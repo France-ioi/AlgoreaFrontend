@@ -1,0 +1,35 @@
+.list-group {
+    list-style: none;
+    padding-left: 0;
+    border-radius: 4px;
+    min-height: 40px;
+}
+
+.list-group li.list-group-item {
+    background-color: #4A90E2;
+    min-height: 32px;
+    padding: 10px 5px;
+    margin: 8px;
+    border: none;
+    color: #fff;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: row;
+}
+
+.list-group li.list-group-item span {
+    font-size: 14px;
+    padding-top: 2px;
+    padding-left: 5px;
+}
+
+.pick-list-container {
+    margin: 10px;
+    flex: 1;
+}
+
+.pick-list-wrapper {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}

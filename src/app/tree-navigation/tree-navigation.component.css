@@ -1,0 +1,244 @@
+
+:host ::ng-deep .ui-tree {
+  width: 100%;
+  background-color: #4A90E2 !important;
+  border: none;
+  padding: 0;
+}
+
+:host ::ng-deep .ui-tree-container {
+  padding: 0 !important;
+}
+
+:host ::ng-deep .ui-tree-toggler {
+  display: none !important;
+}
+
+:host ::ng-deep .ui-chkbox {
+  display: none !important;
+}
+
+:host ::ng-deep .ui-treenode-label {
+  width: 100%;
+  color: #fff !important;
+  padding: 0 !important;
+}
+
+:host ::ng-deep .ui-treenode {
+  padding: 0 !important;
+}
+
+:host ::ng-deep .ui-treenode-content {
+  border: none !important;
+}
+
+:host ::ng-deep .ui-treenode-content:focus {
+  outline: none;
+}
+
+:host ::ng-deep .ui-treenode-icon {
+  margin: 0 !important;
+}
+
+:host ::ng-deep .ui-treenode-children {
+  padding-left: 36px !important;
+}
+
+/* :host ::ng-deep p-treenode:last-child > .ui-treenode > .ui-treenode-children {
+  border-left: 1px solid transparent;
+} */
+
+:host ::ng-deep .ui-treenode-children {
+  border-left: 1px solid #2E5E95;
+}
+
+:host ::ng-deep .ui-tree-container > p-treenode > .ui-treenode > .ui-treenode-children {
+  border-left: 1px solid transparent;
+}
+
+:host ::ng-deep .ui-tree-container > p-treenode > .ui-treenode > .ui-treenode-children > p-treenode:last-child > .ui-treenode > .ui-treenode-content .node-tree-item .node-item-branch .bottom-branch {
+  border-left: 1px solid #2E5E95;
+}
+
+:host ::ng-deep
+  p-treenode:last-child >
+  .ui-treenode >
+  .ui-treenode-content
+  .node-tree-item
+  .node-item-branch .bottom-branch {
+    border-right: none;
+    border-left: none;
+}
+
+:host ::ng-deep
+  p-treenode:first-child >
+  .ui-treenode >
+  .ui-treenode-content
+  .node-tree-item
+  .node-item-branch .top-branch {
+    border-right: none;
+}
+
+.node-tree-item {
+  width: 100%;
+  display: block;
+  flex-direction: row;
+  align-items: center;
+  min-height: 50px;
+  position: relative;
+}
+
+.node-tree-item .node-item-branch {
+  display: block;
+  width: 38px;
+  min-height: 50px;
+  z-index: 1000;
+}
+
+.node-tree-item .node-item-branch .top-branch {
+  display: block;
+  border-right: 1px solid #2E5E95; 
+  min-height: 25px;
+  position: relative;
+}
+
+.node-tree-item .node-item-branch .bottom-branch {
+  display: block;
+  border-right: 1px solid #2E5E95; 
+  min-height: 25px;
+  position: relative;
+}
+
+.node-tree-item.expanded .folder-branch {
+  position: relative;
+}
+
+.node-item-branch .bottom-branch .mask-branch {
+  display: block;
+  position: absolute;
+  right: -1px;
+  width: 2px;
+  top: 0;
+  height: 15px;
+  background-color: #4A90E2;
+}
+
+.node-item-branch .top-branch .mask-branch {
+  display: block;
+  position: absolute;
+  right: -1px;
+  width: 16px;
+  bottom: -1px;
+  height: 15px;
+  background-color: #4A90E2;
+}
+
+/* .node-tree-item.folder .node-item-branch .top-branch {
+  width: 28px;
+} */
+
+.node-tree-item.child .node-item-branch .top-branch {
+  border-left: 1px solid #2E5E95;
+  border-bottom: 1px solid #2E5E95;
+  border-right: none;
+}
+
+.node-tree-item.child .node-item-branch .bottom-branch {
+  border-left: 1px solid #2E5E95;
+  border-right: none;
+}
+
+.node-tree-item.folder.child.expanded .node-item-branch .bottom-branch {
+  border-right: 1px solid #2E5E95;
+}
+
+.node-tree-item .node-item-content {
+  padding: 0px 3px;
+  position: absolute;
+  display: block;
+  border-bottom: 1px solid #4587D4;
+  padding-right: 20px;
+  top: 0;
+  bottom: 0;
+  left: 15px;
+  right: 0;
+}
+
+.node-tree-item.checked .node-item-content {
+  border-top-left-radius: 6px !important;
+  border-bottom-left-radius: 6px !important;
+  background-color: #fff !important;
+  color: #4A90E2;
+}
+
+.node-tree-item .node-item-content .node-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 14px;
+}
+
+
+.node-tree-item .node-item-content.node-bottom-radius {
+  border-bottom-right-radius: 6px;
+}
+
+.node-select {
+  width: 30px;
+  height: 30px;
+  margin-right: 15px;
+  margin-left: 5px;
+  display: block;
+  text-align: center;
+  position: absolute;
+  top: 50%;
+  margin-top: -15px;
+}
+
+.node-select i {
+  line-height: 30px;
+}
+
+.node-tree-item .node-select {
+  color: #F5A623;
+  z-index: 10001;
+}
+
+.node-tree-item.checked .node-select {
+  color: #fff;
+  background-color: #F5A623;
+  border-radius: 100px;
+}
+
+.node-item-content .node-label {
+  top: 0;
+  bottom: 0;
+  left: 50px;
+  right: 0;
+  position: absolute;
+  display: block;
+  padding-right: 20px;
+}
+
+.node-item-content .node-label .label-container {
+  display: flex;
+  margin-top: 15px;
+}
+
+.node-item-content .node-label .node-state {
+  margin-left: auto;
+}
+
+.node-item-content .node-label .node-label-title {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  margin-right: 10px;
+}
+
+.node-item-content .node-label app-skill-progress {
+  position: absolute;
+  left: 0;
+  right: 15px;
+  bottom: 0;
+}

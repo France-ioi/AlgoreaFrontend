@@ -1,0 +1,14 @@
+.container {
+    max-width: 960px;
+    margin: 0 auto;
+}
+
+.score-ring-container {
+    display: flex; 
+    flex-direction: column; 
+    width: 100%;
+}
+
+.score-ring-container app-skill-progress {
+    margin: 5px;
+}

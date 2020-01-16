@@ -1,0 +1,156 @@
+
+:host ::ng-deep .ui-tree {
+  width: 100%;
+  background-color: transparent !important;
+  border: none;
+  padding: 0;
+}
+
+:host ::ng-deep .ui-tree-container {
+  padding: 0 !important;
+}
+
+:host ::ng-deep .ui-tree-toggler {
+  display: none !important;
+}
+
+:host ::ng-deep .ui-chkbox {
+  display: none !important;
+}
+
+:host ::ng-deep .ui-treenode-label {
+  width: 100%;
+  color: #9d9d9d !important;
+  padding: 0 !important;
+}
+
+:host ::ng-deep .ui-treenode {
+  padding: 0 !important;
+}
+
+:host ::ng-deep .ui-treenode-content {
+  border: none !important;
+}
+
+:host ::ng-deep .ui-treenode-content:focus {
+  outline: none;
+}
+
+:host ::ng-deep .ui-treenode-icon {
+  margin: 0 !important;
+}
+
+:host ::ng-deep .ui-treenode-children {
+  border-left: 1px solid #9B9B9B;
+  padding-left: 31px !important;
+}
+
+:host ::ng-deep p-treenode:last-child > .ui-treenode > .ui-treenode-children {
+  border-left: 1px solid transparent;
+  padding-left: 31px !important;
+}
+
+:host ::ng-deep
+  p-treenode:last-child >
+  .ui-treenode >
+  .ui-treenode-content
+  .node-tree-item
+  .node-item-branch .bottom-branch {
+    border-left: none !important;
+}
+
+:host ::ng-deep
+  p-treenode:last-child >
+  .ui-treenode >
+  .ui-treenode-content
+  .node-tree-item
+  .node-item-branch .top-branch {
+    border-bottom-left-radius: 10px;
+}
+
+.node-tree-item {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  min-height: 40px;
+  position: relative;
+}
+
+.node-tree-item .node-item-branch {
+  display: flex;
+  flex-direction: column;
+  width: 33px;
+  min-height: 40px;
+  z-index: 1000;
+}
+
+.node-tree-item .node-item-branch .top-branch {
+  border-bottom: 1px solid #9B9B9B; 
+  border-left: 1px solid #9B9B9B; 
+  flex: 1;
+}
+
+.node-tree-item .node-item-branch .bottom-branch {
+  border-left: 1px solid #9B9B9B; 
+  flex: 1;
+}
+
+.node-tree-item.expanded .folder-branch {
+  position: relative;
+}
+
+.node-item-branch .bottom-branch .mask-branch {
+  position: absolute;
+  border-right: 1px solid #9B9B9B;
+  right: 0;
+  height: 15px;
+  width: 2px;
+  bottom: 0;
+}
+
+.node-tree-item.folder .node-item-branch .top-branch {
+  width: 28px;
+}
+
+.node-tree-item .node-item-content {
+  right: 0;
+  height: 26px;
+  padding: 10px 3px;
+  position: absolute;
+  left: 15px;
+  display: flex;
+  align-items: center;
+}
+
+.node-tree-item.checked .node-item-content {
+  border-top-left-radius: 4px !important;
+  border-bottom-left-radius: 4px !important;
+  background-color: #fff !important;
+}
+
+.node-tree-item .node-item-content .node-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 14px;
+}
+
+.node-tree-item .node-select {
+  color: #9B9B9B;
+}
+
+.node-select {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  margin-right: 15px;
+  margin-left: 5px;
+  align-items: center;
+  justify-content: center;
+  z-index: 1001;
+}
+
+.node-item-content .node-label {
+  flex: 1;
+}
