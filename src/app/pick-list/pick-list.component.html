@@ -1,0 +1,25 @@
+<h3>Total title</h3>
+<div class="pick-list-wrapper">
+  <div class="pick-list-container" *ngFor="let listItem of list.lists">
+    <h4>{{ listItem.title }}</h4>
+    <ul
+      class="list-group"
+      droppable
+      [ngStyle]="{ border: listItem.border }"
+      (onDrop)="onItemDrop($event, listItem)"
+    >
+      <ng-container *ngFor="let item of list.items">
+        <li
+          draggable
+          *ngIf="item.list === listItem.ID"
+          [dragData]="{ data: item, _id: list['_id'] }"
+          class="list-group-item"
+          [ngStyle]="{ 'background-color': listItem.color }"
+        >
+          <i class="pi pi-ellipsis-v" style="font-size: 20px"></i>
+          <span>{{ item.title }}</span>
+        </li>
+      </ng-container>
+    </ul>
+  </div>
+</div>

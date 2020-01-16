@@ -1,0 +1,50 @@
+.progress-bar-wrapper {
+  width: 100%;
+  border-radius: 100px;
+  position: relative;
+  margin: 0;
+}
+
+.progress-bar-wrapper .progress-current {
+  height: 100%;
+  border-radius: 100px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+}
+
+.progress-bar-wrapper .progress-displayed {
+  height: 100%;
+  border-radius: 100px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+}
+
+.progress-bar-wrapper .progress-label {
+  color: white;
+  position: absolute;
+  left: 10px;
+  top: 0;
+  bottom: 0;
+  line-height: 16px;
+}
+
+.progress-bar-wrapper .progress-label.vertical-label {
+  left: 0;
+  top: 10px;
+  right: 0;
+  word-wrap: break-word;
+  font-size: 12px;
+}
+
+.vertical {
+  height: 100%;
+  width: 15px;
+}
+
+.vertical-progress {
+  width: 100%;
+}

@@ -1,0 +1,42 @@
+<p-tree [value]="data">
+  <!-- Folder elements template -->
+  <ng-template let-node pTemplate="folder">
+    <span class="node-tree-item folder" [ngClass]="{'expanded': node.expanded, 'checked': node.checked}">
+      <span class="node-item-branch">
+        <span *ngIf="!node.root" class="top-branch"></span>
+        <span class="bottom-branch folder-branch">
+          <span *ngIf="node.expanded" class="mask-branch"></span>
+        </span>
+      </span>
+      <span class="node-item-content">
+        <span (click)="nodeExpand($event, node)" class="node-select">
+          <i *ngIf="!node.expanded && !node.checked" class="pi pi-folder" [ngStyle]="{'fontSize.px': node.root ? 24 : 16}"></i>
+          <i *ngIf="node.expanded && !node.checked" class="pi pi-folder-open" [ngStyle]="{'fontSize.px': node.root ? 24 : 16}"></i>
+          <i *ngIf="!node.expanded && node.checked" class="pi pi-folder" style="color: white;" [ngStyle]="{'fontSize.px': node.root ? 24: 12}"></i>
+          <i *ngIf="node.expanded && node.checked" class="pi pi-folder-open" style="color: white;" [ngStyle]="{'fontSize.px': node.root ? 24 : 12}"></i>
+        </span>
+        <span (click)="nodeCheck($event, node)" class="node-label">{{
+          node.title
+        }}</span>
+      </span>
+    </span>
+  </ng-template>
+  <!-- Leaf elements template -->
+  <ng-template let-node pTemplate="leaf">
+    <span class="node-tree-item" [ngClass]="{'checked': node.checked}">
+      <span class="node-item-branch" [ngStyle]="{'width.px': node.checked ? 33 : 35}">
+        <span class="top-branch"></span>
+        <span class="bottom-branch"></span>
+      </span>
+      <span class="node-item-content">
+        <span (click)="nodeExpand($event, node)" class="node-select">
+          <i *ngIf="node.checked" class="pi pi-check" style="font-size: 12px;"></i>
+          <i *ngIf="!node.checked" class="pi pi-circle-on" style="font-size: 12px;"></i>
+        </span>
+        <span (click)="nodeCheck($event, node)" class="node-label">{{
+          node.title
+        }}</span>
+      </span>
+    </span>
+  </ng-template>
+</p-tree>
