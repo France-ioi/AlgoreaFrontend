@@ -4,7 +4,7 @@ import { TreeNode } from 'primeng/api';
 @Component({
   selector: 'app-group-navigation',
   templateUrl: './group-navigation.component.html',
-  styleUrls: ['./group-navigation.component.css']
+  styleUrls: ['./group-navigation.component.scss']
 })
 export class GroupNavigationComponent implements OnInit, OnChanges {
 

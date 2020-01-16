@@ -14,6 +14,7 @@ import { ScoreRingComponent } from './score-ring/score-ring.component';
 import { TreeSelectionDialogComponent } from './tree-selection-dialog/tree-selection-dialog.component';
 import { GroupNavigationComponent } from './group-navigation/group-navigation.component';
 import { TreeNavigationComponent } from './tree-navigation/tree-navigation.component';
+import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { TreeNavigationComponent } from './tree-navigation/tree-navigation.compo
     ScoreRingComponent,
     TreeSelectionDialogComponent,
     GroupNavigationComponent,
-    TreeNavigationComponent
+    TreeNavigationComponent,
+    BreadcrumbComponent
   ],
   imports: [
     BrowserModule,
