@@ -4,7 +4,7 @@ import { TreeNode } from 'primeng/api';
 @Component({
   selector: 'app-tree-selection-dialog',
   templateUrl: './tree-selection-dialog.component.html',
-  styleUrls: ['./tree-selection-dialog.component.css']
+  styleUrls: ['./tree-selection-dialog.component.scss']
 })
 export class TreeSelectionDialogComponent implements OnInit, OnChanges {
 

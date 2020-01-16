@@ -18,7 +18,7 @@ export enum PickListColor {
 @Component({
   selector: 'app-pick-list',
   templateUrl: './pick-list.component.html',
-  styleUrls: ['./pick-list.component.css']
+  styleUrls: ['./pick-list.component.scss']
 })
 export class PickListComponent implements OnInit {
 

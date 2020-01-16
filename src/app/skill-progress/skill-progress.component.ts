@@ -22,7 +22,7 @@ enum ProgressHeight {
 @Component({
   selector: "app-skill-progress",
   templateUrl: "./skill-progress.component.html",
-  styleUrls: ["./skill-progress.component.css"]
+  styleUrls: ["./skill-progress.component.scss"]
 })
 export class SkillProgressComponent implements OnInit, OnChanges {
 
