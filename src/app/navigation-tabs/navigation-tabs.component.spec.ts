@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { GroupNavigationComponent } from './group-navigation.component';
+import { NavigationTabsComponent } from './navigation-tabs.component';
 
-describe('GroupNavigationComponent', () => {
-  let component: GroupNavigationComponent;
-  let fixture: ComponentFixture<GroupNavigationComponent>;
+describe('GroupViewComponent', () => {
+  let component: NavigationTabsComponent;
+  let fixture: ComponentFixture<NavigationTabsComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ GroupNavigationComponent ]
+      declarations: [ NavigationTabsComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(GroupNavigationComponent);
+    fixture = TestBed.createComponent(NavigationTabsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

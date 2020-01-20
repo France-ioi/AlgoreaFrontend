@@ -309,7 +309,7 @@
 <div class="container">
   <div class="left">
     <div style="height: 90px;"></div>
-    <app-group-view [items]="groupdata"></app-group-view>
+    <app-navigation-tabs [items]="groupdata"></app-navigation-tabs>
   </div>
   <div class="right">
     <app-breadcrumb [items]="breaddata"></app-breadcrumb>
@@ -320,10 +320,10 @@
       style="width: 100%;"
     ></app-tree-selection-dialog>
     <div style="width: 100%;background-color: #F1F2F7">
-      <app-group-navigation
+      <app-group-navigation-tree
         [data]="groups"
         style="width: 100%;"
-      ></app-group-navigation>
+      ></app-group-navigation-tree>
     </div>
     <div style="width: 100%;background-color: #4A90E2">
       <app-tree-navigation

@@ -77,9 +77,9 @@
                   >Groups you manage</span
                 >
               </p-header>
-              <app-group-navigation
+              <app-group-navigation-tree
                 [data]="items.groups.manage"
-              ></app-group-navigation>
+              ></app-group-navigation-tree>
             </p-accordionTab>
             <p-accordionTab [selected]="joinShow">
               <p-header>
@@ -94,9 +94,9 @@
                   >Groups You Joined</span
                 >
               </p-header>
-              <app-group-navigation
+              <app-group-navigation-tree
                 [data]="items.groups.join"
-              ></app-group-navigation>
+              ></app-group-navigation-tree>
             </p-accordionTab>
           </p-accordion>
         </div>

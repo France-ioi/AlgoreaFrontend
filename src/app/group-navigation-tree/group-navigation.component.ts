@@ -2,11 +2,11 @@ import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/cor
 import { TreeNode } from 'primeng/api';
 
 @Component({
-  selector: 'app-group-navigation',
-  templateUrl: './group-navigation.component.html',
-  styleUrls: ['./group-navigation.component.scss']
+  selector: 'app-group-navigation-tree',
+  templateUrl: './group-navigation-tree.component.html',
+  styleUrls: ['./group-navigation-tree.component.scss']
 })
-export class GroupNavigationComponent implements OnInit, OnChanges {
+export class GroupNavigationTreeComponent implements OnInit, OnChanges {
 
   @Input() data: TreeNode[];
 

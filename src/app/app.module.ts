@@ -24,10 +24,10 @@ import { PickListComponent } from './pick-list/pick-list.component';
 import { SkillProgressComponent } from './skill-progress/skill-progress.component';
 import { ScoreRingComponent } from './score-ring/score-ring.component';
 import { TreeSelectionDialogComponent } from './tree-selection-dialog/tree-selection-dialog.component';
-import { GroupNavigationComponent } from './group-navigation/group-navigation.component';
+import { GroupNavigationTreeComponent } from './group-navigation-tree/group-navigation.component';
 import { TreeNavigationComponent } from './tree-navigation/tree-navigation.component';
 import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
-import { GroupViewComponent } from './group-view/group-view.component';
+import { NavigationTabsComponent } from './navigation-tabs/navigation-tabs.component';
 import { SkillActivityComponent } from './skill-activity/skill-activity.component';
 import { LeftNavComponent } from './left-nav/left-nav.component';
 
@@ -42,10 +42,10 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     SkillProgressComponent,
     ScoreRingComponent,
     TreeSelectionDialogComponent,
-    GroupNavigationComponent,
+    GroupNavigationTreeComponent,
     TreeNavigationComponent,
     BreadcrumbComponent,
-    GroupViewComponent,
+    NavigationTabsComponent,
     SkillActivityComponent,
     LeftNavComponent
   ],
