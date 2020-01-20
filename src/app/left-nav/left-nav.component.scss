@@ -1,0 +1,14 @@
+
+.sticky {
+  position: absolute;
+  top: calc(100vh - 50px);
+}
+
+:host ::ng-deep perfect-scrollbar {
+  position: relative;
+}
+
+.nav-container {
+  overflow-y: scroll; 
+  height: 100vh;
+}

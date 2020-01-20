@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-breadcrumb',
@@ -7,9 +7,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class BreadcrumbComponent implements OnInit {
 
+  @Input() items;
+  @Output() itemClick = new EventEmitter<any>();
+
   constructor() { }
 
   ngOnInit() {
+  }
+
+  onItemClick(e, item) {
+    this.items.selectedID = item.ID;
+    this.itemClick.emit(item);
   }
 
 }

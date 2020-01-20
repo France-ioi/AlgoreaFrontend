@@ -1,0 +1,8 @@
+<p-tabView class="group-skills" [activeIndex]="activeTab" (onChange)="tabChanged($event)">
+  <p-tabPanel header="SKILLS" leftIcon="pi pi-calendar">
+    <app-tree-navigation [data]="data"></app-tree-navigation>
+  </p-tabPanel>
+  <p-tabPanel header="ACTIVITIES" leftIcon="pi pi-inbox">
+    <app-tree-navigation [data]="data"></app-tree-navigation>
+  </p-tabPanel>
+</p-tabView>

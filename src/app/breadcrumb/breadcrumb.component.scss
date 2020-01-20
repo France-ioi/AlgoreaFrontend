@@ -1,0 +1,50 @@
+@import 'src/colors.scss';
+
+$breadcrumb-bottom-color: #E0E1E5;
+
+.breadcrumb-container {
+  border-bottom: 1px solid $breadcrumb-bottom-color;
+  padding: 0;
+
+  ul {
+    list-style: none;
+    margin: 0;
+    height: 100%;
+    padding-left: 15px;
+
+    li {
+      display: inline-block;
+      margin: 0 .25em;
+      color: $base-text-color;
+      line-height: 40px;
+      height: 40px;
+      cursor: pointer;
+
+      &.active {
+        border-top: 3px solid $base-color;
+        color: $base-color;
+      }
+
+      &.home {
+        color: $base-color;
+        margin-right: 10px;
+      }
+
+      span {
+        padding: 0 5px;
+        font-size: 12px;
+        border-radius: 10px;
+        display: inline-block;
+        vertical-align: middle;
+        line-height: normal;
+
+        &.attempt-badge {
+          background-color: $base-color;
+          color: white;
+          height: 16px;
+          line-height: 16px;
+        }
+      }
+    }
+  }
+}

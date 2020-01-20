@@ -1,6 +1,24 @@
 .container {
-    max-width: 960px;
-    margin: 0 auto;
+    // max-width: 960px;
+    // margin: 0 auto;
+    width: 100%;
+    position: relative;
+
+    .left {
+        width: 400px;
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        background-color: #4E4E4E;
+        height: 100%;
+    }
+
+    .right {
+        margin-left: 400px;
+        padding-left: 20px;
+        background-color: #F1F2F7;
+    }
 }
 
 .score-ring-container {
