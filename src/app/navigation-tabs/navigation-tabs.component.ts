@@ -1,11 +1,11 @@
 import { Component, OnInit, Input, OnChanges, SimpleChanges, ViewChild, ElementRef, NgZone } from '@angular/core';
 
 @Component({
-  selector: 'app-group-view',
-  templateUrl: './group-view.component.html',
-  styleUrls: ['./group-view.component.scss']
+  selector: 'app-navigation-tabs',
+  templateUrl: './navigation-tabs.component.html',
+  styleUrls: ['./navigation-tabs.component.scss']
 })
-export class GroupViewComponent implements OnInit, OnChanges {
+export class NavigationTabsComponent implements OnInit, OnChanges {
 
   @Input() items;
 
