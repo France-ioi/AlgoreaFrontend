@@ -1,1 +1,18 @@
-<p>breadcrumb works!</p>
+<div class="breadcrumb-container">
+  <ul>
+    <li class="home"><i class="fa fa-folder"></i></li>
+    <ng-container *ngFor="let item of items.path; index as idx;">
+      <ng-container *ngIf="idx > 0">
+        <li>/</li>
+      </ng-container>
+      <li [ngClass]="{'active': item.ID === items.selectedID}" (click)="onItemClick($event, item)">
+        <span>
+          {{item.label}}
+        </span>
+        <span *ngIf="item.attempt && item.attempt > 0" class="attempt-badge">
+          {{item.attempt}}
+        </span>
+      </li>
+    </ng-container>
+  </ul>
+</div>

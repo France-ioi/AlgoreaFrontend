@@ -1,0 +1,119 @@
+<!-- <perfect-scrollbar style="max-height: calc(100vh - 140px);"> -->
+<div class="group-container">
+  <div class="group-header">
+    <div class="group-avatar">
+      <ng-container
+        *ngIf="currentUser.avatar; then userAvatar; else noAvatar"
+      ></ng-container>
+      <ng-template #userAvatar>
+        <img
+          src="assets/images/{{currentUser.avatar }}"
+          width="70px"
+          height="70px"
+        />
+      </ng-template>
+      <ng-template #noAvatar>
+        <span class="anonym-group">
+          <ng-container
+            *ngIf="currentUser.type == 'user'; then userAnony; else groupAnony"
+          >
+          </ng-container>
+          <ng-template #userAnony>
+            <img src="assets/images/Male.svg" width="70px" height="70px" />
+          </ng-template>
+          <ng-template #groupAnony>
+            <img
+              src="assets/images/Group - Managed.svg"
+              width="70px"
+              height="70px"
+            />
+          </ng-template>
+        </span>
+      </ng-template>
+    </div>
+    <span class="group-title">
+      {{ currentUser.title }}
+    </span>
+    <span class="group-toggle" (click)="toggleGroup($event)">
+      <i class="fa fa-users"></i>
+      <i class="fa {{ groupShow ? 'fa-caret-down' : 'fa-caret-up' }}"></i>
+    </span>
+  </div>
+  <perfect-scrollbar
+    style="width: 100%;height: 100%;"
+    #scrollPanel
+    (psScrollY)="onScrollEvent($event)"
+  >
+    <ng-container *ngIf="groupShow">
+      <div class="group-content" (resized)="onResized($event)" #groupPanel>
+        <div class="group-show-activity">
+          <span>
+            Show groups that participate to that activity
+          </span>
+          <span> </span>
+        </div>
+        <div class="group-self">
+          <span class="anonym-group">
+            <img src="assets/images/Male.svg" width="40px" height="40px" />
+          </span>
+          <span style="text-transform: uppercase;">Yourself</span>
+        </div>
+        <div class="group-list">
+          <p-accordion
+            [multiple]="true"
+            (onOpen)="onTabOpen($event)"
+            (onClose)="onTabClose($event)"
+          >
+            <p-accordionTab [selected]="manageShow">
+              <p-header>
+                <span class="anonym-group">
+                  <img
+                    src="assets/images/Group - Managed.svg"
+                    width="40px"
+                    height="40px"
+                  />
+                </span>
+                <span style="text-transform: uppercase;"
+                  >Groups you manage</span
+                >
+              </p-header>
+              <app-group-navigation
+                [data]="items.groups.manage"
+              ></app-group-navigation>
+            </p-accordionTab>
+            <p-accordionTab [selected]="joinShow">
+              <p-header>
+                <span class="anonym-group">
+                  <img
+                    src="assets/images/Group - Joined.svg"
+                    width="40px"
+                    height="40px"
+                  />
+                </span>
+                <span style="text-transform: uppercase;"
+                  >Groups You Joined</span
+                >
+              </p-header>
+              <app-group-navigation
+                [data]="items.groups.join"
+              ></app-group-navigation>
+            </p-accordionTab>
+          </p-accordion>
+        </div>
+      </div>
+    </ng-container>
+    <app-skill-activity
+      [data]="items.skills"
+      [activeTab]="activeTab"
+      (tabChange)="onTabChanged($event)"
+    ></app-skill-activity>
+    <app-skill-activity
+      *ngIf="stickyShow"
+      [data]="items.skills"
+      [activeTab]="activeTab"
+      (tabChange)="onTabChanged($event)"
+      class="overlay-skills"
+    ></app-skill-activity>
+  </perfect-scrollbar>
+</div>
+<!-- </perfect-scrollbar> -->
