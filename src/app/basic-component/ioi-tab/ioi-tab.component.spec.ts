@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SkillActivityComponent } from './skill-activity.component';
+import { IoiTabComponent } from './ioi-tab.component';
 
-describe('SkillActivityComponent', () => {
-  let component: SkillActivityComponent;
-  let fixture: ComponentFixture<SkillActivityComponent>;
+describe('IoiTabComponent', () => {
+  let component: IoiTabComponent;
+  let fixture: ComponentFixture<IoiTabComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SkillActivityComponent ]
+      declarations: [ IoiTabComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SkillActivityComponent);
+    fixture = TestBed.createComponent(IoiTabComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

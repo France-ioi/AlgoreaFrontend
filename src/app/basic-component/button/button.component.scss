@@ -1,0 +1,115 @@
+@import 'src/colors.scss';
+
+$secondary-color: #4a4a4a;
+$warning-color: #f5a623;
+$danger-color: #ff001f;
+
+:host ::ng-deep .ui-button {
+  background-color: $base-color;
+  border-color: $base-color;
+
+  &:enabled:focus {
+    outline: none;
+    box-shadow: none;
+  }
+
+  .ui-button-text {
+    text-transform: uppercase;
+  }
+
+  &.ui-button-text-icon-left {
+    .ui-button-text {
+      padding-left: 36px;
+    }
+  }
+
+  &.ui-button-text-icon-right {
+    .ui-button-text {
+      padding-right: 36px;
+    }
+  }
+
+  .ui-button-icon-left {
+    left: 12px;
+  }
+
+  .ui-button-icon-right {
+    right: 12px;
+  }
+  
+  &.ui-state-default {
+
+    &.ui-button-secondary {
+      background-color: $secondary-color;
+      border-color: $secondary-color;
+      color: white;
+
+      &:enabled:focus {
+        outline: none;
+        box-shadow: none;
+      }
+    }
+
+    &.ui-button-info {
+      background-color: $base-color;
+      border-color: $base-color;
+
+      &:enabled:focus {
+        outline: none;
+        box-shadow: none;
+      }
+    }
+    
+    &.ui-button-warning {
+      background-color: $warning-color;
+      border-color: $warning-color;
+      color: white;
+
+      &:enabled:hover {
+        color: white;
+      }
+      &:enabled:focus {
+        outline: none;
+        box-shadow: none;
+      }
+    }
+    
+    &.ui-button-danger {
+      background-color: $danger-color;
+      border-color: $danger-color;
+
+      &:enabled:focus {
+        outline: none;
+        box-shadow: none;
+      }
+    }
+    
+    &.ui-top-rounded {
+      border-radius: 0;
+      border-top-left-radius: 8px;
+      border-top-right-radius: 8px;
+    }
+    
+    &.ui-diag-rounded {
+      border-radius: 0;
+      border-top-left-radius: 8px;
+      border-bottom-right-radius: 8px;
+    }
+    
+    &.ui-button-success {
+      background-color: white;
+      border-color: $base-color;
+      color: $base-color;
+
+      &:enabled:hover {
+        background-color: $base-color;
+        border-color: $base-color;
+        color: white;
+      }
+      &:enabled:focus {
+        outline: none;
+        box-shadow: none;
+      }
+    }
+  }
+}

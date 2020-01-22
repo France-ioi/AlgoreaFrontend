@@ -1,30 +1,35 @@
-import { Component, OnInit, OnChanges, Input, SimpleChanges, Output, EventEmitter } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnChanges,
+  Input,
+  SimpleChanges,
+  Output,
+  EventEmitter
+} from '@angular/core';
 import { TreeNode } from 'primeng/api';
 
 @Component({
-  selector: 'app-tree-navigation',
-  templateUrl: './tree-navigation.component.html',
-  styleUrls: ['./tree-navigation.component.scss']
+  selector: 'app-items-navigation-tree',
+  templateUrl: './items-navigation-tree.component.html',
+  styleUrls: ['./items-navigation-tree.component.scss']
 })
-export class TreeNavigationComponent implements OnInit, OnChanges {
-
+export class ItemsNavigationTreeComponent implements OnInit, OnChanges {
   @Input() data: TreeNode[];
 
   @Output() onNodeExpand = new EventEmitter<any>();
-  _spread = [];
+  spread = [];
 
-  constructor() {
-  }
+  constructor() {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   ngOnChanges(changes: SimpleChanges) {
     if (this.data) {
-      this.data.forEach((item) => {
+      this.data.forEach(item => {
         item['root'] = true;
       });
-      this._spread.length = 0;
+      this.spread.length = 0;
       this.dfs(this.data);
     }
   }
@@ -43,7 +48,7 @@ export class TreeNavigationComponent implements OnInit, OnChanges {
       return;
     }
 
-    nodes.forEach((node) => {
+    nodes.forEach(node => {
       node.checked = false;
       node.selectedTop = false;
       node.selectedBottom = false;
@@ -56,8 +61,8 @@ export class TreeNavigationComponent implements OnInit, OnChanges {
       return;
     }
 
-    nodes.forEach((node) => {
-      this._spread.push(node);
+    nodes.forEach(node => {
+      this.spread.push(node);
       this.dfs(node.children);
     });
   }
@@ -65,8 +70,7 @@ export class TreeNavigationComponent implements OnInit, OnChanges {
   nodeCheck(event, node) {
     this._unCheckAll(this.data);
     node.checked = true;
-    
+
     node.expanded = true;
   }
-
 }

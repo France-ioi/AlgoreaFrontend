@@ -1,0 +1,36 @@
+<p-tabView class="group-skills" [activeIndex]="activeTab" (onChange)="tabChanged($event)">
+  <p-tabPanel>
+    <ng-template pTemplate="header">
+      <span class="indicator"></span>
+      <i class="fa fa-graduation-cap"></i>
+      <span class="ui-tabview-title">
+        SKILLS
+      </span>
+    </ng-template>
+    <div class="tree-header">
+      <span class="tree-header-handle">
+        <i class="fa fa-chevron-left"></i>
+        <i class="fa fa-folder-open"></i>
+      </span>
+      <span class="tree-header-title">{{skills.title}}</span>
+    </div>
+    <app-items-navigation-tree [data]="skills.data"></app-items-navigation-tree>
+  </p-tabPanel>
+  <p-tabPanel>
+    <ng-template pTemplate="header">
+      <span class="indicator"></span>
+      <i class="fa fa-hand-paper"></i>
+      <span class="ui-tabview-title">
+        ACTIVITIES
+      </span>
+    </ng-template>
+    <div class="tree-header">
+      <span class="tree-header-handle">
+        <i class="fa fa-chevron-left"></i>
+        <i class="fa fa-folder-open"></i>
+      </span>
+      <span class="tree-header-title">{{activities.title}}</span>
+    </div>
+    <app-items-navigation-tree [data]="activities.data"></app-items-navigation-tree>
+  </p-tabPanel>
+</p-tabView>

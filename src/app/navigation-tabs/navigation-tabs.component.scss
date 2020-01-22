@@ -91,6 +91,7 @@ $header-height: 90px;
       padding: 7px 15px;
       display: flex;
       align-items: center;
+      position: relative;
     }
 
     .group-show-activity {
@@ -101,14 +102,29 @@ $header-height: 90px;
     .anonym-group {
       @include anonym_group(40px, 24px);
       margin-right: 10px;
+      z-index: 2;
     }
 
     .group-self {
       @extend %group-div;
+    }
 
-      span {
-        font-weight: bold;
+    .group-subtitle {
+      font-weight: bold;
+      text-transform: uppercase;
+      padding: 8px;
+      padding-left: 20px;
+      left: 45px;
+      right: 10px;
+      position: absolute;
+
+      &.selected {
+        background-color: white;
+        border-top-right-radius: 100px;
+        border-bottom-right-radius: 100px;
       }
+
+      z-index: 1;
     }
 
     .group-list {
@@ -120,14 +136,20 @@ $header-height: 90px;
         position: relative;
       }
       .ui-accordion-header {
+        margin-bottom: 0;
         a {
           @extend %trans-bk-accordion;
+
+          &[aria-expanded="true"] {
+            padding-bottom: 0;
+          }
 
           .ui-accordion-toggle-icon {
             position: absolute;
             right: 10px;
             top: 20px;
             color: $base-text-color !important;
+            z-index: 2;
           }
         }
 
@@ -150,7 +172,11 @@ $header-height: 90px;
         .ui-accordion-content {
           background-color: transparent;
           border: 1px solid transparent;
-          padding-right: 0;
+          padding: {
+            left: 32px;
+            top: 0;
+            right: 0;
+          }
         }
       }
     }
