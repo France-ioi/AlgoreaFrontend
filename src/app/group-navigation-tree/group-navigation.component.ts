@@ -9,6 +9,7 @@ import { TreeNode } from 'primeng/api';
 export class GroupNavigationTreeComponent implements OnInit, OnChanges {
 
   @Input() data: TreeNode[];
+  @Input() inGroup = false;
 
   constructor() {
   }
@@ -18,10 +19,10 @@ export class GroupNavigationTreeComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     if (this.data) {
-      while(this.data.length > 1) {
-        this.data.pop();
-      }
-      if (this.data.length > 0) {
+      // while (this.data.length > 1) {
+      //   this.data.pop();
+      // }
+      if (!this.inGroup && this.data.length > 0) {
         this.data[0]['root'] = true;
       }
     }

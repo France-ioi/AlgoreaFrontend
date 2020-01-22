@@ -1,0 +1,40 @@
+@import 'src/colors.scss';
+
+.section-container {
+  margin-top: 30px;
+  border-bottom: 1px solid $light-border-color;
+  
+  .section-header {
+    display: flex;
+    align-items: center;
+
+    .section-handler {
+      display: block;
+      background-color: $base-color;
+      border-left: 3px solid $dark-color;
+      width: 55px;
+      height: 30px;
+      border-top-right-radius: 100px;
+      border-bottom-right-radius: 100px;
+      position: relative;
+
+      i {
+        color: white;
+        position: absolute;
+        right: 10px;
+        top: 7px;
+      }
+    }
+
+    .section-title {
+      font-size: 24px;
+      color: $dark-text-color;
+      margin-left: 15px;
+    }
+  }
+  
+  .section-content {
+    padding: 15px 20px 15px 70px;
+    color: $base-text-color;
+  }
+}

@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TreeSelectionDialogComponent } from './tree-selection-dialog.component';
+import { SelectionTreeComponent } from './selection-tree.component';
 
 describe('TreeSelectionDialogComponent', () => {
-  let component: TreeSelectionDialogComponent;
-  let fixture: ComponentFixture<TreeSelectionDialogComponent>;
+  let component: SelectionTreeComponent;
+  let fixture: ComponentFixture<SelectionTreeComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ TreeSelectionDialogComponent ]
+      declarations: [ SelectionTreeComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TreeSelectionDialogComponent);
+    fixture = TestBed.createComponent(SelectionTreeComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

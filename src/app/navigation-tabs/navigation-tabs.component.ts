@@ -19,6 +19,8 @@ export class NavigationTabsComponent implements OnInit, OnChanges {
   joinShow = false;
   activeTab = 0;
 
+  selectedGroup = -1;
+
   constructor(private ngZone: NgZone) { }
 
   ngOnInit() {
@@ -77,6 +79,7 @@ export class NavigationTabsComponent implements OnInit, OnChanges {
     } else {
       this.joinShow = true;
     }
+    this.selectedGroup = e.index + 1;
   }
 
   onTabClose(e) {
@@ -85,12 +88,17 @@ export class NavigationTabsComponent implements OnInit, OnChanges {
     } else {
       this.joinShow = false;
     }
+    this.selectedGroup = e.index + 1;
   }
 
   onTabChanged(e) {
     this.activeTab = e;
     this.groupShow = false;
     this.stickyShow = false;
+  }
+
+  onSelectGroup(e, idx) {
+    this.selectedGroup = idx;
   }
 
 }

@@ -313,12 +313,76 @@
   </div>
   <div class="right">
     <app-breadcrumb [items]="breaddata"></app-breadcrumb>
+    <div>
+      <app-ioi-tab [items]="tabs">
+        <div class="mat-tab-content-wrapper">
+        </div>
+      </app-ioi-tab>
+      <!-- <mat-tab-group>
+        <app-ioi-tab></app-ioi-tab>
+      </mat-tab-group> -->
+    </div>
+    <div>
+    </div>
+    <div class="button-container">
+      <app-button label="Primary" icon="pi pi-check" iconPos="right"></app-button>
+      <app-button label="Secondary" icon="fa fa-user" iconPos="right" class="ui-button-secondary"></app-button>
+      <app-button label="Success" icon="fa fa-book" iconPos="right" class="ui-button-success"></app-button>
+      <app-button label="Info" icon="fa fa-users" iconPos="right" class="ui-button-info"></app-button>
+      <app-button label="Danger" icon="fa fa-cog" iconPos="right" class="ui-button-danger"></app-button>
+      <app-button label="Warning" icon="fa fa-cog" iconPos="right" class="ui-button-warning"></app-button>
+    </div>
+    <div class="button-container">
+      <app-button label="Primary" icon="pi pi-check" class="ui-diag-rounded"></app-button>
+      <app-button label="Secondary" icon="fa fa-user" class="ui-diag-rounded ui-button-secondary"></app-button>
+      <app-button label="Success" icon="fa fa-book" class="ui-diag-rounded ui-button-success"></app-button>
+      <app-button label="Info" icon="fa fa-users" class="ui-diag-rounded ui-button-info"></app-button>
+      <app-button label="Danger" icon="fa fa-cog" class="ui-diag-rounded ui-button-danger"></app-button>
+      <app-button label="Warning" icon="fa fa-cog" class="ui-diag-rounded ui-button-warning"></app-button>
+    </div>
+    <div class="button-container">
+      <app-button label="Primary" icon="pi pi-check" class="ui-top-rounded"></app-button>
+      <app-button label="Secondary" icon="fa fa-user" class="ui-top-rounded ui-button-secondary"></app-button>
+      <app-button label="Success" icon="fa fa-book" class="ui-top-rounded ui-button-success"></app-button>
+      <app-button label="Info" icon="fa fa-users" class="ui-top-rounded ui-button-info"></app-button>
+      <app-button label="Danger" icon="fa fa-cog" class="ui-top-rounded ui-button-danger"></app-button>
+      <app-button label="Warning" icon="fa fa-cog" class="ui-top-rounded ui-button-warning"></app-button>
+    </div>
+    <div class="button-container">
+      <app-button label="Primary" icon="pi pi-check" class="ui-button-rounded"></app-button>
+      <app-button label="Secondary" icon="fa fa-user" class="ui-button-rounded ui-button-secondary"></app-button>
+      <app-button label="Success" icon="fa fa-book" class="ui-button-rounded ui-button-success"></app-button>
+      <app-button label="Info" icon="fa fa-users" class="ui-button-rounded ui-button-info"></app-button>
+      <app-button label="Danger" icon="fa fa-cog" class="ui-button-rounded ui-button-danger"></app-button>
+      <app-button label="Warning" icon="fa fa-cog" class="ui-button-rounded ui-button-warning"></app-button>
+    </div>
+    <div class="button-container">
+      <app-button label="Progression" icon="fa fa-chart-line" class="ui-button-rounded"></app-button>
+      <app-button label="Filter" icon="pi pi-check" class="ui-button-rounded"></app-button>
+      <app-button label="Connexion" icon="fa fa-power-off" class="ui-button-rounded ui-button-warning"></app-button>
+      <app-button label="Host a session" icon="fa fa-plus" class="ui-button-rounded"></app-button>
+      <app-button label="Cancel all?" icon="fa fa-times" iconPos="right" class="ui-button-rounded"></app-button>
+      <app-button label="Add group" class="ui-button-rounded"></app-button>
+      <app-button label="Export" icon="fa fa-download" class="ui-button-rounded ui-button-warning"></app-button>
+      <app-button label="Cancel" icon="fa fa-times" class="ui-button-rounded"></app-button>
+      <app-button label="Import" icon="fa fa-upload" class="ui-button-rounded ui-button-warning"></app-button>
+      <app-button label="Attach" icon="fa fa-link" class="ui-button-rounded ui-button-secondary"></app-button>
+      <app-button label="Remove" icon="fa fa-trash-alt" class="ui-button-rounded ui-button-secondary"></app-button>
+      <app-button label="Move" icon="fa fa-folder-open" class="ui-button-rounded ui-button-secondary"></app-button>
+      <app-button label="Cancel" icon="fa fa-times" class="ui-button-rounded ui-button-danger"></app-button>
+      <app-button label="Never" icon="fa fa-times" class="ui-button-rounded ui-button-danger"></app-button>
+      <app-button label="Validate session to obtain the code" icon="pi pi-check" class="ui-button-rounded ui-button-success"></app-button>
+      <app-button label="Preview" icon="fa fa-eye" class="ui-button-rounded ui-button-success"></app-button>
+      <app-button label="Delete" class="ui-top-rounded ui-button-secondary"></app-button>
+      <app-button label="Validate" class="ui-diag-rounded"></app-button>
+    </div>
+
     <app-pick-list [list]="list"></app-pick-list>
     <app-pick-list [list]="list1" [listCount]="3"></app-pick-list>
-    <app-tree-selection-dialog
+    <app-selection-tree
       [data]="files"
       style="width: 100%;"
-    ></app-tree-selection-dialog>
+    ></app-selection-tree>
     <div style="width: 100%;background-color: #F1F2F7">
       <app-group-navigation-tree
         [data]="groups"
@@ -326,10 +390,10 @@
       ></app-group-navigation-tree>
     </div>
     <div style="width: 100%;background-color: #4A90E2">
-      <app-tree-navigation
+      <app-items-navigation-tree
         [data]="trees"
         style="width: 100%;"
-      ></app-tree-navigation>
+      ></app-items-navigation-tree>
     </div>
     <div>
       <div>

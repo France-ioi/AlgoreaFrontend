@@ -2,11 +2,11 @@ import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/cor
 import { TreeNode } from 'primeng/api';
 
 @Component({
-  selector: 'app-tree-selection-dialog',
-  templateUrl: './tree-selection-dialog.component.html',
-  styleUrls: ['./tree-selection-dialog.component.scss']
+  selector: 'app-selection-tree',
+  templateUrl: './selection-tree.component.html',
+  styleUrls: ['./selection-tree.component.scss']
 })
-export class TreeSelectionDialogComponent implements OnInit, OnChanges {
+export class SelectionTreeComponent implements OnInit, OnChanges {
 
   @Input() data: TreeNode[];
 

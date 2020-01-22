@@ -1,0 +1,24 @@
+@import 'src/colors.scss';
+
+.data-list-container {
+  list-style: none;
+  padding-left: 0;
+
+  li {
+    display: flex;
+    border-bottom: 1px solid $light-border-color;
+    padding: 7px 0;
+
+    span {
+      
+      &.list-field {
+        color: $base-text-color;
+      }
+
+      &.list-value {
+        margin-left: auto;
+        color: $base-color;
+      }
+    }
+  }
+}

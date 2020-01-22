@@ -1,13 +1,14 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
-  selector: 'app-skill-activity',
-  templateUrl: './skill-activity.component.html',
-  styleUrls: ['./skill-activity.component.scss']
+  selector: 'app-skill-activity-tabs',
+  templateUrl: './skill-activity-tabs.component.html',
+  styleUrls: ['./skill-activity-tabs.component.scss']
 })
-export class SkillActivityComponent implements OnInit {
+export class SkillActivityTabsComponent implements OnInit {
 
-  @Input() data;
+  @Input() skills;
+  @Input() activities;
   @Input() activeTab;
 
   @Output() tabChange = new EventEmitter<number>();
