@@ -93,7 +93,7 @@ $bk-secondary: #3B73B4;
             height: 0;
             border-left: 8px solid transparent;
             border-right: 8px solid transparent;
-            border-top: 5px solid white;
+            border-top: 5px solid $base-bk-color;
           }
           
           &:hover {

@@ -1,3 +1,5 @@
+@import 'src/colors.scss';
+
 .container {
     // max-width: 960px;
     // margin: 0 auto;
@@ -17,7 +19,7 @@
     .right {
         margin-left: 400px;
         padding-left: 20px;
-        background-color: #F1F2F7;
+        background-color: $base-bk-color;
 
         .button-container {
             margin-top: 10px;
