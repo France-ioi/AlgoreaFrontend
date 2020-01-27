@@ -110,6 +110,7 @@
     <app-skill-activity-tabs
       *ngIf="stickyShow"
       [skills]="items.skills"
+      [activities]="items.activities"
       [activeTab]="activeTab"
       (tabChange)="onTabChanged($event)"
       class="overlay-skills"

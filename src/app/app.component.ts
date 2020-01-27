@@ -728,6 +728,11 @@ export class AppComponent {
     ]}
   };
 
+  user = {
+    name: 'Concours castor',
+    alarm: 0
+  };
+
   personal = [
     {
       field: 'Login',
@@ -862,6 +867,9 @@ export class AppComponent {
     }
   };
 
+  collapsed = false;
+  folded = false;
+
   constructor(private nodeService: NodeService) {}
 
   ngOnInit() {
@@ -872,6 +880,14 @@ export class AppComponent {
     this.nodeService.getTrees().then(res => {
       this.trees = res;
     });
+  }
+
+  onCollapse(e) {
+    this.collapsed = e;
+  }
+
+  onFold(e) {
+    this.folded = e;
   }
 
   onDisplayScoreChange(e) {

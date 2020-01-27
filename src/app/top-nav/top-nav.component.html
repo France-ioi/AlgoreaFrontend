@@ -1,0 +1,34 @@
+<div class="nav-header" *ngIf="templateId === 0">
+  <div class="nav-control">
+    <span class="nav-collapse" (click)="onCollapse($event)">
+      <!-- <i class="fa fa-bars"></i> -->
+      <img src="assets/images/menu-open.svg" width="25px" height="25px" />
+    </span>
+    <span class="user-info">
+      <span class="user-image">
+        <img src="assets/images/_messi.jpg" width="28px" height="28px" />
+      </span>
+      <span class="user-name">{{ data.name }}</span>
+    </span>
+    <span class="alarms" *ngIf="data.alarm > 0">
+      <span class="alarm-number">{{ data.alarm }}</span>
+      <i class="far fa-bell"></i>
+    </span>
+    <span class="sign-out">
+      <i class="fa fa-power-off"></i>
+    </span>
+  </div>
+</div>
+
+<div class="nav-control alt" *ngIf="templateId">
+  <span class="nav-collapse" (click)="onCollapse($event)">
+    <img src="assets/images/menu-open.svg" width="25px" height="25px" />
+  </span>
+  <span class="title-collapse" (click)="onFold($event)" [ngClass]="{down: !folded}">
+    <img src="assets/images/header-open.svg" />
+  </span>
+  <span class="alarms" *ngIf="data.alarm > 0">
+    <span class="alarm-number">{{ data.alarm }}</span>
+    <i class="far fa-bell"></i>
+  </span>
+</div>

@@ -10,13 +10,15 @@ import { ButtonComponent } from './button/button.component';
 import { SectionComponent } from './section/section.component';
 import { DataListComponent } from './data-list/data-list.component';
 import { IoiTabComponent } from './ioi-tab/ioi-tab.component';
+import { PageNavigatorComponent } from './page-navigator/page-navigator.component';
 
 @NgModule({
   declarations: [
     ButtonComponent,
     SectionComponent,
     DataListComponent,
-    IoiTabComponent
+    IoiTabComponent,
+    PageNavigatorComponent
   ],
   imports: [
     CommonModule,
@@ -31,7 +33,8 @@ import { IoiTabComponent } from './ioi-tab/ioi-tab.component';
     SectionComponent,
     DataListComponent,
     MatTabsModule,
-    IoiTabComponent
+    IoiTabComponent,
+    PageNavigatorComponent
   ]
 })
 export class BasicComponentModule { }
