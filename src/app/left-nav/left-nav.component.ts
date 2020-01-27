@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, HostListener, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-left-nav',
@@ -7,12 +7,20 @@ import { Component, OnInit, Input, HostListener, ChangeDetectorRef } from '@angu
 })
 export class LeftNavComponent implements OnInit {
 
-  @Input() trees;
+  @Input() data;
+  @Input() user;
+  @Output() collapseEvent = new EventEmitter<boolean>();
 
-  constructor() { 
-  }
+  @Input() collapsed = false;
+
+  constructor() { }
 
   ngOnInit() {
+  }
+
+  onCollapse(e) {
+    this.collapsed = !this.collapsed;
+    this.collapseEvent.emit(this.collapsed);
   }
 
 }

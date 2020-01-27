@@ -1,0 +1,106 @@
+@import "src/colors.scss";
+
+$nav-control-border: #5c5c5c;
+
+.nav-header {
+  height: 90px;
+}
+
+.nav-control {
+  color: white;
+  height: 43px;
+  padding: 10px;
+  border-bottom: 1px solid $nav-control-border;
+  position: relative;
+  text-align: center;
+  display: flex;
+  align-items: center;
+
+  &.alt {
+    background-color: $nav-bk-color;
+
+    .nav-collapse {
+      img {
+        transform: rotate(360deg);
+      }
+    }
+
+    .title-collapse {
+      margin-left: 15px;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      justify-content: center;
+
+      &.down {
+        transform: rotate(180deg);
+      }
+    }
+
+    .alarms {
+      margin-left: 15px;
+      margin-right: 0;
+    }
+  }
+
+  span {
+    display: block;
+    height: 40px;
+    line-height: 40px;
+  }
+
+  .nav-collapse {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    img {
+      transform: rotate(180deg);
+    }
+  }
+
+  .user-info {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .user-image {
+      display: flex;
+      align-items: center;
+      border-radius: 4px;
+      img {
+        display: block;
+        margin-right: 10px;
+        border-radius: 4px;
+      }
+    }
+
+    .user-name {
+      text-transform: uppercase;
+      font-weight: bold;
+    }
+  }
+
+  .sign-out {
+    margin-right: 5px;
+  }
+
+  .alarms {
+    margin-right: 10px;
+    width: 30px;
+    position: relative;
+
+    .alarm-number {
+      position: absolute;
+      display: inline-block;
+      top: 3px;
+      left: 2px;
+      background-color: $secondary-color;
+      border-radius: 100px;
+      width: 16px;
+      height: 16px;
+      color: white;
+      line-height: 16px;
+      font-size: 9px;
+    }
+  }
+}

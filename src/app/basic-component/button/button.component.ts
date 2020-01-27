@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-button',
@@ -13,9 +13,16 @@ export class ButtonComponent implements OnInit {
   @Input() class;
   @Input() iconPos = 'left';
 
+  // tslint:disable-next-line: no-output-on-prefix
+  @Output() onClick = new EventEmitter<any>();
+
   constructor() { }
 
   ngOnInit() {
+  }
+
+  onClickEvent(e) {
+    this.onClick.emit(e);
   }
 
 }

@@ -4,9 +4,7 @@
   border-bottom: none;
   .mat-tab-label-container {
     .mat-ink-bar {
-      background-color: $base-color;
-      height: 3px;
-      top: 0;
+      display: none;
     }
 
     .mat-tab-labels {
@@ -18,6 +16,7 @@
           background-color: white;
           border-right-color: transparent;
           color: $base-color;
+          border-top: 3px solid $base-color;
         }
         &.mat-tab-label-active + .mat-tab-label {
           border-bottom-left-radius: 10px;

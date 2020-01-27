@@ -32,6 +32,8 @@ import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
 import { NavigationTabsComponent } from './navigation-tabs/navigation-tabs.component';
 import { SkillActivityTabsComponent } from './skill-activity-tabs/skill-activity-tabs.component';
 import { LeftNavComponent } from './left-nav/left-nav.component';
+import { TopNavComponent } from './top-nav/top-nav.component';
+import { TaskHeaderComponent } from './task-header/task-header.component';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: false
@@ -49,7 +51,9 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     BreadcrumbComponent,
     NavigationTabsComponent,
     SkillActivityTabsComponent,
-    LeftNavComponent
+    LeftNavComponent,
+    TopNavComponent,
+    TaskHeaderComponent
   ],
   imports: [
     BrowserModule,

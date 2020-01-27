@@ -3,7 +3,7 @@
 $breadcrumb-bottom-color: #E0E1E5;
 
 .breadcrumb-container {
-  border-bottom: 1px solid $breadcrumb-bottom-color;
+  position: relative;
   padding: 0;
 
   ul {

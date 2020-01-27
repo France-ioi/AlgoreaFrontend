@@ -1,5 +1,4 @@
 @import "src/colors.scss";
-$group-bk-color: #f1f2f7;
 $group-header-height: 70px;
 $group-border-color: #e8eaeb;
 $header-height: 90px;
@@ -23,7 +22,7 @@ $header-height: 90px;
 :host ::ng-deep .group-container {
   display: flex;
   flex-direction: column;
-  background-color: $group-bk-color;
+  background-color: $base-bk-color;
   height: calc(100vh - #{$header-height});
   position: relative;
 
@@ -97,6 +96,7 @@ $header-height: 90px;
     .group-show-activity {
       @extend %group-div;
       padding: 15px 20px;
+      background-color: $base-bk-color;
     }
 
     .anonym-group {
@@ -107,6 +107,7 @@ $header-height: 90px;
 
     .group-self {
       @extend %group-div;
+      background-color: $base-bk-color;
     }
 
     .group-subtitle {
@@ -128,6 +129,8 @@ $header-height: 90px;
     }
 
     .group-list {
+      background-color: $base-bk-color;
+      border-top: 1px solid $group-border-color;
       %trans-bk-accordion {
         background-color: transparent !important;
         border: none !important;
@@ -189,4 +192,8 @@ $header-height: 90px;
     top: calc(100vh - 50px);
     z-index: 100001;
   }
+}
+
+:host ::ng-deep perfect-scrollbar {
+  background-color: $base-color;
 }

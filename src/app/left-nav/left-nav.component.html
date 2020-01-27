@@ -1,0 +1,6 @@
+<app-top-nav
+  [collapsed]="collapsed"
+  (collapseEvent)="onCollapse($event)"
+  [data]="user"
+></app-top-nav>
+<app-navigation-tabs [items]="data"></app-navigation-tabs>

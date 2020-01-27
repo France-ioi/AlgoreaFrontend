@@ -1,0 +1,36 @@
+@import 'src/colors.scss';
+
+.page-nav {
+  display: flex;
+  align-items: center;
+
+  span {
+    display: flex;
+    align-items: center;
+    height: 28px;
+    background-color: $base-color;
+    justify-content: center;
+    color: white;
+    cursor: pointer;
+  }
+
+  .page-edit {
+    width: 28px;
+    border-radius: 28px;
+    margin-right: 5px;
+  }
+
+  .navigator {
+    border-top-left-radius: 28px;
+    border-bottom-left-radius: 28px;
+    padding-left: 10px;
+    color: #D0DDEC;
+    i {
+      cursor: pointer;
+      margin-right: 10px;
+      &:last-child {
+        margin-right: 5px;
+      }
+    }
+  }
+}

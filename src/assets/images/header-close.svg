@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="10px" height="24px" viewBox="0 0 10 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 62 (91390) - https://sketch.com -->
+    <title>Group</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Panneau-latéral-/-Réduit-/-Icône-fermer" transform="translate(-5.000000, 2.000000)">
+            <g id="Group" transform="translate(5.000000, -3.000000)">
+                <text id="" font-family="FontAwesome" font-size="19" font-weight="normal" fill="#D8D8D8">
+                    <tspan x="1" y="17"></tspan>
+                </text>
+                <circle id="Oval" fill="#4A90E2" cx="5" cy="20" r="5"></circle>
+            </g>
+        </g>
+    </g>
+</svg>

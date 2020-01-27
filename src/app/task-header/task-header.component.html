@@ -1,0 +1,45 @@
+<div class="task-header" [ngClass]="{ folded: isFolded, unfolded: !isFolded }">
+  <app-score-ring
+    *ngIf="isStarted"
+    displayedScore="75"
+    currentScore="80"
+  ></app-score-ring>
+  <div *ngIf="!isStarted" class="task-user-image">
+    <img src="assets/images/_messi.jpg" width="50px" height="50px" />
+  </div>
+  <div class="task-title">
+    <p>Exercice lorem ipsum</p>
+    <span>Subtitle for the task</span>
+  </div>
+  <div *ngIf="!isStarted; then cordBlock; else userBlock"></div>
+  <ng-template #cordBlock>
+    <app-button
+      *ngIf="!isCoordinator"
+      icon="pi pi-check"
+      label="Become coordinator"
+      class="ui-button-rounded ui-button-success"
+      (onClick)="onCoordEvent($event)"
+    ></app-button>
+    <app-button
+      *ngIf="isCoordinator"
+      icon="pi pi-check"
+      label="You are coordinator"
+      class="ui-button-rounded"
+      (onClick)="onCoordEvent($event)"
+    ></app-button>
+  </ng-template>
+  <ng-template #userBlock>
+    <div *ngIf="isCollapsed" class="user-info">
+      <span class="user-avatar">
+        <img src="assets/images/Male.svg" width="32px" height="32px" />
+      </span>
+      <span class="user-id">CyrilK89</span>
+    </div>
+    <span class="clock-icon" [ngClass]="{ finished: isFinished }">
+      <i class="fa fa-clock"></i>
+    </span>
+    <span class="remaining-time" [ngClass]="{ finished: isFinished }">
+      00:03:10
+    </span>
+  </ng-template>
+</div>
