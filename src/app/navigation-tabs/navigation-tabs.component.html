@@ -106,6 +106,8 @@
       [activities]="items.activities"
       [activeTab]="activeTab"
       (tabChange)="onTabChanged($event)"
+      (skillSelect)="onSkillSelected($event)"
+      (activitySelect)="onActivitySelected($event)"
     ></app-skill-activity-tabs>
     <app-skill-activity-tabs
       *ngIf="stickyShow"

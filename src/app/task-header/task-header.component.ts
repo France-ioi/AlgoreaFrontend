@@ -17,6 +17,8 @@ export class TaskHeaderComponent implements OnInit {
 
   @Input() isFolded = false;
 
+  @Input() isScrolled = false;
+
   constructor() { }
 
   ngOnInit() {

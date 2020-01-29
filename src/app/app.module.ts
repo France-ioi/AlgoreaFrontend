@@ -17,14 +17,13 @@ import { TabViewModule } from 'primeng/tabview';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
 
 import { BasicComponentModule } from './basic-component/basic-component.module';
+import { ViewComponentModule } from './view-component/view-component.module';
 
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
 import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
 
 import { PickListComponent } from './pick-list/pick-list.component';
-import { SkillProgressComponent } from './skill-progress/skill-progress.component';
-import { ScoreRingComponent } from './score-ring/score-ring.component';
 import { SelectionTreeComponent } from './selection-tree/selection-tree.component';
 import { GroupNavigationTreeComponent } from './group-navigation-tree/group-navigation.component';
 import { ItemsNavigationTreeComponent } from './items-navigation-tree/items-navigation-tree.component';
@@ -43,8 +42,6 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   declarations: [
     AppComponent,
     PickListComponent,
-    SkillProgressComponent,
-    ScoreRingComponent,
     SelectionTreeComponent,
     GroupNavigationTreeComponent,
     ItemsNavigationTreeComponent,
@@ -69,7 +66,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     PerfectScrollbarModule,
     ScrollPanelModule,
     AngularResizedEventModule,
-    BasicComponentModule
+    BasicComponentModule,
+    ViewComponentModule
   ],
   providers: [
     {

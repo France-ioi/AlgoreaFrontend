@@ -6,12 +6,12 @@
     </span>
     <span class="user-info">
       <span class="user-image">
-        <img src="assets/images/_messi.jpg" width="28px" height="28px" />
+        <img src="assets/images/{{data.image}}" width="28px" height="28px" />
       </span>
       <span class="user-name">{{ data.name }}</span>
     </span>
-    <span class="alarms" *ngIf="data.alarm > 0">
-      <span class="alarm-number">{{ data.alarm }}</span>
+    <span class="notifications" *ngIf="data.notification > 0">
+      <span class="notification-number">{{ data.notification }}</span>
       <i class="far fa-bell"></i>
     </span>
     <span class="sign-out">
@@ -27,8 +27,8 @@
   <span class="title-collapse" (click)="onFold($event)" [ngClass]="{down: !folded}">
     <img src="assets/images/header-open.svg" />
   </span>
-  <span class="alarms" *ngIf="data.alarm > 0">
-    <span class="alarm-number">{{ data.alarm }}</span>
+  <span class="notifications" *ngIf="data.notification > 0">
+    <span class="notification-number">{{ data.notification }}</span>
     <i class="far fa-bell"></i>
   </span>
 </div>

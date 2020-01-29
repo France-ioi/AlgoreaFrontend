@@ -3,12 +3,13 @@
     *ngIf="isStarted"
     displayedScore="75"
     currentScore="80"
+    [ngStyle]="{'opacity': isScrolled ? 0 : 1}"
   ></app-score-ring>
   <div *ngIf="!isStarted" class="task-user-image">
     <img src="assets/images/_messi.jpg" width="50px" height="50px" />
   </div>
   <div class="task-title">
-    <p>Exercice lorem ipsum</p>
+    <p [ngStyle]="{'opacity': isScrolled ? 0 : 1}">Exercice lorem ipsum</p>
     <span>Subtitle for the task</span>
   </div>
   <div *ngIf="!isStarted; then cordBlock; else userBlock"></div>
@@ -35,10 +36,10 @@
       </span>
       <span class="user-id">CyrilK89</span>
     </div>
-    <span class="clock-icon" [ngClass]="{ finished: isFinished }">
+    <span class="clock-icon" [ngClass]="{ finished: isFinished }" [ngStyle]="{'opacity': isScrolled ? 0 : 1}">
       <i class="fa fa-clock"></i>
     </span>
-    <span class="remaining-time" [ngClass]="{ finished: isFinished }">
+    <span class="remaining-time" [ngClass]="{ finished: isFinished }" [ngStyle]="{'opacity': isScrolled ? 0 : 1}">
       00:03:10
     </span>
   </ng-template>

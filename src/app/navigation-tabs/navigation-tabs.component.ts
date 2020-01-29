@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges, SimpleChanges, ViewChild, ElementRef, NgZone } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges, ViewChild, ElementRef, NgZone, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-navigation-tabs',
@@ -11,6 +11,9 @@ export class NavigationTabsComponent implements OnInit, OnChanges {
 
   @ViewChild('scrollPanel', {static: false}) scrollPanel;
   @ViewChild('groupPanel', {static: false}) groupPanel;
+
+  @Output() skillSelect = new EventEmitter<any>();
+  @Output() activitySelect = new EventEmitter<any>();
 
   currentUser;
   groupShow = true;
@@ -99,6 +102,14 @@ export class NavigationTabsComponent implements OnInit, OnChanges {
 
   onSelectGroup(e, idx) {
     this.selectedGroup = idx;
+  }
+
+  onSkillSelected(e) {
+    this.skillSelect.emit(e);
+  }
+
+  onActivitySelected(e) {
+    this.activitySelect.emit(e);
   }
 
 }

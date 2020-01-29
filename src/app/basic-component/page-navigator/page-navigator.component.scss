@@ -18,6 +18,7 @@
     width: 28px;
     border-radius: 28px;
     margin-right: 5px;
+    margin-left: 10px;
   }
 
   .navigator {
@@ -32,5 +33,32 @@
         margin-right: 5px;
       }
     }
+  }
+
+  .top-bar-expand {
+      border-left: 1px solid #E0E1E5;
+      color: $base-color;
+      font-size: 18px;
+      padding-left: 10px;
+      margin-left: 10px;
+      margin-right: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: transparent;
+  }
+
+  .top-bar-menu {
+      color: white;
+      background-color: $base-color;
+      border-top-left-radius: 28px;
+      border-bottom-left-radius: 28px;
+      padding-left: 15px;
+      padding-right: 10px;
+      height: 28px;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
   }
 }

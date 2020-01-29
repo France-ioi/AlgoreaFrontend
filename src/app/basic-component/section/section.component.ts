@@ -8,6 +8,7 @@ import { Component, OnInit, Input } from '@angular/core';
 export class SectionComponent implements OnInit {
   @Input() icon;
   @Input() title;
+  @Input() hideBorder = false;
 
   constructor() { }
 

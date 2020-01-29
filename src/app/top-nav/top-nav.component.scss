@@ -37,7 +37,7 @@ $nav-control-border: #5c5c5c;
       }
     }
 
-    .alarms {
+    .notifications {
       margin-left: 15px;
       margin-right: 0;
     }
@@ -84,12 +84,12 @@ $nav-control-border: #5c5c5c;
     margin-right: 5px;
   }
 
-  .alarms {
+  .notifications {
     margin-right: 10px;
     width: 30px;
     position: relative;
 
-    .alarm-number {
+    .notification-number {
       position: absolute;
       display: inline-block;
       top: 3px;

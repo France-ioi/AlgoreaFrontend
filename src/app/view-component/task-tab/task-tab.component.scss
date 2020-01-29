@@ -1,0 +1,138 @@
+@import 'src/colors.scss';
+
+:host ::ng-deep .mat-tab-header {
+  border-bottom: none;
+  .mat-tab-label-container {
+    .mat-ink-bar {
+      display: none;
+    }
+
+    .mat-tab-labels {
+      background-color: white;
+      .mat-tab-label {
+        background-color: $base-bk-color;
+        border-right: 1px solid $light-border-color;
+        &.mat-tab-label-active {
+          background-color: white;
+          border-right-color: transparent;
+          color: $base-color;
+          border-top: 3px solid $base-color;
+        }
+        &.mat-tab-label-active + .mat-tab-label {
+          border-bottom-left-radius: 10px;
+        }
+        &.mat-tab-label-before-active {
+          border-bottom-right-radius: 10px;
+        }
+        .mat-tab-label-content {
+          i {
+            margin-right: 15px;
+          }
+        }
+      }
+    }
+  }
+}
+
+:host ::ng-deep .mat-tab-body-wrapper {
+  .mat-tab-body {
+    background-color: white;
+
+    .desc-image {
+      padding: 20px;
+      width: 100%;
+      .image {
+        width: 100%;
+        height: 500px;
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-size: cover;
+      }
+    }
+
+    .validation-text {
+      padding-left: 70px;
+      color: $base-color;
+      font-size: 16px;
+    }
+
+    .data-list-container {
+      list-style: none;
+      padding-left: 0;
+      color: $dark-text-color;
+
+      &.activity {
+        padding: 20px;
+        li {
+          display: flex;
+          align-items: center;
+          border-bottom: none;
+
+          .activity-progress {
+            width: 50px;
+          }
+          
+          .activity-content {
+            display: flex;
+            flex: 1;
+            padding: 7px 0;
+            border-bottom: 1px solid $light-border-color;
+
+            &.locked {
+              color: $light-text-color;
+            }
+
+            .activity-title {
+              flex: 1;
+            }
+
+            .activity-status {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              margin-right: 20px;
+            }
+          }
+        }
+      }
+
+      &.sub-skill {
+        li {
+          margin-left: -40px;
+          border-bottom: none;
+          display: flex;
+          align-items: center;
+
+          .skill-icon {
+            width: 35px;
+          }
+
+          .skill-content {
+            display: flex;
+            flex: 1;
+            padding: 7px 0;
+            border-bottom: 1px solid $light-border-color;
+          }
+        }
+      }
+      
+      li {
+        display: flex;
+        border-bottom: 1px solid $light-border-color;
+        padding: 7px 0;
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        .skill-icon {
+          margin-right: 5px;
+        }
+
+        .skill-title {
+          flex: 1;
+        }
+      }
+    }
+  }
+}
