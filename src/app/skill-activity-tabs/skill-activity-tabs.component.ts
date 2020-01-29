@@ -12,6 +12,8 @@ export class SkillActivityTabsComponent implements OnInit {
   @Input() activeTab;
 
   @Output() tabChange = new EventEmitter<number>();
+  @Output() skillSelect = new EventEmitter<any>();
+  @Output() activitySelect = new EventEmitter<any>();
 
   constructor() { }
 
@@ -20,6 +22,15 @@ export class SkillActivityTabsComponent implements OnInit {
 
   tabChanged(e) {
     this.tabChange.emit(e.index);
+  }
+
+  onSkillSelected(e) {
+    this.skillSelect.emit(e);
+  }
+
+  onActivitySelected(e) {
+    this.activitySelect.emit(e);
+    // console.log(e);
   }
 
 }

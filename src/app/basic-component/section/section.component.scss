@@ -3,6 +3,10 @@
 .section-container {
   margin-top: 30px;
   border-bottom: 1px solid $light-border-color;
+
+  &.no-border {
+    border-bottom: none;
+  }
   
   .section-header {
     display: flex;

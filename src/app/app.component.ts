@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { PickListType, PickListColor } from './pick-list/pick-list.component';
-import { ProgressType } from './skill-progress/skill-progress.component';
+import { ProgressType } from './basic-component/skill-progress/skill-progress.component';
 import { NodeService } from './services/node-service.service';
 import * as _ from 'lodash';
 
@@ -74,6 +74,8 @@ export class AppComponent {
   groups;
   trees;
 
+  allowFullScreen = false;
+
   breaddata = {
     selectedID: 42,
     path: [
@@ -107,60 +109,60 @@ export class AppComponent {
     groups: {
       manage: [
         {
-          'title': 'Big root',
-          'type': 'folder',
-          'icons': 'fa fa-home',
-          'children': [
+          title: 'Big root',
+          type: 'folder',
+          icons: 'fa fa-home',
+          children: [
             {
-              'title': 'Big root1',
-              'type': 'folder',
-              'progress': {
-                'currentScore': 50,
-                'displayedScore': 30
+              title: 'Big root1',
+              type: 'folder',
+              progress: {
+                currentScore: 50,
+                displayedScore: 30
               },
-              'children': [
+              children: [
                 {
-                  'title': 'Documents',
-                  'icons': 'fa fa-folder',
-                  'type': 'folder',
-                  'children': [
+                  title: 'Documents',
+                  icons: 'fa fa-folder',
+                  type: 'folder',
+                  children: [
                     {
-                      'title': 'Work',
-                      'type': 'folder',
-                      'children': [
+                      title: 'Work',
+                      type: 'folder',
+                      children: [
                         {
-                          'title': 'Expenses.doc',
-                          'type': 'leaf'
+                          title: 'Expenses.doc',
+                          type: 'leaf'
                         },
                         {
-                          'title': 'Resume.doc',
-                          'type': 'leaf'
+                          title: 'Resume.doc',
+                          type: 'leaf'
                         }
                       ]
                     },
                     {
-                      'title': 'Resume.doc',
-                      'type': 'leaf'
+                      title: 'Resume.doc',
+                      type: 'leaf'
                     },
                     {
-                      'title': 'Home',
-                      'type': 'folder',
-                      'children': [
+                      title: 'Home',
+                      type: 'folder',
+                      children: [
                         {
-                          'title': 'Invoices.txt',
-                          'type': 'leaf'
+                          title: 'Invoices.txt',
+                          type: 'leaf'
                         },
                         {
-                          'title': 'Work',
-                          'type': 'folder',
-                          'children': [
+                          title: 'Work',
+                          type: 'folder',
+                          children: [
                             {
-                              'title': 'Expenses.doc',
-                              'type': 'leaf'
+                              title: 'Expenses.doc',
+                              type: 'leaf'
                             },
                             {
-                              'title': 'Resume.doc',
-                              'type': 'leaf'
+                              title: 'Resume.doc',
+                              type: 'leaf'
                             }
                           ]
                         }
@@ -169,52 +171,52 @@ export class AppComponent {
                   ]
                 },
                 {
-                  'title': 'Pictures',
-                  'type': 'folder',
-                  'children': [
+                  title: 'Pictures',
+                  type: 'folder',
+                  children: [
                     {
-                      'title': 'barcelona.jpg',
-                      'type': 'leaf'
+                      title: 'barcelona.jpg',
+                      type: 'leaf'
                     },
                     {
-                      'title': 'logo.jpg',
-                      'type': 'leaf'
+                      title: 'logo.jpg',
+                      type: 'leaf'
                     },
                     {
-                      'title': 'primeui.png',
-                      'type': 'leaf'
+                      title: 'primeui.png',
+                      type: 'leaf'
                     }
                   ]
                 },
                 {
-                  'title': 'Movies',
-                  'type': 'folder',
-                  'children': [
+                  title: 'Movies',
+                  type: 'folder',
+                  children: [
                     {
-                      'title': 'Al Pacino',
-                      'type': 'folder',
-                      'children': [
+                      title: 'Al Pacino',
+                      type: 'folder',
+                      children: [
                         {
-                          'title': 'Scarface',
-                          'type': 'leaf'
+                          title: 'Scarface',
+                          type: 'leaf'
                         },
                         {
-                          'title': 'Serpico',
-                          'type': 'leaf'
+                          title: 'Serpico',
+                          type: 'leaf'
                         }
                       ]
                     },
                     {
-                      'title': 'Robert De Niro',
-                      'type': 'folder',
-                      'children': [
+                      title: 'Robert De Niro',
+                      type: 'folder',
+                      children: [
                         {
-                          'title': 'Goodfellas',
-                          'type': 'leaf'
+                          title: 'Goodfellas',
+                          type: 'leaf'
                         },
                         {
-                          'title': 'Untouchables',
-                          'type': 'leaf'
+                          title: 'Untouchables',
+                          type: 'leaf'
                         }
                       ]
                     }
@@ -225,60 +227,60 @@ export class AppComponent {
           ]
         },
         {
-          'title': 'Big root',
-          'type': 'folder',
-          'icons': 'fa fa-home',
-          'children': [
+          title: 'Big root',
+          type: 'folder',
+          icons: 'fa fa-home',
+          children: [
             {
-              'title': 'Big root1',
-              'type': 'folder',
-              'progress': {
-                'currentScore': 50,
-                'displayedScore': 30
+              title: 'Big root1',
+              type: 'folder',
+              progress: {
+                currentScore: 50,
+                displayedScore: 30
               },
-              'children': [
+              children: [
                 {
-                  'title': 'Documents',
-                  'icons': 'fa fa-folder',
-                  'type': 'folder',
-                  'children': [
+                  title: 'Documents',
+                  icons: 'fa fa-folder',
+                  type: 'folder',
+                  children: [
                     {
-                      'title': 'Work',
-                      'type': 'folder',
-                      'children': [
+                      title: 'Work',
+                      type: 'folder',
+                      children: [
                         {
-                          'title': 'Expenses.doc',
-                          'type': 'leaf'
+                          title: 'Expenses.doc',
+                          type: 'leaf'
                         },
                         {
-                          'title': 'Resume.doc',
-                          'type': 'leaf'
+                          title: 'Resume.doc',
+                          type: 'leaf'
                         }
                       ]
                     },
                     {
-                      'title': 'Resume.doc',
-                      'type': 'leaf'
+                      title: 'Resume.doc',
+                      type: 'leaf'
                     },
                     {
-                      'title': 'Home',
-                      'type': 'folder',
-                      'children': [
+                      title: 'Home',
+                      type: 'folder',
+                      children: [
                         {
-                          'title': 'Invoices.txt',
-                          'type': 'leaf'
+                          title: 'Invoices.txt',
+                          type: 'leaf'
                         },
                         {
-                          'title': 'Work',
-                          'type': 'folder',
-                          'children': [
+                          title: 'Work',
+                          type: 'folder',
+                          children: [
                             {
-                              'title': 'Expenses.doc',
-                              'type': 'leaf'
+                              title: 'Expenses.doc',
+                              type: 'leaf'
                             },
                             {
-                              'title': 'Resume.doc',
-                              'type': 'leaf'
+                              title: 'Resume.doc',
+                              type: 'leaf'
                             }
                           ]
                         }
@@ -287,52 +289,52 @@ export class AppComponent {
                   ]
                 },
                 {
-                  'title': 'Pictures',
-                  'type': 'folder',
-                  'children': [
+                  title: 'Pictures',
+                  type: 'folder',
+                  children: [
                     {
-                      'title': 'barcelona.jpg',
-                      'type': 'leaf'
+                      title: 'barcelona.jpg',
+                      type: 'leaf'
                     },
                     {
-                      'title': 'logo.jpg',
-                      'type': 'leaf'
+                      title: 'logo.jpg',
+                      type: 'leaf'
                     },
                     {
-                      'title': 'primeui.png',
-                      'type': 'leaf'
+                      title: 'primeui.png',
+                      type: 'leaf'
                     }
                   ]
                 },
                 {
-                  'title': 'Movies',
-                  'type': 'folder',
-                  'children': [
+                  title: 'Movies',
+                  type: 'folder',
+                  children: [
                     {
-                      'title': 'Al Pacino',
-                      'type': 'folder',
-                      'children': [
+                      title: 'Al Pacino',
+                      type: 'folder',
+                      children: [
                         {
-                          'title': 'Scarface',
-                          'type': 'leaf'
+                          title: 'Scarface',
+                          type: 'leaf'
                         },
                         {
-                          'title': 'Serpico',
-                          'type': 'leaf'
+                          title: 'Serpico',
+                          type: 'leaf'
                         }
                       ]
                     },
                     {
-                      'title': 'Robert De Niro',
-                      'type': 'folder',
-                      'children': [
+                      title: 'Robert De Niro',
+                      type: 'folder',
+                      children: [
                         {
-                          'title': 'Goodfellas',
-                          'type': 'leaf'
+                          title: 'Goodfellas',
+                          type: 'leaf'
                         },
                         {
-                          'title': 'Untouchables',
-                          'type': 'leaf'
+                          title: 'Untouchables',
+                          type: 'leaf'
                         }
                       ]
                     }
@@ -345,60 +347,60 @@ export class AppComponent {
       ],
       join: [
         {
-          'title': 'Big root',
-          'type': 'folder',
-          'icons': 'fa fa-home',
-          'children': [
+          title: 'Big root',
+          type: 'folder',
+          icons: 'fa fa-home',
+          children: [
             {
-              'title': 'Big root1',
-              'type': 'folder',
-              'progress': {
-                'currentScore': 50,
-                'displayedScore': 30
+              title: 'Big root1',
+              type: 'folder',
+              progress: {
+                currentScore: 50,
+                displayedScore: 30
               },
-              'children': [
+              children: [
                 {
-                  'title': 'Documents',
-                  'icons': 'fa fa-folder',
-                  'type': 'folder',
-                  'children': [
+                  title: 'Documents',
+                  icons: 'fa fa-folder',
+                  type: 'folder',
+                  children: [
                     {
-                      'title': 'Work',
-                      'type': 'folder',
-                      'children': [
+                      title: 'Work',
+                      type: 'folder',
+                      children: [
                         {
-                          'title': 'Expenses.doc',
-                          'type': 'leaf'
+                          title: 'Expenses.doc',
+                          type: 'leaf'
                         },
                         {
-                          'title': 'Resume.doc',
-                          'type': 'leaf'
+                          title: 'Resume.doc',
+                          type: 'leaf'
                         }
                       ]
                     },
                     {
-                      'title': 'Resume.doc',
-                      'type': 'leaf'
+                      title: 'Resume.doc',
+                      type: 'leaf'
                     },
                     {
-                      'title': 'Home',
-                      'type': 'folder',
-                      'children': [
+                      title: 'Home',
+                      type: 'folder',
+                      children: [
                         {
-                          'title': 'Invoices.txt',
-                          'type': 'leaf'
+                          title: 'Invoices.txt',
+                          type: 'leaf'
                         },
                         {
-                          'title': 'Work',
-                          'type': 'folder',
-                          'children': [
+                          title: 'Work',
+                          type: 'folder',
+                          children: [
                             {
-                              'title': 'Expenses.doc',
-                              'type': 'leaf'
+                              title: 'Expenses.doc',
+                              type: 'leaf'
                             },
                             {
-                              'title': 'Resume.doc',
-                              'type': 'leaf'
+                              title: 'Resume.doc',
+                              type: 'leaf'
                             }
                           ]
                         }
@@ -407,52 +409,52 @@ export class AppComponent {
                   ]
                 },
                 {
-                  'title': 'Pictures',
-                  'type': 'folder',
-                  'children': [
+                  title: 'Pictures',
+                  type: 'folder',
+                  children: [
                     {
-                      'title': 'barcelona.jpg',
-                      'type': 'leaf'
+                      title: 'barcelona.jpg',
+                      type: 'leaf'
                     },
                     {
-                      'title': 'logo.jpg',
-                      'type': 'leaf'
+                      title: 'logo.jpg',
+                      type: 'leaf'
                     },
                     {
-                      'title': 'primeui.png',
-                      'type': 'leaf'
+                      title: 'primeui.png',
+                      type: 'leaf'
                     }
                   ]
                 },
                 {
-                  'title': 'Movies',
-                  'type': 'folder',
-                  'children': [
+                  title: 'Movies',
+                  type: 'folder',
+                  children: [
                     {
-                      'title': 'Al Pacino',
-                      'type': 'folder',
-                      'children': [
+                      title: 'Al Pacino',
+                      type: 'folder',
+                      children: [
                         {
-                          'title': 'Scarface',
-                          'type': 'leaf'
+                          title: 'Scarface',
+                          type: 'leaf'
                         },
                         {
-                          'title': 'Serpico',
-                          'type': 'leaf'
+                          title: 'Serpico',
+                          type: 'leaf'
                         }
                       ]
                     },
                     {
-                      'title': 'Robert De Niro',
-                      'type': 'folder',
-                      'children': [
+                      title: 'Robert De Niro',
+                      type: 'folder',
+                      children: [
                         {
-                          'title': 'Goodfellas',
-                          'type': 'leaf'
+                          title: 'Goodfellas',
+                          type: 'leaf'
                         },
                         {
-                          'title': 'Untouchables',
-                          'type': 'leaf'
+                          title: 'Untouchables',
+                          type: 'leaf'
                         }
                       ]
                     }
@@ -467,270 +469,314 @@ export class AppComponent {
     skills: {
       title: 'Algorithmic skills',
       data: [
-    	{
-				title: 'Graphs: methods',
-				type: 'leaf',
-				ring: true,
-				state: 'started',
-				progress: {
-					displayedScore: 100,
-					currentScore: 100
-				}
-    	},
-    	{
-				'title': 'List graph caracteristics',
-				'type': 'leaf',
-				'ring': false,
-				'state': 'never opened',
-				'progress': {
-					'displayedScore': 0,
-					'currentScore': 0
-				}
-    	},
-    	{
-				'title': 'Reduce graph size',
-				'type': 'folder',
-				'ring': false,
-				'state': 'opened',
-				'progress': {
-					'displayedScore': 90,
-					'currentScore': 90
-				},
-				'children': [
-					{
-						'title': 'Simplify or optimize manipulation',
-						'type': 'leaf',
-						'ring': true,
-						'state': 'opened',
-						'progress': {
-							'displayedScore': 30,
-							'currentScore': 30
-						}
-					},
-					{
-						'title': 'Spot symetry an convert to normal form',
-						'type': 'folder',
-						'ring': true,
-						'state': 'opened',
-						'progress': {
-							'displayedScore': 70,
-							'currentScore': 70
-						},
-						'children': [
-							{
-								'title': 'Simplify or optimize manipulation',
-								'type': 'leaf',
-								'ring': true,
-								'state': 'opened',
-								'progress': {
-									'displayedScore': 30,
-									'currentScore': 30
-								}
-							},
-							{
-								'title': 'Spot symetry an convert to normal form',
-								'type': 'leaf',
-								'ring': true,
-								'state': 'opened',
-								'progress': {
-									'displayedScore': 70,
-									'currentScore': 70
-								}
-							}
-						]
-					},
-					{
-						'title': 'Simplify or optimize manipulation',
-						'type': 'leaf',
-						'ring': false,
-						'state': 'opened',
-						'progress': {
-							'displayedScore': 30,
-							'currentScore': 30
-						}
-					},
-					{
-						'title': 'Spot symetry an convert to normal form',
-						'type': 'folder',
-						'ring': false,
-						'state': 'opened',
-						'progress': {
-							'displayedScore': 70,
-							'currentScore': 70
-						},
-						'children': [
-							{
-								'title': 'Simplify or optimize manipulation',
-								'type': 'leaf',
-								'ring': true,
-								'state': 'opened',
-								'progress': {
-									'displayedScore': 30,
-									'currentScore': 30
-								}
-							},
-							{
-								'title': 'Spot symetry an convert to normal form',
-								'type': 'leaf',
-								'ring': true,
-								'state': 'opened',
-								'progress': {
-									'displayedScore': 70,
-									'currentScore': 70
-								}
-							}
-						]
-					}
-				]
-    	},
-    	{
-				'title': 'Flood Fill',
-				'type': 'leaf',
-				'ring': true,
-				'state': 'opened',
-				'progress': {
-					'displayedScore': 70,
-					'currentScore': 70,
-					'icons': 'camera'
-				}
-			},
-			{
-				'title': 'Horizontal digging (BFS) et DijkstraHorizontal digging (BFS) et DijkstraHorizontal digging (BFS) et DijkstraHorizontal digging (BFS) et DijkstraHorizontal digging (BFS) et Dijkstra',
-				'type': 'leaf',
-				'ring': false,
-				'state': 'locked',
-				'progress': {
-					'displayedScore': 20,
-					'currentScore': 20
-				}
-			}
-    ]
+        {
+          title: 'Graphs: methods',
+          type: 'leaf',
+          ring: true,
+          state: 'started',
+          progress: {
+            displayedScore: 100,
+            currentScore: 100
+          }
+        },
+        {
+          title: 'List graph caracteristics',
+          type: 'leaf',
+          ring: false,
+          state: 'never opened',
+          progress: {
+            displayedScore: 0,
+            currentScore: 0
+          }
+        },
+        {
+          title: 'Reduce graph size',
+          type: 'folder',
+          ring: false,
+          state: 'opened',
+          progress: {
+            displayedScore: 90,
+            currentScore: 90
+          },
+          children: [
+            {
+              title: 'Simplify or optimize manipulation',
+              icon: 'progress',
+              type: 'leaf',
+              ring: true,
+              state: 'opened',
+              progress: {
+                displayedScore: 30,
+                currentScore: 30
+              }
+            },
+            {
+              title: 'Spot symetry an convert to normal form',
+              icon: 'regress',
+              type: 'folder',
+              ring: true,
+              state: 'opened',
+              progress: {
+                displayedScore: 70,
+                currentScore: 70
+              },
+              children: [
+                {
+                  title: 'Simplify or optimize manipulation',
+                  icon: 'stagnant',
+                  type: 'leaf',
+                  ring: true,
+                  state: 'opened',
+                  progress: {
+                    displayedScore: 30,
+                    currentScore: 30
+                  }
+                },
+                {
+                  title: 'Spot symetry an convert to normal form',
+                  type: 'leaf',
+                  ring: true,
+                  state: 'opened',
+                  progress: {
+                    displayedScore: 70,
+                    currentScore: 70
+                  }
+                }
+              ]
+            },
+            {
+              title: 'Simplify or optimize manipulation',
+              icon: 'stagnant',
+              type: 'leaf',
+              ring: false,
+              state: 'opened',
+              progress: {
+                displayedScore: 30,
+                currentScore: 30
+              }
+            },
+            {
+              title: 'Spot symetry an convert to normal form',
+              type: 'folder',
+              ring: false,
+              state: 'opened',
+              progress: {
+                displayedScore: 70,
+                currentScore: 70
+              },
+              children: [
+                {
+                  title: 'Simplify or optimize manipulation',
+                  type: 'leaf',
+                  ring: true,
+                  state: 'opened',
+                  progress: {
+                    displayedScore: 30,
+                    currentScore: 30
+                  }
+                },
+                {
+                  title: 'Spot symetry an convert to normal form',
+                  type: 'leaf',
+                  ring: true,
+                  state: 'opened',
+                  progress: {
+                    displayedScore: 70,
+                    currentScore: 70
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          title: 'Flood Fill',
+          type: 'leaf',
+          ring: true,
+          state: 'opened',
+          progress: {
+            displayedScore: 70,
+            currentScore: 70,
+            icons: 'camera'
+          }
+        },
+        {
+          title: 'Horizontal digging (BFS) et DijkstraHorizontal digging (BFS) et DijkstraHorizontal digging (BFS) et DijkstraHorizontal digging (BFS) et DijkstraHorizontal digging (BFS) et Dijkstra',
+          type: 'leaf',
+          ring: false,
+          state: 'locked',
+          progress: {
+            displayedScore: 20,
+            currentScore: 20
+          }
+        }
+      ]
   },
     activities: {
       title: 'My Activities',
       data: [
-    	{
-				'title': 'List graph caracteristics',
-				'type': 'leaf',
-				'ring': false,
-				'state': 'never opened',
-				'progress': {
-					'displayedScore': 0,
-					'currentScore': 0
-				}
-    	},
-    	{
-				'title': 'Reduce graph size',
-				'type': 'folder',
-				'ring': false,
-				'state': 'opened',
-				'progress': {
-					'displayedScore': 90,
-					'currentScore': 90
-				},
-				'children': [
-					{
-						'title': 'Simplify or optimize manipulation',
-						'type': 'leaf',
-						'ring': true,
-						'state': 'opened',
-						'progress': {
-							'displayedScore': 30,
-							'currentScore': 30
-						}
-					},
-					{
-						'title': 'Spot symetry an convert to normal form',
-						'type': 'folder',
-						'ring': true,
-						'state': 'opened',
-						'progress': {
-							'displayedScore': 70,
-							'currentScore': 70
-						},
-						'children': [
-							{
-								'title': 'Simplify or optimize manipulation',
-								'type': 'leaf',
-								'ring': true,
-								'state': 'opened',
-								'progress': {
-									'displayedScore': 30,
-									'currentScore': 30
-								}
-							},
-							{
-								'title': 'Spot symetry an convert to normal form',
-								'type': 'leaf',
-								'ring': true,
-								'state': 'opened',
-								'progress': {
-									'displayedScore': 70,
-									'currentScore': 70
-								}
-							}
-						]
-					},
-					{
-						'title': 'Simplify or optimize manipulation',
-						'type': 'leaf',
-						'ring': false,
-						'state': 'opened',
-						'progress': {
-							'displayedScore': 30,
-							'currentScore': 30
-						}
-					},
-					{
-						'title': 'Spot symetry an convert to normal form',
-						'type': 'folder',
-						'ring': false,
-						'state': 'opened',
-						'progress': {
-							'displayedScore': 70,
-							'currentScore': 70
-						},
-						'children': [
-							{
-								'title': 'Simplify or optimize manipulation',
-								'type': 'leaf',
-								'ring': true,
-								'state': 'opened',
-								'progress': {
-									'displayedScore': 30,
-									'currentScore': 30
-								}
-							},
-							{
-								'title': 'Spot symetry an convert to normal form',
-								'type': 'leaf',
-								'ring': true,
-								'state': 'opened',
-								'progress': {
-									'displayedScore': 70,
-									'currentScore': 70
-								}
-							}
-						]
-					}
-				]
-    	},
-			{
-				'title': 'Horizontal digging (BFS) et DijkstraHorizontal digging (BFS) et DijkstraHorizontal digging (BFS) et DijkstraHorizontal digging (BFS) et DijkstraHorizontal digging (BFS) et Dijkstra',
-				'type': 'leaf',
-				'ring': false,
-				'state': 'locked',
-				'progress': {
-					'displayedScore': 20,
-					'currentScore': 20
-				}
-			}
+        {
+          title: 'List graph caracteristics',
+          type: 'leaf',
+          ring: false,
+          state: 'never opened',
+          progress: {
+            displayedScore: 0,
+            currentScore: 0
+          },
+          category: {
+            icon: 'fa fa-book-open',
+            label: 'Discovery'
+          }
+        },
+        {
+          title: 'Reduce graph size',
+          type: 'folder',
+          ring: false,
+          state: 'opened',
+          progress: {
+            displayedScore: 90,
+            currentScore: 90
+          },
+          children: [
+            {
+              title: 'Simplify or optimize manipulation',
+              type: 'leaf',
+              ring: true,
+              state: 'opened',
+              hasKey: true,
+              progress: {
+                displayedScore: 30,
+                currentScore: 30
+              },
+              category: {
+                icon: 'fa fa-book-open',
+                label: 'Discovery'
+              }
+            },
+            {
+              title: 'Spot symetry an convert to normal form',
+              type: 'folder',
+              ring: true,
+              state: 'opened',
+              progress: {
+                displayedScore: 70,
+                currentScore: 70
+              },
+              category: {
+                icon: 'fa fa-video',
+                label: 'Validation'
+              },
+              children: [
+                {
+                  title: 'Simplify or optimize manipulation',
+                  type: 'leaf',
+                  ring: true,
+                  state: 'opened',
+                  progress: {
+                    displayedScore: 30,
+                    currentScore: 30
+                  },
+                  category: {
+                    icon: 'fa fa-book-open',
+                    label: 'Discovery'
+                  }
+                },
+                {
+                  title: 'Spot symetry an convert to normal form',
+                  type: 'leaf',
+                  ring: true,
+                  state: 'opened',
+                  progress: {
+                    displayedScore: 70,
+                    currentScore: 70
+                  },
+                  category: {
+                    icon: 'fa fa-book-open',
+                    label: 'Discovery'
+                  }
+                }
+              ]
+            },
+            {
+              title: 'Simplify or optimize manipulation',
+              type: 'leaf',
+              ring: false,
+              state: 'opened',
+              isLocked: true,
+              progress: {
+                displayedScore: 30,
+                currentScore: 30
+              },
+              category: {
+                icon: 'fa fa-laptop-code',
+                label: 'Training'
+              }
+            },
+            {
+              title: 'Spot symetry an convert to normal form',
+              type: 'folder',
+              ring: false,
+              state: 'opened',
+              progress: {
+                displayedScore: 70,
+                currentScore: 70
+              },
+              category: {
+                icon: 'fa fa-code',
+                label: 'Course'
+              },
+              children: [
+                {
+                  title: 'Simplify or optimize manipulation',
+                  type: 'leaf',
+                  ring: true,
+                  state: 'opened',
+                  progress: {
+                    displayedScore: 30,
+                    currentScore: 30
+                  },
+                  category: {
+                    icon: 'fa fa-book-open',
+                    label: 'Discovery'
+                  }
+                },
+                {
+                  title: 'Spot symetry an convert to normal form',
+                  type: 'leaf',
+                  ring: true,
+                  state: 'opened',
+                  progress: {
+                    displayedScore: 70,
+                    currentScore: 70
+                  },
+                  category: {
+                    icon: 'fa fa-book-open',
+                    label: 'Discovery'
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          // tslint:disable-next-line: max-line-length
+          title: 'Horizontal digging (BFS) et DijkstraHorizontal digging (BFS) et DijkstraHorizontal digging (BFS) et DijkstraHorizontal digging (BFS) et DijkstraHorizontal digging (BFS) et Dijkstra',
+          type: 'leaf',
+          ring: false,
+          state: 'locked',
+          progress: {
+            displayedScore: 20,
+            currentScore: 20
+          }
+        }
     ]}
   };
 
   user = {
     name: 'Concours castor',
-    alarm: 0
+    notification: 2,
+    image: '_messi.jpg'
   };
 
   personal = [
@@ -867,8 +913,14 @@ export class AppComponent {
     }
   };
 
+
   collapsed = false;
   folded = false;
+  scrolled = false;
+
+  activityORSkill = false;
+
+  taskdata;
 
   constructor(private nodeService: NodeService) {}
 
@@ -888,6 +940,7 @@ export class AppComponent {
 
   onFold(e) {
     this.folded = e;
+    console.log(e);
   }
 
   onDisplayScoreChange(e) {
@@ -900,5 +953,25 @@ export class AppComponent {
 
   onIsStartedChange(e) {
     this.isStarted = e.srcElement.checked;
+  }
+
+  @HostListener('window:scroll', ['$event'])
+  onScrollContent(e) {
+    if (window.pageYOffset > 40 && !this.scrolled) {
+      this.scrolled = true;
+    } else if (window.pageYOffset <= 40 && this.scrolled) {
+      this.scrolled = false;
+    }
+  }
+
+  onSkillSelected(e) {
+    this.activityORSkill = false;
+    this.taskdata = e;
+  }
+
+  onActivitySelected(e) {
+    this.activityORSkill = true;
+    this.taskdata = e;
+    console.log(this.activityORSkill, e);
   }
 }

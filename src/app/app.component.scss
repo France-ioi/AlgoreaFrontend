@@ -1,239 +1,231 @@
-@import 'src/colors.scss';
+@import "src/colors.scss";
 
 .container {
-    // max-width: 960px;
-    // margin: 0 auto;
-    width: 100%;
-    position: relative;
+  // max-width: 960px;
+  // margin: 0 auto;
+  width: 100%;
+  position: relative;
+  background-color: $base-bk-color;
+
+  .left {
+    width: 400px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    background-color: $nav-bk-color;
+    height: 100%;
+
+    &.collapsed {
+      left: -400px;
+      transition: left 1s;
+      -webkit-transition: left 1s;
+      -moz-transition: left 1s;
+      -o-transition: left 1s;
+    }
+
+    &.expanded {
+      transition: left 1s;
+      -webkit-transition: left 1s;
+      -moz-transition: left 1s;
+      -o-transition: left 1s;
+    }
+  }
+
+  .right {
+    margin-left: 400px;
     background-color: $base-bk-color;
+    position: relative;
 
-    .left {
-        width: 400px;
-        position: fixed;
+    &.collapsed {
+      margin-left: 0;
+      transition: margin-left 1s;
+      -webkit-transition: margin-left 1s;
+      -moz-transition: margin-left 1s;
+      -o-transition: margin-left 1s;
+
+      .top-bar {
         left: 0;
-        top: 0;
-        bottom: 0;
-        background-color: $nav-bk-color;
+        transition: left 1s;
+        -webkit-transition: left 1s;
+        -moz-transition: left 1s;
+        -o-transition: left 1s;
+      }
+    }
+
+    &.expanded {
+      transition: margin-left 1s;
+      -webkit-transition: margin-left 1s;
+      -moz-transition: margin-left 1s;
+      -o-transition: margin-left 1s;
+
+      .top-bar {
+        transition: left 1s;
+        -webkit-transition: left 1s;
+        -moz-transition: left 1s;
+        -o-transition: left 1s;
+      }
+    }
+
+    .top-bar {
+      position: fixed;
+      left: 400px;
+      top: 0;
+      right: 0;
+      height: 43px;
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid #e0e1e5;
+      background-color: $base-bk-color;
+
+      app-breadcrumb {
+        flex: 1;
+      }
+      z-index: 101;
+
+      .folded-top-bar {
+        margin-left: 10px;
+        display: flex;
+        align-items: center;
         height: 100%;
+        flex: 1;
 
-        &.collapsed {
-            left: -400px;
-            transition: left 1s;
-            -webkit-transition: left 1s;        
-            -moz-transition: left 1s;        
-            -o-transition: left 1s;
+        .task-user-image {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          img {
+            border-radius: 100px;
+          }
         }
 
-        &.expanded {
-            transition: left 1s;
-            -webkit-transition: left 1s;        
-            -moz-transition: left 1s;        
-            -o-transition: left 1s;
-        }
-    }
+        .task-title {
+          margin-left: 15px;
+          flex: 1;
 
-    .right {
-        margin-left: 400px;
-        background-color: $base-bk-color;
-        position: relative;
-
-        &.collapsed {
-            margin-left: 0;
-            transition: margin-left 1s;
-            -webkit-transition: margin-left 1s;        
-            -moz-transition: margin-left 1s;        
-            -o-transition: margin-left 1s;
+          p {
+            font-size: 30px;
+            margin: 0;
+            margin-bottom: 5px;
+          }
+          span {
+            color: $base-text-color;
+          }
         }
 
-        &.expanded {
-            transition: margin-left 1s;
-            -webkit-transition: margin-left 1s;        
-            -moz-transition: margin-left 1s;        
-            -o-transition: margin-left 1s;
-        }
+        .user-info {
+          display: flex;
+          align-items: center;
+          margin-right: 5px;
 
-        .top-bar {
-            position: absolute;
-            left: 0;
-            top: 0;
-            right: 0;
-            display: flex;
-            align-items: center;
-            border-bottom: 1px solid #E0E1E5;
-            background-color: $base-bk-color;
-
-            app-breadcrumb {
-                flex: 1;
-            }
-            z-index: 101;
-
-            .folded-top-bar {
-                margin-left: 10px;
-                display: flex;
-                align-items: center;
-                flex: 1;
-
-                .task-user-image {
-                  display: flex;
-                  flex-direction: column;
-                  align-items: center;
-                  img {
-                    border-radius: 100px;
-                  }
-                }
-
-                .task-title {
-                  margin-left: 15px;
-                  flex: 1;
-              
-                  p {
-                    font-size: 30px;
-                    margin: 0;
-                    margin-bottom: 5px;
-                  }
-                  span {
-                    color: $base-text-color;
-                  }
-                }
-              
-                .user-info {
-                  display: flex;
-                  align-items: center;
-                  margin-right: 5px;
-              
-                  span {
-                    display: block;
-              
-                    &.user-avatar {
-                      position: relative;
-                    }
-              
-                    &.user-id {
-                      color: $base-color;
-                      font-size: 20px;
-                      font-weight: bold;
-                    }
-                  }
-                }
-              
-                .clock-icon {
-                  color: $dark-text-color;
-                  font-size: 24px;
-                  font-weight: bold;
-                  margin-right: 5px;
-              
-                  &.finished {
-                    color: $light-text-color;
-                  }
-                }
-              
-                .remaining-time {
-                  color: $dark-text-color;
-                  font-size: 24px;
-                  font-weight: bold;
-              
-                  &.finished {
-                    color: $light-text-color;
-                  }
-                }
-
-                .top-bar-expand {
-                    border-left: 1px solid #E0E1E5;
-                    color: $base-color;
-                    font-size: 18px;
-                    margin-left: 10px;
-                    margin-right: 10px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                }
-
-                .top-bar-menu {
-                    color: white;
-                    background-color: $base-color;
-                    border-top-left-radius: 28px;
-                    border-bottom-left-radius: 28px;
-                    padding-left: 15px;
-                    padding-right: 10px;
-                    height: 28px;
-                    font-size: 16px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                }
-            }
-        }
-
-        app-task-header {
-            width: 100%;
+          span {
             display: block;
-            position: absolute;
-            z-index: 0;
-            top: 43px;
-            left: 0px;
-            padding-left: 20px;
-            right: 0;
-            background-color: $base-bk-color;
 
-            &.folded {
-              top: -120px;
-              transition: top 1s;
-              -webkit-transition: top 1s;
-              -moz-transition: top 1s;
-              -o-transition: top 1s;
+            &.user-avatar {
+              position: relative;
             }
-          
-            &.unfolded {
-              transition: top 1s;
-              -webkit-transition: top 1s;
-              -moz-transition: top 1s;
-              -o-transition: top 1s;
+
+            &.user-id {
+              color: $base-color;
+              font-size: 20px;
+              font-weight: bold;
             }
+          }
         }
 
-        .main-content {
-            position: absolute;
-            padding-left: 20px;
-            top: 163px;
-            left: 0px;
-            right: 0;
-            background-color: $base-bk-color;
+        .clock-icon {
+          color: $dark-text-color;
+          font-size: 24px;
+          font-weight: bold;
+          margin-right: 5px;
 
-            &.folded {
-              top: 43px;
-              transition: top 1s;
-              -webkit-transition: top 1s;
-              -moz-transition: top 1s;
-              -o-transition: top 1s;
-            }
-          
-            &.unfolded {
-              transition: top 1s;
-              -webkit-transition: top 1s;
-              -moz-transition: top 1s;
-              -o-transition: top 1s;
-            }
+          &.finished {
+            color: $light-text-color;
+          }
         }
 
-        .button-container {
-            margin-top: 10px;
-            display: flex;
-            flex-wrap: wrap;
+        .remaining-time {
+          color: $dark-text-color;
+          font-size: 24px;
+          font-weight: bold;
 
-            app-button {
-                margin-right: 10px;
-                margin-top: 10px;
-            }
+          &.finished {
+            color: $light-text-color;
+          }
         }
+      }
     }
+
+    app-task-header {
+      width: 100%;
+      display: block;
+      position: absolute;
+      z-index: 0;
+      top: 43px;
+      left: 0px;
+      padding-left: 20px;
+      right: 0;
+      background-color: $base-bk-color;
+
+      &.folded {
+        top: -120px;
+        transition: top 1s;
+        -webkit-transition: top 1s;
+        -moz-transition: top 1s;
+        -o-transition: top 1s;
+      }
+
+      &.unfolded {
+        transition: top 1s;
+        -webkit-transition: top 1s;
+        -moz-transition: top 1s;
+        -o-transition: top 1s;
+      }
+    }
+
+    .main-content {
+      position: absolute;
+      padding-left: 20px;
+      top: 163px;
+      left: 0px;
+      right: 0;
+      background-color: $base-bk-color;
+
+      &.folded {
+        top: 43px;
+        transition: top 1s;
+        -webkit-transition: top 1s;
+        -moz-transition: top 1s;
+        -o-transition: top 1s;
+      }
+
+      &.unfolded {
+        transition: top 1s;
+        -webkit-transition: top 1s;
+        -moz-transition: top 1s;
+        -o-transition: top 1s;
+      }
+    }
+
+    .button-container {
+      margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+
+      app-button {
+        margin-right: 10px;
+        margin-top: 10px;
+      }
+    }
+  }
 }
 
 .score-ring-container {
-    display: flex; 
-    flex-direction: column; 
-    width: 100%;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 }
 
 .score-ring-container app-skill-progress {
-    margin: 5px;
+  margin: 5px;
 }

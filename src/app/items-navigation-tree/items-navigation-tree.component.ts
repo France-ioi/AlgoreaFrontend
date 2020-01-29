@@ -8,6 +8,7 @@ import {
   EventEmitter
 } from '@angular/core';
 import { TreeNode } from 'primeng/api';
+import { faTintSlash } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-items-navigation-tree',
@@ -17,7 +18,11 @@ import { TreeNode } from 'primeng/api';
 export class ItemsNavigationTreeComponent implements OnInit, OnChanges {
   @Input() data: TreeNode[];
 
+  // tslint:disable-next-line: no-output-on-prefix
   @Output() onNodeExpand = new EventEmitter<any>();
+  // tslint:disable-next-line: no-output-on-prefix
+  @Output() onNodeSelect = new EventEmitter<any>();
+
   spread = [];
 
   constructor() {}
@@ -72,5 +77,6 @@ export class ItemsNavigationTreeComponent implements OnInit, OnChanges {
     node.checked = true;
 
     node.expanded = true;
+    this.onNodeSelect.emit(node);
   }
 }

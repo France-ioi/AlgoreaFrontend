@@ -11,6 +11,9 @@ import { SectionComponent } from './section/section.component';
 import { DataListComponent } from './data-list/data-list.component';
 import { IoiTabComponent } from './ioi-tab/ioi-tab.component';
 import { PageNavigatorComponent } from './page-navigator/page-navigator.component';
+import { SkillProgressComponent } from './skill-progress/skill-progress.component';
+import { ScoreRingComponent } from './score-ring/score-ring.component';
+import { StateWidgetComponent } from './state-widget/state-widget.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +21,10 @@ import { PageNavigatorComponent } from './page-navigator/page-navigator.componen
     SectionComponent,
     DataListComponent,
     IoiTabComponent,
-    PageNavigatorComponent
+    PageNavigatorComponent,
+    SkillProgressComponent,
+    ScoreRingComponent,
+    StateWidgetComponent
   ],
   imports: [
     CommonModule,
@@ -34,7 +40,10 @@ import { PageNavigatorComponent } from './page-navigator/page-navigator.componen
     DataListComponent,
     MatTabsModule,
     IoiTabComponent,
-    PageNavigatorComponent
+    PageNavigatorComponent,
+    SkillProgressComponent,
+    ScoreRingComponent,
+    StateWidgetComponent
   ]
 })
 export class BasicComponentModule { }

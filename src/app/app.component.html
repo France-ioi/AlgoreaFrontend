@@ -313,6 +313,8 @@
       [user]="user"
       [collapsed]="collapsed"
       (collapseEvent)="onCollapse($event)"
+      (skillSelect)="onSkillSelected($event)"
+      (activitySelect)="onActivitySelected($event)"
     ></app-left-nav>
   </div>
   <div class="right" [ngClass]="{ collapsed: collapsed, expanded: !collapsed }">
@@ -320,14 +322,15 @@
       <app-top-nav
         *ngIf="collapsed"
         [collapsed]="collapsed"
+        [folded]="folded"
         [data]="user"
         (collapseEvent)="onCollapse($event)"
         (foldEvent)="onFold($event)"
         templateId="1"
       ></app-top-nav>
-      <app-breadcrumb *ngIf="!folded" [items]="breaddata"></app-breadcrumb>
-      <app-page-navigator *ngIf="!folded"></app-page-navigator>
-      <div class="folded-top-bar" *ngIf="folded">
+      <app-breadcrumb *ngIf="!folded && !scrolled" [items]="breaddata"></app-breadcrumb>
+      <app-page-navigator *ngIf="!folded && !scrolled" ></app-page-navigator>
+      <div class="folded-top-bar" *ngIf="folded || scrolled">
         <app-score-ring
           *ngIf="isStarted"
           displayedScore="75"
@@ -352,344 +355,19 @@
         <span class="remaining-time" [ngClass]="{ finished: false }">
           00:03:10
         </span>
-        <span class="top-bar-expand">
-          <i class="fa fa-expand-arrows-alt"></i>
-        </span>
-        <span class="top-bar-menu">
-          <i class="fa fa-th-large"></i>
-        </span>
+        <app-page-navigator allowFullScreen="false" navigationMode="nextAndPrev"></app-page-navigator>
       </div>
     </div>
     <app-task-header
       [ngClass]="{ folded: folded, unfolded: !folded }"
+      [isScrolled]="scrolled"
       [isFolded]="folded"
       [isStarted]="isStarted"
       [isCollapsed]="collapsed"
     ></app-task-header>
     <div class="main-content" [ngClass]="{ folded: folded, unfolded: !folded }">
       <div>
-        <app-ioi-tab [items]="tabs">
-          <div class="mat-tab-content-wrapper"></div>
-        </app-ioi-tab>
-        <!-- <mat-tab-group>
-          <app-ioi-tab></app-ioi-tab>
-        </mat-tab-group> -->
-      </div>
-      <div>
-        <div>
-          <label for="displayedScore">displayedScore</label>
-          <input
-            type="number"
-            name="displayedScore"
-            (change)="onDisplayScoreChange($event)"
-            value="{{ dispScore }}"
-          />
-        </div>
-        <div>
-          <label for="currentScore">currentScore</label>
-          <input
-            type="number"
-            name="currentScore"
-            (change)="onCurrentScoreChange($event)"
-            value="{{ curScore }}"
-          />
-        </div>
-        <div>
-          <input
-            type="checkbox"
-            name="isStarted"
-            (change)="onIsStartedChange($event)"
-            checked
-          />
-          <label for="isStarted">isStarted</label>
-        </div>
-      </div>
-      <div class="button-container">
-        <app-button
-          label="Primary"
-          icon="pi pi-check"
-          iconPos="right"
-        ></app-button>
-        <app-button
-          label="Secondary"
-          icon="fa fa-user"
-          iconPos="right"
-          class="ui-button-secondary"
-        ></app-button>
-        <app-button
-          label="Success"
-          icon="fa fa-book"
-          iconPos="right"
-          class="ui-button-success"
-        ></app-button>
-        <app-button
-          label="Info"
-          icon="fa fa-users"
-          iconPos="right"
-          class="ui-button-info"
-        ></app-button>
-        <app-button
-          label="Danger"
-          icon="fa fa-cog"
-          iconPos="right"
-          class="ui-button-danger"
-        ></app-button>
-        <app-button
-          label="Warning"
-          icon="fa fa-cog"
-          iconPos="right"
-          class="ui-button-warning"
-        ></app-button>
-      </div>
-      <div class="button-container">
-        <app-button
-          label="Primary"
-          icon="pi pi-check"
-          class="ui-diag-rounded"
-        ></app-button>
-        <app-button
-          label="Secondary"
-          icon="fa fa-user"
-          class="ui-diag-rounded ui-button-secondary"
-        ></app-button>
-        <app-button
-          label="Success"
-          icon="fa fa-book"
-          class="ui-diag-rounded ui-button-success"
-        ></app-button>
-        <app-button
-          label="Info"
-          icon="fa fa-users"
-          class="ui-diag-rounded ui-button-info"
-        ></app-button>
-        <app-button
-          label="Danger"
-          icon="fa fa-cog"
-          class="ui-diag-rounded ui-button-danger"
-        ></app-button>
-        <app-button
-          label="Warning"
-          icon="fa fa-cog"
-          class="ui-diag-rounded ui-button-warning"
-        ></app-button>
-      </div>
-      <div class="button-container">
-        <app-button
-          label="Primary"
-          icon="pi pi-check"
-          class="ui-top-rounded"
-        ></app-button>
-        <app-button
-          label="Secondary"
-          icon="fa fa-user"
-          class="ui-top-rounded ui-button-secondary"
-        ></app-button>
-        <app-button
-          label="Success"
-          icon="fa fa-book"
-          class="ui-top-rounded ui-button-success"
-        ></app-button>
-        <app-button
-          label="Info"
-          icon="fa fa-users"
-          class="ui-top-rounded ui-button-info"
-        ></app-button>
-        <app-button
-          label="Danger"
-          icon="fa fa-cog"
-          class="ui-top-rounded ui-button-danger"
-        ></app-button>
-        <app-button
-          label="Warning"
-          icon="fa fa-cog"
-          class="ui-top-rounded ui-button-warning"
-        ></app-button>
-      </div>
-      <div class="button-container">
-        <app-button
-          label="Primary"
-          icon="pi pi-check"
-          class="ui-button-rounded"
-        ></app-button>
-        <app-button
-          label="Secondary"
-          icon="fa fa-user"
-          class="ui-button-rounded ui-button-secondary"
-        ></app-button>
-        <app-button
-          label="Success"
-          icon="fa fa-book"
-          class="ui-button-rounded ui-button-success"
-        ></app-button>
-        <app-button
-          label="Info"
-          icon="fa fa-users"
-          class="ui-button-rounded ui-button-info"
-        ></app-button>
-        <app-button
-          label="Danger"
-          icon="fa fa-cog"
-          class="ui-button-rounded ui-button-danger"
-        ></app-button>
-        <app-button
-          label="Warning"
-          icon="fa fa-cog"
-          class="ui-button-rounded ui-button-warning"
-        ></app-button>
-      </div>
-      <div class="button-container">
-        <app-button
-          label="Progression"
-          icon="fa fa-chart-line"
-          class="ui-button-rounded"
-        ></app-button>
-        <app-button
-          label="Filter"
-          icon="pi pi-check"
-          class="ui-button-rounded"
-        ></app-button>
-        <app-button
-          label="Connexion"
-          icon="fa fa-power-off"
-          class="ui-button-rounded ui-button-warning"
-        ></app-button>
-        <app-button
-          label="Host a session"
-          icon="fa fa-plus"
-          class="ui-button-rounded"
-        ></app-button>
-        <app-button
-          label="Cancel all?"
-          icon="fa fa-times"
-          iconPos="right"
-          class="ui-button-rounded"
-        ></app-button>
-        <app-button label="Add group" class="ui-button-rounded"></app-button>
-        <app-button
-          label="Export"
-          icon="fa fa-download"
-          class="ui-button-rounded ui-button-warning"
-        ></app-button>
-        <app-button
-          label="Cancel"
-          icon="fa fa-times"
-          class="ui-button-rounded"
-        ></app-button>
-        <app-button
-          label="Import"
-          icon="fa fa-upload"
-          class="ui-button-rounded ui-button-warning"
-        ></app-button>
-        <app-button
-          label="Attach"
-          icon="fa fa-link"
-          class="ui-button-rounded ui-button-secondary"
-        ></app-button>
-        <app-button
-          label="Remove"
-          icon="fa fa-trash-alt"
-          class="ui-button-rounded ui-button-secondary"
-        ></app-button>
-        <app-button
-          label="Move"
-          icon="fa fa-folder-open"
-          class="ui-button-rounded ui-button-secondary"
-        ></app-button>
-        <app-button
-          label="Cancel"
-          icon="fa fa-times"
-          class="ui-button-rounded ui-button-danger"
-        ></app-button>
-        <app-button
-          label="Never"
-          icon="fa fa-times"
-          class="ui-button-rounded ui-button-danger"
-        ></app-button>
-        <app-button
-          label="Validate session to obtain the code"
-          icon="pi pi-check"
-          class="ui-button-rounded ui-button-success"
-        ></app-button>
-        <app-button
-          label="Preview"
-          icon="fa fa-eye"
-          class="ui-button-rounded ui-button-success"
-        ></app-button>
-        <app-button
-          label="Delete"
-          class="ui-top-rounded ui-button-secondary"
-        ></app-button>
-        <app-button label="Validate" class="ui-diag-rounded"></app-button>
-      </div>
-
-      <app-pick-list [list]="list"></app-pick-list>
-      <app-pick-list [list]="list1" [listCount]="3"></app-pick-list>
-      <app-selection-tree
-        [data]="files"
-        style="width: 100%;"
-      ></app-selection-tree>
-      <div style="width: 100%;background-color: #F1F2F7">
-        <app-group-navigation-tree
-          [data]="groups"
-          style="width: 100%;"
-        ></app-group-navigation-tree>
-      </div>
-      <div style="width: 100%;background-color: #4A90E2">
-        <app-items-navigation-tree
-          [data]="trees"
-          style="width: 100%;"
-        ></app-items-navigation-tree>
-      </div>
-      <app-score-ring
-        [displayedScore]="dispScore"
-        [currentScore]="curScore"
-        [isStarted]="isStarted"
-        [icons]="'user'"
-      ></app-score-ring>
-      <app-score-ring
-        [displayedScore]="dispScore"
-        [currentScore]="curScore"
-        [isStarted]="isStarted"
-      ></app-score-ring>
-      <app-score-ring
-        [displayedScore]="dispScore"
-        [currentScore]="curScore"
-        [isStarted]="isStarted"
-        isValidated="false"
-      ></app-score-ring>
-      <div style="width: 100%; height: 200px; background-color: #4a90e2;">
-        <app-score-ring
-          [displayedScore]="dispScore"
-          [currentScore]="curScore"
-          [isStarted]="isStarted"
-          [icons]="'check'"
-          isDark="true"
-        ></app-score-ring>
-        <app-score-ring
-          [displayedScore]="dispScore"
-          [currentScore]="curScore"
-          [isStarted]="isStarted"
-          isDark="true"
-        ></app-score-ring>
-      </div>
-      <div class="score-ring-container">
-        <app-skill-progress
-          [currentScore]="curScore"
-          [displayedScore]="dispScore"
-          [type]="ProgressType.ThickHorizontal"
-        ></app-skill-progress>
-        <app-skill-progress
-          [currentScore]="curScore"
-          [displayedScore]="dispScore"
-          [type]="ProgressType.ThinHorizontal"
-        ></app-skill-progress>
-        <div style="width: 100%; height: 200px;">
-          <app-skill-progress
-            [currentScore]="curScore"
-            [displayedScore]="dispScore"
-            [type]="ProgressType.ThickVertical"
-          ></app-skill-progress>
-        </div>
+        <app-task-tab [activityORSkill]="activityORSkill" [data]="taskdata" image="france.jpg">It won't be a bigger problem to find one video game lover in your neighbor. Since the introduction of Virtual Game, it has been achieving great heights so far as its popularity and technological advancement are concerned. The history of video game is as intersting as a fairy tale.</app-task-tab>
       </div>
     </div>
   </div>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
   selector: 'app-page-navigator',
@@ -7,9 +7,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PageNavigatorComponent implements OnInit {
 
+  @Input() allowFullScreen = 'false';
+  @Input() navigationMode = 'nextAndPrev';
+
   constructor() { }
 
   ngOnInit() {
+    console.log(this.allowFullScreen);
   }
 
 }

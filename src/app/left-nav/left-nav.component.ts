@@ -10,6 +10,8 @@ export class LeftNavComponent implements OnInit {
   @Input() data;
   @Input() user;
   @Output() collapseEvent = new EventEmitter<boolean>();
+  @Output() skillSelect = new EventEmitter<any>();
+  @Output() activitySelect = new EventEmitter<any>();
 
   @Input() collapsed = false;
 
@@ -21,6 +23,14 @@ export class LeftNavComponent implements OnInit {
   onCollapse(e) {
     this.collapsed = !this.collapsed;
     this.collapseEvent.emit(this.collapsed);
+  }
+
+  onSkillSelected(e) {
+    this.skillSelect.emit(e);
+  }
+
+  onActivitySelected(e) {
+    this.activitySelect.emit(e);
   }
 
 }
