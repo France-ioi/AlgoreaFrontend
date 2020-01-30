@@ -89,6 +89,7 @@
         align-items: center;
         height: 100%;
         flex: 1;
+        min-width: 0;
 
         .task-user-image {
           display: flex;
@@ -102,12 +103,12 @@
         .task-title {
           margin-left: 15px;
           flex: 1;
-
-          p {
-            font-size: 30px;
-            margin: 0;
-            margin-bottom: 5px;
-          }
+          font-size: 30px;
+          margin-bottom: 5px;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          white-space: nowrap;
+          min-width: 0;
           span {
             color: $base-text-color;
           }

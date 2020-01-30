@@ -341,7 +341,7 @@
           <img src="assets/images/_messi.jpg" width="35px" height="35px" />
         </div>
         <div class="task-title">
-          <p>Exercice lorem ipsum</p>
+          Exercice lorem ipsum Exercice lorem ipsum Exercice lorem ipsum Exercice lorem Exercice lorem Exercice lorem
         </div>
         <div *ngIf="collapsed" class="user-info">
           <span class="user-avatar">
@@ -367,6 +367,12 @@
     ></app-task-header>
     <div class="main-content" [ngClass]="{ folded: folded, unfolded: !folded }">
       <div>
+        <app-header-section icon="fa fa-bell" title="Your Pending requests (3)" isCollapsible="true" isCollapsed="false">
+          Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+        </app-header-section>
+        <app-header-section icon="fa fa-info" title="Buttons" isCollapsible="true" isCollapsed="false">
+          <app-button icon="fa fa-check" label="Check me"></app-button>
+        </app-header-section>
         <app-task-tab [activityORSkill]="activityORSkill" [data]="taskdata" image="france.jpg">It won't be a bigger problem to find one video game lover in your neighbor. Since the introduction of Virtual Game, it has been achieving great heights so far as its popularity and technological advancement are concerned. The history of video game is as intersting as a fairy tale.</app-task-tab>
       </div>
     </div>

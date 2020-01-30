@@ -14,6 +14,7 @@ import { PageNavigatorComponent } from './page-navigator/page-navigator.componen
 import { SkillProgressComponent } from './skill-progress/skill-progress.component';
 import { ScoreRingComponent } from './score-ring/score-ring.component';
 import { StateWidgetComponent } from './state-widget/state-widget.component';
+import { HeaderSectionComponent } from './header-section/header-section.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { StateWidgetComponent } from './state-widget/state-widget.component';
     PageNavigatorComponent,
     SkillProgressComponent,
     ScoreRingComponent,
-    StateWidgetComponent
+    StateWidgetComponent,
+    HeaderSectionComponent
   ],
   imports: [
     CommonModule,
@@ -43,7 +45,8 @@ import { StateWidgetComponent } from './state-widget/state-widget.component';
     PageNavigatorComponent,
     SkillProgressComponent,
     ScoreRingComponent,
-    StateWidgetComponent
+    StateWidgetComponent,
+    HeaderSectionComponent
   ]
 })
 export class BasicComponentModule { }
