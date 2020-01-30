@@ -1,42 +1,62 @@
-<p-table [columns]="selectedColumns" [value]="data" [sortMode]="sortMode">
-  <ng-template pTemplate="header" let-columns>
-    <tr>
-      <th *ngFor="let col of columns" [pSortableColumn]="col.field">
-        {{col.header}}
-        <p-sortIcon [field]="col.field"></p-sortIcon>
-      </th>
-    </tr>
+<p-table
+  #table
+  [columns]="selectedColumns"
+  [value]="data"
+  [sortMode]="sortMode"
+  [scrollable]="scrollWhenExpanded || scrollable"
+  [scrollHeight]="scrollHeight"
+  [selectionMode]="selectionMode"
+  [responsive]="responsive"
+>
+  <!-- <ng-container *ngTemplateOutlet="headerTemplate; context: {$implicit: columns}"></ng-container> -->
+  <ng-template pTemplate="colgroup" let-columns *ngIf="scrollWhenExpanded">
+    <colgroup>
+      <col *ngFor="let col of columns" style="width:350px">
+    </colgroup>
   </ng-template>
-  <ng-template pTemplate="body" let-rowData let-columns="columns">
-    <tr>
-      <td *ngFor="let col of columns">
-        {{rowData[col.field]}}
-      </td>
-    </tr>
+  <ng-template pTemplate="header" let-columns>
+    <ng-container [ngTemplateOutlet]="headerTemplate" [ngTemplateOutletContext]="{ $implicit: columns }"></ng-container>
+  </ng-template>
+  <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+    <ng-container [ngTemplateOutlet]="bodyTemplate" [ngTemplateOutletContext]="{ $implicit: rowData, columns: columns, rowIndex: rowIndex }"></ng-container>
+  </ng-template>
+  <ng-template pTemplate="footer">
+    <ng-container [ngTemplateOutlet]="footerTemplate"></ng-container>
   </ng-template>
 </p-table>
-<span class="toggle-gear" (click)="showColumns($event)" *ngIf="!showColumnSelection">
+<span
+  class="toggle-gear"
+  (click)="showColumns($event)"
+  *ngIf="!showColumnSelection"
+>
   <i class="fa fa-cog"></i>
 </span>
 <div class="select-column" *ngIf="showColumnSelection">
-  <div class="header">
-    <span class="fold-icon" (click)="showColumns($event)">
+  <div class="header" (click)="showColumns($event)">
+    <span class="fold-icon">
       <i class="fa fa-caret-up"></i>
     </span>
     <span>Personaliser</span>
   </div>
-  <ul>
-    <li *ngFor="let item of columns">
-      <span [ngClass]="{checked: selected[item.field]}">
-        {{item.header}}
-      </span>
-      <app-switch checked="selected[item.field]" (onChange)="handleChanges($event, item)"></app-switch>
-    </li>
-  </ul>
+  <div class="column-group" *ngFor="let group of groupInfo">
+    <p>{{group.name}}</p>
+    <ul>
+      <li *ngFor="let item of group.columns">
+        <span [ngClass]="{ checked: selected[item.field] }" (click)="handleChanges($event, item)">
+          {{ item.header }}
+        </span>
+        <app-switch
+          [checked]="selected[item.field]"
+          (onChange)="handleChanges($event, item)"
+        ></app-switch>
+      </li>
+    </ul>
+  </div>
 </div>
-<div class="show-all" *ngIf="toShow > 0">
-  <span class="missing-title">{{toShow}}</span>
+<div class="show-all" *ngIf="toShow > 0 || expand" (click)="showAll($event)">
+  <span class="missing-title" *ngIf="toShow > 0">{{ toShow }}</span>
   <span class="show-icon">
-    <i class="fa fa-caret-right"></i>
+    <i *ngIf="!expand" class="fa fa-caret-right"></i>
+    <i *ngIf="expand" class="fa fa-caret-left"></i>
   </span>
 </div>

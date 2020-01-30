@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, OnChanges, SimpleChanges, Input } from '@angular/core';
+import { Component, OnInit, ElementRef, OnChanges, SimpleChanges, Input, Output, EventEmitter } from '@angular/core';
 import { NodeService } from 'src/app/services/node-service.service';
 
 @Component({
@@ -24,6 +24,10 @@ export class TaskTabComponent implements OnInit, OnChanges {
 
   gridData;
   columns;
+
+  grdata;
+
+  @Output() expandWholeWidth = new EventEmitter<void>();
 
   constructor(
     private elementRef: ElementRef,
@@ -81,8 +85,18 @@ export class TaskTabComponent implements OnInit, OnChanges {
         { field: 'vin', header: 'Vin' },
         { field: 'year', header: 'Year' },
         { field: 'brand', header: 'Brand' },
-        { field: 'color', header: 'Color' }
+        { field: 'color', header: 'Color' },
+        { field: 'vin1', header: 'Vin1' },
+        { field: 'year1', header: 'Year1' },
+        { field: 'brand1', header: 'Brand1' },
+        { field: 'color1', header: 'Color1' }
       ];
+      this.grdata = [
+        {
+          name: 'Epreuves',
+          columns: this.columns
+        }
+      ]
     });
   }
 
@@ -107,6 +121,10 @@ export class TaskTabComponent implements OnInit, OnChanges {
     if (i > 0) {
       tabs[i - 1].classList.add('mat-tab-label-before-active');
     }
+  }
+
+  onExpandWidth(e) {
+    this.expandWholeWidth.emit(e);
   }
 
 }
