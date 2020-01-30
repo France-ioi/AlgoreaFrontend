@@ -1,0 +1,73 @@
+@import 'src/colors.scss';
+
+@mixin custom-switch($bk-color, $shadow, $handle-shadow) {
+
+  %custom-pattern {
+    background-color: $bk-color;
+    box-shadow: 0px 1px $shadow inset;
+  }
+
+  &.ui-inputswitch-checked {
+    &.ui-inputswitch-focus .ui-inputswitch-slider {
+      @extend %custom-pattern;
+    }
+    .ui-inputswitch-slider {
+      background-color: $bk-color;
+
+      &::before {
+        background-color: $base-color;
+        width: 25px;
+        border-radius: 100px;
+        height: 12px;
+        bottom: 1px;
+        transform: translateX(25px);
+        box-shadow: 0px 1px $handle-shadow;
+      }
+    }
+  }
+
+  &.ui-inputswitch-focus .ui-inputswitch-slider {
+    @extend %custom-pattern;
+  }
+
+  &:not(.ui-state-disabled):hover .ui-inputswitch-slider {
+    @extend %custom-pattern;
+  }
+
+  .ui-inputswitch-slider {
+    @extend %custom-pattern;
+
+    &::before {
+      background-color: #9B9B9B;
+      width: 25px;
+      border-radius: 100px;
+      height: 12px;
+      bottom: 1px;
+      left: 0;
+      box-shadow: 0px 1px #727272;
+    }
+  }
+
+  &:hover .ui-inputswitch-slider {
+    @extend %custom-pattern;
+  }
+
+  &.ui-inputswitch-checked:not(.ui-state-disabled):hover .ui-inputswitch-slider {
+    @extend %custom-pattern;
+  }
+}
+
+:host ::ng-deep .ui-inputswitch {
+  width: 50px;
+  height: 13px;
+
+  @include custom-switch(#F2F2F2, #DADADA, $dark-base-color);
+}
+
+
+:host ::ng-deep .dark .ui-inputswitch {
+  width: 50px;
+  height: 13px;
+
+  @include custom-switch(#464646, #3F3F3F, #31649E);
+}

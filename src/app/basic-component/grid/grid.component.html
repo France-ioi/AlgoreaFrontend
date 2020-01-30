@@ -1,0 +1,42 @@
+<p-table [columns]="selectedColumns" [value]="data" [sortMode]="sortMode">
+  <ng-template pTemplate="header" let-columns>
+    <tr>
+      <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+        {{col.header}}
+        <p-sortIcon [field]="col.field"></p-sortIcon>
+      </th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-rowData let-columns="columns">
+    <tr>
+      <td *ngFor="let col of columns">
+        {{rowData[col.field]}}
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
+<span class="toggle-gear" (click)="showColumns($event)" *ngIf="!showColumnSelection">
+  <i class="fa fa-cog"></i>
+</span>
+<div class="select-column" *ngIf="showColumnSelection">
+  <div class="header">
+    <span class="fold-icon" (click)="showColumns($event)">
+      <i class="fa fa-caret-up"></i>
+    </span>
+    <span>Personaliser</span>
+  </div>
+  <ul>
+    <li *ngFor="let item of columns">
+      <span [ngClass]="{checked: selected[item.field]}">
+        {{item.header}}
+      </span>
+      <app-switch checked="selected[item.field]" (onChange)="handleChanges($event, item)"></app-switch>
+    </li>
+  </ul>
+</div>
+<div class="show-all" *ngIf="toShow > 0">
+  <span class="missing-title">{{toShow}}</span>
+  <span class="show-icon">
+    <i class="fa fa-caret-right"></i>
+  </span>
+</div>

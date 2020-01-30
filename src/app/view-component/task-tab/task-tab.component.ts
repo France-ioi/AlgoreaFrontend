@@ -1,4 +1,5 @@
 import { Component, OnInit, ElementRef, OnChanges, SimpleChanges, Input } from '@angular/core';
+import { NodeService } from 'src/app/services/node-service.service';
 
 @Component({
   selector: 'app-task-tab',
@@ -21,7 +22,13 @@ export class TaskTabComponent implements OnInit, OnChanges {
 
   validText;
 
-  constructor(private elementRef: ElementRef) { }
+  gridData;
+  columns;
+
+  constructor(
+    private elementRef: ElementRef,
+    private nodeService: NodeService
+  ) { }
 
   findParents(node) {
     if (!node) {
@@ -68,6 +75,15 @@ export class TaskTabComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.refresh();
+    this.nodeService.getCarHuge().subscribe(res => {
+      this.gridData = res.data;
+      this.columns = [
+        { field: 'vin', header: 'Vin' },
+        { field: 'year', header: 'Year' },
+        { field: 'brand', header: 'Brand' },
+        { field: 'color', header: 'Color' }
+      ];
+    });
   }
 
   ngOnChanges(changes: SimpleChanges) {
