@@ -11,6 +11,7 @@ export class BreadcrumbComponent implements OnInit {
   @Output() itemClick = new EventEmitter<any>();
 
   selectedIdx;
+  breadWidth;
 
   maxWidths = [100, 120, 140, 150, 200, 240, 0];
 
@@ -35,7 +36,7 @@ export class BreadcrumbComponent implements OnInit {
   }
 
   onResize(e) {
-    const width = e.newWidth;
+    this.breadWidth = e.newWidth;
     this.maxWidths = this.itemMaxWidth();
     console.log(this.maxWidths);
   }
