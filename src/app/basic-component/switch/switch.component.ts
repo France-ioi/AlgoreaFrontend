@@ -7,7 +7,7 @@ import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChange
 })
 export class SwitchComponent implements OnInit, OnChanges {
 
-  @Input() checked = false;
+  @Input() checked;
   @Input() isDark = 'true';
 
   // tslint:disable-next-line: no-output-on-prefix
@@ -23,7 +23,7 @@ export class SwitchComponent implements OnInit, OnChanges {
   }
 
   handleChange(e) {
-    this.onChange.emit(this.checked);
+    this.onChange.emit(e.checked);
   }
 
 }

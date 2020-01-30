@@ -367,7 +367,7 @@
     ></app-task-header>
     <div class="main-content" [ngClass]="{ folded: folded, unfolded: !folded }">
       <div>
-        <app-task-tab [activityORSkill]="activityORSkill" [data]="taskdata" image="france.jpg">It won't be a bigger problem to find one video game lover in your neighbor. Since the introduction of Virtual Game, it has been achieving great heights so far as its popularity and technological advancement are concerned. The history of video game is as intersting as a fairy tale.</app-task-tab>
+        <app-task-tab [activityORSkill]="activityORSkill" [data]="taskdata" image="france.jpg" (expandWholeWidth)="collapsed = $event;">It won't be a bigger problem to find one video game lover in your neighbor. Since the introduction of Virtual Game, it has been achieving great heights so far as its popularity and technological advancement are concerned. The history of video game is as intersting as a fairy tale.</app-task-tab>
       </div>
     </div>
   </div>
