@@ -1,0 +1,18 @@
+<div class="selection-container">
+  <ul *ngIf="type === 'square'" class="square">
+    <li *ngFor="let item of items; index as idx" [ngClass]="{active: idx === selected}" (click)="onChange($event, idx)">
+      <span *ngIf="item.icon" class="icon">
+        <i class="{{item.icon}}"></i>
+      </span>
+      <span class="label">{{item.label}}</span>
+    </li>
+  </ul>
+  <ul *ngIf="type === 'rounded'" class="rounded">
+    <li *ngFor="let item of items; index as idx" [ngClass]="{active: idx === selected, previous: idx === selected - 1}" (click)="onChange($event, idx)">
+      <span *ngIf="item.icon" class="icon">
+        <i class="{{item.icon}}"></i>
+      </span>
+      <span class="label">{{item.label}}</span>
+    </li>
+  </ul>
+</div>

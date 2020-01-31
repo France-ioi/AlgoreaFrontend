@@ -26,6 +26,43 @@ export class TaskTabComponent implements OnInit, OnChanges {
   columns;
 
   grdata;
+  selItems = [
+    {
+      icon: 'fa fa-calendar',
+      label: 'sessions'
+    },
+    {
+      icon: 'fa fa-users',
+      label: 'teams (3)'
+    },
+    {
+      icon: 'fa fa-users',
+      label: 'group (2)'
+    },
+    {
+      icon: 'fa fa-user',
+      label: 'users'
+    }
+  ];
+  selItems1 = [
+    {
+      label: 'list'
+    },
+    {
+      label: 'event/log'
+    }
+  ];
+  selItems2 = [
+    {
+      label: 'no'
+    },
+    {
+      label: 'recommended'
+    },
+    {
+      label: 'yes'
+    }
+  ];
 
   @Output() expandWholeWidth = new EventEmitter<void>();
 
