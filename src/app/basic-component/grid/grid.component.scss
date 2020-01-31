@@ -7,6 +7,36 @@
   ::ng-deep .ui-table {
     margin-bottom: 10px;
 
+    .ui-chkbox {
+      width: 13px;
+      height: 13px;
+      .ui-chkbox-box {
+        background-color: #E5E5E5;
+        box-shadow: 0 1px #BBB inset;
+        width: 13px;
+        height: 13px;
+        border: none;
+        position: relative;
+
+        &:hover {
+          background-color: #D0D0D0;
+        }
+
+        &.ui-state-active:not(.ui-state-disabled):hover {
+          background-color: #D0D0D0;
+        }
+
+        .ui-chkbox-icon {
+          overflow: visible;
+          color: #505050;
+          position: absolute;
+          top: -6px;
+          left: -4px;
+          font-size: 22px;
+        }
+      }
+    }
+
     .ui-table-thead > tr > th {
       border-top: none;
       text-transform: uppercase;
@@ -35,6 +65,27 @@
 
     .ui-table-tbody > tr.ui-state-highlight > td {
       color: #fff;
+    }
+
+    .ui-table-summary {
+      border: none;
+      background-color: white;
+
+      .export-tools {
+        display: flex;
+        align-items: center;
+        color: $base-color;
+        font-size: 12px;
+
+        span {
+          margin-right: 10px;
+          cursor: pointer;
+          
+          span {
+            margin-right: 10px;
+          }
+        }
+      }
     }
   }
 }

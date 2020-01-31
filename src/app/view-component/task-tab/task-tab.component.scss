@@ -134,5 +134,16 @@
         }
       }
     }
+
+    .selection-tool {
+      display: flex;
+      flex-direction: column;
+      border-radius: 5px;
+      background-color: $base-bk-color;
+
+      margin-left: 55px;
+      margin-right: 20px;
+      margin-bottom: 32px;
+    }
   }
 }

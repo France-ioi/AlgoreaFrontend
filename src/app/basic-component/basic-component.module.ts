@@ -19,6 +19,7 @@ import { ScoreRingComponent } from './score-ring/score-ring.component';
 import { StateWidgetComponent } from './state-widget/state-widget.component';
 import { SwitchComponent } from './switch/switch.component';
 import { GridComponent } from './grid/grid.component';
+import { SelectionComponent } from './selection/selection.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { GridComponent } from './grid/grid.component';
     ScoreRingComponent,
     StateWidgetComponent,
     SwitchComponent,
-    GridComponent
+    GridComponent,
+    SelectionComponent
   ],
   imports: [
     CommonModule,
@@ -55,7 +57,8 @@ import { GridComponent } from './grid/grid.component';
     ScoreRingComponent,
     StateWidgetComponent,
     SwitchComponent,
-    GridComponent
+    GridComponent,
+    SelectionComponent
   ]
 })
 export class BasicComponentModule { }

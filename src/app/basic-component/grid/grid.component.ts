@@ -41,6 +41,7 @@ export class GridComponent implements OnInit, OnChanges {
   @ContentChild('headerTemplate', { static: false }) headerTemplate;
   @ContentChild('bodyTemplate', { static: false }) bodyTemplate;
   @ContentChild('footerTemplate', { static: false }) footerTemplate;
+  @ContentChild('summaryTemplate', { static: false }) summaryTemplate;
 
   showColumnSelection = false;
 

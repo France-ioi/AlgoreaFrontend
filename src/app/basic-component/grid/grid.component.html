@@ -23,6 +23,9 @@
   <ng-template pTemplate="footer">
     <ng-container [ngTemplateOutlet]="footerTemplate"></ng-container>
   </ng-template>
+  <ng-template pTemplate="summary">
+    <ng-container [ngTemplateOutlet]="summaryTemplate" [ngTemplateOutletContext]="{ $implicit: table }"></ng-container>
+  </ng-template>
 </p-table>
 <span
   class="toggle-gear"

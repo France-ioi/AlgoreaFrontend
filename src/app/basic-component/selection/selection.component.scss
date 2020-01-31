@@ -1,0 +1,94 @@
+@import 'src/colors.scss';
+
+.selection-container {
+  ul {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    padding: 0;
+    margin-bottom: 0;
+
+    li {
+      flex: 1;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: row;
+      color: $base-text-color;
+      cursor: pointer;
+      transition: .2s;
+      font-size: 12px;
+      font-weight: bold;
+      padding: 0 10px;
+
+      &.active {
+        background-color: $base-color;
+        box-shadow: 0 1px $dark-base-color inset;
+        color: white;
+      }
+
+      span {
+        &.label {
+          text-transform: uppercase;
+        }
+      }
+    }
+
+    &.square {
+      height: 67px;
+
+      li {
+        flex-direction: column;
+        border: 1px solid #E2E3E8;
+
+        &.active {
+          border-top: none;
+          border-bottom: none;
+        }
+
+        span {
+          &.icon {
+            margin-bottom: 5px;
+          }
+        }
+
+        &:not(:last-child) {
+          border-right: none;
+        }
+      }
+    }
+
+    &.rounded {
+      background-color: #DFE0E4;
+      border-radius: 100px;
+      height: 30px;
+      box-shadow: 0 1px #BBB inset;
+      margin-left: 10px;
+      margin-right: 10px;
+
+      li {
+        border-right: 1px solid #BBB;
+
+        &:last-child {
+          border-right: none;
+        }
+
+        &.previous {
+          border-right: none;
+        }
+
+        &.active {
+          box-shadow: none;
+          border-radius: 100px;
+        }
+
+        span {
+          &.icon {
+            margin-right: 7px;
+          }
+        }
+      }
+    }
+  }
+}
