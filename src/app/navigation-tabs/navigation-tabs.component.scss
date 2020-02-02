@@ -154,6 +154,10 @@ $header-height: 90px;
             color: $base-text-color !important;
             z-index: 2;
           }
+
+          &:focus {
+            box-shadow: none;
+          }
         }
 
         &.ui-state-active {
