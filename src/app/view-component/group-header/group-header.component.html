@@ -11,56 +11,56 @@
     </div>
     <div *ngIf="!isTwoColumn; then oneColumn else twoColumn"></div>
     <ng-template #oneColumn>
-      <span class="user-type">
+      <span class="user-type" *ngIf="data.type">
         <i class="fa fa-home"></i>
         <span>{{data.type}}</span>
       </span>
-      <span class="user-site">
+      <span class="user-site" *ngIf="data.website">
         <i class="fa fa-external-link-alt"></i>
         <a href="https://{{data.website}}">{{data.website}}</a>
       </span>
-      <span class="user-location">
+      <span class="user-location" *ngIf="data.location">
         <i class="fa fa-map-marker-alt"></i>
         <span title="{{data.location}}">{{data.location}}</span>
       </span>
     </ng-template>
     <ng-template #twoColumn>
       <div class="two-columns">
-        <span class="user-type">
+        <span class="user-type" *ngIf="data.type">
           <i class="fa fa-home"></i>
           <span>{{data.type}}</span>
         </span>
-        <span class="user-site">
+        <span class="user-site" *ngIf="data.website">
           <i class="fa fa-external-link-alt"></i>
           <a href="https://{{data.website}}">{{data.website}}</a>
         </span>
-        <span class="user-location">
+        <span class="user-location" *ngIf="data.location">
           <i class="fa fa-map-marker-alt"></i>
           <span title="{{data.location}}">{{data.location}}</span>
         </span>
-        <span class="time">
+        <span class="time" *ngIf="data.date">
           <i class="fa fa-clock"></i>
           <span>{{data.date | date:'MMM d, y h:mm a'}}</span>
         </span>
-        <span class="grade">
+        <span class="grade" *ngIf="data.grades">
           <i class="fa fa-user-graduate"></i>
           <span>Grades: {{grades.join(", ")}}</span>
         </span>
-        <span class="join-method">
+        <span class="join-method" *ngIf="data.joinMethods && data.joinMethods.length > 0">
           <i class="fa fa-sign-in-alt"></i>
           <span>Join Methods: {{data.joinMethods.join(", ")}}</span>
         </span>
-        <span class="assoc-skill">
+        <span class="assoc-skill" *ngIf="data.assocSkill">
           <i class="fa fa-link"></i>
           <span class="no-wrap" *ngIf="visibleAssoc">Associated with: </span>
           <a href="{{data.assocSkill.link}}">{{data.assocSkill.name}}</a>
-          <app-score-ring [displayedScore]="data.assocSkill.progress.displayedScore" [currentScore]="data.assocSkill.progress.currentScore" diameter="24"></app-score-ring>
+          <app-score-ring *ngIf="data.assocSkill.progress" [displayedScore]="data.assocSkill.progress.displayedScore" [currentScore]="data.assocSkill.progress.currentScore" diameter="24"></app-score-ring>
         </span>
-        <span class="assoc-skill">
+        <span class="assoc-skill" *ngIf="data.assocActivity">
           <i class="fa fa-link"></i>
           <span class="no-wrap" *ngIf="visibleAssoc">Associated with: </span>
           <a href="{{data.assocActivity.link}}">{{data.assocSkill.name}}</a>
-          <app-skill-progress [displayedScore]="data.assocActivity.progress.displayedScore" [currentScore]="data.assocActivity.progress.currentScore" style="width: 40%; margin-left: 10px;"></app-skill-progress>
+          <app-skill-progress *ngIf="data.assocActivity.progress" [displayedScore]="data.assocActivity.progress.displayedScore" [currentScore]="data.assocActivity.progress.currentScore" style="width: 40%; margin-left: 10px;"></app-skill-progress>
         </span>
       </div>
     </ng-template>
