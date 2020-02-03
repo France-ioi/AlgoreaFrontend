@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { TreeNode } from 'primeng/api';
 
 @Component({
@@ -11,6 +11,8 @@ export class GroupNavigationTreeComponent implements OnInit, OnChanges {
   @Input() data: TreeNode[];
   @Input() inGroup = false;
 
+  @Output() onNodeChange = new EventEmitter<any>();
+
   constructor() {
   }
 
@@ -19,9 +21,6 @@ export class GroupNavigationTreeComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     if (this.data) {
-      // while (this.data.length > 1) {
-      //   this.data.pop();
-      // }
       if (!this.inGroup && this.data.length > 0) {
         this.data[0]['root'] = true;
       }
@@ -56,6 +55,7 @@ export class GroupNavigationTreeComponent implements OnInit, OnChanges {
     }
     
     node.expanded = true;
+    this.onNodeChange.emit(node);
   }
 
 }

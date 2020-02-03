@@ -157,43 +157,16 @@
       }
     }
 
-    app-task-header {
-      width: 100%;
-      display: block;
-      position: absolute;
-      z-index: 0;
-      top: 43px;
-      left: 0px;
-      padding-left: 20px;
-      right: 0;
-      background-color: $base-bk-color;
-
-      &.folded {
-        top: -120px;
-        transition: top 1s;
-        -webkit-transition: top 1s;
-        -moz-transition: top 1s;
-        -o-transition: top 1s;
-      }
-
-      &.unfolded {
-        transition: top 1s;
-        -webkit-transition: top 1s;
-        -moz-transition: top 1s;
-        -o-transition: top 1s;
-      }
-    }
-
     .main-content {
       position: absolute;
       padding-left: 20px;
-      top: 163px;
+      top: 43px;
       left: 0px;
       right: 0;
       background-color: $base-bk-color;
 
       &.folded {
-        top: 43px;
+        top: -90px;
         transition: top 1s;
         -webkit-transition: top 1s;
         -moz-transition: top 1s;

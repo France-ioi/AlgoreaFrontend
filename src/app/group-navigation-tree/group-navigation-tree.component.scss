@@ -137,6 +137,12 @@
   margin-right: 14px;
 }
 
+.node-tree-item.checked .node-item-content .leaf.node-select {
+  color: white;
+  background-color: #9B9B9B;
+  border-radius: 100px;
+}
+
 .node-tree-item .node-select {
   color: #9B9B9B;
 }

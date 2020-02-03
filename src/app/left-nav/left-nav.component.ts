@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-left-nav',
@@ -9,13 +10,17 @@ export class LeftNavComponent implements OnInit {
 
   @Input() data;
   @Input() user;
+  @Input() collapsed = false;
+
   @Output() collapseEvent = new EventEmitter<boolean>();
   @Output() skillSelect = new EventEmitter<any>();
   @Output() activitySelect = new EventEmitter<any>();
+  @Output() yourselfSelect = new EventEmitter<any>();
+  @Output() groupSelect = new EventEmitter<any>();
 
-  @Input() collapsed = false;
-
-  constructor() { }
+  constructor(
+    private router: Router
+  ) { }
 
   ngOnInit() {
   }
@@ -31,6 +36,14 @@ export class LeftNavComponent implements OnInit {
 
   onActivitySelected(e) {
     this.activitySelect.emit(e);
+  }
+
+  onYourselfSelected(e) {
+    this.yourselfSelect.emit(e);
+  }
+
+  onGroupSelected(e) {
+    this.groupSelect.emit(e);
   }
 
 }
