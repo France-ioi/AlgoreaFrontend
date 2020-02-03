@@ -1,0 +1,38 @@
+<mat-tab-group mat-stretch-tabs (selectedTabChange)="onTabChange($event)">
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <i class="fa fa-chart-pie"></i>
+      Overview
+    </ng-template>
+    <ng-template matTabContent>
+    </ng-template>
+  </mat-tab>
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <i class="fa fa-user"></i>
+      Personal Data
+    </ng-template>
+    <ng-template matTabContent>
+      <app-section icon="fa fa-users" title="Personal Information">
+        <app-data-list [items]="personal"></app-data-list>
+      </app-section>
+      <app-section icon="fa fa-graduation-cap" title="School Information">
+        <app-data-list [items]="school"></app-data-list>
+      </app-section>
+      <app-section icon="fa fa-envelope" title="Contact Information">
+        <app-data-list [items]="contact"></app-data-list>
+      </app-section>
+      <app-section icon="fa fa-cog" title="Parameters">
+        <app-data-list [items]="parameters"></app-data-list>
+      </app-section>
+    </ng-template>
+  </mat-tab>
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <i class="fa fa-user-cog"></i>
+      Settings
+    </ng-template>
+    <ng-template matTabContent>
+    </ng-template>
+  </mat-tab>
+</mat-tab-group>

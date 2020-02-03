@@ -315,6 +315,8 @@
       (collapseEvent)="onCollapse($event)"
       (skillSelect)="onSkillSelected($event)"
       (activitySelect)="onActivitySelected($event)"
+      (yourselfSelect)="onYourselfSelected($event)"
+      (groupSelect)="onGroupSelected($event)"
     ></app-left-nav>
   </div>
   <div class="right" [ngClass]="{ collapsed: collapsed, expanded: !collapsed }">
@@ -332,16 +334,16 @@
       <app-page-navigator *ngIf="!folded && !scrolled" ></app-page-navigator>
       <div class="folded-top-bar" *ngIf="folded || scrolled">
         <app-score-ring
-          *ngIf="isStarted"
+          *ngIf="isStarted && selectedType == 2"
           displayedScore="75"
           currentScore="80"
           [diameter]="30"
         ></app-score-ring>
-        <div *ngIf="!isStarted" class="task-user-image">
+        <div *ngIf="!isStarted || selectedType == 0 || selectedType == 1" class="task-user-image">
           <img src="assets/images/_messi.jpg" width="35px" height="35px" />
         </div>
         <div class="task-title">
-          <p>Exercice lorem ipsum</p>
+          <p>{{userTitle}}</p>
         </div>
         <div *ngIf="collapsed" class="user-info">
           <span class="user-avatar">
@@ -349,28 +351,17 @@
           </span>
           <span class="user-id">CyrilK89</span>
         </div>
-        <span class="clock-icon" [ngClass]="{ finished: false }">
+        <span *ngIf="selectedType == 2" class="clock-icon" [ngClass]="{ finished: false }">
           <i class="fa fa-clock"></i>
         </span>
-        <span class="remaining-time" [ngClass]="{ finished: false }">
+        <span *ngIf="selectedType == 2" class="remaining-time" [ngClass]="{ finished: false }">
           00:03:10
         </span>
         <app-page-navigator allowFullScreen="false" navigationMode="nextAndPrev"></app-page-navigator>
       </div>
     </div>
-    <app-task-header
-      [ngClass]="{ folded: folded, unfolded: !folded }"
-      [isScrolled]="scrolled"
-      [isFolded]="folded"
-      [isStarted]="isStarted"
-      [isCollapsed]="collapsed"
-    ></app-task-header>
     <div class="main-content" [ngClass]="{ folded: folded, unfolded: !folded }">
-      <div>
-        <app-task-tab [activityORSkill]="activityORSkill" [data]="taskdata" image="france.jpg" (expandWholeWidth)="collapsed = $event;">It won't be a bigger problem to find one video game lover in your neighbor. Since the introduction of Virtual Game, it has been achieving great heights so far as its popularity and technological advancement are concerned. The history of video game is as intersting as a fairy tale.</app-task-tab>
-      </div>
+      <router-outlet></router-outlet>
     </div>
   </div>
 </div>
-
-<router-outlet></router-outlet>

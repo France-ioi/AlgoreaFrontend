@@ -8,6 +8,10 @@ $bk-secondary: #3B73B4;
 :host ::ng-deep .group-skills {
   .ui-tabview {
     padding: 0;
+
+    &.ui-tabview-top .ui-tabview-nav li:focus {
+      box-shadow: none;
+    }
   
     ul.ui-tabview-nav {
       display: flex;

@@ -5,6 +5,7 @@ import { NodeService } from './services/node-service.service';
 import * as _ from 'lodash';
 
 import { ButtonComponent } from './basic-component/button/button.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -470,6 +471,7 @@ export class AppComponent {
       title: 'Algorithmic skills',
       data: [
         {
+          ID: 12,
           title: 'Graphs: methods',
           type: 'leaf',
           ring: true,
@@ -480,6 +482,7 @@ export class AppComponent {
           }
         },
         {
+          ID: 13,
           title: 'List graph caracteristics',
           type: 'leaf',
           ring: false,
@@ -490,6 +493,7 @@ export class AppComponent {
           }
         },
         {
+          ID: 14,
           title: 'Reduce graph size',
           type: 'folder',
           ring: false,
@@ -500,6 +504,7 @@ export class AppComponent {
           },
           children: [
             {
+              ID: 15,
               title: 'Simplify or optimize manipulation',
               icon: 'progress',
               type: 'leaf',
@@ -511,6 +516,7 @@ export class AppComponent {
               }
             },
             {
+              ID: 16,
               title: 'Spot symetry an convert to normal form',
               icon: 'regress',
               type: 'folder',
@@ -522,6 +528,7 @@ export class AppComponent {
               },
               children: [
                 {
+                  ID: 17,
                   title: 'Simplify or optimize manipulation',
                   icon: 'stagnant',
                   type: 'leaf',
@@ -533,6 +540,7 @@ export class AppComponent {
                   }
                 },
                 {
+                  ID: 18,
                   title: 'Spot symetry an convert to normal form',
                   type: 'leaf',
                   ring: true,
@@ -545,6 +553,7 @@ export class AppComponent {
               ]
             },
             {
+              ID: 19,
               title: 'Simplify or optimize manipulation',
               icon: 'stagnant',
               type: 'leaf',
@@ -556,6 +565,7 @@ export class AppComponent {
               }
             },
             {
+              ID: 21,
               title: 'Spot symetry an convert to normal form',
               type: 'folder',
               ring: false,
@@ -566,6 +576,7 @@ export class AppComponent {
               },
               children: [
                 {
+                  ID: 22,
                   title: 'Simplify or optimize manipulation',
                   type: 'leaf',
                   ring: true,
@@ -576,6 +587,7 @@ export class AppComponent {
                   }
                 },
                 {
+                  ID: 23,
                   title: 'Spot symetry an convert to normal form',
                   type: 'leaf',
                   ring: true,
@@ -590,6 +602,7 @@ export class AppComponent {
           ]
         },
         {
+          ID: 24,
           title: 'Flood Fill',
           type: 'leaf',
           ring: true,
@@ -601,6 +614,7 @@ export class AppComponent {
           }
         },
         {
+          ID: 25,
           title: 'Horizontal digging (BFS) et DijkstraHorizontal digging (BFS) et DijkstraHorizontal digging (BFS) et DijkstraHorizontal digging (BFS) et DijkstraHorizontal digging (BFS) et Dijkstra',
           type: 'leaf',
           ring: false,
@@ -616,6 +630,7 @@ export class AppComponent {
       title: 'My Activities',
       data: [
         {
+          ID: 26,
           title: 'List graph caracteristics',
           type: 'leaf',
           ring: false,
@@ -630,6 +645,7 @@ export class AppComponent {
           }
         },
         {
+          ID: 27,
           title: 'Reduce graph size',
           type: 'folder',
           ring: false,
@@ -640,6 +656,7 @@ export class AppComponent {
           },
           children: [
             {
+              ID: 28,
               title: 'Simplify or optimize manipulation',
               type: 'leaf',
               ring: true,
@@ -655,6 +672,7 @@ export class AppComponent {
               }
             },
             {
+              ID: 29,
               title: 'Spot symetry an convert to normal form',
               type: 'folder',
               ring: true,
@@ -669,6 +687,7 @@ export class AppComponent {
               },
               children: [
                 {
+                  ID: 30,
                   title: 'Simplify or optimize manipulation',
                   type: 'leaf',
                   ring: true,
@@ -683,6 +702,7 @@ export class AppComponent {
                   }
                 },
                 {
+                  ID: 31,
                   title: 'Spot symetry an convert to normal form',
                   type: 'leaf',
                   ring: true,
@@ -699,6 +719,7 @@ export class AppComponent {
               ]
             },
             {
+              ID: 32,
               title: 'Simplify or optimize manipulation',
               type: 'leaf',
               ring: false,
@@ -714,6 +735,7 @@ export class AppComponent {
               }
             },
             {
+              ID: 33,
               title: 'Spot symetry an convert to normal form',
               type: 'folder',
               ring: false,
@@ -728,6 +750,7 @@ export class AppComponent {
               },
               children: [
                 {
+                  ID: 34,
                   title: 'Simplify or optimize manipulation',
                   type: 'leaf',
                   ring: true,
@@ -742,6 +765,7 @@ export class AppComponent {
                   }
                 },
                 {
+                  ID: 35,
                   title: 'Spot symetry an convert to normal form',
                   type: 'leaf',
                   ring: true,
@@ -760,6 +784,7 @@ export class AppComponent {
           ]
         },
         {
+          ID: 36,
           // tslint:disable-next-line: max-line-length
           title: 'Horizontal digging (BFS) et DijkstraHorizontal digging (BFS) et DijkstraHorizontal digging (BFS) et DijkstraHorizontal digging (BFS) et DijkstraHorizontal digging (BFS) et Dijkstra',
           type: 'leaf',
@@ -779,140 +804,6 @@ export class AppComponent {
     image: '_messi.jpg'
   };
 
-  personal = [
-    {
-      field: 'Login',
-      value: 'CyrilK67'
-    },
-    {
-      field: 'First name',
-      value: 'Cyril'
-    },
-    {
-      field: 'Last name',
-      value: 'Kitsch'
-    },
-    {
-      field: 'Display my real name on my public profile',
-      value: 'non'
-    },
-    {
-      field: 'Birth date',
-      value: '24/12/1985'
-    },
-    {
-      field: 'Student ID',
-      value: '568DH8H9'
-    },
-    {
-      field: 'Sex',
-      value: 'Mascuin'
-    },
-    {
-      field: 'Nationality',
-      value: 'France'
-    },
-    {
-      field: 'Personal Web page',
-      value: 'www.cyrilk.com'
-    }
-  ];
-  school = [
-    {
-      field: 'Your grade',
-      value: 'Terminale'
-    },
-    {
-      field: 'Highschool graduation year',
-      value: '2019'
-    },
-    {
-      field: 'Residence country',
-      value: 'France'
-    },
-    {
-      field: 'Role',
-      value: 'Etudiant'
-    }
-  ];
-  contact = [
-    {
-      field: 'Primary email',
-      value: 'cyrilk@mail.com'
-    },
-    {
-      field: 'Secondary email',
-      value: 'cyril.kitsch@academy.org'
-    },
-    {
-      field: 'Address',
-      value: '34, rue des tulipes'
-    },
-    {
-      field: 'City',
-      value: 'PARIS'
-    },
-    {
-      field: 'Zipcode',
-      value: '75020'
-    },
-    {
-      field: 'Primary phone number',
-      value: '06 45 37 69 80'
-    },
-    {
-      field: 'Secondary phone number',
-      value: '07 65 74 83 93'
-    }
-  ];
-  parameters = [
-    {
-      field: 'Language',
-      value: 'French'
-    },
-    {
-      field: 'Time zone',
-      value: 'Paris (GMT+1)'
-    }
-  ];
-
-  tabs = {
-    overview: {
-      label: 'Overview',
-      icon: 'fa fa-chart-pie'
-    },
-    personal: {
-      label: 'Personal Data',
-      icon: 'fa fa-user',
-      data: [
-        {
-          title: 'Personal Information',
-          icon: 'fa fa-users',
-          items: this.personal
-        },
-        {
-          title: 'School Information',
-          icon: 'fa fa-graduation-cap',
-          items: this.school
-        },
-        {
-          title: 'Contact Information',
-          icon: 'fa fa-envelope',
-          items: this.contact
-        },
-        {
-          title: 'Parameters',
-          icon: 'fa fa-cog',
-          items: this.parameters
-        }
-      ]
-    },
-    settings: {
-      label: 'Settings',
-      icon: 'fa fa-cog'
-    }
-  };
-
 
   collapsed = false;
   folded = false;
@@ -921,8 +812,13 @@ export class AppComponent {
   activityORSkill = false;
 
   taskdata;
+  selectedType = -1;
+  userTitle;
 
-  constructor(private nodeService: NodeService) {}
+  constructor(
+    private nodeService: NodeService,
+    private router: Router
+  ) { }
 
   ngOnInit() {
     this.nodeService.getFiles().then(res => {
@@ -965,13 +861,72 @@ export class AppComponent {
   }
 
   onSkillSelected(e) {
+    this.selectedType = 2;
+    this.userTitle = e.title;
     this.activityORSkill = false;
     this.taskdata = e;
+    this.router.navigate([`/task/${e.ID}`], {
+      queryParams: {
+        refresh: new Date().getTime()
+      },
+      state: {
+        scrolled: this.scrolled,
+        folded: this.folded,
+        isStarted: this.isStarted,
+        collapsed: this.collapsed,
+        taskdata: this.taskdata,
+        activityORSkill: this.activityORSkill
+      }
+    });
   }
 
   onActivitySelected(e) {
+    this.selectedType = 2;
+    this.userTitle = e.title;
     this.activityORSkill = true;
     this.taskdata = e;
-    console.log(this.activityORSkill, e);
+    this.router.navigate([`/task/${e.ID}`], {
+      queryParams: {
+        refresh: new Date().getTime()
+      },
+      state: {
+        scrolled: this.scrolled,
+        folded: this.folded,
+        isStarted: this.isStarted,
+        collapsed: this.collapsed,
+        taskdata: this.taskdata,
+        activityORSkill: this.activityORSkill
+      }
+    });
+  }
+
+  onYourselfSelected(e) {
+    this.selectedType = 0;
+    this.userTitle = 'Cyril KITSCH';
+    this.router.navigate(['/yourself'], {
+      state: {
+        scrolled: this.scrolled,
+        folded: this.folded,
+        isStarted: this.isStarted,
+        collapsed: this.collapsed
+      }
+    });
+  }
+
+  onGroupSelected(e) {
+    this.selectedType = 1;
+    this.userTitle = 'Jean Monet';
+    this.router.navigate(['/group'], {
+      queryParams: {
+        refresh: new Date().getTime()
+      },
+      state: {
+        scrolled: this.scrolled,
+        folded: this.folded,
+        isStarted: this.isStarted,
+        collapsed: this.collapsed,
+        groupdata: e
+      }
+    });
   }
 }

@@ -3,4 +3,10 @@
   (collapseEvent)="onCollapse($event)"
   [data]="user"
 ></app-top-nav>
-<app-navigation-tabs [items]="data" (skillSelect)="onSkillSelected($event)" (activitySelect)="onActivitySelected($event)"></app-navigation-tabs>
+<app-navigation-tabs
+  [items]="data"
+  (skillSelect)="onSkillSelected($event)"
+  (activitySelect)="onActivitySelected($event)"
+  (yourselfSelect)="onYourselfSelected($event)"
+  (groupSelect)="onGroupSelected($event)"
+></app-navigation-tabs>

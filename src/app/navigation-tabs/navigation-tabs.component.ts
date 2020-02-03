@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, OnChanges, SimpleChanges, ViewChild, ElementRef, NgZone, Output, EventEmitter } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-navigation-tabs',
@@ -14,6 +15,8 @@ export class NavigationTabsComponent implements OnInit, OnChanges {
 
   @Output() skillSelect = new EventEmitter<any>();
   @Output() activitySelect = new EventEmitter<any>();
+  @Output() yourselfSelect = new EventEmitter<any>();
+  @Output() groupSelect = new EventEmitter<any>();
 
   currentUser;
   groupShow = true;
@@ -24,7 +27,10 @@ export class NavigationTabsComponent implements OnInit, OnChanges {
 
   selectedGroup = -1;
 
-  constructor(private ngZone: NgZone) { }
+  constructor(
+    private ngZone: NgZone,
+    private router: Router
+  ) { }
 
   ngOnInit() {
   }
@@ -49,7 +55,6 @@ export class NavigationTabsComponent implements OnInit, OnChanges {
 
   onResized(e) {
     const boundaryHeight = this.scrollPanel.directiveRef.elementRef.nativeElement.clientHeight - 50;
-    console.log(e.newHeight, boundaryHeight);
     if (e.newHeight > boundaryHeight) {
       // this.stickyShow = true;
       this._updateStatus(this.scrollPanel.directiveRef.elementRef.nativeElement);
@@ -63,7 +68,6 @@ export class NavigationTabsComponent implements OnInit, OnChanges {
       const scrollTop = e.scrollTop;
       const clientHeight = e.clientHeight - 50;
       const groupHeight = this.groupPanel.nativeElement.clientHeight;
-      console.log(scrollTop, clientHeight, groupHeight);
       if (scrollTop + clientHeight >= groupHeight) {
         this.stickyShow = false;
       } else {
@@ -100,8 +104,9 @@ export class NavigationTabsComponent implements OnInit, OnChanges {
     this.stickyShow = false;
   }
 
-  onSelectGroup(e, idx) {
+  onSelectYourself(e, idx) {
     this.selectedGroup = idx;
+    this.yourselfSelect.emit(e);
   }
 
   onSkillSelected(e) {
@@ -110,6 +115,10 @@ export class NavigationTabsComponent implements OnInit, OnChanges {
 
   onActivitySelected(e) {
     this.activitySelect.emit(e);
+  }
+
+  onNodeChange(e) {
+    this.groupSelect.emit(e);
   }
 
 }

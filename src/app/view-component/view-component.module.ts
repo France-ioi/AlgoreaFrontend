@@ -9,11 +9,27 @@ import { BasicComponentModule } from '../basic-component/basic-component.module'
 
 
 import { TaskTabComponent } from './task-tab/task-tab.component';
+import { TaskComponent } from './task/task.component';
+import { TaskHeaderComponent } from './task-header/task-header.component';
+import { YourselfComponent } from './yourself/yourself.component';
+import { YourselfTabComponent } from './yourself-tab/yourself-tab.component';
+import { YourselfHeaderComponent } from './yourself-header/yourself-header.component';
+import { GroupComponent } from './group/group.component';
+import { GroupHeaderComponent } from './group-header/group-header.component';
+import { GroupTabComponent } from './group-tab/group-tab.component';
 
 
 @NgModule({
   declarations: [
-    TaskTabComponent
+    TaskTabComponent,
+    TaskHeaderComponent,
+    TaskComponent,
+    YourselfComponent,
+    YourselfTabComponent,
+    YourselfHeaderComponent,
+    GroupComponent,
+    GroupHeaderComponent,
+    GroupTabComponent
   ],
   imports: [
     CommonModule,
@@ -26,6 +42,14 @@ import { TaskTabComponent } from './task-tab/task-tab.component';
   ],
   exports: [
     TaskTabComponent,
+    TaskHeaderComponent,
+    TaskComponent,
+    YourselfComponent,
+    YourselfTabComponent,
+    YourselfHeaderComponent,
+    GroupComponent,
+    GroupHeaderComponent,
+    GroupTabComponent
   ]
 })
 export class ViewComponentModule { }

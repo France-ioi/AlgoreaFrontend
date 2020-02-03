@@ -52,7 +52,7 @@
           </span>
           <span> </span>
         </div>
-        <div class="group-self" (click)="onSelectGroup($event, 0)">
+        <div class="group-self" (click)="onSelectYourself($event, 0)">
           <span class="anonym-group">
             <img src="assets/images/Male.svg" width="40px" height="40px" />
           </span>
@@ -79,6 +79,7 @@
               <app-group-navigation-tree
                 [data]="items.groups.manage"
                 inGroup="true"
+                (onNodeChange)="onNodeChange($event)"
               ></app-group-navigation-tree>
             </p-accordionTab>
             <p-accordionTab [selected]="joinShow">
@@ -95,6 +96,7 @@
               </p-header>
               <app-group-navigation-tree
                 [data]="items.groups.join"
+                (onNodeChange)="onNodeChange($event)"
               ></app-group-navigation-tree>
             </p-accordionTab>
           </p-accordion>
