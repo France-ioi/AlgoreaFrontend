@@ -1,0 +1,42 @@
+@import 'src/colors.scss';
+
+:host:last-child .switch-container .switch-content-wrapper {
+  border-bottom: none;
+}
+
+.switch-container {
+  margin-top: 10px;
+  display: flex;
+
+  .switch-header {
+    display: flex;
+  }
+
+  .switch-content-wrapper {
+    display: flex;
+    flex: 1;
+    margin-left: 15px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #DEE4ED;
+
+    .header-title {
+      text-transform: uppercase;
+      color: $nav-bk-color;
+      font-weight: bold;
+      font-size: 12px;
+      flex-basis: 40%;
+    }
+
+    .switch-content {
+      flex-basis: 60%;
+      display: flex;
+      flex-direction: column;
+
+      .content-title {
+        font-size: 12px;
+        color: $base-text-color;
+      }
+    }
+    
+  }
+}

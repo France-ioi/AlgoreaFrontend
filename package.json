@@ -32,6 +32,7 @@
     "number-to-words": "^1.2.4",
     "primeicons": "^2.0.0",
     "primeng": "^9.0.0-rc.4",
+    "random-string": "^0.2.0",
     "rxjs": "~6.4.0",
     "tslib": "^1.10.0",
     "uuid": "^3.3.3",

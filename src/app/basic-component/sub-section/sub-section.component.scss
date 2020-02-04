@@ -1,0 +1,42 @@
+@import 'src/colors.scss';
+
+.section-container {
+  padding: 25px 20px 15px;
+  border-bottom: 1px solid #DEE4ED;
+  background-color: #ECF3FC;
+
+  &.no-border {
+    border-bottom: none;
+  }
+  
+  .section-header {
+    display: flex;
+    align-items: center;
+
+    .section-handler {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: $base-color;
+      width: 30px;
+      height: 30px;
+      border-radius: 100px;
+      position: relative;
+
+      i {
+        color: white;
+      }
+    }
+
+    .section-title {
+      font-size: 20px;
+      color: $nav-bk-color;
+      margin-left: 15px;
+    }
+  }
+  
+  .section-content {
+    padding: 15px 0px 15px 70px;
+    color: $base-text-color;
+  }
+}

@@ -1,0 +1,44 @@
+@import 'src/colors.scss';
+
+.activity-container {
+  display: flex;
+  align-items: center;
+  height: 32px;
+  border-radius: 5px;
+
+  .activity-content {
+    padding-left: 10px;
+    display: flex;
+    height: 100%;
+    align-items: center;
+    background-color: #DFE6EF;
+    box-shadow: 0 1px #C9CFD7 inset;
+    border-bottom-left-radius: 5px;
+    border-top-left-radius: 5px;
+    color: #C4C0C0;
+    
+    .placeholder {
+      margin-left: 10px;
+      margin-right: 15px;
+      font-style: italic;
+
+      &.touched {
+        font-style: normal;
+      }
+    }
+  }
+
+  .select-folder {
+    height: 100%;
+    width: 32px;
+    background-color: $base-color;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    cursor: pointer;
+  }
+
+}

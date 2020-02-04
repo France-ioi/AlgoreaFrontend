@@ -1,0 +1,36 @@
+@import 'src/colors.scss';
+
+:host {
+  display: block;
+  position: relative;
+}
+
+textarea {
+  width: 100%;
+  background-color: #DFE6EF;
+  box-shadow: 1px 1px #C9CFD7 inset;
+  border-radius: 5px;
+  border: none;
+  font-size: 12px;
+  padding-left: 30px;
+  padding-top: 6px;
+
+  color: $nav-bk-color;
+
+  &::placeholder {
+    font-style: italic;
+    color: #C6C2C2;
+  }
+}
+
+.placeholder-icon {
+  position: absolute;
+  left: 8px;
+  top: 8px;
+  color: $base-text-color;
+  font-size: 12px;
+}
+
+:host ::ng-deep .ui-inputtext:enabled:focus:not(.ui-state-error) {
+  box-shadow: 1px 1px #C9CFD7 inset;
+}

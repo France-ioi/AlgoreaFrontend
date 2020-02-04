@@ -1,0 +1,35 @@
+@import 'src/colors.scss';
+
+.code-generator {
+  display: flex;
+  align-items: center;
+  width: 120px;
+  height: 32px;
+  border-radius: 5px;
+
+  span {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .code {
+    background-color: #DFE6EF;
+    color: $dark-text-color;
+    box-shadow: 0 1px #C9CFD7 inset;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    flex: 1;
+    font-size: 15px;
+  }
+
+  .refresh {
+    width: 32px;
+    background-color: $base-color;
+    color: white;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    cursor: pointer;
+  }
+}

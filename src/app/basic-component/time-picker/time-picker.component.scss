@@ -1,0 +1,74 @@
+@import 'src/colors.scss';
+
+.time-picker {
+  display: flex;
+  border-radius: 5px;
+  height: 32px;
+  position: relative;
+
+  .time-display {
+    height: 100%;
+    background-color: #DFE6EF;
+    box-shadow: 0 1px #C9CFD7 inset;
+    color: $base-text-color;
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+
+    .time-input {
+      display: flex;
+      align-items: center;
+      margin-left: 10px;
+      margin-right: 10px;
+    }
+  }
+
+  &::before {
+    font-family: "Font Awesome 5 Free";
+    font-weight: 400;
+    content: "\f017";
+    position: absolute;
+    left: 8px;
+    top: 9px;
+  }
+
+  &::after {
+    position: absolute;
+    right: 40px;
+    top: 8px;
+    content: "mn";
+    color: $base-text-color;
+  }
+
+  .time-edit {
+    display: flex;
+    width: 80px;
+    background-color: #DFE6EF;
+    border: none;
+    box-shadow: 0 1px #C9CFD7 inset;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    padding-left: 30px;
+    font-size: 16px;
+    color: $base-text-color;
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  .time-button {
+    height: 100%;
+    width: 32px;
+    background-color: $base-color;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+  }
+
+}

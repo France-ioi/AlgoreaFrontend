@@ -1,0 +1,12 @@
+<div class="switch-container">
+  <div class="switch-header">
+    <app-switch [checked]="checked" mode="circular" (onChange)="onChange($event)"></app-switch>
+  </div>
+  <div class="switch-content-wrapper">
+    <span class="header-title">{{label}}</span>
+    <div class="switch-content">
+      <span class="content-title">{{title}}</span>
+      <ng-content *ngIf="visible"></ng-content>
+    </div>
+  </div>
+</div>
