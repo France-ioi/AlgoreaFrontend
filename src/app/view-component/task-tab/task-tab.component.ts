@@ -1,5 +1,4 @@
 import { Component, OnInit, ElementRef, OnChanges, SimpleChanges, Input, Output, EventEmitter } from '@angular/core';
-import { NodeService } from 'src/app/services/node-service.service';
 
 @Component({
   selector: 'app-task-tab',
@@ -21,29 +20,6 @@ export class TaskTabComponent implements OnInit, OnChanges {
   parentSkills;
 
   validText;
-
-  gridData;
-  columns;
-
-  grdata;
-  selItems = [
-    {
-      icon: 'fa fa-calendar',
-      label: 'sessions'
-    },
-    {
-      icon: 'fa fa-users',
-      label: 'teams (3)'
-    },
-    {
-      icon: 'fa fa-users',
-      label: 'group (2)'
-    },
-    {
-      icon: 'fa fa-user',
-      label: 'users'
-    }
-  ];
   selItems1 = [
     {
       label: 'list'
@@ -64,11 +40,8 @@ export class TaskTabComponent implements OnInit, OnChanges {
     }
   ];
 
-  @Output() expandWholeWidth = new EventEmitter<void>();
-
   constructor(
-    private elementRef: ElementRef,
-    private nodeService: NodeService
+    private elementRef: ElementRef
   ) { }
 
   findParents(node) {
@@ -116,25 +89,6 @@ export class TaskTabComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.refresh();
-    this.nodeService.getCarHuge().subscribe(res => {
-      this.gridData = res.data;
-      this.columns = [
-        { field: 'vin', header: 'Vin' },
-        { field: 'year', header: 'Year' },
-        { field: 'brand', header: 'Brand' },
-        { field: 'color', header: 'Color' },
-        { field: 'vin1', header: 'Vin1' },
-        { field: 'year1', header: 'Year1' },
-        { field: 'brand1', header: 'Brand1' },
-        { field: 'color1', header: 'Color1' }
-      ];
-      this.grdata = [
-        {
-          name: 'Epreuves',
-          columns: this.columns
-        }
-      ]
-    });
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -158,10 +112,6 @@ export class TaskTabComponent implements OnInit, OnChanges {
     if (i > 0) {
       tabs[i - 1].classList.add('mat-tab-label-before-active');
     }
-  }
-
-  onExpandWidth(e) {
-    this.expandWholeWidth.emit(e);
   }
 
 }

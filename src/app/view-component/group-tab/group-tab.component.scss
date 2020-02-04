@@ -37,5 +37,147 @@
 :host ::ng-deep .mat-tab-body-wrapper {
   .mat-tab-body {
     background-color: white;
+
+    .selection-tool {
+      display: flex;
+      flex-direction: column;
+      border-radius: 5px;
+      background-color: $base-bk-color;
+
+      margin-left: 55px;
+      margin-right: 20px;
+      margin-bottom: 32px;
+
+      app-selection:first-child {
+        margin-left: 10px;
+        margin-right: 10px;
+      }
+    }
+
+    app-sub-section {
+      display: block;
+      margin-left: -70px;
+      margin-right: -20px;
+    }
+
+    .button-container {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .session-selectors {
+      display: flex;
+      align-items: center;
+
+      span.label {
+        font-size: 12px;
+        font-weight: bold;
+        color: #7C7C7C;
+        margin-right: 20px;
+      }
+
+      .date-selector {
+        display: flex;
+        align-items: center;
+        margin-right: 20px;
+
+      }
+
+      .activity-selector {
+        display: flex;
+        align-items: center;
+      }
+    }
+
+    .session-content {
+      display: flex;
+      flex-direction: column;
+
+      app-button {
+        align-self: center;
+      }
+    }
+
+    span.comment {
+      font-size: 12px;
+      margin-bottom: 5px;
+    }
+
+    .invitation-code {
+      display: flex;
+      flex-direction: column;
+
+      span.comment {
+        font-size: 12px;
+      }
+
+      .auto-create {
+        display: flex;
+        margin-top: 10px;
+        
+        span {
+          flex: 1;
+          color: $nav-bk-color;
+          font-weight: bold;
+        }
+      }
+
+      .code-validation {
+        display: flex;
+        margin-top: 15px;
+          
+        span.label {
+          color: $nav-bk-color;
+          font-weight: bold;
+          margin-right: 15px;
+          font-size: 12px;
+        }
+
+        .code-wrapper {
+          display: flex;
+          align-items: center;
+        }
+
+        .time-wrapper {
+          margin-left: 15px;
+          display: flex;
+          align-items: center;
+        }
+      }
+    }
+
+    .invite-users {
+      display: flex;
+      flex-direction: column;
+      margin-top: 10px;
+
+      app-textarea {
+        width: 100%;
+      }
+      
+      app-button {
+        margin-top: 10px;
+        align-self: flex-end;
+        
+        ::ng-deep p-button button {
+          width: 140px;
+        }
+      }
+    }
+
+    .import-csv {
+      display: flex;
+      align-items: center;
+
+      span.comment {
+        flex: 1;
+      }
+      
+      app-button {        
+        ::ng-deep p-button button {
+          width: 310px;
+        }
+      }
+    }
   }
 }

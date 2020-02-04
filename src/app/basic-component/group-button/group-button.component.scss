@@ -1,0 +1,31 @@
+@import 'src/colors.scss';
+
+.button-container {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  width: 130px;
+  height: 130px;
+  margin: 5px;
+  padding: 10px;
+  background-color: #DFE6EF;
+  cursor: pointer;
+  border-radius: 5px;
+
+  &:hover, &.active {
+    background-color: #CBDFF6;
+  }
+
+  &.disabled {
+    background-color: transparent;
+    opacity: 0.5;
+  }
+
+  .button-label {
+    margin-top: 10px;
+    font-weight: bold;
+    font-size: 14px;
+    text-transform: uppercase;
+    color: $base-text-color;
+  }
+}

@@ -1,1 +1,1 @@
-<p-inputSwitch [(ngModel)]="checked" [ngClass]="{dark: isDark === 'true'}" (onChange)="handleChange($event)"></p-inputSwitch>
+<p-inputSwitch [(ngModel)]="checked" [ngClass]="{dark: mode === 'dark', circular: mode === 'circular', white: mode === 'white'}" (onChange)="handleChange($event)"></p-inputSwitch>
