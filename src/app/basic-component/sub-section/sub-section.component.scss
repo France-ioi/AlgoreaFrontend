@@ -32,6 +32,19 @@
       font-size: 20px;
       color: $nav-bk-color;
       margin-left: 15px;
+      flex: 1;
+    }
+
+    .section-help {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      font-size: 12px;
+      border-radius: 15px;
+      border: 1px solid $nav-bk-color;
+      cursor: pointer;
     }
   }
   
