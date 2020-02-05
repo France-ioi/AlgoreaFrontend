@@ -1,5 +1,7 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
+import { EditService } from 'src/app/services/edit.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-task',
@@ -14,11 +16,26 @@ export class TaskComponent implements OnInit {
   collapsed;
   activityORSkill;
   taskdata;
+  editing;
+  parents;
+  parentSkills;
+
+  editSubscription: Subscription;
 
   constructor(
-    private router: Router,
+    private editService: EditService,
     private activatedRoute: ActivatedRoute
   ) { 
+  }
+
+  findParents(node) {
+    if (!node) {
+      return ;
+    }
+
+    this.parentSkills.push(node);
+    this.parents.push(node.title);
+    this.findParents(node.parent);
   }
 
   @HostListener('window:scroll', ['$event'])
@@ -41,8 +58,26 @@ export class TaskComponent implements OnInit {
         this.collapsed = param.collapsed;
         this.activityORSkill = param.activityORSkill;
         this.taskdata = param.taskdata;
+
+        this.parents = [];
+        this.parentSkills = [];
+        this.findParents(this.taskdata);
+        if (this.parents.length > 0) {
+          this.parents.shift();
+          this.parents.reverse();
+          this.parentSkills.shift();
+          this.parentSkills.reverse();
+        }
       }
     });
+
+    this.editSubscription = this.editService.getOb().subscribe(res => {
+      this.editing = res;
+    });
+  }
+
+  ngOnDestroy() {
+    this.editSubscription.unsubscribe();
   }
 
 }

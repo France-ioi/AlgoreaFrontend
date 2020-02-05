@@ -8,6 +8,13 @@ $danger-color: #ff001f;
   background-color: $base-color;
   border-color: $base-color;
 
+  &.diagonal-rounded {
+    border-top-left-radius: 10px;
+    border-top-right-radius: unset;
+    border-bottom-left-radius: unset;
+    border-bottom-right-radius: 5px;
+  }
+
   &:enabled:focus {
     outline: none;
     box-shadow: none;

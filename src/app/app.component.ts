@@ -3,9 +3,8 @@ import { PickListType, PickListColor } from './pick-list/pick-list.component';
 import { ProgressType } from './basic-component/skill-progress/skill-progress.component';
 import { NodeService } from './services/node-service.service';
 import * as _ from 'lodash';
-
-import { ButtonComponent } from './basic-component/button/button.component';
 import { Router } from '@angular/router';
+import { EditService } from './services/edit.service';
 
 @Component({
   selector: 'app-root',
@@ -15,6 +14,7 @@ import { Router } from '@angular/router';
 export class AppComponent {
   ProgressType = ProgressType;
   title = 'france-ioi';
+  editing = false;
   list = {
     lists: [
       {
@@ -821,6 +821,7 @@ export class AppComponent {
 
   constructor(
     private nodeService: NodeService,
+    private editService: EditService,
     private router: Router
   ) { }
 
@@ -829,9 +830,6 @@ export class AppComponent {
     this.nodeService.getFiles().then(res => {
       this.files = res;
       this.groups = _.cloneDeep(res);
-    });
-    this.nodeService.getTrees().then(res => {
-      this.trees = res;
     });
   }
 
@@ -933,5 +931,15 @@ export class AppComponent {
         groupdata: e
       }
     });
+  }
+
+  onEditPage(e) {
+    this.editing = true;
+    this.editService.setValue(this.editing);
+  }
+
+  onEditCancel(e) {
+    this.editing = false;
+    this.editService.setValue(this.editing);
   }
 }

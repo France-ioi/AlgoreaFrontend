@@ -1,5 +1,5 @@
 <div class="page-nav">
-  <span *ngIf="allowFullScreen === 'false'" class="page-edit">
+  <span *ngIf="allowFullScreen === 'false'" class="page-edit" (click)="editPage($event)">
     <i class="fa fa-pencil-alt"></i>
   </span>
   <span *ngIf="allowFullScreen === 'true'" class="top-bar-expand">

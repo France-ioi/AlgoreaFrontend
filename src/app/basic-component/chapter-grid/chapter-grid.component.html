@@ -1,0 +1,18 @@
+<p-table [value]="data" [reorderableColumns]="true">
+  <ng-template pTemplate="body" let-rowData let-index="rowIndex">
+    <tr [pReorderableRow]="index">
+      <td class="reorder-handle" pReorderableRowHandle>
+        <i class="fa fa-sort"></i>
+      </td>
+      <td *ngFor="let col of cols; index as idx" [ngClass]="{main: idx === 1, type: idx === 0}">
+        {{ rowData[col] }}
+      </td>
+      <td>
+        <span class="table-icon lock"><i class="fa fa-lock"></i></span>
+        <span class="table-icon"><i class="fa fa-paste"></i></span>
+        <span class="table-icon"><i class="fa fa-folder"></i></span>
+        <span class="table-icon"><i class="fa fa-trash-alt"></i></span>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>

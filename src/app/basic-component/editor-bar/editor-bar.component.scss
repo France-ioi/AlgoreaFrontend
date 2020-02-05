@@ -1,0 +1,59 @@
+@import 'src/colors.scss';
+
+.editor-bar-wrapper {
+  height: 45px;
+  display: flex;
+  align-items: center;
+  color: white;
+  font-size: 14px;
+  background-color: $base-color;
+  padding-left: 20px;
+  padding-right: 20px;
+
+  span {
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 5px;
+    margin-right: 5px;
+    border-radius: 100px;
+
+    &.edit-icon {
+      margin-left: 0;
+    }
+
+    &.edit-title {
+      flex: 1;
+      font-size: 12px;
+    }
+
+    &.edit-translate {
+      background-color: #3B73B4;
+      height: 25px;
+      padding-left: 10px;
+      padding-right: 10px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    &.edit-redo {
+      background-color: #3B73B4;
+      width: 25px;
+      height: 25px;
+      cursor: pointer;
+    }
+
+    &.edit-save {
+      background-color: #B8E986;
+      width: 28px;
+      height: 28px;
+      cursor: pointer;
+    }
+
+    &.edit-cancel {
+      cursor: pointer;
+    }
+  }
+
+}

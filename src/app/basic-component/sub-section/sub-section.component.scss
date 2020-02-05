@@ -1,5 +1,11 @@
 @import 'src/colors.scss';
 
+:host {
+  display: block;
+  margin-left: -70px;
+  margin-right: -20px;
+}
+
 .section-container {
   padding: 25px 20px 15px;
   border-bottom: 1px solid #DEE4ED;

@@ -1,4 +1,12 @@
 import { Component, OnInit, ElementRef, OnChanges, SimpleChanges, Input, Output, EventEmitter } from '@angular/core';
+import { NodeService } from 'src/app/services/node-service.service';
+
+export enum AutoText {
+  category = 'category',
+  all = 'all',
+  all_but_one = 'all_but_one',
+  n_problem = 'n_problem'
+}
 
 @Component({
   selector: 'app-task-tab',
@@ -16,10 +24,14 @@ export class TaskTabComponent implements OnInit, OnChanges {
   @Input() autoText = 'category';
   @Input() data;
   @Input() image;
+  @Input() editing = false;
+  @Input() desc;
+  @Input() parentSkills;
 
-  parentSkills;
+  showDialog = false;
 
   validText;
+  trees;
   selItems1 = [
     {
       label: 'list'
@@ -39,25 +51,51 @@ export class TaskTabComponent implements OnInit, OnChanges {
       label: 'yes'
     }
   ];
+  validationType = [
+    {
+      label: 'Category',
+      value: AutoText.category
+    },
+    {
+      label: 'All',
+      value: AutoText.all
+    },
+    {
+      label: 'All but one',
+      value: AutoText.all_but_one
+    },
+    {
+      label: 'N problems',
+      value: AutoText.n_problem
+    }
+  ];
+
+  chapterdata = [
+    {
+      ID: 1,
+      col1: 'video',
+      col2: 'Morbi sit amet eleifend tortor'
+    },
+    {
+      ID: 2,
+      col1: 'video',
+      col2: 'Morbi sit amet eleifend tortor'
+    },
+    {
+      ID: 3,
+      col1: 'conc.',
+      col2: 'Morbi sit amet eleifend tortor'
+    }
+  ];
+
+  chaptercols = ['col1', 'col2', 'col3'];
 
   constructor(
-    private elementRef: ElementRef
+    private elementRef: ElementRef,
+    private nodeService: NodeService
   ) { }
 
-  findParents(node) {
-    if (!node) {
-      return ;
-    }
-
-    this.parentSkills.push(node);
-    this.findParents(node.parent);
-  }
-
   refresh() {
-    // this.content = this.items.content;
-    // this.participation = this.items.participation;
-    // this.discussions = this.items.discussions;
-    // this.relatedSkills = this.items.relatedSkills;
     switch (this.autoText) {
       case 'category':
         this.validText = 'solve at least all tasks with Validation type';
@@ -72,23 +110,14 @@ export class TaskTabComponent implements OnInit, OnChanges {
         this.validText = `solve at least ${this.autoText} tasks`;
         break;
     }
-
-    console.log(this.data);
-
-    this.parentSkills = [];
-
-    this.findParents(this.data);
-
-    console.log(this.parentSkills);
-
-    if (this.parentSkills.length > 0) {
-      this.parentSkills.shift();
-      this.parentSkills.reverse();
-    }
   }
 
   ngOnInit() {
     this.refresh();
+    this.nodeService.getFiles().then(res => {
+      this.trees = res;
+      console.log(this.trees);
+    });
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -112,6 +141,10 @@ export class TaskTabComponent implements OnInit, OnChanges {
     if (i > 0) {
       tabs[i - 1].classList.add('mat-tab-label-before-active');
     }
+  }
+
+  openContentDialog(e) {
+    this.showDialog = true;
   }
 
 }

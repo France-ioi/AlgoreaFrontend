@@ -1,0 +1,44 @@
+@import 'src/colors.scss';
+
+:host ::ng-deep .ui-table {
+
+  .ui-table-tbody > tr {
+    background-color: #EFEFEF;
+    display: flex;
+    border-bottom: 1px solid #E2E9F1;
+    margin-bottom: 2px;
+    border-radius: 10px;
+  }
+
+  .ui-table-tbody > tr:last-child {
+    border: none;
+  }
+
+  .ui-table-tbody > tr:nth-child(even) {
+    background-color: #EFEFEF;
+  }
+
+  .ui-table-tbody > tr > td {
+    color: $base-text-color;
+    border: none;
+    background-color: transparent;
+
+    span.table-icon {
+      margin-right: 10px;
+      color: $base-color;
+      cursor: pointer;
+
+      &.lock {
+        color: $secondary-color;
+      }
+    }
+
+    &.main {
+      flex: 1;
+    }
+
+    &.type {
+      color: $base-color;
+    }
+  }
+}

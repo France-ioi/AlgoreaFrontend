@@ -67,6 +67,10 @@
     border-bottom-left-radius: 10px;
 }
 
+:host ::ng-deep .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content:focus {
+  box-shadow: none;
+}
+
 .node-tree-item {
   width: 100%;
   display: flex;

@@ -1,4 +1,4 @@
-<textarea pInputTextarea rows="5" placeholder="psuedo, psuedo..."></textarea>
-<span class="placeholder-icon">
+<textarea pInputTextarea rows="5" placeholder="{{placeholder}}" [ngClass]="{'no-icon': !icon}">{{value}}</textarea>
+<span class="placeholder-icon" *ngIf="icon">
   <i class="fa fa-font"></i>
 </span>

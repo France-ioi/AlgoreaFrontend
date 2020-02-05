@@ -23,6 +23,7 @@ export class SelectionTreeComponent implements OnInit, OnChanges {
       }
       if (this.data.length > 0) {
         this.data[0]['root'] = true;
+        this.data[0]['expanded'] = true;
       }
     }
   }

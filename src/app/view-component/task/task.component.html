@@ -4,17 +4,22 @@
   [isStarted]="isStarted"
   [isCollapsed]="collapsed"
   [title]="taskdata.title"
+  [editing]="editing"
+  [parents]="parents"
 ></app-task-header>
 <div>
   <app-task-tab
     [activityORSkill]="activityORSkill"
+    [editing]="editing"
     [data]="taskdata"
+    [parentSkills]="parentSkills"
     image="france.jpg"
-    (expandWholeWidth)="collapsed = $event"
-    >It won't be a bigger problem to find one video game lover in your neighbor.
+    desc="It won't be a bigger problem to find one video game lover in your neighbor.
     Since the introduction of Virtual Game, it has been achieving great heights
     so far as its popularity and technological advancement are concerned. The
-    history of video game is as intersting as a fairy tale.</app-task-tab
+    history of video game is as intersting as a fairy tale."
+    (expandWholeWidth)="collapsed = $event"
+    ></app-task-tab
   >
 </div>
 <!-- <p>Task works</p> -->

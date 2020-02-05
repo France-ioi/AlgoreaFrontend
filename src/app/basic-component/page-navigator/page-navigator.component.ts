@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-page-navigator',
@@ -9,11 +9,16 @@ export class PageNavigatorComponent implements OnInit {
 
   @Input() allowFullScreen = 'false';
   @Input() navigationMode = 'nextAndPrev';
+  @Output() onEdit = new EventEmitter<any>();
 
   constructor() { }
 
   ngOnInit() {
     console.log(this.allowFullScreen);
+  }
+
+  editPage(e) {
+    this.onEdit.emit(e);
   }
 
 }

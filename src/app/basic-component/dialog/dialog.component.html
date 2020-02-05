@@ -1,0 +1,11 @@
+<p-dialog [(visible)]="show" [style]="{ width: '50vw' }" [modal]="true" (onHide)="hideEvent($event)" closeIcon="fa fa-times">
+  <p-header>
+    <div class="dialog-header">
+      <span class="dialog-handler">
+        <i class="{{icon}}"></i>
+      </span>
+      <span class="dialog-title">{{title}}</span>
+    </div>
+  </p-header>
+  <ng-content></ng-content>
+</p-dialog>

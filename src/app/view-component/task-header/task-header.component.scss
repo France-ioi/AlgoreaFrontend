@@ -6,11 +6,59 @@
 }
 
 .task-header {
+  padding-top: 20px;
   display: flex;
   align-items: center;
-  height: 120px;
   margin-right: 15px;
   background-color: $base-bk-color;
+  padding-bottom: 10px;
+
+  &.edit {
+    flex-direction: column;
+    align-items: unset;
+
+    app-input {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+
+    .links {
+      display: flex;
+      align-items: center;
+
+      .category {
+        display: flex;
+        align-items: center;
+        flex: 1;
+
+        .parent-link {
+          color: $base-color;
+        }
+
+        .parent-item {
+          margin-left: 10px;
+          color: $base-text-color;
+          font-size: 12px;
+        }
+      }
+
+      .actions {
+        display: flex;
+        align-items: center;
+        color: $base-color;
+        font-size: 12px;
+
+        span {
+          margin-right: 10px;
+          cursor: pointer;
+          
+          span {
+            margin-right: 10px;
+          }
+        }
+      }
+    }
+  }
 
   &.small {
     height: 43px;

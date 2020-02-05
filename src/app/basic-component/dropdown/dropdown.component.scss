@@ -1,0 +1,47 @@
+@import 'src/colors.scss';
+
+:host {
+  width: 100%;
+  display: block;
+}
+
+:host ::ng-deep .ui-inputtext {
+  background-color: #DFE6EF;
+  border: none;
+  box-shadow: 0 1px #C9CFD7 inset;
+}
+
+:host ::ng-deep .ui-dropdown:not(.ui-state-disabled).ui-state-focus {
+  box-shadow: none;
+}
+
+:host ::ng-deep .ui-dropdown {
+  border: none;
+  border-radius: 5px;
+  width: 100%;
+
+  .ui-dropdown-trigger {
+    background-color: #DFE6EF;
+    box-shadow: 0 1px #C9CFD7 inset;
+    right: unset;
+    left: 0;
+    border-top-right-radius: unset;
+    border-bottom-right-radius: unset;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+  }
+
+  .ui-dropdown-label-container {
+    padding-left: 2em;
+
+    .ui-dropdown-label {
+      border-top-left-radius: unset;
+      border-bottom-left-radius: unset;
+      color: $base-text-color;
+
+      &.ui-placeholder {
+        font-style: italic;
+      }
+    }
+  }
+}
