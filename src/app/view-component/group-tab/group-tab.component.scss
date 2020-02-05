@@ -38,19 +38,33 @@
   .mat-tab-body {
     background-color: white;
 
-    .selection-tool {
-      display: flex;
-      flex-direction: column;
-      border-radius: 5px;
-      background-color: $base-bk-color;
+    .table-container {
+      padding-bottom: 20px;
+      position: relative;
 
-      margin-left: 55px;
-      margin-right: 20px;
-      margin-bottom: 32px;
+      .selection-tool {
+        display: flex;
+        flex-direction: column;
+        border-radius: 5px;
+        background-color: $base-bk-color;
 
-      app-selection:first-child {
-        margin-left: 10px;
-        margin-right: 10px;
+        margin-left: 55px;
+        margin-right: 20px;
+        margin-bottom: 32px;
+
+        app-selection:first-child {
+          margin-left: 10px;
+          margin-right: 10px;
+        }
+      }
+
+      .tri-tag {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        border-left: 11px solid transparent;
+        border-right: 11px solid transparent;
+        border-bottom: 17px solid #ECF3FC;
       }
     }
 

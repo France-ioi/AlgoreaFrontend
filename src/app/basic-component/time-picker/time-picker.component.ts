@@ -9,9 +9,24 @@ export class TimePickerComponent implements OnInit {
 
   @Input() time = 30;
 
-  constructor() { }
+  _prev;
+
+  constructor() { 
+  }
 
   ngOnInit() {
+  }
+
+  timeChange(e) {
+    console.log(e);
+    console.log(this.time);
+    this._prev = this.time;
+  }
+
+  timeChanged(e) {
+    if (this.time > 999) {
+      this.time = this._prev;
+    }
   }
 
 }

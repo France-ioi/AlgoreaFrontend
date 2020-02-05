@@ -14,67 +14,70 @@
     </ng-template>
     <ng-template matTabContent>
       <app-section icon="fa fa-users" title="Current Composition">
-        <div class="selection-tool">
-          <app-selection [items]="selItems"></app-selection>
-          <app-selection [items]="selItems" type="square"></app-selection>
-        </div>
-        <app-grid
-          [selectedColumns]="columns"
-          [columns]="columns"
-          [data]="gridData"
-          sortMode="single"
-          selectionMode="multiple"
-          scrollWhenExpanded="true"
-          [groupInfo]="grdata"
-          (expandWholeWidth)="onExpandWidth($event)"
-        >
-          <ng-template #headerTemplate let-columns>
-            <tr>
-              <th *ngFor="let col of columns" [pSortableColumn]="col.field">
-                {{ col.header }}
-                <p-sortIcon [field]="col.field"></p-sortIcon>
-              </th>
-            </tr>
-          </ng-template>
-          <ng-template
-            #bodyTemplate
-            let-rowData
-            let-columns="columns"
-            let-rowIndex="rowIndex"
+        <div class="table-container">
+          <div class="selection-tool">
+            <app-selection [items]="selItems"></app-selection>
+            <app-selection [items]="selItems" type="square"></app-selection>
+          </div>
+          <app-grid
+            [selectedColumns]="columns"
+            [columns]="columns"
+            [data]="gridData"
+            sortMode="single"
+            selectionMode="multiple"
+            scrollWhenExpanded="true"
+            [groupInfo]="grdata"
+            (expandWholeWidth)="onExpandWidth($event)"
           >
-            <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
-              <td style="width: 35px;">
-                <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
-              </td>
-              <td *ngFor="let col of columns">
-                {{ rowData[col.field] }}
-              </td>
-            </tr>
-          </ng-template>
-          <ng-template #summaryTemplate let-table>
-            <div style="text-align: left; display: flex; align-items: center;">
-              <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-              <span style="margin-left: 10px; color: #9B9B9B; flex: 1;">
-                Select all
-              </span>
-              <div class="export-tools">
-                <span class="export">
-                  <span>Duplicate</span>
-                  <i class="fa fa-paste"></i>
+            <ng-template #headerTemplate let-columns>
+              <tr>
+                <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                  {{ col.header }}
+                  <p-sortIcon [field]="col.field"></p-sortIcon>
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template
+              #bodyTemplate
+              let-rowData
+              let-columns="columns"
+              let-rowIndex="rowIndex"
+            >
+              <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
+                <td style="width: 35px;">
+                  <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                </td>
+                <td *ngFor="let col of columns">
+                  {{ rowData[col.field] }}
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template #summaryTemplate let-table>
+              <div style="text-align: left; display: flex; align-items: center;">
+                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                <span style="margin-left: 10px; color: #9B9B9B; flex: 1;">
+                  Select all
                 </span>
-                <span class="remove">
-                  <span>Remove</span>
-                  <i class="fa fa-trash-alt"></i>
-                </span>
-                <span class="print">
-                  <span>Move</span>
-                  <i class="fa fa-folder-open"></i>
-                </span>
+                <div class="export-tools">
+                  <span class="export">
+                    <span>Duplicate</span>
+                    <i class="fa fa-paste"></i>
+                  </span>
+                  <span class="remove">
+                    <span>Remove</span>
+                    <i class="fa fa-trash-alt"></i>
+                  </span>
+                  <span class="print">
+                    <span>Move</span>
+                    <i class="fa fa-folder-open"></i>
+                  </span>
+                </div>
               </div>
-            </div>
-          </ng-template>
-        </app-grid>
-        <app-sub-section icon="fa fa-user-plus" title="Add subgroups">
+            </ng-template>
+          </app-grid>
+          <span class="tri-tag"></span>
+        </div>
+        <app-sub-section icon="fa fa-user-plus" title="Add subgroups" tooltip="tooltip help">
           <div class="button-container">
             <ng-container *ngFor="let item of subgroup">
               <app-group-button [label]="item.label" [icon]="item.icon" [disabled]="item.disabled"></app-group-button>

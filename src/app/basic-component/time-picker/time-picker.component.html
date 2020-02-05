@@ -5,7 +5,7 @@
       <span class="time-value" contenteditable="true">{{time}}</span>&nbsp;mn
     </span>
   </span> -->
-  <input type="text" class="time-edit" [(ngModel)]="time">
+  <input type="number" class="time-edit" [(ngModel)]="time" (keypress)="timeChange($event)" (keyup)="timeChanged($event)">
   <span class="time-button">
     <i class="fa fa-check"></i>
   </span>
