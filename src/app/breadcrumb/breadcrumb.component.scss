@@ -11,18 +11,35 @@ $breadcrumb-bottom-color: #E0E1E5;
     margin: 0;
     height: 100%;
     padding-left: 15px;
+    display: flex;
 
     li {
-      display: inline-block;
+      display: flex;
       margin: 0 .25em;
       color: $base-text-color;
-      line-height: 40px;
+      align-items: center;
       height: 40px;
       cursor: pointer;
+      overflow: hidden;
+      min-width: 0;
+      border-top: 3px solid transparent;
 
       &.active {
         border-top: 3px solid $base-color;
         color: $base-color;
+        &.separator {
+          border-top: 3px solid transparent;
+
+          i.fa-arrow-right {
+            color: $base-color;
+          }
+        }
+      }
+
+      &.separator {
+        i.fa-arrow-right {
+          color: $base-color;
+        }
       }
 
       &.home {
@@ -37,6 +54,14 @@ $breadcrumb-bottom-color: #E0E1E5;
         display: inline-block;
         vertical-align: middle;
         line-height: normal;
+
+        &.label {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          min-width: 0;
+          flex: 1;
+        }
 
         &.attempt-badge {
           background-color: $base-color;

@@ -80,9 +80,13 @@ export class AppComponent {
   breaddata = {
     selectedID: 42,
     path: [
-      { ID: 1, label: 'Contest' },
-      { ID: 42, label: 'Personalized contest', attempt: 12 },
-      { ID: 21, label: 'IOI Selection 2012', attempt: 2 }
+      { ID: 1, label: 'Contest', separator: 'slash' },
+      { ID: 42, label: 'Personalized contest', attempt: 12, separator: 'arrow' },
+      { ID: 21, label: 'IOI Selection 2012', attempt: 2 },
+      { ID: 22, label: 'Individual', separator: 'slash' },
+      { ID: 43, label: 'Personalized contests', attempt: 12 },
+      { ID: 23, label: 'IOI Selection 2012', attempt: 2 },
+      { ID: 24, label: 'Individuals', separator: 'slash' }
     ]
   };
 
@@ -820,6 +824,7 @@ export class AppComponent {
     private router: Router
   ) { }
 
+  // tslint:disable-next-line: use-lifecycle-interface
   ngOnInit() {
     this.nodeService.getFiles().then(res => {
       this.files = res;

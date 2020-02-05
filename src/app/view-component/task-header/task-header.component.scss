@@ -27,12 +27,17 @@
 
   .task-title {
     margin-left: 15px;
+    margin-right: 10px;
     flex: 1;
+    min-width: 0;
 
     p {
       font-size: 30px;
       margin: 0;
       margin-bottom: 5px;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;  
     }
     span {
       color: $base-text-color;

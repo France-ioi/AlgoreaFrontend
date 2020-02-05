@@ -31,6 +31,7 @@ import { ActivityPickerComponent } from './activity-picker/activity-picker.compo
 import { TimePickerComponent } from './time-picker/time-picker.component';
 import { TextareaComponent } from './textarea/textarea.component';
 import { SubGridComponent } from './sub-grid/sub-grid.component';
+import { HeaderSectionComponent } from './header-section/header-section.component';
 
 @NgModule({
   declarations: [
@@ -53,7 +54,8 @@ import { SubGridComponent } from './sub-grid/sub-grid.component';
     ActivityPickerComponent,
     TimePickerComponent,
     TextareaComponent,
-    SubGridComponent
+    SubGridComponent,
+    HeaderSectionComponent
   ],
   imports: [
     CommonModule,
@@ -89,7 +91,8 @@ import { SubGridComponent } from './sub-grid/sub-grid.component';
     ActivityPickerComponent,
     TimePickerComponent,
     TextareaComponent,
-    SubGridComponent
+    SubGridComponent,
+    HeaderSectionComponent
   ]
 })
 export class BasicComponentModule { }
