@@ -21,6 +21,11 @@ textarea {
     font-style: italic;
     color: #C6C2C2;
   }
+
+  &.no-icon {
+    padding-left: 10px;
+    padding-top: 10px;
+  }
 }
 
 .placeholder-icon {

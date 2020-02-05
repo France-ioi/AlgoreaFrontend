@@ -38,6 +38,49 @@
   .mat-tab-body {
     background-color: white;
 
+    .section-chapter-wrapper {
+      padding-bottom: 20px;
+      position: relative;
+
+      .tri-tag {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        border-left: 11px solid transparent;
+        border-right: 11px solid transparent;
+        border-bottom: 17px solid #ECF3FC;
+      }
+    }
+
+    .add-content-wrapper {
+      display: flex;
+      align-items: center;
+
+      span.label {
+        font-style: italic;
+        margin-left: 20px;
+        margin-right: 20px;
+      }
+
+      app-input, app-activity-picker {
+        flex: 1;
+      }
+
+      .dialog-content {
+        display: flex;
+        flex-direction: column;
+
+        .tree-content {
+          padding-right: 20px;
+          margin-bottom: 20px;
+        }
+
+        app-button {
+          align-self: flex-end;
+        }
+      }
+    }
+
     .desc-image {
       padding: 20px;
       width: 100%;

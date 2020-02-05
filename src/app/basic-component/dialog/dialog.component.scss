@@ -1,0 +1,65 @@
+@import 'src/colors.scss';
+
+:host ::ng-deep .ui-widget-overlay {
+  background-color: #FFFC;
+}
+
+:host ::ng-deep .ui-corner-top {
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+:host ::ng-deep .ui-dialog {
+  .ui-dialog-titlebar {
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    padding-left: 0;
+
+    .ui-dialog-titlebar-close {
+      color: $base-color;
+      
+    }
+
+    .ui-dialog-title {
+      flex: 1;
+
+      .dialog-header {
+        display: flex;
+        align-items: center;
+    
+        .dialog-handler {
+          display: block;
+          background-color: $base-color;
+          border-left: 3px solid $dark-color;
+          width: 55px;
+          height: 30px;
+          border-top-right-radius: 100px;
+          border-bottom-right-radius: 100px;
+          position: relative;
+    
+          i {
+            color: white;
+            position: absolute;
+            right: 10px;
+            top: 7px;
+          }
+        }
+    
+        .dialog-title {
+          font-size: 24px;
+          color: $dark-text-color;
+          margin-left: 15px;
+          font-weight: normal;
+        }
+      }
+    }
+  }
+
+  .ui-dialog-content {
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    padding-right: 0;
+    padding-bottom: 0;
+  }
+}

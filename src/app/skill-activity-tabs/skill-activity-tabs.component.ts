@@ -25,6 +25,7 @@ export class SkillActivityTabsComponent implements OnInit {
   }
 
   onSkillSelected(e) {
+    console.log(e);
     this.skillSelect.emit(e);
   }
 

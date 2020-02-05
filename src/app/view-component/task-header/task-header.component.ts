@@ -8,18 +8,14 @@ import { Component, OnInit, Input } from '@angular/core';
 export class TaskHeaderComponent implements OnInit {
 
   @Input() isStarted = false;
-
   @Input() isCoordinator = false;
-
   @Input() isFinished = true;
-
   @Input() isCollapsed = false;
-
   @Input() isFolded = false;
-
   @Input() isScrolled = false;
-
   @Input() title;
+  @Input() editing;
+  @Input() parents;
 
   constructor() { }
 

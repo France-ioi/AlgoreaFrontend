@@ -1,15 +1,19 @@
-<div class="task-header" [ngClass]="{ folded: isFolded, unfolded: !isFolded }">
+<div
+  *ngIf="!editing"
+  class="task-header"
+  [ngClass]="{ folded: isFolded, unfolded: !isFolded }"
+>
   <app-score-ring
     *ngIf="isStarted"
     displayedScore="75"
     currentScore="80"
-    [ngStyle]="{'opacity': isScrolled ? 0 : 1}"
+    [ngStyle]="{ opacity: isScrolled ? 0 : 1 }"
   ></app-score-ring>
   <div *ngIf="!isStarted" class="task-user-image">
     <img src="assets/images/_messi.jpg" width="50px" height="50px" />
   </div>
   <div class="task-title">
-    <p [ngStyle]="{'opacity': isScrolled ? 0 : 1}">{{title}}</p>
+    <p [ngStyle]="{ opacity: isScrolled ? 0 : 1 }">{{ title }}</p>
     <span>Subtitle for the task</span>
   </div>
   <div *ngIf="!isStarted; then cordBlock; else userBlock"></div>
@@ -36,11 +40,46 @@
       </span>
       <span class="user-id">CyrilK89</span>
     </div>
-    <span class="clock-icon" [ngClass]="{ finished: isFinished }" [ngStyle]="{'opacity': isScrolled ? 0 : 1}">
+    <span
+      class="clock-icon"
+      [ngClass]="{ finished: isFinished }"
+      [ngStyle]="{ opacity: isScrolled ? 0 : 1 }"
+    >
       <i class="fa fa-clock"></i>
     </span>
-    <span class="remaining-time" [ngClass]="{ finished: isFinished }" [ngStyle]="{'opacity': isScrolled ? 0 : 1}">
+    <span
+      class="remaining-time"
+      [ngClass]="{ finished: isFinished }"
+      [ngStyle]="{ opacity: isScrolled ? 0 : 1 }"
+    >
       00:03:10
     </span>
   </ng-template>
+</div>
+
+<div *ngIf="editing" class="task-header edit">
+  <app-input mode="light" type="large" placeholder="Course title" [value]="title"></app-input>
+  <app-input mode="light" placeholder="Course subtitle"></app-input>
+  <div class="links">
+    <div class="category">
+      <span class="parent-link">
+        <i class="fa fa-link"></i>
+      </span>
+      <span class="parent-item">{{parents.join(", ")}}</span>
+    </div>
+    <div class="actions">
+      <span class="export">
+        <span>Duplicate</span>
+        <i class="fa fa-paste"></i>
+      </span>
+      <span class="print">
+        <span>Move</span>
+        <i class="fa fa-folder-open"></i>
+      </span>
+      <span class="remove">
+        <span>Remove</span>
+        <i class="fa fa-trash-alt"></i>
+      </span>
+    </div>
+  </div>
 </div>

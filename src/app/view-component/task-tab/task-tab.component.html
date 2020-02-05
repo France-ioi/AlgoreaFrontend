@@ -1,72 +1,96 @@
 <mat-tab-group mat-stretch-tabs (selectedTabChange)="onTabChange($event)">
-  <mat-tab>
-    <ng-template mat-tab-label>
-      <i class="fa fa-book"></i>
-      Content
-    </ng-template>
-    <ng-template matTabContent>
-      <div class="desc-image">
-        <div
-          class="image"
-          [ngStyle]="{ 'background-image': 'url(assets/images/' + image + ')' }"
-        ></div>
-        <!-- <img src="assets/images/{{image}}" width="100%"> -->
-      </div>
-      <app-section title="Description" icon="fa fa-book" hideBorder="true">
-        <ng-content></ng-content>
-      </app-section>
-      <p class="validation-text" *ngIf="activityORSkill">
-        To validate this chapter, {{ validText }}
-      </p>
-      <ul *ngIf="activityORSkill" class="data-list-container activity">
-        <ng-container *ngFor="let item of data.children; index as ln">
-          <li>
-            <span class="activity-progress">
-              <app-score-ring
-                *ngIf="!item.isLocked"
-                diameter="30"
-                [displayedScore]="item.progress.displayedScore"
-                [currentScore]="item.progress.currentScore"
-              ></app-score-ring>
-            </span>
-            <span
-              class="activity-content"
-              [ngClass]="{ locked: item.isLocked }"
-            >
-              <span class="activity-title">{{ ln + 1 }}. {{ item.title }}</span>
-              <span
-                *ngIf="item.isLocked || item.hasKey"
-                class="activity-status"
-              >
-                <i *ngIf="item.isLocked" class="fa fa-lock"></i>
-                <i *ngIf="!item.isLocked && item.hasKey" class="fa fa-key"></i>
-              </span>
-              <app-state-widget
-                [label]="item.category.label"
-                [icon]="item.category.icon"
-              ></app-state-widget>
-            </span>
-          </li>
-        </ng-container>
-      </ul>
-      <app-section
-        *ngIf="!activityORSkill && data && data.children"
-        title="Sub-skills"
-        icon="fa fa-graduation-cap"
-        hideBorder="true"
-      >
-        <ul class="data-list-container sub-skill">
-          <ng-container *ngFor="let item of data.children">
+  <ng-container *ngIf="!editing">
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <i class="fa fa-book"></i>
+        Content
+      </ng-template>
+      <ng-template matTabContent>
+        <div class="desc-image">
+          <div
+            class="image"
+            [ngStyle]="{ 'background-image': 'url(assets/images/' + image + ')' }"
+          ></div>
+          <!-- <img src="assets/images/{{image}}" width="100%"> -->
+        </div>
+        <app-section title="Description" icon="fa fa-book" hideBorder="true">
+          {{desc}}
+        </app-section>
+        <p class="validation-text" *ngIf="activityORSkill">
+          To validate this chapter, {{ validText }}
+        </p>
+        <ul *ngIf="activityORSkill" class="data-list-container activity">
+          <ng-container *ngFor="let item of data.children; index as ln">
             <li>
-              <span class="skill-icon">
-                <i *ngIf="item.icon === 'progress'" class="fa fa-thumbs-up"></i>
-                <i
-                  *ngIf="item.icon === 'regress'"
-                  class="fa fa-thumbs-down"
-                ></i>
-                <i *ngIf="item.icon === 'stagnant'" class="fa fa-moon"></i>
+              <span class="activity-progress">
+                <app-score-ring
+                  *ngIf="!item.isLocked"
+                  diameter="30"
+                  [displayedScore]="item.progress.displayedScore"
+                  [currentScore]="item.progress.currentScore"
+                ></app-score-ring>
               </span>
-              <div class="skill-content">
+              <span
+                class="activity-content"
+                [ngClass]="{ locked: item.isLocked }"
+              >
+                <span class="activity-title">{{ ln + 1 }}. {{ item.title }}</span>
+                <span
+                  *ngIf="item.isLocked || item.hasKey"
+                  class="activity-status"
+                >
+                  <i *ngIf="item.isLocked" class="fa fa-lock"></i>
+                  <i *ngIf="!item.isLocked && item.hasKey" class="fa fa-key"></i>
+                </span>
+                <app-state-widget
+                  [label]="item.category.label"
+                  [icon]="item.category.icon"
+                ></app-state-widget>
+              </span>
+            </li>
+          </ng-container>
+        </ul>
+        <app-section
+          *ngIf="!activityORSkill && data && data.children"
+          title="Sub-skills"
+          icon="fa fa-graduation-cap"
+          hideBorder="true"
+        >
+          <ul class="data-list-container sub-skill">
+            <ng-container *ngFor="let item of data.children">
+              <li>
+                <span class="skill-icon">
+                  <i *ngIf="item.icon === 'progress'" class="fa fa-thumbs-up"></i>
+                  <i
+                    *ngIf="item.icon === 'regress'"
+                    class="fa fa-thumbs-down"
+                  ></i>
+                  <i *ngIf="item.icon === 'stagnant'" class="fa fa-moon"></i>
+                </span>
+                <div class="skill-content">
+                  <span class="skill-title">
+                    {{ item.title }}
+                  </span>
+                  <app-skill-progress
+                    style="width: 25%;"
+                    type="thick-horizontal"
+                    [displayedScore]="item.progress.displayedScore"
+                    [currentScore]="item.progress.currentScore"
+                  ></app-skill-progress>
+                </div>
+              </li>
+            </ng-container>
+          </ul>
+        </app-section>
+        <app-section
+          *ngIf="!activityORSkill && parentSkills.length > 0"
+          title="Parent skills"
+          icon="fa fa-link"
+          hideBorder="true"
+        >
+          <ul class="data-list-container">
+            <ng-container *ngFor="let item of parentSkills">
+              <li>
                 <span class="skill-title">
                   {{ item.title }}
                 </span>
@@ -76,63 +100,87 @@
                   [displayedScore]="item.progress.displayedScore"
                   [currentScore]="item.progress.currentScore"
                 ></app-skill-progress>
+              </li>
+            </ng-container>
+          </ul>
+        </app-section>
+      </ng-template>
+    </mat-tab>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <i class="fa fa-chart-line"></i>
+        <ng-container *ngIf="activityORSkill">Participation</ng-container>
+        <ng-container *ngIf="!activityORSkill">Progress</ng-container>
+      </ng-template>
+      <ng-template matTabContent>
+        <app-switch checked="true"></app-switch>
+        <app-switch checked="false" mode="white"></app-switch>
+        <app-selection [items]="selItems1"></app-selection>
+        <app-selection [items]="selItems2"></app-selection>
+      </ng-template>
+    </mat-tab>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <i class="fa fa-comment"></i>
+        Discussions
+      </ng-template>
+      <ng-template matTabContent>
+      </ng-template>
+    </mat-tab>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <i class="fa fa-link"></i>
+        <ng-container *ngIf="activityORSkill">Related skills</ng-container>
+        <ng-container *ngIf="!activityORSkill">Related activities</ng-container>
+      </ng-template>
+      <ng-template matTabContent>
+      </ng-template>
+    </mat-tab>
+  </ng-container>
+  <ng-container *ngIf="editing">
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <i class="fa fa-book"></i>
+        Content
+      </ng-template>
+      <ng-template matTabContent>
+          <app-section title="Description" icon="fa fa-book">
+            <app-textarea placeholder="Type your description..." [value]="desc"></app-textarea>
+          </app-section>
+          <app-section title="Validation type" icon="fa fa-book">
+            <app-dropdown [items]="validationType" placeholder="Select a type..."></app-dropdown>
+          </app-section>
+          <app-section title="Chapter" icon="fa fa-book">
+            <div class="section-chapter-wrapper">
+              <app-chapter-grid [data]="chapterdata" [cols]="chaptercols"></app-chapter-grid>
+              <span class="tri-tag"></span>
+            </div>
+            <app-sub-section icon="fa fa-sign-in-alt" title="Add a content">
+              <div class="add-content-wrapper">
+                <app-input placeholder="New content ..."></app-input>
+                <span class="label">or</span>
+                <app-activity-picker (click)="openContentDialog($event)"></app-activity-picker>
+                <app-dialog [show]="showDialog" icon="fa fa-folder" title="Select a content" (onHide)="showDialog = false">
+                  <div class="dialog-content">
+                    <div class="tree-content">
+                      <app-selection-tree [data]="trees"></app-selection-tree>
+                    </div>
+                    <app-button label="Validate" class="diagonal-rounded"></app-button>
+                  </div>
+                </app-dialog>
               </div>
-            </li>
-          </ng-container>
-        </ul>
-      </app-section>
-      <app-section
-        *ngIf="!activityORSkill && parentSkills.length > 0"
-        title="Parent skills"
-        icon="fa fa-link"
-        hideBorder="true"
-      >
-        <ul class="data-list-container">
-          <ng-container *ngFor="let item of parentSkills">
-            <li>
-              <span class="skill-title">
-                {{ item.title }}
-              </span>
-              <app-skill-progress
-                style="width: 25%;"
-                type="thick-horizontal"
-                [displayedScore]="item.progress.displayedScore"
-                [currentScore]="item.progress.currentScore"
-              ></app-skill-progress>
-            </li>
-          </ng-container>
-        </ul>
-      </app-section>
-    </ng-template>
-  </mat-tab>
-  <mat-tab>
-    <ng-template mat-tab-label>
-      <i class="fa fa-chart-line"></i>
-      <ng-container *ngIf="activityORSkill">Participation</ng-container>
-      <ng-container *ngIf="!activityORSkill">Progress</ng-container>
-    </ng-template>
-    <ng-template matTabContent>
-      <app-switch checked="true"></app-switch>
-      <app-switch checked="false" mode="white"></app-switch>
-      <app-selection [items]="selItems1"></app-selection>
-      <app-selection [items]="selItems2"></app-selection>
-    </ng-template>
-  </mat-tab>
-  <mat-tab>
-    <ng-template mat-tab-label>
-      <i class="fa fa-comment"></i>
-      Discussions
-    </ng-template>
-    <ng-template matTabContent>
-    </ng-template>
-  </mat-tab>
-  <mat-tab>
-    <ng-template mat-tab-label>
-      <i class="fa fa-link"></i>
-      <ng-container *ngIf="activityORSkill">Related skills</ng-container>
-      <ng-container *ngIf="!activityORSkill">Related activities</ng-container>
-    </ng-template>
-    <ng-template matTabContent>
-    </ng-template>
-  </mat-tab>
+            </app-sub-section>
+          </app-section>
+      </ng-template>
+    </mat-tab>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <i class="fa fa-chart-line"></i>
+        Advanced parameters
+      </ng-template>
+      <ng-template matTabContent>
+
+      </ng-template>
+    </mat-tab>    
+  </ng-container>
 </mat-tab-group>

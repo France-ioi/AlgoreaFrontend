@@ -15,7 +15,8 @@
     box-shadow: 0 1px #C9CFD7 inset;
     border-bottom-left-radius: 5px;
     border-top-left-radius: 5px;
-    color: #C4C0C0;
+    color: $base-text-color;
+    flex: 1;
     
     .placeholder {
       margin-left: 10px;
