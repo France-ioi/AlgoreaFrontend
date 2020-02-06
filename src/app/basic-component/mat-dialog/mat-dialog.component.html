@@ -1,0 +1,24 @@
+<div mat-dialog-title>
+  <div class="dialog-header">
+    <span class="dialog-handler">
+      <i class="{{ data.icon }}"></i>
+    </span>
+    <span class="dialog-title">{{ data.label }}</span>
+    <span class="dialog-close" (click)="onClose($event)">
+      <i class="fa fa-times"></i>
+    </span>
+  </div>
+  <div mat-dialog-close></div>
+</div>
+<div mat-dialog-content>
+  <div class="dialog-container">
+    <div class="dialog-content">
+      <div class="tree-content">
+        <app-selection-tree [data]="data.trees"></app-selection-tree>
+      </div>
+    </div>
+  </div>
+</div>
+<div mat-dialog-actions>
+  <app-button label="Validate" class="diagonal-rounded" (onClick)="onClose($event)"></app-button>
+</div>
