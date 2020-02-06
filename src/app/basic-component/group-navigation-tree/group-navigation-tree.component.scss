@@ -76,6 +76,7 @@
   align-items: center;
   min-height: 40px;
   position: relative;
+  cursor: pointer;
 }
 
 .node-tree-item .node-item-branch {
@@ -83,7 +84,7 @@
   flex-direction: column;
   width: 33px;
   min-height: 40px;
-  z-index: 1000;
+  z-index: 10;
 }
 
 .node-tree-item .node-item-branch .top-branch {
@@ -155,7 +156,7 @@
   margin-left: 5px;
   align-items: center;
   justify-content: center;
-  z-index: 1001;
+  z-index: 11;
 }
 
 .node-item-content .node-label {

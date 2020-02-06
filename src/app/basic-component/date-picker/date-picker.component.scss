@@ -20,15 +20,27 @@
     background-color: #DFE6EF;
     border: none;
     box-shadow: 0 1px #C9CFD7 inset;
+    padding-left: 25px;
     
     &::placeholder {
-      font-family: Arial;
       font-weight: 400;
       font-style: italic;
-      padding-left: 20px;
     }
   }
 }
+
+// :host ::ng-deep p-calendar {
+//   position: relative;
+
+//   &::before {
+//     position: absolute;
+//     content: "XXXX/XX/XX";
+//     left: 25px;
+//     top: 2px;
+//     font-style: italic;
+//     z-index: 10;
+//   }
+// }
 
 :host ::ng-deep .ui-inputtext:enabled:focus:not(.ui-state-error) {
   box-shadow: 0 1px #C9CFD7 inset;

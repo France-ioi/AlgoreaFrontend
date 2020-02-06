@@ -9,7 +9,7 @@ export class SwitchContainerComponent implements OnInit {
 
   @Input() label;
   @Input() checked: boolean;
-  @Input() title;
+  @Input() subtitle;
 
   visible = true;
 

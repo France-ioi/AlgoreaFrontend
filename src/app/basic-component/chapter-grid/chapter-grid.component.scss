@@ -33,6 +33,10 @@
       }
     }
 
+    &.reorder-handle {
+      cursor: grab;
+    }
+
     &.main {
       flex: 1;
     }

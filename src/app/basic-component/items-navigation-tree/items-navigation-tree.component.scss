@@ -89,13 +89,14 @@
   align-items: center;
   min-height: 50px;
   position: relative;
+  cursor: pointer;
 }
 
 .node-tree-item .node-item-branch {
   display: block;
   width: 38px;
   min-height: 50px;
-  z-index: 1000;
+  z-index: 10;
 }
 
 .node-tree-item .node-item-branch .top-branch {
@@ -204,7 +205,7 @@
 
 .node-tree-item .node-select {
   color: #F5A623;
-  z-index: 10001;
+  z-index: 11;
 }
 
 .node-tree-item.checked .node-select {

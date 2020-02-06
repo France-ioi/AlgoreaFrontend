@@ -155,19 +155,11 @@
               <app-chapter-grid [data]="chapterdata" [cols]="chaptercols"></app-chapter-grid>
               <span class="tri-tag"></span>
             </div>
-            <app-sub-section icon="fa fa-sign-in-alt" title="Add a content">
+            <app-sub-section icon="fa fa-sign-in-alt" label="Add a content">
               <div class="add-content-wrapper">
                 <app-input placeholder="New content ..."></app-input>
                 <span class="label">or</span>
-                <app-activity-picker (click)="openContentDialog($event)"></app-activity-picker>
-                <app-dialog [show]="showDialog" icon="fa fa-folder" title="Select a content" (onHide)="showDialog = false">
-                  <div class="dialog-content">
-                    <div class="tree-content">
-                      <app-selection-tree [data]="trees"></app-selection-tree>
-                    </div>
-                    <app-button label="Validate" class="diagonal-rounded"></app-button>
-                  </div>
-                </app-dialog>
+                <app-activity-picker [trees]="trees"></app-activity-picker>
               </div>
             </app-sub-section>
           </app-section>

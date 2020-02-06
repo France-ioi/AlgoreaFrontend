@@ -2,7 +2,12 @@
 @import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
 @import 'src/colors.scss';
 
+html {
+  height: 100%;
+}
+
 body {
   margin: 0;
   background-color: $base-bk-color;
+  min-height: 100%;
 }

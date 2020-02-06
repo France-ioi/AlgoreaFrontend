@@ -9,7 +9,7 @@ export class DialogComponent implements OnInit {
 
   @Input() show = false;
   @Input() icon;
-  @Input() title;
+  @Input() label;
   @Output() onHide = new EventEmitter<boolean>();
 
   constructor() { }
