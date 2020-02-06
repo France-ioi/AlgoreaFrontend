@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
   selector: 'app-activity-picker',
@@ -9,13 +9,13 @@ export class ActivityPickerComponent implements OnInit {
 
   selected = 'Select an activity';
 
+  @Input() trees;
+
+  show = false;
+
   constructor() { }
 
   ngOnInit() {
-  }
-
-  selectActivity(e) {
-    
   }
 
 }

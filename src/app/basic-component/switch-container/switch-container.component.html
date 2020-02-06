@@ -3,9 +3,9 @@
     <app-switch [checked]="checked" mode="circular" (onChange)="onChange($event)"></app-switch>
   </div>
   <div class="switch-content-wrapper">
-    <span class="header-title">{{label}}</span>
+    <span class="header-title" (click)="checked = !checked">{{label}}</span>
     <div class="switch-content">
-      <span class="content-title">{{title}}</span>
+      <span class="content-title">{{subtitle}}</span>
       <ng-content *ngIf="visible"></ng-content>
     </div>
   </div>

@@ -91,6 +91,9 @@ export class GroupTabComponent implements OnInit {
 
   subgridcols = ['col1', 'col2', 'col3'];
 
+  showDialog;
+  trees;
+
   constructor(
     private elementRef: ElementRef,
     private nodeService: NodeService
@@ -116,6 +119,10 @@ export class GroupTabComponent implements OnInit {
         }
       ]
     });
+    this.nodeService.getFiles().then(res => {
+      this.trees = res;
+      console.log(this.trees);
+    });
   }
 
   onTabChange(e) {
@@ -139,6 +146,10 @@ export class GroupTabComponent implements OnInit {
 
   onExpandWidth(e) {
     this.expandWholeWidth.emit(e);
+  }
+
+  openContentDialog(e) {
+    this.showDialog = true;
   }
 
 }

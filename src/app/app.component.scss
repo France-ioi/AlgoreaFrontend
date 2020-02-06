@@ -32,10 +32,139 @@
     }
   }
 
+  .top-bar {
+    position: fixed;
+    left: 400px;
+    top: 0;
+    right: 0;
+    height: 45px;
+    display: flex;
+    align-items: flex-start;
+    border-bottom: 1px solid #e0e1e5;
+    background-color: $base-bk-color;
+    z-index: 9000;
+
+    &.editing {
+      height: 90px;
+    }
+
+    &.collapsed {
+      left: 0;
+      transition: left 1s;
+      -webkit-transition: left 1s;
+      -moz-transition: left 1s;
+      -o-transition: left 1s;
+    }
+
+    &.expanded {
+      transition: left 1s;
+      -webkit-transition: left 1s;
+      -moz-transition: left 1s;
+      -o-transition: left 1s;
+    }
+
+    .top-right-bar {
+      width: 100%;
+      height: 100%;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+
+      .breadcrumb-bar {
+        display: flex;
+        align-items: center;
+        flex: 1;
+
+        app-breadcrumb {
+          flex: 1;
+        }
+      }
+
+      .folded-top-bar {
+        margin-left: 10px;
+        display: flex;
+        align-items: center;
+        height: 45px;
+        flex: 1;
+        min-width: 0;
+
+        .task-user-image {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          img {
+            border-radius: 100px;
+          }
+        }
+
+        .task-title {
+          margin-left: 15px;
+          flex: 1;
+          font-size: 30px;
+          margin-bottom: 5px;
+          min-width: 0;
+
+          p {
+            color: $base-text-color;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;  
+          }
+        }
+
+        .user-info {
+          display: flex;
+          align-items: center;
+          margin-right: 5px;
+
+          span {
+            display: block;
+
+            &.user-avatar {
+              position: relative;
+            }
+
+            &.user-id {
+              color: $base-color;
+              font-size: 20px;
+              font-weight: bold;
+            }
+          }
+        }
+
+        .clock-icon {
+          color: $dark-text-color;
+          font-size: 24px;
+          font-weight: bold;
+          margin-right: 5px;
+
+          &.finished {
+            color: $light-text-color;
+          }
+        }
+
+        .remaining-time {
+          color: $dark-text-color;
+          font-size: 24px;
+          font-weight: bold;
+
+          &.finished {
+            color: $light-text-color;
+          }
+        }
+      }
+    }
+  }
+
   .right {
     margin-left: 400px;
+    padding-top: 45px;
     background-color: $base-bk-color;
     position: relative;
+
+    &.editing {
+      padding-top: 90px;
+    }
 
     &.collapsed {
       margin-left: 0;
@@ -58,148 +187,26 @@
       -webkit-transition: margin-left 1s;
       -moz-transition: margin-left 1s;
       -o-transition: margin-left 1s;
-
-      .top-bar {
-        transition: left 1s;
-        -webkit-transition: left 1s;
-        -moz-transition: left 1s;
-        -o-transition: left 1s;
-      }
-    }
-
-    .top-bar {
-      position: fixed;
-      left: 400px;
-      top: 0;
-      right: 0;
-      height: 45px;
-      display: flex;
-      align-items: flex-start;
-      border-bottom: 1px solid #e0e1e5;
-      background-color: $base-bk-color;
-      z-index: 101;
-
-      &.editing {
-        height: 90px;
-      }
-
-      .top-right-bar {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-
-        .breadcrumb-bar {
-          display: flex;
-          align-items: center;
-          flex: 1;
-
-          app-breadcrumb {
-            flex: 1;
-          }
-        }
-
-        .folded-top-bar {
-          margin-left: 10px;
-          display: flex;
-          align-items: center;
-          height: 45px;
-          flex: 1;
-          min-width: 0;
-
-          .task-user-image {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            img {
-              border-radius: 100px;
-            }
-          }
-
-          .task-title {
-            margin-left: 15px;
-            flex: 1;
-            font-size: 30px;
-            margin-bottom: 5px;
-            min-width: 0;
-
-            p {
-              color: $base-text-color;
-              text-overflow: ellipsis;
-              overflow: hidden;
-              white-space: nowrap;  
-            }
-          }
-
-          .user-info {
-            display: flex;
-            align-items: center;
-            margin-right: 5px;
-
-            span {
-              display: block;
-
-              &.user-avatar {
-                position: relative;
-              }
-
-              &.user-id {
-                color: $base-color;
-                font-size: 20px;
-                font-weight: bold;
-              }
-            }
-          }
-
-          .clock-icon {
-            color: $dark-text-color;
-            font-size: 24px;
-            font-weight: bold;
-            margin-right: 5px;
-
-            &.finished {
-              color: $light-text-color;
-            }
-          }
-
-          .remaining-time {
-            color: $dark-text-color;
-            font-size: 24px;
-            font-weight: bold;
-
-            &.finished {
-              color: $light-text-color;
-            }
-          }
-        }
-      }
     }
 
     .main-content {
-      position: absolute;
       padding-left: 20px;
-      top: 43px;
-      left: 0px;
-      right: 0;
       background-color: $base-bk-color;
 
-      &.editing {
-        top: 83px;
-      }
+      // &.folded {
+      //   top: -90px;
+      //   transition: top 1s;
+      //   -webkit-transition: top 1s;
+      //   -moz-transition: top 1s;
+      //   -o-transition: top 1s;
+      // }
 
-      &.folded {
-        top: -90px;
-        transition: top 1s;
-        -webkit-transition: top 1s;
-        -moz-transition: top 1s;
-        -o-transition: top 1s;
-      }
-
-      &.unfolded {
-        transition: top 1s;
-        -webkit-transition: top 1s;
-        -moz-transition: top 1s;
-        -o-transition: top 1s;
-      }
+      // &.unfolded {
+      //   transition: top 1s;
+      //   -webkit-transition: top 1s;
+      //   -moz-transition: top 1s;
+      //   -o-transition: top 1s;
+      // }
     }
 
     .button-container {
@@ -213,14 +220,4 @@
       }
     }
   }
-}
-
-.score-ring-container {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-}
-
-.score-ring-container app-skill-progress {
-  margin: 5px;
 }

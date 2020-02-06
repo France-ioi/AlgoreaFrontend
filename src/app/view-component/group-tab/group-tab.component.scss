@@ -97,6 +97,20 @@
       .activity-selector {
         display: flex;
         align-items: center;
+
+        .dialog-content {
+          display: flex;
+          flex-direction: column;
+  
+          .tree-content {
+            padding-right: 20px;
+            margin-bottom: 20px;
+          }
+  
+          app-button {
+            align-self: flex-end;
+          }
+        }
       }
     }
 

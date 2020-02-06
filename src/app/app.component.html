@@ -8,6 +8,7 @@
     box-sizing: border-box;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    display: block;
   }
 
   h1,
@@ -48,80 +49,80 @@
       (groupSelect)="onGroupSelected($event)"
     ></app-left-nav>
   </div>
-  <div class="right" [ngClass]="{ collapsed: collapsed, expanded: !collapsed }">
-    <div class="top-bar" [ngClass]="{ editing: editing }">
-      <app-top-nav
-        *ngIf="collapsed"
-        [collapsed]="collapsed"
-        [folded]="folded"
-        [data]="user"
-        (collapseEvent)="onCollapse($event)"
-        (foldEvent)="onFold($event)"
-        templateId="1"
-      ></app-top-nav>
-      <div class="top-right-bar">
-        <app-editor-bar
-          *ngIf="editing"
-          (onCancel)="onEditCancel($event)"
-        ></app-editor-bar>
-        <div class="breadcrumb-bar">
-          <app-breadcrumb
-            *ngIf="!folded && !scrolled"
-            [items]="breaddata"
-          ></app-breadcrumb>
-          <app-page-navigator
-            *ngIf="!folded && !scrolled && !editing"
-            (onEdit)="onEditPage($event)"
-          ></app-page-navigator>
+  <div class="top-bar" [ngClass]="{ editing: editing, collapsed: collapsed, expanded: !collapsed }">
+    <app-top-nav
+      *ngIf="collapsed"
+      [collapsed]="collapsed"
+      [folded]="folded"
+      [data]="user"
+      (collapseEvent)="onCollapse($event)"
+      (foldEvent)="onFold($event)"
+      templateId="1"
+    ></app-top-nav>
+    <div class="top-right-bar">
+      <app-editor-bar
+        *ngIf="editing"
+        (onCancel)="onEditCancel($event)"
+      ></app-editor-bar>
+      <div class="breadcrumb-bar"
+      *ngIf="!folded && !scrolled">
+        <app-breadcrumb
+          [items]="breaddata"
+        ></app-breadcrumb>
+        <app-page-navigator
+          *ngIf="!editing"
+          (onEdit)="onEditPage($event)"
+        ></app-page-navigator>
+      </div>
+      <div class="folded-top-bar" *ngIf="folded || scrolled">
+        <app-score-ring
+          *ngIf="isStarted && selectedType == 2"
+          displayedScore="75"
+          currentScore="80"
+          [diameter]="30"
+        ></app-score-ring>
+        <div
+          *ngIf="!isStarted || selectedType == 0 || selectedType == 1"
+          class="task-user-image"
+        >
+          <img src="assets/images/_messi.jpg" width="35px" height="35px" />
         </div>
-        <div class="folded-top-bar" *ngIf="folded || scrolled">
-          <app-score-ring
-            *ngIf="isStarted && selectedType == 2"
-            displayedScore="75"
-            currentScore="80"
-            [diameter]="30"
-          ></app-score-ring>
-          <div
-            *ngIf="!isStarted || selectedType == 0 || selectedType == 1"
-            class="task-user-image"
-          >
-            <img src="assets/images/_messi.jpg" width="35px" height="35px" />
-          </div>
-          <div class="task-title">
-            <p>{{ userTitle }}</p>
-          </div>
-          <div *ngIf="collapsed" class="user-info">
-            <span class="user-avatar">
-              <img src="assets/images/Male.svg" width="32px" height="32px" />
-            </span>
-            <span class="user-id">CyrilK89</span>
-          </div>
-          <span
-            *ngIf="selectedType == 2"
-            class="clock-icon"
-            [ngClass]="{ finished: false }"
-          >
-            <i class="fa fa-clock"></i>
-          </span>
-          <span
-            *ngIf="selectedType == 2"
-            class="remaining-time"
-            [ngClass]="{ finished: false }"
-          >
-            00:03:10
-          </span>
-          <app-page-navigator
-            *ngIf="!editing"
-            allowFullScreen="false"
-            navigationMode="nextAndPrev"
-            (onEdit)="onEditPage($event)"
-          ></app-page-navigator>
+        <div class="task-title">
+          <p>{{ userTitle }}</p>
         </div>
+        <div *ngIf="collapsed" class="user-info">
+          <span class="user-avatar">
+            <img src="assets/images/Male.svg" width="32px" height="32px" />
+          </span>
+          <span class="user-id">CyrilK89</span>
+        </div>
+        <span
+          *ngIf="selectedType == 2"
+          class="clock-icon"
+          [ngClass]="{ finished: false }"
+        >
+          <i class="fa fa-clock"></i>
+        </span>
+        <span
+          *ngIf="selectedType == 2"
+          class="remaining-time"
+          [ngClass]="{ finished: false }"
+        >
+          00:03:10
+        </span>
+        <app-page-navigator
+          *ngIf="!editing"
+          allowFullScreen="false"
+          navigationMode="nextAndPrev"
+          (onEdit)="onEditPage($event)"
+        ></app-page-navigator>
       </div>
     </div>
+  </div>
+  <div class="right" [ngClass]="{ collapsed: collapsed, expanded: !collapsed, editing: editing }">
     <div
       class="main-content"
-      [ngClass]="{ folded: folded, unfolded: !folded, editing: editing }"
+      [ngClass]="{ folded: folded, unfolded: !folded }"
     >
       <router-outlet></router-outlet>
     </div>

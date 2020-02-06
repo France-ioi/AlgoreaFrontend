@@ -7,7 +7,7 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class SubSectionComponent implements OnInit {
   @Input() icon;
-  @Input() title;
+  @Input() label;
   @Input() tooltip;
 
   constructor() { }
