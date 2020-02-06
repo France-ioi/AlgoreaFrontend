@@ -12,6 +12,7 @@ import { DialogModule } from 'primeng/dialog';
 import { TreeModule } from 'primeng/tree';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatDialogModule, MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 import { MatNativeDateModule, MatRippleModule } from '@angular/material/core';
 
 import { ButtonComponent } from './button/button.component';
@@ -43,6 +44,7 @@ import { DialogComponent } from './dialog/dialog.component';
 import { SelectionTreeComponent } from './selection-tree/selection-tree.component';
 import { GroupNavigationTreeComponent } from './group-navigation-tree/group-navigation.component';
 import { ItemsNavigationTreeComponent } from './items-navigation-tree/items-navigation-tree.component';
+import { MatDialogComponent } from './mat-dialog/mat-dialog.component';
 
 @NgModule({
   declarations: [
@@ -74,23 +76,26 @@ import { ItemsNavigationTreeComponent } from './items-navigation-tree/items-navi
     DialogComponent,
     SelectionTreeComponent,
     GroupNavigationTreeComponent,
-    ItemsNavigationTreeComponent
+    ItemsNavigationTreeComponent,
+    MatDialogComponent
   ],
   imports: [
     CommonModule,
     FormsModule,
     TableModule,
     ButtonModule,
-    MatIconModule,
-    MatNativeDateModule,
-    MatRippleModule,
-    MatTabsModule,
     InputSwitchModule,
     CalendarModule,
     InputTextareaModule,
     DropdownModule,
     DialogModule,
-    TreeModule
+    TreeModule,
+
+    MatIconModule,
+    MatNativeDateModule,
+    MatRippleModule,
+    MatTabsModule,
+    MatDialogModule
   ],
   exports: [
     ButtonComponent,
@@ -122,7 +127,15 @@ import { ItemsNavigationTreeComponent } from './items-navigation-tree/items-navi
     DialogComponent,
     SelectionTreeComponent,
     GroupNavigationTreeComponent,
-    ItemsNavigationTreeComponent
+    ItemsNavigationTreeComponent,
+    MatDialogComponent
+  ],
+  providers: [
+    {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: false}}
+  ],
+  entryComponents: [
+    MatDialogComponent,
+    ActivityPickerComponent
   ]
 })
 export class BasicComponentModule { }

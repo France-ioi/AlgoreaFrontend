@@ -1,0 +1,55 @@
+@import "src/colors.scss";
+
+.dialog-header {
+  display: flex;
+  align-items: center;
+
+  .dialog-handler {
+    display: block;
+    background-color: $base-color;
+    border-left: 3px solid $dark-color;
+    width: 55px;
+    height: 30px;
+    border-top-right-radius: 100px;
+    border-bottom-right-radius: 100px;
+    position: relative;
+
+    i {
+      color: white;
+      position: absolute;
+      right: 10px;
+      font-size: 12px;
+      top: 7px;
+    }
+  }
+
+  .dialog-title {
+    font-size: 24px;
+    color: $dark-text-color;
+    margin-left: 15px;
+    font-weight: normal;
+    flex: 1;
+  }
+
+  .dialog-close {
+    width: 25px;
+    color: $base-color;
+    cursor: pointer;
+  }
+}
+
+:host ::ng-deep .mat-dialog-actions {
+  justify-content: flex-end;
+
+  app-button {
+    margin-right: -24px;
+    margin-bottom: -19px;
+  }
+}
+
+:host ::ng-deep .mat-dialog-title {
+  margin-left: -24px;
+  margin-right: -24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid $light-border-color;
+}
