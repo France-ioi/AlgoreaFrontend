@@ -831,10 +831,20 @@ export class AppComponent {
       this.files = res;
       this.groups = _.cloneDeep(res);
     });
+    this.editService.setUser(
+      {
+        title: 'Lionel MESSI',
+        avatar: '_messi.jpg',
+        type: 'user'
+      }
+    );
   }
 
   onCollapse(e) {
     this.collapsed = e;
+    if (!this.collapsed) {
+      this.folded = false;
+    }
   }
 
   onFold(e) {
@@ -868,17 +878,20 @@ export class AppComponent {
     this.userTitle = e.title;
     this.activityORSkill = false;
     this.taskdata = e;
+    this.editService.setValue({
+      scrolled: this.scrolled,
+      folded: this.folded,
+      isStarted: this.isStarted,
+      collapsed: this.collapsed,
+      activityORSkill: false,
+      editing: this.editing
+    });
     this.router.navigate([`/task/${e.ID}`], {
       queryParams: {
         refresh: new Date().getTime()
       },
       state: {
-        scrolled: this.scrolled,
-        folded: this.folded,
-        isStarted: this.isStarted,
-        collapsed: this.collapsed,
-        taskdata: this.taskdata,
-        activityORSkill: this.activityORSkill
+        taskdata: this.taskdata
       }
     });
   }
@@ -888,17 +901,20 @@ export class AppComponent {
     this.userTitle = e.title;
     this.activityORSkill = true;
     this.taskdata = e;
+    this.editService.setValue({
+      scrolled: this.scrolled,
+      folded: this.folded,
+      isStarted: this.isStarted,
+      collapsed: this.collapsed,
+      activityORSkill: true,
+      editing: this.editing
+    });
     this.router.navigate([`/task/${e.ID}`], {
       queryParams: {
         refresh: new Date().getTime()
       },
       state: {
-        scrolled: this.scrolled,
-        folded: this.folded,
-        isStarted: this.isStarted,
-        collapsed: this.collapsed,
-        taskdata: this.taskdata,
-        activityORSkill: this.activityORSkill
+        taskdata: this.taskdata
       }
     });
   }
@@ -906,12 +922,15 @@ export class AppComponent {
   onYourselfSelected(e) {
     this.selectedType = 0;
     this.userTitle = 'Cyril KITSCH';
+    this.editService.setValue({
+      scrolled: this.scrolled,
+      folded: this.folded,
+      isStarted: this.isStarted,
+      collapsed: this.collapsed,
+      editing: this.editing
+    });
     this.router.navigate(['/yourself'], {
       state: {
-        scrolled: this.scrolled,
-        folded: this.folded,
-        isStarted: this.isStarted,
-        collapsed: this.collapsed
       }
     });
   }
@@ -919,27 +938,40 @@ export class AppComponent {
   onGroupSelected(e) {
     this.selectedType = 1;
     this.userTitle = 'Jean Monet';
+    this.editService.setValue({
+      scrolled: this.scrolled,
+      folded: this.folded,
+      isStarted: this.isStarted,
+      collapsed: this.collapsed,
+      editing: this.editing
+    });
     this.router.navigate(['/group'], {
       queryParams: {
         refresh: new Date().getTime()
       },
       state: {
-        scrolled: this.scrolled,
-        folded: this.folded,
-        isStarted: this.isStarted,
-        collapsed: this.collapsed,
         groupdata: e
       }
     });
   }
 
   onEditPage(e) {
-    this.editing = true;
-    this.editService.setValue(this.editing);
+    this.editService.setValue({
+      scrolled: this.scrolled,
+      folded: this.folded,
+      isStarted: this.isStarted,
+      collapsed: this.collapsed,
+      editing: true
+    });
   }
 
   onEditCancel(e) {
-    this.editing = false;
-    this.editService.setValue(this.editing);
+    this.editService.setValue({
+      scrolled: this.scrolled,
+      folded: this.folded,
+      isStarted: this.isStarted,
+      collapsed: this.collapsed,
+      editing: false
+    });
   }
 }

@@ -122,7 +122,7 @@
   <div class="right" [ngClass]="{ collapsed: collapsed, expanded: !collapsed, editing: editing }">
     <div
       class="main-content"
-      [ngClass]="{ folded: folded, unfolded: !folded }"
+      [ngClass]="{ folded: folded, unfolded: !folded, 'type-1': selectedType === 1, 'type-2': selectedType === 2, 'type-0': selectedType === 0 }"
     >
       <router-outlet></router-outlet>
     </div>

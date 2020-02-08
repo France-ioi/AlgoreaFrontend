@@ -5,5 +5,5 @@
   <path *ngIf="isStarted" attr.stroke="{{_displayFill}}" attr.d="{{_displayPath}}" fill="none" stroke-width="4" stroke-linecap="round" transform="translate(32,32)"/>
   <path *ngIf="isStarted && isDark" d="M32,4 a28,28 0 0,1 0,56  a28,28 0 1,1 0,-56" fill="black" fill-opacity="0.4" />
   <text *ngIf="!_iconPath" id="perc" x="32" y="39" font-size="20px" text-anchor="middle" attr.fill="{{_textFill}}">{{displayedScore}}</text>
-  <path *ngIf="_iconPath" attr.d="{{_iconPath}}" attr.fill="{{_iconFill}}" transform="translate(19,19) scale(0.05, 0.05)"/>
+  <path *ngIf="_iconPath" attr.d="{{_iconPath}}" attr.fill="{{_iconFill}}" transform="translate(22,19) scale(0.05, 0.05)"/>
 </svg>

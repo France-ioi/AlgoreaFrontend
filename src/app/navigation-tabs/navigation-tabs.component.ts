@@ -1,5 +1,6 @@
-import { Component, OnInit, Input, OnChanges, SimpleChanges, ViewChild, ElementRef, NgZone, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges, ViewChild, NgZone, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
+import { EditService } from '../services/edit.service';
 
 @Component({
   selector: 'app-navigation-tabs',
@@ -23,26 +24,30 @@ export class NavigationTabsComponent implements OnInit, OnChanges {
   stickyShow = false;
   manageShow = false;
   joinShow = false;
-  activeTab = 0;
+  activeTab = 1;
 
   selectedGroup = -1;
 
   constructor(
     private ngZone: NgZone,
-    private router: Router
+    private editService: EditService
   ) { }
 
   ngOnInit() {
   }
 
+  fetchUser(){
+    for (const user of this.items.users) {
+      if (user.ID === this.items.selectedID) {
+        this.currentUser = user;
+        break;
+      }
+    }
+  }
+
   ngOnChanges(changes: SimpleChanges) {
     if (this.items) {
-      for (const user of this.items.users) {
-        if (user.ID === this.items.selectedID) {
-          this.currentUser = user;
-          break;
-        }
-      }
+      this.fetchUser();
     }
   }
 
@@ -106,6 +111,8 @@ export class NavigationTabsComponent implements OnInit, OnChanges {
 
   onSelectYourself(e, idx) {
     this.selectedGroup = idx;
+    this.fetchUser();
+    this.editService.setUser(this.currentUser);
     this.yourselfSelect.emit(e);
   }
 
@@ -118,6 +125,11 @@ export class NavigationTabsComponent implements OnInit, OnChanges {
   }
 
   onNodeChange(e) {
+    this.currentUser = {
+      title: e.title,
+      type: 'group'
+    };
+    this.editService.setUser(this.currentUser);
     this.groupSelect.emit(e);
   }
 

@@ -6,7 +6,16 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class EditService {
 
-  status = new BehaviorSubject<boolean>(false);
+  status = new BehaviorSubject<any>({
+    scrolled: false,
+    folded: false,
+    isStarted: false,
+    collapsed: false,
+    editing: false,
+    activityORSkill: false
+  });
+
+  user = new BehaviorSubject<any>({});
 
   constructor() { }
 
@@ -16,5 +25,13 @@ export class EditService {
 
   getOb() {
     return this.status.asObservable();
+  }
+
+  setUser(val) {
+    this.user.next(val);
+  }
+
+  getUserOb() {
+    return this.user.asObservable();
   }
 }

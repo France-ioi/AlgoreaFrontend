@@ -1,5 +1,7 @@
 import { Component, OnInit, ElementRef, OnChanges, SimpleChanges, Input, Output, EventEmitter } from '@angular/core';
 import { NodeService } from 'src/app/services/node-service.service';
+import { EditService } from 'src/app/services/edit.service';
+import { MenuItem } from 'primeng/api/menuitem';
 
 export enum AutoText {
   category = 'category',
@@ -15,11 +17,6 @@ export enum AutoText {
 })
 export class TaskTabComponent implements OnInit, OnChanges {
 
-  content;
-  participation;
-  discussions;
-  relatedSkills;
-
   @Input() activityORSkill = true;
   @Input() autoText = 'category';
   @Input() data;
@@ -27,28 +24,33 @@ export class TaskTabComponent implements OnInit, OnChanges {
   @Input() editing = false;
   @Input() desc;
   @Input() parentSkills;
+  
+  @Output() expandWholeWidth = new EventEmitter<void>();
 
   showDialog = false;
 
   validText;
   trees;
-  selItems1 = [
+  situationTypes = [
     {
-      label: 'list'
+      label: 'log view'
     },
     {
-      label: 'event/log'
+      label: 'chapter view'
     }
   ];
-  selItems2 = [
+  groupTypes = [
     {
-      label: 'no'
+      icon: 'fa fa-users',
+      label: 'teams'
     },
     {
-      label: 'recommended'
+      icon: 'fa fa-users',
+      label: 'group'
     },
     {
-      label: 'yes'
+      icon: 'fa fa-user',
+      label: 'users'
     }
   ];
   validationType = [
@@ -90,9 +92,545 @@ export class TaskTabComponent implements OnInit, OnChanges {
 
   chaptercols = ['col1', 'col2', 'col3'];
 
+  currentUser;
+
+  selectedView = 0;
+
+  compactMode = false;
+
+  logviewdata = [
+    {
+      potential_icon: 'fa fa-bell',
+      date: new Date(2018, 2, 23),
+      status: 'Activity started',
+      title: 'Stage lorem ipsum',
+      score: {
+        displayedScore: 75,
+        currentScore: 75,
+        type: 'score'
+      }
+    },
+    {
+      date: new Date(2018, 2, 25),
+      status: 'Submissions',
+      title: 'Competence Lorem ipsum augmentee',
+      score: {
+        displayedScore: 63,
+        currentScore: 63,
+        type: 'progress'
+      }
+    },
+    {
+      date: new Date(2018, 2, 23),
+      status: 'Ask for clue',
+      title: 'Travaux encadres en presentiel',
+      score: {
+        displayedScore: 75,
+        currentScore: 75,
+        type: 'score'
+      }
+    }
+  ];
+
+  logviewcols = ['potential_icon', 'date', 'title', 'score'];
+
+  chapterviewdata = [
+    {
+      title: 'Responds',
+      submissions: 1,
+      hints: 1,
+      last_activity: new Date(),
+      time_spent: 30,
+      progress: {
+        displayedScore: 100,
+        currentScore: 100
+      }
+    },
+    {
+      title: 'L\'eclipse',
+      submissions: 2,
+      hints: 2,
+      last_activity: new Date(),
+      time_spent: 17,
+      progress: {
+        displayedScore: 100,
+        currentScore: 100
+      }
+    },
+    {
+      title: 'Bonbons pour tout le monde !',
+      submissions: 4,
+      hints: 4,
+      last_activity: new Date(),
+      time_spent: 24,
+      progress: {
+        displayedScore: 75,
+        currentScore: 75
+      }
+    },
+    {
+      title: 'Sed consectetur bibendum phareta',
+      submissions: 1,
+      hints: 1,
+      last_activity: new Date(),
+      time_spent: 18,
+      progress: {
+        displayedScore: 0,
+        currentScore: 0
+      }
+    },
+    {
+      title: 'Sed consectetur bibendum pharetas',
+      submissions: 0,
+      hints: 0
+    },
+  ];
+
+  chapterviewcols = [
+    { field: 'title', header: 'Title' },
+    { field: 'submissions', header: 'Submissions' },
+    { field: 'hints', header: 'Hints' },
+    { field: 'last_activity', header: 'Last activity' },
+    { field: 'time_spent', header: 'Time spent' }
+  ];
+
+  chapterviewgroupinfo = [
+    {
+      name: 'Epreuves',
+      columns: this.chapterviewcols
+    }
+  ];
+
+  gcvd = [
+    [
+      {
+        time_spent: 72000,
+        hints: 1,
+        clues: 3,
+        attempts: 3,
+        last_activity: Date.now(),
+        progress: {
+          displayedScore: 75,
+          currentScore: 75,
+          isStarted: true,
+          isValidated: true
+        }
+      },
+      {
+        time_spent: 1235,
+        hints: 1,
+        clues: 3,
+        attempts: 3,
+        last_activity: Date.now(),
+        progress: {
+          displayedScore: 75,
+          currentScore: 75,
+          isStarted: true,
+          isValidated: true
+        }
+      },
+      {
+        time_spent: 454000,
+        hints: 1,
+        clues: 3,
+        attempts: 3,
+        last_activity: Date.now(),
+        progress: {
+          displayedScore: 75,
+          currentScore: 75,
+          isStarted: true,
+          isValidated: true
+        }
+      },
+      {
+        time_spent: 54,
+        hints: 1,
+        clues: 3,
+        attempts: 3,
+        last_activity: Date.now(),
+        progress: {
+          displayedScore: 75,
+          currentScore: 75,
+          isStarted: false,
+          isValidated: false
+        }
+      },
+      {
+        time_spent: 54,
+        hints: 1,
+        clues: 3,
+        attempts: 3,
+        last_activity: Date.now(),
+        progress: {
+          displayedScore: 75,
+          currentScore: 75,
+          isStarted: true,
+          isValidated: true
+        }
+      }
+    ],
+    [
+      {
+        time_spent: 54,
+        hints: 1,
+        clues: 3,
+        attempts: 3,
+        last_activity: Date.now(),
+        progress: {
+          displayedScore: 75,
+          currentScore: 75,
+          isStarted: true,
+          isValidated: true
+        }
+      },
+      {
+        time_spent: 54,
+        hints: 1,
+        clues: 3,
+        attempts: 3,
+        last_activity: Date.now(),
+        progress: {
+          displayedScore: 75,
+          currentScore: 75,
+          isStarted: true,
+          isValidated: true
+        }
+      },
+      {
+        time_spent: 54,
+        hints: 1,
+        clues: 3,
+        attempts: 3,
+        last_activity: Date.now(),
+        progress: {
+          displayedScore: 75,
+          currentScore: 75,
+          isStarted: true,
+          isValidated: true
+        }
+      },
+      {
+        time_spent: 54,
+        hints: 1,
+        clues: 3,
+        attempts: 3,
+        last_activity: Date.now(),
+        progress: {
+          displayedScore: 75,
+          currentScore: 75,
+          isStarted: true,
+          isValidated: true
+        }
+      },
+      {
+        time_spent: 54,
+        hints: 1,
+        clues: 3,
+        attempts: 3,
+        last_activity: Date.now(),
+        progress: {
+          displayedScore: 75,
+          currentScore: 75,
+          isStarted: true,
+          isValidated: true
+        }
+      },
+    ],
+    [
+      {
+        time_spent: 1235,
+        hints: 1,
+        clues: 3,
+        attempts: 3,
+        last_activity: Date.now(),
+        progress: {
+          displayedScore: 75,
+          currentScore: 75,
+          isStarted: true,
+          isValidated: true
+        }
+      },
+      {
+        time_spent: 54,
+        hints: 1,
+        clues: 3,
+        attempts: 3,
+        last_activity: Date.now(),
+        progress: {
+          displayedScore: 75,
+          currentScore: 75,
+          isStarted: true,
+          isValidated: true
+        }
+      },
+      {
+        time_spent: 54,
+        hints: 1,
+        clues: 3,
+        attempts: 3,
+        last_activity: Date.now(),
+        progress: {
+          displayedScore: 75,
+          currentScore: 75,
+          isStarted: true,
+          isValidated: true
+        }
+      },
+      {
+        time_spent: 54,
+        hints: 1,
+        clues: 3,
+        attempts: 3,
+        last_activity: Date.now(),
+        progress: {
+          displayedScore: 75,
+          currentScore: 75,
+          isStarted: true,
+          isValidated: true
+        }
+      },
+      {
+        time_spent: 54,
+        hints: 1,
+        clues: 3,
+        attempts: 3,
+        last_activity: Date.now(),
+        progress: {
+          displayedScore: 75,
+          currentScore: 75,
+          isStarted: true,
+          isValidated: true
+        }
+      },
+    ],
+    [
+      {
+        time_spent: 54,
+        hints: 1,
+        clues: 3,
+        attempts: 3,
+        last_activity: Date.now(),
+        progress: {
+          displayedScore: 75,
+          currentScore: 75,
+          isStarted: true,
+          isValidated: true
+        }
+      },
+      {
+        time_spent: 54,
+        hints: 1,
+        clues: 3,
+        attempts: 3,
+        last_activity: Date.now(),
+        progress: {
+          displayedScore: 75,
+          currentScore: 75,
+          isStarted: true,
+          isValidated: true
+        }
+      },
+      {
+        time_spent: 54,
+        hints: 1,
+        clues: 3,
+        attempts: 3,
+        last_activity: Date.now(),
+        progress: {
+          displayedScore: 75,
+          currentScore: 75,
+          isStarted: true,
+          isValidated: true
+        }
+      },
+      {
+        time_spent: 54,
+        hints: 1,
+        clues: 3,
+        attempts: 3,
+        last_activity: Date.now(),
+        progress: {
+          displayedScore: 75,
+          currentScore: 75,
+          isStarted: true,
+          isValidated: true
+        }
+      },
+      {
+        time_spent: 54,
+        hints: 1,
+        clues: 3,
+        attempts: 3,
+        last_activity: Date.now(),
+        progress: {
+          displayedScore: 75,
+          currentScore: 75,
+          isStarted: true,
+          isValidated: true
+        }
+      },
+    ],
+    [
+      {
+        time_spent: 54,
+        hints: 1,
+        clues: 3,
+        attempts: 3,
+        last_activity: Date.now(),
+        progress: {
+          displayedScore: 75,
+          currentScore: 0,
+          isStarted: true,
+          isValidated: true
+        }
+      },
+      {
+        time_spent: 54,
+        hints: 1,
+        clues: 3,
+        attempts: 3,
+        last_activity: Date.now(),
+        progress: {
+          displayedScore: 75,
+          currentScore: 75,
+          isStarted: true,
+          isValidated: true
+        }
+      },
+      {
+        time_spent: 54,
+        hints: 1,
+        clues: 3,
+        attempts: 3,
+        last_activity: Date.now(),
+        progress: {
+          displayedScore: 75,
+          currentScore: 75,
+          isStarted: true,
+          isValidated: true
+        }
+      },
+      {
+        time_spent: 54,
+        hints: 1,
+        clues: 3,
+        attempts: 3,
+        last_activity: Date.now(),
+        progress: {
+          displayedScore: 75,
+          currentScore: 75,
+          isStarted: true,
+          isValidated: true
+        }
+      },
+      {
+        time_spent: 54,
+        hints: 1,
+        clues: 3,
+        attempts: 3,
+        last_activity: Date.now(),
+        progress: {
+          displayedScore: 75,
+          currentScore: 100,
+          isStarted: true,
+          isValidated: true,
+        }
+      },
+    ],
+    [
+      {
+        time_spent: 54,
+        hints: 1,
+        clues: 3,
+        attempts: 3,
+        last_activity: Date.now(),
+        progress: {
+          displayedScore: 75,
+          currentScore: 75,
+          isStarted: false,
+          isValidated: true
+        }
+      },
+      {
+        time_spent: 54,
+        hints: 1,
+        clues: 3,
+        attempts: 3,
+        last_activity: Date.now(),
+        progress: {
+          displayedScore: 75,
+          currentScore: 75,
+          isStarted: true,
+          isValidated: true
+        }
+      },
+      {
+        time_spent: 54,
+        hints: 1,
+        clues: 3,
+        attempts: 3,
+        last_activity: Date.now(),
+        progress: {
+          displayedScore: 75,
+          currentScore: 75,
+          isStarted: true,
+          isValidated: true
+        }
+      },
+      {
+        time_spent: 54,
+        hints: 1,
+        clues: 3,
+        attempts: 3,
+        last_activity: Date.now(),
+        progress: {
+          displayedScore: 75,
+          currentScore: 75,
+          isStarted: true,
+          isValidated: true
+        }
+      },
+      {
+        time_spent: 54,
+        hints: 1,
+        clues: 3,
+        attempts: 3,
+        last_activity: Date.now(),
+        progress: {
+          displayedScore: 75,
+          currentScore: 75,
+          isStarted: true,
+          isValidated: true
+        }
+      },
+    ]
+  ];
+
+  gcvc = [
+    'Column 1',
+    'Column 2',
+    'Column 3',
+    'Column 4',
+    'Column 5',
+  ];
+
+  gcvr = [
+    'Row 1',
+    'Row 2',
+    'Row 3',
+    'Row 4',
+    'Row 5',
+    'Row 6'
+  ];
+
+  cmenu: MenuItem[];
+
+  vertical = false;
+
   constructor(
     private elementRef: ElementRef,
-    private nodeService: NodeService
+    private nodeService: NodeService,
+    private editService: EditService
   ) { }
 
   refresh() {
@@ -118,6 +656,33 @@ export class TaskTabComponent implements OnInit, OnChanges {
       this.trees = res;
       console.log(this.trees);
     });
+    this.editService.getUserOb().subscribe(res => {
+      this.currentUser = res;
+    });
+    this.cmenu = [
+        {
+            label: 'File',
+            items: [{
+                    label: 'New', 
+                    icon: 'pi pi-fw pi-plus',
+                    items: [
+                        {label: 'Project'},
+                        {label: 'Other'},
+                    ]
+                },
+                {label: 'Open'},
+                {label: 'Quit'}
+            ]
+        },
+        {
+            label: 'Edit',
+            icon: 'pi pi-fw pi-pencil',
+            items: [
+                {label: 'Delete', icon: 'pi pi-fw pi-trash'},
+                {label: 'Refresh', icon: 'pi pi-fw pi-refresh'}
+            ]
+        }
+    ];
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -143,8 +708,32 @@ export class TaskTabComponent implements OnInit, OnChanges {
     }
   }
 
-  openContentDialog(e) {
-    this.showDialog = true;
+  viewTypeChanged(idx) {
+    this.selectedView = idx;
+    if (idx === 0) {  // Log View
+      console.log("Log View");
+    } else {          // Chapter View
+      console.log("Chapter View");
+    }
+  }
+
+  onSwapColRow(e) {
+    const cont = this.gcvc;
+    this.gcvc = this.gcvr;
+    this.gcvr = cont;
+    this.gcvd = this.gcvd[0].map((col, i) => this.gcvd.map(row => row[i]));
+  }
+
+  onModeChange(e) {
+    this.compactMode = !this.compactMode;
+  }
+
+  onProgressShowChange(e) {
+    this.vertical = !this.vertical;
+  }
+
+  onExpandWidth(e) {
+    this.expandWholeWidth.emit(e);
   }
 
 }

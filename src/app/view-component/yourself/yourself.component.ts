@@ -1,5 +1,6 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
+import { EditService } from 'src/app/services/edit.service';
 
 @Component({
   selector: 'app-yourself',
@@ -8,29 +9,26 @@ import { Router } from '@angular/router';
 })
 export class YourselfComponent implements OnInit {
 
-  scrolled;
-  folded;
-  isStarted;
-  collapsed;
+  status;
 
   constructor(
-    private router: Router
+    private router: Router,
+    private editService: EditService
   ) { }
 
   ngOnInit() {
     let param = history.state;
-    this.scrolled = param.scrolled;
-    this.folded = param.folded;
-    this.isStarted = param.isStarted;
-    this.collapsed = param.collapsed;
+    this.editService.getOb().subscribe(res => {
+      this.status = res;
+    });
   }
 
   @HostListener('window:scroll', ['$event'])
   onScrollContent(e) {
-    if (window.pageYOffset > 40 && !this.scrolled) {
-      this.scrolled = true;
-    } else if (window.pageYOffset <= 40 && this.scrolled) {
-      this.scrolled = false;
+    if (window.pageYOffset > 40 && !this.status.scrolled) {
+      this.status.scrolled = true;
+    } else if (window.pageYOffset <= 40 && this.status.scrolled) {
+      this.status.scrolled = false;
     }
   }
 

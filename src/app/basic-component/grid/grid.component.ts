@@ -35,14 +35,18 @@ export class GridComponent implements OnInit, OnChanges {
   @Input() scrollHeight;
   @Input() selectionMode;
   @Input() responsive;
+  @Input() dataKey;
   
   @Output() expandWholeWidth = new EventEmitter<boolean>();
   
+  @ContentChild('colgroupTemplate', { static: false }) colgroupTemplate;
   @ContentChild('headerTemplate', { static: false }) headerTemplate;
   @ContentChild('bodyTemplate', { static: false }) bodyTemplate;
   @ContentChild('footerTemplate', { static: false }) footerTemplate;
   @ContentChild('summaryTemplate', { static: false }) summaryTemplate;
+  @ContentChild('rowExpansionTemplate', { static: false }) rowExpansionTemplate;
 
+  @Input() showGear = true;
   showColumnSelection = false;
 
   selected = {};
@@ -68,7 +72,9 @@ export class GridComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    this.detectSelected();
+    if (this.showGear) {
+      this.detectSelected();
+    }
   }
 
   showColumns(e) {
