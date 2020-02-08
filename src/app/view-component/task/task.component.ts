@@ -10,13 +10,8 @@ import { Subscription } from 'rxjs';
 })
 export class TaskComponent implements OnInit {
 
-  scrolled;
-  folded;
-  isStarted;
-  collapsed;
-  activityORSkill;
+  status;
   taskdata;
-  editing;
   parents;
   parentSkills;
 
@@ -40,10 +35,10 @@ export class TaskComponent implements OnInit {
 
   @HostListener('window:scroll', ['$event'])
   onScrollContent(e) {
-    if (window.pageYOffset > 30 && !this.scrolled) {
-      this.scrolled = true;
-    } else if (window.pageYOffset <= 30 && this.scrolled) {
-      this.scrolled = false;
+    if (window.pageYOffset > 30 && !this.status.scrolled) {
+      this.status.scrolled = true;
+    } else if (window.pageYOffset <= 30 && this.status.scrolled) {
+      this.status.scrolled = false;
     }
   }
 
@@ -52,11 +47,6 @@ export class TaskComponent implements OnInit {
       const refresh = paramMap.get('refresh');
       if (refresh) {
         let param = history.state;
-        this.scrolled = param.scrolled;
-        this.folded = param.folded;
-        this.isStarted = param.isStarted;
-        this.collapsed = param.collapsed;
-        this.activityORSkill = param.activityORSkill;
         this.taskdata = param.taskdata;
 
         this.parents = [];
@@ -72,7 +62,7 @@ export class TaskComponent implements OnInit {
     });
 
     this.editSubscription = this.editService.getOb().subscribe(res => {
-      this.editing = res;
+      this.status = res;
     });
   }
 

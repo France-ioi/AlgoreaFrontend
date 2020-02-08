@@ -7,21 +7,23 @@
   [scrollHeight]="scrollHeight"
   [selectionMode]="selectionMode"
   [responsive]="responsive"
+  [dataKey]="dataKey"
 >
   <!-- <ng-container *ngTemplateOutlet="headerTemplate; context: {$implicit: columns}"></ng-container> -->
-  <ng-template pTemplate="colgroup" let-columns *ngIf="scrollWhenExpanded">
-    <colgroup>
-      <col *ngFor="let col of columns" style="width:350px">
-    </colgroup>
+  <ng-template pTemplate="colgroup" let-columns>
+    <ng-container [ngTemplateOutlet]="colgroupTemplate" [ngTemplateOutletContext]="{ $implicit: columns }"></ng-container>
   </ng-template>
   <ng-template pTemplate="header" let-columns>
     <ng-container [ngTemplateOutlet]="headerTemplate" [ngTemplateOutletContext]="{ $implicit: columns }"></ng-container>
   </ng-template>
-  <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
-    <ng-container [ngTemplateOutlet]="bodyTemplate" [ngTemplateOutletContext]="{ $implicit: rowData, columns: columns, rowIndex: rowIndex }"></ng-container>
+  <ng-template pTemplate="body" let-rowData let-expanded="expanded" let-columns="columns" let-rowIndex="rowIndex">
+    <ng-container [ngTemplateOutlet]="bodyTemplate" [ngTemplateOutletContext]="{ $implicit: rowData, columns: columns, rowIndex: rowIndex, expanded: expanded }"></ng-container>
   </ng-template>
   <ng-template pTemplate="footer">
     <ng-container [ngTemplateOutlet]="footerTemplate"></ng-container>
+  </ng-template>
+  <ng-template pTemplate="rowexpansion" let-rowData>
+    <ng-container [ngTemplateOutlet]="rowExpansionTemplate" [ngTemplateOutletContext]="{ $implicit: rowData, columns: columns }"></ng-container>
   </ng-template>
   <ng-template pTemplate="summary">
     <ng-container [ngTemplateOutlet]="summaryTemplate" [ngTemplateOutletContext]="{ $implicit: table }"></ng-container>
@@ -30,11 +32,11 @@
 <span
   class="toggle-gear"
   (click)="showColumns($event)"
-  *ngIf="!showColumnSelection"
+  *ngIf="!showColumnSelection && showGear"
 >
   <i class="fa fa-cog"></i>
 </span>
-<div class="select-column" *ngIf="showColumnSelection">
+<div class="select-column" *ngIf="showColumnSelection && showGear">
   <div class="header" (click)="showColumns($event)">
     <span class="fold-icon">
       <i class="fa fa-caret-up"></i>
@@ -56,7 +58,7 @@
     </ul>
   </div>
 </div>
-<div class="show-all" *ngIf="toShow > 0 || expand" (click)="showAll($event)">
+<div class="show-all" *ngIf="showGear && (toShow > 0 || expand)" (click)="showAll($event)">
   <span class="missing-title" *ngIf="toShow > 0">{{ toShow }}</span>
   <span class="show-icon">
     <i *ngIf="!expand" class="fa fa-caret-right"></i>

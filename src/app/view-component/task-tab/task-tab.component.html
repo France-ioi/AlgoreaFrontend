@@ -9,12 +9,14 @@
         <div class="desc-image">
           <div
             class="image"
-            [ngStyle]="{ 'background-image': 'url(assets/images/' + image + ')' }"
+            [ngStyle]="{
+              'background-image': 'url(assets/images/' + image + ')'
+            }"
           ></div>
           <!-- <img src="assets/images/{{image}}" width="100%"> -->
         </div>
-        <app-section title="Description" icon="fa fa-book" hideBorder="true">
-          {{desc}}
+        <app-section label="Description" icon="fa fa-book" hideBorder="true">
+          {{ desc }}
         </app-section>
         <p class="validation-text" *ngIf="activityORSkill">
           To validate this chapter, {{ validText }}
@@ -34,13 +36,18 @@
                 class="activity-content"
                 [ngClass]="{ locked: item.isLocked }"
               >
-                <span class="activity-title">{{ ln + 1 }}. {{ item.title }}</span>
+                <span class="activity-title"
+                  >{{ ln + 1 }}. {{ item.title }}</span
+                >
                 <span
                   *ngIf="item.isLocked || item.hasKey"
                   class="activity-status"
                 >
                   <i *ngIf="item.isLocked" class="fa fa-lock"></i>
-                  <i *ngIf="!item.isLocked && item.hasKey" class="fa fa-key"></i>
+                  <i
+                    *ngIf="!item.isLocked && item.hasKey"
+                    class="fa fa-key"
+                  ></i>
                 </span>
                 <app-state-widget
                   [label]="item.category.label"
@@ -52,7 +59,7 @@
         </ul>
         <app-section
           *ngIf="!activityORSkill && data && data.children"
-          title="Sub-skills"
+          label="Sub-skills"
           icon="fa fa-graduation-cap"
           hideBorder="true"
         >
@@ -60,7 +67,10 @@
             <ng-container *ngFor="let item of data.children">
               <li>
                 <span class="skill-icon">
-                  <i *ngIf="item.icon === 'progress'" class="fa fa-thumbs-up"></i>
+                  <i
+                    *ngIf="item.icon === 'progress'"
+                    class="fa fa-thumbs-up"
+                  ></i>
                   <i
                     *ngIf="item.icon === 'regress'"
                     class="fa fa-thumbs-down"
@@ -84,7 +94,7 @@
         </app-section>
         <app-section
           *ngIf="!activityORSkill && parentSkills.length > 0"
-          title="Parent skills"
+          label="Parent skills"
           icon="fa fa-link"
           hideBorder="true"
         >
@@ -113,10 +123,438 @@
         <ng-container *ngIf="!activityORSkill">Progress</ng-container>
       </ng-template>
       <ng-template matTabContent>
-        <app-switch checked="true"></app-switch>
-        <app-switch checked="false" mode="white"></app-switch>
-        <app-selection [items]="selItems1"></app-selection>
-        <app-selection [items]="selItems2"></app-selection>
+        <ng-container *ngIf="activityORSkill">
+          <app-section
+            icon="fa fa-graduation-cap"
+            [label]="
+              currentUser.type === 'user' ? 'User situation' : 'Group Situation'
+            "
+          >
+            <span>Compact/Details </span>
+            <app-switch
+              mode="white"
+              (onChange)="onModeChange($event)"
+            ></app-switch>
+            <span>Vertical Scrollbar</span>
+            <app-switch
+              mode="white"
+              (onChange)="onProgressShowChange($event)"
+            ></app-switch>
+            <div class="selection-tool">
+              <app-selection
+                [items]="situationTypes"
+                (onChange)="viewTypeChanged($event)"
+              ></app-selection>
+              <app-selection
+                *ngIf="selectedView === 1"
+                [items]="groupTypes"
+                type="square"
+              ></app-selection>
+            </div>
+            <!-- Log View -->
+            <ng-container *ngIf="selectedView === 0">
+              <app-log-view-grid
+                [data]="logviewdata"
+                [cols]="logviewcols"
+                [type]="currentUser.type"
+              ></app-log-view-grid>
+            </ng-container>
+            <!-- Chapter View -->
+            <ng-container *ngIf="selectedView === 1">
+              <ng-container *ngIf="currentUser.type === 'user'">
+                <app-grid
+                  [selectedColumns]="chapterviewcols"
+                  [columns]="chapterviewcols"
+                  [data]="chapterviewdata"
+                  [groupInfo]="chapterviewgroupinfo"
+                  scrollWhenExpanded="true"
+                  sortMode="single"
+                  dataKey="title"
+                  (expandWholeWidth)="onExpandWidth($event)"
+                >
+                  <ng-template #headerTemplate let-columns>
+                    <tr>
+                      <th
+                        style="width: 50px;border-right: 1px solid transparent;"
+                      ></th>
+                      <th
+                        *ngFor="let col of columns"
+                        [pSortableColumn]="col.field"
+                      >
+                        {{ col.header }}
+                        <p-sortIcon [field]="col.field"></p-sortIcon>
+                      </th>
+                      <th style="width: 70px;"></th>
+                    </tr>
+                  </ng-template>
+                  <ng-template
+                    #rowExpansionTemplate
+                    let-rowData
+                    let-columns="columns"
+                  >
+                    <tr>
+                      <td></td>
+                      <td colspan="6">
+                        {{ rowData.title }}
+                      </td>
+                    </tr>
+                  </ng-template>
+                  <ng-template
+                    #bodyTemplate
+                    let-rowData
+                    let-expanded="expanded"
+                    let-columns="columns"
+                    let-rowIndex="rowIndex"
+                  >
+                    <tr
+                      [pSelectableRow]="rowData"
+                      [pSelectableRowIndex]="rowIndex"
+                    >
+                      <td>
+                        <app-score-ring
+                          *ngIf="rowData.progress"
+                          [displayedScore]="rowData.progress.displayedScore"
+                          [currentScore]="rowData.progress.currentScore"
+                          diameter="32"
+                        ></app-score-ring>
+                      </td>
+                      <td *ngFor="let col of columns">
+                        <ng-container [ngSwitch]="col.field">
+                          <ng-container *ngSwitchCase="'last_activity'">
+                            <ng-container
+                              *ngIf="
+                                rowData.last_activity;
+                                then last_activity_existing;
+                                else last_activity_none
+                              "
+                            ></ng-container>
+                            <ng-template #last_activity_existing>{{
+                              rowData.last_activity | date: "d/MM/y"
+                            }}</ng-template>
+                            <ng-template #last_activity_none>-</ng-template>
+                          </ng-container>
+                          <ng-container *ngSwitchCase="'time_spent'">
+                            <ng-container
+                              *ngIf="
+                                rowData.time_spent;
+                                then time_spent_existing;
+                                else time_spent_none
+                              "
+                            ></ng-container>
+                            <ng-template #time_spent_existing
+                              >{{ rowData.time_spent }} min</ng-template
+                            >
+                            <ng-template #time_spent_none>-</ng-template>
+                          </ng-container>
+                          <ng-container *ngSwitchDefault>{{
+                            rowData[col.field]
+                          }}</ng-container>
+                        </ng-container>
+                      </td>
+                      <td>
+                        <span class="table-icon" [pRowToggler]="rowData">
+                          <i *ngIf="expanded" class="fa fa-times"></i>
+                          <i *ngIf="!expanded" class="fa fa-align-left"></i>
+                        </span>
+                        <span class="table-icon">
+                          <i class="fa fa-puzzle-piece"></i>
+                        </span>
+                      </td>
+                    </tr>
+                  </ng-template>
+                </app-grid>
+              </ng-container>
+              <ng-container *ngIf="currentUser.type === 'group'">
+                <app-grid
+                  [selectedColumns]="gcvc"
+                  [columns]="gcvc"
+                  [data]="gcvd"
+                  sortMode="single"
+                  [showGear]="false"
+                  scrollable="true"
+                  class="slanted-grid"
+                >
+                  <ng-template #headerTemplate let-columns>
+                    <tr style="border: none;">
+                      <th style="background-color: transparent;">
+                        <div class="swap-col-row">
+                          <span class="outer-button">
+                            <span
+                              class="inner-button"
+                              (click)="onSwapColRow($event)"
+                            >
+                              <i class="fa fa-retweet"></i>
+                            </span>
+                          </span>
+                        </div>
+                      </th>
+                      <th *ngFor="let col of columns">
+                        <div class="slanted-header">{{ col }}</div>
+                      </th>
+                    </tr>
+                  </ng-template>
+                  <ng-template
+                    #bodyTemplate
+                    let-rowData
+                    let-columns="columns"
+                    let-rowIndex="rowIndex"
+                  >
+                    <tr>
+                      <td>
+                        {{ gcvr[rowIndex] }}
+                      </td>
+                      <td
+                        *ngFor="
+                          let col of columns;
+                          index as idx;
+                          let menuName = rowIndex
+                        "
+                        [matMenuTriggerFor]="menuName"
+                      >
+                        <mat-menu #menuName="matMenu" yPosition="above">
+                          <div class="content">
+                            <ng-container
+                              *ngIf="!rowData[idx].progress.isValidated"
+                            >
+                              <span>
+                                Give access?
+                              </span>
+                              <span>
+                                <i class="fa fa-check"></i>
+                                <span>Yes</span>
+                              </span>
+                              <span>
+                                <i class="fa fa-times"></i>
+                                <span>No</span>
+                              </span>
+                              <span>
+                                <i class="fa fa-cog"></i>
+                                <span>Custom</span>
+                              </span>
+                            </ng-container>
+                            <ng-container
+                              *ngIf="rowData[idx].progress.isValidated"
+                            >
+                              <span>
+                                <i class="fa fa-clock"></i>
+                                <span class="menu-label">Time spent</span>
+                                <span class="menu-value">
+                                  <ng-container
+                                    *ngIf="rowData[idx].time_spent < 60"
+                                    >{{
+                                      rowData[idx].time_spent
+                                    }}
+                                    min</ng-container
+                                  >
+                                  <ng-container
+                                    *ngIf="
+                                      rowData[idx].time_spent >= 60 &&
+                                      rowData[idx].time_spent < 1440
+                                    "
+                                    >{{
+                                      rowData[idx].time_spent / 60
+                                        | number: "1.0-0"
+                                    }}
+                                    hours</ng-container
+                                  >
+                                  <ng-container
+                                    *ngIf="
+                                      rowData[idx].time_spent >= 1440 &&
+                                      rowData[idx].time_spent < 144000
+                                    "
+                                    >{{
+                                      rowData[idx].time_spent / 1440
+                                        | number: "1.0-0"
+                                    }}
+                                    days</ng-container
+                                  >
+                                  <ng-container
+                                    *ngIf="rowData[idx].time_spent >= 144000"
+                                    >{{
+                                      rowData[idx].time_spent / 1440 / 30
+                                        | number: "1.0-0"
+                                    }}
+                                    months</ng-container
+                                  >
+                                </span>
+                              </span>
+                              <span>
+                                <i class="fa fa-question-circle"></i>
+                                <span class="menu-label">Asked questions</span>
+                                <span class="menu-value">{{
+                                  rowData[idx].hints
+                                }}</span>
+                              </span>
+                              <span>
+                                <i class="fa fa-lightbulb"></i>
+                                <span class="menu-label">Clues</span>
+                                <span class="menu-value">{{
+                                  rowData[idx].clues
+                                }}</span>
+                              </span>
+                              <span>
+                                <i class="fa fa-flag-checkered"></i>
+                                <span class="menu-label">Attempts</span>
+                                <span class="menu-value">{{
+                                  rowData[idx].attempts
+                                }}</span>
+                              </span>
+                              <span class="score">
+                                <app-score-ring
+                                  [isDark]="true"
+                                  [displayedScore]="
+                                    rowData[idx].progress.displayedScore
+                                  "
+                                  [currentScore]="
+                                    rowData[idx].progress.currentScore
+                                  "
+                                  diameter="32"
+                                ></app-score-ring>
+                                <span>{{
+                                  rowData[idx].last_activity | date: "d/MM/y"
+                                }}</span>
+                              </span>
+                              <span class="clickable">
+                                <i class="fa fa-caret-down"></i>
+                                <span>UNOFFICIAL</span>
+                              </span>
+                              <span class="clickable">
+                                <i class="fa fa-check"></i>
+                                <span>VALIDATION</span>
+                              </span>
+                              <span class="clickable">
+                                <i class="fa fa-list"></i>
+                                <span>HISTORIQUE</span>
+                              </span>
+                            </ng-container>
+                          </div>
+                          <span class="indicator"></span>
+                        </mat-menu>
+                        <div class="group-situation-data">
+                          <div class="situation-top" *ngIf="!compactMode && !vertical">
+                            <span class="time-spent">
+                              <i class="fa fa-clock"></i>
+                              <span>
+                                <ng-container
+                                  *ngIf="rowData[idx].time_spent < 60"
+                                  >{{
+                                    rowData[idx].time_spent
+                                  }}
+                                  min</ng-container
+                                >
+                                <ng-container
+                                  *ngIf="
+                                    rowData[idx].time_spent >= 60 &&
+                                    rowData[idx].time_spent < 1440
+                                  "
+                                  >{{
+                                    rowData[idx].time_spent / 60
+                                      | number: "1.0-0"
+                                  }}
+                                  hours</ng-container
+                                >
+                                <ng-container
+                                  *ngIf="
+                                    rowData[idx].time_spent >= 1440 &&
+                                    rowData[idx].time_spent < 144000
+                                  "
+                                  >{{
+                                    rowData[idx].time_spent / 1440
+                                      | number: "1.0-0"
+                                  }}
+                                  days</ng-container
+                                >
+                                <ng-container
+                                  *ngIf="rowData[idx].time_spent >= 144000"
+                                  >{{
+                                    rowData[idx].time_spent / 1440 / 30
+                                      | number: "1.0-0"
+                                  }}
+                                  months</ng-container
+                                >
+                              </span>
+                            </span>
+                            <span class="hints">
+                              <i class="fa fa-question-circle"></i>
+                              <span>{{ rowData[idx].hints }}</span>
+                            </span>
+                            <span class="clues">
+                              <i class="fa fa-lightbulb"></i>
+                              <span>{{ rowData[idx].clues }}</span>
+                            </span>
+                            <span class="attempts">
+                              <i class="fa fa-flag-checkered"></i>
+                              <span>{{ rowData[idx].attempts }}</span>
+                            </span>
+                          </div>
+                          <div class="situation-bottom">
+                            <app-score-ring
+                              *ngIf="
+                                rowData[idx].progress.isValidated &&
+                                rowData[idx].progress.isStarted &&
+                                !vertical
+                              "
+                              [displayedScore]="
+                                rowData[idx].progress.displayedScore
+                              "
+                              [currentScore]="
+                                rowData[idx].progress.currentScore
+                              "
+                              diameter="32"
+                            ></app-score-ring>
+                            <span
+                              class="situation-lock open"
+                              *ngIf="
+                                rowData[idx].progress.isValidated &&
+                                !rowData[idx].progress.isStarted &&
+                                !vertical
+                              "
+                            >
+                              <i class="fa fa-lock-open"></i>
+                            </span>
+                            <span
+                              class="situation-lock"
+                              *ngIf="
+                                !rowData[idx].progress.isValidated && !vertical
+                              "
+                            >
+                              <i class="fa fa-lock"></i>
+                            </span>
+                            <span class="activity-date" *ngIf="!compactMode && rowData[idx].progress.isValidated && rowData[idx].progress.isStarted && !vertical">{{
+                              rowData[idx].last_activity | date: "d/MM/y"
+                            }}</span>
+                            <app-skill-progress
+                              *ngIf="vertical"
+                              style="height: 30px;"
+                              type="vertical"
+                              [displayedScore]="
+                                rowData[idx].progress.displayedScore
+                              "
+                              [currentScore]="
+                                rowData[idx].progress.currentScore
+                              "
+                            ></app-skill-progress>
+                            <span class="progress-value" *ngIf="vertical" [ngClass]="{check: rowData[idx].progress.currentScore >= 100}">
+                              <ng-container *ngIf="rowData[idx].progress.currentScore >= 100">
+                                <i class="fa fa-check"></i>
+                              </ng-container>
+                              <ng-container *ngIf="rowData[idx].progress.currentScore > 0 && rowData[idx].progress.currentScore < 100">
+                                {{rowData[idx].progress.currentScore}}
+                              </ng-container>
+                              <ng-container *ngIf="rowData[idx].progress.currentScore == 0">
+                                <i class="fa fa-hourglass-half"></i>
+                              </ng-container>
+                            </span>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  </ng-template>
+                </app-grid>
+              </ng-container>
+            </ng-container>
+          </app-section>
+        </ng-container>
       </ng-template>
     </mat-tab>
     <mat-tab>
@@ -124,8 +562,7 @@
         <i class="fa fa-comment"></i>
         Discussions
       </ng-template>
-      <ng-template matTabContent>
-      </ng-template>
+      <ng-template matTabContent> </ng-template>
     </mat-tab>
     <mat-tab>
       <ng-template mat-tab-label>
@@ -133,8 +570,7 @@
         <ng-container *ngIf="activityORSkill">Related skills</ng-container>
         <ng-container *ngIf="!activityORSkill">Related activities</ng-container>
       </ng-template>
-      <ng-template matTabContent>
-      </ng-template>
+      <ng-template matTabContent> </ng-template>
     </mat-tab>
   </ng-container>
   <ng-container *ngIf="editing">
@@ -144,25 +580,34 @@
         Content
       </ng-template>
       <ng-template matTabContent>
-          <app-section title="Description" icon="fa fa-book">
-            <app-textarea placeholder="Type your description..." [value]="desc"></app-textarea>
-          </app-section>
-          <app-section title="Validation type" icon="fa fa-book">
-            <app-dropdown [items]="validationType" placeholder="Select a type..."></app-dropdown>
-          </app-section>
-          <app-section title="Chapter" icon="fa fa-book">
-            <div class="section-chapter-wrapper">
-              <app-chapter-grid [data]="chapterdata" [cols]="chaptercols"></app-chapter-grid>
-              <span class="tri-tag"></span>
+        <app-section label="Description" icon="fa fa-book">
+          <app-textarea
+            placeholder="Type your description..."
+            [value]="desc"
+          ></app-textarea>
+        </app-section>
+        <app-section label="Validation type" icon="fa fa-book">
+          <app-dropdown
+            [items]="validationType"
+            placeholder="Select a type..."
+          ></app-dropdown>
+        </app-section>
+        <app-section label="Chapter" icon="fa fa-book">
+          <div class="section-chapter-wrapper">
+            <app-chapter-grid
+              [data]="chapterdata"
+              [cols]="chaptercols"
+            ></app-chapter-grid>
+            <span class="tri-tag"></span>
+          </div>
+          <app-sub-section icon="fa fa-sign-in-alt" label="Add a content">
+            <div class="add-content-wrapper">
+              <app-input placeholder="New content ..."></app-input>
+              <span class="label">or</span>
+              <app-activity-picker [trees]="trees"></app-activity-picker>
             </div>
-            <app-sub-section icon="fa fa-sign-in-alt" label="Add a content">
-              <div class="add-content-wrapper">
-                <app-input placeholder="New content ..."></app-input>
-                <span class="label">or</span>
-                <app-activity-picker [trees]="trees"></app-activity-picker>
-              </div>
-            </app-sub-section>
-          </app-section>
+          </app-sub-section>
+        </app-section>
       </ng-template>
     </mat-tab>
     <mat-tab>
@@ -170,9 +615,7 @@
         <i class="fa fa-chart-line"></i>
         Advanced parameters
       </ng-template>
-      <ng-template matTabContent>
-
-      </ng-template>
-    </mat-tab>    
+      <ng-template matTabContent> </ng-template>
+    </mat-tab>
   </ng-container>
 </mat-tab-group>

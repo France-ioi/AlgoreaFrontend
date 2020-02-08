@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
+import { EditService } from 'src/app/services/edit.service';
 
 export enum Type {
   student = 'Student',
@@ -24,25 +25,18 @@ export enum JoinMethod {
   styleUrls: ['./group.component.scss']
 })
 export class GroupComponent implements OnInit {
-  scrolled;
-  folded;
-  isStarted;
-  collapsed;
   groupdata;
+  status;
 
   constructor(
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private editService: EditService
   ) { }
 
   ngOnInit() {
     this.activatedRoute.queryParamMap.subscribe((paramMap: ParamMap) => {
       const refresh = paramMap.get('refresh');
       if (refresh) {
-        let param = history.state;
-        this.scrolled = param.scrolled;
-        this.folded = param.folded;
-        this.isStarted = param.isStarted;
-        this.collapsed = param.collapsed;
         this.groupdata = {
           name: 'Jean Monnet',
           type: Type.school,
@@ -78,6 +72,14 @@ export class GroupComponent implements OnInit {
         console.log(this.groupdata);
       }
     });
+
+    this.editService.getOb().subscribe(res => {
+      this.status = res;
+    });
+  }
+
+  onExpandWidth(e) {
+    
   }
 
 }

@@ -10,6 +10,8 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 import { DropdownModule } from 'primeng/dropdown';
 import { DialogModule } from 'primeng/dialog';
 import { TreeModule } from 'primeng/tree';
+import { TieredMenuModule } from 'primeng/tieredmenu';
+
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatDialogModule, MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
@@ -45,6 +47,7 @@ import { SelectionTreeComponent } from './selection-tree/selection-tree.componen
 import { GroupNavigationTreeComponent } from './group-navigation-tree/group-navigation.component';
 import { ItemsNavigationTreeComponent } from './items-navigation-tree/items-navigation-tree.component';
 import { MatDialogComponent } from './mat-dialog/mat-dialog.component';
+import { LogViewGridComponent } from './log-view-grid/log-view-grid.component';
 
 @NgModule({
   declarations: [
@@ -77,7 +80,8 @@ import { MatDialogComponent } from './mat-dialog/mat-dialog.component';
     SelectionTreeComponent,
     GroupNavigationTreeComponent,
     ItemsNavigationTreeComponent,
-    MatDialogComponent
+    MatDialogComponent,
+    LogViewGridComponent
   ],
   imports: [
     CommonModule,
@@ -90,6 +94,7 @@ import { MatDialogComponent } from './mat-dialog/mat-dialog.component';
     DropdownModule,
     DialogModule,
     TreeModule,
+    TieredMenuModule,
 
     MatIconModule,
     MatNativeDateModule,
@@ -128,7 +133,8 @@ import { MatDialogComponent } from './mat-dialog/mat-dialog.component';
     SelectionTreeComponent,
     GroupNavigationTreeComponent,
     ItemsNavigationTreeComponent,
-    MatDialogComponent
+    MatDialogComponent,
+    LogViewGridComponent
   ],
   providers: [
     {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: false}}

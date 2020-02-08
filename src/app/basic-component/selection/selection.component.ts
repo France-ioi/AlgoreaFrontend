@@ -11,16 +11,16 @@ export class SelectionComponent implements OnInit {
   @Input() items;
   @Input() selected = 0;
 
-  @Output() onChangeSelection = new EventEmitter<any>();
+  @Output() onChange = new EventEmitter<any>();
 
   constructor() { }
 
   ngOnInit() {
   }
 
-  onChange(e, index) {
+  itemChanged(e, index) {
     this.selected = index;
-    this.onChangeSelection.emit(index);
+    this.onChange.emit(index);
   }
 
 }
