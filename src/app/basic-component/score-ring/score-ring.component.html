@@ -1,9 +1,55 @@
-
-<svg attr.width.px="{{diameter}}" attr.height.px="{{diameter}}" viewBox="0 0 64 64">
-  <path *ngIf="isStarted" stroke="black" d="M32,2 a30,30 0 0,1 0,60  a30,30 0 1,1 0,-60" fill="none" stroke-width="4" stroke-opacity="0.2" />
-  <path *ngIf="isStarted" attr.stroke="{{_currentFill}}" attr.d="{{_currentPath}}" fill="none" stroke-width="4" stroke-linecap="round" transform="translate(32,32)"/>
-  <path *ngIf="isStarted" attr.stroke="{{_displayFill}}" attr.d="{{_displayPath}}" fill="none" stroke-width="4" stroke-linecap="round" transform="translate(32,32)"/>
-  <path *ngIf="isStarted && isDark" d="M32,4 a28,28 0 0,1 0,56  a28,28 0 1,1 0,-56" fill="black" fill-opacity="0.4" />
-  <text *ngIf="!_iconPath" id="perc" x="32" y="39" font-size="20px" text-anchor="middle" attr.fill="{{_textFill}}">{{displayedScore}}</text>
-  <path *ngIf="_iconPath" attr.d="{{_iconPath}}" attr.fill="{{_iconFill}}" transform="translate(22,19) scale(0.05, 0.05)"/>
-</svg>
+<div class="ring-container">
+  <svg
+    attr.width.px="{{ diameter }}"
+    attr.height.px="{{ diameter }}"
+    viewBox="0 0 64 64"
+  >
+    <path
+      *ngIf="isStarted"
+      stroke="black"
+      d="M32,2 a30,30 0 0,1 0,60  a30,30 0 1,1 0,-60"
+      fill="none"
+      stroke-width="4"
+      stroke-opacity="0.2"
+    />
+    <path
+      *ngIf="isStarted"
+      attr.stroke="{{ _currentFill }}"
+      attr.d="{{ _currentPath }}"
+      fill="none"
+      stroke-width="4"
+      stroke-linecap="round"
+      transform="translate(32,32)"
+    />
+    <path
+      *ngIf="isStarted"
+      attr.stroke="{{ _displayFill }}"
+      attr.d="{{ _displayPath }}"
+      fill="none"
+      stroke-width="4"
+      stroke-linecap="round"
+      transform="translate(32,32)"
+    />
+    <path
+      *ngIf="isStarted && isDark"
+      d="M32,4 a28,28 0 0,1 0,56  a28,28 0 1,1 0,-56"
+      fill="black"
+      fill-opacity="0.4"
+    />
+    <text
+      *ngIf="!icons"
+      id="perc"
+      x="32"
+      y="39"
+      font-size="20px"
+      text-anchor="middle"
+      attr.fill="{{ _textFill }}"
+    >
+      {{ displayedScore }}
+    </text>
+    <!-- <path #svg *ngIf="_iconPath" attr.d="{{_iconPath}}" attr.fill="{{_iconFill}}" transform="translate(21,19) scale(0.05, 0.05)"/> -->
+  </svg>
+  <span *ngIf="icons" class="ring-icon" [ngStyle]="{color: _iconFill}">
+    <i class="fa fa-{{icons}}" [ngStyle]="{'font-size.px': _fontSize}"></i>
+  </span>
+</div>

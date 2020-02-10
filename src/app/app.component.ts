@@ -956,6 +956,7 @@ export class AppComponent {
   }
 
   onEditPage(e) {
+    this.editing = true;
     this.editService.setValue({
       scrolled: this.scrolled,
       folded: this.folded,
@@ -966,6 +967,7 @@ export class AppComponent {
   }
 
   onEditCancel(e) {
+    this.editing = false;
     this.editService.setValue({
       scrolled: this.scrolled,
       folded: this.folded,
