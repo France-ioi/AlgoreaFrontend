@@ -3,7 +3,8 @@ import {
   OnInit,
   Input,
   OnChanges,
-  SimpleChanges
+  SimpleChanges,
+  ViewChild
 } from '@angular/core';
 import * as fas from '@fortawesome/free-solid-svg-icons';
 import { icon } from '@fortawesome/fontawesome-svg-core';
@@ -31,6 +32,8 @@ export class ScoreRingComponent implements OnInit, OnChanges {
   @Input() isDark = false;
   @Input() icons = '';
 
+  @ViewChild('svg', {static: false}) svg;
+
   _displayPath;
   _displayFill;
 
@@ -43,6 +46,7 @@ export class ScoreRingComponent implements OnInit, OnChanges {
   _iconFill = 'white';
 
   _textFill = ScoreRingColor.defaultText;
+  _fontSize = 16;
 
   constructor() {}
 
@@ -86,13 +90,12 @@ export class ScoreRingComponent implements OnInit, OnChanges {
     }
 
     if (this.isValidated) {
-      this._iconPath = fas['faCheck'].icon[4].toString();
+      this.icons = 'check';
       this._iconFill = ScoreRingColor.success;
     } else if (this.displayedScore === 0) {
-      this._iconPath = fas['faTimes'].icon[4].toString();
+      this.icons = 'times';
       this._iconFill = ScoreRingColor.initial;
     } else if (this.icons) {
-      this._iconPath = fas['fa' + this.icons.charAt(0).toUpperCase() + this.icons.slice(1)].icon[4].toString();
       if (this.isDark) {
         this._iconFill = 'white';
       } else {
@@ -102,5 +105,7 @@ export class ScoreRingComponent implements OnInit, OnChanges {
     } else {
       this._iconPath = '';
     }
+
+    this._fontSize = Math.floor(14 * 2 * this.diameter / 64);
   }
 }
