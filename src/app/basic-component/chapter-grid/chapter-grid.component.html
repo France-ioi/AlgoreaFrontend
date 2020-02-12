@@ -1,18 +1,156 @@
-<p-table [value]="data" [reorderableColumns]="true">
+<p-table [value]="data" [reorderableColumns]="orderable">
   <ng-template pTemplate="body" let-rowData let-index="rowIndex">
-    <tr [pReorderableRow]="index">
-      <td class="reorder-handle" pReorderableRowHandle>
-        <i class="fa fa-sort" pReorderableRowHandle></i>
-      </td>
-      <td *ngFor="let col of cols; index as idx" [ngClass]="{main: idx === 1, type: idx === 0}">
-        {{ rowData[col] }}
-      </td>
-      <td>
-        <span class="table-icon lock"><i class="fa fa-lock"></i></span>
-        <span class="table-icon"><i class="fa fa-paste"></i></span>
-        <span class="table-icon"><i class="fa fa-folder"></i></span>
-        <span class="table-icon"><i class="fa fa-trash-alt"></i></span>
-      </td>
-    </tr>
+    <ng-container *ngIf="!orderable">
+      <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="index">
+        <td>
+          <i class="fa fa-sort"></i>
+        </td>
+        <td>
+          <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+        </td>
+        <td *ngIf="scoreWeight" pEditableColumn>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <input pInputText type="text" [(ngModel)]="rowData.weight" />
+            </ng-template>
+            <ng-template pTemplate="output">
+              x{{ rowData.weight }}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+        <td
+          *ngFor="let col of cols; index as idx; let menuName = rowIndex"
+          [ngClass]="{ main: idx === 1, type: idx === 0 }"
+        >
+          {{ rowData[col] }}
+        </td>
+        <td>
+          <div class="chapter-type-control">
+            <span class="table-icon lock" [matMenuTriggerFor]="menuName">
+              <i class="{{icons[index]}}"></i>
+            </span>
+            <div class="chapter-type">
+              <app-category-dropdown [current]="rowData.type"></app-category-dropdown>
+            </div>
+            <mat-menu #menuName="matMenu" yPosition="above" class="chapter-menu">
+              <div class="content">
+                <span class="content-title">
+                  <span class="content-title-label">Default access</span>
+                  <span class="content-title-icon">
+                    <i class="fa fa-question"></i>
+                  </span>
+                </span>
+                <span class="content-item" (click)="menuSelected($event, index, 0)">
+                  <span class="content-item-label">Locked and hidden</span>
+                  <span class="content-item-icon">
+                    <i class="fa fa-eye-slash"></i>
+                  </span>
+                </span>
+                <span class="content-item" (click)="menuSelected($event, index, 1)">
+                  <span class="content-item-label">Locked</span>
+                  <span class="content-item-icon">
+                    <i class="fa fa-lock"></i>
+                  </span>
+                </span>
+                <span class="content-item" (click)="menuSelected($event, index, 2)">
+                  <span class="content-item-label">Open</span>
+                  <span class="content-item-icon">
+                    <i class="fa fa-eye"></i>
+                  </span>
+                </span>
+              </div>
+            </mat-menu>
+          </div>
+        </td>
+      </tr>
+    </ng-container>
+    <ng-container *ngIf="orderable">
+      <tr [pReorderableRow]="index" [pSelectableRow]="rowData">
+        <td class="reorder-handle" pReorderableRowHandle="{{ orderable }}">
+          <i class="fa fa-sort" pReorderableRowHandle="{{ orderable }}"></i>
+        </td>
+        <td>
+          <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+        </td>
+        <td *ngIf="scoreWeight" pEditableColumn>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <input pInputText type="text" [(ngModel)]="rowData.weight" />
+            </ng-template>
+            <ng-template pTemplate="output">
+              x{{ rowData.weight }}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+        <td
+          *ngFor="let col of cols; index as idx; let menuName = rowIndex"
+          [ngClass]="{ main: idx === 1, type: idx === 0 }"
+        >
+          {{ rowData[col] }}
+        </td>
+        <td>
+          <div class="chapter-type-control">
+            <span class="table-icon lock" [matMenuTriggerFor]="menuName">
+              <i class="{{icons[index]}}"></i>
+            </span>
+            <div class="chapter-type">
+              <app-category-dropdown [current]="rowData.type"></app-category-dropdown>
+            </div>
+            <mat-menu #menuName="matMenu" yPosition="above" class="chapter-menu">
+              <div class="content">
+                <span class="content-title">
+                  <span class="content-title-label">Default access</span>
+                  <span class="content-title-icon">
+                    <i class="fa fa-question"></i>
+                  </span>
+                </span>
+                <span class="content-item" (click)="menuSelected($event, index, 0)">
+                  <span class="content-item-label">Locked and hidden</span>
+                  <span class="content-item-icon">
+                    <i class="fa fa-eye-slash"></i>
+                  </span>
+                </span>
+                <span class="content-item" (click)="menuSelected($event, index, 1)">
+                  <span class="content-item-label">Locked</span>
+                  <span class="content-item-icon">
+                    <i class="fa fa-lock"></i>
+                  </span>
+                </span>
+                <span class="content-item" (click)="menuSelected($event, index, 2)">
+                  <span class="content-item-label">Open</span>
+                  <span class="content-item-icon">
+                    <i class="fa fa-eye"></i>
+                  </span>
+                </span>
+              </div>
+            </mat-menu>
+          </div>
+        </td>
+      </tr>
+    </ng-container>
+  </ng-template>
+  <ng-template pTemplate="summary">
+    <div class="summary-container">
+      <span class="lock-drag" (click)="toggleLock($event)">
+        <i *ngIf="orderable" class="fa fa-lock"></i>
+        <i *ngIf="!orderable" class="fa fa-lock-open"></i>
+      </span>
+      <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+      <span class="select-all">Select all</span>
+      <div class="export-tools">
+        <span class="export">
+          <span>Duplicate</span>
+          <i class="fa fa-paste"></i>
+        </span>
+        <span class="remove">
+          <span>Remove</span>
+          <i class="fa fa-trash-alt"></i>
+        </span>
+        <span class="print">
+          <span>Move</span>
+          <i class="fa fa-folder-open"></i>
+        </span>
+      </div>
+    </div>
   </ng-template>
 </p-table>

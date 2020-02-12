@@ -8,7 +8,23 @@ import { Component, OnInit, Input } from '@angular/core';
 export class StateWidgetComponent implements OnInit {
 
   @Input() icon;
-  @Input() label;
+  @Input() type;
+
+  labels = [
+    'Discovery',
+    'Practice',
+    'Validation',
+    'Challenge',
+    'Review'
+  ];
+
+  classes = [
+    'discovery',
+    'practice',
+    'validation',
+    'challenge',
+    'review'
+  ];
 
   constructor() { }
 

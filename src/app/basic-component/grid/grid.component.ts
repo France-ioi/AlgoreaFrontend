@@ -36,6 +36,8 @@ export class GridComponent implements OnInit, OnChanges {
   @Input() selectionMode;
   @Input() responsive;
   @Input() dataKey;
+  @Input() frozenCols;
+  @Input() frozenWidth;
   
   @Output() expandWholeWidth = new EventEmitter<boolean>();
   
@@ -45,6 +47,8 @@ export class GridComponent implements OnInit, OnChanges {
   @ContentChild('footerTemplate', { static: false }) footerTemplate;
   @ContentChild('summaryTemplate', { static: false }) summaryTemplate;
   @ContentChild('rowExpansionTemplate', { static: false }) rowExpansionTemplate;
+  @ContentChild('frozenHeaderTemplate', { static: false }) frozenHeaderTemplate;
+  @ContentChild('frozenBodyTemplate', { static: false }) frozenBodyTemplate;
 
   @Input() showGear = true;
   showColumnSelection = false;
@@ -69,6 +73,7 @@ export class GridComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     // this.detectSelected();
+    console.log(this.frozenBodyTemplate);
   }
 
   ngOnChanges(changes: SimpleChanges) {

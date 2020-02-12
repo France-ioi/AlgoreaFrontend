@@ -1,8 +1,8 @@
-<div class="state-container">
+<div class="state-container" [ngClass]="classes[type]">
   <span class="state-icon">
     <i class="{{icon}}"></i>
   </span>
   <span class="state-label">
-    {{label}}
+    {{labels[type]}}
   </span>
 </div>

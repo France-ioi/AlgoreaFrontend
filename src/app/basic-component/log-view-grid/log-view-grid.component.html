@@ -1,28 +1,71 @@
-<p-table [value]="data">
-  <ng-template pTemplate="body" let-rowData>
-    <tr [ngClass]="{active: rowData.potential_icon}">
-      <td class="row-icon">
-        <span class="icon" *ngIf="rowData.potential_icon"><i class="{{rowData.potential_icon}}"></i></span>
-      </td>
-      <td>
-        {{ rowData.date | date:'d/MM/y' }}
-      </td>
-      <td *ngIf="type === 'user'">
-        User
-      </td>
-      <td class="main">
-        <b>{{rowData.status}}</b> - {{rowData.title}}
-      </td>
-      <td>
-        <div class="score-wrapper">
-          <ng-container *ngIf="rowData.score.type === 'score'">
-            <app-score-ring [displayedScore]="rowData.score.displayedScore" [currentScore]="rowData.score.currentScore" diameter="24"></app-score-ring>
-          </ng-container>
-          <ng-container *ngIf="rowData.score.type === 'progress'">
-            <app-skill-progress [displayedScore]="rowData.score.displayedScore" [currentScore]="rowData.score.currentScore" type="thick-horizontal"></app-skill-progress>
-          </ng-container>
-        </div>
-      </td>
+<app-grid
+  [selectedColumns]="cols"
+  [columns]="cols"
+  [groupInfo]="groupInfo"
+  [data]="data"
+  sortMode="single"
+>
+  <ng-template #headerTemplate let-columns>
+    <tr>
+      <th style="width: 40px;"></th>
+      <ng-container *ngFor="let col of columns">
+        <th
+          *ngIf="
+            col.field !== 'user' || (col.field === 'user' && type === 'user')
+          "
+          [pSortableColumn]="col.field"
+          [ngClass]="{
+            title: col.field === 'title',
+            'non-title': col.field !== 'title',
+            score: col.field === 'score'
+          }"
+        >
+          {{ col.header }}
+          <p-sortIcon [field]="col.field"></p-sortIcon>
+        </th>
+      </ng-container>
     </tr>
   </ng-template>
-</p-table>
+  <ng-template #bodyTemplate let-rowData let-columns="columns">
+    <tr [ngClass]="{ active: rowData.potential_icon }">
+      <td class="row-icon">
+        <span class="icon" *ngIf="rowData.potential_icon"
+          ><i class="{{ rowData.potential_icon }}"></i
+        ></span>
+      </td>
+      <ng-container
+        *ngFor="let col of columns"
+      >
+        <td *ngIf="col.field === 'title'" class="main">
+          <div class="log-content">
+            <b>{{ rowData.status }}</b> - {{ rowData.title }}
+          </div>
+        </td>
+        <td *ngIf="col.field === 'user' && type === 'user'">
+          User
+        </td>
+        <td *ngIf="col.field === 'date'">
+          {{ rowData.date | date: "d/MM/y" }}
+        </td>
+        <td *ngIf="col.field === 'score'">
+          <div class="score-wrapper">
+            <ng-container *ngIf="rowData.score.type === 'score'">
+              <app-score-ring
+                [displayedScore]="rowData.score.displayedScore"
+                [currentScore]="rowData.score.currentScore"
+                diameter="24"
+              ></app-score-ring>
+            </ng-container>
+            <ng-container *ngIf="rowData.score.type === 'progress'">
+              <app-skill-progress
+                [displayedScore]="rowData.score.displayedScore"
+                [currentScore]="rowData.score.currentScore"
+                type="thick-horizontal"
+              ></app-skill-progress>
+            </ng-container>
+          </div>
+        </td>
+      </ng-container>
+    </tr>
+  </ng-template>
+</app-grid>

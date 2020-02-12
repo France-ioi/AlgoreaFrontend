@@ -1,11 +1,11 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 
 @Component({
   selector: 'app-skill-activity-tabs',
   templateUrl: './skill-activity-tabs.component.html',
   styleUrls: ['./skill-activity-tabs.component.scss']
 })
-export class SkillActivityTabsComponent implements OnInit {
+export class SkillActivityTabsComponent implements OnInit, OnChanges {
 
   @Input() skills;
   @Input() activities;
@@ -18,6 +18,11 @@ export class SkillActivityTabsComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    console.log('Skill Activity Tabs', changes);
+    console.log(this.activities);
   }
 
   tabChanged(e) {

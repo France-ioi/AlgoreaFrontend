@@ -10,6 +10,7 @@ export class LogViewGridComponent implements OnInit {
   @Input() data;
   @Input() cols;
   @Input() type;
+  @Input() groupInfo;
 
   constructor() { }
 

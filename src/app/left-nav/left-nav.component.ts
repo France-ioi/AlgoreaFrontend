@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
   templateUrl: './left-nav.component.html',
   styleUrls: ['./left-nav.component.scss']
 })
-export class LeftNavComponent implements OnInit {
+export class LeftNavComponent implements OnInit, OnChanges {
 
   @Input() data;
   @Input() user;
@@ -23,6 +23,9 @@ export class LeftNavComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
   }
 
   onCollapse(e) {

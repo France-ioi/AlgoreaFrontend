@@ -16,8 +16,8 @@
       <app-section icon="fa fa-users" label="Current Composition">
         <div class="table-container">
           <div class="selection-tool">
-            <app-selection [items]="selItems"></app-selection>
-            <app-selection [items]="selItems" type="square"></app-selection>
+            <app-selection [items]="childrenPolicy" (onChange)="onChildrenPolicyChanged($event)"></app-selection>
+            <app-selection *ngIf="selectedPolicy" [items]="selItems" type="square"></app-selection>
           </div>
           <app-grid
             [selectedColumns]="columns"

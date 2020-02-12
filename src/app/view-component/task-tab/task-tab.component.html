@@ -36,6 +36,17 @@
                 class="activity-content"
                 [ngClass]="{ locked: item.isLocked }"
               >
+                <span
+                  class="activity-weight"
+                  *ngIf="enableScoreWeight"
+                  pTooltip="Weight of this item, when computing the score of the chapter"
+                  tooltipPosition="top"
+                  tooltipStyleClass="tooltip-custom"
+                >
+                  <ng-container *ngIf="item.weight"
+                    >x {{ item.weight }}</ng-container
+                  >
+                </span>
                 <span class="activity-title"
                   >{{ ln + 1 }}. {{ item.title }}</span
                 >
@@ -50,7 +61,7 @@
                   ></i>
                 </span>
                 <app-state-widget
-                  [label]="item.category.label"
+                  [type]="item.category.type"
                   [icon]="item.category.icon"
                 ></app-state-widget>
               </span>
@@ -123,23 +134,13 @@
         <ng-container *ngIf="!activityORSkill">Progress</ng-container>
       </ng-template>
       <ng-template matTabContent>
-        <ng-container *ngIf="activityORSkill">
+        <ng-container>
           <app-section
             icon="fa fa-graduation-cap"
             [label]="
               currentUser.type === 'user' ? 'User situation' : 'Group Situation'
             "
           >
-            <span>Compact/Details </span>
-            <app-switch
-              mode="white"
-              (onChange)="onModeChange($event)"
-            ></app-switch>
-            <span>Vertical Scrollbar</span>
-            <app-switch
-              mode="white"
-              (onChange)="onProgressShowChange($event)"
-            ></app-switch>
             <div class="selection-tool">
               <app-selection
                 [items]="situationTypes"
@@ -156,6 +157,7 @@
               <app-log-view-grid
                 [data]="logviewdata"
                 [cols]="logviewcols"
+                [groupInfo]="logviewgroupinfo"
                 [type]="currentUser.type"
               ></app-log-view-grid>
             </ng-container>
@@ -270,25 +272,66 @@
                   [data]="gcvd"
                   sortMode="single"
                   [showGear]="false"
-                  scrollable="true"
+                  [scrollable]="true"
                   class="slanted-grid"
+                  [ngClass]="{ unfreeze: !freeze, 'compact-mode': compactMode }"
+                  [frozenWidth]="freeze ? '160px' : null"
                 >
+                  <ng-template #colgroupTemplate let-columns>
+                    <colgroup>
+                      <col *ngFor="let col of columns" [ngStyle]="{'width.px': columnWidth}"/>
+                    </colgroup>
+                  </ng-template>
+                  <ng-template *ngIf="freeze" #frozenHeaderTemplate>
+                    <tr>
+                      <th
+                        style="background-color: transparent;min-width: 160px;transform: none;"
+                      >
+                        <app-grid-gear
+                          [compactMode]="compactMode"
+                          (compactChange)="onModeChange($event)"
+                          (frozenChange)="onFrozenChange($event)"
+                          (asRowChange)="onSwapColRow($event)"
+                          (showDescChange)="onShowDescription($event)"
+                        ></app-grid-gear>
+                      </th>
+                    </tr>
+                  </ng-template>
+                  <ng-template *ngIf="freeze" #frozenBodyTemplate let-rowIndex>
+                    <tr>
+                      <td>
+                        {{ gcvr[rowIndex] }}
+                      </td>
+                    </tr>
+                  </ng-template>
                   <ng-template #headerTemplate let-columns>
                     <tr style="border: none;">
-                      <th style="background-color: transparent;">
-                        <div class="swap-col-row">
-                          <span class="outer-button">
-                            <span
-                              class="inner-button"
-                              (click)="onSwapColRow($event)"
-                            >
-                              <i class="fa fa-retweet"></i>
-                            </span>
-                          </span>
-                        </div>
+                      <th
+                        style="min-width: 160px;transform: none;width: 159px;"
+                        *ngIf="!freeze"
+                      >
+                        <app-grid-gear
+                          [compactMode]="compactMode"
+                          [freeze]="freeze"
+                          (compactChange)="onModeChange($event)"
+                          (frozenChange)="onFrozenChange($event)"
+                        ></app-grid-gear>
                       </th>
-                      <th *ngFor="let col of columns">
-                        <div class="slanted-header">{{ col }}</div>
+                      <th
+                        *ngIf="asRow && showDesc"
+                        style="width: 300px;transform: none;"
+                        >
+                        Description
+                      </th>
+                      <th
+                        *ngFor="let col of columns"
+                        [ngStyle]="{'min-width.px': columnWidth, 'width.px': columnWidth}"
+                      >
+                        <div class="slanted-header">
+                          <div class="slanted-header-content">
+                            {{ col }}
+                          </div>                          
+                        </div>
                       </th>
                     </tr>
                   </ng-template>
@@ -299,8 +342,11 @@
                     let-rowIndex="rowIndex"
                   >
                     <tr>
-                      <td>
+                      <td *ngIf="!freeze" style="width: 160px;">
                         {{ gcvr[rowIndex] }}
+                      </td>
+                      <td *ngIf="asRow && showDesc" style="width: 300px;">
+                        Lorem Ipsum
                       </td>
                       <td
                         *ngFor="
@@ -309,8 +355,13 @@
                           let menuName = rowIndex
                         "
                         [matMenuTriggerFor]="menuName"
+                        [ngStyle]="{'width.px': columnWidth}"
                       >
-                        <mat-menu #menuName="matMenu" yPosition="above">
+                        <mat-menu
+                          #menuName="matMenu"
+                          yPosition="above"
+                          class="grid-td-menu"
+                        >
                           <div class="content">
                             <ng-container
                               *ngIf="!rowData[idx].progress.isValidated"
@@ -429,8 +480,11 @@
                           </div>
                           <span class="indicator"></span>
                         </mat-menu>
-                        <div class="group-situation-data">
-                          <div class="situation-top" *ngIf="!compactMode && !vertical">
+                        <div class="group-situation-data" [ngStyle]="{'min-width.px': columnWidth}">
+                          <div
+                            class="situation-top"
+                            *ngIf="!compactMode && activityORSkill"
+                          >
                             <span class="time-spent">
                               <i class="fa fa-clock"></i>
                               <span>
@@ -491,7 +545,7 @@
                               *ngIf="
                                 rowData[idx].progress.isValidated &&
                                 rowData[idx].progress.isStarted &&
-                                !vertical
+                                activityORSkill
                               "
                               [displayedScore]="
                                 rowData[idx].progress.displayedScore
@@ -506,7 +560,7 @@
                               *ngIf="
                                 rowData[idx].progress.isValidated &&
                                 !rowData[idx].progress.isStarted &&
-                                !vertical
+                                activityORSkill
                               "
                             >
                               <i class="fa fa-lock-open"></i>
@@ -514,16 +568,26 @@
                             <span
                               class="situation-lock"
                               *ngIf="
-                                !rowData[idx].progress.isValidated && !vertical
+                                !rowData[idx].progress.isValidated &&
+                                activityORSkill
                               "
                             >
                               <i class="fa fa-lock"></i>
                             </span>
-                            <span class="activity-date" *ngIf="!compactMode && rowData[idx].progress.isValidated && rowData[idx].progress.isStarted && !vertical">{{
-                              rowData[idx].last_activity | date: "d/MM/y"
-                            }}</span>
+                            <span
+                              class="activity-date"
+                              *ngIf="
+                                !compactMode &&
+                                rowData[idx].progress.isValidated &&
+                                rowData[idx].progress.isStarted &&
+                                activityORSkill
+                              "
+                              >{{
+                                rowData[idx].last_activity | date: "d/MM/y"
+                              }}</span
+                            >
                             <app-skill-progress
-                              *ngIf="vertical"
+                              *ngIf="!activityORSkill"
                               style="height: 30px;"
                               type="vertical"
                               [displayedScore]="
@@ -533,14 +597,31 @@
                                 rowData[idx].progress.currentScore
                               "
                             ></app-skill-progress>
-                            <span class="progress-value" *ngIf="vertical" [ngClass]="{check: rowData[idx].progress.currentScore >= 100}">
-                              <ng-container *ngIf="rowData[idx].progress.currentScore >= 100">
+                            <span
+                              class="progress-value"
+                              *ngIf="!activityORSkill"
+                              [ngClass]="{
+                                check: rowData[idx].progress.currentScore >= 100
+                              }"
+                            >
+                              <ng-container
+                                *ngIf="
+                                  rowData[idx].progress.currentScore >= 100
+                                "
+                              >
                                 <i class="fa fa-check"></i>
                               </ng-container>
-                              <ng-container *ngIf="rowData[idx].progress.currentScore > 0 && rowData[idx].progress.currentScore < 100">
-                                {{rowData[idx].progress.currentScore}}
+                              <ng-container
+                                *ngIf="
+                                  rowData[idx].progress.currentScore > 0 &&
+                                  rowData[idx].progress.currentScore < 100
+                                "
+                              >
+                                {{ rowData[idx].progress.currentScore }}
                               </ng-container>
-                              <ng-container *ngIf="rowData[idx].progress.currentScore == 0">
+                              <ng-container
+                                *ngIf="rowData[idx].progress.currentScore == 0"
+                              >
                                 <i class="fa fa-hourglass-half"></i>
                               </ng-container>
                             </span>
@@ -585,17 +666,36 @@
             [value]="desc"
           ></app-textarea>
         </app-section>
-        <app-section label="Validation type" icon="fa fa-book">
-          <app-dropdown
-            [items]="validationType"
-            placeholder="Select a type..."
-          ></app-dropdown>
+        <app-section label="Score / Validation" icon="fa fa-book">
+          <div class="score-validation-container">
+            <div class="score-validation-input">
+              <app-dropdown
+                [items]="validationType"
+                placeholder="Select a type..."
+                (onChange)="validationChanged($event)"
+              ></app-dropdown>
+              <app-input
+                *ngIf="validationN"
+                placeholder="Number of problems..."
+              ></app-input>
+            </div>
+            <div class="score-weight-container">
+              <span class="score-weight-container-label"
+                ><b>Enable score weights</b></span
+              >
+              <app-switch
+                mode="white"
+                (onChange)="toggleScoreWeight($event)"
+              ></app-switch>
+            </div>
+          </div>
         </app-section>
         <app-section label="Chapter" icon="fa fa-book">
           <div class="section-chapter-wrapper">
             <app-chapter-grid
               [data]="chapterdata"
               [cols]="chaptercols"
+              [scoreWeight]="enableScoreWeight"
             ></app-chapter-grid>
             <span class="tri-tag"></span>
           </div>

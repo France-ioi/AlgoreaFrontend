@@ -47,10 +47,10 @@
     <ng-container *ngIf="groupShow">
       <div class="group-content" (resized)="onResized($event)" #groupPanel>
         <div class="group-show-activity">
-          <span>
+          <span class="group-show-activity-label">
             Show groups that participate to that activity
           </span>
-          <span> </span>
+          <app-switch mode="white"></app-switch>
         </div>
         <div class="group-self" (click)="onSelectYourself($event, 0)">
           <span class="anonym-group">
