@@ -478,7 +478,7 @@ export class AppComponent {
           ID: 12,
           title: 'Graphs: methods',
           type: 'leaf',
-          ring: true,
+          ring: false,
           state: 'started',
           progress: {
             displayedScore: 100,
@@ -512,7 +512,7 @@ export class AppComponent {
               title: 'Simplify or optimize manipulation',
               icon: 'progress',
               type: 'leaf',
-              ring: true,
+              ring: false,
               state: 'opened',
               progress: {
                 displayedScore: 30,
@@ -524,7 +524,7 @@ export class AppComponent {
               title: 'Spot symetry an convert to normal form',
               icon: 'regress',
               type: 'folder',
-              ring: true,
+              ring: false,
               state: 'opened',
               progress: {
                 displayedScore: 70,
@@ -536,7 +536,7 @@ export class AppComponent {
                   title: 'Simplify or optimize manipulation',
                   icon: 'stagnant',
                   type: 'leaf',
-                  ring: true,
+                  ring: false,
                   state: 'opened',
                   progress: {
                     displayedScore: 30,
@@ -547,7 +547,7 @@ export class AppComponent {
                   ID: 18,
                   title: 'Spot symetry an convert to normal form',
                   type: 'leaf',
-                  ring: true,
+                  ring: false,
                   state: 'opened',
                   progress: {
                     displayedScore: 70,
@@ -583,7 +583,7 @@ export class AppComponent {
                   ID: 22,
                   title: 'Simplify or optimize manipulation',
                   type: 'leaf',
-                  ring: true,
+                  ring: false,
                   state: 'opened',
                   progress: {
                     displayedScore: 30,
@@ -594,7 +594,7 @@ export class AppComponent {
                   ID: 23,
                   title: 'Spot symetry an convert to normal form',
                   type: 'leaf',
-                  ring: true,
+                  ring: false,
                   state: 'opened',
                   progress: {
                     displayedScore: 70,
@@ -609,7 +609,7 @@ export class AppComponent {
           ID: 24,
           title: 'Flood Fill',
           type: 'leaf',
-          ring: true,
+          ring: false,
           state: 'opened',
           progress: {
             displayedScore: 70,
@@ -637,7 +637,7 @@ export class AppComponent {
           ID: 26,
           title: 'List graph caracteristics',
           type: 'leaf',
-          ring: false,
+          ring: true,
           state: 'never opened',
           progress: {
             displayedScore: 0,
@@ -645,14 +645,14 @@ export class AppComponent {
           },
           category: {
             icon: 'fa fa-book-open',
-            label: 'Discovery'
+            type: 0
           }
         },
         {
           ID: 27,
           title: 'Reduce graph size',
           type: 'folder',
-          ring: false,
+          ring: true,
           state: 'opened',
           progress: {
             displayedScore: 90,
@@ -670,9 +670,10 @@ export class AppComponent {
                 displayedScore: 30,
                 currentScore: 30
               },
+              weight: 1,
               category: {
                 icon: 'fa fa-book-open',
-                label: 'Discovery'
+                type: 1
               }
             },
             {
@@ -685,9 +686,10 @@ export class AppComponent {
                 displayedScore: 70,
                 currentScore: 70
               },
+              weight: 4,
               category: {
                 icon: 'fa fa-video',
-                label: 'Validation'
+                type: 2
               },
               children: [
                 {
@@ -700,9 +702,10 @@ export class AppComponent {
                     displayedScore: 30,
                     currentScore: 30
                   },
+                  weight: 2,
                   category: {
                     icon: 'fa fa-book-open',
-                    label: 'Discovery'
+                    type: 0
                   }
                 },
                 {
@@ -715,9 +718,10 @@ export class AppComponent {
                     displayedScore: 70,
                     currentScore: 70
                   },
+                  weight: 3,
                   category: {
                     icon: 'fa fa-book-open',
-                    label: 'Discovery'
+                    type: 4
                   }
                 }
               ]
@@ -726,7 +730,7 @@ export class AppComponent {
               ID: 32,
               title: 'Simplify or optimize manipulation',
               type: 'leaf',
-              ring: false,
+              ring: true,
               state: 'opened',
               isLocked: true,
               progress: {
@@ -735,14 +739,14 @@ export class AppComponent {
               },
               category: {
                 icon: 'fa fa-laptop-code',
-                label: 'Training'
+                type: 3
               }
             },
             {
               ID: 33,
               title: 'Spot symetry an convert to normal form',
               type: 'folder',
-              ring: false,
+              ring: true,
               state: 'opened',
               progress: {
                 displayedScore: 70,
@@ -750,7 +754,7 @@ export class AppComponent {
               },
               category: {
                 icon: 'fa fa-code',
-                label: 'Course'
+                type: 4
               },
               children: [
                 {
@@ -765,7 +769,7 @@ export class AppComponent {
                   },
                   category: {
                     icon: 'fa fa-book-open',
-                    label: 'Discovery'
+                    type: 3
                   }
                 },
                 {
@@ -780,7 +784,7 @@ export class AppComponent {
                   },
                   category: {
                     icon: 'fa fa-book-open',
-                    label: 'Discovery'
+                    type: 3
                   }
                 }
               ]
@@ -792,7 +796,7 @@ export class AppComponent {
           // tslint:disable-next-line: max-line-length
           title: 'Horizontal digging (BFS) et DijkstraHorizontal digging (BFS) et DijkstraHorizontal digging (BFS) et DijkstraHorizontal digging (BFS) et DijkstraHorizontal digging (BFS) et Dijkstra',
           type: 'leaf',
-          ring: false,
+          ring: true,
           state: 'locked',
           progress: {
             displayedScore: 20,
@@ -813,7 +817,7 @@ export class AppComponent {
   folded = false;
   scrolled = false;
 
-  activityORSkill = false;
+  activityORSkill = true;
 
   taskdata;
   selectedType = -1;
@@ -962,6 +966,7 @@ export class AppComponent {
       folded: this.folded,
       isStarted: this.isStarted,
       collapsed: this.collapsed,
+      activityORSkill: this.activityORSkill,
       editing: true
     });
   }
@@ -973,6 +978,7 @@ export class AppComponent {
       folded: this.folded,
       isStarted: this.isStarted,
       collapsed: this.collapsed,
+      activityORSkill: this.activityORSkill,
       editing: false
     });
   }

@@ -1,0 +1,24 @@
+@import 'src/colors.scss';
+
+.gear-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .gear-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    color: white;
+    background-color: $nav-bk-color;
+    border-radius: 30px;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+  }
+
+  .gear-label {
+    color: $base-text-color;
+  }
+}

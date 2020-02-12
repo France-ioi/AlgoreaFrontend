@@ -8,8 +8,15 @@
   [selectionMode]="selectionMode"
   [responsive]="responsive"
   [dataKey]="dataKey"
+  [frozenWidth]="frozenWidth"
 >
   <!-- <ng-container *ngTemplateOutlet="headerTemplate; context: {$implicit: columns}"></ng-container> -->
+  <ng-template *ngIf="frozenWidth && frozenWidth.length > 0" pTemplate="frozenheader">
+    <ng-container [ngTemplateOutlet]="frozenHeaderTemplate"></ng-container>
+  </ng-template>
+  <ng-template *ngIf="frozenWidth && frozenWidth.length > 0" pTemplate="frozenbody" let-rowIndex="rowIndex">
+    <ng-container [ngTemplateOutlet]="frozenBodyTemplate" [ngTemplateOutletContext]="{ $implicit: rowIndex }"></ng-container>
+  </ng-template>
   <ng-template pTemplate="colgroup" let-columns>
     <ng-container [ngTemplateOutlet]="colgroupTemplate" [ngTemplateOutletContext]="{ $implicit: columns }"></ng-container>
   </ng-template>

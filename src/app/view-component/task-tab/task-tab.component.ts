@@ -27,7 +27,15 @@ export class TaskTabComponent implements OnInit, OnChanges {
   
   @Output() expandWholeWidth = new EventEmitter<void>();
 
-  showDialog = false;
+  validationN = false;
+  freeze = true;
+  enableScoreWeight = false;
+  asRow = false;
+  showDesc = false;
+  compactMode = false;
+
+  columnWidth = 160;
+  columnHeight = 70;
 
   validText;
   trees;
@@ -75,28 +83,31 @@ export class TaskTabComponent implements OnInit, OnChanges {
   chapterdata = [
     {
       ID: 1,
+      weight: 2,
       col1: 'video',
-      col2: 'Morbi sit amet eleifend tortor'
+      col2: 'Morbi sit amet eleifend tortor',
+      type: 0
     },
     {
       ID: 2,
+      weight: '2',
       col1: 'video',
-      col2: 'Morbi sit amet eleifend tortor'
+      col2: 'Morbi sit amet eleifend tortor',
+      type: 1
     },
     {
       ID: 3,
+      weight: 2,
       col1: 'conc.',
-      col2: 'Morbi sit amet eleifend tortor'
+      col2: 'Morbi sit amet eleifend tortor',
+      type: 2
     }
   ];
 
-  chaptercols = ['col1', 'col2', 'col3'];
-
+  chaptercols = ['col1', 'col2'];
   currentUser;
-
   selectedView = 0;
 
-  compactMode = false;
 
   logviewdata = [
     {
@@ -132,7 +143,31 @@ export class TaskTabComponent implements OnInit, OnChanges {
     }
   ];
 
-  logviewcols = ['potential_icon', 'date', 'title', 'score'];
+  logviewcols = [
+    {
+      header: 'Date',
+      field: 'date'
+    },
+    {
+      header: 'Type',
+      field: 'user'
+    },
+    {
+      header: 'Title',
+      field: 'title'
+    },
+    {
+      header: 'Score',
+      field: 'score'
+    }
+  ];
+
+  logviewgroupinfo = [
+    {
+      name: 'Log view columns',
+      columns: this.logviewcols
+    }
+  ];
 
   chapterviewdata = [
     {
@@ -722,10 +757,13 @@ export class TaskTabComponent implements OnInit, OnChanges {
     this.gcvc = this.gcvr;
     this.gcvr = cont;
     this.gcvd = this.gcvd[0].map((col, i) => this.gcvd.map(row => row[i]));
+    this.asRow = !this.asRow;
   }
 
   onModeChange(e) {
     this.compactMode = !this.compactMode;
+    this.columnWidth = this.compactMode ? 60 : 160;
+    this.columnHeight = this.compactMode ? 50 : 70;
   }
 
   onProgressShowChange(e) {
@@ -734,6 +772,27 @@ export class TaskTabComponent implements OnInit, OnChanges {
 
   onExpandWidth(e) {
     this.expandWholeWidth.emit(e);
+  }
+
+  onFrozenChange(e) {
+    this.freeze = e;
+  }
+
+  validationChanged(e) {
+    console.log(e);
+    if (e.value === 'n_problem') {
+      this.validationN = true;
+    } else {
+      this.validationN = false;
+    }
+  }
+
+  toggleScoreWeight(e) {
+    this.enableScoreWeight = !this.enableScoreWeight;
+  }
+
+  onShowDescription(e) {
+    this.showDesc = !this.showDesc;
   }
 
 }

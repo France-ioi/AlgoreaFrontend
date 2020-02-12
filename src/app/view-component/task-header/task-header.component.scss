@@ -4,131 +4,141 @@
   background-color: $base-bk-color;
 }
 
-.task-header {
-  padding-top: 20px;
+.task-header-container {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  margin-bottom: 10px;
   margin-right: 15px;
-  background-color: $base-bk-color;
-  padding-bottom: 10px;
 
-  &.edit {
-    flex-direction: column;
-    align-items: unset;
-
-    app-input {
-      width: 100%;
-      margin-bottom: 10px;
-    }
-
-    .links {
-      display: flex;
-      align-items: center;
-
-      .category {
-        display: flex;
-        align-items: center;
-        flex: 1;
-
-        .parent-link {
-          color: $base-color;
-        }
-
-        .parent-item {
-          margin-left: 10px;
-          color: $base-text-color;
-          font-size: 12px;
-        }
+  .task-header {
+    padding-top: 20px;
+    display: flex;
+    align-items: center;
+    background-color: $base-bk-color;
+    padding-bottom: 10px;
+  
+    &.edit {
+      flex-direction: column;
+      align-items: unset;
+  
+      app-input {
+        width: 100%;
+        margin-bottom: 10px;
       }
-
-      .actions {
+  
+      .links {
         display: flex;
         align-items: center;
-        color: $base-color;
-        font-size: 12px;
-
-        span {
-          margin-right: 10px;
-          cursor: pointer;
-          
+  
+        .category {
+          display: flex;
+          align-items: center;
+          flex: 1;
+  
+          .parent-link {
+            color: $base-color;
+          }
+  
+          .parent-item {
+            margin-left: 10px;
+            color: $base-text-color;
+            font-size: 12px;
+          }
+        }
+  
+        .actions {
+          display: flex;
+          align-items: center;
+          color: $base-color;
+          font-size: 12px;
+  
           span {
             margin-right: 10px;
+            cursor: pointer;
+            
+            span {
+              margin-right: 10px;
+            }
           }
         }
       }
     }
-  }
-
-  &.small {
-    height: 43px;
-  }
-
-  .task-user-image {
-    border-radius: 100px;
-    background-color: white;
-
-    img {
+  
+    &.small {
+      height: 43px;
+    }
+  
+    .task-user-image {
       border-radius: 100px;
-    }
-  }
-
-  .task-title {
-    margin-left: 15px;
-    margin-right: 10px;
-    flex: 1;
-    min-width: 0;
-
-    p {
-      font-size: 30px;
-      margin: 0;
-      margin-bottom: 5px;
-      text-overflow: ellipsis;
-      overflow: hidden;
-      white-space: nowrap;  
-    }
-    span {
-      color: $base-text-color;
-    }
-  }
-
-  .user-info {
-    display: flex;
-    align-items: center;
-    margin-right: 5px;
-
-    span {
-      display: block;
-
-      &.user-avatar {
-        position: relative;
-      }
-
-      &.user-id {
-        color: $base-color;
-        font-size: 20px;
-        font-weight: bold;
+      background-color: white;
+  
+      img {
+        border-radius: 100px;
       }
     }
-  }
+  
+    .task-title {
+      margin-left: 0;
+      margin-right: 10px;
+      flex: 1;
+      min-width: 0;
 
-  .clock-icon {
-    color: $dark-text-color;
-    font-size: 24px;
-    font-weight: bold;
-    margin-right: 5px;
-
-    &.finished {
-      color: $light-text-color;
+      &.skill {
+        margin-left: 10px;
+      }
+  
+      p {
+        font-size: 30px;
+        margin: 0;
+        margin-bottom: 5px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;  
+      }
+      span {
+        color: $base-text-color;
+      }
     }
-  }
-
-  .remaining-time {
-    color: $dark-text-color;
-    font-size: 24px;
-    font-weight: bold;
-
-    &.finished {
-      color: $light-text-color;
+  
+    .user-info {
+      display: flex;
+      align-items: center;
+      margin-right: 5px;
+  
+      span {
+        display: block;
+  
+        &.user-avatar {
+          position: relative;
+        }
+  
+        &.user-id {
+          color: $base-color;
+          font-size: 20px;
+          font-weight: bold;
+        }
+      }
+    }
+  
+    .clock-icon {
+      color: $dark-text-color;
+      font-size: 24px;
+      font-weight: bold;
+      margin-right: 5px;
+  
+      &.finished {
+        color: $light-text-color;
+      }
+    }
+  
+    .remaining-time {
+      color: $dark-text-color;
+      font-size: 24px;
+      font-weight: bold;
+  
+      &.finished {
+        color: $light-text-color;
+      }
     }
   }
 }

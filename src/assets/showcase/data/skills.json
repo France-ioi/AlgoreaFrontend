@@ -13,7 +13,7 @@
     	{
 				"title": "List graph caracteristics",
 				"type": "leaf",
-				"ring": false,
+				"ring": true,
 				"state": "never opened",
 				"progress": {
 					"displayedScore": 0,
@@ -23,7 +23,7 @@
     	{
 				"title": "Reduce graph size",
 				"type": "folder",
-				"ring": false,
+				"ring": true,
 				"state": "opened",
 				"progress": {
 					"displayedScore": 90,
@@ -75,7 +75,7 @@
 					{
 						"title": "Simplify or optimize manipulation",
 						"type": "leaf",
-						"ring": false,
+						"ring": true,
 						"state": "opened",
 						"progress": {
 							"displayedScore": 30,
@@ -85,7 +85,7 @@
 					{
 						"title": "Spot symetry an convert to normal form",
 						"type": "folder",
-						"ring": false,
+						"ring": true,
 						"state": "opened",
 						"progress": {
 							"displayedScore": 70,
@@ -130,7 +130,7 @@
 			{
 				"title": "Horizontal digging (BFS) et DijkstraHorizontal digging (BFS) et DijkstraHorizontal digging (BFS) et DijkstraHorizontal digging (BFS) et DijkstraHorizontal digging (BFS) et Dijkstra",
 				"type": "leaf",
-				"ring": false,
+				"ring": true,
 				"state": "locked",
 				"progress": {
 					"displayedScore": 20,

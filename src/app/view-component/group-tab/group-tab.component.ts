@@ -12,20 +12,31 @@ export class GroupTabComponent implements OnInit {
 
   gridData;
   columns;
-
   grdata;
+
+  selectedPolicy = 0;
+
+  childrenPolicy = [
+    {
+      label: 'Direct Children Only'
+    },
+    {
+      label: 'All descendants'
+    }
+  ];
+
   selItems = [
+    {
+      icon: 'fa fa-users',
+      label: 'sub-groups'
+    },
     {
       icon: 'fa fa-calendar',
       label: 'sessions'
     },
     {
       icon: 'fa fa-users',
-      label: 'teams (3)'
-    },
-    {
-      icon: 'fa fa-users',
-      label: 'group (2)'
+      label: 'teams'
     },
     {
       icon: 'fa fa-user',
@@ -148,8 +159,8 @@ export class GroupTabComponent implements OnInit {
     this.expandWholeWidth.emit(e);
   }
 
-  openContentDialog(e) {
-    this.showDialog = true;
+  onChildrenPolicyChanged(idx) {
+    this.selectedPolicy = idx;
   }
 
 }

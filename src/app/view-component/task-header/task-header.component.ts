@@ -16,6 +16,8 @@ export class TaskHeaderComponent implements OnInit {
   @Input() title;
   @Input() editing;
   @Input() parents;
+  @Input() activityORSkill = true;
+  @Input() progress;
 
   constructor() { }
 

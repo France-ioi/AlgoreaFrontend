@@ -53,3 +53,29 @@
   padding-bottom: 20px;
   border-bottom: 1px solid $light-border-color;
 }
+
+:host ::ng-deep .dialog-container {
+  max-height: 65vh;
+  overflow: hidden;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &:hover {
+    overflow: auto;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #f1f1f1;
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: #d1d1d1;
+  }
+}

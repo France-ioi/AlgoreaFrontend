@@ -1,4 +1,17 @@
-@import 'src/colors.scss';
+@import "src/colors.scss";
+
+:host ::ng-deep .ui-table .ui-table-thead > tr > th {
+  position: -webkit-sticky;
+  position: sticky !important;
+  top: 70px;
+  overflow: visible;
+}
+
+@media screen and (max-width: 64em) {
+  :host ::ng-deep .ui-table .ui-table-thead > tr > th {
+    top: 100px;
+  }
+}
 
 :host {
   position: relative;
@@ -11,19 +24,19 @@
       width: 13px;
       height: 13px;
       .ui-chkbox-box {
-        background-color: #E5E5E5;
-        box-shadow: 0 1px #BBB inset;
+        background-color: #e5e5e5;
+        box-shadow: 0 1px #bbb inset;
         width: 13px;
         height: 13px;
         border: none;
         position: relative;
 
         &:hover {
-          background-color: #D0D0D0;
+          background-color: #d0d0d0;
         }
 
         &.ui-state-active:not(.ui-state-disabled):hover {
-          background-color: #D0D0D0;
+          background-color: #d0d0d0;
         }
 
         .ui-chkbox-icon {
@@ -54,9 +67,10 @@
 
     .ui-table-tbody > tr > td {
       border: none;
-      border-bottom: 1px solid #F0F0F0;
+      border-bottom: 1px solid #f0f0f0;
       color: $base-text-color;
-      height: 40px;
+      height: 43px;
+      max-height: 43px;
     }
 
     .ui-table-tbody > tr:last-child > td {
@@ -80,7 +94,7 @@
         span {
           margin-right: 10px;
           cursor: pointer;
-          
+
           span {
             margin-right: 10px;
           }
@@ -112,7 +126,7 @@
   left: 0;
   top: 0;
   width: 220px;
-  background-color: #4A4A4A;
+  background-color: #4a4a4a;
   color: white;
 
   .header {
@@ -140,7 +154,7 @@
       font-size: 10px;
       text-transform: uppercase;
       padding: 0 10px;
-      color: #7D7D7D;
+      color: #7d7d7d;
     }
 
     ul {
@@ -148,17 +162,17 @@
       display: flex;
       flex-direction: column;
       padding: 0 10px;
-  
+
       li {
         display: flex;
         margin-bottom: 5px;
         cursor: pointer;
-        
+
         span {
           flex: 1;
           font-size: 10px;
-          color: #7D7D7D;
-  
+          color: #7d7d7d;
+
           &.checked {
             color: white;
           }
@@ -166,7 +180,6 @@
       }
     }
   }
-
 }
 
 .show-all {
@@ -194,5 +207,27 @@
     font-size: 20px;
     margin-left: 5px;
     align-items: center;
+  }
+}
+
+:host.compact-mode ::ng-deep .ui-table-frozen-view tr {
+  height: 41px;
+
+  &:first-child {
+    height: 40px;
+  }
+
+  td {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+:host ::ng-deep .ui-table-frozen-view tr {
+  height: 71px;
+
+  &:first-child {
+    height: 70px;
   }
 }

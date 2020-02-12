@@ -1,0 +1,121 @@
+{
+  "data": [
+    {
+      "title": "Graphs: methods",
+      "type": "leaf",
+      "ring": true,
+      "state": "started",
+      "progress": {
+        "displayedScore": 100,
+        "currentScore": 100
+      }
+    },
+    {
+      "title": "List graph caracteristics",
+      "type": "leaf",
+      "ring": true,
+      "state": "never opened",
+      "progress": {
+        "displayedScore": 0,
+        "currentScore": 0
+      }
+    },
+    {
+      "title": "Reduce graph size",
+      "type": "folder",
+      "ring": true,
+      "state": "opened",
+      "progress": {
+        "displayedScore": 90,
+        "currentScore": 90
+      },
+      "children": [
+        {
+          "title": "Simplify or optimize manipulation",
+          "type": "leaf",
+          "ring": true,
+          "state": "opened",
+          "progress": {
+            "displayedScore": 30,
+            "currentScore": 30
+          }
+        },
+        {
+          "title": "Spot symetry an convert to normal form",
+          "type": "folder",
+          "ring": true,
+          "state": "opened",
+          "progress": {
+            "displayedScore": 70,
+            "currentScore": 70
+          },
+          "children": [
+            {
+              "title": "Simplify or optimize manipulation",
+              "type": "leaf",
+              "ring": true,
+              "state": "opened",
+              "progress": {
+                "displayedScore": 30,
+                "currentScore": 30
+              }
+            },
+            {
+              "title": "Spot symetry an convert to normal form",
+              "type": "leaf",
+              "ring": true,
+              "state": "opened",
+              "progress": {
+                "displayedScore": 70,
+                "currentScore": 70
+              }
+            }
+          ]
+        },
+        {
+          "title": "Spot symetry an convert to normal form",
+          "type": "folder",
+          "ring": true,
+          "state": "opened",
+          "progress": {
+            "displayedScore": 70,
+            "currentScore": 70
+          },
+          "children": [
+            {
+              "title": "Simplify or optimize manipulation",
+              "type": "leaf",
+              "ring": true,
+              "state": "opened",
+              "progress": {
+                "displayedScore": 30,
+                "currentScore": 30
+              }
+            },
+            {
+              "title": "Spot symetry an convert to normal form",
+              "type": "leaf",
+              "ring": true,
+              "state": "opened",
+              "progress": {
+                "displayedScore": 70,
+                "currentScore": 70
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Flood Fill",
+      "type": "leaf",
+      "ring": true,
+      "state": "opened",
+      "progress": {
+        "displayedScore": 70,
+        "currentScore": 70,
+        "icons": "camera"
+      }
+    }
+  ]
+}

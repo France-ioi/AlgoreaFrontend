@@ -46,6 +46,7 @@ export class NavigationTabsComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
+    console.log('navigation tabs', changes);
     if (this.items) {
       this.fetchUser();
     }
@@ -118,10 +119,12 @@ export class NavigationTabsComponent implements OnInit, OnChanges {
 
   onSkillSelected(e) {
     this.skillSelect.emit(e);
+    this.groupShow = false;
   }
 
   onActivitySelected(e) {
     this.activitySelect.emit(e);
+    this.groupShow = false;
   }
 
   onNodeChange(e) {

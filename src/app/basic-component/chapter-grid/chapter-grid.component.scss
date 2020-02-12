@@ -2,6 +2,40 @@
 
 :host ::ng-deep .ui-table {
 
+  .ui-table-tbody > tr > td.ui-editing-cell p-celleditor > * {
+    width: 40px;
+  }
+
+  .ui-chkbox {
+    width: 13px;
+    height: 13px;
+    .ui-chkbox-box {
+      background-color: #E5E5E5;
+      box-shadow: 0 1px #BBB inset;
+      width: 13px;
+      height: 13px;
+      border: none;
+      position: relative;
+
+      &:hover {
+        background-color: #D0D0D0;
+      }
+
+      &.ui-state-active:not(.ui-state-disabled):hover {
+        background-color: #D0D0D0;
+      }
+
+      .ui-chkbox-icon {
+        overflow: visible;
+        color: #505050;
+        position: absolute;
+        top: -6px;
+        left: -4px;
+        font-size: 22px;
+      }
+    }
+  }
+
   .ui-table-tbody > tr {
     background-color: #EFEFEF;
     display: flex;
@@ -22,6 +56,22 @@
     color: $base-text-color;
     border: none;
     background-color: transparent;
+    display: flex;
+    align-items: center;
+
+    .chapter-type-control {
+      display: flex;
+      align-items: center;
+    }
+
+    &.ui-editable-column {
+      display: flex;
+      align-items: center;
+
+      input:focus {
+        outline: none;
+      }
+    }
 
     span.table-icon {
       margin-right: 10px;
@@ -43,6 +93,53 @@
 
     &.type {
       color: $base-color;
+    }
+  }
+
+  .ui-table-summary {
+    background-color: transparent;
+    border: none;
+    padding-left: 5px;
+
+    .summary-container {
+      display: flex;
+      align-items: center;
+
+      .lock-drag {
+        color: $base-color;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 24px;
+        height: 24px;
+        margin-right: 10px;
+      }
+
+      .select-all {
+        margin-left: 10px;
+        color: $base-text-color;
+        font-weight: bold;
+        font-size: 12px;
+        flex: 1;
+        text-align: left;
+      }
+
+      .export-tools {
+        display: flex;
+        align-items: center;
+        color: $base-color;
+        font-size: 12px;
+
+        span {
+          margin-right: 10px;
+          cursor: pointer;
+          
+          span {
+            margin-right: 10px;
+          }
+        }
+      }
     }
   }
 }

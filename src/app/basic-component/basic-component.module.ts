@@ -11,6 +11,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { DialogModule } from 'primeng/dialog';
 import { TreeModule } from 'primeng/tree';
 import { TieredMenuModule } from 'primeng/tieredmenu';
+import { TooltipModule } from 'primeng/tooltip';
 
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -48,6 +49,9 @@ import { GroupNavigationTreeComponent } from './group-navigation-tree/group-navi
 import { ItemsNavigationTreeComponent } from './items-navigation-tree/items-navigation-tree.component';
 import { MatDialogComponent } from './mat-dialog/mat-dialog.component';
 import { LogViewGridComponent } from './log-view-grid/log-view-grid.component';
+import { GridGearComponent } from './grid-gear/grid-gear.component';
+import { MatMenuModule } from '@angular/material';
+import { CategoryDropdownComponent } from './category-dropdown/category-dropdown.component';
 
 @NgModule({
   declarations: [
@@ -81,7 +85,9 @@ import { LogViewGridComponent } from './log-view-grid/log-view-grid.component';
     GroupNavigationTreeComponent,
     ItemsNavigationTreeComponent,
     MatDialogComponent,
-    LogViewGridComponent
+    LogViewGridComponent,
+    GridGearComponent,
+    CategoryDropdownComponent
   ],
   imports: [
     CommonModule,
@@ -95,12 +101,14 @@ import { LogViewGridComponent } from './log-view-grid/log-view-grid.component';
     DialogModule,
     TreeModule,
     TieredMenuModule,
+    TooltipModule,
 
     MatIconModule,
     MatNativeDateModule,
     MatRippleModule,
     MatTabsModule,
-    MatDialogModule
+    MatDialogModule,
+    MatMenuModule
   ],
   exports: [
     ButtonComponent,
@@ -134,7 +142,9 @@ import { LogViewGridComponent } from './log-view-grid/log-view-grid.component';
     GroupNavigationTreeComponent,
     ItemsNavigationTreeComponent,
     MatDialogComponent,
-    LogViewGridComponent
+    LogViewGridComponent,
+    GridGearComponent,
+    CategoryDropdownComponent
   ],
   providers: [
     {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: false}}

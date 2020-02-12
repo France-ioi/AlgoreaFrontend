@@ -77,8 +77,8 @@
       <div class="folded-top-bar" *ngIf="folded || scrolled">
         <app-score-ring
           *ngIf="isStarted && selectedType == 2"
-          displayedScore="75"
-          currentScore="80"
+          [displayedScore]="taskdata.progress.displayedScore"
+          [currentScore]="taskdata.progress.currentScore"
           [diameter]="30"
         ></app-score-ring>
         <div

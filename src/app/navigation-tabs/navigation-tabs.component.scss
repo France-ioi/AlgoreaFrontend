@@ -97,6 +97,11 @@ $header-height: 90px;
       @extend %group-div;
       padding: 15px 20px;
       background-color: $base-bk-color;
+      padding-right: 0;
+
+      &-label {
+        flex: 1;
+      }
     }
 
     .anonym-group {

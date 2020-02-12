@@ -16,16 +16,16 @@ export class NodeService {
       .then(res => res.data as TreeNode[]);
   }
 
-  getTrees() {
+  getSkills() {
     return this.http
-      .get<any>('assets/showcase/data/trees.json')
+      .get<any>('assets/showcase/data/skills.json')
       .toPromise()
       .then(res => res.data as TreeNode[]);
   }
 
-  getFilesystem() {
+  getActivities() {
     return this.http
-      .get<any>('assets/showcase/data/filesystem.json')
+      .get<any>('assets/showcase/data/activities.json')
       .toPromise()
       .then(res => res.data as TreeNode[]);
   }

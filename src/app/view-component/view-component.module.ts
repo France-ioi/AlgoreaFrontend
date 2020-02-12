@@ -7,6 +7,7 @@ import { MatNativeDateModule, MatRippleModule } from '@angular/material/core';
 import { TableModule } from 'primeng/table';
 import { BasicComponentModule } from '../basic-component/basic-component.module';
 import { TieredMenuModule } from 'primeng/tieredmenu';
+import { TooltipModule } from 'primeng/tooltip';
 
 import { TaskTabComponent } from './task-tab/task-tab.component';
 import { TaskComponent } from './task/task.component';
@@ -17,7 +18,7 @@ import { YourselfHeaderComponent } from './yourself-header/yourself-header.compo
 import { GroupComponent } from './group/group.component';
 import { GroupHeaderComponent } from './group-header/group-header.component';
 import { GroupTabComponent } from './group-tab/group-tab.component';
-import { MatMenu, MatMenuModule } from '@angular/material';
+import { MatMenuModule } from '@angular/material';
 
 
 @NgModule({
@@ -41,6 +42,7 @@ import { MatMenu, MatMenuModule } from '@angular/material';
     TableModule,
     BasicComponentModule,
     TieredMenuModule,
+    TooltipModule,
     MatMenuModule
   ],
   exports: [
