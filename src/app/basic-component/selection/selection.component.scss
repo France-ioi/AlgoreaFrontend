@@ -67,6 +67,26 @@
       // margin-left: 10px;
       // margin-right: 10px;
 
+      &.dark {
+        background-color: $dark-base-color;
+        box-shadow: 0 1px #295485 inset;
+
+        li {
+          color: #577EAA;
+          border-right: 1px solid transparent;
+          font-size: 11px;
+
+          &:last-child {
+            border-right: none;
+          }
+
+          &.active {
+            background-color: $secondary-color;
+            color: white;
+          }
+        }
+      }
+
       li {
         border-right: 1px solid #BBB;
 

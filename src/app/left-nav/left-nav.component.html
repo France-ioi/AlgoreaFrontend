@@ -1,6 +1,7 @@
 <app-top-nav
   [collapsed]="collapsed"
   (collapseEvent)="onCollapse($event)"
+  (signInOutEvent)="onSignInOut($event)"
   [data]="user"
 ></app-top-nav>
 <app-navigation-tabs

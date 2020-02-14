@@ -201,6 +201,34 @@
       }
     }
 
+    .other-info {
+      display: flex;
+
+      app-sub-section {
+        margin-left: 0;
+        margin-right: 0;
+        flex: 1;
+      }
+    }
+
+    .other-list-container {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      padding-left: 0;
+      margin-left: -25px;
+      
+      li {
+        display: flex;
+        flex-direction: column;
+        margin: 5px 0;
+
+        span.skill-title {
+          margin-bottom: 5px;
+        }
+      }
+    }
+
     app-log-view-grid {
       margin-top: 30px;
       margin-left: -40px;

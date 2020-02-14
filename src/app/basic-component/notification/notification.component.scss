@@ -1,0 +1,50 @@
+@import 'src/colors.scss';
+
+$notify-color: #F5A623;
+
+:host {
+  display: block;
+}
+
+.notification-wrapper {
+  display: flex;
+  position: relative;
+  height: 40px;
+  width: 100%;
+  border-radius: 5px;
+  color: white;
+  background-color: $notify-color;
+
+  .notification-indicator {
+    position: absolute;
+    right: 45px;
+    top: -4px;
+    width: 10px;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-bottom: 4px solid $notify-color;
+  }
+
+  .notification-icon {
+    min-width: 40px;
+    height: 40px;
+    background-color: #D3932B;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+  }
+
+  .notification-text {
+    display: block;
+    line-height: 40px;
+    height: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    min-width: 0;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}

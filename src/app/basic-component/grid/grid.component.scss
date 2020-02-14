@@ -71,6 +71,9 @@
       color: $base-text-color;
       height: 43px;
       max-height: 43px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .ui-table-tbody > tr:last-child > td {
@@ -215,12 +218,6 @@
 
   &:first-child {
     height: 40px;
-  }
-
-  td {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
   }
 }
 

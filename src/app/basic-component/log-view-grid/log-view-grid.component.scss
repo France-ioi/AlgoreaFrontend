@@ -28,19 +28,6 @@
 
         &:last-child {
           padding: 0;
-    
-          .score-wrapper {
-            float: right;
-            width: auto;
-            padding: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-            background-color: white;
-            border-top-left-radius: 20px;
-            border-bottom-left-radius: 20px;
-          }
         }
       }
     }
@@ -96,6 +83,19 @@
     app-skill-progress {
       width: 150px;
       display: block;
+    }
+    
+    .score-wrapper {
+      float: right;
+      width: auto;
+      padding: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      background-color: white;
+      border-top-left-radius: 20px;
+      border-bottom-left-radius: 20px;
     }
   }
 }

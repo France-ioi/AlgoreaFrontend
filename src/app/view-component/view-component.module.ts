@@ -19,6 +19,7 @@ import { GroupComponent } from './group/group.component';
 import { GroupHeaderComponent } from './group-header/group-header.component';
 import { GroupTabComponent } from './group-tab/group-tab.component';
 import { MatMenuModule } from '@angular/material';
+import { HomePageComponent } from './home-page/home-page.component';
 
 
 @NgModule({
@@ -31,7 +32,8 @@ import { MatMenuModule } from '@angular/material';
     YourselfHeaderComponent,
     GroupComponent,
     GroupHeaderComponent,
-    GroupTabComponent
+    GroupTabComponent,
+    HomePageComponent
   ],
   imports: [
     CommonModule,
