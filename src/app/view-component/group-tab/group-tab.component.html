@@ -31,6 +31,7 @@
           >
             <ng-template #headerTemplate let-columns>
               <tr>
+                <th style="width: 40px;"></th>
                 <th *ngFor="let col of columns" [pSortableColumn]="col.field">
                   {{ col.header }}
                   <p-sortIcon [field]="col.field"></p-sortIcon>
@@ -44,7 +45,7 @@
               let-rowIndex="rowIndex"
             >
               <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
-                <td style="width: 35px;">
+                <td style="width: 40px;">
                   <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
                 </td>
                 <td *ngFor="let col of columns">

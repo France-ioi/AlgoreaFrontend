@@ -3,18 +3,33 @@
 $nav-control-border: #5c5c5c;
 
 .nav-header {
-  height: 90px;
+  height: 100px;
+
+  app-notification {
+    margin: 5px;
+  }
+
+  app-button {
+    margin: 5px;
+    margin-top: 10px;
+    display: block;
+
+    ::ng-deep p-button {
+      width: 100%;
+    }
+  }
 }
 
 .nav-control {
   color: white;
   height: 45px;
-  padding: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
   border-bottom: 1px solid $nav-control-border;
   position: relative;
   text-align: center;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
 
   &.alt {
     background-color: $nav-bk-color;
@@ -49,8 +64,8 @@ $nav-control-border: #5c5c5c;
 
   span {
     display: block;
-    height: 40px;
-    line-height: 40px;
+    height: 45px;
+    line-height: 45px;
   }
 
   .nav-collapse {
@@ -86,12 +101,14 @@ $nav-control-border: #5c5c5c;
 
   .sign-out {
     margin-right: 5px;
+    cursor: pointer;
   }
 
   .notifications {
     margin-right: 10px;
     width: 30px;
     position: relative;
+    cursor: pointer;
 
     .notification-number {
       position: absolute;
@@ -106,5 +123,9 @@ $nav-control-border: #5c5c5c;
       line-height: 16px;
       font-size: 9px;
     }
+  }
+
+  app-select {
+    margin-top: 10px;
   }
 }

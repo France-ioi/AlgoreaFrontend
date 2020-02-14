@@ -10,24 +10,27 @@
       </span>
       <span class="user-name">{{ data.name }}</span>
     </span>
-    <span class="notifications" *ngIf="data.notification > 0">
+    <span class="notifications" *ngIf="data.notification > 0 && signedIn" (click)="toggleNotification($event)">
       <span class="notification-number">{{ data.notification }}</span>
       <i class="far fa-bell"></i>
     </span>
-    <span class="sign-out">
+    <span *ngIf="signedIn" class="sign-out" (click)="signInOut($event)">
       <i class="fa fa-power-off"></i>
     </span>
+    <app-select *ngIf="!signedIn" [items]="langs"></app-select>
   </div>
+  <app-notification *ngIf="showNotification && signedIn"></app-notification>
+  <app-button *ngIf="!signedIn" icon="fa fa-power-off" label="Connexion" class="ui-button-rounded ui-button-warning ui-fit-parent" (onClick)="signInOut($event)"></app-button>
 </div>
 
 <div class="nav-control alt" *ngIf="templateId">
   <span class="nav-collapse" (click)="onCollapse($event)">
     <img src="assets/images/menu-open.svg" width="25px" height="25px" />
   </span>
-  <span class="title-collapse" (click)="onFold($event)" [ngClass]="{down: !folded}">
+  <span *ngIf="signedIn" class="title-collapse" (click)="onFold($event)" [ngClass]="{down: !folded}">
     <img src="assets/images/header-open.svg" />
   </span>
-  <span class="notifications" *ngIf="data.notification > 0">
+  <span class="notifications" *ngIf="data.notification > 0 && signedIn">
     <span class="notification-number">{{ data.notification }}</span>
     <i class="far fa-bell"></i>
   </span>

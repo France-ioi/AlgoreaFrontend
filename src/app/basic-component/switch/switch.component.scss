@@ -2,7 +2,7 @@
 
 $circular: 12px;
 
-@mixin custom-switch($bk-color, $shadow, $handle-shadow, $switch-width, $handler-width) {
+@mixin custom-switch($bk-color, $shadow, $handle-shadow, $switch-width, $handler-width, $handler-height) {
 
   %custom-pattern {
     background-color: $bk-color;
@@ -20,7 +20,7 @@ $circular: 12px;
         background-color: $base-color;
         width: $handler-width;
         border-radius: 100px;
-        height: 12px;
+        height: $handler-height;
         bottom: 1px;
         transform: translateX(calc(#{$switch-width} - #{$handler-width}));
         box-shadow: 0px 1px $handle-shadow;
@@ -43,7 +43,7 @@ $circular: 12px;
       background-color: #9B9B9B;
       width: $handler-width;
       border-radius: 100px;
-      height: 12px;
+      height: $handler-height;
       bottom: 1px;
       left: 0;
       box-shadow: 0px 1px #727272;
@@ -63,7 +63,7 @@ $circular: 12px;
   width: 50px;
   height: 13px;
 
-  @include custom-switch(#E4E5EA, #DADADA, $dark-base-color, 50px, 25px);
+  @include custom-switch(#E4E5EA, #DADADA, $dark-base-color, 50px, 25px, 12px);
 }
 
 
@@ -71,17 +71,28 @@ $circular: 12px;
   width: 50px;
   height: 13px;
 
-  @include custom-switch(#464646, #3F3F3F, #31649E, 50px, 25px);
+  @include custom-switch(#464646, #3F3F3F, #31649E, 50px, 25px, 12px);
 }
 
 :host ::ng-deep .circular .ui-inputswitch {
   width: 30px;
   height: 13px; 
 
-  @include custom-switch(#E4E5EA, #DADADA, $dark-base-color, 30px, $circular);
+  @include custom-switch(#E4E5EA, #DADADA, $dark-base-color, 30px, $circular, 12px);
+}
+
+:host ::ng-deep .dark-circular .ui-inputswitch {
+  width: 30px;
+  height: 15px; 
+
+  @include custom-switch(#2C5687, #152A43, $dark-base-color, 30px, 13px, 13px);
 }
 
 :host ::ng-deep p-inputSwitch {
   height: 13px;
   display: flex;
+
+  &.dark-circular {
+    height: 15px;
+  }
 }

@@ -125,6 +125,42 @@
             </ng-container>
           </ul>
         </app-section>
+        <div *ngIf="!activityORSkill" class="other-info">
+          <app-sub-section icon="fa fa-code-branch" label="Prequisites">
+            <ul class="other-list-container">
+              <ng-container *ngFor="let item of preqs">
+                <li>
+                  <span class="skill-title">
+                    {{ item.title }}
+                  </span>
+                  <app-skill-progress
+                    style="width: 100%;"
+                    type="thin-horizontal"
+                    [displayedScore]="item.progress.displayedScore"
+                    [currentScore]="item.progress.currentScore"
+                  ></app-skill-progress>
+                </li>
+              </ng-container>
+            </ul>
+          </app-sub-section>
+          <app-sub-section icon="fa fa-folder-open" label="Parent skills">
+            <ul class="other-list-container">
+              <ng-container *ngFor="let item of preqs">
+                <li>
+                  <span class="skill-title">
+                    {{ item.title }}
+                  </span>
+                  <app-skill-progress
+                    style="width: 100%;"
+                    type="thin-horizontal"
+                    [displayedScore]="item.progress.displayedScore"
+                    [currentScore]="item.progress.currentScore"
+                  ></app-skill-progress>
+                </li>
+              </ng-container>
+            </ul>
+          </app-sub-section>
+        </div>
       </ng-template>
     </mat-tab>
     <mat-tab>
@@ -152,6 +188,23 @@
                 type="square"
               ></app-selection>
             </div>
+            <app-grid-filter-bar>
+              <app-select [items]="filterChoice" [opened]="false" width="120" style="margin: 5px;"></app-select>
+              <ng-container *ngFor="let filter of gridFilters">
+                <app-grid-filter
+                  [icon]="filter.icon"
+                  [label]="filter.label"
+                  [type]="filter.type"
+                  [mode]="filter.mode"
+                  [text]="filter.text"
+                  [ranges]="filter.ranges"
+                  [dateRanges]="filter.dateRanges"
+                  [list]="filter.list"
+                  (onClose)="removeFilter(filter.ID)"
+                ></app-grid-filter>
+              </ng-container>
+            </app-grid-filter-bar>
+
             <!-- Log View -->
             <ng-container *ngIf="selectedView === 0">
               <app-log-view-grid
@@ -279,7 +332,10 @@
                 >
                   <ng-template #colgroupTemplate let-columns>
                     <colgroup>
-                      <col *ngFor="let col of columns" [ngStyle]="{'width.px': columnWidth}"/>
+                      <col
+                        *ngFor="let col of columns"
+                        [ngStyle]="{ 'width.px': columnWidth }"
+                      />
                     </colgroup>
                   </ng-template>
                   <ng-template *ngIf="freeze" #frozenHeaderTemplate>
@@ -288,6 +344,7 @@
                         style="background-color: transparent;min-width: 160px;transform: none;"
                       >
                         <app-grid-gear
+                          [freeze]="freeze"
                           [compactMode]="compactMode"
                           (compactChange)="onModeChange($event)"
                           (frozenChange)="onFrozenChange($event)"
@@ -311,26 +368,32 @@
                         *ngIf="!freeze"
                       >
                         <app-grid-gear
-                          [compactMode]="compactMode"
                           [freeze]="freeze"
+                          [compactMode]="compactMode"
                           (compactChange)="onModeChange($event)"
                           (frozenChange)="onFrozenChange($event)"
+                          (asRowChange)="onSwapColRow($event)"
+                          (showDescChange)="onShowDescription($event)"
                         ></app-grid-gear>
                       </th>
-                      <th
-                        *ngIf="asRow && showDesc"
-                        style="width: 300px;transform: none;"
-                        >
-                        Description
+                      <th *ngIf="asRow && showDesc" style="width: 300px;">
+                        <div class="slanted-header">
+                          <div class="slanted-header-content">
+                            Description
+                          </div>
+                        </div>
                       </th>
                       <th
                         *ngFor="let col of columns"
-                        [ngStyle]="{'min-width.px': columnWidth, 'width.px': columnWidth}"
+                        [ngStyle]="{
+                          'min-width.px': columnWidth,
+                          'width.px': columnWidth
+                        }"
                       >
                         <div class="slanted-header">
                           <div class="slanted-header-content">
                             {{ col }}
-                          </div>                          
+                          </div>
                         </div>
                       </th>
                     </tr>
@@ -355,7 +418,7 @@
                           let menuName = rowIndex
                         "
                         [matMenuTriggerFor]="menuName"
-                        [ngStyle]="{'width.px': columnWidth}"
+                        [ngStyle]="{ 'width.px': columnWidth }"
                       >
                         <mat-menu
                           #menuName="matMenu"
@@ -480,7 +543,10 @@
                           </div>
                           <span class="indicator"></span>
                         </mat-menu>
-                        <div class="group-situation-data" [ngStyle]="{'min-width.px': columnWidth}">
+                        <div
+                          class="group-situation-data"
+                          [ngStyle]="{ 'min-width.px': columnWidth }"
+                        >
                           <div
                             class="situation-top"
                             *ngIf="!compactMode && activityORSkill"
@@ -642,7 +708,8 @@
         <i class="fa fa-comment"></i>
         Discussions
       </ng-template>
-      <ng-template matTabContent> </ng-template>
+      <ng-template matTabContent>
+      </ng-template>
     </mat-tab>
     <mat-tab>
       <ng-template mat-tab-label>

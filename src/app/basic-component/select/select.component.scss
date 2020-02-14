@@ -1,0 +1,62 @@
+@import "src/colors.scss";
+
+.select-value {
+  border-radius: 100px;
+  background-color: $base-color;
+  display: flex;
+  align-items: center;
+  height: 22px;
+  width: 75px;
+  padding: 0 10px;
+  color: white;
+  font-size: 12px;
+  cursor: pointer;
+
+  .select-label {
+    flex: 1;
+  }
+
+  .dropdown-icon {
+    margin-right: 0;
+  }
+}
+
+.select-dropdown-wrapper {
+  z-index: 1;
+  position: relative;
+  width: 75px;
+
+  .select-dropdown {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+    background-color: $base-color;
+    border-radius: 12px;
+    width: 100%;
+    position: absolute;
+    top: 0;
+
+    li {
+      padding: 5px 10px;
+      color: white;
+      border-bottom: 1px solid #6ea6e7;
+      cursor: pointer;
+      height: 22px;
+      font-size: 12px;
+      line-height: 12px;
+
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+  }
+
+  .dropdown-icon {
+    position: absolute;
+    right: 10px;
+    top: 4px;
+    color: white;
+    font-size: 12px;
+    cursor: pointer;
+  }
+}

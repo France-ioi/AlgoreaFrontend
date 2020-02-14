@@ -8,7 +8,7 @@ import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChange
 export class SwitchComponent implements OnInit, OnChanges {
 
   @Input() checked;
-  @Input() mode = 'dark';
+  @Input() mode : 'dark' | 'white' | 'circular' | 'dark-circular' = 'dark';
   @Input() type = 'square';
 
   // tslint:disable-next-line: no-output-on-prefix

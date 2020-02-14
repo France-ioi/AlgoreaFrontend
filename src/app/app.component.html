@@ -42,11 +42,13 @@
       [data]="groupdata"
       [user]="user"
       [collapsed]="collapsed"
+      [signedIn]="signedIn"
       (collapseEvent)="onCollapse($event)"
       (skillSelect)="onSkillSelected($event)"
       (activitySelect)="onActivitySelected($event)"
       (yourselfSelect)="onYourselfSelected($event)"
       (groupSelect)="onGroupSelected($event)"
+      (signInOutEvent)="onSignInOut($event)"
     ></app-left-nav>
   </div>
   <div class="top-bar" [ngClass]="{ editing: editing, collapsed: collapsed, expanded: !collapsed }">
@@ -55,6 +57,7 @@
       [collapsed]="collapsed"
       [folded]="folded"
       [data]="user"
+      [signedIn]="signedIn"
       (collapseEvent)="onCollapse($event)"
       (foldEvent)="onFold($event)"
       templateId="1"
@@ -67,12 +70,14 @@
       <div class="breadcrumb-bar"
       *ngIf="!folded && !scrolled">
         <app-breadcrumb
-          [items]="breaddata"
+          [items]="signedIn ? breaddata : breadhome"
         ></app-breadcrumb>
         <app-page-navigator
-          *ngIf="!editing"
+          *ngIf="!editing && signedIn"
           (onEdit)="onEditPage($event)"
         ></app-page-navigator>
+        <app-select *ngIf="!signedIn && collapsed" [items]="langs" style="margin-right: 10px;height: 22px;"></app-select>
+        <app-button *ngIf="!signedIn && collapsed" label="Connexion" icon="pi pi-check" class="ui-button-rounded" style="margin-right: 5px;" (onClick)="onSignInOut(true)"></app-button>
       </div>
       <div class="folded-top-bar" *ngIf="folded || scrolled">
         <app-score-ring

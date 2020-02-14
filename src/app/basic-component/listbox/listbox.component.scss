@@ -1,0 +1,83 @@
+@import "src/colors.scss";
+
+:host ::ng-deep .ui-listbox {
+  background-color: $dark-base-color;
+  border: none;
+
+  .ui-listbox-header {
+    background-color: $dark-base-color;
+    border-bottom: 1px solid #2b588c;
+    border-radius: unset;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    padding: 0;
+
+    .ui-listbox-filter-container {
+      width: 100%;
+
+      .ui-inputtext {
+        background-color: $dark-base-color;
+        border: none;
+        color: #EFF3F7;
+
+        &::placeholder {
+          content: "Filter ...";
+          font-style: italic;
+
+        }
+
+        &:focus {
+          box-shadow: none;
+        }
+      }
+
+      .ui-listbox-filter-icon {
+        color: white;
+      }
+    }
+  }
+
+  .ui-listbox-list-wrapper {
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+
+    &::-webkit-scrollbar {
+      width: 12px;
+    }  
+
+    &::-webkit-scrollbar-thumb {
+      background-color: $base-color;
+      border-radius: 100px;
+      width: 12px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background-color: transparent;
+    }
+
+    .ui-listbox-list {
+      background-color: $dark-base-color;
+
+      .ui-listbox-item {
+        font-size: 12px;
+        color: #EFF3F7;
+        padding: 2px 10px;
+
+        &.ui-state-highlight {
+          border-radius: 100px;
+          background-color: $secondary-color;
+
+          &:focus {
+            box-shadow: none;
+          }
+        }
+      }
+    }
+  }
+}
+
+:host ::ng-deep .ui-listbox:not(.ui-state-disabled) .ui-listbox-item:not(.ui-state-highlight):not(.ui-state-disabled):hover {
+  background-color: $secondary-color;
+  color: #EFF3F7;
+  border-radius: 100px;
+}

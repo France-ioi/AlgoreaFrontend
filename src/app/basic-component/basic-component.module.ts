@@ -12,11 +12,15 @@ import { DialogModule } from 'primeng/dialog';
 import { TreeModule } from 'primeng/tree';
 import { TieredMenuModule } from 'primeng/tieredmenu';
 import { TooltipModule } from 'primeng/tooltip';
+import { SliderModule } from 'primeng/slider';
+import { ListboxModule } from 'primeng/listbox';
 
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatDialogModule, MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 import { MatNativeDateModule, MatRippleModule } from '@angular/material/core';
+
+import { ClickOutsideModule } from 'ng-click-outside';
 
 import { ButtonComponent } from './button/button.component';
 import { SectionComponent } from './section/section.component';
@@ -52,6 +56,13 @@ import { LogViewGridComponent } from './log-view-grid/log-view-grid.component';
 import { GridGearComponent } from './grid-gear/grid-gear.component';
 import { MatMenuModule } from '@angular/material';
 import { CategoryDropdownComponent } from './category-dropdown/category-dropdown.component';
+import { NotificationComponent } from './notification/notification.component';
+import { SelectComponent } from './select/select.component';
+import { SliderComponent } from './slider/slider.component';
+import { GridFilterComponent } from './grid/grid-filter/grid-filter.component';
+import { GridFilterBarComponent } from './grid/grid-filter-bar/grid-filter-bar.component';
+import { DatePickerSimpleComponent } from './date-picker-simple/date-picker-simple.component';
+import { ListboxComponent } from './listbox/listbox.component';
 
 @NgModule({
   declarations: [
@@ -87,7 +98,14 @@ import { CategoryDropdownComponent } from './category-dropdown/category-dropdown
     MatDialogComponent,
     LogViewGridComponent,
     GridGearComponent,
-    CategoryDropdownComponent
+    CategoryDropdownComponent,
+    NotificationComponent,
+    SelectComponent,
+    SliderComponent,
+    GridFilterComponent,
+    GridFilterBarComponent,
+    DatePickerSimpleComponent,
+    ListboxComponent
   ],
   imports: [
     CommonModule,
@@ -102,13 +120,17 @@ import { CategoryDropdownComponent } from './category-dropdown/category-dropdown
     TreeModule,
     TieredMenuModule,
     TooltipModule,
+    SliderModule,
+    ListboxModule,
 
     MatIconModule,
     MatNativeDateModule,
     MatRippleModule,
     MatTabsModule,
     MatDialogModule,
-    MatMenuModule
+    MatMenuModule,
+
+    ClickOutsideModule
   ],
   exports: [
     ButtonComponent,
@@ -144,7 +166,14 @@ import { CategoryDropdownComponent } from './category-dropdown/category-dropdown
     MatDialogComponent,
     LogViewGridComponent,
     GridGearComponent,
-    CategoryDropdownComponent
+    CategoryDropdownComponent,
+    NotificationComponent,
+    SelectComponent,
+    SliderComponent,
+    GridFilterComponent,
+    GridFilterBarComponent,
+    DatePickerSimpleComponent,
+    ListboxComponent
   ],
   providers: [
     {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: false}}

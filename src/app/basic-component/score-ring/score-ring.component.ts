@@ -88,12 +88,13 @@ export class ScoreRingComponent implements OnInit, OnChanges {
     } else {
       this._textFill = ScoreRingColor.defaultText;
     }
+    console.log(this.displayedScore, this.icons);
 
     if (this.isValidated) {
-      this.icons = 'check';
+      this._iconPath = 'check';
       this._iconFill = ScoreRingColor.success;
     } else if (this.displayedScore === 0) {
-      this.icons = 'times';
+      this._iconPath = 'times';
       this._iconFill = ScoreRingColor.initial;
     } else if (this.icons) {
       if (this.isDark) {
@@ -101,11 +102,12 @@ export class ScoreRingComponent implements OnInit, OnChanges {
       } else {
         this._iconFill = ScoreRingColor.defaultText;
       }
-
+      this._iconPath = this.icons;
     } else {
       this._iconPath = '';
     }
 
     this._fontSize = Math.floor(14 * 2 * this.diameter / 64);
+    console.log(this.displayedScore, this.icons);
   }
 }

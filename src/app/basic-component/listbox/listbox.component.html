@@ -1,0 +1,7 @@
+<p-listbox
+  [options]="items"
+  [(ngModel)]="selectedItem"
+  [filter]="true"
+  [listStyle]="{ 'max-height': '150px', 'margin-right': '4px' }"
+  (onChange)="itemSelect($event)"
+></p-listbox>

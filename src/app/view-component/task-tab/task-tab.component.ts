@@ -662,6 +662,87 @@ export class TaskTabComponent implements OnInit, OnChanges {
 
   vertical = false;
 
+  preqs = [
+    {
+      title: 'Graphs: methods',
+      progress: {
+        displayedScore: 20,
+        currentScore: 20
+      }
+    },
+    {
+      title: 'Graphs caracteristics listing',
+      progress: {
+        displayedScore: 30,
+        currentScore: 30
+      }
+    },
+    {
+      title: 'Reduce size of a graph',
+      progress: {
+        displayedScore: 30,
+        currentScore: 30
+      }
+    },
+  ];
+
+  gridFilters = [
+    {
+      ID: 1,
+      icon: 'fa fa-flag-checkered',
+      label: 'Those who started',
+      type: 'default',
+      mode: 'list',
+      list: [
+        { label: 'Item 1', value: { id: 1, value: 'item1' } },
+        { label: 'Item 2', value: { id: 2, value: 'item2' } },
+        { label: 'Item 3', value: { id: 3, value: 'item3' } },
+        { label: 'Item 4', value: { id: 4, value: 'item4' } },
+        { label: 'Item 5', value: { id: 5, value: 'item5' } },
+        { label: 'Item 6', value: { id: 6, value: 'item6' } },
+        { label: 'Item 7', value: { id: 7, value: 'item7' } },
+        { label: 'Item 8', value: { id: 8, value: 'item8' } },
+        { label: 'Item 9', value: { id: 9, value: 'item9' } }
+      ]
+    },
+    {
+      ID: 2,
+      icon: 'fa fa-eye',
+      label: 'Another filter',
+      type: 'standard',
+      mode: 'basic',
+      text: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.'
+    },
+    {
+      ID: 3,
+      icon: 'fa fa-hand-paper',
+      label: 'Filter 2',
+      type: 'standard',
+      mode: 'dates',
+      dateRanges: [
+        new Date(),
+        new Date()
+      ]
+    },
+    {
+      ID: 4,
+      icon: 'fa fa-hand-paper',
+      label: 'Score',
+      type: 'standard',
+      mode: 'activity',
+      ranges: [30, 72]
+    }
+  ];
+
+  ranges = [0, 20];
+
+  filterChoice = [
+    'Select a filter',
+    'Range of date',
+    'Location',
+    'Score range'
+  ];
+
   constructor(
     private elementRef: ElementRef,
     private nodeService: NodeService,
@@ -757,6 +838,7 @@ export class TaskTabComponent implements OnInit, OnChanges {
     this.gcvc = this.gcvr;
     this.gcvr = cont;
     this.gcvd = this.gcvd[0].map((col, i) => this.gcvd.map(row => row[i]));
+    console.log('Hey, I am called');
     this.asRow = !this.asRow;
   }
 
@@ -793,6 +875,12 @@ export class TaskTabComponent implements OnInit, OnChanges {
 
   onShowDescription(e) {
     this.showDesc = !this.showDesc;
+  }
+
+  removeFilter(id) {
+    this.gridFilters = this.gridFilters.filter(el => {
+      return el.ID !== id;
+    });
   }
 
 }

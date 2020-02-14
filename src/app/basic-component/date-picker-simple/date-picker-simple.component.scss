@@ -1,0 +1,36 @@
+@import 'src/colors.scss';
+$date-color: #B0C2D7;
+
+:host ::ng-deep .ui-calendar {
+
+  &::before {
+    font-family: "Font Awesome 5 Free";
+    font-weight: 400;
+    content: "\f073";
+    position: absolute;
+    left: 8px;
+    top: 8px;
+    color: $date-color;
+  }
+
+  .ui-calendar-button {
+    border: none;
+    background-color: $base-color;
+  }
+
+  .ui-inputtext {
+    background-color: $dark-base-color;
+    border: none;
+    box-shadow: none;
+    color: $date-color;
+    padding-left: 25px;
+  }
+}
+
+:host ::ng-deep .ui-inputtext:enabled:focus:not(.ui-state-error) {
+  box-shadow: none;
+}
+
+:host ::ng-deep .ui-button:enabled:focus {
+  box-shadow: none;
+}

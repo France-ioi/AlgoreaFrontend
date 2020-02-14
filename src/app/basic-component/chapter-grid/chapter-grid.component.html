@@ -132,8 +132,8 @@
   <ng-template pTemplate="summary">
     <div class="summary-container">
       <span class="lock-drag" (click)="toggleLock($event)">
-        <i *ngIf="orderable" class="fa fa-lock"></i>
-        <i *ngIf="!orderable" class="fa fa-lock-open"></i>
+        <i *ngIf="!orderable" class="fa fa-lock"></i>
+        <i *ngIf="orderable" class="fa fa-lock-open"></i>
       </span>
       <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
       <span class="select-all">Select all</span>
