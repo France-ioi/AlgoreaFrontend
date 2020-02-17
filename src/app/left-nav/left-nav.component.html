@@ -1,5 +1,6 @@
 <app-top-nav
   [collapsed]="collapsed"
+  [signedIn]="signedIn"
   (collapseEvent)="onCollapse($event)"
   (signInOutEvent)="onSignInOut($event)"
   [data]="user"

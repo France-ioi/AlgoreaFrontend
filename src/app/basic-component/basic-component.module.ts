@@ -63,6 +63,7 @@ import { GridFilterComponent } from './grid/grid-filter/grid-filter.component';
 import { GridFilterBarComponent } from './grid/grid-filter-bar/grid-filter-bar.component';
 import { DatePickerSimpleComponent } from './date-picker-simple/date-picker-simple.component';
 import { ListboxComponent } from './listbox/listbox.component';
+import { SectionParagraphComponent } from './section-paragrah/section-paragraph.component';
 
 @NgModule({
   declarations: [
@@ -105,7 +106,8 @@ import { ListboxComponent } from './listbox/listbox.component';
     GridFilterComponent,
     GridFilterBarComponent,
     DatePickerSimpleComponent,
-    ListboxComponent
+    ListboxComponent,
+    SectionParagraphComponent
   ],
   imports: [
     CommonModule,
@@ -173,7 +175,8 @@ import { ListboxComponent } from './listbox/listbox.component';
     GridFilterComponent,
     GridFilterBarComponent,
     DatePickerSimpleComponent,
-    ListboxComponent
+    ListboxComponent,
+    SectionParagraphComponent
   ],
   providers: [
     {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: false}}

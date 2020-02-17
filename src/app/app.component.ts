@@ -134,11 +134,13 @@ export class AppComponent {
     groups: {
       manage: [
         {
+          ID: 1,
           title: "Big root",
           type: "folder",
           icons: "fa fa-home",
           children: [
             {
+              ID: 2,
               title: "Big root1",
               type: "folder",
               progress: {
@@ -147,11 +149,13 @@ export class AppComponent {
               },
               children: [
                 {
+                  ID: 3,
                   title: "Documents",
                   icons: "fa fa-folder",
                   type: "folder",
                   children: [
                     {
+                      ID: 4,
                       title: "Work",
                       type: "folder",
                       children: [
@@ -166,26 +170,32 @@ export class AppComponent {
                       ]
                     },
                     {
+                      ID: 5,
                       title: "Resume.doc",
                       type: "leaf"
                     },
                     {
+                      ID: 6,
                       title: "Home",
                       type: "folder",
                       children: [
                         {
+                          ID: 7,
                           title: "Invoices.txt",
                           type: "leaf"
                         },
                         {
+                          ID: 8,
                           title: "Work",
                           type: "folder",
                           children: [
                             {
+                              ID: 9,
                               title: "Expenses.doc",
                               type: "leaf"
                             },
                             {
+                              ID: 10,
                               title: "Resume.doc",
                               type: "leaf"
                             }
@@ -196,50 +206,61 @@ export class AppComponent {
                   ]
                 },
                 {
+                  ID: 16,
                   title: "Pictures",
                   type: "folder",
                   children: [
                     {
+                      ID: 11,
                       title: "barcelona.jpg",
                       type: "leaf"
                     },
                     {
+                      ID: 12,
                       title: "logo.jpg",
                       type: "leaf"
                     },
                     {
+                      ID: 13,
                       title: "primeui.png",
                       type: "leaf"
                     }
                   ]
                 },
                 {
+                  ID: 14,
                   title: "Movies",
                   type: "folder",
                   children: [
                     {
+                      ID: 15,
                       title: "Al Pacino",
                       type: "folder",
                       children: [
                         {
+                          ID: 17,
                           title: "Scarface",
                           type: "leaf"
                         },
                         {
+                          ID: 18,
                           title: "Serpico",
                           type: "leaf"
                         }
                       ]
                     },
                     {
+                      ID: 19,
                       title: "Robert De Niro",
                       type: "folder",
                       children: [
                         {
+                          ID: 20,
                           title: "Goodfellas",
                           type: "leaf"
                         },
                         {
+                          ID: 21,
                           title: "Untouchables",
                           type: "leaf"
                         }
@@ -252,120 +273,42 @@ export class AppComponent {
           ]
         },
         {
-          title: "Big root",
+          ID: 22,
+          title: "Groups with requests",
           type: "folder",
           icons: "fa fa-home",
           children: [
             {
-              title: "Big root1",
-              type: "folder",
+              ID: 42,
+              title: "Group with pending requests",
+              type: "leaf",
+              ring: true,
+              state: "opened",
+              hasKey: true,
               progress: {
-                currentScore: 50,
-                displayedScore: 30
+                displayedScore: 60,
+                currentScore: 30
               },
-              children: [
-                {
-                  title: "Documents",
-                  icons: "fa fa-folder",
-                  type: "folder",
-                  children: [
-                    {
-                      title: "Work",
-                      type: "folder",
-                      children: [
-                        {
-                          title: "Expenses.doc",
-                          type: "leaf"
-                        },
-                        {
-                          title: "Resume.doc",
-                          type: "leaf"
-                        }
-                      ]
-                    },
-                    {
-                      title: "Resume.doc",
-                      type: "leaf"
-                    },
-                    {
-                      title: "Home",
-                      type: "folder",
-                      children: [
-                        {
-                          title: "Invoices.txt",
-                          type: "leaf"
-                        },
-                        {
-                          title: "Work",
-                          type: "folder",
-                          children: [
-                            {
-                              title: "Expenses.doc",
-                              type: "leaf"
-                            },
-                            {
-                              title: "Resume.doc",
-                              type: "leaf"
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  title: "Pictures",
-                  type: "folder",
-                  children: [
-                    {
-                      title: "barcelona.jpg",
-                      type: "leaf"
-                    },
-                    {
-                      title: "logo.jpg",
-                      type: "leaf"
-                    },
-                    {
-                      title: "primeui.png",
-                      type: "leaf"
-                    }
-                  ]
-                },
-                {
-                  title: "Movies",
-                  type: "folder",
-                  children: [
-                    {
-                      title: "Al Pacino",
-                      type: "folder",
-                      children: [
-                        {
-                          title: "Scarface",
-                          type: "leaf"
-                        },
-                        {
-                          title: "Serpico",
-                          type: "leaf"
-                        }
-                      ]
-                    },
-                    {
-                      title: "Robert De Niro",
-                      type: "folder",
-                      children: [
-                        {
-                          title: "Goodfellas",
-                          type: "leaf"
-                        },
-                        {
-                          title: "Untouchables",
-                          type: "leaf"
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
+              category: {
+                icon: "fa fa-book-open",
+                type: 1
+              }
+            },
+            {
+              ID: 43,
+              title: "Group with grading requests",
+              type: "leaf",
+              ring: true,
+              state: "opened",
+              hasKey: true,
+              progress: {
+                displayedScore: 50,
+                currentScore: 30
+              },
+              category: {
+                icon: "fa fa-book-open",
+                type: 1
+              }
             }
           ]
         }
@@ -813,6 +756,84 @@ export class AppComponent {
           ]
         },
         {
+          ID: 37,
+          // tslint:disable-next-line: max-line-length
+          title: 'Activities to test headers',
+          type: "folder",
+          ring: true,
+          state: "opened",
+          progress: {
+            displayedScore: 20,
+            currentScore: 20
+          },
+          children: [
+            {
+              ID: 38,
+              title: "Activity with access code",
+              type: "leaf",
+              ring: true,
+              state: "opened",
+              hasKey: true,
+              progress: {
+                displayedScore: 30,
+                currentScore: 30
+              },
+              category: {
+                icon: "fa fa-book-open",
+                type: 1
+              }
+            },
+            {
+              ID: 39,
+              title: "Before you start notice",
+              type: "leaf",
+              ring: true,
+              state: "opened",
+              hasKey: true,
+              progress: {
+                displayedScore: 20,
+                currentScore: 30
+              },
+              category: {
+                icon: "fa fa-book-open",
+                type: 1
+              }
+            },
+            {
+              ID: 40,
+              title: "Activity for teams",
+              type: "leaf",
+              ring: true,
+              state: "opened",
+              hasKey: true,
+              progress: {
+                displayedScore: 90,
+                currentScore: 30
+              },
+              category: {
+                icon: "fa fa-book-open",
+                type: 1
+              }
+            },
+            {
+              ID: 41,
+              title: "Activity with attempts",
+              type: "leaf",
+              ring: true,
+              state: "opened",
+              hasKey: true,
+              progress: {
+                displayedScore: 10,
+                currentScore: 30
+              },
+              category: {
+                icon: "fa fa-book-open",
+                type: 1
+              }
+            }
+          ]
+        },
+        {
           ID: 36,
           // tslint:disable-next-line: max-line-length
           title:
@@ -865,11 +886,23 @@ export class AppComponent {
     });
   }
 
+  updateService() {
+    this.editService.setValue({
+      scrolled: this.scrolled,
+      folded: this.folded,
+      isStarted: this.isStarted,
+      collapsed: this.collapsed,
+      activityORSkill: this.activityORSkill,
+      editing: this.editing
+    });
+  }
+
   onCollapse(e) {
     this.collapsed = e;
     if (!this.collapsed) {
       this.folded = false;
     }
+    this.updateService();
   }
 
   onFold(e) {
@@ -884,13 +917,7 @@ export class AppComponent {
     } else {
       this.selectedType = 0;
       this.userTitle = "Cyril KITSCH";
-      this.editService.setValue({
-        scrolled: this.scrolled,
-        folded: this.folded,
-        isStarted: this.isStarted,
-        collapsed: this.collapsed,
-        editing: this.editing
-      });
+      this.updateService();
       this.router.navigate(["/yourself"], {
         state: {}
       });
@@ -923,14 +950,7 @@ export class AppComponent {
     this.userTitle = e.title;
     this.activityORSkill = false;
     this.taskdata = e;
-    this.editService.setValue({
-      scrolled: this.scrolled,
-      folded: this.folded,
-      isStarted: this.isStarted,
-      collapsed: this.collapsed,
-      activityORSkill: false,
-      editing: this.editing
-    });
+    this.updateService();
     this.router.navigate([`/task/${e.ID}`], {
       queryParams: {
         refresh: new Date().getTime()
@@ -946,14 +966,7 @@ export class AppComponent {
     this.userTitle = e.title;
     this.activityORSkill = true;
     this.taskdata = e;
-    this.editService.setValue({
-      scrolled: this.scrolled,
-      folded: this.folded,
-      isStarted: this.isStarted,
-      collapsed: this.collapsed,
-      activityORSkill: true,
-      editing: this.editing
-    });
+    this.updateService();
     this.router.navigate([`/task/${e.ID}`], {
       queryParams: {
         refresh: new Date().getTime()
@@ -967,13 +980,7 @@ export class AppComponent {
   onYourselfSelected(e) {
     this.selectedType = 0;
     this.userTitle = "Cyril KITSCH";
-    this.editService.setValue({
-      scrolled: this.scrolled,
-      folded: this.folded,
-      isStarted: this.isStarted,
-      collapsed: this.collapsed,
-      editing: this.editing
-    });
+    this.updateService();
     this.router.navigate(["/yourself"], {
       state: {}
     });
@@ -982,13 +989,7 @@ export class AppComponent {
   onGroupSelected(e) {
     this.selectedType = 1;
     this.userTitle = "Jean Monet";
-    this.editService.setValue({
-      scrolled: this.scrolled,
-      folded: this.folded,
-      isStarted: this.isStarted,
-      collapsed: this.collapsed,
-      editing: this.editing
-    });
+    this.updateService();
     this.router.navigate(["/group"], {
       queryParams: {
         refresh: new Date().getTime()
@@ -1001,25 +1002,11 @@ export class AppComponent {
 
   onEditPage(e) {
     this.editing = true;
-    this.editService.setValue({
-      scrolled: this.scrolled,
-      folded: this.folded,
-      isStarted: this.isStarted,
-      collapsed: this.collapsed,
-      activityORSkill: this.activityORSkill,
-      editing: true
-    });
+    this.updateService();
   }
 
   onEditCancel(e) {
     this.editing = false;
-    this.editService.setValue({
-      scrolled: this.scrolled,
-      folded: this.folded,
-      isStarted: this.isStarted,
-      collapsed: this.collapsed,
-      activityORSkill: this.activityORSkill,
-      editing: false
-    });
+    this.updateService();
   }
 }

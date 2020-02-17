@@ -86,6 +86,12 @@ $circular: 12px;
   height: 15px; 
 
   @include custom-switch(#2C5687, #152A43, $dark-base-color, 30px, 13px, 13px);
+
+  .ui-inputswitch-slider {
+    &::before {
+      box-shadow: none;
+    }
+  }
 }
 
 :host ::ng-deep p-inputSwitch {

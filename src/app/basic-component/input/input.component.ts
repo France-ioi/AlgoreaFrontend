@@ -12,6 +12,7 @@ export class InputComponent implements OnInit {
   @Input() icon;
   @Input() mode = 'dark';
   @Input() type = 'small';
+  @Input() hasButton = false;
 
   constructor() { }
 
