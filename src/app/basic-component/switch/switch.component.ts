@@ -20,7 +20,7 @@ export class SwitchComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-
+    console.log(changes);
   }
 
   handleChange(e) {

@@ -80,7 +80,7 @@ export class ScoreRingComponent implements OnInit, OnChanges {
       this._displayFill = ScoreRingColor.success;
     } else {
       this._displayFill = 'hsl(' + this.displayedScore * 0.4 + ', 100%, 50%)';
-      this._currentFill = 'hsl(' + this.currentScore * 0.4 + ', 100%, 70%)';
+      this._currentFill = '#8E8E8E';
     }
 
     if (this.isDark) {
@@ -88,7 +88,6 @@ export class ScoreRingComponent implements OnInit, OnChanges {
     } else {
       this._textFill = ScoreRingColor.defaultText;
     }
-    console.log(this.displayedScore, this.icons);
 
     if (this.isValidated) {
       this._iconPath = 'check';
@@ -108,6 +107,5 @@ export class ScoreRingComponent implements OnInit, OnChanges {
     }
 
     this._fontSize = Math.floor(14 * 2 * this.diameter / 64);
-    console.log(this.displayedScore, this.icons);
   }
 }

@@ -1,4 +1,7 @@
-<div class="yourself-header" [ngClass]="{ folded: isFolded, unfolded: !isFolded }">
+<div
+  class="yourself-header"
+  [ngClass]="{ folded: isFolded, unfolded: !isFolded }"
+>
   <div class="user-image">
     <img src="assets/images/_messi.jpg" width="90px" height="90px" />
   </div>
@@ -22,6 +25,10 @@
     </span>
   </div>
   <div class="certificates">
-    <app-button label="Certificates" icon="fa fa-medal" class="ui-button-success ui-button-rounded"></app-button>
+    <app-button
+      label="Certificates"
+      icon="fa fa-medal"
+      class="ui-button-success ui-button-rounded"
+    ></app-button>
   </div>
 </div>

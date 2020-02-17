@@ -63,7 +63,6 @@ export class SkillProgressComponent implements OnInit, OnChanges {
         this.color = ProgressColor.Thin;
     } else if (this.type === ProgressType.ThickHorizontal) {
         this._progressHeight = ProgressHeight.Thick;
-        this.color = ProgressColor.Thick;
     }
   }
 

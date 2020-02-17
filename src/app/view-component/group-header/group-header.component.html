@@ -1,68 +1,186 @@
-<div
-  class="yourself-header"
-  [ngClass]="{ folded: isFolded, unfolded: !isFolded }"
->
-  <div class="user-image">
-    <img src="assets/images/_messi.jpg" width="90px" height="90px" />
-  </div>
-  <div class="user-info" (window:resize)="onResized($event)" #userInfo>
-    <div class="user-name" [ngStyle]="{ opacity: isScrolled ? 0 : 1 }">
-      <span>{{data.name}}</span>
+<div class="group-header-container">
+  <div
+    class="group-header"
+    [ngClass]="{ folded: isFolded, unfolded: !isFolded }"
+  >
+    <div class="user-image">
+      <img src="assets/images/_messi.jpg" width="90px" height="90px" />
     </div>
-    <div *ngIf="!isTwoColumn; then oneColumn else twoColumn"></div>
-    <ng-template #oneColumn>
-      <span class="user-type" *ngIf="data.type">
-        <i class="fa fa-home"></i>
-        <span>{{data.type}}</span>
-      </span>
-      <span class="user-site" *ngIf="data.website">
-        <i class="fa fa-external-link-alt"></i>
-        <a href="https://{{data.website}}">{{data.website}}</a>
-      </span>
-      <span class="user-location" *ngIf="data.location">
-        <i class="fa fa-map-marker-alt"></i>
-        <span title="{{data.location}}">{{data.location}}</span>
-      </span>
-    </ng-template>
-    <ng-template #twoColumn>
-      <div class="two-columns">
+    <div class="user-info" (window:resize)="onResized($event)" #userInfo>
+      <div class="user-name" [ngStyle]="{ opacity: isScrolled ? 0 : 1 }">
+        <span>{{ data.name }}</span>
+      </div>
+      <div *ngIf="!isTwoColumn; then oneColumn; else twoColumn"></div>
+      <ng-template #oneColumn>
         <span class="user-type" *ngIf="data.type">
           <i class="fa fa-home"></i>
-          <span>{{data.type}}</span>
+          <span>{{ data.type }}</span>
         </span>
         <span class="user-site" *ngIf="data.website">
           <i class="fa fa-external-link-alt"></i>
-          <a href="https://{{data.website}}">{{data.website}}</a>
+          <a href="https://{{ data.website }}">{{ data.website }}</a>
         </span>
         <span class="user-location" *ngIf="data.location">
           <i class="fa fa-map-marker-alt"></i>
-          <span title="{{data.location}}">{{data.location}}</span>
+          <span title="{{ data.location }}">{{ data.location }}</span>
         </span>
-        <span class="time" *ngIf="data.date">
-          <i class="fa fa-clock"></i>
-          <span>{{data.date | date:'MMM d, y h:mm a'}}</span>
-        </span>
-        <span class="grade" *ngIf="data.grades">
-          <i class="fa fa-user-graduate"></i>
-          <span>Grades: {{grades.join(", ")}}</span>
-        </span>
-        <span class="join-method" *ngIf="data.joinMethods && data.joinMethods.length > 0">
-          <i class="fa fa-sign-in-alt"></i>
-          <span>Join Methods: {{data.joinMethods.join(", ")}}</span>
-        </span>
-        <span class="assoc-skill" *ngIf="data.assocSkill">
-          <i class="fa fa-link"></i>
-          <span class="no-wrap" *ngIf="visibleAssoc">Associated with: </span>
-          <a href="{{data.assocSkill.link}}">{{data.assocSkill.name}}</a>
-          <app-score-ring *ngIf="data.assocSkill.progress" [displayedScore]="data.assocSkill.progress.displayedScore" [currentScore]="data.assocSkill.progress.currentScore" diameter="24"></app-score-ring>
-        </span>
-        <span class="assoc-skill" *ngIf="data.assocActivity">
-          <i class="fa fa-link"></i>
-          <span class="no-wrap" *ngIf="visibleAssoc">Associated with: </span>
-          <a href="{{data.assocActivity.link}}">{{data.assocSkill.name}}</a>
-          <app-skill-progress *ngIf="data.assocActivity.progress" [displayedScore]="data.assocActivity.progress.displayedScore" [currentScore]="data.assocActivity.progress.currentScore" style="width: 40%; margin-left: 10px;"></app-skill-progress>
-        </span>
-      </div>
-    </ng-template>
+      </ng-template>
+      <ng-template #twoColumn>
+        <div class="two-columns">
+          <span class="user-type" *ngIf="data.type">
+            <i class="fa fa-home"></i>
+            <span>{{ data.type }}</span>
+          </span>
+          <span class="user-site" *ngIf="data.website">
+            <i class="fa fa-external-link-alt"></i>
+            <a href="https://{{ data.website }}">{{ data.website }}</a>
+          </span>
+          <span class="user-location" *ngIf="data.location">
+            <i class="fa fa-map-marker-alt"></i>
+            <span title="{{ data.location }}">{{ data.location }}</span>
+          </span>
+          <span class="time" *ngIf="data.date">
+            <i class="fa fa-clock"></i>
+            <span>{{ data.date | date: "MMM d, y h:mm a" }}</span>
+          </span>
+          <span class="grade" *ngIf="data.grades">
+            <i class="fa fa-user-graduate"></i>
+            <span>Grades: {{ grades.join(", ") }}</span>
+          </span>
+          <span
+            class="join-method"
+            *ngIf="data.joinMethods && data.joinMethods.length > 0"
+          >
+            <i class="fa fa-sign-in-alt"></i>
+            <span>Join Methods: {{ data.joinMethods.join(", ") }}</span>
+          </span>
+          <span class="assoc-skill" *ngIf="data.assocSkill">
+            <i class="fa fa-link"></i>
+            <span class="no-wrap" *ngIf="visibleAssoc">Associated with: </span>
+            <a href="{{ data.assocSkill.link }}">{{ data.assocSkill.name }}</a>
+            <app-score-ring
+              *ngIf="data.assocSkill.progress"
+              [displayedScore]="data.assocSkill.progress.displayedScore"
+              [currentScore]="data.assocSkill.progress.currentScore"
+              diameter="24"
+            ></app-score-ring>
+          </span>
+          <span class="assoc-skill" *ngIf="data.assocActivity">
+            <i class="fa fa-link"></i>
+            <span class="no-wrap" *ngIf="visibleAssoc">Associated with: </span>
+            <a href="{{ data.assocActivity.link }}">{{
+              data.assocSkill.name
+            }}</a>
+            <app-skill-progress
+              *ngIf="data.assocActivity.progress"
+              [displayedScore]="data.assocActivity.progress.displayedScore"
+              [currentScore]="data.assocActivity.progress.currentScore"
+              style="width: 40%; margin-left: 10px;"
+            ></app-skill-progress>
+          </span>
+        </div>
+      </ng-template>
+    </div>
   </div>
+  
+  <ng-container *ngIf="data.ID && data.ID === 42">
+    <app-section-paragraph icon="fa fa-check" label="Pending requests" [collapsible]="true">
+      <ng-template #headerTemplate>
+        <app-selection [items]="groupSwitch" style="width: 300px; margin-top: -14px;"></app-selection>
+      </ng-template>
+      <div class="pending-request-container">
+        <app-grid
+          [selectedColumns]="columns"
+          [columns]="columns"
+          [data]="pendingRequests"
+          [groupInfo]="grdata"
+          sortMode="single"
+          (expandWholeWidth)="onExpandWidth($event)"
+        >
+          <ng-template #headerTemplate let-columns>
+            <tr>
+              <th style="width: 40px;background-color: #D3DBE7;"></th>
+              <ng-container *ngFor="let col of columns">
+                <th *ngIf="col.field === 'date'" [pSortableColumn]="col.field" style="width: 160px; background-color: #D3DBE7;">
+                  {{ col.header }}
+                  <p-sortIcon [field]="col.field"></p-sortIcon>
+                </th>
+                <th *ngIf="col.field !== 'date'" [pSortableColumn]="col.field" style="background-color: #D3DBE7;">
+                  {{ col.header }}
+                  <p-sortIcon [field]="col.field"></p-sortIcon>
+                </th>
+              </ng-container>
+            </tr>
+          </ng-template>
+          <ng-template
+            #bodyTemplate
+            let-rowData
+            let-columns="columns"
+            let-rowIndex="rowIndex"
+          >
+            <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
+              <td style="width: 40px;">
+                <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+              </td>
+              <td *ngFor="let col of columns">
+                <ng-container *ngIf="col.field === 'date'">
+                  {{ rowData[col.field] | date:'MM/d/y'}}
+                </ng-container>
+                <ng-container *ngIf="col.field === 'user'">
+                  <div class="grid-user-info-field">
+                    <img src="{{rowData.user.image}}" width="70px" height="70px">
+                    <div class="user-info">
+                      <span class="user-info-name">{{rowData.user.name}}</span>
+                      <span class="user-info-activity"><em>{{rowData.user.activity}}</em></span>
+                      <div class="user-info-content">{{rowData.user.content}}</div>
+                    </div>
+                  </div>
+                </ng-container>
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template #summaryTemplate let-table>
+            <div
+              style="text-align: left; display: flex; align-items: center;"
+            >
+              <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+              <span style="margin-left: 10px; color: #9B9B9B; flex: 1;">
+                Select all
+              </span>
+              <div class="req-tools">
+                <span class="accept">
+                  <span>Accept</span>
+                  <i class="fa fa-check"></i>
+                </span>
+                <span class="reject">
+                  <span>Reject</span>
+                  <i class="fa fa-times"></i>
+                </span>
+              </div>
+            </div>
+          </ng-template>
+        </app-grid>
+      </div>
+    </app-section-paragraph>
+  </ng-container>
+
+  <ng-container *ngIf="data.ID && data.ID === 43">
+    <app-section-paragraph icon="fa fa-users" label="You have 6 grading requests" [collapsible]="true">
+      <ng-template #headerTemplate>
+        <div style="width: 160px;">
+          <app-button icon="fa fa-glasses" label="view submissions" class="ui-button-rounded ui-fit-parent ui-medium-button"></app-button>
+        </div>
+      </ng-template>
+      <ul class="grading-request-container">
+        <li *ngFor="let item of gradingRequests" class="request-item">
+          <span class="request-item-label">
+            <b>{{item.user}}</b> is waiting for a grading on <b>{{item.subject}}</b>
+          </span>
+          <div class="request-item-view">
+            <app-button icon="fa fa-glasses" label="view" class="ui-button-rounded ui-fit-parent ui-small-button"></app-button>
+          </div>
+        </li> 
+      </ul>
+    </app-section-paragraph>
+  </ng-container>
 </div>

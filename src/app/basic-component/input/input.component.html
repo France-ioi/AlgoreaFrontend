@@ -1,6 +1,9 @@
 <div class="input-wrapper" [ngClass]="{large: type === 'large', light: mode === 'light'}">
-  <input type="text" [(ngModel)]="value" [placeholder]="placeholder">
+  <input type="text" [(ngModel)]="value" [placeholder]="placeholder" [ngClass]="{'has-button': hasButton}">
   <span class="icon">
     <i class="fa fa-font"></i>
+  </span>
+  <span *ngIf="hasButton" class="input-button">
+    <i class="{{icon}}"></i>
   </span>
 </div>

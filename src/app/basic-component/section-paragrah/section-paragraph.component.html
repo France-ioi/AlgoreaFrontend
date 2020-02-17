@@ -1,0 +1,22 @@
+
+<div class="section-container" [ngClass]="theme">
+  <div class="section-header" [ngClass]="{'show-cursor': collapsible}">
+    <div class="section-handler">
+      <i class="{{icon}}" *ngIf="!data || !data.ID"></i>
+      <div class="score-container" *ngIf="data && data.ID">
+        <app-score-ring [displayedScore]="data.progress.displayedScore" [currentScore]="data.progress.currentScore" diameter="24" ></app-score-ring>
+      </div>
+    </div>
+    <div class="section-header-content" [ngClass]="{'show-border': hasBorder && visible}">
+      <span class="section-title" (click)="toggleContent($event)">{{label}}</span>
+      <ng-container [ngTemplateOutlet]="headerTemplate"></ng-container>
+      <span *ngIf="collapsible" class="toggle-content" (click)="toggleContent($event)">
+        <i *ngIf="!visible" class="fa fa-angle-down"></i>
+        <i *ngIf="visible" class="fa fa-angle-up"></i>
+      </span>
+    </div>
+  </div>
+  <div *ngIf="visible || !collapsible" class="section-content">
+    <ng-content></ng-content>
+  </div>
+</div>

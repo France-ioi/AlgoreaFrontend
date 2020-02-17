@@ -16,9 +16,89 @@ export class GroupHeaderComponent implements OnInit, OnChanges {
 
   @ViewChild('userInfo', { static: false }) userInfo;
 
+  ID;
+
   isTwoColumn = false;
   grades;
   visibleAssoc = true;
+
+  gradingRequests = [
+    {
+      user: 'BorisKarlo',
+      subject: 'LoremIpsum'
+    },
+    {
+      user: 'PaulGogo',
+      subject: 'LoremIpsum'
+    },
+    {
+      user: 'Marionduv',
+      subject: 'LoremIpsum'
+    },
+    {
+      user: 'Bestof',
+      subject: 'LoremIpsum'
+    },
+    {
+      user: 'SimSim',
+      subject: 'LoremIpsum'
+    },
+    {
+      user: 'Mamaschmitt',
+      subject: 'LoremIpsum'
+    }
+  ];
+
+  pendingRequests = [
+    {
+      user: {
+        image: 'assets/images/_messi.jpg',
+        name: 'DUJARDIN Jean (Jeandu88)',
+        activity: 'Terminale',
+        content: 'Led ac magna suscipit, sollicitudin urna at, firibus ipsum, Nulla ullarncoper vulputate nisl. Aenean in ex nisl, Suspendisse magna tortor sagittis quis.'
+      },
+      date: new Date(2019, 12, 31)
+    },
+    {
+      user: {
+        image: 'assets/images/_messi.jpg',
+        name: 'DENIS Marie-Sophie (MadameSoso)',
+        activity: 'Terminale',
+        content: 'Led ac magna suscipit, sollicitudin urna at, firibus ipsum, Nulla ullarncoper vulputate nisl. Aenean in ex nisl, Suspendisse magna tortor sagittis quis.'
+      },
+      date: new Date(2020, 1, 24)
+    },
+    {
+      user: {
+        image: 'assets/images/_messi.jpg',
+        name: 'GASTARD Frederique (FredGast)',
+        activity: 'Terminale',
+        content: 'Led ac magna suscipit, sollicitudin urna at, firibus ipsum, Nulla ullarncoper vulputate nisl. Aenean in ex nisl, Suspendisse magna tortor sagittis quis.'
+      },
+      date: new Date(2020, 2, 12)
+    }
+  ];
+
+  columns = [
+    { field: 'user', header: 'user' },
+    { field: 'date', header: 'requested on' }
+  ];
+  
+  grdata = [
+    {
+      name: 'Epreuves',
+      columns: this.columns
+    }
+  ];
+
+  groupSwitch = [
+    {
+      label: 'This group only'
+    },
+    {
+      label: 'All subgroups'
+    }
+  ];
 
   constructor() { }
 
@@ -26,6 +106,7 @@ export class GroupHeaderComponent implements OnInit, OnChanges {
     if (Object.keys(this.data).length > 3) {
       this.isTwoColumn = true;
     }
+    this.ID = this.data.ID;
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -45,6 +126,10 @@ export class GroupHeaderComponent implements OnInit, OnChanges {
     } else {
       this.visibleAssoc = true;
     }
+  }
+
+  onExpandWidth(e) {
+    
   }
 
 }

@@ -1,13 +1,5 @@
 <p-table [value]="data">
-  <ng-template pTemplate="body" let-rowData>
-    <tr>
-      <td *ngFor="let col of cols; index as idx" [ngClass]="{main: idx === 1}">
-        {{ rowData[col] }}
-      </td>
-      <td>
-        <span class="table-icon"><i class="fa fa-eye"></i></span>
-        <span class="table-icon"><i class="fa fa-trash-alt"></i></span>
-      </td>
-    </tr>
+  <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+    <ng-container [ngTemplateOutlet]="bodyTemplate" [ngTemplateOutletContext]="{ $implicit: rowData, columns: columns, rowIndex: rowIndex }"></ng-container>
   </ng-template>
 </p-table>

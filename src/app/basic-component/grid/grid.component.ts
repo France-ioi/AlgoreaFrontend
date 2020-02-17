@@ -90,17 +90,23 @@ export class GridComponent implements OnInit, OnChanges {
     this.selectedColumns = this.columns;
     this.toShow = 0;
     this.expand = !this.expand;
+    
     if (!this.expand) {
       const newSel = [];
       for (const col of this.columns) {
         if (this.selected[col.field] === true) {
           newSel.push(col);
         }
+        this.selected[col.field] = true;
       }
 
       this.selectedColumns = newSel;
 
       this.toShow = this.columns.length - this.selectedColumns.length;
+    }
+
+    for (const col of this.columns) {
+      this.selected[col.field] = true;
     }
     this.expandWholeWidth.emit(this.expand);
   }

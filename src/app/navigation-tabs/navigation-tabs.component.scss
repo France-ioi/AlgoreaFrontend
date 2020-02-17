@@ -30,6 +30,8 @@ $header-height: 90px;
     min-height: $group-header-height;
     border-top-left-radius: 10px;
     position: relative;
+    display: flex;
+    align-items: center;
 
     .group-avatar {
       position: absolute;
@@ -53,7 +55,12 @@ $header-height: 90px;
       line-height: $group-header-height;
       display: inline-block;
       color: $base-text-color;
-      width: 100%;
+      flex: 1;
+      margin-left: 85px;
+      margin-right: 70px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
     }
 
     .group-toggle {

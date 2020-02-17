@@ -1,0 +1,98 @@
+@import 'src/colors.scss';
+
+@mixin section-format($bk-color, $handle-color, $handle-border-color) {
+  border-bottom: 1px solid $light-border-color;
+  background-color: $bk-color;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  
+  .section-header {
+    display: flex;
+    align-items: center;
+
+    &.show-cursor {
+      cursor: pointer;
+    }
+
+    .section-handler {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      background-color: $handle-color;
+      border-left: 3px solid $handle-border-color;
+      width: 55px;
+      height: 30px;
+      border-top-right-radius: 100px;
+      border-bottom-right-radius: 100px;
+      position: relative;
+
+      i {
+        color: white;
+        margin-right: 10px;
+      }
+
+      .score-container {
+        width: 32px;
+        height: 32px;
+        border-radius: 15px;
+        background-color: $bk-color;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+
+    .section-header-content {
+      padding-top: 15px;
+      padding-bottom: 15px;
+      display: flex;
+      align-items: center;
+      flex: 1;
+      margin-right: 10px;
+      border-bottom: 1px solid transparent;
+
+      &.show-border {
+        border-bottom: 1px solid $section-border-color;
+      }
+
+      .section-title {
+        font-size: 24px;
+        color: $dark-text-color;
+        padding-left: 15px;
+        flex: 1;
+      }
+  
+      .toggle-content {
+        font-size: 24px;
+        color: $base-text-color;
+        width: 50px;
+        height: 24px;
+        padding-left: 26px;
+        line-height: 24px;
+        text-align: center;
+        font-weight: lighter;
+        cursor: pointer;
+      }
+
+    }
+  }
+  
+  .section-content {
+    padding: 15px 20px 15px 70px;
+    color: $base-text-color;
+  }
+  
+}
+
+.section-container {
+
+  &.success {
+    @include section-format($section-color, $base-color, $dark-color);
+  }
+
+  &.danger {
+    @include section-format($section-danger-color, $section-danger-handle-color, $section-danger-handle-border-color)
+  }
+}
+
+

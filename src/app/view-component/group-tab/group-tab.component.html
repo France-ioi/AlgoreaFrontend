@@ -4,8 +4,7 @@
       <i class="fa fa-chart-pie"></i>
       Overview
     </ng-template>
-    <ng-template matTabContent>
-    </ng-template>
+    <ng-template matTabContent> </ng-template>
   </mat-tab>
   <mat-tab>
     <ng-template mat-tab-label>
@@ -16,8 +15,15 @@
       <app-section icon="fa fa-users" label="Current Composition">
         <div class="table-container">
           <div class="selection-tool">
-            <app-selection [items]="childrenPolicy" (onChange)="onChildrenPolicyChanged($event)"></app-selection>
-            <app-selection *ngIf="selectedPolicy" [items]="selItems" type="square"></app-selection>
+            <app-selection
+              [items]="childrenPolicy"
+              (onChange)="onChildrenPolicyChanged($event)"
+            ></app-selection>
+            <app-selection
+              *ngIf="selectedPolicy"
+              [items]="selItems"
+              type="square"
+            ></app-selection>
           </div>
           <app-grid
             [selectedColumns]="columns"
@@ -54,7 +60,9 @@
               </tr>
             </ng-template>
             <ng-template #summaryTemplate let-table>
-              <div style="text-align: left; display: flex; align-items: center;">
+              <div
+                style="text-align: left; display: flex; align-items: center;"
+              >
                 <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
                 <span style="margin-left: 10px; color: #9B9B9B; flex: 1;">
                   Select all
@@ -78,16 +86,30 @@
           </app-grid>
           <span class="tri-tag"></span>
         </div>
-        <app-sub-section icon="fa fa-user-plus" label="Add subgroups" tooltip="tooltip help">
+        <app-sub-section
+          icon="fa fa-user-plus"
+          label="Add subgroups"
+          tooltip="tooltip help"
+        >
           <div class="button-container">
             <ng-container *ngFor="let item of subgroup">
-              <app-group-button [label]="item.label" [icon]="item.icon" [disabled]="item.disabled"></app-group-button>
+              <app-group-button
+                [label]="item.label"
+                [icon]="item.icon"
+                [disabled]="item.disabled"
+              ></app-group-button>
             </ng-container>
           </div>
         </app-sub-section>
-        <app-sub-section icon="fa fa-calendar" label="Organize a session to constitute this group">
+        <app-sub-section
+          icon="fa fa-calendar"
+          label="Organize a session to constitute this group"
+        >
           <div class="session-content">
-            <p style="font-size: 12px;">A session is an event focused on a specific activity, that takes place at a given time.</p>
+            <p style="font-size: 12px;">
+              A session is an event focused on a specific activity, that takes
+              place at a given time.
+            </p>
             <div class="session-selectors">
               <div class="date-selector">
                 <span class="label">Date</span>
@@ -98,12 +120,26 @@
                 <app-activity-picker [trees]="trees"></app-activity-picker>
               </div>
             </div>
-            <p style="font-size: 12px;">All the participants to this session will be automatically added as memebers of this group ([group name]).</p>
-            <app-button label="Organize" icon="fa fa-plus" class="ui-button-rounded"></app-button>
+            <p style="font-size: 12px;">
+              All the participants to this session will be automatically added
+              as memebers of this group ([group name]).
+            </p>
+            <app-button
+              label="Organize"
+              icon="fa fa-plus"
+              class="ui-button-rounded"
+            ></app-button>
           </div>
         </app-sub-section>
-        <app-sub-section icon="fa fa-user-plus" label="Other ways to add new memebers to this group">
-          <app-switch-container label="Invitation code" checked="true" subtitle="Let users access this group using a password you send them.">
+        <app-sub-section
+          icon="fa fa-user-plus"
+          label="Other ways to add new memebers to this group"
+        >
+          <app-switch-container
+            label="Invitation code"
+            checked="true"
+            subtitle="Let users access this group using a password you send them."
+          >
             <div class="invitation-code">
               <div class="code-validation">
                 <div class="code-wrapper">
@@ -121,27 +157,63 @@
               </div>
             </div>
           </app-switch-container>
-          <app-switch-container label="Invite users" checked="true" subtitle="Add users name list, separated by commas.">
+          <app-switch-container
+            label="Invite users"
+            checked="true"
+            subtitle="Add users name list, separated by commas."
+          >
             <div class="invite-users">
-              <app-textarea icon="show" placeholder="psuedo, psuedo..."></app-textarea>
+              <app-textarea
+                icon="show"
+                placeholder="psuedo, psuedo..."
+              ></app-textarea>
               <app-button label="Invite" class="ui-button-rounded"></app-button>
             </div>
           </app-switch-container>
-          <app-switch-container label="Spontanewous requests" checked="true" subtitle="Can users ask you to join the group ?">
+          <app-switch-container
+            label="Spontanewous requests"
+            checked="true"
+            subtitle="Can users ask you to join the group ?"
+          >
             <div class="spon-req">
               <app-selection [items]="yesNo"></app-selection>
             </div>
           </app-switch-container>
-          <app-switch-container label="Account creation" checked="true" subtitle="Create batch unique user accounts.">
+          <app-switch-container
+            label="Account creation"
+            checked="true"
+            subtitle="Create batch unique user accounts."
+          >
             <div class="account-create">
-              <app-sub-grid [data]="subgriddata" [cols]="subgridcols"></app-sub-grid>
+              <app-sub-grid [data]="subgriddata">
+                <ng-template #bodyTemplate let-rowData>
+                  <tr>
+                    <td
+                      *ngFor="let col of subgridcols; index as idx"
+                      [ngClass]="{ main: idx === 1 }"
+                    >
+                      {{ rowData[col] }}
+                    </td>
+                    <td>
+                      <span class="table-icon"><i class="fa fa-eye"></i></span>
+                      <span class="table-icon">
+                        <i class="fa fa-trash-alt"></i>
+                      </span>
+                    </td>
+                  </tr>
+                </ng-template>
+              </app-sub-grid>
             </div>
           </app-switch-container>
         </app-sub-section>
         <app-sub-section icon="fa fa-file-import" label="Import">
           <div class="import-csv">
             <span class="comment">Import members from a .csv file</span>
-            <app-button label="Import" icon="fa fa-plus" class="ui-button-rounded"></app-button>
+            <app-button
+              label="Import"
+              icon="fa fa-plus"
+              class="ui-button-rounded"
+            ></app-button>
           </div>
         </app-sub-section>
       </app-section>

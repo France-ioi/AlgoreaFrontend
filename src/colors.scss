@@ -1,6 +1,8 @@
 $base-color: #4A90E2;
-$secondary-color: #F5A623;
+$base-bk-color: #F1F2F7;
 $base-text-color: #9B9B9B;
+
+$secondary-color: #F5A623;
 
 $light-text-color: #DBDBDB;
 $light-color: #DBE9F9;
@@ -9,9 +11,13 @@ $light-border-color: #EBEBEB;
 $dark-text-color: #6E6E6E;
 $dark-color: #33649D;
 $dark-base-color: #2E5E95;
-
-$base-bk-color: #F1F2F7;
+$dark-black-color: #464646;
 
 $nav-bk-color: #4E4E4E;
 
-$dark-black-color: #464646;
+// Section colors
+$section-color: #DFE7F4;
+$section-danger-color: #F2D9E0;
+$section-danger-handle-color: #FF001F;
+$section-danger-handle-border-color: #B20015;
+$section-border-color: #D1D9E5;

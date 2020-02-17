@@ -1,10 +1,10 @@
 @import "src/colors.scss";
 
 :host ::ng-deep .ui-table .ui-table-thead > tr > th {
-  position: -webkit-sticky;
-  position: sticky !important;
-  top: 70px;
-  overflow: visible;
+  // position: -webkit-sticky;
+  // position: sticky !important;
+  // top: 70px;
+  // overflow: visible;
 }
 
 @media screen and (max-width: 64em) {

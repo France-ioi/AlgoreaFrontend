@@ -12,6 +12,14 @@ $danger-color: #ff001f;
     width: 100%;
   }
 
+  &.ui-small-button {
+    font-size: 10px;
+  }
+
+  &.ui-medium-button {
+    font-size: 11px;
+  }
+
   &.diagonal-rounded {
     border-top-left-radius: 10px;
     border-top-right-radius: unset;
@@ -123,4 +131,8 @@ $danger-color: #ff001f;
       }
     }
   }
+}
+
+:host ::ng-deep p-button {
+  width: 100%;
 }

@@ -37,7 +37,9 @@ export class GroupComponent implements OnInit {
     this.activatedRoute.queryParamMap.subscribe((paramMap: ParamMap) => {
       const refresh = paramMap.get('refresh');
       if (refresh) {
+        console.log(history.state.groupdata);
         this.groupdata = {
+          ID: history.state.groupdata.ID,
           name: 'Jean Monnet',
           type: Type.school,
           website: 'www.lyceeloremipsum.com',

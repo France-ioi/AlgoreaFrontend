@@ -40,7 +40,7 @@
   input {
     width: 100%;
     display: flex;
-    background-color: #DFE6EF;
+    background-color: #D3DBE7;
     border: none;
     box-shadow: 0 1px #C9CFD7 inset;
     border-radius: 5px;
@@ -48,6 +48,11 @@
     font-size: 16px;
     line-height: 32px;
     color: $base-text-color;
+
+    &.has-button {
+      border-top-right-radius: unset;
+      border-bottom-right-radius: unset;
+    }
 
     &:focus {
       outline: none;
@@ -57,6 +62,19 @@
       font-style: italic;
       color: $base-text-color;
     }
+  }
+
+  .input-button {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    color: white;
+    background-color: $base-color;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    cursor: pointer;
   }
 
 }

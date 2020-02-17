@@ -95,4 +95,133 @@
     [displayedScore]="progress.displayedScore"
     [currentScore]="progress.currentScore"
   ></app-skill-progress>
+
+  <ng-container *ngIf="ID === 38" #accessCodeBlock>
+    <app-section-paragraph icon="fa fa-sign-in-alt" label="Access to activity">
+      <div style="margin-right: 20px;">
+        <app-input placeholder="Group code" [hasButton]="true" icon="fa fa-flag-checkered"></app-input>
+      </div>
+    </app-section-paragraph>
+  </ng-container>
+
+  <ng-container *ngIf="ID === 39" >
+    <app-section-paragraph icon="fa fa-book" label="Before you start...">
+      <div style="display: flex; flex-direction: column; align-items: center;">
+        <div>
+          Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+        </div>
+        <app-button icon="fa fa-flag-checkered" label="Start" class="ui-button-rounded" style="margin-top: 20px;"></app-button>
+      </div>
+    </app-section-paragraph>
+    <app-section-paragraph icon="fa fa-book" label="Start by a notice ...">
+      <div style="display: flex; flex-direction: column; align-items: center;">
+        <div>
+          Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+        </div>
+        <app-button icon="fa fa-print" label="Print a notice" class="ui-button-rounded" style="margin-top: 20px;"></app-button>
+      </div>
+    </app-section-paragraph>
+  </ng-container>
+
+  <ng-container *ngIf="ID === 40">
+    <app-section-paragraph icon="fa fa-users" label="You chose The indesctructibles" [collapsible]="true" [hasBorder]="true">
+      <div class="team-view-container">
+        <app-sub-grid [data]="teamdata">
+          <ng-template #bodyTemplate let-rowData>
+            <tr>
+              <td>
+                <img class="team-user-image" src="{{ rowData.image }}" width="25px" height="25px">
+              </td>
+              <td style="flex: 2;"> {{ rowData.col2 }} </td>
+              <td style="flex: 1;"> {{ rowData.col3 }} </td>
+              <td style="flex: 1; text-align: right;"> {{ rowData.col4 }} </td>
+            </tr>
+          </ng-template>
+        </app-sub-grid>
+        <div class="tool-container">
+          <app-button icon="fa fa-pencil-alt" label="edit team" class="ui-button-rounded ui-fit-parent"></app-button>
+        </div>
+      </div>
+    </app-section-paragraph>
+    <app-section-paragraph icon="fa fa-times" label="Your team can't participate to this challenge" theme="danger">
+      <div class="checklist-container">
+        <span class="checklist-container-title">To access this challenge your team must:</span>
+        <ul class="checklist">
+          <li class="checklist-item">
+            <span class="checklist-item-icon" [ngClass]="{danger: !preq.team.validated}">
+              <i *ngIf="preq.team.validated" class="fa fa-check"></i>
+              <i *ngIf="!preq.team.validated" class="fa fa-times"></i>
+            </span>
+            <span class="checklist-item-label">
+              Your team should contain from {{preq.team.min}} to {{preq.team.max}} members
+            </span>
+          </li>
+          <li class="checklist-item">
+            <span class="checklist-item-icon" [ngClass]="{danger: !preq.member.validated}">
+              <i *ngIf="preq.member.validated" class="fa fa-check"></i>
+              <i *ngIf="!preq.member.validated" class="fa fa-times"></i>
+            </span>
+            <span class="checklist-item-label">
+              {{preq.member.label}}
+            </span>
+          </li>
+          <li class="checklist-item">
+            <span class="checklist-item-icon" [ngClass]="{danger: !preq.scores.validated}">
+              <i *ngIf="preq.scores.validated" class="fa fa-check"></i>
+              <i *ngIf="!preq.scores.validated" class="fa fa-times"></i>
+            </span>
+            <span class="checklist-item-label">
+              Validate these prequisities:
+            </span>
+          </li>
+          <li *ngFor="let item of preq.scores.req" class="checklist-item checklist-score">
+            <span class="checklist-item-icon" [ngClass]="{danger: !item.validated}">
+              <i *ngIf="item.validated" class="fa fa-check"></i>
+              <i *ngIf="!item.validated" class="fa fa-times"></i>
+            </span>
+            <span class="checklist-item-label">
+              {{item.label}}
+            </span>
+            <app-skill-progress *ngIf="item.type === 'progress'" color="#E5CDD4" type="thick-horizontal" [displayedScore]="item.progress.displayedScore" [currentScore]="item.progress.currentScore"></app-skill-progress>
+            <app-score-ring *ngIf="item.type === 'score'" [displayedScore]="item.progress.displayedScore" [currentScore]="item.progress.currentScore" diameter="32"></app-score-ring>
+          </li>
+          <li class="checklist-item">
+            <span class="checklist-item-icon danger">
+              <i *ngIf="!preq.validated" class="fa fa-lock"></i>
+            </span>
+            <span class="checklist-item-label danger">
+              Validate items you don't have access to yet
+            </span>
+          </li>
+        </ul>
+      </div>
+    </app-section-paragraph>
+  </ng-container>
+
+  <ng-container *ngIf="ID === 41">
+    <app-section-paragraph icon="fa fa-users" label="You have 6 grading requests" [collapsible]="true" [data]="selectedAttempt">
+      <ng-template #headerTemplate>
+        <div style="width: 180px;">
+          <app-button icon="fa fa-flag-checkered" label="New attempt" class="ui-button-rounded ui-fit-parent" (onClick)="newAttempt($event)"></app-button>
+        </div>
+      </ng-template>
+      <ul class="attempts-container">
+        <li *ngFor="let item of attempts" class="attempt-item" [ngClass]="{active: item.ID === selectedAttemptID }" (click)="selectAttempt(item.ID)">
+          <app-score-ring [displayedScore]="item.progress.displayedScore" [currentScore]="item.progress.currentScore" diameter="24" [isDark]="item.ID === selectedAttemptID"></app-score-ring>
+          <span class="attempt-number">
+            <b>Attempt n &#176; {{item.number}}</b>
+          </span>
+          <span class="attempt-date">
+            - {{item.date | date: 'd/MM/y h'}}h - 
+          </span>
+          <span class="attempt-author">
+            {{item.author}}
+          </span>
+          <span class="attempt-language">
+            {{item.lang}}
+          </span>
+        </li> 
+      </ul>
+    </app-section-paragraph>
+  </ng-container>
 </div>

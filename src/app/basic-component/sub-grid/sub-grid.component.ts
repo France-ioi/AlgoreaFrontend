@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ContentChild } from '@angular/core';
 
 @Component({
   selector: 'app-sub-grid',
@@ -8,7 +8,9 @@ import { Component, OnInit, Input } from '@angular/core';
 export class SubGridComponent implements OnInit {
 
   @Input() data;
-  @Input() cols;
+
+  @ContentChild('bodyTemplate', { static: false }) bodyTemplate;
+  // @ContentChild('headerTemplate', { static: false }) headerTemplate;
 
   constructor() { }
 
