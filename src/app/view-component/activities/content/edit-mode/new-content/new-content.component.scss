@@ -1,0 +1,48 @@
+@import 'src/colors.scss';
+
+.new-content-container {
+  display: flex;
+  flex-wrap: wrap;
+
+  app-new-content-type {
+    display: block;
+    margin: 10px;
+    flex: 1 0 calc(25% - 20px);
+  }
+}
+
+@media screen and (min-width: 1220px) {
+  .new-content-container {
+    app-new-content-type {
+      max-width: calc(25% - 20px);
+    }
+  }
+}
+
+@media screen and (min-width: 1040px) and (max-width: 1220px) {
+  .new-content-container {
+    app-new-content-type {
+      flex: 1 0 calc(33.33% - 20px);
+      max-width: calc(33.33% - 20px);
+    }
+  }
+}
+
+@media screen and (min-width: 860px) and (max-width: 1040px) {
+  .new-content-container {
+    app-new-content-type {
+      flex: 1 0 calc(50% - 20px);
+      max-width: calc(50% - 20px);
+    }
+  }
+}
+
+@media screen and (max-width: 860px) {
+  .new-content-container {
+    app-new-content-type {
+      flex: 1 0 calc(100% - 20px);
+      max-width: calc(100% - 20px);
+    }
+  }
+}
+

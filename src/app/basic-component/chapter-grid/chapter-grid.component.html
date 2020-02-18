@@ -1,9 +1,19 @@
-<p-table [value]="data" [reorderableColumns]="orderable">
+<p-table [value]="data" [reorderableColumns]="lockState === 1">
   <ng-template pTemplate="body" let-rowData let-index="rowIndex">
-    <ng-container *ngIf="!orderable">
+    <ng-container *ngIf="lockState !== 1">
       <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="index">
-        <td>
+        <td *ngIf="lockState === 0">
           <i class="fa fa-sort"></i>
+        </td>
+        <td *ngIf="lockState === 2" pEditableColumn>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <input pInputText type="number" [(ngModel)]="rowData.order" />
+            </ng-template>
+            <ng-template pTemplate="output">
+              # {{ rowData.order }}
+            </ng-template>
+          </p-cellEditor>
         </td>
         <td>
           <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
@@ -64,10 +74,10 @@
         </td>
       </tr>
     </ng-container>
-    <ng-container *ngIf="orderable">
+    <ng-container *ngIf="lockState === 1">
       <tr [pReorderableRow]="index" [pSelectableRow]="rowData">
-        <td class="reorder-handle" pReorderableRowHandle="{{ orderable }}">
-          <i class="fa fa-sort" pReorderableRowHandle="{{ orderable }}"></i>
+        <td class="reorder-handle" pReorderableRowHandle="{{ lockState === 1 }}">
+          <i class="fa fa-sort" pReorderableRowHandle="{{ lockState === 1 }}"></i>
         </td>
         <td>
           <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
@@ -131,9 +141,38 @@
   </ng-template>
   <ng-template pTemplate="summary">
     <div class="summary-container">
-      <span class="lock-drag" (click)="toggleLock($event)">
-        <i *ngIf="!orderable" class="fa fa-lock"></i>
-        <i *ngIf="orderable" class="fa fa-lock-open"></i>
+      <span class="lock-drag" [matMenuTriggerFor]="lockMenu">
+        <i *ngIf="lockState === 0" class="fa fa-lock"></i>
+        <i *ngIf="lockState === 1" class="fa fa-lock-open"></i>
+        <i *ngIf="lockState === 2" class="fa fa-book"></i>
+        <mat-menu #lockMenu="matMenu" yPosition="above" class="chapter-menu lock-menu">
+          <div class="content">
+            <span class="content-title">
+              <span class="content-title-label">Default access</span>
+              <span class="content-title-icon">
+                <i class="fa fa-question"></i>
+              </span>
+            </span>
+            <span class="content-item" (click)="lockMenuSelected($event, 0)">
+              <span class="content-item-icon">
+                <i class="fa fa-lock"></i>
+              </span>
+              <span class="content-item-label">Locked</span>
+            </span>
+            <span class="content-item" (click)="lockMenuSelected($event, 1)">
+              <span class="content-item-icon">
+                <i class="fa fa-lock-open"></i>
+              </span>
+              <span class="content-item-label">Unlocked</span>
+            </span>
+            <span class="content-item" (click)="lockMenuSelected($event, 2)">
+              <span class="content-item-icon">
+                <i class="fa fa-book"></i>
+              </span>
+              <span class="content-item-label">Manual</span>
+            </span>
+          </div>
+        </mat-menu>
       </span>
       <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
       <span class="select-all">Select all</span>

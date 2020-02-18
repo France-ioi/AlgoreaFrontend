@@ -52,6 +52,16 @@
       border: 1px solid $nav-bk-color;
       cursor: pointer;
     }
+
+    .section-close {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      cursor: pointer;
+      color: $base-color;
+    }
   }
   
   .section-content {

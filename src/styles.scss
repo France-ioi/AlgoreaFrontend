@@ -79,6 +79,22 @@ body {
       }
     }
   }
+
+  &.lock-menu .mat-menu-content .content .content-item {
+
+    &-label {
+      flex: 1;
+      text-align: left;
+    }
+
+    &-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 10px;
+      width: 15px;
+    }
+  }
 }
 
 .mat-menu-panel.grid-td-menu {

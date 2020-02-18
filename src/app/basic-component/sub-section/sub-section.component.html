@@ -7,6 +7,9 @@
     <span class="section-help" *ngIf="tooltip" title="{{tooltip}}">
       <i class="fa fa-question"></i>
     </span>
+    <span class="section-close" *ngIf="close" (click)="onCloseEvent($event)">
+      <i class="fa fa-times"></i>
+    </span>
   </div>
   <div class="section-content">
     <ng-content></ng-content>

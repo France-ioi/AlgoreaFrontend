@@ -2,11 +2,17 @@
   <p-slider
     [(ngModel)]="ranges"
     [range]="true"
+    [min]="min"
+    [max]="max"
     styleClass="f-slider"
     (onChange)="handleChange($event)"
   ></p-slider>
   <div class="percent-values">
-    <span class="start-value" [style.left.%]="posStart">{{ ranges[0] }}%</span>
-    <span class="end-value" [style.left.%]="posEnd">{{ ranges[1] }}%</span>
+    <span class="start-value" [style.left.%]="posStart">{{ ranges[0] }}
+      <ng-container *ngIf="!showValue">%</ng-container>
+    </span>
+    <span class="end-value" [style.left.%]="posEnd">{{ ranges[1] }}
+      <ng-container *ngIf="!showValue">%</ng-container>
+    </span>
   </div>
 </div>

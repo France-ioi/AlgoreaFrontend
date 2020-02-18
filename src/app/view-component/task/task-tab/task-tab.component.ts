@@ -2,6 +2,7 @@ import { Component, OnInit, ElementRef, OnChanges, SimpleChanges, Input, Output,
 import { NodeService } from 'src/app/services/node-service.service';
 import { EditService } from 'src/app/services/edit.service';
 import { MenuItem } from 'primeng/api/menuitem';
+import { ViewportScroller } from '@angular/common';
 
 export enum AutoText {
   category = 'category',
@@ -686,6 +687,33 @@ export class TaskTabComponent implements OnInit, OnChanges {
     },
   ];
 
+  sessionFilters = [
+    {
+      ID: 1,
+      icon: 'fa fa-map-marker',
+      label: 'Paris',
+      type: 'standard',
+      mode: 'basic',
+      text: 'Location selection'
+    },
+    {
+      ID: 2,
+      icon: 'fa fa-user',
+      label: 'Cyril',
+      type: 'standard',
+      mode: 'basic',
+      text: 'User selection'
+    },
+    {
+      ID: 3,
+      icon: 'fa fa-calendar',
+      label: '24/03/2019',
+      type: 'standard',
+      mode: 'basic',
+      text: 'Date selection'
+    }
+  ];
+
   gridFilters = [
     {
       ID: 1,
@@ -743,10 +771,214 @@ export class TaskTabComponent implements OnInit, OnChanges {
     'Score range'
   ];
 
+  sessionData = [
+    {
+      title: 'Stage Lorem ipsum',
+      activity_name: 'Activity title',
+      chapter_picture: 'barca.jpeg',
+      text: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.',
+      author: 'Jean-Claude MONNET',
+      author_picture: '',
+      location: 'Paris',
+      date: new Date(),
+      spots: {
+        available: 200,
+        remaining: 153
+      }
+    },
+    {
+      title: 'Stage Lorem ipsum',
+      activity_name: 'Activity title',
+      chapter_picture: 'barca.jpeg',
+      text: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.',
+      author: 'Jean-Claude MONNET',
+      author_picture: '_messi.jpg',
+      location: 'Paris',
+      date: new Date(),
+      spots: {
+        available: 200,
+        remaining: 153
+      }
+    },
+    {
+      title: 'Stage Lorem ipsum',
+      activity_name: 'Activity title',
+      chapter_picture: 'barca.jpeg',
+      text: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.',
+      author: 'Jean-Claude MONNET',
+      author_picture: '_messi.jpg',
+      location: 'Paris',
+      date: new Date(),
+      spots: {
+        available: 200,
+        remaining: 153
+      }
+    }
+  ];
+
+  mosaicData = [
+    {
+      ID: 38,
+      title: "Activity with access code",
+      type: "leaf",
+      image: 'france.jpg',
+      ring: true,
+      state: "opened",
+      weight: 2,
+      hasKey: true,
+      progress: {
+        displayedScore: 30,
+        currentScore: 30
+      },
+      category: {
+        icon: "fa fa-book-open",
+        type: 4
+      }
+    },
+    {
+      ID: 39,
+      title: "Before you start notice",
+      type: "leaf",
+      image: 'barca.jpeg',
+      ring: true,
+      state: "opened",
+      weight: 2,
+      hasKey: true,
+      progress: {
+        displayedScore: 20,
+        currentScore: 30
+      },
+      category: {
+        icon: "fa fa-book-open",
+        type: 2
+      }
+    },
+    {
+      ID: 40,
+      title: "Activity for teams",
+      type: "leaf",
+      image: 'france.jpg',
+      ring: true,
+      state: "opened",
+      weight: 2,
+      hasKey: true,
+      progress: {
+        displayedScore: 90,
+        currentScore: 30
+      },
+      category: {
+        icon: "fa fa-book-open",
+        type: 1
+      }
+    },
+    {
+      ID: 41,
+      title: "Activity with attempts",
+      type: "leaf",
+      image: 'barca.jpeg',
+      ring: true,
+      state: "opened",
+      weight: -1,
+      hasKey: true,
+      progress: {
+        displayedScore: 10,
+        currentScore: 30
+      },
+      category: {
+        icon: "fa fa-book-open",
+        type: 4
+      }
+    },
+    {
+      ID: 42,
+      title: "Activity with attempts",
+      type: "leaf",
+      image: 'france.jpg',
+      ring: true,
+      state: "opened",
+      weight: 4,
+      hasKey: true,
+      progress: {
+        displayedScore: 10,
+        currentScore: 30
+      },
+      category: {
+        icon: "fa fa-book-open",
+        type: 3
+      }
+    },
+    {
+      ID: 43,
+      title: "Activity with attempts very very very very very very very very very very very very very very long text",
+      type: "leaf",
+      image: 'france.jpg',
+      ring: true,
+      state: "opened",
+      weight: 3,
+      hasKey: true,
+      progress: {
+        displayedScore: 10,
+        currentScore: 30
+      },
+      category: {
+        icon: "fa fa-book-open",
+        type: 2
+      }
+    }
+
+  ];
+
+  showNewContent = false;
+
+  contentTypes = [
+    {
+      image: 'france.jpg',
+      icon: 'fa fa-list',
+      title: 'Multiple choice',
+      desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.'
+    },
+    {
+      image: 'france.jpg',
+      icon: 'fa fa-play',
+      title: 'Video',
+      desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.'
+    },
+    {
+      image: 'france.jpg',
+      icon: 'fa fa-trophy',
+      title: 'Html presentation',
+      desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.'
+    },
+    {
+      image: 'france.jpg',
+      icon: 'fa fa-trophy',
+      title: 'Free answer',
+      desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.'
+    },
+    {
+      image: 'france.jpg',
+      icon: 'fa fa-trophy',
+      title: 'Programmation',
+      desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.'
+    },
+    {
+      image: 'france.jpg',
+      icon: 'fa fa-play',
+      title: 'Algorea subject',
+      desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.'
+    }
+  ];
+
+  contentValue = '';
+
+  scrolled = false;
+  added = false;
+
   constructor(
     private elementRef: ElementRef,
     private nodeService: NodeService,
-    private editService: EditService
+    private editService: EditService,
+    private vps: ViewportScroller
   ) { }
 
   refresh() {
@@ -881,6 +1113,29 @@ export class TaskTabComponent implements OnInit, OnChanges {
     this.gridFilters = this.gridFilters.filter(el => {
       return el.ID !== id;
     });
+  }
+
+  onAddContent(e, id) {
+    if (e.length > 0) {
+      this.showNewContent = true;
+      this.contentValue = e;
+      // setTimeout(() => {
+        if (!this.scrolled && !this.added) {
+          document.documentElement.scrollTop = window.pageYOffset + 50;
+          this.added = true;
+        }
+        this.scrolled = true;
+      // }, 0);      
+    } else {
+      this.showNewContent = false;
+      this.scrolled = false;
+      this.added = false;
+    }
+  }
+
+  onCancelEdit(e) {
+    this.showNewContent = false;
+    this.contentValue = '';
   }
 
 }

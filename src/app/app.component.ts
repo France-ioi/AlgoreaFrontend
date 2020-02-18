@@ -599,18 +599,130 @@ export class AppComponent {
       data: [
         {
           ID: 26,
-          title: "List graph caracteristics",
-          type: "leaf",
+          title: "Activities to test mosaic/list modes",
+          type: "folder",
           ring: true,
           state: "never opened",
           progress: {
             displayedScore: 0,
             currentScore: 0
           },
+          children: [
+            {
+              ID: 42,
+              title: "Activity with session list",
+              type: "leaf",
+              ring: true,
+              state: "opened",
+              hasKey: true,
+              progress: {
+                displayedScore: 30,
+                currentScore: 30
+              },
+              category: {
+                icon: "fa fa-book-open",
+                type: 1
+              }
+            },
+            {
+              ID: 43,
+              title: "Activity with mosaic view",
+              type: "leaf",
+              ring: true,
+              state: "opened",
+              hasKey: true,
+              progress: {
+                displayedScore: 20,
+                currentScore: 30
+              },
+              category: {
+                icon: "fa fa-book-open",
+                type: 1
+              }
+            }
+          ],
           category: {
             icon: "fa fa-book-open",
             type: 0
           }
+        },
+        {
+          ID: 37,
+          // tslint:disable-next-line: max-line-length
+          title: 'Activities to test headers',
+          type: "folder",
+          ring: true,
+          state: "opened",
+          progress: {
+            displayedScore: 20,
+            currentScore: 20
+          },
+          children: [
+            {
+              ID: 38,
+              title: "Activity with access code",
+              type: "leaf",
+              ring: true,
+              state: "opened",
+              hasKey: true,
+              progress: {
+                displayedScore: 30,
+                currentScore: 30
+              },
+              category: {
+                icon: "fa fa-book-open",
+                type: 1
+              }
+            },
+            {
+              ID: 39,
+              title: "Before you start notice",
+              type: "leaf",
+              ring: true,
+              state: "opened",
+              hasKey: true,
+              progress: {
+                displayedScore: 20,
+                currentScore: 30
+              },
+              category: {
+                icon: "fa fa-book-open",
+                type: 1
+              }
+            },
+            {
+              ID: 40,
+              title: "Activity for teams",
+              type: "leaf",
+              ring: true,
+              state: "opened",
+              hasKey: true,
+              progress: {
+                displayedScore: 90,
+                currentScore: 30
+              },
+              category: {
+                icon: "fa fa-book-open",
+                type: 1
+              }
+            },
+            {
+              ID: 41,
+              title: "Activity with attempts",
+              type: "leaf",
+              ring: true,
+              state: "opened",
+              hasKey: true,
+              progress: {
+                displayedScore: 10,
+                currentScore: 30
+              },
+              category: {
+                icon: "fa fa-book-open",
+                type: 1
+              }
+            }
+          ]
         },
         {
           ID: 27,
@@ -752,84 +864,6 @@ export class AppComponent {
                   }
                 }
               ]
-            }
-          ]
-        },
-        {
-          ID: 37,
-          // tslint:disable-next-line: max-line-length
-          title: 'Activities to test headers',
-          type: "folder",
-          ring: true,
-          state: "opened",
-          progress: {
-            displayedScore: 20,
-            currentScore: 20
-          },
-          children: [
-            {
-              ID: 38,
-              title: "Activity with access code",
-              type: "leaf",
-              ring: true,
-              state: "opened",
-              hasKey: true,
-              progress: {
-                displayedScore: 30,
-                currentScore: 30
-              },
-              category: {
-                icon: "fa fa-book-open",
-                type: 1
-              }
-            },
-            {
-              ID: 39,
-              title: "Before you start notice",
-              type: "leaf",
-              ring: true,
-              state: "opened",
-              hasKey: true,
-              progress: {
-                displayedScore: 20,
-                currentScore: 30
-              },
-              category: {
-                icon: "fa fa-book-open",
-                type: 1
-              }
-            },
-            {
-              ID: 40,
-              title: "Activity for teams",
-              type: "leaf",
-              ring: true,
-              state: "opened",
-              hasKey: true,
-              progress: {
-                displayedScore: 90,
-                currentScore: 30
-              },
-              category: {
-                icon: "fa fa-book-open",
-                type: 1
-              }
-            },
-            {
-              ID: 41,
-              title: "Activity with attempts",
-              type: "leaf",
-              ring: true,
-              state: "opened",
-              hasKey: true,
-              progress: {
-                displayedScore: 10,
-                currentScore: 30
-              },
-              category: {
-                icon: "fa fa-book-open",
-                type: 1
-              }
             }
           ]
         },

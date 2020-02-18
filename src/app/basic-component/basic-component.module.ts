@@ -66,6 +66,7 @@ import { DatePickerSimpleComponent } from './date-picker-simple/date-picker-simp
 import { ListboxComponent } from './listbox/listbox.component';
 import { SectionParagraphComponent } from './section-paragrah/section-paragraph.component';
 import { PickListComponent } from './pick-list/pick-list.component';
+import { DateTimePickerComponent } from './date-picker/date-time-picker/date-time-picker.component';
 
 @NgModule({
   declarations: [
@@ -110,7 +111,8 @@ import { PickListComponent } from './pick-list/pick-list.component';
     DatePickerSimpleComponent,
     ListboxComponent,
     SectionParagraphComponent,
-    PickListComponent
+    PickListComponent,
+    DateTimePickerComponent
   ],
   imports: [
     CommonModule,
@@ -180,7 +182,8 @@ import { PickListComponent } from './pick-list/pick-list.component';
     GridFilterBarComponent,
     DatePickerSimpleComponent,
     ListboxComponent,
-    SectionParagraphComponent
+    SectionParagraphComponent,
+    DateTimePickerComponent
   ],
   providers: [
     {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: false}}

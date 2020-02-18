@@ -24,6 +24,13 @@ import { PendingRequestViewComponent } from './requests-view/pending-request-vie
 import { GradingRequestViewComponent } from './requests-view/grading-request-view/grading-request-view.component';
 import { AccessCodeViewComponent } from './activities/headers/access-code-view/access-code-view.component';
 import { AttemptsViewComponent } from './activities/headers/attempts-view/attempts-view.component';
+import { SessionViewComponent } from './activities/content/sessions/session-view/session-view.component';
+import { SessionsComponent } from './activities/content/sessions/sessions.component';
+import { MosaicsComponent } from './activities/content/mosaics/mosaics.component';
+import { MosaicItemComponent } from './activities/content/mosaics/mosaic-item/mosaic-item.component';
+import { EditModeComponent } from './activities/settings/edit-mode/edit-mode.component';
+import { NewContentComponent } from './activities/content/edit-mode/new-content/new-content.component';
+import { NewContentTypeComponent } from './activities/content/edit-mode/new-content/new-content-type/new-content-type.component';
 
 
 @NgModule({
@@ -41,7 +48,14 @@ import { AttemptsViewComponent } from './activities/headers/attempts-view/attemp
     PendingRequestViewComponent,
     GradingRequestViewComponent,
     AccessCodeViewComponent,
-    AttemptsViewComponent
+    AttemptsViewComponent,
+    SessionViewComponent,
+    SessionsComponent,
+    MosaicsComponent,
+    MosaicItemComponent,
+    EditModeComponent,
+    NewContentComponent,
+    NewContentTypeComponent
   ],
   imports: [
     CommonModule,

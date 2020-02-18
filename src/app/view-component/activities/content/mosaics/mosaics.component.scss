@@ -1,0 +1,52 @@
+@import 'src/colors.scss';
+
+.mosaic-list-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  margin: 0 auto;
+
+  app-mosaic-item {
+    display: block;
+    margin: 10px;
+    flex: 0;
+    width: 200px;
+    // max-width: calc(25% - 20px);
+  }
+}
+
+@media screen and (min-width: 1760px) {
+  .mosaic-list-container {
+    width: 1320px;
+  }
+}
+
+@media screen and (min-width: 1540px) and (max-width: 1760px) {
+  .mosaic-list-container {
+    width: 1100px;
+  }
+}
+
+@media screen and (min-width: 1320px) and (max-width: 1540px) {
+  .mosaic-list-container {
+    width: 880px;
+  }
+}
+
+@media screen and (min-width: 1100px) and (max-width: 1320px) {
+  .mosaic-list-container {
+    width: 660px;
+  }
+}
+
+@media screen and (min-width: 880px) and (max-width: 1100px) {
+  .mosaic-list-container {
+    width: 440px;
+  }
+}
+
+@media screen and (min-width: 660px) and (max-width: 880px) {
+  .mosaic-list-container {
+    width: 220px;
+  }
+}

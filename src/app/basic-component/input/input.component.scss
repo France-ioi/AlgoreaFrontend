@@ -8,6 +8,7 @@
 
   &.large {
     height: 45px;
+
     input {
       font-size: 32px;
       font-weight: 300;
@@ -62,6 +63,12 @@
       font-style: italic;
       color: $base-text-color;
     }
+  }
+    
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
   }
 
   .input-button {
