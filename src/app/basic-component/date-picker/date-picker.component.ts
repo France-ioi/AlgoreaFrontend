@@ -8,6 +8,8 @@ import { Component, OnInit, Input } from '@angular/core';
 export class DatePickerComponent implements OnInit {
 
   @Input() date;
+  @Input() dateTimeShow = false;
+  @Input() placeholder = "XXXX/XX/XX";
 
   constructor() { }
 

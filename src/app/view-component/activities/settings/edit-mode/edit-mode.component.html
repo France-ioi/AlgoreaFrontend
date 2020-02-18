@@ -1,0 +1,157 @@
+
+<app-section icon="fa fa-cogs" label="Global parameters">
+  <div class="form-item-view">
+    <span class="form-item-label">Type</span>
+    <div class="form-item-control">
+      <app-dropdown [items]="globalTypes" placeholder="Select an exercise type ..."></app-dropdown>
+    </div>
+  </div>
+  <div class="form-item-view">
+    <span class="form-item-label">Url</span>
+    <div class="form-item-control">
+      <app-input placeholder="http://www..."></app-input>
+    </div>
+  </div>
+  <div class="form-item-view">
+    <span class="form-item-label">Level on the website</span>
+    <div class="form-item-control">
+      <app-input placeholder=" " inputType="number"></app-input>
+    </div>
+  </div>
+  <div class="form-item-view">
+    <span class="form-item-label">Uses API</span>
+    <div class="form-item-control">
+      <app-switch mode="white"></app-switch>
+    </div>
+  </div>
+  <div class="form-item-view">
+    <span class="form-item-label">TextID</span>
+    <div class="form-item-control">
+      <app-input placeholder=" "></app-input>
+    </div>
+  </div>
+</app-section>
+<app-section icon="fa fa-desktop" label="Display parameters">
+  <div class="form-item-view">
+    <span class="form-item-label">Default language</span>
+    <div class="form-item-control">
+      <app-dropdown [items]="displayLangList" placeholder="Select a language ..."></app-dropdown>
+    </div>
+  </div>
+  <div class="form-item-view">
+    <span class="form-item-label">Display header</span>
+    <div class="form-item-control">
+      <app-switch mode="white"></app-switch>
+    </div>
+  </div>
+  <div class="form-item-view">
+    <span class="form-item-label">Full screen mode</span>
+    <div class="form-item-control">
+      <app-selection [items]="displayFullScreen"></app-selection>
+    </div>
+  </div>
+  <div class="form-item-view">
+    <span class="form-item-label">Hide authors</span>
+    <div class="form-item-control">
+      <app-switch mode="white"></app-switch>
+    </div>
+  </div>
+  <div class="form-item-view">
+    <span class="form-item-label">Display group code header</span>
+    <div class="form-item-control">
+      <app-switch mode="white"></app-switch>
+    </div>
+  </div>
+</app-section>
+<app-section icon="fa fa-users" label="Participation">
+  <div class="form-item-view">
+    <span class="form-item-label">Duration</span>
+    <div class="form-item-control" [ngClass]="{'another-input': showDurationInput}">
+      <app-switch mode="white" [checked]="showDurationInput" (onChange)="onDurationChange($event)"></app-switch>
+      <app-date-time-picker *ngIf="showDurationInput" placeholder="" style="margin-left: 20px;"></app-date-time-picker>
+    </div>
+  </div>
+  <div class="form-item-view">
+    <span class="form-item-label">Number of attempts</span>
+    <div class="form-item-control" [ngClass]="{'another-input': selectedAttemptId === 1}">
+      <app-selection [items]="partiAttempts" (onChange)="onNumberOfAttemptsChange($event)" class="first-child stretch"></app-selection>
+      <app-input *ngIf="selectedAttemptId === 1" placeholder="Number of attempts..." inputType="number"></app-input>
+    </div>
+  </div>
+  <div class="form-item-view">
+    <span class="form-item-label">Disable the score</span>
+    <div class="form-item-control">
+      <app-switch mode="white"></app-switch>
+    </div>
+  </div>
+</app-section>
+<app-section icon="fa fa-users" label="Teams">
+  <div class="form-item-view">
+    <span class="form-item-label">Participation as teams</span>
+    <div class="form-item-control">
+      <app-selection [items]="teamsList" (onChange)="onParticipateAsTeamsChange($event)"></app-selection>
+    </div>
+  </div>
+  <div *ngIf="teamParticipateOption === 2" class="form-item-view">
+    <span class="form-item-label">Restrict team size</span>
+    <div class="form-item-control">
+      <app-switch mode="white" (onChange)="onRestrictTeamSize($event)"></app-switch>
+    </div>
+  </div>
+  <div *ngIf="teamParticipateOption === 2 && restrictTeamSize" class="form-item-view">
+    <span class="form-item-label">Team Size</span>
+    <div class="form-item-control">
+      <app-slider [min]="0" [max]="10" [ranges]="teamRange" [showValue]="true"></app-slider>
+    </div>
+  </div>
+  <div *ngIf="teamParticipateOption === 2" class="form-item-view">
+    <span class="form-item-label">Requires qualification</span>
+    <div class="form-item-control">
+      <app-switch mode="white" (onChange)="onQualificationChange($event)"></app-switch>
+    </div>
+  </div>
+  <div *ngIf="teamParticipateOption === 2 && qualification" class="form-item-view">
+    <span class="form-item-label">Qualification group</span>
+    <div class="form-item-control">
+      <app-activity-picker [trees]="trees"></app-activity-picker>
+    </div>
+  </div>
+  <div *ngIf="teamParticipateOption === 2 && qualification" class="form-item-view">
+    <span class="form-item-label">Percentage of qualified members</span>
+    <div class="form-item-control">
+      <app-slider [ranges]="memberRange" [showValue]="true"></app-slider>
+    </div>
+  </div>
+</app-section>
+<app-section icon="fa fa-calendar" label="Sessions">
+  <div class="form-item-view">
+    <span class="form-item-label">Sessions must be attached to a school</span>
+    <div class="form-item-control">
+      <app-selection [items]="sessionsList"></app-selection>
+    </div>
+  </div>
+  <div class="form-item-view">
+    <span class="form-item-label">Sessions must specify a grade</span>
+    <div class="form-item-control">
+      <app-selection [items]="sessionsList"></app-selection>
+    </div>
+  </div>
+  <div class="form-item-view">
+    <span class="form-item-label">Restrict opening times for sessions</span>
+    <div class="form-item-control">
+      <app-switch mode="white" [checked]="restricted" (onChange)="onRestrictChange($event)"></app-switch>
+    </div>
+  </div>
+  <div *ngIf="restricted" class="form-item-view">
+    <span class="form-item-label">From </span>
+    <div class="form-item-control">
+      <app-date-picker [dateTimeShow]="true" placeholder="XXXX/XX/XX XX:XX"></app-date-picker>
+    </div>
+  </div>
+  <div *ngIf="restricted" class="form-item-view">
+    <span class="form-item-label">To </span>
+    <div class="form-item-control">
+      <app-date-picker [dateTimeShow]="true" placeholder="XXXX/XX/XX XX:XX"></app-date-picker>
+    </div>
+  </div>
+</app-section>

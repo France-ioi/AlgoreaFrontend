@@ -11,7 +11,7 @@ export class ChapterGridComponent implements OnInit {
   @Input() cols;
   @Input() scoreWeight;
 
-  orderable = true;
+  lockState = 1;
   icons = [
     'fa fa-lock',
     'fa fa-lock',
@@ -21,10 +21,9 @@ export class ChapterGridComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-  }
-
-  toggleLock(e) {
-    this.orderable = !this.orderable;
+    this.data.forEach((itm, idx) => {
+      itm.order = idx;
+    });
   }
 
   menuSelected(e, idx, which) {
@@ -39,6 +38,10 @@ export class ChapterGridComponent implements OnInit {
         this.icons[idx] = 'fa fa-eye';
         break;
     }
+  }
+
+  lockMenuSelected(e, which) {
+    this.lockState = which;
   }
 
 }

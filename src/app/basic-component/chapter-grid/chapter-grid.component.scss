@@ -3,7 +3,7 @@
 :host ::ng-deep .ui-table {
 
   .ui-table-tbody > tr > td.ui-editing-cell p-celleditor > * {
-    width: 40px;
+    width: 30px;
   }
 
   .ui-chkbox {
@@ -67,6 +67,8 @@
     &.ui-editable-column {
       display: flex;
       align-items: center;
+      padding-left: 5px;
+      padding-right: 5px;
 
       input:focus {
         outline: none;

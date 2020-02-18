@@ -1,0 +1,26 @@
+@import 'src/colors.scss';
+
+.host-session {
+  padding-top: 20px;
+  padding-bottom: 20px;
+  background-color: #ECF3FC;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  margin-left: -70px;
+  margin-top: 50px;
+
+  .button-wrapper {
+    width: 235px;
+  }
+
+  .tri-tag {
+    position: absolute;
+    top: -17px;
+    left: 25px;
+    border-left: 11px solid transparent;
+    border-right: 11px solid transparent;
+    border-bottom: 17px solid #ECF3FC;
+  }
+}

@@ -1,0 +1,28 @@
+<div class="mosaic-item-container">
+  <div class="mosaic-item-title">
+    <div class="truncated-title">
+      {{ data.title }}
+    </div>
+  </div>
+  <div class="mosaic-item-image">
+    <div class="image" [ngStyle]="{'background-image': 'url(assets/images/' + data.image + ')'}"></div>
+    <span class="mosaic-lock-key">
+      <i *ngIf="data.key" class="fa fa-lock"></i>
+      <i *ngIf="!data.key" class="fa fa-key"></i>
+    </span>
+  </div>
+  <div class="mosaic-bottom-row">
+    <app-state-widget
+      [icon]="data.category.icon"
+      [type]="data.category.type"
+    ></app-state-widget>
+    <span *ngIf="data.weight >= 0" class="weight-view">
+      {{ data.weight }} x
+    </span>
+    <app-score-ring
+      [displayedScore]="data.progress.displayedScore"
+      [currentScore]="data.progress.currentScore"
+      diameter="24"
+    ></app-score-ring>
+  </div>
+</div>

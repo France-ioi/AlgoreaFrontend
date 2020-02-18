@@ -1,0 +1,44 @@
+<div class="session-view-container">
+  <div class="left-view">
+    <div class="session-title">{{data.title}}</div>
+    <div class="activity-name">{{data.activity_name}}</div>
+    <div class="left-bottom-view">
+      <div class="chapter-picture">
+        <img src="assets/images/{{data.chapter_picture}}" width="150px">
+      </div>
+      <div class="author-info-view">
+        <div class="author-info-view-text">{{data.text}}</div>
+        <div class="author-info">
+          <span class="author-name">by {{data.author}}</span>
+          <span class="author-picture">
+            <img *ngIf="data.author_picture" src="assets/images/{{data.author_picture}}" width="30px" height="30px">
+            <img *ngIf="!data.author_picture" src="assets/images/Male.svg" width="30px" height="30px">
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="right-view">
+    <div class="right-item-view">
+      <span class="right-item-icon">
+        <i class="fa fa-map-marker-alt"></i>
+      </span>
+      <span class="right-item-info">{{data.location}}</span>
+    </div>
+    <div class="right-item-view">
+      <span class="right-item-icon">
+        <i class="fa fa-calendar"></i>
+      </span>
+      <span class="right-item-info">{{data.date | date: 'd/MM/y'}}</span>
+    </div>
+    <div class="right-item-view last">
+      <span class="right-item-icon">
+        <i class="fa fa-users"></i>
+      </span>
+      <span class="right-item-info"><b style="color: #4A90E2">{{data.spots.remaining}}</b> / {{data.spots.available}}</span>
+    </div>
+    <div class="right-item-details">
+      <app-button icon="fa fa-search-plus" label="Details" class="ui-button-rounded"></app-button>
+    </div>
+  </div>
+</div>

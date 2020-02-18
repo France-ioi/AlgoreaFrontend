@@ -161,6 +161,17 @@
             </ul>
           </app-sub-section>
         </div>
+        <ng-container *ngIf="data.ID === 42">
+          <app-sessions
+            *ngIf="activityORSkill"
+            [sessions]="sessionData"
+            [filters]="sessionFilters"
+            [filterTypes]="filterChoice"
+          ></app-sessions>
+        </ng-container>
+        <ng-container *ngIf="data.ID === 43">
+          <app-mosaics [data]="mosaicData"></app-mosaics>
+        </ng-container>
       </ng-template>
     </mat-tab>
     <mat-tab>
@@ -189,7 +200,12 @@
               ></app-selection>
             </div>
             <app-grid-filter-bar>
-              <app-select [items]="filterChoice" [opened]="false" width="120" style="margin: 5px;"></app-select>
+              <app-select
+                [items]="filterChoice"
+                [opened]="false"
+                width="120"
+                style="margin: 5px;"
+              ></app-select>
               <ng-container *ngFor="let filter of gridFilters">
                 <app-grid-filter
                   [icon]="filter.icon"
@@ -708,8 +724,7 @@
         <i class="fa fa-comment"></i>
         Discussions
       </ng-template>
-      <ng-template matTabContent>
-      </ng-template>
+      <ng-template matTabContent> </ng-template>
     </mat-tab>
     <mat-tab>
       <ng-template mat-tab-label>
@@ -766,22 +781,25 @@
             ></app-chapter-grid>
             <span class="tri-tag"></span>
           </div>
-          <app-sub-section icon="fa fa-sign-in-alt" label="Add a content">
+          <app-sub-section icon="fa fa-sign-in-alt" label="Add a content" [close]="true" (onClose)="onCancelEdit($event)">
             <div class="add-content-wrapper">
-              <app-input placeholder="New content ..."></app-input>
+              <app-input placeholder="New content ..." [value]="contentValue" (onChange)="onAddContent($event, 'contents')"></app-input>
               <span class="label">or</span>
               <app-activity-picker [trees]="trees"></app-activity-picker>
             </div>
+            <app-new-content id="contents" *ngIf="showNewContent" [data]="contentTypes"></app-new-content>
           </app-sub-section>
         </app-section>
       </ng-template>
     </mat-tab>
     <mat-tab>
       <ng-template mat-tab-label>
-        <i class="fa fa-chart-line"></i>
-        Advanced parameters
+        <i class="fa fa-cog"></i>
+        Settings
       </ng-template>
-      <ng-template matTabContent> </ng-template>
+      <ng-template matTabContent>
+        <app-edit-mode [trees]="trees"></app-edit-mode>
+      </ng-template>
     </mat-tab>
   </ng-container>
 </mat-tab-group>

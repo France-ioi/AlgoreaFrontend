@@ -53,9 +53,7 @@
         margin-bottom: 32px;
 
         app-selection:first-child {
-          margin-left: 10px;
-          margin-right: 10px;
-          margin-bottom: 10px;
+          margin: 10px;
         }
       }
 
@@ -189,6 +187,10 @@
           width: 140px;
         }
       }
+    }
+
+    .spon-req {
+      margin-top: 10px;
     }
 
     .import-csv {
