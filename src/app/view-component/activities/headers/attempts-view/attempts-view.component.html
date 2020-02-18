@@ -1,0 +1,45 @@
+<app-section-paragraph
+  icon="fa fa-users"
+  label="You have {{ attempts.length }} attempts"
+  [collapsible]="true"
+  [data]="selectedAttempt"
+>
+  <ng-template #headerTemplate>
+    <div style="width: 180px;">
+      <app-button
+        icon="fa fa-flag-checkered"
+        label="New attempt"
+        class="ui-button-rounded ui-fit-parent"
+        (onClick)="newAttempt($event)"
+      ></app-button>
+    </div>
+  </ng-template>
+  <ul class="attempts-container">
+    <li
+      *ngFor="let item of attempts"
+      class="attempt-item"
+      [ngClass]="{ active: item.ID === selectedAttemptID }"
+      (click)="selectAttempt(item.ID)"
+    >
+      <app-score-ring
+        [displayedScore]="item.progress.displayedScore"
+        [currentScore]="item.progress.currentScore"
+        [icons]="item.progress.isStarted === false ? 'flag-checkered' : ''"
+        diameter="24"
+        [isDark]="item.ID === selectedAttemptID"
+      ></app-score-ring>
+      <span class="attempt-number">
+        <b>Attempt n &#176; {{ item.number }}</b>
+      </span>
+      <span class="attempt-date">
+        - {{ item.date | date: "d/MM/y h" }}h -
+      </span>
+      <span class="attempt-author">
+        {{ item.author }}
+      </span>
+      <span class="attempt-language">
+        {{ item.lang }}
+      </span>
+    </li>
+  </ul>
+</app-section-paragraph>

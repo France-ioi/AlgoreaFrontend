@@ -6,7 +6,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
-import { NgDragDropModule } from 'ng-drag-drop';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { AngularResizedEventModule } from 'angular-resize-event';
 
@@ -22,10 +21,9 @@ import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
 import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
 
-import { PickListComponent } from './pick-list/pick-list.component';
 import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
-import { NavigationTabsComponent } from './navigation-tabs/navigation-tabs.component';
-import { SkillActivityTabsComponent } from './skill-activity-tabs/skill-activity-tabs.component';
+import { NavigationTabsComponent } from './left-nav/navigation-tabs/navigation-tabs.component';
+import { SkillActivityTabsComponent } from './left-nav/skill-activity-tabs/skill-activity-tabs.component';
 import { LeftNavComponent } from './left-nav/left-nav.component';
 import { TopNavComponent } from './top-nav/top-nav.component';
 
@@ -36,7 +34,6 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 @NgModule({
   declarations: [
     AppComponent,
-    PickListComponent,
     BreadcrumbComponent,
     NavigationTabsComponent,
     SkillActivityTabsComponent,
@@ -48,7 +45,6 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     BrowserAnimationsModule,
     AppRoutingModule,
     HttpClientModule,
-    NgDragDropModule.forRoot(),
     FontAwesomeModule,
     BreadcrumbModule,
     AccordionModule,
