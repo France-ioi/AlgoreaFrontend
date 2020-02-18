@@ -9,17 +9,21 @@ import { BasicComponentModule } from '../basic-component/basic-component.module'
 import { TieredMenuModule } from 'primeng/tieredmenu';
 import { TooltipModule } from 'primeng/tooltip';
 
-import { TaskTabComponent } from './task-tab/task-tab.component';
+import { TaskTabComponent } from './task/task-tab/task-tab.component';
 import { TaskComponent } from './task/task.component';
-import { TaskHeaderComponent } from './task-header/task-header.component';
+import { TaskHeaderComponent } from './task/task-header/task-header.component';
 import { YourselfComponent } from './yourself/yourself.component';
-import { YourselfTabComponent } from './yourself-tab/yourself-tab.component';
-import { YourselfHeaderComponent } from './yourself-header/yourself-header.component';
+import { YourselfTabComponent } from './yourself/yourself-tab/yourself-tab.component';
+import { YourselfHeaderComponent } from './yourself/yourself-header/yourself-header.component';
 import { GroupComponent } from './group/group.component';
-import { GroupHeaderComponent } from './group-header/group-header.component';
-import { GroupTabComponent } from './group-tab/group-tab.component';
+import { GroupHeaderComponent } from './group/group-header/group-header.component';
+import { GroupTabComponent } from './group/group-tab/group-tab.component';
 import { MatMenuModule } from '@angular/material';
 import { HomePageComponent } from './home-page/home-page.component';
+import { PendingRequestViewComponent } from './requests-view/pending-request-view/pending-request-view.component';
+import { GradingRequestViewComponent } from './requests-view/grading-request-view/grading-request-view.component';
+import { AccessCodeViewComponent } from './activities/headers/access-code-view/access-code-view.component';
+import { AttemptsViewComponent } from './activities/headers/attempts-view/attempts-view.component';
 
 
 @NgModule({
@@ -33,7 +37,11 @@ import { HomePageComponent } from './home-page/home-page.component';
     GroupComponent,
     GroupHeaderComponent,
     GroupTabComponent,
-    HomePageComponent
+    HomePageComponent,
+    PendingRequestViewComponent,
+    GradingRequestViewComponent,
+    AccessCodeViewComponent,
+    AttemptsViewComponent
   ],
   imports: [
     CommonModule,

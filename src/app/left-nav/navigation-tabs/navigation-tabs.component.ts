@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, OnChanges, SimpleChanges, ViewChild, NgZone, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
-import { EditService } from '../services/edit.service';
+import { EditService } from '../../services/edit.service';
 
 @Component({
   selector: 'app-navigation-tabs',

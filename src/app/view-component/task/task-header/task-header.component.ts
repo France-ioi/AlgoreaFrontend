@@ -114,8 +114,9 @@ export class TaskHeaderComponent implements OnInit {
       ID: 3,
       number: 3,
       progress: {
-        displayedScore: 75,
-        currentScore: 75
+        displayedScore: 0,
+        currentScore: 0,
+        isStarted: false
       },
       date: new Date(),
       author: 'Mathieu',
@@ -167,10 +168,6 @@ export class TaskHeaderComponent implements OnInit {
     }
   ];
 
-  selectedAttempt = {};
-
-  selectedAttemptID = -1;
-
   constructor() { }
 
   ngOnInit() {
@@ -179,31 +176,6 @@ export class TaskHeaderComponent implements OnInit {
   onCoordEvent(e) {
     console.log(e);
     this.isCoordinator = !this.isCoordinator;
-  }
-
-  selectAttempt(id) {
-    this.selectedAttemptID = id;
-    for (const attempt of this.attempts) {
-      if (attempt.ID === id) {
-        this.selectedAttempt = attempt;
-        break;
-      }
-    }
-  }
-
-  newAttempt(e) {
-    const newID = this.attempts[this.attempts.length - 1].ID + 1;
-    this.attempts.push({
-      ID: newID,
-      number: newID,
-      progress: {
-        displayedScore: 75,
-        currentScore: 75
-      },
-      date: new Date(),
-      author: 'Mathieu',
-      lang: 'Python'
-    });
   }
 
 }

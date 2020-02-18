@@ -91,15 +91,6 @@ export class GroupHeaderComponent implements OnInit, OnChanges {
     }
   ];
 
-  groupSwitch = [
-    {
-      label: 'This group only'
-    },
-    {
-      label: 'All subgroups'
-    }
-  ];
-
   constructor() { }
 
   ngOnInit() {

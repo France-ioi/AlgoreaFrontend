@@ -1,5 +1,5 @@
 import { Component, HostListener } from "@angular/core";
-import { PickListType, PickListColor } from "./pick-list/pick-list.component";
+import { PickListType, PickListColor } from "./basic-component/pick-list/pick-list.component";
 import { ProgressType } from "./basic-component/skill-progress/skill-progress.component";
 import { NodeService } from "./services/node-service.service";
 import * as _ from "lodash";

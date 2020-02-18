@@ -1,0 +1,30 @@
+<app-section-paragraph
+  icon="fa fa-users"
+  label="You have 6 grading requests"
+  [collapsible]="true"
+>
+  <ng-template #headerTemplate>
+    <div style="width: 160px;">
+      <app-button
+        icon="fa fa-glasses"
+        label="view submissions"
+        class="ui-button-rounded ui-fit-parent ui-medium-button"
+      ></app-button>
+    </div>
+  </ng-template>
+  <ul class="grading-request-container">
+    <li *ngFor="let item of data" class="request-item">
+      <span class="request-item-label">
+        <b>{{ item.user }}</b> is waiting for a grading on
+        <b>{{ item.subject }}</b>
+      </span>
+      <div class="request-item-view">
+        <app-button
+          icon="fa fa-glasses"
+          label="view"
+          class="ui-button-rounded ui-fit-parent ui-small-button"
+        ></app-button>
+      </div>
+    </li>
+  </ul>
+</app-section-paragraph>

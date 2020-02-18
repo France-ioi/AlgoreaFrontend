@@ -74,6 +74,7 @@ export class ScoreRingComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     // console.log(changes);
     // console.log(this.displayPathRef);
+
     this._displayPath = this._pathFromScore(this.displayedScore);
     this._currentPath = this._pathFromScore(this.currentScore);
     if (this.displayedScore === 100) {
@@ -89,19 +90,19 @@ export class ScoreRingComponent implements OnInit, OnChanges {
       this._textFill = ScoreRingColor.defaultText;
     }
 
-    if (this.isValidated) {
-      this._iconPath = 'check';
-      this._iconFill = ScoreRingColor.success;
-    } else if (this.displayedScore === 0) {
-      this._iconPath = 'times';
-      this._iconFill = ScoreRingColor.initial;
-    } else if (this.icons) {
+    if (this.icons) {
       if (this.isDark) {
         this._iconFill = 'white';
       } else {
         this._iconFill = ScoreRingColor.defaultText;
       }
       this._iconPath = this.icons;
+    } else if (this.isValidated) {
+      this._iconPath = 'check';
+      this._iconFill = ScoreRingColor.success;
+    } else if (this.displayedScore === 0) {
+      this._iconPath = 'times';
+      this._iconFill = ScoreRingColor.initial;
     } else {
       this._iconPath = '';
     }

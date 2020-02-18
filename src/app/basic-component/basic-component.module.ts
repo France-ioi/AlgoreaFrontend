@@ -21,6 +21,7 @@ import { MatDialogModule, MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/d
 import { MatNativeDateModule, MatRippleModule } from '@angular/material/core';
 
 import { ClickOutsideModule } from 'ng-click-outside';
+import { NgDragDropModule } from 'ng-drag-drop';
 
 import { ButtonComponent } from './button/button.component';
 import { SectionComponent } from './section/section.component';
@@ -64,6 +65,7 @@ import { GridFilterBarComponent } from './grid/grid-filter-bar/grid-filter-bar.c
 import { DatePickerSimpleComponent } from './date-picker-simple/date-picker-simple.component';
 import { ListboxComponent } from './listbox/listbox.component';
 import { SectionParagraphComponent } from './section-paragrah/section-paragraph.component';
+import { PickListComponent } from './pick-list/pick-list.component';
 
 @NgModule({
   declarations: [
@@ -107,7 +109,8 @@ import { SectionParagraphComponent } from './section-paragrah/section-paragraph.
     GridFilterBarComponent,
     DatePickerSimpleComponent,
     ListboxComponent,
-    SectionParagraphComponent
+    SectionParagraphComponent,
+    PickListComponent
   ],
   imports: [
     CommonModule,
@@ -132,6 +135,7 @@ import { SectionParagraphComponent } from './section-paragrah/section-paragraph.
     MatDialogModule,
     MatMenuModule,
 
+    NgDragDropModule.forRoot(),
     ClickOutsideModule
   ],
   exports: [

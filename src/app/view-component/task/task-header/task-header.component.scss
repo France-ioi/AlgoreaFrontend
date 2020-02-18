@@ -223,46 +223,4 @@
       }
     }
   }
-
-  .attempts-container {
-    list-style: none;
-    padding-left: 0;
-    display: flex;
-    flex-direction: column;
-    margin: -15px -20px -15px -70px;
-
-    .attempt-item {
-      display: flex;
-      align-items: center;
-      padding: 5px;
-      color: $base-text-color;
-      height: 40px;
-      border-top: 1px solid $section-border-color;
-      padding-left: 20px;
-      padding-right: 20px;
-      font-size: 12px;
-      cursor: pointer;
-
-      app-score-ring {
-        margin-right: 15px;
-      }
-
-      .attempt-number {
-        color: $base-color;
-      }
-
-      .attempt-author {
-        flex: 1;
-      }
-
-      &.active {
-        background-color: $base-color;
-        color: white;
-
-        .attempt-number {
-          color: white;
-        }
-      }
-    }
-  }
 }
