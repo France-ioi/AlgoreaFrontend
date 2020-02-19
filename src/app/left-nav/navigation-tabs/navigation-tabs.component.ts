@@ -18,6 +18,8 @@ export class NavigationTabsComponent implements OnInit, OnChanges {
   @Output() activitySelect = new EventEmitter<any>();
   @Output() yourselfSelect = new EventEmitter<any>();
   @Output() groupSelect = new EventEmitter<any>();
+  @Output() joinGroupSelect = new EventEmitter<any>();
+  @Output() manageGroupSelect = new EventEmitter<any>();
 
   currentUser;
   groupShow = true;
@@ -89,8 +91,10 @@ export class NavigationTabsComponent implements OnInit, OnChanges {
   onTabOpen(e) {
     if (e.index === 0) {
       this.manageShow = true;
+      this.manageGroupSelect.emit(e);
     } else {
       this.joinShow = true;
+      this.joinGroupSelect.emit(e);
     }
     this.selectedGroup = e.index + 1;
   }
@@ -98,8 +102,10 @@ export class NavigationTabsComponent implements OnInit, OnChanges {
   onTabClose(e) {
     if (e.index === 0) {
       this.manageShow = false;
+      this.manageGroupSelect.emit(e);
     } else {
       this.joinShow = false;
+      this.joinGroupSelect.emit(e);
     }
     this.selectedGroup = e.index + 1;
   }

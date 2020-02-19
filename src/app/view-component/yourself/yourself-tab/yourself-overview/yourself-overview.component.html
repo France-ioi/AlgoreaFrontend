@@ -1,0 +1,68 @@
+<app-section icon="fa fa-users" label="Presentation">
+  <p>
+    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+  </p>
+</app-section>
+<app-section icon="fa fa-medal" label="Awards">
+  <ul class="award-list">
+    <li *ngFor="let award of awardList">
+      <span class="medal-icon" [ngClass]="award.type">
+        <i class="fa fa-medal"></i>
+      </span>
+      <span class="medal-title">
+        IOI {{award.year}}, <span style="text-transform: capitalize;">{{award.type}}</span> medal
+      </span>
+    </li>
+  </ul>
+</app-section>
+<app-section icon="fa fa-puzzle-piece" label="Recently solved tasks">
+  <app-grid
+    [selectedColumns]="columns"
+    [columns]="columns"
+    [data]="griddata"
+    sortMode="single"
+    scrollWhenExpanded="true"
+    [groupInfo]="panels"
+    (expandWholeWidth)="onExpandWidth($event)"
+  >
+    <ng-template #colgroupTemplate let-columns>
+      <colgroup>
+        <col style="width: 40px;"/>
+        <col style="width: 100%;"/>
+        <col style="width: 100%;"/>
+        <col style="width: 110px;"/>
+        <col style="width: 110px;"/>
+      </colgroup>
+    </ng-template>
+    <ng-template #headerTemplate let-columns>
+      <tr>
+        <th style="width: 40px;"></th>
+        <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+          {{ col.header }}
+          <p-sortIcon [field]="col.field"></p-sortIcon>
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template
+      #bodyTemplate
+      let-rowData
+      let-columns="columns"
+      let-rowIndex="rowIndex"
+    >
+      <tr >
+        <td style="width: 40px;"></td>
+        <ng-container *ngFor="let col of columns">
+          <td *ngIf="col.field === 'date'">
+            {{rowData[col.field] | date:'d/MM/y'}}
+          </td>
+          <td *ngIf="col.field === 'task'">
+            {{rowIndex+1}}) {{ rowData[col.field] }}
+          </td>
+          <td *ngIf="col.field === 'grade' || col.field === 'chapter'">
+            {{rowData[col.field]}}
+          </td>
+        </ng-container>
+      </tr>
+    </ng-template>
+  </app-grid>
+</app-section>

@@ -781,7 +781,7 @@
             ></app-chapter-grid>
             <span class="tri-tag"></span>
           </div>
-          <app-sub-section icon="fa fa-sign-in-alt" label="Add a content" [close]="true" (onClose)="onCancelEdit($event)">
+          <app-sub-section icon="fa fa-sign-in-alt" label="Add a content" [close]="showNewContent" (onClose)="onCancelEdit($event)">
             <div class="add-content-wrapper">
               <app-input placeholder="New content ..." [value]="contentValue" (onChange)="onAddContent($event, 'contents')"></app-input>
               <span class="label">or</span>

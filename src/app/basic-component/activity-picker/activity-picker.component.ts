@@ -9,7 +9,7 @@ import { MatDialogComponent } from '../mat-dialog/mat-dialog.component';
 })
 export class ActivityPickerComponent implements OnInit {
 
-  selected = 'Select an activity';
+  @Input() selected = 'Select an activity';
 
   @Input() trees;
 

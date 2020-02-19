@@ -12,6 +12,12 @@ $danger-color: #ff001f;
     width: 100%;
   }
 
+  &.no-uppercase {
+    .ui-button-text {
+      text-transform: unset;
+    }
+  }
+
   &.ui-small-button {
     font-size: 10px;
   }

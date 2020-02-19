@@ -40,17 +40,30 @@ body {
 
       .content-item {
         display: flex;
+        align-items: center;
         font-size: 12px;
-        margin: 5px;
+        margin: 2px;
+        padding: 5px;
         cursor: pointer;
+        border-bottom: 1px solid #4281CA;
 
         &-label {
+          display: flex;
           flex: 1;
           text-align: right;
+          line-height: 15px;
+          height: 15px;
         }
 
         &-icon {
           margin-left: 10px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        &:last-child {
+          border-bottom: none;
         }
       }
 

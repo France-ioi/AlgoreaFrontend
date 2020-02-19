@@ -14,94 +14,6 @@ export class GroupTabComponent implements OnInit {
   columns;
   grdata;
 
-  selectedPolicy = 0;
-
-  childrenPolicy = [
-    {
-      label: 'Direct Children Only'
-    },
-    {
-      label: 'All descendants'
-    }
-  ];
-
-  selItems = [
-    {
-      icon: 'fa fa-users',
-      label: 'sub-groups'
-    },
-    {
-      icon: 'fa fa-calendar',
-      label: 'sessions'
-    },
-    {
-      icon: 'fa fa-users',
-      label: 'teams'
-    },
-    {
-      icon: 'fa fa-user',
-      label: 'users'
-    }
-  ];
-
-  yesNo = [
-    {
-      label: 'Yes'
-    },
-    {
-      label: 'No'
-    }
-  ];
-
-  subgroup = [
-    {
-      label: 'School',
-      icon: 'School.svg',
-      disabled: true
-    },
-    {
-      label: 'Class',
-      icon: 'Group.svg'
-    },
-    {
-      label: 'Folder',
-      icon: 'Team.svg'
-    },
-    {
-      label: 'Team',
-      icon: 'Team.svg'
-    }
-  ];
-
-  subgriddata = [
-    {
-      ID: 1,
-      col1: 'Prefix-1',
-      col2: '1356 generated codes',
-      col3: '03/04/2018'
-    },
-    {
-      ID: 2,
-      col1: 'Prefix-2',
-      col2: '1356 generated codes',
-      col3: '03/04/2018'
-    },
-    {
-      ID: 3,
-      col1: 'Prefix-3',
-      col2: '1356 generated codes',
-      col3: '03/04/2018'
-    },
-    {
-      ID: 4,
-      col1: 'Prefix-4',
-      col2: '1356 generated codes',
-      col3: '03/04/2018'
-    }
-  ];
-
-  subgridcols = ['col1', 'col2', 'col3'];
-
   showDialog;
   trees;
 
@@ -157,10 +69,6 @@ export class GroupTabComponent implements OnInit {
 
   onExpandWidth(e) {
     this.expandWholeWidth.emit(e);
-  }
-
-  onChildrenPolicyChanged(idx) {
-    this.selectedPolicy = idx;
   }
 
 }

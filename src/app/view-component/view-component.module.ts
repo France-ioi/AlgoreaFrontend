@@ -31,6 +31,14 @@ import { MosaicItemComponent } from './activities/content/mosaics/mosaic-item/mo
 import { EditModeComponent } from './activities/settings/edit-mode/edit-mode.component';
 import { NewContentComponent } from './activities/content/edit-mode/new-content/new-content.component';
 import { NewContentTypeComponent } from './activities/content/edit-mode/new-content/new-content-type/new-content-type.component';
+import { GroupSettingsComponent } from './groups/settings/group-settings.component';
+import { GroupOverviewComponent } from './groups/overview/group-overview.component';
+import { YourselfOverviewComponent } from './yourself/yourself-tab/yourself-overview/yourself-overview.component';
+import { GroupInfoComponent } from './groups/group-info/group-info.component';
+import { GroupJoinedComponent } from './groups/group-info/group-joined/group-joined.component';
+import { GroupManageComponent } from './groups/group-info/group-manage/group-manage.component';
+import { PendingInvitationViewComponent } from './requests-view/pending-invitation-view/pending-invitation-view.component';
+import { GroupCompositionComponent } from './groups/composition/group-composition.component';
 
 
 @NgModule({
@@ -55,7 +63,15 @@ import { NewContentTypeComponent } from './activities/content/edit-mode/new-cont
     MosaicItemComponent,
     EditModeComponent,
     NewContentComponent,
-    NewContentTypeComponent
+    NewContentTypeComponent,
+    GroupSettingsComponent,
+    GroupOverviewComponent,
+    YourselfOverviewComponent,
+    GroupInfoComponent,
+    GroupJoinedComponent,
+    GroupManageComponent,
+    PendingInvitationViewComponent,
+    GroupCompositionComponent
   ],
   imports: [
     CommonModule,

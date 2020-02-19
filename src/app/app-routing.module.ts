@@ -4,6 +4,7 @@ import { TaskComponent } from './view-component/task/task.component';
 import { YourselfComponent } from './view-component/yourself/yourself.component';
 import { GroupComponent } from './view-component/group/group.component';
 import { HomePageComponent } from './view-component/home-page/home-page.component';
+import { GroupInfoComponent } from './view-component/groups/group-info/group-info.component';
 
 
 const routes: Routes = [
@@ -14,6 +15,10 @@ const routes: Routes = [
   {
     path: 'yourself',
     component: YourselfComponent
+  },
+  {
+    path: 'group-info',
+    component: GroupInfoComponent
   },
   {
     path: 'group',

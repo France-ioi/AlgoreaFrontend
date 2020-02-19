@@ -1,0 +1,64 @@
+@import 'src/colors.scss';
+
+.form-item-view {
+  display: flex;
+  align-items: center;
+  margin: 15px;
+
+  .form-item-label {
+    display: block;
+    font-size: 12px;
+    color: $dark-text-color;
+    font-weight: bold;
+    flex: 1;
+
+    &.left-control {
+      flex: unset;
+      margin-right: 25px;
+    }
+  }
+
+  .form-item-control {
+    display: flex;
+    flex-direction: row-reverse;
+    width: 350px;
+
+    &.left-control {
+      flex-direction: row;
+    }
+
+    .stretch {
+      flex: 1;
+    }
+
+    &.another-input {
+      display: flex;
+      align-items: center;
+
+      .first-child {
+        margin-right: 20px;
+      }
+
+      .date-pickers {
+        display: flex;
+        align-items: center;
+        font-size: 12px;
+
+        .date-label {
+          margin-left: 10px;
+          margin-right: 10px;
+        }
+      }
+    }
+  }
+}
+
+.pick-list-header {
+  margin-left: 10px;
+  margin-bottom: 30px;
+}
+
+.pick-list-error {
+  margin-left: 10px;
+  color: #FF001F;
+}

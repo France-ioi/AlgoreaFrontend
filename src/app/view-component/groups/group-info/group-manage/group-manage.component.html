@@ -1,0 +1,8 @@
+<app-pending-request-view
+  [columns]="columns"
+  [data]="requests"
+  [gridGr]="panel"
+></app-pending-request-view>
+<div class="composition-wrapper">
+  <app-group-composition [gridData]="gridData" [columns]="grcols" [grdata]="grdata" [trees]="trees" groupTitle="groups" (expandWholeWidth)="onExpandWidth($event)" [forGroup]="true"></app-group-composition>
+</div>
