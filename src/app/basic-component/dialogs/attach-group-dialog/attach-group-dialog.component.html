@@ -1,0 +1,28 @@
+<div mat-dialog-title>
+  <div class="dialog-header">
+    <span class="dialog-handler">
+      <i class="{{ data.icon }}"></i>
+    </span>
+    <span class="dialog-title">{{ data.label }}</span>
+    <span class="dialog-close" (click)="onClose($event)">
+      <i class="fa fa-times"></i>
+    </span>
+  </div>
+  <div mat-dialog-close></div>
+</div>
+<div mat-dialog-content>
+  <div class="dialog-content">
+    <div class="comment-wrapper">
+      {{data.comment}}
+    </div>
+    <div class="form-item-view">
+      <span class="form-item-label">Attach to this group</span>
+      <div class="form-item-control">
+        <app-activity-picker [trees]="trees" selected="Select a group"></app-activity-picker>
+      </div>
+    </div>
+  </div>
+</div>
+<div mat-dialog-actions>
+  <app-button icon="fa fa-link" label="Attach" class="ui-button-rounded" (onClick)="onClose($event)"></app-button>
+</div>

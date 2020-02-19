@@ -1,5 +1,4 @@
 import { Component, HostListener } from "@angular/core";
-import { PickListType, PickListColor } from "./basic-component/pick-list/pick-list.component";
 import { ProgressType } from "./basic-component/skill-progress/skill-progress.component";
 import { NodeService } from "./services/node-service.service";
 import * as _ from "lodash";
@@ -15,56 +14,6 @@ export class AppComponent {
   ProgressType = ProgressType;
   title = "france-ioi";
   editing = false;
-  list = {
-    lists: [
-      {
-        ID: PickListType.Standard,
-        title: "Select columns to import",
-        color: PickListColor.Standard
-      },
-      {
-        ID: PickListType.Imported,
-        title: "Imported columns",
-        color: PickListColor.Imported
-      }
-    ],
-    items: [
-      { ID: 1, title: "Last name", list: PickListType.Standard },
-      { ID: 2, title: "Grade", list: PickListType.Standard },
-      { ID: 3, title: "Sub-group", list: PickListType.Standard },
-      { ID: 4, title: "First name", list: PickListType.Imported }
-    ]
-  };
-  list1 = {
-    lists: [
-      {
-        ID: PickListType.NonRequested,
-        title: "Non-requested fields",
-        color: PickListColor.NonRequested
-      },
-      {
-        ID: PickListType.Standard,
-        title: "Recommended fields",
-        color: PickListColor.Standard
-      },
-      {
-        ID: PickListType.Mandatory,
-        title: "Mandatory fields",
-        color: PickListColor.Mandatory
-      }
-    ],
-    items: [
-      { ID: 1, title: "Online", list: PickListType.NonRequested },
-      { ID: 2, title: "Change Password", list: PickListType.NonRequested },
-      { ID: 3, title: "E-mail", list: PickListType.Standard },
-      { ID: 4, title: "Member's activity", list: PickListType.Standard },
-      { ID: 5, title: "Skills", list: PickListType.Standard },
-      { ID: 6, title: "Participation code", list: PickListType.Standard },
-      { ID: 7, title: "First name", list: PickListType.Mandatory },
-      { ID: 8, title: "Last name", list: PickListType.Mandatory },
-      { ID: 9, title: "Login", list: PickListType.Mandatory }
-    ]
-  };
   curScore = 70;
   dispScore = 65;
   isStarted = true;
@@ -1017,6 +966,38 @@ export class AppComponent {
     this.updateService();
     this.router.navigate(["/yourself"], {
       state: {}
+    });
+  }
+
+  onJoinGroupSelected(e) {
+    this.selectedType = 3;
+    this.userTitle = 'Groups you joined';
+    this.updateService();
+    this.router.navigate(['/group-info'], {
+      queryParams: {
+        refresh: new Date().getTime()
+      },
+      state: {
+        title: 'Groups you joined',
+        subtitle: 'Here are the groups you joined, you can leave them ore add new ones, lorem ipsum dolor sit amet',
+        showJoined: true
+      }
+    });
+  }
+
+  onManageGroupSelected(e) {
+    this.selectedType = 3;
+    this.userTitle = 'Groups you manage';
+    this.updateService();
+    this.router.navigate(['/group-info'], {
+      queryParams: {
+        refresh: new Date().getTime()
+      },
+      state: {
+        title: 'Groups you manage',
+        subtitle: 'Here are the groups you manage, you can leave them ore add new ones, lorem ipsum dolor sit amet',
+        showJoined: false
+      }
     });
   }
 

@@ -1,0 +1,64 @@
+<div mat-dialog-title>
+  <div class="dialog-header">
+    <span class="dialog-handler">
+      <i class="{{ data.icon }}"></i>
+    </span>
+    <span class="dialog-title">{{ data.label }}</span>
+    <span class="dialog-close" (click)="onClose($event)">
+      <i class="fa fa-times"></i>
+    </span>
+  </div>
+  <div mat-dialog-close></div>
+</div>
+<div mat-dialog-content>
+  <div class="dialog-content">
+    <div class="button-wrapper">
+      <app-button icon="fa fa-link" label="attach" class="ui-button-rounded ui-fit-parent ui-button-secondary" (onClick)="onAttachClicked($event)"></app-button>
+      <app-button icon="fa fa-trash-alt" label="remove" class="ui-button-rounded ui-fit-parent ui-button-secondary"></app-button>
+      <app-button icon="fa fa-folder-open" label="move" class="ui-button-rounded ui-fit-parent ui-button-secondary"></app-button>
+    </div>
+    <div class="user-status-wrapper">
+      <span class="user-status-info">
+        <ng-container *ngIf="data.status === 'requested'">Requested to join this group on {{data.date | date:'d/MM/y'}}</ng-container>
+        <ng-container *ngIf="data.status === 'invited'">Was invited to this group on {{data.date | date:'d/MM/y'}}</ng-container>
+        <ng-container *ngIf="data.status === 'member'">Joined this group on {{data.date | date:'d/MM/y'}}</ng-container>
+      </span>
+      <div class="user-status-comment">
+        {{data.comment}}
+      </div>
+    </div>
+    <div class="button-wrapper">
+      <app-button icon="fa fa-key" label="reinitialize password" class="ui-button-rounded ui-fit-parent" (onClick)="onResetPassword($event)"></app-button>
+      <app-button icon="fa fa-paste" label="Participation code: uqt82xk" class="ui-button-rounded ui-fit-parent no-uppercase"></app-button>
+    </div>
+    <div class="user-details-wrapper">
+      <div class="form-item-view">
+        <span class="form-item-label">First Name</span>
+        <div class="form-item-control">
+          <app-input placeholder="First Name ..."></app-input>
+        </div>
+      </div>
+      <div class="form-item-view">
+        <span class="form-item-label">Last Name</span>
+        <div class="form-item-control">
+          <app-input placeholder="Last Name ..."></app-input>
+        </div>
+      </div>
+      <div class="form-item-view">
+        <span class="form-item-label">Nickname</span>
+        <div class="form-item-control">
+          <app-input placeholder="Nickname ..."></app-input>
+        </div>
+      </div>
+      <div class="form-item-view">
+        <span class="form-item-label">Grade</span>
+        <div class="form-item-control">
+          <app-dropdown [items]="data.grades" placeholder="Select a grade..."></app-dropdown>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div mat-dialog-actions>
+  <app-button icon="fa fa-check" label="Save" class="ui-button-rounded" (onClick)="onClose($event)"></app-button>
+</div>

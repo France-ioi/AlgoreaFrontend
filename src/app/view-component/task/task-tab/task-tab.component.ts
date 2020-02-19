@@ -1,31 +1,39 @@
-import { Component, OnInit, ElementRef, OnChanges, SimpleChanges, Input, Output, EventEmitter } from '@angular/core';
-import { NodeService } from 'src/app/services/node-service.service';
-import { EditService } from 'src/app/services/edit.service';
-import { MenuItem } from 'primeng/api/menuitem';
-import { ViewportScroller } from '@angular/common';
+import {
+  Component,
+  OnInit,
+  ElementRef,
+  OnChanges,
+  SimpleChanges,
+  Input,
+  Output,
+  EventEmitter
+} from "@angular/core";
+import { NodeService } from "src/app/services/node-service.service";
+import { EditService } from "src/app/services/edit.service";
+import { MenuItem } from "primeng/api/menuitem";
+import { ViewportScroller } from "@angular/common";
 
 export enum AutoText {
-  category = 'category',
-  all = 'all',
-  all_but_one = 'all_but_one',
-  n_problem = 'n_problem'
+  category = "category",
+  all = "all",
+  all_but_one = "all_but_one",
+  n_problem = "n_problem"
 }
 
 @Component({
-  selector: 'app-task-tab',
-  templateUrl: './task-tab.component.html',
-  styleUrls: ['./task-tab.component.scss']
+  selector: "app-task-tab",
+  templateUrl: "./task-tab.component.html",
+  styleUrls: ["./task-tab.component.scss"]
 })
 export class TaskTabComponent implements OnInit, OnChanges {
-
   @Input() activityORSkill = true;
-  @Input() autoText = 'category';
+  @Input() autoText = "category";
   @Input() data;
   @Input() image;
   @Input() editing = false;
   @Input() desc;
   @Input() parentSkills;
-  
+
   @Output() expandWholeWidth = new EventEmitter<void>();
 
   validationN = false;
@@ -42,41 +50,41 @@ export class TaskTabComponent implements OnInit, OnChanges {
   trees;
   situationTypes = [
     {
-      label: 'log view'
+      label: "log view"
     },
     {
-      label: 'chapter view'
+      label: "chapter view"
     }
   ];
   groupTypes = [
     {
-      icon: 'fa fa-users',
-      label: 'teams'
+      icon: "fa fa-users",
+      label: "teams"
     },
     {
-      icon: 'fa fa-users',
-      label: 'group'
+      icon: "fa fa-users",
+      label: "group"
     },
     {
-      icon: 'fa fa-user',
-      label: 'users'
+      icon: "fa fa-user",
+      label: "users"
     }
   ];
   validationType = [
     {
-      label: 'Category',
+      label: "Category",
       value: AutoText.category
     },
     {
-      label: 'All',
+      label: "All",
       value: AutoText.all
     },
     {
-      label: 'All but one',
+      label: "All but one",
       value: AutoText.all_but_one
     },
     {
-      label: 'N problems',
+      label: "N problems",
       value: AutoText.n_problem
     }
   ];
@@ -85,94 +93,93 @@ export class TaskTabComponent implements OnInit, OnChanges {
     {
       ID: 1,
       weight: 2,
-      col1: 'video',
-      col2: 'Morbi sit amet eleifend tortor',
+      col1: "video",
+      col2: "Morbi sit amet eleifend tortor",
       type: 0
     },
     {
       ID: 2,
-      weight: '2',
-      col1: 'video',
-      col2: 'Morbi sit amet eleifend tortor',
+      weight: "2",
+      col1: "video",
+      col2: "Morbi sit amet eleifend tortor",
       type: 1
     },
     {
       ID: 3,
       weight: 2,
-      col1: 'conc.',
-      col2: 'Morbi sit amet eleifend tortor',
+      col1: "conc.",
+      col2: "Morbi sit amet eleifend tortor",
       type: 2
     }
   ];
 
-  chaptercols = ['col1', 'col2'];
+  chaptercols = ["col1", "col2"];
   currentUser;
   selectedView = 0;
 
-
   logviewdata = [
     {
-      potential_icon: 'fa fa-bell',
+      potential_icon: "fa fa-bell",
       date: new Date(2018, 2, 23),
-      status: 'Activity started',
-      title: 'Stage lorem ipsum',
+      status: "Activity started",
+      title: "Stage lorem ipsum",
       score: {
         displayedScore: 75,
         currentScore: 75,
-        type: 'score'
+        type: "score"
       }
     },
     {
       date: new Date(2018, 2, 25),
-      status: 'Submissions',
-      title: 'Competence Lorem ipsum augmentee',
+      status: "Submissions",
+      title: "Competence Lorem ipsum augmentee",
       score: {
         displayedScore: 63,
         currentScore: 63,
-        type: 'progress'
+        type: "progress"
       }
     },
     {
       date: new Date(2018, 2, 23),
-      status: 'Ask for clue',
-      title: 'Travaux encadres en presentiel',
+      status: "Ask for clue",
+      title: "Travaux encadres en presentiel",
       score: {
         displayedScore: 75,
         currentScore: 75,
-        type: 'score'
+        type: "score"
       }
     }
   ];
 
   logviewcols = [
     {
-      header: 'Date',
-      field: 'date'
+      header: "Date",
+      field: "date"
     },
     {
-      header: 'Type',
-      field: 'user'
+      header: "Type",
+      field: "user"
     },
     {
-      header: 'Title',
-      field: 'title'
+      header: "Title",
+      field: "title"
     },
     {
-      header: 'Score',
-      field: 'score'
+      header: "Score",
+      field: "score"
     }
   ];
 
   logviewgroupinfo = [
     {
-      name: 'Log view columns',
+      name: "Log view columns",
       columns: this.logviewcols
     }
   ];
 
   chapterviewdata = [
     {
-      title: 'Responds',
+      title: "Responds",
       submissions: 1,
       hints: 1,
       last_activity: new Date(),
@@ -183,7 +190,7 @@ export class TaskTabComponent implements OnInit, OnChanges {
       }
     },
     {
-      title: 'L\'eclipse',
+      title: "L'eclipse",
       submissions: 2,
       hints: 2,
       last_activity: new Date(),
@@ -194,7 +201,7 @@ export class TaskTabComponent implements OnInit, OnChanges {
       }
     },
     {
-      title: 'Bonbons pour tout le monde !',
+      title: "Bonbons pour tout le monde !",
       submissions: 4,
       hints: 4,
       last_activity: new Date(),
@@ -205,7 +212,7 @@ export class TaskTabComponent implements OnInit, OnChanges {
       }
     },
     {
-      title: 'Sed consectetur bibendum phareta',
+      title: "Sed consectetur bibendum phareta",
       submissions: 1,
       hints: 1,
       last_activity: new Date(),
@@ -216,23 +223,23 @@ export class TaskTabComponent implements OnInit, OnChanges {
       }
     },
     {
-      title: 'Sed consectetur bibendum pharetas',
+      title: "Sed consectetur bibendum pharetas",
       submissions: 0,
       hints: 0
-    },
+    }
   ];
 
   chapterviewcols = [
-    { field: 'title', header: 'Title' },
-    { field: 'submissions', header: 'Submissions' },
-    { field: 'hints', header: 'Hints' },
-    { field: 'last_activity', header: 'Last activity' },
-    { field: 'time_spent', header: 'Time spent' }
+    { field: "title", header: "Title" },
+    { field: "submissions", header: "Submissions" },
+    { field: "hints", header: "Hints" },
+    { field: "last_activity", header: "Last activity" },
+    { field: "time_spent", header: "Time spent" }
   ];
 
   chapterviewgroupinfo = [
     {
-      name: 'Epreuves',
+      name: "Epreuves",
       columns: this.chapterviewcols
     }
   ];
@@ -370,7 +377,7 @@ export class TaskTabComponent implements OnInit, OnChanges {
           isStarted: true,
           isValidated: true
         }
-      },
+      }
     ],
     [
       {
@@ -437,7 +444,7 @@ export class TaskTabComponent implements OnInit, OnChanges {
           isStarted: true,
           isValidated: true
         }
-      },
+      }
     ],
     [
       {
@@ -504,7 +511,7 @@ export class TaskTabComponent implements OnInit, OnChanges {
           isStarted: true,
           isValidated: true
         }
-      },
+      }
     ],
     [
       {
@@ -569,9 +576,9 @@ export class TaskTabComponent implements OnInit, OnChanges {
           displayedScore: 75,
           currentScore: 100,
           isStarted: true,
-          isValidated: true,
+          isValidated: true
         }
-      },
+      }
     ],
     [
       {
@@ -638,26 +645,13 @@ export class TaskTabComponent implements OnInit, OnChanges {
           isStarted: true,
           isValidated: true
         }
-      },
+      }
     ]
   ];
 
-  gcvc = [
-    'Column 1',
-    'Column 2',
-    'Column 3',
-    'Column 4',
-    'Column 5',
-  ];
+  gcvc = ["Column 1", "Column 2", "Column 3", "Column 4", "Column 5"];
 
-  gcvr = [
-    'Row 1',
-    'Row 2',
-    'Row 3',
-    'Row 4',
-    'Row 5',
-    'Row 6'
-  ];
+  gcvr = ["Row 1", "Row 2", "Row 3", "Row 4", "Row 5", "Row 6"];
 
   cmenu: MenuItem[];
 
@@ -665,99 +659,97 @@ export class TaskTabComponent implements OnInit, OnChanges {
 
   preqs = [
     {
-      title: 'Graphs: methods',
+      title: "Graphs: methods",
       progress: {
         displayedScore: 20,
         currentScore: 20
       }
     },
     {
-      title: 'Graphs caracteristics listing',
+      title: "Graphs caracteristics listing",
       progress: {
         displayedScore: 30,
         currentScore: 30
       }
     },
     {
-      title: 'Reduce size of a graph',
+      title: "Reduce size of a graph",
       progress: {
         displayedScore: 30,
         currentScore: 30
       }
-    },
+    }
   ];
 
   sessionFilters = [
     {
       ID: 1,
-      icon: 'fa fa-map-marker',
-      label: 'Paris',
-      type: 'standard',
-      mode: 'basic',
-      text: 'Location selection'
+      icon: "fa fa-map-marker",
+      label: "Paris",
+      type: "standard",
+      mode: "basic",
+      text: "Location selection"
     },
     {
       ID: 2,
-      icon: 'fa fa-user',
-      label: 'Cyril',
-      type: 'standard',
-      mode: 'basic',
-      text: 'User selection'
+      icon: "fa fa-user",
+      label: "Cyril",
+      type: "standard",
+      mode: "basic",
+      text: "User selection"
     },
     {
       ID: 3,
-      icon: 'fa fa-calendar',
-      label: '24/03/2019',
-      type: 'standard',
-      mode: 'basic',
-      text: 'Date selection'
+      icon: "fa fa-calendar",
+      label: "24/03/2019",
+      type: "standard",
+      mode: "basic",
+      text: "Date selection"
     }
   ];
 
   gridFilters = [
     {
       ID: 1,
-      icon: 'fa fa-flag-checkered',
-      label: 'Those who started',
-      type: 'default',
-      mode: 'list',
+      icon: "fa fa-flag-checkered",
+      label: "Those who started",
+      type: "default",
+      mode: "list",
       list: [
-        { label: 'Item 1', value: { id: 1, value: 'item1' } },
-        { label: 'Item 2', value: { id: 2, value: 'item2' } },
-        { label: 'Item 3', value: { id: 3, value: 'item3' } },
-        { label: 'Item 4', value: { id: 4, value: 'item4' } },
-        { label: 'Item 5', value: { id: 5, value: 'item5' } },
-        { label: 'Item 6', value: { id: 6, value: 'item6' } },
-        { label: 'Item 7', value: { id: 7, value: 'item7' } },
-        { label: 'Item 8', value: { id: 8, value: 'item8' } },
-        { label: 'Item 9', value: { id: 9, value: 'item9' } }
+        { label: "Item 1", value: { id: 1, value: "item1" } },
+        { label: "Item 2", value: { id: 2, value: "item2" } },
+        { label: "Item 3", value: { id: 3, value: "item3" } },
+        { label: "Item 4", value: { id: 4, value: "item4" } },
+        { label: "Item 5", value: { id: 5, value: "item5" } },
+        { label: "Item 6", value: { id: 6, value: "item6" } },
+        { label: "Item 7", value: { id: 7, value: "item7" } },
+        { label: "Item 8", value: { id: 8, value: "item8" } },
+        { label: "Item 9", value: { id: 9, value: "item9" } }
       ]
     },
     {
       ID: 2,
-      icon: 'fa fa-eye',
-      label: 'Another filter',
-      type: 'standard',
-      mode: 'basic',
-      text: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.'
+      icon: "fa fa-eye",
+      label: "Another filter",
+      type: "standard",
+      mode: "basic",
+      text:
+        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged."
     },
     {
       ID: 3,
-      icon: 'fa fa-hand-paper',
-      label: 'Filter 2',
-      type: 'standard',
-      mode: 'dates',
-      dateRanges: [
-        new Date(),
-        new Date()
-      ]
+      icon: "fa fa-hand-paper",
+      label: "Filter 2",
+      type: "standard",
+      mode: "dates",
+      dateRanges: [new Date(), new Date()]
     },
     {
       ID: 4,
-      icon: 'fa fa-hand-paper',
-      label: 'Score',
-      type: 'standard',
-      mode: 'activity',
+      icon: "fa fa-hand-paper",
+      label: "Score",
+      type: "standard",
+      mode: "activity",
       ranges: [30, 72]
     }
   ];
@@ -765,21 +757,22 @@ export class TaskTabComponent implements OnInit, OnChanges {
   ranges = [0, 20];
 
   filterChoice = [
-    'Select a filter',
-    'Range of date',
-    'Location',
-    'Score range'
+    "Select a filter",
+    "Range of date",
+    "Location",
+    "Score range"
   ];
 
   sessionData = [
     {
-      title: 'Stage Lorem ipsum',
-      activity_name: 'Activity title',
-      chapter_picture: 'barca.jpeg',
-      text: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.',
-      author: 'Jean-Claude MONNET',
-      author_picture: '',
-      location: 'Paris',
+      title: "Stage Lorem ipsum",
+      activity_name: "Activity title",
+      chapter_picture: "barca.jpeg",
+      text:
+        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.",
+      author: "Jean-Claude MONNET",
+      author_picture: "",
+      location: "Paris",
       date: new Date(),
       spots: {
         available: 200,
@@ -787,13 +780,14 @@ export class TaskTabComponent implements OnInit, OnChanges {
       }
     },
     {
-      title: 'Stage Lorem ipsum',
-      activity_name: 'Activity title',
-      chapter_picture: 'barca.jpeg',
-      text: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.',
-      author: 'Jean-Claude MONNET',
-      author_picture: '_messi.jpg',
-      location: 'Paris',
+      title: "Stage Lorem ipsum",
+      activity_name: "Activity title",
+      chapter_picture: "barca.jpeg",
+      text:
+        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.",
+      author: "Jean-Claude MONNET",
+      author_picture: "_messi.jpg",
+      location: "Paris",
       date: new Date(),
       spots: {
         available: 200,
@@ -801,13 +795,14 @@ export class TaskTabComponent implements OnInit, OnChanges {
       }
     },
     {
-      title: 'Stage Lorem ipsum',
-      activity_name: 'Activity title',
-      chapter_picture: 'barca.jpeg',
-      text: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.',
-      author: 'Jean-Claude MONNET',
-      author_picture: '_messi.jpg',
-      location: 'Paris',
+      title: "Stage Lorem ipsum",
+      activity_name: "Activity title",
+      chapter_picture: "barca.jpeg",
+      text:
+        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.",
+      author: "Jean-Claude MONNET",
+      author_picture: "_messi.jpg",
+      location: "Paris",
       date: new Date(),
       spots: {
         available: 200,
@@ -821,7 +816,7 @@ export class TaskTabComponent implements OnInit, OnChanges {
       ID: 38,
       title: "Activity with access code",
       type: "leaf",
-      image: 'france.jpg',
+      image: "france.jpg",
       ring: true,
       state: "opened",
       weight: 2,
@@ -839,7 +834,7 @@ export class TaskTabComponent implements OnInit, OnChanges {
       ID: 39,
       title: "Before you start notice",
       type: "leaf",
-      image: 'barca.jpeg',
+      image: "barca.jpeg",
       ring: true,
       state: "opened",
       weight: 2,
@@ -857,7 +852,7 @@ export class TaskTabComponent implements OnInit, OnChanges {
       ID: 40,
       title: "Activity for teams",
       type: "leaf",
-      image: 'france.jpg',
+      image: "france.jpg",
       ring: true,
       state: "opened",
       weight: 2,
@@ -875,7 +870,7 @@ export class TaskTabComponent implements OnInit, OnChanges {
       ID: 41,
       title: "Activity with attempts",
       type: "leaf",
-      image: 'barca.jpeg',
+      image: "barca.jpeg",
       ring: true,
       state: "opened",
       weight: -1,
@@ -893,7 +888,7 @@ export class TaskTabComponent implements OnInit, OnChanges {
       ID: 42,
       title: "Activity with attempts",
       type: "leaf",
-      image: 'france.jpg',
+      image: "france.jpg",
       ring: true,
       state: "opened",
       weight: 4,
@@ -909,9 +904,10 @@ export class TaskTabComponent implements OnInit, OnChanges {
     },
     {
       ID: 43,
-      title: "Activity with attempts very very very very very very very very very very very very very very long text",
+      title:
+        "Activity with attempts very very very very very very very very very very very very very very long text",
       type: "leaf",
-      image: 'france.jpg',
+      image: "france.jpg",
       ring: true,
       state: "opened",
       weight: 3,
@@ -925,51 +921,56 @@ export class TaskTabComponent implements OnInit, OnChanges {
         type: 2
       }
     }
-
   ];
 
   showNewContent = false;
 
   contentTypes = [
     {
-      image: 'france.jpg',
-      icon: 'fa fa-list',
-      title: 'Multiple choice',
-      desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.'
+      image: "france.jpg",
+      icon: "fa fa-list",
+      title: "Multiple choice",
+      desc:
+        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
     },
     {
-      image: 'france.jpg',
-      icon: 'fa fa-play',
-      title: 'Video',
-      desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.'
+      image: "france.jpg",
+      icon: "fa fa-play",
+      title: "Video",
+      desc:
+        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
     },
     {
-      image: 'france.jpg',
-      icon: 'fa fa-trophy',
-      title: 'Html presentation',
-      desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.'
+      image: "france.jpg",
+      icon: "fa fa-trophy",
+      title: "Html presentation",
+      desc:
+        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
     },
     {
-      image: 'france.jpg',
-      icon: 'fa fa-trophy',
-      title: 'Free answer',
-      desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.'
+      image: "france.jpg",
+      icon: "fa fa-trophy",
+      title: "Free answer",
+      desc:
+        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
     },
     {
-      image: 'france.jpg',
-      icon: 'fa fa-trophy',
-      title: 'Programmation',
-      desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.'
+      image: "france.jpg",
+      icon: "fa fa-trophy",
+      title: "Programmation",
+      desc:
+        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
     },
     {
-      image: 'france.jpg',
-      icon: 'fa fa-play',
-      title: 'Algorea subject',
-      desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.'
+      image: "france.jpg",
+      icon: "fa fa-play",
+      title: "Algorea subject",
+      desc:
+        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
     }
   ];
 
-  contentValue = '';
+  contentValue = "";
 
   scrolled = false;
   added = false;
@@ -979,18 +980,18 @@ export class TaskTabComponent implements OnInit, OnChanges {
     private nodeService: NodeService,
     private editService: EditService,
     private vps: ViewportScroller
-  ) { }
+  ) {}
 
   refresh() {
     switch (this.autoText) {
-      case 'category':
-        this.validText = 'solve at least all tasks with Validation type';
+      case "category":
+        this.validText = "solve at least all tasks with Validation type";
         break;
-      case 'all':
-        this.validText = 'solve all the tasks';
+      case "all":
+        this.validText = "solve all the tasks";
         break;
-      case 'all_but_one':
-        this.validText = 'solve all the tasks except maybe one';
+      case "all_but_one":
+        this.validText = "solve all the tasks except maybe one";
         break;
       default:
         this.validText = `solve at least ${this.autoText} tasks`;
@@ -1002,34 +1003,31 @@ export class TaskTabComponent implements OnInit, OnChanges {
     this.refresh();
     this.nodeService.getFiles().then(res => {
       this.trees = res;
-      console.log(this.trees);
     });
     this.editService.getUserOb().subscribe(res => {
       this.currentUser = res;
     });
     this.cmenu = [
-        {
-            label: 'File',
-            items: [{
-                    label: 'New', 
-                    icon: 'pi pi-fw pi-plus',
-                    items: [
-                        {label: 'Project'},
-                        {label: 'Other'},
-                    ]
-                },
-                {label: 'Open'},
-                {label: 'Quit'}
-            ]
-        },
-        {
-            label: 'Edit',
-            icon: 'pi pi-fw pi-pencil',
-            items: [
-                {label: 'Delete', icon: 'pi pi-fw pi-trash'},
-                {label: 'Refresh', icon: 'pi pi-fw pi-refresh'}
-            ]
-        }
+      {
+        label: "File",
+        items: [
+          {
+            label: "New",
+            icon: "pi pi-fw pi-plus",
+            items: [{ label: "Project" }, { label: "Other" }]
+          },
+          { label: "Open" },
+          { label: "Quit" }
+        ]
+      },
+      {
+        label: "Edit",
+        icon: "pi pi-fw pi-pencil",
+        items: [
+          { label: "Delete", icon: "pi pi-fw pi-trash" },
+          { label: "Refresh", icon: "pi pi-fw pi-refresh" }
+        ]
+      }
     ];
   }
 
@@ -1038,29 +1036,35 @@ export class TaskTabComponent implements OnInit, OnChanges {
   }
 
   onTabChange(e) {
-    const tabs = this.elementRef.nativeElement.querySelectorAll('.mat-tab-labels .mat-tab-label');
+    const tabs = this.elementRef.nativeElement.querySelectorAll(
+      ".mat-tab-labels .mat-tab-label"
+    );
     let i;
-    const activeTab = this.elementRef.nativeElement.querySelector('.mat-tab-labels .mat-tab-label.mat-tab-label-active');
-    tabs.forEach((tab) => {
-      tab.classList.remove('mat-tab-label-before-active');
+    const activeTab = this.elementRef.nativeElement.querySelector(
+      ".mat-tab-labels .mat-tab-label.mat-tab-label-active"
+    );
+    tabs.forEach(tab => {
+      tab.classList.remove("mat-tab-label-before-active");
     });
 
-    for (i = 0 ; i < tabs.length ; i++) {
+    for (i = 0; i < tabs.length; i++) {
       if (tabs[i] === activeTab) {
         break;
       }
     }
 
     if (i > 0) {
-      tabs[i - 1].classList.add('mat-tab-label-before-active');
+      tabs[i - 1].classList.add("mat-tab-label-before-active");
     }
   }
 
   viewTypeChanged(idx) {
     this.selectedView = idx;
-    if (idx === 0) {  // Log View
+    if (idx === 0) {
+      // Log View
       console.log("Log View");
-    } else {          // Chapter View
+    } else {
+      // Chapter View
       console.log("Chapter View");
     }
   }
@@ -1070,7 +1074,7 @@ export class TaskTabComponent implements OnInit, OnChanges {
     this.gcvc = this.gcvr;
     this.gcvr = cont;
     this.gcvd = this.gcvd[0].map((col, i) => this.gcvd.map(row => row[i]));
-    console.log('Hey, I am called');
+    console.log("Hey, I am called");
     this.asRow = !this.asRow;
   }
 
@@ -1094,7 +1098,7 @@ export class TaskTabComponent implements OnInit, OnChanges {
 
   validationChanged(e) {
     console.log(e);
-    if (e.value === 'n_problem') {
+    if (e.value === "n_problem") {
       this.validationN = true;
     } else {
       this.validationN = false;
@@ -1119,13 +1123,14 @@ export class TaskTabComponent implements OnInit, OnChanges {
     if (e.length > 0) {
       this.showNewContent = true;
       this.contentValue = e;
-      // setTimeout(() => {
+      setTimeout(() => {
         if (!this.scrolled && !this.added) {
-          document.documentElement.scrollTop = window.pageYOffset + 50;
+          let [x, y] = this.vps.getScrollPosition();
+          this.vps.scrollToPosition([x, y + 50]);
           this.added = true;
         }
         this.scrolled = true;
-      // }, 0);      
+      }, 0);
     } else {
       this.showNewContent = false;
       this.scrolled = false;
@@ -1135,7 +1140,6 @@ export class TaskTabComponent implements OnInit, OnChanges {
 
   onCancelEdit(e) {
     this.showNewContent = false;
-    this.contentValue = '';
+    this.contentValue = "";
   }
-
 }

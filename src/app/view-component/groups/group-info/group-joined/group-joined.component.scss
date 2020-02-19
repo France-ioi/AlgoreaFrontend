@@ -1,0 +1,29 @@
+@import 'src/colors.scss';
+
+
+.team-content {
+  margin-top: 40px;
+  padding-top: 5px;
+  background-color: white;
+  
+  .team-grid-container {
+    padding-bottom: 30px;
+    margin-bottom: 0;
+    margin-left: -40px;
+    margin-right: -20px;
+    position: relative;
+
+    .tri-tag {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      border-left: 11px solid transparent;
+      border-right: 11px solid transparent;
+      border-bottom: 17px solid #ECF3FC;
+    }
+  }
+
+  .input-wrapper {
+    margin-left: -70px;
+  }
+}

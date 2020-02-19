@@ -67,6 +67,10 @@ import { ListboxComponent } from './listbox/listbox.component';
 import { SectionParagraphComponent } from './section-paragrah/section-paragraph.component';
 import { PickListComponent } from './pick-list/pick-list.component';
 import { DateTimePickerComponent } from './date-picker/date-time-picker/date-time-picker.component';
+import { EditUserDialogComponent } from './dialogs/edit-user-dialog/edit-user-dialog.component';
+import { AttachGroupDialogComponent } from './dialogs/attach-group-dialog/attach-group-dialog.component';
+import { ResetPasswordDialogComponent } from './dialogs/reset-password-dialog/reset-password-dialog.component';
+import { ConfirmPasswordDialogComponent } from './dialogs/confirm-password-dialog/confirm-password-dialog.component';
 
 @NgModule({
   declarations: [
@@ -112,7 +116,11 @@ import { DateTimePickerComponent } from './date-picker/date-time-picker/date-tim
     ListboxComponent,
     SectionParagraphComponent,
     PickListComponent,
-    DateTimePickerComponent
+    DateTimePickerComponent,
+    EditUserDialogComponent,
+    AttachGroupDialogComponent,
+    ResetPasswordDialogComponent,
+    ConfirmPasswordDialogComponent
   ],
   imports: [
     CommonModule,
@@ -183,14 +191,23 @@ import { DateTimePickerComponent } from './date-picker/date-time-picker/date-tim
     DatePickerSimpleComponent,
     ListboxComponent,
     SectionParagraphComponent,
-    DateTimePickerComponent
+    PickListComponent,
+    DateTimePickerComponent,
+    EditUserDialogComponent,
+    AttachGroupDialogComponent,
+    ResetPasswordDialogComponent,
+    ConfirmPasswordDialogComponent
   ],
   providers: [
     {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: false}}
   ],
   entryComponents: [
     MatDialogComponent,
-    ActivityPickerComponent
+    ActivityPickerComponent,
+    EditUserDialogComponent,
+    AttachGroupDialogComponent,
+    ResetPasswordDialogComponent,
+    ConfirmPasswordDialogComponent
   ]
 })
 export class BasicComponentModule { }

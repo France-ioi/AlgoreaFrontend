@@ -1,0 +1,80 @@
+<app-section-paragraph
+  icon="fa fa-bell"
+  label="Your pending invitations"
+  [collapsible]="true"
+>
+  <div class="pending-invitation-container">
+    <app-grid
+      [selectedColumns]="columns"
+      [columns]="columns"
+      [data]="data"
+      [groupInfo]="gridGr"
+      sortMode="single"
+      (expandWholeWidth)="onExpandWidth($event)"
+    >
+      <ng-template #headerTemplate let-columns>
+        <tr>
+          <th style="width: 40px;background-color: #D3DBE7;"></th>
+          <ng-container *ngFor="let col of columns">
+            <th
+              *ngIf="col.field === 'date'"
+              [pSortableColumn]="col.field"
+              style="width: 160px; background-color: #D3DBE7;"
+            >
+              {{ col.header }}
+              <p-sortIcon [field]="col.field"></p-sortIcon>
+            </th>
+            <th
+              *ngIf="col.field !== 'date'"
+              [pSortableColumn]="col.field"
+              style="background-color: #D3DBE7;"
+            >
+              {{ col.header }}
+              <p-sortIcon [field]="col.field"></p-sortIcon>
+            </th>
+          </ng-container>
+        </tr>
+      </ng-template>
+      <ng-template
+        #bodyTemplate
+        let-rowData
+        let-columns="columns"
+        let-rowIndex="rowIndex"
+      >
+        <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
+          <td style="width: 40px;">
+            <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+          </td>
+          <td *ngFor="let col of columns">
+            <ng-container *ngIf="col.field === 'date'">
+              {{ rowData[col.field] | date: "MM/d/y" }}
+            </ng-container>
+            <ng-container *ngIf="col.field !== 'date'">
+              {{ rowData[col.field] }}
+            </ng-container>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template #summaryTemplate let-table>
+        <div
+          style="text-align: left; display: flex; align-items: center;"
+        >
+          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+          <span style="margin-left: 10px; color: #9B9B9B; flex: 1;">
+            Select all
+          </span>
+          <div class="req-tools">
+            <span class="accept">
+              <span>Accept</span>
+              <i class="fa fa-check"></i>
+            </span>
+            <span class="reject">
+              <span>Reject</span>
+              <i class="fa fa-times"></i>
+            </span>
+          </div>
+        </div>
+      </ng-template>
+    </app-grid>
+  </div>
+</app-section-paragraph>

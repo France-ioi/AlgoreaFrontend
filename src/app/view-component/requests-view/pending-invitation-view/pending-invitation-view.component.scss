@@ -1,0 +1,55 @@
+@import 'src/colors.scss';
+
+.pending-invitation-container {
+  margin-right: -20px;
+
+  .req-tools {
+    display: flex;
+    align-items: center;
+    color: $base-color;
+    font-size: 12px;
+
+    span {
+      margin-right: 10px;
+      cursor: pointer;
+
+      span {
+        margin-right: 10px;
+      }
+    }
+  }
+}
+
+
+:host ::ng-deep .pending-invitation-container .ui-table .ui-table-summary {
+  background-color: transparent;
+}
+
+:host ::ng-deep .pending-invitation-container .ui-table .ui-table-tbody > tr {
+  background-color: transparent;
+
+  & > td {
+    border-bottom-color: $section-border-color;
+    border-right: 1px solid $section-border-color;
+
+    &:first-child {
+      border-right: none;
+    }
+  }
+
+  &:last-child {
+    border-bottom: 1px solid $section-border-color;
+  }
+
+  &:nth-child(even) {
+    background-color: transparent;
+  }
+
+  &.ui-state-highlight {
+    background-color: $base-color;
+
+    .grid-user-info-field .user-info {
+      color: white;
+    }
+  }
+}

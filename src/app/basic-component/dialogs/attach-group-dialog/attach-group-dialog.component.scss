@@ -1,0 +1,104 @@
+@import "src/colors.scss";
+
+.dialog-header {
+  display: flex;
+  align-items: center;
+
+  .dialog-handler {
+    display: block;
+    background-color: $base-color;
+    border-left: 3px solid $dark-color;
+    width: 55px;
+    height: 30px;
+    border-top-right-radius: 100px;
+    border-bottom-right-radius: 100px;
+    position: relative;
+
+    i {
+      color: white;
+      position: absolute;
+      right: 10px;
+      font-size: 12px;
+      top: 7px;
+    }
+  }
+
+  .dialog-title {
+    font-size: 24px;
+    color: $dark-text-color;
+    margin-left: 15px;
+    font-weight: normal;
+    flex: 1;
+  }
+
+  .dialog-close {
+    width: 25px;
+    color: $base-color;
+    cursor: pointer;
+  }
+}
+
+:host ::ng-deep .mat-dialog-actions {
+  justify-content: center;
+}
+
+:host ::ng-deep .mat-dialog-title {
+  margin-left: -24px;
+  margin-right: -24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid $light-border-color;
+}
+
+:host ::ng-deep .dialog-content {
+  max-height: 65vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding-left: 40px;
+  padding-right: 20px;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &:hover {
+    overflow: auto;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #f1f1f1;
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: #d1d1d1;
+  }
+
+  .comment-wrapper {
+    font-size: 12px;
+    color: $base-text-color;
+    margin-bottom: 15px;
+  }
+
+  .form-item-view {
+    display: flex;
+    align-items: center;
+    margin: 5px;
+  
+    .form-item-label {
+      display: block;
+      font-size: 12px;
+      width: 250px;
+      color: $dark-text-color;
+      font-weight: bold;
+    }
+  
+    .form-item-control {
+      flex: 1;
+    }
+  }
+}

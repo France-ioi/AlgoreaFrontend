@@ -82,10 +82,6 @@
       </ng-template>
     </div>
   </div>
-  
-  <ng-container *ngIf="data.ID && data.ID === 42">
-    <app-pending-request-view [columns]="columns" [data]="pendingRequests" [gridGr]="grdata"></app-pending-request-view>
-  </ng-container>
 
   <ng-container *ngIf="data.ID && data.ID === 43">
     <app-grading-request-view [data]="gradingRequests"></app-grading-request-view>
