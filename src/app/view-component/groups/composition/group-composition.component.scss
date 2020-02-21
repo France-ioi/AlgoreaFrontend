@@ -1,10 +1,15 @@
 @import 'src/colors.scss';
 
-
-
 .table-container {
   padding-bottom: 20px;
   position: relative;
+
+  .empty-group {
+    text-align: center;
+    font-style: italic;
+    margin-bottom: 30px;
+    margin-top: 20px;
+  }
 
   .selection-tool {
     display: flex;
@@ -112,6 +117,7 @@ span.comment {
 
   .code-validation {
     display: flex;
+    flex-direction: column;
     margin-top: 15px;
       
     span.label {
@@ -119,17 +125,25 @@ span.comment {
       font-weight: bold;
       margin-right: 15px;
       font-size: 12px;
+      flex: 1;
+
+      &.orange {
+        color: #F5A623;
+      }
+
+      &.green {
+        color: #9ACC68;
+      }
+
+      &.red {
+        color: #FF001F;
+      }
     }
 
     .code-wrapper {
       display: flex;
       align-items: center;
-    }
-
-    .time-wrapper {
-      margin-left: 15px;
-      display: flex;
-      align-items: center;
+      margin-bottom: 15px;
     }
   }
 }

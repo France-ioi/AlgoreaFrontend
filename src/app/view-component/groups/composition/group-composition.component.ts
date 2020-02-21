@@ -15,6 +15,7 @@ export class GroupCompositionComponent implements OnInit {
   @Input() trees;
   @Input() groupTitle = "subgroups";
   @Input() forGroup = false;
+  @Input() empty;
   
   @Output() expandWholeWidth = new EventEmitter<void>();
 
@@ -111,6 +112,10 @@ export class GroupCompositionComponent implements OnInit {
     'member'
   ];
 
+  showMsg = false;
+
+  activateStatus = 2;
+
   constructor(
     private mainDialog: MatDialog
   ) { }
@@ -148,6 +153,10 @@ export class GroupCompositionComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Main dialog returns ${result}`);
     })
+  }
+
+  onInvite(e) {
+    this.showMsg = !this.showMsg;
   }
 
 }

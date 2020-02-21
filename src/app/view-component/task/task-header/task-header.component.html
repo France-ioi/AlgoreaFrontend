@@ -120,7 +120,12 @@
   </ng-container>
 
   <ng-container *ngIf="ID === 40">
-    <app-section-paragraph icon="fa fa-users" label="You chose The indesctructibles" [collapsible]="true" [hasBorder]="true">
+    <app-section-paragraph icon="fa fa-users" label="You chose The indesctructibles" [collapsible]="true" [hasBorder]="true" (onCollapse)="onCollapseTeam($event)">
+      <ng-template #headerTemplate>
+        <span *ngIf="showTeamTitle" class="team-count">
+          {{teamdata.length}} <i class="fa fa-user"></i>
+        </span>
+      </ng-template>
       <div class="team-view-container">
         <app-sub-grid [data]="teamdata">
           <ng-template #bodyTemplate let-rowData>

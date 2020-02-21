@@ -4,12 +4,14 @@
   [collapsible]="true"
 >
   <ng-template #headerTemplate>
-    <div style="width: 160px;">
-      <app-button
-        icon="fa fa-glasses"
-        label="view submissions"
-        class="ui-button-rounded ui-fit-parent ui-medium-button"
-      ></app-button>
+    <div style="flex: 1; flex-direction: row-reverse;display: flex;">
+      <div style="width: 160px;">
+        <app-button
+          icon="fa fa-glasses"
+          label="view submissions"
+          class="ui-button-rounded ui-fit-parent ui-medium-button"
+        ></app-button>
+      </div>
     </div>
   </ng-template>
   <ul class="grading-request-container">

@@ -12,6 +12,7 @@ export class AttemptsViewComponent implements OnInit {
   selectedAttempt = {};
 
   selectedAttemptID = -1;
+  showSelected = false;
 
   constructor() { }
 
@@ -41,6 +42,10 @@ export class AttemptsViewComponent implements OnInit {
       author: 'Mathieu',
       lang: 'Python'
     });
+  }
+
+  onCollapseHeader(e) {
+    this.showSelected = !e;
   }
 
 }

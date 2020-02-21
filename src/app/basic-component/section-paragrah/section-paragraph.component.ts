@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ContentChild } from '@angular/core';
+import { Component, OnInit, Input, ContentChild, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-section-paragraph',
@@ -12,6 +12,9 @@ export class SectionParagraphComponent implements OnInit {
   @Input() theme = 'success';
   @Input() hasBorder = false;
   @Input() data;
+  @Input() remainOrigin = true;
+
+  @Output() onCollapse = new EventEmitter<any>();
 
   @ContentChild('headerTemplate', { static: false }) headerTemplate;
 
@@ -25,6 +28,7 @@ export class SectionParagraphComponent implements OnInit {
 
   toggleContent(e) {
     this.visible = !this.visible;
+    this.onCollapse.emit(this.visible);
   }
 
 }

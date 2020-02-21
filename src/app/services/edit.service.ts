@@ -17,6 +17,8 @@ export class EditService {
 
   user = new BehaviorSubject<any>({});
 
+  url = new BehaviorSubject<string>('');
+
   constructor() { }
 
   setValue(val) {
@@ -33,5 +35,13 @@ export class EditService {
 
   getUserOb() {
     return this.user.asObservable();
+  }
+
+  setUrl(val) {
+    this.url.next(val);
+  }
+
+  getUrl() {
+    return this.url.getValue();
   }
 }

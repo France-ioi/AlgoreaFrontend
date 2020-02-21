@@ -1,6 +1,6 @@
 <app-section icon="fa fa-users" label="{{ forGroup ? 'Groups' : 'Current Composition' }}">
   <div class="table-container">
-    <div class="selection-tool">
+    <div *ngIf="!empty" class="selection-tool">
       <app-selection
         [items]="childrenPolicy"
         (onChange)="onChildrenPolicyChanged($event)"
@@ -12,6 +12,7 @@
       ></app-selection>
     </div>
     <app-grid
+      *ngIf="!empty"
       [selectedColumns]="columns"
       [columns]="columns"
       [data]="gridData"
@@ -57,15 +58,23 @@
             Select all
           </span>
           <div class="export-tools">
+            <span class="notice">
+              <span>Print notices/codes</span>
+              <i class="fa fa-print"></i>
+            </span>
             <span class="export">
-              <span>Duplicate</span>
+              <span>Export</span>
+              <i class="fa fa-file-alt"></i>
+            </span>
+            <span class="merge">
+              <span>Merge</span>
               <i class="fa fa-paste"></i>
             </span>
             <span class="remove">
               <span>Remove</span>
               <i class="fa fa-trash-alt"></i>
             </span>
-            <span class="print">
+            <span class="move">
               <span>Move</span>
               <i class="fa fa-folder-open"></i>
             </span>
@@ -73,6 +82,9 @@
         </div>
       </ng-template>
     </app-grid>
+    <div *ngIf="empty" class="empty-group">
+      This group is empty, check below, the different ways to add users or sub-groups.
+    </div>
     <span class="tri-tag"></span>
   </div>
   <app-sub-section
@@ -137,9 +149,18 @@
             <span class="label">Code</span>
             <app-code-token></app-code-token>
           </div>
-          <div class="time-wrapper">
+          <div class="code-wrapper">
             <span class="label">Validity</span>
-            <app-time-picker></app-time-picker>
+            <app-time-picker [status]="activateStatus"></app-time-picker>
+          </div>
+          <div class="code-wrapper">
+            <span *ngIf="activateStatus === 0" class="label orange">This code has been activated 15 minutes ago, it will be disabled in 15 minutes</span>
+            <span *ngIf="activateStatus === 1" class="label green">This code has not yet been used</span>
+            <span *ngIf="activateStatus === 2" class="label red">This code was used 15 minutes ago and is now disabled</span>
+          </div>
+          <div class="code-wrapper">
+            <span class="label">Security</span>
+            <app-code-token [refresh]="false"></app-code-token>
           </div>
         </div>
         <div class="auto-create">
@@ -158,7 +179,9 @@
           icon="show"
           placeholder="psuedo, psuedo..."
         ></app-textarea>
-        <app-button label="Invite" class="ui-button-rounded"></app-button>
+        <app-button label="Invite" class="ui-button-rounded" (onClick)="onInvite($event)"></app-button>
+        <app-message *ngIf="showMsg" type="info" label="3 users invited successfully"></app-message>
+        <app-message *ngIf="showMsg" type="error" label="2 users not found: Jean, Matthew"></app-message>
       </div>
     </app-switch-container>
     <app-switch-container

@@ -14,18 +14,7 @@
       Personal Data
     </ng-template>
     <ng-template matTabContent>
-      <app-section icon="fa fa-users" label="Personal Information">
-        <app-data-list [items]="personal"></app-data-list>
-      </app-section>
-      <app-section icon="fa fa-graduation-cap" label="School Information">
-        <app-data-list [items]="school"></app-data-list>
-      </app-section>
-      <app-section icon="fa fa-envelope" label="Contact Information">
-        <app-data-list [items]="contact"></app-data-list>
-      </app-section>
-      <app-section icon="fa fa-cog" label="Parameters">
-        <app-data-list [items]="parameters"></app-data-list>
-      </app-section>
+      <app-yourself-personal></app-yourself-personal>
     </ng-template>
   </mat-tab>
   <mat-tab>

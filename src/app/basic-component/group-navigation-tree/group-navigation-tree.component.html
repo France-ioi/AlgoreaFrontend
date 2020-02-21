@@ -17,6 +17,9 @@
         <span (click)="nodeCheck($event, node)" class="node-label">{{
           node.title
         }}</span>
+        <span *ngIf="node.checked" class="go-to-page" (click)="goToPage($event, node)">
+          <i class="fa fa-chevron-right"></i>
+        </span>
         <app-score-ring *ngIf="node.progress" [displayedScore]="node.progress.displayedScore" [currentScore]="node.progress.currentScore" [diameter]="24"></app-score-ring>
       </span>
     </span>
@@ -36,6 +39,9 @@
         <span (click)="nodeCheck($event, node)" class="node-label">{{
           node.title
         }}</span>
+        <span *ngIf="node.checked" class="go-to-page" (click)="goToPage($event, node)">
+          <i class="fa fa-chevron-right"></i>
+        </span>
       </span>
     </span>
   </ng-template>

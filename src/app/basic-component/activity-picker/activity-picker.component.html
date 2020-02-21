@@ -1,17 +1,9 @@
-<div class="activity-container">
+<div class="activity-container" (click)="openDialog($event)">
   <span class="activity-content">
     <i class="fa fa-folder"></i>
     <span class="placeholder">{{selected}}</span>
   </span>
-  <span class="select-folder" (click)="openDialog($event)">
+  <span class="select-folder">
     <i class="fa fa-sitemap"></i>
   </span>
 </div>
-<!-- <app-dialog [show]="show" icon="fa fa-folder" label="Select a content" (onHide)="show = false">
-  <div class="dialog-content">
-    <div class="tree-content">
-      <app-selection-tree [data]="trees"></app-selection-tree>
-    </div>
-    <app-button label="Validate" class="diagonal-rounded"></app-button>
-  </div>
-</app-dialog> -->

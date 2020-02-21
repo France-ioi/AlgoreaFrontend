@@ -1,0 +1,76 @@
+@import 'src/colors.scss';
+
+.team-container {
+  position: relative;
+  margin-bottom: -15px;
+
+  .tri-tag {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    border-left: 11px solid transparent;
+    border-right: 11px solid transparent;
+    border-bottom: 17px solid #ECF3FC;
+  }
+}
+
+.invite-container {
+  background-color: #ECF3FC;
+
+  ::ng-deep app-section .section-container {
+    margin-top: 0;
+    padding-top: 30px;
+  }
+
+  .invitation-code {
+    display: flex;
+    flex-direction: column;
+  
+    span.comment {
+      font-size: 12px;
+    }
+  
+    .auto-create {
+      display: flex;
+      margin-top: 10px;
+      
+      span {
+        flex: 1;
+        color: $nav-bk-color;
+        font-weight: bold;
+      }
+    }
+  
+    .code-validation {
+      display: flex;
+      flex-direction: column;
+      margin-top: 15px;
+        
+      span.label {
+        color: $nav-bk-color;
+        font-weight: bold;
+        margin-right: 15px;
+        font-size: 12px;
+        flex: 1;
+  
+        &.orange {
+          color: #F5A623;
+        }
+  
+        &.green {
+          color: #9ACC68;
+        }
+  
+        &.red {
+          color: #FF001F;
+        }
+      }
+  
+      .code-wrapper {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+      }
+    }
+  }
+}

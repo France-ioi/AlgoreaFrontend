@@ -5,6 +5,7 @@
   align-items: center;
   height: 32px;
   border-radius: 5px;
+  cursor: pointer;
 
   .activity-content {
     padding-left: 10px;
@@ -39,7 +40,6 @@
     justify-content: center;
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
-    cursor: pointer;
   }
 
 }

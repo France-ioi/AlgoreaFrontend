@@ -1,0 +1,77 @@
+@import "src/colors.scss";
+
+.team-member-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  padding: 10px;
+
+  .close-button {
+    width: 25px;
+    height: 25px;
+    color: $base-color;
+    position: absolute;
+    right: 0;
+    top: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .team-member {
+    &-name {
+      font-size: 16px;
+      font-weight: bold;
+      color: $dark-text-color;
+      margin-bottom: 5px;
+    }
+
+    &-full-name {
+      font-style: italic;
+      font-size: 12px;
+      color: $base-text-color;
+      margin-bottom: 5px;
+    }
+
+    &-picture {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      margin-bottom: 10px;
+
+      img {
+        border-radius: 100px;
+      }
+    }
+
+    &-creator {
+      position: absolute;
+      bottom: 0;
+      text-transform: uppercase;
+      border-radius: 100px;
+      height: 20px;
+      line-height: 20px;
+      font-size: 11px;
+      color: white;
+      background-color: #4a90e2;
+      width: 70px;
+      text-align: center;
+      left: calc(50% - 35px);
+    }
+
+    &-school {
+      font-weight: bold;
+      font-size: 12px;
+      color: $dark-text-color;
+      margin-bottom: 10px;
+    }
+
+    &-grade-date {
+      font-style: italic;
+      color: $base-text-color;
+    }
+  }
+}

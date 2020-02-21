@@ -7,10 +7,12 @@
         <app-score-ring [displayedScore]="data.progress.displayedScore" [icons]="data.progress.isStarted === false ? 'flag-checkered' : ''" [currentScore]="data.progress.currentScore" diameter="24" ></app-score-ring>
       </div>
     </div>
-    <div class="section-header-content" [ngClass]="{'show-border': hasBorder && visible}">
-      <span class="section-title" (click)="toggleContent($event)">{{label}}</span>
-      <ng-container [ngTemplateOutlet]="headerTemplate"></ng-container>
-      <span *ngIf="collapsible" class="toggle-content" (click)="toggleContent($event)">
+    <div class="section-header-content" [ngClass]="{'show-border': hasBorder && visible}" (click)="toggleContent($event)">
+      <span *ngIf="remainOrigin || visible || !data.ID" class="section-title">{{label}}</span>
+      <div class="additional-content">
+        <ng-container [ngTemplateOutlet]="headerTemplate" [ngTemplateOutletContext]="{ $implicit: data }"></ng-container>
+      </div>      
+      <span *ngIf="collapsible" class="toggle-content">
         <i *ngIf="!visible" class="fa fa-angle-down"></i>
         <i *ngIf="visible" class="fa fa-angle-up"></i>
       </span>

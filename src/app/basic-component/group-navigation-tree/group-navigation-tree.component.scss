@@ -1,3 +1,4 @@
+@import 'src/colors.scss';
 
 :host ::ng-deep .ui-tree {
   width: 100%;
@@ -129,6 +130,18 @@
   border-top-left-radius: 4px !important;
   border-bottom-left-radius: 4px !important;
   background-color: #fff !important;
+
+  .go-to-page {
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+    border-radius: 20px;
+    background-color: $base-color;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 }
 
 .node-tree-item .node-item-content .node-icon {

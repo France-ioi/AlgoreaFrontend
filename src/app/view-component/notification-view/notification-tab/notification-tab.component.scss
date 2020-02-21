@@ -1,0 +1,56 @@
+@import 'src/colors.scss';
+
+:host ::ng-deep .mat-tab-header {
+  border-bottom: none;
+  .mat-tab-label-container {
+    .mat-ink-bar {
+      display: none;
+    }
+
+    .mat-tab-labels {
+      background-color: white;
+      .mat-tab-label {
+        background-color: $base-bk-color;
+        border-right: 1px solid $light-border-color;
+        &.mat-tab-label-active {
+          background-color: white;
+          border-right-color: transparent;
+          color: $base-color;
+          border-top: 3px solid $base-color;
+        }
+        &.mat-tab-label-active + .mat-tab-label {
+          border-bottom-left-radius: 10px;
+        }
+        &.mat-tab-label-before-active {
+          border-bottom-right-radius: 10px;
+        }
+        .mat-tab-label-content {
+          i {
+            margin-right: 15px;
+          }
+        }
+      }
+    }
+  }
+}
+
+:host ::ng-deep .mat-tab-body-wrapper {
+  .mat-tab-body {
+    background-color: white;
+  }
+}
+
+.table-icon {
+  color: $base-color;
+  cursor: pointer;
+}
+
+app-grid {
+  margin-right: -20px;
+  margin-left: -30px;
+}
+
+app-grid-filter-bar {
+  display: block;
+  margin-bottom: 20px;
+}

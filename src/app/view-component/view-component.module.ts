@@ -39,6 +39,15 @@ import { GroupJoinedComponent } from './groups/group-info/group-joined/group-joi
 import { GroupManageComponent } from './groups/group-info/group-manage/group-manage.component';
 import { PendingInvitationViewComponent } from './requests-view/pending-invitation-view/pending-invitation-view.component';
 import { GroupCompositionComponent } from './groups/composition/group-composition.component';
+import { YourselfPersonalComponent } from './yourself/yourself-tab/yourself-personal/yourself-personal.component';
+import { PresentationsComponent } from './activities/content/presentations/presentations.component';
+import { PresentationItemComponent } from './activities/content/presentations/presentation-item/presentation-item.component';
+import { TeamComponent } from './groups/composition/team/team.component';
+import { TeamMemberComponent } from './groups/composition/team/team-member/team-member.component';
+import { TeamCompositionComponent } from './groups/composition/team-composition/team-composition.component';
+import { NotificationViewComponent } from './notification-view/notification-view.component';
+import { NotificationHeaderComponent } from './notification-view/notification-header/notification-header.component';
+import { NotificationTabComponent } from './notification-view/notification-tab/notification-tab.component';
 
 
 @NgModule({
@@ -71,7 +80,16 @@ import { GroupCompositionComponent } from './groups/composition/group-compositio
     GroupJoinedComponent,
     GroupManageComponent,
     PendingInvitationViewComponent,
-    GroupCompositionComponent
+    GroupCompositionComponent,
+    YourselfPersonalComponent,
+    PresentationsComponent,
+    PresentationItemComponent,
+    TeamComponent,
+    TeamMemberComponent,
+    TeamCompositionComponent,
+    NotificationViewComponent,
+    NotificationHeaderComponent,
+    NotificationTabComponent
   ],
   imports: [
     CommonModule,

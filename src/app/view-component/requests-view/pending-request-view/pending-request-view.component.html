@@ -4,10 +4,12 @@
   [collapsible]="true"
 >
   <ng-template #headerTemplate>
-    <app-selection
-      [items]="groupSwitch"
-      style="width: 300px;"
-    ></app-selection>
+    <div style="flex: 1; flex-direction: row-reverse;display: flex;">
+      <app-selection
+        [items]="groupSwitch"
+        style="width: 300px;"
+      ></app-selection>
+    </div>
   </ng-template>
   <div class="pending-request-container">
     <app-grid

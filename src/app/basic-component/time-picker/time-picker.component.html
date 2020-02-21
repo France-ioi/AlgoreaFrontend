@@ -1,4 +1,4 @@
-<div class="time-picker">
+<div class="time-picker" [ngClass]="{orange: status === 0, green: status === 1, red: status === 2}">
   <!-- <span class="time-display">
     <i class="fa fa-clock"></i>
     <span class="time-input">
