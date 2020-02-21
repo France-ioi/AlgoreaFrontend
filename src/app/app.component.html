@@ -51,6 +51,7 @@
       (joinGroupSelect)="onJoinGroupSelected($event)"
       (manageGroupSelect)="onManageGroupSelected($event)"
       (signInOutEvent)="onSignInOut($event)"
+      (onNotify)="onNotify($event)"
     ></app-left-nav>
   </div>
   <div class="top-bar" [ngClass]="{ editing: editing, collapsed: collapsed, expanded: !collapsed }">
@@ -62,6 +63,7 @@
       [signedIn]="signedIn"
       (collapseEvent)="onCollapse($event)"
       (foldEvent)="onFold($event)"
+      (onNotify)="onNotify($event)"
       templateId="1"
     ></app-top-nav>
     <div class="top-right-bar">
@@ -89,7 +91,7 @@
           [diameter]="30"
         ></app-score-ring>
         <div
-          *ngIf="!isStarted || selectedType == 0 || selectedType == 1"
+          *ngIf="(!isStarted || selectedType === 0 || selectedType === 1) && selectedType !== 5"
           class="task-user-image"
         >
           <img src="assets/images/_messi.jpg" width="35px" height="35px" />

@@ -41,3 +41,20 @@
     }
   }
 }
+
+.collapsed-attempt-header {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  margin-left: 15px;
+
+  .attempt-title {
+    font-size: 24px;
+    color: $dark-text-color;
+  }
+
+  .attempt-info {
+    font-size: 12px;
+    color: $base-text-color;
+  }
+}

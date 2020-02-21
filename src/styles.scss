@@ -147,19 +147,22 @@ body {
       display: flex;
       flex-direction: column;
 
+      &.validated {
+        background-color: $dark-base-color;
+      }
+
       & > span {
         display: flex;
         align-items: center;
         padding: 5px;
-        border-bottom: 1px solid #4281CA;
         font-size: 12px;
-        cursor: pointer;
 
         &:last-child {
           border-bottom: none;
         }
 
         &.score {
+          border-top: 1px solid #295485;
           justify-content: center;
           border-bottom: none;
 
@@ -170,13 +173,24 @@ body {
         }
 
         &.clickable {
-          height: 30px;
-          margin-bottom: 5px;
-          border-bottom: none;
-          background-color: $dark-base-color;
-          border-radius: 100px;
+          height: 35px;
+          padding-bottom: 10px;
+          padding-top: 10px;
+          border-bottom: 1px solid #295485;
+          background-color: $base-color;
+          margin-left: -5px;
+          margin-right: -5px;
           padding-left: 10px;
           cursor: pointer;
+
+          &:hover {
+            background-color: #295485;
+          }
+
+          &:last-child {
+            margin-bottom: -5px;
+            border-bottom: none;
+          }
 
           i {
             margin-right: 10px;

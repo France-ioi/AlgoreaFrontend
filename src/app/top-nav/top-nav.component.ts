@@ -1,4 +1,6 @@
 import { Component, OnInit, Output, EventEmitter, Input, HostListener } from '@angular/core';
+import { EditService } from '../services/edit.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-top-nav',
@@ -20,6 +22,8 @@ export class TopNavComponent implements OnInit {
   showNotification = false;
   @Input() signedIn = true;
 
+  @Output() onNotify = new EventEmitter<any>();
+
   langs = [
     'English',
     'Francais',
@@ -28,7 +32,10 @@ export class TopNavComponent implements OnInit {
     'Deutsch'
   ];
 
-  constructor() { }
+  constructor(
+    private editService: EditService,
+    private router: Router
+  ) { }
 
   ngOnInit() {
   }
@@ -46,7 +53,9 @@ export class TopNavComponent implements OnInit {
 
   toggleNotification(e) {
     this.showNotification = !this.showNotification;
-    console.log('toogleNotification')
+    console.log('toogleNotification');
+    this.editService.setUrl(this.router.url);
+    this.onNotify.emit(e);
   }
 
   signInOut(e) {

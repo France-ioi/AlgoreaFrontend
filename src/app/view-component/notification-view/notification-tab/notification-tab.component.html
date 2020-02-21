@@ -1,0 +1,85 @@
+<mat-tab-group mat-stretch-tabs (selectedTabChange)="onTabChange($event)">
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <i class="fa fa-book"></i>
+      Content
+    </ng-template>
+    <ng-template matTabContent>
+      <app-section icon="fa fa-check" label="Pending notifications ({{data.length}})">
+        
+        <app-grid-filter-bar>
+          <app-select
+            [items]="filterChoice"
+            [opened]="false"
+            width="120"
+            style="margin: 5px;"
+          ></app-select>
+        </app-grid-filter-bar>
+        <app-grid
+          [selectedColumns]="cols"
+          [columns]="cols"
+          [data]="data"
+          [groupInfo]="panels"
+          sortMode="single"
+          (expandWholeWidth)="onExpandWidth($event)"
+        >
+          <ng-template #headerTemplate let-columns>
+            <tr>
+              <th style="width: 50px;"></th>
+              <ng-container *ngFor="let col of columns">
+                <th *ngIf="col.field === 'date'" [pSortableColumn]="col.field" style="width: 120px;">
+                  {{ col.header }}
+                  <p-sortIcon [field]="col.field"></p-sortIcon>
+                </th>
+                <th *ngIf="col.field === 'type'" [pSortableColumn]="col.field" style="width: 120px;">
+                  {{ col.header }}
+                  <p-sortIcon [field]="col.field"></p-sortIcon>
+                </th>
+                <th *ngIf="col.field === 'desc'" [pSortableColumn]="col.field">
+                  {{ col.header }}
+                  <p-sortIcon [field]="col.field"></p-sortIcon>
+                </th>
+              </ng-container>
+              <th style="width: 50px;"></th>
+            </tr>
+          </ng-template>
+          <ng-template
+            #bodyTemplate
+            let-rowData
+            let-columns="columns"
+            let-rowIndex="rowIndex"
+          >
+            <tr>
+              <td style="width: 50px;">
+                <span class="table-icon">
+                  <i class="{{rowData.icon}}"></i>
+                </span>
+              </td>
+              <td *ngFor="let col of columns">
+                <ng-container *ngIf="col.field === 'date'">
+                  {{ rowData[col.field] | date: "MM/d/y" }}
+                </ng-container>
+                <ng-container *ngIf="col.field !== 'date'">
+                  {{rowData[col.field]}}
+                </ng-container>
+              </td>
+              <td style="width: 50px;">
+                <span class="table-icon">
+                  <i class="fa fa-eye"></i>
+                </span>
+              </td> 
+            </tr>
+          </ng-template>
+        </app-grid>
+      </app-section>
+    </ng-template>
+  </mat-tab>
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <i class="fa fa-cog"></i>
+      Settings
+    </ng-template>
+    <ng-template matTabContent>
+    </ng-template>
+  </mat-tab>
+</mat-tab-group>

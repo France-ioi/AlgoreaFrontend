@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { TreeNode } from 'primeng/api';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-group-navigation-tree',
@@ -12,9 +13,11 @@ export class GroupNavigationTreeComponent implements OnInit, OnChanges {
   @Input() inGroup = false;
 
   @Output() onNodeChange = new EventEmitter<any>();
+  @Output() onTitleChange = new EventEmitter<any>();
 
-  constructor() {
-  }
+  constructor(
+    private router: Router
+  ) {}
 
   ngOnInit() {
   }
@@ -46,7 +49,7 @@ export class GroupNavigationTreeComponent implements OnInit, OnChanges {
     });
   }
 
-  nodeCheck(event, node) {
+  nodeCheck(e, node) {
     this._unCheckAll(this.data);
     if (!node.checked) {
       node.checked = true;
@@ -54,7 +57,18 @@ export class GroupNavigationTreeComponent implements OnInit, OnChanges {
       node.checked = false;
     }
     
+    console.log();
+    const segments = this.router.parseUrl(this.router.url).root.children.primary.segments;
+
+    if (segments.length > 0 && segments[0].path === 'group') {
+      this.onNodeChange.emit(node);
+    } else {
+      this.onTitleChange.emit(node);
+    }
     node.expanded = true;
+  }
+
+  goToPage(e, node) {
     this.onNodeChange.emit(node);
   }
 

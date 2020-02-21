@@ -253,10 +253,11 @@ export class TaskTabComponent implements OnInit, OnChanges {
         attempts: 3,
         last_activity: Date.now(),
         progress: {
-          displayedScore: 75,
-          currentScore: 75,
+          displayedScore: 0,
+          currentScore: 0,
           isStarted: true,
-          isValidated: true
+          isValidated: false,
+          isFailed: true
         }
       },
       {
@@ -266,7 +267,7 @@ export class TaskTabComponent implements OnInit, OnChanges {
         attempts: 3,
         last_activity: Date.now(),
         progress: {
-          displayedScore: 75,
+          displayedScore: 100,
           currentScore: 75,
           isStarted: true,
           isValidated: true
@@ -279,10 +280,10 @@ export class TaskTabComponent implements OnInit, OnChanges {
         attempts: 3,
         last_activity: Date.now(),
         progress: {
-          displayedScore: 75,
-          currentScore: 75,
+          displayedScore: 0,
+          currentScore: 0,
           isStarted: true,
-          isValidated: true
+          isValidated: false
         }
       },
       {
@@ -813,7 +814,7 @@ export class TaskTabComponent implements OnInit, OnChanges {
 
   mosaicData = [
     {
-      ID: 38,
+      ID: 1,
       title: "Activity with access code",
       type: "leaf",
       image: "france.jpg",
@@ -831,7 +832,7 @@ export class TaskTabComponent implements OnInit, OnChanges {
       }
     },
     {
-      ID: 39,
+      ID: 2,
       title: "Before you start notice",
       type: "leaf",
       image: "barca.jpeg",
@@ -849,7 +850,7 @@ export class TaskTabComponent implements OnInit, OnChanges {
       }
     },
     {
-      ID: 40,
+      ID: 3,
       title: "Activity for teams",
       type: "leaf",
       image: "france.jpg",
@@ -867,7 +868,7 @@ export class TaskTabComponent implements OnInit, OnChanges {
       }
     },
     {
-      ID: 41,
+      ID: 4,
       title: "Activity with attempts",
       type: "leaf",
       image: "barca.jpeg",
@@ -885,7 +886,7 @@ export class TaskTabComponent implements OnInit, OnChanges {
       }
     },
     {
-      ID: 42,
+      ID: 5,
       title: "Activity with attempts",
       type: "leaf",
       image: "france.jpg",
@@ -903,7 +904,7 @@ export class TaskTabComponent implements OnInit, OnChanges {
       }
     },
     {
-      ID: 43,
+      ID: 6,
       title:
         "Activity with attempts very very very very very very very very very very very very very very long text",
       type: "leaf",

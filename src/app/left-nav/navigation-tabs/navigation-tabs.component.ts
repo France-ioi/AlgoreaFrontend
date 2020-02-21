@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, OnChanges, SimpleChanges, ViewChild, NgZone, Output, EventEmitter } from '@angular/core';
-import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 import { EditService } from '../../services/edit.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-navigation-tabs',
@@ -27,13 +28,23 @@ export class NavigationTabsComponent implements OnInit, OnChanges {
   manageShow = false;
   joinShow = false;
   activeTab = 1;
-
+  notified = false;
   selectedGroup = -1;
+
+  esOb;
 
   constructor(
     private ngZone: NgZone,
-    private editService: EditService
-  ) { }
+    private editService: EditService,
+    private _location: Location,
+    private router: Router
+  ) { 
+    this.editService.getOb().subscribe(res => {
+      this.notified = res.notified;
+      this.esOb = res;
+      console.log('get', this.esOb);
+    });
+  }
 
   ngOnInit() {
   }
@@ -140,6 +151,25 @@ export class NavigationTabsComponent implements OnInit, OnChanges {
     };
     this.editService.setUser(this.currentUser);
     this.groupSelect.emit(e);
+  }
+
+  onTitleChange(e) {
+    this.currentUser = {
+      title: e.title,
+      type: 'group'
+    };
+
+    this.editService.setUser(this.currentUser);
+  }
+
+  goBack(e) {
+    this.notified = false;
+    this.esOb.notified = false;
+    console.log(this.esOb);
+    this.editService.setValue(this.esOb);
+    // this.editService.getUrl()
+    // this.router.navigateByUrl('/yourself');
+    this._location.back();
   }
 
 }

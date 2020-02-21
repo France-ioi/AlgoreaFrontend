@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import * as randomString from 'random-string';
 
 @Component({
@@ -9,6 +9,8 @@ import * as randomString from 'random-string';
 export class CodeTokenComponent implements OnInit {
   
   @Output() onRefresh = new EventEmitter<any>();
+
+  @Input() refresh = true;
 
   code = 'X78ghJiK';
 

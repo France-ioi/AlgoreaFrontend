@@ -27,6 +27,7 @@ export enum JoinMethod {
 export class GroupComponent implements OnInit {
   groupdata;
   status;
+  empty;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -38,6 +39,7 @@ export class GroupComponent implements OnInit {
       const refresh = paramMap.get('refresh');
       if (refresh) {
         console.log(history.state.groupdata);
+        this.empty = history.state.groupdata.children ? false : true;
         this.groupdata = {
           ID: history.state.groupdata.ID,
           name: 'Jean Monnet',

@@ -1,0 +1,16 @@
+<div class="modify-section">
+  <span class="section-comment">Here are the informations registered for <em>Toile de competences</em> in IOI Connect</span>
+  <app-button icon="fa fa-pencil-alt" label="Modify" class="ui-button-rounded"></app-button>
+</div>
+<app-section icon="fa fa-users" label="Personal Information">
+  <app-data-list [items]="personal"></app-data-list>
+</app-section>
+<app-section icon="fa fa-graduation-cap" label="School Information">
+  <app-data-list [items]="school"></app-data-list>
+</app-section>
+<app-section icon="fa fa-envelope" label="Contact Information">
+  <app-data-list [items]="contact"></app-data-list>
+</app-section>
+<app-section icon="fa fa-cog" label="Parameters">
+  <app-data-list [items]="parameters"></app-data-list>
+</app-section>

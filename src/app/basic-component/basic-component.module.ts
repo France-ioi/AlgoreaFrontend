@@ -14,6 +14,7 @@ import { TieredMenuModule } from 'primeng/tieredmenu';
 import { TooltipModule } from 'primeng/tooltip';
 import { SliderModule } from 'primeng/slider';
 import { ListboxModule } from 'primeng/listbox';
+import { MessagesModule } from 'primeng/messages';
 
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -48,7 +49,6 @@ import { EditorBarComponent } from './editor-bar/editor-bar.component';
 import { DropdownComponent } from './dropdown/dropdown.component';
 import { ChapterGridComponent } from './chapter-grid/chapter-grid.component';
 import { InputComponent } from './input/input.component';
-import { DialogComponent } from './dialog/dialog.component';
 import { SelectionTreeComponent } from './selection-tree/selection-tree.component';
 import { GroupNavigationTreeComponent } from './group-navigation-tree/group-navigation.component';
 import { ItemsNavigationTreeComponent } from './items-navigation-tree/items-navigation-tree.component';
@@ -71,6 +71,9 @@ import { EditUserDialogComponent } from './dialogs/edit-user-dialog/edit-user-di
 import { AttachGroupDialogComponent } from './dialogs/attach-group-dialog/attach-group-dialog.component';
 import { ResetPasswordDialogComponent } from './dialogs/reset-password-dialog/reset-password-dialog.component';
 import { ConfirmPasswordDialogComponent } from './dialogs/confirm-password-dialog/confirm-password-dialog.component';
+import { MessageComponent } from './message/message.component';
+import { ImageUploadComponent } from './image-upload/image-upload.component';
+import { DragDropDirective } from './image-upload/drag-drop.directive';
 
 @NgModule({
   declarations: [
@@ -99,7 +102,6 @@ import { ConfirmPasswordDialogComponent } from './dialogs/confirm-password-dialo
     DropdownComponent,
     ChapterGridComponent,
     InputComponent,
-    DialogComponent,
     SelectionTreeComponent,
     GroupNavigationTreeComponent,
     ItemsNavigationTreeComponent,
@@ -120,7 +122,10 @@ import { ConfirmPasswordDialogComponent } from './dialogs/confirm-password-dialo
     EditUserDialogComponent,
     AttachGroupDialogComponent,
     ResetPasswordDialogComponent,
-    ConfirmPasswordDialogComponent
+    ConfirmPasswordDialogComponent,
+    MessageComponent,
+    ImageUploadComponent,
+    DragDropDirective
   ],
   imports: [
     CommonModule,
@@ -137,6 +142,7 @@ import { ConfirmPasswordDialogComponent } from './dialogs/confirm-password-dialo
     TooltipModule,
     SliderModule,
     ListboxModule,
+    MessagesModule,
 
     MatIconModule,
     MatNativeDateModule,
@@ -175,7 +181,6 @@ import { ConfirmPasswordDialogComponent } from './dialogs/confirm-password-dialo
     DropdownComponent,
     ChapterGridComponent,
     InputComponent,
-    DialogComponent,
     SelectionTreeComponent,
     GroupNavigationTreeComponent,
     ItemsNavigationTreeComponent,
@@ -196,10 +201,12 @@ import { ConfirmPasswordDialogComponent } from './dialogs/confirm-password-dialo
     EditUserDialogComponent,
     AttachGroupDialogComponent,
     ResetPasswordDialogComponent,
-    ConfirmPasswordDialogComponent
+    ConfirmPasswordDialogComponent,
+    MessageComponent,
+    ImageUploadComponent
   ],
   providers: [
-    {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: false}}
+    {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: true}}
   ],
   entryComponents: [
     MatDialogComponent,

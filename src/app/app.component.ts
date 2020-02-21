@@ -258,6 +258,22 @@ export class AppComponent {
                 icon: "fa fa-book-open",
                 type: 1
               }
+            },
+            {
+              ID: 44,
+              title: "Groups as teams",
+              type: "leaf",
+              ring: true,
+              state: "opened",
+              hasKey: true,
+              progress: {
+                displayedScore: 50,
+                currentScore: 30
+              },
+              category: {
+                icon: "fa fa-book-open",
+                type: 1
+              }
             }
           ]
         }
@@ -588,6 +604,22 @@ export class AppComponent {
                 icon: "fa fa-book-open",
                 type: 1
               }
+            },
+            {
+              ID: 44,
+              title: "Activity with presentation view",
+              type: "leaf",
+              ring: true,
+              state: "opened",
+              hasKey: true,
+              progress: {
+                displayedScore: 20,
+                currentScore: 30
+              },
+              category: {
+                icon: "fa fa-book-open",
+                type: 1
+              }
             }
           ],
           category: {
@@ -843,7 +875,7 @@ export class AppComponent {
   folded = false;
   scrolled = false;
   signedIn = true;
-
+  notified = false;
   activityORSkill = true;
 
   taskdata;
@@ -867,6 +899,15 @@ export class AppComponent {
       avatar: "_messi.jpg",
       type: "user"
     });
+    this.editService.getOb().subscribe(res => {
+      this.scrolled = res.scrolled;
+      this.folded = res.folded;
+      this.isStarted = res.isStarted;
+      this.collapsed = res.collapsed;
+      this.activityORSkill = res.activityORSkill;
+      this.editing = res.editing;
+      this.notified = res.notified;
+    });
   }
 
   updateService() {
@@ -876,7 +917,8 @@ export class AppComponent {
       isStarted: this.isStarted,
       collapsed: this.collapsed,
       activityORSkill: this.activityORSkill,
-      editing: this.editing
+      editing: this.editing,
+      notified: this.notified
     });
   }
 
@@ -1023,5 +1065,13 @@ export class AppComponent {
   onEditCancel(e) {
     this.editing = false;
     this.updateService();
+  }
+
+  onNotify(e) {
+    this.selectedType = 5;
+    this.userTitle = 'Notifications';
+    this.notified = true;
+    this.updateService();
+    this.router.navigate(["/notification"]);
   }
 }

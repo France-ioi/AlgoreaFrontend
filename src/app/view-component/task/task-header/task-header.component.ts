@@ -168,6 +168,8 @@ export class TaskHeaderComponent implements OnInit {
     }
   ];
 
+  showTeamTitle = false;
+
   constructor() { }
 
   ngOnInit() {
@@ -176,6 +178,10 @@ export class TaskHeaderComponent implements OnInit {
   onCoordEvent(e) {
     console.log(e);
     this.isCoordinator = !this.isCoordinator;
+  }
+
+  onCollapseTeam(e) {
+    this.showTeamTitle = !e;
   }
 
 }

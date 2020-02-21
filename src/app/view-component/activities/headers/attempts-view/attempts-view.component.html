@@ -3,15 +3,27 @@
   label="You have {{ attempts.length }} attempts"
   [collapsible]="true"
   [data]="selectedAttempt"
+  [remainOrigin]="false"
+  (onCollapse)="onCollapseHeader($event)"
 >
-  <ng-template #headerTemplate>
-    <div style="width: 180px;">
-      <app-button
-        icon="fa fa-flag-checkered"
-        label="New attempt"
-        class="ui-button-rounded ui-fit-parent"
-        (onClick)="newAttempt($event)"
-      ></app-button>
+  <ng-template #headerTemplate let-data>
+    <div style="flex: 1; flex-direction: row-reverse;display: flex; align-items: center;">
+      <div style="width: 180px;">
+        <app-button
+          icon="fa fa-flag-checkered"
+          label="New attempt"
+          class="ui-button-rounded ui-fit-parent"
+          (onClick)="newAttempt($event)"
+        ></app-button>
+      </div>
+      <div *ngIf="showSelected && selectedAttemptID >= 0" class="collapsed-attempt-header">
+        <div class="attempt-title">
+          Attempt n&#176; {{data.ID}}
+        </div>
+        <div class="attempt-info">
+          {{data.date | date:'d/MM/y h'}} - par {{data.author}}
+        </div>
+      </div>
     </div>
   </ng-template>
   <ul class="attempts-container">
@@ -29,7 +41,7 @@
         [isDark]="item.ID === selectedAttemptID"
       ></app-score-ring>
       <span class="attempt-number">
-        <b>Attempt n &#176; {{ item.number }}</b>
+        <b>Attempt n&#176; {{ item.number }}</b>
       </span>
       <span class="attempt-date">
         - {{ item.date | date: "d/MM/y h" }}h -

@@ -8,6 +8,7 @@ import { Component, OnInit, Input } from '@angular/core';
 export class TimePickerComponent implements OnInit {
 
   @Input() time = 30;
+  @Input() status;
 
   _prev;
 

@@ -21,6 +21,7 @@ export class LeftNavComponent implements OnInit, OnChanges {
   @Output() signInOutEvent = new EventEmitter<any>();
   @Output() joinGroupSelect = new EventEmitter<any>();
   @Output() manageGroupSelect = new EventEmitter<any>();
+  @Output() onNotify = new EventEmitter<any>();
 
   constructor(
     private router: Router
@@ -63,6 +64,10 @@ export class LeftNavComponent implements OnInit, OnChanges {
 
   onManageGroupSelected(e) {
     this.manageGroupSelect.emit(e);
+  }
+
+  onNotifyClicked(e) {
+    this.onNotify.emit(e);
   }
 
 }

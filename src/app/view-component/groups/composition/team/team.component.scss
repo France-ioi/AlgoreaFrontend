@@ -1,0 +1,58 @@
+@import 'src/colors.scss';
+
+.team-member-list-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  margin: 0 auto;
+
+  app-team-member {
+    display: block;
+    margin: 10px;
+    flex: 0;
+    width: 200px;
+    // max-width: calc(25% - 20px);
+  }
+}
+
+@media screen and (min-width: 1770px) {
+  .team-member-list-container {
+    width: 1260px;
+  }
+}
+
+@media screen and (min-width: 1590px) and (max-width: 1770px) {
+  .team-member-list-container {
+    width: 1080px;
+  }
+}
+
+@media screen and (min-width: 1410px) and (max-width: 1590px) {
+  .team-member-list-container {
+    width: 900px;
+  }
+}
+
+@media screen and (min-width: 1230px) and (max-width: 1410px) {
+  .team-member-list-container {
+    width: 720px;
+  }
+}
+
+@media screen and (min-width: 1050px) and (max-width: 1230px) {
+  .team-member-list-container {
+    width: 540px;
+  }
+}
+
+@media screen and (min-width: 870px) and (max-width: 1050px) {
+  .team-member-list-container {
+    width: 360px;
+  }
+}
+
+@media screen and (min-width: 690px) and (max-width: 870px) {
+  .team-member-list-container {
+    width: 180px;
+  }
+}

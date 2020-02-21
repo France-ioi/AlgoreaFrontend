@@ -5,6 +5,7 @@ import { YourselfComponent } from './view-component/yourself/yourself.component'
 import { GroupComponent } from './view-component/group/group.component';
 import { HomePageComponent } from './view-component/home-page/home-page.component';
 import { GroupInfoComponent } from './view-component/groups/group-info/group-info.component';
+import { NotificationViewComponent } from './view-component/notification-view/notification-view.component';
 
 
 const routes: Routes = [
@@ -27,6 +28,10 @@ const routes: Routes = [
   {
     path: 'home',
     component: HomePageComponent
+  },
+  {
+    path: 'notification',
+    component: NotificationViewComponent
   }
 ];
 

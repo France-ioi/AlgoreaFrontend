@@ -30,7 +30,9 @@ export class ScoreRingComponent implements OnInit, OnChanges {
   @Input() isValidated = false;
   @Input() isStarted = true;
   @Input() isDark = false;
+  @Input() isFailed = false;
   @Input() icons = '';
+  @Input() scoreFill = '';
 
   @ViewChild('svg', {static: false}) svg;
 
@@ -75,19 +77,24 @@ export class ScoreRingComponent implements OnInit, OnChanges {
     // console.log(changes);
     // console.log(this.displayPathRef);
 
+    if (this.scoreFill.length > 0) {
+      this._displayFill = this.scoreFill;
+      this._textFill = ScoreRingColor.darkText;
+    } else {
+      if (this.isDark) {
+        this._textFill = ScoreRingColor.darkText;
+      } else {
+        this._textFill = ScoreRingColor.defaultText;
+      }
+    }
+
     this._displayPath = this._pathFromScore(this.displayedScore);
     this._currentPath = this._pathFromScore(this.currentScore);
     if (this.displayedScore === 100) {
       this._displayFill = ScoreRingColor.success;
-    } else {
+    } else if (this.scoreFill.length === 0) {
       this._displayFill = 'hsl(' + this.displayedScore * 0.4 + ', 100%, 50%)';
       this._currentFill = '#8E8E8E';
-    }
-
-    if (this.isDark) {
-      this._textFill = ScoreRingColor.darkText;
-    } else {
-      this._textFill = ScoreRingColor.defaultText;
     }
 
     if (this.icons) {
@@ -100,7 +107,7 @@ export class ScoreRingComponent implements OnInit, OnChanges {
     } else if (this.isValidated) {
       this._iconPath = 'check';
       this._iconFill = ScoreRingColor.success;
-    } else if (this.displayedScore === 0) {
+    } else if (this.isFailed) {
       this._iconPath = 'times';
       this._iconFill = ScoreRingColor.initial;
     } else {

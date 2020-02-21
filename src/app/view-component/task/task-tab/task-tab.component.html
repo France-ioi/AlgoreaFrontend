@@ -172,6 +172,9 @@
         <ng-container *ngIf="data.ID === 43">
           <app-mosaics [data]="mosaicData"></app-mosaics>
         </ng-container>
+        <ng-container *ngIf="data.ID === 44">
+          <app-presentations [data]="mosaicData"></app-presentations>
+        </ng-container>
       </ng-template>
     </mat-tab>
     <mat-tab>
@@ -441,10 +444,10 @@
                           yPosition="above"
                           class="grid-td-menu"
                         >
-                          <div class="content">
-                            <ng-container
-                              *ngIf="!rowData[idx].progress.isValidated"
-                            >
+                          <ng-container
+                            *ngIf="!rowData[idx].progress.isValidated"
+                          >
+                            <div class="content">
                               <span>
                                 Give access?
                               </span>
@@ -460,10 +463,12 @@
                                 <i class="fa fa-cog"></i>
                                 <span>Custom</span>
                               </span>
-                            </ng-container>
-                            <ng-container
-                              *ngIf="rowData[idx].progress.isValidated"
-                            >
+                            </div>
+                          </ng-container>
+                          <ng-container
+                            *ngIf="rowData[idx].progress.isValidated"
+                          >
+                            <div class="content validated">
                               <span>
                                 <i class="fa fa-clock"></i>
                                 <span class="menu-label">Time spent</span>
@@ -555,8 +560,12 @@
                                 <i class="fa fa-list"></i>
                                 <span>HISTORIQUE</span>
                               </span>
-                            </ng-container>
-                          </div>
+                              <span class="clickable">
+                                <i class="fa fa-lock"></i>
+                                <span>ACCESS</span>
+                              </span>
+                            </div>
+                          </ng-container>
                           <span class="indicator"></span>
                         </mat-menu>
                         <div
@@ -622,11 +631,34 @@
                               <span>{{ rowData[idx].attempts }}</span>
                             </span>
                           </div>
-                          <div class="situation-bottom">
+                          <div
+                            class="situation-bottom"
+                            [ngClass]="{
+                              cross: rowData[idx].progress.isFailed,
+                              'not-started':
+                                !rowData[idx].progress.isFailed &&
+                                !rowData[idx].progress.isStarted,
+                              success:
+                                rowData[idx].progress.isValidated &&
+                                rowData[idx].progress.displayedScore === 100,
+                              'in-progress':
+                                !rowData[idx].progress.isFailed &&
+                                rowData[idx].progress.isValidated &&
+                                rowData[idx].progress.displayedScore > 0 &&
+                                rowData[idx].progress.displayedScore < 100,
+                              'no-score':
+                                !rowData[idx].progress.isFailed &&
+                                rowData[idx].progress.isStarted &&
+                                rowData[idx].progress.displayedScore === 0
+                            }"
+                          >
                             <app-score-ring
                               *ngIf="
-                                rowData[idx].progress.isValidated &&
-                                rowData[idx].progress.isStarted &&
+                                ((
+                                  rowData[idx].progress.isStarted &&
+                                  rowData[idx].progress.displayedScore !==
+                                    100) ||
+                                  rowData[idx].progress.isFailed) &&
                                 activityORSkill
                               "
                               [displayedScore]="
@@ -635,11 +667,32 @@
                               [currentScore]="
                                 rowData[idx].progress.currentScore
                               "
+                              [isFailed]="rowData[idx].progress.isFailed ? true : false"
                               diameter="32"
+                              [scoreFill]="
+                                !rowData[idx].progress.isFailed &&
+                                rowData[idx].progress.isValidated &&
+                                rowData[idx].progress.displayedScore > 0 &&
+                                rowData[idx].progress.displayedScore < 100
+                                  ? '#FFF'
+                                  : ''
+                              "
                             ></app-score-ring>
+                            <span
+                              class="situation-check"
+                              *ngIf="
+                                rowData[idx].progress.isValidated &&
+                                rowData[idx].progress.isStarted &&
+                                activityORSkill &&
+                                rowData[idx].progress.displayedScore === 100
+                              "
+                            >
+                              <i class="fa fa-check"></i>
+                            </span>
                             <span
                               class="situation-lock open"
                               *ngIf="
+                                !rowData[idx].progress.isFailed &&
                                 rowData[idx].progress.isValidated &&
                                 !rowData[idx].progress.isStarted &&
                                 activityORSkill
@@ -650,7 +703,9 @@
                             <span
                               class="situation-lock"
                               *ngIf="
+                                !rowData[idx].progress.isFailed &&
                                 !rowData[idx].progress.isValidated &&
+                                !rowData[idx].progress.isStarted &&
                                 activityORSkill
                               "
                             >
@@ -742,6 +797,12 @@
         Content
       </ng-template>
       <ng-template matTabContent>
+        <app-section label="Activity illustrations" icon="fa fa-images">
+          <div class="activity-illustration-container">
+            <app-image-upload label="Cover illustration"></app-image-upload>
+            <app-image-upload label="Thumbnail"></app-image-upload>
+          </div>
+        </app-section>
         <app-section label="Description" icon="fa fa-book">
           <app-textarea
             placeholder="Type your description..."
@@ -781,13 +842,26 @@
             ></app-chapter-grid>
             <span class="tri-tag"></span>
           </div>
-          <app-sub-section icon="fa fa-sign-in-alt" label="Add a content" [close]="showNewContent" (onClose)="onCancelEdit($event)">
+          <app-sub-section
+            icon="fa fa-sign-in-alt"
+            label="Add a content"
+            [close]="showNewContent"
+            (onClose)="onCancelEdit($event)"
+          >
             <div class="add-content-wrapper">
-              <app-input placeholder="New content ..." [value]="contentValue" (onChange)="onAddContent($event, 'contents')"></app-input>
+              <app-input
+                placeholder="New content ..."
+                [value]="contentValue"
+                (onChange)="onAddContent($event, 'contents')"
+              ></app-input>
               <span class="label">or</span>
               <app-activity-picker [trees]="trees"></app-activity-picker>
             </div>
-            <app-new-content id="contents" *ngIf="showNewContent" [data]="contentTypes"></app-new-content>
+            <app-new-content
+              id="contents"
+              *ngIf="showNewContent"
+              [data]="contentTypes"
+            ></app-new-content>
           </app-sub-section>
         </app-section>
       </ng-template>

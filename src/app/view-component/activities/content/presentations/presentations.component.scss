@@ -1,0 +1,11 @@
+@import 'src/colors.scss';
+
+.presentation-list-container {
+  display: flex;
+  flex-direction: column;
+
+  app-presentation-item {
+    display: block;
+    margin: 10px;
+  }
+}

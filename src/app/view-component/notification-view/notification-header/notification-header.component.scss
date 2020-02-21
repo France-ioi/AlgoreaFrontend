@@ -1,0 +1,18 @@
+@import 'src/colors.scss';
+
+.notification-header-container {
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+  margin-bottom: 20px;
+
+  .notification-header-title {
+    font-size: 24px;
+    color: $dark-text-color;
+  }
+
+  .notification-header-subtitle {
+    font-size: 12px;
+    color: $base-text-color;
+  }
+}

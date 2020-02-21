@@ -1,0 +1,16 @@
+@import 'src/colors.scss';
+
+.modify-section {
+  display: flex;
+  border-bottom: 1px solid $light-border-color;
+  padding: 10px;
+
+  .section-comment {
+    padding-left: 20px;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    font-size: 12px;
+    color: $base-text-color;
+  }
+}

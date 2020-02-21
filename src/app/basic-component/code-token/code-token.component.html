@@ -1,6 +1,6 @@
 <div class="code-generator">
-  <span class="code">{{code}}</span>
-  <span class="refresh" (click)="refreshCode($event)">
+  <span class="code" [ngClass]="{'no-refresh': !refresh}">{{code}}</span>
+  <span *ngIf="refresh" class="refresh" (click)="refreshCode($event)">
     <i class="fa fa-redo"></i>
   </span>
 </div>

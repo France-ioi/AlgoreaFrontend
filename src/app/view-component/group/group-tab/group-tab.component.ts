@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, ElementRef, EventEmitter, Output, Input } from '@angular/core';
 import { NodeService } from 'src/app/services/node-service.service';
 
 @Component({
@@ -7,6 +7,9 @@ import { NodeService } from 'src/app/services/node-service.service';
   styleUrls: ['./group-tab.component.scss']
 })
 export class GroupTabComponent implements OnInit {
+
+  @Input() data;
+  @Input() empty;
 
   @Output() expandWholeWidth = new EventEmitter<void>();
 
