@@ -1,0 +1,26 @@
+<app-section icon="fa fa-link" label="Skills associated with this activity">
+  <app-grid-filter-bar>
+    <app-select
+      [items]="filterChoice"
+      [opened]="false"
+      width="120"
+      style="margin: 5px;"
+    ></app-select>
+    <ng-container *ngFor="let filter of gridFilters">
+      <app-grid-filter
+        [icon]="filter.icon"
+        [label]="filter.label"
+        [type]="filter.type"
+        [mode]="filter.mode"
+        [text]="filter.text"
+        [ranges]="filter.ranges"
+        [dateRanges]="filter.dateRanges"
+        [list]="filter.list"
+        (onClose)="removeFilter(filter.ID)"
+      ></app-grid-filter>
+    </ng-container>
+  </app-grid-filter-bar>
+  <app-activity-skill-list [data]="suggested" [activity]="false"></app-activity-skill-list>
+
+  <p class="skill-post">There may be more skills associated with this activity, that you don't have access to.</p>
+</app-section>

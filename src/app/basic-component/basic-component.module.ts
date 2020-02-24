@@ -74,6 +74,7 @@ import { ConfirmPasswordDialogComponent } from './dialogs/confirm-password-dialo
 import { MessageComponent } from './message/message.component';
 import { ImageUploadComponent } from './image-upload/image-upload.component';
 import { DragDropDirective } from './image-upload/drag-drop.directive';
+import { ActivitySkillListComponent } from './activity-skill-list/activity-skill-list.component';
 
 @NgModule({
   declarations: [
@@ -125,7 +126,8 @@ import { DragDropDirective } from './image-upload/drag-drop.directive';
     ConfirmPasswordDialogComponent,
     MessageComponent,
     ImageUploadComponent,
-    DragDropDirective
+    DragDropDirective,
+    ActivitySkillListComponent
   ],
   imports: [
     CommonModule,
@@ -203,7 +205,8 @@ import { DragDropDirective } from './image-upload/drag-drop.directive';
     ResetPasswordDialogComponent,
     ConfirmPasswordDialogComponent,
     MessageComponent,
-    ImageUploadComponent
+    ImageUploadComponent,
+    ActivitySkillListComponent
   ],
   providers: [
     {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: true}}

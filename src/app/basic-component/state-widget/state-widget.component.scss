@@ -67,6 +67,11 @@
     background-color: $dark-base-color;
     border-top-left-radius: 100px;
     border-bottom-left-radius: 100px;
+
+    &.disabled {
+      background-color: #EFEFEF !important;
+      color: #D8D8D8 !important;
+    }
   }
 
   .state-label {
@@ -78,5 +83,10 @@
     border-bottom-right-radius: 100px;
     font-size: 10px;
     padding-left: 4px;
+
+    &.disabled {
+      background-color: #EFEFEF !important;
+      color: #D8D8D8 !important;
+    }
   }
 }

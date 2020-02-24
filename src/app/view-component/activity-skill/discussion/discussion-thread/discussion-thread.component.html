@@ -1,0 +1,142 @@
+<div class="back-to-discuss">
+  <span class="back-icon">
+    <i class="fa fa-chevron-left"></i>
+  </span>
+  <div class="back-label-wrapper">
+    <span class="back-label" (click)="onBack($event)">
+      Back to discussions
+    </span>
+  </div>
+  <span class="close-icon" (click)="onBack($event)">
+    <i class="fa fa-times"></i>
+  </span>
+</div>
+<app-section icon="fa fa-comment" label="{{ label }} help thread">
+  <div class="thread-list-container">
+    <div class="thread-list">
+      <div
+        *ngFor="let item of threads"
+        class="thread-list-item"
+        [ngClass]="{ creator: item.creator }"
+      >
+        <ng-container *ngIf="item.message">
+          <div class="message-item">
+            <div class="user-info">
+              <span class="item-id">
+                <span class="message-icon">
+                  <i class="{{ item.icon }}"></i>
+                </span>
+                <span class="user-id">
+                  {{ item.user }}
+                </span>
+              </span>
+              <span class="item-date">
+                {{ item.date | date: "d/MM/y - h:m" }}
+              </span>
+            </div>
+            <div class="user-message">
+              <div class="user-image">
+                <img
+                  *ngIf="item.image"
+                  src="assets/images/{{ item.image }}"
+                  width="40px"
+                  height="40px"
+                />
+                <img
+                  *ngIf="!item.image"
+                  src="assets/images/Male.svg"
+                  width="40px"
+                  height="40px"
+                />
+              </div>
+              <div class="message-content-wrapper">
+                <div
+                  class="message-content"
+                  [innerHTML]="item.message_content"
+                ></div>
+                <app-rating-bar *ngIf="!item.creator"></app-rating-bar>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="!item.message">
+          <span class="item-icon">
+            <i class="{{ item.icon }}"></i>
+          </span>
+          <span class="item-title">
+            {{ item.title }}
+            <span *ngIf="item.grading" class="item-grading"
+              >(waiting for validation)</span
+            >
+          </span>
+          <app-button
+            *ngIf="item.grading"
+            icon="fa fa-graduation-cap"
+            label="grade"
+            class="ui-button-rounded ui-small-button"
+          ></app-button>
+          <span *ngIf="item.graded" class="item-grade">
+            Graded
+          </span>
+          <span class="item-date">
+            {{ item.date | date: "d/MM/y - h:m" }}
+          </span>
+        </ng-container>
+      </div>
+      <div class="thread-list-item">
+        <span class="item-icon">
+          <i class="{{ answer.icon }}"></i>
+        </span>
+        <span class="item-title answer">
+          {{ answer.title }}
+        </span>
+        <span class="item-date">
+          {{ answer.date | date: "d/MM/y - h:m" }}
+        </span>
+      </div>
+    </div>
+    <span class="tri-tag"></span>
+  </div>
+  <app-sub-section icon="fa fa-comment" label="Add a message">
+    <div class="sub-section-unwrapper">
+      <p>{{ message.desc }}</p>
+      <div class="new-comment">
+        <div class="comment-editor-container">
+          <div class="user-info">
+            <img
+              src="assets/images/{{ message.user.image }}"
+              width="40px"
+              height="40px"
+            />
+            <span class="user-name">{{ message.user.name }}</span>
+          </div>
+          <editor
+            [init]="{
+              height: 210,
+              plugins: [
+                'advlist autolink lists link image charmap print preview anchor',
+                'searchreplace visualblocks code fullscreen',
+                'insertdatetime media table paste code help wordcount'
+              ],
+              toolbar: 'image link underline forecolor numlist bullist fullscreen',
+              menubar: 'file edit view insert format table',
+              statusbar: false
+            }"
+          ></editor>
+        </div>
+        <div class="comment-buttons">
+          <app-button
+            icon="fa fa-eye"
+            label="Preview"
+            class="ui-button-rounded ui-button-success"
+          ></app-button>
+          <app-button
+            icon="fa fa-envelope"
+            label="Reply"
+            class="ui-button-rounded"
+          ></app-button>
+        </div>
+      </div>
+    </div>
+  </app-sub-section>
+</app-section>

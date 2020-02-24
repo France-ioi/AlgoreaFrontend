@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SettingsEditModeComponent } from './edit-mode.component';
+import { DiscussionThreadComponent } from './discussion-thread.component';
 
-describe('EditModeComponent', () => {
-  let component: SettingsEditModeComponent;
-  let fixture: ComponentFixture<SettingsEditModeComponent>;
+describe('DiscussionThreadComponent', () => {
+  let component: DiscussionThreadComponent;
+  let fixture: ComponentFixture<DiscussionThreadComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SettingsEditModeComponent ]
+      declarations: [ DiscussionThreadComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SettingsEditModeComponent);
+    fixture = TestBed.createComponent(DiscussionThreadComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

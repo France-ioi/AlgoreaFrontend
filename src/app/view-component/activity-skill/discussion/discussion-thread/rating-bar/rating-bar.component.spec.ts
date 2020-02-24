@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SettingsEditModeComponent } from './edit-mode.component';
+import { RatingBarComponent } from './rating-bar.component';
 
-describe('EditModeComponent', () => {
-  let component: SettingsEditModeComponent;
-  let fixture: ComponentFixture<SettingsEditModeComponent>;
+describe('RatingBarComponent', () => {
+  let component: RatingBarComponent;
+  let fixture: ComponentFixture<RatingBarComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SettingsEditModeComponent ]
+      declarations: [ RatingBarComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SettingsEditModeComponent);
+    fixture = TestBed.createComponent(RatingBarComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
