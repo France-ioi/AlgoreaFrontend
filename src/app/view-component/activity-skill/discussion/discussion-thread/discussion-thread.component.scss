@@ -1,0 +1,240 @@
+@import 'src/colors.scss';
+
+.back-to-discuss {
+  display: flex;
+  padding: 15px 25px;
+  position: relative;
+  align-items: center;
+  height: 50px;
+  border-bottom: 1px solid #F0F0F0;
+
+  .back-icon {
+    color: $base-text-color;
+    display: flex;
+    width: 25px;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+  }
+
+  .back-label-wrapper {
+    flex: 1;
+    .back-label {
+      color: $base-color;
+      font-size: 12px;
+      cursor: pointer;
+    }
+  }
+
+  .close-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 25px;
+    height: 100%;
+    color: $base-color;
+    cursor: pointer;
+  }
+}
+
+.thread-list-container {
+  margin-left: -70px;
+  margin-right: -20px;
+  position: relative;
+
+  .thread-list {
+    display: flex;
+    flex-direction: column;
+    
+    &-item {
+      padding: 10px 25px;
+      border-bottom: 1px solid #F0F0F0;
+      display: flex;
+      color: $dark-text-color;
+      font-size: 12px;
+      min-height: 50px;
+
+      &.creator {
+        border-left: 5px solid $base-color;
+
+        .message-item {
+
+          .user-info .item-id {
+            border-radius: 100px;
+            background-color: $base-color;
+            color: white;
+          }
+        }
+      }
+
+      .message-item {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+
+        .user-info {
+          display: flex;
+          align-items: center;
+          min-height: 50px;
+
+          .item-id {
+            display: flex;
+            padding: 5px 10px;
+            color: $dark-text-color;
+
+            .message-icon {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            }
+
+            .user-id {
+              margin-left: 20px;
+            }
+          }
+
+          .item-date {
+            color: $base-text-color;
+            flex: 1;
+            justify-content: flex-end;
+          }
+        }
+
+        .user-message {
+          display: flex;
+          align-items: flex-start;
+
+          .user-image {
+            display: flex;
+            justify-content: center;
+            width: 150px;
+
+            img {
+              border-radius: 100px;
+            }
+          }
+
+          .message-content-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+
+            .message-content {
+              margin-bottom: 10px;
+            }
+          }
+        }
+      }
+      
+      .item-icon {
+        margin-right: 20px;
+        width: 25px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .item-grade {
+        color: #9CCD6B;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+      }
+
+      .item-title {
+        flex: 1;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+
+        .item-grading {
+          margin-left: 5px;
+          color: $base-color;
+        }
+
+        &.answer {
+          color: $base-color;
+          cursor: pointer;
+        }
+      }
+
+      .item-date {
+        color: $base-text-color;
+        margin-left: 10px;
+        display: flex;
+        align-items: center;
+      }
+
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+
+  }
+
+  .tri-tag {
+    position: absolute;
+    border-left: 11px solid transparent;
+    border-right: 11px solid transparent;
+    border-bottom: 17px solid #ECF3FC;
+  }
+}
+
+.sub-section-unwrapper {
+  margin-left: -25px;
+  margin-right: 135px;
+
+  .new-comment {
+    display: flex;
+    flex-direction: column;
+
+    .comment-editor-container {
+      margin-bottom: 10px;
+      display: flex;
+      align-items: flex-start;
+
+      .user-info {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-right: 40px;
+
+        img {
+          border-radius: 100px;
+        }
+
+        .user-name {
+          font-weight: bold;
+          font-size: 12px;
+          color: $dark-text-color;
+          margin-top: 5px;
+        }
+      }
+
+      editor {
+        flex: 1;
+      }
+    }
+
+    .comment-buttons {
+      display: flex;
+      justify-content: flex-end;
+
+      app-button:first-child {
+        margin-right: 10px;
+      }
+    }
+  }
+}
+
+:host ::ng-deep .tox {
+  &.tox-tinymce {
+    border-radius: 8px !important;
+    border: none;
+  }
+
+  .tox-edit-area__iframe {
+    background-color: #DFE6EF !important;
+  }
+}

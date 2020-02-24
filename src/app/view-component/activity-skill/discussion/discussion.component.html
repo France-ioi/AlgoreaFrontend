@@ -1,0 +1,82 @@
+<app-section
+  *ngIf="!selected"
+  icon="fa fa-comment"
+  label="Discussions related to this activities"
+>
+  <div class="section-for-sub">
+    <div style="background-color: #F1F2F7; margin-bottom: 20px;">
+      <app-selection type="square" [items]="sels"></app-selection>
+    </div>
+    <app-grid-filter-bar>
+      <app-select
+        [items]="filterChoice"
+        [opened]="false"
+        width="120"
+        style="margin: 5px;"
+      ></app-select>
+    </app-grid-filter-bar>
+    <app-grid
+      [selectedColumns]="columns"
+      [columns]="columns"
+      [data]="gridData"
+      sortMode="single"
+      scrollWhenExpanded="true"
+      [groupInfo]="gridPanel"
+      (expandWholeWidth)="onExpandWidth($event)"
+    >
+      <ng-template #headerTemplate let-columns>
+        <tr>
+          <th style="width: 50px;"></th>
+          <ng-container *ngFor="let col of columns">
+            <th *ngIf="col.field !== 'progress'" [pSortableColumn]="col.field">
+              {{ col.header }}
+              <p-sortIcon [field]="col.field"></p-sortIcon>
+            </th>
+            <th *ngIf="col.field === 'progress'" style="width: 60px">
+              {{ col.header }}
+            </th>
+          </ng-container>
+        </tr>
+      </ng-template>
+      <ng-template
+        #bodyTemplate
+        let-rowData
+        let-columns="columns"
+        let-rowIndex="rowIndex"
+      >
+        <tr style="cursor: pointer;" (click)="onShowThread(rowData)">
+          <td style="width: 50px;">
+            <span *ngIf="rowData.notification" class="table-icon"
+              ><i class="{{ rowData.notification }}"></i
+            ></span>
+          </td>
+          <ng-container *ngFor="let col of columns">
+            <td
+              *ngIf="col.field === 'progress'"
+              style="width: 60px; text-align: center"
+            >
+              <app-score-ring
+                [displayedScore]="rowData.progress.displayedScore"
+                [currentScore]="rowData.progress.currentScore"
+                diameter="24"
+              ></app-score-ring>
+            </td>
+            <td *ngIf="col.field === 'date'">
+              {{ rowData.date | date: "d/MM/y" }}
+            </td>
+            <td *ngIf="col.field !== 'progress' && col.field !== 'date'">
+              {{ rowData[col.field] }}
+            </td>
+          </ng-container>
+        </tr>
+      </ng-template>
+    </app-grid>
+  </div>
+  <div class="ask-for-help">
+    <span class="tri-tag"></span>
+    <div style="width: 230px;">
+      <app-button icon="fa fa-plus" label="ask for help" class="ui-button-rounded ui-fit-parent"></app-button>
+    </div>
+  </div>
+</app-section>
+<app-discussion-thread *ngIf="selected" [label]="currentThreadLabel" [threads]="currentThread" [answer]="answer" [message]="message" (onClose)="onCloseThread($event)"></app-discussion-thread>

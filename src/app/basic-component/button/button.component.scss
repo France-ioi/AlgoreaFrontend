@@ -4,6 +4,11 @@ $secondary-color: #4a4a4a;
 $warning-color: #f5a623;
 $danger-color: #ff001f;
 
+:host {
+  display: flex;
+  align-items: center;
+}
+
 :host ::ng-deep .ui-button {
   background-color: $base-color;
   border-color: $base-color;

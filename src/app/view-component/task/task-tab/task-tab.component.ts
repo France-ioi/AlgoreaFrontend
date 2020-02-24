@@ -971,10 +971,14 @@ export class TaskTabComponent implements OnInit, OnChanges {
     }
   ];
 
+  editTreeData;
+
   contentValue = "";
 
   scrolled = false;
   added = false;
+
+  selectedTab = 0;
 
   constructor(
     private elementRef: ElementRef,
@@ -998,6 +1002,12 @@ export class TaskTabComponent implements OnInit, OnChanges {
         this.validText = `solve at least ${this.autoText} tasks`;
         break;
     }
+
+    this.editTreeData = [
+      this.data
+    ];
+
+
   }
 
   ngOnInit() {
@@ -1034,6 +1044,9 @@ export class TaskTabComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     this.refresh();
+    if (changes.activityORSkill && changes.activityORSkill.previousValue !== changes.activityORSkill.currentValue) {
+      this.selectedTab = 0;
+    }
   }
 
   onTabChange(e) {

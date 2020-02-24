@@ -96,11 +96,11 @@
     [currentScore]="progress.currentScore"
   ></app-skill-progress>
 
-  <ng-container *ngIf="ID === 38">
+  <ng-container *ngIf="ID === 38 && activityORSkill">
     <app-access-code-view></app-access-code-view>
   </ng-container>
 
-  <ng-container *ngIf="ID === 39" >
+  <ng-container *ngIf="ID === 39 && activityORSkill" >
     <app-section-paragraph icon="fa fa-book" label="Before you start...">
       <div style="display: flex; flex-direction: column; align-items: center;">
         <div>
@@ -119,7 +119,7 @@
     </app-section-paragraph>
   </ng-container>
 
-  <ng-container *ngIf="ID === 40">
+  <ng-container *ngIf="ID === 40 && activityORSkill">
     <app-section-paragraph icon="fa fa-users" label="You chose The indesctructibles" [collapsible]="true" [hasBorder]="true" (onCollapse)="onCollapseTeam($event)">
       <ng-template #headerTemplate>
         <span *ngIf="showTeamTitle" class="team-count">
@@ -199,7 +199,7 @@
     </app-section-paragraph>
   </ng-container>
 
-  <ng-container *ngIf="ID === 41">
+  <ng-container *ngIf="ID === 41 && activityORSkill">
     <app-attempts-view [attempts]="attempts"></app-attempts-view>
   </ng-container>
 </div>

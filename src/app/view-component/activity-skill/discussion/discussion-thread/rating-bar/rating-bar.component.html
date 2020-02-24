@@ -1,0 +1,11 @@
+<div class="message-rating">
+  <span class="rating-item" [ngClass]="{active: selected[0]}" (click)="onSelectItem(0)" pTooltip="Graduate">
+    <i class="fa fa-graduation-cap"></i>
+  </span>
+  <span class="rating-item" [ngClass]="{active: selected[1]}" (click)="onSelectItem(1)" pTooltip="Like">
+    <i class="fa fa-thumbs-up"></i>
+  </span>
+  <span class="rating-item" [ngClass]="{active: selected[2]}" (click)="onSelectItem(2)" pTooltip="Shield">
+    <i class="fa fa-shield-alt"></i>
+  </span>
+</div>

@@ -1,0 +1,36 @@
+@import 'src/colors.scss';
+
+.table-icon {
+  color: $base-color;
+}
+
+.section-for-sub {
+  position: relative;
+
+  app-grid {
+    margin-left: -50px;
+    margin-right: -20px;
+  }
+}
+
+.ask-for-help {
+  margin-left: -70px;
+  margin-right: -20px;
+  margin-bottom: -20px;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ECF3FC;
+  position: relative;
+
+  .tri-tag {
+    position: absolute;
+    top: -17px;
+    left: 20px;
+    border-left: 11px solid transparent;
+    border-right: 11px solid transparent;
+    border-bottom: 17px solid #ECF3FC;
+  }
+}

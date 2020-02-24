@@ -907,6 +907,7 @@ export class AppComponent {
       this.activityORSkill = res.activityORSkill;
       this.editing = res.editing;
       this.notified = res.notified;
+      this.userTitle = res.userTitle;
     });
   }
 
@@ -918,7 +919,8 @@ export class AppComponent {
       collapsed: this.collapsed,
       activityORSkill: this.activityORSkill,
       editing: this.editing,
-      notified: this.notified
+      notified: this.notified,
+      userTitle: this.userTitle
     });
   }
 

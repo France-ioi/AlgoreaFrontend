@@ -1,0 +1,32 @@
+<app-section icon="fa fa-link" label="Activities related to this skill">
+  <app-grid-filter-bar>
+    <ng-container *ngFor="let filter of gridFilters">
+      <app-grid-filter
+        [icon]="filter.icon"
+        [label]="filter.label"
+        [type]="filter.type"
+        [mode]="filter.mode"
+        [text]="filter.text"
+        [ranges]="filter.ranges"
+        [dateRanges]="filter.dateRanges"
+        [list]="filter.list"
+        (onClose)="removeFilter(filter.ID)"
+      ></app-grid-filter>
+    </ng-container>
+    <app-select
+      [items]="filterChoice"
+      [opened]="false"
+      width="120"
+      style="margin: 5px;"
+    ></app-select>
+  </app-grid-filter-bar>
+</app-section>
+<div class="group-tree-container">
+  <app-group-navigation-tree [data]="trees" [navigation]="false" (onEditPage)="onGotoPage($event)"></app-group-navigation-tree>
+</div>
+<div class="tree-container">
+  <span class="tri-tag"></span>
+  <app-sub-section icon="fa fa-plus" label="Add content">
+    <app-activity-picker [trees]="trees[0]"></app-activity-picker>
+  </app-sub-section>
+</div>

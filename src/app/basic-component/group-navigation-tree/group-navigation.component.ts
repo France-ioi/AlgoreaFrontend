@@ -11,9 +11,12 @@ export class GroupNavigationTreeComponent implements OnInit, OnChanges {
 
   @Input() data: TreeNode[];
   @Input() inGroup = false;
+  @Input() navigation = true;
+  @Input() showCategory = true;
 
   @Output() onNodeChange = new EventEmitter<any>();
   @Output() onTitleChange = new EventEmitter<any>();
+  @Output() onEditPage = new EventEmitter<any>();
 
   constructor(
     private router: Router
@@ -24,6 +27,7 @@ export class GroupNavigationTreeComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     if (this.data) {
+      console.log(changes);
       if (!this.inGroup && this.data.length > 0) {
         this.data[0]['root'] = true;
       }
@@ -70,6 +74,20 @@ export class GroupNavigationTreeComponent implements OnInit, OnChanges {
 
   goToPage(e, node) {
     this.onNodeChange.emit(node);
+  }
+
+  toggleConnection(e, node) {
+    e.stopPropagation();
+    
+    if (!node.connected) {
+      node.connected = true;
+    } else {
+      node.connected = false;
+    }
+  }
+
+  onGotoEditPage(node) {
+    this.onEditPage.emit(node);
   }
 
 }

@@ -1,4 +1,4 @@
-<mat-tab-group mat-stretch-tabs (selectedTabChange)="onTabChange($event)">
+<mat-tab-group [(selectedIndex)]="selectedTab" mat-stretch-tabs (selectedTabChange)="onTabChange($event)">
   <ng-container *ngIf="!editing">
     <mat-tab>
       <ng-template mat-tab-label>
@@ -779,15 +779,20 @@
         <i class="fa fa-comment"></i>
         Discussions
       </ng-template>
-      <ng-template matTabContent> </ng-template>
+      <ng-template matTabContent>
+        <app-discussion></app-discussion>
+      </ng-template>
     </mat-tab>
     <mat-tab>
       <ng-template mat-tab-label>
         <i class="fa fa-link"></i>
-        <ng-container *ngIf="activityORSkill">Related skills</ng-container>
-        <ng-container *ngIf="!activityORSkill">Related activities</ng-container>
+        <ng-container *ngIf="activityORSkill">Associated skills</ng-container>
+        <ng-container *ngIf="!activityORSkill">Associated activities</ng-container>
       </ng-template>
-      <ng-template matTabContent> </ng-template>
+      <ng-template matTabContent>
+        <app-associated-skills *ngIf="activityORSkill"></app-associated-skills>
+        <app-associated-activities *ngIf="!activityORSkill"></app-associated-activities>
+      </ng-template>
     </mat-tab>
   </ng-container>
   <ng-container *ngIf="editing">
@@ -872,7 +877,18 @@
         Settings
       </ng-template>
       <ng-template matTabContent>
-        <app-edit-mode [trees]="trees"></app-edit-mode>
+        <app-settings-edit-mode [trees]="trees"></app-settings-edit-mode>
+      </ng-template>
+    </mat-tab>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <i class="fa fa-link"></i>
+        <ng-container *ngIf="activityORSkill">Associated skills</ng-container>
+        <ng-container *ngIf="!activityORSkill">Associated activities</ng-container>
+      </ng-template>
+      <ng-template matTabContent>
+        <app-associated-skills-edit *ngIf="activityORSkill"></app-associated-skills-edit>
+        <app-associated-activities-edit *ngIf="!activityORSkill"></app-associated-activities-edit>
       </ng-template>
     </mat-tab>
   </ng-container>

@@ -9,6 +9,7 @@ export class StateWidgetComponent implements OnInit {
 
   @Input() icon;
   @Input() type;
+  @Input() disabled = false;
 
   labels = [
     'Discovery',

@@ -9,6 +9,8 @@ import { BasicComponentModule } from '../basic-component/basic-component.module'
 import { TieredMenuModule } from 'primeng/tieredmenu';
 import { TooltipModule } from 'primeng/tooltip';
 
+import { EditorModule } from '@tinymce/tinymce-angular';
+
 import { TaskTabComponent } from './task/task-tab/task-tab.component';
 import { TaskComponent } from './task/task.component';
 import { TaskHeaderComponent } from './task/task-header/task-header.component';
@@ -28,7 +30,7 @@ import { SessionViewComponent } from './activities/content/sessions/session-view
 import { SessionsComponent } from './activities/content/sessions/sessions.component';
 import { MosaicsComponent } from './activities/content/mosaics/mosaics.component';
 import { MosaicItemComponent } from './activities/content/mosaics/mosaic-item/mosaic-item.component';
-import { EditModeComponent } from './activities/settings/edit-mode/edit-mode.component';
+import { SettingsEditModeComponent } from './activities/settings/edit-mode/edit-mode.component';
 import { NewContentComponent } from './activities/content/edit-mode/new-content/new-content.component';
 import { NewContentTypeComponent } from './activities/content/edit-mode/new-content/new-content-type/new-content-type.component';
 import { GroupSettingsComponent } from './groups/settings/group-settings.component';
@@ -48,6 +50,13 @@ import { TeamCompositionComponent } from './groups/composition/team-composition/
 import { NotificationViewComponent } from './notification-view/notification-view.component';
 import { NotificationHeaderComponent } from './notification-view/notification-header/notification-header.component';
 import { NotificationTabComponent } from './notification-view/notification-tab/notification-tab.component';
+import { AssociatedActivitiesComponent } from './skills/associated-activities/associated-activities.component';
+import { AssociatedSkillsComponent } from './activities/associated-skills/associated-skills.component';
+import { DiscussionComponent } from './activity-skill/discussion/discussion.component';
+import { AssociatedActivitiesEditModeComponent } from './skills/associated-activities/edit-mode/edit-mode.component';
+import { AssociatedSkillsEditModeComponent } from './activities/associated-skills/edit-mode/edit-mode.component';
+import { DiscussionThreadComponent } from './activity-skill/discussion/discussion-thread/discussion-thread.component';
+import { RatingBarComponent } from './activity-skill/discussion/discussion-thread/rating-bar/rating-bar.component';
 
 
 @NgModule({
@@ -70,7 +79,7 @@ import { NotificationTabComponent } from './notification-view/notification-tab/n
     SessionsComponent,
     MosaicsComponent,
     MosaicItemComponent,
-    EditModeComponent,
+    SettingsEditModeComponent,
     NewContentComponent,
     NewContentTypeComponent,
     GroupSettingsComponent,
@@ -89,7 +98,14 @@ import { NotificationTabComponent } from './notification-view/notification-tab/n
     TeamCompositionComponent,
     NotificationViewComponent,
     NotificationHeaderComponent,
-    NotificationTabComponent
+    NotificationTabComponent,
+    AssociatedActivitiesComponent,
+    AssociatedSkillsComponent,
+    DiscussionComponent,
+    AssociatedActivitiesEditModeComponent,
+    AssociatedSkillsEditModeComponent,
+    DiscussionThreadComponent,
+    RatingBarComponent
   ],
   imports: [
     CommonModule,
@@ -101,7 +117,8 @@ import { NotificationTabComponent } from './notification-view/notification-tab/n
     BasicComponentModule,
     TieredMenuModule,
     TooltipModule,
-    MatMenuModule
+    MatMenuModule,
+    EditorModule
   ],
   exports: [
     TaskTabComponent,

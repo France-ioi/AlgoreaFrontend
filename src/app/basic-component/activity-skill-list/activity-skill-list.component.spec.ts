@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SettingsEditModeComponent } from './edit-mode.component';
+import { ActivitySkillListComponent } from './activity-skill-list.component';
 
-describe('EditModeComponent', () => {
-  let component: SettingsEditModeComponent;
-  let fixture: ComponentFixture<SettingsEditModeComponent>;
+describe('ActivitySkillListComponent', () => {
+  let component: ActivitySkillListComponent;
+  let fixture: ComponentFixture<ActivitySkillListComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SettingsEditModeComponent ]
+      declarations: [ ActivitySkillListComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SettingsEditModeComponent);
+    fixture = TestBed.createComponent(ActivitySkillListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

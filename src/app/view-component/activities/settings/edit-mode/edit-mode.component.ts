@@ -1,11 +1,11 @@
 import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
-  selector: 'app-edit-mode',
+  selector: 'app-settings-edit-mode',
   templateUrl: './edit-mode.component.html',
   styleUrls: ['./edit-mode.component.scss']
 })
-export class EditModeComponent implements OnInit {
+export class SettingsEditModeComponent implements OnInit {
 
   @Input() trees;
 
