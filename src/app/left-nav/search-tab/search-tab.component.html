@@ -1,0 +1,101 @@
+<div class="search-tools-wrapper">
+  <app-selection [items]="sels" mode="basic" (onChange)="onSelectionChanged($event)"></app-selection>
+  <app-grid-filter-bar>
+    <ng-container *ngFor="let filter of gridFilters">
+      <app-grid-filter
+        [icon]="filter.icon"
+        [label]="filter.label"
+        [type]="filter.type"
+        [mode]="filter.mode"
+        [text]="filter.text"
+        [ranges]="filter.ranges"
+        [dateRanges]="filter.dateRanges"
+        [list]="filter.list"
+        (onClose)="removeFilter(filter.ID)"
+      ></app-grid-filter>
+    </ng-container>
+    <app-select
+      [items]="filterChoice"
+      [opened]="false"
+      width="120"
+      style="margin: 5px;"
+    ></app-select>
+    <app-search-filter></app-search-filter>
+  </app-grid-filter-bar>
+</div>
+<div class="search-result">
+  <div class="items-found">
+    <span class="found-icon">
+      <i class="fa fa-folder-open"></i>
+    </span>
+    <span class="found-label">4 items found</span>
+  </div>
+  <ng-container *ngIf="selected === 0">
+    <div class="items-list">
+      <span *ngFor="let node of nodes" class="node-item-content">
+        <span class="node-select">
+          <i
+            *ngIf="node.checked"
+            class="pi pi-check"
+            style="font-size: 12px;"
+          ></i>
+          <i
+            *ngIf="!node.checked"
+            class="pi pi-circle-on"
+            style="font-size: 12px;"
+          ></i>
+        </span>
+        <span class="node-label">
+          <span class="label-container">
+            <span class="node-label-title">
+              {{ node.title }}
+            </span>
+            <span class="node-state" *ngIf="node.state === 'locked'">
+              <i class="fa fa-key" style="font-size: 16px;"></i>
+            </span>
+            <span class="node-state" *ngIf="node.state === 'never opened'">
+              <i class="fa fa-lock" style="font-size: 16px;"></i>
+            </span>
+          </span>
+          <app-skill-progress
+            *ngIf="node.progress"
+            [currentScore]="node.progress.currentScore"
+            [displayedScore]="node.progress.displayedScore"
+            [type]="'thin-horizontal'"
+          ></app-skill-progress>
+        </span>
+        
+      </span>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="selected === 1">
+    <div class="items-list">
+      <span *ngFor="let node of nodes" class="node-item-content">
+        <span class="node-select">
+          <app-score-ring
+            *ngIf="node.progress"
+            [displayedScore]="node.progress.displayedScore"
+            [currentScore]="node.progress.currentScore"
+            [diameter]="30"
+            isDark="true"
+            [icons]="node.progress.icons"
+          ></app-score-ring>
+        </span>
+        <span class="node-label">
+          <span class="label-container">
+            <span class="node-label-title">
+              {{ node.title }}
+            </span>
+            <span class="node-state" *ngIf="node.state === 'locked'">
+              <i class="fa fa-key" style="font-size: 16px;"></i>
+            </span>
+            <span class="node-state" *ngIf="node.state === 'never opened'">
+              <i class="fa fa-lock" style="font-size: 16px;"></i>
+            </span>
+          </span>
+        </span>
+        
+      </span>
+    </div>
+  </ng-container>
+</div>

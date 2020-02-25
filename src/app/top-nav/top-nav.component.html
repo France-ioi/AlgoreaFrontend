@@ -19,6 +19,7 @@
     </span>
     <app-select *ngIf="!signedIn" [items]="langs"></app-select>
   </div>
+  <app-search-input (onChange)="onSearchEvent($event)" (onClose)="onSearchCloseEvent($event)"></app-search-input>
   <app-notification *ngIf="showNotification && signedIn"></app-notification>
   <app-button *ngIf="!signedIn" icon="fa fa-power-off" label="Connexion" class="ui-button-rounded ui-button-warning ui-fit-parent" (onClick)="signInOut($event)"></app-button>
 </div>

@@ -23,6 +23,8 @@ export class LeftNavComponent implements OnInit, OnChanges {
   @Output() manageGroupSelect = new EventEmitter<any>();
   @Output() onNotify = new EventEmitter<any>();
 
+  searchView = false;
+
   constructor(
     private router: Router
   ) { }
@@ -68,6 +70,14 @@ export class LeftNavComponent implements OnInit, OnChanges {
 
   onNotifyClicked(e) {
     this.onNotify.emit(e);
+  }
+
+  onSearchEvent(e) {
+    this.searchView = true;
+  }
+
+  onSearchCloseEvent(e) {
+    this.searchView = false;
   }
 
 }

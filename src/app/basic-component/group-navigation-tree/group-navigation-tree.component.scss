@@ -217,6 +217,7 @@
       flex: 1;
       display: flex;
       align-items: center;
+      min-width: 0;
 
       app-state-widget {
         margin-right: 10px;
@@ -224,6 +225,9 @@
 
       &-title {
         flex: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
 
       .connect-link {

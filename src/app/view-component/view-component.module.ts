@@ -57,6 +57,7 @@ import { AssociatedActivitiesEditModeComponent } from './skills/associated-activ
 import { AssociatedSkillsEditModeComponent } from './activities/associated-skills/edit-mode/edit-mode.component';
 import { DiscussionThreadComponent } from './activity-skill/discussion/discussion-thread/discussion-thread.component';
 import { RatingBarComponent } from './activity-skill/discussion/discussion-thread/rating-bar/rating-bar.component';
+import { GroupRightHeaderComponent } from './group/group-header/group-right-header/group-right-header.component';
 
 
 @NgModule({
@@ -105,7 +106,8 @@ import { RatingBarComponent } from './activity-skill/discussion/discussion-threa
     AssociatedActivitiesEditModeComponent,
     AssociatedSkillsEditModeComponent,
     DiscussionThreadComponent,
-    RatingBarComponent
+    RatingBarComponent,
+    GroupRightHeaderComponent
   ],
   imports: [
     CommonModule,

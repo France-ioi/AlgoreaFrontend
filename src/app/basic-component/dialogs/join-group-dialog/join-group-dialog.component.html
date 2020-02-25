@@ -1,0 +1,79 @@
+<div mat-dialog-title>
+  <div class="dialog-header">
+    <span class="dialog-handler">
+      <i class="fa fa-list"></i>
+    </span>
+    <span class="dialog-title">Join the group "{{ data.group_name }}"</span>
+    <span class="dialog-close" (click)="onClose($event)">
+      <i class="fa fa-times"></i>
+    </span>
+  </div>
+  <div mat-dialog-close></div>
+</div>
+<div mat-dialog-content>
+  <div class="dialog-content">
+    <div class="join-group-wrapper">
+      <p class="description">{{ data.desc }}</p>
+      <div class="group-administrators">
+        <div class="admin-label">
+          This group is administrated by:
+        </div>
+        <div
+          *ngFor="let item of data.administrators; index as idx"
+          class="group-administrator"
+        >
+          <span class="user-icon"><i class="fa fa-user"></i></span>
+          <span class="user-name">
+            {{item}}
+            <ng-container *ngIf="idx !== data.administrators.length - 1">,</ng-container>
+          </span>
+        </div>
+      </div>
+      <span class="tri-tag"></span>
+    </div>
+    <div class="administrator-config-container">
+      <app-section icon="fa fa-exclamation-triangle" label="Allow the administrators to...">
+        <div *ngIf="data.require_watch_approval" class="form-item-view switch">
+          <span class="form-item-label">See your activity and your answers</span>
+          <div class="form-item-control">
+            <app-switch mode="white" [checked]="seeActivity" (onChange)="seeActivity = $event"></app-switch>
+          </div>
+        </div>
+        <div *ngIf="data.require_personal_info_access_approval === 'view' || data.require_personal_info_access_approval === 'edit'" class="form-item-view switch">
+          <span class="form-item-label">View your personal information</span>
+          <div class="form-item-control">
+            <app-switch mode="white" [checked]="viewPersonalInfo" (onChange)="viewPersonalInfo = $event"></app-switch>
+          </div>
+        </div>
+        <div *ngIf="data.require_personal_info_access_approval === 'edit'" class="form-item-view switch">
+          <span class="form-item-label danger">Modify your password and personal information</span>
+          <div class="form-item-control">
+            <app-switch mode="white" [checked]="modifyPersonalInfo" (onChange)="modifyPersonalInfo = $event"></app-switch>
+          </div>
+        </div>
+        <div *ngIf="data.require_lock_membership_approval_until" class="form-item-view switch">
+          <span class="form-item-label danger">Keep you locked in this group until {{data.require_lock_membership_approval_until | date: 'd/MM/y h:m'}}</span>
+          <div class="form-item-control">
+            <app-switch mode="white" [checked]="keepLocked" (onChange)="keepLocked = $event"></app-switch>
+          </div>
+        </div>
+      </app-section>
+    </div>
+    <div class="feedback">
+      <p class="feedback-label">Tell us your motivations for joining this group</p>
+      <app-textarea></app-textarea>
+      <app-message *ngIf="error" type="error" label="You need to accept all authorization requests to join this group" [closable]="false"></app-message>
+    </div>
+    <div class="join-group-button">
+      <div style="width: 150px;">
+        <app-button
+          icon="fa fa-check"
+          label="Join"
+          class="ui-button-rounded ui-fit-parent"
+          (onClick)="onJoin($event)"
+        ></app-button>
+      </div>
+    </div>
+  </div>
+</div>
+<div mat-dialog-actions></div>

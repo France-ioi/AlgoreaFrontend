@@ -13,7 +13,7 @@
     align-items: center;
 
     .section-handler {
-      display: block;
+      display: flex;
       background-color: $base-color;
       border-left: 3px solid $dark-color;
       width: 55px;
@@ -21,12 +21,13 @@
       border-top-right-radius: 100px;
       border-bottom-right-radius: 100px;
       position: relative;
+      justify-content: flex-end;
+      align-items: center;
+      padding-right: 10px;
 
       i {
         color: white;
-        position: absolute;
-        right: 10px;
-        top: 7px;
+        font-size: 14px;
       }
     }
 

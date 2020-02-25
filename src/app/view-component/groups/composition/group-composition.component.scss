@@ -189,3 +189,9 @@ span.comment {
 .edit-icon {
   color: $base-color;
 }
+
+.batch-button-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 15px;
+}

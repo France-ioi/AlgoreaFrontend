@@ -26,6 +26,7 @@ import { NavigationTabsComponent } from './left-nav/navigation-tabs/navigation-t
 import { SkillActivityTabsComponent } from './left-nav/skill-activity-tabs/skill-activity-tabs.component';
 import { LeftNavComponent } from './left-nav/left-nav.component';
 import { TopNavComponent } from './top-nav/top-nav.component';
+import { SearchTabComponent } from './left-nav/search-tab/search-tab.component';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: false
@@ -38,7 +39,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     NavigationTabsComponent,
     SkillActivityTabsComponent,
     LeftNavComponent,
-    TopNavComponent
+    TopNavComponent,
+    SearchTabComponent
   ],
   imports: [
     BrowserModule,
