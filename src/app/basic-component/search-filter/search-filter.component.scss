@@ -1,0 +1,206 @@
+@import 'src/colors.scss';
+
+.search-filter-container {
+  display: flex;
+  flex-direction: column;
+  margin: 5px;
+
+  &.expanded {
+    width: 100%;
+
+    .search-filter {
+      height: 30px;
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+      border-bottom-left-radius: unset;
+      border-bottom-right-radius: unset;
+    }
+  }
+
+  .search-filter {
+    display: flex;
+    align-items: center;
+    border-radius: 20px;
+    background-color: $base-color;
+    color: white;
+    font-size: 12px;
+    height: 20px;
+    padding-left: 10px;
+    padding-right: 10px;
+    cursor: pointer;
+
+    .icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+
+      &.filter-icon {
+        margin-right: 10px;
+      }
+
+      &.close-icon {
+        cursor: pointer;
+        width: 20px;
+      }
+    }
+
+    .filter-title {
+      flex: 1;
+      margin-right: 10px;
+    }
+  }
+
+  .search-filter-content {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    background-color: $dark-base-color;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+
+    .self-search-bar {
+      position: relative;
+      height: 30px;
+      color: white;
+
+
+      .self-search {
+        height: 100%;
+        width: 100%;
+        color: white;
+        border-radius: 100px;
+        background-color: #2B588B;
+        padding-left: 10px;
+        padding-right: 40px;
+        font-size: 12px;
+        border: none;
+
+        &:focus {
+          outline: none;
+        }
+      }
+
+      .search-icon {
+        width: 40px;
+        right: 0;
+        bottom: 0;
+        top: 0;
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+      }
+    }
+
+    .search-row {
+      margin: 5px;
+      display: flex;
+      align-items: center;
+
+      &-label {
+        flex: 1;
+        color: white;
+        font-size: 12px;
+      }
+
+      &-control {
+        .selector-switch {
+          background-color: #264F7E;
+          padding: 5px;
+          border-radius: 100px;
+          color: #466991;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+
+          .label {
+            color: #466991;
+            font-size: 12px;
+            display: inline-block;
+            line-height: 12px;
+            height: 12px;
+            margin-left: 3px;
+            margin-right: 3px;
+
+            &.active {
+              color: white;
+            }
+          }
+        }
+
+        .dropdown-list-wrapper {
+          position: relative;
+          min-width: 100px;
+
+          .dropdown-input {
+            display: flex;
+            align-items: center;
+            height: 25px;
+            width: 100%;
+            color: white;
+            padding-left: 15px;
+            padding-right: 15px;
+            background-color: #264F7E;
+            border-radius: 15px;
+            font-size: 12px;
+            cursor: pointer;
+
+            &.open {
+              border-bottom-left-radius: unset;
+              border-bottom-right-radius: unset;
+            }
+
+            .dropdown-value {
+              flex: 1;
+            }
+            
+            .dropdown-caret {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            }
+          }
+
+          .dropdown-list {
+            position: absolute;
+            width: 100%;
+            left: 0;
+            top: 25px;
+            display: flex;
+            flex-direction: column;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+            z-index: 10;
+
+            &-item {
+              cursor: pointer;
+              height: 25px;
+              color: white;
+              background-color: $base-color;
+              padding-left: 10px;
+              
+              &:last-child {
+                border-bottom-left-radius: 10px;
+                border-bottom-right-radius: 10px;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .search-slider {
+      margin: 5px;
+      color: white;
+      font-size: 12px;
+
+      .rate-label {
+        background-color: #264F7E;
+        padding: 5px;
+        border-radius: 100px;
+      }
+    }
+  }
+}

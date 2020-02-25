@@ -1,0 +1,101 @@
+@import 'src/colors.scss';
+
+.group-administrators {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  padding-bottom: 5px;
+
+  .admin-label {
+    font-style: italic;
+    font-size: 12px;
+    color: $base-text-color;
+    margin-right: 10px;
+  }
+
+  .group-administrator {
+    display: flex;
+    align-items: center;
+    margin: 0 5px;
+    font-size: 12px;
+
+    .user-icon {
+      margin-right: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: $base-color;
+    }
+    
+    .user-name {
+      color: $base-text-color;
+      margin: 5px;
+    }
+  }
+}
+
+.allow-label {
+  font-size: 12px;
+  color: $base-text-color;
+  margin: 5px;
+}
+
+.lock-time {
+  margin-top: 15px;
+  color: $section-danger-handle-color;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+
+  &-paragraph {
+    color: $section-danger-handle-color;
+    font-size: 12px;
+    font-style: italic;
+    margin-right: 100px;
+  }
+
+  &-text {
+    flex: 1;
+  }
+
+  &-icon {
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+  }
+}
+
+.form-item-view {
+  display: flex;
+  align-items: center;
+  margin: 5px;
+
+  &.switch {
+    .form-item-label {
+      width: auto;
+      flex: 1;
+    }
+
+    .form-item-control {
+      flex: unset;
+    }
+  }
+
+  .form-item-label {
+    display: block;
+    font-size: 12px;
+    width: 160px;
+    color: #5C5C5C;
+    font-weight: bold;
+
+    &.danger {
+      color: $section-danger-handle-color;
+    }
+  }
+
+  .form-item-control {
+    flex: 1;
+  }
+}

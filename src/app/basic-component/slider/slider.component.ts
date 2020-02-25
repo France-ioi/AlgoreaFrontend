@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-slider',
@@ -12,6 +12,8 @@ export class SliderComponent implements OnInit {
   @Input() max = 100;
   @Input() showValue = false;
   @ViewChild('slider', { static: false }) slider: ElementRef;
+
+  @Output() onChange = new EventEmitter<any>();
 
   posStart;
   posEnd;
@@ -27,9 +29,11 @@ export class SliderComponent implements OnInit {
   handleChange(e) {
     var handles = this.slider.nativeElement.querySelectorAll('.ui-slider-handle');
 
-    console.log(handles[1].style.left);
+    console.log(e);
     this.posStart = parseFloat(handles[0].style.left);
     this.posEnd = parseFloat(handles[1].style.left);
+
+    this.onChange.emit(e);
   }
 
 }

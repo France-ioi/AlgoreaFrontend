@@ -274,6 +274,22 @@ export class AppComponent {
                 icon: "fa fa-book-open",
                 type: 1
               }
+            },
+            {
+              ID: 45,
+              title: "Reminder of rights given to manager",
+              type: "leaf",
+              ring: true,
+              state: "opened",
+              hasKey: true,
+              progress: {
+                displayedScore: 50,
+                currentScore: 30
+              },
+              category: {
+                icon: "fa fa-book-open",
+                type: 1
+              }
             }
           ]
         }

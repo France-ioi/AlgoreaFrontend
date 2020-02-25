@@ -23,6 +23,8 @@ export class TopNavComponent implements OnInit {
   @Input() signedIn = true;
 
   @Output() onNotify = new EventEmitter<any>();
+  @Output() onSearch = new EventEmitter<any>();
+  @Output() onSearchClose = new EventEmitter<any>();
 
   langs = [
     'English',
@@ -62,6 +64,14 @@ export class TopNavComponent implements OnInit {
     this.signedIn = !this.signedIn;
     this.signInOutEvent.emit(this.signedIn);
     console.log(this.signedIn, this.templateId);
+  }
+
+  onSearchEvent(e) {
+    this.onSearch.emit(e);
+  }
+
+  onSearchCloseEvent(e) {
+    this.onSearchClose.emit(e);
   }
 
 }

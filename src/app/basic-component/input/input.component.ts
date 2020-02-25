@@ -14,8 +14,10 @@ export class InputComponent implements OnInit, OnChanges {
   @Input() type = 'small';
   @Input() hasButton = false;
   @Input() inputType = 'text';
+  @Input() leftIcon = 'fa fa-font';
 
   @Output() onChange = new EventEmitter<any>();
+  @Output() onClick = new EventEmitter<any>();
 
   constructor() { }
 
@@ -28,6 +30,10 @@ export class InputComponent implements OnInit, OnChanges {
 
   onValueChange(e) {
     this.onChange.emit(e);
+  }
+
+  onButtonClick(e) {
+    this.onClick.emit(e);
   }
 
 }

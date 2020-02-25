@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { EditUserDialogComponent } from 'src/app/basic-component/dialogs/edit-user-dialog/edit-user-dialog.component';
+import { GenerateBatchUserDialogComponent } from 'src/app/basic-component/dialogs/generate-batch-user-dialog/generate-batch-user-dialog.component';
 
 @Component({
   selector: 'app-group-composition',
@@ -152,11 +153,31 @@ export class GroupCompositionComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Main dialog returns ${result}`);
-    })
+    });
   }
 
   onInvite(e) {
     this.showMsg = !this.showMsg;
+  }
+
+  onCreateBatch(e) {
+    const dialogRef = this.mainDialog.open(GenerateBatchUserDialogComponent, {
+      maxHeight: '1000px',
+      minWidth: '600px',
+      maxWidth: '600px',
+      minHeight: '200px',
+      data: {
+        type: [
+          { label: 'passwords' },
+          { label: 'participation codes' }
+        ],
+        desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Generate Batch User dialog reaturns ${result}`);
+    });
   }
 
 }

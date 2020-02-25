@@ -1,0 +1,148 @@
+@import "src/colors.scss";
+
+.dialog-header {
+  display: flex;
+  align-items: center;
+
+  .dialog-handler {
+    display: block;
+    background-color: $base-color;
+    border-left: 3px solid $dark-color;
+    width: 55px;
+    height: 30px;
+    border-top-right-radius: 100px;
+    border-bottom-right-radius: 100px;
+    position: relative;
+
+    i {
+      color: white;
+      position: absolute;
+      right: 10px;
+      font-size: 12px;
+      top: 7px;
+    }
+  }
+
+  .dialog-title {
+    font-size: 24px;
+    color: $dark-text-color;
+    margin-left: 15px;
+    font-weight: normal;
+    flex: 1;
+  }
+
+  .dialog-close {
+    width: 25px;
+    color: $base-color;
+    cursor: pointer;
+  }
+}
+
+:host ::ng-deep .mat-dialog-actions {
+}
+
+:host ::ng-deep .mat-dialog-title {
+  margin-left: -24px;
+  margin-right: -24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid $light-border-color;
+}
+
+:host ::ng-deep .dialog-content {
+  max-height: 65vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  margin-left: -24px;
+  margin-right: -24px;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &:hover {
+    overflow: auto;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #f1f1f1;
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: #d1d1d1;
+  }
+
+  .account-type-wrapper {
+    display: flex;
+    flex-direction: column;
+    padding-left: 64px;
+    padding-right: 44px;
+
+    .description {
+      color: $base-text-color;
+      font-size: 12px;
+    }
+  }
+
+  .account-info-wrapper {
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid $light-border-color;
+    border-bottom: 1px solid $light-border-color;
+    padding: 15px 44px 15px 64px;
+
+    .gen-password, .gen-code {
+      font-size: 12px;
+      color: $base-text-color;
+      font-style: italic;
+    }
+  }
+
+  .form-item-view {
+    display: flex;
+    align-items: center;
+    margin: 5px;
+
+    &.switch {
+      .form-item-label {
+        width: auto;
+        flex: 1;
+      }
+
+      .form-item-control {
+        flex: unset;
+      }
+    }
+  
+    .form-item-label {
+      display: block;
+      font-size: 12px;
+      width: 160px;
+      color: #5C5C5C;
+      font-weight: bold;
+    }
+  
+    .form-item-control {
+      flex: 1;
+    }
+  }
+
+  .account-actions {
+    display: flex;
+    flex-direction: column;
+    margin-top: 15px;
+    padding-left: 64px;
+    padding-right: 44px;
+  }
+
+  .account-generate {
+    display: flex;
+    margin-top: 10px;
+    justify-content: center;
+  }
+}

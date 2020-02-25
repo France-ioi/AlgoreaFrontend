@@ -75,6 +75,10 @@ import { MessageComponent } from './message/message.component';
 import { ImageUploadComponent } from './image-upload/image-upload.component';
 import { DragDropDirective } from './image-upload/drag-drop.directive';
 import { ActivitySkillListComponent } from './activity-skill-list/activity-skill-list.component';
+import { GenerateBatchUserDialogComponent } from './dialogs/generate-batch-user-dialog/generate-batch-user-dialog.component';
+import { JoinGroupDialogComponent } from './dialogs/join-group-dialog/join-group-dialog.component';
+import { SearchInputComponent } from './search-input/search-input.component';
+import { SearchFilterComponent } from './search-filter/search-filter.component';
 
 @NgModule({
   declarations: [
@@ -127,7 +131,11 @@ import { ActivitySkillListComponent } from './activity-skill-list/activity-skill
     MessageComponent,
     ImageUploadComponent,
     DragDropDirective,
-    ActivitySkillListComponent
+    ActivitySkillListComponent,
+    GenerateBatchUserDialogComponent,
+    JoinGroupDialogComponent,
+    SearchInputComponent,
+    SearchFilterComponent
   ],
   imports: [
     CommonModule,
@@ -206,7 +214,11 @@ import { ActivitySkillListComponent } from './activity-skill-list/activity-skill
     ConfirmPasswordDialogComponent,
     MessageComponent,
     ImageUploadComponent,
-    ActivitySkillListComponent
+    ActivitySkillListComponent,
+    GenerateBatchUserDialogComponent,
+    JoinGroupDialogComponent,
+    SearchInputComponent,
+    SearchFilterComponent
   ],
   providers: [
     {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: true}}
@@ -217,7 +229,9 @@ import { ActivitySkillListComponent } from './activity-skill-list/activity-skill
     EditUserDialogComponent,
     AttachGroupDialogComponent,
     ResetPasswordDialogComponent,
-    ConfirmPasswordDialogComponent
+    ConfirmPasswordDialogComponent,
+    GenerateBatchUserDialogComponent,
+    JoinGroupDialogComponent
   ]
 })
 export class BasicComponentModule { }

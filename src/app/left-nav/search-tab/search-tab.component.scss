@@ -1,0 +1,118 @@
+@import "src/colors.scss";
+
+.search-tools-wrapper {
+  margin: 10px;
+  margin-bottom: 0;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #5c5c5c;
+
+  app-grid-filter-bar {
+    margin-left: -5px;
+    display: block;
+  }
+}
+
+.search-result {
+  .items-found {
+    height: 50px;
+    display: flex;
+    align-items: center;
+    padding-left: 20px;
+
+    .found-icon {
+      border-radius: 100px;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 20px;
+      background-color: #3b3b3b;
+      color: $secondary-color;
+      font-size: 16px;
+    }
+
+    .found-label {
+      color: white;
+      font-size: 16px;
+    }
+  }
+
+  .items-list {
+    display: flex;
+    flex-direction: column;
+
+    .node-item-content {
+      padding: 0px 3px;
+      display: block;
+      border-bottom: 2px solid #505050;
+      padding-right: 20px;
+      position: relative;
+      background-color: #535353;
+      height: 50px;
+      cursor: pointer;
+    }
+
+    .node-item-content .node-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 14px;
+    }
+
+    .node-select {
+      width: 30px;
+      height: 30px;
+      margin-right: 15px;
+      margin-left: 5px;
+      display: block;
+      text-align: center;
+      position: absolute;
+      top: 50%;
+      margin-top: -15px;
+    }
+
+    .node-select i {
+      line-height: 30px;
+    }
+
+    .node-select {
+      color: #f5a623;
+      z-index: 11;
+    }
+
+    .node-item-content .node-label {
+      top: 0;
+      bottom: 0;
+      left: 50px;
+      right: 0;
+      position: absolute;
+      display: block;
+      padding-right: 20px;
+      color: white;
+    }
+
+    .node-item-content .node-label .label-container {
+      display: flex;
+      margin-top: 15px;
+    }
+
+    .node-item-content .node-label .node-state {
+      margin-left: auto;
+    }
+
+    .node-item-content .node-label .node-label-title {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      margin-right: 10px;
+    }
+
+    .node-item-content .node-label app-skill-progress {
+      position: absolute;
+      left: 0;
+      right: 15px;
+      bottom: 0;
+    }
+  }
+}
