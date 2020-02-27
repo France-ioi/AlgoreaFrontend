@@ -1,6 +1,6 @@
 <div class="nav-header" *ngIf="templateId === 0">
   <div class="nav-control">
-    <span class="nav-collapse" (click)="onCollapse($event)">
+    <span class="nav-collapse" (click)="onCollapse($event)" tabindex="0">
       <!-- <i class="fa fa-bars"></i> -->
       <img src="assets/images/menu-open.svg" width="25px" height="25px" />
     </span>
@@ -10,11 +10,11 @@
       </span>
       <span class="user-name">{{ data.name }}</span>
     </span>
-    <span class="notifications" *ngIf="data.notification > 0 && signedIn" (click)="toggleNotification($event)">
+    <span class="notifications" *ngIf="data.notification > 0 && signedIn" (click)="toggleNotification($event)" tabindex="1">
       <span class="notification-number">{{ data.notification }}</span>
       <i class="far fa-bell"></i>
     </span>
-    <span *ngIf="signedIn" class="sign-out" (click)="signInOut($event)">
+    <span *ngIf="signedIn" class="sign-out" (click)="signInOut($event)" tabindex="2">
       <i class="fa fa-power-off"></i>
     </span>
     <app-select *ngIf="!signedIn" [items]="langs"></app-select>
@@ -25,13 +25,13 @@
 </div>
 
 <div class="nav-control alt" *ngIf="templateId">
-  <span class="nav-collapse" (click)="onCollapse($event)">
+  <span class="nav-collapse" (click)="onCollapse($event)" tabindex="0">
     <img src="assets/images/menu-open.svg" width="25px" height="25px" />
   </span>
   <span *ngIf="signedIn" class="title-collapse" (click)="onFold($event)" [ngClass]="{down: !folded}">
     <img src="assets/images/header-open.svg" />
   </span>
-  <span class="notifications" *ngIf="data.notification > 0 && signedIn">
+  <span class="notifications" *ngIf="data.notification > 0 && signedIn" tabindex="1">
     <span class="notification-number">{{ data.notification }}</span>
     <i class="far fa-bell"></i>
   </span>

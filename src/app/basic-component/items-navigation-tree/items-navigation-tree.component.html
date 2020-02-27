@@ -1,4 +1,4 @@
-<p-tree [value]="data">
+<p-tree [value]="data" (keydown)="onKeyDown($event)" #navTree>
   <!-- Folder elements template -->
   <ng-template let-node pTemplate="folder">
     <span

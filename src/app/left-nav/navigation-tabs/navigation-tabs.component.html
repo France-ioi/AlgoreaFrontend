@@ -46,7 +46,7 @@
     (psScrollY)="onScrollEvent($event)"
   >
     <ng-container *ngIf="groupShow">
-      <div class="group-content" (resized)="onResized($event)" #groupPanel>
+      <div class="group-content" (resized)="onResized($event)" #groupPanel tabindex="4">
         <div class="group-show-activity">
           <span class="group-show-activity-label">
             Show groups that participate to that activity

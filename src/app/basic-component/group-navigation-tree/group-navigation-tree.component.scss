@@ -1,4 +1,4 @@
-@import 'src/colors.scss';
+@import "src/colors.scss";
 
 :host ::ng-deep .ui-tree {
   width: 100%;
@@ -33,7 +33,12 @@
   border: none !important;
 }
 
-:host ::ng-deep .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content:focus {
+:host
+  ::ng-deep
+  .ui-tree
+  .ui-tree-container
+  .ui-treenode
+  .ui-treenode-content:focus {
   outline: none;
   box-shadow: none;
 }
@@ -43,7 +48,7 @@
 }
 
 :host ::ng-deep .ui-treenode-children {
-  border-left: 1px solid #9B9B9B;
+  border-left: 1px solid #9b9b9b;
   padding-left: 31px !important;
 }
 
@@ -52,203 +57,214 @@
   padding-left: 31px !important;
 }
 
-:host ::ng-deep
-  p-treenode:last-child >
-  .ui-treenode >
-  .ui-treenode-content
+:host
+  ::ng-deep
+  p-treenode:last-child
+  > .ui-treenode
+  > .ui-treenode-content
   .node-tree-item
-  .node-item-branch .bottom-branch {
-    border-left: none !important;
+  .node-item-branch
+  .bottom-branch {
+  border-left: none !important;
 }
 
-:host ::ng-deep
-  p-treenode:last-child >
-  .ui-treenode >
-  .ui-treenode-content
+:host
+  ::ng-deep
+  p-treenode:last-child
+  > .ui-treenode
+  > .ui-treenode-content
   .node-tree-item
-  .node-item-branch .top-branch {
-    border-bottom-left-radius: 10px;
+  .node-item-branch
+  .top-branch {
+  border-bottom-left-radius: 10px;
 }
 
-:host ::ng-deep .ui-treenode-content .node-tree-item {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  min-height: 40px;
-  position: relative;
-  cursor: pointer;
-  
-  &.expanded .folder-branch {
-    position: relative;
+:host ::ng-deep .ui-treenode-content {
+
+  &:focus {
+    .node-tree-item .node-item-content {
+      border-top-left-radius: 4px;
+      border-bottom-left-radius: 4px;
+      background-color: #fff;
+    }
   }
 
-  &.folder .node-item-branch .top-branch {
-    width: 28px;
-  }
-  
-  .node-item-branch {
+  .node-tree-item {
+    width: 100%;
     display: flex;
-    flex-direction: column;
-    width: 33px;
+    flex-direction: row;
+    align-items: center;
     min-height: 40px;
-    z-index: 10;
+    position: relative;
+    cursor: pointer;
 
-    .top-branch {
-      border-bottom: 1px solid #9B9B9B; 
-      border-left: 1px solid #9B9B9B; 
-      flex: 1;
+    &.expanded .folder-branch {
+      position: relative;
     }
 
-    .bottom-branch {
-      border-left: 1px solid #9B9B9B; 
-      flex: 1;
+    &.folder .node-item-branch .top-branch {
+      width: 28px;
+    }
 
-      .mask-branch {
-        position: absolute;
-        border-right: 1px solid #9B9B9B;
-        right: 0;
-        height: 15px;
-        width: 2px;
-        bottom: 0;
+    .node-item-branch {
+      display: flex;
+      flex-direction: column;
+      width: 33px;
+      min-height: 40px;
+      z-index: 10;
+
+      .top-branch {
+        border-bottom: 1px solid #9b9b9b;
+        border-left: 1px solid #9b9b9b;
+        flex: 1;
+      }
+
+      .bottom-branch {
+        border-left: 1px solid #9b9b9b;
+        flex: 1;
+
+        .mask-branch {
+          position: absolute;
+          border-right: 1px solid #9b9b9b;
+          right: 0;
+          height: 15px;
+          width: 2px;
+          bottom: 0;
+        }
       }
     }
-  }
 
-  .node-select {
-    width: 20px;
-    height: 20px;
-    display: flex;
-    margin-right: 15px;
-    margin-left: 5px;
-    align-items: center;
-    justify-content: center;
-    z-index: 11;
-    color: #9B9B9B;
-  }
+    .node-select {
+      width: 20px;
+      height: 20px;
+      display: flex;
+      margin-right: 15px;
+      margin-left: 5px;
+      align-items: center;
+      justify-content: center;
+      z-index: 11;
+      color: #9b9b9b;
+    }
 
-  &.assoc {
-    
+    &.assoc {
+      .node-item-content {
+        &.connected {
+          border-radius: unset;
+          background-color: transparent;
+
+          .node-label {
+            background-color: #dbe9f9;
+            color: $base-color;
+            border-radius: 100px;
+          }
+        }
+
+        .node-icon {
+          color: $base-color;
+        }
+      }
+
+      &.checked {
+        .node-item-content {
+          border-radius: unset;
+          background-color: transparent;
+
+          .node-label {
+            background-color: #dbe9f9;
+            color: $base-color;
+            border-radius: 100px;
+          }
+        }
+      }
+    }
+
+    &.checked .node-item-content {
+      border-top-left-radius: 4px;
+      border-bottom-left-radius: 4px;
+      background-color: #fff;
+
+      .go-to-page {
+        width: 30px;
+        height: 30px;
+        margin-right: 10px;
+        border-radius: 20px;
+        background-color: $base-color;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .leaf.node-select {
+        color: white;
+        background-color: #9b9b9b;
+        border-radius: 100px;
+      }
+    }
+
     .node-item-content {
+      right: 0;
+      height: 29px;
+      line-height: 29px;
+      padding: 10px 3px;
+      position: absolute;
+      left: 15px;
+      display: flex;
+      align-items: center;
 
       &.connected {
-        border-radius: unset;
-        background-color: transparent;
-  
-        .node-label {
-          background-color: #dbe9f9;
-          color: $base-color;
+        .node-label .connect-link {
+          color: $secondary-color;
+          background-color: white;
           border-radius: 100px;
         }
       }
 
       .node-icon {
-        color: $base-color;
-      }
-    }
-
-    &.checked {
-  
-      .node-item-content {
-        border-radius: unset;
-        background-color: transparent;
-  
-        .node-label {
-          background-color: #dbe9f9;
-          color: $base-color;
-          border-radius: 100px;
-        }
-      }
-    }
-    
-  }
-  
-  &.checked .node-item-content {
-    border-top-left-radius: 4px;
-    border-bottom-left-radius: 4px;
-    background-color: #fff;
-  
-    .go-to-page {
-      width: 30px;
-      height: 30px;
-      margin-right: 10px;
-      border-radius: 20px;
-      background-color: $base-color;
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .leaf.node-select {
-      color: white;
-      background-color: #9B9B9B;
-      border-radius: 100px;
-    }
-  }
-  
-  .node-item-content {
-    right: 0;
-    height: 29px;
-    line-height: 29px;
-    padding: 10px 3px;
-    position: absolute;
-    left: 15px;
-    display: flex;
-    align-items: center;
-
-    &.connected {
-      .node-label .connect-link {
-        color: $secondary-color;
-        background-color: white;
-        border-radius: 100px;
-      }
-    }
-    
-    .node-icon {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-right: 14px;
-    }
-    
-    .node-label {
-      padding-left: 5px;
-      flex: 1;
-      display: flex;
-      align-items: center;
-      min-width: 0;
-
-      app-state-widget {
-        margin-right: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 14px;
       }
 
-      &-title {
+      .node-label {
+        padding-left: 5px;
         flex: 1;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-
-      .connect-link {
-        height: 30px;
-        width: 30px;
         display: flex;
         align-items: center;
-        justify-content: center;
-        color: $base-color;
-        background-color: transparent;
-        // cursor: pointer;
-      }
+        min-width: 0;
 
-      .edit-icon {
-        height: 100%;
-        width: 30px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: $base-color;
-        cursor: pointer;
+        app-state-widget {
+          margin-right: 10px;
+        }
+
+        &-title {
+          flex: 1;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .connect-link {
+          height: 30px;
+          width: 30px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: $base-color;
+          background-color: transparent;
+          // cursor: pointer;
+        }
+
+        .edit-icon {
+          height: 100%;
+          width: 30px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: $base-color;
+          cursor: pointer;
+        }
       }
     }
   }
