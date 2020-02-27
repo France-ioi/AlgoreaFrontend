@@ -1,4 +1,4 @@
-<p-tree [value]="data">
+<p-tree [value]="data" (keydown)="onKeyDown($event)" #groupTree>
   <!-- Folder elements template -->
   <ng-template let-node pTemplate="folder">
     <span class="node-tree-item folder" [ngClass]="{'expanded': node.expanded, checked: node.checked, assoc: !navigation}">
@@ -13,7 +13,7 @@
           <i *ngIf="!node.expanded" class="fa fa-plus-square" style="font-size: 16px;"></i>
           <i *ngIf="node.expanded" class="fa fa-minus-square" style="font-size: 16px;"></i>
         </span>
-        <span *ngIf="node.icons" class="node-icon"><i class="{{node.icons}}" style="font-size: 16px;"></i></span>
+        <span *ngIf="node.icons" class="node-icon" (click)="nodeCheck($event, node)"><i class="{{node.icons}}" style="font-size: 16px;"></i></span>
         
         <span class="node-label">
           <app-state-widget *ngIf="!navigation && node.category && showCategory" [disabled]="!node.connected" [type]="node.category.type" [icon]="node.category.icon" (click)="nodeCheck($event, node)"></app-state-widget>

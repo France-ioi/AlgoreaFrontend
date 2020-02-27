@@ -39,7 +39,7 @@ export class GroupSettingsComponent implements OnInit {
       { ID: 7, title: "First name", list: PickListType.Mandatory, type: PickListItemType.Normal },
       { ID: 8, title: "Last name", list: PickListType.Mandatory, type: PickListItemType.Normal },
       { ID: 9, title: "Login", list: PickListType.Mandatory, type: PickListItemType.Normal },
-      { ID: 4, title: "Locked into Group", list: PickListType.Mandatory, type: PickListItemType.Lock }
+      { ID: 10, title: "Locked into Group", list: PickListType.Mandatory, type: PickListItemType.Lock }
     ]
   };
 

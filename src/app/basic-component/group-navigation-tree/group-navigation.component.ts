@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges, Output, EventEmitter, HostListener, ViewChild } from '@angular/core';
 import { TreeNode } from 'primeng/api';
 import { Router } from '@angular/router';
 
@@ -17,6 +17,8 @@ export class GroupNavigationTreeComponent implements OnInit, OnChanges {
   @Output() onNodeChange = new EventEmitter<any>();
   @Output() onTitleChange = new EventEmitter<any>();
   @Output() onEditPage = new EventEmitter<any>();
+
+  @ViewChild('groupTree', {static: false}) groupTree;
 
   constructor(
     private router: Router
@@ -88,6 +90,36 @@ export class GroupNavigationTreeComponent implements OnInit, OnChanges {
 
   onGotoEditPage(node) {
     this.onEditPage.emit(node);
+  }
+
+  onKeyDown(e) {
+    console.log(e);
+    if (e.code === 'Space') {
+      e.stopPropagation();
+      e.preventDefault();
+      const element = document.activeElement.querySelector('.ui-treenode-label .node-tree-item > .node-item-content > .node-label > .node-label-title') as HTMLElement;
+      element.click();
+    } else if (e.code === 'Enter') {
+      e.stopPropagation();
+      e.preventDefault();
+      const element = document.activeElement.querySelector('.ui-treenode-label .node-tree-item > .node-item-content > .node-label > .node-label-title') as HTMLElement;
+      element.click();
+      setTimeout(() => {
+        const gotoElement = document.activeElement.querySelector('.ui-treenode-label .node-tree-item > .node-item-content > .go-to-page') as HTMLElement;
+        gotoElement.click();
+      }, 0);
+    } else if (e.code === 'ArrowDown' || e.code === 'ArrowUp') {
+      e.stopPropagation();
+      e.preventDefault();
+      const element = document.activeElement as HTMLElement;
+
+      if (element) {
+        element.scrollIntoView({
+          behavior: 'auto',
+          block: 'center'
+        });
+      }
+    }
   }
 
 }
