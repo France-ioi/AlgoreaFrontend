@@ -1252,12 +1252,14 @@ export class TaskTabComponent implements OnInit, OnChanges {
               {
                 field: "solution",
                 label: "Solution",
-                comment: "User(s) can also grant \"Can view: solution\" access"
+                comment: "User(s) can also grant \"Can view: solution\" access",
+                disabled: true
               },
               {
                 field: "solution_with_grant",
                 label: "Solution and grant",
-                comment: "User(s) can also grant \"Can grant view\" access"
+                comment: "User(s) can also grant \"Can grant view\" access",
+                disabled: true
               }
             ],
             name: 'can_grant_view',

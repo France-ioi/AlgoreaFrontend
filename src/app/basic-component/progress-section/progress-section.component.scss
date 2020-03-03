@@ -1,4 +1,4 @@
-@import 'src/colors.scss';
+@import "src/colors.scss";
 
 .progress-section-container {
   display: flex;
@@ -15,6 +15,10 @@
     background-color: $base-color;
     padding: 5px;
     cursor: pointer;
+
+    &.disabled {
+      opacity: 0.5;
+    }
 
     .header-icon {
       display: flex;
@@ -52,10 +56,12 @@
   .progress-section-body {
     display: flex;
     flex-direction: column;
+    position: relative;
 
     .progress-section-item {
       display: flex;
-      
+      position: relative;
+
       .progress-control {
         margin-right: 10px;
         width: 30px;
@@ -73,7 +79,7 @@
           border-radius: 15px;
           font-size: 9px;
           color: white;
-          background-color: #D8D8D8;
+          background-color: #d8d8d8;
           cursor: pointer;
 
           &.active {
@@ -91,7 +97,7 @@
         .progress-branch {
           display: flex;
           width: 5px;
-          background-color: #D8D8D8;
+          background-color: #d8d8d8;
           flex: 1;
 
           &.active {
@@ -147,6 +153,16 @@
       .progress-addition {
         margin-left: 10px;
       }
+    }
+
+    .gray-overlay {
+      position: absolute;
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      opacity: 0.5;
+      background-color: #fff;
     }
   }
 }
