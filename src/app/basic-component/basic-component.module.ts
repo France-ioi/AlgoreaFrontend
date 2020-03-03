@@ -79,6 +79,9 @@ import { GenerateBatchUserDialogComponent } from './dialogs/generate-batch-user-
 import { JoinGroupDialogComponent } from './dialogs/join-group-dialog/join-group-dialog.component';
 import { SearchInputComponent } from './search-input/search-input.component';
 import { SearchFilterComponent } from './search-filter/search-filter.component';
+import { ProgressLevelComponent } from './progress-level/progress-level.component';
+import { AccessEditDialogComponent } from './dialogs/access-edit-dialog/access-edit-dialog.component';
+import { ProgressSectionComponent } from './progress-section/progress-section.component';
 
 @NgModule({
   declarations: [
@@ -135,7 +138,10 @@ import { SearchFilterComponent } from './search-filter/search-filter.component';
     GenerateBatchUserDialogComponent,
     JoinGroupDialogComponent,
     SearchInputComponent,
-    SearchFilterComponent
+    SearchFilterComponent,
+    ProgressLevelComponent,
+    AccessEditDialogComponent,
+    ProgressSectionComponent
   ],
   imports: [
     CommonModule,
@@ -218,7 +224,9 @@ import { SearchFilterComponent } from './search-filter/search-filter.component';
     GenerateBatchUserDialogComponent,
     JoinGroupDialogComponent,
     SearchInputComponent,
-    SearchFilterComponent
+    SearchFilterComponent,
+    ProgressLevelComponent,
+    AccessEditDialogComponent
   ],
   providers: [
     {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: true}}
@@ -231,7 +239,8 @@ import { SearchFilterComponent } from './search-filter/search-filter.component';
     ResetPasswordDialogComponent,
     ConfirmPasswordDialogComponent,
     GenerateBatchUserDialogComponent,
-    JoinGroupDialogComponent
+    JoinGroupDialogComponent,
+    AccessEditDialogComponent
   ]
 })
 export class BasicComponentModule { }

@@ -12,6 +12,8 @@ import { NodeService } from "src/app/services/node-service.service";
 import { EditService } from "src/app/services/edit.service";
 import { MenuItem } from "primeng/api/menuitem";
 import { ViewportScroller } from "@angular/common";
+import { MatDialog } from '@angular/material';
+import { AccessEditDialogComponent } from 'src/app/basic-component/dialogs/access-edit-dialog/access-edit-dialog.component';
 
 export enum AutoText {
   category = "category",
@@ -984,7 +986,8 @@ export class TaskTabComponent implements OnInit, OnChanges {
     private elementRef: ElementRef,
     private nodeService: NodeService,
     private editService: EditService,
-    private vps: ViewportScroller
+    private vps: ViewportScroller,
+    private dialog: MatDialog
   ) {}
 
   refresh() {
@@ -1155,5 +1158,200 @@ export class TaskTabComponent implements OnInit, OnChanges {
   onCancelEdit(e) {
     this.showNewContent = false;
     this.contentValue = "";
+  }
+
+  onConfigureAccess(e) {
+    const ref = this.dialog.open(AccessEditDialogComponent, {
+      maxHeight: "1000px",
+      minWidth: "800px",
+      maxWidth: "800px",
+      minHeight: "300px",
+      data: {
+        icon: "fa fa-lock",
+        label: `Item 1: access given to Terminale B`,
+        comment:
+          "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.",
+        sections: [
+          {
+            header: {
+              icon: "fa fa-eye",
+              title: "Can view"
+            },
+            progress: true,
+            values: [
+              {
+                field: "none",
+                label: 'Nothing',
+                comment: "Item is invisible to the user"
+              },
+              {
+                field: "info",
+                label: "Info",
+                comment: "User(s) can see the item title and description, but not its content"
+              },
+              {
+                field: "content",
+                label: "Content",
+                comment: "User(s) can see the content of this item"
+              },
+              {
+                field: "content_with_descendants",
+                label: "Content and descendants",
+                comment: "User(s) can also see the content of this items descendants (when possible for this group)"
+              },
+              {
+                field: "solution",
+                label: "Solution",
+                comment: "User(s) can also see the solution of this items and its descendants (when possible for this group)"
+              }
+            ],
+            name: 'can_view',
+            active_until: 2
+          },
+          {
+            header: {
+              icon: "fa fa-door-open",
+              title: "Can enter"
+            },
+            progress: false,
+            label: "User(s) may enter this item (a contest or time-limited chapter)",
+            name: 'can_enter_from',
+            checked: false,
+            start_from: new Date(),
+            until: new Date(),
+            until_name: 'can_enter_until',
+            until_checkd: false
+          },
+          {
+            header: {
+              icon: "fa fa-key",
+              title: "Can grant view"
+            },
+            progress: true,
+            values: [
+              {
+                field: "none",
+                label: 'Nothing',
+                comment: "User(s) can't grant any access to this item"
+              },
+              {
+                field: "enter",
+                label: "Info & enter",
+                comment: "User(s) can grant \"Can view: info\" and  \"Can enter\" access"
+              },
+              {
+                field: "content",
+                label: "Content",
+                comment: "User(s) can also grant \"Can view: content\" access"
+              },
+              {
+                field: "content_with_descendants",
+                label: "Content and descendants",
+                comment: "User(s) can also grant \"Can view: content and descendants\" access"
+              },
+              {
+                field: "solution",
+                label: "Solution",
+                comment: "User(s) can also grant \"Can view: solution\" access"
+              },
+              {
+                field: "solution_with_grant",
+                label: "Solution and grant",
+                comment: "User(s) can also grant \"Can grant view\" access"
+              }
+            ],
+            name: 'can_grant_view',
+            active_until: 2
+          },
+          {
+            header: {
+              icon: "fa fa-binoculars",
+              title: "Can watch"
+            },
+            progress: true,
+            values: [
+              {
+                field: "none",
+                label: 'Nothing',
+                comment: "User(s) can't watch the activity of others on this item"
+              },
+              {
+                field: "result",
+                label: "Result",
+                comment: "User(s) can view information about submissions and scores of others on this item, but not their answers"
+              },
+              {
+                field: "answer",
+                label: "Answer",
+                comment: "User(s) can also look at other people's answers on this item"
+              },
+              {
+                field: "answer_with_grant",
+                label: "Answer and grant",
+                comment: "User(s) can also grant \"Can watch\" access to others"
+              }
+            ],
+            name: 'can_watch',
+            active_until: 2
+          },
+          {
+            header: {
+              icon: "fa fa-pencil-alt",
+              title: "Can edit"
+            },
+            progress: true,
+            values: [
+              {
+                field: "none",
+                label: 'Nothing',
+                comment: "User(s) can't make any changes to this item"
+              },
+              {
+                field: "children",
+                label: "Children",
+                comment: "User(s) can add children to this item and edit how permissions propagate to them"
+              },
+              {
+                field: "all",
+                label: "All",
+                comment: "User(s) can also edit the content of the item itself, but may not delete it"
+              },
+              {
+                field: "all_with_grant",
+                label: "All and grant",
+                comment: "User(s) can also give \"Can edit\" access to others"
+              }
+            ],
+            name: 'can_edit',
+            active_until: 2
+          },
+          {
+            header: {
+              icon: "fa fa-paperclip",
+              title: "Can attach official sessions"
+            },
+            progress: false,
+            label: "User(s) may attach official sessions to this item, that will be visible to everyone in the content tab of the item",
+            name: "can_make_session_official",
+            checked: false
+          },
+          {
+            header: {
+              icon: "fa fa-user-tie",
+              title: "Is owner"
+            },
+            progress: false,
+            label:
+              "User(s) own this item, and get the maximum access in all categories above, and may also delete this item",
+            name: 'is_owner',
+            checked: false
+          }
+        ]
+      }
+    });
+
+    ref.afterClosed().subscribe(result => {
+      console.log(`Attach Group dialog result ${result}`);
+    });
   }
 }

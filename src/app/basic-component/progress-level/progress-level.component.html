@@ -1,0 +1,6 @@
+<div class="progress-level-container">
+  <ng-container *ngFor="let i of Arr(total).fill(1); let idx = index;">
+    <span class="progress-level-item" [ngClass]="{active: idx < filled, revert: theme === 'revert'}"></span>
+    <span *ngIf="idx + 1 < total" class="progress-level-item-link" [ngClass]="{active: idx + 1 < filled, revert: theme === 'revert'}"></span>
+  </ng-container>
+</div>

@@ -5,21 +5,21 @@
   <span class="gear-label">Settings</span>
   <mat-menu #gearMenu class="gear-mat-menu">
     <ul class="gear-menu">
-      <li>
+      <li *ngIf="!secondary">
         <span class="switch-label">Items as rows</span>
         <app-switch
           [checked]="itemsAsRow"
           (onChange)="handleSwitches($event, 0)"
         ></app-switch>
       </li>
-      <li>
+      <li *ngIf="!secondary">
         <span class="switch-label">Compact mode</span>
         <app-switch
           [checked]="compactMode"
           (onChange)="handleSwitches($event, 1)"
         ></app-switch>
       </li>
-      <li>
+      <li *ngIf="!secondary">
         <span class="switch-label">Freeze first column</span>
         <app-switch
           [checked]="freeze"
@@ -38,6 +38,13 @@
         <app-switch
           [checked]="showDescription"
           (onChange)="handleSwitches($event, 4)"
+        ></app-switch>
+      </li>
+      <li *ngIf="secondary">
+        <span class="switch-label">Comment</span>
+        <app-switch
+          [checked]="comment"
+          (onChange)="handleSwitches($event, 5)"
         ></app-switch>
       </li>
     </ul>
