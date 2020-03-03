@@ -92,6 +92,10 @@ $header-height: 90px;
     -khtml-user-select: none; /* webkit (konqueror) browsers */
     -ms-user-select: none;
 
+    &:focus {
+      outline: none;
+    }
+
     %group-div {
       border-top: 1px solid $group-border-color;
       padding: 7px 15px;

@@ -1,0 +1,45 @@
+@import 'src/colors.scss';
+
+.progress-level-container {
+  display: flex;
+  align-items: center;
+
+  .progress-level-item {
+    display: flex;
+    width: 12px;
+    height: 12px;
+    background-color: $base-text-color;
+    border-radius: 12px;
+
+    &.active {
+      background-color: $base-color;
+    }
+
+    &.revert {
+      background-color: $dark-base-color;
+
+      &.active {
+        background-color: white;
+      }
+    }
+
+    &-link {
+      display: flex;
+      width: 7px;
+      height: 3px;
+      background-color: $base-text-color;
+
+      &.active {
+        background-color: $base-color;
+      }
+
+      &.revert {
+        background-color: $dark-base-color;
+  
+        &.active {
+          background-color: white;
+        }
+      }
+    }
+  }
+}

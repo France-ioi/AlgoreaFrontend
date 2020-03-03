@@ -1,0 +1,152 @@
+@import 'src/colors.scss';
+
+.progress-section-container {
+  display: flex;
+  flex-direction: column;
+  margin-top: 5px;
+  margin-bottom: 5px;
+
+  .progress-section-header {
+    display: flex;
+    align-items: center;
+    height: 30px;
+    border-radius: 30px;
+    color: white;
+    background-color: $base-color;
+    padding: 5px;
+    cursor: pointer;
+
+    .header-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 25px;
+      height: 25px;
+      margin-right: 10px;
+      font-size: 14px;
+    }
+
+    .header-title {
+      font-weight: bold;
+      flex: 1;
+    }
+
+    .header-content {
+      display: flex;
+      align-items: center;
+
+      .selected-progress-level {
+        margin-left: 5px;
+      }
+    }
+
+    .toggle-expand {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 25px;
+      height: 25px;
+    }
+  }
+
+  .progress-section-body {
+    display: flex;
+    flex-direction: column;
+
+    .progress-section-item {
+      display: flex;
+      
+      .progress-control {
+        margin-right: 10px;
+        width: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        flex-direction: column;
+
+        .progress-point {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 15px;
+          height: 15px;
+          border-radius: 15px;
+          font-size: 9px;
+          color: white;
+          background-color: #D8D8D8;
+          cursor: pointer;
+
+          &.active {
+            background-color: $base-color;
+          }
+
+          &.last {
+            width: 30px;
+            height: 30px;
+            border-radius: 30px;
+            font-size: 12px;
+          }
+        }
+
+        .progress-branch {
+          display: flex;
+          width: 5px;
+          background-color: #D8D8D8;
+          flex: 1;
+
+          &.active {
+            background-color: $base-color;
+          }
+        }
+      }
+
+      .progress-desc {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        font-size: 12px;
+        color: $base-text-color;
+        min-height: 30px;
+
+        &.header-comment {
+          padding-top: 5px;
+        }
+
+        .progress-desc-name {
+          color: $dark-text-color;
+          font-weight: bold;
+          margin-bottom: 5px;
+          cursor: pointer;
+
+          &.active {
+            color: $base-color;
+          }
+
+          &.date {
+            display: flex;
+            align-items: center;
+
+            &.flex-start {
+              align-items: flex-start;
+            }
+
+            .date-start-label {
+              margin-right: 15px;
+              width: 90px;
+            }
+          }
+        }
+
+        .progress-desc-comment {
+          font-style: italic;
+          color: $base-text-color;
+          margin-bottom: 10px;
+        }
+      }
+
+      .progress-addition {
+        margin-left: 10px;
+      }
+    }
+  }
+}

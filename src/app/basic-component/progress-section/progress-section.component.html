@@ -1,0 +1,90 @@
+<div class="progress-section-container">
+  <div class="progress-section-header" (click)="onCollapse($event)">
+    <span class="header-icon">
+      <i class="{{ data.header.icon }}"></i>
+    </span>
+    <span class="header-title">{{ data.header.title }}</span>
+    <div *ngIf="collapsed && data.progress" class="header-content">
+      <app-progress-level [total]="data.values.length" [filled]="data.active_until" theme="revert"></app-progress-level>
+      <span *ngIf="data.active_until > 0" class="selected-progress-level">{{data.values[data.active_until-1].label}}</span>
+    </div>
+    <div *ngIf="collapsed && data.until_name && data.checked" class="header-content">
+      from {{ data.start_from | date:'d/MM/y'}}
+    </div>
+    <div *ngIf="collapsed && !data.until_name && !data.progress">
+      <ng-container *ngIf="data.checked">yes</ng-container>
+      <ng-container *ngIf="!data.checked">no</ng-container>
+    </div>
+    <span class="toggle-expand">
+      <i *ngIf="collapsed" class="fa fa-caret-down"></i>
+      <i *ngIf="!collapsed" class="fa fa-caret-up"></i>
+    </span>
+  </div>
+  <div *ngIf="!collapsed" class="progress-section-body">
+    <div class="progress-section-item">
+      <div class="progress-control">
+        <span *ngIf="data.progress" class="progress-branch" [ngClass]="{active: data.active_until > 0}"></span>
+      </div>
+      <div class="progress-desc header-comment">
+        The level of visibility the group has on the item
+      </div>
+    </div>
+    <ng-container *ngIf="data.progress">
+      <div *ngFor="let item of data.values; let idx = index;" class="progress-section-item">
+        <div class="progress-control">
+          <span class="progress-point" [ngClass]="{active: idx < data.active_until, last: idx + 1 == data.active_until}" (click)="onSetActive($event, data, idx)">
+            <i *ngIf="idx + 1 < data.active_until" class="fa fa-check"></i>
+            <i *ngIf="idx + 1 === data.active_until" class="fa fa-lock-open"></i>
+          </span>
+          <span *ngIf="idx + 1 < data.values.length" class="progress-branch" [ngClass]="{active: idx + 1 < data.active_until}"></span>
+        </div>
+        <div class="progress-desc">
+          <div class="progress-desc-name" [ngClass]="{active: idx < data.active_until}" (click)="onSetActive($event, data, idx)">{{ item.label }}</div>
+          <div class="progress-desc-comment">{{ item.comment }}</div>
+        </div>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="!data.progress">
+      <div class="progress-section-item">
+        <div class="progress-control">
+          <app-switch
+            mode="circular"
+            [checked]="data.checked"
+            (onChange)="onSwitchChange($event, data)"
+          ></app-switch>
+        </div>
+        <div class="progress-desc">
+          <div class="progress-desc-name" [ngClass]="{ active: data.checked }" (click)="onSwitchChange($event, data)">
+            {{ data.label }}
+          </div>
+          <!-- <div class="progress-desc-comment">{{ data.label }}</div> -->
+        </div>
+      </div>
+      <div *ngIf="data.until_name && data.checked" class="progress-section-item">
+        <div class="progress-control"></div>
+        <div class="progress-desc">
+          <div class="progress-desc-name date">
+            <span class="date-start-label">Starting from</span>
+            <app-date-picker></app-date-picker>
+          </div>
+          <div class="progress-desc-comment"></div>
+        </div>
+      </div>
+      <div *ngIf="data.until_name && data.checked" class="progress-section-item">
+        <div class="progress-control">
+          <app-switch
+            mode="circular"
+            [checked]="data.until_checkd"
+            (onChange)="data.until_checkd = !data.until_checkd"
+          ></app-switch>
+        </div>
+        <div class="progress-desc">
+          <div class="progress-desc-name date flex-start" [ngClass]="{ active: data.until_checkd }">
+            <span class="date-start-label" (click)="data.until_checkd = !data.until_checkd">Until</span>
+            <app-date-picker *ngIf="data.until_checkd"></app-date-picker>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>

@@ -13,11 +13,14 @@ export class GridGearComponent implements OnInit {
   @Input() freeze = true;
   @Input() sticky = true;
   @Input() showDescription = false;
+  @Input() secondary = false;
+  @Input() comment = false;
 
   @Output() compactChange = new EventEmitter<any>();
   @Output() frozenChange = new EventEmitter<any>();
   @Output() asRowChange = new EventEmitter<any>();
   @Output() showDescChange = new EventEmitter<any>();
+  @Output() commentChange = new EventEmitter<any>();
 
   constructor() { }
 
@@ -48,8 +51,12 @@ export class GridGearComponent implements OnInit {
       case 3:
         break;
       // Show descriptions
-      default:
+      case 4:
         this.showDescChange.emit(e);
+      case 5:
+        this.commentChange.emit(e);
+        break;
+      default:
     }
   }
 

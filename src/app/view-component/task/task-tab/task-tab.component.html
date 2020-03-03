@@ -459,7 +459,7 @@
                                 <i class="fa fa-times"></i>
                                 <span>No</span>
                               </span>
-                              <span>
+                              <span (click)="onConfigureAccess($event)">
                                 <i class="fa fa-cog"></i>
                                 <span>Custom</span>
                               </span>
@@ -560,7 +560,7 @@
                                 <i class="fa fa-list"></i>
                                 <span>HISTORIQUE</span>
                               </span>
-                              <span class="clickable">
+                              <span class="clickable" (click)="onConfigureAccess($event)">
                                 <i class="fa fa-lock"></i>
                                 <span>ACCESS</span>
                               </span>

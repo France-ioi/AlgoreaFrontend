@@ -39,14 +39,14 @@ export class NavigationTabsComponent implements OnInit, OnChanges {
     private _location: Location,
     private router: Router
   ) { 
+  }
+
+  ngOnInit() {
     this.editService.getOb().subscribe(res => {
       this.notified = res.notified;
       this.esOb = res;
       console.log('get', this.esOb);
     });
-  }
-
-  ngOnInit() {
   }
 
   fetchUser(){
@@ -95,11 +95,21 @@ export class NavigationTabsComponent implements OnInit, OnChanges {
     });
   }
 
+  _focusParent() {
+    const elements = this.groupPanel.nativeElement.querySelectorAll('.ui-accordion-header a');
+    console.log(elements);
+    for (const element of elements) {
+      (element as HTMLElement).blur();
+    }
+    (this.groupPanel.nativeElement as HTMLElement).focus();
+  }
+
   onScrollEvent(e) {
     this._updateStatus(e.srcElement);
   }
 
   onTabOpen(e) {
+    this.selectedGroup = e.index + 1;
     if (e.index === 0) {
       this.manageShow = true;
       this.manageGroupSelect.emit(e);
@@ -107,10 +117,11 @@ export class NavigationTabsComponent implements OnInit, OnChanges {
       this.joinShow = true;
       this.joinGroupSelect.emit(e);
     }
-    this.selectedGroup = e.index + 1;
+    this._focusParent();
   }
 
   onTabClose(e) {
+    this.selectedGroup = e.index + 1;
     if (e.index === 0) {
       this.manageShow = false;
       this.manageGroupSelect.emit(e);
@@ -118,7 +129,7 @@ export class NavigationTabsComponent implements OnInit, OnChanges {
       this.joinShow = false;
       this.joinGroupSelect.emit(e);
     }
-    this.selectedGroup = e.index + 1;
+    this._focusParent();
   }
 
   onTabChanged(e) {
@@ -165,11 +176,47 @@ export class NavigationTabsComponent implements OnInit, OnChanges {
   goBack(e) {
     this.notified = false;
     this.esOb.notified = false;
-    console.log(this.esOb);
     this.editService.setValue(this.esOb);
-    // this.editService.getUrl()
-    // this.router.navigateByUrl('/yourself');
     this._location.back();
+  }
+
+  onKeyDown(e) {
+    e.preventDefault();
+
+    if (e.code !== 'ArrowDown' && e.code !== 'ArrowUp' && e.code !== 'ArrowLeft' && e.code !== 'ArrowRight' && e.code !== 'Space' && e.code !== 'Enter') 
+      return;
+
+    // e.stopPropagation();
+    if (e.code === 'ArrowUp') {
+      this.selectedGroup = (this.selectedGroup - 1 + 3) % 3;
+    } else if (e.code === 'ArrowDown') {
+      this.selectedGroup = (this.selectedGroup + 1) % 3;
+    } else if (e.code === 'Space' || e.code === 'Enter') {
+      switch(this.selectedGroup) {
+        case 0:
+          this.fetchUser();
+          this.editService.setUser(this.currentUser);
+          this.yourselfSelect.emit(e);
+          break;
+        case 1:
+          this.manageShow = !this.manageShow;
+          this.manageGroupSelect.emit({
+            index: 0
+          });
+          break;
+        default:
+          this.joinShow = !this.joinShow;
+          this.joinGroupSelect.emit({
+            index: 1
+          });
+      }
+    } else {
+      if (this.selectedGroup === 1) {
+        this.manageShow = e.code === 'ArrowRight';
+      } else if (this.selectedGroup == 2) {
+        this.joinShow = e.code === 'ArrowRight';
+      }
+    }
   }
 
 }

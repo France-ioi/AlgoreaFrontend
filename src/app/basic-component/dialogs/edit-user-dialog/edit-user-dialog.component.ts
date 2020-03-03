@@ -39,7 +39,7 @@ export class EditUserDialogComponent implements OnInit {
 
     ref.afterClosed().subscribe(result => {
       console.log(`Attach Group dialog result ${result}`);
-    })
+    });
   }
 
   onResetPassword(e) {

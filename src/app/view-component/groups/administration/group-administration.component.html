@@ -1,0 +1,140 @@
+<app-section icon="fa fa-lock" label="Administrators of this group">
+  <app-grid
+    [selectedColumns]="cols"
+    [columns]="cols"
+    [data]="roles"
+    sortMode="single"
+    [showGear]="false"
+    [scrollable]="true"
+    class="slanted-grid"
+  >
+    <ng-template #headerTemplate let-columns>
+      <tr style="border: none;">
+        <th style="width: 60px; max-width: 60px;"></th>
+        <th style="min-width: 160px; transform: none; width: 159px;">
+          <app-grid-gear
+            [secondary]="true"
+            (commentChange)="onCommentChanged($event)"
+          ></app-grid-gear>
+        </th>
+        <th *ngIf="showComment" style="width: 160px;">
+          <div class="slanted-header">
+            <div class="slanted-header-content">
+              Comment
+            </div>
+          </div>
+        </th>
+        <ng-container *ngFor="let col of columns">
+          <th *ngIf="col.field === 'can_manage'" style="width: 110px;">
+            <div class="slanted-header">
+              <div class="slanted-header-content">
+                {{ col.header }}
+              </div>
+            </div>
+          </th>
+          <th
+            *ngIf="col.field !== 'can_manage' && col.field !== 'manager_of'"
+            style="width: 60px;"
+          >
+            <div class="slanted-header">
+              <div class="slanted-header-content">
+                {{ col.header }}
+              </div>
+            </div>
+          </th>
+          <th *ngIf="col.field === 'manager_of'" style="width: 100px;">
+            <div class="slanted-header">
+              <div class="slanted-header-content">
+                {{ col.header }}
+              </div>
+            </div>
+          </th>
+        </ng-container>
+        <th style="width: 60px;"></th>
+      </tr>
+    </ng-template>
+    <ng-template
+      #bodyTemplate
+      let-rowData
+      let-columns="columns"
+      let-rowIndex="rowIndex"
+    >
+      <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
+        <td style="width: 60px; max-width: 60px;">
+          <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+        </td>
+        <td
+          style="width: 160px;text-align: left;"
+          pTooltip="{{ rowData.comment }}"
+          tooltipPosition="top"
+          tooltipStyleClass="tooltip-custom"
+        >
+          {{ rowData.user }}
+        </td>
+        <td *ngIf="showComment" style="width: 160px;">
+          {{ rowData.comment }}
+        </td>
+        <ng-container *ngFor="let col of columns">
+          <td *ngIf="col.field === 'manager_of'" style="width: 100px;">
+            <b>{{ rowData.manager_of }}</b>
+          </td>
+          <td *ngIf="col.field === 'can_manage'" style="width: 110px;">
+            <div class="can-manage">
+              <span>memeberships</span>
+              <app-progress-level
+                *ngIf="rowData.can_manage.progress"
+                [filled]="rowData.can_manage.value"
+              ></app-progress-level>
+              <span *ngIf="!rowData.can_manage.progress">{{
+                rowData.can_manage.name
+              }}</span>
+            </div>
+          </td>
+          <td
+            *ngIf="col.field !== 'manager_of' && col.field !== 'can_manage'"
+            style="width: 60px;"
+          >
+            <span
+              class="table-icon"
+              [ngClass]="{
+                locked: rowData[col.field],
+                unlocked: !rowData[col.field]
+              }"
+            >
+              <i *ngIf="!rowData[col.field]" class="fa fa-lock"></i>
+              <i *ngIf="rowData[col.field]" class="fa fa-lock-open"></i>
+            </span>
+          </td>
+        </ng-container>
+        <td style="width: 60px; cursor: pointer;" (click)="onEditAccess($event, rowIndex)">
+          <span class="table-icon edit">
+            <i class="fa fa-pencil-alt"></i>
+          </span>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template #summaryTemplate let-table>
+      <div style="text-align: left; display: flex; align-items: center;">
+        <p-tableHeaderCheckbox
+          style="margin-left: 17px; margin-right: 20px;"
+        ></p-tableHeaderCheckbox>
+        <span style="margin-left: 10px; color: #9B9B9B; flex: 1;">
+          Select all
+        </span>
+        <div class="export-tools">
+          <span class="remove">
+            <span>Remove</span>
+            <i class="fa fa-trash-alt"></i>
+          </span>
+        </div>
+      </div>
+    </ng-template>
+  </app-grid>
+  <div class="add-manager-button-wrapper">
+    <app-button
+      icon="fa fa-user-plus"
+      label="Add manager"
+      class="ui-button-rounded"
+    ></app-button>
+  </div>
+</app-section>
