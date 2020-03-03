@@ -1,5 +1,5 @@
 <div class="progress-section-container">
-  <div class="progress-section-header" (click)="onCollapse($event)">
+  <div class="progress-section-header" [ngClass]="{disabled: data.disabled}" (click)="onCollapse($event)">
     <span class="header-icon">
       <i class="{{ data.header.icon }}"></i>
     </span>
@@ -42,6 +42,7 @@
           <div class="progress-desc-name" [ngClass]="{active: idx < data.active_until}" (click)="onSetActive($event, data, idx)">{{ item.label }}</div>
           <div class="progress-desc-comment">{{ item.comment }}</div>
         </div>
+        <div *ngIf="item.disabled" class="gray-overlay"></div>
       </div>
     </ng-container>
     <ng-container *ngIf="!data.progress">
@@ -86,5 +87,8 @@
         </div>
       </div>
     </ng-container>
+    <div *ngIf="data.disabled" class="gray-overlay">
+    </div>
   </div>
+  
 </div>

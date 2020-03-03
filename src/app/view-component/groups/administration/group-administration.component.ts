@@ -146,7 +146,8 @@ export class GroupAdministrationComponent implements OnInit {
             label:
               "User(s) can edit the members personal data and password (if they agreed)",
             name: 'can_edit_personal_info',
-            checked: false
+            checked: false,
+            disabled: true
           }
         ]
       }
