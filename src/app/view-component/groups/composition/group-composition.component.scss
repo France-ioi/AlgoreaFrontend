@@ -1,28 +1,28 @@
 @import 'src/colors.scss';
 
 .table-container {
-  padding-bottom: 20px;
+  padding-bottom: 1.6667rem;
   position: relative;
 
   .empty-group {
     text-align: center;
     font-style: italic;
-    margin-bottom: 30px;
-    margin-top: 20px;
+    margin-bottom: 2.5rem;
+    margin-top: 1.6667rem;
   }
 
   .selection-tool {
     display: flex;
     flex-direction: column;
-    border-radius: 5px;
+    border-radius: 0.4167rem;
     background-color: $base-bk-color;
 
-    margin-left: 55px;
-    margin-right: 20px;
-    margin-bottom: 32px;
+    margin-left: 4.5833rem;
+    margin-right: 1.6667rem;
+    margin-bottom: 2.6667rem;
 
     app-selection:first-child {
-      margin: 10px;
+      margin: 0.8333rem;
     }
   }
 
@@ -30,9 +30,9 @@
     position: absolute;
     bottom: 0;
     left: 0;
-    border-left: 11px solid transparent;
-    border-right: 11px solid transparent;
-    border-bottom: 17px solid #ECF3FC;
+    border-left: 0.9167rem solid transparent;
+    border-right: 0.9167rem solid transparent;
+    border-bottom: 1.4167rem solid #ECF3FC;
   }
 }
 
@@ -49,16 +49,16 @@ app-sub-section {
   align-items: center;
 
   span.label {
-    font-size: 12px;
+    font-size: 1rem;
     font-weight: bold;
     color: #7C7C7C;
-    margin-right: 20px;
+    margin-right: 1.6667rem;
   }
 
   .date-selector {
     display: flex;
     align-items: center;
-    margin-right: 20px;
+    margin-right: 1.6667rem;
 
   }
 
@@ -71,8 +71,8 @@ app-sub-section {
       flex-direction: column;
 
       .tree-content {
-        padding-right: 20px;
-        margin-bottom: 20px;
+        padding-right: 1.6667rem;
+        margin-bottom: 1.6667rem;
       }
 
       app-button {
@@ -92,8 +92,8 @@ app-sub-section {
 }
 
 span.comment {
-  font-size: 12px;
-  margin-bottom: 5px;
+  font-size: 1rem;
+  margin-bottom: 0.4167rem;
 }
 
 .invitation-code {
@@ -101,12 +101,12 @@ span.comment {
   flex-direction: column;
 
   span.comment {
-    font-size: 12px;
+    font-size: 1rem;
   }
 
   .auto-create {
     display: flex;
-    margin-top: 10px;
+    margin-top: 0.8333rem;
     
     span {
       flex: 1;
@@ -118,13 +118,13 @@ span.comment {
   .code-validation {
     display: flex;
     flex-direction: column;
-    margin-top: 15px;
+    margin-top: 1.25rem;
       
     span.label {
       color: $nav-bk-color;
       font-weight: bold;
-      margin-right: 15px;
-      font-size: 12px;
+      margin-right: 1.25rem;
+      font-size: 1rem;
       flex: 1;
 
       &.orange {
@@ -143,7 +143,7 @@ span.comment {
     .code-wrapper {
       display: flex;
       align-items: center;
-      margin-bottom: 15px;
+      margin-bottom: 1.25rem;
     }
   }
 }
@@ -151,24 +151,24 @@ span.comment {
 .invite-users {
   display: flex;
   flex-direction: column;
-  margin-top: 10px;
+  margin-top: 0.8333rem;
 
   app-textarea {
     width: 100%;
   }
   
   app-button {
-    margin-top: 10px;
+    margin-top: 0.8333rem;
     align-self: flex-end;
     
     ::ng-deep p-button button {
-      width: 140px;
+      width: 11.6667rem;
     }
   }
 }
 
 .spon-req {
-  margin-top: 10px;
+  margin-top: 0.8333rem;
 }
 
 .import-csv {
@@ -181,7 +181,7 @@ span.comment {
   
   app-button {        
     ::ng-deep p-button button {
-      width: 310px;
+      width: 25.8333rem;
     }
   }
 }
@@ -193,5 +193,5 @@ span.comment {
 .batch-button-container {
   display: flex;
   justify-content: flex-end;
-  margin-top: 15px;
+  margin-top: 1.25rem;
 }

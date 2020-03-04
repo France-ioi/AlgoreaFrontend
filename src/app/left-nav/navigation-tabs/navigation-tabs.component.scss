@@ -1,7 +1,7 @@
 @import "src/colors.scss";
-$group-header-height: 70px;
+$group-header-height: 5.8333rem;
 $group-border-color: #e8eaeb;
-$header-height: 90px;
+$header-height: 7.5rem;
 
 @mixin anonym_group($size, $font-size) {
   display: flex;
@@ -11,7 +11,7 @@ $header-height: 90px;
   width: $size;
   height: $size;
   background-color: $secondary-color;
-  border-radius: 100px;
+  border-radius: 9rem;
 
   i {
     font-size: $font-size;
@@ -28,36 +28,36 @@ $header-height: 90px;
 
   .group-header {
     min-height: $group-header-height;
-    border-top-left-radius: 10px;
+    border-top-left-radius: 0.8333rem;
     position: relative;
     display: flex;
     align-items: center;
 
     .group-avatar {
       position: absolute;
-      left: 15px;
-      top: -5px;
+      left: 1.25rem;
+      top: -0.4167rem;
       width: $group-header-height;
 
       img,
       span {
-        border-radius: 100px;
+        border-radius: 9rem;
       }
 
       .anonym-group {
-        @include anonym_group(70px, 48px);
+        @include anonym_group(5.8333rem, 4rem);
       }
     }
 
     .group-title {
-      font-size: 24px;
+      font-size: 2rem;
       text-align: center;
       line-height: $group-header-height;
       display: inline-block;
       color: $base-text-color;
       flex: 1;
-      margin-left: 85px;
-      margin-right: 70px;
+      margin-left: 7.0833rem;
+      margin-right: 5.8333rem;
       text-overflow: ellipsis;
       white-space: nowrap;
       overflow: hidden;
@@ -65,17 +65,17 @@ $header-height: 90px;
 
     .group-toggle {
       position: absolute;
-      right: 10px;
-      height: 28px;
-      width: 55px;
-      top: calc(50% - 14px);
-      border-radius: 100px;
+      right: 0.8333rem;
+      height: 2.3333rem;
+      width: 4.5833rem;
+      top: calc(50% - 1.1667rem);
+      border-radius: 9rem;
       background-color: $base-color;
       display: flex;
       align-items: center;
       cursor: pointer;
       color: white;
-      padding: 10px;
+      padding: 0.8333rem;
 
       i {
         &:last-child {
@@ -97,8 +97,8 @@ $header-height: 90px;
     }
 
     %group-div {
-      border-top: 1px solid $group-border-color;
-      padding: 7px 15px;
+      border-top: 0.0833rem solid $group-border-color;
+      padding: 0.5833rem 1.25rem;
       display: flex;
       align-items: center;
       position: relative;
@@ -106,7 +106,7 @@ $header-height: 90px;
 
     .group-show-activity {
       @extend %group-div;
-      padding: 15px 20px;
+      padding: 1.25rem 1.6667rem;
       background-color: $base-bk-color;
       padding-right: 0;
 
@@ -116,8 +116,8 @@ $header-height: 90px;
     }
 
     .anonym-group {
-      @include anonym_group(40px, 24px);
-      margin-right: 10px;
+      @include anonym_group(3.3333rem, 2rem);
+      margin-right: 0.8333rem;
       z-index: 2;
     }
 
@@ -129,16 +129,17 @@ $header-height: 90px;
     .group-subtitle {
       font-weight: bold;
       text-transform: uppercase;
-      padding: 8px;
-      padding-left: 20px;
-      left: 45px;
-      right: 10px;
+      padding: 0.6667rem;
+      padding-left: 1.6667rem;
+      left: 3.75rem;
+      right: 0.8333rem;
       position: absolute;
+      font-size: 1rem;
 
       &.selected {
         background-color: white;
-        border-top-right-radius: 100px;
-        border-bottom-right-radius: 100px;
+        border-top-right-radius: 9rem;
+        border-bottom-right-radius: 9rem;
       }
 
       z-index: 1;
@@ -146,18 +147,20 @@ $header-height: 90px;
 
     .group-list {
       background-color: $base-bk-color;
-      border-top: 1px solid $group-border-color;
+      border-top: 0.0833rem solid $group-border-color;
       %trans-bk-accordion {
         background-color: transparent !important;
         border: none !important;
-        outline: 1px solid transparent;
+        outline: 0.0833rem solid transparent;
         color: $base-text-color !important;
         position: relative;
       }
       .ui-accordion-header {
         margin-bottom: 0;
+
         a {
           @extend %trans-bk-accordion;
+          padding-left: 1.25rem;
 
           &[aria-expanded="true"] {
             padding-bottom: 0;
@@ -165,10 +168,11 @@ $header-height: 90px;
 
           .ui-accordion-toggle-icon {
             position: absolute;
-            right: 10px;
-            top: 20px;
+            right: 0.8333rem;
+            top: 1.6667rem;
             color: $base-text-color !important;
             z-index: 2;
+            font-size: 1rem;
           }
 
           &:focus {
@@ -191,12 +195,12 @@ $header-height: 90px;
       }
 
       .ui-accordion-content-wrapper {
-        border-bottom: 1px solid $group-border-color;
+        border-bottom: 0.0833rem solid $group-border-color;
         .ui-accordion-content {
           background-color: transparent;
-          border: 1px solid transparent;
+          border: 0.0833rem solid transparent;
           padding: {
-            left: 32px;
+            left: 2.6667rem;
             top: 0;
             right: 0;
           }
@@ -208,8 +212,8 @@ $header-height: 90px;
   .overlay-skills {
     position: fixed;
     left: 0;
-    width: 400px;
-    top: calc(100vh - 50px);
+    width: 33.3333rem;
+    top: calc(100vh - 4.1667rem);
     z-index: 120;
   }
 
@@ -217,24 +221,24 @@ $header-height: 90px;
     width: 100%;
     height: 100%;
     background-color: $nav-bk-color;
-    border-top-right-radius: 10px;
+    border-top-right-radius: 0.8333rem;
     display: flex;
     flex-direction: column;
 
     .back-to {
-      height: 50px;
+      height: 4.1667rem;
       display: flex;
       align-items: center;
-      font-size: 12px;
-      padding-left: 15px;
-      padding-right: 15px;
+      font-size: 1rem;
+      padding-left: 1.25rem;
+      padding-right: 1.25rem;
       color: white;
-      border-bottom: 1px solid #5B5B5B;
+      border-bottom: 0.0833rem solid #5B5B5B;
       cursor: pointer;
 
       .back-icon {
-        font-size: 16px;
-        margin-right: 10px;
+        font-size: 1.3333rem;
+        margin-right: 0.8333rem;
       }
 
       .back-label {

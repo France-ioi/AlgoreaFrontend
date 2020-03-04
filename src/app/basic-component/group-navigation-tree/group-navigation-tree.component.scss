@@ -48,13 +48,13 @@
 }
 
 :host ::ng-deep .ui-treenode-children {
-  border-left: 1px solid #9b9b9b;
-  padding-left: 31px !important;
+  border-left: 0.0833rem solid #9b9b9b;
+  padding-left: 2.5833rem !important;
 }
 
 :host ::ng-deep p-treenode:last-child > .ui-treenode > .ui-treenode-children {
-  border-left: 1px solid transparent;
-  padding-left: 31px !important;
+  border-left: 0.0833rem solid transparent;
+  padding-left: 2.5833rem !important;
 }
 
 :host
@@ -76,15 +76,15 @@
   .node-tree-item
   .node-item-branch
   .top-branch {
-  border-bottom-left-radius: 10px;
+  border-bottom-left-radius: 0.8333rem;
 }
 
 :host ::ng-deep .ui-treenode-content {
 
   &:focus {
     .node-tree-item .node-item-content {
-      border-top-left-radius: 4px;
-      border-bottom-left-radius: 4px;
+      border-top-left-radius: 0.3333rem;
+      border-bottom-left-radius: 0.3333rem;
       background-color: #fff;
     }
   }
@@ -94,7 +94,7 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    min-height: 40px;
+    min-height: 3.3333rem;
     position: relative;
     cursor: pointer;
 
@@ -103,43 +103,43 @@
     }
 
     &.folder .node-item-branch .top-branch {
-      width: 28px;
+      width: 2.3333rem;
     }
 
     .node-item-branch {
       display: flex;
       flex-direction: column;
-      width: 33px;
-      min-height: 40px;
+      width: 2.75rem;
+      min-height: 3.3333rem;
       z-index: 10;
 
       .top-branch {
-        border-bottom: 1px solid #9b9b9b;
-        border-left: 1px solid #9b9b9b;
+        border-bottom: 0.0833rem solid #9b9b9b;
+        border-left: 0.0833rem solid #9b9b9b;
         flex: 1;
       }
 
       .bottom-branch {
-        border-left: 1px solid #9b9b9b;
+        border-left: 0.0833rem solid #9b9b9b;
         flex: 1;
 
         .mask-branch {
           position: absolute;
-          border-right: 1px solid #9b9b9b;
+          border-right: 0.0833rem solid #9b9b9b;
           right: 0;
-          height: 15px;
-          width: 2px;
+          height: 1.25rem;
+          width: 0.1667rem;
           bottom: 0;
         }
       }
     }
 
     .node-select {
-      width: 20px;
-      height: 20px;
+      width: 1.6667rem;
+      height: 1.6667rem;
       display: flex;
-      margin-right: 15px;
-      margin-left: 5px;
+      margin-right: 1.25rem;
+      margin-left: 0.4167rem;
       align-items: center;
       justify-content: center;
       z-index: 11;
@@ -155,7 +155,7 @@
           .node-label {
             background-color: #dbe9f9;
             color: $base-color;
-            border-radius: 100px;
+            border-radius: 9rem;
           }
         }
 
@@ -172,43 +172,44 @@
           .node-label {
             background-color: #dbe9f9;
             color: $base-color;
-            border-radius: 100px;
+            border-radius: 9rem;
           }
         }
       }
     }
 
     &.checked .node-item-content {
-      border-top-left-radius: 4px;
-      border-bottom-left-radius: 4px;
+      border-top-left-radius: 0.3333rem;
+      border-bottom-left-radius: 0.3333rem;
       background-color: #fff;
 
       .go-to-page {
-        width: 30px;
-        height: 30px;
-        margin-right: 10px;
-        border-radius: 20px;
+        width: 2.5rem;
+        height: 2.5rem;
+        margin-right: 0.8333rem;
+        border-radius: 1.6667rem;
         background-color: $base-color;
         color: white;
         display: flex;
         align-items: center;
         justify-content: center;
+        font-size: 1rem;
       }
 
       .leaf.node-select {
         color: white;
         background-color: #9b9b9b;
-        border-radius: 100px;
+        border-radius: 9rem;
       }
     }
 
     .node-item-content {
       right: 0;
-      height: 29px;
-      line-height: 29px;
-      padding: 10px 3px;
+      height: 2.4167rem;
+      line-height: 2.4167rem;
+      padding: 0.8333rem 0.25rem;
       position: absolute;
-      left: 15px;
+      left: 1.25rem;
       display: flex;
       align-items: center;
 
@@ -216,7 +217,7 @@
         .node-label .connect-link {
           color: $secondary-color;
           background-color: white;
-          border-radius: 100px;
+          border-radius: 9rem;
         }
       }
 
@@ -224,18 +225,19 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        margin-right: 14px;
+        margin-right: 1.1667rem;
       }
 
       .node-label {
-        padding-left: 5px;
+        padding-left: 0.4167rem;
         flex: 1;
         display: flex;
         align-items: center;
         min-width: 0;
+        font-size: 1rem;
 
         app-state-widget {
-          margin-right: 10px;
+          margin-right: 0.8333rem;
         }
 
         &-title {
@@ -246,8 +248,8 @@
         }
 
         .connect-link {
-          height: 30px;
-          width: 30px;
+          height: 2.5rem;
+          width: 2.5rem;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -258,7 +260,7 @@
 
         .edit-icon {
           height: 100%;
-          width: 30px;
+          width: 2.5rem;
           display: flex;
           align-items: center;
           justify-content: center;

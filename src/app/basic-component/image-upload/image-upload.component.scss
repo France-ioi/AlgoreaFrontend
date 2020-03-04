@@ -5,21 +5,21 @@
   flex-direction: column;
 
   .image-upload-title {
-    font-size: 12px;
+    font-size: 1rem;
     color: $dark-text-color;
     font-weight: bold;
-    margin-bottom: 10px;
+    margin-bottom: 0.8333rem;
   }
 
   .upload-file-container {
     background-repeat: no-repeat;
-    background-size: 100px;
+    background-size: 9rem;
     background-position: center;
     background-color: #f2f2f2;
-    height: 200px;
+    height: 16.6667rem;
     width: 100%;
-    border: 1px dashed #1c8adb;
-    border-radius: 10px;
+    border: 0.0833rem dashed #1c8adb;
+    border-radius: 0.8333rem;
 
     .image-preview {
       width: 100%;
@@ -27,13 +27,13 @@
       background-position: center center;
       background-repeat: no-repeat;
       background-size: cover;
-      border-radius: 10px;
+      border-radius: 0.8333rem;
       position: relative;
 
       app-button {
         position: absolute;
-        right: -1px;
-        bottom: -1px;
+        right: -0.0833rem;
+        bottom: -0.0833rem;
       }
     }
 
@@ -42,22 +42,22 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      font-size: 13px;
+      font-size: 1.0833rem;
       height: 100%;
       color: $base-color;
 
       .image-drop-label {
-        margin-bottom: 20px;
+        margin-bottom: 1.6667rem;
 
         .drop-label {
           text-transform: uppercase;
           font-weight: bold;
-          margin-left: 10px;
+          margin-left: 0.8333rem;
         }
       }
 
       .image-drop-button {
-        width: 190px;
+        width: 15.8333rem;
       }
     }
 

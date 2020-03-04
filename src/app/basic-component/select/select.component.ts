@@ -8,7 +8,7 @@ import { Component, OnInit, Input, ElementRef, HostListener } from '@angular/cor
 export class SelectComponent implements OnInit {
 
   @Input() items;
-  @Input() width = 75;
+  @Input() width = 6.5;
   @Input() opened = false;
   
   selected;

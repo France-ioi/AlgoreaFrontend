@@ -8,8 +8,7 @@
       <ng-template #userAvatar>
         <img
           src="assets/images/{{currentUser.avatar }}"
-          width="70px"
-          height="70px"
+          style="width: 6rem; height: 6rem;"
         />
       </ng-template>
       <ng-template #noAvatar>
@@ -19,13 +18,12 @@
           >
           </ng-container>
           <ng-template #userAnony>
-            <img src="assets/images/Male.svg" width="70px" height="70px" />
+            <img src="assets/images/Male.svg" style="width: 6rem; height: 6rem;"/>
           </ng-template>
           <ng-template #groupAnony>
             <img
               src="assets/images/Group - Managed.svg"
-              width="70px"
-              height="70px"
+              style="width: 6rem; height: 6rem;"
             />
           </ng-template>
         </span>
@@ -55,7 +53,7 @@
         </div>
         <div class="group-self" (click)="onSelectYourself($event, 0)">
           <span class="anonym-group">
-            <img src="assets/images/Male.svg" width="40px" height="40px" />
+            <img src="assets/images/Male.svg" style="width: 3.3333rem; height: 3.3333rem;" />
           </span>
           <span class="group-subtitle" [ngClass]="{'selected': selectedGroup == 0 ? true : false}">Yourself</span>
         </div>
@@ -70,8 +68,7 @@
                 <span class="anonym-group">
                   <img
                     src="assets/images/Group - Managed.svg"
-                    width="40px"
-                    height="40px"
+                    style="width: 3.3333rem; height: 3.3333rem;"
                   />
                 </span>
                 <span class="group-subtitle" [ngClass]="{'selected': selectedGroup == 1 ? true : false}">Groups you manage</span
@@ -89,8 +86,7 @@
                 <span class="anonym-group">
                   <img
                     src="assets/images/Group - Joined.svg"
-                    width="40px"
-                    height="40px"
+                    style="width: 3.3333rem; height: 3.3333rem;"
                   />
                 </span>
                 <span class="group-subtitle" [ngClass]="{'selected': selectedGroup == 2 ? true : false}">Groups You Joined</span

@@ -4,15 +4,15 @@
   label="Discussions related to this activities"
 >
   <div class="section-for-sub">
-    <div style="background-color: #F1F2F7; margin-bottom: 20px;">
+    <div style="background-color: #F1F2F7; margin-bottom: 1.6667rem;">
       <app-selection type="square" [items]="sels"></app-selection>
     </div>
     <app-grid-filter-bar>
       <app-select
         [items]="filterChoice"
         [opened]="false"
-        width="120"
-        style="margin: 5px;"
+        width="10"
+        style="margin: 0.4167rem;"
       ></app-select>
     </app-grid-filter-bar>
     <app-grid
@@ -26,13 +26,13 @@
     >
       <ng-template #headerTemplate let-columns>
         <tr>
-          <th style="width: 50px;"></th>
+          <th style="width: 4.1667rem;"></th>
           <ng-container *ngFor="let col of columns">
             <th *ngIf="col.field !== 'progress'" [pSortableColumn]="col.field">
               {{ col.header }}
               <p-sortIcon [field]="col.field"></p-sortIcon>
             </th>
-            <th *ngIf="col.field === 'progress'" style="width: 60px">
+            <th *ngIf="col.field === 'progress'" style="width: 5rem">
               {{ col.header }}
             </th>
           </ng-container>
@@ -45,7 +45,7 @@
         let-rowIndex="rowIndex"
       >
         <tr style="cursor: pointer;" (click)="onShowThread(rowData)">
-          <td style="width: 50px;">
+          <td style="width: 4.1667rem;">
             <span *ngIf="rowData.notification" class="table-icon"
               ><i class="{{ rowData.notification }}"></i
             ></span>
@@ -53,7 +53,7 @@
           <ng-container *ngFor="let col of columns">
             <td
               *ngIf="col.field === 'progress'"
-              style="width: 60px; text-align: center"
+              style="width: 5rem; text-align: center"
             >
               <app-score-ring
                 [displayedScore]="rowData.progress.displayedScore"
@@ -74,7 +74,7 @@
   </div>
   <div class="ask-for-help">
     <span class="tri-tag"></span>
-    <div style="width: 230px;">
+    <div style="width: 20rem;">
       <app-button icon="fa fa-plus" label="ask for help" class="ui-button-rounded ui-fit-parent"></app-button>
     </div>
   </div>

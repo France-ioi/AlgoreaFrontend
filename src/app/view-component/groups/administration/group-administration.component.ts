@@ -81,10 +81,10 @@ export class GroupAdministrationComponent implements OnInit {
 
   onEditAccess(e, idx) {
     const ref = this.dialog.open(AccessEditDialogComponent, {
-      maxHeight: "1000px",
-      minWidth: "800px",
-      maxWidth: "800px",
-      minHeight: "300px",
+      maxHeight: "83rem",
+      minWidth: "67rem",
+      maxWidth: "67rem",
+      minHeight: "25rem",
       data: {
         icon: "fa fa-lock",
         label: `Terminale B: manager access given to ${this.roles[idx].user}`,

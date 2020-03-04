@@ -4,9 +4,9 @@
   .activity-skill-list-item {
     display: flex;
     flex-direction: column;
-    border-bottom: 1px solid #F4F4F4;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    border-bottom: 0.0833rem solid #F4F4F4;
+    padding-top: 0.8333rem;
+    padding-bottom: 0.8333rem;
     cursor: pointer;
 
     &:last-child {
@@ -23,12 +23,12 @@
 
       .list-item-icon {
         display: flex;
-        width: 25px;
-        height: 25px;
+        width: 2.0833rem;
+        height: 2.0833rem;
         align-items: center;
         justify-content: center;
         color: $base-color;
-        margin-right: 10px;
+        margin-right: 0.8333rem;
       }
     }
 
@@ -36,12 +36,12 @@
       flex: 1;
       display: flex;
       flex-direction: column;
-      margin-left: 20px;
+      margin-left: 1.6667rem;
 
       .session-item {
         display: flex;
-        margin: 5px 0;
-        font-size: 12px;
+        margin: 0.4167rem 0;
+        font-size: 1rem;
 
         .session-date, .session-online {
           color: $base-color;
@@ -49,7 +49,7 @@
         }
 
         .session-location {
-          margin-right: 20px;
+          margin-right: 1.6667rem;
         }
       }
     }

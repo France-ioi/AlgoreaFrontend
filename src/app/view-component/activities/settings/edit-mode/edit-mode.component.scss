@@ -3,12 +3,12 @@
 .form-item-view {
   display: flex;
   align-items: center;
-  margin: 15px;
+  margin: 1.25rem;
 
   .form-item-label {
     display: block;
-    font-size: 12px;
-    width: 250px;
+    font-size: 1rem;
+    width: 20.8333rem;
     color: $dark-text-color;
     font-weight: bold;
   }
@@ -21,7 +21,7 @@
       align-items: center;
 
       .first-child {
-        margin-right: 20px;
+        margin-right: 1.6667rem;
 
         &.stretch {
           flex: 1;
@@ -31,11 +31,11 @@
       .date-pickers {
         display: flex;
         align-items: center;
-        font-size: 12px;
+        font-size: 1rem;
 
         .date-label {
-          margin-left: 10px;
-          margin-right: 10px;
+          margin-left: 0.8333rem;
+          margin-right: 0.8333rem;
         }
       }
     }

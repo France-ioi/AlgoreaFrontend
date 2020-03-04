@@ -4,23 +4,23 @@
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  padding-bottom: 5px;
+  padding-bottom: 0.4167rem;
 
   .admin-label {
     font-style: italic;
-    font-size: 12px;
+    font-size: 1rem;
     color: $base-text-color;
-    margin-right: 10px;
+    margin-right: 0.8333rem;
   }
 
   .group-administrator {
     display: flex;
     align-items: center;
-    margin: 0 5px;
-    font-size: 12px;
+    margin: 0 0.4167rem;
+    font-size: 1rem;
 
     .user-icon {
-      margin-right: 5px;
+      margin-right: 0.4167rem;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -29,29 +29,29 @@
     
     .user-name {
       color: $base-text-color;
-      margin: 5px;
+      margin: 0.4167rem;
     }
   }
 }
 
 .allow-label {
-  font-size: 12px;
+  font-size: 1rem;
   color: $base-text-color;
-  margin: 5px;
+  margin: 0.4167rem;
 }
 
 .lock-time {
-  margin-top: 15px;
+  margin-top: 1.25rem;
   color: $section-danger-handle-color;
-  font-size: 14px;
+  font-size: 1.1667rem;
   display: flex;
   align-items: center;
 
   &-paragraph {
     color: $section-danger-handle-color;
-    font-size: 12px;
+    font-size: 1rem;
     font-style: italic;
-    margin-right: 100px;
+    margin-right: 9rem;
   }
 
   &-text {
@@ -59,18 +59,18 @@
   }
 
   &-icon {
-    font-size: 16px;
+    font-size: 1.3333rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-right: 15px;
+    margin-right: 1.25rem;
   }
 }
 
 .form-item-view {
   display: flex;
   align-items: center;
-  margin: 5px;
+  margin: 0.4167rem;
 
   &.switch {
     .form-item-label {
@@ -85,8 +85,8 @@
 
   .form-item-label {
     display: block;
-    font-size: 12px;
-    width: 160px;
+    font-size: 1rem;
+    width: 13.3333rem;
     color: #5C5C5C;
     font-weight: bold;
 

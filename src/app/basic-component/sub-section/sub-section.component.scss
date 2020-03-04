@@ -2,13 +2,13 @@
 
 :host {
   display: block;
-  margin-left: -70px;
-  margin-right: -20px;
+  margin-left: -5.8333rem;
+  margin-right: -1.6667rem;
 }
 
 .section-container {
-  padding: 25px 20px 15px;
-  border-bottom: 1px solid #DEE4ED;
+  padding: 2.0833rem 1.6667rem 1.25rem;
+  border-bottom: 0.0833rem solid #DEE4ED;
   background-color: #ECF3FC;
 
   &.no-border {
@@ -24,9 +24,9 @@
       align-items: center;
       justify-content: center;
       background-color: $base-color;
-      width: 30px;
-      height: 30px;
-      border-radius: 100px;
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 9rem;
       position: relative;
 
       i {
@@ -35,9 +35,9 @@
     }
 
     .section-title {
-      font-size: 20px;
+      font-size: 1.6667rem;
       color: $nav-bk-color;
-      margin-left: 15px;
+      margin-left: 1.25rem;
       flex: 1;
     }
 
@@ -45,11 +45,11 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 30px;
-      height: 30px;
-      font-size: 12px;
-      border-radius: 15px;
-      border: 1px solid $nav-bk-color;
+      width: 2.5rem;
+      height: 2.5rem;
+      font-size: 1rem;
+      border-radius: 1.25rem;
+      border: 0.0833rem solid $nav-bk-color;
       cursor: pointer;
     }
 
@@ -57,15 +57,15 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 30px;
-      height: 30px;
+      width: 2.5rem;
+      height: 2.5rem;
       cursor: pointer;
       color: $base-color;
     }
   }
   
   .section-content {
-    padding: 15px 0px 15px 70px;
+    padding: 1.25rem 0 1.25rem 5.8333rem;
     color: $base-text-color;
   }
 }

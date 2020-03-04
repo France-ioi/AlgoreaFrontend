@@ -11,7 +11,7 @@
       [ngStyle]="{ opacity: isScrolled ? 0 : 1 }"
     ></app-score-ring>
     <div *ngIf="!isStarted" class="task-user-image">
-      <img src="assets/images/_messi.jpg" width="50px" height="50px" />
+      <img src="assets/images/_messi.jpg" style="width: 4rem; height: 4rem;" />
     </div>
     <div class="task-title" [ngClass]="{skill: activityORSkill}">
       <p [ngStyle]="{ opacity: isScrolled ? 0 : 1 }">{{ title }}</p>
@@ -37,7 +37,7 @@
     <ng-template #userBlock>
       <div *ngIf="isCollapsed" class="user-info">
         <span class="user-avatar">
-          <img src="assets/images/Male.svg" width="32px" height="32px" />
+          <img src="assets/images/Male.svg" style="width: 2.6667rem; height: 2.6667rem;"/>
         </span>
         <span class="user-id">CyrilK89</span>
       </div>
@@ -106,7 +106,7 @@
         <div>
           Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
         </div>
-        <app-button icon="fa fa-flag-checkered" label="Start" class="ui-button-rounded" style="margin-top: 20px;"></app-button>
+        <app-button icon="fa fa-flag-checkered" label="Start" class="ui-button-rounded" style="margin-top: 1.6667rem;"></app-button>
       </div>
     </app-section-paragraph>
     <app-section-paragraph icon="fa fa-book" label="Start by a notice ...">
@@ -114,7 +114,7 @@
         <div>
           Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
         </div>
-        <app-button icon="fa fa-print" label="Print a notice" class="ui-button-rounded" style="margin-top: 20px;"></app-button>
+        <app-button icon="fa fa-print" label="Print a notice" class="ui-button-rounded" style="margin-top: 1.6667rem;"></app-button>
       </div>
     </app-section-paragraph>
   </ng-container>
@@ -131,7 +131,7 @@
           <ng-template #bodyTemplate let-rowData>
             <tr>
               <td>
-                <img class="team-user-image" src="{{ rowData.image }}" width="25px" height="25px">
+                <img class="team-user-image" src="{{ rowData.image }}" style="width: 2.0833rem; height: 2.0833rem;">
               </td>
               <td style="flex: 2;"> {{ rowData.col2 }} </td>
               <td style="flex: 1;"> {{ rowData.col3 }} </td>

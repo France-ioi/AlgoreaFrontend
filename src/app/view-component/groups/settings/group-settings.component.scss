@@ -3,25 +3,25 @@
 .form-item-view {
   display: flex;
   align-items: center;
-  margin: 15px;
+  margin: 1.25rem;
 
   .form-item-label {
     display: block;
-    font-size: 12px;
+    font-size: 1rem;
     color: $dark-text-color;
     font-weight: bold;
     flex: 1;
 
     &.left-control {
       flex: unset;
-      margin-right: 25px;
+      margin-right: 2.0833rem;
     }
   }
 
   .form-item-control {
     display: flex;
     flex-direction: row-reverse;
-    width: 350px;
+    width: 29.1667rem;
 
     &.left-control {
       flex-direction: row;
@@ -36,17 +36,17 @@
       align-items: center;
 
       .first-child {
-        margin-right: 20px;
+        margin-right: 1.6667rem;
       }
 
       .date-pickers {
         display: flex;
         align-items: center;
-        font-size: 12px;
+        font-size: 1rem;
 
         .date-label {
-          margin-left: 10px;
-          margin-right: 10px;
+          margin-left: 0.8333rem;
+          margin-right: 0.8333rem;
         }
       }
     }
@@ -54,11 +54,11 @@
 }
 
 .pick-list-header {
-  margin-left: 10px;
-  margin-bottom: 30px;
+  margin-left: 0.8333rem;
+  margin-bottom: 2.5rem;
 }
 
 .pick-list-error {
-  margin-left: 10px;
+  margin-left: 0.8333rem;
   color: #FF001F;
 }

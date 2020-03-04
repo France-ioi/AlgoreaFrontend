@@ -23,12 +23,12 @@
     >
       <ng-template #headerTemplate let-columns>
         <tr>
-          <th style="width: 40px;"></th>
+          <th style="width: 4rem;"></th>
           <th *ngFor="let col of columns" [pSortableColumn]="col.field">
             {{ col.header }}
             <p-sortIcon [field]="col.field"></p-sortIcon>
           </th>
-          <th style="width: 40px;"></th>
+          <th style="width: 4rem;"></th>
         </tr>
       </ng-template>
       <ng-template
@@ -38,13 +38,13 @@
         let-rowIndex="rowIndex"
       >
         <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
-          <td style="width: 40px;">
+          <td style="width: 4rem;">
             <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
           </td>
           <td *ngFor="let col of columns">
             {{ rowData[col.field] }}
           </td>
-          <td style="width: 40px; cursor: pointer;" (click)="onOpenDialog($event)">
+          <td style="width: 4rem; cursor: pointer;" (click)="onOpenDialog($event)">
             <span class="edit-icon">
               <i class="fa fa-edit"></i>
             </span>
@@ -54,7 +54,7 @@
       <ng-template #summaryTemplate let-table>
         <div style="text-align: left; display: flex; align-items: center;">
           <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-          <span style="margin-left: 10px; color: #9B9B9B; flex: 1;">
+          <span style="margin-left: 0.8333rem; color: #9B9B9B; flex: 1;font-size: 1rem;">
             Select all
           </span>
           <div class="export-tools">
@@ -108,7 +108,7 @@
     label="Organize a session to constitute this group"
   >
     <div class="session-content">
-      <p style="font-size: 12px;">
+      <p style="font-size: 1rem;">
         A session is an event focused on a specific activity, that takes place
         at a given time.
       </p>
@@ -122,7 +122,7 @@
           <app-activity-picker [trees]="trees"></app-activity-picker>
         </div>
       </div>
-      <p style="font-size: 12px;">
+      <p style="font-size: 1rem;">
         All the participants to this session will be automatically added as
         memebers of this group ([group name]).
       </p>

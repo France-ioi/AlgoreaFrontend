@@ -1,8 +1,8 @@
 @import 'src/colors.scss';
 
 .section-container {
-  margin-top: 30px;
-  border-bottom: 1px solid $light-border-color;
+  margin-top: 2.5rem;
+  border-bottom: 0.0833rem solid $light-border-color;
 
   &.no-border {
     border-bottom: none;
@@ -15,31 +15,31 @@
     .section-handler {
       display: flex;
       background-color: $base-color;
-      border-left: 3px solid $dark-color;
-      width: 55px;
-      height: 30px;
-      border-top-right-radius: 100px;
-      border-bottom-right-radius: 100px;
+      border-left: 0.25rem solid $dark-color;
+      width: 4.5833rem;
+      height: 2.5rem;
+      border-top-right-radius: 9rem;
+      border-bottom-right-radius: 9rem;
       position: relative;
       justify-content: flex-end;
       align-items: center;
-      padding-right: 10px;
+      padding-right: 0.8333rem;
 
       i {
         color: white;
-        font-size: 14px;
+        font-size: 1.1667rem;
       }
     }
 
     .section-title {
-      font-size: 24px;
+      font-size: 2rem;
       color: $dark-text-color;
-      margin-left: 15px;
+      margin-left: 1.25rem;
     }
   }
   
   .section-content {
-    padding: 15px 20px 15px 70px;
+    padding: 1.25rem 1.6667rem 1.25rem 5.8333rem;
     color: $base-text-color;
   }
 }

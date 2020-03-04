@@ -11,22 +11,25 @@
       background-color: white;
       .mat-tab-label {
         background-color: $base-bk-color;
-        border-right: 1px solid $light-border-color;
+        border-right: 0.0833rem solid $light-border-color;
+        font-size: 1rem;
+        height: 3rem;
+
         &.mat-tab-label-active {
           background-color: white;
           border-right-color: transparent;
           color: $base-color;
-          border-top: 3px solid $base-color;
+          border-top: 0.25rem solid $base-color;
         }
         &.mat-tab-label-active + .mat-tab-label {
-          border-bottom-left-radius: 10px;
+          border-bottom-left-radius: 0.8333rem;
         }
         &.mat-tab-label-before-active {
-          border-bottom-right-radius: 10px;
+          border-bottom-right-radius: 0.8333rem;
         }
         .mat-tab-label-content {
           i {
-            margin-right: 15px;
+            margin-right: 1.25rem;
           }
         }
       }
@@ -41,32 +44,32 @@
     .selection-tool {
       display: flex;
       flex-direction: column;
-      border-radius: 5px;
+      border-radius: 0.4167rem;
       background-color: $base-bk-color;
 
-      margin-left: 55px;
-      margin-right: 20px;
-      margin-bottom: 32px;
+      margin-left: 4.5833rem;
+      margin-right: 1.6667rem;
+      margin-bottom: 2.6667rem;
 
       app-selection:first-child {
-        margin-left: 10px;
-        margin-right: 10px;
-        margin-bottom: 10px;
-        margin-top: 10px;
+        margin-left: 0.8333rem;
+        margin-right: 0.8333rem;
+        margin-bottom: 0.8333rem;
+        margin-top: 0.8333rem;
       }
     }
 
     .section-chapter-wrapper {
-      padding-bottom: 20px;
+      padding-bottom: 1.6667rem;
       position: relative;
 
       .tri-tag {
         position: absolute;
         bottom: 0;
         left: 0;
-        border-left: 11px solid transparent;
-        border-right: 11px solid transparent;
-        border-bottom: 17px solid #ECF3FC;
+        border-left: 0.9167rem solid transparent;
+        border-right: 0.9167rem solid transparent;
+        border-bottom: 1.4167rem solid #ECF3FC;
       }
     }
 
@@ -76,8 +79,8 @@
 
       span.label {
         font-style: italic;
-        margin-left: 20px;
-        margin-right: 20px;
+        margin-left: 1.6667rem;
+        margin-right: 1.6667rem;
       }
 
       app-input, app-activity-picker {
@@ -89,8 +92,8 @@
         flex-direction: column;
 
         .tree-content {
-          padding-right: 20px;
-          margin-bottom: 20px;
+          padding-right: 1.6667rem;
+          margin-bottom: 1.6667rem;
         }
 
         app-button {
@@ -100,11 +103,11 @@
     }
 
     .desc-image {
-      padding: 20px;
+      padding: 1.6667rem;
       width: 100%;
       .image {
         width: 100%;
-        height: 500px;
+        height: 41.6667rem;
         background-position: center center;
         background-repeat: no-repeat;
         background-size: cover;
@@ -112,9 +115,9 @@
     }
 
     .validation-text {
-      padding-left: 70px;
+      padding-left: 5.8333rem;
       color: $base-color;
-      font-size: 16px;
+      font-size: 1.3333rem;
     }
 
     .data-list-container {
@@ -123,30 +126,30 @@
       color: $dark-text-color;
 
       &.activity {
-        padding: 20px;
+        padding: 1.6667rem;
         li {
           display: flex;
           align-items: center;
           border-bottom: none;
 
           .activity-progress {
-            width: 50px;
+            width: 4.1667rem;
           }
           
           .activity-content {
             display: flex;
             align-items: center;
             flex: 1;
-            padding: 7px 0;
-            border-bottom: 1px solid $light-border-color;
+            padding: 0.5833rem 0;
+            border-bottom: 0.0833rem solid $light-border-color;
 
             &.locked {
               color: $light-text-color;
             }
 
             .activity-weight {
-              margin-right: 20px;
-              width: 40px;
+              margin-right: 1.6667rem;
+              width: 3.3333rem;
             }
 
             .activity-title {
@@ -157,7 +160,7 @@
               display: flex;
               align-items: center;
               justify-content: center;
-              margin-right: 20px;
+              margin-right: 1.6667rem;
             }
           }
         }
@@ -165,35 +168,35 @@
 
       &.sub-skill {
         li {
-          margin-left: -40px;
+          margin-left: -3.3333rem;
           border-bottom: none;
           display: flex;
           align-items: center;
 
           .skill-icon {
-            width: 35px;
+            width: 2.9167rem;
           }
 
           .skill-content {
             display: flex;
             flex: 1;
-            padding: 7px 0;
-            border-bottom: 1px solid $light-border-color;
+            padding: 0.5833rem 0;
+            border-bottom: 0.0833rem solid $light-border-color;
           }
         }
       }
       
       li {
         display: flex;
-        border-bottom: 1px solid $light-border-color;
-        padding: 7px 0;
+        border-bottom: 0.0833rem solid $light-border-color;
+        padding: 0.5833rem 0;
 
         &:last-child {
           border-bottom: none;
         }
 
         .skill-icon {
-          margin-right: 5px;
+          margin-right: 0.4167rem;
         }
 
         .skill-title {
@@ -217,46 +220,46 @@
       display: flex;
       flex-direction: column;
       padding-left: 0;
-      margin-left: -25px;
+      margin-left: -2.0833rem;
       
       li {
         display: flex;
         flex-direction: column;
-        margin: 5px 0;
+        margin: 0.4167rem 0;
 
         span.skill-title {
-          margin-bottom: 5px;
+          margin-bottom: 0.4167rem;
         }
       }
     }
 
     app-log-view-grid {
-      margin-top: 30px;
-      margin-left: -40px;
+      margin-top: 2.5rem;
+      margin-left: -3.3333rem;
       display: block;
     }
 
     app-grid {
-      margin-top: 30px;
+      margin-top: 2.5rem;
     }
 
     .slanted-grid {
 
       &.compact-mode {
         .group-situation-data {
-          height: 43px;
+          height: 3.5833rem;
         }
       }
 
       tr > th {
         border-left: none;
         border-right: none;
-        height: 150px;
+        height: 12.5rem;
         transform: skewX(-45deg);
         transform-origin: 0 100%;
         position: relative;
         background-color: #F8F8F8;
-        min-width: 40px;
+        min-width: 3.3333rem;
 
         .slanted-header {
           position: absolute;
@@ -266,12 +269,12 @@
           transform: translate(50%, 50%) skewX(45deg) rotate(-45deg);
           transform-origin: 0 50%;
           text-align: left;
-          padding-left: 20px;
+          padding-left: 1.6667rem;
           color: #8C8C8C;
           overflow: visible;
 
           &-content {
-            width: 180px;
+            width: 15rem;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
@@ -329,15 +332,15 @@
       .group-situation-data {
         display: flex;
         flex-direction: column;
-        font-size: 12px;
-        height: 70px;
+        font-size: 1rem;
+        height: 5.8333rem;
         cursor: pointer;
 
         &-compact {
           display: flex;
           align-items: center;
           justify-content: center;
-          height: 40px;
+          height: 3.3333rem;
           cursor: pointer;
         }
 
@@ -345,10 +348,10 @@
           display: flex;
           align-items: center;
           background-color: $light-text-color;
-          padding: 5px;
+          padding: 0.4167rem;
 
           & > span {
-            margin-right: 5px;
+            margin-right: 0.4167rem;
             color: #858585;
 
             &.time-spent {
@@ -356,7 +359,7 @@
             }
 
             i {
-              margin-right: 2px;
+              margin-right: 0.1667rem;
             }
 
             &:last-child {
@@ -371,7 +374,7 @@
           align-items: center;
           justify-content: center;
           font-weight: bold;
-          padding: 5px;
+          padding: 0.4167rem;
 
           &.cross {
             background-color: #F9C6CD;
@@ -397,7 +400,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
+            font-size: 1.6667rem;
             color: $nav-bk-color;
 
             &.open {
@@ -409,7 +412,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
+            font-size: 1.6667rem;
             color: white;
           }
 
@@ -418,7 +421,7 @@
           }
 
           .progress-value {
-            margin-left: 10px;
+            margin-left: 0.8333rem;
 
             &.check {
               font-weight: bold;
@@ -430,7 +433,7 @@
             color: #585858;
 
             &.activity-date {
-              margin-left: 10px;
+              margin-left: 0.8333rem;
             }
           }
         }
@@ -441,11 +444,11 @@
     .table-icon {
       display: inline-block;
       color: $base-color;
-      font-size: 12px;
+      font-size: 1rem;
       cursor: pointer;
-      width: 20px;
-      height: 20px;
-      margin-right: 5px;
+      width: 1.6667rem;
+      height: 1.6667rem;
+      margin-right: 0.4167rem;
 
       &:last-child {
         margin-right: 0;
@@ -457,7 +460,7 @@
       
       app-image-upload {
         flex: 1;
-        margin-right: 20px;
+        margin-right: 1.6667rem;
 
         &:last-child {
           margin-right: 0;
@@ -477,19 +480,19 @@
         }
   
         app-input {
-          width: 250px;
-          margin-left: 15px;
+          width: 20.8333rem;
+          margin-left: 1.25rem;
         }
       }
 
       .score-weight-container {
         display: flex;
         align-items: center;
-        margin-top: 10px;
+        margin-top: 0.8333rem;
 
         &-label {
           flex: 1;
-          font-size: 12px;
+          font-size: 1rem;
           color: #8D8D8D;
         }
       }

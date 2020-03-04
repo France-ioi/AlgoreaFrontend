@@ -5,15 +5,15 @@
   flex-direction: column;
   align-items: center;
   position: relative;
-  padding: 10px;
+  padding: 0.8333rem;
 
   .close-button {
-    width: 25px;
-    height: 25px;
+    width: 2.0833rem;
+    height: 2.0833rem;
     color: $base-color;
     position: absolute;
     right: 0;
-    top: 10px;
+    top: 0.8333rem;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -22,17 +22,17 @@
 
   .team-member {
     &-name {
-      font-size: 16px;
+      font-size: 1.3333rem;
       font-weight: bold;
       color: $dark-text-color;
-      margin-bottom: 5px;
+      margin-bottom: 0.4167rem;
     }
 
     &-full-name {
       font-style: italic;
-      font-size: 12px;
+      font-size: 1rem;
       color: $base-text-color;
-      margin-bottom: 5px;
+      margin-bottom: 0.4167rem;
     }
 
     &-picture {
@@ -40,10 +40,10 @@
       align-items: center;
       justify-content: center;
       position: relative;
-      margin-bottom: 10px;
+      margin-bottom: 0.8333rem;
 
       img {
-        border-radius: 100px;
+        border-radius: 9rem;
       }
     }
 
@@ -51,22 +51,22 @@
       position: absolute;
       bottom: 0;
       text-transform: uppercase;
-      border-radius: 100px;
-      height: 20px;
-      line-height: 20px;
-      font-size: 11px;
+      border-radius: 9rem;
+      height: 1.6667rem;
+      line-height: 1.6667rem;
+      font-size: 0.9167rem;
       color: white;
       background-color: #4a90e2;
-      width: 70px;
+      width: 5.8333rem;
       text-align: center;
-      left: calc(50% - 35px);
+      left: calc(50% - 2.9167rem);
     }
 
     &-school {
       font-weight: bold;
-      font-size: 12px;
+      font-size: 1rem;
       color: $dark-text-color;
-      margin-bottom: 10px;
+      margin-bottom: 0.8333rem;
     }
 
     &-grade-date {

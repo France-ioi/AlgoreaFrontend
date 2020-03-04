@@ -3,29 +3,37 @@
 $nav-control-border: #5c5c5c;
 
 .nav-header {
-  height: 100px;
+  height: 8.3333rem;
+  position: relative;
 
-  app-notification {
-    margin: 5px;
-  }
+  .overlay-container {
+    position: absolute;
+    top: 3.75rem;
+    left: 0;
+    right: 0;
 
-  app-button {
-    margin: 5px;
-    margin-top: 10px;
-    display: block;
-
-    ::ng-deep p-button {
-      width: 100%;
+    app-notification {
+      margin: 0.4167rem;
+    }
+  
+    app-button {
+      margin: 0.4167rem;
+      margin-top: 0.8333rem;
+      display: block;
+  
+      ::ng-deep p-button {
+        width: 100%;
+      }
     }
   }
 }
 
 .nav-control {
   color: white;
-  height: 45px;
-  padding-left: 10px;
-  padding-right: 10px;
-  border-bottom: 1px solid $nav-control-border;
+  height: 3.75rem;
+  padding-left: 0.8333rem;
+  padding-right: 0.8333rem;
+  border-bottom: 0.0833rem solid $nav-control-border;
   position: relative;
   text-align: center;
   display: flex;
@@ -41,10 +49,10 @@ $nav-control-border: #5c5c5c;
     }
 
     .title-collapse {
-      margin-left: 10px;
-      margin-right: 10px;
-      padding-left: 10px;
-      padding-right: 10px;
+      margin-left: 0.8333rem;
+      margin-right: 0.8333rem;
+      padding-left: 0.8333rem;
+      padding-right: 0.8333rem;
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -57,15 +65,15 @@ $nav-control-border: #5c5c5c;
     }
 
     .notifications {
-      margin-left: 5px;
+      margin-left: 0.4167rem;
       margin-right: 0;
     }
   }
 
   span {
     display: block;
-    height: 45px;
-    line-height: 45px;
+    height: 3.75rem;
+    line-height: 3.75rem;
   }
 
   .nav-collapse {
@@ -85,11 +93,11 @@ $nav-control-border: #5c5c5c;
     .user-image {
       display: flex;
       align-items: center;
-      border-radius: 4px;
+      border-radius: 0.3333rem;
       img {
         display: block;
-        margin-right: 10px;
-        border-radius: 4px;
+        margin-right: 0.8333rem;
+        border-radius: 0.3333rem;
       }
     }
 
@@ -100,32 +108,32 @@ $nav-control-border: #5c5c5c;
   }
 
   .sign-out {
-    margin-right: 5px;
+    margin-right: 0.4167rem;
     cursor: pointer;
   }
 
   .notifications {
-    margin-right: 10px;
-    width: 30px;
+    margin-right: 0.8333rem;
+    width: 2.5rem;
     position: relative;
     cursor: pointer;
 
     .notification-number {
       position: absolute;
       display: inline-block;
-      top: 3px;
-      left: 2px;
+      top: 0.25rem;
+      left: 0.1667rem;
       background-color: $secondary-color;
-      border-radius: 100px;
-      width: 16px;
-      height: 16px;
+      border-radius: 9rem;
+      width: 1.3333rem;
+      height: 1.3333rem;
       color: white;
-      line-height: 16px;
-      font-size: 9px;
+      line-height: 1.3333rem;
+      font-size: 0.75rem;
     }
   }
 
   app-select {
-    margin-top: 10px;
+    margin-top: 0.8333rem;
   }
 }

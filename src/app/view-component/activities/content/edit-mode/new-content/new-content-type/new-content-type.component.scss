@@ -8,11 +8,11 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 225px;
-  padding: 10px;
+  height: 18.75rem;
+  padding: 0.8333rem;
   background-color: transparent;
   cursor: pointer;
-  max-width: 150px;
+  max-width: 12.5rem;
   margin: 0 auto;
 
   .item-image-wrapper {
@@ -24,25 +24,25 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 85px;
-      height: 85px;
+      width: 7.0833rem;
+      height: 7.0833rem;
       background-color: $base-color;
       color: white;
-      border-radius: 85px;
-      font-size: 40px;
+      border-radius: 7.0833rem;
+      font-size: 3.3333rem;
     }
   }
 
   .item-title {
-    font-size: 14px;
+    font-size: 1.1667rem;
     font-weight: bold;
     color: $dark-text-color;
-    margin-bottom: 10px;
-    margin-top: 10px;
+    margin-bottom: 0.8333rem;
+    margin-top: 0.8333rem;
   }
 
   .item-description {
-    font-size: 12px;
+    font-size: 1rem;
     color: $base-text-color;
     text-align: center;
     flex: 1;

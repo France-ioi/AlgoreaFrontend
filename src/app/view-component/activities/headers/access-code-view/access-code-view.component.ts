@@ -18,10 +18,10 @@ export class AccessCodeViewComponent implements OnInit {
 
   onJoinTeam(e) {
     const dialogRef = this.dialog.open(JoinGroupDialogComponent, {
-      maxHeight: '1000px',
-      minWidth: '600px',
-      maxWidth: '600px',
-      minHeight: '200px',
+      maxHeight: '83rem',
+      minWidth: '50rem',
+      maxWidth: '50rem',
+      minHeight: '17rem',
       data: {
         group_name: 'Terminale A',
         desc: 'Group presentation Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.',

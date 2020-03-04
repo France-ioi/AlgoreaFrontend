@@ -1,19 +1,21 @@
 @import "src/colors.scss";
 
+$inactive-bk-color: #d8d8d8;
+
 .progress-section-container {
   display: flex;
   flex-direction: column;
-  margin-top: 5px;
-  margin-bottom: 5px;
+  margin-top: 0.4167rem;
+  margin-bottom: 0.4167rem;
 
   .progress-section-header {
     display: flex;
     align-items: center;
-    height: 30px;
-    border-radius: 30px;
+    height: 2.5rem;
+    border-radius: 2.5rem;
     color: white;
     background-color: $base-color;
-    padding: 5px;
+    padding: 0.4167rem;
     cursor: pointer;
 
     &.disabled {
@@ -24,10 +26,10 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 25px;
-      height: 25px;
-      margin-right: 10px;
-      font-size: 14px;
+      width: 2.0833rem;
+      height: 2.0833rem;
+      margin-right: 0.8333rem;
+      font-size: 1.1667rem;
     }
 
     .header-title {
@@ -40,7 +42,7 @@
       align-items: center;
 
       .selected-progress-level {
-        margin-left: 5px;
+        margin-left: 0.4167rem;
       }
     }
 
@@ -48,8 +50,8 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 25px;
-      height: 25px;
+      width: 2.0833rem;
+      height: 2.0833rem;
     }
   }
 
@@ -63,8 +65,8 @@
       position: relative;
 
       .progress-control {
-        margin-right: 10px;
-        width: 30px;
+        margin-right: 0.8333rem;
+        width: 2.5rem;
         display: flex;
         align-items: center;
         justify-content: flex-start;
@@ -74,12 +76,12 @@
           display: flex;
           align-items: center;
           justify-content: center;
-          width: 15px;
-          height: 15px;
-          border-radius: 15px;
-          font-size: 9px;
+          width: 1.25rem;
+          height: 1.25rem;
+          border-radius: 1.25rem;
+          font-size: 0.75rem;
           color: white;
-          background-color: #d8d8d8;
+          background-color: $inactive-bk-color;
           cursor: pointer;
 
           &.active {
@@ -87,17 +89,17 @@
           }
 
           &.last {
-            width: 30px;
-            height: 30px;
-            border-radius: 30px;
-            font-size: 12px;
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 2.5rem;
+            font-size: 1rem;
           }
         }
 
         .progress-branch {
           display: flex;
-          width: 5px;
-          background-color: #d8d8d8;
+          width: 0.4167rem;
+          background-color: $inactive-bk-color;
           flex: 1;
 
           &.active {
@@ -110,18 +112,18 @@
         flex: 1;
         display: flex;
         flex-direction: column;
-        font-size: 12px;
+        font-size: 1rem;
         color: $base-text-color;
-        min-height: 30px;
+        min-height: 2.5rem;
 
         &.header-comment {
-          padding-top: 5px;
+          padding-top: 0.4167rem;
         }
 
         .progress-desc-name {
           color: $dark-text-color;
           font-weight: bold;
-          margin-bottom: 5px;
+          margin-bottom: 0.4167rem;
           cursor: pointer;
 
           &.active {
@@ -137,8 +139,8 @@
             }
 
             .date-start-label {
-              margin-right: 15px;
-              width: 90px;
+              margin-right: 1.25rem;
+              width: 7.5rem;
             }
           }
         }
@@ -146,12 +148,12 @@
         .progress-desc-comment {
           font-style: italic;
           color: $base-text-color;
-          margin-bottom: 10px;
+          margin-bottom: 0.8333rem;
         }
       }
 
       .progress-addition {
-        margin-left: 10px;
+        margin-left: 0.8333rem;
       }
     }
 
@@ -162,7 +164,7 @@
       right: 0;
       bottom: 0;
       opacity: 0.5;
-      background-color: #fff;
+      background-color: white;
     }
   }
 }

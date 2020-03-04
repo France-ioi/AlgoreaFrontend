@@ -39,14 +39,12 @@
                 <img
                   *ngIf="item.image"
                   src="assets/images/{{ item.image }}"
-                  width="40px"
-                  height="40px"
+                  style="width: 3.3333rem; height: 3.3333rem;"
                 />
                 <img
                   *ngIf="!item.image"
                   src="assets/images/Male.svg"
-                  width="40px"
-                  height="40px"
+                  style="width: 3.3333rem; height: 3.3333rem;"
                 />
               </div>
               <div class="message-content-wrapper">
@@ -105,8 +103,7 @@
           <div class="user-info">
             <img
               src="assets/images/{{ message.user.image }}"
-              width="40px"
-              height="40px"
+              style="width: 3.3333rem; height: 3.3333rem;"
             />
             <span class="user-name">{{ message.user.name }}</span>
           </div>

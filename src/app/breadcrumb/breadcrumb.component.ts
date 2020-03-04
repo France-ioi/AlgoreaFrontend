@@ -13,7 +13,7 @@ export class BreadcrumbComponent implements OnInit {
   selectedIdx;
   breadWidth;
 
-  maxWidths = [100, 120, 140, 150, 200, 240, 0];
+  maxWidths = [9, 10, 12, 13, 16, 20, 0];
 
   constructor() { }
 
@@ -28,9 +28,9 @@ export class BreadcrumbComponent implements OnInit {
   }
 
   itemMaxWidth() {
-    const widths = [100, 100, 140, 150, 200, 240, 0];
+    const widths = [9, 9, 12, 13, 16, 20, 0];
 
-    widths[this.selectedIdx] = 150;
+    widths[this.selectedIdx] = 13;
 
     return widths;
   }

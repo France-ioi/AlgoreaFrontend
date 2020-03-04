@@ -8,17 +8,17 @@
   position: relative;
 
   app-grid {
-    margin-left: -50px;
-    margin-right: -20px;
+    margin-left: -4.1667rem;
+    margin-right: -1.6667rem;
   }
 }
 
 .ask-for-help {
-  margin-left: -70px;
-  margin-right: -20px;
-  margin-bottom: -20px;
-  padding-top: 15px;
-  padding-bottom: 15px;
+  margin-left: -5.8333rem;
+  margin-right: -1.6667rem;
+  margin-bottom: -1.6667rem;
+  padding-top: 1.25rem;
+  padding-bottom: 1.25rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -27,10 +27,10 @@
 
   .tri-tag {
     position: absolute;
-    top: -17px;
-    left: 20px;
-    border-left: 11px solid transparent;
-    border-right: 11px solid transparent;
-    border-bottom: 17px solid #ECF3FC;
+    top: -1.4167rem;
+    left: 1.6667rem;
+    border-left: 0.9167rem solid transparent;
+    border-right: 0.9167rem solid transparent;
+    border-bottom: 1.4167rem solid #ECF3FC;
   }
 }

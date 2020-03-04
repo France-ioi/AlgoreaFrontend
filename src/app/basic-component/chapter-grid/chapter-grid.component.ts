@@ -32,10 +32,10 @@ export class ChapterGridComponent implements OnInit {
 
   openAdvancedDialog() {
     const ref = this.dialog.open(AccessEditDialogComponent, {
-      maxHeight: "1000px",
-      minWidth: "800px",
-      maxWidth: "800px",
-      minHeight: "300px",
+      maxHeight: "83rem",
+      minWidth: "67rem",
+      maxWidth: "67rem",
+      minHeight: "25rem",
       data: {
         icon: "fa fa-lock",
         label: `Morbi sit amet eleifend tortor: propagation of access from Activity with mosaic view`,

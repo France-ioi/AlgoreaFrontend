@@ -17,8 +17,8 @@
     <app-select
       [items]="filterChoice"
       [opened]="false"
-      width="120"
-      style="margin: 5px;"
+      width="10"
+      style="margin: 0.4167rem;"
     ></app-select>
     <app-search-filter></app-search-filter>
   </app-grid-filter-bar>
@@ -37,12 +37,12 @@
           <i
             *ngIf="node.checked"
             class="pi pi-check"
-            style="font-size: 12px;"
+            style="font-size: 1rem;"
           ></i>
           <i
             *ngIf="!node.checked"
             class="pi pi-circle-on"
-            style="font-size: 12px;"
+            style="font-size: 1rem;"
           ></i>
         </span>
         <span class="node-label">
@@ -51,10 +51,10 @@
               {{ node.title }}
             </span>
             <span class="node-state" *ngIf="node.state === 'locked'">
-              <i class="fa fa-key" style="font-size: 16px;"></i>
+              <i class="fa fa-key" style="font-size: 1.3333rem;"></i>
             </span>
             <span class="node-state" *ngIf="node.state === 'never opened'">
-              <i class="fa fa-lock" style="font-size: 16px;"></i>
+              <i class="fa fa-lock" style="font-size: 1.3333rem;"></i>
             </span>
           </span>
           <app-skill-progress
@@ -87,10 +87,10 @@
               {{ node.title }}
             </span>
             <span class="node-state" *ngIf="node.state === 'locked'">
-              <i class="fa fa-key" style="font-size: 16px;"></i>
+              <i class="fa fa-key" style="font-size: 1.3333rem;"></i>
             </span>
             <span class="node-state" *ngIf="node.state === 'never opened'">
-              <i class="fa fa-lock" style="font-size: 16px;"></i>
+              <i class="fa fa-lock" style="font-size: 1.3333rem;"></i>
             </span>
           </span>
         </span>

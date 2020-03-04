@@ -3,20 +3,20 @@
 .yourself-header {
   display: flex;
   align-items: center;
-  margin-right: 15px;
-  margin-top: 10px;
-  margin-bottom: 30px;
+  margin-right: 1.25rem;
+  margin-top: 0.8333rem;
+  margin-bottom: 2.5rem;
   background-color: $base-bk-color;
 
   &.small {
-    height: 43px;
+    height: 3.5833rem;
   }
 
   .user-image {
-    border-radius: 100px;
+    border-radius: 9rem;
 
     img {
-      border-radius: 100px;
+      border-radius: 9rem;
     }
   }
 
@@ -24,28 +24,28 @@
     display: flex;
     flex-direction: column;
     flex: 1;
-    margin-left: 20px;
+    margin-left: 1.6667rem;
 
     div {
       display: flex;
       align-items: center;
-      margin-bottom: 10px;
+      margin-bottom: 0.8333rem;
 
       span {
         color: #4A4A4A;
 
         &.user-name {
-          font-size: 24px;
-          line-height: 24px;
+          font-size: 2rem;
+          line-height: 2rem;
           margin-top: 0;
-          margin-right: 20px;
+          margin-right: 1.6667rem;
         }
 
         &.make-public {
-          margin-right: 15px;
+          margin-right: 1.25rem;
           text-transform: uppercase;
           font-weight: bold;
-          font-size: 10px;
+          font-size: 0.8333rem;
         }
       }
       
@@ -55,17 +55,17 @@
       display: flex;
       align-items: center;
       color: $base-text-color;
-      margin-bottom: 3px;
-      font-size: 12px;
-      line-height: 12px;
+      margin-bottom: 0.25rem;
+      font-size: 1rem;
+      line-height: 1rem;
 
       i {
-        margin-right: 8px;
+        margin-right: 0.6667rem;
       }
     }
   }
 
   .certificates {
-    margin-right: 25px;
+    margin-right: 2.0833rem;
   }
 }

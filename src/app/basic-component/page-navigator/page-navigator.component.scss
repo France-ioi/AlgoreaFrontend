@@ -7,7 +7,7 @@
   span {
     display: flex;
     align-items: center;
-    height: 28px;
+    height: 2.3333rem;
     background-color: $base-color;
     justify-content: center;
     color: white;
@@ -15,33 +15,33 @@
   }
 
   .page-edit {
-    width: 28px;
-    border-radius: 28px;
-    margin-right: 5px;
-    margin-left: 10px;
+    width: 2.3333rem;
+    border-radius: 2.3333rem;
+    margin-right: 0.4167rem;
+    margin-left: 0.8333rem;
   }
 
   .navigator {
-    border-top-left-radius: 28px;
-    border-bottom-left-radius: 28px;
-    padding-left: 10px;
+    border-top-left-radius: 2.3333rem;
+    border-bottom-left-radius: 2.3333rem;
+    padding-left: 0.8333rem;
     color: #D0DDEC;
     i {
       cursor: pointer;
-      margin-right: 10px;
+      margin-right: 0.8333rem;
       &:last-child {
-        margin-right: 5px;
+        margin-right: 0.4167rem;
       }
     }
   }
 
   .top-bar-expand {
-      border-left: 1px solid #E0E1E5;
+      border-left: 0.0833rem solid #E0E1E5;
       color: $base-color;
-      font-size: 18px;
-      padding-left: 10px;
-      margin-left: 10px;
-      margin-right: 10px;
+      font-size: 1.5rem;
+      padding-left: 0.8333rem;
+      margin-left: 0.8333rem;
+      margin-right: 0.8333rem;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -51,12 +51,12 @@
   .top-bar-menu {
       color: white;
       background-color: $base-color;
-      border-top-left-radius: 28px;
-      border-bottom-left-radius: 28px;
-      padding-left: 15px;
-      padding-right: 10px;
-      height: 28px;
-      font-size: 16px;
+      border-top-left-radius: 2.3333rem;
+      border-bottom-left-radius: 2.3333rem;
+      padding-left: 1.25rem;
+      padding-right: 0.8333rem;
+      height: 2.3333rem;
+      font-size: 1.3333rem;
       display: flex;
       align-items: center;
       justify-content: center;

@@ -3,25 +3,25 @@
 .activity-container {
   display: flex;
   align-items: center;
-  height: 32px;
-  border-radius: 5px;
+  height: 2.6667rem;
+  border-radius: 0.4167rem;
   cursor: pointer;
 
   .activity-content {
-    padding-left: 10px;
+    padding-left: 0.8333rem;
     display: flex;
     height: 100%;
     align-items: center;
     background-color: #DFE6EF;
-    box-shadow: 0 1px #C9CFD7 inset;
-    border-bottom-left-radius: 5px;
-    border-top-left-radius: 5px;
+    box-shadow: 0 0.0833rem #C9CFD7 inset;
+    border-bottom-left-radius: 0.4167rem;
+    border-top-left-radius: 0.4167rem;
     color: $base-text-color;
     flex: 1;
     
     .placeholder {
-      margin-left: 10px;
-      margin-right: 15px;
+      margin-left: 0.8333rem;
+      margin-right: 1.25rem;
       font-style: italic;
 
       &.touched {
@@ -32,14 +32,14 @@
 
   .select-folder {
     height: 100%;
-    width: 32px;
+    width: 2.6667rem;
     background-color: $base-color;
     color: white;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-top-right-radius: 5px;
-    border-bottom-right-radius: 5px;
+    border-top-right-radius: 0.4167rem;
+    border-bottom-right-radius: 0.4167rem;
   }
 
 }

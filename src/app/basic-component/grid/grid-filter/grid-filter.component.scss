@@ -4,19 +4,19 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  margin: 5px;
+  margin: 0.4167rem;
   position: relative;
 
   .grid-filter-button {
     display: flex;
     align-items: center;
     color: white;
-    height: 22px;
-    font-size: 12px;
+    height: 1.8333rem;
+    font-size: 1rem;
     background-color: $base-color;
-    border-radius: 10px;
-    padding-left: 10px;
-    padding-right: 5px;
+    border-radius: 0.8333rem;
+    padding-left: 0.8333rem;
+    padding-right: 0.4167rem;
     cursor: pointer;
 
     &.open {
@@ -25,49 +25,49 @@
     }
     
     &-icon {
-      padding-right: 5px;
+      padding-right: 0.4167rem;
     }
 
     &-label {
-      margin-right: 5px;
+      margin-right: 0.4167rem;
     }
 
     &-action {
-      font-size: 10px;
+      font-size: 0.8333rem;
       display: flex;
       align-items: center;
 
       .close-icon {
-        margin-right: 5px;
+        margin-right: 0.4167rem;
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 16px;
-        height: 16px;
+        width: 1.3333rem;
+        height: 1.3333rem;
       }
     }
   }
 
   &-menu {
-    width: 330px;
+    width: 27.5rem;
     height: auto;
-    padding: 15px;
+    padding: 1.25rem;
     color: white;
     background-color: $base-color;
-    border-radius: 6px;
+    border-radius: 0.5rem;
     border-top-left-radius: unset;
     position: absolute;
     left: 0;
-    top: 22px;
+    top: 1.8333rem;
     z-index: 100;
 
     &-list {
       display: flex;
 
       &-label {
-        font-size: 12px;
+        font-size: 1rem;
         color: white;
-        margin-right: 15px;
+        margin-right: 1.25rem;
       }
     }
 
@@ -78,7 +78,7 @@
       &-item {
         display: flex;
         align-items: center;
-        margin: 5px;
+        margin: 0.4167rem;
 
         &-label {
           flex: 1;
@@ -91,9 +91,9 @@
       flex-direction: column;
 
       &-label {
-        font-size: 12px;
-        margin-top: 5px;
-        margin-bottom: 5px;
+        font-size: 1rem;
+        margin-top: 0.4167rem;
+        margin-bottom: 0.4167rem;
       }
     }
   }

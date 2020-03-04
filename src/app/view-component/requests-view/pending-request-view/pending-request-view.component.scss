@@ -1,26 +1,26 @@
 @import 'src/colors.scss';
 
 .pending-request-container {
-  margin-right: -20px;
+  margin-right: -1.6667rem;
 
   .grid-user-info-field {
     display: flex;
     align-items: center;
 
     img {
-      border-radius: 35px;
+      border-radius: 2.9167rem;
     }
 
     .user-info {
       display: flex;
       flex-direction: column;
-      font-size: 12px;
+      font-size: 1rem;
       color: $base-text-color;
-      margin-left: 15px;
+      margin-left: 1.25rem;
 
       &-name {
         font-weight: bold;
-        font-size: 16px;
+        font-size: 1.3333rem;
       }
 
       &-activity {
@@ -37,14 +37,14 @@
     display: flex;
     align-items: center;
     color: $base-color;
-    font-size: 12px;
+    font-size: 1rem;
 
     span {
-      margin-right: 10px;
+      margin-right: 0.8333rem;
       cursor: pointer;
 
       span {
-        margin-right: 10px;
+        margin-right: 0.8333rem;
       }
     }
   }
@@ -58,16 +58,17 @@
 :host ::ng-deep .pending-request-container .ui-table .ui-table-tbody > tr {
   background-color: transparent;
 
-  & > td {
+   > td {
     border-bottom-color: $section-border-color;
+    font: 1rem;
 
     &:last-child {
-      border-left: 1px solid $section-border-color;
+      border-left: 0.0833rem solid $section-border-color;
     }
   }
 
   &:last-child {
-    border-bottom: 1px solid $section-border-color;
+    border-bottom: 0.0833rem solid $section-border-color;
   }
 
   &:nth-child(even) {

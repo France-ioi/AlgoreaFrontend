@@ -2,11 +2,11 @@
   <div class="nav-control">
     <span class="nav-collapse" (click)="onCollapse($event)" tabindex="0">
       <!-- <i class="fa fa-bars"></i> -->
-      <img src="assets/images/menu-open.svg" width="25px" height="25px" />
+      <img src="assets/images/menu-open.svg" style="width: 2rem; height: 2rem;" />
     </span>
     <span class="user-info">
       <span class="user-image">
-        <img src="assets/images/{{data.image}}" width="28px" height="28px" />
+        <img src="assets/images/{{data.image}}" style="width: 2.3333rem; height: 2.3333rem;" />
       </span>
       <span class="user-name">{{ data.name }}</span>
     </span>
@@ -19,17 +19,19 @@
     </span>
     <app-select *ngIf="!signedIn" [items]="langs"></app-select>
   </div>
-  <app-search-input (onChange)="onSearchEvent($event)" (onClose)="onSearchCloseEvent($event)"></app-search-input>
-  <app-notification *ngIf="showNotification && signedIn"></app-notification>
-  <app-button *ngIf="!signedIn" icon="fa fa-power-off" label="Connexion" class="ui-button-rounded ui-button-warning ui-fit-parent" (onClick)="signInOut($event)"></app-button>
+  <app-search-input *ngIf="signedIn" (onChange)="onSearchEvent($event)" (onClose)="onSearchCloseEvent($event)"></app-search-input>
+  <div class="overlay-container">
+    <app-notification *ngIf="showNotification && signedIn"></app-notification>
+    <app-button *ngIf="!signedIn" icon="fa fa-power-off" label="Connexion" class="ui-button-rounded ui-button-warning ui-fit-parent" (onClick)="signInOut($event)"></app-button>
+  </div>
 </div>
 
 <div class="nav-control alt" *ngIf="templateId">
   <span class="nav-collapse" (click)="onCollapse($event)" tabindex="0">
-    <img src="assets/images/menu-open.svg" width="25px" height="25px" />
+    <img src="assets/images/menu-open.svg" style="width: 2rem; height: 2rem;"/>
   </span>
   <span *ngIf="signedIn" class="title-collapse" (click)="onFold($event)" [ngClass]="{down: !folded}">
-    <img src="assets/images/header-open.svg" />
+    <img src="assets/images/header-open.svg" style="width: 0.8333rem;"/>
   </span>
   <span class="notifications" *ngIf="data.notification > 0 && signedIn" tabindex="1">
     <span class="notification-number">{{ data.notification }}</span>

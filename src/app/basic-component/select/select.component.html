@@ -2,7 +2,7 @@
   *ngIf="!opened"
   class="select-value"
   (click)="toogleDropdown($event)"
-  [ngStyle]="{ 'width.px': width }"
+  [ngStyle]="{ 'width.rem': width }"
 >
   <span class="select-label">{{ selected }}</span>
   <span class="dropdown-icon">
@@ -12,7 +12,7 @@
 <div
   *ngIf="opened"
   class="select-dropdown-wrapper"
-  [ngStyle]="{ 'width.px': width }"
+  [ngStyle]="{ 'width.rem': width }"
   (clickOutside)="hideDropdown($event)"
 >
   <ul class="select-dropdown">

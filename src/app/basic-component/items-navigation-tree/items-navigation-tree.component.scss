@@ -49,15 +49,15 @@
 }
 
 :host ::ng-deep .ui-treenode-children {
-  padding-left: 36px !important;
+  padding-left: 3rem !important;
 }
 
 /* :host ::ng-deep p-treenode:last-child > .ui-treenode > .ui-treenode-children {
-  border-left: 1px solid transparent;
+  border-left: 0.0833rem solid transparent;
 } */
 
 :host ::ng-deep .ui-treenode-children {
-  border-left: 1px solid #2e5e95;
+  border-left: 0.0833rem solid #2e5e95;
 }
 
 :host
@@ -66,7 +66,7 @@
   > p-treenode
   > .ui-treenode
   > .ui-treenode-children {
-  border-left: 1px solid transparent;
+  border-left: 0.0833rem solid transparent;
 }
 
 :host
@@ -81,7 +81,7 @@
   .node-tree-item
   .node-item-branch
   .bottom-branch {
-  border-left: 1px solid #2e5e95;
+  border-left: 0.0833rem solid #2e5e95;
 }
 
 :host
@@ -111,15 +111,15 @@
 
   &:focus {
     .node-tree-item .node-item-content {
-      border-top-left-radius: 6px;
-      border-bottom-left-radius: 6px;
+      border-top-left-radius: 0.5rem;
+      border-bottom-left-radius: 0.5rem;
       background-color: $base-bk-color;
       color: $base-color;
 
       .node-select {
         color: #fff;
         background-color: #f5a623;
-        border-radius: 100px;
+        border-radius: 9rem;
       }
     }
   }
@@ -129,103 +129,110 @@
     display: block;
     flex-direction: row;
     align-items: center;
-    min-height: 50px;
+    min-height: 4.1667rem;
     position: relative;
     cursor: pointer;
 
     .node-item-branch {
       display: block;
-      width: 38px;
-      min-height: 50px;
+      width: 3.1667rem;
+      min-height: 4.1667rem;
       z-index: 10;
 
       .top-branch {
         display: block;
-        border-right: 1px solid #2e5e95;
-        min-height: 25px;
+        border-right: 0.0833rem solid #2e5e95;
+        min-height: 2.0833rem;
         position: relative;
 
         .mask-branch {
           display: block;
           position: absolute;
-          right: -1px;
-          width: 16px;
-          bottom: -1px;
-          height: 15px;
+          right: -0.0833rem;
+          width: 1.3333rem;
+          bottom: -0.0833rem;
+          height: 1.25rem;
           background-color: $base-color;
         }
       }
 
       .bottom-branch {
         display: block;
-        border-right: 1px solid #2e5e95;
-        min-height: 25px;
+        border-right: 0.0833rem solid #2e5e95;
+        min-height: 2.0833rem;
         position: relative;
 
         .mask-branch {
           display: block;
           position: absolute;
-          right: -1px;
-          width: 2px;
+          right: -0.0833rem;
+          width: 0.1667rem;
           top: 0;
-          height: 15px;
+          height: 1.25rem;
           background-color: $base-color;
         }
       }
     }
 
     .node-item-content {
-      padding: 0px 3px;
+      padding: 0 0.25rem;
       position: absolute;
       display: block;
-      border-bottom: 1px solid #4587d4;
-      padding-right: 20px;
+      border-bottom: 0.0833rem solid #4587d4;
+      padding-right: 1.6667rem;
       top: 0;
       bottom: 0;
-      left: 15px;
+      left: 1.25rem;
       right: 0;
 
       .node-select {
-        width: 30px;
-        height: 30px;
-        margin-right: 15px;
-        margin-left: 5px;
-        display: block;
+        width: 2.5rem;
+        height: 2.5rem;
+        margin-right: 1.25rem;
+        margin-left: 0.4167rem;
         text-align: center;
         position: absolute;
         top: 50%;
-        margin-top: -15px;
+        margin-top: -1.25rem;
         color: #f5a623;
         z-index: 11;
+        display: flex;
+        align-items: center;
+        justify-content: center;
 
         i {
-          line-height: 30px;
+          line-height: 2.5rem;
+        }
+
+        app-score-ring {
+          width: 100%;
+          height: 100%;
         }
       }
 
       &.node-bottom-radius {
-        border-bottom-right-radius: 6px;
+        border-bottom-right-radius: 0.5rem;
       }
 
       .node-icon {
         display: flex;
         align-items: center;
         justify-content: center;
-        margin-right: 14px;
+        margin-right: 1.1667rem;
       }
 
       .node-label {
         top: 0;
         bottom: 0;
-        left: 50px;
+        left: 4.1667rem;
         right: 0;
         position: absolute;
         display: block;
-        padding-right: 20px;
+        padding-right: 1.6667rem;
 
         .label-container {
           display: flex;
-          margin-top: 15px;
+          margin-top: 1.25rem;
         }
 
         .node-state {
@@ -236,13 +243,14 @@
           overflow: hidden;
           white-space: nowrap;
           text-overflow: ellipsis;
-          margin-right: 10px;
+          margin-right: 0.8333rem;
+          font-size: 1rem;
         }
 
         app-skill-progress {
           position: absolute;
           left: 0;
-          right: 15px;
+          right: 1.25rem;
           bottom: 0;
         }
       }
@@ -255,33 +263,33 @@
     &.child {
       .node-item-branch {
         .top-branch {
-          border-left: 1px solid #2e5e95;
-          border-bottom: 1px solid #2e5e95;
+          border-left: 0.0833rem solid #2e5e95;
+          border-bottom: 0.0833rem solid #2e5e95;
           border-right: none;
         }
 
         .bottom-branch {
-          border-left: 1px solid #2e5e95;
+          border-left: 0.0833rem solid #2e5e95;
           border-right: none;
         }
       }
     }
 
     &.folder.child.expanded .node-item-branch .bottom-branch {
-      border-right: 1px solid #2e5e95;
+      border-right: 0.0833rem solid #2e5e95;
     }
 
     &.checked {
       .node-item-content {
-        border-top-left-radius: 6px;
-        border-bottom-left-radius: 6px;
+        border-top-left-radius: 0.5rem;
+        border-bottom-left-radius: 0.5rem;
         background-color: $base-bk-color;
         color: $base-color;
 
         .node-select {
           color: #fff;
           background-color: #f5a623;
-          border-radius: 100px;
+          border-radius: 9rem;
         }
       }
     }

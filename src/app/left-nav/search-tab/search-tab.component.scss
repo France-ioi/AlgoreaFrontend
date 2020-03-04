@@ -1,40 +1,40 @@
 @import "src/colors.scss";
 
 .search-tools-wrapper {
-  margin: 10px;
+  margin: 0.8333rem;
   margin-bottom: 0;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #5c5c5c;
+  padding-bottom: 0.8333rem;
+  border-bottom: 0.0833rem solid #5c5c5c;
 
   app-grid-filter-bar {
-    margin-left: -5px;
+    margin-left: -0.4167rem;
     display: block;
   }
 }
 
 .search-result {
   .items-found {
-    height: 50px;
+    height: 4.1667rem;
     display: flex;
     align-items: center;
-    padding-left: 20px;
+    padding-left: 1.6667rem;
 
     .found-icon {
-      border-radius: 100px;
-      width: 40px;
-      height: 40px;
+      border-radius: 9rem;
+      width: 3.3333rem;
+      height: 3.3333rem;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-right: 20px;
+      margin-right: 1.6667rem;
       background-color: #3b3b3b;
       color: $secondary-color;
-      font-size: 16px;
+      font-size: 1.3333rem;
     }
 
     .found-label {
       color: white;
-      font-size: 16px;
+      font-size: 1.3333rem;
     }
   }
 
@@ -43,13 +43,13 @@
     flex-direction: column;
 
     .node-item-content {
-      padding: 0px 3px;
+      padding: 0 0.25rem;
       display: block;
-      border-bottom: 2px solid #505050;
-      padding-right: 20px;
+      border-bottom: 0.1667rem solid #505050;
+      padding-right: 1.6667rem;
       position: relative;
       background-color: #535353;
-      height: 50px;
+      height: 4.1667rem;
       cursor: pointer;
     }
 
@@ -57,23 +57,23 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-right: 14px;
+      margin-right: 1.1667rem;
     }
 
     .node-select {
-      width: 30px;
-      height: 30px;
-      margin-right: 15px;
-      margin-left: 5px;
+      width: 2.5rem;
+      height: 2.5rem;
+      margin-right: 1.25rem;
+      margin-left: 0.4167rem;
       display: block;
       text-align: center;
       position: absolute;
       top: 50%;
-      margin-top: -15px;
+      margin-top: -1.25rem;
     }
 
     .node-select i {
-      line-height: 30px;
+      line-height: 2.5rem;
     }
 
     .node-select {
@@ -84,17 +84,17 @@
     .node-item-content .node-label {
       top: 0;
       bottom: 0;
-      left: 50px;
+      left: 4.1667rem;
       right: 0;
       position: absolute;
       display: block;
-      padding-right: 20px;
+      padding-right: 1.6667rem;
       color: white;
     }
 
     .node-item-content .node-label .label-container {
       display: flex;
-      margin-top: 15px;
+      margin-top: 1.25rem;
     }
 
     .node-item-content .node-label .node-state {
@@ -105,13 +105,13 @@
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
-      margin-right: 10px;
+      margin-right: 0.8333rem;
     }
 
     .node-item-content .node-label app-skill-progress {
       position: absolute;
       left: 0;
-      right: 15px;
+      right: 1.25rem;
       bottom: 0;
     }
   }

@@ -7,7 +7,7 @@
     <div style="flex: 1; flex-direction: row-reverse;display: flex;">
       <app-selection
         [items]="groupSwitch"
-        style="width: 300px;"
+        style="width: 25rem;"
       ></app-selection>
     </div>
   </ng-template>
@@ -22,12 +22,12 @@
     >
       <ng-template #headerTemplate let-columns>
         <tr>
-          <th style="width: 40px;background-color: #D3DBE7;"></th>
+          <th style="width: 3.3333rem;background-color: #D3DBE7;"></th>
           <ng-container *ngFor="let col of columns">
             <th
               *ngIf="col.field === 'date'"
               [pSortableColumn]="col.field"
-              style="width: 160px; background-color: #D3DBE7;"
+              style="width: 13.3333rem; background-color: #D3DBE7;"
             >
               {{ col.header }}
               <p-sortIcon [field]="col.field"></p-sortIcon>
@@ -45,7 +45,7 @@
         let-rowIndex="rowIndex"
       >
         <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
-          <td style="width: 40px;">
+          <td style="width: 3.3333rem;">
             <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
           </td>
           <td *ngFor="let col of columns">
@@ -56,8 +56,7 @@
               <div class="grid-user-info-field">
                 <img
                   src="{{ rowData.user.image }}"
-                  width="70px"
-                  height="70px"
+                  style="width: 6rem; height: 6rem;"
                 />
                 <div class="user-info">
                   <span class="user-info-name">{{ rowData.user.name }}</span>
@@ -76,7 +75,7 @@
       <ng-template #summaryTemplate let-table>
         <div style="text-align: left; display: flex; align-items: center;">
           <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-          <span style="margin-left: 10px; color: #9B9B9B; flex: 1;">
+          <span style="margin-left: 0.8333rem; color: #9B9B9B; flex: 1;font-size: 1rem;">
             Select all
           </span>
           <div class="req-tools">

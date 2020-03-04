@@ -15,8 +15,8 @@ export enum ProgressType {
 }
 
 enum ProgressHeight {
-  Thin = 5,
-  Thick = 16
+  Thin = 0.4167,
+  Thick = 1.3333
 }
 
 @Component({

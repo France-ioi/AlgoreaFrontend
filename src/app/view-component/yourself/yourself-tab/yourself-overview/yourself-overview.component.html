@@ -27,16 +27,16 @@
   >
     <ng-template #colgroupTemplate let-columns>
       <colgroup>
-        <col style="width: 40px;"/>
+        <col style="width: 4rem;"/>
         <col style="width: 100%;"/>
         <col style="width: 100%;"/>
-        <col style="width: 110px;"/>
-        <col style="width: 110px;"/>
+        <col style="width: 9rem;"/>
+        <col style="width: 9rem;"/>
       </colgroup>
     </ng-template>
     <ng-template #headerTemplate let-columns>
       <tr>
-        <th style="width: 40px;"></th>
+        <th style="width: 4rem;"></th>
         <th *ngFor="let col of columns" [pSortableColumn]="col.field">
           {{ col.header }}
           <p-sortIcon [field]="col.field"></p-sortIcon>
@@ -50,7 +50,7 @@
       let-rowIndex="rowIndex"
     >
       <tr >
-        <td style="width: 40px;"></td>
+        <td style="width: 4rem;"></td>
         <ng-container *ngFor="let col of columns">
           <td *ngIf="col.field === 'date'">
             {{rowData[col.field] | date:'d/MM/y'}}

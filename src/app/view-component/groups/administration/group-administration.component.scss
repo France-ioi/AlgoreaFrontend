@@ -10,12 +10,12 @@
   tr > th {
     border-left: none;
     border-right: none;
-    height: 150px;
+    height: 12.5rem;
     transform: skewX(-45deg);
     transform-origin: 0 100%;
     position: relative;
     background-color: #f8f8f8;
-    min-width: 40px;
+    min-width: 3.3333rem;
 
     .slanted-header {
       position: absolute;
@@ -25,12 +25,12 @@
       transform: translate(50%, 50%) skewX(45deg) rotate(-45deg);
       transform-origin: 0 50%;
       text-align: left;
-      padding-left: 20px;
+      padding-left: 1.6667rem;
       color: #8c8c8c;
       overflow: visible;
 
       &-content {
-        width: 180px;
+        width: 15rem;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
@@ -51,7 +51,7 @@
     background-color: #f8f8f8;
     padding: 0;
     text-align: center;
-    font-size: 12px;
+    font-size: 1rem;
 
     &:nth-child(even) {
       background-color: white;
@@ -69,7 +69,7 @@
       cursor: pointer;
 
       i {
-        font-size: 16px;
+        font-size: 1.3333rem;
       }
 
       &.edit {
@@ -91,7 +91,7 @@
       align-items: center;
 
       > span {
-        margin-bottom: 5px;
+        margin-bottom: 0.4167rem;
       }
     }
   }

@@ -1,7 +1,5 @@
-<div class="ring-container">
+<div class="ring-container" [ngStyle]="{width: forTree ? '100%' : diameter / 12 + 'rem', height: forTree ? '100%' : diameter / 12 + 'rem'}">
   <svg
-    attr.width.px="{{ diameter }}"
-    attr.height.px="{{ diameter }}"
     viewBox="0 0 64 64"
   >
     <path
@@ -36,19 +34,11 @@
       fill="black"
       fill-opacity="0.4"
     />
-    <text
-      *ngIf="!_iconPath || _iconPath.length === 0"
-      id="perc"
-      x="32"
-      y="39"
-      font-size="20px"
-      text-anchor="middle"
-      attr.fill="{{ _textFill }}"
-    >
-      {{ displayedScore }}
-    </text>
   </svg>
-  <span *ngIf="_iconPath && _iconPath.length > 0" class="ring-icon" [ngStyle]="{color: _iconFill}">
-    <i class="fa fa-{{_iconPath}}" [ngStyle]="{'font-size.px': _fontSize}"></i>
+  <span class="ring-icon" [ngStyle]="{color: _iconPath && _iconPath.length > 0 ? _iconFill : _textFill}">
+    <i *ngIf="_iconPath && _iconPath.length > 0" class="fa fa-{{_iconPath}}" [ngStyle]="{'font-size.rem': _fontSize}"></i>
+    <ng-container *ngIf="!_iconPath || _iconPath.length === 0">
+      {{displayedScore}}
+    </ng-container>
   </span>
 </div>

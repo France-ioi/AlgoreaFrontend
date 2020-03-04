@@ -7,15 +7,15 @@
 .task-header-container {
   display: flex;
   flex-direction: column;
-  margin-bottom: 10px;
-  margin-right: 15px;
+  margin-bottom: 0.8333rem;
+  margin-right: 1.25rem;
 
   .task-header {
-    padding-top: 20px;
+    padding-top: 1.6667rem;
     display: flex;
     align-items: center;
     background-color: $base-bk-color;
-    padding-bottom: 10px;
+    padding-bottom: 0.8333rem;
   
     &.edit {
       flex-direction: column;
@@ -23,7 +23,7 @@
   
       app-input {
         width: 100%;
-        margin-bottom: 10px;
+        margin-bottom: 0.8333rem;
       }
   
       .links {
@@ -40,9 +40,9 @@
           }
   
           .parent-item {
-            margin-left: 10px;
+            margin-left: 0.8333rem;
             color: $base-text-color;
-            font-size: 12px;
+            font-size: 1rem;
           }
         }
   
@@ -50,14 +50,14 @@
           display: flex;
           align-items: center;
           color: $base-color;
-          font-size: 12px;
+          font-size: 1rem;
   
           span {
-            margin-right: 10px;
+            margin-right: 0.8333rem;
             cursor: pointer;
             
             span {
-              margin-right: 10px;
+              margin-right: 0.8333rem;
             }
           }
         }
@@ -65,32 +65,32 @@
     }
   
     &.small {
-      height: 43px;
+      height: 3.5833rem;
     }
   
     .task-user-image {
-      border-radius: 100px;
+      border-radius: 9rem;
       background-color: white;
   
       img {
-        border-radius: 100px;
+        border-radius: 9rem;
       }
     }
   
     .task-title {
       margin-left: 0;
-      margin-right: 10px;
+      margin-right: 0.8333rem;
       flex: 1;
       min-width: 0;
 
       &.skill {
-        margin-left: 10px;
+        margin-left: 0.8333rem;
       }
   
       p {
-        font-size: 30px;
+        font-size: 2.5rem;
         margin: 0;
-        margin-bottom: 5px;
+        margin-bottom: 0.4167rem;
         text-overflow: ellipsis;
         overflow: hidden;
         white-space: nowrap;  
@@ -103,7 +103,7 @@
     .user-info {
       display: flex;
       align-items: center;
-      margin-right: 5px;
+      margin-right: 0.4167rem;
   
       span {
         display: block;
@@ -114,7 +114,7 @@
   
         &.user-id {
           color: $base-color;
-          font-size: 20px;
+          font-size: 1.6667rem;
           font-weight: bold;
         }
       }
@@ -122,9 +122,9 @@
   
     .clock-icon {
       color: $dark-text-color;
-      font-size: 24px;
+      font-size: 2rem;
       font-weight: bold;
-      margin-right: 5px;
+      margin-right: 0.4167rem;
   
       &.finished {
         color: $light-text-color;
@@ -133,7 +133,7 @@
   
     .remaining-time {
       color: $dark-text-color;
-      font-size: 24px;
+      font-size: 2rem;
       font-weight: bold;
   
       &.finished {
@@ -143,8 +143,8 @@
   }
 
   .team-count {
-    margin-left: 20px;
-    font-size: 20px;
+    margin-left: 1.6667rem;
+    font-size: 1.6667rem;
     color: $dark-text-color;
   }
 
@@ -163,7 +163,7 @@
       justify-content: center;
 
       app-button {
-        width: 160px;
+        width: 13.3333rem;
       }
     }
   }
@@ -171,12 +171,12 @@
   .checklist-container {
     display: flex;
     flex-direction: column;
-    font-size: 12px;
+    font-size: 1rem;
     color: $base-text-color;
 
     &-title {
       font-weight: bold;
-      padding-left: 10px;
+      padding-left: 0.8333rem;
     }
 
     .checklist {
@@ -188,16 +188,16 @@
       &-item {
         display: flex;
         align-items: center;
-        padding-top: 5px;
-        padding-bottom: 5px;
+        padding-top: 0.4167rem;
+        padding-bottom: 0.4167rem;
 
         &-icon {
           display: flex;
           align-items: center;
           justify-content: center;
           color: $base-color;
-          height: 20px;
-          width: 25px;
+          height: 1.6667rem;
+          width: 2.0833rem;
 
           &.danger {
             color: $section-danger-handle-color;
@@ -214,16 +214,16 @@
         }
 
         &.checklist-score {
-          border-bottom: 1px solid #E8D1D8;
-          margin-left: 20px;
-          min-height: 35px;
+          border-bottom: 0.0833rem solid #E8D1D8;
+          margin-left: 1.6667rem;
+          min-height: 2.9167rem;
 
           &:last-child {
-            border-bottom: 1px solid transparent;
+            border-bottom: 0.0833rem solid transparent;
           }
 
           app-skill-progress {
-            width: 160px;
+            width: 13.3333rem;
           }
         }
       }

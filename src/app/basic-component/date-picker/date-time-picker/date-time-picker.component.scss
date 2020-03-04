@@ -7,8 +7,8 @@
   //   font-weight: 400;
   //   content: "\f073";
   //   position: absolute;
-  //   left: 8px;
-  //   top: 8px;
+  //   left: 0.6667rem;
+  //   top: 0.6667rem;
   // }
 
   .ui-calendar-button {
@@ -19,7 +19,7 @@
   .ui-inputtext {
     background-color: #DFE6EF;
     border: none;
-    box-shadow: 0 1px #C9CFD7 inset;
+    box-shadow: 0 0.0833rem #C9CFD7 inset;
     
     &::placeholder {
       font-weight: 400;
@@ -34,15 +34,15 @@
 //   &::before {
 //     position: absolute;
 //     content: "XXXX/XX/XX";
-//     left: 25px;
-//     top: 2px;
+//     left: 2.0833rem;
+//     top: 0.1667rem;
 //     font-style: italic;
 //     z-index: 10;
 //   }
 // }
 
 :host ::ng-deep .ui-inputtext:enabled:focus:not(.ui-state-error) {
-  box-shadow: 0 1px #C9CFD7 inset;
+  box-shadow: 0 0.0833rem #C9CFD7 inset;
 }
 
 :host ::ng-deep .ui-inputwrapper-filled .ui-calendar {

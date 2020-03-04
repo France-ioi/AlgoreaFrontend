@@ -7,34 +7,35 @@
   .dialog-handler {
     display: block;
     background-color: $base-color;
-    border-left: 3px solid $dark-color;
-    width: 55px;
-    height: 30px;
-    border-top-right-radius: 100px;
-    border-bottom-right-radius: 100px;
+    border-left: 0.25rem solid $dark-color;
+    width: 4.5833rem;
+    height: 2.5rem;
+    border-top-right-radius: 9rem;
+    border-bottom-right-radius: 9rem;
     position: relative;
 
     i {
       color: white;
       position: absolute;
-      right: 10px;
-      font-size: 12px;
-      top: 7px;
+      right: 0.8333rem;
+      font-size: 1rem;
+      top: 0.5833rem;
     }
   }
 
   .dialog-title {
-    font-size: 24px;
+    font-size: 2rem;
     color: $dark-text-color;
-    margin-left: 15px;
+    margin-left: 1.25rem;
     font-weight: normal;
     flex: 1;
   }
 
   .dialog-close {
-    width: 25px;
+    width: 2.0833rem;
     color: $base-color;
     cursor: pointer;
+    font-size: 1rem;
   }
 }
 
@@ -43,10 +44,10 @@
 }
 
 :host ::ng-deep .mat-dialog-title {
-  margin-left: -24px;
-  margin-right: -24px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid $light-border-color;
+  margin-left: -2rem;
+  margin-right: -2rem;
+  padding-bottom: 1.6667rem;
+  border-bottom: 0.0833rem solid $light-border-color;
 }
 
 :host ::ng-deep .dialog-content {
@@ -54,11 +55,11 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  padding-left: 40px;
-  padding-right: 20px;
+  padding-left: 3.3333rem;
+  padding-right: 1.6667rem;
 
   &::-webkit-scrollbar {
-    width: 6px;
+    width: 0.5rem;
   }
 
   &:hover {
@@ -71,7 +72,7 @@
 
   &::-webkit-scrollbar-thumb {
     background-color: #f1f1f1;
-    border-radius: 10px;
+    border-radius: 0.8333rem;
   }
 
   &::-webkit-scrollbar-thumb:hover {
@@ -80,14 +81,14 @@
 
   .button-wrapper {
     display: flex;
-    padding-bottom: 20px;
-    padding-top: 15px;
-    margin-bottom: 15px;
-    border-bottom: 1px solid #F0F0F0;
+    padding-bottom: 1.6667rem;
+    padding-top: 1.25rem;
+    margin-bottom: 1.25rem;
+    border-bottom: 0.0833rem solid #F0F0F0;
     
     app-button {
       flex: 1;
-      margin-right: 10px;
+      margin-right: 0.8333rem;
 
       &:last-child {
         margin-right: 0;
@@ -98,13 +99,13 @@
   .user-status-wrapper {
     display: flex;
     flex-direction: column;
-    padding-bottom: 20px;
-    font-size: 12px;
-    border-bottom: 1px solid #F0F0F0;
+    padding-bottom: 1.6667rem;
+    font-size: 1rem;
+    border-bottom: 0.0833rem solid #F0F0F0;
 
     .user-status-info {
       font-weight: bold;
-      margin-bottom: 20px;
+      margin-bottom: 1.6667rem;
       color: $dark-text-color
     }
 
@@ -121,12 +122,12 @@
     .form-item-view {
       display: flex;
       align-items: center;
-      margin: 5px;
+      margin: 0.4167rem;
     
       .form-item-label {
         display: block;
-        font-size: 12px;
-        width: 250px;
+        font-size: 1rem;
+        width: 20.8333rem;
         color: $dark-text-color;
         font-weight: bold;
       }
