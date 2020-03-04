@@ -14,12 +14,12 @@
     >
       <ng-template #headerTemplate let-columns>
         <tr>
-          <th style="width: 40px;background-color: #D3DBE7;"></th>
+          <th style="width: 4rem;background-color: #D3DBE7;"></th>
           <ng-container *ngFor="let col of columns">
             <th
               *ngIf="col.field === 'date'"
               [pSortableColumn]="col.field"
-              style="width: 160px; background-color: #D3DBE7;"
+              style="width: 13.3333rem; background-color: #D3DBE7;"
             >
               {{ col.header }}
               <p-sortIcon [field]="col.field"></p-sortIcon>
@@ -42,7 +42,7 @@
         let-rowIndex="rowIndex"
       >
         <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
-          <td style="width: 40px;">
+          <td style="width: 4rem;">
             <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
           </td>
           <td *ngFor="let col of columns">
@@ -60,7 +60,7 @@
           style="text-align: left; display: flex; align-items: center;"
         >
           <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-          <span style="margin-left: 10px; color: #9B9B9B; flex: 1;">
+          <span style="margin-left: 0.8333rem; color: #9B9B9B; flex: 1;">
             Select all
           </span>
           <div class="req-tools">

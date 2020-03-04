@@ -7,34 +7,35 @@
   .dialog-handler {
     display: flex;
     background-color: $base-color;
-    border-left: 3px solid $dark-color;
-    width: 55px;
-    height: 30px;
-    border-top-right-radius: 100px;
-    border-bottom-right-radius: 100px;
+    border-left: 0.25rem solid $dark-color;
+    width: 4.5833rem;
+    height: 2.5rem;
+    border-top-right-radius: 9rem;
+    border-bottom-right-radius: 9rem;
     position: relative;
     align-items: center;
     justify-content: flex-end;
-    padding-right: 10px;
+    padding-right: 0.8333rem;
 
     i {
       color: white;
-      font-size: 12px;
+      font-size: 1rem;
     }
   }
 
   .dialog-title {
-    font-size: 24px;
+    font-size: 2rem;
     color: $dark-text-color;
-    margin-left: 15px;
+    margin-left: 1.25rem;
     font-weight: normal;
     flex: 1;
   }
 
   .dialog-close {
-    width: 25px;
+    width: 2.0833rem;
     color: $base-color;
     cursor: pointer;
+    font-size: 1rem;
   }
 }
 
@@ -42,22 +43,22 @@
 }
 
 :host ::ng-deep .mat-dialog-title {
-  margin-left: -24px;
-  margin-right: -24px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid $light-border-color;
+  margin-left: -2rem;
+  margin-right: -2rem;
+  padding-bottom: 1.6667rem;
+  border-bottom: 0.0833rem solid $light-border-color;
 }
 
 :host ::ng-deep .dialog-content {
   max-height: 65vh;
   display: flex;
   flex-direction: column;
-  margin-left: -24px;
-  margin-right: -24px;
+  margin-left: -2rem;
+  margin-right: -2rem;
   overflow: auto;
 
   &::-webkit-scrollbar {
-    width: 6px;
+    width: 0.5rem;
   }
 
   &::-webkit-scrollbar-track {
@@ -66,7 +67,7 @@
 
   &::-webkit-scrollbar-thumb {
     background-color: #d1d1d1;
-    border-radius: 10px;
+    border-radius: 0.8333rem;
   }
 
   &::-webkit-scrollbar-thumb:hover {
@@ -76,36 +77,36 @@
   .join-group-wrapper {
     display: flex;
     flex-direction: column;
-    padding-left: 64px;
-    padding-right: 44px;
+    padding-left: 5.3333rem;
+    padding-right: 3.6667rem;
     position: relative;
 
     .description {
       color: $base-text-color;
-      font-size: 12px;
+      font-size: 1rem;
     }
 
     .group-administrators {
       display: flex;
       align-items: center;
       flex-wrap: wrap;
-      padding-bottom: 25px;
+      padding-bottom: 2.0833rem;
 
       .admin-label {
         font-style: italic;
-        font-size: 12px;
+        font-size: 1rem;
         color: $base-text-color;
-        margin-right: 10px;
+        margin-right: 0.8333rem;
       }
 
       .group-administrator {
         display: flex;
         align-items: center;
-        margin: 0 5px;
-        font-size: 12px;
+        margin: 0 0.4167rem;
+        font-size: 1rem;
 
         .user-icon {
-          margin-right: 5px;
+          margin-right: 0.4167rem;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -114,18 +115,18 @@
         
         .user-name {
           color: $base-text-color;
-          margin: 5px;
+          margin: 0.4167rem;
         }
       }
     }
 
     .tri-tag {
       position: absolute;
-      left: 20px;
+      left: 1.6667rem;
       bottom: 0;
-      border-left: 11px solid transparent;
-      border-right: 11px solid transparent;
-      border-bottom: 17px solid #DFE7F4;
+      border-left: 0.9167rem solid transparent;
+      border-right: 0.9167rem solid transparent;
+      border-bottom: 1.4167rem solid #DFE7F4;
     }
   }
 
@@ -137,10 +138,10 @@
   .feedback {
     display: flex;
     flex-direction: column;
-    margin: 20px 64px;
+    margin: 1.6667rem 5.3333rem;
 
     .feedback-label {
-      font-size: 12px;
+      font-size: 1rem;
       color: $base-text-color;
     }
   }
@@ -148,7 +149,7 @@
   .form-item-view {
     display: flex;
     align-items: center;
-    margin: 5px;
+    margin: 0.4167rem;
 
     &.switch {
       .form-item-label {
@@ -163,8 +164,8 @@
   
     .form-item-label {
       display: block;
-      font-size: 12px;
-      width: 160px;
+      font-size: 1rem;
+      width: 13.3333rem;
       color: #5C5C5C;
       font-weight: bold;
 
@@ -180,7 +181,7 @@
 
   .join-group-button {
     display: flex;
-    margin-top: 10px;
+    margin-top: 0.8333rem;
     justify-content: center;
   }
 }

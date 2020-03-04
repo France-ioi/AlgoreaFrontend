@@ -1,10 +1,10 @@
 @import 'src/colors.scss';
 
 @mixin section-format($bk-color, $handle-color, $handle-border-color) {
-  border-bottom: 1px solid $light-border-color;
+  border-bottom: 0.0833rem solid $light-border-color;
   background-color: $bk-color;
-  margin-top: 10px;
-  margin-bottom: 10px;
+  margin-top: 0.8333rem;
+  margin-bottom: 0.8333rem;
   
   .section-header {
     display: flex;
@@ -19,22 +19,22 @@
       align-items: center;
       justify-content: flex-end;
       background-color: $handle-color;
-      border-left: 3px solid $handle-border-color;
-      width: 55px;
-      height: 30px;
-      border-top-right-radius: 100px;
-      border-bottom-right-radius: 100px;
+      border-left: 0.25rem solid $handle-border-color;
+      width: 4.5833rem;
+      height: 2.5rem;
+      border-top-right-radius: 9rem;
+      border-bottom-right-radius: 9rem;
       position: relative;
 
       i {
         color: white;
-        margin-right: 10px;
+        margin-right: 0.8333rem;
       }
 
       .score-container {
-        width: 32px;
-        height: 32px;
-        border-radius: 15px;
+        width: 2.6667rem;
+        height: 2.6667rem;
+        border-radius: 1.25rem;
         background-color: $bk-color;
         display: flex;
         align-items: center;
@@ -43,39 +43,39 @@
     }
 
     .section-header-content {
-      padding-top: 15px;
-      padding-bottom: 15px;
+      padding-top: 1.25rem;
+      padding-bottom: 1.25rem;
       display: flex;
       align-items: center;
       flex: 1;
-      margin-right: 10px;
-      border-bottom: 1px solid transparent;
+      margin-right: 0.8333rem;
+      border-bottom: 0.0833rem solid transparent;
       position: relative;
 
       &.show-border {
-        border-bottom: 1px solid $section-border-color;
+        border-bottom: 0.0833rem solid $section-border-color;
       }
 
       .section-title {
-        font-size: 24px;
+        font-size: 2rem;
         color: $dark-text-color;
-        padding-left: 15px;
+        padding-left: 1.25rem;
       }
 
       .additional-content {
-        margin-right: 50px;
+        margin-right: 4.1667rem;
         flex: 1;
         display: flex;
         align-items: center;
       }
   
       .toggle-content {
-        font-size: 24px;
+        font-size: 2rem;
         color: $base-text-color;
-        width: 50px;
-        height: 24px;
-        padding-left: 26px;
-        line-height: 24px;
+        width: 4.1667rem;
+        height: 2rem;
+        padding-left: 2.1667rem;
+        line-height: 2rem;
         text-align: center;
         font-weight: lighter;
         cursor: pointer;
@@ -87,7 +87,7 @@
   }
   
   .section-content {
-    padding: 15px 20px 15px 70px;
+    padding: 1.25rem 1.6667rem 1.25rem 5.8333rem;
     color: $base-text-color;
   }
   

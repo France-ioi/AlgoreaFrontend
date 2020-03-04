@@ -7,20 +7,20 @@
   .group-header {
     display: flex;
     align-items: center;
-    margin-right: 15px;
-    margin-top: 20px;
-    margin-bottom: 30px;
+    margin-right: 1.25rem;
+    margin-top: 1.6667rem;
+    margin-bottom: 2.5rem;
     background-color: $base-bk-color;
 
     &.small {
-      height: 43px;
+      height: 3.5833rem;
     }
 
     .user-image {
-      border-radius: 100px;
+      border-radius: 9rem;
 
       img {
-        border-radius: 100px;
+        border-radius: 9rem;
       }
     }
 
@@ -28,19 +28,19 @@
       display: flex;
       flex-direction: column;
       flex: 1;
-      margin-left: 20px;
+      margin-left: 1.6667rem;
 
       .user-name {
         display: flex;
         align-items: center;
-        margin-bottom: 10px;
+        margin-bottom: 0.8333rem;
 
         span {
           color: #4A4A4A;
-          font-size: 24px;
-          line-height: 24px;
+          font-size: 2rem;
+          line-height: 2rem;
           margin-top: 0;
-          margin-right: 20px;
+          margin-right: 1.6667rem;
         }
         
       }
@@ -55,7 +55,7 @@
 
           &.assoc-skill {
             app-score-ring {
-              margin-left: 20px;
+              margin-left: 1.6667rem;
             }
           }
         }
@@ -65,15 +65,15 @@
         display: flex;
         align-items: center;
         color: $base-text-color;
-        margin-bottom: 8px;
-        font-size: 12px;
-        line-height: 12px;
+        margin-bottom: 0.6667rem;
+        font-size: 1rem;
+        line-height: 1rem;
         // overflow: hidden;
-        padding-right: 10px;
+        padding-right: 0.8333rem;
 
         i {
-          margin-right: 8px;
-          width: 12px;
+          margin-right: 0.6667rem;
+          width: 1rem;
         }
 
         span, a {
@@ -93,7 +93,7 @@
     }
 
     .certificates {
-      margin-right: 25px;
+      margin-right: 2.0833rem;
     }
   }
 }

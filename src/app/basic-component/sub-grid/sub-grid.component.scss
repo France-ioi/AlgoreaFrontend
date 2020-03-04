@@ -5,7 +5,7 @@
   .ui-table-tbody > tr {
     background-color: transparent;
     display: flex;
-    border-bottom: 1px solid #D1D9E5;
+    border-bottom: 0.0833rem solid #D1D9E5;
   }
 
   .ui-table-tbody > tr:last-child {
@@ -19,9 +19,10 @@
   .ui-table-tbody > tr > td {
     border: none;
     background-color: transparent;
+    font-size: 1rem;
 
     span.table-icon {
-      margin-right: 10px;
+      margin-right: 0.8333rem;
       color: $base-color;
       cursor: pointer;
     }
@@ -31,7 +32,7 @@
     }
 
     .team-user-image {
-      border-radius: 25px;
+      border-radius: 2.0833rem;
     }
   }
 }

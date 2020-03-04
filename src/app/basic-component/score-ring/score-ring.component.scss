@@ -1,10 +1,19 @@
 :host {
   display: flex;
+  // width: 100%;
+  // height: 100%;
 }
 
 .ring-container {
   position: relative;
   display: flex;
+  width: 100%;
+  height: 100%;
+
+  svg {
+    width: 100%;
+    height: 100%;
+  }
 
   .ring-icon {
     position: absolute;
@@ -15,5 +24,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    font-size: 1rem;
   }
 }

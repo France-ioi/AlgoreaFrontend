@@ -11,22 +11,22 @@
       background-color: white;
       .mat-tab-label {
         background-color: $base-bk-color;
-        border-right: 1px solid $light-border-color;
+        border-right: 0.0833rem solid $light-border-color;
         &.mat-tab-label-active {
           background-color: white;
           border-right-color: transparent;
           color: $base-color;
-          border-top: 3px solid $base-color;
+          border-top: 0.25rem solid $base-color;
         }
         &.mat-tab-label-active + .mat-tab-label {
-          border-bottom-left-radius: 10px;
+          border-bottom-left-radius: 0.8333rem;
         }
         &.mat-tab-label-before-active {
-          border-bottom-right-radius: 10px;
+          border-bottom-right-radius: 0.8333rem;
         }
         .mat-tab-label-content {
           i {
-            margin-right: 15px;
+            margin-right: 1.25rem;
           }
         }
       }
@@ -46,11 +46,11 @@
 }
 
 app-grid {
-  margin-right: -20px;
-  margin-left: -30px;
+  margin-right: -1.6667rem;
+  margin-left: -2.5rem;
 }
 
 app-grid-filter-bar {
   display: block;
-  margin-bottom: 20px;
+  margin-bottom: 1.6667rem;
 }

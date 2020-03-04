@@ -33,6 +33,7 @@ export class ScoreRingComponent implements OnInit, OnChanges {
   @Input() isFailed = false;
   @Input() icons = '';
   @Input() scoreFill = '';
+  @Input() forTree = false;
 
   @ViewChild('svg', {static: false}) svg;
 
@@ -48,7 +49,7 @@ export class ScoreRingComponent implements OnInit, OnChanges {
   _iconFill = 'white';
 
   _textFill = ScoreRingColor.defaultText;
-  _fontSize = 16;
+  _fontSize = 1;
 
   constructor() {}
 
@@ -114,6 +115,9 @@ export class ScoreRingComponent implements OnInit, OnChanges {
       this._iconPath = '';
     }
 
-    this._fontSize = Math.floor(14 * 2 * this.diameter / 64);
+    this._fontSize = Math.floor(2 * this.diameter / 64);
+    if (this.forTree) {
+      this._fontSize = 1;
+    }
   }
 }

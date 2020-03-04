@@ -4,13 +4,13 @@ $presentation-bk-color: #EFEFEF;
 
 .presentation-item-container {
   display: flex;
-  border-radius: 5px;
+  border-radius: 0.4167rem;
 
   .presentation-item-image {
     position: relative;
-    height: 150px;
-    width: 180px;
-    min-width: 180px;
+    height: 12.5rem;
+    width: 15rem;
+    min-width: 15rem;
 
     .image {
       width: 100%;
@@ -18,46 +18,46 @@ $presentation-bk-color: #EFEFEF;
       background-position: center center;
       background-repeat: no-repeat;
       background-size: cover;
-      border-top-left-radius: 5px;
-      border-bottom-left-radius: 5px;
+      border-top-left-radius: 0.4167rem;
+      border-bottom-left-radius: 0.4167rem;
     }
   }
 
   .presentation-item-content {
     flex: 1;
-    height: 150px;
+    height: 12.5rem;
     display: flex;
     flex-direction: column;
     position: relative;
-    border-top-right-radius: 5px;
-    border-bottom-right-radius: 5px;
+    border-top-right-radius: 0.4167rem;
+    border-bottom-right-radius: 0.4167rem;
     min-width: 0;
 
     .presentation-lock-key {
       position: absolute;
       right: 0;
       top: 0;
-      width: 25px;
-      height: 20px;
-      font-size: 12px;
+      width: 2.0833rem;
+      height: 1.6667rem;
+      font-size: 1rem;
       color: $secondary-color;
       background-color: white;
       display: flex;
       align-items: center;
       justify-content: center;
-      border-bottom-left-radius: 10px;
+      border-bottom-left-radius: 0.8333rem;
     }
 
     .presentation-item-title {
       background-color: $presentation-bk-color;
-      padding: 10px;
+      padding: 0.8333rem;
       display: flex;
       flex-direction: column;
       flex: 1;
       
       .presentation-item-chapter-title {
-        padding-top: 15px;
-        font-size: 20px;
+        padding-top: 1.25rem;
+        font-size: 1.6667rem;
         color: $dark-text-color;
         text-overflow: ellipsis;
         overflow: hidden;
@@ -65,28 +65,28 @@ $presentation-bk-color: #EFEFEF;
       }
 
       .presentation-item-chapter-desc {
-        font-size: 12px;
+        font-size: 1rem;
         color: $base-text-color;
-        margin-top: 10px;
+        margin-top: 0.8333rem;
       }
     }
 
     .presentation-bottom-row {
       display: flex;
       align-items: center;
-      padding: 10px;
+      padding: 0.8333rem;
       background-color: $presentation-bk-color;
-      border-bottom-right-radius: 5px;
-      border-top: 1px solid #E1E1E1;
+      border-bottom-right-radius: 0.4167rem;
+      border-top: 0.0833rem solid #E1E1E1;
 
       app-state-widget {
         flex: 1;
       }
 
       .weight-view {
-        font-size: 12px;
+        font-size: 1rem;
         color: $base-text-color;
-        margin-right: 5px;
+        margin-right: 0.4167rem;
       }
     }
 

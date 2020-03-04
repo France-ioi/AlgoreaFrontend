@@ -3,38 +3,38 @@
 .list-group {
   list-style: none;
   padding-left: 0;
-  border-radius: 4px;
-  min-height: 40px;
+  border-radius: 0.3333rem;
+  min-height: 3.3333rem;
 
   li.list-group-item {
     background-color: $base-color;
-    min-height: 32px;
-    padding: 10px 5px;
-    margin: 8px;
+    min-height: 2.6667rem;
+    padding: 0.8333rem 0.4167rem;
+    margin: 0.6667rem;
     border: none;
     color: #fff;
-    border-radius: 4px;
+    border-radius: 0.3333rem;
     display: flex;
     flex-direction: row;
 
     &.active {
-      box-shadow: 2px 2px 8px $dark-color;
+      box-shadow: 0.1667rem 0.1667rem 0.6667rem $dark-color;
     }
 
     &.selected {
-      box-shadow: 2px 2px 8px $dark-color inset;
+      box-shadow: 0.1667rem 0.1667rem 0.6667rem $dark-color inset;
     }
 
     span {
-      font-size: 14px;
-      padding-top: 2px;
-      padding-left: 5px;
+      font-size: 1.1667rem;
+      padding-top: 0.1667rem;
+      padding-left: 0.4167rem;
     }
   }
 }
 
 .pick-list-container {
-  margin: 10px;
+  margin: 0.8333rem;
   flex: 1;
 }
 

@@ -2,15 +2,15 @@
 
 .modify-section {
   display: flex;
-  border-bottom: 1px solid $light-border-color;
-  padding: 10px;
+  border-bottom: 0.0833rem solid $light-border-color;
+  padding: 0.8333rem;
 
   .section-comment {
-    padding-left: 20px;
+    padding-left: 1.6667rem;
     flex: 1;
     display: flex;
     align-items: center;
-    font-size: 12px;
+    font-size: 1rem;
     color: $base-text-color;
   }
 }

@@ -4,27 +4,27 @@ $mosaic-bk-color: #EFEFEF;
 
 .mosaic-item-container {
   display: flex;
-  border-radius: 5px;
+  border-radius: 0.4167rem;
   flex-direction: column;
-  min-width: 200px;
+  min-width: 16.6667rem;
 
   .mosaic-item-title {
     background-color: $mosaic-bk-color;
     color: $base-text-color;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
-    padding: 10px;
-    height: 44px;
-    font-size: 12px;
-    line-height: 12px;
+    border-top-left-radius: 0.4167rem;
+    border-top-right-radius: 0.4167rem;
+    padding: 0.8333rem;
+    height: 3.6667rem;
+    font-size: 1rem;
+    line-height: 1rem;
     display: flex;
     align-items: center;
 
     .truncated-title {
       position: relative;
       overflow: hidden;
-      max-height: 24px;
-      padding-right: 12px;
+      max-height: 2rem;
+      padding-right: 1rem;
 
       &::before {
         content: '...';
@@ -37,8 +37,8 @@ $mosaic-bk-color: #EFEFEF;
         content: '';
         position: absolute;
         right: 0;
-        width: 12px;
-        height: 12px;
+        width: 1rem;
+        height: 1rem;
         background: $mosaic-bk-color;
       }
     }
@@ -46,12 +46,12 @@ $mosaic-bk-color: #EFEFEF;
 
   .mosaic-item-image {
     position: relative;
-    height: 110px;
+    height: 9.1667rem;
     width: 100%;
 
     .image {
       width: 100%;
-      height: 110px;
+      height: 9.1667rem;
       background-position: center center;
       background-repeat: no-repeat;
       background-size: cover;
@@ -61,34 +61,34 @@ $mosaic-bk-color: #EFEFEF;
       position: absolute;
       right: 0;
       top: 0;
-      width: 25px;
-      height: 20px;
-      font-size: 12px;
+      width: 2.0833rem;
+      height: 1.6667rem;
+      font-size: 1rem;
       color: $secondary-color;
       background-color: white;
       display: flex;
       align-items: center;
       justify-content: center;
-      border-bottom-left-radius: 10px;
+      border-bottom-left-radius: 0.8333rem;
     }
   }
 
   .mosaic-bottom-row {
     display: flex;
     align-items: center;
-    padding: 10px;
+    padding: 0.8333rem;
     background-color: $mosaic-bk-color;
-    border-bottom-left-radius: 5px;
-    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 0.4167rem;
+    border-bottom-right-radius: 0.4167rem;
 
     app-state-widget {
       flex: 1;
     }
 
     .weight-view {
-      font-size: 12px;
+      font-size: 1rem;
       color: $base-text-color;
-      margin-right: 5px;
+      margin-right: 0.4167rem;
     }
   }
 }

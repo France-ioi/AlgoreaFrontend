@@ -1,15 +1,15 @@
 @import "src/colors.scss";
 
 .select-value {
-  border-radius: 100px;
+  border-radius: 9rem;
   background-color: $base-color;
   display: flex;
   align-items: center;
-  height: 22px;
-  width: 75px;
-  padding: 0 10px;
+  height: 1.8333rem;
+  width: 6.25rem;
+  padding: 0 0.8333rem;
   color: white;
-  font-size: 12px;
+  font-size: 1rem;
   cursor: pointer;
 
   .select-label {
@@ -24,27 +24,27 @@
 .select-dropdown-wrapper {
   z-index: 1;
   position: relative;
-  width: 75px;
-  height: 22px;
+  width: 6.25rem;
+  height: 1.8333rem;
 
   .select-dropdown {
     list-style: none;
     padding-left: 0;
     margin: 0;
     background-color: $base-color;
-    border-radius: 12px;
+    border-radius: 1rem;
     width: 100%;
     position: absolute;
     top: 0;
 
     li {
-      padding: 5px 10px;
+      padding: 0.4167rem 0.8333rem;
       color: white;
-      border-bottom: 1px solid #6ea6e7;
+      border-bottom: 0.0833rem solid #6ea6e7;
       cursor: pointer;
-      height: 22px;
-      font-size: 12px;
-      line-height: 12px;
+      height: 1.8333rem;
+      font-size: 1rem;
+      line-height: 1rem;
 
       &:last-child {
         border-bottom: none;
@@ -54,10 +54,10 @@
 
   .dropdown-icon {
     position: absolute;
-    right: 10px;
-    top: 4px;
+    right: 0.8333rem;
+    top: 0.3333rem;
     color: white;
-    font-size: 12px;
+    font-size: 1rem;
     cursor: pointer;
   }
 }

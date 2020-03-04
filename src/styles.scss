@@ -4,6 +4,7 @@
 
 html {
   height: 100%;
+  font-size: 12px;
 }
 
 body {
@@ -32,31 +33,31 @@ body {
       background-color: $base-color;
       color: white;
       width: 100%;
-      border-radius: 5px;
-      padding: 5px;
-      box-shadow: 0 2px 4px -1px rgba(0,0,0,.2), 0 4px 5px 0 rgba(0,0,0,.14), 0 1px 10px 0 rgba(0,0,0,.12);
+      border-radius: 0.4167rem;
+      padding: 0.4167rem;
+      box-shadow: 0 0.1667rem 0.3333rem -0.0833rem rgba(0,0,0,.2), 0 0.3333rem 0.4167rem 0 rgba(0,0,0,.14), 0 0.0833rem 0.8333rem 0 rgba(0,0,0,.12);
       display: flex;
       flex-direction: column;
 
       .content-item {
         display: flex;
         align-items: center;
-        font-size: 12px;
-        margin: 2px;
-        padding: 5px;
+        font-size: 1rem;
+        margin: 0.1667rem;
+        padding: 0.4167rem;
         cursor: pointer;
-        border-bottom: 1px solid #4281CA;
+        border-bottom: 0.0833rem solid #4281CA;
 
         &-label {
           display: flex;
           flex: 1;
           text-align: right;
-          line-height: 15px;
-          height: 15px;
+          line-height: 1.25rem;
+          height: 1.25rem;
         }
 
         &-icon {
-          margin-left: 10px;
+          margin-left: 0.8333rem;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -69,9 +70,9 @@ body {
 
       .content-title {
         text-transform: uppercase;
-        font-size: 12px;
-        padding: 1px;
-        border-bottom: 1px solid #4587D4;
+        font-size: 1rem;
+        padding: 0.0833rem;
+        border-bottom: 0.0833rem solid #4587D4;
         display: flex;
         align-items: center;
 
@@ -83,10 +84,10 @@ body {
           display: flex;
           align-items: center;
           justify-content: center;
-          margin-left: 10px;
-          border-radius: 100px;
-          width: 22px;
-          height: 22px;
+          margin-left: 0.8333rem;
+          border-radius: 1.8333rem;
+          width: 1.8333rem;
+          height: 1.8333rem;
           background-color: $dark-base-color;
         }
       }
@@ -104,8 +105,8 @@ body {
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-right: 10px;
-      width: 15px;
+      margin-right: 0.8333rem;
+      width: 1.25rem;
     }
   }
 }
@@ -122,9 +123,9 @@ body {
         
         .indicator {
           width: 0;
-          border-left: 5px solid transparent;
-          border-right: 5px solid transparent;
-          border-bottom: 5px solid $base-color;
+          border-left: 0.4167rem solid transparent;
+          border-right: 0.4167rem solid transparent;
+          border-bottom: 0.4167rem solid $base-color;
         }
       }
     }
@@ -141,9 +142,9 @@ body {
       background-color: $base-color;
       color: white;
       width: 100%;
-      border-radius: 5px;
-      padding: 5px;
-      box-shadow: 0 2px 4px -1px rgba(0,0,0,.2), 0 4px 5px 0 rgba(0,0,0,.14), 0 1px 10px 0 rgba(0,0,0,.12);
+      border-radius: 0.4167rem;
+      padding: 0.4167rem;
+      box-shadow: 0 0.1667rem 0.3333rem -0.0833rem rgba(0,0,0,.2), 0 0.3333rem 0.4167rem 0 rgba(0,0,0,.14), 0 0.0833rem 0.8333rem 0 rgba(0,0,0,.12);
       display: flex;
       flex-direction: column;
 
@@ -154,8 +155,8 @@ body {
       & > span {
         display: flex;
         align-items: center;
-        padding: 5px;
-        font-size: 12px;
+        padding: 0.4167rem;
+        font-size: 1rem;
         cursor: pointer;
 
         &:last-child {
@@ -163,25 +164,25 @@ body {
         }
 
         &.score {
-          border-top: 1px solid #295485;
+          border-top: 0.0833rem solid #295485;
           justify-content: center;
           border-bottom: none;
 
           app-score-ring {
             color: white;
-            margin-right: 10px;
+            margin-right: 0.8333rem;
           }
         }
 
         &.clickable {
-          height: 35px;
-          padding-bottom: 10px;
-          padding-top: 10px;
-          border-bottom: 1px solid #295485;
+          height: 2.9167rem;
+          padding-bottom: 0.8333rem;
+          padding-top: 0.8333rem;
+          border-bottom: 0.0833rem solid #295485;
           background-color: $base-color;
-          margin-left: -5px;
-          margin-right: -5px;
-          padding-left: 10px;
+          margin-left: -0.4167rem;
+          margin-right: -0.4167rem;
+          padding-left: 0.8333rem;
           cursor: pointer;
 
           &:hover {
@@ -189,12 +190,12 @@ body {
           }
 
           &:last-child {
-            margin-bottom: -5px;
+            margin-bottom: -0.4167rem;
             border-bottom: none;
           }
 
           i {
-            margin-right: 10px;
+            margin-right: 0.8333rem;
           }
         }
 
@@ -203,21 +204,21 @@ body {
         }
 
         span.menu-value {
-          margin-left: 10px;
+          margin-left: 0.8333rem;
         }
         
         i {
-          margin-right: 5px;
-          width: 20px;
+          margin-right: 0.4167rem;
+          width: 1.6667rem;
         }
       }
     }
 
     .indicator {
       width: 0;
-      border-left: 5px solid transparent;
-      border-right: 5px solid transparent;
-      border-top: 5px solid $base-color;
+      border-left: 0.4167rem solid transparent;
+      border-right: 0.4167rem solid transparent;
+      border-top: 0.4167rem solid $base-color;
     }
   }
 }
@@ -230,18 +231,18 @@ body {
     flex-direction: column;
     padding-left: 0;
     list-style: none;
-    margin-left: 5px;
-    margin-right: 5px;
+    margin-left: 0.4167rem;
+    margin-right: 0.4167rem;
 
     li {
       display: flex;
-      margin: 5px;
+      margin: 0.4167rem;
 
       span.switch-label {
         color: #7D7D7D;
         flex: 1;
-        font-size: 12px;
-        margin-right: 10px;
+        font-size: 1rem;
+        margin-right: 0.8333rem;
 
         &.checked {
           color: white;
@@ -255,9 +256,9 @@ body {
 
   .ui-tooltip-text {
     background-color: $base-color;
-    border-radius: 10px;
-    padding-left: 8px;
-    padding-right: 8px;
+    border-radius: 0.8333rem;
+    padding-left: 0.6667rem;
+    padding-right: 0.6667rem;
   }
 
   &.ui-tooltip-top {
@@ -266,4 +267,46 @@ body {
     }
   }
 
+}
+
+@media screen and (max-width: 1200px) {
+  html {
+    font-size: 12px;
+  }
+}
+
+@media screen and (min-width: 1200px) and (max-width: 1400px) {
+  html {
+    font-size: 14px;
+  }
+}
+
+@media screen and (min-width: 1400px) and (max-width: 1600px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+@media screen and (min-width: 1600px) and (max-width: 1900px) {
+  html {
+    font-size: 19px;
+  }
+}
+
+@media screen and (min-width: 1900px) and (max-width: 2400px) {
+  html {
+    font-size: 24px;
+  }
+}
+
+@media screen and (min-width: 2400px) and (max-width: 3000px) {
+  html {
+    font-size: 30px;
+  }
+}
+
+@media screen and (min-width: 3000px) {
+  html {
+    font-size: 32px;
+  }
 }

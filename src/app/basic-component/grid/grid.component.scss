@@ -3,13 +3,13 @@
 :host ::ng-deep .ui-table .ui-table-thead > tr > th {
   // position: -webkit-sticky;
   // position: sticky !important;
-  // top: 70px;
+  // top: 5.8333rem;
   // overflow: visible;
 }
 
 @media screen and (max-width: 64em) {
   :host ::ng-deep .ui-table .ui-table-thead > tr > th {
-    top: 100px;
+    top: 8.3333rem;
   }
 }
 
@@ -18,16 +18,16 @@
   display: block;
 
   ::ng-deep .ui-table {
-    margin-bottom: 10px;
+    margin-bottom: 0.8333rem;
 
     .ui-chkbox {
-      width: 13px;
-      height: 13px;
+      width: 1.0833rem;
+      height: 1.0833rem;
       .ui-chkbox-box {
         background-color: #e5e5e5;
-        box-shadow: 0 1px #bbb inset;
-        width: 13px;
-        height: 13px;
+        box-shadow: 0 0.0833rem #bbb inset;
+        width: 1.0833rem;
+        height: 1.0833rem;
         border: none;
         position: relative;
 
@@ -43,9 +43,9 @@
           overflow: visible;
           color: #505050;
           position: absolute;
-          top: -6px;
-          left: -4px;
-          font-size: 22px;
+          top: -0.5rem;
+          left: -0.3333rem;
+          font-size: 1.8333rem;
         }
       }
     }
@@ -53,8 +53,8 @@
     .ui-table-thead > tr > th {
       border-top: none;
       text-transform: uppercase;
-      font-size: 12px;
-      height: 36px;
+      font-size: 1rem;
+      height: 3rem;
 
       &:focus {
         outline: transparent;
@@ -67,13 +67,14 @@
 
     .ui-table-tbody > tr > td {
       border: none;
-      border-bottom: 1px solid #f0f0f0;
+      border-bottom: 0.0833rem solid #f0f0f0;
       color: $base-text-color;
-      height: 43px;
-      max-height: 43px;
+      height: 3.5833rem;
+      max-height: 3.5833rem;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+      font-size: 1rem;
     }
 
     .ui-table-tbody > tr:last-child > td {
@@ -92,14 +93,14 @@
         display: flex;
         align-items: center;
         color: $base-color;
-        font-size: 12px;
+        font-size: 1rem;
 
         span {
-          margin-right: 10px;
+          margin-right: 0.8333rem;
           cursor: pointer;
 
           span {
-            margin-right: 10px;
+            margin-right: 0.8333rem;
           }
         }
       }
@@ -114,49 +115,49 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: 3rem;
+  height: 3rem;
   color: white;
   background-color: $dark-black-color;
-  border-top-right-radius: 18px;
-  border-bottom-right-radius: 18px;
-  border-top-left-radius: 5px;
-  border-bottom-left-radius: 5px;
+  border-top-right-radius: 1.5rem;
+  border-bottom-right-radius: 1.5rem;
+  border-top-left-radius: 0.4167rem;
+  border-bottom-left-radius: 0.4167rem;
 }
 
 .select-column {
   position: absolute;
   left: 0;
   top: 0;
-  width: 220px;
+  width: 18.3333rem;
   background-color: #4a4a4a;
   color: white;
 
   .header {
-    height: 30px;
+    height: 2.5rem;
     display: flex;
     align-items: center;
-    border-bottom: 1px solid #424242;
+    border-bottom: 0.0833rem solid #424242;
     cursor: pointer;
 
     span {
-      padding: 5px;
-      font-size: 10px;
+      padding: 0.4167rem;
+      font-size: 0.8333rem;
       text-transform: uppercase;
 
       &.fold-icon {
-        font-size: 16px;
+        font-size: 1.3333rem;
       }
     }
   }
 
   .column-group {
-    border-bottom: 1px solid $light-border-color;
+    border-bottom: 0.0833rem solid $light-border-color;
 
     p {
-      font-size: 10px;
+      font-size: 0.8333rem;
       text-transform: uppercase;
-      padding: 0 10px;
+      padding: 0 0.8333rem;
       color: #7d7d7d;
     }
 
@@ -164,16 +165,16 @@
       list-style: none;
       display: flex;
       flex-direction: column;
-      padding: 0 10px;
+      padding: 0 0.8333rem;
 
       li {
         display: flex;
-        margin-bottom: 5px;
+        margin-bottom: 0.4167rem;
         cursor: pointer;
 
         span {
           flex: 1;
-          font-size: 10px;
+          font-size: 0.8333rem;
           color: #7d7d7d;
 
           &.checked {
@@ -189,42 +190,42 @@
   position: absolute;
   right: 0;
   top: 0;
-  width: 55px;
-  height: 36px;
+  width: 4.5833rem;
+  height: 3rem;
   color: white;
   background-color: $dark-black-color;
   display: flex;
   align-items: center;
-  border-top-left-radius: 5px;
-  border-bottom-left-radius: 5px;
+  border-top-left-radius: 0.4167rem;
+  border-bottom-left-radius: 0.4167rem;
   cursor: pointer;
 
   .missing-title {
-    margin-left: 5px;
-    font-size: 12px;
-    margin-right: 5px;
+    margin-left: 0.4167rem;
+    font-size: 1rem;
+    margin-right: 0.4167rem;
   }
 
   .show-icon {
     display: flex;
-    font-size: 20px;
-    margin-left: 5px;
+    font-size: 1.6667rem;
+    margin-left: 0.4167rem;
     align-items: center;
   }
 }
 
 :host.compact-mode ::ng-deep .ui-table-frozen-view tr {
-  height: 41px;
+  height: 3.4167rem;
 
   &:first-child {
-    height: 40px;
+    height: 3.3333rem;
   }
 }
 
 :host ::ng-deep .ui-table-frozen-view tr {
-  height: 71px;
+  height: 5.9167rem;
 
   &:first-child {
-    height: 70px;
+    height: 5.8333rem;
   }
 }

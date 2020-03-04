@@ -1,12 +1,12 @@
 @import 'src/colors.scss';
 
 .state-container {
-  width: 90px;
-  height: 23px;
-  border-radius: 100px;
+  width: 7.5rem;
+  height: 1.9167rem;
+  border-radius: 9rem;
   color: white;
   display: flex;
-  font-size: 12px;
+  font-size: 1rem;
 
   &.discovery {
     .state-icon {
@@ -63,10 +63,10 @@
     align-items: center;
     justify-content: center;
     height: 100%;
-    width: 30px;
+    width: 2.5rem;
     background-color: $dark-base-color;
-    border-top-left-radius: 100px;
-    border-bottom-left-radius: 100px;
+    border-top-left-radius: 9rem;
+    border-bottom-left-radius: 9rem;
 
     &.disabled {
       background-color: #EFEFEF !important;
@@ -79,10 +79,10 @@
     display: flex;
     align-items: center;
     background-color: $base-color;
-    border-top-right-radius: 100px;
-    border-bottom-right-radius: 100px;
-    font-size: 10px;
-    padding-left: 4px;
+    border-top-right-radius: 9rem;
+    border-bottom-right-radius: 9rem;
+    font-size: 0.8333rem;
+    padding-left: 0.3333rem;
 
     &.disabled {
       background-color: #EFEFEF !important;

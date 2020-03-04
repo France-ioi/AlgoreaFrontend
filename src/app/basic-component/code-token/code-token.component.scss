@@ -3,9 +3,9 @@
 .code-generator {
   display: flex;
   align-items: center;
-  width: 132px;
-  height: 32px;
-  border-radius: 5px;
+  width: 11rem;
+  height: 2.6667rem;
+  border-radius: 0.4167rem;
 
   span {
     height: 100%;
@@ -17,24 +17,24 @@
   .code {
     background-color: #DFE6EF;
     color: $dark-text-color;
-    box-shadow: 0 1px #C9CFD7 inset;
-    border-top-left-radius: 5px;
-    border-bottom-left-radius: 5px;
+    box-shadow: 0 0.0833rem #C9CFD7 inset;
+    border-top-left-radius: 0.4167rem;
+    border-bottom-left-radius: 0.4167rem;
     flex: 1;
-    font-size: 15px;
+    font-size: 1.25rem;
 
     &.no-refresh {
-      border-top-right-radius: 5px;
-      border-bottom-right-radius: 5px;
+      border-top-right-radius: 0.4167rem;
+      border-bottom-right-radius: 0.4167rem;
     }
   }
 
   .refresh {
-    width: 32px;
+    width: 2.6667rem;
     background-color: $base-color;
     color: white;
-    border-top-right-radius: 5px;
-    border-bottom-right-radius: 5px;
+    border-top-right-radius: 0.4167rem;
+    border-bottom-right-radius: 0.4167rem;
     cursor: pointer;
   }
 }

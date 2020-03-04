@@ -2,27 +2,27 @@
 
 .back-to-discuss {
   display: flex;
-  padding: 15px 25px;
+  padding: 1.25rem 2.0833rem;
   position: relative;
   align-items: center;
-  height: 50px;
-  border-bottom: 1px solid #F0F0F0;
+  height: 4.1667rem;
+  border-bottom: 0.0833rem solid #F0F0F0;
 
   .back-icon {
     color: $base-text-color;
     display: flex;
-    width: 25px;
+    width: 2.0833rem;
     height: 100%;
     align-items: center;
     justify-content: center;
-    margin-right: 10px;
+    margin-right: 0.8333rem;
   }
 
   .back-label-wrapper {
     flex: 1;
     .back-label {
       color: $base-color;
-      font-size: 12px;
+      font-size: 1rem;
       cursor: pointer;
     }
   }
@@ -31,7 +31,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 25px;
+    width: 2.0833rem;
     height: 100%;
     color: $base-color;
     cursor: pointer;
@@ -39,31 +39,31 @@
 }
 
 .thread-list-container {
-  margin-left: -70px;
-  margin-right: -20px;
+  margin-left: -5.8333rem;
+  margin-right: -1.6667rem;
   position: relative;
-  padding-bottom: 10px;
+  padding-bottom: 0.8333rem;
 
   .thread-list {
     display: flex;
     flex-direction: column;
-    margin-bottom: 10px;
+    margin-bottom: 0.8333rem;
     
     &-item {
-      padding: 10px 25px;
-      border-bottom: 1px solid #F0F0F0;
+      padding: 0.8333rem 2.0833rem;
+      border-bottom: 0.0833rem solid #F0F0F0;
       display: flex;
       color: $dark-text-color;
-      font-size: 12px;
-      min-height: 50px;
+      font-size: 1rem;
+      min-height: 4.1667rem;
 
       &.creator {
-        border-left: 5px solid $base-color;
+        border-left: 0.4167rem solid $base-color;
 
         .message-item {
 
           .user-info .item-id {
-            border-radius: 100px;
+            border-radius: 9rem;
             background-color: $base-color;
             color: white;
           }
@@ -78,11 +78,11 @@
         .user-info {
           display: flex;
           align-items: center;
-          min-height: 50px;
+          min-height: 4.1667rem;
 
           .item-id {
             display: flex;
-            padding: 5px 10px;
+            padding: 0.4167rem 0.8333rem;
             color: $dark-text-color;
 
             .message-icon {
@@ -92,7 +92,7 @@
             }
 
             .user-id {
-              margin-left: 20px;
+              margin-left: 1.6667rem;
             }
           }
 
@@ -110,10 +110,10 @@
           .user-image {
             display: flex;
             justify-content: center;
-            width: 150px;
+            width: 12.5rem;
 
             img {
-              border-radius: 100px;
+              border-radius: 9rem;
             }
           }
 
@@ -123,15 +123,15 @@
             flex-direction: column;
 
             .message-content {
-              margin-bottom: 10px;
+              margin-bottom: 0.8333rem;
             }
           }
         }
       }
       
       .item-icon {
-        margin-right: 20px;
-        width: 25px;
+        margin-right: 1.6667rem;
+        width: 2.0833rem;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -151,7 +151,7 @@
         align-items: center;
 
         .item-grading {
-          margin-left: 5px;
+          margin-left: 0.4167rem;
           color: $base-color;
         }
 
@@ -163,7 +163,7 @@
 
       .item-date {
         color: $base-text-color;
-        margin-left: 10px;
+        margin-left: 0.8333rem;
         display: flex;
         align-items: center;
       }
@@ -177,24 +177,24 @@
 
   .tri-tag {
     position: absolute;
-    border-left: 11px solid transparent;
-    border-right: 11px solid transparent;
-    border-bottom: 17px solid #ECF3FC;
-    left: 20px;
+    border-left: 0.9167rem solid transparent;
+    border-right: 0.9167rem solid transparent;
+    border-bottom: 1.4167rem solid #ECF3FC;
+    left: 1.6667rem;
     bottom: 0;
   }
 }
 
 .sub-section-unwrapper {
-  margin-left: -25px;
-  margin-right: 135px;
+  margin-left: -2.0833rem;
+  margin-right: 11.25rem;
 
   .new-comment {
     display: flex;
     flex-direction: column;
 
     .comment-editor-container {
-      margin-bottom: 10px;
+      margin-bottom: 0.8333rem;
       display: flex;
       align-items: flex-start;
 
@@ -202,17 +202,17 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        margin-right: 40px;
+        margin-right: 3.3333rem;
 
         img {
-          border-radius: 100px;
+          border-radius: 9rem;
         }
 
         .user-name {
           font-weight: bold;
-          font-size: 12px;
+          font-size: 1rem;
           color: $dark-text-color;
-          margin-top: 5px;
+          margin-top: 0.4167rem;
         }
       }
 
@@ -226,7 +226,7 @@
       justify-content: flex-end;
 
       app-button:first-child {
-        margin-right: 10px;
+        margin-right: 0.8333rem;
       }
     }
   }
@@ -234,8 +234,9 @@
 
 :host ::ng-deep .tox {
   &.tox-tinymce {
-    border-radius: 8px !important;
+    border-radius: 0.6667rem !important;
     border: none;
+    height: 20rem;
   }
 
   .tox-edit-area__iframe {

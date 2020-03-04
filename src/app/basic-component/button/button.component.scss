@@ -12,9 +12,14 @@ $danger-color: #ff001f;
 :host ::ng-deep .ui-button {
   background-color: $base-color;
   border-color: $base-color;
+  font-size: 1rem;
 
   &.ui-fit-parent {
     width: 100%;
+  }
+
+  &.ui-button-rounded {
+    border-radius: 1rem;
   }
 
   &.no-uppercase {
@@ -24,18 +29,18 @@ $danger-color: #ff001f;
   }
 
   &.ui-small-button {
-    font-size: 10px;
+    font-size: 0.8333rem;
   }
 
   &.ui-medium-button {
-    font-size: 11px;
+    font-size: 0.9167rem;
   }
 
   &.diagonal-rounded {
-    border-top-left-radius: 10px;
+    border-top-left-radius: 0.8333rem;
     border-top-right-radius: unset;
     border-bottom-left-radius: unset;
-    border-bottom-right-radius: 5px;
+    border-bottom-right-radius: 0.4167rem;
   }
 
   &:enabled:focus {
@@ -49,22 +54,22 @@ $danger-color: #ff001f;
 
   &.ui-button-text-icon-left {
     .ui-button-text {
-      padding-left: 36px;
+      padding-left: 3rem;
     }
   }
 
   &.ui-button-text-icon-right {
     .ui-button-text {
-      padding-right: 36px;
+      padding-right: 3rem;
     }
   }
 
   .ui-button-icon-left {
-    left: 12px;
+    left: 1rem;
   }
 
   .ui-button-icon-right {
-    right: 12px;
+    right: 1rem;
   }
   
   &.ui-state-default {
@@ -116,14 +121,14 @@ $danger-color: #ff001f;
     
     &.ui-top-rounded {
       border-radius: 0;
-      border-top-left-radius: 8px;
-      border-top-right-radius: 8px;
+      border-top-left-radius: 0.6667rem;
+      border-top-right-radius: 0.6667rem;
     }
     
     &.ui-diag-rounded {
       border-radius: 0;
-      border-top-left-radius: 8px;
-      border-bottom-right-radius: 8px;
+      border-top-left-radius: 0.6667rem;
+      border-bottom-right-radius: 0.6667rem;
     }
     
     &.ui-button-success {

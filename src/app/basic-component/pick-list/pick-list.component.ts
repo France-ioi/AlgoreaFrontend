@@ -46,10 +46,10 @@ export class PickListComponent implements OnInit {
     this.list.lists.map(listItem => {
       switch (listItem.ID) {
         case PickListType.Imported:
-          listItem.border = "dashed 1px #6F90B6";
+          listItem.border = "dashed 0.0833rem #6F90B6";
           break;
         default:
-          listItem.border = "dashed 1px #E4E4E4";
+          listItem.border = "dashed 0.0833rem #E4E4E4";
           break;
       }
 

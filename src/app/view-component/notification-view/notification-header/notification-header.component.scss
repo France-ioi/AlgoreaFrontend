@@ -3,16 +3,16 @@
 .notification-header-container {
   display: flex;
   flex-direction: column;
-  margin-top: 20px;
-  margin-bottom: 20px;
+  margin-top: 1.6667rem;
+  margin-bottom: 1.6667rem;
 
   .notification-header-title {
-    font-size: 24px;
+    font-size: 2rem;
     color: $dark-text-color;
   }
 
   .notification-header-subtitle {
-    font-size: 12px;
+    font-size: 1rem;
     color: $base-text-color;
   }
 }

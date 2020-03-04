@@ -44,8 +44,6 @@ export class AppComponent {
         attempt: 12,
         separator: "arrow"
       },
-      { ID: 21, label: "IOI Selection 2012", attempt: 2 },
-      { ID: 22, label: "Individual", separator: "slash" },
       { ID: 43, label: "Personalized contests", attempt: 12 },
       { ID: 23, label: "IOI Selection 2012", attempt: 2 },
       { ID: 24, label: "Individuals", separator: "slash" }

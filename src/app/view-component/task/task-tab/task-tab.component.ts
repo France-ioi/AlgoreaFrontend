@@ -45,7 +45,7 @@ export class TaskTabComponent implements OnInit, OnChanges {
   showDesc = false;
   compactMode = false;
 
-  columnWidth = 160;
+  columnWidth = 13.3333;
   columnHeight = 70;
 
   validText;
@@ -1097,7 +1097,7 @@ export class TaskTabComponent implements OnInit, OnChanges {
 
   onModeChange(e) {
     this.compactMode = !this.compactMode;
-    this.columnWidth = this.compactMode ? 60 : 160;
+    this.columnWidth = this.compactMode ? 5 : 13.3333;
     this.columnHeight = this.compactMode ? 50 : 70;
   }
 
@@ -1162,10 +1162,10 @@ export class TaskTabComponent implements OnInit, OnChanges {
 
   onConfigureAccess(e) {
     const ref = this.dialog.open(AccessEditDialogComponent, {
-      maxHeight: "1000px",
-      minWidth: "800px",
-      maxWidth: "800px",
-      minHeight: "300px",
+      maxHeight: "83rem",
+      minWidth: "67rem",
+      maxWidth: "67rem",
+      minHeight: "25rem",
       data: {
         icon: "fa fa-lock",
         label: `Item 1: access given to Terminale B`,

@@ -1,28 +1,28 @@
 @import "src/colors.scss";
 
 .slider-wrapper {
-  margin: 10px 0;
+  margin: 0.8333rem 0;
 
   .percent-values {
     width: 100%;
-    height: 25px;
-    margin-top: 10px;
+    height: 2.0833rem;
+    margin-top: 0.8333rem;
     position: relative;
 
     .start-value, .end-value {
       position: absolute;
       top: 0;
-      transform: translateX(-14px);
-      border-radius: 100px;
+      transform: translateX(-1.1667rem);
+      border-radius: 9rem;
       display: flex;
       text-align: center;
       justify-content: center;
-      width: 35px;
-      height: 25px;
+      width: 2.9167rem;
+      height: 2.0833rem;
       background-color: $dark-base-color;
-      font-size: 12px;
+      font-size: 1rem;
       color: white;
-      line-height: 25px;
+      line-height: 2.0833rem;
     }
   }
 }
@@ -33,7 +33,7 @@
     background-color: #3b73b5;
 
     &:not(.ui-state-disabled) .ui-slider-handle:hover {
-      border: 2px solid transparent;
+      border: 0.1667rem solid transparent;
     }
 
     .ui-slider-range {
@@ -42,19 +42,19 @@
 
     .ui-slider-handle {
       background-color: $base-color;
-      border: 2px solid transparent;
+      border: 0.1667rem solid transparent;
       width: auto;
-      height: 20px;
+      height: 1.6667rem;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding-left: 3px;
-      padding-right: 3px;
-      border-radius: 10px;
-      box-shadow: 0 1px $dark-base-color;
+      padding-left: 0.25rem;
+      padding-right: 0.25rem;
+      border-radius: 0.8333rem;
+      box-shadow: 0 0.0833rem $dark-base-color;
 
       &:focus {
-        box-shadow: 0 1px $dark-base-color;
+        box-shadow: 0 0.0833rem $dark-base-color;
       }
 
       &::before {
@@ -62,7 +62,7 @@
         content: "\f053\f054";
         font-weight: bold;
         color: white;
-        font-size: 12px;
+        font-size: 1rem;
       }
     }
   }

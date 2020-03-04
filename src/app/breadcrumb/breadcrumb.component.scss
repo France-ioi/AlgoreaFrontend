@@ -10,7 +10,7 @@ $breadcrumb-bottom-color: #E0E1E5;
     list-style: none;
     margin: 0;
     height: 100%;
-    padding-left: 15px;
+    padding-left: 1.25rem;
     display: flex;
 
     li {
@@ -18,17 +18,17 @@ $breadcrumb-bottom-color: #E0E1E5;
       margin: 0 .25em;
       color: $base-text-color;
       align-items: center;
-      height: 45px;
+      height: 3.75rem;
       cursor: pointer;
       overflow: hidden;
       min-width: 0;
-      border-top: 3px solid transparent;
+      border-top: 0.25rem solid transparent;
 
       &.active {
-        border-top: 3px solid $base-color;
+        border-top: 0.25rem solid $base-color;
         color: $base-color;
         &.separator {
-          border-top: 3px solid transparent;
+          border-top: 0.25rem solid transparent;
 
           i.fa-arrow-right {
             color: $base-color;
@@ -44,13 +44,13 @@ $breadcrumb-bottom-color: #E0E1E5;
 
       &.home {
         color: $base-color;
-        margin-right: 10px;
+        margin-right: 0.8333rem;
       }
 
       span {
-        padding: 0 5px;
-        font-size: 12px;
-        border-radius: 10px;
+        padding: 0 0.4167rem;
+        font-size: 1rem;
+        border-radius: 0.8333rem;
         display: inline-block;
         vertical-align: middle;
         line-height: normal;
@@ -66,8 +66,8 @@ $breadcrumb-bottom-color: #E0E1E5;
         &.attempt-badge {
           background-color: $base-color;
           color: white;
-          height: 16px;
-          line-height: 16px;
+          height: 1.3333rem;
+          line-height: 1.3333rem;
         }
       }
     }

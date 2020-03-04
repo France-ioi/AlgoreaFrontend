@@ -8,8 +8,8 @@
 :host ::ng-deep .ui-inputtext {
   background-color: white;
   border: none;
-  box-shadow: 0 1px #C9CFD7;
-  border-radius: 100px;
+  box-shadow: 0 0.0833rem #C9CFD7;
+  border-radius: 9rem;
 }
 
 :host ::ng-deep .ui-dropdown:not(.ui-state-disabled).ui-state-focus {
@@ -18,15 +18,15 @@
 
 :host ::ng-deep .ui-dropdown {
   border: none;
-  border-radius: 100px;
+  border-radius: 9rem;
   width: 100%;
   background: transparent;
 
   .ui-dropdown-trigger {
     background-color: white;
-    box-shadow: 0 1px #C9CFD7;
-    border-top-right-radius: 100px;
-    border-bottom-right-radius: 100px;
+    box-shadow: 0 0.0833rem #C9CFD7;
+    border-top-right-radius: 9rem;
+    border-bottom-right-radius: 9rem;
   }
 
   .ui-dropdown-label-container {
@@ -35,7 +35,7 @@
       color: $base-text-color;
 
       .selected-icon {
-        margin-right: 10px;
+        margin-right: 0.8333rem;
       }
 
       &.ui-placeholder {

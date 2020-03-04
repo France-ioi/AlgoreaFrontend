@@ -1,26 +1,26 @@
 @import 'src/colors.scss';
 
 .host-session {
-  padding-top: 20px;
-  padding-bottom: 20px;
+  padding-top: 1.6667rem;
+  padding-bottom: 1.6667rem;
   background-color: #ECF3FC;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
-  margin-left: -70px;
-  margin-top: 50px;
+  margin-left: -5.8333rem;
+  margin-top: 4.1667rem;
 
   .button-wrapper {
-    width: 235px;
+    width: 19.5833rem;
   }
 
   .tri-tag {
     position: absolute;
-    top: -17px;
-    left: 25px;
-    border-left: 11px solid transparent;
-    border-right: 11px solid transparent;
-    border-bottom: 17px solid #ECF3FC;
+    top: -1.4167rem;
+    left: 2.0833rem;
+    border-left: 0.9167rem solid transparent;
+    border-right: 0.9167rem solid transparent;
+    border-bottom: 1.4167rem solid #ECF3FC;
   }
 }

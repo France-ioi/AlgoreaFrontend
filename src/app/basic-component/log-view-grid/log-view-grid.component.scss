@@ -9,18 +9,18 @@
       }
   
       &.non-title:not(.score) {
-        width: 100px;
+        width: 9rem;
       }
 
       &.score {
-        width: 160px;
+        width: 13.3333rem;
       }
     }
   }
 
   .ui-table-tbody > tr {
     background-color: transparent;
-    border-bottom: 1px solid #E2E9F1;
+    border-bottom: 0.0833rem solid #E2E9F1;
 
     &.active {
       > td {
@@ -47,10 +47,10 @@
 
   .ui-table-tbody > tr > td {
     border: none;
-    padding: 5px;
-    margin-top: 5px;
-    margin-bottom: 5px;
-    font-size: 12px;
+    padding: 0.4167rem;
+    margin-top: 0.4167rem;
+    margin-bottom: 0.4167rem;
+    font-size: 1rem;
     vertical-align: middle;
 
     span.icon {
@@ -58,15 +58,15 @@
       align-items: center;
       justify-content: center;
       color: white;
-      font-size: 12px;
-      width: 25px;
-      height: 25px;
-      border-radius: 100px;
+      font-size: 1rem;
+      width: 2.0833rem;
+      height: 2.0833rem;
+      border-radius: 9rem;
       background-color: #FF001F;
     }
 
     &.row-icon {
-      width: 40px;
+      width: 3.3333rem;
     }
 
     &.main {
@@ -76,26 +76,26 @@
     }
 
     &:first-child {
-      border-top-left-radius: 20px;
-      border-bottom-left-radius: 20px;
+      border-top-left-radius: 1.6667rem;
+      border-bottom-left-radius: 1.6667rem;
     }
 
     app-skill-progress {
-      width: 150px;
+      width: 12.5rem;
       display: block;
     }
     
     .score-wrapper {
       float: right;
       width: auto;
-      padding: 5px;
+      padding: 0.4167rem;
       display: flex;
       align-items: center;
       justify-content: center;
       height: 100%;
       background-color: white;
-      border-top-left-radius: 20px;
-      border-bottom-left-radius: 20px;
+      border-top-left-radius: 1.6667rem;
+      border-bottom-left-radius: 1.6667rem;
     }
   }
 }

@@ -2,44 +2,44 @@
 
 .header-section-container {
   background-color: $light-color;
-  padding:  15px 0;
-  border-top-left-radius: 5px;
-  border-bottom-left-radius: 5px;
-  margin-bottom: 10px;
+  padding:  1.25rem 0;
+  border-top-left-radius: 0.4167rem;
+  border-bottom-left-radius: 0.4167rem;
+  margin-bottom: 0.8333rem;
 
   .header-section-header {
     display: flex;
     align-items: center;
-    padding-right: 15px;
+    padding-right: 1.25rem;
 
     .header-handle {
       display: flex;
       background-color: $base-color;
-      border-left: 3px solid $dark-color;
-      width: 55px;
-      height: 30px;
-      border-top-right-radius: 100px;
-      border-bottom-right-radius: 100px;
+      border-left: 0.25rem solid $dark-color;
+      width: 4.5833rem;
+      height: 2.5rem;
+      border-top-right-radius: 9rem;
+      border-bottom-right-radius: 9rem;
       align-items: center;
       justify-content: flex-end;
       color: white;
-      margin-right: 10px;
-      padding-right: 8px;
+      margin-right: 0.8333rem;
+      padding-right: 0.6667rem;
     }
 
     .header-title {
       flex: 1;
-      font-size: 20px;
+      font-size: 1.6667rem;
       color: $dark-text-color;
     }
 
     .header-collapse {
-      font-size: 16px;
+      font-size: 1.3333rem;
       color: $dark-text-color;
     }
   }
 
   .header-section-body {
-    padding: 10px 15px 5px 65px;
+    padding: 0.8333rem 1.25rem 0.4167rem 5.4167rem;
   }
 }

@@ -3,15 +3,15 @@
 .search-filter-container {
   display: flex;
   flex-direction: column;
-  margin: 5px;
+  margin: 0.4167rem;
 
   &.expanded {
     width: 100%;
 
     .search-filter {
-      height: 30px;
-      border-top-left-radius: 10px;
-      border-top-right-radius: 10px;
+      height: 2.5rem;
+      border-top-left-radius: 0.8333rem;
+      border-top-right-radius: 0.8333rem;
       border-bottom-left-radius: unset;
       border-bottom-right-radius: unset;
     }
@@ -20,13 +20,13 @@
   .search-filter {
     display: flex;
     align-items: center;
-    border-radius: 20px;
+    border-radius: 1.6667rem;
     background-color: $base-color;
     color: white;
-    font-size: 12px;
-    height: 20px;
-    padding-left: 10px;
-    padding-right: 10px;
+    font-size: 1rem;
+    height: 1.6667rem;
+    padding-left: 0.8333rem;
+    padding-right: 0.8333rem;
     cursor: pointer;
 
     .icon {
@@ -36,32 +36,32 @@
       height: 100%;
 
       &.filter-icon {
-        margin-right: 10px;
+        margin-right: 0.8333rem;
       }
 
       &.close-icon {
         cursor: pointer;
-        width: 20px;
+        width: 1.6667rem;
       }
     }
 
     .filter-title {
       flex: 1;
-      margin-right: 10px;
+      margin-right: 0.8333rem;
     }
   }
 
   .search-filter-content {
-    padding: 10px;
+    padding: 0.8333rem;
     display: flex;
     flex-direction: column;
     background-color: $dark-base-color;
-    border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 0.8333rem;
+    border-bottom-right-radius: 0.8333rem;
 
     .self-search-bar {
       position: relative;
-      height: 30px;
+      height: 2.5rem;
       color: white;
 
 
@@ -69,11 +69,11 @@
         height: 100%;
         width: 100%;
         color: white;
-        border-radius: 100px;
+        border-radius: 9rem;
         background-color: #2B588B;
-        padding-left: 10px;
-        padding-right: 40px;
-        font-size: 12px;
+        padding-left: 0.8333rem;
+        padding-right: 3.3333rem;
+        font-size: 1rem;
         border: none;
 
         &:focus {
@@ -82,7 +82,7 @@
       }
 
       .search-icon {
-        width: 40px;
+        width: 3.3333rem;
         right: 0;
         bottom: 0;
         top: 0;
@@ -90,26 +90,26 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 16px;
+        font-size: 1.3333rem;
       }
     }
 
     .search-row {
-      margin: 5px;
+      margin: 0.4167rem;
       display: flex;
       align-items: center;
 
       &-label {
         flex: 1;
         color: white;
-        font-size: 12px;
+        font-size: 1rem;
       }
 
       &-control {
         .selector-switch {
           background-color: #264F7E;
-          padding: 5px;
-          border-radius: 100px;
+          padding: 0.4167rem;
+          border-radius: 9rem;
           color: #466991;
           cursor: pointer;
           display: flex;
@@ -117,12 +117,12 @@
 
           .label {
             color: #466991;
-            font-size: 12px;
+            font-size: 1rem;
             display: inline-block;
-            line-height: 12px;
-            height: 12px;
-            margin-left: 3px;
-            margin-right: 3px;
+            line-height: 1rem;
+            height: 1rem;
+            margin-left: 0.25rem;
+            margin-right: 0.25rem;
 
             &.active {
               color: white;
@@ -132,19 +132,19 @@
 
         .dropdown-list-wrapper {
           position: relative;
-          min-width: 100px;
+          min-width: 9rem;
 
           .dropdown-input {
             display: flex;
             align-items: center;
-            height: 25px;
+            height: 2.0833rem;
             width: 100%;
             color: white;
-            padding-left: 15px;
-            padding-right: 15px;
+            padding-left: 1.25rem;
+            padding-right: 1.25rem;
             background-color: #264F7E;
-            border-radius: 15px;
-            font-size: 12px;
+            border-radius: 1.25rem;
+            font-size: 1rem;
             cursor: pointer;
 
             &.open {
@@ -167,23 +167,23 @@
             position: absolute;
             width: 100%;
             left: 0;
-            top: 25px;
+            top: 2.0833rem;
             display: flex;
             flex-direction: column;
-            border-bottom-left-radius: 10px;
-            border-bottom-right-radius: 10px;
+            border-bottom-left-radius: 0.8333rem;
+            border-bottom-right-radius: 0.8333rem;
             z-index: 10;
 
             &-item {
               cursor: pointer;
-              height: 25px;
+              height: 2.0833rem;
               color: white;
               background-color: $base-color;
-              padding-left: 10px;
+              padding-left: 0.8333rem;
               
               &:last-child {
-                border-bottom-left-radius: 10px;
-                border-bottom-right-radius: 10px;
+                border-bottom-left-radius: 0.8333rem;
+                border-bottom-right-radius: 0.8333rem;
               }
             }
           }
@@ -192,14 +192,14 @@
     }
 
     .search-slider {
-      margin: 5px;
+      margin: 0.4167rem;
       color: white;
-      font-size: 12px;
+      font-size: 1rem;
 
       .rate-label {
         background-color: #264F7E;
-        padding: 5px;
-        border-radius: 100px;
+        padding: 0.4167rem;
+        border-radius: 9rem;
       }
     }
   }

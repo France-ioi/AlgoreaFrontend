@@ -26,10 +26,10 @@ export class EditUserDialogComponent implements OnInit {
 
   onAttachClicked(e) {
     const ref = this.dialog.open(AttachGroupDialogComponent, {
-      maxHeight: '500px',
-      minWidth: '600px',
-      maxWidth: '600px',
-      minHeight: '200px',
+      maxHeight: '41rem',
+      minWidth: '50rem',
+      maxWidth: '50rem',
+      minHeight: '17rem',
       data: {
         icon: 'fa fa-link',
         label: 'Attach to another group',
@@ -44,10 +44,10 @@ export class EditUserDialogComponent implements OnInit {
 
   onResetPassword(e) {
     const ref = this.dialog.open(ResetPasswordDialogComponent, {
-      maxHeight: '500px',
-      minWidth: '600px',
-      maxWidth: '600px',
-      minHeight: '200px',
+      maxHeight: '41rem',
+      minWidth: '50rem',
+      maxWidth: '50rem',
+      minHeight: '17rem',
       data: {
         icon: 'fa fa-key',
         label: 'Reset password',
@@ -58,10 +58,10 @@ export class EditUserDialogComponent implements OnInit {
     ref.afterClosed().subscribe(result => {
       if (result == true) {
         const codeRef = this.dialog.open(ConfirmPasswordDialogComponent, {
-          maxHeight: '500px',
-          minWidth: '600px',
-          maxWidth: '600px',
-          minHeight: '200px',
+          maxHeight: '41rem',
+          minWidth: '50rem',
+          maxWidth: '50rem',
+          minHeight: '17rem',
           data: {
             icon: 'fa fa-key',
             label: 'Reset password',

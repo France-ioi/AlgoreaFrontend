@@ -4,13 +4,13 @@
   display: flex;
   align-items: center;
   flex-direction: column;
-  width: 130px;
-  height: 130px;
-  margin: 5px;
-  padding: 10px;
+  width: 10.8333rem;
+  height: 10.8333rem;
+  margin: 0.4167rem;
+  padding: 0.8333rem;
   background-color: #DFE6EF;
   cursor: pointer;
-  border-radius: 5px;
+  border-radius: 0.4167rem;
 
   &:hover, &.active {
     background-color: #CBDFF6;
@@ -22,9 +22,9 @@
   }
 
   .button-label {
-    margin-top: 10px;
+    margin-top: 0.8333rem;
     font-weight: bold;
-    font-size: 14px;
+    font-size: 1.1667rem;
     text-transform: uppercase;
     color: $base-text-color;
   }

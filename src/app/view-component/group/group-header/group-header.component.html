@@ -4,7 +4,7 @@
     [ngClass]="{ folded: isFolded, unfolded: !isFolded }"
   >
     <div class="user-image">
-      <img src="assets/images/_messi.jpg" width="90px" height="90px" />
+      <img src="assets/images/_messi.jpg" style="width: 7.5rem; height: 7.5rem;"/>
     </div>
     <div class="user-info" (window:resize)="onResized($event)" #userInfo>
       <div class="user-name" [ngStyle]="{ opacity: isScrolled ? 0 : 1 }">
@@ -75,7 +75,7 @@
               *ngIf="data.assocActivity.progress"
               [displayedScore]="data.assocActivity.progress.displayedScore"
               [currentScore]="data.assocActivity.progress.currentScore"
-              style="width: 40%; margin-left: 10px;"
+              style="width: 40%; margin-left: 0.8333rem;"
             ></app-skill-progress>
           </span>
         </div>

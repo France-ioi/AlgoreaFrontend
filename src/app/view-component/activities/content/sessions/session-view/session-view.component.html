@@ -4,15 +4,15 @@
     <div class="activity-name">{{data.activity_name}}</div>
     <div class="left-bottom-view">
       <div class="chapter-picture">
-        <img src="assets/images/{{data.chapter_picture}}" width="150px">
+        <img src="assets/images/{{data.chapter_picture}}" style="width: 12.5rem;">
       </div>
       <div class="author-info-view">
         <div class="author-info-view-text">{{data.text}}</div>
         <div class="author-info">
           <span class="author-name">by {{data.author}}</span>
           <span class="author-picture">
-            <img *ngIf="data.author_picture" src="assets/images/{{data.author_picture}}" width="30px" height="30px">
-            <img *ngIf="!data.author_picture" src="assets/images/Male.svg" width="30px" height="30px">
+            <img *ngIf="data.author_picture" src="assets/images/{{data.author_picture}}" style="width: 2.5rem; height: 2.5rem;">
+            <img *ngIf="!data.author_picture" src="assets/images/Male.svg" style="width: 2.5rem; height: 2.5rem;">
           </span>
         </div>
       </div>

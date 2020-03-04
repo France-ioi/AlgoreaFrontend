@@ -8,7 +8,7 @@
   background-color: $base-bk-color;
 
   .left {
-    width: 400px;
+    width: 33.3333rem;
     position: fixed;
     left: 0;
     top: 0;
@@ -17,7 +17,7 @@
     height: 100%;
 
     &.collapsed {
-      left: -400px;
+      left: -33.3333rem;
       transition: left 1s;
       -webkit-transition: left 1s;
       -moz-transition: left 1s;
@@ -34,18 +34,18 @@
 
   .top-bar {
     position: fixed;
-    left: 400px;
+    left: 33.3333rem;
     top: 0;
     right: 0;
-    height: 45px;
+    height: 3.75rem;
     display: flex;
     align-items: flex-start;
-    border-bottom: 1px solid #e0e1e5;
+    border-bottom: 0.0833rem solid #e0e1e5;
     background-color: $base-bk-color;
     z-index: 900;
 
     &.editing {
-      height: 90px;
+      height: 7.5rem;
     }
 
     &.collapsed {
@@ -81,10 +81,10 @@
       }
 
       .folded-top-bar {
-        margin-left: 10px;
+        margin-left: 0.8333rem;
         display: flex;
         align-items: center;
-        height: 45px;
+        height: 3.75rem;
         flex: 1;
         min-width: 0;
 
@@ -93,15 +93,15 @@
           flex-direction: column;
           align-items: center;
           img {
-            border-radius: 100px;
+            border-radius: 9rem;
           }
         }
 
         .task-title {
-          margin-left: 15px;
+          margin-left: 1.25rem;
           flex: 1;
-          font-size: 30px;
-          margin-bottom: 5px;
+          font-size: 2.5rem;
+          margin-bottom: 0.4167rem;
           min-width: 0;
 
           p {
@@ -115,7 +115,7 @@
         .user-info {
           display: flex;
           align-items: center;
-          margin-right: 5px;
+          margin-right: 0.4167rem;
 
           span {
             display: block;
@@ -126,7 +126,7 @@
 
             &.user-id {
               color: $base-color;
-              font-size: 20px;
+              font-size: 1.6667rem;
               font-weight: bold;
             }
           }
@@ -134,9 +134,9 @@
 
         .clock-icon {
           color: $dark-text-color;
-          font-size: 24px;
+          font-size: 2rem;
           font-weight: bold;
-          margin-right: 5px;
+          margin-right: 0.4167rem;
 
           &.finished {
             color: $light-text-color;
@@ -145,7 +145,7 @@
 
         .remaining-time {
           color: $dark-text-color;
-          font-size: 24px;
+          font-size: 2rem;
           font-weight: bold;
 
           &.finished {
@@ -157,17 +157,17 @@
   }
 
   .right {
-    margin-left: 400px;
-    padding-top: 45px;
+    margin-left: 33.3333rem;
+    padding-top: 3.75rem;
     background-color: $base-bk-color;
     position: relative;
 
     &.editing {
-      padding-top: 90px;
+      padding-top: 7.5rem;
 
       .main-content {
         &.type-2 {
-          margin-top: -140px;
+          margin-top: -11.6667rem;
         }
       }
     }
@@ -188,11 +188,11 @@
     }
 
     .main-content {
-      padding-left: 20px;
+      padding-left: 1.6667rem;
       background-color: $base-bk-color;
 
       &.folded {
-        margin-top: -145px;
+        margin-top: -12.0833rem;
         transition: margin-top 1s;
         -webkit-transition: margin-top 1s;
         -moz-transition: margin-top 1s;
@@ -200,15 +200,15 @@
       }
 
       &.type-0 {
-        margin-top: -140px;
+        margin-top: -11.6667rem;
       }
 
       &.type-1 {
-        margin-top: -180px;
+        margin-top: -15rem;
       }
 
       &.type-2 {
-        margin-top: -90px;
+        margin-top: -7.5rem;
       }
 
       &.unfolded {
@@ -221,13 +221,13 @@
     }
 
     .button-container {
-      margin-top: 10px;
+      margin-top: 0.8333rem;
       display: flex;
       flex-wrap: wrap;
 
       app-button {
-        margin-right: 10px;
-        margin-top: 10px;
+        margin-right: 0.8333rem;
+        margin-top: 0.8333rem;
       }
     }
   }

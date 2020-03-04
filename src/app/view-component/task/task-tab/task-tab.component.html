@@ -13,7 +13,6 @@
               'background-image': 'url(assets/images/' + image + ')'
             }"
           ></div>
-          <!-- <img src="assets/images/{{image}}" width="100%"> -->
         </div>
         <app-section label="Description" icon="fa fa-book" hideBorder="true">
           {{ desc }}
@@ -206,8 +205,8 @@
               <app-select
                 [items]="filterChoice"
                 [opened]="false"
-                width="120"
-                style="margin: 5px;"
+                width="10"
+                style="margin: 0.4167rem;"
               ></app-select>
               <ng-container *ngFor="let filter of gridFilters">
                 <app-grid-filter
@@ -248,7 +247,7 @@
                   <ng-template #headerTemplate let-columns>
                     <tr>
                       <th
-                        style="width: 50px;border-right: 1px solid transparent;"
+                        style="width: 4rem;border-right: 0.0833rem solid transparent;"
                       ></th>
                       <th
                         *ngFor="let col of columns"
@@ -257,7 +256,7 @@
                         {{ col.header }}
                         <p-sortIcon [field]="col.field"></p-sortIcon>
                       </th>
-                      <th style="width: 70px;"></th>
+                      <th style="width: 6rem;"></th>
                     </tr>
                   </ng-template>
                   <ng-template
@@ -347,13 +346,13 @@
                   [scrollable]="true"
                   class="slanted-grid"
                   [ngClass]="{ unfreeze: !freeze, 'compact-mode': compactMode }"
-                  [frozenWidth]="freeze ? '160px' : null"
+                  [frozenWidth]="freeze ? '13.3333rem' : null"
                 >
                   <ng-template #colgroupTemplate let-columns>
                     <colgroup>
                       <col
                         *ngFor="let col of columns"
-                        [ngStyle]="{ 'width.px': columnWidth }"
+                        [ngStyle]="{ 'width.rem': columnWidth }"
                       />
                     </colgroup>
                   </ng-template>
@@ -405,8 +404,8 @@
                       <th
                         *ngFor="let col of columns"
                         [ngStyle]="{
-                          'min-width.px': columnWidth,
-                          'width.px': columnWidth
+                          'min-width.rem': columnWidth,
+                          'width.rem': columnWidth
                         }"
                       >
                         <div class="slanted-header">
@@ -424,10 +423,10 @@
                     let-rowIndex="rowIndex"
                   >
                     <tr>
-                      <td *ngIf="!freeze" style="width: 160px;">
+                      <td *ngIf="!freeze" style="width: 13.3333rem;">
                         {{ gcvr[rowIndex] }}
                       </td>
-                      <td *ngIf="asRow && showDesc" style="width: 300px;">
+                      <td *ngIf="asRow && showDesc" style="width: 25rem;">
                         Lorem Ipsum
                       </td>
                       <td
@@ -437,7 +436,7 @@
                           let menuName = rowIndex
                         "
                         [matMenuTriggerFor]="menuName"
-                        [ngStyle]="{ 'width.px': columnWidth }"
+                        [ngStyle]="{ 'width.rem': columnWidth }"
                       >
                         <mat-menu
                           #menuName="matMenu"
@@ -570,7 +569,7 @@
                         </mat-menu>
                         <div
                           class="group-situation-data"
-                          [ngStyle]="{ 'min-width.px': columnWidth }"
+                          [ngStyle]="{ 'min-width.rem': columnWidth }"
                         >
                           <div
                             class="situation-top"
@@ -725,7 +724,7 @@
                             >
                             <app-skill-progress
                               *ngIf="!activityORSkill"
-                              style="height: 30px;"
+                              style="height: 2.5rem;"
                               type="vertical"
                               [displayedScore]="
                                 rowData[idx].progress.displayedScore

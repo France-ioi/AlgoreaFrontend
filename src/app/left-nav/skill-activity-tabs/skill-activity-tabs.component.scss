@@ -15,10 +15,10 @@ $bk-secondary: #3B73B4;
   
     ul.ui-tabview-nav {
       display: flex;
-      height: 50px;
+      height: 4.1667rem;
       background-color: $base-color;
-      border-top-left-radius: 5px;
-      border-top-right-radius: 5px;
+      border-top-left-radius: 0.4167rem;
+      border-top-right-radius: 0.4167rem;
       
       > li {
         flex: 1;
@@ -31,16 +31,16 @@ $bk-secondary: #3B73B4;
         // color: white !important;
 
         &:first-child {
-          border-top-left-radius: 5px;
+          border-top-left-radius: 0.4167rem;
           a {
-            border-top-left-radius: 5px;
+            border-top-left-radius: 0.4167rem;
           }
         }
 
         &:last-child {
-          border-top-right-radius: 5px;
+          border-top-right-radius: 0.4167rem;
           a {
-            border-top-right-radius: 5px;
+            border-top-right-radius: 0.4167rem;
           }
         }
 
@@ -50,6 +50,7 @@ $bk-secondary: #3B73B4;
           display: flex;
           align-items: center;
           position: relative;
+          font-size: 1rem;
 
           span.ui-tabview-left-icon {
             position: absolute;
@@ -67,11 +68,11 @@ $bk-secondary: #3B73B4;
         &.ui-state-default {
           
           &:not(:first-child) {
-            border-bottom-left-radius: 10px;
+            border-bottom-left-radius: 0.8333rem;
           }
 
           &:first-child {
-            border-bottom-right-radius: 10px;
+            border-bottom-right-radius: 0.8333rem;
           }
 
           a {
@@ -91,13 +92,13 @@ $bk-secondary: #3B73B4;
 
           .indicator {
             position: absolute;
-            left: calc(50% - 4px);
+            left: calc(50% - 0.3333rem);
             top: 0;
             width: 0;
             height: 0;
-            border-left: 8px solid transparent;
-            border-right: 8px solid transparent;
-            border-top: 5px solid $base-bk-color;
+            border-left: 0.6667rem solid transparent;
+            border-right: 0.6667rem solid transparent;
+            border-top: 0.4167rem solid $base-bk-color;
           }
           
           &:hover {
@@ -114,32 +115,32 @@ $bk-secondary: #3B73B4;
       .ui-tabview-panel {
         .tree-header {
           background-color: $base-color;
-          height: 50px;
+          height: 4.1667rem;
           display: flex;
           align-items: center;
-          border-bottom: 1px solid #4587D4;
+          border-bottom: 0.0833rem solid #4587D4;
 
           .tree-header-handle {
             display: flex;
-            height: 30px;
-            width: 40px;
-            margin-right: 5px;
+            height: 2.5rem;
+            width: 3.3333rem;
+            margin-right: 0.4167rem;
             background-color: $bk-secondary;
-            border-top-right-radius: 100px;
-            border-bottom-right-radius: 100px;
+            border-top-right-radius: 9rem;
+            border-bottom-right-radius: 9rem;
             color: white;
             align-items: center;
+            font-size: 1rem;
             
             i:first-child {
-              font-size: 12px;
-              margin-right: 5px;
-              margin-left: 5px;
+              margin-right: 0.4167rem;
+              margin-left: 0.4167rem;
               color: rgb(99, 150, 209);
             }
           }
 
           .tree-header-title {
-            font-size: 16px;
+            font-size: 1.3333rem;
             font-weight: bold;
             color: white;
           }

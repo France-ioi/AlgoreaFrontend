@@ -8,8 +8,8 @@ $date-color: #B0C2D7;
     font-weight: 400;
     content: "\f073";
     position: absolute;
-    left: 8px;
-    top: 8px;
+    left: 0.6667rem;
+    top: 0.6667rem;
     color: $date-color;
   }
 
@@ -23,7 +23,7 @@ $date-color: #B0C2D7;
     border: none;
     box-shadow: none;
     color: $date-color;
-    padding-left: 25px;
+    padding-left: 2.0833rem;
   }
 }
 

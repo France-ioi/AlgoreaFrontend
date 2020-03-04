@@ -5,7 +5,7 @@
 }
 
 .switch-container {
-  margin-top: 10px;
+  margin-top: 0.8333rem;
   display: flex;
 
   .switch-header {
@@ -15,15 +15,15 @@
   .switch-content-wrapper {
     display: flex;
     flex: 1;
-    margin-left: 15px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid #DEE4ED;
+    margin-left: 1.25rem;
+    padding-bottom: 1.6667rem;
+    border-bottom: 0.0833rem solid #DEE4ED;
 
     .header-title {
       text-transform: uppercase;
       color: $nav-bk-color;
       font-weight: bold;
-      font-size: 12px;
+      font-size: 1rem;
       flex-basis: 40%;
       cursor: pointer;
     }
@@ -34,7 +34,7 @@
       flex-direction: column;
 
       .content-title {
-        font-size: 12px;
+        font-size: 1rem;
         color: $base-text-color;
       }
     }

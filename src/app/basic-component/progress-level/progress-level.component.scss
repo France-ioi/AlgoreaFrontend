@@ -6,10 +6,10 @@
 
   .progress-level-item {
     display: flex;
-    width: 12px;
-    height: 12px;
+    width: 1rem;
+    height: 1rem;
     background-color: $base-text-color;
-    border-radius: 12px;
+    border-radius: 1rem;
 
     &.active {
       background-color: $base-color;
@@ -25,8 +25,8 @@
 
     &-link {
       display: flex;
-      width: 7px;
-      height: 3px;
+      width: 0.5833rem;
+      height: 0.25rem;
       background-color: $base-text-color;
 
       &.active {

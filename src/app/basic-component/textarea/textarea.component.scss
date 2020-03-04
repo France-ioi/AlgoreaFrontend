@@ -8,12 +8,12 @@
 textarea {
   width: 100%;
   background-color: #DFE6EF;
-  box-shadow: 1px 1px #C9CFD7 inset;
-  border-radius: 5px;
+  box-shadow: 0.0833rem 0.0833rem #C9CFD7 inset;
+  border-radius: 0.4167rem;
   border: none;
-  font-size: 12px;
-  padding-left: 30px;
-  padding-top: 6px;
+  font-size: 1rem;
+  padding-left: 2.5rem;
+  padding-top: 0.5rem;
 
   color: $nav-bk-color;
 
@@ -23,19 +23,19 @@ textarea {
   }
 
   &.no-icon {
-    padding-left: 10px;
-    padding-top: 10px;
+    padding-left: 0.8333rem;
+    padding-top: 0.8333rem;
   }
 }
 
 .placeholder-icon {
   position: absolute;
-  left: 8px;
-  top: 8px;
+  left: 0.6667rem;
+  top: 0.6667rem;
   color: $base-text-color;
-  font-size: 12px;
+  font-size: 1rem;
 }
 
 :host ::ng-deep .ui-inputtext:enabled:focus:not(.ui-state-error) {
-  box-shadow: 1px 1px #C9CFD7 inset;
+  box-shadow: 0.0833rem 0.0833rem #C9CFD7 inset;
 }

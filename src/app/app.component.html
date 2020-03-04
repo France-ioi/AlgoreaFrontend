@@ -3,7 +3,7 @@
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
       Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
       "Segoe UI Symbol";
-    font-size: 14px;
+    font-size: 1.1667rem;
     color: #333;
     box-sizing: border-box;
     -webkit-font-smoothing: antialiased;
@@ -17,7 +17,7 @@
   h4,
   h5,
   h6 {
-    margin: 8px 0;
+    margin: 0.6667rem 0;
   }
 
   p {
@@ -80,8 +80,8 @@
           *ngIf="!editing && signedIn"
           (onEdit)="onEditPage($event)"
         ></app-page-navigator>
-        <app-select *ngIf="!signedIn && collapsed" [items]="langs" style="margin-right: 10px;height: 22px;"></app-select>
-        <app-button *ngIf="!signedIn && collapsed" label="Connexion" icon="pi pi-check" class="ui-button-rounded" style="margin-right: 5px;" (onClick)="onSignInOut(true)"></app-button>
+        <app-select *ngIf="!signedIn && collapsed" [items]="langs" style="margin-right: 0.8333rem;height: 1.8333rem;"></app-select>
+        <app-button *ngIf="!signedIn && collapsed" label="Connexion" icon="pi pi-check" class="ui-button-rounded" style="margin-right: 0.4167rem;" (onClick)="onSignInOut(true)"></app-button>
       </div>
       <div class="folded-top-bar" *ngIf="folded || scrolled">
         <app-score-ring
@@ -94,14 +94,14 @@
           *ngIf="(!isStarted || selectedType === 0 || selectedType === 1) && selectedType !== 5"
           class="task-user-image"
         >
-          <img src="assets/images/_messi.jpg" width="35px" height="35px" />
+          <img src="assets/images/_messi.jpg" style="width: 2.9167rem; height: 2.9167rem;" />
         </div>
         <div class="task-title">
           <p>{{ userTitle }}</p>
         </div>
         <div *ngIf="collapsed" class="user-info">
           <span class="user-avatar">
-            <img src="assets/images/Male.svg" width="32px" height="32px" />
+            <img src="assets/images/Male.svg" style="width: 2.6667rem; height: 2.6667rem;" />
           </span>
           <span class="user-id">CyrilK89</span>
         </div>
