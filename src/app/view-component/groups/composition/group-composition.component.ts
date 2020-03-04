@@ -134,10 +134,10 @@ export class GroupCompositionComponent implements OnInit {
 
   onOpenDialog(e) {
     const dialogRef = this.mainDialog.open(EditUserDialogComponent, {
-      maxHeight: '1000px',
-      minWidth: '600px',
-      maxWidth: '600px',
-      minHeight: '200px',
+      maxHeight: '83rem',
+      minWidth: '50rem',
+      maxWidth: '50rem',
+      minHeight: '17rem',
       data: {
         icon: 'fa fa-pencil-alt',
         label: 'Quick edit user\'s details',
@@ -162,10 +162,10 @@ export class GroupCompositionComponent implements OnInit {
 
   onCreateBatch(e) {
     const dialogRef = this.mainDialog.open(GenerateBatchUserDialogComponent, {
-      maxHeight: '1000px',
-      minWidth: '600px',
-      maxWidth: '600px',
-      minHeight: '200px',
+      maxHeight: '83rem',
+      minWidth: '50rem',
+      maxWidth: '50rem',
+      minHeight: '17rem',
       data: {
         type: [
           { label: 'passwords' },

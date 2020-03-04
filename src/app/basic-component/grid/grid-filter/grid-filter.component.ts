@@ -15,8 +15,9 @@ export class GridFilterComponent implements OnInit {
   @Input() list;
   @Input() icon;
   @Input() label;
-
+  @Input() outsideClicked = false;
   @Output() onClose = new EventEmitter<any>();
+  @Output() onHide = new EventEmitter<any>();
 
   menuOpened = false;
   
@@ -45,10 +46,13 @@ export class GridFilterComponent implements OnInit {
 
   toggleMenu(e) {
     this.menuOpened = !this.menuOpened;
+    this.onHide.emit(true);
   }
 
   hideMenu(e) {
     this.menuOpened = false;
+    this.outsideClicked = false;
+    this.onHide.emit(true);
   }
 
   changeStatus(e) {

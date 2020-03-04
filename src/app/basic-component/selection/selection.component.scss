@@ -32,6 +32,7 @@
       span {
         &.label {
           text-transform: uppercase;
+          white-space: nowrap;
         }
       }
     }

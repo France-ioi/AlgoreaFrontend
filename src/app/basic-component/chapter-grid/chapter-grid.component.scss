@@ -58,6 +58,7 @@
     background-color: transparent;
     display: flex;
     align-items: center;
+    font-size: 1rem;
 
     .chapter-type-control {
       display: flex;
@@ -116,6 +117,7 @@
         width: 2rem;
         height: 2rem;
         margin-right: 0.8333rem;
+        font-size: 1rem;
       }
 
       .select-all {

@@ -44,7 +44,7 @@ export class TaskTabComponent implements OnInit, OnChanges {
   asRow = false;
   showDesc = false;
   compactMode = false;
-
+  gridSelect = false;
   columnWidth = 13.3333;
   columnHeight = 70;
 

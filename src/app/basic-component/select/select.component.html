@@ -14,6 +14,7 @@
   class="select-dropdown-wrapper"
   [ngStyle]="{ 'width.rem': width }"
   (clickOutside)="hideDropdown($event)"
+  [delayClickOutsideInit]="true"
 >
   <ul class="select-dropdown">
     <li *ngFor="let item of items" (click)="selectValue(item)">

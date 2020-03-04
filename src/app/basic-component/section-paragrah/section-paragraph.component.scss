@@ -60,11 +60,11 @@
         font-size: 2rem;
         color: $dark-text-color;
         padding-left: 1.25rem;
+        flex: 1;
       }
 
       .additional-content {
         margin-right: 4.1667rem;
-        flex: 1;
         display: flex;
         align-items: center;
       }

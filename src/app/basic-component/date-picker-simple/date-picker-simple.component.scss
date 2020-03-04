@@ -9,8 +9,9 @@ $date-color: #B0C2D7;
     content: "\f073";
     position: absolute;
     left: 0.6667rem;
-    top: 0.6667rem;
+    top: calc(50% - 0.5rem);
     color: $date-color;
+    font-size: 1rem;
   }
 
   .ui-calendar-button {
@@ -24,6 +25,7 @@ $date-color: #B0C2D7;
     box-shadow: none;
     color: $date-color;
     padding-left: 2.0833rem;
+    font-size: 1rem;
   }
 }
 
@@ -33,4 +35,8 @@ $date-color: #B0C2D7;
 
 :host ::ng-deep .ui-button:enabled:focus {
   box-shadow: none;
+}
+
+:host ::ng-deep .ui-datepicker table {
+  font-size: 1rem;
 }

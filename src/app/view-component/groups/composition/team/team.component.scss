@@ -5,54 +5,55 @@
   flex-wrap: wrap;
   justify-content: flex-start;
   margin: 0 auto;
+  width: 54rem;
 
   app-team-member {
     display: block;
     margin: 0.8333rem;
     flex: 0;
-    width: 16.6667rem;
+    width: 17.3334rem;
     // max-width: calc(25% - 1.6667rem);
   }
 }
 
-@media screen and (min-width: 1770px) {
-  .team-member-list-container {
-    width: 1260px;
-  }
-}
+// @media screen and (min-width: 171rem) {
+//   .team-member-list-container {
+//     width: 133rem;
+//   }
+// }
 
-@media screen and (min-width: 1590px) and (max-width: 1770px) {
-  .team-member-list-container {
-    width: 1080px;
-  }
-}
+// @media screen and (min-width: 152rem) and (max-width: 171rem) {
+//   .team-member-list-container {
+//     width: 114rem;
+//   }
+// }
 
-@media screen and (min-width: 1410px) and (max-width: 1590px) {
-  .team-member-list-container {
-    width: 900px;
-  }
-}
+// @media screen and (min-width: 133rem) and (max-width: 152rem) {
+//   .team-member-list-container {
+//     width: 95rem;
+//   }
+// }
 
-@media screen and (min-width: 1230px) and (max-width: 1410px) {
-  .team-member-list-container {
-    width: 720px;
-  }
-}
+// @media screen and (min-width: 114rem) and (max-width: 133rem) {
+//   .team-member-list-container {
+//     width: 76rem;
+//   }
+// }
 
-@media screen and (min-width: 1050px) and (max-width: 1230px) {
-  .team-member-list-container {
-    width: 540px;
-  }
-}
+// @media screen and (min-width: 95rem) and (max-width: 114rem) {
+//   .team-member-list-container {
+//     width: 57rem;
+//   }
+// }
 
-@media screen and (min-width: 870px) and (max-width: 1050px) {
-  .team-member-list-container {
-    width: 360px;
-  }
-}
+// @media screen and (min-width: 76rem) and (max-width: 95rem) {
+//   .team-member-list-container {
+//     width: 38rem;
+//   }
+// }
 
-@media screen and (min-width: 690px) and (max-width: 870px) {
-  .team-member-list-container {
-    width: 180px;
-  }
-}
+// @media screen and (min-width: 57rem) and (max-width: 76rem) {
+//   .team-member-list-container {
+//     width: 19rem;
+//   }
+// }
