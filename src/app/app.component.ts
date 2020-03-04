@@ -226,22 +226,6 @@ export class AppComponent {
           icons: "fa fa-home",
           children: [
             {
-              ID: 42,
-              title: "Group with pending requests",
-              type: "leaf",
-              ring: true,
-              state: "opened",
-              hasKey: true,
-              progress: {
-                displayedScore: 60,
-                currentScore: 30
-              },
-              category: {
-                icon: "fa fa-book-open",
-                type: 1
-              }
-            },
-            {
               ID: 43,
               title: "Group with grading requests",
               type: "leaf",

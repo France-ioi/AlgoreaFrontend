@@ -217,6 +217,8 @@ export class AssociatedActivitiesComponent implements OnInit {
     }
   ];
 
+  gridSelect = false;
+
   ranges = [0, 20];
 
   filterChoice = [
@@ -236,7 +238,9 @@ export class AssociatedActivitiesComponent implements OnInit {
     {
       label: 'On site only'
     }
-  ]
+  ];
+
+  select
 
   constructor() { }
 

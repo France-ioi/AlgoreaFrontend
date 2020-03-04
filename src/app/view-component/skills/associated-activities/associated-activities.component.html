@@ -11,6 +11,7 @@
       [opened]="false"
       width="10"
       style="margin: 0.4167rem;"
+      (onClick)="gridSelect = true"
     ></app-select>
     <ng-container *ngFor="let filter of gridFilters">
       <app-grid-filter
@@ -22,7 +23,9 @@
         [ranges]="filter.ranges"
         [dateRanges]="filter.dateRanges"
         [list]="filter.list"
+        [outsideClicked]="gridSelect"
         (onClose)="removeFilter(filter.ID)"
+        (onHide)="gridSelect = false"
       ></app-grid-filter>
     </ng-container>
   </app-grid-filter-bar>

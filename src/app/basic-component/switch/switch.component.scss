@@ -96,7 +96,7 @@ $circular: 1rem;
 
 :host ::ng-deep p-inputSwitch {
   height: 1.0833rem;
-  display: block;
+  display: flex;
   width: fit-content;
 
   &.dark-circular {

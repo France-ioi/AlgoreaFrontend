@@ -1,5 +1,5 @@
-<div class="grid-filter" (clickOutside)="hideMenu($event)">
-  <div class="grid-filter-button" [ngClass]="{open: menuOpened}">
+<div class="grid-filter" (clickOutside)="hideMenu($event)" [delayClickOutsideInit]="true">
+  <div class="grid-filter-button" [ngClass]="{open: menuOpened && !outsideClicked}">
     <span class="grid-filter-button-icon" (click)="toggleMenu($event)">
       <i class="{{icon}}"></i>
     </span>
@@ -28,7 +28,7 @@
       <app-switch *ngIf="type === 'default'" mode="dark-circular"></app-switch>
     </div>
   </div>
-  <div *ngIf="menuOpened" class="grid-filter-menu">
+  <div *ngIf="menuOpened && !outsideClicked" class="grid-filter-menu">
     <div class="space"></div>
     <div *ngIf="mode === 'basic'">
       {{text}}

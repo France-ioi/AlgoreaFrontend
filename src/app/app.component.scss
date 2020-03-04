@@ -8,7 +8,7 @@
   background-color: $base-bk-color;
 
   .left {
-    width: 33.3333rem;
+    width: 25rem;
     position: fixed;
     left: 0;
     top: 0;
@@ -17,7 +17,7 @@
     height: 100%;
 
     &.collapsed {
-      left: -33.3333rem;
+      left: -25rem;
       transition: left 1s;
       -webkit-transition: left 1s;
       -moz-transition: left 1s;
@@ -34,7 +34,7 @@
 
   .top-bar {
     position: fixed;
-    left: 33.3333rem;
+    left: 25rem;
     top: 0;
     right: 0;
     height: 3.75rem;
@@ -157,7 +157,7 @@
   }
 
   .right {
-    margin-left: 33.3333rem;
+    margin-left: 25rem;
     padding-top: 3.75rem;
     background-color: $base-bk-color;
     position: relative;

@@ -10,6 +10,7 @@
   border: none;
   box-shadow: 0 0.0833rem #C9CFD7;
   border-radius: 9rem;
+  font-size: 1rem;
 }
 
 :host ::ng-deep .ui-dropdown:not(.ui-state-disabled).ui-state-focus {
@@ -21,6 +22,7 @@
   border-radius: 9rem;
   width: 100%;
   background: transparent;
+  font-size: 1rem;
 
   .ui-dropdown-trigger {
     background-color: white;
