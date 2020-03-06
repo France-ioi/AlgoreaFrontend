@@ -129,7 +129,7 @@
     display: block;
     flex-direction: row;
     align-items: center;
-    min-height: 4.1667rem;
+    min-height: 4.5rem;
     position: relative;
     cursor: pointer;
 
@@ -232,7 +232,7 @@
 
         .label-container {
           display: flex;
-          margin-top: 1.25rem;
+          margin-top: 1.1rem;
         }
 
         .node-state {
@@ -240,11 +240,13 @@
         }
 
         .node-label-title {
+          font-family: "titillium";
           overflow: hidden;
           white-space: nowrap;
           text-overflow: ellipsis;
           margin-right: 0.8333rem;
-          font-size: 1rem;
+          font-size: 1.2rem;
+          font-weight: 700;
         }
 
         app-skill-progress {
@@ -285,6 +287,24 @@
         border-bottom-left-radius: 0.5rem;
         background-color: $base-bk-color;
         color: $base-color;
+
+        &:before,
+        &:after {
+          content:" ";
+          background-image: url("/assets/images/corner-white.svg");
+          background-repeat: none;
+          width: 1rem;
+          height: 1rem;
+          position: absolute;
+          right:0;
+          top: -1rem;
+        }
+
+        &:after {
+          top: auto;
+          bottom: -1rem;
+          background-position: bottom;
+        }
 
         .node-select {
           color: #fff;

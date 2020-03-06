@@ -4,7 +4,7 @@
   border-radius: 9rem;
   height: 2.5rem;
   position: relative;
-  margin: 0.4167rem;
+  margin: 1rem;
 
   .search-input {
     background-color: $base-color;
@@ -24,7 +24,7 @@
 
   .search-icon {
     color: white;
-    width: 3.3333rem;
+    width: 4rem;
     position: absolute;
     right: 0;
     top: 0;
@@ -32,7 +32,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.6667rem;
+    font-size: 1.5rem;
     cursor: pointer;
   }
 }

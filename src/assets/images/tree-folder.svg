@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="17px" height="13px" viewBox="0 0 17 13" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 63.1 (92452) - https://sketch.com -->
+    <title>Iconne dossier</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Panneau-latéral-/-Boutons-/-Retours-arbo" transform="translate(-22.000000, -11.000000)">
+            <g id="Panneau-latéral-/-Icônes-/-Icone-dossier" transform="translate(22.000000, 11.000000)">
+                <path d="M17,7.525 C17,7.75 16.8671096,7.975 16.7253599,8.14375 L13.7486157,11.85625 C13.234773,12.49375 12.1893688,13 11.4097453,13 L1.77076412,13 C1.45182724,13 1,12.896875 1,12.475 C1,12.25 1.13289037,12.025 1.27464009,11.85625 L4.25138427,8.14375 C4.76522702,7.50625 5.81063123,7 6.59025471,7 L16.2292359,7 C16.5481728,7 17,7.103125 17,7.525 Z" id="folder-open---FontAwesome" fill="#FFFFFF"></path>
+                <path d="M14,4.36724566 L14,5.82299421 L6.41666667,5.82299421 C5.27734375,5.82299421 3.86458333,6.46898263 3.12630208,7.34243176 L0.0546875,10.9454094 L0.00911458333,11 C0.00911458333,10.9272126 0,10.8453267 0,10.7725393 L0,2.03804797 C0,0.918941274 0.920572917,0 2.04166667,0 L4.95833333,0 C6.07942708,0 7,0.918941274 7,2.03804797 L7,2.32919768 L11.9583333,2.32919768 C13.0794271,2.32919768 14,3.24813896 14,4.36724566 Z" id="Path" fill="#F5A623"></path>
+            </g>
+        </g>
+    </g>
+</svg>

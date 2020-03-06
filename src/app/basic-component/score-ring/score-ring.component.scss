@@ -18,12 +18,14 @@
   .ring-icon {
     position: absolute;
     left: 0;
-    top: 0;
+    top: -.1rem;
     bottom: 0;
     right: 0;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 1rem;
+    font-weight: 700;
+    font-family: "titillium";
   }
 }

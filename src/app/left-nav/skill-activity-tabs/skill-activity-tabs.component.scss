@@ -1,25 +1,26 @@
 @import 'src/colors.scss';
 $bk-secondary: #3B73B4;
+$border-radius: .5rem;
 
 :host {
   display: block;
 }
 
+
 :host ::ng-deep .group-skills {
   .ui-tabview {
     padding: 0;
+    background-color: $base-bk-color;
+    border-radius: 0;
 
     &.ui-tabview-top .ui-tabview-nav li:focus {
       box-shadow: none;
     }
-  
+
     ul.ui-tabview-nav {
       display: flex;
       height: 4.1667rem;
-      background-color: $base-color;
-      border-top-left-radius: 0.4167rem;
-      border-top-right-radius: 0.4167rem;
-      
+
       > li {
         flex: 1;
         border: none;
@@ -31,16 +32,16 @@ $bk-secondary: #3B73B4;
         // color: white !important;
 
         &:first-child {
-          border-top-left-radius: 0.4167rem;
+          border-top-left-radius: $border-radius;
           a {
-            border-top-left-radius: 0.4167rem;
+            border-top-left-radius: $border-radius;
           }
         }
 
         &:last-child {
-          border-top-right-radius: 0.4167rem;
+          border-top-right-radius: $border-radius;
           a {
-            border-top-right-radius: 0.4167rem;
+            border-top-right-radius: $border-radius;
           }
         }
 
@@ -60,19 +61,19 @@ $bk-secondary: #3B73B4;
             margin: 0 auto;
           }
         }
-        
+
         &:hover {
           border: none !important;
         }
 
         &.ui-state-default {
-          
+
           &:not(:first-child) {
-            border-bottom-left-radius: 0.8333rem;
+            // border-bottom-left-radius: 0.8333rem;
           }
 
           &:first-child {
-            border-bottom-right-radius: 0.8333rem;
+            // border-bottom-right-radius: 0.8333rem;
           }
 
           a {
@@ -89,6 +90,26 @@ $bk-secondary: #3B73B4;
 
         &.ui-state-active {
           background-color: $base-color;
+          z-index: 1;
+
+          &:before {
+            content:" ";
+            display: block;
+            background-image: url('/assets/images/corner.svg');
+            background-repeat: none;
+            background-position: right;
+            width: 1rem;
+            height: 1rem;
+            position: absolute;
+            bottom:0;
+            right:-1rem;
+          }
+
+          &:last-child:before {
+            right:auto;
+            left:-1rem;
+            background-position: left;
+          }
 
           .indicator {
             position: absolute;
@@ -100,7 +121,7 @@ $bk-secondary: #3B73B4;
             border-right: 0.6667rem solid transparent;
             border-top: 0.4167rem solid $base-bk-color;
           }
-          
+
           &:hover {
             background-color: #779CCA !important;
           }
@@ -111,37 +132,44 @@ $bk-secondary: #3B73B4;
     .ui-tabview-panels {
       padding: 0;
       border: none;
+      font-family: "titillium";
 
       .ui-tabview-panel {
         .tree-header {
           background-color: $base-color;
-          height: 4.1667rem;
+          height: 6rem;
           display: flex;
           align-items: center;
           border-bottom: 0.0833rem solid #4587D4;
 
           .tree-header-handle {
             display: flex;
-            height: 2.5rem;
-            width: 3.3333rem;
-            margin-right: 0.4167rem;
+            height: 3.5rem;
+            width: 5rem;
+            margin-right: 1rem;
             background-color: $bk-secondary;
-            border-top-right-radius: 9rem;
-            border-bottom-right-radius: 9rem;
+            border-top-right-radius: 1.5rem;
+            border-bottom-right-radius: 1.5rem;
             color: white;
             align-items: center;
-            font-size: 1rem;
-            
+            font-size: 1.5rem;
+
             i:first-child {
-              margin-right: 0.4167rem;
-              margin-left: 0.4167rem;
+              margin-right: 1rem;
+              margin-left: .5rem;
               color: rgb(99, 150, 209);
+            }
+
+            .icon-folder {
+              height: 2.1rem;
             }
           }
 
           .tree-header-title {
-            font-size: 1.3333rem;
+            font-size: 1.6rem;
+            letter-spacing: .01em;
             font-weight: bold;
+            text-transform: uppercase;
             color: white;
           }
         }

@@ -8,7 +8,7 @@
   background-color: $base-bk-color;
 
   .left {
-    width: 25rem;
+    width: 34rem;
     position: fixed;
     left: 0;
     top: 0;
@@ -34,7 +34,7 @@
 
   .top-bar {
     position: fixed;
-    left: 25rem;
+    left: 34rem;
     top: 0;
     right: 0;
     height: 3.75rem;
@@ -108,7 +108,7 @@
             color: $base-text-color;
             text-overflow: ellipsis;
             overflow: hidden;
-            white-space: nowrap;  
+            white-space: nowrap;
           }
         }
 
@@ -157,7 +157,7 @@
   }
 
   .right {
-    margin-left: 25rem;
+    margin-left: 34rem;
     padding-top: 3.75rem;
     background-color: $base-bk-color;
     position: relative;
