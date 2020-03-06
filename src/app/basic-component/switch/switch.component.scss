@@ -46,7 +46,9 @@ $circular: 1rem;
       height: $handler-height;
       bottom: 0.0833rem;
       left: 0;
-      box-shadow: 0 0.0833rem #727272;
+      position: absolute;
+      top: .1rem;
+      box-shadow: 0 0.1rem #727272;
     }
   }
 
@@ -60,10 +62,10 @@ $circular: 1rem;
 }
 
 :host ::ng-deep .white .ui-inputswitch {
-  width: 4.1667rem;
-  height: 1.0833rem;
+  width: 5rem;
+  height: 1.5rem;
 
-  @include custom-switch(#E4E5EA, #DADADA, $dark-base-color, 4.1667rem, 2.0833rem, 1rem);
+  @include custom-switch(#E4E5EA, #DADADA, $dark-base-color, 5rem, 2.5rem, 1.2rem);
 }
 
 
@@ -76,14 +78,14 @@ $circular: 1rem;
 
 :host ::ng-deep .circular .ui-inputswitch {
   width: 2.5rem;
-  height: 1.0833rem; 
+  height: 1.0833rem;
 
   @include custom-switch(#E4E5EA, #DADADA, $dark-base-color, 2.5rem, $circular, 1rem);
 }
 
 :host ::ng-deep .dark-circular .ui-inputswitch {
   width: 2.5rem;
-  height: 1.25rem; 
+  height: 1.25rem;
 
   @include custom-switch(#2C5687, #152A43, $dark-base-color, 2.5rem, 1.0833rem, 1.0833rem);
 
@@ -95,9 +97,10 @@ $circular: 1rem;
 }
 
 :host ::ng-deep p-inputSwitch {
-  height: 1.0833rem;
+  height: 1.5rem;
+  width: 5rem;
   display: flex;
-  width: fit-content;
+  // width: fit-content;
 
   &.dark-circular {
     height: 1.25rem;

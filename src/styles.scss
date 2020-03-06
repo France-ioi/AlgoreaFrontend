@@ -4,10 +4,11 @@
 
 html {
   height: 100%;
-  font-size: 12px;
+  font-size: 62.5%;
 }
 
 body {
+  font-size: 1.2rem;
   margin: 0;
   background-color: $base-bk-color;
   min-height: 100%;
@@ -28,7 +29,7 @@ body {
     flex-direction: column;
     align-items: center;
     background-color: transparent;
-    
+
     .content {
       background-color: $base-color;
       color: white;
@@ -120,7 +121,7 @@ body {
     .mat-menu-content {
       .content {
         flex-direction: column-reverse;
-        
+
         .indicator {
           width: 0;
           border-left: 0.4167rem solid transparent;
@@ -137,7 +138,7 @@ body {
     flex-direction: column;
     align-items: center;
     background-color: transparent;
-    
+
     .content {
       background-color: $base-color;
       color: white;
@@ -206,7 +207,7 @@ body {
         span.menu-value {
           margin-left: 0.8333rem;
         }
-        
+
         i {
           margin-right: 0.4167rem;
           width: 1.6667rem;
@@ -271,42 +272,42 @@ body {
 
 @media screen and (max-width: 1200px) {
   html {
-    font-size: 12px;
+    // font-size: 12px;
   }
 }
 
 @media screen and (min-width: 1200px) and (max-width: 1400px) {
   html {
-    font-size: 14px;
+    // font-size: 12px;
   }
 }
 
 @media screen and (min-width: 1400px) and (max-width: 1600px) {
   html {
-    font-size: 16px;
+    // font-size: 12px;
   }
 }
 
 @media screen and (min-width: 1600px) and (max-width: 1900px) {
   html {
-    font-size: 19px;
+    // font-size: 12px;
   }
 }
 
 @media screen and (min-width: 1900px) and (max-width: 2400px) {
   html {
-    font-size: 24px;
+    // font-size: 14px;
   }
 }
 
 @media screen and (min-width: 2400px) and (max-width: 3000px) {
   html {
-    font-size: 30px;
+    // font-size: 30px;
   }
 }
 
 @media screen and (min-width: 3000px) {
   html {
-    font-size: 32px;
+    // font-size: 32px;
   }
 }

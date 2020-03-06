@@ -8,6 +8,7 @@
 }
 
 :host ::ng-deep .ui-tree-container {
+  font-family: "titillium";
   padding: 0 !important;
 }
 
@@ -49,7 +50,7 @@
 
 :host ::ng-deep .ui-treenode-children {
   border-left: 0.0833rem solid #9b9b9b;
-  padding-left: 2.5833rem !important;
+  padding-left: 2.55rem !important;
 }
 
 :host ::ng-deep p-treenode:last-child > .ui-treenode > .ui-treenode-children {
@@ -83,8 +84,7 @@
 
   &:focus {
     .node-tree-item .node-item-content {
-      border-top-left-radius: 0.3333rem;
-      border-bottom-left-radius: 0.3333rem;
+      border-radius: 1.5rem;
       background-color: #fff;
     }
   }
@@ -179,14 +179,13 @@
     }
 
     &.checked .node-item-content {
-      border-top-left-radius: 0.3333rem;
-      border-bottom-left-radius: 0.3333rem;
+      border-radius: 1.5rem;
       background-color: #fff;
 
       .go-to-page {
-        width: 2.5rem;
-        height: 2.5rem;
-        margin-right: 0.8333rem;
+        width: 2rem;
+        height: 2rem;
+        margin-right: .8rem;
         border-radius: 1.6667rem;
         background-color: $base-color;
         color: white;
@@ -194,6 +193,10 @@
         align-items: center;
         justify-content: center;
         font-size: 1rem;
+
+        i {
+          margin-top:.1rem;
+        }
       }
 
       .leaf.node-select {
@@ -205,9 +208,9 @@
 
     .node-item-content {
       right: 0;
-      height: 2.4167rem;
-      line-height: 2.4167rem;
-      padding: 0.8333rem 0.25rem;
+      height: 3rem;
+      line-height: 3rem;
+      padding-left: 0.25rem;
       position: absolute;
       left: 1.25rem;
       display: flex;
