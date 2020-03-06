@@ -12,6 +12,8 @@
       .mat-tab-label {
         background-color: $base-bk-color;
         border-right: 0.0833rem solid $light-border-color;
+        height: 5rem;
+
         &.mat-tab-label-active {
           background-color: white;
           border-right-color: transparent;
