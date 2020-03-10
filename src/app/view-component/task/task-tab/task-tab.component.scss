@@ -1,6 +1,10 @@
 @import 'src/colors.scss';
 @import 'src/geometry.scss';
 
+.mat-tab-group {
+  font-family: 'titillium';
+}
+
 :host ::ng-deep .mat-tab-header {
   border-bottom: none;
   .mat-tab-label-container {
@@ -9,29 +13,49 @@
     }
 
     .mat-tab-labels {
-      background-color: white;
+      // background-color: white;
       border-radius: $border-radius;
       .mat-tab-label {
-        background-color: $base-bk-color;
+        // background-color: $base-bk-color;
+        font-family: 'titillium';
         border-right: 0.0833rem solid $light-border-color;
         font-size: 1.2rem;
         height: 5rem;
-        border-radius: $border-radius;
+        border-radius: $border-radius $border-radius 0 0;
 
         &.mat-tab-label-active {
           background-color: white;
           border-right-color: transparent;
           color: $base-color;
-          // border-top: 0.25rem solid $base-color;
+          border-top: 0.3rem solid $base-color;
+          overflow: visible;
 
-          &:before {
+          // &:before {
+          //   content:" ";
+          //   height: .3rem;
+          //   background-color: $base-color;
+          //   width: 100%;
+          //   position: absolute;
+          //   top: 0;
+          //   left: 0;
+          // }
+          &:before,
+          &:after {
             content:" ";
-            height: .3rem;
-            background-color: $base-color;
-            width: 100%;
+            height: 1rem;
+            width: 1rem;;
+            background-image:url('/assets/images/corner-tab.svg');
+            background-position: left;
+            background-repeat: no-repeat;
             position: absolute;
-            top: 0;
-            left: 0;
+            bottom: 0;
+            left: -1rem;
+          }
+          &:after {
+            background-position: right;
+            bottom: 0;
+            left: auto;
+            right: -1rem;
           }
         }
         &.mat-tab-label-active + .mat-tab-label {
@@ -52,7 +76,15 @@
 
 :host ::ng-deep .mat-tab-body-wrapper {
   .mat-tab-body {
-    background-color: white;
+    border-radius: $border-radius 0 0 $border-radius;
+
+     &:first-child {
+       border-radius: 0 0 0 $border-radius;
+     }
+
+     &.mat-tab-body-active {
+       background-color: white;
+     }
 
     .selection-tool {
       display: flex;
@@ -130,7 +162,7 @@
     .validation-text {
       padding-left: 5.8333rem;
       color: $base-color;
-      font-size: 1.3333rem;
+      font-size: 1.6rem;
     }
 
     .data-list-container {
@@ -140,10 +172,12 @@
 
       &.activity {
         padding: 1.6667rem;
+
         li {
           display: flex;
           align-items: center;
           border-bottom: none;
+          padding: 0;
 
           .activity-progress {
             width: 4.1667rem;
@@ -153,7 +187,8 @@
             display: flex;
             align-items: center;
             flex: 1;
-            padding: 0.5833rem 0;
+            box-sizing: border-box;
+            height: 4rem;
             border-bottom: 0.0833rem solid $light-border-color;
 
             &.locked {

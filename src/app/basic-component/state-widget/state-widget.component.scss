@@ -1,12 +1,12 @@
 @import 'src/colors.scss';
 
 .state-container {
-  width: 7.5rem;
-  height: 1.9167rem;
-  border-radius: 9rem;
+  width: 9rem;
+  height: 2rem;
+  border-radius: 1rem;
   color: white;
   display: flex;
-  font-size: 1rem;
+  font-size: .9rem;
 
   &.discovery {
     .state-icon {
@@ -63,7 +63,8 @@
     align-items: center;
     justify-content: center;
     height: 100%;
-    width: 2.5rem;
+    width: 3rem;
+    line-height: 100%;
     background-color: $dark-base-color;
     border-top-left-radius: 9rem;
     border-bottom-left-radius: 9rem;
@@ -76,13 +77,14 @@
 
   .state-label {
     flex: 1;
-    display: flex;
-    align-items: center;
+    display: block;
     background-color: $base-color;
     border-top-right-radius: 9rem;
     border-bottom-right-radius: 9rem;
-    font-size: 0.8333rem;
-    padding-left: 0.3333rem;
+    font-size: 0.9rem;
+    font-weight: 700;
+    padding-left: 0.5rem;
+    line-height: 1.9rem;;
 
     &.disabled {
       background-color: #EFEFEF !important;
