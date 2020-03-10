@@ -28,16 +28,22 @@
               <th style="width: 50px;"></th>
               <ng-container *ngFor="let col of columns">
                 <th *ngIf="col.field === 'date'" [pSortableColumn]="col.field" style="width: 120px;">
-                  {{ col.header }}
-                  <p-sortIcon [field]="col.field"></p-sortIcon>
+                  <div class="header-container"> 
+                    {{ col.header }}
+                    <p-sortIcon [field]="col.field"></p-sortIcon>
+                    </div>
                 </th>
                 <th *ngIf="col.field === 'type'" [pSortableColumn]="col.field" style="width: 120px;">
-                  {{ col.header }}
-                  <p-sortIcon [field]="col.field"></p-sortIcon>
+                  <div class="header-container"> 
+                    {{ col.header }}
+                    <p-sortIcon [field]="col.field"></p-sortIcon>
+                    </div>
                 </th>
                 <th *ngIf="col.field === 'desc'" [pSortableColumn]="col.field">
-                  {{ col.header }}
-                  <p-sortIcon [field]="col.field"></p-sortIcon>
+                  <div class="header-container"> 
+                    {{ col.header }}
+                    <p-sortIcon [field]="col.field"></p-sortIcon>
+                    </div>
                 </th>
               </ng-container>
               <th style="width: 50px;"></th>

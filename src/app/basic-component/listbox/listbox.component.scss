@@ -3,7 +3,7 @@
 :host ::ng-deep .ui-listbox {
   background-color: $dark-base-color;
   border: none;
-  font-size: 1rem;
+  font-size: 1.2rem;
 
   .ui-listbox-header {
     background-color: $dark-base-color;
@@ -44,7 +44,7 @@
 
     &::-webkit-scrollbar {
       width: 1rem;
-    }  
+    }
 
     &::-webkit-scrollbar-thumb {
       background-color: $base-color;
@@ -60,7 +60,7 @@
       background-color: $dark-base-color;
 
       .ui-listbox-item {
-        font-size: 1rem;
+        font-size: 1.2rem;
         color: #EFF3F7;
         padding: 0.1667rem 0.8333rem;
 

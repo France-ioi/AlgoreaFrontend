@@ -20,8 +20,11 @@
             score: col.field === 'score'
           }"
         >
-          {{ col.header }}
-          <p-sortIcon [field]="col.field"></p-sortIcon>
+          <div class="header-container"> 
+            {{ col.header }}
+            <p-sortIcon [field]="col.field"></p-sortIcon>
+          </div>
+        
         </th>
       </ng-container>
     </tr>

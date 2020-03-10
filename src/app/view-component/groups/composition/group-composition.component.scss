@@ -18,9 +18,11 @@
     border-radius: $border-radius;
     background-color: $base-bk-color;
 
-    margin-left: 4.5833rem;
-    margin-right: 1.6667rem;
-    margin-bottom: 2.6667rem;
+    max-width: 58rem;
+
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 2rem;
 
     app-selection:first-child {
       margin: 0.8333rem;

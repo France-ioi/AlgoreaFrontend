@@ -19,6 +19,7 @@
 
   ::ng-deep .ui-table {
     margin-bottom: 0.8333rem;
+    font-family: 'titillium', sans-serif;
 
     .ui-chkbox {
       width: 1.0833rem;
@@ -51,14 +52,34 @@
     }
 
     .ui-table-thead > tr > th {
+      padding: 0 1rem;
+      text-align: left;
       border-top: none;
       text-transform: uppercase;
-      font-size: 1rem;
+      font-size: .9rem;
+      letter-spacing: .03em;
       height: 3rem;
+
+      .header-container {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        display: flex;
+        align-items: center;
+
+          p-sorticon {
+            position: absolute;
+            right: 0;
+            top: 1.5rem;
+            transform: translateY(-50%);
+          }
+
+      }
 
       &:focus {
         outline: transparent;
       }
+
     }
 
     .ui-table-tbody > tr:nth-child(even) {
@@ -69,12 +90,12 @@
       border: none;
       border-bottom: 0.0833rem solid #f0f0f0;
       color: $base-text-color;
-      height: 3.5833rem;
-      max-height: 3.5833rem;
+      height: 4rem;
+      max-height: 4rem;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
-      font-size: 1rem;
+      font-size: 1.2rem;
     }
 
     .ui-table-tbody > tr:last-child > td {

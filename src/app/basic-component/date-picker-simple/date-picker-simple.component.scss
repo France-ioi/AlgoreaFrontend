@@ -10,8 +10,8 @@ $date-color: #B0C2D7;
     position: absolute;
     left: 0.6667rem;
     top: calc(50% - 0.5rem);
-    color: $date-color;
-    font-size: 1rem;
+    color: white;
+    font-size: 1.2rem;
   }
 
   .ui-calendar-button {
@@ -25,7 +25,7 @@ $date-color: #B0C2D7;
     box-shadow: none;
     color: $date-color;
     padding-left: 2.0833rem;
-    font-size: 1rem;
+    font-size: 1.2rem;
   }
 }
 
@@ -38,5 +38,5 @@ $date-color: #B0C2D7;
 }
 
 :host ::ng-deep .ui-datepicker table {
-  font-size: 1rem;
+  font-size: 1.2rem;
 }

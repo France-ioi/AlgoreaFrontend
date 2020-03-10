@@ -2,7 +2,7 @@
 @import 'src/geometry.scss';
 
 .mat-tab-group {
-  font-family: 'titillium';
+  font-family: inherit;
 }
 
 :host ::ng-deep .mat-tab-header {
@@ -17,7 +17,7 @@
       border-radius: $border-radius;
       .mat-tab-label {
         // background-color: $base-bk-color;
-        font-family: 'titillium';
+        font-family: inherit;
         border-right: 0.0833rem solid $light-border-color;
         font-size: 1.2rem;
         height: 5rem;
@@ -89,12 +89,14 @@
     .selection-tool {
       display: flex;
       flex-direction: column;
-      border-radius: 0.4167rem;
+      border-radius: $border-radius;
       background-color: $base-bk-color;
 
-      margin-left: 4.5833rem;
-      margin-right: 1.6667rem;
-      margin-bottom: 2.6667rem;
+      max-width: 58rem;
+
+      margin-left: auto;
+      margin-right: auto;
+      margin-bottom: 2rem;
 
       app-selection:first-child {
         margin-left: 0.8333rem;
