@@ -19,7 +19,7 @@
       color: $base-text-color;
       cursor: pointer;
       transition: .2s;
-      font-size: 1rem;
+      font-size: 1.2rem;
       font-weight: bold;
       padding: 0 0.8333rem;
 
@@ -38,7 +38,7 @@
     }
 
     &.square {
-      height: 5.5833rem;
+      height: 7rem;
 
       li {
         flex-direction: column;
@@ -62,10 +62,10 @@
     }
 
     &.rounded {
-      background-color: #DFE0E4;
+      background-color: $dark-transparency-color;
       border-radius: 9rem;
-      height: 2.5rem;
-      box-shadow: 0 0.0833rem #BBB inset;
+      height: 3rem;
+      box-shadow: 0 0.0833rem $dark-transparency-color inset;
       // margin-left: 0.8333rem;
       // margin-right: 0.8333rem;
 
@@ -76,7 +76,7 @@
         li {
           color: #7B7B7B;
           border-right: 0.0833rem solid #3B3B3B;
-          
+
           &:last-child {
             border-right: none;
           }
