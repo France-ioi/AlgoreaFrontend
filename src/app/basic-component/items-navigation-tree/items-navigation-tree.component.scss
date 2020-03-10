@@ -292,7 +292,8 @@
         &:after {
           content:" ";
           background-image: url("/assets/images/corner-white.svg");
-          background-repeat: none;
+          background-repeat: no-repeat;
+          background-size: cover;
           width: 1rem;
           height: 1rem;
           position: absolute;
