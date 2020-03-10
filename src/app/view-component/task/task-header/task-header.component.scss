@@ -7,16 +7,17 @@
 .task-header-container {
   display: flex;
   flex-direction: column;
-  margin-bottom: 0.8333rem;
-  margin-right: 1.25rem;
-  min-height: 10.9rem;
+  // margin-bottom: 0.8333rem;
+  margin-right: 2rem;
+  min-height: 11.7rem;
 
   .task-header {
-    padding-top: 1.6667rem;
+    // padding-top: 1.6667rem;
     display: flex;
     align-items: center;
-    background-color: $base-bk-color;
-    padding-bottom: 0.8333rem;
+    // background-color: $base-bk-color;
+    // padding-bottom: 0.8333rem;
+    min-height: 11.7rem;
 
     &.edit {
       flex-direction: column;
@@ -72,6 +73,7 @@
     .task-user-image {
       border-radius: 9rem;
       background-color: white;
+      margin-right: 1.5rem;
 
       img {
         border-radius: 9rem;
@@ -79,25 +81,26 @@
     }
 
     .task-title {
-      margin-left: 0;
+      // margin-left: 0;
       margin-right: 0.8333rem;
       flex: 1;
       min-width: 0;
 
       &.skill {
-        margin-left: 0.8333rem;
+
       }
 
       p {
         font-size: 2.5rem;
         margin: 0;
-        margin-bottom: 0.4167rem;
         text-overflow: ellipsis;
         overflow: hidden;
         white-space: nowrap;
+        margin-bottom: -.4rem;
       }
       span {
         color: $base-text-color;
+        font-size: 1.6rem;
       }
     }
 

@@ -49,8 +49,8 @@ $breadcrumb-bottom-color: #E0E1E5;
 
       span {
         padding: 0 0.4167rem;
-        font-size: 1rem;
-        border-radius: 0.8333rem;
+        font-size: 1.2rem;
+        border-radius: 1rem;
         display: inline-block;
         vertical-align: middle;
         line-height: normal;
@@ -66,8 +66,11 @@ $breadcrumb-bottom-color: #E0E1E5;
         &.attempt-badge {
           background-color: $base-color;
           color: white;
-          height: 1.3333rem;
-          line-height: 1.3333rem;
+          height: 2rem;
+          line-height: 1.9rem;
+          text-align: center;
+          font-weight: 700;
+          padding: 0 .7rem;
         }
       }
     }

@@ -71,7 +71,7 @@ $danger-color: #ff001f;
   .ui-button-icon-right {
     right: 1rem;
   }
-  
+
   &.ui-state-default {
 
     &.ui-button-secondary {
@@ -94,7 +94,7 @@ $danger-color: #ff001f;
         box-shadow: none;
       }
     }
-    
+
     &.ui-button-warning {
       background-color: $warning-color;
       border-color: $warning-color;
@@ -108,7 +108,7 @@ $danger-color: #ff001f;
         box-shadow: none;
       }
     }
-    
+
     &.ui-button-danger {
       background-color: $danger-color;
       border-color: $danger-color;
@@ -118,19 +118,19 @@ $danger-color: #ff001f;
         box-shadow: none;
       }
     }
-    
+
     &.ui-top-rounded {
       border-radius: 0;
       border-top-left-radius: 0.6667rem;
       border-top-right-radius: 0.6667rem;
     }
-    
+
     &.ui-diag-rounded {
       border-radius: 0;
       border-top-left-radius: 0.6667rem;
       border-bottom-right-radius: 0.6667rem;
     }
-    
+
     &.ui-button-success {
       background-color: white;
       border-color: $base-color;
@@ -151,4 +151,19 @@ $danger-color: #ff001f;
 
 :host ::ng-deep p-button {
   width: 100%;
+
+    .ui-button {
+      height: 3rem;
+      font-weight: 700;
+      font-size: inherit;
+      padding: 0 1.5rem;
+
+        &.ui-button-rounded {
+          border-radius: 1.5rem;
+        }
+
+        &.ui-state-default.ui-button-success {
+          background-color: transparent;
+        }
+    }
 }

@@ -5,7 +5,7 @@
   // margin: 0 auto;
   width: 100%;
   position: relative;
-  background-color: $base-bk-color;
+  // background-color: $base-bk-color;
 
   .left {
     width: 34rem;
@@ -100,7 +100,7 @@
         .task-title {
           margin-left: 1.25rem;
           flex: 1;
-          font-size: 2.5rem;
+          font-size: 2.8rem;
           margin-bottom: 0.4167rem;
           min-width: 0;
 
@@ -159,7 +159,7 @@
   .right {
     margin-left: 34rem;
     padding-top: 3.75rem;
-    background-color: $base-bk-color;
+    // background-color: $base-bk-color;
     position: relative;
 
     &.editing {
@@ -189,7 +189,7 @@
 
     .main-content {
       padding-left: 1.6667rem;
-      background-color: $base-bk-color;
+      // background-color: $base-bk-color;
 
       &.folded {
         margin-top: -12.0833rem;

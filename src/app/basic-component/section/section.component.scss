@@ -15,19 +15,19 @@
     .section-handler {
       display: flex;
       background-color: $base-color;
-      border-left: 0.25rem solid $dark-color;
-      width: 4.5833rem;
-      height: 2.5rem;
-      border-top-right-radius: 9rem;
-      border-bottom-right-radius: 9rem;
+      border-left: .3rem solid $dark-color;
+      width: 5rem;
+      height: 3rem;
+      border-top-right-radius: 1.5rem;
+      border-bottom-right-radius: 1.5rem;
       position: relative;
       justify-content: flex-end;
       align-items: center;
-      padding-right: 0.8333rem;
+      padding-right: 1rem;
 
       i {
         color: white;
-        font-size: 1.1667rem;
+        font-size: 1.2rem;
       }
     }
 
