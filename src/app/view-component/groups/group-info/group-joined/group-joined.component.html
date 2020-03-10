@@ -19,8 +19,10 @@
           <tr>
             <th style="width: 40px;"></th>
             <th *ngFor="let col of teamColumns" [pSortableColumn]="col.field">
-              {{ col.header }}
-              <p-sortIcon [field]="col.field"></p-sortIcon>
+              <div class="header-container"> 
+                {{ col.header }}
+                <p-sortIcon [field]="col.field"></p-sortIcon>
+              </div>
             </th>
           </tr>
         </ng-template>

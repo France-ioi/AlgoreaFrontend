@@ -29,8 +29,10 @@
           <th style="width: 4.1667rem;"></th>
           <ng-container *ngFor="let col of columns">
             <th *ngIf="col.field !== 'progress'" [pSortableColumn]="col.field">
-              {{ col.header }}
-              <p-sortIcon [field]="col.field"></p-sortIcon>
+              <div class="header-container"> 
+                {{ col.header }}
+                <p-sortIcon [field]="col.field"></p-sortIcon>
+              </div>
             </th>
             <th *ngIf="col.field === 'progress'" style="width: 5rem">
               {{ col.header }}

@@ -257,8 +257,10 @@
                         *ngFor="let col of columns"
                         [pSortableColumn]="col.field"
                       >
-                        {{ col.header }}
-                        <p-sortIcon [field]="col.field"></p-sortIcon>
+                        <div class="header-container"> 
+                          {{ col.header }}
+                          <p-sortIcon [field]="col.field"></p-sortIcon>
+                        </div>
                       </th>
                       <th style="width: 6rem;"></th>
                     </tr>
