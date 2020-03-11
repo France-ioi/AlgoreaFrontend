@@ -5,7 +5,7 @@
   background-color: $bk-color;
   margin-top: 0.8333rem;
   margin-bottom: 0.8333rem;
-  
+
   .section-header {
     display: flex;
     align-items: center;
@@ -68,7 +68,7 @@
         display: flex;
         align-items: center;
       }
-  
+
       .toggle-content {
         font-size: 2rem;
         color: $base-text-color;
@@ -85,12 +85,12 @@
 
     }
   }
-  
+
   .section-content {
-    padding: 1.25rem 1.6667rem 1.25rem 5.8333rem;
+    padding: 1.25rem 1.6667rem 5rem 5.8333rem;
     color: $base-text-color;
   }
-  
+
 }
 
 .section-container {
@@ -103,5 +103,3 @@
     @include section-format($section-danger-color, $section-danger-handle-color, $section-danger-handle-border-color)
   }
 }
-
-
