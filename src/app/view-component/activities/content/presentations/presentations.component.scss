@@ -3,6 +3,7 @@
 .presentation-list-container {
   display: flex;
   flex-direction: column;
+  margin: 0 2rem 0 6rem;
 
   app-presentation-item {
     display: block;
