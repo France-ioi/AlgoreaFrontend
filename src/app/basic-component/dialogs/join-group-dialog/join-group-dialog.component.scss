@@ -19,7 +19,7 @@
 
     i {
       color: white;
-      font-size: 1rem;
+      font-size: 1.2rem;
     }
   }
 
@@ -35,7 +35,7 @@
     width: 2.0833rem;
     color: $base-color;
     cursor: pointer;
-    font-size: 1rem;
+    font-size: 1.2rem;
   }
 }
 
@@ -83,7 +83,7 @@
 
     .description {
       color: $base-text-color;
-      font-size: 1rem;
+      font-size: 1.2rem;
     }
 
     .group-administrators {
@@ -94,7 +94,7 @@
 
       .admin-label {
         font-style: italic;
-        font-size: 1rem;
+        font-size: 1.2rem;
         color: $base-text-color;
         margin-right: 0.8333rem;
       }
@@ -103,7 +103,7 @@
         display: flex;
         align-items: center;
         margin: 0 0.4167rem;
-        font-size: 1rem;
+        font-size: 1.2rem;
 
         .user-icon {
           margin-right: 0.4167rem;
@@ -141,7 +141,7 @@
     margin: 1.6667rem 5.3333rem;
 
     .feedback-label {
-      font-size: 1rem;
+      font-size: 1.2rem;
       color: $base-text-color;
     }
   }
@@ -164,7 +164,7 @@
   
     .form-item-label {
       display: block;
-      font-size: 1rem;
+      font-size: 1.2rem;
       width: 13.3333rem;
       color: #5C5C5C;
       font-weight: bold;

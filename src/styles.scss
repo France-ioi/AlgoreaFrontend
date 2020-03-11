@@ -48,7 +48,7 @@ body .ui-widget {
       .content-item {
         display: flex;
         align-items: center;
-        font-size: 1rem;
+        font-size: 1.2rem;
         margin: 0.1667rem;
         padding: 0.4167rem;
         cursor: pointer;
@@ -76,7 +76,7 @@ body .ui-widget {
 
       .content-title {
         text-transform: uppercase;
-        font-size: 1rem;
+        font-size: 1.2rem;
         padding: 0.0833rem;
         border-bottom: 0.0833rem solid #4587D4;
         display: flex;
@@ -162,7 +162,7 @@ body .ui-widget {
         display: flex;
         align-items: center;
         padding: 0.4167rem;
-        font-size: 1rem;
+        font-size: 1.2rem;
         cursor: pointer;
 
         &:last-child {
@@ -247,7 +247,7 @@ body .ui-widget {
       span.switch-label {
         color: #7D7D7D;
         flex: 1;
-        font-size: 1rem;
+        font-size: 1.2rem;
         margin-right: 0.8333rem;
 
         &.checked {
@@ -273,6 +273,20 @@ body .ui-widget {
     }
   }
 
+}
+
+
+/*
+*  COMMONS
+*/
+
+.tri-tag {
+  position: absolute;
+  top: -.8rem;
+  left: 3rem;
+  border-left: 1rem solid transparent;
+  border-right: 1rem solid transparent;
+  border-bottom: .8rem solid $light-color;
 }
 
 @media screen and (max-width: 1200px) {

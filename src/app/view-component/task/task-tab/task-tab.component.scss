@@ -166,6 +166,11 @@
       padding-left: 5.8333rem;
       color: $base-color;
       font-size: 1.6rem;
+      margin: 2rem 0;
+    }
+    .validation-text+* {
+      margin-top: 0;
+      padding-top: 0 !important;
     }
 
     .data-list-container {
@@ -383,7 +388,7 @@
       .group-situation-data {
         display: flex;
         flex-direction: column;
-        font-size: 1rem;
+        font-size: 1.2rem;
         height: 5.8333rem;
         cursor: pointer;
 
@@ -495,7 +500,7 @@
     .table-icon {
       display: inline-block;
       color: $base-color;
-      font-size: 1rem;
+      font-size: 1.2rem;
       cursor: pointer;
       width: 1.6667rem;
       height: 1.6667rem;
@@ -543,7 +548,7 @@
 
         &-label {
           flex: 1;
-          font-size: 1rem;
+          font-size: 1.2rem;
           color: #8D8D8D;
         }
       }

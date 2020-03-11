@@ -22,7 +22,7 @@
     flex: 1;
     .back-label {
       color: $base-color;
-      font-size: 1rem;
+      font-size: 1.2rem;
       cursor: pointer;
     }
   }
@@ -54,7 +54,7 @@
       border-bottom: 0.0833rem solid #F0F0F0;
       display: flex;
       color: $dark-text-color;
-      font-size: 1rem;
+      font-size: 1.2rem;
       min-height: 4.1667rem;
 
       &.creator {
@@ -210,7 +210,7 @@
 
         .user-name {
           font-weight: bold;
-          font-size: 1rem;
+          font-size: 1.2rem;
           color: $dark-text-color;
           margin-top: 0.4167rem;
         }
