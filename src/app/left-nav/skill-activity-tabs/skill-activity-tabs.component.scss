@@ -90,7 +90,6 @@ $border-radius: .5rem;
 
         &.ui-state-active {
           background-color: $base-color;
-          z-index: 1;
 
           &:before {
             content:" ";
@@ -104,6 +103,7 @@ $border-radius: .5rem;
             position: absolute;
             bottom:0;
             right:-1rem;
+            z-index: 1;
           }
 
           &:last-child:before {
