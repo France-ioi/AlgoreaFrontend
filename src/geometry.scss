@@ -1,11 +1,12 @@
 $border-radius: .5rem;
 $drop-shadow: 0 .1rem rgba(0,0,0, 0.2);
+$border-filet: solid .1rem $dark-transparency-color;
 
 /*
 * Common blocs
 */
 
-    //Footer
+    // Footer
     @mixin footer-add {
       margin-left: -5.8333rem;
       margin-right: -1.6667rem;
@@ -17,4 +18,19 @@ $drop-shadow: 0 .1rem rgba(0,0,0, 0.2);
       justify-content: center;
       background-color: $light-color;
       position: relative;
+    }
+
+
+
+    // Key icon
+    @mixin lock-key {
+      width: 2.5rem;
+      height: 2rem;
+      font-size: 1.2rem;
+      color: $secondary-color;
+      background-color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-bottom-left-radius: 1rem;
     }

@@ -1,4 +1,5 @@
 @import 'src/colors.scss';
+@import 'src/geometry.scss';
 
 $presentation-bk-color: #EFEFEF;
 
@@ -34,30 +35,23 @@ $presentation-bk-color: #EFEFEF;
     min-width: 0;
 
     .presentation-lock-key {
+      @include lock-key;
       position: absolute;
       right: 0;
       top: 0;
-      width: 2.0833rem;
-      height: 1.6667rem;
-      font-size: 1.2rem;
-      color: $secondary-color;
-      background-color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-bottom-left-radius: 0.8333rem;
     }
 
     .presentation-item-title {
       background-color: $presentation-bk-color;
-      padding: 0.8333rem;
+      padding: 2rem;
       display: flex;
       flex-direction: column;
       flex: 1;
-      
+
       .presentation-item-chapter-title {
-        padding-top: 1.25rem;
-        font-size: 1.6667rem;
+        // padding-top: 1.25rem;
+        font-size: 1.6rem;
+        font-weight: 400;
         color: $dark-text-color;
         text-overflow: ellipsis;
         overflow: hidden;
@@ -65,19 +59,20 @@ $presentation-bk-color: #EFEFEF;
       }
 
       .presentation-item-chapter-desc {
-        font-size: 1.2rem;
+        // font-size: 1.2rem;
         color: $base-text-color;
-        margin-top: 0.8333rem;
+        margin-top: .5rem;
       }
     }
 
     .presentation-bottom-row {
       display: flex;
       align-items: center;
-      padding: 0.8333rem;
+      height: 4rem;
+      padding: 0 2rem;
       background-color: $presentation-bk-color;
-      border-bottom-right-radius: 0.4167rem;
-      border-top: 0.0833rem solid #E1E1E1;
+      border-bottom-right-radius: $border-radius;
+      border-top: $border-filet;
 
       app-state-widget {
         flex: 1;
