@@ -52,7 +52,7 @@ app-sub-section {
   align-items: center;
 
   span.label {
-    font-size: 1rem;
+    font-size: 1.2rem;
     font-weight: bold;
     color: #7C7C7C;
     margin-right: 1.6667rem;
@@ -95,7 +95,7 @@ app-sub-section {
 }
 
 span.comment {
-  font-size: 1rem;
+  font-size: 1.2rem;
   margin-bottom: 0.4167rem;
 }
 
@@ -104,7 +104,7 @@ span.comment {
   flex-direction: column;
 
   span.comment {
-    font-size: 1rem;
+    font-size: 1.2rem;
   }
 
   .auto-create {
@@ -127,7 +127,7 @@ span.comment {
       color: $nav-bk-color;
       font-weight: bold;
       margin-right: 1.25rem;
-      font-size: 1rem;
+      font-size: 1.2rem;
       flex: 1;
 
       &.orange {

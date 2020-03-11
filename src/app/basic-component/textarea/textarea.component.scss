@@ -11,7 +11,7 @@ textarea {
   box-shadow: 0.0833rem 0.0833rem #C9CFD7 inset;
   border-radius: 0.4167rem;
   border: none;
-  font-size: 1rem;
+  font-size: 1.2rem;
   padding-left: 2.5rem;
   padding-top: 0.5rem;
 
@@ -33,7 +33,7 @@ textarea {
   left: 0.6667rem;
   top: 0.6667rem;
   color: $base-text-color;
-  font-size: 1rem;
+  font-size: 1.2rem;
 }
 
 :host ::ng-deep .ui-inputtext:enabled:focus:not(.ui-state-error) {

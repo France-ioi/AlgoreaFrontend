@@ -23,7 +23,7 @@
       text-transform: uppercase;
       color: $nav-bk-color;
       font-weight: bold;
-      font-size: 1rem;
+      font-size: 1.2rem;
       flex-basis: 40%;
       cursor: pointer;
     }
@@ -34,7 +34,7 @@
       flex-direction: column;
 
       .content-title {
-        font-size: 1rem;
+        font-size: 1.2rem;
         color: $base-text-color;
       }
     }

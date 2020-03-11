@@ -23,7 +23,7 @@
     border-radius: 1.6667rem;
     background-color: $base-color;
     color: white;
-    font-size: 1rem;
+    font-size: 1.2rem;
     height: 1.6667rem;
     padding-left: 0.8333rem;
     padding-right: 0.8333rem;
@@ -73,7 +73,7 @@
         background-color: #2B588B;
         padding-left: 0.8333rem;
         padding-right: 3.3333rem;
-        font-size: 1rem;
+        font-size: 1.2rem;
         border: none;
 
         &:focus {
@@ -102,7 +102,7 @@
       &-label {
         flex: 1;
         color: white;
-        font-size: 1rem;
+        font-size: 1.2rem;
       }
 
       &-control {
@@ -117,7 +117,7 @@
 
           .label {
             color: #466991;
-            font-size: 1rem;
+            font-size: 1.2rem;
             display: inline-block;
             line-height: 1rem;
             height: 1rem;
@@ -144,7 +144,7 @@
             padding-right: 1.25rem;
             background-color: #264F7E;
             border-radius: 1.25rem;
-            font-size: 1rem;
+            font-size: 1.2rem;
             cursor: pointer;
 
             &.open {
@@ -194,7 +194,7 @@
     .search-slider {
       margin: 0.4167rem;
       color: white;
-      font-size: 1rem;
+      font-size: 1.2rem;
 
       .rate-label {
         background-color: #264F7E;

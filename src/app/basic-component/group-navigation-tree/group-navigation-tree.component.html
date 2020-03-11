@@ -42,8 +42,8 @@
       </span>
       <span class="node-item-content" [ngClass]="{connected: node.connected}">
         <span (click)="nodeExpand($event, node)" class="leaf node-select">
-          <i *ngIf="node.checked" class="pi pi-check" style="font-size: 1rem;"></i>
-          <i *ngIf="!node.checked" class="pi pi-circle-on" style="font-size: 1rem;"></i>
+          <i *ngIf="node.checked" class="pi pi-check" style="font-size: 1.2rem;"></i>
+          <i *ngIf="!node.checked" class="pi pi-circle-on" style="font-size: 1.2rem;"></i>
         </span>
         <span class="node-label">
           <app-state-widget *ngIf="!navigation && node.category && showCategory" [disabled]="!node.connected" [type]="node.category.type" [icon]="node.category.icon" (click)="nodeCheck($event, node)"></app-state-widget>

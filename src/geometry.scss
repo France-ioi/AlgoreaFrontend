@@ -1,1 +1,20 @@
 $border-radius: .5rem;
+$drop-shadow: 0 .1rem rgba(0,0,0, 0.2);
+
+/*
+* Common blocs
+*/
+
+    //Footer
+    @mixin footer-add {
+      margin-left: -5.8333rem;
+      margin-right: -1.6667rem;
+      margin-bottom: -5rem;
+      padding-top: 2rem;
+      padding-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: $light-color;
+      position: relative;
+    }
