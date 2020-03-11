@@ -140,6 +140,7 @@ $header-height: 7.5rem;
       height: 3rem;
       line-height: 3rem;
       font-size: 1rem;
+      // z-index: 1;
 
       &.selected {
         background-color: white;
@@ -147,7 +148,6 @@ $header-height: 7.5rem;
         border-bottom-right-radius: 9rem;
       }
 
-      z-index: 1;
     }
 
     .group-list {
@@ -218,7 +218,7 @@ $header-height: 7.5rem;
   .overlay-skills {
     position: fixed;
     left: 0;
-    width: 25rem;
+    width: 34rem;
     top: calc(100vh - 4.1667rem);
     z-index: 120;
   }
