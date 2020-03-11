@@ -7,7 +7,7 @@
       &.title {
         width: 100%;
       }
-  
+
       &.non-title:not(.score) {
         width: 9rem;
       }
@@ -50,7 +50,7 @@
     padding: 0.4167rem;
     margin-top: 0.4167rem;
     margin-bottom: 0.4167rem;
-    font-size: 1rem;
+    // font-size: 1.2rem;
     vertical-align: middle;
 
     span.icon {
@@ -58,7 +58,7 @@
       align-items: center;
       justify-content: center;
       color: white;
-      font-size: 1rem;
+      // font-size: 1rem;
       width: 2.0833rem;
       height: 2.0833rem;
       border-radius: 9rem;
@@ -84,7 +84,7 @@
       width: 12.5rem;
       display: block;
     }
-    
+
     .score-wrapper {
       float: right;
       width: auto;

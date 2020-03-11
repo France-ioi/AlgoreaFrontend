@@ -14,7 +14,7 @@
   &.no-border {
     border-bottom: none;
   }
-  
+
   .section-header {
     display: flex;
     align-items: center;
@@ -63,9 +63,9 @@
       color: $base-color;
     }
   }
-  
+
   .section-content {
-    padding: 1.25rem 0 1.25rem 5.8333rem;
+    padding: 1.25rem 0 5rem 5.8333rem;
     color: $base-text-color;
   }
 }
