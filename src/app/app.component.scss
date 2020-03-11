@@ -1,4 +1,6 @@
 @import "src/colors.scss";
+@import "src/geometry.scss";
+
 
 .container {
   // max-width: 960px;
@@ -8,7 +10,7 @@
   // background-color: $base-bk-color;
 
   .left {
-    width: 34rem;
+    width: $left-panel-size;
     position: fixed;
     left: 0;
     top: 0;
@@ -17,7 +19,7 @@
     height: 100%;
 
     &.collapsed {
-      left: -25rem;
+      left: calc(0rem - #{$left-panel-size});
       transition: left 1s;
       -webkit-transition: left 1s;
       -moz-transition: left 1s;
@@ -34,7 +36,7 @@
 
   .top-bar {
     position: fixed;
-    left: 34rem;
+    left: $left-panel-size;
     top: 0;
     right: 0;
     height: 3.75rem;
