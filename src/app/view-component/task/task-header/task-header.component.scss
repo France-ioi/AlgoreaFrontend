@@ -10,6 +10,14 @@
   // margin-bottom: 0.8333rem;
   margin-right: 2rem;
   min-height: 11.7rem;
+  position: relative;
+
+  app-skill-progress {
+    position: absolute;
+    top:50%;
+    width: 100%;
+    transform: translateY(3rem);
+  }
 
   .task-header {
     // padding-top: 1.6667rem;

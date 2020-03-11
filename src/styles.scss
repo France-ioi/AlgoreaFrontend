@@ -290,43 +290,30 @@ body .ui-widget {
 }
 
 @media screen and (max-width: 1200px) {
-  html {
-    font-size: 12px;
+  html { font-size: 12px;
   }
 }
 
 @media screen and (min-width: 1200px) and (max-width: 1400px) {
-  html {
-    font-size: 72.5%;
-  }
+  html { font-size: 72.5%; }
 }
 
 @media screen and (min-width: 1400px) and (max-width: 1600px) {
-  html {
-    font-size: 82.5%;
-  }
+  html { font-size: 82.5%; }
 }
 
 @media screen and (min-width: 1600px) and (max-width: 1900px) {
-  html {
-    font-size: 92.5%;
-  }
+  html { font-size: 92.5%; }
 }
 
 @media screen and (min-width: 1900px) and (max-width: 2400px) {
-  html {
-    // font-size: 95.5%;
-  }
+  html { /* font-size: 95.5%; */ }
 }
 
 @media screen and (min-width: 2400px) and (max-width: 3000px) {
-  html {
-    // font-size: 30px;
-  }
+  html { /* font-size: 30px; */ }
 }
 
 @media screen and (min-width: 3000px) {
-  html {
-    // font-size: 32px;
-  }
+  html { /* font-size: 32px; */ }
 }
