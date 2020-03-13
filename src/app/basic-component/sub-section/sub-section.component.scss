@@ -1,4 +1,5 @@
 @import 'src/colors.scss';
+@import 'src/geometry.scss';
 
 :host {
   display: block;
@@ -20,14 +21,7 @@
     align-items: center;
 
     .section-handler {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-color: $base-color;
-      width: 2.5rem;
-      height: 2.5rem;
-      border-radius: 9rem;
-      position: relative;
+      @include section-handler($base-color,$dark-color);
 
       i {
         color: white;

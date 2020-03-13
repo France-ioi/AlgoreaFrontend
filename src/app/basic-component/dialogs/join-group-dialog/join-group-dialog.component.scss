@@ -1,21 +1,12 @@
 @import "src/colors.scss";
+@import "src/geometry.scss";
 
 .dialog-header {
   display: flex;
   align-items: center;
 
   .dialog-handler {
-    display: flex;
-    background-color: $base-color;
-    border-left: 0.25rem solid $dark-color;
-    width: 4.5833rem;
-    height: 2.5rem;
-    border-top-right-radius: 9rem;
-    border-bottom-right-radius: 9rem;
-    position: relative;
-    align-items: center;
-    justify-content: flex-end;
-    padding-right: 0.8333rem;
+    @include section-handler($base-color,$dark-color);
 
     i {
       color: white;
@@ -112,7 +103,7 @@
           justify-content: center;
           color: $base-color;
         }
-        
+
         .user-name {
           color: $base-text-color;
           margin: 0.4167rem;
@@ -161,7 +152,7 @@
         flex: unset;
       }
     }
-  
+
     .form-item-label {
       display: block;
       font-size: 1.2rem;
@@ -173,7 +164,7 @@
         color: $section-danger-handle-color;
       }
     }
-  
+
     .form-item-control {
       flex: 1;
     }

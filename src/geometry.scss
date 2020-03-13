@@ -1,3 +1,5 @@
+@import 'src/colors.scss';
+
 $border-radius: .5rem;
 $drop-shadow: 0 .1rem rgba(0,0,0, 0.2);
 $border-filet: solid .1rem $dark-transparency-color;
@@ -34,4 +36,23 @@ $left-panel-size: 34rem;
       align-items: center;
       justify-content: center;
       border-bottom-left-radius: 1rem;
+    }
+
+    // Section handler
+    @mixin section-handler($handle-color, $handle-border-color) {
+      display: flex;
+      background-color: $handle-color;
+      border-left: .3rem solid $handle-border-color;
+      width: 5rem;
+      height: 3rem;
+      border-top-right-radius: 1.5rem;
+      border-bottom-right-radius: 1.5rem;
+      position: relative;
+      justify-content: flex-end;
+      align-items: center;
+      padding-right: 1rem;
+
+      i {
+        color: white;
+      }
     }

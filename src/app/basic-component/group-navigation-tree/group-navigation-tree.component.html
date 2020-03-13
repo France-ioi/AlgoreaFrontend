@@ -10,10 +10,10 @@
       </span>
       <span class="node-item-content" [ngClass]="{connected: node.connected}">
         <span (click)="nodeExpand($event, node)" class="node-select">
-          <i *ngIf="!node.expanded" class="fa fa-plus-square" style="font-size: 1.3333rem;"></i>
-          <i *ngIf="node.expanded" class="fa fa-minus-square" style="font-size: 1.3333rem;"></i>
+          <i *ngIf="!node.expanded" class="fa fa-plus-square" style="font-size: 1.2rem;"></i>
+          <i *ngIf="node.expanded" class="fa fa-minus-square" style="font-size: 1.2rem;"></i>
         </span>
-        <span *ngIf="node.icons" class="node-icon" (click)="nodeCheck($event, node)"><i class="{{node.icons}}" style="font-size: 1.3333rem;"></i></span>
+        <span *ngIf="node.icons" class="node-icon" (click)="nodeCheck($event, node)"><i class="{{node.icons}}" style="font-size: 1.2rem;"></i></span>
 
         <span class="node-label">
           <app-state-widget *ngIf="!navigation && node.category && showCategory" [disabled]="!node.connected" [type]="node.category.type" [icon]="node.category.icon" (click)="nodeCheck($event, node)"></app-state-widget>

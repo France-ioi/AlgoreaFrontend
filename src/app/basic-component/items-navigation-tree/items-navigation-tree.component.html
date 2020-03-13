@@ -22,12 +22,12 @@
           <i
             *ngIf="!node.expanded && !node.ring"
             class="fa fa-folder"
-            style="font-size: 1.3333rem;"
+            style="font-size: 1.2rem;"
           ></i>
           <i
             *ngIf="node.expanded && !node.ring"
             class="fa fa-folder-open"
-            style="font-size: 1.3333rem;"
+            style="font-size: 1.2rem;"
           ></i>
           <app-score-ring
             *ngIf="node.progress && node.ring"
@@ -40,7 +40,7 @@
           ></app-score-ring>
         </span>
         <span *ngIf="node.icons" class="node-icon"
-          ><i class="{{ node.icons }}" style="font-size: 1.3333rem;"></i
+          ><i class="{{ node.icons }}" style="font-size: 1.2rem;"></i
         ></span>
         <span (click)="nodeCheck($event, node)" class="node-label">
           <span class="label-container">
@@ -48,10 +48,10 @@
               {{ node.title }}
             </span>
             <span class="node-state" *ngIf="node.state === 'locked'">
-              <i class="fa fa-key" style="font-size: 1.3333rem;"></i>
+              <i class="fa fa-key" style="font-size: 1.2rem;"></i>
             </span>
             <span class="node-state" *ngIf="node.state === 'never opened'">
-              <i class="fa fa-lock" style="font-size: 1.3333rem;"></i>
+              <i class="fa fa-lock" style="font-size: 1.2rem;"></i>
             </span>
           </span>
           <app-skill-progress
@@ -106,10 +106,10 @@
               {{ node.title }}
             </span>
             <span class="node-state" *ngIf="node.state === 'locked'">
-              <i class="fa fa-key" style="font-size: 1.3333rem;"></i>
+              <i class="fa fa-key" style="font-size: 1.2rem;"></i>
             </span>
             <span class="node-state" *ngIf="node.state === 'never opened'">
-              <i class="fa fa-lock" style="font-size: 1.3333rem;"></i>
+              <i class="fa fa-lock" style="font-size: 1.2rem;"></i>
             </span>
           </span>
           <app-skill-progress
