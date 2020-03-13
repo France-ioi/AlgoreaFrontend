@@ -1,18 +1,12 @@
 @import "src/colors.scss";
+@import "src/geometry.scss";
 
 .dialog-header {
   display: flex;
   align-items: center;
 
   .dialog-handler {
-    display: block;
-    background-color: $base-color;
-    border-left: 0.25rem solid $dark-color;
-    width: 4.5833rem;
-    height: 2.5rem;
-    border-top-right-radius: 9rem;
-    border-bottom-right-radius: 9rem;
-    position: relative;
+    @include section-handler($base-color,$dark-color);
 
     i {
       color: white;

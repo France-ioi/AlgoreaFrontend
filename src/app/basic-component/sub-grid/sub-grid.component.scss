@@ -5,7 +5,9 @@
   .ui-table-tbody > tr {
     background-color: transparent;
     display: flex;
-    border-bottom: 0.0833rem solid #D1D9E5;
+    border-bottom: 0.1rem solid $dark-transparency-color;
+    height: 4rem;
+    line-height: 2.3rem;
   }
 
   .ui-table-tbody > tr:last-child {
@@ -19,7 +21,7 @@
   .ui-table-tbody > tr > td {
     border: none;
     background-color: transparent;
-    font-size: 1.2rem;
+    // font-size: 1.2rem;
 
     span.table-icon {
       margin-right: 0.8333rem;

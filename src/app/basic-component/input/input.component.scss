@@ -1,9 +1,10 @@
 @import 'src/colors.scss';
+@import 'src/geometry.scss';
 
 .input-wrapper {
   display: flex;
   border-radius: 0.4167rem;
-  height: 2.6667rem;
+  height: 3rem;
   position: relative;
 
   &.large {
@@ -39,6 +40,7 @@
   }
 
   input {
+    font-family: "titillium", sans-serif;
     width: 100%;
     display: flex;
     background-color: #D3DBE7;
@@ -46,7 +48,7 @@
     box-shadow: 0 0.0833rem #C9CFD7 inset;
     border-radius: 0.4167rem;
     padding-left: 2.5rem;
-    font-size: 1.3333rem;
+    font-size: 1.2rem;
     line-height: 2.6667rem;
     color: $base-text-color;
 
@@ -65,7 +67,7 @@
       font-size: 1.2rem;
     }
   }
-    
+
   input::-webkit-outer-spin-button,
   input::-webkit-inner-spin-button {
     -webkit-appearance: none;
@@ -77,11 +79,11 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 2.8333rem;
+    width: 3rem;
     color: white;
     background-color: $base-color;
-    border-top-right-radius: 0.4167rem;
-    border-bottom-right-radius: 0.4167rem;
+    border-top-right-radius: $border-radius;
+    border-bottom-right-radius: $border-radius;
     cursor: pointer;
   }
 

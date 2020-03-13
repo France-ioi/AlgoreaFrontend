@@ -1,10 +1,12 @@
 @import 'src/colors.scss';
+@import 'src/geometry.scss';
 
 @mixin section-format($bk-color, $handle-color, $handle-border-color) {
   border-bottom: 0.0833rem solid $light-border-color;
   background-color: $bk-color;
-  margin-top: 0.8333rem;
-  margin-bottom: 0.8333rem;
+  border-radius: $border-radius;
+  margin-top: 0;
+  margin-bottom: 3rem;
 
   .section-header {
     display: flex;
@@ -15,21 +17,12 @@
     }
 
     .section-handler {
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      background-color: $handle-color;
-      border-left: 0.25rem solid $handle-border-color;
-      width: 4.5833rem;
-      height: 2.5rem;
-      border-top-right-radius: 9rem;
-      border-bottom-right-radius: 9rem;
-      position: relative;
+      @include section-handler($handle-color,$handle-border-color);
 
-      i {
-        color: white;
-        margin-right: 0.8333rem;
-      }
+      // i {
+      //   color: white;
+      //   margin-right: 0.8333rem;
+      // }
 
       .score-container {
         width: 2.6667rem;
@@ -43,13 +36,13 @@
     }
 
     .section-header-content {
-      padding-top: 1.25rem;
-      padding-bottom: 1.25rem;
+      padding-top: 1.5rem;
+      padding-bottom: 1.5rem;
       display: flex;
       align-items: center;
       flex: 1;
-      margin-right: 0.8333rem;
-      border-bottom: 0.0833rem solid transparent;
+      margin-right: 2rem;
+      // border-bottom: 0.0833rem solid transparent;
       position: relative;
 
       &.show-border {
@@ -87,7 +80,7 @@
   }
 
   .section-content {
-    padding: 1.25rem 1.6667rem 5rem 5.8333rem;
+    padding: 0 2rem 3rem 5.8333rem;
     color: $base-text-color;
   }
 
