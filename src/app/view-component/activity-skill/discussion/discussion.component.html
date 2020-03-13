@@ -4,7 +4,7 @@
   label="Discussions related to this activities"
 >
   <div class="section-for-sub">
-    <div style="background-color: #F1F2F7; margin-bottom: 1.6667rem;">
+    <div class="selection-bk">
       <app-selection type="square" [items]="sels"></app-selection>
     </div>
     <app-grid-filter-bar>
@@ -29,7 +29,7 @@
           <th style="width: 4.1667rem;"></th>
           <ng-container *ngFor="let col of columns">
             <th *ngIf="col.field !== 'progress'" [pSortableColumn]="col.field">
-              <div class="header-container"> 
+              <div class="header-container">
                 {{ col.header }}
                 <p-sortIcon [field]="col.field"></p-sortIcon>
               </div>

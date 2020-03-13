@@ -7,6 +7,12 @@
 .section-for-sub {
   position: relative;
 
+  .selection-bk {
+    background-color: $base-bk-color;
+    width: 56rem;
+    margin: 0 auto 2rem;
+  }
+
   app-grid {
     margin-left: -4.1667rem;
     margin-right: -1.6667rem;
