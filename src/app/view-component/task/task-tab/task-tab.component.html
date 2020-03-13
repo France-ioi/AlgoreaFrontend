@@ -257,7 +257,7 @@
                         *ngFor="let col of columns"
                         [pSortableColumn]="col.field"
                       >
-                        <div class="header-container"> 
+                        <div class="header-container">
                           {{ col.header }}
                           <p-sortIcon [field]="col.field"></p-sortIcon>
                         </div>
@@ -576,6 +576,24 @@
                         <div
                           class="group-situation-data"
                           [ngStyle]="{ 'min-width.rem': columnWidth }"
+                          [ngClass]="{
+                            cross: rowData[idx].progress.isFailed,
+                            'not-started':
+                              !rowData[idx].progress.isFailed &&
+                              !rowData[idx].progress.isStarted,
+                            success:
+                              rowData[idx].progress.isValidated &&
+                              rowData[idx].progress.displayedScore === 100,
+                            'in-progress':
+                              !rowData[idx].progress.isFailed &&
+                              rowData[idx].progress.isValidated &&
+                              rowData[idx].progress.displayedScore > 0 &&
+                              rowData[idx].progress.displayedScore < 100,
+                            'no-score':
+                              !rowData[idx].progress.isFailed &&
+                              rowData[idx].progress.isStarted &&
+                              rowData[idx].progress.displayedScore === 0
+                          }"
                         >
                           <div
                             class="situation-top"
@@ -636,27 +654,7 @@
                               <span>{{ rowData[idx].attempts }}</span>
                             </span>
                           </div>
-                          <div
-                            class="situation-bottom"
-                            [ngClass]="{
-                              cross: rowData[idx].progress.isFailed,
-                              'not-started':
-                                !rowData[idx].progress.isFailed &&
-                                !rowData[idx].progress.isStarted,
-                              success:
-                                rowData[idx].progress.isValidated &&
-                                rowData[idx].progress.displayedScore === 100,
-                              'in-progress':
-                                !rowData[idx].progress.isFailed &&
-                                rowData[idx].progress.isValidated &&
-                                rowData[idx].progress.displayedScore > 0 &&
-                                rowData[idx].progress.displayedScore < 100,
-                              'no-score':
-                                !rowData[idx].progress.isFailed &&
-                                rowData[idx].progress.isStarted &&
-                                rowData[idx].progress.displayedScore === 0
-                            }"
-                          >
+                          <div class="situation-bottom">
                             <app-score-ring
                               *ngIf="
                                 ((

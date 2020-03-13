@@ -1,0 +1,7 @@
+@import 'src/colors.scss';
+@import 'src/geometry.scss';
+
+// Main titles
+@mixin title-h2 {
+  font-size : 2rem;
+}
