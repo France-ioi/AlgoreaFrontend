@@ -1,5 +1,6 @@
 @import 'src/colors.scss';
 @import 'src/geometry.scss';
+@import 'src/typography.scss';
 
 :host {
   display: block;
@@ -9,8 +10,8 @@
 
 .section-container {
   padding: 2.0833rem 1.6667rem 1.25rem;
-  border-bottom: 0.0833rem solid #DEE4ED;
-  background-color: #ECF3FC;
+  border-bottom: .1rem solid rgba(46, 94, 149, .2);
+  background-color: $light-color;
 
   &.no-border {
     border-bottom: none;
@@ -20,16 +21,19 @@
     display: flex;
     align-items: center;
 
-    .section-handler {
+      .section-handler {
       @include section-handler($base-color,$dark-color);
-
-      i {
-        color: white;
+      width: 3rem;
+      border-radius: 50%;
+      border: none;
+      padding-right: 0;
+      justify-content: center;
       }
-    }
+
+
 
     .section-title {
-      font-size: 1.6667rem;
+      @include title-h2;
       color: $nav-bk-color;
       margin-left: 1.25rem;
       flex: 1;
@@ -59,7 +63,7 @@
   }
 
   .section-content {
-    padding: 1.25rem 0 5rem 5.8333rem;
+    padding: 2rem 0 5rem 4.2rem;
     color: $base-text-color;
   }
 }

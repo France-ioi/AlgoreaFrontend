@@ -1,4 +1,5 @@
 @import 'src/colors.scss';
+@import 'src/geometry.scss';
 
 :host ::ng-deep .ui-table {
 
@@ -39,7 +40,7 @@
   .ui-table-tbody > tr {
     background-color: #EFEFEF;
     display: flex;
-    border-bottom: 0.0833rem solid #E2E9F1;
+    border-bottom: $border-filet;
     margin-bottom: 0.1667rem;
     border-radius: 0.8333rem;
   }
@@ -138,7 +139,7 @@
         span {
           margin-right: 0.8333rem;
           cursor: pointer;
-          
+
           span {
             margin-right: 0.8333rem;
           }

@@ -25,9 +25,10 @@
       transform: translate(50%, 50%) skewX(45deg) rotate(-45deg);
       transform-origin: 0 50%;
       text-align: left;
-      padding-left: 1.6667rem;
+      padding-left: 3rem;
       color: #8c8c8c;
       overflow: visible;
+      font-size: 1.2rem;
 
       &-content {
         width: 15rem;

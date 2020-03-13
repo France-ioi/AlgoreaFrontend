@@ -303,16 +303,23 @@
       display: flex;
       flex-direction: column;
       padding-left: 0;
-      margin-left: -2.0833rem;
+      margin: 0;
 
       li {
-        display: flex;
-        flex-direction: column;
-        margin: 0.4167rem 0;
+        position: relative;
+        height: 4rem;
+        line-height: 4rem;
 
         span.skill-title {
-          margin-bottom: 0.4167rem;
+          // margin-bottom: 0.4167rem;
         }
+
+        app-skill-progress {
+          position: absolute;
+          bottom: 0;
+          left:0;
+        }
+
       }
     }
 
@@ -331,6 +338,7 @@
       &.compact-mode {
         .group-situation-data {
           height: 3.5833rem;
+          background-color: $secondary-color;
         }
       }
 
@@ -352,9 +360,10 @@
           transform: translate(50%, 50%) skewX(45deg) rotate(-45deg);
           transform-origin: 0 50%;
           text-align: left;
-          padding-left: 1.6667rem;
+          padding-left: 3rem;
           color: #8C8C8C;
           overflow: visible;
+          font-size: 1.2rem;
 
           &-content {
             width: 15rem;
@@ -416,8 +425,29 @@
         display: flex;
         flex-direction: column;
         font-size: 1.2rem;
-        height: 5.8333rem;
+        height: 6rem;
+        border-right: $border-filet;
         cursor: pointer;
+
+        &.cross {
+          background-color: #F9C6CD;
+        }
+
+        &.success {
+          background-color: #9ACC68;
+        }
+
+        &.in-progress {
+          background-color: $secondary-color;
+        }
+
+        &.not-started {
+          background-color: #F1F1F1;
+        }
+
+        &.no-score {
+          background-color: white;
+        }
 
         &-compact {
           display: flex;
@@ -430,15 +460,18 @@
         .situation-top {
           display: flex;
           align-items: center;
-          background-color: $light-text-color;
-          padding: 0.4167rem;
+          justify-content: center;
+          background-color: rgba(0, 0, 0, .1);
+          height: 2rem;
+          color: rgba(0,0,0,.4);
 
           & > span {
-            margin-right: 0.4167rem;
-            color: #858585;
+            font-size: .9rem;
+            font-weight: 700;
+            margin-right: .5rem;
 
             &.time-spent {
-              flex: 1;
+              // flex: 1;
             }
 
             i {
@@ -459,25 +492,6 @@
           font-weight: bold;
           padding: 0.4167rem;
 
-          &.cross {
-            background-color: #F9C6CD;
-          }
-
-          &.success {
-            background-color: #9ACC68;
-          }
-
-          &.in-progress {
-            background-color: $secondary-color;
-          }
-
-          &.not-started {
-            background-color: #F1F1F1;
-          }
-
-          &.no-score {
-            background-color: white;
-          }
 
           .situation-lock {
             display: flex;
@@ -513,10 +527,12 @@
           }
 
           & > span {
-            color: #585858;
+            color: rgba(0,0,0,.4);
 
             &.activity-date {
-              margin-left: 0.8333rem;
+              margin-left: 1rem;
+              font-size: .9rem;
+              font-weight: bold;
             }
           }
         }
