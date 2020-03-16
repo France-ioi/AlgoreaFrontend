@@ -1,4 +1,5 @@
 @import 'src/colors.scss';
+@import 'src/geometry.scss';
 
 .pending-request-container {
   margin-right: -1.6667rem;
@@ -8,7 +9,9 @@
     align-items: center;
 
     img {
-      border-radius: 2.9167rem;
+      border-radius: 50%;
+      width: 7rem;
+      height: auto;
     }
 
     .user-info {
@@ -16,7 +19,7 @@
       flex-direction: column;
       font-size: 1.2rem;
       color: $base-text-color;
-      margin-left: 1.25rem;
+      margin-left: 2rem;
 
       &-name {
         font-weight: bold;
@@ -29,6 +32,8 @@
 
       &-content {
         white-space: normal;
+        margin-top: 1.2rem;
+        line-height: 1.5rem;
       }
     }
   }
@@ -57,13 +62,15 @@
 
 :host ::ng-deep .pending-request-container .ui-table .ui-table-tbody > tr {
   background-color: transparent;
+  height: 13rem;
 
    > td {
     border-bottom-color: $section-border-color;
     font: 1rem;
 
     &:last-child {
-      border-left: 0.0833rem solid $section-border-color;
+      border-left: $border-filet;
+      text-align: center;
     }
   }
 

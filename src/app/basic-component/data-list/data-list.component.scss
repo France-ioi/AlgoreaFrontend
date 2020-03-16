@@ -1,4 +1,5 @@
 @import 'src/colors.scss';
+@import 'src/geometry.scss';
 
 .data-list-container {
   list-style: none;
@@ -6,8 +7,9 @@
 
   li {
     display: flex;
-    border-bottom: 0.0833rem solid $light-border-color;
-    padding: 0.5833rem 0;
+    border-bottom: $border-filet;
+    padding: 0.5rem 0;
+    height: 3rem;
 
     span {
 

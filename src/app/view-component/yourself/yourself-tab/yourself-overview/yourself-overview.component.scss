@@ -1,4 +1,5 @@
 @import 'src/colors.scss';
+@import 'src/geometry.scss';
 
 :host ::ng-deep app-section .ui-table .ui-table-tbody > tr > td {
   border-right: 0.0833rem solid #f0f0f0;
@@ -23,8 +24,8 @@ app-grid {
   li {
     display: flex;
     align-items: center;
-    height: 2.9167rem;
-    border-bottom: 0.0833rem solid #F4F4F4;
+    height: 4rem;
+    border-bottom: $border-filet;
 
     &:last-child {
       border-bottom: none;
@@ -34,9 +35,9 @@ app-grid {
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 2.0833rem;
-      height: 2.0833rem;
-      margin-right: 0.8333rem;
+      width: 2rem;
+      height: 2rem;
+      margin-right: .1rem;
 
       &.bronze {
         color: #F5A623;
@@ -52,7 +53,7 @@ app-grid {
     }
 
     .medal-title {
-      font-size: 1.2rem;
+      font-size: inherit;
       color: $base-text-color;
     }
   }

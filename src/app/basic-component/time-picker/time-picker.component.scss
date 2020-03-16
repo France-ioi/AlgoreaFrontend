@@ -26,7 +26,7 @@
 
   .time-display {
     height: 100%;
-    background-color: #DFE6EF;
+    background-color: $input-transparency-color;
     box-shadow: 0 0.0833rem #C9CFD7 inset;
     color: $base-text-color;
     display: flex;
@@ -63,7 +63,7 @@
   .time-edit {
     display: flex;
     width: 8.3333rem;
-    background-color: #DFE6EF;
+    background-color: $input-transparency-color;
     border: none;
     box-shadow: 0 0.0833rem #C9CFD7 inset;
     border-top-left-radius: 0.4167rem;

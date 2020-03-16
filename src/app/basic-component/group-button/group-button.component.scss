@@ -1,19 +1,20 @@
 @import 'src/colors.scss';
+@import 'src/geometry.scss';
 
 .button-container {
   display: flex;
   align-items: center;
+  justify-content: center;
   flex-direction: column;
-  width: 10.8333rem;
-  height: 10.8333rem;
-  margin: 0.4167rem;
-  padding: 0.8333rem;
-  background-color: #DFE6EF;
+  width: 13rem;
+  height: 13rem;
+  margin: 1rem;
+  padding: 0;
   cursor: pointer;
-  border-radius: 0.4167rem;
+  border-radius: $border-radius;
 
   &:hover, &.active {
-    background-color: #CBDFF6;
+    background-color: rgba(0, 0, 0, .05);
   }
 
   &.disabled {
@@ -24,7 +25,6 @@
   .button-label {
     margin-top: 0.8333rem;
     font-weight: bold;
-    font-size: 1.1667rem;
     text-transform: uppercase;
     color: $base-text-color;
   }

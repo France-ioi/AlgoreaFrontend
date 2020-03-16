@@ -14,7 +14,7 @@ $circular: 1rem;
       @extend %custom-pattern;
     }
     .ui-inputswitch-slider {
-      background-color: $bk-color;
+      background-color: $dark-transparency-color;
 
       &::before {
         background-color: $base-color;

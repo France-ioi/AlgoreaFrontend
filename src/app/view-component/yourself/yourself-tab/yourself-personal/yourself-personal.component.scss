@@ -3,10 +3,9 @@
 .modify-section {
   display: flex;
   border-bottom: 0.0833rem solid $light-border-color;
-  padding: 0.8333rem;
+  padding: 1rem 2rem;
 
   .section-comment {
-    padding-left: 1.6667rem;
     flex: 1;
     display: flex;
     align-items: center;

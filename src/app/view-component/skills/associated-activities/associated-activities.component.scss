@@ -1,11 +1,11 @@
 @import 'src/colors.scss';
+@import 'src/geometry.scss';
 
 .select-type-container {
-  margin-top: 0.8333rem;
-  margin-left: 4.1667rem;
-  margin-bottom: 0.8333rem;
-  border-radius: 0.8333rem;
-  padding: 0.8333rem;
+  margin: 1rem auto 2rem;
+  border-radius: $border-radius;
+  padding: 1rem;
+  max-width: 58rem;
 
   background-color: $base-bk-color;
 }
