@@ -6,7 +6,7 @@
 }
 
 :host ::ng-deep .ui-inputtext {
-  background-color: white;
+  background-color: $input-transparency-color;
   border: none;
   box-shadow: 0 0.0833rem #C9CFD7;
   border-radius: 9rem;

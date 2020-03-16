@@ -6,7 +6,7 @@
 }
 
 :host ::ng-deep .ui-inputtext {
-  background-color: #DFE6EF;
+  background-color: $input-transparency-color;
   border: none;
   box-shadow: 0 0.0833rem #C9CFD7 inset;
 }
@@ -22,7 +22,7 @@
   font-size: 1.2rem;
 
   .ui-dropdown-trigger {
-    background-color: #DFE6EF;
+    background-color: $input-transparency-color;
     box-shadow: 0 0.0833rem #C9CFD7 inset;
     right: unset;
     left: 0;

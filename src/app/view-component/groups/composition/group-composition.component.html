@@ -25,7 +25,7 @@
         <tr>
           <th style="width: 4rem;"></th>
           <th *ngFor="let col of columns" [pSortableColumn]="col.field">
-            <div class="header-container"> 
+            <div class="header-container">
               {{ col.header }}
               <p-sortIcon [field]="col.field"></p-sortIcon>
             </div>
@@ -56,7 +56,7 @@
       <ng-template #summaryTemplate let-table>
         <div style="text-align: left; display: flex; align-items: center;">
           <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-          <span style="margin-left: 0.8333rem; color: #9B9B9B; flex: 1;font-size: 1.2rem;">
+          <span style="margin-left: 2.7rem; color: #9B9B9B; flex: 1;font-size: 1.2rem;">
             Select all
           </span>
           <div class="export-tools">
@@ -87,13 +87,13 @@
     <div *ngIf="empty" class="empty-group">
       This group is empty, check below, the different ways to add users or sub-groups.
     </div>
-    <span class="tri-tag"></span>
   </div>
   <app-sub-section
     icon="fa fa-user-plus"
     label="Add {{groupTitle}}"
     tooltip="tooltip help"
   >
+    <span class="tri-tag"></span>
     <div class="button-container">
       <ng-container *ngFor="let item of subgroup">
         <app-group-button
@@ -222,12 +222,12 @@
       </div>
       <div class="batch-button-container">
         <app-button icon="fa fa-plus" label="Create batch" class="ui-button-rounded" (onClick)="onCreateBatch($event)"></app-button>
-      </div>      
+      </div>
     </app-switch-container>
   </app-sub-section>
-  <app-sub-section 
+  <app-sub-section
     *ngIf="!forGroup"
-    icon="fa fa-file-import" 
+    icon="fa fa-file-import"
     label="Import">
     <div class="import-csv">
       <span class="comment">Import members from a .csv file</span>

@@ -56,3 +56,49 @@ $left-panel-size: 34rem;
         color: white;
       }
     }
+
+    //Main ui-table-summary
+    @mixin main-tabs {
+      font-family: inherit;
+      border-right: .1rem solid $light-border-color;
+      font-size: 1.2rem;
+      height: 5rem;
+      border-radius: $border-radius $border-radius 0 0;
+    }
+
+    @mixin main-tab-active {
+        background-color: white;
+        border-right-color: transparent;
+        color: $base-color;
+        border-top: 0.3rem solid $base-color;
+        overflow: visible;
+
+        // &:before {
+        //   content:" ";
+        //   height: .3rem;
+        //   background-color: $base-color;
+        //   width: 100%;
+        //   position: absolute;
+        //   top: 0;
+        //   left: 0;
+        // }
+        &:before,
+        &:after {
+          content:" ";
+          height: 1rem;
+          width: 1rem;;
+          background-image:url('/assets/images/corner-tab.svg');
+          background-position: left;
+          background-repeat: no-repeat;
+          background-size: cover;
+          position: absolute;
+          bottom: 0;
+          left: -1rem;
+        }
+        &:after {
+          background-position: right;
+          bottom: 0;
+          left: auto;
+          right: -1rem;
+        }
+    }

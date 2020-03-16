@@ -1,4 +1,9 @@
 @import 'src/colors.scss';
+@import 'src/geometry.scss';
+
+.mat-tab-group {
+  font-family: inherit;
+}
 
 :host ::ng-deep .mat-tab-header {
   border-bottom: none;
@@ -8,25 +13,19 @@
     }
 
     .mat-tab-labels {
-      background-color: white;
+      // background-color: white;
       .mat-tab-label {
-        background-color: $base-bk-color;
-        border-right: 0.0833rem solid $light-border-color;
-        font-size: 1.2rem;
-        height: 3rem;
+        @include main-tabs;
 
         &.mat-tab-label-active {
-          background-color: white;
-          border-right-color: transparent;
-          color: $base-color;
-          border-top: 0.25rem solid $base-color;
+          @include main-tab-active;
         }
-        &.mat-tab-label-active + .mat-tab-label {
-          border-bottom-left-radius: 0.8333rem;
-        }
-        &.mat-tab-label-before-active {
-          border-bottom-right-radius: 0.8333rem;
-        }
+        // &.mat-tab-label-active + .mat-tab-label {
+        //   border-bottom-left-radius: 0.8333rem;
+        // }
+        // &.mat-tab-label-before-active {
+        //   border-bottom-right-radius: 0.8333rem;
+        // }
         .mat-tab-label-content {
           i {
             margin-right: 1.25rem;

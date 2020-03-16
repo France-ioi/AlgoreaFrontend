@@ -26,7 +26,7 @@
       width: 1.0833rem;
       height: 1.0833rem;
       .ui-chkbox-box {
-        background-color: #e5e5e5;
+        background-color: $dark-transparency-color;
         box-shadow: 0 0.0833rem #bbb inset;
         width: 1.0833rem;
         height: 1.0833rem;
@@ -111,6 +111,9 @@
     .ui-table-summary {
       border: none;
       background-color: white;
+      height: 5rem;
+      line-height: 5rem;
+      margin-bottom: -1.5rem;
 
       .export-tools {
         display: flex;
@@ -119,11 +122,11 @@
         font-size: 1.2rem;
 
         span {
-          margin-right: 0.8333rem;
+          margin-right: 1rem;
           cursor: pointer;
 
           span {
-            margin-right: 0.8333rem;
+            margin-right: 1rem;
           }
         }
       }
@@ -255,8 +258,4 @@
 
 :host ::ng-deep .ui-table-frozen-view tr {
   height: 6rem;
-
-  &:first-child {
-    height: 5.8333rem;
-  }
 }

@@ -17,7 +17,7 @@
     flex: 1;
     margin-left: 1.25rem;
     padding-bottom: 1.6667rem;
-    border-bottom: 0.0833rem solid #DEE4ED;
+    border-bottom: solid .1rem $dark-transparency-color;
 
     .header-title {
       text-transform: uppercase;
@@ -38,6 +38,6 @@
         color: $base-text-color;
       }
     }
-    
+
   }
 }

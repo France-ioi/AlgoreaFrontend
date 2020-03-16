@@ -4,9 +4,10 @@
   display: flex;
   align-items: center;
   margin-right: 1.25rem;
-  margin-top: 0.8333rem;
-  margin-bottom: 2.5rem;
+  // margin-top: 0.8333rem;
+  // margin-bottom: 2.5rem;
   background-color: $base-bk-color;
+  min-height: 11.7rem;
 
   &.small {
     height: 3.5833rem;
@@ -29,7 +30,7 @@
     div {
       display: flex;
       align-items: center;
-      margin-bottom: 0.8333rem;
+      margin-bottom: 1rem;
 
       span {
         color: #4A4A4A;
@@ -49,7 +50,7 @@
           margin-bottom: 0;
         }
       }
-      
+
     }
 
     span {
@@ -57,11 +58,13 @@
       align-items: center;
       color: $base-text-color;
       margin-bottom: 0.25rem;
-      font-size: 1.2rem;
-      line-height: 1rem;
+      font-size: inherit;
+      height: 1.5rem;
 
       i {
         margin-right: 0.6667rem;
+        height: 100%;
+        line-height: 1.5rem;
       }
     }
   }
