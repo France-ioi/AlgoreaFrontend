@@ -1,10 +1,13 @@
 @import 'src/colors.scss';
+@import 'src/geometry.scss';
 
 .time-picker {
   display: flex;
-  border-radius: 0.4167rem;
-  height: 2.6667rem;
+  border-radius: $border-radius;
+  height: 3rem;
+  width: 12rem;
   position: relative;
+  color: $dark-text-color;
 
   &.orange {
     .time-button {
@@ -27,19 +30,19 @@
   .time-display {
     height: 100%;
     background-color: $input-transparency-color;
-    box-shadow: 0 0.0833rem #C9CFD7 inset;
+    box-shadow: 0 .1rem #C9CFD7 inset;
     color: $base-text-color;
     display: flex;
     align-items: center;
-    padding-left: 0.8333rem;
-    border-top-left-radius: 0.4167rem;
-    border-bottom-left-radius: 0.4167rem;
+    padding-left: 1rem;
+    border-top-left-radius: $border-radius;
+    border-bottom-left-radius: $border-radius;
 
     .time-input {
       display: flex;
       align-items: center;
-      margin-left: 0.8333rem;
-      margin-right: 0.8333rem;
+      margin-left: 1rem;
+      margin-right: 1rem;
     }
   }
 
@@ -48,29 +51,35 @@
     font-weight: 400;
     content: "\f017";
     position: absolute;
-    left: 0.6667rem;
-    top: 0.75rem;
+    left: 0;
+    top: 0;
+    width: 3rem;
+    height: 3rem;
+    line-height: 3rem;
+    text-align: center;
   }
 
   &::after {
     position: absolute;
-    right: 3.3333rem;
+    right: 4rem;
     top: 0.6667rem;
     content: "mn";
-    color: $base-text-color;
+    color: $dark-text-color;
+    font-family: "titillium", sans-serif;
   }
 
   .time-edit {
     display: flex;
-    width: 8.3333rem;
+    width: 9rem;
     background-color: $input-transparency-color;
     border: none;
-    box-shadow: 0 0.0833rem #C9CFD7 inset;
-    border-top-left-radius: 0.4167rem;
-    border-bottom-left-radius: 0.4167rem;
-    padding-left: 2.5rem;
+    box-shadow: 0 .1rem #C9CFD7 inset;
+    border-top-left-radius: $border-radius;
+    border-bottom-left-radius: $border-radius;
+    padding-left: 3rem;
     font-size: 1.2rem;
-    color: $base-text-color;
+    color: $dark-text-color;
+    font-family: "titillium", sans-serif;
 
     &:focus {
       outline: none;
@@ -86,14 +95,14 @@
 
   .time-button {
     height: 100%;
-    width: 2.6667rem;
+    width: 3rem;
     background-color: $base-color;
     display: flex;
     align-items: center;
     justify-content: center;
     color: white;
-    border-top-right-radius: 0.4167rem;
-    border-bottom-right-radius: 0.4167rem;
+    border-top-right-radius: $border-radius;
+    border-bottom-right-radius: $border-radius;
   }
 
 }

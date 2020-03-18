@@ -25,7 +25,7 @@
     margin-bottom: 2rem;
 
     app-selection:first-child {
-      margin: 0.8333rem;
+      margin: 1rem;
     }
   }
 
@@ -41,7 +41,10 @@
 
 app-sub-section {
   position: relative;
-  margin-bottom: -5rem;
+
+  &:last-child {
+    // margin-bottom: -5rem;
+  }
 }
 
 .button-container {
@@ -111,7 +114,7 @@ span.comment {
 
   .auto-create {
     display: flex;
-    margin-top: 0.8333rem;
+    margin-top: 1rem;
 
     span {
       flex: 1;
@@ -148,7 +151,7 @@ span.comment {
     .code-wrapper {
       display: flex;
       align-items: center;
-      margin-bottom: 1.25rem;
+      margin-bottom: 1.5rem;
     }
   }
 }
@@ -156,14 +159,14 @@ span.comment {
 .invite-users {
   display: flex;
   flex-direction: column;
-  margin-top: 0.8333rem;
+  margin-top: 1rem;
 
   app-textarea {
     width: 100%;
   }
 
   app-button {
-    margin-top: 0.8333rem;
+    margin-top: 1rem;
     align-self: flex-end;
 
     ::ng-deep p-button button {
@@ -173,7 +176,7 @@ span.comment {
 }
 
 .spon-req {
-  margin-top: 0.8333rem;
+  margin-top: 1rem;
 }
 
 .import-csv {
@@ -198,5 +201,5 @@ span.comment {
 .batch-button-container {
   display: flex;
   justify-content: flex-end;
-  margin-top: 1.25rem;
+  margin-top: 2rem;
 }

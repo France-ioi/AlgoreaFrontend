@@ -4,17 +4,10 @@
 .dialog-header {
   display: flex;
   align-items: center;
+  position: relative;
 
   .dialog-handler {
     @include section-handler($base-color,$dark-color);
-
-    i {
-      color: white;
-      position: absolute;
-      right: 0.8333rem;
-      font-size: 1.2rem;
-      top: 0.5833rem;
-    }
   }
 
   .dialog-title {
@@ -26,10 +19,7 @@
   }
 
   .dialog-close {
-    width: 2.0833rem;
-    color: $base-color;
-    cursor: pointer;
-    font-size: 1.2rem;
+      @include dialog-close;
   }
 }
 
@@ -37,8 +27,8 @@
   justify-content: flex-end;
 
   app-button {
-    margin-right: -24px;
-    margin-bottom: -8px;
+    margin-right: -2.4rem;
+    margin-bottom: -2.2rem;
   }
 }
 
@@ -46,7 +36,8 @@
   margin-left: -24px;
   margin-right: -24px;
   padding-bottom: 20px;
-  border-bottom: 0.0833rem solid $light-border-color;
+  border-bottom: $border-filet;
+  font-family: "titillium", sans-serif;
 }
 
 :host ::ng-deep .dialog-container {
@@ -67,7 +58,7 @@
 
   &::-webkit-scrollbar-thumb {
     background-color: #f1f1f1;
-    border-radius: 0.8333rem;
+    border-radius: 1rem;
   }
 
   &::-webkit-scrollbar-thumb:hover {

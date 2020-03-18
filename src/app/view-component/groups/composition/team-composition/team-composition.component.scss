@@ -25,51 +25,51 @@
   .invitation-code {
     display: flex;
     flex-direction: column;
-  
+
     span.comment {
       font-size: 1.2rem;
     }
-  
+
     .auto-create {
       display: flex;
-      margin-top: 0.8333rem;
-      
+      margin-top: 1rem;
+
       span {
         flex: 1;
         color: $nav-bk-color;
         font-weight: bold;
       }
     }
-  
+
     .code-validation {
       display: flex;
       flex-direction: column;
       margin-top: 1.25rem;
-        
+
       span.label {
         color: $nav-bk-color;
         font-weight: bold;
         margin-right: 1.25rem;
         font-size: 1.2rem;
         flex: 1;
-  
+
         &.orange {
           color: #F5A623;
         }
-  
+
         &.green {
           color: #9ACC68;
         }
-  
+
         &.red {
           color: #FF001F;
         }
       }
-  
+
       .code-wrapper {
         display: flex;
         align-items: center;
-        margin-bottom: 1.25rem;
+        margin-bottom: 1.5rem;
       }
     }
   }

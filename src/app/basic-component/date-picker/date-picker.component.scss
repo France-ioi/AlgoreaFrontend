@@ -20,7 +20,7 @@
   .ui-inputtext {
     background-color: $input-transparency-color;
     border: none;
-    box-shadow: 0 0.0833rem #C9CFD7 inset;
+    box-shadow: 0 .1rem #C9CFD7 inset;
     font-size: 1.2rem;
     
     &::placeholder {
@@ -44,7 +44,7 @@
 // }
 
 :host ::ng-deep .ui-inputtext:enabled:focus:not(.ui-state-error) {
-  box-shadow: 0 0.0833rem #C9CFD7 inset;
+  box-shadow: 0 .1rem #C9CFD7 inset;
 }
 
 :host ::ng-deep .ui-inputwrapper-filled .ui-calendar {

@@ -1,10 +1,10 @@
 @import "src/colors.scss";
 
 .search-tools-wrapper {
-  margin: 0.8333rem;
+  margin: 1rem;
   margin-bottom: 0;
-  padding-bottom: 0.8333rem;
-  border-bottom: 0.0833rem solid #5c5c5c;
+  padding-bottom: 1rem;
+  border-bottom: .1rem solid #5c5c5c;
 
   app-grid-filter-bar {
     margin-left: -0.4167rem;
@@ -105,7 +105,7 @@
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
-      margin-right: 0.8333rem;
+      margin-right: 1rem;
     }
 
     .node-item-content .node-label app-skill-progress {

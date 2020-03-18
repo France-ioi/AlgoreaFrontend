@@ -3,7 +3,7 @@
 
 .input-wrapper {
   display: flex;
-  border-radius: 0.4167rem;
+  border-radius: $border-radius;
   height: 3rem;
   position: relative;
 
@@ -11,7 +11,7 @@
     height: 3.75rem;
 
     input {
-      font-size: 2.6667rem;
+      font-size: 3rem;
       font-weight: 300;
       padding-left: 3.75rem;
       line-height: 3.75rem;
@@ -45,11 +45,11 @@
     display: flex;
     background-color: #D3DBE7;
     border: none;
-    box-shadow: 0 0.0833rem #C9CFD7 inset;
-    border-radius: 0.4167rem;
+    box-shadow: 0 .1rem #C9CFD7 inset;
+    border-radius: $border-radius;
     padding-left: 2.5rem;
     font-size: 1.2rem;
-    line-height: 2.6667rem;
+    line-height: 3rem;
     color: $base-text-color;
 
     &.has-button {

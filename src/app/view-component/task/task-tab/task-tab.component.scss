@@ -187,7 +187,7 @@
             flex: 1;
             box-sizing: border-box;
             height: 4rem;
-            border-bottom: 0.0833rem solid $light-border-color;
+            border-bottom: .1rem solid $light-border-color;
 
             &.locked {
               color: $light-text-color;
@@ -227,14 +227,14 @@
             display: flex;
             flex: 1;
             padding: 0.5833rem 0;
-            border-bottom: 0.0833rem solid $light-border-color;
+            border-bottom: .1rem solid $light-border-color;
           }
         }
       }
 
       li {
         display: flex;
-        border-bottom: 0.0833rem solid $light-border-color;
+        border-bottom: .1rem solid $light-border-color;
         padding: 0.5833rem 0;
 
         &:last-child {
@@ -481,7 +481,7 @@
           }
 
           .progress-value {
-            margin-left: 0.8333rem;
+            margin-left: 1rem;
 
             &.check {
               font-weight: bold;
@@ -542,7 +542,7 @@
         }
 
         app-input {
-          width: 20.8333rem;
+          width: 21rem;
           margin-left: 1.25rem;
         }
       }
@@ -550,7 +550,7 @@
       .score-weight-container {
         display: flex;
         align-items: center;
-        margin-top: 0.8333rem;
+        margin-top: 1rem;
 
         &-label {
           flex: 1;

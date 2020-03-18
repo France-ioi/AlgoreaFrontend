@@ -45,11 +45,11 @@
     font-size: 1.2rem;
 
     span {
-      margin-right: 0.8333rem;
+      margin-right: 1rem;
       cursor: pointer;
 
       span {
-        margin-right: 0.8333rem;
+        margin-right: 1rem;
       }
     }
   }
@@ -75,7 +75,7 @@
   }
 
   &:last-child {
-    border-bottom: 0.0833rem solid $section-border-color;
+    border-bottom: .1rem solid $section-border-color;
   }
 
   &:nth-child(even) {

@@ -31,7 +31,7 @@
     <img src="assets/images/menu-open.svg" style="width: 2rem; height: 2rem;"/>
   </span>
   <span *ngIf="signedIn" class="title-collapse" (click)="onFold($event)" [ngClass]="{down: !folded}">
-    <img src="assets/images/header-open.svg" style="width: 0.8333rem;"/>
+    <img src="assets/images/header-open.svg" style="width: 1rem;"/>
   </span>
   <span class="notifications" *ngIf="data.notification > 0 && signedIn" tabindex="1">
     <span class="notification-number">{{ data.notification }}</span>

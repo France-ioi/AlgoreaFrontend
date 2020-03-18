@@ -4,9 +4,9 @@
   .activity-skill-list-item {
     display: flex;
     flex-direction: column;
-    border-bottom: 0.0833rem solid #F4F4F4;
-    padding-top: 0.8333rem;
-    padding-bottom: 0.8333rem;
+    border-bottom: .1rem solid #F4F4F4;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
     cursor: pointer;
 
     &:last-child {
@@ -28,7 +28,7 @@
         align-items: center;
         justify-content: center;
         color: $base-color;
-        margin-right: 0.8333rem;
+        margin-right: 1rem;
       }
     }
 

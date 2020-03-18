@@ -6,7 +6,7 @@
   position: relative;
   align-items: center;
   height: 4.1667rem;
-  border-bottom: 0.0833rem solid #F0F0F0;
+  border-bottom: .1rem solid #F0F0F0;
 
   .back-icon {
     color: $base-text-color;
@@ -15,7 +15,7 @@
     height: 100%;
     align-items: center;
     justify-content: center;
-    margin-right: 0.8333rem;
+    margin-right: 1rem;
   }
 
   .back-label-wrapper {
@@ -42,16 +42,16 @@
   margin-left: -5.8333rem;
   margin-right: -1.6667rem;
   position: relative;
-  padding-bottom: 0.8333rem;
+  padding-bottom: 1rem;
 
   .thread-list {
     display: flex;
     flex-direction: column;
-    margin-bottom: 0.8333rem;
+    margin-bottom: 1rem;
     
     &-item {
-      padding: 0.8333rem 2.0833rem;
-      border-bottom: 0.0833rem solid #F0F0F0;
+      padding: 1rem 2.0833rem;
+      border-bottom: .1rem solid #F0F0F0;
       display: flex;
       color: $dark-text-color;
       font-size: 1.2rem;
@@ -82,7 +82,7 @@
 
           .item-id {
             display: flex;
-            padding: 0.4167rem 0.8333rem;
+            padding: 0.4167rem 1rem;
             color: $dark-text-color;
 
             .message-icon {
@@ -123,7 +123,7 @@
             flex-direction: column;
 
             .message-content {
-              margin-bottom: 0.8333rem;
+              margin-bottom: 1rem;
             }
           }
         }
@@ -163,7 +163,7 @@
 
       .item-date {
         color: $base-text-color;
-        margin-left: 0.8333rem;
+        margin-left: 1rem;
         display: flex;
         align-items: center;
       }
@@ -194,7 +194,7 @@
     flex-direction: column;
 
     .comment-editor-container {
-      margin-bottom: 0.8333rem;
+      margin-bottom: 1rem;
       display: flex;
       align-items: flex-start;
 
@@ -226,7 +226,7 @@
       justify-content: flex-end;
 
       app-button:first-child {
-        margin-right: 0.8333rem;
+        margin-right: 1rem;
       }
     }
   }

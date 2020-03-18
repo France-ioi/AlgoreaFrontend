@@ -7,7 +7,7 @@
 .task-header-container {
   display: flex;
   flex-direction: column;
-  // margin-bottom: 0.8333rem;
+  // margin-bottom: 1rem;
   margin-right: 2rem;
   min-height: 11.7rem;
   position: relative;
@@ -26,7 +26,7 @@
     display: flex;
     align-items: center;
     // background-color: $base-bk-color;
-    // padding-bottom: 0.8333rem;
+    // padding-bottom: 1rem;
     min-height: 11.7rem;
 
     &.edit {
@@ -35,7 +35,7 @@
 
       app-input {
         width: 100%;
-        margin-bottom: 0.8333rem;
+        margin-bottom: 1rem;
       }
 
       .links {
@@ -52,7 +52,7 @@
           }
 
           .parent-item {
-            margin-left: 0.8333rem;
+            margin-left: 1rem;
             color: $base-text-color;
             font-size: 1.2rem;
           }
@@ -65,11 +65,11 @@
           font-size: 1.2rem;
 
           span {
-            margin-right: 0.8333rem;
+            margin-right: 1rem;
             cursor: pointer;
 
             span {
-              margin-right: 0.8333rem;
+              margin-right: 1rem;
             }
           }
         }
@@ -92,7 +92,7 @@
 
     .task-title {
       // margin-left: 0;
-      margin-right: 0.8333rem;
+      margin-right: 1rem;
       flex: 1;
       min-width: 0;
 
@@ -195,7 +195,7 @@
 
     &-title {
       font-weight: bold;
-      padding-left: 0.8333rem;
+      padding-left: 1rem;
     }
 
     .checklist {
@@ -233,12 +233,12 @@
         }
 
         &.checklist-score {
-          border-bottom: 0.0833rem solid #E8D1D8;
+          border-bottom: .1rem solid #E8D1D8;
           margin-left: 1.6667rem;
           min-height: 2.9167rem;
 
           &:last-child {
-            border-bottom: 0.0833rem solid transparent;
+            border-bottom: .1rem solid transparent;
           }
 
           app-skill-progress {

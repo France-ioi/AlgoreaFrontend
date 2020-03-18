@@ -2,6 +2,9 @@
 @import 'src/geometry.scss';
 
 // Main titles
-@mixin title-h2 {
+@mixin h2-title {
   font-size : 2rem;
+  margin-left: 1.25rem;
+  color: $dark-text-color;
+  font-family: inherit;
 }

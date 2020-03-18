@@ -1,12 +1,12 @@
 @import 'src/colors.scss';
 
-$circular: 1rem;
+$circular: 1.2rem;
 
 @mixin custom-switch($bk-color, $shadow, $handle-shadow, $switch-width, $handler-width, $handler-height) {
 
   %custom-pattern {
     background-color: $bk-color;
-    box-shadow: 0 0.0833rem $shadow inset;
+    box-shadow: 0 .1rem $shadow inset;
   }
 
   &.ui-inputswitch-checked {
@@ -21,9 +21,9 @@ $circular: 1rem;
         width: $handler-width;
         border-radius: 9rem;
         height: $handler-height;
-        bottom: 0.0833rem;
+        bottom: .1rem;
         transform: translateX(calc(#{$switch-width} - #{$handler-width}));
-        box-shadow: 0 0.0833rem $handle-shadow;
+        box-shadow: 0 .1rem $handle-shadow;
       }
     }
   }
@@ -44,7 +44,7 @@ $circular: 1rem;
       width: $handler-width;
       border-radius: 9rem;
       height: $handler-height;
-      bottom: 0.0833rem;
+      bottom: .1rem;
       left: 0;
       position: absolute;
       top: .1rem;
@@ -65,29 +65,29 @@ $circular: 1rem;
   width: 5rem;
   height: 1.5rem;
 
-  @include custom-switch(#E4E5EA, #DADADA, $dark-base-color, 5rem, 2.5rem, 1.2rem);
+  @include custom-switch($dark-transparency-color, #DADADA, $dark-base-color, 5rem, 2.5rem, 1.2rem);
 }
 
 
 :host ::ng-deep .dark .ui-inputswitch {
   width: 4.1667rem;
-  height: 1.0833rem;
+  height: 1.5rem;
 
-  @include custom-switch(#464646, #3F3F3F, #31649E, 4.1667rem, 2.0833rem, 1rem);
+  @include custom-switch(#464646, #3F3F3F, #31649E, 5rem, 2rem, 1rem);
 }
 
 :host ::ng-deep .circular .ui-inputswitch {
   width: 2.5rem;
-  height: 1.0833rem;
+  height: 1.5rem;
 
-  @include custom-switch(#E4E5EA, #DADADA, $dark-base-color, 2.5rem, $circular, 1rem);
+  @include custom-switch($dark-transparency-color, #DADADA, $dark-base-color, 2.5rem, $circular, $circular);
 }
 
 :host ::ng-deep .dark-circular .ui-inputswitch {
   width: 2.5rem;
   height: 1.25rem;
 
-  @include custom-switch(#2C5687, #152A43, $dark-base-color, 2.5rem, 1.0833rem, 1.0833rem);
+  @include custom-switch(#2C5687, #152A43, $dark-base-color, 2.5rem, 1.5rem, 1.5rem);
 
   .ui-inputswitch-slider {
     &::before {

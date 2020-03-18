@@ -2,7 +2,7 @@
 @import 'src/geometry.scss';
 
 :host ::ng-deep app-section .ui-table .ui-table-tbody > tr > td {
-  border-right: 0.0833rem solid #f0f0f0;
+  border-right: .1rem solid #f0f0f0;
 
   &:first-child {
     border: none;

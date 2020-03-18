@@ -1,4 +1,5 @@
 @import 'src/colors.scss';
+@import 'src/geometry.scss';
 
 :host ::ng-deep .mat-tab-header {
   border-bottom: none;
@@ -11,7 +12,7 @@
       background-color: white;
       .mat-tab-label {
         background-color: $base-bk-color;
-        border-right: 0.0833rem solid $light-border-color;
+        border-right: .1rem solid $light-border-color;
         height: 5rem;
 
         &.mat-tab-label-active {
@@ -21,10 +22,10 @@
           border-top: 0.25rem solid $base-color;
         }
         &.mat-tab-label-active + .mat-tab-label {
-          border-bottom-left-radius: 0.8333rem;
+          border-bottom-left-radius: 1rem;
         }
         &.mat-tab-label-before-active {
-          border-bottom-right-radius: 0.8333rem;
+          border-bottom-right-radius: 1rem;
         }
         .mat-tab-label-content {
           i {
@@ -39,5 +40,6 @@
 :host ::ng-deep .mat-tab-body-wrapper {
   .mat-tab-body {
     background-color: white;
+    @include tab-content-radius;
   }
 }

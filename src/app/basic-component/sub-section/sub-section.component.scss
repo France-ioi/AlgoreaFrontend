@@ -9,7 +9,7 @@
 }
 
 .section-container {
-  padding: 2.0833rem 1.6667rem 1.25rem;
+  padding: 2rem 2rem 2rem;
   border-bottom: .1rem solid rgba(46, 94, 149, .2);
   background-color: $light-color;
 
@@ -18,8 +18,7 @@
   }
 
   .section-header {
-    display: flex;
-    align-items: center;
+    @include section-header;
 
       .section-handler {
       @include section-handler($base-color,$dark-color);
@@ -33,9 +32,8 @@
 
 
     .section-title {
-      @include title-h2;
+      @include h2-title;
       color: $nav-bk-color;
-      margin-left: 1.25rem;
       flex: 1;
     }
 
@@ -47,7 +45,7 @@
       height: 2.5rem;
       font-size: 1.2rem;
       border-radius: 1.25rem;
-      border: 0.0833rem solid $nav-bk-color;
+      border: .1rem solid $nav-bk-color;
       cursor: pointer;
     }
 
@@ -63,7 +61,8 @@
   }
 
   .section-content {
-    padding: .5rem 0 5rem 4.2rem;
+    // padding: .5rem 0 5rem 4.2rem;
+    padding: 0 0 0 4.2rem;
     color: $base-text-color;
   }
 }

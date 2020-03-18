@@ -19,7 +19,7 @@
   display: block;
 
   ::ng-deep .ui-table {
-    margin-bottom: 0.8333rem;
+    margin-bottom: 1rem;
     font-family: 'titillium', sans-serif;
 
     .ui-chkbox {
@@ -27,7 +27,7 @@
       height: 1.0833rem;
       .ui-chkbox-box {
         background-color: $dark-transparency-color;
-        box-shadow: 0 0.0833rem #bbb inset;
+        box-shadow: 0 .1rem #bbb inset;
         width: 1.0833rem;
         height: 1.0833rem;
         border: none;
@@ -147,8 +147,8 @@
   background-color: $dark-black-color;
   border-top-right-radius: 1.5rem;
   border-bottom-right-radius: 1.5rem;
-  border-top-left-radius: 0.4167rem;
-  border-bottom-left-radius: 0.4167rem;
+  border-top-left-radius: $border-radius;
+  border-bottom-left-radius: $border-radius;
 }
 
 .select-column {
@@ -164,7 +164,7 @@
     height: 2.5rem;
     display: flex;
     align-items: center;
-    border-bottom: 0.0833rem solid #424242;
+    border-bottom: .1rem solid #424242;
     cursor: pointer;
 
     span {
@@ -185,10 +185,10 @@
   }
 
   .column-group {
-    border-bottom: 0.0833rem solid $light-border-color;
+    border-bottom: .1rem solid $light-border-color;
 
     p {
-      // font-size: 0.8333rem;
+      // font-size: 1rem;
       text-transform: uppercase;
       padding: 0 2rem;
       color: #9b9b9b;
@@ -208,7 +208,7 @@
 
         span {
           flex: 1;
-          // font-size: 0.8333rem;
+          // font-size: 1rem;
           color: #9b9b9b;
 
           &.checked {
@@ -230,8 +230,8 @@
   background-color: $dark-black-color;
   display: flex;
   align-items: center;
-  border-top-left-radius: 0.4167rem;
-  border-bottom-left-radius: 0.4167rem;
+  border-top-left-radius: $border-radius;
+  border-bottom-left-radius: $border-radius;
   cursor: pointer;
 
   .missing-title {

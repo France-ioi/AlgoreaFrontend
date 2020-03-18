@@ -5,7 +5,9 @@
 }
 
 .switch-container {
-  margin-top: 0.8333rem;
+  // margin-top: 1rem;
+  margin-left: -3.7rem;
+  margin-bottom: 2rem;
   display: flex;
 
   .switch-header {
@@ -15,8 +17,8 @@
   .switch-content-wrapper {
     display: flex;
     flex: 1;
-    margin-left: 1.25rem;
-    padding-bottom: 1.6667rem;
+    margin-left: 1.3rem;
+    padding-bottom: 2rem;
     border-bottom: solid .1rem $dark-transparency-color;
 
     .header-title {
@@ -26,6 +28,7 @@
       font-size: 1.2rem;
       flex-basis: 40%;
       cursor: pointer;
+      margin-top: -.2rem;
     }
 
     .switch-content {

@@ -8,7 +8,7 @@
 :host ::ng-deep .ui-inputtext {
   background-color: $input-transparency-color;
   border: none;
-  box-shadow: 0 0.0833rem #C9CFD7;
+  box-shadow: 0 .1rem #C9CFD7;
   border-radius: 9rem;
   font-size: 1.2rem;
 }
@@ -26,7 +26,7 @@
 
   .ui-dropdown-trigger {
     background-color: white;
-    box-shadow: 0 0.0833rem #C9CFD7;
+    box-shadow: 0 .1rem #C9CFD7;
     border-top-right-radius: 9rem;
     border-bottom-right-radius: 9rem;
   }
@@ -37,7 +37,7 @@
       color: $base-text-color;
 
       .selected-icon {
-        margin-right: 0.8333rem;
+        margin-right: 1rem;
       }
 
       &.ui-placeholder {

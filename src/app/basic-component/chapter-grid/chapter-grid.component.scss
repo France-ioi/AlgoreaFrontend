@@ -12,7 +12,7 @@
     height: 1.0833rem;
     .ui-chkbox-box {
       background-color: #E5E5E5;
-      box-shadow: 0 0.0833rem #BBB inset;
+      box-shadow: 0 .1rem #BBB inset;
       width: 1.0833rem;
       height: 1.0833rem;
       border: none;
@@ -42,7 +42,7 @@
     display: flex;
     border-bottom: $border-filet;
     margin-bottom: 0.1667rem;
-    border-radius: 0.8333rem;
+    border-radius: 1rem;
   }
 
   .ui-table-tbody > tr:last-child {
@@ -78,7 +78,7 @@
     }
 
     span.table-icon {
-      margin-right: 0.8333rem;
+      margin-right: 1rem;
       color: $base-color;
       cursor: pointer;
 
@@ -117,12 +117,12 @@
         justify-content: center;
         width: 2rem;
         height: 2rem;
-        margin-right: 0.8333rem;
+        margin-right: 1rem;
         font-size: 1.2rem;
       }
 
       .select-all {
-        margin-left: 0.8333rem;
+        margin-left: 1rem;
         color: $base-text-color;
         font-weight: bold;
         font-size: 1.2rem;
@@ -137,11 +137,11 @@
         font-size: 1.2rem;
 
         span {
-          margin-right: 0.8333rem;
+          margin-right: 1rem;
           cursor: pointer;
 
           span {
-            margin-right: 0.8333rem;
+            margin-right: 1rem;
           }
         }
       }

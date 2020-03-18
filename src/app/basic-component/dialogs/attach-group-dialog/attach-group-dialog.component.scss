@@ -1,23 +1,17 @@
 @import "src/colors.scss";
+@import "src/geometry.scss";
 
 .dialog-header {
   display: flex;
   align-items: center;
 
   .dialog-handler {
-    display: block;
-    background-color: $base-color;
-    border-left: 0.25rem solid $dark-color;
-    width: 4.5833rem;
-    height: 2.5rem;
-    border-top-right-radius: 9rem;
-    border-bottom-right-radius: 9rem;
-    position: relative;
+    @include section-handler($base-color,$dark-color);
 
     i {
       color: white;
       position: absolute;
-      right: 0.8333rem;
+      right: 1rem;
       font-size: 1.2rem;
       top: 0.5833rem;
     }
@@ -47,8 +41,9 @@
   margin-left: -24px;
   margin-right: -24px;
   padding-bottom: 20px;
-  border-bottom: 0.0833rem solid $light-border-color;
+  border-bottom: .1rem solid $light-border-color;
 }
+
 
 :host ::ng-deep .dialog-content {
   max-height: 65vh;
@@ -72,7 +67,7 @@
 
   &::-webkit-scrollbar-thumb {
     background-color: #f1f1f1;
-    border-radius: 0.8333rem;
+    border-radius: 1rem;
   }
 
   &::-webkit-scrollbar-thumb:hover {
@@ -89,15 +84,15 @@
     display: flex;
     align-items: center;
     margin: 0.4167rem;
-  
+
     .form-item-label {
       display: block;
       font-size: 1.2rem;
-      width: 20.8333rem;
+      width: 21rem;
       color: $dark-text-color;
       font-weight: bold;
     }
-  
+
     .form-item-control {
       flex: 1;
     }

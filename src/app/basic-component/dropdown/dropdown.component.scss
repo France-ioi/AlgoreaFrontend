@@ -1,4 +1,5 @@
 @import 'src/colors.scss';
+@import 'src/geometry.scss';
 
 :host {
   width: 100%;
@@ -8,7 +9,7 @@
 :host ::ng-deep .ui-inputtext {
   background-color: $input-transparency-color;
   border: none;
-  box-shadow: 0 0.0833rem #C9CFD7 inset;
+  box-shadow: 0 .1rem #C9CFD7 inset;
 }
 
 :host ::ng-deep .ui-dropdown:not(.ui-state-disabled).ui-state-focus {
@@ -17,19 +18,19 @@
 
 :host ::ng-deep .ui-dropdown {
   border: none;
-  border-radius: 0.4167rem;
+  border-radius: $border-radius;
   width: 100%;
   font-size: 1.2rem;
 
   .ui-dropdown-trigger {
     background-color: $input-transparency-color;
-    box-shadow: 0 0.0833rem #C9CFD7 inset;
+    box-shadow: 0 .1rem #C9CFD7 inset;
     right: unset;
     left: 0;
     border-top-right-radius: unset;
     border-bottom-right-radius: unset;
-    border-top-left-radius: 0.4167rem;
-    border-bottom-left-radius: 0.4167rem;
+    border-top-left-radius: $border-radius;
+    border-bottom-left-radius: $border-radius;
   }
 
   .ui-dropdown-label-container {

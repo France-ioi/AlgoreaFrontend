@@ -1,11 +1,12 @@
 @import 'src/colors.scss';
+@import 'src/geometry.scss';
 
 .code-generator {
   display: flex;
   align-items: center;
-  width: 11rem;
-  height: 2.6667rem;
-  border-radius: 0.4167rem;
+  width: 12rem;
+  height: 3rem;
+  border-radius: $border-radius;
 
   span {
     height: 100%;
@@ -17,24 +18,24 @@
   .code {
     background-color: $input-transparency-color;
     color: $dark-text-color;
-    box-shadow: 0 0.0833rem #C9CFD7 inset;
-    border-top-left-radius: 0.4167rem;
-    border-bottom-left-radius: 0.4167rem;
+    box-shadow: 0 .1rem #C9CFD7 inset;
+    border-top-left-radius: $border-radius;
+    border-bottom-left-radius: $border-radius;
     flex: 1;
-    font-size: 1.25rem;
+    font-size: 1.2rem;
 
     &.no-refresh {
-      border-top-right-radius: 0.4167rem;
-      border-bottom-right-radius: 0.4167rem;
+      border-top-right-radius: $border-radius;
+      border-bottom-right-radius: $border-radius;
     }
   }
 
   .refresh {
-    width: 2.6667rem;
+    width: 3rem;
     background-color: $base-color;
     color: white;
-    border-top-right-radius: 0.4167rem;
-    border-bottom-right-radius: 0.4167rem;
+    border-top-right-radius: $border-radius;
+    border-bottom-right-radius: $border-radius;
     cursor: pointer;
   }
 }

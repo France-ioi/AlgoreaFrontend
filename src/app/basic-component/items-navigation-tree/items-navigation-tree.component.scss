@@ -53,11 +53,11 @@
 }
 
 /* :host ::ng-deep p-treenode:last-child > .ui-treenode > .ui-treenode-children {
-  border-left: 0.0833rem solid transparent;
+  border-left: .1rem solid transparent;
 } */
 
 :host ::ng-deep .ui-treenode-children {
-  border-left: 0.0833rem solid #2e5e95;
+  border-left: .1rem solid #2e5e95;
 }
 
 :host
@@ -66,7 +66,7 @@
   > p-treenode
   > .ui-treenode
   > .ui-treenode-children {
-  border-left: 0.0833rem solid transparent;
+  border-left: .1rem solid transparent;
 }
 
 :host
@@ -81,7 +81,7 @@
   .node-tree-item
   .node-item-branch
   .bottom-branch {
-  border-left: 0.0833rem solid #2e5e95;
+  border-left: .1rem solid #2e5e95;
 }
 
 :host
@@ -141,16 +141,16 @@
 
       .top-branch {
         display: block;
-        border-right: 0.0833rem solid #2e5e95;
+        border-right: .1rem solid #2e5e95;
         min-height: 2.0833rem;
         position: relative;
 
         .mask-branch {
           display: block;
           position: absolute;
-          right: -0.0833rem;
+          right: -.1rem;
           width: 1.3333rem;
-          bottom: -0.0833rem;
+          bottom: -.1rem;
           height: 1.25rem;
           background-color: $base-color;
         }
@@ -158,14 +158,14 @@
 
       .bottom-branch {
         display: block;
-        border-right: 0.0833rem solid #2e5e95;
+        border-right: .1rem solid #2e5e95;
         min-height: 2.0833rem;
         position: relative;
 
         .mask-branch {
           display: block;
           position: absolute;
-          right: -0.0833rem;
+          right: -.1rem;
           width: 0.1667rem;
           top: 0;
           height: 1.25rem;
@@ -178,7 +178,7 @@
       padding: 0 0.25rem;
       position: absolute;
       display: block;
-      border-bottom: 0.0833rem solid #4587d4;
+      border-bottom: .1rem solid #4587d4;
       padding-right: 1.6667rem;
       top: 0;
       bottom: 0;
@@ -244,7 +244,7 @@
           overflow: hidden;
           white-space: nowrap;
           text-overflow: ellipsis;
-          margin-right: 0.8333rem;
+          margin-right: 1rem;
           font-size: 1.2rem;
           font-weight: 700;
         }
@@ -265,20 +265,20 @@
     &.child {
       .node-item-branch {
         .top-branch {
-          border-left: 0.0833rem solid #2e5e95;
-          border-bottom: 0.0833rem solid #2e5e95;
+          border-left: .1rem solid #2e5e95;
+          border-bottom: .1rem solid #2e5e95;
           border-right: none;
         }
 
         .bottom-branch {
-          border-left: 0.0833rem solid #2e5e95;
+          border-left: .1rem solid #2e5e95;
           border-right: none;
         }
       }
     }
 
     &.folder.child.expanded .node-item-branch .bottom-branch {
-      border-right: 0.0833rem solid #2e5e95;
+      border-right: .1rem solid #2e5e95;
     }
 
     &.checked {

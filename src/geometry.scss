@@ -9,6 +9,18 @@ $left-panel-size: 34rem;
 * Common blocs
 */
 
+
+    // Tab content radius
+    @mixin tab-content-radius {
+      border-radius: 0 0 0 1rem;
+    }
+
+    // Secion header (h2 title container)
+    @mixin section-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
     // Footer
     @mixin footer-add {
       margin-left: -5.8333rem;
@@ -23,6 +35,19 @@ $left-panel-size: 34rem;
       position: relative;
     }
 
+    // Dialog close
+    @mixin dialog-close {
+      width: 4rem;
+      height: 4rem;
+      color: $base-color;
+      cursor: pointer;
+      position: absolute;
+      right: 2rem;
+      top: -.4rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
 
 
     // Key icon
@@ -54,6 +79,7 @@ $left-panel-size: 34rem;
 
       i {
         color: white;
+        font-size: 1.2rem;
       }
     }
 

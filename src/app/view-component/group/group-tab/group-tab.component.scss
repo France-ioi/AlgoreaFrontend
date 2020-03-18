@@ -39,5 +39,10 @@
 :host ::ng-deep .mat-tab-body-wrapper {
   .mat-tab-body {
     background-color: white;
+    @include tab-content-radius;
+
+    &:last-child {
+      @include tab-content-radius;
+    }
   }
 }
