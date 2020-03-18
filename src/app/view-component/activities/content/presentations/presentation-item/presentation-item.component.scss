@@ -5,7 +5,7 @@ $presentation-bk-color: #EFEFEF;
 
 .presentation-item-container {
   display: flex;
-  border-radius: 0.4167rem;
+  border-radius: $border-radius;
 
   .presentation-item-image {
     position: relative;
@@ -19,8 +19,8 @@ $presentation-bk-color: #EFEFEF;
       background-position: center center;
       background-repeat: no-repeat;
       background-size: cover;
-      border-top-left-radius: 0.4167rem;
-      border-bottom-left-radius: 0.4167rem;
+      border-top-left-radius: $border-radius;
+      border-bottom-left-radius: $border-radius;
     }
   }
 
@@ -30,8 +30,8 @@ $presentation-bk-color: #EFEFEF;
     display: flex;
     flex-direction: column;
     position: relative;
-    border-top-right-radius: 0.4167rem;
-    border-bottom-right-radius: 0.4167rem;
+    border-top-right-radius: $border-radius;
+    border-bottom-right-radius: $border-radius;
     min-width: 0;
 
     .presentation-lock-key {

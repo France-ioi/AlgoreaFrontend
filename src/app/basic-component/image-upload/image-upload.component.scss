@@ -8,7 +8,7 @@
     font-size: 1.2rem;
     color: $dark-text-color;
     font-weight: bold;
-    margin-bottom: 0.8333rem;
+    margin-bottom: 1rem;
   }
 
   .upload-file-container {
@@ -18,8 +18,8 @@
     background-color: #f2f2f2;
     height: 16.6667rem;
     width: 100%;
-    border: 0.0833rem dashed #1c8adb;
-    border-radius: 0.8333rem;
+    border: .1rem dashed #1c8adb;
+    border-radius: 1rem;
 
     .image-preview {
       width: 100%;
@@ -27,13 +27,13 @@
       background-position: center center;
       background-repeat: no-repeat;
       background-size: cover;
-      border-radius: 0.8333rem;
+      border-radius: 1rem;
       position: relative;
 
       app-button {
         position: absolute;
-        right: -0.0833rem;
-        bottom: -0.0833rem;
+        right: -.1rem;
+        bottom: -.1rem;
       }
     }
 
@@ -52,7 +52,7 @@
         .drop-label {
           text-transform: uppercase;
           font-weight: bold;
-          margin-left: 0.8333rem;
+          margin-left: 1rem;
         }
       }
 

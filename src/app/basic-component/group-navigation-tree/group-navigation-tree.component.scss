@@ -49,12 +49,12 @@
 }
 
 :host ::ng-deep .ui-treenode-children {
-  border-left: 0.0833rem solid #9b9b9b;
+  border-left: .1rem solid #9b9b9b;
   padding-left: 2.55rem !important;
 }
 
 :host ::ng-deep p-treenode:last-child > .ui-treenode > .ui-treenode-children {
-  border-left: 0.0833rem solid transparent;
+  border-left: .1rem solid transparent;
   padding-left: 2.5833rem !important;
 }
 
@@ -77,7 +77,7 @@
   .node-tree-item
   .node-item-branch
   .top-branch {
-  border-bottom-left-radius: 0.8333rem;
+  border-bottom-left-radius: 1rem;
 }
 
 :host ::ng-deep .ui-treenode-content {
@@ -114,18 +114,18 @@
       z-index: 10;
 
       .top-branch {
-        border-bottom: 0.0833rem solid #9b9b9b;
-        border-left: 0.0833rem solid #9b9b9b;
+        border-bottom: .1rem solid #9b9b9b;
+        border-left: .1rem solid #9b9b9b;
         flex: 1;
       }
 
       .bottom-branch {
-        border-left: 0.0833rem solid #9b9b9b;
+        border-left: .1rem solid #9b9b9b;
         flex: 1;
 
         .mask-branch {
           position: absolute;
-          border-right: 0.0833rem solid #9b9b9b;
+          border-right: .1rem solid #9b9b9b;
           right: 0;
           height: 1.25rem;
           width: 0.1667rem;
@@ -240,7 +240,7 @@
         font-size: 1.2rem;
 
         app-state-widget {
-          margin-right: 0.8333rem;
+          margin-right: 1rem;
         }
 
         &-title {

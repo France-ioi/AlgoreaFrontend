@@ -1,4 +1,5 @@
 @import 'src/colors.scss';
+@import 'src/geometry.scss';
 
 $secondary-color: #4a4a4a;
 $warning-color: #f5a623;
@@ -29,18 +30,18 @@ $danger-color: #ff001f;
   }
 
   &.ui-small-button {
-    font-size: 0.8333rem;
+    font-size: 1rem;
   }
 
   &.ui-medium-button {
-    font-size: 0.9167rem;
+    font-size: 1rem;
   }
 
   &.diagonal-rounded {
-    border-top-left-radius: 0.8333rem;
+    border-top-left-radius: 1rem;
     border-top-right-radius: unset;
     border-bottom-left-radius: unset;
-    border-bottom-right-radius: 0.4167rem;
+    border-bottom-right-radius: $border-radius;
   }
 
   &:enabled:focus {
@@ -54,13 +55,14 @@ $danger-color: #ff001f;
 
   &.ui-button-text-icon-left {
     .ui-button-text {
-      padding-left: 3rem;
+      padding: 0;
+      padding-left: 1.5rem;
     }
   }
 
   &.ui-button-text-icon-right {
     .ui-button-text {
-      padding-right: 3rem;
+      padding-right: 1.5rem;
     }
   }
 

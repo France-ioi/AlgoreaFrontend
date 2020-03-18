@@ -1,11 +1,12 @@
 @import 'src/colors.scss';
+@import 'src/geometry.scss';
 
 .header-section-container {
   background-color: $light-color;
   padding:  1.25rem 0;
-  border-top-left-radius: 0.4167rem;
-  border-bottom-left-radius: 0.4167rem;
-  margin-bottom: 0.8333rem;
+  border-top-left-radius: $border-radius;
+  border-bottom-left-radius: $border-radius;
+  margin-bottom: 1rem;
 
   .header-section-header {
     display: flex;
@@ -23,7 +24,7 @@
       align-items: center;
       justify-content: flex-end;
       color: white;
-      margin-right: 0.8333rem;
+      margin-right: 1rem;
       padding-right: 0.6667rem;
     }
 
@@ -40,6 +41,6 @@
   }
 
   .header-section-body {
-    padding: 0.8333rem 1.25rem 0.4167rem 5.4167rem;
+    padding: 1rem 1.25rem 0.4167rem 5.4167rem;
   }
 }

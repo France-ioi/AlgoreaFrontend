@@ -7,7 +7,7 @@
   align-items: center;
   height: 2rem;
   width: 6.25rem;
-  padding: 0 0.8333rem;
+  padding: 0 1rem;
   color: white;
   font-size: 1.2rem;
   cursor: pointer;
@@ -41,7 +41,7 @@
     li {
       padding: 0 1rem;
       color: white;
-      border-bottom: 0.0833rem solid #6ea6e7;
+      border-bottom: .1rem solid #6ea6e7;
       cursor: pointer;
       height: 3rem;
       font-weight: 700;
@@ -64,7 +64,7 @@
 
   .dropdown-icon {
     position: absolute;
-    right: 0.8333rem;
+    right: 1rem;
     top: 0.3333rem;
     color: white;
     font-size: 1.2rem;

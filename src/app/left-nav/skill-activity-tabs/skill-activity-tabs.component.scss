@@ -69,11 +69,11 @@ $border-radius: .5rem;
         &.ui-state-default {
 
           &:not(:first-child) {
-            // border-bottom-left-radius: 0.8333rem;
+            // border-bottom-left-radius: 1rem;
           }
 
           &:first-child {
-            // border-bottom-right-radius: 0.8333rem;
+            // border-bottom-right-radius: 1rem;
           }
 
           a {
@@ -141,7 +141,7 @@ $border-radius: .5rem;
           height: 6rem;
           display: flex;
           align-items: center;
-          border-bottom: 0.0833rem solid #4587D4;
+          border-bottom: .1rem solid #4587D4;
 
           .tree-header-handle {
             display: flex;

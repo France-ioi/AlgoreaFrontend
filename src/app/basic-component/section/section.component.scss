@@ -1,8 +1,9 @@
 @import 'src/colors.scss';
 @import 'src/geometry.scss';
+@import 'src/typography.scss';
 
 .section-container {
-  margin-top: 3rem;
+  margin-top: 2rem;
   border-bottom: 0.1rem solid $light-border-color;
 
   &.no-border {
@@ -10,8 +11,7 @@
   }
 
   .section-header {
-    display: flex;
-    align-items: center;
+    @include section-header;
 
     .section-handler {
       @include section-handler($base-color,$dark-color);
@@ -23,14 +23,13 @@
     }
 
     .section-title {
-      font-size: 2rem;
-      color: $dark-text-color;
-      margin-left: 1.25rem;
+      @include h2-title
     }
   }
 
   .section-content {
-    padding: 1.25rem 2rem 5rem 5.8333rem;
+    // padding: 1.25rem 2rem 3rem 5.8333rem;
+    padding: 0 2rem 3rem 5.8333rem;
     color: $base-text-color;
   }
 }

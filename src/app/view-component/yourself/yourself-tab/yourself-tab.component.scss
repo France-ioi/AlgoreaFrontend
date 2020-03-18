@@ -21,10 +21,10 @@
           @include main-tab-active;
         }
         // &.mat-tab-label-active + .mat-tab-label {
-        //   border-bottom-left-radius: 0.8333rem;
+        //   border-bottom-left-radius: 1rem;
         // }
         // &.mat-tab-label-before-active {
-        //   border-bottom-right-radius: 0.8333rem;
+        //   border-bottom-right-radius: 1rem;
         // }
         .mat-tab-label-content {
           i {
@@ -39,5 +39,6 @@
 :host ::ng-deep .mat-tab-body-wrapper {
   .mat-tab-body {
     background-color: white;
+    @include tab-content-radius;
   }
 }

@@ -29,7 +29,7 @@ $header-height: 7.5rem;
 
   .group-header {
     min-height: $group-header-height;
-    // border-top-left-radius: 0.8333rem;
+    // border-top-left-radius: 1rem;
     position: relative;
     display: flex;
     align-items: center;
@@ -76,7 +76,7 @@ $header-height: 7.5rem;
       align-items: center;
       cursor: pointer;
       color: $base-text-color;
-      padding: 0.8333rem;
+      padding: 1rem;
 
       i {
         &:last-child {
@@ -98,7 +98,7 @@ $header-height: 7.5rem;
     }
 
     %group-div {
-      border-top: 0.0833rem solid $group-border-color;
+      border-top: .1rem solid $group-border-color;
       padding: 0 1.5rem 0 2rem;
       display: flex;
       align-items: center;
@@ -152,11 +152,11 @@ $header-height: 7.5rem;
 
     .group-list {
       background-color: $base-bk-color;
-      border-top: 0.0833rem solid $group-border-color;
+      border-top: .1rem solid $group-border-color;
       %trans-bk-accordion {
         background-color: transparent !important;
         border: none !important;
-        outline: 0.0833rem solid transparent;
+        outline: .1rem solid transparent;
         color: $base-text-color !important;
         position: relative;
       }
@@ -173,7 +173,7 @@ $header-height: 7.5rem;
 
           .ui-accordion-toggle-icon {
             position: absolute;
-            right: 0.8333rem;
+            right: 1rem;
             top: 1.5rem;
             color: $base-text-color !important;
             z-index: 2;
@@ -201,10 +201,10 @@ $header-height: 7.5rem;
       }
 
       .ui-accordion-content-wrapper {
-        border-bottom: 0.0833rem solid $group-border-color;
+        border-bottom: .1rem solid $group-border-color;
         .ui-accordion-content {
           background-color: transparent;
-          border: 0.0833rem solid transparent;
+          border: .1rem solid transparent;
           padding: {
             left: 3.2rem;
             top: 0;
@@ -227,7 +227,7 @@ $header-height: 7.5rem;
     width: 100%;
     height: 100%;
     background-color: $nav-bk-color;
-    border-top-right-radius: 0.8333rem;
+    border-top-right-radius: 1rem;
     display: flex;
     flex-direction: column;
 
@@ -239,12 +239,12 @@ $header-height: 7.5rem;
       padding-left: 1.25rem;
       padding-right: 1.25rem;
       color: white;
-      border-bottom: 0.0833rem solid #5B5B5B;
+      border-bottom: .1rem solid #5B5B5B;
       cursor: pointer;
 
       .back-icon {
         font-size: 1.2rem;
-        margin-right: 0.8333rem;
+        margin-right: 1rem;
       }
 
       .back-label {

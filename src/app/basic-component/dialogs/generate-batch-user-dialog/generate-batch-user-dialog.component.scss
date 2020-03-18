@@ -7,14 +7,6 @@
 
   .dialog-handler {
     @include section-handler($base-color,$dark-color);
-
-    i {
-      color: white;
-      position: absolute;
-      right: 0.8333rem;
-      font-size: 1.2rem;
-      top: 0.5833rem;
-    }
   }
 
   .dialog-title {
@@ -40,7 +32,7 @@
   margin-left: -24px;
   margin-right: -24px;
   padding-bottom: 20px;
-  border-bottom: 0.0833rem solid $light-border-color;
+  border-bottom: .1rem solid $light-border-color;
 }
 
 :host ::ng-deep .dialog-content {
@@ -65,7 +57,7 @@
 
   &::-webkit-scrollbar-thumb {
     background-color: #f1f1f1;
-    border-radius: 0.8333rem;
+    border-radius: 1rem;
   }
 
   &::-webkit-scrollbar-thumb:hover {
@@ -87,8 +79,8 @@
   .account-info-wrapper {
     display: flex;
     flex-direction: column;
-    border-top: 0.0833rem solid $light-border-color;
-    border-bottom: 0.0833rem solid $light-border-color;
+    border-top: .1rem solid $light-border-color;
+    border-bottom: .1rem solid $light-border-color;
     padding: 1.25rem 3.6667rem 1.25rem 5.3333rem;
 
     .gen-password, .gen-code {
@@ -137,7 +129,7 @@
 
   .account-generate {
     display: flex;
-    margin-top: 0.8333rem;
+    margin-top: 1rem;
     justify-content: center;
   }
 }

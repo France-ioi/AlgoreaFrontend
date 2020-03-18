@@ -18,7 +18,7 @@ $nav-control-border: #5c5c5c;
 
     app-button {
       margin: 0.4167rem;
-      margin-top: 0.8333rem;
+      margin-top: 1rem;
       display: block;
 
       ::ng-deep p-button {
@@ -33,7 +33,7 @@ $nav-control-border: #5c5c5c;
   height: 4rem;
   padding-left: 1rem;
   padding-right: 1rem;
-  border-bottom: 0.0833rem solid $nav-control-border;
+  border-bottom: .1rem solid $nav-control-border;
   position: relative;
   text-align: center;
   display: flex;
@@ -49,10 +49,10 @@ $nav-control-border: #5c5c5c;
     }
 
     .title-collapse {
-      margin-left: 0.8333rem;
-      margin-right: 0.8333rem;
-      padding-left: 0.8333rem;
-      padding-right: 0.8333rem;
+      margin-left: 1rem;
+      margin-right: 1rem;
+      padding-left: 1rem;
+      padding-right: 1rem;
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -96,7 +96,7 @@ $nav-control-border: #5c5c5c;
       border-radius: 0.3333rem;
       img {
         display: block;
-        margin-right: 0.8333rem;
+        margin-right: 1rem;
         border-radius: 0.3333rem;
       }
     }
@@ -113,7 +113,7 @@ $nav-control-border: #5c5c5c;
   }
 
   .notifications {
-    margin-right: 0.8333rem;
+    margin-right: 1rem;
     width: 2.5rem;
     position: relative;
     cursor: pointer;
@@ -134,6 +134,6 @@ $nav-control-border: #5c5c5c;
   }
 
   app-select {
-    margin-top: 0.8333rem;
+    margin-top: 1rem;
   }
 }

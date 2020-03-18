@@ -8,7 +8,7 @@
 
   .ui-listbox-header {
     background-color: $dark-base-color;
-    border-bottom: 0.0833rem solid #2b588c;
+    border-bottom: .1rem solid #2b588c;
     border-radius: unset;
     border-top-left-radius: 0.6667rem;
     border-top-right-radius: 0.6667rem;
@@ -63,7 +63,7 @@
       .ui-listbox-item {
         font-size: 1.2rem;
         color: #EFF3F7;
-        padding: 0.1667rem 0.8333rem;
+        padding: 0.1667rem 1rem;
 
         &.ui-state-highlight {
           border-radius: 9rem;

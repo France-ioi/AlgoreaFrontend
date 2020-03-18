@@ -5,7 +5,7 @@
   flex-direction: column;
   align-items: center;
   position: relative;
-  padding: 0.8333rem;
+  padding: 1rem;
 
   .close-button {
     width: 2.0833rem;
@@ -13,7 +13,7 @@
     color: $base-color;
     position: absolute;
     right: 0;
-    top: 0.8333rem;
+    top: 1rem;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -40,7 +40,7 @@
       align-items: center;
       justify-content: center;
       position: relative;
-      margin-bottom: 0.8333rem;
+      margin-bottom: 1rem;
 
       img {
         border-radius: 9rem;
@@ -66,7 +66,7 @@
       font-weight: bold;
       font-size: 1.2rem;
       color: $dark-text-color;
-      margin-bottom: 0.8333rem;
+      margin-bottom: 1rem;
     }
 
     &-grade-date {

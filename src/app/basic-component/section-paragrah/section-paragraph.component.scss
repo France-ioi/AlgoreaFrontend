@@ -1,16 +1,16 @@
 @import 'src/colors.scss';
 @import 'src/geometry.scss';
+@import 'src/typography.scss';
 
 @mixin section-format($bk-color, $handle-color, $handle-border-color) {
-  border-bottom: 0.0833rem solid $light-border-color;
+  border-bottom: .1rem solid $light-border-color;
   background-color: $bk-color;
   border-radius: $border-radius;
   margin-top: 0;
   margin-bottom: 3rem;
 
   .section-header {
-    display: flex;
-    align-items: center;
+    @include section-header;
 
     &.show-cursor {
       cursor: pointer;
@@ -21,12 +21,12 @@
 
       // i {
       //   color: white;
-      //   margin-right: 0.8333rem;
+      //   margin-right: 1rem;
       // }
 
       .score-container {
-        width: 2.6667rem;
-        height: 2.6667rem;
+        width: 3rem;
+        height: 3rem;
         border-radius: 1.25rem;
         background-color: $bk-color;
         display: flex;
@@ -42,17 +42,15 @@
       align-items: center;
       flex: 1;
       margin-right: 2rem;
-      // border-bottom: 0.0833rem solid transparent;
+      // border-bottom: .1rem solid transparent;
       position: relative;
 
       &.show-border {
-        border-bottom: 0.0833rem solid $section-border-color;
+        border-bottom: .1rem solid $section-border-color;
       }
 
       .section-title {
-        font-size: 2rem;
-        color: $dark-text-color;
-        padding-left: 1.25rem;
+        @include h2-title;
         flex: 1;
       }
 

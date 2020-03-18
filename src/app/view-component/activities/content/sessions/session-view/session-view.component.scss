@@ -78,8 +78,8 @@
     display: flex;
     flex-direction: column;
     background-color: $session-right-view-color;
-    border-top-right-radius: 0.4167rem;
-    border-bottom-right-radius: 0.4167rem;
+    border-top-right-radius: $border-radius;
+    border-bottom-right-radius: $border-radius;
     padding: 0 2rem .3rem;
 
       .right-item-view,
@@ -90,7 +90,7 @@
     .right-item-view {
       display: flex;
       align-items: center;
-      border-bottom: 0.0833rem solid #DCDCDC;
+      border-bottom: .1rem solid #DCDCDC;
 
       .right-item-icon {
         width: 1rem;

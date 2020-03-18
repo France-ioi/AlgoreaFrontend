@@ -10,8 +10,8 @@
 
     .search-filter {
       height: 2.5rem;
-      border-top-left-radius: 0.8333rem;
-      border-top-right-radius: 0.8333rem;
+      border-top-left-radius: 1rem;
+      border-top-right-radius: 1rem;
       border-bottom-left-radius: unset;
       border-bottom-right-radius: unset;
     }
@@ -25,8 +25,8 @@
     color: white;
     font-size: 1.2rem;
     height: 1.6667rem;
-    padding-left: 0.8333rem;
-    padding-right: 0.8333rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
     cursor: pointer;
 
     .icon {
@@ -36,7 +36,7 @@
       height: 100%;
 
       &.filter-icon {
-        margin-right: 0.8333rem;
+        margin-right: 1rem;
       }
 
       &.close-icon {
@@ -47,17 +47,17 @@
 
     .filter-title {
       flex: 1;
-      margin-right: 0.8333rem;
+      margin-right: 1rem;
     }
   }
 
   .search-filter-content {
-    padding: 0.8333rem;
+    padding: 1rem;
     display: flex;
     flex-direction: column;
     background-color: $dark-base-color;
-    border-bottom-left-radius: 0.8333rem;
-    border-bottom-right-radius: 0.8333rem;
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
 
     .self-search-bar {
       position: relative;
@@ -71,7 +71,7 @@
         color: white;
         border-radius: 9rem;
         background-color: #2B588B;
-        padding-left: 0.8333rem;
+        padding-left: 1rem;
         padding-right: 3.3333rem;
         font-size: 1.2rem;
         border: none;
@@ -170,8 +170,8 @@
             top: 2.0833rem;
             display: flex;
             flex-direction: column;
-            border-bottom-left-radius: 0.8333rem;
-            border-bottom-right-radius: 0.8333rem;
+            border-bottom-left-radius: 1rem;
+            border-bottom-right-radius: 1rem;
             z-index: 10;
 
             &-item {
@@ -179,11 +179,11 @@
               height: 2.0833rem;
               color: white;
               background-color: $base-color;
-              padding-left: 0.8333rem;
+              padding-left: 1rem;
               
               &:last-child {
-                border-bottom-left-radius: 0.8333rem;
-                border-bottom-right-radius: 0.8333rem;
+                border-bottom-left-radius: 1rem;
+                border-bottom-right-radius: 1rem;
               }
             }
           }
