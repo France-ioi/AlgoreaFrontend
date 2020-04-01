@@ -264,8 +264,7 @@ body .ui-widget {
   .ui-tooltip-text {
     background-color: $base-color;
     border-radius: 1rem;
-    padding-left: 0.6667rem;
-    padding-right: 0.6667rem;
+    padding: 1rem 2rem;
   }
 
   &.ui-tooltip-top {
@@ -290,7 +289,24 @@ body .ui-widget {
   border-bottom: .8rem solid $light-color;
 }
 
+.mat-dialog-container {
+  box-shadow: none;
+  padding: 1.5rem !important;
+  font-family: "titillium", sans-serif;
 
+  .mat-dialog-content {
+    margin: 0 -1.5rem;
+    padding: 0 1.5rem;
+  }
+
+  .mat-dialog-actions {
+    padding: 0.5rem 0 0;
+  }
+
+  .dialog-title {
+    font-family: "titillium", sans-serif;
+  }
+}
 
 @media screen and (max-width: 800px) {
   html { font-size: 55.66%; }

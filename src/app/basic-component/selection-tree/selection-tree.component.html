@@ -10,12 +10,12 @@
       </span>
       <span class="node-item-content">
         <span (click)="nodeExpand($event, node)" class="node-select">
-          <i *ngIf="!node.expanded && !node.checked" class="pi pi-folder" [ngStyle]="{'fontSize.rem': node.root ? 2 : 1.3333}"></i>
-          <i *ngIf="node.expanded && !node.checked" class="pi pi-folder-open" [ngStyle]="{'fontSize.rem': node.root ? 2 : 1.3333}"></i>
-          <i *ngIf="!node.expanded && node.checked" class="pi pi-folder" style="color: white;" [ngStyle]="{'fontSize.rem': node.root ? 2: 1}"></i>
-          <i *ngIf="node.expanded && node.checked" class="pi pi-folder-open" style="color: white;" [ngStyle]="{'fontSize.rem': node.root ? 2 : 1}"></i>
+          <i *ngIf="!node.expanded && !node.checked" class="pi pi-folder" [ngStyle]="{'fontSize.rem': node.root ? 2 : 1.4}"></i>
+          <i *ngIf="node.expanded && !node.checked" class="pi pi-folder-open" [ngStyle]="{'fontSize.rem': node.root ? 2 : 1.4}"></i>
+          <i *ngIf="!node.expanded && node.checked" class="pi pi-folder" style="color: white;" [ngStyle]="{'fontSize.rem': node.root ? 2: 1.4}"></i>
+          <i *ngIf="node.expanded && node.checked" class="pi pi-folder-open" style="color: white;" [ngStyle]="{'fontSize.rem': node.root ? 2 : 1.4}"></i>
         </span>
-        <span (click)="nodeCheck($event, node)" class="node-label">{{
+        <span (click)="nodeCheck($event, node)" class="node-label" [ngStyle]="{'fontSize.rem': node.root ? 2 : 1.4}">{{
           node.title
         }}</span>
       </span>
@@ -30,10 +30,10 @@
       </span>
       <span class="node-item-content">
         <span (click)="nodeExpand($event, node)" class="node-select">
-          <i *ngIf="node.checked" class="pi pi-check" style="font-size: 1.2rem;"></i>
-          <i *ngIf="!node.checked" class="pi pi-circle-on" style="font-size: 1.2rem;"></i>
+          <i *ngIf="node.checked" class="pi pi-check" [ngStyle]="{'fontSize.rem': node.root ? 2 : 1.4}"></i>
+          <i *ngIf="!node.checked" class="pi pi-circle-on" [ngStyle]="{'fontSize.rem': node.root ? 2 : 1.4}"></i>
         </span>
-        <span (click)="nodeCheck($event, node)" class="node-label">{{
+        <span (click)="nodeCheck($event, node)" class="node-label" [ngStyle]="{'fontSize.rem': node.root ? 2 : 1.4}">{{
           node.title
         }}</span>
       </span>

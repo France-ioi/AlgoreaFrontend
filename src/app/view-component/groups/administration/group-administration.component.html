@@ -11,7 +11,7 @@
     <ng-template #headerTemplate let-columns>
       <tr style="border: none;">
         <th style="width: 5rem; max-width: 5rem;"></th>
-        <th style="min-width: 160px; transform: none; width: 159px;">
+        <th style="width: 160px; transform: none;">
           <app-grid-gear
             [secondary]="true"
             (commentChange)="onCommentChanged($event)"
@@ -42,7 +42,7 @@
               </div>
             </div>
           </th>
-          <th *ngIf="col.field === 'manager_of'" style="width: 100px;">
+          <th *ngIf="col.field === 'manager_of'">
             <div class="slanted-header">
               <div class="slanted-header-content">
                 {{ col.header }}
@@ -64,7 +64,7 @@
           <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
         </td>
         <td
-          style="width: 160px;text-align: left;"
+          style="text-align: left;width: 160px;"
           pTooltip="{{ rowData.comment }}"
           tooltipPosition="top"
           tooltipStyleClass="tooltip-custom"
@@ -75,7 +75,7 @@
           {{ rowData.comment }}
         </td>
         <ng-container *ngFor="let col of columns">
-          <td *ngIf="col.field === 'manager_of'" style="width: 100px;">
+          <td *ngIf="col.field === 'manager_of'">
             <b>{{ rowData.manager_of }}</b>
           </td>
           <td *ngIf="col.field === 'can_manage'" style="width: 110px;">
@@ -114,11 +114,11 @@
       </tr>
     </ng-template>
     <ng-template #summaryTemplate let-table>
-      <div style="text-align: left; display: flex; align-items: center;">
-        <p-tableHeaderCheckbox
-          style="margin-left: 1.4167rem; margin-right: 2rem;"
-        ></p-tableHeaderCheckbox>
-        <span style="margin-left: 1rem; color: #9B9B9B; flex: 1;font-size: 1.2rem;">
+      <div style="text-align: left; display: flex; align-items: center;margin-left: -1em;">
+        <div style="width: 5rem; display: flex; justify-content: center;">
+          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+        </div>
+        <span style="color: #9B9B9B; flex: 1;font-size: 1.2rem;">
           Select all
         </span>
         <div class="export-tools">
@@ -131,6 +131,7 @@
     </ng-template>
   </app-grid>
   <div class="add-manager-button-wrapper">
+    <span class="tri-tag"></span>
     <app-button
       icon="fa fa-user-plus"
       label="Add manager"

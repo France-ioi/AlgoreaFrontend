@@ -29,8 +29,8 @@
 }
 
 :host ::ng-deep .mat-dialog-title {
-  margin-left: -24px;
-  margin-right: -24px;
+  margin-left: -1.5rem;
+  margin-right: -1.5rem;
   padding-bottom: 20px;
   border-bottom: .1rem solid $light-border-color;
 }
@@ -40,8 +40,8 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  margin-left: -24px;
-  margin-right: -24px;
+  margin-left: -1.5rem;
+  margin-right: -1.5rem;
 
   &::-webkit-scrollbar {
     width: 0.5rem;

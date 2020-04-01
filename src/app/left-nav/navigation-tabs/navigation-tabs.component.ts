@@ -160,6 +160,9 @@ export class NavigationTabsComponent implements OnInit, OnChanges {
       title: e.title,
       type: 'group'
     };
+    
+    this.selectedGroup = 3;
+    
     this.editService.setUser(this.currentUser);
     this.groupSelect.emit(e);
   }
@@ -169,6 +172,8 @@ export class NavigationTabsComponent implements OnInit, OnChanges {
       title: e.title,
       type: 'group'
     };
+    
+    this.selectedGroup = 3;
 
     this.editService.setUser(this.currentUser);
   }

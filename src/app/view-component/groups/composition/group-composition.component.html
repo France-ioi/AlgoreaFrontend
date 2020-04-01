@@ -152,13 +152,13 @@
             <app-code-token></app-code-token>
           </div>
           <div class="code-wrapper">
-            <span class="label">Validity</span>
+            <div class="label-with-error-message">
+              <span class="label">Validity</span>
+              <span *ngIf="activateStatus === 0" class="label orange">This code has been activated 15 minutes ago, it will be disabled in 15 minutes</span>
+              <span *ngIf="activateStatus === 1" class="label green">This code has not yet been used</span>
+              <span *ngIf="activateStatus === 2" class="label red">This code was used 15 minutes ago and is now disabled</span>
+            </div>
             <app-time-picker [status]="activateStatus"></app-time-picker>
-          </div>
-          <div class="code-wrapper">
-            <span *ngIf="activateStatus === 0" class="label orange">This code has been activated 15 minutes ago, it will be disabled in 15 minutes</span>
-            <span *ngIf="activateStatus === 1" class="label green">This code has not yet been used</span>
-            <span *ngIf="activateStatus === 2" class="label red">This code was used 15 minutes ago and is now disabled</span>
           </div>
           <div class="code-wrapper">
             <span class="label">Security</span>
@@ -238,4 +238,5 @@
       ></app-button>
     </div>
   </app-sub-section>
+  <div style="margin-bottom: -3rem;"></div>
 </app-section>

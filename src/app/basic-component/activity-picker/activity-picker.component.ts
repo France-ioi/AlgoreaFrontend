@@ -26,7 +26,6 @@ export class ActivityPickerComponent implements OnInit {
     const dialogRef = this.dialog.open(MatDialogComponent, {
       maxHeight: '83rem',
       minWidth: '50rem',
-      minHeight: '17rem',
       data: {
         trees: this.trees,
         icon: 'fa fa-folder',
