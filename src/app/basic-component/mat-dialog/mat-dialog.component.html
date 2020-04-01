@@ -16,9 +16,9 @@
       <div class="tree-content">
         <app-selection-tree [data]="data.trees"></app-selection-tree>
       </div>
+      <div class="button-container">
+        <app-button label="Validate" class="diagonal-rounded" (onClick)="onClose($event)"></app-button>
+      </div>
     </div>
   </div>
-</div>
-<div mat-dialog-actions>
-  <app-button label="Validate" class="diagonal-rounded" (onClick)="onClose($event)"></app-button>
 </div>

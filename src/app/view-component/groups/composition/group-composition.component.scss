@@ -153,6 +153,12 @@ span.comment {
       align-items: center;
       margin-bottom: 1.5rem;
     }
+
+    .label-with-error-message {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
   }
 }
 

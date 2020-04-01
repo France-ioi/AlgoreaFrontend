@@ -13,8 +13,7 @@
         <ng-container [ngTemplateOutlet]="headerTemplate" [ngTemplateOutletContext]="{ $implicit: data }"></ng-container>
       </div>      
       <span *ngIf="collapsible" class="toggle-content" (click)="toggleContent($event)">
-        <i *ngIf="!visible" class="fa fa-angle-down"></i>
-        <i *ngIf="visible" class="fa fa-angle-up"></i>
+        <img [ngClass]="{down: !visible}" src="assets/images/collapse.svg">
       </span>
     </div>
   </div>
