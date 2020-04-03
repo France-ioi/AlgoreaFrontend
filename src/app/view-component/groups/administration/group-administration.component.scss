@@ -106,6 +106,8 @@
   }
 
   tr {
+    height: 5rem;
+    
     &.ui-state-highlight {
       td {
         background-color: $base-color;
