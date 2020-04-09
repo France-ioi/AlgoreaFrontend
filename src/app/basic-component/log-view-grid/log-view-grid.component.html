@@ -7,7 +7,7 @@
 >
   <ng-template #headerTemplate let-columns>
     <tr>
-      <th style="width: 3.3333rem;"></th>
+      <th style="width: 3.3333rem; border-right: none;"></th>
       <ng-container *ngFor="let col of columns">
         <th
           *ngIf="
@@ -19,6 +19,7 @@
             'non-title': col.field !== 'title',
             score: col.field === 'score'
           }"
+          style="border-left: none;"
         >
           <div class="header-container"> 
             {{ col.header }}

@@ -25,7 +25,7 @@
           </div>
         </th>
         <ng-container *ngFor="let col of columns">
-          <th *ngIf="col.field === 'can_manage'" style="width: 110px;">
+          <th *ngIf="col.field === 'can_manage'" style="min-width: 110px;">
             <div class="slanted-header">
               <div class="slanted-header-content">
                 {{ col.header }}
@@ -42,7 +42,7 @@
               </div>
             </div>
           </th>
-          <th *ngIf="col.field === 'manager_of'">
+          <th *ngIf="col.field === 'manager_of'" style="min-width: 110px;">
             <div class="slanted-header">
               <div class="slanted-header-content">
                 {{ col.header }}
@@ -64,7 +64,7 @@
           <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
         </td>
         <td
-          style="text-align: left;width: 160px;"
+          style="text-align: left;width: 160px;padding-left: 0.5rem;"
           pTooltip="{{ rowData.comment }}"
           tooltipPosition="top"
           tooltipStyleClass="tooltip-custom"
@@ -75,10 +75,10 @@
           {{ rowData.comment }}
         </td>
         <ng-container *ngFor="let col of columns">
-          <td *ngIf="col.field === 'manager_of'">
+          <td *ngIf="col.field === 'manager_of'" style="min-width: 110px;">
             <b>{{ rowData.manager_of }}</b>
           </td>
-          <td *ngIf="col.field === 'can_manage'" style="width: 110px;">
+          <td *ngIf="col.field === 'can_manage'" style="min-width: 110px;">
             <div class="can-manage">
               <span>memeberships</span>
               <app-progress-level
@@ -118,7 +118,7 @@
         <div style="width: 5rem; display: flex; justify-content: center;">
           <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
         </div>
-        <span style="color: #9B9B9B; flex: 1;font-size: 1.2rem;">
+        <span style="color: #9B9B9B; flex: 1;font-size: 1.2rem;padding-left: 0.5rem;">
           Select all
         </span>
         <div class="export-tools">

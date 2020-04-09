@@ -41,12 +41,12 @@
 
 :host ::ng-deep .ui-treenode-children {
   border-left: .1rem solid #4A90E2;
-  padding-left: 3rem !important;
+  padding-left: 4rem !important;
 }
 
 :host ::ng-deep p-treenode:last-child > .ui-treenode > .ui-treenode-children {
   border-left: .1rem solid transparent;
-  padding-left: 3rem !important;
+  padding-left: 4rem !important;
 }
 
 :host ::ng-deep
@@ -85,7 +85,7 @@
   }
 
   &.folder .node-item-branch .top-branch {
-    width: 2.3333rem;
+    width: 3.3333rem;
   }
 
   &.checked {
@@ -104,7 +104,7 @@
   .node-item-branch {
     display: flex;
     flex-direction: column;
-    width: 3.2rem;
+    width: 4.2rem;
     min-height: 3.3333rem;
     z-index: 10;
 
@@ -134,13 +134,14 @@
     height: 2.5rem;  
     padding: .1rem 0.25rem;
     position: absolute;
-    left: 2.0833rem;
+    left: 3rem;
     display: flex;
     align-items: center;
 
     .node-label {
       flex: 1;
       font-size: 1.2rem;
+      padding-left: 1.3rem;
     }
   }
 

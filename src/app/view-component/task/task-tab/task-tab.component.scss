@@ -107,13 +107,14 @@
         left: 0;
         border-left: 0.9167rem solid transparent;
         border-right: 0.9167rem solid transparent;
-        border-bottom: 1.4167rem solid #ECF3FC;
+        border-bottom: 1.4167rem solid $light-color;
       }
     }
 
     .add-content-wrapper {
       display: flex;
       align-items: center;
+      margin-bottom: 1.5rem;
 
       span.label {
         font-style: italic;
@@ -258,6 +259,10 @@
         margin-left: 0;
         margin-right: 0;
         flex: 1;
+
+        .section-container {
+          padding-bottom: 5rem;
+        }
       }
     }
 

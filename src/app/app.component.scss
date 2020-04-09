@@ -103,7 +103,7 @@
         .task-title {
           margin-left: 1.25rem;
           flex: 1;
-          font-size: 2.8rem;
+          font-size: 1.6rem;
           margin-bottom: 0.4167rem;
           min-width: 0;
 
@@ -150,6 +150,7 @@
           color: $dark-text-color;
           font-size: 2rem;
           font-weight: bold;
+          margin-right: 20px;
 
           &.finished {
             color: $light-text-color;

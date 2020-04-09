@@ -9,6 +9,7 @@
   background-color: $base-color;
   padding-left: 1.6667rem;
   padding-right: 1.6667rem;
+  position: relative;
 
   span {
     text-transform: uppercase;
@@ -21,11 +22,19 @@
 
     &.edit-icon {
       margin-left: 0;
+      margin-right: auto;
     }
 
     &.edit-title {
-      flex: 1;
+      position: absolute;
       font-size: 1.2rem;
+      font-weight: bold;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      text-align: center;
+      vertical-align: middle;
     }
 
     &.edit-translate {
@@ -35,6 +44,8 @@
       padding-right: 1rem;
       font-size: 1.2rem;
       cursor: pointer;
+      font-weight: bold;
+      z-index: 1;
     }
 
     &.edit-redo {
@@ -42,6 +53,7 @@
       width: 2.0833rem;
       height: 2.0833rem;
       cursor: pointer;
+      z-index: 1;
     }
 
     &.edit-save {
@@ -49,12 +61,14 @@
       width: 2.3333rem;
       height: 2.3333rem;
       cursor: pointer;
+      z-index: 1;
     }
 
     &.edit-cancel {
       cursor: pointer;
       width: 2.3333rem;
       height: 2.3333rem;
+      z-index: 1;
     }
   }
 

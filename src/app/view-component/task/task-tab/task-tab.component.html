@@ -256,6 +256,7 @@
                       <th
                         *ngFor="let col of columns"
                         [pSortableColumn]="col.field"
+                        style="border-left: none;"
                       >
                         <div class="header-container">
                           {{ col.header }}

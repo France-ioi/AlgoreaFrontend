@@ -26,15 +26,15 @@
     >
       <ng-template #headerTemplate let-columns>
         <tr>
-          <th style="width: 4.1667rem;"></th>
+          <th style="width: 4.1667rem; border-right: none;"></th>
           <ng-container *ngFor="let col of columns">
-            <th *ngIf="col.field !== 'progress'" [pSortableColumn]="col.field">
+            <th *ngIf="col.field !== 'progress'" [pSortableColumn]="col.field" style="border-left: none;">
               <div class="header-container">
                 {{ col.header }}
                 <p-sortIcon [field]="col.field"></p-sortIcon>
               </div>
             </th>
-            <th *ngIf="col.field === 'progress'" style="width: 5rem">
+            <th *ngIf="col.field === 'progress'" style="width: 5rem;">
               {{ col.header }}
             </th>
           </ng-container>

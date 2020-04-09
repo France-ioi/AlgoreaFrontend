@@ -4,6 +4,7 @@
 .table-container {
   padding-bottom: 1.6667rem;
   position: relative;
+  margin-left: -4.1rem;
 
   .empty-group {
     text-align: center;
@@ -49,7 +50,10 @@ app-sub-section {
 
 .button-container {
   display: flex;
-  flex-wrap: wrap;
+
+  app-group-button {
+    flex: 1;
+  }
 }
 
 .session-selectors {
@@ -188,6 +192,7 @@ span.comment {
 .import-csv {
   display: flex;
   align-items: center;
+  margin-bottom: 2rem;
 
   span.comment {
     flex: 1;

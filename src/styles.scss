@@ -41,10 +41,12 @@ body .ui-widget {
       color: white;
       width: 100%;
       border-radius: $border-radius;
-      padding: 0.4167rem;
+      padding: 2px;
       box-shadow: 0 0.1667rem 0.3333rem -.1rem rgba(0,0,0,.2), 0 0.3333rem 0.4167rem 0 rgba(0,0,0,.14), 0 .1rem 1rem 0 rgba(0,0,0,.12);
       display: flex;
       flex-direction: column;
+      font-family: 'Titillium';
+      font-weight: bold;
 
       .content-item {
         display: flex;
@@ -52,8 +54,11 @@ body .ui-widget {
         font-size: 1.2rem;
         margin: 0.1667rem;
         padding: 0.4167rem;
+        padding-right: 0;
+        margin-right: 0;
         cursor: pointer;
         border-bottom: .1rem solid #4281CA;
+        height: 3rem;
 
         &-label {
           display: flex;
@@ -61,9 +66,11 @@ body .ui-widget {
           text-align: right;
           line-height: 1.25rem;
           height: 1.25rem;
+          justify-content: flex-end;
         }
 
         &-icon {
+          width: 2.5rem;
           margin-left: 1rem;
           display: flex;
           align-items: center;
@@ -82,20 +89,31 @@ body .ui-widget {
         border-bottom: .1rem solid #4587D4;
         display: flex;
         align-items: center;
+        height: 3rem;
 
         &-label {
           flex: 1;
+          display: flex;
+          justify-content: flex-end;
         }
 
         &-icon {
           display: flex;
           align-items: center;
           justify-content: center;
-          margin-left: 1rem;
-          border-radius: 1.8333rem;
-          width: 1.8333rem;
-          height: 1.8333rem;
+          border-radius: 2.4rem;
+          width: 2.4rem;
+          height: 2.4rem;
           background-color: $dark-base-color;
+
+          &-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.5rem;
+            margin-left: 1rem;
+            margin-right: 0;
+          }
         }
       }
     }

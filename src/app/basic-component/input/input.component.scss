@@ -11,7 +11,7 @@
     height: 3.75rem;
 
     input {
-      font-size: 3rem;
+      font-size: 2.5rem;
       font-weight: 300;
       padding-left: 3.75rem;
       line-height: 3.75rem;
@@ -45,7 +45,7 @@
     display: flex;
     background-color: #D3DBE7;
     border: none;
-    box-shadow: 0 .1rem #C9CFD7 inset;
+    box-shadow: 0 .1rem #00000019 inset;
     border-radius: $border-radius;
     padding-left: 2.5rem;
     font-size: 1.2rem;
@@ -63,7 +63,7 @@
 
     &::placeholder {
       font-style: italic;
-      color: $base-text-color;
+      color: lightgray;
       font-size: 1.2rem;
     }
   }

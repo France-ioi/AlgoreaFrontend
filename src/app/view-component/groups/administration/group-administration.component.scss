@@ -10,11 +10,13 @@
   position: relative;
 
   .tri-tag {
-    left: 8rem;
+    left: 2.5rem;
   }
 }
 
 :host .slanted-grid {
+  margin-left: -4.8rem;
+
   tr > th {
     border-left: none;
     border-right: none;
