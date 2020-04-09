@@ -13,7 +13,7 @@
   .dialog-title {
     font-size: 2rem;
     color: $dark-text-color;
-    margin-left: 1.6rem;
+    margin-left: 1.8rem;
     font-weight: normal;
     flex: 1;
   }
@@ -55,9 +55,6 @@
     width: 0.5rem;
   }
 
-  &:hover {
-  }
-
   &::-webkit-scrollbar-track {
     background-color: transparent;
   }
@@ -77,6 +74,11 @@
 
     .tree-content {
       padding-right: 1.5rem;
+
+      app-selection-tree {
+        display: block;
+        margin-left: -2rem;
+      }
     }
 
     .button-container {

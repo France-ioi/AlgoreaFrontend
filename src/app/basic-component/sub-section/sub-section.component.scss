@@ -21,12 +21,12 @@
     @include section-header;
 
       .section-handler {
-      @include section-handler($base-color,$dark-color);
-      width: 3rem;
-      border-radius: 50%;
-      border: none;
-      padding-right: 0;
-      justify-content: center;
+        @include section-handler($base-color,$dark-color);
+        width: 3rem;
+        border-radius: 50%;
+        border: none;
+        padding-right: 0;
+        justify-content: center;
       }
 
 
@@ -62,7 +62,7 @@
 
   .section-content {
     // padding: .5rem 0 5rem 4.2rem;
-    padding: 0 0 0 4.2rem;
+    padding: 2rem 0 0 4.2rem;
     color: $base-text-color;
   }
 }

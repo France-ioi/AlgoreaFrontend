@@ -2,11 +2,13 @@
 @import 'src/geometry.scss';
 
 .pending-request-container {
+  margin-left: -4rem;
   margin-right: -1.6667rem;
 
   .grid-user-info-field {
     display: flex;
     align-items: center;
+    margin-left: 0.2rem;
 
     img {
       border-radius: 50%;

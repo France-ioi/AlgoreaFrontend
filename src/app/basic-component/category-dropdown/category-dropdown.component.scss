@@ -35,6 +35,10 @@
 
     .ui-dropdown-label {
       color: $base-text-color;
+      height: 2rem;
+      line-height: 2rem;
+      padding-top: 0;
+      padding-bottom: 0;
 
       .selected-icon {
         margin-right: 1rem;

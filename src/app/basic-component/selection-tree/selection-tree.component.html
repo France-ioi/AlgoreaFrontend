@@ -15,7 +15,7 @@
           <i *ngIf="!node.expanded && node.checked" class="pi pi-folder" style="color: white;" [ngStyle]="{'fontSize.rem': node.root ? 2: 1.4}"></i>
           <i *ngIf="node.expanded && node.checked" class="pi pi-folder-open" style="color: white;" [ngStyle]="{'fontSize.rem': node.root ? 2 : 1.4}"></i>
         </span>
-        <span (click)="nodeCheck($event, node)" class="node-label" [ngStyle]="{'fontSize.rem': node.root ? 2 : 1.4}">{{
+        <span (click)="nodeCheck($event, node)" class="node-label" [ngStyle]="{'fontSize.rem': node.root ? 2 : 1.2}">{{
           node.title
         }}</span>
       </span>
@@ -33,7 +33,7 @@
           <i *ngIf="node.checked" class="pi pi-check" [ngStyle]="{'fontSize.rem': node.root ? 2 : 1.4}"></i>
           <i *ngIf="!node.checked" class="pi pi-circle-on" [ngStyle]="{'fontSize.rem': node.root ? 2 : 1.4}"></i>
         </span>
-        <span (click)="nodeCheck($event, node)" class="node-label" [ngStyle]="{'fontSize.rem': node.root ? 2 : 1.4}">{{
+        <span (click)="nodeCheck($event, node)" class="node-label" [ngStyle]="{'fontSize.rem': node.root ? 2 : 1.2}">{{
           node.title
         }}</span>
       </span>

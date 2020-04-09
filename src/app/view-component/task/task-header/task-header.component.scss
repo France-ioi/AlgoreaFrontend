@@ -11,13 +11,14 @@
   margin-right: 2rem;
   min-height: 11.7rem;
   position: relative;
+  margin-top: 1rem;
 
   app-skill-progress {
-    position: absolute;
-    left:0;
-    bottom: 2rem;
+    // position: absolute;
+    // left:0;
+    // bottom: 2rem;
     // top:50%;
-    width: 100%;
+    // width: 100%;
     // transform: translateY(3rem);
   }
 
@@ -70,6 +71,10 @@
 
             span {
               margin-right: 1rem;
+            }
+
+            &:last-child {
+              margin-right: 0;
             }
           }
         }

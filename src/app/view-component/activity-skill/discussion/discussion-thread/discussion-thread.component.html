@@ -8,7 +8,8 @@
     </span>
   </div>
   <span class="close-icon" (click)="onBack($event)">
-    <i class="fa fa-times"></i>
+    <!-- <i class="fa fa-times"></i> -->
+    <img src="assets/images/close.svg">
   </span>
 </div>
 <app-section icon="fa fa-comment" label="{{ label }} help thread">
@@ -97,7 +98,7 @@
   </div>
   <app-sub-section icon="fa fa-comment" label="Add a message">
     <div class="sub-section-unwrapper">
-      <p>{{ message.desc }}</p>
+      <p class="comment-desc">{{ message.desc }}</p>
       <div class="new-comment">
         <div class="comment-editor-container">
           <div class="user-info">
@@ -136,4 +137,5 @@
       </div>
     </div>
   </app-sub-section>
+  <div style="margin-bottom: -3rem;"></div>
 </app-section>
