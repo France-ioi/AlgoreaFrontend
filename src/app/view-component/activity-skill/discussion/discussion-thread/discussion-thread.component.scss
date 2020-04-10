@@ -39,7 +39,7 @@
   }
 }
 
-.thread-list-container {
+:host .thread-list-container {
   margin-left: -5.8333rem;
   margin-right: -1.6667rem;
   position: relative;
@@ -57,6 +57,12 @@
       color: $dark-text-color;
       font-size: 1.2rem;
       min-height: 4.1667rem;
+
+      app-button {
+        ::ng-deep .ui-button {
+          height: 2rem;
+        }
+      }
 
       &.creator {
         border-left: 0.4167rem solid $base-color;
@@ -93,6 +99,7 @@
             padding: 0.4167rem 1rem;
             color: $dark-text-color;
             height: 2rem;
+            margin-left: -1rem;
 
             .message-icon {
               display: flex;
