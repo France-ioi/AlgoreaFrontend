@@ -9,10 +9,11 @@
   flex-direction: column;
   // margin-bottom: 1rem;
   margin-right: 2rem;
-  // min-height: 11.7rem;
+  min-height: 10.3rem;
   position: relative;
   margin-top: 1rem;
   margin-bottom: .5rem;
+  justify-content: center;
 
   app-skill-progress {
     // position: absolute;
@@ -29,7 +30,6 @@
     align-items: center;
     // background-color: $base-bk-color;
     // padding-bottom: 1rem;
-    // min-height: 11.7rem;
     margin-bottom: 2rem;
 
     &.edit {
@@ -113,7 +113,7 @@
         text-overflow: ellipsis;
         overflow: hidden;
         white-space: nowrap;
-        margin-bottom: -.4rem;
+        // margin-bottom: -.4rem;
       }
       span {
         color: $base-text-color;
