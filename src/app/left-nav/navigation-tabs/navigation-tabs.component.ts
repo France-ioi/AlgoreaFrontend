@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, OnChanges, SimpleChanges, ViewChild, NgZone, Output, EventEmitter } from '@angular/core';
 import { Location } from '@angular/common';
-import { EditService } from '../../services/edit.service';
+import { EditService } from '../../shared/services/edit.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -155,7 +155,7 @@ export class NavigationTabsComponent implements OnInit, OnChanges {
     this.groupShow = false;
   }
 
-  onNodeChange(e) {
+  onNodeChange(e, src) {
     this.currentUser = {
       title: e.title,
       type: 'group'
@@ -164,7 +164,10 @@ export class NavigationTabsComponent implements OnInit, OnChanges {
     this.selectedGroup = 3;
     
     this.editService.setUser(this.currentUser);
-    this.groupSelect.emit(e);
+    this.groupSelect.emit({
+      e: e,
+      src: src
+    });
   }
 
   onTitleChange(e) {

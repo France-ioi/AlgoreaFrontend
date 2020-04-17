@@ -4,12 +4,7 @@
     <span class="group-subtitle">{{ subtitle }}</span>
   </div>
   <div class="group-info-content">
-    <app-group-manage
-      *ngIf="!showJoined"
-      [requests]="pendingRequests"
-      [columns]="columns"
-      [panel]="grdata"
-    ></app-group-manage>
+    <app-group-manage *ngIf="!showJoined"></app-group-manage>
     <app-group-joined *ngIf="showJoined"></app-group-joined>
   </div>
 </div>

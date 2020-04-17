@@ -33,20 +33,20 @@ import { MosaicItemComponent } from './activities/content/mosaics/mosaic-item/mo
 import { SettingsEditModeComponent } from './activities/settings/edit-mode/edit-mode.component';
 import { NewContentComponent } from './activities/content/edit-mode/new-content/new-content.component';
 import { NewContentTypeComponent } from './activities/content/edit-mode/new-content/new-content-type/new-content-type.component';
-import { GroupSettingsComponent } from './groups/settings/group-settings.component';
-import { GroupOverviewComponent } from './groups/overview/group-overview.component';
+import { GroupSettingsComponent } from './group-views/settings/group-settings.component';
+import { GroupOverviewComponent } from './group-views/overview/group-overview.component';
 import { YourselfOverviewComponent } from './yourself/yourself-tab/yourself-overview/yourself-overview.component';
-import { GroupInfoComponent } from './groups/group-info/group-info.component';
-import { GroupJoinedComponent } from './groups/group-info/group-joined/group-joined.component';
-import { GroupManageComponent } from './groups/group-info/group-manage/group-manage.component';
+import { GroupInfoComponent } from './group-views/group-info/group-info.component';
+import { GroupJoinedComponent } from './group-views/group-info/group-joined/group-joined.component';
+import { GroupManageComponent } from './group-views/group-info/group-manage/group-manage.component';
 import { PendingInvitationViewComponent } from './requests-view/pending-invitation-view/pending-invitation-view.component';
-import { GroupCompositionComponent } from './groups/composition/group-composition.component';
+import { GroupCompositionComponent } from './group-views/composition/group-composition.component';
 import { YourselfPersonalComponent } from './yourself/yourself-tab/yourself-personal/yourself-personal.component';
 import { PresentationsComponent } from './activities/content/presentations/presentations.component';
 import { PresentationItemComponent } from './activities/content/presentations/presentation-item/presentation-item.component';
-import { TeamComponent } from './groups/composition/team/team.component';
-import { TeamMemberComponent } from './groups/composition/team/team-member/team-member.component';
-import { TeamCompositionComponent } from './groups/composition/team-composition/team-composition.component';
+import { TeamComponent } from './group-views/composition/team/team.component';
+import { TeamMemberComponent } from './group-views/composition/team/team-member/team-member.component';
+import { TeamCompositionComponent } from './group-views/composition/team-composition/team-composition.component';
 import { NotificationViewComponent } from './notification-view/notification-view.component';
 import { NotificationHeaderComponent } from './notification-view/notification-header/notification-header.component';
 import { NotificationTabComponent } from './notification-view/notification-tab/notification-tab.component';
@@ -58,7 +58,7 @@ import { AssociatedSkillsEditModeComponent } from './activities/associated-skill
 import { DiscussionThreadComponent } from './activity-skill/discussion/discussion-thread/discussion-thread.component';
 import { RatingBarComponent } from './activity-skill/discussion/discussion-thread/rating-bar/rating-bar.component';
 import { GroupRightHeaderComponent } from './group/group-header/group-right-header/group-right-header.component';
-import { GroupAdministrationComponent } from './groups/administration/group-administration.component';
+import { GroupAdministrationComponent } from './group-views/administration/group-administration.component';
 
 
 @NgModule({

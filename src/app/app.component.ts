@@ -1,9 +1,9 @@
 import { Component, HostListener } from "@angular/core";
 import { ProgressType } from "./basic-component/skill-progress/skill-progress.component";
-import { NodeService } from "./services/node-service.service";
+import { NodeService } from "./shared/services/node-service.service";
 import * as _ from "lodash";
 import { Router } from "@angular/router";
-import { EditService } from "./services/edit.service";
+import { EditService } from "./shared/services/edit.service";
 
 @Component({
   selector: "app-root",
@@ -1015,46 +1015,26 @@ export class AppComponent {
     this.selectedType = 3;
     this.userTitle = 'Groups you joined';
     this.updateService();
-    this.router.navigate(['/group-info'], {
-      queryParams: {
-        refresh: new Date().getTime()
-      },
-      state: {
-        title: 'Groups you joined',
-        subtitle: 'Here are the groups you joined, you can leave them ore add new ones, lorem ipsum dolor sit amet',
-        showJoined: true
-      }
-    });
+    this.router.navigate(['/groups/memberships']);
   }
 
   onManageGroupSelected(e) {
     this.selectedType = 3;
     this.userTitle = 'Groups you manage';
     this.updateService();
-    this.router.navigate(['/group-info'], {
-      queryParams: {
-        refresh: new Date().getTime()
-      },
-      state: {
-        title: 'Groups you manage',
-        subtitle: 'Here are the groups you manage, you can leave them ore add new ones, lorem ipsum dolor sit amet',
-        showJoined: false
-      }
-    });
+    this.router.navigate(['/groups/managed']);
   }
 
   onGroupSelected(e) {
     this.selectedType = 1;
     this.userTitle = "Jean Monet";
     this.updateService();
-    this.router.navigate(["/group"], {
-      queryParams: {
-        refresh: new Date().getTime()
-      },
-      state: {
-        groupdata: e
-      }
-    });
+    console.log(e);
+    if (e.src === 'managed') {
+      this.router.navigate(["/groups/managed/50"]);
+    } else {
+      this.router.navigate(["/groups/memberships/11"]);
+    }
   }
 
   onEditPage(e) {

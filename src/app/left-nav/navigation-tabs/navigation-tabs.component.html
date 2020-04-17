@@ -77,7 +77,7 @@
               <app-group-navigation-tree
                 [data]="items.groups.manage"
                 inGroup="true"
-                (onNodeChange)="onNodeChange($event)"
+                (onNodeChange)="onNodeChange($event, 'managed')"
                 (onTitleChange)="onTitleChange($event)"
               ></app-group-navigation-tree>
             </p-accordionTab>
@@ -94,7 +94,7 @@
               </p-header>
               <app-group-navigation-tree
                 [data]="items.groups.join"
-                (onNodeChange)="onNodeChange($event)"
+                (onNodeChange)="onNodeChange($event, 'memberships')"
                 (onTitleChange)="onTitleChange($event)"
               ></app-group-navigation-tree>
             </p-accordionTab>

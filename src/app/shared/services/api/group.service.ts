@@ -1,0 +1,84 @@
+import { Injectable } from '@angular/core';
+import { environment } from '../../../../environments/environment';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Observable, Subject, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { Group } from '../../models/group.model';
+import { GroupPendingRequest } from '../../models/group-pending-request.model';
+import { GroupMember } from '../../models/group-member.model';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class GroupService {
+
+  private baseUrl = `${environment.apiUrl}/groups`;
+  private groupList = new Subject<Group>();
+  private requestList = new Subject<GroupPendingRequest[]>();
+  private memberList = new Subject<GroupMember[]>();
+
+  constructor(
+    private http: HttpClient
+  ) { }
+
+  getManagedGroup(id): Observable<Group> {
+    this.http.get(`${this.baseUrl}/${id}`)
+      .subscribe((group: Group) => this.groupList.next(group), this.handleError);
+
+    return this.groupList;
+  }
+
+  getManagedRequests(id): Observable<GroupPendingRequest[]> {
+    this.http.get(`${this.baseUrl}/${id}/requests`)
+      .subscribe((requests: GroupPendingRequest[]) => this.requestList.next(requests), this.handleError);
+
+    return this.requestList;
+  }
+
+  getGroupMemebers(id): Observable<GroupMember[]> {
+    this.http.get(`${this.baseUrl}/${id}/members`)
+      .subscribe((members: GroupMember[]) => this.memberList.next(members), this.handleError);
+
+    return this.memberList;
+  }
+
+  removeGroupMembers(id, user_ids): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/${id}/members`, {
+      params: {
+        user_ids: user_ids
+      }
+    }).pipe(
+      catchError( this.handleError )
+    );
+  }
+
+  acceptJoinRequest(id, group_ids) {
+    return this.http.post(`${this.baseUrl}/${id}/join-requests/accept`, {
+      params: {
+        group_ids: group_ids
+      }
+    }).pipe(
+      catchError( this.handleError )
+    );
+  }
+
+  rejectJoinRequest(id, group_ids) {
+    return this.http.post(`${this.baseUrl}/${id}/join-requests/reject`, {
+      params: {
+        group_ids: group_ids
+      }
+    }).pipe(
+      catchError( this.handleError )
+    );
+  }
+
+  private handleError(error: HttpErrorResponse) {
+    if (error.error instanceof ErrorEvent) {
+      console.error('An error occurred:', error.error.message);
+    } else {
+      console.error(`Backend returned code ${error.status}, ` + `body was: ${error.error}`);
+    }
+
+    return throwError('Something bad happened; please try again later.');
+  }
+}

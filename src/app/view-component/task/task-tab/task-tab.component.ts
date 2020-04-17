@@ -8,8 +8,8 @@ import {
   Output,
   EventEmitter
 } from "@angular/core";
-import { NodeService } from "src/app/services/node-service.service";
-import { EditService } from "src/app/services/edit.service";
+import { NodeService } from "src/app/shared/services/node-service.service";
+import { EditService } from "src/app/shared/services/edit.service";
 import { MenuItem } from "primeng/api/menuitem";
 import { ViewportScroller } from "@angular/common";
 import { MatDialog } from '@angular/material';

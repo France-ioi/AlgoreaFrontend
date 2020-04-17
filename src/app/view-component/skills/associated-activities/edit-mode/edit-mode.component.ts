@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { NodeService } from 'src/app/services/node-service.service';
-import { EditService } from 'src/app/services/edit.service';
+import { NodeService } from 'src/app/shared/services/node-service.service';
+import { EditService } from 'src/app/shared/services/edit.service';
 import { Router } from '@angular/router';
 
 @Component({
