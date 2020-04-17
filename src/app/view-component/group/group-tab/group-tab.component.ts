@@ -1,5 +1,5 @@
 import { Component, OnInit, ElementRef, EventEmitter, Output, Input } from '@angular/core';
-import { NodeService } from 'src/app/services/node-service.service';
+import { NodeService } from 'src/app/shared/services/node-service.service';
 
 @Component({
   selector: 'app-group-tab',
