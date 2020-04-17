@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MatDialog, MAT_DIALOG_DATA } from '@angular/material';
-import { NodeService } from 'src/app/services/node-service.service';
+import { NodeService } from 'src/app/shared/services/node-service.service';
 
 @Component({
   selector: 'app-attach-group-dialog',

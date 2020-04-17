@@ -1,5 +1,5 @@
 import { Component, OnInit, Output, EventEmitter, Input, HostListener } from '@angular/core';
-import { EditService } from '../services/edit.service';
+import { EditService } from '../shared/services/edit.service';
 import { Router } from '@angular/router';
 
 @Component({

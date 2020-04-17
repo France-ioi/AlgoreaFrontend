@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { NodeService } from 'src/app/services/node-service.service';
+import { NodeService } from 'src/app/shared/services/node-service.service';
 import { Router } from '@angular/router';
-import { EditService } from 'src/app/services/edit.service';
+import { EditService } from 'src/app/shared/services/edit.service';
 
 @Component({
   selector: 'app-associated-skills-edit',
