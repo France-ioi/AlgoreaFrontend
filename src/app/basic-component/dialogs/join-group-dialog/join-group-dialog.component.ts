@@ -24,7 +24,10 @@ export class JoinGroupDialogComponent implements OnInit {
   }
 
   onClose(e) {
-    this.dialogRef.close(e);
+    this.dialogRef.close({
+      success: false,
+      event: e
+    });
   }
 
   onJoin(e) {
@@ -50,7 +53,10 @@ export class JoinGroupDialogComponent implements OnInit {
     }
 
     this.error = false;
-    this.dialogRef.close(e);
+    this.dialogRef.close({
+      success: true,
+      event: e
+    });
   }
 
 }

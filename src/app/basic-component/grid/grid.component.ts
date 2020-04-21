@@ -51,6 +51,30 @@ export class GridComponent implements OnInit, OnChanges {
   @ContentChild('frozenBodyTemplate', { static: false }) frozenBodyTemplate;
 
   @Input() showGear = true;
+
+  selectionValue = [];
+
+  @Input()
+  get selection() {
+    console.log(this.selectionValue);
+    return this.selectionValue;
+  }
+
+  @Output() selectionChange = new EventEmitter();
+
+  set selection(val) {
+    this.selectionValue = val;
+    this.selectionChange.emit(this.selectionValue);
+  }
+
+  onRowSelect(e) {
+    this.selectionChange.emit(this.selectionValue);
+  }
+
+  onRowUnselect(e) {
+    this.selectionChange.emit(this.selectionValue);
+  }
+
   showColumnSelection = false;
 
   selected = {};

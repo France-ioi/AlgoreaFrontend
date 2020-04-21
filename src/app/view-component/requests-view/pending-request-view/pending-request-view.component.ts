@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 
 @Component({
   selector: 'app-pending-request-view',
@@ -10,6 +10,9 @@ export class PendingRequestViewComponent implements OnInit {
   @Input() columns;
   @Input() data;
   @Input() gridGr;
+
+  @Output() onAccept = new EventEmitter<any>();
+  @Output() onReject = new EventEmitter<any>();
 
   groupSwitch = [
     {
@@ -27,6 +30,14 @@ export class PendingRequestViewComponent implements OnInit {
 
   onExpandWidth(e) {
 
+  }
+
+  onClickAccept(e) {
+    this.onAccept.emit(e);
+  }
+
+  onClickReject(e) {
+    this.onReject.emit(e);
   }
 
 }
