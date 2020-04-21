@@ -1,6 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { JoinGroupDialogComponent } from 'src/app/basic-component/dialogs/join-group-dialog/join-group-dialog.component';
+import { CurrentUserService } from 'src/app/shared/services/api/current-user.service';
+import { MembershipHistory } from 'src/app/shared/models/membership-history.model';
+import { GroupMembership } from 'src/app/shared/models/group-membership.model';
+import { GroupService } from 'src/app/shared/services/api/group.service';
+import { GroupMember } from 'src/app/shared/models/group-member.model';
 
 @Component({
   selector: 'app-group-joined',
@@ -9,44 +14,7 @@ import { JoinGroupDialogComponent } from 'src/app/basic-component/dialogs/join-g
 })
 export class GroupJoinedComponent implements OnInit {
 
-  teamData = [
-    {
-      title: 'Team 1',
-      members: 'Member 1, Member 2, Member 3',
-      related_to: 'Lorem Ipsum',
-      created_the: 'Lorem Ipsum'
-    },
-    {
-      title: 'Team 2',
-      members: 'Member 1, Member 2, Member 3',
-      related_to: 'Lorem Ipsum',
-      created_the: 'Lorem Ipsum'
-    },
-    {
-      title: 'Team 3',
-      members: 'Member 1, Member 2, Member 3',
-      related_to: 'Lorem Ipsum',
-      created_the: 'Lorem Ipsum'
-    },
-    {
-      title: 'Team 4',
-      members: 'Member 1, Member 2, Member 3',
-      related_to: 'Lorem Ipsum',
-      created_the: 'Lorem Ipsum'
-    },
-    {
-      title: 'Team 5',
-      members: 'Member 1, Member 2, Member 3',
-      related_to: 'Lorem Ipsum',
-      created_the: 'Lorem Ipsum'
-    },
-    {
-      title: 'Team 6',
-      members: 'Member 1, Member 2, Member 3',
-      related_to: 'Lorem Ipsum',
-      created_the: 'Lorem Ipsum'
-    }
-  ]
+  teamData = [];
 
   teamColumns = [
     { field: 'title', header: 'title' },
@@ -62,20 +30,7 @@ export class GroupJoinedComponent implements OnInit {
     }
   ];
 
-  invitationData = [
-    {
-      title: 'Terminale A',
-      type: 'Classe',
-      date: new Date(),
-      admins: 'Mathias, Melanie'
-    },
-    {
-      title: 'Terminale B',
-      type: 'Classe',
-      date: new Date(),
-      admins: 'Mathias'
-    }
-  ]
+  invitationData = [];
 
   invitationColumns = [
     { field: 'title', header: 'title' },
@@ -92,17 +47,54 @@ export class GroupJoinedComponent implements OnInit {
   ];
 
   constructor(
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private currentUserService: CurrentUserService,
+    private groupService: GroupService
   ) { }
 
   ngOnInit() {
+    this.currentUserService.getPendingInvitations().subscribe((memberships: MembershipHistory []) => {
+      for (const membership of memberships) {
+        if (membership.action !== 'invitation_created') {
+          continue;
+        }
+
+        this.invitationData.push({
+          title: membership.group.name,
+          type: membership.group.type,
+          date: membership.at,
+          admins: 'Mathias'
+        });
+      }
+    });
+
+    this.currentUserService.getJoinedGroups().subscribe((memberships: GroupMembership []) => {
+      for (const membership of memberships) {
+
+        // this.groupService.getGroupMembers(membership.group.id).subscribe((mbrs: GroupMember []) => {
+        //   this.teamData.push({
+        //     title: membership.group.name,
+        //     created_the: membership.group.type,
+        //     related_to: membership.action,
+        //     members: mbrs.map(val => val.user.login).join(', ')
+        //   });
+        // });
+
+        this.teamData.push({
+          title: membership.group.name,
+          created_the: membership.group.type,
+          related_to: membership.action,
+          members: 'Mathias'
+        });
+      }
+    });
   }
 
   onExpandWidth(e) {
     
   }
 
-  onJoinTeam(e) {
+  onJoinTeam(code) {
     const dialogRef = this.dialog.open(JoinGroupDialogComponent, {
       maxHeight: '83rem',
       minWidth: '50rem',
@@ -123,7 +115,18 @@ export class GroupJoinedComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Main dialog returns ${result}`);
+      // console.log(`Main dialog returns ${result}`);
+      if (result.success) {
+        this.currentUserService.joinGroupByCode(code, ['personal_info_view']).subscribe(res => {
+          console.log(res);
+        })
+      }
+    });
+  }
+
+  onClickLeaveTeam(e) {
+    this.currentUserService.leaveGroup(11).subscribe(res => {
+      console.log(res);
     });
   }
 

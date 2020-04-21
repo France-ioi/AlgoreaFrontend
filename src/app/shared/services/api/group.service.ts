@@ -35,7 +35,7 @@ export class GroupService {
     return this.requestList;
   }
 
-  getGroupMemebers(id): Observable<GroupMember[]> {
+  getGroupMembers(id): Observable<GroupMember[]> {
     this.http.get(`${this.baseUrl}/${id}/members`)
       .subscribe((members: GroupMember[]) => this.memberList.next(members), this.handleError);
 
@@ -45,7 +45,7 @@ export class GroupService {
   removeGroupMembers(id, user_ids): Observable<any> {
     return this.http.delete(`${this.baseUrl}/${id}/members`, {
       params: {
-        user_ids: user_ids
+        user_ids: user_ids.join(',')
       }
     }).pipe(
       catchError( this.handleError )
@@ -53,9 +53,9 @@ export class GroupService {
   }
 
   acceptJoinRequest(id, group_ids) {
-    return this.http.post(`${this.baseUrl}/${id}/join-requests/accept`, {
+    return this.http.post(`${this.baseUrl}/${id}/join-requests/accept`, null, {
       params: {
-        group_ids: group_ids
+        group_ids: group_ids.join(',')
       }
     }).pipe(
       catchError( this.handleError )
@@ -63,9 +63,9 @@ export class GroupService {
   }
 
   rejectJoinRequest(id, group_ids) {
-    return this.http.post(`${this.baseUrl}/${id}/join-requests/reject`, {
+    return this.http.post(`${this.baseUrl}/${id}/join-requests/reject`, null, {
       params: {
-        group_ids: group_ids
+        group_ids: group_ids.join(',')
       }
     }).pipe(
       catchError( this.handleError )
