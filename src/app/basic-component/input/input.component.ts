@@ -33,7 +33,7 @@ export class InputComponent implements OnInit, OnChanges {
   }
 
   onButtonClick(e) {
-    this.onClick.emit(e);
+    this.onClick.emit(this.value);
   }
 
 }

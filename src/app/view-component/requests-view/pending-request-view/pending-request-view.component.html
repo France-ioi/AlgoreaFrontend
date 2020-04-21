@@ -81,11 +81,11 @@
             Select all
           </span>
           <div class="req-tools">
-            <span class="accept">
+            <span class="accept" (click)="onClickAccept($event)">
               <span>Accept</span>
               <i class="fa fa-check"></i>
             </span>
-            <span class="reject">
+            <span class="reject" (click)="onClickReject($event)">
               <span>Reject</span>
               <i class="fa fa-times"></i>
             </span>

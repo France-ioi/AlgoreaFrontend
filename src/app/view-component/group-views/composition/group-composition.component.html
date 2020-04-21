@@ -16,6 +16,7 @@
       [selectedColumns]="columns"
       [columns]="columns"
       [data]="gridData"
+      [(selection)]="selection"
       sortMode="single"
       scrollWhenExpanded="true"
       [groupInfo]="grdata"
@@ -72,7 +73,7 @@
               <span>Merge</span>
               <i class="fa fa-paste"></i>
             </span>
-            <span class="remove">
+            <span class="remove" (click)="onClickRemove($event)">
               <span>Remove</span>
               <i class="fa fa-trash-alt"></i>
             </span>

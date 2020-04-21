@@ -19,6 +19,9 @@ export class GroupCompositionComponent implements OnInit {
   @Input() empty;
   
   @Output() expandWholeWidth = new EventEmitter<void>();
+  @Output() onRemove = new EventEmitter<any>();
+
+  selection = [];
 
   selectedPolicy = 0;
 
@@ -178,6 +181,10 @@ export class GroupCompositionComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Generate Batch User dialog reaturns ${result}`);
     });
+  }
+
+  onClickRemove(e) {
+    this.onRemove.emit(this.selection);
   }
 
 }
