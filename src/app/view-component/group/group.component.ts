@@ -82,7 +82,7 @@ export class GroupComponent implements OnInit {
 
     const id = this.activatedRoute.snapshot.paramMap.get('id');
 
-    this.groupService.getManagedGroup(id).subscribe((group: Group) => {
+    this.groupService.getManagedGroup(50).subscribe((group: Group) => {
       this.groupdata = {
         ID: group.id,
         name: group.name,
