@@ -30,7 +30,10 @@ export class GroupService {
 
   getManagedRequests(id): Observable<GroupPendingRequest[]> {
     this.http.get(`${this.baseUrl}/${id}/requests`)
-      .subscribe((requests: GroupPendingRequest[]) => this.requestList.next(requests), this.handleError);
+      .subscribe((requests: GroupPendingRequest[]) => {
+        const newReqs = requests.filter((req: GroupPendingRequest) => req.action === 'join_request_created');
+        this.requestList.next(newReqs);
+      }, this.handleError);
 
     return this.requestList;
   }
