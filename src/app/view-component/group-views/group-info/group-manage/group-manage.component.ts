@@ -35,6 +35,7 @@ export class GroupManageComponent implements OnInit {
     { field: 'id', order: 1 },
     { field: 'member_since', order: -1 }
   ];
+  prevSortMeta = "-member_since id";
   memberPanel = [
     {
       name: 'Group Info',
@@ -117,9 +118,23 @@ export class GroupManageComponent implements OnInit {
 
   onSort(event: SortEvent) {
     console.log(event);
+    let diff = false;
+
     const sortBy = event.multiSortMeta.map(meta => {
       return meta.order === -1 ? `-${meta.field}` : meta.field
     });
+    
+    if (sortBy.sort().join(' ') !== this.prevSortMeta) {
+      diff = true;
+    }
+
+    console.log(this.prevSortMeta, sortBy);
+
+    if (!diff) {
+      return;
+    }
+
+    this.prevSortMeta = sortBy.sort().join(' ');
 
     this.groupService.getGroupMembers(51, sortBy).subscribe((members: GroupMember[]) => {
       this._setMemberData(members);
