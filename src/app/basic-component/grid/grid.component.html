@@ -9,6 +9,10 @@
   [responsive]="responsive"
   [dataKey]="dataKey"
   [frozenWidth]="frozenWidth"
+  sortMode="multiple"
+  [multiSortMeta]="multiSortMeta"
+  [customSort]="true"
+  (sortFunction)="sortFunction($event)"
   (onRowSelect)="onRowSelect($event)"
   (onRowUnselect)="onRowUnselect($event)"
 >

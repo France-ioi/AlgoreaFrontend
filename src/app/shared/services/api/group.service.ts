@@ -6,6 +6,7 @@ import { catchError } from 'rxjs/operators';
 import { Group } from '../../models/group.model';
 import { GroupPendingRequest } from '../../models/group-pending-request.model';
 import { GroupMember } from '../../models/group-member.model';
+import { DEFAULT_LIMIT, GROUP_API } from '../../constants/api';
 
 @Injectable({
   providedIn: 'root'
@@ -38,8 +39,12 @@ export class GroupService {
     return this.requestList;
   }
 
-  getGroupMembers(id): Observable<GroupMember[]> {
-    this.http.get(`${this.baseUrl}/${id}/members`)
+  getGroupMembers(id, sort = GROUP_API.sort, limit = DEFAULT_LIMIT): Observable<GroupMember[]> {
+    this.http.get(`${this.baseUrl}/${id}/members`, {
+      params: {
+        sort: sort
+      }
+    })
       .subscribe((members: GroupMember[]) => this.memberList.next(members), this.handleError);
 
     return this.memberList;

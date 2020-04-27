@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, OnChanges, SimpleChanges, ContentChild, ViewChild, Output, EventEmitter } from '@angular/core';
 import { DomHandler } from 'primeng/dom';
 import { Table, TableService } from 'primeng/table';
+import { SortEvent } from 'primeng/api/sortevent';
 
 export function tableFactory(wrapper: GridComponent) {
   return wrapper.table;
@@ -28,18 +29,24 @@ export class GridComponent implements OnInit, OnChanges {
   @Input() columns;
   @Input() groupInfo;
 
-  @Input() sortMode;
-  @Input() scrollWhenExpanded = false;
+  @Input() sortMode = "multiple";
+  @Input() multiSortMeta = [];
+  @Input() customSort = true;
 
+  @Input() scrollWhenExpanded = false;
   @Input() scrollable;
   @Input() scrollHeight;
+
   @Input() selectionMode;
   @Input() responsive;
   @Input() dataKey;
   @Input() frozenCols;
   @Input() frozenWidth;
+  @Input() showGear = true;
   
   @Output() expandWholeWidth = new EventEmitter<boolean>();
+  @Output() onSort = new EventEmitter();
+  @Output() selectionChange = new EventEmitter();
   
   @ContentChild('colgroupTemplate', { static: false }) colgroupTemplate;
   @ContentChild('headerTemplate', { static: false }) headerTemplate;
@@ -50,7 +57,6 @@ export class GridComponent implements OnInit, OnChanges {
   @ContentChild('frozenHeaderTemplate', { static: false }) frozenHeaderTemplate;
   @ContentChild('frozenBodyTemplate', { static: false }) frozenBodyTemplate;
 
-  @Input() showGear = true;
 
   selectionValue = [];
 
@@ -60,7 +66,6 @@ export class GridComponent implements OnInit, OnChanges {
     return this.selectionValue;
   }
 
-  @Output() selectionChange = new EventEmitter();
 
   set selection(val) {
     this.selectionValue = val;
@@ -149,6 +154,10 @@ export class GridComponent implements OnInit, OnChanges {
     this.toShow = this.columns.length - this.selectedColumns.length;
 
     console.log(this.selected);
+  }
+
+  sortFunction(event: SortEvent) {
+    this.onSort.emit(event);
   }
 
 }
