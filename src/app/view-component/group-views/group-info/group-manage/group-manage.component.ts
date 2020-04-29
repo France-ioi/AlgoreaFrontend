@@ -117,7 +117,6 @@ export class GroupManageComponent implements OnInit {
   }
 
   onSort(event: SortEvent) {
-    console.log(event);
     let diff = false;
 
     const sortBy = event.multiSortMeta.map(meta => {
@@ -127,8 +126,6 @@ export class GroupManageComponent implements OnInit {
     if (sortBy.sort().join(' ') !== this.prevSortMeta) {
       diff = true;
     }
-
-    console.log(this.prevSortMeta, sortBy);
 
     if (!diff) {
       return;

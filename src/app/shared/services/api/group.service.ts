@@ -42,7 +42,7 @@ export class GroupService {
   getGroupMembers(id, sort = GROUP_API.sort, limit = DEFAULT_LIMIT): Observable<GroupMember[]> {
     this.http.get(`${this.baseUrl}/${id}/members`, {
       params: {
-        sort: sort
+        sort: sort.join(',')
       }
     })
       .subscribe((members: GroupMember[]) => this.memberList.next(members), this.handleError);
