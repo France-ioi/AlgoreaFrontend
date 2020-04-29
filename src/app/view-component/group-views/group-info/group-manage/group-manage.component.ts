@@ -1,8 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { NodeService } from 'src/app/shared/services/node-service.service';
 import { GroupService } from 'src/app/shared/services/api/group.service';
 import { GroupPendingRequest } from 'src/app/shared/models/group-pending-request.model';
 import { GroupMember } from 'src/app/shared/models/group-member.model';
+import { SortEvent } from 'primeng/api/sortevent';
 
 @Component({
   selector: 'app-group-manage',
@@ -25,11 +25,17 @@ export class GroupManageComponent implements OnInit {
 
   memberData = [];
   memberCols = [
+    { field: 'id', header: 'ID' },
     { field: 'name', header: 'Name' },
-    { field: 'login', header: 'User name' },
-    { field: 'grade', header: 'Grade' },
+    { field: 'user.login', header: 'User name' },
+    { field: 'user.grade', header: 'Grade' },
     { field: 'member_since', header: 'Member Since' },
   ];
+  multiSortMeta = [
+    { field: 'id', order: 1 },
+    { field: 'member_since', order: -1 }
+  ];
+  prevSortMeta = "-member_since id";
   memberPanel = [
     {
       name: 'Group Info',
@@ -40,6 +46,20 @@ export class GroupManageComponent implements OnInit {
   trees;
 
   pendingReqs: GroupPendingRequest[];
+
+  private _setMemberData(members: GroupMember []) {
+    this.memberData = [];
+
+    for( const member of members ) {
+      this.memberData.push({
+        member_since: member.member_since,
+        name: `${member.user.first_name} ${member.user.last_name}`,
+        'user.login': member.user.login,
+        'user.grade': member.user.grade,
+        id: member.id
+      })
+    }
+  }
 
   constructor(
     private groupService: GroupService
@@ -62,16 +82,8 @@ export class GroupManageComponent implements OnInit {
     });
 
     this.groupService.getGroupMembers(51).subscribe((members: GroupMember[]) => {
-      for( const member of members ) {
-        this.memberData.push({
-          member_since: member.member_since,
-          name: `${member.user.first_name} ${member.user.last_name}`,
-          login: member.user.login,
-          grade: member.user.grade,
-          id: member.id
-        })
-      }
-    })
+      this._setMemberData(members);
+    });
   }
 
   onAcceptRequest(e) {
@@ -102,6 +114,31 @@ export class GroupManageComponent implements OnInit {
 
   onExpandWidth(e) {
     
+  }
+
+  onSort(event: SortEvent) {
+    console.log(event);
+    let diff = false;
+
+    const sortBy = event.multiSortMeta.map(meta => {
+      return meta.order === -1 ? `-${meta.field}` : meta.field
+    });
+    
+    if (sortBy.sort().join(' ') !== this.prevSortMeta) {
+      diff = true;
+    }
+
+    console.log(this.prevSortMeta, sortBy);
+
+    if (!diff) {
+      return;
+    }
+
+    this.prevSortMeta = sortBy.sort().join(' ');
+
+    this.groupService.getGroupMembers(51, sortBy).subscribe((members: GroupMember[]) => {
+      this._setMemberData(members);
+    });
   }
 
 }

@@ -13,6 +13,8 @@ export class GroupCompositionComponent implements OnInit {
   @Input() gridData;
   @Input() columns;
   @Input() grdata;
+  @Input() multiSortMeta;
+
   @Input() trees;
   @Input() groupTitle = "subgroups";
   @Input() forGroup = false;
@@ -20,6 +22,7 @@ export class GroupCompositionComponent implements OnInit {
   
   @Output() expandWholeWidth = new EventEmitter<void>();
   @Output() onRemove = new EventEmitter<any>();
+  @Output() onSort = new EventEmitter<any>();
 
   selection = [];
 
@@ -129,6 +132,10 @@ export class GroupCompositionComponent implements OnInit {
 
   onChildrenPolicyChanged(idx) {
     this.selectedPolicy = idx;
+  }
+
+  onCustomSort(e) {
+    this.onSort.emit(e);
   }
 
   onExpandWidth(e) {

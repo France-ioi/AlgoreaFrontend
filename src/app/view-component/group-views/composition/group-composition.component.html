@@ -17,9 +17,11 @@
       [columns]="columns"
       [data]="gridData"
       [(selection)]="selection"
-      sortMode="single"
+      sortMode="multiple"
+      [multiSortMeta]="multiSortMeta"
       scrollWhenExpanded="true"
       [groupInfo]="grdata"
+      (onSort)="onCustomSort($event)"
       (expandWholeWidth)="onExpandWidth($event)"
     >
       <ng-template #headerTemplate let-columns>

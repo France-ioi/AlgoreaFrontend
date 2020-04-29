@@ -6,5 +6,5 @@
   (onReject)="onRejectRequest($event)"
 ></app-pending-request-view>
 <div class="composition-wrapper">
-  <app-group-composition [forGroup]="true" [gridData]="memberData" [columns]="memberCols" [grdata]="memberPanel" [trees]="trees" groupTitle="groups" (expandWholeWidth)="onExpandWidth($event)" (onRemove)="onRemoveMember($event)"></app-group-composition>
+  <app-group-composition [forGroup]="true" [gridData]="memberData" [columns]="memberCols" [grdata]="memberPanel" [multiSortMeta]="multiSortMeta" [trees]="trees" groupTitle="groups" (expandWholeWidth)="onExpandWidth($event)" (onRemove)="onRemoveMember($event)" (onSort)="onSort($event)"></app-group-composition>
 </div>
