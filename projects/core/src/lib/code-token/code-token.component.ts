@@ -1,5 +1,5 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
-import * as randomString from 'random-string';
+// import * as randomString from 'random-string';
 
 @Component({
   selector: 'app-code-token',
@@ -20,12 +20,12 @@ export class CodeTokenComponent implements OnInit {
   }
 
   refreshCode(e) {
-    this.code = randomString({
-      length: 8,
-      numeric: true,
-      letters: true,
-      special: false
-    });
+    // this.code = randomString({
+    //   length: 8,
+    //   numeric: true,
+    //   letters: true,
+    //   special: false
+    // });
   }
 
 }

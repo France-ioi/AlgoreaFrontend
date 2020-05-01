@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { GroupNavigationTreeComponent } from './group-navigation.component';
+import { GroupNavigationTreeComponent } from './group-navigation-tree.component';
 
 describe('GroupNavigationComponent', () => {
   let component: GroupNavigationTreeComponent;

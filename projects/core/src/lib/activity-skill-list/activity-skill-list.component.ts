@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { EditService } from 'src/app/services/edit.service';
+// import { EditService } from 'src/app/services/edit.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -16,20 +16,20 @@ export class ActivitySkillListComponent implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
-    private editService: EditService
+    // private editService: EditService
   ) { }
 
   ngOnInit() {
-    this.unsubscribe = this.editService.getOb().subscribe(res => {
-      this.status = res;
-    });
+    // this.unsubscribe = this.editService.getOb().subscribe(res => {
+    //   this.status = res;
+    // });
   }
 
   onItemClick(e) {
     this.status.selectedType = 2;
     this.status.activityORSkill = this.activity;
     this.status.userTitle = e.title;
-    this.editService.setValue(this.status);
+    // this.editService.setValue(this.status);
     this.router.navigate([`/task/${e.ID}`], {
       queryParams: {
         refresh: new Date().getTime()
@@ -41,7 +41,7 @@ export class ActivitySkillListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.unsubscribe.unsubscribe();
+    // this.unsubscribe.unsubscribe();
   }
 
 }

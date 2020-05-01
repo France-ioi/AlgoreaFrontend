@@ -5,7 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatNativeDateModule, MatRippleModule } from '@angular/material/core';
 import { TableModule } from 'primeng/table';
-import { BasicComponentModule } from '../basic-component/basic-component.module';
+// import { BasicComponentModule } from '../basic-component/basic-component.module';
 import { TieredMenuModule } from 'primeng/tieredmenu';
 import { TooltipModule } from 'primeng/tooltip';
 
@@ -59,6 +59,7 @@ import { DiscussionThreadComponent } from './activity-skill/discussion/discussio
 import { RatingBarComponent } from './activity-skill/discussion/discussion-thread/rating-bar/rating-bar.component';
 import { GroupRightHeaderComponent } from './group/group-header/group-right-header/group-right-header.component';
 import { GroupAdministrationComponent } from './groups/administration/group-administration.component';
+import { CoreModule } from 'core';
 
 
 @NgModule({
@@ -118,7 +119,8 @@ import { GroupAdministrationComponent } from './groups/administration/group-admi
     MatRippleModule,
     MatTabsModule,
     TableModule,
-    BasicComponentModule,
+    // BasicComponentModule,
+    CoreModule,
     TieredMenuModule,
     TooltipModule,
     MatMenuModule,

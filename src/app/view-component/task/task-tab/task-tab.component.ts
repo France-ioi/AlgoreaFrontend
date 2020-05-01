@@ -13,7 +13,7 @@ import { EditService } from "src/app/services/edit.service";
 import { MenuItem } from "primeng/api/menuitem";
 import { ViewportScroller } from "@angular/common";
 import { MatDialog } from '@angular/material';
-import { AccessEditDialogComponent } from 'src/app/basic-component/dialogs/access-edit-dialog/access-edit-dialog.component';
+import { AccessEditDialogComponent } from 'core';
 
 export enum AutoText {
   category = "category",

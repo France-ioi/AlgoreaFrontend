@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import * as randomString from 'random-string';
+// import * as randomString from 'random-string';
 
 @Component({
   selector: 'app-generate-batch-user-dialog',
@@ -20,12 +20,12 @@ export class GenerateBatchUserDialogComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.random_string = randomString({
-      length: 0,
-      numeric: true,
-      letters: true,
-      special: false
-    });
+    // this.random_string = randomString({
+    //   length: 0,
+    //   numeric: true,
+    //   letters: true,
+    //   special: false
+    // });
   }
 
   onTypeChange(idx) {
@@ -37,12 +37,12 @@ export class GenerateBatchUserDialogComponent implements OnInit {
   }
 
   onSuffixChange(e) {
-    this.random_string = randomString({
-      length: parseInt(e, 10),
-      numeric: true,
-      letters: true,
-      special: false
-    });
+    // this.random_string = randomString({
+    //   length: parseInt(e, 10),
+    //   numeric: true,
+    //   letters: true,
+    //   special: false
+    // });
   }
 
   onClose(e) {

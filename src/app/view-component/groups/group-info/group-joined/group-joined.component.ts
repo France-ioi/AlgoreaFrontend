@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
-import { JoinGroupDialogComponent } from 'src/app/basic-component/dialogs/join-group-dialog/join-group-dialog.component';
+import { JoinGroupDialogComponent } from 'core';
 
 @Component({
   selector: 'app-group-joined',

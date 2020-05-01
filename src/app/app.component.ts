@@ -1,9 +1,9 @@
 import { Component, HostListener } from "@angular/core";
-import { ProgressType } from "./basic-component/skill-progress/skill-progress.component";
 import { NodeService } from "./services/node-service.service";
 import * as _ from "lodash";
 import { Router } from "@angular/router";
 import { EditService } from "./services/edit.service";
+import { ProgressType } from 'core';
 
 @Component({
   selector: "app-root",

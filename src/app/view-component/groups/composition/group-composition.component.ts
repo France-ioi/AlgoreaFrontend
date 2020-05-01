@@ -1,7 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { MatDialog } from '@angular/material';
-import { EditUserDialogComponent } from 'src/app/basic-component/dialogs/edit-user-dialog/edit-user-dialog.component';
-import { GenerateBatchUserDialogComponent } from 'src/app/basic-component/dialogs/generate-batch-user-dialog/generate-batch-user-dialog.component';
+import { EditUserDialogComponent, GenerateBatchUserDialogComponent } from 'core';
 
 @Component({
   selector: 'app-group-composition',

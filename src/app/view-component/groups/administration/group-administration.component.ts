@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material";
-import { AccessEditDialogComponent } from "src/app/basic-component/dialogs/access-edit-dialog/access-edit-dialog.component";
+import { AccessEditDialogComponent } from 'core';
 
 @Component({
   selector: "app-group-administration",

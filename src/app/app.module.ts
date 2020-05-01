@@ -14,7 +14,8 @@ import { AccordionModule } from 'primeng/accordion';
 import { TabViewModule } from 'primeng/tabview';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
 
-import { BasicComponentModule } from './basic-component/basic-component.module';
+// import { BasicComponentModule } from './basic-component/basic-component.module';
+import { CoreModule } from 'core';
 import { ViewComponentModule } from './view-component/view-component.module';
 
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
@@ -27,6 +28,8 @@ import { SkillActivityTabsComponent } from './left-nav/skill-activity-tabs/skill
 import { LeftNavComponent } from './left-nav/left-nav.component';
 import { TopNavComponent } from './top-nav/top-nav.component';
 import { SearchTabComponent } from './left-nav/search-tab/search-tab.component';
+import { DesignAppModule } from 'projects/design/src/app/app.module';
+import { DevAppModule } from 'projects/dev/src/app/app.module';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: false
@@ -54,8 +57,11 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     PerfectScrollbarModule,
     ScrollPanelModule,
     AngularResizedEventModule,
-    BasicComponentModule,
-    ViewComponentModule
+    // BasicComponentModule,
+    CoreModule,
+    ViewComponentModule,
+    DesignAppModule.forRoot(),
+    DevAppModule.forRoot()
   ],
   providers: [
     {

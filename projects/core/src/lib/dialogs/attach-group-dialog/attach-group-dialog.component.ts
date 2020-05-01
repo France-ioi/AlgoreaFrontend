@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MatDialog, MAT_DIALOG_DATA } from '@angular/material';
-import { NodeService } from 'src/app/services/node-service.service';
+// import { NodeService } from 'src/app/services/node-service.service';
 
 @Component({
   selector: 'app-attach-group-dialog',
@@ -15,13 +15,13 @@ export class AttachGroupDialogComponent implements OnInit {
     public dialogRef: MatDialogRef<AttachGroupDialogComponent>,
     public dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data,
-    private nodeService: NodeService
+    // private nodeService: NodeService
   ) { }
 
   ngOnInit() {
-    this.nodeService.getFiles().then(res => {
-      this.trees = res;
-    });
+    // this.nodeService.getFiles().then(res => {
+    //   this.trees = res;
+    // });
   }
 
   onClose(e) {

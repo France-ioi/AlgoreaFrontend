@@ -3,7 +3,7 @@
   "version": 1, 
   "newProjectRoot": "projects",
   "projects": {
-    "AlgoreaFrontend": {
+    "france-ioi": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/AlgoreaFrontend",
+            "outputPath": "dist/france-ioi",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -66,18 +66,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "AlgoreaFrontend:build"
+            "browserTarget": "france-ioi:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "AlgoreaFrontend:build:production"
+              "browserTarget": "france-ioi:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "AlgoreaFrontend:build"
+            "browserTarget": "france-ioi:build"
           }
         },
         "test": {
@@ -114,11 +114,11 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "AlgoreaFrontend:serve"
+            "devServerTarget": "france-ioi:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "AlgoreaFrontend:serve:production"
+              "devServerTarget": "france-ioi:serve:production"
             }
           }
         }
@@ -407,5 +407,5 @@
       }
     }
   },
-  "defaultProject": "AlgoreaFrontend"
+  "defaultProject": "france-ioi"
 }

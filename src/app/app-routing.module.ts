@@ -1,42 +1,21 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { TaskComponent } from './view-component/task/task.component';
-import { YourselfComponent } from './view-component/yourself/yourself.component';
-import { GroupComponent } from './view-component/group/group.component';
-import { HomePageComponent } from './view-component/home-page/home-page.component';
-import { GroupInfoComponent } from './view-component/groups/group-info/group-info.component';
-import { NotificationViewComponent } from './view-component/notification-view/notification-view.component';
+import { DesignAppModule } from 'projects/design/src/app/app.module';
+import { DevAppModule } from 'projects/dev/src/app/app.module';
 
 
 const routes: Routes = [
-  {
-    path: 'task/:id',
-    component: TaskComponent
-  },
-  {
-    path: 'yourself',
-    component: YourselfComponent
-  },
-  {
-    path: 'group-info',
-    component: GroupInfoComponent
-  },
-  {
-    path: 'group',
-    component: GroupComponent
-  },
-  {
-    path: 'home',
-    component: HomePageComponent
-  },
-  {
-    path: 'notification',
-    component: NotificationViewComponent
-  }
+  { path: 'design', loadChildren: () => import('projects/design/src/app/app.module').then(m => m.DesignAppModule) },
+  { path: 'dev', loadChildren: () => import('projects/dev/src/app/app.module').then(m => m.DevAppModule) },
+  { path: '**', redirectTo: '/design' }
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [
+    RouterModule.forRoot(routes),
+    DesignAppModule.forRoot(),
+    DevAppModule.forRoot()
+  ],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

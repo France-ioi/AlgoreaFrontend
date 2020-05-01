@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NodeService } from 'src/app/services/node-service.service';
-import { PickListType, PickListColor, PickListItemType } from "src/app/basic-component/pick-list/pick-list.component";
+import { PickListType, PickListColor, PickListItemType } from 'projects/core/src/public-api';
 
 @Component({
   selector: 'app-group-settings',
