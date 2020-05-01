@@ -1,0 +1,131 @@
+@import 'src/colors.scss';
+
+$border-radius: .5rem;
+$drop-shadow: 0 .1rem rgba(0,0,0, 0.2);
+$border-filet: solid .1rem $dark-transparency-color;
+$left-panel-size: 34rem;
+
+/*
+* Common blocs
+*/
+
+
+    // Tab content radius
+    @mixin tab-content-radius {
+      border-radius: 0 0 0 1rem;
+    }
+
+    // Secion header (h2 title container)
+    @mixin section-header {
+      display: flex;
+      align-items: center;
+      // margin-bottom: 2rem;
+    }
+    // Footer
+    @mixin footer-add {
+      margin-left: -5.8333rem;
+      margin-right: -1.6667rem;
+      margin-bottom: -5rem;
+      padding-top: 2rem;
+      padding-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: $light-color;
+      position: relative;
+    }
+
+    // Dialog close
+    @mixin dialog-close {
+      width: 4rem;
+      height: 4rem;
+      color: $base-color;
+      cursor: pointer;
+      position: absolute;
+      right: 2rem;
+      top: -.4rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+
+    // Key icon
+    @mixin lock-key {
+      width: 2.5rem;
+      height: 2rem;
+      font-size: 1.2rem;
+      color: $secondary-color;
+      background-color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-bottom-left-radius: 1rem;
+    }
+
+    // Section handler
+    @mixin section-handler($handle-color, $handle-border-color) {
+      display: flex;
+      background-color: $handle-color;
+      border-left: .3rem solid $handle-border-color;
+      width: 5rem;
+      height: 3rem;
+      border-top-right-radius: 1.5rem;
+      border-bottom-right-radius: 1.5rem;
+      position: relative;
+      justify-content: flex-end;
+      align-items: center;
+      padding-right: 1rem;
+
+      i {
+        color: white;
+        font-size: 1.2rem;
+      }
+    }
+
+    //Main ui-table-summary
+    @mixin main-tabs {
+      font-family: inherit;
+      border-right: .1rem solid $light-border-color;
+      font-size: 1.2rem;
+      height: 5rem;
+      line-height: 5rem;
+      border-radius: $border-radius $border-radius 0 0;
+    }
+
+    @mixin main-tab-active {
+        background-color: white;
+        border-right-color: transparent;
+        color: $base-color;
+        border-top: 0.3rem solid $base-color;
+        overflow: visible;
+
+        // &:before {
+        //   content:" ";
+        //   height: .3rem;
+        //   background-color: $base-color;
+        //   width: 100%;
+        //   position: absolute;
+        //   top: 0;
+        //   left: 0;
+        // }
+        &:before,
+        &:after {
+          content:" ";
+          height: 1rem;
+          width: 1rem;;
+          background-image:url('/assets/images/corner-tab.svg');
+          background-position: left;
+          background-repeat: no-repeat;
+          background-size: cover;
+          position: absolute;
+          bottom: 0;
+          left: -1rem;
+        }
+        &:after {
+          background-position: right;
+          bottom: 0;
+          left: auto;
+          right: -1rem;
+        }
+    }

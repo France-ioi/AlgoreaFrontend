@@ -4,7 +4,9 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build core && npm run copyColor && npm run copyGeo",
+    "copyColor": "xcopy \"projects\\core\\src\\lib\\colors.scss\" \"dist\\core\\\"",
+    "copyGeo": "xcopy \"projects\\core\\src\\lib\\geometry.scss\" \"dist\\core\\\"",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
@@ -36,6 +38,7 @@
     "primeng": "^9.0.0-rc.4",
     "random-string": "^0.2.0",
     "rxjs": "~6.4.0",
+    "scss-bundle": "^3.1.1",
     "tslib": "^1.10.0",
     "uuid": "^3.3.3",
     "zone.js": "~0.9.1"
@@ -57,7 +60,7 @@
     "karma-coverage-istanbul-reporter": "~2.0.1",
     "karma-jasmine": "~2.0.1",
     "karma-jasmine-html-reporter": "^1.4.0",
-    "ng-packagr": "^5.0.0",
+    "ng-packagr": "^5.7.1",
     "protractor": "~5.4.0",
     "ts-node": "~7.0.0",
     "tslint": "~5.15.0",
