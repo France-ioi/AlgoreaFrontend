@@ -1,1 +1,368 @@
 /* You can add global styles to this file, and also import other style files */
+@import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
+@import 'src/colors.scss';
+@import 'src/geometry.scss';
+
+html {
+  height: 100%;
+  font-size: 62.5%;
+}
+
+body {
+  font-size: 1.2rem;
+  margin: 0;
+  background-color: $base-bk-color;
+  min-height: 100%;
+}
+
+body .ui-widget {
+  font-family: "titillium", sans-serif;
+  font-size: inherit;
+}
+
+.cdk-global-overlay-wrapper {
+  background-color: #FFFC;
+}
+
+.cdk-overlay-connected-position-bounding-box {
+  margin-bottom: -2rem;
+}
+
+.mat-menu-panel.chapter-menu {
+  background-color: transparent;
+  box-shadow: none;
+  min-height: unset !important;
+
+  .mat-menu-content {
+    padding: 0 !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: transparent;
+
+    .content {
+      background-color: $base-color;
+      color: white;
+      width: 100%;
+      border-radius: $border-radius;
+      padding: 2px;
+      box-shadow: 0 0.1667rem 0.3333rem -.1rem rgba(0,0,0,.2), 0 0.3333rem 0.4167rem 0 rgba(0,0,0,.14), 0 .1rem 1rem 0 rgba(0,0,0,.12);
+      display: flex;
+      flex-direction: column;
+      font-family: 'Titillium';
+      font-weight: bold;
+
+      .content-item {
+        display: flex;
+        align-items: center;
+        font-size: 1.2rem;
+        margin: 0.1667rem;
+        padding: 0.4167rem;
+        padding-right: 0;
+        margin-right: 0;
+        cursor: pointer;
+        border-bottom: .1rem solid #4281CA;
+        height: 3rem;
+
+        &-label {
+          display: flex;
+          flex: 1;
+          text-align: right;
+          line-height: 1.25rem;
+          height: 1.25rem;
+          justify-content: flex-end;
+        }
+
+        &-icon {
+          width: 2.5rem;
+          margin-left: 1rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        &:last-child {
+          border-bottom: none;
+        }
+      }
+
+      .content-title {
+        text-transform: uppercase;
+        font-size: 1.2rem;
+        padding: .1rem;
+        border-bottom: .1rem solid #4587D4;
+        display: flex;
+        align-items: center;
+        height: 3rem;
+
+        &-label {
+          flex: 1;
+          display: flex;
+          justify-content: flex-end;
+        }
+
+        &-icon {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 2.4rem;
+          width: 2.4rem;
+          height: 2.4rem;
+          background-color: $dark-base-color;
+
+          &-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.5rem;
+            margin-left: 1rem;
+            margin-right: 0;
+          }
+        }
+      }
+    }
+  }
+
+  &.lock-menu .mat-menu-content .content .content-item {
+
+    &-label {
+      flex: 1;
+      text-align: left;
+    }
+
+    &-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 1rem;
+      width: 1.25rem;
+    }
+  }
+}
+
+.mat-menu-panel.grid-td-menu {
+  background-color: transparent;
+  box-shadow: none;
+  min-height: unset !important;
+
+  &.mat-menu-before {
+    .mat-menu-content {
+      .content {
+        flex-direction: column-reverse;
+
+        .indicator {
+          width: 0;
+          border-left: 0.4167rem solid transparent;
+          border-right: 0.4167rem solid transparent;
+          border-bottom: 0.4167rem solid $base-color;
+        }
+      }
+    }
+  }
+
+  .mat-menu-content {
+    padding: 0 !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: transparent;
+
+    .content {
+      background-color: $base-color;
+      color: white;
+      width: 100%;
+      border-radius: $border-radius;
+      padding: 0.4167rem;
+      box-shadow: 0 0.1667rem 0.3333rem -.1rem rgba(0,0,0,.2), 0 0.3333rem 0.4167rem 0 rgba(0,0,0,.14), 0 .1rem 1rem 0 rgba(0,0,0,.12);
+      display: flex;
+      flex-direction: column;
+
+      &.validated {
+        background-color: $dark-base-color;
+      }
+
+      & > span {
+        display: flex;
+        align-items: center;
+        padding: 0.4167rem;
+        font-size: 1.2rem;
+        cursor: pointer;
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        &.score {
+          border-top: .1rem solid #295485;
+          justify-content: center;
+          border-bottom: none;
+
+          app-score-ring {
+            color: white;
+            margin-right: 1rem;
+          }
+        }
+
+        &.clickable {
+          height: 2.9167rem;
+          padding-bottom: 1rem;
+          padding-top: 1rem;
+          border-bottom: .1rem solid #295485;
+          background-color: $base-color;
+          margin-left: -0.4167rem;
+          margin-right: -0.4167rem;
+          padding-left: 1rem;
+          cursor: pointer;
+
+          &:hover {
+            background-color: #295485;
+          }
+
+          &:last-child {
+            margin-bottom: -0.4167rem;
+            border-bottom: none;
+          }
+
+          i {
+            margin-right: 1rem;
+          }
+        }
+
+        span.menu-label {
+          flex: 1;
+        }
+
+        span.menu-value {
+          margin-left: 1rem;
+        }
+
+        i {
+          margin-right: 0.4167rem;
+          width: 1.6667rem;
+        }
+      }
+    }
+
+    .indicator {
+      width: 0;
+      border-left: 0.4167rem solid transparent;
+      border-right: 0.4167rem solid transparent;
+      border-top: 0.4167rem solid $base-color;
+    }
+  }
+}
+
+.mat-menu-panel.gear-mat-menu {
+  background-color: #4A4A4A;
+
+  .gear-menu {
+    display: flex;
+    flex-direction: column;
+    padding-left: 0;
+    list-style: none;
+    margin-left: 0.4167rem;
+    margin-right: 0.4167rem;
+
+    li {
+      display: flex;
+      margin: 0.4167rem;
+
+      span.switch-label {
+        color: #7D7D7D;
+        flex: 1;
+        font-size: 1.2rem;
+        margin-right: 1rem;
+
+        &.checked {
+          color: white;
+        }
+      }
+    }
+  }
+}
+
+.ui-tooltip.tooltip-custom {
+
+  .ui-tooltip-text {
+    background-color: $base-color;
+    border-radius: 1rem;
+    padding: 1rem 2rem;
+  }
+
+  &.ui-tooltip-top {
+    .ui-tooltip-arrow {
+      border-top-color: $base-color;
+    }
+  }
+
+}
+
+
+/*
+*  COMMONS
+*/
+
+.tri-tag {
+  position: absolute;
+  top: -.8rem;
+  left: 3rem;
+  border-left: 1rem solid transparent;
+  border-right: 1rem solid transparent;
+  border-bottom: .8rem solid $light-color;
+}
+
+.mat-dialog-container {
+  box-shadow: none;
+  padding: 1.5rem !important;
+  font-family: "titillium", sans-serif;
+
+  .mat-dialog-content {
+    margin: 0 -1.5rem;
+    padding: 0 1.5rem;
+  }
+
+  .mat-dialog-actions {
+    padding: 0.5rem 0 0;
+  }
+
+  .dialog-title {
+    font-family: "titillium", sans-serif;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  html { font-size: 55.66%; }
+}
+@media screen and (min-width: 1200px) {
+  html { font-size: 67.87%; }
+}
+@media screen and (min-width: 1400px) {
+  html { font-size: 73.97%; }
+}
+@media screen and (min-width: 1600px) {
+  html { font-size: 80.08%; }
+}
+@media screen and (min-width: 1920px) {
+  html { font-size: 89.84%; }
+}
+@media screen and (min-width: 2200px) {
+  html { font-size: 98.39%; }
+}
+@media screen and (min-width: 2400px) {
+  html { font-size: 104.49%; }
+}
+@media screen and (min-width: 2700px) {
+  html { font-size: 113.65%; }
+}
+@media screen and (min-width: 3000px) {
+  html { font-size: 122.80%; }
+}
+@media screen and (min-width: 3300px) {
+  html { font-size: 131.96%; }
+}
+@media screen and (min-width: 3600px) {
+  html { font-size: 141.11%; }
+}
+@media screen and (min-width: 4000px) {
+  html { font-size: 153.32%; }
+}

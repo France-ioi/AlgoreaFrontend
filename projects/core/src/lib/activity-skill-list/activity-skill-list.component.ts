@@ -30,7 +30,7 @@ export class ActivitySkillListComponent implements OnInit, OnDestroy {
     this.status.activityORSkill = this.activity;
     this.status.userTitle = e.title;
     // this.editService.setValue(this.status);
-    this.router.navigate([`/task/${e.ID}`], {
+    this.router.navigate([`/design/task/${e.ID}`], {
       queryParams: {
         refresh: new Date().getTime()
       },

@@ -1,2 +1,139 @@
+<style>
+  :host {
+    font-family: "titillium", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+      Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+      "Segoe UI Symbol";
+    font-size: 1.2rem;
+    color: #333;
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    display: block;
+  }
 
-<router-outlet></router-outlet>
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin: 0.6667rem 0;
+  }
+
+  p {
+    margin: 0;
+  }
+
+  a,
+  a:visited,
+  a:hover {
+    color: #1976d2;
+    text-decoration: none;
+  }
+
+  a:hover {
+    color: #125699;
+  }
+</style>
+
+<div class="container">
+  <div class="left" [ngClass]="{ collapsed: collapsed, expanded: !collapsed }">
+    <app-left-nav
+      [data]="groupdata"
+      [user]="user"
+      [collapsed]="collapsed"
+      [signedIn]="signedIn"
+      (collapseEvent)="onCollapse($event)"
+      (skillSelect)="onSkillSelected($event)"
+      (activitySelect)="onActivitySelected($event)"
+      (yourselfSelect)="onYourselfSelected($event)"
+      (groupSelect)="onGroupSelected($event)"
+      (joinGroupSelect)="onJoinGroupSelected($event)"
+      (manageGroupSelect)="onManageGroupSelected($event)"
+      (signInOutEvent)="onSignInOut($event)"
+      (onNotify)="onNotify($event)"
+    ></app-left-nav>
+  </div>
+  <div class="top-bar" [ngClass]="{ editing: editing, collapsed: collapsed, expanded: !collapsed }">
+    <app-top-nav
+      *ngIf="collapsed"
+      [collapsed]="collapsed"
+      [folded]="folded"
+      [data]="user"
+      [signedIn]="signedIn"
+      (collapseEvent)="onCollapse($event)"
+      (foldEvent)="onFold($event)"
+      (onNotify)="onNotify($event)"
+      templateId="1"
+    ></app-top-nav>
+    <div class="top-right-bar">
+      <app-editor-bar
+        *ngIf="editing"
+        (onCancel)="onEditCancel($event)"
+      ></app-editor-bar>
+      <div class="breadcrumb-bar"
+      *ngIf="!folded && !scrolled">
+        <app-breadcrumb
+          [items]="signedIn ? breaddata : breadhome"
+        ></app-breadcrumb>
+        <app-page-navigator
+          *ngIf="!editing && signedIn"
+          (onEdit)="onEditPage($event)"
+        ></app-page-navigator>
+        <app-select *ngIf="!signedIn && collapsed" [items]="langs" style="margin-right: 1rem;height: 1.8333rem;"></app-select>
+        <app-button *ngIf="!signedIn && collapsed" label="Connexion" icon="pi pi-check" class="ui-button-rounded" style="margin-right: 0.4167rem;" (onClick)="onSignInOut(true)"></app-button>
+      </div>
+      <div class="folded-top-bar" *ngIf="folded || scrolled">
+        <app-score-ring
+          *ngIf="isStarted && selectedType == 2"
+          [displayedScore]="taskdata.progress.displayedScore"
+          [currentScore]="taskdata.progress.currentScore"
+          [diameter]="30"
+        ></app-score-ring>
+        <div
+          *ngIf="(!isStarted || selectedType === 0 || selectedType === 1) && selectedType !== 5"
+          class="task-user-image"
+        >
+          <img src="assets/images/_messi.jpg" style="width: 2.9167rem; height: 2.9167rem;" />
+        </div>
+        <div class="task-title">
+          <p>{{ userTitle }}</p>
+        </div>
+        <div *ngIf="collapsed" class="user-info">
+          <span class="user-avatar">
+            <img src="assets/images/Male.svg" style="width: 3rem; height: 3rem;" />
+          </span>
+          <span class="user-id">CyrilK89</span>
+        </div>
+        <span
+          *ngIf="selectedType == 2"
+          class="clock-icon"
+          [ngClass]="{ finished: false }"
+        >
+          <i class="fa fa-clock"></i>
+        </span>
+        <span
+          *ngIf="selectedType == 2"
+          class="remaining-time"
+          [ngClass]="{ finished: false }"
+        >
+          00:03:10
+        </span>
+        <app-page-navigator
+          *ngIf="!editing"
+          allowFullScreen="false"
+          navigationMode="nextAndPrev"
+          (onEdit)="onEditPage($event)"
+        ></app-page-navigator>
+      </div>
+    </div>
+  </div>
+  <div class="right" [ngClass]="{ collapsed: collapsed, expanded: !collapsed, editing: editing }">
+    <div
+      class="main-content"
+      [ngClass]="{ folded: folded, unfolded: !folded, 'type-1': selectedType === 1, 'type-2': selectedType === 2, 'type-0': selectedType === 0 }"
+    >
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

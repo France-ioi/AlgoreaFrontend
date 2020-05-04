@@ -8,12 +8,12 @@ import {
   Output,
   EventEmitter
 } from "@angular/core";
-import { NodeService } from "src/app/services/node-service.service";
-import { EditService } from "src/app/services/edit.service";
 import { MenuItem } from "primeng/api/menuitem";
 import { ViewportScroller } from "@angular/common";
 import { MatDialog } from '@angular/material';
 import { AccessEditDialogComponent } from 'core';
+import { NodeService } from '../../../services/node-service.service';
+import { EditService } from '../../../services/edit.service';
 
 export enum AutoText {
   category = "category",

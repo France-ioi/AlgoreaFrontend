@@ -1,7 +1,7 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
-import { EditService } from 'src/app/services/edit.service';
 import { Subscription } from 'rxjs';
+import { EditService } from '../../services/edit.service';
 
 @Component({
   selector: 'app-task',

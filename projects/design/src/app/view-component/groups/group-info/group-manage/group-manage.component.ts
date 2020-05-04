@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { NodeService } from 'src/app/services/node-service.service';
+import { NodeService } from 'projects/design/src/app/services/node-service.service';
 
 @Component({
   selector: 'app-group-manage',

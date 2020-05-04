@@ -1,14 +1,13 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { NodeService } from 'src/app/services/node-service.service';
-import { EditService } from 'src/app/services/edit.service';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { EditService } from 'projects/design/src/app/services/edit.service';
 
 @Component({
-  selector: 'app-associated-activities-edit',
+  selector: 'app-associated-skills-edit',
   templateUrl: './edit-mode.component.html',
   styleUrls: ['./edit-mode.component.scss']
 })
-export class AssociatedActivitiesEditModeComponent implements OnInit {
+export class AssociatedSkillsEditModeComponent implements OnInit {
 
   gridFilters = [
     {
@@ -55,91 +54,10 @@ export class AssociatedActivitiesEditModeComponent implements OnInit {
       },
       children: [
         {
-          ID: 37,
-          // tslint:disable-next-line: max-line-length
-          title: 'Activities to test headers',
-          type: "folder",
-          ring: true,
-          icons: 'fa fa-folder',
-          state: "opened",
-          connected: true,
-          progress: {
-            displayedScore: 20,
-            currentScore: 20
-          },
-          children: [
-            {
-              ID: 38,
-              title: "Activity with access code",
-              type: "leaf",
-              ring: true,
-              state: "opened",
-              hasKey: true,
-              progress: {
-                displayedScore: 30,
-                currentScore: 30
-              },
-              category: {
-                icon: "fa fa-book-open",
-                type: 1
-              }
-            },
-            {
-              ID: 39,
-              title: "Before you start notice",
-              type: "leaf",
-              ring: true,
-              state: "opened",
-              hasKey: true,
-              progress: {
-                displayedScore: 20,
-                currentScore: 30
-              },
-              category: {
-                icon: "fa fa-book-open",
-                type: 1
-              }
-            },
-            {
-              ID: 40,
-              title: "Activity for teams",
-              type: "leaf",
-              ring: true,
-              state: "opened",
-              hasKey: true,
-              progress: {
-                displayedScore: 90,
-                currentScore: 30
-              },
-              category: {
-                icon: "fa fa-book-open",
-                type: 1
-              }
-            },
-            {
-              ID: 41,
-              title: "Activity with attempts",
-              type: "leaf",
-              ring: true,
-              state: "opened",
-              hasKey: true,
-              progress: {
-                displayedScore: 10,
-                currentScore: 30
-              },
-              category: {
-                icon: "fa fa-book-open",
-                type: 1
-              }
-            }
-          ]
-        },
-        {
           ID: 28,
           title: "Simplify or optimize manipulation",
           type: "leaf",
           ring: true,
-          connected: true,
           state: "opened",
           hasKey: true,
           progress: {
@@ -157,7 +75,6 @@ export class AssociatedActivitiesEditModeComponent implements OnInit {
           title: "Spot symetry an convert to normal form",
           type: "folder",
           ring: true,
-          connected: true,
           state: "opened",
           progress: {
             displayedScore: 70,
@@ -285,13 +202,13 @@ export class AssociatedActivitiesEditModeComponent implements OnInit {
 
   onGotoPage(node) {
     this.status.selectedType = 2;
-    this.status.activityORSkill = true;
+    this.status.activityORSkill = false;
     this.editService.setValue(this.status);
     this.editService.setUser({
       title: node.title,
-      type: 'activity'
+      type: 'skill'
     })
-    this.router.navigate([`/task/${node.ID}`], {
+    this.router.navigate([`/design/task/${node.ID}`], {
       queryParams: {
         refresh: new Date().getTime()
       },

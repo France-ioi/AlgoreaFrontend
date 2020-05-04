@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
-import { EditService } from 'src/app/services/edit.service';
+import { EditService } from '../../services/edit.service';
 
 export enum Type {
   student = 'Student',

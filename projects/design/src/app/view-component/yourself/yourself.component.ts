@@ -1,6 +1,6 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
-import { EditService } from 'src/app/services/edit.service';
+import { EditService } from '../../services/edit.service';
 
 @Component({
   selector: 'app-yourself',
