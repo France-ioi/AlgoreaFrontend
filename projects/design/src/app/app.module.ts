@@ -6,7 +6,6 @@ import { AppComponent } from './app.component';
 import { NavigationTabsComponent } from './left-nav/navigation-tabs/navigation-tabs.component';
 import { LeftNavComponent } from './left-nav/left-nav.component';
 import { TopNavComponent } from './top-nav/top-nav.component';
-import { SearchTabComponent } from './left-nav/search-tab/search-tab.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -29,8 +28,7 @@ const providers = [
     AppComponent,
     NavigationTabsComponent,
     LeftNavComponent,
-    TopNavComponent,
-    SearchTabComponent
+    TopNavComponent
   ],
   imports: [
     BrowserModule,

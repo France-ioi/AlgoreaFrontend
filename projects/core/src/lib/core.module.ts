@@ -87,6 +87,7 @@ import { AccessEditDialogComponent } from './dialogs/access-edit-dialog/access-e
 import { ProgressSectionComponent } from './progress-section/progress-section.component';
 import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
 import { SkillActivityTabsComponent } from './skill-activity-tabs/skill-activity-tabs.component';
+import { SearchTabComponent } from './search-tab/search-tab.component';
 
 @NgModule({
   declarations: [
@@ -149,7 +150,8 @@ import { SkillActivityTabsComponent } from './skill-activity-tabs/skill-activity
     ProgressLevelComponent,
     AccessEditDialogComponent,
     ProgressSectionComponent,
-    SkillActivityTabsComponent
+    SkillActivityTabsComponent,
+    SearchTabComponent
   ],
   imports: [
     CommonModule,
@@ -238,7 +240,8 @@ import { SkillActivityTabsComponent } from './skill-activity-tabs/skill-activity
     SearchFilterComponent,
     ProgressLevelComponent,
     AccessEditDialogComponent,
-    SkillActivityTabsComponent
+    SkillActivityTabsComponent,
+    SearchTabComponent
   ],
   providers: [
     {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: true}}

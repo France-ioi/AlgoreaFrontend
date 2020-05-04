@@ -43,6 +43,7 @@ export * from './lib/progress-section/progress-section.component';
 export * from './lib/score-ring/score-ring.component';
 export * from './lib/search-filter/search-filter.component';
 export * from './lib/search-input/search-input.component';
+export * from './lib/search-tab/search-tab.component';
 export * from './lib/section/section.component';
 export * from './lib/section-paragrah/section-paragraph.component';
 export * from './lib/select/select.component';
