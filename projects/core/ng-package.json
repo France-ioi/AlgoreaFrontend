@@ -4,6 +4,7 @@
   "lib": {
     "entryFile": "src/public-api.ts",
     "umdModuleIds": {
+      "primeng/breadcrumb": "primeng/breadcrumb",
       "primeng/button": "primeng/button",
       "primeng/inputswitch": "primeng/inputswitch",
       "primeng/table": "primeng/table",

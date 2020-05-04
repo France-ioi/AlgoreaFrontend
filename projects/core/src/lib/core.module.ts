@@ -3,6 +3,7 @@ import { CoreComponent } from './core.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
+import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { ButtonModule } from 'primeng/button';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { TableModule } from 'primeng/table';
@@ -83,10 +84,12 @@ import { SearchFilterComponent } from './search-filter/search-filter.component';
 import { ProgressLevelComponent } from './progress-level/progress-level.component';
 import { AccessEditDialogComponent } from './dialogs/access-edit-dialog/access-edit-dialog.component';
 import { ProgressSectionComponent } from './progress-section/progress-section.component';
+import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
 
 @NgModule({
   declarations: [
     CoreComponent,
+    BreadcrumbComponent,
     ButtonComponent,
     SectionComponent,
     DataListComponent,
@@ -149,6 +152,7 @@ import { ProgressSectionComponent } from './progress-section/progress-section.co
     CommonModule,
     FormsModule,
     TableModule,
+    BreadcrumbModule,
     ButtonModule,
     InputSwitchModule,
     CalendarModule,
@@ -173,6 +177,7 @@ import { ProgressSectionComponent } from './progress-section/progress-section.co
     ClickOutsideModule
   ],
   exports: [
+    BreadcrumbComponent,
     ButtonComponent,
     SectionComponent,
     DataListComponent,

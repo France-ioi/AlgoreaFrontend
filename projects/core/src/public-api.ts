@@ -8,6 +8,7 @@ export * from './lib/core.module';
 
 export * from './lib/activity-picker/activity-picker.component';
 export * from './lib/activity-skill-list/activity-skill-list.component';
+export * from './lib/breadcrumb/breadcrumb.component';
 export * from './lib/button/button.component';
 export * from './lib/category-dropdown/category-dropdown.component';
 export * from './lib/chapter-grid/chapter-grid.component';
