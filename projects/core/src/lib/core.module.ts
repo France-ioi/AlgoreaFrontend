@@ -17,6 +17,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { SliderModule } from 'primeng/slider';
 import { ListboxModule } from 'primeng/listbox';
 import { MessagesModule } from 'primeng/messages';
+import { TabViewModule } from 'primeng/tabview';
 
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -85,6 +86,7 @@ import { ProgressLevelComponent } from './progress-level/progress-level.componen
 import { AccessEditDialogComponent } from './dialogs/access-edit-dialog/access-edit-dialog.component';
 import { ProgressSectionComponent } from './progress-section/progress-section.component';
 import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
+import { SkillActivityTabsComponent } from './skill-activity-tabs/skill-activity-tabs.component';
 
 @NgModule({
   declarations: [
@@ -146,7 +148,8 @@ import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
     SearchFilterComponent,
     ProgressLevelComponent,
     AccessEditDialogComponent,
-    ProgressSectionComponent
+    ProgressSectionComponent,
+    SkillActivityTabsComponent
   ],
   imports: [
     CommonModule,
@@ -165,6 +168,7 @@ import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
     SliderModule,
     ListboxModule,
     MessagesModule,
+    TabViewModule,
 
     MatIconModule,
     MatNativeDateModule,
@@ -233,7 +237,8 @@ import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
     SearchInputComponent,
     SearchFilterComponent,
     ProgressLevelComponent,
-    AccessEditDialogComponent
+    AccessEditDialogComponent,
+    SkillActivityTabsComponent
   ],
   providers: [
     {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: true}}

@@ -48,6 +48,7 @@ export * from './lib/section-paragrah/section-paragraph.component';
 export * from './lib/select/select.component';
 export * from './lib/selection/selection.component';
 export * from './lib/selection-tree/selection-tree.component';
+export * from './lib/skill-activity-tabs/skill-activity-tabs.component';
 export * from './lib/skill-progress/skill-progress.component';
 export * from './lib/slider/slider.component';
 export * from './lib/state-widget/state-widget.component';
