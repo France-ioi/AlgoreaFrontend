@@ -6,6 +6,10 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 Run `ng build core` in order to use the core components in current project
 
+# Project update
+
+- Original design implementation moved to `/projects/design` sub app and all routing for design is now under `/design` sub url.
+
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
