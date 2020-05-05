@@ -5,9 +5,16 @@
   [scrollable]="scrollWhenExpanded || scrollable"
   [scrollHeight]="scrollHeight"
   [selectionMode]="selectionMode"
+  [(selection)]="selectionValue"
   [responsive]="responsive"
   [dataKey]="dataKey"
   [frozenWidth]="frozenWidth"
+  [sortMode]="sortMode"
+  [multiSortMeta]="multiSortMeta"
+  [customSort]="true"
+  (sortFunction)="sortFunction($event)"
+  (onRowSelect)="onRowSelect($event)"
+  (onRowUnselect)="onRowUnselect($event)"
 >
   <!-- <ng-container *ngTemplateOutlet="headerTemplate; context: {$implicit: columns}"></ng-container> -->
   <ng-template *ngIf="frozenWidth && frozenWidth.length > 0" pTemplate="frozenheader">
