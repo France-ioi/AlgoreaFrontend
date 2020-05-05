@@ -4,6 +4,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 # Build core components library
 
+Run `npm install` first to use latest packages.
 Run `ng build core` in order to use the core components in current project
 
 # Project update
