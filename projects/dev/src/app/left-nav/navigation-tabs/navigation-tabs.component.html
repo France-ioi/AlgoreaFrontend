@@ -1,0 +1,93 @@
+<!-- <perfect-scrollbar style="max-height: calc(100vh - 140px);"> -->
+<div class="group-container">
+  <div class="group-header">
+    <div class="group-avatar">
+      <ng-container *ngIf="currentUser.avatar; then userAvatar; else noAvatar"></ng-container>
+      <ng-template #userAvatar>
+        <img src="assets/images/{{currentUser.avatar }}" style="width: 7rem; height: 7rem;" />
+      </ng-template>
+      <ng-template #noAvatar>
+        <span class="anonym-group">
+          <ng-container *ngIf="currentUser.type == 'user'; then userAnony; else groupAnony">
+          </ng-container>
+          <ng-template #userAnony>
+            <img src="assets/images/Male.svg" style="width: 7rem; height: auto;" />
+          </ng-template>
+          <ng-template #groupAnony>
+            <img src="assets/images/Group - Managed.svg" style="width: 7rem; height: auto;" />
+          </ng-template>
+        </span>
+      </ng-template>
+    </div>
+    <span class="group-title">
+      {{ currentUser.title }}
+    </span>
+    <span class="group-toggle" (click)="toggleGroup($event)">
+      <i class="fa fa-users"></i>
+      <i class="fa {{ groupShow ? 'fa-caret-down' : 'fa-caret-up' }}"></i>
+    </span>
+  </div>
+  <perfect-scrollbar *ngIf="!notified" style="width: 100%;height: 100%;" #scrollPanel
+    (psScrollY)="onScrollEvent($event)">
+    <ng-container *ngIf="groupShow">
+      <div class="group-content" (resized)="onResized($event)" #groupPanel tabindex="4" (keydown)="onKeyDown($event)">
+        <div class="group-show-activity">
+          <span class="group-show-activity-label">
+            Show groups that participate to that activity
+          </span>
+          <app-switch mode="white"></app-switch>
+        </div>
+        <div class="group-self" (click)="onSelectYourself($event, 0)">
+          <span class="anonym-group">
+            <img src="assets/images/Male.svg" style="width: 3.3333rem; height: 3.3333rem;" />
+          </span>
+          <span class="group-subtitle" [ngClass]="{'selected': selectedGroup == 0 ? true : false}">Yourself</span>
+        </div>
+        <div class="group-list">
+          <p-accordion [multiple]="true" (onOpen)="onTabOpen($event)" (onClose)="onTabClose($event)">
+            <p-accordionTab [selected]="manageShow">
+              <p-header>
+                <span class="anonym-group">
+                  <img src="assets/images/Group - Managed.svg" style="width: 3.3333rem; height: 3.3333rem;" />
+                </span>
+                <span class="group-subtitle" [ngClass]="{'selected': selectedGroup == 1 ? true : false}">Groups you
+                  manage</span>
+              </p-header>
+              <app-group-navigation-tree [data]="items.groups.manage" inGroup="true"
+                (onNodeChange)="onNodeChange($event, 'managed')" (onTitleChange)="onTitleChange($event)">
+              </app-group-navigation-tree>
+            </p-accordionTab>
+            <p-accordionTab [selected]="joinShow">
+              <p-header>
+                <span class="anonym-group">
+                  <img src="assets/images/Group - Joined.svg" style="width: 3.3333rem; height: 3.3333rem;" />
+                </span>
+                <span class="group-subtitle" [ngClass]="{'selected': selectedGroup == 2 ? true : false}">Groups You
+                  Joined</span>
+              </p-header>
+              <app-group-navigation-tree [data]="items.groups.join" (onNodeChange)="onNodeChange($event, 'memberships')"
+                (onTitleChange)="onTitleChange($event)"></app-group-navigation-tree>
+            </p-accordionTab>
+          </p-accordion>
+        </div>
+      </div>
+    </ng-container>
+    <app-skill-activity-tabs [skills]="items.skills" [activities]="items.activities" [activeTab]="activeTab"
+      (tabChange)="onTabChanged($event)" (skillSelect)="onSkillSelected($event)"
+      (activitySelect)="onActivitySelected($event)"></app-skill-activity-tabs>
+    <app-skill-activity-tabs *ngIf="stickyShow" [skills]="items.skills" [activities]="items.activities"
+      [activeTab]="activeTab" (tabChange)="onTabChanged($event)" class="overlay-skills"></app-skill-activity-tabs>
+  </perfect-scrollbar>
+  <div class="notified" *ngIf="notified" (click)="goBack($event)">
+    <div class="back-to">
+      <span class="back-icon">
+        <i class="fa fa-sitemap"></i>
+      </span>
+      <span class="back-label">back to the tree</span>
+      <span>
+        <i class="fa fa-times"></i>
+      </span>
+    </div>
+  </div>
+</div>
+<!-- </perfect-scrollbar> -->

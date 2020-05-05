@@ -9,30 +9,7 @@ const routes: Routes = [
     children: [
       {
         path: 'groups',
-        children: [
-          {
-            path: 'managed/:id',
-            component: GroupComponent
-          },
-          {
-            path: 'memberships/:id',
-            component: GroupComponent
-          },
-          {
-            path: 'managed',
-            component: GroupInfoComponent,
-            data: {
-              src: 'managed'
-            }
-          },
-          {
-            path: 'memberships',
-            component: GroupInfoComponent,
-            data: {
-              src: 'memberships'
-            }
-          }
-        ]
+        loadChildren: () => import('./group/group.module').then(m => m.GroupModule)
       }
     ]
   }
