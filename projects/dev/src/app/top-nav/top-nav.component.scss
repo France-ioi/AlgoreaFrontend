@@ -1,0 +1,139 @@
+@import "src/colors.scss";
+
+$nav-control-border: #5c5c5c;
+
+.nav-header {
+  // height: 8.3333rem;
+  position: relative;
+
+  .overlay-container {
+    position: absolute;
+    top: 3.75rem;
+    left: 0;
+    right: 0;
+
+    app-notification {
+      margin: 0.4167rem;
+    }
+
+    app-button {
+      margin: 0.4167rem;
+      margin-top: 1rem;
+      display: block;
+
+      ::ng-deep p-button {
+        width: 100%;
+      }
+    }
+  }
+}
+
+.nav-control {
+  color: white;
+  height: 4rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  border-bottom: .1rem solid $nav-control-border;
+  position: relative;
+  text-align: center;
+  display: flex;
+  align-items: flex-start;
+
+  &.alt {
+    background-color: $nav-bk-color;
+
+    .nav-collapse {
+      img {
+        transform: rotate(360deg);
+      }
+    }
+
+    .title-collapse {
+      margin-left: 1rem;
+      margin-right: 1rem;
+      padding-left: 1rem;
+      padding-right: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      justify-content: center;
+
+      &.down {
+        transform: rotate(180deg);
+      }
+    }
+
+    .notifications {
+      margin-left: 0.4167rem;
+      margin-right: 0;
+    }
+  }
+
+  span {
+    display: block;
+    height: 3.75rem;
+    line-height: 3.75rem;
+  }
+
+  .nav-collapse {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    img {
+      transform: rotate(180deg);
+    }
+  }
+
+  .user-info {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .user-image {
+      display: flex;
+      align-items: center;
+      border-radius: 0.3333rem;
+      img {
+        display: block;
+        margin-right: 1rem;
+        border-radius: 0.3333rem;
+      }
+    }
+
+    .user-name {
+      text-transform: uppercase;
+      font-weight: bold;
+    }
+  }
+
+  .sign-out {
+    margin-right: 0.5rem;
+    cursor: pointer;
+  }
+
+  .notifications {
+    margin-right: 1rem;
+    width: 2.5rem;
+    position: relative;
+    cursor: pointer;
+
+    .notification-number {
+      position: absolute;
+      display: inline-block;
+      top: 0.25rem;
+      left: 0.1667rem;
+      background-color: $secondary-color;
+      border-radius: 9rem;
+      width: 1.3333rem;
+      height: 1.3333rem;
+      color: white;
+      line-height: 1.3333rem;
+      font-size: 0.75rem;
+    }
+  }
+
+  app-select {
+    margin-top: 1rem;
+  }
+}

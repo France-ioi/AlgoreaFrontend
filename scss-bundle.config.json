@@ -1,0 +1,7 @@
+{
+  "bundlerOptions": {
+    "entryFile": "./projects/core/src/lib/index.scss",
+    "rootDir": "./",
+    "outFile": "dist/core/index.scss"
+  }
+}

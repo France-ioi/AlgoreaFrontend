@@ -1,0 +1,21 @@
+<app-top-nav
+  [collapsed]="collapsed"
+  [signedIn]="signedIn"
+  (collapseEvent)="onCollapse($event)"
+  (signInOutEvent)="onSignInOut($event)"
+  (onNotify)="onNotifyClicked($event)"
+  (onSearch)="onSearchEvent($event)"
+  (onSearchClose)="onSearchCloseEvent($event)"
+  [data]="user"
+></app-top-nav>
+<app-navigation-tabs
+  *ngIf="!searchView"
+  [items]="data"
+  (skillSelect)="onSkillSelected($event)"
+  (activitySelect)="onActivitySelected($event)"
+  (yourselfSelect)="onYourselfSelected($event)"
+  (groupSelect)="onGroupSelected($event)"
+  (joinGroupSelect)="onJoinGroupSelected($event)"
+  (manageGroupSelect)="onManageGroupSelected($event)"
+></app-navigation-tabs>
+<app-search-tab *ngIf="searchView"></app-search-tab>
