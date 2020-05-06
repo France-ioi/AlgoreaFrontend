@@ -1,0 +1,9 @@
+<app-group-header
+  [isScrolled]="status.scrolled"
+  [isFolded]="status.folded"
+  [isStarted]="status.isStarted"
+  [isCollapsed]="status.collapsed"
+  [data]="groupdata"
+  (expandWholeWidth)="onExpandWidth($event)"
+></app-group-header>
+<app-group-content [data]="groupdata"></app-group-content>
