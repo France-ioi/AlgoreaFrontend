@@ -1,18 +1,25 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { NgModule } from "@angular/core";
+import { CommonModule } from "@angular/common";
 
-import { GroupRoutingModule } from './group-routing.module';
-import { GroupComponent } from './group.component';
-import { GroupHeaderComponent } from './group-header/group-header.component';
-import { CoreModule } from 'core';
+import { TableModule } from "primeng/table";
+import { CoreModule } from "core";
 
+import { GroupRoutingModule } from "./group-routing.module";
+
+import { GroupComponent } from "./group.component";
+import { GroupHeaderComponent } from "./group-header/group-header.component";
+import { GroupContentComponent } from "./group-content/group-content.component";
+import { GroupOverviewComponent } from "./group-content/group-overview/group-overview.component";
+import { GroupManageComponent } from "./group-manage/group-manage.component";
 
 @NgModule({
-  declarations: [GroupComponent, GroupHeaderComponent],
-  imports: [
-    CommonModule,
-    GroupRoutingModule,
-    CoreModule
-  ]
+  declarations: [
+    GroupComponent,
+    GroupHeaderComponent,
+    GroupContentComponent,
+    GroupOverviewComponent,
+    GroupManageComponent,
+  ],
+  imports: [CommonModule, GroupRoutingModule, TableModule, CoreModule],
 })
-export class GroupModule { }
+export class GroupModule {}
