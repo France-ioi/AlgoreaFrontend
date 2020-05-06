@@ -13,61 +13,7 @@ export class GroupOverviewComponent implements OnInit {
       chapter: 'Chapter 1',
       grade: 'Terminale',
       date: new Date(2018, 4, 23)
-    },
-    {
-      task: 'Espion etranger',
-      chapter: 'Chapter 1',
-      grade: 'Terminale',
-      date: new Date(2018, 4, 23)
-    },
-    {
-      task: 'Espion etranger',
-      chapter: 'Chapter 1',
-      grade: 'Terminale',
-      date: new Date(2018, 4, 23)
-    },
-    {
-      task: 'Espion etranger',
-      chapter: 'Chapter 1',
-      grade: 'Terminale',
-      date: new Date(2018, 4, 23)
-    },
-    {
-      task: 'Espion etranger',
-      chapter: 'Chapter 1',
-      grade: 'Terminale',
-      date: new Date(2018, 4, 23)
-    },
-    {
-      task: 'Espion etranger',
-      chapter: 'Chapter 1',
-      grade: 'Terminale',
-      date: new Date(2018, 4, 23)
-    },
-    {
-      task: 'Espion etranger',
-      chapter: 'Chapter 1',
-      grade: 'Terminale',
-      date: new Date(2018, 4, 23)
-    },
-    {
-      task: 'Espion etranger',
-      chapter: 'Chapter 1',
-      grade: 'Terminale',
-      date: new Date(2018, 4, 23)
-    },
-    {
-      task: 'Espion etranger',
-      chapter: 'Chapter 1',
-      grade: 'Terminale',
-      date: new Date(2018, 4, 23)
-    },
-    {
-      task: 'Espion etranger',
-      chapter: 'Chapter 1',
-      grade: 'Terminale',
-      date: new Date(2018, 4, 23)
-    },
+    }
   ];
 
   columns = [

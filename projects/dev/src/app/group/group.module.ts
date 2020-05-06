@@ -11,6 +11,7 @@ import { GroupHeaderComponent } from "./group-header/group-header.component";
 import { GroupContentComponent } from "./group-content/group-content.component";
 import { GroupOverviewComponent } from "./group-content/group-overview/group-overview.component";
 import { GroupManageComponent } from "./group-manage/group-manage.component";
+import { PendingRequestComponent } from './group-manage/pending-request/pending-request.component';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { GroupManageComponent } from "./group-manage/group-manage.component";
     GroupContentComponent,
     GroupOverviewComponent,
     GroupManageComponent,
+    PendingRequestComponent,
   ],
   imports: [CommonModule, GroupRoutingModule, TableModule, CoreModule],
 })
