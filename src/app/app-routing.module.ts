@@ -7,7 +7,7 @@ import { DevAppModule } from 'projects/dev/src/app/app.module';
 const routes: Routes = [
   { path: 'design', loadChildren: () => import('projects/design/src/app/app.module').then(m => m.DesignAppModule) },
   { path: 'dev', loadChildren: () => import('projects/dev/src/app/app.module').then(m => m.DevAppModule) },
-  { path: '**', redirectTo: '/design' }
+  { path: '**', redirectTo: '/dev' }
 ];
 
 @NgModule({
