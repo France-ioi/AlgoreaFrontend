@@ -12,7 +12,7 @@ import { StatusService } from '../shared/services/status.service';
 })
 export class GroupComponent implements OnInit {
 
-  groupdata;
+  groupdata = {};
   status;
 
   constructor(
@@ -47,7 +47,7 @@ export class GroupComponent implements OnInit {
           }
         },
         location: '46  Chemin Du Lavarin Sud Cachan Île-de-France France',
-        grades: group.grade,
+        grades: [group.grade],
         date: group.created_at,
         joinMethods: [
           JoinMethod.accessCode,
@@ -59,6 +59,10 @@ export class GroupComponent implements OnInit {
     this.statusService.getObservable().subscribe(res => {
       this.status = res;
     });
+  }
+
+  onExpandWidth(e) {
+    
   }
 
 }
