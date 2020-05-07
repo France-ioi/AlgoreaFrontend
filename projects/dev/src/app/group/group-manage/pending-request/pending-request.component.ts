@@ -45,7 +45,8 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     },
   ];
 
-  loading = false;
+  acceptLoading = false;
+  rejectLoading = false;
   selection = [];
 
   _setRequestData(reqs: PendingRequest[]) {
@@ -63,6 +64,34 @@ export class PendingRequestComponent implements OnInit, OnChanges {
             : null,
         joining_user: req.joining_user,
         at: req.at,
+      });
+    }
+  }
+
+  _manageRequestData(res, summary, msg) {
+    if (res["success"] === true && res["message"] === "updated") {
+      const status = res["data"];
+      let toRemove = [];
+
+      for (const prop in status) {
+        if (status[prop] === "success") {
+          toRemove.push(prop);
+        }
+      }
+
+      this.requests = this.requests.filter((req: PendingRequest) => {
+        return toRemove.indexOf(req.joining_user.group_id);
+      });
+      this.messageService.add({
+        severity: "success",
+        summary: summary,
+        detail: msg,
+      });
+    } else if (res["success"] === false) {
+      this.messageService.add({
+        severity: "error",
+        summary: summary,
+        detail: ERROR_MESSAGE.fail,
       });
     }
   }
@@ -99,50 +128,28 @@ export class PendingRequestComponent implements OnInit, OnChanges {
       return;
     }
 
-    this.loading = true;
+    this.acceptLoading = true;
     this.groupService
       .acceptJoinRequest(
         this.id,
         this.selection.map((val) => val.joining_user.group_id)
       )
       .subscribe((res) => {
-        if (res["success"] === true && res["message"] === "updated") {
-          const status = res["data"];
-          let toRemove = [];
-
-          for (const prop in status) {
-            if (status[prop] === "success") {
-              toRemove.push(prop);
-            }
-          }
-
-          this.requests = this.requests.filter((req: PendingRequest) => {
-            return toRemove.indexOf(req.joining_user.group_id);
-          });
-          this.messageService.add({
-            severity: "success",
-            summary: "Accept request",
-            detail: PENDING_REQUEST_SUCCESS_MESSAGE.accept,
-          });
-        } else if (res["success"] === false) {
-          this.messageService.add({
-            severity: "error",
-            summary: "Accept request",
-            detail: ERROR_MESSAGE.fail,
-          });
-        }
-        this.loading = false;
+        this._manageRequestData(res, "Accept request", PENDING_REQUEST_SUCCESS_MESSAGE.accept);
+        this.acceptLoading = false;
       });
   }
 
   onClickReject(e) {
+    this.rejectLoading = true;
     this.groupService
       .rejectJoinRequest(
         this.id,
         this.selection.map((val) => val.joining_user.group_id)
       )
       .subscribe((res) => {
-        console.log(res);
+        this._manageRequestData(res, "Reject request", PENDING_REQUEST_SUCCESS_MESSAGE.reject);
+        this.rejectLoading = false;
       });
   }
 

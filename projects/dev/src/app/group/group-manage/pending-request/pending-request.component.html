@@ -112,16 +112,21 @@
             Select all
           </span>
           <div class="req-tools">
-            <span class="accept" [ngClass]="{disabled: selection.length === 0}" (click)="onClickAccept($event)">
+            <span class="accept" [ngClass]="{disabled: selection.length === 0 || rejectLoading}" (click)="onClickAccept($event)">
               <span>Accept</span>
-              <ng-container *ngIf="loading">
+              <ng-container *ngIf="acceptLoading">
                 <p-progressSpinner></p-progressSpinner>
               </ng-container>
-              <ng-container *ngIf="!loading"><i class="fa fa-check"></i></ng-container>
+              <ng-container *ngIf="!acceptLoading"><i class="fa fa-check"></i></ng-container>
             </span>
-            <span class="reject" (click)="onClickReject($event)">
+            <span class="reject" [ngClass]="{disabled: selection.length === 0 || acceptLoading}" (click)="onClickReject($event)">
               <span>Reject</span>
-              <i class="fa fa-times"></i>
+              <ng-container *ngIf="rejectLoading">
+                <p-progressSpinner></p-progressSpinner>
+              </ng-container>
+              <ng-container *ngIf="!rejectLoading">
+                <i class="fa fa-times"></i>
+              </ng-container>
             </span>
           </div>
         </div>
