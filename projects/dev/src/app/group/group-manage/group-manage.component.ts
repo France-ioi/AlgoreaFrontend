@@ -3,7 +3,6 @@ import { ActivatedRoute } from "@angular/router";
 import { StatusService } from "../../shared/services/status.service";
 import { GroupService } from "../../shared/services/api/group.service";
 import { Group } from "../../shared/models/group.model";
-import { PendingRequest } from "../../shared/models/pending-request.model";
 import { Member } from "../../shared/models/member.model";
 
 @Component({
@@ -79,12 +78,6 @@ export class GroupManageComponent implements OnInit {
     this.statusService.getObservable().subscribe((res) => {
       this.status = res;
     });
-  }
-
-  onAcceptRequest(e) {
-  }
-
-  onRejectRequest(e) {
   }
 
   onExpandWidth(e) {

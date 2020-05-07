@@ -4,6 +4,7 @@
   label="Pending requests"
   [collapsible]="true"
 >
+  <p-toast></p-toast>
   <ng-template #headerTemplate>
     <div style="flex: 1; flex-direction: row-reverse; display: flex;">
       <!-- <app-selection
@@ -18,6 +19,7 @@
       [columns]="columns"
       [data]="requests"
       [groupInfo]="panel"
+      [(selection)]="selection"
       [multiSortMeta]="multiSortMeta"
       (onSort)="onCustomSort($event)"
       (expandWholeWidth)="onExpandWidth($event)"
@@ -110,9 +112,12 @@
             Select all
           </span>
           <div class="req-tools">
-            <span class="accept" (click)="onClickAccept($event)">
+            <span class="accept" [ngClass]="{disabled: selection.length === 0}" (click)="onClickAccept($event)">
               <span>Accept</span>
-              <i class="fa fa-check"></i>
+              <ng-container *ngIf="loading">
+                <p-progressSpinner></p-progressSpinner>
+              </ng-container>
+              <ng-container *ngIf="!loading"><i class="fa fa-check"></i></ng-container>
             </span>
             <span class="reject" (click)="onClickReject($event)">
               <span>Reject</span>

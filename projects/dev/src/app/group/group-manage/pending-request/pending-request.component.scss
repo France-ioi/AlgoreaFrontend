@@ -46,9 +46,29 @@
     color: $base-color;
     font-size: 1.2rem;
 
-    span {
+    > span {
       margin-right: 1rem;
       cursor: pointer;
+
+      &.disabled {
+        color: $dark-text-color;
+        cursor: not-allowed;
+      }
+
+      &.accept {
+        display: flex;
+        align-items: center;
+
+        ::ng-deep p-progressSpinner {
+          display: flex;
+          align-items: center;
+          
+          .ui-progress-spinner {
+            width: 1.2rem;
+            height: 1.2rem;
+          }
+        }
+      }
 
       span {
         margin-right: 1rem;

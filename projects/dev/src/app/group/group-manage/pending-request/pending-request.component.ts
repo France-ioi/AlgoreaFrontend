@@ -1,12 +1,24 @@
-import { Component, OnInit, Input, EventEmitter, Output, OnChanges, SimpleChanges } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  Input,
+  OnChanges,
+  SimpleChanges,
+} from "@angular/core";
 import { GroupService } from "../../../shared/services/api/group.service";
 import { PendingRequest } from "../../../shared/models/pending-request.model";
 import { SortEvent } from "primeng/api/sortevent";
+import { MessageService } from "primeng/api";
+import {
+  ERROR_MESSAGE,
+  PENDING_REQUEST_SUCCESS_MESSAGE,
+} from "../../../shared/constants/api";
 
 @Component({
   selector: "app-pending-request",
   templateUrl: "./pending-request.component.html",
   styleUrls: ["./pending-request.component.scss"],
+  providers: [MessageService],
 })
 export class PendingRequestComponent implements OnInit, OnChanges {
   @Input() id;
@@ -24,9 +36,6 @@ export class PendingRequestComponent implements OnInit, OnChanges {
   ];
   prevSortMeta = "-at member_id";
 
-  @Output() onAccept = new EventEmitter<any>();
-  @Output() onReject = new EventEmitter<any>();
-
   groupSwitch = [
     {
       label: "This group only",
@@ -35,6 +44,9 @@ export class PendingRequestComponent implements OnInit, OnChanges {
       label: "All subgroups",
     },
   ];
+
+  loading = false;
+  selection = [];
 
   _setRequestData(reqs: PendingRequest[]) {
     this.requests = [];
@@ -45,13 +57,20 @@ export class PendingRequestComponent implements OnInit, OnChanges {
         "joining_user.login": `${req.joining_user.first_name || ""} ${
           req.joining_user.last_name || ""
         } (${req.joining_user.login || ""})`,
-        "grade": req.joining_user && req.joining_user.grade ? req.joining_user.grade : null,
+        grade:
+          req.joining_user && req.joining_user.grade
+            ? req.joining_user.grade
+            : null,
+        joining_user: req.joining_user,
         at: req.at,
       });
     }
   }
 
-  constructor(private groupService: GroupService) {}
+  constructor(
+    private groupService: GroupService,
+    private messageService: MessageService
+  ) {}
 
   ngOnInit() {
     this.panel.push({
@@ -76,11 +95,55 @@ export class PendingRequestComponent implements OnInit, OnChanges {
   onExpandWidth(e) {}
 
   onClickAccept(e) {
-    this.onAccept.emit(e);
+    if (this.selection.length === 0) {
+      return;
+    }
+
+    this.loading = true;
+    this.groupService
+      .acceptJoinRequest(
+        this.id,
+        this.selection.map((val) => val.joining_user.group_id)
+      )
+      .subscribe((res) => {
+        if (res["success"] === true && res["message"] === "updated") {
+          const status = res["data"];
+          let toRemove = [];
+
+          for (const prop in status) {
+            if (status[prop] === "success") {
+              toRemove.push(prop);
+            }
+          }
+
+          this.requests = this.requests.filter((req: PendingRequest) => {
+            return toRemove.indexOf(req.joining_user.group_id);
+          });
+          this.messageService.add({
+            severity: "success",
+            summary: "Accept request",
+            detail: PENDING_REQUEST_SUCCESS_MESSAGE.accept,
+          });
+        } else if (res["success"] === false) {
+          this.messageService.add({
+            severity: "error",
+            summary: "Accept request",
+            detail: ERROR_MESSAGE.fail,
+          });
+        }
+        this.loading = false;
+      });
   }
 
   onClickReject(e) {
-    this.onReject.emit(e);
+    this.groupService
+      .rejectJoinRequest(
+        this.id,
+        this.selection.map((val) => val.joining_user.group_id)
+      )
+      .subscribe((res) => {
+        console.log(res);
+      });
   }
 
   onCustomSort(event: SortEvent) {
