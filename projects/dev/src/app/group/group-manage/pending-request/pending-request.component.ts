@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, EventEmitter, Output } from "@angular/core";
+import { Component, OnInit, Input, EventEmitter, Output, OnChanges, SimpleChanges } from "@angular/core";
 import { GroupService } from "../../../shared/services/api/group.service";
 import { PendingRequest } from "../../../shared/models/pending-request.model";
 import { SortEvent } from "primeng/api/sortevent";
@@ -8,7 +8,7 @@ import { SortEvent } from "primeng/api/sortevent";
   templateUrl: "./pending-request.component.html",
   styleUrls: ["./pending-request.component.scss"],
 })
-export class PendingRequestComponent implements OnInit {
+export class PendingRequestComponent implements OnInit, OnChanges {
   @Input() id;
 
   columns = [
@@ -59,7 +59,15 @@ export class PendingRequestComponent implements OnInit {
       columns: this.columns,
     });
     this.groupService
-      .getManagedRequests(50)
+      .getManagedRequests(this.id)
+      .subscribe((reqs: PendingRequest[]) => {
+        this._setRequestData(reqs);
+      });
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    this.groupService
+      .getManagedRequests(this.id)
       .subscribe((reqs: PendingRequest[]) => {
         this._setRequestData(reqs);
       });

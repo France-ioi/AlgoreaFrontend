@@ -803,7 +803,7 @@ export class AppComponent {
     this.updateService();
     console.log(e);
     if (e.src === 'managed') {
-      this.router.navigate(["/dev/groups/managed/50"]);
+      this.router.navigate([`/dev/groups/managed/${e.e.ID}`]);
     } else {
       this.router.navigate(["/dev/groups/memberships/11"]);
     }
