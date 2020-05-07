@@ -56,27 +56,25 @@ export class GroupManageComponent implements OnInit {
     private groupService: GroupService
   ) {}
 
-  ngOnInit() {
-    const id = this.activatedRoute.snapshot.params.id;
-    
+  ngOnInit() {    
     this.activatedRoute.params.subscribe(routeParams => {
       this.groupId = routeParams.id;
-      console.log(this.groupId)
+      console.log(this.groupId);
+
+      this.groupService.getManagedGroup(this.groupId).subscribe((group: Group) => {
+        this.groupdata = {
+          ID: group.id,
+          name: group.name,
+          type: group.type,
+          grades: [group.grade],
+          date: group.created_at,
+        };
+      });
+  
+      this.groupService.getGroupMembers(51).subscribe((members: Member[]) => {
+        this._setMemberData(members);
+      });
     })
-
-    this.groupService.getManagedGroup(id).subscribe((group: Group) => {
-      this.groupdata = {
-        ID: group.id,
-        name: group.name,
-        type: group.type,
-        grades: [group.grade],
-        date: group.created_at,
-      };
-    });
-
-    this.groupService.getGroupMembers(51).subscribe((members: Member[]) => {
-      this._setMemberData(members);
-    });
 
     this.statusService.getObservable().subscribe((res) => {
       this.status = res;
