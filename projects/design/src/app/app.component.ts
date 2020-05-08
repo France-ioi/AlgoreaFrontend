@@ -12,7 +12,7 @@ import { ProgressType } from 'core';
 })
 export class AppComponent {
   ProgressType = ProgressType;
-  title = "france-ioi";
+  title = "algorea";
   editing = false;
   curScore = 70;
   dispScore = 65;
