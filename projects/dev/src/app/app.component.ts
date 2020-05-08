@@ -80,74 +80,16 @@ export class AppComponent {
     groups: {
       manage: [
         {
-          ID: 1,
-          title: "Big root",
-          type: "folder",
-          icons: "fa fa-home",
-          children: [
-            {
-              ID: 2,
-              title: "Big root1",
-              type: "folder",
-              progress: {
-                currentScore: 50,
-                displayedScore: 30
-              },
-              children: [
-                {
-                  ID: 3,
-                  title: "Documents",
-                  icons: "fa fa-folder",
-                  type: "folder"
-                },
-                {
-                  ID: 16,
-                  title: "Pictures",
-                  type: "folder"
-                }
-              ]
-            }
-          ]
+          ID: 50,
+          title: "Group 50",
+          type: "leaf",
+          icons: "fa fa-home"
         },
         {
-          ID: 22,
-          title: "Groups with requests",
-          type: "folder",
-          icons: "fa fa-home",
-          children: [
-            {
-              ID: 43,
-              title: "Group with grading requests",
-              type: "leaf",
-              ring: true,
-              state: "opened",
-              hasKey: true,
-              progress: {
-                displayedScore: 50,
-                currentScore: 30
-              },
-              category: {
-                icon: "fa fa-book-open",
-                type: 1
-              }
-            },
-            {
-              ID: 44,
-              title: "Groups as teams",
-              type: "leaf",
-              ring: true,
-              state: "opened",
-              hasKey: true,
-              progress: {
-                displayedScore: 50,
-                currentScore: 30
-              },
-              category: {
-                icon: "fa fa-book-open",
-                type: 1
-              }
-            }
-          ]
+          ID: 51,
+          title: "Group 51",
+          type: "leaf",
+          icons: "fa fa-home"
         }
       ],
       join: [
@@ -861,7 +803,7 @@ export class AppComponent {
     this.updateService();
     console.log(e);
     if (e.src === 'managed') {
-      this.router.navigate(["/dev/groups/managed/50"]);
+      this.router.navigate([`/dev/groups/managed/${e.e.ID}`]);
     } else {
       this.router.navigate(["/dev/groups/memberships/11"]);
     }

@@ -1,0 +1,14 @@
+<app-group-header
+  [isScrolled]="status.scrolled"
+  [isFolded]="status.folded"
+  [isStarted]="status.isStarted"
+  [isCollapsed]="status.collapsed"
+  [data]="groupdata"
+  (expandWholeWidth)="onExpandWidth($event)"
+></app-group-header>
+<app-pending-request
+  [id]="groupId"
+  (onAccept)="onAcceptRequest($event)"
+  (onReject)="onRejectRequest($event)"
+></app-pending-request>
+<!-- <app-group-content [data]="groupdata"></app-group-content> -->

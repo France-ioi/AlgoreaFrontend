@@ -45,7 +45,6 @@ export class NavigationTabsComponent implements OnInit, OnChanges {
     this.editService.getOb().subscribe(res => {
       this.notified = res.notified;
       this.esOb = res;
-      console.log('get', this.esOb);
     });
   }
 
@@ -59,7 +58,6 @@ export class NavigationTabsComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    console.log('navigation tabs', changes);
     if (this.items) {
       this.fetchUser();
     }
@@ -97,7 +95,6 @@ export class NavigationTabsComponent implements OnInit, OnChanges {
 
   _focusParent() {
     const elements = this.groupPanel.nativeElement.querySelectorAll('.ui-accordion-header a');
-    console.log(elements);
     for (const element of elements) {
       (element as HTMLElement).blur();
     }

@@ -1,0 +1,93 @@
+@import "src/colors.scss";
+@import "src/geometry.scss";
+
+.pending-request-container {
+  margin-left: -4rem;
+  margin-right: -1.6667rem;
+
+  .grid-user-info-field {
+    display: flex;
+    align-items: center;
+    margin-left: 0.2rem;
+
+    img {
+      border-radius: 50%;
+      width: 7rem;
+      height: auto;
+      margin-right: 2rem;
+    }
+
+    .user-info {
+      display: flex;
+      flex-direction: column;
+      font-size: 1.2rem;
+      color: $base-text-color;
+
+      &-name {
+        font-weight: bold;
+        font-size: 1.2rem;
+      }
+
+      &-activity {
+        font-style: italic;
+      }
+
+      &-content {
+        white-space: normal;
+        margin-top: 1.2rem;
+        line-height: 1.5rem;
+      }
+    }
+  }
+
+  .req-tools {
+    display: flex;
+    align-items: center;
+    color: $base-color;
+    font-size: 1.2rem;
+
+    span {
+      margin-right: 1rem;
+      cursor: pointer;
+
+      span {
+        margin-right: 1rem;
+      }
+    }
+  }
+}
+
+:host ::ng-deep .pending-request-container .ui-table .ui-table-summary {
+  background-color: transparent;
+}
+
+:host ::ng-deep .pending-request-container .ui-table .ui-table-tbody > tr {
+  background-color: transparent;
+  height: 13rem;
+
+  > td {
+    border-bottom-color: $section-border-color;
+    font: 1rem;
+
+    &:last-child {
+      border-left: $border-filet;
+      text-align: center;
+    }
+  }
+
+  &:last-child {
+    border-bottom: 0.1rem solid $section-border-color;
+  }
+
+  &:nth-child(even) {
+    background-color: transparent;
+  }
+
+  &.ui-state-highlight {
+    background-color: $base-color;
+
+    .grid-user-info-field .user-info {
+      color: white;
+    }
+  }
+}
