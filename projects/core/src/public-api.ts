@@ -29,7 +29,6 @@ export * from './lib/header-section/header-section.component';
 export * from './lib/image-upload/image-upload.component';
 export * from './lib/image-upload/drag-drop.directive';
 export * from './lib/input/input.component';
-export * from './lib/ioi-tab/ioi-tab.component';
 export * from './lib/items-navigation-tree/items-navigation-tree.component';
 export * from './lib/listbox/listbox.component';
 export * from './lib/log-view-grid/log-view-grid.component';
