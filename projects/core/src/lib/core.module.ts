@@ -30,7 +30,6 @@ import { NgDragDropModule } from 'ng-drag-drop';
 import { ButtonComponent } from './button/button.component';
 import { SectionComponent } from './section/section.component';
 import { DataListComponent } from './data-list/data-list.component';
-import { IoiTabComponent } from './ioi-tab/ioi-tab.component';
 import { PageNavigatorComponent } from './page-navigator/page-navigator.component';
 import { SkillProgressComponent } from './skill-progress/skill-progress.component';
 import { ScoreRingComponent } from './score-ring/score-ring.component';
@@ -96,7 +95,6 @@ import { SearchTabComponent } from './search-tab/search-tab.component';
     ButtonComponent,
     SectionComponent,
     DataListComponent,
-    IoiTabComponent,
     PageNavigatorComponent,
     SkillProgressComponent,
     ScoreRingComponent,
@@ -188,7 +186,6 @@ import { SearchTabComponent } from './search-tab/search-tab.component';
     SectionComponent,
     DataListComponent,
     MatTabsModule,
-    IoiTabComponent,
     PageNavigatorComponent,
     SkillProgressComponent,
     ScoreRingComponent,
