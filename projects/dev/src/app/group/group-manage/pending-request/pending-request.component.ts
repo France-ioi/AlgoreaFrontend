@@ -71,22 +71,41 @@ export class PendingRequestComponent implements OnInit, OnChanges {
   _manageRequestData(res, summary, msg) {
     if (res["success"] === true && res["message"] === "updated") {
       const status = res["data"];
-      let toRemove = [];
+      let succ = 0,
+        fail = 0;
 
-      for (const prop in status) {
-        if (status[prop] === "success") {
-          toRemove.push(prop);
+      for (const group_id in status) {
+        switch (status[group_id]) {
+          case "success":
+          case "unchanged":
+            succ++;
+            break;
+          default:
+            fail++;
         }
       }
+      console.log(succ, fail);
 
-      this.requests = this.requests.filter((req: PendingRequest) => {
-        return toRemove.indexOf(req.joining_user.group_id);
-      });
-      this.messageService.add({
-        severity: "success",
-        summary: summary,
-        detail: msg,
-      });
+      if (fail === 0) {
+        console.log("Success");
+        this.messageService.add({
+          severity: "success",
+          summary: summary,
+          detail: `${succ} request(s) have been ${msg}`,
+        });
+      } else {
+        this.messageService.add({
+          severity: "warn",
+          summary: summary,
+          detail: `${succ} request(s) have been ${msg}, ${fail} could not be executed`,
+        });
+      }
+
+      this.groupService
+        .getManagedRequests(this.id)
+        .subscribe((reqs: PendingRequest[]) => {
+          this._setRequestData(reqs);
+        });
     } else if (res["success"] === false) {
       this.messageService.add({
         severity: "error",
@@ -135,7 +154,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
         this.selection.map((val) => val.joining_user.group_id)
       )
       .subscribe((res) => {
-        this._manageRequestData(res, "Accept request", PENDING_REQUEST_SUCCESS_MESSAGE.accept);
+        this._manageRequestData(res, "Accept request", "accepted");
         this.acceptLoading = false;
       });
   }
@@ -148,7 +167,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
         this.selection.map((val) => val.joining_user.group_id)
       )
       .subscribe((res) => {
-        this._manageRequestData(res, "Reject request", PENDING_REQUEST_SUCCESS_MESSAGE.reject);
+        this._manageRequestData(res, "Reject request", "declined");
         this.rejectLoading = false;
       });
   }

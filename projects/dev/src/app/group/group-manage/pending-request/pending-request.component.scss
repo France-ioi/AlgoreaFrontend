@@ -55,19 +55,19 @@
         cursor: not-allowed;
       }
 
+      ::ng-deep p-progressSpinner {
+        display: flex;
+        align-items: center;
+        
+        .ui-progress-spinner {
+          width: 1.2rem;
+          height: 1.2rem;
+        }
+      }
+
       &.accept {
         display: flex;
         align-items: center;
-
-        ::ng-deep p-progressSpinner {
-          display: flex;
-          align-items: center;
-          
-          .ui-progress-spinner {
-            width: 1.2rem;
-            height: 1.2rem;
-          }
-        }
       }
 
       span {
