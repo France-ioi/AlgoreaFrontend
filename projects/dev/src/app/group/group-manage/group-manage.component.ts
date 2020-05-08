@@ -67,6 +67,7 @@ export class GroupManageComponent implements OnInit {
           type: group.type,
           grades: [group.grade],
           date: group.created_at,
+          description: group.description
         };
       });
   

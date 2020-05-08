@@ -1,4 +1,5 @@
 import { Component, OnInit, ElementRef, EventEmitter, Input, Output } from '@angular/core';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-group-content',
@@ -26,14 +27,7 @@ export class GroupContentComponent implements OnInit {
       tab.classList.remove('mat-tab-label-before-active');
     });
     
-    let i;
-
-    for (i = 0 ; i < tabs.length ; i++) {
-      if (tabs[i] === activeTab) {
-        break;
-      }
-    }
-
+    const i = _.findIndex(tabs, activeTab);
     if (i > 0) {
       tabs[i - 1].classList.add('mat-tab-label-before-active');
     }
