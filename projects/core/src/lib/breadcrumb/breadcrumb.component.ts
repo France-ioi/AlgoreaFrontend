@@ -1,12 +1,11 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
 
 @Component({
-  selector: 'app-breadcrumb',
-  templateUrl: './breadcrumb.component.html',
-  styleUrls: ['./breadcrumb.component.scss']
+  selector: "app-breadcrumb",
+  templateUrl: "./breadcrumb.component.html",
+  styleUrls: ["./breadcrumb.component.scss"],
 })
 export class BreadcrumbComponent implements OnInit {
-
   @Input() items;
   @Output() itemClick = new EventEmitter<any>();
 
@@ -15,10 +14,9 @@ export class BreadcrumbComponent implements OnInit {
 
   maxWidths = [9, 10, 12, 13, 16, 20, 0];
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   onItemClick(e, item, idx) {
     this.items.selectedID = item.ID;
@@ -38,7 +36,5 @@ export class BreadcrumbComponent implements OnInit {
   onResize(e) {
     this.breadWidth = e.newWidth;
     this.maxWidths = this.itemMaxWidth();
-    console.log(this.maxWidths);
   }
-
 }

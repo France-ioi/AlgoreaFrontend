@@ -1,21 +1,19 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input } from "@angular/core";
 
 @Component({
-  selector: 'app-image-upload',
-  templateUrl: './image-upload.component.html',
-  styleUrls: ['./image-upload.component.scss']
+  selector: "app-image-upload",
+  templateUrl: "./image-upload.component.html",
+  styleUrls: ["./image-upload.component.scss"],
 })
 export class ImageUploadComponent implements OnInit {
-
   @Input() label;
 
   imgURL;
   imagePath;
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   uploadImage(files) {
     if (files.length === 0) {
@@ -32,11 +30,10 @@ export class ImageUploadComponent implements OnInit {
     reader.readAsDataURL(files[0]);
     reader.onload = (_event) => {
       this.imgURL = reader.result;
-    }
+    };
   }
 
   removeImage(e) {
     this.imgURL = null;
   }
-
 }

@@ -1,14 +1,13 @@
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output } from "@angular/core";
 
 @Component({
-  selector: 'app-grid-filter',
-  templateUrl: './grid-filter.component.html',
-  styleUrls: ['./grid-filter.component.scss']
+  selector: "app-grid-filter",
+  templateUrl: "./grid-filter.component.html",
+  styleUrls: ["./grid-filter.component.scss"],
 })
 export class GridFilterComponent implements OnInit {
-
-  @Input() type: 'standard' | 'default' = 'standard';
-  @Input() mode: 'basic' | 'list' | 'dates' | 'activity' = 'basic';
+  @Input() type: "standard" | "default" = "standard";
+  @Input() mode: "basic" | "list" | "dates" | "activity" = "basic";
   @Input() text;
   @Input() ranges;
   @Input() dateRanges;
@@ -20,25 +19,24 @@ export class GridFilterComponent implements OnInit {
   @Output() onHide = new EventEmitter<any>();
 
   menuOpened = false;
-  
+
   status = [
     {
-      label: 'locked'
+      label: "locked",
     },
     {
-      label: 'not started'
+      label: "not started",
     },
     {
-      label: 'started'
-    }
+      label: "started",
+    },
   ];
 
   selectedStatus = 0;
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   closeFilter(e) {
     this.onClose.emit(e);
@@ -65,11 +63,10 @@ export class GridFilterComponent implements OnInit {
 
   listItemSelected(e) {
     this.label = e;
-    this.list.forEach(item => {
+    this.list.forEach((item) => {
       if (item.value.id === e.value.id) {
         this.label = item.label;
       }
     });
   }
-
 }

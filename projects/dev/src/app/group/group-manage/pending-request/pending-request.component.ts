@@ -1,4 +1,12 @@
-import { Component, OnInit, Input, EventEmitter, Output, OnChanges, SimpleChanges } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  Input,
+  EventEmitter,
+  Output,
+  OnChanges,
+  SimpleChanges,
+} from "@angular/core";
 import { GroupService } from "../../../shared/services/api/group.service";
 import { PendingRequest } from "../../../shared/models/pending-request.model";
 import { SortEvent } from "primeng/api/sortevent";
@@ -45,7 +53,10 @@ export class PendingRequestComponent implements OnInit, OnChanges {
         "joining_user.login": `${req.joining_user.first_name || ""} ${
           req.joining_user.last_name || ""
         } (${req.joining_user.login || ""})`,
-        "grade": req.joining_user && req.joining_user.grade ? req.joining_user.grade : null,
+        grade:
+          req.joining_user && req.joining_user.grade
+            ? req.joining_user.grade
+            : null,
         at: req.at,
       });
     }

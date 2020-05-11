@@ -6,14 +6,14 @@ import {
   SimpleChanges,
   Output,
   EventEmitter,
-  ViewChild
-} from '@angular/core';
-import { TreeNode } from 'primeng/api';
+  ViewChild,
+} from "@angular/core";
+import { TreeNode } from "primeng/api";
 
 @Component({
-  selector: 'app-items-navigation-tree',
-  templateUrl: './items-navigation-tree.component.html',
-  styleUrls: ['./items-navigation-tree.component.scss']
+  selector: "app-items-navigation-tree",
+  templateUrl: "./items-navigation-tree.component.html",
+  styleUrls: ["./items-navigation-tree.component.scss"],
 })
 export class ItemsNavigationTreeComponent implements OnInit, OnChanges {
   @Input() data: TreeNode[];
@@ -23,7 +23,7 @@ export class ItemsNavigationTreeComponent implements OnInit, OnChanges {
   // tslint:disable-next-line: no-output-on-prefix
   @Output() onNodeSelect = new EventEmitter<any>();
 
-  @ViewChild('navTree', {static: false}) navTree;
+  @ViewChild("navTree", { static: false }) navTree;
 
   spread = [];
 
@@ -33,8 +33,8 @@ export class ItemsNavigationTreeComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     if (this.data) {
-      this.data.forEach(item => {
-        item['root'] = true;
+      this.data.forEach((item) => {
+        item["root"] = true;
       });
       this.spread.length = 0;
       this.dfs(this.data);
@@ -55,7 +55,7 @@ export class ItemsNavigationTreeComponent implements OnInit, OnChanges {
       return;
     }
 
-    nodes.forEach(node => {
+    nodes.forEach((node) => {
       node.checked = false;
       node.selectedTop = false;
       node.selectedBottom = false;
@@ -68,7 +68,7 @@ export class ItemsNavigationTreeComponent implements OnInit, OnChanges {
       return;
     }
 
-    nodes.forEach(node => {
+    nodes.forEach((node) => {
       this.spread.push(node);
       this.dfs(node.children);
     });
@@ -82,23 +82,25 @@ export class ItemsNavigationTreeComponent implements OnInit, OnChanges {
     this.onNodeSelect.emit(node);
   }
 
-  nodeSelect(e) {
-    console.log(e);
-  }
+  nodeSelect(e) {}
 
   onKeyDown(e) {
-    if (e.code === 'Space' || e.code === 'Enter') {
+    if (e.code === "Space" || e.code === "Enter") {
       e.stopPropagation();
       e.preventDefault();
-      const element = document.activeElement.querySelector('.ui-treenode-label .node-tree-item > .node-item-content > .node-label') as HTMLElement;
+      const element = document.activeElement.querySelector(
+        ".ui-treenode-label .node-tree-item > .node-item-content > .node-label"
+      ) as HTMLElement;
       element.click();
-    } else if (e.code === 'ArrowDown' || e.code === 'ArrowUp') {
+    } else if (e.code === "ArrowDown" || e.code === "ArrowUp") {
       e.stopPropagation();
       e.preventDefault();
-      const element = document.activeElement.querySelector('.ui-treenode-label .node-tree-item > .node-item-content > .node-label') as HTMLElement;
+      const element = document.activeElement.querySelector(
+        ".ui-treenode-label .node-tree-item > .node-item-content > .node-label"
+      ) as HTMLElement;
       element.scrollIntoView({
-        behavior: 'auto',
-        block: 'center'
+        behavior: "auto",
+        block: "center",
       });
     }
   }

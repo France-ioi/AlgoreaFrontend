@@ -1,14 +1,22 @@
-import { Component, OnInit, Input, OnChanges, SimpleChanges, Output, EventEmitter, HostListener, ViewChild } from '@angular/core';
-import { TreeNode } from 'primeng/api';
-import { Router } from '@angular/router';
+import {
+  Component,
+  OnInit,
+  Input,
+  OnChanges,
+  SimpleChanges,
+  Output,
+  EventEmitter,
+  ViewChild,
+} from "@angular/core";
+import { TreeNode } from "primeng/api";
+import { Router } from "@angular/router";
 
 @Component({
-  selector: 'app-group-navigation-tree',
-  templateUrl: './group-navigation-tree.component.html',
-  styleUrls: ['./group-navigation-tree.component.scss']
+  selector: "app-group-navigation-tree",
+  templateUrl: "./group-navigation-tree.component.html",
+  styleUrls: ["./group-navigation-tree.component.scss"],
 })
 export class GroupNavigationTreeComponent implements OnInit, OnChanges {
-
   @Input() data: TreeNode[];
   @Input() inGroup = false;
   @Input() navigation = true;
@@ -18,20 +26,16 @@ export class GroupNavigationTreeComponent implements OnInit, OnChanges {
   @Output() onTitleChange = new EventEmitter<any>();
   @Output() onEditPage = new EventEmitter<any>();
 
-  @ViewChild('groupTree', {static: false}) groupTree;
+  @ViewChild("groupTree", { static: false }) groupTree;
 
-  constructor(
-    private router: Router
-  ) {}
+  constructor(private router: Router) {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   ngOnChanges(changes: SimpleChanges) {
     if (this.data) {
-      console.log(changes);
       if (!this.inGroup && this.data.length > 0) {
-        this.data[0]['root'] = true;
+        this.data[0]["root"] = true;
       }
     }
   }
@@ -62,11 +66,11 @@ export class GroupNavigationTreeComponent implements OnInit, OnChanges {
     } else {
       node.checked = false;
     }
-    
-    console.log();
-    const segments = this.router.parseUrl(this.router.url).root.children.primary.segments;
 
-    if (segments.length > 0 && segments[0].path === 'group') {
+    const segments = this.router.parseUrl(this.router.url).root.children.primary
+      .segments;
+
+    if (segments.length > 0 && segments[0].path === "group") {
       this.onNodeChange.emit(node);
     } else {
       this.onTitleChange.emit(node);
@@ -80,7 +84,7 @@ export class GroupNavigationTreeComponent implements OnInit, OnChanges {
 
   toggleConnection(e, node) {
     e.stopPropagation();
-    
+
     if (!node.connected) {
       node.connected = true;
     } else {
@@ -93,33 +97,37 @@ export class GroupNavigationTreeComponent implements OnInit, OnChanges {
   }
 
   onKeyDown(e) {
-    console.log(e);
-    if (e.code === 'Space') {
+    if (e.code === "Space") {
       e.stopPropagation();
       e.preventDefault();
-      const element = document.activeElement.querySelector('.ui-treenode-label .node-tree-item > .node-item-content > .node-label > .node-label-title') as HTMLElement;
+      const element = document.activeElement.querySelector(
+        ".ui-treenode-label .node-tree-item > .node-item-content > .node-label > .node-label-title"
+      ) as HTMLElement;
       element.click();
-    } else if (e.code === 'Enter') {
+    } else if (e.code === "Enter") {
       e.stopPropagation();
       e.preventDefault();
-      const element = document.activeElement.querySelector('.ui-treenode-label .node-tree-item > .node-item-content > .node-label > .node-label-title') as HTMLElement;
+      const element = document.activeElement.querySelector(
+        ".ui-treenode-label .node-tree-item > .node-item-content > .node-label > .node-label-title"
+      ) as HTMLElement;
       element.click();
       setTimeout(() => {
-        const gotoElement = document.activeElement.querySelector('.ui-treenode-label .node-tree-item > .node-item-content > .go-to-page') as HTMLElement;
+        const gotoElement = document.activeElement.querySelector(
+          ".ui-treenode-label .node-tree-item > .node-item-content > .go-to-page"
+        ) as HTMLElement;
         gotoElement.click();
       }, 0);
-    } else if (e.code === 'ArrowDown' || e.code === 'ArrowUp') {
+    } else if (e.code === "ArrowDown" || e.code === "ArrowUp") {
       e.stopPropagation();
       e.preventDefault();
       const element = document.activeElement as HTMLElement;
 
       if (element) {
         element.scrollIntoView({
-          behavior: 'auto',
-          block: 'center'
+          behavior: "auto",
+          block: "center",
         });
       }
     }
   }
-
 }

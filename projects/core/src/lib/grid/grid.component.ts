@@ -1,28 +1,38 @@
-import { Component, OnInit, Input, OnChanges, SimpleChanges, ContentChild, ViewChild, Output, EventEmitter } from '@angular/core';
-import { DomHandler } from 'primeng/dom';
-import { Table, TableService } from 'primeng/table';
-import { SortEvent } from 'primeng/api/sortevent';
+import {
+  Component,
+  OnInit,
+  Input,
+  OnChanges,
+  SimpleChanges,
+  ContentChild,
+  ViewChild,
+  Output,
+  EventEmitter,
+} from "@angular/core";
+import { DomHandler } from "primeng/dom";
+import { Table, TableService } from "primeng/table";
+import { SortEvent } from "primeng/api/sortevent";
 
 export function tableFactory(wrapper: GridComponent) {
   return wrapper.table;
 }
 
 @Component({
-  selector: 'app-grid',
-  templateUrl: './grid.component.html',
-  styleUrls: ['./grid.component.scss'],
+  selector: "app-grid",
+  templateUrl: "./grid.component.html",
+  styleUrls: ["./grid.component.scss"],
   providers: [
     DomHandler,
-    TableService,// from old imports
+    TableService, // from old imports
     {
-      provide: Table,// providing table class
+      provide: Table, // providing table class
       useFactory: tableFactory, // using new function
-      deps: [GridComponent],// new function depends on your wrapper
+      deps: [GridComponent], // new function depends on your wrapper
     },
   ],
 })
 export class GridComponent implements OnInit, OnChanges {
-  @ViewChild('table', {static: true}) table: Table;
+  @ViewChild("table", { static: true }) table: Table;
 
   @Input() data;
   @Input() selectedColumns;
@@ -43,28 +53,26 @@ export class GridComponent implements OnInit, OnChanges {
   @Input() frozenCols;
   @Input() frozenWidth;
   @Input() showGear = true;
-  
+
   @Output() expandWholeWidth = new EventEmitter<boolean>();
   @Output() onSort = new EventEmitter();
   @Output() selectionChange = new EventEmitter();
-  
-  @ContentChild('colgroupTemplate', { static: false }) colgroupTemplate;
-  @ContentChild('headerTemplate', { static: false }) headerTemplate;
-  @ContentChild('bodyTemplate', { static: false }) bodyTemplate;
-  @ContentChild('footerTemplate', { static: false }) footerTemplate;
-  @ContentChild('summaryTemplate', { static: false }) summaryTemplate;
-  @ContentChild('rowExpansionTemplate', { static: false }) rowExpansionTemplate;
-  @ContentChild('frozenHeaderTemplate', { static: false }) frozenHeaderTemplate;
-  @ContentChild('frozenBodyTemplate', { static: false }) frozenBodyTemplate;
+
+  @ContentChild("colgroupTemplate", { static: false }) colgroupTemplate;
+  @ContentChild("headerTemplate", { static: false }) headerTemplate;
+  @ContentChild("bodyTemplate", { static: false }) bodyTemplate;
+  @ContentChild("footerTemplate", { static: false }) footerTemplate;
+  @ContentChild("summaryTemplate", { static: false }) summaryTemplate;
+  @ContentChild("rowExpansionTemplate", { static: false }) rowExpansionTemplate;
+  @ContentChild("frozenHeaderTemplate", { static: false }) frozenHeaderTemplate;
+  @ContentChild("frozenBodyTemplate", { static: false }) frozenBodyTemplate;
 
   selectionValue = [];
 
   @Input()
   get selection() {
-    console.log(this.selectionValue);
     return this.selectionValue;
   }
-
 
   set selection(val) {
     this.selectionValue = val;
@@ -85,7 +93,7 @@ export class GridComponent implements OnInit, OnChanges {
   toShow = 0;
   expand = false;
 
-  constructor() { }
+  constructor() {}
 
   detectSelected() {
     for (const col of this.columns) {
@@ -99,10 +107,7 @@ export class GridComponent implements OnInit, OnChanges {
     this.toShow = this.columns.length - this.selectedColumns.length;
   }
 
-  ngOnInit() {
-    // this.detectSelected();
-    console.log(this.frozenBodyTemplate);
-  }
+  ngOnInit() {}
 
   ngOnChanges(changes: SimpleChanges) {
     if (this.showGear) {
@@ -118,7 +123,7 @@ export class GridComponent implements OnInit, OnChanges {
     this.selectedColumns = this.columns;
     this.toShow = 0;
     this.expand = !this.expand;
-    
+
     if (!this.expand) {
       const newSel = [];
       for (const col of this.columns) {
@@ -151,12 +156,9 @@ export class GridComponent implements OnInit, OnChanges {
     this.selectedColumns = newSel;
 
     this.toShow = this.columns.length - this.selectedColumns.length;
-
-    console.log(this.selected);
   }
 
   sortFunction(event: SortEvent) {
     this.onSort.emit(event);
   }
-
 }

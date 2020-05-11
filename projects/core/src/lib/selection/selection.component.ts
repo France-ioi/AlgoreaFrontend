@@ -1,27 +1,24 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
 
 @Component({
-  selector: 'app-selection',
-  templateUrl: './selection.component.html',
-  styleUrls: ['./selection.component.scss']
+  selector: "app-selection",
+  templateUrl: "./selection.component.html",
+  styleUrls: ["./selection.component.scss"],
 })
 export class SelectionComponent implements OnInit {
-
-  @Input() type: 'rounded' | 'square' = 'rounded';
+  @Input() type: "rounded" | "square" = "rounded";
   @Input() items;
   @Input() selected = 0;
-  @Input() mode: 'light' | 'dark' | 'basic' = 'light';
+  @Input() mode: "light" | "dark" | "basic" = "light";
 
   @Output() onChange = new EventEmitter<any>();
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   itemChanged(e, index) {
     this.selected = index;
     this.onChange.emit(index);
   }
-
 }

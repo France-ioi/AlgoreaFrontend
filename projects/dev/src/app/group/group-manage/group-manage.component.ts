@@ -3,7 +3,6 @@ import { ActivatedRoute } from "@angular/router";
 import { StatusService } from "../../shared/services/status.service";
 import { GroupService } from "../../shared/services/api/group.service";
 import { Group } from "../../shared/models/group.model";
-import { PendingRequest } from "../../shared/models/pending-request.model";
 import { Member } from "../../shared/models/member.model";
 
 @Component({
@@ -56,37 +55,36 @@ export class GroupManageComponent implements OnInit {
     private groupService: GroupService
   ) {}
 
-  ngOnInit() {    
-    this.activatedRoute.params.subscribe(routeParams => {
+  ngOnInit() {
+    this.activatedRoute.params.subscribe((routeParams) => {
       this.groupId = routeParams.id;
       console.log(this.groupId);
 
-      this.groupService.getManagedGroup(this.groupId).subscribe((group: Group) => {
-        this.groupdata = {
-          ID: group.id,
-          name: group.name,
-          type: group.type,
-          grades: [group.grade],
-          date: group.created_at,
-        };
-      });
-  
+      this.groupService
+        .getManagedGroup(this.groupId)
+        .subscribe((group: Group) => {
+          this.groupdata = {
+            ID: group.id,
+            name: group.name,
+            type: group.type,
+            grades: [group.grade],
+            date: group.created_at,
+          };
+        });
+
       this.groupService.getGroupMembers(51).subscribe((members: Member[]) => {
         this._setMemberData(members);
       });
-    })
+    });
 
     this.statusService.getObservable().subscribe((res) => {
       this.status = res;
     });
   }
 
-  onAcceptRequest(e) {
-  }
+  onAcceptRequest(e) {}
 
-  onRejectRequest(e) {
-  }
+  onRejectRequest(e) {}
 
-  onExpandWidth(e) {
-  }
+  onExpandWidth(e) {}
 }

@@ -1,13 +1,12 @@
-import { Component, OnInit, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { Component, OnInit, Inject } from "@angular/core";
+import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
 
 @Component({
-  selector: 'app-join-group-dialog',
-  templateUrl: './join-group-dialog.component.html',
-  styleUrls: ['./join-group-dialog.component.scss']
+  selector: "app-join-group-dialog",
+  templateUrl: "./join-group-dialog.component.html",
+  styleUrls: ["./join-group-dialog.component.scss"],
 })
 export class JoinGroupDialogComponent implements OnInit {
-
   seeActivity = false;
   viewPersonalInfo = false;
   modifyPersonalInfo = false;
@@ -18,28 +17,33 @@ export class JoinGroupDialogComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<JoinGroupDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data
-    ) { }
+  ) {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   onClose(e) {
     this.dialogRef.close(e);
   }
 
   onJoin(e) {
-    console.log(this.seeActivity, this.viewPersonalInfo, this.modifyPersonalInfo, this.keepLocked)
     if (this.data.require_watch_approval && !this.seeActivity) {
       this.error = true;
       return;
     }
 
-    if ((this.data.require_personal_info_access_approval === 'view' || this.data.require_personal_info_access_approval === 'edit') && !this.viewPersonalInfo) {
+    if (
+      (this.data.require_personal_info_access_approval === "view" ||
+        this.data.require_personal_info_access_approval === "edit") &&
+      !this.viewPersonalInfo
+    ) {
       this.error = true;
       return;
     }
 
-    if (this.data.require_personal_info_access_approval === 'edit' && !this.modifyPersonalInfo) {
+    if (
+      this.data.require_personal_info_access_approval === "edit" &&
+      !this.modifyPersonalInfo
+    ) {
       this.error = true;
       return;
     }
@@ -52,5 +56,4 @@ export class JoinGroupDialogComponent implements OnInit {
     this.error = false;
     this.dialogRef.close(e);
   }
-
 }
