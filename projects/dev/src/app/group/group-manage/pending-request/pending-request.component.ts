@@ -51,6 +51,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
 
   _setRequestData(reqs: PendingRequest[]) {
     this.requests = [];
+    this.selection = [];
 
     for (const req of reqs) {
       this.requests.push({
