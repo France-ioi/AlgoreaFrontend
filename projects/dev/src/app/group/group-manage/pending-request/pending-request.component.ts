@@ -144,7 +144,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
   onExpandWidth(e) {}
 
   onClickAccept(e) {
-    if (this.selection.length === 0) {
+    if (this.selection.length === 0 || this.acceptLoading || this.rejectLoading) {
       return;
     }
 
@@ -155,12 +155,16 @@ export class PendingRequestComponent implements OnInit, OnChanges {
         this.selection.map((val) => val.joining_user.group_id)
       )
       .subscribe((res) => {
-        this._manageRequestData(res, "Accept request", "accepted");
         this.acceptLoading = false;
+        this._manageRequestData(res, "Accept request", "accepted");
       });
   }
 
   onClickReject(e) {
+    if (this.selection.length === 0 || this.acceptLoading || this.rejectLoading) {
+      return;
+    }
+
     this.rejectLoading = true;
     this.groupService
       .rejectJoinRequest(
@@ -168,8 +172,8 @@ export class PendingRequestComponent implements OnInit, OnChanges {
         this.selection.map((val) => val.joining_user.group_id)
       )
       .subscribe((res) => {
-        this._manageRequestData(res, "Reject request", "declined");
         this.rejectLoading = false;
+        this._manageRequestData(res, "Reject request", "declined");
       });
   }
 
