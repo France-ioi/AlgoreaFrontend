@@ -4,20 +4,20 @@ import {
   Input,
   OnChanges,
   SimpleChanges,
-} from "@angular/core";
+} from '@angular/core';
 
 export enum ProgressColor {
-  Red = "#FF001F",
-  Orange = "#FCC16E",
-  Green = "#B8E986",
-  Thick = "#F2F2F2",
-  Thin = "#CFD0D4",
+  Red = '#FF001F',
+  Orange = '#FCC16E',
+  Green = '#B8E986',
+  Thick = '#F2F2F2',
+  Thin = '#CFD0D4',
 }
 
 export enum ProgressType {
-  ThinHorizontal = "thin-horizontal",
-  ThickHorizontal = "thick-horizontal",
-  ThickVertical = "vertical",
+  ThinHorizontal = 'thin-horizontal',
+  ThickHorizontal = 'thick-horizontal',
+  ThickVertical = 'vertical',
 }
 
 enum ProgressHeight {
@@ -26,9 +26,9 @@ enum ProgressHeight {
 }
 
 @Component({
-  selector: "app-skill-progress",
-  templateUrl: "./skill-progress.component.html",
-  styleUrls: ["./skill-progress.component.scss"],
+  selector: 'lib-skill-progress',
+  templateUrl: './skill-progress.component.html',
+  styleUrls: ['./skill-progress.component.scss'],
 })
 export class SkillProgressComponent implements OnInit, OnChanges {
   ProgressType = ProgressType;
@@ -72,10 +72,10 @@ export class SkillProgressComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     if (this.displayedScore === 100) {
-      this._displayColor = "#B8E986";
+      this._displayColor = '#B8E986';
     } else {
-      this._displayColor = "hsl(" + this.displayedScore * 0.4 + ", 100%, 50%)";
-      this._currentColor = "hsl(" + this.currentScore * 0.4 + ", 100%, 70%)";
+      this._displayColor = 'hsl(' + this.displayedScore * 0.4 + ', 100%, 50%)';
+      this._currentColor = 'hsl(' + this.currentScore * 0.4 + ', 100%, 70%)';
     }
   }
 }

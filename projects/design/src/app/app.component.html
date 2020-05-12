@@ -67,29 +67,29 @@
       templateId="1"
     ></app-top-nav>
     <div class="top-right-bar">
-      <app-editor-bar
+      <lib-editor-bar
         *ngIf="editing"
         (onCancel)="onEditCancel($event)"
-      ></app-editor-bar>
+      ></lib-editor-bar>
       <div class="breadcrumb-bar"
       *ngIf="!folded && !scrolled">
-        <app-breadcrumb
+        <lib-breadcrumb
           [items]="signedIn ? breaddata : breadhome"
-        ></app-breadcrumb>
-        <app-page-navigator
+        ></lib-breadcrumb>
+        <lib-page-navigator
           *ngIf="!editing && signedIn"
           (onEdit)="onEditPage($event)"
-        ></app-page-navigator>
-        <app-select *ngIf="!signedIn && collapsed" [items]="langs" style="margin-right: 1rem;height: 1.8333rem;"></app-select>
-        <app-button *ngIf="!signedIn && collapsed" label="Connexion" icon="pi pi-check" class="ui-button-rounded" style="margin-right: 0.4167rem;" (onClick)="onSignInOut(true)"></app-button>
+        ></lib-page-navigator>
+        <lib-select *ngIf="!signedIn && collapsed" [items]="langs" style="margin-right: 1rem;height: 1.8333rem;"></lib-select>
+        <lib-button *ngIf="!signedIn && collapsed" label="Connexion" icon="pi pi-check" class="ui-button-rounded" style="margin-right: 0.4167rem;" (onClick)="onSignInOut(true)"></lib-button>
       </div>
       <div class="folded-top-bar" *ngIf="folded || scrolled">
-        <app-score-ring
+        <lib-score-ring
           *ngIf="isStarted && selectedType == 2"
           [displayedScore]="taskdata.progress.displayedScore"
           [currentScore]="taskdata.progress.currentScore"
           [diameter]="30"
-        ></app-score-ring>
+        ></lib-score-ring>
         <div
           *ngIf="(!isStarted || selectedType === 0 || selectedType === 1) && selectedType !== 5"
           class="task-user-image"
@@ -119,12 +119,12 @@
         >
           00:03:10
         </span>
-        <app-page-navigator
+        <lib-page-navigator
           *ngIf="!editing"
           allowFullScreen="false"
           navigationMode="nextAndPrev"
           (onEdit)="onEditPage($event)"
-        ></app-page-navigator>
+        ></lib-page-navigator>
       </div>
     </div>
   </div>

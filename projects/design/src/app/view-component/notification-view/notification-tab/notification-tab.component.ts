@@ -1,7 +1,7 @@
 import { Component, OnInit, ElementRef, Input } from '@angular/core';
 
 @Component({
-  selector: 'app-notification-tab',
+  selector: 'lib-notification-tab',
   templateUrl: './notification-tab.component.html',
   styleUrls: ['./notification-tab.component.scss']
 })

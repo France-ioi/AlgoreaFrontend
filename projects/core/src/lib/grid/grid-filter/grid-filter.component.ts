@@ -1,13 +1,13 @@
-import { Component, OnInit, Input, EventEmitter, Output } from "@angular/core";
+import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 
 @Component({
-  selector: "app-grid-filter",
-  templateUrl: "./grid-filter.component.html",
-  styleUrls: ["./grid-filter.component.scss"],
+  selector: 'lib-grid-filter',
+  templateUrl: './grid-filter.component.html',
+  styleUrls: ['./grid-filter.component.scss'],
 })
 export class GridFilterComponent implements OnInit {
-  @Input() type: "standard" | "default" = "standard";
-  @Input() mode: "basic" | "list" | "dates" | "activity" = "basic";
+  @Input() type: 'standard' | 'default' = 'standard';
+  @Input() mode: 'basic' | 'list' | 'dates' | 'activity' = 'basic';
   @Input() text;
   @Input() ranges;
   @Input() dateRanges;
@@ -22,13 +22,13 @@ export class GridFilterComponent implements OnInit {
 
   status = [
     {
-      label: "locked",
+      label: 'locked',
     },
     {
-      label: "not started",
+      label: 'not started',
     },
     {
-      label: "started",
+      label: 'started',
     },
   ];
 

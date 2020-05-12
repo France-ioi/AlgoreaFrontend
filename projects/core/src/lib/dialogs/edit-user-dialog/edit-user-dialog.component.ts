@@ -1,13 +1,13 @@
-import { Component, OnInit, Inject } from "@angular/core";
-import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from "@angular/material";
-import { AttachGroupDialogComponent } from "../attach-group-dialog/attach-group-dialog.component";
-import { ResetPasswordDialogComponent } from "../reset-password-dialog/reset-password-dialog.component";
-import { ConfirmPasswordDialogComponent } from "../confirm-password-dialog/confirm-password-dialog.component";
+import { Component, OnInit, Inject } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material';
+import { AttachGroupDialogComponent } from '../attach-group-dialog/attach-group-dialog.component';
+import { ResetPasswordDialogComponent } from '../reset-password-dialog/reset-password-dialog.component';
+import { ConfirmPasswordDialogComponent } from '../confirm-password-dialog/confirm-password-dialog.component';
 
 @Component({
-  selector: "app-edit-user-dialog",
-  templateUrl: "./edit-user-dialog.component.html",
-  styleUrls: ["./edit-user-dialog.component.scss"],
+  selector: 'lib-edit-user-dialog',
+  templateUrl: './edit-user-dialog.component.html',
+  styleUrls: ['./edit-user-dialog.component.scss'],
 })
 export class EditUserDialogComponent implements OnInit {
   constructor(
@@ -24,15 +24,15 @@ export class EditUserDialogComponent implements OnInit {
 
   onAttachClicked(e) {
     const ref = this.dialog.open(AttachGroupDialogComponent, {
-      maxHeight: "41rem",
-      minWidth: "50rem",
-      maxWidth: "50rem",
-      minHeight: "17rem",
+      maxHeight: '41rem',
+      minWidth: '50rem',
+      maxWidth: '50rem',
+      minHeight: '17rem',
       data: {
-        icon: "fa fa-link",
-        label: "Attach to another group",
+        icon: 'fa fa-link',
+        label: 'Attach to another group',
         comment:
-          "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.",
+          'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.',
       },
     });
 
@@ -41,29 +41,29 @@ export class EditUserDialogComponent implements OnInit {
 
   onResetPassword(e) {
     const ref = this.dialog.open(ResetPasswordDialogComponent, {
-      maxHeight: "41rem",
-      minWidth: "50rem",
-      maxWidth: "50rem",
-      minHeight: "17rem",
+      maxHeight: '41rem',
+      minWidth: '50rem',
+      maxWidth: '50rem',
+      minHeight: '17rem',
       data: {
-        icon: "fa fa-key",
-        label: "Reset password",
-        user: "Jeannomonetto",
+        icon: 'fa fa-key',
+        label: 'Reset password',
+        user: 'Jeannomonetto',
       },
     });
 
     ref.afterClosed().subscribe((result) => {
       if (result == true) {
         const codeRef = this.dialog.open(ConfirmPasswordDialogComponent, {
-          maxHeight: "41rem",
-          minWidth: "50rem",
-          maxWidth: "50rem",
-          minHeight: "17rem",
+          maxHeight: '41rem',
+          minWidth: '50rem',
+          maxWidth: '50rem',
+          minHeight: '17rem',
           data: {
-            icon: "fa fa-key",
-            label: "Reset password",
-            user: "Jeannomonetto",
-            code: "HJGT7890",
+            icon: 'fa fa-key',
+            label: 'Reset password',
+            user: 'Jeannomonetto',
+            code: 'HJGT7890',
           },
         });
 

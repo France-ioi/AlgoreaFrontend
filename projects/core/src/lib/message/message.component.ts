@@ -1,9 +1,9 @@
-import { Component, OnInit, Input } from "@angular/core";
+import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
-  selector: "app-message",
-  templateUrl: "./message.component.html",
-  styleUrls: ["./message.component.scss"],
+  selector: 'lib-message',
+  templateUrl: './message.component.html',
+  styleUrls: ['./message.component.scss'],
 })
 export class MessageComponent implements OnInit {
   @Input() type;
@@ -17,7 +17,7 @@ export class MessageComponent implements OnInit {
   ngOnInit() {
     this.msgs.push({
       severity: this.type,
-      summary: "",
+      summary: '',
       detail: this.label,
     });
   }

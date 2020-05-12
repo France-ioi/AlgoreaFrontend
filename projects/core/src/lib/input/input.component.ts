@@ -6,22 +6,22 @@ import {
   EventEmitter,
   OnChanges,
   SimpleChanges,
-} from "@angular/core";
+} from '@angular/core';
 
 @Component({
-  selector: "app-input",
-  templateUrl: "./input.component.html",
-  styleUrls: ["./input.component.scss"],
+  selector: 'lib-input',
+  templateUrl: './input.component.html',
+  styleUrls: ['./input.component.scss'],
 })
 export class InputComponent implements OnInit, OnChanges {
   @Input() value;
   @Input() placeholder;
   @Input() icon;
-  @Input() mode = "dark";
-  @Input() type = "small";
+  @Input() mode = 'dark';
+  @Input() type = 'small';
   @Input() hasButton = false;
-  @Input() inputType = "text";
-  @Input() leftIcon = "fa fa-font";
+  @Input() inputType = 'text';
+  @Input() leftIcon = 'fa fa-font';
 
   @Output() onChange = new EventEmitter<any>();
   @Output() onClick = new EventEmitter<any>();

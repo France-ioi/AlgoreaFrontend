@@ -1,10 +1,10 @@
-import { Component, OnInit, Inject } from "@angular/core";
-import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
+import { Component, OnInit, Inject } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 @Component({
-  selector: "app-join-group-dialog",
-  templateUrl: "./join-group-dialog.component.html",
-  styleUrls: ["./join-group-dialog.component.scss"],
+  selector: 'lib-join-group-dialog',
+  templateUrl: './join-group-dialog.component.html',
+  styleUrls: ['./join-group-dialog.component.scss'],
 })
 export class JoinGroupDialogComponent implements OnInit {
   seeActivity = false;
@@ -32,8 +32,8 @@ export class JoinGroupDialogComponent implements OnInit {
     }
 
     if (
-      (this.data.require_personal_info_access_approval === "view" ||
-        this.data.require_personal_info_access_approval === "edit") &&
+      (this.data.require_personal_info_access_approval === 'view' ||
+        this.data.require_personal_info_access_approval === 'edit') &&
       !this.viewPersonalInfo
     ) {
       this.error = true;
@@ -41,7 +41,7 @@ export class JoinGroupDialogComponent implements OnInit {
     }
 
     if (
-      this.data.require_personal_info_access_approval === "edit" &&
+      this.data.require_personal_info_access_approval === 'edit' &&
       !this.modifyPersonalInfo
     ) {
       this.error = true;

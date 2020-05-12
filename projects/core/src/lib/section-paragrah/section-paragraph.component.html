@@ -4,7 +4,7 @@
     <div class="section-handler">
       <i class="{{icon}}" *ngIf="!data || !data.ID"></i>
       <div class="score-container" *ngIf="data && data.ID">
-        <app-score-ring [displayedScore]="data.progress.displayedScore" [icons]="data.progress.isStarted === false ? 'flag-checkered' : ''" [currentScore]="data.progress.currentScore" diameter="24" ></app-score-ring>
+        <lib-score-ring [displayedScore]="data.progress.displayedScore" [icons]="data.progress.isStarted === false ? 'flag-checkered' : ''" [currentScore]="data.progress.currentScore" diameter="24" ></lib-score-ring>
       </div>
     </div>
     <div class="section-header-content" [ngClass]="{'show-border': hasBorder && visible}">

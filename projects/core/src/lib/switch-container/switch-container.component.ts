@@ -1,9 +1,9 @@
-import { Component, OnInit, Input } from "@angular/core";
+import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
-  selector: "app-switch-container",
-  templateUrl: "./switch-container.component.html",
-  styleUrls: ["./switch-container.component.scss"],
+  selector: 'lib-switch-container',
+  templateUrl: './switch-container.component.html',
+  styleUrls: ['./switch-container.component.scss'],
 })
 export class SwitchContainerComponent implements OnInit {
   @Input() label;

@@ -1,7 +1,7 @@
-<app-section icon="fa fa-link" label="Skills related to this activity">
-  <app-grid-filter-bar>
+<lib-section icon="fa fa-link" label="Skills related to this activity">
+  <lib-grid-filter-bar>
     <ng-container *ngFor="let filter of gridFilters">
-      <app-grid-filter
+      <lib-grid-filter
         [icon]="filter.icon"
         [label]="filter.label"
         [type]="filter.type"
@@ -11,22 +11,22 @@
         [dateRanges]="filter.dateRanges"
         [list]="filter.list"
         (onClose)="removeFilter(filter.ID)"
-      ></app-grid-filter>
+      ></lib-grid-filter>
     </ng-container>
-    <app-select
+    <lib-select
       [items]="filterChoice"
       [opened]="false"
       width="10"
       style="margin: 0.4167rem;"
-    ></app-select>
-  </app-grid-filter-bar>
-</app-section>
+    ></lib-select>
+  </lib-grid-filter-bar>
+</lib-section>
 <div class="group-tree-container">
-  <app-group-navigation-tree [data]="trees" [navigation]="false" [showCategory]="false" (onEditPage)="onGotoPage($event)"></app-group-navigation-tree>
+  <lib-group-navigation-tree [data]="trees" [navigation]="false" [showCategory]="false" (onEditPage)="onGotoPage($event)"></lib-group-navigation-tree>
 </div>
 <div class="tree-container">
   <span class="tri-tag"></span>
-  <app-sub-section icon="fa fa-plus" label="Add content">
-    <app-activity-picker [trees]="trees"></app-activity-picker>
-  </app-sub-section>
+  <lib-sub-section icon="fa fa-plus" label="Add content">
+    <lib-activity-picker [trees]="trees"></lib-activity-picker>
+  </lib-sub-section>
 </div>

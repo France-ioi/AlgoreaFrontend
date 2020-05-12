@@ -4,16 +4,15 @@ import {
   Input,
   OnChanges,
   SimpleChanges,
-} from "@angular/core";
-import { TreeNode } from "primeng/api";
+} from '@angular/core';
 
 @Component({
-  selector: "app-selection-tree",
-  templateUrl: "./selection-tree.component.html",
-  styleUrls: ["./selection-tree.component.scss"],
+  selector: 'lib-selection-tree',
+  templateUrl: './selection-tree.component.html',
+  styleUrls: ['./selection-tree.component.scss'],
 })
 export class SelectionTreeComponent implements OnInit, OnChanges {
-  @Input() data: TreeNode[];
+  @Input() data = [];
 
   constructor() {}
 
@@ -25,8 +24,8 @@ export class SelectionTreeComponent implements OnInit, OnChanges {
         this.data.pop();
       }
       if (this.data.length > 0) {
-        this.data[0]["root"] = true;
-        this.data[0]["expanded"] = true;
+        this.data[0].root = true;
+        this.data[0].expanded = true;
       }
     }
   }

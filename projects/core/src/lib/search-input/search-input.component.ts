@@ -1,12 +1,12 @@
-import { Component, OnInit, Output, EventEmitter } from "@angular/core";
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 
 @Component({
-  selector: "app-search-input",
-  templateUrl: "./search-input.component.html",
-  styleUrls: ["./search-input.component.scss"],
+  selector: 'lib-search-input',
+  templateUrl: './search-input.component.html',
+  styleUrls: ['./search-input.component.scss'],
 })
 export class SearchInputComponent implements OnInit {
-  value = "";
+  value = '';
   dirty = false;
 
   @Output() onChange = new EventEmitter<any>();
@@ -18,12 +18,12 @@ export class SearchInputComponent implements OnInit {
 
   onIconClicked(e) {
     if (this.dirty) {
-      this.value = "";
+      this.value = '';
       this.dirty = false;
       this.onClose.emit(e);
     } else {
       this.dirty = true;
-      this.onChange.emit("");
+      this.onChange.emit('');
     }
   }
 
@@ -37,7 +37,7 @@ export class SearchInputComponent implements OnInit {
   }
 
   onFocus(e) {
-    this.onChange.emit("");
+    this.onChange.emit('');
     this.dirty = true;
   }
 }

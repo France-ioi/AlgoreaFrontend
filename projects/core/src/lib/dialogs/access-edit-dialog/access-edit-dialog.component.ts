@@ -1,10 +1,10 @@
-import { Component, OnInit, Inject } from "@angular/core";
-import { MatDialogRef, MatDialog, MAT_DIALOG_DATA } from "@angular/material";
+import { Component, OnInit, Inject } from '@angular/core';
+import { MatDialogRef, MatDialog, MAT_DIALOG_DATA } from '@angular/material';
 
 @Component({
-  selector: "app-access-edit-dialog",
-  templateUrl: "./access-edit-dialog.component.html",
-  styleUrls: ["./access-edit-dialog.component.scss"],
+  selector: 'lib-access-edit-dialog',
+  templateUrl: './access-edit-dialog.component.html',
+  styleUrls: ['./access-edit-dialog.component.scss'],
 })
 export class AccessEditDialogComponent implements OnInit {
   objectKeys = Object.keys;

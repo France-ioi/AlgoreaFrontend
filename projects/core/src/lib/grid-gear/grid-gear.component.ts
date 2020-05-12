@@ -1,9 +1,9 @@
-import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
-  selector: "app-grid-gear",
-  templateUrl: "./grid-gear.component.html",
-  styleUrls: ["./grid-gear.component.scss"],
+  selector: 'lib-grid-gear',
+  templateUrl: './grid-gear.component.html',
+  styleUrls: ['./grid-gear.component.scss'],
 })
 export class GridGearComponent implements OnInit {
   menuOpen = false;

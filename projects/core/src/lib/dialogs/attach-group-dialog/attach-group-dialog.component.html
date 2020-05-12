@@ -18,11 +18,11 @@
     <div class="form-item-view">
       <span class="form-item-label">Attach to this group</span>
       <div class="form-item-control">
-        <app-activity-picker [trees]="trees" selected="Select a group"></app-activity-picker>
+        <lib-activity-picker [trees]="trees" selected="Select a group"></lib-activity-picker>
       </div>
     </div>
   </div>
 </div>
 <div mat-dialog-actions>
-  <app-button icon="fa fa-link" label="Attach" class="ui-button-rounded" (onClick)="onClose($event)"></app-button>
+  <lib-button icon="fa fa-link" label="Attach" class="ui-button-rounded" (onClick)="onClose($event)"></lib-button>
 </div>

@@ -8,19 +8,19 @@ import {
   ViewChild,
   Output,
   EventEmitter,
-} from "@angular/core";
-import { DomHandler } from "primeng/dom";
-import { Table, TableService } from "primeng/table";
-import { SortEvent } from "primeng/api/sortevent";
+} from '@angular/core';
+import { DomHandler } from 'primeng/dom';
+import { Table, TableService } from 'primeng/table';
+import { SortEvent } from 'primeng/api/sortevent';
 
 export function tableFactory(wrapper: GridComponent) {
   return wrapper.table;
 }
 
 @Component({
-  selector: "app-grid",
-  templateUrl: "./grid.component.html",
-  styleUrls: ["./grid.component.scss"],
+  selector: 'lib-grid',
+  templateUrl: './grid.component.html',
+  styleUrls: ['./grid.component.scss'],
   providers: [
     DomHandler,
     TableService, // from old imports
@@ -32,14 +32,26 @@ export function tableFactory(wrapper: GridComponent) {
   ],
 })
 export class GridComponent implements OnInit, OnChanges {
-  @ViewChild("table", { static: true }) table: Table;
+
+  @Input()
+  get selection() {
+    return this.selectionValue;
+  }
+
+  set selection(val) {
+    this.selectionValue = val;
+    this.selectionChange.emit(this.selectionValue);
+  }
+
+  constructor() {}
+  @ViewChild('table', { static: true }) table: Table;
 
   @Input() data;
   @Input() selectedColumns;
   @Input() columns;
   @Input() groupInfo;
 
-  @Input() sortMode = "multiple";
+  @Input() sortMode = 'multiple';
   @Input() multiSortMeta = [];
   @Input() customSort = true;
 
@@ -58,26 +70,22 @@ export class GridComponent implements OnInit, OnChanges {
   @Output() onSort = new EventEmitter();
   @Output() selectionChange = new EventEmitter();
 
-  @ContentChild("colgroupTemplate", { static: false }) colgroupTemplate;
-  @ContentChild("headerTemplate", { static: false }) headerTemplate;
-  @ContentChild("bodyTemplate", { static: false }) bodyTemplate;
-  @ContentChild("footerTemplate", { static: false }) footerTemplate;
-  @ContentChild("summaryTemplate", { static: false }) summaryTemplate;
-  @ContentChild("rowExpansionTemplate", { static: false }) rowExpansionTemplate;
-  @ContentChild("frozenHeaderTemplate", { static: false }) frozenHeaderTemplate;
-  @ContentChild("frozenBodyTemplate", { static: false }) frozenBodyTemplate;
+  @ContentChild('colgroupTemplate', { static: false }) colgroupTemplate;
+  @ContentChild('headerTemplate', { static: false }) headerTemplate;
+  @ContentChild('bodyTemplate', { static: false }) bodyTemplate;
+  @ContentChild('footerTemplate', { static: false }) footerTemplate;
+  @ContentChild('summaryTemplate', { static: false }) summaryTemplate;
+  @ContentChild('rowExpansionTemplate', { static: false }) rowExpansionTemplate;
+  @ContentChild('frozenHeaderTemplate', { static: false }) frozenHeaderTemplate;
+  @ContentChild('frozenBodyTemplate', { static: false }) frozenBodyTemplate;
 
   selectionValue = [];
 
-  @Input()
-  get selection() {
-    return this.selectionValue;
-  }
+  showColumnSelection = false;
 
-  set selection(val) {
-    this.selectionValue = val;
-    this.selectionChange.emit(this.selectionValue);
-  }
+  selected = {};
+  toShow = 0;
+  expand = false;
 
   onRowSelect(e) {
     this.selectionChange.emit(this.selectionValue);
@@ -86,14 +94,6 @@ export class GridComponent implements OnInit, OnChanges {
   onRowUnselect(e) {
     this.selectionChange.emit(this.selectionValue);
   }
-
-  showColumnSelection = false;
-
-  selected = {};
-  toShow = 0;
-  expand = false;
-
-  constructor() {}
 
   detectSelected() {
     for (const col of this.columns) {

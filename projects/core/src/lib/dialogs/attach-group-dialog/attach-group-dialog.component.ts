@@ -1,10 +1,10 @@
-import { Component, OnInit, Inject } from "@angular/core";
-import { MatDialogRef, MatDialog, MAT_DIALOG_DATA } from "@angular/material";
+import { Component, OnInit, Inject } from '@angular/core';
+import { MatDialogRef, MatDialog, MAT_DIALOG_DATA } from '@angular/material';
 
 @Component({
-  selector: "app-attach-group-dialog",
-  templateUrl: "./attach-group-dialog.component.html",
-  styleUrls: ["./attach-group-dialog.component.scss"],
+  selector: 'lib-attach-group-dialog',
+  templateUrl: './attach-group-dialog.component.html',
+  styleUrls: ['./attach-group-dialog.component.scss'],
 })
 export class AttachGroupDialogComponent implements OnInit {
   trees;

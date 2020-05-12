@@ -1,10 +1,10 @@
-import { Component, OnInit, Inject } from "@angular/core";
-import { MatDialogRef, MatDialog, MAT_DIALOG_DATA } from "@angular/material";
+import { Component, OnInit, Inject } from '@angular/core';
+import { MatDialogRef, MatDialog, MAT_DIALOG_DATA } from '@angular/material';
 
 @Component({
-  selector: "app-reset-password-dialog",
-  templateUrl: "./reset-password-dialog.component.html",
-  styleUrls: ["./reset-password-dialog.component.scss"],
+  selector: 'lib-reset-password-dialog',
+  templateUrl: './reset-password-dialog.component.html',
+  styleUrls: ['./reset-password-dialog.component.scss'],
 })
 export class ResetPasswordDialogComponent implements OnInit {
   constructor(

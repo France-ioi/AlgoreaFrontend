@@ -5,25 +5,25 @@ import {
   ContentChild,
   Output,
   EventEmitter,
-} from "@angular/core";
+} from '@angular/core';
 
 @Component({
-  selector: "app-section-paragraph",
-  templateUrl: "./section-paragraph.component.html",
-  styleUrls: ["./section-paragraph.component.scss"],
+  selector: 'lib-section-paragraph',
+  templateUrl: './section-paragraph.component.html',
+  styleUrls: ['./section-paragraph.component.scss'],
 })
 export class SectionParagraphComponent implements OnInit {
   @Input() icon;
   @Input() label;
   @Input() collapsible = false;
-  @Input() theme = "success";
+  @Input() theme = 'success';
   @Input() hasBorder = false;
   @Input() data;
   @Input() remainOrigin = true;
 
   @Output() onCollapse = new EventEmitter<any>();
 
-  @ContentChild("headerTemplate", { static: false }) headerTemplate;
+  @ContentChild('headerTemplate', { static: false }) headerTemplate;
 
   visible;
 

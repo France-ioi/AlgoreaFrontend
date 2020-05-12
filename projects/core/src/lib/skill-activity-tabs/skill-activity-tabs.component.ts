@@ -6,12 +6,12 @@ import {
   EventEmitter,
   OnChanges,
   SimpleChanges,
-} from "@angular/core";
+} from '@angular/core';
 
 @Component({
-  selector: "app-skill-activity-tabs",
-  templateUrl: "./skill-activity-tabs.component.html",
-  styleUrls: ["./skill-activity-tabs.component.scss"],
+  selector: 'lib-skill-activity-tabs',
+  templateUrl: './skill-activity-tabs.component.html',
+  styleUrls: ['./skill-activity-tabs.component.scss'],
 })
 export class SkillActivityTabsComponent implements OnInit, OnChanges {
   @Input() skills;

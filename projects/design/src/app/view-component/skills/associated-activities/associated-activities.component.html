@@ -1,20 +1,20 @@
-<app-section icon="fa fa-link" label="Suggested activities for this skill">
-  <app-activity-skill-list [data]="suggested" [activity]="true"></app-activity-skill-list>
-</app-section>
-<app-section icon="fa fa-calendar-check" label="Activities associated with this skill">
+<lib-section icon="fa fa-link" label="Suggested activities for this skill">
+  <lib-activity-skill-list [data]="suggested" [activity]="true"></lib-activity-skill-list>
+</lib-section>
+<lib-section icon="fa fa-calendar-check" label="Activities associated with this skill">
   <div class="select-type-container">
-    <app-selection type="square" [items]="sels"></app-selection>
+    <lib-selection type="square" [items]="sels"></lib-selection>
   </div>
-  <app-grid-filter-bar>
-    <app-select
+  <lib-grid-filter-bar>
+    <lib-select
       [items]="filterChoice"
       [opened]="false"
       width="10"
       style="margin: 0.4167rem;"
       (onClick)="gridSelect = true"
-    ></app-select>
+    ></lib-select>
     <ng-container *ngFor="let filter of gridFilters">
-      <app-grid-filter
+      <lib-grid-filter
         [icon]="filter.icon"
         [label]="filter.label"
         [type]="filter.type"
@@ -26,8 +26,8 @@
         [outsideClicked]="gridSelect"
         (onClose)="removeFilter(filter.ID)"
         (onHide)="gridSelect = false"
-      ></app-grid-filter>
+      ></lib-grid-filter>
     </ng-container>
-  </app-grid-filter-bar>
-  <app-activity-skill-list [data]="associated" [activity]="true"></app-activity-skill-list>
-</app-section>
+  </lib-grid-filter-bar>
+  <lib-activity-skill-list [data]="associated" [activity]="true"></lib-activity-skill-list>
+</lib-section>

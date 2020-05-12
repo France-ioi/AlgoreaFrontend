@@ -1,11 +1,11 @@
-import { Component, OnInit, Input, OnDestroy } from "@angular/core";
-import { Router } from "@angular/router";
-import { Subscription } from "rxjs";
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
-  selector: "app-activity-skill-list",
-  templateUrl: "./activity-skill-list.component.html",
-  styleUrls: ["./activity-skill-list.component.scss"],
+  selector: 'lib-activity-skill-list',
+  templateUrl: './activity-skill-list.component.html',
+  styleUrls: ['./activity-skill-list.component.scss'],
 })
 export class ActivitySkillListComponent implements OnInit, OnDestroy {
   @Input() data;
@@ -13,8 +13,7 @@ export class ActivitySkillListComponent implements OnInit, OnDestroy {
   status;
   unsubscribe: Subscription;
 
-  constructor(private router: Router)
-  {}
+  constructor(private router: Router) {}
 
   ngOnInit() {
   }
