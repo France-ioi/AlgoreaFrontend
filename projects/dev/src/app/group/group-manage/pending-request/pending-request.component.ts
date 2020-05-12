@@ -85,14 +85,18 @@ export class PendingRequestComponent implements OnInit, OnChanges {
             fail++;
         }
       }
-      console.log(succ, fail);
 
       if (fail === 0) {
-        console.log("Success");
         this.messageService.add({
           severity: "success",
           summary: summary,
           detail: `${succ} request(s) have been ${msg}`,
+        });
+      } else if (succ === 0) {
+        this.messageService.add({
+          severity: "error",
+          summary: summary,
+          detail: `Unable to ${summary} the selected request(s).`,
         });
       } else {
         this.messageService.add({
@@ -155,8 +159,8 @@ export class PendingRequestComponent implements OnInit, OnChanges {
         this.selection.map((val) => val.joining_user.group_id)
       )
       .subscribe((res) => {
+        this._manageRequestData(res, "accept", "accepted");
         this.acceptLoading = false;
-        this._manageRequestData(res, "Accept request", "accepted");
       });
   }
 
@@ -172,9 +176,25 @@ export class PendingRequestComponent implements OnInit, OnChanges {
         this.selection.map((val) => val.joining_user.group_id)
       )
       .subscribe((res) => {
+        this._manageRequestData(res, "reject", "declined");
         this.rejectLoading = false;
-        this._manageRequestData(res, "Reject request", "declined");
       });
+  }
+
+  onSelectAll(event) {
+    if (this.selection.length === this.requests.length) {
+      this.selection = [];
+    } else {
+      this.selection = this.requests;
+    }
+  }
+
+  onHeaderCheckboxToggle(event) {
+    if (event.checked) {
+      this.selection = this.requests;
+    } else {
+      this.selection = [];
+    }
   }
 
   onCustomSort(event: SortEvent) {

@@ -22,6 +22,7 @@
       [multiSortMeta]="multiSortMeta"
       (onSort)="onCustomSort($event)"
       (expandWholeWidth)="onExpandWidth($event)"
+      (onHeaderCheckboxToggle)="onHeaderCheckboxToggle($event)"
     >
       <ng-template #headerTemplate let-columns>
         <tr>
@@ -68,7 +69,7 @@
       >
         <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
           <td style="width: 3.3333rem;">
-            <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+            <p-tableCheckbox [value]="rowData" [disabled]="rejectLoading || acceptLoading"></p-tableCheckbox>
           </td>
           <td *ngFor="let col of columns">
             <ng-container *ngIf="col.field === 'member_id'">
@@ -99,17 +100,20 @@
       </ng-template>
       <ng-template #summaryTemplate let-table>
         <div style="text-align: left; display: flex; align-items: center;">
-          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+          <p-tableHeaderCheckbox [disabled]="rejectLoading || acceptLoading"></p-tableHeaderCheckbox>
           <span
             style="
               margin-left: 2.1rem;
               color: #9b9b9b;
-              flex: 1;
               font-size: 1.2rem;
+              cursor: pointer;
             "
+            [ngClass]="{disabled: selection.length === 0 || rejectLoading || acceptLoading}"
+            (click)="onSelectAll($event)"
           >
             Select all
           </span>
+          <span style="flex: 1;"></span>
           <div class="req-tools">
             <span class="accept" [ngClass]="{disabled: selection.length === 0 || rejectLoading || acceptLoading}" (click)="onClickAccept($event)">
               <span>Accept</span>

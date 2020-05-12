@@ -40,6 +40,11 @@
     }
   }
 
+  .disabled {
+    color: $light-text-color;
+    cursor: not-allowed;
+  }
+
   .req-tools {
     display: flex;
     align-items: center;
@@ -49,11 +54,6 @@
     > span {
       margin-right: 1rem;
       cursor: pointer;
-
-      &.disabled {
-        color: $light-text-color;
-        cursor: not-allowed;
-      }
 
       ::ng-deep p-progressSpinner {
         display: flex;
@@ -65,7 +65,7 @@
         }
       }
 
-      &.accept {
+      &.accept, &.reject {
         display: flex;
         align-items: center;
       }
