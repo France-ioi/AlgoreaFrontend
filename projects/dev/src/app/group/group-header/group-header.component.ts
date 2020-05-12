@@ -7,13 +7,13 @@ import {
   HostListener,
   ViewChild,
   AfterViewInit,
-} from "@angular/core";
-import * as converter from "number-to-words";
+} from '@angular/core';
+import * as converter from 'number-to-words';
 
 @Component({
-  selector: "app-group-header",
-  templateUrl: "./group-header.component.html",
-  styleUrls: ["./group-header.component.scss"],
+  selector: 'app-group-header',
+  templateUrl: './group-header.component.html',
+  styleUrls: ['./group-header.component.scss'],
 })
 export class GroupHeaderComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() isScrolled;
@@ -22,7 +22,7 @@ export class GroupHeaderComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() isCollapsed;
   @Input() data;
 
-  @ViewChild("userInfo", { static: false }) userInfo;
+  @ViewChild('userInfo', { static: false }) userInfo;
 
   isTwoColumn = false;
   grades;
@@ -41,11 +41,11 @@ export class GroupHeaderComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   checkVisibility() {
-    let html = document.getElementsByTagName("html")[0] as HTMLElement;
+    const html = document.getElementsByTagName('html')[0] as HTMLElement;
     const fontSize = window
       .getComputedStyle(html, null)
-      .getPropertyValue("font-size");
-    if (this.userInfo.nativeElement.offsetWidth / parseInt(fontSize) <= 60) {
+      .getPropertyValue('font-size');
+    if (this.userInfo.nativeElement.offsetWidth / parseInt(fontSize, 10) <= 60) {
       this.visibleAssoc = false;
     } else {
       this.visibleAssoc = true;
@@ -61,7 +61,7 @@ export class GroupHeaderComponent implements OnInit, OnChanges, AfterViewInit {
     }
   }
 
-  @HostListener("window:resize", ["$event"])
+  @HostListener('window:resize', ['$event'])
   onResized(e) {
     this.checkVisibility();
   }

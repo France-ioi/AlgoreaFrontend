@@ -1,14 +1,14 @@
-import { Component, OnInit } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
-import { StatusService } from "../../shared/services/status.service";
-import { GroupService } from "../../shared/services/api/group.service";
-import { Group } from "../../shared/models/group.model";
-import { Member } from "../../shared/models/member.model";
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { StatusService } from '../../shared/services/status.service';
+import { GroupService } from '../../shared/services/api/group.service';
+import { Group } from '../../shared/models/group.model';
+import { Member } from '../../shared/models/member.model';
 
 @Component({
-  selector: "app-group-manage",
-  templateUrl: "./group-manage.component.html",
-  styleUrls: ["./group-manage.component.scss"],
+  selector: 'app-group-manage',
+  templateUrl: './group-manage.component.html',
+  styleUrls: ['./group-manage.component.scss'],
 })
 export class GroupManageComponent implements OnInit {
   groupdata = {};
@@ -17,20 +17,20 @@ export class GroupManageComponent implements OnInit {
 
   memberData = [];
   memberCols = [
-    { field: "id", header: "ID" },
-    { field: "name", header: "Name" },
-    { field: "user.login", header: "User name" },
-    { field: "user.grade", header: "Grade" },
-    { field: "member_since", header: "Member Since" },
+    { field: 'id', header: 'ID' },
+    { field: 'name', header: 'Name' },
+    { field: 'user.login', header: 'User name' },
+    { field: 'user.grade', header: 'Grade' },
+    { field: 'member_since', header: 'Member Since' },
   ];
   multiSortMeta = [
-    { field: "id", order: 1 },
-    { field: "member_since", order: -1 },
+    { field: 'id', order: 1 },
+    { field: 'member_since', order: -1 },
   ];
-  prevSortMeta = "-member_since id";
+  prevSortMeta = '-member_since id';
   memberPanel = [
     {
-      name: "Group Info",
+      name: 'Group Info',
       columns: this.memberCols,
     },
   ];
@@ -42,8 +42,8 @@ export class GroupManageComponent implements OnInit {
       this.memberData.push({
         member_since: member.member_since,
         name: `${member.user.first_name} ${member.user.last_name}`,
-        "user.login": member.user.login,
-        "user.grade": member.user.grade,
+        'user.login': member.user.login,
+        'user.grade': member.user.grade,
         id: member.id,
       });
     }

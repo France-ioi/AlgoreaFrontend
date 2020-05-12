@@ -1,25 +1,25 @@
-import { NgModule } from "@angular/core";
-import { Routes, RouterModule } from "@angular/router";
-import { GroupComponent } from "./group.component";
-import { GroupManageComponent } from "./group-manage/group-manage.component";
+import { NgModule } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
+import { GroupComponent } from './group.component';
+import { GroupManageComponent } from './group-manage/group-manage.component';
 
 const routes: Routes = [
   {
-    path: "managed",
+    path: 'managed',
     component: GroupComponent,
     children: [
       {
-        path: ":id",
+        path: ':id',
         component: GroupManageComponent,
       },
     ],
   },
   {
-    path: "memberships/:id",
+    path: 'memberships/:id',
     component: GroupComponent,
   },
   {
-    path: "**",
+    path: '**',
     component: GroupComponent,
   },
 ];
