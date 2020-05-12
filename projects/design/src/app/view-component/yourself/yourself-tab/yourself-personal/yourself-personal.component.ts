@@ -45,7 +45,7 @@ export class YourselfPersonalComponent implements OnInit {
       value: 'www.cyrilk.com'
     }
   ];
-  
+
   school = [
     {
       field: 'Your grade',

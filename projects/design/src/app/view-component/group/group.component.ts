@@ -83,7 +83,7 @@ export class GroupComponent implements OnInit {
   }
 
   onExpandWidth(e) {
-    
+
   }
 
 }

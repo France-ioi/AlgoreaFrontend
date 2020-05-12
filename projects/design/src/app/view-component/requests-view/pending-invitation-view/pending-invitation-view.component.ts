@@ -17,7 +17,7 @@ export class PendingInvitationViewComponent implements OnInit {
   }
 
   onExpandWidth(e) {
-    
+
   }
 
 }

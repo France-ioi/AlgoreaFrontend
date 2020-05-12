@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { EditService } from '../../services/edit.service';
@@ -8,7 +8,7 @@ import { EditService } from '../../services/edit.service';
   templateUrl: './task.component.html',
   styleUrls: ['./task.component.scss']
 })
-export class TaskComponent implements OnInit {
+export class TaskComponent implements OnInit, OnDestroy {
 
   status;
   taskdata;
@@ -20,7 +20,7 @@ export class TaskComponent implements OnInit {
   constructor(
     private editService: EditService,
     private activatedRoute: ActivatedRoute
-  ) { 
+  ) {
   }
 
   findParents(node) {
@@ -46,7 +46,7 @@ export class TaskComponent implements OnInit {
     this.activatedRoute.queryParamMap.subscribe((paramMap: ParamMap) => {
       const refresh = paramMap.get('refresh');
       if (refresh) {
-        let param = history.state;
+        const param = history.state;
         this.taskdata = param.taskdata;
 
         this.parents = [];

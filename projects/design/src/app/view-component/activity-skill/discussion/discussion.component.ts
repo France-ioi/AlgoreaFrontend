@@ -33,6 +33,7 @@ export class DiscussionComponent implements OnInit {
       image: '_messi.jpg',
       message: true,
       creator: true,
+      // tslint:disable-next-line
       message_content: '<ul> <li><a href="/docs/plugins/moxiemanager">MoxieManager (Premium Plugin)</a> — <a href="/docs/plugins/drive"><strong>Tiny Drive</strong></a> included instead.</li> <li><a href="/docs/plugins/autoresize">Autoresize</a> — Resizes the editor to fit the content.</li> <li><a href="/docs/plugins/bbcode">BBCode</a> — Changes the markup used for the content.</li> <li><a href="/docs/plugins/code">Code</a> — <a href="/docs/plugins/advcode"><strong>Advanced Code Editor</strong></a> included instead.</li> <li><a href="/docs/plugins/fullpage">Full Page</a> — Used for modifying HTML <code class="highlighter-rouge">&lt;head&gt;</code> elements.</li> <li><a href="/docs/plugins/paste">Paste</a> — <a href="/docs/plugins/powerpaste"><strong>PowerPaste</strong></a> included instead.</li> <li><a href="/docs/plugins/spellchecker">Spellchecker</a> — <a href="/docs/plugins/tinymcespellchecker"><strong>Spell Checker Pro</strong></a> included instead.</li> <li><a href="/docs/plugins/tabfocus">Tab Focus</a> — Changes the behavior of the TAB-key within the editor.</li> </ul>'
     },
     {
@@ -41,6 +42,7 @@ export class DiscussionComponent implements OnInit {
       date: new Date(),
       message: true,
       creator: false,
+      // tslint:disable-next-line
       message_content: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.'
     },
     {
@@ -63,7 +65,7 @@ export class DiscussionComponent implements OnInit {
       image: '_messi.jpg',
       name: 'CyrilK'
     }
-  }
+  };
 
   sels = [
     {
@@ -181,8 +183,8 @@ export class DiscussionComponent implements OnInit {
   ];
 
   gridPanel = [
-    { 
-      name: 'Panel', 
+    {
+      name: 'Panel',
       columns: this.columns
     }
   ];

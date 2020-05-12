@@ -59,7 +59,7 @@ export class DesignAppModule {
   static forRoot(): ModuleWithProviders {
     return {
       ngModule: AppModule,
-      providers: providers
-    }
+      providers
+    };
   }
 }

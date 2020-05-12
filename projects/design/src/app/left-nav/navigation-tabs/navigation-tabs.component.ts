@@ -36,9 +36,9 @@ export class NavigationTabsComponent implements OnInit, OnChanges {
   constructor(
     private ngZone: NgZone,
     private editService: EditService,
-    private _location: Location,
+    private locationService: Location,
     private router: Router
-  ) { 
+  ) {
   }
 
   ngOnInit() {
@@ -48,7 +48,7 @@ export class NavigationTabsComponent implements OnInit, OnChanges {
     });
   }
 
-  fetchUser(){
+  fetchUser() {
     for (const user of this.items.users) {
       if (user.ID === this.items.selectedID) {
         this.currentUser = user;
@@ -157,9 +157,9 @@ export class NavigationTabsComponent implements OnInit, OnChanges {
       title: e.title,
       type: 'group'
     };
-    
+
     this.selectedGroup = 3;
-    
+
     this.editService.setUser(this.currentUser);
     this.groupSelect.emit(e);
   }
@@ -169,7 +169,7 @@ export class NavigationTabsComponent implements OnInit, OnChanges {
       title: e.title,
       type: 'group'
     };
-    
+
     this.selectedGroup = 3;
 
     this.editService.setUser(this.currentUser);
@@ -179,14 +179,15 @@ export class NavigationTabsComponent implements OnInit, OnChanges {
     this.notified = false;
     this.esOb.notified = false;
     this.editService.setValue(this.esOb);
-    this._location.back();
+    this.locationService.back();
   }
 
   onKeyDown(e) {
     e.preventDefault();
 
-    if (e.code !== 'ArrowDown' && e.code !== 'ArrowUp' && e.code !== 'ArrowLeft' && e.code !== 'ArrowRight' && e.code !== 'Space' && e.code !== 'Enter') 
+    if (e.code !== 'ArrowDown' && e.code !== 'ArrowUp' && e.code !== 'ArrowLeft' && e.code !== 'ArrowRight' && e.code !== 'Space' && e.code !== 'Enter') {
       return;
+    }
 
     // e.stopPropagation();
     if (e.code === 'ArrowUp') {
@@ -194,7 +195,7 @@ export class NavigationTabsComponent implements OnInit, OnChanges {
     } else if (e.code === 'ArrowDown') {
       this.selectedGroup = (this.selectedGroup + 1) % 3;
     } else if (e.code === 'Space' || e.code === 'Enter') {
-      switch(this.selectedGroup) {
+      switch (this.selectedGroup) {
         case 0:
           this.fetchUser();
           this.editService.setUser(this.currentUser);
@@ -215,7 +216,7 @@ export class NavigationTabsComponent implements OnInit, OnChanges {
     } else {
       if (this.selectedGroup === 1) {
         this.manageShow = e.code === 'ArrowRight';
-      } else if (this.selectedGroup == 2) {
+      } else if (this.selectedGroup === 2) {
         this.joinShow = e.code === 'ArrowRight';
       }
     }

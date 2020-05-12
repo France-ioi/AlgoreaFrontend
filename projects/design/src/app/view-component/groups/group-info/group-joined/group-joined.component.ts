@@ -46,7 +46,7 @@ export class GroupJoinedComponent implements OnInit {
       related_to: 'Lorem Ipsum',
       created_the: 'Lorem Ipsum'
     }
-  ]
+  ];
 
   teamColumns = [
     { field: 'title', header: 'title' },
@@ -75,14 +75,14 @@ export class GroupJoinedComponent implements OnInit {
       date: new Date(),
       admins: 'Mathias'
     }
-  ]
+  ];
 
   invitationColumns = [
     { field: 'title', header: 'title' },
     { field: 'type', header: 'type' },
     { field: 'date', header: 'entry date' },
     { field: 'admins', header: 'admins' }
-  ]
+  ];
 
   invitationPanel = [
     {
@@ -99,7 +99,7 @@ export class GroupJoinedComponent implements OnInit {
   }
 
   onExpandWidth(e) {
-    
+
   }
 
   onJoinTeam(e) {
@@ -110,6 +110,7 @@ export class GroupJoinedComponent implements OnInit {
       minHeight: '17rem',
       data: {
         group_name: 'Terminale A',
+        // tslint:disable-next-line
         desc: 'Group presentation Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.',
         administrators: [
           'Mathias HIRON',

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'lib-notification-view',
+  selector: 'app-notification-view',
   templateUrl: './notification-view.component.html',
   styleUrls: ['./notification-view.component.scss']
 })

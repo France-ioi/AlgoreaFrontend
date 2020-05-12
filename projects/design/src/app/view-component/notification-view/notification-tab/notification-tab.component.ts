@@ -1,7 +1,7 @@
 import { Component, OnInit, ElementRef, Input } from '@angular/core';
 
 @Component({
-  selector: 'lib-notification-tab',
+  selector: 'app-notification-tab',
   templateUrl: './notification-tab.component.html',
   styleUrls: ['./notification-tab.component.scss']
 })
@@ -12,10 +12,10 @@ export class NotificationTabComponent implements OnInit {
   @Input() panels;
 
   filterChoice = [
-    "Add a filter",
-    "Range of date",
-    "Location",
-    "Score range"
+    'Add a filter',
+    'Range of date',
+    'Location',
+    'Score range'
   ];
 
   constructor(
@@ -45,7 +45,7 @@ export class NotificationTabComponent implements OnInit {
   }
 
   onExpandWidth(e) {
-    
+
   }
 
 }

@@ -42,7 +42,7 @@ export class GroupInfoComponent implements OnInit {
     { field: 'user', header: 'user' },
     { field: 'date', header: 'requested on' }
   ];
-  
+
   grdata = [
     {
       name: 'Epreuves',
