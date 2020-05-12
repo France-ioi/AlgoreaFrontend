@@ -9,7 +9,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 export class GenerateBatchUserDialogComponent implements OnInit {
   prefix1 = 'mat';
   isPassword = true;
-  random_string = '';
+  randomString = '';
   prefix = '';
 
   constructor(

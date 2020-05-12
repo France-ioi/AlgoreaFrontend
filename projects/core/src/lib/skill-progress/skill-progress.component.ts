@@ -38,9 +38,9 @@ export class SkillProgressComponent implements OnInit, OnChanges {
   @Input() currentScore = 0;
   @Input() color = ProgressColor.Thin;
 
-  _progressHeight = ProgressHeight.Thin;
-  _currentColor;
-  _displayColor;
+  progressHeight = ProgressHeight.Thin;
+  currentColor;
+  displayColor;
 
   RANGE_MIN = 0;
   RANGE_MAX = 100;
@@ -63,19 +63,19 @@ export class SkillProgressComponent implements OnInit, OnChanges {
     this._validateScore(this.currentScore);
 
     if (this.type === ProgressType.ThinHorizontal) {
-      this._progressHeight = ProgressHeight.Thin;
+      this.progressHeight = ProgressHeight.Thin;
       this.color = ProgressColor.Thin;
     } else if (this.type === ProgressType.ThickHorizontal) {
-      this._progressHeight = ProgressHeight.Thick;
+      this.progressHeight = ProgressHeight.Thick;
     }
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (this.displayedScore === 100) {
-      this._displayColor = '#B8E986';
+      this.displayColor = '#B8E986';
     } else {
-      this._displayColor = 'hsl(' + this.displayedScore * 0.4 + ', 100%, 50%)';
-      this._currentColor = 'hsl(' + this.currentScore * 0.4 + ', 100%, 70%)';
+      this.displayColor = 'hsl(' + this.displayedScore * 0.4 + ', 100%, 50%)';
+      this.currentColor = 'hsl(' + this.currentScore * 0.4 + ', 100%, 70%)';
     }
   }
 }

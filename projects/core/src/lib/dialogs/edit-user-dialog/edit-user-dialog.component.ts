@@ -32,7 +32,7 @@ export class EditUserDialogComponent implements OnInit {
         icon: 'fa fa-link',
         label: 'Attach to another group',
         comment:
-          'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.',
+          'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s',
       },
     });
 
@@ -53,7 +53,7 @@ export class EditUserDialogComponent implements OnInit {
     });
 
     ref.afterClosed().subscribe((result) => {
-      if (result == true) {
+      if (result === true) {
         const codeRef = this.dialog.open(ConfirmPasswordDialogComponent, {
           maxHeight: '41rem',
           minWidth: '50rem',
@@ -67,7 +67,7 @@ export class EditUserDialogComponent implements OnInit {
           },
         });
 
-        codeRef.afterClosed().subscribe((result) => {});
+        codeRef.afterClosed().subscribe((code) => {});
       }
     });
   }

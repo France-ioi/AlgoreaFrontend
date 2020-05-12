@@ -34,8 +34,8 @@
           <lib-input placeholder="Number of characters" inputType="number" (onChange)="onSuffixChange($event)"></lib-input>
         </div>
       </div>
-      <div *ngIf="isPassword" class="gen-password">Usernames will look like this: {{prefix1}}_{{prefix}}_{{random_string}}</div>
-      <div *ngIf="!isPassword" class="gen-code">Participation codes will look like this: {{prefix1}}_{{prefix}}_{{random_string}}</div>
+      <div *ngIf="isPassword" class="gen-password">Usernames will look like this: {{prefix1}}_{{prefix}}_{{randomString}}</div>
+      <div *ngIf="!isPassword" class="gen-code">Participation codes will look like this: {{prefix1}}_{{prefix}}_{{randomString}}</div>
       <div *ngIf="isPassword" class="form-item-view">
         <span class="form-item-label">Password length</span>
         <div class="form-item-control">
