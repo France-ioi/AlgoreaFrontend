@@ -50,6 +50,8 @@ export class GridGearComponent implements OnInit {
       // Show descriptions
       case 4:
         this.showDescChange.emit(e);
+        this.commentChange.emit(e);
+        break;
       case 5:
         this.commentChange.emit(e);
         break;
