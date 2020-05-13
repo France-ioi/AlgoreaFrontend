@@ -169,8 +169,8 @@ export class PendingRequestComponent implements OnInit, OnChanges {
           this.acceptLoading = false;
         },
         (err) => {
-          this._processRequestError(err, "reject");
-          this.rejectLoading = false;
+          this._processRequestError(err, "accept");
+          this.acceptLoading = false;
         }
       );
   }
