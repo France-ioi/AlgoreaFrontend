@@ -91,18 +91,21 @@ export class PendingRequestComponent implements OnInit, OnChanges {
           severity: "success",
           summary: summary,
           detail: `${succ} request(s) have been ${msg}`,
+          life: 5000,
         });
       } else if (succ === 0) {
         this.messageService.add({
           severity: "error",
           summary: summary,
           detail: `Unable to ${summary} the selected request(s).`,
+          life: 5000,
         });
       } else {
         this.messageService.add({
           severity: "warn",
           summary: summary,
           detail: `${succ} request(s) have been ${msg}, ${fail} could not be executed`,
+          life: 5000,
         });
       }
 
@@ -111,13 +114,16 @@ export class PendingRequestComponent implements OnInit, OnChanges {
         .subscribe((reqs: PendingRequest[]) => {
           this._setRequestData(reqs);
         });
-    } else if (res["success"] === false) {
-      this.messageService.add({
-        severity: "error",
-        summary: summary,
-        detail: ERROR_MESSAGE.fail,
-      });
     }
+  }
+
+  _processRequestError(err, summary) {
+    this.messageService.add({
+      severity: "error",
+      summary: summary,
+      detail: ERROR_MESSAGE.fail,
+      life: 5000,
+    });
   }
 
   constructor(
@@ -130,16 +136,11 @@ export class PendingRequestComponent implements OnInit, OnChanges {
       name: "Pending Requests",
       columns: this.columns,
     });
-    this.groupService
-      .getManagedRequests(this.id)
-      .subscribe((reqs: PendingRequest[]) => {
-        this._setRequestData(reqs);
-      });
   }
 
   ngOnChanges(changes: SimpleChanges) {
     this.groupService
-      .getManagedRequests(this.id)
+      .getManagedRequests(changes.id.currentValue)
       .subscribe((reqs: PendingRequest[]) => {
         this._setRequestData(reqs);
       });
@@ -148,7 +149,11 @@ export class PendingRequestComponent implements OnInit, OnChanges {
   onExpandWidth(e) {}
 
   onClickAccept(e) {
-    if (this.selection.length === 0 || this.acceptLoading || this.rejectLoading) {
+    if (
+      this.selection.length === 0 ||
+      this.acceptLoading ||
+      this.rejectLoading
+    ) {
       return;
     }
 
@@ -158,14 +163,24 @@ export class PendingRequestComponent implements OnInit, OnChanges {
         this.id,
         this.selection.map((val) => val.joining_user.group_id)
       )
-      .subscribe((res) => {
-        this._manageRequestData(res, "accept", "accepted");
-        this.acceptLoading = false;
-      });
+      .subscribe(
+        (res) => {
+          this._manageRequestData(res, "accept", "accepted");
+          this.acceptLoading = false;
+        },
+        (err) => {
+          this._processRequestError(err, "reject");
+          this.rejectLoading = false;
+        }
+      );
   }
 
   onClickReject(e) {
-    if (this.selection.length === 0 || this.acceptLoading || this.rejectLoading) {
+    if (
+      this.selection.length === 0 ||
+      this.acceptLoading ||
+      this.rejectLoading
+    ) {
       return;
     }
 
@@ -175,10 +190,16 @@ export class PendingRequestComponent implements OnInit, OnChanges {
         this.id,
         this.selection.map((val) => val.joining_user.group_id)
       )
-      .subscribe((res) => {
-        this._manageRequestData(res, "reject", "declined");
-        this.rejectLoading = false;
-      });
+      .subscribe(
+        (res) => {
+          this._manageRequestData(res, "reject", "declined");
+          this.rejectLoading = false;
+        },
+        (err) => {
+          this._processRequestError(err, "reject");
+          this.rejectLoading = false;
+        }
+      );
   }
 
   onSelectAll(event) {

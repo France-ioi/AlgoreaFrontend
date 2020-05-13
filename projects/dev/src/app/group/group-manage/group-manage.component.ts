@@ -70,10 +70,6 @@ export class GroupManageComponent implements OnInit {
           description: group.description
         };
       });
-  
-      this.groupService.getGroupMembers(51).subscribe((members: Member[]) => {
-        this._setMemberData(members);
-      });
     })
 
     this.statusService.getObservable().subscribe((res) => {
