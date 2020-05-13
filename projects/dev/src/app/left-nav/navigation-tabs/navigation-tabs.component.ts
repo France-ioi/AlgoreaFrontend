@@ -191,7 +191,13 @@ export class NavigationTabsComponent implements OnInit, OnChanges {
   onKeyDown(e) {
     e.preventDefault();
 
-    if (e.code !== 'ArrowDown' && e.code !== 'ArrowUp' && e.code !== 'ArrowLeft' && e.code !== 'ArrowRight' && e.code !== 'Space' && e.code !== 'Enter') {
+    if (
+      e.code !== 'ArrowDown' &&
+      e.code !== 'ArrowUp' &&
+      e.code !== 'ArrowLeft' &&
+      e.code !== 'ArrowRight' &&
+      e.code !== 'Space' &&
+      e.code !== 'Enter') {
       return;
     }
 
