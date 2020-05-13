@@ -14,6 +14,7 @@ export class GroupInfoComponent implements OnInit {
         image: 'assets/images/_messi.jpg',
         name: 'DUJARDIN Jean (Jeandu88)',
         activity: 'Terminale',
+        // tslint:disable-next-line: max-line-length
         content: 'Led ac magna suscipit, sollicitudin urna at, firibus ipsum, Nulla ullarncoper vulputate nisl. Aenean in ex nisl, Suspendisse magna tortor sagittis quis.'
       },
       date: new Date(2019, 12, 31)
@@ -23,6 +24,7 @@ export class GroupInfoComponent implements OnInit {
         image: 'assets/images/_messi.jpg',
         name: 'DENIS Marie-Sophie (MadameSoso)',
         activity: 'Terminale',
+        // tslint:disable-next-line: max-line-length
         content: 'Led ac magna suscipit, sollicitudin urna at, firibus ipsum, Nulla ullarncoper vulputate nisl. Aenean in ex nisl, Suspendisse magna tortor sagittis quis.'
       },
       date: new Date(2020, 1, 24)
@@ -32,6 +34,7 @@ export class GroupInfoComponent implements OnInit {
         image: 'assets/images/_messi.jpg',
         name: 'GASTARD Frederique (FredGast)',
         activity: 'Terminale',
+        // tslint:disable-next-line: max-line-length
         content: 'Led ac magna suscipit, sollicitudin urna at, firibus ipsum, Nulla ullarncoper vulputate nisl. Aenean in ex nisl, Suspendisse magna tortor sagittis quis.'
       },
       date: new Date(2020, 2, 12)
