@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { environment } from "../../../../environments/environment";
-import { HttpClient, HttpErrorResponse } from "@angular/common/http";
+import { HttpClient, HttpErrorResponse, HttpHeaders } from "@angular/common/http";
 import { Observable, Subject, throwError } from "rxjs";
 import { catchError } from "rxjs/operators";
 
@@ -107,7 +107,7 @@ export class GroupService {
       .post(`${this.baseGroupUrl}/${id}/join-requests/reject`, null, {
         params: {
           group_ids: group_ids.join(","),
-        },
+        }
       })
       .pipe(catchError(this.handleError));
   }

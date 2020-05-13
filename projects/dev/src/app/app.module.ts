@@ -59,7 +59,7 @@ const providers = [];
     },
     {
       provide: DEFAULT_TIMEOUT,
-      useValue: 3000
+      useValue: 3000,
     },
   ],
   bootstrap: [AppComponent],

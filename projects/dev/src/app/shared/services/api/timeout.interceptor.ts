@@ -19,8 +19,10 @@ export class TimeoutInterceptor implements HttpInterceptor {
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
     const timeoutValue = req.headers.get('timeout') || this.defaultTimeout;
-    const timeoutValueNumeric = Number(timeoutValue);
+    const originReq = req.clone({
+      headers: req.headers.delete('timeout')
+    });
 
-    return next.handle(req).pipe(timeout(timeoutValueNumeric));
+    return next.handle(originReq).pipe(timeout(Number(timeoutValue)));
   }
 }
