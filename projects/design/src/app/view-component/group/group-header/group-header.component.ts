@@ -58,6 +58,7 @@ export class GroupHeaderComponent implements OnInit, OnChanges, AfterViewInit {
     require_watch_approval: true,
     require_personal_info_access_approval: 'edit',
     require_lock_membership_approval_until: new Date(),
+    // tslint:disable-next-line
     desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.'
   };
 
@@ -75,9 +76,9 @@ export class GroupHeaderComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   checkVisibility() {
-    let html = document.getElementsByTagName("html")[0] as HTMLElement;
+    const html = document.getElementsByTagName('html')[0] as HTMLElement;
     const fontSize = window.getComputedStyle(html, null).getPropertyValue('font-size');
-    if (this.userInfo.nativeElement.offsetWidth / parseInt(fontSize) <= 60) {
+    if (this.userInfo.nativeElement.offsetWidth / parseInt(fontSize, 10) <= 60) {
       this.visibleAssoc = false;
     } else {
       this.visibleAssoc = true;
@@ -99,7 +100,7 @@ export class GroupHeaderComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   onExpandWidth(e) {
-    
+
   }
 
 }

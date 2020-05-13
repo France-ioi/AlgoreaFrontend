@@ -1,12 +1,12 @@
-<app-section icon="fa fa-users" label="Team members">
+<lib-section icon="fa fa-users" label="Team members">
   <div class="team-container">
     <app-team [data]="team"></app-team>
     <span class="tri-tag"></span>
   </div>
-</app-section>
+</lib-section>
 <div class="invite-container">
-  <app-section icon="fa fa-users" label="Invite teammates">
-    <app-switch-container
+  <lib-section icon="fa fa-users" label="Invite teammates">
+    <lib-switch-container
       label="Invitation code"
       checked="true"
       subtitle="Open access to team by a code to distribute"
@@ -15,26 +15,26 @@
         <div class="code-validation">
           <div class="code-wrapper">
             <span class="label">Code</span>
-            <app-code-token></app-code-token>
+            <lib-code-token></lib-code-token>
           </div>
         </div>
       </div>
-    </app-switch-container>
-    <app-switch-container
+    </lib-switch-container>
+    <lib-switch-container
       label="Alternate reconnexion"
       checked="true"
       subtitle="If one of your teammates is in front of this screeen, he/she can join this team quickly by login."
     >
-      <app-button icon="fa fa-sync" label="Deconnexion for teammate reconnexion" class="ui-button-rounded ui-fit-parent ui-button-success" style="margin-top: 1rem;"></app-button>
+      <lib-button icon="fa fa-sync" label="Deconnexion for teammate reconnexion" class="ui-button-rounded ui-fit-parent ui-button-success" style="margin-top: 1rem;"></lib-button>
       <p style="font-size: 1.2rem;">You'll be disconnected, then your teammate will be allowed to connect and will automatically join the team.</p>
-    </app-switch-container>
-  </app-section>
+    </lib-switch-container>
+  </lib-section>
 </div>
-<app-section icon="fa fa-sign-out-alt" label="Leave the team ?">
+<lib-section icon="fa fa-sign-out-alt" label="Leave the team ?">
   <p style="font-size: 1.2rem;">
     You can leave this team if you wish. You may loose your access yo sed dolor
   </p>
   <div style="display: flex; align-items: center;justify-content: center;margin-top: 1.6667rem;">
-    <app-button icon="fa fa-times" label="Leave this team" class="ui-button-rounded"></app-button>
+    <lib-button icon="fa fa-times" label="Leave this team" class="ui-button-rounded"></lib-button>
   </div>
-</app-section>
+</lib-section>

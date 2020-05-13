@@ -16,7 +16,7 @@
       <div class="form-item-view">
         <span class="form-item-label">Accounts type</span>
         <div class="form-item-control">
-          <app-selection [items]="data.type" (onChange)="onTypeChange($event)"></app-selection>
+          <lib-selection [items]="data.type" (onChange)="onTypeChange($event)"></lib-selection>
         </div>
       </div>
       <p class="description">{{data.desc}}</p>
@@ -25,21 +25,21 @@
       <div class="form-item-view">
         <span class="form-item-label">Prefix</span>
         <div class="form-item-control">
-          <app-input placeholder="Chaine de caracteres" (onChange)="onPrefixChange($event)"></app-input>
+          <lib-input placeholder="Chaine de caracteres" (onChange)="onPrefixChange($event)"></lib-input>
         </div>
       </div>
       <div class="form-item-view">
         <span class="form-item-label">Suffix length</span>
         <div class="form-item-control">
-          <app-input placeholder="Number of characters" inputType="number" (onChange)="onSuffixChange($event)"></app-input>
+          <lib-input placeholder="Number of characters" inputType="number" (onChange)="onSuffixChange($event)"></lib-input>
         </div>
       </div>
-      <div *ngIf="isPassword" class="gen-password">Usernames will look like this: {{prefix1}}_{{prefix}}_{{random_string}}</div>
-      <div *ngIf="!isPassword" class="gen-code">Participation codes will look like this: {{prefix1}}_{{prefix}}_{{random_string}}</div>
+      <div *ngIf="isPassword" class="gen-password">Usernames will look like this: {{prefix1}}_{{prefix}}_{{randomString}}</div>
+      <div *ngIf="!isPassword" class="gen-code">Participation codes will look like this: {{prefix1}}_{{prefix}}_{{randomString}}</div>
       <div *ngIf="isPassword" class="form-item-view">
         <span class="form-item-label">Password length</span>
         <div class="form-item-control">
-          <app-input placeholder="Number of characters" inputType="number"></app-input>
+          <lib-input placeholder="Number of characters" inputType="number"></lib-input>
         </div>
       </div>
     </div>
@@ -47,24 +47,24 @@
       <div class="form-item-view">
         <span class="form-item-label">Number of accounts to create</span>
         <div class="form-item-control">
-          <app-input placeholder="Number of characters" inputType="number"></app-input>
+          <lib-input placeholder="Number of characters" inputType="number"></lib-input>
         </div>
       </div>
       <div class="form-item-view switch">
         <span class="form-item-label">Create X accounts in each sub-group?</span>
         <div class="form-item-control">
-          <app-switch mode="white"></app-switch>
+          <lib-switch mode="white"></lib-switch>
         </div>
       </div>
     </div>
     <div class="account-generate">
       <div style="width: 21rem;">
-        <app-button
+        <lib-button
           icon="fa fa-key"
           label="Generate"
           class="ui-button-rounded ui-fit-parent"
           (onClick)="onClose($event)"
-        ></app-button>
+        ></lib-button>
       </div>
     </div>
   </div>

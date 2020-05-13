@@ -12,10 +12,10 @@ export class NotificationTabComponent implements OnInit {
   @Input() panels;
 
   filterChoice = [
-    "Add a filter",
-    "Range of date",
-    "Location",
-    "Score range"
+    'Add a filter',
+    'Range of date',
+    'Location',
+    'Score range'
   ];
 
   constructor(
@@ -45,7 +45,7 @@ export class NotificationTabComponent implements OnInit {
   }
 
   onExpandWidth(e) {
-    
+
   }
 
 }

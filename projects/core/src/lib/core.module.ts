@@ -21,7 +21,10 @@ import { TabViewModule } from 'primeng/tabview';
 
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
-import { MatDialogModule, MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
+import {
+  MatDialogModule,
+  MAT_DIALOG_DEFAULT_OPTIONS,
+} from '@angular/material/dialog';
 import { MatNativeDateModule, MatRippleModule } from '@angular/material/core';
 
 import { ClickOutsideModule } from 'ng-click-outside';
@@ -149,7 +152,7 @@ import { SearchTabComponent } from './search-tab/search-tab.component';
     AccessEditDialogComponent,
     ProgressSectionComponent,
     SkillActivityTabsComponent,
-    SearchTabComponent
+    SearchTabComponent,
   ],
   imports: [
     CommonModule,
@@ -178,7 +181,7 @@ import { SearchTabComponent } from './search-tab/search-tab.component';
     MatMenuModule,
 
     NgDragDropModule.forRoot(),
-    ClickOutsideModule
+    ClickOutsideModule,
   ],
   exports: [
     BreadcrumbComponent,
@@ -238,10 +241,10 @@ import { SearchTabComponent } from './search-tab/search-tab.component';
     ProgressLevelComponent,
     AccessEditDialogComponent,
     SkillActivityTabsComponent,
-    SearchTabComponent
+    SearchTabComponent,
   ],
   providers: [
-    {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: true}}
+    { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: true } },
   ],
   entryComponents: [
     MatDialogComponent,
@@ -252,7 +255,7 @@ import { SearchTabComponent } from './search-tab/search-tab.component';
     ConfirmPasswordDialogComponent,
     GenerateBatchUserDialogComponent,
     JoinGroupDialogComponent,
-    AccessEditDialogComponent
-  ]
+    AccessEditDialogComponent,
+  ],
 })
-export class CoreModule { }
+export class CoreModule {}

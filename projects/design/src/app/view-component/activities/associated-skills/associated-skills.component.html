@@ -1,13 +1,13 @@
-<app-section icon="fa fa-link" label="Skills associated with this activity">
-  <app-grid-filter-bar>
-    <app-select
+<lib-section icon="fa fa-link" label="Skills associated with this activity">
+  <lib-grid-filter-bar>
+    <lib-select
       [items]="filterChoice"
       [opened]="false"
       width="10"
       style="margin: 0.4167rem;"
-    ></app-select>
+    ></lib-select>
     <ng-container *ngFor="let filter of gridFilters">
-      <app-grid-filter
+      <lib-grid-filter
         [icon]="filter.icon"
         [label]="filter.label"
         [type]="filter.type"
@@ -17,10 +17,10 @@
         [dateRanges]="filter.dateRanges"
         [list]="filter.list"
         (onClose)="removeFilter(filter.ID)"
-      ></app-grid-filter>
+      ></lib-grid-filter>
     </ng-container>
-  </app-grid-filter-bar>
-  <app-activity-skill-list [data]="suggested" [activity]="false"></app-activity-skill-list>
+  </lib-grid-filter-bar>
+  <lib-activity-skill-list [data]="suggested" [activity]="false"></lib-activity-skill-list>
 
   <p class="skill-post">There may be more skills associated with this activity, that you don't have access to.</p>
-</app-section>
+</lib-section>

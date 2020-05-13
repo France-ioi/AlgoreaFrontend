@@ -3,7 +3,6 @@ import { Routes, RouterModule } from '@angular/router';
 import { GroupComponent } from './group.component';
 import { GroupManageComponent } from './group-manage/group-manage.component';
 
-
 const routes: Routes = [
   {
     path: 'managed',
@@ -11,36 +10,22 @@ const routes: Routes = [
     children: [
       {
         path: ':id',
-        component: GroupManageComponent
-      }
-    ]
+        component: GroupManageComponent,
+      },
+    ],
   },
   {
     path: 'memberships/:id',
-    component: GroupComponent
+    component: GroupComponent,
   },
   {
     path: '**',
-    component: GroupComponent
-  }
-  // {
-  //   path: 'managed',
-  //   component: GroupInfoComponent,
-  //   data: {
-  //     src: 'managed'
-  //   }
-  // },
-  // {
-  //   path: 'memberships',
-  //   component: GroupInfoComponent,
-  //   data: {
-  //     src: 'memberships'
-  //   }
-  // }
+    component: GroupComponent,
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class GroupRoutingModule { }
+export class GroupRoutingModule {}

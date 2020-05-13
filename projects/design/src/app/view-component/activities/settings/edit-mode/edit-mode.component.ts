@@ -11,7 +11,7 @@ export class SettingsEditModeComponent implements OnInit {
 
   globalTypes = [
     { label: 'Chapter', value: 'chapter' },
-    { label: 'Presentation', value: 'presentation' }, 
+    { label: 'Presentation', value: 'presentation' },
     { label: 'Exercise', value: 'exercise' }
   ];
 

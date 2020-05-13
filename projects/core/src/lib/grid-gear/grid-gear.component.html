@@ -7,45 +7,45 @@
     <ul class="gear-menu">
       <li *ngIf="!secondary">
         <span class="switch-label">Items as rows</span>
-        <app-switch
+        <lib-switch
           [checked]="itemsAsRow"
           (onChange)="handleSwitches($event, 0)"
-        ></app-switch>
+        ></lib-switch>
       </li>
       <li *ngIf="!secondary">
         <span class="switch-label">Compact mode</span>
-        <app-switch
+        <lib-switch
           [checked]="compactMode"
           (onChange)="handleSwitches($event, 1)"
-        ></app-switch>
+        ></lib-switch>
       </li>
       <li *ngIf="!secondary">
         <span class="switch-label">Freeze first column</span>
-        <app-switch
+        <lib-switch
           [checked]="freeze"
           (onChange)="handleSwitches($event, 2)"
-        ></app-switch>
+        ></lib-switch>
       </li>
       <!-- <li>
         <span class="switch-label">Sticky header</span>
-        <app-switch
+        <lib-switch
           [checked]="sticky"
           (onChange)="handleSwitches($event, 3)"
-        ></app-switch>
+        ></lib-switch>
       </li> -->
       <li *ngIf="itemsAsRow">
         <span class="switch-label">Show descriptions</span>
-        <app-switch
+        <lib-switch
           [checked]="showDescription"
           (onChange)="handleSwitches($event, 4)"
-        ></app-switch>
+        ></lib-switch>
       </li>
       <li *ngIf="secondary">
         <span class="switch-label">Comment</span>
-        <app-switch
+        <lib-switch
           [checked]="comment"
           (onChange)="handleSwitches($event, 5)"
-        ></app-switch>
+        ></lib-switch>
       </li>
     </ul>
   </mat-menu>

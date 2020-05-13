@@ -58,12 +58,12 @@
             <i class="fa fa-link"></i>
             <span class="no-wrap" *ngIf="visibleAssoc">Associated with: </span>
             <a href="{{ data.assocSkill.link }}">{{ data.assocSkill.name }}</a>
-            <app-score-ring
+            <lib-score-ring
               *ngIf="data.assocSkill.progress"
               [displayedScore]="data.assocSkill.progress.displayedScore"
               [currentScore]="data.assocSkill.progress.currentScore"
               diameter="24"
-            ></app-score-ring>
+            ></lib-score-ring>
           </span>
           <span class="assoc-skill" *ngIf="data.assocActivity">
             <i class="fa fa-link"></i>
@@ -71,12 +71,12 @@
             <a href="{{ data.assocActivity.link }}">{{
               data.assocSkill.name
             }}</a>
-            <app-skill-progress
+            <lib-skill-progress
               *ngIf="data.assocActivity.progress"
               [displayedScore]="data.assocActivity.progress.displayedScore"
               [currentScore]="data.assocActivity.progress.currentScore"
               style="width: 40%; margin-left: 1rem;"
-            ></app-skill-progress>
+            ></lib-skill-progress>
           </span>
         </div>
       </ng-template>

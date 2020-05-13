@@ -1,12 +1,11 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-// import { EditService } from 'src/app/services/edit.service';
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-activity-skill-list',
+  selector: 'lib-activity-skill-list',
   templateUrl: './activity-skill-list.component.html',
-  styleUrls: ['./activity-skill-list.component.scss']
+  styleUrls: ['./activity-skill-list.component.scss'],
 })
 export class ActivitySkillListComponent implements OnInit, OnDestroy {
   @Input() data;
@@ -14,34 +13,25 @@ export class ActivitySkillListComponent implements OnInit, OnDestroy {
   status;
   unsubscribe: Subscription;
 
-  constructor(
-    private router: Router,
-    // private editService: EditService
-  ) { }
+  constructor(private router: Router) {}
 
   ngOnInit() {
-    // this.unsubscribe = this.editService.getOb().subscribe(res => {
-    //   this.status = res;
-    // });
   }
 
   onItemClick(e) {
     this.status.selectedType = 2;
     this.status.activityORSkill = this.activity;
     this.status.userTitle = e.title;
-    // this.editService.setValue(this.status);
     this.router.navigate([`/design/task/${e.ID}`], {
       queryParams: {
-        refresh: new Date().getTime()
+        refresh: new Date().getTime(),
       },
       state: {
-        taskdata: e
-      }
+        taskdata: e,
+      },
     });
   }
 
   ngOnDestroy() {
-    // this.unsubscribe.unsubscribe();
   }
-
 }

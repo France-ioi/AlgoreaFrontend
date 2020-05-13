@@ -1,4 +1,4 @@
-<app-section-paragraph
+<lib-section-paragraph
   icon="fa fa-users"
   label="You have {{ attempts.length }} attempts"
   [collapsible]="true"
@@ -9,12 +9,12 @@
   <ng-template #headerTemplate let-data>
     <div style="flex: 1; flex-direction: row-reverse;display: flex; align-items: center;">
       <div style="width: 180px;">
-        <app-button
+        <lib-button
           icon="fa fa-flag-checkered"
           label="New attempt"
           class="ui-button-rounded ui-fit-parent"
           (onClick)="newAttempt($event)"
-        ></app-button>
+        ></lib-button>
       </div>
       <div *ngIf="showSelected && selectedAttemptID >= 0" class="collapsed-attempt-header">
         <div class="attempt-title">
@@ -33,13 +33,13 @@
       [ngClass]="{ active: item.ID === selectedAttemptID }"
       (click)="selectAttempt(item.ID)"
     >
-      <app-score-ring
+      <lib-score-ring
         [displayedScore]="item.progress.displayedScore"
         [currentScore]="item.progress.currentScore"
         [icons]="item.progress.isStarted === false ? 'flag-checkered' : ''"
         diameter="24"
         [isDark]="item.ID === selectedAttemptID"
-      ></app-score-ring>
+      ></lib-score-ring>
       <span class="attempt-number">
         <b>Attempt n&#176; {{ item.number }}</b>
       </span>
@@ -54,4 +54,4 @@
       </span>
     </li>
   </ul>
-</app-section-paragraph>
+</lib-section-paragraph>

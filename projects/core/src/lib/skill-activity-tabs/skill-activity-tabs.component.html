@@ -15,7 +15,7 @@
       </span>
       <span class="tree-header-title">{{skills.title}}</span>
     </div>
-    <app-items-navigation-tree [data]="skills.data" (onNodeSelect)="onSkillSelected($event)"></app-items-navigation-tree>
+    <lib-items-navigation-tree [data]="skills.data" (onNodeSelect)="onSkillSelected($event)"></lib-items-navigation-tree>
   </p-tabPanel>
   <p-tabPanel>
     <ng-template pTemplate="header" tabindex="6">
@@ -33,6 +33,6 @@
       </span>
       <span class="tree-header-title">{{activities.title}}</span>
     </div>
-    <app-items-navigation-tree [data]="activities.data" (onNodeSelect)="onActivitySelected($event)"></app-items-navigation-tree>
+    <lib-items-navigation-tree [data]="activities.data" (onNodeSelect)="onActivitySelected($event)"></lib-items-navigation-tree>
   </p-tabPanel>
 </p-tabView>

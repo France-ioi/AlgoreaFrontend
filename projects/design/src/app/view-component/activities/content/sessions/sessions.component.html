@@ -1,17 +1,17 @@
-<app-section
+<lib-section
   icon="fa fa-calendar"
   label="Sessions for Terminale B"
   hideBorder="true"
 >
-  <app-grid-filter-bar style="display:block; margin-bottom: 1.6667rem;">
-    <app-select
+  <lib-grid-filter-bar style="display:block; margin-bottom: 1.6667rem;">
+    <lib-select
       [items]="filterTypes"
       [opened]="false"
       width="10"
       style="margin: 0.4167rem;"
-    ></app-select>
+    ></lib-select>
     <ng-container *ngFor="let filter of filters">
-      <app-grid-filter
+      <lib-grid-filter
         [icon]="filter.icon"
         [label]="filter.label"
         [type]="filter.type"
@@ -21,9 +21,9 @@
         [dateRanges]="filter.dateRanges"
         [list]="filter.list"
         (onClose)="removeFilter(filter.ID)"
-      ></app-grid-filter>
+      ></lib-grid-filter>
     </ng-container>
-  </app-grid-filter-bar>
+  </lib-grid-filter-bar>
   <app-session-view
     *ngFor="let item of sessions"
     [data]="item"
@@ -31,7 +31,7 @@
   <div class="host-session">
     <span class="tri-tag"></span>
     <div class="button-wrapper">
-      <app-button icon="fa fa-plus" label="Host a session" class="ui-button-rounded ui-fit-parent"></app-button>
+      <lib-button icon="fa fa-plus" label="Host a session" class="ui-button-rounded ui-fit-parent"></lib-button>
     </div>
   </div>
-</app-section>
+</lib-section>

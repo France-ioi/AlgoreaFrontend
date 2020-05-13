@@ -1,12 +1,19 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  Output,
+  EventEmitter,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 
 @Component({
-  selector: 'app-input',
+  selector: 'lib-input',
   templateUrl: './input.component.html',
-  styleUrls: ['./input.component.scss']
+  styleUrls: ['./input.component.scss'],
 })
 export class InputComponent implements OnInit, OnChanges {
-
   @Input() value;
   @Input() placeholder;
   @Input() icon;
@@ -19,14 +26,11 @@ export class InputComponent implements OnInit, OnChanges {
   @Output() onChange = new EventEmitter<any>();
   @Output() onClick = new EventEmitter<any>();
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
-  ngOnChanges(changes: SimpleChanges) {
-    console.log(changes);
-  }
+  ngOnChanges(changes: SimpleChanges) {}
 
   onValueChange(e) {
     this.onChange.emit(e);
@@ -35,5 +39,4 @@ export class InputComponent implements OnInit, OnChanges {
   onButtonClick(e) {
     this.onClick.emit(e);
   }
-
 }

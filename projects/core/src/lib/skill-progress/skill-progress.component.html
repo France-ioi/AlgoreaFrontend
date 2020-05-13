@@ -1,20 +1,20 @@
 <ng-container *ngIf="type !== ProgressType.ThickVertical">
   <div
     class="progress-bar-wrapper"
-    [ngStyle]="{ 'height.rem': _progressHeight, 'background-color': color }"
+    [ngStyle]="{ 'height.rem': progressHeight, 'background-color': color }"
   >
     <div
       class="progress-current"
       [ngStyle]="{
         'width.%': currentScore,
-        'background-color': _currentColor
+        'background-color': currentColor
       }"
     ></div>
     <div
       class="progress-displayed"
       [ngStyle]="{
         'width.%': displayedScore,
-        'background-color':_displayColor
+        'background-color':displayColor
       }"
     ></div>
     <div class="progress-label" *ngIf="type === ProgressType.ThickHorizontal">
@@ -32,14 +32,14 @@
       class="progress-current vertical-progress"
       [ngStyle]="{
         'height.%': currentScore,
-        'background-color': _currentColor
+        'background-color': currentColor
       }"
     ></div>
     <div
       class="progress-displayed vertical-progress"
       [ngStyle]="{
         'height.%': displayedScore,
-        'background-color': _displayColor
+        'background-color': displayColor
       }"
     ></div>
     <!-- <div class="progress-label vertical-label">

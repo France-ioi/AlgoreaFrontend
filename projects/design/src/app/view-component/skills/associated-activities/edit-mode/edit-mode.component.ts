@@ -12,20 +12,20 @@ export class AssociatedActivitiesEditModeComponent implements OnInit {
   gridFilters = [
     {
       ID: 1,
-      icon: "fa fa-flag-checkered",
-      label: "Only associated items",
-      type: "default",
-      mode: "list",
+      icon: 'fa fa-flag-checkered',
+      label: 'Only associated items',
+      type: 'default',
+      mode: 'list',
       list: [
-        { label: "Item 1", value: { id: 1, value: "item1" } },
-        { label: "Item 2", value: { id: 2, value: "item2" } },
-        { label: "Item 3", value: { id: 3, value: "item3" } },
-        { label: "Item 4", value: { id: 4, value: "item4" } },
-        { label: "Item 5", value: { id: 5, value: "item5" } },
-        { label: "Item 6", value: { id: 6, value: "item6" } },
-        { label: "Item 7", value: { id: 7, value: "item7" } },
-        { label: "Item 8", value: { id: 8, value: "item8" } },
-        { label: "Item 9", value: { id: 9, value: "item9" } }
+        { label: 'Item 1', value: { id: 1, value: 'item1' } },
+        { label: 'Item 2', value: { id: 2, value: 'item2' } },
+        { label: 'Item 3', value: { id: 3, value: 'item3' } },
+        { label: 'Item 4', value: { id: 4, value: 'item4' } },
+        { label: 'Item 5', value: { id: 5, value: 'item5' } },
+        { label: 'Item 6', value: { id: 6, value: 'item6' } },
+        { label: 'Item 7', value: { id: 7, value: 'item7' } },
+        { label: 'Item 8', value: { id: 8, value: 'item8' } },
+        { label: 'Item 9', value: { id: 9, value: 'item9' } }
       ]
     }
   ];
@@ -33,20 +33,20 @@ export class AssociatedActivitiesEditModeComponent implements OnInit {
   ranges = [0, 20];
 
   filterChoice = [
-    "Add a filter",
-    "Range of date",
-    "Location",
-    "Score range"
+    'Add a filter',
+    'Range of date',
+    'Location',
+    'Score range'
   ];
 
   trees = [
     {
       ID: 27,
-      title: "Reduce graph size",
-      type: "folder",
+      title: 'Reduce graph size',
+      type: 'folder',
       icons: 'fa fa-folder',
       ring: true,
-      state: "opened",
+      state: 'opened',
       connected: true,
       progress: {
         displayedScore: 90,
@@ -57,10 +57,10 @@ export class AssociatedActivitiesEditModeComponent implements OnInit {
           ID: 37,
           // tslint:disable-next-line: max-line-length
           title: 'Activities to test headers',
-          type: "folder",
+          type: 'folder',
           ring: true,
           icons: 'fa fa-folder',
-          state: "opened",
+          state: 'opened',
           connected: true,
           progress: {
             displayedScore: 20,
@@ -69,65 +69,65 @@ export class AssociatedActivitiesEditModeComponent implements OnInit {
           children: [
             {
               ID: 38,
-              title: "Activity with access code",
-              type: "leaf",
+              title: 'Activity with access code',
+              type: 'leaf',
               ring: true,
-              state: "opened",
+              state: 'opened',
               hasKey: true,
               progress: {
                 displayedScore: 30,
                 currentScore: 30
               },
               category: {
-                icon: "fa fa-book-open",
+                icon: 'fa fa-book-open',
                 type: 1
               }
             },
             {
               ID: 39,
-              title: "Before you start notice",
-              type: "leaf",
+              title: 'Before you start notice',
+              type: 'leaf',
               ring: true,
-              state: "opened",
+              state: 'opened',
               hasKey: true,
               progress: {
                 displayedScore: 20,
                 currentScore: 30
               },
               category: {
-                icon: "fa fa-book-open",
+                icon: 'fa fa-book-open',
                 type: 1
               }
             },
             {
               ID: 40,
-              title: "Activity for teams",
-              type: "leaf",
+              title: 'Activity for teams',
+              type: 'leaf',
               ring: true,
-              state: "opened",
+              state: 'opened',
               hasKey: true,
               progress: {
                 displayedScore: 90,
                 currentScore: 30
               },
               category: {
-                icon: "fa fa-book-open",
+                icon: 'fa fa-book-open',
                 type: 1
               }
             },
             {
               ID: 41,
-              title: "Activity with attempts",
-              type: "leaf",
+              title: 'Activity with attempts',
+              type: 'leaf',
               ring: true,
-              state: "opened",
+              state: 'opened',
               hasKey: true,
               progress: {
                 displayedScore: 10,
                 currentScore: 30
               },
               category: {
-                icon: "fa fa-book-open",
+                icon: 'fa fa-book-open',
                 type: 1
               }
             }
@@ -135,11 +135,11 @@ export class AssociatedActivitiesEditModeComponent implements OnInit {
         },
         {
           ID: 28,
-          title: "Simplify or optimize manipulation",
-          type: "leaf",
+          title: 'Simplify or optimize manipulation',
+          type: 'leaf',
           ring: true,
           connected: true,
-          state: "opened",
+          state: 'opened',
           hasKey: true,
           progress: {
             displayedScore: 30,
@@ -147,56 +147,56 @@ export class AssociatedActivitiesEditModeComponent implements OnInit {
           },
           weight: 1,
           category: {
-            icon: "fa fa-book-open",
+            icon: 'fa fa-book-open',
             type: 1
           }
         },
         {
           ID: 29,
-          title: "Spot symetry an convert to normal form",
-          type: "folder",
+          title: 'Spot symetry an convert to normal form',
+          type: 'folder',
           ring: true,
           connected: true,
-          state: "opened",
+          state: 'opened',
           progress: {
             displayedScore: 70,
             currentScore: 70
           },
           weight: 4,
           category: {
-            icon: "fa fa-video",
+            icon: 'fa fa-video',
             type: 2
           },
           children: [
             {
               ID: 30,
-              title: "Simplify or optimize manipulation",
-              type: "leaf",
+              title: 'Simplify or optimize manipulation',
+              type: 'leaf',
               ring: true,
-              state: "opened",
+              state: 'opened',
               progress: {
                 displayedScore: 30,
                 currentScore: 30
               },
               weight: 2,
               category: {
-                icon: "fa fa-book-open",
+                icon: 'fa fa-book-open',
                 type: 0
               }
             },
             {
               ID: 31,
-              title: "Spot symetry an convert to normal form",
-              type: "leaf",
+              title: 'Spot symetry an convert to normal form',
+              type: 'leaf',
               ring: true,
-              state: "opened",
+              state: 'opened',
               progress: {
                 displayedScore: 70,
                 currentScore: 70
               },
               weight: 3,
               category: {
-                icon: "fa fa-book-open",
+                icon: 'fa fa-book-open',
                 type: 4
               }
             }
@@ -204,62 +204,62 @@ export class AssociatedActivitiesEditModeComponent implements OnInit {
         },
         {
           ID: 32,
-          title: "Simplify or optimize manipulation",
-          type: "leaf",
+          title: 'Simplify or optimize manipulation',
+          type: 'leaf',
           ring: true,
-          state: "opened",
+          state: 'opened',
           isLocked: true,
           progress: {
             displayedScore: 30,
             currentScore: 30
           },
           category: {
-            icon: "fa fa-laptop-code",
+            icon: 'fa fa-laptop-code',
             type: 3
           }
         },
         {
           ID: 33,
-          title: "Spot symetry an convert to normal form",
-          type: "folder",
+          title: 'Spot symetry an convert to normal form',
+          type: 'folder',
           ring: true,
-          state: "opened",
+          state: 'opened',
           progress: {
             displayedScore: 70,
             currentScore: 70
           },
           category: {
-            icon: "fa fa-code",
+            icon: 'fa fa-code',
             type: 4
           },
           children: [
             {
               ID: 34,
-              title: "Simplify or optimize manipulation",
-              type: "leaf",
+              title: 'Simplify or optimize manipulation',
+              type: 'leaf',
               ring: true,
-              state: "opened",
+              state: 'opened',
               progress: {
                 displayedScore: 30,
                 currentScore: 30
               },
               category: {
-                icon: "fa fa-book-open",
+                icon: 'fa fa-book-open',
                 type: 3
               }
             },
             {
               ID: 35,
-              title: "Spot symetry an convert to normal form",
-              type: "leaf",
+              title: 'Spot symetry an convert to normal form',
+              type: 'leaf',
               ring: true,
-              state: "opened",
+              state: 'opened',
               progress: {
                 displayedScore: 70,
                 currentScore: 70
               },
               category: {
-                icon: "fa fa-book-open",
+                icon: 'fa fa-book-open',
                 type: 3
               }
             }
@@ -289,7 +289,7 @@ export class AssociatedActivitiesEditModeComponent implements OnInit {
     this.editService.setUser({
       title: node.title,
       type: 'activity'
-    })
+    });
     this.router.navigate([`/design/task/${node.ID}`], {
       queryParams: {
         refresh: new Date().getTime()

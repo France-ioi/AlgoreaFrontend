@@ -5,17 +5,17 @@
       Content
     </ng-template>
     <ng-template matTabContent>
-      <app-section icon="fa fa-check" label="Pending notifications ({{data.length}})">
+      <lib-section icon="fa fa-check" label="Pending notifications ({{data.length}})">
         
-        <app-grid-filter-bar>
-          <app-select
+        <lib-grid-filter-bar>
+          <lib-select
             [items]="filterChoice"
             [opened]="false"
             width="10"
             style="margin: 0.4167rem;"
-          ></app-select>
-        </app-grid-filter-bar>
-        <app-grid
+          ></lib-select>
+        </lib-grid-filter-bar>
+        <lib-grid
           [selectedColumns]="cols"
           [columns]="cols"
           [data]="data"
@@ -76,8 +76,8 @@
               </td> 
             </tr>
           </ng-template>
-        </app-grid>
-      </app-section>
+        </lib-grid>
+      </lib-section>
     </ng-template>
   </mat-tab>
   <mat-tab>

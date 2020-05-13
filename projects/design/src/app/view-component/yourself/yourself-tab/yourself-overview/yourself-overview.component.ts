@@ -109,7 +109,7 @@ export class YourselfOverviewComponent implements OnInit {
   }
 
   onExpandWidth(e) {
-    
+
   }
 
 }

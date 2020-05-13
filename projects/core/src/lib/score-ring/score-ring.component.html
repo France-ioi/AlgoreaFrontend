@@ -12,8 +12,8 @@
     />
     <path
       *ngIf="isStarted"
-      attr.stroke="{{ _currentFill }}"
-      attr.d="{{ _currentPath }}"
+      attr.stroke="{{ currentFill }}"
+      attr.d="{{ currentPath }}"
       fill="none"
       stroke-width="4"
       stroke-linecap="round"
@@ -21,8 +21,8 @@
     />
     <path
       *ngIf="isStarted"
-      attr.stroke="{{ _displayFill }}"
-      attr.d="{{ _displayPath }}"
+      attr.stroke="{{ displayFill }}"
+      attr.d="{{ displayPath }}"
       fill="none"
       stroke-width="4"
       stroke-linecap="round"
@@ -35,9 +35,9 @@
       fill-opacity="0.4"
     />
   </svg>
-  <span class="ring-icon" [ngStyle]="{color: _iconPath && _iconPath.length > 0 ? _iconFill : _textFill}">
-    <i *ngIf="_iconPath && _iconPath.length > 0" class="fa fa-{{_iconPath}}" [ngStyle]="{'font-size.rem': _fontSize}"></i>
-    <ng-container *ngIf="!_iconPath || _iconPath.length === 0">
+  <span class="ring-icon" [ngStyle]="{color: iconPath && iconPath.length > 0 ? iconFill : textFill}">
+    <i *ngIf="iconPath && iconPath.length > 0" class="fa fa-{{iconPath}}" [ngStyle]="{'font-size.rem': fontSize}"></i>
+    <ng-container *ngIf="!iconPath || iconPath.length === 0">
       {{displayedScore}}
     </ng-container>
   </span>

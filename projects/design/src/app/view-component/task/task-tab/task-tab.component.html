@@ -15,9 +15,9 @@
             }"
           ></div>
         </div>
-        <app-section label="Description" icon="fa fa-book">
+        <lib-section label="Description" icon="fa fa-book">
           {{ desc }}
-        </app-section>
+        </lib-section>
         <p class="validation-text" *ngIf="activityORSkill">
           To validate this chapter, {{ validText }}
         </p>
@@ -25,12 +25,12 @@
           <ng-container *ngFor="let item of data.children; index as ln">
             <li>
               <span class="activity-progress">
-                <app-score-ring
+                <lib-score-ring
                   *ngIf="!item.isLocked"
                   diameter="30"
                   [displayedScore]="item.progress.displayedScore"
                   [currentScore]="item.progress.currentScore"
-                ></app-score-ring>
+                ></lib-score-ring>
               </span>
               <span
                 class="activity-content"
@@ -60,15 +60,15 @@
                     class="fa fa-key"
                   ></i>
                 </span>
-                <app-state-widget
+                <lib-state-widget
                   [type]="item.category.type"
                   [icon]="item.category.icon"
-                ></app-state-widget>
+                ></lib-state-widget>
               </span>
             </li>
           </ng-container>
         </ul>
-        <app-section
+        <lib-section
           *ngIf="!activityORSkill && data && data.children"
           label="Sub-skills"
           icon="fa fa-graduation-cap"
@@ -92,18 +92,18 @@
                   <span class="skill-title">
                     {{ item.title }}
                   </span>
-                  <app-skill-progress
+                  <lib-skill-progress
                     style="width: 25%;"
                     type="thick-horizontal"
                     [displayedScore]="item.progress.displayedScore"
                     [currentScore]="item.progress.currentScore"
-                  ></app-skill-progress>
+                  ></lib-skill-progress>
                 </div>
               </li>
             </ng-container>
           </ul>
-        </app-section>
-        <app-section
+        </lib-section>
+        <lib-section
           *ngIf="!activityORSkill && parentSkills.length > 0"
           label="Parent skills"
           icon="fa fa-link"
@@ -115,51 +115,51 @@
                 <span class="skill-title">
                   {{ item.title }}
                 </span>
-                <app-skill-progress
+                <lib-skill-progress
                   style="width: 25%;"
                   type="thick-horizontal"
                   [displayedScore]="item.progress.displayedScore"
                   [currentScore]="item.progress.currentScore"
-                ></app-skill-progress>
+                ></lib-skill-progress>
               </li>
             </ng-container>
           </ul>
-        </app-section>
+        </lib-section>
         <div *ngIf="!activityORSkill" class="other-info">
-          <app-sub-section icon="fa fa-code-branch" label="Prequisites">
+          <lib-sub-section icon="fa fa-code-branch" label="Prequisites">
             <ul class="other-list-container">
               <ng-container *ngFor="let item of preqs">
                 <li>
                   <span class="skill-title">
                     {{ item.title }}
                   </span>
-                  <app-skill-progress
+                  <lib-skill-progress
                     style="width: 100%;"
                     type="thin-horizontal"
                     [displayedScore]="item.progress.displayedScore"
                     [currentScore]="item.progress.currentScore"
-                  ></app-skill-progress>
+                  ></lib-skill-progress>
                 </li>
               </ng-container>
             </ul>
-          </app-sub-section>
-          <app-sub-section icon="fa fa-folder-open" label="Parent skills">
+          </lib-sub-section>
+          <lib-sub-section icon="fa fa-folder-open" label="Parent skills">
             <ul class="other-list-container">
               <ng-container *ngFor="let item of preqs">
                 <li>
                   <span class="skill-title">
                     {{ item.title }}
                   </span>
-                  <app-skill-progress
+                  <lib-skill-progress
                     style="width: 100%;"
                     type="thin-horizontal"
                     [displayedScore]="item.progress.displayedScore"
                     [currentScore]="item.progress.currentScore"
-                  ></app-skill-progress>
+                  ></lib-skill-progress>
                 </li>
               </ng-container>
             </ul>
-          </app-sub-section>
+          </lib-sub-section>
         </div>
         <ng-container *ngIf="data.ID === 42">
           <app-sessions
@@ -185,33 +185,33 @@
       </ng-template>
       <ng-template matTabContent>
         <ng-container>
-          <app-section
+          <lib-section
             icon="fa fa-graduation-cap"
             [label]="
               currentUser.type === 'user' ? 'User situation' : 'Group Situation'
             "
           >
             <div class="selection-tool">
-              <app-selection
+              <lib-selection
                 [items]="situationTypes"
                 (onChange)="viewTypeChanged($event)"
-              ></app-selection>
-              <app-selection
+              ></lib-selection>
+              <lib-selection
                 *ngIf="selectedView === 1"
                 [items]="groupTypes"
                 type="square"
-              ></app-selection>
+              ></lib-selection>
             </div>
-            <app-grid-filter-bar>
-              <app-select
+            <lib-grid-filter-bar>
+              <lib-select
                 [items]="filterChoice"
                 [opened]="false"
                 width="10"
                 style="margin: 0.4167rem;"
                 (onClick)="gridSelect = true"
-              ></app-select>
+              ></lib-select>
               <ng-container *ngFor="let filter of gridFilters">
-                <app-grid-filter
+                <lib-grid-filter
                   [icon]="filter.icon"
                   [label]="filter.label"
                   [type]="filter.type"
@@ -223,23 +223,23 @@
                   [outsideClicked]="gridSelect"
                   (onClose)="removeFilter(filter.ID)"
                   (onHide)="gridSelect = false"
-                ></app-grid-filter>
+                ></lib-grid-filter>
               </ng-container>
-            </app-grid-filter-bar>
+            </lib-grid-filter-bar>
 
             <!-- Log View -->
             <ng-container *ngIf="selectedView === 0">
-              <app-log-view-grid
+              <lib-log-view-grid
                 [data]="logviewdata"
                 [cols]="logviewcols"
                 [groupInfo]="logviewgroupinfo"
                 [type]="currentUser.type"
-              ></app-log-view-grid>
+              ></lib-log-view-grid>
             </ng-container>
             <!-- Chapter View -->
             <ng-container *ngIf="selectedView === 1">
               <ng-container *ngIf="currentUser.type === 'user'">
-                <app-grid
+                <lib-grid
                   [selectedColumns]="chapterviewcols"
                   [columns]="chapterviewcols"
                   [data]="chapterviewdata"
@@ -290,12 +290,12 @@
                       [pSelectableRowIndex]="rowIndex"
                     >
                       <td>
-                        <app-score-ring
+                        <lib-score-ring
                           *ngIf="rowData.progress"
                           [displayedScore]="rowData.progress.displayedScore"
                           [currentScore]="rowData.progress.currentScore"
                           diameter="32"
-                        ></app-score-ring>
+                        ></lib-score-ring>
                       </td>
                       <td *ngFor="let col of columns">
                         <ng-container [ngSwitch]="col.field">
@@ -341,10 +341,10 @@
                       </td>
                     </tr>
                   </ng-template>
-                </app-grid>
+                </lib-grid>
               </ng-container>
               <ng-container *ngIf="currentUser.type === 'group'">
-                <app-grid
+                <lib-grid
                   [selectedColumns]="gcvc"
                   [columns]="gcvc"
                   [data]="gcvd"
@@ -368,14 +368,14 @@
                       <th
                         style="background-color: transparent;min-width: 160px;transform: none;"
                       >
-                        <app-grid-gear
+                        <lib-grid-gear
                           [freeze]="freeze"
                           [compactMode]="compactMode"
                           (compactChange)="onModeChange($event)"
                           (frozenChange)="onFrozenChange($event)"
                           (asRowChange)="onSwapColRow($event)"
                           (showDescChange)="onShowDescription($event)"
-                        ></app-grid-gear>
+                        ></lib-grid-gear>
                       </th>
                     </tr>
                   </ng-template>
@@ -392,14 +392,14 @@
                         style="min-width: 160px;transform: none;width: 159px;"
                         *ngIf="!freeze"
                       >
-                        <app-grid-gear
+                        <lib-grid-gear
                           [freeze]="freeze"
                           [compactMode]="compactMode"
                           (compactChange)="onModeChange($event)"
                           (frozenChange)="onFrozenChange($event)"
                           (asRowChange)="onSwapColRow($event)"
                           (showDescChange)="onShowDescription($event)"
-                        ></app-grid-gear>
+                        ></lib-grid-gear>
                       </th>
                       <th *ngIf="asRow && showDesc" style="width: 300px;">
                         <div class="slanted-header">
@@ -540,7 +540,7 @@
                                 }}</span>
                               </span>
                               <span class="score">
-                                <app-score-ring
+                                <lib-score-ring
                                   [isDark]="true"
                                   [displayedScore]="
                                     rowData[idx].progress.displayedScore
@@ -549,7 +549,7 @@
                                     rowData[idx].progress.currentScore
                                   "
                                   diameter="32"
-                                ></app-score-ring>
+                                ></lib-score-ring>
                                 <span>{{
                                   rowData[idx].last_activity | date: "d/MM/y"
                                 }}</span>
@@ -656,7 +656,7 @@
                             </span>
                           </div>
                           <div class="situation-bottom">
-                            <app-score-ring
+                            <lib-score-ring
                               *ngIf="
                                 ((
                                   rowData[idx].progress.isStarted &&
@@ -681,7 +681,7 @@
                                   ? '#FFF'
                                   : ''
                               "
-                            ></app-score-ring>
+                            ></lib-score-ring>
                             <span
                               class="situation-check"
                               *ngIf="
@@ -727,7 +727,7 @@
                                 rowData[idx].last_activity | date: "d/MM/y"
                               }}</span
                             >
-                            <app-skill-progress
+                            <lib-skill-progress
                               *ngIf="!activityORSkill"
                               style="height: 2.5rem;"
                               type="vertical"
@@ -737,7 +737,7 @@
                               [currentScore]="
                                 rowData[idx].progress.currentScore
                               "
-                            ></app-skill-progress>
+                            ></lib-skill-progress>
                             <span
                               class="progress-value"
                               *ngIf="!activityORSkill"
@@ -771,10 +771,10 @@
                       </td>
                     </tr>
                   </ng-template>
-                </app-grid>
+                </lib-grid>
               </ng-container>
             </ng-container>
-          </app-section>
+          </lib-section>
         </ng-container>
       </ng-template>
     </mat-tab>
@@ -806,74 +806,74 @@
         Content
       </ng-template>
       <ng-template matTabContent>
-        <app-section label="Activity illustrations" icon="fa fa-images">
+        <lib-section label="Activity illustrations" icon="fa fa-images">
           <div class="activity-illustration-container">
-            <app-image-upload label="Cover illustration"></app-image-upload>
-            <app-image-upload label="Thumbnail"></app-image-upload>
+            <lib-image-upload label="Cover illustration"></lib-image-upload>
+            <lib-image-upload label="Thumbnail"></lib-image-upload>
           </div>
-        </app-section>
-        <app-section label="Description" icon="fa fa-book">
-          <app-textarea
+        </lib-section>
+        <lib-section label="Description" icon="fa fa-book">
+          <lib-textarea
             placeholder="Type your description..."
             [value]="desc"
-          ></app-textarea>
-        </app-section>
-        <app-section label="Score / Validation" icon="fa fa-book">
+          ></lib-textarea>
+        </lib-section>
+        <lib-section label="Score / Validation" icon="fa fa-book">
           <div class="score-validation-container">
             <div class="score-validation-input">
-              <app-dropdown
+              <lib-dropdown
                 [items]="validationType"
                 placeholder="Select a type..."
                 (onChange)="validationChanged($event)"
-              ></app-dropdown>
-              <app-input
+              ></lib-dropdown>
+              <lib-input
                 *ngIf="validationN"
                 placeholder="Number of problems..."
-              ></app-input>
+              ></lib-input>
             </div>
             <div class="score-weight-container">
               <span class="score-weight-container-label"
                 ><b>Enable score weights</b></span
               >
-              <app-switch
+              <lib-switch
                 mode="white"
                 (onChange)="toggleScoreWeight($event)"
-              ></app-switch>
+              ></lib-switch>
             </div>
           </div>
-        </app-section>
-        <app-section label="Chapter" icon="fa fa-book">
+        </lib-section>
+        <lib-section label="Chapter" icon="fa fa-book">
           <div class="section-chapter-wrapper">
-            <app-chapter-grid
+            <lib-chapter-grid
               [data]="chapterdata"
               [cols]="chaptercols"
               [scoreWeight]="enableScoreWeight"
-            ></app-chapter-grid>
+            ></lib-chapter-grid>
             <span class="tri-tag"></span>
           </div>
-          <app-sub-section
+          <lib-sub-section
             icon="fa fa-sign-in-alt"
             label="Add a content"
             [close]="showNewContent"
             (onClose)="onCancelEdit($event)"
           >
             <div class="add-content-wrapper">
-              <app-input
+              <lib-input
                 placeholder="New content ..."
                 [value]="contentValue"
                 (onChange)="onAddContent($event, 'contents')"
-              ></app-input>
+              ></lib-input>
               <span class="label">or</span>
-              <app-activity-picker [trees]="trees"></app-activity-picker>
+              <lib-activity-picker [trees]="trees"></lib-activity-picker>
             </div>
             <app-new-content
               id="contents"
               *ngIf="showNewContent"
               [data]="contentTypes"
             ></app-new-content>
-          </app-sub-section>
+          </lib-sub-section>
           <div style="margin-bottom: -3rem;"></div>
-        </app-section>
+        </lib-section>
       </ng-template>
     </mat-tab>
     <mat-tab>

@@ -1,12 +1,11 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
-  selector: 'app-grid-gear',
+  selector: 'lib-grid-gear',
   templateUrl: './grid-gear.component.html',
-  styleUrls: ['./grid-gear.component.scss']
+  styleUrls: ['./grid-gear.component.scss'],
 })
 export class GridGearComponent implements OnInit {
-
   menuOpen = false;
   @Input() itemsAsRow = false;
   @Input() compactMode = false;
@@ -22,17 +21,15 @@ export class GridGearComponent implements OnInit {
   @Output() showDescChange = new EventEmitter<any>();
   @Output() commentChange = new EventEmitter<any>();
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   toggleGear(e) {
     this.menuOpen = !this.menuOpen;
   }
 
   handleSwitches(e, which) {
-    console.log(e, which);
     switch (which) {
       // Row Column Swap
       case 0:
@@ -53,11 +50,12 @@ export class GridGearComponent implements OnInit {
       // Show descriptions
       case 4:
         this.showDescChange.emit(e);
+        this.commentChange.emit(e);
+        break;
       case 5:
         this.commentChange.emit(e);
         break;
       default:
     }
   }
-
 }

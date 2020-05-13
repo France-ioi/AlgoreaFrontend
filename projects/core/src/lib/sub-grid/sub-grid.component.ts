@@ -1,20 +1,16 @@
 import { Component, OnInit, Input, ContentChild } from '@angular/core';
 
 @Component({
-  selector: 'app-sub-grid',
+  selector: 'lib-sub-grid',
   templateUrl: './sub-grid.component.html',
-  styleUrls: ['./sub-grid.component.scss']
+  styleUrls: ['./sub-grid.component.scss'],
 })
 export class SubGridComponent implements OnInit {
-
   @Input() data;
 
   @ContentChild('bodyTemplate', { static: false }) bodyTemplate;
-  // @ContentChild('headerTemplate', { static: false }) headerTemplate;
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit() {
-  }
-
+  ngOnInit() {}
 }

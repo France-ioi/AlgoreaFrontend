@@ -12,7 +12,7 @@
     <img src="assets/images/close.svg">
   </span>
 </div>
-<app-section icon="fa fa-comment" label="{{ label }} help thread">
+<lib-section icon="fa fa-comment" label="{{ label }} help thread">
   <div class="thread-list-container">
     <div class="thread-list">
       <div
@@ -68,12 +68,12 @@
               >(waiting for validation)</span
             >
           </span>
-          <app-button
+          <lib-button
             *ngIf="item.grading"
             icon="fa fa-graduation-cap"
             label="grade"
             class="ui-button-rounded ui-small-button"
-          ></app-button>
+          ></lib-button>
           <span *ngIf="item.graded" class="item-grade">
             Graded
           </span>
@@ -96,7 +96,7 @@
     </div>
     <span class="tri-tag"></span>
   </div>
-  <app-sub-section icon="fa fa-comment" label="Add a message">
+  <lib-sub-section icon="fa fa-comment" label="Add a message">
     <div class="sub-section-unwrapper">
       <p class="comment-desc">{{ message.desc }}</p>
       <div class="new-comment">
@@ -123,19 +123,19 @@
           ></editor>
         </div>
         <div class="comment-buttons">
-          <app-button
+          <lib-button
             icon="fa fa-eye"
             label="Preview"
             class="ui-button-rounded ui-button-success"
-          ></app-button>
-          <app-button
+          ></lib-button>
+          <lib-button
             icon="fa fa-envelope"
             label="Reply"
             class="ui-button-rounded"
-          ></app-button>
+          ></lib-button>
         </div>
       </div>
     </div>
-  </app-sub-section>
+  </lib-sub-section>
   <div style="margin-bottom: -3rem;"></div>
-</app-section>
+</lib-section>
