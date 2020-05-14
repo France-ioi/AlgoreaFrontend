@@ -13,6 +13,7 @@ import {
   ERROR_MESSAGE,
   PENDING_REQUEST_SUCCESS_MESSAGE,
 } from "../../../shared/constants/api";
+import * as _ from 'lodash';
 
 @Component({
   selector: "app-pending-request",
@@ -66,29 +67,18 @@ export class PendingRequestComponent implements OnInit, OnChanges {
 
   _manageRequestData(result, summary, msg) {
     if (result["success"] === true && result["message"] === "updated") {
-      const status = result["data"];
-      let succ = 0,
-        fail = 0;
+      const succ = _.countBy(result["data"], (status) => {
+        return status === "success" || status === "unchanged";
+      });
 
-      for (const group_id in status) {
-        switch (status[group_id]) {
-          case "success":
-          case "unchanged":
-            succ++;
-            break;
-          default:
-            fail++;
-        }
-      }
-
-      if (fail === 0) {
+      if (succ.false === undefined || succ.false === 0) {
         this.messageService.add({
           severity: "success",
           summary: summary,
-          detail: `${succ} request(s) have been ${msg}`,
+          detail: `${succ.true} request(s) have been ${msg}`,
           life: 5000,
         });
-      } else if (succ === 0) {
+      } else if (succ.true === undefined || succ.true === 0) {
         this.messageService.add({
           severity: "error",
           summary: summary,
@@ -99,7 +89,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
         this.messageService.add({
           severity: "warn",
           summary: summary,
-          detail: `${succ} request(s) have been ${msg}, ${fail} could not be executed`,
+          detail: `${succ.true} request(s) have been ${msg}, ${succ.false} could not be executed`,
           life: 5000,
         });
       }
