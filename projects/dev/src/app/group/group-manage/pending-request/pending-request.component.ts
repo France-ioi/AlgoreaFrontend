@@ -58,7 +58,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
         member_id: req.member_id,
         "joining_user.login": login,
         grade: joining_user.grade,
-        joining_user: joining_user,
+        group_id: joining_user.group_id,
         at: req.at,
       };
     });
@@ -156,7 +156,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     this.groupService
       .acceptJoinRequest(
         this.id,
-        this.selection.map((val) => val.joining_user.group_id)
+        this.selection.map((req) => req.group_id)
       )
       .subscribe(
         (res) => {
@@ -183,7 +183,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     this.groupService
       .rejectJoinRequest(
         this.id,
-        this.selection.map((val) => val.joining_user.group_id)
+        this.selection.map((req) => req.group_id)
       )
       .subscribe(
         (res) => {
