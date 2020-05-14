@@ -64,9 +64,9 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     });
   }
 
-  _manageRequestData(res, summary, msg) {
-    if (res["success"] === true && res["message"] === "updated") {
-      const status = res["data"];
+  _manageRequestData(result, summary, msg) {
+    if (result["success"] === true && result["message"] === "updated") {
+      const status = result["data"];
       let succ = 0,
         fail = 0;
 
