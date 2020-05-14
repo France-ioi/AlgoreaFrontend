@@ -41,8 +41,8 @@
   }
 
   .disabled {
-    color: $light-text-color;
-    cursor: not-allowed;
+    color: #BBB;
+    cursor: not-allowed !important;
   }
 
   .req-tools {
