@@ -65,7 +65,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     });
   }
 
-  _manageRequestData(result, summary, msg) {
+  _manageRequestData(result, summary, verb, msg) {
     if (result["success"] === true && result["message"] === "updated") {
       const succ = _.countBy(result["data"], (status) => {
         return status === "success" || status === "unchanged";
@@ -82,7 +82,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
         this.messageService.add({
           severity: "error",
           summary: summary,
-          detail: `Unable to ${summary} the selected request(s).`,
+          detail: `Unable to ${verb} the selected request(s).`,
           life: TOAST_LENGTH,
         });
       } else {
@@ -150,11 +150,11 @@ export class PendingRequestComponent implements OnInit, OnChanges {
       )
       .subscribe(
         (res) => {
-          this._manageRequestData(res, "accept", "accepted");
+          this._manageRequestData(res, "Accept request", "accept", "accepted");
           this.acceptLoading = false;
         },
         (err) => {
-          this._processRequestError(err, "accept");
+          this._processRequestError(err, "Accept request");
           this.acceptLoading = false;
         }
       );
@@ -177,11 +177,11 @@ export class PendingRequestComponent implements OnInit, OnChanges {
       )
       .subscribe(
         (res) => {
-          this._manageRequestData(res, "reject", "declined");
+          this._manageRequestData(res, "Reject request", "reject", "declined");
           this.rejectLoading = false;
         },
         (err) => {
-          this._processRequestError(err, "reject");
+          this._processRequestError(err, "Reject request");
           this.rejectLoading = false;
         }
       );
