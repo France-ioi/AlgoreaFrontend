@@ -1,0 +1,41 @@
+version: 2.1
+
+jobs:
+
+  # deps has to be run before the other jobs and basically run "npm install" and cache it
+  deps:
+    docker:
+      - image: circleci/node:14.2
+    steps:
+      - checkout
+      # cache is used between builds, we use the cache if the lock file has not changed
+      - restore_cache: &CACHEKEY
+          key: deps-{{ checksum "package-lock.json" }}
+      - run: npm install
+      # workspace persistence is used between jobs of the same builds (here includes the code and node modules)
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - "*"
+      - save_cache:
+          <<: *CACHEKEY
+          paths:
+            - ./node_modules
+
+  lint:
+    docker:
+      - image: circleci/node:14.2
+    steps:
+      - attach_workspace:
+          at: ./
+      - run: ./node_modules/.bin/ng lint
+
+workflows:
+  version: 2
+  checks:
+    jobs:
+      - deps
+      - lint:
+          requires:
+          - deps
+
