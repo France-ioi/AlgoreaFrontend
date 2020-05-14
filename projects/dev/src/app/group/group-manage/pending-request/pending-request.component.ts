@@ -11,9 +11,9 @@ import { SortEvent } from "primeng/api/sortevent";
 import { MessageService } from "primeng/api";
 import {
   ERROR_MESSAGE,
-  PENDING_REQUEST_SUCCESS_MESSAGE,
 } from "../../../shared/constants/api";
 import * as _ from 'lodash';
+import { TOAST_LENGTH } from '../../../shared/constants/global';
 
 @Component({
   selector: "app-pending-request",
@@ -76,21 +76,21 @@ export class PendingRequestComponent implements OnInit, OnChanges {
           severity: "success",
           summary: summary,
           detail: `${succ.true} request(s) have been ${msg}`,
-          life: 5000,
+          life: TOAST_LENGTH,
         });
       } else if (succ.true === undefined || succ.true === 0) {
         this.messageService.add({
           severity: "error",
           summary: summary,
           detail: `Unable to ${summary} the selected request(s).`,
-          life: 5000,
+          life: TOAST_LENGTH,
         });
       } else {
         this.messageService.add({
           severity: "warn",
           summary: summary,
           detail: `${succ.true} request(s) have been ${msg}, ${succ.false} could not be executed`,
-          life: 5000,
+          life: TOAST_LENGTH,
         });
       }
 
@@ -107,7 +107,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
       severity: "error",
       summary: summary,
       detail: ERROR_MESSAGE.fail,
-      life: 5000,
+      life: TOAST_LENGTH,
     });
   }
 
