@@ -36,15 +36,6 @@ export class PendingRequestComponent implements OnInit, OnChanges {
   ];
   prevSortMeta = "-at member_id";
 
-  groupSwitch = [
-    {
-      label: "This group only",
-    },
-    {
-      label: "All subgroups",
-    },
-  ];
-
   acceptLoading = false;
   rejectLoading = false;
   selection = [];
@@ -53,7 +44,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     this.requests = [];
     this.selection = [];
 
-    for (const req of reqs) {
+    this.requests = reqs.map(req => {
       const joining_user = req.joining_user;
       let login;
 
@@ -63,14 +54,14 @@ export class PendingRequestComponent implements OnInit, OnChanges {
         login = `${joining_user.first_name || ""} ${joining_user.last_name || ""} (${joining_user.login || ""})`;
       }
 
-      this.requests.push({
+      return {
         member_id: req.member_id,
         "joining_user.login": login,
         grade: joining_user.grade,
         joining_user: joining_user,
         at: req.at,
-      });
-    }
+      };
+    });
   }
 
   _manageRequestData(res, summary, msg) {
