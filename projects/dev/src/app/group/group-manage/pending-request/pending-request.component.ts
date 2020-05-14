@@ -54,16 +54,20 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     this.selection = [];
 
     for (const req of reqs) {
+      const joining_user = req.joining_user;
+      let login;
+
+      if (!joining_user.first_name && !joining_user.last_name) {
+        login = `${joining_user.login || ""}`;
+      } else {
+        login = `${joining_user.first_name || ""} ${joining_user.last_name || ""} (${joining_user.login || ""})`;
+      }
+
       this.requests.push({
         member_id: req.member_id,
-        "joining_user.login": `${req.joining_user.first_name || ""} ${
-          req.joining_user.last_name || ""
-        } (${req.joining_user.login || ""})`,
-        grade:
-          req.joining_user && req.joining_user.grade
-            ? req.joining_user.grade
-            : null,
-        joining_user: req.joining_user,
+        "joining_user.login": login,
+        grade: joining_user.grade,
+        joining_user: joining_user,
         at: req.at,
       });
     }
