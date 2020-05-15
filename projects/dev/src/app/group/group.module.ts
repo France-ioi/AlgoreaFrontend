@@ -1,9 +1,6 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 
-import { TableModule } from "primeng/table";
-import { ProgressSpinnerModule } from "primeng/progressspinner";
-import { ToastModule } from "primeng/toast";
 import { CoreModule } from "core";
 
 import { GroupRoutingModule } from "./group-routing.module";
@@ -27,9 +24,6 @@ import { PendingRequestComponent } from "./group-manage/pending-request/pending-
   imports: [
     CommonModule,
     GroupRoutingModule,
-    TableModule,
-    ProgressSpinnerModule,
-    ToastModule,
     CoreModule,
   ],
 })
