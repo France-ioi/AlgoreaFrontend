@@ -180,14 +180,8 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     );
 
     if (sortBy.sort().join(" ") !== this.prevSortMeta) {
-      diff = true;
+      this.prevSortMeta = sortBy.sort().join(" ");
+      this._setRequestData(sortBy);
     }
-
-    if (!diff) {
-      return;
-    }
-
-    this.prevSortMeta = sortBy.sort().join(" ");
-    this._setRequestData(sortBy);
   }
 }
