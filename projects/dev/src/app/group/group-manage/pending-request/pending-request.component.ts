@@ -69,7 +69,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
       });
   }
 
-  _manageRequestData(result, summary, verb, msg) {
+  _manageRequestData(result, _summary, verb, msg) {
     if (result["success"] === true && result["message"] === "updated") {
       const succ = _.countBy(result["data"], (status) => {
         return status === "success" || status === "unchanged";
@@ -102,7 +102,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     }
   }
 
-  _processRequestError(err, summary) {
+  _processRequestError(_err, _summary) {
     this.messageService.add({
       severity: "error",
       summary: "Error",
@@ -127,9 +127,9 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     this._setRequestData();
   }
 
-  onExpandWidth(e) {}
+  onExpandWidth(_e) {}
 
-  onClickAccept(e) {
+  onClickAccept(_e) {
     if (
       this.selection.length === 0 ||
       this.acceptLoading ||
@@ -156,7 +156,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
       );
   }
 
-  onClickReject(e) {
+  onClickReject(_e) {
     if (
       this.selection.length === 0 ||
       this.acceptLoading ||
@@ -183,7 +183,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
       );
   }
 
-  onSelectAll(event) {
+  onSelectAll(_event) {
     if (this.selection.length === this.requests.length) {
       this.selection = [];
     } else {
