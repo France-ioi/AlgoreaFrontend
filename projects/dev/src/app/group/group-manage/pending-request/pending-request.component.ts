@@ -10,10 +10,10 @@ import { PendingRequest } from "../../../shared/models/pending-request.model";
 import { SortEvent } from "primeng/api/sortevent";
 import { MessageService } from "primeng/api";
 import {
-  ERROR_MESSAGE,
+  ERROR_MESSAGE, GROUP_REQUESTS_API,
 } from "../../../shared/constants/api";
-import * as _ from 'lodash';
 import { TOAST_LENGTH } from '../../../shared/constants/global';
+import * as _ from 'lodash';
 
 @Component({
   selector: "app-pending-request",
@@ -41,28 +41,32 @@ export class PendingRequestComponent implements OnInit, OnChanges {
   rejectLoading = false;
   selection = [];
 
-  _setRequestData(reqs: PendingRequest[]) {
-    this.requests = [];
-    this.selection = [];
-
-    this.requests = reqs.map(req => {
-      const joining_user = req.joining_user;
-      let login;
-
-      if (!joining_user.first_name && !joining_user.last_name) {
-        login = `${joining_user.login || ""}`;
-      } else {
-        login = `${joining_user.first_name || ""} ${joining_user.last_name || ""} (${joining_user.login || ""})`;
-      }
-
-      return {
-        member_id: req.member_id,
-        "joining_user.login": login,
-        grade: joining_user.grade,
-        group_id: joining_user.group_id,
-        at: req.at,
-      };
-    });
+  _setRequestData(sortBy = GROUP_REQUESTS_API.sort) {
+    this.groupService
+      .getManagedRequests(this.id, sortBy)
+      .subscribe((reqs: PendingRequest[]) => {
+        this.requests = [];
+        this.selection = [];
+    
+        this.requests = reqs.map(req => {
+          const joining_user = req.joining_user;
+          let login;
+    
+          if (!joining_user.first_name && !joining_user.last_name) {
+            login = `${joining_user.login || ""}`;
+          } else {
+            login = `${joining_user.first_name || ""} ${joining_user.last_name || ""} (${joining_user.login || ""})`;
+          }
+    
+          return {
+            member_id: req.member_id,
+            "joining_user.login": login,
+            grade: joining_user.grade,
+            group_id: joining_user.group_id,
+            at: req.at,
+          };
+        });
+      });
   }
 
   _manageRequestData(result, summary, verb, msg) {
@@ -94,11 +98,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
         });
       }
 
-      this.groupService
-        .getManagedRequests(this.id)
-        .subscribe((reqs: PendingRequest[]) => {
-          this._setRequestData(reqs);
-        });
+      this._setRequestData();
     }
   }
 
@@ -123,12 +123,8 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     });
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    this.groupService
-      .getManagedRequests(changes.id.currentValue)
-      .subscribe((reqs: PendingRequest[]) => {
-        this._setRequestData(reqs);
-      });
+  ngOnChanges(_changes: SimpleChanges) {
+    this._setRequestData();
   }
 
   onExpandWidth(e) {}
@@ -219,10 +215,6 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     }
 
     this.prevSortMeta = sortBy.sort().join(" ");
-    this.groupService
-      .getManagedRequests(this.id, sortBy)
-      .subscribe((reqs: PendingRequest[]) => {
-        this._setRequestData(reqs);
-      });
+    this._setRequestData(sortBy);
   }
 }
