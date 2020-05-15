@@ -1,11 +1,14 @@
 version: 2.1
 
-jobs:
+# custom vars:
+var_node: &node_image
+  - image: circleci/node:12.16
 
+
+jobs:
   # deps has to be run before the other jobs and basically run "npm install" and cache it
   deps:
-    docker:
-      - image: circleci/node:14.2
+    docker: *node_image
     steps:
       - checkout
       # cache is used between builds, we use the cache if the lock file has not changed
@@ -23,8 +26,7 @@ jobs:
             - ./node_modules
 
   lint:
-    docker:
-      - image: circleci/node:14.2
+    docker: *node_image
     steps:
       - attach_workspace:
           at: ./
