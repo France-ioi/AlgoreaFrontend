@@ -34,19 +34,12 @@ export class GroupService {
   private membershipHistoryList = new Subject<MembershipHistory[]>();
   private joinedGroupList = new Subject<GroupMembership[]>();
 
-  private requestActionResponseList = new Subject<RequestActionResponse>();
-
   constructor(private http: HttpClient) {}
 
   getManagedGroup(id): Observable<Group> {
-    this.http
-      .get(`${this.baseGroupUrl}/${id}`)
-      .subscribe(
-        (group: Group) => this.groupList.next(group),
-        this.handleError
-      );
-
-    return this.groupList;
+    return this.http
+      .get<Group>(`${this.baseGroupUrl}/${id}`)
+      .pipe(catchError(this.handleError));
   }
 
   getManagedRequests(
@@ -55,7 +48,7 @@ export class GroupService {
     limit = DEFAULT_LIMIT
   ): Observable<PendingRequest[]> {
     this.http
-      .get(`${this.baseGroupUrl}/${id}/requests`, {
+      .get<PendingRequest[]>(`${this.baseGroupUrl}/${id}/requests`, {
         params: {
           sort: sort.join(","),
         },
@@ -100,35 +93,23 @@ export class GroupService {
   }
 
   acceptJoinRequest(id, group_ids): Observable<RequestActionResponse> {
-    this.http
-      .post(`${this.baseGroupUrl}/${id}/join-requests/accept`, null, {
+    return this.http
+      .post<RequestActionResponse>(`${this.baseGroupUrl}/${id}/join-requests/accept`, null, {
         params: {
           group_ids: group_ids.join(","),
         },
       })
-      .subscribe(
-        (result: RequestActionResponse) =>
-          this.requestActionResponseList.next(result),
-        this.handleError
-      );
-
-    return this.requestActionResponseList;
+      .pipe(catchError(this.handleError));
   }
 
   rejectJoinRequest(id, group_ids) {
-    this.http
-      .post(`${this.baseGroupUrl}/${id}/join-requests/reject`, null, {
+    return this.http
+      .post<RequestActionResponse>(`${this.baseGroupUrl}/${id}/join-requests/reject`, null, {
         params: {
           group_ids: group_ids.join(","),
         }
       })
-      .subscribe(
-        (result: RequestActionResponse) =>
-          this.requestActionResponseList.next(result),
-        this.handleError
-      );
-      
-    return this.requestActionResponseList;
+      .pipe(catchError(this.handleError));
   }
 
   getPendingInvitations(
