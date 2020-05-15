@@ -53,20 +53,9 @@ export class PendingRequestComponent implements OnInit, OnChanges {
         this.requests = [];
 
         this.requests = reqs.map((req) => {
-          const joining_user = req.joining_user;
-          let login;
-
-          if (!joining_user.first_name && !joining_user.last_name) {
-            login = `${joining_user.login || ""}`;
-          } else {
-            login = `${joining_user.first_name || ""} ${joining_user.last_name || ""} (${joining_user.login || ""})`;
-          }
-
           return {
             member_id: req.member_id,
-            "joining_user.login": login,
-            grade: joining_user.grade,
-            group_id: joining_user.group_id,
+            joining_user: req.joining_user,
             at: req.at,
           };
         });
@@ -143,7 +132,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     this.requestAction = type;
     
     console.log(this.requestLoading, this.requestAction);
-    const group_ids = this.selection.map((req) => req.group_id);
+    const group_ids = this.selection.map((req: PendingRequest) => req.joining_user.group_id);
 
     if (type === "accept") {
       resultObserver = this.groupService.acceptJoinRequest(this.id, group_ids);

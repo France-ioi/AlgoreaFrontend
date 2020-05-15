@@ -77,9 +77,16 @@
                   style="width: 7rem; height: 7rem;"
                 /> -->
                 <div class="user-info">
-                  <span class="user-info-name">{{ rowData[col.field] }}</span>
+                  <span class="user-info-name">
+                    <ng-container *ngIf="!rowData.joining_user.first_name && !rowData.joining_user.last_name; else fullInfo">
+                      {{ rowData.joining_user.login }}
+                    </ng-container>
+                    <ng-template #fullInfo>
+                      {{ rowData.joining_user.first_name || "" }} {{ rowData.joining_user.last_name || "" }} ({{ rowData.joining_user.login || "" }})
+                    </ng-template>
+                  </span>
                   <span class="user-info-activity" *ngIf="rowData.grade"
-                    ><em>Grade: {{ rowData.grade }}</em></span
+                    ><em>Grade: {{ rowData.joining_user.grade }}</em></span
                   >
                   <!-- <div class="user-info-content">
                     {{ rowData.user.content }}
