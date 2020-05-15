@@ -74,21 +74,21 @@ export class PendingRequestComponent implements OnInit, OnChanges {
       if (succ.false === undefined || succ.false === 0) {
         this.messageService.add({
           severity: "success",
-          summary: summary,
+          summary: "Success",
           detail: `${succ.true} request(s) have been ${msg}`,
           life: TOAST_LENGTH,
         });
       } else if (succ.true === undefined || succ.true === 0) {
         this.messageService.add({
           severity: "error",
-          summary: summary,
+          summary: "Error",
           detail: `Unable to ${verb} the selected request(s).`,
           life: TOAST_LENGTH,
         });
       } else {
         this.messageService.add({
           severity: "warn",
-          summary: summary,
+          summary: "Partial success",
           detail: `${succ.true} request(s) have been ${msg}, ${succ.false} could not be executed`,
           life: TOAST_LENGTH,
         });
@@ -105,7 +105,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
   _processRequestError(err, summary) {
     this.messageService.add({
       severity: "error",
-      summary: summary,
+      summary: "Error",
       detail: ERROR_MESSAGE.fail,
       life: TOAST_LENGTH,
     });
