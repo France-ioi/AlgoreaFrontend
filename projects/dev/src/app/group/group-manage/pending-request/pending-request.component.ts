@@ -76,7 +76,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
   _manageRequestData(result: RequestActionResponse, verb, msg) {
     if (result.success === true && result.message === "updated") {
       const succ = _.countBy(result.data, (status: string) => {
-        return status === "success" || status === "unchanged";
+        return ["success", "unchanged"].includes(status);
       });
 
       if (succ.false === undefined || succ.false === 0) {
