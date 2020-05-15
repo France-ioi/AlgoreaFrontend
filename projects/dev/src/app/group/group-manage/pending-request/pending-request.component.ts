@@ -10,10 +10,11 @@ import { PendingRequest } from "../../../shared/models/pending-request.model";
 import { SortEvent } from "primeng/api/sortevent";
 import { MessageService } from "primeng/api";
 import {
-  ERROR_MESSAGE, GROUP_REQUESTS_API,
+  ERROR_MESSAGE,
+  GROUP_REQUESTS_API,
 } from "../../../shared/constants/api";
-import { TOAST_LENGTH } from '../../../shared/constants/global';
-import * as _ from 'lodash';
+import { TOAST_LENGTH } from "../../../shared/constants/global";
+import * as _ from "lodash";
 
 @Component({
   selector: "app-pending-request",
@@ -39,25 +40,27 @@ export class PendingRequestComponent implements OnInit, OnChanges {
 
   acceptLoading = false;
   rejectLoading = false;
+  requestLoading = false;
+  requestAction = "";
   selection = [];
 
   _setRequestData(sortBy = GROUP_REQUESTS_API.sort) {
+    this.selection = [];
     this.groupService
       .getManagedRequests(this.id, sortBy)
       .subscribe((reqs: PendingRequest[]) => {
         this.requests = [];
-        this.selection = [];
-    
-        this.requests = reqs.map(req => {
+
+        this.requests = reqs.map((req) => {
           const joining_user = req.joining_user;
           let login;
-    
+
           if (!joining_user.first_name && !joining_user.last_name) {
             login = `${joining_user.login || ""}`;
           } else {
             login = `${joining_user.first_name || ""} ${joining_user.last_name || ""} (${joining_user.login || ""})`;
           }
-    
+
           return {
             member_id: req.member_id,
             "joining_user.login": login,
@@ -129,58 +132,36 @@ export class PendingRequestComponent implements OnInit, OnChanges {
 
   onExpandWidth(_e) {}
 
-  onClickAccept(_e) {
-    if (
-      this.selection.length === 0 ||
-      this.acceptLoading ||
-      this.rejectLoading
-    ) {
+  onProcessRequest(type) {
+    if (this.selection.length === 0 || this.requestLoading) {
       return;
     }
 
-    this.acceptLoading = true;
-    this.groupService
-      .acceptJoinRequest(
-        this.id,
-        this.selection.map((req) => req.group_id)
-      )
-      .subscribe(
-        (res) => {
-          this._manageRequestData(res, "accept", "accepted");
-          this.acceptLoading = false;
-        },
-        (err) => {
-          this._processRequestError(err);
-          this.acceptLoading = false;
-        }
-      );
-  }
+    let resultObserver;
+    this.requestLoading = true;
+    this.requestAction = type;
+    const group_ids = this.selection.map((req) => req.group_id);
 
-  onClickReject(_e) {
-    if (
-      this.selection.length === 0 ||
-      this.acceptLoading ||
-      this.rejectLoading
-    ) {
-      return;
+    if (type === "accept") {
+      resultObserver = this.groupService.acceptJoinRequest(this.id, group_ids);
+    } else {
+      resultObserver = this.groupService.rejectJoinRequest(this.id, group_ids);
     }
 
-    this.rejectLoading = true;
-    this.groupService
-      .rejectJoinRequest(
-        this.id,
-        this.selection.map((req) => req.group_id)
-      )
-      .subscribe(
-        (res) => {
-          this._manageRequestData(res, "reject", "declined");
-          this.rejectLoading = false;
-        },
-        (err) => {
-          this._processRequestError(err);
-          this.rejectLoading = false;
-        }
-      );
+    resultObserver.subscribe(
+      (res) => {
+        this._manageRequestData(
+          res,
+          type,
+          type === "accept" ? "accepted" : "declined"
+        );
+        this.requestLoading = false;
+      },
+      (err) => {
+        this._processRequestError(err);
+        this.requestLoading = false;
+      }
+    );
   }
 
   onSelectAll(_event) {

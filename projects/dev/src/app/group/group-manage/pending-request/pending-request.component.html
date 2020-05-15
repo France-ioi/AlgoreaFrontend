@@ -92,7 +92,7 @@
       </ng-template>
       <ng-template #summaryTemplate let-table>
         <div style="text-align: left; display: flex; align-items: center;">
-          <p-tableHeaderCheckbox [disabled]="rejectLoading || acceptLoading"></p-tableHeaderCheckbox>
+          <p-tableHeaderCheckbox [disabled]="requestLoading"></p-tableHeaderCheckbox>
           <span
             style="
               margin-left: 2.1rem;
@@ -100,26 +100,26 @@
               font-size: 1.2rem;
               cursor: pointer;
             "
-            [ngClass]="{disabled: selection.length === 0 || rejectLoading || acceptLoading}"
+            [ngClass]="{disabled: selection.length === 0 || requestLoading}"
             (click)="onSelectAll($event)"
           >
             Select all
           </span>
           <span style="flex: 1;"></span>
           <div class="req-tools">
-            <span class="accept" [ngClass]="{disabled: selection.length === 0 || rejectLoading || acceptLoading}" (click)="onClickAccept($event)">
+            <span class="accept" [ngClass]="{disabled: selection.length === 0 || requestLoading}" (click)="onProcessRequest('accept')">
               <span>Accept</span>
-              <ng-container *ngIf="acceptLoading">
+              <ng-container *ngIf="requestLoading && requestAction === 'accept'">
                 <p-progressSpinner></p-progressSpinner>
               </ng-container>
-              <ng-container *ngIf="!acceptLoading"><i class="fa fa-check"></i></ng-container>
+              <ng-container *ngIf="!requestLoading || requestAction !== 'aceept'"><i class="fa fa-check"></i></ng-container>
             </span>
-            <span class="reject" [ngClass]="{disabled: selection.length === 0 || rejectLoading || acceptLoading}" (click)="onClickReject($event)">
+            <span class="reject" [ngClass]="{disabled: selection.length === 0 || requestLoading}" (click)="onProcessRequest('reject')">
               <span>Reject</span>
-              <ng-container *ngIf="rejectLoading">
+              <ng-container *ngIf="requestLoading && requestAction === 'reject'">
                 <p-progressSpinner></p-progressSpinner>
               </ng-container>
-              <ng-container *ngIf="!rejectLoading">
+              <ng-container *ngIf="!requestLoading || requestAction !== 'reject'">
                 <i class="fa fa-times"></i>
               </ng-container>
             </span>
