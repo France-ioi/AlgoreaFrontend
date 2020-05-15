@@ -73,7 +73,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
       });
   }
 
-  _manageRequestData(result: RequestActionResponse, verb, msg) {
+  _manageRequestData(result: RequestActionResponse, verb: string, msg: string) {
     if (result.success === true && result.message === "updated") {
       const succ = _.countBy(result.data, (status: string) => {
         return ["success", "unchanged"].includes(status);
@@ -133,7 +133,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
 
   onExpandWidth(_e) {}
 
-  onProcessRequest(type) {
+  onProcessRequest(type: string) {
     if (this.selection.length === 0 || this.requestLoading) {
       return;
     }
