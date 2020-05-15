@@ -62,7 +62,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
       });
   }
 
-  _manageRequestData(result: RequestActionResponse, verb: string, msg: string) {
+  _handleActionResponse(result: RequestActionResponse, verb: string, msg: string) {
     if (result.success === true && result.message === "updated") {
       const succ = _.countBy(result.data, (status: string) => {
         return ["success", "unchanged"].includes(status);
@@ -131,7 +131,6 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     this.requestLoading = true;
     this.requestAction = type;
     
-    console.log(this.requestLoading, this.requestAction);
     const group_ids = this.selection.map((req: PendingRequest) => req.joining_user.group_id);
 
     if (type === "accept") {
@@ -142,7 +141,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
 
     resultObserver.subscribe(
       (res: RequestActionResponse) => {
-        this._manageRequestData(
+        this._handleActionResponse(
           res,
           type,
           type === "accept" ? "accepted" : "declined"
