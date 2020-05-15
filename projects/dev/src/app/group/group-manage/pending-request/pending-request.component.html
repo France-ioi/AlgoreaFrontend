@@ -112,7 +112,7 @@
               <ng-container *ngIf="requestLoading && requestAction === 'accept'">
                 <p-progressSpinner></p-progressSpinner>
               </ng-container>
-              <ng-container *ngIf="!requestLoading || requestAction !== 'aceept'"><i class="fa fa-check"></i></ng-container>
+              <ng-container *ngIf="!requestLoading || requestAction !== 'accept'"><i class="fa fa-check"></i></ng-container>
             </span>
             <span class="reject" [ngClass]="{disabled: selection.length === 0 || requestLoading}" (click)="onProcessRequest('reject')">
               <span>Reject</span>
