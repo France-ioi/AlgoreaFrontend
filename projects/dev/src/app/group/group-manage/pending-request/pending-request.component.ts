@@ -162,7 +162,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     }
   }
 
-  onHeaderCheckboxToggle(event) {
+  onSelectAllCheckboxToggle(event) {
     if (event.checked) {
       this.selection = this.requests;
     } else {
