@@ -15,6 +15,7 @@ import {
 } from "../../../shared/constants/api";
 import { TOAST_LENGTH } from "../../../shared/constants/global";
 import * as _ from "lodash";
+import { RequestActionResponse } from '../../../shared/models/requet-action-response.model';
 
 @Component({
   selector: "app-pending-request",
@@ -72,9 +73,9 @@ export class PendingRequestComponent implements OnInit, OnChanges {
       });
   }
 
-  _manageRequestData(result, verb, msg) {
-    if (result["success"] === true && result["message"] === "updated") {
-      const succ = _.countBy(result["data"], (status) => {
+  _manageRequestData(result: RequestActionResponse, verb, msg) {
+    if (result.success === true && result.message === "updated") {
+      const succ = _.countBy(result.data, (status: string) => {
         return status === "success" || status === "unchanged";
       });
 
@@ -140,6 +141,8 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     let resultObserver;
     this.requestLoading = true;
     this.requestAction = type;
+    
+    console.log(this.requestLoading, this.requestAction);
     const group_ids = this.selection.map((req) => req.group_id);
 
     if (type === "accept") {
@@ -149,7 +152,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     }
 
     resultObserver.subscribe(
-      (res) => {
+      (res: RequestActionResponse) => {
         this._manageRequestData(
           res,
           type,
