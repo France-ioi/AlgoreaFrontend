@@ -16,6 +16,7 @@ import {
 import { TOAST_LENGTH } from "../../../shared/constants/global";
 import * as _ from "lodash";
 import { RequestActionResponse } from '../../../shared/models/requet-action-response.model';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: "app-pending-request",
@@ -37,12 +38,10 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     { field: "at", order: -1 },
     { field: "member_id", order: 1 },
   ];
-  prevSortMeta = "-at member_id";
+  prevSortMeta: string = "-at member_id";
 
-  acceptLoading = false;
-  rejectLoading = false;
-  requestLoading = false;
-  requestAction = "";
+  requestLoading: boolean = false;
+  requestAction: string = "";
   selection = [];
 
   _setRequestData(sortBy = GROUP_REQUESTS_API.sort) {
@@ -127,7 +126,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
       return;
     }
 
-    let resultObserver;
+    let resultObserver: Observable<RequestActionResponse>;
     this.requestLoading = true;
     this.requestAction = type;
     
@@ -172,8 +171,6 @@ export class PendingRequestComponent implements OnInit, OnChanges {
   }
 
   onCustomSort(event: SortEvent) {
-    let diff = false;
-
     const sortBy = event.multiSortMeta.map((meta) =>
       meta.order === -1 ? `-${meta.field}` : meta.field
     );
