@@ -60,7 +60,7 @@ jobs:
       - aws-s3/sync:
           from: ./dist/algorea/
           to: $DST
-          overwrite: true
+          overwrite: false
           arguments: >-
             --acl public-read
             --exclude "index.html"
