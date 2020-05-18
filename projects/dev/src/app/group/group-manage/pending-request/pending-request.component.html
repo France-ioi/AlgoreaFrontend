@@ -61,7 +61,7 @@
       >
         <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
           <td style="width: 3.3333rem;">
-            <p-tableCheckbox [value]="rowData" [disabled]="rejectLoading || acceptLoading"></p-tableCheckbox>
+            <p-tableCheckbox [value]="rowData" [disabled]="requestLoading"></p-tableCheckbox>
           </td>
           <td *ngFor="let col of columns">
             <ng-container *ngIf="col.field === 'member_id'">
