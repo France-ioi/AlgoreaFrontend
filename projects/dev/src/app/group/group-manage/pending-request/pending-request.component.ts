@@ -11,7 +11,6 @@ import { SortEvent } from "primeng/api/sortevent";
 import { MessageService } from "primeng/api";
 import {
   ERROR_MESSAGE,
-  GROUP_REQUESTS_API,
 } from "../../../shared/constants/api";
 import { TOAST_LENGTH } from "../../../shared/constants/global";
 import * as _ from "lodash";
@@ -44,8 +43,11 @@ export class PendingRequestComponent implements OnInit, OnChanges {
   requestAction: string = "";
   selection = [];
 
-  _setRequestData(sortBy = GROUP_REQUESTS_API.sort) {
+  reloadData(sortBy = []) {
     this.selection = [];
+    if (sortBy.length === 0) {
+      sortBy = this.prevSortMeta.split(" ");
+    }
     this.groupService
       .getManagedRequests(this.id, sortBy)
       .subscribe((reqs: PendingRequest[]) => {
@@ -90,7 +92,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
         });
       }
 
-      this._setRequestData();
+      this.reloadData();
     }
   }
 
@@ -116,7 +118,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(_changes: SimpleChanges) {
-    this._setRequestData();
+    this.reloadData();
   }
 
   onExpandWidth(_e) {}
@@ -177,7 +179,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
 
     if (sortBy.sort().join(" ") !== this.prevSortMeta) {
       this.prevSortMeta = sortBy.sort().join(" ");
-      this._setRequestData(sortBy);
+      this.reloadData(sortBy);
     }
   }
 }
