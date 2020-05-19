@@ -51,7 +51,13 @@ export class GroupService {
           sort: sort.join(","),
         },
       })
-      .pipe(map((reqs: PendingRequest[]) => reqs.filter((req: PendingRequest) => req.action === "join_request_created")))
+      .pipe(
+        map(
+          (reqs: PendingRequest[]) => reqs.filter(
+            (req: PendingRequest) => req.action === "join_request_created"
+          )
+        )
+      )
       .pipe(catchError(this.handleError));
   }
 

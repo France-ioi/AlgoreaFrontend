@@ -51,7 +51,6 @@ export class PendingRequestComponent implements OnInit, OnChanges {
   selection = [];
 
   _reloadData() {
-    this.selection = [];
     this.groupService
       .getManagedRequests(this.id, this.prevSortMeta)
       .subscribe((reqs: PendingRequest[]) => {
@@ -120,6 +119,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(_changes: SimpleChanges) {
+    this.selection = [];
     this._reloadData();
   }
 
@@ -147,6 +147,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
           type === AcceptReject.Accept ? "accepted" : "declined"
         );
         this.requestAction = AcceptReject.None;
+        this.selection = [];
       },
       (err) => {
         this._processRequestError(err);
