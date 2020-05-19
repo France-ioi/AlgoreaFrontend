@@ -85,9 +85,9 @@
                       {{ rowData.joining_user.first_name || "" }} {{ rowData.joining_user.last_name || "" }} ({{ rowData.joining_user.login || "" }})
                     </ng-template>
                   </span>
-                  <span class="user-info-activity" *ngIf="rowData.grade"
-                    ><em>Grade: {{ rowData.joining_user.grade }}</em></span
-                  >
+                  <span class="user-info-activity" *ngIf="rowData.grade">
+                    <em>Grade: {{ rowData.joining_user.grade }}</em>
+                  </span>
                   <!-- <div class="user-info-content">
                     {{ rowData.user.content }}
                   </div> -->
