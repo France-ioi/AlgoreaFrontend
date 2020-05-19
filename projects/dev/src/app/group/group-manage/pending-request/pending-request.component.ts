@@ -19,7 +19,8 @@ import { Observable } from 'rxjs';
 
 export enum AcceptReject {
   Accept = "accept",
-  Reject = "reject"
+  Reject = "reject",
+  None = "none"
 };
 
 @Component({
@@ -46,8 +47,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
   ];
   prevSortMeta: string[] = GROUP_REQUESTS_API.sort;
 
-  requestLoading: boolean = false;
-  requestAction: AcceptReject;
+  requestAction: AcceptReject = AcceptReject.None;
   selection = [];
 
   _reloadData() {
@@ -124,12 +124,11 @@ export class PendingRequestComponent implements OnInit, OnChanges {
   }
 
   onAcceptOrReject(type: AcceptReject) {
-    if (this.selection.length === 0 || this.requestLoading) {
+    if (this.selection.length === 0 || this.requestAction !== AcceptReject.None) {
       return;
     }
 
     let resultObserver: Observable<RequestActionResponse>;
-    this.requestLoading = true;
     this.requestAction = type;
     
     const group_ids = this.selection.map((req: PendingRequest) => req.joining_user.group_id);
@@ -147,11 +146,11 @@ export class PendingRequestComponent implements OnInit, OnChanges {
           type,
           type === AcceptReject.Accept ? "accepted" : "declined"
         );
-        this.requestLoading = false;
+        this.requestAction = AcceptReject.None;
       },
       (err) => {
         this._processRequestError(err);
-        this.requestLoading = false;
+        this.requestAction = AcceptReject.None;
       }
     );
   }
