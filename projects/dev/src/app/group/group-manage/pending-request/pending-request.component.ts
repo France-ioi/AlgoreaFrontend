@@ -43,7 +43,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
   requestAction: string = "";
   selection = [];
 
-  reloadData() {
+  _reloadData() {
     this.selection = [];
     this.groupService
       .getManagedRequests(this.id, this.prevSortMeta)
@@ -89,7 +89,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
         });
       }
 
-      this.reloadData();
+      this._reloadData();
     }
   }
 
@@ -115,7 +115,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(_changes: SimpleChanges) {
-    this.reloadData();
+    this._reloadData();
   }
 
   onProcessRequest(type: string) {
@@ -174,7 +174,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
 
     if (!_.isEqual(_.sortBy(sortMeta), _.sortBy(this.prevSortMeta))) {
       this.prevSortMeta = sortMeta;
-      this.reloadData();
+      this._reloadData();
     }
   }
 }
