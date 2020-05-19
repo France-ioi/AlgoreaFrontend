@@ -113,19 +113,19 @@
           </span>
           <span style="flex: 1;"></span>
           <div class="req-tools">
-            <span class="accept" [ngClass]="{disabled: selection.length === 0 || requestLoading}" (click)="onProcessRequest('accept')">
+            <span class="accept" [ngClass]="{disabled: selection.length === 0 || requestLoading}" (click)="onAcceptOrReject(AcceptReject.Accept)">
               <span>Accept</span>
-              <ng-container *ngIf="requestLoading && requestAction === 'accept'">
+              <ng-container *ngIf="requestLoading && requestAction === AcceptReject.Accept">
                 <p-progressSpinner></p-progressSpinner>
               </ng-container>
-              <ng-container *ngIf="!requestLoading || requestAction !== 'accept'"><i class="fa fa-check"></i></ng-container>
+              <ng-container *ngIf="!requestLoading || requestAction !== AcceptReject.Accept"><i class="fa fa-check"></i></ng-container>
             </span>
-            <span class="reject" [ngClass]="{disabled: selection.length === 0 || requestLoading}" (click)="onProcessRequest('reject')">
+            <span class="reject" [ngClass]="{disabled: selection.length === 0 || requestLoading}" (click)="onAcceptOrReject(AcceptReject.Reject)">
               <span>Reject</span>
-              <ng-container *ngIf="requestLoading && requestAction === 'reject'">
+              <ng-container *ngIf="requestLoading && requestAction === AcceptReject.Reject">
                 <p-progressSpinner></p-progressSpinner>
               </ng-container>
-              <ng-container *ngIf="!requestLoading || requestAction !== 'reject'">
+              <ng-container *ngIf="!requestLoading || requestAction !== AcceptReject.Reject">
                 <i class="fa fa-times"></i>
               </ng-container>
             </span>

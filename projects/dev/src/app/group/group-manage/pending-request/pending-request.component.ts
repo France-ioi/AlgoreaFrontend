@@ -17,6 +17,11 @@ import * as _ from "lodash";
 import { RequestActionResponse } from '../../../shared/models/requet-action-response.model';
 import { Observable } from 'rxjs';
 
+export enum AcceptReject {
+  Accept = "accept",
+  Reject = "reject"
+};
+
 @Component({
   selector: "app-pending-request",
   templateUrl: "./pending-request.component.html",
@@ -25,6 +30,8 @@ import { Observable } from 'rxjs';
 })
 export class PendingRequestComponent implements OnInit, OnChanges {
   @Input() id;
+
+  AcceptReject = AcceptReject;
 
   columns = [
     { field: "member_id", header: "ID" },
@@ -40,7 +47,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
   prevSortMeta: string[] = GROUP_REQUESTS_API.sort;
 
   requestLoading: boolean = false;
-  requestAction: string = "";
+  requestAction: AcceptReject;
   selection = [];
 
   _reloadData() {
@@ -116,7 +123,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     this._reloadData();
   }
 
-  onProcessRequest(type: string) {
+  onAcceptOrReject(type: AcceptReject) {
     if (this.selection.length === 0 || this.requestLoading) {
       return;
     }
@@ -127,7 +134,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     
     const group_ids = this.selection.map((req: PendingRequest) => req.joining_user.group_id);
 
-    if (type === "accept") {
+    if (type === AcceptReject.Accept) {
       resultObserver = this.groupService.acceptJoinRequest(this.id, group_ids);
     } else {
       resultObserver = this.groupService.rejectJoinRequest(this.id, group_ids);
@@ -138,7 +145,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
         this._handleActionResponse(
           res,
           type,
-          type === "accept" ? "accepted" : "declined"
+          type === AcceptReject.Accept ? "accepted" : "declined"
         );
         this.requestLoading = false;
       },
