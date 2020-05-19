@@ -48,8 +48,6 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     this.groupService
       .getManagedRequests(this.id, this.prevSortMeta)
       .subscribe((reqs: PendingRequest[]) => {
-        this.requests = [];
-
         this.requests = reqs.map((req) => {
           return {
             member_id: req.member_id,
