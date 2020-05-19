@@ -121,8 +121,6 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     this.reloadData();
   }
 
-  onExpandWidth(_e) {}
-
   onProcessRequest(type: string) {
     if (this.selection.length === 0 || this.requestLoading) {
       return;
