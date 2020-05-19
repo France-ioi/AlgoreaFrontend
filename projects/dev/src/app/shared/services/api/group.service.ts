@@ -6,7 +6,7 @@ import {
   HttpHeaders,
 } from "@angular/common/http";
 import { Observable, Subject, throwError } from "rxjs";
-import { catchError } from "rxjs/operators";
+import { catchError, map } from "rxjs/operators";
 
 import {
   DEFAULT_LIMIT,
@@ -29,7 +29,6 @@ export class GroupService {
   private baseCurrentUserUrl = `${environment.apiUrl}/current-user`;
 
   private groupList = new Subject<Group>();
-  private requestList = new Subject<PendingRequest[]>();
   private memberList = new Subject<Member[]>();
   private membershipHistoryList = new Subject<MembershipHistory[]>();
   private joinedGroupList = new Subject<GroupMembership[]>();
@@ -46,20 +45,14 @@ export class GroupService {
     id,
     sort = GROUP_REQUESTS_API.sort
   ): Observable<PendingRequest[]> {
-    this.http
+    return this.http
       .get<PendingRequest[]>(`${this.baseGroupUrl}/${id}/requests`, {
         params: {
           sort: sort.join(","),
         },
       })
-      .subscribe((requests: PendingRequest[]) => {
-        const newReqs = requests.filter(
-          (req: PendingRequest) => req.action === "join_request_created"
-        );
-        this.requestList.next(newReqs);
-      }, this.handleError);
-
-    return this.requestList;
+      .pipe(map((reqs: PendingRequest[]) => reqs.filter((req: PendingRequest) => req.action === "join_request_created")))
+      .pipe(catchError(this.handleError));
   }
 
   getGroupMembers(
