@@ -10,7 +10,7 @@ import { PendingRequest } from "../../../shared/models/pending-request.model";
 import { SortEvent } from "primeng/api/sortevent";
 import { MessageService } from "primeng/api";
 import {
-  ERROR_MESSAGE,
+  ERROR_MESSAGE, GROUP_REQUESTS_API,
 } from "../../../shared/constants/api";
 import { TOAST_LENGTH } from "../../../shared/constants/global";
 import * as _ from "lodash";
@@ -37,19 +37,16 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     { field: "at", order: -1 },
     { field: "member_id", order: 1 },
   ];
-  prevSortMeta: string = "-at member_id";
+  prevSortMeta: string[] = GROUP_REQUESTS_API.sort;
 
   requestLoading: boolean = false;
   requestAction: string = "";
   selection = [];
 
-  reloadData(sortBy = []) {
+  reloadData() {
     this.selection = [];
-    if (sortBy.length === 0) {
-      sortBy = this.prevSortMeta.split(" ");
-    }
     this.groupService
-      .getManagedRequests(this.id, sortBy)
+      .getManagedRequests(this.id, this.prevSortMeta)
       .subscribe((reqs: PendingRequest[]) => {
         this.requests = [];
 
@@ -171,13 +168,13 @@ export class PendingRequestComponent implements OnInit, OnChanges {
   }
 
   onCustomSort(event: SortEvent) {
-    const sortBy = event.multiSortMeta.map((meta) =>
+    const sortMeta = event.multiSortMeta.map((meta) =>
       meta.order === -1 ? `-${meta.field}` : meta.field
     );
 
-    if (sortBy.sort().join(" ") !== this.prevSortMeta) {
-      this.prevSortMeta = sortBy.sort().join(" ");
-      this.reloadData(sortBy);
+    if (!_.isEqual(_.sortBy(sortMeta), _.sortBy(this.prevSortMeta))) {
+      this.prevSortMeta = sortMeta;
+      this.reloadData();
     }
   }
 }
