@@ -60,7 +60,7 @@
       >
         <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
           <td style="width: 3.3333rem;">
-            <p-tableCheckbox [value]="rowData" [disabled]="requestAction !== AcceptReject.None"></p-tableCheckbox>
+            <p-tableCheckbox [value]="rowData" [disabled]="requestAction !== Activity.None"></p-tableCheckbox>
           </td>
           <td *ngFor="let col of columns">
             <ng-container *ngIf="col.field === 'member_id'">
@@ -98,7 +98,7 @@
       </ng-template>
       <ng-template #summaryTemplate let-table>
         <div style="text-align: left; display: flex; align-items: center;">
-          <p-tableHeaderCheckbox [disabled]="requestAction !== AcceptReject.None"></p-tableHeaderCheckbox>
+          <p-tableHeaderCheckbox [disabled]="requestAction !== Activity.None"></p-tableHeaderCheckbox>
           <span
             style="
               margin-left: 2.1rem;
@@ -106,26 +106,26 @@
               font-size: 1.2rem;
               cursor: pointer;
             "
-            [ngClass]="{disabled: selection.length === 0 || requestAction !== AcceptReject.None}"
+            [ngClass]="{disabled: selection.length === 0 || requestAction !== Activity.None}"
             (click)="onSelectAll($event)"
           >
             Select all
           </span>
           <span style="flex: 1;"></span>
           <div class="req-tools">
-            <span class="accept" [ngClass]="{disabled: selection.length === 0 || requestAction !== AcceptReject.None}" (click)="onAcceptOrReject(AcceptReject.Accept)">
+            <span class="accept" [ngClass]="{disabled: selection.length === 0 || requestAction !== Activity.None}" (click)="onAcceptOrReject(Action.Accept)">
               <span>Accept</span>
-              <ng-container *ngIf="requestAction === AcceptReject.Accept">
+              <ng-container *ngIf="requestAction === Activity.Accepting">
                 <p-progressSpinner></p-progressSpinner>
               </ng-container>
-              <ng-container *ngIf="requestAction !== AcceptReject.Accept"><i class="fa fa-check"></i></ng-container>
+              <ng-container *ngIf="requestAction !== Activity.Accepting"><i class="fa fa-check"></i></ng-container>
             </span>
-            <span class="reject" [ngClass]="{disabled: selection.length === 0 || requestAction !== AcceptReject.None}" (click)="onAcceptOrReject(AcceptReject.Reject)">
+            <span class="reject" [ngClass]="{disabled: selection.length === 0 || requestAction !== Activity.None}" (click)="onAcceptOrReject(Action.Reject)">
               <span>Reject</span>
-              <ng-container *ngIf="requestAction === AcceptReject.Reject">
+              <ng-container *ngIf="requestAction === Activity.Rejecting">
                 <p-progressSpinner></p-progressSpinner>
               </ng-container>
-              <ng-container *ngIf="requestAction !== AcceptReject.Reject">
+              <ng-container *ngIf="requestAction !== Activity.Rejecting">
                 <i class="fa fa-times"></i>
               </ng-container>
             </span>

@@ -17,11 +17,16 @@ import * as _ from "lodash";
 import { RequestActionResponse } from '../../../shared/models/requet-action-response.model';
 import { Observable } from 'rxjs';
 
-export enum AcceptReject {
-  Accept = "accept",
-  Reject = "reject",
+export enum Activity {
+  Accepting = "accept",
+  Rejecting = "reject",
   None = "none"
 };
+
+export enum Action {
+  Accept = "accept",
+  Reject = "reject"
+}
 
 @Component({
   selector: "app-pending-request",
@@ -32,7 +37,8 @@ export enum AcceptReject {
 export class PendingRequestComponent implements OnInit, OnChanges {
   @Input() id;
 
-  AcceptReject = AcceptReject;
+  Action = Action;
+  Activity = Activity;
 
   columns = [
     { field: "member_id", header: "ID" },
@@ -47,7 +53,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
   ];
   prevSortMeta: string[] = GROUP_REQUESTS_API.sort;
 
-  requestAction: AcceptReject = AcceptReject.None;
+  requestAction: Activity = Activity.None;
   selection = [];
 
   _reloadData() {
@@ -123,17 +129,17 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     this._reloadData();
   }
 
-  onAcceptOrReject(type: AcceptReject) {
-    if (this.selection.length === 0 || this.requestAction !== AcceptReject.None) {
+  onAcceptOrReject(action: Action) {
+    if (this.selection.length === 0 || this.requestAction !== Activity.None) {
       return;
     }
 
     let resultObserver: Observable<RequestActionResponse>;
-    this.requestAction = type;
+    this.requestAction = action === Action.Accept ? Activity.Accepting : Activity.Rejecting;
     
     const group_ids = this.selection.map((req: PendingRequest) => req.joining_user.group_id);
 
-    if (type === AcceptReject.Accept) {
+    if (action === Action.Accept) {
       resultObserver = this.groupService.acceptJoinRequest(this.id, group_ids);
     } else {
       resultObserver = this.groupService.rejectJoinRequest(this.id, group_ids);
@@ -143,15 +149,15 @@ export class PendingRequestComponent implements OnInit, OnChanges {
       (res: RequestActionResponse) => {
         this._handleActionResponse(
           res,
-          type,
-          type === AcceptReject.Accept ? "accepted" : "declined"
+          action,
+          action === Action.Accept ? "accepted" : "declined"
         );
-        this.requestAction = AcceptReject.None;
+        this.requestAction = Activity.None;
         this.selection = [];
       },
       (err) => {
         this._processRequestError(err);
-        this.requestAction = AcceptReject.None;
+        this.requestAction = Activity.None;
       }
     );
   }
