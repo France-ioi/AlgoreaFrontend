@@ -61,7 +61,6 @@ export class GridComponent implements OnInit, OnChanges {
   selectionValue = [];
 
   get selection() {
-    console.log(this.selectionValue);
     return this.selectionValue;
   }
 
@@ -160,7 +159,7 @@ export class GridComponent implements OnInit, OnChanges {
   }
 
   onHeaderCheckbox(event) {
-    this.onHeaderCheckboxToggle.emit(event);
+    this.selectionChange.emit(this.selectionValue);
   }
 
 }
