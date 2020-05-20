@@ -37,6 +37,8 @@ export enum Action {
 export class PendingRequestComponent implements OnInit, OnChanges {
   @Input() id;
 
+  Action = Action;
+
   columns = [
     { field: "member_id", header: "ID" },
     { field: "joining_user.login", header: "LOGIN" },

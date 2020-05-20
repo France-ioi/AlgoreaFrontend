@@ -13,7 +13,7 @@
       [(selection)]="selection"
       [multiSortMeta]="multiSortMeta"
       (onSort)="onCustomSort($event)"
-      (onHeaderCheckboxToggle)="onSelectAllCheckboxToggle($event)"
+      
     >
       <ng-template #headerTemplate let-columns>
         <tr>
@@ -113,14 +113,14 @@
           </span>
           <span style="flex: 1;"></span>
           <div class="req-tools">
-            <span class="accept" [ngClass]="{disabled: selection.length === 0 || !isIdle()}" (click)="onAcceptOrReject('accept')">
+            <span class="accept" [ngClass]="{disabled: selection.length === 0 || !isIdle()}" (click)="onAcceptOrReject(Action.Accept)">
               <span>Accept</span>
               <ng-container *ngIf="isAccepting()">
                 <p-progressSpinner></p-progressSpinner>
               </ng-container>
               <ng-container *ngIf="!isAccepting()"><i class="fa fa-check"></i></ng-container>
             </span>
-            <span class="reject" [ngClass]="{disabled: selection.length === 0 || !isIdle()}" (click)="onAcceptOrReject('reject')">
+            <span class="reject" [ngClass]="{disabled: selection.length === 0 || !isIdle()}" (click)="onAcceptOrReject(Action.Reject)">
               <span>Reject</span>
               <ng-container *ngIf="isRejecting()">
                 <p-progressSpinner></p-progressSpinner>
