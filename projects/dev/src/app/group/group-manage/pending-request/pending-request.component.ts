@@ -63,7 +63,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
       });
   }
 
-  _handleActionResponse(result: RequestActionResponse, verb: string, msg: string) {
+  _displayResponseToast(result: RequestActionResponse, verb: string, msg: string) {
     if (result.success === true && result.message === "updated") {
       const succ = _.countBy(result.data, (status: string) => {
         return ["success", "unchanged"].includes(status);
@@ -91,8 +91,6 @@ export class PendingRequestComponent implements OnInit, OnChanges {
           life: TOAST_LENGTH,
         });
       }
-
-      this._reloadData();
     } else {
       this._processRequestError("Unkown error");
     }
@@ -154,11 +152,14 @@ export class PendingRequestComponent implements OnInit, OnChanges {
 
     resultObserver.subscribe(
       (res: RequestActionResponse) => {
-        this._handleActionResponse(
+        this._displayResponseToast(
           res,
           action,
           action === Action.Accept ? "accepted" : "declined"
         );
+        if (res.success === true && res.message === "updated") {
+          this._reloadData();
+        }
         this.onGoingActivity = Activity.None;
         this.selection = [];
       },
