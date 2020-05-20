@@ -56,9 +56,9 @@ export class GroupService {
           (reqs: PendingRequest[]) => reqs.filter(
             (req: PendingRequest) => req.action === "join_request_created"
           )
-        )
-      )
-      .pipe(catchError(this.handleError));
+        ),
+        catchError(this.handleError)
+      );
   }
 
   getGroupMembers(
