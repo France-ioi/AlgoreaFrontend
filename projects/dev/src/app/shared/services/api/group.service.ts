@@ -43,7 +43,7 @@ export class GroupService {
 
   getManagedRequests(
     id,
-    sort = GROUP_REQUESTS_API.sort
+    sort = GROUP_REQUESTS_API.defaultSort
   ): Observable<PendingRequest[]> {
     return this.http
       .get<PendingRequest[]>(`${this.baseGroupUrl}/${id}/requests`, {

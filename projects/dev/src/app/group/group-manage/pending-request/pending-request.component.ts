@@ -48,7 +48,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     { field: "at", order: -1 },
     { field: "member_id", order: 1 },
   ];
-  currentSort: string[] = GROUP_REQUESTS_API.sort;
+  currentSort: string[] = GROUP_REQUESTS_API.defaultSort;
 
   onGoingActivity: Activity = Activity.None;
   selection = [];
