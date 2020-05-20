@@ -100,7 +100,7 @@ export class GroupService {
       .pipe(catchError(this.handleError));
   }
 
-  rejectJoinRequest(id, group_ids) {
+  rejectJoinRequest(id, group_ids): Observable<RequestActionResponse> {
     return this.http
       .post<RequestActionResponse>(`${this.baseGroupUrl}/${id}/join-requests/reject`, null, {
         params: {
