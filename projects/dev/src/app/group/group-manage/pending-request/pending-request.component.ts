@@ -37,9 +37,6 @@ export enum Action {
 export class PendingRequestComponent implements OnInit, OnChanges {
   @Input() id;
 
-  Action = Action;
-  Activity = Activity;
-
   columns = [
     { field: "member_id", header: "ID" },
     { field: "joining_user.login", header: "LOGIN" },
@@ -53,7 +50,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
   ];
   prevSortMeta: string[] = GROUP_REQUESTS_API.sort;
 
-  requestAction: Activity = Activity.None;
+  onGoingActivity: Activity = Activity.None;
   selection = [];
 
   _reloadData() {
@@ -112,6 +109,18 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     });
   }
 
+  isAccepting() {
+    return this.onGoingActivity === Activity.Accepting;
+  }
+
+  isRejecting() {
+    return this.onGoingActivity === Activity.Rejecting;
+  }
+
+  isIdle() {
+    return this.onGoingActivity === Activity.None;
+  }
+
   constructor(
     private groupService: GroupService,
     private messageService: MessageService
@@ -130,12 +139,12 @@ export class PendingRequestComponent implements OnInit, OnChanges {
   }
 
   onAcceptOrReject(action: Action) {
-    if (this.selection.length === 0 || this.requestAction !== Activity.None) {
+    if (this.selection.length === 0 || this.onGoingActivity !== Activity.None) {
       return;
     }
 
     let resultObserver: Observable<RequestActionResponse>;
-    this.requestAction = action === Action.Accept ? Activity.Accepting : Activity.Rejecting;
+    this.onGoingActivity = (action === Action.Accept) ? Activity.Accepting : Activity.Rejecting;
     
     const group_ids = this.selection.map((req: PendingRequest) => req.joining_user.group_id);
 
@@ -152,12 +161,12 @@ export class PendingRequestComponent implements OnInit, OnChanges {
           action,
           action === Action.Accept ? "accepted" : "declined"
         );
-        this.requestAction = Activity.None;
+        this.onGoingActivity = Activity.None;
         this.selection = [];
       },
       (err) => {
         this._processRequestError(err);
-        this.requestAction = Activity.None;
+        this.onGoingActivity = Activity.None;
       }
     );
   }
