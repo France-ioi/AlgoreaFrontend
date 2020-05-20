@@ -97,6 +97,8 @@ export class PendingRequestComponent implements OnInit, OnChanges {
       }
 
       this._reloadData();
+    } else {
+      this._processRequestError("Unkown error");
     }
   }
 
