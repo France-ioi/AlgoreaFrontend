@@ -48,14 +48,14 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     { field: "at", order: -1 },
     { field: "member_id", order: 1 },
   ];
-  prevSortMeta: string[] = GROUP_REQUESTS_API.sort;
+  currentSort: string[] = GROUP_REQUESTS_API.sort;
 
   onGoingActivity: Activity = Activity.None;
   selection = [];
 
   _reloadData() {
     this.groupService
-      .getManagedRequests(this.id, this.prevSortMeta)
+      .getManagedRequests(this.id, this.currentSort)
       .subscribe((reqs: PendingRequest[]) => {
         this.requests = reqs.map((req) => {
           return {
@@ -192,8 +192,8 @@ export class PendingRequestComponent implements OnInit, OnChanges {
       meta.order === -1 ? `-${meta.field}` : meta.field
     );
 
-    if (!_.isEqual(_.sortBy(sortMeta), _.sortBy(this.prevSortMeta))) {
-      this.prevSortMeta = sortMeta;
+    if (!_.isEqual(_.sortBy(sortMeta), _.sortBy(this.currentSort))) {
+      this.currentSort = sortMeta;
       this._reloadData();
     }
   }
