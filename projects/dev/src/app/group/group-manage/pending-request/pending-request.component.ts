@@ -177,14 +177,6 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     }
   }
 
-  onSelectAllCheckboxToggle(event) {
-    if (event.checked) {
-      this.selection = this.requests;
-    } else {
-      this.selection = [];
-    }
-  }
-
   onCustomSort(event: SortEvent) {
     const sortMeta = event.multiSortMeta.map((meta) =>
       meta.order === -1 ? `-${meta.field}` : meta.field
