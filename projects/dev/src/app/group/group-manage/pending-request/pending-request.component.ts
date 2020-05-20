@@ -42,7 +42,8 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     { field: "joining_user.login", header: "LOGIN" },
     { field: "at", header: "REQUESTED ON" },
   ];
-  requests = [];
+  requests: PendingRequest[];
+  selection: PendingRequest[];
   panel = [];
   multiSortMeta = [
     { field: "at", order: -1 },
@@ -51,19 +52,12 @@ export class PendingRequestComponent implements OnInit, OnChanges {
   currentSort: string[] = GROUP_REQUESTS_API.defaultSort;
 
   onGoingActivity: Activity = Activity.None;
-  selection = [];
 
   _reloadData() {
     this.groupService
       .getManagedRequests(this.id, this.currentSort)
       .subscribe((reqs: PendingRequest[]) => {
-        this.requests = reqs.map((req) => {
-          return {
-            member_id: req.member_id,
-            joining_user: req.joining_user,
-            at: req.at,
-          };
-        });
+        this.requests = reqs;
       });
   }
 
