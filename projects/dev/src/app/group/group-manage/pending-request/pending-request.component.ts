@@ -15,7 +15,8 @@ import {
 import { TOAST_LENGTH } from "../../../shared/constants/global";
 import * as _ from "lodash";
 import { RequestActionResponse } from '../../../shared/models/requet-action-response.model';
-import { Observable } from 'rxjs';
+import { Observable, throwError, of } from 'rxjs';
+import { mergeMap } from 'rxjs/operators';
 
 export enum Activity {
   Accepting = "accept",
@@ -64,35 +65,31 @@ export class PendingRequestComponent implements OnInit, OnChanges {
   }
 
   _displayResponseToast(result: RequestActionResponse, verb: string, msg: string) {
-    if (result.success === true && result.message === "updated") {
-      const succ = _.countBy(result.data, (status: string) => {
-        return ["success", "unchanged"].includes(status);
-      });
+    const succ = _.countBy(result.data, (status: string) => {
+      return ["success", "unchanged"].includes(status);
+    });
 
-      if (succ.false === undefined || succ.false === 0) {
-        this.messageService.add({
-          severity: "success",
-          summary: "Success",
-          detail: `${succ.true} request(s) have been ${msg}`,
-          life: TOAST_LENGTH,
-        });
-      } else if (succ.true === undefined || succ.true === 0) {
-        this.messageService.add({
-          severity: "error",
-          summary: "Error",
-          detail: `Unable to ${verb} the selected request(s).`,
-          life: TOAST_LENGTH,
-        });
-      } else {
-        this.messageService.add({
-          severity: "warn",
-          summary: "Partial success",
-          detail: `${succ.true} request(s) have been ${msg}, ${succ.false} could not be executed`,
-          life: TOAST_LENGTH,
-        });
-      }
+    if (succ.false === undefined || succ.false === 0) {
+      this.messageService.add({
+        severity: "success",
+        summary: "Success",
+        detail: `${succ.true} request(s) have been ${msg}`,
+        life: TOAST_LENGTH,
+      });
+    } else if (succ.true === undefined || succ.true === 0) {
+      this.messageService.add({
+        severity: "error",
+        summary: "Error",
+        detail: `Unable to ${verb} the selected request(s).`,
+        life: TOAST_LENGTH,
+      });
     } else {
-      this._processRequestError("Unkown error");
+      this.messageService.add({
+        severity: "warn",
+        summary: "Partial success",
+        detail: `${succ.true} request(s) have been ${msg}, ${succ.false} could not be executed`,
+        life: TOAST_LENGTH,
+      });
     }
   }
 
@@ -150,16 +147,24 @@ export class PendingRequestComponent implements OnInit, OnChanges {
       resultObserver = this.groupService.rejectJoinRequest(this.id, group_ids);
     }
 
-    resultObserver.subscribe(
+    resultObserver
+    .pipe(
+      mergeMap((res: RequestActionResponse) => {
+        if (res.success === false || res.message !== "updated" || typeof res.data !== "object") {
+          return throwError("Unknown error");
+        } else {
+          return of(res);
+        }
+      })
+    )
+    .subscribe(
       (res: RequestActionResponse) => {
         this._displayResponseToast(
           res,
           action,
           action === Action.Accept ? "accepted" : "declined"
         );
-        if (res.success === true && res.message === "updated") {
-          this._reloadData();
-        }
+        this._reloadData();
         this.onGoingActivity = Activity.None;
         this.selection = [];
       },
