@@ -135,7 +135,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     let resultObserver: Observable<RequestActionResponse>;
     this.onGoingActivity = (action === Action.Accept) ? Activity.Accepting : Activity.Rejecting;
     
-    const group_ids = this.selection.map((req: PendingRequest) => req.joining_user.group_id);
+    const group_ids = this.selection.map(req => req.joining_user.group_id);
 
     if (action === Action.Accept) {
       resultObserver = this.groupService.acceptJoinRequest(this.id, group_ids);
