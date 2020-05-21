@@ -1,7 +1,7 @@
 export interface RequestActionResponse {
     message: string;
     success: boolean;
-    data: Object;
+    data: Record<string, string>;
 
     error_text: string;
     errors: Object;
