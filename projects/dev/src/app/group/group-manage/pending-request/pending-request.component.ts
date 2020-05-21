@@ -36,7 +36,7 @@ export enum Action {
   providers: [MessageService],
 })
 export class PendingRequestComponent implements OnInit, OnChanges {
-  @Input() id;
+  @Input() id: string;
 
   Action = Action;
 
@@ -146,7 +146,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     resultObserver
     .pipe(
       tap((res: RequestActionResponse) => {
-        if (res.success === false || res.message !== "updated" || typeof res.data !== "object") {
+        if (res.success === false || res.message !== "updated" || !res.data) {
           throw "Unknown error";
         }
       })
