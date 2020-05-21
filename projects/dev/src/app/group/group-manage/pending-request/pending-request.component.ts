@@ -48,7 +48,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
   requests: PendingRequest[] = [];
   selection: PendingRequest[] = [];
   panel = [];
-  currentSort: string[] = GROUP_REQUESTS_API.defaultSort;
+  currentSort: string[] = [];
 
   onGoingActivity: Activity = Activity.None;
 
