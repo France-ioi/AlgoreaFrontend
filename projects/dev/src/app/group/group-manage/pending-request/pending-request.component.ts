@@ -48,10 +48,6 @@ export class PendingRequestComponent implements OnInit, OnChanges {
   requests: PendingRequest[] = [];
   selection: PendingRequest[] = [];
   panel = [];
-  multiSortMeta = [
-    { field: "at", order: -1 },
-    { field: "member_id", order: 1 },
-  ];
   currentSort: string[] = GROUP_REQUESTS_API.defaultSort;
 
   onGoingActivity: Activity = Activity.None;
@@ -150,7 +146,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     resultObserver
     .pipe(
       switchMap((res: RequestActionResponse) => {
-        if (res.success === true || res.message !== "updated" || typeof res.data !== "object") {
+        if (res.success === false || res.message !== "updated" || typeof res.data !== "object") {
           return throwError("Unknown error");
         } else {
           return of(res);
