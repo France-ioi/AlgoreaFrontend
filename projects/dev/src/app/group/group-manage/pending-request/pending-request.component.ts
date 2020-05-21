@@ -44,8 +44,8 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     { field: "joining_user.login", header: "LOGIN" },
     { field: "at", header: "REQUESTED ON" },
   ];
-  requests: PendingRequest[];
-  selection: PendingRequest[];
+  requests: PendingRequest[] = [];
+  selection: PendingRequest[] = [];
   panel = [];
   multiSortMeta = [
     { field: "at", order: -1 },
