@@ -41,8 +41,8 @@ export class GroupService {
   }
 
   getManagedRequests(
-    id,
-    sort = []
+    id: string,
+    sort: string[] = []
   ): Observable<PendingRequest[]> {
     let params = new HttpParams();
     if (sort.length > 0) {
@@ -91,7 +91,7 @@ export class GroupService {
       .pipe(catchError(this.handleError));
   }
 
-  acceptJoinRequest(id, group_ids): Observable<RequestActionResponse> {
+  acceptJoinRequest(id: string, group_ids: string[]): Observable<RequestActionResponse> {
     return this.http
       .post<RequestActionResponse>(`${this.baseGroupUrl}/${id}/join-requests/accept`, null, {
         params: {
@@ -101,7 +101,7 @@ export class GroupService {
       .pipe(catchError(this.handleError));
   }
 
-  rejectJoinRequest(id, group_ids): Observable<RequestActionResponse> {
+  rejectJoinRequest(id: string, group_ids: string[]): Observable<RequestActionResponse> {
     return this.http
       .post<RequestActionResponse>(`${this.baseGroupUrl}/${id}/join-requests/reject`, null, {
         params: {
