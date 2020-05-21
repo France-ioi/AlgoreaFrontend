@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TopNavComponent } from './top-nav.component';
+import { CoreModule } from 'core';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('TopNavComponent', () => {
   let component: TopNavComponent;
@@ -8,7 +10,11 @@ describe('TopNavComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ TopNavComponent ]
+      declarations: [ TopNavComponent ],
+      imports: [
+        CoreModule
+      ],
+      schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();
   }));

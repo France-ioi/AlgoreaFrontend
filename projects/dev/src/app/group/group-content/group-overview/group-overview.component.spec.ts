@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { GroupOverviewComponent } from './group-overview.component';
+import { CoreModule } from 'core';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('GroupOverviewComponent', () => {
   let component: GroupOverviewComponent;
@@ -8,7 +10,9 @@ describe('GroupOverviewComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ GroupOverviewComponent ]
+      imports: [CoreModule],
+      declarations: [ GroupOverviewComponent ],
+      schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();
   }));
