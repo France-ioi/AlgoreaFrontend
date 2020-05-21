@@ -91,7 +91,7 @@
               font-size: 1.2rem;
               cursor: pointer;
             "
-            [ngClass]="{disabled: selection.length === 0 || !isIdle()}"
+            [ngClass]="{disabled: !isIdle()}"
             (click)="onSelectAll($event)"
           >
             Select all
