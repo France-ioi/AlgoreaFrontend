@@ -28,16 +28,6 @@
               </div>
             </th>
             <th
-              *ngIf="col.field === 'member_id'"
-              [pSortableColumn]="col.field"
-              style="width: 5rem; background-color: #d3dbe7;"
-            >
-              <div class="header-container">
-                {{ col.header }}
-                <p-sortIcon [field]="col.field"></p-sortIcon>
-              </div>
-            </th>
-            <th
               *ngIf="col.field === 'joining_user.login'"
               [pSortableColumn]="col.field"
               style="background-color: #d3dbe7;"
@@ -61,9 +51,6 @@
             <p-tableCheckbox [value]="rowData" [disabled]="!isIdle()"></p-tableCheckbox>
           </td>
           <td *ngFor="let col of columns">
-            <ng-container *ngIf="col.field === 'member_id'">
-              {{ rowData.member_id }}
-            </ng-container>
             <ng-container *ngIf="col.field === 'at'">
               {{ rowData.at | date: "MM/d/y" }}
             </ng-container>

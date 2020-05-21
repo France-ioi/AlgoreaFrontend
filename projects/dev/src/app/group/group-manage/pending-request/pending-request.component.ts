@@ -41,7 +41,6 @@ export class PendingRequestComponent implements OnInit, OnChanges {
   Action = Action;  // Make the enum usable in the html template
 
   columns = [
-    { field: "member_id", header: "ID" },
     { field: "joining_user.login", header: "LOGIN" },
     { field: "at", header: "REQUESTED ON" },
   ];
