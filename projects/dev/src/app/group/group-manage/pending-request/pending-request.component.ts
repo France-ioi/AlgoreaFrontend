@@ -15,8 +15,8 @@ import {
 import { TOAST_LENGTH } from "../../../shared/constants/global";
 import * as _ from "lodash";
 import { RequestActionResponse } from '../../../shared/models/requet-action-response.model';
-import { Observable, throwError, of } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 export enum Activity {
   Accepting = "accept",
@@ -145,11 +145,9 @@ export class PendingRequestComponent implements OnInit, OnChanges {
 
     resultObserver
     .pipe(
-      switchMap((res: RequestActionResponse) => {
+      tap((res: RequestActionResponse) => {
         if (res.success === false || res.message !== "updated" || typeof res.data !== "object") {
-          return throwError("Unknown error");
-        } else {
-          return of(res);
+          throw "Unknown error";
         }
       })
     )
