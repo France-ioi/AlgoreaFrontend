@@ -182,7 +182,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
       meta.order === -1 ? `-${meta.field}` : meta.field
     );
 
-    if (!_.isEqual(_.sortBy(sortMeta), _.sortBy(this.currentSort))) {
+    if (!_.isEqual(sortMeta, this.currentSort)) {
       this.currentSort = sortMeta;
       this._reloadData();
     }
