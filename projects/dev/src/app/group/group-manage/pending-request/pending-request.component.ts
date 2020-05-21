@@ -19,14 +19,14 @@ import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
 export enum Activity {
-  Accepting = "accept",
-  Rejecting = "reject",
-  None = "none"
+  Accepting,
+  Rejecting,
+  None
 };
 
 export enum Action {
-  Accept = "accept",
-  Reject = "reject"
+  Accept,
+  Reject
 }
 
 @Component({
@@ -154,7 +154,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
       (res: RequestActionResponse) => {
         this._displayResponseToast(
           res,
-          action,
+          action === Action.Accept ? "accept" : "reject",
           action === Action.Accept ? "accepted" : "declined"
         );
         this._reloadData();
