@@ -59,8 +59,8 @@ export class PendingRequestComponent implements OnInit, OnChanges {
       });
   }
 
-  _displayResponseToast(result: RequestActionResponse, verb: string, msg: string) {
-    const succ = _.countBy(result.data, (status: string) => {
+  _displayResponseToast(data: Record<string, string>, verb: string, msg: string) {
+    const succ = _.countBy(data, (status: string) => {
       return ["success", "unchanged"].includes(status);
     });
 
@@ -153,7 +153,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     .subscribe(
       (res: RequestActionResponse) => {
         this._displayResponseToast(
-          res,
+          res.data,
           action === Action.Accept ? "accept" : "reject",
           action === Action.Accept ? "accepted" : "declined"
         );
