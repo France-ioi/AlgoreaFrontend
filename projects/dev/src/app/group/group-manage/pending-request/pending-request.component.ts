@@ -38,7 +38,7 @@ export enum Action {
 export class PendingRequestComponent implements OnInit, OnChanges {
   @Input() id: string;
 
-  Action = Action;
+  Action = Action;  // Make the enum usable in the html template
 
   columns = [
     { field: "member_id", header: "ID" },
