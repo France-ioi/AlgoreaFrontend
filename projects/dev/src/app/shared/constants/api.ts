@@ -1,10 +1,4 @@
 export const DEFAULT_LIMIT = 500;
-export const GROUP_MEMBERS_API = {
-  sort: ["-member_since", "id"],
-};
-export const GROUP_REQUESTS_API = {
-  defaultSort: ["-at", "member_id"],
-};
 export const ERROR_MESSAGE = {
   fail: "The action cannot be executed. If the problem persists, contact us."
 };

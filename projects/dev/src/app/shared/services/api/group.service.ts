@@ -4,14 +4,13 @@ import {
   HttpClient,
   HttpErrorResponse,
   HttpHeaders,
+  HttpParams,
 } from "@angular/common/http";
 import { Observable, Subject, throwError } from "rxjs";
 import { catchError, map } from "rxjs/operators";
 
 import {
   DEFAULT_LIMIT,
-  GROUP_MEMBERS_API,
-  GROUP_REQUESTS_API,
 } from "../../constants/api";
 
 import { Group } from "../../models/group.model";
@@ -45,15 +44,13 @@ export class GroupService {
     id,
     sort = []
   ): Observable<PendingRequest[]> {
-    let param = {};
+    let params = new HttpParams();
     if (sort.length > 0) {
-      param = {
-        sort: sort.join(",")
-      };
+      params = params.set('sort', sort.join(","));
     }
     return this.http
       .get<PendingRequest[]>(`${this.baseGroupUrl}/${id}/requests`, {
-        params: param,
+        params,
       })
       .pipe(
         map(
@@ -67,7 +64,7 @@ export class GroupService {
 
   getGroupMembers(
     id,
-    sort = GROUP_MEMBERS_API.sort,
+    sort = [],
     limit = DEFAULT_LIMIT
   ): Observable<Member[]> {
     this.http

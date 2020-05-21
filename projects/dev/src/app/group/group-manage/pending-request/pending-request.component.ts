@@ -10,7 +10,7 @@ import { PendingRequest } from "../../../shared/models/pending-request.model";
 import { SortEvent } from "primeng/api/sortevent";
 import { MessageService } from "primeng/api";
 import {
-  ERROR_MESSAGE, GROUP_REQUESTS_API,
+  ERROR_MESSAGE,
 } from "../../../shared/constants/api";
 import { TOAST_LENGTH } from "../../../shared/constants/global";
 import * as _ from "lodash";
