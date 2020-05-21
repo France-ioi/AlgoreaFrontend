@@ -16,7 +16,6 @@ import { TOAST_LENGTH } from "../../../shared/constants/global";
 import * as _ from "lodash";
 import { RequestActionResponse } from '../../../shared/models/requet-action-response.model';
 import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
 
 export enum Activity {
   Accepting,
@@ -143,13 +142,6 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     }
 
     resultObserver
-    .pipe(
-      tap((res: RequestActionResponse) => {
-        if (res.success === false || res.message !== "updated" || !res.data) {
-          throw "Unknown error";
-        }
-      })
-    )
     .subscribe(
       (res: RequestActionResponse) => {
         this._displayResponseToast(

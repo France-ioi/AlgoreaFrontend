@@ -7,7 +7,7 @@ import {
   HttpParams,
 } from "@angular/common/http";
 import { Observable, Subject, throwError } from "rxjs";
-import { catchError, map } from "rxjs/operators";
+import { catchError, map, tap } from "rxjs/operators";
 
 import {
   DEFAULT_LIMIT,
@@ -98,7 +98,10 @@ export class GroupService {
           group_ids: group_ids.join(","),
         },
       })
-      .pipe(catchError(this.handleError));
+      .pipe(
+        tap(this.handleRequestActionResponse),
+        catchError(this.handleError)
+      );
   }
 
   rejectJoinRequest(id: string, group_ids: string[]): Observable<RequestActionResponse> {
@@ -108,7 +111,10 @@ export class GroupService {
           group_ids: group_ids.join(","),
         }
       })
-      .pipe(catchError(this.handleError));
+      .pipe(
+        tap(this.handleRequestActionResponse),
+        catchError(this.handleError)
+      );
   }
 
   getPendingInvitations(
@@ -161,6 +167,12 @@ export class GroupService {
         },
       })
       .pipe(catchError(this.handleError));
+  }
+
+  private handleRequestActionResponse(result: RequestActionResponse) {
+    if (result.success === false || result.message !== "updated" || typeof result.data === "object") {
+      throw "Unknown error";
+    }
   }
 
   private handleError(error: HttpErrorResponse) {
