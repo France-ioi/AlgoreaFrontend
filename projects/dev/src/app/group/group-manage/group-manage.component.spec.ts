@@ -1,9 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { GroupManageComponent } from './group-manage.component';
-import { GroupHeaderComponent } from '../group-header/group-header.component';
-import { PendingRequestComponent } from './pending-request/pending-request.component';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { of } from 'rxjs';
 
 describe('GroupManageComponent', () => {
   let component: GroupManageComponent;
@@ -11,7 +12,18 @@ describe('GroupManageComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ GroupManageComponent, GroupHeaderComponent, PendingRequestComponent ],
+      imports: [
+        HttpClientTestingModule
+      ],
+      declarations: [ GroupManageComponent ],
+      providers: [
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            params: of({id: 50})
+          }
+        },
+      ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();

@@ -1,7 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { LeftNavComponent } from './left-nav.component';
-import { TopNavComponent } from '../top-nav/top-nav.component';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('LeftNavComponent', () => {
@@ -10,7 +9,7 @@ describe('LeftNavComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ LeftNavComponent, TopNavComponent ],
+      declarations: [ LeftNavComponent ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();
