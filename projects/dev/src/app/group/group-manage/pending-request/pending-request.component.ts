@@ -87,6 +87,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     }
   }
 
+  // tslint:disable-next-line
   _processRequestError(_err) {
     this.messageService.add({
       severity: 'error',
@@ -120,6 +121,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     });
   }
 
+  // tslint:disable-next-line
   ngOnChanges(_changes: SimpleChanges) {
     this.selection = [];
     this._reloadData();
@@ -133,12 +135,12 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     let resultObserver: Observable<RequestActionResponse>;
     this.onGoingActivity = (action === Action.Accept) ? Activity.Accepting : Activity.Rejecting;
 
-    const group_ids = this.selection.map(req => req.joining_user.group_id);
+    const groupIds = this.selection.map(req => req.joining_user.group_id);
 
     if (action === Action.Accept) {
-      resultObserver = this.groupService.acceptJoinRequest(this.id, group_ids);
+      resultObserver = this.groupService.acceptJoinRequest(this.id, groupIds);
     } else {
-      resultObserver = this.groupService.rejectJoinRequest(this.id, group_ids);
+      resultObserver = this.groupService.rejectJoinRequest(this.id, groupIds);
     }
 
     resultObserver
@@ -160,6 +162,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     );
   }
 
+  // tslint:disable-next-line
   onSelectAll(_event) {
     if (this.selection.length === this.requests.length) {
       this.selection = [];

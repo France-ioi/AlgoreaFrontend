@@ -8,7 +8,7 @@ import { GroupService } from '../../../shared/services/api/group.service';
 })
 export class GroupOverviewComponent implements OnInit {
 
-  @Input() group_id;
+  @Input() id;
   @Input() description;
 
   tasks = [];

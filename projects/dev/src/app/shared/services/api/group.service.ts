@@ -91,11 +91,11 @@ export class GroupService {
       .pipe(catchError(this.handleError));
   }
 
-  acceptJoinRequest(id: string, group_ids: string[]): Observable<RequestActionResponse> {
+  acceptJoinRequest(id: string, groupIds: string[]): Observable<RequestActionResponse> {
     return this.http
       .post<RequestActionResponse>(`${this.baseGroupUrl}/${id}/join-requests/accept`, null, {
         params: {
-          group_ids: group_ids.join(','),
+          group_ids: groupIds.join(','),
         },
       })
       .pipe(
@@ -104,11 +104,11 @@ export class GroupService {
       );
   }
 
-  rejectJoinRequest(id: string, group_ids: string[]): Observable<RequestActionResponse> {
+  rejectJoinRequest(id: string, groupIds: string[]): Observable<RequestActionResponse> {
     return this.http
       .post<RequestActionResponse>(`${this.baseGroupUrl}/${id}/join-requests/reject`, null, {
         params: {
-          group_ids: group_ids.join(','),
+          group_ids: groupIds.join(','),
         }
       })
       .pipe(

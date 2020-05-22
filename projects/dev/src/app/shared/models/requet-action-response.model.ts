@@ -4,5 +4,5 @@ export interface RequestActionResponse {
     data: Record<string, string>;
 
     error_text: string;
-    errors: Object;
+    errors: object;
 }
