@@ -60,20 +60,15 @@ export class GroupManageComponent implements OnInit {
       this.groupId = routeParams.id;
       console.log(this.groupId);
 
-      this.groupService
-        .getManagedGroup(this.groupId)
-        .subscribe((group: Group) => {
-          this.groupdata = {
-            ID: group.id,
-            name: group.name,
-            type: group.type,
-            grades: [group.grade],
-            date: group.created_at,
-          };
-        });
-
-      this.groupService.getGroupMembers(51).subscribe((members: Member[]) => {
-        this._setMemberData(members);
+      this.groupService.getManagedGroup(this.groupId).subscribe((group: Group) => {
+        this.groupdata = {
+          ID: group.id,
+          name: group.name,
+          type: group.type,
+          grades: [group.grade],
+          date: group.created_at,
+          description: group.description
+        };
       });
     });
 
@@ -82,9 +77,6 @@ export class GroupManageComponent implements OnInit {
     });
   }
 
-  onAcceptRequest(e) {}
-
-  onRejectRequest(e) {}
-
-  onExpandWidth(e) {}
+  onExpandWidth(e) {
+  }
 }

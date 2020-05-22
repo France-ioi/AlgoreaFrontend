@@ -1,0 +1,113 @@
+version: 2.1
+
+# custom vars:
+var_node: &node_image
+  - image: circleci/node:12.16
+
+
+orbs:
+  aws-s3: circleci/aws-s3@1.0.15
+
+
+jobs:
+  # deps has to be run before the other jobs and basically run "npm install" and cache it
+  deps:
+    docker: *node_image
+    steps:
+      - checkout
+      # cache is used between builds, we use the cache if the lock file has not changed
+      - restore_cache: &CACHEKEY
+          key: deps-{{ checksum "package-lock.json" }}
+      - run: npm install
+      # workspace persistence is used between jobs of the same builds (here includes the code and node modules)
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - "*"
+      - save_cache:
+          <<: *CACHEKEY
+          paths:
+            - ./node_modules
+
+  lint:
+    docker: *node_image
+    steps:
+      - attach_workspace:
+          at: ./
+      - run: ./node_modules/.bin/ng lint
+
+  build:
+    docker: *node_image
+    steps:
+      - attach_workspace:
+          at: ./
+      - run: ./node_modules/.bin/ng build core --prod
+      - run: ./node_modules/.bin/ng build --configuration ci --base-href ./
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - dist/algorea
+
+  deploy-branch:
+    docker:
+      - image: 'circleci/python:2.7'
+    environment:
+      AWS_REGION: eu-central-1
+      DST: s3://algorea-static/branch/<< pipeline.git.branch >>
+    steps: &deploy_steps
+      - attach_workspace:
+          at: ./
+      - aws-s3/sync:
+          from: ./dist/algorea/
+          to: $DST
+          overwrite: false
+          arguments: >-
+            --acl public-read
+            --exclude "index.html"
+            --exclude "favicon.ico"
+            --cache-control 'max-age=86400'
+      - aws-s3/copy:
+          from: ./dist/algorea/index.html
+          to: $DST/
+          arguments: >-
+            --acl public-read
+            --cache-control 'max-age=10'
+      - aws-s3/copy:
+          from: ./dist/algorea/favicon.ico
+          to: $DST/
+          arguments: >-
+            --acl public-read
+            --cache-control 'max-age=10'
+
+  deploy-master:
+    docker:
+      - image: 'circleci/python:2.7'
+    environment:
+      AWS_REGION: eu-central-1
+      DST: s3://algorea-static/
+    steps: *deploy_steps
+
+workflows:
+  version: 2
+  checks:
+    jobs:
+      - deps
+      - lint:
+          requires:
+          - deps
+  deploy:
+    jobs:
+      - deps
+      - build:
+          requires:
+            - deps
+      - deploy-branch:
+          requires:
+            - build
+      - deploy-master:
+          filters:
+            branches:
+              only: master
+          requires:
+            - build
+

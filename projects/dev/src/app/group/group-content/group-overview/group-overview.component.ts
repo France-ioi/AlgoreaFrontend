@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { GroupService } from '../../../shared/services/api/group.service';
 
 @Component({
   selector: 'app-group-overview',
@@ -7,14 +8,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class GroupOverviewComponent implements OnInit {
 
-  griddata = [
-    {
-      task: 'Espion etranger',
-      chapter: 'Chapter 1',
-      grade: 'Terminale',
-      date: new Date(2018, 4, 23)
-    }
-  ];
+  @Input() id;
+  @Input() description;
+
+  tasks = [];
 
   columns = [
     { field: 'task', header: 'Task' },
@@ -26,7 +23,9 @@ export class GroupOverviewComponent implements OnInit {
   panels = [
   ];
 
-  constructor() { }
+  constructor(
+    private groupService: GroupService
+  ) { }
 
   ngOnInit() {
     this.panels.push(
@@ -35,6 +34,7 @@ export class GroupOverviewComponent implements OnInit {
         columns: this.columns
       }
     );
+
   }
 
   onExpandWidth(e) {

@@ -18,6 +18,8 @@ import { SliderModule } from 'primeng/slider';
 import { ListboxModule } from 'primeng/listbox';
 import { MessagesModule } from 'primeng/messages';
 import { TabViewModule } from 'primeng/tabview';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { ToastModule } from 'primeng/toast';
 
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -172,6 +174,8 @@ import { SearchTabComponent } from './search-tab/search-tab.component';
     ListboxModule,
     MessagesModule,
     TabViewModule,
+    ProgressSpinnerModule,
+    ToastModule,
 
     MatIconModule,
     MatNativeDateModule,
@@ -242,6 +246,9 @@ import { SearchTabComponent } from './search-tab/search-tab.component';
     AccessEditDialogComponent,
     SkillActivityTabsComponent,
     SearchTabComponent,
+    TableModule,
+    ProgressSpinnerModule,
+    ToastModule
   ],
   providers: [
     { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: true } },
