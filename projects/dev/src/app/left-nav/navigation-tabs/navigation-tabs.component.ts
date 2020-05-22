@@ -37,7 +37,6 @@ export class NavigationTabsComponent implements OnInit, OnChanges {
     private ngZone: NgZone,
     private statusService: StatusService,
     private locationService: Location,
-    private router: Router
   ) {
   }
 

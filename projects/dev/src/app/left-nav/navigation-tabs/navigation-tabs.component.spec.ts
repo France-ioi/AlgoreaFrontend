@@ -3,14 +3,25 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NavigationTabsComponent } from './navigation-tabs.component';
 import { CoreModule } from 'core';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('NavigationTabsComponent', () => {
   let component: NavigationTabsComponent;
   let fixture: ComponentFixture<NavigationTabsComponent>;
 
   beforeEach(async(() => {
+    const locationSpy = jasmine.createSpyObj('Location', ['back']);
     TestBed.configureTestingModule({
-      imports: [CoreModule],
+      imports: [
+        CoreModule,
+        RouterTestingModule
+      ],
+      providers: [
+        {
+          provide: Location,
+          useClass: locationSpy
+        }
+      ],
       declarations: [ NavigationTabsComponent ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })
