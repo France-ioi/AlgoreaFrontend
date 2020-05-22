@@ -23,9 +23,7 @@ export class GroupOverviewComponent implements OnInit {
   panels = [
   ];
 
-  constructor(
-    private groupService: GroupService
-  ) { }
+  constructor() { }
 
   ngOnInit() {
     this.panels.push(
