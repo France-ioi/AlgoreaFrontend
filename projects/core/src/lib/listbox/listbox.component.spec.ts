@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ListboxComponent } from './listbox.component';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('ListboxComponent', () => {
   let component: ListboxComponent;
@@ -8,7 +9,8 @@ describe('ListboxComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ListboxComponent ]
+      declarations: [ ListboxComponent ],
+      schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();
   }));

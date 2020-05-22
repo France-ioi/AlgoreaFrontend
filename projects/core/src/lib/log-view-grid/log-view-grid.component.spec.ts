@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { LogViewGridComponent } from './log-view-grid.component';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('LogViewGridComponent', () => {
   let component: LogViewGridComponent;
@@ -8,7 +9,8 @@ describe('LogViewGridComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ LogViewGridComponent ]
+      declarations: [ LogViewGridComponent ],
+      schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();
   }));

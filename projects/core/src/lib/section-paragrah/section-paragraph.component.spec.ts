@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SectionParagraphComponent } from './section-paragraph.component';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('SectionParagrahComponent', () => {
   let component: SectionParagraphComponent;
@@ -8,7 +9,8 @@ describe('SectionParagrahComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SectionParagraphComponent ]
+      declarations: [ SectionParagraphComponent ],
+      schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();
   }));

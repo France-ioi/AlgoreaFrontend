@@ -57,7 +57,6 @@ export class GridComponent implements OnInit, OnChanges {
 
   @Input() scrollWhenExpanded = false;
   @Input() scrollable;
-  @Input() scrollHeight;
 
   @Input() selectionMode;
   @Input() responsive;
