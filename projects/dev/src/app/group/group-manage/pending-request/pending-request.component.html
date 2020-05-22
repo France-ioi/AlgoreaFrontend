@@ -4,23 +4,14 @@
   label="Pending requests"
   [collapsible]="true"
 >
-  <ng-template #headerTemplate>
-    <div style="flex: 1; flex-direction: row-reverse; display: flex;">
-      <!-- <lib-selection
-        [items]="groupSwitch"
-        style="width: 25rem;"
-      ></lib-selection> -->
-    </div>
-  </ng-template>
   <div class="pending-request-container">
     <lib-grid
       [selectedColumns]="columns"
       [columns]="columns"
       [data]="requests"
       [groupInfo]="panel"
-      [multiSortMeta]="multiSortMeta"
+      [(selection)]="selection"
       (onSort)="onCustomSort($event)"
-      (expandWholeWidth)="onExpandWidth($event)"
     >
       <ng-template #headerTemplate let-columns>
         <tr>
@@ -30,16 +21,6 @@
               *ngIf="col.field === 'at'"
               [pSortableColumn]="col.field"
               style="width: 13.3333rem; background-color: #d3dbe7;"
-            >
-              <div class="header-container">
-                {{ col.header }}
-                <p-sortIcon [field]="col.field"></p-sortIcon>
-              </div>
-            </th>
-            <th
-              *ngIf="col.field === 'member_id'"
-              [pSortableColumn]="col.field"
-              style="width: 5rem; background-color: #d3dbe7;"
             >
               <div class="header-container">
                 {{ col.header }}
@@ -67,12 +48,9 @@
       >
         <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
           <td style="width: 3.3333rem;">
-            <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+            <p-tableCheckbox [value]="rowData" [disabled]="!isIdle()"></p-tableCheckbox>
           </td>
           <td *ngFor="let col of columns">
-            <ng-container *ngIf="col.field === 'member_id'">
-              {{ rowData.member_id }}
-            </ng-container>
             <ng-container *ngIf="col.field === 'at'">
               {{ rowData.at | date: "MM/d/y" }}
             </ng-container>
@@ -83,10 +61,17 @@
                   style="width: 7rem; height: 7rem;"
                 /> -->
                 <div class="user-info">
-                  <span class="user-info-name">{{ rowData[col.field] }}</span>
-                  <span class="user-info-activity" *ngIf="rowData.grade"
-                    ><em>Grade: {{ rowData.grade }}</em></span
-                  >
+                  <span class="user-info-name">
+                    <ng-container *ngIf="!rowData.joining_user.first_name && !rowData.joining_user.last_name; else fullInfo">
+                      {{ rowData.joining_user.login }}
+                    </ng-container>
+                    <ng-template #fullInfo>
+                      {{ rowData.joining_user.first_name || "" }} {{ rowData.joining_user.last_name || "" }} ({{ rowData.joining_user.login || "" }})
+                    </ng-template>
+                  </span>
+                  <span class="user-info-activity" *ngIf="rowData.grade">
+                    <em>Grade: {{ rowData.joining_user.grade }}</em>
+                  </span>
                   <!-- <div class="user-info-content">
                     {{ rowData.user.content }}
                   </div> -->
@@ -98,25 +83,36 @@
       </ng-template>
       <ng-template #summaryTemplate let-table>
         <div style="text-align: left; display: flex; align-items: center;">
-          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+          <p-tableHeaderCheckbox [disabled]="!isIdle()"></p-tableHeaderCheckbox>
           <span
             style="
               margin-left: 2.1rem;
               color: #9b9b9b;
-              flex: 1;
               font-size: 1.2rem;
+              cursor: pointer;
             "
+            [ngClass]="{disabled: !isIdle()}"
+            (click)="onSelectAll($event)"
           >
             Select all
           </span>
+          <span style="flex: 1;"></span>
           <div class="req-tools">
-            <span class="accept" (click)="onClickAccept($event)">
+            <span class="accept" [ngClass]="{disabled: selection.length === 0 || !isIdle()}" (click)="onAcceptOrReject(Action.Accept)">
               <span>Accept</span>
-              <i class="fa fa-check"></i>
+              <ng-container *ngIf="isAccepting()">
+                <p-progressSpinner></p-progressSpinner>
+              </ng-container>
+              <ng-container *ngIf="!isAccepting()"><i class="fa fa-check"></i></ng-container>
             </span>
-            <span class="reject" (click)="onClickReject($event)">
+            <span class="reject" [ngClass]="{disabled: selection.length === 0 || !isIdle()}" (click)="onAcceptOrReject(Action.Reject)">
               <span>Reject</span>
-              <i class="fa fa-times"></i>
+              <ng-container *ngIf="isRejecting()">
+                <p-progressSpinner></p-progressSpinner>
+              </ng-container>
+              <ng-container *ngIf="!isRejecting()">
+                <i class="fa fa-times"></i>
+              </ng-container>
             </span>
           </div>
         </div>
@@ -124,3 +120,4 @@
     </lib-grid>
   </div>
 </lib-section-paragraph>
+<p-toast></p-toast>

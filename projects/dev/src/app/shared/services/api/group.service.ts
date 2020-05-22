@@ -1,13 +1,16 @@
 import { Injectable } from '@angular/core';
-import { environment } from 'src/environments/environment';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { environment } from '../../../../environments/environment';
+import {
+  HttpClient,
+  HttpErrorResponse,
+  HttpHeaders,
+  HttpParams,
+} from '@angular/common/http';
 import { Observable, Subject, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
 
 import {
   DEFAULT_LIMIT,
-  GROUP_MEMBERS_API,
-  GROUP_REQUESTS_API,
 } from '../../constants/api';
 
 import { Group } from '../../models/group.model';
@@ -15,6 +18,7 @@ import { PendingRequest } from '../../models/pending-request.model';
 import { Member } from '../../models/member.model';
 import { MembershipHistory } from '../../models/membership-history.model';
 import { GroupMembership } from '../../models/group-membership.model';
+import { RequestActionResponse } from '../../models/requet-action-response.model';
 
 @Injectable({
   providedIn: 'root',
@@ -24,7 +28,6 @@ export class GroupService {
   private baseCurrentUserUrl = `${environment.apiUrl}/current-user`;
 
   private groupList = new Subject<Group>();
-  private requestList = new Subject<PendingRequest[]>();
   private memberList = new Subject<Member[]>();
   private membershipHistoryList = new Subject<MembershipHistory[]>();
   private joinedGroupList = new Subject<GroupMembership[]>();
@@ -32,40 +35,36 @@ export class GroupService {
   constructor(private http: HttpClient) {}
 
   getManagedGroup(id): Observable<Group> {
-    this.http
-      .get(`${this.baseGroupUrl}/${id}`)
-      .subscribe(
-        (group: Group) => this.groupList.next(group),
-        this.handleError
-      );
-
-    return this.groupList;
+    return this.http
+      .get<Group>(`${this.baseGroupUrl}/${id}`)
+      .pipe(catchError(this.handleError));
   }
 
   getManagedRequests(
-    id,
-    sort = GROUP_REQUESTS_API.sort,
-    limit = DEFAULT_LIMIT
+    id: string,
+    sort: string[] = []
   ): Observable<PendingRequest[]> {
-    this.http
-      .get(`${this.baseGroupUrl}/${id}/requests`, {
-        params: {
-          sort: sort.join(','),
-        },
+    let params = new HttpParams();
+    if (sort.length > 0) {
+      params = params.set('sort', sort.join(','));
+    }
+    return this.http
+      .get<PendingRequest[]>(`${this.baseGroupUrl}/${id}/requests`, {
+        params,
       })
-      .subscribe((requests: PendingRequest[]) => {
-        const newReqs = requests.filter(
-          (req: PendingRequest) => req.action === 'join_request_created'
-        );
-        this.requestList.next(newReqs);
-      }, this.handleError);
-
-    return this.requestList;
+      .pipe(
+        map(
+          (reqs: PendingRequest[]) => reqs.filter(
+            (req: PendingRequest) => req.action === 'join_request_created'
+          )
+        ),
+        catchError(this.handleError)
+      );
   }
 
   getGroupMembers(
     id,
-    sort = GROUP_MEMBERS_API.sort,
+    sort = [],
     limit = DEFAULT_LIMIT
   ): Observable<Member[]> {
     this.http
@@ -92,24 +91,30 @@ export class GroupService {
       .pipe(catchError(this.handleError));
   }
 
-  acceptJoinRequest(id, groupIds) {
+  acceptJoinRequest(id: string, groupIds: string[]): Observable<RequestActionResponse> {
     return this.http
-      .post(`${this.baseGroupUrl}/${id}/join-requests/accept`, null, {
+      .post<RequestActionResponse>(`${this.baseGroupUrl}/${id}/join-requests/accept`, null, {
         params: {
           group_ids: groupIds.join(','),
         },
       })
-      .pipe(catchError(this.handleError));
+      .pipe(
+        tap(this.handleRequestActionResponse),
+        catchError(this.handleError)
+      );
   }
 
-  rejectJoinRequest(id, groupIds) {
+  rejectJoinRequest(id: string, groupIds: string[]): Observable<RequestActionResponse> {
     return this.http
-      .post(`${this.baseGroupUrl}/${id}/join-requests/reject`, null, {
+      .post<RequestActionResponse>(`${this.baseGroupUrl}/${id}/join-requests/reject`, null, {
         params: {
           group_ids: groupIds.join(','),
-        },
+        }
       })
-      .pipe(catchError(this.handleError));
+      .pipe(
+        tap(this.handleRequestActionResponse),
+        catchError(this.handleError)
+      );
   }
 
   getPendingInvitations(
@@ -164,12 +169,18 @@ export class GroupService {
       .pipe(catchError(this.handleError));
   }
 
+  private handleRequestActionResponse(result: RequestActionResponse) {
+    if (result.success === false || result.message !== 'updated' || typeof result.data !== 'object') {
+      throw new Error('Unknown error');
+    }
+  }
+
   private handleError(error: HttpErrorResponse) {
     if (error.error instanceof ErrorEvent) {
       console.error('An error occurred:', error.error.message);
     } else {
       console.error(
-        `Backend returned code ${error.status}, ` + `body was: ${error.error}`
+        `Backend returned code ${error.status}, ` + `body was`, error.error
       );
     }
 

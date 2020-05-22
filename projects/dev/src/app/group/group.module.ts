@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { TableModule } from 'primeng/table';
 import { CoreModule } from 'core';
 
 import { GroupRoutingModule } from './group-routing.module';
@@ -22,6 +21,10 @@ import { PendingRequestComponent } from './group-manage/pending-request/pending-
     GroupManageComponent,
     PendingRequestComponent,
   ],
-  imports: [CommonModule, GroupRoutingModule, TableModule, CoreModule],
+  imports: [
+    CommonModule,
+    GroupRoutingModule,
+    CoreModule,
+  ],
 })
 export class GroupModule {}
