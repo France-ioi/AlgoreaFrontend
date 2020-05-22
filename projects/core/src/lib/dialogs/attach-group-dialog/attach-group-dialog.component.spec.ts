@@ -19,9 +19,9 @@ describe('AttachGroupDialogComponent', () => {
           provide: MatDialogRef,
           useValue: {}
         },
-        { 
-          provide: MAT_DIALOG_DATA, 
-          useValue: {} 
+        {
+          provide: MAT_DIALOG_DATA,
+          useValue: {}
         }
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
