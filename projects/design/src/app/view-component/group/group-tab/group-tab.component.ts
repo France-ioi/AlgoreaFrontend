@@ -43,7 +43,7 @@ export class GroupTabComponent implements OnInit {
           name: 'Epreuves',
           columns: this.columns
         }
-      ]
+      ];
     });
     this.nodeService.getFiles().then(res => {
       this.trees = res;

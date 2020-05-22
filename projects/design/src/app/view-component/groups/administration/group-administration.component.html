@@ -1,5 +1,5 @@
-<app-section icon="fa fa-lock" label="Administrators of this group">
-  <app-grid
+<lib-section icon="fa fa-lock" label="Administrators of this group">
+  <lib-grid
     [selectedColumns]="cols"
     [columns]="cols"
     [data]="roles"
@@ -12,10 +12,10 @@
       <tr style="border: none;">
         <th style="width: 5rem; max-width: 5rem;"></th>
         <th style="width: 160px; transform: none;">
-          <app-grid-gear
+          <lib-grid-gear
             [secondary]="true"
             (commentChange)="onCommentChanged($event)"
-          ></app-grid-gear>
+          ></lib-grid-gear>
         </th>
         <th *ngIf="showComment" style="width: 160px;">
           <div class="slanted-header">
@@ -81,10 +81,10 @@
           <td *ngIf="col.field === 'can_manage'" style="min-width: 110px;">
             <div class="can-manage">
               <span>memeberships</span>
-              <app-progress-level
+              <lib-progress-level
                 *ngIf="rowData.can_manage.progress"
                 [filled]="rowData.can_manage.value"
-              ></app-progress-level>
+              ></lib-progress-level>
               <span *ngIf="!rowData.can_manage.progress">{{
                 rowData.can_manage.name
               }}</span>
@@ -129,13 +129,13 @@
         </div>
       </div>
     </ng-template>
-  </app-grid>
+  </lib-grid>
   <div class="add-manager-button-wrapper">
     <span class="tri-tag"></span>
-    <app-button
+    <lib-button
       icon="fa fa-user-plus"
       label="Add manager"
       class="ui-button-rounded"
-    ></app-button>
+    ></lib-button>
   </div>
-</app-section>
+</lib-section>

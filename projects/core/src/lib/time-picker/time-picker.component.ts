@@ -1,33 +1,27 @@
 import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
-  selector: 'app-time-picker',
+  selector: 'lib-time-picker',
   templateUrl: './time-picker.component.html',
-  styleUrls: ['./time-picker.component.scss']
+  styleUrls: ['./time-picker.component.scss'],
 })
 export class TimePickerComponent implements OnInit {
-
   @Input() time = 30;
   @Input() status;
 
-  _prev;
+  prev;
 
-  constructor() { 
-  }
+  constructor() {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   timeChange(e) {
-    console.log(e);
-    console.log(this.time);
-    this._prev = this.time;
+    this.prev = this.time;
   }
 
   timeChanged(e) {
     if (this.time > 999) {
-      this.time = this._prev;
+      this.time = this.prev;
     }
   }
-
 }

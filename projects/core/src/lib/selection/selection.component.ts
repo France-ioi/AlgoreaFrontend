@@ -1,12 +1,11 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
-  selector: 'app-selection',
+  selector: 'lib-selection',
   templateUrl: './selection.component.html',
-  styleUrls: ['./selection.component.scss']
+  styleUrls: ['./selection.component.scss'],
 })
 export class SelectionComponent implements OnInit {
-
   @Input() type: 'rounded' | 'square' = 'rounded';
   @Input() items;
   @Input() selected = 0;
@@ -14,14 +13,12 @@ export class SelectionComponent implements OnInit {
 
   @Output() onChange = new EventEmitter<any>();
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   itemChanged(e, index) {
     this.selected = index;
     this.onChange.emit(index);
   }
-
 }

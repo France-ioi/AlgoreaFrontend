@@ -1,12 +1,19 @@
-import { Component, OnInit, Input, ViewChild, ElementRef, Output, EventEmitter } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  ViewChild,
+  ElementRef,
+  Output,
+  EventEmitter,
+} from '@angular/core';
 
 @Component({
-  selector: 'app-slider',
+  selector: 'lib-slider',
   templateUrl: './slider.component.html',
-  styleUrls: ['./slider.component.scss']
+  styleUrls: ['./slider.component.scss'],
 })
 export class SliderComponent implements OnInit {
-
   @Input() ranges;
   @Input() min = 0;
   @Input() max = 100;
@@ -18,22 +25,21 @@ export class SliderComponent implements OnInit {
   posStart;
   posEnd;
 
-  constructor() { }
+  constructor() {}
 
   ngOnInit() {
-    this.posStart = this.ranges[0] * 100 / this.max;
-    this.posEnd = this.ranges[1] * 100 / this.max;
-    console.log(this.max);
+    this.posStart = (this.ranges[0] * 100) / this.max;
+    this.posEnd = (this.ranges[1] * 100) / this.max;
   }
 
   handleChange(e) {
-    var handles = this.slider.nativeElement.querySelectorAll('.ui-slider-handle');
+    const handles = this.slider.nativeElement.querySelectorAll(
+      '.ui-slider-handle'
+    );
 
-    console.log(e);
     this.posStart = parseFloat(handles[0].style.left);
     this.posEnd = parseFloat(handles[1].style.left);
 
     this.onChange.emit(e);
   }
-
 }

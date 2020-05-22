@@ -1,55 +1,55 @@
-<app-section icon="fa fa-lock" label="Group settings">
+<lib-section icon="fa fa-lock" label="Group settings">
   <div class="form-item-view">
     <span class="form-item-label">Associated activity</span>
     <div class="form-item-control">
-      <app-activity-picker [trees]="trees" class="stretch"></app-activity-picker>
+      <lib-activity-picker [trees]="trees" class="stretch"></lib-activity-picker>
     </div>
   </div>
   <div class="form-item-view">
     <span class="form-item-label">This activity is a contest. Start it immediately when the code is entered</span>
     <div class="form-item-control">
-      <app-switch mode="white"></app-switch>
+      <lib-switch mode="white"></lib-switch>
     </div>
   </div>
   <div class="form-item-view">
     <span class="form-item-label">Associated skill</span>
     <div class="form-item-control">
-      <app-activity-picker [trees]="trees" selected="Select a skill" class="stretch"></app-activity-picker>
+      <lib-activity-picker [trees]="trees" selected="Select a skill" class="stretch"></lib-activity-picker>
     </div>
   </div>
-</app-section>
-<app-section icon="fa fa-shield-alt" label="Administrator access">
+</lib-section>
+<lib-section icon="fa fa-shield-alt" label="Administrator access">
   <p class="pick-list-header">Select information that administrators can access about the group members</p>
-  <app-pick-list [list]="pickListData" (onLock)="onLockDrop($event)" (onShowDate)="onShowDateEvent($event)"></app-pick-list>
+  <lib-pick-list [list]="pickListData" (onLock)="onLockDrop($event)" (onShowDate)="onShowDateEvent($event)"></lib-pick-list>
   <p *ngIf="showPickListError" class="pick-list-error">You are not allowed to drop the "Lock into group" item into the "Recommended" field list.</p>
   <div *ngIf="showLockDate" class="form-item-view">
     <span class="form-item-label left-control">Members of this group can't leave it until</span>
     <div class="form-item-control left-control">
-      <app-date-picker></app-date-picker>
+      <lib-date-picker></lib-date-picker>
     </div>
   </div>
-</app-section>
-<app-section icon="fa fa-shield-alt" label="Other members access">
+</lib-section>
+<lib-section icon="fa fa-shield-alt" label="Other members access">
   <p class="pick-list-header">Select information that group memebers can access about other group members</p>
-  <app-pick-list [list]="memberPickListData"></app-pick-list>
-</app-section>
-<app-section icon="fa fa-envelope" label="Notifications for this group">
+  <lib-pick-list [list]="memberPickListData"></lib-pick-list>
+</lib-section>
+<lib-section icon="fa fa-envelope" label="Notifications for this group">
   <div class="form-item-view">
     <span class="form-item-label">Notify administratiors when a user of this group complete an acitivity</span>
     <div class="form-item-control">
-      <app-switch mode="white"></app-switch>
+      <lib-switch mode="white"></lib-switch>
     </div>
   </div>
   <div class="form-item-view">
     <span class="form-item-label">Notify administrators when a question is asked</span>
     <div class="form-item-control">
-      <app-switch mode="white"></app-switch>
+      <lib-switch mode="white"></lib-switch>
     </div>
   </div>
   <div class="form-item-view">
     <span class="form-item-label">Notify administrators when a new member join the group</span>
     <div class="form-item-control">
-      <app-switch mode="white"></app-switch>
+      <lib-switch mode="white"></lib-switch>
     </div>
   </div>
-</app-section>
+</lib-section>

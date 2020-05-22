@@ -17,7 +17,7 @@ export class YourselfComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    let param = history.state;
+    const param = history.state;
     this.editService.getOb().subscribe(res => {
       this.status = res;
     });

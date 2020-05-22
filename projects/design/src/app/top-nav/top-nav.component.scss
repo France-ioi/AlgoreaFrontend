@@ -12,11 +12,11 @@ $nav-control-border: #5c5c5c;
     left: 0;
     right: 0;
 
-    app-notification {
+    lib-notification {
       margin: 0.4167rem;
     }
 
-    app-button {
+    lib-button {
       margin: 0.4167rem;
       margin-top: 1rem;
       display: block;
@@ -133,7 +133,7 @@ $nav-control-border: #5c5c5c;
     }
   }
 
-  app-select {
+  lib-select {
     margin-top: 1rem;
   }
 }

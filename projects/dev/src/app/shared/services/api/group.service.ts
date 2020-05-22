@@ -1,27 +1,27 @@
-import { Injectable } from "@angular/core";
-import { environment } from "../../../../environments/environment";
+import { Injectable } from '@angular/core';
+import { environment } from '../../../../environments/environment';
 import {
   HttpClient,
   HttpErrorResponse,
   HttpHeaders,
   HttpParams,
-} from "@angular/common/http";
-import { Observable, Subject, throwError } from "rxjs";
-import { catchError, map, tap } from "rxjs/operators";
+} from '@angular/common/http';
+import { Observable, Subject, throwError } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
 
 import {
   DEFAULT_LIMIT,
-} from "../../constants/api";
+} from '../../constants/api';
 
-import { Group } from "../../models/group.model";
-import { PendingRequest } from "../../models/pending-request.model";
-import { Member } from "../../models/member.model";
-import { MembershipHistory } from "../../models/membership-history.model";
-import { GroupMembership } from "../../models/group-membership.model";
-import { RequestActionResponse } from "../../models/requet-action-response.model";
+import { Group } from '../../models/group.model';
+import { PendingRequest } from '../../models/pending-request.model';
+import { Member } from '../../models/member.model';
+import { MembershipHistory } from '../../models/membership-history.model';
+import { GroupMembership } from '../../models/group-membership.model';
+import { RequestActionResponse } from '../../models/requet-action-response.model';
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class GroupService {
   private baseGroupUrl = `${environment.apiUrl}/groups`;
@@ -46,7 +46,7 @@ export class GroupService {
   ): Observable<PendingRequest[]> {
     let params = new HttpParams();
     if (sort.length > 0) {
-      params = params.set('sort', sort.join(","));
+      params = params.set('sort', sort.join(','));
     }
     return this.http
       .get<PendingRequest[]>(`${this.baseGroupUrl}/${id}/requests`, {
@@ -55,7 +55,7 @@ export class GroupService {
       .pipe(
         map(
           (reqs: PendingRequest[]) => reqs.filter(
-            (req: PendingRequest) => req.action === "join_request_created"
+            (req: PendingRequest) => req.action === 'join_request_created'
           )
         ),
         catchError(this.handleError)
@@ -70,7 +70,7 @@ export class GroupService {
     this.http
       .get(`${this.baseGroupUrl}/${id}/members`, {
         params: {
-          sort: sort.join(","),
+          sort: sort.join(','),
         },
       })
       .subscribe(
@@ -81,11 +81,11 @@ export class GroupService {
     return this.memberList;
   }
 
-  removeGroupMembers(id, user_ids): Observable<any> {
+  removeGroupMembers(id, userIds): Observable<any> {
     return this.http
       .delete(`${this.baseGroupUrl}/${id}/members`, {
         params: {
-          user_ids: user_ids.join(","),
+          user_ids: userIds.join(','),
         },
       })
       .pipe(catchError(this.handleError));
@@ -95,7 +95,7 @@ export class GroupService {
     return this.http
       .post<RequestActionResponse>(`${this.baseGroupUrl}/${id}/join-requests/accept`, null, {
         params: {
-          group_ids: group_ids.join(","),
+          group_ids: group_ids.join(','),
         },
       })
       .pipe(
@@ -108,7 +108,7 @@ export class GroupService {
     return this.http
       .post<RequestActionResponse>(`${this.baseGroupUrl}/${id}/join-requests/reject`, null, {
         params: {
-          group_ids: group_ids.join(","),
+          group_ids: group_ids.join(','),
         }
       })
       .pipe(
@@ -118,13 +118,13 @@ export class GroupService {
   }
 
   getPendingInvitations(
-    sort_by = [],
+    sortBy = [],
     limit = 500
   ): Observable<MembershipHistory[]> {
     this.http
       .get(`${this.baseCurrentUserUrl}/group-memberships-history`, {
         params: {
-          sort: sort_by,
+          sort: sortBy.join(','),
         },
       })
       .subscribe(
@@ -136,11 +136,11 @@ export class GroupService {
     return this.membershipHistoryList;
   }
 
-  getJoinedGroups(sort_by = []): Observable<GroupMembership[]> {
+  getJoinedGroups(sortBy = []): Observable<GroupMembership[]> {
     this.http
       .get(`${this.baseCurrentUserUrl}/group-memberships`, {
         params: {
-          sort: sort_by,
+          sort: sortBy.join(','),
         },
       })
       .subscribe(
@@ -162,28 +162,28 @@ export class GroupService {
     return this.http
       .post(`${this.baseCurrentUserUrl}/group-memberships/by-code`, {
         params: {
-          code: code,
-          approvals: approvals.join(","),
+          code,
+          approvals: approvals.join(','),
         },
       })
       .pipe(catchError(this.handleError));
   }
 
   private handleRequestActionResponse(result: RequestActionResponse) {
-    if (result.success === false || result.message !== "updated" || typeof result.data === "object") {
-      throw "Unknown error";
+    if (result.success === false || result.message !== 'updated' || typeof result.data !== 'object') {
+      throw new Error('Unknown error');
     }
   }
 
   private handleError(error: HttpErrorResponse) {
     if (error.error instanceof ErrorEvent) {
-      console.error("An error occurred:", error.error.message);
+      console.error('An error occurred:', error.error.message);
     } else {
       console.error(
         `Backend returned code ${error.status}, ` + `body was`, error.error
       );
     }
 
-    return throwError("Something bad happened; please try again later.");
+    return throwError('Something bad happened; please try again later.');
   }
 }

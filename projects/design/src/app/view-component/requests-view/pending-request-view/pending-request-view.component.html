@@ -1,18 +1,18 @@
-<app-section-paragraph
+<lib-section-paragraph
   icon="fa fa-check"
   label="Pending requests"
   [collapsible]="true"
 >
   <ng-template #headerTemplate>
     <div style="flex: 1; flex-direction: row-reverse;display: flex;">
-      <app-selection
+      <lib-selection
         [items]="groupSwitch"
         style="width: 25rem;"
-      ></app-selection>
+      ></lib-selection>
     </div>
   </ng-template>
   <div class="pending-request-container">
-    <app-grid
+    <lib-grid
       [selectedColumns]="columns"
       [columns]="columns"
       [data]="data"
@@ -92,6 +92,6 @@
           </div>
         </div>
       </ng-template>
-    </app-grid>
+    </lib-grid>
   </div>
-</app-section-paragraph>
+</lib-section-paragraph>

@@ -1,12 +1,19 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  Output,
+  EventEmitter,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 
 @Component({
-  selector: 'app-skill-activity-tabs',
+  selector: 'lib-skill-activity-tabs',
   templateUrl: './skill-activity-tabs.component.html',
-  styleUrls: ['./skill-activity-tabs.component.scss']
+  styleUrls: ['./skill-activity-tabs.component.scss'],
 })
 export class SkillActivityTabsComponent implements OnInit, OnChanges {
-
   @Input() skills;
   @Input() activities;
   @Input() activeTab;
@@ -15,28 +22,21 @@ export class SkillActivityTabsComponent implements OnInit, OnChanges {
   @Output() skillSelect = new EventEmitter<any>();
   @Output() activitySelect = new EventEmitter<any>();
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
-  ngOnChanges(changes: SimpleChanges) {
-    console.log('Skill Activity Tabs', changes);
-    console.log(this.activities);
-  }
+  ngOnChanges(changes: SimpleChanges) {}
 
   tabChanged(e) {
     this.tabChange.emit(e.index);
   }
 
   onSkillSelected(e) {
-    console.log(e);
     this.skillSelect.emit(e);
   }
 
   onActivitySelected(e) {
     this.activitySelect.emit(e);
-    // console.log(e);
   }
-
 }

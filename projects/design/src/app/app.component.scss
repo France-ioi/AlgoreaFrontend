@@ -78,7 +78,7 @@
         align-items: center;
         flex: 1;
 
-        app-breadcrumb {
+        lib-breadcrumb {
           flex: 1;
         }
       }
@@ -230,7 +230,7 @@
       display: flex;
       flex-wrap: wrap;
 
-      app-button {
+      lib-button {
         margin-right: 1rem;
         margin-top: 1rem;
       }

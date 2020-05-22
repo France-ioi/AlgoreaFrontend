@@ -10,36 +10,36 @@ import { NodeService } from '../../../services/node-service.service';
 export class GroupSettingsComponent implements OnInit {
 
   trees;
-  
+
   pickListData = {
     lists: [
       {
         ID: PickListType.NonRequested,
-        title: "Non-requested fields",
+        title: 'Non-requested fields',
         color: PickListColor.NonRequested
       },
       {
         ID: PickListType.Standard,
-        title: "Recommended fields",
+        title: 'Recommended fields',
         color: PickListColor.Standard
       },
       {
         ID: PickListType.Mandatory,
-        title: "Mandatory fields",
+        title: 'Mandatory fields',
         color: PickListColor.Mandatory
       }
     ],
     items: [
-      { ID: 1, title: "Online", list: PickListType.NonRequested, type: PickListItemType.Normal },
-      { ID: 2, title: "Change Password", list: PickListType.NonRequested, type: PickListItemType.Normal },
-      { ID: 3, title: "E-mail", list: PickListType.Standard, type: PickListItemType.Normal },
-      { ID: 4, title: "Member's activity", list: PickListType.Standard, type: PickListItemType.Normal },
-      { ID: 5, title: "Skills", list: PickListType.Standard, type: PickListItemType.Normal },
-      { ID: 6, title: "Participation code", list: PickListType.Standard, type: PickListItemType.Normal },
-      { ID: 7, title: "First name", list: PickListType.Mandatory, type: PickListItemType.Normal },
-      { ID: 8, title: "Last name", list: PickListType.Mandatory, type: PickListItemType.Normal },
-      { ID: 9, title: "Login", list: PickListType.Mandatory, type: PickListItemType.Normal },
-      { ID: 10, title: "Locked into Group", list: PickListType.Mandatory, type: PickListItemType.Lock }
+      { ID: 1, title: 'Online', list: PickListType.NonRequested, type: PickListItemType.Normal },
+      { ID: 2, title: 'Change Password', list: PickListType.NonRequested, type: PickListItemType.Normal },
+      { ID: 3, title: 'E-mail', list: PickListType.Standard, type: PickListItemType.Normal },
+      { ID: 4, title: 'Member\'s activity', list: PickListType.Standard, type: PickListItemType.Normal },
+      { ID: 5, title: 'Skills', list: PickListType.Standard, type: PickListItemType.Normal },
+      { ID: 6, title: 'Participation code', list: PickListType.Standard, type: PickListItemType.Normal },
+      { ID: 7, title: 'First name', list: PickListType.Mandatory, type: PickListItemType.Normal },
+      { ID: 8, title: 'Last name', list: PickListType.Mandatory, type: PickListItemType.Normal },
+      { ID: 9, title: 'Login', list: PickListType.Mandatory, type: PickListItemType.Normal },
+      { ID: 10, title: 'Locked into Group', list: PickListType.Mandatory, type: PickListItemType.Lock }
     ]
   };
 
@@ -47,28 +47,28 @@ export class GroupSettingsComponent implements OnInit {
     lists: [
       {
         ID: PickListType.NonRequested,
-        title: "Non-requested fields",
+        title: 'Non-requested fields',
         color: PickListColor.NonRequested
       },
       {
         ID: PickListType.Standard,
-        title: "Recommended fields",
+        title: 'Recommended fields',
         color: PickListColor.Standard
       },
       {
         ID: PickListType.Mandatory,
-        title: "Mandatory fields",
+        title: 'Mandatory fields',
         color: PickListColor.Mandatory
       }
     ],
     items: [
-      { ID: 1, title: "Online", list: PickListType.NonRequested, type: PickListItemType.Normal },
-      { ID: 2, title: "Change Password", list: PickListType.NonRequested, type: PickListItemType.Normal },
-      { ID: 3, title: "E-mail", list: PickListType.Standard, type: PickListItemType.Normal },
-      { ID: 6, title: "Discussions", list: PickListType.Standard, type: PickListItemType.Normal },
-      { ID: 7, title: "First name", list: PickListType.Standard, type: PickListItemType.Normal },
-      { ID: 8, title: "Last name", list: PickListType.Standard, type: PickListItemType.Normal },
-      { ID: 9, title: "Login", list: PickListType.Mandatory, type: PickListItemType.Normal }
+      { ID: 1, title: 'Online', list: PickListType.NonRequested, type: PickListItemType.Normal },
+      { ID: 2, title: 'Change Password', list: PickListType.NonRequested, type: PickListItemType.Normal },
+      { ID: 3, title: 'E-mail', list: PickListType.Standard, type: PickListItemType.Normal },
+      { ID: 6, title: 'Discussions', list: PickListType.Standard, type: PickListItemType.Normal },
+      { ID: 7, title: 'First name', list: PickListType.Standard, type: PickListItemType.Normal },
+      { ID: 8, title: 'Last name', list: PickListType.Standard, type: PickListItemType.Normal },
+      { ID: 9, title: 'Login', list: PickListType.Mandatory, type: PickListItemType.Normal }
     ]
   };
 
@@ -82,7 +82,7 @@ export class GroupSettingsComponent implements OnInit {
   ngOnInit() {
     this.nodeService.getFiles().then(res => {
       this.trees = res;
-    })
+    });
   }
 
   onLockDrop(e) {

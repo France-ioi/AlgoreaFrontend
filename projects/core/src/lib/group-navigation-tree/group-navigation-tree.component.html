@@ -16,7 +16,7 @@
         <span *ngIf="node.icons" class="node-icon" (click)="nodeCheck($event, node)"><i class="{{node.icons}}" style="font-size: 1.2rem;"></i></span>
 
         <span class="node-label">
-          <app-state-widget *ngIf="!navigation && node.category && showCategory" [disabled]="!node.connected" [type]="node.category.type" [icon]="node.category.icon" (click)="nodeCheck($event, node)"></app-state-widget>
+          <lib-state-widget *ngIf="!navigation && node.category && showCategory" [disabled]="!node.connected" [type]="node.category.type" [icon]="node.category.icon" (click)="nodeCheck($event, node)"></lib-state-widget>
           <span class="node-label-title" (click)="nodeCheck($event, node)">{{ node.title }}</span>
           <span *ngIf="!navigation" class="edit-icon" (click)="onGotoEditPage(node)">
             <i class="fa fa-edit"></i>
@@ -26,7 +26,7 @@
             <i *ngIf="!node.connected" class="fa fa-unlink"></i>
           </span>
         </span>
-        <app-score-ring *ngIf="node.progress && navigation" [displayedScore]="node.progress.displayedScore" [currentScore]="node.progress.currentScore" [diameter]="24"></app-score-ring>
+        <lib-score-ring *ngIf="node.progress && navigation" [displayedScore]="node.progress.displayedScore" [currentScore]="node.progress.currentScore" [diameter]="24"></lib-score-ring>
         <span *ngIf="node.checked && navigation" class="go-to-page" (click)="goToPage($event, node)">
           <i class="fa fa-chevron-right"></i>
         </span>
@@ -46,7 +46,7 @@
           <i *ngIf="!node.checked" class="pi pi-circle-on" style="font-size: 1.2rem;"></i>
         </span>
         <span class="node-label">
-          <app-state-widget *ngIf="!navigation && node.category && showCategory" [disabled]="!node.connected" [type]="node.category.type" [icon]="node.category.icon" (click)="nodeCheck($event, node)"></app-state-widget>
+          <lib-state-widget *ngIf="!navigation && node.category && showCategory" [disabled]="!node.connected" [type]="node.category.type" [icon]="node.category.icon" (click)="nodeCheck($event, node)"></lib-state-widget>
           <span class="node-label-title" (click)="nodeCheck($event, node)">{{ node.title }}</span>
           <span *ngIf="!navigation" class="edit-icon" (click)="onGotoEditPage(node)">
             <i class="fa fa-edit"></i>

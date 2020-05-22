@@ -58,7 +58,7 @@
       font-size: 1.2rem;
       min-height: 4.1667rem;
 
-      app-button {
+      lib-button {
         ::ng-deep .ui-button {
           height: 2rem;
         }
@@ -247,7 +247,7 @@
       display: flex;
       justify-content: flex-end;
 
-      app-button:first-child {
+      lib-button:first-child {
         margin-right: 1rem;
       }
     }

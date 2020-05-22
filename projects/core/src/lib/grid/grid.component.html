@@ -64,10 +64,10 @@
         <span [ngClass]="{ checked: selected[item.field] }" (click)="handleChanges($event, item)">
           {{ item.header }}
         </span>
-        <app-switch
+        <lib-switch
           [checked]="selected[item.field]"
           (onChange)="handleChanges($event, item)"
-        ></app-switch>
+        ></lib-switch>
       </li>
     </ul>
   </div>

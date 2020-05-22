@@ -1,18 +1,18 @@
-import { Component, HostListener } from "@angular/core";
-import { NodeService } from "./services/node-service.service";
-import * as _ from "lodash";
-import { Router } from "@angular/router";
-import { EditService } from "./services/edit.service";
+import { Component, HostListener } from '@angular/core';
+import { NodeService } from './services/node-service.service';
+import * as _ from 'lodash';
+import { Router } from '@angular/router';
+import { EditService } from './services/edit.service';
 import { ProgressType } from 'core';
 
 @Component({
-  selector: "app-root",
-  templateUrl: "./app.component.html",
-  styleUrls: ["./app.component.scss"]
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
   ProgressType = ProgressType;
-  title = "france-ioi";
+  title = 'algorea';
   editing = false;
   curScore = 70;
   dispScore = 65;
@@ -37,25 +37,25 @@ export class AppComponent {
   breaddata = {
     selectedID: 42,
     path: [
-      { ID: 1, label: "Contest", separator: "slash" },
+      { ID: 1, label: 'Contest', separator: 'slash' },
       {
         ID: 42,
-        label: "Personalized contest",
+        label: 'Personalized contest',
         attempt: 12,
-        separator: "arrow"
+        separator: 'arrow'
       },
-      { ID: 43, label: "Personalized contests", attempt: 12 },
-      { ID: 23, label: "IOI Selection 2012", attempt: 2 },
-      { ID: 24, label: "Individuals", separator: "slash" }
+      { ID: 43, label: 'Personalized contests', attempt: 12 },
+      { ID: 23, label: 'IOI Selection 2012', attempt: 2 },
+      { ID: 24, label: 'Individuals', separator: 'slash' }
     ]
   };
 
   breadhome = {
     selectedID: -1,
     path: [
-      { ID: 1, label: "Home" }
+      { ID: 1, label: 'Home' }
     ]
-  }
+  };
 
   groupdata = {
     selectedID: 1, // User selected ID
@@ -63,33 +63,33 @@ export class AppComponent {
     users: [
       {
         ID: 1,
-        title: "Lionel MESSI",
-        avatar: "_messi.jpg",
-        type: "user"
+        title: 'Lionel MESSI',
+        avatar: '_messi.jpg',
+        type: 'user'
       },
       {
         ID: 2,
-        title: "Suarez",
-        type: "user"
+        title: 'Suarez',
+        type: 'user'
       },
       {
         ID: 3,
-        title: "FC Barcelona",
-        type: "group"
+        title: 'FC Barcelona',
+        type: 'group'
       }
     ],
     groups: {
       manage: [
         {
           ID: 1,
-          title: "Big root",
-          type: "folder",
-          icons: "fa fa-home",
+          title: 'Big root',
+          type: 'folder',
+          icons: 'fa fa-home',
           children: [
             {
               ID: 2,
-              title: "Big root1",
-              type: "folder",
+              title: 'Big root1',
+              type: 'folder',
               progress: {
                 currentScore: 50,
                 displayedScore: 30
@@ -97,54 +97,54 @@ export class AppComponent {
               children: [
                 {
                   ID: 3,
-                  title: "Documents",
-                  icons: "fa fa-folder",
-                  type: "folder",
+                  title: 'Documents',
+                  icons: 'fa fa-folder',
+                  type: 'folder',
                   children: [
                     {
                       ID: 4,
-                      title: "Work",
-                      type: "folder",
+                      title: 'Work',
+                      type: 'folder',
                       children: [
                         {
-                          title: "Expenses.doc",
-                          type: "leaf"
+                          title: 'Expenses.doc',
+                          type: 'leaf'
                         },
                         {
-                          title: "Resume.doc",
-                          type: "leaf"
+                          title: 'Resume.doc',
+                          type: 'leaf'
                         }
                       ]
                     },
                     {
                       ID: 5,
-                      title: "Resume.doc",
-                      type: "leaf"
+                      title: 'Resume.doc',
+                      type: 'leaf'
                     },
                     {
                       ID: 6,
-                      title: "Home",
-                      type: "folder",
+                      title: 'Home',
+                      type: 'folder',
                       children: [
                         {
                           ID: 7,
-                          title: "Invoices.txt",
-                          type: "leaf"
+                          title: 'Invoices.txt',
+                          type: 'leaf'
                         },
                         {
                           ID: 8,
-                          title: "Work",
-                          type: "folder",
+                          title: 'Work',
+                          type: 'folder',
                           children: [
                             {
                               ID: 9,
-                              title: "Expenses.doc",
-                              type: "leaf"
+                              title: 'Expenses.doc',
+                              type: 'leaf'
                             },
                             {
                               ID: 10,
-                              title: "Resume.doc",
-                              type: "leaf"
+                              title: 'Resume.doc',
+                              type: 'leaf'
                             }
                           ]
                         }
@@ -154,62 +154,62 @@ export class AppComponent {
                 },
                 {
                   ID: 16,
-                  title: "Pictures",
-                  type: "folder",
+                  title: 'Pictures',
+                  type: 'folder',
                   children: [
                     {
                       ID: 11,
-                      title: "barcelona.jpg",
-                      type: "leaf"
+                      title: 'barcelona.jpg',
+                      type: 'leaf'
                     },
                     {
                       ID: 12,
-                      title: "logo.jpg",
-                      type: "leaf"
+                      title: 'logo.jpg',
+                      type: 'leaf'
                     },
                     {
                       ID: 13,
-                      title: "primeui.png",
-                      type: "leaf"
+                      title: 'primeui.png',
+                      type: 'leaf'
                     }
                   ]
                 },
                 {
                   ID: 14,
-                  title: "Movies",
-                  type: "folder",
+                  title: 'Movies',
+                  type: 'folder',
                   children: [
                     {
                       ID: 15,
-                      title: "Al Pacino",
-                      type: "folder",
+                      title: 'Al Pacino',
+                      type: 'folder',
                       children: [
                         {
                           ID: 17,
-                          title: "Scarface",
-                          type: "leaf"
+                          title: 'Scarface',
+                          type: 'leaf'
                         },
                         {
                           ID: 18,
-                          title: "Serpico",
-                          type: "leaf"
+                          title: 'Serpico',
+                          type: 'leaf'
                         }
                       ]
                     },
                     {
                       ID: 19,
-                      title: "Robert De Niro",
-                      type: "folder",
+                      title: 'Robert De Niro',
+                      type: 'folder',
                       children: [
                         {
                           ID: 20,
-                          title: "Goodfellas",
-                          type: "leaf"
+                          title: 'Goodfellas',
+                          type: 'leaf'
                         },
                         {
                           ID: 21,
-                          title: "Untouchables",
-                          type: "leaf"
+                          title: 'Untouchables',
+                          type: 'leaf'
                         }
                       ]
                     }
@@ -221,39 +221,39 @@ export class AppComponent {
         },
         {
           ID: 22,
-          title: "Groups with requests",
-          type: "folder",
-          icons: "fa fa-home",
+          title: 'Groups with requests',
+          type: 'folder',
+          icons: 'fa fa-home',
           children: [
             {
               ID: 43,
-              title: "Group with grading requests",
-              type: "leaf",
+              title: 'Group with grading requests',
+              type: 'leaf',
               ring: true,
-              state: "opened",
+              state: 'opened',
               hasKey: true,
               progress: {
                 displayedScore: 50,
                 currentScore: 30
               },
               category: {
-                icon: "fa fa-book-open",
+                icon: 'fa fa-book-open',
                 type: 1
               }
             },
             {
               ID: 44,
-              title: "Groups as teams",
-              type: "leaf",
+              title: 'Groups as teams',
+              type: 'leaf',
               ring: true,
-              state: "opened",
+              state: 'opened',
               hasKey: true,
               progress: {
                 displayedScore: 50,
                 currentScore: 30
               },
               category: {
-                icon: "fa fa-book-open",
+                icon: 'fa fa-book-open',
                 type: 1
               }
             }
@@ -262,60 +262,60 @@ export class AppComponent {
       ],
       join: [
         {
-          title: "Big root",
-          type: "folder",
-          icons: "fa fa-home",
+          title: 'Big root',
+          type: 'folder',
+          icons: 'fa fa-home',
           children: [
             {
-              title: "Big root1",
-              type: "folder",
+              title: 'Big root1',
+              type: 'folder',
               progress: {
                 currentScore: 50,
                 displayedScore: 30
               },
               children: [
                 {
-                  title: "Documents",
-                  icons: "fa fa-folder",
-                  type: "folder",
+                  title: 'Documents',
+                  icons: 'fa fa-folder',
+                  type: 'folder',
                   children: [
                     {
-                      title: "Work",
-                      type: "folder",
+                      title: 'Work',
+                      type: 'folder',
                       children: [
                         {
-                          title: "Expenses.doc",
-                          type: "leaf"
+                          title: 'Expenses.doc',
+                          type: 'leaf'
                         },
                         {
-                          title: "Resume.doc",
-                          type: "leaf"
+                          title: 'Resume.doc',
+                          type: 'leaf'
                         }
                       ]
                     },
                     {
-                      title: "Resume.doc",
-                      type: "leaf"
+                      title: 'Resume.doc',
+                      type: 'leaf'
                     },
                     {
-                      title: "Home",
-                      type: "folder",
+                      title: 'Home',
+                      type: 'folder',
                       children: [
                         {
-                          title: "Invoices.txt",
-                          type: "leaf"
+                          title: 'Invoices.txt',
+                          type: 'leaf'
                         },
                         {
-                          title: "Work",
-                          type: "folder",
+                          title: 'Work',
+                          type: 'folder',
                           children: [
                             {
-                              title: "Expenses.doc",
-                              type: "leaf"
+                              title: 'Expenses.doc',
+                              type: 'leaf'
                             },
                             {
-                              title: "Resume.doc",
-                              type: "leaf"
+                              title: 'Resume.doc',
+                              type: 'leaf'
                             }
                           ]
                         }
@@ -324,52 +324,52 @@ export class AppComponent {
                   ]
                 },
                 {
-                  title: "Pictures",
-                  type: "folder",
+                  title: 'Pictures',
+                  type: 'folder',
                   children: [
                     {
-                      title: "barcelona.jpg",
-                      type: "leaf"
+                      title: 'barcelona.jpg',
+                      type: 'leaf'
                     },
                     {
-                      title: "logo.jpg",
-                      type: "leaf"
+                      title: 'logo.jpg',
+                      type: 'leaf'
                     },
                     {
-                      title: "primeui.png",
-                      type: "leaf"
+                      title: 'primeui.png',
+                      type: 'leaf'
                     }
                   ]
                 },
                 {
-                  title: "Movies",
-                  type: "folder",
+                  title: 'Movies',
+                  type: 'folder',
                   children: [
                     {
-                      title: "Al Pacino",
-                      type: "folder",
+                      title: 'Al Pacino',
+                      type: 'folder',
                       children: [
                         {
-                          title: "Scarface",
-                          type: "leaf"
+                          title: 'Scarface',
+                          type: 'leaf'
                         },
                         {
-                          title: "Serpico",
-                          type: "leaf"
+                          title: 'Serpico',
+                          type: 'leaf'
                         }
                       ]
                     },
                     {
-                      title: "Robert De Niro",
-                      type: "folder",
+                      title: 'Robert De Niro',
+                      type: 'folder',
                       children: [
                         {
-                          title: "Goodfellas",
-                          type: "leaf"
+                          title: 'Goodfellas',
+                          type: 'leaf'
                         },
                         {
-                          title: "Untouchables",
-                          type: "leaf"
+                          title: 'Untouchables',
+                          type: 'leaf'
                         }
                       ]
                     }
@@ -379,17 +379,17 @@ export class AppComponent {
             },
             {
               ID: 45,
-              title: "Reminder of rights given to manager",
-              type: "leaf",
+              title: 'Reminder of rights given to manager',
+              type: 'leaf',
               ring: true,
-              state: "opened",
+              state: 'opened',
               hasKey: true,
               progress: {
                 displayedScore: 50,
                 currentScore: 30
               },
               category: {
-                icon: "fa fa-book-open",
+                icon: 'fa fa-book-open',
                 type: 1
               }
             }
@@ -398,14 +398,14 @@ export class AppComponent {
       ]
     },
     skills: {
-      title: "Algorithmic skills",
+      title: 'Algorithmic skills',
       data: [
         {
           ID: 12,
-          title: "Graphs: methods",
-          type: "leaf",
+          title: 'Graphs: methods',
+          type: 'leaf',
           ring: false,
-          state: "started",
+          state: 'started',
           progress: {
             displayedScore: 100,
             currentScore: 100
@@ -413,10 +413,10 @@ export class AppComponent {
         },
         {
           ID: 13,
-          title: "List graph caracteristics",
-          type: "leaf",
+          title: 'List graph caracteristics',
+          type: 'leaf',
           ring: false,
-          state: "never opened",
+          state: 'never opened',
           progress: {
             displayedScore: 0,
             currentScore: 0
@@ -424,10 +424,10 @@ export class AppComponent {
         },
         {
           ID: 14,
-          title: "Reduce graph size",
-          type: "folder",
+          title: 'Reduce graph size',
+          type: 'folder',
           ring: false,
-          state: "opened",
+          state: 'opened',
           progress: {
             displayedScore: 90,
             currentScore: 90
@@ -435,11 +435,11 @@ export class AppComponent {
           children: [
             {
               ID: 15,
-              title: "Simplify or optimize manipulation",
-              icon: "progress",
-              type: "leaf",
+              title: 'Simplify or optimize manipulation',
+              icon: 'progress',
+              type: 'leaf',
               ring: false,
-              state: "opened",
+              state: 'opened',
               progress: {
                 displayedScore: 30,
                 currentScore: 30
@@ -447,11 +447,11 @@ export class AppComponent {
             },
             {
               ID: 16,
-              title: "Spot symetry an convert to normal form",
-              icon: "regress",
-              type: "folder",
+              title: 'Spot symetry an convert to normal form',
+              icon: 'regress',
+              type: 'folder',
               ring: false,
-              state: "opened",
+              state: 'opened',
               progress: {
                 displayedScore: 70,
                 currentScore: 70
@@ -459,11 +459,11 @@ export class AppComponent {
               children: [
                 {
                   ID: 17,
-                  title: "Simplify or optimize manipulation",
-                  icon: "stagnant",
-                  type: "leaf",
+                  title: 'Simplify or optimize manipulation',
+                  icon: 'stagnant',
+                  type: 'leaf',
                   ring: false,
-                  state: "opened",
+                  state: 'opened',
                   progress: {
                     displayedScore: 30,
                     currentScore: 30
@@ -471,10 +471,10 @@ export class AppComponent {
                 },
                 {
                   ID: 18,
-                  title: "Spot symetry an convert to normal form",
-                  type: "leaf",
+                  title: 'Spot symetry an convert to normal form',
+                  type: 'leaf',
                   ring: false,
-                  state: "opened",
+                  state: 'opened',
                   progress: {
                     displayedScore: 70,
                     currentScore: 70
@@ -484,11 +484,11 @@ export class AppComponent {
             },
             {
               ID: 19,
-              title: "Simplify or optimize manipulation",
-              icon: "stagnant",
-              type: "leaf",
+              title: 'Simplify or optimize manipulation',
+              icon: 'stagnant',
+              type: 'leaf',
               ring: false,
-              state: "opened",
+              state: 'opened',
               progress: {
                 displayedScore: 30,
                 currentScore: 30
@@ -496,10 +496,10 @@ export class AppComponent {
             },
             {
               ID: 21,
-              title: "Spot symetry an convert to normal form",
-              type: "folder",
+              title: 'Spot symetry an convert to normal form',
+              type: 'folder',
               ring: false,
-              state: "opened",
+              state: 'opened',
               progress: {
                 displayedScore: 70,
                 currentScore: 70
@@ -507,10 +507,10 @@ export class AppComponent {
               children: [
                 {
                   ID: 22,
-                  title: "Simplify or optimize manipulation",
-                  type: "leaf",
+                  title: 'Simplify or optimize manipulation',
+                  type: 'leaf',
                   ring: false,
-                  state: "opened",
+                  state: 'opened',
                   progress: {
                     displayedScore: 30,
                     currentScore: 30
@@ -518,10 +518,10 @@ export class AppComponent {
                 },
                 {
                   ID: 23,
-                  title: "Spot symetry an convert to normal form",
-                  type: "leaf",
+                  title: 'Spot symetry an convert to normal form',
+                  type: 'leaf',
                   ring: false,
-                  state: "opened",
+                  state: 'opened',
                   progress: {
                     displayedScore: 70,
                     currentScore: 70
@@ -533,23 +533,23 @@ export class AppComponent {
         },
         {
           ID: 24,
-          title: "Flood Fill",
-          type: "leaf",
+          title: 'Flood Fill',
+          type: 'leaf',
           ring: false,
-          state: "opened",
+          state: 'opened',
           progress: {
             displayedScore: 70,
             currentScore: 70,
-            icons: "camera"
+            icons: 'camera'
           }
         },
         {
           ID: 25,
-          title:
-            "Horizontal digging (BFS) et DijkstraHorizontal digging (BFS) et DijkstraHorizontal digging (BFS) et DijkstraHorizontal digging (BFS) et DijkstraHorizontal digging (BFS) et Dijkstra",
-          type: "leaf",
+          // tslint:disable-next-line: max-line-length
+          title: 'Horizontal digging (BFS) et DijkstraHorizontal digging (BFS) et DijkstraHorizontal digging (BFS) et DijkstraHorizontal digging (BFS) et DijkstraHorizontal digging (BFS) et Dijkstra',
+          type: 'leaf',
           ring: false,
-          state: "locked",
+          state: 'locked',
           progress: {
             displayedScore: 20,
             currentScore: 20
@@ -558,14 +558,14 @@ export class AppComponent {
       ]
     },
     activities: {
-      title: "My Activities",
+      title: 'My Activities',
       data: [
         {
           ID: 26,
-          title: "Activities to test mosaic/list modes",
-          type: "folder",
+          title: 'Activities to test mosaic/list modes',
+          type: 'folder',
           ring: true,
-          state: "never opened",
+          state: 'never opened',
           progress: {
             displayedScore: 0,
             currentScore: 0
@@ -573,55 +573,55 @@ export class AppComponent {
           children: [
             {
               ID: 42,
-              title: "Activity with session list",
-              type: "leaf",
+              title: 'Activity with session list',
+              type: 'leaf',
               ring: true,
-              state: "opened",
+              state: 'opened',
               hasKey: true,
               progress: {
                 displayedScore: 30,
                 currentScore: 30
               },
               category: {
-                icon: "fa fa-book-open",
+                icon: 'fa fa-book-open',
                 type: 1
               }
             },
             {
               ID: 43,
-              title: "Activity with mosaic view",
-              type: "leaf",
+              title: 'Activity with mosaic view',
+              type: 'leaf',
               ring: true,
-              state: "opened",
+              state: 'opened',
               hasKey: true,
               progress: {
                 displayedScore: 20,
                 currentScore: 30
               },
               category: {
-                icon: "fa fa-book-open",
+                icon: 'fa fa-book-open',
                 type: 1
               }
             },
             {
               ID: 44,
-              title: "Activity with presentation view",
-              type: "leaf",
+              title: 'Activity with presentation view',
+              type: 'leaf',
               ring: true,
-              state: "opened",
+              state: 'opened',
               hasKey: true,
               progress: {
                 displayedScore: 20,
                 currentScore: 30
               },
               category: {
-                icon: "fa fa-book-open",
+                icon: 'fa fa-book-open',
                 type: 1
               }
             }
           ],
           category: {
-            icon: "fa fa-book-open",
+            icon: 'fa fa-book-open',
             type: 0
           }
         },
@@ -629,9 +629,9 @@ export class AppComponent {
           ID: 37,
           // tslint:disable-next-line: max-line-length
           title: 'Activities to test headers',
-          type: "folder",
+          type: 'folder',
           ring: true,
-          state: "opened",
+          state: 'opened',
           progress: {
             displayedScore: 20,
             currentScore: 20
@@ -639,65 +639,65 @@ export class AppComponent {
           children: [
             {
               ID: 38,
-              title: "Activity with access code",
-              type: "leaf",
+              title: 'Activity with access code',
+              type: 'leaf',
               ring: true,
-              state: "opened",
+              state: 'opened',
               hasKey: true,
               progress: {
                 displayedScore: 30,
                 currentScore: 30
               },
               category: {
-                icon: "fa fa-book-open",
+                icon: 'fa fa-book-open',
                 type: 1
               }
             },
             {
               ID: 39,
-              title: "Before you start notice",
-              type: "leaf",
+              title: 'Before you start notice',
+              type: 'leaf',
               ring: true,
-              state: "opened",
+              state: 'opened',
               hasKey: true,
               progress: {
                 displayedScore: 20,
                 currentScore: 30
               },
               category: {
-                icon: "fa fa-book-open",
+                icon: 'fa fa-book-open',
                 type: 1
               }
             },
             {
               ID: 40,
-              title: "Activity for teams",
-              type: "leaf",
+              title: 'Activity for teams',
+              type: 'leaf',
               ring: true,
-              state: "opened",
+              state: 'opened',
               hasKey: true,
               progress: {
                 displayedScore: 90,
                 currentScore: 30
               },
               category: {
-                icon: "fa fa-book-open",
+                icon: 'fa fa-book-open',
                 type: 1
               }
             },
             {
               ID: 41,
-              title: "Activity with attempts",
-              type: "leaf",
+              title: 'Activity with attempts',
+              type: 'leaf',
               ring: true,
-              state: "opened",
+              state: 'opened',
               hasKey: true,
               progress: {
                 displayedScore: 10,
                 currentScore: 30
               },
               category: {
-                icon: "fa fa-book-open",
+                icon: 'fa fa-book-open',
                 type: 1
               }
             }
@@ -705,10 +705,10 @@ export class AppComponent {
         },
         {
           ID: 27,
-          title: "Reduce graph size",
-          type: "folder",
+          title: 'Reduce graph size',
+          type: 'folder',
           ring: true,
-          state: "opened",
+          state: 'opened',
           progress: {
             displayedScore: 90,
             currentScore: 90
@@ -716,10 +716,10 @@ export class AppComponent {
           children: [
             {
               ID: 28,
-              title: "Simplify or optimize manipulation",
-              type: "leaf",
+              title: 'Simplify or optimize manipulation',
+              type: 'leaf',
               ring: true,
-              state: "opened",
+              state: 'opened',
               hasKey: true,
               progress: {
                 displayedScore: 30,
@@ -727,55 +727,55 @@ export class AppComponent {
               },
               weight: 1,
               category: {
-                icon: "fa fa-book-open",
+                icon: 'fa fa-book-open',
                 type: 1
               }
             },
             {
               ID: 29,
-              title: "Spot symetry an convert to normal form",
-              type: "folder",
+              title: 'Spot symetry an convert to normal form',
+              type: 'folder',
               ring: true,
-              state: "opened",
+              state: 'opened',
               progress: {
                 displayedScore: 70,
                 currentScore: 70
               },
               weight: 4,
               category: {
-                icon: "fa fa-video",
+                icon: 'fa fa-video',
                 type: 2
               },
               children: [
                 {
                   ID: 30,
-                  title: "Simplify or optimize manipulation",
-                  type: "leaf",
+                  title: 'Simplify or optimize manipulation',
+                  type: 'leaf',
                   ring: true,
-                  state: "opened",
+                  state: 'opened',
                   progress: {
                     displayedScore: 30,
                     currentScore: 30
                   },
                   weight: 2,
                   category: {
-                    icon: "fa fa-book-open",
+                    icon: 'fa fa-book-open',
                     type: 0
                   }
                 },
                 {
                   ID: 31,
-                  title: "Spot symetry an convert to normal form",
-                  type: "leaf",
+                  title: 'Spot symetry an convert to normal form',
+                  type: 'leaf',
                   ring: true,
-                  state: "opened",
+                  state: 'opened',
                   progress: {
                     displayedScore: 70,
                     currentScore: 70
                   },
                   weight: 3,
                   category: {
-                    icon: "fa fa-book-open",
+                    icon: 'fa fa-book-open',
                     type: 4
                   }
                 }
@@ -783,62 +783,62 @@ export class AppComponent {
             },
             {
               ID: 32,
-              title: "Simplify or optimize manipulation",
-              type: "leaf",
+              title: 'Simplify or optimize manipulation',
+              type: 'leaf',
               ring: true,
-              state: "opened",
+              state: 'opened',
               isLocked: true,
               progress: {
                 displayedScore: 30,
                 currentScore: 30
               },
               category: {
-                icon: "fa fa-laptop-code",
+                icon: 'fa fa-laptop-code',
                 type: 3
               }
             },
             {
               ID: 33,
-              title: "Spot symetry an convert to normal form",
-              type: "folder",
+              title: 'Spot symetry an convert to normal form',
+              type: 'folder',
               ring: true,
-              state: "opened",
+              state: 'opened',
               progress: {
                 displayedScore: 70,
                 currentScore: 70
               },
               category: {
-                icon: "fa fa-code",
+                icon: 'fa fa-code',
                 type: 4
               },
               children: [
                 {
                   ID: 34,
-                  title: "Simplify or optimize manipulation",
-                  type: "leaf",
+                  title: 'Simplify or optimize manipulation',
+                  type: 'leaf',
                   ring: true,
-                  state: "opened",
+                  state: 'opened',
                   progress: {
                     displayedScore: 30,
                     currentScore: 30
                   },
                   category: {
-                    icon: "fa fa-book-open",
+                    icon: 'fa fa-book-open',
                     type: 3
                   }
                 },
                 {
                   ID: 35,
-                  title: "Spot symetry an convert to normal form",
-                  type: "leaf",
+                  title: 'Spot symetry an convert to normal form',
+                  type: 'leaf',
                   ring: true,
-                  state: "opened",
+                  state: 'opened',
                   progress: {
                     displayedScore: 70,
                     currentScore: 70
                   },
                   category: {
-                    icon: "fa fa-book-open",
+                    icon: 'fa fa-book-open',
                     type: 3
                   }
                 }
@@ -849,11 +849,10 @@ export class AppComponent {
         {
           ID: 36,
           // tslint:disable-next-line: max-line-length
-          title:
-            "Horizontal digging (BFS) et DijkstraHorizontal digging (BFS) et DijkstraHorizontal digging (BFS) et DijkstraHorizontal digging (BFS) et DijkstraHorizontal digging (BFS) et Dijkstra",
-          type: "leaf",
+          title: 'Horizontal digging (BFS) et DijkstraHorizontal digging (BFS) et DijkstraHorizontal digging (BFS) et DijkstraHorizontal digging (BFS) et DijkstraHorizontal digging (BFS) et Dijkstra',
+          type: 'leaf',
           ring: true,
-          state: "locked",
+          state: 'locked',
           progress: {
             displayedScore: 20,
             currentScore: 20
@@ -864,9 +863,9 @@ export class AppComponent {
   };
 
   user = {
-    name: "Concours castor",
+    name: 'Concours castor',
     notification: 2,
-    image: "_messi.jpg"
+    image: '_messi.jpg'
   };
 
   collapsed = false;
@@ -893,9 +892,9 @@ export class AppComponent {
       this.groups = _.cloneDeep(res);
     });
     this.editService.setUser({
-      title: "Lionel MESSI",
-      avatar: "_messi.jpg",
-      type: "user"
+      title: 'Lionel MESSI',
+      avatar: '_messi.jpg',
+      type: 'user'
     });
     this.editService.getOb().subscribe(res => {
       this.scrolled = res.scrolled;
@@ -938,12 +937,12 @@ export class AppComponent {
   onSignInOut(e) {
     this.signedIn = e;
     if (!this.signedIn) {
-      this.router.navigate(["/design/home"]);
+      this.router.navigate(['/design/home']);
     } else {
       this.selectedType = 0;
-      this.userTitle = "Cyril KITSCH";
+      this.userTitle = 'Cyril KITSCH';
       this.updateService();
-      this.router.navigate(["/design/yourself"], {
+      this.router.navigate(['/design/yourself'], {
         state: {}
       });
     }
@@ -961,7 +960,7 @@ export class AppComponent {
     this.isStarted = e.srcElement.checked;
   }
 
-  @HostListener("window:scroll", ["$event"])
+  @HostListener('window:scroll', ['$event'])
   onScrollContent(e) {
     if (window.pageYOffset > 40 && !this.scrolled) {
       this.scrolled = true;
@@ -1004,9 +1003,9 @@ export class AppComponent {
 
   onYourselfSelected(e) {
     this.selectedType = 0;
-    this.userTitle = "Cyril KITSCH";
+    this.userTitle = 'Cyril KITSCH';
     this.updateService();
-    this.router.navigate(["/design/yourself"], {
+    this.router.navigate(['/design/yourself'], {
       state: {}
     });
   }
@@ -1045,9 +1044,9 @@ export class AppComponent {
 
   onGroupSelected(e) {
     this.selectedType = 1;
-    this.userTitle = "Jean Monet";
+    this.userTitle = 'Jean Monet';
     this.updateService();
-    this.router.navigate(["/design/group"], {
+    this.router.navigate(['/design/group'], {
       queryParams: {
         refresh: new Date().getTime()
       },
@@ -1072,6 +1071,6 @@ export class AppComponent {
     this.userTitle = 'Notifications';
     this.notified = true;
     this.updateService();
-    this.router.navigate(["/design/notification"]);
+    this.router.navigate(['/design/notification']);
   }
 }

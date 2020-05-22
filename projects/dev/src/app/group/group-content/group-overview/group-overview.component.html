@@ -1,8 +1,8 @@
-<app-section icon="fa fa-users" label="Presentation" *ngIf="description && description.length">
+<lib-section icon="fa fa-users" label="Presentation" *ngIf="description && description.length">
   <p>{{description}}</p>
-</app-section>
-<app-section icon="fa fa-puzzle-piece" label="Recently solved tasks">
-  <app-grid
+</lib-section>
+<lib-section icon="fa fa-puzzle-piece" label="Recently solved tasks">
+  <lib-grid
     [selectedColumns]="columns"
     [columns]="columns"
     [data]="tasks"
@@ -52,5 +52,5 @@
         </ng-container>
       </tr>
     </ng-template>
-  </app-grid>
-</app-section>
+  </lib-grid>
+</lib-section>

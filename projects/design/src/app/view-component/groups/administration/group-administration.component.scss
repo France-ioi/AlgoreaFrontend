@@ -114,7 +114,7 @@
       td {
         background-color: $base-color;
 
-        ::ng-deep app-progress-level {
+        ::ng-deep lib-progress-level {
           .progress-level-container {
             .progress-level-item, .progress-level-item-link {
               background-color: $dark-base-color;

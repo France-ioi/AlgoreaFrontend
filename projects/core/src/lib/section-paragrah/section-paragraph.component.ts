@@ -1,9 +1,16 @@
-import { Component, OnInit, Input, ContentChild, Output, EventEmitter } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  ContentChild,
+  Output,
+  EventEmitter,
+} from '@angular/core';
 
 @Component({
-  selector: 'app-section-paragraph',
+  selector: 'lib-section-paragraph',
   templateUrl: './section-paragraph.component.html',
-  styleUrls: ['./section-paragraph.component.scss']
+  styleUrls: ['./section-paragraph.component.scss'],
 })
 export class SectionParagraphComponent implements OnInit {
   @Input() icon;
@@ -20,7 +27,7 @@ export class SectionParagraphComponent implements OnInit {
 
   visible;
 
-  constructor() { }
+  constructor() {}
 
   ngOnInit() {
     this.visible = this.collapsible;
@@ -30,5 +37,4 @@ export class SectionParagraphComponent implements OnInit {
     this.visible = !this.visible;
     this.onCollapse.emit(this.visible);
   }
-
 }

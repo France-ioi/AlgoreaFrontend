@@ -90,7 +90,7 @@ export class GroupOverviewComponent implements OnInit {
   }
 
   onExpandWidth(e) {
-    
+
   }
 
 }

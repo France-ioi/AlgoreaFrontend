@@ -1,25 +1,23 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 
 @Component({
-  selector: 'app-search-input',
+  selector: 'lib-search-input',
   templateUrl: './search-input.component.html',
-  styleUrls: ['./search-input.component.scss']
+  styleUrls: ['./search-input.component.scss'],
 })
 export class SearchInputComponent implements OnInit {
-
   value = '';
   dirty = false;
 
   @Output() onChange = new EventEmitter<any>();
   @Output() onClose = new EventEmitter<any>();
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   onIconClicked(e) {
-    if(this.dirty) {
+    if (this.dirty) {
       this.value = '';
       this.dirty = false;
       this.onClose.emit(e);
@@ -42,5 +40,4 @@ export class SearchInputComponent implements OnInit {
     this.onChange.emit('');
     this.dirty = true;
   }
-
 }

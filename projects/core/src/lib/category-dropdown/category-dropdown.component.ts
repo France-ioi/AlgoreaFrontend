@@ -1,12 +1,11 @@
 import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
-  selector: 'app-category-dropdown',
+  selector: 'lib-category-dropdown',
   templateUrl: './category-dropdown.component.html',
-  styleUrls: ['./category-dropdown.component.scss']
+  styleUrls: ['./category-dropdown.component.scss'],
 })
 export class CategoryDropdownComponent implements OnInit {
-
   @Input() current = 0;
 
   types = [
@@ -14,16 +13,12 @@ export class CategoryDropdownComponent implements OnInit {
     { label: 'practice', value: 1 },
     { label: 'validation', value: 2 },
     { label: 'challenge', value: 3 },
-    { label: 'review', value: 4 }
+    { label: 'review', value: 4 },
   ];
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
-  handleChange(e) {
-    
-  }
-
+  handleChange(e) {}
 }

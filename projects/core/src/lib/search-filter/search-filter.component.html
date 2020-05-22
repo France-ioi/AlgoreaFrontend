@@ -42,7 +42,7 @@
     <div class="search-slider">
       Success rate between <span class="rate-label">{{ranges[0]}}%</span> and <span class="rate-label">{{ranges[1]}}%</span>
     </div>
-    <app-slider [ranges]="ranges" (onChange)="onSliderChange($event)"></app-slider>
-    <app-button icon="fa fa-check" label="filter" class="ui-button-rounded"></app-button>
+    <lib-slider [ranges]="ranges" (onChange)="onSliderChange($event)"></lib-slider>
+    <lib-button icon="fa fa-check" label="filter" class="ui-button-rounded"></lib-button>
   </div>
 </div>

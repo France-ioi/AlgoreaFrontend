@@ -4,16 +4,16 @@ import {
   Input,
   OnChanges,
   SimpleChanges,
-} from "@angular/core";
-import { GroupService } from "../../../shared/services/api/group.service";
-import { PendingRequest } from "../../../shared/models/pending-request.model";
-import { SortEvent } from "primeng/api/sortevent";
-import { MessageService } from "primeng/api";
+} from '@angular/core';
+import { GroupService } from '../../../shared/services/api/group.service';
+import { PendingRequest } from '../../../shared/models/pending-request.model';
+import { SortEvent } from 'primeng/api/sortevent';
+import { MessageService } from 'primeng/api';
 import {
   ERROR_MESSAGE,
-} from "../../../shared/constants/api";
-import { TOAST_LENGTH } from "../../../shared/constants/global";
-import * as _ from "lodash";
+} from '../../../shared/constants/api';
+import { TOAST_LENGTH } from '../../../shared/constants/global';
+import * as _ from 'lodash';
 import { RequestActionResponse } from '../../../shared/models/requet-action-response.model';
 import { Observable } from 'rxjs';
 
@@ -21,7 +21,7 @@ export enum Activity {
   Accepting,
   Rejecting,
   None
-};
+}
 
 export enum Action {
   Accept,
@@ -29,9 +29,9 @@ export enum Action {
 }
 
 @Component({
-  selector: "app-pending-request",
-  templateUrl: "./pending-request.component.html",
-  styleUrls: ["./pending-request.component.scss"],
+  selector: 'app-pending-request',
+  templateUrl: './pending-request.component.html',
+  styleUrls: ['./pending-request.component.scss'],
   providers: [MessageService],
 })
 export class PendingRequestComponent implements OnInit, OnChanges {
@@ -40,8 +40,8 @@ export class PendingRequestComponent implements OnInit, OnChanges {
   Action = Action;  // Make the enum usable in the html template
 
   columns = [
-    { field: "joining_user.login", header: "LOGIN" },
-    { field: "at", header: "REQUESTED ON" },
+    { field: 'joining_user.login', header: 'LOGIN' },
+    { field: 'at', header: 'REQUESTED ON' },
   ];
   requests: PendingRequest[] = [];
   selection: PendingRequest[] = [];
@@ -60,27 +60,27 @@ export class PendingRequestComponent implements OnInit, OnChanges {
 
   _displayResponseToast(data: Record<string, string>, verb: string, msg: string) {
     const succ = _.countBy(data, (status: string) => {
-      return ["success", "unchanged"].includes(status);
+      return ['success', 'unchanged'].includes(status);
     });
 
     if (succ.false === undefined || succ.false === 0) {
       this.messageService.add({
-        severity: "success",
-        summary: "Success",
+        severity: 'success',
+        summary: 'Success',
         detail: `${succ.true} request(s) have been ${msg}`,
         life: TOAST_LENGTH,
       });
     } else if (succ.true === undefined || succ.true === 0) {
       this.messageService.add({
-        severity: "error",
-        summary: "Error",
+        severity: 'error',
+        summary: 'Error',
         detail: `Unable to ${verb} the selected request(s).`,
         life: TOAST_LENGTH,
       });
     } else {
       this.messageService.add({
-        severity: "warn",
-        summary: "Partial success",
+        severity: 'warn',
+        summary: 'Partial success',
         detail: `${succ.true} request(s) have been ${msg}, ${succ.false} could not be executed`,
         life: TOAST_LENGTH,
       });
@@ -89,8 +89,8 @@ export class PendingRequestComponent implements OnInit, OnChanges {
 
   _processRequestError(_err) {
     this.messageService.add({
-      severity: "error",
-      summary: "Error",
+      severity: 'error',
+      summary: 'Error',
       detail: ERROR_MESSAGE.fail,
       life: TOAST_LENGTH,
     });
@@ -115,7 +115,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.panel.push({
-      name: "Pending Requests",
+      name: 'Pending Requests',
       columns: this.columns,
     });
   }
@@ -132,7 +132,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
 
     let resultObserver: Observable<RequestActionResponse>;
     this.onGoingActivity = (action === Action.Accept) ? Activity.Accepting : Activity.Rejecting;
-    
+
     const group_ids = this.selection.map(req => req.joining_user.group_id);
 
     if (action === Action.Accept) {
@@ -146,8 +146,8 @@ export class PendingRequestComponent implements OnInit, OnChanges {
       (res: RequestActionResponse) => {
         this._displayResponseToast(
           res.data,
-          action === Action.Accept ? "accept" : "reject",
-          action === Action.Accept ? "accepted" : "declined"
+          action === Action.Accept ? 'accept' : 'reject',
+          action === Action.Accept ? 'accepted' : 'declined'
         );
         this._reloadData();
         this.onGoingActivity = Activity.None;

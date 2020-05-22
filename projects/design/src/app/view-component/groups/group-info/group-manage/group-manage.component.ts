@@ -40,7 +40,7 @@ export class GroupManageComponent implements OnInit {
           name: 'Epreuves',
           columns: this.columns
         }
-      ]
+      ];
     });
 
     this.nodeService.getFiles().then(res => {
@@ -49,7 +49,7 @@ export class GroupManageComponent implements OnInit {
   }
 
   onExpandWidth(e) {
-    
+
   }
 
 }

@@ -18,12 +18,15 @@ import { SliderModule } from 'primeng/slider';
 import { ListboxModule } from 'primeng/listbox';
 import { MessagesModule } from 'primeng/messages';
 import { TabViewModule } from 'primeng/tabview';
-import { ProgressSpinnerModule } from "primeng/progressspinner";
-import { ToastModule } from "primeng/toast";
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { ToastModule } from 'primeng/toast';
 
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
-import { MatDialogModule, MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
+import {
+  MatDialogModule,
+  MAT_DIALOG_DEFAULT_OPTIONS,
+} from '@angular/material/dialog';
 import { MatNativeDateModule, MatRippleModule } from '@angular/material/core';
 
 import { ClickOutsideModule } from 'ng-click-outside';
@@ -32,7 +35,6 @@ import { NgDragDropModule } from 'ng-drag-drop';
 import { ButtonComponent } from './button/button.component';
 import { SectionComponent } from './section/section.component';
 import { DataListComponent } from './data-list/data-list.component';
-import { IoiTabComponent } from './ioi-tab/ioi-tab.component';
 import { PageNavigatorComponent } from './page-navigator/page-navigator.component';
 import { SkillProgressComponent } from './skill-progress/skill-progress.component';
 import { ScoreRingComponent } from './score-ring/score-ring.component';
@@ -98,7 +100,6 @@ import { SearchTabComponent } from './search-tab/search-tab.component';
     ButtonComponent,
     SectionComponent,
     DataListComponent,
-    IoiTabComponent,
     PageNavigatorComponent,
     SkillProgressComponent,
     ScoreRingComponent,
@@ -153,7 +154,7 @@ import { SearchTabComponent } from './search-tab/search-tab.component';
     AccessEditDialogComponent,
     ProgressSectionComponent,
     SkillActivityTabsComponent,
-    SearchTabComponent
+    SearchTabComponent,
   ],
   imports: [
     CommonModule,
@@ -184,7 +185,7 @@ import { SearchTabComponent } from './search-tab/search-tab.component';
     MatMenuModule,
 
     NgDragDropModule.forRoot(),
-    ClickOutsideModule
+    ClickOutsideModule,
   ],
   exports: [
     BreadcrumbComponent,
@@ -192,7 +193,6 @@ import { SearchTabComponent } from './search-tab/search-tab.component';
     SectionComponent,
     DataListComponent,
     MatTabsModule,
-    IoiTabComponent,
     PageNavigatorComponent,
     SkillProgressComponent,
     ScoreRingComponent,
@@ -251,7 +251,7 @@ import { SearchTabComponent } from './search-tab/search-tab.component';
     ToastModule
   ],
   providers: [
-    {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: true}}
+    { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: true } },
   ],
   entryComponents: [
     MatDialogComponent,
@@ -262,7 +262,7 @@ import { SearchTabComponent } from './search-tab/search-tab.component';
     ConfirmPasswordDialogComponent,
     GenerateBatchUserDialogComponent,
     JoinGroupDialogComponent,
-    AccessEditDialogComponent
-  ]
+    AccessEditDialogComponent,
+  ],
 })
-export class CoreModule { }
+export class CoreModule {}

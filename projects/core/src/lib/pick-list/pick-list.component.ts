@@ -1,36 +1,33 @@
-import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
-import { v4 as uuid } from "uuid";
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { v4 as uuid } from 'uuid';
 
 export enum PickListType {
   Standard,
   Imported,
   NonRequested,
-  Mandatory
+  Mandatory,
 }
 
 export enum PickListColor {
-  Standard = "#4A90E2",
-  Imported = "#F5A623",
-  NonRequested = "#9B9B9B",
-  Mandatory = "#FF001F"
+  Standard = '#4A90E2',
+  Imported = '#F5A623',
+  NonRequested = '#9B9B9B',
+  Mandatory = '#FF001F',
 }
 
 export enum PickListItemType {
-  Normal = "normal",
-  Lock = "lock"
+  Normal = 'normal',
+  Lock = 'lock',
 }
 
 @Component({
-  selector: "app-pick-list",
-  templateUrl: "./pick-list.component.html",
-  styleUrls: ["./pick-list.component.scss"]
+  selector: 'lib-pick-list',
+  templateUrl: './pick-list.component.html',
+  styleUrls: ['./pick-list.component.scss'],
 })
 export class PickListComponent implements OnInit {
   @Input() listCount = 2;
-  @Input() list = {
-    lists: [],
-    items: []
-  };
+  @Input() list;
 
   @Output() onLock = new EventEmitter<any>();
   @Output() onShowDate = new EventEmitter<any>();
@@ -42,14 +39,14 @@ export class PickListComponent implements OnInit {
   constructor() {}
 
   ngOnInit() {
-    this.list["_id"] = uuid();
-    this.list.lists.map(listItem => {
+    this.list._id = uuid();
+    this.list.lists.map((listItem) => {
       switch (listItem.ID) {
         case PickListType.Imported:
-          listItem.border = "dashed .1rem #6F90B6";
+          listItem.border = 'dashed .1rem #6F90B6';
           break;
         default:
-          listItem.border = "dashed .1rem #E4E4E4";
+          listItem.border = 'dashed .1rem #E4E4E4';
           break;
       }
 
@@ -60,7 +57,7 @@ export class PickListComponent implements OnInit {
   onItemDrop(e, listItem) {
     // Check if the item is from other pick list
 
-    if (e.dragData._id !== this.list["_id"]) {
+    if (e.dragData._id !== this.list._id) {
       return;
     }
 
@@ -83,15 +80,15 @@ export class PickListComponent implements OnInit {
   }
 
   onKeyDown(e) {
-    console.log(e);
     if (
-      e.code !== "ArrowLeft" &&
-      e.code !== "ArrowRight" &&
-      e.code !== "ArrowUp" &&
-      e.code !== "ArrowDown" &&
-      e.code !== "Space"
-    )
+      e.code !== 'ArrowLeft' &&
+      e.code !== 'ArrowRight' &&
+      e.code !== 'ArrowUp' &&
+      e.code !== 'ArrowDown' &&
+      e.code !== 'Space'
+    ) {
       return;
+    }
     e.preventDefault();
     e.stopPropagation();
     if (this.activeID === -1) {
@@ -99,7 +96,7 @@ export class PickListComponent implements OnInit {
       //   return item.list === this.list.lists[0].ID;
       // });
     } else {
-      if (e.code === "ArrowLeft" || e.code === "ArrowRight") {
+      if (e.code === 'ArrowLeft' || e.code === 'ArrowRight') {
         let ord = 0;
         for (let i = 0; i < this.list.lists.length; i++) {
           if (this.list.lists[i].ID === this.activeType) {
@@ -108,15 +105,14 @@ export class PickListComponent implements OnInit {
           }
         }
 
-        if (e.code === "ArrowLeft") {
+        if (e.code === 'ArrowLeft') {
           ord = (ord - 1 + this.list.lists.length) % this.list.lists.length;
         } else {
           ord = (ord + 1) % this.list.lists.length;
         }
 
         if (this.selectedID < 0) {
-
-          const selList = this.list.items.filter(item => {
+          const selList = this.list.items.filter((item) => {
             return item.list === this.list.lists[ord].ID;
           });
 
@@ -125,9 +121,12 @@ export class PickListComponent implements OnInit {
             this.activeType = this.list.lists[ord].ID;
           }
         } else {
-          for(const item of this.list.items) {
+          for (const item of this.list.items) {
             if (item.ID === this.selectedID) {
-              if (item.type === PickListItemType.Lock && this.list.lists[ord].ID === PickListType.Standard) {
+              if (
+                item.type === PickListItemType.Lock &&
+                this.list.lists[ord].ID === PickListType.Standard
+              ) {
                 this.onLock.emit(true);
                 return;
               }
@@ -138,9 +137,9 @@ export class PickListComponent implements OnInit {
             }
           }
         }
-      } else if (e.code === "ArrowUp" || e.code === "ArrowDown") {
+      } else if (e.code === 'ArrowUp' || e.code === 'ArrowDown') {
         if (this.selectedID < 0) {
-          const selList = this.list.items.filter(item => {
+          const selList = this.list.items.filter((item) => {
             return item.list === this.activeType;
           });
           let ord = 0;
@@ -151,7 +150,7 @@ export class PickListComponent implements OnInit {
             }
           }
 
-          if (e.code === "ArrowUp") {
+          if (e.code === 'ArrowUp') {
             ord = (ord - 1 + selList.length) % selList.length;
           } else {
             ord = (ord + 1) % selList.length;
@@ -159,7 +158,6 @@ export class PickListComponent implements OnInit {
 
           this.activeID = selList[ord].ID;
         } else {
-
         }
       } else {
         if (this.selectedID < 0) {
