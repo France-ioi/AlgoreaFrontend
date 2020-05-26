@@ -7,7 +7,7 @@
     "build": "ng build core && npm run copyColor && npm run copyGeo",
     "copyColor": "xcopy \"projects\\core\\src\\lib\\colors.scss\" \"dist\\core\\\"",
     "copyGeo": "xcopy \"projects\\core\\src\\lib\\geometry.scss\" \"dist\\core\\\"",
-    "test": "ng test dev && ng test core",
+    "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
   },
