@@ -58,7 +58,6 @@ export class GroupManageComponent implements OnInit {
   ngOnInit() {
     this.activatedRoute.params.subscribe((routeParams) => {
       this.groupId = routeParams.id;
-      console.log(this.groupId);
 
       this.groupService.getManagedGroup(this.groupId).subscribe((group: Group) => {
         this.groupdata = {
