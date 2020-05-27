@@ -16,6 +16,12 @@ module.exports = function (config) {
       clearContext: false, // leave Jasmine Spec Runner output visible in browser
       random: false
     },
+    files: [
+      { pattern: 'assets/**', watched: false, included: false, nocache: false, served: true }
+    ],
+    proxies: {
+      '/assets/': 'src/assets/'
+    },
     coverageIstanbulReporter: {
       dir: require('path').join(__dirname, '../../coverage/dev'),
       reports: ['html', 'lcovonly', 'text-summary'],
