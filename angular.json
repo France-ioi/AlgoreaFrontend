@@ -239,24 +239,11 @@
           "options": {
             "tsConfig": [
               "projects/design/tsconfig.app.json",
-              "projects/design/tsconfig.spec.json",
               "projects/design/e2e/tsconfig.json"
             ],
             "exclude": [
               "**/node_modules/**"
             ]
-          }
-        },
-        "e2e": {
-          "builder": "@angular-devkit/build-angular:protractor",
-          "options": {
-            "protractorConfig": "projects/design/e2e/protractor.conf.js",
-            "devServerTarget": "design:serve"
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "design:serve:production"
-            }
           }
         }
       }
