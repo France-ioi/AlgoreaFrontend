@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SwitchContainerComponent } from './switch-container.component';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('SwitchContainerComponent', () => {
   let component: SwitchContainerComponent;
@@ -8,7 +9,8 @@ describe('SwitchContainerComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SwitchContainerComponent ]
+      declarations: [ SwitchContainerComponent ],
+      schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();
   }));

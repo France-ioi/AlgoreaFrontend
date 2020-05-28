@@ -13,7 +13,14 @@ module.exports = function (config) {
       require('@angular-devkit/build-angular/plugins/karma')
     ],
     client: {
-      clearContext: false // leave Jasmine Spec Runner output visible in browser
+      clearContext: false, // leave Jasmine Spec Runner output visible in browser
+      random: false
+    },
+    files: [
+      { pattern: 'assets/**', watched: false, included: false, nocache: false, served: true }
+    ],
+    proxies: {
+      '/assets/': 'src/assets/'
     },
     coverageIstanbulReporter: {
       dir: require('path').join(__dirname, '../../coverage/dev'),
@@ -26,7 +33,7 @@ module.exports = function (config) {
     logLevel: config.LOG_INFO,
     autoWatch: true,
     browsers: ['Chrome'],
-    singleRun: false,
+    singleRun: true,
     restartOnFileChange: true
   });
 };

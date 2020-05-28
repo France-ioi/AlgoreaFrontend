@@ -1,14 +1,25 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ActivityPickerComponent } from './activity-picker.component';
+import { MatDialogModule, MatDialog } from '@angular/material';
 
 describe('ActivityPickerComponent', () => {
   let component: ActivityPickerComponent;
   let fixture: ComponentFixture<ActivityPickerComponent>;
 
   beforeEach(async(() => {
+    const dialogSpy = jasmine.createSpyObj('MatDialog', ['open']);
     TestBed.configureTestingModule({
-      declarations: [ ActivityPickerComponent ]
+      imports: [
+        MatDialogModule
+      ],
+      declarations: [ ActivityPickerComponent ],
+      providers: [
+        {
+          provide: MatDialog,
+          useValue: dialogSpy
+        }
+      ]
     })
     .compileComponents();
   }));

@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ItemsNavigationTreeComponent } from './items-navigation-tree.component';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('TreeNavigationComponent', () => {
   let component: ItemsNavigationTreeComponent;
@@ -8,7 +9,8 @@ describe('TreeNavigationComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ItemsNavigationTreeComponent ]
+      declarations: [ ItemsNavigationTreeComponent ],
+      schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();
   }));

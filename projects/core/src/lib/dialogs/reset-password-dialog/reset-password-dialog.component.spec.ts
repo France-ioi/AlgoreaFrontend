@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ResetPasswordDialogComponent } from './reset-password-dialog.component';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 describe('ResetPasswordDialogComponent', () => {
   let component: ResetPasswordDialogComponent;
@@ -8,7 +10,21 @@ describe('ResetPasswordDialogComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ResetPasswordDialogComponent ]
+      imports: [
+        MatDialogModule
+      ],
+      declarations: [ ResetPasswordDialogComponent ],
+      providers: [
+        {
+          provide: MatDialogRef,
+          useValue: {}
+        },
+        {
+          provide: MAT_DIALOG_DATA,
+          useValue: {}
+        }
+      ],
+      schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();
   }));

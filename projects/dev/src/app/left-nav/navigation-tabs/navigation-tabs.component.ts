@@ -37,7 +37,6 @@ export class NavigationTabsComponent implements OnInit, OnChanges {
     private ngZone: NgZone,
     private statusService: StatusService,
     private locationService: Location,
-    private router: Router
   ) {
   }
 
@@ -45,7 +44,6 @@ export class NavigationTabsComponent implements OnInit, OnChanges {
     this.statusService.getObservable().subscribe(res => {
       this.notified = res.notified;
       this.esOb = res;
-      console.log('get', this.esOb);
     });
   }
 

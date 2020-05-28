@@ -1,5 +1,4 @@
 import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-left-nav',
@@ -25,9 +24,7 @@ export class LeftNavComponent implements OnInit, OnChanges {
 
   searchView = false;
 
-  constructor(
-    private router: Router
-  ) { }
+  constructor() { }
 
   ngOnInit() {
   }

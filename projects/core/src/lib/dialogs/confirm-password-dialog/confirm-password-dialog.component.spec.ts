@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ConfirmPasswordDialogComponent } from './confirm-password-dialog.component';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 describe('ConfirmPasswordDialogComponent', () => {
   let component: ConfirmPasswordDialogComponent;
@@ -8,7 +10,21 @@ describe('ConfirmPasswordDialogComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ConfirmPasswordDialogComponent ]
+      imports: [
+        MatDialogModule,
+      ],
+      declarations: [ ConfirmPasswordDialogComponent ],
+      providers: [
+        {
+          provide: MatDialogRef,
+          useValue: {}
+        },
+        {
+          provide: MAT_DIALOG_DATA,
+          useValue: {}
+        }
+      ],
+      schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();
   }));

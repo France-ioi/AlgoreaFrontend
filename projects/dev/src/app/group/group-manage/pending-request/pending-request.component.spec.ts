@@ -1,6 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PendingRequestComponent } from './pending-request.component';
+import { CoreModule } from 'core';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('PendingRequestComponent', () => {
   let component: PendingRequestComponent;
@@ -8,7 +11,12 @@ describe('PendingRequestComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PendingRequestComponent ]
+      imports: [
+        CoreModule,
+        HttpClientTestingModule
+      ],
+      declarations: [ PendingRequestComponent ],
+      schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();
   }));

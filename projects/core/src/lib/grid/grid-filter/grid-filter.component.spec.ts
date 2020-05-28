@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { GridFilterComponent } from './grid-filter.component';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('GridFilterComponent', () => {
   let component: GridFilterComponent;
@@ -8,7 +9,8 @@ describe('GridFilterComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ GridFilterComponent ]
+      declarations: [ GridFilterComponent ],
+      schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();
   }));

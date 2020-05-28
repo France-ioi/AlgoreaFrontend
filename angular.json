@@ -234,46 +234,15 @@
             "browserTarget": "design:build"
           }
         },
-        "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "main": "projects/design/src/test.ts",
-            "polyfills": "projects/design/src/polyfills.ts",
-            "tsConfig": "projects/design/tsconfig.spec.json",
-            "karmaConfig": "projects/design/karma.conf.js",
-            "assets": [
-              "projects/design/src/favicon.ico",
-              "projects/design/src/assets"
-            ],
-            "styles": [
-              "projects/design/src/styles.scss"
-            ],
-            "scripts": []
-          }
-        },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "projects/design/tsconfig.app.json",
-              "projects/design/tsconfig.spec.json",
-              "projects/design/e2e/tsconfig.json"
+              "projects/design/tsconfig.app.json"
             ],
             "exclude": [
               "**/node_modules/**"
             ]
-          }
-        },
-        "e2e": {
-          "builder": "@angular-devkit/build-angular:protractor",
-          "options": {
-            "protractorConfig": "projects/design/e2e/protractor.conf.js",
-            "devServerTarget": "design:serve"
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "design:serve:production"
-            }
           }
         }
       }

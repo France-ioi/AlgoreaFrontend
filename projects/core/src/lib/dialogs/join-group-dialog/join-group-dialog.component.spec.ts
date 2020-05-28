@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { JoinGroupDialogComponent } from './join-group-dialog.component';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 describe('JoinGroupDialogComponent', () => {
   let component: JoinGroupDialogComponent;
@@ -8,7 +10,21 @@ describe('JoinGroupDialogComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ JoinGroupDialogComponent ]
+      imports: [
+        MatDialogModule
+      ],
+      declarations: [ JoinGroupDialogComponent ],
+      providers: [
+        {
+          provide: MatDialogRef,
+          useValue: {}
+        },
+        {
+          provide: MAT_DIALOG_DATA,
+          useValue: {}
+        }
+      ],
+      schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();
   }));

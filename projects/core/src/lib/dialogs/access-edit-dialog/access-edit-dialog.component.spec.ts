@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AccessEditDialogComponent } from './access-edit-dialog.component';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { MatDialogRef, MatDialogModule, MAT_DIALOG_DATA } from '@angular/material';
 
 describe('AccessEditDialogComponent', () => {
   let component: AccessEditDialogComponent;
@@ -8,7 +10,21 @@ describe('AccessEditDialogComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AccessEditDialogComponent ]
+      imports: [
+        MatDialogModule
+      ],
+      declarations: [ AccessEditDialogComponent ],
+      providers: [
+        {
+          provide: MatDialogRef,
+          useValue: {}
+        },
+        {
+          provide: MAT_DIALOG_DATA,
+          useValue: {}
+        }
+      ],
+      schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();
   }));

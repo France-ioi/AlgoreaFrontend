@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SubGridComponent } from './sub-grid.component';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('SubGridComponent', () => {
   let component: SubGridComponent;
@@ -8,7 +9,8 @@ describe('SubGridComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SubGridComponent ]
+      declarations: [ SubGridComponent ],
+      schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();
   }));
