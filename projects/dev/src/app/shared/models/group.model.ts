@@ -25,7 +25,7 @@ export interface Group {
   created_at: Date;
 }
 
-export const initializeGroup = () : Group => {
+export const initializeGroup = (): Group => {
   return {
     id: '',
     name: '',
@@ -48,4 +48,4 @@ export const initializeGroup = () : Group => {
     open_contest: false,
     created_at: new Date()
   };
-}
+};

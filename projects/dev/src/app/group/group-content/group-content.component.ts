@@ -17,7 +17,7 @@ export enum Management {
 export class GroupContentComponent implements OnInit {
 
   group: Group;
-  groupId: number = 0;
+  groupId = 0;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -41,6 +41,7 @@ export class GroupContentComponent implements OnInit {
     return this.group.current_user_can_manage === Management.MembershipsAndGroup;
   }
 
+  // tslint:disable-next-line
   onTabChange(_e) {
     const tabsDom = this.elementRef.nativeElement.querySelectorAll(
       '.mat-tab-labels .mat-tab-label'
@@ -57,7 +58,7 @@ export class GroupContentComponent implements OnInit {
       tabsDom[iTab - 1].classList.add('mat-tab-label-before-active');
     }
 
-    switch(iTab) {
+    switch (iTab) {
       case 0:
         this.router.navigateByUrl(`/groups/${this.groupId}`);
         break;
