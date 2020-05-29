@@ -26,6 +26,9 @@
         Administration
       </ng-template>
       <ng-template matTabContent>
+        <ng-container *ngIf="canMangeMembershipAndGroup(); else noPermissionBlock">
+
+        </ng-container>
       </ng-template>
     </mat-tab>
     <mat-tab>
@@ -34,7 +37,13 @@
         Settings
       </ng-template>
       <ng-template matTabContent>
+        <ng-container *ngIf="canMangeMembershipAndGroup(); else noPermissionBlock">
+
+        </ng-container>
       </ng-template>
     </mat-tab>
   </mat-tab-group>
+</ng-template>
+<ng-template #noPermissionBlock>
+  <p>The user doesn't have enought permission to see this content</p>
 </ng-template>
