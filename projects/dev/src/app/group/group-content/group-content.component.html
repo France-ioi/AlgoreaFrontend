@@ -1,35 +1,40 @@
-<mat-tab-group mat-stretch-tabs (selectedTabChange)="onTabChange($event)">
-  <mat-tab>
-    <ng-template mat-tab-label>
-      <i class="fa fa-chart-pie"></i>
-      Overview
-    </ng-template>
-    <ng-template matTabContent>
-      <app-group-overview [id]="data.ID" [description]="data.description"></app-group-overview>
-    </ng-template>
-  </mat-tab>
-  <mat-tab>
-    <ng-template mat-tab-label>
-      <i class="fa fa-sitemap"></i>
-      Composition
-    </ng-template>
-    <ng-template matTabContent>
-    </ng-template>
-  </mat-tab>
-  <mat-tab>
-    <ng-template mat-tab-label>
-      <i class="fa fa-lock"></i>
-      Administration
-    </ng-template>
-    <ng-template matTabContent>
-    </ng-template>
-  </mat-tab>
-  <mat-tab>
-    <ng-template mat-tab-label>
-      <i class="fa fa-cog"></i>
-      Settings
-    </ng-template>
-    <ng-template matTabContent>
-    </ng-template>
-  </mat-tab>
-</mat-tab-group>
+<ng-container *ngIf="!group.current_user_is_manager; else managerBlock">
+  <app-group-overview [description]="group.description"></app-group-overview>
+</ng-container>
+<ng-template #managerBlock>
+  <mat-tab-group mat-stretch-tabs (selectedTabChange)="onTabChange($event)">
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <i class="fa fa-chart-pie"></i>
+        Overview
+      </ng-template>
+      <ng-template matTabContent>
+        <app-group-overview [description]="group.description"></app-group-overview>
+      </ng-template>
+    </mat-tab>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <i class="fa fa-sitemap"></i>
+        Composition
+      </ng-template>
+      <ng-template matTabContent>
+      </ng-template>
+    </mat-tab>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <i class="fa fa-lock"></i>
+        Administration
+      </ng-template>
+      <ng-template matTabContent>
+      </ng-template>
+    </mat-tab>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <i class="fa fa-cog"></i>
+        Settings
+      </ng-template>
+      <ng-template matTabContent>
+      </ng-template>
+    </mat-tab>
+  </mat-tab-group>
+</ng-template>
