@@ -4,6 +4,11 @@ import { GroupService } from '../../shared/services/api/group.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Group, initializeGroup } from '../../shared/models/group.model';
 
+export enum Management {
+  None = 'none',
+  MembershipsAndGroup = 'memberships_and_group'
+}
+
 @Component({
   selector: 'app-group-content',
   templateUrl: './group-content.component.html',
@@ -30,6 +35,10 @@ export class GroupContentComponent implements OnInit {
         this.group = group;
       });
     });
+  }
+
+  canMangeMembershipAndGroup() {
+    return this.group.current_user_can_manage === Management.MembershipsAndGroup;
   }
 
   onTabChange(_e) {
