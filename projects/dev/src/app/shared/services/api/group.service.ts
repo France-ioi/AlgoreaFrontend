@@ -34,7 +34,7 @@ export class GroupService {
 
   constructor(private http: HttpClient) {}
 
-  getManagedGroup(id): Observable<Group> {
+  getGroup(id): Observable<Group> {
     return this.http
       .get<Group>(`${this.baseGroupUrl}/${id}`)
       .pipe(catchError(this.handleError));
