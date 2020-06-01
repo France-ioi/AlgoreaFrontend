@@ -27,8 +27,7 @@ describe('GroupContentComponent', () => {
         {
           provide: ActivatedRoute,
           useValue: {
-            params: of({id: 50}),
-            url: of([{path: 'overview'}])
+            params: of({id: 50})
           }
         },
       ],
