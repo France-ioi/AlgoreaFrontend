@@ -9,13 +9,6 @@ export enum Management {
   MembershipsAndGroup = 'memberships_and_group'
 }
 
-export enum TabUrls {
-  Overview = 'overview',
-  Composition = 'members',
-  Administration = 'managers',
-  Settings = 'settings'
-}
-
 @Component({
   selector: 'app-group-content',
   templateUrl: './group-content.component.html',
@@ -41,23 +34,6 @@ export class GroupContentComponent implements OnInit {
       this.groupService.getGroup(this.groupId).subscribe((group) => {
         this.group = group;
       });
-    });
-
-    this.activatedRoute.url.subscribe((segments: UrlSegment[]) => {
-      switch (segments[0].path) {
-        case TabUrls.Composition:
-          this.activeTab = 1;
-          break;
-        case TabUrls.Administration:
-          this.activeTab = 2;
-          break;
-        case TabUrls.Settings:
-          this.activeTab = 3;
-          break;
-        default:
-          this.activeTab = 0;
-          break;
-      }
     });
   }
 
@@ -96,5 +72,9 @@ export class GroupContentComponent implements OnInit {
         this.router.navigate([`/dev/groups/${this.groupId}/settings`]);
         break;
     }
+  }
+
+  onActiveTabChange(idx) {
+    this.activeTab = idx;
   }
 }
