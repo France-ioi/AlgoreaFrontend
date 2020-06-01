@@ -1,5 +1,6 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute, UrlSegment } from '@angular/router';
+import { Location } from '@angular/common';
 
 export enum TabUrls {
   Overview = 'overview',
@@ -18,13 +19,15 @@ export class GroupActiveTabComponent implements OnInit {
   @Output() activeTabChange = new EventEmitter<number>();
 
   constructor(
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private location: Location
   ) { }
 
+  
   ngOnInit() {
-
-    this.activatedRoute.url.subscribe((segments: UrlSegment[]) => {
-      switch (segments[0].path) {
+    this.activatedRoute.url.subscribe(_ => {
+      const path = this.location.path().split('/').pop();
+      switch (path) {
         case TabUrls.Composition:
           this.activeTabChange.emit(1);
           break;
