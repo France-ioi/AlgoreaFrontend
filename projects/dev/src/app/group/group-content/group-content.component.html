@@ -1,4 +1,4 @@
-<ng-container *ngIf="!group.current_user_is_manager; else managerBlock">
+<ng-container *ngIf="!group.current_user_is_manager && activeTab === 0; else managerBlock">
   <app-group-overview [description]="group.description"></app-group-overview>
 </ng-container>
 <ng-template #managerBlock>
@@ -18,6 +18,9 @@
         Composition
       </ng-template>
       <ng-template matTabContent>
+        <ng-container *ngIf="group.current_user_is_manager; else noPermissionBlock">
+
+        </ng-container>
       </ng-template>
     </mat-tab>
     <mat-tab>
