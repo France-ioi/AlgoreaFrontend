@@ -1,12 +1,19 @@
 import { Component, OnInit, ElementRef, EventEmitter, Input, Output } from '@angular/core';
 import * as _ from 'lodash';
 import { GroupService } from '../../shared/services/api/group.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
 import { Group, initializeGroup } from '../../shared/models/group.model';
 
 export enum Management {
   None = 'none',
   MembershipsAndGroup = 'memberships_and_group'
+}
+
+export enum TabUrls {
+  Overview = 'overview',
+  Composition = 'members',
+  Administration = 'managers',
+  Settings = 'settings'
 }
 
 @Component({
@@ -18,6 +25,7 @@ export class GroupContentComponent implements OnInit {
 
   group: Group;
   groupId = 0;
+  activeTab = 0;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -30,10 +38,26 @@ export class GroupContentComponent implements OnInit {
   ngOnInit() {
     this.activatedRoute.params.subscribe((routeParams) => {
       this.groupId = routeParams.id;
-
       this.groupService.getGroup(this.groupId).subscribe((group) => {
         this.group = group;
       });
+    });
+
+    this.activatedRoute.url.subscribe((segments: UrlSegment[]) => {
+      switch (segments[0].path) {
+        case TabUrls.Composition:
+          this.activeTab = 1;
+          break;
+        case TabUrls.Administration:
+          this.activeTab = 2;
+          break;
+        case TabUrls.Settings:
+          this.activeTab = 3;
+          break;
+        default:
+          this.activeTab = 0;
+          break;
+      }
     });
   }
 
@@ -60,16 +84,16 @@ export class GroupContentComponent implements OnInit {
 
     switch (iTab) {
       case 0:
-        this.router.navigateByUrl(`/groups/${this.groupId}`);
+        this.router.navigate([`/dev/groups/${this.groupId}`]);
         break;
       case 1:
-        this.router.navigateByUrl(`/groups/${this.groupId}/members`);
+        this.router.navigate([`/dev/groups/${this.groupId}/members`]);
         break;
       case 2:
-        this.router.navigateByUrl(`/groups/${this.groupId}/managers`);
+        this.router.navigate([`/dev/groups/${this.groupId}/managers`]);
         break;
       case 3:
-        this.router.navigateByUrl(`/groups/${this.groupId}/settings`);
+        this.router.navigate([`/dev/groups/${this.groupId}/settings`]);
         break;
     }
   }

@@ -2,7 +2,7 @@
   <app-group-overview [description]="group.description"></app-group-overview>
 </ng-container>
 <ng-template #managerBlock>
-  <mat-tab-group mat-stretch-tabs (selectedTabChange)="onTabChange($event)">
+  <mat-tab-group mat-stretch-tabs (selectedTabChange)="onTabChange($event)" [selectedIndex]="activeTab">
     <mat-tab>
       <ng-template mat-tab-label>
         <i class="fa fa-chart-pie"></i>
