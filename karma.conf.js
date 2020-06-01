@@ -17,7 +17,7 @@ module.exports = function (config) {
       random: false
     },
     coverageIstanbulReporter: {
-      dir: require('path').join(__dirname, './coverage/fracne-ioi'),
+      dir: require('path').join(__dirname, './coverage/algorea'),
       reports: ['html', 'lcovonly', 'text-summary'],
       fixWebpackSourcePaths: true
     },
