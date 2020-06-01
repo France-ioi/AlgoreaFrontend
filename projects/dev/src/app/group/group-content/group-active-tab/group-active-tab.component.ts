@@ -23,7 +23,6 @@ export class GroupActiveTabComponent implements OnInit {
     private location: Location
   ) { }
 
-  
   ngOnInit() {
     this.activatedRoute.url.subscribe(_ => {
       const path = this.location.path().split('/').pop();
