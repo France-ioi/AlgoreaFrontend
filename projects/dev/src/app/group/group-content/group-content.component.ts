@@ -58,6 +58,10 @@ export class GroupContentComponent implements OnInit {
     return this.group.current_user_can_manage === Management.MembershipsAndGroup;
   }
 
+  canShowTab() {
+    return this.activeTab === 0 || this.activeTab === 1 || this.canMangeMembershipAndGroup();
+  }
+
   // tslint:disable-next-line
   onTabChange(_e) {
     const tabsDom = this.elementRef.nativeElement.querySelectorAll(

@@ -1,10 +1,14 @@
-<ng-container *ngIf="!group.current_user_is_manager && activeTab === 0; else managerBlock">
-  <div class="no-permission">
-    <app-group-overview [description]="group.description"></app-group-overview>
-  </div>
+<ng-container *ngIf="!group.current_user_is_manager; else managerBlock">
+  <ng-container *ngIf="activeTab === 0">
+    <div class="no-permission">
+      <app-group-overview [description]="group.description"></app-group-overview>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="activeTab === 2 || activeTab === 3 then noPermissionBlock">
+  </ng-container>
 </ng-container>
 <ng-template #managerBlock>
-  <mat-tab-group mat-stretch-tabs (selectedTabChange)="onTabChange($event)" [selectedIndex]="activeTab">
+  <mat-tab-group *ngIf="canShowTab(); else noPermissionBlock" mat-stretch-tabs (selectedTabChange)="onTabChange($event)" [selectedIndex]="activeTab">
     <mat-tab>
       <ng-template mat-tab-label>
         <i class="fa fa-chart-pie"></i>
@@ -50,5 +54,5 @@
   </mat-tab-group>
 </ng-template>
 <ng-template #noPermissionBlock>
-  <p>The user doesn't have enought permission to see this content</p>
+  <p class="no-permission">The user doesn't have enought permission to see this content</p>
 </ng-template>
