@@ -10,7 +10,7 @@ export enum Management {
 }
 
 export enum TabUrls {
-  Overview = 'overview',
+  Overview = '',
   Composition = 'members',
   Administration = 'managers',
   Settings = 'settings'

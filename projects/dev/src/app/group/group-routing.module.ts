@@ -14,7 +14,7 @@ const routes: Routes = [
     component: GroupManageComponent,
     children: [
       {
-        path: 'overview',
+        path: '',
         component: GroupContentComponent,
       },
       {
@@ -31,7 +31,7 @@ const routes: Routes = [
       },
       {
         path: '**',
-        redirectTo: 'overview'
+        redirectTo: ''
       }
     ]
   },
