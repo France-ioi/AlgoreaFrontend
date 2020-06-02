@@ -3,41 +3,31 @@ import { Routes, RouterModule } from '@angular/router';
 import { GroupComponent } from './group.component';
 import { GroupManageComponent } from './group-manage/group-manage.component';
 import { GroupContentComponent } from './group-content/group-content.component';
-import { GroupActiveTabComponent } from './group-content/group-active-tab/group-active-tab.component';
 
 const routes: Routes = [
-  {
-    path: 'managed',
-    children: [
-      {
-        path: ':id',
-        component: GroupManageComponent,
-      }
-    ]
-  },
   {
     path: 'memberships/:id',
     component: GroupComponent,
   },
   {
     path: ':id',
-    component: GroupContentComponent,
+    component: GroupManageComponent,
     children: [
       {
         path: 'overview',
-        component: GroupActiveTabComponent,
+        component: GroupContentComponent,
       },
       {
         path: 'members',
-        component: GroupActiveTabComponent,
+        component: GroupContentComponent,
       },
       {
         path: 'managers',
-        component: GroupActiveTabComponent,
+        component: GroupContentComponent,
       },
       {
         path: 'settings',
-        component: GroupActiveTabComponent,
+        component: GroupContentComponent,
       },
       {
         path: '**',
