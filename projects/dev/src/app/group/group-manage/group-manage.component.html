@@ -3,10 +3,10 @@
   [isFolded]="status.folded"
   [isStarted]="status.isStarted"
   [isCollapsed]="status.collapsed"
-  [data]="groupdata"
+  [data]="group"
   (expandWholeWidth)="onExpandWidth($event)"
 ></app-group-header>
 <app-pending-request
   [id]="groupId"
 ></app-pending-request>
-<!-- <app-group-content [data]="groupdata"></app-group-content> -->
+<app-group-content [group]="group"></app-group-content>

@@ -11,7 +11,6 @@ import { GroupContentComponent } from './group-content/group-content.component';
 import { GroupOverviewComponent } from './group-content/group-overview/group-overview.component';
 import { GroupManageComponent } from './group-manage/group-manage.component';
 import { PendingRequestComponent } from './group-manage/pending-request/pending-request.component';
-import { GroupActiveTabComponent } from './group-content/group-active-tab/group-active-tab.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +20,6 @@ import { GroupActiveTabComponent } from './group-content/group-active-tab/group-
     GroupOverviewComponent,
     GroupManageComponent,
     PendingRequestComponent,
-    GroupActiveTabComponent,
   ],
   imports: [
     CommonModule,
