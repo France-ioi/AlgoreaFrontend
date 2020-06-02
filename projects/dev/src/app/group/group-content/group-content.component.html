@@ -1,5 +1,7 @@
 <ng-container *ngIf="!group.current_user_is_manager && activeTab === 0; else managerBlock">
-  <app-group-overview [description]="group.description"></app-group-overview>
+  <div class="no-permission">
+    <app-group-overview [description]="group.description"></app-group-overview>
+  </div>
 </ng-container>
 <ng-template #managerBlock>
   <mat-tab-group mat-stretch-tabs (selectedTabChange)="onTabChange($event)" [selectedIndex]="activeTab">
