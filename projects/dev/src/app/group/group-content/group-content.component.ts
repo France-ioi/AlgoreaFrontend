@@ -34,6 +34,7 @@ export class GroupContentComponent implements OnInit {
   }
 
   ngOnInit() {
+    // tslint:disable-next-line
     this.activatedRoute.url.subscribe(_ => {
       const path = this.location.path().split('/').pop();
       switch (path) {
