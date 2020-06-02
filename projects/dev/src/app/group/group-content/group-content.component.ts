@@ -55,7 +55,7 @@ export class GroupContentComponent implements OnInit {
   }
 
   canMangeMembershipAndGroup() {
-    return this.group.current_user_can_manage === Management.MembershipsAndGroup && this.group.current_user_is_manager;
+    return this.group.current_user_can_manage === Management.MembershipsAndGroup;
   }
 
   // tslint:disable-next-line
