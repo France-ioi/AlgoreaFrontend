@@ -62,15 +62,15 @@ jobs:
       - run: echo "" > lcov.info.combined
       - run:
           name: tests for "algorea"
-          command: ./node_modules/.bin/ng test algorea --code-coverage --karma-config .circleci/karma.conf.js
+          command: ./node_modules/.bin/ng test algorea --code-coverage --karma-config .circleci/karma.conf.js --no-watch --no-progress --browsers=ChromeHeadlessCI
       - run: cat lcov.info >> lcov.info.combined
       - run:
           name: tests for "core"
-          command: ./node_modules/.bin/ng test core --code-coverage --karma-config .circleci/karma.conf.js
+          command: ./node_modules/.bin/ng test core --code-coverage --karma-config .circleci/karma.conf.js --no-watch --no-progress --browsers=ChromeHeadlessCI
       - run: cat lcov.info >> lcov.info.combined
       - run:
           name: tests for "dev"
-          command: ./node_modules/.bin/ng test dev --code-coverage --karma-config .circleci/karma.conf.js
+          command: ./node_modules/.bin/ng test dev --code-coverage --karma-config .circleci/karma.conf.js --no-watch --no-progress --browsers=ChromeHeadlessCI
       - run: cat lcov.info.combined >> lcov.info # putting all cov reports together
       - run:
           name: CodeCov (tool sending coverage reports to Codecov.io)
@@ -81,7 +81,12 @@ jobs:
     steps:
       - attach_workspace:
           at: ./
-      - run: ./node_modules/.bin/ng e2e
+      - run:
+          name: e2e for "algorea"
+          command: ./node_modules/.bin/ng e2e algorea --protractor-config=e2e/protractor-ci.conf.js
+      - run:
+          name: e2e for "dev"
+          command: ./node_modules/.bin/ng e2e dev --protractor-config=projects/dev/e2e/protractor-ci.conf.js
 
 
   deploy-branch:
