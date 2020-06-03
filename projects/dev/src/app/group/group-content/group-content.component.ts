@@ -4,7 +4,7 @@ import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
 import { Group } from '../../shared/models/group.model';
 import { Location } from '@angular/common';
 
-export enum Management {
+export enum ManagementLevel {
   None = 'none',
   MembershipsAndGroup = 'memberships_and_group'
 }
