@@ -6,7 +6,7 @@
   </ng-container>
 </ng-container>
 <ng-template #managerBlock>
-  <mat-tab-group *ngIf="canShowTab(); else noPermissionBlock" mat-stretch-tabs (selectedTabChange)="onTabChange($event)" [selectedIndex]="activeTab">
+  <mat-tab-group *ngIf="canShowTab(); else noPermissionBlock" mat-stretch-tabs (selectedTabChange)="onTabChange()" [selectedIndex]="activeTab">
     <mat-tab>
       <ng-template mat-tab-label>
         <i class="fa fa-chart-pie"></i>
