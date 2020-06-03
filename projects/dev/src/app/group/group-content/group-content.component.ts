@@ -54,7 +54,7 @@ export class GroupContentComponent implements OnInit {
   }
 
   canMangeMembershipAndGroup() {
-    return this.group.current_user_can_manage === Management.MembershipsAndGroup;
+    return this.group.current_user_can_manage === ManagementLevel.MembershipsAndGroup;
   }
 
   canShowTab() {
