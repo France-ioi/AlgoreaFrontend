@@ -34,8 +34,7 @@ export class GroupContentComponent implements OnInit {
   }
 
   ngOnInit() {
-    // tslint:disable-next-line
-    this.activatedRoute.url.subscribe(_ => {
+    this.activatedRoute.url.subscribe(() => {
       const path = this.location.path().split('/').pop();
       switch (path) {
         case TabUrls.Composition:
