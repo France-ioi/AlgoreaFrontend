@@ -1,18 +1,13 @@
 version: 2.1
 
-# custom vars:
-var_node: &node_image
-  - image: circleci/node:12.16
-
-
 orbs:
   aws-s3: circleci/aws-s3@1.0.15
-
 
 jobs:
   # deps has to be run before the other jobs and basically run "npm install" and cache it
   deps:
-    docker: *node_image
+    docker: &node_image
+      - image: circleci/node:12.16
     steps:
       - checkout
       # cache is used between builds, we use the cache if the lock file has not changed
@@ -36,17 +31,63 @@ jobs:
           at: ./
       - run: ./node_modules/.bin/ng lint
 
-  build:
+  build-core:
     docker: *node_image
     steps:
       - attach_workspace:
           at: ./
       - run: ./node_modules/.bin/ng build core --prod
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - dist/core
+
+  build:
+    docker: *node_image
+    steps:
+      - attach_workspace:
+          at: ./
       - run: ./node_modules/.bin/ng build --configuration ci --base-href ./
       - persist_to_workspace:
           root: ./
           paths:
             - dist/algorea
+
+  tests:
+    docker: &node_browsers_image
+      - image: circleci/node:12.16-browsers
+    steps:
+      - attach_workspace:
+          at: ./
+      - run: echo "" > lcov.info.combined
+      - run:
+          name: tests for "algorea"
+          command: ./node_modules/.bin/ng test algorea --code-coverage --karma-config .circleci/karma.conf.js --no-watch --no-progress --browsers=ChromeHeadlessCI
+      - run: cat lcov.info >> lcov.info.combined
+      - run:
+          name: tests for "core"
+          command: ./node_modules/.bin/ng test core --code-coverage --karma-config .circleci/karma.conf.js --no-watch --no-progress --browsers=ChromeHeadlessCI
+      - run: cat lcov.info >> lcov.info.combined
+      - run:
+          name: tests for "dev"
+          command: ./node_modules/.bin/ng test dev --code-coverage --karma-config .circleci/karma.conf.js --no-watch --no-progress --browsers=ChromeHeadlessCI
+      - run: cat lcov.info.combined >> lcov.info # putting all cov reports together
+      - run:
+          name: CodeCov (tool sending coverage reports to Codecov.io)
+          command: bash <(curl -s https://codecov.io/bash)
+
+  e2e:
+    docker: *node_browsers_image
+    steps:
+      - attach_workspace:
+          at: ./
+      - run:
+          name: e2e for "algorea"
+          command: ./node_modules/.bin/ng e2e algorea --protractor-config=e2e/protractor-ci.conf.js
+      - run:
+          name: e2e for "dev"
+          command: ./node_modules/.bin/ng e2e dev --protractor-config=projects/dev/e2e/protractor-ci.conf.js
+
 
   deploy-branch:
     docker:
@@ -89,18 +130,24 @@ jobs:
 
 workflows:
   version: 2
-  checks:
+  default:
     jobs:
       - deps
       - lint:
           requires:
           - deps
-  deploy:
-    jobs:
-      - deps
-      - build:
+      - build-core:
           requires:
             - deps
+      - build:
+          requires:
+            - build-core
+      - tests:
+          requires:
+            - build-core
+      - e2e:
+          requires:
+            - build-core
       - deploy-branch:
           requires:
             - build
@@ -110,4 +157,3 @@ workflows:
               only: master
           requires:
             - build
-
