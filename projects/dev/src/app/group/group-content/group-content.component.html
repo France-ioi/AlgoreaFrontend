@@ -1,10 +1,8 @@
 <ng-container *ngIf="!group.current_user_is_manager; else managerBlock">
-  <ng-container *ngIf="activeTab === 0">
+  <ng-container *ngIf="activeTab === 0; else noPermissionBlock">
     <div class="no-permission">
       <app-group-overview [description]="group.description"></app-group-overview>
     </div>
-  </ng-container>
-  <ng-container *ngIf="activeTab === 2 || activeTab === 3 then noPermissionBlock">
   </ng-container>
 </ng-container>
 <ng-template #managerBlock>
