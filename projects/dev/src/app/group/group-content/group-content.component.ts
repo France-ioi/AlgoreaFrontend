@@ -62,8 +62,7 @@ export class GroupContentComponent implements OnInit {
     return this.activeTab === 0 || this.activeTab === 1 || this.canMangeMembershipAndGroup();
   }
 
-  // tslint:disable-next-line
-  onTabChange(_e) {
+  onTabChange() {
     const tabsDom = this.elementRef.nativeElement.querySelectorAll(
       '.mat-tab-labels .mat-tab-label'
     );
