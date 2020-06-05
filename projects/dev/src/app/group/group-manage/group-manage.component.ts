@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { StatusService } from '../../shared/services/status.service';
 import { GroupService } from '../../shared/services/api/group.service';
-import { Group, initializeGroup } from '../../shared/models/group.model';
+import { Group } from '../../shared/models/group.model';
 import { Member } from '../../shared/models/member.model';
 
 @Component({
@@ -11,7 +11,7 @@ import { Member } from '../../shared/models/member.model';
   styleUrls: ['./group-manage.component.scss'],
 })
 export class GroupManageComponent implements OnInit {
-  group: Group;
+  group: Group = new Group();
   groupId;
   status;
 
@@ -53,9 +53,7 @@ export class GroupManageComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private statusService: StatusService,
     private groupService: GroupService
-  ) {
-    this.group = initializeGroup();
-  }
+  ) { }
 
   ngOnInit() {
     this.activatedRoute.params.subscribe((routeParams) => {
