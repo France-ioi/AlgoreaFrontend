@@ -11,6 +11,10 @@ import { GroupContentComponent } from './group-content/group-content.component';
 import { GroupOverviewComponent } from './group-content/group-overview/group-overview.component';
 import { GroupManageComponent } from './group-manage/group-manage.component';
 import { PendingRequestComponent } from './group-manage/pending-request/pending-request.component';
+import { GroupCompositionComponent } from './group-content/group-composition/group-composition.component';
+import { GroupAdministrationComponent } from './group-content/group-administration/group-administration.component';
+import { GroupSettingsComponent } from './group-content/group-settings/group-settings.component';
+import { GroupNoPermissionComponent } from './group-content/group-no-permission/group-no-permission.component';
 
 @NgModule({
   declarations: [
@@ -20,6 +24,10 @@ import { PendingRequestComponent } from './group-manage/pending-request/pending-
     GroupOverviewComponent,
     GroupManageComponent,
     PendingRequestComponent,
+    GroupCompositionComponent,
+    GroupAdministrationComponent,
+    GroupSettingsComponent,
+    GroupNoPermissionComponent,
   ],
   imports: [
     CommonModule,
