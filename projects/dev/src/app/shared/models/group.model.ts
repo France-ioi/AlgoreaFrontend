@@ -1,4 +1,6 @@
-export interface Group {
+import { ManagementLevel } from '../constants/group';
+
+export class Group {
   id: string;
   name: string;
   type: string;
@@ -23,29 +25,35 @@ export interface Group {
   open_contest: boolean;
 
   created_at: Date;
-}
 
-export const initializeGroup = (): Group => {
-  return {
-    id: '',
-    name: '',
-    type: '',
-    grade: 0,
-    description: '',
-    code: '',
-    code_lifetime: '',
-    code_expires_at: new Date(),
-    current_user_is_manager: false,
-    current_user_is_member: false,
-    current_user_can_grant_group_access: false,
-    current_user_can_manage: 'none',
-    current_user_can_watch_members: false,
-    open_activity_when_joining: false,
-    root_activity_id: '',
-    root_skill_id: '',
-    is_open: false,
-    is_public: false,
-    open_contest: false,
-    created_at: new Date()
-  };
-};
+  constructor(input: any = {}) {
+    if (Object.keys(input).length === 0) {
+      this.id = '';
+      this.name = '';
+      this.type = '';
+      this.grade = 0;
+      this.description = '';
+      this.code = '';
+      this.code_lifetime = '';
+      this.code_expires_at = new Date();
+      this.current_user_is_manager = false;
+      this.current_user_is_member = false;
+      this.current_user_can_grant_group_access = false;
+      this.current_user_can_manage = 'none';
+      this.current_user_can_watch_members = false;
+      this.open_activity_when_joining = false;
+      this.root_activity_id = '';
+      this.root_skill_id = '';
+      this.is_open = false;
+      this.is_public = false;
+      this.open_contest = false;
+      this.created_at = new Date();
+    } else {
+      Object.assign(this, input);
+    }
+  }
+
+  canMangeMembershipAndGroup = (): boolean => {
+    return this.current_user_can_manage === ManagementLevel.MembershipsAndGroup;
+  }
+}
