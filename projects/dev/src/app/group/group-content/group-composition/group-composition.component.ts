@@ -18,7 +18,7 @@ export class GroupCompositionComponent implements OnInit {
   ngOnInit() {
     this.groupService.getLatestGroup().subscribe(group => {
       this.group = group;
-    })
+    });
   }
 
 }

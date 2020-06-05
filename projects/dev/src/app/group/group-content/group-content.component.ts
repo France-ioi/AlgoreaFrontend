@@ -19,7 +19,7 @@ interface NavLink {
 export class GroupContentComponent implements OnInit {
 
   @Input() group: Group;
-  activeTab: number = 0;
+  activeTab = 0;
   navLinks: NavLink[] = [
     {
       path: './',
