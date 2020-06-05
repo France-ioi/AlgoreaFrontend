@@ -2,7 +2,10 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { GroupComponent } from './group.component';
 import { GroupManageComponent } from './group-manage/group-manage.component';
-import { GroupContentComponent } from './group-content/group-content.component';
+import { GroupOverviewComponent } from './group-content/group-overview/group-overview.component';
+import { GroupAdministrationComponent } from './group-content/group-administration/group-administration.component';
+import { GroupCompositionComponent } from './group-content/group-composition/group-composition.component';
+import { GroupSettingsComponent } from './group-content/group-settings/group-settings.component';
 
 const routes: Routes = [
   {
@@ -15,19 +18,19 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        component: GroupContentComponent,
+        component: GroupOverviewComponent,
       },
       {
         path: 'members',
-        component: GroupContentComponent,
+        component: GroupCompositionComponent
       },
       {
         path: 'managers',
-        component: GroupContentComponent,
+        component: GroupAdministrationComponent
       },
       {
         path: 'settings',
-        component: GroupContentComponent,
+        component: GroupSettingsComponent
       },
       {
         path: '**',
