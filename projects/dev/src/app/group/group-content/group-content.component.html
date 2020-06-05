@@ -1,56 +1,15 @@
-<ng-container *ngIf="!group.current_user_is_manager; else managerBlock">
-  <ng-container *ngIf="activeTab === 0; else noPermissionBlock">
-    <div class="no-permission">
-      <app-group-overview [description]="group.description"></app-group-overview>
-    </div>
+<nav mat-tab-nav-bar *ngIf="group.current_user_is_manager && canShowTabBar()">
+  <ng-container *ngFor="let link of navLinks; index as idx">
+    <a mat-tab-link
+      *ngIf="canShowTab(idx)"
+      [routerLink]="link.path"
+      routerLinkActive #rla="routerLinkActive"
+      [routerLinkActiveOptions]="{exact: true}"
+      [active]="rla.isActive">
+      {{link.label}}
+    </a>
   </ng-container>
-</ng-container>
-<ng-template #managerBlock>
-  <mat-tab-group *ngIf="canShowTab(); else noPermissionBlock" mat-stretch-tabs (selectedTabChange)="onTabChange()" [selectedIndex]="activeTab">
-    <mat-tab>
-      <ng-template mat-tab-label>
-        <i class="fa fa-chart-pie"></i>
-        Overview
-      </ng-template>
-      <ng-template matTabContent>
-        <app-group-overview [description]="group.description"></app-group-overview>
-      </ng-template>
-    </mat-tab>
-    <mat-tab>
-      <ng-template mat-tab-label>
-        <i class="fa fa-sitemap"></i>
-        Composition
-      </ng-template>
-      <ng-template matTabContent>
-        <ng-container *ngIf="group.current_user_is_manager; else noPermissionBlock">
-
-        </ng-container>
-      </ng-template>
-    </mat-tab>
-    <mat-tab *ngIf="canMangeMembershipAndGroup()">
-      <ng-template mat-tab-label>
-        <i class="fa fa-lock"></i>
-        Administration
-      </ng-template>
-      <ng-template matTabContent>
-        <ng-container *ngIf="group.current_user_is_manager; else noPermissionBlock">
-
-        </ng-container>
-      </ng-template>
-    </mat-tab>
-    <mat-tab *ngIf="canMangeMembershipAndGroup()">
-      <ng-template mat-tab-label>
-        <i class="fa fa-cog"></i>
-        Settings
-      </ng-template>
-      <ng-template matTabContent>
-        <ng-container *ngIf="group.current_user_is_manager; else noPermissionBlock">
-
-        </ng-container>
-      </ng-template>
-    </mat-tab>
-  </mat-tab-group>
-</ng-template>
-<ng-template #noPermissionBlock>
-  <p class="no-permission">The user doesn't have enough permission to see this content</p>
-</ng-template>
+</nav>
+<div class="bg-white">
+  <router-outlet (activate)="onRouteActivated($event)"></router-outlet>
+</div>
