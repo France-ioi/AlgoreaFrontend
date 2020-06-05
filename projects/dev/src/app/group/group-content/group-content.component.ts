@@ -1,19 +1,14 @@
-import { Component, OnInit, ElementRef, Input } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import * as _ from 'lodash';
-import { ActivatedRoute, Router } from '@angular/router';
 import { Group } from '../../shared/models/group.model';
-import { Location } from '@angular/common';
+import { GroupSettingsComponent } from './group-settings/group-settings.component';
+import { GroupAdministrationComponent } from './group-administration/group-administration.component';
+import { GroupOverviewComponent } from './group-overview/group-overview.component';
+import { GroupCompositionComponent } from './group-composition/group-composition.component';
 
-export enum ManagementLevel {
-  None = 'none',
-  MembershipsAndGroup = 'memberships_and_group'
-}
-
-export enum TabUrls {
-  Overview = '',
-  Composition = 'members',
-  Administration = 'managers',
-  Settings = 'settings'
+interface NavLink {
+  path: string;
+  label: string;
 }
 
 @Component({
@@ -24,76 +19,48 @@ export enum TabUrls {
 export class GroupContentComponent implements OnInit {
 
   @Input() group: Group;
-  activeTab = 0;
+  activeTab: number = 0;
+  navLinks: NavLink[] = [
+    {
+      path: './',
+      label: 'Overview'
+    },
+    {
+      path: 'members',
+      label: 'Composition'
+    },
+    {
+      path: 'managers',
+      label: 'Administration'
+    },
+    {
+      path: 'settings',
+      label: 'Settings'
+    }
+  ];
 
-  constructor(
-    private activatedRoute: ActivatedRoute,
-    private elementRef: ElementRef,
-    private router: Router,
-    private location: Location) {
-  }
+  constructor() { }
 
   ngOnInit() {
-    this.activatedRoute.url.subscribe(() => {
-      const path = this.location.path().split('/').pop();
-      switch (path) {
-        case TabUrls.Composition:
-          this.activeTab = 1;
-          break;
-        case TabUrls.Administration:
-          this.activeTab = 2;
-          break;
-        case TabUrls.Settings:
-          this.activeTab = 3;
-          break;
-        default:
-          this.activeTab = 0;
-          break;
-      }
-    });
   }
 
-  canMangeMembershipAndGroup() {
-    return this.group.current_user_can_manage === ManagementLevel.MembershipsAndGroup;
+  canShowTab(idx: number) {
+    return idx === 0 || idx === 1 || this.group.canMangeMembershipAndGroup();
   }
 
-  canShowTab() {
-    return this.activeTab === 0 || this.activeTab === 1 || this.canMangeMembershipAndGroup();
+  canShowTabBar() {
+    return this.canShowTab(this.activeTab);
   }
 
-  onTabChange() {
-    const tabsDom = this.elementRef.nativeElement.querySelectorAll(
-      '.mat-tab-labels .mat-tab-label'
-    );
-    const activeTabDom = this.elementRef.nativeElement.querySelector(
-      '.mat-tab-labels .mat-tab-label.mat-tab-label-active'
-    );
-    tabsDom.forEach((tabDom) => {
-      tabDom.classList.remove('mat-tab-label-before-active');
-    });
-
-    const iTab = _.findIndex(tabsDom, activeTabDom);
-    if (iTab > 0) {
-      tabsDom[iTab - 1].classList.add('mat-tab-label-before-active');
+  onRouteActivated(e) {
+    if (e instanceof GroupOverviewComponent) {
+      this.activeTab = 0;
+    } else if (e instanceof GroupCompositionComponent) {
+      this.activeTab = 1;
+    } else if (e instanceof GroupAdministrationComponent) {
+      this.activeTab = 2;
+    } else {
+      this.activeTab = 3;
     }
-
-    switch (iTab) {
-      case 0:
-        this.router.navigate([`/dev/groups/${this.group.id}`]);
-        break;
-      case 1:
-        this.router.navigate([`/dev/groups/${this.group.id}/members`]);
-        break;
-      case 2:
-        this.router.navigate([`/dev/groups/${this.group.id}/managers`]);
-        break;
-      case 3:
-        this.router.navigate([`/dev/groups/${this.group.id}/settings`]);
-        break;
-    }
-  }
-
-  onActiveTabChange(idx) {
-    this.activeTab = idx;
   }
 }
