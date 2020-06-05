@@ -86,7 +86,8 @@
     "use-pipe-transform-interface": true,
     "variable-name": {
       "options": [
-        "allow-snake-case"
+        "allow-snake-case",
+        "allow-pascal-case"
       ]
     }
   },
