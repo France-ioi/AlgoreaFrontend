@@ -4,11 +4,11 @@ import { GroupContentComponent } from './group-content.component';
 import { CoreModule } from 'core';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { initializeGroup } from '../../shared/models/group.model';
 import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
+import { Group } from '../../shared/models/group.model';
 
 describe('GroupContentComponent', () => {
   let component: GroupContentComponent;
@@ -39,7 +39,7 @@ describe('GroupContentComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(GroupContentComponent);
     component = fixture.componentInstance;
-    component.group = initializeGroup();
+    component.group = new Group();
     fixture.detectChanges();
   });
 

@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { GroupCompositionComponent } from './group-composition.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('GroupCompositionComponent', () => {
   let component: GroupCompositionComponent;
@@ -8,7 +10,11 @@ describe('GroupCompositionComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ GroupCompositionComponent ]
+      imports: [
+        HttpClientTestingModule
+      ],
+      declarations: [ GroupCompositionComponent ],
+      schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();
   }));

@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { GroupAdministrationComponent } from './group-administration.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('GroupAdministrationComponent', () => {
   let component: GroupAdministrationComponent;
@@ -8,7 +10,11 @@ describe('GroupAdministrationComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ GroupAdministrationComponent ]
+      imports: [
+        HttpClientTestingModule
+      ],
+      declarations: [ GroupAdministrationComponent ],
+      schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();
   }));

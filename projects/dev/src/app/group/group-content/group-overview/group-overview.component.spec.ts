@@ -2,6 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { GroupOverviewComponent } from './group-overview.component';
 import { CoreModule } from 'core';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('GroupOverviewComponent', () => {
@@ -10,7 +11,10 @@ describe('GroupOverviewComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [CoreModule],
+      imports: [
+        CoreModule,
+        HttpClientTestingModule
+      ],
       declarations: [ GroupOverviewComponent ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })
