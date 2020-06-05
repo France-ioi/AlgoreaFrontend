@@ -1,5 +1,6 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { GroupService } from '../../../shared/services/api/group.service';
+import { Group } from '../../../shared/models/group.model';
 
 @Component({
   selector: 'app-group-overview',
@@ -8,8 +9,7 @@ import { GroupService } from '../../../shared/services/api/group.service';
 })
 export class GroupOverviewComponent implements OnInit {
 
-  @Input() id;
-  @Input() description;
+  group: Group = new Group();
 
   tasks = [];
 
@@ -23,7 +23,9 @@ export class GroupOverviewComponent implements OnInit {
   panels = [
   ];
 
-  constructor() { }
+  constructor(
+    private groupService: GroupService
+  ) { }
 
   ngOnInit() {
     this.panels.push(
@@ -32,7 +34,9 @@ export class GroupOverviewComponent implements OnInit {
         columns: this.columns
       }
     );
-
+    this.groupService.getLatestGroup().subscribe(group => {
+      this.group = group;
+    });
   }
 
   onExpandWidth(e) {
