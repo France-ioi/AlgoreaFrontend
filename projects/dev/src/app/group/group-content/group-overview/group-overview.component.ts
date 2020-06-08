@@ -34,7 +34,7 @@ export class GroupOverviewComponent implements OnInit {
 
   }
 
-  onExpandWidth(e) {
+  onExpandWidth(_e) {
 
   }
 

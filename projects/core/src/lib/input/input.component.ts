@@ -30,7 +30,7 @@ export class InputComponent implements OnInit, OnChanges {
 
   ngOnInit() {}
 
-  ngOnChanges(changes: SimpleChanges) {}
+  ngOnChanges(_changes: SimpleChanges) {}
 
   onValueChange(e) {
     this.onChange.emit(e);

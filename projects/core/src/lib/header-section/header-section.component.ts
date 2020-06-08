@@ -15,7 +15,7 @@ export class HeaderSectionComponent implements OnInit {
 
   ngOnInit() {}
 
-  onCollapse(e) {
+  onCollapse(_e) {
     this.isCollapsed = !this.isCollapsed;
   }
 }

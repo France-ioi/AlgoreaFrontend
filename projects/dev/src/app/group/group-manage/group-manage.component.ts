@@ -61,6 +61,6 @@ export class GroupManageComponent implements OnInit {
     });
   }
 
-  onExpandWidth(e) {
+  onExpandWidth(_e) {
   }
 }

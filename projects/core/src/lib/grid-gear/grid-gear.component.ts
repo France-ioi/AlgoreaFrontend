@@ -25,7 +25,7 @@ export class GridGearComponent implements OnInit {
 
   ngOnInit() {}
 
-  toggleGear(e) {
+  toggleGear(_e) {
     this.menuOpen = !this.menuOpen;
   }
 

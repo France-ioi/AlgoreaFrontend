@@ -30,7 +30,7 @@ export class ItemsNavigationTreeComponent implements OnInit, OnChanges {
 
   ngOnInit() {}
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(_changes: SimpleChanges) {
     if (this.data) {
       this.data.forEach((item) => {
         item.root = true;
@@ -40,7 +40,7 @@ export class ItemsNavigationTreeComponent implements OnInit, OnChanges {
     }
   }
 
-  nodeExpand(event, node) {
+  nodeExpand(_event, node) {
     if (!node.expanded) {
       node.expanded = true;
     } else {
@@ -73,7 +73,7 @@ export class ItemsNavigationTreeComponent implements OnInit, OnChanges {
     });
   }
 
-  nodeCheck(event, node) {
+  nodeCheck(_event, node) {
     this._unCheckAll(this.data);
     node.checked = true;
 
@@ -81,7 +81,7 @@ export class ItemsNavigationTreeComponent implements OnInit, OnChanges {
     this.onNodeSelect.emit(node);
   }
 
-  nodeSelect(e) {}
+  nodeSelect(_e) {}
 
   onKeyDown(e) {
     if (e.code === 'Space' || e.code === 'Enter') {

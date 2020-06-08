@@ -72,7 +72,7 @@ export class ScoreRingComponent implements OnInit, OnChanges {
     );
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(_changes: SimpleChanges) {
     if (this.scoreFill.length > 0) {
       this.displayFill = this.scoreFill;
       this.textFill = ScoreRingColor.darkText;

@@ -27,7 +27,7 @@ export class GenerateBatchUserDialogComponent implements OnInit {
     this.prefix = e;
   }
 
-  onSuffixChange(e) {}
+  onSuffixChange(_e) {}
 
   onClose(e) {
     this.dialogRef.close(e);

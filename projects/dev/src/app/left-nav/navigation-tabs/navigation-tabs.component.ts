@@ -62,7 +62,7 @@ export class NavigationTabsComponent implements OnInit, OnChanges {
     }
   }
 
-  toggleGroup(e) {
+  toggleGroup(_e) {
     this.groupShow = !this.groupShow;
     if (!this.groupShow) {
       this.stickyShow = false;
@@ -178,7 +178,7 @@ export class NavigationTabsComponent implements OnInit, OnChanges {
     this.statusService.setUser(this.currentUser);
   }
 
-  goBack(e) {
+  goBack(_e) {
     this.notified = false;
     this.esOb.notified = false;
     this.statusService.setValue(this.esOb);
