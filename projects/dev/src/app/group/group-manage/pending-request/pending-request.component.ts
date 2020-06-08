@@ -58,7 +58,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
       });
   }
 
-  _displayResponseToast(data: Record<string, string>, verb: string, msg: string) {
+  _displayResponseToast(data: Map<string, string>, verb: string, msg: string) {
     const succ = _.countBy(data, (status: string) => {
       return ['success', 'unchanged'].includes(status);
     });
