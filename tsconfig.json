@@ -27,7 +27,8 @@
 
     // compiler linter checks
     "noFallthroughCasesInSwitch": true,
-    "noImplicitReturns": true
+    "noImplicitReturns": true,
+    "noUnusedLocals": true
   },
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,

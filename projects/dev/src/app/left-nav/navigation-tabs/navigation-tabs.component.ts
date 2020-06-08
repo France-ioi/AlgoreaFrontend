@@ -1,7 +1,6 @@
 import { Component, OnInit, Input, OnChanges, SimpleChanges, ViewChild, NgZone, Output, EventEmitter } from '@angular/core';
 import { Location } from '@angular/common';
 import { StatusService } from '../../shared/services/status.service';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-navigation-tabs',
