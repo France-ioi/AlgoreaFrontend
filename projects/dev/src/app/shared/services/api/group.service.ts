@@ -48,7 +48,7 @@ export class GroupService {
   }
 
   getLatestGroup(): Observable<Group> {
-    return this.groupList;
+    return this.groupList.asObservable();
   }
 
   getManagedRequests(
