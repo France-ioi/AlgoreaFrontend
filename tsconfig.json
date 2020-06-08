@@ -23,7 +23,11 @@
         "dist/core/core",
         "dist/core"
       ]
-    }
+    },
+
+    // compiler linter checks
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true
   },
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,
