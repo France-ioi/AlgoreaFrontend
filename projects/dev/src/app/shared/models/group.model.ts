@@ -53,7 +53,7 @@ export class Group {
     }
   }
 
-  canMangeMembershipAndGroup = (): boolean => {
+  canMangeMembershipAndGroup(): boolean {
     return this.current_user_can_manage === ManagementLevel.MembershipsAndGroup;
   }
 }
