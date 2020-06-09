@@ -1,35 +1,15 @@
-<mat-tab-group mat-stretch-tabs (selectedTabChange)="onTabChange($event)">
-  <mat-tab>
-    <ng-template mat-tab-label>
-      <i class="fa fa-chart-pie"></i>
-      Overview
-    </ng-template>
-    <ng-template matTabContent>
-      <app-group-overview [id]="data.ID" [description]="data.description"></app-group-overview>
-    </ng-template>
-  </mat-tab>
-  <mat-tab>
-    <ng-template mat-tab-label>
-      <i class="fa fa-sitemap"></i>
-      Composition
-    </ng-template>
-    <ng-template matTabContent>
-    </ng-template>
-  </mat-tab>
-  <mat-tab>
-    <ng-template mat-tab-label>
-      <i class="fa fa-lock"></i>
-      Administration
-    </ng-template>
-    <ng-template matTabContent>
-    </ng-template>
-  </mat-tab>
-  <mat-tab>
-    <ng-template mat-tab-label>
-      <i class="fa fa-cog"></i>
-      Settings
-    </ng-template>
-    <ng-template matTabContent>
-    </ng-template>
-  </mat-tab>
-</mat-tab-group>
+<nav mat-tab-nav-bar *ngIf="group.current_user_is_manager && canShowTabBar()">
+  <ng-container *ngFor="let link of navLinks; index as idx">
+    <a mat-tab-link
+      *ngIf="canShowTab(idx)"
+      [routerLink]="link.path"
+      routerLinkActive #rla="routerLinkActive"
+      [routerLinkActiveOptions]="{exact: true}"
+      [active]="rla.isActive">
+      {{link.label}}
+    </a>
+  </ng-container>
+</nav>
+<div class="bg-white">
+  <router-outlet (activate)="onRouteActivated($event)"></router-outlet>
+</div>

@@ -1,5 +1,14 @@
-import { Component, OnInit, ElementRef, EventEmitter, Input, Output } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import * as _ from 'lodash';
+import { Group } from '../../shared/models/group.model';
+import { GroupAdministrationComponent } from './group-administration/group-administration.component';
+import { GroupOverviewComponent } from './group-overview/group-overview.component';
+import { GroupCompositionComponent } from './group-composition/group-composition.component';
+
+interface NavLink {
+  path: string;
+  label: string;
+}
 
 @Component({
   selector: 'app-group-content',
@@ -7,33 +16,50 @@ import * as _ from 'lodash';
   styleUrls: ['./group-content.component.scss'],
 })
 export class GroupContentComponent implements OnInit {
-  @Input() data;
-  @Input() empty;
 
-  @Output() expandWholeWidth = new EventEmitter<void>();
-
-  constructor(private elementRef: ElementRef) {}
-
-  ngOnInit() {}
-
-  onTabChange(_e) {
-    const tabs = this.elementRef.nativeElement.querySelectorAll(
-      '.mat-tab-labels .mat-tab-label'
-    );
-    const activeTab = this.elementRef.nativeElement.querySelector(
-      '.mat-tab-labels .mat-tab-label.mat-tab-label-active'
-    );
-    tabs.forEach((tab) => {
-      tab.classList.remove('mat-tab-label-before-active');
-    });
-
-    const i = _.findIndex(tabs, activeTab);
-    if (i > 0) {
-      tabs[i - 1].classList.add('mat-tab-label-before-active');
+  @Input() group: Group;
+  activeTab = 0;
+  navLinks: NavLink[] = [
+    {
+      path: './',
+      label: 'Overview'
+    },
+    {
+      path: 'members',
+      label: 'Composition'
+    },
+    {
+      path: 'managers',
+      label: 'Administration'
+    },
+    {
+      path: 'settings',
+      label: 'Settings'
     }
+  ];
+
+  constructor() { }
+
+  ngOnInit() {
   }
 
-  onExpandWidth(e) {
-    this.expandWholeWidth.emit(e);
+  canShowTab(idx: number) {
+    return idx === 0 || idx === 1 || this.group.canMangeMembershipAndGroup();
+  }
+
+  canShowTabBar() {
+    return this.canShowTab(this.activeTab);
+  }
+
+  onRouteActivated(e) {
+    if (e instanceof GroupOverviewComponent) {
+      this.activeTab = 0;
+    } else if (e instanceof GroupCompositionComponent) {
+      this.activeTab = 1;
+    } else if (e instanceof GroupAdministrationComponent) {
+      this.activeTab = 2;
+    } else {
+      this.activeTab = 3;
+    }
   }
 }

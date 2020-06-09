@@ -793,7 +793,7 @@ export class AppComponent {
     this.selectedType = 3;
     this.userTitle = 'Groups you manage';
     this.updateService();
-    this.router.navigate(['/dev/groups/managed']);
+    this.router.navigate(['/dev/groups']);
   }
 
   onGroupSelected(e) {
@@ -802,7 +802,7 @@ export class AppComponent {
     this.updateService();
     console.log(e);
     if (e.src === 'managed') {
-      this.router.navigate([`/dev/groups/managed/${e.e.ID}`]);
+      this.router.navigate([`/dev/groups/${e.e.ID}`]);
     } else {
       this.router.navigate(['/dev/groups/memberships/11']);
     }

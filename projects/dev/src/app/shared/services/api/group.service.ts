@@ -5,7 +5,7 @@ import {
   HttpErrorResponse,
   HttpParams,
 } from '@angular/common/http';
-import { Observable, Subject, throwError } from 'rxjs';
+import { Observable, Subject, throwError, BehaviorSubject } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
 import {
@@ -26,16 +26,28 @@ export class GroupService {
   private baseGroupUrl = `${environment.apiUrl}/groups`;
   private baseCurrentUserUrl = `${environment.apiUrl}/current-user`;
 
+  private groupList = new BehaviorSubject<Group>(new Group());
   private memberList = new Subject<Member[]>();
   private membershipHistoryList = new Subject<MembershipHistory[]>();
   private joinedGroupList = new Subject<GroupMembership[]>();
 
   constructor(private http: HttpClient) {}
 
-  getManagedGroup(id): Observable<Group> {
+  getGroup(id): Observable<Group> {
     return this.http
       .get<Group>(`${this.baseGroupUrl}/${id}`)
-      .pipe(catchError(this.handleError));
+      .pipe(
+        map((group: Group) => {
+          const groupObj = new Group(group);
+          this.groupList.next(groupObj);
+          return groupObj;
+        }),
+        catchError(this.handleError)
+      );
+  }
+
+  getLatestGroup(): Observable<Group> {
+    return this.groupList.asObservable();
   }
 
   getManagedRequests(

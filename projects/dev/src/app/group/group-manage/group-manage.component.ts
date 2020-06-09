@@ -10,7 +10,7 @@ import { Group } from '../../shared/models/group.model';
   styleUrls: ['./group-manage.component.scss'],
 })
 export class GroupManageComponent implements OnInit {
-  groupdata = {};
+  group: Group = new Group();
   groupId;
   status;
 
@@ -38,21 +38,14 @@ export class GroupManageComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private statusService: StatusService,
     private groupService: GroupService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.activatedRoute.params.subscribe((routeParams) => {
       this.groupId = routeParams.id;
 
-      this.groupService.getManagedGroup(this.groupId).subscribe((group: Group) => {
-        this.groupdata = {
-          ID: group.id,
-          name: group.name,
-          type: group.type,
-          grades: [group.grade],
-          date: group.created_at,
-          description: group.description
-        };
+      this.groupService.getGroup(this.groupId).subscribe((group: Group) => {
+        this.group = group;
       });
     });
 

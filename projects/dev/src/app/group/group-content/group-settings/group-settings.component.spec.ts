@@ -1,28 +1,26 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { GroupOverviewComponent } from './group-overview.component';
-import { CoreModule } from 'core';
+import { GroupSettingsComponent } from './group-settings.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 
-describe('GroupOverviewComponent', () => {
-  let component: GroupOverviewComponent;
-  let fixture: ComponentFixture<GroupOverviewComponent>;
+describe('GroupSettingsComponent', () => {
+  let component: GroupSettingsComponent;
+  let fixture: ComponentFixture<GroupSettingsComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        CoreModule,
         HttpClientTestingModule
       ],
-      declarations: [ GroupOverviewComponent ],
+      declarations: [ GroupSettingsComponent ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(GroupOverviewComponent);
+    fixture = TestBed.createComponent(GroupSettingsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
