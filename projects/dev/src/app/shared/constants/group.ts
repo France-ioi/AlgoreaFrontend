@@ -17,5 +17,6 @@ export enum JoinMethod {
 
 export enum ManagementLevel {
   None = 'none',
+  Memberships = 'memberships',
   MembershipsAndGroup = 'memberships_and_group'
 }
