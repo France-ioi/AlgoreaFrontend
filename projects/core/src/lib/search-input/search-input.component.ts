@@ -36,7 +36,7 @@ export class SearchInputComponent implements OnInit {
     this.onChange.emit(e);
   }
 
-  onFocus(e) {
+  onFocus(_e) {
     this.onChange.emit('');
     this.dirty = true;
   }

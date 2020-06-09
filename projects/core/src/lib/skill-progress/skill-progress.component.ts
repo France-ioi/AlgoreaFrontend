@@ -70,7 +70,7 @@ export class SkillProgressComponent implements OnInit, OnChanges {
     }
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(_changes: SimpleChanges) {
     if (this.displayedScore === 100) {
       this.displayColor = '#B8E986';
     } else {

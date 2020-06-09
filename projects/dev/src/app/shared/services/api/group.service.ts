@@ -3,7 +3,6 @@ import { environment } from '../../../../environments/environment';
 import {
   HttpClient,
   HttpErrorResponse,
-  HttpHeaders,
   HttpParams,
 } from '@angular/common/http';
 import { Observable, Subject, throwError } from 'rxjs';
@@ -27,7 +26,6 @@ export class GroupService {
   private baseGroupUrl = `${environment.apiUrl}/groups`;
   private baseCurrentUserUrl = `${environment.apiUrl}/current-user`;
 
-  private groupList = new Subject<Group>();
   private memberList = new Subject<Member[]>();
   private membershipHistoryList = new Subject<MembershipHistory[]>();
   private joinedGroupList = new Subject<GroupMembership[]>();
@@ -65,7 +63,7 @@ export class GroupService {
   getGroupMembers(
     id,
     sort = [],
-    limit = DEFAULT_LIMIT
+    _limit = DEFAULT_LIMIT
   ): Observable<Member[]> {
     this.http
       .get(`${this.baseGroupUrl}/${id}/members`, {
@@ -119,7 +117,7 @@ export class GroupService {
 
   getPendingInvitations(
     sortBy = [],
-    limit = 500
+    _limit = 500
   ): Observable<MembershipHistory[]> {
     this.http
       .get(`${this.baseCurrentUserUrl}/group-memberships-history`, {

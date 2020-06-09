@@ -13,15 +13,15 @@ export class ProgressSectionComponent implements OnInit {
 
   ngOnInit() {}
 
-  onCollapse(e) {
+  onCollapse(_e) {
     this.collapsed = !this.collapsed;
   }
 
-  onSwitchChange(e, item) {
+  onSwitchChange(_e, item) {
     item.checked = !item.checked;
   }
 
-  onSetActive(e, item, idx) {
+  onSetActive(_e, item, idx) {
     item.active_until = idx + 1;
   }
 }

@@ -27,7 +27,7 @@ export class SelectComponent implements OnInit {
     this.onClick.emit(true);
   }
 
-  hideDropdown(e) {
+  hideDropdown(_e) {
     this.opened = false;
   }
 

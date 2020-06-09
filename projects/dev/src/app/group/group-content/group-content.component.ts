@@ -16,7 +16,7 @@ export class GroupContentComponent implements OnInit {
 
   ngOnInit() {}
 
-  onTabChange(e) {
+  onTabChange(_e) {
     const tabs = this.elementRef.nativeElement.querySelectorAll(
       '.mat-tab-labels .mat-tab-label'
     );

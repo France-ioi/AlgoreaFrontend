@@ -1,5 +1,4 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { GroupService } from '../../../shared/services/api/group.service';
 
 @Component({
   selector: 'app-group-overview',
@@ -35,7 +34,7 @@ export class GroupOverviewComponent implements OnInit {
 
   }
 
-  onExpandWidth(e) {
+  onExpandWidth(_e) {
 
   }
 

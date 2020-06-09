@@ -87,11 +87,11 @@ export class GridComponent implements OnInit, OnChanges {
   toShow = 0;
   expand = false;
 
-  onRowSelect(e) {
+  onRowSelect(_e) {
     this.selectionChange.emit(this.selectionValue);
   }
 
-  onRowUnselect(e) {
+  onRowUnselect(_e) {
     this.selectionChange.emit(this.selectionValue);
   }
 
@@ -109,17 +109,17 @@ export class GridComponent implements OnInit, OnChanges {
 
   ngOnInit() {}
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(_changes: SimpleChanges) {
     if (this.showGear) {
       this.detectSelected();
     }
   }
 
-  showColumns(e) {
+  showColumns(_e) {
     this.showColumnSelection = !this.showColumnSelection;
   }
 
-  showAll(e) {
+  showAll(_e) {
     this.selectedColumns = this.columns;
     this.toShow = 0;
     this.expand = !this.expand;
@@ -144,7 +144,7 @@ export class GridComponent implements OnInit, OnChanges {
     this.expandWholeWidth.emit(this.expand);
   }
 
-  handleChanges(e, item) {
+  handleChanges(_e, item) {
     this.selected[item.field] = !this.selected[item.field];
     const newSel = [];
     for (const col of this.columns) {
@@ -162,7 +162,7 @@ export class GridComponent implements OnInit, OnChanges {
     this.onSort.emit(event);
   }
 
-  onHeaderCheckbox(event) {
+  onHeaderCheckbox(_event) {
     this.selectionChange.emit(this.selectionValue);
   }
 

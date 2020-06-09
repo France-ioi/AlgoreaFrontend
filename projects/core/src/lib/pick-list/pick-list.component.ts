@@ -74,7 +74,7 @@ export class PickListComponent implements OnInit {
     e.dragData.data.list = listItem.ID;
   }
 
-  onListItemSelect(e, item, listID) {
+  onListItemSelect(_e, item, _listID) {
     this.activeID = item.ID;
     this.activeType = item.list;
   }
@@ -169,7 +169,7 @@ export class PickListComponent implements OnInit {
     }
   }
 
-  onClickOutside(e) {
+  onClickOutside(_e) {
     this.activeID = -1;
   }
 }

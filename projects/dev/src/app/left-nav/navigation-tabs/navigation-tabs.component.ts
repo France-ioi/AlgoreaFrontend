@@ -1,7 +1,6 @@
 import { Component, OnInit, Input, OnChanges, SimpleChanges, ViewChild, NgZone, Output, EventEmitter } from '@angular/core';
 import { Location } from '@angular/common';
 import { StatusService } from '../../shared/services/status.service';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-navigation-tabs',
@@ -63,7 +62,7 @@ export class NavigationTabsComponent implements OnInit, OnChanges {
     }
   }
 
-  toggleGroup(e) {
+  toggleGroup(_e) {
     this.groupShow = !this.groupShow;
     if (!this.groupShow) {
       this.stickyShow = false;
@@ -179,7 +178,7 @@ export class NavigationTabsComponent implements OnInit, OnChanges {
     this.statusService.setUser(this.currentUser);
   }
 
-  goBack(e) {
+  goBack(_e) {
     this.notified = false;
     this.esOb.notified = false;
     this.statusService.setValue(this.esOb);

@@ -28,12 +28,12 @@ export class ImageUploadComponent implements OnInit {
     const reader = new FileReader();
     this.imagePath = files;
     reader.readAsDataURL(files[0]);
-    reader.onload = (event) => {
+    reader.onload = (_event) => {
       this.imgURL = reader.result;
     };
   }
 
-  removeImage(e) {
+  removeImage(_e) {
     this.imgURL = null;
   }
 }

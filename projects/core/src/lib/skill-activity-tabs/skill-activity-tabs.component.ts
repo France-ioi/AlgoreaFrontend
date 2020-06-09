@@ -26,7 +26,7 @@ export class SkillActivityTabsComponent implements OnInit, OnChanges {
 
   ngOnInit() {}
 
-  ngOnChanges(changes: SimpleChanges) {}
+  ngOnChanges(_changes: SimpleChanges) {}
 
   tabChanged(e) {
     this.tabChange.emit(e.index);

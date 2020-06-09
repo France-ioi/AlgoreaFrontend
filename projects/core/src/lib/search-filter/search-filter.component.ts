@@ -22,11 +22,11 @@ export class SearchFilterComponent implements OnInit {
   ngOnInit() {
   }
 
-  toggleContent(e) {
+  toggleContent(_e) {
     this.showContent = !this.showContent;
   }
 
-  onItemSelect(e, i) {
+  onItemSelect(_e, i) {
     this.selected = i;
     this.showDropdown = false;
   }

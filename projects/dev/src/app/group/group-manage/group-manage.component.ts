@@ -3,7 +3,6 @@ import { ActivatedRoute } from '@angular/router';
 import { StatusService } from '../../shared/services/status.service';
 import { GroupService } from '../../shared/services/api/group.service';
 import { Group } from '../../shared/models/group.model';
-import { Member } from '../../shared/models/member.model';
 
 @Component({
   selector: 'app-group-manage',
@@ -35,20 +34,6 @@ export class GroupManageComponent implements OnInit {
     },
   ];
 
-  private _setMemberData(members: Member[]) {
-    this.memberData = [];
-
-    for (const member of members) {
-      this.memberData.push({
-        member_since: member.member_since,
-        name: `${member.user.first_name} ${member.user.last_name}`,
-        'user.login': member.user.login,
-        'user.grade': member.user.grade,
-        id: member.id,
-      });
-    }
-  }
-
   constructor(
     private activatedRoute: ActivatedRoute,
     private statusService: StatusService,
@@ -76,6 +61,6 @@ export class GroupManageComponent implements OnInit {
     });
   }
 
-  onExpandWidth(e) {
+  onExpandWidth(_e) {
   }
 }

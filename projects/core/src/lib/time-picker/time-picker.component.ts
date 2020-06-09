@@ -15,11 +15,11 @@ export class TimePickerComponent implements OnInit {
 
   ngOnInit() {}
 
-  timeChange(e) {
+  timeChange(_e) {
     this.prev = this.time;
   }
 
-  timeChanged(e) {
+  timeChanged(_e) {
     if (this.time > 999) {
       this.time = this.prev;
     }

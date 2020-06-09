@@ -43,5 +43,6 @@ describe('TopNavComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+    expect(router).toBeDefined();
   });
 });

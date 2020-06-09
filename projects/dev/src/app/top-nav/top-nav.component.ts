@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, Input, HostListener } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { StatusService } from '../shared/services/status.service';
 import { Router } from '@angular/router';
 
@@ -42,13 +42,13 @@ export class TopNavComponent implements OnInit {
   ngOnInit() {
   }
 
-  onCollapse(e) {
+  onCollapse(_e) {
     this.collapsed = !this.collapsed;
     this.collapseEvent.emit(this.collapsed);
     console.log(this.templateId);
   }
 
-  onFold(e) {
+  onFold(_e) {
     this.folded = !this.folded;
     this.foldEvent.emit(this.folded);
   }
@@ -59,7 +59,7 @@ export class TopNavComponent implements OnInit {
     this.onNotify.emit(e);
   }
 
-  signInOut(e) {
+  signInOut(_e) {
     this.signedIn = !this.signedIn;
     this.signInOutEvent.emit(this.signedIn);
     console.log(this.signedIn, this.templateId);

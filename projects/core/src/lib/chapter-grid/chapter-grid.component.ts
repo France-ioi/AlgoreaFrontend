@@ -130,10 +130,10 @@ export class ChapterGridComponent implements OnInit {
       },
     });
 
-    ref.afterClosed().subscribe((result) => {});
+    ref.afterClosed().subscribe((_result) => {});
   }
 
-  menuSelected(e, idx, which) {
+  menuSelected(_e, idx, which) {
     switch (which) {
       case 0:
         this.icons[idx] = 'fa fa-eye-slash';
@@ -152,7 +152,7 @@ export class ChapterGridComponent implements OnInit {
     }
   }
 
-  lockMenuSelected(e, which) {
+  lockMenuSelected(_e, which) {
     this.lockState = which;
   }
 }

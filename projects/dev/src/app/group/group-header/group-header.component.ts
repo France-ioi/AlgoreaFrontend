@@ -52,7 +52,7 @@ export class GroupHeaderComponent implements OnInit, OnChanges, AfterViewInit {
     }
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(_changes: SimpleChanges) {
     if (this.data && this.data.grades) {
       this.grades = [];
       this.data.grades.forEach((grade) => {
@@ -62,9 +62,9 @@ export class GroupHeaderComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   @HostListener('window:resize', ['$event'])
-  onResized(e) {
+  onResized(_e) {
     this.checkVisibility();
   }
 
-  onExpandWidth(e) {}
+  onExpandWidth(_e) {}
 }
