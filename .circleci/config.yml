@@ -3,6 +3,40 @@ version: 2.1
 orbs:
   aws-s3: circleci/aws-s3@1.0.15
 
+commands:
+  deploy-to-s3:
+    parameters:
+      # from current dir, with trailing slash
+      from:
+        type: string
+      bucket:
+        type: string
+      # starting with a slash, no trailing slash
+      path:
+        type: string
+    steps:
+      - aws-s3/sync:
+          from: << parameters.from >>
+          to: s3://<< parameters.bucket >><< parameters.path >>
+          overwrite: false
+          arguments: >-
+            --acl public-read
+            --exclude "index.html"
+            --exclude "favicon.ico"
+            --cache-control 'max-age=86400'
+      - aws-s3/copy:
+          from:  << parameters.from >>index.html
+          to: s3://<< parameters.bucket >><< parameters.path >>/index.html
+          arguments: >-
+            --acl public-read
+            --cache-control 'max-age=10'
+      - aws-s3/copy:
+          from:  << parameters.from >>favicon.ico
+          to: s3://<< parameters.bucket >><< parameters.path >>/favicon.ico
+          arguments: >-
+            --acl public-read
+            --cache-control 'max-age=10'
+
 jobs:
   # deps has to be run before the other jobs and basically run "npm install" and cache it
   deps:
@@ -94,39 +128,26 @@ jobs:
       - image: 'circleci/python:2.7'
     environment:
       AWS_REGION: eu-central-1
-      DST: s3://algorea-static/branch/<< pipeline.git.branch >>
-    steps: &deploy_steps
+    steps:
       - attach_workspace:
           at: ./
-      - aws-s3/sync:
+      - deploy-to-s3:
           from: ./dist/algorea/
-          to: $DST
-          overwrite: false
-          arguments: >-
-            --acl public-read
-            --exclude "index.html"
-            --exclude "favicon.ico"
-            --cache-control 'max-age=86400'
-      - aws-s3/copy:
-          from: ./dist/algorea/index.html
-          to: $DST/
-          arguments: >-
-            --acl public-read
-            --cache-control 'max-age=10'
-      - aws-s3/copy:
-          from: ./dist/algorea/favicon.ico
-          to: $DST/
-          arguments: >-
-            --acl public-read
-            --cache-control 'max-age=10'
+          bucket: $DEPLOYMENT_BUCKET
+          path: /branch/<< pipeline.git.branch >>
 
   deploy-master:
     docker:
       - image: 'circleci/python:2.7'
     environment:
       AWS_REGION: eu-central-1
-      DST: s3://algorea-static/
-    steps: *deploy_steps
+    steps:
+      - attach_workspace:
+          at: ./
+      - deploy-to-s3:
+          from: ./dist/algorea/
+          bucket: $DEPLOYMENT_BUCKET
+          path: ""
 
 workflows:
   version: 2
