@@ -87,7 +87,6 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     }
   }
 
-  // tslint:disable-next-line
   _processRequestError(_err) {
     this.messageService.add({
       severity: 'error',
@@ -121,7 +120,6 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     });
   }
 
-  // tslint:disable-next-line
   ngOnChanges(_changes: SimpleChanges) {
     this.selection = [];
     this._reloadData();
@@ -162,7 +160,6 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     );
   }
 
-  // tslint:disable-next-line
   onSelectAll(_event) {
     if (this.selection.length === this.requests.length) {
       this.selection = [];

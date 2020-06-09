@@ -17,7 +17,7 @@ export class SelectionComponent implements OnInit {
 
   ngOnInit() {}
 
-  itemChanged(e, index) {
+  itemChanged(_e, index) {
     this.selected = index;
     this.onChange.emit(index);
   }

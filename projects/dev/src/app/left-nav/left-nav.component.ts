@@ -29,10 +29,10 @@ export class LeftNavComponent implements OnInit, OnChanges {
   ngOnInit() {
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(_changes: SimpleChanges) {
   }
 
-  onCollapse(e) {
+  onCollapse(_e) {
     this.collapsed = !this.collapsed;
     this.collapseEvent.emit(this.collapsed);
   }
@@ -69,11 +69,11 @@ export class LeftNavComponent implements OnInit, OnChanges {
     this.onNotify.emit(e);
   }
 
-  onSearchEvent(e) {
+  onSearchEvent(_e) {
     this.searchView = true;
   }
 
-  onSearchCloseEvent(e) {
+  onSearchCloseEvent(_e) {
     this.searchView = false;
   }
 

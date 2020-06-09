@@ -31,7 +31,7 @@ export class GroupNavigationTreeComponent implements OnInit, OnChanges {
 
   ngOnInit() {}
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(_changes: SimpleChanges) {
     if (this.data) {
       if (!this.inGroup && this.data.length > 0) {
         this.data[0].root = true;
@@ -39,7 +39,7 @@ export class GroupNavigationTreeComponent implements OnInit, OnChanges {
     }
   }
 
-  nodeExpand(event, node) {
+  nodeExpand(_event, node) {
     if (!node.expanded) {
       node.expanded = true;
     } else {
@@ -58,7 +58,7 @@ export class GroupNavigationTreeComponent implements OnInit, OnChanges {
     });
   }
 
-  nodeCheck(e, node) {
+  nodeCheck(_e, node) {
     this._unCheckAll(this.data);
     if (!node.checked) {
       node.checked = true;
@@ -77,7 +77,7 @@ export class GroupNavigationTreeComponent implements OnInit, OnChanges {
     node.expanded = true;
   }
 
-  goToPage(e, node) {
+  goToPage(_e, node) {
     this.onNodeChange.emit(node);
   }
 

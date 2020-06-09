@@ -22,7 +22,7 @@ export class EditUserDialogComponent implements OnInit {
     this.dialogRef.close(e);
   }
 
-  onAttachClicked(e) {
+  onAttachClicked(_e) {
     const ref = this.dialog.open(AttachGroupDialogComponent, {
       maxHeight: '41rem',
       minWidth: '50rem',
@@ -36,10 +36,10 @@ export class EditUserDialogComponent implements OnInit {
       },
     });
 
-    ref.afterClosed().subscribe((result) => {});
+    ref.afterClosed().subscribe((_result) => {});
   }
 
-  onResetPassword(e) {
+  onResetPassword(_e) {
     const ref = this.dialog.open(ResetPasswordDialogComponent, {
       maxHeight: '41rem',
       minWidth: '50rem',
@@ -67,7 +67,7 @@ export class EditUserDialogComponent implements OnInit {
           },
         });
 
-        codeRef.afterClosed().subscribe((code) => {});
+        codeRef.afterClosed().subscribe((_code) => {});
       }
     });
   }

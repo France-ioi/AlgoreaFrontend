@@ -42,12 +42,12 @@ export class GridFilterComponent implements OnInit {
     this.onClose.emit(e);
   }
 
-  toggleMenu(e) {
+  toggleMenu(_e) {
     this.menuOpened = !this.menuOpened;
     this.onHide.emit(true);
   }
 
-  hideMenu(e) {
+  hideMenu(_e) {
     this.menuOpened = false;
     this.outsideClicked = false;
     this.onHide.emit(true);

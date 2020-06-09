@@ -774,7 +774,7 @@ export class AppComponent {
   }
 
   @HostListener('window:scroll', ['$event'])
-  onScrollContent(e) {
+  onScrollContent(_e) {
     if (window.pageYOffset > 40 && !this.scrolled) {
       this.scrolled = true;
     } else if (window.pageYOffset <= 40 && this.scrolled) {
@@ -782,14 +782,14 @@ export class AppComponent {
     }
   }
 
-  onJoinGroupSelected(e) {
+  onJoinGroupSelected(_e) {
     this.selectedType = 3;
     this.userTitle = 'Groups you joined';
     this.updateService();
     this.router.navigate(['/dev/groups/memberships']);
   }
 
-  onManageGroupSelected(e) {
+  onManageGroupSelected(_e) {
     this.selectedType = 3;
     this.userTitle = 'Groups you manage';
     this.updateService();
@@ -808,33 +808,33 @@ export class AppComponent {
     }
   }
 
-  onEditPage(e) {
+  onEditPage(_e) {
     this.editing = true;
     this.updateService();
   }
 
-  onEditCancel(e) {
+  onEditCancel(_e) {
     this.editing = false;
     this.updateService();
   }
 
-  onNotify(e) {
+  onNotify(_e) {
 
   }
 
-  onSignInOut(e) {
+  onSignInOut(_e) {
 
   }
 
-  onSkillSelected(e) {
+  onSkillSelected(_e) {
 
   }
 
-  onActivitySelected(e) {
+  onActivitySelected(_e) {
 
   }
 
-  onYourselfSelected(e) {
+  onYourselfSelected(_e) {
 
   }
 }

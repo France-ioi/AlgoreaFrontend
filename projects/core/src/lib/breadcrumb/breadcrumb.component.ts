@@ -18,7 +18,7 @@ export class BreadcrumbComponent implements OnInit {
 
   ngOnInit() {}
 
-  onItemClick(e, item, idx) {
+  onItemClick(_e, item, idx) {
     this.items.selectedID = item.ID;
     this.selectedIdx = idx;
     this.itemClick.emit(item);

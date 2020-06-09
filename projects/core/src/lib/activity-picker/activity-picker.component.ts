@@ -18,7 +18,7 @@ export class ActivityPickerComponent implements OnInit {
 
   ngOnInit() {}
 
-  openDialog(e) {
+  openDialog(_e) {
     const dialogRef = this.dialog.open(MatDialogComponent, {
       maxHeight: '83rem',
       minWidth: '50rem',
@@ -29,6 +29,6 @@ export class ActivityPickerComponent implements OnInit {
       },
     });
 
-    dialogRef.afterClosed().subscribe((result) => {});
+    dialogRef.afterClosed().subscribe((_result) => {});
   }
 }

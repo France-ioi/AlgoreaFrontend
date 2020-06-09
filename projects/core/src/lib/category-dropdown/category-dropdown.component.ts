@@ -20,5 +20,5 @@ export class CategoryDropdownComponent implements OnInit {
 
   ngOnInit() {}
 
-  handleChange(e) {}
+  handleChange(_e) {}
 }

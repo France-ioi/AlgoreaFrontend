@@ -17,17 +17,23 @@ module.exports = function (config) {
       random: false
     },
     coverageIstanbulReporter: {
-      dir: require('path').join(__dirname, './coverage/algorea'),
-      reports: ['html', 'lcovonly', 'text-summary'],
+      dir: ".",
+      reports: ['lcovonly'],
       fixWebpackSourcePaths: true
     },
     reporters: ['progress', 'kjhtml'],
     port: 9876,
-    colors: true,
+    colors: false,
     logLevel: config.LOG_INFO,
-    autoWatch: true,
+    autoWatch: false,
     browsers: ['Chrome'],
+    customLaunchers: {
+      ChromeHeadlessCI: {
+        base: 'ChromeHeadless',
+        flags: ['--no-sandbox']
+      }
+    },
     singleRun: true,
-    restartOnFileChange: true
+    restartOnFileChange: false
   });
 };

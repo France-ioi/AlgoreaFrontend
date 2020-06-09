@@ -25,7 +25,7 @@ export class SwitchComponent implements OnInit, OnChanges {
 
   ngOnInit() {}
 
-  ngOnChanges(changes: SimpleChanges) {}
+  ngOnChanges(_changes: SimpleChanges) {}
 
   handleChange(e) {
     this.onChange.emit(e.checked);
