@@ -304,6 +304,22 @@
                   "maximumError": "10kb"
                 }
               ]
+            },
+            "ci": {
+              "fileReplacements": [
+                {
+                  "replace": "projects/dev/src/environments/environment.ts",
+                  "with": "projects/dev/src/environments/environment.ci.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true
             }
           }
         },
