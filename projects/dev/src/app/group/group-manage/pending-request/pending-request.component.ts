@@ -32,7 +32,6 @@ export enum Action {
   selector: 'app-pending-request',
   templateUrl: './pending-request.component.html',
   styleUrls: ['./pending-request.component.scss'],
-  providers: [MessageService],
 })
 export class PendingRequestComponent implements OnInit, OnChanges {
   @Input() id: string;
@@ -58,19 +57,22 @@ export class PendingRequestComponent implements OnInit, OnChanges {
       });
   }
 
-  _displayResponseToast(data: Record<string, string>, verb: string, msg: string) {
-    const succ = _.countBy(data, (status: string) => {
-      return ['success', 'unchanged'].includes(status);
-    });
+  _displayResponseToast(data: Map<string, string>, verb: string, msg: string) {
+    // count number of success
+    const results = Array.from(data.values());
+    const nbReq = results.length;
+    const nbSucc = results
+      .map(res => ['success', 'unchanged'].includes(res) ? 1 : 0)
+      .reduce( (acc, res) => acc + res, 0 );
 
-    if (succ.false === undefined || succ.false === 0) {
+    if (nbSucc === nbReq) {
       this.messageService.add({
         severity: 'success',
         summary: 'Success',
-        detail: `${succ.true} request(s) have been ${msg}`,
+        detail: `${nbSucc} request(s) have been ${msg}`,
         life: TOAST_LENGTH,
       });
-    } else if (succ.true === undefined || succ.true === 0) {
+    } else if (nbSucc === 0) {
       this.messageService.add({
         severity: 'error',
         summary: 'Error',
@@ -81,7 +83,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
       this.messageService.add({
         severity: 'warn',
         summary: 'Partial success',
-        detail: `${succ.true} request(s) have been ${msg}, ${succ.false} could not be executed`,
+        detail: `${nbSucc} request(s) have been ${msg}, ${nbReq - nbSucc} could not be executed`,
         life: TOAST_LENGTH,
       });
     }
