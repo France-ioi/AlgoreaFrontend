@@ -29,8 +29,8 @@ export class PickListComponent implements OnInit {
   @Input() listCount = 2;
   @Input() list;
 
-  @Output() onLock = new EventEmitter<any>();
-  @Output() onShowDate = new EventEmitter<any>();
+  @Output() lock = new EventEmitter<any>();
+  @Output() showDate = new EventEmitter<any>();
 
   selectedID = -1;
   activeID = -1;
@@ -63,14 +63,14 @@ export class PickListComponent implements OnInit {
 
     if (e.dragData.data.type === PickListItemType.Lock) {
       if (listItem.ID === PickListType.Standard) {
-        this.onLock.emit(true);
+        this.lock.emit(true);
         return;
       } else {
-        this.onShowDate.emit(listItem.ID === PickListType.Mandatory);
+        this.showDate.emit(listItem.ID === PickListType.Mandatory);
       }
     }
 
-    this.onLock.emit(false);
+    this.lock.emit(false);
     e.dragData.data.list = listItem.ID;
   }
 
@@ -127,7 +127,7 @@ export class PickListComponent implements OnInit {
                 item.type === PickListItemType.Lock &&
                 this.list.lists[ord].ID === PickListType.Standard
               ) {
-                this.onLock.emit(true);
+                this.lock.emit(true);
                 return;
               }
               item.list = this.list.lists[ord].ID;

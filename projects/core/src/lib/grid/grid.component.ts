@@ -66,9 +66,9 @@ export class GridComponent implements OnInit, OnChanges {
   @Input() showGear = true;
 
   @Output() expandWholeWidth = new EventEmitter<boolean>();
-  @Output() onSort = new EventEmitter();
+  @Output() sort = new EventEmitter();
   @Output() selectionChange = new EventEmitter();
-  @Output() onHeaderCheckboxToggle = new EventEmitter();
+  @Output() headerCheckboxToggle = new EventEmitter();
 
   @ContentChild('colgroupTemplate', { static: false }) colgroupTemplate;
   @ContentChild('headerTemplate', { static: false }) headerTemplate;
@@ -159,7 +159,7 @@ export class GridComponent implements OnInit, OnChanges {
   }
 
   sortFunction(event: SortEvent) {
-    this.onSort.emit(event);
+    this.sort.emit(event);
   }
 
   onHeaderCheckbox(_event) {

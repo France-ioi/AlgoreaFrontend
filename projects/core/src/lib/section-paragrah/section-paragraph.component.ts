@@ -21,7 +21,7 @@ export class SectionParagraphComponent implements OnInit {
   @Input() data;
   @Input() remainOrigin = true;
 
-  @Output() onCollapse = new EventEmitter<any>();
+  @Output() collapse = new EventEmitter<any>();
 
   @ContentChild('headerTemplate', { static: false }) headerTemplate;
 
@@ -35,6 +35,6 @@ export class SectionParagraphComponent implements OnInit {
 
   toggleContent(_e) {
     this.visible = !this.visible;
-    this.onCollapse.emit(this.visible);
+    this.collapse.emit(this.visible);
   }
 }

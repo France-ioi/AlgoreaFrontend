@@ -22,9 +22,9 @@ export class TopNavComponent implements OnInit {
   showNotification = false;
   @Input() signedIn = true;
 
-  @Output() onNotify = new EventEmitter<any>();
-  @Output() onSearch = new EventEmitter<any>();
-  @Output() onSearchClose = new EventEmitter<any>();
+  @Output() notify = new EventEmitter<any>();
+  @Output() search = new EventEmitter<any>();
+  @Output() searchClose = new EventEmitter<any>();
 
   langs = [
     'English',
@@ -56,7 +56,7 @@ export class TopNavComponent implements OnInit {
   toggleNotification(e) {
     this.showNotification = !this.showNotification;
     this.statusService.setUrl(this.router.url);
-    this.onNotify.emit(e);
+    this.notify.emit(e);
   }
 
   signInOut(_e) {
@@ -66,11 +66,11 @@ export class TopNavComponent implements OnInit {
   }
 
   onSearchEvent(e) {
-    this.onSearch.emit(e);
+    this.search.emit(e);
   }
 
   onSearchCloseEvent(e) {
-    this.onSearchClose.emit(e);
+    this.searchClose.emit(e);
   }
 
 }

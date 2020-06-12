@@ -12,8 +12,7 @@ export class ButtonComponent implements OnInit {
   @Input() class;
   @Input() iconPos = 'left';
 
-  // tslint:disable-next-line: no-output-on-prefix
-  @Output() onClick = new EventEmitter<any>();
+  @Output() click = new EventEmitter<any>();
 
   constructor() {}
 
@@ -21,6 +20,6 @@ export class ButtonComponent implements OnInit {
 
   onClickEvent(e) {
     e.stopPropagation();
-    this.onClick.emit(e);
+    this.click.emit(e);
   }
 }

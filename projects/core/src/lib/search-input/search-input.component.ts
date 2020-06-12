@@ -9,8 +9,8 @@ export class SearchInputComponent implements OnInit {
   value = '';
   dirty = false;
 
-  @Output() onChange = new EventEmitter<any>();
-  @Output() onClose = new EventEmitter<any>();
+  @Output() change = new EventEmitter<any>();
+  @Output() close = new EventEmitter<any>();
 
   constructor() {}
 
@@ -20,10 +20,10 @@ export class SearchInputComponent implements OnInit {
     if (this.dirty) {
       this.value = '';
       this.dirty = false;
-      this.onClose.emit(e);
+      this.close.emit(e);
     } else {
       this.dirty = true;
-      this.onChange.emit('');
+      this.change.emit('');
     }
   }
 
@@ -33,11 +33,11 @@ export class SearchInputComponent implements OnInit {
     } else {
       this.dirty = false;
     }
-    this.onChange.emit(e);
+    this.change.emit(e);
   }
 
   onFocus(_e) {
-    this.onChange.emit('');
+    this.change.emit('');
     this.dirty = true;
   }
 }

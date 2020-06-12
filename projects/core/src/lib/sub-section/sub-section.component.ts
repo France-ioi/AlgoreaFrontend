@@ -9,15 +9,15 @@ export class SubSectionComponent implements OnInit {
   @Input() icon;
   @Input() label;
   @Input() tooltip;
-  @Input() close = false;
+  @Input() closed = false;
 
-  @Output() onClose = new EventEmitter<any>();
+  @Output() close = new EventEmitter<any>();
 
   constructor() {}
 
   ngOnInit() {}
 
   onCloseEvent(e) {
-    this.onClose.emit(e);
+    this.close.emit(e);
   }
 }

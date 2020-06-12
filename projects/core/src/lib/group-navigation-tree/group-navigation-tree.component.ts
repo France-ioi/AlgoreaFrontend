@@ -21,9 +21,9 @@ export class GroupNavigationTreeComponent implements OnInit, OnChanges {
   @Input() navigation = true;
   @Input() showCategory = true;
 
-  @Output() onNodeChange = new EventEmitter<any>();
-  @Output() onTitleChange = new EventEmitter<any>();
-  @Output() onEditPage = new EventEmitter<any>();
+  @Output() nodeChange = new EventEmitter<any>();
+  @Output() titleChange = new EventEmitter<any>();
+  @Output() editPage = new EventEmitter<any>();
 
   @ViewChild('groupTree', { static: false }) groupTree;
 
@@ -70,15 +70,15 @@ export class GroupNavigationTreeComponent implements OnInit, OnChanges {
       .segments;
 
     if (segments.length > 0 && segments[0].path === 'group') {
-      this.onNodeChange.emit(node);
+      this.nodeChange.emit(node);
     } else {
-      this.onTitleChange.emit(node);
+      this.titleChange.emit(node);
     }
     node.expanded = true;
   }
 
   goToPage(_e, node) {
-    this.onNodeChange.emit(node);
+    this.nodeChange.emit(node);
   }
 
   toggleConnection(e, node) {
@@ -92,7 +92,7 @@ export class GroupNavigationTreeComponent implements OnInit, OnChanges {
   }
 
   onGotoEditPage(node) {
-    this.onEditPage.emit(node);
+    this.editPage.emit(node);
   }
 
   onKeyDown(e) {

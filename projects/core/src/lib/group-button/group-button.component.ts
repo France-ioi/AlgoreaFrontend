@@ -10,13 +10,13 @@ export class GroupButtonComponent implements OnInit {
   @Input() icon;
   @Input() disabled = false;
 
-  @Output() onClick = new EventEmitter<any>();
+  @Output() click = new EventEmitter<any>();
 
   constructor() {}
 
   ngOnInit() {}
 
   onClickEvent(e) {
-    this.onClick.emit(e);
+    this.click.emit(e);
   }
 }

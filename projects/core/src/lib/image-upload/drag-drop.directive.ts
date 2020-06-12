@@ -9,7 +9,7 @@ import {
   selector: '[appDragDrop]',
 })
 export class DragDropDirective {
-  @Output() onFileDropped = new EventEmitter<any>();
+  @Output() fileDropped = new EventEmitter<any>();
 
   // Dragover listener
   @HostListener('dragover', ['$event']) onDragOver(evt) {
@@ -29,7 +29,7 @@ export class DragDropDirective {
     evt.stopPropagation();
     const files = evt.dataTransfer.files;
     if (files.length > 0) {
-      this.onFileDropped.emit(files);
+      this.fileDropped.emit(files);
     }
   }
 }

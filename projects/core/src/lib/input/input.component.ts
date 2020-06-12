@@ -23,8 +23,8 @@ export class InputComponent implements OnInit, OnChanges {
   @Input() inputType = 'text';
   @Input() leftIcon = 'fa fa-font';
 
-  @Output() onChange = new EventEmitter<any>();
-  @Output() onClick = new EventEmitter<any>();
+  @Output() change = new EventEmitter<any>();
+  @Output() click = new EventEmitter<any>();
 
   constructor() {}
 
@@ -33,10 +33,10 @@ export class InputComponent implements OnInit, OnChanges {
   ngOnChanges(_changes: SimpleChanges) {}
 
   onValueChange(e) {
-    this.onChange.emit(e);
+    this.change.emit(e);
   }
 
   onButtonClick(e) {
-    this.onClick.emit(e);
+    this.click.emit(e);
   }
 }

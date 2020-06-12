@@ -18,7 +18,7 @@
         </span>
       </span>
       <span class="node-item-content">
-        <span (click)="nodeExpand($event, node)" class="node-select">
+        <span (click)="onNodeExpand($event, node)" class="node-select">
           <i
             *ngIf="!node.expanded && !node.ring"
             class="fa fa-folder"
@@ -79,7 +79,7 @@
         </span>
       </span>
       <span class="node-item-content" [ngClass]="{'node-bottom-radius': node.selectedTop, 'node-top-radius': node.selectedBottom}">
-        <span (click)="nodeExpand($event, node)" class="node-select">
+        <span (click)="onNodeExpand($event, node)" class="node-select">
           <i
             *ngIf="node.checked && !node.ring"
             class="pi pi-check"

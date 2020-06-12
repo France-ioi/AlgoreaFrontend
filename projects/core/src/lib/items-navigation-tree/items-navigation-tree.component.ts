@@ -18,9 +18,9 @@ export class ItemsNavigationTreeComponent implements OnInit, OnChanges {
   @Input() data = [];
 
   // tslint:disable-next-line: no-output-on-prefix
-  @Output() onNodeExpand = new EventEmitter<any>();
+  @Output() nodeExpand = new EventEmitter<any>();
   // tslint:disable-next-line: no-output-on-prefix
-  @Output() onNodeSelect = new EventEmitter<any>();
+  @Output() nodeSelect = new EventEmitter<any>();
 
   @ViewChild('navTree', { static: false }) navTree;
 
@@ -40,13 +40,13 @@ export class ItemsNavigationTreeComponent implements OnInit, OnChanges {
     }
   }
 
-  nodeExpand(_event, node) {
+  onNodeExpand(_event, node) {
     if (!node.expanded) {
       node.expanded = true;
     } else {
       node.expanded = false;
     }
-    this.onNodeExpand.emit(node);
+    this.nodeExpand.emit(node);
   }
 
   _unCheckAll(nodes) {
@@ -78,10 +78,10 @@ export class ItemsNavigationTreeComponent implements OnInit, OnChanges {
     node.checked = true;
 
     node.expanded = true;
-    this.onNodeSelect.emit(node);
+    this.nodeSelect.emit(node);
   }
 
-  nodeSelect(_e) {}
+  onNodeSelect(_e) {}
 
   onKeyDown(e) {
     if (e.code === 'Space' || e.code === 'Enter') {

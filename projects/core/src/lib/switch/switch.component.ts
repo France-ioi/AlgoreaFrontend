@@ -18,8 +18,7 @@ export class SwitchComponent implements OnInit, OnChanges {
   @Input() mode: 'dark' | 'white' | 'circular' | 'dark-circular' = 'dark';
   @Input() type = 'square';
 
-  // tslint:disable-next-line: no-output-on-prefix
-  @Output() onChange = new EventEmitter<boolean>();
+  @Output() change = new EventEmitter<boolean>();
 
   constructor() {}
 
@@ -28,6 +27,6 @@ export class SwitchComponent implements OnInit, OnChanges {
   ngOnChanges(_changes: SimpleChanges) {}
 
   handleChange(e) {
-    this.onChange.emit(e.checked);
+    this.change.emit(e.checked);
   }
 }
