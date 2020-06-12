@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 
 @Component({
-  selector: 'lib-selection-tree',
+  selector: 'app-selection-tree',
   templateUrl: './selection-tree.component.html',
   styleUrls: ['./selection-tree.component.scss'],
 })

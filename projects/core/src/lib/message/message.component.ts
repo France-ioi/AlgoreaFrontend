@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
-  selector: 'lib-message',
+  selector: 'app-message',
   templateUrl: './message.component.html',
   styleUrls: ['./message.component.scss'],
 })

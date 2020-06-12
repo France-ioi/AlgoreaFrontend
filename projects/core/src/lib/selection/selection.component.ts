@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
-  selector: 'lib-selection',
+  selector: 'app-selection',
   templateUrl: './selection.component.html',
   styleUrls: ['./selection.component.scss'],
 })
@@ -11,7 +11,7 @@ export class SelectionComponent implements OnInit {
   @Input() selected = 0;
   @Input() mode: 'light' | 'dark' | 'basic' = 'light';
 
-  @Output() onChange = new EventEmitter<any>();
+  @Output() change = new EventEmitter<any>();
 
   constructor() {}
 
@@ -19,6 +19,6 @@ export class SelectionComponent implements OnInit {
 
   itemChanged(_e, index) {
     this.selected = index;
-    this.onChange.emit(index);
+    this.change.emit(index);
   }
 }

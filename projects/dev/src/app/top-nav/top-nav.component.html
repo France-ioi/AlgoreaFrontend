@@ -17,12 +17,18 @@
     <span *ngIf="signedIn" class="sign-out" (click)="signInOut($event)" tabindex="2">
       <i class="fa fa-power-off"></i>
     </span>
-    <lib-select *ngIf="!signedIn" [items]="langs"></lib-select>
+    <app-select *ngIf="!signedIn" [items]="langs"></app-select>
   </div>
-  <lib-search-input *ngIf="signedIn" (onChange)="onSearchEvent($event)" (onClose)="onSearchCloseEvent($event)"></lib-search-input>
+  <app-search-input *ngIf="signedIn" (onChange)="onSearchEvent($event)" (onClose)="onSearchCloseEvent($event)"></app-search-input>
   <div class="overlay-container">
-    <lib-notification *ngIf="showNotification && signedIn"></lib-notification>
-    <lib-button *ngIf="!signedIn" icon="fa fa-power-off" label="Connexion" class="ui-button-rounded ui-button-warning ui-fit-parent" (onClick)="signInOut($event)"></lib-button>
+    <app-notification *ngIf="showNotification && signedIn"></app-notification>
+    <app-button
+      *ngIf="!signedIn"
+      icon="fa fa-power-off"
+      label="Connexion"
+      lass="ui-button-rounded ui-button-warning ui-fit-parent"
+      (onClick)="signInOut($event)"
+    ></app-button>
   </div>
 </div>
 

@@ -17,7 +17,12 @@
       <ng-container *ngIf="maxWidths[idx] === 0">
         <li [ngClass]="{'active': item.ID === items.selectedID}" (click)="onItemClick($event, item, idx)">...</li>
       </ng-container>
-      <li *ngIf="maxWidths[idx] > 0" [ngClass]="{'active': item.ID === items.selectedID}" (click)="onItemClick($event, item, idx)" [ngStyle]="{'max-width.rem': maxWidths[idx]}">
+      <li
+        *ngIf="maxWidths[idx] > 0"
+        [ngClass]="{'active': item.ID === items.selectedID}"
+        (click)="onItemClick($event, item, idx)"
+        [ngStyle]="{'max-width.rem': maxWidths[idx]}"
+      >
         <span class="label">
           {{item.label}}
         </span>

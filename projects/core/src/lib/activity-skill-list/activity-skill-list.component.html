@@ -5,8 +5,18 @@
       <span *ngIf="item.hasKey" class="list-item-icon">
         <i class="fa fa-lock"></i>
       </span>
-      <lib-score-ring *ngIf="item.ring" [displayedScore]="item.progress.displayedScore" [currentScore]="item.progress.currentScore" diameter="32"></lib-score-ring>
-      <lib-skill-progress *ngIf="!item.ring" [displayedScore]="item.progress.displayedScore" [currentScore]="item.progress.currentScore" style="width: 150px;"></lib-skill-progress>
+      <app-score-ring
+        *ngIf="item.ring"
+        [displayedScore]="item.progress.displayedScore"
+        [currentScore]="item.progress.currentScore"
+        diameter="32"
+      ></app-score-ring>
+      <app-skill-progress
+        *ngIf="!item.ring"
+        [displayedScore]="item.progress.displayedScore"
+        [currentScore]="item.progress.currentScore"
+        style="width: 150px;"
+      ></app-skill-progress>
     </div>
     <div *ngIf="item.sessions" class="activity-skill-list-item-content">
       <div *ngFor="let session of item.sessions" class="session-item">

@@ -113,7 +113,6 @@ describe('NavigationTabsComponent', () => {
         },
         {
           ID: 37,
-          // tslint:disable-next-line: max-line-length
           title: 'Activities to test headers',
           type: 'leaf',
           ring: true,

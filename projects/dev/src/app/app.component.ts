@@ -1,4 +1,4 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { ProgressType } from 'core';
 import * as _ from 'lodash';
 import { Router } from '@angular/router';
@@ -9,7 +9,7 @@ import { StatusService } from './shared/services/status.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   ProgressType = ProgressType;
   title = 'dev';
   editing = false;
@@ -377,8 +377,8 @@ export class AppComponent {
         },
         {
           ID: 25,
-          // tslint:disable-next-line: max-line-length
-          title: 'Horizontal digging (BFS) et DijkstraHorizontal digging (BFS) et DijkstraHorizontal digging (BFS) et DijkstraHorizontal digging (BFS) et DijkstraHorizontal digging (BFS) et Dijkstra',
+          title: 'Horizontal digging (BFS) et DijkstraHorizontal digging (BFS) et DijkstraHorizontal digging (BFS) et DijkstraHorizontal '
+               + 'digging (BFS) et DijkstraHorizontal digging (BFS) et Dijkstra',
           type: 'leaf',
           ring: false,
           state: 'locked',
@@ -459,7 +459,6 @@ export class AppComponent {
         },
         {
           ID: 37,
-          // tslint:disable-next-line: max-line-length
           title: 'Activities to test headers',
           type: 'folder',
           ring: true,
@@ -680,8 +679,8 @@ export class AppComponent {
         },
         {
           ID: 36,
-          // tslint:disable-next-line: max-line-length
-          title: 'Horizontal digging (BFS) et DijkstraHorizontal digging (BFS) et DijkstraHorizontal digging (BFS) et DijkstraHorizontal digging (BFS) et DijkstraHorizontal digging (BFS) et Dijkstra',
+          title: 'Horizontal digging (BFS) et DijkstraHorizontal digging (BFS) et DijkstraHorizontal digging (BFS) et DijkstraHorizontal '
+               + 'digging (BFS) et DijkstraHorizontal digging (BFS) et Dijkstra',
           type: 'leaf',
           ring: true,
           state: 'locked',
@@ -716,7 +715,6 @@ export class AppComponent {
     private router: Router
   ) {}
 
-  // tslint:disable-next-line: use-lifecycle-interface
   ngOnInit() {
     this.statusService.setUser({
       title: 'Lionel MESSI',

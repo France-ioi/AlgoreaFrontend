@@ -30,13 +30,17 @@
     <ng-container [ngTemplateOutlet]="headerTemplate" [ngTemplateOutletContext]="{ $implicit: columns }"></ng-container>
   </ng-template>
   <ng-template pTemplate="body" let-rowData let-expanded="expanded" let-columns="columns" let-rowIndex="rowIndex">
-    <ng-container [ngTemplateOutlet]="bodyTemplate" [ngTemplateOutletContext]="{ $implicit: rowData, columns: columns, rowIndex: rowIndex, expanded: expanded }"></ng-container>
+    <ng-container
+      [ngTemplateOutlet]="bodyTemplate"
+      [ngTemplateOutletContext]="{ $implicit: rowData, columns: columns, rowIndex: rowIndex, expanded: expanded }"
+    ></ng-container>
   </ng-template>
   <ng-template pTemplate="footer">
     <ng-container [ngTemplateOutlet]="footerTemplate"></ng-container>
   </ng-template>
   <ng-template pTemplate="rowexpansion" let-rowData>
-    <ng-container [ngTemplateOutlet]="rowExpansionTemplate" [ngTemplateOutletContext]="{ $implicit: rowData, columns: columns }"></ng-container>
+    <ng-container [ngTemplateOutlet]="rowExpansionTemplate" [ngTemplateOutletContext]="{ $implicit: rowData, columns: columns }">
+    </ng-container>
   </ng-template>
   <ng-template pTemplate="summary">
     <ng-container [ngTemplateOutlet]="summaryTemplate" [ngTemplateOutletContext]="{ $implicit: table }"></ng-container>
@@ -63,10 +67,10 @@
         <span [ngClass]="{ checked: selected[item.field] }" (click)="handleChanges($event, item)">
           {{ item.header }}
         </span>
-        <lib-switch
+        <app-switch
           [checked]="selected[item.field]"
           (onChange)="handleChanges($event, item)"
-        ></lib-switch>
+        ></app-switch>
       </li>
     </ul>
   </div>

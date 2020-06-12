@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
-  selector: 'lib-group-button',
+  selector: 'app-group-button',
   templateUrl: './group-button.component.html',
   styleUrls: ['./group-button.component.scss'],
 })
@@ -10,13 +10,13 @@ export class GroupButtonComponent implements OnInit {
   @Input() icon;
   @Input() disabled = false;
 
-  @Output() onClick = new EventEmitter<any>();
+  @Output() click = new EventEmitter<any>();
 
   constructor() {}
 
   ngOnInit() {}
 
   onClickEvent(e) {
-    this.onClick.emit(e);
+    this.click.emit(e);
   }
 }

@@ -24,7 +24,6 @@ export class AccessCodeViewComponent implements OnInit {
       minHeight: '17rem',
       data: {
         group_name: 'Terminale A',
-        // tslint:disable-next-line: max-line-length
         desc: 'Group presentation Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s',
         administrators: [
           'Mathias HIRON',

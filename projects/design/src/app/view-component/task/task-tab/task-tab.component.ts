@@ -736,7 +736,6 @@ export class TaskTabComponent implements OnInit, OnChanges {
       label: 'Another filter',
       type: 'standard',
       mode: 'basic',
-      // tslint:disable-next-line
       text: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.'
     },
     {
@@ -771,7 +770,6 @@ export class TaskTabComponent implements OnInit, OnChanges {
       title: 'Stage Lorem ipsum',
       activity_name: 'Activity title',
       chapter_picture: 'barca.jpeg',
-      // tslint:disable-next-line
       text: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.',
       author: 'Jean-Claude MONNET',
       author_picture: '',
@@ -786,7 +784,6 @@ export class TaskTabComponent implements OnInit, OnChanges {
       title: 'Stage Lorem ipsum',
       activity_name: 'Activity title',
       chapter_picture: 'barca.jpeg',
-      // tslint:disable-next-line
       text: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.',
       author: 'Jean-Claude MONNET',
       author_picture: '_messi.jpg',
@@ -801,7 +798,6 @@ export class TaskTabComponent implements OnInit, OnChanges {
       title: 'Stage Lorem ipsum',
       activity_name: 'Activity title',
       chapter_picture: 'barca.jpeg',
-      // tslint:disable-next-line
       text: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.',
       author: 'Jean-Claude MONNET',
       author_picture: '_messi.jpg',
@@ -933,42 +929,36 @@ export class TaskTabComponent implements OnInit, OnChanges {
       image: 'france.jpg',
       icon: 'fa fa-list',
       title: 'Multiple choice',
-      // tslint:disable-next-line: max-line-length
       desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.'
     },
     {
       image: 'france.jpg',
       icon: 'fa fa-play',
       title: 'Video',
-      // tslint:disable-next-line: max-line-length
       desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.'
     },
     {
       image: 'france.jpg',
       icon: 'fa fa-trophy',
       title: 'Html presentation',
-      // tslint:disable-next-line: max-line-length
       desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.'
     },
     {
       image: 'france.jpg',
       icon: 'fa fa-trophy',
       title: 'Free answer',
-      // tslint:disable-next-line: max-line-length
       desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.'
     },
     {
       image: 'france.jpg',
       icon: 'fa fa-trophy',
       title: 'Programmation',
-      // tslint:disable-next-line: max-line-length
       desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.'
     },
     {
       image: 'france.jpg',
       icon: 'fa fa-play',
       title: 'Algorea subject',
-      // tslint:disable-next-line: max-line-length
       desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.'
     }
   ];
@@ -1168,8 +1158,7 @@ export class TaskTabComponent implements OnInit, OnChanges {
       minHeight: '25rem',
       data: {
         icon: 'fa fa-lock',
-        label: `Item 1: access given to Terminale B`,
-        // tslint:disable-next-line
+        label: 'Item 1: access given to Terminale B',
         comment: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.',
         sections: [
           {

@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'lib-activity-skill-list',
+  selector: 'app-activity-skill-list',
   templateUrl: './activity-skill-list.component.html',
   styleUrls: ['./activity-skill-list.component.scss'],
 })

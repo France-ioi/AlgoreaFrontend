@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
-  selector: 'lib-state-widget',
+  selector: 'app-state-widget',
   templateUrl: './state-widget.component.html',
   styleUrls: ['./state-widget.component.scss'],
 })

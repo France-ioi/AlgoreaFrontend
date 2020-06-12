@@ -3,7 +3,7 @@
   <div
     class="upload-file-container"
     (click)="fileInput.click()"
-    libDragDrop
+    appDragDrop
     (onFileDropped)="uploadImage($event)"
   >
     <input
@@ -19,7 +19,7 @@
         'background-image': 'url(' + imgURL + ')'
       }"
     >
-      <lib-button *ngIf="imgURL" label="remove" class="diagonal-rounded" (onClick)="removeImage($event)"></lib-button>
+      <app-button *ngIf="imgURL" label="remove" class="diagonal-rounded" (onClick)="removeImage($event)"></app-button>
     </div>
     <div *ngIf="!imgURL" class="image-upload-labels">
       <div class="image-drop-label">
@@ -28,12 +28,12 @@
       </div>
 
       <div class="image-drop-button">
-        <lib-button
+        <app-button
           class="ui-button-rounded ui-button-success ui-fit-parent"
           icon="fa fa-folder-open"
           label="or select files"
           (onClick)="fileInput.click()"
-        ></lib-button>
+        ></app-button>
       </div>
     </div>
   </div>

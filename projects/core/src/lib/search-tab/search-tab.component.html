@@ -1,8 +1,8 @@
 <div class="search-tools-wrapper">
-  <lib-selection [items]="sels" mode="basic" (onChange)="onSelectionChanged($event)"></lib-selection>
-  <lib-grid-filter-bar>
+  <app-selection [items]="sels" mode="basic" (onChange)="onSelectionChanged($event)"></app-selection>
+  <app-grid-filter-bar>
     <ng-container *ngFor="let filter of gridFilters">
-      <lib-grid-filter
+      <app-grid-filter
         [icon]="filter.icon"
         [label]="filter.label"
         [type]="filter.type"
@@ -12,16 +12,16 @@
         [dateRanges]="filter.dateRanges"
         [list]="filter.list"
         (onClose)="removeFilter(filter.ID)"
-      ></lib-grid-filter>
+      ></app-grid-filter>
     </ng-container>
-    <lib-select
+    <app-select
       [items]="filterChoice"
       [opened]="false"
       width="10"
       style="margin: 0.4167rem;"
-    ></lib-select>
-    <lib-search-filter></lib-search-filter>
-  </lib-grid-filter-bar>
+    ></app-select>
+    <app-search-filter></app-search-filter>
+  </app-grid-filter-bar>
 </div>
 <div class="search-result">
   <div class="items-found">
@@ -57,14 +57,14 @@
               <i class="fa fa-lock" style="font-size: 1.2rem;"></i>
             </span>
           </span>
-          <lib-skill-progress
+          <app-skill-progress
             *ngIf="node.progress"
             [currentScore]="node.progress.currentScore"
             [displayedScore]="node.progress.displayedScore"
             [type]="'thin-horizontal'"
-          ></lib-skill-progress>
+          ></app-skill-progress>
         </span>
-        
+
       </span>
     </div>
   </ng-container>
@@ -72,14 +72,14 @@
     <div class="items-list">
       <span *ngFor="let node of nodes" class="node-item-content">
         <span class="node-select">
-          <lib-score-ring
+          <app-score-ring
             *ngIf="node.progress"
             [displayedScore]="node.progress.displayedScore"
             [currentScore]="node.progress.currentScore"
             [diameter]="30"
             isDark="true"
             [icons]="node.progress.icons"
-          ></lib-score-ring>
+          ></app-score-ring>
         </span>
         <span class="node-label">
           <span class="label-container">
@@ -94,7 +94,7 @@
             </span>
           </span>
         </span>
-        
+
       </span>
     </div>
   </ng-container>

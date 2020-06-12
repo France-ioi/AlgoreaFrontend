@@ -1,4 +1,4 @@
-<lib-section-paragraph
+<app-section-paragraph
   icon="fa fa-users"
   label="You have 6 grading requests"
   [collapsible]="true"
@@ -6,11 +6,11 @@
   <ng-template #headerTemplate>
     <div style="flex: 1; flex-direction: row-reverse;display: flex;">
       <div style="width: 13.3333rem;">
-        <lib-button
+        <app-button
           icon="fa fa-glasses"
           label="view submissions"
           class="ui-button-rounded ui-fit-parent ui-medium-button"
-        ></lib-button>
+        ></app-button>
       </div>
     </div>
   </ng-template>
@@ -21,12 +21,12 @@
         <b>{{ item.subject }}</b>
       </span>
       <div class="request-item-view">
-        <lib-button
+        <app-button
           icon="fa fa-glasses"
           label="view"
           class="ui-button-rounded ui-fit-parent ui-small-button"
-        ></lib-button>
+        ></app-button>
       </div>
     </li>
   </ul>
-</lib-section-paragraph>
+</app-section-paragraph>

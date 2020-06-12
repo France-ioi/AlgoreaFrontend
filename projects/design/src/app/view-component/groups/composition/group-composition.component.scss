@@ -25,7 +25,7 @@
     margin-right: auto;
     margin-bottom: 2rem;
 
-    lib-selection:first-child {
+    app-selection:first-child {
       margin: 1rem;
     }
   }
@@ -40,7 +40,7 @@
   }
 }
 
-lib-sub-section {
+app-sub-section {
   position: relative;
 
   &:last-child {
@@ -51,7 +51,7 @@ lib-sub-section {
 .button-container {
   display: flex;
 
-  lib-group-button {
+  app-group-button {
     flex: 1;
   }
 }
@@ -87,7 +87,7 @@ lib-sub-section {
         margin-bottom: 1.6667rem;
       }
 
-      lib-button {
+      app-button {
         align-self: flex-end;
       }
     }
@@ -98,7 +98,7 @@ lib-sub-section {
   display: flex;
   flex-direction: column;
 
-  lib-button {
+  app-button {
     align-self: center;
   }
 }
@@ -171,11 +171,11 @@ span.comment {
   flex-direction: column;
   margin-top: 1rem;
 
-  lib-textarea {
+  app-textarea {
     width: 100%;
   }
 
-  lib-button {
+  app-button {
     margin-top: 1rem;
     align-self: flex-end;
 
@@ -198,7 +198,7 @@ span.comment {
     flex: 1;
   }
 
-  lib-button {
+  app-button {
     ::ng-deep p-button button {
       width: 25.8333rem;
     }

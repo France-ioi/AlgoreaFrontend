@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
-  selector: 'lib-dropdown',
+  selector: 'app-dropdown',
   templateUrl: './dropdown.component.html',
   styleUrls: ['./dropdown.component.scss'],
 })
@@ -10,13 +10,13 @@ export class DropdownComponent implements OnInit {
   @Input() selectedItem;
   @Input() placeholder;
 
-  @Output() onChange = new EventEmitter<any>();
+  @Output() change = new EventEmitter<any>();
 
   constructor() {}
 
   ngOnInit() {}
 
   handleChange(e) {
-    this.onChange.emit(e);
+    this.change.emit(e);
   }
 }

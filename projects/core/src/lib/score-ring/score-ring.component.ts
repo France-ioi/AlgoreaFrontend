@@ -16,7 +16,7 @@ enum ScoreRingColor {
 }
 
 @Component({
-  selector: 'lib-score-ring',
+  selector: 'app-score-ring',
   templateUrl: './score-ring.component.html',
   styleUrls: ['./score-ring.component.scss'],
 })

@@ -49,7 +49,7 @@
     display: flex;
     flex-direction: column;
     margin-bottom: 1rem;
-    
+
     &-item {
       padding: 1rem 2.3rem;
       border-bottom: .1rem solid #F0F0F0;
@@ -58,7 +58,7 @@
       font-size: 1.2rem;
       min-height: 4.1667rem;
 
-      lib-button {
+      app-button {
         ::ng-deep .ui-button {
           height: 2rem;
         }
@@ -146,7 +146,7 @@
           }
         }
       }
-      
+
       .item-icon {
         margin-right: 2rem;
         width: 2.0833rem;
@@ -247,7 +247,7 @@
       display: flex;
       justify-content: flex-end;
 
-      lib-button:first-child {
+      app-button:first-child {
         margin-right: 1rem;
       }
     }

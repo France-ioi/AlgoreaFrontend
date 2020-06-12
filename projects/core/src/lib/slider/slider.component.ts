@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 
 @Component({
-  selector: 'lib-slider',
+  selector: 'app-slider',
   templateUrl: './slider.component.html',
   styleUrls: ['./slider.component.scss'],
 })
@@ -20,7 +20,7 @@ export class SliderComponent implements OnInit {
   @Input() showValue = false;
   @ViewChild('slider', { static: false }) slider: ElementRef;
 
-  @Output() onChange = new EventEmitter<any>();
+  @Output() change = new EventEmitter<any>();
 
   posStart;
   posEnd;
@@ -40,6 +40,6 @@ export class SliderComponent implements OnInit {
     this.posStart = parseFloat(handles[0].style.left);
     this.posEnd = parseFloat(handles[1].style.left);
 
-    this.onChange.emit(e);
+    this.change.emit(e);
   }
 }

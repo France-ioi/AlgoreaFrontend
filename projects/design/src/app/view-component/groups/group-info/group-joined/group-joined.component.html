@@ -4,9 +4,9 @@
   [gridGr]="invitationPanel"
 ></app-pending-invitation-view>
 <div class="team-content">
-  <lib-section icon="fa fa-users" label="The teams you joined">
+  <app-section icon="fa fa-users" label="The teams you joined">
     <div class="team-grid-container">
-      <lib-grid
+      <app-grid
         [selectedColumns]="teamColumns"
         [columns]="teamColumns"
         [data]="teamData"
@@ -19,7 +19,7 @@
           <tr>
             <th style="width: 3.55rem;border-right: none;"></th>
             <th *ngFor="let col of teamColumns" [pSortableColumn]="col.field" style="border-left: none;">
-              <div class="header-container"> 
+              <div class="header-container">
                 {{ col.header }}
                 <p-sortIcon [field]="col.field"></p-sortIcon>
               </div>
@@ -55,28 +55,28 @@
             </div>
           </div>
         </ng-template>
-      </lib-grid>
+      </app-grid>
       <span class="tri-tag"></span>
     </div>
-    <lib-sub-section icon="fa fa-plus" label="Create a team">
+    <app-sub-section icon="fa fa-plus" label="Create a team">
       <div class="input-wrapper">
-        <lib-input
+        <app-input
           [hasButton]="true"
           icon="fa fa-plus"
           placeholder="Name de lequipe"
-        ></lib-input>
+        ></app-input>
       </div>
-    </lib-sub-section>
-    <lib-sub-section icon="fa fa-sign-in-alt" label="Join a team">
+    </app-sub-section>
+    <app-sub-section icon="fa fa-sign-in-alt" label="Join a team">
       <div class="input-wrapper">
-        <lib-input
+        <app-input
           [hasButton]="true"
           icon="fa fa-check"
           placeholder="Invitation code"
           (onClick)="onJoinTeam($event)"
-        ></lib-input>
+        ></app-input>
       </div>
-    </lib-sub-section>
+    </app-sub-section>
     <div style="margin-bottom: -3rem;"></div>
-  </lib-section>
+  </app-section>
 </div>

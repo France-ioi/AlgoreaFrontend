@@ -16,25 +16,25 @@
       <div class="comment-wrapper">
         {{ data.comment }}
       </div>
-      <lib-progress-section
+      <app-progress-section
         *ngFor="let section of data.sections"
         [data]="section"
-      ></lib-progress-section>
+      ></app-progress-section>
     </div>
   </div>
 </div>
 <div mat-dialog-actions>
-  <lib-button
+  <app-button
     icon="fa fa-times"
     label="Cancel"
     class="ui-button-rounded ui-button-danger"
     style="margin-right: 1.25rem;"
     (onClick)="onClose($event)"
-  ></lib-button>
-  <lib-button
+  ></app-button>
+  <app-button
     icon="fa fa-check"
     label="Proceed"
     class="ui-button-rounded"
     (onClick)="onClose($event)"
-  ></lib-button>
+  ></app-button>
 </div>

@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material';
 import { MatDialogComponent } from '../mat-dialog/mat-dialog.component';
 
 @Component({
-  selector: 'lib-activity-picker',
+  selector: 'app-activity-picker',
   templateUrl: './activity-picker.component.html',
   styleUrls: ['./activity-picker.component.scss'],
 })

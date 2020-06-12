@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material';
 import { AccessEditDialogComponent } from '../dialogs/access-edit-dialog/access-edit-dialog.component';
 
 @Component({
-  selector: 'lib-chapter-grid',
+  selector: 'app-chapter-grid',
   templateUrl: './chapter-grid.component.html',
   styleUrls: ['./chapter-grid.component.scss'],
 })
@@ -31,9 +31,9 @@ export class ChapterGridComponent implements OnInit {
       minHeight: '25rem',
       data: {
         icon: 'fa fa-lock',
-        label: `Morbi sit amet eleifend tortor: propagation of access from Activity with mosaic view`,
-        // tslint:disable-next-line: max-line-length
-        comment: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s',
+        label: 'Morbi sit amet eleifend tortor: propagation of access from Activity with mosaic view',
+        comment: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard'
+               + ' dummy text ever since the 1500s',
         sections: [
           {
             header: {
@@ -80,14 +80,14 @@ export class ChapterGridComponent implements OnInit {
               {
                 field: 'as_content_with_descendants',
                 label: 'Content and descendants',
-                // tslint:disable-next-line: max-line-length
-                comment: 'User(s) get this view access (but not Solutions access) on this child if they have "Content and descendants" or "Solutions" access on the chapter.',
+                comment: 'User(s) get this view access (but not Solutions access) on this child if they have "Content and descendants" or '
+                       + '"Solutions" access on the chapter.',
               },
               {
                 field: 'as_is',
                 label: 'Same as parent',
-                // tslint:disable-next-line: max-line-length
-                comment: 'User(s) get the same extra access on this child, that they have on the chapter ("Content and descendants" or "Solutions").',
+                comment: 'User(s) get the same extra access on this child, that they have on the chapter ("Content and descendants" '
+                       + 'or "Solutions").',
               },
             ],
             name: 'upper_view_levels_propagation',
@@ -110,8 +110,8 @@ export class ChapterGridComponent implements OnInit {
               title: 'Can watch: propagation',
             },
             progress: false,
-            // tslint:disable-next-line: max-line-length
-            label: 'User(s) get the same "Can watch" access to this child as they do to the parent, except that "Solutions and grant" becomes "Solutions"',
+            label: 'User(s) get the same "Can watch" access to this child as they do to the parent, except that "Solutions and grant"'
+                 + ' becomes "Solutions"',
             name: 'watch_propagation',
             checked: false,
           },

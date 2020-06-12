@@ -1,17 +1,17 @@
-<lib-section icon="fa fa-users" label="{{ forGroup ? 'Groups' : 'Current Composition' }}">
+<app-section icon="fa fa-users" label="{{ forGroup ? 'Groups' : 'Current Composition' }}">
   <div class="table-container">
     <div *ngIf="!empty" class="selection-tool">
-      <lib-selection
+      <app-selection
         [items]="childrenPolicy"
         (onChange)="onChildrenPolicyChanged($event)"
-      ></lib-selection>
-      <lib-selection
+      ></app-selection>
+      <app-selection
         *ngIf="selectedPolicy"
         [items]="selItems"
         type="square"
-      ></lib-selection>
+      ></app-selection>
     </div>
-    <lib-grid
+    <app-grid
       *ngIf="!empty"
       [selectedColumns]="columns"
       [columns]="columns"
@@ -83,12 +83,12 @@
           </div>
         </div>
       </ng-template>
-    </lib-grid>
+    </app-grid>
     <div *ngIf="empty" class="empty-group">
       This group is empty, check below, the different ways to add users or sub-groups.
     </div>
   </div>
-  <lib-sub-section
+  <app-sub-section
     icon="fa fa-user-plus"
     label="Add {{groupTitle}}"
     tooltip="tooltip help"
@@ -96,15 +96,15 @@
     <span class="tri-tag"></span>
     <div class="button-container">
       <ng-container *ngFor="let item of subgroup">
-        <lib-group-button
+        <app-group-button
           [label]="item.label"
           [icon]="item.icon"
           [disabled]="item.disabled"
-        ></lib-group-button>
+        ></app-group-button>
       </ng-container>
     </div>
-  </lib-sub-section>
-  <lib-sub-section
+  </app-sub-section>
+  <app-sub-section
     *ngIf="!forGroup"
     icon="fa fa-calendar"
     label="Organize a session to constitute this group"
@@ -117,30 +117,30 @@
       <div class="session-selectors">
         <div class="date-selector">
           <span class="label">Date</span>
-          <lib-date-picker></lib-date-picker>
+          <app-date-picker></app-date-picker>
         </div>
         <div class="activity-selector">
           <span class="label">Activity</span>
-          <lib-activity-picker [trees]="trees"></lib-activity-picker>
+          <app-activity-picker [trees]="trees"></app-activity-picker>
         </div>
       </div>
       <p style="font-size: 1.2rem;">
         All the participants to this session will be automatically added as
         memebers of this group ([group name]).
       </p>
-      <lib-button
+      <app-button
         label="Organize"
         icon="fa fa-plus"
         class="ui-button-rounded"
-      ></lib-button>
+      ></app-button>
     </div>
-  </lib-sub-section>
-  <lib-sub-section
+  </app-sub-section>
+  <app-sub-section
     *ngIf="!forGroup"
     icon="fa fa-user-plus"
     label="Other ways to add new memebers to this group"
   >
-    <lib-switch-container
+    <app-switch-container
       label="Invitation code"
       checked="true"
       subtitle="Let users access this group using a password you send them."
@@ -149,59 +149,61 @@
         <div class="code-validation">
           <div class="code-wrapper">
             <span class="label">Code</span>
-            <lib-code-token></lib-code-token>
+            <app-code-token></app-code-token>
           </div>
           <div class="code-wrapper">
             <div class="label-with-error-message">
               <span class="label">Validity</span>
-              <span *ngIf="activateStatus === 0" class="label orange">This code has been activated 15 minutes ago, it will be disabled in 15 minutes</span>
+              <span *ngIf="activateStatus === 0" class="label orange">
+                This code has been activated 15 minutes ago, it will be disabled in 15 minutes
+              </span>
               <span *ngIf="activateStatus === 1" class="label green">This code has not yet been used</span>
               <span *ngIf="activateStatus === 2" class="label red">This code was used 15 minutes ago and is now disabled</span>
             </div>
-            <lib-time-picker [status]="activateStatus"></lib-time-picker>
+            <app-time-picker [status]="activateStatus"></app-time-picker>
           </div>
           <div class="code-wrapper">
             <span class="label">Security</span>
-            <lib-code-token [refresh]="false"></lib-code-token>
+            <app-code-token [refreshed]="false"></app-code-token>
           </div>
         </div>
         <div class="auto-create">
           <span class="comment">Automatically create user account ?</span>
-          <lib-switch mode="white"></lib-switch>
+          <app-switch mode="white"></app-switch>
         </div>
       </div>
-    </lib-switch-container>
-    <lib-switch-container
+    </app-switch-container>
+    <app-switch-container
       label="Invite users"
       checked="true"
       subtitle="Add users name list, separated by commas."
     >
       <div class="invite-users">
-        <lib-textarea
+        <app-textarea
           icon="show"
           placeholder="psuedo, psuedo..."
-        ></lib-textarea>
-        <lib-button label="Invite" class="ui-button-rounded" (onClick)="onInvite($event)"></lib-button>
-        <lib-message *ngIf="showMsg" type="info" label="3 users invited successfully"></lib-message>
-        <lib-message *ngIf="showMsg" type="error" label="2 users not found: Jean, Matthew"></lib-message>
+        ></app-textarea>
+        <app-button label="Invite" class="ui-button-rounded" (onClick)="onInvite($event)"></app-button>
+        <app-message *ngIf="showMsg" type="info" label="3 users invited successfully"></app-message>
+        <app-message *ngIf="showMsg" type="error" label="2 users not found: Jean, Matthew"></app-message>
       </div>
-    </lib-switch-container>
-    <lib-switch-container
+    </app-switch-container>
+    <app-switch-container
       label="Spontanewous requests"
       checked="true"
       subtitle="Can users ask you to join the group ?"
     >
       <div class="spon-req">
-        <lib-selection [items]="yesNo"></lib-selection>
+        <app-selection [items]="yesNo"></app-selection>
       </div>
-    </lib-switch-container>
-    <lib-switch-container
+    </app-switch-container>
+    <app-switch-container
       label="Account creation"
       checked="true"
       subtitle="Create batch unique user accounts."
     >
       <div class="account-create">
-        <lib-sub-grid [data]="subgriddata">
+        <app-sub-grid [data]="subgriddata">
           <ng-template #bodyTemplate let-rowData>
             <tr>
               <td
@@ -218,25 +220,25 @@
               </td>
             </tr>
           </ng-template>
-        </lib-sub-grid>
+        </app-sub-grid>
       </div>
       <div class="batch-button-container">
-        <lib-button icon="fa fa-plus" label="Create batch" class="ui-button-rounded" (onClick)="onCreateBatch($event)"></lib-button>
+        <app-button icon="fa fa-plus" label="Create batch" class="ui-button-rounded" (onClick)="onCreateBatch($event)"></app-button>
       </div>
-    </lib-switch-container>
-  </lib-sub-section>
-  <lib-sub-section
+    </app-switch-container>
+  </app-sub-section>
+  <app-sub-section
     *ngIf="!forGroup"
     icon="fa fa-file-import"
     label="Import">
     <div class="import-csv">
       <span class="comment">Import members from a .csv file</span>
-      <lib-button
+      <app-button
         label="Import"
         icon="fa fa-plus"
         class="ui-button-rounded"
-      ></lib-button>
+      ></app-button>
     </div>
-  </lib-sub-section>
+  </app-sub-section>
   <div style="margin-bottom: -3rem;"></div>
-</lib-section>
+</app-section>

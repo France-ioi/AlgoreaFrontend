@@ -1,10 +1,14 @@
-<lib-section icon="fa fa-users" label="Presentation">
+<app-section icon="fa fa-users" label="Presentation">
   <p>
-    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever
+    since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only
+    five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the
+    release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker
+    including versions of Lorem Ipsum.
   </p>
-</lib-section>
-<lib-section icon="fa fa-puzzle-piece" label="Recently solved tasks">
-  <lib-grid
+</app-section>
+<app-section icon="fa fa-puzzle-piece" label="Recently solved tasks">
+  <app-grid
     [selectedColumns]="columns"
     [columns]="columns"
     [data]="griddata"
@@ -26,7 +30,7 @@
       <tr>
         <th style="width: 4rem;"></th>
         <th *ngFor="let col of columns" [pSortableColumn]="col.field">
-          <div class="header-container"> 
+          <div class="header-container">
             {{ col.header }}
             <p-sortIcon [field]="col.field"></p-sortIcon>
           </div>
@@ -54,5 +58,5 @@
         </ng-container>
       </tr>
     </ng-template>
-  </lib-grid>
-</lib-section>
+  </app-grid>
+</app-section>

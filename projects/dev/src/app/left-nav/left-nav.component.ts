@@ -20,7 +20,7 @@ export class LeftNavComponent implements OnInit, OnChanges {
   @Output() signInOutEvent = new EventEmitter<any>();
   @Output() joinGroupSelect = new EventEmitter<any>();
   @Output() manageGroupSelect = new EventEmitter<any>();
-  @Output() onNotify = new EventEmitter<any>();
+  @Output() notify = new EventEmitter<any>();
 
   searchView = false;
 
@@ -66,7 +66,7 @@ export class LeftNavComponent implements OnInit, OnChanges {
   }
 
   onNotifyClicked(e) {
-    this.onNotify.emit(e);
+    this.notify.emit(e);
   }
 
   onSearchEvent(_e) {

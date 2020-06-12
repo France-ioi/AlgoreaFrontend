@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 
 @Component({
-  selector: 'lib-grid-filter',
+  selector: 'app-grid-filter',
   templateUrl: './grid-filter.component.html',
   styleUrls: ['./grid-filter.component.scss'],
 })
@@ -15,8 +15,9 @@ export class GridFilterComponent implements OnInit {
   @Input() icon;
   @Input() label;
   @Input() outsideClicked = false;
-  @Output() onClose = new EventEmitter<any>();
-  @Output() onHide = new EventEmitter<any>();
+
+  @Output() close = new EventEmitter<any>();
+  @Output() hide = new EventEmitter<any>();
 
   menuOpened = false;
 
@@ -39,18 +40,18 @@ export class GridFilterComponent implements OnInit {
   ngOnInit() {}
 
   closeFilter(e) {
-    this.onClose.emit(e);
+    this.close.emit(e);
   }
 
   toggleMenu(_e) {
     this.menuOpened = !this.menuOpened;
-    this.onHide.emit(true);
+    this.hide.emit(true);
   }
 
   hideMenu(_e) {
     this.menuOpened = false;
     this.outsideClicked = false;
-    this.onHide.emit(true);
+    this.hide.emit(true);
   }
 
   changeStatus(e) {

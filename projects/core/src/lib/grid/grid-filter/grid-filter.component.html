@@ -25,7 +25,7 @@
       <span *ngIf="type === 'standard'" class="close-icon" (click)="closeFilter($event)">
         <i class="fa fa-times"></i>
       </span>
-      <lib-switch *ngIf="type === 'default'" mode="dark-circular"></lib-switch>
+      <app-switch *ngIf="type === 'default'" mode="dark-circular"></app-switch>
     </div>
   </div>
   <div *ngIf="menuOpened && !outsideClicked" class="grid-filter-menu">
@@ -37,25 +37,25 @@
       <span class="grid-filter-menu-list-label">
         Select in the list
       </span>
-      <lib-listbox [items]="list" (onChange)="listItemSelected($event)"></lib-listbox>
+      <app-listbox [items]="list" (onChange)="listItemSelected($event)"></app-listbox>
     </div>
     <div *ngIf="mode === 'dates'" class="grid-filter-menu-date-range">
       <div class="grid-filter-menu-date-range-item">
         <span class="grid-filter-menu-date-range-item-label">From</span>
-        <lib-date-picker-simple [date]="dateRanges[0]" (onChange)="dateChanged($event, 0)"></lib-date-picker-simple>
+        <app-date-picker-simple [date]="dateRanges[0]" (onChange)="dateChanged($event, 0)"></app-date-picker-simple>
       </div>
       <div class="grid-filter-menu-date-range-item">
         <span class="grid-filter-menu-date-range-item-label">Until</span>
-        <lib-date-picker-simple [date]="dateRanges[1]" (onChange)="dateChanged($event, 1)"></lib-date-picker-simple>
+        <app-date-picker-simple [date]="dateRanges[1]" (onChange)="dateChanged($event, 1)"></app-date-picker-simple>
       </div>
     </div>
     <div *ngIf="mode === 'activity'" class="grid-filter-menu-activity">
       <span class="grid-filter-menu-activity-label">Users in group [group name] for whom the activity is:</span>
-      <lib-selection [items]="status" mode="dark" (onChange)="changeStatus($event)"></lib-selection>
+      <app-selection [items]="status" mode="dark" (onChange)="changeStatus($event)"></app-selection>
       <span class="grid-filter-menu-activity-label" *ngIf="selectedStatus === 2">
         <b>Score range</b>
       </span>
-      <lib-slider [ranges]="ranges" *ngIf="selectedStatus === 2"></lib-slider>
+      <app-slider [ranges]="ranges" *ngIf="selectedStatus === 2"></app-slider>
     </div>
   </div>
 </div>

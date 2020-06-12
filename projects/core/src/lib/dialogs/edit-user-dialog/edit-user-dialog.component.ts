@@ -5,7 +5,7 @@ import { ResetPasswordDialogComponent } from '../reset-password-dialog/reset-pas
 import { ConfirmPasswordDialogComponent } from '../confirm-password-dialog/confirm-password-dialog.component';
 
 @Component({
-  selector: 'lib-edit-user-dialog',
+  selector: 'app-edit-user-dialog',
   templateUrl: './edit-user-dialog.component.html',
   styleUrls: ['./edit-user-dialog.component.scss'],
 })
@@ -31,8 +31,8 @@ export class EditUserDialogComponent implements OnInit {
       data: {
         icon: 'fa fa-link',
         label: 'Attach to another group',
-        // tslint:disable-next-line: max-line-length
-        comment: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s',
+        comment: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s '
+               + 'standard dummy text ever since the 1500s',
       },
     });
 

@@ -1,13 +1,13 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
-  selector: 'lib-listbox',
+  selector: 'app-listbox',
   templateUrl: './listbox.component.html',
   styleUrls: ['./listbox.component.scss'],
 })
 export class ListboxComponent implements OnInit {
   @Input() items;
-  @Output() onChange = new EventEmitter<any>();
+  @Output() change = new EventEmitter<any>();
 
   selectedItem;
 
@@ -16,6 +16,6 @@ export class ListboxComponent implements OnInit {
   ngOnInit() {}
 
   itemSelect(e) {
-    this.onChange.emit(e);
+    this.change.emit(e);
   }
 }

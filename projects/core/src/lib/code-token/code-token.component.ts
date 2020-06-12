@@ -1,14 +1,14 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 
 @Component({
-  selector: 'lib-code-token',
+  selector: 'app-code-token',
   templateUrl: './code-token.component.html',
   styleUrls: ['./code-token.component.scss'],
 })
 export class CodeTokenComponent implements OnInit {
-  @Output() onRefresh = new EventEmitter<any>();
+  @Input() refreshed = true;
 
-  @Input() refresh = true;
+  @Output() refresh = new EventEmitter<any>();
 
   code = 'X78ghJiK';
 
@@ -16,5 +16,5 @@ export class CodeTokenComponent implements OnInit {
 
   ngOnInit() {}
 
-  refreshCode(_e) {}
+  refreshCode(e) {}
 }

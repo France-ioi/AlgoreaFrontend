@@ -14,7 +14,15 @@
       Composition
     </ng-template>
     <ng-template matTabContent>
-      <app-group-composition *ngIf="data.ID !== 44" [gridData]="gridData" [columns]="columns" [grdata]="grdata" [trees]="trees" (expandWholeWidth)="onExpandWidth($event)" [empty]="empty"></app-group-composition>
+      <app-group-composition
+        *ngIf="data.ID !== 44"
+        [gridData]="gridData"
+        [columns]="columns"
+        [grdata]="grdata"
+        [trees]="trees"
+        (expandWholeWidth)="onExpandWidth($event)"
+        [empty]="empty"
+      ></app-group-composition>
       <ng-container *ngIf="data.ID === 44">
         <app-team-composition></app-team-composition>
       </ng-container>

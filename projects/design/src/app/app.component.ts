@@ -545,7 +545,6 @@ export class AppComponent {
         },
         {
           ID: 25,
-          // tslint:disable-next-line: max-line-length
           title: 'Horizontal digging (BFS) et DijkstraHorizontal digging (BFS) et DijkstraHorizontal digging (BFS) et DijkstraHorizontal digging (BFS) et DijkstraHorizontal digging (BFS) et Dijkstra',
           type: 'leaf',
           ring: false,
@@ -627,7 +626,6 @@ export class AppComponent {
         },
         {
           ID: 37,
-          // tslint:disable-next-line: max-line-length
           title: 'Activities to test headers',
           type: 'folder',
           ring: true,
@@ -848,7 +846,6 @@ export class AppComponent {
         },
         {
           ID: 36,
-          // tslint:disable-next-line: max-line-length
           title: 'Horizontal digging (BFS) et DijkstraHorizontal digging (BFS) et DijkstraHorizontal digging (BFS) et DijkstraHorizontal digging (BFS) et DijkstraHorizontal digging (BFS) et Dijkstra',
           type: 'leaf',
           ring: true,
@@ -885,7 +882,6 @@ export class AppComponent {
     private router: Router
   ) {}
 
-  // tslint:disable-next-line: use-lifecycle-interface
   ngOnInit() {
     this.nodeService.getFiles().then(res => {
       this.files = res;
