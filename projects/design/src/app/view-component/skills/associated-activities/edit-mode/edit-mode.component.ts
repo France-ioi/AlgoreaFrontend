@@ -55,7 +55,6 @@ export class AssociatedActivitiesEditModeComponent implements OnInit {
       children: [
         {
           ID: 37,
-          // tslint:disable-next-line: max-line-length
           title: 'Activities to test headers',
           type: 'folder',
           ring: true,

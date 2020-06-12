@@ -17,9 +17,7 @@ import {
 export class ItemsNavigationTreeComponent implements OnInit, OnChanges {
   @Input() data = [];
 
-  // tslint:disable-next-line: no-output-on-prefix
   @Output() nodeExpand = new EventEmitter<any>();
-  // tslint:disable-next-line: no-output-on-prefix
   @Output() nodeSelect = new EventEmitter<any>();
 
   @ViewChild('navTree', { static: false }) navTree;

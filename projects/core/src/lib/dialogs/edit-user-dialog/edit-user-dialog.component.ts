@@ -31,7 +31,6 @@ export class EditUserDialogComponent implements OnInit {
       data: {
         icon: 'fa fa-link',
         label: 'Attach to another group',
-        // tslint:disable-next-line: max-line-length
         comment: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s '
                + 'standard dummy text ever since the 1500s',
       },

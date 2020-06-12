@@ -32,7 +32,6 @@ export class ChapterGridComponent implements OnInit {
       data: {
         icon: 'fa fa-lock',
         label: 'Morbi sit amet eleifend tortor: propagation of access from Activity with mosaic view',
-        // tslint:disable-next-line: max-line-length
         comment: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard'
                + ' dummy text ever since the 1500s',
         sections: [
@@ -81,14 +80,12 @@ export class ChapterGridComponent implements OnInit {
               {
                 field: 'as_content_with_descendants',
                 label: 'Content and descendants',
-                // tslint:disable-next-line: max-line-length
                 comment: 'User(s) get this view access (but not Solutions access) on this child if they have "Content and descendants" or '
                        + '"Solutions" access on the chapter.',
               },
               {
                 field: 'as_is',
                 label: 'Same as parent',
-                // tslint:disable-next-line: max-line-length
                 comment: 'User(s) get the same extra access on this child, that they have on the chapter ("Content and descendants" '
                        + 'or "Solutions").',
               },
@@ -113,7 +110,6 @@ export class ChapterGridComponent implements OnInit {
               title: 'Can watch: propagation',
             },
             progress: false,
-            // tslint:disable-next-line: max-line-length
             label: 'User(s) get the same "Can watch" access to this child as they do to the parent, except that "Solutions and grant"'
                  + ' becomes "Solutions"',
             name: 'watch_propagation',

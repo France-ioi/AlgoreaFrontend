@@ -32,7 +32,6 @@ export class AssociatedSkillsComponent implements OnInit {
       label: 'Another filter',
       type: 'standard',
       mode: 'basic',
-      // tslint:disable-next-line: max-line-length
       text: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s'
     },
     {

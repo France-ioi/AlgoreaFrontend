@@ -377,7 +377,6 @@ export class AppComponent implements OnInit {
         },
         {
           ID: 25,
-          // tslint:disable-next-line: max-line-length
           title: 'Horizontal digging (BFS) et DijkstraHorizontal digging (BFS) et DijkstraHorizontal digging (BFS) et DijkstraHorizontal '
                + 'digging (BFS) et DijkstraHorizontal digging (BFS) et Dijkstra',
           type: 'leaf',
@@ -460,7 +459,6 @@ export class AppComponent implements OnInit {
         },
         {
           ID: 37,
-          // tslint:disable-next-line: max-line-length
           title: 'Activities to test headers',
           type: 'folder',
           ring: true,
@@ -681,7 +679,6 @@ export class AppComponent implements OnInit {
         },
         {
           ID: 36,
-          // tslint:disable-next-line: max-line-length
           title: 'Horizontal digging (BFS) et DijkstraHorizontal digging (BFS) et DijkstraHorizontal digging (BFS) et DijkstraHorizontal '
                + 'digging (BFS) et DijkstraHorizontal digging (BFS) et Dijkstra',
           type: 'leaf',
@@ -718,7 +715,6 @@ export class AppComponent implements OnInit {
     private router: Router
   ) {}
 
-  // tslint:disable-next-line: use-lifecycle-interface
   ngOnInit() {
     this.statusService.setUser({
       title: 'Lionel MESSI',

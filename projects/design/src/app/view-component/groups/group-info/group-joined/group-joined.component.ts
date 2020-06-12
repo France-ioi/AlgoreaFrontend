@@ -110,7 +110,6 @@ export class GroupJoinedComponent implements OnInit {
       minHeight: '17rem',
       data: {
         group_name: 'Terminale A',
-        // tslint:disable-next-line
         desc: 'Group presentation Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.',
         administrators: [
           'Mathias HIRON',
