@@ -378,7 +378,8 @@ export class AppComponent implements OnInit {
         {
           ID: 25,
           // tslint:disable-next-line: max-line-length
-          title: 'Horizontal digging (BFS) et DijkstraHorizontal digging (BFS) et DijkstraHorizontal digging (BFS) et DijkstraHorizontal digging (BFS) et DijkstraHorizontal digging (BFS) et Dijkstra',
+          title: 'Horizontal digging (BFS) et DijkstraHorizontal digging (BFS) et DijkstraHorizontal digging (BFS) et DijkstraHorizontal '
+               + 'digging (BFS) et DijkstraHorizontal digging (BFS) et Dijkstra',
           type: 'leaf',
           ring: false,
           state: 'locked',
@@ -681,7 +682,8 @@ export class AppComponent implements OnInit {
         {
           ID: 36,
           // tslint:disable-next-line: max-line-length
-          title: 'Horizontal digging (BFS) et DijkstraHorizontal digging (BFS) et DijkstraHorizontal digging (BFS) et DijkstraHorizontal digging (BFS) et DijkstraHorizontal digging (BFS) et Dijkstra',
+          title: 'Horizontal digging (BFS) et DijkstraHorizontal digging (BFS) et DijkstraHorizontal digging (BFS) et DijkstraHorizontal '
+               + 'digging (BFS) et DijkstraHorizontal digging (BFS) et Dijkstra',
           type: 'leaf',
           ring: true,
           state: 'locked',
