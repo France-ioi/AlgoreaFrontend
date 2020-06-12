@@ -1,7 +1,7 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 
 @Component({
-  selector: 'lib-editor-bar',
+  selector: 'app-editor-bar',
   templateUrl: './editor-bar.component.html',
   styleUrls: ['./editor-bar.component.scss'],
 })

@@ -1,10 +1,10 @@
-<lib-section-paragraph
+<app-section-paragraph
   icon="fa fa-bell"
   label="Your pending invitations"
   [collapsible]="true"
 >
   <div class="pending-invitation-container">
-    <lib-grid
+    <app-grid
       [selectedColumns]="columns"
       [columns]="columns"
       [data]="data"
@@ -21,7 +21,7 @@
               [pSortableColumn]="col.field"
               style="width: 13.3333rem; background-color: #D3DBE7;"
             >
-              <div class="header-container"> 
+              <div class="header-container">
                 {{ col.header }}
                 <p-sortIcon [field]="col.field"></p-sortIcon>
               </div>
@@ -31,7 +31,7 @@
               [pSortableColumn]="col.field"
               style="background-color: #D3DBE7;"
             >
-              <div class="header-container"> 
+              <div class="header-container">
                 {{ col.header }}
                 <p-sortIcon [field]="col.field"></p-sortIcon>
               </div>
@@ -79,6 +79,6 @@
           </div>
         </div>
       </ng-template>
-    </lib-grid>
+    </app-grid>
   </div>
-</lib-section-paragraph>
+</app-section-paragraph>

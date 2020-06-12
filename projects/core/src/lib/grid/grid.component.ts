@@ -18,7 +18,7 @@ export function tableFactory(wrapper: GridComponent) {
 }
 
 @Component({
-  selector: 'lib-grid',
+  selector: 'app-grid',
   templateUrl: './grid.component.html',
   styleUrls: ['./grid.component.scss'],
   providers: [

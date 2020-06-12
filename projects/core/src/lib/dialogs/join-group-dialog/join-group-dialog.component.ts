@@ -2,7 +2,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 @Component({
-  selector: 'lib-join-group-dialog',
+  selector: 'app-join-group-dialog',
   templateUrl: './join-group-dialog.component.html',
   styleUrls: ['./join-group-dialog.component.scss'],
 })

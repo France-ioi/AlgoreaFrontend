@@ -1,4 +1,4 @@
-<lib-section-paragraph
+<app-section-paragraph
   icon="fa fa-flag-checkered"
   label="Rights you gave to the coordinator"
   [collapsible]="true"
@@ -26,9 +26,9 @@
     <div *ngIf="data.require_watch_approval" class="form-item-view switch">
       <span class="form-item-label">See your activity and your answers</span>
       <div class="form-item-control">
-        <lib-switch
+        <app-switch
           mode="white"
-        ></lib-switch>
+        ></app-switch>
       </div>
     </div>
     <div
@@ -40,9 +40,9 @@
     >
       <span class="form-item-label">View your personal information</span>
       <div class="form-item-control">
-        <lib-switch
+        <app-switch
           mode="white"
-        ></lib-switch>
+        ></app-switch>
       </div>
     </div>
     <div
@@ -53,9 +53,9 @@
         >Modify your password and personal information</span
       >
       <div class="form-item-control">
-        <lib-switch
+        <app-switch
           mode="white"
-        ></lib-switch>
+        ></app-switch>
       </div>
     </div>
     <div class="lock-time">
@@ -69,4 +69,4 @@
       {{data.desc}}
     </p>
   </div>
-</lib-section-paragraph>
+</app-section-paragraph>

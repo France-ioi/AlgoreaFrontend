@@ -1,11 +1,11 @@
-<lib-section-paragraph
+<app-section-paragraph
   *ngIf="requests.length"
   icon="fa fa-check"
   label="Pending requests"
   [collapsible]="true"
 >
   <div class="pending-request-container">
-    <lib-grid
+    <app-grid
       [selectedColumns]="columns"
       [columns]="columns"
       [data]="requests"
@@ -118,7 +118,7 @@
           </div>
         </div>
       </ng-template>
-    </lib-grid>
+    </app-grid>
   </div>
-</lib-section-paragraph>
+</app-section-paragraph>
 <p-toast></p-toast>

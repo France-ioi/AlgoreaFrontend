@@ -15,7 +15,7 @@
   margin-bottom: .5rem;
   justify-content: center;
 
-  lib-skill-progress {
+  app-skill-progress {
     // position: absolute;
     // left:0;
     // bottom: 2rem;
@@ -36,7 +36,7 @@
       flex-direction: column;
       align-items: unset;
 
-      lib-input {
+      app-input {
         width: 100%;
         margin-bottom: 1rem;
       }
@@ -173,7 +173,7 @@
     // display: flex;
     align-items: center;
 
-    lib-sub-grid {
+    app-sub-grid {
       // flex: 3;
       margin-bottom: 2rem;
 
@@ -188,7 +188,7 @@
       align-items: center;
       justify-content: center;
 
-      lib-button {
+      app-button {
         width: 13.3333rem;
       }
     }
@@ -248,7 +248,7 @@
             border-bottom: .1rem solid transparent;
           }
 
-          lib-skill-progress {
+          app-skill-progress {
             width: 13.3333rem;
           }
         }

@@ -2,7 +2,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 @Component({
-  selector: 'lib-mat-dialog',
+  selector: 'app-mat-dialog',
   templateUrl: './mat-dialog.component.html',
   styleUrls: ['./mat-dialog.component.scss'],
 })

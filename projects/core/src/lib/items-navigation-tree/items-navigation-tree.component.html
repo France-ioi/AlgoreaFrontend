@@ -29,7 +29,7 @@
             class="fa fa-folder-open"
             style="font-size: 1.2rem;"
           ></i>
-          <lib-score-ring
+          <app-score-ring
             *ngIf="node.progress && node.ring"
             [displayedScore]="node.progress.displayedScore"
             [currentScore]="node.progress.currentScore"
@@ -37,7 +37,7 @@
             [forTree]="true"
             [isDark]="true"
             icons="folder"
-          ></lib-score-ring>
+          ></app-score-ring>
         </span>
         <span *ngIf="node.icons" class="node-icon"
           ><i class="{{ node.icons }}" style="font-size: 1.2rem;"></i
@@ -54,12 +54,12 @@
               <i class="fa fa-lock" style="font-size: 1.2rem;"></i>
             </span>
           </span>
-          <lib-skill-progress
+          <app-skill-progress
             *ngIf="node.progress && !node.ring"
             [currentScore]="node.progress.currentScore"
             [displayedScore]="node.progress.displayedScore"
             [type]="'thin-horizontal'"
-          ></lib-skill-progress>
+          ></app-skill-progress>
         </span>
       </span>
     </span>
@@ -90,7 +90,7 @@
             class="pi pi-circle-on"
             style="font-size: 1.2rem;"
           ></i>
-          <lib-score-ring
+          <app-score-ring
             *ngIf="node.progress && node.ring"
             [displayedScore]="node.progress.displayedScore"
             [currentScore]="node.progress.currentScore"
@@ -98,7 +98,7 @@
             [forTree]="true"
             [isDark]="true"
             [icons]="node.progress.icons"
-          ></lib-score-ring>
+          ></app-score-ring>
         </span>
         <span (click)="nodeCheck($event, node)" class="node-label">
           <span class="label-container">
@@ -112,14 +112,14 @@
               <i class="fa fa-lock" style="font-size: 1.2rem;"></i>
             </span>
           </span>
-          <lib-skill-progress
+          <app-skill-progress
             *ngIf="node.progress && !node.ring"
             [currentScore]="node.progress.currentScore"
             [displayedScore]="node.progress.displayedScore"
             [type]="'thin-horizontal'"
-          ></lib-skill-progress>
+          ></app-skill-progress>
         </span>
-        
+
       </span>
     </span>
   </ng-template>

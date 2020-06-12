@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
-  selector: 'lib-switch-container',
+  selector: 'app-switch-container',
   templateUrl: './switch-container.component.html',
   styleUrls: ['./switch-container.component.scss'],
 })

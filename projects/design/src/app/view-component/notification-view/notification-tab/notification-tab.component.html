@@ -5,17 +5,17 @@
       Content
     </ng-template>
     <ng-template matTabContent>
-      <lib-section icon="fa fa-check" label="Pending notifications ({{data.length}})">
-        
-        <lib-grid-filter-bar>
-          <lib-select
+      <app-section icon="fa fa-check" label="Pending notifications ({{data.length}})">
+
+        <app-grid-filter-bar>
+          <app-select
             [items]="filterChoice"
             [opened]="false"
             width="10"
             style="margin: 0.4167rem;"
-          ></lib-select>
-        </lib-grid-filter-bar>
-        <lib-grid
+          ></app-select>
+        </app-grid-filter-bar>
+        <app-grid
           [selectedColumns]="cols"
           [columns]="cols"
           [data]="data"
@@ -28,19 +28,19 @@
               <th style="width: 50px;"></th>
               <ng-container *ngFor="let col of columns">
                 <th *ngIf="col.field === 'date'" [pSortableColumn]="col.field" style="width: 120px;">
-                  <div class="header-container"> 
+                  <div class="header-container">
                     {{ col.header }}
                     <p-sortIcon [field]="col.field"></p-sortIcon>
                     </div>
                 </th>
                 <th *ngIf="col.field === 'type'" [pSortableColumn]="col.field" style="width: 120px;">
-                  <div class="header-container"> 
+                  <div class="header-container">
                     {{ col.header }}
                     <p-sortIcon [field]="col.field"></p-sortIcon>
                     </div>
                 </th>
                 <th *ngIf="col.field === 'desc'" [pSortableColumn]="col.field">
-                  <div class="header-container"> 
+                  <div class="header-container">
                     {{ col.header }}
                     <p-sortIcon [field]="col.field"></p-sortIcon>
                     </div>
@@ -73,11 +73,11 @@
                 <span class="table-icon">
                   <i class="fa fa-eye"></i>
                 </span>
-              </td> 
+              </td>
             </tr>
           </ng-template>
-        </lib-grid>
-      </lib-section>
+        </app-grid>
+      </app-section>
     </ng-template>
   </mat-tab>
   <mat-tab>

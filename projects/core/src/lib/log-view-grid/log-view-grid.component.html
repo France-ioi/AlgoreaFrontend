@@ -1,4 +1,4 @@
-<lib-grid
+<app-grid
   [selectedColumns]="cols"
   [columns]="cols"
   [groupInfo]="groupInfo"
@@ -21,11 +21,11 @@
           }"
           style="border-left: none;"
         >
-          <div class="header-container"> 
+          <div class="header-container">
             {{ col.header }}
             <p-sortIcon [field]="col.field"></p-sortIcon>
           </div>
-        
+
         </th>
       </ng-container>
     </tr>
@@ -54,22 +54,22 @@
         <td *ngIf="col.field === 'score'">
           <div class="score-wrapper">
             <ng-container *ngIf="rowData.score.type === 'score'">
-              <lib-score-ring
+              <app-score-ring
                 [displayedScore]="rowData.score.displayedScore"
                 [currentScore]="rowData.score.currentScore"
                 diameter="24"
-              ></lib-score-ring>
+              ></app-score-ring>
             </ng-container>
             <ng-container *ngIf="rowData.score.type === 'progress'">
-              <lib-skill-progress
+              <app-skill-progress
                 [displayedScore]="rowData.score.displayedScore"
                 [currentScore]="rowData.score.currentScore"
                 type="thick-horizontal"
-              ></lib-skill-progress>
+              ></app-skill-progress>
             </ng-container>
           </div>
         </td>
       </ng-container>
     </tr>
   </ng-template>
-</lib-grid>
+</app-grid>

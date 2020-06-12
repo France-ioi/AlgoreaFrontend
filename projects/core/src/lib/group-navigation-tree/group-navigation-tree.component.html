@@ -18,13 +18,13 @@
         </span>
 
         <span class="node-label">
-          <lib-state-widget
+          <app-state-widget
             *ngIf="!navigation && node.category && showCategory"
             [disabled]="!node.connected"
             [type]="node.category.type"
             [icon]="node.category.icon"
             (click)="nodeCheck($event, node)"
-          ></lib-state-widget>
+          ></app-state-widget>
           <span class="node-label-title" (click)="nodeCheck($event, node)">{{ node.title }}</span>
           <span *ngIf="!navigation" class="edit-icon" (click)="onGotoEditPage(node)">
             <i class="fa fa-edit"></i>
@@ -34,12 +34,12 @@
             <i *ngIf="!node.connected" class="fa fa-unlink"></i>
           </span>
         </span>
-        <lib-score-ring
+        <app-score-ring
           *ngIf="node.progress && navigation"
           [displayedScore]="node.progress.displayedScore"
           [currentScore]="node.progress.currentScore"
           [diameter]="24"
-        ></lib-score-ring>
+        ></app-score-ring>
         <span *ngIf="node.checked && navigation" class="go-to-page" (click)="goToPage($event, node)">
           <i class="fa fa-chevron-right"></i>
         </span>
@@ -59,13 +59,13 @@
           <i *ngIf="!node.checked" class="pi pi-circle-on" style="font-size: 1.2rem;"></i>
         </span>
         <span class="node-label">
-          <lib-state-widget
+          <app-state-widget
             *ngIf="!navigation && node.category && showCategory"
             [disabled]="!node.connected"
             [type]="node.category.type"
             [icon]="node.category.icon"
             (click)="nodeCheck($event, node)"
-          ></lib-state-widget>
+          ></app-state-widget>
           <span class="node-label-title" (click)="nodeCheck($event, node)">{{ node.title }}</span>
           <span *ngIf="!navigation" class="edit-icon" (click)="onGotoEditPage(node)">
             <i class="fa fa-edit"></i>

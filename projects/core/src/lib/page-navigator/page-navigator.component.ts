@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
-  selector: 'lib-page-navigator',
+  selector: 'app-page-navigator',
   templateUrl: './page-navigator.component.html',
   styleUrls: ['./page-navigator.component.scss'],
 })

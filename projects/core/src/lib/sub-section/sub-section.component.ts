@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
-  selector: 'lib-sub-section',
+  selector: 'app-sub-section',
   templateUrl: './sub-section.component.html',
   styleUrls: ['./sub-section.component.scss'],
 })

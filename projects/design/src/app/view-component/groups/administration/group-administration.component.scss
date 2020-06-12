@@ -109,12 +109,12 @@
 
   tr {
     height: 5rem;
-    
+
     &.ui-state-highlight {
       td {
         background-color: $base-color;
 
-        ::ng-deep lib-progress-level {
+        ::ng-deep app-progress-level {
           .progress-level-container {
             .progress-level-item, .progress-level-item-link {
               background-color: $dark-base-color;

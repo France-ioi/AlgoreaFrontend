@@ -32,11 +32,11 @@
       <span class="tri-tag"></span>
     </div>
     <div class="administrator-config-container">
-      <lib-section icon="fa fa-exclamation-triangle" label="Allow the administrators to...">
+      <app-section icon="fa fa-exclamation-triangle" label="Allow the administrators to...">
         <div *ngIf="data.require_watch_approval" class="form-item-view switch">
           <span class="form-item-label">See your activity and your answers</span>
           <div class="form-item-control">
-            <lib-switch mode="white" [checked]="seeActivity" (onChange)="seeActivity = $event"></lib-switch>
+            <app-switch mode="white" [checked]="seeActivity" (onChange)="seeActivity = $event"></app-switch>
           </div>
         </div>
         <div
@@ -45,13 +45,13 @@
         >
           <span class="form-item-label">View your personal information</span>
           <div class="form-item-control">
-            <lib-switch mode="white" [checked]="viewPersonalInfo" (onChange)="viewPersonalInfo = $event"></lib-switch>
+            <app-switch mode="white" [checked]="viewPersonalInfo" (onChange)="viewPersonalInfo = $event"></app-switch>
           </div>
         </div>
         <div *ngIf="data.require_personal_info_access_approval === 'edit'" class="form-item-view switch">
           <span class="form-item-label danger">Modify your password and personal information</span>
           <div class="form-item-control">
-            <lib-switch mode="white" [checked]="modifyPersonalInfo" (onChange)="modifyPersonalInfo = $event"></lib-switch>
+            <app-switch mode="white" [checked]="modifyPersonalInfo" (onChange)="modifyPersonalInfo = $event"></app-switch>
           </div>
         </div>
         <div *ngIf="data.require_lock_membership_approval_until" class="form-item-view switch">
@@ -59,25 +59,25 @@
             Keep you locked in this group until {{data.require_lock_membership_approval_until | date: 'd/MM/y h:m'}}
           </span>
           <div class="form-item-control">
-            <lib-switch mode="white" [checked]="keepLocked" (onChange)="keepLocked = $event"></lib-switch>
+            <app-switch mode="white" [checked]="keepLocked" (onChange)="keepLocked = $event"></app-switch>
           </div>
         </div>
-      </lib-section>
+      </app-section>
     </div>
     <div class="feedback">
       <p class="feedback-label">Tell us your motivations for joining this group</p>
-      <lib-textarea></lib-textarea>
-      <lib-message *ngIf="error" type="error" label="You need to accept all authorization requests to join this group" [closable]="false">
-      </lib-message>
+      <app-textarea></app-textarea>
+      <app-message *ngIf="error" type="error" label="You need to accept all authorization requests to join this group" [closable]="false">
+      </app-message>
     </div>
     <div class="join-group-button">
       <div style="width: 12.5rem;">
-        <lib-button
+        <app-button
           icon="fa fa-check"
           label="Join"
           class="ui-button-rounded ui-fit-parent"
           (onClick)="onJoin($event)"
-        ></lib-button>
+        ></app-button>
       </div>
     </div>
   </div>

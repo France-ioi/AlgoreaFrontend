@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, ContentChild } from '@angular/core';
 
 @Component({
-  selector: 'lib-sub-grid',
+  selector: 'app-sub-grid',
   templateUrl: './sub-grid.component.html',
   styleUrls: ['./sub-grid.component.scss'],
 })

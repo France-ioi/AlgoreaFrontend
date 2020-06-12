@@ -5,7 +5,7 @@ import { ResetPasswordDialogComponent } from '../reset-password-dialog/reset-pas
 import { ConfirmPasswordDialogComponent } from '../confirm-password-dialog/confirm-password-dialog.component';
 
 @Component({
-  selector: 'lib-edit-user-dialog',
+  selector: 'app-edit-user-dialog',
   templateUrl: './edit-user-dialog.component.html',
   styleUrls: ['./edit-user-dialog.component.scss'],
 })

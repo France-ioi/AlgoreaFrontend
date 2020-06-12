@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'lib-grid-filter-bar',
+  selector: 'app-grid-filter-bar',
   templateUrl: './grid-filter-bar.component.html',
   styleUrls: ['./grid-filter-bar.component.scss'],
 })

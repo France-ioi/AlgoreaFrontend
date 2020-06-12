@@ -2,7 +2,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 @Component({
-  selector: 'lib-generate-batch-user-dialog',
+  selector: 'app-generate-batch-user-dialog',
   templateUrl: './generate-batch-user-dialog.component.html',
   styleUrls: ['./generate-batch-user-dialog.component.scss'],
 })

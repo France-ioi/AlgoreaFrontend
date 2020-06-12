@@ -6,7 +6,7 @@ import {
 } from '@angular/core';
 
 @Directive({
-  selector: '[libDragDrop]',
+  selector: '[appDragDrop]',
 })
 export class DragDropDirective {
   @Output() onFileDropped = new EventEmitter<any>();

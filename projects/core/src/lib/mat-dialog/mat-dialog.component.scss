@@ -27,7 +27,7 @@
   justify-content: flex-end;
   align-items: flex-end;
 
-  lib-button {
+  app-button {
     margin-right: -1.5rem;
   }
 }
@@ -75,7 +75,7 @@
     .tree-content {
       padding-right: 1.5rem;
 
-      lib-selection-tree {
+      app-selection-tree {
         display: block;
         margin-left: -2rem;
       }

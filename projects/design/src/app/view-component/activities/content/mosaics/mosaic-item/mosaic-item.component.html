@@ -12,17 +12,17 @@
     </span>
   </div>
   <div class="mosaic-bottom-row">
-    <lib-state-widget
+    <app-state-widget
       [icon]="data.category.icon"
       [type]="data.category.type"
-    ></lib-state-widget>
+    ></app-state-widget>
     <span *ngIf="data.weight >= 0" class="weight-view">
       {{ data.weight }} x
     </span>
-    <lib-score-ring
+    <app-score-ring
       [displayedScore]="data.progress.displayedScore"
       [currentScore]="data.progress.currentScore"
       diameter="24"
-    ></lib-score-ring>
+    ></app-score-ring>
   </div>
 </div>

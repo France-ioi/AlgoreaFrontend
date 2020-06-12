@@ -1,7 +1,7 @@
 @import 'src/colors.scss';
 @import 'src/geometry.scss';
 
-:host ::ng-deep lib-section .ui-table .ui-table-tbody > tr > td {
+:host ::ng-deep app-section .ui-table .ui-table-tbody > tr > td {
   border-right: .1rem solid #f0f0f0;
 
   &:first-child {
@@ -9,7 +9,7 @@
   }
 }
 
-lib-grid {
+app-grid {
   margin-right: -1.6667rem;
   margin-left: -3.3333rem;
 }

@@ -2,7 +2,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MatDialog, MAT_DIALOG_DATA } from '@angular/material';
 
 @Component({
-  selector: 'lib-confirm-password-dialog',
+  selector: 'app-confirm-password-dialog',
   templateUrl: './confirm-password-dialog.component.html',
   styleUrls: ['./confirm-password-dialog.component.scss'],
 })

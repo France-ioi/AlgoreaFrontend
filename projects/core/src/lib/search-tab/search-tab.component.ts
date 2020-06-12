@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'lib-search-tab',
+  selector: 'app-search-tab',
   templateUrl: './search-tab.component.html',
   styleUrls: ['./search-tab.component.scss'],
 })

@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
-  selector: 'lib-progress-section',
+  selector: 'app-progress-section',
   templateUrl: './progress-section.component.html',
   styleUrls: ['./progress-section.component.scss'],
 })
