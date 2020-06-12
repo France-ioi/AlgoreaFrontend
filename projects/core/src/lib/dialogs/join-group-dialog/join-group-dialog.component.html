@@ -39,7 +39,10 @@
             <lib-switch mode="white" [checked]="seeActivity" (onChange)="seeActivity = $event"></lib-switch>
           </div>
         </div>
-        <div *ngIf="data.require_personal_info_access_approval === 'view' || data.require_personal_info_access_approval === 'edit'" class="form-item-view switch">
+        <div
+          *ngIf="data.require_personal_info_access_approval === 'view' || data.require_personal_info_access_approval === 'edit'"
+          class="form-item-view switch"
+        >
           <span class="form-item-label">View your personal information</span>
           <div class="form-item-control">
             <lib-switch mode="white" [checked]="viewPersonalInfo" (onChange)="viewPersonalInfo = $event"></lib-switch>
@@ -52,7 +55,9 @@
           </div>
         </div>
         <div *ngIf="data.require_lock_membership_approval_until" class="form-item-view switch">
-          <span class="form-item-label danger">Keep you locked in this group until {{data.require_lock_membership_approval_until | date: 'd/MM/y h:m'}}</span>
+          <span class="form-item-label danger">
+            Keep you locked in this group until {{data.require_lock_membership_approval_until | date: 'd/MM/y h:m'}}
+          </span>
           <div class="form-item-control">
             <lib-switch mode="white" [checked]="keepLocked" (onChange)="keepLocked = $event"></lib-switch>
           </div>
@@ -62,7 +67,8 @@
     <div class="feedback">
       <p class="feedback-label">Tell us your motivations for joining this group</p>
       <lib-textarea></lib-textarea>
-      <lib-message *ngIf="error" type="error" label="You need to accept all authorization requests to join this group" [closable]="false"></lib-message>
+      <lib-message *ngIf="error" type="error" label="You need to accept all authorization requests to join this group" [closable]="false">
+      </lib-message>
     </div>
     <div class="join-group-button">
       <div style="width: 12.5rem;">

@@ -32,14 +32,20 @@
     <ng-container *ngIf="data.progress">
       <div *ngFor="let item of data.values; let idx = index;" class="progress-section-item">
         <div class="progress-control">
-          <span class="progress-point" [ngClass]="{active: idx < data.active_until, last: idx + 1 == data.active_until}" (click)="onSetActive($event, data, idx)">
+          <span
+            class="progress-point"
+            [ngClass]="{active: idx < data.active_until, last: idx + 1 == data.active_until}"
+            (click)="onSetActive($event, data, idx)"
+          >
             <i *ngIf="idx + 1 < data.active_until" class="fa fa-check"></i>
             <i *ngIf="idx + 1 === data.active_until" class="fa fa-lock-open"></i>
           </span>
           <span *ngIf="idx + 1 < data.values.length" class="progress-branch" [ngClass]="{active: idx + 1 < data.active_until}"></span>
         </div>
         <div class="progress-desc">
-          <div class="progress-desc-name" [ngClass]="{active: idx < data.active_until}" (click)="onSetActive($event, data, idx)">{{ item.label }}</div>
+          <div class="progress-desc-name" [ngClass]="{active: idx < data.active_until}" (click)="onSetActive($event, data, idx)">
+            {{ item.label }}
+          </div>
           <div class="progress-desc-comment">{{ item.comment }}</div>
         </div>
         <div *ngIf="item.disabled" class="gray-overlay"></div>
@@ -90,5 +96,5 @@
     <div *ngIf="data.disabled" class="gray-overlay">
     </div>
   </div>
-  
+
 </div>

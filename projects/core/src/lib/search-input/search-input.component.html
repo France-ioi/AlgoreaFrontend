@@ -1,5 +1,12 @@
 <div class="search-input-wrapper">
-  <input type="text" class="search-input" [(ngModel)]="value" (ngModelChange)="onValueChange($event)" (focus)="onFocus($event)" tabindex="3">
+  <input
+    type="text"
+    class="search-input"
+    [(ngModel)]="value"
+    (ngModelChange)="onValueChange($event)"
+    (focus)="onFocus($event)"
+    tabindex="3"
+  >
   <span class="search-icon" (click)="onIconClicked($event)">
     <i *ngIf="!dirty" class="fa fa-search"></i>
     <i *ngIf="dirty" class="fa fa-times"></i>

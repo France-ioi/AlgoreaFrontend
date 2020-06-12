@@ -22,7 +22,13 @@
   <lib-search-input *ngIf="signedIn" (onChange)="onSearchEvent($event)" (onClose)="onSearchCloseEvent($event)"></lib-search-input>
   <div class="overlay-container">
     <lib-notification *ngIf="showNotification && signedIn"></lib-notification>
-    <lib-button *ngIf="!signedIn" icon="fa fa-power-off" label="Connexion" class="ui-button-rounded ui-button-warning ui-fit-parent" (onClick)="signInOut($event)"></lib-button>
+    <lib-button
+      *ngIf="!signedIn"
+      icon="fa fa-power-off"
+      label="Connexion"
+      lass="ui-button-rounded ui-button-warning ui-fit-parent"
+      (onClick)="signInOut($event)"
+    ></lib-button>
   </div>
 </div>
 

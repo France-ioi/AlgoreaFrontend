@@ -66,7 +66,8 @@
                       {{ rowData.joining_user.login }}
                     </ng-container>
                     <ng-template #fullInfo>
-                      {{ rowData.joining_user.first_name || "" }} {{ rowData.joining_user.last_name || "" }} ({{ rowData.joining_user.login || "" }})
+                      {{ rowData.joining_user.first_name || "" }} {{ rowData.joining_user.last_name || "" }}
+                      ({{ rowData.joining_user.login || "" }})
                     </ng-template>
                   </span>
                   <span class="user-info-activity" *ngIf="rowData.grade">

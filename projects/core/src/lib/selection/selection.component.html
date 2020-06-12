@@ -8,7 +8,11 @@
     </li>
   </ul>
   <ul *ngIf="type === 'rounded'" class="rounded" [ngClass]="{dark: mode === 'dark', basic: mode === 'basic'}">
-    <li *ngFor="let item of items; index as idx" [ngClass]="{active: idx === selected, previous: idx === selected - 1}" (click)="itemChanged($event, idx)">
+    <li
+      *ngFor="let item of items; index as idx"
+      [ngClass]="{active: idx === selected, previous: idx === selected - 1}"
+      (click)="itemChanged($event, idx)"
+    >
       <span *ngIf="item.icon" class="icon">
         <i class="{{item.icon}}"></i>
       </span>
