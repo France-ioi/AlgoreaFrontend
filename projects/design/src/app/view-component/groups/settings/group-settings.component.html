@@ -21,7 +21,9 @@
 <app-section icon="fa fa-shield-alt" label="Administrator access">
   <p class="pick-list-header">Select information that administrators can access about the group members</p>
   <app-pick-list [list]="pickListData" (onLock)="onLockDrop($event)" (onShowDate)="onShowDateEvent($event)"></app-pick-list>
-  <p *ngIf="showPickListError" class="pick-list-error">You are not allowed to drop the "Lock into group" item into the "Recommended" field list.</p>
+  <p *ngIf="showPickListError" class="pick-list-error">
+    You are not allowed to drop the "Lock into group" item into the "Recommended" field list.
+  </p>
   <div *ngIf="showLockDate" class="form-item-view">
     <span class="form-item-label left-control">Members of this group can't leave it until</span>
     <div class="form-item-control left-control">

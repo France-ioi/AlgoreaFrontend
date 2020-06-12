@@ -154,7 +154,9 @@
           <div class="code-wrapper">
             <div class="label-with-error-message">
               <span class="label">Validity</span>
-              <span *ngIf="activateStatus === 0" class="label orange">This code has been activated 15 minutes ago, it will be disabled in 15 minutes</span>
+              <span *ngIf="activateStatus === 0" class="label orange">
+                This code has been activated 15 minutes ago, it will be disabled in 15 minutes
+              </span>
               <span *ngIf="activateStatus === 1" class="label green">This code has not yet been used</span>
               <span *ngIf="activateStatus === 2" class="label red">This code was used 15 minutes ago and is now disabled</span>
             </div>

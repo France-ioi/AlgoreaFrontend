@@ -81,7 +81,14 @@
           (onEdit)="onEditPage($event)"
         ></app-page-navigator>
         <app-select *ngIf="!signedIn && collapsed" [items]="langs" style="margin-right: 1rem;height: 1.8333rem;"></app-select>
-        <app-button *ngIf="!signedIn && collapsed" label="Connexion" icon="pi pi-check" class="ui-button-rounded" style="margin-right: 0.4167rem;" (onClick)="onSignInOut(true)"></app-button>
+        <app-button
+          *ngIf="!signedIn && collapsed"
+          label="Connexion"
+          icon="pi pi-check"
+          class="ui-button-rounded"
+          style="margin-right: 0.4167rem;"
+          (onClick)="onSignInOut(true)"
+        ></app-button>
       </div>
       <div class="folded-top-bar" *ngIf="folded || scrolled">
         <app-score-ring
@@ -131,7 +138,8 @@
   <div class="right" [ngClass]="{ collapsed: collapsed, expanded: !collapsed, editing: editing }">
     <div
       class="main-content"
-      [ngClass]="{ folded: folded, unfolded: !folded, 'type-1': selectedType === 1, 'type-2': selectedType === 2, 'type-0': selectedType === 0 }"
+      [ngClass]=
+        "{ folded: folded, unfolded: !folded, 'type-1': selectedType === 1, 'type-2': selectedType === 2, 'type-0': selectedType === 0 }"
     >
       <router-outlet></router-outlet>
     </div>

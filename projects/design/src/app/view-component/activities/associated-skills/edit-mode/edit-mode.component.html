@@ -22,7 +22,12 @@
   </app-grid-filter-bar>
 </app-section>
 <div class="group-tree-container">
-  <app-group-navigation-tree [data]="trees" [navigation]="false" [showCategory]="false" (onEditPage)="onGotoPage($event)"></app-group-navigation-tree>
+  <app-group-navigation-tree
+    [data]="trees"
+    [navigation]="false"
+    [showCategory]="false"
+    (onEditPage)="onGotoPage($event)"
+  ></app-group-navigation-tree>
 </div>
 <div class="tree-container">
   <span class="tri-tag"></span>

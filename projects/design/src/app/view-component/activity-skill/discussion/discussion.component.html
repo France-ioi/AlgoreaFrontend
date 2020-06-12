@@ -81,4 +81,11 @@
     </div>
   </div>
 </app-section>
-<app-discussion-thread *ngIf="selected" [label]="currentThreadLabel" [threads]="currentThread" [answer]="answer" [message]="message" (onClose)="onCloseThread($event)"></app-discussion-thread>
+<app-discussion-thread
+  *ngIf="selected"
+  [label]="currentThreadLabel"
+  [threads]="currentThread"
+  [answer]="answer"
+  [message]="message"
+  (onClose)="onCloseThread($event)"
+></app-discussion-thread>
