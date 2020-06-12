@@ -31,7 +31,7 @@ export class ChapterGridComponent implements OnInit {
       minHeight: '25rem',
       data: {
         icon: 'fa fa-lock',
-        label: `Morbi sit amet eleifend tortor: propagation of access from Activity with mosaic view`,
+        label: 'Morbi sit amet eleifend tortor: propagation of access from Activity with mosaic view',
         // tslint:disable-next-line: max-line-length
         comment: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s',
         sections: [
