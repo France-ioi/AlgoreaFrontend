@@ -81,7 +81,7 @@ jobs:
     steps:
       - attach_workspace:
           at: ./
-      - run: ./node_modules/.bin/ng build algorea --configuration ci --base-href ./
+      - run: ./node_modules/.bin/ng build algorea --configuration ci --base-href ./ --progress=false
       - persist_to_workspace:
           root: ./
           paths:
