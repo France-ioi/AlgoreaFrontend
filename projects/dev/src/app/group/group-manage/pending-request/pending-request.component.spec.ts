@@ -6,7 +6,6 @@ import { GroupService } from '../../../shared/services/api/group.service';
 import { of, Subject } from 'rxjs';
 import { PendingRequest } from '../../../shared/models/pending-request.model';
 import { RequestActionResponse } from '../../../shared/models/requet-action-response.model';
-import * as _ from 'lodash';
 import { MessageService } from 'primeng/api';
 
 const MOCK_RESPONSE = [

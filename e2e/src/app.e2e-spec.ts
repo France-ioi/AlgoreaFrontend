@@ -2,7 +2,7 @@ import { AppPage } from './app.po';
 import { browser, logging } from 'protractor';
 
 describe('workspace-project App', () => {
-  let page: AppPage;
+  let page: AppPage; // eslint-disable-line @typescript-eslint/no-unused-vars
 
   beforeEach(() => {
     page = new AppPage();
