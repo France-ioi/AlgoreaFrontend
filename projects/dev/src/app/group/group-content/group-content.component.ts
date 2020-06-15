@@ -1,5 +1,4 @@
 import { Component, OnInit, Input } from '@angular/core';
-import * as _ from 'lodash';
 import { Group } from '../../shared/models/group.model';
 import { GroupAdministrationComponent } from './group-administration/group-administration.component';
 import { GroupOverviewComponent } from './group-overview/group-overview.component';

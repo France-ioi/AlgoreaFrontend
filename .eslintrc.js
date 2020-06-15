@@ -3,11 +3,17 @@
  * add lots of comments to better explain and document the setup.
  */
 module.exports = {
-  /**
-   * See packages/eslint-plugin/src/configs/README.md
-   * for what this recommended config contains.
-   */
-  extends: ['plugin:@angular-eslint/recommended'],
+  // these are not required if we do not require type check
+  // parser: '@typescript-eslint/parser',
+  // parserOptions: {
+  //   tsconfigRootDir: __dirname,
+  //   project: './tsconfig.json'
+  // },
+  extends: [
+    'plugin:@typescript-eslint/eslint-recommended',
+    // 'plugin:@typescript-eslint/recommended-requiring-type-checking', // very slow
+    'plugin:@angular-eslint/recommended'
+  ],
   rules: {
     '@angular-eslint/directive-selector': [
       'error',
@@ -17,7 +23,12 @@ module.exports = {
       'error',
       { type: 'element', prefix: 'app', style: 'kebab-case' },
     ],
-    "@angular-eslint/no-output-native": "off"
+    '@angular-eslint/no-output-native': 'off',
+    'no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': [
+      'error',
+      { 'argsIgnorePattern': '^_' }
+    ]
   },
   overrides: [
     /**

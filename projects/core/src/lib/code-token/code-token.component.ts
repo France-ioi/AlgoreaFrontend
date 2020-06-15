@@ -16,5 +16,5 @@ export class CodeTokenComponent implements OnInit {
 
   ngOnInit() {}
 
-  refreshCode(e) {}
+  refreshCode(_e) {}
 }

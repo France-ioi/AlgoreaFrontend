@@ -1,6 +1,5 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { ProgressType } from 'core';
-import * as _ from 'lodash';
 import { Router } from '@angular/router';
 import { StatusService } from './shared/services/status.service';
 
