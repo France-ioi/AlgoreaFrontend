@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { AttachGroupDialogComponent } from '../attach-group-dialog/attach-group-dialog.component';
 import { ResetPasswordDialogComponent } from '../reset-password-dialog/reset-password-dialog.component';
 import { ConfirmPasswordDialogComponent } from '../confirm-password-dialog/confirm-password-dialog.component';

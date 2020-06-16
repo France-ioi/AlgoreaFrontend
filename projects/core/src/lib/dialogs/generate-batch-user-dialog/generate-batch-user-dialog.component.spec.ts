@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { GenerateBatchUserDialogComponent } from './generate-batch-user-dialog.component';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 describe('GenerateBatchUserDialogComponent', () => {
   let component: GenerateBatchUserDialogComponent;

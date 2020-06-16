@@ -31,6 +31,8 @@
   },
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,
-    "strictInjectionParameters": true
+    "strictInjectionParameters": true,
+    "strictOutputEventTypes": true
+    // see https://angular.io/guide/template-typecheck for all (or set strictTemplates: true)
   }
 }

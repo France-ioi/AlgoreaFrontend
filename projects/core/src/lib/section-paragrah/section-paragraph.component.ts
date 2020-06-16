@@ -23,7 +23,7 @@ export class SectionParagraphComponent implements OnInit {
 
   @Output() collapse = new EventEmitter<any>();
 
-  @ContentChild('headerTemplate', { static: false }) headerTemplate;
+  @ContentChild('headerTemplate') headerTemplate;
 
   visible;
 

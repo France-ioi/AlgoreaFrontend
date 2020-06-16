@@ -25,7 +25,7 @@ export class GroupNavigationTreeComponent implements OnInit, OnChanges {
   @Output() titleChange = new EventEmitter<any>();
   @Output() editPage = new EventEmitter<any>();
 
-  @ViewChild('groupTree', { static: false }) groupTree;
+  @ViewChild('groupTree') groupTree;
 
   constructor(private router: Router) {}
 

@@ -20,7 +20,7 @@ import { YourselfHeaderComponent } from './yourself/yourself-header/yourself-hea
 import { GroupComponent } from './group/group.component';
 import { GroupHeaderComponent } from './group/group-header/group-header.component';
 import { GroupTabComponent } from './group/group-tab/group-tab.component';
-import { MatMenuModule } from '@angular/material';
+import { MatMenuModule } from '@angular/material/menu';
 import { HomePageComponent } from './home-page/home-page.component';
 import { PendingRequestViewComponent } from './requests-view/pending-request-view/pending-request-view.component';
 import { GradingRequestViewComponent } from './requests-view/grading-request-view/grading-request-view.component';

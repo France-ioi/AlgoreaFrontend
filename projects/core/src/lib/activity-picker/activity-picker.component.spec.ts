@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ActivityPickerComponent } from './activity-picker.component';
-import { MatDialogModule, MatDialog } from '@angular/material';
+import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 
 describe('ActivityPickerComponent', () => {
   let component: ActivityPickerComponent;

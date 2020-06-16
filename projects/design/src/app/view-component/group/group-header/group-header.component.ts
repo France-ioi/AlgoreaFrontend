@@ -14,7 +14,7 @@ export class GroupHeaderComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() isCollapsed;
   @Input() data;
 
-  @ViewChild('userInfo', { static: false }) userInfo;
+  @ViewChild('userInfo') userInfo;
 
   ID;
 

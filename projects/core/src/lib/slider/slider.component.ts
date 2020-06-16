@@ -18,7 +18,7 @@ export class SliderComponent implements OnInit {
   @Input() min = 0;
   @Input() max = 100;
   @Input() showValue = false;
-  @ViewChild('slider', { static: false }) slider: ElementRef;
+  @ViewChild('slider') slider: ElementRef;
 
   @Output() change = new EventEmitter<any>();
 
