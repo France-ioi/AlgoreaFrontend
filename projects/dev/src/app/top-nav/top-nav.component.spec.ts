@@ -36,7 +36,7 @@ describe('TopNavComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(TopNavComponent);
     component = fixture.componentInstance;
-    router = TestBed.get(Router);
+    router = TestBed.inject(Router);
     component.data = mockData;
     fixture.detectChanges();
   });
