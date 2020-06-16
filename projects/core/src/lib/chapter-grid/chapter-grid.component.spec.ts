@@ -2,7 +2,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ChapterGridComponent } from './chapter-grid.component';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { MatMenuModule, MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
+import { MatMenuModule } from '@angular/material/menu';
 
 describe('ChapterGridComponent', () => {
   let component: ChapterGridComponent;

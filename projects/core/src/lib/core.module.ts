@@ -62,7 +62,7 @@ import { ItemsNavigationTreeComponent } from './items-navigation-tree/items-navi
 import { MatDialogComponent } from './mat-dialog/mat-dialog.component';
 import { LogViewGridComponent } from './log-view-grid/log-view-grid.component';
 import { GridGearComponent } from './grid-gear/grid-gear.component';
-import { MatMenuModule } from '@angular/material';
+import { MatMenuModule } from '@angular/material/menu';
 import { CategoryDropdownComponent } from './category-dropdown/category-dropdown.component';
 import { NotificationComponent } from './notification/notification.component';
 import { SelectComponent } from './select/select.component';

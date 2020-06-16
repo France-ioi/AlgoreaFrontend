@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { MenuItem } from 'primeng/api/menuitem';
 import { ViewportScroller } from '@angular/common';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { AccessEditDialogComponent } from 'core';
 import { NodeService } from '../../../services/node-service.service';
 import { EditService } from '../../../services/edit.service';
