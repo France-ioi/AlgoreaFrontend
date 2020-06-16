@@ -12,8 +12,8 @@ export class NavigationTabsComponent implements OnInit, OnChanges {
 
   @Input() items;
 
-  @ViewChild('scrollPanel', {static: false}) scrollPanel;
-  @ViewChild('groupPanel', {static: false}) groupPanel;
+  @ViewChild('scrollPanel') scrollPanel;
+  @ViewChild('groupPanel') groupPanel;
 
   @Output() skillSelect = new EventEmitter<any>();
   @Output() activitySelect = new EventEmitter<any>();

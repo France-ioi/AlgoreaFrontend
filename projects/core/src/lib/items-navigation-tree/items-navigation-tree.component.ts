@@ -20,7 +20,7 @@ export class ItemsNavigationTreeComponent implements OnInit, OnChanges {
   @Output() nodeExpand = new EventEmitter<any>();
   @Output() nodeSelect = new EventEmitter<any>();
 
-  @ViewChild('navTree', { static: false }) navTree;
+  @ViewChild('navTree') navTree;
 
   spread = [];
 

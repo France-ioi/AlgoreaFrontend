@@ -8,7 +8,7 @@ import { Component, OnInit, Input, ContentChild } from '@angular/core';
 export class SubGridComponent implements OnInit {
   @Input() data;
 
-  @ContentChild('bodyTemplate', { static: false }) bodyTemplate;
+  @ContentChild('bodyTemplate') bodyTemplate;
 
   constructor() {}
 

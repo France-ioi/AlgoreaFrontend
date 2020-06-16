@@ -56,7 +56,7 @@ export class AppModule { }
 
 @NgModule({})
 export class DesignAppModule {
-  static forRoot(): ModuleWithProviders {
+  static forRoot(): ModuleWithProviders<AppModule> {
     return {
       ngModule: AppModule,
       providers

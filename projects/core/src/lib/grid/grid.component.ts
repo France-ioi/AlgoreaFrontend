@@ -70,14 +70,14 @@ export class GridComponent implements OnInit, OnChanges {
   @Output() selectionChange = new EventEmitter();
   @Output() headerCheckboxToggle = new EventEmitter();
 
-  @ContentChild('colgroupTemplate', { static: false }) colgroupTemplate;
-  @ContentChild('headerTemplate', { static: false }) headerTemplate;
-  @ContentChild('bodyTemplate', { static: false }) bodyTemplate;
-  @ContentChild('footerTemplate', { static: false }) footerTemplate;
-  @ContentChild('summaryTemplate', { static: false }) summaryTemplate;
-  @ContentChild('rowExpansionTemplate', { static: false }) rowExpansionTemplate;
-  @ContentChild('frozenHeaderTemplate', { static: false }) frozenHeaderTemplate;
-  @ContentChild('frozenBodyTemplate', { static: false }) frozenBodyTemplate;
+  @ContentChild('colgroupTemplate') colgroupTemplate;
+  @ContentChild('headerTemplate') headerTemplate;
+  @ContentChild('bodyTemplate') bodyTemplate;
+  @ContentChild('footerTemplate') footerTemplate;
+  @ContentChild('summaryTemplate') summaryTemplate;
+  @ContentChild('rowExpansionTemplate') rowExpansionTemplate;
+  @ContentChild('frozenHeaderTemplate') frozenHeaderTemplate;
+  @ContentChild('frozenBodyTemplate') frozenBodyTemplate;
 
   selectionValue = [];
 
