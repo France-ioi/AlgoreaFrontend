@@ -14,7 +14,6 @@
     "primeicons": "^2.0.0",
     "primeng": "^9.0.0-rc.4",
     "random-string": "^0.2.0",
-    "uuid": "^3.3.3",
-    "tslib": "^1.10.0"
+    "uuid": "^3.3.3"
   }
 }
