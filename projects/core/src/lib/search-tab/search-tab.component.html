@@ -1,5 +1,5 @@
 <div class="search-tools-wrapper">
-  <app-selection [items]="sels" mode="basic" (onChange)="onSelectionChanged($event)"></app-selection>
+  <app-selection [items]="sels" mode="basic" (change)="onSelectionChanged($event)"></app-selection>
   <app-grid-filter-bar>
     <ng-container *ngFor="let filter of gridFilters">
       <app-grid-filter
@@ -11,7 +11,7 @@
         [ranges]="filter.ranges"
         [dateRanges]="filter.dateRanges"
         [list]="filter.list"
-        (onClose)="removeFilter(filter.ID)"
+        (close)="removeFilter(filter.ID)"
       ></app-grid-filter>
     </ng-container>
     <app-select

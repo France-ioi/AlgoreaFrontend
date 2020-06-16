@@ -36,7 +36,7 @@
         <div *ngIf="data.require_watch_approval" class="form-item-view switch">
           <span class="form-item-label">See your activity and your answers</span>
           <div class="form-item-control">
-            <app-switch mode="white" [checked]="seeActivity" (onChange)="seeActivity = $event"></app-switch>
+            <app-switch mode="white" [checked]="seeActivity" (change)="seeActivity = $event"></app-switch>
           </div>
         </div>
         <div
@@ -45,13 +45,13 @@
         >
           <span class="form-item-label">View your personal information</span>
           <div class="form-item-control">
-            <app-switch mode="white" [checked]="viewPersonalInfo" (onChange)="viewPersonalInfo = $event"></app-switch>
+            <app-switch mode="white" [checked]="viewPersonalInfo" (change)="viewPersonalInfo = $event"></app-switch>
           </div>
         </div>
         <div *ngIf="data.require_personal_info_access_approval === 'edit'" class="form-item-view switch">
           <span class="form-item-label danger">Modify your password and personal information</span>
           <div class="form-item-control">
-            <app-switch mode="white" [checked]="modifyPersonalInfo" (onChange)="modifyPersonalInfo = $event"></app-switch>
+            <app-switch mode="white" [checked]="modifyPersonalInfo" (change)="modifyPersonalInfo = $event"></app-switch>
           </div>
         </div>
         <div *ngIf="data.require_lock_membership_approval_until" class="form-item-view switch">
@@ -59,7 +59,7 @@
             Keep you locked in this group until {{data.require_lock_membership_approval_until | date: 'd/MM/y h:m'}}
           </span>
           <div class="form-item-control">
-            <app-switch mode="white" [checked]="keepLocked" (onChange)="keepLocked = $event"></app-switch>
+            <app-switch mode="white" [checked]="keepLocked" (change)="keepLocked = $event"></app-switch>
           </div>
         </div>
       </app-section>
@@ -76,7 +76,7 @@
           icon="fa fa-check"
           label="Join"
           class="ui-button-rounded ui-fit-parent"
-          (onClick)="onJoin($event)"
+          (click)="onJoin($event)"
         ></app-button>
       </div>
     </div>

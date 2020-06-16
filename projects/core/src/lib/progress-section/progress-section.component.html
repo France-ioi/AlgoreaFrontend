@@ -57,7 +57,7 @@
           <app-switch
             mode="circular"
             [checked]="data.checked"
-            (onChange)="onSwitchChange($event, data)"
+            (change)="onSwitchChange($event, data)"
           ></app-switch>
         </div>
         <div class="progress-desc">
@@ -82,7 +82,7 @@
           <app-switch
             mode="circular"
             [checked]="data.until_checkd"
-            (onChange)="data.until_checkd = !data.until_checkd"
+            (change)="data.until_checkd = !data.until_checkd"
           ></app-switch>
         </div>
         <div class="progress-desc">

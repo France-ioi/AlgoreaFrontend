@@ -16,7 +16,7 @@
       <div class="form-item-view">
         <span class="form-item-label">Accounts type</span>
         <div class="form-item-control">
-          <app-selection [items]="data.type" (onChange)="onTypeChange($event)"></app-selection>
+          <app-selection [items]="data.type" (change)="onTypeChange($event)"></app-selection>
         </div>
       </div>
       <p class="description">{{data.desc}}</p>
@@ -25,13 +25,13 @@
       <div class="form-item-view">
         <span class="form-item-label">Prefix</span>
         <div class="form-item-control">
-          <app-input placeholder="Chaine de caracteres" (onChange)="onPrefixChange($event)"></app-input>
+          <app-input placeholder="Chaine de caracteres" (change)="onPrefixChange($event)"></app-input>
         </div>
       </div>
       <div class="form-item-view">
         <span class="form-item-label">Suffix length</span>
         <div class="form-item-control">
-          <app-input placeholder="Number of characters" inputType="number" (onChange)="onSuffixChange($event)"></app-input>
+          <app-input placeholder="Number of characters" inputType="number" (change)="onSuffixChange($event)"></app-input>
         </div>
       </div>
       <div *ngIf="isPassword" class="gen-password">Usernames will look like this: {{prefix1}}_{{prefix}}_{{randomString}}</div>
@@ -63,7 +63,7 @@
           icon="fa fa-key"
           label="Generate"
           class="ui-button-rounded ui-fit-parent"
-          (onClick)="onClose($event)"
+          (click)="onClose($event)"
         ></app-button>
       </div>
     </div>
