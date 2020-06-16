@@ -4,7 +4,7 @@
     class="upload-file-container"
     (click)="fileInput.click()"
     appDragDrop
-    (onFileDropped)="uploadImage($event)"
+    (fileDropped)="uploadImage($event)"
   >
     <input
       hidden
@@ -19,7 +19,7 @@
         'background-image': 'url(' + imgURL + ')'
       }"
     >
-      <app-button *ngIf="imgURL" label="remove" class="diagonal-rounded" (onClick)="removeImage($event)"></app-button>
+      <app-button *ngIf="imgURL" label="remove" class="diagonal-rounded" (click)="removeImage($event)"></app-button>
     </div>
     <div *ngIf="!imgURL" class="image-upload-labels">
       <div class="image-drop-label">
@@ -32,7 +32,7 @@
           class="ui-button-rounded ui-button-success ui-fit-parent"
           icon="fa fa-folder-open"
           label="or select files"
-          (onClick)="fileInput.click()"
+          (click)="fileInput.click()"
         ></app-button>
       </div>
     </div>

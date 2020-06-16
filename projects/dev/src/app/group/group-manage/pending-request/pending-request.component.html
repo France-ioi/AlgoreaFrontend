@@ -11,7 +11,7 @@
       [data]="requests"
       [groupInfo]="panel"
       [(selection)]="selection"
-      (onSort)="onCustomSort($event)"
+      (sort)="onCustomSort($event)"
     >
       <ng-template #headerTemplate let-columns>
         <tr>

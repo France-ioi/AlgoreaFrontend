@@ -17,7 +17,7 @@
         icon="fa fa-link"
         label="attach"
         class="ui-button-rounded ui-fit-parent ui-button-secondary"
-        (onClick)="onAttachClicked($event)"
+        (click)="onAttachClicked($event)"
       ></app-button>
       <app-button icon="fa fa-trash-alt" label="remove" class="ui-button-rounded ui-fit-parent ui-button-secondary"></app-button>
       <app-button icon="fa fa-folder-open" label="move" class="ui-button-rounded ui-fit-parent ui-button-secondary"></app-button>
@@ -37,7 +37,7 @@
         icon="fa fa-key"
         label="reinitialize password"
         class="ui-button-rounded ui-fit-parent"
-        (onClick)="onResetPassword($event)"
+        (click)="onResetPassword($event)"
       ></app-button>
       <app-button icon="fa fa-paste" label="Participation code: uqt82xk" class="ui-button-rounded ui-fit-parent no-uppercase"></app-button>
     </div>
@@ -70,5 +70,5 @@
   </div>
 </div>
 <div mat-dialog-actions>
-  <app-button icon="fa fa-check" label="Save" class="ui-button-rounded" (onClick)="onClose($event)"></app-button>
+  <app-button icon="fa fa-check" label="Save" class="ui-button-rounded" (click)="onClose($event)"></app-button>
 </div>

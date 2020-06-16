@@ -9,42 +9,42 @@
         <span class="switch-label">Items as rows</span>
         <app-switch
           [checked]="itemsAsRow"
-          (onChange)="handleSwitches($event, 0)"
+          (change)="handleSwitches($event, 0)"
         ></app-switch>
       </li>
       <li *ngIf="!secondary">
         <span class="switch-label">Compact mode</span>
         <app-switch
           [checked]="compactMode"
-          (onChange)="handleSwitches($event, 1)"
+          (change)="handleSwitches($event, 1)"
         ></app-switch>
       </li>
       <li *ngIf="!secondary">
         <span class="switch-label">Freeze first column</span>
         <app-switch
           [checked]="freeze"
-          (onChange)="handleSwitches($event, 2)"
+          (change)="handleSwitches($event, 2)"
         ></app-switch>
       </li>
       <!-- <li>
         <span class="switch-label">Sticky header</span>
         <app-switch
           [checked]="sticky"
-          (onChange)="handleSwitches($event, 3)"
+          (change)="handleSwitches($event, 3)"
         ></app-switch>
       </li> -->
       <li *ngIf="itemsAsRow">
         <span class="switch-label">Show descriptions</span>
         <app-switch
           [checked]="showDescription"
-          (onChange)="handleSwitches($event, 4)"
+          (change)="handleSwitches($event, 4)"
         ></app-switch>
       </li>
       <li *ngIf="secondary">
         <span class="switch-label">Comment</span>
         <app-switch
           [checked]="comment"
-          (onChange)="handleSwitches($event, 5)"
+          (change)="handleSwitches($event, 5)"
         ></app-switch>
       </li>
     </ul>

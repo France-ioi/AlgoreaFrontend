@@ -44,7 +44,7 @@
           <span class="group-subtitle" [ngClass]="{'selected': selectedGroup == 0 ? true : false}">Yourself</span>
         </div>
         <div class="group-list">
-          <p-accordion [multiple]="true" (onOpen)="onTabOpen($event)" (onClose)="onTabClose($event)">
+          <p-accordion [multiple]="true" (open)="onTabOpen($event)" (close)="onTabClose($event)">
             <p-accordionTab [selected]="manageShow">
               <p-header>
                 <span class="anonym-group">
@@ -54,7 +54,7 @@
                   manage</span>
               </p-header>
               <app-group-navigation-tree [data]="items.groups.manage" inGroup="true"
-                (onNodeChange)="onNodeChange($event, 'managed')" (onTitleChange)="onTitleChange($event)">
+                (nodeChange)="onNodeChange($event, 'managed')" (titleChange)="onTitleChange($event)">
               </app-group-navigation-tree>
             </p-accordionTab>
             <p-accordionTab [selected]="joinShow">
@@ -65,8 +65,8 @@
                 <span class="group-subtitle" [ngClass]="{'selected': selectedGroup == 2 ? true : false}">Groups You
                   Joined</span>
               </p-header>
-              <app-group-navigation-tree [data]="items.groups.join" (onNodeChange)="onNodeChange($event, 'memberships')"
-                (onTitleChange)="onTitleChange($event)"></app-group-navigation-tree>
+              <app-group-navigation-tree [data]="items.groups.join" (nodeChange)="onNodeChange($event, 'memberships')"
+                (titleChange)="onTitleChange($event)"></app-group-navigation-tree>
             </p-accordionTab>
           </p-accordion>
         </div>
