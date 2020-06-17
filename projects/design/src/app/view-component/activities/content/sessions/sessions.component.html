@@ -20,7 +20,7 @@
         [ranges]="filter.ranges"
         [dateRanges]="filter.dateRanges"
         [list]="filter.list"
-        (onClose)="removeFilter(filter.ID)"
+        (close)="removeFilter(filter.ID)"
       ></app-grid-filter>
     </ng-container>
   </app-grid-filter-bar>

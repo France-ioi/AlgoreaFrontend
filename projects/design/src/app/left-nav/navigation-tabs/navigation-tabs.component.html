@@ -77,8 +77,8 @@
               <app-group-navigation-tree
                 [data]="items.groups.manage"
                 inGroup="true"
-                (onNodeChange)="onNodeChange($event)"
-                (onTitleChange)="onTitleChange($event)"
+                (nodeChange)="onNodeChange($event)"
+                (titleChange)="onTitleChange($event)"
               ></app-group-navigation-tree>
             </p-accordionTab>
             <p-accordionTab [selected]="joinShow">
@@ -94,8 +94,8 @@
               </p-header>
               <app-group-navigation-tree
                 [data]="items.groups.join"
-                (onNodeChange)="onNodeChange($event)"
-                (onTitleChange)="onTitleChange($event)"
+                (nodeChange)="onNodeChange($event)"
+                (titleChange)="onTitleChange($event)"
               ></app-group-navigation-tree>
             </p-accordionTab>
           </p-accordion>

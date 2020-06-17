@@ -24,14 +24,14 @@
         icon="pi pi-check"
         label="Become coordinator"
         class="ui-button-rounded ui-button-success"
-        (onClick)="onCoordEvent($event)"
+        (click)="onCoordEvent($event)"
       ></app-button>
       <app-button
         *ngIf="isCoordinator"
         icon="pi pi-check"
         label="You are coordinator"
         class="ui-button-rounded"
-        (onClick)="onCoordEvent($event)"
+        (click)="onCoordEvent($event)"
       ></app-button>
     </ng-template>
     <ng-template #userBlock>
@@ -133,7 +133,7 @@
       label="You chose The indesctructibles"
       [collapsible]="true"
       [hasBorder]="false"
-      (onCollapse)="onCollapseTeam($event)"
+      (collapse)="onCollapseTeam($event)"
     >
       <ng-template #headerTemplate>
         <span *ngIf="showTeamTitle" class="team-count">
