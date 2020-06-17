@@ -194,7 +194,7 @@
             <div class="selection-tool">
               <app-selection
                 [items]="situationTypes"
-                (onChange)="viewTypeChanged($event)"
+                (change)="viewTypeChanged($event)"
               ></app-selection>
               <app-selection
                 *ngIf="selectedView === 1"
@@ -208,7 +208,7 @@
                 [opened]="false"
                 width="10"
                 style="margin: 0.4167rem;"
-                (onClick)="gridSelect = true"
+                (click)="gridSelect = true"
               ></app-select>
               <ng-container *ngFor="let filter of gridFilters">
                 <app-grid-filter
@@ -221,8 +221,8 @@
                   [dateRanges]="filter.dateRanges"
                   [list]="filter.list"
                   [outsideClicked]="gridSelect"
-                  (onClose)="removeFilter(filter.ID)"
-                  (onHide)="gridSelect = false"
+                  (close)="removeFilter(filter.ID)"
+                  (hide)="gridSelect = false"
                 ></app-grid-filter>
               </ng-container>
             </app-grid-filter-bar>
@@ -824,7 +824,7 @@
               <app-dropdown
                 [items]="validationType"
                 placeholder="Select a type..."
-                (onChange)="validationChanged($event)"
+                (change)="validationChanged($event)"
               ></app-dropdown>
               <app-input
                 *ngIf="validationN"
@@ -837,7 +837,7 @@
               >
               <app-switch
                 mode="white"
-                (onChange)="toggleScoreWeight($event)"
+                (change)="toggleScoreWeight($event)"
               ></app-switch>
             </div>
           </div>
@@ -855,13 +855,13 @@
             icon="fa fa-sign-in-alt"
             label="Add a content"
             [closed]="showNewContent"
-            (onClose)="onCancelEdit($event)"
+            (close)="onCancelEdit($event)"
           >
             <div class="add-content-wrapper">
               <app-input
                 placeholder="New content ..."
                 [value]="contentValue"
-                (onChange)="onAddContent($event, 'contents')"
+                (change)="onAddContent($event, 'contents')"
               ></app-input>
               <span class="label">or</span>
               <app-activity-picker [trees]="trees"></app-activity-picker>

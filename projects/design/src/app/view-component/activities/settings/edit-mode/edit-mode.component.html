@@ -67,14 +67,14 @@
   <div class="form-item-view">
     <span class="form-item-label">Duration</span>
     <div class="form-item-control" [ngClass]="{'another-input': showDurationInput}">
-      <app-switch mode="white" [checked]="showDurationInput" (onChange)="onDurationChange($event)"></app-switch>
+      <app-switch mode="white" [checked]="showDurationInput" (change)="onDurationChange($event)"></app-switch>
       <app-date-time-picker *ngIf="showDurationInput" placeholder="" style="margin-left: 1.6667rem;"></app-date-time-picker>
     </div>
   </div>
   <div class="form-item-view">
     <span class="form-item-label">Number of attempts</span>
     <div class="form-item-control" [ngClass]="{'another-input': selectedAttemptId === 1}">
-      <app-selection [items]="partiAttempts" (onChange)="onNumberOfAttemptsChange($event)" class="first-child stretch"></app-selection>
+      <app-selection [items]="partiAttempts" (change)="onNumberOfAttemptsChange($event)" class="first-child stretch"></app-selection>
       <app-input *ngIf="selectedAttemptId === 1" placeholder="Number of attempts..." inputType="number"></app-input>
     </div>
   </div>
@@ -89,13 +89,13 @@
   <div class="form-item-view">
     <span class="form-item-label">Participation as teams</span>
     <div class="form-item-control">
-      <app-selection [items]="teamsList" (onChange)="onParticipateAsTeamsChange($event)"></app-selection>
+      <app-selection [items]="teamsList" (change)="onParticipateAsTeamsChange($event)"></app-selection>
     </div>
   </div>
   <div *ngIf="teamParticipateOption === 2" class="form-item-view">
     <span class="form-item-label">Restrict team size</span>
     <div class="form-item-control">
-      <app-switch mode="white" (onChange)="onRestrictTeamSize($event)"></app-switch>
+      <app-switch mode="white" (change)="onRestrictTeamSize($event)"></app-switch>
     </div>
   </div>
   <div *ngIf="teamParticipateOption === 2 && restrictTeamSize" class="form-item-view">
@@ -107,7 +107,7 @@
   <div *ngIf="teamParticipateOption === 2" class="form-item-view">
     <span class="form-item-label">Requires qualification</span>
     <div class="form-item-control">
-      <app-switch mode="white" (onChange)="onQualificationChange($event)"></app-switch>
+      <app-switch mode="white" (change)="onQualificationChange($event)"></app-switch>
     </div>
   </div>
   <div *ngIf="teamParticipateOption === 2 && qualification" class="form-item-view">
@@ -139,7 +139,7 @@
   <div class="form-item-view">
     <span class="form-item-label">Restrict opening times for sessions</span>
     <div class="form-item-control">
-      <app-switch mode="white" [checked]="restricted" (onChange)="onRestrictChange($event)"></app-switch>
+      <app-switch mode="white" [checked]="restricted" (change)="onRestrictChange($event)"></app-switch>
     </div>
   </div>
   <div *ngIf="restricted" class="form-item-view">

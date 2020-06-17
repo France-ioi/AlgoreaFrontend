@@ -3,7 +3,7 @@
     <div *ngIf="!empty" class="selection-tool">
       <app-selection
         [items]="childrenPolicy"
-        (onChange)="onChildrenPolicyChanged($event)"
+        (change)="onChildrenPolicyChanged($event)"
       ></app-selection>
       <app-selection
         *ngIf="selectedPolicy"
@@ -183,7 +183,7 @@
           icon="show"
           placeholder="psuedo, psuedo..."
         ></app-textarea>
-        <app-button label="Invite" class="ui-button-rounded" (onClick)="onInvite($event)"></app-button>
+        <app-button label="Invite" class="ui-button-rounded" (click)="onInvite($event)"></app-button>
         <app-message *ngIf="showMsg" type="info" label="3 users invited successfully"></app-message>
         <app-message *ngIf="showMsg" type="error" label="2 users not found: Jean, Matthew"></app-message>
       </div>
@@ -223,7 +223,7 @@
         </app-sub-grid>
       </div>
       <div class="batch-button-container">
-        <app-button icon="fa fa-plus" label="Create batch" class="ui-button-rounded" (onClick)="onCreateBatch($event)"></app-button>
+        <app-button icon="fa fa-plus" label="Create batch" class="ui-button-rounded" (click)="onCreateBatch($event)"></app-button>
       </div>
     </app-switch-container>
   </app-sub-section>
