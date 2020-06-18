@@ -4,7 +4,7 @@
 .code-generator {
   display: flex;
   align-items: center;
-  width: 12rem;
+  width: 17rem;
   height: 3rem;
   border-radius: $border-radius;
 
@@ -24,7 +24,7 @@
     flex: 1;
     font-size: 1.2rem;
 
-    &.no-refresh {
+    &.no-button {
       border-top-right-radius: $border-radius;
       border-bottom-right-radius: $border-radius;
     }
@@ -34,8 +34,21 @@
     width: 3rem;
     background-color: $base-color;
     color: white;
+    cursor: pointer;
+
+    &.no-remove {
+      border-top-right-radius: $border-radius;
+      border-bottom-right-radius: $border-radius;
+    }
+  }
+
+  .remove {
+    width: 3rem;
+    background-color: $section-danger-handle-color;
+    color: white;
     border-top-right-radius: $border-radius;
     border-bottom-right-radius: $border-radius;
     cursor: pointer;
   }
+
 }
