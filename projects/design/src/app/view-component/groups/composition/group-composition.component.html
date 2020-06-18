@@ -160,11 +160,11 @@
               <span *ngIf="activateStatus === 1" class="label green">This code has not yet been used</span>
               <span *ngIf="activateStatus === 2" class="label red">This code was used 15 minutes ago and is now disabled</span>
             </div>
-            <app-time-picker [status]="activateStatus"></app-time-picker>
+            <app-time-picker></app-time-picker>
           </div>
           <div class="code-wrapper">
             <span class="label">Security</span>
-            <app-code-token [refreshed]="false"></app-code-token>
+            <app-code-token [showRefresh]="false"></app-code-token>
           </div>
         </div>
         <div class="auto-create">
