@@ -53,6 +53,14 @@ export class Group {
     }
   }
 
+  canCurrentUserManageMemberships(): boolean {
+    return this.current_user_is_manager && [
+      ManagementLevel.MembershipsAndGroup as string,
+      ManagementLevel.Memberships as string
+    ].includes(this.current_user_can_manage);
+  }
+
+  // fixme: make consistent with the fct above
   canMangeMembershipAndGroup(): boolean {
     return this.current_user_can_manage === ManagementLevel.MembershipsAndGroup;
   }

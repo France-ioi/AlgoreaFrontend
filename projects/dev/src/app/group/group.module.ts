@@ -15,6 +15,7 @@ import { GroupCompositionComponent } from './group-content/group-composition/gro
 import { GroupAdministrationComponent } from './group-content/group-administration/group-administration.component';
 import { GroupSettingsComponent } from './group-content/group-settings/group-settings.component';
 import { GroupNoPermissionComponent } from './group-content/group-no-permission/group-no-permission.component';
+import { GroupJoinByCodeComponent } from './group-join-by-code/group-join-by-code.component';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import { GroupNoPermissionComponent } from './group-content/group-no-permission/
     GroupAdministrationComponent,
     GroupSettingsComponent,
     GroupNoPermissionComponent,
+    GroupJoinByCodeComponent,
   ],
   imports: [
     CommonModule,
