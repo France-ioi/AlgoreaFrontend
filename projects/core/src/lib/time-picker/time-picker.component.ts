@@ -1,27 +1,33 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnChanges, Input, Output, EventEmitter} from '@angular/core';
 
 @Component({
   selector: 'app-time-picker',
   templateUrl: './time-picker.component.html',
   styleUrls: ['./time-picker.component.scss'],
 })
-export class TimePickerComponent implements OnInit {
-  @Input() time = 30;
-  @Input() status;
+export class TimePickerComponent implements OnChanges {
+  @Input() value = 30;
 
-  prev;
+  @Output() submit = new EventEmitter<Number>();
+
+  initialValue: Number;
 
   constructor() {}
 
-  ngOnInit() {}
+  ngOnChanges(_change) {
+    this.initialValue = this.value;
+  }
+
+  onClickRightButton(_e) {
+    if (this.value !== this.initialValue) {
+      this.submit.emit(this.value);
+    }
+    // otherwise it should not be possible to trigger the button
+  }
 
   timeChange(_e) {
-    this.prev = this.time;
   }
 
   timeChanged(_e) {
-    if (this.time > 999) {
-      this.time = this.prev;
-    }
   }
 }

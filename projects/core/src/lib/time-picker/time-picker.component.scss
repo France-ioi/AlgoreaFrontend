@@ -9,24 +9,6 @@
   position: relative;
   color: $dark-text-color;
 
-  &.orange {
-    .time-button {
-      background-color: #F5A623;
-    }
-  }
-
-  &.green {
-    .time-button {
-      background-color: #9ACC68;
-    }
-  }
-
-  &.red {
-    .time-button {
-      background-color: #FF001F;
-    }
-  }
-
   .time-display {
     height: 100%;
     background-color: $input-transparency-color;
@@ -103,6 +85,12 @@
     color: white;
     border-top-right-radius: $border-radius;
     border-bottom-right-radius: $border-radius;
+    cursor: pointer;
+
+    &.disabled {
+      background-color: rgba(128, 128, 128, 0.5); // FIXME: define a greyed-out color globally
+      cursor: default;
+    }
   }
 
 }
