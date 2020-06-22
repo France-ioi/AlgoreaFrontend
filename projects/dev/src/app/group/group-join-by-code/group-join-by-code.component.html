@@ -41,7 +41,7 @@
       </div>
       <div class="validity-selector">
         <span class="label">Validity</span>
-        <app-time-picker [value]="30" (submit)="changeValidity($event)"></app-time-picker>
+        <app-time-picker [initialValue]="group.code_lifetime" (submit)="changeValidity($event)"></app-time-picker>
       </div>
     </div>
 

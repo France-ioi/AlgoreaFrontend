@@ -1,4 +1,5 @@
-import { Component, OnChanges, Input, Output, EventEmitter} from '@angular/core';
+import { Component, OnChanges, Input, Output, EventEmitter } from '@angular/core';
+import { Duration } from 'core';
 
 @Component({
   selector: 'app-time-picker',
@@ -6,28 +7,34 @@ import { Component, OnChanges, Input, Output, EventEmitter} from '@angular/core'
   styleUrls: ['./time-picker.component.scss'],
 })
 export class TimePickerComponent implements OnChanges {
-  @Input() value = 30;
+  @Input() initialValue : Duration;
 
-  @Output() submit = new EventEmitter<Number>();
+  @Output() submit = new EventEmitter<Duration>();
 
-  initialValue: Number;
+  currentValue: number;
 
   constructor() {}
 
   ngOnChanges(_change) {
-    this.initialValue = this.value;
+    this.currentValue = this.initialValue.minutes();
   }
 
-  onClickRightButton(_e) {
-    if (this.value !== this.initialValue) {
-      this.submit.emit(this.value);
+  currentDuration(): Duration|null {
+    return Duration.fromHMS(0, this.currentValue, 0);
+  }
+
+  onClickValidateButton(_e) {
+    let duration = this.currentDuration();
+    if (duration != null) {
+      this.submit.emit(duration);
     }
-    // otherwise it should not be possible to trigger the button
   }
 
   timeChange(_e) {
+    // nothing for the moment
   }
 
   timeChanged(_e) {
+    // nothing for the moment
   }
 }

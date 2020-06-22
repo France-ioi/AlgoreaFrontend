@@ -1,4 +1,5 @@
 import { ManagementLevel } from '../constants/group';
+import { Duration } from 'core';
 
 export enum GroupCodeState { NotSet, Unused, InUse, Expired }
 
@@ -9,7 +10,7 @@ export class Group {
   grade: number;
   description: string;
   code?: string;
-  code_lifetime?: string;
+  code_lifetime?: Duration;
   code_expires_at?: Date;
 
   current_user_is_manager: boolean;
@@ -36,7 +37,7 @@ export class Group {
       this.grade = 0;
       this.description = '';
       this.code = '';
-      this.code_lifetime = '';
+      this.code_lifetime = null;
       this.code_expires_at = new Date();
       this.current_user_is_manager = false;
       this.current_user_is_member = false;
@@ -52,6 +53,7 @@ export class Group {
       this.created_at = new Date();
     } else {
       Object.assign(this, input);
+      this.code_lifetime = Duration.fromString(input.code_lifetime);
     }
   }
 

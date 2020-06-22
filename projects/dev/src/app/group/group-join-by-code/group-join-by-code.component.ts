@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { concat, finalize } from 'rxjs/operators';
 import { TOAST_LENGTH } from '../../shared/constants/global';
 import {  ERROR_MESSAGE } from '../../shared/constants/api';
+import { Duration } from 'core';
 
 @Component({
   selector: 'app-group-join-by-code',
@@ -77,7 +78,7 @@ export class GroupJoinByCodeComponent implements OnInit {
       );
   }
 
-  changeValidity(newValue: Number) {
+  changeValidity(newDuration: Duration) {
     // check valid state
     if (![GroupCodeState.Unused, GroupCodeState.InUse, GroupCodeState.Expired].includes(this.group.codeState())) return;
 
@@ -86,7 +87,7 @@ export class GroupJoinByCodeComponent implements OnInit {
 
     // call code refresh service, then group refresh data
     this.groupService
-      .updateGroup(this.group.id, { code_lifetime: '0:00:'+newValue.toString() })
+      .updateGroup(this.group.id, { code_lifetime: newDuration.toString() })
       .pipe(
         concat(this.reloadGroupData()),
         finalize(() => this.processing = false)
