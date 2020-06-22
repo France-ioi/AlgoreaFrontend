@@ -1,23 +1,29 @@
 import { Component, OnInit } from '@angular/core';
-import { Group } from '../../shared/models/group.model';
+import { Group, GroupCodeState } from '../../shared/models/group.model';
 import { GroupService } from '../../shared/services/api/group.service';
-
-export enum CodeState { NotSet, Unused, InUse, Expired }
+import { MessageService } from 'primeng/api';
+import { Observable } from 'rxjs';
+import { concat, finalize } from 'rxjs/operators';
+import { TOAST_LENGTH } from '../../shared/constants/global';
+import {  ERROR_MESSAGE } from '../../shared/constants/api';
 
 @Component({
   selector: 'app-group-join-by-code',
   templateUrl: './group-join-by-code.component.html',
-  styleUrls: ['./group-join-by-code.component.scss']
+  styleUrls: ['./group-join-by-code.component.scss'],
+  providers: [ MessageService ]
 })
 
 export class GroupJoinByCodeComponent implements OnInit {
 
   group = new Group()
-  codeState: CodeState
   processing = false
 
+  CodeState = GroupCodeState // to make it available in the template
+
   constructor(
-    private groupService: GroupService
+    private groupService: GroupService,
+    private messageService: MessageService
   ) { }
 
   ngOnInit(): void {
@@ -26,44 +32,92 @@ export class GroupJoinByCodeComponent implements OnInit {
     });
   }
 
+  reloadGroupData(): Observable<Group> {
+    return this.groupService
+      .getGroup(this.group.id)
+  }
+
+  displaySuccess(msg: string) {
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Success',
+      detail: msg,
+      life: TOAST_LENGTH,
+    });
+  }
+
+  displayError() {
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Error',
+      detail: ERROR_MESSAGE.fail,
+      life: TOAST_LENGTH,
+    });
+  }
+
   /* events */
+
+  generateNewCode() {
+    // disable UI
+    this.processing = true;
+
+    // call code refresh service, then group refresh data
+    this.groupService
+      .createNewCode(this.group.id)
+      .pipe(
+        concat(this.reloadGroupData()),
+        finalize(() => this.processing = false)
+      ).subscribe(
+        (_result) => {
+          this.displaySuccess('A new code has been generated')
+        },
+        (_err) => {
+          this.displayError()
+        }
+      );
+  }
 
   changeValidity(newValue: Number) {
     // check valid state
-    // disable UI
-    // call code refresh service
-    // display result
-    // refresh group info
-    // re-enable UI
-    console.log('new value:'+newValue);
-  }
+    if (![GroupCodeState.Unused, GroupCodeState.InUse, GroupCodeState.Expired].includes(this.group.codeState())) return;
 
-  generateCode() {
-    console.log('generateCode');
-    // check valid state
     // disable UI
-    // call code refresh service
-    // display result
-    // update validity and code
-    // re-enable UI
-  }
+    this.processing = true;
 
-  refreshCode() {
-    console.log('refreshCode');
-    // check valid state
-    // disable UI
-    // call code refresh service
-    // display result
-    // re-enable UI
+    // call code refresh service, then group refresh data
+    this.groupService
+      .updateGroup(this.group.id, { code_lifetime: '0:00:'+newValue.toString() })
+      .pipe(
+        concat(this.reloadGroupData()),
+        finalize(() => this.processing = false)
+      ).subscribe(
+        (_result) => {
+          this.displaySuccess('The validity has been changed')
+        },
+        (_err) => {
+          this.displayError()
+        }
+      );
   }
 
   removeCode() {
-    console.log('removeCode');
-    // check valid state
     // disable UI
-    // call code removal service
-    // display result
-    // re-enable UI
+    this.processing = true;
+
+    // call code refresh service, then group refresh data
+    this.groupService
+      .removeCode(this.group.id)
+      .pipe(
+        concat(this.reloadGroupData()),
+        finalize(() => this.processing = false)
+      ).subscribe(
+        (_result) => {
+          this.displaySuccess('Users will not be able to join with the former code.')
+        },
+        (_err) => {
+          this.displayError()
+        }
+      );
   }
 
 }

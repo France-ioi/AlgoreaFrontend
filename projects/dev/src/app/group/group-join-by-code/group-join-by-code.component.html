@@ -7,29 +7,43 @@
   <div class="invitation-code">
     <span class="content-title">Let users access this group using a password you send them.</span>
 
-      <div class="code-state">
-        <!-- <span class="label">There is currently no code set</span> -->
-        <!-- <span class="label green">This code has been activated 15 minutes ago, it will be disabled in 15 minutes</span> -->
-        <span class="label red">This code was used 15 minutes ago and is now disabled</span>
-        <app-button label="Generate a code" icon="fa fa-plus" class="ui-button-rounded" (click)="generateCode()"></app-button>
-      </div>
+    <span *ngIf="processing">FREEZE UI</span>
 
-      <div class="code-info">
-        <div class="code-show">
-          <span class="label">Code</span>
-          <app-code-token
-            [code]="'abcdefge'"
-            [showRefresh]="true"
-            [showRemove]="true"
-            (refresh)="refreshCode()"
-            (remove)="removeCode()"
-          ></app-code-token>
-        </div>
-        <div class="validity-selector">
-          <span class="label">Validity</span>
-          <app-time-picker [value]="30" (submit)="changeValidity($event)"></app-time-picker>
-        </div>
+    <div class="code-state">
+      <span class="label" *ngIf="group.codeState() === CodeState.NotSet">There is currently no code set.</span>
+      <span class="label" *ngIf="group.codeState() === CodeState.Unused">This code has not been used yet.</span>
+      <span class="label green" *ngIf="group.codeState() === CodeState.InUse">
+        This code has been activated xx minutes ago, it will be disabled in yy minutes.
+      </span>
+      <span class="label red" *ngIf="group.codeState() === CodeState.Expired">
+        This code was used 15 minutes ago and is now disabled
+      </span>
+      <app-button
+        label="Generate a code"
+        icon="fa fa-plus"
+        class="ui-button-rounded"
+        (click)="generateNewCode()"
+        [disabled]="processing"
+        *ngIf="group.codeState() === CodeState.NotSet"
+      ></app-button>
+    </div>
+
+    <div class="code-info" *ngIf="group.codeState() !== CodeState.NotSet">
+      <div class="code-show">
+        <span class="label">Code</span>
+        <app-code-token
+          [code]="group.code"
+          [showRefresh]="true"
+          [showRemove]="true"
+          (refresh)="generateNewCode()"
+          (remove)="removeCode()"
+        ></app-code-token>
       </div>
+      <div class="validity-selector">
+        <span class="label">Validity</span>
+        <app-time-picker [value]="30" (submit)="changeValidity($event)"></app-time-picker>
+      </div>
+    </div>
 
   </div>
 

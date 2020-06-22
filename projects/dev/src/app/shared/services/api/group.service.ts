@@ -18,6 +18,8 @@ import { Member } from '../../models/member.model';
 import { MembershipHistory } from '../../models/membership-history.model';
 import { GroupMembership } from '../../models/group-membership.model';
 import { RequestActionResponse } from '../../models/requet-action-response.model';
+import { NewCodeSuccessResponse } from '../../models/group-service-response.model';
+import { GenericResponse } from '../../models/generic-response.model';
 
 @Injectable({
   providedIn: 'root',
@@ -42,6 +44,16 @@ export class GroupService {
           this.groupList.next(groupObj);
           return groupObj;
         }),
+        catchError(this.handleError)
+      );
+  }
+
+  updateGroup(id: String, changes: Object): Observable<void> {
+    return this.http
+      .put<GenericResponse>(`${this.baseGroupUrl}/${id}`, changes)
+      .pipe(
+        tap(this.ensureSuccessResponse),
+        map( (_r) => {}),
         catchError(this.handleError)
       );
   }
@@ -177,6 +189,37 @@ export class GroupService {
         },
       })
       .pipe(catchError(this.handleError));
+  }
+
+  /* ****************** */
+
+  createNewCode(id: String): Observable<string> {
+    return this.http
+      .post<NewCodeSuccessResponse|GenericResponse>(`${this.baseGroupUrl}/${id}/code`, null, {})
+      .pipe(
+        tap(this.ensureSuccessResponse),
+        map( (r:NewCodeSuccessResponse) => r.code),
+        catchError(this.handleError)
+      );
+  }
+
+  removeCode(id: String): Observable<void> {
+    return this.http
+      .delete<GenericResponse>(`${this.baseGroupUrl}/${id}/code`)
+      .pipe(
+        tap(this.ensureSuccessResponse),
+        map( (_r) => {}),
+        catchError(this.handleError)
+      );
+  }
+
+  /* ****************** */
+
+  // convert response errors in observable error
+  private ensureSuccessResponse(response: any) {
+    if ('success' in response && response.success === false) {
+      throw new Error('Service error');
+    }
   }
 
   private handleRequestActionResponse(result: RequestActionResponse) {

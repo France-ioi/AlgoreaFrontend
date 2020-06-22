@@ -1,5 +1,7 @@
 import { ManagementLevel } from '../constants/group';
 
+export enum GroupCodeState { NotSet, Unused, InUse, Expired }
+
 export class Group {
   id: string;
   name: string;
@@ -64,4 +66,12 @@ export class Group {
   canMangeMembershipAndGroup(): boolean {
     return this.current_user_can_manage === ManagementLevel.MembershipsAndGroup;
   }
+
+  // Return the state of the code used for joining the group
+  codeState(): GroupCodeState {
+    if (!this.code || this.code.length < 1) return GroupCodeState.NotSet;
+    if (!this.code_expires_at || this.code_expires_at === null) return GroupCodeState.Unused;
+    return (new Date() < this.code_expires_at) ? GroupCodeState.InUse : GroupCodeState.Expired;
+  }
+
 }
