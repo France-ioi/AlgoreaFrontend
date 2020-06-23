@@ -72,7 +72,7 @@ export class Group {
   // Return the state of the code used for joining the group
   codeState(): GroupCodeState {
     if (!this.code || this.code.length < 1) return GroupCodeState.NotSet;
-    if (!this.code_expires_at || this.code_expires_at === null) return GroupCodeState.Unused;
+    if (!this.code_expires_at || this.code_expires_at == null) return GroupCodeState.Unused;
     return (new Date() < this.code_expires_at) ? GroupCodeState.InUse : GroupCodeState.Expired;
   }
 
