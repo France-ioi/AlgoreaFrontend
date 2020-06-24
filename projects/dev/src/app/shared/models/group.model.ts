@@ -54,6 +54,7 @@ export class Group {
     } else {
       Object.assign(this, input);
       this.code_lifetime = Duration.fromString(input.code_lifetime);
+      this.code_expires_at = (input.code_expires_at == null) ? undefined : new Date(input.code_expires_at);
     }
   }
 
@@ -72,8 +73,13 @@ export class Group {
   // Return the state of the code used for joining the group
   codeState(): GroupCodeState {
     if (!this.code || this.code.length < 1) return GroupCodeState.NotSet;
-    if (!this.code_expires_at || this.code_expires_at == null) return GroupCodeState.Unused;
+    if (this.code_expires_at == null) return GroupCodeState.Unused;
     return (new Date() < this.code_expires_at) ? GroupCodeState.InUse : GroupCodeState.Expired;
+  }
+
+  codeFirstUse(): Date {
+    if (this.code_expires_at == null || this.code_lifetime == null) return null;
+    return new Date(this.code_expires_at.valueOf() - this.code_lifetime.ms);
   }
 
 }

@@ -17,10 +17,8 @@ import { Duration } from 'core';
 
 export class GroupJoinByCodeComponent implements OnInit {
 
-  group = new Group()
-  processing = false
-
-  CodeState = GroupCodeState // to make it available in the template
+  group = new Group();
+  processing = false;
 
   constructor(
     private groupService: GroupService,
@@ -87,7 +85,7 @@ export class GroupJoinByCodeComponent implements OnInit {
 
     // call code refresh service, then group refresh data
     this.groupService
-      .updateGroup(this.group.id, { code_lifetime: newDuration.toString() })
+      .updateGroup(this.group.id, { code_lifetime: newDuration.toString(), code_expires_at: null })
       .pipe(
         concat(this.reloadGroupData()),
         finalize(() => this.processing = false)
