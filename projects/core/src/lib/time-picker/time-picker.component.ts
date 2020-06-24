@@ -1,5 +1,5 @@
 import { Component, OnChanges, Input, Output, EventEmitter } from '@angular/core';
-import { Duration } from '../utils/duration';
+import { Duration, MINUTES } from '../utils/duration';
 
 @Component({
   selector: 'app-time-picker',
@@ -11,7 +11,9 @@ export class TimePickerComponent implements OnChanges {
 
   @Output() submit = new EventEmitter<Duration>();
 
-  currentValue: number;
+  currentValue = 0;
+
+  MINUTES = MINUTES; // export to template
 
   constructor() {}
 

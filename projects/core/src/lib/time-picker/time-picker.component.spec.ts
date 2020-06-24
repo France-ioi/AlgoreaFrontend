@@ -1,4 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Duration } from '../utils/duration';
 
 import { TimePickerComponent } from './time-picker.component';
 import { FormsModule } from '@angular/forms';
@@ -20,6 +21,7 @@ describe('TimePickerComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(TimePickerComponent);
     component = fixture.componentInstance;
+    component.initialValue = new Duration(60);
     fixture.detectChanges();
   });
 
