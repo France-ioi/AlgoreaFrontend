@@ -1,27 +1,42 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnChanges, Input, Output, EventEmitter } from '@angular/core';
+import { Duration, MINUTES } from '../utils/duration';
 
 @Component({
   selector: 'app-time-picker',
   templateUrl: './time-picker.component.html',
   styleUrls: ['./time-picker.component.scss'],
 })
-export class TimePickerComponent implements OnInit {
-  @Input() time = 30;
-  @Input() status;
+export class TimePickerComponent implements OnChanges {
+  @Input() initialValue : Duration;
 
-  prev;
+  @Output() submit = new EventEmitter<Duration>();
+
+  currentValue = 0;
+
+  MINUTES = MINUTES; // export to template
 
   constructor() {}
 
-  ngOnInit() {}
+  ngOnChanges(_change) {
+    this.currentValue = this.initialValue.minutes();
+  }
+
+  currentDuration(): Duration|null {
+    return Duration.fromHMS(0, this.currentValue, 0);
+  }
+
+  onClickValidateButton(_e) {
+    let duration = this.currentDuration();
+    if (duration != null) {
+      this.submit.emit(duration);
+    }
+  }
 
   timeChange(_e) {
-    this.prev = this.time;
+    // nothing for the moment
   }
 
   timeChanged(_e) {
-    if (this.time > 999) {
-      this.time = this.prev;
-    }
+    // nothing for the moment
   }
 }

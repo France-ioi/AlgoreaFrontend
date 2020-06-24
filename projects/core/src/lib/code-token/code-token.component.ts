@@ -6,15 +6,22 @@ import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
   styleUrls: ['./code-token.component.scss'],
 })
 export class CodeTokenComponent implements OnInit {
-  @Input() refreshed = true;
+  @Input() showRefresh = true;
+  @Input() showRemove = false;
+  @Input() code = '...';
 
-  @Output() refresh = new EventEmitter<any>();
-
-  code = 'X78ghJiK';
+  @Output() refresh = new EventEmitter<void>();
+  @Output() remove = new EventEmitter<void>();
 
   constructor() {}
 
   ngOnInit() {}
 
-  refreshCode(_e) {}
+  refreshCode(_e) {
+    this.refresh.emit();
+  }
+
+  removeCode(_e) {
+    this.remove.emit();
+  }
 }

@@ -1,12 +1,16 @@
-<div class="time-picker" [ngClass]="{orange: status === 0, green: status === 1, red: status === 2}">
+<div class="time-picker">
   <!-- <span class="time-display">
     <i class="fa fa-clock"></i>
     <span class="time-input">
       <span class="time-value" contenteditable="true">{{time}}</span>&nbsp;mn
     </span>
   </span> -->
-  <input type="number" class="time-edit" [(ngModel)]="time" (keypress)="timeChange($event)" (keyup)="timeChanged($event)">
-  <span class="time-button">
+  <input type="number" class="time-edit" [(ngModel)]="currentValue" (keypress)="timeChange($event)" (keyup)="timeChanged($event)">
+  <span
+    class="time-button"
+    [ngClass]="{'disabled': currentValue*MINUTES === initialValue.ms}"
+    (click)="onClickValidateButton($event)"
+  >
     <i class="fa fa-check"></i>
   </span>
 </div>

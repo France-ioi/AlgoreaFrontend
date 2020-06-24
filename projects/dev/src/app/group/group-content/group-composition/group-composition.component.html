@@ -1,5 +1,8 @@
 <ng-container *ngIf="group.current_user_is_manager; else noPermission">
-
+  <app-section icon="fa fa-users" label="Current Composition">
+    <p>...</p>
+  </app-section>
+  <app-group-join-by-code></app-group-join-by-code>
 </ng-container>
 <ng-template #noPermission>
   <app-group-no-permission></app-group-no-permission>

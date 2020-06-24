@@ -66,3 +66,5 @@ export * from './lib/dialogs/edit-user-dialog/edit-user-dialog.component';
 export * from './lib/dialogs/generate-batch-user-dialog/generate-batch-user-dialog.component';
 export * from './lib/dialogs/join-group-dialog/join-group-dialog.component';
 export * from './lib/dialogs/reset-password-dialog/reset-password-dialog.component';
+
+export * from './lib/utils/duration';

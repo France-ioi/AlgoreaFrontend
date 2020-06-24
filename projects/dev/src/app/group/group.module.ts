@@ -15,6 +15,12 @@ import { GroupCompositionComponent } from './group-content/group-composition/gro
 import { GroupAdministrationComponent } from './group-content/group-administration/group-administration.component';
 import { GroupSettingsComponent } from './group-content/group-settings/group-settings.component';
 import { GroupNoPermissionComponent } from './group-content/group-no-permission/group-no-permission.component';
+import { GroupJoinByCodeComponent } from './group-join-by-code/group-join-by-code.component';
+
+import {
+  CodeNotSetPipe, CodeUnusedPipe, CodeInUsePipe, CodeExpiredPipe,
+  CodeTimeSinceFirstUsePipe, CodeTimeBeforeExpirationPipe
+} from '../shared/models/group.pipe';
 
 @NgModule({
   declarations: [
@@ -28,6 +34,9 @@ import { GroupNoPermissionComponent } from './group-content/group-no-permission/
     GroupAdministrationComponent,
     GroupSettingsComponent,
     GroupNoPermissionComponent,
+    GroupJoinByCodeComponent,
+    CodeNotSetPipe, CodeUnusedPipe, CodeInUsePipe, CodeExpiredPipe,
+    CodeTimeSinceFirstUsePipe, CodeTimeBeforeExpirationPipe,
   ],
   imports: [
     CommonModule,
