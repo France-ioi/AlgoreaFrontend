@@ -1,5 +1,5 @@
 import { Component, OnChanges, Input, Output, EventEmitter } from '@angular/core';
-import { Duration } from 'core';
+import { Duration } from '../utils/duration';
 
 @Component({
   selector: 'app-time-picker',
