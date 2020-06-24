@@ -33,7 +33,7 @@ export class GroupJoinByCodeComponent implements OnInit {
 
   reloadGroupData(): Observable<Group> {
     return this.groupService
-      .getGroup(this.group.id)
+      .getGroup(this.group.id);
   }
 
   displaySuccess(msg: string) {
@@ -68,10 +68,10 @@ export class GroupJoinByCodeComponent implements OnInit {
         finalize(() => this.processing = false)
       ).subscribe(
         (_result) => {
-          this.displaySuccess('A new code has been generated')
+          this.displaySuccess('A new code has been generated');
         },
         (_err) => {
-          this.displayError()
+          this.displayError();
         }
       );
   }
@@ -91,10 +91,10 @@ export class GroupJoinByCodeComponent implements OnInit {
         finalize(() => this.processing = false)
       ).subscribe(
         (_result) => {
-          this.displaySuccess('The validity has been changed')
+          this.displaySuccess('The validity has been changed');
         },
         (_err) => {
-          this.displayError()
+          this.displayError();
         }
       );
   }
@@ -111,10 +111,10 @@ export class GroupJoinByCodeComponent implements OnInit {
         finalize(() => this.processing = false)
       ).subscribe(
         (_result) => {
-          this.displaySuccess('Users will not be able to join with the former code.')
+          this.displaySuccess('Users will not be able to join with the former code.');
         },
         (_err) => {
-          this.displayError()
+          this.displayError();
         }
       );
   }

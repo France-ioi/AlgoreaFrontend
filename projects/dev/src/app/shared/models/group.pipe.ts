@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { Group, GroupCodeState } from './group.model'
+import { Group, GroupCodeState } from './group.model';
 
 /*
  * Return whether the group has joining code is not set
