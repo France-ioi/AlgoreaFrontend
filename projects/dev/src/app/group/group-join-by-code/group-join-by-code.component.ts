@@ -3,7 +3,7 @@ import { Group, GroupCodeState } from '../../shared/models/group.model';
 import { GroupService } from '../../shared/services/api/group.service';
 import { MessageService } from 'primeng/api';
 import { Observable } from 'rxjs';
-import { concat, finalize } from 'rxjs/operators';
+import { finalize, concatMap } from 'rxjs/operators';
 import { TOAST_LENGTH } from '../../shared/constants/global';
 import {  ERROR_MESSAGE } from '../../shared/constants/api';
 import { Duration } from 'core';
@@ -64,7 +64,7 @@ export class GroupJoinByCodeComponent implements OnInit {
     this.groupService
       .createNewCode(this.group.id)
       .pipe(
-        concat(this.reloadGroupData()),
+        concatMap(() => this.reloadGroupData()),
         finalize(() => this.processing = false)
       ).subscribe(
         (_result) => {
@@ -87,8 +87,8 @@ export class GroupJoinByCodeComponent implements OnInit {
     this.groupService
       .updateGroup(this.group.id, { code_lifetime: newDuration.toString(), code_expires_at: null })
       .pipe(
-        concat(this.reloadGroupData()),
-        finalize(() => this.processing = false)
+        concatMap(() => this.reloadGroupData()),
+        finalize(() => this.processing = false),
       ).subscribe(
         (_result) => {
           this.displaySuccess('The validity has been changed');
@@ -107,7 +107,7 @@ export class GroupJoinByCodeComponent implements OnInit {
     this.groupService
       .removeCode(this.group.id)
       .pipe(
-        concat(this.reloadGroupData()),
+        concatMap(() => this.reloadGroupData()),
         finalize(() => this.processing = false)
       ).subscribe(
         (_result) => {
