@@ -25,7 +25,7 @@ export class Duration {
   };
 
   static fromHMS(hours: number, minutes: number, seconds: number): Duration {
-    return new this(hours*HOURS + minutes*MINUTES + seconds*SECONDS);
+    return new Duration(hours*HOURS + minutes*MINUTES + seconds*SECONDS);
   };
 
   toString(): string {
