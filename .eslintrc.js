@@ -29,7 +29,12 @@ module.exports = {
     '@typescript-eslint/no-unused-vars': [
       'error',
       { 'argsIgnorePattern': '^_' }
-    ]
+    ],
+    '@typescript-eslint/class-literal-property-style': [
+      'error',
+      'fields',
+    ],
+    "@typescript-eslint/consistent-type-definitions": ["error", "interface"],
   },
   overrides: [
     /**
