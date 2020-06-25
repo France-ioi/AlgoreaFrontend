@@ -10,6 +10,7 @@ module.exports = {
   //   project: './tsconfig.json'
   // },
   extends: [
+    "eslint:recommended",
     'plugin:@typescript-eslint/eslint-recommended',
     // 'plugin:@typescript-eslint/recommended-requiring-type-checking', // very slow
     'plugin:@angular-eslint/recommended'
@@ -28,7 +29,13 @@ module.exports = {
     '@typescript-eslint/no-unused-vars': [
       'error',
       { 'argsIgnorePattern': '^_' }
-    ]
+    ],
+    '@typescript-eslint/class-literal-property-style': [
+      'error',
+      'fields',
+    ],
+    "@typescript-eslint/consistent-type-definitions": ["error", "interface"],
+    "@typescript-eslint/prefer-for-of": ["error"],
   },
   overrides: [
     /**
