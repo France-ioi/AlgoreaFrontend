@@ -15,11 +15,11 @@ export class Duration {
   // If invalid format, return null
   static fromString(s: string): Duration|null {
     const MAX_DURATION = 838*HOURS + 59*MINUTES + 59*SECONDS; // 838:59:59 in ms
-    let values = s.split(':');
+    const values = s.split(':');
     if (values.length != 3) return null;
-    let sec = +values[2];
-    let min = +values[1];
-    let hou = +values[0];
+    const sec = +values[2];
+    const min = +values[1];
+    const hou = +values[0];
     if (isNaN(sec) || isNaN(min) || isNaN(hou) || hou > MAX_DURATION) return null;
     return this.fromHMS(hou, min, sec) ;
   }

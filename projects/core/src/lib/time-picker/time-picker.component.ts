@@ -26,7 +26,7 @@ export class TimePickerComponent implements OnChanges {
   }
 
   onClickValidateButton(_e) {
-    let duration = this.currentDuration();
+    const duration = this.currentDuration();
     if (duration != null) {
       this.submit.emit(duration);
     }

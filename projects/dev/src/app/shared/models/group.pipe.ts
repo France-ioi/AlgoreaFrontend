@@ -47,7 +47,7 @@ export class CodeExpiredPipe implements PipeTransform {
 @Pipe({ name: 'msSinceCodeFirstUsed' })
 export class CodeTimeSinceFirstUsePipe implements PipeTransform {
   transform(group: Group): number {
-    let t = group.codeFirstUse();
+    const t = group.codeFirstUse();
     if (t == null) return 0;
     return Date.now() - t.valueOf();
   }
