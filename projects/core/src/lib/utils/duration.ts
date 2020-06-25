@@ -9,7 +9,7 @@ export class Duration {
 
   constructor(milliseconds: number) {
     this.ms = milliseconds;
-  };
+  }
 
   // Create a duration from a ^\d{1,3}:[0-5]?\d:[0-5]?\d$ formatted string, e.g. "838:59:59"
   // If invalid format, return null
@@ -20,17 +20,17 @@ export class Duration {
     let sec = +values[2];
     let min = +values[1];
     let hou = +values[0];
-    if (sec === NaN || min === NaN || hou === NaN || hou > MAX_DURATION) return null;
+    if (isNaN(sec) || isNaN(min) || isNaN(hou) || hou > MAX_DURATION) return null;
     return this.fromHMS(hou, min, sec) ;
-  };
+  }
 
   static fromHMS(hours: number, minutes: number, seconds: number): Duration {
     return new Duration(hours*HOURS + minutes*MINUTES + seconds*SECONDS);
-  };
+  }
 
   toString(): string {
     return Math.floor(this.ms/HOURS) + ':' + Math.floor(this.ms%HOURS/MINUTES) + ':' + this.ms%MINUTES;
-  };
+  }
 
   minutes(): number {
     return Math.floor(this.ms/MINUTES);
