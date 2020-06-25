@@ -1,21 +1,22 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { DesignAppModule } from 'projects/design/src/app/app.module';
-import { DevAppModule } from 'projects/dev/src/app/app.module';
-
+import { AppComponent } from './app.component';
 
 const routes: Routes = [
-  { path: 'design', loadChildren: () => import('projects/design/src/app/app.module').then(m => m.DesignAppModule) },
-  { path: 'dev', loadChildren: () => import('projects/dev/src/app/app.module').then(m => m.DevAppModule) },
-  { path: '**', redirectTo: '/dev' }
+  {
+    path: '',
+    component: AppComponent,
+    children: [
+      {
+        path: 'groups',
+        loadChildren: () => import('./group/group.module').then(m => m.GroupModule)
+      }
+    ]
+  }
 ];
 
 @NgModule({
-  imports: [
-    RouterModule.forRoot(routes, { useHash: true }),
-    DesignAppModule.forRoot(),
-    DevAppModule.forRoot()
-  ],
+  imports: [ RouterModule.forRoot(routes, { useHash: true }) ],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
