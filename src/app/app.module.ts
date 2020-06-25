@@ -14,7 +14,6 @@ import { TopNavComponent } from './top-nav/top-nav.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
 import { SkillActivityTabsComponent } from './skill-activity-tabs/skill-activity-tabs.component';
-import { SearchTabComponent } from './search-tab/search-tab.component';
 
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 
@@ -39,7 +38,6 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     LeftNavComponent,
     NavigationTabsComponent,
     TopNavComponent,
-    SearchTabComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,7 +1,7 @@
 @import "src/colors.scss";
 $group-header-height: 7rem;
 $group-border-color: #e8eaeb;
-$header-height: 7.5rem;
+$header-height: 0rem; //7.5rem; <- to be restored if search bar is re-added
 
 @mixin anonym_group($size, $font-size) {
   display: flex;

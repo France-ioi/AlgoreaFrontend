@@ -19,9 +19,7 @@
     </span>
     <alg-select *ngIf="!signedIn" [items]="langs"></alg-select>
   </div>
-  <alg-search-input *ngIf="signedIn" (change)="onSearchEvent($event)" (close)="onSearchCloseEvent($event)"></alg-search-input>
   <div class="overlay-container">
-    <alg-notification *ngIf="showNotification && signedIn"></alg-notification>
     <alg-button
       *ngIf="!signedIn"
       icon="fa fa-power-off"
