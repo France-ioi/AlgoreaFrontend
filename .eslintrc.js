@@ -35,6 +35,7 @@ module.exports = {
       'fields',
     ],
     "@typescript-eslint/consistent-type-definitions": ["error", "interface"],
+    "@typescript-eslint/prefer-for-of": ["error"],
   },
   overrides: [
     /**
