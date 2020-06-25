@@ -66,10 +66,8 @@ export class GroupNavigationTreeComponent implements OnInit, OnChanges {
       node.checked = false;
     }
 
-    const segments = this.router.parseUrl(this.router.url).root.children.primary
-      .segments;
-
-    if (segments.length > 0 && segments[0].path === 'group') {
+    const primaryChildren = this.router.parseUrl(this.router.url).root.children.primary;
+    if (primaryChildren && primaryChildren.segments.length > 0 && primaryChildren.segments[0].path === 'group') {
       this.nodeChange.emit(node);
     } else {
       this.titleChange.emit(node);

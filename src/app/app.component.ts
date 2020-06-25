@@ -783,14 +783,14 @@ export class AppComponent implements OnInit {
     this.selectedType = 3;
     this.userTitle = 'Groups you joined';
     this.updateService();
-    this.router.navigate(['/dev/groups/memberships']);
+    this.router.navigate(['/groups/memberships']);
   }
 
   onManageGroupSelected(_e) {
     this.selectedType = 3;
     this.userTitle = 'Groups you manage';
     this.updateService();
-    this.router.navigate(['/dev/groups']);
+    this.router.navigate(['/groups']);
   }
 
   onGroupSelected(e) {
@@ -799,9 +799,9 @@ export class AppComponent implements OnInit {
     this.updateService();
     console.log(e);
     if (e.src === 'managed') {
-      this.router.navigate([`/dev/groups/${e.e.ID}`]);
+      this.router.navigate([`/groups/${e.e.ID}`]);
     } else {
-      this.router.navigate(['/dev/groups/memberships/11']);
+      this.router.navigate(['/groups/memberships/11']);
     }
   }
 
