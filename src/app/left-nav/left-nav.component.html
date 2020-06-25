@@ -1,4 +1,4 @@
-<app-top-nav
+<alg-top-nav
   [collapsed]="collapsed"
   [signedIn]="signedIn"
   (collapseEvent)="onCollapse($event)"
@@ -7,8 +7,8 @@
   (search)="onSearchEvent($event)"
   (searchClose)="onSearchCloseEvent($event)"
   [data]="user"
-></app-top-nav>
-<app-navigation-tabs
+></alg-top-nav>
+<alg-navigation-tabs
   *ngIf="!searchView"
   [items]="data"
   (skillSelect)="onSkillSelected($event)"
@@ -17,5 +17,5 @@
   (groupSelect)="onGroupSelected($event)"
   (joinGroupSelect)="onJoinGroupSelected($event)"
   (manageGroupSelect)="onManageGroupSelected($event)"
-></app-navigation-tabs>
-<app-search-tab *ngIf="searchView"></app-search-tab>
+></alg-navigation-tabs>
+<alg-search-tab *ngIf="searchView"></alg-search-tab>

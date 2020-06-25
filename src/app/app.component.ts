@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { StatusService } from './shared/services/status.service';
 
 @Component({
-  selector: 'app-root',
+  selector: 'alg-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })

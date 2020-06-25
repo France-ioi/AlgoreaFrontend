@@ -11,7 +11,7 @@ import {
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-group-navigation-tree',
+  selector: 'alg-group-navigation-tree',
   templateUrl: './group-navigation-tree.component.html',
   styleUrls: ['./group-navigation-tree.component.scss'],
 })

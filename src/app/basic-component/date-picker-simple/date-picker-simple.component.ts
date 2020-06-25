@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
-  selector: 'app-date-picker-simple',
+  selector: 'alg-date-picker-simple',
   templateUrl: './date-picker-simple.component.html',
   styleUrls: ['./date-picker-simple.component.scss'],
 })

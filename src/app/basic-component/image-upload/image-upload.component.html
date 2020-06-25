@@ -19,7 +19,7 @@
         'background-image': 'url(' + imgURL + ')'
       }"
     >
-      <app-button *ngIf="imgURL" label="remove" class="diagonal-rounded" (click)="removeImage($event)"></app-button>
+      <alg-button *ngIf="imgURL" label="remove" class="diagonal-rounded" (click)="removeImage($event)"></alg-button>
     </div>
     <div *ngIf="!imgURL" class="image-upload-labels">
       <div class="image-drop-label">
@@ -28,12 +28,12 @@
       </div>
 
       <div class="image-drop-button">
-        <app-button
+        <alg-button
           class="ui-button-rounded ui-button-success ui-fit-parent"
           icon="fa fa-folder-open"
           label="or select files"
           (click)="fileInput.click()"
-        ></app-button>
+        ></alg-button>
       </div>
     </div>
   </div>

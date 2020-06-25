@@ -11,7 +11,7 @@ import {
 import * as converter from 'number-to-words';
 
 @Component({
-  selector: 'app-group-header',
+  selector: 'alg-group-header',
   templateUrl: './group-header.component.html',
   styleUrls: ['./group-header.component.scss'],
 })

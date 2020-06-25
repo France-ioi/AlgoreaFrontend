@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 
 @Component({
-  selector: 'app-skill-activity-tabs',
+  selector: 'alg-skill-activity-tabs',
   templateUrl: './skill-activity-tabs.component.html',
   styleUrls: ['./skill-activity-tabs.component.scss'],
 })

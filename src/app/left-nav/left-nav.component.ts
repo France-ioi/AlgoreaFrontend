@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 
 @Component({
-  selector: 'app-left-nav',
+  selector: 'alg-left-nav',
   templateUrl: './left-nav.component.html',
   styleUrls: ['./left-nav.component.scss']
 })

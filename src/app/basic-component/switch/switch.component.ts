@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 
 @Component({
-  selector: 'app-switch',
+  selector: 'alg-switch',
   templateUrl: './switch.component.html',
   styleUrls: ['./switch.component.scss'],
 })

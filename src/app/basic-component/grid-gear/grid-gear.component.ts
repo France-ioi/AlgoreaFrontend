@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
-  selector: 'app-grid-gear',
+  selector: 'alg-grid-gear',
   templateUrl: './grid-gear.component.html',
   styleUrls: ['./grid-gear.component.scss'],
 })

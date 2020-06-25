@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
-  selector: 'app-group-button',
+  selector: 'alg-group-button',
   templateUrl: './group-button.component.html',
   styleUrls: ['./group-button.component.scss'],
 })

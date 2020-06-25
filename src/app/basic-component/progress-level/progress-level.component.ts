@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
-  selector: 'app-progress-level',
+  selector: 'alg-progress-level',
   templateUrl: './progress-level.component.html',
   styleUrls: ['./progress-level.component.scss'],
 })

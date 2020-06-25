@@ -1,8 +1,8 @@
 <div class="search-tools-wrapper">
-  <app-selection [items]="sels" mode="basic" (change)="onSelectionChanged($event)"></app-selection>
-  <app-grid-filter-bar>
+  <alg-selection [items]="sels" mode="basic" (change)="onSelectionChanged($event)"></alg-selection>
+  <alg-grid-filter-bar>
     <ng-container *ngFor="let filter of gridFilters">
-      <app-grid-filter
+      <alg-grid-filter
         [icon]="filter.icon"
         [label]="filter.label"
         [type]="filter.type"
@@ -12,16 +12,16 @@
         [dateRanges]="filter.dateRanges"
         [list]="filter.list"
         (close)="removeFilter(filter.ID)"
-      ></app-grid-filter>
+      ></alg-grid-filter>
     </ng-container>
-    <app-select
+    <alg-select
       [items]="filterChoice"
       [opened]="false"
       width="10"
       style="margin: 0.4167rem;"
-    ></app-select>
-    <app-search-filter></app-search-filter>
-  </app-grid-filter-bar>
+    ></alg-select>
+    <alg-search-filter></alg-search-filter>
+  </alg-grid-filter-bar>
 </div>
 <div class="search-result">
   <div class="items-found">
@@ -57,12 +57,12 @@
               <i class="fa fa-lock" style="font-size: 1.2rem;"></i>
             </span>
           </span>
-          <app-skill-progress
+          <alg-skill-progress
             *ngIf="node.progress"
             [currentScore]="node.progress.currentScore"
             [displayedScore]="node.progress.displayedScore"
             [type]="'thin-horizontal'"
-          ></app-skill-progress>
+          ></alg-skill-progress>
         </span>
 
       </span>
@@ -72,14 +72,14 @@
     <div class="items-list">
       <span *ngFor="let node of nodes" class="node-item-content">
         <span class="node-select">
-          <app-score-ring
+          <alg-score-ring
             *ngIf="node.progress"
             [displayedScore]="node.progress.displayedScore"
             [currentScore]="node.progress.currentScore"
             [diameter]="30"
             isDark="true"
             [icons]="node.progress.icons"
-          ></app-score-ring>
+          ></alg-score-ring>
         </span>
         <span class="node-label">
           <span class="label-container">

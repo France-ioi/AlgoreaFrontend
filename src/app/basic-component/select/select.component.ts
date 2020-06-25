@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
-  selector: 'app-select',
+  selector: 'alg-select',
   templateUrl: './select.component.html',
   styleUrls: ['./select.component.scss'],
 })

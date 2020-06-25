@@ -25,7 +25,7 @@
       <span *ngIf="type === 'standard'" class="close-icon" (click)="closeFilter($event)">
         <i class="fa fa-times"></i>
       </span>
-      <app-switch *ngIf="type === 'default'" mode="dark-circular"></app-switch>
+      <alg-switch *ngIf="type === 'default'" mode="dark-circular"></alg-switch>
     </div>
   </div>
   <div *ngIf="menuOpened && !outsideClicked" class="grid-filter-menu">
@@ -37,25 +37,25 @@
       <span class="grid-filter-menu-list-label">
         Select in the list
       </span>
-      <app-listbox [items]="list" (change)="listItemSelected($event)"></app-listbox>
+      <alg-listbox [items]="list" (change)="listItemSelected($event)"></alg-listbox>
     </div>
     <div *ngIf="mode === 'dates'" class="grid-filter-menu-date-range">
       <div class="grid-filter-menu-date-range-item">
         <span class="grid-filter-menu-date-range-item-label">From</span>
-        <app-date-picker-simple [date]="dateRanges[0]" (change)="dateChanged($event, 0)"></app-date-picker-simple>
+        <alg-date-picker-simple [date]="dateRanges[0]" (change)="dateChanged($event, 0)"></alg-date-picker-simple>
       </div>
       <div class="grid-filter-menu-date-range-item">
         <span class="grid-filter-menu-date-range-item-label">Until</span>
-        <app-date-picker-simple [date]="dateRanges[1]" (change)="dateChanged($event, 1)"></app-date-picker-simple>
+        <alg-date-picker-simple [date]="dateRanges[1]" (change)="dateChanged($event, 1)"></alg-date-picker-simple>
       </div>
     </div>
     <div *ngIf="mode === 'activity'" class="grid-filter-menu-activity">
       <span class="grid-filter-menu-activity-label">Users in group [group name] for whom the activity is:</span>
-      <app-selection [items]="status" mode="dark" (change)="changeStatus($event)"></app-selection>
+      <alg-selection [items]="status" mode="dark" (change)="changeStatus($event)"></alg-selection>
       <span class="grid-filter-menu-activity-label" *ngIf="selectedStatus === 2">
         <b>Score range</b>
       </span>
-      <app-slider [ranges]="ranges" *ngIf="selectedStatus === 2"></app-slider>
+      <alg-slider [ranges]="ranges" *ngIf="selectedStatus === 2"></alg-slider>
     </div>
   </div>
 </div>

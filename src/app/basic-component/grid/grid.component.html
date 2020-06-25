@@ -67,10 +67,10 @@
         <span [ngClass]="{ checked: selected[item.field] }" (click)="handleChanges($event, item)">
           {{ item.header }}
         </span>
-        <app-switch
+        <alg-switch
           [checked]="selected[item.field]"
           (change)="handleChanges($event, item)"
-        ></app-switch>
+        ></alg-switch>
       </li>
     </ul>
   </div>

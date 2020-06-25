@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-group-no-permission',
+  selector: 'alg-group-no-permission',
   templateUrl: './group-no-permission.component.html',
   styleUrls: ['./group-no-permission.component.scss']
 })

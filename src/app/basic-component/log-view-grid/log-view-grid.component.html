@@ -1,4 +1,4 @@
-<app-grid
+<alg-grid
   [selectedColumns]="cols"
   [columns]="cols"
   [groupInfo]="groupInfo"
@@ -54,22 +54,22 @@
         <td *ngIf="col.field === 'score'">
           <div class="score-wrapper">
             <ng-container *ngIf="rowData.score.type === 'score'">
-              <app-score-ring
+              <alg-score-ring
                 [displayedScore]="rowData.score.displayedScore"
                 [currentScore]="rowData.score.currentScore"
                 diameter="24"
-              ></app-score-ring>
+              ></alg-score-ring>
             </ng-container>
             <ng-container *ngIf="rowData.score.type === 'progress'">
-              <app-skill-progress
+              <alg-skill-progress
                 [displayedScore]="rowData.score.displayedScore"
                 [currentScore]="rowData.score.currentScore"
                 type="thick-horizontal"
-              ></app-skill-progress>
+              ></alg-skill-progress>
             </ng-container>
           </div>
         </td>
       </ng-container>
     </tr>
   </ng-template>
-</app-grid>
+</alg-grid>

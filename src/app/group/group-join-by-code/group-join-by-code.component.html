@@ -1,4 +1,4 @@
-<app-section-paragraph
+<alg-section-paragraph
   icon="fa fa-user-plus"
   label="Let user join using a code"
   [collapsible]="true"
@@ -19,34 +19,34 @@
       <span class="label red" *ngIf="group | hasCodeExpired">
         This code has expired on {{ group.code_expires_at | date:'medium'}}
       </span>
-      <app-button
+      <alg-button
         label="Generate a code"
         icon="fa fa-plus"
         class="ui-button-rounded"
         (click)="generateNewCode()"
         [disabled]="processing"
         *ngIf="group | hasCodeNotSet"
-      ></app-button>
+      ></alg-button>
     </div>
 
     <div class="code-info" *ngIf="!(group|hasCodeNotSet)">
       <div class="code-show">
         <span class="label">Code</span>
-        <app-code-token
+        <alg-code-token
           [code]="group.code"
           [showRefresh]="true"
           [showRemove]="true"
           (refresh)="generateNewCode()"
           (remove)="removeCode()"
-        ></app-code-token>
+        ></alg-code-token>
       </div>
       <div class="validity-selector">
         <span class="label">Validity</span>
-        <app-time-picker [initialValue]="group.code_lifetime" (submit)="changeValidity($event)"></app-time-picker>
+        <alg-time-picker [initialValue]="group.code_lifetime" (submit)="changeValidity($event)"></alg-time-picker>
       </div>
     </div>
 
   </div>
 
-</app-section-paragraph>
+</alg-section-paragraph>
 <p-toast></p-toast>

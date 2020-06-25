@@ -29,7 +29,7 @@ export enum Action {
 }
 
 @Component({
-  selector: 'app-pending-request',
+  selector: 'alg-pending-request',
   templateUrl: './pending-request.component.html',
   styleUrls: ['./pending-request.component.scss'],
   providers: [ MessageService ]

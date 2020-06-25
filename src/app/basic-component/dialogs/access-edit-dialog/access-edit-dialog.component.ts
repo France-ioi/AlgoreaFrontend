@@ -2,7 +2,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-access-edit-dialog',
+  selector: 'alg-access-edit-dialog',
   templateUrl: './access-edit-dialog.component.html',
   styleUrls: ['./access-edit-dialog.component.scss'],
 })

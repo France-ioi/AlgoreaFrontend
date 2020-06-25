@@ -3,7 +3,7 @@ import { Location } from '@angular/common';
 import { StatusService } from '../../shared/services/status.service';
 
 @Component({
-  selector: 'app-navigation-tabs',
+  selector: 'alg-navigation-tabs',
   templateUrl: './navigation-tabs.component.html',
   styleUrls: ['./navigation-tabs.component.scss']
 })

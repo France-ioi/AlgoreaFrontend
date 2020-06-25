@@ -3,7 +3,7 @@ import { GroupService } from '../../../shared/services/api/group.service';
 import { Group } from '../../../shared/models/group.model';
 
 @Component({
-  selector: 'app-group-overview',
+  selector: 'alg-group-overview',
   templateUrl: './group-overview.component.html',
   styleUrls: ['./group-overview.component.scss']
 })

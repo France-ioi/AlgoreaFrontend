@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
-  selector: 'app-section',
+  selector: 'alg-section',
   templateUrl: './section.component.html',
   styleUrls: ['./section.component.scss'],
 })

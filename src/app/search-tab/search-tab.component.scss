@@ -6,7 +6,7 @@
   padding-bottom: 1rem;
   border-bottom: .1rem solid #5c5c5c;
 
-  app-grid-filter-bar {
+  alg-grid-filter-bar {
     margin-left: -0.4167rem;
     display: block;
   }
@@ -108,7 +108,7 @@
       margin-right: 1rem;
     }
 
-    .node-item-content .node-label app-skill-progress {
+    .node-item-content .node-label alg-skill-progress {
       position: absolute;
       left: 0;
       right: 1.25rem;

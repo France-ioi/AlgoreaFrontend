@@ -5,7 +5,7 @@ import { GroupService } from '../../shared/services/api/group.service';
 import { Group } from '../../shared/models/group.model';
 
 @Component({
-  selector: 'app-group-manage',
+  selector: 'alg-group-manage',
   templateUrl: './group-manage.component.html',
   styleUrls: ['./group-manage.component.scss'],
 })

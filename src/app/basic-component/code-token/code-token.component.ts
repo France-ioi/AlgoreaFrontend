@@ -1,7 +1,7 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 
 @Component({
-  selector: 'app-code-token',
+  selector: 'alg-code-token',
   templateUrl: './code-token.component.html',
   styleUrls: ['./code-token.component.scss'],
 })

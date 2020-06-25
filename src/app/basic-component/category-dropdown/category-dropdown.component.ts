@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
-  selector: 'app-category-dropdown',
+  selector: 'alg-category-dropdown',
   templateUrl: './category-dropdown.component.html',
   styleUrls: ['./category-dropdown.component.scss'],
 })

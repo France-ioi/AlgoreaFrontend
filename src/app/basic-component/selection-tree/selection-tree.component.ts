@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 
 @Component({
-  selector: 'app-selection-tree',
+  selector: 'alg-selection-tree',
   templateUrl: './selection-tree.component.html',
   styleUrls: ['./selection-tree.component.scss'],
 })

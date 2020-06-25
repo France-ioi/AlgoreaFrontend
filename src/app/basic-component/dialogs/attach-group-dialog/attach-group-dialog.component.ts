@@ -2,7 +2,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-attach-group-dialog',
+  selector: 'alg-attach-group-dialog',
   templateUrl: './attach-group-dialog.component.html',
   styleUrls: ['./attach-group-dialog.component.scss'],
 })

@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 
 @Component({
-  selector: 'app-items-navigation-tree',
+  selector: 'alg-items-navigation-tree',
   templateUrl: './items-navigation-tree.component.html',
   styleUrls: ['./items-navigation-tree.component.scss'],
 })

@@ -13,14 +13,14 @@
 <div mat-dialog-content>
   <div class="dialog-content">
     <div class="button-wrapper">
-      <app-button
+      <alg-button
         icon="fa fa-link"
         label="attach"
         class="ui-button-rounded ui-fit-parent ui-button-secondary"
         (click)="onAttachClicked($event)"
-      ></app-button>
-      <app-button icon="fa fa-trash-alt" label="remove" class="ui-button-rounded ui-fit-parent ui-button-secondary"></app-button>
-      <app-button icon="fa fa-folder-open" label="move" class="ui-button-rounded ui-fit-parent ui-button-secondary"></app-button>
+      ></alg-button>
+      <alg-button icon="fa fa-trash-alt" label="remove" class="ui-button-rounded ui-fit-parent ui-button-secondary"></alg-button>
+      <alg-button icon="fa fa-folder-open" label="move" class="ui-button-rounded ui-fit-parent ui-button-secondary"></alg-button>
     </div>
     <div class="user-status-wrapper">
       <span class="user-status-info">
@@ -33,42 +33,42 @@
       </div>
     </div>
     <div class="button-wrapper">
-      <app-button
+      <alg-button
         icon="fa fa-key"
         label="reinitialize password"
         class="ui-button-rounded ui-fit-parent"
         (click)="onResetPassword($event)"
-      ></app-button>
-      <app-button icon="fa fa-paste" label="Participation code: uqt82xk" class="ui-button-rounded ui-fit-parent no-uppercase"></app-button>
+      ></alg-button>
+      <alg-button icon="fa fa-paste" label="Participation code: uqt82xk" class="ui-button-rounded ui-fit-parent no-uppercase"></alg-button>
     </div>
     <div class="user-details-wrapper">
       <div class="form-item-view">
         <span class="form-item-label">First Name</span>
         <div class="form-item-control">
-          <app-input placeholder="First Name ..."></app-input>
+          <alg-input placeholder="First Name ..."></alg-input>
         </div>
       </div>
       <div class="form-item-view">
         <span class="form-item-label">Last Name</span>
         <div class="form-item-control">
-          <app-input placeholder="Last Name ..."></app-input>
+          <alg-input placeholder="Last Name ..."></alg-input>
         </div>
       </div>
       <div class="form-item-view">
         <span class="form-item-label">Nickname</span>
         <div class="form-item-control">
-          <app-input placeholder="Nickname ..."></app-input>
+          <alg-input placeholder="Nickname ..."></alg-input>
         </div>
       </div>
       <div class="form-item-view">
         <span class="form-item-label">Grade</span>
         <div class="form-item-control">
-          <app-dropdown [items]="data.grades" placeholder="Select a grade..."></app-dropdown>
+          <alg-dropdown [items]="data.grades" placeholder="Select a grade..."></alg-dropdown>
         </div>
       </div>
     </div>
   </div>
 </div>
 <div mat-dialog-actions>
-  <app-button icon="fa fa-check" label="Save" class="ui-button-rounded" (click)="onClose($event)"></app-button>
+  <alg-button icon="fa fa-check" label="Save" class="ui-button-rounded" (click)="onClose($event)"></alg-button>
 </div>

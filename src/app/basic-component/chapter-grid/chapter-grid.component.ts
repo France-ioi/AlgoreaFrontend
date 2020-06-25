@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { AccessEditDialogComponent } from '../dialogs/access-edit-dialog/access-edit-dialog.component';
 
 @Component({
-  selector: 'app-chapter-grid',
+  selector: 'alg-chapter-grid',
   templateUrl: './chapter-grid.component.html',
   styleUrls: ['./chapter-grid.component.scss'],
 })

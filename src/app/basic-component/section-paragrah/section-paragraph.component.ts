@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 
 @Component({
-  selector: 'app-section-paragraph',
+  selector: 'alg-section-paragraph',
   templateUrl: './section-paragraph.component.html',
   styleUrls: ['./section-paragraph.component.scss'],
 })

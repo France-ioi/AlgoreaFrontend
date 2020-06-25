@@ -5,7 +5,7 @@
     </span>
     <span class="header-title">{{ data.header.title }}</span>
     <div *ngIf="collapsed && data.progress" class="header-content">
-      <app-progress-level [total]="data.values.length" [filled]="data.active_until" theme="revert"></app-progress-level>
+      <alg-progress-level [total]="data.values.length" [filled]="data.active_until" theme="revert"></alg-progress-level>
       <span *ngIf="data.active_until > 0" class="selected-progress-level">{{data.values[data.active_until-1].label}}</span>
     </div>
     <div *ngIf="collapsed && data.until_name && data.checked" class="header-content">
@@ -54,11 +54,11 @@
     <ng-container *ngIf="!data.progress">
       <div class="progress-section-item">
         <div class="progress-control">
-          <app-switch
+          <alg-switch
             mode="circular"
             [checked]="data.checked"
             (change)="onSwitchChange($event, data)"
-          ></app-switch>
+          ></alg-switch>
         </div>
         <div class="progress-desc">
           <div class="progress-desc-name" [ngClass]="{ active: data.checked }" (click)="onSwitchChange($event, data)">
@@ -72,23 +72,23 @@
         <div class="progress-desc">
           <div class="progress-desc-name date">
             <span class="date-start-label">Starting from</span>
-            <app-date-picker></app-date-picker>
+            <alg-date-picker></alg-date-picker>
           </div>
           <div class="progress-desc-comment"></div>
         </div>
       </div>
       <div *ngIf="data.until_name && data.checked" class="progress-section-item">
         <div class="progress-control">
-          <app-switch
+          <alg-switch
             mode="circular"
             [checked]="data.until_checkd"
             (change)="data.until_checkd = !data.until_checkd"
-          ></app-switch>
+          ></alg-switch>
         </div>
         <div class="progress-desc">
           <div class="progress-desc-name date flex-start" [ngClass]="{ active: data.until_checkd }">
             <span class="date-start-label" (click)="data.until_checkd = !data.until_checkd">Until</span>
-            <app-date-picker *ngIf="data.until_checkd"></app-date-picker>
+            <alg-date-picker *ngIf="data.until_checkd"></alg-date-picker>
           </div>
         </div>
       </div>

@@ -10,7 +10,7 @@ interface NavLink {
 }
 
 @Component({
-  selector: 'app-group-content',
+  selector: 'alg-group-content',
   templateUrl: './group-content.component.html',
   styleUrls: ['./group-content.component.scss'],
 })

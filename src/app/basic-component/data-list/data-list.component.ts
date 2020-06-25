@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
-  selector: 'app-data-list',
+  selector: 'alg-data-list',
   templateUrl: './data-list.component.html',
   styleUrls: ['./data-list.component.scss'],
 })

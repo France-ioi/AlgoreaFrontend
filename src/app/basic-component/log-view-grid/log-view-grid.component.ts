@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
-  selector: 'app-log-view-grid',
+  selector: 'alg-log-view-grid',
   templateUrl: './log-view-grid.component.html',
   styleUrls: ['./log-view-grid.component.scss'],
 })

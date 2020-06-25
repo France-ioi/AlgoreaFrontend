@@ -1,6 +1,6 @@
 @import 'src/colors.scss';
 
-:host ::ng-deep app-section .ui-table .ui-table-tbody > tr > td {
+:host ::ng-deep alg-section .ui-table .ui-table-tbody > tr > td {
   border-right: .1rem solid #f0f0f0;
 
   &:first-child {
@@ -8,7 +8,7 @@
   }
 }
 
-app-grid {
+alg-grid {
   margin-right: -1.6667rem;
   margin-left: -3.3333rem;
 }

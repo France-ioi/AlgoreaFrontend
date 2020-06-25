@@ -26,7 +26,7 @@ enum ProgressHeight {
 }
 
 @Component({
-  selector: 'app-skill-progress',
+  selector: 'alg-skill-progress',
   templateUrl: './skill-progress.component.html',
   styleUrls: ['./skill-progress.component.scss'],
 })

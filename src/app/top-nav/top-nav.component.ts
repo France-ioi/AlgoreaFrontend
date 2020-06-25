@@ -3,7 +3,7 @@ import { StatusService } from '../shared/services/status.service';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-top-nav',
+  selector: 'alg-top-nav',
   templateUrl: './top-nav.component.html',
   styleUrls: ['./top-nav.component.scss']
 })

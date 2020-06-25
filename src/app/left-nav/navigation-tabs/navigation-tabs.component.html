@@ -35,7 +35,7 @@
           <span class="group-show-activity-label">
             Show groups that participate to that activity
           </span>
-          <app-switch mode="white"></app-switch>
+          <alg-switch mode="white"></alg-switch>
         </div>
         <div class="group-self" (click)="onSelectYourself($event, 0)">
           <span class="anonym-group">
@@ -53,9 +53,9 @@
                 <span class="group-subtitle" [ngClass]="{'selected': selectedGroup == 1 ? true : false}">Groups you
                   manage</span>
               </p-header>
-              <app-group-navigation-tree [data]="items.groups.manage" inGroup="true"
+              <alg-group-navigation-tree [data]="items.groups.manage" inGroup="true"
                 (nodeChange)="onNodeChange($event, 'managed')" (titleChange)="onTitleChange($event)">
-              </app-group-navigation-tree>
+              </alg-group-navigation-tree>
             </p-accordionTab>
             <p-accordionTab [selected]="joinShow">
               <p-header>
@@ -65,18 +65,18 @@
                 <span class="group-subtitle" [ngClass]="{'selected': selectedGroup == 2 ? true : false}">Groups You
                   Joined</span>
               </p-header>
-              <app-group-navigation-tree [data]="items.groups.join" (nodeChange)="onNodeChange($event, 'memberships')"
-                (titleChange)="onTitleChange($event)"></app-group-navigation-tree>
+              <alg-group-navigation-tree [data]="items.groups.join" (nodeChange)="onNodeChange($event, 'memberships')"
+                (titleChange)="onTitleChange($event)"></alg-group-navigation-tree>
             </p-accordionTab>
           </p-accordion>
         </div>
       </div>
     </ng-container>
-    <app-skill-activity-tabs [skills]="items.skills" [activities]="items.activities" [activeTab]="activeTab"
+    <alg-skill-activity-tabs [skills]="items.skills" [activities]="items.activities" [activeTab]="activeTab"
       (tabChange)="onTabChanged($event)" (skillSelect)="onSkillSelected($event)"
-      (activitySelect)="onActivitySelected($event)"></app-skill-activity-tabs>
-    <app-skill-activity-tabs *ngIf="stickyShow" [skills]="items.skills" [activities]="items.activities"
-      [activeTab]="activeTab" (tabChange)="onTabChanged($event)" class="overlay-skills"></app-skill-activity-tabs>
+      (activitySelect)="onActivitySelected($event)"></alg-skill-activity-tabs>
+    <alg-skill-activity-tabs *ngIf="stickyShow" [skills]="items.skills" [activities]="items.activities"
+      [activeTab]="activeTab" (tabChange)="onTabChanged($event)" class="overlay-skills"></alg-skill-activity-tabs>
   </perfect-scrollbar>
   <div class="notified" *ngIf="notified" (click)="goBack($event)">
     <div class="back-to">

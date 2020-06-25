@@ -9,7 +9,7 @@ import {  ERROR_MESSAGE } from '../../shared/constants/api';
 import { Duration } from '../../utils/duration';
 
 @Component({
-  selector: 'app-group-join-by-code',
+  selector: 'alg-group-join-by-code',
   templateUrl: './group-join-by-code.component.html',
   styleUrls: ['./group-join-by-code.component.scss'],
   providers: [ MessageService ]

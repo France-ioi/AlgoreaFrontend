@@ -21,7 +21,7 @@ export enum PickListItemType {
 }
 
 @Component({
-  selector: 'app-pick-list',
+  selector: 'alg-pick-list',
   templateUrl: './pick-list.component.html',
   styleUrls: ['./pick-list.component.scss'],
 })

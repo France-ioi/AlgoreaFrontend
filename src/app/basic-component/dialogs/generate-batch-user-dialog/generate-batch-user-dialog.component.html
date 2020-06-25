@@ -16,7 +16,7 @@
       <div class="form-item-view">
         <span class="form-item-label">Accounts type</span>
         <div class="form-item-control">
-          <app-selection [items]="data.type" (change)="onTypeChange($event)"></app-selection>
+          <alg-selection [items]="data.type" (change)="onTypeChange($event)"></alg-selection>
         </div>
       </div>
       <p class="description">{{data.desc}}</p>
@@ -25,13 +25,13 @@
       <div class="form-item-view">
         <span class="form-item-label">Prefix</span>
         <div class="form-item-control">
-          <app-input placeholder="Chaine de caracteres" (change)="onPrefixChange($event)"></app-input>
+          <alg-input placeholder="Chaine de caracteres" (change)="onPrefixChange($event)"></alg-input>
         </div>
       </div>
       <div class="form-item-view">
         <span class="form-item-label">Suffix length</span>
         <div class="form-item-control">
-          <app-input placeholder="Number of characters" inputType="number" (change)="onSuffixChange($event)"></app-input>
+          <alg-input placeholder="Number of characters" inputType="number" (change)="onSuffixChange($event)"></alg-input>
         </div>
       </div>
       <div *ngIf="isPassword" class="gen-password">Usernames will look like this: {{prefix1}}_{{prefix}}_{{randomString}}</div>
@@ -39,7 +39,7 @@
       <div *ngIf="isPassword" class="form-item-view">
         <span class="form-item-label">Password length</span>
         <div class="form-item-control">
-          <app-input placeholder="Number of characters" inputType="number"></app-input>
+          <alg-input placeholder="Number of characters" inputType="number"></alg-input>
         </div>
       </div>
     </div>
@@ -47,24 +47,24 @@
       <div class="form-item-view">
         <span class="form-item-label">Number of accounts to create</span>
         <div class="form-item-control">
-          <app-input placeholder="Number of characters" inputType="number"></app-input>
+          <alg-input placeholder="Number of characters" inputType="number"></alg-input>
         </div>
       </div>
       <div class="form-item-view switch">
         <span class="form-item-label">Create X accounts in each sub-group?</span>
         <div class="form-item-control">
-          <app-switch mode="white"></app-switch>
+          <alg-switch mode="white"></alg-switch>
         </div>
       </div>
     </div>
     <div class="account-generate">
       <div style="width: 21rem;">
-        <app-button
+        <alg-button
           icon="fa fa-key"
           label="Generate"
           class="ui-button-rounded ui-fit-parent"
           (click)="onClose($event)"
-        ></app-button>
+        ></alg-button>
       </div>
     </div>
   </div>

@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
-  selector: 'app-page-navigator',
+  selector: 'alg-page-navigator',
   templateUrl: './page-navigator.component.html',
   styleUrls: ['./page-navigator.component.scss'],
 })

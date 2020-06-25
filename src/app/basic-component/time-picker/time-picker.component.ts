@@ -2,7 +2,7 @@ import { Component, OnChanges, Input, Output, EventEmitter } from '@angular/core
 import { Duration, MINUTES } from '../../utils/duration';
 
 @Component({
-  selector: 'app-time-picker',
+  selector: 'alg-time-picker',
   templateUrl: './time-picker.component.html',
   styleUrls: ['./time-picker.component.scss'],
 })

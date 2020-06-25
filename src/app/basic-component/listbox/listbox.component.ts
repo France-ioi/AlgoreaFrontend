@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
-  selector: 'app-listbox',
+  selector: 'alg-listbox',
   templateUrl: './listbox.component.html',
   styleUrls: ['./listbox.component.scss'],
 })
