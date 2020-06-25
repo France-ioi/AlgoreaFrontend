@@ -2,16 +2,15 @@
 
 ## Quick start
 
+It is recommended to run this project on Node 12. The Continuous Integration is run on this version.
+
 Run `npm install` first to use latest packages.
-Run `ng build core` in order to use the core components in current project
 
-##Project Structure
+## Project Structure
 
-This app is made of 4 apps:
-- **design** (in `/projects/design`, under `#/design` url) with the original design implementation (without much logic and not connected with the backend).
-- **dev**  (in `/projects/design`, under `#/dev` url) with the ongoing development of the frontend logic connected to the backend.
-- **core** (in `/projects/core`), the common components between *design* and *dev*.
-- **algorea** (in `src`), the root routing to *dev* and *design*
+The work-in-progress and proof-of-concept design is in the `design` part of this repository (auto-deployed on `http://dev.algorea.org/branch/design/`)
+
+The rest of the project follow the recommended structure of an Angular project.
 
 ## Contributing
 
@@ -24,6 +23,10 @@ Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app w
 Run `ng lint` to launch the linter checks on the code.
 
 For more general code style, we follow the [Angular coding style guide](https://angular.io/guide/styleguide).
+
+## Code auto-deployment
+
+Every branch pushed to the repository is deployed on `http://dev.algorea.org/branch/<branch_name>/`. The `master` one is also deployed on http://dev.algorea.org/.
 
 ### Code Scaffolding
 

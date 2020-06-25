@@ -1,0 +1,124 @@
+<alg-section-paragraph
+  *ngIf="requests.length"
+  icon="fa fa-check"
+  label="Pending requests"
+  [collapsible]="true"
+>
+  <div class="pending-request-container">
+    <alg-grid
+      [selectedColumns]="columns"
+      [columns]="columns"
+      [data]="requests"
+      [groupInfo]="panel"
+      [(selection)]="selection"
+      (sort)="onCustomSort($event)"
+    >
+      <ng-template #headerTemplate let-columns>
+        <tr>
+          <th style="width: 3.3333rem; background-color: #d3dbe7;"></th>
+          <ng-container *ngFor="let col of columns">
+            <th
+              *ngIf="col.field === 'at'"
+              [pSortableColumn]="col.field"
+              style="width: 13.3333rem; background-color: #d3dbe7;"
+            >
+              <div class="header-container">
+                {{ col.header }}
+                <p-sortIcon [field]="col.field"></p-sortIcon>
+              </div>
+            </th>
+            <th
+              *ngIf="col.field === 'joining_user.login'"
+              [pSortableColumn]="col.field"
+              style="background-color: #d3dbe7;"
+            >
+              <div class="header-container">
+                {{ col.header }}
+                <p-sortIcon [field]="col.field"></p-sortIcon>
+              </div>
+            </th>
+          </ng-container>
+        </tr>
+      </ng-template>
+      <ng-template
+        #bodyTemplate
+        let-rowData
+        let-columns="columns"
+        let-rowIndex="rowIndex"
+      >
+        <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
+          <td style="width: 3.3333rem;">
+            <p-tableCheckbox [value]="rowData" [disabled]="!isIdle()"></p-tableCheckbox>
+          </td>
+          <td *ngFor="let col of columns">
+            <ng-container *ngIf="col.field === 'at'">
+              {{ rowData.at | date: "MM/d/y" }}
+            </ng-container>
+            <ng-container *ngIf="col.field === 'joining_user.login'">
+              <div class="grid-user-info-field">
+                <!-- <img
+                  src="{{ rowData.user.image }}"
+                  style="width: 7rem; height: 7rem;"
+                /> -->
+                <div class="user-info">
+                  <span class="user-info-name">
+                    <ng-container *ngIf="!rowData.joining_user.first_name && !rowData.joining_user.last_name; else fullInfo">
+                      {{ rowData.joining_user.login }}
+                    </ng-container>
+                    <ng-template #fullInfo>
+                      {{ rowData.joining_user.first_name || "" }} {{ rowData.joining_user.last_name || "" }}
+                      ({{ rowData.joining_user.login || "" }})
+                    </ng-template>
+                  </span>
+                  <span class="user-info-activity" *ngIf="rowData.grade">
+                    <em>Grade: {{ rowData.joining_user.grade }}</em>
+                  </span>
+                  <!-- <div class="user-info-content">
+                    {{ rowData.user.content }}
+                  </div> -->
+                </div>
+              </div>
+            </ng-container>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template #summaryTemplate let-table>
+        <div style="text-align: left; display: flex; align-items: center;">
+          <p-tableHeaderCheckbox [disabled]="!isIdle()"></p-tableHeaderCheckbox>
+          <span
+            style="
+              margin-left: 2.1rem;
+              color: #9b9b9b;
+              font-size: 1.2rem;
+              cursor: pointer;
+            "
+            [ngClass]="{disabled: !isIdle()}"
+            (click)="onSelectAll($event)"
+          >
+            Select all
+          </span>
+          <span style="flex: 1;"></span>
+          <div class="req-tools">
+            <span class="accept" [ngClass]="{disabled: selection.length === 0 || !isIdle()}" (click)="onAcceptOrReject(Action.Accept)">
+              <span>Accept</span>
+              <ng-container *ngIf="isAccepting()">
+                <p-progressSpinner></p-progressSpinner>
+              </ng-container>
+              <ng-container *ngIf="!isAccepting()"><i class="fa fa-check"></i></ng-container>
+            </span>
+            <span class="reject" [ngClass]="{disabled: selection.length === 0 || !isIdle()}" (click)="onAcceptOrReject(Action.Reject)">
+              <span>Reject</span>
+              <ng-container *ngIf="isRejecting()">
+                <p-progressSpinner></p-progressSpinner>
+              </ng-container>
+              <ng-container *ngIf="!isRejecting()">
+                <i class="fa fa-times"></i>
+              </ng-container>
+            </span>
+          </div>
+        </div>
+      </ng-template>
+    </alg-grid>
+  </div>
+</alg-section-paragraph>
+<p-toast></p-toast>

@@ -1,0 +1,12 @@
+<alg-group-header
+  [isScrolled]="status.scrolled"
+  [isFolded]="status.folded"
+  [isStarted]="status.isStarted"
+  [isCollapsed]="status.collapsed"
+  [data]="group"
+  (expandWholeWidth)="onExpandWidth($event)"
+></alg-group-header>
+<alg-pending-request
+  [id]="groupId"
+></alg-pending-request>
+<alg-group-content [group]="group"></alg-group-content>

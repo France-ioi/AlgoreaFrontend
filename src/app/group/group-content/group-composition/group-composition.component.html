@@ -1,0 +1,10 @@
+<ng-container *ngIf="group.current_user_is_manager; else noPermission">
+  <alg-section icon="fa fa-users" label="Current Composition">
+    <p>...</p>
+  </alg-section>
+  <alg-group-join-by-code></alg-group-join-by-code>
+</ng-container>
+<ng-template #noPermission>
+  <alg-group-no-permission></alg-group-no-permission>
+</ng-template>
+
