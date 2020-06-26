@@ -63,7 +63,7 @@ jobs:
     steps:
       - attach_workspace:
           at: ./
-      - run: ./node_modules/.bin/ng lint
+      - run: npm run lint
 
   build:
     docker: *node_image
