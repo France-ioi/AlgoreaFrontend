@@ -29,7 +29,7 @@ export class Duration {
   }
 
   toString(): string {
-    return Math.floor(this.ms/HOURS) + ':' + Math.floor(this.ms%HOURS/MINUTES) + ':' + this.ms%MINUTES;
+    return `${Math.floor(this.ms/HOURS)}:${Math.floor(this.ms%HOURS/MINUTES)}:${this.ms%MINUTES}`;
   }
 
   minutes(): number {

@@ -20,7 +20,10 @@ Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app w
 
 ## Code Style
 
-Run `ng lint` to launch the linter checks on the code.
+Run `npm run lint` to launch the linter checks on the code.
+
+Note that `ng lint` also run the linter but without the parser option (faster but on a subset of the rules) as it was not possible to
+make it work properly for obscure reasons.
 
 For more general code style, we follow the [Angular coding style guide](https://angular.io/guide/styleguide).
 

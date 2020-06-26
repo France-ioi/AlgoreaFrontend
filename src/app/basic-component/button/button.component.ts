@@ -19,6 +19,8 @@ export class ButtonComponent implements OnInit {
   ngOnInit() {}
 
   onClickEvent(e) {
+    /* eslint-disable @typescript-eslint/no-unsafe-member-access */ /* primeng has no type on their events :-/ */
+    /* eslint-disable @typescript-eslint/no-unsafe-call */
     e.stopPropagation();
     this.click.emit(e);
   }

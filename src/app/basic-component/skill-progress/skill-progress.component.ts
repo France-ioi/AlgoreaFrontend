@@ -47,7 +47,7 @@ export class SkillProgressComponent implements OnInit, OnChanges {
 
   constructor() {}
 
-  _validateScore(score) {
+  _validateScore(score: number): number {
     if (score < this.RANGE_MIN) {
       return this.RANGE_MIN;
     }
@@ -74,8 +74,8 @@ export class SkillProgressComponent implements OnInit, OnChanges {
     if (this.displayedScore === 100) {
       this.displayColor = '#B8E986';
     } else {
-      this.displayColor = 'hsl(' + this.displayedScore * 0.4 + ', 100%, 50%)';
-      this.currentColor = 'hsl(' + this.currentScore * 0.4 + ', 100%, 70%)';
+      this.displayColor = `hsl(${this.displayedScore * 0.4}, 100%, 50%)`;
+      this.currentColor = `hsl(${this.currentScore * 0.4}, 100%, 70%)`;
     }
   }
 }

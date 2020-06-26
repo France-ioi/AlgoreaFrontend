@@ -5,18 +5,11 @@ import {
   HttpErrorResponse,
   HttpParams,
 } from '@angular/common/http';
-import { Observable, Subject, throwError, BehaviorSubject } from 'rxjs';
+import { Observable, throwError, BehaviorSubject } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
-
-import {
-  DEFAULT_LIMIT,
-} from '../../constants/api';
 
 import { Group } from '../../models/group.model';
 import { PendingRequest } from '../../models/pending-request.model';
-import { Member } from '../../models/member.model';
-import { MembershipHistory } from '../../models/membership-history.model';
-import { GroupMembership } from '../../models/group-membership.model';
 import { RequestActionResponse } from '../../models/requet-action-response.model';
 import { NewCodeSuccessResponse } from '../../models/group-service-response.model';
 import { GenericResponse } from '../../models/generic-response.model';
@@ -26,16 +19,11 @@ import { GenericResponse } from '../../models/generic-response.model';
 })
 export class GroupService {
   private baseGroupUrl = `${environment.apiUrl}/groups`;
-  private baseCurrentUserUrl = `${environment.apiUrl}/current-user`;
-
   private groupList = new BehaviorSubject<Group>(new Group());
-  private memberList = new Subject<Member[]>();
-  private membershipHistoryList = new Subject<MembershipHistory[]>();
-  private joinedGroupList = new Subject<GroupMembership[]>();
 
   constructor(private http: HttpClient) {}
 
-  getGroup(id): Observable<Group> {
+  getGroup(id: string): Observable<Group> {
     return this.http
       .get<Group>(`${this.baseGroupUrl}/${id}`)
       .pipe(
@@ -44,17 +32,17 @@ export class GroupService {
           this.groupList.next(groupObj);
           return groupObj;
         }),
-        catchError(this.handleError)
+        catchError((e) => this.handleError(e))
       );
   }
 
-  updateGroup(id: String, changes: Object): Observable<void> {
+  updateGroup(id: string, changes: object): Observable<void> {
     return this.http
       .put<GenericResponse>(`${this.baseGroupUrl}/${id}`, changes)
       .pipe(
-        tap(this.ensureSuccessResponse),
+        tap((r) => this.ensureSuccessResponse(r)),
         map( (_r) => {}),
-        catchError(this.handleError)
+        catchError((e) => this.handleError(e))
       );
   }
 
@@ -80,37 +68,8 @@ export class GroupService {
             (req: PendingRequest) => req.action === 'join_request_created'
           )
         ),
-        catchError(this.handleError)
+        catchError((e) => this.handleError(e))
       );
-  }
-
-  getGroupMembers(
-    id,
-    sort = [],
-    _limit = DEFAULT_LIMIT
-  ): Observable<Member[]> {
-    this.http
-      .get(`${this.baseGroupUrl}/${id}/members`, {
-        params: {
-          sort: sort.join(','),
-        },
-      })
-      .subscribe(
-        (members: Member[]) => this.memberList.next(members),
-        this.handleError
-      );
-
-    return this.memberList;
-  }
-
-  removeGroupMembers(id, userIds): Observable<any> {
-    return this.http
-      .delete(`${this.baseGroupUrl}/${id}/members`, {
-        params: {
-          user_ids: userIds.join(','),
-        },
-      })
-      .pipe(catchError(this.handleError));
   }
 
   acceptJoinRequest(id: string, groupIds: string[]): Observable<RequestActionResponse> {
@@ -121,8 +80,8 @@ export class GroupService {
         },
       })
       .pipe(
-        tap(this.handleRequestActionResponse),
-        catchError(this.handleError)
+        tap((r) => this.handleRequestActionResponse(r)),
+        catchError((e) => this.handleError(e))
       );
   }
 
@@ -134,82 +93,30 @@ export class GroupService {
         }
       })
       .pipe(
-        tap(this.handleRequestActionResponse),
-        catchError(this.handleError)
+        tap((r) => this.handleRequestActionResponse(r)),
+        catchError((e) => this.handleError(e))
       );
-  }
-
-  getPendingInvitations(
-    sortBy = [],
-    _limit = 500
-  ): Observable<MembershipHistory[]> {
-    this.http
-      .get(`${this.baseCurrentUserUrl}/group-memberships-history`, {
-        params: {
-          sort: sortBy.join(','),
-        },
-      })
-      .subscribe(
-        (memberships: MembershipHistory[]) =>
-          this.membershipHistoryList.next(memberships),
-        this.handleError
-      );
-
-    return this.membershipHistoryList;
-  }
-
-  getJoinedGroups(sortBy = []): Observable<GroupMembership[]> {
-    this.http
-      .get(`${this.baseCurrentUserUrl}/group-memberships`, {
-        params: {
-          sort: sortBy.join(','),
-        },
-      })
-      .subscribe(
-        (memberships: GroupMembership[]) =>
-          this.joinedGroupList.next(memberships),
-        this.handleError
-      );
-
-    return this.joinedGroupList;
-  }
-
-  leaveGroup(id) {
-    return this.http
-      .delete(`${this.baseCurrentUserUrl}/group-memberships/${id}`)
-      .pipe(catchError(this.handleError));
-  }
-
-  joinGroupByCode(code, approvals = []) {
-    return this.http
-      .post(`${this.baseCurrentUserUrl}/group-memberships/by-code`, {
-        params: {
-          code,
-          approvals: approvals.join(','),
-        },
-      })
-      .pipe(catchError(this.handleError));
   }
 
   /* ****************** */
 
-  createNewCode(id: String): Observable<string> {
+  createNewCode(id: string): Observable<string> {
     return this.http
       .post<NewCodeSuccessResponse|GenericResponse>(`${this.baseGroupUrl}/${id}/code`, null, {})
       .pipe(
-        tap(this.ensureSuccessResponse),
+        tap((r) => this.ensureSuccessResponse(r)),
         map( (r:NewCodeSuccessResponse) => r.code),
-        catchError(this.handleError)
+        catchError((e) => this.handleError(e))
       );
   }
 
-  removeCode(id: String): Observable<void> {
+  removeCode(id: string): Observable<void> {
     return this.http
       .delete<GenericResponse>(`${this.baseGroupUrl}/${id}/code`)
       .pipe(
-        tap(this.ensureSuccessResponse),
+        tap((r) => this.ensureSuccessResponse(r)),
         map( (_r) => {}),
-        catchError(this.handleError)
+        catchError((e) => this.handleError(e))
       );
   }
 
@@ -217,7 +124,7 @@ export class GroupService {
 
   // convert response errors in observable error
   private ensureSuccessResponse(response: any) {
-    if ('success' in response && response.success === false) {
+    if ('success' in response && (response as GenericResponse).success === false) {
       throw new Error('Service error');
     }
   }

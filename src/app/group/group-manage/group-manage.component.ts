@@ -11,7 +11,6 @@ import { Group } from '../../shared/models/group.model';
 })
 export class GroupManageComponent implements OnInit {
   group: Group = new Group();
-  groupId;
   status;
 
   memberData = [];
@@ -41,15 +40,21 @@ export class GroupManageComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.activatedRoute.params.subscribe((routeParams) => {
-      this.groupId = routeParams.id;
-
-      this.groupService.getGroup(this.groupId).subscribe((group: Group) => {
-        this.group = group;
-      });
+    this.activatedRoute.paramMap.subscribe((params) => {
+      const id = params.get('id');
+      if (id == null) {
+        // FIXME: should probably report error
+      } else {
+        this.group.id = id; // FIXME: strange way to have the subcomponent get an id...
+        this.groupService.getGroup(id).subscribe((group: Group) => {
+          this.group = group;
+        });
+      }
     });
 
     this.statusService.getObservable().subscribe((res) => {
+      /* eslint-disable  @typescript-eslint/no-unsafe-assignment */
+      // FIXME: to be fixed with an actual type in StatusService
       this.status = res;
     });
   }

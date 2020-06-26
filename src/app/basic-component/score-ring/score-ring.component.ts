@@ -61,15 +61,10 @@ export class ScoreRingComponent implements OnInit, OnChanges {
       return 'M0,-30 a30,30 0 0,1 0,60  a30,30 0 1,1 0,-60';
     }
 
-    return (
-      'M0,-30 A30,30 1 ' +
-      (score > 50 ? 1 : 0) +
-      ',1 ' +
-      this.svgRadius * Math.sin((score / 50) * Math.PI) +
-      ',' +
-      this.svgRadius * -Math.cos((score / 50) * Math.PI) +
-      ''
-    );
+    const h = this.svgRadius * Math.sin((score / 50) * Math.PI);
+    const w = this.svgRadius * -Math.cos((score / 50) * Math.PI);
+
+    return `M0,-30 A30,30 1 ${score > 50 ? 1 : 0},1 ${h},${w}`;
   }
 
   ngOnChanges(_changes: SimpleChanges) {
@@ -89,7 +84,7 @@ export class ScoreRingComponent implements OnInit, OnChanges {
     if (this.displayedScore === 100) {
       this.displayFill = ScoreRingColor.success;
     } else if (this.scoreFill.length === 0) {
-      this.displayFill = 'hsl(' + this.displayedScore * 0.4 + ', 100%, 50%)';
+      this.displayFill = `hsl(${this.displayedScore * 0.4 }, 100%, 50%)`;
       this.currentFill = '#8E8E8E';
     }
 

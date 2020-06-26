@@ -1,3 +1,4 @@
+/* eslint-disable */ /* FIXME disabled for now while this is the mockup code, to be removed afterwards */
 import { Component, OnInit, Input, OnChanges, SimpleChanges, ViewChild, NgZone, Output, EventEmitter } from '@angular/core';
 import { Location } from '@angular/common';
 import { StatusService } from '../../shared/services/status.service';

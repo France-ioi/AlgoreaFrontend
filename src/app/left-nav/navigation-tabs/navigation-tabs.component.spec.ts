@@ -127,7 +127,7 @@ describe('NavigationTabsComponent', () => {
   };
 
   beforeEach(async(() => {
-    const locationSpy = jasmine.createSpyObj('Location', ['back']);
+    const locationSpy = jasmine.createSpyObj<Location>('Location', []);
     TestBed.configureTestingModule({
       imports: [
         AppModule,
