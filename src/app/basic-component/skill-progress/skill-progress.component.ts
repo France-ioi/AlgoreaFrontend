@@ -47,7 +47,7 @@ export class SkillProgressComponent implements OnInit, OnChanges {
 
   constructor() {}
 
-  _validateScore(score) {
+  _validateScore(score: number): number {
     if (score < this.RANGE_MIN) {
       return this.RANGE_MIN;
     }

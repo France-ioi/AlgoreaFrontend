@@ -21,7 +21,7 @@ export class SelectComponent<T> implements OnInit {
     this.selected = this.items[0];
   }
 
-  toogleDropdown(e) {
+  toogleDropdown(e: Event) {
     this.opened = true;
     e.stopPropagation();
     this.click.emit(true);
