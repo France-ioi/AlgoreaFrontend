@@ -20,7 +20,9 @@ describe('GroupManageComponent', () => {
         {
           provide: ActivatedRoute,
           useValue: {
-            params: of({id: 50})
+            paramMap: of({
+              get: (_) => '11'
+            })
           }
         },
       ],
