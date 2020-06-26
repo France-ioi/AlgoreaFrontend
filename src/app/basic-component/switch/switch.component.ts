@@ -27,6 +27,7 @@ export class SwitchComponent implements OnInit, OnChanges {
   ngOnChanges(_changes: SimpleChanges) {}
 
   handleChange(e) {
+    /* eslint-disable @typescript-eslint/no-unsafe-member-access */ /* primeng has no type on their events :-/ */
     this.change.emit(e.checked);
   }
 }

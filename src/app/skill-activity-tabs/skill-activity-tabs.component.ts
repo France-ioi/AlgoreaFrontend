@@ -29,6 +29,7 @@ export class SkillActivityTabsComponent implements OnInit, OnChanges {
   ngOnChanges(_changes: SimpleChanges) {}
 
   tabChanged(e) {
+     /* eslint-disable @typescript-eslint/no-unsafe-member-access */ /* primeng has no type on their events :-/ */
     this.tabChange.emit(e.index);
   }
 
