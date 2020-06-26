@@ -23,7 +23,7 @@ export class GroupService {
 
   constructor(private http: HttpClient) {}
 
-  getGroup(id): Observable<Group> {
+  getGroup(id: string): Observable<Group> {
     return this.http
       .get<Group>(`${this.baseGroupUrl}/${id}`)
       .pipe(
@@ -36,7 +36,7 @@ export class GroupService {
       );
   }
 
-  updateGroup(id: String, changes: Object): Observable<void> {
+  updateGroup(id: string, changes: object): Observable<void> {
     return this.http
       .put<GenericResponse>(`${this.baseGroupUrl}/${id}`, changes)
       .pipe(
@@ -100,7 +100,7 @@ export class GroupService {
 
   /* ****************** */
 
-  createNewCode(id: String): Observable<string> {
+  createNewCode(id: string): Observable<string> {
     return this.http
       .post<NewCodeSuccessResponse|GenericResponse>(`${this.baseGroupUrl}/${id}/code`, null, {})
       .pipe(
@@ -110,7 +110,7 @@ export class GroupService {
       );
   }
 
-  removeCode(id: String): Observable<void> {
+  removeCode(id: string): Observable<void> {
     return this.http
       .delete<GenericResponse>(`${this.baseGroupUrl}/${id}/code`)
       .pipe(
@@ -124,7 +124,7 @@ export class GroupService {
 
   // convert response errors in observable error
   private ensureSuccessResponse(response: any) {
-    if ('success' in response && response.success === false) {
+    if ('success' in response && (response as GenericResponse).success === false) {
       throw new Error('Service error');
     }
   }
