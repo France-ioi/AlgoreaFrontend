@@ -5,12 +5,12 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
   templateUrl: './select.component.html',
   styleUrls: ['./select.component.scss'],
 })
-export class SelectComponent implements OnInit {
-  @Input() items;
+export class SelectComponent<T> implements OnInit {
+  @Input() items: T[];
   @Input() width = 6.5;
   @Input() opened = false;
 
-  @Output() change = new EventEmitter<any>();
+  @Output() change = new EventEmitter<T>();
   @Output() click = new EventEmitter<any>();
 
   selected;
@@ -31,9 +31,9 @@ export class SelectComponent implements OnInit {
     this.opened = false;
   }
 
-  selectValue(e) {
-    this.selected = e;
+  selectValue(v: T) {
+    this.selected = v;
     this.opened = false;
-    this.change.emit(e);
+    this.change.emit(v);
   }
 }
