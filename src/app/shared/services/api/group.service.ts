@@ -5,18 +5,11 @@ import {
   HttpErrorResponse,
   HttpParams,
 } from '@angular/common/http';
-import { Observable, Subject, throwError, BehaviorSubject } from 'rxjs';
+import { Observable, throwError, BehaviorSubject } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
-
-import {
-  DEFAULT_LIMIT,
-} from '../../constants/api';
 
 import { Group } from '../../models/group.model';
 import { PendingRequest } from '../../models/pending-request.model';
-import { Member } from '../../models/member.model';
-import { MembershipHistory } from '../../models/membership-history.model';
-import { GroupMembership } from '../../models/group-membership.model';
 import { RequestActionResponse } from '../../models/requet-action-response.model';
 import { NewCodeSuccessResponse } from '../../models/group-service-response.model';
 import { GenericResponse } from '../../models/generic-response.model';
@@ -26,12 +19,7 @@ import { GenericResponse } from '../../models/generic-response.model';
 })
 export class GroupService {
   private baseGroupUrl = `${environment.apiUrl}/groups`;
-  private baseCurrentUserUrl = `${environment.apiUrl}/current-user`;
-
   private groupList = new BehaviorSubject<Group>(new Group());
-  private memberList = new Subject<Member[]>();
-  private membershipHistoryList = new Subject<MembershipHistory[]>();
-  private joinedGroupList = new Subject<GroupMembership[]>();
 
   constructor(private http: HttpClient) {}
 
@@ -84,35 +72,6 @@ export class GroupService {
       );
   }
 
-  getGroupMembers(
-    id,
-    sort = [],
-    _limit = DEFAULT_LIMIT
-  ): Observable<Member[]> {
-    this.http
-      .get(`${this.baseGroupUrl}/${id}/members`, {
-        params: {
-          sort: sort.join(','),
-        },
-      })
-      .subscribe(
-        (members: Member[]) => this.memberList.next(members),
-        this.handleError
-      );
-
-    return this.memberList;
-  }
-
-  removeGroupMembers(id, userIds): Observable<any> {
-    return this.http
-      .delete(`${this.baseGroupUrl}/${id}/members`, {
-        params: {
-          user_ids: userIds.join(','),
-        },
-      })
-      .pipe(catchError(this.handleError));
-  }
-
   acceptJoinRequest(id: string, groupIds: string[]): Observable<RequestActionResponse> {
     return this.http
       .post<RequestActionResponse>(`${this.baseGroupUrl}/${id}/join-requests/accept`, null, {
@@ -137,58 +96,6 @@ export class GroupService {
         tap(this.handleRequestActionResponse),
         catchError(this.handleError)
       );
-  }
-
-  getPendingInvitations(
-    sortBy = [],
-    _limit = 500
-  ): Observable<MembershipHistory[]> {
-    this.http
-      .get(`${this.baseCurrentUserUrl}/group-memberships-history`, {
-        params: {
-          sort: sortBy.join(','),
-        },
-      })
-      .subscribe(
-        (memberships: MembershipHistory[]) =>
-          this.membershipHistoryList.next(memberships),
-        this.handleError
-      );
-
-    return this.membershipHistoryList;
-  }
-
-  getJoinedGroups(sortBy = []): Observable<GroupMembership[]> {
-    this.http
-      .get(`${this.baseCurrentUserUrl}/group-memberships`, {
-        params: {
-          sort: sortBy.join(','),
-        },
-      })
-      .subscribe(
-        (memberships: GroupMembership[]) =>
-          this.joinedGroupList.next(memberships),
-        this.handleError
-      );
-
-    return this.joinedGroupList;
-  }
-
-  leaveGroup(id) {
-    return this.http
-      .delete(`${this.baseCurrentUserUrl}/group-memberships/${id}`)
-      .pipe(catchError(this.handleError));
-  }
-
-  joinGroupByCode(code, approvals = []) {
-    return this.http
-      .post(`${this.baseCurrentUserUrl}/group-memberships/by-code`, {
-        params: {
-          code,
-          approvals: approvals.join(','),
-        },
-      })
-      .pipe(catchError(this.handleError));
   }
 
   /* ****************** */
