@@ -1,3 +1,4 @@
+/* eslint-disable */ /* FIXME disabled for now while this is the mockup code, to be removed afterwards */
 import { Component, HostListener, OnInit } from '@angular/core';
 import { ProgressType } from './basic-component/skill-progress/skill-progress.component';
 import { Router } from '@angular/router';

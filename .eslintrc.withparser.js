@@ -35,5 +35,13 @@ module.exports = {
     "@typescript-eslint/consistent-type-definitions": ["error", "interface"],
     "@typescript-eslint/prefer-for-of": ["error"],
   },
-  overrides: [ ],
+  overrides: [
+    {
+      files: ['*.spec.ts'],
+      rules: {
+        '@typescript-eslint/no-floating-promises': 'off',
+        '@typescript-eslint/unbound-method': 'off',
+      }
+    },
+  ],
 };
