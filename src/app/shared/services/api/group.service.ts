@@ -32,7 +32,7 @@ export class GroupService {
           this.groupList.next(groupObj);
           return groupObj;
         }),
-        catchError(this.handleError)
+        catchError((e) => this.handleError(e))
       );
   }
 
@@ -40,9 +40,9 @@ export class GroupService {
     return this.http
       .put<GenericResponse>(`${this.baseGroupUrl}/${id}`, changes)
       .pipe(
-        tap(this.ensureSuccessResponse),
+        tap((r) => this.ensureSuccessResponse(r)),
         map( (_r) => {}),
-        catchError(this.handleError)
+        catchError((e) => this.handleError(e))
       );
   }
 
@@ -68,7 +68,7 @@ export class GroupService {
             (req: PendingRequest) => req.action === 'join_request_created'
           )
         ),
-        catchError(this.handleError)
+        catchError((e) => this.handleError(e))
       );
   }
 
@@ -80,8 +80,8 @@ export class GroupService {
         },
       })
       .pipe(
-        tap(this.handleRequestActionResponse),
-        catchError(this.handleError)
+        tap((r) => this.handleRequestActionResponse(r)),
+        catchError((e) => this.handleError(e))
       );
   }
 
@@ -93,8 +93,8 @@ export class GroupService {
         }
       })
       .pipe(
-        tap(this.handleRequestActionResponse),
-        catchError(this.handleError)
+        tap((r) => this.handleRequestActionResponse(r)),
+        catchError((e) => this.handleError(e))
       );
   }
 
@@ -104,9 +104,9 @@ export class GroupService {
     return this.http
       .post<NewCodeSuccessResponse|GenericResponse>(`${this.baseGroupUrl}/${id}/code`, null, {})
       .pipe(
-        tap(this.ensureSuccessResponse),
+        tap((r) => this.ensureSuccessResponse(r)),
         map( (r:NewCodeSuccessResponse) => r.code),
-        catchError(this.handleError)
+        catchError((e) => this.handleError(e))
       );
   }
 
@@ -114,9 +114,9 @@ export class GroupService {
     return this.http
       .delete<GenericResponse>(`${this.baseGroupUrl}/${id}/code`)
       .pipe(
-        tap(this.ensureSuccessResponse),
+        tap((r) => this.ensureSuccessResponse(r)),
         map( (_r) => {}),
-        catchError(this.handleError)
+        catchError((e) => this.handleError(e))
       );
   }
 
