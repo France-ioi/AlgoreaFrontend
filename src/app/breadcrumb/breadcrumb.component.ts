@@ -1,3 +1,4 @@
+/* eslint-disable */ /* FIXME disabled for now while this is the mockup code, to be removed afterwards */
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({

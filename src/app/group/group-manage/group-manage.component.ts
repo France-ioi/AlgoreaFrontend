@@ -53,6 +53,8 @@ export class GroupManageComponent implements OnInit {
     });
 
     this.statusService.getObservable().subscribe((res) => {
+      /* eslint-disable  @typescript-eslint/no-unsafe-assignment */
+      // FIXME: to be fixed with an actual type in StatusService
       this.status = res;
     });
   }

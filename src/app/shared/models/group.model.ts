@@ -53,6 +53,8 @@ export class Group {
       this.created_at = new Date();
     } else {
       Object.assign(this, input);
+      /* eslint-disable  @typescript-eslint/no-unsafe-member-access */
+      // FIXME: request data handling to be rethought
       this.code_lifetime = Duration.fromString(input.code_lifetime);
       this.code_expires_at = (input.code_expires_at == null) ? undefined : new Date(input.code_expires_at);
     }
