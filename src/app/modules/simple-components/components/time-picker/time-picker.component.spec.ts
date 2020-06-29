@@ -1,5 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Duration } from '../../utils/duration';
+import { Duration } from '../../../../shared/utils/duration';
 
 import { TimePickerComponent } from './time-picker.component';
 import { FormsModule } from '@angular/forms';

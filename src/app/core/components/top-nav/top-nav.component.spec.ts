@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TopNavComponent } from './top-nav.component';
-import { AppModule } from '../core/app.module';
+import { AppModule } from '../../../core/app.module';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { Router } from '@angular/router';
 
