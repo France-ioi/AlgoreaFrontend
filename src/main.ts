@@ -8,5 +8,6 @@ if (environment.production) {
   enableProdMode();
 }
 
+/* eslint-disable no-console */ /* console call authorized here (?) */
 platformBrowserDynamic().bootstrapModule(AppModule)
   .catch(err => console.error(err));

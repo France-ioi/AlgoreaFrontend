@@ -136,6 +136,8 @@ export class GroupService {
   }
 
   private handleError(error: HttpErrorResponse) {
+    /* eslint-disable no-console */ /* FIXME: to be done properly */
+
     if (error.error instanceof ErrorEvent) {
       console.error('An error occurred:', error.error.message);
     } else {
@@ -144,6 +146,6 @@ export class GroupService {
       );
     }
 
-    return throwError('Something bad happened; please try again later.');
+    return throwError(new Error('Something bad happened; please try again later.'));
   }
 }

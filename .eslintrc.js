@@ -1,20 +1,15 @@
-/**
- * We are using the .JS version of an ESLint config file here so that we can
- * add lots of comments to better explain and document the setup.
- */
 module.exports = {
-  // these are not required if we do not require type check
-  // parser: '@typescript-eslint/parser',
-  // parserOptions: {
-  //   tsconfigRootDir: __dirname,
-  //   project: './tsconfig.json'
-  // },
+  parser: '@typescript-eslint/parser',
+  parserOptions: {
+    project: './tsconfig.json'
+  },
   extends: [
-    "eslint:recommended",
+    'eslint:recommended',
     'plugin:@typescript-eslint/eslint-recommended',
-    // 'plugin:@typescript-eslint/recommended-requiring-type-checking', // very slow
+    'plugin:@typescript-eslint/recommended-requiring-type-checking',
     'plugin:@angular-eslint/recommended'
   ],
+  plugins: ['rxjs'],
   rules: {
     '@angular-eslint/directive-selector': [
       'error',
@@ -34,30 +29,31 @@ module.exports = {
       'error',
       'fields',
     ],
-    "@typescript-eslint/consistent-type-definitions": ["error", "interface"],
-    "@typescript-eslint/prefer-for-of": ["error"],
+    '@typescript-eslint/consistent-type-definitions': ['error', 'interface'],
+    '@typescript-eslint/prefer-for-of': ['error'],
+    'rxjs/no-async-subscribe': 'error',
+    'rxjs/no-ignored-observable': 'error',
+    'rxjs/no-nested-subscribe': 'error',
+    'rxjs/no-unbound-methods': 'error',
+    'rxjs/throw-error': 'error',
+    'rxjs/suffix-subjects': [
+      'error',
+      { suffix: '$' }
+    ],
+    'semi': ['error'],
+    'max-len': [
+      'error',
+      { 'code': 140 },
+    ],
+    'no-console': ['error'],
   },
   overrides: [
-    /**
-     * This extra piece of configuration is only necessary if you make use of inline
-     * templates within Component metadata, e.g.:
-     *
-     * @Component({
-     *  template: `<h1>Hello, World!</h1>`
-     * })
-     * ...
-     *
-     * It is not necessary if you only use .html files for templates.
-     */
-    // {
-    //   files: ['*.component.ts'],
-    //   parser: '@typescript-eslint/parser',
-    //   parserOptions: {
-    //     ecmaVersion: 2020,
-    //     sourceType: 'module',
-    //   },
-    //   plugins: ['@angular-eslint/template'],
-    //   processor: '@angular-eslint/template/extract-inline-html',
-    // },
+    {
+      files: ['*.spec.ts'],
+      rules: {
+        '@typescript-eslint/no-floating-promises': 'off',
+        '@typescript-eslint/unbound-method': 'off',
+      }
+    },
   ],
 };
