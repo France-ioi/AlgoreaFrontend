@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { StatusService } from '../../../shared/http/status.service';
-import { GroupService } from '../../../shared/http/services/group.service';
-import { Group } from '../../../shared/models/group.model';
+import { StatusService } from '../../../../shared/http/status.service';
+import { GroupService } from '../../../../shared/http/services/group.service';
+import { Group } from '../../../../shared/models/group.model';
 
 @Component({
   selector: 'alg-group-manage',

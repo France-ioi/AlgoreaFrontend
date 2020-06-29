@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { GroupComponent } from './group.component';
-import { GroupManageComponent } from './group-manage/group-manage.component';
-import { GroupOverviewComponent } from './group-overview/group-overview.component';
-import { GroupAdministrationComponent } from './group-administration/group-administration.component';
-import { GroupCompositionComponent } from './group-composition/group-composition.component';
-import { GroupSettingsComponent } from './group-settings/group-settings.component';
+import { GroupManageComponent } from './components/group-manage/group-manage.component';
+import { GroupOverviewComponent } from './components/group-overview/group-overview.component';
+import { GroupAdministrationComponent } from './components/group-administration/group-administration.component';
+import { GroupCompositionComponent } from './components/group-composition/group-composition.component';
+import { GroupSettingsComponent } from './components/group-settings/group-settings.component';
 
 const routes: Routes = [
   {

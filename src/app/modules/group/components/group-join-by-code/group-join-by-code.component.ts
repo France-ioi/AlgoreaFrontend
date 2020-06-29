@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { Group, GroupCodeState } from '../../../shared/models/group.model';
-import { GroupService } from '../../../shared/http/services/group.service';
+import { Group, GroupCodeState } from '../../../../shared/models/group.model';
+import { GroupService } from '../../../../shared/http/services/group.service';
 import { MessageService } from 'primeng/api';
 import { Observable } from 'rxjs';
 import { finalize, concatMap } from 'rxjs/operators';
-import { TOAST_LENGTH } from '../../../shared/constants/global';
-import {  ERROR_MESSAGE } from '../../../shared/constants/api';
-import { Duration } from '../../../shared/utils/duration';
+import { TOAST_LENGTH } from '../../../../shared/constants/global';
+import {  ERROR_MESSAGE } from '../../../../shared/constants/api';
+import { Duration } from '../../../../shared/utils/duration';
 
 @Component({
   selector: 'alg-group-join-by-code',

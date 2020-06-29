@@ -5,16 +5,16 @@ import {
   OnChanges,
   SimpleChanges,
 } from '@angular/core';
-import { GroupService } from '../../../shared/http/services/group.service';
-import { PendingRequest } from '../../../shared/models/pending-request.model';
+import { GroupService } from '../../../../shared/http/services/group.service';
+import { PendingRequest } from '../../../../shared/models/pending-request.model';
 import { SortEvent } from 'primeng/api/sortevent';
 import { MessageService } from 'primeng/api';
 import {
   ERROR_MESSAGE,
-} from '../../../shared/constants/api';
-import { TOAST_LENGTH } from '../../../shared/constants/global';
+} from '../../../../shared/constants/api';
+import { TOAST_LENGTH } from '../../../../shared/constants/global';
 import * as _ from 'lodash';
-import { RequestActionResponse } from '../../../shared/models/requet-action-response.model';
+import { RequestActionResponse } from '../../../../shared/models/requet-action-response.model';
 import { Observable } from 'rxjs';
 
 export enum Activity {

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { GroupService } from '../../../shared/http/services/group.service';
-import { Group } from '../../../shared/models/group.model';
+import { GroupService } from '../../../../shared/http/services/group.service';
+import { Group } from '../../../../shared/models/group.model';
 
 @Component({
   selector: 'alg-group-administration',
