@@ -41,6 +41,7 @@ export class GroupManageComponent implements OnInit {
 
   ngOnInit() {
     this.activatedRoute.paramMap.subscribe((params) => {
+      /* eslint-disable rxjs/no-nested-subscribe */ /* FIXME: should not be done this way! :-/ */
       const id = params.get('id');
       if (id == null) {
         // FIXME: should probably report error

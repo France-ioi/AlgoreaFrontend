@@ -4,11 +4,12 @@ module.exports = {
     project: './tsconfig.json'
   },
   extends: [
-    "eslint:recommended",
+    'eslint:recommended',
     'plugin:@typescript-eslint/eslint-recommended',
     'plugin:@typescript-eslint/recommended-requiring-type-checking',
     'plugin:@angular-eslint/recommended'
   ],
+  plugins: ['rxjs'],
   rules: {
     '@angular-eslint/directive-selector': [
       'error',
@@ -28,8 +29,17 @@ module.exports = {
       'error',
       'fields',
     ],
-    "@typescript-eslint/consistent-type-definitions": ["error", "interface"],
-    "@typescript-eslint/prefer-for-of": ["error"],
+    '@typescript-eslint/consistent-type-definitions': ['error', 'interface'],
+    '@typescript-eslint/prefer-for-of': ['error'],
+    'rxjs/no-async-subscribe': 'error',
+    'rxjs/no-ignored-observable': 'error',
+    'rxjs/no-nested-subscribe': 'error',
+    'rxjs/no-unbound-methods': 'error',
+    'rxjs/throw-error': 'error',
+    'rxjs/suffix-subjects': [
+      'error',
+      { suffix: '$' }
+    ],
   },
   overrides: [
     {
