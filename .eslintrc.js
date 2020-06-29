@@ -40,6 +40,12 @@ module.exports = {
       'error',
       { suffix: '$' }
     ],
+    'semi': ['error'],
+    'max-len': [
+      'error',
+      { 'code': 140 },
+    ],
+    'no-console': ['error'],
   },
   overrides: [
     {

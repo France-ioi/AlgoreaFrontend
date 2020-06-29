@@ -45,7 +45,6 @@ export class TopNavComponent implements OnInit {
   onCollapse(_e) {
     this.collapsed = !this.collapsed;
     this.collapseEvent.emit(this.collapsed);
-    console.log(this.templateId);
   }
 
   onFold(_e) {
@@ -62,7 +61,6 @@ export class TopNavComponent implements OnInit {
   signInOut(_e) {
     this.signedIn = !this.signedIn;
     this.signInOutEvent.emit(this.signedIn);
-    console.log(this.signedIn, this.templateId);
   }
 
   onSearchEvent(e) {
