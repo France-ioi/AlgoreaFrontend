@@ -1,5 +1,5 @@
 import { ManagementLevel } from '../constants/group';
-import { Duration } from '../../utils/duration';
+import { Duration } from '../utils/duration';
 
 export enum GroupCodeState { NotSet, Unused, InUse, Expired }
 
