@@ -756,7 +756,6 @@ export class AppComponent implements OnInit {
 
   onFold(e) {
     this.folded = e;
-    console.log(e);
   }
 
   onDisplayScoreChange(e) {
@@ -798,7 +797,6 @@ export class AppComponent implements OnInit {
     this.selectedType = 1;
     this.userTitle = 'Jean Monet';
     this.updateService();
-    console.log(e);
     if (e.src === 'managed') {
       this.router.navigate([`/groups/${e.e.ID}`]);
     } else {
