@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { environment } from '../../../../environments/environment';
+import { environment } from '../../../environments/environment';
 import {
   HttpClient,
   HttpErrorResponse,
@@ -8,11 +8,11 @@ import {
 import { Observable, throwError, BehaviorSubject } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
-import { Group } from '../../models/group.model';
-import { PendingRequest } from '../../models/pending-request.model';
-import { RequestActionResponse } from '../../models/requet-action-response.model';
-import { NewCodeSuccessResponse } from '../../models/group-service-response.model';
-import { GenericResponse } from '../../models/generic-response.model';
+import { Group } from '../models/group.model';
+import { PendingRequest } from '../models/pending-request.model';
+import { RequestActionResponse } from '../models/requet-action-response.model';
+import { NewCodeSuccessResponse } from '../models/group-service-response.model';
+import { GenericResponse } from '../models/generic-response.model';
 
 @Injectable({
   providedIn: 'root',
