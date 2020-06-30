@@ -1,8 +1,9 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Group } from '../../../../shared/models/group.model';
-import { GroupAdministrationComponent } from '../group-administration/group-administration.component';
-import { GroupOverviewComponent } from '../group-overview/group-overview.component';
-import { GroupCompositionComponent } from '../group-composition/group-composition.component';
+import { GroupOverviewComponent } from '../../pages/group-overview/group-overview.component';
+import { GroupCompositionComponent } from '../../pages/group-composition/group-composition.component';
+import { GroupAdministrationComponent } from '../../pages/group-administration/group-administration.component';
+
 
 interface NavLink {
   path: string;
