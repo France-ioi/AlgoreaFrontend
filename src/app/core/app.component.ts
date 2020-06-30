@@ -798,9 +798,9 @@ export class AppComponent implements OnInit {
     this.userTitle = 'Jean Monet';
     this.updateService();
     if (e.src === 'managed') {
-      this.router.navigate([`/groups/${e.e.ID}`]);
+      this.router.navigate([`/groups/details/${e.e.ID}`]);
     } else {
-      this.router.navigate(['/groups/memberships/11']);
+      this.router.navigate(['/groups/details/11']);
     }
   }
 

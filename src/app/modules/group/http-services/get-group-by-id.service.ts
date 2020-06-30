@@ -6,6 +6,9 @@ import { environment } from 'src/environments/environment';
 export interface Group {
   id: string;
   name: string;
+  description: string;
+  current_user_is_manager: boolean;
+  current_user_can_manage?: string;
 }
 
 @Injectable({

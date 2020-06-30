@@ -7,8 +7,6 @@ import { GroupRoutingModule } from './group-routing.module';
 
 import { GroupComponent } from './group.component';
 import { GroupHeaderComponent } from './components/group-header/group-header.component';
-import { GroupContentComponent } from './components/group-content/group-content.component';
-import { GroupManageComponent } from './components/group-manage/group-manage.component';
 import { PendingRequestComponent } from './components/pending-request/pending-request.component';
 import { GroupNoPermissionComponent } from './components/group-no-permission/group-no-permission.component';
 import { GroupJoinByCodeComponent } from './components/group-join-by-code/group-join-by-code.component';
@@ -29,9 +27,7 @@ import { GroupDetailsComponent } from './pages/group-details/group-details.compo
   declarations: [
     GroupComponent,
     GroupHeaderComponent,
-    GroupContentComponent,
     GroupOverviewComponent,
-    GroupManageComponent,
     PendingRequestComponent,
     GroupCompositionComponent,
     GroupAdministrationComponent,

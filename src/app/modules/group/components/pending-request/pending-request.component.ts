@@ -35,7 +35,7 @@ export enum Action {
   providers: [ MessageService ]
 })
 export class PendingRequestComponent implements OnInit, OnChanges {
-  @Input() id: string;
+  @Input() groupId: string;
 
   Action = Action;  // Make the enum usable in the html template
 
@@ -52,7 +52,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
 
   _reloadData() {
     this.groupService
-      .getManagedRequests(this.id, this.currentSort)
+      .getManagedRequests(this.groupId, this.currentSort)
       .subscribe((reqs: PendingRequest[]) => {
         this.requests = reqs;
       });
@@ -139,9 +139,9 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     const groupIds = this.selection.map(req => req.joining_user.group_id);
 
     if (action === Action.Accept) {
-      resultObserver = this.groupService.acceptJoinRequest(this.id, groupIds);
+      resultObserver = this.groupService.acceptJoinRequest(this.groupId, groupIds);
     } else {
-      resultObserver = this.groupService.rejectJoinRequest(this.id, groupIds);
+      resultObserver = this.groupService.rejectJoinRequest(this.groupId, groupIds);
     }
 
     resultObserver

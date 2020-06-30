@@ -1,23 +1,21 @@
-import { Component, OnInit } from '@angular/core';
-import { Group } from '../../../../shared/models/group.model';
-import { GroupService } from '../../../../shared/http-services/group.service';
+import { Component } from '@angular/core';
+import { GroupTabService } from '../../services/group-tab.service';
+import { Group } from '../../http-services/get-group-by-id.service';
 
 @Component({
   selector: 'alg-group-composition',
   templateUrl: './group-composition.component.html',
   styleUrls: ['./group-composition.component.scss']
 })
-export class GroupCompositionComponent implements OnInit {
+export class GroupCompositionComponent {
 
-  group: Group = new Group();
+  group: Group
 
   constructor(
-    private groupService: GroupService
-  ) { }
-
-  ngOnInit() {
-    this.groupService.getLatestGroup().subscribe(group => {
-      this.group = group;
+    private groupTabService: GroupTabService,
+  ) {
+    this.groupTabService.group$.subscribe((g: Group) => {
+      this.group = g;
     });
   }
 

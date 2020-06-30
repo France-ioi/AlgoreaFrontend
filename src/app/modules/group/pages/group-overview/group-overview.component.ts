@@ -9,7 +9,7 @@ import { Group } from '../../http-services/get-group-by-id.service';
 })
 export class GroupOverviewComponent {
 
-  group?: Group
+  group: Group
 
   constructor(
     private groupTabService: GroupTabService,

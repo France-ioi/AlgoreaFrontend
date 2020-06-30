@@ -1,9 +1,42 @@
-<p><strong>GROUP ID {{ idFromRoute}} -- {{ group?.name}}</strong></p>
-<p>header</p>
+<div *ngIf="group; else loading">
+  <alg-group-header [group]="group"></alg-group-header>
+  <alg-pending-request [groupId]="group.id"></alg-pending-request>
 
-<p>pending requests</p>
+  <!-- tabs -- if only the first tab is visible, do not show the tab bar -->
+  <nav mat-tab-nav-bar *ngIf="showMembershipTab">
+    <a mat-tab-link
+      [routerLink]="'./'"
+      routerLinkActive #rla1="routerLinkActive"
+      [routerLinkActiveOptions]="{exact: true}"
+      [active]="rla1.isActive">
+      Overview
+    </a>
+    <a mat-tab-link
+      [routerLink]="'./members'"
+      routerLinkActive #rla2="routerLinkActive"
+      [active]="rla2.isActive">
+      Composition
+    </a>
+    <a mat-tab-link
+      *ngIf="showAdvancedTabs"
+      [routerLink]="'./managers'"
+      routerLinkActive #rla3="routerLinkActive"
+      [active]="rla3.isActive">
+      Administration
+    </a>
+    <a mat-tab-link
+      *ngIf="showAdvancedTabs"
+      [routerLink]="'./settings'"
+      routerLinkActive #rla4="routerLinkActive"
+      [active]="rla4.isActive">
+      Settings
+    </a>
+  </nav>
+  <div class="bg-white">
+    <router-outlet></router-outlet>
+  </div>
+</div>
 
-<p>tabs</p>
-
-<router-outlet *ngIf="group"></router-outlet>
-
+<ng-template #loading>
+  <p-progressSpinner></p-progressSpinner>
+</ng-template>
