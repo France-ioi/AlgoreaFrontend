@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { StatusService } from '../../../../shared/http/status.service';
-import { GroupService } from '../../../../shared/http/services/group.service';
+import { StatusService } from '../../../../shared/services/status.service';
+import { GroupService } from '../../../../shared/http-services/group.service';
 import { Group } from '../../../../shared/models/group.model';
 
 @Component({

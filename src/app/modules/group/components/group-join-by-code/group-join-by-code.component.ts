@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Group, GroupCodeState } from '../../../../shared/models/group.model';
-import { GroupService } from '../../../../shared/http/services/group.service';
+import { GroupService } from '../../../../shared/http-services/group.service';
 import { MessageService } from 'primeng/api';
 import { Observable } from 'rxjs';
 import { finalize, concatMap } from 'rxjs/operators';

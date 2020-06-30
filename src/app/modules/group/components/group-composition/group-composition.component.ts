@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Group } from '../../../../shared/models/group.model';
-import { GroupService } from '../../../../shared/http/services/group.service';
+import { GroupService } from '../../../../shared/http-services/group.service';
 
 @Component({
   selector: 'alg-group-composition',

@@ -5,7 +5,7 @@ import {
   OnChanges,
   SimpleChanges,
 } from '@angular/core';
-import { GroupService } from '../../../../shared/http/services/group.service';
+import { GroupService } from '../../../../shared/http-services/group.service';
 import { PendingRequest } from '../../../../shared/models/pending-request.model';
 import { SortEvent } from 'primeng/api/sortevent';
 import { MessageService } from 'primeng/api';

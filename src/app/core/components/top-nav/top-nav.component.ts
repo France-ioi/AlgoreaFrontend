@@ -1,5 +1,5 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
-import { StatusService } from '../../../shared/http/status.service';
+import { StatusService } from '../../../shared/services/status.service';
 import { Router } from '@angular/router';
 
 @Component({

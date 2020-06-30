@@ -18,11 +18,11 @@ import { SkillActivityTabsComponent } from './components//skill-activity-tabs/sk
 
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 
-import { TokenInterceptor } from '../shared/http/interceptors/token.interceptor';
+import { TokenInterceptor } from '../shared/interceptors/token.interceptor';
 import {
   TimeoutInterceptor,
   DEFAULT_TIMEOUT,
-} from '../shared/http/interceptors/timeout.interceptor';
+} from '../shared/interceptors/timeout.interceptor';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';

@@ -2,7 +2,7 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { ProgressType } from '../modules/simple-components/components/skill-progress/skill-progress.component';
 import { Router } from '@angular/router';
-import { StatusService } from '../shared/http/status.service';
+import { StatusService } from '../shared/services/status.service';
 
 @Component({
   selector: 'alg-root',

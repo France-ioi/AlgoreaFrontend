@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PendingRequestComponent, Activity, Action } from './pending-request.component';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { GroupService } from '../../../../shared/http/services/group.service';
+import { GroupService } from '../../../../shared/http-services/group.service';
 import { of, Subject } from 'rxjs';
 import { PendingRequest } from '../../../../shared/models/pending-request.model';
 import { RequestActionResponse } from '../../../../shared/models/requet-action-response.model';
