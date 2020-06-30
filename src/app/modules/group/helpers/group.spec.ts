@@ -1,4 +1,3 @@
-import { Group } from './group';
 import { TestRequest } from '@angular/common/http/testing';
 
 describe('Group', () => {
