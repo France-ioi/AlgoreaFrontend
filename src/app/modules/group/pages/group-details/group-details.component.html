@@ -1,7 +1,9 @@
+<p><strong>GROUP ID {{ idFromRoute}} -- {{ group?.name}}</strong></p>
 <p>header</p>
 
 <p>pending requests</p>
 
 <p>tabs</p>
 
-<router-outlet></router-outlet>
+<router-outlet *ngIf="group"></router-outlet>
+

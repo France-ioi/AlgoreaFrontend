@@ -1,46 +1,22 @@
-import { Component, OnInit } from '@angular/core';
-import { GroupService } from '../../../../shared/http-services/group.service';
-import { Group } from '../../../../shared/models/group.model';
+import { Component } from '@angular/core';
+import { GroupTabService } from '../../services/group-tab.service';
+import { Group } from '../../http-services/get-group-by-id.service';
 
 @Component({
   selector: 'alg-group-overview',
   templateUrl: './group-overview.component.html',
   styleUrls: ['./group-overview.component.scss']
 })
-export class GroupOverviewComponent implements OnInit {
+export class GroupOverviewComponent {
 
-  group: Group = new Group();
-
-  tasks = [];
-
-  columns = [
-    { field: 'task', header: 'Task' },
-    { field: 'chapter', header: 'Chapter' },
-    { field: 'grade', header: 'Grade' },
-    { field: 'date', header: 'Date' }
-  ];
-
-  panels = [
-  ];
+  group?: Group
 
   constructor(
-    private groupService: GroupService
-  ) { }
-
-  ngOnInit() {
-    this.panels.push(
-      {
-        name: 'Group',
-        columns: this.columns
-      }
-    );
-    this.groupService.getLatestGroup().subscribe(group => {
-      this.group = group;
+    private groupTabService: GroupTabService,
+  ) {
+    this.groupTabService.group$.subscribe((g: Group) => {
+      this.group = g;
     });
-  }
-
-  onExpandWidth(_e) {
-
   }
 
 }
