@@ -13,8 +13,9 @@ import { GroupJoinByCodeComponent } from './components/group-join-by-code/group-
 
 import {
   CodeNotSetPipe, CodeUnusedPipe, CodeInUsePipe, CodeExpiredPipe,
-  CodeTimeSinceFirstUsePipe, CodeTimeBeforeExpirationPipe
-} from '../../shared/models/group.pipe';
+  DurationSinceFirstCodeUsePipe, DurationBeforeCodeExpirationPipe,
+  CodeLifetimePipe
+} from './pipes/group.pipe';
 import { GroupOverviewComponent } from './pages/group-overview/group-overview.component';
 import { GroupAdministrationComponent } from './pages/group-administration/group-administration.component';
 import { GroupSettingsComponent } from './pages/group-settings/group-settings.component';
@@ -22,6 +23,7 @@ import { GroupCompositionComponent } from './pages/group-composition/group-compo
 import { MyGroupsComponent } from './pages/my-groups/my-groups.component';
 import { ManagedGroupsComponent } from './pages/managed-groups/managed-groups.component';
 import { GroupDetailsComponent } from './pages/group-details/group-details.component';
+import { DurationToMinPipe } from 'src/app/shared/pipes/duration';
 
 @NgModule({
   declarations: [
@@ -38,7 +40,8 @@ import { GroupDetailsComponent } from './pages/group-details/group-details.compo
     GroupNoPermissionComponent,
     GroupJoinByCodeComponent,
     CodeNotSetPipe, CodeUnusedPipe, CodeInUsePipe, CodeExpiredPipe,
-    CodeTimeSinceFirstUsePipe, CodeTimeBeforeExpirationPipe,
+    DurationSinceFirstCodeUsePipe, DurationBeforeCodeExpirationPipe,
+    DurationToMinPipe, CodeLifetimePipe
   ],
   imports: [
     CommonModule,

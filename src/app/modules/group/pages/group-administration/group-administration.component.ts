@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { GroupTabService } from '../../services/group-tab.service';
 import { Group } from '../../http-services/get-group-by-id.service';
-import { canCurrentUserManageGroup } from '../../helpers/group';
+import { canCurrentUserManageGroup } from '../../helpers/group-management';
 
 @Component({
   selector: 'alg-group-administration',

@@ -19,4 +19,8 @@ export class GroupCompositionComponent {
     });
   }
 
+  refreshGroupInfo() {
+    this.groupTabService.refresh$.next();
+  }
+
 }

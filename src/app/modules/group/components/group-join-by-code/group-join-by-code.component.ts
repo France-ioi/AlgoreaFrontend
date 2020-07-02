@@ -1,39 +1,37 @@
-import { Component, OnInit } from '@angular/core';
-import { Group, GroupCodeState } from '../../../../shared/models/group.model';
+import { Component, Input, OnChanges, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { GroupService } from '../../../../shared/http-services/group.service';
 import { MessageService } from 'primeng/api';
-import { Observable } from 'rxjs';
-import { finalize, concatMap } from 'rxjs/operators';
+import { finalize, tap } from 'rxjs/operators';
 import { TOAST_LENGTH } from '../../../../shared/constants/global';
 import {  ERROR_MESSAGE } from '../../../../shared/constants/api';
-import { Duration } from '../../../../shared/utils/duration';
+import { Duration } from '../../../../shared/helpers/duration';
+import { Group } from '../../http-services/get-group-by-id.service';
+import { hasCodeNotSet } from '../../helpers/group-code';
+import { canCurrentUserManageMembers } from '../../helpers/group-management';
 
 @Component({
   selector: 'alg-group-join-by-code',
   templateUrl: './group-join-by-code.component.html',
   styleUrls: ['./group-join-by-code.component.scss'],
-  providers: [ MessageService ]
+  providers: [ MessageService ],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class GroupJoinByCodeComponent implements OnInit {
+export class GroupJoinByCodeComponent implements OnChanges {
 
-  group = new Group();
+  @Input() group: Group
+  @Output() refreshRequired = new EventEmitter<void>();
+
+  canChangeCode = false;
   processing = false;
 
   constructor(
-    private groupService: GroupService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private groupService: GroupService
   ) { }
 
-  ngOnInit(): void {
-    this.groupService.getLatestGroup().subscribe(group => {
-      this.group = group;
-    });
-  }
-
-  reloadGroupData(): Observable<Group> {
-    return this.groupService
-      .getGroup(this.group.id);
+  ngOnChanges() {
+    this.canChangeCode = canCurrentUserManageMembers(this.group);
   }
 
   displaySuccess(msg: string) {
@@ -64,7 +62,7 @@ export class GroupJoinByCodeComponent implements OnInit {
     this.groupService
       .createNewCode(this.group.id)
       .pipe(
-        concatMap(() => this.reloadGroupData()),
+        tap(() => this.refreshRequired.emit()),
         finalize(() => this.processing = false)
       ).subscribe(
         (_result) => {
@@ -78,7 +76,7 @@ export class GroupJoinByCodeComponent implements OnInit {
 
   changeValidity(newDuration: Duration) {
     // check valid state
-    if (![GroupCodeState.Unused, GroupCodeState.InUse, GroupCodeState.Expired].includes(this.group.codeState())) return;
+    if (hasCodeNotSet(this.group)) return;
 
     // disable UI
     this.processing = true;
@@ -87,7 +85,7 @@ export class GroupJoinByCodeComponent implements OnInit {
     this.groupService
       .updateGroup(this.group.id, { code_lifetime: newDuration.toString(), code_expires_at: null })
       .pipe(
-        concatMap(() => this.reloadGroupData()),
+        tap(() => this.refreshRequired.emit()),
         finalize(() => this.processing = false),
       ).subscribe(
         (_result) => {
@@ -107,7 +105,7 @@ export class GroupJoinByCodeComponent implements OnInit {
     this.groupService
       .removeCode(this.group.id)
       .pipe(
-        concatMap(() => this.reloadGroupData()),
+        tap(() => this.refreshRequired.emit()),
         finalize(() => this.processing = false)
       ).subscribe(
         (_result) => {

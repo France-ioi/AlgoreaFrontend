@@ -7,8 +7,13 @@ export interface Group {
   id: string;
   name: string;
   description: string;
+
   current_user_is_manager: boolean;
   current_user_can_manage?: string;
+
+  code?: string;
+  code_lifetime?: string;
+  code_expires_at?: string;
 }
 
 @Injectable({

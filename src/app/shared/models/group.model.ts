@@ -1,7 +1,5 @@
 import { ManagementLevel } from '../constants/group';
-import { Duration } from '../utils/duration';
-
-export enum GroupCodeState { NotSet, Unused, InUse, Expired }
+import { Duration } from '../helpers/duration';
 
 export class Group {
   id: string;
@@ -53,10 +51,6 @@ export class Group {
       this.created_at = new Date();
     } else {
       Object.assign(this, input);
-      /* eslint-disable  @typescript-eslint/no-unsafe-member-access */
-      // FIXME: request data handling to be rethought
-      this.code_lifetime = Duration.fromString(input.code_lifetime);
-      this.code_expires_at = (input.code_expires_at == null) ? undefined : new Date(input.code_expires_at);
     }
   }
 
@@ -70,18 +64,6 @@ export class Group {
   // fixme: make consistent with the fct above
   canMangeMembershipAndGroup(): boolean {
     return this.current_user_can_manage === ManagementLevel.MembershipsAndGroup;
-  }
-
-  // Return the state of the code used for joining the group
-  codeState(): GroupCodeState {
-    if (!this.code || this.code.length < 1) return GroupCodeState.NotSet;
-    if (this.code_expires_at == null) return GroupCodeState.Unused;
-    return (new Date() < this.code_expires_at) ? GroupCodeState.InUse : GroupCodeState.Expired;
-  }
-
-  codeFirstUse(): Date {
-    if (this.code_expires_at == null || this.code_lifetime == null) return null;
-    return new Date(this.code_expires_at.valueOf() - this.code_lifetime.ms);
   }
 
 }
