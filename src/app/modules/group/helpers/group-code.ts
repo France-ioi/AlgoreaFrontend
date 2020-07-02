@@ -1,9 +1,9 @@
 import { Duration } from 'src/app/shared/helpers/duration';
 
 export interface CodeInfo {
-  code?: string;
-  code_lifetime?: string;
-  code_expires_at?: string;
+  code?: string|null;
+  code_lifetime?: string|null;
+  code_expires_at?: string|null;
 }
 
 export interface CodeAdditions {
@@ -13,9 +13,9 @@ export interface CodeAdditions {
   hasCodeUnused: boolean;
   hasCodeInUse: boolean;
   hasCodeExpired: boolean;
-  codeFirstUseDate: Date|null;
-  durationSinceFirstCodeUse: Duration|null;
-  durationBeforeCodeExpiration: Duration|null;
+  codeFirstUseDate?: Date;
+  durationSinceFirstCodeUse?: Duration;
+  durationBeforeCodeExpiration?: Duration;
 }
 
 // Adds to the given group some new computed attributes (as value)
@@ -61,19 +61,19 @@ export function hasCodeExpired(group: CodeInfo): boolean {
   return group.code_expires_at && codeExpiration(group) < new Date();
 }
 
-export function codeFirstUseDate(group: CodeInfo): Date|null {
-  if (!group.code_expires_at || !group.code_lifetime) return null;
+export function codeFirstUseDate(group: CodeInfo): Date|undefined {
+  if (!group.code_expires_at || !group.code_lifetime) return undefined;
   return new Date(codeExpiration(group).valueOf() - codeLifetime(group).ms);
 }
 
-export function durationSinceFirstCodeUse(group: CodeInfo): Duration|null {
+export function durationSinceFirstCodeUse(group: CodeInfo): Duration|undefined {
   const firstUse = codeFirstUseDate(group);
-  if (firstUse == null) return null;
+  if (!firstUse) return undefined;
   return new Duration(Date.now() - firstUse.valueOf());
 }
 
-export function durationBeforeCodeExpiration(group: CodeInfo): Duration|null {
+export function durationBeforeCodeExpiration(group: CodeInfo): Duration|undefined {
   const expiration = codeExpiration(group);
-  if (!expiration) return null;
+  if (!expiration) return undefined;
   return new Duration(expiration.valueOf() - Date.now());
 }
