@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { GroupService } from '../../../../shared/http-services/group.service';
 import { MessageService } from 'primeng/api';
 import { finalize, tap } from 'rxjs/operators';
@@ -7,7 +7,6 @@ import {  ERROR_MESSAGE } from '../../../../shared/constants/api';
 import { Duration } from '../../../../shared/helpers/duration';
 import { Group } from '../../http-services/get-group-by-id.service';
 import { hasCodeNotSet } from '../../helpers/group-code';
-import { canCurrentUserManageMembers } from '../../helpers/group-management';
 
 @Component({
   selector: 'alg-group-join-by-code',
@@ -17,22 +16,17 @@ import { canCurrentUserManageMembers } from '../../helpers/group-management';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class GroupJoinByCodeComponent implements OnChanges {
+export class GroupJoinByCodeComponent {
 
   @Input() group: Group
   @Output() refreshRequired = new EventEmitter<void>();
 
-  canChangeCode = false;
   processing = false;
 
   constructor(
     private messageService: MessageService,
     private groupService: GroupService
   ) { }
-
-  ngOnChanges() {
-    this.canChangeCode = canCurrentUserManageMembers(this.group);
-  }
 
   displaySuccess(msg: string) {
     this.messageService.add({
