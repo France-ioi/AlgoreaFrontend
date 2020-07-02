@@ -1,5 +1,5 @@
 import { Component, OnChanges, Input, Output, EventEmitter } from '@angular/core';
-import { Duration, MINUTES } from '../../../../shared/utils/duration';
+import { Duration, MINUTES } from 'src/app/shared/helpers/duration';
 
 @Component({
   selector: 'alg-time-picker',
@@ -7,7 +7,7 @@ import { Duration, MINUTES } from '../../../../shared/utils/duration';
   styleUrls: ['./time-picker.component.scss'],
 })
 export class TimePickerComponent implements OnChanges {
-  @Input() initialValue : Duration;
+  @Input() initialValue? : Duration;
 
   @Output() submit = new EventEmitter<Duration>();
 
@@ -18,18 +18,15 @@ export class TimePickerComponent implements OnChanges {
   constructor() {}
 
   ngOnChanges(_change) {
-    this.currentValue = this.initialValue.minutes();
+    if (this.initialValue) this.currentValue = this.initialValue.minutes();
   }
 
-  currentDuration(): Duration|null {
+  currentDuration(): Duration {
     return Duration.fromHMS(0, this.currentValue, 0);
   }
 
   onClickValidateButton(_e) {
-    const duration = this.currentDuration();
-    if (duration != null) {
-      this.submit.emit(duration);
-    }
+    this.submit.emit(this.currentDuration());
   }
 
   timeChange(_e) {

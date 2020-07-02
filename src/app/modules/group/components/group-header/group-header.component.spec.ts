@@ -8,11 +8,13 @@ describe('GroupHeaderComponent', () => {
   let component: GroupHeaderComponent;
   let fixture: ComponentFixture<GroupHeaderComponent>;
   const mockData = {
-    ID: 11,
+    id: '11',
     name: 'CoderDojo 50',
     type: 'Other',
     grades: [-2],
     date: new Date(),
+    description: 'dummy',
+    current_user_is_manager: false
   };
 
   beforeEach(async(() => {
@@ -27,7 +29,7 @@ describe('GroupHeaderComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(GroupHeaderComponent);
     component = fixture.componentInstance;
-    component.data = mockData;
+    component.group = mockData;
     fixture.detectChanges();
   });
 

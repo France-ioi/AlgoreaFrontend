@@ -1,0 +1,8 @@
+<ng-container *ngIf="isAllowed; else noPermission">
+  <alg-section icon="fa fa-users" label="Settings">
+    <p>...</p>
+  </alg-section>
+</ng-container>
+<ng-template #noPermission>
+  <alg-group-no-permission></alg-group-no-permission>
+</ng-template>

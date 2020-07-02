@@ -64,7 +64,7 @@ describe('PendingRequestComponent', () => {
     fixture.detectChanges();
     groupService = TestBed.inject(GroupService);
     messageService = TestBed.inject(MessageService);
-    component.id = '99';
+    component.groupId = '99';
     spyOn(messageService, 'add').and.callThrough();
     spyOn(groupService, 'getManagedRequests').and.callThrough();
     spyOn(groupService, 'acceptJoinRequest').and.callThrough();

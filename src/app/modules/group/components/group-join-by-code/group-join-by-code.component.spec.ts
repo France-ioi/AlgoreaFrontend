@@ -5,6 +5,7 @@ import { GroupService } from '../../../../shared/http-services/group.service';
 import { MessageService } from 'primeng/api';
 import { of } from 'rxjs';
 import { Group } from '../../../../shared/models/group.model';
+import { mockGroup } from '../../mocks/group-by-id';
 
 
 describe('GroupJoinByCodeComponent', () => {
@@ -29,6 +30,8 @@ describe('GroupJoinByCodeComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(GroupJoinByCodeComponent);
     component = fixture.componentInstance;
+    component.group = mockGroup;
+    component.ngOnChanges();
     fixture.detectChanges();
   });
 

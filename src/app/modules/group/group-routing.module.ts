@@ -1,20 +1,25 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { GroupComponent } from './group.component';
-import { GroupManageComponent } from './components/group-manage/group-manage.component';
-import { GroupOverviewComponent } from './components/group-overview/group-overview.component';
-import { GroupAdministrationComponent } from './components/group-administration/group-administration.component';
-import { GroupCompositionComponent } from './components/group-composition/group-composition.component';
-import { GroupSettingsComponent } from './components/group-settings/group-settings.component';
+import { MyGroupsComponent } from './pages/my-groups/my-groups.component';
+import { ManagedGroupsComponent } from './pages/managed-groups/managed-groups.component';
+import { GroupDetailsComponent } from './pages/group-details/group-details.component';
+import { GroupOverviewComponent } from './pages/group-overview/group-overview.component';
+import { GroupCompositionComponent } from './pages/group-composition/group-composition.component';
+import { GroupAdministrationComponent } from './pages/group-administration/group-administration.component';
+import { GroupSettingsComponent } from './pages/group-settings/group-settings.component';
 
 const routes: Routes = [
   {
-    path: 'memberships/:id',
-    component: GroupComponent,
+    path: 'mine',
+    component: MyGroupsComponent,
   },
   {
-    path: ':id',
-    component: GroupManageComponent,
+    path: 'managed',
+    component: ManagedGroupsComponent,
+  },
+  {
+    path: 'details/:id',
+    component: GroupDetailsComponent,
     children: [
       {
         path: '',
@@ -22,26 +27,18 @@ const routes: Routes = [
       },
       {
         path: 'members',
-        component: GroupCompositionComponent
+        component: GroupCompositionComponent,
       },
       {
         path: 'managers',
-        component: GroupAdministrationComponent
+        component: GroupAdministrationComponent,
       },
       {
         path: 'settings',
-        component: GroupSettingsComponent
-      },
-      {
-        path: '**',
-        redirectTo: ''
+        component: GroupSettingsComponent,
       }
     ]
-  },
-  {
-    path: '**',
-    component: GroupComponent,
-  },
+  }
 ];
 
 @NgModule({
