@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { GroupTabService } from '../../services/group-tab.service';
 import { Group, GetGroupByIdService } from '../../http-services/get-group-by-id.service';
 import { ActivatedRoute } from '@angular/router';
-import { canCurrentUserManageGroup } from '../../helpers/group-management';
+import { withManagementAdditions, ManagementAdditions } from '../../helpers/group-management';
 
 @Component({
   selector: 'alg-group-details',
@@ -13,9 +13,7 @@ import { canCurrentUserManageGroup } from '../../helpers/group-management';
 export class GroupDetailsComponent {
 
   idFromRoute?: string;
-  group?: Group;
-  showMembershipTab = false;
-  showAdvancedTabs = false;
+  group?: Group & ManagementAdditions;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -37,10 +35,8 @@ export class GroupDetailsComponent {
       this.getGroupByIdService
         .get(this.idFromRoute)
         .subscribe((g: Group) => {
-          this.group = g;
+          this.group = withManagementAdditions(g);
           this.groupTabService.group$.next(g);
-          this.showMembershipTab = g.current_user_is_manager;
-          this.showAdvancedTabs = canCurrentUserManageGroup(g);
         });
     }
   }

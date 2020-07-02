@@ -3,7 +3,7 @@
   <alg-pending-request [groupId]="group.id"></alg-pending-request>
 
   <!-- tabs -- if only the first tab is visible, do not show the tab bar -->
-  <nav mat-tab-nav-bar *ngIf="showMembershipTab">
+  <nav mat-tab-nav-bar *ngIf="group.isCurrentUserManager">
     <a mat-tab-link
       [routerLink]="'./'"
       routerLinkActive #rla1="routerLinkActive"
@@ -18,14 +18,14 @@
       Composition
     </a>
     <a mat-tab-link
-      *ngIf="showAdvancedTabs"
+      *ngIf="group.canCurrentUserManageGroup"
       [routerLink]="'./managers'"
       routerLinkActive #rla3="routerLinkActive"
       [active]="rla3.isActive">
       Administration
     </a>
     <a mat-tab-link
-      *ngIf="showAdvancedTabs"
+      *ngIf="group.canCurrentUserManageGroup"
       [routerLink]="'./settings'"
       routerLinkActive #rla4="routerLinkActive"
       [active]="rla4.isActive">
