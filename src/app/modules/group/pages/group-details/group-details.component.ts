@@ -39,7 +39,7 @@ export class GroupDetailsComponent {
         .subscribe((g: Group) => {
           this.group = g;
           this.groupTabService.group$.next(g);
-          this.showMembershipTab = canCurrentUserManageMembers(g);
+          this.showMembershipTab = g.current_user_is_manager;
           this.showAdvancedTabs = canCurrentUserManageGroup(g);
         });
     }
