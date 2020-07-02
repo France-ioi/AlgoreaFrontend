@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { GroupTabService } from '../../services/group-tab.service';
 import { Group, GetGroupByIdService } from '../../http-services/get-group-by-id.service';
 import { ActivatedRoute } from '@angular/router';
-import { canCurrentUserManageMembers, canCurrentUserManageGroup } from '../../helpers/group-management';
+import { canCurrentUserManageGroup } from '../../helpers/group-management';
 
 @Component({
   selector: 'alg-group-details',
