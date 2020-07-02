@@ -6,7 +6,9 @@ describe('GroupTabService', () => {
   let service: GroupTabService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      providers: [ GroupTabService ]
+    });
     service = TestBed.inject(GroupTabService);
   });
 
