@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy, OnChanges } from '@angular/core';
 import { GroupService } from '../../../../shared/http-services/group.service';
 import { MessageService } from 'primeng/api';
 import { finalize, tap } from 'rxjs/operators';
@@ -6,7 +6,7 @@ import { TOAST_LENGTH } from '../../../../shared/constants/global';
 import {  ERROR_MESSAGE } from '../../../../shared/constants/api';
 import { Duration } from '../../../../shared/helpers/duration';
 import { Group } from '../../http-services/get-group-by-id.service';
-import { hasCodeNotSet } from '../../helpers/group-code';
+import { CodeAdditions, withCodeAdditions } from '../../helpers/group-code';
 
 @Component({
   selector: 'alg-group-join-by-code',
@@ -16,17 +16,22 @@ import { hasCodeNotSet } from '../../helpers/group-code';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class GroupJoinByCodeComponent {
+export class GroupJoinByCodeComponent implements OnChanges {
 
   @Input() group: Group
   @Output() refreshRequired = new EventEmitter<void>();
 
+  groupExt: Group & CodeAdditions; // group extended with code related attributes
   processing = false;
 
   constructor(
     private messageService: MessageService,
     private groupService: GroupService
   ) { }
+
+  ngOnChanges() {
+    this.groupExt = withCodeAdditions(this.group);
+  }
 
   displaySuccess(msg: string) {
     this.messageService.add({
@@ -70,7 +75,7 @@ export class GroupJoinByCodeComponent {
 
   changeValidity(newDuration: Duration) {
     // check valid state
-    if (hasCodeNotSet(this.group)) return;
+    if (this.groupExt.hasCodeNotSet) return;
 
     // disable UI
     this.processing = true;

@@ -11,11 +11,6 @@ import { PendingRequestComponent } from './components/pending-request/pending-re
 import { GroupNoPermissionComponent } from './components/group-no-permission/group-no-permission.component';
 import { GroupJoinByCodeComponent } from './components/group-join-by-code/group-join-by-code.component';
 
-import {
-  CodeNotSetPipe, CodeUnusedPipe, CodeInUsePipe, CodeExpiredPipe,
-  DurationSinceFirstCodeUsePipe, DurationBeforeCodeExpirationPipe,
-  CodeLifetimePipe
-} from './pipes/group.pipe';
 import { GroupOverviewComponent } from './pages/group-overview/group-overview.component';
 import { GroupAdministrationComponent } from './pages/group-administration/group-administration.component';
 import { GroupSettingsComponent } from './pages/group-settings/group-settings.component';
@@ -39,9 +34,7 @@ import { DurationToMinPipe } from 'src/app/shared/pipes/duration';
     GroupSettingsComponent,
     GroupNoPermissionComponent,
     GroupJoinByCodeComponent,
-    CodeNotSetPipe, CodeUnusedPipe, CodeInUsePipe, CodeExpiredPipe,
-    DurationSinceFirstCodeUsePipe, DurationBeforeCodeExpirationPipe,
-    DurationToMinPipe, CodeLifetimePipe
+    DurationToMinPipe,
   ],
   imports: [
     CommonModule,
