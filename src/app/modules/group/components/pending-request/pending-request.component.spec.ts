@@ -2,33 +2,27 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PendingRequestComponent, Activity, Action } from './pending-request.component';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { GroupService } from '../../../../shared/http-services/group.service';
 import { of, Subject } from 'rxjs';
-import { PendingRequest } from '../../../../shared/models/pending-request.model';
-import { RequestActionResponse } from '../../../../shared/models/requet-action-response.model';
 import { MessageService } from 'primeng/api';
+import { GenericActionResponse } from 'src/app/shared/http-services/action-response';
+import { PendingRequest, GetRequestsService } from '../../http-services/get-requests.service';
+import { RequestActionsService } from '../../http-services/request-actions.service';
 
-const MOCK_RESPONSE = [
+const MOCK_RESPONSE: PendingRequest[] = [
   {
-    member_id: '11',
     at: null,
-    action: 'join_request_created',
-    joining_user:  { group_id: '11', login: 'MadameSoso', first_name: 'Marie-Sophie', last_name: 'Denis', grade: 3 },
-    inviting_user: { group_id: '20', login: 'CyrilK67', first_name: 'Cyril', last_name: 'Kitsch', grade: -1 }
+    user: { group_id: '11', login: 'MadameSoso', first_name: 'Marie-Sophie', last_name: 'Denis', grade: 3 },
+    group: { id: '50', name: 'Dojo 50' }
   },
   {
-    member_id: '12',
     at: null,
-    action: 'join_request_created',
-    joining_user: { group_id: '12', login: 'FredGast', first_name: 'Frederique', last_name: 'Gastard', grade: 2 },
-    inviting_user: { group_id: '20', login: 'CyrilK67', first_name: 'Cyril', last_name: 'Kitsch', grade: -1 }
+    user: { group_id: '12', login: 'FredGast', first_name: 'Frederique', last_name: 'Gastard', grade: 2 },
+    group: { id: '50', name: 'Dojo 50' }
   },
   {
-    member_id: '10',
     at: null,
-    action: 'join_request_created',
-    joining_user: { group_id: '10', login: 'Jeandu88', first_name: 'Jean', last_name: 'Dujardin', grade: 3 },
-    inviting_user: { group_id: '20', login: 'CyrilK67', first_name: 'Cyril', last_name: 'Kitsch', grade: -1 }
+    user: { group_id: '10', login: 'Jeandu88', first_name: 'Jean', last_name: 'Dujardin', grade: 3 },
+    group: { id: '50', name: 'Dojo 50' }
   }
 
 ];
@@ -36,39 +30,41 @@ const MOCK_RESPONSE = [
 describe('PendingRequestComponent', () => {
   let component: PendingRequestComponent;
   let fixture: ComponentFixture<PendingRequestComponent>;
-  let groupService: GroupService;
+  let requestActionsService: RequestActionsService;
+  let getRequestsService: GetRequestsService;
   let messageService: MessageService;
-  let serviceResponder$: Subject<RequestActionResponse>;
+  let serviceResponder$: Subject<GenericActionResponse>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ PendingRequestComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
-        { provide: MessageService, useValue: { add: (_m) => {} } },
-        { provide: GroupService, useValue:
-          {
-            getManagedRequests: (_id, _sort) => of<PendingRequest[]>(MOCK_RESPONSE),
-            acceptJoinRequest: (_id, _groupIds) => serviceResponder$.asObservable(),
-            rejectJoinRequest: (_id, _groupIds) => serviceResponder$.asObservable(),
-          }
-        }
+        { provide: GetRequestsService, useValue: {
+          getPendingRequests: (_id, _sort) => of<PendingRequest[]>(MOCK_RESPONSE),
+        }},
+        { provide: RequestActionsService, useValue: {
+          acceptJoinRequest: (_id, _groupIds) => serviceResponder$.asObservable(),
+          rejectJoinRequest: (_id, _groupIds) => serviceResponder$.asObservable(),
+        }},
+        { provide: MessageService, useValue: { add: (_m) => {} } }
       ]
     }).compileComponents();
   }));
 
   beforeEach(() => {
-    serviceResponder$ = new Subject<RequestActionResponse>();
+    serviceResponder$ = new Subject<GenericActionResponse>();
     fixture = TestBed.createComponent(PendingRequestComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-    groupService = TestBed.inject(GroupService);
+    requestActionsService = TestBed.inject(RequestActionsService);
+    getRequestsService = TestBed.inject(GetRequestsService);
     messageService = TestBed.inject(MessageService);
     component.groupId = '99';
     spyOn(messageService, 'add').and.callThrough();
-    spyOn(groupService, 'getManagedRequests').and.callThrough();
-    spyOn(groupService, 'acceptJoinRequest').and.callThrough();
-    spyOn(groupService, 'rejectJoinRequest').and.callThrough();
+    spyOn(getRequestsService, 'getPendingRequests').and.callThrough();
+    spyOn(requestActionsService, 'acceptJoinRequest').and.callThrough();
+    spyOn(requestActionsService, 'rejectJoinRequest').and.callThrough();
     component.ngOnChanges(null);
   });
 
@@ -77,32 +73,32 @@ describe('PendingRequestComponent', () => {
   });
 
   it('should load requests at init', () => {
-    expect(groupService.getManagedRequests).toHaveBeenCalledWith('99', []);
+    expect(getRequestsService.getPendingRequests).toHaveBeenCalledWith('99', []);
     expect(component.requests).toEqual(MOCK_RESPONSE);
     expect(component.selection).toEqual([]);
     expect(component.panel.length).toEqual(1);
     expect(component.currentSort).toEqual([]);
-    expect(component.isIdle()).toBeTruthy();
+    expect(component.ongoingActivity).toEqual(Activity.None);
   });
 
   it('should, when none is selected and "select all" is clicked, select all rows', () => {
-    component.onSelectAll(null);
+    component.onSelectAll();
     expect(component.selection).toEqual(MOCK_RESPONSE);
-    expect(component.onGoingActivity).toEqual(Activity.None);
+    expect(component.ongoingActivity).toEqual(Activity.None);
   });
 
   it('should, when some are selected and "select all" is clicked, select all rows', () => {
     component.selection = MOCK_RESPONSE.slice(1);
-    component.onSelectAll(null);
+    component.onSelectAll();
     expect(component.selection).toEqual(MOCK_RESPONSE);
-    expect(component.onGoingActivity).toEqual(Activity.None);
+    expect(component.ongoingActivity).toEqual(Activity.None);
   });
 
   it('should, when all are selected and "select all" is clicked, deselect all rows', () => {
     component.selection = MOCK_RESPONSE;
-    component.onSelectAll(null);
+    component.onSelectAll();
     expect(component.selection).toEqual([]);
-    expect(component.onGoingActivity).toEqual(Activity.None);
+    expect(component.ongoingActivity).toEqual(Activity.None);
   });
 
 
@@ -113,7 +109,7 @@ describe('PendingRequestComponent', () => {
       {field: 'joining_user.login', order: -1},
       {field: 'at', order: 1}
     ]});
-    expect(groupService.getManagedRequests)
+    expect(getRequestsService.getPendingRequests)
       .toHaveBeenCalledWith('99', [ '-joining_user.login', 'at' ]);
 
     // check the field precedence counts
@@ -121,12 +117,12 @@ describe('PendingRequestComponent', () => {
       {field: 'at', order: 1},
       {field: 'joining_user.login', order: -1}
     ]});
-    expect(groupService.getManagedRequests)
+    expect(getRequestsService.getPendingRequests)
       .toHaveBeenCalledWith('99', [ 'at' , '-joining_user.login' ]);
 
     // sort reset
     component.onCustomSort({multiSortMeta: []});
-    expect(groupService.getManagedRequests).toHaveBeenCalledWith('99', []);
+    expect(getRequestsService.getPendingRequests).toHaveBeenCalledWith('99', []);
   });
 
   it('should, when accept is pressed, call the appropriate service and reload', () => {
@@ -135,10 +131,10 @@ describe('PendingRequestComponent', () => {
     component.selection = [ MOCK_RESPONSE[1] ];
     component.onAcceptOrReject(Action.Accept);
 
-    expect(component.isAccepting()).toBeTruthy();
-    expect(groupService.acceptJoinRequest).toHaveBeenCalledWith('99', ['12']);
-    expect(groupService.rejectJoinRequest).toHaveBeenCalledTimes(0);
-    expect(groupService.getManagedRequests).toHaveBeenCalledTimes(1); // the initial one
+    expect(component.ongoingActivity).toEqual(Activity.Accepting);
+    expect(requestActionsService.acceptJoinRequest).toHaveBeenCalledWith('99', ['12']);
+    expect(requestActionsService.rejectJoinRequest).toHaveBeenCalledTimes(0);
+    expect(getRequestsService.getPendingRequests).toHaveBeenCalledTimes(1); // the initial one
 
     // step 2: success response received
     serviceResponder$.next({
@@ -147,7 +143,7 @@ describe('PendingRequestComponent', () => {
       data: new Map([[ '12', 'success']])
     });
 
-    expect(component.isIdle()).toBeTruthy();
+    expect(component.ongoingActivity).toEqual(Activity.None);
     // expect(messageService.add).toHaveBeenCalledTimes(1);
     // expect(messageService.add).toHaveBeenCalledWith({
     //   severity: 'success',
@@ -155,7 +151,7 @@ describe('PendingRequestComponent', () => {
     //   detail: '1 request(s) have been accepted',
     //   life: 5000
     // });
-    expect(groupService.getManagedRequests).toHaveBeenCalledTimes(2);
+    expect(getRequestsService.getPendingRequests).toHaveBeenCalledTimes(2);
     expect(component.selection).toEqual([]);
   });
 
@@ -165,10 +161,10 @@ describe('PendingRequestComponent', () => {
     component.selection = [ MOCK_RESPONSE[1] ];
     component.onAcceptOrReject(Action.Reject);
 
-    expect(component.isRejecting()).toBeTruthy();
-    expect(groupService.rejectJoinRequest).toHaveBeenCalledWith('99', ['12']);
-    expect(groupService.acceptJoinRequest).toHaveBeenCalledTimes(0);
-    expect(groupService.getManagedRequests).toHaveBeenCalledTimes(1); // the initial one
+    expect(component.ongoingActivity).toEqual(Activity.Rejecting);
+    expect(requestActionsService.rejectJoinRequest).toHaveBeenCalledWith('99', ['12']);
+    expect(requestActionsService.acceptJoinRequest).toHaveBeenCalledTimes(0);
+    expect(getRequestsService.getPendingRequests).toHaveBeenCalledTimes(1); // the initial one
 
     // step 2: success response received
     serviceResponder$.next({
@@ -177,7 +173,7 @@ describe('PendingRequestComponent', () => {
       data: new Map([[ '12', 'success']])
     });
 
-    expect(component.isIdle()).toBeTruthy();
+    expect(component.ongoingActivity).toEqual(Activity.None);
     // expect(messageService.add).toHaveBeenCalledTimes(1);
     // expect(messageService.add).toHaveBeenCalledWith({
     //   severity: 'success',
@@ -185,7 +181,7 @@ describe('PendingRequestComponent', () => {
     //   detail: '1 request(s) have been declined',
     //   life: 5000
     // });
-    expect(groupService.getManagedRequests).toHaveBeenCalledTimes(2);
+    expect(getRequestsService.getPendingRequests).toHaveBeenCalledTimes(2);
     expect(component.selection).toEqual([]);
   });
 
@@ -193,8 +189,8 @@ describe('PendingRequestComponent', () => {
     component.selection = [];
     component.onAcceptOrReject(Action.Accept);
 
-    expect(component.isIdle()).toBeTruthy();
-    expect(groupService.getManagedRequests).toHaveBeenCalledTimes(1);  // the initial one
+    expect(component.ongoingActivity).toEqual(Activity.None);
+    expect(getRequestsService.getPendingRequests).toHaveBeenCalledTimes(1);  // the initial one
   });
 
   it('should consider "unchanged" in response as success', () => {
@@ -225,7 +221,7 @@ describe('PendingRequestComponent', () => {
       data: new Map([[ '11', 'invalid'], ['12', 'success'], ['10', 'success']])
     });
 
-    expect(component.isIdle()).toBeTruthy();
+    expect(component.ongoingActivity).toEqual(Activity.None);
     // expect(messageService.add).toHaveBeenCalledTimes(1);
     // expect(messageService.add).toHaveBeenCalledWith({
     //   severity: 'warn',
@@ -233,7 +229,7 @@ describe('PendingRequestComponent', () => {
     //   detail: '2 request(s) have been accepted, 1 could not be executed',
     //   life: 5000
     // });
-    expect(groupService.getManagedRequests).toHaveBeenCalledTimes(2);
+    expect(getRequestsService.getPendingRequests).toHaveBeenCalledTimes(2);
     expect(component.selection).toEqual([]);
   });
 
@@ -247,7 +243,7 @@ describe('PendingRequestComponent', () => {
       data: new Map([[ '11', 'invalid'], ['12', 'cycle']])
     });
 
-    expect(component.isIdle()).toBeTruthy();
+    expect(component.ongoingActivity).toEqual(Activity.None);
     // expect(messageService.add).toHaveBeenCalledTimes(1);
     // expect(messageService.add).toHaveBeenCalledWith({
     //   severity: 'error',
@@ -255,7 +251,7 @@ describe('PendingRequestComponent', () => {
     //   detail: 'Unable to accept the selected request(s).',
     //   life: 5000
     // });
-    expect(groupService.getManagedRequests).toHaveBeenCalledTimes(2);
+    expect(getRequestsService.getPendingRequests).toHaveBeenCalledTimes(2);
     expect(component.selection).toEqual([]);
   });
 
@@ -269,7 +265,7 @@ describe('PendingRequestComponent', () => {
       data: new Map([[ '11', 'invalid'], ['12', 'cycle']])
     });
 
-    expect(component.isIdle()).toBeTruthy();
+    expect(component.ongoingActivity).toEqual(Activity.None);
     // expect(messageService.add).toHaveBeenCalledTimes(1);
     // expect(messageService.add).toHaveBeenCalledWith({
     //   severity: 'error',
@@ -277,7 +273,7 @@ describe('PendingRequestComponent', () => {
     //   detail: 'Unable to reject the selected request(s).',
     //   life: 5000
     // });
-    expect(groupService.getManagedRequests).toHaveBeenCalledTimes(2);
+    expect(getRequestsService.getPendingRequests).toHaveBeenCalledTimes(2);
     expect(component.selection).toEqual([]);
   });
 
@@ -287,7 +283,7 @@ describe('PendingRequestComponent', () => {
 
     serviceResponder$.error(new Error('...'));
 
-    expect(component.isIdle()).toBeTruthy();
+    expect(component.ongoingActivity).toEqual(Activity.None);
     // expect(messageService.add).toHaveBeenCalledTimes(1);
     // expect(messageService.add).toHaveBeenCalledWith({
     //   severity: 'error',
@@ -295,7 +291,7 @@ describe('PendingRequestComponent', () => {
     //   detail: 'The action cannot be executed. If the problem persists, contact us.',
     //   life: 5000
     // });
-    expect(groupService.getManagedRequests).toHaveBeenCalledTimes(1); // service error does not reload content
+    expect(getRequestsService.getPendingRequests).toHaveBeenCalledTimes(1); // service error does not reload content
     expect(component.selection).toEqual([ MOCK_RESPONSE[1] ]);
   });
 
