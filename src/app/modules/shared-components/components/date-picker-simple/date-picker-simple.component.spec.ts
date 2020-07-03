@@ -1,22 +1,22 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DatePickerSimpleComponent } from './date-picker-simple.component';
+import { DatePickerSharedComponent } from './date-picker-simple.component';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 
-describe('DatePickerSimpleComponent', () => {
-  let component: DatePickerSimpleComponent;
-  let fixture: ComponentFixture<DatePickerSimpleComponent>;
+describe('DatePickerSharedComponent', () => {
+  let component: DatePickerSharedComponent;
+  let fixture: ComponentFixture<DatePickerSharedComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DatePickerSimpleComponent ],
+      declarations: [ DatePickerSharedComponent ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DatePickerSimpleComponent);
+    fixture = TestBed.createComponent(DatePickerSharedComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

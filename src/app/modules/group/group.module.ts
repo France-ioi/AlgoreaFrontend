@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { SimpleComponentsModule } from '../simple-components/simple-components.module';
+import { SharedComponentsModule } from '../shared-components/shared-components.module';
 
 import { GroupRoutingModule } from './group-routing.module';
 
@@ -39,7 +39,7 @@ import { DurationToMinPipe } from 'src/app/shared/pipes/duration';
   imports: [
     CommonModule,
     GroupRoutingModule,
-    SimpleComponentsModule,
+    SharedComponentsModule,
   ],
 })
 
