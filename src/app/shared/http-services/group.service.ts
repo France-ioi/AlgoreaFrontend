@@ -3,14 +3,11 @@ import { environment } from '../../../environments/environment';
 import {
   HttpClient,
   HttpErrorResponse,
-  HttpParams,
 } from '@angular/common/http';
 import { Observable, throwError, BehaviorSubject } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
 import { Group } from '../models/group.model';
-import { PendingRequest } from '../models/pending-request.model';
-import { RequestActionResponse } from '../models/requet-action-response.model';
 import { NewCodeSuccessResponse } from '../models/group-service-response.model';
 import { GenericResponse } from '../models/generic-response.model';
 
@@ -50,53 +47,6 @@ export class GroupService {
     return this.groupList.asObservable();
   }
 
-  getManagedRequests(
-    id: string,
-    sort: string[] = []
-  ): Observable<PendingRequest[]> {
-    let params = new HttpParams();
-    if (sort.length > 0) {
-      params = params.set('sort', sort.join(','));
-    }
-    return this.http
-      .get<PendingRequest[]>(`${this.baseGroupUrl}/${id}/requests`, {
-        params,
-      })
-      .pipe(
-        map(
-          (reqs: PendingRequest[]) => reqs.filter(
-            (req: PendingRequest) => req.action === 'join_request_created'
-          )
-        ),
-        catchError((e) => this.handleError(e))
-      );
-  }
-
-  acceptJoinRequest(id: string, groupIds: string[]): Observable<RequestActionResponse> {
-    return this.http
-      .post<RequestActionResponse>(`${this.baseGroupUrl}/${id}/join-requests/accept`, null, {
-        params: {
-          group_ids: groupIds.join(','),
-        },
-      })
-      .pipe(
-        tap((r) => this.handleRequestActionResponse(r)),
-        catchError((e) => this.handleError(e))
-      );
-  }
-
-  rejectJoinRequest(id: string, groupIds: string[]): Observable<RequestActionResponse> {
-    return this.http
-      .post<RequestActionResponse>(`${this.baseGroupUrl}/${id}/join-requests/reject`, null, {
-        params: {
-          group_ids: groupIds.join(','),
-        }
-      })
-      .pipe(
-        tap((r) => this.handleRequestActionResponse(r)),
-        catchError((e) => this.handleError(e))
-      );
-  }
 
   /* ****************** */
 
@@ -126,12 +76,6 @@ export class GroupService {
   private ensureSuccessResponse(response: any) {
     if ('success' in response && (response as GenericResponse).success === false) {
       throw new Error('Service error');
-    }
-  }
-
-  private handleRequestActionResponse(result: RequestActionResponse) {
-    if (result.success === false || result.message !== 'updated' || typeof result.data !== 'object') {
-      throw new Error('Unknown error');
     }
   }
 

@@ -5,8 +5,6 @@ import {
   OnChanges,
   SimpleChanges,
 } from '@angular/core';
-import { GroupService } from '../../../../shared/http-services/group.service';
-import { PendingRequest } from '../../../../shared/models/pending-request.model';
 import { SortEvent } from 'primeng/api/sortevent';
 import { MessageService } from 'primeng/api';
 import {
@@ -14,8 +12,10 @@ import {
 } from '../../../../shared/constants/api';
 import { TOAST_LENGTH } from '../../../../shared/constants/global';
 import * as _ from 'lodash';
-import { RequestActionResponse } from '../../../../shared/models/requet-action-response.model';
 import { Observable } from 'rxjs';
+import { GetRequestsService, PendingRequest } from '../../http-services/get-requests.service';
+import { RequestActionsService } from '../../http-services/request-actions.service';
+import { GenericActionResponse } from 'src/app/shared/http-services/action-response';
 
 export enum Activity {
   Accepting,
@@ -28,6 +28,11 @@ export enum Action {
   Reject
 }
 
+interface Result {
+  countRequests: number;
+  countSuccess: number;
+}
+
 @Component({
   selector: 'alg-pending-request',
   templateUrl: './pending-request.component.html',
@@ -37,10 +42,12 @@ export enum Action {
 export class PendingRequestComponent implements OnInit, OnChanges {
   @Input() groupId: string;
 
-  Action = Action;  // Make the enum usable in the html template
+  // Make the enums usable in the html template
+  Action = Action;
+  Activity = Activity;
 
   columns = [
-    { field: 'joining_user.login', header: 'LOGIN' },
+    { field: 'user.login', header: 'USER' },
     { field: 'at', header: 'REQUESTED ON' },
   ];
   requests: PendingRequest[] = [];
@@ -48,32 +55,53 @@ export class PendingRequestComponent implements OnInit, OnChanges {
   panel = [];
   currentSort: string[] = [];
 
-  onGoingActivity: Activity = Activity.None;
+  ongoingActivity: Activity = Activity.None;
 
-  _reloadData() {
-    this.groupService
-      .getManagedRequests(this.groupId, this.currentSort)
+  constructor(
+    private getRequestsService: GetRequestsService,
+    private requestActionService: RequestActionsService,
+    private messageService: MessageService
+  ) {}
+
+  ngOnInit() {
+    this.panel.push({
+      columns: this.columns,
+    });
+  }
+
+  ngOnChanges(_changes: SimpleChanges) {
+    this.selection = [];
+    this.reloadData();
+    this.ongoingActivity = Activity.None;
+  }
+
+  private reloadData() {
+    this.getRequestsService
+      .getPendingRequests(this.groupId, this.currentSort)
       .subscribe((reqs: PendingRequest[]) => {
         this.requests = reqs;
       });
   }
 
-  _displayResponseToast(data: Map<string, string>, verb: string, msg: string) {
-    // count number of success
-    const results = Array.from(data.values());
-    const nbReq = results.length;
-    const nbSucc = results
+  private parseResults(data: Object): Result {
+    const raw = new Map(Object.entries(data));
+    return {
+      countRequests: raw.size,
+      countSuccess: Array.from(raw.values())
       .map(res => ['success', 'unchanged'].includes(res) ? 1 : 0)
-      .reduce( (acc, res) => acc + res, 0 );
+      .reduce( (acc, res) => acc + res, 0 )
+    };
+  }
 
-    if (nbSucc === nbReq) {
+  private displayResponseToast(result: Result, verb: string, msg: string) {
+    if (result.countSuccess === result.countRequests) {
       this.messageService.add({
         severity: 'success',
         summary: 'Success',
-        detail: `${nbSucc} request(s) have been ${msg}`,
+        detail: `${result.countSuccess} request(s) have been ${msg}`,
         life: TOAST_LENGTH,
       });
-    } else if (nbSucc === 0) {
+    } else if (result.countSuccess === 0) {
       this.messageService.add({
         severity: 'error',
         summary: 'Error',
@@ -84,13 +112,13 @@ export class PendingRequestComponent implements OnInit, OnChanges {
       this.messageService.add({
         severity: 'warn',
         summary: 'Partial success',
-        detail: `${nbSucc} request(s) have been ${msg}, ${nbReq - nbSucc} could not be executed`,
+        detail: `${result.countSuccess} request(s) have been ${msg}, ${result.countRequests - result.countSuccess} could not be executed`,
         life: TOAST_LENGTH,
       });
     }
   }
 
-  _processRequestError(_err) {
+  private processRequestError(_err) {
     this.messageService.add({
       severity: 'error',
       summary: 'Error',
@@ -99,71 +127,41 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     });
   }
 
-  isAccepting() {
-    return this.onGoingActivity === Activity.Accepting;
-  }
-
-  isRejecting() {
-    return this.onGoingActivity === Activity.Rejecting;
-  }
-
-  isIdle() {
-    return this.onGoingActivity === Activity.None;
-  }
-
-  constructor(
-    private groupService: GroupService,
-    private messageService: MessageService
-  ) {}
-
-  ngOnInit() {
-    this.panel.push({
-      name: 'Pending Requests',
-      columns: this.columns,
-    });
-  }
-
-  ngOnChanges(_changes: SimpleChanges) {
-    this.selection = [];
-    this._reloadData();
-  }
-
   onAcceptOrReject(action: Action) {
-    if (this.selection.length === 0 || this.onGoingActivity !== Activity.None) {
+    if (this.selection.length === 0 || this.ongoingActivity !== Activity.None) {
       return;
     }
+    this.ongoingActivity = (action === Action.Accept) ? Activity.Accepting : Activity.Rejecting;
 
-    let resultObserver: Observable<RequestActionResponse>;
-    this.onGoingActivity = (action === Action.Accept) ? Activity.Accepting : Activity.Rejecting;
+    const groupIds = this.selection.map(req => req.user.group_id);
 
-    const groupIds = this.selection.map(req => req.joining_user.group_id);
-
+    let resultObserver: Observable<GenericActionResponse>;
     if (action === Action.Accept) {
-      resultObserver = this.groupService.acceptJoinRequest(this.groupId, groupIds);
+      resultObserver = this.requestActionService.acceptJoinRequest(this.groupId, groupIds);
     } else {
-      resultObserver = this.groupService.rejectJoinRequest(this.groupId, groupIds);
+      resultObserver = this.requestActionService.rejectJoinRequest(this.groupId, groupIds);
     }
 
     resultObserver
-    .subscribe(
-      (res: RequestActionResponse) => {
-        this._displayResponseToast(
-          res.data,
-          action === Action.Accept ? 'accept' : 'reject',
-          action === Action.Accept ? 'accepted' : 'declined'
-        );
-        this._reloadData();
-        this.onGoingActivity = Activity.None;
-        this.selection = [];
-      },
-      (err) => {
-        this._processRequestError(err);
-        this.onGoingActivity = Activity.None;
-      }
-    );
+      .subscribe(
+        (res: GenericActionResponse) => {
+          this.displayResponseToast(
+            this.parseResults(res.data),
+            action === Action.Accept ? 'accept' : 'reject',
+            action === Action.Accept ? 'accepted' : 'declined'
+          );
+          this.reloadData();
+          this.ongoingActivity = Activity.None;
+          this.selection = [];
+        },
+        (err) => {
+          this.processRequestError(err);
+          this.ongoingActivity = Activity.None;
+        }
+      );
   }
 
-  onSelectAll(_event) {
+  onSelectAll() {
     if (this.selection.length === this.requests.length) {
       this.selection = [];
     } else {
@@ -178,7 +176,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
 
     if (!_.isEqual(sortMeta, this.currentSort)) {
       this.currentSort = sortMeta;
-      this._reloadData();
+      this.reloadData();
     }
   }
 }
