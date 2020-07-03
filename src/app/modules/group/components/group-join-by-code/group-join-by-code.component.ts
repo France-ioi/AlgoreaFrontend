@@ -1,5 +1,4 @@
 import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy, OnChanges } from '@angular/core';
-import { GroupService } from '../../../../shared/http-services/group.service';
 import { MessageService } from 'primeng/api';
 import { finalize, tap } from 'rxjs/operators';
 import { TOAST_LENGTH } from '../../../../shared/constants/global';
@@ -7,6 +6,8 @@ import {  ERROR_MESSAGE } from '../../../../shared/constants/api';
 import { Duration } from '../../../../shared/helpers/duration';
 import { Group } from '../../http-services/get-group-by-id.service';
 import { CodeAdditions, withCodeAdditions } from '../../helpers/group-code';
+import { GroupActionsService } from '../../http-services/group-actions.service';
+import { CodeActionsService } from '../../http-services/code-actions.service';
 
 @Component({
   selector: 'alg-group-join-by-code',
@@ -26,7 +27,8 @@ export class GroupJoinByCodeComponent implements OnChanges {
 
   constructor(
     private messageService: MessageService,
-    private groupService: GroupService
+    private groupActionsService: GroupActionsService,
+    private codeActionsService: CodeActionsService,
   ) { }
 
   ngOnChanges() {
@@ -58,7 +60,7 @@ export class GroupJoinByCodeComponent implements OnChanges {
     this.processing = true;
 
     // call code refresh service, then group refresh data
-    this.groupService
+    this.codeActionsService
       .createNewCode(this.group.id)
       .pipe(
         tap(() => this.refreshRequired.emit()),
@@ -81,7 +83,7 @@ export class GroupJoinByCodeComponent implements OnChanges {
     this.processing = true;
 
     // call code refresh service, then group refresh data
-    this.groupService
+    this.groupActionsService
       .updateGroup(this.group.id, { code_lifetime: newDuration.toString(), code_expires_at: null })
       .pipe(
         tap(() => this.refreshRequired.emit()),
@@ -101,7 +103,7 @@ export class GroupJoinByCodeComponent implements OnChanges {
     this.processing = true;
 
     // call code refresh service, then group refresh data
-    this.groupService
+    this.codeActionsService
       .removeCode(this.group.id)
       .pipe(
         tap(() => this.refreshRequired.emit()),

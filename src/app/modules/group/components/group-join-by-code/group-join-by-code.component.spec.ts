@@ -1,11 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { GroupJoinByCodeComponent } from './group-join-by-code.component';
-import { GroupService } from '../../../../shared/http-services/group.service';
 import { MessageService } from 'primeng/api';
-import { of } from 'rxjs';
-import { Group } from '../../../../shared/models/group.model';
 import { mockGroup } from '../../mocks/group-by-id';
+import { GroupActionsService } from '../../http-services/group-actions.service';
+import { CodeActionsService } from '../../http-services/code-actions.service';
 
 
 describe('GroupJoinByCodeComponent', () => {
@@ -18,10 +17,8 @@ describe('GroupJoinByCodeComponent', () => {
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: MessageService, useValue: { add: (_m) => {} } },
-        { provide: GroupService, useValue: {
-            getLatestGroup: () => of(new Group()),
-          },
-        }
+        { provide: GroupActionsService, useValue: {} },
+        { provide: CodeActionsService, useValue: {} },
       ]
     })
     .compileComponents();
