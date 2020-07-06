@@ -26,6 +26,7 @@ import {
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { GroupNavComponent } from './components/group-nav/group-nav.component';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: false,
@@ -39,6 +40,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     LeftNavComponent,
     NavigationTabsComponent,
     TopNavComponent,
+    GroupNavComponent,
   ],
   imports: [
     BrowserModule,

@@ -86,6 +86,7 @@ $header-height: 0rem; //7.5rem; <- to be restored if search bar is re-added
     }
   }
 
+  /* FIXME - this is duplicate from group-nav component. It is not supposed to be here but if required, the design breaks. To be checked! */
   .group-content {
     color: $base-text-color;
     -webkit-user-select: none; /* webkit (safari, chrome) browsers */
