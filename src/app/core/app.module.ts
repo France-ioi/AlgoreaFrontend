@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
-import { SimpleComponentsModule } from '../modules/simple-components/simple-components.module';
+import { SharedComponentsModule } from '../modules/shared-components/shared-components.module';
 
 import { AccordionModule } from 'primeng/accordion';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
@@ -48,7 +48,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     BreadcrumbModule,
     AccordionModule,
     PerfectScrollbarModule,
-    SimpleComponentsModule,
+    SharedComponentsModule,
   ],
   providers: [
     {

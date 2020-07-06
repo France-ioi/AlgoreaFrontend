@@ -5,7 +5,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
   templateUrl: './date-picker-simple.component.html',
   styleUrls: ['./date-picker-simple.component.scss'],
 })
-export class DatePickerSimpleComponent implements OnInit {
+export class DatePickerSharedComponent implements OnInit {
   @Input() date;
   @Output() change = new EventEmitter<any>();
 
