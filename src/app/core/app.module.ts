@@ -27,6 +27,8 @@ import {
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { GroupNavComponent } from './components/group-nav/group-nav.component';
+import { GroupNavigationTreeComponent } from './components/group-navigation-tree/group-navigation-tree.component';
+import { TreeModule } from 'primeng/tree';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: false,
@@ -41,6 +43,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     NavigationTabsComponent,
     TopNavComponent,
     GroupNavComponent,
+    GroupNavigationTreeComponent
   ],
   imports: [
     BrowserModule,
@@ -51,6 +54,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     AccordionModule,
     PerfectScrollbarModule,
     SharedComponentsModule,
+    TreeModule,
   ],
   providers: [
     {
