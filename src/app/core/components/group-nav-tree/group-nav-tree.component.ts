@@ -12,11 +12,11 @@ import {
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'alg-group-navigation-tree',
-  templateUrl: './group-navigation-tree.component.html',
-  styleUrls: ['./group-navigation-tree.component.scss'],
+  selector: 'alg-group-nav-tree',
+  templateUrl: './group-nav-tree.component.html',
+  styleUrls: ['./group-nav-tree.component.scss'],
 })
-export class GroupNavigationTreeComponent implements OnInit, OnChanges {
+export class GroupNavTreeComponent implements OnInit, OnChanges {
   @Input() data = [];
   @Input() inGroup = false;
   @Input() navigation = true;

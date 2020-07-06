@@ -21,9 +21,9 @@
           <span class="group-subtitle" [ngClass]="{'selected': selectedGroup == 1 ? true : false}">Groups you
             manage</span>
         </p-header>
-        <alg-group-navigation-tree [data]="items.groups.manage" inGroup="true"
+        <alg-group-nav-tree [data]="items.groups.manage" inGroup="true"
           (nodeChange)="onNodeChange($event, 'managed')" (titleChange)="onTitleChange($event)">
-        </alg-group-navigation-tree>
+        </alg-group-nav-tree>
       </p-accordionTab>
       <p-accordionTab [selected]="joinShow">
         <p-header>
@@ -33,8 +33,8 @@
           <span class="group-subtitle" [ngClass]="{'selected': selectedGroup == 2 ? true : false}">Groups You
             Joined</span>
         </p-header>
-        <alg-group-navigation-tree [data]="items.groups.join" (nodeChange)="onNodeChange($event, 'memberships')"
-          (titleChange)="onTitleChange($event)"></alg-group-navigation-tree>
+        <alg-group-nav-tree [data]="items.groups.join" (nodeChange)="onNodeChange($event, 'memberships')"
+          (titleChange)="onTitleChange($event)"></alg-group-nav-tree>
       </p-accordionTab>
     </p-accordion>
   </div>
