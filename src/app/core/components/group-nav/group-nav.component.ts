@@ -12,8 +12,7 @@ export class GroupNavComponent {
 
   @Output() focusOnGroupNav = new EventEmitter<void>();
 
-  joinedGroupLoading = true;
-  joinedGroups: Group[] = [];
+  joinedGroups: 'loading'|'error'|Group[] = [];
 
   constructor(
     private getJoinedGroupsService: GetJoinedGroupsService,
@@ -22,13 +21,17 @@ export class GroupNavComponent {
   onTabOpen(event: {index: number}) {
     this.focusOnGroupNav.emit();
     if (event.index == joinGroupTabIdx) {
-      this.joinedGroupLoading = true;
+      this.joinedGroups = 'loading';
       this.getJoinedGroupsService
         .getJoinedGroup()
-        .subscribe((g) => {
-          this.joinedGroups = g;
-          this.joinedGroupLoading = false;
-        });
+        .subscribe(
+          (g) => {
+            this.joinedGroups = g;
+          },
+          (_e) => {
+            this.joinedGroups = 'error';
+          }
+        );
     }
   }
 
