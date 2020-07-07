@@ -25,15 +25,16 @@
           (nodeChange)="onNodeChange($event, 'managed')" (titleChange)="onTitleChange($event)">
         </alg-group-navigation-tree>
       </p-accordionTab> -->
-      <p-accordionTab>
+      <p-accordionTab [ngSwitch]="joinedGroups">
         <p-header>
           <span class="anonym-group">
             <img src="assets/images/Group - Joined.svg" style="width: 3.3333rem; height: 3.3333rem;" />
           </span>
           <span class="group-subtitle">Groups You Joined</span>
         </p-header>
-        <p-progressSpinner *ngIf="joinedGroupLoading" [style]="{width: '3.3333rem', height: '3.3333rem'}"></p-progressSpinner>
-        <alg-group-nav-tree *ngIf="!joinedGroupLoading" [groups]="joinedGroups"></alg-group-nav-tree>
+        <p-progressSpinner *ngSwitchCase="'loading'" [style]="{width: '3.3333rem', height: '3.3333rem'}"></p-progressSpinner>
+        <p *ngSwitchCase="'error'">Unable to load the group list</p>
+        <alg-group-nav-tree *ngSwitchDefault [groups]="joinedGroups"></alg-group-nav-tree>
       </p-accordionTab>
     </p-accordion>
   </div>

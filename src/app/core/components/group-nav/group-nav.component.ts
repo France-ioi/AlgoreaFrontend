@@ -1,6 +1,4 @@
-/* eslint-disable */ /* FIXME disabled for now while this is the mockup code, to be removed afterwards */
-import { Component, OnInit, Output, ViewChild, EventEmitter } from '@angular/core';
-import { StatusService } from 'src/app/shared/services/status.service';
+import { Component, Output, EventEmitter } from '@angular/core';
 import { GetJoinedGroupsService, Group } from '../../http-services/get-joined-groups.service';
 
 const joinGroupTabIdx = 0;
@@ -14,8 +12,7 @@ export class GroupNavComponent {
 
   @Output() focusOnGroupNav = new EventEmitter<void>();
 
-  joinedGroupLoading = true;
-  joinedGroups: Group[] = [];
+  joinedGroups: 'loading'|'error'|Group[] = [];
 
   constructor(
     private getJoinedGroupsService: GetJoinedGroupsService,
@@ -24,13 +21,17 @@ export class GroupNavComponent {
   onTabOpen(event: {index: number}) {
     this.focusOnGroupNav.emit();
     if (event.index == joinGroupTabIdx) {
-      this.joinedGroupLoading = true;
+      this.joinedGroups = 'loading';
       this.getJoinedGroupsService
         .getJoinedGroup()
-        .subscribe((g) => {
-          this.joinedGroups = g;
-          this.joinedGroupLoading = false;
-        });
+        .subscribe(
+          (g) => {
+            this.joinedGroups = g;
+          },
+          (_e) => {
+            this.joinedGroups = 'error';
+          }
+        );
     }
   }
 

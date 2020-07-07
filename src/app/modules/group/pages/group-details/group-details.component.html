@@ -1,4 +1,4 @@
-<div *ngIf="group; else loading">
+<div *ngIf="state === 'loaded'">
   <alg-group-header [group]="group"></alg-group-header>
   <alg-pending-request [groupId]="group.id"></alg-pending-request>
 
@@ -37,6 +37,6 @@
   </div>
 </div>
 
-<ng-template #loading>
-  <p-progressSpinner></p-progressSpinner>
-</ng-template>
+<p-progressSpinner *ngIf="state === 'loading'"></p-progressSpinner>
+
+<p *ngIf="state === 'error'">Error while loading the group info</p>
