@@ -33,7 +33,7 @@
           <span class="group-subtitle">Groups You Joined</span>
         </p-header>
         <p-progressSpinner *ngIf="joinedGroupLoading" [style]="{width: '3.3333rem', height: '3.3333rem'}"></p-progressSpinner>
-        <alg-group-nav-tree *ngIf="!joinedGroupLoading && joinedGroups.length !== 0" [groups]="joinedGroups"></alg-group-nav-tree>
+        <alg-group-nav-tree *ngIf="!joinedGroupLoading" [groups]="joinedGroups"></alg-group-nav-tree>
       </p-accordionTab>
     </p-accordion>
   </div>
