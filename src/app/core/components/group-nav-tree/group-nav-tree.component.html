@@ -1,6 +1,26 @@
-<p-tree [value]="data" (keydown)="onKeyDown($event)" #groupTree>
+<p-tree
+  [value]="nodes"
+  (keydown)="onKeyDown($event)"
+  emptyMessage="You do not belong to any group"
+>
+<ng-template let-node pTemplate="leaf">
+  <span class="node-tree-item">
+    <span class="node-item-branch" style="width: 2.9167rem;">
+      <span class="top-branch"></span>
+      <span class="bottom-branch"></span>
+    </span>
+    <span class="node-item-content">
+      <span class="leaf node-select">
+        <i class="pi pi-circle-on" style="font-size: 1.2rem;"></i>
+      </span>
+      <span class="node-label">
+        <span class="node-label-title" (click)="onSelect($event, node)">{{ node.label }}</span>
+      </span>
+    </span>
+  </span>
+</ng-template>
   <!-- Folder elements template -->
-  <ng-template let-node pTemplate="folder">
+  <!-- <ng-template let-node pTemplate="folder">
     <span class="node-tree-item folder" [ngClass]="{'expanded': node.expanded, checked: node.checked, assoc: !navigation}">
       <span class="node-item-branch">
         <span *ngIf="!node.root" class="top-branch"></span>
@@ -45,9 +65,9 @@
         </span>
       </span>
     </span>
-  </ng-template>
+  </ng-template> -->
   <!-- Leaf elements template -->
-  <ng-template let-node pTemplate="leaf">
+  <!-- <ng-template let-node pTemplate="leaf">
     <span class="node-tree-item" [ngClass]="{checked: node.checked, assoc: !navigation}">
       <span class="node-item-branch" [ngStyle]="{'width.rem': node.checked ? 2.75 : 2.9167}">
         <span class="top-branch"></span>
@@ -55,8 +75,10 @@
       </span>
       <span class="node-item-content" [ngClass]="{connected: node.connected}">
         <span (click)="nodeExpand($event, node)" class="leaf node-select">
-          <i *ngIf="node.checked" class="pi pi-check" style="font-size: 1.2rem;"></i>
+        <span class="leaf node-select">
+            <i *ngIf="node.checked" class="pi pi-check" style="font-size: 1.2rem;"></i>
           <i *ngIf="!node.checked" class="pi pi-circle-on" style="font-size: 1.2rem;"></i>
+          <i class="pi pi-circle-on" style="font-size: 1.2rem;"></i>
         </span>
         <span class="node-label">
           <alg-state-widget
@@ -66,7 +88,7 @@
             [icon]="node.category.icon"
             (click)="nodeCheck($event, node)"
           ></alg-state-widget>
-          <span class="node-label-title" (click)="nodeCheck($event, node)">{{ node.title }}</span>
+          <span class="node-label-title" (click)="nodeCheck($event, node)">{{ node.label }}</span>
           <span *ngIf="!navigation" class="edit-icon" (click)="onGotoEditPage(node)">
             <i class="fa fa-edit"></i>
           </span>
@@ -80,5 +102,5 @@
         </span>
       </span>
     </span>
-  </ng-template>
+  </ng-template> -->
 </p-tree>

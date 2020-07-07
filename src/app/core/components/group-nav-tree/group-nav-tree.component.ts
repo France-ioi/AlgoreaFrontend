@@ -10,88 +10,43 @@ import {
   ViewChild,
 } from '@angular/core';
 import { Router } from '@angular/router';
+import { Group } from '../../http-services/get-joined-groups.service';
+import { TreeNode } from 'primeng/api';
+import * as _ from 'lodash';
+import { environment } from 'src/environments/environment';
+
+// GroupTreeNode is PrimeNG tree node with data forced to be a group
+interface GroupTreeNode extends TreeNode {
+  data: Group
+  target: string
+}
 
 @Component({
   selector: 'alg-group-nav-tree',
   templateUrl: './group-nav-tree.component.html',
   styleUrls: ['./group-nav-tree.component.scss'],
 })
-export class GroupNavTreeComponent implements OnInit, OnChanges {
-  @Input() data = [];
-  @Input() inGroup = false;
-  @Input() navigation = true;
-  @Input() showCategory = true;
+export class GroupNavTreeComponent implements OnChanges {
+  @Input() groups: Group[] = [];
 
-  @Output() nodeChange = new EventEmitter<any>();
-  @Output() titleChange = new EventEmitter<any>();
-  @Output() editPage = new EventEmitter<any>();
-
-  @ViewChild('groupTree') groupTree;
+  nodes: GroupTreeNode[];
 
   constructor(private router: Router) {}
 
-  ngOnInit() {}
-
   ngOnChanges(_changes: SimpleChanges) {
-    if (this.data) {
-      if (!this.inGroup && this.data.length > 0) {
-        this.data[0].root = true;
+    this.nodes = _.map(this.groups, (g) => {
+      return {
+        label: g.name,
+        data: g,
+        type: 'leaf',
+        leaf: true,
+        target: `/groups/details/${g.id}`,
       }
-    }
-  }
-
-  nodeExpand(_event, node) {
-    if (!node.expanded) {
-      node.expanded = true;
-    } else {
-      node.expanded = false;
-    }
-  }
-
-  _unCheckAll(nodes) {
-    if (!nodes) {
-      return;
-    }
-
-    nodes.forEach((node) => {
-      node.checked = false;
-      this._unCheckAll(node.children);
     });
   }
 
-  nodeCheck(_e, node) {
-    this._unCheckAll(this.data);
-    if (!node.checked) {
-      node.checked = true;
-    } else {
-      node.checked = false;
-    }
-
-    const primaryChildren = this.router.parseUrl(this.router.url).root.children.primary;
-    if (primaryChildren && primaryChildren.segments.length > 0 && primaryChildren.segments[0].path === 'group') {
-      this.nodeChange.emit(node);
-    } else {
-      this.titleChange.emit(node);
-    }
-    node.expanded = true;
-  }
-
-  goToPage(_e, node) {
-    this.nodeChange.emit(node);
-  }
-
-  toggleConnection(e, node) {
-    e.stopPropagation();
-
-    if (!node.connected) {
-      node.connected = true;
-    } else {
-      node.connected = false;
-    }
-  }
-
-  onGotoEditPage(node) {
-    this.editPage.emit(node);
+  onSelect(_e, node: GroupTreeNode) {
+    this.router.navigate([node.target]);
   }
 
   onKeyDown(e) {
