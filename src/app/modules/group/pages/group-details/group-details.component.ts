@@ -14,6 +14,7 @@ export class GroupDetailsComponent {
 
   idFromRoute?: string;
   group?: Group & ManagementAdditions;
+  state: 'loaded'|'loading'|'error' = 'loading';
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -22,6 +23,7 @@ export class GroupDetailsComponent {
   ) {
     groupTabService.refresh$.subscribe(() => this.fetchGroup());
     activatedRoute.paramMap.subscribe((params) => {
+      this.state = 'loading';
       const id = params.get('id');
       if (id != null) {
         this.idFromRoute = id;
@@ -34,10 +36,18 @@ export class GroupDetailsComponent {
     if (this.idFromRoute) {
       this.getGroupByIdService
         .get(this.idFromRoute)
-        .subscribe((g: Group) => {
-          this.group = withManagementAdditions(g);
-          this.groupTabService.group$.next(g);
-        });
+        .subscribe(
+          (g: Group) => {
+            this.group = withManagementAdditions(g);
+            this.state = 'loaded';
+            this.groupTabService.group$.next(g);
+          },
+          (_error) => {
+            this.state = 'error';
+          }
+        );
+    } else {
+      this.state = 'error';
     }
   }
 
