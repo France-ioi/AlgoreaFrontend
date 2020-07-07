@@ -1,6 +1,4 @@
-/* eslint-disable */ /* FIXME disabled for now while this is the mockup code, to be removed afterwards */
-import { Component, OnInit, Output, ViewChild, EventEmitter } from '@angular/core';
-import { StatusService } from 'src/app/shared/services/status.service';
+import { Component, Output, EventEmitter } from '@angular/core';
 import { GetJoinedGroupsService, Group } from '../../http-services/get-joined-groups.service';
 
 const joinGroupTabIdx = 0;
