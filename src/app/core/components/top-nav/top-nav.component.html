@@ -4,20 +4,20 @@
       <!-- <i class="fa fa-bars"></i> -->
       <img src="assets/images/menu-open.svg" style="width: 2rem; height: 2rem;" />
     </span>
-    <span class="user-info">
-      <span class="user-image">
+    <span class="platform-info">
+      <!-- <span class="platform-image">
         <img src="assets/images/{{data.image}}" style="width: 2.3333rem; height: 2.3333rem;" />
-      </span>
-      <span class="user-name">{{ data.name }}</span>
+      </span> -->
+      <span class="platform-name">Algorea Platform</span>
     </span>
-    <span class="notifications" *ngIf="data.notification > 0 && signedIn" (click)="toggleNotification($event)" tabindex="1">
+    <!-- <span class="notifications" *ngIf="data.notification > 0 && signedIn" (click)="toggleNotification($event)" tabindex="1">
       <span class="notification-number">{{ data.notification }}</span>
       <i class="far fa-bell"></i>
-    </span>
-    <span *ngIf="signedIn" class="sign-out" (click)="signInOut($event)" tabindex="2">
+    </span> -->
+    <!-- <alg-select [items]="langs"></alg-select> -->
+    <span class="sign-out" (click)="signInOut($event)" tabindex="2">
       <i class="fa fa-power-off"></i>
     </span>
-    <alg-select *ngIf="!signedIn" [items]="langs"></alg-select>
   </div>
   <div class="overlay-container">
     <alg-button
