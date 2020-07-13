@@ -27,7 +27,6 @@ import { MatNativeDateModule, MatRippleModule } from '@angular/material/core';
 import { MatMenuModule } from '@angular/material/menu';
 
 import { ClickOutsideModule } from 'ng-click-outside';
-import { NgDragDropModule } from 'ng-drag-drop';
 
 import { ButtonComponent } from './components/button/button.component';
 import { SectionComponent } from './components/section/section.component';
@@ -119,7 +118,6 @@ import { SectionParagraphComponent } from './components/section-paragrah/section
     MatDialogModule,
     MatMenuModule,
 
-    NgDragDropModule.forRoot(),
     ClickOutsideModule,
   ],
   exports: [
