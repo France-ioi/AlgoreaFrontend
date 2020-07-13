@@ -7,7 +7,7 @@ import {
 import { Router } from '@angular/router';
 import { Group } from '../../http-services/get-joined-groups.service';
 import { TreeNode } from 'primeng/api';
-import * as _ from 'lodash';
+import * as _ from 'lodash-es';
 
 // GroupTreeNode is PrimeNG tree node with data forced to be a group
 interface GroupTreeNode extends TreeNode {

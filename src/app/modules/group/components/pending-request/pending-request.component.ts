@@ -11,7 +11,7 @@ import {
   ERROR_MESSAGE,
 } from '../../../../shared/constants/api';
 import { TOAST_LENGTH } from '../../../../shared/constants/global';
-import * as _ from 'lodash';
+import * as _ from 'lodash-es';
 import { Observable } from 'rxjs';
 import { GetRequestsService, PendingRequest } from '../../http-services/get-requests.service';
 import { RequestActionsService } from '../../http-services/request-actions.service';
