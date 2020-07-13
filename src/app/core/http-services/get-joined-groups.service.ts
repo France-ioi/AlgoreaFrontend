@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { map } from 'rxjs/operators';
-import * as _ from 'lodash';
+import * as _ from 'lodash-es';
 
 export interface Group {
   id: string,
