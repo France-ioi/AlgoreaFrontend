@@ -15,7 +15,6 @@ import * as _ from 'lodash-es';
 import { Observable } from 'rxjs';
 import { GetRequestsService, PendingRequest } from '../../http-services/get-requests.service';
 import { RequestActionsService } from '../../http-services/request-actions.service';
-import { GenericActionResponse } from 'src/app/shared/http-services/action-response';
 
 export enum Activity {
   Accepting,
@@ -83,13 +82,12 @@ export class PendingRequestComponent implements OnInit, OnChanges {
       });
   }
 
-  private parseResults(data: Object): Result {
-    const raw = new Map(Object.entries(data));
+  private parseResults(data: Map<string, any>): Result {
     return {
-      countRequests: raw.size,
-      countSuccess: Array.from(raw.values())
-      .map(res => ['success', 'unchanged'].includes(res) ? 1 : 0)
-      .reduce( (acc, res) => acc + res, 0 )
+      countRequests: data.size,
+      countSuccess: Array.from(data.values())
+        .map(res => ['success', 'unchanged'].includes(res) ? 1 : 0)
+        .reduce( (acc, res) => acc + res, 0 )
     };
   }
 
@@ -135,7 +133,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
 
     const groupIds = this.selection.map(req => req.user.group_id);
 
-    let resultObserver: Observable<GenericActionResponse>;
+    let resultObserver: Observable<Map<string, any>>;
     if (action === Action.Accept) {
       resultObserver = this.requestActionService.acceptJoinRequest(this.groupId, groupIds);
     } else {
@@ -144,9 +142,9 @@ export class PendingRequestComponent implements OnInit, OnChanges {
 
     resultObserver
       .subscribe(
-        (res: GenericActionResponse) => {
+        (res) => {
           this.displayResponseToast(
-            this.parseResults(res.data),
+            this.parseResults(res),
             action === Action.Accept ? 'accept' : 'reject',
             action === Action.Accept ? 'accepted' : 'declined'
           );

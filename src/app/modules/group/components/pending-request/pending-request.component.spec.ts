@@ -4,7 +4,6 @@ import { PendingRequestComponent, Activity, Action } from './pending-request.com
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { of, Subject } from 'rxjs';
 import { MessageService } from 'primeng/api';
-import { GenericActionResponse } from 'src/app/shared/http-services/action-response';
 import { PendingRequest, GetRequestsService } from '../../http-services/get-requests.service';
 import { RequestActionsService } from '../../http-services/request-actions.service';
 
@@ -33,7 +32,7 @@ describe('PendingRequestComponent', () => {
   let requestActionsService: RequestActionsService;
   let getRequestsService: GetRequestsService;
   let messageService: MessageService;
-  let serviceResponder$: Subject<GenericActionResponse>;
+  let serviceResponder$: Subject<Map<string,any>>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -53,7 +52,7 @@ describe('PendingRequestComponent', () => {
   }));
 
   beforeEach(() => {
-    serviceResponder$ = new Subject<GenericActionResponse>();
+    serviceResponder$ = new Subject<Map<string,any>>();
     fixture = TestBed.createComponent(PendingRequestComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -137,11 +136,7 @@ describe('PendingRequestComponent', () => {
     expect(getRequestsService.getPendingRequests).toHaveBeenCalledTimes(1); // the initial one
 
     // step 2: success response received
-    serviceResponder$.next({
-      success: true,
-      message: 'updated',
-      data: new Map([[ '12', 'success']])
-    });
+    serviceResponder$.next(new Map([[ '12', 'success']]));
 
     expect(component.ongoingActivity).toEqual(Activity.None);
     // expect(messageService.add).toHaveBeenCalledTimes(1);
@@ -167,11 +162,7 @@ describe('PendingRequestComponent', () => {
     expect(getRequestsService.getPendingRequests).toHaveBeenCalledTimes(1); // the initial one
 
     // step 2: success response received
-    serviceResponder$.next({
-      success: true,
-      message: 'updated',
-      data: new Map([[ '12', 'success']])
-    });
+    serviceResponder$.next(new Map([[ '12', 'success']]));
 
     expect(component.ongoingActivity).toEqual(Activity.None);
     // expect(messageService.add).toHaveBeenCalledTimes(1);
@@ -197,11 +188,7 @@ describe('PendingRequestComponent', () => {
     component.selection = [ MOCK_RESPONSE[1] ];
     component.onAcceptOrReject(Action.Accept);
 
-    serviceResponder$.next({
-      success: true,
-      message: 'updated',
-      data: new Map([['12', 'unchanged']])
-    });
+    serviceResponder$.next(new Map([['12', 'unchanged']]));
 
     // expect(messageService.add).toHaveBeenCalledWith({
     //   severity: 'success',
@@ -215,11 +202,7 @@ describe('PendingRequestComponent', () => {
     component.selection = MOCK_RESPONSE; // select 10, 11 and 12
     component.onAcceptOrReject(Action.Accept);
 
-    serviceResponder$.next({
-      success: true,
-      message: 'updated',
-      data: new Map([[ '11', 'invalid'], ['12', 'success'], ['10', 'success']])
-    });
+    serviceResponder$.next(new Map([[ '11', 'invalid'], ['12', 'success'], ['10', 'success']]));
 
     expect(component.ongoingActivity).toEqual(Activity.None);
     // expect(messageService.add).toHaveBeenCalledTimes(1);
@@ -237,11 +220,7 @@ describe('PendingRequestComponent', () => {
     component.selection = MOCK_RESPONSE; // select 10, 11 and 12
     component.onAcceptOrReject(Action.Accept);
 
-    serviceResponder$.next({
-      success: true,
-      message: 'updated',
-      data: new Map([[ '11', 'invalid'], ['12', 'cycle']])
-    });
+    serviceResponder$.next(new Map([[ '11', 'invalid'], ['12', 'cycle']]));
 
     expect(component.ongoingActivity).toEqual(Activity.None);
     // expect(messageService.add).toHaveBeenCalledTimes(1);
@@ -259,11 +238,7 @@ describe('PendingRequestComponent', () => {
     component.selection = MOCK_RESPONSE; // select 10, 11 and 12
     component.onAcceptOrReject(Action.Reject);
 
-    serviceResponder$.next({
-      success: true,
-      message: 'updated',
-      data: new Map([[ '11', 'invalid'], ['12', 'cycle']])
-    });
+    serviceResponder$.next(new Map([[ '11', 'invalid'], ['12', 'cycle']]));
 
     expect(component.ongoingActivity).toEqual(Activity.None);
     // expect(messageService.add).toHaveBeenCalledTimes(1);
