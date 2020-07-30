@@ -4,7 +4,9 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'http://dev.algorea.org/api'
+  apiUrl: 'https://dev.algorea.org/api',
+  oauthServerUrl: 'https://login.france-ioi.org',
+  oauthClientId: '43',
 };
 
 /*
