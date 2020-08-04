@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { GenericActionResponse, throwErrorOnFailure } from 'src/app/shared/http-services/action-response';
+import { SimpleActionResponse, assertSuccess } from 'src/app/shared/http-services/action-response';
 import { environment } from 'src/environments/environment';
-import { tap, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 export interface NewCodeSuccessResponse {
   code: string
@@ -18,21 +18,21 @@ export class CodeActionsService {
 
   createNewCode(id: string): Observable<string> {
     return this.http
-      .post<NewCodeSuccessResponse|GenericActionResponse>(`${environment.apiUrl}/groups/${id}/code`, null, {})
+      .post<NewCodeSuccessResponse|SimpleActionResponse>(`${environment.apiUrl}/groups/${id}/code`, null, {})
       .pipe(
-        tap((r) => {
-          if (!(r as NewCodeSuccessResponse).code) throw new Error('Server has returned an error (no code)');
-        }),
-        map( (r:NewCodeSuccessResponse) => r.code),
+        map((resp) => {
+          const code = (resp as NewCodeSuccessResponse).code;
+          if (!code) throw new Error('The backend has returned an error (no code)');
+          return code;
+        })
       );
   }
 
   removeCode(id: string): Observable<void> {
     return this.http
-      .delete<GenericActionResponse>(`${environment.apiUrl}/groups/${id}/code`)
+      .delete<SimpleActionResponse>(`${environment.apiUrl}/groups/${id}/code`)
       .pipe(
-        tap(throwErrorOnFailure),
-        map( (_r) => {}),
+        map(assertSuccess),
       );
   }
 

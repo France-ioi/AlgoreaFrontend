@@ -1,6 +1,7 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { StatusService } from '../../../shared/services/status.service';
 import { Router } from '@angular/router';
+import { AuthService } from 'src/app/shared/auth/auth.service';
 
 @Component({
   selector: 'alg-top-nav',
@@ -36,7 +37,8 @@ export class TopNavComponent implements OnInit {
 
   constructor(
     private statusService: StatusService,
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ) { }
 
   ngOnInit() {
@@ -59,8 +61,11 @@ export class TopNavComponent implements OnInit {
   }
 
   signInOut(_e) {
-    this.signedIn = !this.signedIn;
-    this.signInOutEvent.emit(this.signedIn);
+    if (this.authService.authUserConnected()) {
+      this.authService.logoutAuthUser();
+    } else {
+      this.authService.startLogin();
+    }
   }
 
   onSearchEvent(e) {
