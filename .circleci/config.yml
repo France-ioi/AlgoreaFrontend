@@ -41,7 +41,7 @@ jobs:
   # deps has to be run before the other jobs and basically run "npm install" and cache it
   deps:
     docker: &node_image
-      - image: circleci/node:12.16
+      - image: circleci/node:14.5
     steps:
       - checkout
       # cache is used between builds, we use the cache if the lock file has not changed
@@ -78,7 +78,7 @@ jobs:
 
   tests:
     docker: &node_browsers_image
-      - image: circleci/node:12.16-browsers
+      - image: circleci/node:14.5-browsers
     steps:
       - attach_workspace:
           at: ./
