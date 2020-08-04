@@ -39,6 +39,7 @@ export class AccessToken {
   static clearFromStorage() {
     storage.removeItem(storageTokenKey);
     storage.removeItem(storageExpirationKey);
+    storage.removeItem(storageTypeKey);
   }
 
   saveToStorage() {
