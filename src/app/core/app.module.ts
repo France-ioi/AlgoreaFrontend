@@ -29,6 +29,8 @@ import { AppComponent } from './app.component';
 import { GroupNavComponent } from './components/group-nav/group-nav.component';
 import { GroupNavTreeComponent } from './components/group-nav-tree/group-nav-tree.component';
 import { TreeModule } from 'primeng/tree';
+import { ItemNavTreeComponent } from './components/item-nav-tree/item-nav-tree.component';
+import { ItemNavComponent } from './components/item-nav/item-nav.component';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: false,
@@ -43,7 +45,9 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     NavigationTabsComponent,
     TopNavComponent,
     GroupNavComponent,
-    GroupNavTreeComponent
+    GroupNavTreeComponent,
+    ItemNavComponent,
+    ItemNavTreeComponent,
   ],
   imports: [
     BrowserModule,

@@ -134,47 +134,6 @@ $border-radius: .5rem;
       padding: 0;
       border: none;
       font-family: "titillium";
-
-      .ui-tabview-panel {
-        .tree-header {
-          background-color: $base-color;
-          height: 6rem;
-          display: flex;
-          align-items: center;
-          border-bottom: .1rem solid #4587D4;
-
-          .tree-header-handle {
-            display: flex;
-            height: 3.5rem;
-            width: 5rem;
-            margin-right: 1rem;
-            background-color: $bk-secondary;
-            border-top-right-radius: 1.5rem;
-            border-bottom-right-radius: 1.5rem;
-            color: white;
-            align-items: center;
-            font-size: 1.5rem;
-
-            i:first-child {
-              margin-right: 1rem;
-              margin-left: .5rem;
-              color: rgb(99, 150, 209);
-            }
-
-            .icon-folder {
-              height: 2.1rem;
-            }
-          }
-
-          .tree-header-title {
-            font-size: 1.6rem;
-            letter-spacing: .01em;
-            font-weight: bold;
-            text-transform: uppercase;
-            color: white;
-          }
-        }
-      }
     }
   }
 }
