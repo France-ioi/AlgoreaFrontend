@@ -49,21 +49,22 @@
         <span (click)="onSelect($event, node)" class="node-label">
           <span class="label-container">
             <span class="node-label-title">
-              {{ node.title }}
+              {{ node.label }}
+              <span *ngIf="node.data.groupName">(via group "{{ node.data.groupName }}")</span>
             </span>
-            <span class="node-state" *ngIf="node.state === 'locked'">
+            <!-- <span class="node-state" *ngIf="node.state === 'locked'">
               <i class="fa fa-key" style="font-size: 1.2rem;"></i>
             </span>
             <span class="node-state" *ngIf="node.state === 'never opened'">
               <i class="fa fa-lock" style="font-size: 1.2rem;"></i>
-            </span>
+            </span> -->
           </span>
-          <alg-skill-progress
+          <!-- <alg-skill-progress
             *ngIf="node.progress && !node.ring"
             [currentScore]="node.progress.currentScore"
             [displayedScore]="node.progress.displayedScore"
             [type]="'thin-horizontal'"
-          ></alg-skill-progress>
+          ></alg-skill-progress> -->
         </span>
       </span>
     </span>

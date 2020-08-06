@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { ItemNavigationService, MenuItems } from '../../http-services/item-navigation.service';
 
 @Component({
   selector: 'alg-item-nav',
@@ -6,10 +7,30 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./item-nav.component.scss']
 })
 export class ItemNavComponent implements OnInit {
+  @Input() type: 'activity'|'skill';
+  items: 'loading'|'error'|MenuItems = 'loading';
 
-  constructor() { }
+  constructor(
+    private itemNavService: ItemNavigationService,
+  ) { }
 
-  ngOnInit(): void {
+  loadNav(parentItemId: string|null) {
+    this.items = 'loading';
+    if (parentItemId === null) {
+      this.itemNavService.getRootActivities()
+        .subscribe(
+          (menuItems) => {
+            this.items = menuItems;
+          },
+          (_error) => {
+            this.items = 'error';
+          }
+        );
+    }
+  }
+
+  ngOnInit() {
+    this.loadNav(null);
   }
 
 }

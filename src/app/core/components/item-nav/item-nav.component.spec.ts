@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ItemNavComponent } from './item-nav.component';
+import { ItemNavigationService } from '../../http-services/item-navigation.service';
+import { empty } from 'rxjs';
 
 describe('ItemNavComponent', () => {
   let component: ItemNavComponent;
@@ -8,7 +10,12 @@ describe('ItemNavComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ItemNavComponent ]
+      declarations: [ ItemNavComponent ],
+      providers: [
+        { provide: ItemNavigationService, useValue: {
+          getRootActivities: () => { return empty(); }
+        } },
+      ]
     })
     .compileComponents();
   }));

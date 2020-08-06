@@ -31,6 +31,7 @@ import { GroupNavTreeComponent } from './components/group-nav-tree/group-nav-tre
 import { TreeModule } from 'primeng/tree';
 import { ItemNavTreeComponent } from './components/item-nav-tree/item-nav-tree.component';
 import { ItemNavComponent } from './components/item-nav/item-nav.component';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: false,
@@ -59,6 +60,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     PerfectScrollbarModule,
     SharedComponentsModule,
     TreeModule,
+    ProgressSpinnerModule
   ],
   providers: [
     {
