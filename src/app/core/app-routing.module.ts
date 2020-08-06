@@ -5,7 +5,11 @@ const routes: Routes = [
   {
     path: 'groups',
     loadChildren: () => import('../modules/group/group.module').then(m => m.GroupModule)
-  }
+  },
+  {
+    path: 'items',
+    loadChildren: () => import('../modules/item/item.module').then(m => m.ItemModule)
+  },
 ];
 
 @NgModule({

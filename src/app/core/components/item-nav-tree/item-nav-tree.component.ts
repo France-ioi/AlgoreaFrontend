@@ -2,12 +2,27 @@ import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { TreeNode } from 'primeng/api';
 import { Router } from '@angular/router';
 import * as _ from 'lodash-es';
-import { Item } from '../../http-services/item-navigation.service';
+import { Item, ItemNavigationService, MenuItems } from '../../http-services/item-navigation.service';
+import { ResultActionsService } from 'src/app/shared/http-services/result-actions.service';
+import { of, Observable } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 
 // ItemTreeNode is PrimeNG tree node with data forced to be an item
 interface ItemTreeNode extends TreeNode {
   data: Item
   target: string
+}
+
+function itemsToTreeNodes(items: Item[]): ItemTreeNode[] {
+  return _.map(items, (i) => {
+    return {
+      label: i.title,
+      data: i,
+      type:  i.hasChildren ? 'folder' : 'leaf',
+      leaf: i.hasChildren,
+      target: `/items/details/${i.id}`,
+    };
+  });
 }
 
 @Component({
@@ -48,22 +63,32 @@ export class ItemNavTreeComponent implements OnChanges {
 
   nodes: ItemTreeNode[];
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private resultActionsService: ResultActionsService,
+    private itemNavService: ItemNavigationService,
+  ) {}
 
   ngOnChanges(_changes: SimpleChanges) {
-    this.nodes = _.map(this.items, (i) => {
-      return {
-        label: i.title,
-        data: i,
-        type:  i.hasChildren ? 'folder' : 'leaf',
-        leaf: i.hasChildren,
-        target: `/items/${i.id}`,
-      };
-    });
+    this.nodes = itemsToTreeNodes(this.items);
   }
 
   onSelect(_e, node: ItemTreeNode) {
     void this.router.navigate([node.target]);
+    if (this.isFirstLevelNode(node)) {
+      // if it is a first level node, expand it without changing the root of the menu.
+      // require to create an attempt if the participant has no attempt on this item
+      this.createAttemptIfNoneDefined(node).pipe(
+        switchMap( (attemptId) =>  this.itemNavService.getNavData(node.data.id, attemptId) )
+      ).subscribe(
+        (data: MenuItems) => {
+          // TODO: update parent
+          node.children = itemsToTreeNodes(data.children);
+          node.expanded = true;
+        },
+        (_error) => { /* should handle error somehow */ }
+      );
+    }
   }
 
   onKeyDown(e: KeyboardEvent) {
@@ -84,6 +109,27 @@ export class ItemNavTreeComponent implements OnChanges {
         behavior: 'auto',
         block: 'center',
       });
+    }
+  }
+
+  /**
+   * Return whether the given node is at the first level of the displayed tree (root) (i.e. is not a children)
+   */
+  isFirstLevelNode(node: ItemTreeNode): boolean {
+    return _.some(this.nodes, (n) => n.data.id === node.data.id);
+  }
+
+  createAttemptIfNoneDefined(node: ItemTreeNode): Observable<string> { // observable of attempt_id
+    let attemptId = node.data.attemptId;
+    if (attemptId === null) {
+      attemptId = '0';
+      return this.resultActionsService
+        .start([node.data.id], attemptId)
+        .pipe(
+          map(() => attemptId)
+        );
+    } else {
+      return of(attemptId);
     }
   }
 
