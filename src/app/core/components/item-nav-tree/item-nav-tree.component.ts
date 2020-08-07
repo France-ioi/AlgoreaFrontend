@@ -11,6 +11,7 @@ import { map, switchMap } from 'rxjs/operators';
 interface ItemTreeNode extends TreeNode {
   data: Item
   target: string
+  status: 'ready'|'loading'|'error'
 }
 
 function itemsToTreeNodes(items: Item[]): ItemTreeNode[] {
@@ -21,6 +22,7 @@ function itemsToTreeNodes(items: Item[]): ItemTreeNode[] {
       type:  i.hasChildren ? 'folder' : 'leaf',
       leaf: i.hasChildren,
       target: `/items/details/${i.id}`,
+      status: 'ready',
     };
   });
 }
@@ -75,9 +77,10 @@ export class ItemNavTreeComponent implements OnChanges {
 
   onSelect(_e, node: ItemTreeNode) {
     void this.router.navigate([node.target]);
-    if (this.isFirstLevelNode(node)) {
+    if (this.isFirstLevelNode(node) && node.status !== 'loading') {
       // if it is a first level node, expand it without changing the root of the menu.
       // require to create an attempt if the participant has no attempt on this item
+      node.status = 'loading';
       this.createAttemptIfNoneDefined(node).pipe(
         switchMap( (attemptId) =>  this.itemNavService.getNavData(node.data.id, attemptId) )
       ).subscribe(
@@ -85,8 +88,12 @@ export class ItemNavTreeComponent implements OnChanges {
           // TODO: update parent
           node.children = itemsToTreeNodes(data.children);
           node.expanded = true;
+          node.status = 'ready';
         },
-        (_error) => { /* should handle error somehow */ }
+        (_error) => {
+          node.status = 'error';
+          /* should handle error somehow */
+        }
       );
     }
   }

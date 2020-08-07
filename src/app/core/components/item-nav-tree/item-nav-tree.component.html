@@ -51,6 +51,7 @@
             <span class="node-label-title">
               {{ node.label }}
               <span *ngIf="node.data.groupName">(via group "{{ node.data.groupName }}")</span>
+              <span *ngIf="node.status !== 'ready'">[{{node.status}}]</span>
             </span>
             <!-- <span class="node-state" *ngIf="node.state === 'locked'">
               <i class="fa fa-key" style="font-size: 1.2rem;"></i>
