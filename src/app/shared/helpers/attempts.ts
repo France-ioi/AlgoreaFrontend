@@ -3,6 +3,7 @@ import * as _ from 'lodash-es';
 export interface Result {
   attempt_id: string,
   latest_activity_at: string,
+  started_at: string|null
 }
 
 export function bestAttemptFromResults(results: Result[]): Result|null {
@@ -10,6 +11,7 @@ export function bestAttemptFromResults(results: Result[]): Result|null {
     return null;
   }
   // sort by latest_activity_at
-  const sortedResults = _.sortBy(results, (result) => new Date(result.latest_activity_at).getTime());
+  const startedResults = _.filter(results, (r) => r.started_at !== null && r.latest_activity_at !== null);
+  const sortedResults = _.sortBy(startedResults, (result) => new Date(result.latest_activity_at).getTime());
   return sortedResults[sortedResults.length-1];
 }

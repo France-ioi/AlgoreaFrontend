@@ -13,7 +13,7 @@
       </span>
       <span class="tree-header-title">section title...</span>
     </div>
-    <alg-item-nav-tree [items]="$any(items).children"></alg-item-nav-tree>
+    <alg-item-nav-tree [items]="$any(items).children" (navigateToItem)="navigateTo($event)"></alg-item-nav-tree>
   </ng-container>
 
 </ng-container>

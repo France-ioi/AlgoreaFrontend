@@ -2,6 +2,8 @@
   [value]="nodes"
   (keydown)="onKeyDown($event)"
   emptyMessage="There is no items to display here"
+  selectionMode="single"
+  [(selection)]="selectedNode"
 >
   <!-- Folder elements template -->
   <ng-template let-node pTemplate="folder">
@@ -22,7 +24,7 @@
         </span>
       </span>
       <span class="node-item-content">
-        <span (click)="onSelect($event, node)" class="node-select">
+        <span (click)="selectNode(node)" class="node-select">
           <i
             *ngIf="!node.expanded && !node.ring"
             class="fa fa-folder"
@@ -46,7 +48,7 @@
         <span *ngIf="node.icons" class="node-icon"
           ><i class="{{ node.icons }}" style="font-size: 1.2rem;"></i
         ></span>
-        <span (click)="onSelect($event, node)" class="node-label">
+        <span (click)="selectNode(node)" class="node-label">
           <span class="label-container">
             <span class="node-label-title">
               {{ node.label }}
@@ -85,7 +87,7 @@
         </span>
       </span>
       <span class="node-item-content" [ngClass]="{'node-bottom-radius': node.selectedTop, 'node-top-radius': node.selectedBottom}">
-        <span (click)="onSelect($event, node)" class="node-select">
+        <span (click)="selectNode(node)" class="node-select">
           <i
             *ngIf="node.checked && !node.ring"
             class="pi pi-check"
@@ -106,7 +108,7 @@
             [icons]="node.progress.icons"
           ></alg-score-ring>
         </span>
-        <span (click)="onSelect($event, node)" class="node-label">
+        <span (click)="selectNode(node)" class="node-label">
           <span class="label-container">
             <span class="node-label-title">
               {{ node.data.title }}

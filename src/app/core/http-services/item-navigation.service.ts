@@ -23,7 +23,8 @@ interface RootActivity {
     has_visible_children: boolean,
     results: {
       attempt_id: string,
-      latest_activity_at: string,
+      latest_activity_at: string|null,
+      started_at: string|null,
     }[]
   }
 }
@@ -41,7 +42,8 @@ interface NavData {
     has_visible_children: boolean,
     results: {
       attempt_id: string,
-      latest_activity_at: string,
+      latest_activity_at: string|null,
+      started_at: string|null,
     }[]
   }[]
 }
