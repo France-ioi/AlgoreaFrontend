@@ -11,25 +11,33 @@ interface ItemStrings {
   language_tag: string,
 }
 
+interface ActivityOrSkill {
+  id: string,
+  string: ItemStrings,
+  type: ItemType,
+  best_score: number,
+  has_visible_children: boolean,
+  results: {
+    attempt_id: string,
+    latest_activity_at: string|null,
+    started_at: string|null,
+  }[]
+}
+
 interface RootActivity {
   // Some attributes are omitted as they are not used for the moment. Read the doc for the full list.
   group_id: string,
   name: string,
-  activity: {
-    id: string,
-    string: ItemStrings,
-    type: ItemType,
-    best_score: number,
-    has_visible_children: boolean,
-    results: {
-      attempt_id: string,
-      latest_activity_at: string|null,
-      started_at: string|null,
-    }[]
-  }
+  activity: ActivityOrSkill
 }
 
-interface NavData {
+interface RootSkill {
+  group_id: string,
+  name: string,
+  skill: ActivityOrSkill
+}
+
+interface RawNavData {
   id: string,
   attempt_id: string,
   string: ItemStrings,
@@ -44,23 +52,24 @@ interface NavData {
       attempt_id: string,
       latest_activity_at: string|null,
       started_at: string|null,
-    }[]
+    }[]|null,
   }[]
 }
 
 export type ItemType = 'Chapter'|'Task'|'Course'|'Skill';
 
-export interface Item {
+export interface NavMenuItem {
   id: string,
   title: string,
   hasChildren: boolean,
   groupName?: string,
   attemptId: string|null,
+  children?: NavMenuItem[] // placeholder for children when fetched (may 'hasChildren' with 'children' not set)
 }
 
-export interface MenuItems {
-  parent?: any,
-  children: Item[]
+export interface NavMenuRootItem {
+  parent?: NavMenuItem,
+  items: NavMenuItem[]
 }
 
 @Injectable({
@@ -70,16 +79,26 @@ export class ItemNavigationService {
 
   constructor(private http: HttpClient) {}
 
-  getNavData(parentItemId: string, attemptId: string): Observable<MenuItems> {
+  /**
+   * One of attemptId, childAttemptId must be given (may require to start a result).
+   * If both are given, it is ok, only the attempt will be used.
+   */
+  getNavData(parentItemId: string, attemptId?: string, childAttemptId?: string): Observable<NavMenuRootItem> {
+    const parameters = (attemptId) ? { attempt_id: attemptId } : { child_attempt_id: childAttemptId };
     return this.http
-      .get<NavData>(`${environment.apiUrl}/items/${parentItemId}/navigation`, {
-        params: { attempt_id: attemptId }
+      .get<RawNavData>(`${environment.apiUrl}/items/${parentItemId}/navigation`, {
+        params: parameters
       })
       .pipe(
         map((data) => {
           return {
-            parent: 'tbd',
-            children: _.map(data.children, (i) => {
+            parent: {
+              id: data.id,
+              title: data.string.title,
+              hasChildren: data.children !== null && data.children.length > 0,
+              attemptId: data.attempt_id,
+            },
+            items: data.children === null ? [] : _.map(data.children, (i) => {
               const attempt = bestAttemptFromResults(i.results);
               return {
                 id: i.id,
@@ -93,7 +112,7 @@ export class ItemNavigationService {
       );
   }
 
-  getRootActivities(): Observable<MenuItems> {
+  getRootActivities(): Observable<NavMenuRootItem> {
     return this.http
       .get<RootActivity[]>(`${environment.apiUrl}/current-user/group-memberships/activities`)
       .pipe(
@@ -108,8 +127,34 @@ export class ItemNavigationService {
               attemptId: attempt ? attempt.attempt_id : null,
             };
           });
-          return { children: childrenItems };
+          return { items: childrenItems };
         })
       );
   }
+
+  getRootSkills(): Observable<NavMenuRootItem> {
+    return this.http
+      .get<RootSkill[]>(`${environment.apiUrl}/current-user/group-memberships/skills`)
+      .pipe(
+        map((skills) => {
+          const childrenItems = _.map(skills, (sk) => {
+            const attempt = bestAttemptFromResults(sk.skill.results);
+            return {
+              id: sk.skill.id,
+              title: sk.skill.string.title,
+              hasChildren: sk.skill.has_visible_children,
+              groupName: sk.name,
+              attemptId: attempt ? attempt.attempt_id : null,
+            };
+          });
+          return { items: childrenItems };
+        })
+      );
+  }
+
+  getRoot(type: 'activity'|'skill'): Observable<NavMenuRootItem> {
+    if (type === 'activity') return this.getRootActivities();
+    else return this.getRootSkills();
+  }
+
 }

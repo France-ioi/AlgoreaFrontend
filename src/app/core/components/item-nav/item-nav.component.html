@@ -1,4 +1,4 @@
-<ng-container [ngSwitch]="items">
+<ng-container [ngSwitch]="data">
   <div class="loading" *ngSwitchCase="'loading'">
     <p-progressSpinner [style]="{width: '3.3333rem', height: '3.3333rem'}"></p-progressSpinner>
   </div>
@@ -6,14 +6,12 @@
   <p *ngSwitchCase="'error'" class="error">Unable to load the item list</p>
 
   <ng-container *ngSwitchDefault> <!-- else: 'items' contains data, of type "MenuItems" -->
-    <div class="tree-header" *ngIf="$any(items).parent">
-      <span class="tree-header-handle">
-        <i class="fa fa-chevron-left"></i>
-        <div class="icon-folder"><img src="/assets/images/tree-folder.svg" alt=""></div>
-      </span>
-      <span class="tree-header-title">section title...</span>
-    </div>
-    <alg-item-nav-tree [items]="$any(items).children" (navigateToItem)="navigateTo($event)"></alg-item-nav-tree>
+    <alg-item-nav-tree
+      [items]="$any(data).items"
+      [parent]="$any(data).parent"
+      [pathToItems]="$any(data).pathToItems"
+      [selectedItem]="$any(data).selectedItem"
+    ></alg-item-nav-tree>
   </ng-container>
 
 </ng-container>

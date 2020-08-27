@@ -1,34 +1,19 @@
-import { Component, Input, OnChanges, SimpleChanges, EventEmitter, Output } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { TreeNode } from 'primeng/api';
 import * as _ from 'lodash-es';
-import { Item, ItemNavigationService, MenuItems } from '../../http-services/item-navigation.service';
+import { NavMenuItem } from '../../http-services/item-navigation.service';
 import { ResultActionsService } from 'src/app/shared/http-services/result-actions.service';
 import { of, Observable } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
+import { NavItem, itemDetailsRoute } from 'src/app/shared/services/nav-types';
+import { Router } from '@angular/router';
 
 // ItemTreeNode is PrimeNG tree node with data forced to be an item
 interface ItemTreeNode extends TreeNode {
-  data: Item
-  target: string
+  data: NavMenuItem
+  itemPath: string[]
   status: 'ready'|'loading'|'error'
-}
-
-function itemsToTreeNodes(items: Item[]): ItemTreeNode[] {
-  return _.map(items, (i) => {
-    return {
-      label: i.title,
-      data: i,
-      type:  i.hasChildren ? 'folder' : 'leaf',
-      leaf: i.hasChildren,
-      target: `/items/details/${i.id}`, /* FIXME to be removed with the attribute? */
-      status: 'ready',
-    };
-  });
-}
-
-export interface Target {
-  item: Item,
-  attemptId?: string
+  checked: boolean,
 }
 
 @Component({
@@ -37,93 +22,91 @@ export interface Target {
   styleUrls: ['./item-nav-tree.component.scss']
 })
 export class ItemNavTreeComponent implements OnChanges {
-  @Input() items: Item[] = [];
-  @Output() navigateToItem = new EventEmitter<Target>();
-
-  // : Item[] = [
-  //   {
-  //     id: '26',
-  //     title: 'Activities to test mosaic/list modes',
-  //     type: 'folder',
-  //     ring: true,
-  //     state: 'never opened',
-  //     progress: {
-  //       displayedScore: 0,
-  //       currentScore: 0
-  //     },
-  //     children: [
-  //       {
-  //         id: 42,
-  //         title: 'Activity with session list',
-  //         type: 'leaf',
-  //         ring: true,
-  //         state: 'opened',
-  //         hasKey: true,
-  //         progress: {
-  //           displayedScore: 30,
-  //           currentScore: 30
-  //         },
-  //         category: {
-  //           icon: 'fa fa-book-open',
-  //           type: 1
-  //         }
+  @Input() parent?: NavMenuItem;
+  @Input() items: NavMenuItem[] = [];
+  @Input() pathToItems: string[] = [];
+  @Input() selectedItem?: NavItem;
 
   nodes: ItemTreeNode[];
-  selectedNode: TreeNode|null;
+  selectedNode: ItemTreeNode|null;
 
   constructor(
+    private router: Router,
     private resultActionsService: ResultActionsService,
-    private itemNavService: ItemNavigationService,
   ) {}
 
+  mapItemToNodes(items: NavMenuItem[], pathToItems: string[], selectedItem?: NavItem): ItemTreeNode[] {
+    return _.map(items, (i) => {
+      const isSelected = selectedItem && selectedItem.itemId === i.id;
+      const shouldShowChildren = i.hasChildren && isSelected;
+      const isLoadingChildren = shouldShowChildren && !i.children; // are being loaded by the parent component
+      const showChildren = shouldShowChildren && !!i.children;
+      const pathToChildren = pathToItems.concat([i.id]);
+      return {
+        label: i.title,
+        data: i,
+        itemPath: pathToItems,
+        type: i.hasChildren ? 'folder' : 'leaf',
+        leaf: i.hasChildren,
+        status: isLoadingChildren ? 'loading' : 'ready',
+        children: showChildren ? this.mapItemToNodes(i.children, pathToChildren, selectedItem) : undefined,
+        expanded: showChildren,
+        checked: isSelected,
+      };
+    });
+  }
+
   ngOnChanges(_changes: SimpleChanges) {
-    this.nodes = itemsToTreeNodes(this.items);
+    this.nodes = this.mapItemToNodes(this.items, this.pathToItems, this.selectedItem);
+  }
+
+  navigateToNode(node: ItemTreeNode, attemptId?: string) {
+    void this.router.navigate(itemDetailsRoute({
+      itemId: node.data.id,
+      itemPath: node.itemPath,
+      attemptId: attemptId,
+      parentAttemptId: attemptId ? undefined : (node.parent ? (node.parent as ItemTreeNode).data.attemptId : this.parent.attemptId),
+    }));
+  }
+
+  navigateToParent() {
+    if (!this.parent) return; // unexpected!
+    void this.router.navigate(itemDetailsRoute({
+      itemId: this.parent.id,
+      itemPath: this.pathToItems.slice(0, -1),
+      attemptId: this.parent.attemptId,
+    }));
   }
 
   selectNode(node: ItemTreeNode) {
     this.selectedNode = node;
-    // this.navigateToItem.emit(node.data);
 
-
-    /* Update the menu */
-    // if (node.status === 'loading' || !node.data.hasChildren /*|| already loaded*/) return;
-
-
+    // do not allow re-selecting a node with fetching in progress
     if (node.status === 'loading') return;
 
-    if (this.isFirstLevelNode(node)) {
-      // if it is a first level node, do not change the root of the menu.
-      // just create an attempt if needed, navigate to it, and load children if needed
-
-      if (!node.data.hasChildren) { // leaf
-        this.navigateToItem.emit({item: node.data});
-      } else {
-        // item having children: start a result (if not done yet), navigate and load children
-        node.status = 'loading';
-        this.startResultIfRequired(node).pipe(
-          switchMap( (attemptId) => {
-            if (this.selectedNode === node) {
-              this.navigateToItem.emit({item: node.data, attemptId: attemptId});
-              return this.loadChildren(node, attemptId);
-            }
-            else return of<void>(null); // if the node is not selected anymore, do not navigate and do not load children
-          })
-        ).subscribe({
-          error: (_error) => {
-            node.status = 'error';
-            /* should handle error somehow */
-          },
-          complete: () => {
-            node.status = 'ready';
-          }
-        });
-      }
-
-    } else {
-      // if it is a children of an item, we need to set the item as the root of the tree
-      // CALL ITEM NAV TO SHIFT TRE AND SELECT THE NODE IN TREE
+    // if it is a leaf node, just navigate to it. the item-nav component will rearrange the tree if needed.
+    if (!node.data.hasChildren) { // leaf
+      this.navigateToNode(node, node.data.attemptId === null ? undefined : node.data.attemptId);
+      return;
     }
 
+    // Otherwise, the node has children: start a result (if not done yet), navigate and load children
+    node.status = 'loading';
+    this.startResultIfRequired(node).subscribe({
+      next: (attemptId) => {
+        if (this.selectedNode === node) {
+          // if the node is not selected anymore after result start, do not navigate to it
+          this.navigateToNode(node, attemptId);
+        }
+      },
+      error: (_error) => {
+        node.status = 'error';
+        /* should handle error somehow */
+      },
+      complete: () => {
+        node.status = 'ready';
+      }
+    });
   }
 
   onKeyDown(e: KeyboardEvent) {
@@ -157,33 +140,18 @@ export class ItemNavTreeComponent implements OnChanges {
   /**
    * Start a new result only if the node does not have a result started yet
    */
-  startResultIfRequired(node: ItemTreeNode): Observable<string|null> { // observable of attempt_id
+  startResultIfRequired(node: ItemTreeNode): Observable<string> { // observable of attempt_id
     let attemptId = node.data.attemptId;
     if (attemptId === null) {
       attemptId = '0';
       return this.resultActionsService
-        .start([node.data.id], attemptId)
+        .start(node.itemPath.concat([node.data.id]), attemptId)
         .pipe(
           map(() => attemptId)
         );
     } else {
       return of(attemptId);
     }
-  }
-
-  loadChildren(node: ItemTreeNode, attemptId: string): Observable<void> {
-    return this.itemNavService
-      .getNavData(node.data.id, attemptId)
-      .pipe(
-        map((data: MenuItems) => {
-          // TODO: update parent
-          if (this.selectedNode === node) {
-            node.children = itemsToTreeNodes(data.children);
-            node.expanded = true; // only expend if it is still the selected item in the menu
-          }
-          // return nothing, so map to void
-        })
-      );
   }
 
 }

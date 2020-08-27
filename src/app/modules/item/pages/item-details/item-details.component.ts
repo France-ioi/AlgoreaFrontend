@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { CurrentContentService } from 'src/app/shared/services/current-content.service';
+import { ActivatedRoute } from '@angular/router';
+import { itemFromDetailParams } from 'src/app/shared/services/nav-types';
 
 @Component({
   selector: 'alg-item-details',
@@ -7,9 +10,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ItemDetailsComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private currentContent: CurrentContentService,
+  ) {
+    activatedRoute.paramMap.subscribe((params) => {
+      const item = itemFromDetailParams(params);
+      currentContent.setCurrent(item);
+    });
+  }
 
-  ngOnInit(): void {
+  ngOnInit() {
   }
 
 }
