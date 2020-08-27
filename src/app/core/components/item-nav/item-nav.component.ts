@@ -1,6 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ItemNavigationService, NavMenuRootItem } from '../../http-services/item-navigation.service';
-import { Router } from '@angular/router';
 import { CurrentContentService } from 'src/app/shared/services/current-content.service';
 import { map, switchMap } from 'rxjs/operators';
 import { of, Observable, merge } from 'rxjs';
@@ -32,7 +31,6 @@ export class ItemNavComponent implements OnInit {
   rootItemPath: string[] = [];
 
   constructor(
-    private router: Router,
     private itemNavService: ItemNavigationService,
     private currentContent: CurrentContentService,
   ) { }

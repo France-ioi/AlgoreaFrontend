@@ -2,6 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ItemNavTreeComponent } from './item-nav-tree.component';
 import { Router } from '@angular/router';
+import { ResultActionsService } from 'src/app/shared/http-services/result-actions.service';
 
 describe('ItemNavTreeComponent', () => {
   let component: ItemNavTreeComponent;
@@ -12,6 +13,9 @@ describe('ItemNavTreeComponent', () => {
     TestBed.configureTestingModule({
       providers: [
         { provide: Router, useValue: routerSpy },
+        { provide: ResultActionsService, useValue: {
+
+        }},
       ],
       declarations: [ ItemNavTreeComponent ]
     })

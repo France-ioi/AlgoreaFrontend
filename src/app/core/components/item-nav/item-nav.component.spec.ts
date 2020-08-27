@@ -3,6 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ItemNavComponent } from './item-nav.component';
 import { ItemNavigationService } from '../../http-services/item-navigation.service';
 import { empty } from 'rxjs';
+import { CurrentContentService } from 'src/app/shared/services/current-content.service';
 
 describe('ItemNavComponent', () => {
   let component: ItemNavComponent;
@@ -14,7 +15,10 @@ describe('ItemNavComponent', () => {
       providers: [
         { provide: ItemNavigationService, useValue: {
           getRootActivities: () => { return empty(); }
-        } },
+        }},
+        { provide: CurrentContentService, useValue: {
+          item: () => empty()
+        }},
       ]
     })
     .compileComponents();
