@@ -92,7 +92,12 @@ jobs:
     steps:
       - attach_workspace:
           at: ./
-      - run: ./node_modules/.bin/ng e2e --protractor-config=e2e/protractor-ci.conf.js
+      - run:
+          name: Install the same version of webdriver as the local one
+          command: |
+            npx webdriver-manager clean
+            npx webdriver-manager update --versions.chrome=$(google-chrome --version | cut -d ' ' -f 3)
+      - run: ./node_modules/.bin/ng e2e --protractor-config=e2e/protractor-ci.conf.js --webdriverUpdate=false
 
 
   deploy-branch:
