@@ -1,5 +1,5 @@
 <p-tabView class="group-skills" [activeIndex]="activeTab" (onChange)="tabChanged($event)">
-  <p-tabPanel>
+  <!-- <p-tabPanel>
     <ng-template pTemplate="header" tabindex="5">
       <span class="indicator"></span>
       <i class="fa fa-graduation-cap"></i>
@@ -7,16 +7,8 @@
         SKILLS
       </span>
     </ng-template>
-    <div class="tree-header">
-      <span class="tree-header-handle">
-        <i class="fa fa-chevron-left"></i>
-        <!-- <i class="fa fa-folder-open"></i> -->
-        <div class="icon-folder"><img src="/assets/images/tree-folder.svg" alt=""></div>
-      </span>
-      <span class="tree-header-title">{{skills.title}}</span>
-    </div>
-    <alg-items-navigation-tree [data]="skills.data" (nodeSelect)="onSkillSelected($event)"></alg-items-navigation-tree>
-  </p-tabPanel>
+    <alg-item-nav type="skills"></alg-item-nav>
+  </p-tabPanel> -->
   <p-tabPanel>
     <ng-template pTemplate="header" tabindex="6">
       <span class="indicator"></span>
@@ -25,14 +17,6 @@
         ACTIVITIES
       </span>
     </ng-template>
-    <div class="tree-header">
-      <span class="tree-header-handle">
-        <i class="fa fa-chevron-left"></i>
-        <!-- <i class="fa fa-folder-open"></i> -->
-        <div class="icon-folder"><img src="/assets/images/tree-folder.svg" alt=""></div>
-      </span>
-      <span class="tree-header-title">{{activities.title}}</span>
-    </div>
-    <alg-items-navigation-tree [data]="activities.data" (nodeSelect)="onActivitySelected($event)"></alg-items-navigation-tree>
+    <alg-item-nav type="activity"></alg-item-nav>
   </p-tabPanel>
 </p-tabView>

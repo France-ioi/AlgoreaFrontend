@@ -1,0 +1,17 @@
+<ng-container [ngSwitch]="data">
+  <div class="loading" *ngSwitchCase="'loading'">
+    <p-progressSpinner [style]="{width: '3.3333rem', height: '3.3333rem'}"></p-progressSpinner>
+  </div>
+
+  <p *ngSwitchCase="'error'" class="error">Unable to load the item list</p>
+
+  <ng-container *ngSwitchDefault> <!-- else: 'items' contains data, of type "MenuItems" -->
+    <alg-item-nav-tree
+      [items]="$any(data).items"
+      [parent]="$any(data).parent"
+      [pathToItems]="$any(data).pathToItems"
+      [selectedItem]="$any(data).selectedItem"
+    ></alg-item-nav-tree>
+  </ng-container>
+
+</ng-container>

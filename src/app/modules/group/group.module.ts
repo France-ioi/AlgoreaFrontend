@@ -5,7 +5,6 @@ import { SharedComponentsModule } from '../shared-components/shared-components.m
 
 import { GroupRoutingModule } from './group-routing.module';
 
-import { GroupComponent } from './group.component';
 import { GroupHeaderComponent } from './components/group-header/group-header.component';
 import { PendingRequestComponent } from './components/pending-request/pending-request.component';
 import { GroupNoPermissionComponent } from './components/group-no-permission/group-no-permission.component';
@@ -22,7 +21,6 @@ import { DurationToMinPipe } from 'src/app/shared/pipes/duration';
 
 @NgModule({
   declarations: [
-    GroupComponent,
     GroupHeaderComponent,
     GroupOverviewComponent,
     PendingRequestComponent,

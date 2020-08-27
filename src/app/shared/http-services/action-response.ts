@@ -11,6 +11,9 @@ export interface ActionResponse<T> {
 // SimpleActionResponse is an action response with no "data"
 export type SimpleActionResponse = ActionResponse<undefined>;
 
+// CreationResponse is a response of a creation service which returns the id of the created ressource
+export type CreateResponse = ActionResponse<{id: string}>;
+
 // Extract and return the value of the "data" attribute of the response.
 // Throw an error if the response is not a success or if there is no data.
 // To be used in subscription pipes to map responses.
@@ -22,6 +25,13 @@ export function successData<T>(resp: ActionResponse<T>): T {
     throw new Error('The response has no data');
   }
   return resp.data;
+}
+
+// Extract and return the id from the "data" attribute of the response.
+// Throw an error if the response is not a success or if there is no data.
+// To be used in subscription pipes to map responses.
+export function createdId(resp: CreateResponse): string {
+  return successData(resp).id;
 }
 
 // Ensure that the response is a success.
