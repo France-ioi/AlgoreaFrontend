@@ -2,58 +2,33 @@
 import { Component, OnInit, Input, OnChanges, SimpleChanges, ViewChild, NgZone, Output, EventEmitter } from '@angular/core';
 import { Location } from '@angular/common';
 import { StatusService } from '../../../shared/services/status.service';
+import { CurrentUserService } from 'src/app/shared/services/current-user.service';
+import { UserProfile } from 'src/app/shared/http-services/current-user.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'alg-navigation-tabs',
   templateUrl: './navigation-tabs.component.html',
   styleUrls: ['./navigation-tabs.component.scss']
 })
-export class NavigationTabsComponent implements OnInit, OnChanges {
-
-  @Input() items;
+export class NavigationTabsComponent implements OnInit {
 
   @ViewChild('scrollPanel') scrollPanel;
   @ViewChild('groupPanel') groupPanel;
 
-  @Output() skillSelect = new EventEmitter<any>();
-  @Output() activitySelect = new EventEmitter<any>();
-
-  currentUser;
   groupShow = true;
   stickyShow = false;
-  activeTab = 1;
-  notified = false;
 
-  esOb;
+  currentUser$: Observable<UserProfile>;
 
   constructor(
+    private currentUserService: CurrentUserService,
     private ngZone: NgZone,
-    private statusService: StatusService,
-    private locationService: Location,
   ) {
   }
 
   ngOnInit() {
-    this.statusService.getObservable().subscribe(res => {
-      this.notified = res.notified;
-      this.esOb = res;
-    });
-  }
-
-  fetchUser() {
-    for (const user of this.items.users) {
-      if (user.ID === this.items.selectedID) {
-        this.currentUser = user;
-        break;
-      }
-    }
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
-    console.log('navigation tabs', changes);
-    if (this.items) {
-      this.fetchUser();
-    }
+      this.currentUser$ = this.currentUserService.currentUser();
   }
 
   toggleGroup(_e) {
@@ -100,26 +75,8 @@ export class NavigationTabsComponent implements OnInit, OnChanges {
   }
 
   onTabChanged(e) {
-    this.activeTab = e;
     this.groupShow = false;
     this.stickyShow = false;
-  }
-
-  onSkillSelected(e) {
-    this.skillSelect.emit(e);
-    this.groupShow = false;
-  }
-
-  onActivitySelected(e) {
-    this.activitySelect.emit(e);
-    this.groupShow = false;
-  }
-
-  goBack(_e) {
-    this.notified = false;
-    this.esOb.notified = false;
-    this.statusService.setValue(this.esOb);
-    this.locationService.back();
   }
 
 }
