@@ -31,11 +31,8 @@
     <div *ngIf="groupShow" (resized)="onResized($event)" #groupPanel tabindex="4" (focusOnGroupNav)="focusParent()">
       <alg-group-nav></alg-group-nav>
     </div>
-    <alg-skill-activity-tabs [skills]="items.skills" [activities]="items.activities" [activeTab]="activeTab"
-      (tabChange)="onTabChanged($event)" (skillSelect)="onSkillSelected($event)"
-      (activitySelect)="onActivitySelected($event)"></alg-skill-activity-tabs>
-    <alg-skill-activity-tabs *ngIf="stickyShow" [skills]="items.skills" [activities]="items.activities"
-      [activeTab]="activeTab" (tabChange)="onTabChanged($event)" class="overlay-skills"></alg-skill-activity-tabs>
+    <alg-skill-activity-tabs ></alg-skill-activity-tabs>
+    <alg-skill-activity-tabs *ngIf="stickyShow" class="overlay-skills"></alg-skill-activity-tabs>
   </perfect-scrollbar>
   <div class="notified" *ngIf="notified" (click)="goBack($event)">
     <div class="back-to">

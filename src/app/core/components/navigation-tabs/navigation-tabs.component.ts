@@ -15,9 +15,6 @@ export class NavigationTabsComponent implements OnInit, OnChanges {
   @ViewChild('scrollPanel') scrollPanel;
   @ViewChild('groupPanel') groupPanel;
 
-  @Output() skillSelect = new EventEmitter<any>();
-  @Output() activitySelect = new EventEmitter<any>();
-
   currentUser;
   groupShow = true;
   stickyShow = false;
@@ -103,16 +100,6 @@ export class NavigationTabsComponent implements OnInit, OnChanges {
     this.activeTab = e;
     this.groupShow = false;
     this.stickyShow = false;
-  }
-
-  onSkillSelected(e) {
-    this.skillSelect.emit(e);
-    this.groupShow = false;
-  }
-
-  onActivitySelected(e) {
-    this.activitySelect.emit(e);
-    this.groupShow = false;
   }
 
   goBack(_e) {
