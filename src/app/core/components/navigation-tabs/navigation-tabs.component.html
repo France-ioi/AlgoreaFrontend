@@ -1,49 +1,31 @@
-<!-- <perfect-scrollbar style="max-height: calc(100vh - 140px);"> -->
 <div class="group-container">
   <div class="group-header">
     <div class="group-avatar">
-      <ng-container *ngIf="currentUser.avatar; then userAvatar; else noAvatar"></ng-container>
-      <ng-template #userAvatar>
-        <img src="assets/images/{{currentUser.avatar }}" style="width: 7rem; height: 7rem;" />
-      </ng-template>
-      <ng-template #noAvatar>
-        <span class="anonym-group">
-          <ng-container *ngIf="currentUser.type == 'user'; then userAnony; else groupAnony">
-          </ng-container>
-          <ng-template #userAnony>
-            <img src="assets/images/Male.svg" style="width: 7rem; height: auto;" />
-          </ng-template>
-          <ng-template #groupAnony>
-            <img src="assets/images/Group - Managed.svg" style="width: 7rem; height: auto;" />
-          </ng-template>
-        </span>
-      </ng-template>
+      <img src="assets/images/Male.svg" style="width: 7rem; height: auto;" />
     </div>
-    <span class="group-title">
-      {{ currentUser.title }}
-    </span>
-    <span class="group-toggle" (click)="toggleGroup($event)">
-      <i class="fa fa-users"></i>
-      <i class="fa {{ groupShow ? 'fa-caret-down' : 'fa-caret-up' }}"></i>
-    </span>
+    <ng-container *ngIf="currentUser$ | async as user; else userLoading">
+      <span class="group-title">
+        <ng-container *ngIf="!user.isTemp && (user.firstname.length > 0 || user.lastname.length > 0) else tempUser">
+          {{ user.firstname}} {{ user.lastname}} ({{ user.login }})
+        </ng-container>
+        <ng-template #tempUser>
+          {{ user.login }}
+        </ng-template>
+      </span>
+      <span class="group-toggle" (click)="toggleGroup($event)">
+        <i class="fa fa-users"></i>
+        <i class="fa {{ groupShow ? 'fa-caret-down' : 'fa-caret-up' }}"></i>
+      </span>
+    </ng-container>
+    <ng-template #userLoading>
+      <span class="group-title">Loading...</span>
+    </ng-template>
   </div>
-  <perfect-scrollbar *ngIf="!notified" style="width: 100%;height: 100%;" #scrollPanel (psScrollY)="onScrollEvent($event)">
+  <perfect-scrollbar style="width: 100%;height: 100%;" #scrollPanel (psScrollY)="onScrollEvent($event)">
     <div *ngIf="groupShow" (resized)="onResized($event)" #groupPanel tabindex="4" (focusOnGroupNav)="focusParent()">
       <alg-group-nav></alg-group-nav>
     </div>
     <alg-skill-activity-tabs ></alg-skill-activity-tabs>
     <alg-skill-activity-tabs *ngIf="stickyShow" class="overlay-skills"></alg-skill-activity-tabs>
   </perfect-scrollbar>
-  <div class="notified" *ngIf="notified" (click)="goBack($event)">
-    <div class="back-to">
-      <span class="back-icon">
-        <i class="fa fa-sitemap"></i>
-      </span>
-      <span class="back-label">back to the tree</span>
-      <span>
-        <i class="fa fa-times"></i>
-      </span>
-    </div>
-  </div>
 </div>
-<!-- </perfect-scrollbar> -->

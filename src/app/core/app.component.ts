@@ -56,29 +56,6 @@ export class AppComponent implements OnInit {
     ]
   };
 
-  groupdata = {
-    selectedID: 1, // User selected ID
-    currentID: 1, // Current User ID
-    users: [
-      {
-        ID: 1,
-        title: 'Lionel MESSI',
-        avatar: '_messi.jpg',
-        type: 'user'
-      },
-      {
-        ID: 2,
-        title: 'Suarez',
-        type: 'user'
-      },
-      {
-        ID: 3,
-        title: 'FC Barcelona',
-        type: 'group'
-      }
-    ],
-  };
-
   user = {
     name: 'Concours castor',
     notification: 2,
