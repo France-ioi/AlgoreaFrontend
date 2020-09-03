@@ -2,6 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { GroupNavComponent } from './group-nav.component';
 import { JoinedGroupsService } from '../../http-services/joined-groups.service';
+import { ManagedGroupsService } from '../../http-services/managed-groups.service';
 
 describe('GroupNavComponent', () => {
   let component: GroupNavComponent;
@@ -12,6 +13,7 @@ describe('GroupNavComponent', () => {
       declarations: [ GroupNavComponent ],
       providers: [
         { provide: JoinedGroupsService, useValue: {} },
+        { provide: ManagedGroupsService, useValue: {} },
       ]
     })
     .compileComponents();
