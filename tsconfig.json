@@ -32,9 +32,6 @@
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,
     "strictInjectionParameters": true,
-
-    // Strict templates with some sub-rules disabled (for those, we should try to solve the issues)
-    // see https://angular.io/guide/template-typecheck
     "strictTemplates": true,
   }
 }
