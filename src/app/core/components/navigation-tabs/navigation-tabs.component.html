@@ -5,7 +5,7 @@
     </div>
     <ng-container *ngIf="currentUser$ | async as user; else userLoading">
       <span class="group-title">
-        <ng-container *ngIf="!user.isTemp && (user.firstname.length > 0 || user.lastname.length > 0) else tempUser">
+        <ng-container *ngIf="!user.isTemp && (user.firstname || user.lastname) else tempUser">
           {{ user.firstname}} {{ user.lastname}} ({{ user.login }})
         </ng-container>
         <ng-template #tempUser>
