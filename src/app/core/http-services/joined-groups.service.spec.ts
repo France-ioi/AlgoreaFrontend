@@ -1,10 +1,10 @@
 import { TestBed } from '@angular/core/testing';
 
-import { GetJoinedGroupsService } from './get-joined-groups.service';
+import { JoinedGroupsService } from './joined-groups.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
-describe('GetJoinedGroupsService', () => {
-  let service: GetJoinedGroupsService;
+describe('JoinedGroupsService', () => {
+  let service: JoinedGroupsService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -12,7 +12,7 @@ describe('GetJoinedGroupsService', () => {
         HttpClientTestingModule
       ],
     });
-    service = TestBed.inject(GetJoinedGroupsService);
+    service = TestBed.inject(JoinedGroupsService);
   });
 
   it('should be created', () => {
