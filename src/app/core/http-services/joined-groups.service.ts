@@ -24,11 +24,11 @@ interface JoinedGroup{
 @Injectable({
   providedIn: 'root'
 })
-export class GetJoinedGroupsService {
+export class JoinedGroupsService {
 
   constructor(private http: HttpClient) {}
 
-  getJoinedGroup(): Observable<Group[]> {
+  getJoinedGroups(): Observable<Group[]> {
     return this.http
       .get<JoinedGroup[]>(`${environment.apiUrl}/current-user/group-memberships`)
       .pipe(
