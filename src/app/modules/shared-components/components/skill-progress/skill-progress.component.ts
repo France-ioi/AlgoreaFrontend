@@ -14,11 +14,7 @@ export enum ProgressColor {
   Thin = '#CFD0D4',
 }
 
-export enum ProgressType {
-  ThinHorizontal = 'thin-horizontal',
-  ThickHorizontal = 'thick-horizontal',
-  ThickVertical = 'vertical',
-}
+type ProgressType = 'thin-horizontal'|'thick-horizontal'|'vertical'
 
 enum ProgressHeight {
   Thin = 0.4167,
@@ -31,9 +27,8 @@ enum ProgressHeight {
   styleUrls: ['./skill-progress.component.scss'],
 })
 export class SkillProgressComponent implements OnInit, OnChanges {
-  ProgressType = ProgressType;
 
-  @Input() type = ProgressType.ThinHorizontal;
+  @Input() type: ProgressType = 'thin-horizontal';
   @Input() displayedScore = 0;
   @Input() currentScore = 0;
   @Input() color = ProgressColor.Thin;
@@ -62,10 +57,10 @@ export class SkillProgressComponent implements OnInit, OnChanges {
     this._validateScore(this.displayedScore);
     this._validateScore(this.currentScore);
 
-    if (this.type === ProgressType.ThinHorizontal) {
+    if (this.type === 'thin-horizontal') {
       this.progressHeight = ProgressHeight.Thin;
       this.color = ProgressColor.Thin;
-    } else if (this.type === ProgressType.ThickHorizontal) {
+    } else if (this.type === 'thick-horizontal') {
       this.progressHeight = ProgressHeight.Thick;
     }
   }

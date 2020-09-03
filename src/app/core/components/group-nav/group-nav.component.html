@@ -22,7 +22,7 @@
         </p-header>
         <p-progressSpinner *ngSwitchCase="'loading'" [style]="{width: '3.3333rem', height: '3.3333rem'}"></p-progressSpinner>
         <p *ngSwitchCase="'error'">Unable to load the group list</p>
-        <alg-group-nav-tree *ngSwitchDefault [groups]="managedGroups"></alg-group-nav-tree>
+        <alg-group-nav-tree *ngSwitchDefault [groups]="$any(managedGroups)"><!--any better sol than $any is welcome!--></alg-group-nav-tree>
       </p-accordionTab>
       <p-accordionTab [ngSwitch]="joinedGroups">
         <p-header>
@@ -33,7 +33,7 @@
         </p-header>
         <p-progressSpinner *ngSwitchCase="'loading'" [style]="{width: '3.3333rem', height: '3.3333rem'}"></p-progressSpinner>
         <p *ngSwitchCase="'error'">Unable to load the group list</p>
-        <alg-group-nav-tree *ngSwitchDefault [groups]="joinedGroups"></alg-group-nav-tree>
+        <alg-group-nav-tree *ngSwitchDefault [groups]="$any(joinedGroups)"><!--any better sol than $any is welcome!--></alg-group-nav-tree>
       </p-accordionTab>
     </p-accordion>
   </div>
