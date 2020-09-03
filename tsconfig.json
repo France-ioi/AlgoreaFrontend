@@ -32,7 +32,6 @@
     // "strict" enables all strict type checking option. Some rules are disabled below, we should try to get rid of the disablings
     "strict": true,
     "noImplicitAny": false,
-    "alwaysStrict": false,
     "strictNullChecks": false,
     "strictFunctionTypes": false,
     "strictPropertyInitialization": false,
