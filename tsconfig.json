@@ -27,7 +27,16 @@
 
     // compiler linter checks
     "noFallthroughCasesInSwitch": true,
-    "noImplicitReturns": true
+    "noImplicitReturns": true,
+
+    // "strict" enables all strict type checking option. Some rules are disabled below, we should try to get rid of the disablings
+    "strict": true,
+    "noImplicitAny": false,
+    "noImplicitThis": false,
+    "alwaysStrict": false,
+    "strictNullChecks": false,
+    "strictFunctionTypes": false,
+    "strictPropertyInitialization": false,
   },
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,
