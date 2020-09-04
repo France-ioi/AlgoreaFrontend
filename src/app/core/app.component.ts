@@ -1,7 +1,5 @@
 /* eslint-disable */ /* FIXME disabled for now while this is the mockup code, to be removed afterwards */
 import { Component, HostListener, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { StatusService } from '../shared/services/status.service';
 
 @Component({
   selector: 'alg-root',
@@ -71,40 +69,9 @@ export class AppComponent implements OnInit {
   selectedType = -1;
   userTitle;
 
-  constructor(
-    private statusService: StatusService,
-    private router: Router
-  ) {}
+  constructor() {}
 
   ngOnInit() {
-    this.statusService.setUser({
-      title: 'Lionel MESSI',
-      avatar: '_messi.jpg',
-      type: 'user'
-    });
-    this.statusService.getObservable().subscribe(res => {
-      this.scrolled = res.scrolled;
-      this.folded = res.folded;
-      this.isStarted = res.isStarted;
-      this.collapsed = res.collapsed;
-      this.activityORSkill = res.activityORSkill;
-      this.editing = res.editing;
-      this.notified = res.notified;
-      this.userTitle = res.userTitle;
-    });
-  }
-
-  updateService() {
-    this.statusService.setValue({
-      scrolled: this.scrolled,
-      folded: this.folded,
-      isStarted: this.isStarted,
-      collapsed: this.collapsed,
-      activityORSkill: this.activityORSkill,
-      editing: this.editing,
-      notified: this.notified,
-      userTitle: this.userTitle
-    });
   }
 
   onCollapse(e: boolean) {
@@ -112,7 +79,6 @@ export class AppComponent implements OnInit {
     if (!this.collapsed) {
       this.folded = false;
     }
-    this.updateService();
   }
 
   onFold(folded: boolean) {
@@ -130,12 +96,10 @@ export class AppComponent implements OnInit {
 
   onEditPage() {
     this.editing = true;
-    this.updateService();
   }
 
   onEditCancel() {
     this.editing = false;
-    this.updateService();
   }
 
 }

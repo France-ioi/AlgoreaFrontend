@@ -1,6 +1,4 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
-import { StatusService } from '../../../shared/services/status.service';
-import { Router } from '@angular/router';
 import { AuthService } from 'src/app/shared/auth/auth.service';
 
 @Component({
@@ -35,8 +33,6 @@ export class TopNavComponent implements OnInit {
   ];
 
   constructor(
-    private statusService: StatusService,
-    private router: Router,
     private authService: AuthService
   ) { }
 
@@ -55,7 +51,6 @@ export class TopNavComponent implements OnInit {
 
   toggleNotification(e) {
     this.showNotification = !this.showNotification;
-    this.statusService.setUrl(this.router.url);
     this.notify.emit(e);
   }
 

@@ -1,7 +1,6 @@
 /* eslint-disable */ /* FIXME disabled for now while this is the mockup code, to be removed afterwards */
 import { Component, OnInit, Input, OnChanges, SimpleChanges, ViewChild, NgZone, Output, EventEmitter } from '@angular/core';
-import { Location } from '@angular/common';
-import { StatusService } from '../../../shared/services/status.service';
+
 import { CurrentUserService } from 'src/app/shared/services/current-user.service';
 import { UserProfile } from 'src/app/shared/http-services/current-user.service';
 import { Observable } from 'rxjs';
