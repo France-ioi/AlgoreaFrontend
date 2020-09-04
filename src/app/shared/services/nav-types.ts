@@ -1,6 +1,7 @@
 
 import { ParamMap } from '@angular/router';
 
+/* "name" of the parameters in the url */
 const parentAttemptParamName = 'parentAttempId';
 const attemptParamName = 'attempId';
 const pathParamName = 'path';
@@ -15,7 +16,7 @@ export interface NavItem {
 export interface NavGroup {}
 
 export function itemDetailsRoute(item: NavItem): any[] {
-  const params = {};
+  const params: {[k: string]: any} = {};
   if (item.attemptId) params[attemptParamName] = item.attemptId;
   else params[parentAttemptParamName] = item.parentAttemptId;
   params[pathParamName] = item.itemPath;
