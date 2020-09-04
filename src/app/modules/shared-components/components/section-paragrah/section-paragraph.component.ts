@@ -33,7 +33,7 @@ export class SectionParagraphComponent implements OnInit {
     this.visible = this.collapsible;
   }
 
-  toggleContent(_e) {
+  toggleContent() {
     this.visible = !this.visible;
     this.collapse.emit(this.visible);
   }

@@ -31,48 +31,24 @@ export class LeftNavComponent implements OnInit, OnChanges {
   ngOnChanges(_changes: SimpleChanges) {
   }
 
-  onCollapse(_e) {
+  onCollapse() {
     this.collapsed = !this.collapsed;
     this.collapseEvent.emit(this.collapsed);
-  }
-
-  onSkillSelected(e) {
-    this.skillSelect.emit(e);
-  }
-
-  onActivitySelected(e) {
-    this.activitySelect.emit(e);
-  }
-
-  onYourselfSelected(e) {
-    this.yourselfSelect.emit(e);
-  }
-
-  onGroupSelected(e) {
-    this.groupSelect.emit(e);
   }
 
   onSignInOut(e) {
     this.signInOutEvent.emit(e);
   }
 
-  onJoinGroupSelected(e) {
-    this.joinGroupSelect.emit(e);
-  }
-
-  onManageGroupSelected(e) {
-    this.manageGroupSelect.emit(e);
-  }
-
   onNotifyClicked(e) {
     this.notify.emit(e);
   }
 
-  onSearchEvent(_e) {
+  onSearchEvent() {
     this.searchView = true;
   }
 
-  onSearchCloseEvent(_e) {
+  onSearchCloseEvent() {
     this.searchView = false;
   }
 

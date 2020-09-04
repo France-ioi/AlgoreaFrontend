@@ -39,7 +39,7 @@ export class GroupNavTreeComponent implements OnChanges {
     });
   }
 
-  onSelect(_e, node: GroupTreeNode) {
+  onSelect(node: GroupTreeNode) {
     void this.router.navigate([node.target]);
   }
 

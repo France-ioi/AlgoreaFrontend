@@ -12,11 +12,11 @@
       </div>
     </div>
     <div class="section-header-content" [ngClass]="{'show-border': hasBorder && visible}">
-      <span *ngIf="remainOrigin || visible || !data.ID" class="section-title" (click)="toggleContent($event)">{{label}}</span>
+      <span *ngIf="remainOrigin || visible || !data.ID" class="section-title" (click)="toggleContent()">{{label}}</span>
       <div class="additional-content">
         <ng-container [ngTemplateOutlet]="headerTemplate" [ngTemplateOutletContext]="{ $implicit: data }"></ng-container>
       </div>
-      <span *ngIf="collapsible" class="toggle-content" (click)="toggleContent($event)">
+      <span *ngIf="collapsible" class="toggle-content" (click)="toggleContent()">
         <img [ngClass]="{down: !visible}" src="assets/images/collapse.svg">
       </span>
     </div>

@@ -5,7 +5,7 @@
       <i class="{{icon}}"></i>
     </span>
     <span class="header-title">{{title}}</span>
-    <span *ngIf="isCollapsible" class="header-collapse" (click)="onCollapse($event)">
+    <span *ngIf="isCollapsible" class="header-collapse" (click)="onCollapse()">
       <i *ngIf="isCollapsed" class="fa fa-chevron-down"></i>
       <i *ngIf="!isCollapsed" class="fa fa-chevron-up"></i>
     </span>

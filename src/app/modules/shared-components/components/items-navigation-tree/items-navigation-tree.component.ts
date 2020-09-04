@@ -39,7 +39,7 @@ export class ItemsNavigationTreeComponent implements OnInit, OnChanges {
     }
   }
 
-  onNodeExpand(_event, node) {
+  onNodeExpand(node) {
     if (!node.expanded) {
       node.expanded = true;
     } else {
@@ -72,15 +72,13 @@ export class ItemsNavigationTreeComponent implements OnInit, OnChanges {
     });
   }
 
-  nodeCheck(_event, node) {
+  nodeCheck(node) {
     this._unCheckAll(this.data);
     node.checked = true;
 
     node.expanded = true;
     this.nodeSelect.emit(node);
   }
-
-  onNodeSelect(_e) {}
 
   onKeyDown(e) {
     if (e.code === 'Space' || e.code === 'Enter') {

@@ -119,20 +119,8 @@ export class AppComponent implements OnInit {
     this.folded = e;
   }
 
-  onDisplayScoreChange(e) {
-    this.dispScore = e.srcElement.valueAsNumber;
-  }
-
-  onCurrentScoreChange(e) {
-    this.curScore = e.srcElement.valueAsNumber;
-  }
-
-  onIsStartedChange(e) {
-    this.isStarted = e.srcElement.checked;
-  }
-
   @HostListener('window:scroll', ['$event'])
-  onScrollContent(_e) {
+  onScrollContent() {
     if (window.pageYOffset > 40 && !this.scrolled) {
       this.scrolled = true;
     } else if (window.pageYOffset <= 40 && this.scrolled) {
@@ -140,14 +128,14 @@ export class AppComponent implements OnInit {
     }
   }
 
-  onJoinGroupSelected(_e) {
+  onJoinGroupSelected() {
     this.selectedType = 3;
     this.userTitle = 'Groups you joined';
     this.updateService();
     this.router.navigate(['/groups/memberships']);
   }
 
-  onManageGroupSelected(_e) {
+  onManageGroupSelected() {
     this.selectedType = 3;
     this.userTitle = 'Groups you manage';
     this.updateService();
@@ -165,33 +153,14 @@ export class AppComponent implements OnInit {
     }
   }
 
-  onEditPage(_e) {
+  onEditPage() {
     this.editing = true;
     this.updateService();
   }
 
-  onEditCancel(_e) {
+  onEditCancel() {
     this.editing = false;
     this.updateService();
   }
 
-  onNotify(_e) {
-
-  }
-
-  onSignInOut(_e) {
-
-  }
-
-  onSkillSelected(_e) {
-
-  }
-
-  onActivitySelected(_e) {
-
-  }
-
-  onYourselfSelected(_e) {
-
-  }
 }

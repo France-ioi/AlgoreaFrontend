@@ -44,12 +44,12 @@ export class TopNavComponent implements OnInit {
   ngOnInit() {
   }
 
-  onCollapse(_e) {
+  onCollapse() {
     this.collapsed = !this.collapsed;
     this.collapseEvent.emit(this.collapsed);
   }
 
-  onFold(_e) {
+  onFold() {
     this.folded = !this.folded;
     this.foldEvent.emit(this.folded);
   }
@@ -60,7 +60,7 @@ export class TopNavComponent implements OnInit {
     this.notify.emit(e);
   }
 
-  signInOut(_e) {
+  signInOut() {
     if (this.authService.authUserConnected()) {
       this.authService.logoutAuthUser();
     } else {

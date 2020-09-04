@@ -1,9 +1,9 @@
-<div class="grid-filter" (clickOutside)="hideMenu($event)" [delayClickOutsideInit]="true">
+<div class="grid-filter" (clickOutside)="hideMenu()" [delayClickOutsideInit]="true">
   <div class="grid-filter-button" [ngClass]="{open: menuOpened && !outsideClicked}">
-    <span class="grid-filter-button-icon" (click)="toggleMenu($event)">
+    <span class="grid-filter-button-icon" (click)="toggleMenu()">
       <i class="{{icon}}"></i>
     </span>
-    <span class="grid-filter-button-label" (click)="toggleMenu($event)">
+    <span class="grid-filter-button-label" (click)="toggleMenu()">
       <ng-container *ngIf="mode === 'activity'">
         <ng-container *ngIf="selectedStatus === 2">
           Score : {{ranges[0]}} - {{ranges[1]}} %

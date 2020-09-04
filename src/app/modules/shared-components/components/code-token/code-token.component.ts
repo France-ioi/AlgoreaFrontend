@@ -17,11 +17,11 @@ export class CodeTokenComponent implements OnInit {
 
   ngOnInit() {}
 
-  refreshCode(_e) {
+  refreshCode() {
     this.refresh.emit();
   }
 
-  removeCode(_e) {
+  removeCode() {
     this.remove.emit();
   }
 }

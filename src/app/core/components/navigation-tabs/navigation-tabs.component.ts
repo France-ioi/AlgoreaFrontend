@@ -31,7 +31,7 @@ export class NavigationTabsComponent implements OnInit {
       this.currentUser$ = this.currentUserService.currentUser();
   }
 
-  toggleGroup(_e) {
+  toggleGroup() {
     this.groupShow = !this.groupShow;
     if (!this.groupShow) {
       this.stickyShow = false;
@@ -72,11 +72,6 @@ export class NavigationTabsComponent implements OnInit {
 
   onScrollEvent(e) {
     this._updateStatus(e.srcElement);
-  }
-
-  onTabChanged(e) {
-    this.groupShow = false;
-    this.stickyShow = false;
   }
 
 }

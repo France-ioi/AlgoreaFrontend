@@ -88,11 +88,11 @@ export class GridComponent implements OnInit, OnChanges {
   toShow = 0;
   expand = false;
 
-  onRowSelect(_e) {
+  onRowSelect() {
     this.selectionChange.emit(this.selectionValue);
   }
 
-  onRowUnselect(_e) {
+  onRowUnselect() {
     this.selectionChange.emit(this.selectionValue);
   }
 
@@ -116,11 +116,11 @@ export class GridComponent implements OnInit, OnChanges {
     }
   }
 
-  showColumns(_e) {
+  showColumns() {
     this.showColumnSelection = !this.showColumnSelection;
   }
 
-  showAll(_e) {
+  showAll() {
     this.selectedColumns = this.columns;
     this.toShow = 0;
     this.expand = !this.expand;
@@ -145,7 +145,7 @@ export class GridComponent implements OnInit, OnChanges {
     this.expandWholeWidth.emit(this.expand);
   }
 
-  handleChanges(_e, item) {
+  handleChanges(item) {
     this.selected[item.field] = !this.selected[item.field];
     const newSel = [];
     for (const col of this.columns) {

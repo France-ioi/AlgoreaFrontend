@@ -43,14 +43,9 @@
       [collapsed]="collapsed"
       [signedIn]="signedIn"
       (collapseEvent)="onCollapse($event)"
-      (skillSelect)="onSkillSelected($event)"
-      (activitySelect)="onActivitySelected($event)"
-      (yourselfSelect)="onYourselfSelected($event)"
       (groupSelect)="onGroupSelected($event)"
-      (joinGroupSelect)="onJoinGroupSelected($event)"
-      (manageGroupSelect)="onManageGroupSelected($event)"
-      (signInOutEvent)="onSignInOut($event)"
-      (notify)="onNotify($event)"
+      (joinGroupSelect)="onJoinGroupSelected()"
+      (manageGroupSelect)="onManageGroupSelected()"
     ></alg-left-nav>
   </div>
   <div class="top-bar" [ngClass]="{ editing: editing, collapsed: collapsed, expanded: !collapsed }">
@@ -62,13 +57,12 @@
       [signedIn]="signedIn"
       (collapseEvent)="onCollapse($event)"
       (foldEvent)="onFold($event)"
-      (notify)="onNotify($event)"
       [templateId]="1"
     ></alg-top-nav>
     <div class="top-right-bar">
       <alg-editor-bar
         *ngIf="editing"
-        (cancel)="onEditCancel($event)"
+        (cancel)="onEditCancel()"
       ></alg-editor-bar>
       <div class="breadcrumb-bar"
       *ngIf="!folded && !scrolled">
@@ -77,7 +71,7 @@
         ></alg-breadcrumb>
         <alg-page-navigator
           *ngIf="!editing && signedIn"
-          (edit)="onEditPage($event)"
+          (edit)="onEditPage()"
         ></alg-page-navigator>
         <alg-select *ngIf="!signedIn && collapsed" [items]="langs" style="margin-right: 1rem;height: 1.8333rem;"></alg-select>
         <alg-button
@@ -86,7 +80,6 @@
           icon="pi pi-check"
           class="ui-button-rounded"
           style="margin-right: 0.4167rem;"
-          (click)="onSignInOut(true)"
         ></alg-button>
       </div>
       <div class="folded-top-bar" *ngIf="folded || scrolled">
@@ -129,7 +122,7 @@
           *ngIf="!editing"
           allowFullScreen="false"
           navigationMode="nextAndPrev"
-          (edit)="onEditPage($event)"
+          (edit)="onEditPage()"
         ></alg-page-navigator>
       </div>
     </div>

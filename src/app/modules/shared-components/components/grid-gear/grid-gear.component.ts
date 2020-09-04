@@ -25,10 +25,6 @@ export class GridGearComponent implements OnInit {
 
   ngOnInit() {}
 
-  toggleGear(_e) {
-    this.menuOpen = !this.menuOpen;
-  }
-
   handleSwitches(e, which) {
     switch (which) {
       // Row Column Swap
