@@ -4,13 +4,14 @@
   [value]="data"
   [scrollable]="scrollWhenExpanded || scrollable"
   [selectionMode]="selectionMode"
-  [(selection)]="selectionValue"
+  [selection]="selection"
   [responsive]="responsive"
   [dataKey]="dataKey"
   [frozenWidth]="frozenWidth"
   [sortMode]="sortMode"
   [multiSortMeta]="multiSortMeta"
   [customSort]="true"
+  (selectionChange)="onSelectionChange($event)"
   (sortFunction)="sortFunction($event)"
   (onRowSelect)="onRowSelect()"
   (onRowUnselect)="onRowUnselect()"
@@ -63,13 +64,13 @@
   <div class="column-group" *ngFor="let group of groupInfo">
     <p>{{group.name}}</p>
     <ul>
-      <li *ngFor="let item of group.columns">
-        <span [ngClass]="{ checked: selected[item.field] }" (click)="handleChanges(item)">
-          {{ item.header }}
+      <li *ngFor="let col of group.columns">
+        <span [ngClass]="{ checked: selected[col.field] }" (click)="handleColumnChanges(col)">
+          {{ col.header }}
         </span>
         <alg-switch
-          [checked]="selected[item.field]"
-          (change)="handleChanges(item)"
+          [checked]="selected[col.field]"
+          (change)="handleColumnChanges(col)"
         ></alg-switch>
       </li>
     </ul>

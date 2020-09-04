@@ -1,4 +1,3 @@
-/* eslint-disable */ /* FIXME disabled for now while this is the mockup code, to be removed afterwards */
 import {
   Component,
   OnInit,
@@ -45,15 +44,7 @@ export interface GridColumnGroup {
 })
 export class GridComponent implements OnInit, OnChanges {
 
-  @Input()
-  get selection() {
-    return this.selectionValue;
-  }
-
-  set selection(val) {
-    this.selectionValue = val;
-    this.selectionChange.emit(this.selectionValue);
-  }
+  @Input() selection: any[]
 
   constructor() {}
   @ViewChild('table', { static: true }) table: Table;
@@ -70,7 +61,7 @@ export class GridComponent implements OnInit, OnChanges {
   @Input() scrollWhenExpanded = false;
   @Input() scrollable = false;
 
-  @Input() selectionMode: string;
+  @Input() selectionMode;//: 'multiple'|'single' = 'multiple';
   @Input() responsive = false;
   @Input() dataKey: string;
   @Input() frozenWidth: string|null = null;
@@ -78,7 +69,7 @@ export class GridComponent implements OnInit, OnChanges {
 
   @Output() expandWholeWidth = new EventEmitter<boolean>();
   @Output() sort = new EventEmitter();
-  @Output() selectionChange = new EventEmitter<any>();
+  @Output() selectionChange = new EventEmitter<any[]>();
   @Output() headerCheckboxToggle = new EventEmitter();
 
   @ContentChild('colgroupTemplate') colgroupTemplate;
@@ -90,20 +81,23 @@ export class GridComponent implements OnInit, OnChanges {
   @ContentChild('frozenHeaderTemplate') frozenHeaderTemplate;
   @ContentChild('frozenBodyTemplate') frozenBodyTemplate;
 
-  selectionValue: any[] = [];
-
   showColumnSelection = false;
 
-  selected = {};
+  selected: {[k: string]: any} = {};
   toShow = 0;
   expand = false;
 
+  onSelectionChange(selection: any[]) {
+    this.selection = selection;
+    this.selectionChange.emit(this.selection);
+  }
+
   onRowSelect() {
-    this.selectionChange.emit(this.selectionValue);
+    this.selectionChange.emit(this.selection);
   }
 
   onRowUnselect() {
-    this.selectionChange.emit(this.selectionValue);
+    this.selectionChange.emit(this.selection);
   }
 
   detectSelected() {
@@ -136,7 +130,7 @@ export class GridComponent implements OnInit, OnChanges {
     this.expand = !this.expand;
 
     if (!this.expand) {
-      const newSel = [];
+      const newSel: GridColumn[] = [];
       for (const col of this.columns) {
         if (this.selected[col.field] === true) {
           newSel.push(col);
@@ -155,9 +149,9 @@ export class GridComponent implements OnInit, OnChanges {
     this.expandWholeWidth.emit(this.expand);
   }
 
-  handleChanges(item) {
+  handleColumnChanges(item: GridColumn) {
     this.selected[item.field] = !this.selected[item.field];
-    const newSel = [];
+    const newSel: GridColumn[] = [];
     for (const col of this.columns) {
       if (this.selected[col.field] === true) {
         newSel.push(col);
@@ -174,7 +168,7 @@ export class GridComponent implements OnInit, OnChanges {
   }
 
   onHeaderCheckbox() {
-    this.selectionChange.emit(this.selectionValue);
+    this.selectionChange.emit(this.selection);
   }
 
 }
