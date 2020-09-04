@@ -15,6 +15,7 @@ import * as _ from 'lodash-es';
 import { Observable } from 'rxjs';
 import { GetRequestsService, PendingRequest } from '../../http-services/get-requests.service';
 import { RequestActionsService } from '../../http-services/request-actions.service';
+import { GridColumn, GridColumnGroup } from '../../../shared-components/components/grid/grid.component';
 
 export enum Activity {
   Accepting,
@@ -45,13 +46,13 @@ export class PendingRequestComponent implements OnInit, OnChanges {
   Action = Action;
   Activity = Activity;
 
-  columns = [
+  columns: GridColumn[] = [
     { field: 'user.login', header: 'USER' },
     { field: 'at', header: 'REQUESTED ON' },
   ];
   requests: PendingRequest[] = [];
   selection: PendingRequest[] = [];
-  panel = [];
+  panel: GridColumnGroup[] = [];
   currentSort: string[] = [];
 
   ongoingActivity: Activity = Activity.None;
@@ -116,7 +117,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     }
   }
 
-  private processRequestError(_err) {
+  private processRequestError(_err: any) {
     this.messageService.add({
       severity: 'error',
       summary: 'Error',

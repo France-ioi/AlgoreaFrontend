@@ -13,9 +13,20 @@ import {
 import { DomHandler } from 'primeng/dom';
 import { Table, TableService } from 'primeng/table';
 import { SortEvent } from 'primeng/api/sortevent';
+import { SortMeta } from 'primeng/api/sortmeta';
 
 export function tableFactory(wrapper: GridComponent) {
   return wrapper.table;
+}
+
+export interface GridColumn {
+  field: string,
+  header: string
+}
+
+export interface GridColumnGroup {
+  columns: GridColumn[],
+  name?: string
 }
 
 @Component({
@@ -47,28 +58,27 @@ export class GridComponent implements OnInit, OnChanges {
   constructor() {}
   @ViewChild('table', { static: true }) table: Table;
 
-  @Input() data;
-  @Input() selectedColumns;
-  @Input() columns;
-  @Input() groupInfo;
+  @Input() data: any[];
+  @Input() selectedColumns: GridColumn[];
+  @Input() columns: GridColumn[];
+  @Input() groupInfo: GridColumnGroup[];
 
   @Input() sortMode = 'multiple';
-  @Input() multiSortMeta = [];
+  @Input() multiSortMeta: SortMeta[] = [];
   @Input() customSort = true;
 
   @Input() scrollWhenExpanded = false;
-  @Input() scrollable;
+  @Input() scrollable = false;
 
-  @Input() selectionMode;
-  @Input() responsive;
-  @Input() dataKey;
-  @Input() frozenCols;
-  @Input() frozenWidth;
+  @Input() selectionMode: string;
+  @Input() responsive = false;
+  @Input() dataKey: string;
+  @Input() frozenWidth: string|null = null;
   @Input() showGear = true;
 
   @Output() expandWholeWidth = new EventEmitter<boolean>();
   @Output() sort = new EventEmitter();
-  @Output() selectionChange = new EventEmitter();
+  @Output() selectionChange = new EventEmitter<any>();
   @Output() headerCheckboxToggle = new EventEmitter();
 
   @ContentChild('colgroupTemplate') colgroupTemplate;
@@ -80,7 +90,7 @@ export class GridComponent implements OnInit, OnChanges {
   @ContentChild('frozenHeaderTemplate') frozenHeaderTemplate;
   @ContentChild('frozenBodyTemplate') frozenBodyTemplate;
 
-  selectionValue = [];
+  selectionValue: any[] = [];
 
   showColumnSelection = false;
 
@@ -163,7 +173,7 @@ export class GridComponent implements OnInit, OnChanges {
     this.sort.emit(event);
   }
 
-  onHeaderCheckbox(_event) {
+  onHeaderCheckbox() {
     this.selectionChange.emit(this.selectionValue);
   }
 

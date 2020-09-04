@@ -14,7 +14,7 @@
   (sortFunction)="sortFunction($event)"
   (onRowSelect)="onRowSelect()"
   (onRowUnselect)="onRowUnselect()"
-  (onHeaderCheckboxToggle)="onHeaderCheckbox($event)"
+  (onHeaderCheckboxToggle)="onHeaderCheckbox()"
 >
   <!-- <ng-container *ngTemplateOutlet="headerTemplate; context: {$implicit: columns}"></ng-container> -->
   <ng-template *ngIf="frozenWidth && frozenWidth.length > 0" pTemplate="frozenheader">
