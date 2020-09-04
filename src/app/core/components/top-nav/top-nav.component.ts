@@ -15,7 +15,6 @@ export class TopNavComponent implements OnInit {
 
   @Output() collapse = new EventEmitter<boolean>();
   @Output() fold = new EventEmitter<boolean>();
-  @Output() notify = new EventEmitter<any>();
   @Output() search = new EventEmitter<any>();
   @Output() searchClose = new EventEmitter<any>();
 
@@ -46,9 +45,8 @@ export class TopNavComponent implements OnInit {
     this.fold.emit(this.folded);
   }
 
-  toggleNotification(e) {
+  toggleNotification() {
     this.showNotification = !this.showNotification;
-    this.notify.emit(e);
   }
 
   signInOut() {
@@ -57,14 +55,6 @@ export class TopNavComponent implements OnInit {
     } else {
       this.authService.startLogin();
     }
-  }
-
-  onSearchEvent(e) {
-    this.search.emit(e);
-  }
-
-  onSearchCloseEvent(e) {
-    this.searchClose.emit(e);
   }
 
 }

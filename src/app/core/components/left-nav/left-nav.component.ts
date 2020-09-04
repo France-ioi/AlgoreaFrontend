@@ -11,7 +11,6 @@ export class LeftNavComponent implements OnInit, OnChanges {
   @Input() signedIn;
 
   @Output() collapse = new EventEmitter<boolean>();
-  @Output() notify = new EventEmitter<any>();
 
   searchView = false;
 
@@ -26,10 +25,6 @@ export class LeftNavComponent implements OnInit, OnChanges {
   onCollapse(collapsed: boolean) {
     this.collapsed = collapsed;
     this.collapse.emit(this.collapsed);
-  }
-
-  onNotifyClicked(e) {
-    this.notify.emit(e);
   }
 
   onSearchEvent() {
