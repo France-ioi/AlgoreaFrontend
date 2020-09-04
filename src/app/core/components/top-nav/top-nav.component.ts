@@ -10,9 +10,8 @@ import { AuthService } from 'src/app/shared/auth/auth.service';
 })
 export class TopNavComponent implements OnInit {
 
-  @Output() collapseEvent = new EventEmitter<boolean>();
-  @Output() foldEvent = new EventEmitter<boolean>();
-  @Output() signInOutEvent = new EventEmitter<boolean>();
+  @Output() collapse = new EventEmitter<boolean>();
+  @Output() fold = new EventEmitter<boolean>();
 
   @Input() collapsed = false;
   @Input() templateId = 0;
@@ -46,12 +45,12 @@ export class TopNavComponent implements OnInit {
 
   onCollapse() {
     this.collapsed = !this.collapsed;
-    this.collapseEvent.emit(this.collapsed);
+    this.collapse.emit(this.collapsed);
   }
 
   onFold() {
     this.folded = !this.folded;
-    this.foldEvent.emit(this.folded);
+    this.fold.emit(this.folded);
   }
 
   toggleNotification(e) {

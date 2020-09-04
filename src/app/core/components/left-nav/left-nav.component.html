@@ -1,8 +1,7 @@
 <alg-top-nav
   [collapsed]="collapsed"
   [signedIn]="signedIn"
-  (collapseEvent)="onCollapse()"
-  (signInOutEvent)="onSignInOut($event)"
+  (collapse)="onCollapse($event)"
   (notify)="onNotifyClicked($event)"
   (search)="onSearchEvent()"
   (searchClose)="onSearchCloseEvent()"

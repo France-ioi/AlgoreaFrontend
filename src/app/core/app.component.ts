@@ -107,7 +107,7 @@ export class AppComponent implements OnInit {
     });
   }
 
-  onCollapse(e) {
+  onCollapse(e: boolean) {
     this.collapsed = e;
     if (!this.collapsed) {
       this.folded = false;
@@ -115,8 +115,8 @@ export class AppComponent implements OnInit {
     this.updateService();
   }
 
-  onFold(e) {
-    this.folded = e;
+  onFold(folded: boolean) {
+    this.folded = folded;
   }
 
   @HostListener('window:scroll', ['$event'])
@@ -125,31 +125,6 @@ export class AppComponent implements OnInit {
       this.scrolled = true;
     } else if (window.pageYOffset <= 40 && this.scrolled) {
       this.scrolled = false;
-    }
-  }
-
-  onJoinGroupSelected() {
-    this.selectedType = 3;
-    this.userTitle = 'Groups you joined';
-    this.updateService();
-    this.router.navigate(['/groups/memberships']);
-  }
-
-  onManageGroupSelected() {
-    this.selectedType = 3;
-    this.userTitle = 'Groups you manage';
-    this.updateService();
-    this.router.navigate(['/groups']);
-  }
-
-  onGroupSelected(e) {
-    this.selectedType = 1;
-    this.userTitle = 'Jean Monet';
-    this.updateService();
-    if (e.src === 'managed') {
-      this.router.navigate([`/groups/details/${e.e.ID}`]);
-    } else {
-      this.router.navigate(['/groups/details/11']);
     }
   }
 

@@ -11,14 +11,7 @@ export class LeftNavComponent implements OnInit, OnChanges {
   @Input() collapsed = false;
   @Input() signedIn;
 
-  @Output() collapseEvent = new EventEmitter<boolean>();
-  @Output() skillSelect = new EventEmitter<any>();
-  @Output() activitySelect = new EventEmitter<any>();
-  @Output() yourselfSelect = new EventEmitter<any>();
-  @Output() groupSelect = new EventEmitter<any>();
-  @Output() signInOutEvent = new EventEmitter<any>();
-  @Output() joinGroupSelect = new EventEmitter<any>();
-  @Output() manageGroupSelect = new EventEmitter<any>();
+  @Output() collapse = new EventEmitter<boolean>();
   @Output() notify = new EventEmitter<any>();
 
   searchView = false;
@@ -31,13 +24,9 @@ export class LeftNavComponent implements OnInit, OnChanges {
   ngOnChanges(_changes: SimpleChanges) {
   }
 
-  onCollapse() {
-    this.collapsed = !this.collapsed;
-    this.collapseEvent.emit(this.collapsed);
-  }
-
-  onSignInOut(e) {
-    this.signInOutEvent.emit(e);
+  onCollapse(collapsed: boolean) {
+    this.collapsed = collapsed;
+    this.collapse.emit(this.collapsed);
   }
 
   onNotifyClicked(e) {

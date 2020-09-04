@@ -42,10 +42,7 @@
       [user]="user"
       [collapsed]="collapsed"
       [signedIn]="signedIn"
-      (collapseEvent)="onCollapse($event)"
-      (groupSelect)="onGroupSelected($event)"
-      (joinGroupSelect)="onJoinGroupSelected()"
-      (manageGroupSelect)="onManageGroupSelected()"
+      (collapse)="onCollapse($event)"
     ></alg-left-nav>
   </div>
   <div class="top-bar" [ngClass]="{ editing: editing, collapsed: collapsed, expanded: !collapsed }">
@@ -55,8 +52,8 @@
       [folded]="folded"
       [data]="user"
       [signedIn]="signedIn"
-      (collapseEvent)="onCollapse($event)"
-      (foldEvent)="onFold($event)"
+      (collapse)="onCollapse($event)"
+      (fold)="onFold($event)"
       [templateId]="1"
     ></alg-top-nav>
     <div class="top-right-bar">
