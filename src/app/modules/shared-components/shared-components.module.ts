@@ -48,7 +48,6 @@ import { EditorBarComponent } from './components/editor-bar/editor-bar.component
 import { DropdownComponent } from './components/dropdown/dropdown.component';
 import { InputComponent } from './components/input/input.component';
 import { SelectionTreeComponent } from './components/selection-tree/selection-tree.component';
-import { ItemsNavigationTreeComponent } from './components/items-navigation-tree/items-navigation-tree.component';
 import { GridGearComponent } from './components/grid-gear/grid-gear.component';
 import { SelectComponent } from './components/select/select.component';
 import { SliderComponent } from './components/slider/slider.component';
@@ -80,7 +79,6 @@ import { SectionParagraphComponent } from './components/section-paragrah/section
     DropdownComponent,
     InputComponent,
     SelectionTreeComponent,
-    ItemsNavigationTreeComponent,
     GridGearComponent,
     SelectComponent,
     SliderComponent,
@@ -142,7 +140,6 @@ import { SectionParagraphComponent } from './components/section-paragrah/section
     DropdownComponent,
     InputComponent,
     SelectionTreeComponent,
-    ItemsNavigationTreeComponent,
     GridGearComponent,
     SelectComponent,
     SliderComponent,
