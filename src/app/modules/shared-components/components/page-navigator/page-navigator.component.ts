@@ -6,7 +6,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
   styleUrls: ['./page-navigator.component.scss'],
 })
 export class PageNavigatorComponent implements OnInit {
-  @Input() allowFullScreen = 'false';
+  @Input() allowFullScreen = false;
   @Input() navigationMode = 'nextAndPrev';
   @Output() edit = new EventEmitter<any>();
 

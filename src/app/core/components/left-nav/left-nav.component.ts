@@ -7,7 +7,6 @@ import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChange
 })
 export class LeftNavComponent implements OnInit, OnChanges {
 
-  @Input() user;
   @Input() collapsed = false;
   @Input() signedIn;
 

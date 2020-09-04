@@ -7,10 +7,7 @@ import { Component, HostListener, OnInit } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  title = 'dev';
   editing = false;
-  curScore = 70;
-  dispScore = 65;
   isStarted = true;
 
   langs = [
@@ -20,14 +17,6 @@ export class AppComponent implements OnInit {
     'Czech',
     'Deutsch'
   ];
-
-  // Tree Data
-
-  files;
-  groups;
-  trees;
-
-  allowFullScreen = false;
 
   breaddata = {
     selectedID: 42,
@@ -45,29 +34,12 @@ export class AppComponent implements OnInit {
     ]
   };
 
-  breadhome = {
-    selectedID: -1,
-    path: [
-      { ID: 1, label: 'Home' }
-    ]
-  };
-
-  user = {
-    name: 'Concours castor',
-    notification: 2,
-    image: '_messi.jpg'
-  };
-
   collapsed = false;
   folded = false;
   scrolled = false;
   signedIn = true;
-  notified = false;
-  activityORSkill = true;
 
-  taskdata;
   selectedType = -1;
-  userTitle;
 
   constructor() {}
 

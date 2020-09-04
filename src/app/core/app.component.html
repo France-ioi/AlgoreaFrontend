@@ -39,7 +39,6 @@
 <div class="container">
   <div class="left" [ngClass]="{ collapsed: collapsed, expanded: !collapsed }">
     <alg-left-nav
-      [user]="user"
       [collapsed]="collapsed"
       [signedIn]="signedIn"
       (collapse)="onCollapse($event)"
@@ -50,7 +49,6 @@
       *ngIf="collapsed"
       [collapsed]="collapsed"
       [folded]="folded"
-      [data]="user"
       [signedIn]="signedIn"
       (collapse)="onCollapse($event)"
       (fold)="onFold($event)"
@@ -64,7 +62,7 @@
       <div class="breadcrumb-bar"
       *ngIf="!folded && !scrolled">
         <alg-breadcrumb
-          [items]="signedIn ? breaddata : breadhome"
+          [items]="breaddata"
         ></alg-breadcrumb>
         <alg-page-navigator
           *ngIf="!editing && signedIn"
@@ -82,8 +80,8 @@
       <div class="folded-top-bar" *ngIf="folded || scrolled">
         <alg-score-ring
           *ngIf="isStarted && selectedType == 2"
-          [displayedScore]="taskdata.progress.displayedScore"
-          [currentScore]="taskdata.progress.currentScore"
+          [displayedScore]="50"
+          [currentScore]="60"
           [diameter]="30"
         ></alg-score-ring>
         <div
@@ -93,7 +91,7 @@
           <img src="assets/images/_messi.jpg" style="width: 2.9167rem; height: 2.9167rem;" />
         </div>
         <div class="task-title">
-          <p>{{ userTitle }}</p>
+          <p>Dummy user title to be replaced</p>
         </div>
         <div *ngIf="collapsed" class="user-info">
           <span class="user-avatar">
@@ -117,7 +115,7 @@
         </span>
         <alg-page-navigator
           *ngIf="!editing"
-          allowFullScreen="false"
+          [allowFullScreen]="false"
           navigationMode="nextAndPrev"
           (edit)="onEditPage()"
         ></alg-page-navigator>

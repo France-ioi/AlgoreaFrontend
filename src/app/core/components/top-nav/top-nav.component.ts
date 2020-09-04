@@ -8,21 +8,18 @@ import { AuthService } from 'src/app/shared/auth/auth.service';
 })
 export class TopNavComponent implements OnInit {
 
-  @Output() collapse = new EventEmitter<boolean>();
-  @Output() fold = new EventEmitter<boolean>();
-
   @Input() collapsed = false;
   @Input() templateId = 0;
   @Input() folded = false;
-
-  @Input() data;
-
-  showNotification = false;
   @Input() signedIn = true;
 
+  @Output() collapse = new EventEmitter<boolean>();
+  @Output() fold = new EventEmitter<boolean>();
   @Output() notify = new EventEmitter<any>();
   @Output() search = new EventEmitter<any>();
   @Output() searchClose = new EventEmitter<any>();
+
+  showNotification = false;
 
   langs = [
     'English',
