@@ -51,8 +51,8 @@ import { SelectionTreeComponent } from './components/selection-tree/selection-tr
 import { GridGearComponent } from './components/grid-gear/grid-gear.component';
 import { SelectComponent } from './components/select/select.component';
 import { SliderComponent } from './components/slider/slider.component';
-import { GridFilterComponent } from './components/grid/grid-filter/grid-filter.component';
-import { GridFilterBarComponent } from './components/grid/grid-filter-bar/grid-filter-bar.component';
+import { GridFilterComponent } from './components/grid-filter/grid-filter.component';
+import { GridFilterBarComponent } from './components/grid-filter-bar/grid-filter-bar.component';
 import { DatePickerSharedComponent } from './components/date-picker-simple/date-picker-simple.component';
 import { ListboxComponent } from './components/listbox/listbox.component';
 import { SectionParagraphComponent } from './components/section-paragrah/section-paragraph.component';
