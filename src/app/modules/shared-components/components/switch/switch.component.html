@@ -1,4 +1,5 @@
 <p-inputSwitch
+  #switch
   [(ngModel)]="checked"
   [ngClass]="{
     dark: mode === 'dark',
@@ -6,5 +7,5 @@
     white: mode === 'white',
     'dark-circular': mode === 'dark-circular'
   }"
-  (change)="handleChange($event)"
+  (onChange)="handleChange(switch.checked)"
 ></p-inputSwitch>
