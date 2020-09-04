@@ -31,7 +31,7 @@ export class SelectionTreeComponent implements OnInit, OnChanges {
     }
   }
 
-  nodeExpand(_event, node) {
+  nodeExpand(node) {
     if (!node.expanded) {
       node.expanded = true;
     } else {
@@ -39,7 +39,7 @@ export class SelectionTreeComponent implements OnInit, OnChanges {
     }
   }
 
-  nodeCheck(_event, node) {
+  nodeCheck(node) {
     if (!node.checked) {
       node.checked = true;
     } else {
