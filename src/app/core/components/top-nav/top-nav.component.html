@@ -10,7 +10,7 @@
       </span> -->
       <span class="platform-name">Algorea Platform</span>
     </span>
-    <!-- <span class="notifications" *ngIf="data.notification > 0 && signedIn" (click)="toggleNotification()" tabindex="1">
+    <!-- <span class="notifications" *ngIf="data.notification > 0" (click)="toggleNotification()" tabindex="1">
       <span class="notification-number">{{ data.notification }}</span>
       <i class="far fa-bell"></i>
     </span> -->
@@ -21,7 +21,6 @@
   </div>
   <div class="overlay-container">
     <alg-button
-      *ngIf="!signedIn"
       icon="fa fa-power-off"
       label="Connexion"
       lass="ui-button-rounded ui-button-warning ui-fit-parent"
@@ -34,7 +33,7 @@
   <span class="nav-collapse" (click)="onCollapse()" tabindex="0">
     <img src="assets/images/menu-open.svg" style="width: 2rem; height: 2rem;"/>
   </span>
-  <span *ngIf="signedIn" class="title-collapse" (click)="onFold()" [ngClass]="{down: !folded}">
+  <span class="title-collapse" (click)="onFold()" [ngClass]="{down: !folded}">
     <img src="assets/images/header-open.svg" style="width: 1rem;"/>
   </span>
   <span class="notifications" *ngIf="false" tabindex="1">

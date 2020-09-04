@@ -36,7 +36,6 @@ export class AppComponent implements OnInit {
   collapsed = false;
   folded = false;
   scrolled = false;
-  signedIn = true;
 
   selectedType = -1;
 

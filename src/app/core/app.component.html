@@ -40,7 +40,6 @@
   <div class="left" [ngClass]="{ collapsed: collapsed, expanded: !collapsed }">
     <alg-left-nav
       [collapsed]="collapsed"
-      [signedIn]="signedIn"
       (collapse)="onCollapse($event)"
     ></alg-left-nav>
   </div>
@@ -49,7 +48,6 @@
       *ngIf="collapsed"
       [collapsed]="collapsed"
       [folded]="folded"
-      [signedIn]="signedIn"
       (collapse)="onCollapse($event)"
       (fold)="onFold($event)"
       [templateId]="1"
@@ -65,12 +63,12 @@
           [items]="breaddata"
         ></alg-breadcrumb>
         <alg-page-navigator
-          *ngIf="!editing && signedIn"
+          *ngIf="!editing"
           (edit)="onEditPage()"
         ></alg-page-navigator>
-        <alg-select *ngIf="!signedIn && collapsed" [items]="langs" style="margin-right: 1rem;height: 1.8333rem;"></alg-select>
+        <alg-select *ngIf="collapsed" [items]="langs" style="margin-right: 1rem;height: 1.8333rem;"></alg-select>
         <alg-button
-          *ngIf="!signedIn && collapsed"
+          *ngIf="collapsed"
           label="Connexion"
           icon="pi pi-check"
           class="ui-button-rounded"

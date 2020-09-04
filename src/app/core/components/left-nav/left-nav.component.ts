@@ -8,7 +8,6 @@ import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChange
 export class LeftNavComponent implements OnInit, OnChanges {
 
   @Input() collapsed = false;
-  @Input() signedIn;
 
   @Output() collapse = new EventEmitter<boolean>();
 

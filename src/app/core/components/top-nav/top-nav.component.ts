@@ -11,7 +11,6 @@ export class TopNavComponent implements OnInit {
   @Input() collapsed = false;
   @Input() templateId = 0;
   @Input() folded = false;
-  @Input() signedIn = true;
 
   @Output() collapse = new EventEmitter<boolean>();
   @Output() fold = new EventEmitter<boolean>();
