@@ -12,16 +12,14 @@ export class ButtonComponent implements OnInit {
   @Input() class;
   @Input() iconPos = 'left';
 
-  @Output() click = new EventEmitter<any>();
+  @Output() click = new EventEmitter<void>();
 
   constructor() {}
 
   ngOnInit() {}
 
-  onClickEvent(e) {
-    /* eslint-disable @typescript-eslint/no-unsafe-member-access */ /* primeng has no type on their events :-/ */
-    /* eslint-disable @typescript-eslint/no-unsafe-call */
-    e.stopPropagation();
-    this.click.emit(e);
+  onClickEvent(event: any) {
+    (event as Event).stopPropagation();
+    this.click.emit();
   }
 }
