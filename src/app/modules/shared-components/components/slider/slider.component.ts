@@ -1,10 +1,8 @@
-/* eslint-disable */ /* FIXME disabled for now while this is the mockup code, to be removed afterwards */
 import {
   Component,
   OnInit,
   Input,
   ViewChild,
-  ElementRef,
   Output,
   EventEmitter,
 } from '@angular/core';
@@ -15,16 +13,20 @@ import {
   styleUrls: ['./slider.component.scss'],
 })
 export class SliderComponent implements OnInit {
-  @Input() ranges;
+  /**
+   * Quite error-prone way to do a slider... should probably be re-written
+   */
+
+  @Input() ranges: number[];
   @Input() min = 0;
   @Input() max = 100;
   @Input() showValue = false;
-  @ViewChild('slider') slider: ElementRef;
+  @ViewChild('slider') slider: HTMLDivElement;
 
-  @Output() change = new EventEmitter<any>();
+  @Output() change = new EventEmitter<void>();
 
-  posStart;
-  posEnd;
+  posStart: number;
+  posEnd: number;
 
   constructor() {}
 
@@ -33,14 +35,10 @@ export class SliderComponent implements OnInit {
     this.posEnd = (this.ranges[1] * 100) / this.max;
   }
 
-  handleChange(e) {
-    const handles = this.slider.nativeElement.querySelectorAll(
-      '.ui-slider-handle'
-    );
-
-    this.posStart = parseFloat(handles[0].style.left);
-    this.posEnd = parseFloat(handles[1].style.left);
-
-    this.change.emit(e);
+  handleChange() {
+    // const handles = this.slider.querySelectorAll('.ui-slider-handle');
+    // this.posStart = parseFloat(handles.item(0)...asna.style.left);
+    // this.posEnd = parseFloat(handles[1].style.left);
+    this.change.emit();
   }
 }
