@@ -13,8 +13,8 @@ import {
   styleUrls: ['./section-paragraph.component.scss'],
 })
 export class SectionParagraphComponent implements OnInit {
-  @Input() icon;
-  @Input() label;
+  @Input() icon: string;
+  @Input() label: string;
   @Input() collapsible = false;
   @Input() theme = 'success';
   @Input() hasBorder = false;
@@ -25,7 +25,7 @@ export class SectionParagraphComponent implements OnInit {
 
   @ContentChild('headerTemplate') headerTemplate;
 
-  visible;
+  visible = false;
 
   constructor() {}
 

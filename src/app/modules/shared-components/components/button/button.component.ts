@@ -6,10 +6,10 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
   styleUrls: ['./button.component.scss'],
 })
 export class ButtonComponent implements OnInit {
-  @Input() label;
+  @Input() label: string;
   @Input() disabled = false;
-  @Input() icon;
-  @Input() class;
+  @Input() icon: string;
+  @Input() class: string;
   @Input() iconPos = 'left';
 
   @Output() click = new EventEmitter<void>();
