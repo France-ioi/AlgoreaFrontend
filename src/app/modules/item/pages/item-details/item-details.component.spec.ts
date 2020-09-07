@@ -19,7 +19,7 @@ describe('ItemDetailsComponent', () => {
         }},
         { provide: ActivatedRoute, useValue: {
           paramMap: of({
-            get: (_) => '30'
+            get: (_s: string) => '30'
           })
         }}
       ]
