@@ -52,7 +52,6 @@ import { GridGearComponent } from './components/grid-gear/grid-gear.component';
 import { SelectComponent } from './components/select/select.component';
 import { SliderComponent } from './components/slider/slider.component';
 import { DatePickerSharedComponent } from './components/date-picker-simple/date-picker-simple.component';
-import { ListboxComponent } from './components/listbox/listbox.component';
 import { SectionParagraphComponent } from './components/section-paragrah/section-paragraph.component';
 
 @NgModule({
@@ -81,7 +80,6 @@ import { SectionParagraphComponent } from './components/section-paragrah/section
     SelectComponent,
     SliderComponent,
     DatePickerSharedComponent,
-    ListboxComponent,
     SectionParagraphComponent,
   ],
   imports: [
@@ -140,7 +138,6 @@ import { SectionParagraphComponent } from './components/section-paragrah/section
     SelectComponent,
     SliderComponent,
     DatePickerSharedComponent,
-    ListboxComponent,
     SectionParagraphComponent,
     ProgressSpinnerModule,
     ToastModule,
