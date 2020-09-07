@@ -14,17 +14,17 @@ import {
   styleUrls: ['./input.component.scss'],
 })
 export class InputComponent implements OnInit, OnChanges {
-  @Input() value;
-  @Input() placeholder;
-  @Input() icon;
+  @Input() value: string;
+  @Input() placeholder: string;
+  @Input() icon: string;
   @Input() mode = 'dark';
   @Input() type = 'small';
   @Input() hasButton = false;
   @Input() inputType = 'text';
   @Input() leftIcon = 'fa fa-font';
 
-  @Output() change = new EventEmitter<any>();
-  @Output() click = new EventEmitter<any>();
+  @Output() change = new EventEmitter<string>();
+  @Output() click = new EventEmitter();
 
   constructor() {}
 
@@ -32,11 +32,11 @@ export class InputComponent implements OnInit, OnChanges {
 
   ngOnChanges(_changes: SimpleChanges) {}
 
-  onValueChange(e) {
-    this.change.emit(e);
+  onValueChange(newValue: string) {
+    this.change.emit(newValue);
   }
 
-  onButtonClick(e) {
-    this.click.emit(e);
+  onButtonClick() {
+    this.click.emit();
   }
 }
