@@ -87,7 +87,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     return {
       countRequests: data.size,
       countSuccess: Array.from(data.values())
-        .map(res => ['success', 'unchanged'].includes(res) ? 1 : 0)
+        .map<number>(res => ['success', 'unchanged'].includes(res) ? 1 : 0)
         .reduce( (acc, res) => acc + res, 0 )
     };
   }
