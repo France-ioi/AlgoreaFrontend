@@ -8,6 +8,7 @@ import {
   ViewChild,
   Output,
   EventEmitter,
+  TemplateRef,
 } from '@angular/core';
 import { DomHandler } from 'primeng/dom';
 import { Table, TableService } from 'primeng/table';
@@ -72,14 +73,14 @@ export class GridComponent implements OnInit, OnChanges {
   @Output() selectionChange = new EventEmitter<any[]>();
   @Output() headerCheckboxToggle = new EventEmitter();
 
-  @ContentChild('colgroupTemplate') colgroupTemplate;
-  @ContentChild('headerTemplate') headerTemplate;
-  @ContentChild('bodyTemplate') bodyTemplate;
-  @ContentChild('footerTemplate') footerTemplate;
-  @ContentChild('summaryTemplate') summaryTemplate;
-  @ContentChild('rowExpansionTemplate') rowExpansionTemplate;
-  @ContentChild('frozenHeaderTemplate') frozenHeaderTemplate;
-  @ContentChild('frozenBodyTemplate') frozenBodyTemplate;
+  @ContentChild('colgroupTemplate') colgroupTemplate: TemplateRef<any>;
+  @ContentChild('headerTemplate') headerTemplate: TemplateRef<any>;
+  @ContentChild('bodyTemplate') bodyTemplate: TemplateRef<any>;
+  @ContentChild('footerTemplate') footerTemplate: TemplateRef<any>;
+  @ContentChild('summaryTemplate') summaryTemplate: TemplateRef<any>;
+  @ContentChild('rowExpansionTemplate') rowExpansionTemplate: TemplateRef<any>;
+  @ContentChild('frozenHeaderTemplate') frozenHeaderTemplate: TemplateRef<any>;
+  @ContentChild('frozenBodyTemplate') frozenBodyTemplate: TemplateRef<any>;
 
   showColumnSelection = false;
 

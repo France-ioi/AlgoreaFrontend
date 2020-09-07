@@ -5,6 +5,7 @@ import {
   ContentChild,
   Output,
   EventEmitter,
+  TemplateRef,
 } from '@angular/core';
 
 @Component({
@@ -23,7 +24,7 @@ export class SectionParagraphComponent implements OnInit {
 
   @Output() collapse = new EventEmitter<boolean>();
 
-  @ContentChild('headerTemplate') headerTemplate;
+  @ContentChild('headerTemplate') headerTemplate: TemplateRef<any>;
 
   visible = false;
 
