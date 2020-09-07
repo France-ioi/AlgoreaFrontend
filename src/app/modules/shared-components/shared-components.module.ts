@@ -38,7 +38,6 @@ import { SwitchComponent } from './components/switch/switch.component';
 import { GridComponent } from './components/grid/grid.component';
 import { SelectionComponent } from './components/selection/selection.component';
 import { CodeTokenComponent } from './components/code-token/code-token.component';
-import { DatePickerComponent } from './components/date-picker/date-picker.component';
 import { TimePickerComponent } from './components/time-picker/time-picker.component';
 import { TextareaComponent } from './components/textarea/textarea.component';
 import { HeaderSectionComponent } from './components/header-section/header-section.component';
@@ -63,7 +62,6 @@ import { SectionParagraphComponent } from './components/section-paragrah/section
     GridComponent,
     SelectionComponent,
     CodeTokenComponent,
-    DatePickerComponent,
     TimePickerComponent,
     TextareaComponent,
     HeaderSectionComponent,
@@ -118,7 +116,6 @@ import { SectionParagraphComponent } from './components/section-paragrah/section
     GridComponent,
     SelectionComponent,
     CodeTokenComponent,
-    DatePickerComponent,
     TimePickerComponent,
     TextareaComponent,
     HeaderSectionComponent,
