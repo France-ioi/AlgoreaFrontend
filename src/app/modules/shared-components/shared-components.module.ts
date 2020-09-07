@@ -42,7 +42,6 @@ import { TimePickerComponent } from './components/time-picker/time-picker.compon
 import { TextareaComponent } from './components/textarea/textarea.component';
 import { HeaderSectionComponent } from './components/header-section/header-section.component';
 import { EditorBarComponent } from './components/editor-bar/editor-bar.component';
-import { DropdownComponent } from './components/dropdown/dropdown.component';
 import { InputComponent } from './components/input/input.component';
 import { SelectionTreeComponent } from './components/selection-tree/selection-tree.component';
 import { SelectComponent } from './components/select/select.component';
@@ -65,7 +64,6 @@ import { SectionParagraphComponent } from './components/section-paragrah/section
     TextareaComponent,
     HeaderSectionComponent,
     EditorBarComponent,
-    DropdownComponent,
     InputComponent,
     SelectionTreeComponent,
     SelectComponent,
@@ -92,7 +90,6 @@ import { SectionParagraphComponent } from './components/section-paragrah/section
     TabViewModule,
     ProgressSpinnerModule,
     ToastModule,
-
     MatIconModule,
     MatNativeDateModule,
     MatRippleModule,
@@ -118,7 +115,6 @@ import { SectionParagraphComponent } from './components/section-paragrah/section
     TextareaComponent,
     HeaderSectionComponent,
     EditorBarComponent,
-    DropdownComponent,
     InputComponent,
     SelectionTreeComponent,
     SelectComponent,
