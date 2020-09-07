@@ -1,5 +1,12 @@
-/* eslint-disable */ /* FIXME disabled for now while this is the mockup code, to be removed afterwards */
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { ResizedEvent } from 'angular-resize-event';
+
+interface Item {
+  ID: string
+  label: string,
+  attempt?: number
+  separator?: string,
+} // FIXME: quick fix type, to be cleaned
 
 @Component({
   selector: 'alg-breadcrumb',
@@ -7,11 +14,14 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
   styleUrls: ['./breadcrumb.component.scss'],
 })
 export class BreadcrumbComponent implements OnInit {
-  @Input() items;
+  @Input() items: {
+    selectedID: string,
+    path: Item[]
+  }; // FIXME: quick fix type, to be cleaned
   @Output() itemClick = new EventEmitter<any>();
 
-  selectedIdx;
-  breadWidth;
+  selectedIdx: number;
+  breadWidth: number;
 
   maxWidths = [9, 10, 12, 13, 16, 20, 0];
 
@@ -19,7 +29,7 @@ export class BreadcrumbComponent implements OnInit {
 
   ngOnInit() {}
 
-  onItemClick(_e, item, idx) {
+  onItemClick(item: Item, idx: number) {
     this.items.selectedID = item.ID;
     this.selectedIdx = idx;
     this.itemClick.emit(item);
@@ -34,7 +44,7 @@ export class BreadcrumbComponent implements OnInit {
     return widths;
   }
 
-  onResize(e) {
+  onResize(e: ResizedEvent) {
     this.breadWidth = e.newWidth;
     this.maxWidths = this.itemMaxWidth();
   }

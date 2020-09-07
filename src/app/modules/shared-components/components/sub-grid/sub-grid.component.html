@@ -1,8 +1,0 @@
-<p-table [value]="data">
-  <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
-    <ng-container
-      [ngTemplateOutlet]="bodyTemplate"
-      [ngTemplateOutletContext]="{ $implicit: rowData, columns: columns, rowIndex: rowIndex }"
-    ></ng-container>
-  </ng-template>
-</p-table>

@@ -5,6 +5,7 @@ import {
   ContentChild,
   Output,
   EventEmitter,
+  TemplateRef,
 } from '@angular/core';
 
 @Component({
@@ -13,19 +14,19 @@ import {
   styleUrls: ['./section-paragraph.component.scss'],
 })
 export class SectionParagraphComponent implements OnInit {
-  @Input() icon;
-  @Input() label;
+  @Input() icon: string;
+  @Input() label: string;
   @Input() collapsible = false;
   @Input() theme = 'success';
   @Input() hasBorder = false;
-  @Input() data;
+  @Input() data: any;
   @Input() remainOrigin = true;
 
-  @Output() collapse = new EventEmitter<any>();
+  @Output() collapse = new EventEmitter<boolean>();
 
-  @ContentChild('headerTemplate') headerTemplate;
+  @ContentChild('headerTemplate') headerTemplate: TemplateRef<any>;
 
-  visible;
+  visible = false;
 
   constructor() {}
 
@@ -33,7 +34,7 @@ export class SectionParagraphComponent implements OnInit {
     this.visible = this.collapsible;
   }
 
-  toggleContent(_e) {
+  toggleContent() {
     this.visible = !this.visible;
     this.collapse.emit(this.visible);
   }

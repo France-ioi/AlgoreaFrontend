@@ -1,4 +1,3 @@
-/* eslint-disable */ /* FIXME disabled for now while this is the mockup code, to be removed afterwards */
 import {
   Component,
   OnInit,
@@ -7,13 +6,19 @@ import {
   SimpleChanges,
 } from '@angular/core';
 
+interface Node {
+  root: boolean
+  expanded: boolean
+  checked: boolean
+}
+
 @Component({
   selector: 'alg-selection-tree',
   templateUrl: './selection-tree.component.html',
   styleUrls: ['./selection-tree.component.scss'],
 })
 export class SelectionTreeComponent implements OnInit, OnChanges {
-  @Input() data = [];
+  @Input() data: Node[] = [];
 
   constructor() {}
 
@@ -31,7 +36,7 @@ export class SelectionTreeComponent implements OnInit, OnChanges {
     }
   }
 
-  nodeExpand(_event, node) {
+  nodeExpand(node: Node) {
     if (!node.expanded) {
       node.expanded = true;
     } else {
@@ -39,7 +44,7 @@ export class SelectionTreeComponent implements OnInit, OnChanges {
     }
   }
 
-  nodeCheck(_event, node) {
+  nodeCheck(node: Node) {
     if (!node.checked) {
       node.checked = true;
     } else {

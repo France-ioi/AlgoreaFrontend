@@ -9,7 +9,7 @@
         </span>
       </span>
       <span class="node-item-content">
-        <span (click)="nodeExpand($event, node)" class="node-select">
+        <span (click)="nodeExpand(node)" class="node-select">
           <i *ngIf="!node.expanded && !node.checked" class="pi pi-folder" [ngStyle]="{'fontSize.rem': node.root ? 2 : 1.4}"></i>
           <i *ngIf="node.expanded && !node.checked" class="pi pi-folder-open" [ngStyle]="{'fontSize.rem': node.root ? 2 : 1.4}"></i>
           <i
@@ -25,7 +25,7 @@
             [ngStyle]="{'fontSize.rem': node.root ? 2 : 1.4}"
           ></i>
         </span>
-        <span (click)="nodeCheck($event, node)" class="node-label" [ngStyle]="{'fontSize.rem': node.root ? 2 : 1.2}">{{
+        <span (click)="nodeCheck(node)" class="node-label" [ngStyle]="{'fontSize.rem': node.root ? 2 : 1.2}">{{
           node.title
         }}</span>
       </span>
@@ -39,11 +39,11 @@
         <span class="bottom-branch"></span>
       </span>
       <span class="node-item-content">
-        <span (click)="nodeExpand($event, node)" class="node-select">
+        <span (click)="nodeExpand(node)" class="node-select">
           <i *ngIf="node.checked" class="pi pi-check" [ngStyle]="{'fontSize.rem': node.root ? 2 : 1.4}"></i>
           <i *ngIf="!node.checked" class="pi pi-circle-on" [ngStyle]="{'fontSize.rem': node.root ? 2 : 1.4}"></i>
         </span>
-        <span (click)="nodeCheck($event, node)" class="node-label" [ngStyle]="{'fontSize.rem': node.root ? 2 : 1.2}">{{
+        <span (click)="nodeCheck(node)" class="node-label" [ngStyle]="{'fontSize.rem': node.root ? 2 : 1.2}">{{
           node.title
         }}</span>
       </span>

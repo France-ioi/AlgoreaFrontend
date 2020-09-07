@@ -5,6 +5,7 @@ import {
   OnChanges,
   SimpleChanges,
   ViewChild,
+  ElementRef,
 } from '@angular/core';
 
 enum ScoreRingColor {
@@ -33,17 +34,17 @@ export class ScoreRingComponent implements OnInit, OnChanges {
   @Input() scoreFill = '';
   @Input() forTree = false;
 
-  @ViewChild('svg') svg;
+  @ViewChild('svg') svg: ElementRef;
 
-  displayPath;
-  displayFill;
+  displayPath: string;
+  displayFill: string;
 
-  currentPath;
-  currentFill;
+  currentPath: string;
+  currentFill: string;
 
   svgRadius = 30;
 
-  iconPath;
+  iconPath: string;
   iconFill = 'white';
 
   textFill = ScoreRingColor.defaultText;
@@ -53,7 +54,7 @@ export class ScoreRingComponent implements OnInit, OnChanges {
 
   ngOnInit() {}
 
-  _pathFromScore(score) {
+  _pathFromScore(score: number) {
     if (score === 0) {
       return 'M0, -30';
     }

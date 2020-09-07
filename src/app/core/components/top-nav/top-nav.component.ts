@@ -1,6 +1,4 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
-import { StatusService } from '../../../shared/services/status.service';
-import { Router } from '@angular/router';
 import { AuthService } from 'src/app/shared/auth/auth.service';
 
 @Component({
@@ -10,22 +8,16 @@ import { AuthService } from 'src/app/shared/auth/auth.service';
 })
 export class TopNavComponent implements OnInit {
 
-  @Output() collapseEvent = new EventEmitter<boolean>();
-  @Output() foldEvent = new EventEmitter<boolean>();
-  @Output() signInOutEvent = new EventEmitter<boolean>();
-
   @Input() collapsed = false;
   @Input() templateId = 0;
   @Input() folded = false;
 
-  @Input() data;
-
-  showNotification = false;
-  @Input() signedIn = true;
-
-  @Output() notify = new EventEmitter<any>();
+  @Output() collapse = new EventEmitter<boolean>();
+  @Output() fold = new EventEmitter<boolean>();
   @Output() search = new EventEmitter<any>();
   @Output() searchClose = new EventEmitter<any>();
+
+  showNotification = false;
 
   langs = [
     'English',
@@ -36,44 +28,32 @@ export class TopNavComponent implements OnInit {
   ];
 
   constructor(
-    private statusService: StatusService,
-    private router: Router,
     private authService: AuthService
   ) { }
 
   ngOnInit() {
   }
 
-  onCollapse(_e) {
+  onCollapse() {
     this.collapsed = !this.collapsed;
-    this.collapseEvent.emit(this.collapsed);
+    this.collapse.emit(this.collapsed);
   }
 
-  onFold(_e) {
+  onFold() {
     this.folded = !this.folded;
-    this.foldEvent.emit(this.folded);
+    this.fold.emit(this.folded);
   }
 
-  toggleNotification(e) {
+  toggleNotification() {
     this.showNotification = !this.showNotification;
-    this.statusService.setUrl(this.router.url);
-    this.notify.emit(e);
   }
 
-  signInOut(_e) {
+  signInOut() {
     if (this.authService.authUserConnected()) {
       this.authService.logoutAuthUser();
     } else {
       this.authService.startLogin();
     }
-  }
-
-  onSearchEvent(e) {
-    this.search.emit(e);
-  }
-
-  onSearchCloseEvent(e) {
-    this.searchClose.emit(e);
   }
 
 }

@@ -4,17 +4,18 @@
   [value]="data"
   [scrollable]="scrollWhenExpanded || scrollable"
   [selectionMode]="selectionMode"
-  [(selection)]="selectionValue"
+  [selection]="selection"
   [responsive]="responsive"
   [dataKey]="dataKey"
   [frozenWidth]="frozenWidth"
   [sortMode]="sortMode"
   [multiSortMeta]="multiSortMeta"
   [customSort]="true"
+  (selectionChange)="onSelectionChange($event)"
   (sortFunction)="sortFunction($event)"
-  (onRowSelect)="onRowSelect($event)"
-  (onRowUnselect)="onRowUnselect($event)"
-  (onHeaderCheckboxToggle)="onHeaderCheckbox($event)"
+  (onRowSelect)="onRowSelect()"
+  (onRowUnselect)="onRowUnselect()"
+  (onHeaderCheckboxToggle)="onHeaderCheckbox()"
 >
   <!-- <ng-container *ngTemplateOutlet="headerTemplate; context: {$implicit: columns}"></ng-container> -->
   <ng-template *ngIf="frozenWidth && frozenWidth.length > 0" pTemplate="frozenheader">
@@ -48,13 +49,13 @@
 </p-table>
 <span
   class="toggle-gear"
-  (click)="showColumns($event)"
+  (click)="showColumns()"
   *ngIf="!showColumnSelection && showGear"
 >
   <i class="fa fa-cog"></i>
 </span>
 <div class="select-column" *ngIf="showColumnSelection && showGear">
-  <div class="header" (click)="showColumns($event)">
+  <div class="header" (click)="showColumns()">
     <span class="fold-icon">
       <i class="fa fa-caret-up"></i>
     </span>
@@ -63,19 +64,19 @@
   <div class="column-group" *ngFor="let group of groupInfo">
     <p>{{group.name}}</p>
     <ul>
-      <li *ngFor="let item of group.columns">
-        <span [ngClass]="{ checked: selected[item.field] }" (click)="handleChanges($event, item)">
-          {{ item.header }}
+      <li *ngFor="let col of group.columns">
+        <span [ngClass]="{ checked: selected[col.field] }" (click)="handleColumnChanges(col)">
+          {{ col.header }}
         </span>
         <alg-switch
-          [checked]="selected[item.field]"
-          (change)="handleChanges($event, item)"
+          [checked]="selected[col.field]"
+          (change)="handleColumnChanges(col)"
         ></alg-switch>
       </li>
     </ul>
   </div>
 </div>
-<div class="show-all" *ngIf="showGear && (toShow > 0 || expand)" (click)="showAll($event)">
+<div class="show-all" *ngIf="showGear && (toShow > 0 || expand)" (click)="showAll()">
   <span class="missing-title" *ngIf="toShow > 0">{{ toShow }}</span>
   <span class="show-icon">
     <i *ngIf="!expand" class="fa fa-caret-right"></i>

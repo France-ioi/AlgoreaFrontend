@@ -16,7 +16,7 @@ describe('GroupJoinByCodeComponent', () => {
       declarations: [ GroupJoinByCodeComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
-        { provide: MessageService, useValue: { add: (_m) => {} } },
+        { provide: MessageService, useValue: { add: (_m: any) => {} } },
         { provide: GroupActionsService, useValue: {} },
         { provide: CodeActionsService, useValue: {} },
       ]

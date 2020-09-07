@@ -40,13 +40,13 @@ describe('PendingRequestComponent', () => {
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: GetRequestsService, useValue: {
-          getPendingRequests: (_id, _sort) => of<PendingRequest[]>(MOCK_RESPONSE),
+          getPendingRequests: (_id: any, _sort: any) => of<PendingRequest[]>(MOCK_RESPONSE),
         }},
         { provide: RequestActionsService, useValue: {
-          acceptJoinRequest: (_id, _groupIds) => serviceResponder$.asObservable(),
-          rejectJoinRequest: (_id, _groupIds) => serviceResponder$.asObservable(),
+          acceptJoinRequest: (_id: any, _groupIds: any) => serviceResponder$.asObservable(),
+          rejectJoinRequest: (_id: any, _groupIds: any) => serviceResponder$.asObservable(),
         }},
-        { provide: MessageService, useValue: { add: (_m) => {} } }
+        { provide: MessageService, useValue: { add: (_m: any) => {} } }
       ]
     }).compileComponents();
   }));

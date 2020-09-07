@@ -1,4 +1,3 @@
-/* eslint-disable */ /* FIXME disabled for now while this is the mockup code, to be removed afterwards */
 import {
   Component,
   OnInit,
@@ -9,13 +8,25 @@ import {
   ViewChild,
   Output,
   EventEmitter,
+  TemplateRef,
 } from '@angular/core';
 import { DomHandler } from 'primeng/dom';
 import { Table, TableService } from 'primeng/table';
 import { SortEvent } from 'primeng/api/sortevent';
+import { SortMeta } from 'primeng/api/sortmeta';
 
 export function tableFactory(wrapper: GridComponent) {
   return wrapper.table;
+}
+
+export interface GridColumn {
+  field: string,
+  header: string
+}
+
+export interface GridColumnGroup {
+  columns: GridColumn[],
+  name?: string
 }
 
 @Component({
@@ -34,66 +45,60 @@ export function tableFactory(wrapper: GridComponent) {
 })
 export class GridComponent implements OnInit, OnChanges {
 
-  @Input()
-  get selection() {
-    return this.selectionValue;
-  }
-
-  set selection(val) {
-    this.selectionValue = val;
-    this.selectionChange.emit(this.selectionValue);
-  }
+  @Input() selection: any[]
 
   constructor() {}
   @ViewChild('table', { static: true }) table: Table;
 
-  @Input() data;
-  @Input() selectedColumns;
-  @Input() columns;
-  @Input() groupInfo;
+  @Input() data: any[];
+  @Input() selectedColumns: GridColumn[];
+  @Input() columns: GridColumn[];
+  @Input() groupInfo: GridColumnGroup[];
 
   @Input() sortMode = 'multiple';
-  @Input() multiSortMeta = [];
+  @Input() multiSortMeta: SortMeta[] = [];
   @Input() customSort = true;
 
   @Input() scrollWhenExpanded = false;
-  @Input() scrollable;
+  @Input() scrollable = false;
 
-  @Input() selectionMode;
-  @Input() responsive;
-  @Input() dataKey;
-  @Input() frozenCols;
-  @Input() frozenWidth;
+  @Input() selectionMode: 'multiple'|'single'|null = null;
+  @Input() responsive = false;
+  @Input() dataKey: string;
+  @Input() frozenWidth: string|null = null;
   @Input() showGear = true;
 
   @Output() expandWholeWidth = new EventEmitter<boolean>();
   @Output() sort = new EventEmitter();
-  @Output() selectionChange = new EventEmitter();
+  @Output() selectionChange = new EventEmitter<any[]>();
   @Output() headerCheckboxToggle = new EventEmitter();
 
-  @ContentChild('colgroupTemplate') colgroupTemplate;
-  @ContentChild('headerTemplate') headerTemplate;
-  @ContentChild('bodyTemplate') bodyTemplate;
-  @ContentChild('footerTemplate') footerTemplate;
-  @ContentChild('summaryTemplate') summaryTemplate;
-  @ContentChild('rowExpansionTemplate') rowExpansionTemplate;
-  @ContentChild('frozenHeaderTemplate') frozenHeaderTemplate;
-  @ContentChild('frozenBodyTemplate') frozenBodyTemplate;
-
-  selectionValue = [];
+  @ContentChild('colgroupTemplate') colgroupTemplate: TemplateRef<any>;
+  @ContentChild('headerTemplate') headerTemplate: TemplateRef<any>;
+  @ContentChild('bodyTemplate') bodyTemplate: TemplateRef<any>;
+  @ContentChild('footerTemplate') footerTemplate: TemplateRef<any>;
+  @ContentChild('summaryTemplate') summaryTemplate: TemplateRef<any>;
+  @ContentChild('rowExpansionTemplate') rowExpansionTemplate: TemplateRef<any>;
+  @ContentChild('frozenHeaderTemplate') frozenHeaderTemplate: TemplateRef<any>;
+  @ContentChild('frozenBodyTemplate') frozenBodyTemplate: TemplateRef<any>;
 
   showColumnSelection = false;
 
-  selected = {};
+  selected: {[k: string]: any} = {};
   toShow = 0;
   expand = false;
 
-  onRowSelect(_e) {
-    this.selectionChange.emit(this.selectionValue);
+  onSelectionChange(selection: any[]) {
+    this.selection = selection;
+    this.selectionChange.emit(this.selection);
   }
 
-  onRowUnselect(_e) {
-    this.selectionChange.emit(this.selectionValue);
+  onRowSelect() {
+    this.selectionChange.emit(this.selection);
+  }
+
+  onRowUnselect() {
+    this.selectionChange.emit(this.selection);
   }
 
   detectSelected() {
@@ -116,17 +121,17 @@ export class GridComponent implements OnInit, OnChanges {
     }
   }
 
-  showColumns(_e) {
+  showColumns() {
     this.showColumnSelection = !this.showColumnSelection;
   }
 
-  showAll(_e) {
+  showAll() {
     this.selectedColumns = this.columns;
     this.toShow = 0;
     this.expand = !this.expand;
 
     if (!this.expand) {
-      const newSel = [];
+      const newSel: GridColumn[] = [];
       for (const col of this.columns) {
         if (this.selected[col.field] === true) {
           newSel.push(col);
@@ -145,9 +150,9 @@ export class GridComponent implements OnInit, OnChanges {
     this.expandWholeWidth.emit(this.expand);
   }
 
-  handleChanges(_e, item) {
+  handleColumnChanges(item: GridColumn) {
     this.selected[item.field] = !this.selected[item.field];
-    const newSel = [];
+    const newSel: GridColumn[] = [];
     for (const col of this.columns) {
       if (this.selected[col.field] === true) {
         newSel.push(col);
@@ -163,8 +168,8 @@ export class GridComponent implements OnInit, OnChanges {
     this.sort.emit(event);
   }
 
-  onHeaderCheckbox(_event) {
-    this.selectionChange.emit(this.selectionValue);
+  onHeaderCheckbox() {
+    this.selectionChange.emit(this.selection);
   }
 
 }

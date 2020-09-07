@@ -1,4 +1,3 @@
-/* eslint-disable */ /* FIXME disabled for now while this is the mockup code, to be removed afterwards */
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
@@ -8,17 +7,17 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 })
 export class SelectionComponent implements OnInit {
   @Input() type: 'rounded' | 'square' = 'rounded';
-  @Input() items;
+  @Input() items: any;
   @Input() selected = 0;
   @Input() mode: 'light' | 'dark' | 'basic' = 'light';
 
-  @Output() change = new EventEmitter<any>();
+  @Output() change = new EventEmitter<number>();
 
   constructor() {}
 
   ngOnInit() {}
 
-  itemChanged(_e, index) {
+  itemChanged(index: number) {
     this.selected = index;
     this.change.emit(index);
   }

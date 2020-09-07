@@ -9,11 +9,6 @@ describe('TopNavComponent', () => {
   let component: TopNavComponent;
   let fixture: ComponentFixture<TopNavComponent>;
   let router: Router;
-  const mockData = {
-    name: 'Concours castor',
-    notification: 2,
-    image: '_messi.jpg'
-  };
 
   beforeEach(async(() => {
     const routerSpy = jasmine.createSpyObj<Router>('Router', ['navigateByUrl']);
@@ -37,7 +32,6 @@ describe('TopNavComponent', () => {
     fixture = TestBed.createComponent(TopNavComponent);
     component = fixture.componentInstance;
     router = TestBed.inject(Router);
-    component.data = mockData;
     fixture.detectChanges();
   });
 

@@ -1,8 +1,8 @@
 <div class="page-nav">
-  <span *ngIf="allowFullScreen === 'false'" class="page-edit" (click)="editPage($event)">
+  <span *ngIf="!allowFullScreen" class="page-edit" (click)="editPage()">
     <i class="fa fa-pencil-alt"></i>
   </span>
-  <span *ngIf="allowFullScreen === 'true'" class="top-bar-expand">
+  <span *ngIf="allowFullScreen" class="top-bar-expand">
     <i class="fa fa-expand-arrows-alt"></i>
   </span>
   <span *ngIf="navigationMode === 'nextAndPrev'" class="navigator">

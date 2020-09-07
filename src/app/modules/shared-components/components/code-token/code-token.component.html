@@ -1,9 +1,9 @@
 <div class="code-generator">
   <span class="code" [ngClass]="{'no-button': !showRefresh && !showRemove}">{{code}}</span>
-  <span *ngIf="showRefresh" class="refresh" [ngClass]="{'no-remove': !showRemove}" (click)="refreshCode($event)">
+  <span *ngIf="showRefresh" class="refresh" [ngClass]="{'no-remove': !showRemove}" (click)="refreshCode()">
     <i class="fa fa-redo"></i>
   </span>
-  <span *ngIf="showRemove" class="remove" (click)="removeCode($event)">
+  <span *ngIf="showRemove" class="remove" (click)="removeCode()">
     <i class="fa fa-times "></i>
   </span>
 </div>

@@ -37,25 +37,14 @@ import { StateWidgetComponent } from './components/state-widget/state-widget.com
 import { SwitchComponent } from './components/switch/switch.component';
 import { GridComponent } from './components/grid/grid.component';
 import { SelectionComponent } from './components/selection/selection.component';
-import { SubSectionComponent } from './components/sub-section/sub-section.component';
 import { CodeTokenComponent } from './components/code-token/code-token.component';
-import { DatePickerComponent } from './components/date-picker/date-picker.component';
 import { TimePickerComponent } from './components/time-picker/time-picker.component';
 import { TextareaComponent } from './components/textarea/textarea.component';
-import { SubGridComponent } from './components/sub-grid/sub-grid.component';
-import { HeaderSectionComponent } from './components/header-section/header-section.component';
 import { EditorBarComponent } from './components/editor-bar/editor-bar.component';
-import { DropdownComponent } from './components/dropdown/dropdown.component';
 import { InputComponent } from './components/input/input.component';
 import { SelectionTreeComponent } from './components/selection-tree/selection-tree.component';
-import { ItemsNavigationTreeComponent } from './components/items-navigation-tree/items-navigation-tree.component';
-import { GridGearComponent } from './components/grid-gear/grid-gear.component';
 import { SelectComponent } from './components/select/select.component';
 import { SliderComponent } from './components/slider/slider.component';
-import { GridFilterComponent } from './components/grid/grid-filter/grid-filter.component';
-import { GridFilterBarComponent } from './components/grid/grid-filter-bar/grid-filter-bar.component';
-import { DatePickerSharedComponent } from './components/date-picker-simple/date-picker-simple.component';
-import { ListboxComponent } from './components/listbox/listbox.component';
 import { SectionParagraphComponent } from './components/section-paragrah/section-paragraph.component';
 
 @NgModule({
@@ -69,25 +58,14 @@ import { SectionParagraphComponent } from './components/section-paragrah/section
     SwitchComponent,
     GridComponent,
     SelectionComponent,
-    SubSectionComponent,
     CodeTokenComponent,
-    DatePickerComponent,
     TimePickerComponent,
     TextareaComponent,
-    SubGridComponent,
-    HeaderSectionComponent,
     EditorBarComponent,
-    DropdownComponent,
     InputComponent,
     SelectionTreeComponent,
-    ItemsNavigationTreeComponent,
-    GridGearComponent,
     SelectComponent,
     SliderComponent,
-    GridFilterComponent,
-    GridFilterBarComponent,
-    DatePickerSharedComponent,
-    ListboxComponent,
     SectionParagraphComponent,
   ],
   imports: [
@@ -110,7 +88,6 @@ import { SectionParagraphComponent } from './components/section-paragrah/section
     TabViewModule,
     ProgressSpinnerModule,
     ToastModule,
-
     MatIconModule,
     MatNativeDateModule,
     MatRippleModule,
@@ -131,25 +108,14 @@ import { SectionParagraphComponent } from './components/section-paragrah/section
     SwitchComponent,
     GridComponent,
     SelectionComponent,
-    SubSectionComponent,
     CodeTokenComponent,
-    DatePickerComponent,
     TimePickerComponent,
     TextareaComponent,
-    SubGridComponent,
-    HeaderSectionComponent,
     EditorBarComponent,
-    DropdownComponent,
     InputComponent,
     SelectionTreeComponent,
-    ItemsNavigationTreeComponent,
-    GridGearComponent,
     SelectComponent,
     SliderComponent,
-    GridFilterComponent,
-    GridFilterBarComponent,
-    DatePickerSharedComponent,
-    ListboxComponent,
     SectionParagraphComponent,
     ProgressSpinnerModule,
     ToastModule,

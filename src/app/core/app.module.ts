@@ -32,6 +32,7 @@ import { TreeModule } from 'primeng/tree';
 import { ItemNavTreeComponent } from './components/item-nav-tree/item-nav-tree.component';
 import { ItemNavComponent } from './components/item-nav/item-nav.component';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { AngularResizedEventModule } from 'angular-resize-event';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: false,
@@ -52,6 +53,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   ],
   imports: [
     BrowserModule,
+    AngularResizedEventModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,

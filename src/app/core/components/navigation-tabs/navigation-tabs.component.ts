@@ -1,10 +1,10 @@
-/* eslint-disable */ /* FIXME disabled for now while this is the mockup code, to be removed afterwards */
-import { Component, OnInit, Input, OnChanges, SimpleChanges, ViewChild, NgZone, Output, EventEmitter } from '@angular/core';
-import { Location } from '@angular/common';
-import { StatusService } from '../../../shared/services/status.service';
+import { Component, OnInit, ViewChild, NgZone } from '@angular/core';
+
 import { CurrentUserService } from 'src/app/shared/services/current-user.service';
 import { UserProfile } from 'src/app/shared/http-services/current-user.service';
 import { Observable } from 'rxjs';
+import { PerfectScrollbarComponent } from 'ngx-perfect-scrollbar';
+import { ResizedEvent } from 'angular-resize-event';
 
 @Component({
   selector: 'alg-navigation-tabs',
@@ -13,8 +13,8 @@ import { Observable } from 'rxjs';
 })
 export class NavigationTabsComponent implements OnInit {
 
-  @ViewChild('scrollPanel') scrollPanel;
-  @ViewChild('groupPanel') groupPanel;
+  @ViewChild('scrollPanel') scrollPanel: PerfectScrollbarComponent;
+  @ViewChild('groupPanel') groupPanel: HTMLDivElement;
 
   groupShow = true;
   stickyShow = false;
@@ -31,28 +31,28 @@ export class NavigationTabsComponent implements OnInit {
       this.currentUser$ = this.currentUserService.currentUser();
   }
 
-  toggleGroup(_e) {
+  toggleGroup() {
     this.groupShow = !this.groupShow;
     if (!this.groupShow) {
       this.stickyShow = false;
     }
   }
 
-  onResized(e) {
-    const boundaryHeight = this.scrollPanel.directiveRef.elementRef.nativeElement.clientHeight - 50;
+  onResized(e: ResizedEvent) {
+    const boundaryHeight = (this.scrollPanel.directiveRef.elementRef.nativeElement as HTMLElement).clientHeight - 50;
     if (e.newHeight > boundaryHeight) {
       // this.stickyShow = true;
-      this._updateStatus(this.scrollPanel.directiveRef.elementRef.nativeElement);
+      this._updateStatus(this.scrollPanel.directiveRef.elementRef.nativeElement as HTMLElement);
     } else {
       this.stickyShow = false;
     }
   }
 
-  _updateStatus(e) {
+  _updateStatus(e: HTMLElement) {
     this.ngZone.run(() => {
       const scrollTop = e.scrollTop;
       const clientHeight = e.clientHeight - 50;
-      const groupHeight = this.groupPanel.nativeElement.clientHeight;
+      const groupHeight = this.groupPanel.clientHeight;
       if (scrollTop + clientHeight >= groupHeight) {
         this.stickyShow = false;
       } else {
@@ -62,21 +62,15 @@ export class NavigationTabsComponent implements OnInit {
   }
 
   focusParent() {
-    const elements = this.groupPanel.nativeElement.querySelectorAll('.ui-accordion-header a');
-    console.log(elements);
-    for (const element of elements) {
-      (element as HTMLElement).blur();
-    }
-    (this.groupPanel.nativeElement as HTMLElement).focus();
+    const elements = this.groupPanel.querySelectorAll('.ui-accordion-header a');
+    elements.forEach((e) => {
+      (e as HTMLElement).blur();
+    });
+    this.groupPanel.focus();
   }
 
-  onScrollEvent(e) {
+  onScrollEvent(e: {srcElement: HTMLElement}) { /* guessed type, something cleaner would be nice */
     this._updateStatus(e.srcElement);
-  }
-
-  onTabChanged(e) {
-    this.groupShow = false;
-    this.stickyShow = false;
   }
 
 }

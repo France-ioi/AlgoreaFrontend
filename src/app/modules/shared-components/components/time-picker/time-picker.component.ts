@@ -17,7 +17,7 @@ export class TimePickerComponent implements OnChanges {
 
   constructor() {}
 
-  ngOnChanges(_change) {
+  ngOnChanges() {
     if (this.initialValue) this.currentValue = this.initialValue.minutes();
   }
 
@@ -25,15 +25,15 @@ export class TimePickerComponent implements OnChanges {
     return Duration.fromHMS(0, this.currentValue, 0);
   }
 
-  onClickValidateButton(_e) {
+  onClickValidateButton() {
     this.submit.emit(this.currentDuration());
   }
 
-  timeChange(_e) {
+  timeChange() {
     // nothing for the moment
   }
 
-  timeChanged(_e) {
+  timeChanged() {
     // nothing for the moment
   }
 }

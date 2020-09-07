@@ -5,11 +5,11 @@
       <span class="time-value" contenteditable="true">{{time}}</span>&nbsp;mn
     </span>
   </span> -->
-  <input type="number" class="time-edit" [(ngModel)]="currentValue" (keypress)="timeChange($event)" (keyup)="timeChanged($event)">
+  <input type="number" class="time-edit" [(ngModel)]="currentValue" (keypress)="timeChange()" (keyup)="timeChanged()">
   <span
     class="time-button"
     [ngClass]="{'disabled': currentValue*MINUTES === initialValue.ms}"
-    (click)="onClickValidateButton($event)"
+    (click)="onClickValidateButton()"
   >
     <i class="fa fa-check"></i>
   </span>

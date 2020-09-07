@@ -6,22 +6,20 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
   styleUrls: ['./button.component.scss'],
 })
 export class ButtonComponent implements OnInit {
-  @Input() label;
+  @Input() label: string;
   @Input() disabled = false;
-  @Input() icon;
-  @Input() class;
+  @Input() icon: string;
+  @Input() class: string;
   @Input() iconPos = 'left';
 
-  @Output() click = new EventEmitter<any>();
+  @Output() click = new EventEmitter<void>();
 
   constructor() {}
 
   ngOnInit() {}
 
-  onClickEvent(e) {
-    /* eslint-disable @typescript-eslint/no-unsafe-member-access */ /* primeng has no type on their events :-/ */
-    /* eslint-disable @typescript-eslint/no-unsafe-call */
-    e.stopPropagation();
-    this.click.emit(e);
+  onClickEvent(event: any) {
+    (event as Event).stopPropagation();
+    this.click.emit();
   }
 }

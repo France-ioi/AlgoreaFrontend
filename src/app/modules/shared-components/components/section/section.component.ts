@@ -6,8 +6,8 @@ import { Component, OnInit, Input } from '@angular/core';
   styleUrls: ['./section.component.scss'],
 })
 export class SectionComponent implements OnInit {
-  @Input() icon;
-  @Input() label;
+  @Input() icon: string;
+  @Input() label: string;
   @Input() hideBorder = false;
 
   constructor() {}

@@ -7,19 +7,9 @@ import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChange
 })
 export class LeftNavComponent implements OnInit, OnChanges {
 
-  @Input() user;
   @Input() collapsed = false;
-  @Input() signedIn;
 
-  @Output() collapseEvent = new EventEmitter<boolean>();
-  @Output() skillSelect = new EventEmitter<any>();
-  @Output() activitySelect = new EventEmitter<any>();
-  @Output() yourselfSelect = new EventEmitter<any>();
-  @Output() groupSelect = new EventEmitter<any>();
-  @Output() signInOutEvent = new EventEmitter<any>();
-  @Output() joinGroupSelect = new EventEmitter<any>();
-  @Output() manageGroupSelect = new EventEmitter<any>();
-  @Output() notify = new EventEmitter<any>();
+  @Output() collapse = new EventEmitter<boolean>();
 
   searchView = false;
 
@@ -31,48 +21,16 @@ export class LeftNavComponent implements OnInit, OnChanges {
   ngOnChanges(_changes: SimpleChanges) {
   }
 
-  onCollapse(_e) {
-    this.collapsed = !this.collapsed;
-    this.collapseEvent.emit(this.collapsed);
+  onCollapse(collapsed: boolean) {
+    this.collapsed = collapsed;
+    this.collapse.emit(this.collapsed);
   }
 
-  onSkillSelected(e) {
-    this.skillSelect.emit(e);
-  }
-
-  onActivitySelected(e) {
-    this.activitySelect.emit(e);
-  }
-
-  onYourselfSelected(e) {
-    this.yourselfSelect.emit(e);
-  }
-
-  onGroupSelected(e) {
-    this.groupSelect.emit(e);
-  }
-
-  onSignInOut(e) {
-    this.signInOutEvent.emit(e);
-  }
-
-  onJoinGroupSelected(e) {
-    this.joinGroupSelect.emit(e);
-  }
-
-  onManageGroupSelected(e) {
-    this.manageGroupSelect.emit(e);
-  }
-
-  onNotifyClicked(e) {
-    this.notify.emit(e);
-  }
-
-  onSearchEvent(_e) {
+  onSearchEvent() {
     this.searchView = true;
   }
 
-  onSearchCloseEvent(_e) {
+  onSearchCloseEvent() {
     this.searchView = false;
   }
 

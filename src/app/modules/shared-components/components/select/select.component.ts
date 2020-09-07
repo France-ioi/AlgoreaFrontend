@@ -11,9 +11,9 @@ export class SelectComponent<T> implements OnInit {
   @Input() opened = false;
 
   @Output() change = new EventEmitter<T>();
-  @Output() click = new EventEmitter<any>();
+  @Output() click = new EventEmitter();
 
-  selected;
+  selected: T;
 
   constructor() {}
 
@@ -24,10 +24,10 @@ export class SelectComponent<T> implements OnInit {
   toogleDropdown(e: Event) {
     this.opened = true;
     e.stopPropagation();
-    this.click.emit(true);
+    this.click.emit();
   }
 
-  hideDropdown(_e) {
+  hideDropdown() {
     this.opened = false;
   }
 
