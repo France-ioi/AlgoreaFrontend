@@ -18,10 +18,10 @@ export class SectionParagraphComponent implements OnInit {
   @Input() collapsible = false;
   @Input() theme = 'success';
   @Input() hasBorder = false;
-  @Input() data;
+  @Input() data: any;
   @Input() remainOrigin = true;
 
-  @Output() collapse = new EventEmitter<any>();
+  @Output() collapse = new EventEmitter<boolean>();
 
   @ContentChild('headerTemplate') headerTemplate;
 

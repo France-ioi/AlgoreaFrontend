@@ -6,8 +6,8 @@ import { Component, OnInit, Input } from '@angular/core';
   styleUrls: ['./state-widget.component.scss'],
 })
 export class StateWidgetComponent implements OnInit {
-  @Input() icon;
-  @Input() type;
+  @Input() icon: string;
+  @Input() type: number;
   @Input() disabled = false;
 
   labels = ['Discovery', 'Practice', 'Validation', 'Challenge', 'Review'];

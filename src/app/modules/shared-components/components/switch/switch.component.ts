@@ -14,7 +14,7 @@ import {
   styleUrls: ['./switch.component.scss'],
 })
 export class SwitchComponent implements OnInit, OnChanges {
-  @Input() checked;
+  @Input() checked: boolean;
   @Input() mode: 'dark' | 'white' | 'circular' | 'dark-circular' = 'dark';
   @Input() type = 'square';
 

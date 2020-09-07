@@ -7,7 +7,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 })
 export class SelectionComponent implements OnInit {
   @Input() type: 'rounded' | 'square' = 'rounded';
-  @Input() items;
+  @Input() items: any;
   @Input() selected = 0;
   @Input() mode: 'light' | 'dark' | 'basic' = 'light';
 
