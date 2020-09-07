@@ -37,7 +37,6 @@ import { StateWidgetComponent } from './components/state-widget/state-widget.com
 import { SwitchComponent } from './components/switch/switch.component';
 import { GridComponent } from './components/grid/grid.component';
 import { SelectionComponent } from './components/selection/selection.component';
-import { SubSectionComponent } from './components/sub-section/sub-section.component';
 import { CodeTokenComponent } from './components/code-token/code-token.component';
 import { DatePickerComponent } from './components/date-picker/date-picker.component';
 import { TimePickerComponent } from './components/time-picker/time-picker.component';
@@ -63,7 +62,6 @@ import { SectionParagraphComponent } from './components/section-paragrah/section
     SwitchComponent,
     GridComponent,
     SelectionComponent,
-    SubSectionComponent,
     CodeTokenComponent,
     DatePickerComponent,
     TimePickerComponent,
@@ -119,7 +117,6 @@ import { SectionParagraphComponent } from './components/section-paragrah/section
     SwitchComponent,
     GridComponent,
     SelectionComponent,
-    SubSectionComponent,
     CodeTokenComponent,
     DatePickerComponent,
     TimePickerComponent,
