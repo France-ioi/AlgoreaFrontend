@@ -8,14 +8,14 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 export class PageNavigatorComponent implements OnInit {
   @Input() allowFullScreen = false;
   @Input() navigationMode = 'nextAndPrev';
-  @Output() edit = new EventEmitter<any>();
+  @Output() edit = new EventEmitter();
 
   constructor() {}
 
   ngOnInit() {
   }
 
-  editPage(e) {
-    this.edit.emit(e);
+  editPage() {
+    this.edit.emit();
   }
 }
