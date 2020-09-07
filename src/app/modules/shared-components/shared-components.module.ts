@@ -40,7 +40,6 @@ import { SelectionComponent } from './components/selection/selection.component';
 import { CodeTokenComponent } from './components/code-token/code-token.component';
 import { TimePickerComponent } from './components/time-picker/time-picker.component';
 import { TextareaComponent } from './components/textarea/textarea.component';
-import { HeaderSectionComponent } from './components/header-section/header-section.component';
 import { EditorBarComponent } from './components/editor-bar/editor-bar.component';
 import { InputComponent } from './components/input/input.component';
 import { SelectionTreeComponent } from './components/selection-tree/selection-tree.component';
@@ -62,7 +61,6 @@ import { SectionParagraphComponent } from './components/section-paragrah/section
     CodeTokenComponent,
     TimePickerComponent,
     TextareaComponent,
-    HeaderSectionComponent,
     EditorBarComponent,
     InputComponent,
     SelectionTreeComponent,
@@ -113,7 +111,6 @@ import { SectionParagraphComponent } from './components/section-paragrah/section
     CodeTokenComponent,
     TimePickerComponent,
     TextareaComponent,
-    HeaderSectionComponent,
     EditorBarComponent,
     InputComponent,
     SelectionTreeComponent,
