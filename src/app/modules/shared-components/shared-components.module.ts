@@ -42,7 +42,6 @@ import { CodeTokenComponent } from './components/code-token/code-token.component
 import { DatePickerComponent } from './components/date-picker/date-picker.component';
 import { TimePickerComponent } from './components/time-picker/time-picker.component';
 import { TextareaComponent } from './components/textarea/textarea.component';
-import { SubGridComponent } from './components/sub-grid/sub-grid.component';
 import { HeaderSectionComponent } from './components/header-section/header-section.component';
 import { EditorBarComponent } from './components/editor-bar/editor-bar.component';
 import { DropdownComponent } from './components/dropdown/dropdown.component';
@@ -69,7 +68,6 @@ import { SectionParagraphComponent } from './components/section-paragrah/section
     DatePickerComponent,
     TimePickerComponent,
     TextareaComponent,
-    SubGridComponent,
     HeaderSectionComponent,
     EditorBarComponent,
     DropdownComponent,
@@ -126,7 +124,6 @@ import { SectionParagraphComponent } from './components/section-paragrah/section
     DatePickerComponent,
     TimePickerComponent,
     TextareaComponent,
-    SubGridComponent,
     HeaderSectionComponent,
     EditorBarComponent,
     DropdownComponent,
