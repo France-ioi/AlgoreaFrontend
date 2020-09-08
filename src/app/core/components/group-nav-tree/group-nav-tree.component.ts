@@ -46,20 +46,16 @@ export class GroupNavTreeComponent implements OnChanges {
     if (e.code === 'Space' || e.code === 'Enter') {
       e.stopPropagation();
       e.preventDefault();
-      const element: HTMLElement = document.activeElement.querySelector(
+      document.activeElement?.querySelector<HTMLElement>(
         '.ui-treenode-label .node-tree-item > .node-item-content > .node-label > .node-label-title'
-      );
-      element.click();
+      )?.click();
     } else if (e.code === 'ArrowDown' || e.code === 'ArrowUp') {
       e.stopPropagation();
       e.preventDefault();
-      const element = document.activeElement as HTMLElement;
-      if (element) {
-        element.scrollIntoView({
-          behavior: 'auto',
-          block: 'center',
-        });
-      }
+      document.activeElement?.scrollIntoView({
+        behavior: 'auto',
+        block: 'center',
+      });
     }
   }
 }

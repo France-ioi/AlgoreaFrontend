@@ -2,7 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { ItemNavigationService, NavMenuRootItem } from '../../http-services/item-navigation.service';
 import { CurrentContentService } from 'src/app/shared/services/current-content.service';
 import { map, switchMap } from 'rxjs/operators';
-import { of, Observable, merge, empty } from 'rxjs';
+import { of, Observable, merge, empty, throwError } from 'rxjs';
 import { NavItem } from 'src/app/shared/services/nav-types';
 
 interface NavMenuData extends NavMenuRootItem {
@@ -49,7 +49,9 @@ export class ItemNavComponent implements OnInit {
     let dataFetcher: Observable<NavMenuRootItem>;
     if (item.itemPath.length >= 1) {
       const parentId = item.itemPath[item.itemPath.length-1];
-      dataFetcher = this.itemNavService.getNavData(parentId, item.parentAttemptId, item.attemptId);
+      if (item.parentAttemptId) dataFetcher = this.itemNavService.getNavData(parentId, item.parentAttemptId);
+      else if (item.attemptId) dataFetcher = this.itemNavService.getNavDataFromChildAttempt(parentId, item.attemptId);
+      else return throwError(new Error('Requires either the parent or child attempt to load nav'));
     } else {
       dataFetcher = this.itemNavService.getRoot(this.type);
     }
@@ -73,7 +75,9 @@ export class ItemNavComponent implements OnInit {
 
     // the selected item should be one of the items at the first level
     const itemData = data.items.find((item) => item.id === selectedItem.itemId);
-    if (!itemData /* unexpected */ || !itemData.hasChildren) return empty(); // if no children, no need to fetch children
+    if (!itemData) return throwError(new Error('Cannot find the item (unexpected)'));
+    if (!itemData.hasChildren) return empty(); // if no children, no need to fetch children
+    if (!selectedItem.attemptId) return throwError(new Error('Cannot fetch children without attempt (unexpected'));
 
     // We do not check if children were already known. So we might re-load again the same children, which is intended.
     return this.itemNavService.getNavData(itemData.id, selectedItem.attemptId).pipe(

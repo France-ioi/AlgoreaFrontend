@@ -51,7 +51,7 @@ interface RawNavData {
       attempt_id: string,
       latest_activity_at: string|null,
       started_at: string|null,
-    }[]|null,
+    }[],
   }[]
 }
 
@@ -78,18 +78,21 @@ export class ItemNavigationService {
 
   constructor(private http: HttpClient) {}
 
-  /**
-   * One of attemptId, childAttemptId must be given (may require to start a result).
-   * If both are given, it is ok, only the attempt will be used.
-   */
-  getNavData(parentItemId: string, attemptId?: string, childAttemptId?: string): Observable<NavMenuRootItem> {
-    const parameters = (attemptId) ? { attempt_id: attemptId } : { child_attempt_id: childAttemptId };
+  getNavData(itemId: string, attemptId: string): Observable<NavMenuRootItem> {
+    return this.getNavDataGeneric(itemId, { attempt_id: attemptId});
+  }
+
+  getNavDataFromChildAttempt(itemId: string, childAttemptId: string): Observable<NavMenuRootItem> {
+    return this.getNavDataGeneric(itemId, { child_attempt_id: childAttemptId});
+  }
+
+  private getNavDataGeneric(itemId: string, parameters: {[param: string]: string}): Observable<NavMenuRootItem> {
     return this.http
-      .get<RawNavData>(`${environment.apiUrl}/items/${parentItemId}/navigation`, {
+      .get<RawNavData>(`${environment.apiUrl}/items/${itemId}/navigation`, {
         params: parameters
       })
       .pipe(
-        map((data) => {
+        map<RawNavData,NavMenuRootItem>((data: RawNavData): NavMenuRootItem => {
           return {
             parent: {
               id: data.id,
@@ -103,7 +106,7 @@ export class ItemNavigationService {
                 id: i.id,
                 title: i.string.title,
                 hasChildren: i.has_visible_children,
-                attemptId: attempt ? attempt.attempt_id : null,
+                attemptId: attempt?.attempt_id || null,
               };
             }),
           };

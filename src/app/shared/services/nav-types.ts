@@ -23,14 +23,19 @@ export function itemDetailsRoute(item: NavItem): any[] {
   return ['items', 'details', item.itemId, params];
 }
 
-export function itemFromDetailParams(params: ParamMap): NavItem {
+/**
+ * Return null if some required parameters are missing.
+ */
+export function itemFromDetailParams(params: ParamMap): NavItem|undefined {
   const pathAsString = params.get(pathParamName);
   const attemptId = params.get(attemptParamName);
   const parentAttemptID = params.get(parentAttemptParamName);
+  const id = params.get('id');
+  if (id === null) return undefined;
   return {
-    itemId: params.get('id'),
+    itemId: id,
     attemptId: attemptId === null ? undefined : attemptId,
     parentAttemptId: parentAttemptID === null ? undefined : parentAttemptID,
-    itemPath: pathAsString.length === 0 ? [] : pathAsString.split(','),
+    itemPath: pathAsString === null || pathAsString.length === 0 ? [] : pathAsString.split(','),
   };
 }
