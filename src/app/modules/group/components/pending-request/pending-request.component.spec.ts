@@ -64,7 +64,7 @@ describe('PendingRequestComponent', () => {
     spyOn(getRequestsService, 'getPendingRequests').and.callThrough();
     spyOn(requestActionsService, 'acceptJoinRequest').and.callThrough();
     spyOn(requestActionsService, 'rejectJoinRequest').and.callThrough();
-    component.ngOnChanges(null);
+    component.ngOnChanges({});
   });
 
   afterEach(() => {

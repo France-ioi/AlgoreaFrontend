@@ -11,10 +11,10 @@ describe('AccessToken', () => {
     const token = new AccessToken('atemptok', exp, 'temporary');
     token.saveToStorage();
     const loaded = AccessToken.fromStorage();
-    expect(loaded.accessToken).toEqual('atemptok');
-    expect(loaded.expiration).toEqual(exp);
-    expect(loaded.type).toEqual('temporary');
-    expect(loaded.isValid()).toBeTruthy();
+    expect(loaded?.accessToken).toEqual('atemptok');
+    expect(loaded?.expiration).toEqual(exp);
+    expect(loaded?.type).toEqual('temporary');
+    expect(loaded?.isValid()).toBeTruthy();
   });
 
   it('should load successfully an authenticated token', () => {
@@ -22,10 +22,10 @@ describe('AccessToken', () => {
     const token = new AccessToken('aauthtoken', exp, 'authenticated');
     token.saveToStorage();
     const loaded = AccessToken.fromStorage();
-    expect(loaded.accessToken).toEqual('aauthtoken');
-    expect(loaded.expiration).toEqual(exp);
-    expect(loaded.type).toEqual('authenticated');
-    expect(loaded.isValid()).toBeTruthy();
+    expect(loaded?.accessToken).toEqual('aauthtoken');
+    expect(loaded?.expiration).toEqual(exp);
+    expect(loaded?.type).toEqual('authenticated');
+    expect(loaded?.isValid()).toBeTruthy();
   });
 
   it('should fail when loading a token with no token', () => {
@@ -93,7 +93,7 @@ describe('AccessToken', () => {
     const token = new AccessToken('atemptok', exp, 'temporary');
     token.saveToStorage();
     let loaded = AccessToken.fromStorage();
-    expect(loaded.isValid()).toBeTruthy();
+    expect(loaded?.isValid()).toBeTruthy();
     AccessToken.clearFromStorage();
     loaded = AccessToken.fromStorage();
     expect(loaded).toBeNull();
