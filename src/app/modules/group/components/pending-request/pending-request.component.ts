@@ -168,11 +168,11 @@ export class PendingRequestComponent implements OnInit, OnChanges {
   }
 
   onCustomSort(event: SortEvent) {
-    const sortMeta = event.multiSortMeta.map((meta) =>
+    const sortMeta = event.multiSortMeta?.map((meta) =>
       meta.order === -1 ? `-${meta.field}` : meta.field
     );
 
-    if (JSON.stringify(sortMeta) !== JSON.stringify(this.currentSort)) {
+    if (sortMeta && JSON.stringify(sortMeta) !== JSON.stringify(this.currentSort)) {
 
       this.currentSort = sortMeta;
       this.reloadData();

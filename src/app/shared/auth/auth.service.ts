@@ -135,7 +135,7 @@ export class AuthService {
     });
   }
 
-  private tokenChanged([oldToken, newToken]: [AccessToken, AccessToken]) {
+  private tokenChanged([oldToken, newToken]: [AccessToken|null, AccessToken|null]) {
     logState('token changed');
 
     if (JSON.stringify(oldToken) === JSON.stringify(newToken)) return;

@@ -17,20 +17,15 @@ export function getHashFragmentParams(): Map<string, string>{
 
 export function parseQueryString(queryString: string): Map<string, string> {
   const data = new Map<string, string>();
-  let escapedKey, escapedValue;
+  let escapedKey, escapedValue: string;
   if (queryString === null) {
       return data;
   }
   for (const pair of queryString.split('&')) {
       const separatorIndex = pair.indexOf('=');
-      if (separatorIndex === -1) {
-          escapedKey = pair;
-          escapedValue = null;
-      }
-      else {
-          escapedKey = pair.substr(0, separatorIndex);
-          escapedValue = pair.substr(separatorIndex + 1);
-      }
+      if (separatorIndex === -1) continue;
+      escapedKey = pair.substr(0, separatorIndex);
+      escapedValue = pair.substr(separatorIndex + 1);
       let key = decodeURIComponent(escapedKey);
       const value = decodeURIComponent(escapedValue);
       if (key.substr(0, 1) === '/') {
