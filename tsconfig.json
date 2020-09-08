@@ -31,7 +31,6 @@
 
     // "strict" enables all strict type checking option. Some rules are disabled below, we should try to get rid of the disablings
     "strict": true,
-    "strictNullChecks": false,
     "strictPropertyInitialization": false,
   },
   "angularCompilerOptions": {
