@@ -11,7 +11,6 @@ import {
   ERROR_MESSAGE,
 } from '../../../../shared/constants/api';
 import { TOAST_LENGTH } from '../../../../shared/constants/global';
-import * as _ from 'lodash-es';
 import { Observable } from 'rxjs';
 import { GetRequestsService, PendingRequest } from '../../http-services/get-requests.service';
 import { RequestActionsService } from '../../http-services/request-actions.service';
@@ -173,7 +172,8 @@ export class PendingRequestComponent implements OnInit, OnChanges {
       meta.order === -1 ? `-${meta.field}` : meta.field
     );
 
-    if (!_.isEqual(sortMeta, this.currentSort)) {
+    if (JSON.stringify(sortMeta) !== JSON.stringify(this.currentSort)) {
+
       this.currentSort = sortMeta;
       this.reloadData();
     }

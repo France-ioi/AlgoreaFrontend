@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import * as _ from 'lodash-es';
 import { map } from 'rxjs/operators';
 import { bestAttemptFromResults } from 'src/app/shared/helpers/attempts';
 
@@ -98,7 +97,7 @@ export class ItemNavigationService {
               hasChildren: data.children !== null && data.children.length > 0,
               attemptId: data.attempt_id,
             },
-            items: data.children === null ? [] : _.map(data.children, (i) => {
+            items: data.children === null ? [] : data.children.map((i) => {
               const attempt = bestAttemptFromResults(i.results);
               return {
                 id: i.id,
@@ -117,7 +116,7 @@ export class ItemNavigationService {
       .get<RootActivity[]>(`${environment.apiUrl}/current-user/group-memberships/activities`)
       .pipe(
         map((acts) => {
-          const childrenItems = _.map(acts, (act) => {
+          const childrenItems = acts.map((act) => {
             const attempt = bestAttemptFromResults(act.activity.results);
             return {
               id: act.activity.id,
@@ -137,7 +136,7 @@ export class ItemNavigationService {
       .get<RootSkill[]>(`${environment.apiUrl}/current-user/group-memberships/skills`)
       .pipe(
         map((skills) => {
-          const childrenItems = _.map(skills, (sk) => {
+          const childrenItems = skills.map((sk) => {
             const attempt = bestAttemptFromResults(sk.skill.results);
             return {
               id: sk.skill.id,

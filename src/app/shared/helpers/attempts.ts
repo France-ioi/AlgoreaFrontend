@@ -1,4 +1,3 @@
-import * as _ from 'lodash-es';
 
 export interface Result {
   attempt_id: string,
@@ -10,8 +9,10 @@ export function bestAttemptFromResults(results: Result[]): Result|null {
   if (!results || results.length === 0) {
     return null;
   }
-  // sort by latest_activity_at
-  const startedResults = _.filter(results, (r) => r.started_at !== null && r.latest_activity_at !== null);
-  const sortedResults = _.sortBy(startedResults, (result) => new Date(result.latest_activity_at).getTime());
-  return sortedResults[sortedResults.length-1];
+  const startedResults = results.filter((r) => r.started_at !== null && r.latest_activity_at !== null);
+
+  // pick the one with the greatest latest_activity_at
+  return startedResults.reduce<Result|null>((acc, current) =>
+    (acc === null || new Date(acc.latest_activity_at).getTime() < new Date(current.latest_activity_at).getTime()) ? current : acc,
+  null);
 }

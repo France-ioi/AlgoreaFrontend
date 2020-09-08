@@ -1,6 +1,5 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { TreeNode } from 'primeng/api';
-import * as _ from 'lodash-es';
 import { NavMenuItem } from '../../http-services/item-navigation.service';
 import { ResultActionsService } from 'src/app/shared/http-services/result-actions.service';
 import { of, Observable } from 'rxjs';
@@ -36,7 +35,7 @@ export class ItemNavTreeComponent implements OnChanges {
   ) {}
 
   mapItemToNodes(items: NavMenuItem[], pathToItems: string[], selectedItem?: NavItem): ItemTreeNode[] {
-    return _.map(items, (i) => {
+    return items.map((i) => {
       const isSelected = selectedItem && selectedItem.itemId === i.id;
       const shouldShowChildren = i.hasChildren && isSelected;
       const isLoadingChildren = shouldShowChildren && !i.children; // are being loaded by the parent component
@@ -134,7 +133,7 @@ export class ItemNavTreeComponent implements OnChanges {
    * Return whether the given node is at the first level of the displayed tree (root) (i.e. is not a children)
    */
   isFirstLevelNode(node: ItemTreeNode): boolean {
-    return _.some(this.nodes, (n) => n.data.id === node.data.id);
+    return this.nodes.some((n) => n.data.id === node.data.id);
   }
 
   /**
