@@ -16,7 +16,7 @@ export class ItemDetailsComponent implements OnInit {
   ) {
     activatedRoute.paramMap.subscribe((params) => {
       const item = itemFromDetailParams(params);
-      currentContent.setCurrent(item);
+      if (item) currentContent.setCurrent(item);
     });
   }
 

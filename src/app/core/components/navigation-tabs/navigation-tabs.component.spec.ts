@@ -12,10 +12,10 @@ import { By } from '@angular/platform-browser';
 describe('NavigationTabsComponent', () => {
   let component: NavigationTabsComponent;
   let fixture: ComponentFixture<NavigationTabsComponent>;
-  let currentUser: BehaviorSubject<UserProfile>;
+  let currentUser: BehaviorSubject<UserProfile|null>;
 
   beforeEach(async(() => {
-    currentUser = new BehaviorSubject<UserProfile>(null);
+    currentUser = new BehaviorSubject<UserProfile|null>(null);
     TestBed.configureTestingModule({
       imports: [
         AppModule,
@@ -52,7 +52,7 @@ describe('NavigationTabsComponent', () => {
     function userString(): string {
       fixture.detectChanges();
       const element = fixture.debugElement.query(By.css('.group-title')).nativeElement as HTMLElement;
-      return element.textContent.trim().replace(/\s+/g, ' ');
+      return (element.textContent || '').trim().replace(/\s+/g, ' ');
     }
 
     it('should display loading when no user defined', () => {

@@ -3,7 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { map } from 'rxjs/operators';
-import * as _ from 'lodash-es';
 
 export interface Group {
   id: string,
@@ -34,7 +33,7 @@ export class JoinedGroupsService {
       .pipe(
         // convert array of JoinedGroup to array of Group
         map((jgs) =>
-          _.map(jgs, (jg) => {
+          jgs.map((jg) => {
             return { id: jg.group.id, name: jg.group.name };
           })
         )

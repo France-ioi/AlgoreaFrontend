@@ -6,7 +6,6 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { TreeNode } from 'primeng/api';
-import * as _ from 'lodash-es';
 import { Group } from './group';
 
 // GroupTreeNode is PrimeNG tree node with data forced to be a group
@@ -28,7 +27,7 @@ export class GroupNavTreeComponent implements OnChanges {
   constructor(private router: Router) {}
 
   ngOnChanges(_changes: SimpleChanges) {
-    this.nodes = _.map(this.groups, (g) => {
+    this.nodes = this.groups.map((g) => {
       return {
         label: g.name,
         data: g,
@@ -47,20 +46,16 @@ export class GroupNavTreeComponent implements OnChanges {
     if (e.code === 'Space' || e.code === 'Enter') {
       e.stopPropagation();
       e.preventDefault();
-      const element: HTMLElement = document.activeElement.querySelector(
+      document.activeElement?.querySelector<HTMLElement>(
         '.ui-treenode-label .node-tree-item > .node-item-content > .node-label > .node-label-title'
-      );
-      element.click();
+      )?.click();
     } else if (e.code === 'ArrowDown' || e.code === 'ArrowUp') {
       e.stopPropagation();
       e.preventDefault();
-      const element = document.activeElement as HTMLElement;
-      if (element) {
-        element.scrollIntoView({
-          behavior: 'auto',
-          block: 'center',
-        });
-      }
+      document.activeElement?.scrollIntoView({
+        behavior: 'auto',
+        block: 'center',
+      });
     }
   }
 }

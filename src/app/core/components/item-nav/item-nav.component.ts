@@ -2,9 +2,8 @@ import { Component, OnInit, Input } from '@angular/core';
 import { ItemNavigationService, NavMenuRootItem } from '../../http-services/item-navigation.service';
 import { CurrentContentService } from 'src/app/shared/services/current-content.service';
 import { map, switchMap } from 'rxjs/operators';
-import { of, Observable, merge } from 'rxjs';
+import { of, Observable, merge, empty, throwError } from 'rxjs';
 import { NavItem } from 'src/app/shared/services/nav-types';
-import * as _ from 'lodash-es';
 
 interface NavMenuData extends NavMenuRootItem {
   pathToItems: string[]; // path from root to the elements in `items` (so including the parent if any)
@@ -50,7 +49,9 @@ export class ItemNavComponent implements OnInit {
     let dataFetcher: Observable<NavMenuRootItem>;
     if (item.itemPath.length >= 1) {
       const parentId = item.itemPath[item.itemPath.length-1];
-      dataFetcher = this.itemNavService.getNavData(parentId, item.parentAttemptId, item.attemptId);
+      if (item.parentAttemptId) dataFetcher = this.itemNavService.getNavData(parentId, item.parentAttemptId);
+      else if (item.attemptId) dataFetcher = this.itemNavService.getNavDataFromChildAttempt(parentId, item.attemptId);
+      else return throwError(new Error('Requires either the parent or child attempt to load nav'));
     } else {
       dataFetcher = this.itemNavService.getRoot(this.type);
     }
@@ -69,20 +70,23 @@ export class ItemNavComponent implements OnInit {
   }
 
   loadChildrenIfNeeded(data: NavMenuData): Observable<NavMenuDataState> {
-    if (!data.selectedItem) return of(); // if nothing selected, no need to load more (this function should not be called in this case)
+    const selectedItem = data.selectedItem;
+    if (!selectedItem) return empty(); // if nothing selected, no need to load more (this function should not be called in this case)
 
     // the selected item should be one of the items at the first level
-    const itemData = _.find(data.items, (item) => item.id == data.selectedItem.itemId);
-    if (!itemData.hasChildren) return of(); // if no children, no need to fetch children
+    const itemData = data.items.find((item) => item.id === selectedItem.itemId);
+    if (!itemData) return throwError(new Error('Cannot find the item (unexpected)'));
+    if (!itemData.hasChildren) return empty(); // if no children, no need to fetch children
+    if (!selectedItem.attemptId) return throwError(new Error('Cannot fetch children without attempt (unexpected'));
 
     // We do not check if children were already known. So we might re-load again the same children, which is intended.
-    return this.itemNavService.getNavData(itemData.id, data.selectedItem.attemptId).pipe(
+    return this.itemNavService.getNavData(itemData.id, selectedItem.attemptId).pipe(
       map( (nav) => {
         return {
           parent: data.parent,
           pathToItems: data.pathToItems,
           selectedItem: data.selectedItem,
-          items: _.map(data.items, (i) => {
+          items: data.items.map((i) => {
             if (i.id === itemData.id) {
               return Object.assign({}, i, {children: nav.items}); // a copy of the item with different children
             } else {
@@ -101,8 +105,8 @@ export class ItemNavComponent implements OnInit {
    */
   treeShiftedToChild(item: NavItem): Observable<NavMenuDataState> {
     const menuItems = this.data as NavMenuData;
-    const newParent = _.find(menuItems.items, (i) => i.children && _.some(i.children, (c) => c.id == item.itemId));
-    if (newParent === null) return of(this.data);
+    const newParent = menuItems.items.find((i) => i.children && i.children.some((c) => c.id === item.itemId));
+    if (!newParent || !newParent.children /* unexpected */) return of(this.data);
     const newData = {
       parent: newParent,
       items: newParent.children,
@@ -119,7 +123,7 @@ export class ItemNavComponent implements OnInit {
       switchMap((item):Observable<NavMenuDataState> => {
 
         // CASE 0: the current content is not an item and the menu has already items displayed -> do nothing
-        if (item === null && this.isLoaded()) return of();
+        if (item === null && this.isLoaded()) return empty();
 
         // CASE 1: the content is not an item and the menu has not already item displayed -> load item root
         if (item === null) {
@@ -158,13 +162,13 @@ export class ItemNavComponent implements OnInit {
   hasItemAmongTreeRoots(item: NavItem): boolean {
     if (!this.isLoaded()) return false;
     const menuItems = this.data as NavMenuData;
-    return _.some(menuItems.items, (i) => i.id === item.itemId);
+    return menuItems.items.some((i) => i.id === item.itemId);
   }
 
   hasItemAmongKnownTreeChildren(item: NavItem): boolean {
     if (!this.isLoaded()) return false;
     const menuItems = this.data as NavMenuData;
-    return _.some(menuItems.items, (i) => i.children && _.some(i.children, (c) => c.id == item.itemId));
+    return menuItems.items.some((i) => i.children && i.children.some((c) => c.id === item.itemId));
   }
 
 }

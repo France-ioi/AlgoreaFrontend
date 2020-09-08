@@ -39,10 +39,9 @@ export function codeExpiration(group: CodeInfo): Date|undefined {
 }
 
 export function codeLifetime(group: CodeInfo): Duration|undefined {
-  if (!group.code_lifetime) {
-    return undefined;
-  }
-  return  Duration.fromString(group.code_lifetime);
+  const lifetime = group.code_lifetime;
+  if (!lifetime) return undefined;
+  return Duration.fromString(lifetime)||undefined;
 }
 
 export function hasCodeNotSet(group: CodeInfo): boolean {
@@ -50,20 +49,24 @@ export function hasCodeNotSet(group: CodeInfo): boolean {
 }
 
 export function hasCodeUnused(group: CodeInfo): boolean {
-  return group.code && !group.code_expires_at;
+  return !!group.code && !group.code_expires_at;
 }
 
 export function hasCodeInUse(group: CodeInfo): boolean {
-  return group.code_expires_at && new Date() < codeExpiration(group);
+  const expiration = codeExpiration(group);
+  return !!expiration && new Date() < expiration;
 }
 
 export function hasCodeExpired(group: CodeInfo): boolean {
-  return group.code_expires_at && codeExpiration(group) < new Date();
+  const expiration = codeExpiration(group);
+  return !!expiration && expiration < new Date();
 }
 
 export function codeFirstUseDate(group: CodeInfo): Date|undefined {
-  if (!group.code_expires_at || !group.code_lifetime) return undefined;
-  return new Date(codeExpiration(group).valueOf() - codeLifetime(group).ms);
+  const expiration = codeExpiration(group);
+  const lifetime = codeLifetime(group);
+  if (!expiration || !lifetime) return undefined;
+  return new Date(expiration.valueOf() - lifetime.ms);
 }
 
 export function durationSinceFirstCodeUse(group: CodeInfo): Duration|undefined {

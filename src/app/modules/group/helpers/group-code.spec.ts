@@ -21,7 +21,7 @@ describe('GroupCode', () => {
   });
 
   describe('when the group has no code set', () => {
-    const group = { code: null as string, code_lifetime: null as string, code_expires_at: null as string };
+    const group = { code: null as string|null, code_lifetime: null as string|null, code_expires_at: null as string|null };
 
     it('should set expected values', () => {
       const g = withCodeAdditions(group);
@@ -38,7 +38,7 @@ describe('GroupCode', () => {
   });
 
   describe('when the group has a unused code', () => {
-    const group = { code: 'abcd', code_lifetime: '1:02:03', code_expires_at: null as string };
+    const group = { code: 'abcd', code_lifetime: '1:02:03', code_expires_at: null as string|null };
 
     it('should set expected values', () => {
       const g = withCodeAdditions(group);

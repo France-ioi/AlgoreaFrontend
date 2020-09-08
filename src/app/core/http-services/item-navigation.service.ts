@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import * as _ from 'lodash-es';
 import { map } from 'rxjs/operators';
 import { bestAttemptFromResults } from 'src/app/shared/helpers/attempts';
 
@@ -52,7 +51,7 @@ interface RawNavData {
       attempt_id: string,
       latest_activity_at: string|null,
       started_at: string|null,
-    }[]|null,
+    }[],
   }[]
 }
 
@@ -79,18 +78,21 @@ export class ItemNavigationService {
 
   constructor(private http: HttpClient) {}
 
-  /**
-   * One of attemptId, childAttemptId must be given (may require to start a result).
-   * If both are given, it is ok, only the attempt will be used.
-   */
-  getNavData(parentItemId: string, attemptId?: string, childAttemptId?: string): Observable<NavMenuRootItem> {
-    const parameters = (attemptId) ? { attempt_id: attemptId } : { child_attempt_id: childAttemptId };
+  getNavData(itemId: string, attemptId: string): Observable<NavMenuRootItem> {
+    return this.getNavDataGeneric(itemId, { attempt_id: attemptId});
+  }
+
+  getNavDataFromChildAttempt(itemId: string, childAttemptId: string): Observable<NavMenuRootItem> {
+    return this.getNavDataGeneric(itemId, { child_attempt_id: childAttemptId});
+  }
+
+  private getNavDataGeneric(itemId: string, parameters: {[param: string]: string}): Observable<NavMenuRootItem> {
     return this.http
-      .get<RawNavData>(`${environment.apiUrl}/items/${parentItemId}/navigation`, {
+      .get<RawNavData>(`${environment.apiUrl}/items/${itemId}/navigation`, {
         params: parameters
       })
       .pipe(
-        map((data) => {
+        map<RawNavData,NavMenuRootItem>((data: RawNavData): NavMenuRootItem => {
           return {
             parent: {
               id: data.id,
@@ -98,13 +100,13 @@ export class ItemNavigationService {
               hasChildren: data.children !== null && data.children.length > 0,
               attemptId: data.attempt_id,
             },
-            items: data.children === null ? [] : _.map(data.children, (i) => {
+            items: data.children === null ? [] : data.children.map((i) => {
               const attempt = bestAttemptFromResults(i.results);
               return {
                 id: i.id,
                 title: i.string.title,
                 hasChildren: i.has_visible_children,
-                attemptId: attempt ? attempt.attempt_id : null,
+                attemptId: attempt?.attempt_id || null,
               };
             }),
           };
@@ -117,7 +119,7 @@ export class ItemNavigationService {
       .get<RootActivity[]>(`${environment.apiUrl}/current-user/group-memberships/activities`)
       .pipe(
         map((acts) => {
-          const childrenItems = _.map(acts, (act) => {
+          const childrenItems = acts.map((act) => {
             const attempt = bestAttemptFromResults(act.activity.results);
             return {
               id: act.activity.id,
@@ -137,7 +139,7 @@ export class ItemNavigationService {
       .get<RootSkill[]>(`${environment.apiUrl}/current-user/group-memberships/skills`)
       .pipe(
         map((skills) => {
-          const childrenItems = _.map(skills, (sk) => {
+          const childrenItems = skills.map((sk) => {
             const attempt = bestAttemptFromResults(sk.skill.results);
             return {
               id: sk.skill.id,

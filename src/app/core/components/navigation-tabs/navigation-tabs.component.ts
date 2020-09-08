@@ -19,7 +19,7 @@ export class NavigationTabsComponent implements OnInit {
   groupShow = true;
   stickyShow = false;
 
-  currentUser$: Observable<UserProfile>;
+  currentUser$: Observable<UserProfile|null>;
 
   constructor(
     private currentUserService: CurrentUserService,
@@ -39,10 +39,12 @@ export class NavigationTabsComponent implements OnInit {
   }
 
   onResized(e: ResizedEvent) {
-    const boundaryHeight = (this.scrollPanel.directiveRef.elementRef.nativeElement as HTMLElement).clientHeight - 50;
+    const directiveRef = this.scrollPanel.directiveRef;
+    if (!directiveRef) return;
+    const boundaryHeight = (directiveRef.elementRef.nativeElement as HTMLElement).clientHeight - 50;
     if (e.newHeight > boundaryHeight) {
       // this.stickyShow = true;
-      this._updateStatus(this.scrollPanel.directiveRef.elementRef.nativeElement as HTMLElement);
+      this._updateStatus(directiveRef.elementRef.nativeElement as HTMLElement);
     } else {
       this.stickyShow = false;
     }

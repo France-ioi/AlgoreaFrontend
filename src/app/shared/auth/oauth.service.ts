@@ -58,7 +58,7 @@ export class OAuthService {
       return of<AccessToken|null>(null);
     }
     if (parts.has('errors')) {
-      return throwError(new Error('Error received from authenticator: '+parts.get('errors')));
+      return throwError(new Error(`Error received from authenticator: ${parts.get('errors')||'no error'}`));
     }
     const {nonce: nonceInState} = this.parseState(state);
     if (!nonceInState || nonceInState !== nonceStorage.getItem(nonceStorageKey)) {

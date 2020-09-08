@@ -1,6 +1,5 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { TreeNode } from 'primeng/api';
-import * as _ from 'lodash-es';
 import { NavMenuItem } from '../../http-services/item-navigation.service';
 import { ResultActionsService } from 'src/app/shared/http-services/result-actions.service';
 import { of, Observable } from 'rxjs';
@@ -36,11 +35,10 @@ export class ItemNavTreeComponent implements OnChanges {
   ) {}
 
   mapItemToNodes(items: NavMenuItem[], pathToItems: string[], selectedItem?: NavItem): ItemTreeNode[] {
-    return _.map(items, (i) => {
-      const isSelected = selectedItem && selectedItem.itemId === i.id;
+    return items.map((i) => {
+      const isSelected = !!(selectedItem && selectedItem.itemId === i.id);
       const shouldShowChildren = i.hasChildren && isSelected;
       const isLoadingChildren = shouldShowChildren && !i.children; // are being loaded by the parent component
-      const showChildren = shouldShowChildren && !!i.children;
       const pathToChildren = pathToItems.concat([i.id]);
       return {
         label: i.title,
@@ -49,8 +47,8 @@ export class ItemNavTreeComponent implements OnChanges {
         type: i.hasChildren ? 'folder' : 'leaf',
         leaf: i.hasChildren,
         status: isLoadingChildren ? 'loading' : 'ready',
-        children: showChildren ? this.mapItemToNodes(i.children, pathToChildren, selectedItem) : undefined,
-        expanded: showChildren,
+        children: shouldShowChildren && i.children ? this.mapItemToNodes(i.children, pathToChildren, selectedItem) : undefined,
+        expanded: !!(shouldShowChildren && i.children),
         checked: isSelected,
       };
     });
@@ -65,12 +63,13 @@ export class ItemNavTreeComponent implements OnChanges {
       itemId: node.data.id,
       itemPath: node.itemPath,
       attemptId: attemptId,
-      parentAttemptId: attemptId ? undefined : (node.parent ? (node.parent as ItemTreeNode).data.attemptId : this.parent.attemptId),
+      // The parent attempt is only needed if attempt id is not known
+      parentAttemptId: attemptId ? undefined : this.parentAttemptForNode(node)
     }));
   }
 
   navigateToParent() {
-    if (!this.parent) return; // unexpected!
+    if (!this.parent || !this.parent.attemptId) return; // unexpected!
     void this.router.navigate(itemDetailsRoute({
       itemId: this.parent.id,
       itemPath: this.pathToItems.slice(0, -1),
@@ -113,20 +112,18 @@ export class ItemNavTreeComponent implements OnChanges {
     if (e.code === 'Space' || e.code === 'Enter') {
       e.stopPropagation();
       e.preventDefault();
-      const element: HTMLElement = document.activeElement.querySelector(
-        '.ui-treenode-label .node-tree-item > .node-item-content > .node-label'
-      );
-      element.click();
+      document.activeElement
+        ?.querySelector<HTMLElement>('.ui-treenode-label .node-tree-item > .node-item-content > .node-label')
+        ?.click();
     } else if (e.code === 'ArrowDown' || e.code === 'ArrowUp') {
       e.stopPropagation();
       e.preventDefault();
-      const element: HTMLElement = document.activeElement.querySelector(
-        '.ui-treenode-label .node-tree-item > .node-item-content > .node-label'
-      );
-      element.scrollIntoView({
-        behavior: 'auto',
-        block: 'center',
-      });
+      document.activeElement
+        ?.querySelector('.ui-treenode-label .node-tree-item > .node-item-content > .node-label')
+        ?.scrollIntoView({
+          behavior: 'auto',
+          block: 'center',
+        });
     }
   }
 
@@ -134,20 +131,36 @@ export class ItemNavTreeComponent implements OnChanges {
    * Return whether the given node is at the first level of the displayed tree (root) (i.e. is not a children)
    */
   isFirstLevelNode(node: ItemTreeNode): boolean {
-    return _.some(this.nodes, (n) => n.data.id === node.data.id);
+    return this.nodes.some((n) => n.data.id === node.data.id);
+  }
+
+  /**
+   * Return the parent attemp id of this node.
+   * If the node is a one of the "root" items, use this.parent
+   * Otherwise use the parent node.
+   * In a regular case, this function should never return 'undefined'
+   */
+  parentAttemptForNode(node: ItemTreeNode): string|undefined {
+    if (node.parent) {
+      const parent = node.parent as ItemTreeNode;
+      return parent.data.attemptId || undefined /* unexpected */;
+    } else if (this.parent) {
+      return this.parent.attemptId || undefined /* unexpected */;
+    }
+    return undefined /* unexpected */;
   }
 
   /**
    * Start a new result only if the node does not have a result started yet
    */
   startResultIfRequired(node: ItemTreeNode): Observable<string> { // observable of attempt_id
-    let attemptId = node.data.attemptId;
+    const attemptId = node.data.attemptId;
     if (attemptId === null) {
-      attemptId = '0';
+      const startingAttemptId = '0';
       return this.resultActionsService
-        .start(node.itemPath.concat([node.data.id]), attemptId)
+        .start(node.itemPath.concat([node.data.id]), startingAttemptId)
         .pipe(
-          map(() => attemptId)
+          map(() => startingAttemptId)
         );
     } else {
       return of(attemptId);

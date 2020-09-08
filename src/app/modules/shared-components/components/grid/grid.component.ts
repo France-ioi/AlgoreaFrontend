@@ -62,10 +62,10 @@ export class GridComponent implements OnInit, OnChanges {
   @Input() scrollWhenExpanded = false;
   @Input() scrollable = false;
 
-  @Input() selectionMode: 'multiple'|'single'|null = null;
+  @Input() selectionMode: string; // primeng does not defined null as acceptable value while it is the default
   @Input() responsive = false;
   @Input() dataKey: string;
-  @Input() frozenWidth: string|null = null;
+  @Input() frozenWidth: string; // primeng does not defined null as acceptable value while it is the default
   @Input() showGear = true;
 
   @Output() expandWholeWidth = new EventEmitter<boolean>();
