@@ -2,7 +2,7 @@
 
 ## Quick start
 
-It is recommended to run this project on Node 12. The Continuous Integration is run on this version.
+It is recommended to run this project on a recent node version (continuous integration use 14).
 
 Run `npm install` first to use latest packages.
 
