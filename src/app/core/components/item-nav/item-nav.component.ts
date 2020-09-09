@@ -88,7 +88,8 @@ export class ItemNavComponent implements OnInit {
           selectedItem: data.selectedItem,
           items: data.items.map((i) => {
             if (i.id === itemData.id) {
-              return Object.assign({}, i, {children: nav.items}); // a copy of the item with different children
+              // replace the previous item by new item (the same with possibly an attempt) with the fetched children
+              return Object.assign({}, nav.parent, {children: nav.items});
             } else {
               return i;
             }
