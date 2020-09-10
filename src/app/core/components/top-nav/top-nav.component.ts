@@ -52,7 +52,7 @@ export class TopNavComponent implements OnInit {
     if (this.authService.authUserConnected()) {
       this.authService.logoutAuthUser();
     } else {
-      this.authService.startLogin();
+      this.authService.startAuthLogin();
     }
   }
 
