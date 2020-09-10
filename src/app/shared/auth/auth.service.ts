@@ -105,15 +105,24 @@ export class AuthService {
   logoutAuthUser() {
     logState('logoutAuthUser');
 
-    if (!['idle','error'].includes(this.state)) {
-      logState('cannot logoutAuthUser if state is not idle or error');
+    if (this.currentAccessToken$.value?.type !== 'authenticated') {
+      logState('cannot startLogin if a temp user is already connected (unexpected)');
       // FIXME more logs (?)
       return;
     }
-    const currentToken = this.currentAccessToken$.value;
-    if (currentToken?.type !== 'authenticated') {
-      logState('cannot startLogin if a temp user is already connected (unexpected)');
-      // FIXME more logs (?)
+
+    // FIXME - should logout!
+
+    this.startTempUserSession();
+  }
+
+  startTempUserSession() {
+    if (!['idle','error'].includes(this.state)) {
+      logState('cannot tempUserLogin if state is not idle or error');
+      return;
+    }
+    if (this.currentAccessToken$.value !== null) {
+      logState('cannot startLogin if a temp user is already connected');
       return;
     }
 
@@ -122,17 +131,35 @@ export class AuthService {
       next:(tempUserToken) => {
         logState('temp user token received');
         this.currentAccessToken$.next(tempUserToken);
+        this.state = 'idle';
       },
       error:(_e) => {
         logState('temp user creation failed');
         // if temp user creation fails, there is not much we can do
-        this.currentAccessToken$.next(null);
         this.state = 'error';
-      },
-      complete:() => {
-        this.state = 'idle';
       }
     });
+  }
+
+  /**
+   * Called when the API token is invalid (typically by an interceptor) and so that a fallback solution has to be found.
+   * The token arg is the token which was used with the request that was considered as invalid, so that a more recent token which has been
+   * added in the meantime is not dropped.
+   */
+  invalidToken(invalidToken: string) {
+    const currentToken = this.currentAccessToken$.value;
+    if (currentToken?.accessToken === invalidToken) {
+
+      // invalidate the current token only it is the one which is still used now
+      this.currentAccessToken$.next(null);
+
+      if (currentToken.type === 'authenticated') { // user was authenticated
+        this.startLogin();
+      } else { // user was temporary
+        this.startTempUserSession();
+        // FIXME should redirect to home page?
+      }
+    }
   }
 
   private tokenChanged([oldToken, newToken]: [AccessToken|null, AccessToken|null]) {
