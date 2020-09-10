@@ -18,7 +18,7 @@ import { SkillActivityTabsComponent } from './components//skill-activity-tabs/sk
 
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 
-import { AuthInterceptor } from '../shared/interceptors/auth.interceptor';
+import { AuthTokenInjector } from '../shared/interceptors/auth_token_injector.interceptor';
 import {
   TimeoutInterceptor,
   DEFAULT_TIMEOUT,
@@ -71,7 +71,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     },
     {
       provide: HTTP_INTERCEPTORS,
-      useClass: AuthInterceptor,
+      useClass: AuthTokenInjector,
       multi: true,
     },
     {
