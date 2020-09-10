@@ -89,7 +89,7 @@ export class AuthService {
       // FIXME more logs (?)
       return;
     }
-    if ((this.currentAccessToken$.value || {}).type !== 'temporary') {
+    if (this.currentAccessToken$.value?.type !== 'temporary') {
       logState('cannot startLogin if an auth user is already connected (unexpected, should logout first)');
       // FIXME more logs (?)
       return;
@@ -111,7 +111,7 @@ export class AuthService {
       return;
     }
     const currentToken = this.currentAccessToken$.value;
-    if ((currentToken || {}).type !== 'authenticated') {
+    if (currentToken?.type !== 'authenticated') {
       logState('cannot startLogin if a temp user is already connected (unexpected)');
       // FIXME more logs (?)
       return;
