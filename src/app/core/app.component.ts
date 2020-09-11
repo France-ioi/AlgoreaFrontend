@@ -1,4 +1,7 @@
 import { Component, HostListener, OnInit } from '@angular/core';
+import { CurrentUserService } from '../shared/services/current-user.service';
+import { filter, skip } from 'rxjs/operators';
+import { UserProfile } from '../shared/http-services/current-user.service';
 
 @Component({
   selector: 'alg-root',
@@ -39,9 +42,18 @@ export class AppComponent implements OnInit {
 
   selectedType = -1;
 
-  constructor() {}
+  constructor(
+    private currentUserService: CurrentUserService,
+  ) {}
 
   ngOnInit() {
+   // each time there is a new user, refresh the page
+    this.currentUserService.currentUser().pipe(
+      filter<UserProfile|null, UserProfile>((user):user is UserProfile => user !== null),
+      skip(1), // do not refresh when the first user is set
+    ).subscribe((_user) => {
+      window.location.reload();
+    });
   }
 
   onCollapse(e: boolean) {
