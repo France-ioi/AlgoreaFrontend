@@ -14,7 +14,7 @@ import { ResizedEvent } from 'angular-resize-event';
 export class NavigationTabsComponent implements OnInit {
 
   @ViewChild('scrollPanel') scrollPanel: PerfectScrollbarComponent;
-  @ViewChild('groupPanel') groupPanel: HTMLDivElement;
+  @ViewChild('groupPanel') groupPanel?: HTMLDivElement;
 
   groupShow = false;
   stickyShow = false;
@@ -54,7 +54,7 @@ export class NavigationTabsComponent implements OnInit {
     this.ngZone.run(() => {
       const scrollTop = e.scrollTop;
       const clientHeight = e.clientHeight - 50;
-      const groupHeight = this.groupPanel.clientHeight;
+      const groupHeight = this.groupPanel?.clientHeight || 0;
       if (scrollTop + clientHeight >= groupHeight) {
         this.stickyShow = false;
       } else {
@@ -64,11 +64,13 @@ export class NavigationTabsComponent implements OnInit {
   }
 
   focusParent() {
-    const elements = this.groupPanel.querySelectorAll('.ui-accordion-header a');
-    elements.forEach((e) => {
-      (e as HTMLElement).blur();
-    });
-    this.groupPanel.focus();
+    if (this.groupPanel) {
+      const elements = this.groupPanel.querySelectorAll('.ui-accordion-header a');
+      elements.forEach((e) => {
+        (e as HTMLElement).blur();
+      });
+      this.groupPanel.focus();
+    }
   }
 
   onScrollEvent(e: {srcElement: HTMLElement}) { /* guessed type, something cleaner would be nice */
