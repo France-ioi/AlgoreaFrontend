@@ -16,7 +16,7 @@ export class NavigationTabsComponent implements OnInit {
   @ViewChild('scrollPanel') scrollPanel: PerfectScrollbarComponent;
   @ViewChild('groupPanel') groupPanel: HTMLDivElement;
 
-  groupShow = true;
+  groupShow = false;
   stickyShow = false;
 
   currentUser$: Observable<UserProfile|null>;
