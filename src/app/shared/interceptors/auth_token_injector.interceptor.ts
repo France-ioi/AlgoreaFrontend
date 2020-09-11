@@ -7,9 +7,12 @@ import { switchMap, filter, take } from 'rxjs/operators';
 import { AccessToken } from '../auth/access-token';
 import { headersForAuth } from '../helpers/auth';
 
-// note that this interceptor must be combined with a timeout interceptor so that having no token does not block all requests
+/**
+ * This interceptor add the authentication token (in the headers) to all outgoing request to the API
+ * Note that it must be combined with a timeout interceptor so that having no token does not block all requests
+ */
 @Injectable()
-export class AuthInterceptor implements HttpInterceptor {
+export class AuthTokenInjector implements HttpInterceptor {
 
   constructor(public auth: AuthService) { }
 

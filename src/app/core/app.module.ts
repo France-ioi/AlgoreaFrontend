@@ -18,7 +18,7 @@ import { SkillActivityTabsComponent } from './components//skill-activity-tabs/sk
 
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 
-import { AuthInterceptor } from '../shared/interceptors/auth.interceptor';
+import { AuthTokenInjector } from '../shared/interceptors/auth_token_injector.interceptor';
 import {
   TimeoutInterceptor,
   DEFAULT_TIMEOUT,
@@ -33,6 +33,7 @@ import { ItemNavTreeComponent } from './components/item-nav-tree/item-nav-tree.c
 import { ItemNavComponent } from './components/item-nav/item-nav.component';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { AngularResizedEventModule } from 'angular-resize-event';
+import { UnauthorizedResponseInterceptor } from '../shared/interceptors/unauthorized_response.interceptor';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: false,
@@ -71,12 +72,17 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     },
     {
       provide: HTTP_INTERCEPTORS,
-      useClass: AuthInterceptor,
+      useClass: AuthTokenInjector,
       multi: true,
     },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TimeoutInterceptor,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: UnauthorizedResponseInterceptor,
       multi: true,
     },
     {

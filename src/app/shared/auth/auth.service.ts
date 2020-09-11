@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { catchError, switchMap, pairwise } from 'rxjs/operators';
 import { AccessToken } from './access-token';
-import { Observable, BehaviorSubject, of, empty } from 'rxjs';
+import { Observable, BehaviorSubject, of, merge } from 'rxjs';
 import { TempAuthService } from './temp-auth.service';
 import { OAuthService } from './oauth.service';
 import { AuthHttpService } from '../http-services/auth.http-service';
@@ -15,6 +15,12 @@ function logState(msg: string) {
   }
 }
 
+/**
+ * This service manages the authentication workflow (login, logout, ...) for authenticated and temp sessions.
+ * In this service, we use the following terms:
+ * - 'authenticated' session: a precise user who has been authenticated by the auth server, typically (but not only) by username/password.
+ * - 'temporary' session: a temp user which has been created on the backend and which will not be persisted.
+ */
 @Injectable({
   providedIn: 'root'
 })
@@ -31,29 +37,37 @@ export class AuthService {
     logState('Init the auth service');
 
     this.state = 'fetching'; // will immediately be changed if we can get a token without fetching
-    this.currentAccessToken$ = new BehaviorSubject<AccessToken|null>(AccessToken.fromStorage());
+    this.currentAccessToken$ = new BehaviorSubject<AccessToken|null>(null);
 
     this.currentAccessToken$.pipe(pairwise()).subscribe((tokens) => this.tokenChanged(tokens));
 
     // First, check if a code/state is given in URL (i.e., we are back from a oauth login redirect) and try to get a token from it.
     oauthService.tryCompletingCodeFlowLogin().pipe(
-      catchError((_e):Observable<AccessToken|null> => of<AccessToken|null>(null)),
+      catchError((_e) => of<AccessToken|null>(null)),
       switchMap((newToken) => {
+        const fromStorage = AccessToken.fromStorage();
+
         // If can get a token from these code/state, use this one in priority
         if (newToken !== null) {
-          this.currentAccessToken$.next(newToken);
+          // if there was a stored token, revoke the token
+          if (fromStorage === null) return of(newToken);
+          else return merge(
+            of(newToken),
+            this.authHttp.revokeToken(fromStorage.accessToken).pipe(
+              switchMap(() => of<AccessToken>()) // just completing without emitting anything new
+            )
+          );
         }
-        // If there is a valid token (just set or stored from earlier), use it. Otherwise, create a temp user.
-        if (this.currentAccessToken$.value !== null) {
-          return empty();
-        } else {
-          return this.tempAuth.login();
-        }
+
+        // if there is a valid token in storage, use it
+        if (fromStorage !== null) return of(fromStorage);
+
+        // otherwise, create a temp session
+        return this.tempAuth.login();
       }),
     ).subscribe({
-      next:(tempUserToken: AccessToken) => {
-        // temp user token received successfully
-        this.currentAccessToken$.next(tempUserToken);
+      next:(token: AccessToken) => {
+        this.currentAccessToken$.next(token);
       },
       error:(_e) => {
         // if temp user creation fails, there is not much we can do
@@ -74,79 +88,103 @@ export class AuthService {
    * Return whether an authenticated user (i.e. non-temp) is connected
    */
   authUserConnected(): boolean {
-    const token = this.currentAccessToken$.getValue();
-    return token !== null && token.type === 'authenticated';
+    return this.currentAccessToken$.value?.type === 'authenticated';
   }
 
   /**
-   * Start the login workflow (i.e., redirect to login prompt)
+   * Start the auth session login workflow (i.e., redirect to login prompt)
    */
-  startLogin() {
+  startAuthLogin() {
     logState('startLogin');
-
-    if (!['idle','error'].includes(this.state)) {
-      logState('cannot startLogin if state is not idle or error');
-      // FIXME more logs (?)
-      return;
-    }
-    if ((this.currentAccessToken$.value || {}).type !== 'temporary') {
-      logState('cannot startLogin if an auth user is already connected (unexpected, should logout first)');
-      // FIXME more logs (?)
-      return;
-    }
-
-    this.oauthService.initCodeFlow();
-  }
-
-  /**
-   * Log the authenticated user out and create a new temp user.
-   * (note the token revocation is done by `tokenChanged` when the token is changed)
-   */
-  logoutAuthUser() {
-    logState('logoutAuthUser');
-
-    if (!['idle','error'].includes(this.state)) {
-      logState('cannot logoutAuthUser if state is not idle or error');
-      // FIXME more logs (?)
-      return;
-    }
-    const currentToken = this.currentAccessToken$.value;
-    if ((currentToken || {}).type !== 'authenticated') {
-      logState('cannot startLogin if a temp user is already connected (unexpected)');
-      // FIXME more logs (?)
+    if (this.isBusy() || this.authUserConnected()) {
+      logState(`cannot startLogin if busy or already connected (${this.debugState()})`);
       return;
     }
 
     this.state = 'fetching';
-    this.tempAuth.login().subscribe({
-      next:(tempUserToken) => {
-        logState('temp user token received');
-        this.currentAccessToken$.next(tempUserToken);
-      },
-      error:(_e) => {
-        logState('temp user creation failed');
-        // if temp user creation fails, there is not much we can do
-        this.currentAccessToken$.next(null);
-        this.state = 'error';
-      },
-      complete:() => {
+    this.oauthService.initCodeFlow();
+  }
+
+  /**
+   * Log the authenticated user out and start a new temp session.
+   */
+  logoutAuthUser() {
+    logState('endAuthSession');
+    const currentToken = this.currentAccessToken$.value;
+
+    if (this.isBusy() || !currentToken || currentToken.type !== 'authenticated') {
+      logState(`cannot endAuthSession if busy or not connected (${this.debugState()})`);
+      return;
+    }
+
+    this.state = 'fetching';
+    this.currentAccessToken$.next(null);
+    this.authHttp.revokeToken(currentToken.accessToken).pipe(
+      catchError((_e) => of(null)), // continue next step even if token revocation failed
+      switchMap(() => this.tempAuth.login())
+    ).subscribe({
+      next: (token) => {
+        this.currentAccessToken$.next(token);
         this.state = 'idle';
+      },
+      error: (_e) => {
+        this.state = 'error';
+        // temp session creation failed :-/
       }
     });
+  }
+
+  /**
+   * Called when the API token is invalid (typically by an interceptor) and so that a fallback solution has to be found.
+   * The token arg is the token which was used with the request that was considered as invalid, so that a more recent token which has been
+   * added in the meantime is not dropped.
+   */
+  invalidToken(invalidToken: string) {
+    const currentToken = this.currentAccessToken$.value;
+    if (currentToken?.accessToken === invalidToken) {
+
+      // invalidate the current token only if it is the one which is still used now
+      this.currentAccessToken$.next(null);
+      if (this.isBusy()) return;
+
+      if (currentToken.type === 'authenticated') { // user was authenticated
+        this.startAuthLogin();
+      } else { // user was temporary
+        this.state = 'fetching';
+        this.tempAuth.login().subscribe({
+          next:(tempUserToken) => {
+            logState('temp user token received');
+            this.currentAccessToken$.next(tempUserToken);
+            this.state = 'idle';
+          },
+          error:(_e) => {
+            logState('temp user creation failed');
+            this.state = 'error'; // if temp user creation fails, there is not much we can do
+          }
+        });
+      }
+    }
   }
 
   private tokenChanged([oldToken, newToken]: [AccessToken|null, AccessToken|null]) {
     logState('token changed');
 
     if (JSON.stringify(oldToken) === JSON.stringify(newToken)) return;
-    if (oldToken !== null && oldToken.isValid()) {
-      this.authHttp.revokeToken(oldToken.accessToken).subscribe();
-    }
+    // make sure to replace/clear the token in storage
     if (newToken === null) {
       AccessToken.clearFromStorage();
     } else {
       newToken.saveToStorage();
     }
+  }
+
+  private isBusy(): boolean {
+    return this.state === 'fetching';
+  }
+
+  private debugState(): string {
+    const current = this.currentAccessToken$.value;
+    return (current === null) ? `${this.state},no-token` : `${this.state},${current.type},${current.expiration.toString()}`;
   }
 
 }
