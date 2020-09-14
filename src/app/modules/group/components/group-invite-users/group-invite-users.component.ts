@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, Output, OnInit, EventEmitter } from '@angular/core';
 import { Group } from '../../http-services/get-group-by-id.service';
 
 @Component({
@@ -9,6 +9,7 @@ import { Group } from '../../http-services/get-group-by-id.service';
 export class GroupInviteUsersComponent implements OnInit {
 
   @Input() group: Group
+  @Output() refreshRequired = new EventEmitter<void>();
 
   showMsg = false;
 
@@ -19,6 +20,7 @@ export class GroupInviteUsersComponent implements OnInit {
 
   onInvite(_e: any) {
     this.showMsg = !this.showMsg;
+    this.refreshRequired.emit();
   }
 
 }
