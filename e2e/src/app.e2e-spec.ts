@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-floating-promises */
+
 import {AppPage} from './app.po';
 import {browser, by, logging} from 'protractor';
 
