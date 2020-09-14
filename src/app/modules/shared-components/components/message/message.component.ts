@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { Message } from 'primeng/api';
 
 @Component({
   selector: 'alg-message',
@@ -7,22 +8,20 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class MessageComponent implements OnInit {
 
-  @Input() type: string;
+  @Input() type: 'success' | 'info' | 'error';
   @Input() label: string;
   @Input() closable = true;
 
-  msgs = [];
+  msgs : Message[] = [];
 
   constructor() { }
 
   ngOnInit() {
-    /*
     this.msgs.push({
       severity: this.type,
       summary: '',
       detail: this.label
     });
-    */
   }
 
 }
