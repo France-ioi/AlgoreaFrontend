@@ -15,10 +15,9 @@ export class GroupInviteUsersComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
-  onInvite(_e: any) {
+  onInvite() {
     this.showMsg = !this.showMsg;
     this.refreshRequired.emit();
   }
