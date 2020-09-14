@@ -46,6 +46,7 @@ import { SelectionTreeComponent } from './components/selection-tree/selection-tr
 import { SelectComponent } from './components/select/select.component';
 import { SliderComponent } from './components/slider/slider.component';
 import { SectionParagraphComponent } from './components/section-paragrah/section-paragraph.component';
+import { MessageComponent } from './components/message/message.component';
 
 @NgModule({
   declarations: [
@@ -67,6 +68,7 @@ import { SectionParagraphComponent } from './components/section-paragrah/section
     SelectComponent,
     SliderComponent,
     SectionParagraphComponent,
+    MessageComponent,
   ],
   imports: [
     CommonModule,
@@ -121,6 +123,7 @@ import { SectionParagraphComponent } from './components/section-paragrah/section
     ToastModule,
     TableModule,
     TabViewModule,
+    MessageComponent,
   ],
   providers: [
     {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: true}}
