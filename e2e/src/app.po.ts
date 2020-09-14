@@ -23,8 +23,23 @@ export class AppPage {
     return element(by.css('.ui-treenode-content'));
   }
 
+  getLeftElement() {
+    return element(by.css('.left'));
+  }
+
+  getTopBarElement() {
+    return element(by.css('.top-bar'));
+  }
+
+  getRightElement() {
+    return element(by.css('.right'));
+  }
+
   getMainContentElement() {
     return element(by.css('.right .main-content p'));
   }
 
+  getCollapseButtonElement() {
+    return element(by.css('.nav-collapse'));
+  }
 }

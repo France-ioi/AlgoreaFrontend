@@ -9,14 +9,14 @@ describe('workspace-project App', () => {
   });
 
   it('check the heading title', () => {
-    void page.navigateTo();
-    void expect(
+    page.navigateTo();
+    expect(
       page.getHeadingElement().getText()).toEqual('ALGOREA PLATFORM');
   });
 
   it('check the first element of the activity tree', () => {
-    void page.navigateTo();
-    void expect(
+    page.navigateTo();
+    expect(
       page
         .getFirstPokemonCardElement()
         .element(by.css('.node-label-title'))
@@ -25,23 +25,38 @@ describe('workspace-project App', () => {
   });
 
   it('check the number of elements in the activity tree', () => {
-    void page.navigateTo();
-    void expect(page.getActivitiesElements().count()).toBe(1);
+    page.navigateTo();
+    expect(page.getActivitiesElements().count()).toBe(1);
   });
 
   it('check the number of elements in the activity tree after a click', () => {
-    void page.navigateTo();
-    void page.getFirstPokemonCardElement().click();
+    page.navigateTo();
+    page.getFirstPokemonCardElement().click();
 
-    void expect(page.getActivitiesElements().count()).toBe(42);
+    expect(page.getActivitiesElements().count()).toBe(42);
   });
 
   it('check the item-detail', () => {
-    void page.navigateTo();
-    void page.getFirstPokemonCardElement().click();
+    // Check if the first item exists and is working
+    page.navigateTo();
+    page.getFirstPokemonCardElement().click();
 
-    void expect(page.getMainContentElement()).toBeTruthy();
-    void expect(page.getMainContentElement().getText()).toEqual('item-details works!');
+    expect(page.getMainContentElement()).toBeTruthy();
+    expect(page.getMainContentElement().getText()).toEqual('item-details works!');
+  });
+
+  it('check the collapse button behavior', () => {
+    page.navigateTo();
+
+    expect(page.getLeftElement().getAttribute('class')).toMatch('expanded');
+    expect(page.getTopBarElement().getAttribute('class')).toMatch('expanded');
+    expect(page.getRightElement().getAttribute('class')).toMatch('expanded');
+
+    page.getCollapseButtonElement().click();
+
+    expect(page.getLeftElement().getAttribute('class')).toMatch('collapsed');
+    expect(page.getTopBarElement().getAttribute('class')).toMatch('collapsed');
+    expect(page.getRightElement().getAttribute('class')).toMatch('collapsed');
   });
 
   afterEach(async () => {
