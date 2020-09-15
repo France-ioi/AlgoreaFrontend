@@ -19,7 +19,6 @@ export class GroupInviteUsersComponent implements OnInit {
 
   onInvite() {
     this.showMsg = !this.showMsg;
-    this.refreshRequired.emit();
   }
 
 }
