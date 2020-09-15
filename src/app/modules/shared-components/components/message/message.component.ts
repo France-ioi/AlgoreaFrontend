@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnChanges, Input, SimpleChanges } from '@angular/core';
 import { Message } from 'primeng/api';
 
 @Component({
@@ -6,7 +6,7 @@ import { Message } from 'primeng/api';
   templateUrl: './message.component.html',
   styleUrls: ['./message.component.scss']
 })
-export class MessageComponent implements OnInit {
+export class MessageComponent implements OnChanges {
 
   @Input() type: 'success' | 'info' | 'error';
   @Input() summary: string;
@@ -17,12 +17,11 @@ export class MessageComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit() {
-    this.msgs.push({
+  ngOnChanges(_changes: SimpleChanges): void {
+    this.msgs = [{
       severity: this.type,
       summary: this.summary,
       detail: this.detail
-    });
+    }];
   }
-
 }
