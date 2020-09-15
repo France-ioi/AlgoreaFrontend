@@ -9,7 +9,8 @@ import { Message } from 'primeng/api';
 export class MessageComponent implements OnInit {
 
   @Input() type: 'success' | 'info' | 'error';
-  @Input() label: string;
+  @Input() summary: string;
+  @Input() detail: string;
   @Input() closable = true;
 
   msgs : Message[] = [];
@@ -19,8 +20,8 @@ export class MessageComponent implements OnInit {
   ngOnInit() {
     this.msgs.push({
       severity: this.type,
-      summary: '',
-      detail: this.label
+      summary: this.summary,
+      detail: this.detail
     });
   }
 
