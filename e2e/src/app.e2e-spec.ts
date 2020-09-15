@@ -1,64 +1,67 @@
-/* eslint-disable @typescript-eslint/no-floating-promises */
-
 import {AppPage} from './app.po';
 import {browser, by, logging} from 'protractor';
 
-describe('workspace-project App', () => {
+describe('Algorea Frontend', () => {
   let page: AppPage; // eslint-disable-line @typescript-eslint/no-unused-vars
 
   beforeEach(() => {
     page = new AppPage();
   });
 
-  it('check the heading title', () => {
-    page.navigateTo();
-    expect(
-      page.getHeadingElement().getText()).toEqual('ALGOREA PLATFORM');
+  it('shows the heading title', () => {
+    void page.navigateTo();
+    void expect(
+      page.getTitleElement().getText()).toEqual('ALGOREA PLATFORM');
   });
 
-  it('check the first element of the activity tree', () => {
-    page.navigateTo();
-    expect(
+  it('shows the first element of the activity tree', () => {
+    void page.navigateTo();
+    void browser.waitForAngular();
+
+    void expect(
       page
-        .getFirstPokemonCardElement()
+        .getFirstActivityElement()
         .element(by.css('.node-label-title'))
         .getText()
     ).toContain('Activités publiques');
   });
 
-  it('check the number of elements in the activity tree', () => {
-    page.navigateTo();
-    expect(page.getActivitiesElements().count()).toBe(1);
+  it('shows one element in the activity tree', () => {
+    void page.navigateTo();
+    void browser.waitForAngular();
+
+    void expect(page.getActivitiesElements().count()).toBe(1);
   });
 
-  it('check the number of elements in the activity tree after a click', () => {
-    page.navigateTo();
-    page.getFirstPokemonCardElement().click();
+  it('shows multiple elements in the activity tree after a click', () => {
+    void page.navigateTo();
+    void browser.waitForAngular();
+    void page.getFirstActivityElement().click();
 
-    expect(page.getActivitiesElements().count()).toBe(42);
+    void expect(page.getActivitiesElements().count()).toBe(42);
   });
 
-  it('check the item-detail', () => {
+  it('have a working item-detail', () => {
     // Check if the first item exists and is working
-    page.navigateTo();
-    page.getFirstPokemonCardElement().click();
+    void page.navigateTo();
+    void page.getFirstActivityElement().click();
 
-    expect(page.getMainContentElement()).toBeTruthy();
-    expect(page.getMainContentElement().getText()).toEqual('item-details works!');
+    void expect(page.getMainContentElement()).toBeTruthy();
+    void expect(page.getMainContentElement().getText()).toEqual('item-details works!');
   });
 
-  it('check the collapse button behavior', () => {
-    page.navigateTo();
+  it('have a working collapse button', () => {
+    void page.navigateTo();
 
-    expect(page.getLeftElement().getAttribute('class')).toMatch('expanded');
-    expect(page.getTopBarElement().getAttribute('class')).toMatch('expanded');
-    expect(page.getRightElement().getAttribute('class')).toMatch('expanded');
+    void expect(page.getLeftElement().getAttribute('class')).toMatch('expanded');
+    void expect(page.getTopBarElement().getAttribute('class')).toMatch('expanded');
+    void expect(page.getRightElement().getAttribute('class')).toMatch('expanded');
 
-    page.getCollapseButtonElement().click();
+    void page.getCollapseButtonElement().click();
 
-    expect(page.getLeftElement().getAttribute('class')).toMatch('collapsed');
-    expect(page.getTopBarElement().getAttribute('class')).toMatch('collapsed');
-    expect(page.getRightElement().getAttribute('class')).toMatch('collapsed');
+    void expect(page.getLeftElement().getAttribute('class')).toMatch('collapsed');
+    void expect(page.getTopBarElement().getAttribute('class')).toMatch('collapsed');
+    void expect(page.getRightElement().getAttribute('class')).toMatch('collapsed');
   });
 
   afterEach(async () => {

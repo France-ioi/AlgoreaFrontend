@@ -5,12 +5,7 @@ export class AppPage {
     return browser.get(browser.baseUrl) as Promise<any>;
   }
 
-  // "alg-root .content span" not found
-  getTitleText() {
-    return element(by.css('alg-root .content span')).getText() as Promise<string>;
-  }
-
-  getHeadingElement() {
+  getTitleElement() {
     // Get the home page heading element reference
     return element(by.css('.platform-name'));
   }
@@ -19,7 +14,7 @@ export class AppPage {
     return element.all(by.css('.ui-treenode-content'));
   }
 
-  getFirstPokemonCardElement() {
+  getFirstActivityElement() {
     return element(by.css('.ui-treenode-content'));
   }
 
@@ -41,5 +36,9 @@ export class AppPage {
 
   getCollapseButtonElement() {
     return element(by.css('.nav-collapse'));
+  }
+
+  getSignOutElement () {
+    return element(by.css('.sign-out'));
   }
 }
