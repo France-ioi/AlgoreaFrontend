@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 
 @Component({
   selector: 'alg-textarea',
@@ -6,11 +6,19 @@ import { Component, OnInit, Input } from '@angular/core';
   styleUrls: ['./textarea.component.scss'],
 })
 export class TextareaComponent implements OnInit {
-  @Input() icon: string;
-  @Input() placeholder: string;
-  @Input() value: string;
+  @Input() icon = '';
+  @Input() placeholder = '';
+
+  @Output() valueChange = new EventEmitter<string>();
+
+  value:string;
 
   constructor() {}
 
   ngOnInit() {}
+
+  onChange()
+  {
+    this.valueChange.emit(this.value);
+  }
 }
