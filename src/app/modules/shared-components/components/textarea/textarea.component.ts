@@ -11,14 +11,18 @@ export class TextareaComponent implements OnInit {
 
   @Output() valueChange = new EventEmitter<string>();
 
-  value:string;
+  value: string;
 
   constructor() {}
 
   ngOnInit() {}
 
-  onChange()
-  {
+  setValue(text: string) {
+    this.value = text;
+    this.onChange();
+  }
+
+  onChange() {
     this.valueChange.emit(this.value);
   }
 }

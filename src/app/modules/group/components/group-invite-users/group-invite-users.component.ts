@@ -1,4 +1,5 @@
-import { Component, Input, Output, OnInit, EventEmitter } from '@angular/core';
+import { Component, Input, Output, OnInit, EventEmitter, ViewChild } from '@angular/core';
+import { TextareaComponent } from 'src/app/modules/shared-components/components/textarea/textarea.component';
 import { Group } from '../../http-services/get-group-by-id.service';
 
 interface Message
@@ -18,6 +19,8 @@ export class GroupInviteUsersComponent implements OnInit {
   @Input() group: Group
   @Output() refreshRequired = new EventEmitter<void>();
 
+  @ViewChild(TextareaComponent)
+  private textArea: TextareaComponent;
 
   logins:string[];
 
@@ -67,5 +70,7 @@ export class GroupInviteUsersComponent implements OnInit {
 
     this.sendInvites(this.logins);
 
+    if (this.textArea != undefined)
+      this.textArea.setValue('');
   }
 }
