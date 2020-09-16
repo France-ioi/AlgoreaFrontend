@@ -5,6 +5,11 @@
     </alg-textarea>
 
     <div *ngIf="!processing">
+
+      <alg-message *ngIf="tooManyLogins" type="error" detail="You cannot invite more than 100 users at once"
+        [closable]="false">
+      </alg-message>
+
       <alg-button label="Invite" class="ui-button-rounded" (click)="invite()" [disabled]="!canClick || processing">
       </alg-button>
 

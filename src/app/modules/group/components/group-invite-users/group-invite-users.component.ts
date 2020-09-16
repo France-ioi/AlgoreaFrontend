@@ -26,6 +26,8 @@ export class GroupInviteUsersComponent implements OnInit {
 
   processing = false;
 
+  tooManyLogins = false;
+
   messages : Message[] = [];
 
   canClick:boolean;
@@ -44,6 +46,7 @@ export class GroupInviteUsersComponent implements OnInit {
   changeText(text:string)
   {
     this.canClick = true;
+    this.tooManyLogins = false;
 
     if (text.length == 0)
     {
@@ -56,11 +59,9 @@ export class GroupInviteUsersComponent implements OnInit {
     if (this.logins.length >= 100)
     {
       this.canClick = false;
-      this.messages = [{type:'error', detail:'You cannot invite more than 100 users at once'}];
+      this.tooManyLogins = true;
       return;
     }
-
-    this.messages = [];
   }
 
   invite() {
