@@ -51,21 +51,6 @@ describe('Algorea Frontend', () => {
           .getText()
       ).toContain('Activités publiques');
     });
-
-    it('should shows one element in the activity tree', () => {
-      void page.navigateTo();
-      void browser.waitForAngular();
-
-      void expect(page.getActivitiesElements().count()).toBe(1);
-    });
-
-    it('should shows multiple elements in the activity tree after a click', () => {
-      void page.navigateTo();
-      void browser.waitForAngular();
-      void page.getFirstActivityElement().click();
-
-      void expect(page.getActivitiesElements().count()).toBe(42);
-    });
   });
 
   afterEach(async () => {
