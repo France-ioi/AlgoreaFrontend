@@ -1,0 +1,10 @@
+<alg-section-paragraph icon="fa fa-user-plus" label="Invite users" [collapsible]="true">
+  <span class="content-title">Add users name list, separated by commas.</span>
+  <div class="invite-users">
+    <alg-textarea icon="show" placeholder="psuedo, psuedo..."></alg-textarea>
+    <alg-button label="Invite" class="ui-button-rounded" (click)="onInvite()"></alg-button>
+    <alg-message *ngIf="showMsg" type="success" detail="3 users invited successfully"></alg-message>
+    <alg-message *ngIf="showMsg" type="error" detail="2 users not found: Jean, Matthew"></alg-message>
+    <alg-message *ngIf="showMsg" type="info" detail="Jean, Matthew have already been invited"></alg-message>
+  </div>
+</alg-section-paragraph>
