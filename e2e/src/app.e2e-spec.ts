@@ -2,7 +2,7 @@ import {AppPage} from './app.po';
 import {browser, by, logging} from 'protractor';
 
 describe('Algorea Frontend', () => {
-  let page: AppPage; // eslint-disable-line @typescript-eslint/no-unused-vars
+  let page: AppPage;
 
   beforeEach(() => {
     page = new AppPage();
