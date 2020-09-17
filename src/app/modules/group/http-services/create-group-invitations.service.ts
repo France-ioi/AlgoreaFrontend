@@ -34,10 +34,7 @@ export class CreateGroupInvitationsService {
           return new Map<string, InvitationResult>(
             Object.entries(data).map(
               ([key, value]) => {
-                const result = InvitationResult[value as keyof typeof InvitationResult];
-                if (result == undefined)
-                  throw new Error(`Invitation of user ${key} returned an unexpected result`);
-                return [key, value];
+                    throw new Error(`Invitation of user ${key} returned an unexpected result (${JSON.stringify(value)})`);
           }));
         })
       );
