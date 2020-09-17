@@ -24,6 +24,7 @@ export class SectionParagraphComponent implements OnInit {
   @Input() switchItems = Array<Object>();
 
   @Output() collapse = new EventEmitter<boolean>();
+  @Output() includeSubgroupEvent = new EventEmitter<number>();
 
   @ContentChild('headerTemplate') headerTemplate: TemplateRef<any>;
 
@@ -38,5 +39,9 @@ export class SectionParagraphComponent implements OnInit {
   toggleContent() {
     this.visible = !this.visible;
     this.collapse.emit(this.visible);
+  }
+
+  toggleIncludeSubgroup(isAllowed: number) {
+    this.includeSubgroupEvent.emit(isAllowed);
   }
 }

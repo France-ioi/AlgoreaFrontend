@@ -27,12 +27,16 @@ export class GetRequestsService {
 
   getPendingRequests(
     groupId: string,
-    sort: string[] = []
+    sort: string[] = [],
+    includeSubgroup: number = 0
   ): Observable<PendingRequest[]> {
     let params = new HttpParams();
     params = params.set('group_id', groupId);
     if (sort.length > 0) {
       params = params.set('sort', sort.join(','));
+    }
+    if (includeSubgroup) {
+      params = params.set('include_descendant_groups', includeSubgroup.toString());
     }
     return this.http
       .get<PendingRequest[]>(`${environment.apiUrl}/groups/user-requests`, { params: params });

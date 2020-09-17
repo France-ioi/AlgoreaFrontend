@@ -53,6 +53,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
   selection: PendingRequest[] = [];
   panel: GridColumnGroup[] = [];
   currentSort: string[] = [];
+  includeSubgroup: number;
 
   ongoingActivity: Activity = Activity.None;
 
@@ -76,7 +77,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
 
   private reloadData() {
     this.getRequestsService
-      .getPendingRequests(this.groupId, this.currentSort)
+      .getPendingRequests(this.groupId, this.currentSort, this.includeSubgroup)
       .subscribe((reqs: PendingRequest[]) => {
         this.requests = reqs;
       });
@@ -177,5 +178,11 @@ export class PendingRequestComponent implements OnInit, OnChanges {
       this.currentSort = sortMeta;
       this.reloadData();
     }
+  }
+
+  onSwitchChange(isAllowed: number)
+  {
+    this.includeSubgroup = isAllowed;
+    this.reloadData();
   }
 }

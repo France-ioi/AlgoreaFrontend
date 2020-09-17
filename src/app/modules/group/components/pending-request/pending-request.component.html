@@ -4,6 +4,7 @@
   label="Pending requests"
   [collapsible]="true"
   [switchItems]="[{label:'This group only'}, {label:'All subgroups'}]"
+  (includeSubgroupEvent)="onSwitchChange($event)"
 >
   <div class="pending-request-container">
     <alg-grid

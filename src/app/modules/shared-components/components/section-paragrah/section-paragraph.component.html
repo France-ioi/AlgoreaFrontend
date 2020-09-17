@@ -15,7 +15,7 @@
       <span *ngIf="remainOrigin || visible || !data.ID" class="section-title" (click)="toggleContent()">{{label}}</span>
       <div class="additional-content">
         <ng-container [ngTemplateOutlet]="headerTemplate" [ngTemplateOutletContext]="{ $implicit: data }">
-          <alg-selection [items]="switchItems"></alg-selection>
+          <alg-selection (change)="toggleIncludeSubgroup($event)" [items]="switchItems"></alg-selection>
         </ng-container>
       </div>
       <span *ngIf="collapsible" class="toggle-content" (click)="toggleContent()">
