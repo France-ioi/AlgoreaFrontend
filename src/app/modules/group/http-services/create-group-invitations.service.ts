@@ -6,10 +6,10 @@ import { ActionResponse, successData } from 'src/app/shared/http-services/action
 import { map } from 'rxjs/operators';
 
 export enum InvitationResult {
-  success,
-  error,
-  already_invited,
-  not_found,
+  Success,
+  Error,
+  AlreadyInvited,
+  NotFound,
 }
 
 @Injectable({
