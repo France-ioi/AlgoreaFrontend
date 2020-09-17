@@ -21,6 +21,7 @@ export class SectionParagraphComponent implements OnInit {
   @Input() hasBorder = false;
   @Input() data: any;
   @Input() remainOrigin = true;
+  @Input() switchItems = [];
 
   @Output() collapse = new EventEmitter<boolean>();
 
