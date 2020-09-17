@@ -2,9 +2,15 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { ActionResponse, successData, objectToMap } from 'src/app/shared/http-services/action-response';
+import { ActionResponse, successData } from 'src/app/shared/http-services/action-response';
 import { map } from 'rxjs/operators';
 
+export enum InvitationResult {
+  success,
+  error,
+  already_invited,
+  not_found,
+}
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +22,7 @@ export class CreateGroupInvitationsService {
   createInvitations(
     groupId: string,
     logins : string[]
-  ) : Observable<Map<string, any>>
+  ) : Observable<Map<string, InvitationResult>>
   {
     return this.http
       .post<ActionResponse<Object>>(
@@ -24,7 +30,16 @@ export class CreateGroupInvitationsService {
         {logins: logins}, {})
       .pipe(
         map(successData),
-        map(objectToMap)
+        map(function (data: Object): Map<string, InvitationResult> {
+          return new Map<string, InvitationResult>(
+            Object.entries(data).map(
+              ([key, value]) => {
+                const result = InvitationResult[value as keyof typeof InvitationResult];
+                if (result == undefined)
+                  throw new Error(`Invitation of user ${key} returned an unexpected result`);
+                return [key, value];
+          }));
+        })
       );
   }
 }
