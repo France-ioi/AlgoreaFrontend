@@ -34,7 +34,19 @@ export class CreateGroupInvitationsService {
           return new Map<string, InvitationResult>(
             Object.entries(data).map(
               ([key, value]) => {
+                switch (value) {
+                  case 'success':
+                    return [key, InvitationResult.Success];
+                  case 'unchanged':
+                    return [key, InvitationResult.AlreadyInvited];
+                  case 'not_found':
+                    return [key, InvitationResult.NotFound];
+                  case 'cycle':
+                  case 'invalid':
+                    return [key, InvitationResult.Error];
+                  default:
                     throw new Error(`Invitation of user ${key} returned an unexpected result (${JSON.stringify(value)})`);
+                }
           }));
         })
       );
