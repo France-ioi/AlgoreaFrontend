@@ -3,7 +3,7 @@ import {
   OnInit,
   Input,
   OnChanges,
-  SimpleChanges, Output, EventEmitter,
+  SimpleChanges
 } from '@angular/core';
 import { SortEvent } from 'primeng/api/sortevent';
 import { MessageService } from 'primeng/api';
@@ -60,9 +60,6 @@ export class PendingRequestComponent implements OnInit, OnChanges {
   includeSubgroup: boolean;
 
   ongoingActivity: Activity = Activity.None;
-
-
-  @Output() includeSubgroupEvent = new EventEmitter<number>();
 
   constructor(
     private getRequestsService: GetRequestsService,
