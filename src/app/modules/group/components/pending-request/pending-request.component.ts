@@ -49,9 +49,9 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     { field: 'user.login', header: 'USER' },
     { field: 'at', header: 'REQUESTED ON' },
   ];
-  switchItems= [
-    {label:'This group only'},
-    {label:'All subgroups'}
+  subgroupSwitchItems = [
+    { label: 'This group only', includeSubgroup: false},
+    { label: 'All subgroups', includeSubgroup: true }
   ];
   requests: PendingRequest[] = [];
   selection: PendingRequest[] = [];
@@ -184,9 +184,8 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     }
   }
 
-  onSwitchChange(isAllowed: number)
-  {
-    this.includeSubgroup = !!isAllowed;
+  onSubgroupSwitch(selectedIdx: number) {
+    this.includeSubgroup = this.subgroupSwitchItems[selectedIdx].includeSubgroup;
     this.reloadData();
   }
 }
