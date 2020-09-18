@@ -40,7 +40,7 @@ describe('PendingRequestComponent', () => {
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: GetRequestsService, useValue: {
-          getPendingRequests: (_id: any, _sort: any, _includeSubgroup: any) => of<PendingRequest[]>(MOCK_RESPONSE),
+          getPendingRequests: (_id: any, _sort: any) => of<PendingRequest[]>(MOCK_RESPONSE),
         }},
         { provide: RequestActionsService, useValue: {
           acceptJoinRequest: (_id: any, _groupIds: any) => serviceResponder$.asObservable(),
@@ -65,7 +65,6 @@ describe('PendingRequestComponent', () => {
     spyOn(requestActionsService, 'acceptJoinRequest').and.callThrough();
     spyOn(requestActionsService, 'rejectJoinRequest').and.callThrough();
     component.ngOnChanges({});
-    component.includeSubgroup = false;
   });
 
   afterEach(() => {
@@ -73,7 +72,7 @@ describe('PendingRequestComponent', () => {
   });
 
   it('should load requests at init', () => {
-    expect(getRequestsService.getPendingRequests).toHaveBeenCalledWith('99', [], undefined);
+    expect(getRequestsService.getPendingRequests).toHaveBeenCalledWith('99', []);
     expect(component.requests).toEqual(MOCK_RESPONSE);
     expect(component.selection).toEqual([]);
     expect(component.panel.length).toEqual(1);
@@ -110,7 +109,7 @@ describe('PendingRequestComponent', () => {
       {field: 'at', order: 1}
     ]});
     expect(getRequestsService.getPendingRequests)
-      .toHaveBeenCalledWith('99', [ '-joining_user.login', 'at' ], false);
+      .toHaveBeenCalledWith('99', [ '-joining_user.login', 'at' ]);
 
     // check the field precedence counts
     component.onCustomSort({multiSortMeta: [
@@ -118,11 +117,11 @@ describe('PendingRequestComponent', () => {
       {field: 'joining_user.login', order: -1}
     ]});
     expect(getRequestsService.getPendingRequests)
-      .toHaveBeenCalledWith('99', [ 'at' , '-joining_user.login' ], false);
+      .toHaveBeenCalledWith('99', [ 'at' , '-joining_user.login' ]);
 
     // sort reset
     component.onCustomSort({multiSortMeta: []});
-    expect(getRequestsService.getPendingRequests).toHaveBeenCalledWith('99', [], false);
+    expect(getRequestsService.getPendingRequests).toHaveBeenCalledWith('99', []);
   });
 
   it('should, when accept is pressed, call the appropriate service and reload', () => {
