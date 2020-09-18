@@ -1,4 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MessageService } from 'primeng/api';
+import { CreateGroupInvitationsService } from '../../http-services/create-group-invitations.service';
 
 import { GroupInviteUsersComponent } from './group-invite-users.component';
 
@@ -8,7 +10,11 @@ describe('GroupInviteUsersComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ GroupInviteUsersComponent ]
+      declarations: [ GroupInviteUsersComponent ],
+      providers: [
+        { provide: MessageService, useValue: { add: (_m: any) => {} } },
+        { provide: CreateGroupInvitationsService, useValue: {} },
+      ]
     })
     .compileComponents();
   });
