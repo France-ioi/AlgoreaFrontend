@@ -1,5 +1,8 @@
 import { Component, Input, Output, OnInit, EventEmitter, ViewChild } from '@angular/core';
 import { TextareaComponent } from 'src/app/modules/shared-components/components/textarea/textarea.component';
+import { MessageService } from 'primeng/api';
+import { ERROR_MESSAGE } from 'src/app/shared/constants/api';
+import { TOAST_LENGTH } from 'src/app/shared/constants/global';
 import { CreateGroupInvitationsService, InvitationResult } from '../../http-services/create-group-invitations.service';
 import { Group } from '../../http-services/get-group-by-id.service';
 
@@ -13,7 +16,8 @@ interface Message
 @Component({
   selector: 'alg-group-invite-users',
   templateUrl: './group-invite-users.component.html',
-  styleUrls: ['./group-invite-users.component.scss']
+  styleUrls: ['./group-invite-users.component.scss'],
+  providers: [MessageService],
 })
 export class GroupInviteUsersComponent implements OnInit {
 
@@ -35,9 +39,19 @@ export class GroupInviteUsersComponent implements OnInit {
 
   constructor(
     private createGroupInvitationsService: CreateGroupInvitationsService,
+    private messageService: MessageService,
     ) {}
 
   ngOnInit(): void {}
+
+  private processRequestError(_err: any) {
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Error',
+      detail: ERROR_MESSAGE.fail,
+      life: TOAST_LENGTH,
+    });
+  }
 
   private displayResponse(response: Map<string, InvitationResult>) {
     const sucessInvites: string[] = [];
@@ -143,7 +157,7 @@ export class GroupInviteUsersComponent implements OnInit {
         this.processing = false;
       },
       (err) => {
-        // TODO process the error
+        this.processRequestError(err);
 
         this.processing = false;
       }
