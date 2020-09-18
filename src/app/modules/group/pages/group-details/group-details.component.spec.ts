@@ -6,6 +6,7 @@ import { mockGroup } from '../../mocks/group-by-id';
 import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { GetGroupByIdService } from '../../http-services/get-group-by-id.service';
 
 describe('GroupDetailsComponent', () => {
   let component: GroupDetailsComponent;
@@ -19,11 +20,19 @@ describe('GroupDetailsComponent', () => {
         HttpClientTestingModule
       ],
       providers: [
-        { provide: GroupTabService, useValue: groupTabService },
         { provide: ActivatedRoute, useValue: {
           paramMap: of({
-            get: (_s: string) => '30'
-          })
+            has: (_s: string) => true,
+          }),
+          snapshot: {
+            paramMap: {
+              get: (_s: string) => '30',
+            }
+          }
+        }},
+        { provide: GroupTabService, useValue: groupTabService },
+        { provide: GetGroupByIdService, useValue: {
+          get: (_id: string) => of({})
         }}
       ]
     })
