@@ -21,6 +21,15 @@ export class ItemDetailsComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.currentContent.setPageInfo({
+      category: 'Items',
+      breadcrumb: [
+        { title: 'RootChapter' },
+        { title: 'MyChapter', attemptOrder: 1 },
+        { title: 'Content' }
+      ],
+      currentPageIndex: 2
+    });
   }
 
 }

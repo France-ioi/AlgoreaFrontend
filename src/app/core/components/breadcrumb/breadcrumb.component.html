@@ -1,34 +1,25 @@
 <div class="breadcrumb-container">
-  <ul (resized)="onResize($event)">
+  <ul *ngIf="pageInfo"> <!-- TODO: handle "smart" ellipsis (as in https://codepen.io/shippin/pen/YrwrYa) -->
+
+    <!-- category -->
     <li class="home"><i class="fa fa-folder"></i></li>
-    <ng-container *ngFor="let item of items.path; index as idx;">
-      <ng-container *ngIf="idx > 0">
-        <li class="separator" [ngClass]="{'active': item.ID === items.selectedID}">
-          <ng-container *ngIf="item.separator === 'arrow'; then arrowBlock else slashBlock">
-          </ng-container>
-          <ng-template #arrowBlock>
-            <i class="fa fa-arrow-right"></i>
-          </ng-template>
-          <ng-template #slashBlock>
-            \
-          </ng-template>
-        </li>
-      </ng-container>
-      <ng-container *ngIf="maxWidths[idx] === 0">
-        <li [ngClass]="{'active': item.ID === items.selectedID}" (click)="onItemClick(item, idx)">...</li>
-      </ng-container>
-      <li
-        *ngIf="maxWidths[idx] > 0"
-        [ngClass]="{'active': item.ID === items.selectedID}"
-        (click)="onItemClick(item, idx)"
-        [ngStyle]="{'max-width.rem': maxWidths[idx]}"
-      >
-        <span class="label">
-          {{item.label}}
-        </span>
-        <span *ngIf="item.attempt && item.attempt > 0" class="attempt-badge">
-          {{item.attempt}}
-        </span>
+    <li><span class="label">{{ pageInfo.category }}</span></li>
+
+    <!-- elements -->
+    <ng-container *ngFor="let element of pageInfo.breadcrumb; index as idx;">
+      <li class="separator" [ngClass]="{'active': idx === pageInfo.currentPageIndex}">
+        <ng-container *ngIf="idx === 0; then arrowBlock else slashBlock">
+        </ng-container>
+        <ng-template #arrowBlock>
+          <i class="fa fa-arrow-right"></i>
+        </ng-template>
+        <ng-template #slashBlock>
+          \
+        </ng-template>
+      </li>
+      <li [ngClass]="{'active': idx === pageInfo.currentPageIndex}" (click)="onElementClick(element)">
+        <span class="label">{{element.title}}</span>
+        <span *ngIf="element.attemptOrder" class="attempt-badge">{{element.attemptOrder}}</span>
       </li>
     </ng-container>
   </ul>
