@@ -1,11 +1,15 @@
+
 <alg-section-paragraph
   *ngIf="requests.length"
   icon="fa fa-check"
   label="Pending requests"
   [collapsible]="true"
-  [switchItems]="[{label:'This group only'}, {label:'All subgroups'}]"
-  (includeSubgroupEvent)="onSwitchChange($event)"
 >
+  <ng-template #headerTemplate>
+    <div style="flex: 1; flex-direction: row-reverse;display: flex;">
+      <alg-selection (change)="onSwitchChange($event)" [items]="switchItems" style="width: 25rem;"></alg-selection>
+    </div>
+  </ng-template>
   <div class="pending-request-container">
     <alg-grid
       [selectedColumns]="columns"

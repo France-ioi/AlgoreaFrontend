@@ -3,7 +3,7 @@ import {
   OnInit,
   Input,
   OnChanges,
-  SimpleChanges,
+  SimpleChanges, Output, EventEmitter,
 } from '@angular/core';
 import { SortEvent } from 'primeng/api/sortevent';
 import { MessageService } from 'primeng/api';
@@ -49,13 +49,20 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     { field: 'user.login', header: 'USER' },
     { field: 'at', header: 'REQUESTED ON' },
   ];
+  switchItems= [
+    {label:'This group only'},
+    {label:'All subgroups'}
+  ];
   requests: PendingRequest[] = [];
   selection: PendingRequest[] = [];
   panel: GridColumnGroup[] = [];
   currentSort: string[] = [];
-  includeSubgroup: number;
+  includeSubgroup: boolean;
 
   ongoingActivity: Activity = Activity.None;
+
+
+  @Output() includeSubgroupEvent = new EventEmitter<number>();
 
   constructor(
     private getRequestsService: GetRequestsService,
@@ -182,7 +189,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
 
   onSwitchChange(isAllowed: number)
   {
-    this.includeSubgroup = isAllowed;
+    this.includeSubgroup = !!isAllowed;
     this.reloadData();
   }
 }
