@@ -1,4 +1,3 @@
-
 <div class="section-container" [ngClass]="theme">
   <div class="section-header" [ngClass]="{'show-cursor': collapsible}">
     <div class="section-handler">
@@ -14,9 +13,7 @@
     <div class="section-header-content" [ngClass]="{'show-border': hasBorder && visible}">
       <span *ngIf="remainOrigin || visible || !data.ID" class="section-title" (click)="toggleContent()">{{label}}</span>
       <div class="additional-content">
-        <ng-container [ngTemplateOutlet]="headerTemplate" [ngTemplateOutletContext]="{ $implicit: data }">
-          <alg-selection (change)="toggleIncludeSubgroup($event)" [items]="switchItems"></alg-selection>
-        </ng-container>
+        <ng-container [ngTemplateOutlet]="headerTemplate" [ngTemplateOutletContext]="{ $implicit: data }"></ng-container>
       </div>
       <span *ngIf="collapsible" class="toggle-content" (click)="toggleContent()">
         <img [ngClass]="{down: !visible}" src="assets/images/collapse.svg">
