@@ -1,6 +1,6 @@
 import { Component, Input, Output, OnInit, EventEmitter, ViewChild } from '@angular/core';
 import { TextareaComponent } from 'src/app/modules/shared-components/components/textarea/textarea.component';
-import { CreateGroupInvitationsService } from '../../http-services/create-group-invitations.service';
+import { CreateGroupInvitationsService, InvitationResult } from '../../http-services/create-group-invitations.service';
 import { Group } from '../../http-services/get-group-by-id.service';
 
 interface Message
@@ -39,9 +39,56 @@ export class GroupInviteUsersComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  sendInvites(_logins:string[])
-  {
-    //TODO
+  private displayResponse(response: Map<string, InvitationResult>) {
+    const sucessInvites: string[] = [];
+    const alreadyInvited: string[] = [];
+    const notFoundUsers: string[] = [];
+    const invalidInvites: string[] = [];
+
+    for (const [key, value] of response) {
+      switch (value) {
+        case InvitationResult.Success:
+          sucessInvites.push(key);
+          break;
+        case InvitationResult.AlreadyInvited:
+          alreadyInvited.push(key);
+          break;
+        case InvitationResult.Error:
+          invalidInvites.push(key);
+          break;
+        case InvitationResult.NotFound:
+          notFoundUsers.push(key);
+          break;
+      }
+    }
+
+    if (sucessInvites.length > 0)
+      this.messages.push({
+        type: 'success',
+        summary: `${sucessInvites.length} user(s) invited successfully: `,
+        detail: `${sucessInvites.join(', ')}`,
+      });
+
+    if (alreadyInvited.length > 0)
+      this.messages.push({
+        type: 'info',
+        summary: `${alreadyInvited.length} user(s) have already been invited: `,
+        detail: `${alreadyInvited.join(', ')}`,
+      });
+
+    if (notFoundUsers.length > 0)
+      this.messages.push({
+        type: 'error',
+        summary: `${notFoundUsers.length} user login(s) not found: `,
+        detail: `${notFoundUsers.join(', ')}`,
+      });
+
+    if (invalidInvites.length > 0)
+      this.messages.push({
+        type: 'error',
+        summary: `${invalidInvites.length} user login(s) could not be invited: `,
+        detail: `${invalidInvites.join(', ')}`,
+      });
   }
 
   /* events */
@@ -87,7 +134,7 @@ export class GroupInviteUsersComponent implements OnInit {
 
     this.createGroupInvitationsService.createInvitations(this.group.id, logins).subscribe(
       (res) => {
-        // TODO display the messages
+        this.displayResponse(res);
 
         // Clear the textarea
         if (this.textArea != undefined)
