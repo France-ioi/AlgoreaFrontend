@@ -28,7 +28,7 @@ export class CurrentContentService {
     this.currentContent.next(item);
   }
 
-  setPageInfo(info: PageInfo) {
+  setPageInfo(info: PageInfo|null) {
     this.currentPageInfo.next(info);
   }
 
