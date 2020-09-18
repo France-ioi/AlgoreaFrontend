@@ -1,5 +1,6 @@
 import { Component, Input, Output, OnInit, EventEmitter, ViewChild } from '@angular/core';
 import { TextareaComponent } from 'src/app/modules/shared-components/components/textarea/textarea.component';
+import { CreateGroupInvitationsService } from '../../http-services/create-group-invitations.service';
 import { Group } from '../../http-services/get-group-by-id.service';
 
 interface Message
@@ -32,7 +33,9 @@ export class GroupInviteUsersComponent implements OnInit {
 
   canClick:boolean;
 
-  constructor() { }
+  constructor(
+    private createGroupInvitationsService: CreateGroupInvitationsService,
+    ) {}
 
   ngOnInit(): void {}
 
@@ -82,11 +85,21 @@ export class GroupInviteUsersComponent implements OnInit {
     // disable UI
     this.processing = true;
 
-    // TODO call create group invitation service
+    this.createGroupInvitationsService.createInvitations(this.group.id, logins).subscribe(
+      (res) => {
+        // TODO display the messages
 
-    this.sendInvites(this.logins);
+        // Clear the textarea
+        if (this.textArea != undefined)
+          this.textArea.setValue('');
 
-    if (this.textArea != undefined)
-      this.textArea.setValue('');
+        this.processing = false;
+      },
+      (err) => {
+        // TODO process the error
+
+        this.processing = false;
+      }
+    );
   }
 }
