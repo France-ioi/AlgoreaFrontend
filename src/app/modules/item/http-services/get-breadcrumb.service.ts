@@ -1,5 +1,3 @@
-
-
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
@@ -29,12 +27,10 @@ export class ItemNavigationService {
   constructor(private http: HttpClient) {}
 
   getBreadcrumb(itemIdPath: string[], attemptId: string): Observable<BreadcrumbItem[]|'forbidden'> {
-
     return this.getBreadcrumbGeneric(itemIdPath, { attempt_id: attemptId });
   }
 
   getBreadcrumbWithParentAttempt(itemIdPath: string[], parentAttemptId: string): Observable<BreadcrumbItem[]|'forbidden'> {
-
       return this.getBreadcrumbGeneric(itemIdPath, { parent_attempt_id: parentAttemptId });
   }
 
