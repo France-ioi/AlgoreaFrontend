@@ -1,8 +1,10 @@
-<ng-container *ngIf="isAllowed; else noPermission">
-  <alg-section icon="fa fa-users" label="Administration">
-    <p>...</p>
-  </alg-section>
+<ng-container *ngIf="group$ | async as group">
+  <ng-container *ngIf="group.canCurrentUserManageGroup; else noPermission">
+    <alg-section icon="fa fa-users" label="Administration">
+      <p>...</p>
+    </alg-section>
+  </ng-container>
+  <ng-template #noPermission>
+    <alg-group-no-permission></alg-group-no-permission>
+  </ng-template>
 </ng-container>
-<ng-template #noPermission>
-  <alg-group-no-permission></alg-group-no-permission>
-</ng-template>

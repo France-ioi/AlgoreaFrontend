@@ -31,7 +31,7 @@ describe('GroupDetailsComponent', () => {
   }));
 
   beforeEach(() => {
-    groupTabService.group$.next(mockGroup);
+    groupTabService.setGroup(mockGroup);
     fixture = TestBed.createComponent(GroupDetailsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
