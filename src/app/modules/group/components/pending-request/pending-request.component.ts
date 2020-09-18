@@ -3,7 +3,7 @@ import {
   OnInit,
   Input,
   OnChanges,
-  SimpleChanges
+  SimpleChanges,
 } from '@angular/core';
 import { SortEvent } from 'primeng/api/sortevent';
 import { MessageService } from 'primeng/api';
