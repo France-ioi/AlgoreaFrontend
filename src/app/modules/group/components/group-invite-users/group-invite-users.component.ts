@@ -65,9 +65,24 @@ export class GroupInviteUsersComponent implements OnInit {
   }
 
   invite() {
+    // clear the messages
+    this.messages = [];
+
+    // remove empty logins and duplicates
+    const logins = this.logins
+      .map((login) => login.trim())
+      .filter(function (login, index, self) {
+        return self.indexOf(login) == index && login != '';
+      });
+
+    this.logins = [];
+
+    if (logins.length == 0) return;
+
+    // disable UI
     this.processing = true;
 
-    this.messages = [];
+    // TODO call create group invitation service
 
     this.sendInvites(this.logins);
 
