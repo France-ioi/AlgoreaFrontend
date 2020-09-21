@@ -30,7 +30,7 @@ export class GetRequestsService {
     sort: string[] = []
   ): Observable<PendingRequest[]> {
     let params = new HttpParams();
-    params.set('group_id', groupId);
+    params = params.set('group_id', groupId);
     if (sort.length > 0) {
       params = params.set('sort', sort.join(','));
     }
