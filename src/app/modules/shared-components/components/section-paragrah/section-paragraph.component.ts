@@ -21,6 +21,8 @@ export class SectionParagraphComponent implements OnInit {
   @Input() hasBorder = false;
   @Input() data: any;
   @Input() remainOrigin = true;
+  @Input() isCollapsedByDefault = false;
+
 
   @Output() collapse = new EventEmitter<boolean>();
 
@@ -31,7 +33,7 @@ export class SectionParagraphComponent implements OnInit {
   constructor() {}
 
   ngOnInit() {
-    this.visible = this.collapsible;
+    this.visible = this.collapsible && !this.isCollapsedByDefault;
   }
 
   toggleContent() {
