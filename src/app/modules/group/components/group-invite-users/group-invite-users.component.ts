@@ -9,8 +9,8 @@ import { Group } from '../../http-services/get-group-by-id.service';
 interface Message
 {
   type: 'success' | 'info' | 'error',
-  summary?:string,
-  detail:string
+  summary?: string,
+  detail: string
 }
 
 @Component({
