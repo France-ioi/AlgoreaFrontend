@@ -48,27 +48,11 @@ export class GroupInviteUsersComponent implements OnInit {
   }
 
   private displayResponse(response: Map<string, InvitationResult>) {
-    const sucessInvites: string[] = [];
-    const alreadyInvited: string[] = [];
-    const notFoundUsers: string[] = [];
-    const invalidInvites: string[] = [];
 
-    for (const [key, value] of response) {
-      switch (value) {
-        case InvitationResult.Success:
-          sucessInvites.push(key);
-          break;
-        case InvitationResult.AlreadyInvited:
-          alreadyInvited.push(key);
-          break;
-        case InvitationResult.Error:
-          invalidInvites.push(key);
-          break;
-        case InvitationResult.NotFound:
-          notFoundUsers.push(key);
-          break;
-      }
-    }
+    const sucessInvites: string[] = Array.from(response.entries()).filter((e) => e[1] == InvitationResult.Success).map((e) => e[0]);
+    const alreadyInvited: string[] = Array.from(response.entries()).filter((e) => e[1] == InvitationResult.AlreadyInvited).map((e) => e[0]);
+    const notFoundUsers: string[] = Array.from(response.entries()).filter((e) => e[1] == InvitationResult.NotFound).map((e) => e[0]);
+    const invalidInvites: string[] = Array.from(response.entries()).filter((e) => e[1] == InvitationResult.Error).map((e) => e[0]);
 
     if (sucessInvites.length > 0)
       this.messages.push({
