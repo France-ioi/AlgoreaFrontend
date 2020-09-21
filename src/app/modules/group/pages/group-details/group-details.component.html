@@ -1,6 +1,6 @@
 <div *ngIf="state === 'loaded' && group"><!-- && group is used for asserting that the variable is set -->
   <alg-group-header [group]="group"></alg-group-header>
-  <alg-pending-request [groupId]="group.id"></alg-pending-request>
+  <alg-pending-request [groupId]="group.id" [isPublic]="group.is_public"></alg-pending-request>
 
   <!-- tabs -- if only the first tab is visible, do not show the tab bar -->
   <nav mat-tab-nav-bar *ngIf="group.isCurrentUserManager">

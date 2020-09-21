@@ -1,5 +1,5 @@
 <alg-section-paragraph
-  *ngIf="requests.length"
+  *ngIf="requests.length || isPublic"
   icon="fa fa-check"
   label="Pending requests"
   [collapsible]="true"

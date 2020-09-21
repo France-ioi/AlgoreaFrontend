@@ -40,6 +40,7 @@ interface Result {
 })
 export class PendingRequestComponent implements OnInit, OnChanges {
   @Input() groupId: string;
+  @Input() isPublic: boolean;
 
   // Make the enums usable in the html template
   Action = Action;
