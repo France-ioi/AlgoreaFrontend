@@ -5,7 +5,40 @@ export class AppPage {
     return browser.get(browser.baseUrl) as Promise<any>;
   }
 
-  getTitleText() {
-    return element(by.css('alg-root .content span')).getText() as Promise<string>;
+  getTitleElement() {
+    // Get the home page heading element reference
+    return element(by.css('.platform-name'));
+  }
+
+  getActivitiesElements() {
+    return element.all(by.css('.ui-treenode-content'));
+  }
+
+  getFirstActivityElement() {
+    return element(by.css('.ui-treenode-content'));
+  }
+
+  getLeftElement() {
+    return element(by.css('.left'));
+  }
+
+  getTopBarElement() {
+    return element(by.css('.top-bar'));
+  }
+
+  getRightElement() {
+    return element(by.css('.right'));
+  }
+
+  getMainContentElement() {
+    return element(by.css('.right .main-content p'));
+  }
+
+  getCollapseButtonElement() {
+    return element(by.css('.nav-collapse'));
+  }
+
+  getSignOutElement () {
+    return element(by.css('.sign-out'));
   }
 }
