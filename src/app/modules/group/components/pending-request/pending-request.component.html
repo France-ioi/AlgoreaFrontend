@@ -6,11 +6,12 @@
   [isCollapsedByDefault]="true"
 >
   <ng-template #headerTemplate>
-    <div style="flex: 1; flex-direction: row-reverse;display: flex;">
+    <div style="flex: 1; flex-direction: row-reverse;display: flex;" [ngClass]="{'all-disabled': !isLoaded}">
       <alg-selection (change)="onSubgroupSwitch($event)" [items]="subgroupSwitchItems" style="width: 25rem;"></alg-selection>
     </div>
   </ng-template>
-  <div class="pending-request-container">
+
+  <div class="pending-request-container" *ngIf="isLoaded; else loading">
     <alg-grid
       [selectedColumns]="columns"
       [columns]="columns"

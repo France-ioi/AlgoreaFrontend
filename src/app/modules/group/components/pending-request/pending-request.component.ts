@@ -59,6 +59,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
   panel: GridColumnGroup[] = [];
   currentSort: string[] = [];
   includeSubgroup: boolean;
+  isLoaded = false;
 
   ongoingActivity: Activity = Activity.None;
 
@@ -75,9 +76,10 @@ export class PendingRequestComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(_changes: SimpleChanges) {
+    this.isLoaded = false;
     this.selection = [];
-    this.reloadData();
     this.ongoingActivity = Activity.None;
+    this.reloadData();
   }
 
   private reloadData() {
@@ -86,6 +88,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
       .subscribe((reqs: PendingRequest[]) => {
         this.requests = reqs;
       });
+    this.isLoaded = true;
   }
 
   private parseResults(data: Map<string, any>): Result {
@@ -187,6 +190,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
 
   onSubgroupSwitch(selectedIdx: number) {
     this.includeSubgroup = this.subgroupSwitchItems[selectedIdx].includeSubgroup;
+    this.isLoaded = false;
     this.reloadData();
   }
 }
