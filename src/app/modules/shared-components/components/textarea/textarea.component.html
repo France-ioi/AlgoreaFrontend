@@ -1,5 +1,5 @@
 <textarea pInputTextarea rows="5" placeholder="{{placeholder}}" [ngClass]="{'no-icon': !icon}" (input)="onChange()"
-  [(ngModel)]="value"></textarea>
+  [(ngModel)]="value" [disabled]="disabled"></textarea>
 <span class="placeholder-icon" *ngIf="icon">
   <i class="fa fa-font"></i>
 </span>

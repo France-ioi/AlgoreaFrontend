@@ -8,6 +8,7 @@ import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 export class TextareaComponent implements OnInit {
   @Input() icon = '';
   @Input() placeholder = '';
+  @Input() disabled = false;
 
   @Output() valueChange = new EventEmitter<string>();
 
