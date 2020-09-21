@@ -49,10 +49,15 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     { field: 'user.login', header: 'USER' },
     { field: 'at', header: 'REQUESTED ON' },
   ];
+  subgroupSwitchItems = [
+    { label: 'This group only', includeSubgroup: false},
+    { label: 'All subgroups', includeSubgroup: true }
+  ];
   requests: PendingRequest[] = [];
   selection: PendingRequest[] = [];
   panel: GridColumnGroup[] = [];
   currentSort: string[] = [];
+  includeSubgroup: boolean;
 
   ongoingActivity: Activity = Activity.None;
 
@@ -177,5 +182,10 @@ export class PendingRequestComponent implements OnInit, OnChanges {
       this.currentSort = sortMeta;
       this.reloadData();
     }
+  }
+
+  onSubgroupSwitch(selectedIdx: number) {
+    this.includeSubgroup = this.subgroupSwitchItems[selectedIdx].includeSubgroup;
+    this.reloadData();
   }
 }

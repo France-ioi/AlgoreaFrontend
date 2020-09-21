@@ -4,6 +4,11 @@
   label="Pending requests"
   [collapsible]="true"
 >
+  <ng-template #headerTemplate>
+    <div style="flex: 1; flex-direction: row-reverse;display: flex;">
+      <alg-selection (change)="onSubgroupSwitch($event)" [items]="subgroupSwitchItems" style="width: 25rem;"></alg-selection>
+    </div>
+  </ng-template>
   <div class="pending-request-container">
     <alg-grid
       [selectedColumns]="columns"
