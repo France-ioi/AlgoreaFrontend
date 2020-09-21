@@ -11,7 +11,7 @@ export class TextareaComponent implements OnInit {
 
   @Output() valueChange = new EventEmitter<string>();
 
-  value: string;
+  value = '';
 
   constructor() {}
 
