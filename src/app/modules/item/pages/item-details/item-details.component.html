@@ -1,1 +1,18 @@
-<p>item-details works!</p>
+
+<ng-container [ngSwitch]="state">
+
+  <p-progressSpinner *ngSwitchCase="'loading'"></p-progressSpinner>
+
+  <p *ngSwitchCase="'error'">Error while loading the item</p>
+
+  <ng-container *ngSwitchCase="'loaded'">
+    <ng-container *ngIf="item$ | async as item">
+
+      <h1>{{ item.string.title }}</h1>
+
+      <p>item-details works!</p>
+
+    </ng-container>
+  </ng-container>
+
+</ng-container>
