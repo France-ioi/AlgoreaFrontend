@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CurrentContentService } from 'src/app/shared/services/current-content.service';
 import { ActivatedRoute } from '@angular/router';
 import { itemFromDetailParams } from 'src/app/shared/services/nav-types';
@@ -8,7 +8,7 @@ import { itemFromDetailParams } from 'src/app/shared/services/nav-types';
   templateUrl: './item-details.component.html',
   styleUrls: ['./item-details.component.scss']
 })
-export class ItemDetailsComponent implements OnInit {
+export class ItemDetailsComponent implements OnInit, OnDestroy {
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -21,6 +21,19 @@ export class ItemDetailsComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.currentContent.setPageInfo({
+      category: 'Items',
+      breadcrumb: [
+        { title: 'RootChapter' },
+        { title: 'MyChapter', attemptOrder: 1 },
+        { title: 'Content' }
+      ],
+      currentPageIndex: 2
+    });
+  }
+
+  ngOnDestroy() {
+    this.currentContent.setPageInfo(null);
   }
 
 }

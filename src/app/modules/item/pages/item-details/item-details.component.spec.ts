@@ -15,7 +15,8 @@ describe('ItemDetailsComponent', () => {
       declarations: [ ItemDetailsComponent ],
       providers: [
         { provide: CurrentContentService, useValue: {
-          setCurrent: (_i: NavItem) => {}
+          setCurrent: (_i: NavItem) => {},
+          setPageInfo: (_p: any) => {},
         }},
         { provide: ActivatedRoute, useValue: {
           paramMap: of({

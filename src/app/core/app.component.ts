@@ -1,7 +1,9 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { CurrentUserService } from '../shared/services/current-user.service';
-import { filter, skip } from 'rxjs/operators';
+import { delay, filter, skip } from 'rxjs/operators';
 import { UserProfile } from '../shared/http-services/current-user.service';
+import { Observable } from 'rxjs';
+import { CurrentContentService, PageInfo } from '../shared/services/current-content.service';
 
 @Component({
   selector: 'alg-root',
@@ -9,6 +11,10 @@ import { UserProfile } from '../shared/http-services/current-user.service';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
+
+  // the delay(0) is used to prevent the UI to update itself (when the content is loaded) (ExpressionChangedAfterItHasBeenCheckedError)
+  pageInfo$: Observable<PageInfo|null>  = this.currentContent.pageInfo().pipe( delay(0) );
+
   editing = false;
   isStarted = true;
 
@@ -20,22 +26,6 @@ export class AppComponent implements OnInit {
     'Deutsch'
   ];
 
-  breaddata = {
-    selectedID: '42',
-    path: [
-      { ID: '1', label: 'Contest', separator: 'slash' },
-      {
-        ID: '42',
-        label: 'Personalized contest',
-        attempt: 12,
-        separator: 'arrow'
-      },
-      { ID: '43', label: 'Personalized contests', attempt: 12 },
-      { ID: '23', label: 'IOI Selection 2012', attempt: 2 },
-      { ID: '24', label: 'Individuals', separator: 'slash' }
-    ]
-  };
-
   collapsed = false;
   folded = false;
   scrolled = false;
@@ -44,6 +34,7 @@ export class AppComponent implements OnInit {
 
   constructor(
     private currentUserService: CurrentUserService,
+    private currentContent: CurrentContentService,
   ) {}
 
   ngOnInit() {

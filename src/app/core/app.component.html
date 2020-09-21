@@ -59,9 +59,7 @@
       ></alg-editor-bar>
       <div class="breadcrumb-bar"
       *ngIf="!folded && !scrolled">
-        <alg-breadcrumb
-          [items]="breaddata"
-        ></alg-breadcrumb>
+        <alg-breadcrumb [pageInfo]="pageInfo$ | async"></alg-breadcrumb>
         <alg-page-navigator
           *ngIf="!editing"
           (edit)="onEditPage()"

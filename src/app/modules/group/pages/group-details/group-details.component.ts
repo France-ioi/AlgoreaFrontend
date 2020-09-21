@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { GroupTabService } from '../../services/group-tab.service';
 import { Group, GetGroupByIdService } from '../../http-services/get-group-by-id.service';
 import { ActivatedRoute } from '@angular/router';
 import { withManagementAdditions, ManagementAdditions } from '../../helpers/group-management';
+import { CurrentContentService } from 'src/app/shared/services/current-content.service';
 
 @Component({
   selector: 'alg-group-details',
@@ -10,7 +11,7 @@ import { withManagementAdditions, ManagementAdditions } from '../../helpers/grou
   styleUrls: ['./group-details.component.scss'],
   providers: [ GroupTabService ]
 })
-export class GroupDetailsComponent {
+export class GroupDetailsComponent implements OnDestroy {
 
   idFromRoute?: string;
   group?: Group & ManagementAdditions;
@@ -19,7 +20,8 @@ export class GroupDetailsComponent {
   constructor(
     private activatedRoute: ActivatedRoute,
     private groupTabService: GroupTabService,
-    private getGroupByIdService: GetGroupByIdService
+    private getGroupByIdService: GetGroupByIdService,
+    private currentContent: CurrentContentService,
   ) {
     groupTabService.refresh$.subscribe(() => this.fetchGroup());
     activatedRoute.paramMap.subscribe((params) => {
@@ -41,6 +43,11 @@ export class GroupDetailsComponent {
             this.group = withManagementAdditions(g);
             this.state = 'loaded';
             this.groupTabService.group$.next(g);
+            this.currentContent.setPageInfo({
+              category: 'Groups',
+              breadcrumb: [{ title: g.name }],
+              currentPageIndex: 0
+            });
           },
           (_error) => {
             this.state = 'error';
@@ -49,6 +56,10 @@ export class GroupDetailsComponent {
     } else {
       this.state = 'error';
     }
+  }
+
+  ngOnDestroy() {
+    this.currentContent.setPageInfo(null);
   }
 
 }
