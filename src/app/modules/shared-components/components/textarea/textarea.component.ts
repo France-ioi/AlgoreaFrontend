@@ -10,7 +10,7 @@ export class TextareaComponent implements OnInit {
   @Input() placeholder = '';
   @Input() disabled = false;
 
-  @Output() valueChange = new EventEmitter<string>();
+  @Output() textChange = new EventEmitter<string>();
 
   value = '';
 
@@ -24,6 +24,6 @@ export class TextareaComponent implements OnInit {
   }
 
   onChange() {
-    this.valueChange.emit(this.value);
+    this.textChange.emit(this.value);
   }
 }
