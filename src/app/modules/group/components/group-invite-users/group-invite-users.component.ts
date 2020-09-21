@@ -89,16 +89,12 @@ export class GroupInviteUsersComponent implements OnInit {
   {
     this.state = 'ready';
 
-    if (text.length == 0)
-    {
-      this.state = 'empty';
-      return;
-    }
+    const logins = text.split(',').filter(login => login.length > 0);
 
-    if (text.split(',').length >= 100)
-    {
+    if (logins.length == 0) {
+      this.state = 'empty';
+    } else if (logins.length >= 100) {
       this.state = 'too_many';
-      return;
     }
   }
 
