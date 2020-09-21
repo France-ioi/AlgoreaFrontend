@@ -1,22 +1,18 @@
 <alg-section-paragraph icon="fa fa-user-plus" label="Invite users" [collapsible]="true">
   <span class="content-title">Add users name list, separated by commas.</span>
   <div class="invite-users">
-    <alg-textarea icon="show" placeholder="pseudo, pseudo..." (valueChange)="changeText($event)">
+    <alg-textarea icon="show" placeholder="login, login..." (valueChange)="onTextChange($event)" [disabled]="state == 'loading'">
     </alg-textarea>
 
-    <div *ngIf="!processing">
+    <alg-message *ngIf="state == 'too_many'" type="error" detail="You cannot invite more than 100 users at once"
+      [closable]="false">
+    </alg-message>
 
-      <alg-message *ngIf="tooManyLogins" type="error" detail="You cannot invite more than 100 users at once"
-        [closable]="false">
-      </alg-message>
+    <alg-button label="Invite" class="ui-button-rounded" (click)="onInviteClicked()" [disabled]="state != 'ready'">
+    </alg-button>
 
-      <alg-button label="Invite" class="ui-button-rounded" (click)="invite()" [disabled]="!canClick || processing">
-      </alg-button>
-
-      <alg-message *ngFor="let message of messages" [type]="message.type" [detail]="message.detail"
-        summary={{message.summary}}></alg-message>
-    </div>
-    <p-progressSpinner *ngIf="processing"></p-progressSpinner>
+    <alg-message *ngFor="let message of messages" [type]="message.type" [detail]="message.detail"
+      summary={{message.summary}}></alg-message>
 
   </div>
 </alg-section-paragraph>

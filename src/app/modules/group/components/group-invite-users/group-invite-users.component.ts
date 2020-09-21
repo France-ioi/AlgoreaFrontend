@@ -27,15 +27,9 @@ export class GroupInviteUsersComponent implements OnInit {
   @ViewChild(TextareaComponent)
   private textArea: TextareaComponent;
 
-  logins:string[];
+  state: 'empty'|'too_many'|'loading'|'ready' = 'empty';
 
-  processing = false;
-
-  tooManyLogins = false;
-
-  messages : Message[] = [];
-
-  canClick:boolean;
+  messages: Message[] = [];
 
   constructor(
     private createGroupInvitationsService: CreateGroupInvitationsService,
@@ -107,59 +101,53 @@ export class GroupInviteUsersComponent implements OnInit {
 
   /* events */
 
-  changeText(text:string)
+  onTextChange(text:string)
   {
-    this.canClick = true;
-    this.tooManyLogins = false;
+    this.state = 'ready';
 
     if (text.length == 0)
     {
-      this.canClick = false;
+      this.state = 'empty';
       return;
     }
 
-    this.logins = text.split(',');
-
-    if (this.logins.length >= 100)
+    if (text.split(',').length >= 100)
     {
-      this.canClick = false;
-      this.tooManyLogins = true;
+      this.state = 'too_many';
       return;
     }
   }
 
-  invite() {
+  onInviteClicked() {
     // clear the messages
     this.messages = [];
 
     // remove empty logins and duplicates
-    const logins = this.logins
+    const logins = this.textArea.value.split(',')
       .map((login) => login.trim())
       .filter(function (login, index, self) {
-        return self.indexOf(login) == index && login != '';
+        return self.indexOf(login) === index && login !== '';
       });
-
-    this.logins = [];
 
     if (logins.length == 0) return;
 
     // disable UI
-    this.processing = true;
+    this.state = 'loading';
 
     this.createGroupInvitationsService.createInvitations(this.group.id, logins).subscribe(
       (res) => {
         this.displayResponse(res);
 
         // Clear the textarea
-        if (this.textArea != undefined)
+        if (this.textArea)
           this.textArea.setValue('');
 
-        this.processing = false;
+          this.state = 'empty';
       },
       (err) => {
         this.processRequestError(err);
 
-        this.processing = false;
+        this.state = 'ready';
       }
     );
   }
