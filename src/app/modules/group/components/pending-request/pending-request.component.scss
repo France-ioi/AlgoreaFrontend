@@ -77,6 +77,17 @@
   }
 }
 
+// FIXME: find a more restrictive selector
+.all-disabled {
+  opacity: 70%;
+  pointer-events: none;
+
+  > * {
+    opacity: 70%;
+    pointer-events: none;
+  }
+}
+
 :host ::ng-deep .pending-request-container .ui-table .ui-table-summary {
   background-color: transparent;
 }
