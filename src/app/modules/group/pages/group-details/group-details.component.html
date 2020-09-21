@@ -1,4 +1,4 @@
-<div *ngIf="state === 'loaded' && group"><!-- && group is used for asserting that the variable is set -->
+<div *ngIf="state === 'loaded' && (group$ | async) as group">
   <alg-group-header [group]="group"></alg-group-header>
   <alg-pending-request [groupId]="group.id"></alg-pending-request>
 

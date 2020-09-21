@@ -11,7 +11,19 @@ import { Group } from '../http-services/get-group-by-id.service';
 @Injectable()
 export class GroupTabService {
   // for parent to pass the current group to tabs
-  group$ = new ReplaySubject<Group>(1);
+  private group = new ReplaySubject<Group>(1);
+
   // for tabs to ask for a group refresh
-  refresh$ = new Subject<void>();
+  private refresh = new Subject<void>();
+
+  readonly group$ = this.group.asObservable();
+  readonly refresh$ = this.refresh.asObservable();
+
+  setGroup(g: Group) {
+    this.group.next(g);
+  }
+
+  requestGroupRefresh() {
+    this.refresh.next();
+  }
 }
