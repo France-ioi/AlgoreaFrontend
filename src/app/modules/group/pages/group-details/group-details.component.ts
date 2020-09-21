@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { GroupTabService } from '../../services/group-tab.service';
 import { Group, GetGroupByIdService } from '../../http-services/get-group-by-id.service';
 import { ActivatedRoute } from '@angular/router';
 import { withManagementAdditions } from '../../helpers/group-management';
 import { map } from 'rxjs/operators';
+import { CurrentContentService } from 'src/app/shared/services/current-content.service';
 
 @Component({
   selector: 'alg-group-details',
@@ -11,7 +12,7 @@ import { map } from 'rxjs/operators';
   styleUrls: ['./group-details.component.scss'],
   providers: [ GroupTabService ]
 })
-export class GroupDetailsComponent {
+export class GroupDetailsComponent implements OnDestroy {
 
   group$ = this.groupTabService.group$.pipe(map((g) => withManagementAdditions(g)))
   state: 'loaded'|'loading'|'error' = 'loading';
@@ -19,7 +20,8 @@ export class GroupDetailsComponent {
   constructor(
     private activatedRoute: ActivatedRoute,
     private groupTabService: GroupTabService,
-    private getGroupByIdService: GetGroupByIdService
+    private getGroupByIdService: GetGroupByIdService,
+    private currentContent: CurrentContentService,
   ) {
     groupTabService.refresh$.subscribe(() => this.fetchGroup(false));
     activatedRoute.paramMap.subscribe((params) => {
@@ -41,6 +43,11 @@ export class GroupDetailsComponent {
           (g: Group) => {
             this.state = 'loaded';
             this.groupTabService.setGroup(g);
+            this.currentContent.setPageInfo({
+              category: 'Groups',
+              breadcrumb: [{ title: g.name }],
+              currentPageIndex: 0
+            });
           },
           (_error) => {
             this.state = 'error';
@@ -49,6 +56,10 @@ export class GroupDetailsComponent {
     } else {
       this.state = 'error'; // unexpected - the routing should not let this happen
     }
+  }
+
+  ngOnDestroy() {
+    this.currentContent.setPageInfo(null);
   }
 
 }
