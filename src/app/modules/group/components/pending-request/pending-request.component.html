@@ -1,5 +1,5 @@
 <alg-section-paragraph
-  *ngIf="requests.length || isPublic"
+  *ngIf="isPublic"
   icon="fa fa-check"
   label="Pending requests"
   [collapsible]="true"
@@ -13,6 +13,7 @@
 
   <div class="pending-request-container" *ngIf="isLoaded; else loading">
     <alg-grid
+      *ngIf="requests.length; else empty"
       [selectedColumns]="columns"
       [columns]="columns"
       [data]="requests"
@@ -124,4 +125,8 @@
 <p-toast></p-toast>
 <ng-template #loading>
   <p-progressSpinner></p-progressSpinner>
+</ng-template>
+
+<ng-template #empty>
+  No request
 </ng-template>
