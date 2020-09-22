@@ -1,4 +1,4 @@
-import { Component, Input, Output, OnInit, EventEmitter, ViewChild } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 import { TextareaComponent } from 'src/app/modules/shared-components/components/textarea/textarea.component';
 import { MessageService } from 'primeng/api';
 import { ERROR_MESSAGE } from 'src/app/shared/constants/api';
@@ -24,8 +24,7 @@ export class GroupInviteUsersComponent {
   @Input() group: Group
   @Output() refreshRequired = new EventEmitter<void>();
 
-  @ViewChild(TextareaComponent)
-  private textArea: TextareaComponent;
+  @ViewChild(TextareaComponent) private textArea: TextareaComponent;
 
   state: 'empty'|'too_many'|'loading'|'ready' = 'empty';
 
@@ -48,10 +47,10 @@ export class GroupInviteUsersComponent {
 
   private displayResponse(response: Map<string, InvitationResult>) {
 
-    const sucessInvites: string[] = Array.from(response.entries()).filter((e) => e[1] == InvitationResult.Success).map((e) => e[0]);
-    const alreadyInvited: string[] = Array.from(response.entries()).filter((e) => e[1] == InvitationResult.AlreadyInvited).map((e) => e[0]);
-    const notFoundUsers: string[] = Array.from(response.entries()).filter((e) => e[1] == InvitationResult.NotFound).map((e) => e[0]);
-    const invalidInvites: string[] = Array.from(response.entries()).filter((e) => e[1] == InvitationResult.Error).map((e) => e[0]);
+    const sucessInvites: string[] = Array.from(response.entries()).filter(e => e[1] === InvitationResult.Success).map(e => e[0]);
+    const alreadyInvited: string[] = Array.from(response.entries()).filter(e => e[1] === InvitationResult.AlreadyInvited).map(e => e[0]);
+    const notFoundUsers: string[] = Array.from(response.entries()).filter(e => e[1] === InvitationResult.NotFound).map(e => e[0]);
+    const invalidInvites: string[] = Array.from(response.entries()).filter(e => e[1] === InvitationResult.Error).map(e => e[0]);
 
     if (sucessInvites.length > 0)
       this.messages.push({
@@ -90,7 +89,7 @@ export class GroupInviteUsersComponent {
 
     const logins = text.split(',').filter(login => login.length > 0);
 
-    if (logins.length == 0) {
+    if (logins.length === 0) {
       this.state = 'empty';
     } else if (logins.length >= 100) {
       this.state = 'too_many';
@@ -116,10 +115,9 @@ export class GroupInviteUsersComponent {
         this.displayResponse(res);
 
         // Clear the textarea
-        if (this.textArea)
-          this.textArea.setValue('');
+        if (this.textArea) this.textArea.setValue('');
 
-          this.state = 'empty';
+        this.state = 'empty';
       },
       (err) => {
         this.processRequestError(err);
