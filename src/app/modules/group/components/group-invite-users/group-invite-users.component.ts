@@ -19,7 +19,7 @@ interface Message
   styleUrls: ['./group-invite-users.component.scss'],
   providers: [MessageService],
 })
-export class GroupInviteUsersComponent implements OnInit {
+export class GroupInviteUsersComponent {
 
   @Input() group: Group
   @Output() refreshRequired = new EventEmitter<void>();
@@ -36,7 +36,6 @@ export class GroupInviteUsersComponent implements OnInit {
     private messageService: MessageService,
     ) {}
 
-  ngOnInit(): void {}
 
   private processRequestError(_err: any) {
     this.messageService.add({
@@ -108,8 +107,6 @@ export class GroupInviteUsersComponent implements OnInit {
       .filter(function (login, index, self) {
         return self.indexOf(login) === index && login !== '';
       });
-
-    if (logins.length == 0) return;
 
     // disable UI
     this.state = 'loading';
