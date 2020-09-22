@@ -6,14 +6,14 @@
   [isCollapsedByDefault]="true"
 >
   <ng-template #headerTemplate>
-    <div style="flex: 1; flex-direction: row-reverse;display: flex;" [ngClass]="{'all-disabled': !isLoaded}">
+    <div style="flex: 1; flex-direction: row-reverse;display: flex;" [ngClass]="{'all-disabled': status == 'loading'}">
       <alg-selection (change)="onSubgroupSwitch($event)" [items]="subgroupSwitchItems" style="width: 25rem;"></alg-selection>
     </div>
   </ng-template>
 
-  <div class="pending-request-container" *ngIf="isLoaded; else loading">
+  <div class="pending-request-container" *ngIf="status != 'loading'; else loading" [ngSwitch]="status">
     <alg-grid
-      *ngIf="requests.length; else empty"
+      *ngSwitchCase="'loaded'"
       [selectedColumns]="columns"
       [columns]="columns"
       [data]="requests"
@@ -119,14 +119,16 @@
         </div>
       </ng-template>
     </alg-grid>
+    <div *ngSwitchCase="'empty'">
+      No request
+    </div>
+    <div *ngSwitchDefault>
+      Error
+    </div>
   </div>
 </alg-section-paragraph>
 
 <p-toast></p-toast>
 <ng-template #loading>
   <p-progressSpinner></p-progressSpinner>
-</ng-template>
-
-<ng-template #empty>
-  No request
 </ng-template>

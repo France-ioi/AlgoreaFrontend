@@ -59,7 +59,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
   panel: GridColumnGroup[] = [];
   currentSort: string[] = [];
   includeSubgroup: boolean;
-  isLoaded = false;
+  status: 'loading' | 'loaded' | 'empty' |'error';
 
   ongoingActivity: Activity = Activity.None;
 
@@ -76,19 +76,24 @@ export class PendingRequestComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(_changes: SimpleChanges) {
-    this.isLoaded = false;
     this.selection = [];
     this.ongoingActivity = Activity.None;
     this.reloadData();
   }
 
   private reloadData() {
+    this.status = 'loading';
     this.getRequestsService
       .getPendingRequests(this.groupId, this.currentSort)
-      .subscribe((reqs: PendingRequest[]) => {
-        this.requests = reqs;
-      });
-    this.isLoaded = true;
+      .subscribe(
+        (reqs: PendingRequest[]) => {
+          this.requests = reqs;
+          this.status = reqs.length ? 'loaded' : 'empty';
+        },
+        () => {
+          this.status = 'error';
+        }
+      );
   }
 
   private parseResults(data: Map<string, any>): Result {
@@ -190,7 +195,6 @@ export class PendingRequestComponent implements OnInit, OnChanges {
 
   onSubgroupSwitch(selectedIdx: number) {
     this.includeSubgroup = this.subgroupSwitchItems[selectedIdx].includeSubgroup;
-    this.isLoaded = false;
     this.reloadData();
   }
 }
