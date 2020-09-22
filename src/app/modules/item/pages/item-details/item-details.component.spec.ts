@@ -6,6 +6,8 @@ import { NavItem } from 'src/app/shared/services/nav-types';
 import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
 import { GetBreadcrumbService } from '../../http-services/get-breadcrumb.service';
+import { GetItemByIdService } from '../../http-services/get-item-by-id.service';
+import { ResultActionsService } from 'src/app/shared/http-services/result-actions.service';
 
 describe('ItemDetailsComponent', () => {
   let component: ItemDetailsComponent;
@@ -33,6 +35,18 @@ describe('ItemDetailsComponent', () => {
         { provide: GetBreadcrumbService, useValue: {
           getBreadcrumb: (_p: any, _a: any) => of([]),
           getBreadcrumbWithParentAttempt: (_p: any, _a: any) => of([]),
+        }},
+        { provide: GetItemByIdService, useValue: {
+          get: (_id: string) => of({
+            id: 1,
+            requires_explicit_entry:true,
+            string: {
+              title: 'Dummy title',
+            }
+          }),
+        }},
+        { provide: ResultActionsService, useValue: {
+          start: (_path: any, _a: string) => of(undefined)
         }}
       ]
     })

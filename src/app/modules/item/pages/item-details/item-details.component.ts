@@ -3,20 +3,30 @@ import { CurrentContentService, PageInfo } from 'src/app/shared/services/current
 import { ActivatedRoute } from '@angular/router';
 import { itemFromDetailParams, NavItem, isPathGiven } from 'src/app/shared/services/nav-types';
 import { GetBreadcrumbService, BreadcrumbItem } from 'src/app/modules/item/http-services/get-breadcrumb.service';
-import { EMPTY, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { EMPTY, forkJoin, Observable, of, throwError } from 'rxjs';
+import { map, mapTo, switchMap } from 'rxjs/operators';
+import { ItemTabService } from '../../services/item-tab.service';
+import { GetItemByIdService } from '../../http-services/get-item-by-id.service';
+import { ResultActionsService } from 'src/app/shared/http-services/result-actions.service';
 
 @Component({
   selector: 'alg-item-details',
   templateUrl: './item-details.component.html',
-  styleUrls: ['./item-details.component.scss']
+  styleUrls: ['./item-details.component.scss'],
+  providers: [ ItemTabService ]
 })
 export class ItemDetailsComponent implements OnDestroy {
 
+  item$ = this.itemTabService.item$;
+  state: 'loaded'|'loading'|'error' = 'loading';
+
   constructor(
     private activatedRoute: ActivatedRoute,
+    private itemTabService: ItemTabService,
     private currentContent: CurrentContentService,
     private getBreadcrumbService: GetBreadcrumbService,
+    private getItemByIdService: GetItemByIdService,
+    private resultActionsService: ResultActionsService,
   ) {
     activatedRoute.paramMap.subscribe((params) => {
       const navItem = itemFromDetailParams(params);
@@ -42,9 +52,39 @@ export class ItemDetailsComponent implements OnDestroy {
       // TODO: handle no attempt given
       return;
     }
-    this.breadcumbRequest(navItem).subscribe((pageInfo) => {
-      this.currentContent.setPageInfo(pageInfo);
-    });
+    this.state = 'loading';
+
+    // do in parallel:
+    // - fetch breadcrumb
+    // - in serial:
+    //   - fetch the item info
+    //   - start a result on the item if required
+    forkJoin([
+      this.breadcumbRequest(navItem),
+      this.getItemByIdService.get(navItem.itemId).pipe(
+        switchMap((item) => {
+          if (navItem.attemptId || item.requires_explicit_entry) return of(item);
+          if (!navItem.parentAttemptId) return throwError(new Error('unexpected: no attempt provided')); /* cannot happen */
+          return this.resultActionsService.start(navItem.itemPath.concat([navItem.itemId]), navItem.parentAttemptId).pipe(
+            mapTo(item) // return the fetched item at the end
+          );
+        })
+      )
+    ])
+    .subscribe(
+      ([pageInfo, item]) => {
+        // do the ui change only if the displayed item is still the same
+        const nowNavItem = itemFromDetailParams(this.activatedRoute.snapshot.paramMap);
+        if (nowNavItem && nowNavItem.itemId === navItem.itemId) {
+          this.currentContent.setPageInfo(pageInfo);
+          this.itemTabService.setItem(item);
+          this.state = 'loaded';
+        }
+      },
+      (_err) => {
+        this.state = 'error';
+      }
+    );
   }
 
   private breadcumbRequest(navItem: NavItem): Observable<PageInfo> {
