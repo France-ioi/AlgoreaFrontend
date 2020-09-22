@@ -39,3 +39,7 @@ export function itemFromDetailParams(params: ParamMap): NavItem|undefined {
     itemPath: pathAsString === null || pathAsString.length === 0 ? [] : pathAsString.split(','),
   };
 }
+
+export function isPathGiven(params: ParamMap): boolean {
+  return params.has(pathParamName);
+}

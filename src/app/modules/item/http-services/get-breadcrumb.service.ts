@@ -12,7 +12,7 @@ interface RawBreadcrumbItem {
   attempt_number?: string,
 }
 
-interface BreadcrumbItem {
+export interface BreadcrumbItem {
   itemId: string,
   title: string
   attemptId?: string,
@@ -22,7 +22,7 @@ interface BreadcrumbItem {
 @Injectable({
   providedIn: 'root'
 })
-export class ItemNavigationService {
+export class GetBreadcrumbService {
 
   constructor(private http: HttpClient) {}
 
@@ -34,7 +34,7 @@ export class ItemNavigationService {
       return this.getBreadcrumbGeneric(itemIdPath, { parent_attempt_id: parentAttemptId });
   }
 
-  getBreadcrumbGeneric(itemIdPath: string[], parameters: {[param: string]: string}): Observable<BreadcrumbItem[]|'forbidden'> {
+  private getBreadcrumbGeneric(itemIdPath: string[], parameters: {[param: string]: string}): Observable<BreadcrumbItem[]|'forbidden'> {
     return this.http
       .get<RawBreadcrumbItem[]>(`${environment.apiUrl}/items/${itemIdPath.join('/')}/breadcrumbs`, {
         params: parameters
