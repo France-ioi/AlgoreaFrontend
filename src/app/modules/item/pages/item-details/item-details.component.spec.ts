@@ -7,6 +7,7 @@ import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
 import { GetBreadcrumbService } from '../../http-services/get-breadcrumb.service';
 import { GetItemByIdService } from '../../http-services/get-item-by-id.service';
+import { ResultActionsService } from 'src/app/shared/http-services/result-actions.service';
 
 describe('ItemDetailsComponent', () => {
   let component: ItemDetailsComponent;
@@ -44,6 +45,9 @@ describe('ItemDetailsComponent', () => {
             }
           }),
         }},
+        { provide: ResultActionsService, useValue: {
+          start: (_path: any, _a: string) => of(undefined)
+        }}
       ]
     })
     .compileComponents();
