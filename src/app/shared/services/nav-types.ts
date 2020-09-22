@@ -40,6 +40,6 @@ export function itemFromDetailParams(params: ParamMap): NavItem|undefined {
   };
 }
 
-export function pathGiven(params: ParamMap): boolean {
+export function isPathGiven(params: ParamMap): boolean {
   return params.has(pathParamName);
 }

@@ -1,7 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { CurrentContentService, PageInfo } from 'src/app/shared/services/current-content.service';
 import { ActivatedRoute } from '@angular/router';
-import { itemFromDetailParams, NavItem, pathGiven } from 'src/app/shared/services/nav-types';
+import { itemFromDetailParams, NavItem, isPathGiven } from 'src/app/shared/services/nav-types';
 import { GetBreadcrumbService, BreadcrumbItem } from 'src/app/modules/item/http-services/get-breadcrumb.service';
 import { EMPTY, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -32,7 +32,7 @@ export class ItemDetailsComponent implements OnDestroy {
   }
 
   private fetchItem() {
-    if (!pathGiven(this.activatedRoute.snapshot.paramMap)) {
+    if (!isPathGiven(this.activatedRoute.snapshot.paramMap)) {
       // TODO: handle no path given
       return;
     }
