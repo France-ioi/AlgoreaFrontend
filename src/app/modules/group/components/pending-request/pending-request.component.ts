@@ -40,7 +40,6 @@ interface Result {
 })
 export class PendingRequestComponent implements OnInit, OnChanges {
   @Input() groupId: string;
-  @Input() isPublic: boolean;
 
   // Make the enums usable in the html template
   Action = Action;
@@ -90,7 +89,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
           this.requests = reqs;
           this.status = reqs.length ? 'loaded' : 'empty';
         },
-        () => {
+        (_err) => {
           this.status = 'error';
         }
       );
