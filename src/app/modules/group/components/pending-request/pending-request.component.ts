@@ -39,7 +39,7 @@ interface Result {
   providers: [ MessageService ]
 })
 export class PendingRequestComponent implements OnInit, OnChanges {
-  @Input() groupId: string;
+  @Input() groupId: string | undefined;
 
   // Make the enums usable in the html template
   Action = Action;
@@ -131,7 +131,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
   }
 
   onAcceptOrReject(action: Action) {
-    if (this.selection.length === 0 || this.ongoingActivity !== Activity.None) {
+    if (this.selection.length === 0 || this.ongoingActivity !== Activity.None || !this.groupId) {
       return;
     }
     this.ongoingActivity = (action === Action.Accept) ? Activity.Accepting : Activity.Rejecting;

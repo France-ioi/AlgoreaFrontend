@@ -26,11 +26,12 @@ export class GetRequestsService {
   constructor(private http: HttpClient) {}
 
   getPendingRequests(
-    groupId: string,
+    groupId: string | undefined,
     sort: string[] = []
   ): Observable<PendingRequest[]> {
     let params = new HttpParams();
-    params = params.set('group_id', groupId);
+    if (groupId)
+      params = params.set('group_id', groupId);
     if (sort.length > 0) {
       params = params.set('sort', sort.join(','));
     }

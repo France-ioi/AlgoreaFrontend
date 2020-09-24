@@ -7,6 +7,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ManagedGroupsComponent implements OnInit {
 
+  title = 'Groups you manage';
+  subtitle = 'Here are the groups you manage';
+
   constructor() { }
 
   ngOnInit(): void {
