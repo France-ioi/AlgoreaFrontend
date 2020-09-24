@@ -9,13 +9,13 @@ export class ProgressLevelComponent {
 
   @Input() size = 12;
   @Input() theme : 'default' | 'revert' = 'default';
-  @Input() filled = 0;
-  @Input() total = 4;
+  @Input() value = 0;
+  @Input() maximum = 4;
 
-  constructor() {}
+  totalArray : number[] = [];
 
-  totalArray() {
-    return [...Array(this.total).keys()];
+  constructor() {
+    this.totalArray = [...Array(this.maximum).keys()];
   }
 
 }
