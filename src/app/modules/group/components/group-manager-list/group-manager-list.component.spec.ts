@@ -1,3 +1,4 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { GroupManagerListComponent } from './group-manager-list.component';
@@ -8,7 +9,8 @@ describe('GroupManagerListComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ GroupManagerListComponent ]
+      declarations: [ GroupManagerListComponent ],
+      imports: [ HttpClientTestingModule ]
     })
     .compileComponents();
   });
