@@ -7,7 +7,6 @@ import { Component, Input } from '@angular/core';
 })
 export class ProgressLevelComponent {
 
-  @Input() size = 12;
   @Input() theme : 'default' | 'revert' = 'default';
   @Input() value = 0;
   @Input() maximum = 4;
