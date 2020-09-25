@@ -15,7 +15,7 @@ export class GroupManagerListComponent implements OnChanges {
 
   state: 'loading' | 'ready' | 'error' = 'loading';
 
-  constructor(private getGroupManagersService:GetGroupManagersService) {}
+  constructor(private getGroupManagersService: GetGroupManagersService) {}
 
 
   ngOnChanges(_changes: SimpleChanges) {
@@ -25,7 +25,7 @@ export class GroupManagerListComponent implements OnChanges {
   private reloadData() {
     this.state = 'loading';
     this.getGroupManagersService
-      .getGroupManagers(this.group.id,)
+      .getGroupManagers(this.group.id)
       .subscribe((managers: Manager[]) => {
         this.managers = managers;
         this.state = 'ready';
