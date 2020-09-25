@@ -10,17 +10,17 @@
         ></alg-score-ring>
       </div>
     </div>
-    <div class="section-header-content" [ngClass]="{'show-border': hasBorder && visible}">
-      <span *ngIf="remainOrigin || visible || !data.ID" class="section-title" (click)="toggleContent()">{{label}}</span>
+    <div class="section-header-content" [ngClass]="{'show-border': hasBorder && !isCollapsed}">
+      <span *ngIf="remainOrigin || !isCollapsed || !data.ID" class="section-title" (click)="toggleContent()">{{label}}</span>
       <div class="additional-content">
         <ng-container [ngTemplateOutlet]="headerTemplate" [ngTemplateOutletContext]="{ $implicit: data }"></ng-container>
       </div>
       <span *ngIf="collapsible" class="toggle-content" (click)="toggleContent()">
-        <img [ngClass]="{down: !visible}" src="assets/images/collapse.svg">
+        <img [ngClass]="{down: isCollapsed}" src="assets/images/collapse.svg">
       </span>
     </div>
   </div>
-  <div *ngIf="visible || !collapsible" class="section-content">
+  <div *ngIf="!(collapsible && isCollapsed)" class="section-content">
     <ng-content></ng-content>
   </div>
 </div>

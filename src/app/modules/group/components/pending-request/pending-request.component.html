@@ -2,7 +2,7 @@
   icon="fa fa-check"
   label="Pending requests"
   [collapsible]="true"
-  [isCollapsedByDefault]="true"
+  [isCollapsed]="true"
 >
   <ng-template #headerTemplate>
     <div style="flex: 1; flex-direction: row-reverse;display: flex;" [ngClass]="{'all-disabled': status === 'loading'}">

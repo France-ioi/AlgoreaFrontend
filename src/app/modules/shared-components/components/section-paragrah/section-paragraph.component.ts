@@ -21,23 +21,20 @@ export class SectionParagraphComponent implements OnInit {
   @Input() hasBorder = false;
   @Input() data: any;
   @Input() remainOrigin = true;
-  @Input() isCollapsedByDefault = false;
+  @Input() isCollapsed = false;
 
 
   @Output() collapse = new EventEmitter<boolean>();
 
   @ContentChild('headerTemplate') headerTemplate: TemplateRef<any>;
 
-  visible = false;
-
   constructor() {}
 
   ngOnInit() {
-    this.visible = this.collapsible && !this.isCollapsedByDefault;
   }
 
   toggleContent() {
-    this.visible = !this.visible;
-    this.collapse.emit(this.visible);
+    this.isCollapsed = !this.isCollapsed;
+    this.collapse.emit(this.isCollapsed);
   }
 }
