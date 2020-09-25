@@ -5,7 +5,10 @@
   [isCollapsed]="true"
 >
   <ng-template #headerTemplate>
-    <div style="flex: 1; flex-direction: row-reverse;display: flex;" [ngClass]="{'all-disabled': status === 'loading'}">
+    <div
+      *ngIf="showSwitch"
+      style="flex: 1; flex-direction: row-reverse;display: flex;"
+      [ngClass]="{'all-disabled': status === 'loading'}">
       <alg-selection (change)="onSubgroupSwitch($event)" [items]="subgroupSwitchItems" style="width: 25rem;"></alg-selection>
     </div>
   </ng-template>
