@@ -16,8 +16,8 @@
   <div class="pending-request-container" *ngIf="status !== 'loading'; else loading" [ngSwitch]="status">
     <alg-grid
       *ngSwitchCase="'loaded'"
-      [selectedColumns]="columns"
-      [columns]="columns"
+      [selectedColumns]="getGroupGrid()"
+      [columns]="getGroupGrid()"
       [data]="requests"
       [groupInfo]="panel"
       [(selection)]="selection"
@@ -47,6 +47,16 @@
                 <p-sortIcon [field]="col.field"></p-sortIcon>
               </div>
             </th>
+            <th
+              *ngIf="col.field === 'group.name'"
+              [pSortableColumn]="col.field"
+              style="width: 13.3333rem; background-color: #d3dbe7;"
+            >
+              <div class="header-container">
+                {{ col.header }}
+                <p-sortIcon [field]="col.field"></p-sortIcon>
+              </div>
+            </th>
           </ng-container>
         </tr>
       </ng-template>
@@ -61,6 +71,9 @@
             <p-tableCheckbox [value]="rowData" [disabled]="ongoingActivity !== Activity.None"></p-tableCheckbox>
           </td>
           <td *ngFor="let col of columns">
+            <ng-container *ngIf="col.field === 'group.name'">
+              {{ rowData.group.name }}
+            </ng-container>
             <ng-container *ngIf="col.field === 'at'">
               {{ rowData.at | date: "d/MM/y" }}
             </ng-container>

@@ -50,6 +50,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     { field: 'user.login', header: 'USER' },
     { field: 'at', header: 'REQUESTED ON' },
   ];
+  groupColumn = { field: 'group.name', header: 'GROUP'};
   subgroupSwitchItems = [
     { label: 'This group only', includeSubgroup: false},
     { label: 'All subgroups', includeSubgroup: true }
@@ -196,5 +197,11 @@ export class PendingRequestComponent implements OnInit, OnChanges {
   onSubgroupSwitch(selectedIdx: number) {
     this.includeSubgroup = this.subgroupSwitchItems[selectedIdx].includeSubgroup;
     this.reloadData();
+  }
+
+  getGroupGrid() {
+    if (this.includeSubgroup || !this.showSwitch)
+      return [this.groupColumn].concat(this.columns);
+    return this.columns;
   }
 }
