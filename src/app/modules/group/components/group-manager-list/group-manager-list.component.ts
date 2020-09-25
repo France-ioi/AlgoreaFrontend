@@ -11,8 +11,6 @@ export class GroupManagerListComponent implements OnChanges {
 
   @Input() group: Group;
 
-  cols = [];
-
   managers: Manager[] = [];
 
   constructor(private getGroupManagersService:GetGroupManagersService) {}
