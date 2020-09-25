@@ -13,6 +13,8 @@ export class GroupManagerListComponent implements OnChanges {
 
   managers: Manager[] = [];
 
+  state: 'loading' | 'ready' | 'error' = 'loading';
+
   constructor(private getGroupManagersService:GetGroupManagersService) {}
 
 
@@ -21,10 +23,15 @@ export class GroupManagerListComponent implements OnChanges {
   }
 
   private reloadData() {
+    this.state = 'loading';
     this.getGroupManagersService
       .getGroupManagers(this.group.id,)
       .subscribe((managers: Manager[]) => {
         this.managers = managers;
-      });
+        this.state = 'ready';
+      },
+        (_err) => {
+          this.state = 'error';
+        });
   }
 }
