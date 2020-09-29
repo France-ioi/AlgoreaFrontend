@@ -16,4 +16,7 @@ export class GroupAdministrationComponent {
     private groupTabService: GroupTabService,
   ) {}
 
+  refreshGroupInfo() {
+    this.groupTabService.requestGroupRefresh();
+  }
 }
