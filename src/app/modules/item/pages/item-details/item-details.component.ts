@@ -29,7 +29,7 @@ export class ItemDetailsComponent implements OnDestroy {
     // on route change: refetch item if needed
     this.activatedRoute.paramMap.subscribe((params) => {
       const navItem = itemFromDetailParams(params);
-      if (!navItem) return; // unexpected as this component should not be routed in id is missing
+      if (!navItem) return; // unexpected as this component should not be routed if id is missing
       currentContent.setCurrent(navItem);
       if (!isPathGiven(params)) {
         // TODO: handle no path given

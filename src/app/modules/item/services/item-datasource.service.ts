@@ -12,8 +12,8 @@ export interface ItemData { item: Item, breadcrumbs: BreadcrumbItem[], attemptId
 
 /**
  * A datasource which allows fetching a item using a proper state and sharing it among several components.
- * The interactions with this class is:
- * - do actions by calling public functions
+ * The only interactions with this class are:
+ * - trigger actions by calling public functions
  * - listen state change by listening the state
  */
 @Injectable()
