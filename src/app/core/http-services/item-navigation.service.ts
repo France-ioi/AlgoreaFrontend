@@ -99,7 +99,7 @@ export class ItemNavigationService {
             hasChildren: data.children !== null && data.children.length > 0,
             attemptId: data.attempt_id,
           },
-          items: data.children === null ? [] : data.children.map((i) => ({
+          items: data.children === null ? [] : data.children.map(i => ({
             id: i.id,
             title: i.string.title,
             hasChildren: i.has_visible_children,
@@ -113,8 +113,8 @@ export class ItemNavigationService {
     return this.http
       .get<RootActivity[]>(`${environment.apiUrl}/current-user/group-memberships/activities`)
       .pipe(
-        map((acts) => ({
-          items: acts.map((act) => ({
+        map(acts => ({
+          items: acts.map(act => ({
             id: act.activity.id,
             title: act.activity.string.title,
             hasChildren: act.activity.has_visible_children,
@@ -129,8 +129,8 @@ export class ItemNavigationService {
     return this.http
       .get<RootSkill[]>(`${environment.apiUrl}/current-user/group-memberships/skills`)
       .pipe(
-        map((skills) => ({
-          items: skills.map((sk) => ({
+        map(skills => ({
+          items: skills.map(sk => ({
             id: sk.skill.id,
             title: sk.skill.string.title,
             hasChildren: sk.skill.has_visible_children,

@@ -10,7 +10,7 @@ import { map } from 'rxjs/operators';
 })
 export class GroupCompositionComponent {
 
-  group$ = this.groupTabService.group$.pipe(map((g) => withManagementAdditions(g)));
+  group$ = this.groupTabService.group$.pipe(map(withManagementAdditions));
 
   constructor(
     private groupTabService: GroupTabService,

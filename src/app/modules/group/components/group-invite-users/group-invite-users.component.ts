@@ -102,7 +102,7 @@ export class GroupInviteUsersComponent {
 
     // remove empty logins and duplicates
     const logins = this.textArea.value.split(',')
-      .map((login) => login.trim())
+      .map(login => login.trim())
       .filter(function (login, index, self) {
         return self.indexOf(login) === index && login !== '';
       });
@@ -111,7 +111,7 @@ export class GroupInviteUsersComponent {
     this.state = 'loading';
 
     this.createGroupInvitationsService.createInvitations(this.group.id, logins).subscribe(
-      (res) => {
+      res => {
         this.displayResponse(res);
 
         // Clear the textarea
@@ -119,7 +119,7 @@ export class GroupInviteUsersComponent {
 
         this.state = 'empty';
       },
-      (err) => {
+      err => {
         this.processRequestError(err);
 
         this.state = 'ready';

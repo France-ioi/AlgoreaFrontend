@@ -67,7 +67,7 @@ export class OAuthService {
     nonceStorage.removeItem(nonceStorageKey); // no need to store the nonce any longer
     // the code can be used to get a token back
     return this.authHttp.createTokenFromCode(code, this.loginRedirectUri()).pipe(
-      map((t) => {
+      map(t => {
         return AccessToken.fromCountdown(t.access_token, t.expires_in, 'authenticated');
       })
     );

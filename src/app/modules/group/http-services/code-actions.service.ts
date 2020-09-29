@@ -20,7 +20,7 @@ export class CodeActionsService {
     return this.http
       .post<NewCodeSuccessResponse|SimpleActionResponse>(`${environment.apiUrl}/groups/${id}/code`, null, {})
       .pipe(
-        map((resp) => {
+        map(resp => {
           const code = (resp as NewCodeSuccessResponse).code;
           if (!code) throw new Error('The backend has returned an error (no code)');
           return code;

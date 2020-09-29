@@ -42,7 +42,7 @@ export class AppComponent implements OnInit {
     this.currentUserService.currentUser().pipe(
       filter<UserProfile|null, UserProfile>((user):user is UserProfile => user !== null),
       skip(1), // do not refresh when the first user is set
-    ).subscribe((_user) => {
+    ).subscribe(_user => {
       window.location.reload();
     });
   }

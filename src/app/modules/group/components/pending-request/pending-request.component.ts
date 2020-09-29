@@ -92,7 +92,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
       countRequests: data.size,
       countSuccess: Array.from(data.values())
         .map<number>(res => ['success', 'unchanged'].includes(res) ? 1 : 0)
-        .reduce( (acc, res) => acc + res, 0 )
+        .reduce((acc, res) => acc + res, 0 )
     };
   }
 
@@ -147,7 +147,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
 
     resultObserver
       .subscribe(
-        (res) => {
+        res => {
           this.displayResponseToast(
             this.parseResults(res),
             action === Action.Accept ? 'accept' : 'reject',
@@ -157,7 +157,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
           this.ongoingActivity = Activity.None;
           this.selection = [];
         },
-        (err) => {
+        err => {
           this.processRequestError(err);
           this.ongoingActivity = Activity.None;
         }
@@ -173,7 +173,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
   }
 
   onCustomSort(event: SortEvent) {
-    const sortMeta = event.multiSortMeta?.map((meta) =>
+    const sortMeta = event.multiSortMeta?.map(meta =>
       meta.order === -1 ? `-${meta.field}` : meta.field
     );
 

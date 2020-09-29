@@ -68,7 +68,7 @@ export class ItemDataSource implements OnDestroy {
     return forkJoin([
       this.getBreadcrumb(navItem),
       this.getItemByIdService.get(navItem.itemId).pipe(
-        switchMap((item) => this.startResultIfNeeded(navItem, item).pipe(map(a => ({ item: item, attemptId: a }))))
+        switchMap(item => this.startResultIfNeeded(navItem, item).pipe(map(a => ({ item: item, attemptId: a }))))
       )
     ]).pipe(
       map(([breadcrumbs, {item: i, attemptId: a}]) => ({ item: i, breadcrumbs: breadcrumbs, attemptId: a })),

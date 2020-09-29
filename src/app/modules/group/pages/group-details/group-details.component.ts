@@ -14,7 +14,7 @@ import { CurrentContentService } from 'src/app/shared/services/current-content.s
 })
 export class GroupDetailsComponent implements OnDestroy {
 
-  group$ = this.groupTabService.group$.pipe(map((g) => withManagementAdditions(g)))
+  group$ = this.groupTabService.group$.pipe(map(withManagementAdditions))
   state: 'loaded'|'loading'|'error' = 'loading';
 
   constructor(
@@ -24,7 +24,7 @@ export class GroupDetailsComponent implements OnDestroy {
     private currentContent: CurrentContentService,
   ) {
     groupTabService.refresh$.subscribe(() => this.fetchGroup(false));
-    activatedRoute.paramMap.subscribe((params) => {
+    activatedRoute.paramMap.subscribe(params => {
       if (params.has('id')) this.fetchGroup(true);
     });
   }
@@ -49,7 +49,7 @@ export class GroupDetailsComponent implements OnDestroy {
               currentPageIndex: 0
             });
           },
-          (_error) => {
+          _error => {
             this.state = 'error';
           }
         );

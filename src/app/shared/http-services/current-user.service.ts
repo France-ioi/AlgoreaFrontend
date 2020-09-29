@@ -33,7 +33,7 @@ export class CurrentUserHttpService {
     return this.http
       .get<RawUserProfile>(`${environment.apiUrl}/current-user`)
       .pipe(
-        map((raw) => ({
+        map(raw => ({
           id: raw.group_id,
           login: raw.login,
           firstname: raw.first_name,

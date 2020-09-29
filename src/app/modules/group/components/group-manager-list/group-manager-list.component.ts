@@ -26,11 +26,12 @@ export class GroupManagerListComponent implements OnChanges {
     this.state = 'loading';
     this.getGroupManagersService
       .getGroupManagers(this.group.id)
-      .subscribe((managers: Manager[]) => {
-        this.managers = managers;
-        this.state = 'ready';
-      },
-        (_err) => {
+      .subscribe(
+        (managers: Manager[]) => {
+          this.managers = managers;
+          this.state = 'ready';
+        },
+        _err => {
           this.state = 'error';
         });
   }

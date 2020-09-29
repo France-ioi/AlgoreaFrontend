@@ -46,6 +46,7 @@ module.exports = {
       { 'code': 140 },
     ],
     'no-console': ['error'],
+    'arrow-parens': ['error', 'as-needed'],
   },
   overrides: [
     {

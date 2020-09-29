@@ -38,7 +38,7 @@ export class ItemNavComponent implements OnInit {
     return merge(
       of('loading'), // first change items to loading
       this.itemNavService.getRoot(this.type).pipe(
-        map((items) => {
+        map(items => {
           return navMenuDataWith(items, []);
         })
       )
@@ -58,10 +58,10 @@ export class ItemNavComponent implements OnInit {
     return merge(
       of('loading'), // as the menu change completely, display the loader
       dataFetcher.pipe(
-        map((items) => {
+        map(items => {
           return navMenuDataWith(items, item.itemPath, item); // the new items (only first level loaded)
         }),
-        switchMap((data) => {
+        switchMap(data => {
           // already update the tree loaded with the first level, and if needed, load (async) children as well
           return merge( of(data), this.loadChildrenIfNeeded(data) );
         }),
@@ -74,18 +74,18 @@ export class ItemNavComponent implements OnInit {
     if (!selectedItem) return empty(); // if nothing selected, no need to load more (this function should not be called in this case)
 
     // the selected item should be one of the items at the first level
-    const itemData = data.items.find((item) => item.id === selectedItem.itemId);
+    const itemData = data.items.find(item => item.id === selectedItem.itemId);
     if (!itemData) return throwError(new Error('Cannot find the item (unexpected)'));
     if (!itemData.hasChildren) return empty(); // if no children, no need to fetch children
     if (!selectedItem.attemptId) return throwError(new Error('Cannot fetch children without attempt (unexpected'));
 
     // We do not check if children were already known. So we might re-load again the same children, which is intended.
     return this.itemNavService.getNavData(itemData.id, selectedItem.attemptId).pipe(
-      map( (nav) => ({
+      map(nav => ({
         parent: data.parent,
         pathToItems: data.pathToItems,
         selectedItem: data.selectedItem,
-        items: data.items.map((i) => {
+        items: data.items.map(i => {
           if (i.id === itemData.id) {
             // replace the previous item by new item (the same with possibly an attempt) with the fetched children
             return Object.assign({}, nav.parent, {children: nav.items});
@@ -104,7 +104,7 @@ export class ItemNavComponent implements OnInit {
    */
   treeShiftedToChild(item: NavItem): Observable<NavMenuDataState> {
     const menuItems = this.data as NavMenuData;
-    const newParent = menuItems.items.find((i) => i.children && i.children.some((c) => c.id === item.itemId));
+    const newParent = menuItems.items.find(i => i.children && i.children.some(c => c.id === item.itemId));
     if (!newParent || !newParent.children /* unexpected */) return of(this.data);
     const newData = {
       parent: newParent,
@@ -144,8 +144,8 @@ export class ItemNavComponent implements OnInit {
         return this.loadNewNav(item);
       })
     ).subscribe({
-      next: (change) =>  this.data = change,
-      error: (_e) => this.data = 'error'
+      next: change => this.data = change,
+      error: _e => this.data = 'error'
     });
   }
 
@@ -161,13 +161,13 @@ export class ItemNavComponent implements OnInit {
   hasItemAmongTreeRoots(item: NavItem): boolean {
     if (!this.isLoaded()) return false;
     const menuItems = this.data as NavMenuData;
-    return menuItems.items.some((i) => i.id === item.itemId);
+    return menuItems.items.some(i => i.id === item.itemId);
   }
 
   hasItemAmongKnownTreeChildren(item: NavItem): boolean {
     if (!this.isLoaded()) return false;
     const menuItems = this.data as NavMenuData;
-    return menuItems.items.some((i) => i.children && i.children.some((c) => c.id === item.itemId));
+    return menuItems.items.some(i => i.children && i.children.some(c => c.id === item.itemId));
   }
 
 }

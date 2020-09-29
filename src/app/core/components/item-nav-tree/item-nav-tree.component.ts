@@ -35,7 +35,7 @@ export class ItemNavTreeComponent implements OnChanges {
   ) {}
 
   mapItemToNodes(items: NavMenuItem[], pathToItems: string[], selectedItem?: NavItem): ItemTreeNode[] {
-    return items.map((i) => {
+    return items.map(i => {
       const isSelected = !!(selectedItem && selectedItem.itemId === i.id);
       const shouldShowChildren = i.hasChildren && isSelected;
       const isLoadingChildren = shouldShowChildren && !i.children; // are being loaded by the parent component
@@ -92,13 +92,13 @@ export class ItemNavTreeComponent implements OnChanges {
     // Otherwise, the node has children: start a result (if not done yet), navigate and load children
     node.status = 'loading';
     this.startResultIfRequired(node).subscribe({
-      next: (attemptId) => {
+      next: attemptId => {
         if (this.selectedNode === node) {
           // if the node is not selected anymore after result start, do not navigate to it
           this.navigateToNode(node, attemptId);
         }
       },
-      error: (_error) => {
+      error: _error => {
         node.status = 'error';
         /* should handle error somehow */
       },
@@ -131,7 +131,7 @@ export class ItemNavTreeComponent implements OnChanges {
    * Return whether the given node is at the first level of the displayed tree (root) (i.e. is not a children)
    */
   isFirstLevelNode(node: ItemTreeNode): boolean {
-    return this.nodes.some((n) => n.data.id === node.data.id);
+    return this.nodes.some(n => n.data.id === node.data.id);
   }
 
   /**
