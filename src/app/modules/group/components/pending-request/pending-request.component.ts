@@ -91,7 +91,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     return {
       countRequests: data.size,
       countSuccess: Array.from(data.values())
-        .map<number>(res => ['success', 'unchanged'].includes(res) ? 1 : 0)
+        .map<number>(res => (['success', 'unchanged'].includes(res) ? 1 : 0))
         .reduce((acc, res) => acc + res, 0 )
     };
   }
@@ -173,9 +173,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
   }
 
   onCustomSort(event: SortEvent) {
-    const sortMeta = event.multiSortMeta?.map(meta =>
-      meta.order === -1 ? `-${meta.field}` : meta.field
-    );
+    const sortMeta = event.multiSortMeta?.map(meta => (meta.order === -1 ? `-${meta.field}` : meta.field));
 
     if (sortMeta && JSON.stringify(sortMeta) !== JSON.stringify(this.currentSort)) {
 
