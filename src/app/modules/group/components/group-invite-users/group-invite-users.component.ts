@@ -83,8 +83,7 @@ export class GroupInviteUsersComponent {
 
   /* events */
 
-  onTextChange(text:string)
-  {
+  onTextChange(text:string) {
     this.state = 'ready';
 
     const logins = text.split(',').filter(login => login.length > 0);

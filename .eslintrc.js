@@ -50,6 +50,7 @@ module.exports = {
     'arrow-body-style': ['error', 'as-needed'],
     'no-confusing-arrow': ['error'],
     'arrow-spacing': ['error', { "before": true, "after": true }],
+    'brace-style': ['error', '1tbs'],
   },
   overrides: [
     {

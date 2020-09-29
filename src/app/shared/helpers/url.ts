@@ -8,8 +8,7 @@ export function getHashFragmentParams(): Map<string, string>{
   const questionMarkPosition = hash.indexOf('?');
   if (questionMarkPosition > -1) {
       hash = hash.substr(questionMarkPosition + 1);
-  }
-  else {
+  } else {
       hash = hash.substr(1);
   }
   return parseQueryString(hash);
