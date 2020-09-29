@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ItemDetailsComponent } from './item-details.component';
 import { CurrentContentService } from 'src/app/shared/services/current-content.service';
@@ -11,7 +11,7 @@ describe('ItemDetailsComponent', () => {
   let component: ItemDetailsComponent;
   let fixture: ComponentFixture<ItemDetailsComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ ItemDetailsComponent ]
     }).overrideComponent(ItemDetailsComponent, {

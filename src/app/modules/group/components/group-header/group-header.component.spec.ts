@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { GroupHeaderComponent } from './group-header.component';
 import { AppModule } from '../../../../core/app.module';
@@ -17,7 +17,7 @@ describe('GroupHeaderComponent', () => {
     current_user_is_manager: false
   };
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [AppModule],
       declarations: [ GroupHeaderComponent ],

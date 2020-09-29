@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { GroupDetailsComponent } from './group-details.component';
 import { GroupTabService } from '../../services/group-tab.service';
@@ -13,7 +13,7 @@ describe('GroupDetailsComponent', () => {
   let fixture: ComponentFixture<GroupDetailsComponent>;
   const groupTabService = new GroupTabService();
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ GroupDetailsComponent ],
       imports: [

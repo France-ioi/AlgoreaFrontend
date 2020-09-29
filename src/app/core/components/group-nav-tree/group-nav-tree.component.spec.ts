@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { GroupNavTreeComponent } from './group-nav-tree.component';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
@@ -8,7 +8,7 @@ describe('GroupNavTreeComponent', () => {
   let component: GroupNavTreeComponent;
   let fixture: ComponentFixture<GroupNavTreeComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     const routerSpy = jasmine.createSpyObj<Router>('Router', ['parseUrl']);
     TestBed.configureTestingModule({
       declarations: [ GroupNavTreeComponent ],
