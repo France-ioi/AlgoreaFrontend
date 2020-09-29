@@ -49,6 +49,7 @@ module.exports = {
     'arrow-parens': ['error', 'as-needed'],
     'arrow-body-style': ['error', 'as-needed'],
     'no-confusing-arrow': ['error'],
+    'arrow-spacing': ['error', { "before": true, "after": true }],
   },
   overrides: [
     {
