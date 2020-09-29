@@ -2,7 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { ItemNavigationService, NavMenuRootItem } from '../../http-services/item-navigation.service';
 import { CurrentContentService } from 'src/app/shared/services/current-content.service';
 import { map, switchMap } from 'rxjs/operators';
-import { of, Observable, merge, empty, throwError } from 'rxjs';
+import { of, Observable, merge, throwError, EMPTY } from 'rxjs';
 import { NavItem } from 'src/app/shared/services/nav-types';
 
 interface NavMenuData extends NavMenuRootItem {
@@ -65,12 +65,12 @@ export class ItemNavComponent implements OnInit {
 
   loadChildrenIfNeeded(data: NavMenuData): Observable<NavMenuDataState> {
     const selectedItem = data.selectedItem;
-    if (!selectedItem) return empty(); // if nothing selected, no need to load more (this function should not be called in this case)
+    if (!selectedItem) return EMPTY; // if nothing selected, no need to load more (this function should not be called in this case)
 
     // the selected item should be one of the items at the first level
     const itemData = data.items.find(item => item.id === selectedItem.itemId);
     if (!itemData) return throwError(new Error('Cannot find the item (unexpected)'));
-    if (!itemData.hasChildren) return empty(); // if no children, no need to fetch children
+    if (!itemData.hasChildren) return EMPTY; // if no children, no need to fetch children
     if (!selectedItem.attemptId) return throwError(new Error('Cannot fetch children without attempt (unexpected'));
 
     // We do not check if children were already known. So we might re-load again the same children, which is intended.
@@ -116,7 +116,7 @@ export class ItemNavComponent implements OnInit {
       switchMap((item):Observable<NavMenuDataState> => {
 
         // CASE 0: the current content is not an item and the menu has already items displayed -> do nothing
-        if (item === null && this.isLoaded()) return empty();
+        if (item === null && this.isLoaded()) return EMPTY;
 
         // CASE 1: the content is not an item and the menu has not already item displayed -> load item root
         if (item === null) {
