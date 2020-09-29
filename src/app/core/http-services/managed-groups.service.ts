@@ -27,9 +27,7 @@ export class ManagedGroupsService {
       .pipe(
         // convert array of ManagedGroup to array of Group (exported type)
         map((gs) =>
-          gs.map((g) => {
-            return { id: g.id, name: g.name };
-          })
+          gs.map((g) => ({ id: g.id, name: g.name }))
         )
       );
   }

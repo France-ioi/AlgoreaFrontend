@@ -41,14 +41,12 @@ export class GetBreadcrumbService {
       })
       .pipe(
         map((items) => {
-          return items.map((item) => {
-            return {
-              itemId: item.item_id,
-              title: item.title,
-              attemptId: item.attempt_id,
-              attemptCnt: item.attempt_number ? +item.attempt_number : undefined,
-            };
-          });
+          return items.map((item) => ({
+            itemId: item.item_id,
+            title: item.title,
+            attemptId: item.attempt_id,
+            attemptCnt: item.attempt_number ? +item.attempt_number : undefined,
+          }));
         }),
         // extract one specific kind of error (403) as this one needs to be handled separately
         catchError((err) => {

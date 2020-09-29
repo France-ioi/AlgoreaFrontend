@@ -33,9 +33,7 @@ export class JoinedGroupsService {
       .pipe(
         // convert array of JoinedGroup to array of Group
         map((jgs) =>
-          jgs.map((jg) => {
-            return { id: jg.group.id, name: jg.group.name };
-          })
+          jgs.map((jg) => ({id: jg.group.id, name: jg.group.name}))
         )
       );
   }

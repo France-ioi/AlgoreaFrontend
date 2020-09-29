@@ -81,21 +81,19 @@ export class ItemNavComponent implements OnInit {
 
     // We do not check if children were already known. So we might re-load again the same children, which is intended.
     return this.itemNavService.getNavData(itemData.id, selectedItem.attemptId).pipe(
-      map( (nav) => {
-        return {
-          parent: data.parent,
-          pathToItems: data.pathToItems,
-          selectedItem: data.selectedItem,
-          items: data.items.map((i) => {
-            if (i.id === itemData.id) {
-              // replace the previous item by new item (the same with possibly an attempt) with the fetched children
-              return Object.assign({}, nav.parent, {children: nav.items});
-            } else {
-              return i;
-            }
-          })
-        };
-      })
+      map( (nav) => ({
+        parent: data.parent,
+        pathToItems: data.pathToItems,
+        selectedItem: data.selectedItem,
+        items: data.items.map((i) => {
+          if (i.id === itemData.id) {
+            // replace the previous item by new item (the same with possibly an attempt) with the fetched children
+            return Object.assign({}, nav.parent, {children: nav.items});
+          } else {
+            return i;
+          }
+        })
+      }))
     );
   }
 
