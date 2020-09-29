@@ -47,6 +47,7 @@ module.exports = {
     ],
     'no-console': ['error'],
     'arrow-parens': ['error', 'as-needed'],
+    'arrow-body-style': ['error', 'as-needed'],
   },
   overrides: [
     {

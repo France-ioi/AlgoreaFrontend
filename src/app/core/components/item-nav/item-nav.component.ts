@@ -38,9 +38,7 @@ export class ItemNavComponent implements OnInit {
     return merge(
       of('loading'), // first change items to loading
       this.itemNavService.getRoot(this.type).pipe(
-        map(items => {
-          return navMenuDataWith(items, []);
-        })
+        map(items => navMenuDataWith(items, []))
       )
     );
   }
@@ -58,13 +56,9 @@ export class ItemNavComponent implements OnInit {
     return merge(
       of('loading'), // as the menu change completely, display the loader
       dataFetcher.pipe(
-        map(items => {
-          return navMenuDataWith(items, item.itemPath, item); // the new items (only first level loaded)
-        }),
-        switchMap(data => {
-          // already update the tree loaded with the first level, and if needed, load (async) children as well
-          return merge( of(data), this.loadChildrenIfNeeded(data) );
-        }),
+        map(items => navMenuDataWith(items, item.itemPath, item)), // the new items (only first level loaded)
+        // already update the tree loaded with the first level, and if needed, load (async) children as well
+        switchMap(data => merge( of(data), this.loadChildrenIfNeeded(data) )),
       )
     );
   }

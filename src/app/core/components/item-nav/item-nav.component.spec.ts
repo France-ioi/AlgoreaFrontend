@@ -14,7 +14,7 @@ describe('ItemNavComponent', () => {
       declarations: [ ItemNavComponent ],
       providers: [
         { provide: ItemNavigationService, useValue: {
-          getRootActivities: () => { return empty(); }
+          getRootActivities: () => empty()
         }},
         { provide: CurrentContentService, useValue: {
           item: () => empty()

@@ -27,11 +27,9 @@ export class AuthTokenInjector implements HttpInterceptor {
       .pipe(
         filter<AccessToken|null, AccessToken>((token):token is AccessToken => token !== null),
         take(1), // complete after emitting the first non-null token
-        switchMap(token => {
-          return next.handle(
-            req.clone({ setHeaders: headersForAuth(token.accessToken) })
-          );
-        })
+        switchMap(token => next.handle(
+          req.clone({ setHeaders: headersForAuth(token.accessToken) })
+        ))
       );
   }
 }

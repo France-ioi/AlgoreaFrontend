@@ -40,14 +40,13 @@ export class GetBreadcrumbService {
         params: parameters
       })
       .pipe(
-        map(items => {
-          return items.map(item => ({
+        map(items => items.map(item => ({
             itemId: item.item_id,
             title: item.title,
             attemptId: item.attempt_id,
             attemptCnt: item.attempt_number ? +item.attempt_number : undefined,
-          }));
-        }),
+          }))
+        ),
         // extract one specific kind of error (403) as this one needs to be handled separately
         catchError(err => {
           if (err instanceof HttpErrorResponse && err.status === 403) {
