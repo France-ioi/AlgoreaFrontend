@@ -68,8 +68,8 @@
                 locked: rowData[rowData.can_grant_group_access],
                 unlocked: !rowData[rowData.can_grant_group_access]
               }">
-              <i *ngIf="!rowData[rowData.can_grant_group_access]" class="fa fa-lock"></i>
-              <i *ngIf="rowData[rowData.can_grant_group_access]" class="fa fa-lock-open"></i>
+              <i *ngIf="!rowData[rowData.can_grant_group_access]" class="fa fa-times"></i>
+              <i *ngIf="rowData[rowData.can_grant_group_access]" class="fa fa-check"></i>
             </span>
           </td>
           <td style="width: 5rem;">
@@ -78,8 +78,8 @@
                 locked: rowData[rowData.can_watch_members],
                 unlocked: !rowData[rowData.can_watch_members]
               }">
-              <i *ngIf="!rowData[rowData.can_watch_members]" class="fa fa-lock"></i>
-              <i *ngIf="rowData[rowData.can_watch_members]" class="fa fa-lock-open"></i>
+              <i *ngIf="!rowData[rowData.can_watch_members]" class="fa fa-times"></i>
+              <i *ngIf="rowData[rowData.can_watch_members]" class="fa fa-check"></i>
             </span>
           </td>
           <td style="width: 110px;"></td>
