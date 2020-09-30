@@ -22,15 +22,28 @@ export class GroupManagerListComponent implements OnChanges {
     this.reloadData();
   }
 
+  private convertText(can_manage: string): string {
+    switch(can_manage) {
+      case 'none':
+        return 'Read-only';
+      case 'memberships':
+        return 'Memberships';
+      case 'memberships_and_group':
+        return 'Memberships and group';
+      default:
+        return '';
+      }
+  }
+
   private reloadData() {
     this.state = 'loading';
     this.getGroupManagersService
       .getGroupManagers(this.group.id)
-      .subscribe(
-        (managers: Manager[]) => {
-          this.managers = managers;
-          this.state = 'ready';
-        },
+      .subscribe((managers: Manager[]) => {
+        this.managers = managers;
+        this.managers.forEach(manager => manager.can_manage = this.convertText(manager.can_manage));
+        this.state = 'ready';
+      },
         _err => {
           this.state = 'error';
         });
