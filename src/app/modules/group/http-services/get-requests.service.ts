@@ -35,8 +35,7 @@ export class GetRequestsService {
     if (sort.length > 0) {
       params = params.set('sort', sort.join(','));
     }
-    if (includeSubgroup)
-      params = params.set('include_descendant_groups', '1');
+    if (includeSubgroup) params = params.set('include_descendant_groups', '1');
     return this.http
       .get<PendingRequest[]>(`${environment.apiUrl}/groups/user-requests`, { params: params });
   }
