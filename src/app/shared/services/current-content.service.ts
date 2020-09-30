@@ -1,15 +1,34 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { map, distinctUntilChanged } from 'rxjs/operators';
-import { NavItem, NavGroup } from './nav-types';
+import { BehaviorSubject } from 'rxjs';
+import { NavItem } from './nav-types';
 
-export interface PageInfo {
+export interface ContentBreadcrumb {
   category: string,
-  breadcrumb: {
+  path: {
     title: string,
-    attemptOrder?: number,
+    hintNumber?: number,
+    navigateTo?: any[],
   }[],
-  currentPageIndex: number, // index of the current page in the breadcrumb array
+  currentPageIdx: number, // index of the current page in the path array, -1 to select the category
+}
+
+export interface ContentInfo {
+  type: string
+  breadcrumbs?: ContentBreadcrumb,
+  editing?: boolean, // undefined: not allowed, otherwise: whether the current page is current being edited
+  title?: string, // page title
+  data?: any,
+}
+
+export interface ItemInfo extends ContentInfo { type: 'item', data: NavItem }
+export interface GroupInfo extends ContentInfo { type: 'group' }
+
+export function isItemInfo(info: ContentInfo): info is ItemInfo {
+  return info.type === 'item';
+}
+
+export function isGroupInfo(info: ContentInfo): info is GroupInfo {
+  return info.type === 'group';
 }
 
 /**
@@ -19,30 +38,15 @@ export interface PageInfo {
   providedIn: 'root'
 })
 export class CurrentContentService {
-  private currentContent = new BehaviorSubject<NavItem|NavGroup|null>(null);
-  private currentPageInfo = new BehaviorSubject<PageInfo|null>(null);
+  private current = new BehaviorSubject<ContentInfo|null>(null);
+  currentContent$ = this.current.asObservable();
 
-  constructor() { }
-
-  setCurrent(item: NavItem) {
-    this.currentContent.next(item);
+  setCurrent(content: ContentInfo|null) {
+    this.current.next(content);
   }
 
-  setPageInfo(info: PageInfo|null) {
-    this.currentPageInfo.next(info);
+  currentContent(): ContentInfo|null {
+    return this.current.value;
   }
 
-  item(): Observable<NavItem|null> {
-    return this.currentContent.pipe(
-      map(content => {
-        if (content === null) return null;
-        return ((content as NavItem).itemId !== undefined) ? content as NavItem : null;
-      }),
-      distinctUntilChanged() // mainly to avoid sending multiple null
-    );
-  }
-
-  pageInfo(): Observable<PageInfo|null> {
-    return this.currentPageInfo.asObservable();
-  }
 }

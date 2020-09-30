@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ItemNavigationService, NavMenuRootItem } from '../../http-services/item-navigation.service';
-import { CurrentContentService } from 'src/app/shared/services/current-content.service';
-import { map, switchMap } from 'rxjs/operators';
+import { CurrentContentService, isItemInfo } from 'src/app/shared/services/current-content.service';
+import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { of, Observable, merge, throwError, EMPTY } from 'rxjs';
 import { NavItem } from 'src/app/shared/services/nav-types';
 
@@ -111,7 +111,12 @@ export class ItemNavComponent implements OnInit {
 
   ngOnInit() {
 
-    this.currentContent.item().pipe(
+    this.currentContent.currentContent$.pipe(
+
+      // we are only interested in items
+      map(content => (content !== null && isItemInfo(content) ? content.data : null)),
+      distinctUntilChanged(), // mainly to avoid sending multiple null
+
       // switchMap may cancel ongoing network calls if item is changed while the request is not over. That's what we want!
       switchMap((item):Observable<NavMenuDataState> => {
 

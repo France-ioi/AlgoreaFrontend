@@ -43,10 +43,14 @@ export class GroupDetailsComponent implements OnDestroy {
           (g: Group) => {
             this.state = 'loaded';
             this.groupTabService.setGroup(g);
-            this.currentContent.setPageInfo({
-              category: 'Groups',
-              breadcrumb: [{ title: g.name }],
-              currentPageIndex: 0
+            this.currentContent.setCurrent({
+              type: 'group',
+              breadcrumbs: {
+                category: 'Groups',
+                path: [{ title: g.name }],
+                currentPageIdx: 0,
+              },
+              title: g.name,
             });
           },
           _error => {
@@ -59,7 +63,7 @@ export class GroupDetailsComponent implements OnDestroy {
   }
 
   ngOnDestroy() {
-    this.currentContent.setPageInfo(null);
+    this.currentContent.setCurrent(null);
   }
 
 }

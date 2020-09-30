@@ -1,7 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { CurrentContentService } from 'src/app/shared/services/current-content.service';
 import { ActivatedRoute } from '@angular/router';
-import { itemFromDetailParams, isPathGiven } from 'src/app/shared/services/nav-types';
+import { itemFromDetailParams, isPathGiven, itemDetailsRoute } from 'src/app/shared/services/nav-types';
 import { filter, map } from 'rxjs/operators';
 import { ItemDataSource, ItemData } from '../../services/item-datasource.service';
 import { FetchError, Fetching, isReady, Ready } from 'src/app/shared/helpers/state';
@@ -30,7 +30,7 @@ export class ItemDetailsComponent implements OnDestroy {
     this.activatedRoute.paramMap.subscribe(params => {
       const navItem = itemFromDetailParams(params);
       if (!navItem) return; // unexpected as this component should not be routed if id is missing
-      currentContent.setCurrent(navItem);
+      currentContent.setCurrent({ type: 'item', data: navItem });
       if (!isPathGiven(params)) {
         // TODO: handle no path given
         return;
@@ -46,18 +46,28 @@ export class ItemDetailsComponent implements OnDestroy {
     this.subscription = this.itemDataSource.state$.pipe(
       filter<Ready<ItemData>|Fetching|FetchError,Ready<ItemData>>(isReady),
       map(state => ({
-        category: 'Items',
-        breadcrumb: state.data.breadcrumbs.map(el => ({
-          title: el.title,
-          attemptOrder: el.attemptCnt
-        })),
-        currentPageIndex: state.data.breadcrumbs.length - 1
+        type: 'item',
+        breadcrumbs: {
+          category: 'Items',
+          path: state.data.breadcrumbs.map((el, idx) => ({
+            title: el.title,
+            hintNumber: el.attemptCnt,
+            navigateTo: itemDetailsRoute({
+              itemId: el.itemId,
+              attemptId: el.attemptId,
+              itemPath: state.data.breadcrumbs.slice(0,idx).map(it => it.itemId),
+            }),
+          })),
+          currentPageIdx:  state.data.breadcrumbs.length - 1,
+        },
+        title: state.data.item.string.title === null ? undefined : state.data.item.string.title,
+        data: state.data.nav,
       }))
-    ).subscribe(p => this.currentContent.setPageInfo(p));
+    ).subscribe(p => this.currentContent.setCurrent(p));
   }
 
   ngOnDestroy() {
-    this.currentContent.setPageInfo(null);
+    this.currentContent.setCurrent(null);
     this.subscription.unsubscribe();
   }
 

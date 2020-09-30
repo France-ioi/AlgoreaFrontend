@@ -2,7 +2,6 @@ import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ItemDetailsComponent } from './item-details.component';
 import { CurrentContentService } from 'src/app/shared/services/current-content.service';
-import { NavItem } from 'src/app/shared/services/nav-types';
 import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
 import { ItemDataSource } from '../../services/item-datasource.service';
@@ -18,8 +17,7 @@ describe('ItemDetailsComponent', () => {
       set: {
         providers: [
           { provide: CurrentContentService, useValue: {
-            setCurrent: (_i: NavItem) => {},
-            setPageInfo: (_p: any) => {},
+            setCurrent: (_i: any) => {},
           }},
           { provide: ActivatedRoute, useValue: {
             paramMap: of({

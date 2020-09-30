@@ -1,13 +1,13 @@
 <div class="breadcrumb-container">
-  <ul *ngIf="pageInfo"> <!-- TODO: handle "smart" ellipsis (as in https://codepen.io/shippin/pen/YrwrYa) -->
+  <ul *ngIf="contentBreadcrumb"> <!-- TODO: handle "smart" ellipsis (as in https://codepen.io/shippin/pen/YrwrYa) -->
 
     <!-- category -->
     <li class="home"><i class="fa fa-folder"></i></li>
-    <li><span class="label">{{ pageInfo.category }}</span></li>
+    <li><span class="label">{{ contentBreadcrumb.category }}</span></li>
 
     <!-- elements -->
-    <ng-container *ngFor="let element of pageInfo.breadcrumb; index as idx;">
-      <li class="separator" [ngClass]="{'active': idx === pageInfo.currentPageIndex}">
+    <ng-container *ngFor="let element of contentBreadcrumb.path; index as idx;">
+      <li class="separator" [ngClass]="{'active': idx === contentBreadcrumb.currentPageIdx}">
         <ng-container *ngIf="idx === 0; then arrowBlock else slashBlock">
         </ng-container>
         <ng-template #arrowBlock>
@@ -17,9 +17,9 @@
           \
         </ng-template>
       </li>
-      <li [ngClass]="{'active': idx === pageInfo.currentPageIndex}" (click)="onElementClick(element)">
+      <li [ngClass]="{'active': idx === contentBreadcrumb.currentPageIdx}" (click)="onElementClick(element)">
         <span class="label">{{element.title}}</span>
-        <span *ngIf="element.attemptOrder" class="attempt-badge">{{element.attemptOrder}}</span>
+        <span *ngIf="element.hintNumber" class="attempt-badge">{{element.hintNumber}}</span>
       </li>
     </ng-container>
   </ul>
