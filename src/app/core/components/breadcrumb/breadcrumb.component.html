@@ -17,7 +17,7 @@
           \
         </ng-template>
       </li>
-      <li [ngClass]="{'active': idx === contentBreadcrumb.currentPageIdx}" (click)="onElementClick(element)">
+      <li [ngClass]="{'active': idx === contentBreadcrumb.currentPageIdx, 'routable': element.navigateTo }" (click)="onElementClick(element)">
         <span class="label">{{element.title}}</span>
         <span *ngIf="element.hintNumber" class="attempt-badge">{{element.hintNumber}}</span>
       </li>

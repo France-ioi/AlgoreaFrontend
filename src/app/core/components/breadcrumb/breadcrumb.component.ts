@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { Router } from '@angular/router';
 import { ContentBreadcrumb } from 'src/app/shared/services/current-content.service';
 
 @Component({
@@ -10,8 +11,12 @@ export class BreadcrumbComponent {
 
   @Input() contentBreadcrumb?: ContentBreadcrumb
 
-  onElementClick(_el: { title: string, hintNumber?: number}) {
-    // to do go to path
+  constructor(
+    private router: Router,
+  ) {}
+
+  onElementClick(el: { navigateTo?: any[] }) {
+    if (el.navigateTo) void this.router.navigate(el.navigateTo);
   }
 
 }
