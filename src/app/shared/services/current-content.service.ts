@@ -9,7 +9,7 @@ export interface PageInfo {
     title: string,
     attemptOrder?: number,
   }[],
-  currentPageIndex?: number, // index of the current page in the breadcrumb array
+  currentPageIndex: number, // index of the current page in the breadcrumb array
 }
 
 /**
