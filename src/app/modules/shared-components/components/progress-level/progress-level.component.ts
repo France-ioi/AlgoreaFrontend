@@ -11,7 +11,7 @@ export class ProgressLevelComponent {
   @Input() value = 0;
   @Input() maximum = 4;
 
-  totalArray : number[] = [];
+  totalArray : number[]; // array containing [0, 1, 2, ...] as the template cannot iterate by itself
 
   constructor() {
     this.totalArray = [...Array(this.maximum).keys()];
