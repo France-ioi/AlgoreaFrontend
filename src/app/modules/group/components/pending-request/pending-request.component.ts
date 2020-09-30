@@ -11,10 +11,11 @@ import {
   ERROR_MESSAGE,
 } from '../../../../shared/constants/api';
 import { TOAST_LENGTH } from '../../../../shared/constants/global';
-import { Observable } from 'rxjs';
+import { Observable, from, forkJoin} from 'rxjs';
 import { GetRequestsService, PendingRequest } from '../../http-services/get-requests.service';
 import { RequestActionsService } from '../../http-services/request-actions.service';
 import { GridColumn, GridColumnGroup } from '../../../shared-components/components/grid/grid.component';
+import { map } from 'rxjs/operators';
 
 export enum Activity {
   Accepting,
@@ -138,6 +139,23 @@ export class PendingRequestComponent implements OnInit, OnChanges {
       detail: ERROR_MESSAGE.fail,
       life: TOAST_LENGTH,
     });
+  }
+  // forkjoin
+  processRequest() {
+    const dict = new Map<string, string[]>();
+    this.selection.forEach(elm => {
+      const group_id = elm.group.id;
+      const member_id = elm.user.group_id;
+
+      const value = dict.get(group_id);
+      if (value) dict.set(group_id, value.concat([member_id]));
+      else dict.set(group_id, [member_id]);
+    });
+    forkJoin(
+      from(dict)
+    ).pipe(map( elm => console.log(elm))).subscribe();
+    from(dict)
+      .subscribe(value => console.log(value));
   }
 
   onAcceptOrReject(action: Action) {
