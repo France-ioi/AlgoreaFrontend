@@ -39,12 +39,12 @@ export class AuthService {
     this.state = 'fetching'; // will immediately be changed if we can get a token without fetching
     this.currentAccessToken$ = new BehaviorSubject<AccessToken|null>(null);
 
-    this.currentAccessToken$.pipe(pairwise()).subscribe((tokens) => this.tokenChanged(tokens));
+    this.currentAccessToken$.pipe(pairwise()).subscribe(tokens => this.tokenChanged(tokens));
 
     // First, check if a code/state is given in URL (i.e., we are back from a oauth login redirect) and try to get a token from it.
     oauthService.tryCompletingCodeFlowLogin().pipe(
-      catchError((_e) => of<AccessToken|null>(null)),
-      switchMap((newToken) => {
+      catchError(_e => of<AccessToken|null>(null)),
+      switchMap(newToken => {
         const fromStorage = AccessToken.fromStorage();
 
         // If can get a token from these code/state, use this one in priority
@@ -69,7 +69,7 @@ export class AuthService {
       next:(token: AccessToken) => {
         this.currentAccessToken$.next(token);
       },
-      error:(_e) => {
+      error: _e => {
         // if temp user creation fails, there is not much we can do
         this.state = 'error';
       },
@@ -120,14 +120,14 @@ export class AuthService {
     this.state = 'fetching';
     this.currentAccessToken$.next(null);
     this.authHttp.revokeToken(currentToken.accessToken).pipe(
-      catchError((_e) => of(null)), // continue next step even if token revocation failed
+      catchError(_e => of(null)), // continue next step even if token revocation failed
       switchMap(() => this.tempAuth.login())
     ).subscribe({
-      next: (token) => {
+      next: token => {
         this.currentAccessToken$.next(token);
         this.state = 'idle';
       },
-      error: (_e) => {
+      error: _e => {
         this.state = 'error';
         // temp session creation failed :-/
       }
@@ -152,12 +152,12 @@ export class AuthService {
       } else { // user was temporary
         this.state = 'fetching';
         this.tempAuth.login().subscribe({
-          next:(tempUserToken) => {
+          next: tempUserToken => {
             logState('temp user token received');
             this.currentAccessToken$.next(tempUserToken);
             this.state = 'idle';
           },
-          error:(_e) => {
+          error: _e => {
             logState('temp user creation failed');
             this.state = 'error'; // if temp user creation fails, there is not much we can do
           }

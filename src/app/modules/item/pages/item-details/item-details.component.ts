@@ -27,7 +27,7 @@ export class ItemDetailsComponent implements OnDestroy {
   ) {
 
     // on route change: refetch item if needed
-    this.activatedRoute.paramMap.subscribe((params) => {
+    this.activatedRoute.paramMap.subscribe(params => {
       const navItem = itemFromDetailParams(params);
       if (!navItem) return; // unexpected as this component should not be routed if id is missing
       currentContent.setCurrent(navItem);
@@ -47,7 +47,7 @@ export class ItemDetailsComponent implements OnDestroy {
       filter<Ready<ItemData>|Fetching|FetchError,Ready<ItemData>>(isReady),
       map(state => ({
         category: 'Items',
-        breadcrumb: state.data.breadcrumbs.map((el) => ({
+        breadcrumb: state.data.breadcrumbs.map(el => ({
           title: el.title,
           attemptOrder: el.attemptCnt
         })),

@@ -22,8 +22,7 @@ export class CreateGroupInvitationsService {
   createInvitations(
     groupId: string,
     logins : string[]
-  ) : Observable<Map<string, InvitationResult>>
-  {
+  ) : Observable<Map<string, InvitationResult>> {
     return this.http
       .post<ActionResponse<Object>>(
         `${environment.apiUrl}/groups/${groupId}/invitations`,

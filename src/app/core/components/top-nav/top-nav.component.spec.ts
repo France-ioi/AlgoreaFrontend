@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TopNavComponent } from './top-nav.component';
 import { AppModule } from '../../../core/app.module';
@@ -10,7 +10,7 @@ describe('TopNavComponent', () => {
   let fixture: ComponentFixture<TopNavComponent>;
   let router: Router;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     const routerSpy = jasmine.createSpyObj<Router>('Router', ['navigateByUrl']);
     TestBed.configureTestingModule({
       declarations: [ TopNavComponent ],

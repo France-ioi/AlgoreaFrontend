@@ -66,7 +66,7 @@ export class NavigationTabsComponent implements OnInit {
   focusParent() {
     if (this.groupPanel) {
       const elements = this.groupPanel.querySelectorAll('.ui-accordion-header a');
-      elements.forEach((e) => {
+      elements.forEach(e => {
         (e as HTMLElement).blur();
       });
       this.groupPanel.focus();

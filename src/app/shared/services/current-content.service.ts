@@ -34,7 +34,7 @@ export class CurrentContentService {
 
   item(): Observable<NavItem|null> {
     return this.currentContent.pipe(
-      map((content) => {
+      map(content => {
         if (content === null) return null;
         return ((content as NavItem).itemId !== undefined) ? content as NavItem : null;
       }),

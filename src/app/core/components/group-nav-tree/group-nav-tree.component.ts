@@ -27,15 +27,13 @@ export class GroupNavTreeComponent implements OnChanges {
   constructor(private router: Router) {}
 
   ngOnChanges(_changes: SimpleChanges) {
-    this.nodes = this.groups.map((g) => {
-      return {
-        label: g.name,
-        data: g,
-        type: 'leaf',
-        leaf: true,
-        target: `/groups/details/${g.id}`,
-      };
-    });
+    this.nodes = this.groups.map(g => ({
+      label: g.name,
+      data: g,
+      type: 'leaf',
+      leaf: true,
+      target: `/groups/details/${g.id}`,
+    }));
   }
 
   onSelect(node: GroupTreeNode) {

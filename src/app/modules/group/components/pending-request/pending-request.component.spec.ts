@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PendingRequestComponent, Activity, Action } from './pending-request.component';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
@@ -34,7 +34,7 @@ describe('PendingRequestComponent', () => {
   let messageService: MessageService;
   let serviceResponder$: Subject<Map<string,any>>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ PendingRequestComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
