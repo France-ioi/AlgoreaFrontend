@@ -11,11 +11,10 @@ import {
   ERROR_MESSAGE,
 } from '../../../../shared/constants/api';
 import { TOAST_LENGTH } from '../../../../shared/constants/global';
-import { Observable, from, forkJoin} from 'rxjs';
+import { Observable, forkJoin } from 'rxjs';
 import { GetRequestsService, PendingRequest } from '../../http-services/get-requests.service';
 import { RequestActionsService } from '../../http-services/request-actions.service';
 import { GridColumn, GridColumnGroup } from '../../../shared-components/components/grid/grid.component';
-import { map } from 'rxjs/operators';
 
 export enum Activity {
   Accepting,
@@ -98,13 +97,15 @@ export class PendingRequestComponent implements OnInit, OnChanges {
       );
   }
 
-  private parseResults(data: Map<string, any>): Result {
-    return {
-      countRequests: data.size,
-      countSuccess: Array.from(data.values())
-        .map<number>(res => ['success', 'unchanged'].includes(res) ? 1 : 0)
-        .reduce( (acc, res) => acc + res, 0 )
-    };
+  private parseResults(data: Map<string, any>[]): Result {
+    const res : Result = {countRequests: 0, countSuccess: 0};
+    data.forEach(elm => {
+      res.countRequests += elm.size,
+      res.countSuccess += Array.from(elm.values())
+        .map<number>(state => ['success', 'unchanged'].includes(state) ? 1 : 0)
+        .reduce( (acc, res) => acc + res, 0 );
+    });
+    return res;
   }
 
   private displayResponseToast(result: Result, verb: string, msg: string) {
@@ -140,22 +141,23 @@ export class PendingRequestComponent implements OnInit, OnChanges {
       life: TOAST_LENGTH,
     });
   }
-  // forkjoin
-  processRequest() {
-    const dict = new Map<string, string[]>();
+
+  processRequests(action: Action) {
+    const request_map = new Map<string, string[]>();
     this.selection.forEach(elm => {
       const group_id = elm.group.id;
       const member_id = elm.user.group_id;
 
-      const value = dict.get(group_id);
-      if (value) dict.set(group_id, value.concat([member_id]));
-      else dict.set(group_id, [member_id]);
+      const value = request_map.get(group_id);
+      if (value) request_map.set(group_id, value.concat([member_id]));
+      else       request_map.set(group_id, [member_id]);
     });
-    forkJoin(
-      from(dict)
-    ).pipe(map( elm => console.log(elm))).subscribe();
-    from(dict)
-      .subscribe(value => console.log(value));
+    return forkJoin(
+      Array.from(request_map.entries()).map(elm => {
+        if (action === Action.Accept) return this.requestActionService.acceptJoinRequest(elm[0], elm[1]);
+        else                          return this.requestActionService.rejectJoinRequest(elm[0], elm[1]);
+      })
+    );
   }
 
   onAcceptOrReject(action: Action) {
@@ -164,14 +166,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     }
     this.ongoingActivity = (action === Action.Accept) ? Activity.Accepting : Activity.Rejecting;
 
-    const groupIds = this.selection.map(req => req.user.group_id);
-
-    let resultObserver: Observable<Map<string, any>>;
-    if (action === Action.Accept) {
-      resultObserver = this.requestActionService.acceptJoinRequest(this.groupId, groupIds);
-    } else {
-      resultObserver = this.requestActionService.rejectJoinRequest(this.groupId, groupIds);
-    }
+    const resultObserver : Observable<Map<string, any>[]> = this.processRequests(action);
 
     resultObserver
       .subscribe(
