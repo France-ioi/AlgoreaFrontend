@@ -84,7 +84,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
   private reloadData() {
     this.status = 'loading';
     this.getRequestsService
-      .getPendingRequests(this.groupId, this.currentSort, this.includeSubgroup)
+      .getPendingRequests(this.groupId, this.includeSubgroup, this.currentSort)
       .subscribe(
         (reqs: PendingRequest[]) => {
           this.requests = reqs;
