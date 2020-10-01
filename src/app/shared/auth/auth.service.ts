@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { catchError, switchMap, pairwise } from 'rxjs/operators';
 import { AccessToken } from './access-token';
-import { BehaviorSubject, of, merge } from 'rxjs';
+import { BehaviorSubject, of, merge, Subscription } from 'rxjs';
 import { TempAuthService } from './temp-auth.service';
 import { OAuthService } from './oauth.service';
 import { AuthHttpService } from '../http-services/auth.http-service';
@@ -24,11 +24,13 @@ function logState(msg: string) {
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService {
+export class AuthService implements OnDestroy {
 
   private accessToken = new BehaviorSubject<AccessToken|null>(null);
   accessToken$ = this.accessToken.asObservable();
   state: 'idle'|'fetching'|'refreshing'|'error';
+
+  private subscription: Subscription;
 
   constructor(
     private oauthService: OAuthService,
@@ -39,7 +41,7 @@ export class AuthService {
 
     this.state = 'fetching'; // will immediately be changed if we can get a token without fetching
 
-    this.accessToken.pipe(pairwise()).subscribe(tokens => this.tokenChanged(tokens));
+    this.subscription = this.accessToken.pipe(pairwise()).subscribe(tokens => this.tokenChanged(tokens));
 
     // First, check if a code/state is given in URL (i.e., we are back from a oauth login redirect) and try to get a token from it.
     oauthService.tryCompletingCodeFlowLogin().pipe(
@@ -78,6 +80,10 @@ export class AuthService {
         this.state = 'idle';
       }
     });
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
   /**

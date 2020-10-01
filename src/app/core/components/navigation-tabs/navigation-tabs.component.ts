@@ -22,7 +22,7 @@ export class NavigationTabsComponent implements OnDestroy {
 
   currentUser$ = this.currentUserService.currentUser$;
 
-  subscription: Subscription; // for cleaning up on destroy
+  private subscription: Subscription; // for cleaning up on destroy
 
   constructor(
     private currentUserService: CurrentUserService,

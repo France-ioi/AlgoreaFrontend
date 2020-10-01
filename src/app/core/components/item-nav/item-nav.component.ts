@@ -1,8 +1,8 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { ItemNavigationService, NavMenuRootItem } from '../../http-services/item-navigation.service';
 import { CurrentContentService, isItemInfo } from 'src/app/shared/services/current-content.service';
 import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
-import { of, Observable, merge, throwError, EMPTY } from 'rxjs';
+import { of, Observable, merge, throwError, EMPTY, Subscription } from 'rxjs';
 import { NavItem } from 'src/app/shared/services/nav-types';
 
 interface NavMenuData extends NavMenuRootItem {
@@ -24,10 +24,12 @@ function navMenuDataWithSelection(items: NavMenuData, selectedItem?: NavItem): N
   templateUrl: './item-nav.component.html',
   styleUrls: ['./item-nav.component.scss']
 })
-export class ItemNavComponent implements OnInit {
+export class ItemNavComponent implements OnInit, OnDestroy {
   @Input() type: 'activity'|'skill';
   data: NavMenuDataState = 'init';
   rootItemPath: string[] = [];
+
+  private subscription: Subscription;
 
   constructor(
     private itemNavService: ItemNavigationService,
@@ -111,7 +113,7 @@ export class ItemNavComponent implements OnInit {
 
   ngOnInit() {
 
-    this.currentContent.currentContent$.pipe(
+    this.subscription = this.currentContent.currentContent$.pipe(
 
       // we are only interested in items
       map(content => (content !== null && isItemInfo(content) ? content.data : null)),
@@ -146,6 +148,10 @@ export class ItemNavComponent implements OnInit {
       next: change => this.data = change,
       error: _e => this.data = 'error'
     });
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
   /*** Helper functions ***/

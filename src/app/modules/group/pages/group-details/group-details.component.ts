@@ -5,6 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { withManagementAdditions } from '../../helpers/group-management';
 import { map } from 'rxjs/operators';
 import { CurrentContentService } from 'src/app/shared/services/current-content.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'alg-group-details',
@@ -17,13 +18,15 @@ export class GroupDetailsComponent implements OnDestroy {
   group$ = this.groupTabService.group$.pipe(map(withManagementAdditions))
   state: 'loaded'|'loading'|'error' = 'loading';
 
+  private subscription: Subscription;
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private groupTabService: GroupTabService,
     private getGroupByIdService: GetGroupByIdService,
     private currentContent: CurrentContentService,
   ) {
-    groupTabService.refresh$.subscribe(() => this.fetchGroup(false));
+    this.subscription = groupTabService.refresh$.subscribe(() => this.fetchGroup(false));
     activatedRoute.paramMap.subscribe(params => {
       if (params.has('id')) this.fetchGroup(true);
     });
@@ -64,6 +67,7 @@ export class GroupDetailsComponent implements OnDestroy {
 
   ngOnDestroy() {
     this.currentContent.setCurrent(null);
+    this.subscription.unsubscribe();
   }
 
 }
