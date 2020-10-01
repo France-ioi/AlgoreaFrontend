@@ -8,7 +8,7 @@ import { canCurrentUserViewItemContent } from '../helpers/item-permissions';
 import { BreadcrumbItem, GetBreadcrumbService } from '../http-services/get-breadcrumb.service';
 import { GetItemByIdService, Item } from '../http-services/get-item-by-id.service';
 
-export interface ItemData { item: Item, breadcrumbs: BreadcrumbItem[], attemptId: string|null }
+export interface ItemData { nav: NavItem, item: Item, breadcrumbs: BreadcrumbItem[], attemptId: string|null }
 
 /**
  * A datasource which allows fetching a item using a proper state and sharing it among several components.
@@ -71,7 +71,7 @@ export class ItemDataSource implements OnDestroy {
         switchMap(item => this.startResultIfNeeded(navItem, item).pipe(map(a => ({ item: item, attemptId: a }))))
       )
     ]).pipe(
-      map(([breadcrumbs, {item: i, attemptId: a}]) => ({ item: i, breadcrumbs: breadcrumbs, attemptId: a })),
+      map(([breadcrumbs, {item: i, attemptId: a}]) => ({ item: i, breadcrumbs: breadcrumbs, attemptId: a, nav: navItem })),
     );
   }
 

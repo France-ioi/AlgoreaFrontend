@@ -17,7 +17,7 @@ describe('ItemNavComponent', () => {
           getRootActivities: () => EMPTY
         }},
         { provide: CurrentContentService, useValue: {
-          item: () => EMPTY
+          currentContent$: EMPTY
         }},
       ]
     })

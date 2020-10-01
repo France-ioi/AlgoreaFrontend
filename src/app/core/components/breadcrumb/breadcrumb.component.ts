@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { PageInfo } from 'src/app/shared/services/current-content.service';
+import { Router } from '@angular/router';
+import { ContentBreadcrumb } from 'src/app/shared/services/current-content.service';
 
 @Component({
   selector: 'alg-breadcrumb',
@@ -8,10 +9,14 @@ import { PageInfo } from 'src/app/shared/services/current-content.service';
 })
 export class BreadcrumbComponent {
 
-  @Input() pageInfo: PageInfo|null
+  @Input() contentBreadcrumb?: ContentBreadcrumb
 
-  onElementClick(_el: { title: string, attemptOrder?: number}) {
-    // to do go to path
+  constructor(
+    private router: Router,
+  ) {}
+
+  onElementClick(el: { navigateTo?: any[] }) {
+    if (el.navigateTo) void this.router.navigate(el.navigateTo);
   }
 
 }

@@ -1,17 +1,18 @@
-import { Component, OnInit, ViewChild, NgZone } from '@angular/core';
+import { Component, ViewChild, NgZone, OnDestroy } from '@angular/core';
 
 import { CurrentUserService } from 'src/app/shared/services/current-user.service';
-import { UserProfile } from 'src/app/shared/http-services/current-user.service';
-import { Observable } from 'rxjs';
 import { PerfectScrollbarComponent } from 'ngx-perfect-scrollbar';
 import { ResizedEvent } from 'angular-resize-event';
+import { ContentInfo, CurrentContentService, GroupInfo, isGroupInfo } from 'src/app/shared/services/current-content.service';
+import { filter } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'alg-navigation-tabs',
   templateUrl: './navigation-tabs.component.html',
   styleUrls: ['./navigation-tabs.component.scss']
 })
-export class NavigationTabsComponent implements OnInit {
+export class NavigationTabsComponent implements OnDestroy {
 
   @ViewChild('scrollPanel') scrollPanel: PerfectScrollbarComponent;
   @ViewChild('groupPanel') groupPanel?: HTMLDivElement;
@@ -19,16 +20,22 @@ export class NavigationTabsComponent implements OnInit {
   groupShow = false;
   stickyShow = false;
 
-  currentUser$: Observable<UserProfile|null>;
+  currentUser$ = this.currentUserService.currentUser();
+
+  subscription: Subscription; // for cleaning up on destroy
 
   constructor(
     private currentUserService: CurrentUserService,
+    private currentContentService: CurrentContentService,
     private ngZone: NgZone,
   ) {
+    this.subscription = this.currentContentService.currentContent$.pipe(
+      filter<ContentInfo|null,GroupInfo>(isGroupInfo)
+    ).subscribe(_i => this.groupShow = true);
   }
 
-  ngOnInit() {
-      this.currentUser$ = this.currentUserService.currentUser();
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
   toggleGroup() {
