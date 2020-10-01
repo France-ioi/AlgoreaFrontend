@@ -7,7 +7,7 @@ export interface Manager {
   id: string,
   name: string,
 
-  can_manage: string,
+  can_manage: 'none' | 'memberships' | 'memberships_and_group',
   can_grant_group_access: boolean,
   can_watch_members: boolean,
 }

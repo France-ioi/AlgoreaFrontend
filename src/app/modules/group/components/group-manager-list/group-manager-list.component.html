@@ -60,7 +60,7 @@
             {{ rowData.name }}
           </td>
           <td style="min-width: 110px;">
-            {{ rowData.can_manage }}
+            {{ getManagerLevel(rowData) }}
           </td>
           <td style="width: 5rem;">
             <span class="table-icon"
