@@ -143,17 +143,17 @@ export class PendingRequestComponent implements OnInit, OnChanges {
   }
 
   processRequests(action: Action) {
-    const request_map = new Map<string, string[]>();
+    const requestMap = new Map<string, string[]>();
     this.selection.forEach(elm => {
-      const group_id = elm.group.id;
-      const member_id = elm.user.group_id;
+      const groupID = elm.group.id;
+      const memberID = elm.user.group_id;
 
-      const value = request_map.get(group_id);
-      if (value) request_map.set(group_id, value.concat([member_id]));
-      else       request_map.set(group_id, [member_id]);
+      const value = requestMap.get(groupID);
+      if (value) requestMap.set(groupID, value.concat([memberID]));
+      else       requestMap.set(groupID, [memberID]);
     });
     return forkJoin(
-      Array.from(request_map.entries()).map(elm => {
+      Array.from(requestMap.entries()).map(elm => {
         if (action === Action.Accept) return this.requestActionService.acceptJoinRequest(elm[0], elm[1]);
         else                          return this.requestActionService.rejectJoinRequest(elm[0], elm[1]);
       })
