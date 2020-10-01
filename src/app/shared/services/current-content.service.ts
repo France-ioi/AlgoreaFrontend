@@ -23,12 +23,12 @@ export interface ContentInfo {
 export interface ItemInfo extends ContentInfo { type: 'item', data: NavItem }
 export interface GroupInfo extends ContentInfo { type: 'group' }
 
-export function isItemInfo(info: ContentInfo): info is ItemInfo {
-  return info.type === 'item';
+export function isItemInfo(info: ContentInfo|null): info is ItemInfo {
+  return info !== null && info.type === 'item';
 }
 
-export function isGroupInfo(info: ContentInfo): info is GroupInfo {
-  return info.type === 'group';
+export function isGroupInfo(info: ContentInfo|null): info is GroupInfo {
+  return info !== null && info.type === 'group';
 }
 
 /**
