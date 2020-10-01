@@ -15,7 +15,7 @@ export class CurrentUserService {
   ) {}
 
   currentUser(): Observable<UserProfile|null> {
-    return this.authService.accessToken().pipe(
+    return this.authService.accessToken$.pipe(
       switchMap(token => {
         if (token === null) return of<UserProfile|null>(null);
         return this.http.getProfileInfo().pipe(
