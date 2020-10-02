@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { GroupDetailsComponent } from './group-details.component';
 import { GroupTabService } from '../../services/group-tab.service';
@@ -6,24 +6,33 @@ import { mockGroup } from '../../mocks/group-by-id';
 import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { GetGroupByIdService } from '../../http-services/get-group-by-id.service';
 
 describe('GroupDetailsComponent', () => {
   let component: GroupDetailsComponent;
   let fixture: ComponentFixture<GroupDetailsComponent>;
   const groupTabService = new GroupTabService();
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ GroupDetailsComponent ],
       imports: [
         HttpClientTestingModule
       ],
       providers: [
-        { provide: GroupTabService, useValue: groupTabService },
         { provide: ActivatedRoute, useValue: {
           paramMap: of({
-            get: (_s: string) => '30'
-          })
+            has: (_s: string) => true,
+          }),
+          snapshot: {
+            paramMap: {
+              get: (_s: string) => '30',
+            }
+          }
+        }},
+        { provide: GroupTabService, useValue: groupTabService },
+        { provide: GetGroupByIdService, useValue: {
+          get: (_id: string) => of({})
         }}
       ]
     })
@@ -31,7 +40,7 @@ describe('GroupDetailsComponent', () => {
   }));
 
   beforeEach(() => {
-    groupTabService.group$.next(mockGroup);
+    groupTabService.setGroup(mockGroup);
     fixture = TestBed.createComponent(GroupDetailsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

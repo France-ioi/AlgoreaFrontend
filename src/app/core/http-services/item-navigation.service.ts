@@ -92,25 +92,20 @@ export class ItemNavigationService {
         params: parameters
       })
       .pipe(
-        map<RawNavData,NavMenuRootItem>((data: RawNavData): NavMenuRootItem => {
-          return {
-            parent: {
-              id: data.id,
-              title: data.string.title,
-              hasChildren: data.children !== null && data.children.length > 0,
-              attemptId: data.attempt_id,
-            },
-            items: data.children === null ? [] : data.children.map((i) => {
-              const attempt = bestAttemptFromResults(i.results);
-              return {
-                id: i.id,
-                title: i.string.title,
-                hasChildren: i.has_visible_children,
-                attemptId: attempt?.attempt_id || null,
-              };
-            }),
-          };
-        })
+        map<RawNavData,NavMenuRootItem>((data: RawNavData): NavMenuRootItem => ({
+          parent: {
+            id: data.id,
+            title: data.string.title,
+            hasChildren: data.children !== null && data.children.length > 0,
+            attemptId: data.attempt_id,
+          },
+          items: data.children === null ? [] : data.children.map(i => ({
+            id: i.id,
+            title: i.string.title,
+            hasChildren: i.has_visible_children,
+            attemptId: bestAttemptFromResults(i.results)?.attempt_id || null,
+          })),
+        }))
       );
   }
 
@@ -118,19 +113,15 @@ export class ItemNavigationService {
     return this.http
       .get<RootActivity[]>(`${environment.apiUrl}/current-user/group-memberships/activities`)
       .pipe(
-        map((acts) => {
-          const childrenItems = acts.map((act) => {
-            const attempt = bestAttemptFromResults(act.activity.results);
-            return {
-              id: act.activity.id,
-              title: act.activity.string.title,
-              hasChildren: act.activity.has_visible_children,
-              groupName: act.name,
-              attemptId: attempt ? attempt.attempt_id : null,
-            };
-          });
-          return { items: childrenItems };
-        })
+        map(acts => ({
+          items: acts.map(act => ({
+            id: act.activity.id,
+            title: act.activity.string.title,
+            hasChildren: act.activity.has_visible_children,
+            groupName: act.name,
+            attemptId: bestAttemptFromResults(act.activity.results)?.attempt_id || null,
+          }))
+        }))
       );
   }
 
@@ -138,19 +129,15 @@ export class ItemNavigationService {
     return this.http
       .get<RootSkill[]>(`${environment.apiUrl}/current-user/group-memberships/skills`)
       .pipe(
-        map((skills) => {
-          const childrenItems = skills.map((sk) => {
-            const attempt = bestAttemptFromResults(sk.skill.results);
-            return {
-              id: sk.skill.id,
-              title: sk.skill.string.title,
-              hasChildren: sk.skill.has_visible_children,
-              groupName: sk.name,
-              attemptId: attempt ? attempt.attempt_id : null,
-            };
-          });
-          return { items: childrenItems };
-        })
+        map(skills => ({
+          items: skills.map(sk => ({
+            id: sk.skill.id,
+            title: sk.skill.string.title,
+            hasChildren: sk.skill.has_visible_children,
+            groupName: sk.name,
+            attemptId: bestAttemptFromResults(sk.skill.results)?.attempt_id || null,
+          }))
+        }))
       );
   }
 

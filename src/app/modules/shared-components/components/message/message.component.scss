@@ -7,10 +7,10 @@
   margin: 0.4167rem 0;
 
   &.ui-messages-info {
-    background-color: #DDE4ED;
+    background-color: #ffe89b;
 
     .ui-messages-icon {
-      background-color: $base-color;
+      background-color: #ffb900;
       color: white;
 
       &::before {
@@ -23,7 +23,7 @@
     }
 
     .ui-messages-detail {
-      color: $base-color;
+      color: #e2731d;
     }
 
     .ui-messages-close {

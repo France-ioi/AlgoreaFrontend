@@ -85,13 +85,13 @@ export class PendingRequestComponent implements OnInit, OnChanges {
   private reloadData() {
     this.status = 'loading';
     this.getRequestsService
-      .getPendingRequests(this.groupId, this.currentSort, this.includeSubgroup)
+      .getPendingRequests(this.groupId, this.includeSubgroup, this.currentSort)
       .subscribe(
         (reqs: PendingRequest[]) => {
           this.requests = reqs;
           this.status = reqs.length ? 'loaded' : 'empty';
         },
-        (_err) => {
+        _err => {
           this.status = 'error';
         }
       );
@@ -101,8 +101,8 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     return {
       countRequests: data.size,
       countSuccess: Array.from(data.values())
-        .map<number>(res => ['success', 'unchanged'].includes(res) ? 1 : 0)
-        .reduce( (acc, res) => acc + res, 0 )
+        .map<number>(res => (['success', 'unchanged'].includes(res) ? 1 : 0))
+        .reduce((acc, res) => acc + res, 0 )
     };
   }
 
@@ -157,7 +157,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
 
     resultObserver
       .subscribe(
-        (res) => {
+        res => {
           this.displayResponseToast(
             this.parseResults(res),
             action === Action.Accept ? 'accept' : 'reject',
@@ -167,7 +167,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
           this.ongoingActivity = Activity.None;
           this.selection = [];
         },
-        (err) => {
+        err => {
           this.processRequestError(err);
           this.ongoingActivity = Activity.None;
         }
@@ -183,9 +183,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
   }
 
   onCustomSort(event: SortEvent) {
-    const sortMeta = event.multiSortMeta?.map((meta) =>
-      meta.order === -1 ? `-${meta.field}` : meta.field
-    );
+    const sortMeta = event.multiSortMeta?.map(meta => (meta.order === -1 ? `-${meta.field}` : meta.field));
 
     if (sortMeta && JSON.stringify(sortMeta) !== JSON.stringify(this.currentSort)) {
 

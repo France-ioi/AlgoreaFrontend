@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { GroupSettingsComponent } from './group-settings.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -11,7 +11,7 @@ describe('GroupSettingsComponent', () => {
   let fixture: ComponentFixture<GroupSettingsComponent>;
   const groupTabService = new GroupTabService();
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
         HttpClientTestingModule
@@ -24,7 +24,7 @@ describe('GroupSettingsComponent', () => {
   }));
 
   beforeEach(() => {
-    groupTabService.group$.next(mockGroup);
+    groupTabService.setGroup(mockGroup);
     fixture = TestBed.createComponent(GroupSettingsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

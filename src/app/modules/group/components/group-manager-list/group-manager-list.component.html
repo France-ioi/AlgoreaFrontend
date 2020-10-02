@@ -1,0 +1,47 @@
+<p-progressSpinner *ngIf="state === 'loading'"></p-progressSpinner>
+
+<p *ngIf="state === 'error'">Error while loading the group managers</p>
+
+<ng-container *ngIf="state === 'ready'">
+  <alg-section icon="fa fa-users" label="Managers of this group">
+    <alg-grid
+    [data]="managers"
+    sortMode="single"
+    [showGear]="false"
+    [scrollable]="true"
+    class="slanted-grid"
+    >
+
+    <ng-template #headerTemplate let-columns>
+      <tr style="border: none;">
+        <th style="min-width: 110px;">
+          <div class="slanted-header">
+            <div class="slanted-header-content">
+              Name
+            </div>
+          </div>
+        </th>
+        <th style="width: 160px; transform: none;">
+      </tr>
+    </ng-template>
+
+    <ng-template
+      #bodyTemplate
+      let-rowData
+      let-columns="columns"
+      let-rowIndex="rowIndex"
+    >
+      <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
+        <td
+          style="text-align: left;width: 160px;padding-left: 0.5rem;"
+          tooltipPosition="top"
+          tooltipStyleClass="tooltip-custom"
+        >
+          {{ rowData.name }}
+        </td>
+      </tr>
+    </ng-template>
+  </alg-grid>
+
+  </alg-section>
+</ng-container>

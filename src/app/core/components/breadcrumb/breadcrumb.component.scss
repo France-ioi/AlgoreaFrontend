@@ -19,10 +19,13 @@ $breadcrumb-bottom-color: #E0E1E5;
       color: $base-text-color;
       align-items: center;
       height: 3.75rem;
-      cursor: pointer;
       overflow: hidden;
       min-width: 0;
       border-top: 0.25rem solid transparent;
+
+      &.routable {
+        cursor: pointer;
+      }
 
       &.active {
         border-top: 0.25rem solid $base-color;

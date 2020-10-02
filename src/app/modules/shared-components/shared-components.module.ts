@@ -47,6 +47,7 @@ import { SelectComponent } from './components/select/select.component';
 import { SliderComponent } from './components/slider/slider.component';
 import { SectionParagraphComponent } from './components/section-paragrah/section-paragraph.component';
 import { MessageComponent } from './components/message/message.component';
+import { ProgressLevelComponent } from './components/progress-level/progress-level.component';
 
 @NgModule({
   declarations: [
@@ -69,6 +70,7 @@ import { MessageComponent } from './components/message/message.component';
     SliderComponent,
     SectionParagraphComponent,
     MessageComponent,
+    ProgressLevelComponent,
   ],
   imports: [
     CommonModule,
@@ -124,6 +126,7 @@ import { MessageComponent } from './components/message/message.component';
     TableModule,
     TabViewModule,
     MessageComponent,
+    ProgressLevelComponent,
   ],
   providers: [
     {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: true}}

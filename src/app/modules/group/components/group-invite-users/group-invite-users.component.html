@@ -1,10 +1,18 @@
 <alg-section-paragraph icon="fa fa-user-plus" label="Invite users" [collapsible]="true">
   <span class="content-title">Add users name list, separated by commas.</span>
   <div class="invite-users">
-    <alg-textarea icon="show" placeholder="psuedo, psuedo..."></alg-textarea>
-    <alg-button label="Invite" class="ui-button-rounded" (click)="onInvite()"></alg-button>
-    <alg-message *ngIf="showMsg" type="success" detail="3 users invited successfully"></alg-message>
-    <alg-message *ngIf="showMsg" type="error" detail="2 users not found: Jean, Matthew"></alg-message>
-    <alg-message *ngIf="showMsg" type="info" detail="Jean, Matthew have already been invited"></alg-message>
+    <alg-textarea icon="show" placeholder="login_1, login_2..." (textChange)="onTextChange($event)" [disabled]="state === 'loading'">
+    </alg-textarea>
+
+    <alg-message *ngIf="state === 'too_many'" type="error" detail="You cannot invite more than 100 users at once"
+      [closable]="false">
+    </alg-message>
+
+    <alg-button label="Invite" class="ui-button-rounded" (click)="onInviteClicked()" [disabled]="state !== 'ready'">
+    </alg-button>
+
+    <alg-message *ngFor="let message of messages" [type]="message.type" [detail]="message.detail"
+      summary={{message.summary}}></alg-message>
+
   </div>
 </alg-section-paragraph>

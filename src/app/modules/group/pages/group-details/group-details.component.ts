@@ -1,8 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { GroupTabService } from '../../services/group-tab.service';
 import { Group, GetGroupByIdService } from '../../http-services/get-group-by-id.service';
 import { ActivatedRoute } from '@angular/router';
-import { withManagementAdditions, ManagementAdditions } from '../../helpers/group-management';
+import { withManagementAdditions } from '../../helpers/group-management';
+import { map } from 'rxjs/operators';
+import { CurrentContentService } from 'src/app/shared/services/current-content.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'alg-group-details',
@@ -10,45 +13,61 @@ import { withManagementAdditions, ManagementAdditions } from '../../helpers/grou
   styleUrls: ['./group-details.component.scss'],
   providers: [ GroupTabService ]
 })
-export class GroupDetailsComponent {
+export class GroupDetailsComponent implements OnDestroy {
 
-  idFromRoute?: string;
-  group?: Group & ManagementAdditions;
+  group$ = this.groupTabService.group$.pipe(map(withManagementAdditions))
   state: 'loaded'|'loading'|'error' = 'loading';
+
+  private subscription: Subscription;
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private groupTabService: GroupTabService,
-    private getGroupByIdService: GetGroupByIdService
+    private getGroupByIdService: GetGroupByIdService,
+    private currentContent: CurrentContentService,
   ) {
-    groupTabService.refresh$.subscribe(() => this.fetchGroup());
-    activatedRoute.paramMap.subscribe((params) => {
-      this.state = 'loading';
-      const id = params.get('id');
-      if (id != null) {
-        this.idFromRoute = id;
-        this.fetchGroup();
-      }
+    this.subscription = groupTabService.refresh$.subscribe(() => this.fetchGroup(false));
+    activatedRoute.paramMap.subscribe(params => {
+      if (params.has('id')) this.fetchGroup(true);
     });
   }
 
-  fetchGroup() {
-    if (this.idFromRoute) {
+  /**
+   * (re)fetch the group data (and so refresh UI)
+   * @param clearCurrent - whether the current group is cleared out (we display the loading spinner) or we refresh silently
+   */
+  fetchGroup(clearCurrent: boolean) {
+    const id = this.activatedRoute.snapshot.paramMap.get('id');
+    if (id !== null) {
+      if (clearCurrent) this.state = 'loading';
       this.getGroupByIdService
-        .get(this.idFromRoute)
+        .get(id)
         .subscribe(
           (g: Group) => {
-            this.group = withManagementAdditions(g);
             this.state = 'loaded';
-            this.groupTabService.group$.next(g);
+            this.groupTabService.setGroup(g);
+            this.currentContent.setCurrent({
+              type: 'group',
+              breadcrumbs: {
+                category: 'Groups',
+                path: [{ title: g.name }],
+                currentPageIdx: 0,
+              },
+              title: g.name,
+            });
           },
-          (_error) => {
+          _error => {
             this.state = 'error';
           }
         );
     } else {
-      this.state = 'error';
+      this.state = 'error'; // unexpected - the routing should not let this happen
     }
+  }
+
+  ngOnDestroy() {
+    this.currentContent.setCurrent(null);
+    this.subscription.unsubscribe();
   }
 
 }

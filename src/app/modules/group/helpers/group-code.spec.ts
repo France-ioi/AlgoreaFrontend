@@ -57,7 +57,7 @@ describe('GroupCode', () => {
   describe('when the group has a code already used', () => {
     const group = { code: 'abcd', code_lifetime: '1:02:03', code_expires_at: '2020-01-01T10:02:03.00' };
 
-    beforeEach(()=> {
+    beforeEach(() => {
       jasmine.clock().install();
       jasmine.clock().mockDate(new Date('2020-01-01 09:30'));
     });
@@ -83,7 +83,7 @@ describe('GroupCode', () => {
   describe('when the group has an expired code', () => {
     const group = { code: 'abcd', code_lifetime: '1:02:03', code_expires_at: '2020-01-01T10:02:03.00' };
 
-    beforeEach(()=> {
+    beforeEach(() => {
       jasmine.clock().install();
       jasmine.clock().mockDate(new Date('2020-01-01 11:30'));
     });

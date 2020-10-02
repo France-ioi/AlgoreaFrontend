@@ -32,10 +32,8 @@ export class JoinedGroupsService {
       .get<JoinedGroup[]>(`${environment.apiUrl}/current-user/group-memberships`)
       .pipe(
         // convert array of JoinedGroup to array of Group
-        map((jgs) =>
-          jgs.map((jg) => {
-            return { id: jg.group.id, name: jg.group.name };
-          })
+        map(jgs =>
+          jgs.map(jg => ({id: jg.group.id, name: jg.group.name}))
         )
       );
   }

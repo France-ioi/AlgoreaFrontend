@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { GroupTabService } from '../../services/group-tab.service';
-import { Group } from '../../http-services/get-group-by-id.service';
 
 @Component({
   selector: 'alg-group-overview',
@@ -9,14 +8,10 @@ import { Group } from '../../http-services/get-group-by-id.service';
 })
 export class GroupOverviewComponent {
 
-  group: Group
+  group$ = this.groupTabService.group$;
 
   constructor(
     private groupTabService: GroupTabService,
-  ) {
-    this.groupTabService.group$.subscribe((g: Group) => {
-      this.group = g;
-    });
-  }
+  ) {}
 
 }
