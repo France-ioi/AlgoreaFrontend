@@ -90,7 +90,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
           this.requests = reqs;
           this.status = reqs.length ? 'loaded' : 'empty';
         },
-        (_err) => {
+        _err => {
           this.status = 'error';
         }
       );
