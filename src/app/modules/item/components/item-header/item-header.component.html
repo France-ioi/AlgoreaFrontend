@@ -5,7 +5,7 @@
     </div>
     <div class="task-title">
       <p>{{item.string.title}}</p>
-      <span>Subtitle for the task</span>
+      <span *ngIf="item.string.subtitle">{{item.string.subtitle}}</span>
     </div>
   </div>
 </div>
