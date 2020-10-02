@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { catchError, switchMap, pairwise } from 'rxjs/operators';
 import { AccessToken } from './access-token';
-import { Observable, BehaviorSubject, of, merge } from 'rxjs';
+import { BehaviorSubject, of, merge, Subscription } from 'rxjs';
 import { TempAuthService } from './temp-auth.service';
 import { OAuthService } from './oauth.service';
 import { AuthHttpService } from '../http-services/auth.http-service';
@@ -24,10 +24,13 @@ function logState(msg: string) {
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService {
+export class AuthService implements OnDestroy {
 
-  private currentAccessToken$: BehaviorSubject<AccessToken|null>;
+  private accessToken = new BehaviorSubject<AccessToken|null>(null);
+  accessToken$ = this.accessToken.asObservable();
   state: 'idle'|'fetching'|'refreshing'|'error';
+
+  private subscription: Subscription;
 
   constructor(
     private oauthService: OAuthService,
@@ -37,9 +40,8 @@ export class AuthService {
     logState('Init the auth service');
 
     this.state = 'fetching'; // will immediately be changed if we can get a token without fetching
-    this.currentAccessToken$ = new BehaviorSubject<AccessToken|null>(null);
 
-    this.currentAccessToken$.pipe(pairwise()).subscribe(tokens => this.tokenChanged(tokens));
+    this.subscription = this.accessToken.pipe(pairwise()).subscribe(tokens => this.tokenChanged(tokens));
 
     // First, check if a code/state is given in URL (i.e., we are back from a oauth login redirect) and try to get a token from it.
     oauthService.tryCompletingCodeFlowLogin().pipe(
@@ -67,7 +69,7 @@ export class AuthService {
       }),
     ).subscribe({
       next:(token: AccessToken) => {
-        this.currentAccessToken$.next(token);
+        this.accessToken.next(token);
       },
       error: _e => {
         // if temp user creation fails, there is not much we can do
@@ -80,15 +82,15 @@ export class AuthService {
     });
   }
 
-  accessToken(): Observable<AccessToken|null> {
-    return this.currentAccessToken$.asObservable();
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
   /**
    * Return whether an authenticated user (i.e. non-temp) is connected
    */
   authUserConnected(): boolean {
-    return this.currentAccessToken$.value?.type === 'authenticated';
+    return this.accessToken.value?.type === 'authenticated';
   }
 
   /**
@@ -110,7 +112,7 @@ export class AuthService {
    */
   logoutAuthUser() {
     logState('endAuthSession');
-    const currentToken = this.currentAccessToken$.value;
+    const currentToken = this.accessToken.value;
 
     if (this.isBusy() || !currentToken || currentToken.type !== 'authenticated') {
       logState(`cannot endAuthSession if busy or not connected (${this.debugState()})`);
@@ -118,13 +120,13 @@ export class AuthService {
     }
 
     this.state = 'fetching';
-    this.currentAccessToken$.next(null);
+    this.accessToken.next(null);
     this.authHttp.revokeToken(currentToken.accessToken).pipe(
       catchError(_e => of(null)), // continue next step even if token revocation failed
       switchMap(() => this.tempAuth.login())
     ).subscribe({
       next: token => {
-        this.currentAccessToken$.next(token);
+        this.accessToken.next(token);
         this.state = 'idle';
       },
       error: _e => {
@@ -140,11 +142,11 @@ export class AuthService {
    * added in the meantime is not dropped.
    */
   invalidToken(invalidToken: string) {
-    const currentToken = this.currentAccessToken$.value;
+    const currentToken = this.accessToken.value;
     if (currentToken?.accessToken === invalidToken) {
 
       // invalidate the current token only if it is the one which is still used now
-      this.currentAccessToken$.next(null);
+      this.accessToken.next(null);
       if (this.isBusy()) return;
 
       if (currentToken.type === 'authenticated') { // user was authenticated
@@ -154,7 +156,7 @@ export class AuthService {
         this.tempAuth.login().subscribe({
           next: tempUserToken => {
             logState('temp user token received');
-            this.currentAccessToken$.next(tempUserToken);
+            this.accessToken.next(tempUserToken);
             this.state = 'idle';
           },
           error: _e => {
@@ -183,7 +185,7 @@ export class AuthService {
   }
 
   private debugState(): string {
-    const current = this.currentAccessToken$.value;
+    const current = this.accessToken.value;
     return (current === null) ? `${this.state},no-token` : `${this.state},${current.type},${current.expiration.toString()}`;
   }
 

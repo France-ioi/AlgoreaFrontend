@@ -23,7 +23,7 @@ export class AuthTokenInjector implements HttpInterceptor {
 
     // take the latest token (and wait for one if the current one is null
     // and inject it into the header of the request
-    return this.auth.accessToken()
+    return this.auth.accessToken$
       .pipe(
         filter<AccessToken|null, AccessToken>((token):token is AccessToken => token !== null),
         take(1), // complete after emitting the first non-null token

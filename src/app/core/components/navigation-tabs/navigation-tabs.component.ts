@@ -20,9 +20,9 @@ export class NavigationTabsComponent implements OnDestroy {
   groupShow = false;
   stickyShow = false;
 
-  currentUser$ = this.currentUserService.currentUser();
+  currentUser$ = this.currentUserService.currentUser$;
 
-  subscription: Subscription; // for cleaning up on destroy
+  private subscription: Subscription; // for cleaning up on destroy
 
   constructor(
     private currentUserService: CurrentUserService,

@@ -25,7 +25,7 @@ describe('NavigationTabsComponent', () => {
         {
           provide: CurrentUserService,
           useValue: {
-            currentUser: () => currentUser.asObservable()
+            currentUser$: currentUser.asObservable()
           }
         }
       ],
