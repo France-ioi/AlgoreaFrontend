@@ -6,7 +6,8 @@
 
   <ng-container *ngIf="state.tag === 'ready' && (item$ | async) as item">
 
-    <h1>{{ item.string.title }}</h1>
+    <alg-item-header [item]="item"></alg-item-header>
+
     <p>item-details works!</p>
 
   </ng-container>
