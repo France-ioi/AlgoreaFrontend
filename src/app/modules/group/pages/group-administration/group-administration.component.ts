@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { GroupTabService } from '../../services/group-tab.service';
+import { GroupDataSource } from '../../services/group-datasource.service';
 import { withManagementAdditions } from '../../helpers/group-management';
 import { map } from 'rxjs/operators';
 
@@ -10,13 +10,13 @@ import { map } from 'rxjs/operators';
 })
 export class GroupAdministrationComponent {
 
-  group$ = this.groupTabService.group$.pipe(map(withManagementAdditions));
+  group$ = this.groupDataSource.group$.pipe(map(withManagementAdditions));
 
   constructor(
-    private groupTabService: GroupTabService,
+    private groupDataSource: GroupDataSource,
   ) {}
 
   refreshGroupInfo() {
-    this.groupTabService.requestGroupRefresh();
+    this.groupDataSource.refetchGroup();
   }
 }
