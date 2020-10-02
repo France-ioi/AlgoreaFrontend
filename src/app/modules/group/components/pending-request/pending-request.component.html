@@ -71,8 +71,10 @@
             <p-tableCheckbox [value]="rowData" [disabled]="ongoingActivity !== Activity.None"></p-tableCheckbox>
           </td>
           <td *ngFor="let col of columns">
-            <ng-container *ngIf="col.field === 'group.name'">
-              {{ rowData.group.name }}
+            <ng-container *ngIf="col.field === 'group.name'" >
+              <span style="white-space: initial;">
+                {{ rowData.group.name }}
+              </span>
             </ng-container>
             <ng-container *ngIf="col.field === 'at'">
               {{ rowData.at | date: "d/MM/y" }}
