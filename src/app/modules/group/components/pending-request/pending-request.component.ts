@@ -40,6 +40,7 @@ interface Result {
 })
 export class PendingRequestComponent implements OnInit, OnChanges {
   @Input() groupId: string;
+  @Input() showSwitch = true;
 
   // Make the enums usable in the html template
   Action = Action;
@@ -57,7 +58,8 @@ export class PendingRequestComponent implements OnInit, OnChanges {
   selection: PendingRequest[] = [];
   panel: GridColumnGroup[] = [];
   currentSort: string[] = [];
-  includeSubgroup: boolean;
+  includeSubgroup = false;
+  status: 'loading' | 'loaded' | 'empty' |'error';
 
   ongoingActivity: Activity = Activity.None;
 
@@ -75,16 +77,23 @@ export class PendingRequestComponent implements OnInit, OnChanges {
 
   ngOnChanges(_changes: SimpleChanges) {
     this.selection = [];
-    this.reloadData();
     this.ongoingActivity = Activity.None;
+    this.reloadData();
   }
 
   private reloadData() {
+    this.status = 'loading';
     this.getRequestsService
-      .getPendingRequests(this.groupId, this.currentSort)
-      .subscribe((reqs: PendingRequest[]) => {
-        this.requests = reqs;
-      });
+      .getPendingRequests(this.groupId, this.includeSubgroup, this.currentSort)
+      .subscribe(
+        (reqs: PendingRequest[]) => {
+          this.requests = reqs;
+          this.status = reqs.length ? 'loaded' : 'empty';
+        },
+        (_err) => {
+          this.status = 'error';
+        }
+      );
   }
 
   private parseResults(data: Map<string, any>): Result {

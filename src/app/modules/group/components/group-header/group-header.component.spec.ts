@@ -11,6 +11,7 @@ describe('GroupHeaderComponent', () => {
     id: '11',
     name: 'CoderDojo 50',
     type: 'Other',
+    is_public: false,
     grades: [-2],
     date: new Date(),
     description: 'dummy',

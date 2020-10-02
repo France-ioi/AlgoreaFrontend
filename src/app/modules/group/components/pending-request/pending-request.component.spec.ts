@@ -40,7 +40,7 @@ describe('PendingRequestComponent', () => {
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: GetRequestsService, useValue: {
-          getPendingRequests: (_id: any, _sort: any) => of<PendingRequest[]>(MOCK_RESPONSE),
+          getPendingRequests: (_id: any, _sort: any, _includeSubgroup: any) => of<PendingRequest[]>(MOCK_RESPONSE),
         }},
         { provide: RequestActionsService, useValue: {
           acceptJoinRequest: (_id: any, _groupIds: any) => serviceResponder$.asObservable(),
@@ -72,7 +72,7 @@ describe('PendingRequestComponent', () => {
   });
 
   it('should load requests at init', () => {
-    expect(getRequestsService.getPendingRequests).toHaveBeenCalledWith('99', []);
+    expect(getRequestsService.getPendingRequests).toHaveBeenCalledWith('99', false, []);
     expect(component.requests).toEqual(MOCK_RESPONSE);
     expect(component.selection).toEqual([]);
     expect(component.panel.length).toEqual(1);
@@ -109,7 +109,7 @@ describe('PendingRequestComponent', () => {
       {field: 'at', order: 1}
     ]});
     expect(getRequestsService.getPendingRequests)
-      .toHaveBeenCalledWith('99', [ '-joining_user.login', 'at' ]);
+      .toHaveBeenCalledWith('99', false, [ '-joining_user.login', 'at' ]);
 
     // check the field precedence counts
     component.onCustomSort({multiSortMeta: [
@@ -117,11 +117,11 @@ describe('PendingRequestComponent', () => {
       {field: 'joining_user.login', order: -1}
     ]});
     expect(getRequestsService.getPendingRequests)
-      .toHaveBeenCalledWith('99', [ 'at' , '-joining_user.login' ]);
+      .toHaveBeenCalledWith('99', false, [ 'at' , '-joining_user.login' ]);
 
     // sort reset
     component.onCustomSort({multiSortMeta: []});
-    expect(getRequestsService.getPendingRequests).toHaveBeenCalledWith('99', []);
+    expect(getRequestsService.getPendingRequests).toHaveBeenCalledWith('99', false, []);
   });
 
   it('should, when accept is pressed, call the appropriate service and reload', () => {

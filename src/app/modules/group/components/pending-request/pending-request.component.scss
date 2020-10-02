@@ -58,7 +58,7 @@
       ::ng-deep p-progressSpinner {
         display: flex;
         align-items: center;
-        
+
         .ui-progress-spinner {
           width: 1.2rem;
           height: 1.2rem;
@@ -74,6 +74,17 @@
         margin-right: 1rem;
       }
     }
+  }
+}
+
+// FIXME: find a more restrictive selector
+.all-disabled {
+  opacity: 70%;
+  pointer-events: none;
+
+  > * {
+    opacity: 70%;
+    pointer-events: none;
   }
 }
 

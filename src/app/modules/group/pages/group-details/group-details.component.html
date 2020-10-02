@@ -1,6 +1,6 @@
 <div *ngIf="state === 'loaded' && (group$ | async) as group">
   <alg-group-header [group]="group"></alg-group-header>
-  <alg-pending-request [groupId]="group.id"></alg-pending-request>
+  <alg-pending-request *ngIf="group.isCurrentUserManager" [groupId]="group.id"></alg-pending-request>
 
   <!-- tabs -- if only the first tab is visible, do not show the tab bar -->
   <nav mat-tab-nav-bar *ngIf="group.isCurrentUserManager">

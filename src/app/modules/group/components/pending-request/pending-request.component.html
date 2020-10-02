@@ -1,16 +1,21 @@
 <alg-section-paragraph
-  *ngIf="requests.length"
   icon="fa fa-check"
   label="Pending requests"
   [collapsible]="true"
+  [collapsed]="true"
 >
   <ng-template #headerTemplate>
-    <div style="flex: 1; flex-direction: row-reverse;display: flex;">
+    <div
+      *ngIf="showSwitch"
+      style="flex: 1; flex-direction: row-reverse;display: flex;"
+      [ngClass]="{'all-disabled': status === 'loading'}">
       <alg-selection (change)="onSubgroupSwitch($event)" [items]="subgroupSwitchItems" style="width: 25rem;"></alg-selection>
     </div>
   </ng-template>
-  <div class="pending-request-container">
+
+  <div class="pending-request-container" *ngIf="status !== 'loading'; else loading" [ngSwitch]="status">
     <alg-grid
+      *ngSwitchCase="'loaded'"
       [selectedColumns]="columns"
       [columns]="columns"
       [data]="requests"
@@ -116,6 +121,12 @@
         </div>
       </ng-template>
     </alg-grid>
+    <div *ngSwitchCase="'empty'">
+      No request
+    </div>
+    <div *ngSwitchDefault>
+      Error
+    </div>
   </div>
 </alg-section-paragraph>
 
