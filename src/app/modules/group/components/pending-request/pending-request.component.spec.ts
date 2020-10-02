@@ -131,7 +131,7 @@ describe('PendingRequestComponent', () => {
     component.onAcceptOrReject(Action.Accept);
 
     expect(component.ongoingActivity).toEqual(Activity.Accepting);
-    expect(requestActionsService.acceptJoinRequest).toHaveBeenCalledWith('99', ['12']);
+    expect(requestActionsService.acceptJoinRequest).toHaveBeenCalledWith('50', ['12']);
     expect(requestActionsService.rejectJoinRequest).toHaveBeenCalledTimes(0);
     expect(getRequestsService.getPendingRequests).toHaveBeenCalledTimes(1); // the initial one
 
@@ -157,7 +157,7 @@ describe('PendingRequestComponent', () => {
     component.onAcceptOrReject(Action.Reject);
 
     expect(component.ongoingActivity).toEqual(Activity.Rejecting);
-    expect(requestActionsService.rejectJoinRequest).toHaveBeenCalledWith('99', ['12']);
+    expect(requestActionsService.rejectJoinRequest).toHaveBeenCalledWith('50', ['12']);
     expect(requestActionsService.acceptJoinRequest).toHaveBeenCalledTimes(0);
     expect(getRequestsService.getPendingRequests).toHaveBeenCalledTimes(1); // the initial one
 
