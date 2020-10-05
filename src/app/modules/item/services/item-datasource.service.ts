@@ -34,7 +34,6 @@ export class ItemDataSource implements OnDestroy {
     private getItemByIdService: GetItemByIdService,
     private resultActionsService: ResultActionsService,
   ) {
-    // Do fetch on the "fetching" state so that only the latest fetching request is considered (using switchMap)
     this.fetchOperation.pipe(
 
       // switchMap does cancel the previous ongoing processing if a new one comes

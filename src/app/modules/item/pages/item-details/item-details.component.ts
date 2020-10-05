@@ -7,6 +7,8 @@ import { ItemDataSource, ItemData } from '../../services/item-datasource.service
 import { FetchError, Fetching, isReady, Ready } from 'src/app/shared/helpers/state';
 import { Subscription } from 'rxjs';
 
+const ItemBreadcrumbCat = 'Items';
+
 @Component({
   selector: 'alg-item-details',
   templateUrl: './item-details.component.html',
@@ -30,7 +32,7 @@ export class ItemDetailsComponent implements OnDestroy {
     this.activatedRoute.paramMap.subscribe(params => {
       const navItem = itemFromDetailParams(params);
       if (!navItem) return; // unexpected as this component should not be routed if id is missing
-      currentContent.setCurrent({ type: 'item', data: navItem });
+      currentContent.setCurrent({ type: 'item', data: navItem, breadcrumbs: { category: ItemBreadcrumbCat, path: [], currentPageIdx: -1} });
       if (!isPathGiven(params)) {
         // TODO: handle no path given
         return;
@@ -48,7 +50,7 @@ export class ItemDetailsComponent implements OnDestroy {
       map(state => ({
         type: 'item',
         breadcrumbs: {
-          category: 'Items',
+          category: ItemBreadcrumbCat,
           path: state.data.breadcrumbs.map((el, idx) => ({
             title: el.title,
             hintNumber: el.attemptCnt,

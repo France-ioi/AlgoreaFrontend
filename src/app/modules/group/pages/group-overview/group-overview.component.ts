@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { GroupTabService } from '../../services/group-tab.service';
+import { GroupDataSource } from '../../services/group-datasource.service';
 
 @Component({
   selector: 'alg-group-overview',
@@ -8,10 +8,10 @@ import { GroupTabService } from '../../services/group-tab.service';
 })
 export class GroupOverviewComponent {
 
-  group$ = this.groupTabService.group$;
+  group$ = this.groupDataSource.group$;
 
   constructor(
-    private groupTabService: GroupTabService,
+    private groupDataSource: GroupDataSource,
   ) {}
 
 }
