@@ -8,7 +8,18 @@
 
     <alg-item-header [item]="item"></alg-item-header>
 
-    <p>item-details works!</p>
+    <nav mat-tab-nav-bar>
+      <a mat-tab-link
+        [routerLink]="'./'"
+        routerLinkActive #rla1="routerLinkActive"
+        [routerLinkActiveOptions]="{exact: true}"
+        [active]="rla1.isActive">
+        Content
+      </a>
+    </nav>
+    <div class="bg-white">
+      <router-outlet></router-outlet>
+    </div>
 
   </ng-container>
 

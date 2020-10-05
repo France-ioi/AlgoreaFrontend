@@ -6,6 +6,7 @@ import { ItemDetailsComponent } from './pages/item-details/item-details.componen
 import { ItemHeaderComponent } from './components/item-header/item-header.component';
 import { ItemEditComponent } from './pages/item-edit/item-edit.component';
 import { ItemByIdComponent } from './pages/item-by-id/item-by-id.component';
+import { ItemContentComponent } from './pages/item-content/item-content.component';
 
 @NgModule({
   declarations: [
@@ -13,6 +14,7 @@ import { ItemByIdComponent } from './pages/item-by-id/item-by-id.component';
     ItemDetailsComponent,
     ItemHeaderComponent,
     ItemEditComponent,
+    ItemContentComponent,
   ],
   imports: [
     CommonModule,
