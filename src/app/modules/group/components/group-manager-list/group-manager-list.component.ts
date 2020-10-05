@@ -11,7 +11,7 @@ export class GroupManagerListComponent implements OnChanges {
 
   @Input() group: Group;
 
-  managers: Manager[] = [];
+  managers: (Manager&{can_manage_as_text: string})[] = [];
 
   state: 'loading' | 'ready' | 'error' = 'loading';
 
@@ -22,15 +22,25 @@ export class GroupManagerListComponent implements OnChanges {
     this.reloadData();
   }
 
+  private getManagerLevel(manager: Manager): string {
+    switch(manager.can_manage) {
+      case 'none':
+        return 'Read-only';
+      case 'memberships':
+        return 'Memberships';
+      case 'memberships_and_group':
+        return 'Memberships and group';
+      }
+  }
+
   private reloadData() {
     this.state = 'loading';
     this.getGroupManagersService
       .getGroupManagers(this.group.id)
-      .subscribe(
-        (managers: Manager[]) => {
-          this.managers = managers;
-          this.state = 'ready';
-        },
+      .subscribe((managers: Manager[]) => {
+        this.managers = managers.map(manager => ({...manager, can_manage_as_text: this.getManagerLevel(manager)}));
+        this.state = 'ready';
+      },
         _err => {
           this.state = 'error';
         });
