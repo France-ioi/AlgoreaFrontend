@@ -60,6 +60,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
   panel: GridColumnGroup[] = [];
   currentSort: string[] = [];
   includeSubgroup = false;
+  collapsed = true;
   status: 'loading' | 'loaded' | 'empty' |'error';
 
   ongoingActivity: Activity = Activity.None;
@@ -90,6 +91,8 @@ export class PendingRequestComponent implements OnInit, OnChanges {
         (reqs: PendingRequest[]) => {
           this.requests = reqs;
           this.status = reqs.length ? 'loaded' : 'empty';
+          if (this.status === 'loaded')
+            this.collapsed = false;
         },
         _err => {
           this.status = 'error';
