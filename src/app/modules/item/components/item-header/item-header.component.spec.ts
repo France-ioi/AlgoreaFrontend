@@ -13,6 +13,7 @@ describe('ItemHeaderComponent', () => {
     requires_explicit_entry: true,
     string: {
     title: 'mock item',
+    subtitle: 'mock subtitle',
     },
     permissions: {
       can_view: 'content',
