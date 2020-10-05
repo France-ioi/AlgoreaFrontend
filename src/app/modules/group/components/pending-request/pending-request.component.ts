@@ -194,12 +194,12 @@ export class PendingRequestComponent implements OnInit, OnChanges {
 
   onSubgroupSwitch(selectedIdx: number) {
     this.includeSubgroup = this.subgroupSwitchItems[selectedIdx].includeSubgroup;
+    if (this.includeSubgroup) {
+      if (!this.columns.includes(this.groupColumn)) this.columns = [this.groupColumn].concat(this.columns);
+    } else {
+      this.columns = this.columns.filter(elm => elm !== this.groupColumn);
+    }
     this.reloadData();
   }
 
-  getGroupGrid() {
-    if (this.includeSubgroup || !this.showSwitch)
-      return [this.groupColumn].concat(this.columns);
-    return this.columns;
-  }
 }

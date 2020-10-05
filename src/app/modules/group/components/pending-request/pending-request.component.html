@@ -16,8 +16,8 @@
   <div class="pending-request-container" *ngIf="status !== 'loading'; else loading" [ngSwitch]="status">
     <alg-grid
       *ngSwitchCase="'loaded'"
-      [selectedColumns]="getGroupGrid()"
-      [columns]="getGroupGrid()"
+      [selectedColumns]="columns"
+      [columns]="columns"
       [data]="requests"
       [groupInfo]="panel"
       [(selection)]="selection"
