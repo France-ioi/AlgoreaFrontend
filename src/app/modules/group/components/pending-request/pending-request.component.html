@@ -2,7 +2,7 @@
   icon="fa fa-check"
   label="Pending requests"
   [collapsible]="true"
-  [collapsed]="true"
+  [collapsed]="status === 'loading'"
 >
   <ng-template #headerTemplate>
     <div
