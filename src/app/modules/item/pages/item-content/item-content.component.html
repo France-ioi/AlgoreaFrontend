@@ -1,0 +1,6 @@
+<ng-container *ngIf="item$ | async as item">
+  <alg-section icon="fa fa-book" label="Description" *ngIf="item.type === 'Chapter'">
+    <p *ngIf="item.string.description ; else noDesc">{{ item.string.description }} </p>
+    <ng-template #noDesc>This item has no description</ng-template>
+  </alg-section>
+</ng-container>
