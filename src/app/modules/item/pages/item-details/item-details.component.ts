@@ -1,5 +1,5 @@
 import { Component, OnDestroy } from '@angular/core';
-import { CurrentContentService } from 'src/app/shared/services/current-content.service';
+import { ContentInfo, CurrentContentService } from 'src/app/shared/services/current-content.service';
 import { ActivatedRoute } from '@angular/router';
 import { itemFromDetailParams, isPathGiven, itemDetailsRoute } from 'src/app/shared/services/nav-types';
 import { filter, map } from 'rxjs/operators';
@@ -47,25 +47,29 @@ export class ItemDetailsComponent implements OnDestroy {
     // on state change, update current content page info (for breadcrumb)
     this.subscription = this.itemDataSource.state$.pipe(
       filter<Ready<ItemData>|Fetching|FetchError,Ready<ItemData>>(isReady),
-      map(state => ({
-        type: 'item',
-        breadcrumbs: {
-          category: ItemBreadcrumbCat,
-          path: state.data.breadcrumbs.map((el, idx) => ({
-            title: el.title,
-            hintNumber: el.attemptCnt,
-            navigateTo: itemDetailsRoute({
-              itemId: el.itemId,
-              attemptId: el.attemptId,
-              itemPath: state.data.breadcrumbs.slice(0,idx).map(it => it.itemId),
-            }),
-          })),
-          currentPageIdx:  state.data.breadcrumbs.length - 1,
-        },
-        title: state.data.item.string.title === null ? undefined : state.data.item.string.title,
-        data: state.data.nav,
-      }))
+      map(state => this.contentInfoFromItemData(state.data))
     ).subscribe(p => this.currentContent.setCurrent(p));
+  }
+
+  contentInfoFromItemData(data: ItemData): ContentInfo {
+    return {
+      type: 'item',
+      breadcrumbs: {
+        category: ItemBreadcrumbCat,
+        path: data.breadcrumbs.map((el, idx) => ({
+          title: el.title,
+          hintNumber: el.attemptCnt,
+          navigateTo: itemDetailsRoute({
+            itemId: el.itemId,
+            attemptId: el.attemptId,
+            itemPath: data.breadcrumbs.slice(0,idx).map(it => it.itemId),
+          }),
+        })),
+        currentPageIdx: data.breadcrumbs.length - 1,
+      },
+      title: data.item.string.title === null ? undefined : data.item.string.title,
+      data: data.nav,
+    };
   }
 
   ngOnDestroy() {
