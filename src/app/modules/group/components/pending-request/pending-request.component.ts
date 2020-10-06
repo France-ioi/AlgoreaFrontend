@@ -91,8 +91,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
         (reqs: PendingRequest[]) => {
           this.requests = reqs;
           this.status = reqs.length ? 'loaded' : 'empty';
-          if (this.status === 'loaded')
-            this.collapsed = false;
+          if (reqs.length) this.collapsed = false;
         },
         _err => {
           this.status = 'error';
