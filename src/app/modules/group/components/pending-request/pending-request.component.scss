@@ -92,6 +92,12 @@
   background-color: transparent;
 }
 
+:host ::ng-deep .pending-request-container .ui-table .ui-table-thead > tr {
+  .small-column {
+    width: 13.3333rem;
+  }
+}
+
 :host ::ng-deep .pending-request-container .ui-table .ui-table-tbody > tr {
   background-color: transparent;
   height: 13rem;

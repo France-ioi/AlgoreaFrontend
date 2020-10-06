@@ -32,6 +32,8 @@ interface Result {
   countSuccess: number;
 }
 
+const groupColumn = { field: 'group.name', header: 'GROUP'};
+
 @Component({
   selector: 'alg-pending-request',
   templateUrl: './pending-request.component.html',
@@ -59,6 +61,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
   panel: GridColumnGroup[] = [];
   currentSort: string[] = [];
   includeSubgroup = false;
+  collapsed = true;
   status: 'loading' | 'loaded' | 'empty' |'error';
 
   ongoingActivity: Activity = Activity.None;
@@ -89,6 +92,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
         (reqs: PendingRequest[]) => {
           this.requests = reqs;
           this.status = reqs.length ? 'loaded' : 'empty';
+          if (reqs.length) this.collapsed = false;
         },
         _err => {
           this.status = 'error';
@@ -193,6 +197,11 @@ export class PendingRequestComponent implements OnInit, OnChanges {
 
   onSubgroupSwitch(selectedIdx: number) {
     this.includeSubgroup = this.subgroupSwitchItems[selectedIdx].includeSubgroup;
+
+    this.columns = this.columns.filter(elm => elm !== groupColumn);
+    if (this.includeSubgroup) this.columns = [groupColumn].concat(this.columns);
+
     this.reloadData();
   }
+
 }
