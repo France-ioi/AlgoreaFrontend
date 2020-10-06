@@ -17,7 +17,7 @@ const ItemBreadcrumbCat = 'Items';
 })
 export class ItemDetailsComponent implements OnDestroy {
 
-  state$ = this.itemDataSource.state$;
+  itemLoadingstate$ = this.itemDataSource.state$;
   item$ = this.itemDataSource.item$; // as template is not able to infer properly the type
 
   private subscription: Subscription; // subscription to be freed up on destroy
