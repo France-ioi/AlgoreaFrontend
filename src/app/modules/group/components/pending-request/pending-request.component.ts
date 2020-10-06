@@ -32,6 +32,8 @@ interface Result {
   countSuccess: number;
 }
 
+const groupColumn = { field: 'group.name', header: 'GROUP'};
+
 @Component({
   selector: 'alg-pending-request',
   templateUrl: './pending-request.component.html',
@@ -50,7 +52,6 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     { field: 'user.login', header: 'USER' },
     { field: 'at', header: 'REQUESTED ON' },
   ];
-  groupColumn = { field: 'group.name', header: 'GROUP'};
   subgroupSwitchItems = [
     { label: 'This group only', includeSubgroup: false},
     { label: 'All subgroups', includeSubgroup: true }
@@ -197,8 +198,8 @@ export class PendingRequestComponent implements OnInit, OnChanges {
   onSubgroupSwitch(selectedIdx: number) {
     this.includeSubgroup = this.subgroupSwitchItems[selectedIdx].includeSubgroup;
 
-    this.columns = this.columns.filter(elm => elm !== this.groupColumn);
-    if (this.includeSubgroup) this.columns = [this.groupColumn].concat(this.columns);
+    this.columns = this.columns.filter(elm => elm !== groupColumn);
+    if (this.includeSubgroup) this.columns = [groupColumn].concat(this.columns);
 
     this.reloadData();
   }
