@@ -105,7 +105,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     data.forEach(elm => {
       res.countRequests += elm.size,
       res.countSuccess += Array.from(elm.values())
-        .map<number>(state => ['success', 'unchanged'].includes(state) ? 1 : 0)
+        .map<number>(state => (['success', 'unchanged'].includes(state) ? 1 : 0))
         .reduce( (acc, res) => acc + res, 0 );
     });
     return res;
