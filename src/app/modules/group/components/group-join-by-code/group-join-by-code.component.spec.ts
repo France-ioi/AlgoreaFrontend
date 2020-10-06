@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { GroupJoinByCodeComponent } from './group-join-by-code.component';
 import { MessageService } from 'primeng/api';
@@ -11,7 +11,7 @@ describe('GroupJoinByCodeComponent', () => {
   let component: GroupJoinByCodeComponent;
   let fixture: ComponentFixture<GroupJoinByCodeComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ GroupJoinByCodeComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],

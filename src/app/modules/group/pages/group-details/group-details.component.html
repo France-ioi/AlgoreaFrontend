@@ -1,42 +1,46 @@
-<div *ngIf="state === 'loaded' && group"><!-- && group is used for asserting that the variable is set -->
-  <alg-group-header [group]="group"></alg-group-header>
-  <alg-pending-request *ngIf="group.is_public && group.isCurrentUserManager" [groupId]="group.id"></alg-pending-request>
+<ng-container *ngIf="state$ | async as state">
 
-  <!-- tabs -- if only the first tab is visible, do not show the tab bar -->
-  <nav mat-tab-nav-bar *ngIf="group.isCurrentUserManager">
-    <a mat-tab-link
-      [routerLink]="'./'"
-      routerLinkActive #rla1="routerLinkActive"
-      [routerLinkActiveOptions]="{exact: true}"
-      [active]="rla1.isActive">
-      Overview
-    </a>
-    <a mat-tab-link
-      [routerLink]="'./members'"
-      routerLinkActive #rla2="routerLinkActive"
-      [active]="rla2.isActive">
-      Composition
-    </a>
-    <a mat-tab-link
-      *ngIf="group.canCurrentUserManageGroup"
-      [routerLink]="'./managers'"
-      routerLinkActive #rla3="routerLinkActive"
-      [active]="rla3.isActive">
-      Administration
-    </a>
-    <a mat-tab-link
-      *ngIf="group.canCurrentUserManageGroup"
-      [routerLink]="'./settings'"
-      routerLinkActive #rla4="routerLinkActive"
-      [active]="rla4.isActive">
-      Settings
-    </a>
-  </nav>
-  <div class="bg-white">
-    <router-outlet></router-outlet>
+  <div *ngIf="state.tag === 'ready' && (group$ | async) as group">
+    <alg-group-header [group]="group"></alg-group-header>
+    <alg-pending-request *ngIf="group.isCurrentUserManager" [groupId]="group.id"></alg-pending-request>
+
+    <!-- tabs -- if only the first tab is visible, do not show the tab bar -->
+    <nav mat-tab-nav-bar *ngIf="group.isCurrentUserManager">
+      <a mat-tab-link
+        [routerLink]="'./'"
+        routerLinkActive #rla1="routerLinkActive"
+        [routerLinkActiveOptions]="{exact: true}"
+        [active]="rla1.isActive">
+        Overview
+      </a>
+      <a mat-tab-link
+        [routerLink]="'./members'"
+        routerLinkActive #rla2="routerLinkActive"
+        [active]="rla2.isActive">
+        Composition
+      </a>
+      <a mat-tab-link
+        *ngIf="group.canCurrentUserManageGroup"
+        [routerLink]="'./managers'"
+        routerLinkActive #rla3="routerLinkActive"
+        [active]="rla3.isActive">
+        Administration
+      </a>
+      <a mat-tab-link
+        *ngIf="group.canCurrentUserManageGroup"
+        [routerLink]="'./settings'"
+        routerLinkActive #rla4="routerLinkActive"
+        [active]="rla4.isActive">
+        Settings
+      </a>
+    </nav>
+    <div class="bg-white">
+      <router-outlet></router-outlet>
+    </div>
   </div>
-</div>
 
-<p-progressSpinner *ngIf="state === 'loading'"></p-progressSpinner>
+  <p-progressSpinner *ngIf="state.tag === 'fetching'"></p-progressSpinner>
 
-<p *ngIf="state === 'error'">Error while loading the group info</p>
+  <p *ngIf="state.tag === 'error'">Error while loading the group info</p>
+
+</ng-container>

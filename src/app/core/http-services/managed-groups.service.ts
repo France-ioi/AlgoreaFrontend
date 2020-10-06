@@ -26,10 +26,8 @@ export class ManagedGroupsService {
       .get<ManagedGroup[]>(`${environment.apiUrl}/current-user/managed-groups`)
       .pipe(
         // convert array of ManagedGroup to array of Group (exported type)
-        map((gs) =>
-          gs.map((g) => {
-            return { id: g.id, name: g.name };
-          })
+        map(gs =>
+          gs.map(g => ({ id: g.id, name: g.name }))
         )
       );
   }

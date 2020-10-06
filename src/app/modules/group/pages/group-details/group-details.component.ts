@@ -1,54 +1,57 @@
-import { Component } from '@angular/core';
-import { GroupTabService } from '../../services/group-tab.service';
-import { Group, GetGroupByIdService } from '../../http-services/get-group-by-id.service';
+import { Component, OnDestroy } from '@angular/core';
+import { GroupDataSource } from '../../services/group-datasource.service';
+import { Group } from '../../http-services/get-group-by-id.service';
 import { ActivatedRoute } from '@angular/router';
-import { withManagementAdditions, ManagementAdditions } from '../../helpers/group-management';
+import { withManagementAdditions } from '../../helpers/group-management';
+import { filter, map } from 'rxjs/operators';
+import { CurrentContentService } from 'src/app/shared/services/current-content.service';
+import { Subscription } from 'rxjs';
+import { FetchError, Fetching, isReady, Ready } from 'src/app/shared/helpers/state';
+
+const GroupBreadcrumbCat = 'Groups';
 
 @Component({
   selector: 'alg-group-details',
   templateUrl: './group-details.component.html',
   styleUrls: ['./group-details.component.scss'],
-  providers: [ GroupTabService ]
+  providers: [ GroupDataSource ]
 })
-export class GroupDetailsComponent {
+export class GroupDetailsComponent implements OnDestroy {
 
-  idFromRoute?: string;
-  group?: Group & ManagementAdditions;
-  state: 'loaded'|'loading'|'error' = 'loading';
+  state$ = this.groupDataSource.state$;
+  group$ = this.groupDataSource.group$.pipe(map(withManagementAdditions))
+
+  private subscription: Subscription;
 
   constructor(
     private activatedRoute: ActivatedRoute,
-    private groupTabService: GroupTabService,
-    private getGroupByIdService: GetGroupByIdService
+    private groupDataSource: GroupDataSource,
+    private currentContent: CurrentContentService,
   ) {
-    groupTabService.refresh$.subscribe(() => this.fetchGroup());
-    activatedRoute.paramMap.subscribe((params) => {
-      this.state = 'loading';
+    this.activatedRoute.paramMap.subscribe(params => {
       const id = params.get('id');
-      if (id != null) {
-        this.idFromRoute = id;
-        this.fetchGroup();
-      }
+      this.currentContent.setCurrent({ type: 'group', breadcrumbs: { category: GroupBreadcrumbCat, path: [], currentPageIdx: -1} });
+      if (id) this.groupDataSource.fetchGroup(id);
     });
+
+    // on state change, update current content page info (for breadcrumb)
+    this.subscription = this.groupDataSource.state$.pipe(
+      filter<Ready<Group>|Fetching|FetchError,Ready<Group>>(isReady),
+      map(state => ({
+        type: 'group',
+        breadcrumbs: {
+          category: GroupBreadcrumbCat,
+          path: [{ title: state.data.name, navigateTo: ['groups', 'details', state.data.id] }],
+          currentPageIdx:  0,
+        },
+        title: state.data.name,
+      }))
+    ).subscribe(p => this.currentContent.setCurrent(p));
   }
 
-  fetchGroup() {
-    if (this.idFromRoute) {
-      this.getGroupByIdService
-        .get(this.idFromRoute)
-        .subscribe(
-          (g: Group) => {
-            this.group = withManagementAdditions(g);
-            this.state = 'loaded';
-            this.groupTabService.group$.next(g);
-          },
-          (_error) => {
-            this.state = 'error';
-          }
-        );
-    } else {
-      this.state = 'error';
-    }
+  ngOnDestroy() {
+    this.currentContent.setCurrent(null);
+    this.subscription.unsubscribe();
   }
 
 }

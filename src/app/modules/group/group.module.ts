@@ -19,6 +19,7 @@ import { ManagedGroupsComponent } from './pages/managed-groups/managed-groups.co
 import { GroupDetailsComponent } from './pages/group-details/group-details.component';
 import { DurationToMinPipe } from 'src/app/shared/pipes/duration';
 import { GroupInviteUsersComponent } from './components/group-invite-users/group-invite-users.component';
+import { GroupManagerListComponent } from './components/group-manager-list/group-manager-list.component';
 
 @NgModule({
   declarations: [
@@ -35,6 +36,7 @@ import { GroupInviteUsersComponent } from './components/group-invite-users/group
     GroupJoinByCodeComponent,
     DurationToMinPipe,
     GroupInviteUsersComponent,
+    GroupManagerListComponent,
   ],
   imports: [
     CommonModule,

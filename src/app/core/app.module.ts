@@ -72,12 +72,12 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     },
     {
       provide: HTTP_INTERCEPTORS,
-      useClass: AuthTokenInjector,
+      useClass: TimeoutInterceptor,
       multi: true,
     },
     {
       provide: HTTP_INTERCEPTORS,
-      useClass: TimeoutInterceptor,
+      useClass: AuthTokenInjector,
       multi: true,
     },
     {

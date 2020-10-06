@@ -1,0 +1,90 @@
+<p-progressSpinner *ngIf="state === 'loading'"></p-progressSpinner>
+
+<p *ngIf="state === 'error'">Error while loading the group managers</p>
+
+<ng-container *ngIf="state === 'ready'">
+  <alg-section icon="fa fa-users" label="Managers of this group">
+    <alg-grid
+    [data]="managers"
+    sortMode="single"
+    [showGear]="false"
+    [scrollable]="true"
+    class="slanted-grid"
+    >
+      <ng-template #headerTemplate let-columns>
+        <tr style="border: none;">
+          <th style="width: 160px;">
+            <div class="slanted-header">
+              <div class="slanted-header-content">
+                Name
+              </div>
+            </div>
+          </th>
+          <th style="min-width: 110px;">
+            <div class="slanted-header">
+              <div class="slanted-header-content">
+                Can Manage
+              </div>
+            </div>
+          </th>
+          <th style="width: 5rem;">
+            <div class="slanted-header">
+              <div class="slanted-header-content">
+                Can grant group access
+              </div>
+            </div>
+          </th>
+          <th style="width: 5rem;">
+            <div class="slanted-header">
+              <div class="slanted-header-content">
+                Can watch members
+              </div>
+            </div>
+          </th>
+          <th style="width: 110px;"></th>
+      </tr>
+      </ng-template>
+
+      <ng-template
+        #bodyTemplate
+        let-rowData
+        let-columns="columns"
+        let-rowIndex="rowIndex"
+      >
+        <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
+          <td
+            style="text-align: left;width: 160px;padding-left: 0.5rem;"
+            tooltipPosition="top"
+            tooltipStyleClass="tooltip-custom"
+          >
+            {{ rowData.name }}
+          </td>
+          <td style="min-width: 110px;">
+            {{ rowData.can_manage_as_text }}
+          </td>
+          <td style="width: 5rem;">
+            <span class="table-icon"
+              [ngClass]="{
+                locked: rowData[rowData.can_grant_group_access],
+                unlocked: !rowData[rowData.can_grant_group_access]
+              }">
+              <i *ngIf="!rowData[rowData.can_grant_group_access]" class="fa fa-times"></i>
+              <i *ngIf="rowData[rowData.can_grant_group_access]" class="fa fa-check"></i>
+            </span>
+          </td>
+          <td style="width: 5rem;">
+            <span class="table-icon"
+              [ngClass]="{
+                locked: rowData[rowData.can_watch_members],
+                unlocked: !rowData[rowData.can_watch_members]
+              }">
+              <i *ngIf="!rowData[rowData.can_watch_members]" class="fa fa-times"></i>
+              <i *ngIf="rowData[rowData.can_watch_members]" class="fa fa-check"></i>
+            </span>
+          </td>
+          <td style="width: 110px;"></td>
+        </tr>
+      </ng-template>
+    </alg-grid>
+  </alg-section>
+</ng-container>

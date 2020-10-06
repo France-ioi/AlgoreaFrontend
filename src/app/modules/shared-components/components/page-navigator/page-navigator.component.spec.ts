@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PageNavigatorComponent } from './page-navigator.component';
 
@@ -6,7 +6,7 @@ describe('PageNavigatorComponent', () => {
   let component: PageNavigatorComponent;
   let fixture: ComponentFixture<PageNavigatorComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ PageNavigatorComponent ]
     })

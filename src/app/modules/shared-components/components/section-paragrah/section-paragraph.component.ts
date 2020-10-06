@@ -21,7 +21,7 @@ export class SectionParagraphComponent implements OnInit {
   @Input() hasBorder = false;
   @Input() data: any;
   @Input() remainOrigin = true;
-  @Input() isCollapsed = false;
+  @Input() collapsed = false;
 
 
   @Output() collapse = new EventEmitter<boolean>();
@@ -34,7 +34,7 @@ export class SectionParagraphComponent implements OnInit {
   }
 
   toggleContent() {
-    this.isCollapsed = !this.isCollapsed;
-    this.collapse.emit(this.isCollapsed);
+    this.collapsed = !this.collapsed;
+    this.collapse.emit(this.collapsed);
   }
 }

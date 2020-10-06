@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { NavigationTabsComponent } from './navigation-tabs.component';
 import { AppModule } from '../../../core/app.module';
@@ -14,7 +14,7 @@ describe('NavigationTabsComponent', () => {
   let fixture: ComponentFixture<NavigationTabsComponent>;
   let currentUser: BehaviorSubject<UserProfile|null>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     currentUser = new BehaviorSubject<UserProfile|null>(null);
     TestBed.configureTestingModule({
       imports: [
@@ -25,7 +25,7 @@ describe('NavigationTabsComponent', () => {
         {
           provide: CurrentUserService,
           useValue: {
-            currentUser: () => currentUser.asObservable()
+            currentUser$: currentUser.asObservable()
           }
         }
       ],

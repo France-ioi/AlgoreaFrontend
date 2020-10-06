@@ -52,16 +52,14 @@
       (fold)="onFold($event)"
       [templateId]="1"
     ></alg-top-nav>
-    <div class="top-right-bar">
+    <div class="top-right-bar" *ngIf="currentContent$ | async as currentContent">
       <alg-editor-bar
         *ngIf="editing"
         (cancel)="onEditCancel()"
       ></alg-editor-bar>
       <div class="breadcrumb-bar"
       *ngIf="!folded && !scrolled">
-        <alg-breadcrumb
-          [items]="breaddata"
-        ></alg-breadcrumb>
+        <alg-breadcrumb [contentBreadcrumb]="currentContent?.breadcrumbs"></alg-breadcrumb>
         <alg-page-navigator
           *ngIf="!editing"
           (edit)="onEditPage()"
@@ -88,8 +86,8 @@
         >
           <img src="assets/images/_messi.jpg" style="width: 2.9167rem; height: 2.9167rem;" />
         </div>
-        <div class="task-title">
-          <p>Dummy user title to be replaced</p>
+        <div class="rightpane-title">
+          <p *ngIf="currentContent && currentContent.title">{{ currentContent.title }}</p>
         </div>
         <div *ngIf="collapsed" class="user-info">
           <span class="user-avatar">

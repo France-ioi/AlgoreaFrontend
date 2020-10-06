@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { GroupTabService } from '../../services/group-tab.service';
-import { Group } from '../../http-services/get-group-by-id.service';
-import { canCurrentUserManageMembers } from '../../helpers/group-management';
+import { GroupDataSource } from '../../services/group-datasource.service';
+import { withManagementAdditions } from '../../helpers/group-management';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'alg-group-composition',
@@ -10,20 +10,14 @@ import { canCurrentUserManageMembers } from '../../helpers/group-management';
 })
 export class GroupCompositionComponent {
 
-  group: Group
-  canCurrentUserManageMembers = false
+  group$ = this.groupDataSource.group$.pipe(map(withManagementAdditions));
 
   constructor(
-    private groupTabService: GroupTabService,
-  ) {
-    this.groupTabService.group$.subscribe((g: Group) => {
-      this.group = g;
-      this.canCurrentUserManageMembers = canCurrentUserManageMembers(g);
-    });
-  }
+    private groupDataSource: GroupDataSource,
+  ) {}
 
   refreshGroupInfo() {
-    this.groupTabService.refresh$.next();
+    this.groupDataSource.refetchGroup();
   }
 
 }

@@ -1,30 +1,32 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { GroupSettingsComponent } from './group-settings.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { GroupTabService } from '../../services/group-tab.service';
+import { GroupDataSource } from '../../services/group-datasource.service';
 import { mockGroup } from '../../mocks/group-by-id';
+import { readyState } from 'src/app/shared/helpers/state';
+import { of } from 'rxjs';
 
 describe('GroupSettingsComponent', () => {
   let component: GroupSettingsComponent;
   let fixture: ComponentFixture<GroupSettingsComponent>;
-  const groupTabService = new GroupTabService();
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
         HttpClientTestingModule
       ],
       declarations: [ GroupSettingsComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
-      providers: [ { provide: GroupTabService, useValue: groupTabService } ]
+      providers: [ { provide: GroupDataSource, useValue: {
+        group$: of(readyState(mockGroup))
+      } } ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    groupTabService.group$.next(mockGroup);
     fixture = TestBed.createComponent(GroupSettingsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

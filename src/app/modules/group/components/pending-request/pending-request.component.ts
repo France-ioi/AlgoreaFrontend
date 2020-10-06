@@ -32,6 +32,8 @@ interface Result {
   countSuccess: number;
 }
 
+const groupColumn = { field: 'group.name', header: 'GROUP'};
+
 @Component({
   selector: 'alg-pending-request',
   templateUrl: './pending-request.component.html',
@@ -50,7 +52,6 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     { field: 'user.login', header: 'USER' },
     { field: 'at', header: 'REQUESTED ON' },
   ];
-  groupColumn = { field: 'group.name', header: 'GROUP'};
   subgroupSwitchItems = [
     { label: 'This group only', includeSubgroup: false},
     { label: 'All subgroups', includeSubgroup: true }
@@ -60,6 +61,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
   panel: GridColumnGroup[] = [];
   currentSort: string[] = [];
   includeSubgroup = false;
+  collapsed = true;
   status: 'loading' | 'loaded' | 'empty' |'error';
 
   ongoingActivity: Activity = Activity.None;
@@ -85,13 +87,14 @@ export class PendingRequestComponent implements OnInit, OnChanges {
   private reloadData() {
     this.status = 'loading';
     this.getRequestsService
-      .getPendingRequests(this.groupId, this.currentSort, this.includeSubgroup)
+      .getPendingRequests(this.groupId, this.includeSubgroup, this.currentSort)
       .subscribe(
         (reqs: PendingRequest[]) => {
           this.requests = reqs;
           this.status = reqs.length ? 'loaded' : 'empty';
+          if (reqs.length) this.collapsed = false;
         },
-        (_err) => {
+        _err => {
           this.status = 'error';
         }
       );
@@ -170,7 +173,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
 
     resultObserver
       .subscribe(
-        (res) => {
+        res => {
           this.displayResponseToast(
             this.parseResults(res),
             action === Action.Accept ? 'accept' : 'reject',
@@ -180,7 +183,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
           this.ongoingActivity = Activity.None;
           this.selection = [];
         },
-        (err) => {
+        err => {
           this.processRequestError(err);
           this.ongoingActivity = Activity.None;
         }
@@ -196,9 +199,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
   }
 
   onCustomSort(event: SortEvent) {
-    const sortMeta = event.multiSortMeta?.map((meta) =>
-      meta.order === -1 ? `-${meta.field}` : meta.field
-    );
+    const sortMeta = event.multiSortMeta?.map(meta => (meta.order === -1 ? `-${meta.field}` : meta.field));
 
     if (sortMeta && JSON.stringify(sortMeta) !== JSON.stringify(this.currentSort)) {
 
@@ -209,12 +210,11 @@ export class PendingRequestComponent implements OnInit, OnChanges {
 
   onSubgroupSwitch(selectedIdx: number) {
     this.includeSubgroup = this.subgroupSwitchItems[selectedIdx].includeSubgroup;
+
+    this.columns = this.columns.filter(elm => elm !== groupColumn);
+    if (this.includeSubgroup) this.columns = [groupColumn].concat(this.columns);
+
     this.reloadData();
   }
 
-  getGroupGrid() {
-    if (this.includeSubgroup || !this.showSwitch)
-      return [this.groupColumn].concat(this.columns);
-    return this.columns;
-  }
 }
