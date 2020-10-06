@@ -8,6 +8,7 @@ export interface Item {
   requires_explicit_entry: boolean
   string: {
     title: string|null,
+    subtitle?: string|null,
   },
   permissions: {
     can_view: 'none'|'info'|'content'|'content_with_descendants'|'solution',
