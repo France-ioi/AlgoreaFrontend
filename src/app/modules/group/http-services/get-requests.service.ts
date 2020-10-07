@@ -26,7 +26,7 @@ export class GetRequestsService {
   constructor(private http: HttpClient) {}
 
   getPendingRequests(
-    groupId: string | undefined,
+    groupId: string,
     includeSubgroup : boolean = false,
     sort: string[] = []
   ): Observable<PendingRequest[]> {

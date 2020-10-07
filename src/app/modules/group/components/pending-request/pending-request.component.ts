@@ -41,7 +41,7 @@ const groupColumn = { field: 'group.name', header: 'GROUP'};
   providers: [ MessageService ]
 })
 export class PendingRequestComponent implements OnInit, OnChanges {
-  @Input() groupId: string | undefined;
+  @Input() groupId: string;
   @Input() showSwitch = true;
 
   // Make the enums usable in the html template
@@ -104,7 +104,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
   private parseResults(data: Map<string, any>[]): Result {
     const res : Result = {countRequests: 0, countSuccess: 0};
     data.forEach(elm => {
-      res.countRequests += elm.size,
+      res.countRequests += elm.size;
       res.countSuccess += Array.from(elm.values())
         .map<number>(state => (['success', 'unchanged'].includes(state) ? 1 : 0))
         .reduce( (acc, res) => acc + res, 0 );
