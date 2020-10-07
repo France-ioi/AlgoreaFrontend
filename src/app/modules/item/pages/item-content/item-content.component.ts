@@ -8,7 +8,7 @@ import { ItemDataSource } from '../../services/item-datasource.service';
 })
 export class ItemContentComponent {
 
-    item$ = this.itemDataSource.item$;
+    itemData$ = this.itemDataSource.itemData$;
 
     constructor(
       private itemDataSource:ItemDataSource,
