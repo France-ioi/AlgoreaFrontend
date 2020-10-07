@@ -32,7 +32,7 @@ export function isGroupInfo(info: ContentInfo|null): info is GroupInfo {
 }
 
 export type EditState = 'non-editable'|'editable'|'editing'|'editing-noaction'; // editingNoAction is for temporary disabled actions
-export enum EditAction { StartEditing, Save, Cancel, Refresh }
+export enum EditAction { StartEditing, Save, Cancel }
 
 /**
  * Use this service to track what's the current item display in the content (right) pane.

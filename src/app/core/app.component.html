@@ -59,6 +59,7 @@
       <alg-editor-bar
         *ngIf="editState === 'editing' || editState === 'editing-noaction'"
         (cancel)="onEditCancel()"
+        (save)="onEditSave()"
       ></alg-editor-bar>
       <div class="breadcrumb-bar"
       *ngIf="!folded && !scrolled">
