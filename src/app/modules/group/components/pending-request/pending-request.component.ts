@@ -158,7 +158,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     return forkJoin(
       Array.from(requestMap.entries()).map(elm => {
         if (action === Action.Accept) return this.requestActionService.acceptJoinRequest(elm[0], elm[1]);
-        else                          return this.requestActionService.rejectJoinRequest(elm[0], elm[1]);
+        else return this.requestActionService.rejectJoinRequest(elm[0], elm[1]);
       })
     );
   }
