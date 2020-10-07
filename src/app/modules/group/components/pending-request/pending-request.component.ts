@@ -76,6 +76,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     this.panel.push({
       columns: this.columns,
     });
+    if (!this.showSwitch) this.columns = [groupColumn].concat(this.columns);
   }
 
   ngOnChanges(_changes: SimpleChanges) {
