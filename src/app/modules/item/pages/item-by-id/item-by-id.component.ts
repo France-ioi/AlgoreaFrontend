@@ -1,9 +1,9 @@
 import { Component, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { FetchError, Fetching, isReady, Ready } from 'src/app/shared/helpers/state';
-import { CurrentContentService } from 'src/app/shared/services/current-content.service';
+import { CurrentContentService, EditAction, isItemInfo } from 'src/app/shared/services/current-content.service';
 import { isPathGiven, itemDetailsRoute, itemFromDetailParams } from 'src/app/shared/services/nav-types';
 import { ItemDataSource, ItemData } from '../../services/item-datasource.service';
 
@@ -23,6 +23,7 @@ export class ItemByIdComponent implements OnDestroy {
   private subscriptions: Subscription[] = []; // subscriptions to be freed up on destroy
 
   constructor(
+    private router: Router,
     private activatedRoute: ActivatedRoute,
     private currentContent: CurrentContentService,
     private itemDataSource: ItemDataSource,
@@ -70,7 +71,16 @@ export class ItemByIdComponent implements OnDestroy {
           title: state.data.item.string.title === null ? undefined : state.data.item.string.title,
           data: state.data.nav,
         }))
-      ).subscribe(p => this.currentContent.current.next(p))
+      ).subscribe(p => this.currentContent.current.next(p)),
+
+      this.currentContent.editAction$.pipe(
+        filter(action => [EditAction.StartEditing, EditAction.Cancel].includes(action))
+      ).subscribe(action => {
+        const currentInfo = this.currentContent.current.value;
+        if (isItemInfo(currentInfo)) {
+          void this.router.navigate(itemDetailsRoute(currentInfo.data, action === EditAction.StartEditing));
+        }
+      })
     );
   }
 
