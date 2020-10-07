@@ -31,12 +31,13 @@ export class GetRequestsService {
     sort: string[] = []
   ): Observable<PendingRequest[]> {
     let params = new HttpParams();
-    if (groupId)
+    if (groupId) {
       params = params.set('group_id', groupId);
+      if (includeSubgroup) params = params.set('include_descendant_groups', '1');
+    }
     if (sort.length > 0) {
       params = params.set('sort', sort.join(','));
     }
-    if (includeSubgroup) params = params.set('include_descendant_groups', '1');
     return this.http
       .get<PendingRequest[]>(`${environment.apiUrl}/groups/user-requests`, { params: params });
   }
