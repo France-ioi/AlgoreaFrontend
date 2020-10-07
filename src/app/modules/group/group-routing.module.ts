@@ -7,6 +7,7 @@ import { GroupOverviewComponent } from './pages/group-overview/group-overview.co
 import { GroupCompositionComponent } from './pages/group-composition/group-composition.component';
 import { GroupAdministrationComponent } from './pages/group-administration/group-administration.component';
 import { GroupSettingsComponent } from './pages/group-settings/group-settings.component';
+import { JoinedGroupsComponent } from './pages/joined-groups/joined-groups.component';
 
 const routes: Routes = [
   {
@@ -16,6 +17,10 @@ const routes: Routes = [
   {
     path: 'managed',
     component: ManagedGroupsComponent,
+  },
+  {
+    path: 'joined',
+    component: JoinedGroupsComponent,
   },
   {
     path: 'details/:id',

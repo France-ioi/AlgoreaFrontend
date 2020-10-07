@@ -29,7 +29,7 @@
           <span class="anonym-group">
             <img src="assets/images/Group - Joined.svg" style="width: 3.3333rem; height: 3.3333rem;" />
           </span>
-          <span class="group-subtitle">Groups You Joined</span>
+          <span class="group-subtitle" (click)="goToJoinedGroups()">Groups You Joined</span>
         </p-header>
         <p-progressSpinner *ngSwitchCase="'loading'" [style]="{width: '3.3333rem', height: '3.3333rem'}"></p-progressSpinner>
         <p *ngSwitchCase="'error'">Unable to load the group list</p>
