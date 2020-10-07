@@ -1,19 +1,19 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { CurrentUserService } from '../shared/services/current-user.service';
 import { delay, filter, skip } from 'rxjs/operators';
 import { UserProfile } from '../shared/http-services/current-user.service';
-import { Observable } from 'rxjs';
-import { CurrentContentService, PageInfo } from '../shared/services/current-content.service';
+import { Observable, Subscription } from 'rxjs';
+import { ContentInfo, CurrentContentService } from '../shared/services/current-content.service';
 
 @Component({
   selector: 'alg-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
 
   // the delay(0) is used to prevent the UI to update itself (when the content is loaded) (ExpressionChangedAfterItHasBeenCheckedError)
-  pageInfo$: Observable<PageInfo|null>  = this.currentContent.pageInfo().pipe( delay(0) );
+  currentContent$: Observable<ContentInfo|null>  = this.currentContent.currentContent$.pipe( delay(0) );
 
   editing = false;
   isStarted = true;
@@ -32,6 +32,8 @@ export class AppComponent implements OnInit {
 
   selectedType = -1;
 
+  private subscription: Subscription;
+
   constructor(
     private currentUserService: CurrentUserService,
     private currentContent: CurrentContentService,
@@ -39,12 +41,16 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
    // each time there is a new user, refresh the page
-    this.currentUserService.currentUser().pipe(
+    this.currentUserService.currentUser$.pipe(
       filter<UserProfile|null, UserProfile>((user):user is UserProfile => user !== null),
       skip(1), // do not refresh when the first user is set
-    ).subscribe((_user) => {
+    ).subscribe(_user => {
       window.location.reload();
     });
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
   onCollapse(e: boolean) {

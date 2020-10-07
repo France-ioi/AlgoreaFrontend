@@ -11,7 +11,7 @@ import {
   ERROR_MESSAGE,
 } from '../../../../shared/constants/api';
 import { TOAST_LENGTH } from '../../../../shared/constants/global';
-import { Observable } from 'rxjs';
+import { Observable, forkJoin } from 'rxjs';
 import { GetRequestsService, PendingRequest } from '../../http-services/get-requests.service';
 import { RequestActionsService } from '../../http-services/request-actions.service';
 import { GridColumn, GridColumnGroup } from '../../../shared-components/components/grid/grid.component';
@@ -32,6 +32,8 @@ interface Result {
   countSuccess: number;
 }
 
+const groupColumn = { field: 'group.name', header: 'GROUP'};
+
 @Component({
   selector: 'alg-pending-request',
   templateUrl: './pending-request.component.html',
@@ -40,6 +42,7 @@ interface Result {
 })
 export class PendingRequestComponent implements OnInit, OnChanges {
   @Input() groupId: string | undefined;
+  @Input() showSwitch = true;
 
   // Make the enums usable in the html template
   Action = Action;
@@ -57,7 +60,9 @@ export class PendingRequestComponent implements OnInit, OnChanges {
   selection: PendingRequest[] = [];
   panel: GridColumnGroup[] = [];
   currentSort: string[] = [];
-  includeSubgroup: boolean;
+  includeSubgroup = false;
+  collapsed = true;
+  status: 'loading' | 'loaded' | 'empty' |'error';
 
   ongoingActivity: Activity = Activity.None;
 
@@ -75,25 +80,35 @@ export class PendingRequestComponent implements OnInit, OnChanges {
 
   ngOnChanges(_changes: SimpleChanges) {
     this.selection = [];
-    this.reloadData();
     this.ongoingActivity = Activity.None;
+    this.reloadData();
   }
 
   private reloadData() {
+    this.status = 'loading';
     this.getRequestsService
-      .getPendingRequests(this.groupId, this.currentSort)
-      .subscribe((reqs: PendingRequest[]) => {
-        this.requests = reqs;
-      });
+      .getPendingRequests(this.groupId, this.includeSubgroup, this.currentSort)
+      .subscribe(
+        (reqs: PendingRequest[]) => {
+          this.requests = reqs;
+          this.status = reqs.length ? 'loaded' : 'empty';
+          if (reqs.length) this.collapsed = false;
+        },
+        _err => {
+          this.status = 'error';
+        }
+      );
   }
 
-  private parseResults(data: Map<string, any>): Result {
-    return {
-      countRequests: data.size,
-      countSuccess: Array.from(data.values())
-        .map<number>(res => ['success', 'unchanged'].includes(res) ? 1 : 0)
-        .reduce( (acc, res) => acc + res, 0 )
-    };
+  private parseResults(data: Map<string, any>[]): Result {
+    const res : Result = {countRequests: 0, countSuccess: 0};
+    data.forEach(elm => {
+      res.countRequests += elm.size,
+      res.countSuccess += Array.from(elm.values())
+        .map<number>(state => (['success', 'unchanged'].includes(state) ? 1 : 0))
+        .reduce( (acc, res) => acc + res, 0 );
+    });
+    return res;
   }
 
   private displayResponseToast(result: Result, verb: string, msg: string) {
@@ -130,24 +145,35 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     });
   }
 
+  processRequests(action: Action) {
+    const requestMap = new Map<string, string[]>();
+    this.selection.forEach(elm => {
+      const groupID = elm.group.id;
+      const memberID = elm.user.group_id;
+
+      const value = requestMap.get(groupID);
+      if (value) requestMap.set(groupID, value.concat([memberID]));
+      else requestMap.set(groupID, [memberID]);
+    });
+    return forkJoin(
+      Array.from(requestMap.entries()).map(elm => {
+        if (action === Action.Accept) return this.requestActionService.acceptJoinRequest(elm[0], elm[1]);
+        else return this.requestActionService.rejectJoinRequest(elm[0], elm[1]);
+      })
+    );
+  }
+
   onAcceptOrReject(action: Action) {
     if (this.selection.length === 0 || this.ongoingActivity !== Activity.None || !this.groupId) {
       return;
     }
     this.ongoingActivity = (action === Action.Accept) ? Activity.Accepting : Activity.Rejecting;
 
-    const groupIds = this.selection.map(req => req.user.group_id);
-
-    let resultObserver: Observable<Map<string, any>>;
-    if (action === Action.Accept) {
-      resultObserver = this.requestActionService.acceptJoinRequest(this.groupId, groupIds);
-    } else {
-      resultObserver = this.requestActionService.rejectJoinRequest(this.groupId, groupIds);
-    }
+    const resultObserver : Observable<Map<string, any>[]> = this.processRequests(action);
 
     resultObserver
       .subscribe(
-        (res) => {
+        res => {
           this.displayResponseToast(
             this.parseResults(res),
             action === Action.Accept ? 'accept' : 'reject',
@@ -157,7 +183,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
           this.ongoingActivity = Activity.None;
           this.selection = [];
         },
-        (err) => {
+        err => {
           this.processRequestError(err);
           this.ongoingActivity = Activity.None;
         }
@@ -173,9 +199,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
   }
 
   onCustomSort(event: SortEvent) {
-    const sortMeta = event.multiSortMeta?.map((meta) =>
-      meta.order === -1 ? `-${meta.field}` : meta.field
-    );
+    const sortMeta = event.multiSortMeta?.map(meta => (meta.order === -1 ? `-${meta.field}` : meta.field));
 
     if (sortMeta && JSON.stringify(sortMeta) !== JSON.stringify(this.currentSort)) {
 
@@ -186,6 +210,11 @@ export class PendingRequestComponent implements OnInit, OnChanges {
 
   onSubgroupSwitch(selectedIdx: number) {
     this.includeSubgroup = this.subgroupSwitchItems[selectedIdx].includeSubgroup;
+
+    this.columns = this.columns.filter(elm => elm !== groupColumn);
+    if (this.includeSubgroup) this.columns = [groupColumn].concat(this.columns);
+
     this.reloadData();
   }
+
 }

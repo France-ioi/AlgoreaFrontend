@@ -1,16 +1,21 @@
 <alg-section-paragraph
-  *ngIf="requests.length"
   icon="fa fa-check"
   label="Pending requests"
   [collapsible]="true"
+  [collapsed]="collapsed"
 >
   <ng-template #headerTemplate>
-    <div style="flex: 1; flex-direction: row-reverse;display: flex;">
+    <div
+      *ngIf="showSwitch"
+      style="flex: 1; flex-direction: row-reverse;display: flex;"
+      [ngClass]="{'all-disabled': status === 'loading'}">
       <alg-selection (change)="onSubgroupSwitch($event)" [items]="subgroupSwitchItems" style="width: 25rem;"></alg-selection>
     </div>
   </ng-template>
-  <div class="pending-request-container">
+
+  <div class="pending-request-container" *ngIf="status !== 'loading'; else loading" [ngSwitch]="status">
     <alg-grid
+      *ngSwitchCase="'loaded'"
       [selectedColumns]="columns"
       [columns]="columns"
       [data]="requests"
@@ -23,18 +28,8 @@
           <th style="width: 3.3333rem; background-color: #d3dbe7;"></th>
           <ng-container *ngFor="let col of columns">
             <th
-              *ngIf="col.field === 'at'"
               [pSortableColumn]="col.field"
-              style="width: 13.3333rem; background-color: #d3dbe7;"
-            >
-              <div class="header-container">
-                {{ col.header }}
-                <p-sortIcon [field]="col.field"></p-sortIcon>
-              </div>
-            </th>
-            <th
-              *ngIf="col.field === 'user.login'"
-              [pSortableColumn]="col.field"
+              [ngClass]="{'small-column' : ['at', 'group.name'].includes(col.field)}"
               style="background-color: #d3dbe7;"
             >
               <div class="header-container">
@@ -56,6 +51,11 @@
             <p-tableCheckbox [value]="rowData" [disabled]="ongoingActivity !== Activity.None"></p-tableCheckbox>
           </td>
           <td *ngFor="let col of columns">
+            <ng-container *ngIf="col.field === 'group.name'" >
+              <span style="white-space: initial;">
+                {{ rowData.group.name }}
+              </span>
+            </ng-container>
             <ng-container *ngIf="col.field === 'at'">
               {{ rowData.at | date: "d/MM/y" }}
             </ng-container>
@@ -116,6 +116,12 @@
         </div>
       </ng-template>
     </alg-grid>
+    <div *ngSwitchCase="'empty'">
+      No request
+    </div>
+    <div *ngSwitchDefault>
+      Error
+    </div>
   </div>
 </alg-section-paragraph>
 

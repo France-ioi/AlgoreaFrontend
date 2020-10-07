@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { GroupNavComponent } from './group-nav.component';
 import { JoinedGroupsService } from '../../http-services/joined-groups.service';
@@ -9,7 +9,7 @@ describe('GroupNavComponent', () => {
   let component: GroupNavComponent;
   let fixture: ComponentFixture<GroupNavComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ GroupNavComponent ],
       providers: [

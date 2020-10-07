@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ItemNavTreeComponent } from './item-nav-tree.component';
 import { Router } from '@angular/router';
@@ -8,7 +8,7 @@ describe('ItemNavTreeComponent', () => {
   let component: ItemNavTreeComponent;
   let fixture: ComponentFixture<ItemNavTreeComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     const routerSpy = jasmine.createSpyObj<Router>('Router', ['parseUrl']);
     TestBed.configureTestingModule({
       providers: [

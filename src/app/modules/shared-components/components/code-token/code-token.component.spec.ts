@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CodeTokenComponent } from './code-token.component';
 
@@ -6,7 +6,7 @@ describe('CodeTokenComponent', () => {
   let component: CodeTokenComponent;
   let fixture: ComponentFixture<CodeTokenComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ CodeTokenComponent ]
     })

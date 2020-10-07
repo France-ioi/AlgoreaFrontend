@@ -1,56 +1,44 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ItemDetailsComponent } from './item-details.component';
 import { CurrentContentService } from 'src/app/shared/services/current-content.service';
-import { NavItem } from 'src/app/shared/services/nav-types';
 import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
-import { GetBreadcrumbService } from '../../http-services/get-breadcrumb.service';
-import { GetItemByIdService } from '../../http-services/get-item-by-id.service';
-import { ResultActionsService } from 'src/app/shared/http-services/result-actions.service';
+import { ItemDataSource } from '../../services/item-datasource.service';
 
 describe('ItemDetailsComponent', () => {
   let component: ItemDetailsComponent;
   let fixture: ComponentFixture<ItemDetailsComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ ItemDetailsComponent ],
-      providers: [
-        { provide: CurrentContentService, useValue: {
-          setCurrent: (_i: NavItem) => {},
-          setPageInfo: (_p: any) => {},
-        }},
-        { provide: ActivatedRoute, useValue: {
-          paramMap: of({
-            get: (_s: string) => '30'
-          }),
-          snapshot: {
-            paramMap: {
+      declarations: [ ItemDetailsComponent ]
+    }).overrideComponent(ItemDetailsComponent, {
+      set: {
+        providers: [
+          { provide: CurrentContentService, useValue: {
+            setCurrent: (_i: any) => {},
+          }},
+          { provide: ActivatedRoute, useValue: {
+            paramMap: of({
               get: (_s: string) => '30',
               has: (_s: string) => true,
+            }),
+            snapshot: {
+              paramMap: {
+                get: (_s: string) => '30',
+                has: (_s: string) => true,
+              }
             }
-          }
-        }},
-        { provide: GetBreadcrumbService, useValue: {
-          getBreadcrumb: (_p: any, _a: any) => of([]),
-          getBreadcrumbWithParentAttempt: (_p: any, _a: any) => of([]),
-        }},
-        { provide: GetItemByIdService, useValue: {
-          get: (_id: string) => of({
-            id: 1,
-            requires_explicit_entry:true,
-            string: {
-              title: 'Dummy title',
-            }
-          }),
-        }},
-        { provide: ResultActionsService, useValue: {
-          start: (_path: any, _a: string) => of(undefined)
-        }}
-      ]
-    })
-    .compileComponents();
+          }},
+          { provide: ItemDataSource, useValue: {
+            state$: of(),
+            items$: of(),
+            fetchItem: (_nav: any) => {},
+          }},
+        ]
+      }
+    }).compileComponents();
   }));
 
   beforeEach(() => {

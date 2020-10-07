@@ -35,9 +35,9 @@ export class GroupNavComponent {
     merge(
       of<GroupData>('loading'),
       service.pipe(
-        catchError((_e) => of<GroupData>('error'))
+        catchError(_e => of<GroupData>('error'))
       )
-    ).subscribe((res) => {
+    ).subscribe(res => {
       if (event.index == joinGroupTabIdx) this.joinedGroups = res;
       else this.managedGroups = res;
     });

@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HttpErrorResponse } from '@angular/common/http';
+import { Observable, of, throwError } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { AuthService } from '../auth/auth.service';
-import { switchMap, filter, take } from 'rxjs/operators';
+import { switchMap, filter, take, retryWhen, mergeMap } from 'rxjs/operators';
 import { AccessToken } from '../auth/access-token';
 import { headersForAuth } from '../helpers/auth';
 
@@ -23,15 +23,18 @@ export class AuthTokenInjector implements HttpInterceptor {
 
     // take the latest token (and wait for one if the current one is null
     // and inject it into the header of the request
-    return this.auth.accessToken()
+    return this.auth.accessToken$
       .pipe(
         filter<AccessToken|null, AccessToken>((token):token is AccessToken => token !== null),
         take(1), // complete after emitting the first non-null token
-        switchMap(token => {
-          return next.handle(
-            req.clone({ setHeaders: headersForAuth(token.accessToken) })
-          );
-        })
+        switchMap(token => next.handle(
+          req.clone({ setHeaders: headersForAuth(token.accessToken) })
+        )),
+        // when we get a 401 - we retry once (as the token should have been replaced)
+        retryWhen(errors => errors.pipe(
+          mergeMap((err, idx) => (idx === 0 && err instanceof HttpErrorResponse && err.status === 401 &&
+            req.url.toLowerCase().startsWith(environment.apiUrl) ? of(err) : throwError(err)))
+        ))
       );
   }
 }

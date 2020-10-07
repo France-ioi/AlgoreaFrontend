@@ -58,7 +58,7 @@
       ::ng-deep p-progressSpinner {
         display: flex;
         align-items: center;
-        
+
         .ui-progress-spinner {
           width: 1.2rem;
           height: 1.2rem;
@@ -77,8 +77,25 @@
   }
 }
 
+// FIXME: find a more restrictive selector
+.all-disabled {
+  opacity: 70%;
+  pointer-events: none;
+
+  > * {
+    opacity: 70%;
+    pointer-events: none;
+  }
+}
+
 :host ::ng-deep .pending-request-container .ui-table .ui-table-summary {
   background-color: transparent;
+}
+
+:host ::ng-deep .pending-request-container .ui-table .ui-table-thead > tr {
+  .small-column {
+    width: 13.3333rem;
+  }
 }
 
 :host ::ng-deep .pending-request-container .ui-table .ui-table-tbody > tr {

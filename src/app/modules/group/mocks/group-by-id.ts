@@ -4,6 +4,7 @@ export const mockGroup: Group = {
   id: '1',
   name: 'Code Dojo',
   description: 'Our group',
+  is_public: false,
 
   current_user_is_manager: false,
 };
