@@ -153,7 +153,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
 
       const value = requestMap.get(groupID);
       if (value) requestMap.set(groupID, value.concat([memberID]));
-      else       requestMap.set(groupID, [memberID]);
+      else requestMap.set(groupID, [memberID]);
     });
     return forkJoin(
       Array.from(requestMap.entries()).map(elm => {
