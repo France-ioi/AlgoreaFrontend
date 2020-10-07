@@ -38,15 +38,8 @@ export function isGroupInfo(info: ContentInfo|null): info is GroupInfo {
   providedIn: 'root'
 })
 export class CurrentContentService {
-  private current = new BehaviorSubject<ContentInfo|null>(null);
+  /* info about the currently displayed content */
+  current = new BehaviorSubject<ContentInfo|null>(null);
   currentContent$ = this.current.asObservable();
-
-  setCurrent(content: ContentInfo|null) {
-    this.current.next(content);
-  }
-
-  currentContent(): ContentInfo|null {
-    return this.current.value;
-  }
 
 }

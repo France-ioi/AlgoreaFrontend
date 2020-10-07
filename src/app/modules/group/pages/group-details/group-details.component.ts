@@ -30,7 +30,7 @@ export class GroupDetailsComponent implements OnDestroy {
   ) {
     this.activatedRoute.paramMap.subscribe(params => {
       const id = params.get('id');
-      this.currentContent.setCurrent({ type: 'group', breadcrumbs: { category: GroupBreadcrumbCat, path: [], currentPageIdx: -1} });
+      this.currentContent.current.next({ type: 'group', breadcrumbs: { category: GroupBreadcrumbCat, path: [], currentPageIdx: -1} });
       if (id) this.groupDataSource.fetchGroup(id);
     });
 
@@ -46,11 +46,11 @@ export class GroupDetailsComponent implements OnDestroy {
         },
         title: state.data.name,
       }))
-    ).subscribe(p => this.currentContent.setCurrent(p));
+    ).subscribe(p => this.currentContent.current.next(p));
   }
 
   ngOnDestroy() {
-    this.currentContent.setCurrent(null);
+    this.currentContent.current.next(null);
     this.subscription.unsubscribe();
   }
 

@@ -32,7 +32,11 @@ export class ItemByIdComponent implements OnDestroy {
     this.activatedRoute.paramMap.subscribe(params => {
       const navItem = itemFromDetailParams(params);
       if (!navItem) return; // unexpected as this component should not be routed if id is missing
-      currentContent.setCurrent({ type: 'item', data: navItem, breadcrumbs: { category: ItemBreadcrumbCat, path: [], currentPageIdx: -1} });
+      currentContent.current.next({
+        type: 'item',
+        data: navItem,
+        breadcrumbs: { category: ItemBreadcrumbCat, path: [], currentPageIdx: -1}
+      });
       if (!isPathGiven(params)) {
         // TODO: handle no path given
         return;
@@ -65,11 +69,11 @@ export class ItemByIdComponent implements OnDestroy {
         title: state.data.item.string.title === null ? undefined : state.data.item.string.title,
         data: state.data.nav,
       }))
-    ).subscribe(p => this.currentContent.setCurrent(p));
+    ).subscribe(p => this.currentContent.current.next(p));
   }
 
   ngOnDestroy() {
-    this.currentContent.setCurrent(null);
+    this.currentContent.current.next(null);
     this.subscription.unsubscribe();
   }
 
