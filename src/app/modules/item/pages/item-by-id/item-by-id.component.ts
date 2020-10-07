@@ -20,7 +20,7 @@ const ItemBreadcrumbCat = 'Items';
 })
 export class ItemByIdComponent implements OnDestroy {
 
-  private subscription: Subscription; // subscriptions to be freed up on destroy
+  private subscriptions: Subscription[] = []; // subscriptions to be freed up on destroy
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -48,33 +48,35 @@ export class ItemByIdComponent implements OnDestroy {
       this.itemDataSource.fetchItem(navItem);
     });
 
-    // on state change, update current content page info (for breadcrumb)
-    this.subscription = this.itemDataSource.state$.pipe(
-      filter<Ready<ItemData>|Fetching|FetchError,Ready<ItemData>>(isReady),
-      map(state => ({
-        type: 'item',
-        breadcrumbs: {
-          category: ItemBreadcrumbCat,
-          path: state.data.breadcrumbs.map((el, idx) => ({
-            title: el.title,
-            hintNumber: el.attemptCnt,
-            navigateTo: itemDetailsRoute({
-              itemId: el.itemId,
-              attemptId: el.attemptId,
-              itemPath: state.data.breadcrumbs.slice(0,idx).map(it => it.itemId),
-            }),
-          })),
-          currentPageIdx: state.data.breadcrumbs.length - 1,
-        },
-        title: state.data.item.string.title === null ? undefined : state.data.item.string.title,
-        data: state.data.nav,
-      }))
-    ).subscribe(p => this.currentContent.current.next(p));
+    this.subscriptions.push(
+      // on state change, update current content page info (for breadcrumb)
+      this.itemDataSource.state$.pipe(
+        filter<Ready<ItemData>|Fetching|FetchError,Ready<ItemData>>(isReady),
+        map(state => ({
+          type: 'item',
+          breadcrumbs: {
+            category: ItemBreadcrumbCat,
+            path: state.data.breadcrumbs.map((el, idx) => ({
+              title: el.title,
+              hintNumber: el.attemptCnt,
+              navigateTo: itemDetailsRoute({
+                itemId: el.itemId,
+                attemptId: el.attemptId,
+                itemPath: state.data.breadcrumbs.slice(0,idx).map(it => it.itemId),
+              }),
+            })),
+            currentPageIdx: state.data.breadcrumbs.length - 1,
+          },
+          title: state.data.item.string.title === null ? undefined : state.data.item.string.title,
+          data: state.data.nav,
+        }))
+      ).subscribe(p => this.currentContent.current.next(p))
+    );
   }
 
   ngOnDestroy() {
     this.currentContent.current.next(null);
-    this.subscription.unsubscribe();
+    this.subscriptions.forEach(s => s.unsubscribe());
   }
 
 }
