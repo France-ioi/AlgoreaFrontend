@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { NavItem } from './nav-types';
 
 export interface ContentBreadcrumb {
@@ -31,6 +31,9 @@ export function isGroupInfo(info: ContentInfo|null): info is GroupInfo {
   return info !== null && info.type === 'group';
 }
 
+export type EditState = 'non-editable'|'editable'|'editing'|'editing-noaction'; // editingNoAction is for temporary disabled actions
+export enum EditAction { StartEditing, Save, Cancel, Refresh }
+
 /**
  * Use this service to track what's the current item display in the content (right) pane.
  */
@@ -41,5 +44,13 @@ export class CurrentContentService {
   /* info about the currently displayed content */
   current = new BehaviorSubject<ContentInfo|null>(null);
   currentContent$ = this.current.asObservable();
+
+  /* the current state of editing */
+  editState = new BehaviorSubject<EditState>('non-editable');
+  editState$ = this.editState.asObservable();
+
+  /* passing of edit actions */
+  editAction = new Subject<EditAction>();
+  editAction$ = this.editAction.asObservable();
 
 }

@@ -12,6 +12,7 @@ export interface Item {
   },
   permissions: {
     can_view: 'none'|'info'|'content'|'content_with_descendants'|'solution',
+    can_edit: 'none'|'children'|'all'|'all_with_grant',
   },
 }
 
