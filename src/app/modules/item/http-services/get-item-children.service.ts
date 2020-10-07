@@ -4,6 +4,13 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 export interface ItemChild {
+  string: {
+    title: string,
+  },
+  permissions: {
+    can_view: 'none'|'info'|'content'|'content_with_descendants'|'solution',
+  },
+  category: 'Undefined'|'Discovery'|'Application'|'Validation'|'Challenge',
 }
 
 
