@@ -8,7 +8,7 @@ import { ItemDataSource } from '../../services/item-datasource.service';
   templateUrl: './item-details.component.html',
   styleUrls: ['./item-details.component.scss'],
 })
-export class ItemDetailsComponent implements OnDestroy{
+export class ItemDetailsComponent implements OnDestroy {
 
   itemLoadingstate$ = this.itemDataSource.state$;
   item$ = this.itemDataSource.item$; // as template is not able to infer properly the type
