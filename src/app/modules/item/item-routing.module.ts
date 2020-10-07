@@ -1,16 +1,26 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
+import { ItemByIdComponent } from './pages/item-by-id/item-by-id.component';
 import { ItemDetailsComponent } from './pages/item-details/item-details.component';
-
-const routes: Routes = [
-  {
-    path: 'details/:id',
-    component: ItemDetailsComponent,
-  }
-];
+import { ItemEditComponent } from './pages/item-edit/item-edit.component';
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
+  imports: [RouterModule.forChild([
+    {
+      path: 'by-id/:id',
+      component: ItemByIdComponent,
+      children: [
+        {
+          path: 'details',
+          component: ItemDetailsComponent,
+        },
+        {
+          path: 'edit',
+          component: ItemEditComponent,
+        },
+      ]
+    }
+  ])],
   exports: [RouterModule],
 })
 export class ItemRoutingModule {}
