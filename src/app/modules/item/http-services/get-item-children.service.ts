@@ -5,7 +5,7 @@ import { environment } from 'src/environments/environment';
 
 export interface ItemChild {
   string: {
-    title: string,
+    title: string|null,
   },
   permissions: {
     can_view: 'none'|'info'|'content'|'content_with_descendants'|'solution',
