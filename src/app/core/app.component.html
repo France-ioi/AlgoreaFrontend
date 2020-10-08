@@ -43,7 +43,10 @@
       (collapse)="onCollapse($event)"
     ></alg-left-nav>
   </div>
-  <div class="top-bar" [ngClass]="{ editing: editing, collapsed: collapsed, expanded: !collapsed }">
+  <div class="top-bar"
+    *ngIf="editState$ | async as editState"
+    [ngClass]="{ editing: editState === 'editing' || editState === 'editing-noaction', collapsed: collapsed, expanded: !collapsed }"
+  >
     <alg-top-nav
       *ngIf="collapsed"
       [collapsed]="collapsed"
@@ -54,14 +57,15 @@
     ></alg-top-nav>
     <div class="top-right-bar" *ngIf="currentContent$ | async as currentContent">
       <alg-editor-bar
-        *ngIf="editing"
+        *ngIf="editState === 'editing' || editState === 'editing-noaction'"
         (cancel)="onEditCancel()"
+        (save)="onEditSave()"
       ></alg-editor-bar>
       <div class="breadcrumb-bar"
       *ngIf="!folded && !scrolled">
         <alg-breadcrumb [contentBreadcrumb]="currentContent?.breadcrumbs"></alg-breadcrumb>
         <alg-page-navigator
-          *ngIf="!editing"
+          *ngIf="editState === 'editable'"
           (edit)="onEditPage()"
         ></alg-page-navigator>
         <alg-select *ngIf="collapsed" [items]="langs" style="margin-right: 1rem;height: 1.8333rem;"></alg-select>
@@ -110,7 +114,7 @@
           00:03:10
         </span>
         <alg-page-navigator
-          *ngIf="!editing"
+          *ngIf="editState === 'editable'"
           [allowFullScreen]="false"
           navigationMode="nextAndPrev"
           (edit)="onEditPage()"
@@ -118,7 +122,7 @@
       </div>
     </div>
   </div>
-  <div class="right" [ngClass]="{ collapsed: collapsed, expanded: !collapsed, editing: editing }">
+  <div class="right" [ngClass]="{ collapsed: collapsed, expanded: !collapsed }">
     <div
       class="main-content"
       [ngClass]=

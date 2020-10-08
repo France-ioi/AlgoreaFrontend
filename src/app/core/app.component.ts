@@ -3,7 +3,7 @@ import { CurrentUserService } from '../shared/services/current-user.service';
 import { delay, filter, skip } from 'rxjs/operators';
 import { UserProfile } from '../shared/http-services/current-user.service';
 import { Observable, Subscription } from 'rxjs';
-import { ContentInfo, CurrentContentService } from '../shared/services/current-content.service';
+import { ContentInfo, CurrentContentService, EditAction } from '../shared/services/current-content.service';
 
 @Component({
   selector: 'alg-root',
@@ -14,8 +14,8 @@ export class AppComponent implements OnInit, OnDestroy {
 
   // the delay(0) is used to prevent the UI to update itself (when the content is loaded) (ExpressionChangedAfterItHasBeenCheckedError)
   currentContent$: Observable<ContentInfo|null>  = this.currentContent.currentContent$.pipe( delay(0) );
+  editState$ = this.currentContent.editState$.pipe( delay(0) );
 
-  editing = false;
   isStarted = true;
 
   langs = [
@@ -74,11 +74,15 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   onEditPage() {
-    this.editing = true;
+    this.currentContent.editAction.next(EditAction.StartEditing);
   }
 
   onEditCancel() {
-    this.editing = false;
+    this.currentContent.editAction.next(EditAction.Cancel);
+  }
+
+  onEditSave() {
+    this.currentContent.editAction.next(EditAction.Save);
   }
 
 }

@@ -17,6 +17,7 @@ describe('ItemHeaderComponent', () => {
     },
     permissions: {
       can_view: 'content',
+      can_edit: 'none',
     },
   };
 

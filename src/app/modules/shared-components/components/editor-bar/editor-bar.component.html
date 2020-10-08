@@ -5,16 +5,10 @@
   <span class="edit-title">
     Edition Mode
   </span>
-  <span class="edit-translate">
-    Translate
-  </span>
-  <span class="edit-redo">
-    <i class="fa fa-redo"></i>
-  </span>
-  <span class="edit-save">
+  <span class="edit-save"  (click)="onValidateClick()">
     <i class="fa fa-check"></i>
   </span>
-  <span class="edit-cancel" (click)="discardChanges()">
+  <span class="edit-cancel" (click)="onCancelClick()">
     <i class="fa fa-times"></i>
   </span>
 </div>
