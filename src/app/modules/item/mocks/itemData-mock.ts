@@ -11,6 +11,7 @@ export const mockItemData: ItemData = {
     },
     permissions: {
       can_view: 'content',
+      can_edit: 'all',
     },
     type: 'Chapter',
   },
