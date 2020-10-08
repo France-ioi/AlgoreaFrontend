@@ -165,7 +165,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
   }
 
   onAcceptOrReject(action: Action) {
-    if (this.selection.length === 0 || this.ongoingActivity !== Activity.None || !this.groupId) {
+    if (this.selection.length === 0 || this.ongoingActivity !== Activity.None) {
       return;
     }
     this.ongoingActivity = (action === Action.Accept) ? Activity.Accepting : Activity.Rejecting;
