@@ -44,8 +44,7 @@ export class GroupNavComponent {
   }
 
   goToGroupManaged() {
-    const target = '/groups/managed';
-    void this.router.navigate([target]);
+    void this.router.navigate(['groups', 'managed']);
   }
 
 }
