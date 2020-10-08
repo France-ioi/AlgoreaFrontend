@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { CurrentContentService } from '../../../../shared/services/current-content.service';
+
+const GroupBreadcrumbCat = 'Groups';
 
 @Component({
   selector: 'alg-managed-groups',
@@ -8,9 +11,20 @@ import { Component, OnInit } from '@angular/core';
 export class ManagedGroupsComponent implements OnInit {
 
   title = 'Groups you manage';
-  subtitle = 'Here are the groups you manage';
 
-  constructor() { }
+  constructor(
+    private currentContent: CurrentContentService,
+  ) {
+    this.currentContent.setCurrent({
+      type: 'group',
+      breadcrumbs: {
+        category: GroupBreadcrumbCat,
+        path: [{title: this.title, navigateTo: ['groups', 'managed']}],
+        currentPageIdx: 0,
+      },
+      title: this.title,
+    });
+  }
 
   ngOnInit(): void {
   }
