@@ -8,6 +8,7 @@ import { GroupDataSource } from '../../services/group-datasource.service';
 })
 export class GroupOverviewComponent {
 
+  state$ = this.groupDataSource.state$;
   group$ = this.groupDataSource.group$;
 
   constructor(

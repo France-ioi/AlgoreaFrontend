@@ -10,6 +10,7 @@ import { map } from 'rxjs/operators';
 })
 export class GroupSettingsComponent {
 
+  state$ = this.groupDataSource.state$;
   group$ = this.groupDataSource.group$.pipe(map(withManagementAdditions));
 
   constructor(
