@@ -1,9 +1,11 @@
-<ng-container *ngIf="group$ | async as group">
-  <ng-container *ngIf="group.canCurrentUserManageGroup; else noPermission">
-    <alg-group-manager-list [group]="group" (refreshRequired)="refreshGroupInfo()" *ngIf="group.canCurrentUserManageMembers">
-    </alg-group-manager-list>
+<ng-container *ngIf="state$ | async as state">
+  <ng-container *ngIf="state.tag === 'ready' && (group$ | async) as group">
+    <ng-container *ngIf="group.canCurrentUserManageGroup; else noPermission">
+      <alg-group-manager-list [group]="group" (refreshRequired)="refreshGroupInfo()" *ngIf="group.canCurrentUserManageMembers">
+      </alg-group-manager-list>
+    </ng-container>
+    <ng-template #noPermission>
+      <alg-group-no-permission></alg-group-no-permission>
+    </ng-template>
   </ng-container>
-  <ng-template #noPermission>
-    <alg-group-no-permission></alg-group-no-permission>
-  </ng-template>
 </ng-container>

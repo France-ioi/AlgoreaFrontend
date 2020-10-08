@@ -1,18 +1,17 @@
-<ng-container *ngIf="group$ | async as group">
+<ng-container *ngIf="state$ | async as state">
+  <ng-container *ngIf="state.tag === 'ready' && (group$ | async) as group">
+    <ng-container *ngIf="group.isCurrentUserManager; else noPermission">
+      <alg-section icon="fa fa-users" label="Current Composition">
+        <p>...</p>
+      </alg-section>
+      <alg-group-join-by-code [group]="group" (refreshRequired)="refreshGroupInfo()" *ngIf="group.canCurrentUserManageMembers">
+      </alg-group-join-by-code>
 
-  <ng-container *ngIf="group.isCurrentUserManager; else noPermission">
-    <alg-section icon="fa fa-users" label="Current Composition">
-      <p>...</p>
-    </alg-section>
-    <alg-group-join-by-code [group]="group" (refreshRequired)="refreshGroupInfo()" *ngIf="group.canCurrentUserManageMembers">
-    </alg-group-join-by-code>
-
-    <alg-group-invite-users [group]="group" (refreshRequired)="refreshGroupInfo()" *ngIf="group.canCurrentUserManageMembers">
-    </alg-group-invite-users>
+      <alg-group-invite-users [group]="group" (refreshRequired)="refreshGroupInfo()" *ngIf="group.canCurrentUserManageMembers">
+      </alg-group-invite-users>
+    </ng-container>
+    <ng-template #noPermission>
+      <alg-group-no-permission></alg-group-no-permission>
+    </ng-template>
   </ng-container>
-  <ng-template #noPermission>
-    <alg-group-no-permission></alg-group-no-permission>
-  </ng-template>
-
 </ng-container>
-
