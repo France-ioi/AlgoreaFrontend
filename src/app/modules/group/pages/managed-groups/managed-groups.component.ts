@@ -1,32 +1,32 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import { CurrentContentService } from '../../../../shared/services/current-content.service';
-
-const GroupBreadcrumbCat = 'Groups';
 
 @Component({
   selector: 'alg-managed-groups',
   templateUrl: './managed-groups.component.html',
   styleUrls: ['./managed-groups.component.scss']
 })
-export class ManagedGroupsComponent implements OnInit {
+export class ManagedGroupsComponent implements OnInit, OnDestroy {
 
   title = 'Groups you manage';
 
   constructor(
     private currentContent: CurrentContentService,
-  ) {
+  ) {}
+
+  ngOnInit(): void {
     this.currentContent.setCurrent({
       type: 'group',
       breadcrumbs: {
-        category: GroupBreadcrumbCat,
-        path: [{title: this.title, navigateTo: ['groups', 'managed']}],
+        category: this.title,
+        path: [],
         currentPageIdx: 0,
       },
       title: this.title,
     });
   }
 
-  ngOnInit(): void {
+  ngOnDestroy(): void {
+    this.currentContent.setCurrent(null);
   }
-
 }
