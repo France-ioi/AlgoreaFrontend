@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CurrentContentService } from '../../../../shared/services/current-content.service';
 
 @Component({
@@ -15,7 +15,7 @@ export class ManagedGroupsComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.currentContent.setCurrent({
+    this.currentContent.current.next({
       type: 'group',
       breadcrumbs: {
         category: this.title,
@@ -27,6 +27,6 @@ export class ManagedGroupsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.currentContent.setCurrent(null);
+    this.currentContent.current.next(null);
   }
 }
