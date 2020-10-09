@@ -20,7 +20,7 @@ export class ManagedGroupsComponent implements OnInit, OnDestroy {
       breadcrumbs: {
         category: this.title,
         path: [],
-        currentPageIdx: 0,
+        currentPageIdx: -1,
       },
       title: this.title,
     });
