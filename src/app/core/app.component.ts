@@ -18,14 +18,6 @@ export class AppComponent implements OnInit, OnDestroy {
 
   isStarted = true;
 
-  langs = [
-    'English',
-    'Francais',
-    'Espanol',
-    'Czech',
-    'Deutsch'
-  ];
-
   collapsed = false;
   folded = false;
   scrolled = false;
