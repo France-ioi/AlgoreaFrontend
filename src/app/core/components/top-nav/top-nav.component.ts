@@ -19,14 +19,6 @@ export class TopNavComponent implements OnInit {
 
   showNotification = false;
 
-  langs = [
-    'English',
-    'Francais',
-    'Espanol',
-    'Czech',
-    'Deutsch'
-  ];
-
   constructor(
     private authService: AuthService
   ) { }
