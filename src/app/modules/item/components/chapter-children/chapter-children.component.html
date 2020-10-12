@@ -1,0 +1,17 @@
+<ng-container *ngIf="itemData.item.string.description !== undefined">
+  <alg-section icon="fa fa-book" label="Description" *ngIf="itemData.item.type === 'Chapter'">
+    <p *ngIf="itemData.item.string.description === null ; else noDesc">{{ itemData.item.string.description }} </p>
+    <ng-template #noDesc>This item has no description</ng-template>
+  </alg-section>
+</ng-container>
+
+<p-progressSpinner *ngIf="state === 'loading'"></p-progressSpinner>
+
+<p *ngIf="state === 'error'">Error while loading the group managers</p>
+
+<ng-container *ngIf="state === 'ready'">
+  <p class="validation-text">
+    To validate this chapter, solve at least all tasks with Validation type
+  </p>
+  Ready, loaded {{children.length}} children.
+</ng-container>
