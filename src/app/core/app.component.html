@@ -17,7 +17,7 @@
       (fold)="onFold($event)"
       [templateId]="1"
     ></alg-top-nav>
-    <div class="top-right-bar" *ngIf="currentContent$ | async as currentContent">
+    <div class="top-right-bar" *ngrxLet="currentContent$ as currentContent">
       <alg-editor-bar
         *ngIf="editState === 'editing' || editState === 'editing-noaction'"
         (cancel)="onEditCancel()"
