@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" *ngrxLet="currentUser$ as user">
   <div class="left" [ngClass]="{ collapsed: collapsed, expanded: !collapsed }">
     <alg-left-nav
       [collapsed]="collapsed"
@@ -31,11 +31,20 @@
           (edit)="onEditPage()"
         ></alg-page-navigator>
         <alg-button
-          *ngIf="collapsed"
-          label="Connexion"
-          icon="pi pi-check"
+          *ngIf="collapsed && user && user.isTemp"
+          label="Log in / Sign in"
+          icon="pi pi-sign-in"
           class="ui-button-rounded"
           style="margin-right: 0.4167rem;"
+          (click)="login()"
+        ></alg-button>
+        <alg-button
+          *ngIf="collapsed && user && !user.isTemp"
+          label="Log out"
+          icon="pi pi-sign-out"
+          class="ui-button-rounded"
+          style="margin-right: 0.4167rem;"
+          (click)="logout()"
         ></alg-button>
       </div>
       <div class="folded-top-bar" *ngIf="folded || scrolled">

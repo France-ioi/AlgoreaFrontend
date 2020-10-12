@@ -4,6 +4,7 @@ import { delay, filter, skip } from 'rxjs/operators';
 import { UserProfile } from '../shared/http-services/current-user.service';
 import { Observable, Subscription } from 'rxjs';
 import { ContentInfo, CurrentContentService, EditAction } from '../shared/services/current-content.service';
+import { AuthService } from '../shared/auth/auth.service';
 
 @Component({
   selector: 'alg-root',
@@ -15,6 +16,7 @@ export class AppComponent implements OnInit, OnDestroy {
   // the delay(0) is used to prevent the UI to update itself (when the content is loaded) (ExpressionChangedAfterItHasBeenCheckedError)
   currentContent$: Observable<ContentInfo|null>  = this.currentContent.currentContent$.pipe( delay(0) );
   editState$ = this.currentContent.editState$.pipe( delay(0) );
+  currentUser$ = this.currentUserService.currentUser$.pipe( delay(0) );
 
   isStarted = true;
 
@@ -76,6 +78,14 @@ export class AppComponent implements OnInit, OnDestroy {
 
   onEditSave() {
     this.currentContent.editAction.next(EditAction.Save);
+  }
+
+  login() {
+    this.authService.startAuthLogin();
+  }
+
+  logout() {
+    this.authService.logoutAuthUser();
   }
 
 }
