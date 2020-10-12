@@ -42,12 +42,12 @@ export class TopNavComponent implements OnInit {
     this.showNotification = !this.showNotification;
   }
 
-  signInOut() {
-    if (this.authService.authUserConnected()) {
-      this.authService.logoutAuthUser();
-    } else {
-      this.authService.startAuthLogin();
-    }
+  login() {
+    this.authService.startAuthLogin();
+  }
+
+  logout() {
+    this.authService.logoutAuthUser();
   }
 
 }
