@@ -12,10 +12,10 @@ import { By } from '@angular/platform-browser';
 describe('NavigationTabsComponent', () => {
   let component: NavigationTabsComponent;
   let fixture: ComponentFixture<NavigationTabsComponent>;
-  let currentUser: BehaviorSubject<UserProfile|null>;
+  let currentUser: BehaviorSubject<UserProfile|undefined>;
 
   beforeEach(waitForAsync(() => {
-    currentUser = new BehaviorSubject<UserProfile|null>(null);
+    currentUser = new BehaviorSubject<UserProfile|undefined>(undefined);
     TestBed.configureTestingModule({
       imports: [
         AppModule,

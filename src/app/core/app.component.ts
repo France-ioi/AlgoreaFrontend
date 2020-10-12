@@ -37,7 +37,7 @@ export class AppComponent implements OnInit, OnDestroy {
   ngOnInit() {
     // each time there is a new user, refresh the page
     this.subscription = this.currentUserService.currentUser$.pipe(
-      filter<UserProfile|null, UserProfile>((user):user is UserProfile => user !== null),
+      filter<UserProfile|undefined, UserProfile>((user):user is UserProfile => !!user),
       skip(1), // do not refresh when the first user is set
     ).subscribe(_user => {
       window.location.reload();

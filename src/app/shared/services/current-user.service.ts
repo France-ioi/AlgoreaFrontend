@@ -11,12 +11,12 @@ export class CurrentUserService {
 
   currentUser$ = this.authService.accessToken$.pipe(
     switchMap(token => {
-      if (token === null) return of<UserProfile|null>(null);
+      if (token === null) return of<UserProfile|undefined>(undefined);
       return this.http.getProfileInfo().pipe(
         catchError(_e => EMPTY)
       );
     }),
-    distinctUntilChanged((p1, p2) => p1 === p2 || (p1 !== null && p2 !== null && p1.id === p2.id))
+    distinctUntilChanged((p1, p2) => p1 === p2 || (!!p1 && !!p2 && p1.id === p2.id))
   );
 
   constructor(

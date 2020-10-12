@@ -1,5 +1,6 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { AuthService } from 'src/app/shared/auth/auth.service';
+import { UserProfile } from 'src/app/shared/http-services/current-user.service';
 
 @Component({
   selector: 'alg-top-nav',
@@ -11,6 +12,7 @@ export class TopNavComponent implements OnInit {
   @Input() collapsed = false;
   @Input() templateId = 0;
   @Input() folded = false;
+  @Input() currentUser?: UserProfile;
 
   @Output() collapse = new EventEmitter<boolean>();
   @Output() fold = new EventEmitter<boolean>();
