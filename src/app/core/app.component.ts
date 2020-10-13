@@ -4,6 +4,7 @@ import { delay, filter, skip } from 'rxjs/operators';
 import { UserProfile } from '../shared/http-services/current-user.service';
 import { Observable, Subscription } from 'rxjs';
 import { ContentInfo, CurrentContentService, EditAction } from '../shared/services/current-content.service';
+import { AuthService } from '../shared/auth/auth.service';
 
 @Component({
   selector: 'alg-root',
@@ -15,16 +16,9 @@ export class AppComponent implements OnInit, OnDestroy {
   // the delay(0) is used to prevent the UI to update itself (when the content is loaded) (ExpressionChangedAfterItHasBeenCheckedError)
   currentContent$: Observable<ContentInfo|null>  = this.currentContent.currentContent$.pipe( delay(0) );
   editState$ = this.currentContent.editState$.pipe( delay(0) );
+  currentUser$ = this.currentUserService.currentUser$.pipe( delay(0) );
 
   isStarted = true;
-
-  langs = [
-    'English',
-    'Francais',
-    'Espanol',
-    'Czech',
-    'Deutsch'
-  ];
 
   collapsed = false;
   folded = false;
@@ -36,13 +30,14 @@ export class AppComponent implements OnInit, OnDestroy {
 
   constructor(
     private currentUserService: CurrentUserService,
+    private authService: AuthService,
     private currentContent: CurrentContentService,
   ) {}
 
   ngOnInit() {
-   // each time there is a new user, refresh the page
-    this.currentUserService.currentUser$.pipe(
-      filter<UserProfile|null, UserProfile>((user):user is UserProfile => user !== null),
+    // each time there is a new user, refresh the page
+    this.subscription = this.currentUserService.currentUser$.pipe(
+      filter<UserProfile|undefined, UserProfile>((user):user is UserProfile => !!user),
       skip(1), // do not refresh when the first user is set
     ).subscribe(_user => {
       window.location.reload();
@@ -83,6 +78,14 @@ export class AppComponent implements OnInit, OnDestroy {
 
   onEditSave() {
     this.currentContent.editAction.next(EditAction.Save);
+  }
+
+  login() {
+    this.authService.startAuthLogin();
+  }
+
+  logout() {
+    this.authService.logoutAuthUser();
   }
 
 }

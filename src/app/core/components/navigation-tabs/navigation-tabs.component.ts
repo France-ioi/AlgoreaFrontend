@@ -1,11 +1,11 @@
-import { Component, ViewChild, NgZone, OnDestroy } from '@angular/core';
+import { Component, ViewChild, NgZone, OnDestroy, Input } from '@angular/core';
 
-import { CurrentUserService } from 'src/app/shared/services/current-user.service';
 import { PerfectScrollbarComponent } from 'ngx-perfect-scrollbar';
 import { ResizedEvent } from 'angular-resize-event';
 import { ContentInfo, CurrentContentService, GroupInfo, isGroupInfo } from 'src/app/shared/services/current-content.service';
 import { filter } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
+import { UserProfile } from 'src/app/shared/http-services/current-user.service';
 
 @Component({
   selector: 'alg-navigation-tabs',
@@ -14,18 +14,17 @@ import { Subscription } from 'rxjs';
 })
 export class NavigationTabsComponent implements OnDestroy {
 
+  @Input() currentUser?: UserProfile;
+
   @ViewChild('scrollPanel') scrollPanel: PerfectScrollbarComponent;
   @ViewChild('groupPanel') groupPanel?: HTMLDivElement;
 
   groupShow = false;
   stickyShow = false;
 
-  currentUser$ = this.currentUserService.currentUser$;
-
   private subscription: Subscription; // for cleaning up on destroy
 
   constructor(
-    private currentUserService: CurrentUserService,
     private currentContentService: CurrentContentService,
     private ngZone: NgZone,
   ) {
