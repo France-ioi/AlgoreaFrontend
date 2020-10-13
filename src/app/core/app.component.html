@@ -50,12 +50,11 @@
         ></alg-button>
       </div>
       <div class="folded-top-bar" *ngIf="folded || scrolled">
-        <alg-score-ring
-          *ngIf="isStarted && selectedType == 2"
+        <!--<alg-score-ring
           [displayedScore]="50"
           [currentScore]="60"
           [diameter]="30"
-        ></alg-score-ring>
+        ></alg-score-ring>-->
         <div class="rightpane-title">
           <p *ngIf="currentContent && currentContent.title">{{ currentContent.title }}</p>
         </div>
