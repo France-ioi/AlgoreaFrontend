@@ -4,10 +4,11 @@ import { NavigationTabsComponent } from './navigation-tabs.component';
 import { AppModule } from '../../../core/app.module';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
-import { CurrentUserService } from 'src/app/shared/services/current-user.service';
-import { BehaviorSubject } from 'rxjs';
-import { UserProfile } from 'src/app/shared/http-services/current-user.service';
+import { BehaviorSubject, of } from 'rxjs';
 import { By } from '@angular/platform-browser';
+import { CurrentContentService } from 'src/app/shared/services/current-content.service';
+import { CurrentUserService } from 'src/app/shared/services/current-user.service';
+import { UserProfile } from 'src/app/shared/http-services/current-user.service';
 
 describe('NavigationTabsComponent', () => {
   let component: NavigationTabsComponent;
@@ -26,6 +27,12 @@ describe('NavigationTabsComponent', () => {
           provide: CurrentUserService,
           useValue: {
             currentUser$: currentUser.asObservable()
+          }
+        },
+        {
+          provide: CurrentContentService,
+          useValue: {
+            currentContent$: of(null)
           }
         }
       ],
@@ -60,27 +67,27 @@ describe('NavigationTabsComponent', () => {
     });
 
     it('should display the full information correctly when firstname is null', () => {
-      currentUser.next({id: '1', login: 'mylogin', firstname: null, lastname: 'myname', isTemp: false});
+      component.currentUser = {id: '1', login: 'mylogin', firstname: null, lastname: 'myname', isTemp: false};
       expect(userString()).toEqual('myname (mylogin)');
     });
 
     it('should display the full information correctly when lastname is null', () => {
-      currentUser.next({id: '1', login: 'mylogin', firstname: 'myfirst', lastname: null, isTemp: false});
+      component.currentUser = {id: '1', login: 'mylogin', firstname: 'myfirst', lastname: null, isTemp: false};
       expect(userString()).toEqual('myfirst (mylogin)');
     });
 
     it('should display the full information correctly when firstname is empty', () => {
-      currentUser.next({id: '1', login: 'mylogin', firstname: '', lastname: 'myname', isTemp: false});
+      component.currentUser = {id: '1', login: 'mylogin', firstname: '', lastname: 'myname', isTemp: false};
       expect(userString()).toEqual('myname (mylogin)');
     });
 
     it('should display only login when both firstname and lastname are null', () => {
-      currentUser.next({id: '1', login: 'mylogin', firstname: null, lastname: null, isTemp: false});
+      component.currentUser = {id: '1', login: 'mylogin', firstname: null, lastname: null, isTemp: false};
       expect(userString()).toEqual('mylogin');
     });
 
     it('should display only login when both firstname and lastname are empty', () => {
-      currentUser.next({id: '1', login: 'mylogin', firstname: '', lastname: '', isTemp: false});
+      component.currentUser = {id: '1', login: 'mylogin', firstname: '', lastname: '', isTemp: false};
       expect(userString()).toEqual('mylogin');
     });
   });
