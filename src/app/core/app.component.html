@@ -64,20 +64,8 @@
           </span>
           <span class="user-id">CyrilK89</span>
         </div>
-        <span
-          *ngIf="selectedType == 2"
-          class="clock-icon"
-          [ngClass]="{ finished: false }"
-        >
-          <i class="fa fa-clock"></i>
-        </span>
-        <span
-          *ngIf="selectedType == 2"
-          class="remaining-time"
-          [ngClass]="{ finished: false }"
-        >
-          00:03:10
-        </span>
+        <!-- <span class="clock-icon" [ngClass]="{ finished: false }"><i class="fa fa-clock"></i></span> -->
+        <!-- <span class="remaining-time" [ngClass]="{ finished: false }">00:03:10</span> -->
         <alg-page-navigator
           *ngIf="editState === 'editable'"
           [allowFullScreen]="false"
