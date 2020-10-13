@@ -56,12 +56,6 @@
           [currentScore]="60"
           [diameter]="30"
         ></alg-score-ring>
-        <div
-          *ngIf="(!isStarted || selectedType === 0 || selectedType === 1) && selectedType !== 5"
-          class="task-user-image"
-        >
-          <img src="assets/images/_messi.jpg" style="width: 2.9167rem; height: 2.9167rem;" />
-        </div>
         <div class="rightpane-title">
           <p *ngIf="currentContent && currentContent.title">{{ currentContent.title }}</p>
         </div>
