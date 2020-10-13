@@ -18,13 +18,9 @@ export class AppComponent implements OnInit, OnDestroy {
   editState$ = this.currentContent.editState$.pipe( delay(0) );
   currentUser$ = this.currentUserService.currentUser$.pipe( delay(0) );
 
-  isStarted = true;
-
   collapsed = false;
   folded = false;
   scrolled = false;
-
-  selectedType = -1;
 
   private subscription: Subscription;
 
