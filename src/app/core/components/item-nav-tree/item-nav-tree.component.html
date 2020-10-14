@@ -16,14 +16,8 @@
 >
   <!-- Folder elements template -->
   <ng-template let-node pTemplate="folder">
-    <span
-      class="node-tree-item folder"
-      [ngClass]="{
-        expanded: node.expanded,
-        checked: node.checked,
-        child: !node.root
-      }"
-    >
+    <span class="node-tree-item folder" [ngClass]="{ expanded: node.expanded, checked: node.checked, child: !node.root}">
+      <!-- note that "child: !node.root" matches all... TODO: to be checked if useful and fix if needed -->
       <span class="node-item-branch">
         <span class="top-branch">
           <span class="mask-branch"></span>
@@ -35,28 +29,21 @@
       <span class="node-item-content">
         <span (click)="selectNode(node)" class="node-select">
           <i
-            *ngIf="!node.expanded && !node.ring"
-            class="fa fa-folder"
-            style="font-size: 1.2rem;"
-          ></i>
-          <i
-            *ngIf="node.expanded && !node.ring"
-            class="fa fa-folder-open"
+            *ngIf="!node.data.score"
+            class="fa"
+            [ngClass]="{ 'fa-folder': !node.expanded, 'fa-folder-open': node.expanded }"
             style="font-size: 1.2rem;"
           ></i>
           <alg-score-ring
-            *ngIf="node.progress && node.ring"
-            [displayedScore]="node.progress.displayedScore"
-            [currentScore]="node.progress.currentScore"
+            *ngIf="node.data.score"
+            [currentScore]="node.data.score.current"
+            [bestScore]="node.data.score.best"
             [diameter]="30"
             [forTree]="true"
             [isDark]="true"
-            icons="folder"
+            [icon]="node.expanded ? 'folder-open' : 'folder'"
           ></alg-score-ring>
         </span>
-        <span *ngIf="node.icons" class="node-icon"
-          ><i class="{{ node.icons }}" style="font-size: 1.2rem;"></i
-        ></span>
         <span (click)="selectNode(node)" class="node-label">
           <span class="label-container">
             <span class="node-label-title">
@@ -64,9 +51,7 @@
               <span *ngIf="node.data.groupName">(via group "{{ node.data.groupName }}")</span>
               <span *ngIf="node.status !== 'ready'">[{{node.status}}]</span>
             </span>
-            <!-- <span class="node-state" *ngIf="node.state === 'locked'">
-              <i class="fa fa-key" style="font-size: 1.2rem;"></i>
-            </span>
+            <!-- example of icon on the right:
             <span class="node-state" *ngIf="node.state === 'never opened'">
               <i class="fa fa-lock" style="font-size: 1.2rem;"></i>
             </span> -->
@@ -81,6 +66,7 @@
       </span>
     </span>
   </ng-template>
+
   <!-- Leaf elements template -->
   <ng-template let-node pTemplate="leaf">
     <span
