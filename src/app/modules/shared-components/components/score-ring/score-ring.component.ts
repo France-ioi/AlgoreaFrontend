@@ -29,7 +29,7 @@ export class ScoreRingComponent implements OnInit, OnChanges {
   @Input() isStarted = true;
   @Input() isDark = false;
   @Input() isFailed = false;
-  @Input() icons?: string;
+  @Input() icon?: string; // a font-awesome icon identifier
   @Input() scoreFillColor?: string;
   @Input() forTree = false;
 
@@ -43,7 +43,6 @@ export class ScoreRingComponent implements OnInit, OnChanges {
 
   svgRadius = 30;
 
-  iconPath?: string;
   iconFill = 'white';
 
   textFill = ScoreRingColor.defaultText;
@@ -88,21 +87,20 @@ export class ScoreRingComponent implements OnInit, OnChanges {
       this.scoreFill = '#8E8E8E';
     }
 
-    if (this.icons) {
+    if (this.icon) {
       if (this.isDark) {
         this.iconFill = 'white';
       } else {
         this.iconFill = ScoreRingColor.defaultText;
       }
-      this.iconPath = this.icons;
     } else if (this.isValidated) {
-      this.iconPath = 'check';
+      this.icon = 'check';
       this.iconFill = ScoreRingColor.success;
     } else if (this.isFailed) {
-      this.iconPath = 'times';
+      this.icon = 'times';
       this.iconFill = ScoreRingColor.initial;
     } else {
-      this.iconPath = undefined;
+      this.icon = undefined;
     }
 
     this.fontSize = Math.floor((2 * this.diameter) / 64);

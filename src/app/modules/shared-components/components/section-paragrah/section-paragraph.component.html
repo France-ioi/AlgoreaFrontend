@@ -5,7 +5,7 @@
       <div class="score-container" *ngIf="data && data.ID">
         <alg-score-ring
           [currentScore]="data.progress.currentScore"
-          [icons]="data.progress.isStarted === false ? 'flag-checkered' : ''"
+          [icon]="data.progress.isStarted === false ? 'flag-checkered' : ''"
           [bestScore]="data.progress.bestScore" [diameter]="24"
         ></alg-score-ring>
       </div>
