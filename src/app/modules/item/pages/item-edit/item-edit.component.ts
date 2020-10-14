@@ -4,7 +4,7 @@ import { ItemDataSource } from '../../services/item-datasource.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
-import { UpdateItemStringService } from '../../http-services/update-item-string.service';
+import { Item } from '../../http-services/get-item-by-id.service';
 
 interface itemValues {
   title: string
