@@ -16,8 +16,7 @@
 >
   <!-- Folder elements template -->
   <ng-template let-node pTemplate="folder">
-    <span class="node-tree-item folder" [ngClass]="{ expanded: node.expanded, checked: node.checked, child: !node.root}">
-      <!-- note that "child: !node.root" matches all... TODO: to be checked if useful and fix if needed -->
+    <span class="node-tree-item folder" [ngClass]="{ expanded: node.expanded, checked: node.checked }">
       <span class="node-item-branch">
         <span class="top-branch">
           <span class="mask-branch"></span>
@@ -69,10 +68,7 @@
 
   <!-- Leaf elements template -->
   <ng-template let-node pTemplate="leaf">
-    <span
-      class="node-tree-item"
-      [ngClass]="{ checked: node.checked, child: !node.root }"
-    >
+    <span class="node-tree-item" [ngClass]="{ checked: node.checked }" >
       <span class="node-item-branch">
         <span class="top-branch">
           <span class="mask-branch"></span>

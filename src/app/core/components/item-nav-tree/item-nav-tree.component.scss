@@ -148,6 +148,26 @@ $bk-secondary: #3B73B4;
   border-right: none;
 }
 
+:host ::ng-deep .ui-treenode-children .node-tree-item {
+  .node-item-branch {
+    .top-branch {
+      border-left: .1rem solid #2e5e95;
+      border-bottom: .1rem solid #2e5e95;
+      border-right: none;
+    }
+
+    .bottom-branch {
+      border-left: .1rem solid #2e5e95;
+      border-right: none;
+    }
+  }
+}
+
+:host ::ng-deep .ui-treenode-children .node-tree-item.folder.expanded .node-item-branch .bottom-branch {
+  border-right: .1rem solid #2e5e95;
+}
+
+
 :host ::ng-deep .ui-treenode-content {
 
   &:focus {
@@ -301,25 +321,6 @@ $bk-secondary: #3B73B4;
 
     &.expanded .folder-branch {
       position: relative;
-    }
-
-    &.child {
-      .node-item-branch {
-        .top-branch {
-          border-left: .1rem solid #2e5e95;
-          border-bottom: .1rem solid #2e5e95;
-          border-right: none;
-        }
-
-        .bottom-branch {
-          border-left: .1rem solid #2e5e95;
-          border-right: none;
-        }
-      }
-    }
-
-    &.folder.child.expanded .node-item-branch .bottom-branch {
-      border-right: .1rem solid #2e5e95;
     }
 
     &.checked {
