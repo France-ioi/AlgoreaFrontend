@@ -26,7 +26,7 @@ interface ActivityOrSkill {
     latest_activity_at: string|null,
     started_at: string|null,
     score_computed: number,
-    validated: number,
+    validated: boolean,
 }[]
 }
 
@@ -63,7 +63,7 @@ interface RawNavData {
       latest_activity_at: string|null,
       started_at: string|null,
       score_computed: number,
-      validated: number,
+      validated: boolean,
     }[],
   }[]
 }
@@ -77,7 +77,7 @@ export interface NavMenuItem {
   hasChildren: boolean,
   groupName?: string,
   attemptId: string|null,
-  score?: { best: number, current: number },
+  score?: { best: number, current: number, validated: boolean },
   canViewContent: boolean,
   children?: NavMenuItem[] // placeholder for children when fetched (may 'hasChildren' with 'children' not set)
 }
@@ -105,7 +105,11 @@ function createNavMenuItem(raw: {
     hasChildren: raw.has_visible_children,
     attemptId: currentResult?.attempt_id || null,
     canViewContent: canCurrentUserViewItemContent(raw),
-    score: raw.no_score || !currentResult ? undefined : { best: raw.best_score, current: currentResult.score_computed }
+    score: raw.no_score || !currentResult ? undefined : {
+      best: raw.best_score,
+      current: currentResult.score_computed,
+      validated: currentResult.validated
+    }
   };
 }
 
