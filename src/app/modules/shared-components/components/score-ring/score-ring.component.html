@@ -38,7 +38,7 @@
   <span class="ring-icon" [ngStyle]="{color: iconPath && iconPath.length > 0 ? iconFill : textFill}">
     <i *ngIf="iconPath && iconPath.length > 0" class="fa fa-{{iconPath}}" [ngStyle]="{'font-size.rem': fontSize}"></i>
     <ng-container *ngIf="!iconPath || iconPath.length === 0">
-      {{displayedScore}}
+      {{currentScore}}
     </ng-container>
   </span>
 </div>

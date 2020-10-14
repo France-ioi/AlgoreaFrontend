@@ -23,28 +23,27 @@ enum ScoreRingColor {
 })
 export class ScoreRingComponent implements OnInit, OnChanges {
   @Input() diameter = 60;
-  @Input() innerDiameter = 50;
   @Input() displayedScore = 0;
   @Input() currentScore = 0;
   @Input() isValidated = false;
   @Input() isStarted = true;
   @Input() isDark = false;
   @Input() isFailed = false;
-  @Input() icons = '';
-  @Input() scoreFill = '';
+  @Input() icons?: string;
+  @Input() scoreFill?: string;
   @Input() forTree = false;
 
   @ViewChild('svg') svg: ElementRef;
 
-  displayPath: string;
-  displayFill: string;
+  displayPath?: string;
+  displayFill?: string;
 
-  currentPath: string;
-  currentFill: string;
+  currentPath?: string;
+  currentFill?: string;
 
   svgRadius = 30;
 
-  iconPath: string;
+  iconPath?: string;
   iconFill = 'white';
 
   textFill = ScoreRingColor.defaultText;
@@ -69,7 +68,7 @@ export class ScoreRingComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(_changes: SimpleChanges) {
-    if (this.scoreFill.length > 0) {
+    if (this.scoreFill) {
       this.displayFill = this.scoreFill;
       this.textFill = ScoreRingColor.darkText;
     } else {
@@ -84,7 +83,7 @@ export class ScoreRingComponent implements OnInit, OnChanges {
     this.currentPath = this._pathFromScore(this.currentScore);
     if (this.displayedScore === 100) {
       this.displayFill = ScoreRingColor.success;
-    } else if (this.scoreFill.length === 0) {
+    } else if (!this.scoreFill) {
       this.displayFill = `hsl(${this.displayedScore * 0.4 }, 100%, 50%)`;
       this.currentFill = '#8E8E8E';
     }
@@ -103,7 +102,7 @@ export class ScoreRingComponent implements OnInit, OnChanges {
       this.iconPath = 'times';
       this.iconFill = ScoreRingColor.initial;
     } else {
-      this.iconPath = '';
+      this.iconPath = undefined;
     }
 
     this.fontSize = Math.floor((2 * this.diameter) / 64);
