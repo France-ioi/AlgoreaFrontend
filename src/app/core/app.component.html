@@ -122,7 +122,9 @@
       </div>
     </div>
   </div>
-  <div class="right" [ngClass]="{ collapsed: collapsed, expanded: !collapsed }">
+  <div class="right"
+       *ngIf="editState$ | async as editState"
+       [ngClass]="{ collapsed: collapsed, expanded: !collapsed, editing: editState === 'editing' || editState === 'editing-noaction'}">
     <div
       class="main-content"
       [ngClass]=
