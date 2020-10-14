@@ -50,41 +50,22 @@
         ></alg-button>
       </div>
       <div class="folded-top-bar" *ngIf="folded || scrolled">
-        <alg-score-ring
-          *ngIf="isStarted && selectedType == 2"
+        <!--<alg-score-ring
           [displayedScore]="50"
           [currentScore]="60"
           [diameter]="30"
-        ></alg-score-ring>
-        <div
-          *ngIf="(!isStarted || selectedType === 0 || selectedType === 1) && selectedType !== 5"
-          class="task-user-image"
-        >
-          <img src="assets/images/_messi.jpg" style="width: 2.9167rem; height: 2.9167rem;" />
-        </div>
+        ></alg-score-ring>-->
         <div class="rightpane-title">
           <p *ngIf="currentContent && currentContent.title">{{ currentContent.title }}</p>
         </div>
-        <div *ngIf="collapsed" class="user-info">
+        <!-- <div *ngIf="collapsed" class="user-info">
           <span class="user-avatar">
             <img src="assets/images/Male.svg" style="width: 3rem; height: 3rem;" />
           </span>
           <span class="user-id">CyrilK89</span>
-        </div>
-        <span
-          *ngIf="selectedType == 2"
-          class="clock-icon"
-          [ngClass]="{ finished: false }"
-        >
-          <i class="fa fa-clock"></i>
-        </span>
-        <span
-          *ngIf="selectedType == 2"
-          class="remaining-time"
-          [ngClass]="{ finished: false }"
-        >
-          00:03:10
-        </span>
+        </div> -->
+        <!-- <span class="clock-icon" [ngClass]="{ finished: false }"><i class="fa fa-clock"></i></span> -->
+        <!-- <span class="remaining-time" [ngClass]="{ finished: false }">00:03:10</span> -->
         <alg-page-navigator
           *ngIf="editState === 'editable'"
           [allowFullScreen]="false"
@@ -95,11 +76,7 @@
     </div>
   </div>
   <div class="right" [ngClass]="{ collapsed: collapsed, expanded: !collapsed }">
-    <div
-      class="main-content"
-      [ngClass]=
-        "{ folded: folded, unfolded: !folded, 'type-1': selectedType === 1, 'type-2': selectedType === 2, 'type-0': selectedType === 0 }"
-    >
+    <div class="main-content" [ngClass]="{ folded: folded, unfolded: !folded }">
       <router-outlet></router-outlet>
     </div>
   </div>
