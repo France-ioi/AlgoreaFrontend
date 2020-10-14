@@ -1,9 +1,8 @@
-import { Component, OnDestroy, Output, EventEmitter } from '@angular/core';
-import { CurrentContentService, EditAction } from 'src/app/shared/services/current-content.service';
+import { Component, OnDestroy } from '@angular/core';
+import { CurrentContentService } from 'src/app/shared/services/current-content.service';
 import { ItemDataSource } from '../../services/item-datasource.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { filter } from 'rxjs/operators';
 import { Item } from '../../http-services/get-item-by-id.service';
 
 interface itemValues {
