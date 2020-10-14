@@ -1,1 +1,5 @@
-<p>item-edit works!</p>
+<div style="margin: 1rem 0 0.5rem 0">
+  <form [formGroup]="itemForm">
+    <alg-input type="large" mode="light" [value]="itemValues.title" (change)="onInputChange('title', $event)"></alg-input>
+  </form>
+</div>
