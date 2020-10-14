@@ -11,8 +11,6 @@
   [value]="nodes"
   (keydown)="onKeyDown($event)"
   emptyMessage="There is no items to display here"
-  selectionMode="single"
-  [(selection)]="selectedNode"
 >
   <!-- Folder elements template -->
   <ng-template let-node pTemplate="folder">
