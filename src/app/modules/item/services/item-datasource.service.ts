@@ -25,8 +25,7 @@ export class ItemDataSource implements OnDestroy {
   itemData$ = this.state.pipe( // only fetched items, to be use in template as it cannot properly infer types
     filter<Ready<ItemData>|Fetching|FetchError, Ready<ItemData>>(isReady),
     map(s => s.data)
-  )
-
+  );
   item$ = this.itemData$.pipe(map(s => s.item));
 
   private fetchOperation = new Subject<NavItem>(); // trigger item fetching
