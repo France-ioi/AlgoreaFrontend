@@ -77,26 +77,21 @@
           <span class="mask-branch"></span>
         </span>
       </span>
-      <span class="node-item-content" [ngClass]="{'node-bottom-radius': node.selectedTop, 'node-top-radius': node.selectedBottom}">
+      <span class="node-item-content">
         <span (click)="selectNode(node)" class="node-select">
           <i
-            *ngIf="node.checked && !node.ring"
-            class="pi pi-check"
-            style="font-size: 1.2rem;"
-          ></i>
-          <i
-            *ngIf="!node.checked && !node.ring"
-            class="pi pi-circle-on"
+            *ngIf="!node.data.score"
+            class="pi"
+            [ngClass]="{ 'pi-check': node.checked, 'pi-circle-on': !node.checked }"
             style="font-size: 1.2rem;"
           ></i>
           <alg-score-ring
-            *ngIf="node.progress && node.ring"
-            [currentScore]="node.progress.currentScore"
-            [bestScore]="node.progress.bestScore"
+            *ngIf="node.data.score"
+            [currentScore]="node.data.score.current"
+            [bestScore]="node.data.score.best"
             [diameter]="30"
             [forTree]="true"
             [isDark]="true"
-            [icon]="node.progress.icons"
           ></alg-score-ring>
         </span>
         <span (click)="selectNode(node)" class="node-label">
@@ -104,19 +99,17 @@
             <span class="node-label-title">
               {{ node.data.title }}
             </span>
-            <span class="node-state" *ngIf="node.state === 'locked'">
-              <i class="fa fa-key" style="font-size: 1.2rem;"></i>
-            </span>
+            <!-- example of icon on the right
             <span class="node-state" *ngIf="node.state === 'never opened'">
               <i class="fa fa-lock" style="font-size: 1.2rem;"></i>
-            </span>
+            </span>-->
           </span>
-          <alg-skill-progress
+          <!-- <alg-skill-progress
             *ngIf="node.progress && !node.ring"
             [bestScore]="node.progress.bestScore"
             [currentScore]="node.progress.currentScore"
             [type]="'thin-horizontal'"
-          ></alg-skill-progress>
+          ></alg-skill-progress> -->
         </span>
 
       </span>
