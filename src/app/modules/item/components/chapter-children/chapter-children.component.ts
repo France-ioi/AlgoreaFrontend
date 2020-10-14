@@ -1,4 +1,5 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { GetItemChildrenService, ItemChild } from '../../http-services/get-item-children.service';
 import { ItemData } from '../../services/item-datasource.service';
 
@@ -7,7 +8,7 @@ import { ItemData } from '../../services/item-datasource.service';
   templateUrl: './chapter-children.component.html',
   styleUrls: ['./chapter-children.component.scss'],
 })
-export class ChapterChildrenComponent implements OnChanges {
+export class ChapterChildrenComponent implements OnChanges, OnDestroy {
   @Input() itemData: ItemData;
 
   state: 'loading' | 'ready' | 'error' = 'loading';
@@ -15,6 +16,7 @@ export class ChapterChildrenComponent implements OnChanges {
 
   constructor(private getItemChildrenService: GetItemChildrenService) {}
 
+  private subscription: Subscription;
 
   ngOnChanges(_changes: SimpleChanges): void {
     this.reloadData();
@@ -23,7 +25,7 @@ export class ChapterChildrenComponent implements OnChanges {
   private reloadData() {
     if (this.itemData.attemptId) {
       this.state = 'loading';
-      this.getItemChildrenService
+      this.subscription = this.getItemChildrenService
         .get(this.itemData.item.id, this.itemData.attemptId)
         .subscribe(
           children => {
@@ -37,5 +39,9 @@ export class ChapterChildrenComponent implements OnChanges {
     } else {
       this.state = 'error';
     }
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 }
