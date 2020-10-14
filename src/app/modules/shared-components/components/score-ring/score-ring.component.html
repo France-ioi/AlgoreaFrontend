@@ -12,8 +12,8 @@
     />
     <path
       *ngIf="isStarted"
-      attr.stroke="{{ currentFill }}"
-      attr.d="{{ currentPath }}"
+      attr.stroke="{{ scoreFill }}"
+      attr.d="{{ scorePath }}"
       fill="none"
       stroke-width="4"
       stroke-linecap="round"
@@ -21,8 +21,8 @@
     />
     <path
       *ngIf="isStarted"
-      attr.stroke="{{ displayFill }}"
-      attr.d="{{ displayPath }}"
+      attr.stroke="{{ greyedFill }}"
+      attr.d="{{ greyedPath }}"
       fill="none"
       stroke-width="4"
       stroke-linecap="round"

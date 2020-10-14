@@ -56,8 +56,8 @@
         </span>
         <alg-score-ring
           *ngIf="node.progress && navigation"
-          [displayedScore]="node.progress.displayedScore"
           [currentScore]="node.progress.currentScore"
+          [bestScore]="node.progress.bestScore"
           [diameter]="24"
         ></alg-score-ring>
         <span *ngIf="node.checked && navigation" class="go-to-page" (click)="goToPage($event, node)">

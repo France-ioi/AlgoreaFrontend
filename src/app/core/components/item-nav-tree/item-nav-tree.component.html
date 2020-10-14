@@ -73,8 +73,8 @@
           </span>
           <!-- <alg-skill-progress
             *ngIf="node.progress && !node.ring"
+            [bestScore]="node.progress.bestScore"
             [currentScore]="node.progress.currentScore"
-            [displayedScore]="node.progress.displayedScore"
             [type]="'thin-horizontal'"
           ></alg-skill-progress> -->
         </span>
@@ -109,8 +109,8 @@
           ></i>
           <alg-score-ring
             *ngIf="node.progress && node.ring"
-            [displayedScore]="node.progress.displayedScore"
             [currentScore]="node.progress.currentScore"
+            [bestScore]="node.progress.bestScore"
             [diameter]="30"
             [forTree]="true"
             [isDark]="true"
@@ -131,8 +131,8 @@
           </span>
           <alg-skill-progress
             *ngIf="node.progress && !node.ring"
+            [bestScore]="node.progress.bestScore"
             [currentScore]="node.progress.currentScore"
-            [displayedScore]="node.progress.displayedScore"
             [type]="'thin-horizontal'"
           ></alg-skill-progress>
         </span>
