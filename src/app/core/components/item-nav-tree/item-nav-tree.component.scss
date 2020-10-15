@@ -170,6 +170,8 @@ $bk-secondary: #3B73B4;
 
 :host ::ng-deep .ui-treenode-content {
 
+  padding-left: 0em !important;
+
   &:focus {
     .node-tree-item .node-item-content {
       border-top-left-radius: 0.5rem;
