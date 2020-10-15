@@ -84,7 +84,7 @@ export class ItemNavComponent implements OnInit, OnDestroy {
         items: data.items.map(i => {
           if (i.id === itemData.id) {
             // replace the previous item by new item (the same with possibly an attempt) with the fetched children
-            return Object.assign({}, nav.parent, {children: nav.items});
+            return {...i, ...nav.parent, children: nav.items};
           } else {
             return i;
           }

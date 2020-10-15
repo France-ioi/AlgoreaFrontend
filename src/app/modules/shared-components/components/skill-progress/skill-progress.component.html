@@ -6,19 +6,19 @@
     <div
       class="progress-current"
       [ngStyle]="{
-        'width.%': currentScore,
+        'width.%': bestScore,
         'background-color': currentColor
       }"
     ></div>
     <div
       class="progress-displayed"
       [ngStyle]="{
-        'width.%': displayedScore,
+        'width.%': currentScore,
         'background-color':displayColor
       }"
     ></div>
     <div class="progress-label" *ngIf="type === 'thick-horizontal'">
-      {{ displayedScore }}%
+      {{ currentScore }}%
     </div>
   </div>
 </ng-container>
@@ -31,14 +31,14 @@
     <div
       class="progress-current vertical-progress"
       [ngStyle]="{
-        'height.%': currentScore,
+        'height.%': bestScore,
         'background-color': currentColor
       }"
     ></div>
     <div
       class="progress-displayed vertical-progress"
       [ngStyle]="{
-        'height.%': displayedScore,
+        'height.%': currentScore,
         'background-color': displayColor
       }"
     ></div>

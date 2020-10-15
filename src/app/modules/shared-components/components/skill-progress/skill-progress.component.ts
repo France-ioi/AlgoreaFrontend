@@ -29,8 +29,8 @@ enum ProgressHeight {
 export class SkillProgressComponent implements OnInit, OnChanges {
 
   @Input() type: ProgressType = 'thin-horizontal';
-  @Input() displayedScore = 0;
   @Input() currentScore = 0;
+  @Input() bestScore = 0;
   @Input() color = ProgressColor.Thin;
 
   progressHeight = ProgressHeight.Thin;
@@ -54,8 +54,8 @@ export class SkillProgressComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
-    this._validateScore(this.displayedScore);
     this._validateScore(this.currentScore);
+    this._validateScore(this.bestScore);
 
     if (this.type === 'thin-horizontal') {
       this.progressHeight = ProgressHeight.Thin;
@@ -66,11 +66,11 @@ export class SkillProgressComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(_changes: SimpleChanges) {
-    if (this.displayedScore === 100) {
+    if (this.currentScore === 100) {
       this.displayColor = '#B8E986';
     } else {
-      this.displayColor = `hsl(${this.displayedScore * 0.4}, 100%, 50%)`;
-      this.currentColor = `hsl(${this.currentScore * 0.4}, 100%, 70%)`;
+      this.displayColor = `hsl(${this.currentScore * 0.4}, 100%, 50%)`;
+      this.currentColor = `hsl(${this.bestScore * 0.4}, 100%, 70%)`;
     }
   }
 }

@@ -2,7 +2,9 @@
 export interface Result {
   attempt_id: string,
   latest_activity_at: string|null,
-  started_at: string|null
+  started_at: string|null,
+  score_computed: number,
+  validated: boolean,
 }
 
 export function bestAttemptFromResults(results: Result[]): Result|null {
