@@ -18,7 +18,7 @@ const defaultItemValues: itemValues = {
   templateUrl: './item-edit.component.html',
   styleUrls: ['./item-edit.component.scss']
 })
-export class ItemEditComponent implements OnDestroy {
+export class ItemEditComponent implements OnInit, OnDestroy {
   item: Item;
   itemForm: FormGroup;
   itemValues: itemValues;
@@ -33,9 +33,12 @@ export class ItemEditComponent implements OnDestroy {
     private formBuilder: FormBuilder,
   ) {
     this.currentContent.editState.next('editing');
-    this.getCurrentItem();
-    this.initForm();
+  }
+
+  ngOnInit() {
     this.itemValues = defaultItemValues;
+    this.initForm();
+    this.getCurrentItem();
   }
 
   ngOnDestroy() {
