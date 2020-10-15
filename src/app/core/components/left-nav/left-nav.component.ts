@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import { UserProfile } from 'src/app/shared/http-services/current-user.service';
 
 @Component({
   selector: 'alg-left-nav',
@@ -8,6 +9,7 @@ import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChange
 export class LeftNavComponent implements OnInit, OnChanges {
 
   @Input() collapsed = false;
+  @Input() currentUser?: UserProfile;
 
   @Output() collapse = new EventEmitter<boolean>();
 
