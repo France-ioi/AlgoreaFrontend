@@ -47,12 +47,13 @@
             <span class="node-label-title">
               {{ node.label }}
               <span *ngIf="node.data.groupName">(via group "{{ node.data.groupName }}")</span>
-              <span *ngIf="node.status !== 'ready'">[{{node.status}}]</span>
             </span>
-            <!-- example of icon on the right:
-            <span class="node-state" *ngIf="node.state === 'never opened'">
-              <i class="fa fa-lock" style="font-size: 1.2rem;"></i>
-            </span> -->
+            <span class="node-state" *ngIf="node.status === 'loading'">
+              <p-progressSpinner [style]="{ width: '3rem', height: '3rem', 'margin-top': '-0.5rem' }"></p-progressSpinner>
+            </span>
+            <span class="node-state" *ngIf="node.status === 'error'">
+              <i class="fa fa-exclamation-triangle" style="font-size: 1.2rem;"></i>
+            </span>
           </span>
           <!-- <alg-skill-progress
             *ngIf="node.progress && !node.ring"
