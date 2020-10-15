@@ -8,7 +8,7 @@
   display: flex;
   font-size: .9rem;
 
-  &.Undefined {
+  &.undefined {
     .state-icon {
       background-color: $dark-base-color;
     }
@@ -18,7 +18,7 @@
     }
   }
 
-  &.Discovery {
+  &.discovery {
     .state-icon {
       background-color: #C2459F;
     }
@@ -28,7 +28,7 @@
     }
   }
 
-  &.Application {
+  &.application {
     .state-icon {
       background-color: #D3932B;
     }
@@ -38,7 +38,7 @@
     }
   }
 
-  &.Validation {
+  &.validation {
     .state-icon {
       background-color: #8AB262;
     }
@@ -48,7 +48,7 @@
     }
   }
 
-  &.Challenge {
+  &.challenge {
     .state-icon {
       background-color: #4A4A4A;
     }

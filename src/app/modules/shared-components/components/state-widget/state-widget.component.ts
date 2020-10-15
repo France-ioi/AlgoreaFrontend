@@ -1,18 +1,20 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 
 @Component({
   selector: 'alg-state-widget',
   templateUrl: './state-widget.component.html',
   styleUrls: ['./state-widget.component.scss'],
 })
-export class StateWidgetComponent implements OnInit {
+export class StateWidgetComponent implements OnChanges {
 
   @Input() type: 'Undefined'|'Discovery'|'Application'|'Validation'|'Challenge';
   @Input() disabled = false;
 
   icon = '';
+  class = '';
 
-  ngOnInit(): void {
+  ngOnChanges(_changes: SimpleChanges): void {
+    this.class = this.type.toLowerCase();
 
     switch (this.type) {
       case 'Undefined':
