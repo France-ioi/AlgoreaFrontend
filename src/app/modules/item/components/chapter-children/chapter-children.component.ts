@@ -16,7 +16,7 @@ export class ChapterChildrenComponent implements OnChanges, OnDestroy {
 
   constructor(private getItemChildrenService: GetItemChildrenService) {}
 
-  private subscription: Subscription;
+  private subscription?: Subscription;
 
   ngOnChanges(_changes: SimpleChanges): void {
     this.reloadData();
@@ -25,6 +25,8 @@ export class ChapterChildrenComponent implements OnChanges, OnDestroy {
   private reloadData() {
     if (this.itemData.attemptId) {
       this.state = 'loading';
+      if (this.subscription)
+        this.subscription.unsubscribe();
       this.subscription = this.getItemChildrenService
         .get(this.itemData.item.id, this.itemData.attemptId)
         .subscribe(
@@ -42,6 +44,7 @@ export class ChapterChildrenComponent implements OnChanges, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    if (this.subscription)
+      this.subscription.unsubscribe();
   }
 }
