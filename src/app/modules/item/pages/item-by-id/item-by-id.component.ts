@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { FetchError, Fetching, isReady, Ready } from 'src/app/shared/helpers/state';
-import { CurrentContentService, EditAction, isItemInfo } from 'src/app/shared/services/current-content.service';
+import { CurrentContentService, EditAction, isItemInfo, ItemInfo } from 'src/app/shared/services/current-content.service';
 import { isPathGiven, itemDetailsRoute, itemFromDetailParams } from 'src/app/shared/services/nav-types';
 import { ItemDataSource, ItemData } from '../../services/item-datasource.service';
 
@@ -35,9 +35,9 @@ export class ItemByIdComponent implements OnDestroy {
       if (!navItem) return; // unexpected as this component should not be routed if id is missing
       currentContent.current.next({
         type: 'item',
-        data: navItem,
+        data: { nav: navItem },
         breadcrumbs: { category: ItemBreadcrumbCat, path: [], currentPageIdx: -1}
-      });
+      } as ItemInfo);
       if (!isPathGiven(params)) {
         // TODO: handle no path given
         return;
@@ -69,16 +69,16 @@ export class ItemByIdComponent implements OnDestroy {
             currentPageIdx: state.data.breadcrumbs.length - 1,
           },
           title: state.data.item.string.title === null ? undefined : state.data.item.string.title,
-          data: state.data.nav,
+          data: { nav: state.data.nav },
         }))
-      ).subscribe(p => this.currentContent.current.next(p)),
+      ).subscribe(p => this.currentContent.current.next(p as ItemInfo)),
 
       this.currentContent.editAction$.pipe(
         filter(action => [EditAction.StartEditing, EditAction.Cancel].includes(action))
       ).subscribe(action => {
         const currentInfo = this.currentContent.current.value;
         if (isItemInfo(currentInfo)) {
-          void this.router.navigate(itemDetailsRoute(currentInfo.data, action === EditAction.StartEditing));
+          void this.router.navigate(itemDetailsRoute(currentInfo.data.nav, action === EditAction.StartEditing));
         }
       })
     );

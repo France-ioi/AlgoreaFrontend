@@ -20,7 +20,7 @@ export interface ContentInfo {
   data?: any,
 }
 
-export interface ItemInfo extends ContentInfo { type: 'item', data: NavItem }
+export interface ItemInfo extends ContentInfo { type: 'item', data: { nav: NavItem, } }
 export interface GroupInfo extends ContentInfo { type: 'group' }
 
 export function isItemInfo(info: ContentInfo|null): info is ItemInfo {

@@ -93,6 +93,9 @@ export class ItemNavTreeComponent implements OnChanges {
     node.status = 'loading';
     this.startResultIfRequired(node).subscribe({
       next: attemptId => {
+        // as result has just been started, assume the score of the given attempt is 0
+        node.data.attemptId = attemptId;
+        node.data.score = { best: 0, current: 0, validated: false };
         if (this.selectedNode === node) {
           // if the node is not selected anymore after result start, do not navigate to it
           this.navigateToNode(node, attemptId);

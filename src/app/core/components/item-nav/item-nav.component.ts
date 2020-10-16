@@ -131,18 +131,18 @@ export class ItemNavComponent implements OnInit, OnDestroy {
         }
 
         // CASE 2: the content is among the displayed items at the root of the tree -> select the right one (might load children)
-        if (this.hasItemAmongTreeRoots(item)) {
-          const data = navMenuDataWithSelection(this.data as NavMenuData, item);
+        if (this.hasItemAmongTreeRoots(item.nav)) {
+          const data = navMenuDataWithSelection(this.data as NavMenuData, item.nav);
           return merge(of(data), this.loadChildrenIfNeeded(data));
         }
 
         // CASE 3: the content is a child of one of the items at the root of the tree -> shift the tree and select it (might load children)
-        if (this.hasItemAmongKnownTreeChildren(item)) {
-          return this.treeShiftedToChild(item);
+        if (this.hasItemAmongKnownTreeChildren(item.nav)) {
+          return this.treeShiftedToChild(item.nav);
         }
 
         // CASE 4: the content is an item not in case 2 or 3 -> load the tree and select the right one
-        return this.loadNewNav(item);
+        return this.loadNewNav(item.nav);
       })
     ).subscribe({
       next: change => this.data = change,
