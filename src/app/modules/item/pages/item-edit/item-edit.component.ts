@@ -1,17 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CurrentContentService } from 'src/app/shared/services/current-content.service';
 import { ItemDataSource } from '../../services/item-datasource.service';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { Item } from '../../http-services/get-item-by-id.service';
 
-interface itemValues {
-  title: string
-}
-
-const defaultItemValues: itemValues = {
-  title: ''
-};
 
 @Component({
   selector: 'alg-item-edit',
@@ -19,13 +11,11 @@ const defaultItemValues: itemValues = {
   styleUrls: ['./item-edit.component.scss']
 })
 export class ItemEditComponent implements OnInit, OnDestroy {
-  item: Item;
-  itemForm: FormGroup;
-  itemValues: itemValues;
+  itemForm = this.formBuilder.group({
+    title: ['', Validators.required],
+  });
 
   itemSubscription: Subscription;
-
-  changedInput: { [input: string]: string } = {};
 
   constructor(
     private currentContent: CurrentContentService,
@@ -36,8 +26,6 @@ export class ItemEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.itemValues = defaultItemValues;
-    this.initForm();
     this.getCurrentItem();
   }
 
@@ -46,27 +34,12 @@ export class ItemEditComponent implements OnInit, OnDestroy {
     this.itemSubscription.unsubscribe();
   }
 
-  initForm(): void {
-    this.itemForm = this.formBuilder.group({
-      title: [defaultItemValues.title]
-    });
-  }
-
   getCurrentItem(): void {
     this.itemSubscription = this.itemDataSource.item$.subscribe(item => {
-      this.item = item;
-      this.itemValues.title = item.string.title ? item.string.title : '';
       this.itemForm.patchValue({
         title: item.string.title
       });
     });
-  }
-
-  onInputChange(name: string, value: string): void {
-    if (typeof (value) == 'object')
-      return;
-
-    this.changedInput[name] = value;
   }
 
 }
