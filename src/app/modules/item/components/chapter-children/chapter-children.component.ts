@@ -43,7 +43,6 @@ export class ChapterChildrenComponent implements OnChanges, OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this.subscription)
-      this.subscription.unsubscribe();
+    this.subscription?.unsubscribe();
   }
 }
