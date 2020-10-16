@@ -23,11 +23,11 @@ export class ChapterChildrenComponent implements OnChanges, OnDestroy {
   }
 
   private reloadData() {
-    if (this.itemData.attemptId) {
+    if (this.itemData.currentResult) {
       this.state = 'loading';
       this.subscription?.unsubscribe();
       this.subscription = this.getItemChildrenService
-        .get(this.itemData.item.id, this.itemData.attemptId)
+        .get(this.itemData.item.id, this.itemData.currentResult.attemptId)
         .subscribe(
           children => {
             this.children = children;
