@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { CurrentContentService } from 'src/app/shared/services/current-content.service';
 import { ItemDataSource } from '../../services/item-datasource.service';
 import { FormBuilder, Validators } from '@angular/forms';
@@ -12,7 +12,8 @@ import { Subscription } from 'rxjs';
 })
 export class ItemEditComponent implements OnDestroy {
   itemForm = this.formBuilder.group({
-    title: ['', Validators.required],
+    // eslint-disable-next-line @typescript-eslint/unbound-method
+    title: ['', [Validators.required, Validators.minLength(3),]],
   });
 
   itemSubscription: Subscription;
