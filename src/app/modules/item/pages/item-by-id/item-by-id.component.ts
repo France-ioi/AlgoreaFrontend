@@ -69,7 +69,15 @@ export class ItemByIdComponent implements OnDestroy {
             currentPageIdx: state.data.breadcrumbs.length - 1,
           },
           title: state.data.item.string.title === null ? undefined : state.data.item.string.title,
-          data: { nav: state.data.nav },
+          data: {
+            nav: state.data.nav,
+            result: state.data.currentResult ? {
+              attemptId: state.data.currentResult.attemptId,
+              best: state.data.currentResult.score, // TODO fix when we'll have the best score in item info
+              current: state.data.currentResult.score,
+              validated: state.data.currentResult.validated,
+            } : undefined
+          },
         }))
       ).subscribe(p => this.currentContent.current.next(p as ItemInfo)),
 

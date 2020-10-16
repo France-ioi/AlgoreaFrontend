@@ -18,6 +18,18 @@ function navMenuDataWith(items: NavMenuRootItem, path: string[], selectedItem?: 
 function navMenuDataWithSelection(items: NavMenuData, selectedItem?: NavItem): NavMenuData {
   return Object.assign(items, { selectedItem: selectedItem });
 }
+interface ItemResultInfo { attemptId: string, bestScore: number, currentScore: number, validated: boolean }
+function navMenuDataWithUpdatedNode(menuData: NavMenuData, item: NavItem, result: ItemResultInfo): NavMenuData {
+  const currentItemIdx = menuData.items.findIndex(i => i.id === item.itemId);
+  if (currentItemIdx === -1) return menuData; // unexpected
+  const newItems = [...menuData.items];
+  newItems[currentItemIdx] = {
+    ...menuData.items[currentItemIdx],
+    attemptId: result.attemptId,
+    score: { best: result.bestScore, current: result.currentScore, validated: result.validated }
+  };
+  return { ...menuData, items: newItems};
+}
 
 @Component({
   selector: 'alg-item-nav',
@@ -117,7 +129,7 @@ export class ItemNavComponent implements OnInit, OnDestroy {
 
       // we are only interested in items
       map(content => (content !== null && isItemInfo(content) ? content.data : null)),
-      distinctUntilChanged(), // mainly to avoid sending multiple null
+      distinctUntilChanged((v1, v2) => v1 === null && v2 === null), // only to avoid sending multiple null
 
       // switchMap may cancel ongoing network calls if item is changed while the request is not over. That's what we want!
       switchMap((item):Observable<NavMenuDataState> => {
@@ -130,18 +142,24 @@ export class ItemNavComponent implements OnInit, OnDestroy {
           return this.loadRootNav();
         }
 
-        // CASE 2: the content is among the displayed items at the root of the tree -> select the right one (might load children)
+        // CASE 2: the content is the currently selected element in the menu -> update info or do nothing
+        if (this.isSelectedItem(item.nav)) {
+          if (!item.result) return EMPTY;
+          return of(navMenuDataWithUpdatedNode(this.data as NavMenuData, item.nav, item.result));
+        }
+
+        // CASE 3: the content is among the displayed items at the root of the tree -> select the right one (might load children)
         if (this.hasItemAmongTreeRoots(item.nav)) {
           const data = navMenuDataWithSelection(this.data as NavMenuData, item.nav);
           return merge(of(data), this.loadChildrenIfNeeded(data));
         }
 
-        // CASE 3: the content is a child of one of the items at the root of the tree -> shift the tree and select it (might load children)
+        // CASE 4: the content is a child of one of the items at the root of the tree -> shift the tree and select it (might load children)
         if (this.hasItemAmongKnownTreeChildren(item.nav)) {
           return this.treeShiftedToChild(item.nav);
         }
 
-        // CASE 4: the content is an item not in case 2 or 3 -> load the tree and select the right one
+        // CASE 5: the content is an item not in case 2 or 3 -> load the tree and select the right one
         return this.loadNewNav(item.nav);
       })
     ).subscribe({
@@ -161,6 +179,12 @@ export class ItemNavComponent implements OnInit, OnDestroy {
    */
   isLoaded() {
     return typeof this.data !== 'string';
+  }
+
+  isSelectedItem(item: NavItem): boolean {
+    if (!this.isLoaded()) return false;
+    const menuItems = this.data as NavMenuData;
+    return menuItems.selectedItem?.itemId === item.itemId;
   }
 
   hasItemAmongTreeRoots(item: NavItem): boolean {
