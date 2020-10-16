@@ -1,11 +1,10 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject, concat, EMPTY, forkJoin, Observable, of, Subject } from 'rxjs';
-import { catchError, filter, map, mapTo, switchMap, tap } from 'rxjs/operators';
+import { catchError, filter, map, switchMap, tap } from 'rxjs/operators';
 import { bestAttemptFromResults, implicitResultStart } from 'src/app/shared/helpers/attempts';
 import { errorState, FetchError, Fetching, fetchingState, isReady, Ready, readyState } from 'src/app/shared/helpers/state';
 import { ResultActionsService } from 'src/app/shared/http-services/result-actions.service';
 import { NavItem } from 'src/app/shared/services/nav-types';
-import { canCurrentUserViewItemContent } from '../helpers/item-permissions';
 import { BreadcrumbItem, GetBreadcrumbService } from '../http-services/get-breadcrumb.service';
 import { GetItemByIdService, Item } from '../http-services/get-item-by-id.service';
 import { GetResultsService, Result } from '../http-services/get-results.service';
@@ -119,17 +118,6 @@ export class ItemDataSource implements OnDestroy {
           )),
         );
       }),
-    );
-  }
-
-
-  private startResultIfNeeded(navItem: NavItem, item: Item): Observable<string|null> { // observable of the result attempt_id
-    const attemptId  = navItem.attemptId || navItem.parentAttemptId;
-    // if not allowed to start a result on this attempt, do not try
-    if (item.requires_explicit_entry || !canCurrentUserViewItemContent(item) || !attemptId) return of(null);
-    return this.resultActionsService.start(navItem.itemPath.concat([navItem.itemId]), attemptId).pipe(
-      mapTo(attemptId),
-      catchError(_e => of(null)) // if got an error, continue with no result
     );
   }
 
