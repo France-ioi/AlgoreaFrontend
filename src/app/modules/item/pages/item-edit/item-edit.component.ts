@@ -10,7 +10,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './item-edit.component.html',
   styleUrls: ['./item-edit.component.scss']
 })
-export class ItemEditComponent implements OnInit, OnDestroy {
+export class ItemEditComponent implements OnDestroy {
   itemForm = this.formBuilder.group({
     title: ['', Validators.required],
   });
@@ -23,9 +23,6 @@ export class ItemEditComponent implements OnInit, OnDestroy {
     private formBuilder: FormBuilder,
   ) {
     this.currentContent.editState.next('editing');
-  }
-
-  ngOnInit() {
     this.getCurrentItem();
   }
 
