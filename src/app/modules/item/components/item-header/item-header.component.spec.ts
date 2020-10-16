@@ -14,11 +14,13 @@ describe('ItemHeaderComponent', () => {
     string: {
     title: 'mock item',
     subtitle: 'mock subtitle',
+    description: 'mock description',
     },
     permissions: {
       can_view: 'content',
       can_edit: 'none',
     },
+    type: 'Chapter',
   };
 
   beforeEach(waitForAsync(() => {

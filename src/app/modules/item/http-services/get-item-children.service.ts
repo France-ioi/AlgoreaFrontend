@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
@@ -21,8 +21,11 @@ export class GetItemChildrenService {
 
   constructor(private http: HttpClient) { }
 
-  get(id: number): Observable<ItemChild[]> {
+  get(id: string, attempt_id: string
+    ): Observable<ItemChild[]> {
+    let params = new HttpParams();
+    params = params.set('attempt_id', attempt_id);
     return this.http
-      .get<ItemChild[]>(`${environment.apiUrl}/items/${id}/children`);
+      .get<ItemChild[]>(`${environment.apiUrl}/items/${id}/children`, { params: params });
   }
 }
