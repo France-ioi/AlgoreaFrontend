@@ -1,9 +1,11 @@
-import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
 import { canCurrentUserViewItemContent } from '../../helpers/item-permissions';
 import { GetItemChildrenService, ItemChild } from '../../http-services/get-item-children.service';
 import { ItemData } from '../../services/item-datasource.service';
 import { bestAttemptFromResults } from 'src/app/shared/helpers/attempts';
+import { Router } from '@angular/router';
+import { itemDetailsRoute } from 'src/app/shared/services/nav-types';
 
 interface ItemChildAdditional {
   isLocked: boolean,
@@ -24,12 +26,24 @@ export class ChapterChildrenComponent implements OnChanges, OnDestroy {
   state: 'loading' | 'ready' | 'error' = 'loading';
   children: (ItemChild&ItemChildAdditional)[] = [];
 
-  constructor(private getItemChildrenService: GetItemChildrenService) {}
+  constructor(
+    private getItemChildrenService: GetItemChildrenService,
+    private router: Router,
+  ) {}
 
   private subscription?: Subscription;
 
   ngOnChanges(_changes: SimpleChanges): void {
     this.reloadData();
+  }
+
+  click(child: ItemChild&ItemChildAdditional): void {
+    if (child.isLocked) return;
+    void this.router.navigate(itemDetailsRoute({
+      itemId: child.id,
+      itemPath: this.itemData.nav.itemPath.concat([this.itemData.item.id]),
+      attemptId: this.itemData.attemptId ? this.itemData.attemptId : undefined,
+      }));
   }
 
   private reloadData() {
