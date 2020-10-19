@@ -19,3 +19,92 @@
   margin-top: 0;
   padding-top: 0 !important;
 }
+
+.data-list-container {
+  list-style: none;
+  padding-left: 0;
+  color: $dark-text-color;
+
+  &.activity {
+    padding: 1.6667rem;
+
+    li {
+      display: flex;
+      align-items: center;
+      border-bottom: none;
+      padding: 0;
+
+      .activity-progress {
+        width: 4.1667rem;
+      }
+
+      .activity-content {
+        display: flex;
+        align-items: center;
+        flex: 1;
+        box-sizing: border-box;
+        height: 4rem;
+        border-bottom: .1rem solid $light-border-color;
+        cursor: pointer;
+
+        &.locked {
+          color: $light-text-color;
+        }
+
+        .activity-weight {
+          margin-right: 2rem;
+          width: 3.3333rem;
+        }
+
+        .activity-title {
+          flex: 1;
+        }
+
+        .activity-status {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-right: 2rem;
+        }
+      }
+    }
+  }
+
+  &.sub-skill {
+    li {
+      margin-left: -3.3333rem;
+      border-bottom: none;
+      display: flex;
+      align-items: center;
+
+      .skill-icon {
+        width: 2.9167rem;
+      }
+
+      .skill-content {
+        display: flex;
+        flex: 1;
+        padding: 0.5833rem 0;
+        border-bottom: .1rem solid $light-border-color;
+      }
+    }
+  }
+
+  li {
+    display: flex;
+    border-bottom: .1rem solid $light-border-color;
+    padding: 0.5833rem 0;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    .skill-icon {
+      margin-right: 0.4167rem;
+    }
+
+    .skill-title {
+      flex: 1;
+    }
+  }
+}
