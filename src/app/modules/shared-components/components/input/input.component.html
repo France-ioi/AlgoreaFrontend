@@ -1,13 +1,10 @@
-<div class="input-wrapper" [ngClass]="{large: type === 'large', light: mode === 'light'}">
-  <ng-container [formGroup]="parentForm">
+<div class="input-wrapper" [ngClass]="{large: type === 'large', light: mode === 'light'}" [formGroup]="parentForm">
     <input
       [type]="inputType"
       [placeholder]="placeholder"
       [ngClass]="{'has-button': hasButton}"
-      (ngModelChange)="onValueChange($event)"
       [formControlName]="name"
     >
-  </ng-container>
   <span class="icon">
     <i class="{{leftIcon}}"></i>
   </span>
