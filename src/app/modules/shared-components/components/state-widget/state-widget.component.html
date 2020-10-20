@@ -1,8 +1,8 @@
-<div class="state-container" [ngClass]="classes[type]">
+<div class="state-container" [ngClass]="class">
   <span class="state-icon" [ngClass]="{disabled: disabled}">
     <i class="{{icon}}"></i>
   </span>
   <span class="state-label" [ngClass]="{disabled: disabled}">
-    {{labels[type]}}
+    {{type}}
   </span>
 </div>

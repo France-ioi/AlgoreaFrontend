@@ -1,20 +1,37 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 
 @Component({
   selector: 'alg-state-widget',
   templateUrl: './state-widget.component.html',
   styleUrls: ['./state-widget.component.scss'],
 })
-export class StateWidgetComponent implements OnInit {
-  @Input() icon: string;
-  @Input() type: number;
+export class StateWidgetComponent implements OnChanges {
+
+  @Input() type: 'Undefined'|'Discovery'|'Application'|'Validation'|'Challenge';
   @Input() disabled = false;
 
-  labels = ['Discovery', 'Practice', 'Validation', 'Challenge', 'Review'];
+  icon = '';
+  class = '';
 
-  classes = ['discovery', 'practice', 'validation', 'challenge', 'review'];
+  ngOnChanges(_changes: SimpleChanges): void {
+    this.class = this.type.toLowerCase();
 
-  constructor() {}
-
-  ngOnInit() {}
+    switch (this.type) {
+      case 'Undefined':
+        this.icon = 'fa fa-book-open';
+        break;
+      case 'Discovery':
+        this.icon = 'fa fa-book-open';
+        break;
+      case 'Application':
+        this.icon = 'fa fa-code';
+        break;
+      case 'Validation':
+        this.icon = 'fa fa-video';
+        break;
+      case 'Challenge':
+        this.icon = 'fa fa-laptop-code';
+        break;
+    }
+  }
 }
