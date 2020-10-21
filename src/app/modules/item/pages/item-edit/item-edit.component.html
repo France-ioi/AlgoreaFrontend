@@ -4,13 +4,11 @@
 
   <p *ngIf="state.tag === 'error'">Error while loading the item</p>
 
-  <ng-container *ngIf="state.tag === 'ready'">
-    <div style="margin: 1rem 0 0.5rem 0">
-      <form [formGroup]="itemForm">
-        <alg-input [parentForm]="itemForm" name="title" size="large" [isDark]='false'></alg-input>
-      </form>
-    </div>
+  <div *ngIf="state.tag === 'ready'" style="margin: 1rem 0 0.5rem 0">
+    <form [formGroup]="itemForm">
+      <alg-input [parentForm]="itemForm" name="title" size="large" [isDark]='false'></alg-input>
+    </form>
+  </div>
 
-  </ng-container>
 
 </ng-container>
