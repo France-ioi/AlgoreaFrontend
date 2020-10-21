@@ -9,8 +9,8 @@
           "title": "Big root1",
           "type": "folder",
           "progress": {
-            "currentScore": 50,
-            "displayedScore": 30
+            "bestScore": 50,
+            "currentScore": 30
           },
           "children": [
             {

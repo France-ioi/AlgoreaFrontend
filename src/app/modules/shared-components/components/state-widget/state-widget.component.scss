@@ -8,7 +8,7 @@
   display: flex;
   font-size: .9rem;
 
-  &.discovery {
+  &.undefined {
     .state-icon {
       background-color: $dark-base-color;
     }
@@ -18,13 +18,23 @@
     }
   }
 
-  &.practice {
+  &.discovery {
     .state-icon {
       background-color: #C2459F;
     }
 
     .state-label {
       background-color: #E044B4;
+    }
+  }
+
+  &.application {
+    .state-icon {
+      background-color: #D3932B;
+    }
+
+    .state-label {
+      background-color: #F5A623;
     }
   }
 
@@ -35,16 +45,6 @@
 
     .state-label {
       background-color: #9ACC68;
-    }
-  }
-
-  &.review {
-    .state-icon {
-      background-color: #D3932B;
-    }
-
-    .state-label {
-      background-color: #F5A623;
     }
   }
 

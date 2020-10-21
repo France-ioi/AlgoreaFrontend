@@ -6,8 +6,8 @@
       "ring": true,
       "state": "started",
       "progress": {
-        "displayedScore": 100,
-        "currentScore": 100
+        "currentScore": 100,
+        "bestScore": 100
       }
     },
     {
@@ -16,8 +16,8 @@
       "ring": true,
       "state": "never opened",
       "progress": {
-        "displayedScore": 0,
-        "currentScore": 0
+        "currentScore": 0,
+        "bestScore": 0
       }
     },
     {
@@ -26,8 +26,8 @@
       "ring": true,
       "state": "opened",
       "progress": {
-        "displayedScore": 90,
-        "currentScore": 90
+        "currentScore": 90,
+        "bestScore": 90
       },
       "children": [
         {
@@ -36,8 +36,8 @@
           "ring": true,
           "state": "opened",
           "progress": {
-            "displayedScore": 30,
-            "currentScore": 30
+            "currentScore": 30,
+            "bestScore": 30
           }
         },
         {
@@ -46,8 +46,8 @@
           "ring": true,
           "state": "opened",
           "progress": {
-            "displayedScore": 70,
-            "currentScore": 70
+            "currentScore": 70,
+            "bestScore": 70
           },
           "children": [
             {
@@ -56,8 +56,8 @@
               "ring": true,
               "state": "opened",
               "progress": {
-                "displayedScore": 30,
-                "currentScore": 30
+                "currentScore": 30,
+                "bestScore": 30
               }
             },
             {
@@ -66,8 +66,8 @@
               "ring": true,
               "state": "opened",
               "progress": {
-                "displayedScore": 70,
-                "currentScore": 70
+                "currentScore": 70,
+                "bestScore": 70
               }
             }
           ]
@@ -78,8 +78,8 @@
           "ring": true,
           "state": "opened",
           "progress": {
-            "displayedScore": 70,
-            "currentScore": 70
+            "currentScore": 70,
+            "bestScore": 70
           },
           "children": [
             {
@@ -88,8 +88,8 @@
               "ring": true,
               "state": "opened",
               "progress": {
-                "displayedScore": 30,
-                "currentScore": 30
+                "currentScore": 30,
+                "bestScore": 30
               }
             },
             {
@@ -98,8 +98,8 @@
               "ring": true,
               "state": "opened",
               "progress": {
-                "displayedScore": 70,
-                "currentScore": 70
+                "currentScore": 70,
+                "bestScore": 70
               }
             }
           ]
@@ -112,8 +112,8 @@
       "ring": true,
       "state": "opened",
       "progress": {
-        "displayedScore": 70,
         "currentScore": 70,
+        "bestScore": 70,
         "icons": "camera"
       }
     }

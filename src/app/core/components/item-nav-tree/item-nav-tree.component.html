@@ -11,19 +11,10 @@
   [value]="nodes"
   (keydown)="onKeyDown($event)"
   emptyMessage="There is no items to display here"
-  selectionMode="single"
-  [(selection)]="selectedNode"
 >
   <!-- Folder elements template -->
   <ng-template let-node pTemplate="folder">
-    <span
-      class="node-tree-item folder"
-      [ngClass]="{
-        expanded: node.expanded,
-        checked: node.checked,
-        child: !node.root
-      }"
-    >
+    <span class="node-tree-item folder" [ngClass]="{ expanded: node.expanded, checked: node.checked }">
       <span class="node-item-branch">
         <span class="top-branch">
           <span class="mask-branch"></span>
@@ -35,58 +26,49 @@
       <span class="node-item-content">
         <span (click)="selectNode(node)" class="node-select">
           <i
-            *ngIf="!node.expanded && !node.ring"
-            class="fa fa-folder"
-            style="font-size: 1.2rem;"
-          ></i>
-          <i
-            *ngIf="node.expanded && !node.ring"
-            class="fa fa-folder-open"
+            *ngIf="!node.data.score"
+            class="fa"
+            [ngClass]="{ 'fa-folder': !node.expanded, 'fa-folder-open': node.expanded }"
             style="font-size: 1.2rem;"
           ></i>
           <alg-score-ring
-            *ngIf="node.progress && node.ring"
-            [displayedScore]="node.progress.displayedScore"
-            [currentScore]="node.progress.currentScore"
+            *ngIf="node.data.score"
+            [currentScore]="node.data.score.current"
+            [bestScore]="node.data.score.best"
+            [isValidated]="node.data.score.validated"
             [diameter]="30"
             [forTree]="true"
             [isDark]="true"
-            icons="folder"
+            [icon]="node.expanded ? 'folder-open' : 'folder'"
           ></alg-score-ring>
         </span>
-        <span *ngIf="node.icons" class="node-icon"
-          ><i class="{{ node.icons }}" style="font-size: 1.2rem;"></i
-        ></span>
         <span (click)="selectNode(node)" class="node-label">
           <span class="label-container">
             <span class="node-label-title">
               {{ node.label }}
               <span *ngIf="node.data.groupName">(via group "{{ node.data.groupName }}")</span>
-              <span *ngIf="node.status !== 'ready'">[{{node.status}}]</span>
             </span>
-            <!-- <span class="node-state" *ngIf="node.state === 'locked'">
-              <i class="fa fa-key" style="font-size: 1.2rem;"></i>
+            <span class="node-state" *ngIf="node.status === 'loading'">
+              <p-progressSpinner [style]="{ width: '3rem', height: '3rem', 'margin-top': '-0.5rem' }"></p-progressSpinner>
             </span>
-            <span class="node-state" *ngIf="node.state === 'never opened'">
-              <i class="fa fa-lock" style="font-size: 1.2rem;"></i>
-            </span> -->
+            <span class="node-state" *ngIf="node.status === 'error'">
+              <i class="fa fa-exclamation-triangle" style="font-size: 1.2rem;"></i>
+            </span>
           </span>
           <!-- <alg-skill-progress
             *ngIf="node.progress && !node.ring"
+            [bestScore]="node.progress.bestScore"
             [currentScore]="node.progress.currentScore"
-            [displayedScore]="node.progress.displayedScore"
             [type]="'thin-horizontal'"
           ></alg-skill-progress> -->
         </span>
       </span>
     </span>
   </ng-template>
+
   <!-- Leaf elements template -->
   <ng-template let-node pTemplate="leaf">
-    <span
-      class="node-tree-item"
-      [ngClass]="{ checked: node.checked, child: !node.root }"
-    >
+    <span class="node-tree-item" [ngClass]="{ checked: node.checked }" >
       <span class="node-item-branch">
         <span class="top-branch">
           <span class="mask-branch"></span>
@@ -95,26 +77,22 @@
           <span class="mask-branch"></span>
         </span>
       </span>
-      <span class="node-item-content" [ngClass]="{'node-bottom-radius': node.selectedTop, 'node-top-radius': node.selectedBottom}">
+      <span class="node-item-content">
         <span (click)="selectNode(node)" class="node-select">
           <i
-            *ngIf="node.checked && !node.ring"
-            class="pi pi-check"
-            style="font-size: 1.2rem;"
-          ></i>
-          <i
-            *ngIf="!node.checked && !node.ring"
-            class="pi pi-circle-on"
+            *ngIf="!node.data.score"
+            class="pi"
+            [ngClass]="{ 'pi-check': node.checked, 'pi-circle-on': !node.checked }"
             style="font-size: 1.2rem;"
           ></i>
           <alg-score-ring
-            *ngIf="node.progress && node.ring"
-            [displayedScore]="node.progress.displayedScore"
-            [currentScore]="node.progress.currentScore"
+            *ngIf="node.data.score"
+            [currentScore]="node.data.score.current"
+            [bestScore]="node.data.score.best"
+            [isValidated]="node.data.score.validated"
             [diameter]="30"
             [forTree]="true"
             [isDark]="true"
-            [icons]="node.progress.icons"
           ></alg-score-ring>
         </span>
         <span (click)="selectNode(node)" class="node-label">
@@ -122,19 +100,17 @@
             <span class="node-label-title">
               {{ node.data.title }}
             </span>
-            <span class="node-state" *ngIf="node.state === 'locked'">
-              <i class="fa fa-key" style="font-size: 1.2rem;"></i>
-            </span>
+            <!-- example of icon on the right
             <span class="node-state" *ngIf="node.state === 'never opened'">
               <i class="fa fa-lock" style="font-size: 1.2rem;"></i>
-            </span>
+            </span>-->
           </span>
-          <alg-skill-progress
+          <!-- <alg-skill-progress
             *ngIf="node.progress && !node.ring"
+            [bestScore]="node.progress.bestScore"
             [currentScore]="node.progress.currentScore"
-            [displayedScore]="node.progress.displayedScore"
             [type]="'thin-horizontal'"
-          ></alg-skill-progress>
+          ></alg-skill-progress> -->
         </span>
 
       </span>

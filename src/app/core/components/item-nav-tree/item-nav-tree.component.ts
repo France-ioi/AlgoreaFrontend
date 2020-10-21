@@ -27,7 +27,7 @@ export class ItemNavTreeComponent implements OnChanges {
   @Input() selectedItem?: NavItem;
 
   nodes: ItemTreeNode[];
-  selectedNode: ItemTreeNode|null;
+  selectedNode: ItemTreeNode|null; // used to keep track after request that the selected is still the expected one
 
   constructor(
     private router: Router,

@@ -1,18 +1,28 @@
 
-export interface Result {
-  attempt_id: string,
-  latest_activity_at: string|null,
-  started_at: string|null
+interface Result {
+  latestActivityAt: Date,
+  startedAt: Date|null,
 }
 
-export function bestAttemptFromResults(results: Result[]): Result|null {
+export function bestAttemptFromResults<T extends Result>(results: T[]): T|null {
   if (!results || results.length === 0) {
     return null;
   }
   // pick the one which is started and with the greatest latest_activity_at
-  return results.reduce<Result|null>((acc, current) => {
-    if (current.started_at === null || current.latest_activity_at === null) return acc;
-    if (acc === null || acc.latest_activity_at === null) return current;
-    return new Date(acc.latest_activity_at).getTime() < new Date(current.latest_activity_at).getTime() ? current : acc;
+  return results.reduce<T|null>((acc, current) => {
+    if (current.startedAt === null) return acc;
+    if (acc === null) return current;
+    return acc.latestActivityAt.getTime() < current.latestActivityAt.getTime() ? current : acc;
   }, null);
+}
+
+interface Item {
+  requires_explicit_entry: boolean
+  permissions: {
+    can_view: 'none'|'info'|'content'|'content_with_descendants'|'solution',
+  }
+}
+
+export function implicitResultStart(item: Item): boolean {
+  return item.permissions.can_view !== 'none' && !item.requires_explicit_entry;
 }

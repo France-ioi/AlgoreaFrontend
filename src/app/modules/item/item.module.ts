@@ -7,6 +7,8 @@ import { ItemHeaderComponent } from './components/item-header/item-header.compon
 import { ItemEditComponent } from './pages/item-edit/item-edit.component';
 import { ItemByIdComponent } from './pages/item-by-id/item-by-id.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ItemContentComponent } from './pages/item-content/item-content.component';
+import { ChapterChildrenComponent } from './components/chapter-children/chapter-children.component';
 
 @NgModule({
   declarations: [
@@ -14,6 +16,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     ItemDetailsComponent,
     ItemHeaderComponent,
     ItemEditComponent,
+    ItemContentComponent,
+    ChapterChildrenComponent,
   ],
   imports: [
     CommonModule,

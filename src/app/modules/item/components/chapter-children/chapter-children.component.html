@@ -1,0 +1,10 @@
+<p-progressSpinner *ngIf="state === 'loading'"></p-progressSpinner>
+
+<p *ngIf="state === 'error'">Error while loading the group managers</p>
+
+<ng-container *ngIf="state === 'ready'">
+  <p class="validation-text">
+    To validate this chapter, solve at least all tasks with Validation type
+  </p>
+  Ready, loaded {{children.length}} children.
+</ng-container>
