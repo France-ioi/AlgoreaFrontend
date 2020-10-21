@@ -75,8 +75,10 @@
         </div>
       </div>
     </div>
-    <div class="right"
-         [ngClass]="{ collapsed: collapsed, expanded: !collapsed, editing: editState === 'editing' || editState === 'editing-noaction'}">
+    <div 
+         class="right"
+         [ngClass]="{ collapsed: collapsed, expanded: !collapsed, editing: editState === 'editing' || editState === 'editing-noaction' }"
+    >
       <div class="main-content" [ngClass]="{ folded: folded, unfolded: !folded }">
         <router-outlet></router-outlet>
       </div>
