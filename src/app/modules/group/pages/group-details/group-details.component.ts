@@ -4,7 +4,7 @@ import { Group } from '../../http-services/get-group-by-id.service';
 import { ActivatedRoute } from '@angular/router';
 import { withManagementAdditions } from '../../helpers/group-management';
 import { filter, map } from 'rxjs/operators';
-import { CurrentContentService, GroupInfo, ItemInfo } from 'src/app/shared/services/current-content.service';
+import { CurrentContentService } from 'src/app/shared/services/current-content.service';
 import { Subscription } from 'rxjs';
 import { FetchError, Fetching, isReady, Ready } from 'src/app/shared/helpers/state';
 
