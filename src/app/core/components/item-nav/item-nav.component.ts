@@ -41,7 +41,7 @@ export class ItemNavComponent implements OnInit, OnDestroy {
   data: NavMenuDataState = 'init';
   rootItemPath: string[] = [];
 
-  private subscription: Subscription;
+  private subscriptions: Subscription[] = [];
 
   constructor(
     private itemNavService: ItemNavigationService,
@@ -125,51 +125,55 @@ export class ItemNavComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    this.subscription = this.currentContent.currentContent$.pipe(
+    this.subscriptions.push(
+      this.currentContent.currentContent$.pipe(
 
-      // we are only interested in items
-      map(content => (content !== null && isItemInfo(content) ? content.data : null)),
-      distinctUntilChanged((v1, v2) => v1 === null && v2 === null), // only to avoid sending multiple null
+        // we are only interested in items
+        map(content => (content !== null && isItemInfo(content) ? content.data : null)),
+        distinctUntilChanged((v1, v2) => v1 === null && v2 === null), // only to avoid sending multiple null
 
-      // switchMap may cancel ongoing network calls if item is changed while the request is not over. That's what we want!
-      switchMap((item):Observable<NavMenuDataState> => {
+        // switchMap may cancel ongoing network calls if item is changed while the request is not over. That's what we want!
+        switchMap((item):Observable<NavMenuDataState> => {
 
-        // CASE 0: the current content is not an item and the menu has already items displayed -> do nothing
-        if (item === null && this.isLoaded()) return EMPTY;
+          // CASE 0: the current content is not an item and the menu has already items displayed -> do nothing
+          if (item === null && this.isLoaded()) return EMPTY;
 
-        // CASE 1: the content is not an item and the menu has not already item displayed -> load item root
-        if (item === null) {
-          return this.loadRootNav();
-        }
+          // CASE 1: the content is not an item and the menu has not already item displayed -> load item root
+          if (item === null) {
+            return this.loadRootNav();
+          }
 
-        // CASE 2: the content is the currently selected element in the menu -> update info or do nothing
-        if (this.isSelectedItem(item.nav)) {
-          if (!item.result) return EMPTY;
-          return of(navMenuDataWithUpdatedNode(this.data as NavMenuData, item.nav, item.result));
-        }
+          // CASE 2: the content is the currently selected element in the menu -> update info or do nothing
+          if (this.isSelectedItem(item.nav)) {
+            if (!item.result) return EMPTY;
+            return of(navMenuDataWithUpdatedNode(this.data as NavMenuData, item.nav, item.result));
+          }
 
-        // CASE 3: the content is among the displayed items at the root of the tree -> select the right one (might load children)
-        if (this.hasItemAmongTreeRoots(item.nav)) {
-          const data = navMenuDataWithSelection(this.data as NavMenuData, item.nav);
-          return merge(of(data), this.loadChildrenIfNeeded(data));
-        }
+          // CASE 3: the content is among the displayed items at the root of the tree -> select the right one (might load children)
+          if (this.hasItemAmongTreeRoots(item.nav)) {
+            const data = navMenuDataWithSelection(this.data as NavMenuData, item.nav);
+            return merge(of(data), this.loadChildrenIfNeeded(data));
+          }
 
-        // CASE 4: the content is a child of one of the items at the root of the tree -> shift the tree and select it (might load children)
-        if (this.hasItemAmongKnownTreeChildren(item.nav)) {
-          return this.treeShiftedToChild(item.nav);
-        }
+          // CASE 4: the content is a child of one item at the root of the tree -> shift the tree and select it (might load children)
+          if (this.hasItemAmongKnownTreeChildren(item.nav)) {
+            return this.treeShiftedToChild(item.nav);
+          }
 
-        // CASE 5: the content is an item not in case 2 or 3 -> load the tree and select the right one
-        return this.loadNewNav(item.nav);
-      })
-    ).subscribe({
-      next: change => this.data = change,
-      error: _e => this.data = 'error'
-    });
+          // CASE 5: the content is an item not in case 2 or 3 -> load the tree and select the right one
+          return this.loadNewNav(item.nav);
+        })
+      ).subscribe({
+        next: change => this.data = change,
+        error: _e => this.data = 'error'
+      }),
+    );
+
+
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    this.subscriptions.forEach(s => s.unsubscribe());
   }
 
   /*** Helper functions ***/
