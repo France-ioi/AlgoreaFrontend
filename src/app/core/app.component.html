@@ -6,78 +6,82 @@
       (collapse)="onCollapse($event)"
     ></alg-left-nav>
   </div>
-  <div class="top-bar"
-    *ngIf="editState$ | async as editState"
-    [ngClass]="{ editing: editState === 'editing' || editState === 'editing-noaction', collapsed: collapsed, expanded: !collapsed }"
-  >
-    <alg-top-nav
-      *ngIf="collapsed"
-      [collapsed]="collapsed"
-      [folded]="folded"
-      [currentUser]="currentUser"
-      (collapse)="onCollapse($event)"
-      (fold)="onFold($event)"
-      [templateId]="1"
-    ></alg-top-nav>
-    <div class="top-right-bar" *ngrxLet="currentContent$ as currentContent">
-      <alg-editor-bar
-        *ngIf="editState === 'editing' || editState === 'editing-noaction'"
-        (cancel)="onEditCancel()"
-        (save)="onEditSave()"
-      ></alg-editor-bar>
-      <div class="breadcrumb-bar"
-      *ngIf="!folded && !scrolled">
-        <alg-breadcrumb [contentBreadcrumb]="currentContent?.breadcrumbs"></alg-breadcrumb>
-        <alg-page-navigator
-          *ngIf="editState === 'editable'"
-          (edit)="onEditPage()"
-        ></alg-page-navigator>
-        <alg-button
-          *ngIf="collapsed && currentUser && currentUser.isTemp"
-          label="Log in / Sign in"
-          icon="pi pi-sign-in"
-          class="ui-button-rounded"
-          style="margin-right: 0.4167rem;"
-          (click)="login()"
-        ></alg-button>
-        <alg-button
-          *ngIf="collapsed && currentUser && !currentUser.isTemp"
-          label="Log out"
-          icon="pi pi-sign-out"
-          class="ui-button-rounded"
-          style="margin-right: 0.4167rem;"
-          (click)="logout()"
-        ></alg-button>
-      </div>
-      <div class="folded-top-bar" *ngIf="folded || scrolled">
-        <!--<alg-score-ring
-          [displayedScore]="50"
-          [currentScore]="60"
-          [diameter]="30"
-        ></alg-score-ring>-->
-        <div class="rightpane-title">
-          <p *ngIf="currentContent && currentContent.title">{{ currentContent.title }}</p>
+  <ng-container *ngIf="editState$ | async as editState">
+    <div class="top-bar"
+         [ngClass]="{ editing: editState === 'editing' || editState === 'editing-noaction', collapsed: collapsed, expanded: !collapsed }"
+    >
+      <alg-top-nav
+        *ngIf="collapsed"
+        [collapsed]="collapsed"
+        [folded]="folded"
+        [currentUser]="currentUser"
+        (collapse)="onCollapse($event)"
+        (fold)="onFold($event)"
+        [templateId]="1"
+      ></alg-top-nav>
+      <div class="top-right-bar" *ngrxLet="currentContent$ as currentContent">
+        <alg-editor-bar
+          *ngIf="editState === 'editing' || editState === 'editing-noaction'"
+          (cancel)="onEditCancel()"
+          (save)="onEditSave()"
+        ></alg-editor-bar>
+        <div class="breadcrumb-bar"
+             *ngIf="!folded && !scrolled">
+          <alg-breadcrumb [contentBreadcrumb]="currentContent?.breadcrumbs"></alg-breadcrumb>
+          <alg-page-navigator
+            *ngIf="editState === 'editable'"
+            (edit)="onEditPage()"
+          ></alg-page-navigator>
+          <alg-button
+            *ngIf="collapsed && currentUser && currentUser.isTemp"
+            label="Log in / Sign in"
+            icon="pi pi-sign-in"
+            class="ui-button-rounded"
+            style="margin-right: 0.4167rem;"
+            (click)="login()"
+          ></alg-button>
+          <alg-button
+            *ngIf="collapsed && currentUser && !currentUser.isTemp"
+            label="Log out"
+            icon="pi pi-sign-out"
+            class="ui-button-rounded"
+            style="margin-right: 0.4167rem;"
+            (click)="logout()"
+          ></alg-button>
         </div>
-        <!-- <div *ngIf="collapsed" class="user-info">
-          <span class="user-avatar">
-            <img src="assets/images/Male.svg" style="width: 3rem; height: 3rem;" />
-          </span>
-          <span class="user-id">CyrilK89</span>
-        </div> -->
-        <!-- <span class="clock-icon" [ngClass]="{ finished: false }"><i class="fa fa-clock"></i></span> -->
-        <!-- <span class="remaining-time" [ngClass]="{ finished: false }">00:03:10</span> -->
-        <alg-page-navigator
-          *ngIf="editState === 'editable'"
-          [allowFullScreen]="false"
-          navigationMode="nextAndPrev"
-          (edit)="onEditPage()"
-        ></alg-page-navigator>
+        <div class="folded-top-bar" *ngIf="folded || scrolled">
+          <!--<alg-score-ring
+            [displayedScore]="50"
+            [currentScore]="60"
+            [diameter]="30"
+          ></alg-score-ring>-->
+          <div class="rightpane-title">
+            <p *ngIf="currentContent && currentContent.title">{{ currentContent.title }}</p>
+          </div>
+          <!-- <div *ngIf="collapsed" class="user-info">
+            <span class="user-avatar">
+              <img src="assets/images/Male.svg" style="width: 3rem; height: 3rem;" />
+            </span>
+            <span class="user-id">CyrilK89</span>
+          </div> -->
+          <!-- <span class="clock-icon" [ngClass]="{ finished: false }"><i class="fa fa-clock"></i></span> -->
+          <!-- <span class="remaining-time" [ngClass]="{ finished: false }">00:03:10</span> -->
+          <alg-page-navigator
+            *ngIf="editState === 'editable'"
+            [allowFullScreen]="false"
+            navigationMode="nextAndPrev"
+            (edit)="onEditPage()"
+          ></alg-page-navigator>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="right" [ngClass]="{ collapsed: collapsed, expanded: !collapsed }">
-    <div class="main-content" [ngClass]="{ folded: folded, unfolded: !folded }">
-      <router-outlet></router-outlet>
+    <div
+         class="right"
+         [ngClass]="{ collapsed: collapsed, expanded: !collapsed, editing: editState === 'editing' || editState === 'editing-noaction' }"
+    >
+      <div class="main-content" [ngClass]="{ folded: folded, unfolded: !folded }">
+        <router-outlet></router-outlet>
+      </div>
     </div>
-  </div>
+  </ng-container>
 </div>

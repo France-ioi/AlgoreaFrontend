@@ -7,6 +7,7 @@ import {
   OnChanges,
   SimpleChanges,
 } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'alg-input',
@@ -14,16 +15,16 @@ import {
   styleUrls: ['./input.component.scss'],
 })
 export class InputComponent implements OnInit, OnChanges {
-  @Input() value: string;
-  @Input() placeholder: string;
-  @Input() icon: string;
-  @Input() mode = 'dark';
-  @Input() type = 'small';
-  @Input() hasButton = false;
-  @Input() inputType = 'text';
-  @Input() leftIcon = 'fa fa-font';
+  @Input() name : string | number | null; // name of the input in the parent form
+  @Input() parentForm : FormGroup;
 
-  @Output() change = new EventEmitter<string>();
+  @Input() placeholder = ''; // avoid 'undefined' if no placeholder specified
+  @Input() isDark = true;
+  @Input() size : 'small' | 'large' = 'small';
+  @Input() inputType = 'text';
+  @Input() inputIcon = 'font'; // a font-awesome icon identifier
+  @Input() buttonIcon? : string; // a font-awesome icon identifier for the input button
+
   @Output() click = new EventEmitter();
 
   constructor() {}
@@ -31,10 +32,6 @@ export class InputComponent implements OnInit, OnChanges {
   ngOnInit() {}
 
   ngOnChanges(_changes: SimpleChanges) {}
-
-  onValueChange(newValue: string) {
-    this.change.emit(newValue);
-  }
 
   onButtonClick() {
     this.click.emit();
