@@ -16,15 +16,14 @@ import { FormGroup } from '@angular/forms';
 })
 export class InputComponent implements OnInit, OnChanges {
   @Input() name : string | number | null; // name of the input in the parent form
+  @Input() parentForm : FormGroup;
 
   @Input() placeholder = ''; // avoid 'undefined' if no placeholder specified
-  @Input() icon: string;
-  @Input() mode = 'dark';
-  @Input() type = 'small';
-  @Input() hasButton = false;
+  @Input() isDark = true;
+  @Input() size : 'small' | 'large' = 'small';
   @Input() inputType = 'text';
-  @Input() leftIcon = 'fa fa-font';
-  @Input() parentForm : FormGroup;
+  @Input() inputIcon = 'font'; // a font-awesome icon identifier
+  @Input() buttonIcon? : string; // a font-awesome icon identifier for the input button
 
   @Output() click = new EventEmitter();
 
