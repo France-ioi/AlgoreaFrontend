@@ -17,6 +17,7 @@ export class ItemEditComponent implements OnDestroy {
     // eslint-disable-next-line @typescript-eslint/unbound-method
     title: ['', [Validators.required, Validators.minLength(3),]],
   });
+  itemLoadingState$ = this.itemDataSource.state$;
 
   itemSubscription: Subscription;
 
@@ -35,7 +36,7 @@ export class ItemEditComponent implements OnDestroy {
   }
 
   getCurrentItem(): void {
-    this.itemSubscription = this.itemDataSource.state$.pipe(
+    this.itemSubscription = this.itemLoadingState$.pipe(
       filter<Ready<ItemData> | Fetching | FetchError, Ready<ItemData>>(isReady),
     ).subscribe(state => {
       const item = state.data.item;
