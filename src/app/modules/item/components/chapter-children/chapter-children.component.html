@@ -7,8 +7,8 @@
     To validate this chapter, solve at least all tasks with Validation type
   </p>
 
-  <ul *ngFor="let item of children; index as ln" class="data-list-container activity">
-    <li>
+  <ul class="data-list-container activity">
+    <li *ngFor="let item of children; index as ln">
       <span class="activity-progress">
         <alg-score-ring
           *ngIf="!item.isLocked && item.result"
