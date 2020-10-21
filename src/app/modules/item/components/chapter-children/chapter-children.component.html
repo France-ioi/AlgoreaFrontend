@@ -11,7 +11,7 @@
     <li>
       <span class="activity-progress">
         <alg-score-ring
-          *ngIf="!item.isLocked"
+          *ngIf="!item.isLocked && item.result"
           [diameter]="30"
           [currentScore]="item.result.current_score"
           [isValidated]="item.result.is_validated"

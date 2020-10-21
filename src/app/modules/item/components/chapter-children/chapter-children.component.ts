@@ -9,7 +9,7 @@ import { itemDetailsRoute } from 'src/app/shared/services/nav-types';
 
 interface ItemChildAdditional {
   isLocked: boolean,
-  result: {
+  result?: {
     is_validated: boolean,
     current_score: number,
   },
@@ -42,7 +42,7 @@ export class ChapterChildrenComponent implements OnChanges, OnDestroy {
     void this.router.navigate(itemDetailsRoute({
       itemId: child.id,
       itemPath: this.itemData.nav.itemPath.concat([this.itemData.item.id]),
-      attemptId: this.itemData.attemptId ? this.itemData.attemptId : undefined,
+      attemptId: this.itemData.currentResult?.attemptId,
       }));
   }
 
@@ -58,9 +58,9 @@ export class ChapterChildrenComponent implements OnChanges, OnDestroy {
               const res = bestAttemptFromResults(child.results);
               return {...child,
                 isLocked: !canCurrentUserViewItemContent(child),
-                result: {
-                  is_validated: res === null ? false : res.validated,
-                  current_score: res === null ? 0 : res.score_computed,
+                result: res === null ? undefined : {
+                  is_validated: res.validated,
+                  current_score: res.score,
                 },
               };
             });
