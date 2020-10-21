@@ -1,8 +1,10 @@
 import { Component, OnDestroy } from '@angular/core';
 import { CurrentContentService } from 'src/app/shared/services/current-content.service';
-import { ItemDataSource } from '../../services/item-datasource.service';
+import { ItemData, ItemDataSource } from '../../services/item-datasource.service';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
+import { FetchError, Fetching, isReady, Ready } from '../../../../shared/helpers/state';
 
 
 @Component({
@@ -33,7 +35,10 @@ export class ItemEditComponent implements OnDestroy {
   }
 
   getCurrentItem(): void {
-    this.itemSubscription = this.itemDataSource.item$.subscribe(item => {
+    this.itemSubscription = this.itemDataSource.state$.pipe(
+      filter<Ready<ItemData> | Fetching | FetchError, Ready<ItemData>>(isReady),
+    ).subscribe(state => {
+      const item = state.data.item;
       this.itemForm.patchValue({
         title: item.string.title
       });
