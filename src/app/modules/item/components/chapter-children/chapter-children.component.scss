@@ -1,0 +1,21 @@
+@import 'src/colors.scss';
+@import 'src/geometry.scss';
+
+:host ::ng-deep alg-section .ui-table .ui-table-tbody > tr > td {
+  border-right: .1rem solid #f0f0f0;
+
+  &:first-child {
+    border: none;
+  }
+}
+
+.validation-text {
+  padding-left: 5.8333rem;
+  color: $base-color;
+  font-size: 1.6rem;
+  margin: 2rem 0;
+}
+.validation-text+* {
+  margin-top: 0;
+  padding-top: 0 !important;
+}
