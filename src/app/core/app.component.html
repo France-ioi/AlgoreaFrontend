@@ -6,7 +6,7 @@
       (collapse)="onCollapse($event)"
     ></alg-left-nav>
   </div>
-  <div *ngIf="editState$ | async as editState">
+  <ng-container *ngIf="editState$ | async as editState">
     <div class="top-bar"
          [ngClass]="{ editing: editState === 'editing' || editState === 'editing-noaction', collapsed: collapsed, expanded: !collapsed }"
     >
@@ -75,7 +75,7 @@
         </div>
       </div>
     </div>
-    <div 
+    <div
          class="right"
          [ngClass]="{ collapsed: collapsed, expanded: !collapsed, editing: editState === 'editing' || editState === 'editing-noaction' }"
     >
@@ -83,5 +83,5 @@
         <router-outlet></router-outlet>
       </div>
     </div>
-  </div>
+  </ng-container>
 </div>
