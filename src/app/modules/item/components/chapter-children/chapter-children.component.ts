@@ -26,6 +26,8 @@ export class ChapterChildrenComponent implements OnChanges, OnDestroy {
   state: 'loading' | 'ready' | 'error' = 'loading';
   children: (ItemChild&ItemChildAdditional)[] = [];
 
+  case: 'validated' | 'empty' | 'normal' = 'normal';
+
   constructor(
     private getItemChildrenService: GetItemChildrenService,
     private router: Router,
@@ -64,6 +66,13 @@ export class ChapterChildrenComponent implements OnChanges, OnDestroy {
                 },
               };
             });
+
+            this.case = 'normal';
+            if (this.children.length === 0)
+              this.case = 'empty';
+            else if (this.children.filter(item => item.result && item.category === 'Validation' && !item.result.is_validated).length === 0)
+              this.case = 'validated';
+
             this.state = 'ready';
           },
           _err => {

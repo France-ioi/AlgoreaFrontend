@@ -3,8 +3,11 @@
 <p *ngIf="state === 'error'">Error while loading the group managers</p>
 
 <ng-container *ngIf="state === 'ready'">
-  <p class="validation-text">
+  <p class="validation-text" *ngIf="case === 'normal'">
     To validate this chapter, solve at least all tasks with Validation type
+  </p>
+  <p class="validation-text" *ngIf="case === 'empty'">
+    This chapter has no content visible to you, so you can't validate it for now.
   </p>
 
   <ul class="data-list-container activity">
