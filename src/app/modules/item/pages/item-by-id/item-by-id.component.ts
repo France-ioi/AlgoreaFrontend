@@ -53,7 +53,7 @@ export class ItemByIdComponent implements OnDestroy {
       // on state change, update current content page info (for breadcrumb)
       this.itemDataSource.state$.pipe(
         filter<Ready<ItemData>|Fetching|FetchError,Ready<ItemData>>(isReady),
-        map(state => ({
+        map((state): ItemInfo => ({
           type: 'item',
           breadcrumbs: {
             category: ItemBreadcrumbCat,
@@ -73,13 +73,13 @@ export class ItemByIdComponent implements OnDestroy {
             nav: state.data.nav,
             result: state.data.currentResult ? {
               attemptId: state.data.currentResult.attemptId,
-              best: state.data.currentResult.score, // TODO fix when we'll have the best score in item info
-              current: state.data.currentResult.score,
+              bestScore: state.data.currentResult.score, // TODO fix when we'll have the best score in item info
+              currentScore: state.data.currentResult.score,
               validated: state.data.currentResult.validated,
             } : undefined
           },
         }))
-      ).subscribe(p => this.currentContent.current.next(p as ItemInfo)),
+      ).subscribe(p => this.currentContent.current.next(p)),
 
       this.currentContent.editAction$.pipe(
         filter(action => [EditAction.StartEditing, EditAction.Cancel].includes(action))
