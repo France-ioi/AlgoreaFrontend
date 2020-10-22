@@ -12,7 +12,7 @@ export class ItemNavMenuData {
   constructor(
     public readonly elements: NavMenuItem[], // level 1 elements (which may have children)
     public readonly pathToElements: Id[], // path from root to the elements (so including the parent if any)
-    public readonly selectedElement?: NavItem,
+    public readonly selectedElement?: NavItem, // the selected element is among lev 1 elements
     public readonly parent?: NavMenuItem,  // level 0 element
   ) {}
 

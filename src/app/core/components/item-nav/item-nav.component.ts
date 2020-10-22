@@ -94,8 +94,8 @@ export class ItemNavComponent implements OnInit, OnDestroy {
 
             // CASE: the content is among the displayed items at the root of the tree -> select the right one (might load children)
             if (this.state.data.hasLevel1Element(item.nav.itemId)) {
-              const data = this.state.data.withSelection(item.nav);
-              return merge(of(readyState(data)), this.loadChildrenIfNeeded(data));
+              const newData = this.state.data.withSelection(item.nav);
+              return merge(of(readyState(newData)), this.loadChildrenIfNeeded(newData));
             }
 
             // CASE: the content is a child of one item at the root of the tree -> shift the tree and select it (might load children)
