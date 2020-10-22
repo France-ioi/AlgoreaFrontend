@@ -1,7 +1,9 @@
+import { of, Operator, OperatorFunction } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
-export interface Ready<T> { tag: 'ready', data: T }
-export interface Fetching { tag: 'fetching' }
-export interface FetchError { tag: 'error', error?: any }
+export interface Ready<T> { readonly tag: 'ready', readonly data: T }
+export interface Fetching { readonly tag: 'fetching' }
+export interface FetchError { readonly tag: 'error', readonly error?: any }
 
 export function readyState<T>(data: T): Ready<T> {
   return { tag: 'ready', data: data };
@@ -28,4 +30,8 @@ export function isFetching<T>(state: {tag: string}): state is Fetching {
 
 export function isError(state: {tag: string}): state is FetchError {
   return state.tag === 'error';
+}
+
+export function mapErrorToState<T>(): OperatorFunction<T, T|FetchError> {
+  return catchError(e => of(errorState(e)));
 }

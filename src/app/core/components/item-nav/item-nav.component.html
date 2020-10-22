@@ -1,5 +1,5 @@
-<ng-container [ngSwitch]="data">
-  <div class="loading" *ngSwitchCase="'loading'">
+<ng-container [ngSwitch]="state.tag">
+  <div *ngSwitchCase="'fetching'" class="loading">
     <p-progressSpinner [style]="{width: '3.3333rem', height: '3.3333rem'}"></p-progressSpinner>
   </div>
 
@@ -7,10 +7,10 @@
 
   <ng-container *ngSwitchDefault> <!-- else: 'items' contains data, of type "MenuItems" -->
     <alg-item-nav-tree
-      [items]="$any(data).elements"
-      [parent]="$any(data).parent"
-      [pathToItems]="$any(data).pathToElements"
-      [selectedItem]="$any(data).selectedElement"
+      [items]="$any(state).data.elements"
+      [parent]="$any(state).data.parent"
+      [pathToItems]="$any(state).data.pathToElements"
+      [selectedItem]="$any(state).data.selectedElement"
     ></alg-item-nav-tree>
   </ng-container>
 
