@@ -1,4 +1,4 @@
-import { of, Operator, OperatorFunction } from 'rxjs';
+import { of, OperatorFunction } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 export interface Ready<T> { readonly tag: 'ready', readonly data: T }
