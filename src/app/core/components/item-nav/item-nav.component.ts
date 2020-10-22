@@ -42,7 +42,7 @@ export class ItemNavComponent implements OnInit, OnDestroy {
       const parentId = item.itemPath[item.itemPath.length-1];
       if (item.parentAttemptId) dataFetcher = this.itemNavService.getNavData(parentId, item.parentAttemptId);
       else if (item.attemptId) dataFetcher = this.itemNavService.getNavDataFromChildAttempt(parentId, item.attemptId);
-      else return throwError(new Error('Requires either the parent or child attempt to load nav'));
+      else return of(errorState(new Error('Requires either the parent or child attempt to load nav')));
     } else {
       dataFetcher = this.itemNavService.getRoot(this.type);
     }
@@ -59,9 +59,9 @@ export class ItemNavComponent implements OnInit, OnDestroy {
 
   loadChildrenIfNeeded(data: ItemNavMenuData): Observable<State> {
     const selected = data.selectedNavMenuItem();
-    if (!selected) return throwError(new Error('Cannot find selected element (or no selection) (unexpected)'));
+    if (!selected) return of(errorState(new Error('Cannot find selected element (or no selection) (unexpected)')));
     if (!selected.hasChildren) return EMPTY; // if no children, no need to fetch children
-    if (!selected.attemptId) return throwError(new Error('Cannot fetch children without attempt (unexpected)'));
+    if (!selected.attemptId) return of(errorState(new Error('Cannot fetch children without attempt (unexpected)')));
 
     // We do not check if children were already known. So we might re-load again the same children, which is intended.
     return this.itemNavService.getNavData(selected.id, selected.attemptId).pipe(
