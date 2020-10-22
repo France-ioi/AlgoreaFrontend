@@ -132,9 +132,8 @@ export class ItemNavComponent implements OnInit, OnDestroy {
 
         // we are only interested in items
         map(content => (content !== null && isItemInfo(content) ? content.data : null)),
-        distinctUntilChanged((v1, v2) => v1 === null && v2 === null || ( v1 !== null && v2 !== null && v1.nav.itemId === v2.nav.itemId)),
-
-        // switchMap may cancel ongoing network calls if item is changed while the request is not over. That's what we want!
+        // Only propagate distinct items (identified by id). Also prevent multiple null values.
+        distinctUntilChanged((v1, v2) => (v1 === null && v2 === null) || ( v1 !== null && v2 !== null && v1.nav.itemId === v2.nav.itemId)),
         switchMap((item):Observable<NavMenuDataState> => {
 
           // CASE 0: the current content is not an item and the menu has already items displayed -> do nothing
