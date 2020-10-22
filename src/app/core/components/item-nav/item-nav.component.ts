@@ -58,18 +58,14 @@ export class ItemNavComponent implements OnInit, OnDestroy {
   }
 
   loadChildrenIfNeeded(data: ItemNavMenuData): Observable<State> {
-    const selectedItem = data.selectedElement;
-    if (!selectedItem) return EMPTY; // if nothing selected, no need to load more (this function should not be called in this case)
-
-    // the selected item should be one of the items at the first level
-    const itemData = data.elements.find(item => item.id === selectedItem.itemId);
-    if (!itemData) return throwError(new Error('Cannot find the item (unexpected)'));
-    if (!itemData.hasChildren) return EMPTY; // if no children, no need to fetch children
-    if (!selectedItem.attemptId) return throwError(new Error('Cannot fetch children without attempt (unexpected'));
+    const selected = data.selectedNavMenuItem();
+    if (!selected) return throwError(new Error('Cannot find selected element (or no selection) (unexpected)'));
+    if (!selected.hasChildren) return EMPTY; // if no children, no need to fetch children
+    if (!selected.attemptId) return throwError(new Error('Cannot fetch children without attempt (unexpected)'));
 
     // We do not check if children were already known. So we might re-load again the same children, which is intended.
-    return this.itemNavService.getNavData(itemData.id, selectedItem.attemptId).pipe(
-      map(nav => readyState(data.withUpdatedElement(itemData.id, {...nav.parent, children: nav.items }))),
+    return this.itemNavService.getNavData(selected.id, selected.attemptId).pipe(
+      map(nav => readyState(data.withUpdatedElement(selected.id, {...nav.parent, children: nav.items }))),
       mapErrorToState()
     );
   }

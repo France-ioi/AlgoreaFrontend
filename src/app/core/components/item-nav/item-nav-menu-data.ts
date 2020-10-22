@@ -53,4 +53,8 @@ export class ItemNavMenuData {
     return this.elements.some(e => e.children && e.children.some(c => c.id === id));
   }
 
+  selectedNavMenuItem(): NavMenuItem|undefined {
+    return this.elements.find(e => e.id === this.selectedElement?.itemId);
+  }
+
 }
