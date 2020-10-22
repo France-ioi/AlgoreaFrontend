@@ -16,7 +16,7 @@ type State = Ready<ItemNavMenuData>|Fetching|FetchError;
 })
 export class ItemNavComponent implements OnInit, OnDestroy {
 
-  @Input() type: 'activity'|'skill';
+  @Input() type: 'activity'|'skill' = 'activity';
   state: State = fetchingState();
 
   private subscriptions: Subscription[] = [];
