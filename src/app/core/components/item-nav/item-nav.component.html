@@ -6,12 +6,7 @@
   <p *ngSwitchCase="'error'" class="error">Unable to load the item list</p>
 
   <ng-container *ngSwitchDefault> <!-- else: 'items' contains data, of type "MenuItems" -->
-    <alg-item-nav-tree
-      [items]="$any(state).data.elements"
-      [parent]="$any(state).data.parent"
-      [pathToItems]="$any(state).data.pathToElements"
-      [selectedItem]="$any(state).data.selectedElement"
-    ></alg-item-nav-tree>
+    <alg-item-nav-tree [data]="$any(state).data"></alg-item-nav-tree>
   </ng-container>
 
 </ng-container>

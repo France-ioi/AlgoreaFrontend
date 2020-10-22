@@ -4,7 +4,7 @@ import { CurrentContentService, isItemInfo } from 'src/app/shared/services/curre
 import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { of, Observable, merge, EMPTY, Subscription } from 'rxjs';
 import { NavItem } from 'src/app/shared/services/nav-types';
-import { ItemNavMenuData } from './item-nav-menu-data';
+import { ItemNavMenuData } from '../../common/item-nav-menu-data';
 import { Ready, Fetching, FetchError, fetchingState, readyState, mapErrorToState, isReady, errorState } from 'src/app/shared/helpers/state';
 
 type State = Ready<ItemNavMenuData>|Fetching|FetchError;

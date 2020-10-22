@@ -1,5 +1,5 @@
 import { NavItem } from 'src/app/shared/services/nav-types';
-import { NavMenuItem } from '../../http-services/item-navigation.service';
+import { NavMenuItem } from '../http-services/item-navigation.service';
 
 type Id = string;
 
