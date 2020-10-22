@@ -18,6 +18,18 @@ function navMenuDataWith(items: NavMenuRootItem, path: string[], selectedItem?: 
 function navMenuDataWithSelection(items: NavMenuData, selectedItem?: NavItem): NavMenuData {
   return Object.assign(items, { selectedItem: selectedItem });
 }
+interface ItemResultInfo { attemptId: string, bestScore: number, currentScore: number, validated: boolean }
+function navMenuDataWithUpdatedNode(menuData: NavMenuData, item: NavItem, result: ItemResultInfo): NavMenuData {
+  const currentItemIdx = menuData.items.findIndex(i => i.id === item.itemId);
+  if (currentItemIdx === -1) return menuData; // unexpected
+  const newItems = [...menuData.items];
+  newItems[currentItemIdx] = {
+    ...menuData.items[currentItemIdx],
+    attemptId: result.attemptId,
+    score: { best: result.bestScore, current: result.currentScore, validated: result.validated }
+  };
+  return { ...menuData, items: newItems};
+}
 
 @Component({
   selector: 'alg-item-nav',
@@ -29,7 +41,7 @@ export class ItemNavComponent implements OnInit, OnDestroy {
   data: NavMenuDataState = 'init';
   rootItemPath: string[] = [];
 
-  private subscription: Subscription;
+  private subscriptions: Subscription[] = [];
 
   constructor(
     private itemNavService: ItemNavigationService,
@@ -113,45 +125,60 @@ export class ItemNavComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    this.subscription = this.currentContent.currentContent$.pipe(
+    this.subscriptions.push(
 
-      // we are only interested in items
-      map(content => (content !== null && isItemInfo(content) ? content.data : null)),
-      distinctUntilChanged(), // mainly to avoid sending multiple null
+      // This first subscription only follow change in the current item id and use switch map to cancel previous requests
+      this.currentContent.currentContent$.pipe(
 
-      // switchMap may cancel ongoing network calls if item is changed while the request is not over. That's what we want!
-      switchMap((item):Observable<NavMenuDataState> => {
+        // we are only interested in items
+        map(content => (content !== null && isItemInfo(content) ? content.data : null)),
+        // Only propagate distinct items (identified by id). Also prevent multiple null values.
+        distinctUntilChanged((v1, v2) => (v1 === null && v2 === null) || ( v1 !== null && v2 !== null && v1.nav.itemId === v2.nav.itemId)),
+        switchMap((item):Observable<NavMenuDataState> => {
 
-        // CASE 0: the current content is not an item and the menu has already items displayed -> do nothing
-        if (item === null && this.isLoaded()) return EMPTY;
+          // CASE 0: the current content is not an item and the menu has already items displayed -> do nothing
+          if (item === null && this.isLoaded()) return EMPTY;
 
-        // CASE 1: the content is not an item and the menu has not already item displayed -> load item root
-        if (item === null) {
-          return this.loadRootNav();
+          // CASE 1: the content is not an item and the menu has not already item displayed -> load item root
+          if (item === null) {
+            return this.loadRootNav();
+          }
+
+          // CASE 2: the content is among the displayed items at the root of the tree -> select the right one (might load children)
+          if (this.hasItemAmongTreeRoots(item.nav)) {
+            const data = navMenuDataWithSelection(this.data as NavMenuData, item.nav);
+            return merge(of(data), this.loadChildrenIfNeeded(data));
+          }
+
+          // CASE 3: the content is a child of one item at the root of the tree -> shift the tree and select it (might load children)
+          if (this.hasItemAmongKnownTreeChildren(item.nav)) {
+            return this.treeShiftedToChild(item.nav);
+          }
+
+          // CASE 4: the content is an item not in case 2 or 3 -> load the tree and select the right one
+          return this.loadNewNav(item.nav);
+        })
+      ).subscribe({
+        next: change => this.data = change,
+        error: _e => this.data = 'error'
+      }),
+
+      // If the new current item is already the selected one, just update its data (do not cancel ongoing requests)
+      this.currentContent.currentContent$.pipe(
+        map(content => (content !== null && isItemInfo(content) ? content.data : null)),
+      ).subscribe(item => {
+        if (item !== null && this.isLoaded() && (this.data as NavMenuData).selectedItem?.parentAttemptId === item.nav.itemId) {
+          // only update in case 'result' (the score) is given
+          if (item.result) this.data = navMenuDataWithUpdatedNode(this.data as NavMenuData, item.nav, item.result);
         }
-
-        // CASE 2: the content is among the displayed items at the root of the tree -> select the right one (might load children)
-        if (this.hasItemAmongTreeRoots(item)) {
-          const data = navMenuDataWithSelection(this.data as NavMenuData, item);
-          return merge(of(data), this.loadChildrenIfNeeded(data));
-        }
-
-        // CASE 3: the content is a child of one of the items at the root of the tree -> shift the tree and select it (might load children)
-        if (this.hasItemAmongKnownTreeChildren(item)) {
-          return this.treeShiftedToChild(item);
-        }
-
-        // CASE 4: the content is an item not in case 2 or 3 -> load the tree and select the right one
-        return this.loadNewNav(item);
       })
-    ).subscribe({
-      next: change => this.data = change,
-      error: _e => this.data = 'error'
-    });
+    );
+
+
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    this.subscriptions.forEach(s => s.unsubscribe());
   }
 
   /*** Helper functions ***/
@@ -161,6 +188,12 @@ export class ItemNavComponent implements OnInit, OnDestroy {
    */
   isLoaded() {
     return typeof this.data !== 'string';
+  }
+
+  isSelectedItem(item: NavItem): boolean {
+    if (!this.isLoaded()) return false;
+    const menuItems = this.data as NavMenuData;
+    return menuItems.selectedItem?.itemId === item.itemId;
   }
 
   hasItemAmongTreeRoots(item: NavItem): boolean {
