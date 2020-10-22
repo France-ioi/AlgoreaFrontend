@@ -61,6 +61,7 @@ export class ItemEditComponent implements OnDestroy {
     this.updateItemStringService.updateItem(
       this.item.id,
       this.itemForm.value
+      // Fixme: Handle language_tag
     ).subscribe();
   }
 
