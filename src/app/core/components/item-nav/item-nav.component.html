@@ -7,10 +7,10 @@
 
   <ng-container *ngSwitchDefault> <!-- else: 'items' contains data, of type "MenuItems" -->
     <alg-item-nav-tree
-      [items]="$any(data).items"
+      [items]="$any(data).elements"
       [parent]="$any(data).parent"
-      [pathToItems]="$any(data).pathToItems"
-      [selectedItem]="$any(data).selectedItem"
+      [pathToItems]="$any(data).pathToElements"
+      [selectedItem]="$any(data).selectedElement"
     ></alg-item-nav-tree>
   </ng-container>
 
