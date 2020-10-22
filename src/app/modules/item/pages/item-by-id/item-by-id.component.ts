@@ -5,7 +5,7 @@ import { filter, map } from 'rxjs/operators';
 import { FetchError, Fetching, isReady, Ready } from 'src/app/shared/helpers/state';
 import { CurrentContentService, EditAction, isItemInfo } from 'src/app/shared/services/current-content.service';
 import { isPathGiven, itemDetailsRoute, itemFromDetailParams } from 'src/app/shared/services/nav-types';
-import { ItemDataSource, ItemData } from '../../services/item-datasource.service';
+import { ItemData, ItemDataSource } from '../../services/item-datasource.service';
 
 const ItemBreadcrumbCat = 'Items';
 
@@ -16,7 +16,7 @@ const ItemBreadcrumbCat = 'Items';
   selector: 'alg-item-by-id',
   templateUrl: './item-by-id.component.html',
   styleUrls: ['./item-by-id.component.scss'],
-  providers: [ ItemDataSource ]
+  providers: [ItemDataSource]
 })
 export class ItemByIdComponent implements OnDestroy {
 
@@ -36,7 +36,7 @@ export class ItemByIdComponent implements OnDestroy {
       currentContent.current.next({
         type: 'item',
         data: navItem,
-        breadcrumbs: { category: ItemBreadcrumbCat, path: [], currentPageIdx: -1}
+        breadcrumbs: {category: ItemBreadcrumbCat, path: [], currentPageIdx: -1}
       });
       if (!isPathGiven(params)) {
         // TODO: handle no path given
@@ -52,7 +52,7 @@ export class ItemByIdComponent implements OnDestroy {
     this.subscriptions.push(
       // on state change, update current content page info (for breadcrumb)
       this.itemDataSource.state$.pipe(
-        filter<Ready<ItemData>|Fetching|FetchError,Ready<ItemData>>(isReady),
+        filter<Ready<ItemData> | Fetching | FetchError, Ready<ItemData>>(isReady),
         map(state => ({
           type: 'item',
           breadcrumbs: {
@@ -63,7 +63,7 @@ export class ItemByIdComponent implements OnDestroy {
               navigateTo: itemDetailsRoute({
                 itemId: el.itemId,
                 attemptId: el.attemptId,
-                itemPath: state.data.breadcrumbs.slice(0,idx).map(it => it.itemId),
+                itemPath: state.data.breadcrumbs.slice(0, idx).map(it => it.itemId),
               }),
             })),
             currentPageIdx: state.data.breadcrumbs.length - 1,
@@ -79,6 +79,16 @@ export class ItemByIdComponent implements OnDestroy {
         const currentInfo = this.currentContent.current.value;
         if (isItemInfo(currentInfo)) {
           void this.router.navigate(itemDetailsRoute(currentInfo.data, action === EditAction.StartEditing));
+        }
+      }),
+
+      this.currentContent.editAction$.pipe(
+        filter(action => action == EditAction.Save)
+      ).subscribe(_action => {
+        // Fixme: Reload the item data
+        const currentInfo = this.currentContent.current.value;
+        if (isItemInfo(currentInfo)) {
+          void this.router.navigate(itemDetailsRoute(currentInfo.data));
         }
       })
     );
