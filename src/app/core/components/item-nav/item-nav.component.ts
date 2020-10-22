@@ -105,7 +105,7 @@ export class ItemNavComponent implements OnInit, OnDestroy {
             return this.loadRootNav();
           }
 
-          // CASE: the content is an item not in case 2 or 3 -> load the tree and select the right one
+          // CASE: the content is an item which is not current display -> load the tree and select the right one
           return this.loadNewNav(item.nav);
         })
       ).subscribe({
