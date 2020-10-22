@@ -121,7 +121,7 @@ export class ItemNavComponent implements OnInit, OnDestroy {
           if (!isReady(this.state) || this.state.data.selectedElement?.itemId !== item.nav.itemId) return EMPTY; // and same item id
           return of(this.state.data.withUpdatedElement(item.nav.itemId, {
             attemptId: item.result.attemptId,
-            score: { best:  item.result.bestScore, current:  item.result.currentScore, validated: item.result.validated }
+            score: { best: item.result.bestScore, current: item.result.currentScore, validated: item.result.validated }
           }));
         }),
       ).subscribe(newMenuData => this.state = readyState(newMenuData)),
