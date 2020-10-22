@@ -11,7 +11,7 @@ import { ItemDataSource } from '../../services/item-datasource.service';
 export class ItemDetailsComponent implements OnDestroy {
 
   itemLoadingstate$ = this.itemDataSource.state$;
-  item$ = this.itemDataSource.item$; // as template is not able to infer properly the type
+  itemData$ = this.itemDataSource.itemData$; // as template is not able to infer properly the type
 
   subscription: Subscription;
 

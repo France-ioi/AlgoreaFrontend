@@ -1,8 +1,8 @@
-<div class="task-header-container">
+<div class="task-header-container" *ngIf="itemData">
   <div class="task-header">
-    <div class="task-title" *ngIf="item">
-      <p>{{item.string.title}}</p>
-      <span *ngIf="item.string.subtitle">{{item.string.subtitle}}</span>
+    <div class="task-title">
+      <p>{{itemData.item.string.title}}</p>
+      <span *ngIf="itemData.item.string.subtitle">{{itemData.item.string.subtitle}}</span>
     </div>
   </div>
 </div>

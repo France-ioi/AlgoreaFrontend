@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Item } from '../../http-services/get-item-by-id.service';
+import { ItemData } from '../../services/item-datasource.service';
 
 @Component({
   selector: 'alg-item-header',
@@ -7,5 +7,5 @@ import { Item } from '../../http-services/get-item-by-id.service';
   styleUrls: [ './item-header.component.scss' ]
 })
 export class ItemHeaderComponent {
-  @Input() item?: Item;
+  @Input() itemData?: ItemData;
 }
