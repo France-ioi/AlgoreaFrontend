@@ -7,7 +7,7 @@ import { bestAttemptFromResults } from 'src/app/shared/helpers/attempts';
 import { Router } from '@angular/router';
 import { itemDetailsRoute } from 'src/app/shared/services/nav-types';
 
-interface ItemChildAdditional {
+interface ItemChildAdditions {
   isLocked: boolean,
   result?: {
     validated: boolean,
@@ -24,7 +24,7 @@ export class ChapterChildrenComponent implements OnChanges, OnDestroy {
   @Input() itemData: ItemData;
 
   state: 'loading' | 'ready' | 'error' = 'loading';
-  children: (ItemChild&ItemChildAdditional)[] = [];
+  children: (ItemChild&ItemChildAdditions)[] = [];
 
   case: 'validated' | 'empty' | 'normal' = 'normal';
 
@@ -39,7 +39,7 @@ export class ChapterChildrenComponent implements OnChanges, OnDestroy {
     this.reloadData();
   }
 
-  click(child: ItemChild&ItemChildAdditional): void {
+  click(child: ItemChild&ItemChildAdditions): void {
     if (child.isLocked) return;
     void this.router.navigate(itemDetailsRoute({
       itemId: child.id,
@@ -58,7 +58,8 @@ export class ChapterChildrenComponent implements OnChanges, OnDestroy {
           children => {
             this.children = children.map(child => {
               const res = bestAttemptFromResults(child.results);
-              return {...child,
+              return {
+                ...child,
                 isLocked: !canCurrentUserViewItemContent(child),
                 result: res === null ? undefined : {
                   validated: res.validated,
