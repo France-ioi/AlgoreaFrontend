@@ -81,16 +81,6 @@ export class ItemByIdComponent implements OnDestroy {
           void this.router.navigate(itemDetailsRoute(currentInfo.data, action === EditAction.StartEditing));
         }
       }),
-
-      this.currentContent.editAction$.pipe(
-        filter(action => action == EditAction.Save)
-      ).subscribe(_action => {
-        // Fixme: Reload the item data
-        const currentInfo = this.currentContent.current.value;
-        if (isItemInfo(currentInfo)) {
-          void this.router.navigate(itemDetailsRoute(currentInfo.data));
-        }
-      })
     );
   }
 
