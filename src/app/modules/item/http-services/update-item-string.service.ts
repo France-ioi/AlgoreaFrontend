@@ -17,6 +17,7 @@ export class UpdateItemStringService {
     changes: object,
     languageTag?: string
   ) {
+    // Fixme: Get languageTag properly
     const tag = languageTag || 'default';
     return this.http.put<ActionResponse<Object>>(
       `${environment.apiUrl}/items/${itemId}/strings/${tag}`,
