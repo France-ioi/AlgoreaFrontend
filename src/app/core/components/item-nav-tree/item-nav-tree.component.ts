@@ -4,8 +4,9 @@ import { NavMenuItem } from '../../http-services/item-navigation.service';
 import { ResultActionsService } from 'src/app/shared/http-services/result-actions.service';
 import { of, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { NavItem, itemDetailsRoute } from 'src/app/shared/services/nav-types';
+import { itemDetailsRoute } from 'src/app/shared/services/nav-types';
 import { Router } from '@angular/router';
+import { ItemNavMenuData } from '../../common/item-nav-menu-data';
 
 // ItemTreeNode is PrimeNG tree node with data forced to be an item
 interface ItemTreeNode extends TreeNode {
@@ -21,10 +22,7 @@ interface ItemTreeNode extends TreeNode {
   styleUrls: ['./item-nav-tree.component.scss']
 })
 export class ItemNavTreeComponent implements OnChanges {
-  @Input() parent?: NavMenuItem;
-  @Input() items: NavMenuItem[] = [];
-  @Input() pathToItems: string[] = [];
-  @Input() selectedItem?: NavItem;
+  @Input() data: ItemNavMenuData;
 
   nodes: ItemTreeNode[];
   selectedNode: ItemTreeNode|null; // used to keep track after request that the selected is still the expected one
@@ -34,20 +32,20 @@ export class ItemNavTreeComponent implements OnChanges {
     private resultActionsService: ResultActionsService,
   ) {}
 
-  mapItemToNodes(items: NavMenuItem[], pathToItems: string[], selectedItem?: NavItem): ItemTreeNode[] {
-    return items.map(i => {
-      const isSelected = !!(selectedItem && selectedItem.itemId === i.id);
+  mapItemToNodes(data: ItemNavMenuData): ItemTreeNode[] {
+    return data.elements.map(i => {
+      const isSelected = !!(data.selectedElement && data.selectedElement.itemId === i.id);
       const shouldShowChildren = i.hasChildren && isSelected;
       const isLoadingChildren = shouldShowChildren && !i.children; // are being loaded by the parent component
-      const pathToChildren = pathToItems.concat([i.id]);
+      const pathToChildren = data.pathToElements.concat([i.id]);
       return {
         label: i.title,
         data: i,
-        itemPath: pathToItems,
+        itemPath: data.pathToElements,
         type: i.hasChildren ? 'folder' : 'leaf',
         leaf: i.hasChildren,
         status: isLoadingChildren ? 'loading' : 'ready',
-        children: shouldShowChildren && i.children ? this.mapItemToNodes(i.children, pathToChildren, selectedItem) : undefined,
+        children: shouldShowChildren && i.children ? this.mapItemToNodes(new ItemNavMenuData(i.children, pathToChildren)) : undefined,
         expanded: !!(shouldShowChildren && i.children),
         checked: isSelected,
       };
@@ -55,7 +53,7 @@ export class ItemNavTreeComponent implements OnChanges {
   }
 
   ngOnChanges(_changes: SimpleChanges) {
-    this.nodes = this.mapItemToNodes(this.items, this.pathToItems, this.selectedItem);
+    this.nodes = this.mapItemToNodes(this.data);
   }
 
   navigateToNode(node: ItemTreeNode, attemptId?: string) {
@@ -69,11 +67,11 @@ export class ItemNavTreeComponent implements OnChanges {
   }
 
   navigateToParent() {
-    if (!this.parent || !this.parent.attemptId) return; // unexpected!
+    if (!this.data.parent || !this.data.parent.attemptId) return; // unexpected!
     void this.router.navigate(itemDetailsRoute({
-      itemId: this.parent.id,
-      itemPath: this.pathToItems.slice(0, -1),
-      attemptId: this.parent.attemptId,
+      itemId: this.data.parent.id,
+      itemPath: this.data.pathToElements.slice(0, -1),
+      attemptId: this.data.parent.attemptId,
     }));
   }
 
@@ -147,8 +145,8 @@ export class ItemNavTreeComponent implements OnChanges {
     if (node.parent) {
       const parent = node.parent as ItemTreeNode;
       return parent.data.attemptId || undefined /* unexpected */;
-    } else if (this.parent) {
-      return this.parent.attemptId || undefined /* unexpected */;
+    } else if (this.data.parent) {
+      return this.data.parent.attemptId || undefined /* unexpected */;
     }
     return undefined /* unexpected */;
   }
