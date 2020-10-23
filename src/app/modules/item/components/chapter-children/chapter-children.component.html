@@ -2,11 +2,11 @@
 
 <p *ngIf="state === 'error'">Error while loading the group managers</p>
 
-<ng-container *ngIf="state === 'ready'">
-  <p class="validation-text" *ngIf="case === 'normal'">
+<ng-container *ngIf="state !== 'loading' && state !== 'error'">
+  <p class="validation-text" *ngIf="state === 'ready-missing-validation'">
     To validate this chapter, solve at least all tasks with Validation type
   </p>
-  <p class="validation-text" *ngIf="case === 'empty'">
+  <p class="validation-text" *ngIf="state === 'empty'">
     This chapter has no content visible to you, so you can't validate it for now.
   </p>
 

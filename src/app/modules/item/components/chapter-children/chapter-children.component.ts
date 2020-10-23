@@ -23,10 +23,8 @@ interface ItemChildAdditions {
 export class ChapterChildrenComponent implements OnChanges, OnDestroy {
   @Input() itemData: ItemData;
 
-  state: 'loading' | 'ready' | 'error' = 'loading';
+  state: 'loading' | 'error' | 'empty' | 'ready' | 'ready-missing-validation' = 'loading';
   children: (ItemChild&ItemChildAdditions)[] = [];
-
-  case: 'validated' | 'empty' | 'normal' = 'normal';
 
   constructor(
     private getItemChildrenService: GetItemChildrenService,
@@ -68,13 +66,10 @@ export class ChapterChildrenComponent implements OnChanges, OnDestroy {
               };
             });
 
-            this.case = 'normal';
-            if (this.children.length === 0)
-              this.case = 'empty';
-            else if (this.children.filter(item => item.result && item.category === 'Validation' && !item.result.validated).length === 0)
-              this.case = 'validated';
-
-            this.state = 'ready';
+            if (this.children.length === 0) this.state = 'empty';
+            else if (this.itemData.currentResult?.validated ||
+              this.children.some(item => item.category === 'Validation' && item.result && !item.result.validated)) this.state = 'ready';
+            else this.state = 'ready-missing-validation';
           },
           _err => {
             this.state = 'error';
