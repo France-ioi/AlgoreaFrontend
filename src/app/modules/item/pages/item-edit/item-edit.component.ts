@@ -7,12 +7,16 @@ import { filter } from 'rxjs/operators';
 import { FetchError, Fetching, isReady, Ready } from '../../../../shared/helpers/state';
 import { UpdateItemStringService } from '../../http-services/update-item-string.service';
 import { Item } from '../../http-services/get-item-by-id.service';
+import { TOAST_LENGTH } from '../../../../shared/constants/global';
+import { MessageService } from 'primeng/api';
+import { ERROR_MESSAGE } from '../../../../shared/constants/api';
 
 
 @Component({
   selector: 'alg-item-edit',
   templateUrl: './item-edit.component.html',
-  styleUrls: ['./item-edit.component.scss']
+  styleUrls: ['./item-edit.component.scss'],
+  providers: [MessageService]
 })
 export class ItemEditComponent implements OnDestroy {
   item: Item;
@@ -28,7 +32,8 @@ export class ItemEditComponent implements OnDestroy {
     private currentContent: CurrentContentService,
     private itemDataSource: ItemDataSource,
     private formBuilder: FormBuilder,
-    private updateItemStringService: UpdateItemStringService
+    private updateItemStringService: UpdateItemStringService,
+    private messageService: MessageService
   ) {
     this.currentContent.editState.next('editing');
     this.getCurrentItem();
@@ -57,12 +62,36 @@ export class ItemEditComponent implements OnDestroy {
       .subscribe(_action => this.saveInput()));
   }
 
+  errorToast() :void {
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Error',
+      detail: ERROR_MESSAGE.fail,
+      life: TOAST_LENGTH,
+    });
+  }
+
+  successToast() : void {
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Success',
+      detail: 'Changes successfully saved',
+      life: TOAST_LENGTH,
+    });
+  }
+
   saveInput(): void {
     this.updateItemStringService.updateItem(
       this.item.id,
       this.itemForm.value
-      // Fixme: Handle language_tag
-    ).subscribe();
+    ).subscribe(
+      _status => {
+        this.successToast();
+        this.itemDataSource.refreshItem();
+        this.currentContent.editAction.next(EditAction.Cancel);
+      },
+      _err => this.errorToast()
+    );
   }
 
 }
