@@ -1,5 +1,4 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { bestAttemptFromResults } from 'src/app/shared/helpers/attempts';
 import { ItemData } from '../../services/item-datasource.service';
 
 @Component({

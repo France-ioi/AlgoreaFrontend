@@ -2,7 +2,7 @@
   <div class="task-header">
     <alg-score-ring
       *ngIf="itemData.currentResult"
-      [bestScore]="itemData.bestScore"
+      [bestScore]="itemData.item.best_score"
       [currentScore]="itemData.currentResult.score"
       [isValidated]="itemData.currentResult.validated"
       [diameter]="70"
