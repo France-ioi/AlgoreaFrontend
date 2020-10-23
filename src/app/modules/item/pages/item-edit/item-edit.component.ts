@@ -75,7 +75,7 @@ export class ItemEditComponent implements OnDestroy {
     this.messageService.add({
       severity: 'success',
       summary: 'Success',
-      detail: 'Changes successfully saved',
+      detail: 'Changes successfully saved.',
       life: TOAST_LENGTH,
     });
   }
