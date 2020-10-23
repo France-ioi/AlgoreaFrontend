@@ -45,7 +45,7 @@ export class GroupNavTreeComponent implements OnChanges {
       e.stopPropagation();
       e.preventDefault();
       document.activeElement?.querySelector<HTMLElement>(
-        '.ui-treenode-label .node-tree-item > .node-item-content > .node-label > .node-label-title'
+        '.p-treenode-label .node-tree-item > .node-item-content > .node-label > .node-label-title'
       )?.click();
     } else if (e.code === 'ArrowDown' || e.code === 'ArrowUp') {
       e.stopPropagation();

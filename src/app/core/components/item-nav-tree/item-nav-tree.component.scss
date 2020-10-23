@@ -41,7 +41,7 @@ $bk-secondary: #3B73B4;
   }
 }
 
-:host ::ng-deep .ui-tree {
+:host ::ng-deep .p-tree {
   width: 100%;
   background-color: $base-color !important;
   border: none;
@@ -49,76 +49,76 @@ $bk-secondary: #3B73B4;
   border-radius: 0;
 }
 
-:host ::ng-deep .ui-tree-container {
+:host ::ng-deep .p-tree-container {
   padding: 0 !important;
 }
 
-:host ::ng-deep .ui-tree-toggler {
+:host ::ng-deep .p-tree-toggler {
   display: none !important;
 }
 
-:host ::ng-deep .ui-chkbox {
+:host ::ng-deep .p-chkbox {
   display: none !important;
 }
 
-:host ::ng-deep .ui-treenode-label {
+:host ::ng-deep .p-treenode-label {
   width: 100%;
   color: #fff !important;
   padding: 0 !important;
 }
 
-:host ::ng-deep .ui-treenode {
+:host ::ng-deep .p-treenode {
   padding: 0 !important;
 }
 
-:host ::ng-deep .ui-treenode-content {
+:host ::ng-deep .p-treenode-content {
   border: none !important;
 }
 
 :host
   ::ng-deep
-  .ui-tree
-  .ui-tree-container
-  .ui-treenode
-  .ui-treenode-content:focus {
+  .p-tree
+  .p-tree-container
+  .p-treenode
+  .p-treenode-content:focus {
   outline: none;
   box-shadow: none;
 }
 
-:host ::ng-deep .ui-treenode-icon {
+:host ::ng-deep .p-treenode-icon {
   margin: 0 !important;
 }
 
-:host ::ng-deep .ui-treenode-children {
+:host ::ng-deep .p-treenode-children {
   padding-left: 3rem !important;
 }
 
-/* :host ::ng-deep p-treenode:last-child > .ui-treenode > .ui-treenode-children {
+/* :host ::ng-deep p-treenode:last-child > .p-treenode > .p-treenode-children {
   border-left: .1rem solid transparent;
 } */
 
-:host ::ng-deep .ui-treenode-children {
+:host ::ng-deep .p-treenode-children {
   border-left: .1rem solid #2e5e95;
 }
 
 :host
   ::ng-deep
-  .ui-tree-container
+  .p-tree-container
   > p-treenode
-  > .ui-treenode
-  > .ui-treenode-children {
+  > .p-treenode
+  > .p-treenode-children {
   border-left: .1rem solid transparent;
 }
 
 :host
   ::ng-deep
-  .ui-tree-container
+  .p-tree-container
   > p-treenode
-  > .ui-treenode
-  > .ui-treenode-children
+  > .p-treenode
+  > .p-treenode-children
   > p-treenode:last-child
-  > .ui-treenode
-  > .ui-treenode-content
+  > .p-treenode
+  > .p-treenode-content
   .node-tree-item
   .node-item-branch
   .bottom-branch {
@@ -128,8 +128,8 @@ $bk-secondary: #3B73B4;
 :host
   ::ng-deep
   p-treenode:last-child
-  > .ui-treenode
-  > .ui-treenode-content
+  > .p-treenode
+  > .p-treenode-content
   .node-tree-item
   .node-item-branch
   .bottom-branch {
@@ -140,15 +140,15 @@ $bk-secondary: #3B73B4;
 :host
   ::ng-deep
   p-treenode:first-child
-  > .ui-treenode
-  > .ui-treenode-content
+  > .p-treenode
+  > .p-treenode-content
   .node-tree-item
   .node-item-branch
   .top-branch {
   border-right: none;
 }
 
-:host ::ng-deep .ui-treenode-children .node-tree-item {
+:host ::ng-deep .p-treenode-children .node-tree-item {
   .node-item-branch {
     .top-branch {
       border-left: .1rem solid #2e5e95;
@@ -163,12 +163,12 @@ $bk-secondary: #3B73B4;
   }
 }
 
-:host ::ng-deep .ui-treenode-children .node-tree-item.folder.expanded .node-item-branch .bottom-branch {
+:host ::ng-deep .p-treenode-children .node-tree-item.folder.expanded .node-item-branch .bottom-branch {
   border-right: .1rem solid #2e5e95;
 }
 
 
-:host ::ng-deep .ui-treenode-content {
+:host ::ng-deep .p-treenode-content {
 
   padding-left: 0em !important;
 

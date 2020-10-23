@@ -116,13 +116,13 @@ export class ItemNavTreeComponent implements OnChanges {
       e.stopPropagation();
       e.preventDefault();
       document.activeElement
-        ?.querySelector<HTMLElement>('.ui-treenode-label .node-tree-item > .node-item-content > .node-label')
+        ?.querySelector<HTMLElement>('.p-treenode-label .node-tree-item > .node-item-content > .node-label')
         ?.click();
     } else if (e.code === 'ArrowDown' || e.code === 'ArrowUp') {
       e.stopPropagation();
       e.preventDefault();
       document.activeElement
-        ?.querySelector('.ui-treenode-label .node-tree-item > .node-item-content > .node-label')
+        ?.querySelector('.p-treenode-label .node-tree-item > .node-item-content > .node-label')
         ?.scrollIntoView({
           behavior: 'auto',
           block: 'center',

@@ -8,7 +8,7 @@
       [closable]="false">
     </alg-message>
 
-    <alg-button label="Invite" class="ui-button-rounded" (click)="onInviteClicked()" [disabled]="state !== 'ready'">
+    <alg-button label="Invite" class="p-button-rounded" (click)="onInviteClicked()" [disabled]="state !== 'ready'">
     </alg-button>
 
     <alg-message *ngFor="let message of messages" [type]="message.type" [detail]="message.detail"

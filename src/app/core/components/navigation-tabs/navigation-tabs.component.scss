@@ -161,7 +161,7 @@ $header-height: 0rem; //7.5rem; <- to be restored if search bar is re-added
         color: $base-text-color !important;
         position: relative;
       }
-      .ui-accordion-header {
+      .p-accordion-header {
         margin-bottom: 0;
 
         a {
@@ -172,7 +172,7 @@ $header-height: 0rem; //7.5rem; <- to be restored if search bar is re-added
             padding-bottom: 0;
           }
 
-          .ui-accordion-toggle-icon {
+          .p-accordion-toggle-icon {
             position: absolute;
             right: 1rem;
             top: 1.5rem;
@@ -187,11 +187,11 @@ $header-height: 0rem; //7.5rem; <- to be restored if search bar is re-added
           }
         }
 
-        &.ui-state-active {
+        &.p-state-active {
           @extend %trans-bk-accordion;
         }
 
-        .ui-accordion-header-text {
+        .p-accordion-header-text {
           text-transform: uppercase;
         }
 
@@ -201,9 +201,9 @@ $header-height: 0rem; //7.5rem; <- to be restored if search bar is re-added
         }
       }
 
-      .ui-accordion-content-wrapper {
+      .p-accordion-content-wrapper {
         border-bottom: .1rem solid $group-border-color;
-        .ui-accordion-content {
+        .p-accordion-content {
           background-color: transparent;
           border: .1rem solid transparent;
           padding: {

@@ -59,7 +59,7 @@
         display: flex;
         align-items: center;
 
-        .ui-progress-spinner {
+        .p-progress-spinner {
           width: 1.2rem;
           height: 1.2rem;
         }
@@ -88,17 +88,17 @@
   }
 }
 
-:host ::ng-deep .pending-request-container .ui-table .ui-table-summary {
+:host ::ng-deep .pending-request-container .p-table .p-table-summary {
   background-color: transparent;
 }
 
-:host ::ng-deep .pending-request-container .ui-table .ui-table-thead > tr {
+:host ::ng-deep .pending-request-container .p-table .p-table-thead > tr {
   .small-column {
     width: 13.3333rem;
   }
 }
 
-:host ::ng-deep .pending-request-container .ui-table .ui-table-tbody > tr {
+:host ::ng-deep .pending-request-container .p-table .p-table-tbody > tr {
   background-color: transparent;
   height: 13rem;
 
@@ -120,7 +120,7 @@
     background-color: transparent;
   }
 
-  &.ui-state-highlight {
+  &.p-state-highlight {
     background-color: $base-color;
 
     .grid-user-info-field .user-info {

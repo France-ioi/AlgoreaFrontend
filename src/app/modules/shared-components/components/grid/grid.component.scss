@@ -1,7 +1,7 @@
 @import "src/colors.scss";
 @import "src/geometry.scss";
 
-:host ::ng-deep .ui-table .ui-table-thead > tr > th {
+:host ::ng-deep .p-table .p-table-thead > tr > th {
   // position: -webkit-sticky;
   // position: sticky !important;
   // top: 5.8333rem;
@@ -9,7 +9,7 @@
 }
 
 @media screen and (max-width: 64em) {
-  :host ::ng-deep .ui-table .ui-table-thead > tr > th {
+  :host ::ng-deep .p-table .p-table-thead > tr > th {
     top: 8.3333rem;
   }
 }
@@ -18,14 +18,14 @@
   position: relative;
   display: block;
 
-  ::ng-deep .ui-table {
+  ::ng-deep .p-table {
     margin-bottom: 1rem;
     font-family: 'titillium', sans-serif;
 
-    .ui-chkbox {
+    .p-chkbox {
       width: 1.0833rem;
       height: 1.0833rem;
-      .ui-chkbox-box {
+      .p-chkbox-box {
         background-color: $dark-transparency-color;
         box-shadow: 0 .1rem #bbb inset;
         width: 1.0833rem;
@@ -37,11 +37,11 @@
           background-color: #d0d0d0;
         }
 
-        &.ui-state-active:not(.ui-state-disabled):hover {
+        &.p-state-active:not(.p-state-disabled):hover {
           background-color: #d0d0d0;
         }
 
-        .ui-chkbox-icon {
+        .p-chkbox-icon {
           overflow: visible;
           color: #505050;
           position: absolute;
@@ -52,7 +52,7 @@
       }
     }
 
-    .ui-table-thead > tr > th {
+    .p-table-thead > tr > th {
       padding: 0 1rem;
       text-align: left;
       border-top: none;
@@ -83,11 +83,11 @@
 
     }
 
-    .ui-table-tbody > tr:nth-child(even) {
+    .p-table-tbody > tr:nth-child(even) {
       background-color: #fff;
     }
 
-    .ui-table-tbody > tr > td {
+    .p-table-tbody > tr > td {
       border: none;
       border-bottom: 0.1rem solid #f0f0f0;
       color: $base-text-color;
@@ -100,15 +100,15 @@
       padding : 0 1rem;
     }
 
-    .ui-table-tbody > tr:last-child > td {
+    .p-table-tbody > tr:last-child > td {
       border-bottom: none;
     }
 
-    .ui-table-tbody > tr.ui-state-highlight > td {
+    .p-table-tbody > tr.p-state-highlight > td {
       color: #fff;
     }
 
-    .ui-table-summary {
+    .p-table-summary {
       border: none;
       background-color: white;
       height: 5rem;
@@ -248,7 +248,7 @@
   }
 }
 
-:host.compact-mode ::ng-deep .ui-table-frozen-view tr {
+:host.compact-mode ::ng-deep .p-table-frozen-view tr {
   height: 3.4167rem;
 
   &:first-child {
@@ -256,6 +256,6 @@
   }
 }
 
-:host ::ng-deep .ui-table-frozen-view tr {
+:host ::ng-deep .p-table-frozen-view tr {
   height: 6rem;
 }
