@@ -10,8 +10,8 @@ import { itemDetailsRoute } from 'src/app/shared/services/nav-types';
 interface ItemChildAdditional {
   isLocked: boolean,
   result?: {
-    is_validated: boolean,
-    current_score: number,
+    validated: boolean,
+    score: number,
   },
 }
 
@@ -61,8 +61,8 @@ export class ChapterChildrenComponent implements OnChanges, OnDestroy {
               return {...child,
                 isLocked: !canCurrentUserViewItemContent(child),
                 result: res === null ? undefined : {
-                  is_validated: res.validated,
-                  current_score: res.score,
+                  validated: res.validated,
+                  score: res.score,
                 },
               };
             });
@@ -70,7 +70,7 @@ export class ChapterChildrenComponent implements OnChanges, OnDestroy {
             this.case = 'normal';
             if (this.children.length === 0)
               this.case = 'empty';
-            else if (this.children.filter(item => item.result && item.category === 'Validation' && !item.result.is_validated).length === 0)
+            else if (this.children.filter(item => item.result && item.category === 'Validation' && !item.result.validated).length === 0)
               this.case = 'validated';
 
             this.state = 'ready';
