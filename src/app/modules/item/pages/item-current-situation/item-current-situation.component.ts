@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'alg-item-current-situation',
@@ -15,10 +14,7 @@ export class ItemCurrentSituationComponent implements OnInit {
 
   viewSelected = 1;
 
-  constructor(
-    private activatedRoute: ActivatedRoute,
-    private router: Router
-  ) {}
+  constructor() {}
 
   onViewChanged(selectedIdx: number) {
     // TODO :: Implement routing from alg-selection
