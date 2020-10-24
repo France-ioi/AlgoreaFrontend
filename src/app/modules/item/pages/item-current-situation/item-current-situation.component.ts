@@ -22,7 +22,7 @@ export class ItemCurrentSituationComponent implements OnInit {
 
   onViewChanged(selectedIdx: number) {
     // TODO :: Implement routing from alg-selection
-    viewSelected = selectedIdx;
+    this.viewSelected = selectedIdx;
   }
 
   ngOnInit(): void {
