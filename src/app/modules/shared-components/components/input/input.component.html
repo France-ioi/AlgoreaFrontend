@@ -12,3 +12,7 @@
     <i class="fa fa-{{buttonIcon}}"></i>
   </span>
 </div>
+
+<ng-container *ngIf="parentForm.get(name) as input">
+  <ng-container *ngIf="input && input.invalid" [ngTemplateOutlet]="errorTemplate"></ng-container>
+</ng-container>
