@@ -88,17 +88,17 @@
   }
 }
 
-:host ::ng-deep .pending-request-container .p-table .p-table-summary {
+:host ::ng-deep .pending-request-container .p-datatable .p-datatable-summary {
   background-color: transparent;
 }
 
-:host ::ng-deep .pending-request-container .p-table .p-table-thead > tr {
+:host ::ng-deep .pending-request-container .p-datatable .p-datatable-thead > tr {
   .small-column {
     width: 13.3333rem;
   }
 }
 
-:host ::ng-deep .pending-request-container .p-table .p-table-tbody > tr {
+:host ::ng-deep .pending-request-container .p-datatable .p-datatable-tbody > tr {
   background-color: transparent;
   height: 13rem;
 
