@@ -81,6 +81,8 @@ export class ItemEditComponent implements OnDestroy {
   }
 
   saveInput() {
+    if (this.itemForm.invalid) return;
+
     this.updateItemStringService.updateItem(
       this.item.id,
       this.itemForm.value
