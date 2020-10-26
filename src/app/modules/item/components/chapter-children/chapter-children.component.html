@@ -11,7 +11,7 @@
     This chapter has no content visible to you, so you can't validate it for now.
   </p>
 
-  <ul class="data-list-container activity">
+  <ul class="data-list-container activity" *ngIf="state !== 'empty'">
     <li *ngFor="let item of children; index as ln">
       <span class="activity-progress">
         <alg-score-ring
