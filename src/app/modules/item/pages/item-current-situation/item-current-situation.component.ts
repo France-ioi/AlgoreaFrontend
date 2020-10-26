@@ -8,9 +8,9 @@ import { Component, OnInit } from '@angular/core';
 export class ItemCurrentSituationComponent implements OnInit {
 
   viewItems = [
-    {label: 'Chapter view', route: './chapter'},
-    {label: 'Log view', route: './'}
-    ];
+    { label: 'Chapter view', route: './chapter' },
+    { label: 'Log view', route: './' }
+  ];
 
   viewSelected = 1;
 
@@ -21,7 +21,7 @@ export class ItemCurrentSituationComponent implements OnInit {
     this.viewSelected = selectedIdx;
   }
 
-  ngOnInit(): void {
+  ngOnInit() {
     // TODO :: Implement routing from alg-selection
   }
 }

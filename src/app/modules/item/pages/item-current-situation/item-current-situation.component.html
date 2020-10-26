@@ -1,3 +1,4 @@
-<h1>User situation</h1>
-<alg-selection (change)="onViewChanged($event)" [items]="viewItems" [selected]="viewSelected"></alg-selection>
-<router-outlet></router-outlet>
+<alg-section icon="fa fa-list" label="User situation">
+  <div class="selection-center"><alg-selection (change)="onViewChanged($event)" [items]="viewItems" [selected]="viewSelected"></alg-selection></div>
+  <router-outlet></router-outlet>
+</alg-section>
