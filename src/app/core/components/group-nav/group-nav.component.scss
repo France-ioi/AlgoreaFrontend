@@ -91,6 +91,11 @@ $group-border-color: #e8eaeb;
       color: $base-text-color !important;
       position: relative;
     }
+
+    .p-accordion-tab {
+      margin-bottom: 0px !important;
+    }
+
     .p-accordion-header {
       margin-bottom: 0;
 
