@@ -37,6 +37,6 @@
   </svg>
   <span class="ring-icon" [ngStyle]="{color: icon ? iconFill : textFill}">
     <i *ngIf="icon" class="fa fa-{{icon}}" [ngStyle]="{'font-size.rem': fontSize}"></i>
-    <ng-container *ngIf="!icon">{{currentScore}}</ng-container>
+    <ng-container *ngIf="!icon">{{currentScore | number:'1.0-0'}}</ng-container>
   </span>
 </div>
