@@ -19,7 +19,7 @@ import { ERROR_MESSAGE } from '../../../../shared/constants/api';
   providers: [MessageService]
 })
 export class ItemEditComponent implements OnDestroy {
-  item: Item;
+  itemId : string;
   itemForm = this.formBuilder.group({
     // eslint-disable-next-line @typescript-eslint/unbound-method
     title: ['', [Validators.required, Validators.minLength(3),]],
@@ -79,7 +79,7 @@ export class ItemEditComponent implements OnDestroy {
     if (this.itemForm.invalid) return;
 
     this.updateItemStringService.updateItem(
-      this.item.id,
+      this.itemId,
       this.itemForm.value
     ).subscribe(
       _status => {
