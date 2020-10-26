@@ -17,7 +17,7 @@ $group-border-color: #e8eaeb;
   }
 }
 
-.group-content {
+:host ::ng-deep .group-content {
   color: $base-text-color;
   -webkit-user-select: none; /* webkit (safari, chrome) browsers */
   -moz-user-select: none; /* mozilla browsers */
@@ -131,8 +131,9 @@ $group-border-color: #e8eaeb;
       }
     }
 
-    .p-accordion-content-wrapper {
+    .p-toggleable-content {
       border-bottom: .1rem solid $group-border-color;
+
       .p-accordion-content {
         background-color: transparent;
         border: .1rem solid transparent;
