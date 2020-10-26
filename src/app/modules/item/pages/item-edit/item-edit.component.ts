@@ -83,6 +83,7 @@ export class ItemEditComponent implements OnDestroy {
       this.itemForm.value
     ).subscribe(
       _status => {
+        this.itemForm.disable();
         this.successToast();
         this.itemDataSource.refreshItem();
         this.currentContent.editAction.next(EditAction.Cancel);
