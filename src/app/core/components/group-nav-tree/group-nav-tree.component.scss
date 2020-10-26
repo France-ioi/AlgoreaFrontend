@@ -82,6 +82,8 @@
 
 :host ::ng-deep .p-treenode-content {
 
+  padding: 0em !important;
+
   &:focus {
     .node-tree-item .node-item-content {
       border-radius: 1.5rem;
