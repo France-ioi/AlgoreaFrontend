@@ -5,7 +5,7 @@ import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { ItemPermissionsInfo } from '../helpers/item-permissions';
 
-interface RawItemChild extends ItemPermissionsInfo{
+interface RawItemChild extends ItemPermissionsInfo {
   id: string,
   best_score: number,
   string: {
@@ -21,7 +21,7 @@ interface RawItemChild extends ItemPermissionsInfo{
   }[],
 }
 
-export interface ItemChild extends ItemPermissionsInfo{
+export interface ItemChild extends ItemPermissionsInfo {
   id: string,
   bestScore: number,
   string: {
