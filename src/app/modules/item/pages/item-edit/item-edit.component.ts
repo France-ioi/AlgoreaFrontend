@@ -36,30 +36,25 @@ export class ItemEditComponent implements OnDestroy {
     private messageService: MessageService
   ) {
     this.currentContent.editState.next('editing');
-    this.getCurrentItem();
-    this.onSubmit();
+
+    this.subscriptions.push(this.itemLoadingState$.pipe(
+      filter<Ready<ItemData> | Fetching | FetchError, Ready<ItemData>>(isReady),
+    ).subscribe(state => {
+      const item = state.data.item;
+      this.itemId = item.id;
+      this.itemForm.patchValue({
+        title: item.string.title
+      });
+    }));
+
+    this.subscriptions.push(this.currentContent.editAction$
+      .pipe(filter(action => action === EditAction.Save))
+      .subscribe(_action => this.saveInput()));
   }
 
   ngOnDestroy() {
     this.currentContent.editState.next('non-editable');
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
-  }
-
-  getCurrentItem() {
-    this.subscriptions.push(this.itemLoadingState$.pipe(
-      filter<Ready<ItemData> | Fetching | FetchError, Ready<ItemData>>(isReady),
-    ).subscribe(state => {
-      this.item = state.data.item;
-      this.itemForm.patchValue({
-        title: this.item.string.title
-      });
-    }));
-  }
-
-  onSubmit() {
-    this.subscriptions.push(this.currentContent.editAction$
-      .pipe(filter(action => action === EditAction.Save))
-      .subscribe(_action => this.saveInput()));
   }
 
   errorToast() {
