@@ -6,9 +6,12 @@
 
   <div *ngIf="state.tag === 'ready'" style="margin: 1rem 0 0.5rem 0">
     <form [formGroup]="itemForm">
-      <alg-input [parentForm]="itemForm" name="title" size="large" [isDark]='false'></alg-input>
+      <alg-input [parentForm]="itemForm" name="title" size="large" [isDark]='false'>
+        <ng-template #errorTemplate>
+          Title should be at least 3 characters long
+        </ng-template>
+      </alg-input>
     </form>
   </div>
-
 
 </ng-container>
