@@ -22,10 +22,10 @@
     margin-bottom: 1rem;
     font-family: 'titillium', sans-serif;
 
-    .p-chkbox {
+    .p-checkbox {
       width: 1.0833rem;
       height: 1.0833rem;
-      .p-chkbox-box {
+      .p-checkbox-box {
         background-color: $dark-transparency-color;
         box-shadow: 0 .1rem #bbb inset;
         width: 1.0833rem;
@@ -41,7 +41,7 @@
           background-color: #d0d0d0;
         }
 
-        .p-chkbox-icon {
+        .p-checkbox-icon {
           overflow: visible;
           color: #505050;
           position: absolute;
@@ -108,12 +108,14 @@
       color: #fff;
     }
 
-    .p-datatable-summary {
+    .p-datatable-footer {
       border: none;
       background-color: white;
       height: 5rem;
       line-height: 5rem;
       margin-bottom: -1.5rem;
+      border: 0em;
+      font-weight: 700;
 
       .export-tools {
         display: flex;
