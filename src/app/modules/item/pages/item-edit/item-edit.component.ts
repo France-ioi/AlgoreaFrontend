@@ -45,7 +45,7 @@ export class ItemEditComponent implements OnDestroy {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
-  getCurrentItem(): void {
+  getCurrentItem() {
     this.subscriptions.push(this.itemLoadingState$.pipe(
       filter<Ready<ItemData> | Fetching | FetchError, Ready<ItemData>>(isReady),
     ).subscribe(state => {
@@ -56,13 +56,13 @@ export class ItemEditComponent implements OnDestroy {
     }));
   }
 
-  onSubmit(): void {
+  onSubmit() {
     this.subscriptions.push(this.currentContent.editAction$
       .pipe(filter(action => action === EditAction.Save))
       .subscribe(_action => this.saveInput()));
   }
 
-  errorToast() :void {
+  errorToast() {
     this.messageService.add({
       severity: 'error',
       summary: 'Error',
@@ -71,7 +71,7 @@ export class ItemEditComponent implements OnDestroy {
     });
   }
 
-  successToast() : void {
+  successToast() {
     this.messageService.add({
       severity: 'success',
       summary: 'Success',
@@ -80,7 +80,7 @@ export class ItemEditComponent implements OnDestroy {
     });
   }
 
-  saveInput(): void {
+  saveInput() {
     this.updateItemStringService.updateItem(
       this.item.id,
       this.itemForm.value
