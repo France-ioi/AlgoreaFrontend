@@ -31,6 +31,12 @@ $border-radius: .5rem;
         border-radius: 0;
         // color: white !important;
 
+        /* override properties from ngprime that we do not want */
+        .p-tabview-nav-link {
+          background: transparent;
+          border-width: 0px;
+        }
+
         &:first-child {
           border-top-left-radius: $border-radius;
           a {
@@ -38,7 +44,7 @@ $border-radius: .5rem;
           }
         }
 
-        &:last-child {
+        &:nth-last-child(2){
           border-top-right-radius: $border-radius;
           a {
             border-top-right-radius: $border-radius;
@@ -52,6 +58,7 @@ $border-radius: .5rem;
           align-items: center;
           position: relative;
           font-size: 1.2rem;
+          color: white;
 
           span.p-tabview-left-icon {
             position: absolute;
@@ -60,35 +67,23 @@ $border-radius: .5rem;
           span.p-tabview-title {
             margin: 0 auto;
           }
+
+          &:focus {
+            outline: none !important;
+            box-shadow: none;
+          }
+
         }
 
         &:hover {
           border: none !important;
-        }
-
-        &.p-state-default {
-
-          &:not(:first-child) {
-            // border-bottom-left-radius: 1rem;
-          }
-
-          &:first-child {
-            // border-bottom-right-radius: 1rem;
-          }
-
+          background-color: #578CCA !important;
           a {
-            color: white;
-          }
-
-          &:hover {
-            background-color: #578CCA !important;
-            a {
-              color: white !important;
-            }
+            color: white !important;
           }
         }
 
-        &.p-state-active {
+        &.p-highlight {
           background-color: $base-color;
 
           &:before {
