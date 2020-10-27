@@ -14,12 +14,7 @@ export class StateWidgetComponent implements OnChanges {
   class = '';
 
   ngOnChanges(_changes: SimpleChanges): void {
-    this.class = this.type.toLowerCase();
-
     switch (this.type) {
-      case 'Undefined':
-        this.icon = 'fa fa-book-open';
-        break;
       case 'Discovery':
         this.icon = 'fa fa-book-open';
         break;
@@ -32,6 +27,13 @@ export class StateWidgetComponent implements OnChanges {
       case 'Challenge':
         this.icon = 'fa fa-laptop-code';
         break;
+      case 'Undefined':
+      default:
+        this.type = 'Undefined';
+        this.icon = 'fa fa-book-open';
+        break;
     }
+
+    this.class = this.type.toLowerCase();
   }
 }
