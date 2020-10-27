@@ -10,10 +10,6 @@ const routes: Routes = [
     path: 'items',
     loadChildren: () => import('../modules/item/item.module').then(m => m.ItemModule)
   },
-  {
-    path: 'yourself',
-    loadChildren: () => import('../modules/yourself/yourself.module').then(m => m.YourselfModule)
-  }
 ];
 
 @NgModule({
