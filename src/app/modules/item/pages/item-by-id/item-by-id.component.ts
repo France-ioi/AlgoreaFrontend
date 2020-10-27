@@ -74,7 +74,7 @@ export class ItemByIdComponent implements OnDestroy {
       ).subscribe(p => this.currentContent.current.next(p)),
 
       this.currentContent.editAction$.pipe(
-        filter(action => [EditAction.StartEditing, EditAction.Cancel].includes(action))
+        filter(action => [EditAction.StartEditing, EditAction.FinishEditing].includes(action))
       ).subscribe(action => {
         const currentInfo = this.currentContent.current.value;
         if (isItemInfo(currentInfo)) {
