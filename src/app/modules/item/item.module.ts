@@ -9,6 +9,9 @@ import { ItemByIdComponent } from './pages/item-by-id/item-by-id.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ItemContentComponent } from './pages/item-content/item-content.component';
 import { ChapterChildrenComponent } from './components/chapter-children/chapter-children.component';
+import { ItemProgressComponent } from './pages/item-progress/item-progress.component';
+import { ItemCurrentSituationComponent } from './pages/item-current-situation/item-current-situation.component';
+import { ItemLogViewComponent } from './pages/item-log-view/item-log-view.component';
 
 @NgModule({
   declarations: [
@@ -18,6 +21,9 @@ import { ChapterChildrenComponent } from './components/chapter-children/chapter-
     ItemEditComponent,
     ItemContentComponent,
     ChapterChildrenComponent,
+    ItemProgressComponent,
+    ItemCurrentSituationComponent,
+    ItemLogViewComponent,
   ],
   imports: [
     CommonModule,
