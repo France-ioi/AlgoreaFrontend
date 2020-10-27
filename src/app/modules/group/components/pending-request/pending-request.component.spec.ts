@@ -183,7 +183,7 @@ describe('PendingRequestComponent', () => {
     component.onAcceptOrReject(Action.Accept);
 
     expect(component.ongoingActivity).toEqual(Activity.None);
-    expect(getRequestsService.getPendingRequests).toHaveBeenCalledTimes(1);  // the initial one
+    expect(getRequestsService.getPendingRequests).toHaveBeenCalledTimes(1); // the initial one
   });
 
   it('should consider "unchanged" in response as success', () => {

@@ -34,7 +34,7 @@ export class SkillProgressComponent implements OnInit, OnChanges {
   @Input() color = ProgressColor.Thin;
 
   progressHeight = ProgressHeight.Thin;
-  currentColor: string  = ProgressColor.Thin;
+  currentColor: string = ProgressColor.Thin;
   displayColor: string = ProgressColor.Green;
 
   RANGE_MIN = 0;

@@ -57,6 +57,7 @@ module.exports = {
     'space-in-parens': ['error'],
     'func-call-spacing': ['error'],
     'no-trailing-spaces': ['error'],
+    'no-multi-spaces': ['error'],
   },
   overrides: [
     {

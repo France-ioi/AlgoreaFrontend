@@ -2,7 +2,7 @@ import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy, OnChan
 import { MessageService } from 'primeng/api';
 import { finalize, tap } from 'rxjs/operators';
 import { TOAST_LENGTH } from '../../../../shared/constants/global';
-import {  ERROR_MESSAGE } from '../../../../shared/constants/api';
+import { ERROR_MESSAGE } from '../../../../shared/constants/api';
 import { Duration } from '../../../../shared/helpers/duration';
 import { Group } from '../../http-services/get-group-by-id.service';
 import { CodeAdditions, withCodeAdditions } from '../../helpers/group-code';
