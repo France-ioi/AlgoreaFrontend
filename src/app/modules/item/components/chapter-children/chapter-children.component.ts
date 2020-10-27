@@ -68,7 +68,8 @@ export class ChapterChildrenComponent implements OnChanges, OnDestroy {
 
             if (this.children.length === 0) this.state = 'empty';
             else if (this.itemData.currentResult?.validated ||
-              !this.children.some(item => item.category === 'Validation' && item.result && !item.result.validated)) this.state = 'ready';
+              this.children.filter(item => item.category === 'Validation')
+              .every(item => item.result && item.result.validated)) this.state = 'ready';
             else this.state = 'ready-missing-validation';
           },
           _err => {
