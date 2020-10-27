@@ -42,7 +42,7 @@ export class GroupDetailsComponent implements OnDestroy {
         breadcrumbs: {
           category: GroupBreadcrumbCat,
           path: [{ title: state.data.name, navigateTo: [ 'groups', 'details', state.data.id ] }],
-          currentPageIdx:  0,
+          currentPageIdx: 0,
         },
         title: state.data.name,
       }))

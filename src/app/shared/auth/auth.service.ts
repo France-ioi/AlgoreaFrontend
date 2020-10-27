@@ -68,14 +68,14 @@ export class AuthService implements OnDestroy {
         return this.tempAuth.login();
       }),
     ).subscribe({
-      next:(token: AccessToken) => {
+      next: (token: AccessToken) => {
         this.accessToken.next(token);
       },
       error: _e => {
         // if temp user creation fails, there is not much we can do
         this.state = 'error';
       },
-      complete:() => {
+      complete: () => {
         // in any of the success case
         this.state = 'idle';
       }

@@ -59,6 +59,7 @@ module.exports = {
     'no-trailing-spaces': ['error'],
     'no-multi-spaces': ['error'],
     'block-spacing': ['error'],
+    'key-spacing': ['error'],
   },
   overrides: [
     {
