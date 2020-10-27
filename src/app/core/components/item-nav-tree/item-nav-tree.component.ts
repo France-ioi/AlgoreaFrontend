@@ -22,10 +22,10 @@ interface ItemTreeNode extends TreeNode {
   styleUrls: ['./item-nav-tree.component.scss']
 })
 export class ItemNavTreeComponent implements OnChanges {
-  @Input() data: ItemNavMenuData;
+  @Input() data?: ItemNavMenuData;
 
-  nodes: ItemTreeNode[];
-  selectedNode: ItemTreeNode|null; // used to keep track after request that the selected is still the expected one
+  nodes: ItemTreeNode[] = [];
+  selectedNode?: ItemTreeNode; // used to keep track after request that the selected is still the expected one
 
   constructor(
     private router: Router,
@@ -53,7 +53,7 @@ export class ItemNavTreeComponent implements OnChanges {
   }
 
   ngOnChanges(_changes: SimpleChanges) {
-    this.nodes = this.mapItemToNodes(this.data);
+    this.nodes = this.data ? this.mapItemToNodes(this.data) : [];
   }
 
   navigateToNode(node: ItemTreeNode, attemptId?: string) {
@@ -67,7 +67,7 @@ export class ItemNavTreeComponent implements OnChanges {
   }
 
   navigateToParent() {
-    if (!this.data.parent || !this.data.parent.attemptId) return; // unexpected!
+    if (!this.data?.parent?.attemptId) return; // unexpected!
     void this.router.navigate(itemDetailsRoute({
       itemId: this.data.parent.id,
       itemPath: this.data.pathToElements.slice(0, -1),
@@ -145,7 +145,7 @@ export class ItemNavTreeComponent implements OnChanges {
     if (node.parent) {
       const parent = node.parent as ItemTreeNode;
       return parent.data.attemptId || undefined /* unexpected */;
-    } else if (this.data.parent) {
+    } else if (this.data?.parent) {
       return this.data.parent.attemptId || undefined /* unexpected */;
     }
     return undefined /* unexpected */;

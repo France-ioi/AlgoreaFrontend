@@ -16,7 +16,7 @@ export class NavigationTabsComponent implements OnDestroy {
 
   @Input() currentUser?: UserProfile;
 
-  @ViewChild('scrollPanel') scrollPanel: PerfectScrollbarComponent;
+  @ViewChild('scrollPanel') scrollPanel?: PerfectScrollbarComponent;
   @ViewChild('groupPanel') groupPanel?: HTMLDivElement;
 
   groupShow = false;
@@ -45,7 +45,7 @@ export class NavigationTabsComponent implements OnDestroy {
   }
 
   onResized(e: ResizedEvent) {
-    const directiveRef = this.scrollPanel.directiveRef;
+    const directiveRef = this.scrollPanel?.directiveRef;
     if (!directiveRef) return;
     const boundaryHeight = (directiveRef.elementRef.nativeElement as HTMLElement).clientHeight - 50;
     if (e.newHeight > boundaryHeight) {

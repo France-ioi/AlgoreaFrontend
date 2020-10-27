@@ -22,7 +22,7 @@ interface GroupTreeNode extends TreeNode {
 export class GroupNavTreeComponent implements OnChanges {
   @Input() groups: Group[] = [];
 
-  nodes: GroupTreeNode[];
+  nodes: GroupTreeNode[] = [];
 
   constructor(private router: Router) {}
 

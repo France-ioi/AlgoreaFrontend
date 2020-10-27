@@ -19,10 +19,10 @@ import { CodeActionsService } from '../../http-services/code-actions.service';
 
 export class GroupJoinByCodeComponent implements OnChanges {
 
-  @Input() group: Group
+  @Input() group?: Group
   @Output() refreshRequired = new EventEmitter<void>();
 
-  groupExt: Group & CodeAdditions; // group extended with code related attributes
+  groupExt?: Group & CodeAdditions; // group extended with code related attributes
   processing = false;
 
   constructor(
@@ -32,7 +32,7 @@ export class GroupJoinByCodeComponent implements OnChanges {
   ) { }
 
   ngOnChanges() {
-    this.groupExt = withCodeAdditions(this.group);
+    this.groupExt = this.group ? withCodeAdditions(this.group) : undefined;
   }
 
   displaySuccess(msg: string) {
@@ -56,6 +56,8 @@ export class GroupJoinByCodeComponent implements OnChanges {
   /* events */
 
   generateNewCode() {
+    if (!this.group) return;
+
     // disable UI
     this.processing = true;
 
@@ -76,6 +78,8 @@ export class GroupJoinByCodeComponent implements OnChanges {
   }
 
   changeValidity(newDuration: Duration) {
+    if (!this.groupExt) return;
+
     // check valid state
     if (this.groupExt.hasCodeNotSet) return;
 
@@ -84,7 +88,7 @@ export class GroupJoinByCodeComponent implements OnChanges {
 
     // call code refresh service, then group refresh data
     this.groupActionsService
-      .updateGroup(this.group.id, { code_lifetime: newDuration.toString(), code_expires_at: null })
+      .updateGroup(this.groupExt.id, { code_lifetime: newDuration.toString(), code_expires_at: null })
       .pipe(
         tap(() => this.refreshRequired.emit()),
         finalize(() => this.processing = false),
@@ -99,6 +103,8 @@ export class GroupJoinByCodeComponent implements OnChanges {
   }
 
   removeCode() {
+    if (!this.group) return;
+
     // disable UI
     this.processing = true;
 

@@ -7,5 +7,5 @@ import { Item } from '../../http-services/get-item-by-id.service';
   styleUrls: ['./item-header.component.scss']
 })
 export class ItemHeaderComponent {
-  @Input() item: Item;
+  @Input() item?: Item;
 }

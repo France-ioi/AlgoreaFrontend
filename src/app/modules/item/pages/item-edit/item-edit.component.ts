@@ -19,7 +19,7 @@ export class ItemEditComponent implements OnDestroy {
   });
   itemLoadingState$ = this.itemDataSource.state$;
 
-  itemSubscription: Subscription;
+  itemSubscription?: Subscription;
 
   constructor(
     private currentContent: CurrentContentService,
@@ -32,7 +32,7 @@ export class ItemEditComponent implements OnDestroy {
 
   ngOnDestroy() {
     this.currentContent.editState.next('non-editable');
-    this.itemSubscription.unsubscribe();
+    this.itemSubscription?.unsubscribe();
   }
 
   getCurrentItem(): void {

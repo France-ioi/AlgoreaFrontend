@@ -29,9 +29,8 @@
     "noFallthroughCasesInSwitch": true,
     "noImplicitReturns": true,
 
-    // "strict" enables all strict type checking option. Some rules are disabled below, we should try to get rid of the disablings
+    // "strict" enables all strict type checking option
     "strict": true,
-    "strictPropertyInitialization": false, // not enableable while primeng define their inputs as not nullable with default "null" :-/
   },
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,

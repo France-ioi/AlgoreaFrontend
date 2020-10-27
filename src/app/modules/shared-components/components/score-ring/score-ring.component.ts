@@ -33,7 +33,7 @@ export class ScoreRingComponent implements OnInit, OnChanges {
   @Input() scoreFillColor?: string;
   @Input() forTree = false;
 
-  @ViewChild('svg') svg: ElementRef;
+  @ViewChild('svg') svg?: ElementRef;
 
   greyedPath?: string;
   greyedFill?: string;

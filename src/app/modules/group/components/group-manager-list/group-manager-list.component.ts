@@ -9,7 +9,7 @@ import { GetGroupManagersService, Manager } from '../../http-services/get-group-
 })
 export class GroupManagerListComponent implements OnChanges {
 
-  @Input() group: Group;
+  @Input() group?: Group;
 
   managers: (Manager&{can_manage_as_text: string})[] = [];
 
@@ -34,6 +34,7 @@ export class GroupManagerListComponent implements OnChanges {
   }
 
   private reloadData() {
+    if (!this.group) return;
     this.state = 'loading';
     this.getGroupManagersService
       .getGroupManagers(this.group.id)
