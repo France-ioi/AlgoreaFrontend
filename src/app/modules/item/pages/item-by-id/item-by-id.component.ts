@@ -92,7 +92,7 @@ export class ItemByIdComponent implements OnDestroy {
     );
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.currentContent.current.next(null);
     this.subscriptions.forEach(s => s.unsubscribe());
   }

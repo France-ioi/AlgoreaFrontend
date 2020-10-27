@@ -30,7 +30,7 @@ export class AppComponent implements OnInit, OnDestroy {
     private currentContent: CurrentContentService,
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     // each time there is a new user, refresh the page
     this.subscription = this.currentUserService.currentUser$.pipe(
       filter<UserProfile|undefined, UserProfile>((user):user is UserProfile => !!user),
@@ -40,23 +40,23 @@ export class AppComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.subscription?.unsubscribe();
   }
 
-  onCollapse(e: boolean) {
+  onCollapse(e: boolean): void {
     this.collapsed = e;
     if (!this.collapsed) {
       this.folded = false;
     }
   }
 
-  onFold(folded: boolean) {
+  onFold(folded: boolean): void {
     this.folded = folded;
   }
 
   @HostListener('window:scroll', [ '$event' ])
-  onScrollContent() {
+  onScrollContent(): void{
     if (window.pageYOffset > 40 && !this.scrolled) {
       this.scrolled = true;
     } else if (window.pageYOffset <= 40 && this.scrolled) {
@@ -64,23 +64,23 @@ export class AppComponent implements OnInit, OnDestroy {
     }
   }
 
-  onEditPage() {
+  onEditPage(): void {
     this.currentContent.editAction.next(EditAction.StartEditing);
   }
 
-  onEditCancel() {
+  onEditCancel(): void {
     this.currentContent.editAction.next(EditAction.Cancel);
   }
 
-  onEditSave() {
+  onEditSave(): void {
     this.currentContent.editAction.next(EditAction.Save);
   }
 
-  login() {
+  login(): void {
     this.authService.startAuthLogin();
   }
 
-  logout() {
+  logout(): void {
     this.authService.logoutAuthUser();
   }
 

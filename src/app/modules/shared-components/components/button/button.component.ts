@@ -16,9 +16,9 @@ export class ButtonComponent implements OnInit {
 
   constructor() {}
 
-  ngOnInit() {}
+  ngOnInit(): void {}
 
-  onClickEvent(event: any) {
+  onClickEvent(event: any): void {
     (event as Event).stopPropagation();
     this.click.emit();
   }

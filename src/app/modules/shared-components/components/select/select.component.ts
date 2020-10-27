@@ -17,21 +17,21 @@ export class SelectComponent<T> implements OnInit {
 
   constructor() {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.selected = this.items.length > 0 ? this.items[0] : undefined;
   }
 
-  toogleDropdown(e: Event) {
+  toogleDropdown(e: Event): void {
     this.opened = true;
     e.stopPropagation();
     this.click.emit();
   }
 
-  hideDropdown() {
+  hideDropdown(): void {
     this.opened = false;
   }
 
-  selectValue(v: T) {
+  selectValue(v: T): void {
     this.selected = v;
     this.opened = false;
     this.change.emit(v);

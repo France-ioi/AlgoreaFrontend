@@ -72,20 +72,20 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     private messageService: MessageService
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.panel.push({
       columns: this.columns,
     });
     if (!this.showSwitch) this.columns = [ groupColumn ].concat(this.columns);
   }
 
-  ngOnChanges(_changes: SimpleChanges) {
+  ngOnChanges(_changes: SimpleChanges): void {
     this.selection = [];
     this.ongoingActivity = Activity.None;
     this.reloadData();
   }
 
-  private reloadData() {
+  private reloadData(): void {
     if (!this.groupId) return;
 
     this.status = 'loading';
@@ -114,7 +114,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     return res;
   }
 
-  private displayResponseToast(result: Result, verb: string, msg: string) {
+  private displayResponseToast(result: Result, verb: string, msg: string): void {
     if (result.countSuccess === result.countRequests) {
       this.messageService.add({
         severity: 'success',
@@ -139,7 +139,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     }
   }
 
-  private processRequestError(_err: any) {
+  private processRequestError(_err: any): void {
     this.messageService.add({
       severity: 'error',
       summary: 'Error',
@@ -148,7 +148,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     });
   }
 
-  processRequests(action: Action) {
+  processRequests(action: Action): Observable<Map<string, any>[]> {
     const requestMap = new Map<string, string[]>();
     this.selection.forEach(elm => {
       const groupID = elm.group.id;
@@ -166,7 +166,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     );
   }
 
-  onAcceptOrReject(action: Action) {
+  onAcceptOrReject(action: Action): void {
     if (this.selection.length === 0 || this.ongoingActivity !== Activity.None) {
       return;
     }
@@ -193,7 +193,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
       );
   }
 
-  onSelectAll() {
+  onSelectAll(): void {
     if (this.selection.length === this.requests.length) {
       this.selection = [];
     } else {
@@ -201,7 +201,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     }
   }
 
-  onCustomSort(event: SortEvent) {
+  onCustomSort(event: SortEvent): void {
     const sortMeta = event.multiSortMeta?.map(meta => (meta.order === -1 ? `-${meta.field}` : meta.field));
 
     if (sortMeta && JSON.stringify(sortMeta) !== JSON.stringify(this.currentSort)) {
@@ -211,7 +211,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     }
   }
 
-  onSubgroupSwitch(selectedIdx: number) {
+  onSubgroupSwitch(selectedIdx: number): void {
     this.includeSubgroup = this.subgroupSwitchItems[selectedIdx].includeSubgroup;
 
     this.columns = this.columns.filter(elm => elm !== groupColumn);

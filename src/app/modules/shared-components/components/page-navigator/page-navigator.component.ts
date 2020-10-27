@@ -12,10 +12,10 @@ export class PageNavigatorComponent implements OnInit {
 
   constructor() {}
 
-  ngOnInit() {
+  ngOnInit(): void {
   }
 
-  editPage() {
+  editPage(): void {
     this.edit.emit();
   }
 }

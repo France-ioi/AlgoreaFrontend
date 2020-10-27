@@ -17,7 +17,7 @@ export class GroupAdministrationComponent {
     private groupDataSource: GroupDataSource,
   ) {}
 
-  refreshGroupInfo() {
+  refreshGroupInfo(): void {
     this.groupDataSource.refetchGroup();
   }
 }

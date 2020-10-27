@@ -22,11 +22,11 @@ export class SwitchComponent implements OnInit, OnChanges {
 
   constructor() {}
 
-  ngOnInit() {}
+  ngOnInit(): void {}
 
-  ngOnChanges(_changes: SimpleChanges) {}
+  ngOnChanges(_changes: SimpleChanges): void {}
 
-  handleChange(checked: boolean) {
+  handleChange(checked: boolean): void {
     this.change.emit(checked);
   }
 }

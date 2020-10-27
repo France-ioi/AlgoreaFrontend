@@ -15,7 +15,7 @@ import { Table, TableService } from 'primeng/table';
 import { SortEvent } from 'primeng/api/sortevent';
 import { SortMeta } from 'primeng/api/sortmeta';
 
-export function tableFactory(wrapper: GridComponent) {
+export function tableFactory(wrapper: GridComponent): Table|undefined {
   return wrapper.table;
 }
 
@@ -88,20 +88,20 @@ export class GridComponent implements OnInit, OnChanges {
   toShow = 0;
   expand = false;
 
-  onSelectionChange(selection: any[]) {
+  onSelectionChange(selection: any[]): void {
     this.selection = selection;
     this.selectionChange.emit(this.selection ?? []);
   }
 
-  onRowSelect() {
+  onRowSelect(): void {
     this.selectionChange.emit(this.selection ?? []);
   }
 
-  onRowUnselect() {
+  onRowUnselect(): void {
     this.selectionChange.emit(this.selection ?? []);
   }
 
-  detectSelected() {
+  detectSelected(): void {
     const selectedCol = this.selectedColumns ?? [];
 
     for (const col of this.columns) {
@@ -115,19 +115,19 @@ export class GridComponent implements OnInit, OnChanges {
     this.toShow = this.columns.length - selectedCol.length;
   }
 
-  ngOnInit() {}
+  ngOnInit(): void {}
 
-  ngOnChanges(_changes: SimpleChanges) {
+  ngOnChanges(_changes: SimpleChanges): void {
     if (this.showGear) {
       this.detectSelected();
     }
   }
 
-  showColumns() {
+  showColumns(): void {
     this.showColumnSelection = !this.showColumnSelection;
   }
 
-  showAll() {
+  showAll(): void {
     this.selectedColumns = this.columns;
     this.toShow = 0;
     this.expand = !this.expand;
@@ -152,7 +152,7 @@ export class GridComponent implements OnInit, OnChanges {
     this.expandWholeWidth.emit(this.expand);
   }
 
-  handleColumnChanges(item: GridColumn) {
+  handleColumnChanges(item: GridColumn): void {
     this.selected[item.field] = !this.selected[item.field];
     const newSel: GridColumn[] = [];
     for (const col of this.columns) {
@@ -166,11 +166,11 @@ export class GridComponent implements OnInit, OnChanges {
     this.toShow = this.columns.length - this.selectedColumns.length;
   }
 
-  sortFunction(event: SortEvent) {
+  sortFunction(event: SortEvent): void {
     this.sort.emit(event);
   }
 
-  onHeaderCheckbox() {
+  onHeaderCheckbox(): void {
     this.selectionChange.emit(this.selection);
   }
 

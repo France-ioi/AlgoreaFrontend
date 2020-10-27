@@ -30,7 +30,7 @@ export class ItemEditComponent implements OnDestroy {
     this.getCurrentItem();
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.currentContent.editState.next('non-editable');
     this.itemSubscription?.unsubscribe();
   }

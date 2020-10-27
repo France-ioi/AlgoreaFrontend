@@ -53,7 +53,7 @@ export class SkillProgressComponent implements OnInit, OnChanges {
     return score;
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this._validateScore(this.currentScore);
     this._validateScore(this.bestScore);
 
@@ -65,7 +65,7 @@ export class SkillProgressComponent implements OnInit, OnChanges {
     }
   }
 
-  ngOnChanges(_changes: SimpleChanges) {
+  ngOnChanges(_changes: SimpleChanges): void {
     if (this.currentScore === 100) {
       this.displayColor = '#B8E986';
     } else {

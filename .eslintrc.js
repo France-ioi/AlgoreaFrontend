@@ -62,6 +62,7 @@ module.exports = {
     'key-spacing': ['error'],
     'keyword-spacing': ['error'],
     'no-eq-null': ['error'],
+    '@typescript-eslint/explicit-function-return-type': ['error'],
   },
   overrides: [
     {
@@ -69,6 +70,7 @@ module.exports = {
       rules: {
         '@typescript-eslint/no-floating-promises': 'off',
         '@typescript-eslint/unbound-method': 'off',
+        '@typescript-eslint/explicit-function-return-type': 'off',
       }
     },
   ],

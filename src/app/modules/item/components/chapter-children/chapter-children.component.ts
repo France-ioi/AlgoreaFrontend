@@ -47,7 +47,7 @@ export class ChapterChildrenComponent implements OnChanges, OnDestroy {
       }));
   }
 
-  private reloadData() {
+  private reloadData(): void {
     if (this.itemData?.currentResult) {
       this.state = 'loading';
       this.subscription?.unsubscribe();
@@ -82,7 +82,7 @@ export class ChapterChildrenComponent implements OnChanges, OnDestroy {
     }
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.subscription?.unsubscribe();
   }
 }

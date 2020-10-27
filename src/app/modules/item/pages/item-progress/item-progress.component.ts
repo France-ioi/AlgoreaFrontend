@@ -9,7 +9,7 @@ export class ItemProgressComponent implements OnDestroy {
 
   constructor() { }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
   }
 
 }

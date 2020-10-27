@@ -24,7 +24,7 @@ export class ItemDetailsComponent implements OnDestroy {
     );
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.subscription.unsubscribe();
     this.currentContent.editState.next('non-editable');
   }

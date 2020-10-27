@@ -33,18 +33,18 @@ export class NavigationTabsComponent implements OnDestroy {
     ).subscribe(_i => this.groupShow = true);
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
 
-  toggleGroup() {
+  toggleGroup(): void {
     this.groupShow = !this.groupShow;
     if (!this.groupShow) {
       this.stickyShow = false;
     }
   }
 
-  onResized(e: ResizedEvent) {
+  onResized(e: ResizedEvent): void {
     const directiveRef = this.scrollPanel?.directiveRef;
     if (!directiveRef) return;
     const boundaryHeight = (directiveRef.elementRef.nativeElement as HTMLElement).clientHeight - 50;
@@ -56,7 +56,7 @@ export class NavigationTabsComponent implements OnDestroy {
     }
   }
 
-  _updateStatus(e: HTMLElement) {
+  _updateStatus(e: HTMLElement): void {
     this.ngZone.run(() => {
       const scrollTop = e.scrollTop;
       const clientHeight = e.clientHeight - 50;
@@ -69,7 +69,7 @@ export class NavigationTabsComponent implements OnDestroy {
     });
   }
 
-  focusParent() {
+  focusParent(): void {
     if (this.groupPanel) {
       const elements = this.groupPanel.querySelectorAll('.ui-accordion-header a');
       elements.forEach(e => {
@@ -79,7 +79,7 @@ export class NavigationTabsComponent implements OnDestroy {
     }
   }
 
-  onScrollEvent(e: {srcElement: HTMLElement}) { /* guessed type, something cleaner would be nice */
+  onScrollEvent(e: {srcElement: HTMLElement}): void { /* guessed type, something cleaner would be nice */
     this._updateStatus(e.srcElement);
   }
 

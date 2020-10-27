@@ -16,14 +16,14 @@ export class TextareaComponent implements OnInit {
 
   constructor() {}
 
-  ngOnInit() {}
+  ngOnInit(): void {}
 
-  setValue(text: string) {
+  setValue(text: string): void {
     this.value = text;
     this.onChange();
   }
 
-  onChange() {
+  onChange(): void {
     this.textChange.emit(this.value);
   }
 }
