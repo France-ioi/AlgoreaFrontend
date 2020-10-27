@@ -17,7 +17,7 @@ interface GroupTreeNode extends TreeNode {
 @Component({
   selector: 'alg-group-nav-tree',
   templateUrl: './group-nav-tree.component.html',
-  styleUrls: ['./group-nav-tree.component.scss'],
+  styleUrls: [ './group-nav-tree.component.scss' ],
 })
 export class GroupNavTreeComponent implements OnChanges {
   @Input() groups: Group[] = [];
@@ -37,7 +37,7 @@ export class GroupNavTreeComponent implements OnChanges {
   }
 
   onSelect(node: GroupTreeNode) {
-    void this.router.navigate([node.target]);
+    void this.router.navigate([ node.target ]);
   }
 
   onKeyDown(e: KeyboardEvent) {

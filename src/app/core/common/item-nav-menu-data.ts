@@ -13,7 +13,7 @@ export class ItemNavMenuData {
     public readonly elements: NavMenuItem[], // level 1 elements (which may have children)
     public readonly pathToElements: Id[], // path from root to the elements (so including the parent if any)
     public readonly selectedElement?: NavItem, // the selected element is among lev 1 elements
-    public readonly parent?: NavMenuItem,  // level 0 element
+    public readonly parent?: NavMenuItem, // level 0 element
   ) {}
 
   /**
@@ -30,7 +30,7 @@ export class ItemNavMenuData {
   withUpdatedElement(id: Id, data: Object): ItemNavMenuData {
     const idx = this.elements.findIndex(i => i.id === id);
     if (idx === -1) return this;
-    const elements = [...this.elements];
+    const elements = [ ...this.elements ];
     elements[idx] = { ...this.elements[idx], ...data };
     return new ItemNavMenuData(elements, this.pathToElements, this.selectedElement, this.parent);
   }
@@ -42,7 +42,7 @@ export class ItemNavMenuData {
   subNavMenuData(childElement: NavItem): ItemNavMenuData {
     const newParent = this.elements.find(i => i.children && i.children.some(c => c.id === childElement.itemId));
     if (!newParent || !newParent.children /* unexpected */) return this;
-    return new ItemNavMenuData(newParent.children, this.pathToElements.concat([newParent.id]), childElement, newParent);
+    return new ItemNavMenuData(newParent.children, this.pathToElements.concat([ newParent.id ]), childElement, newParent);
   }
 
   hasLevel1Element(id: Id): boolean {

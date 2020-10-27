@@ -72,7 +72,7 @@ export class ItemDataSource implements OnDestroy {
       this.getBreadcrumb(navItem),
       this.getItemByIdService.get(navItem.itemId)
     ]).pipe(
-      switchMap(([breadcrumbs, item]) => {
+      switchMap(([ breadcrumbs, item ]) => {
         // emit immediately without result, then fetch and add it
         const initialData = { nav: navItem, item: item, breadcrumbs: breadcrumbs };
         return concat(
@@ -104,9 +104,9 @@ export class ItemDataSource implements OnDestroy {
         // 3) if no suitable one and this item does not allow implicit result start or perms are not sufficent, continue without result
         if (!implicitResultStart(item)) return of({ results: results });
         // 4) otherwise, start a result
-        const attemptId  = nav.attemptId || nav.parentAttemptId;
+        const attemptId = nav.attemptId || nav.parentAttemptId;
         if (!attemptId) return EMPTY; // unexpected
-        return this.resultActionsService.start(nav.itemPath.concat([nav.itemId]), attemptId).pipe(
+        return this.resultActionsService.start(nav.itemPath.concat([ nav.itemId ]), attemptId).pipe(
           // once a result has been created, fetch it
           switchMap(() => this.getResultsService.getResults(nav.itemId, attempt).pipe(
             map(results => {
@@ -137,7 +137,7 @@ export class ItemDataSource implements OnDestroy {
    * Return the observable to the suitable breadcrumb service depending on the navitem, or undefined if no attempt is given.
    */
   private breadcrumbService(navItem: NavItem): Observable<BreadcrumbItem[]|'forbidden'>|undefined {
-    const fullPath = navItem.itemPath.concat([navItem.itemId]);
+    const fullPath = navItem.itemPath.concat([ navItem.itemId ]);
     if (navItem.attemptId) return this.getBreadcrumbService.getBreadcrumb(fullPath, navItem.attemptId);
     else if (navItem.parentAttemptId) return this.getBreadcrumbService.getBreadcrumbWithParentAttempt(fullPath, navItem.parentAttemptId);
     else return undefined;

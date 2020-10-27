@@ -9,7 +9,7 @@ import { ItemCurrentSituationComponent } from './pages/item-current-situation/it
 import { ItemLogViewComponent } from './pages/item-log-view/item-log-view.component';
 
 @NgModule({
-  imports: [RouterModule.forChild([
+  imports: [ RouterModule.forChild([
     {
       path: 'by-id/:id',
       component: ItemByIdComponent,
@@ -46,7 +46,7 @@ import { ItemLogViewComponent } from './pages/item-log-view/item-log-view.compon
         },
       ]
     }
-  ])],
-  exports: [RouterModule],
+  ]) ],
+  exports: [ RouterModule ],
 })
 export class ItemRoutingModule {}

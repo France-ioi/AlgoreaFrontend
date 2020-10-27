@@ -31,7 +31,7 @@ export class OAuthService {
     const separationChar = loginServerUri.indexOf('?') > -1 ? '&' : '?';
 
     const url = loginServerUri + separationChar + 'response_type=code&scope=account&approval_prompt=auto' +
-      '&client_id=' +  encodeURIComponent(environment.oauthClientId) +
+      '&client_id=' + encodeURIComponent(environment.oauthClientId) +
       '&state=' + encodeURIComponent(state) +
       '&redirect_uri=' + encodeURIComponent(this.loginRedirectUri());
     // should add PKCE here
@@ -53,7 +53,7 @@ export class OAuthService {
     const code = parts.get('code');
     const state = parts.get('state');
     // get and store 'sesssionState' as well?
-    clearHash(['code', 'state']);
+    clearHash([ 'code', 'state' ]);
     if (!code || !state) {
       return of<AccessToken|null>(null);
     }

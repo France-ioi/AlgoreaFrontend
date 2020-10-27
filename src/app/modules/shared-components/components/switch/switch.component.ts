@@ -11,7 +11,7 @@ import {
 @Component({
   selector: 'alg-switch',
   templateUrl: './switch.component.html',
-  styleUrls: ['./switch.component.scss'],
+  styleUrls: [ './switch.component.scss' ],
 })
 export class SwitchComponent implements OnInit, OnChanges {
   @Input() checked = false;

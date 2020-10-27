@@ -11,7 +11,7 @@ describe('TopNavComponent', () => {
   let router: Router;
 
   beforeEach(waitForAsync(() => {
-    const routerSpy = jasmine.createSpyObj<Router>('Router', ['navigateByUrl']);
+    const routerSpy = jasmine.createSpyObj<Router>('Router', [ 'navigateByUrl' ]);
     TestBed.configureTestingModule({
       declarations: [ TopNavComponent ],
       imports: [

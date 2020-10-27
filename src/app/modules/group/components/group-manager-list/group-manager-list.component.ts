@@ -5,7 +5,7 @@ import { GetGroupManagersService, Manager } from '../../http-services/get-group-
 @Component({
   selector: 'alg-group-manager-list',
   templateUrl: './group-manager-list.component.html',
-  styleUrls: ['./group-manager-list.component.scss']
+  styleUrls: [ './group-manager-list.component.scss' ]
 })
 export class GroupManagerListComponent implements OnChanges {
 
@@ -23,7 +23,7 @@ export class GroupManagerListComponent implements OnChanges {
   }
 
   private getManagerLevel(manager: Manager): string {
-    switch(manager.can_manage) {
+    switch (manager.can_manage) {
       case 'none':
         return 'Read-only';
       case 'memberships':

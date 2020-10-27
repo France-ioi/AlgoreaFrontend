@@ -2,7 +2,7 @@ import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy, OnChan
 import { MessageService } from 'primeng/api';
 import { finalize, tap } from 'rxjs/operators';
 import { TOAST_LENGTH } from '../../../../shared/constants/global';
-import {  ERROR_MESSAGE } from '../../../../shared/constants/api';
+import { ERROR_MESSAGE } from '../../../../shared/constants/api';
 import { Duration } from '../../../../shared/helpers/duration';
 import { Group } from '../../http-services/get-group-by-id.service';
 import { CodeAdditions, withCodeAdditions } from '../../helpers/group-code';
@@ -12,7 +12,7 @@ import { CodeActionsService } from '../../http-services/code-actions.service';
 @Component({
   selector: 'alg-group-join-by-code',
   templateUrl: './group-join-by-code.component.html',
-  styleUrls: ['./group-join-by-code.component.scss'],
+  styleUrls: [ './group-join-by-code.component.scss' ],
   providers: [ MessageService ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })

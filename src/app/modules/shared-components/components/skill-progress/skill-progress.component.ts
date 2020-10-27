@@ -24,7 +24,7 @@ enum ProgressHeight {
 @Component({
   selector: 'alg-skill-progress',
   templateUrl: './skill-progress.component.html',
-  styleUrls: ['./skill-progress.component.scss'],
+  styleUrls: [ './skill-progress.component.scss' ],
 })
 export class SkillProgressComponent implements OnInit, OnChanges {
 
@@ -34,7 +34,7 @@ export class SkillProgressComponent implements OnInit, OnChanges {
   @Input() color = ProgressColor.Thin;
 
   progressHeight = ProgressHeight.Thin;
-  currentColor: string  = ProgressColor.Thin;
+  currentColor: string = ProgressColor.Thin;
   displayColor: string = ProgressColor.Green;
 
   RANGE_MIN = 0;

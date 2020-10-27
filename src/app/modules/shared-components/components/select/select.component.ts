@@ -3,7 +3,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 @Component({
   selector: 'alg-select',
   templateUrl: './select.component.html',
-  styleUrls: ['./select.component.scss'],
+  styleUrls: [ './select.component.scss' ],
 })
 export class SelectComponent<T> implements OnInit {
   @Input() items: T[] = [];

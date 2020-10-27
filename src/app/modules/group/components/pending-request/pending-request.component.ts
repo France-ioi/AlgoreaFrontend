@@ -37,7 +37,7 @@ const groupColumn = { field: 'group.name', header: 'GROUP' };
 @Component({
   selector: 'alg-pending-request',
   templateUrl: './pending-request.component.html',
-  styleUrls: ['./pending-request.component.scss'],
+  styleUrls: [ './pending-request.component.scss' ],
   providers: [ MessageService ]
 })
 export class PendingRequestComponent implements OnInit, OnChanges {
@@ -76,7 +76,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     this.panel.push({
       columns: this.columns,
     });
-    if (!this.showSwitch) this.columns = [groupColumn].concat(this.columns);
+    if (!this.showSwitch) this.columns = [ groupColumn ].concat(this.columns);
   }
 
   ngOnChanges(_changes: SimpleChanges) {
@@ -108,8 +108,8 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     data.forEach(elm => {
       res.countRequests += elm.size;
       res.countSuccess += Array.from(elm.values())
-        .map<number>(state => (['success', 'unchanged'].includes(state) ? 1 : 0))
-        .reduce( (acc, res) => acc + res, 0 );
+        .map<number>(state => ([ 'success', 'unchanged' ].includes(state) ? 1 : 0))
+        .reduce((acc, res) => acc + res, 0);
     });
     return res;
   }
@@ -155,8 +155,8 @@ export class PendingRequestComponent implements OnInit, OnChanges {
       const memberID = elm.user.group_id;
 
       const value = requestMap.get(groupID);
-      if (value) requestMap.set(groupID, value.concat([memberID]));
-      else requestMap.set(groupID, [memberID]);
+      if (value) requestMap.set(groupID, value.concat([ memberID ]));
+      else requestMap.set(groupID, [ memberID ]);
     });
     return forkJoin(
       Array.from(requestMap.entries()).map(elm => {
@@ -215,7 +215,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     this.includeSubgroup = this.subgroupSwitchItems[selectedIdx].includeSubgroup;
 
     this.columns = this.columns.filter(elm => elm !== groupColumn);
-    if (this.includeSubgroup) this.columns = [groupColumn].concat(this.columns);
+    if (this.includeSubgroup) this.columns = [ groupColumn ].concat(this.columns);
 
     this.reloadData();
   }

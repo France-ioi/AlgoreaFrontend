@@ -3,7 +3,7 @@ import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 @Component({
   selector: 'alg-state-widget',
   templateUrl: './state-widget.component.html',
-  styleUrls: ['./state-widget.component.scss'],
+  styleUrls: [ './state-widget.component.scss' ],
 })
 export class StateWidgetComponent implements OnChanges {
 

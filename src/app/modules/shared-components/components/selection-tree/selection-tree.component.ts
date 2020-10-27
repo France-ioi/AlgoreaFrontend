@@ -15,7 +15,7 @@ interface Node {
 @Component({
   selector: 'alg-selection-tree',
   templateUrl: './selection-tree.component.html',
-  styleUrls: ['./selection-tree.component.scss'],
+  styleUrls: [ './selection-tree.component.scss' ],
 })
 export class SelectionTreeComponent implements OnInit, OnChanges {
   @Input() data: Node[] = [];

@@ -4,7 +4,7 @@ import { Duration, MINUTES } from 'src/app/shared/helpers/duration';
 @Component({
   selector: 'alg-time-picker',
   templateUrl: './time-picker.component.html',
-  styleUrls: ['./time-picker.component.scss'],
+  styleUrls: [ './time-picker.component.scss' ],
 })
 export class TimePickerComponent implements OnChanges {
   @Input() initialValue? : Duration;

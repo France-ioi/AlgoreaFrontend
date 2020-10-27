@@ -4,7 +4,7 @@ import { UserProfile } from 'src/app/shared/http-services/current-user.service';
 @Component({
   selector: 'alg-left-nav',
   templateUrl: './left-nav.component.html',
-  styleUrls: ['./left-nav.component.scss']
+  styleUrls: [ './left-nav.component.scss' ]
 })
 export class LeftNavComponent implements OnInit, OnChanges {
 

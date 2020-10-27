@@ -20,7 +20,7 @@ export function itemDetailsRoute(item: NavItem, editing = false): any[] {
   if (item.attemptId) params[attemptParamName] = item.attemptId;
   else params[parentAttemptParamName] = item.parentAttemptId;
   params[pathParamName] = item.itemPath;
-  return ['items', 'by-id', item.itemId, params, editing ? 'edit' : 'details'];
+  return [ 'items', 'by-id', item.itemId, params, editing ? 'edit' : 'details' ];
 }
 
 /**

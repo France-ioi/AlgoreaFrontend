@@ -10,12 +10,12 @@ import { FetchError, Fetching, isReady, Ready } from '../../../../shared/helpers
 @Component({
   selector: 'alg-item-edit',
   templateUrl: './item-edit.component.html',
-  styleUrls: ['./item-edit.component.scss']
+  styleUrls: [ './item-edit.component.scss' ]
 })
 export class ItemEditComponent implements OnDestroy {
   itemForm = this.formBuilder.group({
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    title: ['', [Validators.required, Validators.minLength(3),]],
+    title: [ '', [ Validators.required, Validators.minLength(3), ] ],
   });
   itemLoadingState$ = this.itemDataSource.state$;
 

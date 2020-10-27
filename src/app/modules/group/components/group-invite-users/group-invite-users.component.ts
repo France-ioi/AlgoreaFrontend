@@ -16,8 +16,8 @@ interface Message
 @Component({
   selector: 'alg-group-invite-users',
   templateUrl: './group-invite-users.component.html',
-  styleUrls: ['./group-invite-users.component.scss'],
-  providers: [MessageService],
+  styleUrls: [ './group-invite-users.component.scss' ],
+  providers: [ MessageService ],
 })
 export class GroupInviteUsersComponent {
 

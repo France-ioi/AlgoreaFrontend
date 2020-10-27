@@ -4,7 +4,7 @@ import { Message } from 'primeng/api';
 @Component({
   selector: 'alg-message',
   templateUrl: './message.component.html',
-  styleUrls: ['./message.component.scss']
+  styleUrls: [ './message.component.scss' ]
 })
 export class MessageComponent implements OnChanges {
 

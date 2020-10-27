@@ -9,14 +9,14 @@ import { AuthService } from '../shared/auth/auth.service';
 @Component({
   selector: 'alg-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: [ './app.component.scss' ]
 })
 export class AppComponent implements OnInit, OnDestroy {
 
   // the delay(0) is used to prevent the UI to update itself (when the content is loaded) (ExpressionChangedAfterItHasBeenCheckedError)
-  currentContent$: Observable<ContentInfo|null>  = this.currentContent.currentContent$.pipe( delay(0) );
-  editState$ = this.currentContent.editState$.pipe( delay(0) );
-  currentUser$ = this.currentUserService.currentUser$.pipe( delay(0) );
+  currentContent$: Observable<ContentInfo|null> = this.currentContent.currentContent$.pipe(delay(0));
+  editState$ = this.currentContent.editState$.pipe(delay(0));
+  currentUser$ = this.currentUserService.currentUser$.pipe(delay(0));
 
   collapsed = false;
   folded = false;
@@ -55,7 +55,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.folded = folded;
   }
 
-  @HostListener('window:scroll', ['$event'])
+  @HostListener('window:scroll', [ '$event' ])
   onScrollContent() {
     if (window.pageYOffset > 40 && !this.scrolled) {
       this.scrolled = true;

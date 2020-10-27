@@ -12,7 +12,7 @@ type State = Ready<ItemNavMenuData>|Fetching|FetchError;
 @Component({
   selector: 'alg-item-nav',
   templateUrl: './item-nav.component.html',
-  styleUrls: ['./item-nav.component.scss']
+  styleUrls: [ './item-nav.component.scss' ]
 })
 export class ItemNavComponent implements OnInit, OnDestroy {
 
@@ -51,7 +51,7 @@ export class ItemNavComponent implements OnInit, OnDestroy {
       dataFetcher.pipe(
         map(items => new ItemNavMenuData(items.items, item.itemPath, item, items.parent)), // the new items (only first level loaded)
         // already update the tree loaded with the first level, and if needed, load (async) children as well
-        switchMap(data => merge( of(readyState(data)), this.loadChildrenIfNeeded(data) )),
+        switchMap(data => merge(of(readyState(data)), this.loadChildrenIfNeeded(data))),
         mapErrorToState(),
       )
     );
@@ -80,7 +80,7 @@ export class ItemNavComponent implements OnInit, OnDestroy {
         // we are only interested in items
         map(content => (content !== null && isItemInfo(content) ? content.data : null)),
         // Only propagate distinct items (identified by id). Also prevent multiple null values.
-        distinctUntilChanged((v1, v2) => (v1 === null && v2 === null) || ( v1 !== null && v2 !== null && v1.nav.itemId === v2.nav.itemId)),
+        distinctUntilChanged((v1, v2) => (v1 === null && v2 === null) || (v1 !== null && v2 !== null && v1.nav.itemId === v2.nav.itemId)),
         switchMap((item):Observable<State> => {
 
           if (isReady(this.state)) {

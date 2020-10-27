@@ -3,7 +3,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 @Component({
   selector: 'alg-selection',
   templateUrl: './selection.component.html',
-  styleUrls: ['./selection.component.scss'],
+  styleUrls: [ './selection.component.scss' ],
 })
 export class SelectionComponent implements OnInit {
   @Input() type: 'rounded' | 'square' = 'rounded';

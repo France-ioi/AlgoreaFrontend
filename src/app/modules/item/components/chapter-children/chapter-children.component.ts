@@ -18,7 +18,7 @@ interface ItemChildAdditions {
 @Component({
   selector: 'alg-chapter-children',
   templateUrl: './chapter-children.component.html',
-  styleUrls: ['./chapter-children.component.scss'],
+  styleUrls: [ './chapter-children.component.scss' ],
 })
 export class ChapterChildrenComponent implements OnChanges, OnDestroy {
   @Input() itemData?: ItemData;
@@ -42,7 +42,7 @@ export class ChapterChildrenComponent implements OnChanges, OnDestroy {
     if (child.isLocked) return;
     void this.router.navigate(itemDetailsRoute({
       itemId: child.id,
-      itemPath: this.itemData.nav.itemPath.concat([this.itemData.item.id]),
+      itemPath: this.itemData.nav.itemPath.concat([ this.itemData.item.id ]),
       attemptId: this.itemData.currentResult?.attemptId,
       }));
   }

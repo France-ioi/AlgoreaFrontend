@@ -32,14 +32,14 @@ export interface GridColumnGroup {
 @Component({
   selector: 'alg-grid',
   templateUrl: './grid.component.html',
-  styleUrls: ['./grid.component.scss'],
+  styleUrls: [ './grid.component.scss' ],
   providers: [
     DomHandler,
     TableService, // from old imports
     {
       provide: Table, // providing table class
       useFactory: tableFactory, // using new function
-      deps: [GridComponent], // new function depends on your wrapper
+      deps: [ GridComponent ], // new function depends on your wrapper
     },
   ],
 })

@@ -68,14 +68,14 @@ export class AuthService implements OnDestroy {
         return this.tempAuth.login();
       }),
     ).subscribe({
-      next:(token: AccessToken) => {
+      next: (token: AccessToken) => {
         this.accessToken.next(token);
       },
       error: _e => {
         // if temp user creation fails, there is not much we can do
         this.state = 'error';
       },
-      complete:() => {
+      complete: () => {
         // in any of the success case
         this.state = 'idle';
       }
@@ -168,7 +168,7 @@ export class AuthService implements OnDestroy {
     }
   }
 
-  private tokenChanged([oldToken, newToken]: [AccessToken|null, AccessToken|null]) {
+  private tokenChanged([ oldToken, newToken ]: [AccessToken|null, AccessToken|null]) {
     logState('token changed');
 
     if (JSON.stringify(oldToken) === JSON.stringify(newToken)) return;

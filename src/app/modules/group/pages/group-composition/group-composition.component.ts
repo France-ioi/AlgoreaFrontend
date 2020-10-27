@@ -6,7 +6,7 @@ import { map } from 'rxjs/operators';
 @Component({
   selector: 'alg-group-composition',
   templateUrl: './group-composition.component.html',
-  styleUrls: ['./group-composition.component.scss']
+  styleUrls: [ './group-composition.component.scss' ]
 })
 export class GroupCompositionComponent {
 

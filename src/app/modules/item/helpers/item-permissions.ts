@@ -6,5 +6,5 @@ export interface ItemPermissionsInfo {
 }
 
 export function canCurrentUserViewItemContent(item: ItemPermissionsInfo): boolean {
-  return ['content','content_with_descendants','solution'].includes(item.permissions.can_view);
+  return [ 'content','content_with_descendants','solution' ].includes(item.permissions.can_view);
 }
