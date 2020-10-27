@@ -15,7 +15,7 @@ const ItemBreadcrumbCat = 'Items';
 @Component({
   selector: 'alg-item-by-id',
   templateUrl: './item-by-id.component.html',
-  styleUrls: ['./item-by-id.component.scss'],
+  styleUrls: [ './item-by-id.component.scss' ],
   providers: [ ItemDataSource ]
 })
 export class ItemByIdComponent implements OnDestroy {
@@ -82,7 +82,7 @@ export class ItemByIdComponent implements OnDestroy {
       ).subscribe(p => this.currentContent.current.next(p)),
 
       this.currentContent.editAction$.pipe(
-        filter(action => [EditAction.StartEditing, EditAction.Cancel].includes(action))
+        filter(action => [ EditAction.StartEditing, EditAction.Cancel ].includes(action))
       ).subscribe(action => {
         const currentInfo = this.currentContent.current.value;
         if (isItemInfo(currentInfo)) {

@@ -168,7 +168,7 @@ export class AuthService implements OnDestroy {
     }
   }
 
-  private tokenChanged([oldToken, newToken]: [AccessToken|null, AccessToken|null]) {
+  private tokenChanged([ oldToken, newToken ]: [AccessToken|null, AccessToken|null]) {
     logState('token changed');
 
     if (JSON.stringify(oldToken) === JSON.stringify(newToken)) return;

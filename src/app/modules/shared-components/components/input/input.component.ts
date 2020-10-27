@@ -12,7 +12,7 @@ import { FormGroup } from '@angular/forms';
 @Component({
   selector: 'alg-input',
   templateUrl: './input.component.html',
-  styleUrls: ['./input.component.scss'],
+  styleUrls: [ './input.component.scss' ],
 })
 export class InputComponent implements OnInit, OnChanges {
   @Input() name : string | number | null = null; // name of the input in the parent form

@@ -12,7 +12,7 @@ import { CodeActionsService } from '../../http-services/code-actions.service';
 @Component({
   selector: 'alg-group-join-by-code',
   templateUrl: './group-join-by-code.component.html',
-  styleUrls: ['./group-join-by-code.component.scss'],
+  styleUrls: [ './group-join-by-code.component.scss' ],
   providers: [ MessageService ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })

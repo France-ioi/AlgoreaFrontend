@@ -4,7 +4,7 @@ import { CurrentContentService } from '../../../../shared/services/current-conte
 @Component({
   selector: 'alg-managed-groups',
   templateUrl: './managed-groups.component.html',
-  styleUrls: ['./managed-groups.component.scss']
+  styleUrls: [ './managed-groups.component.scss' ]
 })
 export class ManagedGroupsComponent implements OnInit, OnDestroy {
 

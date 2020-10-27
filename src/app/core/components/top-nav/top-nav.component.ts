@@ -5,7 +5,7 @@ import { UserProfile } from 'src/app/shared/http-services/current-user.service';
 @Component({
   selector: 'alg-top-nav',
   templateUrl: './top-nav.component.html',
-  styleUrls: ['./top-nav.component.scss']
+  styleUrls: [ './top-nav.component.scss' ]
 })
 export class TopNavComponent implements OnInit {
 

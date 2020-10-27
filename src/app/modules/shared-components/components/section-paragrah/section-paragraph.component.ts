@@ -11,7 +11,7 @@ import {
 @Component({
   selector: 'alg-section-paragraph',
   templateUrl: './section-paragraph.component.html',
-  styleUrls: ['./section-paragraph.component.scss'],
+  styleUrls: [ './section-paragraph.component.scss' ],
 })
 export class SectionParagraphComponent implements OnInit {
   @Input() icon?: string;

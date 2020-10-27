@@ -19,7 +19,7 @@ enum ScoreRingColor {
 @Component({
   selector: 'alg-score-ring',
   templateUrl: './score-ring.component.html',
-  styleUrls: ['./score-ring.component.scss'],
+  styleUrls: [ './score-ring.component.scss' ],
 })
 export class ScoreRingComponent implements OnInit, OnChanges {
   @Input() diameter = 60;

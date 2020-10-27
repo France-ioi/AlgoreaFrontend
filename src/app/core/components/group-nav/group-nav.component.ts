@@ -13,7 +13,7 @@ type GroupData = 'loading'|'error'|Group[];
 @Component({
   selector: 'alg-group-nav',
   templateUrl: './group-nav.component.html',
-  styleUrls: ['./group-nav.component.scss']
+  styleUrls: [ './group-nav.component.scss' ]
 })
 export class GroupNavComponent {
 
@@ -44,7 +44,7 @@ export class GroupNavComponent {
   }
 
   goToGroupManaged() {
-    void this.router.navigate(['groups', 'managed']);
+    void this.router.navigate([ 'groups', 'managed' ]);
   }
 
 }

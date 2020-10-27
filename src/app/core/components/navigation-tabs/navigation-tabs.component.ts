@@ -10,7 +10,7 @@ import { UserProfile } from 'src/app/shared/http-services/current-user.service';
 @Component({
   selector: 'alg-navigation-tabs',
   templateUrl: './navigation-tabs.component.html',
-  styleUrls: ['./navigation-tabs.component.scss']
+  styleUrls: [ './navigation-tabs.component.scss' ]
 })
 export class NavigationTabsComponent implements OnDestroy {
 

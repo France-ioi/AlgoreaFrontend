@@ -18,7 +18,7 @@ interface ItemChildAdditions {
 @Component({
   selector: 'alg-chapter-children',
   templateUrl: './chapter-children.component.html',
-  styleUrls: ['./chapter-children.component.scss'],
+  styleUrls: [ './chapter-children.component.scss' ],
 })
 export class ChapterChildrenComponent implements OnChanges, OnDestroy {
   @Input() itemData?: ItemData;

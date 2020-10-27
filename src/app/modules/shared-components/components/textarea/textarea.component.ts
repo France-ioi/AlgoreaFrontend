@@ -3,7 +3,7 @@ import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 @Component({
   selector: 'alg-textarea',
   templateUrl: './textarea.component.html',
-  styleUrls: ['./textarea.component.scss'],
+  styleUrls: [ './textarea.component.scss' ],
 })
 export class TextareaComponent implements OnInit {
   @Input() icon = '';

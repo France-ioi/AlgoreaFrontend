@@ -5,7 +5,7 @@ import { GetGroupManagersService, Manager } from '../../http-services/get-group-
 @Component({
   selector: 'alg-group-manager-list',
   templateUrl: './group-manager-list.component.html',
-  styleUrls: ['./group-manager-list.component.scss']
+  styleUrls: [ './group-manager-list.component.scss' ]
 })
 export class GroupManagerListComponent implements OnChanges {
 

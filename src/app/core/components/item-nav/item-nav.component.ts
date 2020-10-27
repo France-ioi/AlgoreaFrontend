@@ -12,7 +12,7 @@ type State = Ready<ItemNavMenuData>|Fetching|FetchError;
 @Component({
   selector: 'alg-item-nav',
   templateUrl: './item-nav.component.html',
-  styleUrls: ['./item-nav.component.scss']
+  styleUrls: [ './item-nav.component.scss' ]
 })
 export class ItemNavComponent implements OnInit, OnDestroy {
 

@@ -10,7 +10,7 @@ import {
 @Component({
   selector: 'alg-slider',
   templateUrl: './slider.component.html',
-  styleUrls: ['./slider.component.scss'],
+  styleUrls: [ './slider.component.scss' ],
 })
 export class SliderComponent implements OnInit {
   /**

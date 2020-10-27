@@ -19,7 +19,7 @@ interface ItemTreeNode extends TreeNode {
 @Component({
   selector: 'alg-item-nav-tree',
   templateUrl: './item-nav-tree.component.html',
-  styleUrls: ['./item-nav-tree.component.scss']
+  styleUrls: [ './item-nav-tree.component.scss' ]
 })
 export class ItemNavTreeComponent implements OnChanges {
   @Input() data?: ItemNavMenuData;
@@ -37,7 +37,7 @@ export class ItemNavTreeComponent implements OnChanges {
       const isSelected = !!(data.selectedElement && data.selectedElement.itemId === i.id);
       const shouldShowChildren = i.hasChildren && isSelected;
       const isLoadingChildren = shouldShowChildren && !i.children; // are being loaded by the parent component
-      const pathToChildren = data.pathToElements.concat([i.id]);
+      const pathToChildren = data.pathToElements.concat([ i.id ]);
       return {
         label: i.title,
         data: i,
@@ -159,7 +159,7 @@ export class ItemNavTreeComponent implements OnChanges {
     if (attemptId === null) {
       const startingAttemptId = '0';
       return this.resultActionsService
-        .start(node.itemPath.concat([node.data.id]), startingAttemptId)
+        .start(node.itemPath.concat([ node.data.id ]), startingAttemptId)
         .pipe(
           map(() => startingAttemptId)
         );

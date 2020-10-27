@@ -9,7 +9,7 @@ import { AuthService } from '../shared/auth/auth.service';
 @Component({
   selector: 'alg-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: [ './app.component.scss' ]
 })
 export class AppComponent implements OnInit, OnDestroy {
 
@@ -55,7 +55,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.folded = folded;
   }
 
-  @HostListener('window:scroll', ['$event'])
+  @HostListener('window:scroll', [ '$event' ])
   onScrollContent() {
     if (window.pageYOffset > 40 && !this.scrolled) {
       this.scrolled = true;

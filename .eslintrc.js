@@ -52,6 +52,7 @@ module.exports = {
     'arrow-spacing': ['error', { "before": true, "after": true }],
     'brace-style': ['error', '1tbs'],
     'object-curly-spacing': ['error', 'always'],
+    'array-bracket-spacing': ['error', 'always', { 'objectsInArrays': false }],
   },
   overrides: [
     {

@@ -3,7 +3,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 @Component({
   selector: 'alg-page-navigator',
   templateUrl: './page-navigator.component.html',
-  styleUrls: ['./page-navigator.component.scss'],
+  styleUrls: [ './page-navigator.component.scss' ],
 })
 export class PageNavigatorComponent implements OnInit {
   @Input() allowFullScreen = false;

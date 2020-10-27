@@ -53,7 +53,7 @@ export class OAuthService {
     const code = parts.get('code');
     const state = parts.get('state');
     // get and store 'sesssionState' as well?
-    clearHash(['code', 'state']);
+    clearHash([ 'code', 'state' ]);
     if (!code || !state) {
       return of<AccessToken|null>(null);
     }

@@ -12,7 +12,7 @@ describe('GroupHeaderComponent', () => {
     name: 'CoderDojo 50',
     type: 'Other',
     is_public: false,
-    grades: [-2],
+    grades: [ -2 ],
     date: new Date(),
     description: 'dummy',
     current_user_is_manager: false
@@ -20,7 +20,7 @@ describe('GroupHeaderComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [AppModule],
+      imports: [ AppModule ],
       declarations: [ GroupHeaderComponent ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })
