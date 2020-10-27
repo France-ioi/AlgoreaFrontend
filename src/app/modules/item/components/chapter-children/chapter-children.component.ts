@@ -42,7 +42,7 @@ export class ChapterChildrenComponent implements OnChanges, OnDestroy {
     if (child.isLocked) return;
     void this.router.navigate(itemDetailsRoute({
       itemId: child.id,
-      itemPath: this.itemData.nav.itemPath.concat([this.itemData.item.id]),
+      itemPath: this.itemData.nav.itemPath.concat([ this.itemData.item.id ]),
       attemptId: this.itemData.currentResult?.attemptId,
       }));
   }

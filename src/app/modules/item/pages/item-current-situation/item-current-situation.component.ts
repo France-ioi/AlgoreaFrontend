@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 @Component({
   selector: 'alg-item-current-situation',
   templateUrl: './item-current-situation.component.html',
-  styleUrls: ['./item-current-situation.component.scss']
+  styleUrls: [ './item-current-situation.component.scss' ]
 })
 export class ItemCurrentSituationComponent implements OnInit {
 
