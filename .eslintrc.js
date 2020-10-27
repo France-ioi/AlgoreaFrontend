@@ -54,6 +54,7 @@ module.exports = {
     'object-curly-spacing': ['error', 'always'],
     'array-bracket-spacing': ['error', 'always', { 'objectsInArrays': false }],
     'computed-property-spacing': ['error'],
+    'space-in-parens': ['error'],
   },
   overrides: [
     {
