@@ -55,6 +55,7 @@ module.exports = {
     'array-bracket-spacing': ['error', 'always', { 'objectsInArrays': false }],
     'computed-property-spacing': ['error'],
     'space-in-parens': ['error'],
+    'func-call-spacing': ['error'],
   },
   overrides: [
     {
