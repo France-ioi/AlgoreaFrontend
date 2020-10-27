@@ -5,7 +5,7 @@
     </span>
     <alg-switch mode="white"></alg-switch>
   </div> -->
-  <div class="group-self" (click)="onSelectYourself()">
+  <div class="group-self" (click)="this.selectedGroup = 0; this.router.navigate(['groups', 'me'])">
     <span class="anonym-group">
       <img src="assets/images/Male.svg" style="width: 3.3333rem; height: 3.3333rem;" />
     </span>

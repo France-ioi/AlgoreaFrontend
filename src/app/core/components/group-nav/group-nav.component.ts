@@ -44,8 +44,4 @@ export class GroupNavComponent {
     });
   }
 
-  onSelectYourself() {
-    this.selectedGroup = 0;
-    void this.router.navigate(['yourself']);
-  }
 }
