@@ -31,11 +31,11 @@ export class GroupJoinByCodeComponent implements OnChanges {
     private codeActionsService: CodeActionsService,
   ) { }
 
-  ngOnChanges() {
+  ngOnChanges(): void {
     this.groupExt = this.group ? withCodeAdditions(this.group) : undefined;
   }
 
-  displaySuccess(msg: string) {
+  displaySuccess(msg: string): void {
     this.messageService.add({
       severity: 'success',
       summary: 'Success',
@@ -44,7 +44,7 @@ export class GroupJoinByCodeComponent implements OnChanges {
     });
   }
 
-  displayError() {
+  displayError(): void {
     this.messageService.add({
       severity: 'error',
       summary: 'Error',
@@ -55,7 +55,7 @@ export class GroupJoinByCodeComponent implements OnChanges {
 
   /* events */
 
-  generateNewCode() {
+  generateNewCode(): void {
     if (!this.group) return;
 
     // disable UI
@@ -77,7 +77,7 @@ export class GroupJoinByCodeComponent implements OnChanges {
       );
   }
 
-  changeValidity(newDuration: Duration) {
+  changeValidity(newDuration: Duration): void {
     if (!this.groupExt) return;
 
     // check valid state
@@ -102,7 +102,7 @@ export class GroupJoinByCodeComponent implements OnChanges {
       );
   }
 
-  removeCode() {
+  removeCode(): void {
     if (!this.group) return;
 
     // disable UI

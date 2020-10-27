@@ -30,12 +30,12 @@ export class SliderComponent implements OnInit {
 
   constructor() {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.posStart = (this.ranges[0] * 100) / this.max;
     this.posEnd = (this.ranges[1] * 100) / this.max;
   }
 
-  handleChange() {
+  handleChange(): void {
     // const handles = this.slider.querySelectorAll('.ui-slider-handle');
     // this.posStart = parseFloat(handles.item(0)...asna.style.left);
     // this.posEnd = parseFloat(handles[1].style.left);

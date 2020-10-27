@@ -29,11 +29,11 @@ export class InputComponent implements OnInit, OnChanges {
 
   constructor() {}
 
-  ngOnInit() {}
+  ngOnInit(): void {}
 
-  ngOnChanges(_changes: SimpleChanges) {}
+  ngOnChanges(_changes: SimpleChanges): void {}
 
-  onButtonClick() {
+  onButtonClick(): void {
     this.click.emit();
   }
 }

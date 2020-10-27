@@ -15,7 +15,7 @@ export class BreadcrumbComponent {
     private router: Router,
   ) {}
 
-  onElementClick(el: { navigateTo?: any[] }) {
+  onElementClick(el: { navigateTo?: any[] }): void {
     if (el.navigateTo) void this.router.navigate(el.navigateTo);
   }
 

@@ -28,7 +28,7 @@ export class GroupNavComponent {
     private router: Router
   ) { }
 
-  onTabOpen(event: {index: number}) {
+  onTabOpen(event: {index: number}): void {
     this.focusOnGroupNav.emit();
     const service = event.index == joinGroupTabIdx ?
       this.joinedGroupsService.getJoinedGroups() : this.managedGroupService.getManagedGroups();
@@ -43,7 +43,7 @@ export class GroupNavComponent {
     });
   }
 
-  goToGroupManaged() {
+  goToGroupManaged(): void {
     void this.router.navigate([ 'groups', 'managed' ]);
   }
 

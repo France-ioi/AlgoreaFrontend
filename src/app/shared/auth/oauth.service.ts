@@ -25,7 +25,7 @@ export class OAuthService {
   /**
    * Init authorization code flow login anf redirect the user to the auth server login url.
    */
-  initCodeFlow() {
+  initCodeFlow(): void {
     const state = this.createNonce();
     const loginServerUri = environment.oauthServerUrl+'/oauth/authorize';
     const separationChar = loginServerUri.indexOf('?') > -1 ? '&' : '?';
@@ -71,7 +71,7 @@ export class OAuthService {
     );
   }
 
-  private loginRedirectUri() {
+  private loginRedirectUri(): string {
     return `${window.location.protocol}//${window.location.host}/#/`;
   }
 
@@ -89,7 +89,7 @@ export class OAuthService {
     return { nonce: nonce, userState: userState };
   }
 
-  private createNonce() {
+  private createNonce(): string {
     const unreserved = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~';
     let size = 45;
     let id = '';

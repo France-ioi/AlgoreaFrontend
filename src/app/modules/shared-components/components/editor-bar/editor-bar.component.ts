@@ -12,13 +12,13 @@ export class EditorBarComponent implements OnInit {
 
   constructor() {}
 
-  ngOnInit() {}
+  ngOnInit(): void {}
 
-  onCancelClick() {
+  onCancelClick(): void {
     this.cancel.emit();
   }
 
-  onValidateClick() {
+  onValidateClick(): void {
     this.save.emit();
   }
 

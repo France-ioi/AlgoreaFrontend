@@ -52,11 +52,11 @@ export class ItemNavTreeComponent implements OnChanges {
     });
   }
 
-  ngOnChanges(_changes: SimpleChanges) {
+  ngOnChanges(_changes: SimpleChanges): void {
     this.nodes = this.data ? this.mapItemToNodes(this.data) : [];
   }
 
-  navigateToNode(node: ItemTreeNode, attemptId?: string) {
+  navigateToNode(node: ItemTreeNode, attemptId?: string): void {
     void this.router.navigate(itemDetailsRoute({
       itemId: node.data.id,
       itemPath: node.itemPath,
@@ -66,7 +66,7 @@ export class ItemNavTreeComponent implements OnChanges {
     }));
   }
 
-  navigateToParent() {
+  navigateToParent(): void {
     if (!this.data?.parent?.attemptId) return; // unexpected!
     void this.router.navigate(itemDetailsRoute({
       itemId: this.data.parent.id,
@@ -75,7 +75,7 @@ export class ItemNavTreeComponent implements OnChanges {
     }));
   }
 
-  selectNode(node: ItemTreeNode) {
+  selectNode(node: ItemTreeNode): void {
     this.selectedNode = node;
 
     // do not allow re-selecting a node with fetching in progress
@@ -109,7 +109,7 @@ export class ItemNavTreeComponent implements OnChanges {
     });
   }
 
-  onKeyDown(e: KeyboardEvent) {
+  onKeyDown(e: KeyboardEvent): void {
     if (e.code === 'Space' || e.code === 'Enter') {
       e.stopPropagation();
       e.preventDefault();

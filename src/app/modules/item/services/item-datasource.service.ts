@@ -54,11 +54,11 @@ export class ItemDataSource implements OnDestroy {
     ).subscribe(state => this.state.next(state));
   }
 
-  fetchItem(navItem: NavItem) {
+  fetchItem(navItem: NavItem): void {
     this.fetchOperation.next(navItem);
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.state.complete();
     this.fetchOperation.complete();
   }

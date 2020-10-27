@@ -26,7 +26,7 @@ export class GroupNavTreeComponent implements OnChanges {
 
   constructor(private router: Router) {}
 
-  ngOnChanges(_changes: SimpleChanges) {
+  ngOnChanges(_changes: SimpleChanges): void {
     this.nodes = this.groups.map(g => ({
       label: g.name,
       data: g,
@@ -36,11 +36,11 @@ export class GroupNavTreeComponent implements OnChanges {
     }));
   }
 
-  onSelect(node: GroupTreeNode) {
+  onSelect(node: GroupTreeNode): void {
     void this.router.navigate([ node.target ]);
   }
 
-  onKeyDown(e: KeyboardEvent) {
+  onKeyDown(e: KeyboardEvent): void {
     if (e.code === 'Space' || e.code === 'Enter') {
       e.stopPropagation();
       e.preventDefault();

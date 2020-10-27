@@ -15,13 +15,13 @@ export class CodeTokenComponent implements OnInit {
 
   constructor() {}
 
-  ngOnInit() {}
+  ngOnInit(): void {}
 
-  refreshCode() {
+  refreshCode(): void {
     this.refresh.emit();
   }
 
-  removeCode() {
+  removeCode(): void {
     this.remove.emit();
   }
 }

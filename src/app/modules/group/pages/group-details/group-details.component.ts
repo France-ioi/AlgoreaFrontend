@@ -49,7 +49,7 @@ export class GroupDetailsComponent implements OnDestroy {
     ).subscribe(p => this.currentContent.current.next(p));
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.currentContent.current.next(null);
     this.subscription.unsubscribe();
   }

@@ -50,9 +50,9 @@ export class ScoreRingComponent implements OnInit, OnChanges {
 
   constructor() {}
 
-  ngOnInit() {}
+  ngOnInit(): void {}
 
-  _pathFromScore(score: number) {
+  _pathFromScore(score: number): string {
     if (score === 0) {
       return 'M0, -30';
     }
@@ -66,7 +66,7 @@ export class ScoreRingComponent implements OnInit, OnChanges {
     return `M0,-30 A30,30 1 ${score > 50 ? 1 : 0},1 ${h},${w}`;
   }
 
-  ngOnChanges(_changes: SimpleChanges) {
+  ngOnChanges(_changes: SimpleChanges): void {
     if (this.scoreFillColor) {
       this.greyedFill = this.scoreFillColor;
       this.textFill = ScoreRingColor.darkText;

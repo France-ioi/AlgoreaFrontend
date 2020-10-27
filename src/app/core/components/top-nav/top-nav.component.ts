@@ -25,28 +25,28 @@ export class TopNavComponent implements OnInit {
     private authService: AuthService
   ) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
   }
 
-  onCollapse() {
+  onCollapse(): void {
     this.collapsed = !this.collapsed;
     this.collapse.emit(this.collapsed);
   }
 
-  onFold() {
+  onFold(): void {
     this.folded = !this.folded;
     this.fold.emit(this.folded);
   }
 
-  toggleNotification() {
+  toggleNotification(): void {
     this.showNotification = !this.showNotification;
   }
 
-  login() {
+  login(): void {
     this.authService.startAuthLogin();
   }
 
-  logout() {
+  logout(): void {
     this.authService.logoutAuthUser();
   }
 

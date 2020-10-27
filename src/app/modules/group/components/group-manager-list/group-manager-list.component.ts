@@ -18,7 +18,7 @@ export class GroupManagerListComponent implements OnChanges {
   constructor(private getGroupManagersService: GetGroupManagersService) {}
 
 
-  ngOnChanges(_changes: SimpleChanges) {
+  ngOnChanges(_changes: SimpleChanges): void {
     this.reloadData();
   }
 
@@ -33,7 +33,7 @@ export class GroupManagerListComponent implements OnChanges {
       }
   }
 
-  private reloadData() {
+  private reloadData(): void {
     if (!this.group) return;
     this.state = 'loading';
     this.getGroupManagersService

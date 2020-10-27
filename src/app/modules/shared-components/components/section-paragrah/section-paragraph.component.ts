@@ -30,10 +30,10 @@ export class SectionParagraphComponent implements OnInit {
 
   constructor() {}
 
-  ngOnInit() {
+  ngOnInit(): void {
   }
 
-  toggleContent() {
+  toggleContent(): void {
     this.collapsed = !this.collapsed;
     this.collapse.emit(this.collapsed);
   }

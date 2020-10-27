@@ -22,9 +22,9 @@ export class SelectionTreeComponent implements OnInit, OnChanges {
 
   constructor() {}
 
-  ngOnInit() {}
+  ngOnInit(): void {}
 
-  ngOnChanges(_changes: SimpleChanges) {
+  ngOnChanges(_changes: SimpleChanges): void {
     if (this.data) {
       while (this.data.length > 1) {
         this.data.pop();
@@ -36,7 +36,7 @@ export class SelectionTreeComponent implements OnInit, OnChanges {
     }
   }
 
-  nodeExpand(node: Node) {
+  nodeExpand(node: Node): void {
     if (!node.expanded) {
       node.expanded = true;
     } else {
@@ -44,7 +44,7 @@ export class SelectionTreeComponent implements OnInit, OnChanges {
     }
   }
 
-  nodeCheck(node: Node) {
+  nodeCheck(node: Node): void {
     if (!node.checked) {
       node.checked = true;
     } else {
