@@ -58,6 +58,7 @@ module.exports = {
     'func-call-spacing': ['error'],
     'no-trailing-spaces': ['error'],
     'no-multi-spaces': ['error'],
+    'block-spacing': ['error'],
   },
   overrides: [
     {
