@@ -61,6 +61,7 @@ module.exports = {
     'block-spacing': ['error'],
     'key-spacing': ['error'],
     'keyword-spacing': ['error'],
+    'no-eq-null': ['error'],
   },
   overrides: [
     {
