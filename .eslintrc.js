@@ -60,6 +60,7 @@ module.exports = {
     'no-multi-spaces': ['error'],
     'block-spacing': ['error'],
     'key-spacing': ['error'],
+    'keyword-spacing': ['error'],
   },
   overrides: [
     {

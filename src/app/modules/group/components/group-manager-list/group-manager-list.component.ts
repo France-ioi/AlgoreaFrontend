@@ -23,7 +23,7 @@ export class GroupManagerListComponent implements OnChanges {
   }
 
   private getManagerLevel(manager: Manager): string {
-    switch(manager.can_manage) {
+    switch (manager.can_manage) {
       case 'none':
         return 'Read-only';
       case 'memberships':
