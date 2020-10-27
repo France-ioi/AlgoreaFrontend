@@ -38,6 +38,7 @@ export class ChapterChildrenComponent implements OnChanges, OnDestroy {
   }
 
   click(child: ItemChild&ItemChildAdditions): void {
+    if (!this.itemData) return;
     if (child.isLocked) return;
     void this.router.navigate(itemDetailsRoute({
       itemId: child.id,
@@ -67,7 +68,7 @@ export class ChapterChildrenComponent implements OnChanges, OnDestroy {
             });
 
             if (this.children.length === 0) this.state = 'empty';
-            else if (this.itemData.currentResult?.validated ||
+            else if (this.itemData?.currentResult?.validated ||
               this.children.filter(item => item.category === 'Validation')
               .every(item => item.result && item.result.validated)) this.state = 'ready';
             else this.state = 'ready-missing-validation';
