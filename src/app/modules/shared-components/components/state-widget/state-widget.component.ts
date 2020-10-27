@@ -27,9 +27,10 @@ export class StateWidgetComponent implements OnChanges {
       case 'Challenge':
         this.icon = 'fa fa-laptop-code';
         break;
+      case 'Undefined':
       default:
-        this.icon = 'fa fa-book-open';
         this.type = 'Undefined';
+        this.icon = 'fa fa-book-open';
         break;
     }
 
