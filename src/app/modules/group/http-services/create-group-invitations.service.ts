@@ -26,7 +26,7 @@ export class CreateGroupInvitationsService {
     return this.http
       .post<ActionResponse<Object>>(
         `${environment.apiUrl}/groups/${groupId}/invitations`,
-        {logins: logins}, {})
+        { logins: logins }, {})
       .pipe(
         map(successData),
         map(function (data: Object): Map<string, InvitationResult> {

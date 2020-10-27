@@ -136,11 +136,11 @@ export class ItemNavigationService {
   constructor(private http: HttpClient) {}
 
   getNavData(itemId: string, attemptId: string): Observable<NavMenuRootItem> {
-    return this.getNavDataGeneric(itemId, { attempt_id: attemptId});
+    return this.getNavDataGeneric(itemId, { attempt_id: attemptId });
   }
 
   getNavDataFromChildAttempt(itemId: string, childAttemptId: string): Observable<NavMenuRootItem> {
-    return this.getNavDataGeneric(itemId, { child_attempt_id: childAttemptId});
+    return this.getNavDataGeneric(itemId, { child_attempt_id: childAttemptId });
   }
 
   private getNavDataGeneric(itemId: string, parameters: {[param: string]: string}): Observable<NavMenuRootItem> {
@@ -167,7 +167,7 @@ export class ItemNavigationService {
       .get<RootActivity[]>(`${environment.apiUrl}/current-user/group-memberships/activities`)
       .pipe(
         map(acts => ({
-          items: acts.map(act => ({...createNavMenuItem(act.activity), groupName: act.name}))
+          items: acts.map(act => ({ ...createNavMenuItem(act.activity), groupName: act.name }))
         }))
       );
   }
@@ -177,7 +177,7 @@ export class ItemNavigationService {
       .get<RootSkill[]>(`${environment.apiUrl}/current-user/group-memberships/skills`)
       .pipe(
         map(skills => ({
-          items: skills.map(sk => ({...createNavMenuItem(sk.skill), groupName: sk.name}))
+          items: skills.map(sk => ({ ...createNavMenuItem(sk.skill), groupName: sk.name }))
         }))
       );
   }

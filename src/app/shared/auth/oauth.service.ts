@@ -60,7 +60,7 @@ export class OAuthService {
     if (parts.has('errors')) {
       return throwError(new Error(`Error received from authenticator: ${parts.get('errors')||'no error'}`));
     }
-    const {nonce: nonceInState} = this.parseState(state);
+    const { nonce: nonceInState } = this.parseState(state);
     if (!nonceInState || nonceInState !== nonceStorage.getItem(nonceStorageKey)) {
       return throwError(new Error('Invalid state received'));
     }

@@ -31,7 +31,7 @@ export class ItemNavMenuData {
     const idx = this.elements.findIndex(i => i.id === id);
     if (idx === -1) return this;
     const elements = [...this.elements];
-    elements[idx] = {...this.elements[idx], ...data };
+    elements[idx] = { ...this.elements[idx], ...data };
     return new ItemNavMenuData(elements, this.pathToElements, this.selectedElement, this.parent);
   }
 

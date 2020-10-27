@@ -78,7 +78,7 @@ export class ItemDataSource implements OnDestroy {
         return concat(
           of(initialData),
           this.fetchResults(navItem, item).pipe(
-            map(r => ({ ...initialData, ...r}))
+            map(r => ({ ...initialData, ...r }))
           )
         );
       })
@@ -96,11 +96,11 @@ export class ItemDataSource implements OnDestroy {
         // 1) if attempt_id was given as arg, try to select the matching result
         if (nav.attemptId) {
           const currentResult = results.find(r => r.attemptId === nav.attemptId);
-          if (currentResult) return of({ results: results, currentResult: currentResult});
+          if (currentResult) return of({ results: results, currentResult: currentResult });
         }
         // 2) if there are already results on this item, select the best one
         const currentResult = bestAttemptFromResults(results);
-        if (currentResult !== null) return of({ results: results, currentResult: currentResult});
+        if (currentResult !== null) return of({ results: results, currentResult: currentResult });
         // 3) if no suitable one and this item does not allow implicit result start or perms are not sufficent, continue without result
         if (!implicitResultStart(item)) return of({ results: results });
         // 4) otherwise, start a result
@@ -113,7 +113,7 @@ export class ItemDataSource implements OnDestroy {
               // this time we are sure to have a started result as we just started it
               const currentResult = bestAttemptFromResults(results);
               if (currentResult === null) throw new Error('Unexpected: result just created not found');
-              return { results: results, currentResult: currentResult};
+              return { results: results, currentResult: currentResult };
             }),
           )),
         );
