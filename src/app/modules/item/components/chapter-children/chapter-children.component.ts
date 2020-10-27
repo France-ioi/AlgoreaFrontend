@@ -9,7 +9,7 @@ import { ItemData } from '../../services/item-datasource.service';
   styleUrls: ['./chapter-children.component.scss'],
 })
 export class ChapterChildrenComponent implements OnChanges, OnDestroy {
-  @Input() itemData: ItemData;
+  @Input() itemData?: ItemData;
 
   state: 'loading' | 'ready' | 'error' = 'loading';
   children: ItemChild[] = [];
@@ -23,7 +23,7 @@ export class ChapterChildrenComponent implements OnChanges, OnDestroy {
   }
 
   private reloadData() {
-    if (this.itemData.currentResult) {
+    if (this.itemData?.currentResult) {
       this.state = 'loading';
       this.subscription?.unsubscribe();
       this.subscription = this.getItemChildrenService

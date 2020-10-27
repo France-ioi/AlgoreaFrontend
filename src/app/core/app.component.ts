@@ -22,7 +22,7 @@ export class AppComponent implements OnInit, OnDestroy {
   folded = false;
   scrolled = false;
 
-  private subscription: Subscription;
+  private subscription?: Subscription;
 
   constructor(
     private currentUserService: CurrentUserService,
@@ -41,7 +41,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    this.subscription?.unsubscribe();
   }
 
   onCollapse(e: boolean) {

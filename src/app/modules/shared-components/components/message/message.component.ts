@@ -8,7 +8,7 @@ import { Message } from 'primeng/api';
 })
 export class MessageComponent implements OnChanges {
 
-  @Input() type: 'success' | 'info' | 'error';
+  @Input() type: 'success' | 'info' | 'error' = 'info';
   @Input() summary?: string;
   @Input() detail = '';
   @Input() closable = true;

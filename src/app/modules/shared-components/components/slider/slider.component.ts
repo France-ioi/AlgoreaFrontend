@@ -17,16 +17,16 @@ export class SliderComponent implements OnInit {
    * Quite error-prone way to do a slider... should probably be re-written
    */
 
-  @Input() ranges: number[];
+  @Input() ranges: number[] = [];
   @Input() min = 0;
   @Input() max = 100;
   @Input() showValue = false;
-  @ViewChild('slider') slider: HTMLDivElement;
+  @ViewChild('slider') slider?: HTMLDivElement;
 
   @Output() change = new EventEmitter<void>();
 
-  posStart: number;
-  posEnd: number;
+  posStart = 0;
+  posEnd = 0;
 
   constructor() {}
 

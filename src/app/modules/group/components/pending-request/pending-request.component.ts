@@ -41,7 +41,7 @@ const groupColumn = { field: 'group.name', header: 'GROUP'};
   providers: [ MessageService ]
 })
 export class PendingRequestComponent implements OnInit, OnChanges {
-  @Input() groupId: string;
+  @Input() groupId?: string;
   @Input() showSwitch = true;
 
   // Make the enums usable in the html template
@@ -62,7 +62,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
   currentSort: string[] = [];
   includeSubgroup = false;
   collapsed = true;
-  status: 'loading' | 'loaded' | 'empty' |'error';
+  status: 'loading' | 'loaded' | 'empty' |'error' = 'loading';
 
   ongoingActivity: Activity = Activity.None;
 
@@ -86,6 +86,8 @@ export class PendingRequestComponent implements OnInit, OnChanges {
   }
 
   private reloadData() {
+    if (!this.groupId) return;
+
     this.status = 'loading';
     this.getRequestsService
       .getPendingRequests(this.groupId, this.includeSubgroup, this.currentSort)

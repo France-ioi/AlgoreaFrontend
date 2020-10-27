@@ -1,4 +1,4 @@
-<div class="input-wrapper" [ngClass]="{ large: size === 'large', light: !isDark }" [formGroup]="parentForm">
+<div class="input-wrapper" [ngClass]="{ large: size === 'large', light: !isDark }" *ngIf="parentForm" [formGroup]="parentForm">
   <input
     [type]="inputType"
     [placeholder]="placeholder"

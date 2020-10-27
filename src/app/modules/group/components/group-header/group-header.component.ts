@@ -7,5 +7,5 @@ import { Group } from '../../http-services/get-group-by-id.service';
   styleUrls: ['./group-header.component.scss'],
 })
 export class GroupHeaderComponent  {
-  @Input() group: Group;
+  @Input() group?: Group;
 }

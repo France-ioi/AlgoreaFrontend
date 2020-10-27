@@ -7,7 +7,7 @@ import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 })
 export class StateWidgetComponent implements OnChanges {
 
-  @Input() type: 'Undefined'|'Discovery'|'Application'|'Validation'|'Challenge';
+  @Input() type: 'Undefined'|'Discovery'|'Application'|'Validation'|'Challenge' = 'Undefined';
   @Input() disabled = false;
 
   icon = '';

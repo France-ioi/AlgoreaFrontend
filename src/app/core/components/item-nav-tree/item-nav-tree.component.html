@@ -1,5 +1,5 @@
 
-<div class="tree-header" *ngIf="data.parent" (click)="navigateToParent()">
+<div class="tree-header" *ngIf="data && data.parent" (click)="navigateToParent()">
   <span class="tree-header-handle">
     <i class="fa fa-chevron-left"></i>
     <div class="icon-folder"><img src="/assets/images/tree-folder.svg" alt=""></div>

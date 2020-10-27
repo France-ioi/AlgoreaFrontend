@@ -21,10 +21,10 @@ interface Message
 })
 export class GroupInviteUsersComponent {
 
-  @Input() group: Group
+  @Input() group?: Group
   @Output() refreshRequired = new EventEmitter<void>();
 
-  @ViewChild(TextareaComponent) private textArea: TextareaComponent;
+  @ViewChild(TextareaComponent) private textArea?: TextareaComponent;
 
   state: 'empty'|'too_many'|'loading'|'ready' = 'empty';
 
@@ -96,6 +96,8 @@ export class GroupInviteUsersComponent {
   }
 
   onInviteClicked() {
+    if (!this.textArea || !this.group) return;
+
     // clear the messages
     this.messages = [];
 

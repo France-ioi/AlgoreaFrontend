@@ -45,15 +45,15 @@ export interface GridColumnGroup {
 })
 export class GridComponent implements OnInit, OnChanges {
 
-  @Input() selection: any[]
+  @Input() selection?: any[]
 
   constructor() {}
-  @ViewChild('table', { static: true }) table: Table;
+  @ViewChild('table', { static: true }) table?: Table;
 
-  @Input() data: any[];
-  @Input() selectedColumns: GridColumn[];
-  @Input() columns: GridColumn[];
-  @Input() groupInfo: GridColumnGroup[];
+  @Input() data?: any[];
+  @Input() selectedColumns?: GridColumn[];
+  @Input() columns: GridColumn[] = [];
+  @Input() groupInfo: GridColumnGroup[] = [];
 
   @Input() sortMode = 'multiple';
   @Input() multiSortMeta: SortMeta[] = [];
@@ -62,10 +62,10 @@ export class GridComponent implements OnInit, OnChanges {
   @Input() scrollWhenExpanded = false;
   @Input() scrollable = false;
 
-  @Input() selectionMode: string; // primeng does not defined null as acceptable value while it is the default
+  @Input() selectionMode?: string;
   @Input() responsive = false;
-  @Input() dataKey: string;
-  @Input() frozenWidth: string; // primeng does not defined null as acceptable value while it is the default
+  @Input() dataKey?: string;
+  @Input() frozenWidth?: string;
   @Input() showGear = true;
 
   @Output() expandWholeWidth = new EventEmitter<boolean>();
@@ -73,14 +73,14 @@ export class GridComponent implements OnInit, OnChanges {
   @Output() selectionChange = new EventEmitter<any[]>();
   @Output() headerCheckboxToggle = new EventEmitter();
 
-  @ContentChild('colgroupTemplate') colgroupTemplate: TemplateRef<any>;
-  @ContentChild('headerTemplate') headerTemplate: TemplateRef<any>;
-  @ContentChild('bodyTemplate') bodyTemplate: TemplateRef<any>;
-  @ContentChild('footerTemplate') footerTemplate: TemplateRef<any>;
-  @ContentChild('summaryTemplate') summaryTemplate: TemplateRef<any>;
-  @ContentChild('rowExpansionTemplate') rowExpansionTemplate: TemplateRef<any>;
-  @ContentChild('frozenHeaderTemplate') frozenHeaderTemplate: TemplateRef<any>;
-  @ContentChild('frozenBodyTemplate') frozenBodyTemplate: TemplateRef<any>;
+  @ContentChild('colgroupTemplate') colgroupTemplate?: TemplateRef<any>;
+  @ContentChild('headerTemplate') headerTemplate?: TemplateRef<any>;
+  @ContentChild('bodyTemplate') bodyTemplate?: TemplateRef<any>;
+  @ContentChild('footerTemplate') footerTemplate?: TemplateRef<any>;
+  @ContentChild('summaryTemplate') summaryTemplate?: TemplateRef<any>;
+  @ContentChild('rowExpansionTemplate') rowExpansionTemplate?: TemplateRef<any>;
+  @ContentChild('frozenHeaderTemplate') frozenHeaderTemplate?: TemplateRef<any>;
+  @ContentChild('frozenBodyTemplate') frozenBodyTemplate?: TemplateRef<any>;
 
   showColumnSelection = false;
 
@@ -90,27 +90,29 @@ export class GridComponent implements OnInit, OnChanges {
 
   onSelectionChange(selection: any[]) {
     this.selection = selection;
-    this.selectionChange.emit(this.selection);
+    this.selectionChange.emit(this.selection ?? []);
   }
 
   onRowSelect() {
-    this.selectionChange.emit(this.selection);
+    this.selectionChange.emit(this.selection ?? []);
   }
 
   onRowUnselect() {
-    this.selectionChange.emit(this.selection);
+    this.selectionChange.emit(this.selection ?? []);
   }
 
   detectSelected() {
+    const selectedCol = this.selectedColumns ?? [];
+
     for (const col of this.columns) {
       this.selected[col.field] = false;
     }
 
-    for (const col of this.selectedColumns) {
+    for (const col of selectedCol) {
       this.selected[col.field] = true;
     }
 
-    this.toShow = this.columns.length - this.selectedColumns.length;
+    this.toShow = this.columns.length - selectedCol.length;
   }
 
   ngOnInit() {}
