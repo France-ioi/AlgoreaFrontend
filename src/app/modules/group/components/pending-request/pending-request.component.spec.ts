@@ -41,11 +41,11 @@ describe('PendingRequestComponent', () => {
       providers: [
         { provide: GetRequestsService, useValue: {
           getPendingRequests: (_id: any, _sort: any, _includeSubgroup: any) => of<PendingRequest[]>(MOCK_RESPONSE),
-        }},
+        } },
         { provide: RequestActionsService, useValue: {
           acceptJoinRequest: (_id: any, _groupIds: any) => serviceResponder$.asObservable(),
           rejectJoinRequest: (_id: any, _groupIds: any) => serviceResponder$.asObservable(),
-        }},
+        } },
         { provide: MessageService, useValue: { add: (_m: any) => {} } }
       ]
     }).compileComponents();
@@ -104,23 +104,23 @@ describe('PendingRequestComponent', () => {
   it('should, when sorting is changed, call the service with the appropriate attributes,', () => {
 
     // mixed orders
-    component.onCustomSort({multiSortMeta: [
-      {field: 'joining_user.login', order: -1},
-      {field: 'at', order: 1}
-    ]});
+    component.onCustomSort({ multiSortMeta: [
+      { field: 'joining_user.login', order: -1 },
+      { field: 'at', order: 1 }
+    ] });
     expect(getRequestsService.getPendingRequests)
       .toHaveBeenCalledWith('99', false, [ '-joining_user.login', 'at' ]);
 
     // check the field precedence counts
-    component.onCustomSort({multiSortMeta: [
-      {field: 'at', order: 1},
-      {field: 'joining_user.login', order: -1}
-    ]});
+    component.onCustomSort({ multiSortMeta: [
+      { field: 'at', order: 1 },
+      { field: 'joining_user.login', order: -1 }
+    ] });
     expect(getRequestsService.getPendingRequests)
       .toHaveBeenCalledWith('99', false, [ 'at' , '-joining_user.login' ]);
 
     // sort reset
-    component.onCustomSort({multiSortMeta: []});
+    component.onCustomSort({ multiSortMeta: [] });
     expect(getRequestsService.getPendingRequests).toHaveBeenCalledWith('99', false, []);
   });
 

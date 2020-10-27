@@ -32,7 +32,7 @@ interface Result {
   countSuccess: number;
 }
 
-const groupColumn = { field: 'group.name', header: 'GROUP'};
+const groupColumn = { field: 'group.name', header: 'GROUP' };
 
 @Component({
   selector: 'alg-pending-request',
@@ -53,7 +53,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     { field: 'at', header: 'REQUESTED ON' },
   ];
   subgroupSwitchItems = [
-    { label: 'This group only', includeSubgroup: false},
+    { label: 'This group only', includeSubgroup: false },
     { label: 'All subgroups', includeSubgroup: true }
   ];
   requests: PendingRequest[] = [];
@@ -104,7 +104,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
   }
 
   private parseResults(data: Map<string, any>[]): Result {
-    const res : Result = {countRequests: 0, countSuccess: 0};
+    const res : Result = { countRequests: 0, countSuccess: 0 };
     data.forEach(elm => {
       res.countRequests += elm.size;
       res.countSuccess += Array.from(elm.values())

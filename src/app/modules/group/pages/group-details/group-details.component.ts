@@ -30,7 +30,7 @@ export class GroupDetailsComponent implements OnDestroy {
   ) {
     this.activatedRoute.paramMap.subscribe(params => {
       const id = params.get('id');
-      this.currentContent.current.next({ type: 'group', breadcrumbs: { category: GroupBreadcrumbCat, path: [], currentPageIdx: -1} });
+      this.currentContent.current.next({ type: 'group', breadcrumbs: { category: GroupBreadcrumbCat, path: [], currentPageIdx: -1 } });
       if (id) this.groupDataSource.fetchGroup(id);
     });
 

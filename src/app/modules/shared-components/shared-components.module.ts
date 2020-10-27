@@ -130,7 +130,7 @@ import { ProgressLevelComponent } from './components/progress-level/progress-lev
     ProgressLevelComponent,
   ],
   providers: [
-    {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: true}}
+    { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: true } }
   ],
   entryComponents: [
   ]

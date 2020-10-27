@@ -65,7 +65,7 @@ export class ItemNavComponent implements OnInit, OnDestroy {
 
     // We do not check if children were already known. So we might re-load again the same children, which is intended.
     return this.itemNavService.getNavData(selected.id, selected.attemptId).pipe(
-      map(nav => readyState(data.withUpdatedElement(selected.id, {...nav.parent, children: nav.items }))),
+      map(nav => readyState(data.withUpdatedElement(selected.id, { ...nav.parent, children: nav.items }))),
       mapErrorToState()
     );
   }

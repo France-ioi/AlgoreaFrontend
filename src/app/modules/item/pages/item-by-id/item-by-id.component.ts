@@ -36,7 +36,7 @@ export class ItemByIdComponent implements OnDestroy {
       currentContent.current.next({
         type: 'item',
         data: { nav: navItem },
-        breadcrumbs: { category: ItemBreadcrumbCat, path: [], currentPageIdx: -1}
+        breadcrumbs: { category: ItemBreadcrumbCat, path: [], currentPageIdx: -1 }
       } as ItemInfo);
       if (!isPathGiven(params)) {
         // TODO: handle no path given

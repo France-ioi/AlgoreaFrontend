@@ -51,6 +51,7 @@ module.exports = {
     'no-confusing-arrow': ['error'],
     'arrow-spacing': ['error', { "before": true, "after": true }],
     'brace-style': ['error', '1tbs'],
+    'object-curly-spacing': ['error', 'always'],
   },
   overrides: [
     {
