@@ -12,7 +12,8 @@ const defaultAttempt = '0';
 interface ItemTreeNode extends TreeNode {
   data: NavMenuItem
   itemPath: string[]
-  status: 'ready'|'loading'|'error'
+  status: 'ready'|'loading'|'error',
+  locked: boolean,
   checked: boolean,
 }
 
@@ -48,6 +49,7 @@ export class ItemNavTreeComponent implements OnChanges {
         children: shouldShowChildren && i.children ? this.mapItemToNodes(new ItemNavMenuData(i.children, pathToChildren)) : undefined,
         expanded: !!(shouldShowChildren && i.children),
         checked: isSelected,
+        locked: !i.canViewContent,
       };
     });
   }
@@ -77,6 +79,8 @@ export class ItemNavTreeComponent implements OnChanges {
   }
 
   selectNode(node: ItemTreeNode): void {
+    if (node.locked) return;
+
     this.selectedNode = node;
 
     // set the node to "loading" so that the user knows the children should appear shortly
