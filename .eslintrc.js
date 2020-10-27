@@ -56,6 +56,7 @@ module.exports = {
     'computed-property-spacing': ['error'],
     'space-in-parens': ['error'],
     'func-call-spacing': ['error'],
+    'no-trailing-spaces': ['error'],
   },
   overrides: [
     {
