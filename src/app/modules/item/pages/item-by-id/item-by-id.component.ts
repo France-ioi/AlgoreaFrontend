@@ -3,9 +3,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { FetchError, Fetching, isReady, Ready } from 'src/app/shared/helpers/state';
-import { CurrentContentService, EditAction, isItemInfo } from 'src/app/shared/services/current-content.service';
+import { CurrentContentService, EditAction, isItemInfo, ItemInfo } from 'src/app/shared/services/current-content.service';
 import { isPathGiven, itemDetailsRoute, itemFromDetailParams } from 'src/app/shared/services/nav-types';
-import { ItemData, ItemDataSource } from '../../services/item-datasource.service';
+import { ItemDataSource, ItemData } from '../../services/item-datasource.service';
 
 const ItemBreadcrumbCat = 'Items';
 
@@ -15,8 +15,8 @@ const ItemBreadcrumbCat = 'Items';
 @Component({
   selector: 'alg-item-by-id',
   templateUrl: './item-by-id.component.html',
-  styleUrls: ['./item-by-id.component.scss'],
-  providers: [ItemDataSource]
+  styleUrls: [ './item-by-id.component.scss' ],
+  providers: [ ItemDataSource ]
 })
 export class ItemByIdComponent implements OnDestroy {
 
@@ -35,9 +35,9 @@ export class ItemByIdComponent implements OnDestroy {
       if (!navItem) return; // unexpected as this component should not be routed if id is missing
       currentContent.current.next({
         type: 'item',
-        data: navItem,
-        breadcrumbs: {category: ItemBreadcrumbCat, path: [], currentPageIdx: -1}
-      });
+        data: { nav: navItem },
+        breadcrumbs: { category: ItemBreadcrumbCat, path: [], currentPageIdx: -1 }
+      } as ItemInfo);
       if (!isPathGiven(params)) {
         // TODO: handle no path given
         return;
@@ -52,8 +52,8 @@ export class ItemByIdComponent implements OnDestroy {
     this.subscriptions.push(
       // on state change, update current content page info (for breadcrumb)
       this.itemDataSource.state$.pipe(
-        filter<Ready<ItemData> | Fetching | FetchError, Ready<ItemData>>(isReady),
-        map(state => ({
+        filter<Ready<ItemData>|Fetching|FetchError,Ready<ItemData>>(isReady),
+        map((state): ItemInfo => ({
           type: 'item',
           breadcrumbs: {
             category: ItemBreadcrumbCat,
@@ -69,22 +69,30 @@ export class ItemByIdComponent implements OnDestroy {
             currentPageIdx: state.data.breadcrumbs.length - 1,
           },
           title: state.data.item.string.title === null ? undefined : state.data.item.string.title,
-          data: state.data.nav,
+          data: {
+            nav: state.data.nav,
+            result: state.data.currentResult ? {
+              attemptId: state.data.currentResult.attemptId,
+              bestScore: state.data.item.best_score,
+              currentScore: state.data.currentResult.score,
+              validated: state.data.currentResult.validated,
+            } : undefined
+          },
         }))
       ).subscribe(p => this.currentContent.current.next(p)),
 
       this.currentContent.editAction$.pipe(
-        filter(action => [EditAction.StartEditing, EditAction.StopEditing].includes(action))
+        filter(action => [ EditAction.StartEditing, EditAction.StopEditing ].includes(action))
       ).subscribe(action => {
         const currentInfo = this.currentContent.current.value;
         if (isItemInfo(currentInfo)) {
-          void this.router.navigate(itemDetailsRoute(currentInfo.data, action === EditAction.StartEditing));
+          void this.router.navigate(itemDetailsRoute(currentInfo.data.nav, action === EditAction.StartEditing));
         }
-      }),
+      })
     );
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.currentContent.current.next(null);
     this.subscriptions.forEach(s => s.unsubscribe());
   }

@@ -15,7 +15,7 @@ describe('GroupNavComponent', () => {
       providers: [
         { provide: JoinedGroupsService, useValue: {} },
         { provide: ManagedGroupsService, useValue: {} },
-        { provide: Router, useValue: {}}
+        { provide: Router, useValue: {} }
       ]
     })
     .compileComponents();

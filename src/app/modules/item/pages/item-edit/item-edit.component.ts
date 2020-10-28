@@ -14,14 +14,14 @@ import { ERROR_MESSAGE } from '../../../../shared/constants/api';
 @Component({
   selector: 'alg-item-edit',
   templateUrl: './item-edit.component.html',
-  styleUrls: ['./item-edit.component.scss'],
-  providers: [MessageService]
+  styleUrls: [ './item-edit.component.scss' ],
+  providers: [ MessageService ]
 })
 export class ItemEditComponent implements OnDestroy {
-  itemId : string;
+  itemId : string | null = null;
   itemForm = this.formBuilder.group({
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    title: ['', [Validators.required, Validators.minLength(3),]],
+    title: [ '', [ Validators.required, Validators.minLength(3), ] ],
   });
   itemLoadingState$ = this.itemDataSource.state$;
 
@@ -35,7 +35,6 @@ export class ItemEditComponent implements OnDestroy {
     private messageService: MessageService
   ) {
     this.currentContent.editState.next('editing');
-
     this.subscriptions.push(this.itemLoadingState$.pipe(
       filter<Ready<ItemData> | Fetching | FetchError, Ready<ItemData>>(isReady),
     ).subscribe(state => {
@@ -51,21 +50,12 @@ export class ItemEditComponent implements OnDestroy {
       .subscribe(_action => this.saveInput()));
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.currentContent.editState.next('non-editable');
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
-  errorToast(message?: string) {
-    this.messageService.add({
-      severity: 'error',
-      summary: 'Error',
-      detail: message || ERROR_MESSAGE.fail,
-      life: TOAST_LENGTH,
-    });
-  }
-
-  successToast() {
+  successToast(): void {
     this.messageService.add({
       severity: 'success',
       summary: 'Success',
@@ -74,7 +64,18 @@ export class ItemEditComponent implements OnDestroy {
     });
   }
 
-  saveInput() {
+  errorToast(message?: string): void {
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Error',
+      detail: message || ERROR_MESSAGE.fail,
+      life: TOAST_LENGTH,
+    });
+  }
+
+  saveInput(): void {
+    if (!this.itemId) return;
+
     if (this.itemForm.invalid) {
       this.errorToast('You need to solve all the errors displayed in the form to save changes.');
       return;

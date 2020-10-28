@@ -4,7 +4,7 @@
   (click)="toogleDropdown($event)"
   [ngStyle]="{ 'width.rem': width }"
 >
-  <span class="select-label">{{ selected }}</span>
+  <span class="select-label" *ngIf="selected">{{ selected }}</span>
   <span class="dropdown-icon">
     <i class="fa fa-caret-down"></i>
   </span>

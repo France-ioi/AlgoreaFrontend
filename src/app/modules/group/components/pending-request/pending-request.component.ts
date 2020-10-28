@@ -32,16 +32,16 @@ interface Result {
   countSuccess: number;
 }
 
-const groupColumn = { field: 'group.name', header: 'GROUP'};
+const groupColumn = { field: 'group.name', header: 'GROUP' };
 
 @Component({
   selector: 'alg-pending-request',
   templateUrl: './pending-request.component.html',
-  styleUrls: ['./pending-request.component.scss'],
+  styleUrls: [ './pending-request.component.scss' ],
   providers: [ MessageService ]
 })
 export class PendingRequestComponent implements OnInit, OnChanges {
-  @Input() groupId: string;
+  @Input() groupId?: string;
   @Input() showSwitch = true;
 
   // Make the enums usable in the html template
@@ -53,7 +53,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     { field: 'at', header: 'REQUESTED ON' },
   ];
   subgroupSwitchItems = [
-    { label: 'This group only', includeSubgroup: false},
+    { label: 'This group only', includeSubgroup: false },
     { label: 'All subgroups', includeSubgroup: true }
   ];
   requests: PendingRequest[] = [];
@@ -62,7 +62,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
   currentSort: string[] = [];
   includeSubgroup = false;
   collapsed = true;
-  status: 'loading' | 'loaded' | 'empty' |'error';
+  status: 'loading' | 'loaded' | 'empty' |'error' = 'loading';
 
   ongoingActivity: Activity = Activity.None;
 
@@ -72,20 +72,22 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     private messageService: MessageService
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.panel.push({
       columns: this.columns,
     });
-    if (!this.showSwitch) this.columns = [groupColumn].concat(this.columns);
+    if (!this.showSwitch) this.columns = [ groupColumn ].concat(this.columns);
   }
 
-  ngOnChanges(_changes: SimpleChanges) {
+  ngOnChanges(_changes: SimpleChanges): void {
     this.selection = [];
     this.ongoingActivity = Activity.None;
     this.reloadData();
   }
 
-  private reloadData() {
+  private reloadData(): void {
+    if (!this.groupId) return;
+
     this.status = 'loading';
     this.getRequestsService
       .getPendingRequests(this.groupId, this.includeSubgroup, this.currentSort)
@@ -102,17 +104,17 @@ export class PendingRequestComponent implements OnInit, OnChanges {
   }
 
   private parseResults(data: Map<string, any>[]): Result {
-    const res : Result = {countRequests: 0, countSuccess: 0};
+    const res : Result = { countRequests: 0, countSuccess: 0 };
     data.forEach(elm => {
       res.countRequests += elm.size;
       res.countSuccess += Array.from(elm.values())
-        .map<number>(state => (['success', 'unchanged'].includes(state) ? 1 : 0))
-        .reduce( (acc, res) => acc + res, 0 );
+        .map<number>(state => ([ 'success', 'unchanged' ].includes(state) ? 1 : 0))
+        .reduce((acc, res) => acc + res, 0);
     });
     return res;
   }
 
-  private displayResponseToast(result: Result, verb: string, msg: string) {
+  private displayResponseToast(result: Result, verb: string, msg: string): void {
     if (result.countSuccess === result.countRequests) {
       this.messageService.add({
         severity: 'success',
@@ -137,7 +139,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     }
   }
 
-  private processRequestError(_err: any) {
+  private processRequestError(_err: any): void {
     this.messageService.add({
       severity: 'error',
       summary: 'Error',
@@ -146,15 +148,15 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     });
   }
 
-  processRequests(action: Action) {
+  processRequests(action: Action): Observable<Map<string, any>[]> {
     const requestMap = new Map<string, string[]>();
     this.selection.forEach(elm => {
       const groupID = elm.group.id;
       const memberID = elm.user.group_id;
 
       const value = requestMap.get(groupID);
-      if (value) requestMap.set(groupID, value.concat([memberID]));
-      else requestMap.set(groupID, [memberID]);
+      if (value) requestMap.set(groupID, value.concat([ memberID ]));
+      else requestMap.set(groupID, [ memberID ]);
     });
     return forkJoin(
       Array.from(requestMap.entries()).map(elm => {
@@ -164,7 +166,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     );
   }
 
-  onAcceptOrReject(action: Action) {
+  onAcceptOrReject(action: Action): void {
     if (this.selection.length === 0 || this.ongoingActivity !== Activity.None) {
       return;
     }
@@ -191,7 +193,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
       );
   }
 
-  onSelectAll() {
+  onSelectAll(): void {
     if (this.selection.length === this.requests.length) {
       this.selection = [];
     } else {
@@ -199,7 +201,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     }
   }
 
-  onCustomSort(event: SortEvent) {
+  onCustomSort(event: SortEvent): void {
     const sortMeta = event.multiSortMeta?.map(meta => (meta.order === -1 ? `-${meta.field}` : meta.field));
 
     if (sortMeta && JSON.stringify(sortMeta) !== JSON.stringify(this.currentSort)) {
@@ -209,11 +211,11 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     }
   }
 
-  onSubgroupSwitch(selectedIdx: number) {
+  onSubgroupSwitch(selectedIdx: number): void {
     this.includeSubgroup = this.subgroupSwitchItems[selectedIdx].includeSubgroup;
 
     this.columns = this.columns.filter(elm => elm !== groupColumn);
-    if (this.includeSubgroup) this.columns = [groupColumn].concat(this.columns);
+    if (this.includeSubgroup) this.columns = [ groupColumn ].concat(this.columns);
 
     this.reloadData();
   }

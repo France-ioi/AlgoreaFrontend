@@ -13,7 +13,7 @@ const GroupBreadcrumbCat = 'Groups';
 @Component({
   selector: 'alg-group-details',
   templateUrl: './group-details.component.html',
-  styleUrls: ['./group-details.component.scss'],
+  styleUrls: [ './group-details.component.scss' ],
   providers: [ GroupDataSource ]
 })
 export class GroupDetailsComponent implements OnDestroy {
@@ -30,7 +30,7 @@ export class GroupDetailsComponent implements OnDestroy {
   ) {
     this.activatedRoute.paramMap.subscribe(params => {
       const id = params.get('id');
-      this.currentContent.current.next({ type: 'group', breadcrumbs: { category: GroupBreadcrumbCat, path: [], currentPageIdx: -1} });
+      this.currentContent.current.next({ type: 'group', breadcrumbs: { category: GroupBreadcrumbCat, path: [], currentPageIdx: -1 } });
       if (id) this.groupDataSource.fetchGroup(id);
     });
 
@@ -41,15 +41,15 @@ export class GroupDetailsComponent implements OnDestroy {
         type: 'group',
         breadcrumbs: {
           category: GroupBreadcrumbCat,
-          path: [{ title: state.data.name, navigateTo: ['groups', 'details', state.data.id] }],
-          currentPageIdx:  0,
+          path: [{ title: state.data.name, navigateTo: [ 'groups', 'details', state.data.id ] }],
+          currentPageIdx: 0,
         },
         title: state.data.name,
       }))
     ).subscribe(p => this.currentContent.current.next(p));
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.currentContent.current.next(null);
     this.subscription.unsubscribe();
   }

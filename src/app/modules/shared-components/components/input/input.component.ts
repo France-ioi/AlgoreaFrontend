@@ -14,11 +14,11 @@ import { AbstractControl, FormGroup } from '@angular/forms';
 @Component({
   selector: 'alg-input',
   templateUrl: './input.component.html',
-  styleUrls: ['./input.component.scss'],
+  styleUrls: [ './input.component.scss' ],
 })
 export class InputComponent implements OnInit, OnChanges {
-  @Input() name: string; // name of the input in the parent form
-  @Input() parentForm: FormGroup;
+  @Input() name?: string; // name of the input in the parent form
+  @Input() parentForm?: FormGroup;
 
   @Input() placeholder = ''; // avoid 'undefined' if no placeholder specified
   @Input() isDark = true;
@@ -35,13 +35,14 @@ export class InputComponent implements OnInit, OnChanges {
 
   constructor() {}
 
-  ngOnInit() {}
+  ngOnInit(): void {}
 
-  ngOnChanges(_changes: SimpleChanges) {
+  ngOnChanges(_changes: SimpleChanges): void {
+    if (!this.name || !this.parentForm) return;
     this.control = this.parentForm.get(this.name);
   }
 
-  onButtonClick() {
+  onButtonClick(): void {
     this.click.emit();
   }
 }

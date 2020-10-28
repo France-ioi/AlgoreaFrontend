@@ -2,7 +2,7 @@ import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy, OnChan
 import { MessageService } from 'primeng/api';
 import { finalize, tap } from 'rxjs/operators';
 import { TOAST_LENGTH } from '../../../../shared/constants/global';
-import {  ERROR_MESSAGE } from '../../../../shared/constants/api';
+import { ERROR_MESSAGE } from '../../../../shared/constants/api';
 import { Duration } from '../../../../shared/helpers/duration';
 import { Group } from '../../http-services/get-group-by-id.service';
 import { CodeAdditions, withCodeAdditions } from '../../helpers/group-code';
@@ -12,17 +12,17 @@ import { CodeActionsService } from '../../http-services/code-actions.service';
 @Component({
   selector: 'alg-group-join-by-code',
   templateUrl: './group-join-by-code.component.html',
-  styleUrls: ['./group-join-by-code.component.scss'],
+  styleUrls: [ './group-join-by-code.component.scss' ],
   providers: [ MessageService ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class GroupJoinByCodeComponent implements OnChanges {
 
-  @Input() group: Group
+  @Input() group?: Group
   @Output() refreshRequired = new EventEmitter<void>();
 
-  groupExt: Group & CodeAdditions; // group extended with code related attributes
+  groupExt?: Group & CodeAdditions; // group extended with code related attributes
   processing = false;
 
   constructor(
@@ -31,11 +31,11 @@ export class GroupJoinByCodeComponent implements OnChanges {
     private codeActionsService: CodeActionsService,
   ) { }
 
-  ngOnChanges() {
-    this.groupExt = withCodeAdditions(this.group);
+  ngOnChanges(): void {
+    this.groupExt = this.group ? withCodeAdditions(this.group) : undefined;
   }
 
-  displaySuccess(msg: string) {
+  displaySuccess(msg: string): void {
     this.messageService.add({
       severity: 'success',
       summary: 'Success',
@@ -44,7 +44,7 @@ export class GroupJoinByCodeComponent implements OnChanges {
     });
   }
 
-  displayError() {
+  displayError(): void {
     this.messageService.add({
       severity: 'error',
       summary: 'Error',
@@ -55,7 +55,9 @@ export class GroupJoinByCodeComponent implements OnChanges {
 
   /* events */
 
-  generateNewCode() {
+  generateNewCode(): void {
+    if (!this.group) return;
+
     // disable UI
     this.processing = true;
 
@@ -75,7 +77,9 @@ export class GroupJoinByCodeComponent implements OnChanges {
       );
   }
 
-  changeValidity(newDuration: Duration) {
+  changeValidity(newDuration: Duration): void {
+    if (!this.groupExt) return;
+
     // check valid state
     if (this.groupExt.hasCodeNotSet) return;
 
@@ -84,7 +88,7 @@ export class GroupJoinByCodeComponent implements OnChanges {
 
     // call code refresh service, then group refresh data
     this.groupActionsService
-      .updateGroup(this.group.id, { code_lifetime: newDuration.toString(), code_expires_at: null })
+      .updateGroup(this.groupExt.id, { code_lifetime: newDuration.toString(), code_expires_at: null })
       .pipe(
         tap(() => this.refreshRequired.emit()),
         finalize(() => this.processing = false),
@@ -98,7 +102,9 @@ export class GroupJoinByCodeComponent implements OnChanges {
       );
   }
 
-  removeCode() {
+  removeCode(): void {
+    if (!this.group) return;
+
     // disable UI
     this.processing = true;
 

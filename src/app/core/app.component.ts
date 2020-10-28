@@ -9,20 +9,20 @@ import { AuthService } from '../shared/auth/auth.service';
 @Component({
   selector: 'alg-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: [ './app.component.scss' ]
 })
 export class AppComponent implements OnInit, OnDestroy {
 
   // the delay(0) is used to prevent the UI to update itself (when the content is loaded) (ExpressionChangedAfterItHasBeenCheckedError)
-  currentContent$: Observable<ContentInfo|null>  = this.currentContent.currentContent$.pipe( delay(0) );
-  editState$ = this.currentContent.editState$.pipe( delay(0) );
-  currentUser$ = this.currentUserService.currentUser$.pipe( delay(0) );
+  currentContent$: Observable<ContentInfo|null> = this.currentContent.currentContent$.pipe(delay(0));
+  editState$ = this.currentContent.editState$.pipe(delay(0));
+  currentUser$ = this.currentUserService.currentUser$.pipe(delay(0));
 
   collapsed = false;
   folded = false;
   scrolled = false;
 
-  private subscription: Subscription;
+  private subscription?: Subscription;
 
   constructor(
     private currentUserService: CurrentUserService,
@@ -30,7 +30,7 @@ export class AppComponent implements OnInit, OnDestroy {
     private currentContent: CurrentContentService,
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     // each time there is a new user, refresh the page
     this.subscription = this.currentUserService.currentUser$.pipe(
       filter<UserProfile|undefined, UserProfile>((user):user is UserProfile => !!user),
@@ -40,23 +40,23 @@ export class AppComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy() {
-    this.subscription.unsubscribe();
+  ngOnDestroy(): void {
+    this.subscription?.unsubscribe();
   }
 
-  onCollapse(e: boolean) {
+  onCollapse(e: boolean): void {
     this.collapsed = e;
     if (!this.collapsed) {
       this.folded = false;
     }
   }
 
-  onFold(folded: boolean) {
+  onFold(folded: boolean): void {
     this.folded = folded;
   }
 
-  @HostListener('window:scroll', ['$event'])
-  onScrollContent() {
+  @HostListener('window:scroll', [ '$event' ])
+  onScrollContent(): void{
     if (window.pageYOffset > 40 && !this.scrolled) {
       this.scrolled = true;
     } else if (window.pageYOffset <= 40 && this.scrolled) {
@@ -64,23 +64,23 @@ export class AppComponent implements OnInit, OnDestroy {
     }
   }
 
-  onEditPage() {
+  onEditPage(): void {
     this.currentContent.editAction.next(EditAction.StartEditing);
   }
 
-  onEditCancel() {
+  onEditCancel() : void{
     this.currentContent.editAction.next(EditAction.StopEditing);
   }
 
-  onEditSave() {
+  onEditSave(): void {
     this.currentContent.editAction.next(EditAction.Save);
   }
 
-  login() {
+  login(): void {
     this.authService.startAuthLogin();
   }
 
-  logout() {
+  logout(): void {
     this.authService.logoutAuthUser();
   }
 

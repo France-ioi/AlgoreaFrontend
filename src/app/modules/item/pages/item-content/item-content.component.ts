@@ -4,7 +4,7 @@ import { ItemDataSource } from '../../services/item-datasource.service';
 @Component({
   selector: 'alg-item-content',
   templateUrl: './item-content.component.html',
-  styleUrls: ['./item-content.component.scss']
+  styleUrls: [ './item-content.component.scss' ]
 })
 export class ItemContentComponent {
 

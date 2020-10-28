@@ -24,13 +24,13 @@ describe('GroupDetailsComponent', () => {
           paramMap: of({
             get: (_s: string) => '',
           }),
-        }},
+        } },
         { provide: GroupDataSource, useValue: {
           group$: of(readyState(mockGroup))
         } },
         { provide: GetGroupByIdService, useValue: {
           get: (_id: string) => of({})
-        }}
+        } }
       ]
     })
     .compileComponents();

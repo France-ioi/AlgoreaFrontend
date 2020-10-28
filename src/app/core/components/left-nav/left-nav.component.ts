@@ -4,7 +4,7 @@ import { UserProfile } from 'src/app/shared/http-services/current-user.service';
 @Component({
   selector: 'alg-left-nav',
   templateUrl: './left-nav.component.html',
-  styleUrls: ['./left-nav.component.scss']
+  styleUrls: [ './left-nav.component.scss' ]
 })
 export class LeftNavComponent implements OnInit, OnChanges {
 
@@ -17,22 +17,22 @@ export class LeftNavComponent implements OnInit, OnChanges {
 
   constructor() { }
 
-  ngOnInit() {
+  ngOnInit(): void {
   }
 
-  ngOnChanges(_changes: SimpleChanges) {
+  ngOnChanges(_changes: SimpleChanges): void {
   }
 
-  onCollapse(collapsed: boolean) {
+  onCollapse(collapsed: boolean): void {
     this.collapsed = collapsed;
     this.collapse.emit(this.collapsed);
   }
 
-  onSearchEvent() {
+  onSearchEvent(): void {
     this.searchView = true;
   }
 
-  onSearchCloseEvent() {
+  onSearchCloseEvent(): void {
     this.searchView = false;
   }
 

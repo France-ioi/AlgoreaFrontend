@@ -6,7 +6,7 @@ import { map } from 'rxjs/operators';
 @Component({
   selector: 'alg-group-settings',
   templateUrl: './group-settings.component.html',
-  styleUrls: ['./group-settings.component.scss']
+  styleUrls: [ './group-settings.component.scss' ]
 })
 export class GroupSettingsComponent {
 

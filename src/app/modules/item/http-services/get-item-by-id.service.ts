@@ -11,6 +11,7 @@ export interface Item {
     subtitle?: string|null,
     description?: string|null,
   },
+  best_score: number,
   permissions: {
     can_view: 'none'|'info'|'content'|'content_with_descendants'|'solution',
     can_edit: 'none'|'children'|'all'|'all_with_grant',

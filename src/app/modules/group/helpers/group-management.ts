@@ -28,7 +28,7 @@ enum ManagementLevel {
 
 export function canCurrentUserManageMembers(group: ManagementInfo): boolean {
   if (group.current_user_is_manager && group.current_user_can_manage) {
-    return [ManagementLevel.Memberships as string, ManagementLevel.MembershipsAndGroup as string].includes(group.current_user_can_manage);
+    return [ ManagementLevel.Memberships as string, ManagementLevel.MembershipsAndGroup as string ].includes(group.current_user_can_manage);
   } else {
     return false;
   }

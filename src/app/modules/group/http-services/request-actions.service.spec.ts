@@ -11,7 +11,8 @@ describe('RequestActionsService', () => {
       imports: [
         HttpClientTestingModule
       ],
-    });    service = TestBed.inject(RequestActionsService);
+    });
+    service = TestBed.inject(RequestActionsService);
   });
 
   it('should be created', () => {

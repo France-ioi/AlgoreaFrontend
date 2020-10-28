@@ -6,12 +6,12 @@ import { ItemDataSource } from '../../services/item-datasource.service';
 @Component({
   selector: 'alg-item-details',
   templateUrl: './item-details.component.html',
-  styleUrls: ['./item-details.component.scss'],
+  styleUrls: [ './item-details.component.scss' ],
 })
 export class ItemDetailsComponent implements OnDestroy {
 
   itemLoadingstate$ = this.itemDataSource.state$;
-  item$ = this.itemDataSource.item$; // as template is not able to infer properly the type
+  itemData$ = this.itemDataSource.itemData$; // as template is not able to infer properly the type
 
   subscription: Subscription;
 
@@ -24,7 +24,7 @@ export class ItemDetailsComponent implements OnDestroy {
     );
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.subscription.unsubscribe();
     this.currentContent.editState.next('non-editable');
   }

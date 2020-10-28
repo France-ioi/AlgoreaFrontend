@@ -9,7 +9,7 @@ describe('GroupNavTreeComponent', () => {
   let fixture: ComponentFixture<GroupNavTreeComponent>;
 
   beforeEach(waitForAsync(() => {
-    const routerSpy = jasmine.createSpyObj<Router>('Router', ['parseUrl']);
+    const routerSpy = jasmine.createSpyObj<Router>('Router', [ 'parseUrl' ]);
     TestBed.configureTestingModule({
       declarations: [ GroupNavTreeComponent ],
       providers: [

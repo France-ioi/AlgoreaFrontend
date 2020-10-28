@@ -11,11 +11,11 @@ import {
 @Component({
   selector: 'alg-section-paragraph',
   templateUrl: './section-paragraph.component.html',
-  styleUrls: ['./section-paragraph.component.scss'],
+  styleUrls: [ './section-paragraph.component.scss' ],
 })
 export class SectionParagraphComponent implements OnInit {
-  @Input() icon: string;
-  @Input() label: string;
+  @Input() icon?: string;
+  @Input() label = '';
   @Input() collapsible = false;
   @Input() theme = 'success';
   @Input() hasBorder = false;
@@ -26,14 +26,14 @@ export class SectionParagraphComponent implements OnInit {
 
   @Output() collapse = new EventEmitter<boolean>();
 
-  @ContentChild('headerTemplate') headerTemplate: TemplateRef<any>;
+  @ContentChild('headerTemplate') headerTemplate?: TemplateRef<any>;
 
   constructor() {}
 
-  ngOnInit() {
+  ngOnInit(): void {
   }
 
-  toggleContent() {
+  toggleContent(): void {
     this.collapsed = !this.collapsed;
     this.collapse.emit(this.collapsed);
   }
