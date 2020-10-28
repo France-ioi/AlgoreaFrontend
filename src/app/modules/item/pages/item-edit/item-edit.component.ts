@@ -76,7 +76,7 @@ export class ItemEditComponent implements OnDestroy {
 
   saveInput() {
     if (this.itemForm.invalid) {
-      this.errorToast('The form isn\'t valid');
+      this.errorToast('You need to solve all the errors displayed in the form to save changes.');
       return;
     }
 
