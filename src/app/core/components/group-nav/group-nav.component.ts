@@ -4,7 +4,6 @@ import { ManagedGroupsService } from '../../http-services/managed-groups.service
 import { Group } from '../group-nav-tree/group';
 import { of, merge } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { Router } from '@angular/router';
 
 const joinGroupTabIdx = 1;
 
@@ -25,8 +24,7 @@ export class GroupNavComponent {
 
   constructor(
     private joinedGroupsService: JoinedGroupsService,
-    private managedGroupService: ManagedGroupsService,
-    private router: Router,
+    private managedGroupService: ManagedGroupsService
   ) { }
 
   onTabOpen(event: {index: number}) {
@@ -42,11 +40,6 @@ export class GroupNavComponent {
       if (event.index == joinGroupTabIdx) this.joinedGroups = res;
       else this.managedGroups = res;
     });
-  }
-
-  onSelectYourself() {
-    this.selectedGroup = 0;
-    void this.router.navigate(['yourself']);
   }
 
 }
