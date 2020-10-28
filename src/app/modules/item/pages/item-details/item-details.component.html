@@ -4,9 +4,9 @@
 
   <p *ngIf="state.tag === 'error'">Error while loading the item</p>
 
-  <ng-container *ngIf="state.tag === 'ready' && (item$ | async) as item">
+  <ng-container *ngIf="state.tag === 'ready' && (itemData$ | async) as itemData">
 
-    <alg-item-header [item]="item"></alg-item-header>
+    <alg-item-header [itemData]="itemData"></alg-item-header>
 
     <nav mat-tab-nav-bar>
       <a mat-tab-link
