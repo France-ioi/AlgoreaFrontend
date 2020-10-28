@@ -9,7 +9,7 @@ import {
   ContentChild,
   TemplateRef,
 } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { AbstractControl, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'alg-input',
@@ -29,13 +29,17 @@ export class InputComponent implements OnInit, OnChanges {
 
   @Output() click = new EventEmitter();
 
+  control: AbstractControl | null = null;
+
   @ContentChild('errorTemplate') errorTemplate: TemplateRef<any>;
 
   constructor() {}
 
   ngOnInit() {}
 
-  ngOnChanges(_changes: SimpleChanges) {}
+  ngOnChanges(_changes: SimpleChanges) {
+    this.control = this.parentForm.get(this.name);
+  }
 
   onButtonClick() {
     this.click.emit();

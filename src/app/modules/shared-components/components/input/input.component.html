@@ -13,6 +13,8 @@
   </span>
 </div>
 
-<ng-container *ngIf="parentForm.get(name) as input">
-  <ng-container *ngIf="input && input.invalid" [ngTemplateOutlet]="errorTemplate"></ng-container>
-</ng-container>
+<div *ngIf="control && control.errors" style="color: #a94442">
+  <div *ngIf="control.errors.required"><small>This field is required</small></div>
+  <div *ngIf="control.errors.minlength as err"><small>This field is too short, minimum : {{err.requiredLength}} characters.</small></div>
+  <div *ngIf="control.errors.maxlength as err"><small>This field is too long, maximum : {{err.requiredLength}} characters.</small></div>
+</div>
