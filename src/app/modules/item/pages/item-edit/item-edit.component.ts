@@ -88,7 +88,7 @@ export class ItemEditComponent implements OnDestroy {
         this.itemForm.disable();
         this.successToast();
         this.itemDataSource.refreshItem();
-        this.currentContent.editAction.next(EditAction.FinishEditing);
+        this.currentContent.editAction.next(EditAction.StopEditing);
       },
       _err => this.errorToast()
     );
