@@ -14,6 +14,7 @@ interface RawItemChild extends ItemPermissionsInfo {
   category: 'Undefined'|'Discovery'|'Application'|'Validation'|'Challenge',
   type: 'Chapter'|'Task'|'Course'|'Skill',
   results: {
+    attempt_id: string,
     latest_activity_at: string,
     started_at: string|null,
     score_computed: number,
@@ -30,6 +31,7 @@ export interface ItemChild extends ItemPermissionsInfo {
   category: 'Undefined'|'Discovery'|'Application'|'Validation'|'Challenge',
   type: 'Chapter'|'Task'|'Course'|'Skill',
   results: {
+    attempt_id: string,
     latestActivityAt: Date,
     startedAt: Date|null,
     score: number,
@@ -59,6 +61,7 @@ export class GetItemChildrenService {
           category: c.category,
           type: c.type,
           results: c.results.map(r => ({
+            attempt_id: r.attempt_id,
             latestActivityAt: new Date(r.latest_activity_at),
             startedAt: r.started_at === null ? null : new Date(r.started_at),
             score: r.score_computed,
