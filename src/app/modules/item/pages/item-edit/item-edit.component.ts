@@ -56,11 +56,11 @@ export class ItemEditComponent implements OnDestroy {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
-  errorToast() {
+  errorToast(message?: string) {
     this.messageService.add({
       severity: 'error',
       summary: 'Error',
-      detail: ERROR_MESSAGE.fail,
+      detail: message || ERROR_MESSAGE.fail,
       life: TOAST_LENGTH,
     });
   }
@@ -75,7 +75,10 @@ export class ItemEditComponent implements OnDestroy {
   }
 
   saveInput() {
-    if (this.itemForm.invalid) return;
+    if (this.itemForm.invalid) {
+      this.errorToast('The form isn\'t valid');
+      return;
+    }
 
     this.updateItemStringService.updateItem(
       this.itemId,
