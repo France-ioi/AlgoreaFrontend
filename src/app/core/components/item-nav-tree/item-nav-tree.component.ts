@@ -39,6 +39,7 @@ export class ItemNavTreeComponent implements OnChanges {
       const shouldShowChildren = i.hasChildren && isSelected;
       const isLoadingChildren = shouldShowChildren && !i.children; // are being loaded by the parent component
       const pathToChildren = data.pathToElements.concat([ i.id ]);
+      const locked = !i.canViewContent;
       return {
         label: i.title ?? undefined,
         data: i,
@@ -49,7 +50,8 @@ export class ItemNavTreeComponent implements OnChanges {
         children: shouldShowChildren && i.children ? this.mapItemToNodes(new ItemNavMenuData(i.children, pathToChildren)) : undefined,
         expanded: !!(shouldShowChildren && i.children),
         checked: isSelected,
-        locked: !i.canViewContent,
+        locked: locked,
+        selectable: !locked,
       };
     });
   }

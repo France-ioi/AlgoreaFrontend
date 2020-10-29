@@ -14,7 +14,7 @@
 >
   <!-- Folder elements template -->
   <ng-template let-node pTemplate="folder">
-    <span class="node-tree-item folder" [ngClass]="{ expanded: node.expanded, checked: node.checked }">
+    <span class="node-tree-item folder" [ngClass]="{ expanded: node.expanded, checked: node.checked, locked: node.locked }">
       <span class="node-item-branch">
         <span class="top-branch">
           <span class="mask-branch"></span>
@@ -23,7 +23,7 @@
           <span class="mask-branch"></span>
         </span>
       </span>
-      <span class="node-item-content">
+      <span class="node-item-content" [ngClass]="{ unlocked: !node.locked }">
         <span (click)="selectNode(node)" class="node-select">
           <i
             *ngIf="!node.data.score"
@@ -44,7 +44,7 @@
         </span>
         <span (click)="selectNode(node)" class="node-label">
           <span class="label-container">
-            <span class="node-label-title" [ngClass]="{ 'locked': node.locked }">
+            <span class="node-label-title" [ngClass]="{ locked: node.locked }">
               {{ node.label }}
               <span *ngIf="node.data.groupName">(via group "{{ node.data.groupName }}")</span>
             </span>
@@ -71,7 +71,7 @@
 
   <!-- Leaf elements template -->
   <ng-template let-node pTemplate="leaf">
-    <span class="node-tree-item" [ngClass]="{ checked: node.checked }" >
+    <span class="node-tree-item" [ngClass]="{ checked: node.checked, locked: node.locked }" >
       <span class="node-item-branch">
         <span class="top-branch">
           <span class="mask-branch"></span>
@@ -100,7 +100,7 @@
         </span>
         <span (click)="selectNode(node)" class="node-label">
           <span class="label-container">
-            <span class="node-label-title"  [ngClass]="{ 'locked': node.locked }">
+            <span class="node-label-title" [ngClass]="{ locked: node.locked }">
               {{ node.data.title }}
             </span>
             <span class="node-state" *ngIf="node.locked">

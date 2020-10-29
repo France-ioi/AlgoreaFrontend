@@ -174,15 +174,17 @@ $bk-secondary: #3B73B4;
 
   &:focus {
     .node-tree-item .node-item-content {
-      border-top-left-radius: 0.5rem;
-      border-bottom-left-radius: 0.5rem;
-      background-color: $base-bk-color;
-      color: $base-color;
+      &.unlocked {
+        border-top-left-radius: 0.5rem;
+        border-bottom-left-radius: 0.5rem;
+        background-color: $base-bk-color;
+        color: $base-color;
 
-      .node-select {
-        color: #fff;
-        background-color: #f5a623;
-        border-radius: 9rem;
+        .node-select {
+          color: #fff;
+          background-color: #f5a623;
+          border-radius: 9rem;
+        }
       }
     }
   }
@@ -312,7 +314,7 @@ $bk-secondary: #3B73B4;
           font-weight: 700;
 
           &.locked {
-            color: #b9b8b8;
+            color: #cacaca;
           }
         }
 
@@ -361,6 +363,10 @@ $bk-secondary: #3B73B4;
           border-radius: 9rem;
         }
       }
+    }
+
+    &.locked {
+      cursor: default;
     }
   }
 }
