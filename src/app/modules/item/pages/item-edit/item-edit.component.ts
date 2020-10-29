@@ -18,7 +18,7 @@ import { ERROR_MESSAGE } from '../../../../shared/constants/api';
   providers: [ MessageService ]
 })
 export class ItemEditComponent implements OnDestroy {
-  itemId : string | null = null;
+  itemId? : string;
   itemForm = this.formBuilder.group({
     // eslint-disable-next-line @typescript-eslint/unbound-method
     title: [ '', [ Validators.required, Validators.minLength(3), ] ],
