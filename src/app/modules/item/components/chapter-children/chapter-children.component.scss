@@ -49,6 +49,7 @@
 
         &.locked {
           color: $light-text-color;
+          cursor: default;
         }
 
         .activity-weight {
