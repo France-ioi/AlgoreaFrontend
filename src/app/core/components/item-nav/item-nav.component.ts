@@ -115,13 +115,16 @@ export class ItemNavComponent implements OnInit, OnDestroy {
 
       // If the new current item is already the selected one, just update its data (do not cancel ongoing requests)
       this.currentContent.currentContent$.pipe(
-        map(content => (content !== null && isItemInfo(content) ? content.data : null)),
-        switchMap(item => {
+        map(content => (content !== null && isItemInfo(content) ? content : null)),
+        switchMap(content => {
+          if (content === null) return EMPTY;
+          const item = content.data;
           if (item === null || !item.result) return EMPTY; // only update if result (score) is given
           if (!isReady(this.state) || this.state.data.selectedElement?.itemId !== item.nav.itemId) return EMPTY; // and same item id
           return of(this.state.data.withUpdatedElement(item.nav.itemId, {
             attemptId: item.result.attemptId,
-            score: { best: item.result.bestScore, current: item.result.currentScore, validated: item.result.validated }
+            score: { best: item.result.bestScore, current: item.result.currentScore, validated: item.result.validated },
+            title: content.title
           }));
         }),
       ).subscribe(newMenuData => this.state = readyState(newMenuData)),
