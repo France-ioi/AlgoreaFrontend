@@ -1,4 +1,5 @@
 import { ItemRoute } from 'src/app/shared/helpers/item-route';
+import { ItemDetails } from 'src/app/shared/services/current-content.service';
 import { NavMenuItem } from '../http-services/item-navigation.service';
 
 type Id = string;
@@ -24,14 +25,30 @@ export class ItemNavMenuData {
   }
 
   /**
-   * Return this with the element identified by id (at first level of `elements`) updated with the given data.
+   * Return this with the element identified by id (at first level of `elements`) updated with the given details.
    * If the element was not found, return this.
    */
-  withUpdatedElement(id: Id, data: Object): ItemNavMenuData {
+  withUpdatedDetails(id: Id, details: ItemDetails): ItemNavMenuData {
     const idx = this.elements.findIndex(i => i.id === id);
     if (idx === -1) return this;
     const elements = [ ...this.elements ];
-    elements[idx] = { ...this.elements[idx], ...data };
+    elements[idx].title = details.title;
+    elements[idx].attemptId = details.attemptId ?? null;
+    elements[idx].bestScore = details.bestScore;
+    elements[idx].currentScore = details.currentScore;
+    elements[idx].validated = details.validated;
+    return new ItemNavMenuData(elements, this.pathToElements, this.selectedElement, this.parent);
+  }
+
+   /**
+   * Return this with the element identified by id (at first level of `elements`) updated with info "self" and replaced children.
+   * If the element was not found, return this.
+   */
+  withUpdatedInfo(id: Id, info: NavMenuItem, children: NavMenuItem[]): ItemNavMenuData {
+    const idx = this.elements.findIndex(i => i.id === id);
+    if (idx === -1) return this;
+    const elements = [ ...this.elements ];
+    elements[idx] = { ...elements[idx], ...info, children: children };
     return new ItemNavMenuData(elements, this.pathToElements, this.selectedElement, this.parent);
   }
 
