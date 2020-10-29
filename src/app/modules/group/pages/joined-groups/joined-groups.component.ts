@@ -4,7 +4,7 @@ import { CurrentContentService } from '../../../../shared/services/current-conte
 @Component({
   selector: 'alg-joined-groups',
   templateUrl: './joined-groups.component.html',
-  styleUrls: ['./joined-groups.component.scss']
+  styleUrls: [ './joined-groups.component.scss' ]
 })
 export class JoinedGroupsComponent implements OnInit {
   title = 'Joined Groups'
@@ -13,7 +13,7 @@ export class JoinedGroupsComponent implements OnInit {
   constructor(private currentContent: CurrentContentService) { }
 
   ngOnInit(): void {
-    this.currentContent.setCurrent({ // change to current.next(content) when merging with master
+    this.currentContent.current.next({
       type: 'group',
       breadcrumbs: {
         category: this.title,
