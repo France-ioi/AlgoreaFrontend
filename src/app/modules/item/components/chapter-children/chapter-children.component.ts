@@ -10,6 +10,7 @@ import { itemDetailsRoute } from 'src/app/shared/services/nav-types';
 interface ItemChildAdditions {
   isLocked: boolean,
   result?: {
+    attempt_id: string,
     validated: boolean,
     score: number,
   },
@@ -38,12 +39,13 @@ export class ChapterChildrenComponent implements OnChanges, OnDestroy {
   }
 
   click(child: ItemChild&ItemChildAdditions): void {
-    if (!this.itemData) return;
-    if (child.isLocked) return;
+    if (!this.itemData || child.isLocked) return;
+    const attempt_id = child.result?.attempt_id;
     void this.router.navigate(itemDetailsRoute({
       itemId: child.id,
       itemPath: this.itemData.nav.itemPath.concat([ this.itemData.item.id ]),
-      attemptId: this.itemData.currentResult?.attemptId,
+      attemptId: attempt_id,
+      parentAttemptId: attempt_id ? undefined : this.itemData.currentResult?.attemptId,
       }));
   }
 
@@ -61,6 +63,7 @@ export class ChapterChildrenComponent implements OnChanges, OnDestroy {
                 ...child,
                 isLocked: !canCurrentUserViewItemContent(child),
                 result: res === null ? undefined : {
+                  attempt_id: res.attempt_id,
                   validated: res.validated,
                   score: res.score,
                 },
