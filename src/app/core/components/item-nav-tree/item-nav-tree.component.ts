@@ -4,9 +4,9 @@ import { NavMenuItem } from '../../http-services/item-navigation.service';
 import { ResultActionsService } from 'src/app/shared/http-services/result-actions.service';
 import { of, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { itemDetailsRoute } from 'src/app/shared/services/nav-types';
 import { Router } from '@angular/router';
 import { ItemNavMenuData } from '../../common/item-nav-menu-data';
+import { itemDetailsUrl } from 'src/app/shared/helpers/item-route';
 
 // ItemTreeNode is PrimeNG tree node with data forced to be an item
 interface ItemTreeNode extends TreeNode {
@@ -34,7 +34,7 @@ export class ItemNavTreeComponent implements OnChanges {
 
   mapItemToNodes(data: ItemNavMenuData): ItemTreeNode[] {
     return data.elements.map(i => {
-      const isSelected = !!(data.selectedElement && data.selectedElement.itemId === i.id);
+      const isSelected = !!(data.selectedElement && data.selectedElement.id === i.id);
       const shouldShowChildren = i.hasChildren && isSelected;
       const isLoadingChildren = shouldShowChildren && !i.children; // are being loaded by the parent component
       const pathToChildren = data.pathToElements.concat([ i.id ]);
@@ -57,20 +57,21 @@ export class ItemNavTreeComponent implements OnChanges {
   }
 
   navigateToNode(node: ItemTreeNode, attemptId?: string): void {
-    void this.router.navigate(itemDetailsRoute({
-      itemId: node.data.id,
-      itemPath: node.itemPath,
-      attemptId: attemptId,
-      // The parent attempt is only needed if attempt id is not known
-      parentAttemptId: attemptId ? undefined : this.parentAttemptForNode(node)
-    }));
+    const routeBase = { id: node.data.id, path: node.itemPath };
+    if (attemptId) {
+      void this.router.navigate(itemDetailsUrl({ ...routeBase, attemptId: attemptId }));
+      return;
+    }
+    const parentAttemptId = this.parentAttemptForNode(node);
+    if (!parentAttemptId) return; // unexpected
+    void this.router.navigate(itemDetailsUrl({ ...routeBase, parentAttemptId: parentAttemptId }));
   }
 
   navigateToParent(): void {
     if (!this.data?.parent?.attemptId) return; // unexpected!
-    void this.router.navigate(itemDetailsRoute({
-      itemId: this.data.parent.id,
-      itemPath: this.data.pathToElements.slice(0, -1),
+    void this.router.navigate(itemDetailsUrl({
+      id: this.data.parent.id,
+      path: this.data.pathToElements.slice(0, -1),
       attemptId: this.data.parent.attemptId,
     }));
   }
