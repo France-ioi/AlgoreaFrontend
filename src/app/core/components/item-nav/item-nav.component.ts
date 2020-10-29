@@ -2,7 +2,7 @@ import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { ItemNavigationService, NavMenuRootItem } from '../../http-services/item-navigation.service';
 import { CurrentContentService, isItemInfo } from 'src/app/shared/services/current-content.service';
 import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
-import { of, Observable, merge, EMPTY, Subscription, concat } from 'rxjs';
+import { of, Observable, EMPTY, Subscription, concat } from 'rxjs';
 import { ItemNavMenuData } from '../../common/item-nav-menu-data';
 import { Ready, Fetching, FetchError, fetchingState, readyState, mapErrorToState, isReady, errorState } from 'src/app/shared/helpers/state';
 import { ItemRoute } from 'src/app/shared/helpers/item-route';
@@ -27,7 +27,7 @@ export class ItemNavComponent implements OnInit, OnDestroy {
   ) { }
 
   loadRootNav(): Observable<State> {
-    return merge(
+    return concat(
       of(fetchingState()), // first change items to loading
       this.itemNavService.getRoot(this.type).pipe(
         map(items => readyState(new ItemNavMenuData(items.items, [], undefined, items.parent))),
@@ -44,12 +44,12 @@ export class ItemNavComponent implements OnInit, OnDestroy {
     } else {
       dataFetcher = this.itemNavService.getRoot(this.type);
     }
-    return merge(
+    return concat(
       of(fetchingState()), // as the menu change completely, display the loader
       dataFetcher.pipe(
         map(items => new ItemNavMenuData(items.items, item.path, item, items.parent)), // the new items (only first level loaded)
         // already update the tree loaded with the first level, and if needed, load (async) children as well
-        switchMap(data => merge(of(readyState(data)), this.loadChildrenIfNeeded(data))),
+        switchMap(data => concat(of(readyState(data)), this.loadChildrenIfNeeded(data))),
         mapErrorToState(),
       )
     );
