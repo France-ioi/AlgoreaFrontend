@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { assertSuccess, SimpleActionResponse } from '../../../shared/http-services/action-response';
 import { environment } from '../../../../environments/environment';
 import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,7 @@ export class UpdateItemStringService {
     itemId: string,
     changes: object,
     languageTag?: string
-  ) {
+  ) : Observable<void> {
     // Fixme: Get languageTag properly
     const tag = languageTag || 'default';
     return this.http.put<SimpleActionResponse>(
