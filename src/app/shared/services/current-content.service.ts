@@ -22,8 +22,17 @@ export interface ContentInfo {
 
 export interface ItemInfo extends ContentInfo {
   type: 'item',
-  data: { route: ItemRoute, result?: { attemptId: string, bestScore: number, currentScore: number, validated: boolean } }
+  data: { route: ItemRoute, details?: ItemDetails }
 }
+
+export interface ItemDetails {
+  title: string|null,
+  attemptId?: string,
+  bestScore?: number,
+  currentScore?: number,
+  validated?: boolean,
+}
+
 export interface GroupInfo extends ContentInfo { type: 'group' }
 
 export function isItemInfo(info: ContentInfo|null): info is ItemInfo {

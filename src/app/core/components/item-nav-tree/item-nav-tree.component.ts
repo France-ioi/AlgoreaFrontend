@@ -2,11 +2,11 @@ import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { TreeNode } from 'primeng/api';
 import { NavMenuItem } from '../../http-services/item-navigation.service';
 import { ResultActionsService } from 'src/app/shared/http-services/result-actions.service';
-import { of, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { ItemNavMenuData } from '../../common/item-nav-menu-data';
 import { itemDetailsUrl } from 'src/app/shared/helpers/item-route';
+
+const defaultAttempt = '0';
 
 // ItemTreeNode is PrimeNG tree node with data forced to be an item
 interface ItemTreeNode extends TreeNode {
@@ -39,7 +39,7 @@ export class ItemNavTreeComponent implements OnChanges {
       const isLoadingChildren = shouldShowChildren && !i.children; // are being loaded by the parent component
       const pathToChildren = data.pathToElements.concat([ i.id ]);
       return {
-        label: i.title,
+        label: i.title ?? undefined,
         data: i,
         itemPath: data.pathToElements,
         type: i.hasChildren ? 'folder' : 'leaf',
@@ -79,35 +79,10 @@ export class ItemNavTreeComponent implements OnChanges {
   selectNode(node: ItemTreeNode): void {
     this.selectedNode = node;
 
-    // do not allow re-selecting a node with fetching in progress
-    if (node.status === 'loading') return;
+    // set the node to "loading" so that the user knows the children should appear shortly
+    if (node.data.hasChildren && !node.data.children) node.status = 'loading';
 
-    // if it is a leaf node, just navigate to it. the item-nav component will rearrange the tree if needed.
-    if (!node.data.hasChildren) { // leaf
-      this.navigateToNode(node, node.data.attemptId === null ? undefined : node.data.attemptId);
-      return;
-    }
-
-    // Otherwise, the node has children: start a result (if not done yet), navigate and load children
-    node.status = 'loading';
-    this.startResultIfRequired(node).subscribe({
-      next: attemptId => {
-        // as result has just been started, assume the score of the given attempt is 0
-        node.data.attemptId = attemptId;
-        node.data.score = { best: 0, current: 0, validated: false };
-        if (this.selectedNode === node) {
-          // if the node is not selected anymore after result start, do not navigate to it
-          this.navigateToNode(node, attemptId);
-        }
-      },
-      error: _error => {
-        node.status = 'error';
-        /* should handle error somehow */
-      },
-      complete: () => {
-        node.status = 'ready';
-      }
-    });
+    this.navigateToNode(node, node.data.attemptId === null ? undefined : node.data.attemptId);
   }
 
   onKeyDown(e: KeyboardEvent): void {
@@ -149,24 +124,7 @@ export class ItemNavTreeComponent implements OnChanges {
     } else if (this.data?.parent) {
       return this.data.parent.attemptId || undefined /* unexpected */;
     }
-    return undefined /* unexpected */;
-  }
-
-  /**
-   * Start a new result only if the node does not have a result started yet
-   */
-  startResultIfRequired(node: ItemTreeNode): Observable<string> { // observable of attempt_id
-    const attemptId = node.data.attemptId;
-    if (attemptId === null) {
-      const startingAttemptId = '0';
-      return this.resultActionsService
-        .start(node.itemPath.concat([ node.data.id ]), startingAttemptId)
-        .pipe(
-          map(() => startingAttemptId)
-        );
-    } else {
-      return of(attemptId);
-    }
+    return defaultAttempt; // if the node has no parent, i.e. is a root, use default attempt
   }
 
 }

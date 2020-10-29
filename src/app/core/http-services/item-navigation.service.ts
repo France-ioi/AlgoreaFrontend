@@ -8,7 +8,7 @@ import { canCurrentUserViewItemContent } from 'src/app/modules/item/helpers/item
 import { isRouteWithAttempt, ItemRoute } from 'src/app/shared/helpers/item-route';
 
 interface ItemStrings {
-  title: string,
+  title: string|null,
   language_tag: string,
 }
 
@@ -79,11 +79,13 @@ interface Result {
 // exported nav menu structure
 export interface NavMenuItem {
   id: string,
-  title: string,
+  title: string|null,
   hasChildren: boolean,
   groupName?: string,
   attemptId: string|null,
-  score?: { best: number, current: number, validated: boolean },
+  bestScore?: number,
+  currentScore?: number,
+  validated?: boolean,
   canViewContent: boolean,
   children?: NavMenuItem[] // placeholder for children when fetched (may 'hasChildren' with 'children' not set)
 }
@@ -91,6 +93,11 @@ export interface NavMenuItem {
 export interface NavMenuRootItem {
   parent?: NavMenuItem,
   items: NavMenuItem[]
+}
+
+
+export interface NavMenuRootItemWithParent extends NavMenuRootItem {
+  parent: NavMenuItem,
 }
 
 function rawResultToResult(r: RawResult): Result {
@@ -121,11 +128,9 @@ function createNavMenuItem(raw: {
     hasChildren: raw.has_visible_children,
     attemptId: currentResult?.attemptId ?? null,
     canViewContent: canCurrentUserViewItemContent(raw),
-    score: raw.no_score || !currentResult ? undefined : {
-      best: raw.best_score,
-      current: currentResult.score,
-      validated: currentResult.validated
-    }
+    bestScore: raw.no_score ? undefined : raw.best_score,
+    currentScore: raw.no_score ? undefined : currentResult?.score,
+    validated: raw.no_score ? undefined : currentResult?.validated,
   };
 }
 
@@ -136,24 +141,24 @@ export class ItemNavigationService {
 
   constructor(private http: HttpClient) {}
 
-  getNavData(itemId: string, attemptId: string): Observable<NavMenuRootItem> {
+  getNavData(itemId: string, attemptId: string): Observable<NavMenuRootItemWithParent> {
     return this.getNavDataGeneric(itemId, { attempt_id: attemptId });
   }
 
-  getNavDataFromChildRoute(itemId: string, childRoute: ItemRoute): Observable<NavMenuRootItem> {
+  getNavDataFromChildRoute(itemId: string, childRoute: ItemRoute): Observable<NavMenuRootItemWithParent> {
     return this.getNavDataGeneric(
       itemId,
       isRouteWithAttempt(childRoute) ? { child_attempt_id: childRoute.attemptId } : { attempt_id: childRoute.parentAttemptId }
     );
   }
 
-  private getNavDataGeneric(itemId: string, parameters: {[param: string]: string}): Observable<NavMenuRootItem> {
+  private getNavDataGeneric(itemId: string, parameters: {[param: string]: string}): Observable<NavMenuRootItemWithParent> {
     return this.http
       .get<RawNavData>(`${environment.apiUrl}/items/${itemId}/navigation`, {
         params: parameters
       })
       .pipe(
-        map<RawNavData,NavMenuRootItem>((data: RawNavData): NavMenuRootItem => ({
+        map((data: RawNavData) => ({
           parent: {
             id: data.id,
             title: data.string.title,

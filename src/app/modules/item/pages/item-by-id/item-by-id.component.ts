@@ -61,12 +61,13 @@ export class ItemByIdComponent implements OnDestroy {
           title: state.data.item.string.title === null ? undefined : state.data.item.string.title,
           data: {
             route: state.data.route,
-            result: state.data.currentResult ? {
-              attemptId: state.data.currentResult.attemptId,
+            details: {
+              title: state.data.item.string.title,
+              attemptId: state.data.currentResult?.attemptId,
               bestScore: state.data.item.best_score,
-              currentScore: state.data.currentResult.score,
-              validated: state.data.currentResult.validated,
-            } : undefined
+              currentScore: state.data.currentResult?.score,
+              validated: state.data.currentResult?.validated,
+            }
           },
         }))
       ).subscribe(p => this.currentContent.current.next(p)),
