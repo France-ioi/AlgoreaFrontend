@@ -5,9 +5,7 @@ import {
   Output,
   EventEmitter,
   OnChanges,
-  SimpleChanges,
-  ContentChild,
-  TemplateRef,
+  SimpleChanges
 } from '@angular/core';
 import { AbstractControl, FormGroup } from '@angular/forms';
 
@@ -30,8 +28,6 @@ export class InputComponent implements OnInit, OnChanges {
   @Output() click = new EventEmitter();
 
   control: AbstractControl | null = null;
-
-  @ContentChild('errorTemplate') errorTemplate: TemplateRef<any>;
 
   constructor() {}
 
