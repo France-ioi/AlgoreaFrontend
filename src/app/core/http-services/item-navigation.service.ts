@@ -52,6 +52,9 @@ interface RawNavData {
   attempt_id: string,
   string: ItemStrings,
   type: ItemType,
+  permissions: {
+    can_view: 'none'|'info'|'content'|'content_with_descendants'|'solution'
+  },
   children: {
     id: string,
     string: ItemStrings,
@@ -162,7 +165,7 @@ export class ItemNavigationService {
           parent: {
             id: data.id,
             title: data.string.title,
-            canViewContent: true,
+            canViewContent: canCurrentUserViewItemContent(data),
             hasChildren: data.children !== null && data.children.length > 0,
             attemptId: data.attempt_id,
           },
