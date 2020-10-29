@@ -3,69 +3,60 @@ import { CurrentUserService } from '../shared/services/current-user.service';
 import { delay, filter, skip } from 'rxjs/operators';
 import { UserProfile } from '../shared/http-services/current-user.service';
 import { Observable, Subscription } from 'rxjs';
-import { ContentInfo, CurrentContentService } from '../shared/services/current-content.service';
+import { ContentInfo, CurrentContentService, EditAction } from '../shared/services/current-content.service';
+import { AuthService } from '../shared/auth/auth.service';
 
 @Component({
   selector: 'alg-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: [ './app.component.scss' ]
 })
 export class AppComponent implements OnInit, OnDestroy {
 
   // the delay(0) is used to prevent the UI to update itself (when the content is loaded) (ExpressionChangedAfterItHasBeenCheckedError)
-  currentContent$: Observable<ContentInfo|null>  = this.currentContent.currentContent$.pipe( delay(0) );
-
-  editing = false;
-  isStarted = true;
-
-  langs = [
-    'English',
-    'Francais',
-    'Espanol',
-    'Czech',
-    'Deutsch'
-  ];
+  currentContent$: Observable<ContentInfo|null> = this.currentContent.currentContent$.pipe(delay(0));
+  editState$ = this.currentContent.editState$.pipe(delay(0));
+  currentUser$ = this.currentUserService.currentUser$.pipe(delay(0));
 
   collapsed = false;
   folded = false;
   scrolled = false;
 
-  selectedType = -1;
-
-  private subscription: Subscription;
+  private subscription?: Subscription;
 
   constructor(
     private currentUserService: CurrentUserService,
+    private authService: AuthService,
     private currentContent: CurrentContentService,
   ) {}
 
-  ngOnInit() {
-   // each time there is a new user, refresh the page
-    this.currentUserService.currentUser$.pipe(
-      filter<UserProfile|null, UserProfile>((user):user is UserProfile => user !== null),
+  ngOnInit(): void {
+    // each time there is a new user, refresh the page
+    this.subscription = this.currentUserService.currentUser$.pipe(
+      filter<UserProfile|undefined, UserProfile>((user):user is UserProfile => !!user),
       skip(1), // do not refresh when the first user is set
     ).subscribe(_user => {
       window.location.reload();
     });
   }
 
-  ngOnDestroy() {
-    this.subscription.unsubscribe();
+  ngOnDestroy(): void {
+    this.subscription?.unsubscribe();
   }
 
-  onCollapse(e: boolean) {
+  onCollapse(e: boolean): void {
     this.collapsed = e;
     if (!this.collapsed) {
       this.folded = false;
     }
   }
 
-  onFold(folded: boolean) {
+  onFold(folded: boolean): void {
     this.folded = folded;
   }
 
-  @HostListener('window:scroll', ['$event'])
-  onScrollContent() {
+  @HostListener('window:scroll', [ '$event' ])
+  onScrollContent(): void{
     if (window.pageYOffset > 40 && !this.scrolled) {
       this.scrolled = true;
     } else if (window.pageYOffset <= 40 && this.scrolled) {
@@ -73,12 +64,24 @@ export class AppComponent implements OnInit, OnDestroy {
     }
   }
 
-  onEditPage() {
-    this.editing = true;
+  onEditPage(): void {
+    this.currentContent.editAction.next(EditAction.StartEditing);
   }
 
-  onEditCancel() {
-    this.editing = false;
+  onEditCancel(): void {
+    this.currentContent.editAction.next(EditAction.Cancel);
+  }
+
+  onEditSave(): void {
+    this.currentContent.editAction.next(EditAction.Save);
+  }
+
+  login(): void {
+    this.authService.startAuthLogin();
+  }
+
+  logout(): void {
+    this.authService.logoutAuthUser();
   }
 
 }

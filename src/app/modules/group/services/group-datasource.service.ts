@@ -43,18 +43,18 @@ export class GroupDataSource implements OnDestroy {
     ).subscribe(state => this.state.next(state));
   }
 
-  fetchGroup(id: GroupId) {
+  fetchGroup(id: GroupId): void {
     this.fetchOperation.next(id);
   }
 
   // If (and only if) a group is currently fetched (so we are not currently loading or in error), refetch it.
-  refetchGroup() {
+  refetchGroup(): void {
     if (isReady(this.state.value)) {
       this.fetchOperation.next(this.state.value.data.id);
     }
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.state.complete();
     this.fetchOperation.complete();
   }

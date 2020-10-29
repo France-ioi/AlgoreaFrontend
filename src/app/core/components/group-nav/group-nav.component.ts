@@ -13,7 +13,7 @@ type GroupData = 'loading'|'error'|Group[];
 @Component({
   selector: 'alg-group-nav',
   templateUrl: './group-nav.component.html',
-  styleUrls: ['./group-nav.component.scss']
+  styleUrls: [ './group-nav.component.scss' ]
 })
 export class GroupNavComponent {
 
@@ -25,10 +25,10 @@ export class GroupNavComponent {
   constructor(
     private joinedGroupsService: JoinedGroupsService,
     private managedGroupService: ManagedGroupsService,
-    private router: Router,
+    private router: Router
   ) { }
 
-  onTabOpen(event: {index: number}) {
+  onTabOpen(event: {index: number}): void {
     this.focusOnGroupNav.emit();
     const service = event.index == joinGroupTabIdx ?
       this.joinedGroupsService.getJoinedGroups() : this.managedGroupService.getManagedGroups();
@@ -43,9 +43,12 @@ export class GroupNavComponent {
     });
   }
 
-  goToJoinedGroups() {
-    const target = '/groups/joined';
-    void this.router.navigate([target]);
+  goToGroupManaged(): void {
+    void this.router.navigate([ 'groups', 'managed' ]);
+  }
+
+  goToJoinedGroups(): void {
+    void this.router.navigate([ 'groups', 'joined' ]);
   }
 
 }

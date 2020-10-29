@@ -41,11 +41,11 @@ describe('PendingRequestComponent', () => {
       providers: [
         { provide: GetRequestsService, useValue: {
           getPendingRequests: (_id: any, _sort: any, _includeSubgroup: any) => of<PendingRequest[]>(MOCK_RESPONSE),
-        }},
+        } },
         { provide: RequestActionsService, useValue: {
           acceptJoinRequest: (_id: any, _groupIds: any) => serviceResponder$.asObservable(),
           rejectJoinRequest: (_id: any, _groupIds: any) => serviceResponder$.asObservable(),
-        }},
+        } },
         { provide: MessageService, useValue: { add: (_m: any) => {} } }
       ]
     }).compileComponents();
@@ -104,23 +104,23 @@ describe('PendingRequestComponent', () => {
   it('should, when sorting is changed, call the service with the appropriate attributes,', () => {
 
     // mixed orders
-    component.onCustomSort({multiSortMeta: [
-      {field: 'joining_user.login', order: -1},
-      {field: 'at', order: 1}
-    ]});
+    component.onCustomSort({ multiSortMeta: [
+      { field: 'joining_user.login', order: -1 },
+      { field: 'at', order: 1 }
+    ] });
     expect(getRequestsService.getPendingRequests)
       .toHaveBeenCalledWith('99', false, [ '-joining_user.login', 'at' ]);
 
     // check the field precedence counts
-    component.onCustomSort({multiSortMeta: [
-      {field: 'at', order: 1},
-      {field: 'joining_user.login', order: -1}
-    ]});
+    component.onCustomSort({ multiSortMeta: [
+      { field: 'at', order: 1 },
+      { field: 'joining_user.login', order: -1 }
+    ] });
     expect(getRequestsService.getPendingRequests)
       .toHaveBeenCalledWith('99', false, [ 'at' , '-joining_user.login' ]);
 
     // sort reset
-    component.onCustomSort({multiSortMeta: []});
+    component.onCustomSort({ multiSortMeta: [] });
     expect(getRequestsService.getPendingRequests).toHaveBeenCalledWith('99', false, []);
   });
 
@@ -131,12 +131,13 @@ describe('PendingRequestComponent', () => {
     component.onAcceptOrReject(Action.Accept);
 
     expect(component.ongoingActivity).toEqual(Activity.Accepting);
-    expect(requestActionsService.acceptJoinRequest).toHaveBeenCalledWith('99', ['12']);
+    expect(requestActionsService.acceptJoinRequest).toHaveBeenCalledWith('50', [ '12' ]);
     expect(requestActionsService.rejectJoinRequest).toHaveBeenCalledTimes(0);
     expect(getRequestsService.getPendingRequests).toHaveBeenCalledTimes(1); // the initial one
 
     // step 2: success response received
-    serviceResponder$.next(new Map([[ '12', 'success']]));
+    serviceResponder$.next(new Map([ [ '12', 'success' ] ]));
+    serviceResponder$.complete();
 
     expect(component.ongoingActivity).toEqual(Activity.None);
     // expect(messageService.add).toHaveBeenCalledTimes(1);
@@ -157,12 +158,13 @@ describe('PendingRequestComponent', () => {
     component.onAcceptOrReject(Action.Reject);
 
     expect(component.ongoingActivity).toEqual(Activity.Rejecting);
-    expect(requestActionsService.rejectJoinRequest).toHaveBeenCalledWith('99', ['12']);
+    expect(requestActionsService.rejectJoinRequest).toHaveBeenCalledWith('50', [ '12' ]);
     expect(requestActionsService.acceptJoinRequest).toHaveBeenCalledTimes(0);
     expect(getRequestsService.getPendingRequests).toHaveBeenCalledTimes(1); // the initial one
 
     // step 2: success response received
-    serviceResponder$.next(new Map([[ '12', 'success']]));
+    serviceResponder$.next(new Map([ [ '12', 'success' ] ]));
+    serviceResponder$.complete();
 
     expect(component.ongoingActivity).toEqual(Activity.None);
     // expect(messageService.add).toHaveBeenCalledTimes(1);
@@ -181,14 +183,15 @@ describe('PendingRequestComponent', () => {
     component.onAcceptOrReject(Action.Accept);
 
     expect(component.ongoingActivity).toEqual(Activity.None);
-    expect(getRequestsService.getPendingRequests).toHaveBeenCalledTimes(1);  // the initial one
+    expect(getRequestsService.getPendingRequests).toHaveBeenCalledTimes(1); // the initial one
   });
 
   it('should consider "unchanged" in response as success', () => {
     component.selection = [ MOCK_RESPONSE[1] ];
     component.onAcceptOrReject(Action.Accept);
 
-    serviceResponder$.next(new Map([['12', 'unchanged']]));
+    serviceResponder$.next(new Map([ [ '12', 'unchanged' ] ]));
+    serviceResponder$.complete();
 
     // expect(messageService.add).toHaveBeenCalledWith({
     //   severity: 'success',
@@ -202,7 +205,8 @@ describe('PendingRequestComponent', () => {
     component.selection = MOCK_RESPONSE; // select 10, 11 and 12
     component.onAcceptOrReject(Action.Accept);
 
-    serviceResponder$.next(new Map([[ '11', 'invalid'], ['12', 'success'], ['10', 'success']]));
+    serviceResponder$.next(new Map([ [ '11', 'invalid' ], [ '12', 'success' ], [ '10', 'success' ] ]));
+    serviceResponder$.complete();
 
     expect(component.ongoingActivity).toEqual(Activity.None);
     // expect(messageService.add).toHaveBeenCalledTimes(1);
@@ -220,7 +224,8 @@ describe('PendingRequestComponent', () => {
     component.selection = MOCK_RESPONSE; // select 10, 11 and 12
     component.onAcceptOrReject(Action.Accept);
 
-    serviceResponder$.next(new Map([[ '11', 'invalid'], ['12', 'cycle']]));
+    serviceResponder$.next(new Map([ [ '11', 'invalid' ], [ '12', 'cycle' ] ]));
+    serviceResponder$.complete();
 
     expect(component.ongoingActivity).toEqual(Activity.None);
     // expect(messageService.add).toHaveBeenCalledTimes(1);
@@ -238,7 +243,8 @@ describe('PendingRequestComponent', () => {
     component.selection = MOCK_RESPONSE; // select 10, 11 and 12
     component.onAcceptOrReject(Action.Reject);
 
-    serviceResponder$.next(new Map([[ '11', 'invalid'], ['12', 'cycle']]));
+    serviceResponder$.next(new Map([ [ '11', 'invalid' ], [ '12', 'cycle' ] ]));
+    serviceResponder$.complete();
 
     expect(component.ongoingActivity).toEqual(Activity.None);
     // expect(messageService.add).toHaveBeenCalledTimes(1);
@@ -257,6 +263,7 @@ describe('PendingRequestComponent', () => {
     component.onAcceptOrReject(Action.Accept);
 
     serviceResponder$.error(new Error('...'));
+    serviceResponder$.complete();
 
     expect(component.ongoingActivity).toEqual(Activity.None);
     // expect(messageService.add).toHaveBeenCalledTimes(1);

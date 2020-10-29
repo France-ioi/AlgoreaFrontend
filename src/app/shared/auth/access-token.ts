@@ -36,19 +36,19 @@ export class AccessToken {
     return new AccessToken(token, new Date(Date.now() + expiresIn*1000), type);
   }
 
-  static clearFromStorage() {
+  static clearFromStorage(): void {
     storage.removeItem(storageTokenKey);
     storage.removeItem(storageExpirationKey);
     storage.removeItem(storageTypeKey);
   }
 
-  saveToStorage() {
+  saveToStorage(): void {
     storage.setItem(storageTokenKey, this.accessToken);
     storage.setItem(storageExpirationKey, this.expiration.getTime().toString());
     storage.setItem(storageTypeKey, this.type);
   }
 
-  isValid() {
+  isValid(): boolean {
     if (!this.accessToken || this.accessToken.length === 0) return false;
     return this.expiration > new Date();
   }

@@ -1,0 +1,15 @@
+<div class="task-header-container" *ngIf="itemData">
+  <div class="task-header">
+    <alg-score-ring
+      *ngIf="itemData.currentResult"
+      [bestScore]="itemData.item.best_score"
+      [currentScore]="itemData.currentResult.score"
+      [isValidated]="itemData.currentResult.validated"
+      [diameter]="70"
+    ></alg-score-ring>
+    <div class="task-title">
+      <p>{{itemData.item.string.title}}</p>
+      <span *ngIf="itemData.item.string.subtitle">{{itemData.item.string.subtitle}}</span>
+    </div>
+  </div>
+</div>

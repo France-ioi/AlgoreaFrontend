@@ -6,10 +6,11 @@ import { map } from 'rxjs/operators';
 @Component({
   selector: 'alg-group-settings',
   templateUrl: './group-settings.component.html',
-  styleUrls: ['./group-settings.component.scss']
+  styleUrls: [ './group-settings.component.scss' ]
 })
 export class GroupSettingsComponent {
 
+  state$ = this.groupDataSource.state$;
   group$ = this.groupDataSource.group$.pipe(map(withManagementAdditions));
 
   constructor(

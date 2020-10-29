@@ -2,7 +2,7 @@
   icon="fa fa-check"
   label="Pending requests"
   [collapsible]="true"
-  [collapsed]="true"
+  [collapsed]="collapsed"
 >
   <ng-template #headerTemplate>
     <div
@@ -28,18 +28,8 @@
           <th style="width: 3.3333rem; background-color: #d3dbe7;"></th>
           <ng-container *ngFor="let col of columns">
             <th
-              *ngIf="col.field === 'at'"
               [pSortableColumn]="col.field"
-              style="width: 13.3333rem; background-color: #d3dbe7;"
-            >
-              <div class="header-container">
-                {{ col.header }}
-                <p-sortIcon [field]="col.field"></p-sortIcon>
-              </div>
-            </th>
-            <th
-              *ngIf="col.field === 'user.login'"
-              [pSortableColumn]="col.field"
+              [ngClass]="{'small-column' : ['at', 'group.name'].includes(col.field)}"
               style="background-color: #d3dbe7;"
             >
               <div class="header-container">
@@ -61,6 +51,11 @@
             <p-tableCheckbox [value]="rowData" [disabled]="ongoingActivity !== Activity.None"></p-tableCheckbox>
           </td>
           <td *ngFor="let col of columns">
+            <ng-container *ngIf="col.field === 'group.name'" >
+              <span style="white-space: initial;">
+                {{ rowData.group.name }}
+              </span>
+            </ng-container>
             <ng-container *ngIf="col.field === 'at'">
               {{ rowData.at | date: "d/MM/y" }}
             </ng-container>

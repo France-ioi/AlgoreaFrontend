@@ -5,11 +5,11 @@ import { GetGroupManagersService, Manager } from '../../http-services/get-group-
 @Component({
   selector: 'alg-group-manager-list',
   templateUrl: './group-manager-list.component.html',
-  styleUrls: ['./group-manager-list.component.scss']
+  styleUrls: [ './group-manager-list.component.scss' ]
 })
 export class GroupManagerListComponent implements OnChanges {
 
-  @Input() group: Group;
+  @Input() group?: Group;
 
   managers: (Manager&{can_manage_as_text: string})[] = [];
 
@@ -18,12 +18,12 @@ export class GroupManagerListComponent implements OnChanges {
   constructor(private getGroupManagersService: GetGroupManagersService) {}
 
 
-  ngOnChanges(_changes: SimpleChanges) {
+  ngOnChanges(_changes: SimpleChanges): void {
     this.reloadData();
   }
 
   private getManagerLevel(manager: Manager): string {
-    switch(manager.can_manage) {
+    switch (manager.can_manage) {
       case 'none':
         return 'Read-only';
       case 'memberships':
@@ -33,12 +33,13 @@ export class GroupManagerListComponent implements OnChanges {
       }
   }
 
-  private reloadData() {
+  private reloadData(): void {
+    if (!this.group) return;
     this.state = 'loading';
     this.getGroupManagersService
       .getGroupManagers(this.group.id)
       .subscribe((managers: Manager[]) => {
-        this.managers = managers.map(manager => ({...manager, can_manage_as_text: this.getManagerLevel(manager)}));
+        this.managers = managers.map(manager => ({ ...manager, can_manage_as_text: this.getManagerLevel(manager) }));
         this.state = 'ready';
       },
         _err => {

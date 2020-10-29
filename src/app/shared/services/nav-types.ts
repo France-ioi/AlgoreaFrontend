@@ -15,12 +15,12 @@ export interface NavItem {
 
 export interface NavGroup {}
 
-export function itemDetailsRoute(item: NavItem): any[] {
+export function itemDetailsRoute(item: NavItem, editing = false): any[] {
   const params: {[k: string]: any} = {};
   if (item.attemptId) params[attemptParamName] = item.attemptId;
   else params[parentAttemptParamName] = item.parentAttemptId;
   params[pathParamName] = item.itemPath;
-  return ['items', 'details', item.itemId, params];
+  return [ 'items', 'by-id', item.itemId, params, editing ? 'edit' : 'details' ];
 }
 
 /**

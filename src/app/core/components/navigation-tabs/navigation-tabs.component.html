@@ -3,13 +3,13 @@
     <div class="group-avatar">
       <img src="assets/images/Male.svg" style="width: 7rem; height: auto;" />
     </div>
-    <ng-container *ngIf="currentUser$ | async as user; else userLoading">
+    <ng-container *ngIf="currentUser; else userLoading">
       <span class="group-title">
-        <ng-container *ngIf="!user.isTemp && (user.firstname || user.lastname) else tempUser">
-          {{ user.firstname}} {{ user.lastname}} ({{ user.login }})
+        <ng-container *ngIf="!currentUser.isTemp && (currentUser.firstname || currentUser.lastname) else tempUser">
+          {{ currentUser.firstname}} {{ currentUser.lastname}} ({{ currentUser.login }})
         </ng-container>
         <ng-template #tempUser>
-          {{ user.login }}
+          {{ currentUser.login }}
         </ng-template>
       </span>
       <span class="group-toggle" (click)="toggleGroup()">

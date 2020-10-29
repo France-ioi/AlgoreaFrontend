@@ -8,7 +8,7 @@ import { AuthHttpService } from '../http-services/auth.http-service';
 
 // as auth can be complex to debug, enable this flag to print state logs
 const debugLogEnabled = true;
-function logState(msg: string) {
+function logState(msg: string): void {
   if (debugLogEnabled) {
     // eslint-disable-next-line no-console
     console.log(msg);
@@ -68,21 +68,21 @@ export class AuthService implements OnDestroy {
         return this.tempAuth.login();
       }),
     ).subscribe({
-      next:(token: AccessToken) => {
+      next: (token: AccessToken) => {
         this.accessToken.next(token);
       },
       error: _e => {
         // if temp user creation fails, there is not much we can do
         this.state = 'error';
       },
-      complete:() => {
+      complete: () => {
         // in any of the success case
         this.state = 'idle';
       }
     });
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
 
@@ -96,7 +96,7 @@ export class AuthService implements OnDestroy {
   /**
    * Start the auth session login workflow (i.e., redirect to login prompt)
    */
-  startAuthLogin() {
+  startAuthLogin(): void {
     logState('startLogin');
     if (this.isBusy() || this.authUserConnected()) {
       logState(`cannot startLogin if busy or already connected (${this.debugState()})`);
@@ -110,7 +110,7 @@ export class AuthService implements OnDestroy {
   /**
    * Log the authenticated user out and start a new temp session.
    */
-  logoutAuthUser() {
+  logoutAuthUser(): void {
     logState('endAuthSession');
     const currentToken = this.accessToken.value;
 
@@ -141,7 +141,7 @@ export class AuthService implements OnDestroy {
    * The token arg is the token which was used with the request that was considered as invalid, so that a more recent token which has been
    * added in the meantime is not dropped.
    */
-  invalidToken(invalidToken: string) {
+  invalidToken(invalidToken: string): void {
     const currentToken = this.accessToken.value;
     if (currentToken?.accessToken === invalidToken) {
 
@@ -168,7 +168,7 @@ export class AuthService implements OnDestroy {
     }
   }
 
-  private tokenChanged([oldToken, newToken]: [AccessToken|null, AccessToken|null]) {
+  private tokenChanged([ oldToken, newToken ]: [AccessToken|null, AccessToken|null]): void {
     logState('token changed');
 
     if (JSON.stringify(oldToken) === JSON.stringify(newToken)) return;

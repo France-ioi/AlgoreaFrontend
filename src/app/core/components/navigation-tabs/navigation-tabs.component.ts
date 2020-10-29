@@ -1,31 +1,30 @@
-import { Component, ViewChild, NgZone, OnDestroy } from '@angular/core';
+import { Component, ViewChild, NgZone, OnDestroy, Input } from '@angular/core';
 
-import { CurrentUserService } from 'src/app/shared/services/current-user.service';
 import { PerfectScrollbarComponent } from 'ngx-perfect-scrollbar';
 import { ResizedEvent } from 'angular-resize-event';
 import { ContentInfo, CurrentContentService, GroupInfo, isGroupInfo } from 'src/app/shared/services/current-content.service';
 import { filter } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
+import { UserProfile } from 'src/app/shared/http-services/current-user.service';
 
 @Component({
   selector: 'alg-navigation-tabs',
   templateUrl: './navigation-tabs.component.html',
-  styleUrls: ['./navigation-tabs.component.scss']
+  styleUrls: [ './navigation-tabs.component.scss' ]
 })
 export class NavigationTabsComponent implements OnDestroy {
 
-  @ViewChild('scrollPanel') scrollPanel: PerfectScrollbarComponent;
+  @Input() currentUser?: UserProfile;
+
+  @ViewChild('scrollPanel') scrollPanel?: PerfectScrollbarComponent;
   @ViewChild('groupPanel') groupPanel?: HTMLDivElement;
 
   groupShow = false;
   stickyShow = false;
 
-  currentUser$ = this.currentUserService.currentUser$;
-
   private subscription: Subscription; // for cleaning up on destroy
 
   constructor(
-    private currentUserService: CurrentUserService,
     private currentContentService: CurrentContentService,
     private ngZone: NgZone,
   ) {
@@ -34,19 +33,19 @@ export class NavigationTabsComponent implements OnDestroy {
     ).subscribe(_i => this.groupShow = true);
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
 
-  toggleGroup() {
+  toggleGroup(): void {
     this.groupShow = !this.groupShow;
     if (!this.groupShow) {
       this.stickyShow = false;
     }
   }
 
-  onResized(e: ResizedEvent) {
-    const directiveRef = this.scrollPanel.directiveRef;
+  onResized(e: ResizedEvent): void {
+    const directiveRef = this.scrollPanel?.directiveRef;
     if (!directiveRef) return;
     const boundaryHeight = (directiveRef.elementRef.nativeElement as HTMLElement).clientHeight - 50;
     if (e.newHeight > boundaryHeight) {
@@ -57,7 +56,7 @@ export class NavigationTabsComponent implements OnDestroy {
     }
   }
 
-  _updateStatus(e: HTMLElement) {
+  _updateStatus(e: HTMLElement): void {
     this.ngZone.run(() => {
       const scrollTop = e.scrollTop;
       const clientHeight = e.clientHeight - 50;
@@ -70,7 +69,7 @@ export class NavigationTabsComponent implements OnDestroy {
     });
   }
 
-  focusParent() {
+  focusParent(): void {
     if (this.groupPanel) {
       const elements = this.groupPanel.querySelectorAll('.ui-accordion-header a');
       elements.forEach(e => {
@@ -80,7 +79,7 @@ export class NavigationTabsComponent implements OnDestroy {
     }
   }
 
-  onScrollEvent(e: {srcElement: HTMLElement}) { /* guessed type, something cleaner would be nice */
+  onScrollEvent(e: {srcElement: HTMLElement}): void { /* guessed type, something cleaner would be nice */
     this._updateStatus(e.srcElement);
   }
 

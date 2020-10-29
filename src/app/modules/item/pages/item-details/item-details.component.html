@@ -1,13 +1,32 @@
-<ng-container *ngIf="state$ | async as state">
+<ng-container *ngIf="itemLoadingstate$ | async as state">
 
   <p-progressSpinner *ngIf="state.tag === 'fetching'"></p-progressSpinner>
 
   <p *ngIf="state.tag === 'error'">Error while loading the item</p>
 
-  <ng-container *ngIf="state.tag === 'ready' && (item$ | async) as item">
+  <ng-container *ngIf="state.tag === 'ready' && (itemData$ | async) as itemData">
 
-    <h1>{{ item.string.title }}</h1>
-    <p>item-details works!</p>
+    <alg-item-header [itemData]="itemData"></alg-item-header>
+
+    <nav mat-tab-nav-bar>
+      <a mat-tab-link
+        [routerLink]="'./'"
+        routerLinkActive #rla1="routerLinkActive"
+        [routerLinkActiveOptions]="{exact: true}"
+        [active]="rla1.isActive">
+        Content
+      </a>
+      <a mat-tab-link
+        [routerLink]="'./progress'"
+        routerLinkActive #rla2="routerLinkActive"
+        [active]="rla2.isActive">
+        <i class="fa fa-chart-line"></i>
+        Progress
+      </a>
+    </nav>
+    <div class="bg-white">
+      <router-outlet></router-outlet>
+    </div>
 
   </ng-container>
 

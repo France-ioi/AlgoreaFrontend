@@ -4,7 +4,7 @@ import { Duration, MINUTES } from 'src/app/shared/helpers/duration';
 @Component({
   selector: 'alg-time-picker',
   templateUrl: './time-picker.component.html',
-  styleUrls: ['./time-picker.component.scss'],
+  styleUrls: [ './time-picker.component.scss' ],
 })
 export class TimePickerComponent implements OnChanges {
   @Input() initialValue? : Duration;
@@ -17,7 +17,7 @@ export class TimePickerComponent implements OnChanges {
 
   constructor() {}
 
-  ngOnChanges() {
+  ngOnChanges(): void {
     if (this.initialValue) this.currentValue = this.initialValue.minutes();
   }
 
@@ -25,15 +25,15 @@ export class TimePickerComponent implements OnChanges {
     return Duration.fromHMS(0, this.currentValue, 0);
   }
 
-  onClickValidateButton() {
+  onClickValidateButton(): void {
     this.submit.emit(this.currentDuration());
   }
 
-  timeChange() {
+  timeChange(): void {
     // nothing for the moment
   }
 
-  timeChanged() {
+  timeChanged(): void {
     // nothing for the moment
   }
 }

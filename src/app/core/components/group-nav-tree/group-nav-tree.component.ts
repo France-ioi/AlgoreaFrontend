@@ -17,16 +17,16 @@ interface GroupTreeNode extends TreeNode {
 @Component({
   selector: 'alg-group-nav-tree',
   templateUrl: './group-nav-tree.component.html',
-  styleUrls: ['./group-nav-tree.component.scss'],
+  styleUrls: [ './group-nav-tree.component.scss' ],
 })
 export class GroupNavTreeComponent implements OnChanges {
   @Input() groups: Group[] = [];
 
-  nodes: GroupTreeNode[];
+  nodes: GroupTreeNode[] = [];
 
   constructor(private router: Router) {}
 
-  ngOnChanges(_changes: SimpleChanges) {
+  ngOnChanges(_changes: SimpleChanges): void {
     this.nodes = this.groups.map(g => ({
       label: g.name,
       data: g,
@@ -36,11 +36,11 @@ export class GroupNavTreeComponent implements OnChanges {
     }));
   }
 
-  onSelect(node: GroupTreeNode) {
-    void this.router.navigate([node.target]);
+  onSelect(node: GroupTreeNode): void {
+    void this.router.navigate([ node.target ]);
   }
 
-  onKeyDown(e: KeyboardEvent) {
+  onKeyDown(e: KeyboardEvent): void {
     if (e.code === 'Space' || e.code === 'Enter') {
       e.stopPropagation();
       e.preventDefault();

@@ -34,6 +34,7 @@ import { ItemNavComponent } from './components/item-nav/item-nav.component';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { AngularResizedEventModule } from 'angular-resize-event';
 import { UnauthorizedResponseInterceptor } from '../shared/interceptors/unauthorized_response.interceptor';
+import { ReactiveComponentModule } from '@ngrx/component';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: false,
@@ -54,6 +55,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   ],
   imports: [
     BrowserModule,
+    ReactiveComponentModule,
     AngularResizedEventModule,
     AppRoutingModule,
     BrowserAnimationsModule,
@@ -90,6 +92,6 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
       useValue: 3000,
     },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [ AppComponent ]
 })
 export class AppModule { }

@@ -8,7 +8,7 @@
 
     <p-progressSpinner *ngIf="processing"></p-progressSpinner>
 
-    <div class="code-state" *ngIf="!processing">
+    <div class="code-state" *ngIf="!processing && groupExt">
       <span class="label" *ngIf="groupExt.hasCodeNotSet">There is currently no code set.</span>
       <span class="label" *ngIf="groupExt.hasCodeUnused">This code has not been used yet (or usage resetted).</span>
       <span class="label green" *ngIf="groupExt.hasCodeInUse">
@@ -28,7 +28,7 @@
       ></alg-button>
     </div>
 
-    <div class="code-info" *ngIf="group.code && !processing">
+    <div class="code-info" *ngIf="group && group.code && !processing">
       <div class="code-show">
         <span class="label">Code</span>
         <alg-code-token
@@ -41,7 +41,7 @@
       </div>
       <div class="validity-selector">
         <span class="label">Validity</span>
-        <alg-time-picker [initialValue]="groupExt.codeLifetime" (submit)="changeValidity($event)"></alg-time-picker>
+        <alg-time-picker [initialValue]="groupExt?.codeLifetime" (submit)="changeValidity($event)"></alg-time-picker>
       </div>
     </div>
 

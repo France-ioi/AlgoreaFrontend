@@ -11,10 +11,10 @@ import {
 @Component({
   selector: 'alg-switch',
   templateUrl: './switch.component.html',
-  styleUrls: ['./switch.component.scss'],
+  styleUrls: [ './switch.component.scss' ],
 })
 export class SwitchComponent implements OnInit, OnChanges {
-  @Input() checked: boolean;
+  @Input() checked = false;
   @Input() mode: 'dark' | 'white' | 'circular' | 'dark-circular' = 'dark';
   @Input() type = 'square';
 
@@ -22,11 +22,11 @@ export class SwitchComponent implements OnInit, OnChanges {
 
   constructor() {}
 
-  ngOnInit() {}
+  ngOnInit(): void {}
 
-  ngOnChanges(_changes: SimpleChanges) {}
+  ngOnChanges(_changes: SimpleChanges): void {}
 
-  handleChange(checked: boolean) {
+  handleChange(checked: boolean): void {
     this.change.emit(checked);
   }
 }
