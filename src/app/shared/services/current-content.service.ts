@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { NavItem } from './nav-types';
+import { ItemRoute } from '../helpers/item-route';
 
 export interface ContentBreadcrumb {
   category: string,
@@ -22,7 +22,7 @@ export interface ContentInfo {
 
 export interface ItemInfo extends ContentInfo {
   type: 'item',
-  data: { nav: NavItem, result?: { attemptId: string, bestScore: number, currentScore: number, validated: boolean } }
+  data: { route: ItemRoute, result?: { attemptId: string, bestScore: number, currentScore: number, validated: boolean } }
 }
 export interface GroupInfo extends ContentInfo { type: 'group' }
 

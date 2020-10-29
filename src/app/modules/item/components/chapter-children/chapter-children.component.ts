@@ -5,7 +5,7 @@ import { GetItemChildrenService, ItemChild } from '../../http-services/get-item-
 import { ItemData } from '../../services/item-datasource.service';
 import { bestAttemptFromResults } from 'src/app/shared/helpers/attempts';
 import { Router } from '@angular/router';
-import { itemDetailsRoute } from 'src/app/shared/services/nav-types';
+import { itemDetailsUrl } from 'src/app/shared/helpers/item-route';
 
 interface ItemChildAdditions {
   isLocked: boolean,
@@ -41,11 +41,12 @@ export class ChapterChildrenComponent implements OnChanges, OnDestroy {
   click(child: ItemChild&ItemChildAdditions): void {
     if (!this.itemData || child.isLocked) return;
     const attempt_id = child.result?.attempt_id;
-    void this.router.navigate(itemDetailsRoute({
-      itemId: child.id,
-      itemPath: this.itemData.nav.itemPath.concat([ this.itemData.item.id ]),
-      attemptId: attempt_id,
-      parentAttemptId: attempt_id ? undefined : this.itemData.currentResult?.attemptId,
+    const parent_attempt_id = this.itemData.currentResult?.attemptId;
+    if (!parent_attempt_id) return; // unexpected: children have been loaded, so we are sure this item has an attempt
+    void this.router.navigate(itemDetailsUrl({
+      id: child.id,
+      path: this.itemData.route.path.concat([ this.itemData.item.id ]),
+      ...attempt_id ? { attemptId: attempt_id } : { parentAttemptId: parent_attempt_id }
       }));
   }
 

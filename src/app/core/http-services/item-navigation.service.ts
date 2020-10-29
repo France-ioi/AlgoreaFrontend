@@ -5,6 +5,7 @@ import { environment } from 'src/environments/environment';
 import { map } from 'rxjs/operators';
 import { bestAttemptFromResults } from 'src/app/shared/helpers/attempts';
 import { canCurrentUserViewItemContent } from 'src/app/modules/item/helpers/item-permissions';
+import { isRouteWithAttempt, ItemRoute } from 'src/app/shared/helpers/item-route';
 
 interface ItemStrings {
   title: string,
@@ -139,8 +140,11 @@ export class ItemNavigationService {
     return this.getNavDataGeneric(itemId, { attempt_id: attemptId });
   }
 
-  getNavDataFromChildAttempt(itemId: string, childAttemptId: string): Observable<NavMenuRootItem> {
-    return this.getNavDataGeneric(itemId, { child_attempt_id: childAttemptId });
+  getNavDataFromChildRoute(itemId: string, childRoute: ItemRoute): Observable<NavMenuRootItem> {
+    return this.getNavDataGeneric(
+      itemId,
+      isRouteWithAttempt(childRoute) ? { child_attempt_id: childRoute.attemptId } : { attempt_id: childRoute.parentAttemptId }
+    );
   }
 
   private getNavDataGeneric(itemId: string, parameters: {[param: string]: string}): Observable<NavMenuRootItem> {

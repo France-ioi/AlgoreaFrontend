@@ -3,9 +3,9 @@ import { ItemNavigationService, NavMenuRootItem } from '../../http-services/item
 import { CurrentContentService, isItemInfo } from 'src/app/shared/services/current-content.service';
 import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { of, Observable, merge, EMPTY, Subscription } from 'rxjs';
-import { NavItem } from 'src/app/shared/services/nav-types';
 import { ItemNavMenuData } from '../../common/item-nav-menu-data';
 import { Ready, Fetching, FetchError, fetchingState, readyState, mapErrorToState, isReady, errorState } from 'src/app/shared/helpers/state';
+import { ItemRoute } from 'src/app/shared/helpers/item-route';
 
 type State = Ready<ItemNavMenuData>|Fetching|FetchError;
 
@@ -36,20 +36,18 @@ export class ItemNavComponent implements OnInit, OnDestroy {
     );
   }
 
-  loadNewNav(item: NavItem): Observable<State> {
+  loadNewNav(item: ItemRoute): Observable<State> {
     let dataFetcher: Observable<NavMenuRootItem>;
-    if (item.itemPath.length >= 1) {
-      const parentId = item.itemPath[item.itemPath.length-1];
-      if (item.parentAttemptId) dataFetcher = this.itemNavService.getNavData(parentId, item.parentAttemptId);
-      else if (item.attemptId) dataFetcher = this.itemNavService.getNavDataFromChildAttempt(parentId, item.attemptId);
-      else return of(errorState(new Error('Requires either the parent or child attempt to load nav')));
+    if (item.path.length >= 1) {
+      const parentId = item.path[item.path.length-1];
+      dataFetcher = this.itemNavService.getNavDataFromChildRoute(parentId, item);
     } else {
       dataFetcher = this.itemNavService.getRoot(this.type);
     }
     return merge(
       of(fetchingState()), // as the menu change completely, display the loader
       dataFetcher.pipe(
-        map(items => new ItemNavMenuData(items.items, item.itemPath, item, items.parent)), // the new items (only first level loaded)
+        map(items => new ItemNavMenuData(items.items, item.path, item, items.parent)), // the new items (only first level loaded)
         // already update the tree loaded with the first level, and if needed, load (async) children as well
         switchMap(data => merge(of(readyState(data)), this.loadChildrenIfNeeded(data))),
         mapErrorToState(),
@@ -80,7 +78,7 @@ export class ItemNavComponent implements OnInit, OnDestroy {
         // we are only interested in items
         map(content => (content !== null && isItemInfo(content) ? content.data : null)),
         // Only propagate distinct items (identified by id). Also prevent multiple null values.
-        distinctUntilChanged((v1, v2) => (v1 === null && v2 === null) || (v1 !== null && v2 !== null && v1.nav.itemId === v2.nav.itemId)),
+        distinctUntilChanged((v1, v2) => (v1 === null && v2 === null) || (v1 !== null && v2 !== null && v1.route.id === v2.route.id)),
         switchMap((item):Observable<State> => {
 
           if (isReady(this.state)) {
@@ -89,14 +87,14 @@ export class ItemNavComponent implements OnInit, OnDestroy {
             if (item === null) return EMPTY;
 
             // CASE: the content is among the displayed items at the root of the tree -> select the right one (might load children)
-            if (this.state.data.hasLevel1Element(item.nav.itemId)) {
-              const newData = this.state.data.withSelection(item.nav);
+            if (this.state.data.hasLevel1Element(item.route.id)) {
+              const newData = this.state.data.withSelection(item.route);
               return merge(of(readyState(newData)), this.loadChildrenIfNeeded(newData));
             }
 
             // CASE: the content is a child of one item at the root of the tree -> shift the tree and select it (might load children)
-            if (this.state.data.hasLevel2Element(item.nav.itemId)) {
-              const newData = this.state.data.subNavMenuData(item.nav);
+            if (this.state.data.hasLevel2Element(item.route.id)) {
+              const newData = this.state.data.subNavMenuData(item.route);
               return merge(of(readyState(newData)), this.loadChildrenIfNeeded(newData));
             }
 
@@ -106,7 +104,7 @@ export class ItemNavComponent implements OnInit, OnDestroy {
           }
 
           // CASE: the content is an item which is not current display -> load the tree and select the right one
-          return this.loadNewNav(item.nav);
+          return this.loadNewNav(item.route);
         })
       ).subscribe({
         next: newState => this.state = newState,
@@ -118,8 +116,8 @@ export class ItemNavComponent implements OnInit, OnDestroy {
         map(content => (content !== null && isItemInfo(content) ? content.data : null)),
         switchMap(item => {
           if (item === null || !item.result) return EMPTY; // only update if result (score) is given
-          if (!isReady(this.state) || this.state.data.selectedElement?.itemId !== item.nav.itemId) return EMPTY; // and same item id
-          return of(this.state.data.withUpdatedElement(item.nav.itemId, {
+          if (!isReady(this.state) || this.state.data.selectedElement?.id !== item.route.id) return EMPTY; // and same item id
+          return of(this.state.data.withUpdatedElement(item.route.id, {
             attemptId: item.result.attemptId,
             score: { best: item.result.bestScore, current: item.result.currentScore, validated: item.result.validated }
           }));
