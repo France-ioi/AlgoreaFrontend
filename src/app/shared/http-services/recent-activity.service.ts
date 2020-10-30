@@ -12,12 +12,12 @@ interface RawRecentActivity {
     string: {
       title: string;
     };
-    type: string;
+    type: 'Chapter'|'Task'|'Course';
   };
-  score: number;
+  score: number|null;
   user: {
-    first_name: string;
-    last_name: string;
+    first_name: string|null;
+    last_name: string|null;
     login: string;
   };
 }
@@ -28,12 +28,12 @@ export interface RecentActivity {
   item: {
     id: string;
     title: string;
-    type: string;
+    type: 'Chapter'|'Task'|'Course';
   };
-  score: number;
+  score: number|null;
   user: {
-    firstName: string;
-    lastName: string;
+    firstName: string|null;
+    lastName: string|null;
     login: string;
   };
 }
@@ -51,7 +51,8 @@ export class RecentActivityService {
   ): Observable<RecentActivity[]> {
     let params = new HttpParams();
     params = params.set('item_id', itemId);
-    // Not hand
+    params = params.set('limit', '100');
+    // Params not handled yet : validated, sort, from.created_at, from.id
     return this.http
       .get<RawRecentActivity[]>(`${environment.apiUrl}/groups/${groupId}/recent_activity`, { params: params })
       .pipe(
@@ -67,7 +68,7 @@ export class RecentActivityService {
           user: {
             firstName: activity.user.first_name,
             lastName: activity.user.last_name,
-            login: activity.user.last_name
+            login: activity.user.login
           }
         })))
       );

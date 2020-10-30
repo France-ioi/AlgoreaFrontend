@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ItemDataSource } from '../../services/item-datasource.service';
 import { RecentActivity, RecentActivityService } from 'src/app/shared/http-services/recent-activity.service';
 import { catchError, switchMap } from 'rxjs/operators';
@@ -10,18 +10,18 @@ import { CurrentUserService } from 'src/app/shared/services/current-user.service
   templateUrl: './item-log-view.component.html',
   styleUrls: [ './item-log-view.component.scss' ]
 })
-export class ItemLogViewComponent implements OnDestroy {
+export class ItemLogViewComponent implements OnInit, OnDestroy {
 
-  subscription: Subscription;
-  logData: RecentActivity[]|'loading'|'error';
+  subscription: Subscription|null = null;
+  logData: RecentActivity[]|'loading'|'error' = 'loading';
 
   constructor(
     private currentUserService: CurrentUserService,
     private itemDataSource: ItemDataSource,
     private recentActivityService: RecentActivityService
-  ) {
-    this.logData = 'loading';
+  ) {}
 
+  ngOnInit(): void {
     // Get user id and item id, and then make the request
     this.subscription = combineLatest([
       this.currentUserService.currentUser$,
@@ -44,6 +44,6 @@ export class ItemLogViewComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    this.subscription?.unsubscribe();
   }
 }
