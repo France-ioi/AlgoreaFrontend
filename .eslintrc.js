@@ -65,10 +65,10 @@ module.exports = {
     '@typescript-eslint/explicit-function-return-type': ['error'],
     '@typescript-eslint/naming-convention': [
       "error",
-      { "selector": "default", "format": ["camelCase"] },
+      { "selector": "default", "format": ["camelCase"], "leadingUnderscore": "forbid" },
       { "selector": "variable", "format": ["camelCase", "UPPER_CASE"] },
       { "selector": "parameter", "format": ["camelCase"], "leadingUnderscore": "allow" },
-      { "selector": "memberLike", "modifiers": ["private"], "format": ["camelCase"], "leadingUnderscore": "forbid" },
+      { "selector": "memberLike", "modifiers": ["private"], "format": ["camelCase"] },
       { "selector": "enumMember", "format": ["PascalCase"] },
       { "selector": "typeLike", "format": ["PascalCase"] },
       { "selector": "property", "format": ["camelCase", "snake_case"] },
