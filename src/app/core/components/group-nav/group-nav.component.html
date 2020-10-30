@@ -18,7 +18,7 @@
           <span class="anonym-group">
             <img src="assets/images/Group - Managed.svg" style="width: 3.3333rem; height: 3.3333rem;" />
           </span>
-          <span class="group-subtitle" (click)="goToGroupManaged()">Groups you manage</span>
+          <span class="group-subtitle" routerLink="groups/me" routerLinkActive="selected">Groups you manage</span>
         </p-header>
         <p-progressSpinner *ngSwitchCase="'loading'" [style]="{width: '3.3333rem', height: '3.3333rem'}"></p-progressSpinner>
         <p *ngSwitchCase="'error'">Unable to load the group list</p>
