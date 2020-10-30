@@ -6,6 +6,7 @@ import { ContentInfo, CurrentContentService, GroupInfo, isGroupInfo } from 'src/
 import { filter } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { UserProfile } from 'src/app/shared/http-services/current-user.service';
+import { AuthService } from 'src/app/shared/auth/auth.service';
 
 @Component({
   selector: 'alg-navigation-tabs',
@@ -26,6 +27,7 @@ export class NavigationTabsComponent implements OnDestroy {
 
   constructor(
     private currentContentService: CurrentContentService,
+    private authService: AuthService,
     private ngZone: NgZone,
   ) {
     this.subscription = this.currentContentService.currentContent$.pipe(
@@ -83,4 +85,7 @@ export class NavigationTabsComponent implements OnDestroy {
     this._updateStatus(e.srcElement);
   }
 
+  login(): void {
+    this.authService.startAuthLogin();
+  }
 }

@@ -1,25 +1,18 @@
-<div class="group-container">
-  <div class="group-header">
+
+<div class="group-container" *ngIf="currentUser ; else userLoading">
+  <div class="group-header" *ngIf="!currentUser.isTemp; else tempUser">
     <div class="group-avatar">
       <img src="assets/images/Male.svg" style="width: 7rem; height: auto;" />
     </div>
-    <ng-container *ngIf="currentUser; else userLoading">
-      <span class="group-title">
-        <ng-container *ngIf="!currentUser.isTemp && (currentUser.firstname || currentUser.lastname) else tempUser">
-          {{ currentUser.firstname}} {{ currentUser.lastname}} ({{ currentUser.login }})
-        </ng-container>
-        <ng-template #tempUser>
-          {{ currentUser.login }}
-        </ng-template>
-      </span>
-      <span class="group-toggle" (click)="toggleGroup()">
-        <i class="fa fa-users"></i>
-        <i class="fa {{ groupShow ? 'fa-caret-down' : 'fa-caret-up' }}"></i>
-      </span>
-    </ng-container>
-    <ng-template #userLoading>
-      <span class="group-title">Loading...</span>
-    </ng-template>
+    <span class="group-title">
+      <ng-container *ngIf="(currentUser.firstname || currentUser.lastname)">
+        {{ currentUser.firstname}} {{ currentUser.lastname}} ({{ currentUser.login }})
+      </ng-container>
+    </span>
+    <span class="group-toggle" (click)="toggleGroup()">
+      <i class="fa fa-users"></i>
+      <i class="fa {{ groupShow ? 'fa-caret-down' : 'fa-caret-up' }}"></i>
+    </span>
   </div>
   <perfect-scrollbar style="width: 100%;height: 100%;" #scrollPanel (psScrollY)="onScrollEvent($event)">
     <div *ngIf="groupShow" (resized)="onResized($event)" #groupPanel tabindex="4" (focusOnGroupNav)="focusParent()">
@@ -29,3 +22,15 @@
     <alg-skill-activity-tabs *ngIf="stickyShow" class="overlay-skills"></alg-skill-activity-tabs>
   </perfect-scrollbar>
 </div>
+<ng-template #userLoading>
+  <span class="group-title">Loading...</span>
+</ng-template>
+<ng-template #tempUser>
+  <alg-button
+    label="Connexion"
+    icon="pi pi-sign-in"
+    class="ui-button-rounded ui-button-warning ui-fit-parent"
+    style="margin: 1rem;"
+    (click)="login()"
+  ></alg-button>
+</ng-template>
