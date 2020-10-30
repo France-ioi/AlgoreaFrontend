@@ -15,7 +15,6 @@ import { ERROR_MESSAGE } from '../../../../shared/constants/api';
   selector: 'alg-item-edit',
   templateUrl: './item-edit.component.html',
   styleUrls: [ './item-edit.component.scss' ],
-  providers: [ MessageService ]
 })
 export class ItemEditComponent implements OnDestroy {
   itemId? : string;
