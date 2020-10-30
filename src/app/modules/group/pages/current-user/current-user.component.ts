@@ -13,14 +13,14 @@ export class CurrentUserComponent implements OnDestroy {
   constructor(
     private currentContent: CurrentContentService,
   ) {
-    this.currentContent.setCurrent({
-      type: 'group', breadcrumbs: {category: CurrentUserBreadcrumbCat, path: [], currentPageIdx: -1}
+    this.currentContent.current.next({
+      type: 'group', breadcrumbs: { category: CurrentUserBreadcrumbCat, path: [], currentPageIdx: -1 }
     });
 
   }
 
-  ngOnDestroy() {
-    this.currentContent.setCurrent(null);
+  ngOnDestroy(): void {
+    this.currentContent.current.next(null);
   }
 
 }
