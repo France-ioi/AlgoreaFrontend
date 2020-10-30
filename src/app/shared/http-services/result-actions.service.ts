@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { SimpleActionResponse, assertSuccess } from './action-response';
+import { SimpleActionResponse, assertSuccess, ActionResponse, successData } from './action-response';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs';
+
+type AttemptId = string;
 
 @Injectable({
   providedIn: 'root'
@@ -25,5 +27,17 @@ export class ResultActionsService {
       );
   }
 
+  /*
+   * Start an item when no attempt or parent attempt is known. To be used only in this case!
+   */
+  startWithoutAttempt(itemIdPath: string[]): Observable<AttemptId> {
+    const path = itemIdPath.join('/');
+    return this.http
+      .post<ActionResponse<{ attempt_id: string }>>(`${environment.apiUrl}/items/${path}/start-result-path`, null, {})
+      .pipe(
+        map(successData),
+        map(data => data.attempt_id)
+      );
+  }
 
 }

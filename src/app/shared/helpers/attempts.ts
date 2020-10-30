@@ -1,4 +1,6 @@
 
+export const defaultAttemptId = '0'; // to be used as parent attempt for root items
+
 interface Result {
   latestActivityAt: Date,
   startedAt: Date|null,
