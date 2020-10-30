@@ -5,7 +5,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { FetchError, Fetching, isReady, Ready } from '../../../../shared/helpers/state';
-import { UpdateItemStringService } from '../../http-services/update-item-string.service';
+import { ItemStringChanges, UpdateItemStringService } from '../../http-services/update-item-string.service';
 import { TOAST_LENGTH } from '../../../../shared/constants/global';
 import { MessageService } from 'primeng/api';
 import { ERROR_MESSAGE } from '../../../../shared/constants/api';
@@ -73,6 +73,12 @@ export class ItemEditComponent implements OnDestroy {
     });
   }
 
+  getItemStringChanges(): ItemStringChanges {
+    return {
+      title: this.itemForm.get('title')?.value as string
+    };
+  }
+
   saveInput(): void {
     if (!this.itemId) return;
 
@@ -83,7 +89,7 @@ export class ItemEditComponent implements OnDestroy {
 
     this.updateItemStringService.updateItem(
       this.itemId,
-      this.itemForm.value
+      this.getItemStringChanges()
     ).subscribe(
       _status => {
         this.itemForm.disable();

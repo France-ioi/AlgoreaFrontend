@@ -5,6 +5,13 @@ import { environment } from '../../../../environments/environment';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
+export interface ItemStringChanges {
+  description?: string | null,
+  image_url?: string | null,
+  subtitle?: string | null,
+  title?: string | null
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -15,7 +22,7 @@ export class UpdateItemStringService {
 
   updateItem(
     itemId: string,
-    changes: object,
+    changes: ItemStringChanges,
     languageTag?: string
   ) : Observable<void> {
     // Fixme: Get languageTag properly
