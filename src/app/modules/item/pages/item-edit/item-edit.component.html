@@ -1,0 +1,14 @@
+<ng-container *ngIf="itemLoadingState$ | async as state">
+
+  <p-progressSpinner *ngIf="state.tag === 'fetching'"></p-progressSpinner>
+
+  <p *ngIf="state.tag === 'error'">Error while loading the item</p>
+
+  <div *ngIf="state.tag === 'ready'" style="margin: 1rem 0 0.5rem 0">
+    <form [formGroup]="itemForm">
+      <alg-input [parentForm]="itemForm" name="title" size="large" [isDark]='false'></alg-input>
+    </form>
+  </div>
+
+
+</ng-container>

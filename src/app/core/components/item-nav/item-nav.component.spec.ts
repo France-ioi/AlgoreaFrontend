@@ -13,12 +13,8 @@ describe('ItemNavComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ ItemNavComponent ],
       providers: [
-        { provide: ItemNavigationService, useValue: {
-          getRootActivities: () => EMPTY
-        }},
-        { provide: CurrentContentService, useValue: {
-          currentContent$: EMPTY
-        }},
+        { provide: ItemNavigationService, useValue: { getRootActivities: () => EMPTY } },
+        { provide: CurrentContentService, useValue: { currentContent$: EMPTY } },
       ]
     })
     .compileComponents();

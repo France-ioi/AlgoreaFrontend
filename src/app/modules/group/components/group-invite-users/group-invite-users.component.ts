@@ -16,15 +16,15 @@ interface Message
 @Component({
   selector: 'alg-group-invite-users',
   templateUrl: './group-invite-users.component.html',
-  styleUrls: ['./group-invite-users.component.scss'],
-  providers: [MessageService],
+  styleUrls: [ './group-invite-users.component.scss' ],
+  providers: [ MessageService ],
 })
 export class GroupInviteUsersComponent {
 
-  @Input() group: Group
+  @Input() group?: Group
   @Output() refreshRequired = new EventEmitter<void>();
 
-  @ViewChild(TextareaComponent) private textArea: TextareaComponent;
+  @ViewChild(TextareaComponent) private textArea?: TextareaComponent;
 
   state: 'empty'|'too_many'|'loading'|'ready' = 'empty';
 
@@ -36,7 +36,7 @@ export class GroupInviteUsersComponent {
     ) {}
 
 
-  private processRequestError(_err: any) {
+  private processRequestError(_err: any): void {
     this.messageService.add({
       severity: 'error',
       summary: 'Error',
@@ -45,7 +45,7 @@ export class GroupInviteUsersComponent {
     });
   }
 
-  private displayResponse(response: Map<string, InvitationResult>) {
+  private displayResponse(response: Map<string, InvitationResult>): void {
 
     const sucessInvites: string[] = Array.from(response.entries()).filter(e => e[1] === InvitationResult.Success).map(e => e[0]);
     const alreadyInvited: string[] = Array.from(response.entries()).filter(e => e[1] === InvitationResult.AlreadyInvited).map(e => e[0]);
@@ -83,7 +83,7 @@ export class GroupInviteUsersComponent {
 
   /* events */
 
-  onTextChange(text:string) {
+  onTextChange(text:string): void {
     this.state = 'ready';
 
     const logins = text.split(',').filter(login => login.length > 0);
@@ -95,7 +95,9 @@ export class GroupInviteUsersComponent {
     }
   }
 
-  onInviteClicked() {
+  onInviteClicked(): void {
+    if (!this.textArea || !this.group) return;
+
     // clear the messages
     this.messages = [];
 

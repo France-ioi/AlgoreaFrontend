@@ -1,15 +1,14 @@
-<div class="input-wrapper" [ngClass]="{large: type === 'large', light: mode === 'light'}">
+<div class="input-wrapper" [ngClass]="{ large: size === 'large', light: !isDark }" *ngIf="parentForm" [formGroup]="parentForm">
   <input
     [type]="inputType"
-    [(ngModel)]="value"
     [placeholder]="placeholder"
-    [ngClass]="{'has-button': hasButton}"
-    (ngModelChange)="onValueChange($event)"
+    [ngClass]="{'has-button': buttonIcon}"
+    [formControlName]="name"
   >
   <span class="icon">
-    <i class="{{leftIcon}}"></i>
+    <i class="fa fa-{{inputIcon}}"></i>
   </span>
-  <span *ngIf="hasButton" class="input-button" (click)="onButtonClick()">
-    <i class="{{icon}}"></i>
+  <span *ngIf="buttonIcon" class="input-button" (click)="onButtonClick()">
+    <i class="fa fa-{{buttonIcon}}"></i>
   </span>
 </div>

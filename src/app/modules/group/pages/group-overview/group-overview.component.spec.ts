@@ -21,9 +21,9 @@ describe('GroupOverviewComponent', () => {
       ],
       declarations: [ GroupOverviewComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
-      providers: [ { provide: GroupDataSource, useValue: {
+      providers: [{ provide: GroupDataSource, useValue: {
         group$: of(readyState(mockGroup))
-      } } ]
+      } }]
     })
     .compileComponents();
   }));

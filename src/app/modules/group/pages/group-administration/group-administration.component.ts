@@ -6,17 +6,18 @@ import { map } from 'rxjs/operators';
 @Component({
   selector: 'alg-group-administration',
   templateUrl: './group-administration.component.html',
-  styleUrls: ['./group-administration.component.scss']
+  styleUrls: [ './group-administration.component.scss' ]
 })
 export class GroupAdministrationComponent {
 
+  state$ = this.groupDataSource.state$;
   group$ = this.groupDataSource.group$.pipe(map(withManagementAdditions));
 
   constructor(
     private groupDataSource: GroupDataSource,
   ) {}
 
-  refreshGroupInfo() {
+  refreshGroupInfo(): void {
     this.groupDataSource.refetchGroup();
   }
 }

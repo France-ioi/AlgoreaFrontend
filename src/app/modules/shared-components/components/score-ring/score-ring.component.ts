@@ -19,32 +19,30 @@ enum ScoreRingColor {
 @Component({
   selector: 'alg-score-ring',
   templateUrl: './score-ring.component.html',
-  styleUrls: ['./score-ring.component.scss'],
+  styleUrls: [ './score-ring.component.scss' ],
 })
 export class ScoreRingComponent implements OnInit, OnChanges {
   @Input() diameter = 60;
-  @Input() innerDiameter = 50;
-  @Input() displayedScore = 0;
   @Input() currentScore = 0;
+  @Input() bestScore = 0;
   @Input() isValidated = false;
   @Input() isStarted = true;
   @Input() isDark = false;
   @Input() isFailed = false;
-  @Input() icons = '';
-  @Input() scoreFill = '';
+  @Input() icon?: string; // a font-awesome icon identifier
+  @Input() scoreFillColor?: string;
   @Input() forTree = false;
 
-  @ViewChild('svg') svg: ElementRef;
+  @ViewChild('svg') svg?: ElementRef;
 
-  displayPath: string;
-  displayFill: string;
+  greyedPath?: string;
+  greyedFill?: string;
 
-  currentPath: string;
-  currentFill: string;
+  scorePath?: string;
+  scoreFill?: string;
 
   svgRadius = 30;
 
-  iconPath: string;
   iconFill = 'white';
 
   textFill = ScoreRingColor.defaultText;
@@ -52,9 +50,9 @@ export class ScoreRingComponent implements OnInit, OnChanges {
 
   constructor() {}
 
-  ngOnInit() {}
+  ngOnInit(): void {}
 
-  _pathFromScore(score: number) {
+  _pathFromScore(score: number): string {
     if (score === 0) {
       return 'M0, -30';
     }
@@ -68,9 +66,9 @@ export class ScoreRingComponent implements OnInit, OnChanges {
     return `M0,-30 A30,30 1 ${score > 50 ? 1 : 0},1 ${h},${w}`;
   }
 
-  ngOnChanges(_changes: SimpleChanges) {
-    if (this.scoreFill.length > 0) {
-      this.displayFill = this.scoreFill;
+  ngOnChanges(_changes: SimpleChanges): void {
+    if (this.scoreFillColor) {
+      this.greyedFill = this.scoreFillColor;
       this.textFill = ScoreRingColor.darkText;
     } else {
       if (this.isDark) {
@@ -80,30 +78,29 @@ export class ScoreRingComponent implements OnInit, OnChanges {
       }
     }
 
-    this.displayPath = this._pathFromScore(this.displayedScore);
-    this.currentPath = this._pathFromScore(this.currentScore);
-    if (this.displayedScore === 100) {
-      this.displayFill = ScoreRingColor.success;
-    } else if (this.scoreFill.length === 0) {
-      this.displayFill = `hsl(${this.displayedScore * 0.4 }, 100%, 50%)`;
-      this.currentFill = '#8E8E8E';
+    this.greyedPath = this._pathFromScore(this.currentScore);
+    this.scorePath = this._pathFromScore(this.bestScore);
+    if (this.currentScore === 100) {
+      this.greyedFill = ScoreRingColor.success;
+    } else if (!this.scoreFillColor) {
+      this.greyedFill = `hsl(${this.currentScore * 0.4 }, 100%, 50%)`;
+      this.scoreFill = '#8E8E8E';
     }
 
-    if (this.icons) {
+    if (this.icon) {
       if (this.isDark) {
         this.iconFill = 'white';
       } else {
         this.iconFill = ScoreRingColor.defaultText;
       }
-      this.iconPath = this.icons;
     } else if (this.isValidated) {
-      this.iconPath = 'check';
+      this.icon = 'check';
       this.iconFill = ScoreRingColor.success;
     } else if (this.isFailed) {
-      this.iconPath = 'times';
+      this.icon = 'times';
       this.iconFill = ScoreRingColor.initial;
     } else {
-      this.iconPath = '';
+      this.icon = undefined;
     }
 
     this.fontSize = Math.floor((2 * this.diameter) / 64);

@@ -25,13 +25,13 @@ export class OAuthService {
   /**
    * Init authorization code flow login anf redirect the user to the auth server login url.
    */
-  initCodeFlow() {
+  initCodeFlow(): void {
     const state = this.createNonce();
     const loginServerUri = environment.oauthServerUrl+'/oauth/authorize';
     const separationChar = loginServerUri.indexOf('?') > -1 ? '&' : '?';
 
     const url = loginServerUri + separationChar + 'response_type=code&scope=account&approval_prompt=auto' +
-      '&client_id=' +  encodeURIComponent(environment.oauthClientId) +
+      '&client_id=' + encodeURIComponent(environment.oauthClientId) +
       '&state=' + encodeURIComponent(state) +
       '&redirect_uri=' + encodeURIComponent(this.loginRedirectUri());
     // should add PKCE here
@@ -53,14 +53,14 @@ export class OAuthService {
     const code = parts.get('code');
     const state = parts.get('state');
     // get and store 'sesssionState' as well?
-    clearHash(['code', 'state']);
+    clearHash([ 'code', 'state' ]);
     if (!code || !state) {
       return of<AccessToken|null>(null);
     }
     if (parts.has('errors')) {
       return throwError(new Error(`Error received from authenticator: ${parts.get('errors')||'no error'}`));
     }
-    const {nonce: nonceInState} = this.parseState(state);
+    const { nonce: nonceInState } = this.parseState(state);
     if (!nonceInState || nonceInState !== nonceStorage.getItem(nonceStorageKey)) {
       return throwError(new Error('Invalid state received'));
     }
@@ -71,7 +71,7 @@ export class OAuthService {
     );
   }
 
-  private loginRedirectUri() {
+  private loginRedirectUri(): string {
     return `${window.location.protocol}//${window.location.host}/#/`;
   }
 
@@ -89,7 +89,7 @@ export class OAuthService {
     return { nonce: nonce, userState: userState };
   }
 
-  private createNonce() {
+  private createNonce(): string {
     const unreserved = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~';
     let size = 45;
     let id = '';

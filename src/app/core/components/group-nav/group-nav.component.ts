@@ -4,6 +4,7 @@ import { ManagedGroupsService } from '../../http-services/managed-groups.service
 import { Group } from '../group-nav-tree/group';
 import { of, merge } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 const joinGroupTabIdx = 1;
 
@@ -12,7 +13,7 @@ type GroupData = 'loading'|'error'|Group[];
 @Component({
   selector: 'alg-group-nav',
   templateUrl: './group-nav.component.html',
-  styleUrls: ['./group-nav.component.scss']
+  styleUrls: [ './group-nav.component.scss' ]
 })
 export class GroupNavComponent {
 
@@ -23,10 +24,11 @@ export class GroupNavComponent {
 
   constructor(
     private joinedGroupsService: JoinedGroupsService,
-    private managedGroupService: ManagedGroupsService
+    private managedGroupService: ManagedGroupsService,
+    private router: Router
   ) { }
 
-  onTabOpen(event: {index: number}) {
+  onTabOpen(event: {index: number}): void {
     this.focusOnGroupNav.emit();
     const service = event.index == joinGroupTabIdx ?
       this.joinedGroupsService.getJoinedGroups() : this.managedGroupService.getManagedGroups();
@@ -39,6 +41,10 @@ export class GroupNavComponent {
       if (event.index == joinGroupTabIdx) this.joinedGroups = res;
       else this.managedGroups = res;
     });
+  }
+
+  goToGroupManaged(): void {
+    void this.router.navigate([ 'groups', 'managed' ]);
   }
 
 }

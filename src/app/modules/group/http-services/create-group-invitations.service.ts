@@ -26,23 +26,23 @@ export class CreateGroupInvitationsService {
     return this.http
       .post<ActionResponse<Object>>(
         `${environment.apiUrl}/groups/${groupId}/invitations`,
-        {logins: logins}, {})
+        { logins: logins }, {})
       .pipe(
         map(successData),
         map(function (data: Object): Map<string, InvitationResult> {
           return new Map<string, InvitationResult>(
             Object.entries(data).map(
-              ([key, value]) => {
+              ([ key, value ]) => {
                 switch (value) {
                   case 'success':
-                    return [key, InvitationResult.Success];
+                    return [ key, InvitationResult.Success ];
                   case 'unchanged':
-                    return [key, InvitationResult.AlreadyInvited];
+                    return [ key, InvitationResult.AlreadyInvited ];
                   case 'not_found':
-                    return [key, InvitationResult.NotFound];
+                    return [ key, InvitationResult.NotFound ];
                   case 'cycle':
                   case 'invalid':
-                    return [key, InvitationResult.Error];
+                    return [ key, InvitationResult.Error ];
                   default:
                     throw new Error(`Invitation of user ${key} returned an unexpected result (${JSON.stringify(value)})`);
                 }

@@ -1,18 +1,18 @@
 <div class="section-container" [ngClass]="theme">
   <div class="section-header" [ngClass]="{'show-cursor': collapsible}">
     <div class="section-handler">
-      <i class="{{icon}}" *ngIf="!data || !data.ID"></i>
+      <i class="{{icon}}" *ngIf="icon && (!data || !data.ID)"></i>
       <div class="score-container" *ngIf="data && data.ID">
         <alg-score-ring
-          [displayedScore]="data.progress.displayedScore"
-          [icons]="data.progress.isStarted === false ? 'flag-checkered' : ''"
-          [currentScore]="data.progress.currentScore" [diameter]="24"
+          [currentScore]="data.progress.currentScore"
+          [icon]="data.progress.isStarted === false ? 'flag-checkered' : ''"
+          [bestScore]="data.progress.bestScore" [diameter]="24"
         ></alg-score-ring>
       </div>
     </div>
     <div class="section-header-content" [ngClass]="{'show-border': hasBorder && !collapsed}">
       <span *ngIf="remainOrigin || !collapsed || !data.ID" class="section-title" (click)="toggleContent()">{{label}}</span>
-      <div class="additional-content">
+      <div class="additional-content" *ngIf="headerTemplate">
         <ng-container [ngTemplateOutlet]="headerTemplate" [ngTemplateOutletContext]="{ $implicit: data }"></ng-container>
       </div>
       <span *ngIf="collapsible" class="toggle-content" (click)="toggleContent()">

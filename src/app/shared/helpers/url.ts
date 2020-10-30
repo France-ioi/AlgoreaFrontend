@@ -47,7 +47,7 @@ export function getArgsFromUrl(): Map<string, string> {
   return parseQueryString(queryString);
 }
 
-export function clearHash(paramNames: string[]) {
+export function clearHash(paramNames: string[]): void {
   let href = location.href;
   for (const param of paramNames) {
     href = href.replace(new RegExp('[&\\?]'+param+'=[^&\\$]*'), '');

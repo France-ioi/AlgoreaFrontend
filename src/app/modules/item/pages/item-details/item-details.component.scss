@@ -7,6 +7,7 @@
 
 :host ::ng-deep .mat-tab-nav-bar {
   border-bottom: none;
+  padding-right: 1rem;
   .mat-tab-link-container {
     .mat-ink-bar {
       display: none;
@@ -37,5 +38,6 @@
 }
 
 .bg-white {
+  margin-right: 1rem;
   background-color: white;
 }

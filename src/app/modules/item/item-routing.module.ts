@@ -1,16 +1,52 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
+import { ItemByIdComponent } from './pages/item-by-id/item-by-id.component';
 import { ItemDetailsComponent } from './pages/item-details/item-details.component';
-
-const routes: Routes = [
-  {
-    path: 'details/:id',
-    component: ItemDetailsComponent,
-  }
-];
+import { ItemEditComponent } from './pages/item-edit/item-edit.component';
+import { ItemContentComponent } from './pages/item-content/item-content.component';
+import { ItemProgressComponent } from './pages/item-progress/item-progress.component';
+import { ItemCurrentSituationComponent } from './pages/item-current-situation/item-current-situation.component';
+import { ItemLogViewComponent } from './pages/item-log-view/item-log-view.component';
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
+  imports: [ RouterModule.forChild([
+    {
+      path: 'by-id/:id',
+      component: ItemByIdComponent,
+      children: [
+        {
+          path: 'details',
+          component: ItemDetailsComponent,
+          children: [
+            {
+              path: '',
+              component: ItemContentComponent,
+            },
+            {
+              path: 'progress',
+              component: ItemProgressComponent,
+              children: [
+                {
+                  path: '',
+                  component: ItemCurrentSituationComponent,
+                  children: [
+                    {
+                      path: '',
+                      component: ItemLogViewComponent
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          path: 'edit',
+          component: ItemEditComponent,
+        },
+      ]
+    }
+  ]) ],
+  exports: [ RouterModule ],
 })
 export class ItemRoutingModule {}

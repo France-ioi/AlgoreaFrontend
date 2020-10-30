@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { ButtonModule } from 'primeng/button';
@@ -100,6 +100,7 @@ import { ProgressLevelComponent } from './components/progress-level/progress-lev
     MatMenuModule,
 
     ClickOutsideModule,
+    ReactiveFormsModule,
   ],
   exports: [
     ButtonComponent,
@@ -129,7 +130,7 @@ import { ProgressLevelComponent } from './components/progress-level/progress-lev
     ProgressLevelComponent,
   ],
   providers: [
-    {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: true}}
+    { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: true } }
   ],
   entryComponents: [
   ]

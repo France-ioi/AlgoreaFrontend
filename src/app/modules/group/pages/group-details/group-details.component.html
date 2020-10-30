@@ -1,6 +1,6 @@
 <ng-container *ngIf="state$ | async as state">
 
-  <div *ngIf="state.tag === 'ready' && (group$ | async) as group">
+  <ng-container *ngIf="state.tag === 'ready' && (group$ | async) as group">
     <alg-group-header [group]="group"></alg-group-header>
     <alg-pending-request *ngIf="group.isCurrentUserManager" [groupId]="group.id"></alg-pending-request>
 
@@ -34,13 +34,14 @@
         Settings
       </a>
     </nav>
-    <div class="bg-white">
-      <router-outlet></router-outlet>
-    </div>
-  </div>
+  </ng-container>
 
   <p-progressSpinner *ngIf="state.tag === 'fetching'"></p-progressSpinner>
 
   <p *ngIf="state.tag === 'error'">Error while loading the group info</p>
 
 </ng-container>
+
+<div class="bg-white">
+  <router-outlet></router-outlet>
+</div>
