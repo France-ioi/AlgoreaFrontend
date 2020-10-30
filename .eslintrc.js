@@ -66,7 +66,8 @@ module.exports = {
     '@typescript-eslint/naming-convention': [
       "error",
       { "selector": "default", "format": ["camelCase"], "leadingUnderscore": "forbid" },
-      { "selector": "variable", "format": ["camelCase", "UPPER_CASE"] },
+      { "selector": "variable", "format": ["camelCase"] },
+      { "selector": "variable", "modifiers": ["const"], "format": ["camelCase", "UPPER_CASE"] },
       { "selector": "parameter", "format": ["camelCase"], "leadingUnderscore": "allow" },
       { "selector": "memberLike", "modifiers": ["private"], "format": ["camelCase"] },
       { "selector": "enumMember", "format": ["PascalCase"] },
