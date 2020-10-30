@@ -1,6 +1,6 @@
 import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PendingRequestComponent, Activity, Action } from './pending-request.component';
+import { PendingRequestComponent } from './pending-request.component';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { of, Subject } from 'rxjs';
 import { MessageService } from 'primeng/api';
@@ -77,27 +77,27 @@ describe('PendingRequestComponent', () => {
     expect(component.selection).toEqual([]);
     expect(component.panel.length).toEqual(1);
     expect(component.currentSort).toEqual([]);
-    expect(component.ongoingActivity).toEqual(Activity.None);
+    expect(component.ongoingActivity).toEqual('none');
   });
 
   it('should, when none is selected and "select all" is clicked, select all rows', () => {
     component.onSelectAll();
     expect(component.selection).toEqual(MOCK_RESPONSE);
-    expect(component.ongoingActivity).toEqual(Activity.None);
+    expect(component.ongoingActivity).toEqual('none');
   });
 
   it('should, when some are selected and "select all" is clicked, select all rows', () => {
     component.selection = MOCK_RESPONSE.slice(1);
     component.onSelectAll();
     expect(component.selection).toEqual(MOCK_RESPONSE);
-    expect(component.ongoingActivity).toEqual(Activity.None);
+    expect(component.ongoingActivity).toEqual('none');
   });
 
   it('should, when all are selected and "select all" is clicked, deselect all rows', () => {
     component.selection = MOCK_RESPONSE;
     component.onSelectAll();
     expect(component.selection).toEqual([]);
-    expect(component.ongoingActivity).toEqual(Activity.None);
+    expect(component.ongoingActivity).toEqual('none');
   });
 
 
@@ -128,9 +128,9 @@ describe('PendingRequestComponent', () => {
 
     // step 1: select one and 'accept'
     component.selection = [ MOCK_RESPONSE[1] ];
-    component.onAcceptOrReject(Action.Accept);
+    component.onAcceptOrReject('accept');
 
-    expect(component.ongoingActivity).toEqual(Activity.Accepting);
+    expect(component.ongoingActivity).toEqual('accepting');
     expect(requestActionsService.acceptJoinRequest).toHaveBeenCalledWith('50', [ '12' ]);
     expect(requestActionsService.rejectJoinRequest).toHaveBeenCalledTimes(0);
     expect(getRequestsService.getPendingRequests).toHaveBeenCalledTimes(1); // the initial one
@@ -139,7 +139,7 @@ describe('PendingRequestComponent', () => {
     serviceResponder$.next(new Map([ [ '12', 'success' ] ]));
     serviceResponder$.complete();
 
-    expect(component.ongoingActivity).toEqual(Activity.None);
+    expect(component.ongoingActivity).toEqual('none');
     // expect(messageService.add).toHaveBeenCalledTimes(1);
     // expect(messageService.add).toHaveBeenCalledWith({
     //   severity: 'success',
@@ -155,9 +155,9 @@ describe('PendingRequestComponent', () => {
 
     // step 1: select one and 'reject'
     component.selection = [ MOCK_RESPONSE[1] ];
-    component.onAcceptOrReject(Action.Reject);
+    component.onAcceptOrReject('reject');
 
-    expect(component.ongoingActivity).toEqual(Activity.Rejecting);
+    expect(component.ongoingActivity).toEqual('rejecting');
     expect(requestActionsService.rejectJoinRequest).toHaveBeenCalledWith('50', [ '12' ]);
     expect(requestActionsService.acceptJoinRequest).toHaveBeenCalledTimes(0);
     expect(getRequestsService.getPendingRequests).toHaveBeenCalledTimes(1); // the initial one
@@ -166,7 +166,7 @@ describe('PendingRequestComponent', () => {
     serviceResponder$.next(new Map([ [ '12', 'success' ] ]));
     serviceResponder$.complete();
 
-    expect(component.ongoingActivity).toEqual(Activity.None);
+    expect(component.ongoingActivity).toEqual('none');
     // expect(messageService.add).toHaveBeenCalledTimes(1);
     // expect(messageService.add).toHaveBeenCalledWith({
     //   severity: 'success',
@@ -180,15 +180,15 @@ describe('PendingRequestComponent', () => {
 
   it('should, when an action is pressed, without selection, do nothing', () => {
     component.selection = [];
-    component.onAcceptOrReject(Action.Accept);
+    component.onAcceptOrReject('accept');
 
-    expect(component.ongoingActivity).toEqual(Activity.None);
+    expect(component.ongoingActivity).toEqual('none');
     expect(getRequestsService.getPendingRequests).toHaveBeenCalledTimes(1); // the initial one
   });
 
   it('should consider "unchanged" in response as success', () => {
     component.selection = [ MOCK_RESPONSE[1] ];
-    component.onAcceptOrReject(Action.Accept);
+    component.onAcceptOrReject('accept');
 
     serviceResponder$.next(new Map([ [ '12', 'unchanged' ] ]));
     serviceResponder$.complete();
@@ -203,12 +203,12 @@ describe('PendingRequestComponent', () => {
 
   it('should display an appropriate message on partial success', () => {
     component.selection = MOCK_RESPONSE; // select 10, 11 and 12
-    component.onAcceptOrReject(Action.Accept);
+    component.onAcceptOrReject('accept');
 
     serviceResponder$.next(new Map([ [ '11', 'invalid' ], [ '12', 'success' ], [ '10', 'success' ] ]));
     serviceResponder$.complete();
 
-    expect(component.ongoingActivity).toEqual(Activity.None);
+    expect(component.ongoingActivity).toEqual('none');
     // expect(messageService.add).toHaveBeenCalledTimes(1);
     // expect(messageService.add).toHaveBeenCalledWith({
     //   severity: 'warn',
@@ -222,12 +222,12 @@ describe('PendingRequestComponent', () => {
 
   it('should display an appropriate error message when all accept requests failed', () => {
     component.selection = MOCK_RESPONSE; // select 10, 11 and 12
-    component.onAcceptOrReject(Action.Accept);
+    component.onAcceptOrReject('accept');
 
     serviceResponder$.next(new Map([ [ '11', 'invalid' ], [ '12', 'cycle' ] ]));
     serviceResponder$.complete();
 
-    expect(component.ongoingActivity).toEqual(Activity.None);
+    expect(component.ongoingActivity).toEqual('none');
     // expect(messageService.add).toHaveBeenCalledTimes(1);
     // expect(messageService.add).toHaveBeenCalledWith({
     //   severity: 'error',
@@ -241,12 +241,12 @@ describe('PendingRequestComponent', () => {
 
   it('should display an appropriate error message when all reject requests failed', () => {
     component.selection = MOCK_RESPONSE; // select 10, 11 and 12
-    component.onAcceptOrReject(Action.Reject);
+    component.onAcceptOrReject('reject');
 
     serviceResponder$.next(new Map([ [ '11', 'invalid' ], [ '12', 'cycle' ] ]));
     serviceResponder$.complete();
 
-    expect(component.ongoingActivity).toEqual(Activity.None);
+    expect(component.ongoingActivity).toEqual('none');
     // expect(messageService.add).toHaveBeenCalledTimes(1);
     // expect(messageService.add).toHaveBeenCalledWith({
     //   severity: 'error',
@@ -260,12 +260,12 @@ describe('PendingRequestComponent', () => {
 
   it('should display an appropriate error message when the service fails', () => {
     component.selection = [ MOCK_RESPONSE[1] ];
-    component.onAcceptOrReject(Action.Accept);
+    component.onAcceptOrReject('accept');
 
     serviceResponder$.error(new Error('...'));
     serviceResponder$.complete();
 
-    expect(component.ongoingActivity).toEqual(Activity.None);
+    expect(component.ongoingActivity).toEqual('none');
     // expect(messageService.add).toHaveBeenCalledTimes(1);
     // expect(messageService.add).toHaveBeenCalledWith({
     //   severity: 'error',
