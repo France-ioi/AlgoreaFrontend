@@ -45,9 +45,6 @@ export function itemEditUrl(item: ItemRoute): RouterCommands {
   return itemUrl(item, 'edit');
 }
 
-/**
- * Return null if some required parameters are missing.
- */
 export function itemRouteFromParams(params: ParamMap): ItemRoute|'missing-id'|'missing-path'|'missing-attempt' {
   const id = params.get('id');
   const pathAsString = params.get(pathParamName);
