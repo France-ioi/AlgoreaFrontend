@@ -47,8 +47,4 @@ export class GroupNavComponent {
     void this.router.navigate([ 'groups', 'managed' ]);
   }
 
-  goToGroupJoined(): void {
-    void this.router.navigate([ 'groups', 'joined' ]);
-  }
-
 }
