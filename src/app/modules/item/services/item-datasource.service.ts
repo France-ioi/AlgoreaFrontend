@@ -58,6 +58,12 @@ export class ItemDataSource implements OnDestroy {
     this.fetchOperation.next(item);
   }
 
+  refreshItem(): void {
+    if (isReady(this.state.value)) {
+      this.fetchItem(this.state.value.data.route);
+    }
+  }
+
   ngOnDestroy(): void {
     this.state.complete();
     this.fetchOperation.complete();
