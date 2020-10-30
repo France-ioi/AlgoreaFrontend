@@ -6,7 +6,7 @@ const CurrentUserBreadcrumbCat = 'Yourself';
 @Component({
   selector: 'alg-current-user',
   templateUrl: './current-user.component.html',
-  styleUrls: ['./current-user.component.scss'],
+  styleUrls: [ './current-user.component.scss' ],
 })
 export class CurrentUserComponent implements OnDestroy {
 
