@@ -37,25 +37,25 @@ export class SkillProgressComponent implements OnInit, OnChanges {
   currentColor: string = ProgressColor.Thin;
   displayColor: string = ProgressColor.Green;
 
-  RANGE_MIN = 0;
-  RANGE_MAX = 100;
+  private readonly rangeMin = 0;
+  private readonly rangeMax = 100;
 
   constructor() {}
 
-  _validateScore(score: number): number {
-    if (score < this.RANGE_MIN) {
-      return this.RANGE_MIN;
+  private validateScore(score: number): number {
+    if (score < this.rangeMin) {
+      return this.rangeMin;
     }
-    if (score > this.RANGE_MAX) {
-      return this.RANGE_MAX;
+    if (score > this.rangeMax) {
+      return this.rangeMax;
     }
 
     return score;
   }
 
   ngOnInit(): void {
-    this._validateScore(this.currentScore);
-    this._validateScore(this.bestScore);
+    this.validateScore(this.currentScore);
+    this.validateScore(this.bestScore);
 
     if (this.type === 'thin-horizontal') {
       this.progressHeight = ProgressHeight.Thin;

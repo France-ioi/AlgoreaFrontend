@@ -21,7 +21,7 @@ export class GetGroupManagersService {
   constructor(private http: HttpClient) { }
 
   getGroupManagers(
-    group_id: string,
+    groupId: string,
     sort: string[] = [],
     ): Observable<Manager[]> {
     let params = new HttpParams();
@@ -29,6 +29,6 @@ export class GetGroupManagersService {
       params = params.set('sort', sort.join(','));
     }
     return this.http
-      .get<Manager[]>(`${environment.apiUrl}/groups/${group_id}/managers`, { params: params });
+      .get<Manager[]>(`${environment.apiUrl}/groups/${groupId}/managers`, { params: params });
   }
 }

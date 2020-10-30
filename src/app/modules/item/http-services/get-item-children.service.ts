@@ -47,10 +47,9 @@ export class GetItemChildrenService {
 
   constructor(private http: HttpClient) { }
 
-  get(id: string, attempt_id: string
-    ): Observable<ItemChild[]> {
+  get(id: string, attemptId: string): Observable<ItemChild[]> {
     let params = new HttpParams();
-    params = params.set('attempt_id', attempt_id);
+    params = params.set('attempt_id', attemptId);
     return this.http
       .get<RawItemChild[]>(`${environment.apiUrl}/items/${id}/children`, { params: params })
       .pipe(

@@ -13,7 +13,7 @@ export class TimePickerComponent implements OnChanges {
 
   currentValue = 0;
 
-  MINUTES = MINUTES; // export to template
+  readonly minutes = MINUTES; // export to template
 
   constructor() {}
 

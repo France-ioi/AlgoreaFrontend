@@ -40,13 +40,13 @@ export class ChapterChildrenComponent implements OnChanges, OnDestroy {
 
   click(child: ItemChild&ItemChildAdditions): void {
     if (!this.itemData || child.isLocked) return;
-    const attempt_id = child.result?.attempt_id;
-    const parent_attempt_id = this.itemData.currentResult?.attemptId;
-    if (!parent_attempt_id) return; // unexpected: children have been loaded, so we are sure this item has an attempt
+    const attemptId = child.result?.attempt_id;
+    const parentAttemptId = this.itemData.currentResult?.attemptId;
+    if (!parentAttemptId) return; // unexpected: children have been loaded, so we are sure this item has an attempt
     void this.router.navigate(itemDetailsUrl({
       id: child.id,
       path: this.itemData.route.path.concat([ this.itemData.item.id ]),
-      ...attempt_id ? { attemptId: attempt_id } : { parentAttemptId: parent_attempt_id }
+      ...attemptId ? { attemptId: attemptId } : { parentAttemptId: parentAttemptId }
       }));
   }
 
