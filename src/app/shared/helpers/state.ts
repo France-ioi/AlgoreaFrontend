@@ -24,7 +24,7 @@ export function isReady<T>(state: {tag: string}): state is Ready<T> {
   return state.tag === 'ready';
 }
 
-export function isFetching<T>(state: {tag: string}): state is Fetching {
+export function isFetching(state: {tag: string}): state is Fetching {
   return state.tag === 'fetching';
 }
 
