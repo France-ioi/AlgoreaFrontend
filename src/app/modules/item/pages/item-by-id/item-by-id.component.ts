@@ -2,8 +2,10 @@ import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
+import { defaultAttemptId } from 'src/app/shared/helpers/attempts';
 import { isItemRouteError, itemDetailsUrl, itemRouteFromParams, itemUrl } from 'src/app/shared/helpers/item-route';
 import { FetchError, Fetching, isReady, Ready } from 'src/app/shared/helpers/state';
+import { ResultActionsService } from 'src/app/shared/http-services/result-actions.service';
 import { CurrentContentService, EditAction, isItemInfo, ItemInfo } from 'src/app/shared/services/current-content.service';
 import { ItemDataSource, ItemData } from '../../services/item-datasource.service';
 
@@ -27,6 +29,7 @@ export class ItemByIdComponent implements OnDestroy {
     private activatedRoute: ActivatedRoute,
     private currentContent: CurrentContentService,
     private itemDataSource: ItemDataSource,
+    private resultActionsService: ResultActionsService,
   ) {
 
     // on route change: refetch item if needed
@@ -92,9 +95,25 @@ export class ItemByIdComponent implements OnDestroy {
     this.subscriptions.forEach(s => s.unsubscribe());
   }
 
-  private solveMissingPathAttempt(id: string, _path?: string[]): void {
-    // eslint-disable-next-line no-console
-    console.log(`Error: missing path or attempt for :${id}`);
+  /**
+   * Called when either path or attempt is missing
+   */
+  private solveMissingPathAttempt(id: string, path?: string[]): void {
+
+    // TODO: handle when path is missing
+
+    if (path) { // if path is known, just fix the attempt
+      // for empty path (root items), consider the item has a (fake) parent attempt id 0
+      if (path.length === 0) void this.router.navigate(itemDetailsUrl({ id: id, path: path, parentAttemptId: defaultAttemptId }));
+      else {
+        // will start all but the current item
+        this.resultActionsService.startWithoutAttempt(path).subscribe(attemptId => {
+          void this.router.navigate(itemDetailsUrl({ id: id, path: path, parentAttemptId: attemptId }));
+        });
+        // TODO: handle error
+      }
+    }
+
   }
 
 }
