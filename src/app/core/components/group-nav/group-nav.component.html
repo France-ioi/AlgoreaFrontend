@@ -5,11 +5,11 @@
     </span>
     <alg-switch mode="white"></alg-switch>
   </div> -->
-  <div class="group-self" routerLink="groups/me">
+  <div class="group-self">
     <span class="anonym-group">
       <img src="assets/images/Male.svg" style="width: 3.3333rem; height: 3.3333rem;" />
     </span>
-    <span class="group-subtitle" [ngClass]="{'selected': selectedGroup == 0}">Yourself</span>
+    <span class="group-subtitle" routerLink="groups/me" routerLinkActive="selected">Yourself</span>
   </div>
   <div class="group-list">
     <p-accordion [multiple]="true" (onOpen)="onTabOpen($event)">

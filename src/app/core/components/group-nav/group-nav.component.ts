@@ -20,7 +20,6 @@ export class GroupNavComponent {
 
   joinedGroups: GroupData = [];
   managedGroups: GroupData = [];
-  selectedGroup: number;
 
   constructor(
     private joinedGroupsService: JoinedGroupsService,
