@@ -12,7 +12,7 @@ import { CurrentUserService } from 'src/app/shared/services/current-user.service
 })
 export class ItemLogViewComponent implements OnInit, OnDestroy {
 
-  subscription: Subscription?;
+  subscription?: Subscription;
   logData: RecentActivity[]|'loading'|'error' = 'loading';
 
   constructor(
