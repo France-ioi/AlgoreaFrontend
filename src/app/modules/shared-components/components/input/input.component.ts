@@ -15,7 +15,7 @@ import { AbstractControl, FormGroup } from '@angular/forms';
   styleUrls: [ './input.component.scss' ],
 })
 export class InputComponent implements OnInit, OnChanges {
-  @Input() name: string = ''; // name of the input in the parent form
+  @Input() name = ''; // name of the input in the parent form
   @Input() parentForm?: FormGroup;
 
   @Input() placeholder = ''; // avoid 'undefined' if no placeholder specified
