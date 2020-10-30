@@ -2,9 +2,9 @@ import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
+import { itemDetailsUrl, itemRouteFromParams, itemUrl } from 'src/app/shared/helpers/item-route';
 import { FetchError, Fetching, isReady, Ready } from 'src/app/shared/helpers/state';
 import { CurrentContentService, EditAction, isItemInfo, ItemInfo } from 'src/app/shared/services/current-content.service';
-import { isPathGiven, itemDetailsRoute, itemFromDetailParams } from 'src/app/shared/services/nav-types';
 import { ItemDataSource, ItemData } from '../../services/item-datasource.service';
 
 const ItemBreadcrumbCat = 'Items';
@@ -31,22 +31,16 @@ export class ItemByIdComponent implements OnDestroy {
 
     // on route change: refetch item if needed
     this.activatedRoute.paramMap.subscribe(params => {
-      const navItem = itemFromDetailParams(params);
-      if (!navItem) return; // unexpected as this component should not be routed if id is missing
+      const item = itemRouteFromParams(params);
+      if (item === 'missing-id') return; // unexpected as this component should not be routed if id is missing
+      if (item === 'missing-path') return; // TODO: handle no path given
+      if (item === 'missing-attempt') return; // TODO: handle no attempt given
       currentContent.current.next({
         type: 'item',
-        data: { nav: navItem },
+        data: { route: item },
         breadcrumbs: { category: ItemBreadcrumbCat, path: [], currentPageIdx: -1 }
       } as ItemInfo);
-      if (!isPathGiven(params)) {
-        // TODO: handle no path given
-        return;
-      }
-      if (!navItem.attemptId && !navItem.parentAttemptId) {
-        // TODO: handle no attempt given
-        return;
-      }
-      this.itemDataSource.fetchItem(navItem);
+      this.itemDataSource.fetchItem(item);
     });
 
     this.subscriptions.push(
@@ -57,26 +51,23 @@ export class ItemByIdComponent implements OnDestroy {
           type: 'item',
           breadcrumbs: {
             category: ItemBreadcrumbCat,
-            path: state.data.breadcrumbs.map((el, idx) => ({
+            path: state.data.breadcrumbs.map(el => ({
               title: el.title,
               hintNumber: el.attemptCnt,
-              navigateTo: itemDetailsRoute({
-                itemId: el.itemId,
-                attemptId: el.attemptId,
-                itemPath: state.data.breadcrumbs.slice(0, idx).map(it => it.itemId),
-              }),
+              navigateTo: itemDetailsUrl(el.route),
             })),
             currentPageIdx: state.data.breadcrumbs.length - 1,
           },
           title: state.data.item.string.title === null ? undefined : state.data.item.string.title,
           data: {
-            nav: state.data.nav,
-            result: state.data.currentResult ? {
-              attemptId: state.data.currentResult.attemptId,
+            route: state.data.route,
+            details: {
+              title: state.data.item.string.title,
+              attemptId: state.data.currentResult?.attemptId,
               bestScore: state.data.item.best_score,
-              currentScore: state.data.currentResult.score,
-              validated: state.data.currentResult.validated,
-            } : undefined
+              currentScore: state.data.currentResult?.score,
+              validated: state.data.currentResult?.validated,
+            }
           },
         }))
       ).subscribe(p => this.currentContent.current.next(p)),
@@ -86,7 +77,7 @@ export class ItemByIdComponent implements OnDestroy {
       ).subscribe(action => {
         const currentInfo = this.currentContent.current.value;
         if (isItemInfo(currentInfo)) {
-          void this.router.navigate(itemDetailsRoute(currentInfo.data.nav, action === EditAction.StartEditing));
+          void this.router.navigate(itemUrl(currentInfo.data.route, action === EditAction.StartEditing ? 'edit' : 'details'));
         }
       })
     );
