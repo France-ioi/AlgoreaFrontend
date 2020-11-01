@@ -29,11 +29,13 @@
   <span class="group-title">Loading...</span>
 </ng-template>
 <ng-template #tempUser>
-  <alg-button
-    label="Connexion"
-    icon="pi pi-sign-in"
-    class="ui-button-rounded ui-button-warning ui-fit-parent"
-    style="margin: 1rem;"
-    (click)="login()"
-  ></alg-button>
+  <div class="connection-button">
+    <alg-button
+      label="Connexion"
+      icon="pi pi-sign-in"
+      class="ui-button-rounded ui-button-warning ui-fit-parent"
+      style="margin: 1rem;"
+      (click)="login()"
+    ></alg-button>
+  </div>
 </ng-template>
