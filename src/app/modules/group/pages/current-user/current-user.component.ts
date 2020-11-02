@@ -1,7 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { CurrentContentService } from 'src/app/shared/services/current-content.service';
 
-const CurrentUserBreadcrumbCat = 'Yourself';
+const currentUserBreadcrumbCat = 'Yourself';
 
 @Component({
   selector: 'alg-current-user',
@@ -14,7 +14,7 @@ export class CurrentUserComponent implements OnDestroy {
     private currentContent: CurrentContentService,
   ) {
     this.currentContent.current.next({
-      type: 'group', breadcrumbs: { category: CurrentUserBreadcrumbCat, path: [], currentPageIdx: -1 }
+      type: 'group', breadcrumbs: { category: currentUserBreadcrumbCat, path: [], currentPageIdx: -1 }
     });
 
   }
