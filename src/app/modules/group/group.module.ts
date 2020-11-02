@@ -32,6 +32,7 @@ import { CurrentUserComponent } from './pages/current-user/current-user.componen
     GroupAdministrationComponent,
     MyGroupsComponent,
     ManagedGroupsComponent,
+    JoinedGroupsComponent,
     GroupDetailsComponent,
     GroupSettingsComponent,
     GroupNoPermissionComponent,
