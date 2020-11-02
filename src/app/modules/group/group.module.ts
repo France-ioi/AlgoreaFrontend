@@ -22,6 +22,8 @@ import { GroupInviteUsersComponent } from './components/group-invite-users/group
 import { GroupManagerListComponent } from './components/group-manager-list/group-manager-list.component';
 import { JoinedGroupsComponent } from './pages/joined-groups/joined-groups.component';
 import { CurrentUserComponent } from './pages/current-user/current-user.component';
+import { GroupEditComponent } from './pages/group-edit/group-edit.component';
+import { GroupByIdComponent } from './pages/group-by-id/group-by-id.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +42,9 @@ import { CurrentUserComponent } from './pages/current-user/current-user.componen
     DurationToMinPipe,
     GroupInviteUsersComponent,
     GroupManagerListComponent,
-    CurrentUserComponent
+    CurrentUserComponent,
+    GroupEditComponent,
+    GroupByIdComponent,
   ],
   imports: [
     CommonModule,
