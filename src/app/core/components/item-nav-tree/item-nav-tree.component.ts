@@ -5,8 +5,7 @@ import { ResultActionsService } from 'src/app/shared/http-services/result-action
 import { Router } from '@angular/router';
 import { ItemNavMenuData } from '../../common/item-nav-menu-data';
 import { itemDetailsUrl } from 'src/app/shared/helpers/item-route';
-
-const defaultAttempt = '0';
+import { defaultAttemptId } from 'src/app/shared/helpers/attempts';
 
 // ItemTreeNode is PrimeNG tree node with data forced to be an item
 interface ItemTreeNode extends TreeNode {
@@ -130,7 +129,7 @@ export class ItemNavTreeComponent implements OnChanges {
     } else if (this.data?.parent) {
       return this.data.parent.attemptId || undefined /* unexpected */;
     }
-    return defaultAttempt; // if the node has no parent, i.e. is a root, use default attempt
+    return defaultAttemptId; // if the node has no parent, i.e. is a root, use default attempt
   }
 
 }

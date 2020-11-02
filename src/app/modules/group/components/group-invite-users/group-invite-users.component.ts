@@ -17,7 +17,6 @@ interface Message
   selector: 'alg-group-invite-users',
   templateUrl: './group-invite-users.component.html',
   styleUrls: [ './group-invite-users.component.scss' ],
-  providers: [ MessageService ],
 })
 export class GroupInviteUsersComponent {
 

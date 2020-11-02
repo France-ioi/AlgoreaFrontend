@@ -68,8 +68,8 @@ export class AppComponent implements OnInit, OnDestroy {
     this.currentContent.editAction.next(EditAction.StartEditing);
   }
 
-  onEditCancel(): void {
-    this.currentContent.editAction.next(EditAction.Cancel);
+  onEditCancel() : void{
+    this.currentContent.editAction.next(EditAction.StopEditing);
   }
 
   onEditSave(): void {

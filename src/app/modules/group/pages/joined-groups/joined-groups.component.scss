@@ -1,0 +1,25 @@
+@import 'src/colors.scss';
+
+.group-info-container {
+
+  .group-info-header {
+    display: flex;
+    flex-direction: column;
+    margin-top: 2.5rem;
+    margin-bottom: 2.5rem;
+    color: $base-text-color;
+
+    .group-title {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      color: #4A4A4A;
+    }
+
+    .group-subtitle {
+      font-size: 1.2rem;
+    }
+  }
+
+  .group-info-content {
+  }
+}
