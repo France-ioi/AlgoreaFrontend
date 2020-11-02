@@ -1,5 +1,4 @@
 import { Component, Input } from '@angular/core';
-import { UserProfile } from 'src/app/shared/http-services/current-user.service';
 
 @Component({
   selector: 'alg-skill-activity-tabs',
@@ -8,7 +7,7 @@ import { UserProfile } from 'src/app/shared/http-services/current-user.service';
 })
 export class SkillActivityTabsComponent {
 
-  @Input() currentUser?: UserProfile;
+  @Input() backgroundColor: 'dark' | 'light' = 'dark';
 
   constructor() {}
 }
