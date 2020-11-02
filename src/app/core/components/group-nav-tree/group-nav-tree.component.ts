@@ -32,7 +32,7 @@ export class GroupNavTreeComponent implements OnChanges {
       data: g,
       type: 'leaf',
       leaf: true,
-      target: `/groups/details/${g.id}`,
+      target: `/groups/by-id/${g.id}/details`,
     }));
   }
 
