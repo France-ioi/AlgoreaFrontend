@@ -7,9 +7,14 @@ import { GroupOverviewComponent } from './pages/group-overview/group-overview.co
 import { GroupCompositionComponent } from './pages/group-composition/group-composition.component';
 import { GroupAdministrationComponent } from './pages/group-administration/group-administration.component';
 import { GroupSettingsComponent } from './pages/group-settings/group-settings.component';
+import { CurrentUserComponent } from './pages/current-user/current-user.component';
 import { JoinedGroupsComponent } from './pages/joined-groups/joined-groups.component';
 
 const routes: Routes = [
+  {
+    path: 'me',
+    component: CurrentUserComponent
+  },
   {
     path: 'mine',
     component: MyGroupsComponent,
