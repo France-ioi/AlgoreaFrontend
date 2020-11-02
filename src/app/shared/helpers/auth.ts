@@ -2,6 +2,8 @@ import { HttpHeaders } from '@angular/common/http';
 
 export function headersForAuth(token: string): { [name: string]: string | string[] } {
   return {
+    // "Authorization" is name to be used in http header
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     Authorization: `Bearer ${token}`,
   };
 }

@@ -9,7 +9,7 @@ import { ResultActionsService } from 'src/app/shared/http-services/result-action
 import { CurrentContentService, EditAction, isItemInfo, ItemInfo } from 'src/app/shared/services/current-content.service';
 import { ItemDataSource, ItemData } from '../../services/item-datasource.service';
 
-const ItemBreadcrumbCat = 'Items';
+const itemBreadcrumbCat = 'Items';
 
 /**
  * ItemByIdComponent is just a container for detail or edit page but manages the fetching on id change and (un)setting the current content.
@@ -44,7 +44,7 @@ export class ItemByIdComponent implements OnDestroy {
       currentContent.current.next({
         type: 'item',
         data: { route: item },
-        breadcrumbs: { category: ItemBreadcrumbCat, path: [], currentPageIdx: -1 }
+        breadcrumbs: { category: itemBreadcrumbCat, path: [], currentPageIdx: -1 }
       } as ItemInfo);
       // trigger the fetch of the item (which will itself re-update the current content)
       this.itemDataSource.fetchItem(item);
@@ -57,7 +57,7 @@ export class ItemByIdComponent implements OnDestroy {
         map((state): ItemInfo => ({
           type: 'item',
           breadcrumbs: {
-            category: ItemBreadcrumbCat,
+            category: itemBreadcrumbCat,
             path: state.data.breadcrumbs.map(el => ({
               title: el.title,
               hintNumber: el.attemptCnt,

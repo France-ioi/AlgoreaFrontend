@@ -9,11 +9,11 @@ import {
 } from '@angular/core';
 
 enum ScoreRingColor {
-  success = '#B8E986',
-  initial = '#F90223',
-  defaultText = '#4A4A4A',
-  darkText = '#FFF',
-  darkBk = '#2E5E95',
+  Success = '#B8E986',
+  Initial = '#F90223',
+  DefaultText = '#4A4A4A',
+  DarkText = '#FFF',
+  DarkBk = '#2E5E95',
 }
 
 @Component({
@@ -45,14 +45,14 @@ export class ScoreRingComponent implements OnInit, OnChanges {
 
   iconFill = 'white';
 
-  textFill = ScoreRingColor.defaultText;
+  textFill = ScoreRingColor.DefaultText;
   fontSize = 1;
 
   constructor() {}
 
   ngOnInit(): void {}
 
-  _pathFromScore(score: number): string {
+  private pathFromScore(score: number): string {
     if (score === 0) {
       return 'M0, -30';
     }
@@ -69,19 +69,19 @@ export class ScoreRingComponent implements OnInit, OnChanges {
   ngOnChanges(_changes: SimpleChanges): void {
     if (this.scoreFillColor) {
       this.greyedFill = this.scoreFillColor;
-      this.textFill = ScoreRingColor.darkText;
+      this.textFill = ScoreRingColor.DarkText;
     } else {
       if (this.isDark) {
-        this.textFill = ScoreRingColor.darkText;
+        this.textFill = ScoreRingColor.DarkText;
       } else {
-        this.textFill = ScoreRingColor.defaultText;
+        this.textFill = ScoreRingColor.DefaultText;
       }
     }
 
-    this.greyedPath = this._pathFromScore(this.currentScore);
-    this.scorePath = this._pathFromScore(this.bestScore);
+    this.greyedPath = this.pathFromScore(this.currentScore);
+    this.scorePath = this.pathFromScore(this.bestScore);
     if (this.currentScore === 100) {
-      this.greyedFill = ScoreRingColor.success;
+      this.greyedFill = ScoreRingColor.Success;
     } else if (!this.scoreFillColor) {
       this.greyedFill = `hsl(${this.currentScore * 0.4 }, 100%, 50%)`;
       this.scoreFill = '#8E8E8E';
@@ -91,14 +91,14 @@ export class ScoreRingComponent implements OnInit, OnChanges {
       if (this.isDark) {
         this.iconFill = 'white';
       } else {
-        this.iconFill = ScoreRingColor.defaultText;
+        this.iconFill = ScoreRingColor.DefaultText;
       }
     } else if (this.isValidated) {
       this.icon = 'check';
-      this.iconFill = ScoreRingColor.success;
+      this.iconFill = ScoreRingColor.Success;
     } else if (this.isFailed) {
       this.icon = 'times';
-      this.iconFill = ScoreRingColor.initial;
+      this.iconFill = ScoreRingColor.Initial;
     } else {
       this.icon = undefined;
     }

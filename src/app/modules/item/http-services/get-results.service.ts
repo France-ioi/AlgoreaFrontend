@@ -5,8 +5,6 @@ import { environment } from 'src/environments/environment';
 import { map } from 'rxjs/operators';
 import { isRouteWithAttempt, ItemRoute } from 'src/app/shared/helpers/item-route';
 
-type Attempt = { attemptId: string } | { parentAttemptId: string };
-
 interface RawResult {
   id: string, // attempt id
   latest_activity_at: string,

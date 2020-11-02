@@ -16,16 +16,8 @@ import { GetRequestsService, PendingRequest } from '../../http-services/get-requ
 import { RequestActionsService } from '../../http-services/request-actions.service';
 import { GridColumn, GridColumnGroup } from '../../../shared-components/components/grid/grid.component';
 
-export enum Activity {
-  Accepting,
-  Rejecting,
-  None
-}
-
-export enum Action {
-  Accept,
-  Reject
-}
+type Activity = 'accepting'|'rejecting'|'none';
+type Action = 'accept'|'reject';
 
 interface Result {
   countRequests: number;
@@ -43,10 +35,6 @@ export class PendingRequestComponent implements OnInit, OnChanges {
   @Input() groupId?: string;
   @Input() showSwitch = true;
 
-  // Make the enums usable in the html template
-  Action = Action;
-  Activity = Activity;
-
   columns: GridColumn[] = [
     { field: 'user.login', header: 'USER' },
     { field: 'at', header: 'REQUESTED ON' },
@@ -63,7 +51,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
   collapsed = true;
   status: 'loading' | 'loaded' | 'empty' |'error' = 'loading';
 
-  ongoingActivity: Activity = Activity.None;
+  ongoingActivity: Activity = 'none';
 
   constructor(
     private getRequestsService: GetRequestsService,
@@ -80,7 +68,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
 
   ngOnChanges(_changes: SimpleChanges): void {
     this.selection = [];
-    this.ongoingActivity = Activity.None;
+    this.ongoingActivity = 'none';
     this.reloadData();
   }
 
@@ -159,17 +147,17 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     });
     return forkJoin(
       Array.from(requestMap.entries()).map(elm => {
-        if (action === Action.Accept) return this.requestActionService.acceptJoinRequest(elm[0], elm[1]);
+        if (action === 'accept') return this.requestActionService.acceptJoinRequest(elm[0], elm[1]);
         else return this.requestActionService.rejectJoinRequest(elm[0], elm[1]);
       })
     );
   }
 
   onAcceptOrReject(action: Action): void {
-    if (this.selection.length === 0 || this.ongoingActivity !== Activity.None) {
+    if (this.selection.length === 0 || this.ongoingActivity !== 'none') {
       return;
     }
-    this.ongoingActivity = (action === Action.Accept) ? Activity.Accepting : Activity.Rejecting;
+    this.ongoingActivity = (action === 'accept') ? 'accepting' : 'rejecting';
 
     const resultObserver : Observable<Map<string, any>[]> = this.processRequests(action);
 
@@ -178,16 +166,16 @@ export class PendingRequestComponent implements OnInit, OnChanges {
         res => {
           this.displayResponseToast(
             this.parseResults(res),
-            action === Action.Accept ? 'accept' : 'reject',
-            action === Action.Accept ? 'accepted' : 'declined'
+            action === 'accept' ? 'accept' : 'reject', // still use a matching as it is "by coincidence" that the type of verb match
+            action === 'accept' ? 'accepted' : 'declined'
           );
           this.reloadData();
-          this.ongoingActivity = Activity.None;
+          this.ongoingActivity = 'none';
           this.selection = [];
         },
         err => {
           this.processRequestError(err);
-          this.ongoingActivity = Activity.None;
+          this.ongoingActivity = 'none';
         }
       );
   }

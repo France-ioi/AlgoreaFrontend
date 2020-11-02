@@ -63,6 +63,17 @@ module.exports = {
     'keyword-spacing': ['error'],
     'no-eq-null': ['error'],
     '@typescript-eslint/explicit-function-return-type': ['error'],
+    '@typescript-eslint/naming-convention': [
+      "error",
+      { "selector": "default", "format": ["camelCase"], "leadingUnderscore": "forbid" },
+      { "selector": "variable", "format": ["camelCase"] },
+      { "selector": "variable", "modifiers": ["const"], "format": ["camelCase", "UPPER_CASE"] },
+      { "selector": "parameter", "format": ["camelCase"], "leadingUnderscore": "allow" },
+      { "selector": "memberLike", "modifiers": ["private"], "format": ["camelCase"] },
+      { "selector": "enumMember", "format": ["PascalCase"] },
+      { "selector": "typeLike", "format": ["PascalCase"] },
+      { "selector": "property", "format": ["camelCase", "snake_case"] },
+    ],
   },
   overrides: [
     {
@@ -71,6 +82,7 @@ module.exports = {
         '@typescript-eslint/no-floating-promises': 'off',
         '@typescript-eslint/unbound-method': 'off',
         '@typescript-eslint/explicit-function-return-type': 'off',
+        '@typescript-eslint/naming-convention': 'off'
       }
     },
   ],

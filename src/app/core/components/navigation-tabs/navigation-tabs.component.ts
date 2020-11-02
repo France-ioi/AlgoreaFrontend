@@ -50,13 +50,13 @@ export class NavigationTabsComponent implements OnDestroy {
     const boundaryHeight = (directiveRef.elementRef.nativeElement as HTMLElement).clientHeight - 50;
     if (e.newHeight > boundaryHeight) {
       // this.stickyShow = true;
-      this._updateStatus(directiveRef.elementRef.nativeElement as HTMLElement);
+      this.updateStatus(directiveRef.elementRef.nativeElement as HTMLElement);
     } else {
       this.stickyShow = false;
     }
   }
 
-  _updateStatus(e: HTMLElement): void {
+  private updateStatus(e: HTMLElement): void {
     this.ngZone.run(() => {
       const scrollTop = e.scrollTop;
       const clientHeight = e.clientHeight - 50;
@@ -80,7 +80,7 @@ export class NavigationTabsComponent implements OnDestroy {
   }
 
   onScrollEvent(e: {srcElement: HTMLElement}): void { /* guessed type, something cleaner would be nice */
-    this._updateStatus(e.srcElement);
+    this.updateStatus(e.srcElement);
   }
 
 }

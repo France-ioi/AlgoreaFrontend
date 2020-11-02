@@ -8,7 +8,7 @@ import { CurrentContentService } from 'src/app/shared/services/current-content.s
 import { Subscription } from 'rxjs';
 import { FetchError, Fetching, isReady, Ready } from 'src/app/shared/helpers/state';
 
-const GroupBreadcrumbCat = 'Groups';
+const groupBreadcrumbCat = 'Groups';
 
 @Component({
   selector: 'alg-group-details',
@@ -30,7 +30,7 @@ export class GroupDetailsComponent implements OnDestroy {
   ) {
     this.activatedRoute.paramMap.subscribe(params => {
       const id = params.get('id');
-      this.currentContent.current.next({ type: 'group', breadcrumbs: { category: GroupBreadcrumbCat, path: [], currentPageIdx: -1 } });
+      this.currentContent.current.next({ type: 'group', breadcrumbs: { category: groupBreadcrumbCat, path: [], currentPageIdx: -1 } });
       if (id) this.groupDataSource.fetchGroup(id);
     });
 
@@ -40,7 +40,7 @@ export class GroupDetailsComponent implements OnDestroy {
       map(state => ({
         type: 'group',
         breadcrumbs: {
-          category: GroupBreadcrumbCat,
+          category: groupBreadcrumbCat,
           path: [{ title: state.data.name, navigateTo: [ 'groups', 'details', state.data.id ] }],
           currentPageIdx: 0,
         },
