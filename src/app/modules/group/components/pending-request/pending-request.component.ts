@@ -30,7 +30,6 @@ const groupColumn = { field: 'group.name', header: 'GROUP' };
   selector: 'alg-pending-request',
   templateUrl: './pending-request.component.html',
   styleUrls: [ './pending-request.component.scss' ],
-  providers: [ MessageService ]
 })
 export class PendingRequestComponent implements OnInit, OnChanges {
   @Input() groupId?: string;

@@ -45,19 +45,26 @@ export function itemEditUrl(item: ItemRoute): RouterCommands {
   return itemUrl(item, 'edit');
 }
 
-/**
- * Return null if some required parameters are missing.
- */
-export function itemRouteFromParams(params: ParamMap): ItemRoute|'missing-id'|'missing-path'|'missing-attempt' {
+export interface ItemRouteError {
+  tag: 'error';
+  id?: ItemId;
+  path?: ItemId[];
+}
+
+export function itemRouteFromParams(params: ParamMap): ItemRoute|ItemRouteError {
   const id = params.get('id');
   const pathAsString = params.get(pathParamName);
   const attemptId = params.get(attemptParamName);
   const parentAttemptId = params.get(parentAttemptParamName);
 
-  if (id === null) return 'missing-id';
-  if (pathAsString === null) return 'missing-path';
+  if (id === null) return { tag: 'error', id: undefined };
+  if (pathAsString === null) return { tag: 'error', id: id };
   const path = pathAsString === '' ? [] : pathAsString.split(',');
   if (attemptId !== null) return { id: id, path: path, attemptId: attemptId };
   if (parentAttemptId !== null) return { id: id, path: path, parentAttemptId: parentAttemptId };
-  return 'missing-attempt';
+  return { tag: 'error', id: id, path: path };
+}
+
+export function isItemRouteError(resp: ItemRoute|ItemRouteError): resp is ItemRouteError {
+  return 'tag' in resp && resp.tag === 'error';
 }

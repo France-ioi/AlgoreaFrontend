@@ -35,6 +35,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { AngularResizedEventModule } from 'angular-resize-event';
 import { UnauthorizedResponseInterceptor } from '../shared/interceptors/unauthorized_response.interceptor';
 import { ReactiveComponentModule } from '@ngrx/component';
+import { MessageService } from 'primeng/api';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: false,
@@ -68,6 +69,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     ProgressSpinnerModule
   ],
   providers: [
+    MessageService,
     {
       provide: PERFECT_SCROLLBAR_CONFIG,
       useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG,

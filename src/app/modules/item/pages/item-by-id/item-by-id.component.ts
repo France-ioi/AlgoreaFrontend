@@ -2,8 +2,10 @@ import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
-import { itemDetailsUrl, itemRouteFromParams, itemUrl } from 'src/app/shared/helpers/item-route';
+import { defaultAttemptId } from 'src/app/shared/helpers/attempts';
+import { isItemRouteError, itemDetailsUrl, itemRouteFromParams, itemUrl } from 'src/app/shared/helpers/item-route';
 import { FetchError, Fetching, isReady, Ready } from 'src/app/shared/helpers/state';
+import { ResultActionsService } from 'src/app/shared/http-services/result-actions.service';
 import { CurrentContentService, EditAction, isItemInfo, ItemInfo } from 'src/app/shared/services/current-content.service';
 import { ItemDataSource, ItemData } from '../../services/item-datasource.service';
 
@@ -27,19 +29,24 @@ export class ItemByIdComponent implements OnDestroy {
     private activatedRoute: ActivatedRoute,
     private currentContent: CurrentContentService,
     private itemDataSource: ItemDataSource,
+    private resultActionsService: ResultActionsService,
   ) {
 
     // on route change: refetch item if needed
     this.activatedRoute.paramMap.subscribe(params => {
       const item = itemRouteFromParams(params);
-      if (item === 'missing-id') return; // unexpected as this component should not be routed if id is missing
-      if (item === 'missing-path') return; // TODO: handle no path given
-      if (item === 'missing-attempt') return; // TODO: handle no attempt given
+      if (isItemRouteError(item)) {
+        // the case where id is missing is not handled as it is unexpected as this component would not be routed
+        if (item.id) this.solveMissingPathAttempt(item.id, item.path);
+        return;
+      }
+      // just publish to current content the new route we are navigating to (without knowing any info)
       currentContent.current.next({
         type: 'item',
         data: { route: item },
         breadcrumbs: { category: itemBreadcrumbCat, path: [], currentPageIdx: -1 }
       } as ItemInfo);
+      // trigger the fetch of the item (which will itself re-update the current content)
       this.itemDataSource.fetchItem(item);
     });
 
@@ -86,6 +93,27 @@ export class ItemByIdComponent implements OnDestroy {
   ngOnDestroy(): void {
     this.currentContent.current.next(null);
     this.subscriptions.forEach(s => s.unsubscribe());
+  }
+
+  /**
+   * Called when either path or attempt is missing
+   */
+  private solveMissingPathAttempt(id: string, path?: string[]): void {
+
+    // TODO: handle when path is missing
+
+    if (path) { // if path is known, just fix the attempt
+      // for empty path (root items), consider the item has a (fake) parent attempt id 0
+      if (path.length === 0) void this.router.navigate(itemDetailsUrl({ id: id, path: path, parentAttemptId: defaultAttemptId }));
+      else {
+        // will start all but the current item
+        this.resultActionsService.startWithoutAttempt(path).subscribe(attemptId => {
+          void this.router.navigate(itemDetailsUrl({ id: id, path: path, parentAttemptId: attemptId }));
+        });
+        // TODO: handle error
+      }
+    }
+
   }
 
 }
