@@ -1,5 +1,4 @@
 import { Component, Input } from '@angular/core';
-import { ItemDataSource } from '../../services/item-datasource.service';
 import { FormGroup } from '@angular/forms';
 
 @Component({
@@ -11,11 +10,10 @@ export class ItemEditContentComponent {
   @Input() inputName = '';
   @Input() parentForm?: FormGroup;
 
-  itemData$ = this.itemDataSource.itemData$;
+  value = '';
 
-  constructor(
-    private itemDataSource: ItemDataSource,
-  ) {
+  constructor() {
+    this.value = this.parentForm?.get(this.inputName)?.value as string;
   }
 
   updateForm(value: string): void {
