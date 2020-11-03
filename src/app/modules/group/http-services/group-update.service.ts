@@ -24,6 +24,6 @@ export class GroupUpdateService {
     return this.http.put<SimpleActionResponse>(
       `${appConfig().apiUrl}/groups/${groupId}`,
       changes,
-    ).pipe(map(assertSuccess))
+    ).pipe(map(assertSuccess));
   }
 }
