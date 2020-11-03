@@ -9,10 +9,10 @@ export class TextareaComponent implements OnInit {
   @Input() icon = '';
   @Input() placeholder = '';
   @Input() disabled = false;
+  @Input() value = '';
 
   @Output() textChange = new EventEmitter<string>();
 
-  value = '';
 
   constructor() {}
 
