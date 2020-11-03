@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { SimpleActionResponse, assertSuccess } from 'src/app/shared/http-services/action-response';
-import { environment } from 'src/environments/environment';
 import { map } from 'rxjs/operators';
+import { appConfig } from 'src/app/shared/helpers/config';
 
 export interface NewCodeSuccessResponse {
   code: string
@@ -18,7 +18,7 @@ export class CodeActionsService {
 
   createNewCode(id: string): Observable<string> {
     return this.http
-      .post<NewCodeSuccessResponse|SimpleActionResponse>(`${environment.apiUrl}/groups/${id}/code`, null, {})
+      .post<NewCodeSuccessResponse|SimpleActionResponse>(`${appConfig().apiUrl}/groups/${id}/code`, null, {})
       .pipe(
         map(resp => {
           const code = (resp as NewCodeSuccessResponse).code;
@@ -30,7 +30,7 @@ export class CodeActionsService {
 
   removeCode(id: string): Observable<void> {
     return this.http
-      .delete<SimpleActionResponse>(`${environment.apiUrl}/groups/${id}/code`)
+      .delete<SimpleActionResponse>(`${appConfig().apiUrl}/groups/${id}/code`)
       .pipe(
         map(assertSuccess),
       );

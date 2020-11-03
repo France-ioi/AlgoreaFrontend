@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpBackend } from '@angular/common/http';
 import { ActionResponse, SimpleActionResponse, successData, assertSuccess } from './action-response';
 import { map, timeout } from 'rxjs/operators';
-import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs';
 import { headersForAuth } from '../helpers/auth';
+import { appConfig } from '../helpers/config';
 
 interface AccessTokenInfo {
   access_token: string;
@@ -29,7 +29,7 @@ export class AuthHttpService {
 
   createTempUser(): Observable<AccessTokenInfo> {
     return this.http
-      .post<ActionResponse<AccessTokenInfo>>(`${environment.apiUrl}/auth/temp-user`, null, {})
+      .post<ActionResponse<AccessTokenInfo>>(`${appConfig().apiUrl}/auth/temp-user`, null, {})
       .pipe(
         timeout(authServicesTimeout),
         map(successData),
@@ -38,7 +38,7 @@ export class AuthHttpService {
 
   createTokenFromCode(code: string, redirectUri: string): Observable<AccessTokenInfo> {
     return this.http
-      .post<ActionResponse<AccessTokenInfo>>(`${environment.apiUrl}/auth/token`, {
+      .post<ActionResponse<AccessTokenInfo>>(`${appConfig().apiUrl}/auth/token`, {
         code: code,
         redirect_uri: redirectUri
       }, {})
@@ -50,7 +50,7 @@ export class AuthHttpService {
 
   revokeToken(token: string): Observable<void> {
     return this.http
-      .post<SimpleActionResponse>(`${environment.apiUrl}/auth/logout`, null, { headers: headersForAuth(token) })
+      .post<SimpleActionResponse>(`${appConfig().apiUrl}/auth/logout`, null, { headers: headersForAuth(token) })
       .pipe(
         map(assertSuccess)
       );

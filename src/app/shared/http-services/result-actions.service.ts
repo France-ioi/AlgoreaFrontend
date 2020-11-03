@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { SimpleActionResponse, assertSuccess, ActionResponse, successData } from './action-response';
 import { map } from 'rxjs/operators';
-import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs';
+import { appConfig } from '../helpers/config';
 
 type AttemptId = string;
 
@@ -17,7 +17,7 @@ export class ResultActionsService {
   start(itemIdPath: string[], attemptId: string): Observable<void> {
     const path = itemIdPath.join('/');
     return this.http
-      .post<SimpleActionResponse>(`${environment.apiUrl}/items/${path}/start-result`, null, {
+      .post<SimpleActionResponse>(`${appConfig().apiUrl}/items/${path}/start-result`, null, {
         params: {
           attempt_id: attemptId
         }
@@ -33,7 +33,7 @@ export class ResultActionsService {
   startWithoutAttempt(itemIdPath: string[]): Observable<AttemptId> {
     const path = itemIdPath.join('/');
     return this.http
-      .post<ActionResponse<{ attempt_id: string }>>(`${environment.apiUrl}/items/${path}/start-result-path`, null, {})
+      .post<ActionResponse<{ attempt_id: string }>>(`${appConfig().apiUrl}/items/${path}/start-result-path`, null, {})
       .pipe(
         map(successData),
         map(data => data.attempt_id)

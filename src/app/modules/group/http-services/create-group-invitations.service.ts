@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { ActionResponse, successData } from 'src/app/shared/http-services/action-response';
 import { map } from 'rxjs/operators';
+import { appConfig } from 'src/app/shared/helpers/config';
 
 export enum InvitationResult {
   Success,
@@ -25,7 +25,7 @@ export class CreateGroupInvitationsService {
   ) : Observable<Map<string, InvitationResult>> {
     return this.http
       .post<ActionResponse<Object>>(
-        `${environment.apiUrl}/groups/${groupId}/invitations`,
+        `${appConfig().apiUrl}/groups/${groupId}/invitations`,
         { logins: logins }, {})
       .pipe(
         map(successData),

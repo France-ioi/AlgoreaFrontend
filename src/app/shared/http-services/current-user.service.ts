@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environment } from 'src/environments/environment';
 import { map } from 'rxjs/operators';
+import { appConfig } from '../helpers/config';
 
 interface RawUserProfile {
   group_id: string,
@@ -31,7 +31,7 @@ export class CurrentUserHttpService {
 
   getProfileInfo(): Observable<UserProfile> {
     return this.http
-      .get<RawUserProfile>(`${environment.apiUrl}/current-user`)
+      .get<RawUserProfile>(`${appConfig().apiUrl}/current-user`)
       .pipe(
         map(raw => ({
           id: raw.group_id,

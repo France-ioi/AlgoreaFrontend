@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { environment } from 'src/environments/environment';
+import { appConfig } from 'src/app/shared/helpers/config';
 import { ItemPermissionsInfo } from '../helpers/item-permissions';
 
 interface RawItemChild extends ItemPermissionsInfo {
@@ -51,7 +51,7 @@ export class GetItemChildrenService {
     let params = new HttpParams();
     params = params.set('attempt_id', attemptId);
     return this.http
-      .get<RawItemChild[]>(`${environment.apiUrl}/items/${id}/children`, { params: params })
+      .get<RawItemChild[]>(`${appConfig().apiUrl}/items/${id}/children`, { params: params })
       .pipe(
         map(children => children.map(c => ({
           id: c.id,

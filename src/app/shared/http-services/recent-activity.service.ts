@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environment } from 'src/environments/environment';
 import { map } from 'rxjs/operators';
+import { appConfig } from '../helpers/config';
 
 interface RawRecentActivity {
   created_at: string;
@@ -54,7 +54,7 @@ export class RecentActivityService {
     params = params.set('limit', '100');
     // Params not handled yet : validated, sort, from.created_at, from.id
     return this.http
-      .get<RawRecentActivity[]>(`${environment.apiUrl}/groups/${groupId}/recent_activity`, { params: params })
+      .get<RawRecentActivity[]>(`${appConfig().apiUrl}/groups/${groupId}/recent_activity`, { params: params })
       .pipe(
         map(activities => activities.map(activity => ({
           createdAt: new Date(activity.created_at),

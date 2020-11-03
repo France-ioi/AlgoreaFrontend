@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { environment } from 'src/environments/environment';
 import { getArgsFromUrl, clearHash } from '../helpers/url';
 import { Observable, throwError, of } from 'rxjs';
 import { AccessToken } from './access-token';
 import { AuthHttpService } from '../http-services/auth.http-service';
 import { map } from 'rxjs/operators';
 import { base64UrlEncode } from '../helpers/base64';
+import { appConfig } from '../helpers/config';
 
 // Use localStorage for nonce if possible localStorage is the only storage who survives a redirect in ALL browsers (also IE)
 const nonceStorage = localStorage;
@@ -19,7 +19,7 @@ export class OAuthService {
   private clientId: string;
 
   constructor(private authHttp: AuthHttpService) {
-    this.clientId = environment.oauthClientId;
+    this.clientId = appConfig().oauthClientId;
   }
 
   /**
@@ -27,11 +27,11 @@ export class OAuthService {
    */
   initCodeFlow(): void {
     const state = this.createNonce();
-    const loginServerUri = environment.oauthServerUrl+'/oauth/authorize';
+    const loginServerUri = appConfig().oauthServerUrl+'/oauth/authorize';
     const separationChar = loginServerUri.indexOf('?') > -1 ? '&' : '?';
 
     const url = loginServerUri + separationChar + 'response_type=code&scope=account&approval_prompt=auto' +
-      '&client_id=' + encodeURIComponent(environment.oauthClientId) +
+      '&client_id=' + encodeURIComponent(appConfig().oauthClientId) +
       '&state=' + encodeURIComponent(state) +
       '&redirect_uri=' + encodeURIComponent(this.loginRedirectUri());
     // should add PKCE here
