@@ -1,12 +1,13 @@
 import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
+import { of, Subscription } from 'rxjs';
+import { filter, map, switchMap } from 'rxjs/operators';
 import { defaultAttemptId } from 'src/app/shared/helpers/attempts';
 import { isItemRouteError, itemDetailsUrl, itemRouteFromParams, itemUrl } from 'src/app/shared/helpers/item-route';
 import { FetchError, Fetching, isReady, Ready } from 'src/app/shared/helpers/state';
 import { ResultActionsService } from 'src/app/shared/http-services/result-actions.service';
 import { CurrentContentService, EditAction, isItemInfo, ItemInfo } from 'src/app/shared/services/current-content.service';
+import { GetItemPathService } from '../../http-services/get-item-path';
 import { ItemDataSource, ItemData } from '../../services/item-datasource.service';
 
 const itemBreadcrumbCat = 'Items';
@@ -30,6 +31,7 @@ export class ItemByIdComponent implements OnDestroy {
     private currentContent: CurrentContentService,
     private itemDataSource: ItemDataSource,
     private resultActionsService: ResultActionsService,
+    private getItemPathService: GetItemPathService,
   ) {
 
     // on route change: refetch item if needed
@@ -96,24 +98,25 @@ export class ItemByIdComponent implements OnDestroy {
   }
 
   /**
-   * Called when either path or attempt is missing
+   * Called when either path or attempt is missing. Will fetch the path if missing, then will be fetch the attempt.
+   * Will redirect when relevant data has been fetched.
    */
   private solveMissingPathAttempt(id: string, path?: string[]): void {
 
-    // TODO: handle when path is missing
-
-    if (path) { // if path is known, just fix the attempt
-      // for empty path (root items), consider the item has a (fake) parent attempt id 0
-      if (path.length === 0) void this.router.navigate(itemDetailsUrl({ id: id, path: path, parentAttemptId: defaultAttemptId }));
-      else {
-        // will start all but the current item
-        this.resultActionsService.startWithoutAttempt(path).subscribe(attemptId => {
-          void this.router.navigate(itemDetailsUrl({ id: id, path: path, parentAttemptId: attemptId }));
-        });
-        // TODO: handle error
-      }
-    }
-
+    const pathObservable = path ? of(path) : this.getItemPathService.getItemPath(id);
+    pathObservable.pipe(
+      switchMap(path => {
+        // for empty path (root items), consider the item has a (fake) parent attempt id 0
+        if (path.length === 0) return of({ id: id, path: path, parentAttemptId: defaultAttemptId });
+        // else, will start all path but the current item
+        return this.resultActionsService.startWithoutAttempt(path).pipe(
+          map(attemptId => ({ id: id, path: path, parentAttemptId: attemptId }))
+        );
+      })
+    ).subscribe(itemRoute => {
+      void this.router.navigate(itemDetailsUrl(itemRoute));
+    });
+    // TODO: handle error
   }
 
 }
