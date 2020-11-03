@@ -4,6 +4,8 @@
 
   <p *ngIf="state.tag === 'error'">Error while loading the group</p>
 
-  <p>Group loaded successfully!</p>
+  <ng-container *ngIf="state.tag === 'ready'">
+    <p>Group loaded successfully!</p>
+  </ng-container>
 
 </ng-container>
