@@ -1,8 +1,9 @@
 import { Injectable, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
 import { BehaviorSubject, concat, EMPTY, forkJoin, Observable, of, Subject } from 'rxjs';
-import { catchError, filter, map, switchMap, tap } from 'rxjs/operators';
+import { catchError, filter, map, switchMap } from 'rxjs/operators';
 import { bestAttemptFromResults, implicitResultStart } from 'src/app/shared/helpers/attempts';
-import { isRouteWithAttempt, ItemRoute } from 'src/app/shared/helpers/item-route';
+import { isRouteWithAttempt, ItemRoute, incompleteItemUrl } from 'src/app/shared/helpers/item-route';
 import { errorState, FetchError, Fetching, fetchingState, isReady, Ready, readyState } from 'src/app/shared/helpers/state';
 import { ResultActionsService } from 'src/app/shared/http-services/result-actions.service';
 import { BreadcrumbItem, GetBreadcrumbService } from '../http-services/get-breadcrumb.service';
@@ -36,6 +37,7 @@ export class ItemDataSource implements OnDestroy {
     private getItemByIdService: GetItemByIdService,
     private resultActionsService: ResultActionsService,
     private getResultsService: GetResultsService,
+    private router: Router,
   ) {
     this.fetchOperation.pipe(
 
@@ -126,11 +128,16 @@ export class ItemDataSource implements OnDestroy {
     const service = this.getBreadcrumbService.getBreadcrumb(item);
     if (!service) return EMPTY; // unexpected as it should verified by the caller of this function
     return service.pipe(
-      // transform forbidden in error while we do not handle it correctly
-      tap(res => {
-        if (res === 'forbidden') throw new Error('unhandled forbidden');
+      map(res => {
+        if (res === 'forbidden') {
+          // clear the route & attempt and retry to visit this item (path/attempt discovery will be called)
+          // ideally routing should not be called inside the datasource and maximum number of tries should be allowed
+          void this.router.navigate(incompleteItemUrl(item.id));
+          throw new Error('unhandled forbidden');
+        } else {
+          return res;
+        }
       }),
-      filter<BreadcrumbItem[]|'forbidden',BreadcrumbItem[]>((_res): _res is BreadcrumbItem[] => true)
     );
   }
 

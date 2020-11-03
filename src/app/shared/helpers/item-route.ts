@@ -31,6 +31,15 @@ export function itemUrl(item: ItemRoute, page: 'edit'|'details'): RouterCommands
   params[pathParamName] = item.path;
   return [ 'items', 'by-id', item.id, params, page ];
 }
+
+/*
+ * Url to an item with missing path and attempt
+ * Build commands to be used with the `Router.navigate()` function
+ */
+export function incompleteItemUrl(itemId: string): RouterCommands {
+  return [ 'items', 'by-id', itemId ];
+}
+
 /*
  * Build commands to be used with the `Router.navigate()` function
  */
