@@ -47,7 +47,7 @@ export class GroupByIdComponent implements OnDestroy {
         id: state.data.id,
         breadcrumbs: {
           category: GroupBreadcrumbCat,
-          path: [{ title: state.data.name, navigateTo: [ 'groups', 'details', state.data.id ] }],
+          path: [{ title: state.data.name, navigateTo: [ 'groups', 'by-id', state.data.id, 'details' ] }],
           currentPageIdx: 0,
         },
         title: state.data.name,
