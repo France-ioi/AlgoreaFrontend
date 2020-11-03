@@ -15,7 +15,6 @@
       <i class="far fa-bell"></i>
     </span> -->
     <!-- <alg-select [items]="langs"></alg-select> -->
-    <span class="sign-out" *ngIf="currentUser && currentUser.isTemp" (click)="login()" tabindex="2"><i class="fa fa-sign-in-alt"></i></span>
     <span class="sign-out" *ngIf="currentUser && !currentUser.isTemp" (click)="logout()" tabindex="2">
       <i class="fa fa-sign-out-alt"></i>
     </span>

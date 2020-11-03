@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'alg-skill-activity-tabs',
@@ -6,5 +6,8 @@ import { Component } from '@angular/core';
   styleUrls: [ './skill-activity-tabs.component.scss' ],
 })
 export class SkillActivityTabsComponent {
+
+  @Input() backgroundColor: 'dark' | 'light' = 'dark';
+
   constructor() {}
 }

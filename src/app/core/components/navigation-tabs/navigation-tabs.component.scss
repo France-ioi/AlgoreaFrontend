@@ -19,6 +19,10 @@ $header-height: 0rem; //7.5rem; <- to be restored if search bar is re-added
   }
 }
 
+:host ::ng-deep .connection-button {
+  background-color: #4E4E4E;
+}
+
 :host ::ng-deep .group-container {
   display: flex;
   flex-direction: column;
