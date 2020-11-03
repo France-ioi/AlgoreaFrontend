@@ -12,6 +12,7 @@ import { ChapterChildrenComponent } from './components/chapter-children/chapter-
 import { ItemProgressComponent } from './pages/item-progress/item-progress.component';
 import { ItemCurrentSituationComponent } from './pages/item-current-situation/item-current-situation.component';
 import { ItemLogViewComponent } from './pages/item-log-view/item-log-view.component';
+import { ItemEditContentComponent } from './pages/item-edit-content/item-edit-content.component';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { ItemLogViewComponent } from './pages/item-log-view/item-log-view.compon
     ItemProgressComponent,
     ItemCurrentSituationComponent,
     ItemLogViewComponent,
+    ItemEditContentComponent,
   ],
   imports: [
     CommonModule,

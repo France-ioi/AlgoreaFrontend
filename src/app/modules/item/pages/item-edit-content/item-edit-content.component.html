@@ -1,0 +1,9 @@
+<ng-container *ngIf="itemData$ | async as itemData">
+  <ng-container *ngIf="itemData.currentResult">
+
+    <alg-section icon="fa fa-book" label="Description">
+      <alg-textarea [value]="itemData.item.string.description" (textChange)="updateForm($event)"></alg-textarea>
+    </alg-section>
+
+  </ng-container>
+</ng-container>
