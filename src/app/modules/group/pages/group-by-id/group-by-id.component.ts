@@ -29,7 +29,7 @@ export class GroupByIdComponent implements OnDestroy {
     private groupDataSource: GroupDataSource
   ) {
 
-    // on route change: refetch item if needed
+    // on route change: refetch group if needed
     this.activatedRoute.paramMap.subscribe(params => {
       const id = params.get('id');
       this.currentContent.current.next({
@@ -54,14 +54,13 @@ export class GroupByIdComponent implements OnDestroy {
       }))
     ).subscribe(p => this.currentContent.current.next(p)),
 
-    this.currentContent.editAction$.pipe(
-      filter(action => [ EditAction.StartEditing, EditAction.StopEditing ].includes(action))
-    ).subscribe(action => {
-      const currentInfo = this.currentContent.current.value;
-      if (isGroupInfo(currentInfo)) {
-        void this.router.navigate([ 'groups', 'by-id', currentInfo.id, action === EditAction.StartEditing ? 'edit' : 'details' ]);
-      }
-    })
+    this.currentContent.editAction$.pipe(filter(action => [ EditAction.StartEditing, EditAction.StopEditing ].includes(action)))
+      .subscribe(action => {
+        const currentInfo = this.currentContent.current.value;
+        if (isGroupInfo(currentInfo)) {
+          void this.router.navigate([ 'groups', 'by-id', currentInfo.id, action === EditAction.StartEditing ? 'edit' : 'details' ]);
+        }
+      })
     );
   }
 
