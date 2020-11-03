@@ -6,7 +6,23 @@
 
   <div *ngIf="state.tag === 'ready'" style="margin: 1rem 0 0.5rem 0">
     <form [formGroup]="itemForm">
-      <alg-input [parentForm]="itemForm" name="title" size="large" [isDark]='false'></alg-input>
+      <div class="header">
+        <alg-input [parentForm]="itemForm" name="title" size="large" [isDark]='false'></alg-input>
+      </div>
+
+      <nav mat-tab-nav-bar>
+        <a mat-tab-link
+           [routerLink]="'./'"
+           routerLinkActive #rla1="routerLinkActive"
+           [routerLinkActiveOptions]="{exact: true}"
+           [active]="rla1.isActive">
+          Content
+        </a>
+      </nav>
+      <div class="bg-white" >
+        <alg-item-edit-content *ngIf="rla1.isActive" [parentForm]="itemForm" inputName="description"></alg-item-edit-content>
+      </div>
+
     </form>
   </div>
 
