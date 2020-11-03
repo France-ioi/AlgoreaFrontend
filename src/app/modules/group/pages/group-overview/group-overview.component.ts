@@ -5,7 +5,6 @@ import { GroupDataSource } from '../../services/group-datasource.service';
   selector: 'alg-group-overview',
   templateUrl: './group-overview.component.html',
   styleUrls: [ './group-overview.component.scss' ],
-  providers: [ GroupDataSource ],
 })
 export class GroupOverviewComponent {
 
