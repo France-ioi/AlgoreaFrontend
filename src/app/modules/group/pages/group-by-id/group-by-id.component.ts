@@ -7,7 +7,7 @@ import { CurrentContentService, EditAction, GroupInfo, isGroupInfo } from 'src/a
 import { Group } from '../../http-services/get-group-by-id.service';
 import { GroupDataSource } from '../../services/group-datasource.service';
 
-const GroupBreadcrumbCat = 'Groups';
+const GROUP_BREADCRUMB_CAT = 'Groups';
 
 /**
  * GroupByIdComponent is just a container for detail or edit page but manages the fetching on id change and (un)setting the current content.
@@ -33,7 +33,7 @@ export class GroupByIdComponent implements OnDestroy {
     this.activatedRoute.paramMap.subscribe(params => {
       const id = params.get('id');
       this.currentContent.current.next({
-        id: id, type: 'group', breadcrumbs: { category: GroupBreadcrumbCat, path: [], currentPageIdx: -1 }
+        id: id, type: 'group', breadcrumbs: { category: GROUP_BREADCRUMB_CAT, path: [], currentPageIdx: -1 }
       } as GroupInfo);
       if (id) this.groupDataSource.fetchGroup(id);
     });
@@ -46,7 +46,7 @@ export class GroupByIdComponent implements OnDestroy {
         type: 'group',
         id: state.data.id,
         breadcrumbs: {
-          category: GroupBreadcrumbCat,
+          category: GROUP_BREADCRUMB_CAT,
           path: [{ title: state.data.name, navigateTo: [ 'groups', 'by-id', state.data.id, 'details' ] }],
           currentPageIdx: 0,
         },
