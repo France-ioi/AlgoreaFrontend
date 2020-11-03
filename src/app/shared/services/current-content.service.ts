@@ -33,7 +33,12 @@ export interface ItemDetails {
   validated?: boolean,
 }
 
-export interface GroupInfo extends ContentInfo { type: 'group' }
+type GroupId = string;
+
+export interface GroupInfo extends ContentInfo {
+  id: GroupId,
+  type: 'group'
+}
 
 export function isItemInfo(info: ContentInfo|null): info is ItemInfo {
   return info !== null && info.type === 'item';

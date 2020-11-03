@@ -9,6 +9,8 @@ import { GroupAdministrationComponent } from './pages/group-administration/group
 import { GroupSettingsComponent } from './pages/group-settings/group-settings.component';
 import { CurrentUserComponent } from './pages/current-user/current-user.component';
 import { JoinedGroupsComponent } from './pages/joined-groups/joined-groups.component';
+import { GroupEditComponent } from './pages/group-edit/group-edit.component';
+import { GroupByIdComponent } from './pages/group-by-id/group-by-id.component';
 
 const routes: Routes = [
   {
@@ -28,27 +30,37 @@ const routes: Routes = [
     component: JoinedGroupsComponent,
   },
   {
-    path: 'details/:id',
-    component: GroupDetailsComponent,
+    path: 'by-id/:id',
+    component: GroupByIdComponent,
     children: [
       {
-        path: '',
-        component: GroupOverviewComponent,
+        path: 'details',
+        component: GroupDetailsComponent,
+        children: [
+          {
+            path: '',
+            component: GroupOverviewComponent,
+          },
+          {
+            path: 'members',
+            component: GroupCompositionComponent,
+          },
+          {
+            path: 'managers',
+            component: GroupAdministrationComponent,
+          },
+          {
+            path: 'settings',
+            component: GroupSettingsComponent,
+          },
+        ]
       },
       {
-        path: 'members',
-        component: GroupCompositionComponent,
+        path: 'edit',
+        component: GroupEditComponent,
       },
-      {
-        path: 'managers',
-        component: GroupAdministrationComponent,
-      },
-      {
-        path: 'settings',
-        component: GroupSettingsComponent,
-      }
-    ]
-  }
+    ],
+  },
 ];
 
 @NgModule({
