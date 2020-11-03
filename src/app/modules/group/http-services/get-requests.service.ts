@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environment } from 'src/environments/environment';
+import { appConfig } from 'src/app/shared/helpers/config';
 
 export interface PendingRequest {
   at: string|null;
@@ -39,7 +39,7 @@ export class GetRequestsService {
       params = params.set('sort', sort.join(','));
     }
     return this.http
-      .get<PendingRequest[]>(`${environment.apiUrl}/groups/user-requests`, { params: params });
+      .get<PendingRequest[]>(`${appConfig().apiUrl}/groups/user-requests`, { params: params });
   }
 
 }

@@ -2,7 +2,9 @@
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
-export const environment = {
+import { Environment } from 'src/app/shared/helpers/config';
+
+export const environment: Environment = {
   production: false,
   apiUrl: 'https://dev.algorea.org/api',
   oauthServerUrl: 'https://login.france-ioi.org',

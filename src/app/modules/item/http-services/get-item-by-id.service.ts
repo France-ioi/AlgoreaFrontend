@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environment } from 'src/environments/environment';
+import { appConfig } from 'src/app/shared/helpers/config';
 
 export interface Item {
   id: string,
@@ -28,7 +28,7 @@ export class GetItemByIdService {
 
   get(id: string): Observable<Item> {
     return this.http
-      .get<Item>(`${environment.apiUrl}/items/${id}`);
+      .get<Item>(`${appConfig().apiUrl}/items/${id}`);
   }
 
 }

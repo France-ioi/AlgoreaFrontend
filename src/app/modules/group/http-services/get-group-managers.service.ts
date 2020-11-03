@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { environment } from 'src/environments/environment';
+import { appConfig } from 'src/app/shared/helpers/config';
 
 export interface Manager {
   id: string,
@@ -29,6 +29,6 @@ export class GetGroupManagersService {
       params = params.set('sort', sort.join(','));
     }
     return this.http
-      .get<Manager[]>(`${environment.apiUrl}/groups/${groupId}/managers`, { params: params });
+      .get<Manager[]>(`${appConfig().apiUrl}/groups/${groupId}/managers`, { params: params });
   }
 }

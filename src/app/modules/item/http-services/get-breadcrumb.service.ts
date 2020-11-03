@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { environment } from 'src/environments/environment';
 import { map, catchError } from 'rxjs/operators';
 import { isRouteWithAttempt, ItemRoute } from 'src/app/shared/helpers/item-route';
+import { appConfig } from 'src/app/shared/helpers/config';
 
 interface RawBreadcrumbItem {
   item_id: string,
@@ -29,7 +29,7 @@ export class GetBreadcrumbService {
 
    getBreadcrumb(itemRoute: ItemRoute): Observable<BreadcrumbItem[]|'forbidden'> {
     return this.http
-      .get<RawBreadcrumbItem[]>(`${environment.apiUrl}/items/${itemRoute.path.concat([ itemRoute.id ]).join('/')}/breadcrumbs`, {
+      .get<RawBreadcrumbItem[]>(`${appConfig().apiUrl}/items/${itemRoute.path.concat([ itemRoute.id ]).join('/')}/breadcrumbs`, {
         params: isRouteWithAttempt(itemRoute) ? { attempt_id: itemRoute.attemptId } : { parent_attempt_id: itemRoute.parentAttemptId }
       })
       .pipe(

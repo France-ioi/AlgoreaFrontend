@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environment } from 'src/environments/environment';
 import { map } from 'rxjs/operators';
 import { bestAttemptFromResults } from 'src/app/shared/helpers/attempts';
 import { canCurrentUserViewItemContent } from 'src/app/modules/item/helpers/item-permissions';
 import { isRouteWithAttempt, ItemRoute } from 'src/app/shared/helpers/item-route';
+import { appConfig } from 'src/app/shared/helpers/config';
 
 interface ItemStrings {
   title: string|null,
@@ -157,7 +157,7 @@ export class ItemNavigationService {
 
   private getNavDataGeneric(itemId: string, parameters: {[param: string]: string}): Observable<NavMenuRootItemWithParent> {
     return this.http
-      .get<RawNavData>(`${environment.apiUrl}/items/${itemId}/navigation`, {
+      .get<RawNavData>(`${appConfig().apiUrl}/items/${itemId}/navigation`, {
         params: parameters
       })
       .pipe(
@@ -176,7 +176,7 @@ export class ItemNavigationService {
 
   getRootActivities(): Observable<NavMenuRootItem> {
     return this.http
-      .get<RootActivity[]>(`${environment.apiUrl}/current-user/group-memberships/activities`)
+      .get<RootActivity[]>(`${appConfig().apiUrl}/current-user/group-memberships/activities`)
       .pipe(
         map(acts => ({
           items: acts.map(act => ({ ...createNavMenuItem(act.activity), groupName: act.name }))
@@ -186,7 +186,7 @@ export class ItemNavigationService {
 
   getRootSkills(): Observable<NavMenuRootItem> {
     return this.http
-      .get<RootSkill[]>(`${environment.apiUrl}/current-user/group-memberships/skills`)
+      .get<RootSkill[]>(`${appConfig().apiUrl}/current-user/group-memberships/skills`)
       .pipe(
         map(skills => ({
           items: skills.map(sk => ({ ...createNavMenuItem(sk.skill), groupName: sk.name }))

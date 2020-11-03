@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environment } from 'src/environments/environment';
 import { map } from 'rxjs/operators';
+import { appConfig } from 'src/app/shared/helpers/config';
 
 export interface Group {
   id: string,
@@ -29,7 +29,7 @@ export class JoinedGroupsService {
 
   getJoinedGroups(): Observable<Group[]> {
     return this.http
-      .get<JoinedGroup[]>(`${environment.apiUrl}/current-user/group-memberships`)
+      .get<JoinedGroup[]>(`${appConfig().apiUrl}/current-user/group-memberships`)
       .pipe(
         // convert array of JoinedGroup to array of Group
         map(jgs =>
