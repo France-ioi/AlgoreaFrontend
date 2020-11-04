@@ -90,13 +90,14 @@ export class GroupEditComponent implements OnDestroy {
       this.groupId,
       this.getGroupChanges(),
     ).subscribe(
-      _status => {
+      _result => {},
+      _err => this.errorToast(),
+      () => {
         this.groupForm.disable();
         this.successToast();
         this.groupDataSource.refetchGroup();
         this.currentContent.editAction.next(EditAction.StopEditing);
       },
-      _err => this.errorToast()
     );
   }
 }
