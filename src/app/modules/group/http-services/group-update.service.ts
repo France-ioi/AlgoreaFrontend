@@ -17,13 +17,9 @@ export class GroupUpdateService {
   constructor(private http: HttpClient) {
   }
 
-  updateGroup(
-    groupId: string,
-    changes: GroupChanges
-  ) : Observable<void> {
-    return this.http.put<SimpleActionResponse>(
-      `${appConfig().apiUrl}/groups/${groupId}`,
-      changes,
-    ).pipe(map(assertSuccess));
+  updateGroup(groupId: string, changes: GroupChanges) : Observable<void> {
+    return this.http.put<SimpleActionResponse>(`${appConfig().apiUrl}/groups/${groupId}`, changes).pipe(
+      map(assertSuccess),
+    );
   }
 }
