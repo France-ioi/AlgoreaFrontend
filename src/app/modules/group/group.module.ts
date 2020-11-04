@@ -21,6 +21,7 @@ import { DurationToMinPipe } from 'src/app/shared/pipes/duration';
 import { GroupInviteUsersComponent } from './components/group-invite-users/group-invite-users.component';
 import { GroupManagerListComponent } from './components/group-manager-list/group-manager-list.component';
 import { JoinedGroupsComponent } from './pages/joined-groups/joined-groups.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -40,11 +41,12 @@ import { JoinedGroupsComponent } from './pages/joined-groups/joined-groups.compo
     GroupInviteUsersComponent,
     GroupManagerListComponent,
   ],
-  imports: [
-    CommonModule,
-    GroupRoutingModule,
-    SharedComponentsModule,
-  ],
+    imports: [
+        CommonModule,
+        GroupRoutingModule,
+        SharedComponentsModule,
+        ReactiveFormsModule,
+    ],
 })
 
 export class GroupModule {}

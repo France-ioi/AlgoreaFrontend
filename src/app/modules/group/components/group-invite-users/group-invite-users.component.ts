@@ -5,6 +5,7 @@ import { ERROR_MESSAGE } from 'src/app/shared/constants/api';
 import { TOAST_LENGTH } from 'src/app/shared/constants/global';
 import { CreateGroupInvitationsService, InvitationResult } from '../../http-services/create-group-invitations.service';
 import { Group } from '../../http-services/get-group-by-id.service';
+import { FormBuilder } from '@angular/forms';
 
 interface Message
 {
@@ -26,12 +27,14 @@ export class GroupInviteUsersComponent {
   @ViewChild(TextareaComponent) private textArea?: TextareaComponent;
 
   state: 'empty'|'too_many'|'loading'|'ready' = 'empty';
+  inviteForm = this.formBuilder.group({ invitations: { value: '', disabled: this.state == 'loading' } });
 
   messages: Message[] = [];
 
   constructor(
     private createGroupInvitationsService: CreateGroupInvitationsService,
     private messageService: MessageService,
+    private formBuilder: FormBuilder,
     ) {}
 
 
@@ -101,7 +104,7 @@ export class GroupInviteUsersComponent {
     this.messages = [];
 
     // remove empty logins and duplicates
-    const logins = this.textArea.value.split(',')
+    const logins = this.textArea.getValue().split(',')
       .map(login => login.trim())
       .filter(function (login, index, self) {
         return self.indexOf(login) === index && login !== '';
