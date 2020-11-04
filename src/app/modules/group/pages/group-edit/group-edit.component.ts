@@ -40,9 +40,10 @@ export class GroupEditComponent implements OnDestroy {
       this.state$.pipe(filter<Ready<Group> | Fetching | FetchError, Ready<Group>>(isReady))
       .subscribe(state => {
         this.groupId = state.data.id;
-        this.groupForm.patchValue({ name: state.data.name });
-      })
-    );
+        this.groupForm.patchValue({
+          name: state.data.name
+        });
+      }));
 
     this.subscriptions.push(this.currentContent.editAction$
       .pipe(filter(action => action === EditAction.Save))
@@ -90,14 +91,13 @@ export class GroupEditComponent implements OnDestroy {
       this.groupId,
       this.getGroupChanges(),
     ).subscribe(
-      _result => {},
-      _err => this.errorToast(),
       () => {
         this.groupForm.disable();
         this.successToast();
         this.groupDataSource.refetchGroup();
         this.currentContent.editAction.next(EditAction.StopEditing);
       },
+      _err => this.errorToast()
     );
   }
 }
