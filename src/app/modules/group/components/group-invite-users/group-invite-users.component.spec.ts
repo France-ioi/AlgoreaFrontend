@@ -16,7 +16,7 @@ describe('GroupInviteUsersComponent', () => {
         { provide: CreateGroupInvitationsService, useValue: {} },
       ]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {

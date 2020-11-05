@@ -10,7 +10,7 @@ describe('CodeTokenComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ CodeTokenComponent ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

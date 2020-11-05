@@ -10,7 +10,7 @@ describe('PageNavigatorComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ PageNavigatorComponent ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

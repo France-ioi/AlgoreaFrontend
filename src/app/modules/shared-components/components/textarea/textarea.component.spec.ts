@@ -10,7 +10,7 @@ describe('TextareaComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ TextareaComponent ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

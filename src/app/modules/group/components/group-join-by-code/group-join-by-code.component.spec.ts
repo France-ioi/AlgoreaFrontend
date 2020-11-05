@@ -21,7 +21,7 @@ describe('GroupJoinByCodeComponent', () => {
         { provide: CodeActionsService, useValue: {} },
       ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

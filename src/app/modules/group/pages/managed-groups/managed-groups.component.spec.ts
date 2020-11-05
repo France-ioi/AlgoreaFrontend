@@ -10,7 +10,7 @@ describe('ManagedGroupsComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ ManagedGroupsComponent ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

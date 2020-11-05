@@ -12,7 +12,7 @@ describe('GridComponent', () => {
       declarations: [ GridComponent ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

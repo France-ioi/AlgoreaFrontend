@@ -19,7 +19,7 @@ describe('SelectComponent', () => {
       ],
       declarations: [ SelectComponent ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

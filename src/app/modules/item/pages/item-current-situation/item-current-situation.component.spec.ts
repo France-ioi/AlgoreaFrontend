@@ -10,7 +10,7 @@ describe('ItemCurrentSituationComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [ ItemCurrentSituationComponent ]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {

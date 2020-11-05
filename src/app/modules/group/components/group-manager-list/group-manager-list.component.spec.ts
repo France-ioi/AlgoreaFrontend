@@ -12,7 +12,7 @@ describe('GroupManagerListComponent', () => {
       declarations: [ GroupManagerListComponent ],
       imports: [ HttpClientTestingModule ]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {

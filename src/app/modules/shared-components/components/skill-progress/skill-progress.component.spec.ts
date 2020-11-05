@@ -10,7 +10,7 @@ describe('SkillProgressComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ SkillProgressComponent ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

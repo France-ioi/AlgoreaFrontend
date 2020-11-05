@@ -25,7 +25,7 @@ describe('GroupOverviewComponent', () => {
         group$: of(readyState(mockGroup))
       } }]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

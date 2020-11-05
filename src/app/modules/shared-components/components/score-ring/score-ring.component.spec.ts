@@ -10,7 +10,7 @@ describe('ScoreRingComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ ScoreRingComponent ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

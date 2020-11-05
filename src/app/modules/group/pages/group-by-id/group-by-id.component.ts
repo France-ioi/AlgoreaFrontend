@@ -41,26 +41,26 @@ export class GroupByIdComponent implements OnDestroy {
     // on state change, update current content page info (for breadcrumb)
     this.subscriptions.push(
       this.groupDataSource.state$.pipe(
-      filter<Ready<Group>|Fetching|FetchError,Ready<Group>>(isReady),
-      map(state => ({
-        type: 'group',
-        id: state.data.id,
-        breadcrumbs: {
-          category: GROUP_BREADCRUMB_CAT,
-          path: [{ title: state.data.name, navigateTo: [ 'groups', 'by-id', state.data.id, 'details' ] }],
-          currentPageIdx: 0,
-        },
-        title: state.data.name,
-      }))
-    ).subscribe(p => this.currentContent.current.next(p)),
+        filter<Ready<Group>|Fetching|FetchError,Ready<Group>>(isReady),
+        map(state => ({
+          type: 'group',
+          id: state.data.id,
+          breadcrumbs: {
+            category: GROUP_BREADCRUMB_CAT,
+            path: [{ title: state.data.name, navigateTo: [ 'groups', 'by-id', state.data.id, 'details' ] }],
+            currentPageIdx: 0,
+          },
+          title: state.data.name,
+        }))
+      ).subscribe(p => this.currentContent.current.next(p)),
 
-    this.currentContent.editAction$.pipe(filter(action => [ EditAction.StartEditing, EditAction.StopEditing ].includes(action)))
-      .subscribe(action => {
-        const currentInfo = this.currentContent.current.value;
-        if (isGroupInfo(currentInfo)) {
-          void this.router.navigate([ 'groups', 'by-id', currentInfo.id, action === EditAction.StartEditing ? 'edit' : 'details' ]);
-        }
-      })
+      this.currentContent.editAction$.pipe(filter(action => [ EditAction.StartEditing, EditAction.StopEditing ].includes(action)))
+        .subscribe(action => {
+          const currentInfo = this.currentContent.current.value;
+          if (isGroupInfo(currentInfo)) {
+            void this.router.navigate([ 'groups', 'by-id', currentInfo.id, action === EditAction.StartEditing ? 'edit' : 'details' ]);
+          }
+        })
     );
   }
 

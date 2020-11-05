@@ -74,6 +74,7 @@ module.exports = {
       { "selector": "typeLike", "format": ["PascalCase"] },
       { "selector": "property", "format": ["camelCase", "snake_case"] },
     ],
+    'indent': ['error', 2, { "SwitchCase": 1 }]
   },
   overrides: [
     {
@@ -82,7 +83,7 @@ module.exports = {
         '@typescript-eslint/no-floating-promises': 'off',
         '@typescript-eslint/unbound-method': 'off',
         '@typescript-eslint/explicit-function-return-type': 'off',
-        '@typescript-eslint/naming-convention': 'off'
+        '@typescript-eslint/naming-convention': 'off',
       }
     },
   ],

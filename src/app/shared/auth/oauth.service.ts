@@ -80,11 +80,11 @@ export class OAuthService {
     let nonce = state;
     let userState = '';
     if (state) {
-        const idx = state.indexOf(nonceStateSeparator);
-        if (idx > -1) {
-            nonce = state.substr(0, idx);
-            userState = state.substr(idx + nonceStateSeparator.length);
-        }
+      const idx = state.indexOf(nonceStateSeparator);
+      if (idx > -1) {
+        nonce = state.substr(0, idx);
+        userState = state.substr(idx + nonceStateSeparator.length);
+      }
     }
     return { nonce: nonce, userState: userState };
   }

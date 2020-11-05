@@ -10,7 +10,7 @@ describe('EditorBarComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ EditorBarComponent ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

@@ -10,7 +10,7 @@ describe('ItemProgressComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [ ItemProgressComponent ]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {

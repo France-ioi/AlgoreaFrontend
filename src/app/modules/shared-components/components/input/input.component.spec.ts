@@ -13,7 +13,7 @@ describe('InputComponent', () => {
       ],
       declarations: [ InputComponent ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
