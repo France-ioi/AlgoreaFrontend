@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnChanges } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
 @Component({
@@ -6,7 +6,7 @@ import { FormGroup } from '@angular/forms';
   templateUrl: './textarea.component.html',
   styleUrls: [ './textarea.component.scss' ],
 })
-export class TextareaComponent implements OnInit {
+export class TextareaComponent implements OnInit, OnChanges {
   @Input() inputName = ''; // name of the input in the parent form
   @Input() parentForm?: FormGroup;
 
@@ -21,7 +21,12 @@ export class TextareaComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  onChange(): void {
+  ngOnChanges(): void {
+    if (this.disabled) this.parentForm?.disable();
+    else this.parentForm?.enable();
+  }
+
+  onTextChange(): void {
     this.textChange.emit(this.parentForm?.get(this.inputName)?.value as string);
   }
 }
