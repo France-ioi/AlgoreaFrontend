@@ -16,7 +16,9 @@ export class InputErrorComponent implements OnChanges {
   }
 
   ngOnChanges(): void {
-    this.control = this.form?.get(this.inputName);
+    const control = this.form?.get(this.inputName);
+    if (control === null) return;
+    this.control = control;
   }
 
 }
