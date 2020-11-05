@@ -27,7 +27,7 @@ export class GetBreadcrumbService {
 
   constructor(private http: HttpClient) {}
 
-   getBreadcrumb(itemRoute: ItemRoute): Observable<BreadcrumbItem[]|'forbidden'> {
+  getBreadcrumb(itemRoute: ItemRoute): Observable<BreadcrumbItem[]|'forbidden'> {
     return this.http
       .get<RawBreadcrumbItem[]>(`${appConfig().apiUrl}/items/${itemRoute.path.concat([ itemRoute.id ]).join('/')}/breadcrumbs`, {
         params: isRouteWithAttempt(itemRoute) ? { attempt_id: itemRoute.attemptId } : { parent_attempt_id: itemRoute.parentAttemptId }

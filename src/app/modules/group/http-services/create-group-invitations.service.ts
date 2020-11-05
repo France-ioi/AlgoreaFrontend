@@ -46,7 +46,7 @@ export class CreateGroupInvitationsService {
                   default:
                     throw new Error(`Invitation of user ${key} returned an unexpected result (${JSON.stringify(value)})`);
                 }
-          }));
+              }));
         })
       );
   }

@@ -30,7 +30,7 @@ export class GroupManagerListComponent implements OnChanges {
         return 'Memberships';
       case 'memberships_and_group':
         return 'Memberships and group';
-      }
+    }
   }
 
   private reloadData(): void {
@@ -42,8 +42,8 @@ export class GroupManagerListComponent implements OnChanges {
         this.managers = managers.map(manager => ({ ...manager, can_manage_as_text: this.getManagerLevel(manager) }));
         this.state = 'ready';
       },
-        _err => {
-          this.state = 'error';
-        });
+      _err => {
+        this.state = 'error';
+      });
   }
 }

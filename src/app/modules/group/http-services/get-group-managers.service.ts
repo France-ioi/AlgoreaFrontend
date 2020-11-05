@@ -23,7 +23,7 @@ export class GetGroupManagersService {
   getGroupManagers(
     groupId: string,
     sort: string[] = [],
-    ): Observable<Manager[]> {
+  ): Observable<Manager[]> {
     let params = new HttpParams();
     if (sort.length > 0) {
       params = params.set('sort', sort.join(','));

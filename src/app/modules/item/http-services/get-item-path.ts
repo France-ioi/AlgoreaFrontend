@@ -15,7 +15,7 @@ export class GetItemPathService {
 
   constructor(private http: HttpClient) {}
 
-   getItemPath(itemId: ItemId): Observable<ItemPath> {
+  getItemPath(itemId: ItemId): Observable<ItemPath> {
     return this.http.get<RawItemPath>(`${environment.apiUrl}/items/${itemId}/path-from-root`).pipe(
       // remove the last element from the path as it is the item id itself, that we do not need in our item paths
       map(raw => raw.path.slice(0,-1))

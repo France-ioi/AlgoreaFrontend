@@ -40,7 +40,7 @@ export class ItemNavMenuData {
     return new ItemNavMenuData(elements, this.pathToElements, this.selectedElement, this.parent);
   }
 
-   /**
+  /**
    * Return this with the element identified by id (at first level of `elements`) updated with info "self" and replaced children.
    * If the element was not found, return this.
    */

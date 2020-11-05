@@ -47,7 +47,7 @@ export class ChapterChildrenComponent implements OnChanges, OnDestroy {
       id: child.id,
       path: this.itemData.route.path.concat([ this.itemData.item.id ]),
       ...attemptId ? { attemptId: attemptId } : { parentAttemptId: parentAttemptId }
-      }));
+    }));
   }
 
   private reloadData(): void {
@@ -74,7 +74,7 @@ export class ChapterChildrenComponent implements OnChanges, OnDestroy {
             if (this.children.length === 0) this.state = 'empty';
             else if (this.itemData?.currentResult?.validated ||
               this.children.filter(item => item.category === 'Validation')
-              .every(item => item.result && item.result.validated)) this.state = 'ready';
+                .every(item => item.result && item.result.validated)) this.state = 'ready';
             else this.state = 'ready-missing-validation';
           },
           _err => {

@@ -46,7 +46,7 @@ export class GroupEditComponent implements OnDestroy {
         }),
       this.currentContent.editAction$.pipe(filter(action => action === EditAction.Save))
         .subscribe(_action => this.saveInput())
-      );
+    );
   }
 
   ngOnDestroy(): void {

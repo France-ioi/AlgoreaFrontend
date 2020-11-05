@@ -32,7 +32,7 @@ export class GroupInviteUsersComponent {
   constructor(
     private createGroupInvitationsService: CreateGroupInvitationsService,
     private messageService: MessageService,
-    ) {}
+  ) {}
 
 
   private processRequestError(_err: any): void {
