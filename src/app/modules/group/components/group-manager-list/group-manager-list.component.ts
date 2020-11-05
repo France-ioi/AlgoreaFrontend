@@ -38,12 +38,14 @@ export class GroupManagerListComponent implements OnChanges {
     this.state = 'loading';
     this.getGroupManagersService
       .getGroupManagers(this.group.id)
-      .subscribe((managers: Manager[]) => {
-        this.managers = managers.map(manager => ({ ...manager, can_manage_as_text: this.getManagerLevel(manager) }));
-        this.state = 'ready';
-      },
-      _err => {
-        this.state = 'error';
-      });
+      .subscribe(
+        (managers: Manager[]) => {
+          this.managers = managers.map(manager => ({ ...manager, can_manage_as_text: this.getManagerLevel(manager) }));
+          this.state = 'ready';
+        },
+        _err => {
+          this.state = 'error';
+        }
+      );
   }
 }
