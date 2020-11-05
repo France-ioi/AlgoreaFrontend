@@ -21,16 +21,7 @@ export class TextareaComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  getValue(): string {
-    return this.parentForm?.get(this.inputName)?.value as string;
-  }
-
-  setValue(text: string): void {
-    this.parentForm?.get(this.inputName)?.patchValue(text);
-    this.onChange();
-  }
-
   onChange(): void {
-    this.textChange.emit(this.getValue());
+    this.textChange.emit(this.parentForm?.get(this.inputName)?.value as string);
   }
 }

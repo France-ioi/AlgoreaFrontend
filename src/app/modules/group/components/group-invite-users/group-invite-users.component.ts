@@ -1,5 +1,4 @@
-import { Component, Input, Output, EventEmitter, ViewChild } from '@angular/core';
-import { TextareaComponent } from 'src/app/modules/shared-components/components/textarea/textarea.component';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { ERROR_MESSAGE } from 'src/app/shared/constants/api';
 import { TOAST_LENGTH } from 'src/app/shared/constants/global';
@@ -24,10 +23,9 @@ export class GroupInviteUsersComponent {
   @Input() group?: Group
   @Output() refreshRequired = new EventEmitter<void>();
 
-  @ViewChild(TextareaComponent) private textArea?: TextareaComponent;
-
   state: 'empty'|'too_many'|'loading'|'ready' = 'empty';
   inviteForm = this.formBuilder.group({ invitations: { value: '', disabled: this.state == 'loading' } });
+  inputName = 'invitations'
 
   messages: Message[] = [];
 
@@ -98,13 +96,13 @@ export class GroupInviteUsersComponent {
   }
 
   onInviteClicked(): void {
-    if (!this.textArea || !this.group) return;
+    if (!this.group) return;
 
     // clear the messages
     this.messages = [];
 
     // remove empty logins and duplicates
-    const logins = this.textArea.getValue().split(',')
+    const logins = (this.inviteForm.get(this.inputName)?.value as string).split(',')
       .map(login => login.trim())
       .filter(function (login, index, self) {
         return self.indexOf(login) === index && login !== '';
@@ -118,7 +116,7 @@ export class GroupInviteUsersComponent {
         this.displayResponse(res);
 
         // Clear the textarea
-        if (this.textArea) this.textArea.setValue('');
+        this.inviteForm.get(this.inputName)?.patchValue('');
 
         this.state = 'empty';
       },
