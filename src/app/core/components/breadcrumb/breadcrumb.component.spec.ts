@@ -15,7 +15,7 @@ describe('BreadcrumbComponent', () => {
       ],
       declarations: [ BreadcrumbComponent ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

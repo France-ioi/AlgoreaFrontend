@@ -26,7 +26,7 @@ describe('ItemLogViewComponent', () => {
         } }
       ]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {

@@ -10,7 +10,7 @@ describe('StateWidgetComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ StateWidgetComponent ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

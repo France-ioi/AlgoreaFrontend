@@ -15,7 +15,7 @@ describe('TimePickerComponent', () => {
       ],
       declarations: [ TimePickerComponent ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

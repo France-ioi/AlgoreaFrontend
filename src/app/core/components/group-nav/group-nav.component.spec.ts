@@ -18,7 +18,7 @@ describe('GroupNavComponent', () => {
         { provide: Router, useValue: {} }
       ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

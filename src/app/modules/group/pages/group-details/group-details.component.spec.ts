@@ -33,7 +33,7 @@ describe('GroupDetailsComponent', () => {
         } }
       ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

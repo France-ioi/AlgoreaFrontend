@@ -10,7 +10,7 @@ describe('GroupNoPermissionComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ GroupNoPermissionComponent ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

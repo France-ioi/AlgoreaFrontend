@@ -17,7 +17,7 @@ describe('ItemNavComponent', () => {
         { provide: CurrentContentService, useValue: { currentContent$: EMPTY } },
       ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

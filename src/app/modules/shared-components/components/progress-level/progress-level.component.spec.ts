@@ -10,7 +10,7 @@ describe('ProgressLevelComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ ProgressLevelComponent ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

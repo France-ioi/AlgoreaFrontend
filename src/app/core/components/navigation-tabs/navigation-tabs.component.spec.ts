@@ -39,7 +39,7 @@ describe('NavigationTabsComponent', () => {
       declarations: [ NavigationTabsComponent ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
