@@ -24,6 +24,7 @@ import { JoinedGroupsComponent } from './pages/joined-groups/joined-groups.compo
 import { CurrentUserComponent } from './pages/current-user/current-user.component';
 import { GroupEditComponent } from './pages/group-edit/group-edit.component';
 import { GroupByIdComponent } from './pages/group-by-id/group-by-id.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -50,6 +51,8 @@ import { GroupByIdComponent } from './pages/group-by-id/group-by-id.component';
     CommonModule,
     GroupRoutingModule,
     SharedComponentsModule,
+    ReactiveFormsModule,
+    FormsModule,
   ],
 })
 

@@ -4,8 +4,17 @@
 
   <p *ngIf="state.tag === 'error'">Error while loading the group</p>
 
-  <ng-container *ngIf="state.tag === 'ready'">
-    <p>Group loaded successfully!</p>
-  </ng-container>
+  <div *ngIf="state.tag === 'ready'" style="margin: 1rem">
+    <form [formGroup]="groupForm">
+      <div class="field">
+        <div class="field-name">
+          <label>Name</label>
+        </div>
+        <div class="field-value">
+          <alg-input [parentForm]="groupForm" name="name" size="large" [isDark]='false'></alg-input>
+        </div>
+      </div>
+    </form>
+  </div>
 
 </ng-container>
