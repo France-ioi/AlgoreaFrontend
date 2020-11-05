@@ -7,5 +7,8 @@
 
     <alg-chapter-children [itemData]="itemData" *ngIf="itemData.item.type === 'Chapter'">
     </alg-chapter-children>
+
+    <alg-sub-skills [itemData]="itemData" *ngIf="itemData.item.type === 'Skill'">
+    </alg-sub-skills>
   </ng-container>
 </ng-container>
