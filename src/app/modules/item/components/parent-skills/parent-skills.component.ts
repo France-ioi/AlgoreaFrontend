@@ -37,7 +37,7 @@ export class ParentSkillsComponent implements OnChanges, OnDestroy {
 
     void this.router.navigate(itemDetailsUrl({
       id: parent.id,
-      path: this.itemData.route.path.concat([ this.itemData.item.id ]),
+      path: this.itemData.route.path.slice(0, -1),
       attemptId: parent.result.attempt_id,
     }));
   }
