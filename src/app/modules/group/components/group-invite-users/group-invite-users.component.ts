@@ -107,13 +107,17 @@ export class GroupInviteUsersComponent implements OnInit, OnDestroy {
 
   /* events */
   onInviteClicked(): void {
-    if (!this.group) return;
+    if (!this.group || this.state != 'ready') return;
 
     // clear the messages
     this.messages = [];
 
     // remove empty logins and duplicates
-    const logins = (this.inviteForm.get(this.inputName)?.value as string).split(',')
+    const input = this.inviteForm.get(this.inputName)?.value as string;
+    if (!input)
+      return;
+
+    const logins = input.split(',')
       .map(login => login.trim())
       .filter(function (login, index, self) {
         return self.indexOf(login) === index && login !== '';
