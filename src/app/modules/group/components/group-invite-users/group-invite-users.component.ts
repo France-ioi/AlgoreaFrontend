@@ -113,11 +113,11 @@ export class GroupInviteUsersComponent implements OnInit, OnDestroy {
     this.messages = [];
 
     // remove empty logins and duplicates
-    const input = this.inviteForm.get(this.inputName)?.value as string;
-    if (!input)
+    const control = this.inviteForm.get(this.inputName);
+    if (!control)
       return;
 
-    const logins = input.split(',')
+    const logins = (control.value as string).split(',')
       .map(login => login.trim())
       .filter(function (login, index, self) {
         return self.indexOf(login) === index && login !== '';
@@ -131,7 +131,7 @@ export class GroupInviteUsersComponent implements OnInit, OnDestroy {
         this.displayResponse(res);
 
         // Clear the textarea
-        this.inviteForm.get(this.inputName)?.patchValue('');
+        control.patchValue('');
 
         this.state = 'empty';
       },
