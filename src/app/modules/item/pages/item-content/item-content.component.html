@@ -10,5 +10,7 @@
 
     <alg-sub-skills [itemData]="itemData" *ngIf="itemData.item.type === 'Skill'">
     </alg-sub-skills>
+    <alg-parent-skills [itemData]="itemData" *ngIf="itemData.item.type === 'Skill'">
+    </alg-parent-skills>
   </ng-container>
 </ng-container>
