@@ -16,8 +16,6 @@ export class TextareaComponent implements OnInit, OnChanges {
 
   @Output() textChange = new EventEmitter<string>();
 
-  value = '';
-
   constructor() {}
 
   ngOnInit(): void {}
@@ -25,9 +23,5 @@ export class TextareaComponent implements OnInit, OnChanges {
   ngOnChanges(): void {
     if (this.disabled) this.parentForm?.disable();
     else this.parentForm?.enable();
-  }
-
-  onTextChange(): void {
-    this.textChange.emit(this.parentForm?.get(this.inputName)?.value as string);
   }
 }

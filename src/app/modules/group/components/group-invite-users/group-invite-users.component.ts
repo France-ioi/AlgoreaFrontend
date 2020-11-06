@@ -82,19 +82,6 @@ export class GroupInviteUsersComponent {
   }
 
   /* events */
-
-  onTextChange(text:string): void {
-    this.state = 'ready';
-
-    const logins = text.split(',').filter(login => login.length > 0);
-
-    if (logins.length === 0) {
-      this.state = 'empty';
-    } else if (logins.length >= 100) {
-      this.state = 'too_many';
-    }
-  }
-
   onInviteClicked(): void {
     if (!this.group) return;
 
