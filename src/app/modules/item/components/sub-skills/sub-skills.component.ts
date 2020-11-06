@@ -46,7 +46,7 @@ export class SubSkillsComponent implements OnChanges, OnDestroy {
       id: child.id,
       path: this.itemData.route.path.concat([ this.itemData.item.id ]),
       ...attemptId ? { attemptId: attemptId } : { parentAttemptId: parentAttemptId }
-      }));
+    }));
   }
 
   private reloadData(): void {
