@@ -48,9 +48,6 @@ export class GetItemParentsService {
   constructor(private http: HttpClient) { }
 
   get(id: string, attemptId: string): Observable<ItemParent[]> {
-    // eslint-disable-next-line no-console
-    console.log('call');
-
     let params = new HttpParams();
     params = params.set('attempt_id', attemptId);
     return this.http
