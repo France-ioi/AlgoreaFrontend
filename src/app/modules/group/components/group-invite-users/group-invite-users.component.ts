@@ -47,16 +47,16 @@ export class GroupInviteUsersComponent {
 
   private displayResponse(response: Map<string, InvitationResult>): void {
 
-    const sucessInvites: string[] = Array.from(response.entries()).filter(e => e[1] === InvitationResult.Success).map(e => e[0]);
+    const successInvites: string[] = Array.from(response.entries()).filter(e => e[1] === InvitationResult.Success).map(e => e[0]);
     const alreadyInvited: string[] = Array.from(response.entries()).filter(e => e[1] === InvitationResult.AlreadyInvited).map(e => e[0]);
     const notFoundUsers: string[] = Array.from(response.entries()).filter(e => e[1] === InvitationResult.NotFound).map(e => e[0]);
     const invalidInvites: string[] = Array.from(response.entries()).filter(e => e[1] === InvitationResult.Error).map(e => e[0]);
 
-    if (sucessInvites.length > 0)
+    if (successInvites.length > 0)
       this.messages.push({
         type: 'success',
-        summary: `${sucessInvites.length} user(s) invited successfully: `,
-        detail: `${sucessInvites.join(', ')}`,
+        summary: `${successInvites.length} user(s) invited successfully: `,
+        detail: `${successInvites.join(', ')}`,
       });
 
     if (alreadyInvited.length > 0)
