@@ -101,10 +101,11 @@ export class ItemNavComponent implements OnInit, OnDestroy {
         switchMap((item):Observable<State> => {
 
           if (isReady(this.state)) {
-            // todo: handle case where item is not as a content (anymore) but one item in the menu is still "loading"
-
-            // CASE: the current content is not an item and the menu has already items displayed -> do nothing
-            if (item === null) return EMPTY;
+            // CASE: the current content is not an item and the menu has already items displayed
+            if (item === null) {
+              if (this.state.data.selectedElement) return of(readyState(this.state.data.withNoSelection()));
+              return EMPTY; // no change
+            }
 
             // CASE: the current content is already the selected one
             if (this.state.data.selectedElement?.id === item.route.id) {

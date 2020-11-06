@@ -62,6 +62,16 @@ export class ItemNavMenuData {
   }
 
   /**
+   * Remove the current selection but keep the item expanded if it has children
+   */
+  withNoSelection(): ItemNavMenuData {
+    if (!this.selectedElement) return this;
+    const element = this.elements.find(i => this.selectedElement?.id === i.id);
+    const newExpanded = element?.hasChildren ? [ this.selectedElement.id ] : [];
+    return new ItemNavMenuData(this.elements, this.pathToElements, undefined, this.parent, newExpanded);
+  }
+
+  /**
    * Create a new sub-ItemNavMenuData moving the child element and its siblings to `elements` and his parent as new parent.
    * Return this if id not found.
    */
