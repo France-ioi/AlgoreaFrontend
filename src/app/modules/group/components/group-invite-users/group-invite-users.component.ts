@@ -23,9 +23,9 @@ export class GroupInviteUsersComponent {
   @Input() group?: Group
   @Output() refreshRequired = new EventEmitter<void>();
 
+  readonly inputName = 'invitations'
   state: 'empty'|'too_many'|'loading'|'ready' = 'empty';
   inviteForm = this.formBuilder.group({ invitations: '' });
-  inputName = 'invitations'
 
   messages: Message[] = [];
 
