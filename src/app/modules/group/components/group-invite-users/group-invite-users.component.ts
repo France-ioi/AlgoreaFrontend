@@ -1,10 +1,11 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { ERROR_MESSAGE } from 'src/app/shared/constants/api';
 import { TOAST_LENGTH } from 'src/app/shared/constants/global';
 import { CreateGroupInvitationsService, InvitationResult } from '../../http-services/create-group-invitations.service';
 import { Group } from '../../http-services/get-group-by-id.service';
 import { FormBuilder } from '@angular/forms';
+import { Subscription } from 'rxjs';
 
 interface Message
 {
@@ -18,7 +19,7 @@ interface Message
   templateUrl: './group-invite-users.component.html',
   styleUrls: [ './group-invite-users.component.scss' ],
 })
-export class GroupInviteUsersComponent {
+export class GroupInviteUsersComponent implements OnDestroy {
 
   @Input() group?: Group
   @Output() refreshRequired = new EventEmitter<void>();
@@ -28,13 +29,31 @@ export class GroupInviteUsersComponent {
   inviteForm = this.formBuilder.group({ invitations: '' });
 
   messages: Message[] = [];
+  subscription?: Subscription;
 
   constructor(
     private createGroupInvitationsService: CreateGroupInvitationsService,
     private messageService: MessageService,
     private formBuilder: FormBuilder,
-  ) {}
+  ) {
+    this.subscription = this.inviteForm.get(this.inputName)?.valueChanges.subscribe((change: string) => this.checkInput(change));
+  }
 
+  ngOnDestroy(): void {
+    this.subscription?.unsubscribe();
+  }
+
+  checkInput(input: string): void {
+    this.state = 'ready';
+
+    const logins = input.split(',').filter(login => login.length > 0);
+
+    if (logins.length === 0) {
+      this.state = 'empty';
+    } else if (logins.length >= 100) {
+      this.state = 'too_many';
+    }
+  }
 
   private processRequestError(_err: any): void {
     this.messageService.add({
