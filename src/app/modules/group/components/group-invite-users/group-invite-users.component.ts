@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnDestroy, OnInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { ERROR_MESSAGE } from 'src/app/shared/constants/api';
 import { TOAST_LENGTH } from 'src/app/shared/constants/global';
@@ -19,7 +19,7 @@ interface Message
   templateUrl: './group-invite-users.component.html',
   styleUrls: [ './group-invite-users.component.scss' ],
 })
-export class GroupInviteUsersComponent implements OnDestroy {
+export class GroupInviteUsersComponent implements OnInit, OnDestroy {
 
   @Input() group?: Group
   @Output() refreshRequired = new EventEmitter<void>();
@@ -36,6 +36,9 @@ export class GroupInviteUsersComponent implements OnDestroy {
     private messageService: MessageService,
     private formBuilder: FormBuilder,
   ) {
+  }
+
+  ngOnInit(): void {
     this.subscription = this.inviteForm.get(this.inputName)?.valueChanges.subscribe((change: string) => this.checkInput(change));
   }
 
