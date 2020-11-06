@@ -25,7 +25,7 @@ export class GroupInviteUsersComponent {
 
   state: 'empty'|'too_many'|'loading'|'ready' = 'empty';
   inviteForm = this.formBuilder.group({ invitations: '' });
-  inputName = 'invitations'
+  readonly inputName = 'invitations'
 
   messages: Message[] = [];
 
