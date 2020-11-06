@@ -26,7 +26,7 @@ export class GroupInviteUsersComponent implements OnInit, OnDestroy {
 
   readonly inputName = 'logins'
   state: 'empty'|'too_many'|'loading'|'ready' = 'empty';
-  inviteForm = this.formBuilder.group({ invitations: '' });
+  inviteForm = this.formBuilder.group({ logins: '' });
 
   messages: Message[] = [];
   subscription?: Subscription;
