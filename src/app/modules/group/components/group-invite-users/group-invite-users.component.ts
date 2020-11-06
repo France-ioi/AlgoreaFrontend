@@ -39,17 +39,19 @@ export class GroupInviteUsersComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.subscription = this.inviteForm.get(this.inputName)?.valueChanges.subscribe((change: string) => this.checkInput(change));
+    this.subscription = this.inviteForm.get(this.inputName)?.valueChanges.subscribe((change: string) => this.loginListChanged(change));
   }
 
   ngOnDestroy(): void {
     this.subscription?.unsubscribe();
   }
 
-  checkInput(input: string): void {
+  loginListChanged(newValue: string): void {
+    if (this.state === 'loading')
+      return;
     this.state = 'ready';
 
-    const logins = input.split(',').filter(login => login.length > 0);
+    const logins = newValue.split(',').filter(login => login.length > 0);
 
     if (logins.length === 0) {
       this.state = 'empty';
