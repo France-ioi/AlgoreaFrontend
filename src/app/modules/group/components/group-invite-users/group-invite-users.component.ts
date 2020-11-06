@@ -33,7 +33,7 @@ export class GroupInviteUsersComponent {
     private createGroupInvitationsService: CreateGroupInvitationsService,
     private messageService: MessageService,
     private formBuilder: FormBuilder,
-    ) {}
+  ) {}
 
 
   private processRequestError(_err: any): void {
