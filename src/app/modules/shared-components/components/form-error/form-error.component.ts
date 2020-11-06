@@ -3,10 +3,10 @@ import { AbstractControl, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'alg-input-error',
-  templateUrl: './input-error.component.html',
-  styleUrls: [ './input-error.component.scss' ],
+  templateUrl: './form-error.component.html',
+  styleUrls: [ './form-error.component.scss' ],
 })
-export class InputErrorComponent implements OnChanges {
+export class FormErrorComponent implements OnChanges {
   @Input() form?: FormGroup;
   @Input() inputName = '';
 
