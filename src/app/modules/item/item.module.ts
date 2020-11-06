@@ -13,6 +13,7 @@ import { ItemProgressComponent } from './pages/item-progress/item-progress.compo
 import { ItemCurrentSituationComponent } from './pages/item-current-situation/item-current-situation.component';
 import { ItemLogViewComponent } from './pages/item-log-view/item-log-view.component';
 import { SubSkillsComponent } from './components/sub-skills/sub-skills.component';
+import { ParentSkillsComponent } from './components/parent-skills/parent-skills.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { SubSkillsComponent } from './components/sub-skills/sub-skills.component
     ItemCurrentSituationComponent,
     ItemLogViewComponent,
     SubSkillsComponent,
+    ParentSkillsComponent,
   ],
   imports: [
     CommonModule,

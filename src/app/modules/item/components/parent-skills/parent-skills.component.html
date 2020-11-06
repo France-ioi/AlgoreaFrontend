@@ -1,0 +1,32 @@
+<p-progressSpinner *ngIf="state === 'loading'"></p-progressSpinner>
+
+<p *ngIf="state === 'error'">Error while loading the skill parents</p>
+
+<alg-section
+*ngIf="state === 'ready'"
+label="Parent skills"
+icon="fa fa-link"
+>
+  <ul class="data-list-container sub-skill">
+    <li *ngFor="let item of parents">
+      <div
+        class="skill-content"
+        (click)="click(item)"
+        [ngClass]="{ locked: item.isLocked }"
+      >
+        <span class="skill-title">
+          {{ item.string.title }}
+        </span>
+        <span *ngIf="item.isLocked" class="skill-status">
+          <i *ngIf="item.isLocked" class="fa fa-lock"></i>
+        </span>
+        <alg-skill-progress
+          style="width: 25%;"
+          type="thick-horizontal"
+          [bestScore]="item.bestScore"
+          [currentScore]="item.result.score"
+        ></alg-skill-progress>
+      </div>
+    </li>
+  </ul>
+</alg-section>
