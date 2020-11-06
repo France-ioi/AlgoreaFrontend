@@ -8,8 +8,8 @@ interface ItemRouteCommon {
   id: ItemId;
   path: ItemId[];
 }
-type ItemRouteWithAttempt = ItemRouteCommon & { attemptId: AttemptId };
-type ItemRouteWithParentAttempt = ItemRouteCommon & { parentAttemptId: AttemptId };
+export type ItemRouteWithAttempt = ItemRouteCommon & { attemptId: AttemptId };
+export type ItemRouteWithParentAttempt = ItemRouteCommon & { parentAttemptId: AttemptId };
 export type ItemRoute = ItemRouteWithAttempt | ItemRouteWithParentAttempt;
 
 /* url parameter names */
@@ -37,7 +37,7 @@ export function itemUrl(item: ItemRoute, page: 'edit'|'details'): RouterCommands
 /*
  * The route to the app default (see config) item
  */
-export function appDefaultItemRoute(): ItemRoute {
+export function appDefaultItemRoute(): ItemRouteWithParentAttempt {
   return {
     id: appConfig().defaultItemId,
     path: [],
