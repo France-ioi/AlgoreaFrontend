@@ -24,7 +24,7 @@ export class GroupInviteUsersComponent implements OnInit, OnDestroy {
   @Input() group?: Group
   @Output() refreshRequired = new EventEmitter<void>();
 
-  readonly inputName = 'invitations'
+  readonly inputName = 'logins'
   state: 'empty'|'too_many'|'loading'|'ready' = 'empty';
   inviteForm = this.formBuilder.group({ invitations: '' });
 
