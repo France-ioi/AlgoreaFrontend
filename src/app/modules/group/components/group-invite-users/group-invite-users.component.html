@@ -1,7 +1,7 @@
 <alg-section-paragraph icon="fa fa-user-plus" label="Invite users" [collapsible]="true">
   <span class="content-title">Add users name list, separated by commas.</span>
   <div class="invite-users">
-    <alg-textarea [parentForm]="inviteForm" [inputName]="inputName" icon="show" placeholder="login_1, login_2..." [disabled]="state === 'loading'">
+    <alg-textarea [parentForm]="inviteForm" [inputName]="inputName" icon="show" placeholder="login_1, login_2...">
     </alg-textarea>
 
     <alg-message *ngIf="state === 'too_many'" type="error" detail="You cannot invite more than 100 users at once"

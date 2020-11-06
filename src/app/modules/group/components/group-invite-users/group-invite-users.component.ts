@@ -14,6 +14,8 @@ interface Message
   detail: string
 }
 
+type GroupInviteState = 'empty'|'too_many'|'loading'|'ready'
+
 @Component({
   selector: 'alg-group-invite-users',
   templateUrl: './group-invite-users.component.html',
@@ -25,8 +27,8 @@ export class GroupInviteUsersComponent implements OnInit, OnDestroy {
   @Output() refreshRequired = new EventEmitter<void>();
 
   readonly inputName = 'logins'
-  state: 'empty'|'too_many'|'loading'|'ready' = 'empty';
   inviteForm = this.formBuilder.group({ logins: '' });
+  state: GroupInviteState = 'empty';
 
   messages: Message[] = [];
   subscription?: Subscription;
@@ -46,17 +48,24 @@ export class GroupInviteUsersComponent implements OnInit, OnDestroy {
     this.subscription?.unsubscribe();
   }
 
+  setState(newState: GroupInviteState): void {
+    if (this.state == newState) return;
+    if (this.state == 'loading') this.inviteForm.enable(); // enable the form only if the previous state was disabled
+    if (newState == 'loading') this.inviteForm.disable();
+    this.state = newState;
+  }
+
   loginListChanged(newValue: string): void {
     if (this.state === 'loading')
       return;
-    this.state = 'ready';
+    this.setState('ready');
 
     const logins = newValue.split(',').filter(login => login.length > 0);
 
     if (logins.length === 0) {
-      this.state = 'empty';
+      this.setState('empty');
     } else if (logins.length >= 100) {
-      this.state = 'too_many';
+      this.setState('too_many');
     }
   }
 
@@ -124,7 +133,7 @@ export class GroupInviteUsersComponent implements OnInit, OnDestroy {
       });
 
     // disable UI
-    this.state = 'loading';
+    this.setState('loading');
 
     this.createGroupInvitationsService.createInvitations(this.group.id, logins).subscribe(
       res => {
@@ -133,12 +142,12 @@ export class GroupInviteUsersComponent implements OnInit, OnDestroy {
         // Clear the textarea
         control.patchValue('');
 
-        this.state = 'empty';
+        this.setState('empty');
       },
       err => {
         this.processRequestError(err);
 
-        this.state = 'ready';
+        this.setState('ready');
       }
     );
   }
