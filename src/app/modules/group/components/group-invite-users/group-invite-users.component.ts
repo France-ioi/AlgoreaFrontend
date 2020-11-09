@@ -26,7 +26,6 @@ export class GroupInviteUsersComponent implements OnInit, OnDestroy {
   @Input() group?: Group
   @Output() refreshRequired = new EventEmitter<void>();
 
-  readonly inputName = 'logins'
   inviteForm = this.formBuilder.group({ logins: '' });
   state: GroupInviteState = 'empty';
 
@@ -41,7 +40,7 @@ export class GroupInviteUsersComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.subscription = this.inviteForm.get(this.inputName)?.valueChanges.subscribe((change: string) => this.loginListChanged(change));
+    this.subscription = this.inviteForm.get('logins')?.valueChanges.subscribe((change: string) => this.loginListChanged(change));
   }
 
   ngOnDestroy(): void {
@@ -121,7 +120,7 @@ export class GroupInviteUsersComponent implements OnInit, OnDestroy {
     this.messages = [];
 
     // remove empty logins and duplicates
-    const control = this.inviteForm.get(this.inputName);
+    const control = this.inviteForm.get('logins');
     if (!control) return;
 
     const logins = (control.value as string).split(',')
