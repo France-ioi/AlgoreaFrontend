@@ -1,4 +1,6 @@
 import { ParamMap } from '@angular/router';
+import { defaultAttemptId } from './attempts';
+import { appConfig } from './config';
 
 type ItemId = string;
 type AttemptId = string;
@@ -6,8 +8,8 @@ interface ItemRouteCommon {
   id: ItemId;
   path: ItemId[];
 }
-type ItemRouteWithAttempt = ItemRouteCommon & { attemptId: AttemptId };
-type ItemRouteWithParentAttempt = ItemRouteCommon & { parentAttemptId: AttemptId };
+export type ItemRouteWithAttempt = ItemRouteCommon & { attemptId: AttemptId };
+export type ItemRouteWithParentAttempt = ItemRouteCommon & { parentAttemptId: AttemptId };
 export type ItemRoute = ItemRouteWithAttempt | ItemRouteWithParentAttempt;
 
 /* url parameter names */
@@ -33,11 +35,33 @@ export function itemUrl(item: ItemRoute, page: 'edit'|'details'): RouterCommands
 }
 
 /*
+ * The route to the app default (see config) item
+ */
+export function appDefaultItemRoute(): ItemRouteWithParentAttempt {
+  return {
+    id: appConfig().defaultItemId,
+    path: [],
+    parentAttemptId: defaultAttemptId,
+  };
+}
+
+/*
  * Url to an item with missing path and attempt
  * Build commands to be used with the `Router.navigate()` function
  */
 export function incompleteItemUrl(itemId: string): RouterCommands {
   return [ 'items', 'by-id', itemId ];
+}
+
+/*
+ * Url (as string) of the details page for the given item route
+ */
+export function itemStringUrl(item: ItemRoute): string {
+  const attemptPart = isRouteWithAttempt(item) ?
+    `${attemptParamName}=${item.attemptId}` :
+    `${parentAttemptParamName}=${item.parentAttemptId}`;
+
+  return `/items/by-id/${item.id};${attemptPart};${pathParamName}=${item.path.join(',')}/details`;
 }
 
 /*

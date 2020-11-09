@@ -5,7 +5,8 @@ import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { of, Observable, EMPTY, Subscription, concat } from 'rxjs';
 import { ItemNavMenuData } from '../../common/item-nav-menu-data';
 import { Ready, Fetching, FetchError, fetchingState, readyState, mapErrorToState, isReady, errorState } from 'src/app/shared/helpers/state';
-import { ItemRoute } from 'src/app/shared/helpers/item-route';
+import { appDefaultItemRoute, ItemRoute, ItemRouteWithParentAttempt } from 'src/app/shared/helpers/item-route';
+import { ResultActionsService } from 'src/app/shared/http-services/result-actions.service';
 
 type State = Ready<ItemNavMenuData>|Fetching|FetchError;
 
@@ -23,16 +24,34 @@ export class ItemNavComponent implements OnInit, OnDestroy {
 
   constructor(
     private itemNavService: ItemNavigationService,
+    private resultActionService: ResultActionsService,
     private currentContent: CurrentContentService,
   ) { }
 
-  loadRootNav(): Observable<State> {
+  loadDefaultNav(): Observable<State> {
+    const route = appDefaultItemRoute();
     return concat(
-      of(fetchingState()), // first change items to loading
+      of(fetchingState()),
       this.itemNavService.getRoot(this.type).pipe(
-        map(items => readyState(new ItemNavMenuData(items.items, [], undefined, items.parent))),
+        map(items => new ItemNavMenuData(items.items, [], undefined, undefined, [ route.id ])),
+        switchMap(menuData => concat(of(readyState(menuData)), this.startResultAndLoadChildren(menuData, route))),
         mapErrorToState()
       )
+    );
+  }
+
+  startResultAndLoadChildren(data: ItemNavMenuData, item: ItemRouteWithParentAttempt): Observable<State> {
+    const menuItem = data.elements.find(i => i.id === item.id);
+    if (!menuItem) return of(errorState(new Error('Cannot find the default item in root')));
+    const dataWithFetchedAttempt = menuItem.attemptId !== null ? of(data) :
+      this.resultActionService.start(item.path.concat([ item.id ]), item.parentAttemptId).pipe(
+        map(() => data.withUpdatedAttemptId(item.id, item.parentAttemptId))
+      );
+    return dataWithFetchedAttempt.pipe(
+      switchMap(dataWithAttempt => {
+        const newMenuItem = dataWithAttempt.elements.find(i => i.id === item.id);
+        return this.loadChildrenIfNeeded(dataWithAttempt, newMenuItem);
+      })
     );
   }
 
@@ -55,14 +74,16 @@ export class ItemNavComponent implements OnInit, OnDestroy {
     );
   }
 
-  loadChildrenIfNeeded(data: ItemNavMenuData): Observable<State> {
-    const selected = data.selectedNavMenuItem();
-    if (!selected) return of(errorState(new Error('Cannot find selected element (or no selection) (unexpected)')));
-    if (!selected.hasChildren || selected.attemptId === null) return EMPTY; // if no children, no need to fetch children
+  /**
+   * Load children of the given item if it has children and has an attempt
+   */
+  loadChildrenIfNeeded(data: ItemNavMenuData, item = data.selectedNavMenuItem()): Observable<State> {
+    if (!item) return of(errorState(new Error('Cannot find selected element (or no selection) (unexpected)')));
+    if (!item.hasChildren || item.attemptId === null) return EMPTY; // if no children, no need to fetch children
 
     // We do not check if children were already known. So we might re-load again the same children, which is intended.
-    return this.itemNavService.getNavData(selected.id, selected.attemptId).pipe(
-      map(nav => readyState(data.withUpdatedInfo(selected.id, nav.parent, nav.items))),
+    return this.itemNavService.getNavData(item.id, item.attemptId).pipe(
+      map(nav => readyState(data.withUpdatedInfo(item.id, nav.parent, nav.items))),
       mapErrorToState()
     );
   }
@@ -80,9 +101,11 @@ export class ItemNavComponent implements OnInit, OnDestroy {
         switchMap((item):Observable<State> => {
 
           if (isReady(this.state)) {
-
-            // CASE: the current content is not an item and the menu has already items displayed -> do nothing
-            if (item === null) return EMPTY;
+            // CASE: the current content is not an item and the menu has already items displayed
+            if (item === null) {
+              if (this.state.data.selectedElement) return of(readyState(this.state.data.withNoSelection()));
+              return EMPTY; // no change
+            }
 
             // CASE: the current content is already the selected one
             if (this.state.data.selectedElement?.id === item.route.id) {
@@ -105,7 +128,7 @@ export class ItemNavComponent implements OnInit, OnDestroy {
 
           } else /* not ready state */ if (item === null) {
             // CASE: the content is not an item and the menu has not already item displayed -> load item root
-            return this.loadRootNav();
+            return this.loadDefaultNav();
           }
 
           // CASE: the content is an item which is not current display -> load the tree and select the right one

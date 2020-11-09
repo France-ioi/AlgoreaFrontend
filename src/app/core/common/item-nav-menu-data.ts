@@ -15,13 +15,14 @@ export class ItemNavMenuData {
     public readonly pathToElements: Id[], // path from root to the elements (so including the parent if any)
     public readonly selectedElement?: ItemRoute, // the selected element is among lev 1 elements
     public readonly parent?: NavMenuItem, // level 0 element
+    public readonly extraExpandedElements?: Id[], // elements to be expanded without being selected
   ) {}
 
   /**
    * Return this with selected element changed
    */
   withSelection(selectedElement: ItemRoute): ItemNavMenuData {
-    return new ItemNavMenuData(this.elements, this.pathToElements, selectedElement, this.parent);
+    return new ItemNavMenuData(this.elements, this.pathToElements, selectedElement, this.parent, this.extraExpandedElements);
   }
 
   /**
@@ -37,7 +38,7 @@ export class ItemNavMenuData {
     elements[idx].bestScore = details.bestScore;
     elements[idx].currentScore = details.currentScore;
     elements[idx].validated = details.validated;
-    return new ItemNavMenuData(elements, this.pathToElements, this.selectedElement, this.parent);
+    return new ItemNavMenuData(elements, this.pathToElements, this.selectedElement, this.parent, this.extraExpandedElements);
   }
 
   /**
@@ -49,7 +50,25 @@ export class ItemNavMenuData {
     if (idx === -1) return this;
     const elements = [ ...this.elements ];
     elements[idx] = { ...elements[idx], ...info, children: children };
-    return new ItemNavMenuData(elements, this.pathToElements, this.selectedElement, this.parent);
+    return new ItemNavMenuData(elements, this.pathToElements, this.selectedElement, this.parent, this.extraExpandedElements);
+  }
+
+  withUpdatedAttemptId(id: Id, newAttemptId: string): ItemNavMenuData {
+    const idx = this.elements.findIndex(i => i.id === id);
+    if (idx === -1) return this;
+    const elements = [ ...this.elements ];
+    elements[idx] = { ...elements[idx], attemptId: newAttemptId };
+    return new ItemNavMenuData(elements, this.pathToElements, this.selectedElement, this.parent, this.extraExpandedElements);
+  }
+
+  /**
+   * Remove the current selection but keep the item expanded if it has children
+   */
+  withNoSelection(): ItemNavMenuData {
+    if (!this.selectedElement) return this;
+    const element = this.elements.find(i => this.selectedElement?.id === i.id);
+    const newExpanded = element?.hasChildren ? [ this.selectedElement.id ] : [];
+    return new ItemNavMenuData(this.elements, this.pathToElements, undefined, this.parent, newExpanded);
   }
 
   /**

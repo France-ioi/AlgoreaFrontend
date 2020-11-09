@@ -1,7 +1,13 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { appDefaultItemRoute, itemStringUrl } from '../shared/helpers/item-route';
 
 const routes: Routes = [
+  {
+    path: '',
+    redirectTo: itemStringUrl(appDefaultItemRoute()),
+    pathMatch: 'full',
+  },
   {
     path: 'groups',
     loadChildren: (): Promise<any> => import('../modules/group/group.module').then(m => m.GroupModule)

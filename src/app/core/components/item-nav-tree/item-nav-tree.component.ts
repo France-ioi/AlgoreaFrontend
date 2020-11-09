@@ -35,8 +35,7 @@ export class ItemNavTreeComponent implements OnChanges {
   mapItemToNodes(data: ItemNavMenuData): ItemTreeNode[] {
     return data.elements.map(i => {
       const isSelected = !!(data.selectedElement && data.selectedElement.id === i.id);
-      const shouldShowChildren = i.hasChildren && isSelected;
-      const isLoadingChildren = shouldShowChildren && !i.children; // are being loaded by the parent component
+      const shouldShowChildren = i.hasChildren && (isSelected || data.extraExpandedElements?.includes(i.id)) ;
       const pathToChildren = data.pathToElements.concat([ i.id ]);
       const locked = !i.canViewContent;
       return {
@@ -45,8 +44,8 @@ export class ItemNavTreeComponent implements OnChanges {
         itemPath: data.pathToElements,
         type: i.hasChildren ? 'folder' : 'leaf',
         leaf: i.hasChildren,
-        status: isLoadingChildren ? 'loading' : 'ready',
-        children: shouldShowChildren && i.children ? this.mapItemToNodes(new ItemNavMenuData(i.children, pathToChildren)) : undefined,
+        status: i.hasChildren && isSelected && !i.children ? 'loading' : 'ready',
+        children: (shouldShowChildren && i.children) ? this.mapItemToNodes(new ItemNavMenuData(i.children, pathToChildren)) : undefined,
         expanded: !!(shouldShowChildren && i.children),
         checked: isSelected,
         locked: locked,

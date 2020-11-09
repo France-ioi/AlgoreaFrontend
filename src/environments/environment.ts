@@ -9,6 +9,8 @@ export const environment: Environment = {
   apiUrl: 'https://dev.algorea.org/api',
   oauthServerUrl: 'https://login.france-ioi.org',
   oauthClientId: '43',
+
+  defaultItemId: '694914435881177216',
 };
 
 /*
