@@ -2,7 +2,7 @@
   <ng-container *ngIf="state.tag === 'ready' && (group$ | async) as group">
     <ng-container *ngIf="group.isCurrentUserManager; else noPermission">
       <alg-section icon="fa fa-users" label="Current Composition">
-        <p>...</p>
+        <alg-user-list [group]="group"></alg-user-list>
       </alg-section>
       <alg-group-join-by-code [group]="group" (refreshRequired)="refreshGroupInfo()" *ngIf="group.canCurrentUserManageMembers">
       </alg-group-join-by-code>
