@@ -25,6 +25,7 @@ import { CurrentUserComponent } from './pages/current-user/current-user.componen
 import { GroupEditComponent } from './pages/group-edit/group-edit.component';
 import { GroupByIdComponent } from './pages/group-by-id/group-by-id.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { UserListComponent } from './components/user-list/user-list.component';
 
 @NgModule({
   declarations: [
@@ -46,6 +47,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     CurrentUserComponent,
     GroupEditComponent,
     GroupByIdComponent,
+    UserListComponent,
   ],
   imports: [
     CommonModule,
