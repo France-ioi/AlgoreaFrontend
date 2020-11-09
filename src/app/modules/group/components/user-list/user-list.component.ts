@@ -1,4 +1,5 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { Group } from '../../http-services/get-group-by-id.service';
 import { GetGroupMembersService, Member } from '../../http-services/get-group-members.service';
 
@@ -11,12 +12,14 @@ interface MemberAddition {
   templateUrl: './user-list.component.html',
   styleUrls: [ './user-list.component.scss' ]
 })
-export class UserListComponent implements OnChanges {
+export class UserListComponent implements OnChanges, OnDestroy {
 
   @Input() group? : Group;
   state: 'loading' | 'error' | 'empty' | 'ready' = 'loading';
 
   members: (Member&MemberAddition)[] = [];
+
+  private subscription?: Subscription;
 
   constructor(private getGroupMembersService: GetGroupMembersService) { }
 
@@ -27,8 +30,8 @@ export class UserListComponent implements OnChanges {
   private reloadData(): void {
     if (this.group) {
       this.state = 'loading';
-
-      this.getGroupMembersService.getGroupMembers(this.group.id)
+      this.subscription?.unsubscribe();
+      this.subscription = this.getGroupMembersService.getGroupMembers(this.group.id)
         .subscribe(
           members => {
             const dateFormatter = new Intl.DateTimeFormat('fr');
@@ -48,5 +51,9 @@ export class UserListComponent implements OnChanges {
     } else {
       this.state = 'error';
     }
+  }
+
+  ngOnDestroy(): void {
+    this.subscription?.unsubscribe();
   }
 }
