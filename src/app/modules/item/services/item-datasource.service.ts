@@ -42,16 +42,16 @@ export class ItemDataSource implements OnDestroy {
     this.fetchOperation.pipe(
 
       // switchMap does cancel the previous ongoing processing if a new one comes
-      switchMap(item => {
-        const dataFetch = this.fetchItemData(item).pipe(
-          map(res => readyState(res)),
-          catchError(e => of(errorState(e)))
-        );
-        // if the fetched item is the same as the current one, do not change state to "loading" (silent refresh)
-        const currentState = this.state.value;
-        if (isReady(currentState) && currentState.data.item.id === item.id) return dataFetch;
-        else return concat(of(fetchingState()), dataFetch);
-      }),
+      // on new fetch operation to be done: set "fetching" stae and fetch the data which will result in a ready or error state
+      switchMap(item =>
+        concat(
+          of(fetchingState()),
+          this.fetchItemData(item).pipe(
+            map(res => readyState(res)),
+            catchError(e => of(errorState(e)))
+          )
+        )
+      ),
 
     ).subscribe(state => this.state.next(state));
   }
