@@ -137,7 +137,7 @@ export class GroupInviteUsersComponent implements OnInit, OnDestroy {
         this.displayResponse(res);
 
         // Clear the textarea
-        control.patchValue('');
+        control.setValue('');
 
         this.setState('empty');
       },
