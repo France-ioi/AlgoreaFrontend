@@ -49,15 +49,14 @@ export class GroupInviteUsersComponent implements OnInit, OnDestroy {
   }
 
   setState(newState: GroupInviteState): void {
-    if (this.state == newState) return;
-    if (this.state == 'loading') this.inviteForm.enable(); // enable the form only if the previous state was disabled
-    if (newState == 'loading') this.inviteForm.disable();
+    if (this.state === newState) return;
+    if (this.state === 'loading') this.inviteForm.enable(); // enable the form only if the previous state was disabled
+    if (newState === 'loading') this.inviteForm.disable();
     this.state = newState;
   }
 
   loginListChanged(newValue: string): void {
-    if (this.state === 'loading')
-      return;
+    if (this.state === 'loading') return;
     this.setState('ready');
 
     const logins = newValue.split(',').filter(login => login.length > 0);
@@ -116,15 +115,14 @@ export class GroupInviteUsersComponent implements OnInit, OnDestroy {
 
   /* events */
   onInviteClicked(): void {
-    if (!this.group || this.state != 'ready') return;
+    if (!this.group || this.state !== 'ready') return;
 
     // clear the messages
     this.messages = [];
 
     // remove empty logins and duplicates
     const control = this.inviteForm.get(this.inputName);
-    if (!control)
-      return;
+    if (!control) return;
 
     const logins = (control.value as string).split(',')
       .map(login => login.trim())
