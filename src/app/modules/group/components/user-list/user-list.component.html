@@ -5,9 +5,9 @@
 <p *ngIf="state === 'empty'">This group is empty, check below, the different ways to add users or sub-groups.</p>
 
 <alg-grid
-*ngIf="state === 'ready'"
-[data]="members"
-[showGear]="false"
+  *ngIf="state === 'ready'"
+  [data]="members"
+  [showGear]="false"
 >
   <ng-template #headerTemplate let-columns>
     <tr>
