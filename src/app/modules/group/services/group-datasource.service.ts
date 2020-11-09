@@ -28,18 +28,19 @@ export class GroupDataSource implements OnDestroy {
     private getGroupByIdService: GetGroupByIdService,
   ) {
     this.fetchOperation.pipe(
-      // switchMap does cancel the previous ongoing processing if a new one comes
-      switchMap(id => {
-        const dataFetch = this.getGroupByIdService.get(id).pipe(
-          map(res => readyState(res)),
-          catchError(e => of(errorState(e)))
-        );
 
-        // if the fetched group is the same as the current one, do not change state to "loading" (silent refresh)
-        const currentState = this.state.value;
-        if (isReady(currentState) && currentState.data.id === id) return dataFetch;
-        else return concat(of(fetchingState()), dataFetch);
-      })
+      // switchMap does cancel the previous ongoing processing if a new one comes
+      // on new fetch operation to be done: set "fetching" state and fetch the data which will result in a ready or error state
+      switchMap(id =>
+        concat(
+          of(fetchingState()),
+          this.getGroupByIdService.get(id).pipe(
+            map(res => readyState(res)),
+            catchError(e => of(errorState(e)))
+          )
+        )
+      ),
+
     ).subscribe(state => this.state.next(state));
   }
 
