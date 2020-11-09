@@ -7,6 +7,7 @@ import { ItemContentComponent } from './pages/item-content/item-content.componen
 import { ItemProgressComponent } from './pages/item-progress/item-progress.component';
 import { ItemCurrentSituationComponent } from './pages/item-current-situation/item-current-situation.component';
 import { ItemLogViewComponent } from './pages/item-log-view/item-log-view.component';
+import { ItemEditContentComponent } from './pages/item-edit-content/item-edit-content.component';
 
 @NgModule({
   imports: [ RouterModule.forChild([
@@ -43,6 +44,12 @@ import { ItemLogViewComponent } from './pages/item-log-view/item-log-view.compon
         {
           path: 'edit',
           component: ItemEditComponent,
+          children: [
+            {
+              path: '',
+              component: ItemEditContentComponent
+            }
+          ]
         },
       ]
     }
