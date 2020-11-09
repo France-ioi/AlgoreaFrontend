@@ -56,7 +56,7 @@ export function incompleteItemUrl(itemId: string): RouterCommands {
 /*
  * Url (as string) of the details page for the given item route
  */
-export function linkToRoute(item: ItemRoute): string {
+export function itemStringUrl(item: ItemRoute): string {
   const attemptPart = isRouteWithAttempt(item) ?
     `${attemptParamName}=${item.attemptId}` :
     `${parentAttemptParamName}=${item.parentAttemptId}`;

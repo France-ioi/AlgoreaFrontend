@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { appDefaultItemRoute, linkToRoute } from '../shared/helpers/item-route';
+import { appDefaultItemRoute, itemStringUrl } from '../shared/helpers/item-route';
 
 const routes: Routes = [
   {
     path: '',
-    redirectTo: linkToRoute(appDefaultItemRoute()),
+    redirectTo: itemStringUrl(appDefaultItemRoute()),
     pathMatch: 'full',
   },
   {
