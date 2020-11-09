@@ -48,6 +48,7 @@ import { SliderComponent } from './components/slider/slider.component';
 import { SectionParagraphComponent } from './components/section-paragrah/section-paragraph.component';
 import { MessageComponent } from './components/message/message.component';
 import { ProgressLevelComponent } from './components/progress-level/progress-level.component';
+import { FormErrorComponent } from './components/form-error/form-error.component';
 
 @NgModule({
   declarations: [
@@ -71,6 +72,7 @@ import { ProgressLevelComponent } from './components/progress-level/progress-lev
     SectionParagraphComponent,
     MessageComponent,
     ProgressLevelComponent,
+    FormErrorComponent,
   ],
   imports: [
     CommonModule,
@@ -128,6 +130,7 @@ import { ProgressLevelComponent } from './components/progress-level/progress-lev
     TabViewModule,
     MessageComponent,
     ProgressLevelComponent,
+    FormErrorComponent,
   ],
   providers: [
     { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: true } }

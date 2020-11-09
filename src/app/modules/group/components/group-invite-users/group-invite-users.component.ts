@@ -1,10 +1,11 @@
-import { Component, Input, Output, EventEmitter, ViewChild } from '@angular/core';
-import { TextareaComponent } from 'src/app/modules/shared-components/components/textarea/textarea.component';
+import { Component, Input, Output, EventEmitter, OnDestroy, OnInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { ERROR_MESSAGE } from 'src/app/shared/constants/api';
 import { TOAST_LENGTH } from 'src/app/shared/constants/global';
 import { CreateGroupInvitationsService, InvitationResult } from '../../http-services/create-group-invitations.service';
 import { Group } from '../../http-services/get-group-by-id.service';
+import { FormBuilder } from '@angular/forms';
+import { Subscription } from 'rxjs';
 
 interface Message
 {
@@ -13,27 +14,58 @@ interface Message
   detail: string
 }
 
+type GroupInviteState = 'empty'|'too_many'|'loading'|'ready'
+
 @Component({
   selector: 'alg-group-invite-users',
   templateUrl: './group-invite-users.component.html',
   styleUrls: [ './group-invite-users.component.scss' ],
 })
-export class GroupInviteUsersComponent {
+export class GroupInviteUsersComponent implements OnInit, OnDestroy {
 
   @Input() group?: Group
   @Output() refreshRequired = new EventEmitter<void>();
 
-  @ViewChild(TextareaComponent) private textArea?: TextareaComponent;
-
-  state: 'empty'|'too_many'|'loading'|'ready' = 'empty';
+  inviteForm = this.formBuilder.group({ logins: '' });
+  state: GroupInviteState = 'empty';
 
   messages: Message[] = [];
+  subscription?: Subscription;
 
   constructor(
     private createGroupInvitationsService: CreateGroupInvitationsService,
     private messageService: MessageService,
-  ) {}
+    private formBuilder: FormBuilder,
+  ) {
+  }
 
+  ngOnInit(): void {
+    this.subscription = this.inviteForm.get('logins')?.valueChanges.subscribe((change: string) => this.loginListChanged(change));
+  }
+
+  ngOnDestroy(): void {
+    this.subscription?.unsubscribe();
+  }
+
+  setState(newState: GroupInviteState): void {
+    if (this.state === newState) return;
+    if (this.state === 'loading') this.inviteForm.enable(); // enable the form only if the previous state was disabled
+    if (newState === 'loading') this.inviteForm.disable();
+    this.state = newState;
+  }
+
+  loginListChanged(newValue: string): void {
+    if (this.state === 'loading') return;
+    this.setState('ready');
+
+    const logins = newValue.split(',').filter(login => login.length > 0);
+
+    if (logins.length === 0) {
+      this.setState('empty');
+    } else if (logins.length >= 100) {
+      this.setState('too_many');
+    }
+  }
 
   private processRequestError(_err: any): void {
     this.messageService.add({
@@ -46,16 +78,16 @@ export class GroupInviteUsersComponent {
 
   private displayResponse(response: Map<string, InvitationResult>): void {
 
-    const sucessInvites: string[] = Array.from(response.entries()).filter(e => e[1] === InvitationResult.Success).map(e => e[0]);
+    const successInvites: string[] = Array.from(response.entries()).filter(e => e[1] === InvitationResult.Success).map(e => e[0]);
     const alreadyInvited: string[] = Array.from(response.entries()).filter(e => e[1] === InvitationResult.AlreadyInvited).map(e => e[0]);
     const notFoundUsers: string[] = Array.from(response.entries()).filter(e => e[1] === InvitationResult.NotFound).map(e => e[0]);
     const invalidInvites: string[] = Array.from(response.entries()).filter(e => e[1] === InvitationResult.Error).map(e => e[0]);
 
-    if (sucessInvites.length > 0)
+    if (successInvites.length > 0)
       this.messages.push({
         type: 'success',
-        summary: `${sucessInvites.length} user(s) invited successfully: `,
-        detail: `${sucessInvites.join(', ')}`,
+        summary: `${successInvites.length} user(s) invited successfully: `,
+        detail: `${successInvites.join(', ')}`,
       });
 
     if (alreadyInvited.length > 0)
@@ -81,48 +113,38 @@ export class GroupInviteUsersComponent {
   }
 
   /* events */
-
-  onTextChange(text:string): void {
-    this.state = 'ready';
-
-    const logins = text.split(',').filter(login => login.length > 0);
-
-    if (logins.length === 0) {
-      this.state = 'empty';
-    } else if (logins.length >= 100) {
-      this.state = 'too_many';
-    }
-  }
-
   onInviteClicked(): void {
-    if (!this.textArea || !this.group) return;
+    if (!this.group || this.state !== 'ready') return;
 
     // clear the messages
     this.messages = [];
 
     // remove empty logins and duplicates
-    const logins = this.textArea.value.split(',')
+    const control = this.inviteForm.get('logins');
+    if (!control) return;
+
+    const logins = (control.value as string).split(',')
       .map(login => login.trim())
       .filter(function (login, index, self) {
         return self.indexOf(login) === index && login !== '';
       });
 
     // disable UI
-    this.state = 'loading';
+    this.setState('loading');
 
     this.createGroupInvitationsService.createInvitations(this.group.id, logins).subscribe(
       res => {
         this.displayResponse(res);
 
         // Clear the textarea
-        if (this.textArea) this.textArea.setValue('');
+        control.setValue('');
 
-        this.state = 'empty';
+        this.setState('empty');
       },
       err => {
         this.processRequestError(err);
 
-        this.state = 'ready';
+        this.setState('ready');
       }
     );
   }

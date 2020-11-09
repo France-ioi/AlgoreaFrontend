@@ -1,5 +1,14 @@
-<textarea pInputTextarea rows="5" placeholder="{{placeholder}}" [ngClass]="{'no-icon': !icon}" (input)="onChange()"
-  [(ngModel)]="value" [disabled]="disabled"></textarea>
-<span class="placeholder-icon" *ngIf="icon">
-  <i class="fa fa-font"></i>
-</span>
+<ng-container *ngIf="parentForm" [formGroup]="parentForm">
+  <textarea
+    [formControlName]="inputName"
+    pInputTextarea
+    rows="5"
+    [placeholder]="placeholder"
+    [ngClass]="{'no-icon': !icon}"
+  >
+  </textarea>
+  <span class="placeholder-icon" *ngIf="icon">
+    <i class="fa fa-font"></i>
+  </span>
+  <alg-input-error [form]="parentForm" [inputName]="inputName"></alg-input-error>
+</ng-container>
