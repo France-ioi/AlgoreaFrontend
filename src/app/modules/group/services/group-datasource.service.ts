@@ -30,7 +30,7 @@ export class GroupDataSource implements OnDestroy {
     this.fetchOperation.pipe(
 
       // switchMap does cancel the previous ongoing processing if a new one comes
-      // on new fetch operation to be done: set "fetching" stae and fetch the data which will result in a ready or error state
+      // on new fetch operation to be done: set "fetching" state and fetch the data which will result in a ready or error state
       switchMap(id =>
         concat(
           of(fetchingState()),
