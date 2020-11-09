@@ -41,7 +41,7 @@
         {{ member.user.login }}
       </td>
       <td>
-        {{ member.memberSinceText }}
+        {{ member.memberSince | date }}
       </td>
     </tr>
   </ng-template>

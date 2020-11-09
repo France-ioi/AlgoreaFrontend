@@ -3,10 +3,6 @@ import { Subscription } from 'rxjs';
 import { Group } from '../../http-services/get-group-by-id.service';
 import { GetGroupMembersService, Member } from '../../http-services/get-group-members.service';
 
-interface MemberAddition {
-  memberSinceText: string,
-}
-
 @Component({
   selector: 'alg-user-list',
   templateUrl: './user-list.component.html',
@@ -17,7 +13,7 @@ export class UserListComponent implements OnChanges, OnDestroy {
   @Input() group? : Group;
   state: 'loading' | 'error' | 'empty' | 'ready' = 'loading';
 
-  members: (Member&MemberAddition)[] = [];
+  members: Member[] = [];
 
   private subscription?: Subscription;
 
@@ -34,12 +30,7 @@ export class UserListComponent implements OnChanges, OnDestroy {
       this.subscription = this.getGroupMembersService.getGroupMembers(this.group.id)
         .subscribe(
           members => {
-            const dateFormatter = new Intl.DateTimeFormat('fr');
-
-            this.members = members.map(member => ({
-              ...member,
-              memberSinceText: member.memberSince === null ? '' : dateFormatter.format(member.memberSince)
-            }));
+            this.members = members;
 
             if (this.members.length === 0) this.state = 'empty';
             else this.state = 'ready';
