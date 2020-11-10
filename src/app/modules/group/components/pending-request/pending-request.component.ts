@@ -139,7 +139,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     const requestMap = new Map<string, string[]>();
     this.selection.forEach(elm => {
       const groupID = elm.group.id;
-      const memberID = elm.user.group_id;
+      const memberID = elm.user.groupId;
 
       const value = requestMap.get(groupID);
       if (value) requestMap.set(groupID, value.concat([ memberID ]));

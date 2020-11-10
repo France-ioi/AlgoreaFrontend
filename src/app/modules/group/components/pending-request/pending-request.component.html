@@ -67,13 +67,7 @@
                 /> -->
                 <div class="user-info">
                   <span class="user-info-name">
-                    <ng-container *ngIf="!rowData.user.first_name && !rowData.user.last_name; else fullInfo">
-                      {{ rowData.user.login }}
-                    </ng-container>
-                    <ng-template #fullInfo>
-                      {{ rowData.user.first_name || "" }} {{ rowData.user.last_name || "" }}
-                      ({{ rowData.user.login }})
-                    </ng-template>
+                    {{ rowData.user | user }}
                   </span>
                   <span class="user-info-activity" *ngIf="rowData.user.grade">
                     <em>Grade: {{ rowData.user.grade }}</em>
