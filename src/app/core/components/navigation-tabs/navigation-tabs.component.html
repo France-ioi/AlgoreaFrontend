@@ -5,12 +5,7 @@
       <img src="assets/images/Male.svg" style="width: 7rem; height: auto;" />
     </div>
     <span class="group-title">
-      <ng-container *ngIf="(currentUser.firstname || currentUser.lastname); else noName">
-        {{ currentUser.firstname}} {{ currentUser.lastname}} ({{ currentUser.login }})
-      </ng-container>
-      <ng-template #noName>
-        {{currentUser.login}}
-      </ng-template>
+      {{ currentUser | user }}
     </span>
     <span class="group-toggle" (click)="toggleGroup()">
       <i class="fa fa-users"></i>

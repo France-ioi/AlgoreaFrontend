@@ -66,28 +66,28 @@ describe('NavigationTabsComponent', () => {
       expect(userString()).toEqual('Loading...');
     });
 
-    it('should display the full information correctly when firstname is null', () => {
-      component.currentUser = { id: '1', login: 'mylogin', firstname: null, lastname: 'myname', isTemp: false };
+    it('should display the full information correctly when firstame is null', () => {
+      component.currentUser = { id: '1', login: 'mylogin', firstName: null, lastName: 'myname', isTemp: false };
       expect(userString()).toEqual('myname (mylogin)');
     });
 
     it('should display the full information correctly when lastname is null', () => {
-      component.currentUser = { id: '1', login: 'mylogin', firstname: 'myfirst', lastname: null, isTemp: false };
+      component.currentUser = { id: '1', login: 'mylogin', firstName: 'myfirst', lastName: null, isTemp: false };
       expect(userString()).toEqual('myfirst (mylogin)');
     });
 
     it('should display the full information correctly when firstname is empty', () => {
-      component.currentUser = { id: '1', login: 'mylogin', firstname: '', lastname: 'myname', isTemp: false };
+      component.currentUser = { id: '1', login: 'mylogin', firstName: '', lastName: 'myname', isTemp: false };
       expect(userString()).toEqual('myname (mylogin)');
     });
 
     it('should display only login when both firstname and lastname are null', () => {
-      component.currentUser = { id: '1', login: 'mylogin', firstname: null, lastname: null, isTemp: false };
+      component.currentUser = { id: '1', login: 'mylogin', firstName: null, lastName: null, isTemp: false };
       expect(userString()).toEqual('mylogin');
     });
 
     it('should display only login when both firstname and lastname are empty', () => {
-      component.currentUser = { id: '1', login: 'mylogin', firstname: '', lastname: '', isTemp: false };
+      component.currentUser = { id: '1', login: 'mylogin', firstName: '', lastName: '', isTemp: false };
       expect(userString()).toEqual('mylogin');
     });
   });
