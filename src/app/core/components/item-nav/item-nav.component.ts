@@ -59,7 +59,7 @@ export class ItemNavComponent implements OnInit, OnDestroy {
     let dataFetcher: Observable<NavMenuRootItem>;
     if (item.path.length >= 1) {
       const parentId = item.path[item.path.length-1];
-      dataFetcher = this.itemNavService.getNavDataFromChildRoute(parentId, item);
+      dataFetcher = this.itemNavService.getNavDataFromChildRoute(parentId, item, this.type === 'skill');
     } else {
       dataFetcher = this.itemNavService.getRoot(this.type);
     }
@@ -82,7 +82,7 @@ export class ItemNavComponent implements OnInit, OnDestroy {
     if (!item.hasChildren || item.attemptId === null) return EMPTY; // if no children, no need to fetch children
 
     // We do not check if children were already known. So we might re-load again the same children, which is intended.
-    return this.itemNavService.getNavData(item.id, item.attemptId).pipe(
+    return this.itemNavService.getNavData(item.id, item.attemptId, this.type === 'skill').pipe(
       map(nav => readyState(data.withUpdatedInfo(item.id, nav.parent, nav.items))),
       mapErrorToState()
     );

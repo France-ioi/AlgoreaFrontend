@@ -144,18 +144,21 @@ export class ItemNavigationService {
 
   constructor(private http: HttpClient) {}
 
-  getNavData(itemId: string, attemptId: string): Observable<NavMenuRootItemWithParent> {
-    return this.getNavDataGeneric(itemId, { attempt_id: attemptId });
+  getNavData(itemId: string, attemptId: string, skillsOnly = false): Observable<NavMenuRootItemWithParent> {
+    return this.getNavDataGeneric(itemId, { attempt_id: attemptId }, skillsOnly);
   }
 
-  getNavDataFromChildRoute(itemId: string, childRoute: ItemRoute): Observable<NavMenuRootItemWithParent> {
+  getNavDataFromChildRoute(itemId: string, childRoute: ItemRoute, skillsOnly = false): Observable<NavMenuRootItemWithParent> {
     return this.getNavDataGeneric(
       itemId,
-      isRouteWithAttempt(childRoute) ? { child_attempt_id: childRoute.attemptId } : { attempt_id: childRoute.parentAttemptId }
+      isRouteWithAttempt(childRoute) ? { child_attempt_id: childRoute.attemptId } : { attempt_id: childRoute.parentAttemptId },
+      skillsOnly
     );
   }
 
-  private getNavDataGeneric(itemId: string, parameters: {[param: string]: string}): Observable<NavMenuRootItemWithParent> {
+  private getNavDataGeneric(itemId: string, parameters: {[param: string]: string}, skillsOnly: boolean):
+    Observable<NavMenuRootItemWithParent> {
+
     return this.http
       .get<RawNavData>(`${appConfig().apiUrl}/items/${itemId}/navigation`, {
         params: parameters
@@ -169,7 +172,7 @@ export class ItemNavigationService {
             hasChildren: data.children !== null && data.children.length > 0,
             attemptId: data.attempt_id,
           },
-          items: data.children === null ? [] : data.children.map(i => createNavMenuItem(i)),
+          items: data.children === null ? [] : data.children.filter(i => !skillsOnly || i.type === 'Skill').map(i => createNavMenuItem(i)),
         }))
       );
   }
