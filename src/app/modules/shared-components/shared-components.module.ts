@@ -49,6 +49,7 @@ import { SectionParagraphComponent } from './components/section-paragrah/section
 import { MessageComponent } from './components/message/message.component';
 import { ProgressLevelComponent } from './components/progress-level/progress-level.component';
 import { FormErrorComponent } from './components/form-error/form-error.component';
+import { UserPipe } from 'src/app/shared/pipes/userDisplay';
 
 @NgModule({
   declarations: [
@@ -73,6 +74,7 @@ import { FormErrorComponent } from './components/form-error/form-error.component
     MessageComponent,
     ProgressLevelComponent,
     FormErrorComponent,
+    UserPipe,
   ],
   imports: [
     CommonModule,
@@ -131,6 +133,7 @@ import { FormErrorComponent } from './components/form-error/form-error.component
     MessageComponent,
     ProgressLevelComponent,
     FormErrorComponent,
+    UserPipe,
   ],
   providers: [
     { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: true } }
