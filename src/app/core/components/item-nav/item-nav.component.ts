@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { ItemNavigationService, NavMenuRootItem } from '../../http-services/item-navigation.service';
 import { CurrentContentService, isItemInfo } from 'src/app/shared/services/current-content.service';
 import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
@@ -7,6 +7,7 @@ import { ItemNavMenuData } from '../../common/item-nav-menu-data';
 import { Ready, Fetching, FetchError, fetchingState, readyState, mapErrorToState, isReady, errorState } from 'src/app/shared/helpers/state';
 import { appDefaultItemRoute, ItemRoute, ItemRouteWithParentAttempt } from 'src/app/shared/helpers/item-route';
 import { ResultActionsService } from 'src/app/shared/http-services/result-actions.service';
+import { Category } from 'src/app/shared/helpers/item-category';
 
 type State = Ready<ItemNavMenuData>|Fetching|FetchError;
 
@@ -17,7 +18,9 @@ type State = Ready<ItemNavMenuData>|Fetching|FetchError;
 })
 export class ItemNavComponent implements OnInit, OnDestroy {
 
-  @Input() type: 'activity'|'skill' = 'activity';
+  @Input() type: Category = 'activity';
+  @Output() typeChange = new EventEmitter<Category>();
+
   state: State = fetchingState();
 
   private subscriptions: Subscription[] = [];
