@@ -72,6 +72,7 @@ export class ItemByIdComponent implements OnDestroy {
             route: state.data.route,
             details: {
               title: state.data.item.string.title,
+              type: state.data.item.type,
               attemptId: state.data.currentResult?.attemptId,
               bestScore: state.data.item.best_score,
               currentScore: state.data.currentResult?.score,
