@@ -17,8 +17,8 @@ interface RawUserProfile {
 export interface UserProfile {
   id: string,
   login: string
-  firstname: string|null,
-  lastname: string|null,
+  firstName: string|null,
+  lastName: string|null,
   isTemp: boolean,
 }
 
@@ -36,8 +36,8 @@ export class CurrentUserHttpService {
         map(raw => ({
           id: raw.group_id,
           login: raw.login,
-          firstname: raw.first_name,
-          lastname: raw.last_name,
+          firstName: raw.first_name,
+          lastName: raw.last_name,
           isTemp: raw.temp_user,
         }))
       );

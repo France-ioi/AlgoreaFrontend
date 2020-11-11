@@ -10,17 +10,17 @@ import { RequestActionsService } from '../../http-services/request-actions.servi
 const MOCK_RESPONSE: PendingRequest[] = [
   {
     at: null,
-    user: { group_id: '11', login: 'MadameSoso', first_name: 'Marie-Sophie', last_name: 'Denis', grade: 3 },
+    user: { groupId: '11', login: 'MadameSoso', firstName: 'Marie-Sophie', lastName: 'Denis', grade: 3 },
     group: { id: '50', name: 'Dojo 50' }
   },
   {
     at: null,
-    user: { group_id: '12', login: 'FredGast', first_name: 'Frederique', last_name: 'Gastard', grade: 2 },
+    user: { groupId: '12', login: 'FredGast', firstName: 'Frederique', lastName: 'Gastard', grade: 2 },
     group: { id: '50', name: 'Dojo 50' }
   },
   {
     at: null,
-    user: { group_id: '10', login: 'Jeandu88', first_name: 'Jean', last_name: 'Dujardin', grade: 3 },
+    user: { groupId: '10', login: 'Jeandu88', firstName: 'Jean', lastName: 'Dujardin', grade: 3 },
     group: { id: '50', name: 'Dojo 50' }
   }
 
