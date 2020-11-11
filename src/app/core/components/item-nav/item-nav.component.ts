@@ -31,6 +31,66 @@ export class ItemNavComponent implements OnInit, OnDestroy {
     private currentContent: CurrentContentService,
   ) { }
 
+  ngOnInit(): void {
+
+    this.subscriptions.push(
+
+      // This first subscription only follow change in the current item id and use switch map to cancel previous requests
+      this.currentContent.currentContent$.pipe(
+
+        // we are only interested in items
+        map(content => (content !== null && isItemInfo(content) ? content.data : null)),
+        distinctUntilChanged((v1, v2) => v1 === null && v2 === null), // only prevent multiple null values
+        switchMap((item):Observable<State> => {
+
+          if (isReady(this.state)) {
+            // CASE: the current content is not an item and the menu has already items displayed
+            if (item === null) {
+              if (this.state.data.selectedElement) return of(readyState(this.state.data.withNoSelection()));
+              return EMPTY; // no change
+            }
+
+            // CASE: the current content is already the selected one
+            if (this.state.data.selectedElement?.id === item.route.id) {
+              if (!item.details) return EMPTY;
+              const newData = this.state.data.withUpdatedDetails(item.route.id, item.details);
+              return concat(of(readyState(newData)), this.loadChildrenIfNeeded(newData));
+            }
+
+            // CASE: the content is among the displayed items at the root of the tree -> select the right one (might load children)
+            if (this.state.data.hasLevel1Element(item.route.id)) {
+              const newData = this.state.data.withSelection(item.route);
+              return of(readyState(newData));
+            }
+
+            // CASE: the content is a child of one item at the root of the tree -> shift the tree and select it (might load children)
+            if (this.state.data.hasLevel2Element(item.route.id)) {
+              const newData = this.state.data.subNavMenuData(item.route);
+              return of(readyState(newData));
+            }
+
+          } else /* not ready state */ if (item === null) {
+            // CASE: the content is not an item and the menu has not already item displayed -> load item root
+            return this.loadDefaultNav();
+          }
+
+          // CASE: the content is an item which is not current display -> load the tree and select the right one
+          return this.loadNewNav(item.route);
+        })
+      ).subscribe({
+        next: newState => this.state = newState,
+        error: e => this.state = errorState(e),
+      }),
+
+    );
+
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(s => s.unsubscribe());
+  }
+
+
   loadDefaultNav(): Observable<State> {
     const route = appDefaultItemRoute();
     return concat(
@@ -89,65 +149,6 @@ export class ItemNavComponent implements OnInit, OnDestroy {
       map(nav => readyState(data.withUpdatedInfo(item.id, nav.parent, nav.items))),
       mapErrorToState()
     );
-  }
-
-  ngOnInit(): void {
-
-    this.subscriptions.push(
-
-      // This first subscription only follow change in the current item id and use switch map to cancel previous requests
-      this.currentContent.currentContent$.pipe(
-
-        // we are only interested in items
-        map(content => (content !== null && isItemInfo(content) ? content.data : null)),
-        distinctUntilChanged((v1, v2) => v1 === null && v2 === null), // only prevent multiple null values
-        switchMap((item):Observable<State> => {
-
-          if (isReady(this.state)) {
-            // CASE: the current content is not an item and the menu has already items displayed
-            if (item === null) {
-              if (this.state.data.selectedElement) return of(readyState(this.state.data.withNoSelection()));
-              return EMPTY; // no change
-            }
-
-            // CASE: the current content is already the selected one
-            if (this.state.data.selectedElement?.id === item.route.id) {
-              if (!item.details) return EMPTY;
-              const newData = this.state.data.withUpdatedDetails(item.route.id, item.details);
-              return concat(of(readyState(newData)), this.loadChildrenIfNeeded(newData));
-            }
-
-            // CASE: the content is among the displayed items at the root of the tree -> select the right one (might load children)
-            if (this.state.data.hasLevel1Element(item.route.id)) {
-              const newData = this.state.data.withSelection(item.route);
-              return of(readyState(newData));
-            }
-
-            // CASE: the content is a child of one item at the root of the tree -> shift the tree and select it (might load children)
-            if (this.state.data.hasLevel2Element(item.route.id)) {
-              const newData = this.state.data.subNavMenuData(item.route);
-              return of(readyState(newData));
-            }
-
-          } else /* not ready state */ if (item === null) {
-            // CASE: the content is not an item and the menu has not already item displayed -> load item root
-            return this.loadDefaultNav();
-          }
-
-          // CASE: the content is an item which is not current display -> load the tree and select the right one
-          return this.loadNewNav(item.route);
-        })
-      ).subscribe({
-        next: newState => this.state = newState,
-        error: e => this.state = errorState(e),
-      }),
-
-    );
-
-  }
-
-  ngOnDestroy(): void {
-    this.subscriptions.forEach(s => s.unsubscribe());
   }
 
 }
