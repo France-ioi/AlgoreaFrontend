@@ -11,7 +11,11 @@ export class SkillActivityTabsComponent {
   @Input() backgroundColor: 'dark' | 'light' = 'dark';
   currentSelection: ItemTypeCategory = 'activity';
 
-  onSelectionChanged(newSelection: ItemTypeCategory): void {
-    this.currentSelection = newSelection;
+  onSelectionChangedByIdx(e: { index: number }): void {
+    this.currentSelection = e.index === 0 ? 'skill' : 'activity';
+  }
+
+  onSelectionChanged(cat: ItemTypeCategory): void {
+    this.currentSelection = cat;
   }
 }
