@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { appConfig } from 'src/app/shared/helpers/config';
+import { ItemType } from 'src/app/shared/helpers/item-type';
 import { ItemPermissionsInfo } from '../helpers/item-permissions';
 
 interface RawItemParent extends ItemPermissionsInfo {
@@ -12,7 +13,7 @@ interface RawItemParent extends ItemPermissionsInfo {
     title: string|null,
   },
   category: 'Undefined'|'Discovery'|'Application'|'Validation'|'Challenge',
-  type: 'Chapter'|'Task'|'Course'|'Skill',
+  type: ItemType,
   result: {
     attempt_id: string,
     latest_activity_at: string,
@@ -29,7 +30,7 @@ export interface ItemParent extends ItemPermissionsInfo {
     title: string|null,
   },
   category: 'Undefined'|'Discovery'|'Application'|'Validation'|'Challenge',
-  type: 'Chapter'|'Task'|'Course'|'Skill',
+  type: ItemType,
   result: {
     attempt_id: string,
     latestActivityAt: Date,

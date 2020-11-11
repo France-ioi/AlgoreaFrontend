@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Category } from 'src/app/shared/helpers/item-category';
+import { ItemTypeCategory } from 'src/app/shared/helpers/item-type';
 
 @Component({
   selector: 'alg-skill-activity-tabs',
@@ -9,9 +9,9 @@ import { Category } from 'src/app/shared/helpers/item-category';
 export class SkillActivityTabsComponent {
 
   @Input() backgroundColor: 'dark' | 'light' = 'dark';
-  currentSelection: Category = 'activity';
+  currentSelection: ItemTypeCategory = 'activity';
 
-  onSelectionChanged(newSelection: Category): void {
+  onSelectionChanged(newSelection: ItemTypeCategory): void {
     this.currentSelection = newSelection;
   }
 }

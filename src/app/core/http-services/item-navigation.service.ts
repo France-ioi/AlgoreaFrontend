@@ -6,6 +6,7 @@ import { bestAttemptFromResults } from 'src/app/shared/helpers/attempts';
 import { canCurrentUserViewItemContent } from 'src/app/modules/item/helpers/item-permissions';
 import { isRouteWithAttempt, ItemRoute } from 'src/app/shared/helpers/item-route';
 import { appConfig } from 'src/app/shared/helpers/config';
+import { isASkill, isSkill, ItemType, ItemTypeCategory } from 'src/app/shared/helpers/item-type';
 
 interface ItemStrings {
   title: string|null,
@@ -68,8 +69,6 @@ interface RawNavData {
     results: RawResult[],
   }[]
 }
-
-export type ItemType = 'Chapter'|'Task'|'Course'|'Skill';
 
 interface Result {
   attemptId: string,
@@ -172,7 +171,7 @@ export class ItemNavigationService {
             hasChildren: data.children !== null && data.children.length > 0,
             attemptId: data.attempt_id,
           },
-          items: data.children === null ? [] : data.children.filter(i => !skillsOnly || i.type === 'Skill').map(i => createNavMenuItem(i)),
+          items: data.children === null ? [] : data.children.filter(i => !skillsOnly || isASkill(i)).map(i => createNavMenuItem(i)),
         }))
       );
   }
@@ -197,9 +196,8 @@ export class ItemNavigationService {
       );
   }
 
-  getRoot(type: 'activity'|'skill'): Observable<NavMenuRootItem> {
-    if (type === 'activity') return this.getRootActivities();
-    else return this.getRootSkills();
+  getRoot(type: ItemTypeCategory): Observable<NavMenuRootItem> {
+    return (isSkill(type)) ? this.getRootSkills() : this.getRootActivities();
   }
 
 }

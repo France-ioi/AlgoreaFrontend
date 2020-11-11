@@ -7,7 +7,7 @@ import { ItemNavMenuData } from '../../common/item-nav-menu-data';
 import { Ready, Fetching, FetchError, fetchingState, readyState, mapErrorToState, isReady, errorState } from 'src/app/shared/helpers/state';
 import { appDefaultItemRoute, ItemRoute, ItemRouteWithParentAttempt } from 'src/app/shared/helpers/item-route';
 import { ResultActionsService } from 'src/app/shared/http-services/result-actions.service';
-import { Category } from 'src/app/shared/helpers/item-category';
+import { isSkill, ItemTypeCategory } from 'src/app/shared/helpers/item-type';
 
 type State = Ready<ItemNavMenuData>|Fetching|FetchError;
 
@@ -18,8 +18,8 @@ type State = Ready<ItemNavMenuData>|Fetching|FetchError;
 })
 export class ItemNavComponent implements OnInit, OnDestroy {
 
-  @Input() type: Category = 'activity';
-  @Output() typeChange = new EventEmitter<Category>();
+  @Input() type: ItemTypeCategory = 'activity';
+  @Output() typeChange = new EventEmitter<ItemTypeCategory>();
 
   state: State = fetchingState();
 
@@ -62,7 +62,7 @@ export class ItemNavComponent implements OnInit, OnDestroy {
     let dataFetcher: Observable<NavMenuRootItem>;
     if (item.path.length >= 1) {
       const parentId = item.path[item.path.length-1];
-      dataFetcher = this.itemNavService.getNavDataFromChildRoute(parentId, item, this.type === 'skill');
+      dataFetcher = this.itemNavService.getNavDataFromChildRoute(parentId, item, isSkill(this.type));
     } else {
       dataFetcher = this.itemNavService.getRoot(this.type);
     }
@@ -85,7 +85,7 @@ export class ItemNavComponent implements OnInit, OnDestroy {
     if (!item.hasChildren || item.attemptId === null) return EMPTY; // if no children, no need to fetch children
 
     // We do not check if children were already known. So we might re-load again the same children, which is intended.
-    return this.itemNavService.getNavData(item.id, item.attemptId, this.type === 'skill').pipe(
+    return this.itemNavService.getNavData(item.id, item.attemptId, isSkill(this.type)).pipe(
       map(nav => readyState(data.withUpdatedInfo(item.id, nav.parent, nav.items))),
       mapErrorToState()
     );
