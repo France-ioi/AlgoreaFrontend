@@ -18,11 +18,6 @@
       </th>
       <th>
         <div class="header-container">
-          Login
-        </div>
-      </th>
-      <th>
-        <div class="header-container">
           Member Since
         </div>
       </th>
@@ -35,10 +30,7 @@
   >
     <tr class="p-selectable-row">
       <td>
-        {{ member.user.firstName }} {{member.user.lastName}}
-      </td>
-      <td>
-        {{ member.user.login }}
+        {{ member.user | user }}
       </td>
       <td>
         {{ member.memberSince | date }}
