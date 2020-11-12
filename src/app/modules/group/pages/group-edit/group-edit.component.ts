@@ -21,6 +21,7 @@ export class GroupEditComponent implements OnDestroy {
   groupForm = this.formBuilder.group({
     // eslint-disable-next-line @typescript-eslint/unbound-method
     name: [ '', [ Validators.required, Validators.minLength(3) ] ],
+    description: [ '', [] ],
   })
 
   state$ = this.groupDataSource.state$;
@@ -41,7 +42,8 @@ export class GroupEditComponent implements OnDestroy {
         .subscribe(state => {
           this.groupId = state.data.id;
           this.groupForm.patchValue({
-            name: state.data.name
+            name: state.data.name,
+            description: state.data.description,
           });
         }),
       this.currentContent.editAction$.pipe(filter(action => action === EditAction.Save))
@@ -74,7 +76,8 @@ export class GroupEditComponent implements OnDestroy {
 
   getGroupChanges(): GroupChanges {
     return {
-      name: this.groupForm.get('name')?.value as string
+      name: this.groupForm.get('name')?.value as string,
+      description: this.groupForm.get('description')?.value as string,
     };
   }
 
