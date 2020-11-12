@@ -29,64 +29,64 @@
           </p-cellEditor>
         </td>
         <td
-          *ngFor="let col of cols; index as idx; let menuName = rowIndex"
+          *ngFor="let col of cols; index as idx"
           [ngClass]="{ main: idx === 1, type: idx === 0 }"
         >
           {{ rowData[col] }}
         </td>
-        <td>
-          <div class="chapter-type-control">
-            <span class="table-icon lock" [matMenuTriggerFor]="menuName">
-              <i class="{{icons[index]}}"></i>
-            </span>
-            <div class="chapter-type">
-              <app-category-dropdown [current]="rowData.type"></app-category-dropdown>
-            </div>
-            <mat-menu #menuName="matMenu" yPosition="above" class="chapter-menu">
-              <div class="content">
-                <span class="content-title">
-                  <span class="content-title-label"><span>Default access</span></span>
-                  <span class="content-title-icon-wrapper">
-                    <span class="content-title-icon">
-                      <i class="fa fa-question"></i>
-                    </span>
-                  </span>
-                </span>
-                <span class="content-item" (click)="menuSelected($event, index, 0)">
-                  <span class="content-item-label"><span>Locked and hidden</span></span>
-                  <span class="content-item-icon">
-                    <i class="fa fa-eye-slash"></i>
-                  </span>
-                </span>
-                <span class="content-item" (click)="menuSelected($event, index, 1)">
-                  <span class="content-item-label"><span>Locked</span></span>
-                  <span class="content-item-icon">
-                    <i class="fa fa-lock"></i>
-                  </span>
-                </span>
-                <span class="content-item" (click)="menuSelected($event, index, 2)">
-                  <span class="content-item-label"><span>Open</span></span>
-                  <span class="content-item-icon">
-                    <i class="fa fa-eye"></i>
-                  </span>
-                </span>
-                <span class="content-item" (click)="menuSelected($event, index, 3)">
-                  <span class="content-item-label"><span>Advanced</span></span>
-                  <span class="content-item-icon">
-                    <i class="fa fa-cog"></i>
-                  </span>
-                </span>
-              </div>
-            </mat-menu>
-          </div>
-        </td>
+<!--        <td>-->
+<!--          <div class="chapter-type-control">-->
+<!--            <span class="table-icon lock" [matMenuTriggerFor]="menuName">-->
+<!--              <i class="{{icons[index]}}"></i>-->
+<!--            </span>-->
+<!--            <div class="chapter-type">-->
+<!--              <app-category-dropdown [current]="rowData.type"></app-category-dropdown>-->
+<!--            </div>-->
+<!--            <mat-menu #menuName="matMenu" yPosition="above" class="chapter-menu">-->
+<!--              <div class="content">-->
+<!--                <span class="content-title">-->
+<!--                  <span class="content-title-label"><span>Default access</span></span>-->
+<!--                  <span class="content-title-icon-wrapper">-->
+<!--                    <span class="content-title-icon">-->
+<!--                      <i class="fa fa-question"></i>-->
+<!--                    </span>-->
+<!--                  </span>-->
+<!--                </span>-->
+<!--                <span class="content-item" (click)="menuSelected($event, index, 0)">-->
+<!--                  <span class="content-item-label"><span>Locked and hidden</span></span>-->
+<!--                  <span class="content-item-icon">-->
+<!--                    <i class="fa fa-eye-slash"></i>-->
+<!--                  </span>-->
+<!--                </span>-->
+<!--                <span class="content-item" (click)="menuSelected($event, index, 1)">-->
+<!--                  <span class="content-item-label"><span>Locked</span></span>-->
+<!--                  <span class="content-item-icon">-->
+<!--                    <i class="fa fa-lock"></i>-->
+<!--                  </span>-->
+<!--                </span>-->
+<!--                <span class="content-item" (click)="menuSelected($event, index, 2)">-->
+<!--                  <span class="content-item-label"><span>Open</span></span>-->
+<!--                  <span class="content-item-icon">-->
+<!--                    <i class="fa fa-eye"></i>-->
+<!--                  </span>-->
+<!--                </span>-->
+<!--                <span class="content-item" (click)="menuSelected($event, index, 3)">-->
+<!--                  <span class="content-item-label"><span>Advanced</span></span>-->
+<!--                  <span class="content-item-icon">-->
+<!--                    <i class="fa fa-cog"></i>-->
+<!--                  </span>-->
+<!--                </span>-->
+<!--              </div>-->
+<!--            </mat-menu>-->
+<!--          </div>-->
+<!--        </td>-->
       </tr>
     </ng-container>
     <ng-container *ngIf="lockState === 1">
       <tr [pReorderableRow]="index" [pSelectableRow]="rowData">
-        <td class="reorder-handle" pReorderableRowHandle="{{ lockState === 1 }}">
-          <i class="fa fa-sort" pReorderableRowHandle="{{ lockState === 1 }}"></i>
-        </td>
+<!--        <td class="reorder-handle" pReorderableRowHandle="{{ lockState === 1 }}">-->
+<!--          <i class="fa fa-sort" pReorderableRowHandle="{{ lockState === 1 }}"></i>-->
+<!--        </td>-->
         <td>
           <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
         </td>
@@ -101,66 +101,66 @@
           </p-cellEditor>
         </td>
         <td
-          *ngFor="let col of cols; index as idx; let menuName = rowIndex"
+          *ngFor="let col of cols; index as idx"
           [ngClass]="{ main: idx === 1, type: idx === 0 }"
         >
           {{ rowData[col] }}
         </td>
-        <td>
-          <div class="chapter-type-control">
-            <span class="table-icon lock" [matMenuTriggerFor]="menuName">
-              <i class="{{icons[index]}}"></i>
-            </span>
-            <div class="chapter-type">
-              <app-category-dropdown [current]="rowData.type"></app-category-dropdown>
-            </div>
-            <mat-menu #menuName="matMenu" yPosition="above" xPosition="before" class="chapter-menu">
-              <div class="content">
-                <span class="content-title">
-                  <span class="content-title-label"><span>Default access</span></span>
-                  <span class="content-title-icon-wrapper">
-                    <span class="content-title-icon">
-                      <i class="fa fa-question"></i>
-                    </span>
-                  </span>
-                </span>
-                <span class="content-item" (click)="menuSelected($event, index, 0)">
-                  <span class="content-item-label"><span>Locked and hidden</span></span>
-                  <span class="content-item-icon">
-                    <i class="fa fa-eye-slash"></i>
-                  </span>
-                </span>
-                <span class="content-item" (click)="menuSelected($event, index, 1)">
-                  <span class="content-item-label"><span>Locked</span></span>
-                  <span class="content-item-icon">
-                    <i class="fa fa-lock"></i>
-                  </span>
-                </span>
-                <span class="content-item" (click)="menuSelected($event, index, 2)">
-                  <span class="content-item-label"><span>Open</span></span>
-                  <span class="content-item-icon">
-                    <i class="fa fa-eye"></i>
-                  </span>
-                </span>
-                <span class="content-item" (click)="menuSelected($event, index, 3)">
-                  <span class="content-item-label"><span>Advanced</span></span>
-                  <span class="content-item-icon">
-                    <i class="fa fa-cog"></i>
-                  </span>
-                </span>
-              </div>
-            </mat-menu>
-          </div>
-        </td>
+<!--        <td>-->
+<!--          <div class="chapter-type-control">-->
+<!--            <span class="table-icon lock" [matMenuTriggerFor]="menuName">-->
+<!--              <i class="{{icons[index]}}"></i>-->
+<!--            </span>-->
+<!--            <div class="chapter-type">-->
+<!--              <app-category-dropdown [current]="rowData.type"></app-category-dropdown>-->
+<!--            </div>-->
+<!--            <mat-menu #menuName="matMenu" yPosition="above" xPosition="before" class="chapter-menu">-->
+<!--              <div class="content">-->
+<!--                <span class="content-title">-->
+<!--                  <span class="content-title-label"><span>Default access</span></span>-->
+<!--                  <span class="content-title-icon-wrapper">-->
+<!--                    <span class="content-title-icon">-->
+<!--                      <i class="fa fa-question"></i>-->
+<!--                    </span>-->
+<!--                  </span>-->
+<!--                </span>-->
+<!--                <span class="content-item" (click)="menuSelected($event, index, 0)">-->
+<!--                  <span class="content-item-label"><span>Locked and hidden</span></span>-->
+<!--                  <span class="content-item-icon">-->
+<!--                    <i class="fa fa-eye-slash"></i>-->
+<!--                  </span>-->
+<!--                </span>-->
+<!--                <span class="content-item" (click)="menuSelected($event, index, 1)">-->
+<!--                  <span class="content-item-label"><span>Locked</span></span>-->
+<!--                  <span class="content-item-icon">-->
+<!--                    <i class="fa fa-lock"></i>-->
+<!--                  </span>-->
+<!--                </span>-->
+<!--                <span class="content-item" (click)="menuSelected($event, index, 2)">-->
+<!--                  <span class="content-item-label"><span>Open</span></span>-->
+<!--                  <span class="content-item-icon">-->
+<!--                    <i class="fa fa-eye"></i>-->
+<!--                  </span>-->
+<!--                </span>-->
+<!--                <span class="content-item" (click)="menuSelected($event, index, 3)">-->
+<!--                  <span class="content-item-label"><span>Advanced</span></span>-->
+<!--                  <span class="content-item-icon">-->
+<!--                    <i class="fa fa-cog"></i>-->
+<!--                  </span>-->
+<!--                </span>-->
+<!--              </div>-->
+<!--            </mat-menu>-->
+<!--          </div>-->
+<!--        </td>-->
       </tr>
     </ng-container>
   </ng-template>
   <ng-template pTemplate="summary">
     <div class="summary-container">
       <span class="lock-drag" [matMenuTriggerFor]="lockMenu">
-        <i *ngIf="lockState === 0" class="fa fa-lock"></i>
-        <i *ngIf="lockState === 1" class="fa fa-lock-open"></i>
-        <i *ngIf="lockState === 2" class="fa fa-book"></i>
+<!--        <i *ngIf="lockState === 0" class="fa fa-lock"></i>-->
+<!--        <i *ngIf="lockState === 1" class="fa fa-lock-open"></i>-->
+<!--        <i *ngIf="lockState === 2" class="fa fa-book"></i>-->
         <mat-menu #lockMenu="matMenu" yPosition="above" class="chapter-menu lock-menu">
           <div class="content">
             <span class="content-title">
@@ -171,24 +171,24 @@
                 </span>
               </span>
             </span>
-            <span class="content-item" (click)="lockMenuSelected($event, 0)">
-              <span class="content-item-icon">
-                <i class="fa fa-lock"></i>
-              </span>
-              <span class="content-item-label"><span>Locked</span></span>
-            </span>
-            <span class="content-item" (click)="lockMenuSelected($event, 1)">
-              <span class="content-item-icon">
-                <i class="fa fa-lock-open"></i>
-              </span>
-              <span class="content-item-label">Unlocked</span>
-            </span>
-            <span class="content-item" (click)="lockMenuSelected($event, 2)">
-              <span class="content-item-icon">
-                <i class="fa fa-book"></i>
-              </span>
-              <span class="content-item-label">Manual</span>
-            </span>
+<!--            <span class="content-item" (click)="lockMenuSelected($event, 0)">-->
+<!--              <span class="content-item-icon">-->
+<!--                <i class="fa fa-lock"></i>-->
+<!--              </span>-->
+<!--              <span class="content-item-label"><span>Locked</span></span>-->
+<!--            </span>-->
+<!--            <span class="content-item" (click)="lockMenuSelected($event, 1)">-->
+<!--              <span class="content-item-icon">-->
+<!--                <i class="fa fa-lock-open"></i>-->
+<!--              </span>-->
+<!--              <span class="content-item-label">Unlocked</span>-->
+<!--            </span>-->
+<!--            <span class="content-item" (click)="lockMenuSelected($event, 2)">-->
+<!--              <span class="content-item-icon">-->
+<!--                <i class="fa fa-book"></i>-->
+<!--              </span>-->
+<!--              <span class="content-item-label">Manual</span>-->
+<!--            </span>-->
           </div>
         </mat-menu>
       </span>

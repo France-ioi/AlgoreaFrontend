@@ -10,7 +10,7 @@ describe('ChapterGridComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ ChapterGridComponent ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
