@@ -10,7 +10,8 @@ export interface Environment {
 
   // the id of the item to be loaded by default on home page (if no specific path is given) and in nav menu (if no other item is visited)
   // this item MUST be on one of all users' root and be implicitely startable
-  defaultItemId: string;
+  defaultActivityId: string;
+  defaultSkillId: string;
 }
 
 type Config = Environment; // config may be someday an extension of the environment

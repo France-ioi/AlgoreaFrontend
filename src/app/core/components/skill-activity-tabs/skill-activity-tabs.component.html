@@ -1,22 +1,17 @@
-<p-tabView class="group-skills" [styleClass]="backgroundColor">
-  <!-- <p-tabPanel>
+<p-tabView class="group-skills" [styleClass]="backgroundColor" (onChange)="onSelectionChangedByIdx($event)">
+  <p-tabPanel [selected]="currentSelection === 'skill'">
     <ng-template pTemplate="header" tabindex="5">
-      <span class="indicator"></span>
+      <span class="indicator" [ngClass]="{ dark: backgroundColor === 'dark'}"></span>
       <i class="fa fa-graduation-cap"></i>
-      <span class="ui-tabview-title">
-        SKILLS
-      </span>
+      <span class="ui-tabview-title">SKILLS</span>
     </ng-template>
-    <alg-item-nav type="skills"></alg-item-nav>
-  </p-tabPanel> -->
-  <p-tabPanel>
+  </p-tabPanel>
+  <p-tabPanel [selected]="currentSelection === 'activity'">
     <ng-template pTemplate="header" tabindex="6">
       <span class="indicator" [ngClass]="{ dark: backgroundColor === 'dark'}"></span>
       <i class="fa fa-hand-paper"></i>
-      <span class="ui-tabview-title">
-        ACTIVITIES
-      </span>
+      <span class="ui-tabview-title">ACTIVITIES</span>
     </ng-template>
-    <alg-item-nav type="activity"></alg-item-nav>
   </p-tabPanel>
 </p-tabView>
+<alg-item-nav [category]="currentSelection" (categoryChange)="onSelectionChanged($event)"></alg-item-nav>

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { appConfig } from 'src/app/shared/helpers/config';
+import { ItemType } from 'src/app/shared/helpers/item-type';
 
 export interface Item {
   id: string,
@@ -16,7 +17,7 @@ export interface Item {
     can_view: 'none'|'info'|'content'|'content_with_descendants'|'solution',
     can_edit: 'none'|'children'|'all'|'all_with_grant',
   },
-  type: 'Chapter'|'Task'|'Course'|'Skill',
+  type: ItemType,
 }
 
 @Injectable({

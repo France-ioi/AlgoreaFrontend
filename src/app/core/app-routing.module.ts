@@ -5,7 +5,7 @@ import { appDefaultItemRoute, itemStringUrl } from '../shared/helpers/item-route
 const routes: Routes = [
   {
     path: '',
-    redirectTo: itemStringUrl(appDefaultItemRoute()),
+    redirectTo: itemStringUrl(appDefaultItemRoute('activity')),
     pathMatch: 'full',
   },
   {

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { ItemRoute } from '../helpers/item-route';
+import { ItemType } from '../helpers/item-type';
 
 export interface ContentBreadcrumb {
   category: string,
@@ -27,6 +28,7 @@ export interface ItemInfo extends ContentInfo {
 
 export interface ItemDetails {
   title: string|null,
+  type: ItemType,
   attemptId?: string,
   bestScore?: number,
   currentScore?: number,

@@ -1,0 +1,20 @@
+
+export type ItemType = 'Chapter'|'Task'|'Course'|'Skill';
+export type ItemTypeCategory = 'activity'|'skill';
+interface ItemWithType { type: ItemType }
+
+/* Helpers in Item-like */
+export function isASkill(item: ItemWithType): boolean {
+  return item.type === 'Skill';
+}
+
+export function typeCategoryOfItem(item: ItemWithType): ItemTypeCategory {
+  return item.type === 'Skill' ? 'skill' : 'activity';
+}
+
+/* Helpers on ItemTypeCategory */
+export function isSkill(cat: ItemTypeCategory): cat is 'skill' {
+  return cat === 'skill';
+}
+
+
