@@ -67,14 +67,16 @@ export class ItemNavComponent implements OnInit, OnChanges, OnDestroy {
 
             // CASE: the content is among the displayed items at the root of the tree -> select the right one (might load children)
             if (prevState.data.hasLevel1Element(itemData.route.id)) {
-              const newData = prevState.data.withSelection(itemData.route);
-              return of(readyState(newData));
+              let newData = prevState.data.withSelection(itemData.route);
+              if (itemData.details) newData = newData.withUpdatedDetails(itemData.route.id, itemData.details);
+              return concat(of(readyState(newData)), this.loadChildrenIfNeeded(newData));
             }
 
             // CASE: the content is a child of one item at the root of the tree -> shift the tree and select it (might load children)
             if (prevState.data.hasLevel2Element(itemData.route.id)) {
-              const newData = prevState.data.subNavMenuData(itemData.route);
-              return of(readyState(newData));
+              let newData = prevState.data.subNavMenuData(itemData.route);
+              if (itemData.details) newData = newData.withUpdatedDetails(itemData.route.id, itemData.details);
+              return concat(of(readyState(newData)), this.loadChildrenIfNeeded(newData));
             }
 
           } else /* not ready state */ if (!itemInfo) {
