@@ -1,6 +1,7 @@
 import { ParamMap } from '@angular/router';
 import { defaultAttemptId } from './attempts';
 import { appConfig } from './config';
+import { isSkill, ItemTypeCategory } from './item-type';
 
 type ItemId = string;
 type AttemptId = string;
@@ -37,9 +38,9 @@ export function itemUrl(item: ItemRoute, page: 'edit'|'details'): RouterCommands
 /*
  * The route to the app default (see config) item
  */
-export function appDefaultItemRoute(): ItemRouteWithParentAttempt {
+export function appDefaultItemRoute(cat: ItemTypeCategory): ItemRouteWithParentAttempt {
   return {
-    id: appConfig().defaultItemId,
+    id: isSkill(cat) ? appConfig().defaultSkillId : appConfig().defaultActivityId,
     path: [],
     parentAttemptId: defaultAttemptId,
   };

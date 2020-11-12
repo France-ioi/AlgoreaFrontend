@@ -1,30 +1,32 @@
-import { Component, OnInit, Input, OnDestroy, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, Output, EventEmitter, OnChanges } from '@angular/core';
 import { ItemNavigationService, NavMenuRootItem } from '../../http-services/item-navigation.service';
-import { CurrentContentService, isItemInfo } from 'src/app/shared/services/current-content.service';
+import { CurrentContentService, isItemInfo, ItemInfo } from 'src/app/shared/services/current-content.service';
 import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
-import { of, Observable, EMPTY, Subscription, concat } from 'rxjs';
+import { of, Observable, EMPTY, Subscription, concat, Subject } from 'rxjs';
 import { ItemNavMenuData } from '../../common/item-nav-menu-data';
 import { Ready, Fetching, FetchError, fetchingState, readyState, mapErrorToState, isReady, errorState } from 'src/app/shared/helpers/state';
 import { appDefaultItemRoute, ItemRoute, ItemRouteWithParentAttempt } from 'src/app/shared/helpers/item-route';
 import { ResultActionsService } from 'src/app/shared/http-services/result-actions.service';
-import { isSkill, ItemTypeCategory } from 'src/app/shared/helpers/item-type';
+import { isSkill, ItemTypeCategory, typeCategoryOfItem } from 'src/app/shared/helpers/item-type';
 
 type State = Ready<ItemNavMenuData>|Fetching|FetchError;
+enum ChangeTrigger { Tab, Content}
 
 @Component({
   selector: 'alg-item-nav',
   templateUrl: './item-nav.component.html',
   styleUrls: [ './item-nav.component.scss' ]
 })
-export class ItemNavComponent implements OnInit, OnDestroy {
+export class ItemNavComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input() category: ItemTypeCategory = 'activity'; // never change the input directly, use `typeChange` to change the type category
-  @Output() typeChange = new EventEmitter<ItemTypeCategory>();
+  @Output() categoryChange = new EventEmitter<ItemTypeCategory>();
 
-  state: State = fetchingState();
+  activityState: State = fetchingState();
+  skillState: State = fetchingState();
 
   private subscriptions: Subscription[] = [];
-  private changes = new Subject<ItemInfo|null>(); // called when the current content is changed or when the tab is changed
+  private changes = new Subject<{ action: ChangeTrigger, item?: ItemInfo }>(); // follow both tab and content changes
 
   constructor(
     private itemNavService: ItemNavigationService,
@@ -38,63 +40,101 @@ export class ItemNavComponent implements OnInit, OnDestroy {
 
       // This first subscription only follow change in the current item id and use switch map to cancel previous requests
       this.currentContent.currentContent$.pipe(
-        map(content => (content !== null && isItemInfo(content) ? content : null)), // we are only interested in items
-        distinctUntilChanged((v1, v2) => v1 === null && v2 === null), // only prevent multiple null values
-      ).subscribe(itemInfo => this.changes.next(itemInfo)),
+        map(content => (content !== null && isItemInfo(content) ? content : undefined)), // we are only interested in items
+        distinctUntilChanged((v1, v2) => v1 === undefined && v2 === undefined), // prevent emitting update when the content is not an item
+      ).subscribe(itemInfo => this.changes.next({ action: ChangeTrigger.Content, item: itemInfo })),
 
       this.changes.pipe(
-        switchMap((item):Observable<State> => {
+        switchMap((change):Observable<State> => {
+          const prevState = isSkill(this.category) ? this.skillState : this.activityState;
+          const itemInfo = change.item;
 
-          if (isReady(this.state)) {
+          if (isReady(prevState)) {
             // CASE: the current content is not an item and the menu has already items displayed
-            if (item === null) {
-              if (this.state.data.selectedElement) return of(readyState(this.state.data.withNoSelection()));
+            if (!itemInfo) {
+              if (prevState.data.selectedElement) return of(readyState(prevState.data.withNoSelection()));
               return EMPTY; // no change
             }
 
+            const itemData = itemInfo.data;
+
             // CASE: the current content is already the selected one
-            if (this.state.data.selectedElement?.id === item.data.route.id) {
-              if (!item.data.details) return EMPTY;
-              const newData = this.state.data.withUpdatedDetails(item.data.route.id, item.data.details);
+            if (prevState.data.selectedElement?.id === itemData.route.id) {
+              if (!itemData.details) return EMPTY;
+              const newData = prevState.data.withUpdatedDetails(itemData.route.id, itemData.details);
               return concat(of(readyState(newData)), this.loadChildrenIfNeeded(newData));
             }
 
             // CASE: the content is among the displayed items at the root of the tree -> select the right one (might load children)
-            if (this.state.data.hasLevel1Element(item.data.route.id)) {
-              const newData = this.state.data.withSelection(item.data.route);
+            if (prevState.data.hasLevel1Element(itemData.route.id)) {
+              const newData = prevState.data.withSelection(itemData.route);
               return of(readyState(newData));
             }
 
             // CASE: the content is a child of one item at the root of the tree -> shift the tree and select it (might load children)
-            if (this.state.data.hasLevel2Element(item.data.route.id)) {
-              const newData = this.state.data.subNavMenuData(item.data.route);
+            if (prevState.data.hasLevel2Element(itemData.route.id)) {
+              const newData = prevState.data.subNavMenuData(itemData.route);
               return of(readyState(newData));
             }
 
-          } else /* not ready state */ if (item === null) {
+          } else /* not ready state */ if (!itemInfo) {
             // CASE: the content is not an item and the menu has not already item displayed -> load item root
             return this.loadDefaultNav();
           }
 
-          // CASE: the content is an item which is not current display -> load the tree and select the right one
-          return this.loadNewNav(item.data.route);
+          // OTHERWISE: the content is an item which is not currently displayed:
+
+          // CASE: The current content type is not known -> wait
+          if (!itemInfo.data.details) return of(fetchingState());
+
+          // CASE: The current content type does not match the current tab
+          if (typeCategoryOfItem(itemInfo.data.details) !== this.category) {
+            switch (change.action) {
+              case ChangeTrigger.Tab:
+                // if it is a user-trigger tab change, keep this tab, load the default item
+                return this.loadDefaultNav();
+              case ChangeTrigger.Content:
+                // if the new current contest does not matches the nav menu shown, switch tab
+                this.triggerCategoryChange();
+                return EMPTY;
+            }
+          }
+
+          // CASE: The current content type matches the current tab
+          return this.loadNewNav(itemInfo.data.route);
         })
       ).subscribe({
-        next: newState => this.state = newState,
-        error: e => this.state = errorState(e),
+        // As an update of `category` triggers a change and as switchMap ensures ongoing requests are cancelled when a new change happens,
+        // the state updated here is on the same category as `prevState` above.
+        next: newState => this.updateCurrentState(newState),
+        error: e => this.updateCurrentState(errorState(e)),
       }),
 
     );
 
   }
 
+  ngOnChanges(): void {
+    const currentContent = this.currentContent.current.value;
+    this.changes.next({ action: ChangeTrigger.Tab, item: isItemInfo(currentContent) ? currentContent : undefined });
+  }
+
   ngOnDestroy(): void {
     this.subscriptions.forEach(s => s.unsubscribe());
   }
 
+  updateCurrentState(state: State): void {
+    if (isSkill(this.category)) this.skillState = state;
+    else this.activityState = state;
+  }
+
+  triggerCategoryChange(): void {
+    if (isSkill(this.category)) this.categoryChange.emit('activity');
+    else this.categoryChange.emit('skill');
+  }
 
   loadDefaultNav(): Observable<State> {
-    const route = appDefaultItemRoute();
+    const route = appDefaultItemRoute(this.category);
     return concat(
       of(fetchingState()),
       this.itemNavService.getRoot(this.category).pipe(

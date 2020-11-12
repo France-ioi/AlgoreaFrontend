@@ -1,4 +1,4 @@
-<ng-container [ngSwitch]="state.tag">
+<ng-container [ngSwitch]="category === 'activity' ? activityState.tag : skillState.tag">
   <div *ngSwitchCase="'fetching'" class="loading">
     <p-progressSpinner [style]="{width: '3.3333rem', height: '3.3333rem'}"></p-progressSpinner>
   </div>
@@ -6,7 +6,7 @@
   <p *ngSwitchCase="'error'" class="error">Unable to load the item list</p>
 
   <ng-container *ngSwitchDefault> <!-- else: 'items' contains data, of type "MenuItems" -->
-    <alg-item-nav-tree [data]="$any(state).data"></alg-item-nav-tree>
+    <alg-item-nav-tree [data]="$any(category === 'activity' ? activityState : skillState).data"></alg-item-nav-tree>
   </ng-container>
 
 </ng-container>
