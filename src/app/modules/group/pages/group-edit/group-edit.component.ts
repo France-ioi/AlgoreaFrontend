@@ -75,9 +75,10 @@ export class GroupEditComponent implements OnDestroy {
   }
 
   getGroupChanges(): GroupChanges {
+    const description = this.groupForm.get('description')?.value as string;
     return {
       name: this.groupForm.get('name')?.value as string,
-      description: this.groupForm.get('description')?.value as string,
+      description: description === '' ? null : description,
     };
   }
 
