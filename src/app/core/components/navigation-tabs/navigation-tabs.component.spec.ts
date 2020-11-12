@@ -32,6 +32,7 @@ describe('NavigationTabsComponent', () => {
         {
           provide: CurrentContentService,
           useValue: {
+            current: new BehaviorSubject(null),
             currentContent$: of(null)
           }
         }
