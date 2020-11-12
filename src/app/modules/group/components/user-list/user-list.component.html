@@ -8,17 +8,20 @@
   *ngIf="state === 'ready'"
   [data]="members"
   [showGear]="false"
+  (sort)="onCustomSort($event)"
 >
   <ng-template #headerTemplate let-columns>
     <tr>
-      <th>
+      <th pSortableColumn="user.login">
         <div class="header-container">
           Name
+          <p-sortIcon field="user.login"></p-sortIcon>
         </div>
       </th>
-      <th>
+      <th pSortableColumn="member_since">
         <div class="header-container">
           Member Since
+          <p-sortIcon field="member_since"></p-sortIcon>
         </div>
       </th>
     </tr>
