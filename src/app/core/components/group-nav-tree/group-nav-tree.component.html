@@ -15,6 +15,9 @@
       </span>
       <span class="node-label">
         <span class="node-label-title" (click)="onSelect(node)">{{ node.label }}</span>
+        <span *ngIf="node.data.canWatchMember" class="right-icon" pTooltip="Watch content as group" tooltipPosition="top">
+          <i class="fa fa-eye"></i>
+        </span>
       </span>
     </span>
   </span>

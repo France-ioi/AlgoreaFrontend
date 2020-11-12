@@ -12,7 +12,6 @@ import { DropdownModule } from 'primeng/dropdown';
 import { DialogModule } from 'primeng/dialog';
 import { TreeModule } from 'primeng/tree';
 import { TieredMenuModule } from 'primeng/tieredmenu';
-import { TooltipModule } from 'primeng/tooltip';
 import { SliderModule } from 'primeng/slider';
 import { ListboxModule } from 'primeng/listbox';
 import { MessagesModule } from 'primeng/messages';
@@ -89,7 +88,6 @@ import { UserPipe } from 'src/app/shared/pipes/userDisplay';
     DialogModule,
     TreeModule,
     TieredMenuModule,
-    TooltipModule,
     SliderModule,
     ListboxModule,
     MessagesModule,
