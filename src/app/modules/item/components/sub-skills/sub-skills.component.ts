@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { bestAttemptFromResults } from 'src/app/shared/helpers/attempts';
 import { itemDetailsUrl } from 'src/app/shared/helpers/item-route';
+import { isASkill } from 'src/app/shared/helpers/item-type';
 import { canCurrentUserViewItemContent } from '../../helpers/item-permissions';
 import { GetItemChildrenService, ItemChild } from '../../http-services/get-item-children.service';
 import { ItemData } from '../../services/item-datasource.service';
@@ -57,7 +58,7 @@ export class SubSkillsComponent implements OnChanges, OnDestroy {
         .get(this.itemData.item.id, this.itemData.currentResult.attemptId)
         .subscribe(
           children => {
-            this.children = children.map(child => {
+            this.children = children.filter(child => isASkill(child)).map(child => {
               const res = bestAttemptFromResults(child.results);
               return {
                 ...child,
