@@ -10,7 +10,7 @@ describe('DatePickerComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ DatePickerComponent ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
