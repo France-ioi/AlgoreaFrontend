@@ -50,7 +50,6 @@ import { MessageComponent } from './components/message/message.component';
 import { ProgressLevelComponent } from './components/progress-level/progress-level.component';
 import { FormErrorComponent } from './components/form-error/form-error.component';
 import { UserPipe } from 'src/app/shared/pipes/userDisplay';
-import { ChapterGridComponent } from './components/chapter-grid/chapter-grid.component';
 
 @NgModule({
   declarations: [
@@ -76,7 +75,6 @@ import { ChapterGridComponent } from './components/chapter-grid/chapter-grid.com
     ProgressLevelComponent,
     FormErrorComponent,
     UserPipe,
-    ChapterGridComponent,
   ],
   imports: [
     CommonModule,
@@ -136,7 +134,6 @@ import { ChapterGridComponent } from './components/chapter-grid/chapter-grid.com
     ProgressLevelComponent,
     FormErrorComponent,
     UserPipe,
-    ChapterGridComponent,
   ],
   providers: [
     { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: true } }
