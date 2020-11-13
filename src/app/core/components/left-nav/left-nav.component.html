@@ -1,8 +1,8 @@
 <alg-top-nav
   [collapsed]="collapsed"
-  [currentUser]="currentUser"
+  [session]="session"
   (collapse)="onCollapse($event)"
   (search)="onSearchEvent()"
   (searchClose)="onSearchCloseEvent()"
 ></alg-top-nav>
-<alg-navigation-tabs *ngIf="!searchView" [currentUser]="currentUser"></alg-navigation-tabs>
+<alg-navigation-tabs *ngIf="!searchView" [session]="session"></alg-navigation-tabs>

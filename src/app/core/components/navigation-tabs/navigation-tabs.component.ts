@@ -5,7 +5,7 @@ import { ResizedEvent } from 'angular-resize-event';
 import { ContentInfo, CurrentContentService, GroupInfo, isGroupInfo } from 'src/app/shared/services/current-content.service';
 import { filter } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
-import { UserProfile } from 'src/app/shared/http-services/current-user.service';
+import { UserSession } from 'src/app/shared/services/user-session.service';
 import { AuthService } from 'src/app/shared/auth/auth.service';
 
 @Component({
@@ -15,7 +15,7 @@ import { AuthService } from 'src/app/shared/auth/auth.service';
 })
 export class NavigationTabsComponent implements OnDestroy {
 
-  @Input() currentUser?: UserProfile;
+  @Input() session?: UserSession;
 
   @ViewChild('scrollPanel') scrollPanel?: PerfectScrollbarComponent;
   @ViewChild('groupPanel') groupPanel?: HTMLDivElement;

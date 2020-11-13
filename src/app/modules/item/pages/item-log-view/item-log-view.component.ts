@@ -3,7 +3,7 @@ import { ItemDataSource } from '../../services/item-datasource.service';
 import { RecentActivity, RecentActivityService } from 'src/app/shared/http-services/recent-activity.service';
 import { catchError, switchMap } from 'rxjs/operators';
 import { combineLatest, concat, of, Subscription } from 'rxjs';
-import { CurrentUserService } from 'src/app/shared/services/current-user.service';
+import { UserSessionService } from 'src/app/shared/services/user-session.service';
 
 @Component({
   selector: 'alg-item-log-view',
@@ -16,7 +16,7 @@ export class ItemLogViewComponent implements OnInit, OnDestroy {
   logData: RecentActivity[]|'loading'|'error' = 'loading';
 
   constructor(
-    private currentUserService: CurrentUserService,
+    private sessionService: UserSessionService,
     private itemDataSource: ItemDataSource,
     private recentActivityService: RecentActivityService
   ) {}
@@ -24,7 +24,7 @@ export class ItemLogViewComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     // Get user id and item id, and then make the request
     this.subscription = combineLatest([
-      this.currentUserService.currentUser$,
+      this.sessionService.currentUser$,
       this.itemDataSource.item$
     ]).pipe(
       switchMap(([ user, item ]) => {

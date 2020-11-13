@@ -1,7 +1,7 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
-import { CurrentUserService } from 'src/app/shared/services/current-user.service';
+import { UserSessionService } from 'src/app/shared/services/user-session.service';
 import { mockItemData } from '../../mocks/item-data';
 import { ItemDataSource } from '../../services/item-datasource.service';
 
@@ -18,7 +18,7 @@ describe('ItemLogViewComponent', () => {
         HttpClientTestingModule
       ],
       providers: [
-        { provide: CurrentUserService, useValue: {
+        { provide: UserSessionService, useValue: {
           currentUser$: of(undefined)
         } },
         { provide: ItemDataSource, useValue: {

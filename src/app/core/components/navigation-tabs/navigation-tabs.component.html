@@ -1,11 +1,11 @@
 
-<div class="group-container" *ngIf="currentUser ; else userLoading">
-  <div class="group-header" *ngIf="!currentUser.isTemp; else tempUser">
+<div class="group-container" *ngIf="session ; else userLoading">
+  <div class="group-header" *ngIf="!session.user.isTemp; else tempUser">
     <div class="group-avatar">
       <img src="assets/images/Male.svg" style="width: 7rem; height: auto;" />
     </div>
     <span class="group-title">
-      {{ currentUser | user }}
+      {{ session.user | user }}
     </span>
     <span class="group-toggle" (click)="toggleGroup()">
       <i class="fa fa-users"></i>
@@ -16,8 +16,8 @@
     <div *ngIf="groupShow" (resized)="onResized($event)" #groupPanel tabindex="4" (focusOnGroupNav)="focusParent()">
       <alg-group-nav></alg-group-nav>
     </div>
-    <alg-skill-activity-tabs [backgroundColor]="!currentUser?.isTemp ? 'light' : 'dark'"></alg-skill-activity-tabs>
-    <alg-skill-activity-tabs [backgroundColor]="!currentUser?.isTemp ? 'light' : 'dark'" *ngIf="stickyShow" class="overlay-skills"></alg-skill-activity-tabs>
+    <alg-skill-activity-tabs [backgroundColor]="!session.user.isTemp ? 'light' : 'dark'"></alg-skill-activity-tabs>
+    <alg-skill-activity-tabs [backgroundColor]="!session.user.isTemp ? 'light' : 'dark'" *ngIf="stickyShow" class="overlay-skills"></alg-skill-activity-tabs>
   </perfect-scrollbar>
 </div>
 <ng-template #userLoading>
