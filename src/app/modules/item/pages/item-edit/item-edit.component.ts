@@ -75,8 +75,8 @@ export class ItemEditComponent implements OnDestroy {
 
   getItemStringChanges(): ItemStringChanges {
     return {
-      title: (this.itemForm.get('title')?.value as string).trim(),
-      description: (this.itemForm.get('description')?.value as string).trim() || null
+      title: (this.itemForm.controls.title.value as string).trim(),
+      description: (this.itemForm.controls.description.value as string).trim() || null
     };
   }
 
