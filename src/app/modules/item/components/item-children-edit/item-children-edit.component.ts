@@ -1,29 +1,22 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { ItemChild } from '../../http-services/get-item-children.service';
-
-interface ChapterData {
-  order: number,
-  chapter: ItemChild
-}
+import { Component, Input, OnChanges } from '@angular/core';
+import { ItemChild } from './item-children';
 
 @Component({
   selector: 'alg-item-children-edit',
   templateUrl: './item-children-edit.component.html',
   styleUrls: [ './item-children-edit.component.scss' ]
 })
-export class ItemChildrenEditComponent implements OnInit {
+export class ItemChildrenEditComponent implements OnChanges {
 
-  @Input() data: ItemChild[] = [];
-  @Input() scoreWeight?: number;
+  @Input() data: ItemChild[] = [
+    { id: '100', title: 'First item', order: 1 },
+    { id: '50', title: 'Second item', order: 2 },
+  ];
 
-  chapterData: ChapterData[] = [];
-  lockState = 1;
+  constructor() {}
 
-  constructor() {
-  }
-
-  ngOnInit(): void {
-    this.chapterData = this.data.map((elm, idx) => ({ order: idx, chapter: elm }));
+  ngOnChanges(): void {
+    this.data = this.data.sort((a, b) => a.order - b.order);
   }
 
 }

@@ -1,4 +1,4 @@
-<p-table [value]="data" [reorderableColumns]="lockState === 1">
+<p-table [value]="data" [reorderableColumns]="true">
   <ng-template pTemplate="body" let-rowData let-index="rowIndex">
     <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="index">
 <!--      <td *ngIf="lockState === 0">-->
@@ -17,35 +17,24 @@
 <!--          </ng-template>-->
 <!--        </p-cellEditor>-->
 <!--      </td>-->
-      <td>
+      <!-- <td>
         <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
-      </td>
-      <td class="type">
-        {{rowData.type}}
-      </td>
-      <td class="main">
-        {{rowData.string.title}}
+      </td> -->
+      <!-- <td class="type">text in blue...</td> -->
+      <td class="main">{{ rowData.title }}
       </td>
     </tr>
   </ng-template>
   <ng-template pTemplate="summary">
     <div class="summary-container">
-      <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+      <!-- <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
       <span class="select-all">Select all</span>
       <div class="export-tools">
-        <span class="export">
-          <span>Duplicate</span>
-          <i class="fa fa-paste"></i>
-        </span>
         <span class="remove">
-          <span>Remove</span>
+          <span>Remove from this chapter</span>
           <i class="fa fa-trash-alt"></i>
         </span>
-        <span class="print">
-          <span>Move</span>
-          <i class="fa fa-folder-open"></i>
-        </span>
-      </div>
+      </div> -->
     </div>
   </ng-template>
 </p-table>
