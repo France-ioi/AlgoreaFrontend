@@ -20,7 +20,7 @@ export class ItemEditComponent implements OnDestroy {
   itemId? : string;
   itemForm = this.formBuilder.group({
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    title: [ '', [ Validators.required, Validators.minLength(3), ] ],
+    title: [ '', [ Validators.required, Validators.minLength(3), Validators.maxLength(200) ] ],
     description: '',
   });
   itemLoadingState$ = this.itemDataSource.state$;
