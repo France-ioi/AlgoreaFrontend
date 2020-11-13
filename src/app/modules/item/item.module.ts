@@ -15,7 +15,7 @@ import { ItemLogViewComponent } from './pages/item-log-view/item-log-view.compon
 import { SubSkillsComponent } from './components/sub-skills/sub-skills.component';
 import { ParentSkillsComponent } from './components/parent-skills/parent-skills.component';
 import { ItemEditContentComponent } from './pages/item-edit-content/item-edit-content.component';
-import { ChapterGridComponent } from './components/chapter-grid/chapter-grid.component';
+import { ItemChildrenEditComponent } from './components/item-children-edit/item-children-edit.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +31,7 @@ import { ChapterGridComponent } from './components/chapter-grid/chapter-grid.com
     SubSkillsComponent,
     ParentSkillsComponent,
     ItemEditContentComponent,
-    ChapterGridComponent,
+    ItemChildrenEditComponent,
   ],
   imports: [
     CommonModule,

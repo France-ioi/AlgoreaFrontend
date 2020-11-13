@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { ItemChild } from '../../../item/http-services/get-item-children.service';
+import { ItemChild } from '../../http-services/get-item-children.service';
 
 interface ChapterData {
   order: number,
@@ -7,11 +7,11 @@ interface ChapterData {
 }
 
 @Component({
-  selector: 'alg-chapter-grid',
-  templateUrl: './chapter-grid.component.html',
-  styleUrls: [ './chapter-grid.component.scss' ]
+  selector: 'alg-item-children-edit',
+  templateUrl: './item-children-edit.component.html',
+  styleUrls: [ './item-children-edit.component.scss' ]
 })
-export class ChapterGridComponent implements OnInit {
+export class ItemChildrenEditComponent implements OnInit {
 
   @Input() data: ItemChild[] = [];
   @Input() scoreWeight?: number;
