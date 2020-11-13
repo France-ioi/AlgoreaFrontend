@@ -42,7 +42,7 @@ export class ItemEditComponent implements OnDestroy {
           this.itemId = item.id;
           this.itemForm.patchValue({
             title: item.string.title,
-            description: item.string.description,
+            description: item.string.description || '',
           });
         }),
       this.currentContent.editAction$.pipe(filter(action => action === EditAction.Save))
