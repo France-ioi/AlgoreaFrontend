@@ -13,7 +13,8 @@ import { GetGroupMembersService, Member } from '../../http-services/get-group-me
 export class UserListComponent implements OnChanges {
 
   @Input() group? : Group;
-  state: 'loading' | 'error' | 'empty' | 'ready' = 'loading';
+  state: 'loading' | 'error' | 'ready' = 'loading';
+
   currentSort: string[] = [];
 
   members: Member[] = [];
@@ -34,9 +35,7 @@ export class UserListComponent implements OnChanges {
     ).subscribe(
       members => {
         this.members = members;
-
-        if (this.members.length === 0) this.state = 'empty';
-        else this.state = 'ready';
+        this.state = 'ready';
       },
       _err => {
         this.state = 'error';
