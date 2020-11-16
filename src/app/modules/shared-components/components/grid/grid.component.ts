@@ -67,6 +67,7 @@ export class GridComponent implements OnInit, OnChanges {
   @Input() dataKey?: string;
   @Input() frozenWidth?: string;
   @Input() showGear = true;
+  @Input() loading = false;
 
   @Output() expandWholeWidth = new EventEmitter<boolean>();
   @Output() sort = new EventEmitter();
