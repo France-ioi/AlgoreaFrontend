@@ -1,6 +1,7 @@
 <alg-section icon="fa fa-book" label="Children">
   <div class="section-chapter-wrapper">
-    <p-table [value]="data" [reorderableColumns]="true">
+
+    <p-table *ngIf="state === 'ready'" [value]="data" [reorderableColumns]="true">
       <ng-template pTemplate="body" let-rowData let-index="rowIndex">
         <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="index">
     <!--      <td *ngIf="lockState === 0">-->
@@ -41,8 +42,11 @@
       </ng-template>
     </p-table>
   </div>
+
+  <span *ngIf="state === 'empty'">No children for this chapter.</span>
+
+  <p-progressSpinner *ngIf="state === 'loading'"></p-progressSpinner>
+
+  <div *ngIf="state === 'error'">Error</div>
+
 </alg-section>
-
-<p-progressSpinner *ngIf="state === 'loading'"></p-progressSpinner>
-
-<div *ngIf="state === 'error'">Error</div>
