@@ -82,6 +82,7 @@ export class GridComponent implements OnInit, OnChanges {
   @ContentChild('rowExpansionTemplate') rowExpansionTemplate?: TemplateRef<any>;
   @ContentChild('frozenHeaderTemplate') frozenHeaderTemplate?: TemplateRef<any>;
   @ContentChild('frozenBodyTemplate') frozenBodyTemplate?: TemplateRef<any>;
+  @ContentChild('emptymessageTemplate') emptymessageTemplate?: TemplateRef<any>;
 
   showColumnSelection = false;
 
