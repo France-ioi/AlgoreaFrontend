@@ -1,5 +1,8 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { ItemChild } from './item-children';
+import { ItemData } from '../../services/item-datasource.service';
+import { GetItemChildrenService } from '../../http-services/get-item-children.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'alg-item-children-edit',
@@ -7,16 +10,42 @@ import { ItemChild } from './item-children';
   styleUrls: [ './item-children-edit.component.scss' ]
 })
 export class ItemChildrenEditComponent implements OnChanges {
+  @Input() itemData?: ItemData;
 
-  @Input() data: ItemChild[] = [
-    { id: '100', title: 'First item', order: 1 },
-    { id: '50', title: 'Second item', order: 2 },
-  ];
+  state: 'loading' | 'error' | 'empty' | 'ready' = 'ready';
+  data: ItemChild[] = [];
 
-  constructor() {}
+  private subscription?: Subscription;
+
+  constructor(
+    private getItemChildrenService: GetItemChildrenService,
+  ) {}
 
   ngOnChanges(): void {
-    this.data = this.data.sort((a, b) => a.order - b.order);
+    this.reloadData();
+  }
+
+  reloadData(): void {
+    if (this.itemData?.currentResult) {
+      this.state = 'loading';
+      this.subscription?.unsubscribe();
+      this.subscription = this.getItemChildrenService
+        .get(this.itemData.item.id, this.itemData.currentResult.attemptId)
+        .subscribe(children => {
+          this.data = children.map((child, idx) => ({
+            id: child.id,
+            title: child.string.title,
+            order: idx
+          }));
+          this.state = this.data.length ? 'ready' : 'empty';
+        },
+        _err => {
+          this.state = 'error';
+        }
+        );
+    } else {
+      this.state = 'error';
+    }
   }
 
 }
