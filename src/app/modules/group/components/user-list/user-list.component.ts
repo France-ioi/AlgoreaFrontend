@@ -1,6 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { SortEvent } from 'primeng/api';
-import { BehaviorSubject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { Group } from '../../http-services/get-group-by-id.service';
 import { GetGroupMembersService, Member } from '../../http-services/get-group-members.service';
@@ -10,7 +10,7 @@ import { GetGroupMembersService, Member } from '../../http-services/get-group-me
   templateUrl: './user-list.component.html',
   styleUrls: [ './user-list.component.scss' ]
 })
-export class UserListComponent implements OnInit {
+export class UserListComponent implements OnChanges {
 
   @Input() group? : Group;
   state: 'loading' | 'error' | 'empty' | 'ready' = 'loading';
@@ -18,18 +18,15 @@ export class UserListComponent implements OnInit {
 
   members: Member[] = [];
 
-  private dataFetching = new BehaviorSubject<'Reload'|'Sort'>('Reload');
+  private dataFetching = new Subject<string[]>();
 
-  constructor(private getGroupMembersService: GetGroupMembersService) { }
-
-  ngOnInit(): void {
+  constructor(private getGroupMembersService: GetGroupMembersService) {
     this.dataFetching.pipe(
-      switchMap(mode => {
+      switchMap(sort => {
         if (this.group) {
-          if (mode === 'Reload')
-            this.state = 'loading';
+          if (sort === []) this.state = 'loading';
 
-          return this.getGroupMembersService.getGroupMembers(this.group.id, this.currentSort);
+          return this.getGroupMembersService.getGroupMembers(this.group.id, sort);
         } else {
           throw new Error('group is null');
         }
@@ -46,12 +43,16 @@ export class UserListComponent implements OnInit {
       });
   }
 
+  ngOnChanges(_changes: SimpleChanges): void {
+    this.dataFetching.next([]);
+  }
+
   onCustomSort(event: SortEvent): void {
     const sortMeta = event.multiSortMeta?.map(meta => (meta.order === -1 ? `-${meta.field}` : meta.field));
 
     if (sortMeta && JSON.stringify(sortMeta) !== JSON.stringify(this.currentSort)) {
       this.currentSort = sortMeta;
-      this.dataFetching.next('Sort');
+      this.dataFetching.next(sortMeta);
     }
   }
 }
