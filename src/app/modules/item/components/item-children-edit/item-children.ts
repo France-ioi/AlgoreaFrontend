@@ -1,6 +1,6 @@
 
 export interface ItemChild {
   id: string,
-  title: string,
+  title: string | null,
   order: number,
 }
