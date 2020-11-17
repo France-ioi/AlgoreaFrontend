@@ -37,13 +37,6 @@ export class ItemNavComponent implements OnInit, OnChanges, OnDestroy {
   ngOnInit(): void {
 
     this.subscriptions.push(
-
-      // This first subscription only follow change in the current item id and use switch map to cancel previous requests
-      this.currentContent.currentContent$.pipe(
-        map(content => (content !== null && isItemInfo(content) ? content : undefined)), // we are only interested in items
-        distinctUntilChanged((v1, v2) => v1 === undefined && v2 === undefined), // prevent emitting update when the content is not an item
-      ).subscribe(itemInfo => this.changes.next({ action: ChangeTrigger.Content, item: itemInfo })),
-
       this.changes.pipe(
         switchMap((change):Observable<State> => {
           const prevState = isSkill(this.category) ? this.skillState : this.activityState;
@@ -110,10 +103,19 @@ export class ItemNavComponent implements OnInit, OnChanges, OnDestroy {
         // the state updated here is on the same category as `prevState` above.
         next: newState => this.updateCurrentState(newState),
         error: e => this.updateCurrentState(errorState(e)),
-      }),
-
+      })
     );
 
+    // emit an initial change as if the current is not an item, nothing will be emitted by the current content observer
+    this.changes.next({ action: ChangeTrigger.Content, item: undefined });
+
+    this.subscriptions.push(
+      // This first subscription only follow change in the current item id and use switch map to cancel previous requests
+      this.currentContent.currentContent$.pipe(
+        map(content => (content !== null && isItemInfo(content) ? content : undefined)), // we are only interested in items
+        distinctUntilChanged((v1, v2) => v1 === undefined && v2 === undefined), // prevent emitting update when the content is not an item
+      ).subscribe(itemInfo => this.changes.next({ action: ChangeTrigger.Content, item: itemInfo })),
+    );
   }
 
   ngOnChanges(): void {
