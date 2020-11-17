@@ -1,10 +1,12 @@
+<p-progressSpinner *ngIf="state === 'loading' && members.length == 0"></p-progressSpinner>
+
 <p *ngIf="state === 'error'">Error while loading the group members</p>
 
 <alg-grid
   [data]="members"
   [showGear]="false"
   (sort)="onCustomSort($event)"
-  [loading]="state === 'loading'"
+  [loading]="state === 'loading' && members.length > 0"
 >
   <ng-template #headerTemplate let-columns>
     <tr>
