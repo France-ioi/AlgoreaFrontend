@@ -74,15 +74,15 @@ export class ItemEditComponent implements OnDestroy {
   }
 
   getItemStringChanges(): ItemStringChanges {
-    const title = this.itemForm.get('title')?.value as string;
-    const description = this.itemForm.get('description')?.value as string;
+    const title = this.itemForm.get('title');
+    const description = this.itemForm.get('description');
 
     if (title === null || description === null) // Something is wrong with the form
       return {};
 
     return {
-      title: title.trim(),
-      description: description.trim() || null
+      title: (title.value as string).trim(),
+      description: (description.value as string).trim() || null
     };
   }
 
