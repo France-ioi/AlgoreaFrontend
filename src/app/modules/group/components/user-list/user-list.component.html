@@ -5,20 +5,15 @@
 <p *ngIf="state === 'empty'">This group is empty, check below, the different ways to add users or sub-groups.</p>
 
 <alg-grid
-*ngIf="state === 'ready'"
-[data]="members"
-[showGear]="false"
+  *ngIf="state === 'ready'"
+  [data]="members"
+  [showGear]="false"
 >
   <ng-template #headerTemplate let-columns>
     <tr>
       <th>
         <div class="header-container">
           Name
-        </div>
-      </th>
-      <th>
-        <div class="header-container">
-          Login
         </div>
       </th>
       <th>
@@ -35,10 +30,7 @@
   >
     <tr class="p-selectable-row">
       <td>
-        {{ member.user.firstName }} {{member.user.lastName}}
-      </td>
-      <td>
-        {{ member.user.login }}
+        {{ member.user | user }}
       </td>
       <td>
         {{ member.memberSince | date }}

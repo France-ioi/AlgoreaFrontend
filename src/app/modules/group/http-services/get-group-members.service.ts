@@ -8,8 +8,8 @@ interface RawMember {
   id: string,
   member_since: string|null;
   action: 'invitation_accepted'|'join_request_accepted'|'joined_by_code'|'added_directly';
-  user: {
-    login: string|null,
+  user: null|{
+    login: string,
     first_name: string|null,
     last_name: string|null,
     grade: number|null,
@@ -21,8 +21,8 @@ export interface Member {
   id: string,
   memberSince: Date|null;
   action: 'invitation_accepted'|'join_request_accepted'|'joined_by_code'|'added_directly';
-  user: {
-    login: string|null,
+  user: null|{
+    login: string,
     firstName: string|null,
     lastName: string|null,
     grade: number|null,
@@ -47,11 +47,11 @@ export class GetGroupMembersService {
     return this.http
       .get<RawMember[]>(`${appConfig().apiUrl}/groups/${groupId}/members`, { params: params })
       .pipe(
-        map(rawMembers => rawMembers.map(m => ({
+        map(rawMembers => rawMembers.filter(m => m.user).map(m => ({
           id: m.id,
-          memberSince: m.member_since === null? null : new Date(m.member_since),
+          memberSince: m.member_since === null ? null : new Date(m.member_since),
           action: m.action,
-          user: {
+          user: m.user === null ? null :{
             login: m.user.login,
             firstName: m.user.first_name,
             lastName: m.user.last_name,
