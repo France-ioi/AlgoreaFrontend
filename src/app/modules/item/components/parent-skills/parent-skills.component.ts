@@ -1,6 +1,7 @@
 import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { itemDetailsUrl } from 'src/app/shared/helpers/item-route';
 import { canCurrentUserViewItemContent } from '../../helpers/item-permissions';
 import { GetItemParentsService, ItemParent } from '../../http-services/get-item-parents.service';
@@ -18,7 +19,7 @@ interface ParentSkillAdditions {
 export class ParentSkillsComponent implements OnChanges, OnDestroy {
   @Input() itemData?: ItemData;
 
-  state: 'loading' | 'error' | 'empty' | 'ready' = 'loading';
+  state: 'loading' | 'error' | 'ready' = 'loading';
   parents: (ItemParent&ParentSkillAdditions)[] = [];
 
   private subscription?: Subscription;
@@ -46,22 +47,17 @@ export class ParentSkillsComponent implements OnChanges, OnDestroy {
     if (this.itemData?.currentResult) {
       this.state = 'loading';
       this.subscription?.unsubscribe();
-      this.subscription = this.getItemParentsService
-        .get(this.itemData.item.id, this.itemData.currentResult.attemptId)
-        .subscribe(
-          parents => {
-            this.parents = parents.map(parent => ({
-              ...parent,
-              isLocked: !canCurrentUserViewItemContent(parent),
-            }));
-
-            if (this.parents.length === 0) this.state = 'empty';
-            else this.state = 'ready';
-          },
-          _err => {
-            this.state = 'error';
-          }
-        );
+      this.subscription = this.getItemParentsService.get(this.itemData.item.id, this.itemData.currentResult.attemptId).pipe(
+        map(parents => parents.map(parent => ({ ...parent, isLocked: !canCurrentUserViewItemContent(parent) })))
+      ).subscribe(
+        parents => {
+          this.parents = parents;
+          this.state = 'ready';
+        },
+        _err => {
+          this.state = 'error';
+        }
+      );
     } else {
       this.state = 'error';
     }
