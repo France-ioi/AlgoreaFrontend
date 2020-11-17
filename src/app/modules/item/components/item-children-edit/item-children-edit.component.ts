@@ -13,7 +13,7 @@ import { map } from 'rxjs/operators';
 export class ItemChildrenEditComponent implements OnChanges {
   @Input() itemData?: ItemData;
 
-  state: 'loading' | 'error' | 'empty' | 'ready' = 'ready';
+  state: 'loading' | 'error' | 'ready' = 'ready';
   data: ItemChild[] = [];
 
   private subscription?: Subscription;
@@ -40,7 +40,7 @@ export class ItemChildrenEditComponent implements OnChanges {
           })))
         ).subscribe(children => {
           this.data = children;
-          this.state = this.data.length ? 'ready' : 'empty';
+          this.state = 'ready';
         },
         _err => {
           this.state = 'error';
