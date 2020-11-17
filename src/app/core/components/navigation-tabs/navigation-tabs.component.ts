@@ -5,7 +5,7 @@ import { ResizedEvent } from 'angular-resize-event';
 import { ContentInfo, CurrentContentService, GroupInfo, isGroupInfo } from 'src/app/shared/services/current-content.service';
 import { filter } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
-import { UserSession } from 'src/app/shared/services/user-session.service';
+import { UserSession, UserSessionService } from 'src/app/shared/services/user-session.service';
 import { AuthService } from 'src/app/shared/auth/auth.service';
 
 @Component({
@@ -27,6 +27,7 @@ export class NavigationTabsComponent implements OnDestroy {
 
   constructor(
     private currentContentService: CurrentContentService,
+    private userSessionService: UserSessionService,
     private authService: AuthService,
     private ngZone: NgZone,
   ) {
@@ -83,6 +84,10 @@ export class NavigationTabsComponent implements OnDestroy {
 
   onScrollEvent(e: {srcElement: HTMLElement}): void { /* guessed type, something cleaner would be nice */
     this.updateStatus(e.srcElement);
+  }
+
+  onStopWatchPressed(): void {
+    this.userSessionService.stopGroupWatching();
   }
 
   login(): void {

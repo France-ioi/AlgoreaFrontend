@@ -2,10 +2,14 @@
 <div class="group-container" *ngIf="session ; else userLoading">
   <div class="group-header" *ngIf="!session.user.isTemp; else tempUser">
     <div class="group-avatar">
-      <img src="assets/images/Male.svg" style="width: 7rem; height: auto;" />
+      <img *ngIf="!session.watchedGroup" src="assets/images/Male.svg" style="width: 7rem; height: auto;" />
+      <img *ngIf="session.watchedGroup" src="assets/images/Group - Managed.svg" style="width: 7rem; height: auto;" />
     </div>
-    <span class="group-title">
+    <span class="group-title" *ngIf="!session.watchedGroup">
       {{ session.user | user }}
+    </span>
+    <span class="group-title" *ngIf="session.watchedGroup">
+      <small>Obs:</small> {{ session.watchedGroup.name }} <small>[<a (click)="onStopWatchPressed()" style="cursor: pointer;">x</a>]</small>
     </span>
     <span class="group-toggle" (click)="toggleGroup()">
       <i class="fa fa-users"></i>
