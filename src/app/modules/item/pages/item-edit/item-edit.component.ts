@@ -20,7 +20,7 @@ export class ItemEditComponent implements OnDestroy {
   itemId? : string;
   itemForm = this.formBuilder.group({
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    title: [ '', [ Validators.required, Validators.minLength(3), ] ],
+    title: [ '', [ Validators.required, Validators.minLength(3), Validators.maxLength(200) ] ],
     description: '',
   });
   itemLoadingState$ = this.itemDataSource.state$;
@@ -41,8 +41,8 @@ export class ItemEditComponent implements OnDestroy {
           const item = state.data.item;
           this.itemId = item.id;
           this.itemForm.patchValue({
-            title: item.string.title,
-            description: item.string.description,
+            title: item.string.title || '',
+            description: item.string.description || '',
           });
         }),
       this.currentContent.editAction$.pipe(filter(action => action === EditAction.Save))
@@ -74,9 +74,15 @@ export class ItemEditComponent implements OnDestroy {
   }
 
   getItemStringChanges(): ItemStringChanges {
+    const title = this.itemForm.get('title');
+    const description = this.itemForm.get('description');
+
+    if (title === null || description === null) // Something is wrong with the form
+      return {};
+
     return {
-      title: this.itemForm.get('title')?.value as string,
-      description: (this.itemForm.get('description')?.value as string).trim() || null
+      title: (title.value as string).trim(),
+      description: (description.value as string).trim() || null
     };
   }
 
@@ -88,9 +94,15 @@ export class ItemEditComponent implements OnDestroy {
       return;
     }
 
+    const itemStringChanges = this.getItemStringChanges();
+    if (!itemStringChanges) {
+      this.errorToast();
+      return;
+    }
+
     this.updateItemStringService.updateItem(
       this.itemId,
-      this.getItemStringChanges()
+      itemStringChanges
     ).subscribe(
       _status => {
         this.itemForm.disable();
