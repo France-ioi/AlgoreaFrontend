@@ -1,0 +1,9 @@
+:host ::ng-deep .ui-table .ui-table-tbody > tr {
+  background-color: transparent;
+
+  border-bottom: 0.1rem solid #f0f0f0;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}

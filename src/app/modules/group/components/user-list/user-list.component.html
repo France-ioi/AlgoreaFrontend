@@ -1,0 +1,40 @@
+<p-progressSpinner *ngIf="state === 'loading'"></p-progressSpinner>
+
+<p *ngIf="state === 'error'">Error while loading the group members</p>
+
+<p *ngIf="state === 'empty'">This group is empty, check below, the different ways to add users or sub-groups.</p>
+
+<alg-grid
+  *ngIf="state === 'ready'"
+  [data]="members"
+  [showGear]="false"
+>
+  <ng-template #headerTemplate let-columns>
+    <tr>
+      <th>
+        <div class="header-container">
+          Name
+        </div>
+      </th>
+      <th>
+        <div class="header-container">
+          Member Since
+        </div>
+      </th>
+    </tr>
+  </ng-template>
+
+  <ng-template
+    #bodyTemplate
+    let-member
+  >
+    <tr class="p-selectable-row">
+      <td>
+        {{ member.user | user }}
+      </td>
+      <td>
+        {{ member.memberSince | date }}
+      </td>
+    </tr>
+  </ng-template>
+</alg-grid>
