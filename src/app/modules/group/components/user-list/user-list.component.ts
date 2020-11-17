@@ -1,7 +1,8 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 import { SortEvent } from 'primeng/api';
 import { Subject } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+import { GridComponent } from 'src/app/modules/shared-components/components/grid/grid.component';
 import { Group } from '../../http-services/get-group-by-id.service';
 import { GetGroupMembersService, Member } from '../../http-services/get-group-members.service';
 
@@ -18,6 +19,8 @@ export class UserListComponent implements OnChanges {
   currentSort: string[] = [];
 
   members: Member[] = [];
+
+  @ViewChild('grid', { static: true }) private grid?: GridComponent;
 
   private dataFetching = new Subject<string[]>();
 
@@ -47,6 +50,7 @@ export class UserListComponent implements OnChanges {
 
   ngOnChanges(_changes: SimpleChanges): void {
     this.dataFetching.next([]);
+    this.grid?.reset();
   }
 
   onCustomSort(event: SortEvent): void {

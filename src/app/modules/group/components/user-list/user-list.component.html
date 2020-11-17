@@ -2,7 +2,7 @@
 
 <p *ngIf="state === 'error'">Error while loading the group members</p>
 
-<alg-grid
+<alg-grid #grid
   [data]="members"
   [showGear]="false"
   (sort)="onCustomSort($event)"
