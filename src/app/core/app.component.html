@@ -1,8 +1,8 @@
-<div class="container" *ngrxLet="currentUser$ as currentUser">
+<div class="container" *ngrxLet="session$ as session">
   <div class="left" [ngClass]="{ collapsed: collapsed, expanded: !collapsed }">
     <alg-left-nav
       [collapsed]="collapsed"
-      [currentUser]="currentUser"
+      [session]="session"
       (collapse)="onCollapse($event)"
     ></alg-left-nav>
   </div>
@@ -14,7 +14,7 @@
         *ngIf="collapsed"
         [collapsed]="collapsed"
         [folded]="folded"
-        [currentUser]="currentUser"
+        [session]="session"
         (collapse)="onCollapse($event)"
         (fold)="onFold($event)"
         [templateId]="1"
@@ -33,7 +33,7 @@
             (edit)="onEditPage()"
           ></alg-page-navigator>
           <alg-button
-            *ngIf="collapsed && currentUser && currentUser.isTemp"
+            *ngIf="collapsed && session && session.user.isTemp"
             label="Log in / Sign in"
             icon="pi pi-sign-in"
             class="ui-button-rounded"
@@ -41,7 +41,7 @@
             (click)="login()"
           ></alg-button>
           <alg-button
-            *ngIf="collapsed && currentUser && !currentUser.isTemp"
+            *ngIf="collapsed && session && !session.user.isTemp"
             label="Log out"
             icon="pi pi-sign-out"
             class="ui-button-rounded"

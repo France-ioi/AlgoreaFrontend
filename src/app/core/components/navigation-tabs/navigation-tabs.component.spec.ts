@@ -4,39 +4,19 @@ import { NavigationTabsComponent } from './navigation-tabs.component';
 import { AppModule } from '../../../core/app.module';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
-import { BehaviorSubject, of } from 'rxjs';
 import { By } from '@angular/platform-browser';
-import { CurrentContentService } from 'src/app/shared/services/current-content.service';
-import { CurrentUserService } from 'src/app/shared/services/current-user.service';
-import { UserProfile } from 'src/app/shared/http-services/current-user.service';
 
 describe('NavigationTabsComponent', () => {
   let component: NavigationTabsComponent;
   let fixture: ComponentFixture<NavigationTabsComponent>;
-  let currentUser: BehaviorSubject<UserProfile|undefined>;
 
   beforeEach(waitForAsync(() => {
-    currentUser = new BehaviorSubject<UserProfile|undefined>(undefined);
     TestBed.configureTestingModule({
       imports: [
         AppModule,
         RouterTestingModule
       ],
-      providers: [
-        {
-          provide: CurrentUserService,
-          useValue: {
-            currentUser$: currentUser.asObservable()
-          }
-        },
-        {
-          provide: CurrentContentService,
-          useValue: {
-            current: new BehaviorSubject(null),
-            currentContent$: of(null)
-          }
-        }
-      ],
+      providers: [],
       declarations: [ NavigationTabsComponent ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })
@@ -67,28 +47,28 @@ describe('NavigationTabsComponent', () => {
       expect(userString()).toEqual('Loading...');
     });
 
-    it('should display the full information correctly when firstame is null', () => {
-      component.currentUser = { id: '1', login: 'mylogin', firstName: null, lastName: 'myname', isTemp: false };
+    it('should display the full information correctly when firstname is null', () => {
+      component.session = { user: { id: '1', login: 'mylogin', firstName: null, lastName: 'myname', isTemp: false } };
       expect(userString()).toEqual('myname (mylogin)');
     });
 
     it('should display the full information correctly when lastname is null', () => {
-      component.currentUser = { id: '1', login: 'mylogin', firstName: 'myfirst', lastName: null, isTemp: false };
+      component.session = { user: { id: '1', login: 'mylogin', firstName: 'myfirst', lastName: null, isTemp: false } };
       expect(userString()).toEqual('myfirst (mylogin)');
     });
 
     it('should display the full information correctly when firstname is empty', () => {
-      component.currentUser = { id: '1', login: 'mylogin', firstName: '', lastName: 'myname', isTemp: false };
+      component.session = { user: { id: '1', login: 'mylogin', firstName: '', lastName: 'myname', isTemp: false } };
       expect(userString()).toEqual('myname (mylogin)');
     });
 
     it('should display only login when both firstname and lastname are null', () => {
-      component.currentUser = { id: '1', login: 'mylogin', firstName: null, lastName: null, isTemp: false };
+      component.session = { user: { id: '1', login: 'mylogin', firstName: null, lastName: null, isTemp: false } };
       expect(userString()).toEqual('mylogin');
     });
 
     it('should display only login when both firstname and lastname are empty', () => {
-      component.currentUser = { id: '1', login: 'mylogin', firstName: '', lastName: '', isTemp: false };
+      component.session = { user: { id: '1', login: 'mylogin', firstName: '', lastName: '', isTemp: false } };
       expect(userString()).toEqual('mylogin');
     });
   });

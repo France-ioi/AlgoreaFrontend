@@ -1,10 +1,11 @@
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
-import { CurrentUserService } from '../shared/services/current-user.service';
+import { UserSessionService } from '../shared/services/user-session.service';
 import { delay, filter, skip } from 'rxjs/operators';
-import { UserProfile } from '../shared/http-services/current-user.service';
 import { Observable, Subscription } from 'rxjs';
 import { ContentInfo, CurrentContentService, EditAction } from '../shared/services/current-content.service';
 import { AuthService } from '../shared/auth/auth.service';
+import { Router } from '@angular/router';
+import { UserProfile } from '../shared/http-services/current-user.service';
 
 @Component({
   selector: 'alg-root',
@@ -16,7 +17,7 @@ export class AppComponent implements OnInit, OnDestroy {
   // the delay(0) is used to prevent the UI to update itself (when the content is loaded) (ExpressionChangedAfterItHasBeenCheckedError)
   currentContent$: Observable<ContentInfo|null> = this.currentContent.currentContent$.pipe(delay(0));
   editState$ = this.currentContent.editState$.pipe(delay(0));
-  currentUser$ = this.currentUserService.currentUser$.pipe(delay(0));
+  session$ = this.sessionService.session$.pipe(delay(0));
 
   collapsed = false;
   folded = false;
@@ -25,18 +26,20 @@ export class AppComponent implements OnInit, OnDestroy {
   private subscription?: Subscription;
 
   constructor(
-    private currentUserService: CurrentUserService,
+    private router: Router,
+    private sessionService: UserSessionService,
     private authService: AuthService,
     private currentContent: CurrentContentService,
   ) {}
 
   ngOnInit(): void {
     // each time there is a new user, refresh the page
-    this.subscription = this.currentUserService.currentUser$.pipe(
+    this.subscription = this.sessionService.currentUser$.pipe(
       filter<UserProfile|undefined, UserProfile>((user):user is UserProfile => !!user),
       skip(1), // do not refresh when the first user is set
     ).subscribe(_user => {
-      window.location.reload();
+      // Navigate to the root with an ugly hack to make sure the full content is reloaded
+      void this.router.navigateByUrl('/groups/me', { skipLocationChange: true }).then(() => this.router.navigateByUrl('/'));
     });
   }
 

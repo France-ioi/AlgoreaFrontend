@@ -6,6 +6,7 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { TreeNode } from 'primeng/api';
+import { UserSessionService } from 'src/app/shared/services/user-session.service';
 import { Group } from './group';
 
 // GroupTreeNode is PrimeNG tree node with data forced to be a group
@@ -24,7 +25,10 @@ export class GroupNavTreeComponent implements OnChanges {
 
   nodes: GroupTreeNode[] = [];
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private sessionService: UserSessionService,
+  ) {}
 
   ngOnChanges(_changes: SimpleChanges): void {
     this.nodes = this.groups.map(g => ({
@@ -38,6 +42,10 @@ export class GroupNavTreeComponent implements OnChanges {
 
   onSelect(node: GroupTreeNode): void {
     void this.router.navigate([ node.target ]);
+  }
+
+  onWatchPressed(node: GroupTreeNode): void {
+    this.sessionService.startGroupWatching(node.data);
   }
 
   onKeyDown(e: KeyboardEvent): void {
