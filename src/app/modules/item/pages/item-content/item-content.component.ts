@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { ItemDataSource } from '../../services/item-datasource.service';
+import { Component, Input } from '@angular/core';
+import { ItemData } from '../../services/item-datasource.service';
 
 @Component({
   selector: 'alg-item-content',
@@ -8,9 +8,6 @@ import { ItemDataSource } from '../../services/item-datasource.service';
 })
 export class ItemContentComponent {
 
-    itemData$ = this.itemDataSource.itemData$;
+  @Input() itemData?: ItemData;
 
-    constructor(
-      private itemDataSource:ItemDataSource,
-    ) {}
 }
