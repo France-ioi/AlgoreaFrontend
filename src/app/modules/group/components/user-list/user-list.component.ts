@@ -29,13 +29,16 @@ export class UserListComponent implements OnChanges {
 
           return this.getGroupMembersService.getGroupMembers(this.group.id, sort);
         } else {
-          throw new Error('group is null');
+          this.state = 'error';
+          return [];
         }
       })
     ).subscribe(
       members => {
-        this.members = members;
-        this.state = 'ready';
+        if (this.state !== 'error') {
+          this.members = members;
+          this.state = 'ready';
+        }
       },
       _err => {
         this.state = 'error';
