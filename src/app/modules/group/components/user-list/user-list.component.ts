@@ -20,7 +20,7 @@ export class UserListComponent implements OnChanges {
 
   members: Member[] = [];
 
-  @ViewChild('grid', { static: true }) private grid?: GridComponent;
+  @ViewChild('grid') private grid?: GridComponent;
 
   private dataFetching = new Subject<string[]>();
 
