@@ -1,15 +1,13 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { ItemData } from '../../services/item-datasource.service';
 
 @Component({
   selector: 'alg-item-progress',
   templateUrl: './item-progress.component.html',
   styleUrls: [ './item-progress.component.scss' ]
 })
-export class ItemProgressComponent implements OnDestroy {
+export class ItemProgressComponent {
 
-  constructor() { }
-
-  ngOnDestroy(): void {
-  }
+  @Input() itemData?: ItemData;
 
 }
