@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { ItemDataSource } from '../../services/item-datasource.service';
+import { ItemData } from '../../services/item-datasource.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'alg-item-edit-content',
@@ -9,11 +10,8 @@ import { ItemDataSource } from '../../services/item-datasource.service';
 })
 export class ItemEditContentComponent {
   @Input() parentForm?: FormGroup;
+  @Input() itemData$? : Observable<ItemData>;
 
-  itemData$ = this.itemDataSource.itemData$;
-
-  constructor(
-    private itemDataSource: ItemDataSource,
-  ) {}
+  constructor() {}
 
 }

@@ -22,7 +22,12 @@
       </nav>
 
       <div class="bg-white" >
-        <alg-item-edit-content *ngIf="rla1.isActive" [parentForm]="itemForm"></alg-item-edit-content>
+        <alg-item-edit-content
+          *ngIf="rla1.isActive"
+          [parentForm]="itemForm"
+          [itemData$]="itemData$"
+        >
+        </alg-item-edit-content>
       </div>
 
     </form>

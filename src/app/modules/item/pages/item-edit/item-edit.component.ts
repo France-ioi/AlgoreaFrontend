@@ -23,6 +23,7 @@ export class ItemEditComponent implements OnDestroy {
     title: [ '', [ Validators.required, Validators.minLength(3), ] ],
     description: '',
   });
+  itemData$ = this.itemDataSource.itemData$;
   itemLoadingState$ = this.itemDataSource.state$;
 
   subscriptions: Subscription[] = [];
