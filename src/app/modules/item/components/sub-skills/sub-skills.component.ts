@@ -1,6 +1,7 @@
 import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { bestAttemptFromResults } from 'src/app/shared/helpers/attempts';
 import { itemDetailsUrl } from 'src/app/shared/helpers/item-route';
 import { isASkill } from 'src/app/shared/helpers/item-type';
@@ -24,7 +25,7 @@ interface SubSkillAdditions {
 export class SubSkillsComponent implements OnChanges, OnDestroy {
   @Input() itemData?: ItemData;
 
-  state: 'loading' | 'error' | 'empty' | 'ready' = 'loading';
+  state: 'loading' | 'error' | 'ready' = 'loading';
   children: (ItemChild&SubSkillAdditions)[] = [];
 
   private subscription?: Subscription;
@@ -54,11 +55,11 @@ export class SubSkillsComponent implements OnChanges, OnDestroy {
     if (this.itemData?.currentResult) {
       this.state = 'loading';
       this.subscription?.unsubscribe();
-      this.subscription = this.getItemChildrenService
-        .get(this.itemData.item.id, this.itemData.currentResult.attemptId)
-        .subscribe(
-          children => {
-            this.children = children.filter(child => isASkill(child)).map(child => {
+      this.subscription = this.getItemChildrenService.get(this.itemData.item.id, this.itemData.currentResult.attemptId).pipe(
+        map(children =>
+          children
+            .filter(child => isASkill(child))
+            .map(child => {
               const res = bestAttemptFromResults(child.results);
               return {
                 ...child,
@@ -68,15 +69,17 @@ export class SubSkillsComponent implements OnChanges, OnDestroy {
                   score: res.score,
                 },
               };
-            });
-
-            if (this.children.length === 0) this.state = 'empty';
-            else this.state = 'ready';
-          },
-          _err => {
-            this.state = 'error';
-          }
-        );
+            })
+        )
+      ).subscribe(
+        children => {
+          this.children = children;
+          this.state = 'ready';
+        },
+        _err => {
+          this.state = 'error';
+        }
+      );
     } else {
       this.state = 'error';
     }
