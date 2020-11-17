@@ -124,6 +124,7 @@ export class ItemNavComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.changes.complete();
     this.subscriptions.forEach(s => s.unsubscribe());
   }
 

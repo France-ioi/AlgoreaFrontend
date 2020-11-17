@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { ItemRoute } from '../helpers/item-route';
 import { ItemType } from '../helpers/item-type';
@@ -59,7 +59,7 @@ export enum EditAction { StartEditing, Save, StopEditing }
 @Injectable({
   providedIn: 'root'
 })
-export class CurrentContentService {
+export class CurrentContentService implements OnDestroy {
   /* info about the currently displayed content */
   current = new BehaviorSubject<ContentInfo|null>(null);
   currentContent$ = this.current.asObservable();
@@ -72,4 +72,9 @@ export class CurrentContentService {
   editAction = new Subject<EditAction>();
   editAction$ = this.editAction.asObservable();
 
+  ngOnDestroy(): void {
+    this.current.complete();
+    this.editState.complete();
+    this.editAction.complete();
+  }
 }
