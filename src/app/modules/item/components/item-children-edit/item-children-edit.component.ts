@@ -3,6 +3,7 @@ import { ItemChild } from './item-children';
 import { ItemData } from '../../services/item-datasource.service';
 import { GetItemChildrenService } from '../../http-services/get-item-children.service';
 import { Subscription } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'alg-item-children-edit',
@@ -31,18 +32,19 @@ export class ItemChildrenEditComponent implements OnChanges {
       this.subscription?.unsubscribe();
       this.subscription = this.getItemChildrenService
         .get(this.itemData.item.id, this.itemData.currentResult.attemptId)
-        .subscribe(children => {
-          this.data = children.map((child, idx) => ({
+        .pipe(
+          map(children => children.map((child, idx) => ({
             id: child.id,
             title: child.string.title,
             order: idx
-          }));
+          })))
+        ).subscribe(children => {
+          this.data = children;
           this.state = this.data.length ? 'ready' : 'empty';
         },
         _err => {
           this.state = 'error';
-        }
-        );
+        });
     } else {
       this.state = 'error';
     }
