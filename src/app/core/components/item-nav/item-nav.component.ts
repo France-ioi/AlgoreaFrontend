@@ -36,75 +36,73 @@ export class ItemNavComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnInit(): void {
 
-    this.subscriptions.push(
-      this.changes.pipe(
-        switchMap((change):Observable<State> => {
-          const prevState = isSkill(this.category) ? this.skillState : this.activityState;
-          const itemInfo = change.item;
+    this.changes.pipe(
+      switchMap((change):Observable<State> => {
+        const prevState = isSkill(this.category) ? this.skillState : this.activityState;
+        const itemInfo = change.item;
 
-          if (isReady(prevState)) {
-            // CASE: the current content is not an item and the menu has already items displayed
-            if (!itemInfo) {
-              if (prevState.data.selectedElement) return of(readyState(prevState.data.withNoSelection()));
-              return EMPTY; // no change
-            }
-
-            const itemData = itemInfo.data;
-
-            // CASE: the current content is already the selected one
-            if (prevState.data.selectedElement?.id === itemData.route.id) {
-              if (!itemData.details) return EMPTY;
-              const newData = prevState.data.withUpdatedDetails(itemData.route.id, itemData.details);
-              return concat(of(readyState(newData)), this.loadChildrenIfNeeded(newData));
-            }
-
-            // CASE: the content is among the displayed items at the root of the tree -> select the right one (might load children)
-            if (prevState.data.hasLevel1Element(itemData.route.id)) {
-              let newData = prevState.data.withSelection(itemData.route);
-              if (itemData.details) newData = newData.withUpdatedDetails(itemData.route.id, itemData.details);
-              return concat(of(readyState(newData)), this.loadChildrenIfNeeded(newData));
-            }
-
-            // CASE: the content is a child of one item at the root of the tree -> shift the tree and select it (might load children)
-            if (prevState.data.hasLevel2Element(itemData.route.id)) {
-              let newData = prevState.data.subNavMenuData(itemData.route);
-              if (itemData.details) newData = newData.withUpdatedDetails(itemData.route.id, itemData.details);
-              return concat(of(readyState(newData)), this.loadChildrenIfNeeded(newData));
-            }
-
-          } else /* not ready state */ if (!itemInfo) {
-            // CASE: the content is not an item and the menu has not already item displayed -> load item root
-            return this.loadDefaultNav();
+        if (isReady(prevState)) {
+          // CASE: the current content is not an item and the menu has already items displayed
+          if (!itemInfo) {
+            if (prevState.data.selectedElement) return of(readyState(prevState.data.withNoSelection()));
+            return EMPTY; // no change
           }
 
-          // OTHERWISE: the content is an item which is not currently displayed:
+          const itemData = itemInfo.data;
 
-          // CASE: The current content type is not known -> wait
-          if (!itemInfo.data.details) return of(fetchingState());
-
-          // CASE: The current content type does not match the current tab
-          if (typeCategoryOfItem(itemInfo.data.details) !== this.category) {
-            switch (change.action) {
-              case ChangeTrigger.Tab:
-                // if it is a user-trigger tab change, keep this tab, load the default item
-                return this.loadDefaultNav();
-              case ChangeTrigger.Content:
-                // if the new current contest does not matches the nav menu shown, switch tab
-                this.triggerCategoryChange();
-                return EMPTY;
-            }
+          // CASE: the current content is already the selected one
+          if (prevState.data.selectedElement?.id === itemData.route.id) {
+            if (!itemData.details) return EMPTY;
+            const newData = prevState.data.withUpdatedDetails(itemData.route.id, itemData.details);
+            return concat(of(readyState(newData)), this.loadChildrenIfNeeded(newData));
           }
 
-          // CASE: The current content type matches the current tab
-          return this.loadNewNav(itemInfo.data.route);
-        })
-      ).subscribe({
-        // As an update of `category` triggers a change and as switchMap ensures ongoing requests are cancelled when a new change happens,
-        // the state updated here is on the same category as `prevState` above.
-        next: newState => this.updateCurrentState(newState),
-        error: e => this.updateCurrentState(errorState(e)),
+          // CASE: the content is among the displayed items at the root of the tree -> select the right one (might load children)
+          if (prevState.data.hasLevel1Element(itemData.route.id)) {
+            let newData = prevState.data.withSelection(itemData.route);
+            if (itemData.details) newData = newData.withUpdatedDetails(itemData.route.id, itemData.details);
+            return concat(of(readyState(newData)), this.loadChildrenIfNeeded(newData));
+          }
+
+          // CASE: the content is a child of one item at the root of the tree -> shift the tree and select it (might load children)
+          if (prevState.data.hasLevel2Element(itemData.route.id)) {
+            let newData = prevState.data.subNavMenuData(itemData.route);
+            if (itemData.details) newData = newData.withUpdatedDetails(itemData.route.id, itemData.details);
+            return concat(of(readyState(newData)), this.loadChildrenIfNeeded(newData));
+          }
+
+        } else /* not ready state */ if (!itemInfo) {
+          // CASE: the content is not an item and the menu has not already item displayed -> load item root
+          return this.loadDefaultNav();
+        }
+
+        // OTHERWISE: the content is an item which is not currently displayed:
+
+        // CASE: The current content type is not known -> wait
+        if (!itemInfo.data.details) return of(fetchingState());
+
+        // CASE: The current content type does not match the current tab
+        if (typeCategoryOfItem(itemInfo.data.details) !== this.category) {
+          switch (change.action) {
+            case ChangeTrigger.Tab:
+              // if it is a user-trigger tab change, keep this tab, load the default item
+              return this.loadDefaultNav();
+            case ChangeTrigger.Content:
+              // if the new current contest does not matches the nav menu shown, switch tab
+              this.triggerCategoryChange();
+              return EMPTY;
+          }
+        }
+
+        // CASE: The current content type matches the current tab
+        return this.loadNewNav(itemInfo.data.route);
       })
-    );
+    ).subscribe({
+      // As an update of `category` triggers a change and as switchMap ensures ongoing requests are cancelled when a new change happens,
+      // the state updated here is on the same category as `prevState` above.
+      next: newState => this.updateCurrentState(newState),
+      error: e => this.updateCurrentState(errorState(e)),
+    });
 
     // emit an initial change as if the current is not an item, nothing will be emitted by the current content observer
     this.changes.next({ action: ChangeTrigger.Content, item: undefined });
@@ -124,6 +122,7 @@ export class ItemNavComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.changes.complete();
     this.subscriptions.forEach(s => s.unsubscribe());
   }
 
