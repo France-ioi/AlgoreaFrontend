@@ -41,7 +41,7 @@ export class ItemEditComponent implements OnDestroy {
           const item = state.data.item;
           this.itemId = item.id;
           this.itemForm.patchValue({
-            title: item.string.title,
+            title: item.string.title || '',
             description: item.string.description || '',
           });
         }),
