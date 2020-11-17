@@ -176,4 +176,8 @@ export class GridComponent implements OnInit, OnChanges {
     this.selectionChange.emit(this.selection);
   }
 
+  public reset(): void {
+    this.table?.reset();
+  }
+
 }
