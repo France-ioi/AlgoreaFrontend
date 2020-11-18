@@ -4,6 +4,6 @@
     <alg-textarea [parentForm]="parentForm" inputName="description"></alg-textarea>
   </alg-section>
 
-  <alg-item-children-edit [itemData]="itemData" *ngIf="itemData.item.type === 'Chapter'"></alg-item-children-edit>
+  <alg-item-children-edit [itemData]="itemData" *ngIf="['Chapter', 'Skill'].includes(itemData.item.type)"></alg-item-children-edit>
 
 </ng-container>
