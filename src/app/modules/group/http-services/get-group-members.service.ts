@@ -42,8 +42,8 @@ export class GetGroupMembersService {
     groupId: string,
     sort: string[] = []
   ): Observable<Member[]> {
-    const params = new HttpParams();
-    if (sort.length > 0) params.set('sort', sort.join(','));
+    let params = new HttpParams();
+    if (sort.length > 0) params = params.set('sort', sort.join(','));
     return this.http
       .get<RawMember[]>(`${appConfig().apiUrl}/groups/${groupId}/members`, { params: params })
       .pipe(

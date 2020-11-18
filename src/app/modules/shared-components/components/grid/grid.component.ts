@@ -67,6 +67,7 @@ export class GridComponent implements OnInit, OnChanges {
   @Input() dataKey?: string;
   @Input() frozenWidth?: string;
   @Input() showGear = true;
+  @Input() loading = false;
 
   @Output() expandWholeWidth = new EventEmitter<boolean>();
   @Output() sort = new EventEmitter();
@@ -81,6 +82,7 @@ export class GridComponent implements OnInit, OnChanges {
   @ContentChild('rowExpansionTemplate') rowExpansionTemplate?: TemplateRef<any>;
   @ContentChild('frozenHeaderTemplate') frozenHeaderTemplate?: TemplateRef<any>;
   @ContentChild('frozenBodyTemplate') frozenBodyTemplate?: TemplateRef<any>;
+  @ContentChild('emptymessageTemplate') emptymessageTemplate?: TemplateRef<any>;
 
   showColumnSelection = false;
 
@@ -172,6 +174,10 @@ export class GridComponent implements OnInit, OnChanges {
 
   onHeaderCheckbox(): void {
     this.selectionChange.emit(this.selection);
+  }
+
+  public reset(): void {
+    this.table?.reset();
   }
 
 }

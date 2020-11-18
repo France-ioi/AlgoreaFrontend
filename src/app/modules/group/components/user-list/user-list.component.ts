@@ -1,5 +1,9 @@
-import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Component, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild } from '@angular/core';
+import { SortEvent } from 'primeng/api';
+import { merge, of, Subject } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
+import { GridComponent } from 'src/app/modules/shared-components/components/grid/grid.component';
+import { fetchingState, isReady, readyState } from 'src/app/shared/helpers/state';
 import { Group } from '../../http-services/get-group-by-id.service';
 import { GetGroupMembersService, Member } from '../../http-services/get-group-members.service';
 
@@ -11,40 +15,52 @@ import { GetGroupMembersService, Member } from '../../http-services/get-group-me
 export class UserListComponent implements OnChanges, OnDestroy {
 
   @Input() group? : Group;
-  state: 'loading' | 'error' | 'empty' | 'ready' = 'loading';
+
+  state: 'error' | 'ready' | 'fetching' = 'fetching';
+
+  currentSort: string[] = [];
 
   members: Member[] = [];
 
-  private subscription?: Subscription;
+  @ViewChild('grid') private grid?: GridComponent;
 
-  constructor(private getGroupMembersService: GetGroupMembersService) { }
+  private dataFetching = new Subject<{groupId: string, sort: string[] }>();
 
-  ngOnChanges(_changes: SimpleChanges): void {
-    this.reloadData();
-  }
-
-  private reloadData(): void {
-    if (this.group) {
-      this.state = 'loading';
-      this.subscription?.unsubscribe();
-      this.subscription = this.getGroupMembersService.getGroupMembers(this.group.id)
-        .subscribe(
-          members => {
-            this.members = members;
-
-            if (this.members.length === 0) this.state = 'empty';
-            else this.state = 'ready';
-          },
-          _err => {
-            this.state = 'error';
-          }
-        );
-    } else {
-      this.state = 'error';
-    }
+  constructor(private getGroupMembersService: GetGroupMembersService) {
+    this.dataFetching.pipe(
+      switchMap(options =>
+        merge(
+          of(fetchingState()),
+          this.getGroupMembersService.getGroupMembers(options.groupId, options.sort).pipe(map(readyState))
+        ))
+    ).subscribe(
+      state => {
+        this.state = state.tag;
+        if (isReady(state)) this.members = state.data;
+      },
+      _err => {
+        this.state = 'error';
+      });
   }
 
   ngOnDestroy(): void {
-    this.subscription?.unsubscribe();
+    this.dataFetching.complete();
+  }
+
+  ngOnChanges(_changes: SimpleChanges): void {
+    if (!this.group) return;
+    this.dataFetching.next({ groupId: this.group.id, sort: [] });
+    this.grid?.reset();
+  }
+
+  onCustomSort(event: SortEvent): void {
+    if (!this.group) return;
+
+    const sortMeta = event.multiSortMeta?.map(meta => (meta.order === -1 ? `-${meta.field}` : meta.field));
+
+    if (sortMeta && JSON.stringify(sortMeta) !== JSON.stringify(this.currentSort)) {
+      this.currentSort = sortMeta;
+      this.dataFetching.next({ groupId: this.group.id, sort: sortMeta });
+    }
   }
 }
