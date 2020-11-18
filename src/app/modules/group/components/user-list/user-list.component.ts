@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild } from '@angular/core';
 import { SortEvent } from 'primeng/api';
 import { Subject } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
@@ -11,7 +11,7 @@ import { GetGroupMembersService, Member } from '../../http-services/get-group-me
   templateUrl: './user-list.component.html',
   styleUrls: [ './user-list.component.scss' ]
 })
-export class UserListComponent implements OnChanges {
+export class UserListComponent implements OnChanges, OnDestroy {
 
   @Input() group? : Group;
   state: 'loading' | 'error' | 'ready' = 'loading';
@@ -46,6 +46,10 @@ export class UserListComponent implements OnChanges {
       _err => {
         this.state = 'error';
       });
+  }
+
+  ngOnDestroy(): void {
+    this.dataFetching.complete();
   }
 
   ngOnChanges(_changes: SimpleChanges): void {
