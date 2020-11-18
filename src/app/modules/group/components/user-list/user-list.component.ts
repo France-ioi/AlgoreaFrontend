@@ -3,7 +3,7 @@ import { SortEvent } from 'primeng/api';
 import { merge, of, Subject } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { GridComponent } from 'src/app/modules/shared-components/components/grid/grid.component';
-import { errorState, FetchError, Fetching, fetchingState, isReady, Ready, readyState } from 'src/app/shared/helpers/state';
+import { fetchingState, isReady, readyState } from 'src/app/shared/helpers/state';
 import { Group } from '../../http-services/get-group-by-id.service';
 import { GetGroupMembersService, Member } from '../../http-services/get-group-members.service';
 
@@ -16,7 +16,7 @@ export class UserListComponent implements OnChanges, OnDestroy {
 
   @Input() group? : Group;
 
-  state: Ready<Member[]> | Fetching | FetchError = fetchingState();
+  state: 'error' | 'ready' | 'fetching' = 'fetching';
 
   currentSort: string[] = [];
 
@@ -35,11 +35,11 @@ export class UserListComponent implements OnChanges, OnDestroy {
         ))
     ).subscribe(
       state => {
-        this.state = state;
+        this.state = state.tag;
         if (isReady(state)) this.members = state.data;
       },
       _err => {
-        this.state = errorState();
+        this.state = 'error';
       });
   }
 
