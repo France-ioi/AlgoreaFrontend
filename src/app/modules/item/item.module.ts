@@ -15,6 +15,7 @@ import { ItemLogViewComponent } from './pages/item-log-view/item-log-view.compon
 import { SubSkillsComponent } from './components/sub-skills/sub-skills.component';
 import { ParentSkillsComponent } from './components/parent-skills/parent-skills.component';
 import { ItemEditContentComponent } from './pages/item-edit-content/item-edit-content.component';
+import { ItemChildrenEditComponent } from './components/item-children-edit/item-children-edit.component';
 
 @NgModule({
   declarations: [
@@ -30,6 +31,7 @@ import { ItemEditContentComponent } from './pages/item-edit-content/item-edit-co
     SubSkillsComponent,
     ParentSkillsComponent,
     ItemEditContentComponent,
+    ItemChildrenEditComponent,
   ],
   imports: [
     CommonModule,

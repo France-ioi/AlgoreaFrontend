@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { ItemData } from '../../services/item-datasource.service';
 
 @Component({
   selector: 'alg-item-edit-content',
@@ -8,6 +9,7 @@ import { FormGroup } from '@angular/forms';
 })
 export class ItemEditContentComponent {
   @Input() parentForm?: FormGroup;
+  @Input() itemData? : ItemData;
 
   constructor() {}
 

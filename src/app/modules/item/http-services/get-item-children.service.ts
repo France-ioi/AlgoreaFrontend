@@ -9,6 +9,7 @@ import { ItemPermissionsInfo } from '../helpers/item-permissions';
 interface RawItemChild extends ItemPermissionsInfo {
   id: string,
   best_score: number,
+  order: number,
   string: {
     title: string|null,
   },
@@ -26,6 +27,7 @@ interface RawItemChild extends ItemPermissionsInfo {
 export interface ItemChild extends ItemPermissionsInfo {
   id: string,
   bestScore: number,
+  order: number,
   string: {
     title: string|null,
   },
@@ -57,6 +59,7 @@ export class GetItemChildrenService {
         map(children => children.map(c => ({
           id: c.id,
           bestScore: c.best_score,
+          order: c.order,
           string: c.string,
           category: c.category,
           type: c.type,

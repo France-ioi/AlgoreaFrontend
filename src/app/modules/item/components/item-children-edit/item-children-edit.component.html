@@ -1,0 +1,54 @@
+<alg-section [ngSwitch]="state" icon="fa fa-book" label="Children">
+
+  <ng-container *ngSwitchCase="'ready'">
+    <div *ngIf="data.length" class="section-chapter-wrapper" >
+      <p-table [value]="data" [reorderableColumns]="true">
+        <ng-template pTemplate="body" let-rowData let-index="rowIndex">
+          <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="index">
+            <!--      <td *ngIf="lockState === 0">-->
+            <!--        <i class="fa fa-sort"></i>-->
+            <!--      </td>-->
+            <!--      <td *ngIf="lockState === 1" class="reorder-handle" [pReorderableRowHandle]="lockState">-->
+            <!--        <i class="fa fa-sort" [pReorderableRowHandle]="lockState"></i>-->
+            <!--      </td>-->
+            <!--      <td *ngIf="lockState === 2" pEditableColumn>-->
+            <!--        <p-cellEditor>-->
+            <!--          <ng-template pTemplate="input">-->
+            <!--            <input  pInputText type="number" [(ngModel)]="rowData.order"/>-->
+            <!--          </ng-template>-->
+            <!--          <ng-template pTemplate="output">-->
+            <!--            # {{ rowData.order }}-->
+            <!--          </ng-template>-->
+            <!--        </p-cellEditor>-->
+            <!--      </td>-->
+            <!-- <td>
+              <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+            </td> -->
+            <!-- <td class="type">text in blue...</td> -->
+            <td class="main">{{ rowData.title }}
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="summary">
+          <div class="summary-container">
+            <!-- <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+            <span class="select-all">Select all</span>
+            <div class="export-tools">
+              <span class="remove">
+                <span>Remove from this chapter</span>
+                <i class="fa fa-trash-alt"></i>
+              </span>
+            </div> -->
+          </div>
+        </ng-template>
+      </p-table>
+    </div>
+
+    <span *ngIf="!data.length">No children for this chapter.</span>
+  </ng-container>
+
+  <p-progressSpinner *ngSwitchCase="'loading'"></p-progressSpinner>
+
+  <div *ngSwitchCase="'error'">Error</div>
+
+</alg-section>

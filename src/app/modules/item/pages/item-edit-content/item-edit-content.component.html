@@ -1,3 +1,9 @@
-<alg-section icon="fa fa-book" label="Description">
-  <alg-textarea [parentForm]="parentForm" inputName="description"></alg-textarea>
-</alg-section>
+<ng-container *ngIf="itemData && itemData.currentResult">
+
+  <alg-section icon="fa fa-book" label="Description">
+    <alg-textarea [parentForm]="parentForm" inputName="description"></alg-textarea>
+  </alg-section>
+
+  <alg-item-children-edit [itemData]="itemData" *ngIf="['Chapter', 'Skill'].includes(itemData.item.type)"></alg-item-children-edit>
+
+</ng-container>
