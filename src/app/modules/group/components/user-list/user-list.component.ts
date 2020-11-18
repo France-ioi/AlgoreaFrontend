@@ -1,8 +1,9 @@
 import { Component, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild } from '@angular/core';
 import { SortEvent } from 'primeng/api';
-import { Subject } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { merge, of, Subject } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 import { GridComponent } from 'src/app/modules/shared-components/components/grid/grid.component';
+import { errorState, FetchError, Fetching, fetchingState, isReady, Ready, readyState } from 'src/app/shared/helpers/state';
 import { Group } from '../../http-services/get-group-by-id.service';
 import { GetGroupMembersService, Member } from '../../http-services/get-group-members.service';
 
@@ -14,7 +15,8 @@ import { GetGroupMembersService, Member } from '../../http-services/get-group-me
 export class UserListComponent implements OnChanges, OnDestroy {
 
   @Input() group? : Group;
-  state: 'loading' | 'error' | 'ready' = 'loading';
+
+  state: Ready<Member[]> | Fetching | FetchError = fetchingState();
 
   currentSort: string[] = [];
 
@@ -22,29 +24,22 @@ export class UserListComponent implements OnChanges, OnDestroy {
 
   @ViewChild('grid') private grid?: GridComponent;
 
-  private dataFetching = new Subject<string[]>();
+  private dataFetching = new Subject<{groupId: string, sort: string[] }>();
 
   constructor(private getGroupMembersService: GetGroupMembersService) {
     this.dataFetching.pipe(
-      switchMap(sort => {
-        if (this.group) {
-          if (sort === []) this.state = 'loading';
-
-          return this.getGroupMembersService.getGroupMembers(this.group.id, sort);
-        } else {
-          this.state = 'error';
-          return [];
-        }
-      })
+      switchMap(options =>
+        merge(
+          of(fetchingState()),
+          this.getGroupMembersService.getGroupMembers(options.groupId, options.sort).pipe(map(readyState))
+        ))
     ).subscribe(
-      members => {
-        if (this.state !== 'error') {
-          this.members = members;
-          this.state = 'ready';
-        }
+      state => {
+        this.state = state;
+        if (isReady(state)) this.members = state.data;
       },
       _err => {
-        this.state = 'error';
+        this.state = errorState();
       });
   }
 
@@ -53,16 +48,19 @@ export class UserListComponent implements OnChanges, OnDestroy {
   }
 
   ngOnChanges(_changes: SimpleChanges): void {
-    this.dataFetching.next([]);
+    if (!this.group) return;
+    this.dataFetching.next({ groupId: this.group.id, sort: [] });
     this.grid?.reset();
   }
 
   onCustomSort(event: SortEvent): void {
+    if (!this.group) return;
+
     const sortMeta = event.multiSortMeta?.map(meta => (meta.order === -1 ? `-${meta.field}` : meta.field));
 
     if (sortMeta && JSON.stringify(sortMeta) !== JSON.stringify(this.currentSort)) {
       this.currentSort = sortMeta;
-      this.dataFetching.next(sortMeta);
+      this.dataFetching.next({ groupId: this.group.id, sort: sortMeta });
     }
   }
 }
