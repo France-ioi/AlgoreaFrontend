@@ -26,6 +26,7 @@ import { GroupEditComponent } from './pages/group-edit/group-edit.component';
 import { GroupByIdComponent } from './pages/group-by-id/group-by-id.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UserListComponent } from './components/user-list/user-list.component';
+import { GroupCompositionFilterComponent } from './components/group-composition-filter/group-composition-filter.component';
 
 @NgModule({
   declarations: [
@@ -48,6 +49,7 @@ import { UserListComponent } from './components/user-list/user-list.component';
     GroupEditComponent,
     GroupByIdComponent,
     UserListComponent,
+    GroupCompositionFilterComponent,
   ],
   imports: [
     CommonModule,
