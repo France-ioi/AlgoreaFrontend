@@ -5,7 +5,8 @@ import { delay, map, switchMap } from 'rxjs/operators';
 import { GridColumn, GridComponent } from 'src/app/modules/shared-components/components/grid/grid.component';
 import { fetchingState, isReady, readyState } from 'src/app/shared/helpers/state';
 import { Group } from '../../http-services/get-group-by-id.service';
-import { GetGroupMembersService } from '../../http-services/get-group-members.service';
+import { GetGroupChildrenService, GroupChild } from '../../http-services/get-group-children.service';
+import { GetGroupMembersService, Member } from '../../http-services/get-group-members.service';
 import { Policy } from '../group-composition-filter/group-composition-filter.component';
 
 interface Column extends GridColumn {
@@ -17,9 +18,15 @@ const usersColumns: Column[] = [
   { field: 'member_since', header: 'Member Since', sortable: true },
 ];
 
+const groupsColumns: Column[] = [
+  { field: 'name', header: 'Name', sortable: true },
+  { field: 'type', header: 'Type' },
+  { field: 'user_count', header: 'User Count' },
+];
+
 interface Data {
   columns: Column[],
-  rowData: Member[],
+  rowData: (Member|GroupChild)[],
 }
 
 @Component({
@@ -50,6 +57,12 @@ export class UserListComponent implements OnChanges, OnDestroy {
 
   getData(groupId: string, policy: Policy, sort: string[]): Observable<Data> {
     switch (policy.category) {
+      case 'groups':
+        return this.getGroupChildrenService.getGroupChildren(groupId, sort)
+          .pipe(map(children => ({
+            columns: groupsColumns,
+            rowData: children.filter(child => child.type != 'Session' && child.type != 'User' && child.type != 'Team')
+          })));
       case 'users':
       default:
         return this.getGroupMembersService.getGroupMembers(groupId, sort)
@@ -59,6 +72,7 @@ export class UserListComponent implements OnChanges, OnDestroy {
 
   constructor(
     private getGroupMembersService: GetGroupMembersService,
+    private getGroupChildrenService: GetGroupChildrenService
   ) {
     this.dataFetching.pipe(
       delay(0),

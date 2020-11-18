@@ -44,6 +44,15 @@
         <ng-container *ngIf="col.field === 'member_since'">
           {{ rowData.memberSince | date }}
         </ng-container>
+        <ng-container *ngIf="col.field === 'name'">
+          {{ rowData.name }}
+        </ng-container>
+        <ng-container *ngIf="col.field === 'type'">
+          {{ rowData.type }}
+        </ng-container>
+        <ng-container *ngIf="col.field === 'user_count'">
+          {{ rowData.userCount }}
+        </ng-container>
       </td>
     </tr>
   </ng-template>
