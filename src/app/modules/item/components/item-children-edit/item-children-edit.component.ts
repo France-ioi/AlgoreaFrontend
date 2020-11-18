@@ -33,10 +33,10 @@ export class ItemChildrenEditComponent implements OnChanges {
       this.subscription = this.getItemChildrenService
         .get(this.itemData.item.id, this.itemData.currentResult.attemptId)
         .pipe(
-          map(children => children.map((child, idx) => ({
+          map(children => children.map(child => ({
             id: child.id,
             title: child.string.title,
-            order: idx
+            order: child.order
           })))
         ).subscribe(children => {
           this.data = children;
