@@ -1,45 +1,54 @@
-<p-progressSpinner *ngIf="state === 'fetching'  && members.length == 0"></p-progressSpinner>
+<p-progressSpinner *ngIf="state === 'fetching'  && data.rowData.length == 0"></p-progressSpinner>
 
 <p *ngIf="state === 'error'">Error while loading the group members</p>
 
-<alg-grid #grid
-  [data]="members"
-  [showGear]="false"
-  (sort)="onCustomSort($event)"
-  [loading]="state === 'fetching' && members.length > 0"
+<alg-group-composition-filter (change)="onPolicyChange($event)" [defaultValue]="currentPolicy"></alg-group-composition-filter>
+
+<p-table
+  [columns]="data.columns"
+  [value]="data.rowData"
+  [customSort]="true"
+  sortMode="multiple"
+  [lazy]="true"
+  (onLazyLoad)="onCustomSort($event)"
+  [loading]="state === 'fetching' && data.rowData.length > 0"
 >
-  <ng-template #headerTemplate let-columns>
+  <ng-template pTemplate="header" let-columns>
     <tr>
-      <th pSortableColumn="user.login">
-        <div class="header-container">
-          Name
-          <p-sortIcon field="user.login"></p-sortIcon>
-        </div>
-      </th>
-      <th pSortableColumn="member_since">
-        <div class="header-container">
-          Member Since
-          <p-sortIcon field="member_since"></p-sortIcon>
-        </div>
-      </th>
+      <ng-container *ngFor="let col of data.columns">
+        <th [pSortableColumn]="col.field" *ngIf="col.sortable">
+          <div class="header-container">
+            {{ col.header }}
+            <p-sortIcon [field]="col.field"></p-sortIcon>
+          </div>
+        </th>
+        <th *ngIf="!col.sortable">
+          <div class="header-container">
+            {{ col.header }}
+          </div>
+        </th>
+      </ng-container>
     </tr>
   </ng-template>
 
   <ng-template
-    #bodyTemplate
-    let-member
+    pTemplate="body"
+    let-rowData
+    let-columns="columns"
   >
-    <tr class="p-selectable-row">
-      <td>
-        {{ member.user | user }}
-      </td>
-      <td>
-        {{ member.memberSince | date }}
+    <tr>
+      <td *ngFor="let col of columns">
+        <ng-container *ngIf="col.field === 'user.login'">
+          {{ rowData.user | user }}
+        </ng-container>
+        <ng-container *ngIf="col.field === 'member_since'">
+          {{ rowData.memberSince | date }}
+        </ng-container>
       </td>
     </tr>
   </ng-template>
 
-  <ng-template #emptymessageTemplate>
+  <ng-template pTemplate="emptymessage">
     <p>This group is empty, check below, the different ways to add users or sub-groups.</p>
   </ng-template>
-</alg-grid>
+</p-table>

@@ -1,11 +1,26 @@
 import { Component, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild } from '@angular/core';
 import { SortEvent } from 'primeng/api';
-import { merge, of, Subject } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
-import { GridComponent } from 'src/app/modules/shared-components/components/grid/grid.component';
+import { merge, Observable, of, Subject } from 'rxjs';
+import { delay, map, switchMap } from 'rxjs/operators';
+import { GridColumn, GridComponent } from 'src/app/modules/shared-components/components/grid/grid.component';
 import { fetchingState, isReady, readyState } from 'src/app/shared/helpers/state';
 import { Group } from '../../http-services/get-group-by-id.service';
-import { GetGroupMembersService, Member } from '../../http-services/get-group-members.service';
+import { GetGroupMembersService } from '../../http-services/get-group-members.service';
+import { Policy } from '../group-composition-filter/group-composition-filter.component';
+
+interface Column extends GridColumn {
+  sortable?: boolean,
+}
+
+const usersColumns: Column[] = [
+  { field: 'user.login', header: 'Name', sortable: true },
+  { field: 'member_since', header: 'Member Since', sortable: true },
+];
+
+interface Data {
+  columns: Column[],
+  rowData: Member[],
+}
 
 @Component({
   selector: 'alg-user-list',
@@ -20,23 +35,42 @@ export class UserListComponent implements OnChanges, OnDestroy {
 
   currentSort: string[] = [];
 
-  members: Member[] = [];
+  currentPolicy: Policy = { category: 'users' };
+
+  json = JSON;
+
+  data: Data = {
+    columns: [],
+    rowData: [],
+  };
 
   @ViewChild('grid') private grid?: GridComponent;
 
-  private dataFetching = new Subject<{groupId: string, sort: string[] }>();
+  private dataFetching = new Subject<{ groupId: string, policy: Policy, sort: string[] }>();
 
-  constructor(private getGroupMembersService: GetGroupMembersService) {
+  getData(groupId: string, policy: Policy, sort: string[]): Observable<Data> {
+    switch (policy.category) {
+      case 'users':
+      default:
+        return this.getGroupMembersService.getGroupMembers(groupId, sort)
+          .pipe(map(members => ({ columns: usersColumns, rowData: members })));
+    }
+  }
+
+  constructor(
+    private getGroupMembersService: GetGroupMembersService,
+  ) {
     this.dataFetching.pipe(
-      switchMap(options =>
+      delay(0),
+      switchMap(params =>
         merge(
           of(fetchingState()),
-          this.getGroupMembersService.getGroupMembers(options.groupId, options.sort).pipe(map(readyState))
+          this.getData(params.groupId, params.policy, params.sort).pipe(map(readyState))
         ))
     ).subscribe(
       state => {
         this.state = state.tag;
-        if (isReady(state)) this.members = state.data;
+        if (isReady(state)) this.data = state.data;
       },
       _err => {
         this.state = 'error';
@@ -49,7 +83,7 @@ export class UserListComponent implements OnChanges, OnDestroy {
 
   ngOnChanges(_changes: SimpleChanges): void {
     if (!this.group) return;
-    this.dataFetching.next({ groupId: this.group.id, sort: [] });
+    this.dataFetching.next({ groupId: this.group.id, policy: { category: 'users' }, sort: [] });
     this.grid?.reset();
   }
 
@@ -60,7 +94,18 @@ export class UserListComponent implements OnChanges, OnDestroy {
 
     if (sortMeta && JSON.stringify(sortMeta) !== JSON.stringify(this.currentSort)) {
       this.currentSort = sortMeta;
-      this.dataFetching.next({ groupId: this.group.id, sort: sortMeta });
+      this.dataFetching.next({ groupId: this.group.id, policy: this.currentPolicy, sort: sortMeta });
+    }
+  }
+
+  onPolicyChange(policy: Policy): void {
+    if (!this.group) return;
+
+    if (this.currentPolicy !== policy) {
+      this.currentPolicy = policy;
+      this.currentSort = [];
+      this.grid?.reset();
+      this.dataFetching.next({ groupId: this.group.id, policy, sort: this.currentSort });
     }
   }
 }
