@@ -1,11 +1,9 @@
-<ng-container *ngIf="itemData$ | async as itemData">
-  <ng-container *ngIf="itemData.currentResult">
+<ng-container *ngIf="itemData && itemData.currentResult">
 
-    <alg-section icon="fa fa-book" label="Description">
-      <alg-textarea [parentForm]="parentForm" inputName="description"></alg-textarea>
-    </alg-section>
+  <alg-section icon="fa fa-book" label="Description">
+    <alg-textarea [parentForm]="parentForm" inputName="description"></alg-textarea>
+  </alg-section>
 
-    <alg-item-children-edit [itemData]="itemData" *ngIf="itemData.item.type === 'Chapter'"></alg-item-children-edit>
+  <alg-item-children-edit [itemData]="itemData" *ngIf="itemData.item.type === 'Chapter'"></alg-item-children-edit>
 
-  </ng-container>
 </ng-container>

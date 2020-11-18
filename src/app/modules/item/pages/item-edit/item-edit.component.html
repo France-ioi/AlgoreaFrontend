@@ -4,7 +4,7 @@
 
   <p *ngIf="state.tag === 'error'">Error while loading the item</p>
 
-  <div *ngIf="state.tag === 'ready'" style="margin: 1rem 0 0.5rem 0">
+  <div *ngIf="state.tag === 'ready' && (itemData$ | async) as itemData" style="margin: 1rem 0 0.5rem 0">
     <form [formGroup]="itemForm">
 
       <div class="header">
@@ -25,7 +25,7 @@
         <alg-item-edit-content
           *ngIf="rla1.isActive"
           [parentForm]="itemForm"
-          [itemData$]="itemData$"
+          [itemData]="itemData"
         >
         </alg-item-edit-content>
       </div>
