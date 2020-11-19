@@ -1,8 +1,9 @@
 import { Component, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild } from '@angular/core';
 import { SortEvent } from 'primeng/api';
+import { Table } from 'primeng/table';
 import { merge, Observable, of, Subject } from 'rxjs';
 import { delay, map, switchMap } from 'rxjs/operators';
-import { GridColumn, GridComponent } from 'src/app/modules/shared-components/components/grid/grid.component';
+import { GridColumn } from 'src/app/modules/shared-components/components/grid/grid.component';
 import { fetchingState, isReady, readyState } from 'src/app/shared/helpers/state';
 import { Group } from '../../http-services/get-group-by-id.service';
 import { GetGroupChildrenService, GroupChild } from '../../http-services/get-group-children.service';
@@ -51,7 +52,7 @@ export class UserListComponent implements OnChanges, OnDestroy {
     rowData: [],
   };
 
-  @ViewChild('grid') private grid?: GridComponent;
+  @ViewChild('table') private table?: Table;
 
   private dataFetching = new Subject<{ groupId: string, policy: Policy, sort: string[] }>();
 
@@ -97,8 +98,8 @@ export class UserListComponent implements OnChanges, OnDestroy {
 
   ngOnChanges(_changes: SimpleChanges): void {
     if (!this.group) return;
-    this.dataFetching.next({ groupId: this.group.id, policy: { category: 'users' }, sort: [] });
-    this.grid?.reset();
+    this.table?.reset();
+    this.dataFetching.next({ groupId: this.group.id, policy: this.currentPolicy, sort: this.currentSort });
   }
 
   onCustomSort(event: SortEvent): void {
@@ -118,8 +119,8 @@ export class UserListComponent implements OnChanges, OnDestroy {
     if (this.currentPolicy !== policy) {
       this.currentPolicy = policy;
       this.currentSort = [];
-      this.grid?.reset();
-      this.dataFetching.next({ groupId: this.group.id, policy, sort: this.currentSort });
+      this.table?.reset();
+      this.dataFetching.next({ groupId: this.group.id, policy: this.currentPolicy, sort: this.currentSort });
     }
   }
 }

@@ -2,7 +2,7 @@
 
 <alg-group-composition-filter (change)="onPolicyChange($event)" [defaultValue]="currentPolicy"></alg-group-composition-filter>
 
-<p-table
+<p-table #table
   [columns]="data.columns"
   [value]="data.rowData"
   [customSort]="true"
