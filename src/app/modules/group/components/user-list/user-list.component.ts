@@ -42,9 +42,10 @@ export class UserListComponent implements OnChanges, OnDestroy {
 
   state: 'error' | 'ready' | 'fetching' = 'fetching';
 
-  currentSort: string[] = [];
+  defaultPolicy: Policy = { category: 'groups' };
 
-  currentPolicy: Policy = { category: 'users' };
+  currentSort: string[] = [];
+  currentPolicy: Policy = this.defaultPolicy;
 
   data: Data = {
     columns: [],
@@ -82,6 +83,8 @@ export class UserListComponent implements OnChanges, OnDestroy {
 
   ngOnChanges(_changes: SimpleChanges): void {
     if (!this.group) return;
+    this.currentPolicy = { ...this.defaultPolicy };
+    this.currentSort = [];
     this.table?.reset();
     this.dataFetching.next({ groupId: this.group.id, policy: this.currentPolicy, sort: this.currentSort });
   }
@@ -116,6 +119,7 @@ export class UserListComponent implements OnChanges, OnDestroy {
     if (!this.group) return;
 
     if (policy !== this.currentPolicy) {
+      this.currentPolicy = { ...policy };
       this.currentSort = [];
       this.table?.reset();
       this.dataFetching.next({ groupId: this.group.id, policy: this.currentPolicy, sort: this.currentSort });
