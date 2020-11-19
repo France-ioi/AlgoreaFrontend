@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { GroupDataSource } from '../../services/group-datasource.service';
+import { Component, Input } from '@angular/core';
+import { Group } from '../../http-services/get-group-by-id.service';
 
 @Component({
   selector: 'alg-group-overview',
@@ -8,11 +8,6 @@ import { GroupDataSource } from '../../services/group-datasource.service';
 })
 export class GroupOverviewComponent {
 
-  state$ = this.groupDataSource.state$;
-  group$ = this.groupDataSource.group$;
-
-  constructor(
-    private groupDataSource: GroupDataSource,
-  ) {}
+  @Input() group?: Group;
 
 }
