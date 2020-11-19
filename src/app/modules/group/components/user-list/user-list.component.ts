@@ -46,8 +46,6 @@ export class UserListComponent implements OnChanges, OnDestroy {
 
   currentPolicy: Policy = { category: 'users' };
 
-  json = JSON;
-
   data: Data = {
     columns: [],
     rowData: [],
@@ -56,21 +54,6 @@ export class UserListComponent implements OnChanges, OnDestroy {
   @ViewChild('table') private table?: Table;
 
   private dataFetching = new Subject<{ groupId: string, policy: Policy, sort: string[] }>();
-
-  getData(groupId: string, policy: Policy, sort: string[]): Observable<Data> {
-    switch (policy.category) {
-      case 'groups':
-        return this.getGroupChildrenService.getGroupChildren(groupId, sort)
-          .pipe(map(children => ({
-            columns: groupsColumns,
-            rowData: children.filter(child => child.type != 'Session' && child.type != 'User' && child.type != 'Team')
-          })));
-      case 'users':
-      default:
-        return this.getGroupMembersService.getGroupMembers(groupId, sort)
-          .pipe(map(members => ({ columns: usersColumns, rowData: members })));
-    }
-  }
 
   constructor(
     private getGroupMembersService: GetGroupMembersService,
@@ -103,6 +86,21 @@ export class UserListComponent implements OnChanges, OnDestroy {
     this.dataFetching.next({ groupId: this.group.id, policy: this.currentPolicy, sort: this.currentSort });
   }
 
+  getData(groupId: string, policy: Policy, sort: string[]): Observable<Data> {
+    switch (policy.category) {
+      case 'groups':
+        return this.getGroupChildrenService.getGroupChildren(groupId, sort)
+          .pipe(map(children => ({
+            columns: groupsColumns,
+            rowData: children.filter(child => child.type != 'Session' && child.type != 'User' && child.type != 'Team')
+          })));
+      case 'users':
+      default:
+        return this.getGroupMembersService.getGroupMembers(groupId, sort)
+          .pipe(map(members => ({ columns: usersColumns, rowData: members })));
+    }
+  }
+
   onCustomSort(event: SortEvent): void {
     if (!this.group) return;
 
@@ -110,15 +108,14 @@ export class UserListComponent implements OnChanges, OnDestroy {
 
     if (sortMeta && JSON.stringify(sortMeta) !== JSON.stringify(this.currentSort)) {
       this.currentSort = sortMeta;
-      this.dataFetching.next({ groupId: this.group.id, policy: this.currentPolicy, sort: sortMeta });
+      this.dataFetching.next({ groupId: this.group.id, policy: this.currentPolicy, sort: this.currentSort });
     }
   }
 
   onPolicyChange(policy: Policy): void {
     if (!this.group) return;
 
-    if (this.currentPolicy !== policy) {
-      this.currentPolicy = policy;
+    if (policy !== this.currentPolicy) {
       this.currentSort = [];
       this.table?.reset();
       this.dataFetching.next({ groupId: this.group.id, policy: this.currentPolicy, sort: this.currentSort });
