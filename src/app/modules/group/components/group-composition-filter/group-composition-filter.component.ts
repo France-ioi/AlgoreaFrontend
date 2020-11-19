@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
-export enum CategoryPolicy {
+export enum TypePolicy {
   Groups,
   Sessions,
   Teams,
@@ -8,7 +8,7 @@ export enum CategoryPolicy {
 }
 
 export interface Policy {
-  category: CategoryPolicy,
+  type: TypePolicy,
 }
 
 @Component({
@@ -22,9 +22,9 @@ export class GroupCompositionFilterComponent implements OnInit{
 
   @Output() change = new EventEmitter<Policy>();
 
-  value: Policy = { category: CategoryPolicy.Users };
+  value: Policy = { type: TypePolicy.Users };
 
-  categoryPolicies = [
+  typePolicies = [
     {
       icon: 'fa fa-users',
       label: 'sub-groups'
@@ -51,9 +51,9 @@ export class GroupCompositionFilterComponent implements OnInit{
     }
   }
 
-  onCategoryPolicyChanged(index: number): void {
+  onTypePolicyChanged(index: number): void {
     if (index < 0 || index > 3) throw Error('invalid value for category policy');
-    this.value.category = index;
+    this.value.type = index;
     this.change.emit(this.value);
   }
 }
