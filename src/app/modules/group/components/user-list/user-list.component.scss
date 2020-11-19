@@ -53,6 +53,12 @@
       white-space: nowrap;
       font-size: 1.2rem;
       padding : 0 1rem;
+
+      .empty-message {
+        font-style: italic;
+        text-align: center;
+        font-size: medium;
+      }
     }
   }
 }
