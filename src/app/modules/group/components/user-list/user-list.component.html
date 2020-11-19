@@ -1,5 +1,3 @@
-<p-progressSpinner *ngIf="state === 'fetching'  && data.rowData.length == 0"></p-progressSpinner>
-
 <p *ngIf="state === 'error'">Error while loading the group members</p>
 
 <alg-group-composition-filter (change)="onPolicyChange($event)" [defaultValue]="currentPolicy"></alg-group-composition-filter>
@@ -11,7 +9,7 @@
   sortMode="multiple"
   [lazy]="true"
   (onLazyLoad)="onCustomSort($event)"
-  [loading]="state === 'fetching' && data.rowData.length > 0"
+  [loading]="state === 'fetching'"
 >
   <ng-template pTemplate="header" let-columns>
     <tr *ngIf="data.rowData.length > 0">
