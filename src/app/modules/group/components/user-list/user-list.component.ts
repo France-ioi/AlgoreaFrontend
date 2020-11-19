@@ -3,15 +3,16 @@ import { SortEvent } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { merge, Observable, of, Subject } from 'rxjs';
 import { delay, map, switchMap } from 'rxjs/operators';
-import { GridColumn } from 'src/app/modules/shared-components/components/grid/grid.component';
 import { fetchingState, isReady, readyState } from 'src/app/shared/helpers/state';
 import { Group } from '../../http-services/get-group-by-id.service';
 import { GetGroupChildrenService, GroupChild } from '../../http-services/get-group-children.service';
 import { GetGroupMembersService, Member } from '../../http-services/get-group-members.service';
 import { Policy } from '../group-composition-filter/group-composition-filter.component';
 
-interface Column extends GridColumn {
+interface Column {
   sortable?: boolean,
+  field: string,
+  header: string
 }
 
 const usersColumns: Column[] = [
