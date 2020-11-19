@@ -7,7 +7,7 @@ import { fetchingState, isReady, readyState } from 'src/app/shared/helpers/state
 import { Group } from '../../http-services/get-group-by-id.service';
 import { GetGroupChildrenService, GroupChild } from '../../http-services/get-group-children.service';
 import { GetGroupMembersService, Member } from '../../http-services/get-group-members.service';
-import { Policy } from '../group-composition-filter/group-composition-filter.component';
+import { CategoryPolicy, Policy } from '../group-composition-filter/group-composition-filter.component';
 
 interface Column {
   sortable?: boolean,
@@ -42,7 +42,7 @@ export class UserListComponent implements OnChanges, OnDestroy {
 
   state: 'error' | 'ready' | 'fetching' = 'fetching';
 
-  defaultPolicy: Policy = { category: 'groups' };
+  defaultPolicy: Policy = { category: CategoryPolicy.Groups };
 
   currentSort: string[] = [];
   currentPolicy: Policy = this.defaultPolicy;
@@ -91,13 +91,13 @@ export class UserListComponent implements OnChanges, OnDestroy {
 
   getData(groupId: string, policy: Policy, sort: string[]): Observable<Data> {
     switch (policy.category) {
-      case 'groups':
+      case CategoryPolicy.Groups:
         return this.getGroupChildrenService.getGroupChildren(groupId, sort)
           .pipe(map(children => ({
             columns: groupsColumns,
             rowData: children.filter(child => child.type != 'Session' && child.type != 'User' && child.type != 'Team')
           })));
-      case 'users':
+      case CategoryPolicy.Users:
       default:
         return this.getGroupMembersService.getGroupMembers(groupId, sort)
           .pipe(map(members => ({ columns: usersColumns, rowData: members })));
