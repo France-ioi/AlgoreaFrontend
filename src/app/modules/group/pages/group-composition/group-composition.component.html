@@ -1,7 +1,7 @@
 <ng-container *ngIf="groupWithPermissions">
   <ng-container *ngIf="groupWithPermissions.isCurrentUserManager; else noPermission">
     <alg-section icon="fa fa-users" label="Current Composition">
-      <alg-user-list [group]="group"></alg-user-list>
+      <alg-member-list [group]="group"></alg-member-list>
     </alg-section>
     <alg-group-join-by-code [group]="group" (refreshRequired)="refreshGroupInfo()" *ngIf="groupWithPermissions.canCurrentUserManageMembers">
     </alg-group-join-by-code>
