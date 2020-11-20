@@ -27,19 +27,23 @@ export class GroupCompositionFilterComponent implements OnInit{
   typePolicies = [
     {
       icon: 'fa fa-users',
-      label: 'sub-groups'
+      label: 'sub-groups',
+      type: TypePolicy.Groups
     },
     {
       icon: 'fa fa-calendar',
-      label: 'sessions'
+      label: 'sessions',
+      type: TypePolicy.Sessions
     },
     {
       icon: 'fa fa-users',
-      label: 'teams'
+      label: 'teams',
+      type: TypePolicy.Teams
     },
     {
       icon: 'fa fa-user',
-      label: 'users'
+      label: 'users',
+      type: TypePolicy.Users
     }
   ];
 
@@ -52,8 +56,8 @@ export class GroupCompositionFilterComponent implements OnInit{
   }
 
   onTypePolicyChanged(index: number): void {
-    if (index < 0 || index > 3) throw Error('invalid value for category policy');
-    this.value.type = index;
+    if (index < 0 || index >= this.typePolicies.length) throw Error('invalid value for category policy');
+    this.value.type = this.typePolicies[index].type;
     this.change.emit(this.value);
   }
 }
