@@ -9,6 +9,8 @@ import { ItemStringChanges, UpdateItemStringService } from '../../http-services/
 import { TOAST_LENGTH } from '../../../../shared/constants/global';
 import { MessageService } from 'primeng/api';
 import { ERROR_MESSAGE } from '../../../../shared/constants/api';
+import { ItemChild } from '../../components/item-children-edit/item-children';
+import { ItemChanges, UpdateItemService } from '../../http-services/update-item.service';
 
 
 @Component({
@@ -76,12 +78,24 @@ export class ItemEditComponent implements OnDestroy {
     });
   }
 
-  getItemStringChanges(): ItemStringChanges {
+  getItemChanges(): ItemChanges | undefined {
+    const children = this.itemForm.get('children');
+
+    if (children === null) return undefined;
+
+    const res: ItemChanges = {};
+    const childrenValue = children.value as ItemChild[];
+    if (childrenValue.length) res.children = childrenValue;
+
+    return res;
+  }
+
+
+  getItemStringChanges(): ItemStringChanges | undefined {
     const title = this.itemForm.get('title');
     const description = this.itemForm.get('description');
 
-    if (title === null || description === null) // Something is wrong with the form
-      return {};
+    if (title === null || description === null) return undefined;
 
     return {
       title: (title.value as string).trim(),
@@ -97,8 +111,9 @@ export class ItemEditComponent implements OnDestroy {
       return;
     }
 
+    const itemChanges = this.getItemChanges();
     const itemStringChanges = this.getItemStringChanges();
-    if (!itemStringChanges) {
+    if (!itemChanges || !itemStringChanges) {
       this.errorToast();
       return;
     }
