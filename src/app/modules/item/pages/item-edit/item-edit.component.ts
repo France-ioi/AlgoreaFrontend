@@ -22,6 +22,7 @@ export class ItemEditComponent implements OnDestroy {
     // eslint-disable-next-line @typescript-eslint/unbound-method
     title: [ '', [ Validators.required, Validators.minLength(3), Validators.maxLength(200) ] ],
     description: '',
+    children: [],
   });
   itemData$ = this.itemDataSource.itemData$;
   itemLoadingState$ = this.itemDataSource.state$;
@@ -44,6 +45,7 @@ export class ItemEditComponent implements OnDestroy {
           this.itemForm.patchValue({
             title: item.string.title || '',
             description: item.string.description || '',
+            children: [],
           });
         }),
       this.currentContent.editAction$.pipe(filter(action => action === EditAction.Save))
