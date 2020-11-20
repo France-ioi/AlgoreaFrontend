@@ -7,7 +7,7 @@ import { fetchingState, isReady, readyState } from 'src/app/shared/helpers/state
 import { Group } from '../../http-services/get-group-by-id.service';
 import { GetGroupChildrenService, GroupChild } from '../../http-services/get-group-children.service';
 import { GetGroupMembersService, Member } from '../../http-services/get-group-members.service';
-import { TypePolicy, Policy } from '../group-composition-filter/group-composition-filter.component';
+import { TypeFilter, Filter } from '../group-composition-filter/group-composition-filter.component';
 
 interface Column {
   sortable?: boolean,
@@ -42,10 +42,10 @@ export class MemberListComponent implements OnChanges, OnDestroy {
 
   state: 'error' | 'ready' | 'fetching' = 'fetching';
 
-  defaultPolicy: Policy = { type: TypePolicy.Groups };
+  defaultPolicy: Filter = { type: TypeFilter.Groups };
 
   currentSort: string[] = [];
-  currentPolicy: Policy = this.defaultPolicy;
+  currentPolicy: Filter = this.defaultPolicy;
 
   data: Data = {
     columns: [],
@@ -54,7 +54,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
 
   @ViewChild('table') private table?: Table;
 
-  private dataFetching = new Subject<{ groupId: string, policy: Policy, sort: string[] }>();
+  private dataFetching = new Subject<{ groupId: string, policy: Filter, sort: string[] }>();
 
   constructor(
     private getGroupMembersService: GetGroupMembersService,
@@ -89,15 +89,15 @@ export class MemberListComponent implements OnChanges, OnDestroy {
     this.dataFetching.next({ groupId: this.group.id, policy: this.currentPolicy, sort: this.currentSort });
   }
 
-  getData(groupId: string, policy: Policy, sort: string[]): Observable<Data> {
+  getData(groupId: string, policy: Filter, sort: string[]): Observable<Data> {
     switch (policy.type) {
-      case TypePolicy.Groups:
+      case TypeFilter.Groups:
         return this.getGroupChildrenService.getGroupChildren(groupId, sort)
           .pipe(map(children => ({
             columns: groupsColumns,
             rowData: children.filter(child => child.type != 'Session' && child.type != 'User' && child.type != 'Team')
           })));
-      case TypePolicy.Users:
+      case TypeFilter.Users:
       default:
         return this.getGroupMembersService.getGroupMembers(groupId, sort)
           .pipe(map(members => ({ columns: usersColumns, rowData: members })));
@@ -115,7 +115,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
     }
   }
 
-  onPolicyChange(policy: Policy): void {
+  onPolicyChange(policy: Filter): void {
     if (!this.group) return;
 
     if (policy !== this.currentPolicy) {

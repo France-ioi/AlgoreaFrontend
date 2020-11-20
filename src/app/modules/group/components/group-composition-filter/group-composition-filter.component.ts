@@ -1,14 +1,14 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
-export enum TypePolicy {
+export enum TypeFilter {
   Groups,
   Sessions,
   Teams,
   Users,
 }
 
-export interface Policy {
-  type: TypePolicy,
+export interface Filter {
+  type: TypeFilter,
 }
 
 @Component({
@@ -18,32 +18,32 @@ export interface Policy {
 })
 export class GroupCompositionFilterComponent implements OnInit{
 
-  @Input() defaultValue?: Policy;
+  @Input() defaultValue?: Filter;
 
-  @Output() change = new EventEmitter<Policy>();
+  @Output() change = new EventEmitter<Filter>();
 
-  value: Policy = { type: TypePolicy.Users };
+  value: Filter = { type: TypeFilter.Users };
 
   typePolicies = [
     {
       icon: 'fa fa-users',
       label: 'sub-groups',
-      type: TypePolicy.Groups
+      type: TypeFilter.Groups
     },
     {
       icon: 'fa fa-calendar',
       label: 'sessions',
-      type: TypePolicy.Sessions
+      type: TypeFilter.Sessions
     },
     {
       icon: 'fa fa-users',
       label: 'teams',
-      type: TypePolicy.Teams
+      type: TypeFilter.Teams
     },
     {
       icon: 'fa fa-user',
       label: 'users',
-      type: TypePolicy.Users
+      type: TypeFilter.Users
     }
   ];
 
