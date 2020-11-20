@@ -8,32 +8,40 @@
     <nav mat-tab-nav-bar *ngIf="group.isCurrentUserManager">
       <a mat-tab-link
         [routerLink]="'./'"
-        routerLinkActive #rla1="routerLinkActive"
+        routerLinkActive #overviewTab="routerLinkActive"
         [routerLinkActiveOptions]="{exact: true}"
-        [active]="rla1.isActive">
+        [active]="overviewTab.isActive">
         Overview
       </a>
       <a mat-tab-link
         [routerLink]="'./members'"
-        routerLinkActive #rla2="routerLinkActive"
-        [active]="rla2.isActive">
+        routerLinkActive #compositionTab="routerLinkActive"
+        [active]="compositionTab.isActive">
         Composition
       </a>
       <a mat-tab-link
         *ngIf="group.canCurrentUserManageGroup"
         [routerLink]="'./managers'"
-        routerLinkActive #rla3="routerLinkActive"
-        [active]="rla3.isActive">
+        routerLinkActive #adminTab="routerLinkActive"
+        [active]="adminTab.isActive">
         Administration
       </a>
       <a mat-tab-link
         *ngIf="group.canCurrentUserManageGroup"
         [routerLink]="'./settings'"
-        routerLinkActive #rla4="routerLinkActive"
-        [active]="rla4.isActive">
+        routerLinkActive #settingsTab="routerLinkActive"
+        [active]="settingsTab.isActive">
         Settings
       </a>
     </nav>
+
+    <div class="bg-white">
+      <alg-group-overview *ngIf="!group.isCurrentUserManager || !!overviewTab?.isActive" [group]="group"></alg-group-overview>
+      <alg-group-composition *ngIf="!!compositionTab?.isActive" [group]="group" (groupRefreshRequired)="onGroupRefreshRequired()"></alg-group-composition>
+      <alg-group-administration *ngIf="!!adminTab?.isActive" [group]="group" (groupRefreshRequired)="onGroupRefreshRequired()"></alg-group-administration>
+      <alg-group-settings *ngIf="!!settingsTab?.isActive" [group]="group" (groupRefreshRequired)="onGroupRefreshRequired()"></alg-group-settings>
+    </div>
+
   </ng-container>
 
   <p-progressSpinner *ngIf="state.tag === 'fetching'"></p-progressSpinner>
@@ -41,7 +49,3 @@
   <p *ngIf="state.tag === 'error'">Error while loading the group info</p>
 
 </ng-container>
-
-<div class="bg-white">
-  <router-outlet></router-outlet>
-</div>
