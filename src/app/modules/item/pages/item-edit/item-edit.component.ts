@@ -35,6 +35,7 @@ export class ItemEditComponent implements OnDestroy {
     private currentContent: CurrentContentService,
     private itemDataSource: ItemDataSource,
     private formBuilder: FormBuilder,
+    private updateItemService: UpdateItemService,
     private updateItemStringService: UpdateItemStringService,
     private messageService: MessageService
   ) {
@@ -117,6 +118,19 @@ export class ItemEditComponent implements OnDestroy {
       this.errorToast();
       return;
     }
+
+    this.updateItemService.updateItem(
+      this.itemId,
+      itemChanges
+    ).subscribe(
+      _status => {
+        this.itemForm.disable();
+        this.successToast();
+        this.itemDataSource.refreshItem();
+        this.currentContent.editAction.next(EditAction.StopEditing);
+      },
+      _err => this.errorToast(_err)
+    );
 
     this.updateItemStringService.updateItem(
       this.itemId,
