@@ -25,6 +25,7 @@ export class UpdateItemService {
     return this.http.put<SimpleActionResponse>(
       `${appConfig().apiUrl}/items/${itemId}`,
       changes,
+      { headers: { timeout: '10000' } },
     ).pipe(
       map(assertSuccess),
     );
