@@ -4,6 +4,7 @@ import { ItemData } from '../../services/item-datasource.service';
 import { GetItemChildrenService } from '../../http-services/get-item-children.service';
 import { Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'alg-item-children-edit',
@@ -12,6 +13,7 @@ import { map } from 'rxjs/operators';
 })
 export class ItemChildrenEditComponent implements OnChanges {
   @Input() itemData?: ItemData;
+  @Input() parentForm?: FormGroup;
 
   state: 'loading' | 'error' | 'ready' = 'ready';
   data: ItemChild[] = [];
@@ -48,6 +50,13 @@ export class ItemChildrenEditComponent implements OnChanges {
     } else {
       this.state = 'error';
     }
+  }
+
+  orderChanged(): void {
+    if (this.state == 'error') return;
+    this.parentForm?.patchValue({
+      children: this.data.map((child, idx) => ({ item_id: child.id, order: idx })),
+    });
   }
 
 }
