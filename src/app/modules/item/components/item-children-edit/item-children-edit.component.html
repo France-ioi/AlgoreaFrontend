@@ -2,10 +2,14 @@
 
   <ng-container *ngSwitchCase="'ready'">
     <div *ngIf="data.length" class="section-chapter-wrapper" >
-      <p-table [value]="data" [reorderableColumns]="true">
+      <p-table [value]="data" [reorderableColumns]="true" (onRowReorder)="orderChanged()">
         <ng-template pTemplate="body" let-rowData let-index="rowIndex">
-          <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="index">
-            <td class="main">{{ rowData.title }}
+          <tr [pSelectableRow]="rowData" [pReorderableRow]="index">
+            <td class="reorder-handle" [pReorderableRowHandle]="index">
+              <i class="fa fa-sort" [pReorderableRowHandle]="index"></i>
+            </td>
+            <td class="main">
+              {{ rowData.title }}
             </td>
           </tr>
         </ng-template>
