@@ -4,6 +4,7 @@ import { Table } from 'primeng/table';
 import { merge, Observable, of, Subject } from 'rxjs';
 import { delay, map, switchMap } from 'rxjs/operators';
 import { fetchingState, isReady, readyState } from 'src/app/shared/helpers/state';
+import { GetGroupUserDescendantsService } from 'src/app/shared/http-services/get-group-user-descendants.service';
 import { Group } from '../../http-services/get-group-by-id.service';
 import { GetGroupChildrenService, GroupChild } from '../../http-services/get-group-children.service';
 import { GetGroupMembersService, Member } from '../../http-services/get-group-members.service';
@@ -26,9 +27,14 @@ const groupsColumns: Column[] = [
   { field: 'user_count', header: 'User Count' },
 ];
 
+const descendantUsersColumns: Column[] = [
+  { field: 'login', header: 'Name' },
+  { field: 'parentGroups', header: 'Parent group(s)' },
+];
+
 interface Data {
   columns: Column[],
-  rowData: (Member|GroupChild)[],
+  rowData: (Member|GroupChild|{ login: string, parentGroups: string })[],
 }
 
 @Component({
@@ -59,6 +65,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
   constructor(
     private getGroupMembersService: GetGroupMembersService,
     private getGroupChildrenService: GetGroupChildrenService,
+    private getGroupUserDescendantsService: GetGroupUserDescendantsService,
   ) {
     this.dataFetching.pipe(
       delay(0),
@@ -102,6 +109,15 @@ export class MemberListComponent implements OnChanges, OnDestroy {
         if (policy.directChildren) {
           return this.getGroupMembersService.getGroupMembers(groupId, sort)
             .pipe(map(members => ({ columns: usersColumns, rowData: members })));
+        } else {
+          return this.getGroupUserDescendantsService.getGroupUserDescendants(groupId, sort)
+            .pipe(map(descendantUsers => ({
+              columns: descendantUsersColumns,
+              rowData: descendantUsers.map(descendantUser => ({
+                login: descendantUser.user.login,
+                parentGroups: descendantUser.parents.map(parent => parent.name).join(', ')
+              }))
+            })));
         }
     }
   }

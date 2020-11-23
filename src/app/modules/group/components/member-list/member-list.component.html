@@ -54,6 +54,12 @@
           <ng-container *ngIf="col.field === 'user_count'">
             {{ rowData.userCount }}
           </ng-container>
+          <ng-container *ngIf="col.field === 'login'">
+            {{ rowData.login }}
+          </ng-container>
+          <ng-container *ngIf="col.field === 'parentGroups'">
+            {{ rowData.parentGroups }}
+          </ng-container>
         </td>
       </tr>
     </ng-template>
