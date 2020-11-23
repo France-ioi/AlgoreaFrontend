@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
 @Component({
@@ -12,8 +12,6 @@ export class TextareaComponent implements OnInit {
 
   @Input() icon = '';
   @Input() placeholder = '';
-
-  @Output() textChange = new EventEmitter<string>();
 
   constructor() {}
 
