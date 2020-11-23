@@ -43,7 +43,7 @@
             {{ rowData.user | user }}
           </ng-container>
           <ng-container *ngIf="col.field === 'member_since'">
-            {{ rowData.memberSince | date }}
+            {{ rowData.memberSince | date:'short' }}
           </ng-container>
           <ng-container *ngIf="col.field === 'name'">
             {{ rowData.name }}
