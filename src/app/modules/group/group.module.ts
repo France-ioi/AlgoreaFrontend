@@ -25,7 +25,8 @@ import { CurrentUserComponent } from './pages/current-user/current-user.componen
 import { GroupEditComponent } from './pages/group-edit/group-edit.component';
 import { GroupByIdComponent } from './pages/group-by-id/group-by-id.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { UserListComponent } from './components/user-list/user-list.component';
+import { MemberListComponent } from './components/member-list/member-list.component';
+import { GroupCompositionFilterComponent } from './components/group-composition-filter/group-composition-filter.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +48,8 @@ import { UserListComponent } from './components/user-list/user-list.component';
     CurrentUserComponent,
     GroupEditComponent,
     GroupByIdComponent,
-    UserListComponent,
+    MemberListComponent,
+    GroupCompositionFilterComponent,
   ],
   imports: [
     CommonModule,
