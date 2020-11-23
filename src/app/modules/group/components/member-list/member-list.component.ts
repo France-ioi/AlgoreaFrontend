@@ -42,7 +42,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
 
   state: 'error' | 'ready' | 'fetching' = 'fetching';
 
-  defaultPolicy: Filter = { type: TypeFilter.Groups };
+  defaultPolicy: Filter = { type: TypeFilter.Groups, directChildren: false };
 
   currentSort: string[] = [];
   currentPolicy: Filter = this.defaultPolicy;
@@ -58,7 +58,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
 
   constructor(
     private getGroupMembersService: GetGroupMembersService,
-    private getGroupChildrenService: GetGroupChildrenService
+    private getGroupChildrenService: GetGroupChildrenService,
   ) {
     this.dataFetching.pipe(
       delay(0),
@@ -99,8 +99,10 @@ export class MemberListComponent implements OnChanges, OnDestroy {
           })));
       case TypeFilter.Users:
       default:
-        return this.getGroupMembersService.getGroupMembers(groupId, sort)
-          .pipe(map(members => ({ columns: usersColumns, rowData: members })));
+        if (policy.directChildren) {
+          return this.getGroupMembersService.getGroupMembers(groupId, sort)
+            .pipe(map(members => ({ columns: usersColumns, rowData: members })));
+        }
     }
   }
 
