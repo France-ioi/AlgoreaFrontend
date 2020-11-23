@@ -1,10 +1,14 @@
 import { Component, Input, OnChanges } from '@angular/core';
-import { ItemChild } from './item-children';
 import { ItemData } from '../../services/item-datasource.service';
 import { GetItemChildrenService } from '../../http-services/get-item-children.service';
 import { Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { FormGroup } from '@angular/forms';
+
+interface ChildData {
+  id: string,
+  title: string | null,
+}
 
 @Component({
   selector: 'alg-item-children-edit',
@@ -16,7 +20,7 @@ export class ItemChildrenEditComponent implements OnChanges {
   @Input() parentForm?: FormGroup;
 
   state: 'loading' | 'error' | 'ready' = 'ready';
-  data: ItemChild[] = [];
+  data: ChildData[] = [];
 
   private subscription?: Subscription;
 
@@ -35,11 +39,10 @@ export class ItemChildrenEditComponent implements OnChanges {
       this.subscription = this.getItemChildrenService
         .get(this.itemData.item.id, this.itemData.currentResult.attemptId)
         .pipe(
-          map(children => children.map(child => ({
-            id: child.id,
-            title: child.string.title,
-            order: child.order
-          })).sort((a, b) => a.order - b.order))
+          map(children => children
+            .sort((a, b) => a.order - b.order)
+            .map(child => ({ id: child.id, title: child.string.title }))
+          )
         ).subscribe(children => {
           this.data = children;
           this.state = 'ready';

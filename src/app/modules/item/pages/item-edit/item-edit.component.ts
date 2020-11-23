@@ -9,8 +9,7 @@ import { ItemStringChanges, UpdateItemStringService } from '../../http-services/
 import { TOAST_LENGTH } from '../../../../shared/constants/global';
 import { MessageService } from 'primeng/api';
 import { ERROR_MESSAGE } from '../../../../shared/constants/api';
-import { ItemChild } from '../../components/item-children-edit/item-children';
-import { ItemChanges, UpdateItemService } from '../../http-services/update-item.service';
+import { ItemChild, ItemChanges, UpdateItemService } from '../../http-services/update-item.service';
 
 
 @Component({

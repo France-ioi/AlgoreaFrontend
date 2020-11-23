@@ -4,7 +4,11 @@ import { Observable } from 'rxjs';
 import { assertSuccess, SimpleActionResponse } from '../../../shared/http-services/action-response';
 import { appConfig } from '../../../shared/helpers/config';
 import { map } from 'rxjs/operators';
-import { ItemChild } from '../components/item-children-edit/item-children';
+
+export interface ItemChild {
+  item_id: string,
+  order: number,
+}
 
 export interface ItemChanges {
   children?: ItemChild[]
