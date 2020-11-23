@@ -2,7 +2,7 @@ import { Component, OnDestroy } from '@angular/core';
 import { CurrentContentService, EditAction } from 'src/app/shared/services/current-content.service';
 import { ItemData, ItemDataSource } from '../../services/item-datasource.service';
 import { FormBuilder, Validators } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { combineLatest, Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { FetchError, Fetching, isReady, Ready } from '../../../../shared/helpers/state';
 import { ItemStringChanges, UpdateItemStringService } from '../../http-services/update-item-string.service';
@@ -119,31 +119,17 @@ export class ItemEditComponent implements OnDestroy {
       return;
     }
 
-    this.updateItemService.updateItem(
-      this.itemId,
-      itemChanges
-    ).subscribe(
+    combineLatest([
+      this.updateItemService.updateItem(this.itemId, itemChanges),
+      this.updateItemStringService.updateItem(this.itemId, itemStringChanges),
+    ]).subscribe(
       _status => {
         this.itemForm.disable();
         this.successToast();
         this.itemDataSource.refreshItem();
         this.currentContent.editAction.next(EditAction.StopEditing);
       },
-      _err => this.errorToast(_err)
-    );
-
-    this.updateItemStringService.updateItem(
-      this.itemId,
-      itemStringChanges
-    ).subscribe(
-      _status => {
-        this.itemForm.disable();
-        this.successToast();
-        this.itemDataSource.refreshItem();
-        this.currentContent.editAction.next(EditAction.StopEditing);
-      },
-      _err => this.errorToast()
+      _err => this.errorToast(_err),
     );
   }
-
 }
