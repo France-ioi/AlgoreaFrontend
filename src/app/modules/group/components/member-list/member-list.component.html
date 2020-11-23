@@ -11,8 +11,7 @@
     [value]="data.rowData"
     [customSort]="true"
     sortMode="multiple"
-    [lazy]="true"
-    (onLazyLoad)="onCustomSort($event)"
+    (sortFunction)="onCustomSort($event)"
     [loading]="state === 'fetching'"
   >
     <ng-template pTemplate="header" let-columns>
