@@ -1,2 +1,5 @@
-<alg-section icon="fa fa-chart-line" label="Progress"></alg-section>
-<alg-item-current-situation [itemData]="itemData"></alg-item-current-situation>
+<ng-container *ngIf="session$ | async as session">
+  <alg-section icon="fa fa-list" label="{{session.watchedGroup ? 'Group' : 'User'}} situation">
+    <alg-item-current-situation [itemData]="itemData" [session]="session"></alg-item-current-situation>
+  </alg-section>
+</ng-container>

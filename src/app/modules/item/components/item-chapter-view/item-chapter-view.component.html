@@ -1,0 +1,13 @@
+<ng-container *ngIf="session">
+
+  <ng-container
+    *ngIf="session.watchedGroup; else userChapterView"
+  >
+    TODO
+  </ng-container>
+
+  <ng-template #userChapterView>
+    <p>Chapter view for user</p>
+  </ng-template>
+
+</ng-container>
