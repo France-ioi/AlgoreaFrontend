@@ -25,7 +25,7 @@ export class GroupCompositionFilterComponent implements OnInit{
 
   value: Filter = { type: TypeFilter.Users, directChildren: true };
 
-  childrenFilters: { label:string, value: boolean }[] = [
+  readonly childrenFilters: { label:string, value: boolean }[] = [
     {
       label: 'All Descendants',
       value: false,
@@ -36,7 +36,7 @@ export class GroupCompositionFilterComponent implements OnInit{
     },
   ];
 
-  allDescendantsTypeFilters = [
+  readonly allDescendantsTypeFilters = [
     {
       icon: 'fa fa-users',
       label: 'teams',
@@ -47,9 +47,9 @@ export class GroupCompositionFilterComponent implements OnInit{
       label: 'users',
       value: TypeFilter.Users
     },
-  ]
+  ];
 
-  directChildrenTypeFilters = [
+  readonly directChildrenTypeFilters = [
     {
       icon: 'fa fa-users',
       label: 'teams',

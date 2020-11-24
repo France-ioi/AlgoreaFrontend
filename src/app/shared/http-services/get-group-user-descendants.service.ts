@@ -15,7 +15,7 @@ interface RawUserDescendant {
     login: string,
     first_name: string|null,
     last_name: string|null,
-    grade: number,
+    grade: number|null,
   },
 }
 
@@ -30,7 +30,7 @@ export interface UserDescendant {
     login: string,
     firstName: string|null,
     lastName: string|null,
-    grade: number,
+    grade: number|null,
   },
 }
 

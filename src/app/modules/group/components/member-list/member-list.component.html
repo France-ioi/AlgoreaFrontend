@@ -1,4 +1,4 @@
-<alg-group-composition-filter (change)="onPolicyChange($event)" [defaultValue]="defaultPolicy"></alg-group-composition-filter>
+<alg-group-composition-filter (change)="onFilterChange($event)" [defaultValue]="defaultFilter"></alg-group-composition-filter>
 
 <p *ngIf="state === 'error';else noError" class="error-message">
   <i class="fa fa-exclamation-triangle"></i>

@@ -48,10 +48,10 @@ export class MemberListComponent implements OnChanges, OnDestroy {
 
   state: 'error' | 'ready' | 'fetching' = 'fetching';
 
-  defaultPolicy: Filter = { type: TypeFilter.Groups, directChildren: false };
+  defaultFilter: Filter = { type: TypeFilter.Groups, directChildren: false };
 
   currentSort: string[] = [];
-  currentPolicy: Filter = this.defaultPolicy;
+  currentFilter: Filter = this.defaultFilter;
 
   data: Data = {
     columns: [],
@@ -60,7 +60,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
 
   @ViewChild('table') private table?: Table;
 
-  private dataFetching = new Subject<{ groupId: string, policy: Filter, sort: string[] }>();
+  private dataFetching = new Subject<{ groupId: string, filter: Filter, sort: string[] }>();
 
   constructor(
     private getGroupMembersService: GetGroupMembersService,
@@ -72,7 +72,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
       switchMap(params =>
         merge(
           of(fetchingState()),
-          this.getData(params.groupId, params.policy, params.sort).pipe(map(readyState))
+          this.getData(params.groupId, params.filter, params.sort).pipe(map(readyState))
         ))
     ).subscribe(
       state => {
@@ -90,14 +90,14 @@ export class MemberListComponent implements OnChanges, OnDestroy {
 
   ngOnChanges(_changes: SimpleChanges): void {
     if (!this.group) return;
-    this.currentPolicy = { ...this.defaultPolicy };
+    this.currentFilter = { ...this.defaultFilter };
     this.currentSort = [];
     this.table?.reset();
-    this.dataFetching.next({ groupId: this.group.id, policy: this.currentPolicy, sort: this.currentSort });
+    this.dataFetching.next({ groupId: this.group.id, filter: this.currentFilter, sort: this.currentSort });
   }
 
-  getData(groupId: string, policy: Filter, sort: string[]): Observable<Data> {
-    switch (policy.type) {
+  getData(groupId: string, filter: Filter, sort: string[]): Observable<Data> {
+    switch (filter.type) {
       case TypeFilter.Groups:
         return this.getGroupChildrenService.getGroupChildren(groupId, sort)
           .pipe(map(children => ({
@@ -106,7 +106,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
           })));
       case TypeFilter.Users:
       default:
-        if (policy.directChildren) {
+        if (filter.directChildren) {
           return this.getGroupMembersService.getGroupMembers(groupId, sort)
             .pipe(map(members => ({ columns: usersColumns, rowData: members })));
         } else {
@@ -129,18 +129,18 @@ export class MemberListComponent implements OnChanges, OnDestroy {
 
     if (sortMeta && JSON.stringify(sortMeta) !== JSON.stringify(this.currentSort)) {
       this.currentSort = sortMeta;
-      this.dataFetching.next({ groupId: this.group.id, policy: this.currentPolicy, sort: this.currentSort });
+      this.dataFetching.next({ groupId: this.group.id, filter: this.currentFilter, sort: this.currentSort });
     }
   }
 
-  onPolicyChange(policy: Filter): void {
+  onFilterChange(filter: Filter): void {
     if (!this.group) return;
 
-    if (policy !== this.currentPolicy) {
-      this.currentPolicy = { ...policy };
+    if (filter !== this.currentFilter) {
+      this.currentFilter = { ...filter };
       this.currentSort = [];
       this.table?.reset();
-      this.dataFetching.next({ groupId: this.group.id, policy: this.currentPolicy, sort: this.currentSort });
+      this.dataFetching.next({ groupId: this.group.id, filter: this.currentFilter, sort: this.currentSort });
     }
   }
 }
