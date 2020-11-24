@@ -45,6 +45,8 @@
 
       <span *ngIf="!data.length">No children for this chapter.</span>
 
+      <alg-add-content></alg-add-content>
+
     </div>
 
   </ng-container>
@@ -52,11 +54,4 @@
   <p-progressSpinner *ngSwitchCase="'loading'"></p-progressSpinner>
 
   <div *ngSwitchCase="'error'">Error</div>
-
-
-  <alg-sub-section icon="sign-in-alt" label="Add a content">
-    <alg-input placeholder="test"></alg-input>
-    dskfjhfdskjlq
-  </alg-sub-section>
-
 </alg-section>
