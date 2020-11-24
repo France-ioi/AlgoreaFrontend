@@ -1,11 +1,11 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges, Output, EventEmitter } from '@angular/core';
 import { ItemData } from '../../services/item-datasource.service';
 import { GetItemChildrenService } from '../../http-services/get-item-children.service';
 import { Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { FormGroup } from '@angular/forms';
 
-interface ChildData {
+export interface ChildData {
   id: string,
   title: string | null,
 }
@@ -23,6 +23,7 @@ export class ItemChildrenEditComponent implements OnChanges {
   data: ChildData[] = [];
 
   private subscription?: Subscription;
+  @Output() change = new EventEmitter<ChildData[]>();
 
   constructor(
     private getItemChildrenService: GetItemChildrenService,
@@ -56,10 +57,7 @@ export class ItemChildrenEditComponent implements OnChanges {
   }
 
   orderChanged(): void {
-    if (this.state == 'error') return;
-    this.parentForm?.patchValue({
-      children: this.data.map((child, idx) => ({ item_id: child.id, order: idx })),
-    });
+    this.change.emit(this.data);
   }
 
 }

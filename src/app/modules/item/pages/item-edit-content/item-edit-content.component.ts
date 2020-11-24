@@ -1,6 +1,7 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { ItemData } from '../../services/item-datasource.service';
+import { ChildData } from '../../components/item-children-edit/item-children-edit.component';
 
 @Component({
   selector: 'alg-item-edit-content',
@@ -10,6 +11,8 @@ import { ItemData } from '../../services/item-datasource.service';
 export class ItemEditContentComponent {
   @Input() parentForm?: FormGroup;
   @Input() itemData? : ItemData;
+
+  @Output() change = new EventEmitter<ChildData[]>();
 
   constructor() {}
 

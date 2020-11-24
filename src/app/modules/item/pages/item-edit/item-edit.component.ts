@@ -10,6 +10,7 @@ import { TOAST_LENGTH } from '../../../../shared/constants/global';
 import { MessageService } from 'primeng/api';
 import { ERROR_MESSAGE } from '../../../../shared/constants/api';
 import { ItemChild, ItemChanges, UpdateItemService } from '../../http-services/update-item.service';
+import { ChildData } from '../../components/item-children-edit/item-children-edit.component';
 
 
 @Component({
@@ -75,6 +76,12 @@ export class ItemEditComponent implements OnDestroy {
       summary: 'Error',
       detail: message || ERROR_MESSAGE.fail,
       life: TOAST_LENGTH,
+    });
+  }
+
+  updateForm(children: ChildData[]): void {
+    this.itemForm.patchValue({
+      children: children.map((child, idx) => ({ item_id: child.id, order: idx })),
     });
   }
 
