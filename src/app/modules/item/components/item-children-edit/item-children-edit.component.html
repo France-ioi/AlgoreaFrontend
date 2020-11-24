@@ -1,8 +1,8 @@
 <alg-section [ngSwitch]="state" icon="fa fa-book" label="Children">
 
   <ng-container *ngSwitchCase="'ready'">
-    <div *ngIf="data.length" class="section-chapter-wrapper" >
-      <p-table [value]="data" [reorderableColumns]="true">
+    <div class="section-chapter-wrapper" >
+      <p-table *ngIf="data.length" [value]="data" [reorderableColumns]="true">
         <ng-template pTemplate="body" let-rowData let-index="rowIndex">
           <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="index">
             <!--      <td *ngIf="lockState === 0">-->
@@ -42,9 +42,11 @@
           </div>
         </ng-template>
       </p-table>
+
+      <span *ngIf="!data.length">No children for this chapter.</span>
+
     </div>
 
-    <span *ngIf="!data.length">No children for this chapter.</span>
   </ng-container>
 
   <p-progressSpinner *ngSwitchCase="'loading'"></p-progressSpinner>
