@@ -49,7 +49,7 @@ describe('Algorea Frontend', () => {
           .getFirstActivityElement()
           .element(by.css('.node-label-title'))
           .getText()
-      ).toContain('Activités publiques');
+      ).toContain('Parcours officiels');
     });
   });
 
