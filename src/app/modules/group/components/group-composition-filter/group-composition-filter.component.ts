@@ -81,8 +81,8 @@ export class GroupCompositionFilterComponent implements OnInit{
     if (this.defaultValue) {
       this.value = this.defaultValue;
       this.selectedChildrenFilter = this.childrenFilters.findIndex(childrenFilter => childrenFilter.value === this.value.directChildren);
-      this.selectedTypeFilter = (this.value.directChildren ? this.directChildrenTypeFilters : this.allDescendantsTypeFilters)
-        .findIndex(typeFilter => typeFilter.value === this.value.type);
+      const typeFilters = this.value.directChildren ? this.directChildrenTypeFilters : this.allDescendantsTypeFilters;
+      this.selectedTypeFilter = Math.max(0, typeFilters.findIndex(typeFilter => typeFilter.value === this.value.type));
     }
   }
 
@@ -101,8 +101,7 @@ export class GroupCompositionFilterComponent implements OnInit{
     this.value.directChildren = this.childrenFilters[index].value;
 
     const typeFilters = this.value.directChildren ? this.directChildrenTypeFilters : this.allDescendantsTypeFilters;
-    this.selectedTypeFilter = typeFilters.findIndex(typeFilter =>
-      typeFilter.value === (this.defaultValue ? this.defaultValue.type : TypeFilter.Users));
+    this.selectedTypeFilter = typeFilters.findIndex(typeFilter => typeFilter.value === TypeFilter.Users);
     this.value.type = typeFilters[this.selectedTypeFilter].value;
 
     this.change.emit(this.value);
