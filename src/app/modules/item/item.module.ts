@@ -17,6 +17,9 @@ import { ParentSkillsComponent } from './components/parent-skills/parent-skills.
 import { ItemEditContentComponent } from './pages/item-edit-content/item-edit-content.component';
 import { ItemChildrenEditComponent } from './components/item-children-edit/item-children-edit.component';
 import { ItemChapterViewComponent } from './components/item-chapter-view/item-chapter-view.component';
+import { GroupSituationChapterViewComponent } from
+  './components/item-chapter-view/group-situation-chapter-view/group-situation-chapter-view.component';
+import { UserProgressComponent } from './components/item-chapter-view/group-situation-chapter-view/user-progress/user-progress.component';
 
 @NgModule({
   declarations: [
@@ -33,6 +36,8 @@ import { ItemChapterViewComponent } from './components/item-chapter-view/item-ch
     ParentSkillsComponent,
     ItemEditContentComponent,
     ItemChildrenEditComponent,
+    GroupSituationChapterViewComponent,
+    UserProgressComponent,
     ItemProgressComponent,
     ItemChapterViewComponent,
   ],

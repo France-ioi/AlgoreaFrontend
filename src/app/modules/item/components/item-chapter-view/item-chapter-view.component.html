@@ -1,10 +1,11 @@
 <ng-container *ngIf="session">
 
-  <ng-container
+  <alg-group-situation-chapter-view
     *ngIf="session.watchedGroup; else userChapterView"
+    [itemData]="itemData"
+    [group]="session.watchedGroup"
   >
-    TODO
-  </ng-container>
+  </alg-group-situation-chapter-view>
 
   <ng-template #userChapterView>
     <p>Chapter view for user</p>

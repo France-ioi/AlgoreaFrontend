@@ -1,0 +1,40 @@
+@import 'src/colors.scss';
+@import 'src/geometry.scss';
+
+.group-situation-data {
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.4167rem;
+  height: 3.5833rem;
+
+  &.success {
+    background-color: #9ACC68;
+  }
+
+  &.in-progress {
+    background-color: $secondary-color;
+  }
+
+  &.no-score {
+    background-color: white;
+  }
+
+  &.not-started {
+    background-color: #F1F1F1;
+  }
+
+
+  .situation-check {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+  }
+
+  app-skill-progress {
+    transform: rotate(180deg);
+    height: 1.5rem;
+  }
+}

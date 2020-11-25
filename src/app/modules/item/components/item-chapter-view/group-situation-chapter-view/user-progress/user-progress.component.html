@@ -1,0 +1,15 @@
+<div
+  *ngIf="userProgress"
+  class="group-situation-data"
+  [ngClass]="state"
+>
+  <alg-score-ring
+    *ngIf="state !== 'success'"
+    [currentScore]="userProgress.score"
+    [diameter]="32"
+    [scoreFillColor]="'#FFF'"
+  ></alg-score-ring>
+  <span class="situation-check" *ngIf="state === 'success'">
+    <i class="fa fa-check"></i>
+  </span>
+</div>
