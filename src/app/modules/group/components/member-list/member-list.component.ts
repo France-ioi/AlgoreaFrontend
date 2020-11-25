@@ -24,7 +24,7 @@ const usersColumns: Column[] = [
 const groupsColumns: Column[] = [
   { field: 'name', header: 'Name', sortable: true },
   { field: 'type', header: 'Type' },
-  { field: 'user_count', header: 'User Count' },
+  { field: 'userCount', header: 'User Count' },
 ];
 
 const descendantUsersColumns: Column[] = [

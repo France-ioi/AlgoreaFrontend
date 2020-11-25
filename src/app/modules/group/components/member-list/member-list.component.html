@@ -39,26 +39,16 @@
     >
       <tr>
         <td *ngFor="let col of columns">
-          <ng-container *ngIf="col.field === 'user.login'">
-            {{ rowData.user | user }}
-          </ng-container>
-          <ng-container *ngIf="col.field === 'member_since'">
-            {{ rowData.memberSince | date:'short' }}
-          </ng-container>
-          <ng-container *ngIf="col.field === 'name'">
-            {{ rowData.name }}
-          </ng-container>
-          <ng-container *ngIf="col.field === 'type'">
-            {{ rowData.type }}
-          </ng-container>
-          <ng-container *ngIf="col.field === 'user_count'">
-            {{ rowData.userCount }}
-          </ng-container>
-          <ng-container *ngIf="col.field === 'login'">
-            {{ rowData.login }}
-          </ng-container>
-          <ng-container *ngIf="col.field === 'parentGroups'">
-            {{ rowData.parentGroups }}
+          <ng-container [ngSwitch]="col.field">
+            <ng-container *ngSwitchCase="'user.login'">
+              {{ rowData.user | user }}
+            </ng-container>
+            <ng-container *ngSwitchCase="'member_since'">
+              {{ rowData.memberSince | date:'short' }}
+            </ng-container>
+            <ng-container *ngSwitchDefault>
+              {{ rowData[col.field] }}
+            </ng-container>
           </ng-container>
         </td>
       </tr>
