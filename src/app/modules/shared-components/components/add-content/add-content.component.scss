@@ -4,7 +4,7 @@
   display: flex;
   flex-wrap: wrap;
 
-  alg-new-content-type {
+  .new-content-type {
     display: block;
     margin: 1rem;
     flex: 1 0 calc(25% - 1.6667rem);
@@ -13,7 +13,7 @@
 
 @media screen and (min-width: 1220px) {
   .new-content-container {
-    alg-new-content-type {
+    .new-content-type {
       max-width: calc(25% - 1.6667rem);
     }
   }
@@ -21,7 +21,7 @@
 
 @media screen and (min-width: 1040px) and (max-width: 1220px) {
   .new-content-container {
-    alg-new-content-type {
+    .new-content-type {
       flex: 1 0 calc(33.33% - 1.6667rem);
       max-width: calc(33.33% - 1.6667rem);
     }
@@ -30,7 +30,7 @@
 
 @media screen and (min-width: 860px) and (max-width: 1040px) {
   .new-content-container {
-    alg-new-content-type {
+    .new-content-type {
       flex: 1 0 calc(50% - 1.6667rem);
       max-width: calc(50% - 1.6667rem);
     }
@@ -39,7 +39,7 @@
 
 @media screen and (max-width: 860px) {
   .new-content-container {
-    alg-new-content-type {
+    .new-content-type {
       flex: 1 0 calc(100% - 1.6667rem);
       max-width: calc(100% - 1.6667rem);
     }
