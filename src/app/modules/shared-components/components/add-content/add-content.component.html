@@ -1,0 +1,14 @@
+<alg-sub-section icon="sign-in-alt" label="Add a content" [isClosed]="state == 'closed'">
+  <alg-input [parentForm]="newContentForm" name="title" placeholder="Enter a title to create a new child"></alg-input>
+  <div class="new-content-container">
+    <ng-container *ngIf="state == 'opened'">
+      <div *ngFor="let item of contentTypes" class="content-type-item-container">
+        <div class="item-image-wrapper">
+          <span><i class="fa fa-{{item.icon}}"></i></span>
+        </div>
+        <div class="item-title">{{item.title}}</div>
+        <div class="item-description">{{item.desc}}</div>
+      </div>
+    </ng-container>
+  </div>
+</alg-sub-section>
