@@ -10,7 +10,7 @@ export const environment: Environment = {
   oauthServerUrl: 'https://login.france-ioi.org',
   oauthClientId: '43',
 
-  defaultActivityId: '694914435881177216',
+  defaultActivityId: '4702',
   defaultSkillId: '3000',
 };
 
