@@ -3,7 +3,6 @@ import { ItemData } from '../../services/item-datasource.service';
 import { GetItemChildrenService } from '../../http-services/get-item-children.service';
 import { Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { FormGroup } from '@angular/forms';
 
 export interface ChildData {
   id: string,
@@ -17,7 +16,6 @@ export interface ChildData {
 })
 export class ItemChildrenEditComponent implements OnChanges {
   @Input() itemData?: ItemData;
-  @Input() parentForm?: FormGroup;
 
   state: 'loading' | 'error' | 'ready' = 'ready';
   data: ChildData[] = [];
