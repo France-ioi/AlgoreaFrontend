@@ -5,6 +5,11 @@
     [ngClass]="{'has-button': buttonIcon}"
     [formControlName]="name"
   >
+  <span class="clear-button">
+    <button (click)="clearInput()">
+      <i class="pi pi-times"></i>
+    </button>
+  </span>
   <span class="icon">
     <i class="fa fa-{{inputIcon}}"></i>
   </span>

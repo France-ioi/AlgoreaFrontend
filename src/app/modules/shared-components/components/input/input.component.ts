@@ -41,4 +41,8 @@ export class InputComponent implements OnInit, OnChanges {
   onButtonClick(): void {
     this.click.emit();
   }
+
+  clearInput(): void {
+    this.parentForm?.get(this.name)?.reset('');
+  }
 }
