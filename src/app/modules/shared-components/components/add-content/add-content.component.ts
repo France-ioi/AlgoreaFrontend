@@ -10,23 +10,6 @@ export class AddContentComponent implements OnInit {
   newContentForm: FormGroup = this.formBuilder.group({
     title: '',
   });
-  contentTypes = [
-    {
-      icon: 'book',
-      title: 'Chapter',
-      desc: 'A new folder which can contain any activities.',
-    },
-    {
-      icon: 'code',
-      title: 'Task',
-      desc: 'A new task which users can try to solve.',
-    },
-    {
-      icon: 'graduation-cap',
-      title: 'Skill',
-      desc: 'A new sub-skill.',
-    },
-  ];
 
   state: 'opened' | 'closed' = 'closed';
 
