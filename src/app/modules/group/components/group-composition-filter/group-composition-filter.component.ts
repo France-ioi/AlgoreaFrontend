@@ -25,14 +25,17 @@ export class GroupCompositionFilterComponent implements OnInit{
 
   value: Filter = { type: TypeFilter.Users, directChildren: true };
 
+  selectedChildrenFilter = 0;
+  selectedTypeFilter = 0;
+
   readonly childrenFilters: { label:string, value: boolean }[] = [
-    {
-      label: 'All Descendants',
-      value: false,
-    },
     {
       label: 'Direct Children Only',
       value: true,
+    },
+    {
+      label: 'All Descendants',
+      value: false,
     },
   ];
 
@@ -52,16 +55,6 @@ export class GroupCompositionFilterComponent implements OnInit{
   readonly directChildrenTypeFilters = [
     {
       icon: 'fa fa-users',
-      label: 'teams',
-      value: TypeFilter.Teams
-    },
-    {
-      icon: 'fa fa-user',
-      label: 'users',
-      value: TypeFilter.Users
-    },
-    {
-      icon: 'fa fa-users',
       label: 'sub-groups',
       value: TypeFilter.Groups
     },
@@ -70,6 +63,16 @@ export class GroupCompositionFilterComponent implements OnInit{
       label: 'sessions',
       value: TypeFilter.Sessions
     },
+    {
+      icon: 'fa fa-users',
+      label: 'teams',
+      value: TypeFilter.Teams
+    },
+    {
+      icon: 'fa fa-user',
+      label: 'users',
+      value: TypeFilter.Users
+    },
   ];
 
   constructor() { }
@@ -77,19 +80,31 @@ export class GroupCompositionFilterComponent implements OnInit{
   ngOnInit(): void {
     if (this.defaultValue) {
       this.value = this.defaultValue;
+      this.selectedChildrenFilter = this.childrenFilters.findIndex(childrenFilter => childrenFilter.value === this.value.directChildren);
+      this.selectedTypeFilter = (this.value.directChildren ? this.directChildrenTypeFilters : this.allDescendantsTypeFilters)
+        .findIndex(typeFilter => typeFilter.value === this.value.type);
     }
   }
 
   onTypeFilterChanged(index: number): void {
     const typeFilters = this.value.directChildren ? this.directChildrenTypeFilters : this.allDescendantsTypeFilters;
     if (index < 0 || index >= typeFilters.length) throw Error('invalid value for type filter');
+    this.selectedTypeFilter = index;
     this.value.type = typeFilters[index].value;
     this.change.emit(this.value);
   }
 
   onChildrenFilterChanged(index: number): void {
     if (index < 0 || index >= this.childrenFilters.length) throw Error('invalid value for children filter');
+
+    this.selectedChildrenFilter = index;
     this.value.directChildren = this.childrenFilters[index].value;
+
+    const typeFilters = this.value.directChildren ? this.directChildrenTypeFilters : this.allDescendantsTypeFilters;
+    this.selectedTypeFilter = typeFilters.findIndex(typeFilter =>
+      typeFilter.value === (this.defaultValue ? this.defaultValue.type : TypeFilter.Users));
+    this.value.type = typeFilters[this.selectedTypeFilter].value;
+
     this.change.emit(this.value);
   }
 }

@@ -1,12 +1,12 @@
 <div class="selection-tool">
   <alg-selection style="margin: 10px;"
     [items]="childrenFilters"
-    [default]="+value.directChildren"
+    [selected]="selectedChildrenFilter"
     (change)="onChildrenFilterChanged($event)"
   ></alg-selection>
   <alg-selection
     [items]="value.directChildren ? directChildrenTypeFilters : allDescendantsTypeFilters"
-    [default]="value.type"
+    [selected]="selectedTypeFilter"
     type="square"
     (change)="onTypeFilterChanged($event)"
   ></alg-selection>
