@@ -70,8 +70,6 @@ export class GroupSituationChapterViewComponent implements OnChanges {
       this.getData(this.itemData.item.id, this.group.id, this.itemData.currentResult.attemptId).pipe(map(readyState))
     ).subscribe(
       state => {
-        console.log(state);
-
         this.state = state.tag;
         if (isReady(state)) this.data = state.data;
       },
