@@ -30,8 +30,4 @@ export class AddContentComponent implements OnInit, OnDestroy {
     this.subscription?.unsubscribe();
   }
 
-  clearInput(): void {
-    this.newContentForm.reset({ title: '' });
-  }
-
 }
