@@ -12,7 +12,7 @@ export class ItemEditContentComponent {
   @Input() parentForm?: FormGroup;
   @Input() itemData? : ItemData;
 
-  @Output() change = new EventEmitter<ChildData[]>();
+  @Output() childrenChanges = new EventEmitter<ChildData[]>();
 
   constructor() {}
 

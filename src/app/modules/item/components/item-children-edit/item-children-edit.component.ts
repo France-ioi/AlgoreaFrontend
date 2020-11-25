@@ -21,7 +21,7 @@ export class ItemChildrenEditComponent implements OnChanges {
   data: ChildData[] = [];
 
   private subscription?: Subscription;
-  @Output() change = new EventEmitter<ChildData[]>();
+  @Output() childrenChanges = new EventEmitter<ChildData[]>();
 
   constructor(
     private getItemChildrenService: GetItemChildrenService,
@@ -55,7 +55,7 @@ export class ItemChildrenEditComponent implements OnChanges {
   }
 
   orderChanged(): void {
-    this.change.emit(this.data);
+    this.childrenChanges.emit(this.data);
   }
 
 }
