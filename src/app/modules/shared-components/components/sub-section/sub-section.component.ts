@@ -9,7 +9,7 @@ export class SubSectionComponent implements OnInit {
   @Input() icon?: string; // font awesome identifier
   @Input() label?: string;
   @Input() tooltip?: string;
-  @Input() canClose = false;
+  @Input() isClosed = false;
 
   @Output() close = new EventEmitter<any>();
 
