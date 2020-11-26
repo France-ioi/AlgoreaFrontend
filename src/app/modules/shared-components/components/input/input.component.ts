@@ -24,6 +24,7 @@ export class InputComponent implements OnInit, OnChanges {
   @Input() inputType = 'text';
   @Input() inputIcon = 'font'; // a font-awesome icon identifier
   @Input() buttonIcon?: string; // a font-awesome icon identifier for the input button
+  @Input() hasClearButton = false;
 
   @Output() click = new EventEmitter();
 

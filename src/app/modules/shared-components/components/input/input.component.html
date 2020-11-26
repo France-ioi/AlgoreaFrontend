@@ -5,7 +5,7 @@
     [ngClass]="{'has-button': buttonIcon}"
     [formControlName]="name"
   >
-  <span class="clear-button">
+  <span *ngIf="hasClearButton" class="clear-button">
     <button (click)="clearInput()">
       <i class="pi pi-times"></i>
     </button>
