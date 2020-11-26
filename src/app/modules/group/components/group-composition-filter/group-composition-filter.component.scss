@@ -1,0 +1,19 @@
+@import 'src/colors.scss';
+@import 'src/geometry.scss';
+
+.selection-tool {
+  display: flex;
+  flex-direction: column;
+  border-radius: $border-radius;
+  background-color: $base-bk-color;
+
+  max-width: 56rem;
+
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 2rem;
+
+  app-selection:first-child {
+    margin: 1rem;
+  }
+}
