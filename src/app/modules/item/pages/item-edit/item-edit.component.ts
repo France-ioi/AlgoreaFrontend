@@ -79,7 +79,7 @@ export class ItemEditComponent implements OnDestroy {
   }
 
   updateItemChanges(children: ChildData[]): void {
-    if (children.length) this.itemChanges.children = children.map((child, idx) => ({ item_id: child.id, order: idx }));
+    this.itemChanges.children = children.map((child, idx) => ({ item_id: child.id, order: idx }));
   }
 
 
