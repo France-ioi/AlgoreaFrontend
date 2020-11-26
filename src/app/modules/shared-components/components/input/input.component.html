@@ -1,11 +1,12 @@
 <div class="input-wrapper" [ngClass]="{ large: size === 'large', light: !isDark }" *ngIf="parentForm" [formGroup]="parentForm">
   <input
+    #input
     [type]="inputType"
     [placeholder]="placeholder"
     [ngClass]="{'has-button': buttonIcon}"
     [formControlName]="name"
   >
-  <span *ngIf="hasClearButton" class="clear-button">
+  <span *ngIf="hasClearButton && input.value" class="clear-button">
     <button (click)="clearInput()">
       <i class="pi pi-times"></i>
     </button>
