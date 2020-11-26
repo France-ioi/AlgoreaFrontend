@@ -3,18 +3,17 @@ import {
   OnInit,
   Input,
   Output,
-  EventEmitter,
-  OnChanges,
-  SimpleChanges
+  EventEmitter, OnDestroy,
 } from '@angular/core';
-import { AbstractControl, FormGroup } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'alg-input',
   templateUrl: './input.component.html',
   styleUrls: [ './input.component.scss' ],
 })
-export class InputComponent implements OnInit, OnChanges {
+export class InputComponent implements OnInit, OnDestroy {
   @Input() name = ''; // name of the input in the parent form
   @Input() parentForm?: FormGroup;
 
@@ -28,15 +27,17 @@ export class InputComponent implements OnInit, OnChanges {
 
   @Output() click = new EventEmitter();
 
-  control: AbstractControl | null = null;
+  subscription?: Subscription;
+  value = '';
 
   constructor() {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.subscription = this.parentForm?.get(this.name)?.valueChanges.subscribe((change: string) => this.value = change);
+  }
 
-  ngOnChanges(_changes: SimpleChanges): void {
-    if (!this.name || !this.parentForm) return;
-    this.control = this.parentForm.get(this.name);
+  ngOnDestroy(): void {
+    this.subscription?.unsubscribe();
   }
 
   onButtonClick(): void {
