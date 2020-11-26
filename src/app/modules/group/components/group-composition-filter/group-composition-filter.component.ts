@@ -101,7 +101,8 @@ export class GroupCompositionFilterComponent implements OnInit{
     this.value.directChildren = this.childrenFilters[index].value;
 
     const typeFilters = this.value.directChildren ? this.directChildrenTypeFilters : this.allDescendantsTypeFilters;
-    this.selectedTypeFilter = typeFilters.findIndex(typeFilter => typeFilter.value === TypeFilter.Users);
+    this.selectedTypeFilter = typeFilters.findIndex(typeFilter => typeFilter.value ===
+      (this.value.type === TypeFilter.Teams ? TypeFilter.Teams : TypeFilter.Users));
     this.value.type = typeFilters[this.selectedTypeFilter].value;
 
     this.change.emit(this.value);

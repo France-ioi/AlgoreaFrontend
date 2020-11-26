@@ -48,7 +48,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
 
   state: 'error' | 'ready' | 'fetching' = 'fetching';
 
-  defaultFilter: Filter = { type: TypeFilter.Groups, directChildren: false };
+  defaultFilter: Filter = { type: TypeFilter.Users, directChildren: true };
 
   currentSort: string[] = [];
   currentFilter: Filter = this.defaultFilter;
