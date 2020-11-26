@@ -9,9 +9,8 @@ import { ItemStringChanges, UpdateItemStringService } from '../../http-services/
 import { TOAST_LENGTH } from '../../../../shared/constants/global';
 import { MessageService } from 'primeng/api';
 import { ERROR_MESSAGE } from '../../../../shared/constants/api';
-import { ItemChild, ItemChanges, UpdateItemService } from '../../http-services/update-item.service';
+import { ItemChanges, UpdateItemService } from '../../http-services/update-item.service';
 import { ChildData } from '../../components/item-children-edit/item-children-edit.component';
-
 
 @Component({
   selector: 'alg-item-edit',
@@ -24,12 +23,12 @@ export class ItemEditComponent implements OnDestroy {
     // eslint-disable-next-line @typescript-eslint/unbound-method
     title: [ '', [ Validators.required, Validators.minLength(3), Validators.maxLength(200) ] ],
     description: '',
-    children: [],
   });
   itemData$ = this.itemDataSource.itemData$;
   itemLoadingState$ = this.itemDataSource.state$;
 
   subscriptions: Subscription[] = [];
+  itemChanges: ItemChanges = {};
 
   constructor(
     private currentContent: CurrentContentService,
@@ -79,22 +78,8 @@ export class ItemEditComponent implements OnDestroy {
     });
   }
 
-  updateForm(children: ChildData[]): void {
-    this.itemForm.patchValue({
-      children: children.map((child, idx) => ({ item_id: child.id, order: idx })),
-    });
-  }
-
-  getItemChanges(): ItemChanges | undefined {
-    const children = this.itemForm.get('children');
-
-    if (children === null) return undefined;
-
-    const res: ItemChanges = {};
-    const childrenValue = children.value as ItemChild[];
-    if (childrenValue.length) res.children = childrenValue;
-
-    return res;
+  updateItemChanges(children: ChildData[]): void {
+    if (children.length) this.itemChanges.children = children.map((child, idx) => ({ item_id: child.id, order: idx }));
   }
 
 
@@ -118,15 +103,14 @@ export class ItemEditComponent implements OnDestroy {
       return;
     }
 
-    const itemChanges = this.getItemChanges();
     const itemStringChanges = this.getItemStringChanges();
-    if (!itemChanges || !itemStringChanges) {
+    if (!itemStringChanges) {
       this.errorToast();
       return;
     }
 
     combineLatest([
-      this.updateItemService.updateItem(this.itemId, itemChanges),
+      this.updateItemService.updateItem(this.itemId, this.itemChanges),
       this.updateItemStringService.updateItem(this.itemId, itemStringChanges),
     ]).subscribe(
       _status => {
