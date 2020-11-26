@@ -13,7 +13,7 @@ export class AddContentComponent implements OnInit, OnDestroy {
   newContentForm: FormGroup = this.formBuilder.group({ title: '' });
 
   state: 'opened' | 'closed' = 'closed';
-  subscription?: Subscription;
+  private subscription?: Subscription;
 
 
   constructor(
