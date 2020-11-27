@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { ItemType } from '../../../../shared/helpers/item-type';
-import { NewItem } from '../../../item/http-services/create-item.service';
+import { NewItem } from '../../../item/components/item-children-edit/item-children-edit.component';
 
 @Component({
   selector: 'alg-add-content',

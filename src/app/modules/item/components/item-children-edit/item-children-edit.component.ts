@@ -4,6 +4,13 @@ import { ItemData } from '../../services/item-datasource.service';
 import { GetItemChildrenService } from '../../http-services/get-item-children.service';
 import { Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { ItemType } from '../../../../shared/helpers/item-type';
+
+export interface NewItem {
+  title: string;
+  language_tag: string;
+  item: { type: ItemType }
+}
 
 @Component({
   selector: 'alg-item-children-edit',
@@ -48,6 +55,10 @@ export class ItemChildrenEditComponent implements OnChanges {
     } else {
       this.state = 'error';
     }
+  }
+
+  addChild(child: NewItem): void {
+    this.data.push({ title: child.title, order: this.data.length, type: child.item.type });
   }
 
 }
