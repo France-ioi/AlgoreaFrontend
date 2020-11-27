@@ -28,6 +28,11 @@ const groupsColumns: Column[] = [
   { field: 'userCount', header: 'User Count' },
 ];
 
+const nameUserCountColumns: Column[] = [
+  { field: 'name', header: 'Name', sortable: true },
+  { field: 'userCount', header: 'User Count' },
+];
+
 const descendantUsersColumns: Column[] = [
   { field: 'login', header: 'Name' },
   { field: 'parentGroups', header: 'Parent group(s)' },
@@ -107,10 +112,16 @@ export class MemberListComponent implements OnChanges, OnDestroy {
   getData(groupId: string, filter: Filter, sort: string[]): Observable<Data> {
     switch (filter.type) {
       case TypeFilter.Groups:
-        return this.getGroupChildrenService.getGroupChildren(groupId, sort)
+        return this.getGroupChildrenService.getGroupChildren(groupId, sort, [], [ 'Team', 'Session', 'User' ])
           .pipe(map(children => ({
             columns: groupsColumns,
-            rowData: children.filter(child => child.type != 'Session' && child.type != 'User' && child.type != 'Team')
+            rowData: children
+          })));
+      case TypeFilter.Sessions:
+        return this.getGroupChildrenService.getGroupChildren(groupId, sort, [ 'Session' ])
+          .pipe(map(children => ({
+            columns: nameUserCountColumns,
+            rowData: children,
           })));
       case TypeFilter.Teams:
         if (!filter.directChildren) {
@@ -124,13 +135,13 @@ export class MemberListComponent implements OnChanges, OnDestroy {
               })),
             })));
         } else {
-          return of({
-            columns: descendantTeamsColumns,
-            rowData: [],
-          });
+          return this.getGroupChildrenService.getGroupChildren(groupId, sort, [ 'Team' ])
+            .pipe(map(children => ({
+              columns: nameUserCountColumns,
+              rowData: children,
+            })));
         }
       case TypeFilter.Users:
-      default:
         if (filter.directChildren) {
           return this.getGroupMembersService.getGroupMembers(groupId, sort)
             .pipe(map(members => ({ columns: usersColumns, rowData: members })));
