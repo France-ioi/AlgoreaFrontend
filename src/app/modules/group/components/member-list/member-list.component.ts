@@ -112,6 +112,12 @@ export class MemberListComponent implements OnChanges, OnDestroy {
             columns: groupsColumns,
             rowData: children
           })));
+      case TypeFilter.Sessions:
+        return this.getGroupChildrenService.getGroupChildren(groupId, sort, [ 'Session' ])
+          .pipe(map(children => ({
+            columns: groupsColumns,
+            rowData: children
+          })));
       case TypeFilter.Teams:
         if (!filter.directChildren) {
           return this.getGroupTeamDescendantsService.getTeamDescendants(groupId, sort)
@@ -124,13 +130,13 @@ export class MemberListComponent implements OnChanges, OnDestroy {
               })),
             })));
         } else {
-          return of({
-            columns: descendantTeamsColumns,
-            rowData: [],
-          });
+          return this.getGroupChildrenService.getGroupChildren(groupId, sort, [ 'Team' ])
+            .pipe(map(children => ({
+              columns: groupsColumns,
+              rowData: children
+            })));
         }
       case TypeFilter.Users:
-      default:
         if (filter.directChildren) {
           return this.getGroupMembersService.getGroupMembers(groupId, sort)
             .pipe(map(members => ({ columns: usersColumns, rowData: members })));
