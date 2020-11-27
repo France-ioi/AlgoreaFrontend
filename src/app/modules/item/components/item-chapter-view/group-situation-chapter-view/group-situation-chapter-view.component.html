@@ -30,7 +30,7 @@
       let-rowIndex="rowIndex"
     >
       <tr>
-        <td style="width: 13.3333rem;">
+        <td class="users" pTooltip="{{ data.users[rowIndex] | user }}" tooltipPosition="left" [showDelay]="1000">
           {{ data.users[rowIndex] | user }}
         </td>
         <td *ngFor="let col of columns; let index = index">

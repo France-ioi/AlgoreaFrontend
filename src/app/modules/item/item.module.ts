@@ -20,6 +20,7 @@ import { ItemChapterViewComponent } from './components/item-chapter-view/item-ch
 import { GroupSituationChapterViewComponent } from
   './components/item-chapter-view/group-situation-chapter-view/group-situation-chapter-view.component';
 import { UserProgressComponent } from './components/item-chapter-view/group-situation-chapter-view/user-progress/user-progress.component';
+import { TooltipModule } from 'primeng/tooltip';
 
 @NgModule({
   declarations: [
@@ -47,6 +48,7 @@ import { UserProgressComponent } from './components/item-chapter-view/group-situ
     SharedComponentsModule,
     ReactiveFormsModule,
     FormsModule,
+    TooltipModule,
   ]
 })
 export class ItemModule { }
