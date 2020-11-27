@@ -32,6 +32,7 @@ export class ScoreRingComponent implements OnInit, OnChanges {
   @Input() icon?: string; // a font-awesome icon identifier
   @Input() scoreFillColor?: string;
   @Input() forTree = false;
+  @Input() textColor?: string;
 
   @ViewChild('svg') svg?: ElementRef;
 
@@ -102,6 +103,8 @@ export class ScoreRingComponent implements OnInit, OnChanges {
     } else {
       this.icon = undefined;
     }
+
+    if (this.textColor) this.textFill = this.textColor as ScoreRingColor;
 
     this.fontSize = Math.floor((2 * this.diameter) / 64);
     if (this.forTree) {
