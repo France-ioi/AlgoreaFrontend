@@ -8,6 +8,7 @@ import { GetGroupUserDescendantsService } from 'src/app/shared/http-services/get
 import { Group } from '../../http-services/get-group-by-id.service';
 import { GetGroupChildrenService, GroupChild } from '../../http-services/get-group-children.service';
 import { GetGroupMembersService, Member } from '../../http-services/get-group-members.service';
+import { GetGroupTeamDescendantsService } from '../../http-services/get-group-team-descendants.service';
 import { TypeFilter, Filter } from '../group-composition-filter/group-composition-filter.component';
 
 interface Column {
@@ -32,9 +33,15 @@ const descendantUsersColumns: Column[] = [
   { field: 'parentGroups', header: 'Parent group(s)' },
 ];
 
+const descendantTeamsColumns: Column[] = [
+  { field: 'name', header: 'Name', sortable: true },
+  { field: 'parentGroups', header: 'Parent group(s)' },
+  { field: 'members', header: 'Member(s)' },
+];
+
 interface Data {
   columns: Column[],
-  rowData: (Member|GroupChild|{ login: string, parentGroups: string })[],
+  rowData: (Member|GroupChild|{ login: string, parentGroups: string }|{ name: string, parentGroups: string, members: string })[],
 }
 
 @Component({
@@ -66,6 +73,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
     private getGroupMembersService: GetGroupMembersService,
     private getGroupChildrenService: GetGroupChildrenService,
     private getGroupUserDescendantsService: GetGroupUserDescendantsService,
+    private getGroupTeamDescendantsService: GetGroupTeamDescendantsService,
   ) {
     this.dataFetching.pipe(
       delay(0),
@@ -104,6 +112,23 @@ export class MemberListComponent implements OnChanges, OnDestroy {
             columns: groupsColumns,
             rowData: children.filter(child => child.type != 'Session' && child.type != 'User' && child.type != 'Team')
           })));
+      case TypeFilter.Teams:
+        if (!filter.directChildren) {
+          return this.getGroupTeamDescendantsService.getTeamDescendants(groupId, sort)
+            .pipe(map(descendantTeams => ({
+              columns: descendantTeamsColumns,
+              rowData: descendantTeams.map(descendantTeam => ({
+                name: descendantTeam.name,
+                parentGroups: descendantTeam.parents.map(parent => parent.name).join(', '),
+                members: descendantTeam.members.map(member => member.login).join(', '),
+              })),
+            })));
+        } else {
+          return of({
+            columns: descendantTeamsColumns,
+            rowData: [],
+          });
+        }
       case TypeFilter.Users:
       default:
         if (filter.directChildren) {
