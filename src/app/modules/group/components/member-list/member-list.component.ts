@@ -36,7 +36,7 @@ const descendantUsersColumns: Column[] = [
 const descendantTeamsColumns: Column[] = [
   { field: 'name', header: 'Name', sortable: true },
   { field: 'parentGroups', header: 'Parent group(s)' },
-  { field: 'parentGroups', header: 'Parent group(s)' },
+  { field: 'members', header: 'Member(s)' },
 ];
 
 interface Data {
