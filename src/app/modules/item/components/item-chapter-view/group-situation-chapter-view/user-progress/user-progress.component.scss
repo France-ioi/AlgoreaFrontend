@@ -18,11 +18,11 @@
   }
 
   &.no-score {
-    background-color: white;
+    background-color: #F9C6CD;
   }
 
   &.not-started {
-    background-color: #F1F1F1;
+    background-color: white;
   }
 
 
@@ -33,8 +33,9 @@
     color: white;
   }
 
-  app-skill-progress {
-    transform: rotate(180deg);
-    height: 1.5rem;
+  alg-score-ring {
+    &.not-started {
+      background-color: red;
+    }
   }
 }

@@ -8,6 +8,7 @@
     [currentScore]="userProgress.score"
     [diameter]="32"
     [scoreFillColor]="'#FFF'"
+    [textColor]="state === 'not-started' ? 'black' : undefined"
   ></alg-score-ring>
   <span class="situation-check" *ngIf="state === 'success'">
     <i class="fa fa-check"></i>

@@ -17,7 +17,7 @@ export class UserProgressComponent implements OnChanges {
 
     if (this.userProgress.validated || this.userProgress.score === 100) this.state = 'success';
     else if (this.userProgress.score > 0) this.state = 'in-progress';
-    else if (this.userProgress.timeSpent === 0) this.state = 'not-started';
-    else this.state = 'no-score';
+    else if (this.userProgress.score === 0 && this.userProgress.timeSpent > 0) this.state = 'no-score';
+    else this.state = 'not-started';
   }
 }
