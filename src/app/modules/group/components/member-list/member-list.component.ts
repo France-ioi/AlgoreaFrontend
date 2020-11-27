@@ -107,10 +107,10 @@ export class MemberListComponent implements OnChanges, OnDestroy {
   getData(groupId: string, filter: Filter, sort: string[]): Observable<Data> {
     switch (filter.type) {
       case TypeFilter.Groups:
-        return this.getGroupChildrenService.getGroupChildren(groupId, sort)
+        return this.getGroupChildrenService.getGroupChildren(groupId, sort, [], [ 'Team', 'Session', 'User' ])
           .pipe(map(children => ({
             columns: groupsColumns,
-            rowData: children.filter(child => child.type != 'Session' && child.type != 'User' && child.type != 'Team')
+            rowData: children
           })));
       case TypeFilter.Teams:
         if (!filter.directChildren) {
