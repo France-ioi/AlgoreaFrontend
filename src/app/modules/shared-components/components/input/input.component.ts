@@ -1,19 +1,17 @@
 import {
   Component,
-  OnInit,
   Input,
   Output,
-  EventEmitter, OnDestroy,
+  EventEmitter,
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'alg-input',
   templateUrl: './input.component.html',
   styleUrls: [ './input.component.scss' ],
 })
-export class InputComponent implements OnInit, OnDestroy {
+export class InputComponent {
   @Input() name = ''; // name of the input in the parent form
   @Input() parentForm?: FormGroup;
 
@@ -27,18 +25,7 @@ export class InputComponent implements OnInit, OnDestroy {
 
   @Output() click = new EventEmitter();
 
-  subscription?: Subscription;
-  value = '';
-
   constructor() {}
-
-  ngOnInit(): void {
-    this.subscription = this.parentForm?.get(this.name)?.valueChanges.subscribe((change: string) => this.value = change);
-  }
-
-  ngOnDestroy(): void {
-    this.subscription?.unsubscribe();
-  }
 
   onButtonClick(): void {
     this.click.emit();
