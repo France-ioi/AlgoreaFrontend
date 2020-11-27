@@ -28,6 +28,11 @@ const groupsColumns: Column[] = [
   { field: 'userCount', header: 'User Count' },
 ];
 
+const nameUserCountColumns: Column[] = [
+  { field: 'name', header: 'Name', sortable: true },
+  { field: 'userCount', header: 'User Count' },
+];
+
 const descendantUsersColumns: Column[] = [
   { field: 'login', header: 'Name' },
   { field: 'parentGroups', header: 'Parent group(s)' },
@@ -115,8 +120,8 @@ export class MemberListComponent implements OnChanges, OnDestroy {
       case TypeFilter.Sessions:
         return this.getGroupChildrenService.getGroupChildren(groupId, sort, [ 'Session' ])
           .pipe(map(children => ({
-            columns: groupsColumns,
-            rowData: children
+            columns: nameUserCountColumns,
+            rowData: children,
           })));
       case TypeFilter.Teams:
         if (!filter.directChildren) {
@@ -132,8 +137,8 @@ export class MemberListComponent implements OnChanges, OnDestroy {
         } else {
           return this.getGroupChildrenService.getGroupChildren(groupId, sort, [ 'Team' ])
             .pipe(map(children => ({
-              columns: groupsColumns,
-              rowData: children
+              columns: nameUserCountColumns,
+              rowData: children,
             })));
         }
       case TypeFilter.Users:
