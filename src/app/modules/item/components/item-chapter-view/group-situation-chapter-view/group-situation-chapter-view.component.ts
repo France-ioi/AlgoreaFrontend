@@ -44,24 +44,6 @@ export class GroupSituationChapterViewComponent implements OnChanges {
     private getGroupUsersProgressService: GetGroupUsersProgressService,
   ) { }
 
-  getData(itemId: string, groupId: string, attemptId: string): Observable<Data> {
-    return forkJoin({
-      users: this.getGroupUserDescendantsService.getGroupUserDescendants(this.group.id),
-      items: this.getItemChildrenService.get(itemId, attemptId),
-      usersProgress: this.getGroupUsersProgressService.getGroupUsersProgress(groupId, [ itemId ])
-    }).pipe(
-      map(data => ({
-        users: data.users.map(user => user.user),
-        items: data.items,
-        data: data.users.map(user =>
-          data.items.map(item =>
-            data.usersProgress.find(userProgress => userProgress.itemId === item.id && userProgress.groupId === user.id)
-          )
-        )
-      }))
-    );
-  }
-
   ngOnChanges(_changes: SimpleChanges): void {
     if (!this.itemData || !this.itemData.currentResult) return;
 
@@ -76,6 +58,24 @@ export class GroupSituationChapterViewComponent implements OnChanges {
       _err => {
         this.state = 'error';
       }
+    );
+  }
+
+  private getData(itemId: string, groupId: string, attemptId: string): Observable<Data> {
+    return forkJoin({
+      users: this.getGroupUserDescendantsService.getGroupUserDescendants(this.group.id),
+      items: this.getItemChildrenService.get(itemId, attemptId),
+      usersProgress: this.getGroupUsersProgressService.getGroupUsersProgress(groupId, [ itemId ])
+    }).pipe(
+      map(data => ({
+        users: data.users.map(user => user.user),
+        items: data.items,
+        data: data.users.map(user =>
+          data.items.map(item =>
+            data.usersProgress.find(userProgress => userProgress.itemId === item.id && userProgress.groupId === user.id)
+          )
+        )
+      }))
     );
   }
 }

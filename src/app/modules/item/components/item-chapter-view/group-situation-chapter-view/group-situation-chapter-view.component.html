@@ -33,9 +33,9 @@
         <td class="users" pTooltip="{{ data.users[rowIndex] | user }}" tooltipPosition="left" [showDelay]="100">
           {{ data.users[rowIndex] | user }}
         </td>
-        <td *ngFor="let col of columns; let index = index">
+        <td *ngFor="let col of columns; let colIndex = index">
           <alg-user-progress
-            [userProgress]="data.data[rowIndex][index]"
+            [userProgress]="data.data[rowIndex][colIndex]"
           ></alg-user-progress>
         </td>
       </tr>
