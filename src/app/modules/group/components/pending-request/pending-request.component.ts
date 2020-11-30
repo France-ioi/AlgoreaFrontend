@@ -15,7 +15,7 @@ import { Observable, forkJoin, Subject, merge, of } from 'rxjs';
 import { GetRequestsService, PendingRequest } from '../../http-services/get-requests.service';
 import { RequestActionsService } from '../../http-services/request-actions.service';
 import { GridColumn, GridColumnGroup } from '../../../shared-components/components/grid/grid.component';
-import { delay, map, switchMap } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { fetchingState, isReady, readyState } from 'src/app/shared/helpers/state';
 
 type Activity = 'accepting'|'rejecting'|'none';
@@ -66,7 +66,6 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     private messageService: MessageService
   ) {
     this.dataFetching.pipe(
-      delay(0),
       switchMap(params =>
         merge(
           of(fetchingState()),
@@ -87,7 +86,6 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     );
 
     this.dataUpdating.pipe(
-      delay(0),
       switchMap(params =>
         merge(
           of({
