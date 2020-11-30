@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-interface UserInfos {
+export interface FormattableUser {
   login: string,
   firstName: string|null,
   lastName: string|null,
@@ -8,7 +8,7 @@ interface UserInfos {
 
 @Pipe({ name: 'user' })
 export class UserPipe implements PipeTransform {
-  transform<T extends UserInfos>(userInfos: T) : string {
+  transform<T extends FormattableUser>(userInfos: T) : string {
     if (userInfos.firstName !== null && userInfos.firstName !== '' && userInfos.lastName !== null && userInfos.lastName !== '') {
       return `${userInfos.firstName} ${userInfos.lastName} (${userInfos.login})`;
     } else if (userInfos.firstName !== null && userInfos.firstName !== '') {

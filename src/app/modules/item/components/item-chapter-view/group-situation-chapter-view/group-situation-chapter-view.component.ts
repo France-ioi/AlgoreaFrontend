@@ -5,17 +5,12 @@ import { Group } from 'src/app/core/components/group-nav-tree/group';
 import { fetchingState, isReady, readyState } from 'src/app/shared/helpers/state';
 import { GetGroupUserDescendantsService } from 'src/app/shared/http-services/get-group-user-descendants.service';
 import { GetGroupUsersProgressService, GroupUsersProgress } from 'src/app/shared/http-services/get-group-users-progress.service';
+import { FormattableUser } from 'src/app/shared/pipes/userDisplay';
 import { GetItemChildrenService, ItemChild } from '../../../http-services/get-item-children.service';
 import { ItemData } from '../../../services/item-datasource.service';
 
-interface User {
-  login: string,
-  firstName: string|null,
-  lastName: string|null,
-}
-
 interface Data {
-  users: User[],
+  users: FormattableUser[],
   items: ItemChild[],
   data: (GroupUsersProgress|undefined)[][],
 }
