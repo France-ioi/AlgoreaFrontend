@@ -2,7 +2,6 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { ItemType } from '../../../../shared/helpers/item-type';
-import { NewItem } from '../../../item/components/item-children-edit/item-children-edit.component';
 
 @Component({
   selector: 'alg-add-content',
@@ -40,8 +39,7 @@ export class AddContentComponent implements OnInit, OnDestroy {
 
     this.contentAdded.emit({
       title: control.value as string,
-      language_tag: 'en',
-      item: { type: type }
+      type: type,
     });
     this.newContentForm.reset({ title: '' });
   }

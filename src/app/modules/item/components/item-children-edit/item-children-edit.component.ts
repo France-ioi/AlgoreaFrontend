@@ -58,8 +58,8 @@ export class ItemChildrenEditComponent implements OnChanges {
     }
   }
 
-  addChild(child: NewItem): void {
-    this.data.push({ title: child.title, order: this.data.length, type: child.item.type });
+  addChild(child: { title: string, type: ItemType }): void {
+    this.data.push({ title: child.title, order: this.data.length, type: child.type });
   }
 
 }
