@@ -1,6 +1,6 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { forkJoin, merge, Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
+import { forkJoin, merge, Observable, of, Subject } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 import { Group } from 'src/app/core/components/group-nav-tree/group';
 import { fetchingState, isReady, readyState } from 'src/app/shared/helpers/state';
 import { GetGroupUserDescendantsService } from 'src/app/shared/http-services/get-group-user-descendants.service';
@@ -20,9 +20,9 @@ interface Data {
   templateUrl: './group-situation-chapter-view.component.html',
   styleUrls: [ './group-situation-chapter-view.component.scss' ]
 })
-export class GroupSituationChapterViewComponent implements OnChanges {
+export class GroupSituationChapterViewComponent implements OnChanges, OnDestroy {
 
-  @Input() group!: Group;
+  @Input() group?: Group;
   @Input() itemData?: ItemData;
 
   state: 'error' | 'ready' | 'fetching' = 'fetching';
@@ -33,19 +33,20 @@ export class GroupSituationChapterViewComponent implements OnChanges {
     data: [],
   }
 
+  private dataFecthing = new Subject<{ groupId: string, itemId: string, attemptId: string }>();
+
   constructor(
     private getItemChildrenService: GetItemChildrenService,
     private getGroupUserDescendantsService: GetGroupUserDescendantsService,
     private getGroupUsersProgressService: GetGroupUsersProgressService,
-  ) { }
-
-  ngOnChanges(_changes: SimpleChanges): void {
-    if (!this.itemData || !this.itemData.currentResult) return;
-
-    merge(
-      of(fetchingState()),
-      this.getData(this.itemData.item.id, this.group.id, this.itemData.currentResult.attemptId).pipe(map(readyState))
-    ).subscribe(
+  ) {
+    this.dataFecthing.pipe(
+      switchMap(params =>
+        merge(
+          of(fetchingState()),
+          this.getData(params.itemId, params.groupId, params.attemptId).pipe(map(readyState))
+        )
+      )).subscribe(
       state => {
         this.state = state.tag;
         if (isReady(state)) this.data = state.data;
@@ -56,9 +57,22 @@ export class GroupSituationChapterViewComponent implements OnChanges {
     );
   }
 
+  ngOnDestroy(): void {
+    this.dataFecthing.complete();
+  }
+
+  ngOnChanges(_changes: SimpleChanges): void {
+    if (!this.itemData || !this.itemData.currentResult || !this.group) {
+      this.state = 'error';
+      return;
+    }
+
+    this.dataFecthing.next({ groupId: this.group.id, itemId: this.itemData.item.id, attemptId: this.itemData.currentResult.attemptId });
+  }
+
   private getData(itemId: string, groupId: string, attemptId: string): Observable<Data> {
     return forkJoin({
-      users: this.getGroupUserDescendantsService.getGroupUserDescendants(this.group.id),
+      users: this.getGroupUserDescendantsService.getGroupUserDescendants(groupId),
       items: this.getItemChildrenService.get(itemId, attemptId),
       usersProgress: this.getGroupUsersProgressService.getGroupUsersProgress(groupId, [ itemId ])
     }).pipe(
