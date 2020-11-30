@@ -11,7 +11,7 @@ import { NewItem } from '../../../item/components/item-children-edit/item-childr
 })
 export class AddContentComponent implements OnInit, OnDestroy {
   @Input() allowSkills = false;
-  @Output() childrenAdded = new EventEmitter<NewItem>();
+  @Output() contentAdded = new EventEmitter<{ title: string, type: ItemType }>();
 
   newContentForm: FormGroup = this.formBuilder.group({ title: '' });
 
@@ -38,7 +38,7 @@ export class AddContentComponent implements OnInit, OnDestroy {
     const control = this.newContentForm.get('title');
     if (!control) return;
 
-    this.childrenAdded.emit({
+    this.contentAdded.emit({
       title: control.value as string,
       language_tag: 'en',
       item: { type: type }

@@ -47,7 +47,7 @@
 
         <span *ngIf="!data.length">No children for this chapter.</span>
 
-        <alg-add-content [allowSkills]="itemData.item.type === 'Skill'" (childrenAdded)="addChild($event)"></alg-add-content>
+        <alg-add-content [allowSkills]="itemData.item.type === 'Skill'" (contentAdded)="addChild($event)"></alg-add-content>
 
       </div>
 
