@@ -15,7 +15,7 @@
         <th class="empty first"></th>
         <th *ngFor="let col of data.items">
           <div class="slanted-header">
-            <div class="slanted-header-content">
+            <div class="slanted-header-content" pTooltip="{{ col.string.title }}" tooltipPosition="top" [showDelay]="100">
               {{ col.string.title }}
             </div>
           </div>
@@ -30,7 +30,7 @@
       let-rowIndex="rowIndex"
     >
       <tr>
-        <td class="users" pTooltip="{{ data.users[rowIndex] | user }}" tooltipPosition="left" [showDelay]="1000">
+        <td class="users" pTooltip="{{ data.users[rowIndex] | user }}" tooltipPosition="left" [showDelay]="100">
           {{ data.users[rowIndex] | user }}
         </td>
         <td *ngFor="let col of columns; let index = index">
