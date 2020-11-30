@@ -21,11 +21,12 @@
         </a>
       </nav>
 
-      <div class="bg-white" >
+      <div class="bg-white">
         <alg-item-edit-content
           *ngIf="rla1.isActive"
           [parentForm]="itemForm"
           [itemData]="itemData"
+          (childrenChanges)="updateItemChanges($event)"
         >
         </alg-item-edit-content>
       </div>

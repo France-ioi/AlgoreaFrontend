@@ -1,4 +1,4 @@
-<alg-group-composition-filter (change)="onPolicyChange($event)" [defaultValue]="defaultPolicy"></alg-group-composition-filter>
+<alg-group-composition-filter (change)="onFilterChange($event)" [defaultValue]="defaultFilter"></alg-group-composition-filter>
 
 <p *ngIf="state === 'error';else noError" class="error-message">
   <i class="fa fa-exclamation-triangle"></i>
@@ -39,20 +39,16 @@
     >
       <tr>
         <td *ngFor="let col of columns">
-          <ng-container *ngIf="col.field === 'user.login'">
-            {{ rowData.user | user }}
-          </ng-container>
-          <ng-container *ngIf="col.field === 'member_since'">
-            {{ rowData.memberSince | date:'short' }}
-          </ng-container>
-          <ng-container *ngIf="col.field === 'name'">
-            {{ rowData.name }}
-          </ng-container>
-          <ng-container *ngIf="col.field === 'type'">
-            {{ rowData.type }}
-          </ng-container>
-          <ng-container *ngIf="col.field === 'user_count'">
-            {{ rowData.userCount }}
+          <ng-container [ngSwitch]="col.field">
+            <ng-container *ngSwitchCase="'user.login'">
+              {{ rowData.user | user }}
+            </ng-container>
+            <ng-container *ngSwitchCase="'member_since'">
+              {{ rowData.memberSince | date:'short' }}
+            </ng-container>
+            <ng-container *ngSwitchDefault>
+              {{ rowData[col.field] }}
+            </ng-container>
           </ng-container>
         </td>
       </tr>

@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { of, Subscription } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
 import { defaultAttemptId } from 'src/app/shared/helpers/attempts';
-import { isItemRouteError, itemDetailsUrl, itemRouteFromParams, itemUrl } from 'src/app/shared/helpers/item-route';
+import { appDefaultItemRoute, isItemRouteError, itemDetailsUrl, itemRouteFromParams, itemUrl } from 'src/app/shared/helpers/item-route';
 import { FetchError, Fetching, isReady, Ready } from 'src/app/shared/helpers/state';
 import { ResultActionsService } from 'src/app/shared/http-services/result-actions.service';
 import { CurrentContentService, EditAction, isItemInfo, ItemInfo } from 'src/app/shared/services/current-content.service';
@@ -114,10 +114,10 @@ export class ItemByIdComponent implements OnDestroy {
           map(attemptId => ({ id: id, path: path, parentAttemptId: attemptId }))
         );
       })
-    ).subscribe(itemRoute => {
-      void this.router.navigate(itemDetailsUrl(itemRoute));
-    });
-    // TODO: handle error
+    ).subscribe(
+      itemRoute => void this.router.navigate(itemDetailsUrl(itemRoute)),
+      _err => void this.router.navigate(itemDetailsUrl(appDefaultItemRoute()))
+    );
   }
 
 }

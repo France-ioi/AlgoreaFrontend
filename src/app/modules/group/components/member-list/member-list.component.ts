@@ -4,9 +4,11 @@ import { Table } from 'primeng/table';
 import { merge, Observable, of, Subject } from 'rxjs';
 import { delay, map, switchMap } from 'rxjs/operators';
 import { fetchingState, isReady, readyState } from 'src/app/shared/helpers/state';
+import { GetGroupUserDescendantsService } from 'src/app/shared/http-services/get-group-user-descendants.service';
 import { Group } from '../../http-services/get-group-by-id.service';
 import { GetGroupChildrenService, GroupChild } from '../../http-services/get-group-children.service';
 import { GetGroupMembersService, Member } from '../../http-services/get-group-members.service';
+import { GetGroupTeamDescendantsService } from '../../http-services/get-group-team-descendants.service';
 import { TypeFilter, Filter } from '../group-composition-filter/group-composition-filter.component';
 
 interface Column {
@@ -23,12 +25,28 @@ const usersColumns: Column[] = [
 const groupsColumns: Column[] = [
   { field: 'name', header: 'Name', sortable: true },
   { field: 'type', header: 'Type' },
-  { field: 'user_count', header: 'User Count' },
+  { field: 'userCount', header: 'User Count' },
+];
+
+const nameUserCountColumns: Column[] = [
+  { field: 'name', header: 'Name', sortable: true },
+  { field: 'userCount', header: 'User Count' },
+];
+
+const descendantUsersColumns: Column[] = [
+  { field: 'login', header: 'Name' },
+  { field: 'parentGroups', header: 'Parent group(s)' },
+];
+
+const descendantTeamsColumns: Column[] = [
+  { field: 'name', header: 'Name', sortable: true },
+  { field: 'parentGroups', header: 'Parent group(s)' },
+  { field: 'members', header: 'Member(s)' },
 ];
 
 interface Data {
   columns: Column[],
-  rowData: (Member|GroupChild)[],
+  rowData: (Member|GroupChild|{ login: string, parentGroups: string }|{ name: string, parentGroups: string, members: string })[],
 }
 
 @Component({
@@ -42,10 +60,10 @@ export class MemberListComponent implements OnChanges, OnDestroy {
 
   state: 'error' | 'ready' | 'fetching' = 'fetching';
 
-  defaultPolicy: Filter = { type: TypeFilter.Groups };
+  defaultFilter: Filter = { type: TypeFilter.Users, directChildren: true };
 
   currentSort: string[] = [];
-  currentPolicy: Filter = this.defaultPolicy;
+  currentFilter: Filter = this.defaultFilter;
 
   data: Data = {
     columns: [],
@@ -54,18 +72,20 @@ export class MemberListComponent implements OnChanges, OnDestroy {
 
   @ViewChild('table') private table?: Table;
 
-  private dataFetching = new Subject<{ groupId: string, policy: Filter, sort: string[] }>();
+  private dataFetching = new Subject<{ groupId: string, filter: Filter, sort: string[] }>();
 
   constructor(
     private getGroupMembersService: GetGroupMembersService,
-    private getGroupChildrenService: GetGroupChildrenService
+    private getGroupChildrenService: GetGroupChildrenService,
+    private getGroupUserDescendantsService: GetGroupUserDescendantsService,
+    private getGroupTeamDescendantsService: GetGroupTeamDescendantsService,
   ) {
     this.dataFetching.pipe(
       delay(0),
       switchMap(params =>
         merge(
           of(fetchingState()),
-          this.getData(params.groupId, params.policy, params.sort).pipe(map(readyState))
+          this.getData(params.groupId, params.filter, params.sort).pipe(map(readyState))
         ))
     ).subscribe(
       state => {
@@ -83,24 +103,58 @@ export class MemberListComponent implements OnChanges, OnDestroy {
 
   ngOnChanges(_changes: SimpleChanges): void {
     if (!this.group) return;
-    this.currentPolicy = { ...this.defaultPolicy };
+    this.currentFilter = { ...this.defaultFilter };
     this.currentSort = [];
     this.table?.reset();
-    this.dataFetching.next({ groupId: this.group.id, policy: this.currentPolicy, sort: this.currentSort });
+    this.dataFetching.next({ groupId: this.group.id, filter: this.currentFilter, sort: this.currentSort });
   }
 
-  getData(groupId: string, policy: Filter, sort: string[]): Observable<Data> {
-    switch (policy.type) {
+  getData(groupId: string, filter: Filter, sort: string[]): Observable<Data> {
+    switch (filter.type) {
       case TypeFilter.Groups:
-        return this.getGroupChildrenService.getGroupChildren(groupId, sort)
+        return this.getGroupChildrenService.getGroupChildren(groupId, sort, [], [ 'Team', 'Session', 'User' ])
           .pipe(map(children => ({
             columns: groupsColumns,
-            rowData: children.filter(child => child.type != 'Session' && child.type != 'User' && child.type != 'Team')
+            rowData: children
           })));
+      case TypeFilter.Sessions:
+        return this.getGroupChildrenService.getGroupChildren(groupId, sort, [ 'Session' ])
+          .pipe(map(children => ({
+            columns: nameUserCountColumns,
+            rowData: children,
+          })));
+      case TypeFilter.Teams:
+        if (!filter.directChildren) {
+          return this.getGroupTeamDescendantsService.getTeamDescendants(groupId, sort)
+            .pipe(map(descendantTeams => ({
+              columns: descendantTeamsColumns,
+              rowData: descendantTeams.map(descendantTeam => ({
+                name: descendantTeam.name,
+                parentGroups: descendantTeam.parents.map(parent => parent.name).join(', '),
+                members: descendantTeam.members.map(member => member.login).join(', '),
+              })),
+            })));
+        } else {
+          return this.getGroupChildrenService.getGroupChildren(groupId, sort, [ 'Team' ])
+            .pipe(map(children => ({
+              columns: nameUserCountColumns,
+              rowData: children,
+            })));
+        }
       case TypeFilter.Users:
-      default:
-        return this.getGroupMembersService.getGroupMembers(groupId, sort)
-          .pipe(map(members => ({ columns: usersColumns, rowData: members })));
+        if (filter.directChildren) {
+          return this.getGroupMembersService.getGroupMembers(groupId, sort)
+            .pipe(map(members => ({ columns: usersColumns, rowData: members })));
+        } else {
+          return this.getGroupUserDescendantsService.getGroupUserDescendants(groupId, sort)
+            .pipe(map(descendantUsers => ({
+              columns: descendantUsersColumns,
+              rowData: descendantUsers.map(descendantUser => ({
+                login: descendantUser.user.login,
+                parentGroups: descendantUser.parents.map(parent => parent.name).join(', ')
+              }))
+            })));
+        }
     }
   }
 
@@ -111,18 +165,18 @@ export class MemberListComponent implements OnChanges, OnDestroy {
 
     if (sortMeta && JSON.stringify(sortMeta) !== JSON.stringify(this.currentSort)) {
       this.currentSort = sortMeta;
-      this.dataFetching.next({ groupId: this.group.id, policy: this.currentPolicy, sort: this.currentSort });
+      this.dataFetching.next({ groupId: this.group.id, filter: this.currentFilter, sort: this.currentSort });
     }
   }
 
-  onPolicyChange(policy: Filter): void {
+  onFilterChange(filter: Filter): void {
     if (!this.group) return;
 
-    if (policy !== this.currentPolicy) {
-      this.currentPolicy = { ...policy };
+    if (filter !== this.currentFilter) {
+      this.currentFilter = { ...filter };
       this.currentSort = [];
       this.table?.reset();
-      this.dataFetching.next({ groupId: this.group.id, policy: this.currentPolicy, sort: this.currentSort });
+      this.dataFetching.next({ groupId: this.group.id, filter: this.currentFilter, sort: this.currentSort });
     }
   }
 }

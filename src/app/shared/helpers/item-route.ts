@@ -38,7 +38,7 @@ export function itemUrl(item: ItemRoute, page: 'edit'|'details'): RouterCommands
 /*
  * The route to the app default (see config) item
  */
-export function appDefaultItemRoute(cat: ItemTypeCategory): ItemRouteWithParentAttempt {
+export function appDefaultItemRoute(cat: ItemTypeCategory = 'activity'): ItemRouteWithParentAttempt {
   return {
     id: isSkill(cat) ? appConfig().defaultSkillId : appConfig().defaultActivityId,
     path: [],
