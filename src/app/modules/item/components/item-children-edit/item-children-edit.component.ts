@@ -1,15 +1,15 @@
 import { Component, Input, OnChanges } from '@angular/core';
-import { ItemChild } from './item-children';
 import { ItemData } from '../../services/item-datasource.service';
 import { GetItemChildrenService } from '../../http-services/get-item-children.service';
 import { Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ItemType } from '../../../../shared/helpers/item-type';
 
-export interface NewItem {
-  title: string;
-  language_tag: string;
-  item: { type: ItemType }
+interface ItemChild {
+  id?: string,
+  title: string | null,
+  order: number,
+  type: ItemType,
 }
 
 @Component({
