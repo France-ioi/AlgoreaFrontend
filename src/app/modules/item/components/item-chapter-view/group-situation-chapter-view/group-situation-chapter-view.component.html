@@ -11,8 +11,8 @@
     [loading]="state === 'fetching'"
   >
     <ng-template pTemplate="header" let-columns>
-      <tr style="border: none;">
-        <th style="min-width: 160px;transform: none;width: 159px;"></th>
+      <tr>
+        <th class="empty first"></th>
         <th *ngFor="let col of data.items">
           <div class="slanted-header">
             <div class="slanted-header-content">
@@ -20,7 +20,7 @@
             </div>
           </div>
         </th>
-        <th style="min-width: 160px;transform: none;width: 130px; background-color: transparent;"></th>
+        <th class="empty last"></th>
       </tr>
     </ng-template>
     <ng-template
