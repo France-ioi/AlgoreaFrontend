@@ -73,8 +73,6 @@ export class PendingRequestComponent implements OnInit, OnChanges {
   }
 
   private reloadData(): void {
-    if (!this.groupId) return;
-
     this.status = 'loading';
     this.getRequestsService
       .getPendingRequests(this.groupId, this.includeSubgroup, this.currentSort)
