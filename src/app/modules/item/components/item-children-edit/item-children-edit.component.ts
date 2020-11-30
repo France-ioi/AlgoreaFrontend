@@ -43,7 +43,8 @@ export class ItemChildrenEditComponent implements OnChanges {
           map(children => children.map(child => ({
             id: child.id,
             title: child.string.title,
-            order: child.order
+            order: child.order,
+            type: child.type,
           })).sort((a, b) => a.order - b.order))
         ).subscribe(children => {
           this.data = children;
