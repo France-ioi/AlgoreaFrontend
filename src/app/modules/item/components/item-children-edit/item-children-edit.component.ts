@@ -1,14 +1,13 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges, Output, EventEmitter } from '@angular/core';
 import { ItemData } from '../../services/item-datasource.service';
 import { GetItemChildrenService } from '../../http-services/get-item-children.service';
 import { Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ItemType } from '../../../../shared/helpers/item-type';
 
-interface ItemChild {
+export interface ChildData {
   id?: string,
   title: string | null,
-  order: number,
   type: ItemType,
 }
 
@@ -21,9 +20,10 @@ export class ItemChildrenEditComponent implements OnChanges {
   @Input() itemData?: ItemData;
 
   state: 'loading' | 'error' | 'ready' = 'ready';
-  data: ItemChild[] = [];
+  data: ChildData[] = [];
 
   private subscription?: Subscription;
+  @Output() childrenChanges = new EventEmitter<ChildData[]>();
 
   constructor(
     private getItemChildrenService: GetItemChildrenService,
@@ -40,12 +40,10 @@ export class ItemChildrenEditComponent implements OnChanges {
       this.subscription = this.getItemChildrenService
         .get(this.itemData.item.id, this.itemData.currentResult.attemptId)
         .pipe(
-          map(children => children.map(child => ({
-            id: child.id,
-            title: child.string.title,
-            order: child.order,
-            type: child.type,
-          })).sort((a, b) => a.order - b.order))
+          map(children => children
+            .sort((a, b) => a.order - b.order)
+            .map(child => ({ id: child.id, title: child.string.title, type: child.type }))
+          )
         ).subscribe(children => {
           this.data = children;
           this.state = 'ready';
@@ -58,8 +56,12 @@ export class ItemChildrenEditComponent implements OnChanges {
     }
   }
 
-  addChild(child: { title: string, type: ItemType }): void {
-    this.data.push({ title: child.title, order: this.data.length, type: child.type });
+  addChild(child: ChildData): void {
+    this.data.push({ title: child.title, type: child.type });
+  }
+
+  orderChanged(): void {
+    this.childrenChanges.emit(this.data);
   }
 
 }

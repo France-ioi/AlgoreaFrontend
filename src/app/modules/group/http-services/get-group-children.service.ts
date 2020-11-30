@@ -27,10 +27,14 @@ export class GetGroupChildrenService {
 
   getGroupChildren(
     groupId: string,
-    sort: string[] = []
+    sort: string[] = [],
+    typesInclude: string[] = [],
+    typesExclude: string[] = [],
   ): Observable<GroupChild[]> {
     let params = new HttpParams();
     if (sort.length > 0) params = params.set('sort', sort.join(','));
+    if (typesInclude.length > 0) params = params.set('types_include', typesInclude.join(','));
+    if (typesExclude.length > 0) params = params.set('types_exclude', typesExclude.join(','));
     return this.http
       .get<RawGroupChild[]>(`${appConfig().apiUrl}/groups/${groupId}/children`, { params: params })
       .pipe(

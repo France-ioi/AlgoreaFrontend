@@ -2,14 +2,15 @@ import { Component, OnDestroy } from '@angular/core';
 import { CurrentContentService, EditAction } from 'src/app/shared/services/current-content.service';
 import { ItemData, ItemDataSource } from '../../services/item-datasource.service';
 import { FormBuilder, Validators } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { combineLatest, Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { FetchError, Fetching, isReady, Ready } from '../../../../shared/helpers/state';
 import { ItemStringChanges, UpdateItemStringService } from '../../http-services/update-item-string.service';
 import { TOAST_LENGTH } from '../../../../shared/constants/global';
 import { MessageService } from 'primeng/api';
 import { ERROR_MESSAGE } from '../../../../shared/constants/api';
-
+import { ItemChanges, UpdateItemService } from '../../http-services/update-item.service';
+import { ChildData } from '../../components/item-children-edit/item-children-edit.component';
 
 @Component({
   selector: 'alg-item-edit',
@@ -27,11 +28,13 @@ export class ItemEditComponent implements OnDestroy {
   itemLoadingState$ = this.itemDataSource.state$;
 
   subscriptions: Subscription[] = [];
+  itemChanges: ItemChanges = {};
 
   constructor(
     private currentContent: CurrentContentService,
     private itemDataSource: ItemDataSource,
     private formBuilder: FormBuilder,
+    private updateItemService: UpdateItemService,
     private updateItemStringService: UpdateItemStringService,
     private messageService: MessageService
   ) {
@@ -44,6 +47,7 @@ export class ItemEditComponent implements OnDestroy {
           this.itemForm.patchValue({
             title: item.string.title || '',
             description: item.string.description || '',
+            children: [],
           });
         }),
       this.currentContent.editAction$.pipe(filter(action => action === EditAction.Save))
@@ -74,12 +78,16 @@ export class ItemEditComponent implements OnDestroy {
     });
   }
 
-  getItemStringChanges(): ItemStringChanges {
+  updateItemChanges(children: ChildData[]): void {
+    this.itemChanges.children = children.map((child, idx) => ({ item_id: child.id, order: idx }));
+  }
+
+
+  getItemStringChanges(): ItemStringChanges | undefined {
     const title = this.itemForm.get('title');
     const description = this.itemForm.get('description');
 
-    if (title === null || description === null) // Something is wrong with the form
-      return {};
+    if (title === null || description === null) return undefined;
 
     return {
       title: (title.value as string).trim(),
@@ -101,18 +109,17 @@ export class ItemEditComponent implements OnDestroy {
       return;
     }
 
-    this.updateItemStringService.updateItem(
-      this.itemId,
-      itemStringChanges
-    ).subscribe(
+    combineLatest([
+      this.updateItemService.updateItem(this.itemId, this.itemChanges),
+      this.updateItemStringService.updateItem(this.itemId, itemStringChanges),
+    ]).subscribe(
       _status => {
         this.itemForm.disable();
         this.successToast();
         this.itemDataSource.refreshItem();
         this.currentContent.editAction.next(EditAction.StopEditing);
       },
-      _err => this.errorToast()
+      _err => this.errorToast(_err),
     );
   }
-
 }
