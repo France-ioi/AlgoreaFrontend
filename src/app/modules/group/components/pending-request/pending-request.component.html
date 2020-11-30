@@ -8,115 +8,122 @@
     <div
       *ngIf="showSwitch"
       style="flex: 1; flex-direction: row-reverse;display: flex;"
-      [ngClass]="{'all-disabled': status === 'loading'}">
+      [ngClass]="{'all-disabled': state === 'fetching'}">
       <alg-selection (change)="onSubgroupSwitch($event)" [items]="subgroupSwitchItems" style="width: 25rem;"></alg-selection>
     </div>
   </ng-template>
 
-  <div class="pending-request-container" *ngIf="status !== 'loading'; else loading" [ngSwitch]="status">
-    <alg-grid
-      *ngSwitchCase="'loaded'"
-      [selectedColumns]="columns"
-      [columns]="columns"
-      [data]="requests"
-      [groupInfo]="panel"
-      [(selection)]="selection"
-      (sort)="onCustomSort($event)"
-    >
-      <ng-template #headerTemplate let-columns>
-        <tr>
-          <th style="width: 3.3333rem; background-color: #d3dbe7;"></th>
-          <ng-container *ngFor="let col of columns">
-            <th
-              [pSortableColumn]="col.field"
-              [ngClass]="{'small-column' : ['at', 'group.name'].includes(col.field)}"
-              style="background-color: #d3dbe7;"
-            >
-              <div class="header-container">
-                {{ col.header }}
-                <p-sortIcon [field]="col.field"></p-sortIcon>
-              </div>
-            </th>
-          </ng-container>
-        </tr>
-      </ng-template>
-      <ng-template
-        #bodyTemplate
-        let-rowData
-        let-columns="columns"
-        let-rowIndex="rowIndex"
+
+  <p *ngIf="state === 'error';else noError" class="error-message">
+    <i class="fa fa-exclamation-triangle"></i>
+    Error while loading the pending requests.
+  </p>
+
+  <ng-template #noError>
+    <div class="pending-request-container" #noError>
+      <alg-grid
+        *ngIf="requests.length > 0"
+        [selectedColumns]="columns"
+        [columns]="columns"
+        [data]="requests"
+        [groupInfo]="panel"
+        [(selection)]="selection"
+        (sort)="onCustomSort($event)"
+        [loading]="state === 'fetching' || ongoingActivity !== 'none'"
       >
-        <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
-          <td style="width: 3.3333rem;">
-            <p-tableCheckbox [value]="rowData" [disabled]="ongoingActivity !== 'none'"></p-tableCheckbox>
-          </td>
-          <td *ngFor="let col of columns">
-            <ng-container *ngIf="col.field === 'group.name'" >
-              <span style="white-space: initial;">
-                {{ rowData.group.name }}
-              </span>
-            </ng-container>
-            <ng-container *ngIf="col.field === 'at'">
-              {{ rowData.at | date: "d/MM/y" }}
-            </ng-container>
-            <ng-container *ngIf="col.field === 'user.login'">
-              <div class="grid-user-info-field">
-                <!-- <img
-                  src="{{ rowData.user.image }}"
-                  style="width: 7rem; height: 7rem;"
-                /> -->
-                <div class="user-info">
-                  <span class="user-info-name">
-                    {{ rowData.user | user }}
-                  </span>
-                  <span class="user-info-activity" *ngIf="rowData.user.grade">
-                    <em>Grade: {{ rowData.user.grade }}</em>
-                  </span>
-                  <!-- <div class="user-info-content">
-                    {{ rowData.user.content }}
-                  </div> -->
+        <ng-template #headerTemplate let-columns>
+          <tr>
+            <th style="width: 3.3333rem; background-color: #d3dbe7;"></th>
+            <ng-container *ngFor="let col of columns">
+              <th
+                [pSortableColumn]="col.field"
+                [ngClass]="{'small-column' : ['at', 'group.name'].includes(col.field)}"
+                style="background-color: #d3dbe7;"
+              >
+                <div class="header-container">
+                  {{ col.header }}
+                  <p-sortIcon [field]="col.field"></p-sortIcon>
                 </div>
-              </div>
+              </th>
             </ng-container>
-          </td>
-        </tr>
-      </ng-template>
-      <ng-template #summaryTemplate let-table>
-        <div style="text-align: left; display: flex; align-items: center;">
-          <p-tableHeaderCheckbox [disabled]="ongoingActivity !== 'none'"></p-tableHeaderCheckbox>
-          <span
-            style="
-              margin-left: 2.1rem;
-              color: #9b9b9b;
-              font-size: 1.2rem;
-              cursor: pointer;
-            "
-            [ngClass]="{disabled: ongoingActivity !== 'none'}"
-            (click)="onSelectAll()"
-          >
-            Select all
-          </span>
-          <span style="flex: 1;"></span>
-          <div class="req-tools">
-            <span class="accept" [ngClass]="{disabled: selection.length === 0 || ongoingActivity !== 'none'}" (click)="onAcceptOrReject('accept')">
-              <span>Accept</span>
-              <i class="fa fa-check" *ngIf="ongoingActivity !== 'accepting'; else loading"></i>
+          </tr>
+        </ng-template>
+        <ng-template
+          #bodyTemplate
+          let-rowData
+          let-columns="columns"
+          let-rowIndex="rowIndex"
+        >
+          <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
+            <td style="width: 3.3333rem;">
+              <p-tableCheckbox [value]="rowData" [disabled]="ongoingActivity !== 'none'"></p-tableCheckbox>
+            </td>
+            <td *ngFor="let col of columns">
+              <ng-container *ngIf="col.field === 'group.name'" >
+                <span style="white-space: initial;">
+                  {{ rowData.group.name }}
+                </span>
+              </ng-container>
+              <ng-container *ngIf="col.field === 'at'">
+                {{ rowData.at | date: "d/MM/y" }}
+              </ng-container>
+              <ng-container *ngIf="col.field === 'user.login'">
+                <div class="grid-user-info-field">
+                  <!-- <img
+                    src="{{ rowData.user.image }}"
+                    style="width: 7rem; height: 7rem;"
+                  /> -->
+                  <div class="user-info">
+                    <span class="user-info-name">
+                      {{ rowData.user | user }}
+                    </span>
+                    <span class="user-info-activity" *ngIf="rowData.user.grade">
+                      <em>Grade: {{ rowData.user.grade }}</em>
+                    </span>
+                    <!-- <div class="user-info-content">
+                      {{ rowData.user.content }}
+                    </div> -->
+                  </div>
+                </div>
+              </ng-container>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template #summaryTemplate let-table>
+          <div style="text-align: left; display: flex; align-items: center;">
+            <p-tableHeaderCheckbox [disabled]="ongoingActivity !== 'none'"></p-tableHeaderCheckbox>
+            <span
+              style="
+                margin-left: 2.1rem;
+                color: #9b9b9b;
+                font-size: 1.2rem;
+                cursor: pointer;
+              "
+              [ngClass]="{disabled: ongoingActivity !== 'none'}"
+              (click)="onSelectAll()"
+            >
+              Select all
             </span>
-            <span class="reject" [ngClass]="{disabled: selection.length === 0 || ongoingActivity !== 'none'}" (click)="onAcceptOrReject('reject')">
-              <span>Reject</span>
-              <i class="fa fa-times" *ngIf="ongoingActivity !== 'rejecting'; else loading"></i>
-            </span>
+            <span style="flex: 1;"></span>
+            <div class="req-tools">
+              <span class="accept" [ngClass]="{disabled: selection.length === 0 || ongoingActivity !== 'none'}" (click)="onAcceptOrReject('accept')">
+                <span>Accept</span>
+                <i class="fa fa-check" *ngIf="ongoingActivity !== 'accepting'; else loading"></i>
+              </span>
+              <span class="reject" [ngClass]="{disabled: selection.length === 0 || ongoingActivity !== 'none'}" (click)="onAcceptOrReject('reject')">
+                <span>Reject</span>
+                <i class="fa fa-times" *ngIf="ongoingActivity !== 'rejecting'; else loading"></i>
+              </span>
+            </div>
           </div>
-        </div>
-      </ng-template>
-    </alg-grid>
-    <div *ngSwitchCase="'empty'">
-      No request
+        </ng-template>
+      </alg-grid>
+      <p class="no-pending-requests" *ngIf="requests.length === 0">
+        No pending requests
+      </p>
     </div>
-    <div *ngSwitchDefault>
-      Error
-    </div>
-  </div>
+  </ng-template>
+
 </alg-section-paragraph>
 
 <ng-template #loading>
