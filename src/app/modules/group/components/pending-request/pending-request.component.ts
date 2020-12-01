@@ -4,6 +4,7 @@ import {
   Input,
   OnChanges,
   SimpleChanges,
+  OnDestroy,
 } from '@angular/core';
 import { SortEvent } from 'primeng/api/sortevent';
 import { MessageService } from 'primeng/api';
@@ -33,7 +34,7 @@ const groupColumn = { field: 'group.name', header: 'GROUP' };
   templateUrl: './pending-request.component.html',
   styleUrls: [ './pending-request.component.scss' ],
 })
-export class PendingRequestComponent implements OnInit, OnChanges {
+export class PendingRequestComponent implements OnInit, OnChanges, OnDestroy {
   @Input() groupId?: string;
   @Input() showSwitch = true;
 
@@ -57,8 +58,6 @@ export class PendingRequestComponent implements OnInit, OnChanges {
   ongoingActivity: Activity = 'none';
 
   private dataFetching = new Subject<{ groupId?: string, includeSubgroup: boolean, sort: string[] }>();
-
-  private dataUpdating = new Subject<{ action: Action, requests: PendingRequest[] }>();
 
   constructor(
     private getRequestsService: GetRequestsService,
@@ -84,44 +83,10 @@ export class PendingRequestComponent implements OnInit, OnChanges {
         this.state = 'error';
       }
     );
+  }
 
-    this.dataUpdating.pipe(
-      switchMap(params =>
-        merge(
-          of({
-            ...fetchingState(),
-            action: params.action,
-            activity: params.action === 'accept' ? 'accepting' : 'rejecting' as Activity,
-          }),
-          this.processRequests(params.action, params.requests)
-            .pipe(map(result => ({
-              ...readyState(result),
-              action: params.action,
-              activity: 'none' as Activity,
-            })))
-        )
-      )
-    ).subscribe(
-      state => {
-        this.state = state.tag;
-        this.ongoingActivity = state.activity;
-        if (isReady(state)) {
-          this.displayResponseToast(
-            this.parseResults(state.data),
-            state.action === 'accept' ? 'accept' : 'reject', // still use a matching as it is "by coincidence" that the type of verb match
-            state.action === 'accept' ? 'accepted' : 'declined'
-          );
-          this.selection = [];
-          this.dataFetching.next({ groupId: this.groupId, includeSubgroup: this.includeSubgroup, sort: this.currentSort });
-        }
-      },
-      err => {
-        this.state = 'ready';
-        this.processRequestError(err);
-        this.ongoingActivity = 'none';
-      }
-    );
-
+  ngOnDestroy(): void {
+    this.dataFetching.complete();
   }
 
   ngOnInit(): void {
@@ -205,7 +170,43 @@ export class PendingRequestComponent implements OnInit, OnChanges {
       return;
     }
 
-    this.dataUpdating.next({ action: action, requests: this.selection });
+    merge(
+      of({
+        ...fetchingState(),
+        action: action,
+        activity: action === 'accept' ? 'accepting' : 'rejecting' as Activity,
+      }),
+      this.processRequests(action, this.selection)
+        .pipe(map(result => ({
+          ...readyState(result),
+          action: action,
+          activity: 'none' as Activity,
+          refreshData: { groupId: this.groupId, includeSubgroup: this.includeSubgroup, sort: this.currentSort },
+        })))
+    ).subscribe(
+      state => {
+        this.state = state.tag;
+        this.ongoingActivity = state.activity;
+        if (isReady(state)) {
+          this.displayResponseToast(
+            this.parseResults(state.data),
+            state.action === 'accept' ? 'accept' : 'reject', // still use a matching as it is "by coincidence" that the type of verb match
+            state.action === 'accept' ? 'accepted' : 'declined'
+          );
+          this.selection = [];
+          this.dataFetching.next({
+            groupId: state.refreshData.groupId,
+            includeSubgroup: state.refreshData.includeSubgroup,
+            sort: state.refreshData.sort
+          });
+        }
+      },
+      err => {
+        this.state = 'ready';
+        this.processRequestError(err);
+        this.ongoingActivity = 'none';
+      }
+    );
   }
 
   onSelectAll(): void {
