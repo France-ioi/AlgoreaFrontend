@@ -1,9 +1,15 @@
+import { MINUTES, SECONDS } from '../helpers/duration';
+
 const storageTokenKey = 'access_token';
 const storageCreationKey = 'access_token_creat';
 const storageExpirationKey = 'access_token_exp';
 const storageTypeKey = 'user_type';
 
 const storage = sessionStorage;
+
+// The minimum token lifetime we accept.
+// It is also the lifetime under which we refresh the token.
+export const minTokenLifetime = 5*MINUTES;
 
 export type Type = 'temporary'|'authenticated';
 
@@ -38,6 +44,9 @@ export class AccessToken {
 
   // Create from a number of seconds before expiry and using now as creation time
   static fromTTL(token: string, expiresIn: number, type: Type): AccessToken {
+    if (expiresIn < minTokenLifetime/SECONDS) {
+      throw new Error(`Cannot use a new token shorter than ${minTokenLifetime/MINUTES} min (received: ${expiresIn} sec)`);
+    }
     return new AccessToken(token, new Date(), new Date(Date.now() + expiresIn*1000), type);
   }
 

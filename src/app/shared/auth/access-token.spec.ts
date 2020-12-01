@@ -87,15 +87,19 @@ describe('AccessToken', () => {
     expect(loaded).toBeNull();
   });
 
-  it('should load a token from countdown', () => {
-    const token = AccessToken.fromTTL('fromttl', 60 /* 1 minute */, 'temporary');
+  it('should load a token from "expires in"', () => {
+    const token = AccessToken.fromTTL('fromttl', 600 /* 10 minutes */, 'temporary');
     const diff = token.expiration.getTime() - Date.now();
-    expect(diff).toBeLessThanOrEqual(60000);
-    expect(diff).toBeGreaterThan(59000);
+    expect(diff).toBeLessThanOrEqual(600000);
+    expect(diff).toBeGreaterThan(599000);
     expect((token.creation.getTime() - Date.now())/1000).toEqual(0);
     expect(token.accessToken).toEqual('fromttl');
     expect(token.type).toEqual('temporary');
     expect(token.isValid()).toBeTruthy();
+  });
+
+  it('should not load a token with too short "expires in"', () => {
+    expect(() => AccessToken.fromTTL('fromttl', 10 /* seconds */, 'temporary')).toThrowError();
   });
 
   it('should clear token with clearFromStorage()', () => {
