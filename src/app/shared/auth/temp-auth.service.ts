@@ -16,7 +16,7 @@ export class TempAuthService {
   // The observable may fail is the backend request fails.
   login(): Observable<AccessToken> {
     return this.authHttp.createTempUser().pipe(
-      map(t => AccessToken.fromCountdown(t.access_token, t.expires_in, 'temporary'))
+      map(t => AccessToken.fromTTL(t.access_token, t.expires_in, 'temporary'))
     );
   }
 
