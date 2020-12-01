@@ -7,9 +7,9 @@
   <ng-template #headerTemplate>
     <div
       *ngIf="showSwitch"
-      style="flex: 1; flex-direction: row-reverse;display: flex;"
+      class="group-switch"
       [ngClass]="{'all-disabled': state === 'fetching'}">
-      <alg-selection (change)="onSubgroupSwitch($event)" [items]="subgroupSwitchItems" style="width: 25rem;"></alg-selection>
+      <alg-selection (change)="onSubgroupSwitch($event)" [items]="subgroupSwitchItems"></alg-selection>
     </div>
   </ng-template>
 
@@ -33,12 +33,11 @@
       >
         <ng-template #headerTemplate let-columns>
           <tr>
-            <th style="width: 3.3333rem; background-color: #d3dbe7;"></th>
+            <th></th>
             <ng-container *ngFor="let col of columns">
               <th
                 [pSortableColumn]="col.field"
                 [ngClass]="{'small-column' : ['at', 'group.name'].includes(col.field)}"
-                style="background-color: #d3dbe7;"
               >
                 <div class="header-container">
                   {{ col.header }}
@@ -55,12 +54,12 @@
           let-rowIndex="rowIndex"
         >
           <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
-            <td style="width: 3.3333rem;">
+            <td>
               <p-tableCheckbox [value]="rowData" [disabled]="ongoingActivity !== 'none'"></p-tableCheckbox>
             </td>
             <td *ngFor="let col of columns">
               <ng-container *ngIf="col.field === 'group.name'" >
-                <span style="white-space: initial;">
+                <span class="group-name">
                   {{ rowData.group.name }}
                 </span>
               </ng-container>
@@ -90,21 +89,16 @@
           </tr>
         </ng-template>
         <ng-template #summaryTemplate let-table>
-          <div style="text-align: left; display: flex; align-items: center;">
+          <div class="summary">
             <p-tableHeaderCheckbox [disabled]="ongoingActivity !== 'none'"></p-tableHeaderCheckbox>
             <span
-              style="
-                margin-left: 2.1rem;
-                color: #9b9b9b;
-                font-size: 1.2rem;
-                cursor: pointer;
-              "
+              class="select-all"
               [ngClass]="{disabled: ongoingActivity !== 'none'}"
               (click)="onSelectAll()"
             >
               Select all
             </span>
-            <span style="flex: 1;"></span>
+            <span class="filler"></span>
             <div class="req-tools">
               <span class="accept" [ngClass]="{disabled: selection.length === 0 || ongoingActivity !== 'none'}" (click)="onAcceptOrReject('accept')">
                 <span>Accept</span>

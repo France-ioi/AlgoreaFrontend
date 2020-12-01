@@ -1,6 +1,16 @@
 @import "src/colors.scss";
 @import "src/geometry.scss";
 
+.group-switch {
+  flex: 1;
+  flex-direction: row-reverse;
+  display: flex;
+
+  alg-selection {
+    width: 25rem;
+  }
+}
+
 .pending-request-container {
   margin-left: -4rem;
   margin-right: -1.6667rem;
@@ -90,9 +100,35 @@
 
 :host ::ng-deep .pending-request-container .p-datatable .p-datatable-footer {
   background-color: transparent;
+
+  .summary {
+    text-align: left;
+    display: flex;
+    align-items: center;
+
+    .select-all {
+      margin-left: 2.1rem;
+      color: #9b9b9b;
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+
+    .filler {
+      flex: 1;
+    }
+  }
 }
 
 :host ::ng-deep .pending-request-container .p-datatable .p-datatable-thead > tr {
+  > th {
+    background-color: #d3dbe7;
+  }
+
+  > th:first-child {
+    width: 3.3333rem;
+    background-color: #d3dbe7;
+  }
+
   .small-column {
     width: 13.3333rem;
   }
@@ -105,6 +141,10 @@
   > td {
     border-bottom-color: $section-border-color;
     font: 1rem;
+
+    .group-name {
+      white-space: initial;
+    }
 
     &:last-child {
       border-left: $border-filet;
