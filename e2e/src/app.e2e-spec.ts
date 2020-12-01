@@ -6,18 +6,18 @@ describe('Algorea Frontend', () => {
 
   beforeEach(() => {
     page = new AppPage();
+    page.navigateTo();
+    page.waitForContent();
   });
 
   describe('page static elements', () => {
     it('should shows the title', () => {
-      void page.navigateTo();
       void expect(
         page.getTitleElement().getText()).toEqual('ALGOREA PLATFORM');
     });
 
     it('should have a working item-detail', () => {
       // Check if the first item exists and is working
-      void page.navigateTo();
       void page.getFirstActivityElement().click();
 
       void expect(page.getMainContentElement()).toBeTruthy();
@@ -25,7 +25,6 @@ describe('Algorea Frontend', () => {
     });
 
     it('should have a working collapse button', () => {
-      void page.navigateTo();
 
       void expect(page.getLeftElement().getAttribute('class')).toMatch('expanded');
       void expect(page.getTopBarElement().getAttribute('class')).toMatch('expanded');
@@ -41,7 +40,6 @@ describe('Algorea Frontend', () => {
 
   describe('activities elements', () => {
     it('should shows the first element of the activity tree', () => {
-      void page.navigateTo();
       void browser.waitForAngular();
 
       void expect(

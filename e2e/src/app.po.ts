@@ -1,8 +1,12 @@
-import { browser, by, element } from 'protractor';
+import { browser, by, element, ExpectedConditions } from 'protractor';
 
 export class AppPage {
   navigateTo() {
     return browser.get(browser.baseUrl) as Promise<any>;
+  }
+
+  waitForContent() {
+    browser.wait(ExpectedConditions.presenceOf(this.getFirstActivityElement()), 10000, 'Element taking too long to appear in the DOM');
   }
 
   getTitleElement() {
