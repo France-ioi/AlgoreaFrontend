@@ -1,0 +1,44 @@
+<p *ngIf="state === 'error';else noError" class="error-message">
+  <i class="fa fa-exclamation-triangle"></i>
+  Error while loading the data
+</p>
+
+<ng-template #noError>
+  <p-table #table
+    [columns]="data.items"
+    [value]="data.data"
+    class="slanted-grid"
+    [loading]="state === 'fetching'"
+  >
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        <th class="empty first"></th>
+        <th *ngFor="let col of data.items">
+          <div class="slanted-header">
+            <div class="slanted-header-content" pTooltip="{{ col.string.title }}" tooltipPosition="top" [showDelay]="100">
+              {{ col.string.title }}
+            </div>
+          </div>
+        </th>
+        <th class="empty last"></th>
+      </tr>
+    </ng-template>
+    <ng-template
+      pTemplate="body"
+      let-rowData
+      let-columns="columns"
+      let-rowIndex="rowIndex"
+    >
+      <tr>
+        <td class="users" pTooltip="{{ data.users[rowIndex] | user }}" tooltipPosition="left" [showDelay]="100">
+          {{ data.users[rowIndex] | user }}
+        </td>
+        <td *ngFor="let col of columns; let colIndex = index">
+          <alg-user-progress
+            [userProgress]="data.data[rowIndex][colIndex]"
+          ></alg-user-progress>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</ng-template>

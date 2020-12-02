@@ -1,7 +1,25 @@
+@import 'src/colors.scss';
+@import 'src/geometry.scss';
+
 .selection-center {
   display: flex;
-  justify-content: center;
-}
-.selection-center > alg-selection {
+  flex-direction: column;
+
+  border-radius: $border-radius;
+  background-color: $base-bk-color;
+
   width: 56rem;
+  max-width: 56rem;
+
+  margin-left: auto;
+  margin-right: auto;
+  padding: 1rem;
+
+  app-selection:first-child {
+    margin: 1rem;
+  }
+}
+
+.chapter-view {
+  margin-top: 4rem;
 }

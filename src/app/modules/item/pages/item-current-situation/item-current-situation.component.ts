@@ -11,16 +11,15 @@ export class ItemCurrentSituationComponent {
   @Input() itemData?: ItemData;
 
   viewItems = [
-    { label: 'Chapter view', route: './chapter' },
-    { label: 'Log view', route: './' }
+    { label: 'Log view', value: 'log' },
+    { label: 'Chapter view', value: 'chapter' },
   ];
 
-  viewSelected = 1;
+  viewSelected = 0;
 
   constructor() {}
 
   onViewChanged(selectedIdx: number): void {
     this.viewSelected = selectedIdx;
   }
-
 }
