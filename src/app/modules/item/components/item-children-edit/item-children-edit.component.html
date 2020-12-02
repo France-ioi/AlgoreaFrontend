@@ -1,26 +1,30 @@
-<alg-section [ngSwitch]="state" icon="fa fa-book" label="Children">
+<ng-container *ngIf="itemData">
+  <alg-section [ngSwitch]="state" icon="fa fa-book" label="Children">
 
-  <ng-container *ngSwitchCase="'ready'">
-    <div *ngIf="data.length" class="section-chapter-wrapper" >
-      <p-table [value]="data" [reorderableColumns]="true" (onRowReorder)="orderChanged()">
-        <ng-template pTemplate="body" let-rowData let-index="rowIndex">
-          <tr [pSelectableRow]="rowData" [pReorderableRow]="index">
-            <td class="reorder-handle" [pReorderableRowHandle]="index">
-              <i class="fa fa-sort" [pReorderableRowHandle]="index"></i>
-            </td>
-            <td class="main">
-              {{ rowData.title }}
-            </td>
-          </tr>
-        </ng-template>
-      </p-table>
-    </div>
+    <ng-container *ngSwitchCase="'ready'">
+      <div class="section-chapter-wrapper">
+        <p-table *ngIf="data.length" [value]="data" [reorderableColumns]="true" (onRowReorder)="orderChanged()">
+          <ng-template pTemplate="body" let-rowData let-index="rowIndex">
+            <tr [pSelectableRow]="rowData" [pReorderableRow]="index">
+              <td class="reorder-handle" [pReorderableRowHandle]="index">
+                <i class="fa fa-sort" [pReorderableRowHandle]="index"></i>
+              </td>
+              <td class="main">
+                {{ rowData.title }}
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
 
-    <span *ngIf="!data.length">No children for this chapter.</span>
-  </ng-container>
+        <span *ngIf="!data.length">No children for this chapter.</span>
+      </div>
 
-  <p-progressSpinner *ngSwitchCase="'loading'"></p-progressSpinner>
+      <alg-add-content [allowSkills]="itemData.item.type === 'Skill'"></alg-add-content>
 
-  <div *ngSwitchCase="'error'">Error</div>
+    </ng-container>
 
-</alg-section>
+    <p-progressSpinner *ngSwitchCase="'loading'"></p-progressSpinner>
+
+    <div *ngSwitchCase="'error'">Error</div>
+  </alg-section>
+</ng-container>

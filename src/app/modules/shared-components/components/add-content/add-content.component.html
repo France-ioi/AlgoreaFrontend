@@ -1,0 +1,30 @@
+<alg-sub-section icon="sign-in-alt" label="Add a content">
+  <alg-input [parentForm]="newContentForm" name="title" placeholder="Enter a title to create a new child" [hasClearButton]="true"></alg-input>
+
+  <div *ngIf="state === 'opened'" class="new-content-type">
+    <div class="new-content-container">
+      <div class="content-type-item-container">
+        <div class="item-image-wrapper">
+          <span><i class="fa fa-book"></i></span>
+        </div>
+        <div class="item-title">Chapter</div>
+        <div class="item-description">A new folder which can contain any activities.</div>
+      </div>
+      <div class="content-type-item-container">
+        <div class="item-image-wrapper">
+          <span><i class="fa fa-code"></i></span>
+        </div>
+        <div class="item-title">Task</div>
+        <div class="item-description">A new task which users can try to solve.</div>
+      </div>
+      <div *ngIf="allowSkills" class="content-type-item-container">
+        <div class="item-image-wrapper">
+          <span><i class="fa fa-graduation-cap"></i></span>
+        </div>
+        <div class="item-title">Skill</div>
+        <div class="item-description">A new sub-skill.</div>
+      </div>
+    </div>
+  </div>
+
+</alg-sub-section>
