@@ -5,13 +5,8 @@ import { assertSuccess, SimpleActionResponse } from '../../../shared/http-servic
 import { appConfig } from '../../../shared/helpers/config';
 import { map } from 'rxjs/operators';
 
-export interface ItemChild {
-  item_id: string,
-  order: number,
-}
-
 export interface ItemChanges {
-  children?: ItemChild[]
+  children?: { item_id?: string, order: number }[]
 }
 
 @Injectable({
