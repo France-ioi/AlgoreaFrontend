@@ -28,7 +28,7 @@ export class ItemEditComponent implements OnDestroy {
   itemLoadingState$ = this.itemDataSource.state$;
 
   subscriptions: Subscription[] = [];
-  itemChanges: ItemChanges = {};
+  itemChanges: { children?: ChildData[] } = {};
 
   constructor(
     private currentContent: CurrentContentService,
@@ -79,10 +79,17 @@ export class ItemEditComponent implements OnDestroy {
   }
 
   updateItemChanges(children: ChildData[]): void {
-    // FIXME: temp fix to compile and not send bad data to the service
-    this.itemChanges.children = children
-      .filter(child => child.id)
-      .map((child, idx) => ({ item_id: child.id as string, order: idx }));
+    this.itemChanges.children = children;
+  }
+
+  getItemChanges(): ItemChanges {
+    const res: ItemChanges = {};
+
+    if (this.itemChanges.children) {
+      res.children = this.itemChanges.children.map((child, idx) => ({ item_id: child.id, order: idx }));
+    }
+
+    return res;
   }
 
 
@@ -113,7 +120,7 @@ export class ItemEditComponent implements OnDestroy {
     }
 
     combineLatest([
-      this.updateItemService.updateItem(this.itemId, this.itemChanges),
+      this.updateItemService.updateItem(this.itemId, this.getItemChanges()),
       this.updateItemStringService.updateItem(this.itemId, itemStringChanges),
     ]).subscribe(
       _status => {
