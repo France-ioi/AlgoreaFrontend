@@ -48,6 +48,15 @@ export class AuthHttpService {
       );
   }
 
+  refreshToken(token: string): Observable<AccessTokenInfo> {
+    return this.http
+      .post<ActionResponse<AccessTokenInfo>>(`${appConfig().apiUrl}/auth/token`, {}, { headers: headersForAuth(token) })
+      .pipe(
+        timeout(longAuthServicesTimeout),
+        map(successData),
+      );
+  }
+
   revokeToken(token: string): Observable<void> {
     return this.http
       .post<SimpleActionResponse>(`${appConfig().apiUrl}/auth/logout`, null, { headers: headersForAuth(token) })
