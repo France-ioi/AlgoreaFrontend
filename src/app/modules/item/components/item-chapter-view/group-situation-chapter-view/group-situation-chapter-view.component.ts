@@ -3,7 +3,7 @@ import { forkJoin, merge, Observable, of, Subject } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { Group } from 'src/app/core/components/group-nav-tree/group';
 import { fetchingState, isReady, readyState } from 'src/app/shared/helpers/state';
-import { GetGroupUserDescendantsService } from 'src/app/shared/http-services/get-group-user-descendants.service';
+import { GetGroupDescendantsService } from 'src/app/shared/http-services/get-group-descendants.service';
 import { GetGroupUsersProgressService, GroupUsersProgress } from 'src/app/shared/http-services/get-group-users-progress.service';
 import { FormattableUser } from 'src/app/shared/pipes/userDisplay';
 import { GetItemChildrenService, ItemChild } from '../../../http-services/get-item-children.service';
@@ -37,7 +37,7 @@ export class GroupSituationChapterViewComponent implements OnChanges, OnDestroy 
 
   constructor(
     private getItemChildrenService: GetItemChildrenService,
-    private getGroupUserDescendantsService: GetGroupUserDescendantsService,
+    private getGroupDescendantsService: GetGroupDescendantsService,
     private getGroupUsersProgressService: GetGroupUsersProgressService,
   ) {
     this.dataFetching.pipe(
@@ -72,7 +72,7 @@ export class GroupSituationChapterViewComponent implements OnChanges, OnDestroy 
 
   private getData(itemId: string, groupId: string, attemptId: string): Observable<Data> {
     return forkJoin({
-      users: this.getGroupUserDescendantsService.getGroupUserDescendants(groupId),
+      users: this.getGroupDescendantsService.getUserDescendants(groupId),
       items: this.getItemChildrenService.get(itemId, attemptId),
       usersProgress: this.getGroupUsersProgressService.getGroupUsersProgress(groupId, [ itemId ])
     }).pipe(
