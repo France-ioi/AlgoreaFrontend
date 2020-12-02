@@ -1,5 +1,4 @@
 import { Component, Input } from '@angular/core';
-import { UserSession } from 'src/app/shared/services/user-session.service';
 import { ItemData } from '../../services/item-datasource.service';
 
 @Component({
@@ -9,7 +8,6 @@ import { ItemData } from '../../services/item-datasource.service';
 })
 export class ItemCurrentSituationComponent {
 
-  @Input() session?: UserSession;
   @Input() itemData?: ItemData;
 
   viewItems = [
