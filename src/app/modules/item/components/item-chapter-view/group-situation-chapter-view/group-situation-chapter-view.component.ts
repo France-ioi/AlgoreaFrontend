@@ -33,14 +33,14 @@ export class GroupSituationChapterViewComponent implements OnChanges, OnDestroy 
     data: [],
   }
 
-  private dataFecthing = new Subject<{ groupId: string, itemId: string, attemptId: string }>();
+  private dataFetching = new Subject<{ groupId: string, itemId: string, attemptId: string }>();
 
   constructor(
     private getItemChildrenService: GetItemChildrenService,
     private getGroupUserDescendantsService: GetGroupUserDescendantsService,
     private getGroupUsersProgressService: GetGroupUsersProgressService,
   ) {
-    this.dataFecthing.pipe(
+    this.dataFetching.pipe(
       switchMap(params =>
         merge(
           of(fetchingState()),
@@ -58,7 +58,7 @@ export class GroupSituationChapterViewComponent implements OnChanges, OnDestroy 
   }
 
   ngOnDestroy(): void {
-    this.dataFecthing.complete();
+    this.dataFetching.complete();
   }
 
   ngOnChanges(_changes: SimpleChanges): void {
@@ -67,7 +67,7 @@ export class GroupSituationChapterViewComponent implements OnChanges, OnDestroy 
       return;
     }
 
-    this.dataFecthing.next({ groupId: this.group.id, itemId: this.itemData.item.id, attemptId: this.itemData.currentResult.attemptId });
+    this.dataFetching.next({ groupId: this.group.id, itemId: this.itemData.item.id, attemptId: this.itemData.currentResult.attemptId });
   }
 
   private getData(itemId: string, groupId: string, attemptId: string): Observable<Data> {
