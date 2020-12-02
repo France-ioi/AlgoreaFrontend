@@ -194,7 +194,10 @@ export class AuthService implements OnDestroy {
       this.tokenRefreshSubscription = undefined;
     } else {
       // Refresh if the token is valid < `minTokenLifetime` or when it will have reached 50% of its lifetime. Retry every minute.
-      const refreshIn = token.expiration.getTime() - Date.now() <= minTokenLifetime ? 0 : (token.expiration.getTime() - Date.now()) * 0.5;
+      let refreshIn = 0;
+      if (token.expiration.getTime() - Date.now() > minTokenLifetime) {
+        refreshIn = Math.max((token.expiration.getTime() + token.creation.getTime())/2 - Date.now(), 0);
+      }
       this.tokenRefreshSubscription = timer(refreshIn, 1*MINUTES).pipe(
         switchMap(() => this.authHttp.refreshToken(token.accessToken)),
         map(t => AccessToken.fromTTL(t.access_token, t.expires_in, token.type))
