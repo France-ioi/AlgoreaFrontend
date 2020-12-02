@@ -2,15 +2,16 @@ import { Component, OnDestroy } from '@angular/core';
 import { CurrentContentService, EditAction } from 'src/app/shared/services/current-content.service';
 import { ItemData, ItemDataSource } from '../../services/item-datasource.service';
 import { FormBuilder, Validators } from '@angular/forms';
-import { combineLatest, Subscription } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import { EMPTY, forkJoin, Observable, of, Subscription, throwError } from 'rxjs';
+import { filter, map, switchMap } from 'rxjs/operators';
 import { FetchError, Fetching, isReady, Ready } from '../../../../shared/helpers/state';
 import { ItemStringChanges, UpdateItemStringService } from '../../http-services/update-item-string.service';
 import { TOAST_LENGTH } from '../../../../shared/constants/global';
 import { MessageService } from 'primeng/api';
 import { ERROR_MESSAGE } from '../../../../shared/constants/api';
 import { ItemChanges, UpdateItemService } from '../../http-services/update-item.service';
-import { ChildData } from '../../components/item-children-edit/item-children-edit.component';
+import { ChildData, ChildDataWithId, hasId } from '../../components/item-children-edit/item-children-edit.component';
+import { CreateItemService } from '../../http-services/create-item.service';
 
 @Component({
   selector: 'alg-item-edit',
@@ -34,6 +35,7 @@ export class ItemEditComponent implements OnDestroy {
     private currentContent: CurrentContentService,
     private itemDataSource: ItemDataSource,
     private formBuilder: FormBuilder,
+    private createItemService: CreateItemService,
     private updateItemService: UpdateItemService,
     private updateItemStringService: UpdateItemStringService,
     private messageService: MessageService
@@ -84,15 +86,29 @@ export class ItemEditComponent implements OnDestroy {
 
   getItemChanges(): ItemChanges {
     const res: ItemChanges = {};
-
-    if (this.itemChanges.children) {
-      res.children = this.itemChanges.children.map((child, idx) => ({ item_id: child.id, order: idx }));
-    }
-
+    if (this.itemChanges.children) res.children = children.map((child, idx) => ({ item_id: child.id, order: idx }));
     return res;
   }
 
+  private updateItem(): Observable<void> {
+    if (!this.itemChanges.children) return EMPTY;
+    return forkJoin(
+      this.itemChanges.children.map(child => {
+        if (hasId(child)) return of(child);
+        // the child doesn't have an idea so we create it
+        return this.createItemService
+          .create(child.title, child.type, 'en', this.itemId)
+          .pipe(map(res => ({ id: res, ...child })));
+      }),
+    ).pipe(
+      switchMap(children => {
+        if (!this.itemId) return throwError(new Error('Invalid form'));
+        return this.updateItemService.updateItem(this.itemId, this.getItemChanges(children));
+      }),
+    );
+  }
 
+  // Item string changes
   getItemStringChanges(): ItemStringChanges | undefined {
     const title = this.itemForm.get('title');
     const description = this.itemForm.get('description');
@@ -101,8 +117,15 @@ export class ItemEditComponent implements OnDestroy {
 
     return {
       title: (title.value as string).trim(),
-      description: (description.value as string).trim() || null
+      description: (description.value as string).trim() || null,
     };
+  }
+
+  updateString(): Observable<void> {
+    if (!this.itemId) return throwError(new Error('Missing ID form'));
+    const itemStringChanges = this.getItemStringChanges();
+    if (!itemStringChanges) return throwError(new Error('Invalid form'));
+    return this.updateItemStringService.updateItem(this.itemId, itemStringChanges);
   }
 
   saveInput(): void {
@@ -113,15 +136,9 @@ export class ItemEditComponent implements OnDestroy {
       return;
     }
 
-    const itemStringChanges = this.getItemStringChanges();
-    if (!itemStringChanges) {
-      this.errorToast();
-      return;
-    }
-
-    combineLatest([
-      this.updateItemService.updateItem(this.itemId, this.getItemChanges()),
-      this.updateItemStringService.updateItem(this.itemId, itemStringChanges),
+    forkJoin([
+      this.updateItem(),
+      this.updateString(),
     ]).subscribe(
       _status => {
         this.itemForm.disable();
