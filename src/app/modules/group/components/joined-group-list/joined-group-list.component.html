@@ -1,0 +1,38 @@
+<p *ngIf="state === 'error';else noError" class="error-message">
+  <i class="fa fa-exclamation-triangle"></i>
+  Error while loading the group you joined
+</p>
+
+<ng-template #noError>
+  <p-table #table
+    [value]="data"
+    [customSort]="true"
+    sortMode="multiple"
+    (sortFunction)="onCustomSort($event)"
+    [loading]="state === 'fetching'"
+  >
+  <ng-template pTemplate="header" let-columns>
+    <tr *ngIf="data.length > 0">
+        <th>Name</th>
+        <th>Type</th>
+        <th pSortableColumn="member_since">Joined On <p-sortIcon field="member_since"></p-sortIcon></th>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="body" let-group>
+    <tr>
+      <td>{{ group.group.name }}</td>
+      <td>{{ group.group.type }}</td>
+      <td>{{ group.memberSince | date:'short' }}</td>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="emptymessage" let-columns>
+    <tr>
+      <td [attr.colspan]="columns.length">
+        <p class="empty-message">This list is empty. Check below the different ways to join a group or sub-groups.</p>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
+</ng-template>
