@@ -19,7 +19,6 @@ import { GridColumn, GridColumnGroup } from '../../../shared-components/componen
 import { map, switchMap } from 'rxjs/operators';
 import { fetchingState, isReady, readyState } from 'src/app/shared/helpers/state';
 
-type Activity = 'accepting'|'rejecting'|'none';
 type Action = 'accept'|'reject';
 
 interface Result {
@@ -53,9 +52,7 @@ export class PendingRequestComponent implements OnInit, OnChanges, OnDestroy {
   includeSubgroup = false;
   collapsed = true;
 
-  state: 'fetching' | 'ready' |'error' = 'fetching';
-
-  ongoingActivity: Activity = 'none';
+  state: 'fetching' | 'accepting' | 'rejecting' | 'ready' |'error' = 'fetching';
 
   private dataFetching = new Subject<{ groupId?: string, includeSubgroup: boolean, sort: string[] }>();
 
@@ -98,7 +95,6 @@ export class PendingRequestComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnChanges(_changes: SimpleChanges): void {
     this.selection = [];
-    this.ongoingActivity = 'none';
     this.dataFetching.next({ groupId: this.groupId, includeSubgroup: this.includeSubgroup, sort: this.currentSort });
   }
 
@@ -166,45 +162,40 @@ export class PendingRequestComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   onAcceptOrReject(action: Action): void {
-    if (this.selection.length === 0 || this.ongoingActivity !== 'none') {
+    if (this.selection.length === 0 || this.state !== 'ready') {
       return;
     }
 
-    merge(
-      of({
-        ...fetchingState(),
+    if (action === 'accept') this.state = 'accepting';
+    else this.state = 'rejecting';
+
+    this.processRequests(action, this.selection)
+      .pipe(map(result => ({
+        result: result,
         action: action,
-        activity: action === 'accept' ? 'accepting' : 'rejecting' as Activity,
-      }),
-      this.processRequests(action, this.selection)
-        .pipe(map(result => ({
-          ...readyState(result),
-          action: action,
-          activity: 'none' as Activity,
-          refreshData: { groupId: this.groupId, includeSubgroup: this.includeSubgroup, sort: this.currentSort },
-        })))
-    ).subscribe(
+        refreshData: { groupId: this.groupId, includeSubgroup: this.includeSubgroup, sort: this.currentSort },
+      })))
+    .subscribe(
       state => {
-        this.state = state.tag;
-        this.ongoingActivity = state.activity;
-        if (isReady(state)) {
-          this.displayResponseToast(
-            this.parseResults(state.data),
-            state.action === 'accept' ? 'accept' : 'reject', // still use a matching as it is "by coincidence" that the type of verb match
-            state.action === 'accept' ? 'accepted' : 'declined'
-          );
-          this.selection = [];
-          this.dataFetching.next({
-            groupId: state.refreshData.groupId,
-            includeSubgroup: state.refreshData.includeSubgroup,
-            sort: state.refreshData.sort
-          });
-        }
+        this.state = 'ready';
+
+        this.displayResponseToast(
+          this.parseResults(state.result),
+          state.action === 'accept' ? 'accept' : 'reject', // still use a matching as it is "by coincidence" that the type of verb match
+          state.action === 'accept' ? 'accepted' : 'declined'
+        );
+
+        this.selection = [];
+
+        this.dataFetching.next({
+          groupId: state.refreshData.groupId,
+          includeSubgroup: state.refreshData.includeSubgroup,
+          sort: state.refreshData.sort
+        });
       },
       err => {
         this.state = 'ready';
         this.processRequestError(err);
-        this.ongoingActivity = 'none';
       }
     );
   }
