@@ -1,6 +1,7 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { ItemType } from '../../../../shared/helpers/item-type';
 
 @Component({
   selector: 'alg-add-content',
@@ -9,6 +10,7 @@ import { Subscription } from 'rxjs';
 })
 export class AddContentComponent implements OnInit, OnDestroy {
   @Input() allowSkills = false;
+  @Output() contentAdded = new EventEmitter<{ title: string, type: ItemType }>();
 
   newContentForm: FormGroup = this.formBuilder.group({ title: '' });
 
@@ -28,6 +30,18 @@ export class AddContentComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscription?.unsubscribe();
+  }
+
+  onClick(type: ItemType): void {
+    if (this.state === 'closed') return;
+    const control = this.newContentForm.get('title');
+    if (!control) return;
+
+    this.contentAdded.emit({
+      title: control.value as string,
+      type: type,
+    });
+    this.newContentForm.reset({ title: '' });
   }
 
 }

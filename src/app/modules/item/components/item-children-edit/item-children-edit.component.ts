@@ -3,10 +3,12 @@ import { ItemData } from '../../services/item-datasource.service';
 import { GetItemChildrenService } from '../../http-services/get-item-children.service';
 import { Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { ItemType } from '../../../../shared/helpers/item-type';
 
 export interface ChildData {
-  id: string,
+  id?: string,
   title: string | null,
+  type: ItemType,
 }
 
 @Component({
@@ -40,7 +42,7 @@ export class ItemChildrenEditComponent implements OnChanges {
         .pipe(
           map(children => children
             .sort((a, b) => a.order - b.order)
-            .map(child => ({ id: child.id, title: child.string.title }))
+            .map(child => ({ id: child.id, title: child.string.title, type: child.type }))
           )
         ).subscribe(children => {
           this.data = children;
@@ -52,6 +54,10 @@ export class ItemChildrenEditComponent implements OnChanges {
     } else {
       this.state = 'error';
     }
+  }
+
+  addChild(child: ChildData): void {
+    this.data.push({ title: child.title, type: child.type });
   }
 
   orderChanged(): void {

@@ -9,17 +9,17 @@
               <td class="reorder-handle" [pReorderableRowHandle]="index">
                 <i class="fa fa-sort" [pReorderableRowHandle]="index"></i>
               </td>
-              <td class="main">
-                {{ rowData.title }}
-              </td>
+              <td class="type">{{ rowData.type }}</td>
+              <td class="main">{{ rowData.title }}</td>
             </tr>
           </ng-template>
         </p-table>
 
         <span *ngIf="!data.length">No children for this chapter.</span>
+
       </div>
 
-      <alg-add-content [allowSkills]="itemData.item.type === 'Skill'"></alg-add-content>
+      <alg-add-content [allowSkills]="itemData.item.type === 'Skill'" (contentAdded)="addChild($event)"></alg-add-content>
 
     </ng-container>
 

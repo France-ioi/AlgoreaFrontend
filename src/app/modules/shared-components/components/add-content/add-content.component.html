@@ -3,21 +3,21 @@
 
   <div *ngIf="state === 'opened'" class="new-content-type">
     <div class="new-content-container">
-      <div class="content-type-item-container">
+      <div class="content-type-item-container" (click)="onClick('Chapter')">
         <div class="item-image-wrapper">
           <span><i class="fa fa-book"></i></span>
         </div>
         <div class="item-title">Chapter</div>
         <div class="item-description">A new folder which can contain any activities.</div>
       </div>
-      <div class="content-type-item-container">
+      <div class="content-type-item-container" (click)="onClick('Task')">
         <div class="item-image-wrapper">
           <span><i class="fa fa-code"></i></span>
         </div>
         <div class="item-title">Task</div>
         <div class="item-description">A new task which users can try to solve.</div>
       </div>
-      <div *ngIf="allowSkills" class="content-type-item-container">
+      <div *ngIf="allowSkills" class="content-type-item-container" (click)="onClick('Skill')">
         <div class="item-image-wrapper">
           <span><i class="fa fa-graduation-cap"></i></span>
         </div>
