@@ -169,35 +169,35 @@ export class PendingRequestComponent implements OnInit, OnChanges, OnDestroy {
     if (action === 'accept') this.state = 'accepting';
     else this.state = 'rejecting';
 
-    this.processRequests(action, this.selection)
-      .pipe(map(result => ({
+    this.processRequests(action, this.selection).pipe(
+      map(result => ({
         result: result,
         action: action,
         refreshData: { groupId: this.groupId, includeSubgroup: this.includeSubgroup, sort: this.currentSort },
       }))
-      ).subscribe(
-        state => {
-          this.state = 'ready';
+    ).subscribe(
+      state => {
+        this.state = 'ready';
 
-          this.displayResponseToast(
-            this.parseResults(state.result),
-            state.action === 'accept' ? 'accept' : 'reject', // still use a matching as it is "by coincidence" that the type of verb match
-            state.action === 'accept' ? 'accepted' : 'declined'
-          );
+        this.displayResponseToast(
+          this.parseResults(state.result),
+          state.action === 'accept' ? 'accept' : 'reject', // still use a matching as it is "by coincidence" that the type of verb match
+          state.action === 'accept' ? 'accepted' : 'declined'
+        );
 
-          this.selection = [];
+        this.selection = [];
 
-          this.dataFetching.next({
-            groupId: state.refreshData.groupId,
-            includeSubgroup: state.refreshData.includeSubgroup,
-            sort: state.refreshData.sort
-          });
-        },
-        err => {
-          this.state = 'ready';
-          this.processRequestError(err);
-        }
-      );
+        this.dataFetching.next({
+          groupId: state.refreshData.groupId,
+          includeSubgroup: state.refreshData.includeSubgroup,
+          sort: state.refreshData.sort
+        });
+      },
+      err => {
+        this.state = 'ready';
+        this.processRequestError(err);
+      }
+    );
   }
 
   onSelectAll(): void {
