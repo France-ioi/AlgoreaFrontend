@@ -4,7 +4,7 @@ import { map, switchMap } from 'rxjs/operators';
 import { Group } from 'src/app/core/components/group-nav-tree/group';
 import { fetchingState, isReady, readyState } from 'src/app/shared/helpers/state';
 import { GetGroupDescendantsService } from 'src/app/shared/http-services/get-group-descendants.service';
-import { GetGroupUsersProgressService, GroupUsersProgress } from 'src/app/shared/http-services/get-group-users-progress.service';
+import { GetGroupProgressService, TeamUserProgress } from 'src/app/shared/http-services/get-group-progress.service';
 import { FormattableUser } from 'src/app/shared/pipes/userDisplay';
 import { GetItemChildrenService, ItemChild } from '../../../http-services/get-item-children.service';
 import { ItemData } from '../../../services/item-datasource.service';
@@ -12,7 +12,7 @@ import { ItemData } from '../../../services/item-datasource.service';
 interface Data {
   users: FormattableUser[],
   items: ItemChild[],
-  data: (GroupUsersProgress|undefined)[][],
+  data: (TeamUserProgress|undefined)[][],
 }
 
 @Component({
@@ -38,7 +38,7 @@ export class GroupSituationChapterViewComponent implements OnChanges, OnDestroy 
   constructor(
     private getItemChildrenService: GetItemChildrenService,
     private getGroupDescendantsService: GetGroupDescendantsService,
-    private getGroupUsersProgressService: GetGroupUsersProgressService,
+    private getGroupUsersProgressService: GetGroupProgressService,
   ) {
     this.dataFetching.pipe(
       switchMap(params =>
@@ -74,7 +74,7 @@ export class GroupSituationChapterViewComponent implements OnChanges, OnDestroy 
     return forkJoin({
       users: this.getGroupDescendantsService.getUserDescendants(groupId),
       items: this.getItemChildrenService.get(itemId, attemptId),
-      usersProgress: this.getGroupUsersProgressService.getGroupUsersProgress(groupId, [ itemId ])
+      usersProgress: this.getGroupUsersProgressService.getUsersProgress(groupId, [ itemId ])
     }).pipe(
       map(data => ({
         users: data.users.map(user => user.user),

@@ -4,10 +4,10 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { appConfig } from 'src/app/shared/helpers/config';
 
-interface RawGroupUsersProgress {
+interface RawTeamUserProgress {
   group_id: string,
-  hints_requested: number,
   item_id: string,
+  hints_requested: number,
   latest_activity_at: string|null,
   score: number,
   submissions: number,
@@ -15,10 +15,10 @@ interface RawGroupUsersProgress {
   validated: boolean,
 }
 
-export interface GroupUsersProgress {
+export interface TeamUserProgress {
   groupId: string,
-  hintsRequested: number,
   itemId: string,
+  hintsRequested: number,
   latestActivityAt: Date|null,
   score: number,
   submissions: number,
@@ -29,22 +29,43 @@ export interface GroupUsersProgress {
 @Injectable({
   providedIn: 'root'
 })
-export class GetGroupUsersProgressService {
+export class GetGroupProgressService {
 
   constructor(private http: HttpClient) { }
 
-  getGroupUsersProgress(
+  getUsersProgress(
     groupId: string,
     parentItemIds: string[],
-  ): Observable<GroupUsersProgress[]> {
+  ): Observable<TeamUserProgress[]> {
     const params = new HttpParams().set('parent_item_ids', parentItemIds.join(','));
     return this.http
-      .get<RawGroupUsersProgress[]>(`${appConfig().apiUrl}/groups/${groupId}/user-progress`, { params: params })
+      .get<RawTeamUserProgress[]>(`${appConfig().apiUrl}/groups/${groupId}/user-progress`, { params: params })
       .pipe(
         map(rawGroupUsersProgress => rawGroupUsersProgress.map(m => ({
           groupId: m.group_id,
-          hintsRequested: m.hints_requested,
           itemId: m.item_id,
+          hintsRequested: m.hints_requested,
+          latestActivityAt: m.latest_activity_at === null ? null : new Date(m.latest_activity_at),
+          score: m.score,
+          submissions: m.submissions,
+          timeSpent: m.time_spent,
+          validated: m.validated,
+        })))
+      );
+  }
+
+  getTeamsProgress(
+    groupId: string,
+    parentItemIds: string[],
+  ): Observable<TeamUserProgress[]> {
+    const params = new HttpParams().set('parent_item_ids', parentItemIds.join(','));
+    return this.http
+      .get<RawTeamUserProgress[]>(`${appConfig().apiUrl}/groups/${groupId}/team-progress`, { params: params })
+      .pipe(
+        map(rawGroupTeamsProgress => rawGroupTeamsProgress.map(m => ({
+          groupId: m.group_id,
+          itemId: m.item_id,
+          hintsRequested: m.hints_requested,
           latestActivityAt: m.latest_activity_at === null ? null : new Date(m.latest_activity_at),
           score: m.score,
           submissions: m.submissions,
