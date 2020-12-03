@@ -18,9 +18,9 @@
             <div class="summary-container">
               <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
               <span class="select-all">Select all</span>
-              <div class="export-tools">
-                <span class="remove" (click)="deleteSelected()">
-                  <span>Remove</span>
+              <div class="export-tools" [ngClass]="{disabled: selectedRows.length === 0}">
+                <span class="remove" (click)="onRemove()">
+                  <span>Remove selected</span>
                   <i class="fa fa-trash-alt"></i>
                 </span>
               </div>

@@ -110,6 +110,16 @@
     }
   }
 
+  .disabled {
+    opacity: 70%;
+    pointer-events: none;
+
+    > * {
+      opacity: 70%;
+      pointer-events: none;
+    }
+  }
+
   .ui-table-summary {
     background-color: transparent;
     border: none;
