@@ -61,7 +61,7 @@ export class ItemChildrenEditComponent implements OnChanges {
     this.data.push({ title: child.title, type: child.type });
   }
 
-  deleteSelected(): void {
+  onRemove(): void {
     this.data = this.data.filter(elm => !this.selectedRows.includes(elm));
     this.childrenChanges.emit(this.data);
   }
