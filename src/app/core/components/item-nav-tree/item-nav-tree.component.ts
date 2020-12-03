@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { ItemNavMenuData } from '../../common/item-nav-menu-data';
 import { itemDetailsUrl } from 'src/app/shared/helpers/item-route';
 import { defaultAttemptId } from 'src/app/shared/helpers/attempts';
+import { ItemTypeCategory } from 'src/app/shared/helpers/item-type';
 
 // ItemTreeNode is PrimeNG tree node with data forced to be an item
 interface ItemTreeNode extends TreeNode {
@@ -23,6 +24,7 @@ interface ItemTreeNode extends TreeNode {
 })
 export class ItemNavTreeComponent implements OnChanges {
   @Input() data?: ItemNavMenuData;
+  @Input() type: ItemTypeCategory = 'activity';
 
   nodes: ItemTreeNode[] = [];
   selectedNode?: ItemTreeNode; // used to keep track after request that the selected is still the expected one
