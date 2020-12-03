@@ -110,6 +110,14 @@
     }
   }
 
+  .ui-table-tbody > tr.ui-state-highlight {
+    background-color: #EFEFEF;
+  }
+
+  .ui-table-tbody > tr:nth-child(even).ui-state-highlight {
+    background-color: #EFEFEF;
+  }
+
   .disabled {
     opacity: 70%;
     pointer-events: none;
