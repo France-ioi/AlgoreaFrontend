@@ -96,12 +96,12 @@
             </span>
             <span class="filler"></span>
             <div class="req-tools">
-              <span class="accept" [ngClass]="{disabled: selection.length === 0}" (click)="onAcceptOrReject('accept')">
+              <span class="accept" [ngClass]="{disabled: selection.length === 0}" (click)="onAccept()">
                 <span>Accept</span>
                 <p-progressSpinner *ngIf="state === 'accepting'"></p-progressSpinner>
                 <i class="fa fa-check" *ngIf="state === 'ready'"></i>
               </span>
-              <span class="reject" [ngClass]="{disabled: selection.length === 0}" (click)="onAcceptOrReject('reject')">
+              <span class="reject" [ngClass]="{disabled: selection.length === 0}" (click)="onReject()">
                 <span>Reject</span>
                 <p-progressSpinner *ngIf="state === 'rejecting'"></p-progressSpinner>
                 <i class="fa fa-times" *ngIf="state === 'ready'"></i>

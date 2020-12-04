@@ -19,7 +19,10 @@ import { GridColumn, GridColumnGroup } from '../../../shared-components/componen
 import { map, switchMap } from 'rxjs/operators';
 import { fetchingState, isReady, readyState } from 'src/app/shared/helpers/state';
 
-type Action = 'accept'|'reject';
+enum Action {
+  Accept,
+  Reject,
+}
 
 interface Result {
   countRequests: number;
@@ -161,13 +164,20 @@ export class PendingRequestComponent implements OnInit, OnChanges, OnDestroy {
     );
   }
 
-  onAcceptOrReject(action: Action): void {
+  onAccept(): void {
+    this.onAcceptOrReject(Action.Accept);
+  }
+
+  onReject(): void {
+    this.onAcceptOrReject(Action.Reject);
+  }
+
+  private onAcceptOrReject(action: Action): void {
     if (this.selection.length === 0 || this.state !== 'ready') {
       return;
     }
 
-    if (action === 'accept') this.state = 'accepting';
-    else this.state = 'rejecting';
+    this.state = action === Action.Accept ? 'accepting' : 'rejecting';
 
     this.processRequests(action, this.selection).pipe(
       map(result => ({
@@ -181,8 +191,8 @@ export class PendingRequestComponent implements OnInit, OnChanges, OnDestroy {
 
         this.displayResponseToast(
           this.parseResults(state.result),
-          state.action === 'accept' ? 'accept' : 'reject', // still use a matching as it is "by coincidence" that the type of verb match
-          state.action === 'accept' ? 'accepted' : 'declined'
+          state.action === Action.Accept ? 'accept' : 'reject',
+          state.action === Action.Accept ? 'accepted' : 'declined'
         );
 
         this.selection = [];
