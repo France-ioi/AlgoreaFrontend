@@ -14,15 +14,12 @@ import {
 import { TOAST_LENGTH } from '../../../../shared/constants/global';
 import { Observable, forkJoin, Subject, merge, of } from 'rxjs';
 import { GetRequestsService, PendingRequest } from '../../http-services/get-requests.service';
-import { RequestActionsService } from '../../http-services/request-actions.service';
+import { Action, RequestActionsService } from '../../http-services/request-actions.service';
 import { GridColumn, GridColumnGroup } from '../../../shared-components/components/grid/grid.component';
 import { map, switchMap } from 'rxjs/operators';
 import { fetchingState, isReady, readyState } from 'src/app/shared/helpers/state';
 
-enum Action {
-  Accept,
-  Reject,
-}
+
 
 interface Result {
   countRequests: number;
@@ -157,10 +154,9 @@ export class PendingRequestComponent implements OnInit, OnChanges, OnDestroy {
       else requestMap.set(groupID, [ memberID ]);
     });
     return forkJoin(
-      Array.from(requestMap.entries()).map(elm => {
-        if (action === 'accept') return this.requestActionService.acceptJoinRequest(elm[0], elm[1]);
-        else return this.requestActionService.rejectJoinRequest(elm[0], elm[1]);
-      })
+      Array.from(requestMap.entries()).map(elm =>
+        this.requestActionService.processJoinRequest(elm[0], elm[1], action)
+      )
     );
   }
 

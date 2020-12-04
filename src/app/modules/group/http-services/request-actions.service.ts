@@ -5,6 +5,11 @@ import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { appConfig } from 'src/app/shared/helpers/config';
 
+export enum Action {
+  Accept,
+  Reject,
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -12,9 +17,10 @@ export class RequestActionsService {
 
   constructor(private http: HttpClient) {}
 
-  acceptJoinRequest(groupId: string, memberIds: string[]): Observable<Map<string, any>> {
+  processJoinRequest(groupId: string, memberIds: string[], action: Action): Observable<Map<string, any>> {
+    const type = action === Action.Accept ? 'accept' : 'reject';
     return this.http
-      .post<ActionResponse<Object>>(`${appConfig().apiUrl}/groups/${groupId}/join-requests/accept`, null, {
+      .post<ActionResponse<Object>>(`${appConfig().apiUrl}/groups/${groupId}/join-requests/${type}`, null, {
         params: {
           group_ids: memberIds.join(','),
         },
@@ -24,18 +30,4 @@ export class RequestActionsService {
         map(objectToMap)
       );
   }
-
-  rejectJoinRequest(groupId: string, memberIds: string[]): Observable<Map<string, any>> {
-    return this.http
-      .post<ActionResponse<Object>>(`${appConfig().apiUrl}/groups/${groupId}/join-requests/reject`, null, {
-        params: {
-          group_ids: memberIds.join(','),
-        }
-      })
-      .pipe(
-        map(successData),
-        map(objectToMap)
-      );
-  }
-
 }
