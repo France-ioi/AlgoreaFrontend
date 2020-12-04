@@ -199,10 +199,11 @@ $header-height: 0rem; //7.5rem; <- to be restored if search bar is re-added
           text-transform: uppercase;
         }
 
-        p-header {
+        .header {
           display: flex;
           align-items: center;
         }
+
       }
 
       .p-accordion-content-wrapper {
