@@ -5,11 +5,11 @@
   position: relative;
   display: block;
 
-  ::ng-deep .ui-table {
+  ::ng-deep .p-datatable {
     margin-bottom: 1rem;
     font-family: 'titillium', sans-serif;
 
-    .ui-table-thead > tr > th {
+    .p-datatable-thead > tr > th {
       padding: 0 1rem;
       text-align: left;
       text-transform: uppercase;
@@ -39,11 +39,11 @@
 
     }
 
-    .ui-table-tbody > tr {
+    .p-datatable-tbody > tr {
       border: 0.1rem solid #eeeeee;
     }
 
-    .ui-table-tbody > tr > td {
+    .p-datatable-tbody > tr > td {
       border: 0.1rem solid #f0f0f0;
       color: $base-text-color;
       height: 4rem;

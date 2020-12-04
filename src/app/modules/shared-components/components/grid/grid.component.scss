@@ -1,7 +1,7 @@
 @import "src/colors.scss";
 @import "src/geometry.scss";
 
-:host ::ng-deep .ui-table .ui-table-thead > tr > th {
+:host ::ng-deep .p-datatable .p-datatable-thead > tr > th {
   // position: -webkit-sticky;
   // position: sticky !important;
   // top: 5.8333rem;
@@ -9,7 +9,7 @@
 }
 
 @media screen and (max-width: 64em) {
-  :host ::ng-deep .ui-table .ui-table-thead > tr > th {
+  :host ::ng-deep .p-datatable .p-datatable-thead > tr > th {
     top: 8.3333rem;
   }
 }
@@ -18,7 +18,7 @@
   position: relative;
   display: block;
 
-  ::ng-deep .ui-table {
+  ::ng-deep .p-datatable {
     margin-bottom: 1rem;
     font-family: 'titillium', sans-serif;
 
@@ -52,7 +52,7 @@
       }
     }
 
-    .ui-table-thead > tr > th {
+    .p-datatable-thead > tr > th {
       padding: 0 1rem;
       text-align: left;
       border-top: none;
@@ -83,11 +83,11 @@
 
     }
 
-    .ui-table-tbody > tr:nth-child(even) {
+    .p-datatable-tbody > tr:nth-child(even) {
       background-color: #fff;
     }
 
-    .ui-table-tbody > tr > td {
+    .p-datatable-tbody > tr > td {
       border: none;
       border-bottom: 0.1rem solid #f0f0f0;
       color: $base-text-color;
@@ -100,15 +100,15 @@
       padding : 0 1rem;
     }
 
-    .ui-table-tbody > tr:last-child > td {
+    .p-datatable-tbody > tr:last-child > td {
       border-bottom: none;
     }
 
-    .ui-table-tbody > tr.p-highlight > td {
+    .p-datatable-tbody > tr.p-highlight > td {
       color: #fff;
     }
 
-    .ui-table-summary {
+    .p-datatable-summary {
       border: none;
       background-color: white;
       height: 5rem;
@@ -248,7 +248,7 @@
   }
 }
 
-:host.compact-mode ::ng-deep .ui-table-frozen-view tr {
+:host.compact-mode ::ng-deep .p-datatable-frozen-view tr {
   height: 3.4167rem;
 
   &:first-child {
@@ -256,6 +256,6 @@
   }
 }
 
-:host ::ng-deep .ui-table-frozen-view tr {
+:host ::ng-deep .p-datatable-frozen-view tr {
   height: 6rem;
 }
