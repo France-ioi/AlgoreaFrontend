@@ -110,6 +110,23 @@
     }
   }
 
+  .ui-table-tbody > tr.ui-state-highlight {
+    background-color: #EFEFEF;
+  }
+
+  .ui-table-tbody > tr:nth-child(even).ui-state-highlight {
+    background-color: #EFEFEF;
+  }
+
+  .disabled {
+    cursor: not-allowed;
+
+    > * {
+      color: #bbb;
+      pointer-events: none;
+    }
+  }
+
   .ui-table-summary {
     background-color: transparent;
     border: none;
@@ -133,12 +150,13 @@
       }
 
       .select-all {
-        margin-left: 1rem;
-        color: $base-text-color;
         font-weight: bold;
         font-size: 1.2rem;
         flex: 1;
         text-align: left;
+        margin-left: 2.1rem;
+        color: #9b9b9b;
+        cursor: pointer;
       }
 
       .export-tools {

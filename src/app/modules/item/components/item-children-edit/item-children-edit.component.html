@@ -3,15 +3,28 @@
 
     <ng-container *ngSwitchCase="'ready'">
       <div class="section-chapter-wrapper">
-        <p-table *ngIf="data.length" [value]="data" [reorderableColumns]="true" (onRowReorder)="orderChanged()">
+        <p-table *ngIf="data.length" [value]="data" [reorderableColumns]="true" [(selection)]="selectedRows" (onRowReorder)="orderChanged()">
           <ng-template pTemplate="body" let-rowData let-index="rowIndex">
             <tr [pSelectableRow]="rowData" [pReorderableRow]="index">
               <td class="reorder-handle" [pReorderableRowHandle]="index">
                 <i class="fa fa-sort" [pReorderableRowHandle]="index"></i>
               </td>
+              <td><p-tableCheckbox [value]="rowData"></p-tableCheckbox></td>
               <td class="type">{{ rowData.type }}</td>
               <td class="main">{{ rowData.title }}</td>
             </tr>
+          </ng-template>
+          <ng-template pTemplate="summary">
+            <div class="summary-container">
+              <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+              <span class="select-all" (click)="onSelectAll()">Select all</span>
+              <div class="export-tools" [ngClass]="{disabled: selectedRows.length === 0}">
+                <span class="remove" (click)="onRemove()">
+                  <span>Remove selected</span>
+                  <i class="fa fa-trash-alt"></i>
+                </span>
+              </div>
+            </div>
           </ng-template>
         </p-table>
 
