@@ -1,16 +1,16 @@
 @import 'src/colors.scss';
 @import 'src/geometry.scss';
 
-:host ::ng-deep .ui-table {
+:host ::ng-deep .p-datatable {
 
-  .ui-table-tbody > tr > td.ui-editing-cell p-celleditor > * {
+  .p-datatable-tbody > tr > td.p-editing-cell p-celleditor > * {
     width: 2.5rem;
   }
 
-  .ui-chkbox {
+  .p-checkbox {
     width: 1.0833rem;
     height: 1.0833rem;
-    .ui-chkbox-box {
+    .p-checkbox-box {
       background-color: #E5E5E5;
       box-shadow: 0 .1rem #BBB inset;
       width: 1.0833rem;
@@ -22,11 +22,11 @@
         background-color: #D0D0D0;
       }
 
-      &.ui-state-active:not(.ui-state-disabled):hover {
+      &.p-highlight:not(.p-disabled):hover {
         background-color: #D0D0D0;
       }
 
-      .ui-chkbox-icon {
+      .p-checkbox-icon {
         overflow: visible;
         color: #505050;
         position: absolute;
@@ -37,7 +37,7 @@
     }
   }
 
-  .ui-table-tbody > tr {
+  .p-datatable-tbody > tr {
     background-color: #EFEFEF;
     display: flex;
     border-bottom: $border-filet;
@@ -46,15 +46,15 @@
     height: 3rem;
   }
 
-  .ui-table-tbody > tr:last-child {
+  .p-datatable-tbody > tr:last-child {
     border: none;
   }
 
-  .ui-table-tbody > tr:nth-child(even) {
+  .p-datatable-tbody > tr:nth-child(even) {
     background-color: #EFEFEF;
   }
 
-  .ui-table-tbody > tr > td {
+  .p-datatable-tbody > tr > td {
     color: $base-text-color;
     border: none;
     background-color: transparent;
@@ -76,7 +76,7 @@
       }
     }
 
-    &.ui-editable-column {
+    &.p-editable-column {
       display: flex;
       align-items: center;
       padding-left: 0.4167rem;
@@ -110,11 +110,11 @@
     }
   }
 
-  .ui-table-tbody > tr.ui-state-highlight {
+  .p-datatable-tbody > tr.p-highlight {
     background-color: #EFEFEF;
   }
 
-  .ui-table-tbody > tr:nth-child(even).ui-state-highlight {
+  .p-datatable-tbody > tr:nth-child(even).p-highlight {
     background-color: #EFEFEF;
   }
 
@@ -127,11 +127,12 @@
     }
   }
 
-  .ui-table-summary {
+  .p-datatable-footer {
     background-color: transparent;
     border: none;
     padding-left: 0.4167rem;
     padding-right: 0;
+    font-weight: 700;
 
     .summary-container {
       display: flex;

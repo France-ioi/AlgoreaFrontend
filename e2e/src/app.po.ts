@@ -15,11 +15,11 @@ export class AppPage {
   }
 
   getActivitiesElements() {
-    return element.all(by.css('.ui-treenode-content'));
+    return element.all(by.css('.p-treenode-content'));
   }
 
   getFirstActivityElement() {
-    return element(by.css('.ui-treenode-content'));
+    return element(by.css('.p-treenode-content'));
   }
 
   getLeftElement() {

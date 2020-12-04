@@ -24,14 +24,14 @@
       *ngIf="session && session.user.isTemp"
       icon="fa fa-sign-in-alt"
       label="Log in / Sign in"
-      class="ui-button-rounded ui-button-warning ui-fit-parent"
+      class="p-button-rounded p-button-warning p-fit-parent"
       (click)="login()"
     ></alg-button>
     <alg-button
     *ngIf="session && !session.user.isTemp"
       icon="fa fa-sign-out-alt"
       label="Log out"
-      class="ui-button-rounded ui-button-warning ui-fit-parent"
+      class="p-button-rounded p-button-warning p-fit-parent"
       (click)="logout()"
     ></alg-button>
   </div>

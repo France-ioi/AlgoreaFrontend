@@ -1,15 +1,15 @@
 @import 'src/colors.scss';
 
-:host ::ng-deep .ui-messages {
+:host ::ng-deep .p-messages {
   border-radius: 9rem;
   padding: 0.4167rem;
   color: $base-color;
   margin: 0.4167rem 0;
 
-  &.ui-messages-info {
+  &.p-messages-info {
     background-color: #ffe89b;
 
-    .ui-messages-icon {
+    .p-messages-icon {
       background-color: #ffb900;
       color: white;
 
@@ -22,19 +22,19 @@
 
     }
 
-    .ui-messages-detail {
+    .p-messages-detail {
       color: #e2731d;
     }
 
-    .ui-messages-close {
+    .p-messages-close {
       color: $base-color;
     }
   }
 
-  &.ui-messages-error {
+  &.p-messages-error {
     background-color: #FFE5E9;
 
-    .ui-messages-icon {
+    .p-messages-icon {
       background-color: $notify-error-color;
       color: white;
 
@@ -46,16 +46,16 @@
       }
     }
 
-    .ui-messages-detail {
+    .p-messages-detail {
       color: $notify-error-color;
     }
 
-    .ui-messages-close {
+    .p-messages-close {
       color: $notify-error-color;
     }
   }
 
-  .ui-messages-icon {
+  .p-messages-icon {
     border-radius: 9rem;
     width: 2rem;
     display: flex;
@@ -69,11 +69,11 @@
     align-items: center;
   }
 
-  .ui-messages-detail {
+  .p-messages-detail {
     font-size: 1.2rem;
   }
 
-  .ui-messages-close {
+  .p-messages-close {
     font-size: 1.1667rem;
     top: calc(50% - 0.6667rem);
     right: 1rem;
