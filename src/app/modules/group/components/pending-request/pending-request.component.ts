@@ -175,35 +175,30 @@ export class PendingRequestComponent implements OnInit, OnChanges, OnDestroy {
 
     this.state = action === Action.Accept ? 'accepting' : 'rejecting';
 
-    this.processRequests(action, this.selection).pipe(
-      map(result => ({
-        result: result,
-        action: action,
-        refreshData: { groupId: this.groupId, includeSubgroup: this.includeSubgroup, sort: this.currentSort },
-      }))
-    ).subscribe(
-      state => {
-        this.state = 'ready';
+    this.processRequests(action, this.selection)
+      .subscribe(
+        result => {
+          this.state = 'ready';
 
-        this.displayResponseToast(
-          this.parseResults(state.result),
-          state.action === Action.Accept ? 'accept' : 'reject',
-          state.action === Action.Accept ? 'accepted' : 'declined'
-        );
+          this.displayResponseToast(
+            this.parseResults(result),
+            action === Action.Accept ? 'accept' : 'reject',
+            action === Action.Accept ? 'accepted' : 'declined'
+          );
 
-        this.selection = [];
+          this.selection = [];
 
-        this.dataFetching.next({
-          groupId: state.refreshData.groupId,
-          includeSubgroup: state.refreshData.includeSubgroup,
-          sort: state.refreshData.sort
-        });
-      },
-      err => {
-        this.state = 'ready';
-        this.processRequestError(err);
-      }
-    );
+          this.dataFetching.next({
+            groupId: this.groupId,
+            includeSubgroup: this.includeSubgroup,
+            sort: this.currentSort,
+          });
+        },
+        err => {
+          this.state = 'ready';
+          this.processRequestError(err);
+        }
+      );
   }
 
   onSelectAll(): void {
