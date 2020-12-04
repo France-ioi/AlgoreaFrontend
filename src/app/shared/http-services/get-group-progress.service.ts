@@ -4,6 +4,26 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { appConfig } from 'src/app/shared/helpers/config';
 
+interface RawGroupProgress {
+  group_id: string,
+  item_id: string,
+  average_score: number,
+  avg_hints_requested: number,
+  avg_submissions: number,
+  avg_time_spent: number,
+  validation_rate: number,
+}
+
+export interface GroupProgress {
+  groupId: string,
+  itemId: string,
+  averageScore: number,
+  avgHintsRequested: number,
+  avgSubmissions: number,
+  avgTimeSpent: number,
+  validationRate: number,
+}
+
 interface RawTeamUserProgress {
   group_id: string,
   item_id: string,
@@ -71,6 +91,26 @@ export class GetGroupProgressService {
           submissions: m.submissions,
           timeSpent: m.time_spent,
           validated: m.validated,
+        })))
+      );
+  }
+
+  getGroupsProgress(
+    groupId: string,
+    parentItemIds: string[],
+  ): Observable<GroupProgress[]> {
+    const params = new HttpParams().set('parent_item_ids', parentItemIds.join(','));
+    return this.http
+      .get<RawGroupProgress[]>(`${appConfig().apiUrl}/groups/${groupId}/group-progress`, { params: params })
+      .pipe(
+        map(rawGroupsProgress => rawGroupsProgress.map(m => ({
+          groupId: m.group_id,
+          itemId: m.item_id,
+          averageScore: m.average_score,
+          avgHintsRequested: m.avg_hints_requested,
+          avgSubmissions: m.avg_submissions,
+          avgTimeSpent: m.avg_time_spent,
+          validationRate: m.validation_rate,
         })))
       );
   }
