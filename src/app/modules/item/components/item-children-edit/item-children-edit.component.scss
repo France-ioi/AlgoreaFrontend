@@ -3,14 +3,14 @@
 
 :host ::ng-deep .p-datatable {
 
-  .p-datatable-tbody > tr > td.ui-editing-cell p-celleditor > * {
+  .p-datatable-tbody > tr > td.p-editing-cell p-celleditor > * {
     width: 2.5rem;
   }
 
-  .ui-chkbox {
+  .p-chkbox {
     width: 1.0833rem;
     height: 1.0833rem;
-    .ui-chkbox-box {
+    .p-chkbox-box {
       background-color: #E5E5E5;
       box-shadow: 0 .1rem #BBB inset;
       width: 1.0833rem;
@@ -26,7 +26,7 @@
         background-color: #D0D0D0;
       }
 
-      .ui-chkbox-icon {
+      .p-chkbox-icon {
         overflow: visible;
         color: #505050;
         position: absolute;
@@ -76,7 +76,7 @@
       }
     }
 
-    &.ui-editable-column {
+    &.p-editable-column {
       display: flex;
       align-items: center;
       padding-left: 0.4167rem;

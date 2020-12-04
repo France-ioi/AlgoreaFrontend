@@ -22,10 +22,10 @@
     margin-bottom: 1rem;
     font-family: 'titillium', sans-serif;
 
-    .ui-chkbox {
+    .p-chkbox {
       width: 1.0833rem;
       height: 1.0833rem;
-      .ui-chkbox-box {
+      .p-chkbox-box {
         background-color: $dark-transparency-color;
         box-shadow: 0 .1rem #bbb inset;
         width: 1.0833rem;
@@ -41,7 +41,7 @@
           background-color: #d0d0d0;
         }
 
-        .ui-chkbox-icon {
+        .p-chkbox-icon {
           overflow: visible;
           color: #505050;
           position: absolute;

@@ -36,7 +36,7 @@
             *ngIf="collapsed && session && session.user.isTemp"
             label="Log in / Sign in"
             icon="pi pi-sign-in"
-            class="ui-button-rounded"
+            class="p-button-rounded"
             style="margin-right: 0.4167rem;"
             (click)="login()"
           ></alg-button>
@@ -44,7 +44,7 @@
             *ngIf="collapsed && session && !session.user.isTemp"
             label="Log out"
             icon="pi pi-sign-out"
-            class="ui-button-rounded"
+            class="p-button-rounded"
             style="margin-right: 0.4167rem;"
             (click)="logout()"
           ></alg-button>

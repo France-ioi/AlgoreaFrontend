@@ -8,7 +8,7 @@ $border-radius: .5rem;
 
 
 :host ::ng-deep .group-skills {
-  .ui-tabview {
+  .p-tabview {
     padding: 0;
     background-color: $base-bk-color;
     border-radius: 0;
@@ -17,11 +17,11 @@ $border-radius: .5rem;
       background-color: #4E4E4E;
     }
 
-    &.ui-tabview-top .ui-tabview-nav li:focus {
+    &.p-tabview-top .p-tabview-nav li:focus {
       box-shadow: none;
     }
 
-    ul.ui-tabview-nav {
+    ul.p-tabview-nav {
       display: flex;
       height: 5rem;
 
@@ -57,11 +57,11 @@ $border-radius: .5rem;
           position: relative;
           font-size: 1.2rem;
 
-          span.ui-tabview-left-icon {
+          span.p-tabview-left-icon {
             position: absolute;
           }
 
-          span.ui-tabview-title {
+          span.p-tabview-title {
             margin: 0 auto;
           }
         }
@@ -138,7 +138,7 @@ $border-radius: .5rem;
       }
     }
 
-    .ui-tabview-panels {
+    .p-tabview-panels {
       padding: 0;
       border: none;
       font-family: "titillium";
