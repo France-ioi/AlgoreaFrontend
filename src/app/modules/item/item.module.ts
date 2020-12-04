@@ -22,6 +22,8 @@ import { GroupSituationChapterViewComponent } from
 import { UserProgressComponent } from './components/item-chapter-view/group-situation-chapter-view/user-progress/user-progress.component';
 import { TooltipModule } from 'primeng/tooltip';
 import { PendingChangesGuard } from 'src/app/shared/guards/pending-changes-guard';
+import { CompositionFilterComponent }
+  from './components/item-chapter-view/group-situation-chapter-view/composition-filter/composition-filter.component';
 
 @NgModule({
   declarations: [
@@ -42,6 +44,7 @@ import { PendingChangesGuard } from 'src/app/shared/guards/pending-changes-guard
     UserProgressComponent,
     ItemProgressComponent,
     ItemChapterViewComponent,
+    CompositionFilterComponent,
   ],
   imports: [
     CommonModule,
