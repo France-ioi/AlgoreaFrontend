@@ -20,6 +20,7 @@ export interface Progress {
 }
 
 interface Data {
+  type: TypeFilter,
   rows: string[],
   items: ItemChild[],
   data: (Progress|undefined)[][],
@@ -42,6 +43,7 @@ export class GroupSituationChapterViewComponent implements OnChanges, OnDestroy 
   state: 'error' | 'ready' | 'fetching' = 'fetching';
 
   data: Data = {
+    type: this.defaultFilter,
     rows: [],
     items: [],
     data: [],
@@ -129,6 +131,7 @@ export class GroupSituationChapterViewComponent implements OnChanges, OnDestroy 
       usersProgress: this.getProgress(itemId, groupId, filter),
     }).pipe(
       map(data => ({
+        type: filter,
         items: data.items,
         rows: data.rows.map(row => row.value),
         data: data.rows.map(row =>

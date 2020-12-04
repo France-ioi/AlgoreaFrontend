@@ -1,6 +1,12 @@
 @import 'src/colors.scss';
 @import 'src/geometry.scss';
 
+.empty-message {
+  font-style: italic;
+  text-align: center;
+  font-size: medium;
+}
+
 .slanted-grid {
 
   font-family: 'titillium', sans-serif;

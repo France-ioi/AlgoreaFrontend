@@ -9,7 +9,15 @@
 </p>
 
 <ng-template #noError>
+
+  <ng-container *ngIf="state === 'ready' && data.rows.length === 0" [ngSwitch]="data.type">
+    <p class="empty-message" *ngSwitchCase="'Users'">This group has no users</p>
+    <p class="empty-message" *ngSwitchCase="'Teams'">This group has no teams</p>
+    <p class="empty-message" *ngSwitchCase="'Groups'">This group has no groups</p>
+  </ng-container>
+
   <p-table #table
+    *ngIf="data.rows.length > 0"
     [columns]="data.items"
     [value]="data.data"
     class="slanted-grid"
