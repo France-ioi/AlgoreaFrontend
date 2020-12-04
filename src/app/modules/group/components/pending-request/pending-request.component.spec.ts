@@ -5,7 +5,7 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { of, Subject } from 'rxjs';
 import { MessageService } from 'primeng/api';
 import { PendingRequest, GetRequestsService } from '../../http-services/get-requests.service';
-import { RequestActionsService } from '../../http-services/request-actions.service';
+import { Action, RequestActionsService } from '../../http-services/request-actions.service';
 
 const MOCK_RESPONSE: PendingRequest[] = [
   {
@@ -43,8 +43,7 @@ describe('PendingRequestComponent', () => {
           getPendingRequests: (_id: any, _sort: any, _includeSubgroup: any) => of<PendingRequest[]>(MOCK_RESPONSE),
         } },
         { provide: RequestActionsService, useValue: {
-          acceptJoinRequest: (_id: any, _groupIds: any) => serviceResponder$.asObservable(),
-          rejectJoinRequest: (_id: any, _groupIds: any) => serviceResponder$.asObservable(),
+          processJoinRequest: (_id: any, _groupIds: any, _action: any) => serviceResponder$.asObservable(),
         } },
         { provide: MessageService, useValue: { add: (_m: any) => {} } }
       ]
@@ -62,8 +61,7 @@ describe('PendingRequestComponent', () => {
     component.groupId = '99';
     spyOn(messageService, 'add').and.callThrough();
     spyOn(getRequestsService, 'getPendingRequests').and.callThrough();
-    spyOn(requestActionsService, 'acceptJoinRequest').and.callThrough();
-    spyOn(requestActionsService, 'rejectJoinRequest').and.callThrough();
+    spyOn(requestActionsService, 'processJoinRequest').and.callThrough();
     component.ngOnChanges({});
   });
 
@@ -128,11 +126,10 @@ describe('PendingRequestComponent', () => {
 
     // step 1: select one and 'accept'
     component.selection = [ MOCK_RESPONSE[1] ];
-    component.onAcceptOrReject('accept');
+    component.onAccept();
 
     expect(component.state).toEqual('accepting');
-    expect(requestActionsService.acceptJoinRequest).toHaveBeenCalledWith('50', [ '12' ]);
-    expect(requestActionsService.rejectJoinRequest).toHaveBeenCalledTimes(0);
+    expect(requestActionsService.processJoinRequest).toHaveBeenCalledWith('50', [ '12' ], Action.Accept);
     expect(getRequestsService.getPendingRequests).toHaveBeenCalledTimes(1); // the initial one
 
     // step 2: success response received
@@ -155,11 +152,10 @@ describe('PendingRequestComponent', () => {
 
     // step 1: select one and 'reject'
     component.selection = [ MOCK_RESPONSE[1] ];
-    component.onAcceptOrReject('reject');
+    component.onReject();
 
     expect(component.state).toEqual('rejecting');
-    expect(requestActionsService.rejectJoinRequest).toHaveBeenCalledWith('50', [ '12' ]);
-    expect(requestActionsService.acceptJoinRequest).toHaveBeenCalledTimes(0);
+    expect(requestActionsService.processJoinRequest).toHaveBeenCalledWith('50', [ '12' ], Action.Reject);
     expect(getRequestsService.getPendingRequests).toHaveBeenCalledTimes(1); // the initial one
 
     // step 2: success response received
@@ -180,7 +176,7 @@ describe('PendingRequestComponent', () => {
 
   it('should, when an action is pressed, without selection, do nothing', () => {
     component.selection = [];
-    component.onAcceptOrReject('accept');
+    component.onAccept();
 
     expect(component.state).toEqual('ready');
     expect(getRequestsService.getPendingRequests).toHaveBeenCalledTimes(1); // the initial one
@@ -188,7 +184,7 @@ describe('PendingRequestComponent', () => {
 
   it('should consider "unchanged" in response as success', () => {
     component.selection = [ MOCK_RESPONSE[1] ];
-    component.onAcceptOrReject('accept');
+    component.onAccept();
 
     serviceResponder$.next(new Map([ [ '12', 'unchanged' ] ]));
     serviceResponder$.complete();
@@ -203,7 +199,7 @@ describe('PendingRequestComponent', () => {
 
   it('should display an appropriate message on partial success', () => {
     component.selection = MOCK_RESPONSE; // select 10, 11 and 12
-    component.onAcceptOrReject('accept');
+    component.onAccept();
 
     serviceResponder$.next(new Map([ [ '11', 'invalid' ], [ '12', 'success' ], [ '10', 'success' ] ]));
     serviceResponder$.complete();
@@ -222,7 +218,7 @@ describe('PendingRequestComponent', () => {
 
   it('should display an appropriate error message when all accept requests failed', () => {
     component.selection = MOCK_RESPONSE; // select 10, 11 and 12
-    component.onAcceptOrReject('accept');
+    component.onAccept();
 
     serviceResponder$.next(new Map([ [ '11', 'invalid' ], [ '12', 'cycle' ] ]));
     serviceResponder$.complete();
@@ -241,7 +237,7 @@ describe('PendingRequestComponent', () => {
 
   it('should display an appropriate error message when all reject requests failed', () => {
     component.selection = MOCK_RESPONSE; // select 10, 11 and 12
-    component.onAcceptOrReject('reject');
+    component.onReject();
 
     serviceResponder$.next(new Map([ [ '11', 'invalid' ], [ '12', 'cycle' ] ]));
     serviceResponder$.complete();
@@ -260,7 +256,7 @@ describe('PendingRequestComponent', () => {
 
   it('should display an appropriate error message when the service fails', () => {
     component.selection = [ MOCK_RESPONSE[1] ];
-    component.onAcceptOrReject('accept');
+    component.onAccept();
 
     serviceResponder$.error(new Error('...'));
     serviceResponder$.complete();
