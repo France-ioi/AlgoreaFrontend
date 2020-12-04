@@ -32,7 +32,7 @@ $circular: 1.2rem;
     @extend %custom-pattern;
   }
 
-  &:not(.ui-state-disabled):hover .ui-inputswitch-slider {
+  &:not(.p-disabled):hover .ui-inputswitch-slider {
     @extend %custom-pattern;
   }
 
@@ -56,7 +56,7 @@ $circular: 1.2rem;
     @extend %custom-pattern;
   }
 
-  &.ui-inputswitch-checked:not(.ui-state-disabled):hover .ui-inputswitch-slider {
+  &.ui-inputswitch-checked:not(.p-disabled):hover .ui-inputswitch-slider {
     @extend %custom-pattern;
   }
 }

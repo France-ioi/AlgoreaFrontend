@@ -37,7 +37,7 @@
           background-color: #d0d0d0;
         }
 
-        &.ui-state-active:not(.ui-state-disabled):hover {
+        &.ui-state-active:not(.p-disabled):hover {
           background-color: #d0d0d0;
         }
 
@@ -104,7 +104,7 @@
       border-bottom: none;
     }
 
-    .ui-table-tbody > tr.ui-state-highlight > td {
+    .ui-table-tbody > tr.p-highlight > td {
       color: #fff;
     }
 
