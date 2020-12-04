@@ -52,7 +52,7 @@ export class PendingRequestComponent implements OnInit, OnChanges, OnDestroy {
   includeSubgroup = false;
   collapsed = true;
 
-  state: 'fetching' | 'accepting' | 'rejecting' | 'ready' |'error' = 'fetching';
+  state: 'fetching' | 'accepting' | 'rejecting' | 'ready' |'fetchingError' = 'fetching';
 
   private dataFetching = new Subject<{ groupId?: string, includeSubgroup: boolean, sort: string[] }>();
 
@@ -77,7 +77,7 @@ export class PendingRequestComponent implements OnInit, OnChanges, OnDestroy {
         }
       },
       _err => {
-        this.state = 'error';
+        this.state = 'fetchingError';
       }
     );
   }

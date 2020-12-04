@@ -14,12 +14,12 @@
   </ng-template>
 
 
-  <p *ngIf="state === 'error';else noError" class="error-message">
+  <p *ngIf="state === 'fetchingError';else noFetchingError" class="error-message">
     <i class="fa fa-exclamation-triangle"></i>
     Error while loading the pending requests.
   </p>
 
-  <ng-template #noError>
+  <ng-template #noFetchingError>
     <div class="pending-request-container" #noError>
       <alg-grid
         *ngIf="requests.length > 0"
