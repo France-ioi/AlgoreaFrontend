@@ -92,7 +92,7 @@ describe('AccessToken', () => {
     const diff = token.expiration.getTime() - Date.now();
     expect(diff).toBeLessThanOrEqual(600000);
     expect(diff).toBeGreaterThan(599000);
-    expect((token.creation.getTime() - Date.now())/1000).toEqual(0);
+    expect(Date.now() - token.creation.getTime()).toBeLessThan(500);
     expect(token.accessToken).toEqual('fromttl');
     expect(token.type).toEqual('temporary');
     expect(token.isValid()).toBeTruthy();
