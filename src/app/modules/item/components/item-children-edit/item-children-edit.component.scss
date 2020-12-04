@@ -119,11 +119,10 @@
   }
 
   .disabled {
-    opacity: 70%;
+    opacity: 0.6;
     pointer-events: none;
 
     > * {
-      opacity: 70%;
       pointer-events: none;
     }
   }
