@@ -4,15 +4,23 @@ import { map, switchMap } from 'rxjs/operators';
 import { Group } from 'src/app/core/components/group-nav-tree/group';
 import { fetchingState, isReady, readyState } from 'src/app/shared/helpers/state';
 import { GetGroupDescendantsService } from 'src/app/shared/http-services/get-group-descendants.service';
-import { GetGroupProgressService, TeamUserProgress } from 'src/app/shared/http-services/get-group-progress.service';
+import { GetGroupProgressService } from 'src/app/shared/http-services/get-group-progress.service';
 import { FormattableUser } from 'src/app/shared/pipes/userDisplay';
 import { GetItemChildrenService, ItemChild } from '../../../http-services/get-item-children.service';
 import { ItemData } from '../../../services/item-datasource.service';
 
+export interface Progress {
+  groupId: string,
+  itemId: string,
+  validated: boolean,
+  score: number,
+  timeSpent: number,
+}
+
 interface Data {
   users: FormattableUser[],
   items: ItemChild[],
-  data: (TeamUserProgress|undefined)[][],
+  data: (Progress|undefined)[][],
 }
 
 @Component({
@@ -70,11 +78,15 @@ export class GroupSituationChapterViewComponent implements OnChanges, OnDestroy 
     this.dataFetching.next({ groupId: this.group.id, itemId: this.itemData.item.id, attemptId: this.itemData.currentResult.attemptId });
   }
 
+  private getProgress(itemId: string, groupId: string): Observable<Progress[]> {
+    return this.getGroupUsersProgressService.getUsersProgress(groupId, [ itemId ]);
+  }
+
   private getData(itemId: string, groupId: string, attemptId: string): Observable<Data> {
     return forkJoin({
       users: this.getGroupDescendantsService.getUserDescendants(groupId),
       items: this.getItemChildrenService.get(itemId, attemptId),
-      usersProgress: this.getGroupUsersProgressService.getUsersProgress(groupId, [ itemId ])
+      usersProgress: this.getProgress(itemId, groupId),
     }).pipe(
       map(data => ({
         users: data.users.map(user => user.user),
