@@ -70,7 +70,7 @@ $border-radius: .5rem;
           border: none !important;
         }
 
-        &.ui-state-default {
+        &.p-default {
 
           &:not(:first-child) {
             // border-bottom-left-radius: 1rem;
@@ -92,7 +92,7 @@ $border-radius: .5rem;
           }
         }
 
-        &.ui-state-active {
+        &.p-active {
           background-color: $base-color;
 
           &:before {

@@ -74,7 +74,7 @@ $danger-color: #ff001f;
     right: 1rem;
   }
 
-  &.ui-state-default {
+  &.p-default {
 
     &.ui-button-secondary {
       background-color: $secondary-color;
@@ -164,7 +164,7 @@ $danger-color: #ff001f;
           border-radius: 1.5rem;
         }
 
-        &.ui-state-default.ui-button-success {
+        &.p-default.ui-button-success {
           background-color: transparent;
         }
     }

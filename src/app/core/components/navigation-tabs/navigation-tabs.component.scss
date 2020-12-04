@@ -191,7 +191,7 @@ $header-height: 0rem; //7.5rem; <- to be restored if search bar is re-added
           }
         }
 
-        &.ui-state-active {
+        &.p-active {
           @extend %trans-bk-accordion;
         }
 
