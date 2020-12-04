@@ -24,7 +24,7 @@ $danger-color: #ff001f;
   }
 
   &.no-uppercase {
-    .p-button-text {
+    .p-button-label {
       text-transform: unset;
     }
   }
@@ -49,19 +49,19 @@ $danger-color: #ff001f;
     box-shadow: none;
   }
 
-  .p-button-text {
+  .p-button-label {
     text-transform: uppercase;
   }
 
-  &.p-button-text-icon-left {
-    .p-button-text {
+  &.p-button-icon-left {
+    .p-button-label {
       padding: 0;
       padding-left: 1.5rem;
     }
   }
 
-  &.p-button-text-icon-right {
-    .p-button-text {
+  &.p-button-icon-right {
+    .p-button-label {
       padding-right: 1.5rem;
     }
   }
@@ -74,82 +74,80 @@ $danger-color: #ff001f;
     right: 1rem;
   }
 
-  &.p-default {
+  &.p-button-secondary {
+    background-color: $secondary-color;
+    border-color: $secondary-color;
+    color: white;
 
-    &.p-button-secondary {
-      background-color: $secondary-color;
-      border-color: $secondary-color;
-      color: white;
-
-      &:enabled:focus {
-        outline: none;
-        box-shadow: none;
-      }
-    }
-
-    &.p-button-info {
-      background-color: $base-color;
-      border-color: $base-color;
-
-      &:enabled:focus {
-        outline: none;
-        box-shadow: none;
-      }
-    }
-
-    &.p-button-warning {
-      background-color: $warning-color;
-      border-color: $warning-color;
-      color: white;
-
-      &:enabled:hover {
-        color: white;
-      }
-      &:enabled:focus {
-        outline: none;
-        box-shadow: none;
-      }
-    }
-
-    &.p-button-danger {
-      background-color: $danger-color;
-      border-color: $danger-color;
-
-      &:enabled:focus {
-        outline: none;
-        box-shadow: none;
-      }
-    }
-
-    &.p-top-rounded {
-      border-radius: 0;
-      border-top-left-radius: 0.6667rem;
-      border-top-right-radius: 0.6667rem;
-    }
-
-    &.p-diag-rounded {
-      border-radius: 0;
-      border-top-left-radius: 0.6667rem;
-      border-bottom-right-radius: 0.6667rem;
-    }
-
-    &.p-button-success {
-      background-color: white;
-      border-color: $base-color;
-      color: $base-color;
-
-      &:enabled:hover {
-        background-color: $base-color;
-        border-color: $base-color;
-        color: white;
-      }
-      &:enabled:focus {
-        outline: none;
-        box-shadow: none;
-      }
+    &:enabled:focus {
+      outline: none;
+      box-shadow: none;
     }
   }
-}
+
+  &.p-button-info {
+    background-color: $base-color;
+    border-color: $base-color;
+
+    &:enabled:focus {
+      outline: none;
+      box-shadow: none;
+    }
+  }
+
+  &.p-button-warning {
+    background-color: $warning-color;
+    border-color: $warning-color;
+    color: white;
+
+    &:enabled:hover {
+      color: white;
+    }
+    &:enabled:focus {
+      outline: none;
+      box-shadow: none;
+    }
+  }
+
+  &.p-button-danger {
+    background-color: $danger-color;
+    border-color: $danger-color;
+
+    &:enabled:focus {
+      outline: none;
+      box-shadow: none;
+    }
+  }
+
+  &.p-top-rounded {
+    border-radius: 0;
+    border-top-left-radius: 0.6667rem;
+    border-top-right-radius: 0.6667rem;
+  }
+
+  &.p-diag-rounded {
+    border-radius: 0;
+    border-top-left-radius: 0.6667rem;
+    border-bottom-right-radius: 0.6667rem;
+  }
+
+  &.p-button-success {
+    background-color: white;
+    border-color: $base-color;
+    color: $base-color;
+
+    &:enabled:hover {
+      background-color: $base-color;
+      border-color: $base-color;
+      color: white;
+    }
+    &:enabled:focus {
+      outline: none;
+      box-shadow: none;
+    }
+  }
+
+  }
 
 :host ::ng-deep p-button {
   width: 100%;
@@ -164,7 +162,7 @@ $danger-color: #ff001f;
           border-radius: 1.5rem;
         }
 
-        &.p-default.p-button-success {
+        &.p-button-success {
           background-color: transparent;
         }
     }
