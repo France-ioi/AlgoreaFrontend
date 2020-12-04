@@ -1,4 +1,6 @@
 <alg-composition-filter
+  [defaultValue]="defaultFilter"
+  (change)="onFilterChange($event)"
 ></alg-composition-filter>
 
 <p *ngIf="state === 'error';else noError" class="error-message">
@@ -33,8 +35,8 @@
       let-rowIndex="rowIndex"
     >
       <tr>
-        <td class="users" pTooltip="{{ data.users[rowIndex] | user }}" tooltipPosition="left" [showDelay]="100">
-          {{ data.users[rowIndex] | user }}
+        <td class="users" pTooltip="{{ data.rows[rowIndex] }}" tooltipPosition="left" [showDelay]="100">
+          {{ data.rows[rowIndex] }}
         </td>
         <td *ngFor="let col of columns; let colIndex = index">
           <alg-user-progress
