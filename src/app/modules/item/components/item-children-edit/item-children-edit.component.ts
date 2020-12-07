@@ -15,7 +15,7 @@ export interface ChildDataWithId extends ChildData{
   id: string;
 }
 
-export function hasId(child: ChildData | ChildDataWithId): child is ChildDataWithId {
+export function hasId(child: ChildData): child is ChildDataWithId {
   return !!child.id;
 }
 
