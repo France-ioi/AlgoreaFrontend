@@ -97,6 +97,7 @@ export class ItemEditComponent implements OnDestroy {
       this.itemChanges.children.map(child => {
         if (hasId(child)) return of(child);
         // the child doesn't have an id so we create it
+        if (!child.title) return throwError(new Error('Something went wrong, the new child is missing his title'));
         return this.createItemService
           .create(child.title, child.type, 'en', this.itemId)
           .pipe(map(res => ({ id: res, ...child })));

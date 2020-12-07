@@ -27,7 +27,7 @@ export class CreateItemService {
   }
 
   create(
-    title: string | null,
+    title: string,
     type: ItemType,
     languageTag: string,
     parentId?: string,
