@@ -1,14 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { appConfig } from 'src/app/shared/helpers/config';
 import { ItemType } from '../../../shared/helpers/item-type';
 import { map } from 'rxjs/operators';
+import { ActionResponse, successData } from '../../../shared/http-services/action-response';
 
-interface RawNewItem {
-  data: { id: string },
-  message: string,
-  success: boolean
+interface NewItemData {
+  id: string;
 }
 
 interface NewItem {
@@ -41,9 +40,11 @@ export class CreateItemService {
 
     if (parentId) body.parent = { item_id: parentId };
 
-    return this.http.post<RawNewItem>(
-      `${appConfig().apiUrl}/items`,
-      body,
-    ).pipe(map(response => response.data.id));
+    return this.http
+      .post<ActionResponse<NewItemData>>(`${appConfig().apiUrl}/items`, body)
+      .pipe(
+        map(successData),
+        map(response => response.id)
+      );
   }
 }
