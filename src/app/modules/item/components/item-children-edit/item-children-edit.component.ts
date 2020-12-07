@@ -11,6 +11,14 @@ export interface ChildData {
   type: ItemType,
 }
 
+export interface ChildDataWithId extends ChildData{
+  id: string;
+}
+
+export function hasId(child: ChildData | ChildDataWithId): child is ChildDataWithId {
+  return !!child.id;
+}
+
 @Component({
   selector: 'alg-item-children-edit',
   templateUrl: './item-children-edit.component.html',
