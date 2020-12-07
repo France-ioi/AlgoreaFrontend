@@ -26,7 +26,7 @@ export class GroupEditComponent implements OnDestroy {
 
   state$ = this.groupDataSource.state$;
 
-  subscriptions: Subscription[] = [];
+  subscription?: Subscription;
 
   constructor(
     private currentContent: CurrentContentService,
@@ -37,18 +37,17 @@ export class GroupEditComponent implements OnDestroy {
   ) {
     this.currentContent.editState.next('editing');
 
-    this.subscriptions.push(
-      this.state$.pipe(filter<Ready<Group> | Fetching | FetchError, Ready<Group>>(isReady))
-        .subscribe(state => {
-          this.initialFormData = state.data;
-          this.resetFormWith(state.data);
-        }),
-    );
+    this.subscription = this.state$
+      .pipe(filter<Ready<Group> | Fetching | FetchError, Ready<Group>>(isReady))
+      .subscribe(state => {
+        this.initialFormData = state.data;
+        this.resetFormWith(state.data);
+      });
   }
 
   ngOnDestroy(): void {
     this.currentContent.editState.next('non-editable');
-    this.subscriptions.forEach(subscription => subscription.unsubscribe());
+    this.subscription?.unsubscribe();
   }
 
   successToast(): void {
