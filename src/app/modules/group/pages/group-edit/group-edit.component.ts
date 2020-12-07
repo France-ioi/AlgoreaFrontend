@@ -6,7 +6,7 @@ import { filter } from 'rxjs/operators';
 import { ERROR_MESSAGE } from 'src/app/shared/constants/api';
 import { TOAST_LENGTH } from 'src/app/shared/constants/global';
 import { Ready, Fetching, FetchError, isReady } from 'src/app/shared/helpers/state';
-import { CurrentContentService, EditAction } from 'src/app/shared/services/current-content.service';
+import { CurrentContentService } from 'src/app/shared/services/current-content.service';
 import { Group } from '../../http-services/get-group-by-id.service';
 import { GroupChanges, GroupUpdateService } from '../../http-services/group-update.service';
 import { GroupDataSource } from '../../services/group-datasource.service';
@@ -17,12 +17,12 @@ import { GroupDataSource } from '../../services/group-datasource.service';
   styleUrls: [ './group-edit.component.scss' ]
 })
 export class GroupEditComponent implements OnDestroy {
-  groupId?: string;
   groupForm = this.formBuilder.group({
     // eslint-disable-next-line @typescript-eslint/unbound-method
     name: [ '', [ Validators.required, Validators.minLength(3) ] ],
     description: [ '', [] ],
   })
+  initialFormData?: Group;
 
   state$ = this.groupDataSource.state$;
 
@@ -40,14 +40,9 @@ export class GroupEditComponent implements OnDestroy {
     this.subscriptions.push(
       this.state$.pipe(filter<Ready<Group> | Fetching | FetchError, Ready<Group>>(isReady))
         .subscribe(state => {
-          this.groupId = state.data.id;
-          this.groupForm.patchValue({
-            name: state.data.name,
-            description: state.data.description,
-          });
+          this.initialFormData = state.data;
+          this.resetFormWith(state.data);
         }),
-      this.currentContent.editAction$.pipe(filter(action => action === EditAction.Save))
-        .subscribe(_action => this.saveInput())
     );
   }
 
@@ -83,24 +78,38 @@ export class GroupEditComponent implements OnDestroy {
   }
 
   saveInput(): void {
-    if (!this.groupId) return;
+    if (!this.initialFormData) return;
 
     if (this.groupForm.invalid) {
       this.errorToast('You need to solve all the errors displayed in the form to save changes.');
       return;
     }
 
+    this.groupForm.disable();
     this.groupUpdateService.updateGroup(
-      this.groupId,
+      this.initialFormData.id,
       this.getGroupChanges(),
     ).subscribe(
       () => {
-        this.groupForm.disable();
+        this.groupDataSource.refetchGroup(); // will re-enable the form
         this.successToast();
-        this.groupDataSource.refetchGroup();
-        this.currentContent.editAction.next(EditAction.StopEditing);
       },
-      _err => this.errorToast()
+      _err => {
+        this.groupForm.enable();
+        this.errorToast();
+      }
     );
+  }
+
+  resetForm(): void {
+    if (this.initialFormData) this.resetFormWith(this.initialFormData);
+  }
+
+  private resetFormWith(group: Group): void {
+    this.groupForm.reset({
+      name: group.name,
+      description: group.description,
+    });
+    this.groupForm.enable();
   }
 }
