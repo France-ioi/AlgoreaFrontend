@@ -11,7 +11,7 @@ import { MessageService } from 'primeng/api';
 import { ERROR_MESSAGE } from '../../../../shared/constants/api';
 import { ItemChanges, UpdateItemService } from '../../http-services/update-item.service';
 import { ChildData, ChildDataWithId, hasId } from '../../components/item-children-edit/item-children-edit.component';
-import { CreateItemService } from '../../http-services/create-item.service';
+import { CreateItemService, NewItem } from '../../http-services/create-item.service';
 
 @Component({
   selector: 'alg-item-edit',
@@ -95,11 +95,18 @@ export class ItemEditComponent implements OnDestroy {
     if (!this.itemChanges.children) return EMPTY;
     return forkJoin(
       this.itemChanges.children.map(child => {
+        if (!this.itemId) return throwError(new Error('Invalid form'));
         if (hasId(child)) return of(child);
         // the child doesn't have an id so we create it
         if (!child.title) return throwError(new Error('Something went wrong, the new child is missing his title'));
+        const newChild: NewItem = {
+          title: child.title,
+          type: child.type,
+          language_tag: 'en',
+          parent: { item_id: this.itemId }
+        };
         return this.createItemService
-          .create(child.title, child.type, 'en', this.itemId)
+          .create(newChild)
           .pipe(map(res => ({ id: res, ...child })));
       }),
     ).pipe(

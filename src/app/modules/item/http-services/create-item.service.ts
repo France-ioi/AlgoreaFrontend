@@ -10,7 +10,7 @@ interface NewItemData {
   id: string;
 }
 
-interface NewItem {
+export interface NewItem {
   title: string,
   type: ItemType,
   language_tag: string,
@@ -26,25 +26,11 @@ export class CreateItemService {
   constructor(private http: HttpClient) {
   }
 
-  create(
-    title: string,
-    type: ItemType,
-    languageTag: string,
-    parentId?: string,
-    groupId?: string
-  ): Observable<string> {
-    const body: NewItem = {
-      title: title || '',
-      type: type,
-      language_tag: languageTag,
-    };
+  create(newItem: NewItem): Observable<string> {
 
-    if (!(parentId || groupId)) return throwError(new Error('Parent id and as_root_of_group_id not given.'));
-    if (parentId) body.parent = { item_id: parentId };
-    if (groupId) body.as_root_of_group_id = groupId;
-
+    if (!(newItem.parent || newItem.as_root_of_group_id)) return throwError(new Error('Parent id and as_root_of_group_id not given.'));
     return this.http
-      .post<ActionResponse<NewItemData>>(`${appConfig().apiUrl}/items`, body)
+      .post<ActionResponse<NewItemData>>(`${appConfig().apiUrl}/items`, newItem)
       .pipe(
         map(successData),
         map(response => response.id)
