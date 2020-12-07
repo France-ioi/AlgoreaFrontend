@@ -84,7 +84,8 @@ export class ItemEditComponent implements OnDestroy {
     this.itemChanges.children = children;
   }
 
-  getItemChanges(): ItemChanges {
+  // Update Item
+  private getItemChanges(children: ChildDataWithId[]): ItemChanges {
     const res: ItemChanges = {};
     if (this.itemChanges.children) res.children = children.map((child, idx) => ({ item_id: child.id, order: idx }));
     return res;
@@ -109,7 +110,7 @@ export class ItemEditComponent implements OnDestroy {
   }
 
   // Item string changes
-  getItemStringChanges(): ItemStringChanges | undefined {
+  private getItemStringChanges(): ItemStringChanges | undefined {
     const title = this.itemForm.get('title');
     const description = this.itemForm.get('description');
 
@@ -121,7 +122,7 @@ export class ItemEditComponent implements OnDestroy {
     };
   }
 
-  updateString(): Observable<void> {
+  private updateString(): Observable<void> {
     if (!this.itemId) return throwError(new Error('Missing ID form'));
     const itemStringChanges = this.getItemStringChanges();
     if (!itemStringChanges) return throwError(new Error('Invalid form'));
