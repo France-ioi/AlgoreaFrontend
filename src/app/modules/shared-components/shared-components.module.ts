@@ -51,6 +51,7 @@ import { FormErrorComponent } from './components/form-error/form-error.component
 import { UserPipe } from 'src/app/shared/pipes/userDisplay';
 import { SubSectionComponent } from './components/sub-section/sub-section.component';
 import { AddContentComponent } from './components/add-content/add-content.component';
+import { FloatingSaveComponent } from './components/floating-save/floating-save.component';
 
 @NgModule({
   declarations: [
@@ -78,6 +79,7 @@ import { AddContentComponent } from './components/add-content/add-content.compon
     UserPipe,
     SubSectionComponent,
     AddContentComponent,
+    FloatingSaveComponent,
   ],
   imports: [
     CommonModule,
@@ -138,6 +140,7 @@ import { AddContentComponent } from './components/add-content/add-content.compon
     UserPipe,
     SubSectionComponent,
     AddContentComponent,
+    FloatingSaveComponent,
   ],
   providers: [
     { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: true } }

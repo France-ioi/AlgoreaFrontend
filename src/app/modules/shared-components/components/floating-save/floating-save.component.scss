@@ -1,0 +1,14 @@
+
+:host {
+  position: fixed;
+  bottom: 0.2rem;
+  right: 1rem;
+  height: 4rem;
+  z-index: 900;
+  display: flex;
+
+  .save {
+    margin-right: 0.2rem;
+  }
+
+}
