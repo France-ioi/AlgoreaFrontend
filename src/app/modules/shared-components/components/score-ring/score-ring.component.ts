@@ -103,6 +103,7 @@ export class ScoreRingComponent implements OnInit, OnChanges {
       this.icon = undefined;
     }
 
+
     this.fontSize = Math.floor((2 * this.diameter) / 64);
     if (this.forTree) {
       this.fontSize = 1;

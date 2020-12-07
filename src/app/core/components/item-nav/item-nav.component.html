@@ -6,7 +6,7 @@
   <p *ngSwitchCase="'error'" class="error">Unable to load the item list</p>
 
   <ng-container *ngSwitchDefault> <!-- else: 'items' contains data, of type "MenuItems" -->
-    <alg-item-nav-tree [data]="$any(category === 'activity' ? activityState : skillState).data"></alg-item-nav-tree>
+    <alg-item-nav-tree [type]="category" [data]="$any(category === 'activity' ? activityState : skillState).data"></alg-item-nav-tree>
   </ng-container>
 
 </ng-container>

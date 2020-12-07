@@ -1,10 +1,11 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { catchError, switchMap, pairwise } from 'rxjs/operators';
-import { AccessToken } from './access-token';
-import { BehaviorSubject, of, merge, Subscription } from 'rxjs';
+import { catchError, switchMap, pairwise, map } from 'rxjs/operators';
+import { AccessToken, minTokenLifetime } from './access-token';
+import { BehaviorSubject, of, merge, Subscription, timer } from 'rxjs';
 import { TempAuthService } from './temp-auth.service';
 import { OAuthService } from './oauth.service';
 import { AuthHttpService } from '../http-services/auth.http-service';
+import { MINUTES } from '../helpers/duration';
 
 // as auth can be complex to debug, enable this flag to print state logs
 const debugLogEnabled = true;
@@ -31,6 +32,7 @@ export class AuthService implements OnDestroy {
   state: 'idle'|'fetching'|'refreshing'|'error';
 
   private subscription: Subscription;
+  private tokenRefreshSubscription?: Subscription;
 
   constructor(
     private oauthService: OAuthService,
@@ -179,10 +181,28 @@ export class AuthService implements OnDestroy {
     } else {
       newToken.saveToStorage();
     }
+    this.resetTokenRefresh(newToken);
   }
 
   private isBusy(): boolean {
     return this.state === 'fetching';
+  }
+
+  private resetTokenRefresh(token: AccessToken|null): void {
+    this.tokenRefreshSubscription?.unsubscribe();
+    if (token === null) {
+      this.tokenRefreshSubscription = undefined;
+    } else {
+      // Refresh if the token is valid < `minTokenLifetime` or when it will have reached 50% of its lifetime. Retry every minute.
+      let refreshIn = 0;
+      if (token.expiration.getTime() - Date.now() > minTokenLifetime) {
+        refreshIn = Math.max((token.expiration.getTime() + token.creation.getTime())/2 - Date.now(), 0);
+      }
+      this.tokenRefreshSubscription = timer(refreshIn, 1*MINUTES).pipe(
+        switchMap(() => this.authHttp.refreshToken(token.accessToken)),
+        map(t => AccessToken.fromTTL(t.access_token, t.expires_in, token.type))
+      ).subscribe(token => this.accessToken.next(token));
+    }
   }
 
   private debugState(): string {

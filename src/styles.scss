@@ -15,7 +15,7 @@ body {
   min-height: 100%;
 }
 
-body .ui-widget {
+body .p-component {
   font-family: "titillium", sans-serif;
   font-size: inherit;
 }
@@ -281,16 +281,16 @@ body .ui-widget {
   }
 }
 
-.ui-tooltip.tooltip-custom {
+.p-tooltip.tooltip-custom {
 
-  .ui-tooltip-text {
+  .p-tooltip-text {
     background-color: $base-color;
     border-radius: 1rem;
     padding: 1rem 2rem;
   }
 
-  &.ui-tooltip-top {
-    .ui-tooltip-arrow {
+  &.p-tooltip-top {
+    .p-tooltip-arrow {
       border-top-color: $base-color;
     }
   }

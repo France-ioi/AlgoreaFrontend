@@ -29,6 +29,7 @@ export class ItemChildrenEditComponent implements OnChanges {
 
   state: 'loading' | 'error' | 'ready' = 'ready';
   data: ChildData[] = [];
+  selectedRows: ChildData[] = [];
 
   private subscription?: Subscription;
   @Output() childrenChanges = new EventEmitter<ChildData[]>();
@@ -66,6 +67,15 @@ export class ItemChildrenEditComponent implements OnChanges {
 
   addChild(child: ChildData): void {
     this.data.push({ title: child.title, type: child.type });
+    this.childrenChanges.emit(this.data);
+  }
+
+  onSelectAll(): void {
+    this.selectedRows = this.selectedRows.length === this.data.length ? [] : this.data;
+  }
+
+  onRemove(): void {
+    this.data = this.data.filter(elm => !this.selectedRows.includes(elm));
     this.childrenChanges.emit(this.data);
   }
 

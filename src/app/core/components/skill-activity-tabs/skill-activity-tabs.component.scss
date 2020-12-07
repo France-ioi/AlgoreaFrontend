@@ -8,7 +8,7 @@ $border-radius: .5rem;
 
 
 :host ::ng-deep .group-skills {
-  .ui-tabview {
+  .p-tabview {
     padding: 0;
     background-color: $base-bk-color;
     border-radius: 0;
@@ -17,11 +17,11 @@ $border-radius: .5rem;
       background-color: #4E4E4E;
     }
 
-    &.ui-tabview-top .ui-tabview-nav li:focus {
+    &.p-tabview-top .p-tabview-nav li:focus {
       box-shadow: none;
     }
 
-    ul.ui-tabview-nav {
+    ul.p-tabview-nav {
       display: flex;
       height: 5rem;
 
@@ -35,6 +35,12 @@ $border-radius: .5rem;
         border-radius: 0;
         // color: white !important;
 
+        /* override properties from ngprime that we do not want */
+        .p-tabview-nav-link {
+          background: transparent;
+          border-width: 0px;
+        }
+
         &:first-child {
           border-top-left-radius: $border-radius;
           a {
@@ -42,7 +48,7 @@ $border-radius: .5rem;
           }
         }
 
-        &:last-child {
+        &:nth-last-child(2){
           border-top-right-radius: $border-radius;
           a {
             border-top-right-radius: $border-radius;
@@ -56,43 +62,32 @@ $border-radius: .5rem;
           align-items: center;
           position: relative;
           font-size: 1.2rem;
+          color: white;
 
-          span.ui-tabview-left-icon {
+          span.p-tabview-left-icon {
             position: absolute;
           }
 
-          span.ui-tabview-title {
+          span.p-tabview-title {
             margin: 0 auto;
           }
+
+          &:focus {
+            outline: none !important;
+            box-shadow: none;
+          }
+
         }
 
         &:hover {
           border: none !important;
-        }
-
-        &.ui-state-default {
-
-          &:not(:first-child) {
-            // border-bottom-left-radius: 1rem;
-          }
-
-          &:first-child {
-            // border-bottom-right-radius: 1rem;
-          }
-
+          background-color: #578CCA !important;
           a {
-            color: white;
-          }
-
-          &:hover {
-            background-color: #578CCA !important;
-            a {
-              color: white !important;
-            }
+            color: white !important;
           }
         }
 
-        &.ui-state-active {
+        &.p-highlight {
           background-color: $base-color;
 
           &:before {
@@ -138,7 +133,7 @@ $border-radius: .5rem;
       }
     }
 
-    .ui-tabview-panels {
+    .p-tabview-panels {
       padding: 0;
       border: none;
       font-family: "titillium";

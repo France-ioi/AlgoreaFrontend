@@ -74,7 +74,7 @@ export class NavigationTabsComponent implements OnDestroy {
 
   focusParent(): void {
     if (this.groupPanel) {
-      const elements = this.groupPanel.querySelectorAll('.ui-accordion-header a');
+      const elements = this.groupPanel.querySelectorAll('.p-accordion-header a');
       elements.forEach(e => {
         (e as HTMLElement).blur();
       });

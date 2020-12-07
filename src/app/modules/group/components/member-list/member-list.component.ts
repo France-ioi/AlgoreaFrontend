@@ -4,11 +4,10 @@ import { Table } from 'primeng/table';
 import { merge, Observable, of, Subject } from 'rxjs';
 import { delay, map, switchMap } from 'rxjs/operators';
 import { fetchingState, isReady, readyState } from 'src/app/shared/helpers/state';
-import { GetGroupUserDescendantsService } from 'src/app/shared/http-services/get-group-user-descendants.service';
+import { GetGroupDescendantsService } from 'src/app/shared/http-services/get-group-descendants.service';
 import { Group } from '../../http-services/get-group-by-id.service';
 import { GetGroupChildrenService, GroupChild } from '../../http-services/get-group-children.service';
 import { GetGroupMembersService, Member } from '../../http-services/get-group-members.service';
-import { GetGroupTeamDescendantsService } from '../../http-services/get-group-team-descendants.service';
 import { TypeFilter, Filter } from '../group-composition-filter/group-composition-filter.component';
 
 interface Column {
@@ -77,8 +76,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
   constructor(
     private getGroupMembersService: GetGroupMembersService,
     private getGroupChildrenService: GetGroupChildrenService,
-    private getGroupUserDescendantsService: GetGroupUserDescendantsService,
-    private getGroupTeamDescendantsService: GetGroupTeamDescendantsService,
+    private getGroupDescendantsService: GetGroupDescendantsService,
   ) {
     this.dataFetching.pipe(
       delay(0),
@@ -125,7 +123,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
           })));
       case TypeFilter.Teams:
         if (!filter.directChildren) {
-          return this.getGroupTeamDescendantsService.getTeamDescendants(groupId, sort)
+          return this.getGroupDescendantsService.getTeamDescendants(groupId, sort)
             .pipe(map(descendantTeams => ({
               columns: descendantTeamsColumns,
               rowData: descendantTeams.map(descendantTeam => ({
@@ -146,7 +144,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
           return this.getGroupMembersService.getGroupMembers(groupId, sort)
             .pipe(map(members => ({ columns: usersColumns, rowData: members })));
         } else {
-          return this.getGroupUserDescendantsService.getGroupUserDescendants(groupId, sort)
+          return this.getGroupDescendantsService.getUserDescendants(groupId, sort)
             .pipe(map(descendantUsers => ({
               columns: descendantUsersColumns,
               rowData: descendantUsers.map(descendantUser => ({

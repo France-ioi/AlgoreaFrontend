@@ -7,30 +7,35 @@ describe('AccessToken', () => {
   });
 
   it('should save & load successfully a temp token', () => {
+    const creationTime = new Date();
     const exp = new Date(Date.now() + 60000);
-    const token = new AccessToken('atemptok', exp, 'temporary');
+    const token = new AccessToken('atemptok', creationTime, exp, 'temporary');
     token.saveToStorage();
     const loaded = AccessToken.fromStorage();
     expect(loaded?.accessToken).toEqual('atemptok');
+    expect(loaded?.creation).toEqual(creationTime);
     expect(loaded?.expiration).toEqual(exp);
     expect(loaded?.type).toEqual('temporary');
     expect(loaded?.isValid()).toBeTruthy();
   });
 
   it('should load successfully an authenticated token', () => {
+    const creationTime = new Date();
     const exp = new Date(Date.now() + 60001);
-    const token = new AccessToken('aauthtoken', exp, 'authenticated');
+    const token = new AccessToken('aauthtoken', creationTime, exp, 'authenticated');
     token.saveToStorage();
     const loaded = AccessToken.fromStorage();
     expect(loaded?.accessToken).toEqual('aauthtoken');
+    expect(loaded?.creation).toEqual(creationTime);
     expect(loaded?.expiration).toEqual(exp);
     expect(loaded?.type).toEqual('authenticated');
     expect(loaded?.isValid()).toBeTruthy();
   });
 
   it('should fail when loading a token with no token', () => {
+    const creationTime = new Date();
     const exp = new Date(Date.now() + 60002);
-    const token = new AccessToken('atoken', exp, 'authenticated');
+    const token = new AccessToken('atoken', creationTime, exp, 'authenticated');
     token.saveToStorage();
     sessionStorage.removeItem('access_token');
     const loaded = AccessToken.fromStorage();
@@ -38,8 +43,9 @@ describe('AccessToken', () => {
   });
 
   it('should fail when loading a token with no expiration', () => {
+    const creationTime = new Date();
     const exp = new Date(Date.now() + 60002);
-    const token = new AccessToken('atoken', exp, 'authenticated');
+    const token = new AccessToken('atoken', creationTime, exp, 'authenticated');
     token.saveToStorage();
     sessionStorage.removeItem('access_token_exp');
     const loaded = AccessToken.fromStorage();
@@ -47,8 +53,9 @@ describe('AccessToken', () => {
   });
 
   it('should fail (and clear) when loading a expired token', () => {
+    const creationTime = new Date();
     const exp = new Date(Date.now() - 1);
-    const token = new AccessToken('atoken', exp, 'authenticated');
+    const token = new AccessToken('atoken', creationTime, exp, 'authenticated');
     token.saveToStorage();
     const loaded = AccessToken.fromStorage();
     expect(loaded).toBeNull();
@@ -58,8 +65,9 @@ describe('AccessToken', () => {
   });
 
   it('should fail (and clear) when loading a invalid token', () => {
+    const creationTime = new Date();
     const exp = new Date(Date.now() + 60002);
-    const token = new AccessToken('atoken', exp, 'authenticated');
+    const token = new AccessToken('atoken', creationTime, exp, 'authenticated');
     token.saveToStorage();
     sessionStorage.setItem('access_token_exp', 'not a number');
     const loaded = AccessToken.fromStorage();
@@ -70,27 +78,34 @@ describe('AccessToken', () => {
   });
 
   it('should fail when loading a token with no type', () => {
+    const creationTime = new Date();
     const exp = new Date(Date.now() + 60002);
-    const token = new AccessToken('atoken', exp, 'authenticated');
+    const token = new AccessToken('atoken', creationTime, exp, 'authenticated');
     token.saveToStorage();
     sessionStorage.removeItem('user_type');
     const loaded = AccessToken.fromStorage();
     expect(loaded).toBeNull();
   });
 
-  it('should load a token from countdown', () => {
-    const token = AccessToken.fromCountdown('fromcountdown', 60 /* 1 minute */, 'temporary');
+  it('should load a token from "expires in"', () => {
+    const token = AccessToken.fromTTL('fromttl', 600 /* 10 minutes */, 'temporary');
     const diff = token.expiration.getTime() - Date.now();
-    expect(diff).toBeLessThanOrEqual(60000);
-    expect(diff).toBeGreaterThan(59000);
-    expect(token.accessToken).toEqual('fromcountdown');
+    expect(diff).toBeLessThanOrEqual(600000);
+    expect(diff).toBeGreaterThan(599000);
+    expect(Date.now() - token.creation.getTime()).toBeLessThan(500);
+    expect(token.accessToken).toEqual('fromttl');
     expect(token.type).toEqual('temporary');
     expect(token.isValid()).toBeTruthy();
   });
 
+  it('should not load a token with too short "expires in"', () => {
+    expect(() => AccessToken.fromTTL('fromttl', 10 /* seconds */, 'temporary')).toThrowError();
+  });
+
   it('should clear token with clearFromStorage()', () => {
+    const creationTime = new Date();
     const exp = new Date(Date.now() + 60004);
-    const token = new AccessToken('atemptok', exp, 'temporary');
+    const token = new AccessToken('atemptok', creationTime, exp, 'temporary');
     token.saveToStorage();
     let loaded = AccessToken.fromStorage();
     expect(loaded?.isValid()).toBeTruthy();
@@ -100,14 +115,16 @@ describe('AccessToken', () => {
   });
 
   it('should consider invalid a token with an empty access token', () => {
+    const creationTime = new Date();
     const exp = new Date(Date.now() + 60004);
-    const token = new AccessToken('', exp, 'temporary');
+    const token = new AccessToken('', creationTime, exp, 'temporary');
     expect(token.isValid()).toBeFalsy();
   });
 
   it('should consider invalid a token with an expired token', () => {
+    const creationTime = new Date();
     const exp = new Date(Date.now() - 1);
-    const token = new AccessToken('abc', exp, 'temporary');
+    const token = new AccessToken('abc', creationTime, exp, 'temporary');
     expect(token.isValid()).toBeFalsy();
   });
 

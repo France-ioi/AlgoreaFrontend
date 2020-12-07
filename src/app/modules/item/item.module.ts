@@ -16,6 +16,11 @@ import { SubSkillsComponent } from './components/sub-skills/sub-skills.component
 import { ParentSkillsComponent } from './components/parent-skills/parent-skills.component';
 import { ItemEditContentComponent } from './pages/item-edit-content/item-edit-content.component';
 import { ItemChildrenEditComponent } from './components/item-children-edit/item-children-edit.component';
+import { ItemChapterViewComponent } from './components/item-chapter-view/item-chapter-view.component';
+import { GroupSituationChapterViewComponent } from
+  './components/item-chapter-view/group-situation-chapter-view/group-situation-chapter-view.component';
+import { UserProgressComponent } from './components/item-chapter-view/group-situation-chapter-view/user-progress/user-progress.component';
+import { TooltipModule } from 'primeng/tooltip';
 
 @NgModule({
   declarations: [
@@ -32,6 +37,10 @@ import { ItemChildrenEditComponent } from './components/item-children-edit/item-
     ParentSkillsComponent,
     ItemEditContentComponent,
     ItemChildrenEditComponent,
+    GroupSituationChapterViewComponent,
+    UserProgressComponent,
+    ItemProgressComponent,
+    ItemChapterViewComponent,
   ],
   imports: [
     CommonModule,
@@ -39,6 +48,7 @@ import { ItemChildrenEditComponent } from './components/item-children-edit/item-
     SharedComponentsModule,
     ReactiveFormsModule,
     FormsModule,
+    TooltipModule,
   ]
 })
 export class ItemModule { }
