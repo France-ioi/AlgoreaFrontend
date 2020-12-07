@@ -32,9 +32,7 @@ export class JoinedGroupListComponent implements OnDestroy, OnInit {
         this.state = state.tag;
         if (isReady(state)) this.data = state.data;
       },
-      _err => {
-        this.state = 'error';
-      }
+      _err => this.state = 'error'
     );
   }
 

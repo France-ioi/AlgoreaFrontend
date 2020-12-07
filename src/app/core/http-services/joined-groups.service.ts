@@ -7,23 +7,23 @@ import { appConfig } from 'src/app/shared/helpers/config';
 interface RawJoinedGroup{
   action: 'invitation_accepted' | 'join_request_accepted' | 'joined_by_code' | 'added_directly',
   group: {
-    description?: string,
+    description: string|null,
     id: string,
     name: string,
     type: 'Class' | 'Team' | 'Club' | 'Friends' | 'Other' | 'Base',
   },
-  member_since: string,
+  member_since: string|null,
 }
 
 export interface JoinedGroup{
   action: 'invitation_accepted' | 'join_request_accepted' | 'joined_by_code' | 'added_directly',
   group: {
-    description?: string,
+    description: string|null,
     id: string,
     name: string,
     type: 'Class' | 'Team' | 'Club' | 'Friends' | 'Other' | 'Base',
   },
-  memberSince: Date,
+  memberSince: Date|null,
 }
 
 @Injectable({
@@ -44,7 +44,7 @@ export class JoinedGroupsService {
         map(groups => groups.map(g => ({
           action: g.action,
           group: g.group,
-          memberSince: new Date(g.member_since),
+          memberSince: g.member_since === null ? null : new Date(g.member_since),
         })))
       );
   }

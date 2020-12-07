@@ -28,7 +28,7 @@ export class GroupNavComponent {
 
   onTabOpen(event: {index: number}): void {
     this.focusOnGroupNav.emit();
-    const service = event.index == joinGroupTabIdx ?
+    const service = event.index === joinGroupTabIdx ?
       this.joinedGroupsService.getJoinedGroups().pipe(map(jgs =>
         jgs.map(jg => ({ id: jg.group.id, name: jg.group.name }))
       )) : this.managedGroupService.getManagedGroups();
