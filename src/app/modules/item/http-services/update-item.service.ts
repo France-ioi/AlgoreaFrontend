@@ -6,7 +6,7 @@ import { appConfig } from '../../../shared/helpers/config';
 import { map } from 'rxjs/operators';
 
 export interface ItemChanges {
-  children?: { item_id?: string, order: number }[]
+  children?: { item_id: string, order: number }[]
 }
 
 @Injectable({
