@@ -96,7 +96,7 @@ export class ItemEditComponent implements OnDestroy {
     return forkJoin(
       this.itemChanges.children.map(child => {
         if (hasId(child)) return of(child);
-        // the child doesn't have an idea so we create it
+        // the child doesn't have an id so we create it
         return this.createItemService
           .create(child.title, child.type, 'en', this.itemId)
           .pipe(map(res => ({ id: res, ...child })));
