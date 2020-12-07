@@ -1,5 +1,5 @@
-import { Component, OnDestroy } from '@angular/core';
-import { CurrentContentService, EditAction } from 'src/app/shared/services/current-content.service';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
+import { CurrentContentService } from 'src/app/shared/services/current-content.service';
 import { ItemData, ItemDataSource } from '../../services/item-datasource.service';
 import { FormBuilder, Validators } from '@angular/forms';
 import { combineLatest, Subscription } from 'rxjs';
@@ -11,6 +11,8 @@ import { MessageService } from 'primeng/api';
 import { ERROR_MESSAGE } from '../../../../shared/constants/api';
 import { ItemChanges, UpdateItemService } from '../../http-services/update-item.service';
 import { ChildData } from '../../components/item-children-edit/item-children-edit.component';
+import { Item } from '../../http-services/get-item-by-id.service';
+import { ItemEditContentComponent } from '../item-edit-content/item-edit-content.component';
 
 @Component({
   selector: 'alg-item-edit',
@@ -18,7 +20,6 @@ import { ChildData } from '../../components/item-children-edit/item-children-edi
   styleUrls: [ './item-edit.component.scss' ],
 })
 export class ItemEditComponent implements OnDestroy {
-  itemId? : string;
   itemForm = this.formBuilder.group({
     // eslint-disable-next-line @typescript-eslint/unbound-method
     title: [ '', [ Validators.required, Validators.minLength(3), Validators.maxLength(200) ] ],
@@ -26,9 +27,12 @@ export class ItemEditComponent implements OnDestroy {
   });
   itemData$ = this.itemDataSource.itemData$;
   itemLoadingState$ = this.itemDataSource.state$;
+  initialFormData?: Item;
 
   subscriptions: Subscription[] = [];
   itemChanges: ItemChanges = {};
+
+  @ViewChild('content') private editContent?: ItemEditContentComponent;
 
   constructor(
     private currentContent: CurrentContentService,
@@ -42,16 +46,9 @@ export class ItemEditComponent implements OnDestroy {
     this.subscriptions.push(
       this.itemLoadingState$.pipe(filter<Ready<ItemData> | Fetching | FetchError, Ready<ItemData>>(isReady))
         .subscribe(state => {
-          const item = state.data.item;
-          this.itemId = item.id;
-          this.itemForm.patchValue({
-            title: item.string.title || '',
-            description: item.string.description || '',
-            children: [],
-          });
+          this.initialFormData = state.data.item;
+          this.resetFormWith(state.data.item);
         }),
-      this.currentContent.editAction$.pipe(filter(action => action === EditAction.Save))
-        .subscribe(_action => this.saveInput())
     );
   }
 
@@ -79,6 +76,7 @@ export class ItemEditComponent implements OnDestroy {
   }
 
   updateItemChanges(children: ChildData[]): void {
+    this.itemForm.markAsDirty();
     // FIXME: temp fix to compile and not send bad data to the service
     this.itemChanges.children = children
       .filter(child => child.id)
@@ -98,8 +96,8 @@ export class ItemEditComponent implements OnDestroy {
     };
   }
 
-  saveInput(): void {
-    if (!this.itemId) return;
+  save(): void {
+    if (!this.initialFormData) return;
 
     if (this.itemForm.invalid) {
       this.errorToast('You need to solve all the errors displayed in the form to save changes.');
@@ -112,17 +110,32 @@ export class ItemEditComponent implements OnDestroy {
       return;
     }
 
+    this.itemForm.disable();
     combineLatest([
-      this.updateItemService.updateItem(this.itemId, this.itemChanges),
-      this.updateItemStringService.updateItem(this.itemId, itemStringChanges),
+      this.updateItemService.updateItem(this.initialFormData.id, this.itemChanges),
+      this.updateItemStringService.updateItem(this.initialFormData.id, itemStringChanges),
     ]).subscribe(
       _status => {
-        this.itemForm.disable();
         this.successToast();
-        this.itemDataSource.refreshItem();
-        this.currentContent.editAction.next(EditAction.StopEditing);
+        this.itemDataSource.refreshItem(); // which will re-enable the form
       },
-      _err => this.errorToast(_err),
+      _err => {
+        this.errorToast(_err);
+        this.itemForm.enable();
+      }
     );
+  }
+
+  resetForm(): void {
+    if (this.initialFormData) this.resetFormWith(this.initialFormData);
+  }
+
+  private resetFormWith(item: Item): void {
+    this.itemForm.reset({
+      title: item.string.title || '',
+      description: item.string.description || '',
+    });
+    this.itemForm.enable();
+    this.editContent?.reset();
   }
 }

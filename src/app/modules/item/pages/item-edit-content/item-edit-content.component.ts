@@ -1,7 +1,7 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { ItemData } from '../../services/item-datasource.service';
-import { ChildData } from '../../components/item-children-edit/item-children-edit.component';
+import { ChildData, ItemChildrenEditComponent } from '../../components/item-children-edit/item-children-edit.component';
 
 @Component({
   selector: 'alg-item-edit-content',
@@ -14,6 +14,12 @@ export class ItemEditContentComponent {
 
   @Output() childrenChanges = new EventEmitter<ChildData[]>();
 
+  @ViewChild('childrenEdit') private childrenEdit?: ItemChildrenEditComponent;
+
   constructor() {}
+
+  reset(): void {
+    this.childrenEdit?.reset();
+  }
 
 }
