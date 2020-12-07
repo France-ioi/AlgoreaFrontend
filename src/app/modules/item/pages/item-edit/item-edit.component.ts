@@ -86,9 +86,9 @@ export class ItemEditComponent implements OnDestroy {
 
   // Update Item
   private getItemChanges(children: ChildDataWithId[]): ItemChanges {
-    const res: ItemChanges = {};
-    if (this.itemChanges.children) res.children = children.map((child, idx) => ({ item_id: child.id, order: idx }));
-    return res;
+    return {
+      children: children.map((child, idx) => ({ item_id: child.id, order: idx }))
+    };
   }
 
   private updateItem(): Observable<void> {
