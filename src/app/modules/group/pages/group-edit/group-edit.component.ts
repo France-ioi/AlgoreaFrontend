@@ -76,7 +76,7 @@ export class GroupEditComponent implements OnDestroy {
     };
   }
 
-  saveInput(): void {
+  save(): void {
     if (!this.initialFormData) return;
 
     if (this.groupForm.invalid) {

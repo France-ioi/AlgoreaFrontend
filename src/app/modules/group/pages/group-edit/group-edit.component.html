@@ -24,7 +24,7 @@
       </div>
     </form>
 
-    <alg-floating-save *ngIf="groupForm.dirty" [saving]="groupForm.disabled" (save)="saveInput()" (cancel)="resetForm()"></alg-floating-save>
+    <alg-floating-save *ngIf="groupForm.dirty" [saving]="groupForm.disabled" (save)="save()" (cancel)="resetForm()"></alg-floating-save>
   </div>
 
 </ng-container>
