@@ -29,7 +29,7 @@ export class ItemEditComponent implements OnDestroy {
   itemLoadingState$ = this.itemDataSource.state$;
   initialFormData?: Item;
 
-  subscriptions: Subscription[] = [];
+  subscription?: Subscription;
   itemChanges: ItemChanges = {};
 
   @ViewChild('content') private editContent?: ItemEditContentComponent;
@@ -43,18 +43,17 @@ export class ItemEditComponent implements OnDestroy {
     private messageService: MessageService
   ) {
     this.currentContent.editState.next('editing');
-    this.subscriptions.push(
-      this.itemLoadingState$.pipe(filter<Ready<ItemData> | Fetching | FetchError, Ready<ItemData>>(isReady))
-        .subscribe(state => {
-          this.initialFormData = state.data.item;
-          this.resetFormWith(state.data.item);
-        }),
-    );
+    this.subscription = this.itemLoadingState$
+      .pipe(filter<Ready<ItemData> | Fetching | FetchError, Ready<ItemData>>(isReady))
+      .subscribe(state => {
+        this.initialFormData = state.data.item;
+        this.resetFormWith(state.data.item);
+      });
   }
 
   ngOnDestroy(): void {
     this.currentContent.editState.next('non-editable');
-    this.subscriptions.forEach(subscription => subscription.unsubscribe());
+    this.subscription?.unsubscribe();
   }
 
   successToast(): void {
