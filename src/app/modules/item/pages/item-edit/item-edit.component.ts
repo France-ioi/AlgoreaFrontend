@@ -3,7 +3,7 @@ import { CurrentContentService, EditAction } from 'src/app/shared/services/curre
 import { ItemData, ItemDataSource } from '../../services/item-datasource.service';
 import { FormBuilder, Validators } from '@angular/forms';
 import { EMPTY, forkJoin, Observable, of, Subscription, throwError } from 'rxjs';
-import { filter, map, switchMap } from 'rxjs/operators';
+import { defaultIfEmpty, filter, map, switchMap } from 'rxjs/operators';
 import { FetchError, Fetching, isReady, Ready } from '../../../../shared/helpers/state';
 import { ItemStringChanges, UpdateItemStringService } from '../../http-services/update-item-string.service';
 import { TOAST_LENGTH } from '../../../../shared/constants/global';
@@ -85,13 +85,14 @@ export class ItemEditComponent implements OnDestroy {
   }
 
   // Update Item
-  private getItemChanges(children: ChildDataWithId[]): ItemChanges {
-    return {
-      children: children.map((child, idx) => ({ item_id: child.id, order: idx }))
-    };
+  private getItemChanges(data: { children?: ChildDataWithId[] }): ItemChanges {
+    const res: ItemChanges = {};
+    if (data.children)
+      res.children = data.children.map((child, idx) => ({ item_id: child.id, order: idx }));
+    return res;
   }
 
-  private updateItem(): Observable<void> {
+  private createChildren(): Observable<ChildDataWithId[]>{
     if (!this.itemChanges.children) return EMPTY;
     return forkJoin(
       this.itemChanges.children.map(child => {
@@ -108,13 +109,21 @@ export class ItemEditComponent implements OnDestroy {
         return this.createItemService
           .create(newChild)
           .pipe(map(res => ({ id: res, ...child })));
-      }),
-    ).pipe(
-      switchMap(children => {
-        // Saving the news children to not recreate them if there is an error.
-        this.itemChanges.children = children;
+      })
+    );
+  }
+
+  private updateItem(): Observable<void> {
+    return forkJoin({
+      children: this.createChildren().pipe(defaultIfEmpty())
+    }).pipe(
+      switchMap((res: {children?: ChildDataWithId[]}) => {
+        if (res.children) {
+          // Saving the news children to not recreate them if there is an error.
+          this.itemChanges.children = res.children;
+        }
         if (!this.itemId) return throwError(new Error('Invalid form'));
-        return this.updateItemService.updateItem(this.itemId, this.getItemChanges(children));
+        return this.updateItemService.updateItem(this.itemId, this.getItemChanges(res));
       }),
     );
   }
