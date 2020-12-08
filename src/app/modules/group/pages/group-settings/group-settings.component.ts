@@ -10,7 +10,7 @@ import { Group } from '../../http-services/get-group-by-id.service';
 export class GroupSettingsComponent implements OnChanges {
 
   @Input() group?: Group;
-  @Output() groupRefreshRequired = new EventEmitter();
+  @Output() groupRefreshRequired = new EventEmitter<void>();
   authorized = false;
 
   ngOnChanges(): void {

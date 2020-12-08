@@ -11,7 +11,7 @@ export class SelectComponent<T> implements OnInit {
   @Input() opened = false;
 
   @Output() change = new EventEmitter<T>();
-  @Output() click = new EventEmitter();
+  @Output() click = new EventEmitter<void>();
 
   selected?: T;
 

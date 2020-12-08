@@ -69,9 +69,8 @@ export class GridComponent implements OnInit, OnChanges {
   @Input() loading = false;
 
   @Output() expandWholeWidth = new EventEmitter<boolean>();
-  @Output() sort = new EventEmitter();
+  @Output() sort = new EventEmitter<SortEvent>();
   @Output() selectionChange = new EventEmitter<any[]>();
-  @Output() headerCheckboxToggle = new EventEmitter();
 
   @ContentChild('colgroupTemplate') colgroupTemplate?: TemplateRef<any>;
   @ContentChild('headerTemplate') headerTemplate?: TemplateRef<any>;
