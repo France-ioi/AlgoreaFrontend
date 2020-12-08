@@ -21,7 +21,7 @@ export interface Progress {
 
 interface Data {
   type: TypeFilter,
-  rows: string[],
+  rowsHeader: string[],
   items: ItemChild[],
   data: (Progress|undefined)[][],
 }
@@ -44,7 +44,7 @@ export class GroupSituationChapterViewComponent implements OnChanges, OnDestroy 
 
   data: Data = {
     type: this.defaultFilter,
-    rows: [],
+    rowsHeader: [],
     items: [],
     data: [],
   }
@@ -133,7 +133,7 @@ export class GroupSituationChapterViewComponent implements OnChanges, OnDestroy 
       map(data => ({
         type: filter,
         items: data.items,
-        rows: data.rows.map(row => row.value),
+        rowsHeader: data.rows.map(row => row.value),
         data: data.rows.map(row =>
           data.items.map(item =>
             data.usersProgress.find(userProgress => userProgress.itemId === item.id && userProgress.groupId === row.id)
