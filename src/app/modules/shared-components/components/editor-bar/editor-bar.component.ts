@@ -6,7 +6,7 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
   styleUrls: [ './editor-bar.component.scss' ],
 })
 export class EditorBarComponent implements OnInit {
-  @Output() cancel = new EventEmitter();
+  @Output() cancel = new EventEmitter<void>();
 
   constructor() {}
 
