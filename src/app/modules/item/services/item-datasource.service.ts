@@ -132,7 +132,6 @@ export class ItemDataSource implements OnDestroy {
 
   private getBreadcrumb(item: ItemRoute): Observable<BreadcrumbItem[]> {
     const service = this.getBreadcrumbService.getBreadcrumb(item);
-    if (!service) return EMPTY; // unexpected as it should verified by the caller of this function
     return service.pipe(
       map(res => {
         if (res === 'forbidden') {
