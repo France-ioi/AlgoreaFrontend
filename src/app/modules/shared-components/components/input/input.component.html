@@ -5,6 +5,7 @@
     [placeholder]="placeholder"
     [ngClass]="{'has-button': buttonIcon}"
     [formControlName]="name"
+    (focus)="focus.emit($event)"
   >
   <span *ngIf="hasClearButton && input.value" class="clear-button">
     <button (click)="clearInput()">

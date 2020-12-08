@@ -24,6 +24,7 @@ export class InputComponent {
   @Input() hasClearButton = false;
 
   @Output() click = new EventEmitter();
+  @Output() focus = new EventEmitter<FocusEvent>()
 
   constructor() {}
 
