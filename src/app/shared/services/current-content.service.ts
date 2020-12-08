@@ -1,4 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
+import { UrlTree } from '@angular/router';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { ItemRoute } from '../helpers/item-route';
 import { ItemType } from '../helpers/item-type';
@@ -8,7 +9,7 @@ export interface ContentBreadcrumb {
   path: {
     title: string,
     hintNumber?: number,
-    navigateTo?: any[],
+    navigateTo?: UrlTree,
   }[],
   currentPageIdx: number, // index of the current page in the path array, -1 to select the category
 }

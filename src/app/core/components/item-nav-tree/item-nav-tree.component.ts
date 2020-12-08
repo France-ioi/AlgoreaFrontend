@@ -63,17 +63,17 @@ export class ItemNavTreeComponent implements OnChanges {
   navigateToNode(node: ItemTreeNode, attemptId?: string): void {
     const routeBase = { id: node.data.id, path: node.itemPath };
     if (attemptId) {
-      void this.router.navigate(itemDetailsUrl({ ...routeBase, attemptId: attemptId }));
+      void this.router.navigateByUrl(itemDetailsUrl(this.router, { ...routeBase, attemptId: attemptId }));
       return;
     }
     const parentAttemptId = this.parentAttemptForNode(node);
     if (!parentAttemptId) return; // unexpected
-    void this.router.navigate(itemDetailsUrl({ ...routeBase, parentAttemptId: parentAttemptId }));
+    void this.router.navigateByUrl(itemDetailsUrl(this.router, { ...routeBase, parentAttemptId: parentAttemptId }));
   }
 
   navigateToParent(): void {
     if (!this.data?.parent?.attemptId) return; // unexpected!
-    void this.router.navigate(itemDetailsUrl({
+    void this.router.navigateByUrl(itemDetailsUrl(this.router, {
       id: this.data.parent.id,
       path: this.data.pathToElements.slice(0, -1),
       attemptId: this.data.parent.attemptId,
