@@ -74,7 +74,12 @@ module.exports = {
       { "selector": "typeLike", "format": ["PascalCase"] },
       { "selector": "property", "format": ["camelCase", "snake_case"] },
     ],
-    'indent': ['error', 2, { "SwitchCase": 1 }]
+    'indent': ['error', 2, { "SwitchCase": 1 }],
+    '@typescript-eslint/strict-boolean-expressions': ['error', {
+      allowNullableString: true,
+      allowNullableNumber: true,
+      allowNullableBoolean: true
+    }],
   },
   overrides: [
     {
