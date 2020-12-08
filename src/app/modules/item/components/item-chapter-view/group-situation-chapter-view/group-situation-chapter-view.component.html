@@ -10,6 +10,10 @@
 
 <ng-template #noError>
 
+  <div class="loader">
+    <p-progressSpinner *ngIf="state === 'fetching' && data.rows.length === 0"></p-progressSpinner>
+  </div>
+
   <ng-container *ngIf="state === 'ready' && data.rows.length === 0" [ngSwitch]="data.type">
     <p class="empty-message" *ngSwitchCase="'Users'">This group has no users</p>
     <p class="empty-message" *ngSwitchCase="'Teams'">This group has no teams</p>
