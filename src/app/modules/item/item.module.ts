@@ -21,6 +21,7 @@ import { GroupSituationChapterViewComponent } from
   './components/item-chapter-view/group-situation-chapter-view/group-situation-chapter-view.component';
 import { UserProgressComponent } from './components/item-chapter-view/group-situation-chapter-view/user-progress/user-progress.component';
 import { TooltipModule } from 'primeng/tooltip';
+import { PendingChangesGuard } from 'src/app/shared/guards/pending-changes-guard';
 
 @NgModule({
   declarations: [
@@ -49,6 +50,9 @@ import { TooltipModule } from 'primeng/tooltip';
     ReactiveFormsModule,
     FormsModule,
     TooltipModule,
+  ],
+  providers: [
+    PendingChangesGuard,
   ]
 })
 export class ItemModule { }

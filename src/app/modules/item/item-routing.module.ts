@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { PendingChangesGuard } from 'src/app/shared/guards/pending-changes-guard';
 import { ItemByIdComponent } from './pages/item-by-id/item-by-id.component';
 import { ItemDetailsComponent } from './pages/item-details/item-details.component';
 import { ItemEditComponent } from './pages/item-edit/item-edit.component';
@@ -26,6 +27,7 @@ import { ItemEditComponent } from './pages/item-edit/item-edit.component';
         {
           path: 'edit',
           component: ItemEditComponent,
+          canDeactivate: [ PendingChangesGuard ],
         },
       ]
     }
