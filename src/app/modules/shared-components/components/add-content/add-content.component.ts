@@ -14,7 +14,7 @@ export class AddContentComponent implements OnInit, OnDestroy {
 
   newContentForm: FormGroup = this.formBuilder.group({ newTitle: '', existingTitle: '' });
 
-  state: 'opened' | 'closed' = 'closed';
+  state: 'existing' | 'new' | 'closed' = 'closed';
   private subscription?: Subscription;
 
 
@@ -24,8 +24,11 @@ export class AddContentComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.subscription = this.newContentForm.get('title')?.valueChanges
-      .subscribe((change: string) => this.state = change.length > 2 ? 'opened' : 'closed');
+    this.newContentForm.valueChanges.subscribe((change: {newTitle: string, existingTitle: string}) => {
+      if (change.newTitle.length > 2) this.state = 'new';
+      else if (change.existingTitle.length > 2) this.state = 'existing';
+      else this.state = 'closed';
+    });
   }
 
   ngOnDestroy(): void {

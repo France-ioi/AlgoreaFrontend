@@ -19,7 +19,7 @@
     </alg-input>
   </div>
 
-  <div *ngIf="state === 'opened'" class="new-content-type">
+  <div *ngIf="state === 'new'" class="new-content-type">
     <div class="new-content-container">
       <div class="content-type-item-container" (click)="onClick('Chapter')">
         <div class="item-image-wrapper">
@@ -43,6 +43,10 @@
         <div class="item-description">A new sub-skill.</div>
       </div>
     </div>
+  </div>
+
+  <div *ngIf="state === 'existing'">
+    Yay
   </div>
 
 </alg-sub-section>
