@@ -1,4 +1,4 @@
-import { ParamMap } from '@angular/router';
+import { ParamMap, Router, UrlTree } from '@angular/router';
 import { defaultAttemptId } from './attempts';
 import { appConfig } from './config';
 import { isSkill, ItemTypeCategory } from './item-type';
@@ -22,20 +22,18 @@ export function isRouteWithAttempt(item: ItemRoute): item is ItemRouteWithAttemp
   return 'attemptId' in item;
 }
 
-type RouterCommands = (string|{[name: string]: string|string[]})[]
-
-/*
- * Build commands to be used with the `Router.navigate()` function
+/**
+ * Build, from an item route, an url for navigation
  */
-export function itemUrl(item: ItemRoute, page: 'edit'|'details'): RouterCommands {
+export function itemUrl(router: Router, item: ItemRoute, page: 'edit'|'details'): UrlTree {
   const params: {[k: string]: any} = {};
   if (isRouteWithAttempt(item)) params[attemptParamName] = item.attemptId;
   else params[parentAttemptParamName] = item.parentAttemptId;
   params[pathParamName] = item.path;
-  return [ 'items', 'by-id', item.id, params, page ];
+  return router.createUrlTree([ 'items', 'by-id', item.id, params, page ]);
 }
 
-/*
+/**
  * The route to the app default (see config) item
  */
 export function appDefaultItemRoute(cat: ItemTypeCategory = 'activity'): ItemRouteWithParentAttempt {
@@ -46,15 +44,14 @@ export function appDefaultItemRoute(cat: ItemTypeCategory = 'activity'): ItemRou
   };
 }
 
-/*
- * Url to an item with missing path and attempt
- * Build commands to be used with the `Router.navigate()` function
+/**
+ * Build an url to an item with missing path and attempt
  */
-export function incompleteItemUrl(itemId: string): RouterCommands {
-  return [ 'items', 'by-id', itemId ];
+export function incompleteItemUrl(router: Router, itemId: string): UrlTree {
+  return router.createUrlTree([ 'items', 'by-id', itemId ]);
 }
 
-/*
+/**
  * Url (as string) of the details page for the given item route
  */
 export function itemStringUrl(item: ItemRoute): string {
@@ -65,18 +62,12 @@ export function itemStringUrl(item: ItemRoute): string {
   return `/items/by-id/${item.id};${attemptPart};${pathParamName}=${item.path.join(',')}/details`;
 }
 
-/*
- * Build commands to be used with the `Router.navigate()` function
- */
-export function itemDetailsUrl(item: ItemRoute): RouterCommands {
-  return itemUrl(item, 'details');
+export function itemDetailsUrl(router: Router, item: ItemRoute): UrlTree {
+  return itemUrl(router, item, 'details');
 }
 
-/*
- * Build commands to be used with the `Router.navigate()` function
- */
-export function itemEditUrl(item: ItemRoute): RouterCommands {
-  return itemUrl(item, 'edit');
+export function itemEditUrl(router: Router, item: ItemRoute): UrlTree {
+  return itemUrl(router, item, 'edit');
 }
 
 export interface ItemRouteError {

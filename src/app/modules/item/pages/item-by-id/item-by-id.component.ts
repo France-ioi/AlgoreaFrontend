@@ -63,7 +63,7 @@ export class ItemByIdComponent implements OnDestroy {
             path: state.data.breadcrumbs.map(el => ({
               title: el.title,
               hintNumber: el.attemptCnt,
-              navigateTo: itemDetailsUrl(el.route),
+              navigateTo: itemDetailsUrl(this.router, el.route),
             })),
             currentPageIdx: state.data.breadcrumbs.length - 1,
           },
@@ -87,7 +87,9 @@ export class ItemByIdComponent implements OnDestroy {
       ).subscribe(action => {
         const currentInfo = this.currentContent.current.value;
         if (isItemInfo(currentInfo)) {
-          void this.router.navigate(itemUrl(currentInfo.data.route, action === EditAction.StartEditing ? 'edit' : 'details'));
+          void this.router.navigateByUrl(
+            itemUrl(this.router, currentInfo.data.route, action === EditAction.StartEditing ? 'edit' : 'details')
+          );
         }
       })
     );
@@ -115,8 +117,8 @@ export class ItemByIdComponent implements OnDestroy {
         );
       })
     ).subscribe(
-      itemRoute => void this.router.navigate(itemDetailsUrl(itemRoute)),
-      _err => void this.router.navigate(itemDetailsUrl(appDefaultItemRoute()))
+      itemRoute => void this.router.navigateByUrl(itemDetailsUrl(this.router, itemRoute)),
+      _err => void this.router.navigateByUrl(itemDetailsUrl(this.router, appDefaultItemRoute()))
     );
   }
 

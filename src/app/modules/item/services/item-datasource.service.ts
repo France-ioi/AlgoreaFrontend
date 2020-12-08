@@ -137,7 +137,7 @@ export class ItemDataSource implements OnDestroy {
         if (res === 'forbidden') {
           // clear the route & attempt and retry to visit this item (path/attempt discovery will be called)
           // ideally routing should not be called inside the datasource and maximum number of tries should be allowed
-          void this.router.navigate(incompleteItemUrl(item.id));
+          void this.router.navigateByUrl(incompleteItemUrl(this.router, item.id));
           throw new Error('unhandled forbidden');
         } else {
           return res;

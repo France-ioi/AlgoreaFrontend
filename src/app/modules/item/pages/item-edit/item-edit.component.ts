@@ -13,13 +13,14 @@ import { ItemChanges, UpdateItemService } from '../../http-services/update-item.
 import { ChildData } from '../../components/item-children-edit/item-children-edit.component';
 import { Item } from '../../http-services/get-item-by-id.service';
 import { ItemEditContentComponent } from '../item-edit-content/item-edit-content.component';
+import { PendingChangesComponent } from 'src/app/shared/guards/pending-changes-guard';
 
 @Component({
   selector: 'alg-item-edit',
   templateUrl: './item-edit.component.html',
   styleUrls: [ './item-edit.component.scss' ],
 })
-export class ItemEditComponent implements OnDestroy {
+export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
   itemForm = this.formBuilder.group({
     // eslint-disable-next-line @typescript-eslint/unbound-method
     title: [ '', [ Validators.required, Validators.minLength(3), Validators.maxLength(200) ] ],
@@ -54,6 +55,10 @@ export class ItemEditComponent implements OnDestroy {
   ngOnDestroy(): void {
     this.currentContent.editState.next('non-editable');
     this.subscription?.unsubscribe();
+  }
+
+  isDirty(): boolean {
+    return this.itemForm.dirty;
   }
 
   successToast(): void {
