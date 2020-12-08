@@ -22,7 +22,7 @@
       </nav>
 
       <div class="bg-white">
-        <alg-item-edit-content
+        <alg-item-edit-content #content
           *ngIf="rla1.isActive"
           [parentForm]="itemForm"
           [itemData]="itemData"
@@ -32,6 +32,7 @@
       </div>
 
     </form>
+    <alg-floating-save *ngIf="itemForm.dirty" [saving]="itemForm.disabled" (save)="save()" (cancel)="resetForm()"></alg-floating-save>
   </div>
 
 </ng-container>

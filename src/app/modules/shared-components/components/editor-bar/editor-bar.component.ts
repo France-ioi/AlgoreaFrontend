@@ -7,8 +7,6 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 })
 export class EditorBarComponent implements OnInit {
   @Output() cancel = new EventEmitter();
-  @Output() save = new EventEmitter();
-  @Output() reload = new EventEmitter();
 
   constructor() {}
 
@@ -16,10 +14,6 @@ export class EditorBarComponent implements OnInit {
 
   onCancelClick(): void {
     this.cancel.emit();
-  }
-
-  onValidateClick(): void {
-    this.save.emit();
   }
 
 }
