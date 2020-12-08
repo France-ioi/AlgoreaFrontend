@@ -1,5 +1,9 @@
 <alg-sub-section icon="sign-in-alt" label="Add a content">
-  <alg-input [parentForm]="newContentForm" name="title" placeholder="Enter a title to create a new child" [hasClearButton]="true"></alg-input>
+  <div class="add-content-wrapper">
+    <alg-input [parentForm]="newContentForm" name="title" placeholder="Enter a title to create a new child" [hasClearButton]="true"></alg-input>
+    <span class="label">or</span>
+    <alg-input [parentForm]="newContentForm" name="title" placeholder="Enter a title to create a new child" [hasClearButton]="true"></alg-input>
+  </div>
 
   <div *ngIf="state === 'opened'" class="new-content-type">
     <div class="new-content-container">
