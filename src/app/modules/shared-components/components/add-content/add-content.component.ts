@@ -12,7 +12,7 @@ export class AddContentComponent implements OnInit, OnDestroy {
   @Input() allowSkills = false;
   @Output() contentAdded = new EventEmitter<{ title: string, type: ItemType }>();
 
-  newContentForm: FormGroup = this.formBuilder.group({ title: '' });
+  newContentForm: FormGroup = this.formBuilder.group({ newTitle: '', existingTitle: '' });
 
   state: 'opened' | 'closed' = 'closed';
   private subscription?: Subscription;
@@ -30,6 +30,10 @@ export class AddContentComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscription?.unsubscribe();
+  }
+
+  clearInputFields(name: string): void {
+    this.newContentForm.get(name)?.setValue('');
   }
 
   onClick(type: ItemType): void {
