@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { ERROR_MESSAGE } from 'src/app/shared/constants/api';
 import { TOAST_LENGTH } from 'src/app/shared/constants/global';
+import { PendingChangesComponent } from 'src/app/shared/guards/pending-changes-guard';
 import { Ready, Fetching, FetchError, isReady } from 'src/app/shared/helpers/state';
 import { CurrentContentService } from 'src/app/shared/services/current-content.service';
 import { Group } from '../../http-services/get-group-by-id.service';
@@ -16,7 +17,7 @@ import { GroupDataSource } from '../../services/group-datasource.service';
   templateUrl: './group-edit.component.html',
   styleUrls: [ './group-edit.component.scss' ]
 })
-export class GroupEditComponent implements OnDestroy {
+export class GroupEditComponent implements OnDestroy, PendingChangesComponent {
   groupForm = this.formBuilder.group({
     // eslint-disable-next-line @typescript-eslint/unbound-method
     name: [ '', [ Validators.required, Validators.minLength(3) ] ],
@@ -48,6 +49,10 @@ export class GroupEditComponent implements OnDestroy {
   ngOnDestroy(): void {
     this.currentContent.editState.next('non-editable');
     this.subscription?.unsubscribe();
+  }
+
+  isDirty(): boolean {
+    return this.groupForm.dirty;
   }
 
   successToast(): void {

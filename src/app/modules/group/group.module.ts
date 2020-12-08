@@ -27,6 +27,7 @@ import { GroupByIdComponent } from './pages/group-by-id/group-by-id.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MemberListComponent } from './components/member-list/member-list.component';
 import { GroupCompositionFilterComponent } from './components/group-composition-filter/group-composition-filter.component';
+import { PendingChangesGuard } from 'src/app/shared/guards/pending-changes-guard';
 
 @NgModule({
   declarations: [
@@ -58,6 +59,9 @@ import { GroupCompositionFilterComponent } from './components/group-composition-
     ReactiveFormsModule,
     FormsModule,
   ],
+  providers: [
+    PendingChangesGuard,
+  ]
 })
 
 export class GroupModule {}
