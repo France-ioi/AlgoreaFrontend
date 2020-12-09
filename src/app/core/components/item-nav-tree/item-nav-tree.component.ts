@@ -1,7 +1,6 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { TreeNode } from 'primeng/api';
 import { NavMenuItem } from '../../http-services/item-navigation.service';
-import { ResultActionsService } from 'src/app/shared/http-services/result-actions.service';
 import { Router } from '@angular/router';
 import { ItemNavMenuData } from '../../common/item-nav-menu-data';
 import { itemDetailsUrl } from 'src/app/shared/helpers/item-route';
@@ -31,7 +30,6 @@ export class ItemNavTreeComponent implements OnChanges {
 
   constructor(
     private router: Router,
-    private resultActionsService: ResultActionsService,
   ) {}
 
   mapItemToNodes(data: ItemNavMenuData): ItemTreeNode[] {
