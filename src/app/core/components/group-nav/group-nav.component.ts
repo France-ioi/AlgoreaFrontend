@@ -3,7 +3,7 @@ import { JoinedGroupsService } from '../../http-services/joined-groups.service';
 import { ManagedGroupsService } from '../../http-services/managed-groups.service';
 import { Group } from '../group-nav-tree/group';
 import { of, merge } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 
 const joinGroupTabIdx = 1;
 
@@ -28,8 +28,10 @@ export class GroupNavComponent {
 
   onTabOpen(event: {index: number}): void {
     this.focusOnGroupNav.emit();
-    const service = event.index == joinGroupTabIdx ?
-      this.joinedGroupsService.getJoinedGroups() : this.managedGroupService.getManagedGroups();
+    const service = event.index === joinGroupTabIdx ?
+      this.joinedGroupsService.getJoinedGroups().pipe(map(jgs =>
+        jgs.map(jg => ({ id: jg.group.id, name: jg.group.name }))
+      )) : this.managedGroupService.getManagedGroups();
     merge(
       of<GroupData>('loading'),
       service.pipe(

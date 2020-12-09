@@ -28,6 +28,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MemberListComponent } from './components/member-list/member-list.component';
 import { GroupCompositionFilterComponent } from './components/group-composition-filter/group-composition-filter.component';
 import { PendingChangesGuard } from 'src/app/shared/guards/pending-changes-guard';
+import { JoinedGroupListComponent } from './components/joined-group-list/joined-group-list.component';
 
 @NgModule({
   declarations: [
@@ -51,6 +52,7 @@ import { PendingChangesGuard } from 'src/app/shared/guards/pending-changes-guard
     GroupByIdComponent,
     MemberListComponent,
     GroupCompositionFilterComponent,
+    JoinedGroupListComponent,
   ],
   imports: [
     CommonModule,
