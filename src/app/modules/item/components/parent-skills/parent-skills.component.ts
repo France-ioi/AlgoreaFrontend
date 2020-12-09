@@ -36,7 +36,7 @@ export class ParentSkillsComponent implements OnChanges, OnDestroy {
   click(parent: ItemParent&ParentSkillAdditions): void {
     if (!this.itemData || parent.isLocked) return;
 
-    void this.router.navigate(itemDetailsUrl({
+    void this.router.navigateByUrl(itemDetailsUrl(this.router, {
       id: parent.id,
       path: this.itemData.route.path.slice(0, -1),
       attemptId: parent.result.attempt_id,

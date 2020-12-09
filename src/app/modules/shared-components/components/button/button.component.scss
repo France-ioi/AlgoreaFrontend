@@ -109,16 +109,6 @@ $danger-color: #ff001f;
     }
   }
 
-  &.p-button-danger {
-    background-color: $danger-color;
-    border-color: $danger-color;
-
-    &:enabled:focus {
-      outline: none;
-      box-shadow: none;
-    }
-  }
-
   &.p-top-rounded {
     border-radius: 0;
     border-top-left-radius: 0.6667rem;
@@ -132,22 +122,11 @@ $danger-color: #ff001f;
   }
 
   &.p-button-success {
-    background-color: white;
-    border-color: $base-color;
-    color: $base-color;
-
-    &:enabled:hover {
-      background-color: $base-color;
-      border-color: $base-color;
-      color: white;
-    }
-    &:enabled:focus {
-      outline: none;
-      box-shadow: none;
-    }
+    color: #ffffff;
+    background: #90C45F;
+    border: 1px solid #90C45F;
   }
-
-  }
+}
 
 :host ::ng-deep p-button {
   width: 100%;
@@ -160,10 +139,6 @@ $danger-color: #ff001f;
 
         &.p-button-rounded {
           border-radius: 1.5rem;
-        }
-
-        &.p-button-success {
-          background-color: transparent;
         }
     }
 }

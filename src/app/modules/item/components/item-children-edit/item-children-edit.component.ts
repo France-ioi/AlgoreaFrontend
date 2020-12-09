@@ -83,4 +83,8 @@ export class ItemChildrenEditComponent implements OnChanges {
     this.childrenChanges.emit(this.data);
   }
 
+  reset(): void {
+    this.reloadData();
+  }
+
 }

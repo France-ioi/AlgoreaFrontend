@@ -25,14 +25,12 @@ export class SelectionTreeComponent implements OnInit, OnChanges {
   ngOnInit(): void {}
 
   ngOnChanges(_changes: SimpleChanges): void {
-    if (this.data) {
-      while (this.data.length > 1) {
-        this.data.pop();
-      }
-      if (this.data.length > 0) {
-        this.data[0].root = true;
-        this.data[0].expanded = true;
-      }
+    while (this.data.length > 1) {
+      this.data.pop();
+    }
+    if (this.data.length > 0) {
+      this.data[0].root = true;
+      this.data[0].expanded = true;
     }
   }
 

@@ -4,17 +4,19 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { appConfig } from 'src/app/shared/helpers/config';
 
+type GroupType = 'Class'|'Team'|'Club'|'Friends'|'Other'|'User'|'Session'|'Base';
+
 interface RawGroupChild {
   id: string,
   name: string,
-  type: 'Class'|'Team'|'Club'|'Friends'|'Other'|'User'|'Session'|'Base',
+  type: GroupType,
   user_count: number,
 }
 
 export interface GroupChild {
   id: string,
   name: string,
-  type: 'Class'|'Team'|'Club'|'Friends'|'Other'|'User'|'Session'|'Base',
+  type: GroupType,
   userCount: number,
 }
 
@@ -28,8 +30,8 @@ export class GetGroupChildrenService {
   getGroupChildren(
     groupId: string,
     sort: string[] = [],
-    typesInclude: string[] = [],
-    typesExclude: string[] = [],
+    typesInclude: GroupType[] = [],
+    typesExclude: GroupType[] = [],
   ): Observable<GroupChild[]> {
     let params = new HttpParams();
     if (sort.length > 0) params = params.set('sort', sort.join(','));

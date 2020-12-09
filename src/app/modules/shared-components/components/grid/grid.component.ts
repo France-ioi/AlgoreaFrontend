@@ -69,9 +69,8 @@ export class GridComponent implements OnInit, OnChanges {
   @Input() loading = false;
 
   @Output() expandWholeWidth = new EventEmitter<boolean>();
-  @Output() sort = new EventEmitter();
+  @Output() sort = new EventEmitter<SortEvent>();
   @Output() selectionChange = new EventEmitter<any[]>();
-  @Output() headerCheckboxToggle = new EventEmitter();
 
   @ContentChild('colgroupTemplate') colgroupTemplate?: TemplateRef<any>;
   @ContentChild('headerTemplate') headerTemplate?: TemplateRef<any>;
@@ -85,7 +84,7 @@ export class GridComponent implements OnInit, OnChanges {
 
   showColumnSelection = false;
 
-  selected: {[k: string]: any} = {};
+  selected: {[k: string]: boolean} = {};
   toShow = 0;
   expand = false;
 
@@ -136,7 +135,7 @@ export class GridComponent implements OnInit, OnChanges {
     if (!this.expand) {
       const newSel: GridColumn[] = [];
       for (const col of this.columns) {
-        if (this.selected[col.field] === true) {
+        if (this.selected[col.field]) {
           newSel.push(col);
         }
         this.selected[col.field] = true;

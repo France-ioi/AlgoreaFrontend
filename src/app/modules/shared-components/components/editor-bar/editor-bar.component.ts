@@ -6,9 +6,7 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
   styleUrls: [ './editor-bar.component.scss' ],
 })
 export class EditorBarComponent implements OnInit {
-  @Output() cancel = new EventEmitter();
-  @Output() save = new EventEmitter();
-  @Output() reload = new EventEmitter();
+  @Output() cancel = new EventEmitter<void>();
 
   constructor() {}
 
@@ -16,10 +14,6 @@ export class EditorBarComponent implements OnInit {
 
   onCancelClick(): void {
     this.cancel.emit();
-  }
-
-  onValidateClick(): void {
-    this.save.emit();
   }
 
 }

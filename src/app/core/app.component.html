@@ -20,11 +20,7 @@
         [templateId]="1"
       ></alg-top-nav>
       <div class="top-right-bar" *ngrxLet="currentContent$ as currentContent">
-        <alg-editor-bar
-          *ngIf="editState === 'editing' || editState === 'editing-noaction'"
-          (cancel)="onEditCancel()"
-          (save)="onEditSave()"
-        ></alg-editor-bar>
+        <alg-editor-bar *ngIf="editState === 'editing' || editState === 'editing-noaction'" (cancel)="onEditCancel()"></alg-editor-bar>
         <div class="breadcrumb-bar"
              *ngIf="!folded && !scrolled">
           <alg-breadcrumb [contentBreadcrumb]="currentContent?.breadcrumbs"></alg-breadcrumb>
@@ -86,3 +82,4 @@
   </ng-container>
 </div>
 <p-toast></p-toast>
+<p-confirmDialog></p-confirmDialog>

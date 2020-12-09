@@ -23,7 +23,7 @@ export class InputComponent {
   @Input() buttonIcon?: string; // a font-awesome icon identifier for the input button
   @Input() hasClearButton = false;
 
-  @Output() click = new EventEmitter();
+  @Output() click = new EventEmitter<void>();
 
   constructor() {}
 

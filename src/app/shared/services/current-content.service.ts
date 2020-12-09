@@ -1,4 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
+import { UrlTree } from '@angular/router';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { ItemRoute } from '../helpers/item-route';
 import { ItemType } from '../helpers/item-type';
@@ -8,7 +9,7 @@ export interface ContentBreadcrumb {
   path: {
     title: string,
     hintNumber?: number,
-    navigateTo?: any[],
+    navigateTo?: UrlTree,
   }[],
   currentPageIdx: number, // index of the current page in the path array, -1 to select the category
 }
@@ -51,7 +52,7 @@ export function isGroupInfo(info: ContentInfo|null): info is GroupInfo {
 }
 
 export type EditState = 'non-editable'|'editable'|'editing'|'editing-noaction'; // editingNoAction is for temporary disabled actions
-export enum EditAction { StartEditing, Save, StopEditing }
+export enum EditAction { StartEditing, StopEditing }
 
 /**
  * Use this service to track what's the current item display in the content (right) pane.

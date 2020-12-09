@@ -43,7 +43,7 @@ export class ChapterChildrenComponent implements OnChanges, OnDestroy {
     const attemptId = child.result?.attempt_id;
     const parentAttemptId = this.itemData.currentResult?.attemptId;
     if (!parentAttemptId) return; // unexpected: children have been loaded, so we are sure this item has an attempt
-    void this.router.navigate(itemDetailsUrl({
+    void this.router.navigateByUrl(itemDetailsUrl(this.router, {
       id: child.id,
       path: this.itemData.route.path.concat([ this.itemData.item.id ]),
       ...attemptId ? { attemptId: attemptId } : { parentAttemptId: parentAttemptId }

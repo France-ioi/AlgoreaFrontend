@@ -1,10 +1,27 @@
+<alg-composition-filter
+  [defaultValue]="defaultFilter"
+  (change)="onFilterChange($event)"
+></alg-composition-filter>
+
 <p *ngIf="state === 'error';else noError" class="error-message">
   <i class="fa fa-exclamation-triangle"></i>
   Error while loading the data
 </p>
 
 <ng-template #noError>
+
+  <div class="loader" *ngIf="state === 'fetching' && data.rowsHeader.length === 0">
+    <p-progressSpinner></p-progressSpinner>
+  </div>
+
+  <ng-container *ngIf="state === 'ready' && data.rowsHeader.length === 0" [ngSwitch]="data.type">
+    <p class="empty-message" *ngSwitchCase="'Users'">This group has no users</p>
+    <p class="empty-message" *ngSwitchCase="'Teams'">This group has no teams</p>
+    <p class="empty-message" *ngSwitchCase="'Groups'">This group has no sub-groups</p>
+  </ng-container>
+
   <p-table #table
+    *ngIf="data.rowsHeader.length > 0"
     [columns]="data.items"
     [value]="data.data"
     class="slanted-grid"
@@ -30,8 +47,8 @@
       let-rowIndex="rowIndex"
     >
       <tr>
-        <td class="users" pTooltip="{{ data.users[rowIndex] | user }}" tooltipPosition="left" [showDelay]="100">
-          {{ data.users[rowIndex] | user }}
+        <td class="users" pTooltip="{{ data.rowsHeader[rowIndex] }}" tooltipPosition="left" [showDelay]="100">
+          {{ data.rowsHeader[rowIndex] }}
         </td>
         <td *ngFor="let col of columns; let colIndex = index">
           <alg-user-progress
