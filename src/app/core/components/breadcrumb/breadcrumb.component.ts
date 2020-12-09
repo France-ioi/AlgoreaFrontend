@@ -15,8 +15,11 @@ export class BreadcrumbComponent {
     private router: Router,
   ) {}
 
-  onElementClick(el: { navigateTo?: UrlTree }): void {
-    if (el.navigateTo) void this.router.navigateByUrl(el.navigateTo);
+  onElementClick(el: { navigateTo?: UrlTree|(() => UrlTree) }): void {
+    if (el.navigateTo) {
+      const dest = 'root' in el.navigateTo ? el.navigateTo : el.navigateTo();
+      void this.router.navigateByUrl(dest);
+    }
   }
 
 }

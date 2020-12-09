@@ -1,5 +1,5 @@
 import { Component, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, UrlTree } from '@angular/router';
 import { of, Subscription } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
 import { defaultAttemptId } from 'src/app/shared/helpers/attempts';
@@ -64,7 +64,7 @@ export class ItemByIdComponent implements OnDestroy {
             path: state.data.breadcrumbs.map(el => ({
               title: el.title,
               hintNumber: el.attemptCnt,
-              navigateTo: itemRouter.url(el.route),
+              navigateTo: ():UrlTree => itemRouter.url(el.route),
             })),
             currentPageIdx: state.data.breadcrumbs.length - 1,
           },
