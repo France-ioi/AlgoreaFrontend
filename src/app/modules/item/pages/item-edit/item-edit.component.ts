@@ -27,12 +27,13 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
     title: [ '', [ Validators.required, Validators.minLength(3), Validators.maxLength(200) ] ],
     description: '',
   });
+  itemChanges: { children?: ChildData[] } = {};
+
   itemData$ = this.itemDataSource.itemData$;
   itemLoadingState$ = this.itemDataSource.state$;
   initialFormData?: Item;
 
   subscription?: Subscription;
-  itemChanges: { children?: ChildData[] } = {};
 
   @ViewChild('content') private editContent?: ItemEditContentComponent;
 
@@ -176,6 +177,7 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
       title: item.string.title || '',
       description: item.string.description || '',
     });
+    this.itemChanges = {};
     this.itemForm.enable();
     this.editContent?.reset();
   }
