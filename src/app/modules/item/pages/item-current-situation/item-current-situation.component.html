@@ -3,7 +3,7 @@
     <alg-selection (change)="onViewChanged($event)" [items]="viewItems" [selected]="viewSelected"></alg-selection>
   </div>
 
-  <div class="chapter-view">
+  <div>
     <alg-item-log-view
       *ngIf="viewItems[viewSelected].value === 'log'"
       [itemData]="itemData"
