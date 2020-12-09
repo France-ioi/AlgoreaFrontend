@@ -119,7 +119,7 @@ export class ItemEditComponent implements OnDestroy {
     }).pipe(
       switchMap((res: {children?: ChildDataWithId[]}) => {
         if (res.children) {
-          // Saving the news children to not recreate them if there is an error.
+          // save the new children (their ids) to prevent recreating them in case of error
           this.itemChanges.children = res.children;
         }
         if (!this.itemId) return throwError(new Error('Invalid form'));
