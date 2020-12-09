@@ -30,4 +30,28 @@ export class RequestActionsService {
         map(objectToMap)
       );
   }
+
+  processLeaveRequest(groupId: string, memberIds: string[], action: Action): Observable<Map<string, any>> {
+    const type = action === Action.Accept ? 'accept' : 'reject';
+    return this.http
+      .post<ActionResponse<Object>>(`${appConfig().apiUrl}/groups/${groupId}/leave-requests/${type}`, null, {
+        params: {
+          group_ids: memberIds.join(','),
+        },
+      })
+      .pipe(
+        map(successData),
+        map(objectToMap)
+      );
+  }
+
+  processGroupInvitation(groupId: string, action: Action): Observable<Map<string, any>> {
+    const type = action === Action.Accept ? 'accept' : 'reject';
+    return this.http
+      .post<ActionResponse<Object>>(`${appConfig().apiUrl}/current-user/group-invitations/${groupId}/${type}`, null)
+      .pipe(
+        map(successData),
+        map(objectToMap)
+      );
+  }
 }
