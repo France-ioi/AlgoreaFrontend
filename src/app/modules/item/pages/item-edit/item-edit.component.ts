@@ -2,8 +2,8 @@ import { Component, OnDestroy } from '@angular/core';
 import { CurrentContentService, EditAction } from 'src/app/shared/services/current-content.service';
 import { ItemData, ItemDataSource } from '../../services/item-datasource.service';
 import { FormBuilder, Validators } from '@angular/forms';
-import { EMPTY, forkJoin, Observable, of, Subscription, throwError } from 'rxjs';
-import { defaultIfEmpty, filter, map, switchMap } from 'rxjs/operators';
+import { forkJoin, Observable, of, Subscription, throwError } from 'rxjs';
+import { filter, map, switchMap } from 'rxjs/operators';
 import { FetchError, Fetching, isReady, Ready } from '../../../../shared/helpers/state';
 import { ItemStringChanges, UpdateItemStringService } from '../../http-services/update-item-string.service';
 import { TOAST_LENGTH } from '../../../../shared/constants/global';
@@ -85,15 +85,8 @@ export class ItemEditComponent implements OnDestroy {
   }
 
   // Update Item
-  private getItemChanges(data: { children?: ChildDataWithId[] }): ItemChanges {
-    const res: ItemChanges = {};
-    if (data.children)
-      res.children = data.children.map((child, idx) => ({ item_id: child.id, order: idx }));
-    return res;
-  }
-
-  private createChildren(): Observable<ChildDataWithId[]>{
-    if (!this.itemChanges.children) return EMPTY;
+  private createChildren(): Observable<ChildDataWithId[] | undefined>{
+    if (!this.itemChanges.children) return of(undefined);
     return forkJoin(
       this.itemChanges.children.map(child => {
         if (!this.itemId) return throwError(new Error('Invalid form'));
@@ -114,16 +107,16 @@ export class ItemEditComponent implements OnDestroy {
   }
 
   private updateItem(): Observable<void> {
-    return forkJoin({
-      children: this.createChildren().pipe(defaultIfEmpty())
-    }).pipe(
-      switchMap((res: {children?: ChildDataWithId[]}) => {
-        if (res.children) {
+    return this.createChildren().pipe(
+      switchMap(res => {
+        const changes: ItemChanges = {};
+        if (res) {
           // save the new children (their ids) to prevent recreating them in case of error
-          this.itemChanges.children = res.children;
+          this.itemChanges.children = res;
+          changes.children = res.map((child, idx) => ({ item_id: child.id, order: idx }));
         }
         if (!this.itemId) return throwError(new Error('Invalid form'));
-        return this.updateItemService.updateItem(this.itemId, this.getItemChanges(res));
+        return this.updateItemService.updateItem(this.itemId, changes);
       }),
     );
   }
