@@ -17,7 +17,7 @@
     </span>
   </div>
   <perfect-scrollbar style="width: 100%;height: 100%;" #scrollPanel (psScrollY)="onScrollEvent($event)">
-    <div *ngIf="groupShow" (resized)="onResized($event)" #groupPanel tabindex="4" (focusOnGroupNav)="focusParent()">
+    <div *ngIf="groupShow" #groupPanel tabindex="4" (focusOnGroupNav)="focusParent()">
       <alg-group-nav></alg-group-nav>
     </div>
     <alg-skill-activity-tabs [backgroundColor]="!session.user.isTemp || groupShow  ? 'light' : 'dark'" [class.overlay-skills]="stickyShow"></alg-skill-activity-tabs>
