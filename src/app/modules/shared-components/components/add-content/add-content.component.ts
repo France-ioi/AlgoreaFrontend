@@ -14,7 +14,10 @@ export class AddContentComponent implements OnInit, OnDestroy {
 
   newContentForm: FormGroup = this.formBuilder.group({ newTitle: '', existingTitle: '' });
 
-  state: 'existing' | 'new' | 'closed' = 'closed';
+  state: 'opened' | 'closed' = 'closed';
+  focused: 'existingTitle' | 'newTitle' | null = null;
+  currentValue = '';
+
   private subscription?: Subscription;
 
   test = [
@@ -34,9 +37,11 @@ export class AddContentComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.newContentForm.valueChanges.subscribe((change: {newTitle: string, existingTitle: string}) => {
-      if (change.newTitle.length > 2) this.state = 'new';
-      else if (change.existingTitle.length > 2) this.state = 'existing';
-      else this.state = 'closed';
+      if (change.newTitle.length < 3 && change.existingTitle.length < 3) this.state = 'closed';
+      else {
+        this.currentValue = change.newTitle.length > 2 ? change.newTitle : change.existingTitle;
+        this.state = 'opened';
+      }
     });
   }
 
@@ -44,21 +49,21 @@ export class AddContentComponent implements OnInit, OnDestroy {
     this.subscription?.unsubscribe();
   }
 
-  clearInputFields(name: string): void {
-    this.newContentForm.get(name)?.setValue('');
+  onFocus(name: 'existingTitle' | 'newTitle'): void {
+    this.focused = name;
+    if (name === 'existingTitle') this.newContentForm.get('newTitle')?.setValue('');
+    else this.newContentForm.get('existingTitle')?.setValue('');
   }
 
   onBlur(): void {
     this.focused = null;
   }
 
-  onClick(type: ItemType): void {
+  addNewItem(type: ItemType): void {
     if (this.state === 'closed') return;
-    const control = this.newContentForm.get('title');
-    if (!control) return;
 
     this.contentAdded.emit({
-      title: control.value as string,
+      title: this.currentValue,
       type: type,
     });
     this.newContentForm.reset({ title: '' });
