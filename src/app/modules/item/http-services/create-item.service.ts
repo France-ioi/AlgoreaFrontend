@@ -13,8 +13,8 @@ interface NewItemData {
 export type NewItem = {
   title: string,
   type: ItemType,
-  language_tag: string
-} & ({ parent: {item_id: string} } | { as_root_of_group_id: string })
+  languageTag: string
+} & ({ parent: {itemId: string} } | { asRootOfGroupId: string })
 
 @Injectable({
   providedIn: 'root'
@@ -28,10 +28,10 @@ export class CreateItemService {
     const body: {[k: string]: any} = {
       title: newItem.title,
       type: newItem.type,
-      language_tag: newItem.language_tag,
+      language_tag: newItem.languageTag,
     };
     if ('parent' in newItem) body.parent = newItem.parent;
-    if ('as_root_of_group_id' in newItem) body.as_root_of_group_id = newItem.as_root_of_group_id;
+    if ('asRootOfGroupId' in newItem) body.as_root_of_group_id = newItem.asRootOfGroupId;
 
     return this.http
       .post<ActionResponse<NewItemData>>(`${appConfig().apiUrl}/items`, body)
