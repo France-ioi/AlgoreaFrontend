@@ -25,8 +25,16 @@ export class CreateItemService {
   }
 
   create(newItem: NewItem): Observable<string> {
+    const body: {[k: string]: any} = {
+      title: newItem.title,
+      type: newItem.type,
+      language_tag: newItem.language_tag,
+    };
+    if ('parent' in newItem) body.parent = newItem.parent;
+    if ('as_root_of_group_id' in newItem) body.as_root_of_group_id = newItem.as_root_of_group_id;
+
     return this.http
-      .post<ActionResponse<NewItemData>>(`${appConfig().apiUrl}/items`, newItem)
+      .post<ActionResponse<NewItemData>>(`${appConfig().apiUrl}/items`, body)
       .pipe(
         map(successData),
         map(response => response.id)
