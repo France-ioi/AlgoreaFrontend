@@ -1,4 +1,4 @@
-import { Component, ViewChild, NgZone, OnDestroy, Input } from '@angular/core';
+import { Component, ViewChild, NgZone, OnDestroy, Input, ElementRef } from '@angular/core';
 
 import { PerfectScrollbarComponent } from 'ngx-perfect-scrollbar';
 import { ResizedEvent } from 'angular-resize-event';
@@ -18,7 +18,7 @@ export class NavigationTabsComponent implements OnDestroy {
   @Input() session?: UserSession;
 
   @ViewChild('scrollPanel') scrollPanel?: PerfectScrollbarComponent;
-  @ViewChild('groupPanel') groupPanel?: HTMLDivElement;
+  @ViewChild('groupPanel') groupPanel?: ElementRef<HTMLDivElement>;
 
   groupShow = false;
   stickyShow = false;
@@ -52,7 +52,6 @@ export class NavigationTabsComponent implements OnDestroy {
     if (!directiveRef) return;
     const boundaryHeight = (directiveRef.elementRef.nativeElement as HTMLElement).clientHeight - 50;
     if (e.newHeight > boundaryHeight) {
-      // this.stickyShow = true;
       this.updateStatus(directiveRef.elementRef.nativeElement as HTMLElement);
     } else {
       this.stickyShow = false;
@@ -63,22 +62,18 @@ export class NavigationTabsComponent implements OnDestroy {
     this.ngZone.run(() => {
       const scrollTop = e.scrollTop;
       const clientHeight = e.clientHeight - 50;
-      const groupHeight = this.groupPanel?.clientHeight || 0;
-      if (scrollTop + clientHeight >= groupHeight) {
-        this.stickyShow = false;
-      } else {
-        this.stickyShow = true;
-      }
+      const groupHeight = this.groupPanel?.nativeElement.clientHeight || 0;
+      this.stickyShow = scrollTop + clientHeight < groupHeight;
     });
   }
 
   focusParent(): void {
     if (this.groupPanel) {
-      const elements = this.groupPanel.querySelectorAll('.p-accordion-header a');
+      const elements = this.groupPanel.nativeElement.querySelectorAll('.p-accordion-header a');
       elements.forEach(e => {
         (e as HTMLElement).blur();
       });
-      this.groupPanel.focus();
+      this.groupPanel.nativeElement.focus();
     }
   }
 
