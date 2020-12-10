@@ -20,8 +20,8 @@
     <div *ngIf="groupShow" (resized)="onResized($event)" #groupPanel tabindex="4" (focusOnGroupNav)="focusParent()">
       <alg-group-nav></alg-group-nav>
     </div>
-    <alg-skill-activity-tabs [backgroundColor]="!session.user.isTemp ? 'light' : 'dark'"></alg-skill-activity-tabs>
-    <alg-skill-activity-tabs [backgroundColor]="!session.user.isTemp ? 'light' : 'dark'" *ngIf="stickyShow" class="overlay-skills"></alg-skill-activity-tabs>
+    <alg-skill-activity-tabs [backgroundColor]="!session.user.isTemp || groupShow ? 'light' : 'dark'"></alg-skill-activity-tabs>
+    <alg-skill-activity-tabs [backgroundColor]="!session.user.isTemp || groupShow ? 'light' : 'dark'" *ngIf="stickyShow" class="overlay-skills"></alg-skill-activity-tabs>
   </perfect-scrollbar>
 </div>
 <ng-template #userLoading>
