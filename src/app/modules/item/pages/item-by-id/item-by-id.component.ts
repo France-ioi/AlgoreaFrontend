@@ -1,12 +1,13 @@
 import { Component, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, UrlTree } from '@angular/router';
 import { of, Subscription } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
 import { defaultAttemptId } from 'src/app/shared/helpers/attempts';
-import { appDefaultItemRoute, isItemRouteError, itemDetailsUrl, itemRouteFromParams, itemUrl } from 'src/app/shared/helpers/item-route';
+import { appDefaultItemRoute, isItemRouteError, itemRouteFromParams } from 'src/app/shared/helpers/item-route';
 import { FetchError, Fetching, isReady, Ready } from 'src/app/shared/helpers/state';
 import { ResultActionsService } from 'src/app/shared/http-services/result-actions.service';
 import { CurrentContentService, EditAction, isItemInfo, ItemInfo } from 'src/app/shared/services/current-content.service';
+import { ItemRouter } from 'src/app/shared/services/item-router';
 import { GetItemPathService } from '../../http-services/get-item-path';
 import { ItemDataSource, ItemData } from '../../services/item-datasource.service';
 
@@ -26,7 +27,7 @@ export class ItemByIdComponent implements OnDestroy {
   private subscriptions: Subscription[] = []; // subscriptions to be freed up on destroy
 
   constructor(
-    private router: Router,
+    private itemRouter: ItemRouter,
     private activatedRoute: ActivatedRoute,
     private currentContent: CurrentContentService,
     private itemDataSource: ItemDataSource,
@@ -63,7 +64,7 @@ export class ItemByIdComponent implements OnDestroy {
             path: state.data.breadcrumbs.map(el => ({
               title: el.title,
               hintNumber: el.attemptCnt,
-              navigateTo: itemDetailsUrl(this.router, el.route),
+              navigateTo: ():UrlTree => itemRouter.url(el.route),
             })),
             currentPageIdx: state.data.breadcrumbs.length - 1,
           },
@@ -87,9 +88,7 @@ export class ItemByIdComponent implements OnDestroy {
       ).subscribe(action => {
         const currentInfo = this.currentContent.current.value;
         if (isItemInfo(currentInfo)) {
-          void this.router.navigateByUrl(
-            itemUrl(this.router, currentInfo.data.route, action === EditAction.StartEditing ? 'edit' : 'details')
-          );
+          this.itemRouter.navigateTo(currentInfo.data.route, action === EditAction.StartEditing ? 'edit' : 'details');
         }
       })
     );
@@ -117,8 +116,8 @@ export class ItemByIdComponent implements OnDestroy {
         );
       })
     ).subscribe(
-      itemRoute => void this.router.navigateByUrl(itemDetailsUrl(this.router, itemRoute)),
-      _err => void this.router.navigateByUrl(itemDetailsUrl(this.router, appDefaultItemRoute()))
+      itemRoute => this.itemRouter.navigateTo(itemRoute),
+      _err => this.itemRouter.navigateTo(appDefaultItemRoute())
     );
   }
 

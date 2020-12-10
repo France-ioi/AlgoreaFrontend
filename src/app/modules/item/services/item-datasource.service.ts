@@ -1,11 +1,11 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
 import { BehaviorSubject, concat, EMPTY, forkJoin, Observable, of, Subject, Subscription } from 'rxjs';
 import { catchError, filter, map, switchMap } from 'rxjs/operators';
 import { bestAttemptFromResults, implicitResultStart } from 'src/app/shared/helpers/attempts';
-import { isRouteWithAttempt, ItemRoute, incompleteItemUrl } from 'src/app/shared/helpers/item-route';
+import { isRouteWithAttempt, ItemRoute } from 'src/app/shared/helpers/item-route';
 import { errorState, FetchError, Fetching, fetchingState, isReady, Ready, readyState } from 'src/app/shared/helpers/state';
 import { ResultActionsService } from 'src/app/shared/http-services/result-actions.service';
+import { ItemRouter } from 'src/app/shared/services/item-router';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
 import { BreadcrumbItem, GetBreadcrumbService } from '../http-services/get-breadcrumb.service';
 import { GetItemByIdService, Item } from '../http-services/get-item-by-id.service';
@@ -40,7 +40,7 @@ export class ItemDataSource implements OnDestroy {
     private resultActionsService: ResultActionsService,
     private getResultsService: GetResultsService,
     private userSessionService: UserSessionService,
-    private router: Router,
+    private itemRouter: ItemRouter,
   ) {
     this.fetchOperation.pipe(
 
@@ -137,7 +137,7 @@ export class ItemDataSource implements OnDestroy {
         if (res === 'forbidden') {
           // clear the route & attempt and retry to visit this item (path/attempt discovery will be called)
           // ideally routing should not be called inside the datasource and maximum number of tries should be allowed
-          void this.router.navigateByUrl(incompleteItemUrl(this.router, item.id));
+          this.itemRouter.navigateToIncompleteItem(item.id);
           throw new Error('unhandled forbidden');
         } else {
           return res;

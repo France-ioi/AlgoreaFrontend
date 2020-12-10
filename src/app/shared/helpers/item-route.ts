@@ -1,4 +1,4 @@
-import { ParamMap, Router, UrlTree } from '@angular/router';
+import { ParamMap } from '@angular/router';
 import { defaultAttemptId } from './attempts';
 import { appConfig } from './config';
 import { isSkill, ItemTypeCategory } from './item-type';
@@ -14,23 +14,12 @@ export type ItemRouteWithParentAttempt = ItemRouteCommon & { parentAttemptId: At
 export type ItemRoute = ItemRouteWithAttempt | ItemRouteWithParentAttempt;
 
 /* url parameter names */
-const parentAttemptParamName = 'parentAttempId';
-const attemptParamName = 'attempId';
-const pathParamName = 'path';
+export const parentAttemptParamName = 'parentAttempId';
+export const attemptParamName = 'attempId';
+export const pathParamName = 'path';
 
 export function isRouteWithAttempt(item: ItemRoute): item is ItemRouteWithAttempt {
   return 'attemptId' in item;
-}
-
-/**
- * Build, from an item route, an url for navigation
- */
-export function itemUrl(router: Router, item: ItemRoute, page: 'edit'|'details'): UrlTree {
-  const params: {[k: string]: any} = {};
-  if (isRouteWithAttempt(item)) params[attemptParamName] = item.attemptId;
-  else params[parentAttemptParamName] = item.parentAttemptId;
-  params[pathParamName] = item.path;
-  return router.createUrlTree([ 'items', 'by-id', item.id, params, page ]);
 }
 
 /**
@@ -45,13 +34,6 @@ export function appDefaultItemRoute(cat: ItemTypeCategory = 'activity'): ItemRou
 }
 
 /**
- * Build an url to an item with missing path and attempt
- */
-export function incompleteItemUrl(router: Router, itemId: string): UrlTree {
-  return router.createUrlTree([ 'items', 'by-id', itemId ]);
-}
-
-/**
  * Url (as string) of the details page for the given item route
  */
 export function itemStringUrl(item: ItemRoute): string {
@@ -60,14 +42,6 @@ export function itemStringUrl(item: ItemRoute): string {
     `${parentAttemptParamName}=${item.parentAttemptId}`;
 
   return `/items/by-id/${item.id};${attemptPart};${pathParamName}=${item.path.join(',')}/details`;
-}
-
-export function itemDetailsUrl(router: Router, item: ItemRoute): UrlTree {
-  return itemUrl(router, item, 'details');
-}
-
-export function itemEditUrl(router: Router, item: ItemRoute): UrlTree {
-  return itemUrl(router, item, 'edit');
 }
 
 export interface ItemRouteError {
