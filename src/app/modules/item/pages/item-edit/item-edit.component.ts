@@ -162,7 +162,7 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
         this.itemDataSource.refreshItem(); // which will re-enable the form
       },
       _err => {
-        this.errorToast(_err);
+        this.errorToast();
         this.itemForm.enable();
       }
     );
