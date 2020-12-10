@@ -1,15 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'alg-my-groups',
   templateUrl: './my-groups.component.html',
   styleUrls: [ './my-groups.component.scss' ]
 })
-export class MyGroupsComponent implements OnInit {
-
-  constructor() { }
-
-  ngOnInit(): void {
-  }
+export class MyGroupsComponent {
 
 }

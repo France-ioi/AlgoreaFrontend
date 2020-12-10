@@ -1,15 +1,4 @@
-import {
-  Component,
-  OnInit,
-  Input,
-  OnChanges,
-  SimpleChanges,
-  ContentChild,
-  ViewChild,
-  Output,
-  EventEmitter,
-  TemplateRef,
-} from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges, ContentChild, ViewChild, Output, EventEmitter, TemplateRef } from '@angular/core';
 import { DomHandler } from 'primeng/dom';
 import { Table, TableService } from 'primeng/table';
 import { SortEvent } from 'primeng/api/sortevent';
@@ -43,7 +32,7 @@ export interface GridColumnGroup {
     },
   ],
 })
-export class GridComponent implements OnInit, OnChanges {
+export class GridComponent implements OnChanges {
 
   @Input() selection?: any[]
 
@@ -114,8 +103,6 @@ export class GridComponent implements OnInit, OnChanges {
 
     this.toShow = this.columns.length - selectedCol.length;
   }
-
-  ngOnInit(): void {}
 
   ngOnChanges(_changes: SimpleChanges): void {
     if (this.showGear) {
