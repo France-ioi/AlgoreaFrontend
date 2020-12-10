@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { Component, Output, EventEmitter, Input } from '@angular/core';
 import { AuthService } from 'src/app/shared/auth/auth.service';
 import { UserSession } from 'src/app/shared/services/user-session.service';
 
@@ -7,7 +7,7 @@ import { UserSession } from 'src/app/shared/services/user-session.service';
   templateUrl: './top-nav.component.html',
   styleUrls: [ './top-nav.component.scss' ]
 })
-export class TopNavComponent implements OnInit {
+export class TopNavComponent {
 
   @Input() collapsed = false;
   @Input() templateId = 0;
@@ -24,9 +24,6 @@ export class TopNavComponent implements OnInit {
   constructor(
     private authService: AuthService
   ) { }
-
-  ngOnInit(): void {
-  }
 
   onCollapse(): void {
     this.collapsed = !this.collapsed;
