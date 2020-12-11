@@ -11,6 +11,14 @@ export interface ChildData {
   type: ItemType,
 }
 
+export interface ChildDataWithId extends ChildData{
+  id: string;
+}
+
+export function hasId(child: ChildData): child is ChildDataWithId {
+  return !!child.id;
+}
+
 @Component({
   selector: 'alg-item-children-edit',
   templateUrl: './item-children-edit.component.html',
@@ -59,6 +67,7 @@ export class ItemChildrenEditComponent implements OnChanges {
 
   addChild(child: ChildData): void {
     this.data.push({ title: child.title, type: child.type });
+    this.childrenChanges.emit(this.data);
   }
 
   onSelectAll(): void {
