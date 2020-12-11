@@ -6,7 +6,6 @@ import { SharedComponentsModule } from '../shared-components/shared-components.m
 import { GroupRoutingModule } from './group-routing.module';
 
 import { GroupHeaderComponent } from './components/group-header/group-header.component';
-import { PendingRequestComponent } from './components/pending-request/pending-request.component';
 import { GroupNoPermissionComponent } from './components/group-no-permission/group-no-permission.component';
 import { GroupJoinByCodeComponent } from './components/group-join-by-code/group-join-by-code.component';
 
@@ -34,7 +33,6 @@ import { JoinedGroupListComponent } from './components/joined-group-list/joined-
   declarations: [
     GroupHeaderComponent,
     GroupOverviewComponent,
-    PendingRequestComponent,
     GroupCompositionComponent,
     GroupAdministrationComponent,
     MyGroupsComponent,

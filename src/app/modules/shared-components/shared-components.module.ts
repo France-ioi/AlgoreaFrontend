@@ -53,6 +53,7 @@ import { SubSectionComponent } from './components/sub-section/sub-section.compon
 import { AddContentComponent } from './components/add-content/add-content.component';
 import { FloatingSaveComponent } from './components/floating-save/floating-save.component';
 import { TooltipModule } from 'primeng/tooltip';
+import { PendingRequestComponent } from './components/pending-request/pending-request.component';
 
 @NgModule({
   declarations: [
@@ -81,6 +82,7 @@ import { TooltipModule } from 'primeng/tooltip';
     SubSectionComponent,
     AddContentComponent,
     FloatingSaveComponent,
+    PendingRequestComponent,
   ],
   imports: [
     CommonModule,
@@ -144,6 +146,7 @@ import { TooltipModule } from 'primeng/tooltip';
     SubSectionComponent,
     AddContentComponent,
     FloatingSaveComponent,
+    PendingRequestComponent,
   ],
   providers: [
     { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: true } }

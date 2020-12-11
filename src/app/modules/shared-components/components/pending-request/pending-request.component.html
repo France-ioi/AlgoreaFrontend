@@ -4,15 +4,10 @@
   [collapsible]="true"
   [collapsed]="collapsed"
 >
-  <ng-template #headerTemplate>
-    <div
-      *ngIf="showSwitch"
-      class="group-switch"
-      [ngClass]="{'all-disabled': state === 'fetching'}">
-      <alg-selection (change)="onSubgroupSwitch($event)" [items]="subgroupSwitchItems"></alg-selection>
-    </div>
-  </ng-template>
 
+  <ng-template #headerTemplate *ngIf="sectionHeaderTemplate">
+    <ng-container [ngTemplateOutlet]="sectionHeaderTemplate" [ngTemplateOutletContext]="{ $implicit: state }"></ng-container>
+  </ng-template>
 
   <p *ngIf="state === 'fetchingError';else noFetchingError" class="error-message">
     <i class="fa fa-exclamation-triangle"></i>
@@ -58,16 +53,14 @@
               <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
             </td>
             <td *ngFor="let col of columns">
-              <ng-container *ngIf="col.field === 'group.name'" >
-                <span class="group-name">
+              <ng-container [ngSwitch]="col.field">
+                <span class="group-name" *ngSwitchCase="'group.name'">
                   {{ rowData.group.name }}
                 </span>
-              </ng-container>
-              <ng-container *ngIf="col.field === 'at'">
-                {{ rowData.at | date: "d/MM/y" }}
-              </ng-container>
-              <ng-container *ngIf="col.field === 'user.login'">
-                <div class="grid-user-info-field">
+                <ng-container *ngSwitchCase="'at'">
+                  {{ rowData.at | date: "d/MM/y" }}
+                </ng-container>
+                <div class="grid-user-info-field" *ngSwitchCase="'user.login'">
                   <!-- <img
                     src="{{ rowData.user.image }}"
                     style="width: 7rem; height: 7rem;"
@@ -84,6 +77,12 @@
                     </div> -->
                   </div>
                 </div>
+                <ng-container *ngSwitchCase="'group.type'">
+                  {{ rowData.group.type }}
+                </ng-container>
+                <ng-container *ngSwitchDefault>
+                  {{ rowData[col.field] }}
+                </ng-container>
               </ng-container>
             </td>
           </tr>
@@ -98,11 +97,11 @@
             <div class="req-tools">
               <span class="accept" [ngClass]="{disabled: selection.length === 0}" (click)="onAccept()">
                 <span>Accept</span>
-                <i class="fa fa-check" *ngIf="state !== 'accepting'; else loading"></i>
+                <i class="fa fa-check" *ngIf="state !== 'processing'; else loading"></i>
               </span>
               <span class="reject" [ngClass]="{disabled: selection.length === 0}" (click)="onReject()">
                 <span>Reject</span>
-                <i class="fa fa-times" *ngIf="state !== 'rejecting'; else loading"></i>
+                <i class="fa fa-times" *ngIf="state !== 'processing'; else loading"></i>
               </span>
             </div>
           </div>
