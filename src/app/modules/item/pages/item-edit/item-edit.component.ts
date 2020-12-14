@@ -179,6 +179,7 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
     this.itemForm.reset({
       title: item.string.title || '',
       description: item.string.description || '',
+      subtitle: item.string.subtitle || '',
     });
     this.itemChanges = {};
     this.itemForm.enable();
