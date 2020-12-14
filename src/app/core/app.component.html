@@ -30,7 +30,7 @@
           ></alg-page-navigator>
           <alg-button
             *ngIf="collapsed && session && session.user.isTemp"
-            label="Log in / Sign in"
+            i18n-label label="Log in / Sign in"
             icon="pi pi-sign-in"
             class="p-button-rounded"
             style="margin-right: 0.4167rem;"
@@ -38,7 +38,7 @@
           ></alg-button>
           <alg-button
             *ngIf="collapsed && session && !session.user.isTemp"
-            label="Log out"
+            i18n-label label="Log out"
             icon="pi pi-sign-out"
             class="p-button-rounded"
             style="margin-right: 0.4167rem;"
