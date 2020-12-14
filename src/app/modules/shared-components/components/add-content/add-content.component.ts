@@ -17,6 +17,15 @@ export class AddContentComponent implements OnInit, OnDestroy {
   state: 'existing' | 'new' | 'closed' = 'closed';
   private subscription?: Subscription;
 
+  test = [
+    { title: 'test', type: 'Chapter' },
+    { title: 'test', type: 'Chapter' },
+    { title: 'test', type: 'Chapter' },
+    { title: 'test', type: 'Chapter' },
+    { title: 'test', type: 'Chapter' },
+    { title: 'test', type: 'Chapter' },
+  ]
+
 
   constructor(
     private formBuilder: FormBuilder,

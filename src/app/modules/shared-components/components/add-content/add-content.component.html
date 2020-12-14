@@ -49,8 +49,16 @@
     </div>
   </div>
 
-  <div *ngIf="state === 'existing'">
-    Yay
-  </div>
+  <p-table *ngIf="state === 'opened' && focused === 'existingTitle'" [value]="test">
+    <ng-template pTemplate="body" let-rowData>
+      <tr>
+        <td class="type">{{ rowData.type }}</td>
+        <td class="main">{{ currentValue }}</td>
+        <td>
+          <alg-button icon="fa fa-plus" label="Add"></alg-button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
 
 </alg-sub-section>
