@@ -39,6 +39,10 @@ export class AddContentComponent implements OnInit, OnDestroy {
     this.newContentForm.get(name)?.setValue('');
   }
 
+  onBlur(): void {
+    this.focused = null;
+  }
+
   onClick(type: ItemType): void {
     if (this.state === 'closed') return;
     const control = this.newContentForm.get('title');
