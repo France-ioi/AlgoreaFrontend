@@ -8,8 +8,6 @@ import { CurrentContentService } from '../../../../shared/services/current-conte
 })
 export class ManagedGroupsComponent implements OnInit, OnDestroy {
 
-  title = 'Groups you manage';
-
   constructor(
     private currentContent: CurrentContentService,
   ) {}
@@ -18,11 +16,11 @@ export class ManagedGroupsComponent implements OnInit, OnDestroy {
     this.currentContent.current.next({
       type: 'group',
       breadcrumbs: {
-        category: this.title,
+        category: 'Groups you manage',
         path: [],
         currentPageIdx: -1,
       },
-      title: this.title,
+      title: 'Groups you manage',
     });
   }
 

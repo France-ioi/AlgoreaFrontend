@@ -4,8 +4,8 @@
 
   <p *ngIf="state.tag === 'error'">Error while loading the item</p>
 
-  <div *ngIf="state.tag === 'ready'" style="margin: 1rem 0 0.5rem 0">
-    <form [formGroup]="itemForm">
+  <div *ngIf="state.tag === 'ready' && (itemData$ | async) as itemData" style="margin: 1rem 0 0.5rem 0">
+    <form [formGroup]="itemForm" *ngIf="['all','all_with_grant'].includes(itemData.item.permissions.can_edit); else notAuthorized">
 
       <div class="header">
         <alg-input [parentForm]="itemForm" name="title" size="large" [isDark]='false'></alg-input>
@@ -22,11 +22,21 @@
         </a>
       </nav>
 
-      <div class="bg-white" >
-        <alg-item-edit-content *ngIf="rla1.isActive" [parentForm]="itemForm"></alg-item-edit-content>
+      <div class="bg-white">
+        <alg-item-edit-content #content
+          *ngIf="rla1.isActive"
+          [parentForm]="itemForm"
+          [itemData]="itemData"
+          (childrenChanges)="updateItemChanges($event)"
+        >
+        </alg-item-edit-content>
       </div>
 
     </form>
+    <alg-floating-save *ngIf="itemForm.dirty" [saving]="itemForm.disabled" (save)="save()" (cancel)="resetForm()"></alg-floating-save>
+    <ng-template #notAuthorized>
+      <p>You do not have the permissions to edit this content.</p>
+    </ng-template>
   </div>
 
 </ng-container>

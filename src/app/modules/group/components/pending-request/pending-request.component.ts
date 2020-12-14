@@ -4,6 +4,7 @@ import {
   Input,
   OnChanges,
   SimpleChanges,
+  OnDestroy,
 } from '@angular/core';
 import { SortEvent } from 'primeng/api/sortevent';
 import { MessageService } from 'primeng/api';
@@ -11,13 +12,14 @@ import {
   ERROR_MESSAGE,
 } from '../../../../shared/constants/api';
 import { TOAST_LENGTH } from '../../../../shared/constants/global';
-import { Observable, forkJoin } from 'rxjs';
+import { Observable, forkJoin, Subject, merge, of } from 'rxjs';
 import { GetRequestsService, PendingRequest } from '../../http-services/get-requests.service';
-import { RequestActionsService } from '../../http-services/request-actions.service';
+import { Action, RequestActionsService } from '../../http-services/request-actions.service';
 import { GridColumn, GridColumnGroup } from '../../../shared-components/components/grid/grid.component';
+import { map, switchMap } from 'rxjs/operators';
+import { fetchingState, isReady, readyState } from 'src/app/shared/helpers/state';
 
-type Activity = 'accepting'|'rejecting'|'none';
-type Action = 'accept'|'reject';
+
 
 interface Result {
   countRequests: number;
@@ -31,7 +33,7 @@ const groupColumn = { field: 'group.name', header: 'GROUP' };
   templateUrl: './pending-request.component.html',
   styleUrls: [ './pending-request.component.scss' ],
 })
-export class PendingRequestComponent implements OnInit, OnChanges {
+export class PendingRequestComponent implements OnInit, OnChanges, OnDestroy {
   @Input() groupId?: string;
   @Input() showSwitch = true;
 
@@ -49,15 +51,40 @@ export class PendingRequestComponent implements OnInit, OnChanges {
   currentSort: string[] = [];
   includeSubgroup = false;
   collapsed = true;
-  status: 'loading' | 'loaded' | 'empty' |'error' = 'loading';
 
-  ongoingActivity: Activity = 'none';
+  state: 'fetching' | 'accepting' | 'rejecting' | 'ready' |'fetchingError' = 'fetching';
+
+  private dataFetching = new Subject<{ groupId?: string, includeSubgroup: boolean, sort: string[] }>();
 
   constructor(
     private getRequestsService: GetRequestsService,
     private requestActionService: RequestActionsService,
     private messageService: MessageService
-  ) {}
+  ) {
+    this.dataFetching.pipe(
+      switchMap(params =>
+        merge(
+          of(fetchingState()),
+          this.getRequestsService.getPendingRequests(params.groupId, params.includeSubgroup, params.sort).pipe(map(readyState))
+        )
+      )
+    ).subscribe(
+      state => {
+        this.state = state.tag;
+        if (isReady(state)) {
+          this.requests = state.data;
+          if (this.requests.length > 0) this.collapsed = false;
+        }
+      },
+      _err => {
+        this.state = 'fetchingError';
+      }
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.dataFetching.complete();
+  }
 
   ngOnInit(): void {
     this.panel.push({
@@ -68,26 +95,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
 
   ngOnChanges(_changes: SimpleChanges): void {
     this.selection = [];
-    this.ongoingActivity = 'none';
-    this.reloadData();
-  }
-
-  private reloadData(): void {
-    if (!this.groupId) return;
-
-    this.status = 'loading';
-    this.getRequestsService
-      .getPendingRequests(this.groupId, this.includeSubgroup, this.currentSort)
-      .subscribe(
-        (reqs: PendingRequest[]) => {
-          this.requests = reqs;
-          this.status = reqs.length ? 'loaded' : 'empty';
-          if (reqs.length) this.collapsed = false;
-        },
-        _err => {
-          this.status = 'error';
-        }
-      );
+    this.dataFetching.next({ groupId: this.groupId, includeSubgroup: this.includeSubgroup, sort: this.currentSort });
   }
 
   private parseResults(data: Map<string, any>[]): Result {
@@ -135,9 +143,9 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     });
   }
 
-  processRequests(action: Action): Observable<Map<string, any>[]> {
+  processRequests(action: Action, requests: PendingRequest[]): Observable<Map<string, any>[]> {
     const requestMap = new Map<string, string[]>();
-    this.selection.forEach(elm => {
+    requests.forEach(elm => {
       const groupID = elm.group.id;
       const memberID = elm.user.groupId;
 
@@ -146,36 +154,49 @@ export class PendingRequestComponent implements OnInit, OnChanges {
       else requestMap.set(groupID, [ memberID ]);
     });
     return forkJoin(
-      Array.from(requestMap.entries()).map(elm => {
-        if (action === 'accept') return this.requestActionService.acceptJoinRequest(elm[0], elm[1]);
-        else return this.requestActionService.rejectJoinRequest(elm[0], elm[1]);
-      })
+      Array.from(requestMap.entries()).map(elm =>
+        this.requestActionService.processJoinRequest(elm[0], elm[1], action)
+      )
     );
   }
 
-  onAcceptOrReject(action: Action): void {
-    if (this.selection.length === 0 || this.ongoingActivity !== 'none') {
+  onAccept(): void {
+    this.onAcceptOrReject(Action.Accept);
+  }
+
+  onReject(): void {
+    this.onAcceptOrReject(Action.Reject);
+  }
+
+  private onAcceptOrReject(action: Action): void {
+    if (this.selection.length === 0 || this.state !== 'ready') {
       return;
     }
-    this.ongoingActivity = (action === 'accept') ? 'accepting' : 'rejecting';
 
-    const resultObserver : Observable<Map<string, any>[]> = this.processRequests(action);
+    this.state = action === Action.Accept ? 'accepting' : 'rejecting';
 
-    resultObserver
+    this.processRequests(action, this.selection)
       .subscribe(
-        res => {
+        result => {
+          this.state = 'ready';
+
           this.displayResponseToast(
-            this.parseResults(res),
-            action === 'accept' ? 'accept' : 'reject', // still use a matching as it is "by coincidence" that the type of verb match
-            action === 'accept' ? 'accepted' : 'declined'
+            this.parseResults(result),
+            action === Action.Accept ? 'accept' : 'reject',
+            action === Action.Accept ? 'accepted' : 'declined'
           );
-          this.reloadData();
-          this.ongoingActivity = 'none';
+
           this.selection = [];
+
+          this.dataFetching.next({
+            groupId: this.groupId,
+            includeSubgroup: this.includeSubgroup,
+            sort: this.currentSort,
+          });
         },
         err => {
+          this.state = 'ready';
           this.processRequestError(err);
-          this.ongoingActivity = 'none';
         }
       );
   }
@@ -192,9 +213,8 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     const sortMeta = event.multiSortMeta?.map(meta => (meta.order === -1 ? `-${meta.field}` : meta.field));
 
     if (sortMeta && JSON.stringify(sortMeta) !== JSON.stringify(this.currentSort)) {
-
       this.currentSort = sortMeta;
-      this.reloadData();
+      this.dataFetching.next({ groupId: this.groupId, includeSubgroup: this.includeSubgroup, sort: this.currentSort });
     }
   }
 
@@ -204,7 +224,7 @@ export class PendingRequestComponent implements OnInit, OnChanges {
     this.columns = this.columns.filter(elm => elm !== groupColumn);
     if (this.includeSubgroup) this.columns = [ groupColumn ].concat(this.columns);
 
-    this.reloadData();
+    this.dataFetching.next({ groupId: this.groupId, includeSubgroup: this.includeSubgroup, sort: this.currentSort });
   }
 
 }

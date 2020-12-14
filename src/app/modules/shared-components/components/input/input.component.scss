@@ -63,8 +63,25 @@
 
     &::placeholder {
       font-style: italic;
-      color: lightgray;
+      color: rgb(118, 118, 121);
       font-size: 1.2rem;
+    }
+
+
+  }
+
+  .clear-button {
+    margin-left:-30px;
+    margin-top: 8px;
+
+    button {
+      cursor: pointer;
+      border: none;
+      outline: none;
+      position: relative;
+      width: 0;
+      color: #787878;
+      background-color: #D3DBE7;
     }
   }
 

@@ -1,11 +1,10 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { TreeNode } from 'primeng/api';
 import { NavMenuItem } from '../../http-services/item-navigation.service';
-import { ResultActionsService } from 'src/app/shared/http-services/result-actions.service';
-import { Router } from '@angular/router';
 import { ItemNavMenuData } from '../../common/item-nav-menu-data';
-import { itemDetailsUrl } from 'src/app/shared/helpers/item-route';
 import { defaultAttemptId } from 'src/app/shared/helpers/attempts';
+import { ItemTypeCategory } from 'src/app/shared/helpers/item-type';
+import { ItemRouter } from 'src/app/shared/services/item-router';
 
 // ItemTreeNode is PrimeNG tree node with data forced to be an item
 interface ItemTreeNode extends TreeNode {
@@ -23,13 +22,13 @@ interface ItemTreeNode extends TreeNode {
 })
 export class ItemNavTreeComponent implements OnChanges {
   @Input() data?: ItemNavMenuData;
+  @Input() type: ItemTypeCategory = 'activity';
 
   nodes: ItemTreeNode[] = [];
   selectedNode?: ItemTreeNode; // used to keep track after request that the selected is still the expected one
 
   constructor(
-    private router: Router,
-    private resultActionsService: ResultActionsService,
+    private itemRouter: ItemRouter,
   ) {}
 
   mapItemToNodes(data: ItemNavMenuData): ItemTreeNode[] {
@@ -61,21 +60,21 @@ export class ItemNavTreeComponent implements OnChanges {
   navigateToNode(node: ItemTreeNode, attemptId?: string): void {
     const routeBase = { id: node.data.id, path: node.itemPath };
     if (attemptId) {
-      void this.router.navigate(itemDetailsUrl({ ...routeBase, attemptId: attemptId }));
+      this.itemRouter.navigateTo({ ...routeBase, attemptId: attemptId });
       return;
     }
     const parentAttemptId = this.parentAttemptForNode(node);
     if (!parentAttemptId) return; // unexpected
-    void this.router.navigate(itemDetailsUrl({ ...routeBase, parentAttemptId: parentAttemptId }));
+    this.itemRouter.navigateTo({ ...routeBase, parentAttemptId: parentAttemptId });
   }
 
   navigateToParent(): void {
     if (!this.data?.parent?.attemptId) return; // unexpected!
-    void this.router.navigate(itemDetailsUrl({
+    this.itemRouter.navigateTo({
       id: this.data.parent.id,
       path: this.data.pathToElements.slice(0, -1),
       attemptId: this.data.parent.attemptId,
-    }));
+    });
   }
 
   selectNode(node: ItemTreeNode): void {
@@ -94,13 +93,13 @@ export class ItemNavTreeComponent implements OnChanges {
       e.stopPropagation();
       e.preventDefault();
       document.activeElement
-        ?.querySelector<HTMLElement>('.ui-treenode-label .node-tree-item > .node-item-content > .node-label')
+        ?.querySelector<HTMLElement>('.p-treenode-label .node-tree-item > .node-item-content > .node-label')
         ?.click();
     } else if (e.code === 'ArrowDown' || e.code === 'ArrowUp') {
       e.stopPropagation();
       e.preventDefault();
       document.activeElement
-        ?.querySelector('.ui-treenode-label .node-tree-item > .node-item-content > .node-label')
+        ?.querySelector('.p-treenode-label .node-tree-item > .node-item-content > .node-label')
         ?.scrollIntoView({
           behavior: 'auto',
           block: 'center',

@@ -36,7 +36,7 @@ export class SliderComponent implements OnInit {
   }
 
   handleChange(): void {
-    // const handles = this.slider.querySelectorAll('.ui-slider-handle');
+    // const handles = this.slider.querySelectorAll('.p-slider-handle');
     // this.posStart = parseFloat(handles.item(0)...asna.style.left);
     // this.posEnd = parseFloat(handles[1].style.left);
     this.change.emit();

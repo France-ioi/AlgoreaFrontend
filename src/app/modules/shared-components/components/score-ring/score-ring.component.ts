@@ -1,12 +1,4 @@
-import {
-  Component,
-  OnInit,
-  Input,
-  OnChanges,
-  SimpleChanges,
-  ViewChild,
-  ElementRef,
-} from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges, ViewChild, ElementRef } from '@angular/core';
 
 enum ScoreRingColor {
   Success = '#B8E986',
@@ -21,7 +13,7 @@ enum ScoreRingColor {
   templateUrl: './score-ring.component.html',
   styleUrls: [ './score-ring.component.scss' ],
 })
-export class ScoreRingComponent implements OnInit, OnChanges {
+export class ScoreRingComponent implements OnChanges {
   @Input() diameter = 60;
   @Input() currentScore = 0;
   @Input() bestScore = 0;
@@ -47,10 +39,6 @@ export class ScoreRingComponent implements OnInit, OnChanges {
 
   textFill = ScoreRingColor.DefaultText;
   fontSize = 1;
-
-  constructor() {}
-
-  ngOnInit(): void {}
 
   private pathFromScore(score: number): string {
     if (score === 0) {
@@ -102,6 +90,7 @@ export class ScoreRingComponent implements OnInit, OnChanges {
     } else {
       this.icon = undefined;
     }
+
 
     this.fontSize = Math.floor((2 * this.diameter) / 64);
     if (this.forTree) {

@@ -1,25 +1,15 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'alg-editor-bar',
   templateUrl: './editor-bar.component.html',
   styleUrls: [ './editor-bar.component.scss' ],
 })
-export class EditorBarComponent implements OnInit {
-  @Output() cancel = new EventEmitter();
-  @Output() save = new EventEmitter();
-  @Output() reload = new EventEmitter();
-
-  constructor() {}
-
-  ngOnInit(): void {}
+export class EditorBarComponent {
+  @Output() cancel = new EventEmitter<void>();
 
   onCancelClick(): void {
     this.cancel.emit();
-  }
-
-  onValidateClick(): void {
-    this.save.emit();
   }
 
 }

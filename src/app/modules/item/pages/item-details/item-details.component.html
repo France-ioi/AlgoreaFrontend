@@ -11,22 +11,23 @@
     <nav mat-tab-nav-bar>
       <a mat-tab-link
         [routerLink]="'./'"
-        routerLinkActive #rla1="routerLinkActive"
+        routerLinkActive #contentTab="routerLinkActive"
         [routerLinkActiveOptions]="{exact: true}"
-        [active]="rla1.isActive">
+        [active]="contentTab.isActive">
         Content
       </a>
       <a mat-tab-link
         [routerLink]="'./progress'"
-        routerLinkActive #rla2="routerLinkActive"
-        [active]="rla2.isActive">
+        routerLinkActive #progressTab="routerLinkActive"
+        [active]="progressTab.isActive">
         <i class="fa fa-chart-line"></i>
         &nbsp;
         Progress
       </a>
     </nav>
     <div class="bg-white">
-      <router-outlet></router-outlet>
+      <alg-item-content *ngIf="contentTab.isActive" [itemData]="itemData"></alg-item-content>
+      <alg-item-progress *ngIf="progressTab.isActive" [itemData]="itemData"></alg-item-progress>
     </div>
 
   </ng-container>

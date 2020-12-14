@@ -15,23 +15,23 @@
       <i class="far fa-bell"></i>
     </span> -->
     <!-- <alg-select [items]="langs"></alg-select> -->
-    <span class="sign-out" *ngIf="currentUser && !currentUser.isTemp" (click)="logout()" tabindex="2">
+    <span class="sign-out" *ngIf="session && !session.user.isTemp" (click)="logout()" tabindex="2">
       <i class="fa fa-sign-out-alt"></i>
     </span>
   </div>
   <div class="overlay-container">
     <alg-button
-      *ngIf="currentUser && currentUser.isTemp"
+      *ngIf="session && session.user.isTemp"
       icon="fa fa-sign-in-alt"
       label="Log in / Sign in"
-      class="ui-button-rounded ui-button-warning ui-fit-parent"
+      class="p-button-rounded p-button-warning p-fit-parent"
       (click)="login()"
     ></alg-button>
     <alg-button
-    *ngIf="currentUser && !currentUser.isTemp"
+    *ngIf="session && !session.user.isTemp"
       icon="fa fa-sign-out-alt"
       label="Log out"
-      class="ui-button-rounded ui-button-warning ui-fit-parent"
+      class="p-button-rounded p-button-warning p-fit-parent"
       (click)="logout()"
     ></alg-button>
   </div>

@@ -1,23 +1,24 @@
-import { Component } from '@angular/core';
-import { GroupDataSource } from '../../services/group-datasource.service';
-import { withManagementAdditions } from '../../helpers/group-management';
-import { map } from 'rxjs/operators';
+import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
+import { ManagementAdditions, withManagementAdditions } from '../../helpers/group-management';
+import { Group } from '../../http-services/get-group-by-id.service';
 
 @Component({
   selector: 'alg-group-administration',
   templateUrl: './group-administration.component.html',
   styleUrls: [ './group-administration.component.scss' ]
 })
-export class GroupAdministrationComponent {
+export class GroupAdministrationComponent implements OnChanges{
 
-  state$ = this.groupDataSource.state$;
-  group$ = this.groupDataSource.group$.pipe(map(withManagementAdditions));
+  @Input() group?: Group;
+  @Output() groupRefreshRequired = new EventEmitter<void>();
+  groupWithPermissions?: Group & ManagementAdditions
 
-  constructor(
-    private groupDataSource: GroupDataSource,
-  ) {}
+  ngOnChanges(): void {
+    this.groupWithPermissions = this.group ? withManagementAdditions(this.group) : undefined;
+  }
 
   refreshGroupInfo(): void {
-    this.groupDataSource.refetchGroup();
+    this.groupRefreshRequired.emit();
   }
+
 }

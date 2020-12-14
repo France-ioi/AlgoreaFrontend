@@ -1,11 +1,12 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
-import { BehaviorSubject, concat, EMPTY, forkJoin, Observable, of, Subject } from 'rxjs';
+import { BehaviorSubject, concat, EMPTY, forkJoin, Observable, of, Subject, Subscription } from 'rxjs';
 import { catchError, filter, map, switchMap } from 'rxjs/operators';
 import { bestAttemptFromResults, implicitResultStart } from 'src/app/shared/helpers/attempts';
-import { isRouteWithAttempt, ItemRoute, incompleteItemUrl } from 'src/app/shared/helpers/item-route';
+import { isRouteWithAttempt, ItemRoute } from 'src/app/shared/helpers/item-route';
 import { errorState, FetchError, Fetching, fetchingState, isReady, Ready, readyState } from 'src/app/shared/helpers/state';
 import { ResultActionsService } from 'src/app/shared/http-services/result-actions.service';
+import { ItemRouter } from 'src/app/shared/services/item-router';
+import { UserSessionService } from 'src/app/shared/services/user-session.service';
 import { BreadcrumbItem, GetBreadcrumbService } from '../http-services/get-breadcrumb.service';
 import { GetItemByIdService, Item } from '../http-services/get-item-by-id.service';
 import { GetResultsService, Result } from '../http-services/get-results.service';
@@ -31,13 +32,15 @@ export class ItemDataSource implements OnDestroy {
   item$ = this.itemData$.pipe(map(s => s.item));
 
   private fetchOperation = new Subject<ItemRoute>(); // trigger item fetching
+  private subscription: Subscription;
 
   constructor(
     private getBreadcrumbService: GetBreadcrumbService,
     private getItemByIdService: GetItemByIdService,
     private resultActionsService: ResultActionsService,
     private getResultsService: GetResultsService,
-    private router: Router,
+    private userSessionService: UserSessionService,
+    private itemRouter: ItemRouter,
   ) {
     this.fetchOperation.pipe(
 
@@ -54,6 +57,8 @@ export class ItemDataSource implements OnDestroy {
       ),
 
     ).subscribe(state => this.state.next(state));
+
+    this.subscription = this.userSessionService.session$.subscribe(_s => this.refreshItem());
   }
 
   fetchItem(item: ItemRoute): void {
@@ -69,6 +74,7 @@ export class ItemDataSource implements OnDestroy {
   ngOnDestroy(): void {
     this.state.complete();
     this.fetchOperation.complete();
+    this.subscription.unsubscribe();
   }
 
   /**
@@ -126,13 +132,12 @@ export class ItemDataSource implements OnDestroy {
 
   private getBreadcrumb(item: ItemRoute): Observable<BreadcrumbItem[]> {
     const service = this.getBreadcrumbService.getBreadcrumb(item);
-    if (!service) return EMPTY; // unexpected as it should verified by the caller of this function
     return service.pipe(
       map(res => {
         if (res === 'forbidden') {
           // clear the route & attempt and retry to visit this item (path/attempt discovery will be called)
           // ideally routing should not be called inside the datasource and maximum number of tries should be allowed
-          void this.router.navigate(incompleteItemUrl(item.id));
+          this.itemRouter.navigateToIncompleteItem(item.id);
           throw new Error('unhandled forbidden');
         } else {
           return res;

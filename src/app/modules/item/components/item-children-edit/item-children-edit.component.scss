@@ -1,0 +1,189 @@
+@import 'src/colors.scss';
+@import 'src/geometry.scss';
+
+:host ::ng-deep .p-datatable {
+
+  .p-datatable-tbody > tr > td.p-editing-cell p-celleditor > * {
+    width: 2.5rem;
+  }
+
+  .p-checkbox {
+    width: 1.0833rem;
+    height: 1.0833rem;
+    .p-checkbox-box {
+      background-color: #E5E5E5;
+      box-shadow: 0 .1rem #BBB inset;
+      width: 1.0833rem;
+      height: 1.0833rem;
+      border: none;
+      position: relative;
+
+      &:hover {
+        background-color: #D0D0D0;
+      }
+
+      &.p-highlight:not(.p-disabled):hover {
+        background-color: #D0D0D0;
+      }
+
+      .p-checkbox-icon {
+        overflow: visible;
+        color: #505050;
+        position: absolute;
+        top: -0.5rem;
+        left: -0.3333rem;
+        font-size: 1.8333rem;
+      }
+    }
+  }
+
+  .p-datatable-tbody > tr {
+    background-color: #EFEFEF;
+    display: flex;
+    border-bottom: $border-filet;
+    margin-bottom: 5px;
+    border-radius: 1rem;
+    height: 3rem;
+  }
+
+  .p-datatable-tbody > tr:last-child {
+    border: none;
+  }
+
+  .p-datatable-tbody > tr:nth-child(even) {
+    background-color: #EFEFEF;
+  }
+
+  .p-datatable-tbody > tr > td {
+    color: $base-text-color;
+    border: none;
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    font-size: 1.2rem;
+
+    p-tableCheckbox {
+      display: flex;
+      align-items: center;
+    }
+
+    .chapter-type-control {
+      display: flex;
+      align-items: center;
+
+      .chapter-type {
+        margin-top: -1px;
+      }
+    }
+
+    &.p-editable-column {
+      display: flex;
+      align-items: center;
+      padding-left: 0.4167rem;
+      padding-right: 0.4167rem;
+
+      input:focus {
+        outline: none;
+      }
+    }
+
+    span.table-icon {
+      margin-right: 1rem;
+      color: $base-color;
+      cursor: pointer;
+
+      &.lock {
+        color: $secondary-color;
+      }
+    }
+
+    &.reorder-handle {
+      cursor: grab;
+    }
+
+    &.main {
+      flex: 1;
+    }
+
+    &.type {
+      color: $base-color;
+    }
+  }
+
+  .p-datatable-tbody > tr.p-highlight {
+    background-color: #EFEFEF;
+  }
+
+  .p-datatable-tbody > tr:nth-child(even).p-highlight {
+    background-color: #EFEFEF;
+  }
+
+  .disabled {
+    cursor: not-allowed;
+
+    > * {
+      color: #bbb;
+      pointer-events: none;
+    }
+  }
+
+  .p-datatable-footer {
+    background-color: transparent;
+    border: none;
+    padding-left: 0.4167rem;
+    padding-right: 0;
+    font-weight: 700;
+
+    .summary-container {
+      display: flex;
+      align-items: center;
+
+      .lock-drag {
+        color: $base-color;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 2rem;
+        height: 2rem;
+        margin-right: 1.43rem;
+        font-size: 1.2rem;
+      }
+
+      .select-all {
+        font-weight: bold;
+        font-size: 1.2rem;
+        flex: 1;
+        text-align: left;
+        margin-left: 2.1rem;
+        color: #9b9b9b;
+        cursor: pointer;
+      }
+
+      .export-tools {
+        display: flex;
+        align-items: center;
+        color: $base-color;
+        font-size: 1.2rem;
+
+        span {
+          margin-right: 1rem;
+          cursor: pointer;
+
+          span {
+            margin-right: 1rem;
+          }
+
+          &:last-child {
+            margin-right: 0;
+          }
+        }
+      }
+
+      p-tableHeaderCheckbox {
+        display: flex;
+        align-items: center;
+      }
+    }
+  }
+}

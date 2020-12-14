@@ -10,30 +10,30 @@ $danger-color: #ff001f;
   align-items: center;
 }
 
-:host ::ng-deep .ui-button {
+:host ::ng-deep .p-button {
   background-color: $base-color;
   border-color: $base-color;
   font-size: 1.2rem;
 
-  &.ui-fit-parent {
+  &.p-fit-parent {
     width: 100%;
   }
 
-  &.ui-button-rounded {
+  &.p-button-rounded {
     border-radius: 1rem;
   }
 
   &.no-uppercase {
-    .ui-button-text {
+    .p-button-label {
       text-transform: unset;
     }
   }
 
-  &.ui-small-button {
+  &.p-small-button {
     font-size: 1rem;
   }
 
-  &.ui-medium-button {
+  &.p-medium-button {
     font-size: 1rem;
   }
 
@@ -49,123 +49,96 @@ $danger-color: #ff001f;
     box-shadow: none;
   }
 
-  .ui-button-text {
+  .p-button-label {
     text-transform: uppercase;
   }
 
-  &.ui-button-text-icon-left {
-    .ui-button-text {
+  &.p-button-icon-left {
+    .p-button-label {
       padding: 0;
       padding-left: 1.5rem;
     }
   }
 
-  &.ui-button-text-icon-right {
-    .ui-button-text {
+  &.p-button-icon-right {
+    .p-button-label {
       padding-right: 1.5rem;
     }
   }
 
-  .ui-button-icon-left {
+  .p-button-icon-left {
     left: 1rem;
   }
 
-  .ui-button-icon-right {
+  .p-button-icon-right {
     right: 1rem;
   }
 
-  &.ui-state-default {
+  &.p-button-secondary {
+    background-color: $secondary-color;
+    border-color: $secondary-color;
+    color: white;
 
-    &.ui-button-secondary {
-      background-color: $secondary-color;
-      border-color: $secondary-color;
+    &:enabled:focus {
+      outline: none;
+      box-shadow: none;
+    }
+  }
+
+  &.p-button-info {
+    background-color: $base-color;
+    border-color: $base-color;
+
+    &:enabled:focus {
+      outline: none;
+      box-shadow: none;
+    }
+  }
+
+  &.p-button-warning {
+    background-color: $warning-color;
+    border-color: $warning-color;
+    color: white;
+
+    &:enabled:hover {
       color: white;
-
-      &:enabled:focus {
-        outline: none;
-        box-shadow: none;
-      }
     }
-
-    &.ui-button-info {
-      background-color: $base-color;
-      border-color: $base-color;
-
-      &:enabled:focus {
-        outline: none;
-        box-shadow: none;
-      }
+    &:enabled:focus {
+      outline: none;
+      box-shadow: none;
     }
+  }
 
-    &.ui-button-warning {
-      background-color: $warning-color;
-      border-color: $warning-color;
-      color: white;
+  &.p-top-rounded {
+    border-radius: 0;
+    border-top-left-radius: 0.6667rem;
+    border-top-right-radius: 0.6667rem;
+  }
 
-      &:enabled:hover {
-        color: white;
-      }
-      &:enabled:focus {
-        outline: none;
-        box-shadow: none;
-      }
-    }
+  &.p-diag-rounded {
+    border-radius: 0;
+    border-top-left-radius: 0.6667rem;
+    border-bottom-right-radius: 0.6667rem;
+  }
 
-    &.ui-button-danger {
-      background-color: $danger-color;
-      border-color: $danger-color;
-
-      &:enabled:focus {
-        outline: none;
-        box-shadow: none;
-      }
-    }
-
-    &.ui-top-rounded {
-      border-radius: 0;
-      border-top-left-radius: 0.6667rem;
-      border-top-right-radius: 0.6667rem;
-    }
-
-    &.ui-diag-rounded {
-      border-radius: 0;
-      border-top-left-radius: 0.6667rem;
-      border-bottom-right-radius: 0.6667rem;
-    }
-
-    &.ui-button-success {
-      background-color: white;
-      border-color: $base-color;
-      color: $base-color;
-
-      &:enabled:hover {
-        background-color: $base-color;
-        border-color: $base-color;
-        color: white;
-      }
-      &:enabled:focus {
-        outline: none;
-        box-shadow: none;
-      }
-    }
+  &.p-button-success {
+    color: #ffffff;
+    background: #90C45F;
+    border: 1px solid #90C45F;
   }
 }
 
 :host ::ng-deep p-button {
   width: 100%;
 
-    .ui-button {
+    .p-button {
       height: 3rem;
       font-weight: 700;
       font-size: inherit;
       padding: 0 1.5rem;
 
-        &.ui-button-rounded {
+        &.p-button-rounded {
           border-radius: 1.5rem;
-        }
-
-        &.ui-state-default.ui-button-success {
-          background-color: transparent;
         }
     }
 }

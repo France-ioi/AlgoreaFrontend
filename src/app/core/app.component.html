@@ -1,8 +1,8 @@
-<div class="container" *ngrxLet="currentUser$ as currentUser">
+<div class="container" *ngrxLet="session$ as session">
   <div class="left" [ngClass]="{ collapsed: collapsed, expanded: !collapsed }">
     <alg-left-nav
       [collapsed]="collapsed"
-      [currentUser]="currentUser"
+      [session]="session"
       (collapse)="onCollapse($event)"
     ></alg-left-nav>
   </div>
@@ -14,17 +14,13 @@
         *ngIf="collapsed"
         [collapsed]="collapsed"
         [folded]="folded"
-        [currentUser]="currentUser"
+        [session]="session"
         (collapse)="onCollapse($event)"
         (fold)="onFold($event)"
         [templateId]="1"
       ></alg-top-nav>
       <div class="top-right-bar" *ngrxLet="currentContent$ as currentContent">
-        <alg-editor-bar
-          *ngIf="editState === 'editing' || editState === 'editing-noaction'"
-          (cancel)="onEditCancel()"
-          (save)="onEditSave()"
-        ></alg-editor-bar>
+        <alg-editor-bar *ngIf="editState === 'editing' || editState === 'editing-noaction'" (cancel)="onEditCancel()"></alg-editor-bar>
         <div class="breadcrumb-bar"
              *ngIf="!folded && !scrolled">
           <alg-breadcrumb [contentBreadcrumb]="currentContent?.breadcrumbs"></alg-breadcrumb>
@@ -33,18 +29,18 @@
             (edit)="onEditPage()"
           ></alg-page-navigator>
           <alg-button
-            *ngIf="collapsed && currentUser && currentUser.isTemp"
+            *ngIf="collapsed && session && session.user.isTemp"
             label="Log in / Sign in"
             icon="pi pi-sign-in"
-            class="ui-button-rounded"
+            class="p-button-rounded"
             style="margin-right: 0.4167rem;"
             (click)="login()"
           ></alg-button>
           <alg-button
-            *ngIf="collapsed && currentUser && !currentUser.isTemp"
+            *ngIf="collapsed && session && !session.user.isTemp"
             label="Log out"
             icon="pi pi-sign-out"
-            class="ui-button-rounded"
+            class="p-button-rounded"
             style="margin-right: 0.4167rem;"
             (click)="logout()"
           ></alg-button>
@@ -86,3 +82,4 @@
   </ng-container>
 </div>
 <p-toast></p-toast>
+<p-confirmDialog></p-confirmDialog>

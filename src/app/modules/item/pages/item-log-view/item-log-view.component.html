@@ -1,5 +1,5 @@
 <p>Log view</p>
-<div [ngSwitch]="logData">
+<div [ngSwitch]="state">
   <p-progressSpinner *ngSwitchCase="'loading'" [style]="{width: '3.3333rem', height: '3.3333rem'}"></p-progressSpinner>
   <p *ngSwitchCase="'error'">Unable to load the recent activity</p>
   <p *ngSwitchDefault>Loaded {{ logData.length }} results</p>

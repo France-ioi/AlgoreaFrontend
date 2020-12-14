@@ -1,18 +1,18 @@
-import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { Component, Output, EventEmitter, Input } from '@angular/core';
 import { AuthService } from 'src/app/shared/auth/auth.service';
-import { UserProfile } from 'src/app/shared/http-services/current-user.service';
+import { UserSession } from 'src/app/shared/services/user-session.service';
 
 @Component({
   selector: 'alg-top-nav',
   templateUrl: './top-nav.component.html',
   styleUrls: [ './top-nav.component.scss' ]
 })
-export class TopNavComponent implements OnInit {
+export class TopNavComponent {
 
   @Input() collapsed = false;
   @Input() templateId = 0;
   @Input() folded = false;
-  @Input() currentUser?: UserProfile;
+  @Input() session?: UserSession;
 
   @Output() collapse = new EventEmitter<boolean>();
   @Output() fold = new EventEmitter<boolean>();
@@ -24,9 +24,6 @@ export class TopNavComponent implements OnInit {
   constructor(
     private authService: AuthService
   ) { }
-
-  ngOnInit(): void {
-  }
 
   onCollapse(): void {
     this.collapsed = !this.collapsed;

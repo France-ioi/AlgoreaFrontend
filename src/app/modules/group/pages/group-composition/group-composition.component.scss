@@ -1,6 +1,6 @@
 @import 'src/colors.scss';
 
-:host ::ng-deep alg-section .ui-table .ui-table-tbody > tr > td {
+:host ::ng-deep alg-section .p-datatable .p-datatable-tbody > tr > td {
   border-right: .1rem solid #f0f0f0;
 
   &:first-child {

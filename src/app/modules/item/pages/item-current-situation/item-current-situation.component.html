@@ -1,4 +1,17 @@
-<alg-section icon="fa fa-list" label="User situation">
-  <div class="selection-center"><alg-selection (change)="onViewChanged($event)" [items]="viewItems" [selected]="viewSelected"></alg-selection></div>
-  <router-outlet></router-outlet>
-</alg-section>
+<ng-container *ngIf="itemData && itemData.item.type === 'Chapter'">
+  <div class="selection-center">
+    <alg-selection (change)="onViewChanged($event)" [items]="viewItems" [selected]="viewSelected"></alg-selection>
+  </div>
+
+  <div>
+    <alg-item-log-view
+      *ngIf="viewItems[viewSelected].value === 'log'"
+      [itemData]="itemData"
+    ></alg-item-log-view>
+
+    <alg-item-chapter-view
+      *ngIf="viewItems[viewSelected].value === 'chapter'"
+      [itemData]="itemData"
+    ></alg-item-chapter-view>
+  </div>
+</ng-container>

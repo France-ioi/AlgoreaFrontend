@@ -1,0 +1,14 @@
+<ng-container *ngIf="session$ | async as session">
+
+  <alg-group-situation-chapter-view
+    *ngIf="session.watchedGroup; else userChapterView"
+    [itemData]="itemData"
+    [group]="session.watchedGroup"
+  >
+  </alg-group-situation-chapter-view>
+
+  <ng-template #userChapterView>
+    <p>Chapter view for user</p>
+  </ng-template>
+
+</ng-container>

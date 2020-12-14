@@ -7,11 +7,13 @@ import { appConfig } from 'src/app/shared/helpers/config';
 export interface Group {
   id: string,
   name: string
+  canWatchMember: boolean
 }
 
-interface ManagedGroup{
+interface RawGroup {
   id: string,
-  name: string
+  name: string,
+  can_watch_members: boolean,
 }
 
 @Injectable({
@@ -23,11 +25,14 @@ export class ManagedGroupsService {
 
   getManagedGroups(): Observable<Group[]> {
     return this.http
-      .get<ManagedGroup[]>(`${appConfig().apiUrl}/current-user/managed-groups`)
+      .get<RawGroup[]>(`${appConfig().apiUrl}/current-user/managed-groups`)
       .pipe(
-        // convert array of ManagedGroup to array of Group (exported type)
-        map(gs =>
-          gs.map(g => ({ id: g.id, name: g.name }))
+        map(groups =>
+          groups.map(g => ({
+            id: g.id,
+            name: g.name,
+            canWatchMember: g.can_watch_members
+          }))
         )
       );
   }

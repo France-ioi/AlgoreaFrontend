@@ -15,6 +15,15 @@ import { ItemLogViewComponent } from './pages/item-log-view/item-log-view.compon
 import { SubSkillsComponent } from './components/sub-skills/sub-skills.component';
 import { ParentSkillsComponent } from './components/parent-skills/parent-skills.component';
 import { ItemEditContentComponent } from './pages/item-edit-content/item-edit-content.component';
+import { ItemChildrenEditComponent } from './components/item-children-edit/item-children-edit.component';
+import { ItemChapterViewComponent } from './components/item-chapter-view/item-chapter-view.component';
+import { GroupSituationChapterViewComponent } from
+  './components/item-chapter-view/group-situation-chapter-view/group-situation-chapter-view.component';
+import { UserProgressComponent } from './components/item-chapter-view/group-situation-chapter-view/user-progress/user-progress.component';
+import { TooltipModule } from 'primeng/tooltip';
+import { PendingChangesGuard } from 'src/app/shared/guards/pending-changes-guard';
+import { CompositionFilterComponent }
+  from './components/item-chapter-view/group-situation-chapter-view/composition-filter/composition-filter.component';
 
 @NgModule({
   declarations: [
@@ -30,6 +39,12 @@ import { ItemEditContentComponent } from './pages/item-edit-content/item-edit-co
     SubSkillsComponent,
     ParentSkillsComponent,
     ItemEditContentComponent,
+    ItemChildrenEditComponent,
+    GroupSituationChapterViewComponent,
+    UserProgressComponent,
+    ItemProgressComponent,
+    ItemChapterViewComponent,
+    CompositionFilterComponent,
   ],
   imports: [
     CommonModule,
@@ -37,6 +52,10 @@ import { ItemEditContentComponent } from './pages/item-edit-content/item-edit-co
     SharedComponentsModule,
     ReactiveFormsModule,
     FormsModule,
+    TooltipModule,
+  ],
+  providers: [
+    PendingChangesGuard,
   ]
 })
 export class ItemModule { }

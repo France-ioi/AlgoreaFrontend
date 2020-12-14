@@ -1,59 +1,59 @@
 @import "src/colors.scss";
 
-:host ::ng-deep .ui-tree {
+:host ::ng-deep .p-tree {
   width: 100%;
   background-color: transparent !important;
   border: none;
   padding: 0;
 }
 
-:host ::ng-deep .ui-tree-container {
+:host ::ng-deep .p-tree-container {
   font-family: "titillium";
   padding: 0 !important;
 }
 
-:host ::ng-deep .ui-tree-toggler {
+:host ::ng-deep .p-tree-toggler {
   display: none !important;
 }
 
-:host ::ng-deep .ui-chkbox {
+:host ::ng-deep .p-checkbox {
   display: none !important;
 }
 
-:host ::ng-deep .ui-treenode-label {
+:host ::ng-deep .p-treenode-label {
   width: 100%;
   color: #9d9d9d !important;
   padding: 0 !important;
 }
 
-:host ::ng-deep .ui-treenode {
+:host ::ng-deep .p-treenode {
   padding: 0 !important;
 }
 
-:host ::ng-deep .ui-treenode-content {
+:host ::ng-deep .p-treenode-content {
   border: none !important;
 }
 
 :host
   ::ng-deep
-  .ui-tree
-  .ui-tree-container
-  .ui-treenode
-  .ui-treenode-content:focus {
+  .p-tree
+  .p-tree-container
+  .p-treenode
+  .p-treenode-content:focus {
   outline: none;
   box-shadow: none;
 }
 
-:host ::ng-deep .ui-treenode-icon {
+:host ::ng-deep .p-treenode-icon {
   margin: 0 !important;
 }
 
-:host ::ng-deep .ui-treenode-children {
+:host ::ng-deep .p-treenode-children {
   border-left: .1rem solid #9b9b9b;
   padding-left: 2.55rem !important;
 }
 
-:host ::ng-deep p-treenode:last-child > .ui-treenode > .ui-treenode-children {
+:host ::ng-deep p-treenode:last-child > .p-treenode > .p-treenode-children {
   border-left: .1rem solid transparent;
   padding-left: 2.5833rem !important;
 }
@@ -61,8 +61,8 @@
 :host
   ::ng-deep
   p-treenode:last-child
-  > .ui-treenode
-  > .ui-treenode-content
+  > .p-treenode
+  > .p-treenode-content
   .node-tree-item
   .node-item-branch
   .bottom-branch {
@@ -72,15 +72,17 @@
 :host
   ::ng-deep
   p-treenode:last-child
-  > .ui-treenode
-  > .ui-treenode-content
+  > .p-treenode
+  > .p-treenode-content
   .node-tree-item
   .node-item-branch
   .top-branch {
   border-bottom-left-radius: 1rem;
 }
 
-:host ::ng-deep .ui-treenode-content {
+:host ::ng-deep .p-treenode-content {
+
+  padding: 0em !important;
 
   &:focus {
     .node-tree-item .node-item-content {
@@ -261,7 +263,7 @@
           // cursor: pointer;
         }
 
-        .edit-icon {
+        .right-icon {
           height: 100%;
           width: 2.5rem;
           display: flex;

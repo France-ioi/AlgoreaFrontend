@@ -7,8 +7,6 @@ import { CurrentContentService } from '../../../../shared/services/current-conte
   styleUrls: [ './joined-groups.component.scss' ]
 })
 export class JoinedGroupsComponent implements OnInit {
-  title = 'Joined Groups'
-  subtitle = 'Joined groups works !'
 
   constructor(private currentContent: CurrentContentService) { }
 
@@ -16,11 +14,11 @@ export class JoinedGroupsComponent implements OnInit {
     this.currentContent.current.next({
       type: 'group',
       breadcrumbs: {
-        category: this.title,
+        category: 'Joined Groups',
         path: [],
         currentPageIdx: -1,
       },
-      title: this.title,
+      title: 'Joined Groups',
     });
   }
 

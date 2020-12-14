@@ -5,12 +5,12 @@
   [scrollable]="scrollWhenExpanded || scrollable"
   [selectionMode]="selectionMode!"
   [selection]="selection!"
-  [responsive]="responsive"
   [dataKey]="dataKey!"
   [frozenWidth]="frozenWidth!"
   [sortMode]="sortMode"
   [multiSortMeta]="multiSortMeta"
   [customSort]="true"
+  [loading]="loading"
   (selectionChange)="onSelectionChange($event)"
   (sortFunction)="sortFunction($event)"
   (onRowSelect)="onRowSelect()"
@@ -45,6 +45,9 @@
   </ng-template>
   <ng-template *ngIf="summaryTemplate" pTemplate="summary">
     <ng-container [ngTemplateOutlet]="summaryTemplate" [ngTemplateOutletContext]="{ $implicit: table }"></ng-container>
+  </ng-template>
+  <ng-template *ngIf="emptymessageTemplate" pTemplate="emptymessage">
+    <ng-container [ngTemplateOutlet]="emptymessageTemplate"></ng-container>
   </ng-template>
 </p-table>
 <span

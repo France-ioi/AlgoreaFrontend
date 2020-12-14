@@ -1,15 +1,4 @@
-import {
-  Component,
-  OnInit,
-  Input,
-  OnChanges,
-  SimpleChanges,
-  ContentChild,
-  ViewChild,
-  Output,
-  EventEmitter,
-  TemplateRef,
-} from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges, ContentChild, ViewChild, Output, EventEmitter, TemplateRef } from '@angular/core';
 import { DomHandler } from 'primeng/dom';
 import { Table, TableService } from 'primeng/table';
 import { SortEvent } from 'primeng/api/sortevent';
@@ -43,7 +32,7 @@ export interface GridColumnGroup {
     },
   ],
 })
-export class GridComponent implements OnInit, OnChanges {
+export class GridComponent implements OnChanges {
 
   @Input() selection?: any[]
 
@@ -63,15 +52,14 @@ export class GridComponent implements OnInit, OnChanges {
   @Input() scrollable = false;
 
   @Input() selectionMode?: string;
-  @Input() responsive = false;
   @Input() dataKey?: string;
   @Input() frozenWidth?: string;
   @Input() showGear = true;
+  @Input() loading = false;
 
   @Output() expandWholeWidth = new EventEmitter<boolean>();
-  @Output() sort = new EventEmitter();
+  @Output() sort = new EventEmitter<SortEvent>();
   @Output() selectionChange = new EventEmitter<any[]>();
-  @Output() headerCheckboxToggle = new EventEmitter();
 
   @ContentChild('colgroupTemplate') colgroupTemplate?: TemplateRef<any>;
   @ContentChild('headerTemplate') headerTemplate?: TemplateRef<any>;
@@ -81,10 +69,11 @@ export class GridComponent implements OnInit, OnChanges {
   @ContentChild('rowExpansionTemplate') rowExpansionTemplate?: TemplateRef<any>;
   @ContentChild('frozenHeaderTemplate') frozenHeaderTemplate?: TemplateRef<any>;
   @ContentChild('frozenBodyTemplate') frozenBodyTemplate?: TemplateRef<any>;
+  @ContentChild('emptymessageTemplate') emptymessageTemplate?: TemplateRef<any>;
 
   showColumnSelection = false;
 
-  selected: {[k: string]: any} = {};
+  selected: {[k: string]: boolean} = {};
   toShow = 0;
   expand = false;
 
@@ -115,8 +104,6 @@ export class GridComponent implements OnInit, OnChanges {
     this.toShow = this.columns.length - selectedCol.length;
   }
 
-  ngOnInit(): void {}
-
   ngOnChanges(_changes: SimpleChanges): void {
     if (this.showGear) {
       this.detectSelected();
@@ -135,7 +122,7 @@ export class GridComponent implements OnInit, OnChanges {
     if (!this.expand) {
       const newSel: GridColumn[] = [];
       for (const col of this.columns) {
-        if (this.selected[col.field] === true) {
+        if (this.selected[col.field]) {
           newSel.push(col);
         }
         this.selected[col.field] = true;
@@ -172,6 +159,10 @@ export class GridComponent implements OnInit, OnChanges {
 
   onHeaderCheckbox(): void {
     this.selectionChange.emit(this.selection);
+  }
+
+  public reset(): void {
+    this.table?.reset();
   }
 
 }

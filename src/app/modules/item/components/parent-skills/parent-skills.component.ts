@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
-import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { itemDetailsUrl } from 'src/app/shared/helpers/item-route';
+import { map } from 'rxjs/operators';
+import { ItemRouter } from 'src/app/shared/services/item-router';
 import { canCurrentUserViewItemContent } from '../../helpers/item-permissions';
 import { GetItemParentsService, ItemParent } from '../../http-services/get-item-parents.service';
 import { ItemData } from '../../services/item-datasource.service';
@@ -18,14 +18,14 @@ interface ParentSkillAdditions {
 export class ParentSkillsComponent implements OnChanges, OnDestroy {
   @Input() itemData?: ItemData;
 
-  state: 'loading' | 'error' | 'empty' | 'ready' = 'loading';
+  state: 'loading' | 'error' | 'ready' = 'loading';
   parents: (ItemParent&ParentSkillAdditions)[] = [];
 
   private subscription?: Subscription;
 
   constructor(
     private getItemParentsService: GetItemParentsService,
-    private router: Router,
+    private itemRouter: ItemRouter,
   ) {}
 
   ngOnChanges(_changes: SimpleChanges): void {
@@ -35,33 +35,28 @@ export class ParentSkillsComponent implements OnChanges, OnDestroy {
   click(parent: ItemParent&ParentSkillAdditions): void {
     if (!this.itemData || parent.isLocked) return;
 
-    void this.router.navigate(itemDetailsUrl({
+    this.itemRouter.navigateTo({
       id: parent.id,
       path: this.itemData.route.path.slice(0, -1),
       attemptId: parent.result.attempt_id,
-    }));
+    });
   }
 
   private reloadData(): void {
     if (this.itemData?.currentResult) {
       this.state = 'loading';
       this.subscription?.unsubscribe();
-      this.subscription = this.getItemParentsService
-        .get(this.itemData.item.id, this.itemData.currentResult.attemptId)
-        .subscribe(
-          parents => {
-            this.parents = parents.map(parent => ({
-              ...parent,
-              isLocked: !canCurrentUserViewItemContent(parent),
-            }));
-
-            if (this.parents.length === 0) this.state = 'empty';
-            else this.state = 'ready';
-          },
-          _err => {
-            this.state = 'error';
-          }
-        );
+      this.subscription = this.getItemParentsService.get(this.itemData.item.id, this.itemData.currentResult.attemptId).pipe(
+        map(parents => parents.map(parent => ({ ...parent, isLocked: !canCurrentUserViewItemContent(parent) })))
+      ).subscribe(
+        parents => {
+          this.parents = parents;
+          this.state = 'ready';
+        },
+        _err => {
+          this.state = 'error';
+        }
+      );
     } else {
       this.state = 'error';
     }
