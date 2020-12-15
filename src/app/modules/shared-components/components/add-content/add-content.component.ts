@@ -49,10 +49,14 @@ export class AddContentComponent implements OnInit, OnDestroy {
     this.subscription?.unsubscribe();
   }
 
-  onFocus(name: 'existingTitle' | 'newTitle'): void {
-    this.focused = name;
-    if (name === 'existingTitle') this.newContentForm.get('newTitle')?.setValue('');
-    else this.newContentForm.get('existingTitle')?.setValue('');
+  onNewFocus(): void {
+    this.focused = 'newTitle';
+    this.newContentForm.get('existingTitle')?.setValue('');
+  }
+
+  onExistingFocus(): void {
+    this.focused = 'existingTitle';
+    this.newContentForm.get('newTitle')?.setValue('');
   }
 
   addNewItem(type: ItemType): void {

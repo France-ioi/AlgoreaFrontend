@@ -3,7 +3,7 @@
     <alg-input
       [parentForm]="newContentForm"
       [hasClearButton]="true"
-      (focus)="onFocus('newTitle')"
+      (focus)="onNewFocus()"
       [ngClass]="{'input-light': focused === 'existingTitle'}"
       name="newTitle"
       placeholder="Enter a title to create a new child"
@@ -17,7 +17,7 @@
     <alg-input
       [parentForm]="newContentForm"
       [hasClearButton]="true"
-      (focus)="onFocus('existingTitle')"
+      (focus)="onExistingFocus()"
       [ngClass]="{'input-light': focused === 'newTitle'}"
       name="existingTitle"
       placeholder="Search for existing content"
