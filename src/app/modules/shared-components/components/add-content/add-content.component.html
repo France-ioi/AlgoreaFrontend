@@ -8,6 +8,10 @@
       [ngClass]="{'input-light': focused === 'existingTitle'}"
       name="newTitle"
       placeholder="Enter a title to create a new child"
+      pTooltip="Enter at least 3 characters"
+      tooltipEvent="focus"
+      tooltipPosition="bottom"
+      [tooltipDisabled]="state === 'opened'"
     >
     </alg-input>
     <span class="label">or</span>
@@ -19,11 +23,13 @@
       [ngClass]="{'input-light': focused === 'newTitle'}"
       name="existingTitle"
       placeholder="Search for existing content"
+      pTooltip="Enter at least 3 characters"
+      tooltipEvent="focus"
+      tooltipPosition="bottom"
+      [tooltipDisabled]="state === 'opened'"
     >
     </alg-input>
   </div>
-
-  <alg-message *ngIf="state === 'closed' && focused !== null" detail="Enter at least 3 characters"></alg-message>
 
   <div *ngIf="state === 'opened' && focused === 'newTitle'" class="new-content-type">
     <div class="new-content-container">
