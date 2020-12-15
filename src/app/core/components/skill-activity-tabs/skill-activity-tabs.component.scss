@@ -80,10 +80,11 @@ $border-radius: .5rem;
         }
 
         &:hover {
-          border: none !important;
-          background-color: #578CCA !important;
+          border: none;
+          background-color: #578CCA;
           a {
             color: white !important;
+            background: none !important;
           }
         }
 
