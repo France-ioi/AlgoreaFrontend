@@ -162,7 +162,7 @@ export class GridComponent implements OnChanges {
   }
 
   public reset(): void {
-    this.table?.reset();
+    this.table?.clear();
   }
 
 }
