@@ -4,7 +4,6 @@
       [parentForm]="newContentForm"
       [hasClearButton]="true"
       (focus)="onFocus('newTitle')"
-      (blur)="onBlur()"
       [ngClass]="{'input-light': focused === 'existingTitle'}"
       name="newTitle"
       placeholder="Enter a title to create a new child"
@@ -19,7 +18,6 @@
       [parentForm]="newContentForm"
       [hasClearButton]="true"
       (focus)="onFocus('existingTitle')"
-      (blur)="onBlur()"
       [ngClass]="{'input-light': focused === 'newTitle'}"
       name="existingTitle"
       placeholder="Search for existing content"
@@ -63,7 +61,7 @@
         <td class="type">{{ rowData.type }}</td>
         <td class="main">{{ currentValue }}</td>
         <td>
-          <alg-button icon="fa fa-plus" label="Add"></alg-button>
+          <alg-button class="p-button-rounded" icon="fa fa-plus" label="Add" ></alg-button>
         </td>
       </tr>
     </ng-template>

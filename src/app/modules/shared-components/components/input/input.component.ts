@@ -30,7 +30,6 @@ export class InputComponent {
 
   @Output() click = new EventEmitter();
   @Output() focus = new EventEmitter<FocusEvent>();
-  @Output() blur = new EventEmitter<FocusEvent>();
 
   constructor() {
   }
