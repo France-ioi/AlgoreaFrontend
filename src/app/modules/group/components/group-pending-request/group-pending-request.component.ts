@@ -14,7 +14,7 @@ import { map, switchMap } from 'rxjs/operators';
 import { fetchingState, isReady, readyState } from 'src/app/shared/helpers/state';
 import { MessageService } from 'primeng/api';
 import { displayResponseToast, processRequestError } from 'src/app/modules/group/helpers/response-toast';
-import { parseResults, processRequests } from 'src/app/modules/shared-components/components/pending-request/request-processing';
+import { parseResults, processRequests } from '../pending-request/request-processing';
 
 const groupColumn = { field: 'group.name', header: 'GROUP' };
 

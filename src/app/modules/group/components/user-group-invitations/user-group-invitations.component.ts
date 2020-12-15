@@ -7,7 +7,7 @@ import { displayResponseToast, processRequestError } from 'src/app/modules/group
 import { fetchingState, readyState, isReady } from 'src/app/shared/helpers/state';
 import { GetRequestsService, PendingRequest } from '../../http-services/get-requests.service';
 import { Action, RequestActionsService } from '../../http-services/request-actions.service';
-import { parseResults, processRequests } from 'src/app/modules/shared-components/components/pending-request/request-processing';
+import { processRequests, parseResults } from '../pending-request/request-processing';
 
 @Component({
   selector: 'alg-user-group-invitations',
