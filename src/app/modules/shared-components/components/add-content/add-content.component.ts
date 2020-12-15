@@ -14,7 +14,7 @@ export class AddContentComponent implements OnInit, OnDestroy {
 
   newContentForm: FormGroup = this.formBuilder.group({ newTitle: '', existingTitle: '' });
 
-  state: 'opened' | 'closed' = 'closed';
+  expanded = false;
   focused: 'existingTitle' | 'newTitle' | null = null;
   currentValue = '';
 
@@ -37,10 +37,10 @@ export class AddContentComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.newContentForm.valueChanges.subscribe((change: {newTitle: string, existingTitle: string}) => {
-      if (change.newTitle.length < 3 && change.existingTitle.length < 3) this.state = 'closed';
+      if (change.newTitle.length < 3 && change.existingTitle.length < 3) this.expanded = false;
       else {
         this.currentValue = change.newTitle.length > 2 ? change.newTitle : change.existingTitle;
-        this.state = 'opened';
+        this.expanded = true;
       }
     });
   }
@@ -60,7 +60,7 @@ export class AddContentComponent implements OnInit, OnDestroy {
   }
 
   addNewItem(type: ItemType): void {
-    if (this.state === 'closed') return;
+    if (!this.expanded) return;
 
     this.contentAdded.emit({
       title: this.currentValue,

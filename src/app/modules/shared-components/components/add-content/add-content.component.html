@@ -10,7 +10,7 @@
       pTooltip="Enter at least 3 characters"
       tooltipEvent="focus"
       tooltipPosition="bottom"
-      [tooltipDisabled]="state === 'opened'"
+      [tooltipDisabled]="expanded"
     >
     </alg-input>
     <span class="label">or</span>
@@ -24,12 +24,12 @@
       pTooltip="Enter at least 3 characters"
       tooltipEvent="focus"
       tooltipPosition="bottom"
-      [tooltipDisabled]="state === 'opened'"
+      [tooltipDisabled]="expanded"
     >
     </alg-input>
   </div>
 
-  <div *ngIf="state === 'opened' && focused === 'newTitle'" class="new-content-type">
+  <div *ngIf="expanded && focused === 'newTitle'" class="new-content-type">
     <div class="new-content-container">
       <div class="content-type-item-container" (click)="addNewItem('Chapter')">
         <div class="item-image-wrapper">
@@ -55,7 +55,7 @@
     </div>
   </div>
 
-  <div *ngIf="state === 'opened' && focused === 'existingTitle'">
+  <div *ngIf="expanded && focused === 'existingTitle'">
     <h3>Select a Content</h3>
     <p-table [value]="test">
       <ng-template pTemplate="body" let-rowData>
