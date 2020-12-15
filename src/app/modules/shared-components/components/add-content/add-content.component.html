@@ -55,16 +55,20 @@
     </div>
   </div>
 
-  <p-table *ngIf="state === 'opened' && focused === 'existingTitle'" [value]="test">
-    <ng-template pTemplate="body" let-rowData>
-      <tr>
-        <td class="type">{{ rowData.type }}</td>
-        <td class="main">{{ currentValue }}</td>
-        <td>
-          <alg-button class="p-button-rounded" icon="fa fa-plus" label="Add" ></alg-button>
-        </td>
-      </tr>
-    </ng-template>
-  </p-table>
+  <div *ngIf="state === 'opened' && focused === 'existingTitle'">
+    <h3>Select a Content</h3>
+    <p-table [value]="test">
+      <ng-template pTemplate="body" let-rowData>
+        <tr style="background-color: #dfe7f4">
+          <td class="type">{{ rowData.type }}</td>
+          <td class="main">{{ currentValue }}</td>
+          <td>
+            <alg-button class="p-small-button p-button-rounded" icon="fa fa-plus" label="Add"></alg-button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+
 
 </alg-sub-section>
