@@ -28,9 +28,9 @@ import { MemberListComponent } from './components/member-list/member-list.compon
 import { GroupCompositionFilterComponent } from './components/group-composition-filter/group-composition-filter.component';
 import { PendingChangesGuard } from 'src/app/shared/guards/pending-changes-guard';
 import { JoinedGroupListComponent } from './components/joined-group-list/joined-group-list.component';
-import { GroupPendingRequestComponent } from './components/group-pending-request/group-pending-request.component';
 import { UserGroupInvitationsComponent } from './components/user-group-invitations/user-group-invitations.component';
 import { PendingRequestComponent } from './components/pending-request/pending-request.component';
+import { PendingJoinRequestsComponent } from './components/pending-join-request/pending-join-request.component';
 
 @NgModule({
   declarations: [
@@ -54,7 +54,7 @@ import { PendingRequestComponent } from './components/pending-request/pending-re
     MemberListComponent,
     GroupCompositionFilterComponent,
     JoinedGroupListComponent,
-    GroupPendingRequestComponent,
+    PendingJoinRequestsComponent,
     UserGroupInvitationsComponent,
     PendingRequestComponent
   ],

@@ -19,11 +19,11 @@ import { parseResults, processRequests } from '../pending-request/request-proces
 const groupColumn = { field: 'group.name', header: 'GROUP' };
 
 @Component({
-  selector: 'alg-group-pending-request',
-  templateUrl: './group-pending-request.component.html',
-  styleUrls: [ './group-pending-request.component.scss' ],
+  selector: 'alg-pending-join-request',
+  templateUrl: './pending-join-request.component.html',
+  styleUrls: [ './pending-join-request.component.scss' ],
 })
-export class GroupPendingRequestComponent implements OnInit, OnChanges, OnDestroy {
+export class PendingJoinRequestsComponent implements OnInit, OnChanges, OnDestroy {
   @Input() groupId?: string;
   @Input() showSwitch = true;
 

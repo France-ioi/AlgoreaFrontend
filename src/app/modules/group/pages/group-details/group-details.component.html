@@ -2,7 +2,7 @@
 
   <ng-container *ngIf="state.tag === 'ready' && (group$ | async) as group">
     <alg-group-header [group]="group"></alg-group-header>
-    <alg-group-pending-request *ngIf="group.isCurrentUserManager" [groupId]="group.id"></alg-group-pending-request>
+    <alg-pending-join-request *ngIf="group.isCurrentUserManager" [groupId]="group.id"></alg-pending-join-request>
     <!-- tabs -- if only the first tab is visible, do not show the tab bar -->
     <nav mat-tab-nav-bar *ngIf="group.isCurrentUserManager">
       <a mat-tab-link
