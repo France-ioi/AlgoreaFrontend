@@ -20,21 +20,12 @@ export class ItemRouter {
   }
 
   /**
-   * Navigate to an item with missing path and attempt
-   */
-  navigateToIncompleteItem(itemId: string): void {
-    void this.router.navigate([ 'items', 'by-id', itemId ]);
-  }
-
-  /**
    * Navigate to the current page without path and attempt if we are on an item page.
    * If we are not on an item page, do nothing.
    */
   navigateToIncompleteItemOfCurrentPage(): void {
     const currentPage = this.currentItemPagePath();
-    if (currentPage && currentPage.length >= 3) {
-      this.navigateToIncompleteItem(currentPage[2]);
-    }
+    if (currentPage) void this.router.navigate(currentPage);
   }
 
 
