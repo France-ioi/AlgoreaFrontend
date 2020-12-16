@@ -52,6 +52,7 @@ import { UserPipe } from 'src/app/shared/pipes/userDisplay';
 import { SubSectionComponent } from './components/sub-section/sub-section.component';
 import { AddContentComponent } from './components/add-content/add-content.component';
 import { FloatingSaveComponent } from './components/floating-save/floating-save.component';
+import { ProgressSectionComponent } from './components/progress-section/progress-section.component';
 
 @NgModule({
   declarations: [
@@ -80,6 +81,7 @@ import { FloatingSaveComponent } from './components/floating-save/floating-save.
     SubSectionComponent,
     AddContentComponent,
     FloatingSaveComponent,
+    ProgressSectionComponent,
   ],
   imports: [
     CommonModule,
@@ -141,6 +143,7 @@ import { FloatingSaveComponent } from './components/floating-save/floating-save.
     SubSectionComponent,
     AddContentComponent,
     FloatingSaveComponent,
+    ProgressSectionComponent,
   ],
   providers: [
     { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: true } }
