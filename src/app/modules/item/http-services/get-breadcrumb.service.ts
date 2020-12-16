@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { isRouteWithAttempt, ItemRoute } from 'src/app/shared/helpers/item-route';
 import { appConfig } from 'src/app/shared/helpers/config';
 
@@ -27,7 +27,7 @@ export class GetBreadcrumbService {
 
   constructor(private http: HttpClient) {}
 
-  getBreadcrumb(itemRoute: ItemRoute): Observable<BreadcrumbItem[]|'forbidden'> {
+  getBreadcrumb(itemRoute: ItemRoute): Observable<BreadcrumbItem[]> {
     return this.http
       .get<RawBreadcrumbItem[]>(`${appConfig().apiUrl}/items/${itemRoute.path.concat([ itemRoute.id ]).join('/')}/breadcrumbs`, {
         params: isRouteWithAttempt(itemRoute) ? { attempt_id: itemRoute.attemptId } : { parent_attempt_id: itemRoute.parentAttemptId }
@@ -53,14 +53,6 @@ export class GetBreadcrumbService {
             route: itemRoute
           }]);
         }),
-        // extract one specific kind of error (403) as this one needs to be handled separately
-        catchError(err => {
-          if (err instanceof HttpErrorResponse && err.status === 403) {
-            return of<'forbidden'>('forbidden');
-          }
-          throw err;
-        })
-
       );
   }
 
