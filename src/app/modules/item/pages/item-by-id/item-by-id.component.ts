@@ -4,12 +4,14 @@ import { of, Subscription } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
 import { defaultAttemptId } from 'src/app/shared/helpers/attempts';
 import { isItemRouteError, itemRouteFromParams } from 'src/app/shared/helpers/item-route';
-import { errorState, FetchError, Fetching, fetchingState, isReady, Ready } from 'src/app/shared/helpers/state';
+import { errorState, FetchError, Fetching, fetchingState, isError, isReady, Ready } from 'src/app/shared/helpers/state';
 import { ResultActionsService } from 'src/app/shared/http-services/result-actions.service';
 import { CurrentContentService, EditAction, isItemInfo, ItemInfo } from 'src/app/shared/services/current-content.service';
 import { ItemRouter } from 'src/app/shared/services/item-router';
+import { breadcrumbServiceTag } from '../../http-services/get-breadcrumb.service';
 import { GetItemPathService } from '../../http-services/get-item-path';
 import { ItemDataSource, ItemData } from '../../services/item-datasource.service';
+import { errorHasTag, errorIsHTTPForbidden } from 'src/app/shared/helpers/errors';
 
 const itemBreadcrumbCat = 'Items';
 
@@ -60,6 +62,10 @@ export class ItemByIdComponent implements OnDestroy {
     this.subscriptions.push(
 
       this.itemDataSource.state$.subscribe(state => {
+        // for invalid paths (for which the breadcrumb service returned a forbidden), redirect to the page without path/attempt
+        if (isError(state) && errorHasTag(state.error, breadcrumbServiceTag) && errorIsHTTPForbidden(state.error)) {
+          this.itemRouter.navigateToIncompleteItemOfCurrentPage();
+        }
         this.state = state;
       }),
 

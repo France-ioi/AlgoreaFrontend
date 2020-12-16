@@ -1,9 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { isRouteWithAttempt, ItemRoute } from 'src/app/shared/helpers/item-route';
 import { appConfig } from 'src/app/shared/helpers/config';
+import { tagError } from 'src/app/shared/helpers/errors';
+
+export const breadcrumbServiceTag = 'breadcrumbservice';
 
 interface RawBreadcrumbItem {
   item_id: string,
@@ -53,6 +56,9 @@ export class GetBreadcrumbService {
             route: itemRoute
           }]);
         }),
+        catchError(err => {
+          throw tagError(err, breadcrumbServiceTag);
+        })
       );
   }
 
