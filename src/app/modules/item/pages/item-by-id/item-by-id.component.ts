@@ -3,8 +3,8 @@ import { ActivatedRoute, UrlTree } from '@angular/router';
 import { of, Subscription } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
 import { defaultAttemptId } from 'src/app/shared/helpers/attempts';
-import { appDefaultItemRoute, isItemRouteError, itemRouteFromParams } from 'src/app/shared/helpers/item-route';
-import { FetchError, Fetching, isReady, Ready } from 'src/app/shared/helpers/state';
+import { isItemRouteError, itemRouteFromParams } from 'src/app/shared/helpers/item-route';
+import { errorState, FetchError, Fetching, fetchingState, isReady, Ready } from 'src/app/shared/helpers/state';
 import { ResultActionsService } from 'src/app/shared/http-services/result-actions.service';
 import { CurrentContentService, EditAction, isItemInfo, ItemInfo } from 'src/app/shared/services/current-content.service';
 import { ItemRouter } from 'src/app/shared/services/item-router';
@@ -24,6 +24,9 @@ const itemBreadcrumbCat = 'Items';
 })
 export class ItemByIdComponent implements OnDestroy {
 
+  // datasource state re-used with fetching/error states of route resolution
+  state: Ready<ItemData>|Fetching|FetchError = fetchingState();
+
   private subscriptions: Subscription[] = []; // subscriptions to be freed up on destroy
 
   constructor(
@@ -40,6 +43,7 @@ export class ItemByIdComponent implements OnDestroy {
       const item = itemRouteFromParams(params);
       if (isItemRouteError(item)) {
         // the case where id is missing is not handled as it is unexpected as this component would not be routed
+        this.state = fetchingState();
         if (item.id) this.solveMissingPathAttempt(item.id, item.path);
         return;
       }
@@ -54,6 +58,11 @@ export class ItemByIdComponent implements OnDestroy {
     });
 
     this.subscriptions.push(
+
+      this.itemDataSource.state$.subscribe(state => {
+        this.state = state;
+      }),
+
       // on state change, update current content page info (for breadcrumb)
       this.itemDataSource.state$.pipe(
         filter<Ready<ItemData>|Fetching|FetchError,Ready<ItemData>>(isReady),
@@ -117,7 +126,9 @@ export class ItemByIdComponent implements OnDestroy {
       })
     ).subscribe(
       itemRoute => this.itemRouter.navigateTo(itemRoute),
-      _err => this.itemRouter.navigateTo(appDefaultItemRoute())
+      err => {
+        this.state = errorState(err);
+      }
     );
   }
 

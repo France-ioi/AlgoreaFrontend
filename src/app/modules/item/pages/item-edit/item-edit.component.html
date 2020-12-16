@@ -1,9 +1,5 @@
 <ng-container *ngIf="itemLoadingState$ | async as state">
 
-  <p-progressSpinner *ngIf="state.tag === 'fetching'"></p-progressSpinner>
-
-  <p *ngIf="state.tag === 'error'">Error while loading the item</p>
-
   <div *ngIf="state.tag === 'ready' && (itemData$ | async) as itemData" style="margin: 1rem 0 0.5rem 0">
     <form [formGroup]="itemForm" *ngIf="['all','all_with_grant'].includes(itemData.item.permissions.can_edit); else notAuthorized">
 
