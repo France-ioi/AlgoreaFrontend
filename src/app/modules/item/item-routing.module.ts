@@ -11,6 +11,7 @@ import { ItemEditComponent } from './pages/item-edit/item-edit.component';
       path: 'by-id/:id',
       component: ItemByIdComponent,
       children: [
+        { path: '', redirectTo: 'details', pathMatch: 'full' },
         {
           path: 'details',
           component: ItemDetailsComponent,
