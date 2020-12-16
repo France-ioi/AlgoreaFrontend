@@ -25,6 +25,7 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
   itemForm = this.formBuilder.group({
     // eslint-disable-next-line @typescript-eslint/unbound-method
     title: [ '', [ Validators.required, Validators.minLength(3), Validators.maxLength(200) ] ],
+    subtitle: [ '', Validators.maxLength(200) ],
     description: '',
   });
   itemChanges: { children?: ChildData[] } = {};
@@ -127,12 +128,14 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
   // Item string changes
   private getItemStringChanges(): ItemStringChanges | undefined {
     const title = this.itemForm.get('title');
+    const subtitle = this.itemForm.get('subtitle');
     const description = this.itemForm.get('description');
 
-    if (title === null || description === null) return undefined;
+    if (title === null || description === null || subtitle === null) return undefined;
 
     return {
       title: (title.value as string).trim(),
+      subtitle: (subtitle.value as string).trim() || null,
       description: (description.value as string).trim() || null,
     };
   }
@@ -176,6 +179,7 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
     this.itemForm.reset({
       title: item.string.title || '',
       description: item.string.description || '',
+      subtitle: item.string.subtitle || '',
     });
     this.itemChanges = {};
     this.itemForm.enable();

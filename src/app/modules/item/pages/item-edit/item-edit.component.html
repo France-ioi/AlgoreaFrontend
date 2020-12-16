@@ -8,7 +8,8 @@
     <form [formGroup]="itemForm" *ngIf="['all','all_with_grant'].includes(itemData.item.permissions.can_edit); else notAuthorized">
 
       <div class="header">
-        <alg-input [parentForm]="itemForm" name="title" size="large" [isDark]='false'></alg-input>
+        <alg-input [parentForm]="itemForm" placeholder="Item title" name="title" size="large" [isDark]='false'></alg-input>
+        <alg-input [parentForm]="itemForm" placeholder="Item subtitle" name="subtitle" size="small" [isDark]='false'></alg-input>
       </div>
 
       <nav mat-tab-nav-bar>
