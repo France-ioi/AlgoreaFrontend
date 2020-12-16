@@ -28,6 +28,8 @@ export class ItemByIdComponent implements OnDestroy {
 
   // datasource state re-used with fetching/error states of route resolution
   state: Ready<ItemData>|Fetching|FetchError = fetchingState();
+  // to prevent looping indefinitely in case of bug in services (wrong path > item without path > fetch path > item with path > wrong path)
+  hasRedirected = false;
 
   private subscriptions: Subscription[] = []; // subscriptions to be freed up on destroy
 
@@ -62,11 +64,14 @@ export class ItemByIdComponent implements OnDestroy {
     this.subscriptions.push(
 
       this.itemDataSource.state$.subscribe(state => {
+        this.state = state;
         // for invalid paths (for which the breadcrumb service returned a forbidden), redirect to the page without path/attempt
         if (isError(state) && errorHasTag(state.error, breadcrumbServiceTag) && errorIsHTTPForbidden(state.error)) {
+          if (this.hasRedirected) throw new Error('Too many redirections (unexpected)');
+          this.hasRedirected = true;
           this.itemRouter.navigateToIncompleteItemOfCurrentPage();
         }
-        this.state = state;
+        if (isReady(state)) this.hasRedirected = false;
       }),
 
       // on state change, update current content page info (for breadcrumb)
