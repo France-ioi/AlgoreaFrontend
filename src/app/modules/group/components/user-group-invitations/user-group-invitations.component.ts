@@ -10,7 +10,6 @@ import {
 import { fetchingState, readyState, isReady } from 'src/app/shared/helpers/state';
 import { GetRequestsService, PendingRequest } from '../../http-services/get-requests.service';
 import { Action, parseResults, RequestActionsService } from '../../http-services/request-actions.service';
-import { processRequests } from '../pending-request/request-processing';
 
 @Component({
   selector: 'alg-user-group-invitations',
@@ -67,11 +66,7 @@ export class UserGroupInvitationsComponent implements OnDestroy, OnInit {
 
   onProcessRequests(params: { data: PendingRequest[], type: Action }): void {
     this.state = 'processing';
-    processRequests(
-      (groupId: string, _memberIds: string[], action: Action) => this.requestActionService.processGroupInvitation(groupId, action),
-      params.type,
-      params.data
-    )
+    this.requestActionService.processGroupInvitations(params.data.map(r => r.group.id), params.type)
       .subscribe(
         result => {
           this.state = 'ready';

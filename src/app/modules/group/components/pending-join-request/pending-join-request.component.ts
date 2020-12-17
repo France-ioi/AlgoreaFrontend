@@ -16,7 +16,6 @@ import {
   displayResponseToast,
   processRequestError
 } from 'src/app/modules/group/components/pending-request/pending-request-response-handling';
-import { processRequests } from '../pending-request/request-processing';
 
 const groupColumn = { field: 'group.name', header: 'GROUP' };
 
@@ -83,13 +82,21 @@ export class PendingJoinRequestsComponent implements OnChanges, OnDestroy {
     this.dataFetching.complete();
   }
 
+
   onProcessRequests(params: { data: PendingRequest[], type: Action }): void {
     this.state = 'processing';
-    processRequests(
-      (groupId: string, memberIds: string[], action: Action) => this.requestActionService.processJoinRequest(groupId, memberIds, action),
-      params.type,
-      params.data
-    )
+
+    const requestMap = new Map<string, string[]>();
+    params.data.forEach(elm => {
+      const groupID = elm.group.id;
+      const memberID = elm.user.id;
+
+      const value = requestMap.get(groupID);
+      if (value) requestMap.set(groupID, value.concat([ memberID ]));
+      else requestMap.set(groupID, [ memberID ]);
+    });
+
+    this.requestActionService.processJoinRequests(requestMap, params.type)
       .subscribe(
         result => {
           this.state = 'ready';
