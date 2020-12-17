@@ -6,8 +6,8 @@ import { GridColumn } from 'src/app/modules/shared-components/components/grid/gr
 import { displayResponseToast, processRequestError } from 'src/app/modules/group/helpers/response-toast';
 import { fetchingState, readyState, isReady } from 'src/app/shared/helpers/state';
 import { GetRequestsService, PendingRequest } from '../../http-services/get-requests.service';
-import { Action, RequestActionsService } from '../../http-services/request-actions.service';
-import { processRequests, parseResults } from '../pending-request/request-processing';
+import { Action, parseResults, RequestActionsService } from '../../http-services/request-actions.service';
+import { processRequests } from '../pending-request/request-processing';
 
 @Component({
   selector: 'alg-user-group-invitations',

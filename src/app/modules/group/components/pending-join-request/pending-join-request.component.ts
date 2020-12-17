@@ -6,14 +6,14 @@ import {
   OnDestroy,
 } from '@angular/core';
 import { GetRequestsService, PendingRequest } from '../../http-services/get-requests.service';
-import { Action, RequestActionsService } from '../../http-services/request-actions.service';
+import { Action, parseResults, RequestActionsService } from '../../http-services/request-actions.service';
 import { GridColumn } from '../../../shared-components/components/grid/grid.component';
 import { merge, of, Subject } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { fetchingState, isReady, readyState } from 'src/app/shared/helpers/state';
 import { MessageService } from 'primeng/api';
 import { displayResponseToast, processRequestError } from 'src/app/modules/group/helpers/response-toast';
-import { parseResults, processRequests } from '../pending-request/request-processing';
+import { processRequests } from '../pending-request/request-processing';
 
 const groupColumn = { field: 'group.name', header: 'GROUP' };
 

@@ -1,18 +1,6 @@
 import { Observable, forkJoin } from 'rxjs';
-import { Result } from 'src/app/modules/group/helpers/response-toast';
 import { PendingRequest } from 'src/app/modules/group/http-services/get-requests.service';
 import { Action } from 'src/app/modules/group/http-services/request-actions.service';
-
-export function parseResults(data: Map<string, any>[]): Result {
-  const res : Result = { countRequests: 0, countSuccess: 0 };
-  data.forEach(elm => {
-    res.countRequests += elm.size;
-    res.countSuccess += Array.from(elm.values())
-      .map<number>(state => ([ 'success', 'unchanged' ].includes(state) ? 1 : 0))
-      .reduce((acc, res) => acc + res, 0);
-  });
-  return res;
-}
 
 export function processRequests(
   processRequestsFunc: (groupId: string, memberIds: string[], action: Action) => Observable<Map<string, any>>,
