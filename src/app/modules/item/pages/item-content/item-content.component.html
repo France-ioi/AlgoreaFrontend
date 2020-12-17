@@ -7,6 +7,13 @@
 
     <alg-chapter-children [itemData]="itemData" *ngIf="itemData.item.type === 'Chapter'"></alg-chapter-children>
 
+    <alg-boolean-section
+      title="Is owner"
+      icon="fa fa-user-tie"
+      description="The level of visibility the group has on the item"
+      label="User(s) own this item, and get the maximum access in all categories above, and may also delete this item"
+    ></alg-boolean-section>
+
     <alg-sub-skills [itemData]="itemData" *ngIf="itemData.item.type === 'Skill'"></alg-sub-skills>
     <alg-parent-skills [itemData]="itemData" *ngIf="itemData.item.type === 'Skill'"></alg-parent-skills>
   </ng-container>
