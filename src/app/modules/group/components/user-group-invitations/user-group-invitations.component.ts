@@ -3,7 +3,10 @@ import { MessageService } from 'primeng/api';
 import { merge, of, Subject } from 'rxjs';
 import { switchMap, map } from 'rxjs/operators';
 import { GridColumn } from 'src/app/modules/shared-components/components/grid/grid.component';
-import { displayResponseToast, processRequestError } from 'src/app/modules/group/helpers/response-toast';
+import {
+  displayResponseToast,
+  processRequestError
+} from 'src/app/modules/group/components/pending-request/pending-request-response-handling';
 import { fetchingState, readyState, isReady } from 'src/app/shared/helpers/state';
 import { GetRequestsService, PendingRequest } from '../../http-services/get-requests.service';
 import { Action, parseResults, RequestActionsService } from '../../http-services/request-actions.service';
@@ -72,14 +75,7 @@ export class UserGroupInvitationsComponent implements OnDestroy, OnInit {
       .subscribe(
         result => {
           this.state = 'ready';
-
-          displayResponseToast(
-            this.messageService,
-            parseResults(result),
-            params.type === Action.Accept ? 'accept' : 'reject',
-            params.type === Action.Accept ? 'accepted' : 'declined'
-          );
-
+          displayResponseToast(this.messageService, parseResults(result), params.type);
           this.dataFetching.next({ sort: this.currentSort });
         },
         _err => {

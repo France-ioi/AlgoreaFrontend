@@ -12,7 +12,10 @@ import { merge, of, Subject } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { fetchingState, isReady, readyState } from 'src/app/shared/helpers/state';
 import { MessageService } from 'primeng/api';
-import { displayResponseToast, processRequestError } from 'src/app/modules/group/helpers/response-toast';
+import {
+  displayResponseToast,
+  processRequestError
+} from 'src/app/modules/group/components/pending-request/pending-request-response-handling';
 import { processRequests } from '../pending-request/request-processing';
 
 const groupColumn = { field: 'group.name', header: 'GROUP' };
@@ -90,14 +93,7 @@ export class PendingJoinRequestsComponent implements OnChanges, OnDestroy {
       .subscribe(
         result => {
           this.state = 'ready';
-
-          displayResponseToast(
-            this.messageService,
-            parseResults(result),
-            params.type === Action.Accept ? 'accept' : 'reject',
-            params.type === Action.Accept ? 'accepted' : 'declined'
-          );
-
+          displayResponseToast(this.messageService, parseResults(result), params.type);
           this.dataFetching.next({ groupId: this.groupId, includeSubgroup: this.includeSubgroup, sort: this.currentSort });
         },
         _err => {

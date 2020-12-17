@@ -4,7 +4,7 @@ import { ActionResponse, successData, objectToMap } from 'src/app/shared/http-se
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { appConfig } from 'src/app/shared/helpers/config';
-import { Result } from '../helpers/response-toast';
+import { Result } from '../components/pending-request/pending-request-response-handling';
 
 export enum Action {
   Accept,
