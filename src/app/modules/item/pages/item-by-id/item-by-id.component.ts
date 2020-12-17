@@ -100,6 +100,7 @@ export class ItemByIdComponent implements OnDestroy {
             this.hasRedirected = true;
             this.itemRouter.navigateToIncompleteItemOfCurrentPage();
           }
+          this.currentContent.current.next(null);
         }
       }),
 
