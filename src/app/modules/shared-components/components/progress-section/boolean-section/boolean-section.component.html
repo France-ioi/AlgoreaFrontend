@@ -1,0 +1,38 @@
+<div class="progress-section-container">
+  <div class="progress-section-header" [ngClass]="{disabled: disabled}" (click)="onCollapse()">
+    <span class="header-icon">
+      <i class="{{ icon }}"></i>
+    </span>
+    <span class="header-title">{{ title }}</span>
+    <div *ngIf="collapsed">
+      <span *ngIf="!value">No</span>
+      <span *ngIf="value">Yes</span>
+    </div>
+    <span class="toggle-expand">
+      <i *ngIf="collapsed" class="fa fa-caret-down"></i>
+      <i *ngIf="!collapsed" class="fa fa-caret-up"></i>
+    </span>
+  </div>
+  <div *ngIf="!collapsed" class="progress-section-body">
+    <div class="progress-section-item">
+      <div class="progress-control"></div>
+      <div class="progress-desc header-comment">
+        {{ description }}
+      </div>
+    </div>
+    <div class="progress-section-item">
+      <div class="progress-control">
+        <alg-switch
+          [checked]="value"
+          (change)="onSwitchChange($event)"
+          mode="circular"
+        ></alg-switch>
+      </div>
+      <div class="progress-desc">
+        <div class="progress-desc-name" [ngClass]="{ active: value }" (click)="onSwitchChange(!value)">
+          {{ label }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
