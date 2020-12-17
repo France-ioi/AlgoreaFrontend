@@ -45,9 +45,8 @@ $circular: 1.2rem;
       border-radius: 9rem;
       height: $handler-height;
       bottom: .1rem;
-      left: 0;
       position: absolute;
-      top: .1rem;
+      left: 0rem;
       box-shadow: 0 0.1rem #727272;
     }
   }
@@ -63,31 +62,31 @@ $circular: 1.2rem;
 
 :host ::ng-deep .white .p-inputswitch {
   width: 5rem;
-  height: 1.5rem;
+  height: 1.2rem;
 
   @include custom-switch($dark-transparency-color, #DADADA, $dark-base-color, 5rem, 2.5rem, 1.2rem);
 }
 
 
 :host ::ng-deep .dark .p-inputswitch {
-  width: 4.1667rem;
-  height: 1.5rem;
+  width: 5rem;
+  height: 1rem;
 
   @include custom-switch(#464646, #3F3F3F, #31649E, 5rem, 2rem, 1rem);
 }
 
 :host ::ng-deep .circular .p-inputswitch {
-  width: 2.5rem;
-  height: 1.5rem;
+  width: 2.4rem;
+  height: 1.2rem;
 
   @include custom-switch($dark-transparency-color, #DADADA, $dark-base-color, 2.5rem, $circular, $circular);
 }
 
 :host ::ng-deep .dark-circular .p-inputswitch {
-  width: 2.5rem;
-  height: 1.25rem;
+  width: 2.4rem;
+  height: 1.2rem;
 
-  @include custom-switch(#2C5687, #152A43, $dark-base-color, 2.5rem, 1.5rem, 1.5rem);
+  @include custom-switch(#2C5687, #152A43, $dark-base-color, 2.5rem, $circular, $circular);
 
   .p-inputswitch-slider {
     &::before {
