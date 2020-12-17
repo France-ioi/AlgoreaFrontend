@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { merge, of, Subject } from 'rxjs';
 import { switchMap, map } from 'rxjs/operators';
@@ -14,10 +14,10 @@ import { processRequests, parseResults } from '../pending-request/request-proces
   templateUrl: './user-group-invitations.component.html',
   styleUrls: [ './user-group-invitations.component.scss' ]
 })
-export class UserGroupInvitationsComponent implements OnDestroy {
+export class UserGroupInvitationsComponent implements OnDestroy, OnInit {
   requests: PendingRequest[] = [];
 
-  columns: GridColumn[] = [
+  readonly columns: GridColumn[] = [
     { field: 'group.name', header: 'TITLE' },
     { field: 'group.type', header: 'TYPE' },
     { field: 'at', header: 'REQUESTED ON' },
@@ -54,11 +54,16 @@ export class UserGroupInvitationsComponent implements OnDestroy {
     );
   }
 
+  ngOnInit(): void {
+    this.dataFetching.next({ sort: this.currentSort });
+  }
+
   ngOnDestroy(): void {
     this.dataFetching.complete();
   }
 
   onProcessRequests(params: { data: PendingRequest[], type: Action }): void {
+    this.state = 'processing';
     processRequests(
       (groupId: string, _memberIds: string[], action: Action) => this.requestActionService.processGroupInvitation(groupId, action),
       params.type,
@@ -75,6 +80,7 @@ export class UserGroupInvitationsComponent implements OnDestroy {
             params.type === Action.Accept ? 'accepted' : 'declined'
           );
 
+          this.dataFetching.next({ sort: this.currentSort });
         },
         _err => {
           this.state = 'ready';

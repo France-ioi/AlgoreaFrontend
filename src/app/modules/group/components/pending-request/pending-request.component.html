@@ -95,13 +95,11 @@
             </span>
             <span class="filler"></span>
             <div class="req-tools">
-              <span class="accept" [ngClass]="{disabled: selection.length === 0}" (click)="onAccept()">
+              <span class="accept" [ngClass]="{disabled: selection.length === 0 || this.state !== 'ready'}" (click)="onAccept()">
                 <span>Accept</span>
-                <i class="fa fa-check" *ngIf="state !== 'processing'; else loading"></i>
               </span>
-              <span class="reject" [ngClass]="{disabled: selection.length === 0}" (click)="onReject()">
+              <span class="reject" [ngClass]="{disabled: selection.length === 0 || this.state !== 'ready'}" (click)="onReject()">
                 <span>Reject</span>
-                <i class="fa fa-times" *ngIf="state !== 'processing'; else loading"></i>
               </span>
             </div>
           </div>

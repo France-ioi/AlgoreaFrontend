@@ -21,7 +21,7 @@ export class PendingRequestComponent<T> implements OnInit, OnChanges {
   @Input() requests: T[] = [];
   @Input() state: 'fetching' | 'processing' | 'ready' | 'fetchingError' = 'fetching';
 
-  @Output() refetch = new EventEmitter<string[]>();
+  @Output() sort = new EventEmitter<string[]>();
   @Output() processRequests = new EventEmitter<{ data: T[], type: Action }>();
 
   @ContentChild('sectionHeaderTemplate') sectionHeaderTemplate?: TemplateRef<any>;
@@ -52,7 +52,6 @@ export class PendingRequestComponent<T> implements OnInit, OnChanges {
     if (this.selection.length === 0 || this.state !== 'ready') {
       return;
     }
-    this.state = 'processing';
     this.processRequests.emit({ data: this.selection, type: action });
     this.selection = [];
   }
@@ -67,6 +66,6 @@ export class PendingRequestComponent<T> implements OnInit, OnChanges {
 
   onCustomSort(event: SortEvent): void {
     const sortMeta = event.multiSortMeta?.map(meta => (meta.order === -1 ? `-${meta.field}` : meta.field));
-    if (sortMeta) this.refetch.emit(sortMeta);
+    if (sortMeta) this.sort.emit(sortMeta);
   }
 }

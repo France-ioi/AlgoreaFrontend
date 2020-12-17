@@ -1,6 +1,5 @@
 import {
   Component,
-  OnInit,
   Input,
   OnChanges,
   SimpleChanges,
@@ -23,7 +22,9 @@ const groupColumn = { field: 'group.name', header: 'GROUP' };
   templateUrl: './pending-join-request.component.html',
   styleUrls: [ './pending-join-request.component.scss' ],
 })
-export class PendingJoinRequestsComponent implements OnInit, OnChanges, OnDestroy {
+export class PendingJoinRequestsComponent implements OnChanges, OnDestroy {
+
+  // if groupId is undefined, pending join requests from all managed group will be used.
   @Input() groupId?: string;
   @Input() showSwitch = true;
 
@@ -33,7 +34,7 @@ export class PendingJoinRequestsComponent implements OnInit, OnChanges, OnDestro
     { field: 'user.login', header: 'USER' },
     { field: 'at', header: 'REQUESTED ON' },
   ];
-  subgroupSwitchItems = [
+  readonly subgroupSwitchItems = [
     { label: 'This group only', includeSubgroup: false },
     { label: 'All subgroups', includeSubgroup: true }
   ];
@@ -70,11 +71,8 @@ export class PendingJoinRequestsComponent implements OnInit, OnChanges, OnDestro
     );
   }
 
-  ngOnInit(): void {
-    if (!this.showSwitch) this.columns = [ groupColumn ].concat(this.columns);
-  }
-
   ngOnChanges(_changes: SimpleChanges): void {
+    if (!this.showSwitch) this.columns = [ groupColumn ].concat(this.columns);
     this.dataFetching.next({ groupId: this.groupId, includeSubgroup: this.includeSubgroup, sort: this.currentSort });
   }
 
@@ -83,6 +81,7 @@ export class PendingJoinRequestsComponent implements OnInit, OnChanges, OnDestro
   }
 
   onProcessRequests(params: { data: PendingRequest[], type: Action }): void {
+    this.state = 'processing';
     processRequests(
       (groupId: string, memberIds: string[], action: Action) => this.requestActionService.processJoinRequest(groupId, memberIds, action),
       params.type,
@@ -99,6 +98,7 @@ export class PendingJoinRequestsComponent implements OnInit, OnChanges, OnDestro
             params.type === Action.Accept ? 'accepted' : 'declined'
           );
 
+          this.dataFetching.next({ groupId: this.groupId, includeSubgroup: this.includeSubgroup, sort: this.currentSort });
         },
         _err => {
           this.state = 'ready';
