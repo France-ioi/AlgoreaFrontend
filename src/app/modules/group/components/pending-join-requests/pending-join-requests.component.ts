@@ -20,9 +20,9 @@ import {
 const groupColumn = { field: 'group.name', header: 'GROUP' };
 
 @Component({
-  selector: 'alg-pending-join-request',
-  templateUrl: './pending-join-request.component.html',
-  styleUrls: [ './pending-join-request.component.scss' ],
+  selector: 'alg-pending-join-requests',
+  templateUrl: './pending-join-requests.component.html',
+  styleUrls: [ './pending-join-requests.component.scss' ],
 })
 export class PendingJoinRequestsComponent implements OnChanges, OnDestroy {
 

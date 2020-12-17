@@ -30,7 +30,7 @@ import { PendingChangesGuard } from 'src/app/shared/guards/pending-changes-guard
 import { JoinedGroupListComponent } from './components/joined-group-list/joined-group-list.component';
 import { UserGroupInvitationsComponent } from './components/user-group-invitations/user-group-invitations.component';
 import { PendingRequestComponent } from './components/pending-request/pending-request.component';
-import { PendingJoinRequestsComponent } from './components/pending-join-request/pending-join-request.component';
+import { PendingJoinRequestsComponent } from './components/pending-join-requests/pending-join-requests.component';
 
 @NgModule({
   declarations: [
