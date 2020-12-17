@@ -63,45 +63,45 @@ export class ItemByIdComponent implements OnDestroy {
 
     this.subscriptions.push(
 
+      // on datasource state change, update current state and current content page info
       this.itemDataSource.state$.subscribe(state => {
         this.state = state;
-        // for invalid paths (for which the breadcrumb service returned a forbidden), redirect to the page without path/attempt
-        if (isError(state) && errorHasTag(state.error, breadcrumbServiceTag) && errorIsHTTPForbidden(state.error)) {
-          if (this.hasRedirected) throw new Error('Too many redirections (unexpected)');
-          this.hasRedirected = true;
-          this.itemRouter.navigateToIncompleteItemOfCurrentPage();
-        }
-        if (isReady(state)) this.hasRedirected = false;
-      }),
 
-      // on state change, update current content page info (for breadcrumb)
-      this.itemDataSource.state$.pipe(
-        filter<Ready<ItemData>|Fetching|FetchError,Ready<ItemData>>(isReady),
-        map((state): ItemInfo => ({
-          type: 'item',
-          breadcrumbs: {
-            category: itemBreadcrumbCat,
-            path: state.data.breadcrumbs.map(el => ({
-              title: el.title,
-              hintNumber: el.attemptCnt,
-              navigateTo: ():UrlTree => itemRouter.url(el.route),
-            })),
-            currentPageIdx: state.data.breadcrumbs.length - 1,
-          },
-          title: state.data.item.string.title === null ? undefined : state.data.item.string.title,
-          data: {
-            route: state.data.route,
-            details: {
-              title: state.data.item.string.title,
-              type: state.data.item.type,
-              attemptId: state.data.currentResult?.attemptId,
-              bestScore: state.data.item.best_score,
-              currentScore: state.data.currentResult?.score,
-              validated: state.data.currentResult?.validated,
-            }
-          },
-        }))
-      ).subscribe(p => this.currentContent.current.next(p)),
+        if (isReady(state)) {
+          this.hasRedirected = false;
+          this.currentContent.current.next({
+            type: 'item',
+            breadcrumbs: {
+              category: itemBreadcrumbCat,
+              path: state.data.breadcrumbs.map(el => ({
+                title: el.title,
+                hintNumber: el.attemptCnt,
+                navigateTo: ():UrlTree => itemRouter.url(el.route),
+              })),
+              currentPageIdx: state.data.breadcrumbs.length - 1,
+            },
+            title: state.data.item.string.title === null ? undefined : state.data.item.string.title,
+            data: {
+              route: state.data.route,
+              details: {
+                title: state.data.item.string.title,
+                type: state.data.item.type,
+                attemptId: state.data.currentResult?.attemptId,
+                bestScore: state.data.item.best_score,
+                currentScore: state.data.currentResult?.score,
+                validated: state.data.currentResult?.validated,
+              }
+            },
+          });
+
+        } else if (isError(state)) {
+          if (errorHasTag(state.error, breadcrumbServiceTag) && errorIsHTTPForbidden(state.error)) {
+            if (this.hasRedirected) throw new Error('Too many redirections (unexpected)');
+            this.hasRedirected = true;
+            this.itemRouter.navigateToIncompleteItemOfCurrentPage();
+          }
+        }
+      }),
 
       this.currentContent.editAction$.pipe(
         filter(action => [ EditAction.StartEditing, EditAction.StopEditing ].includes(action))
