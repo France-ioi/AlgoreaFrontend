@@ -6,6 +6,7 @@
     [ngClass]="{'has-button': buttonIcon}"
     [formControlName]="name"
     (focus)="focus.emit($event)"
+    (blur)="blur.emit($event)"
     [pTooltip]="pTooltip"
     [tooltipEvent]="tooltipEvent"
     [tooltipPosition]="tooltipPosition"
