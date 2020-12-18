@@ -8,8 +8,7 @@
   <ng-template #sectionHeaderTemplate>
     <div
       *ngIf="showSwitch"
-      class="group-switch"
-      [ngClass]="{'all-disabled': state === 'fetching'}">
+      class="group-switch">
       <alg-selection (change)="onSubgroupSwitch($event)" [items]="subgroupSwitchItems"></alg-selection>
     </div>
   </ng-template>
