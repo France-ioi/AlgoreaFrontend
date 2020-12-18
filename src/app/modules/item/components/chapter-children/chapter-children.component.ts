@@ -4,8 +4,7 @@ import { canCurrentUserViewItemContent } from '../../helpers/item-permissions';
 import { GetItemChildrenService, ItemChild } from '../../http-services/get-item-children.service';
 import { ItemData } from '../../services/item-datasource.service';
 import { bestAttemptFromResults } from 'src/app/shared/helpers/attempts';
-import { Router } from '@angular/router';
-import { itemDetailsUrl } from 'src/app/shared/helpers/item-route';
+import { ItemRouter } from 'src/app/shared/services/item-router';
 
 interface ItemChildAdditions {
   isLocked: boolean,
@@ -29,7 +28,7 @@ export class ChapterChildrenComponent implements OnChanges, OnDestroy {
 
   constructor(
     private getItemChildrenService: GetItemChildrenService,
-    private router: Router,
+    private itemRouter: ItemRouter,
   ) {}
 
   private subscription?: Subscription;
@@ -43,11 +42,11 @@ export class ChapterChildrenComponent implements OnChanges, OnDestroy {
     const attemptId = child.result?.attempt_id;
     const parentAttemptId = this.itemData.currentResult?.attemptId;
     if (!parentAttemptId) return; // unexpected: children have been loaded, so we are sure this item has an attempt
-    void this.router.navigate(itemDetailsUrl({
+    this.itemRouter.navigateTo({
       id: child.id,
       path: this.itemData.route.path.concat([ this.itemData.item.id ]),
       ...attemptId ? { attemptId: attemptId } : { parentAttemptId: parentAttemptId }
-    }));
+    });
   }
 
   private reloadData(): void {

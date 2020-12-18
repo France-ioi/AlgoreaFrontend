@@ -30,11 +30,11 @@ export class GroupCompositionFilterComponent implements OnInit{
 
   readonly childrenFilters: { label:string, value: boolean }[] = [
     {
-      label: 'Direct Children Only',
+      label: $localize`Direct Children Only`,
       value: true,
     },
     {
-      label: 'All Descendants',
+      label: $localize`All Descendants`,
       value: false,
     },
   ];

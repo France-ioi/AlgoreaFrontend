@@ -1,10 +1,9 @@
 import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
-import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { bestAttemptFromResults } from 'src/app/shared/helpers/attempts';
-import { itemDetailsUrl } from 'src/app/shared/helpers/item-route';
 import { isASkill } from 'src/app/shared/helpers/item-type';
+import { ItemRouter } from 'src/app/shared/services/item-router';
 import { canCurrentUserViewItemContent } from '../../helpers/item-permissions';
 import { GetItemChildrenService, ItemChild } from '../../http-services/get-item-children.service';
 import { ItemData } from '../../services/item-datasource.service';
@@ -32,7 +31,7 @@ export class SubSkillsComponent implements OnChanges, OnDestroy {
 
   constructor(
     private getItemChildrenService: GetItemChildrenService,
-    private router: Router,
+    private itemRouter: ItemRouter,
   ) {}
 
   ngOnChanges(_changes: SimpleChanges): void {
@@ -44,11 +43,11 @@ export class SubSkillsComponent implements OnChanges, OnDestroy {
     const attemptId = child.result?.attempt_id;
     const parentAttemptId = this.itemData.currentResult?.attemptId;
     if (!parentAttemptId) return; // unexpected: children have been loaded, so we are sure this item has an attempt
-    void this.router.navigate(itemDetailsUrl({
+    this.itemRouter.navigateTo({
       id: child.id,
       path: this.itemData.route.path.concat([ this.itemData.item.id ]),
       ...attemptId ? { attemptId: attemptId } : { parentAttemptId: parentAttemptId }
-    }));
+    });
   }
 
   private reloadData(): void {

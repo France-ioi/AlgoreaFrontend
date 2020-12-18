@@ -17,11 +17,10 @@
     </span>
   </div>
   <perfect-scrollbar style="width: 100%;height: 100%;" #scrollPanel (psScrollY)="onScrollEvent($event)">
-    <div *ngIf="groupShow" (resized)="onResized($event)" #groupPanel tabindex="4" (focusOnGroupNav)="focusParent()">
+    <div *ngIf="groupShow" #groupPanel tabindex="4" (focusOnGroupNav)="focusParent()">
       <alg-group-nav></alg-group-nav>
     </div>
-    <alg-skill-activity-tabs [backgroundColor]="!session.user.isTemp ? 'light' : 'dark'"></alg-skill-activity-tabs>
-    <alg-skill-activity-tabs [backgroundColor]="!session.user.isTemp ? 'light' : 'dark'" *ngIf="stickyShow" class="overlay-skills"></alg-skill-activity-tabs>
+    <alg-skill-activity-tabs [backgroundColor]="!session.user.isTemp || groupShow  ? 'light' : 'dark'" [class.overlay-skills]="stickyShow"></alg-skill-activity-tabs>
   </perfect-scrollbar>
 </div>
 <ng-template #userLoading>
@@ -30,7 +29,7 @@
 <ng-template #tempUser>
   <div class="connection-button">
     <alg-button
-      label="Connexion"
+      i18n-label label="Log in / Sign in"
       icon="pi pi-sign-in"
       class="p-button-rounded p-button-warning p-fit-parent"
       style="margin: 1rem;"

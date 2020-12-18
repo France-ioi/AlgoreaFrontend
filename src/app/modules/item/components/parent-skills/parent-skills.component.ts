@@ -1,8 +1,7 @@
 import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
-import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { itemDetailsUrl } from 'src/app/shared/helpers/item-route';
+import { ItemRouter } from 'src/app/shared/services/item-router';
 import { canCurrentUserViewItemContent } from '../../helpers/item-permissions';
 import { GetItemParentsService, ItemParent } from '../../http-services/get-item-parents.service';
 import { ItemData } from '../../services/item-datasource.service';
@@ -26,7 +25,7 @@ export class ParentSkillsComponent implements OnChanges, OnDestroy {
 
   constructor(
     private getItemParentsService: GetItemParentsService,
-    private router: Router,
+    private itemRouter: ItemRouter,
   ) {}
 
   ngOnChanges(_changes: SimpleChanges): void {
@@ -36,11 +35,11 @@ export class ParentSkillsComponent implements OnChanges, OnDestroy {
   click(parent: ItemParent&ParentSkillAdditions): void {
     if (!this.itemData || parent.isLocked) return;
 
-    void this.router.navigate(itemDetailsUrl({
+    this.itemRouter.navigateTo({
       id: parent.id,
       path: this.itemData.route.path.slice(0, -1),
       attemptId: parent.result.attempt_id,
-    }));
+    });
   }
 
   private reloadData(): void {

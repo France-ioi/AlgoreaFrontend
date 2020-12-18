@@ -103,7 +103,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
     if (!this.group) return;
     this.currentFilter = { ...this.defaultFilter };
     this.currentSort = [];
-    this.table?.reset();
+    this.table?.clear();
     this.dataFetching.next({ groupId: this.group.id, filter: this.currentFilter, sort: this.currentSort });
   }
 
@@ -173,7 +173,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
     if (filter !== this.currentFilter) {
       this.currentFilter = { ...filter };
       this.currentSort = [];
-      this.table?.reset();
+      this.table?.clear();
       this.dataFetching.next({ groupId: this.group.id, filter: this.currentFilter, sort: this.currentSort });
     }
   }

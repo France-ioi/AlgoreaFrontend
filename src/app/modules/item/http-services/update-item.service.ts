@@ -5,13 +5,8 @@ import { assertSuccess, SimpleActionResponse } from '../../../shared/http-servic
 import { appConfig } from '../../../shared/helpers/config';
 import { map } from 'rxjs/operators';
 
-export interface ItemChild {
-  item_id: string,
-  order: number,
-}
-
 export interface ItemChanges {
-  children?: ItemChild[]
+  children?: { item_id: string, order: number }[]
 }
 
 @Injectable({
@@ -29,7 +24,7 @@ export class UpdateItemService {
     return this.http.put<SimpleActionResponse>(
       `${appConfig().apiUrl}/items/${itemId}`,
       changes,
-      { headers: { timeout: '10000' } },
+      { headers: { timeout: '20000' } },
     ).pipe(
       map(assertSuccess),
     );

@@ -7,6 +7,7 @@ import { CurrentUserComponent } from './pages/current-user/current-user.componen
 import { JoinedGroupsComponent } from './pages/joined-groups/joined-groups.component';
 import { GroupEditComponent } from './pages/group-edit/group-edit.component';
 import { GroupByIdComponent } from './pages/group-by-id/group-by-id.component';
+import { PendingChangesGuard } from 'src/app/shared/guards/pending-changes-guard';
 
 const routes: Routes = [
   {
@@ -50,6 +51,7 @@ const routes: Routes = [
       {
         path: 'edit',
         component: GroupEditComponent,
+        canDeactivate: [ PendingChangesGuard ]
       },
     ],
   },

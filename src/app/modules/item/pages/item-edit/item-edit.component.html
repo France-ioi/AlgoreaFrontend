@@ -1,14 +1,11 @@
 <ng-container *ngIf="itemLoadingState$ | async as state">
 
-  <p-progressSpinner *ngIf="state.tag === 'fetching'"></p-progressSpinner>
-
-  <p *ngIf="state.tag === 'error'">Error while loading the item</p>
-
   <div *ngIf="state.tag === 'ready' && (itemData$ | async) as itemData" style="margin: 1rem 0 0.5rem 0">
-    <form [formGroup]="itemForm">
+    <form [formGroup]="itemForm" *ngIf="['all','all_with_grant'].includes(itemData.item.permissions.can_edit); else notAuthorized">
 
       <div class="header">
-        <alg-input [parentForm]="itemForm" name="title" size="large" [isDark]='false'></alg-input>
+        <alg-input [parentForm]="itemForm" placeholder="Item title" name="title" size="large" [isDark]='false'></alg-input>
+        <alg-input [parentForm]="itemForm" placeholder="Item subtitle" name="subtitle" size="small" [isDark]='false'></alg-input>
       </div>
 
       <nav mat-tab-nav-bar>
@@ -33,6 +30,9 @@
 
     </form>
     <alg-floating-save *ngIf="itemForm.dirty" [saving]="itemForm.disabled" (save)="save()" (cancel)="resetForm()"></alg-floating-save>
+    <ng-template #notAuthorized>
+      <p>You do not have the permissions to edit this content.</p>
+    </ng-template>
   </div>
 
 </ng-container>

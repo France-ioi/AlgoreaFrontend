@@ -28,7 +28,7 @@ export class InputComponent {
   @Input() tooltipPosition = 'right';
   @Input() tooltipDisabled = false;
 
-  @Output() click = new EventEmitter();
+  @Output() click = new EventEmitter<void>();
   @Output() focus = new EventEmitter<FocusEvent>();
   @Output() blur = new EventEmitter<FocusEvent>();
 

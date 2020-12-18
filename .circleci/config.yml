@@ -21,18 +21,23 @@ commands:
           overwrite: false
           arguments: >-
             --acl public-read
-            --exclude "index.html"
-            --exclude "favicon.ico"
+            --exclude "*/index.html"
             --cache-control 'max-age=86400'
       - aws-s3/copy:
           from:  << parameters.from >>index.html
           to: s3://<< parameters.bucket >><< parameters.path >>/index.html
           arguments: >-
             --acl public-read
+            --cache-control 'max-age=300'
+      - aws-s3/copy:
+          from:  << parameters.from >>en/index.html
+          to: s3://<< parameters.bucket >><< parameters.path >>/en.html
+          arguments: >-
+            --acl public-read
             --cache-control 'max-age=10'
       - aws-s3/copy:
-          from:  << parameters.from >>favicon.ico
-          to: s3://<< parameters.bucket >><< parameters.path >>/favicon.ico
+          from:  << parameters.from >>fr/index.html
+          to: s3://<< parameters.bucket >><< parameters.path >>/fr.html
           arguments: >-
             --acl public-read
             --cache-control 'max-age=10'
@@ -71,6 +76,7 @@ jobs:
       - attach_workspace:
           at: ./
       - run: npx ng build --configuration ci --base-href ./ --progress=false
+      - run: echo '<html><body><a href="en.html">en</a> - <a href="fr.html">fr</a></body></html>' > dist/algorea/index.html
       - persist_to_workspace:
           root: ./
           paths:

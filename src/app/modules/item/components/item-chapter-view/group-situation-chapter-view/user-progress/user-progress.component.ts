@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { GroupUsersProgress } from 'src/app/shared/http-services/get-group-users-progress.service';
+import { Progress } from '../group-situation-chapter-view.component';
 
 @Component({
   selector: 'alg-user-progress',
@@ -8,7 +8,7 @@ import { GroupUsersProgress } from 'src/app/shared/http-services/get-group-users
 })
 export class UserProgressComponent implements OnChanges {
 
-  @Input() userProgress?: GroupUsersProgress;
+  @Input() userProgress?: Progress;
 
   state: 'success'|'in-progress'|'no-score'|'not-started' = 'no-score';
 

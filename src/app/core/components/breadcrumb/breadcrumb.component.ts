@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, UrlTree } from '@angular/router';
 import { ContentBreadcrumb } from 'src/app/shared/services/current-content.service';
 
 @Component({
@@ -15,8 +15,11 @@ export class BreadcrumbComponent {
     private router: Router,
   ) {}
 
-  onElementClick(el: { navigateTo?: any[] }): void {
-    if (el.navigateTo) void this.router.navigate(el.navigateTo);
+  onElementClick(el: { navigateTo?: UrlTree|(() => UrlTree) }): void {
+    if (el.navigateTo) {
+      const dest = 'root' in el.navigateTo ? el.navigateTo : el.navigateTo();
+      void this.router.navigateByUrl(dest);
+    }
   }
 
 }

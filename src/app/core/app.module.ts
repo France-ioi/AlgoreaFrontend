@@ -32,11 +32,12 @@ import { TreeModule } from 'primeng/tree';
 import { ItemNavTreeComponent } from './components/item-nav-tree/item-nav-tree.component';
 import { ItemNavComponent } from './components/item-nav/item-nav.component';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { AngularResizedEventModule } from 'angular-resize-event';
 import { UnauthorizedResponseInterceptor } from '../shared/interceptors/unauthorized_response.interceptor';
 import { ReactiveComponentModule } from '@ngrx/component';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { TooltipModule } from 'primeng/tooltip';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: false,
@@ -45,6 +46,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 @NgModule({
   declarations: [
     AppComponent,
+    PageNotFoundComponent,
     BreadcrumbComponent,
     SkillActivityTabsComponent,
     LeftNavComponent,
@@ -58,7 +60,6 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   imports: [
     BrowserModule,
     ReactiveComponentModule,
-    AngularResizedEventModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,
@@ -69,8 +70,10 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     TreeModule,
     ProgressSpinnerModule,
     TooltipModule,
+    ConfirmDialogModule,
   ],
   providers: [
+    ConfirmationService,
     MessageService,
     {
       provide: PERFECT_SCROLLBAR_CONFIG,

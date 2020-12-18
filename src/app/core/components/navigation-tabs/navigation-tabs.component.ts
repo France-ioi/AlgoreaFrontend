@@ -1,10 +1,9 @@
-import { Component, ViewChild, NgZone, OnDestroy, Input } from '@angular/core';
+import { Component, ViewChild, NgZone, OnDestroy, Input, ElementRef, OnInit } from '@angular/core';
 
 import { PerfectScrollbarComponent } from 'ngx-perfect-scrollbar';
-import { ResizedEvent } from 'angular-resize-event';
 import { ContentInfo, CurrentContentService, GroupInfo, isGroupInfo } from 'src/app/shared/services/current-content.service';
-import { filter } from 'rxjs/operators';
-import { Subscription } from 'rxjs';
+import { debounceTime, filter } from 'rxjs/operators';
+import { fromEvent, Subscription } from 'rxjs';
 import { UserSession, UserSessionService } from 'src/app/shared/services/user-session.service';
 import { AuthService } from 'src/app/shared/auth/auth.service';
 
@@ -13,17 +12,18 @@ import { AuthService } from 'src/app/shared/auth/auth.service';
   templateUrl: './navigation-tabs.component.html',
   styleUrls: [ './navigation-tabs.component.scss' ]
 })
-export class NavigationTabsComponent implements OnDestroy {
+export class NavigationTabsComponent implements OnInit, OnDestroy {
 
   @Input() session?: UserSession;
 
   @ViewChild('scrollPanel') scrollPanel?: PerfectScrollbarComponent;
-  @ViewChild('groupPanel') groupPanel?: HTMLDivElement;
+  @ViewChild('groupPanel') groupPanel?: ElementRef<HTMLDivElement>;
 
   groupShow = false;
   stickyShow = false;
 
   private subscription: Subscription; // for cleaning up on destroy
+  private resizeSubscription?: Subscription
 
   constructor(
     private currentContentService: CurrentContentService,
@@ -36,8 +36,13 @@ export class NavigationTabsComponent implements OnDestroy {
     ).subscribe(_i => this.groupShow = true);
   }
 
+  ngOnInit(): void {
+    this.resizeSubscription = fromEvent(window, 'resize').pipe(debounceTime(200)).subscribe(() => this.onResize());
+  }
+
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+    this.resizeSubscription?.unsubscribe();
   }
 
   toggleGroup(): void {
@@ -47,12 +52,11 @@ export class NavigationTabsComponent implements OnDestroy {
     }
   }
 
-  onResized(e: ResizedEvent): void {
+  private onResize(): void {
     const directiveRef = this.scrollPanel?.directiveRef;
-    if (!directiveRef) return;
+    if (!directiveRef || !this.groupPanel) return;
     const boundaryHeight = (directiveRef.elementRef.nativeElement as HTMLElement).clientHeight - 50;
-    if (e.newHeight > boundaryHeight) {
-      // this.stickyShow = true;
+    if (this.groupPanel.nativeElement.clientHeight > boundaryHeight) {
       this.updateStatus(directiveRef.elementRef.nativeElement as HTMLElement);
     } else {
       this.stickyShow = false;
@@ -63,22 +67,18 @@ export class NavigationTabsComponent implements OnDestroy {
     this.ngZone.run(() => {
       const scrollTop = e.scrollTop;
       const clientHeight = e.clientHeight - 50;
-      const groupHeight = this.groupPanel?.clientHeight || 0;
-      if (scrollTop + clientHeight >= groupHeight) {
-        this.stickyShow = false;
-      } else {
-        this.stickyShow = true;
-      }
+      const groupHeight = this.groupPanel?.nativeElement.clientHeight || 0;
+      this.stickyShow = scrollTop + clientHeight < groupHeight;
     });
   }
 
   focusParent(): void {
     if (this.groupPanel) {
-      const elements = this.groupPanel.querySelectorAll('.p-accordion-header a');
+      const elements = this.groupPanel.nativeElement.querySelectorAll('.p-accordion-header a');
       elements.forEach(e => {
         (e as HTMLElement).blur();
       });
-      this.groupPanel.focus();
+      this.groupPanel.nativeElement.focus();
     }
   }
 

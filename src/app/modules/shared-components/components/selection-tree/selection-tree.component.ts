@@ -1,10 +1,4 @@
-import {
-  Component,
-  OnInit,
-  Input,
-  OnChanges,
-  SimpleChanges,
-} from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 
 interface Node {
   root: boolean
@@ -17,22 +11,16 @@ interface Node {
   templateUrl: './selection-tree.component.html',
   styleUrls: [ './selection-tree.component.scss' ],
 })
-export class SelectionTreeComponent implements OnInit, OnChanges {
+export class SelectionTreeComponent implements OnChanges {
   @Input() data: Node[] = [];
 
-  constructor() {}
-
-  ngOnInit(): void {}
-
   ngOnChanges(_changes: SimpleChanges): void {
-    if (this.data) {
-      while (this.data.length > 1) {
-        this.data.pop();
-      }
-      if (this.data.length > 0) {
-        this.data[0].root = true;
-        this.data[0].expanded = true;
-      }
+    while (this.data.length > 1) {
+      this.data.pop();
+    }
+    if (this.data.length > 0) {
+      this.data[0].root = true;
+      this.data[0].expanded = true;
     }
   }
 

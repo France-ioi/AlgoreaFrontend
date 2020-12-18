@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file source-language="en" datatype="plaintext" original="ng2.template" target-language="fr">
+    <body>
+      <trans-unit id="cac30a91d2ecebdb1f56ef4743dfb4a779c70857" datatype="html">
+        <source>Log in / Sign in</source><target state="translated">Connexion / Inscription</target>
+
+
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/app.component.html</context><context context-type="linenumber">33</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/app.component.html</context><context context-type="linenumber">33</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/components/navigation-tabs/navigation-tabs.component.html</context><context context-type="linenumber">32</context></context-group></trans-unit><trans-unit id="3fdc751b264ca9998e1542fcf5794e274cd56344" datatype="html">
+        <source>Log out</source><target state="translated">Déconnexion</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/app.component.html</context>
+          <context context-type="linenumber">41</context>
+        </context-group>
+      </trans-unit><trans-unit id="e9935669cab3ea24d8ffde4dc934776f3cbb2a20" datatype="html">
+        <source>Algorea Platform</source><target state="translated">Plateforme Algoréa</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/components/top-nav/top-nav.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="578c8af0148618c6964e5512043a4b3832a31aaf" datatype="html">
+        <source>Yourself</source><target state="translated">Vous</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/components/group-nav/group-nav.component.html</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+      </trans-unit><trans-unit id="871322351859596725" datatype="html">
+        <source>Direct Children Only</source><target state="translated">Enfants directs</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/group-composition-filter/group-composition-filter.component.ts</context>
+          <context context-type="linenumber">33</context>
+        </context-group>
+        
+      </trans-unit><trans-unit id="4958238341510165820" datatype="html">
+        <source>All Descendants</source><target state="translated">Tous les descendants</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/group-composition-filter/group-composition-filter.component.ts</context>
+          <context context-type="linenumber">37</context>
+        </context-group>
+        
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

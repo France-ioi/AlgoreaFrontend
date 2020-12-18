@@ -2,35 +2,39 @@ import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { CurrentContentService } from 'src/app/shared/services/current-content.service';
 import { ItemData, ItemDataSource } from '../../services/item-datasource.service';
 import { FormBuilder, Validators } from '@angular/forms';
-import { combineLatest, Subscription } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import { forkJoin, Observable, of, Subscription, throwError } from 'rxjs';
+import { filter, map, switchMap } from 'rxjs/operators';
 import { FetchError, Fetching, isReady, Ready } from '../../../../shared/helpers/state';
 import { ItemStringChanges, UpdateItemStringService } from '../../http-services/update-item-string.service';
 import { TOAST_LENGTH } from '../../../../shared/constants/global';
 import { MessageService } from 'primeng/api';
 import { ERROR_MESSAGE } from '../../../../shared/constants/api';
 import { ItemChanges, UpdateItemService } from '../../http-services/update-item.service';
-import { ChildData } from '../../components/item-children-edit/item-children-edit.component';
+import { ChildData, ChildDataWithId, hasId } from '../../components/item-children-edit/item-children-edit.component';
 import { Item } from '../../http-services/get-item-by-id.service';
 import { ItemEditContentComponent } from '../item-edit-content/item-edit-content.component';
+import { PendingChangesComponent } from 'src/app/shared/guards/pending-changes-guard';
+import { CreateItemService, NewItem } from '../../http-services/create-item.service';
 
 @Component({
   selector: 'alg-item-edit',
   templateUrl: './item-edit.component.html',
   styleUrls: [ './item-edit.component.scss' ],
 })
-export class ItemEditComponent implements OnDestroy {
+export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
   itemForm = this.formBuilder.group({
     // eslint-disable-next-line @typescript-eslint/unbound-method
     title: [ '', [ Validators.required, Validators.minLength(3), Validators.maxLength(200) ] ],
+    subtitle: [ '', Validators.maxLength(200) ],
     description: '',
   });
+  itemChanges: { children?: ChildData[] } = {};
+
   itemData$ = this.itemDataSource.itemData$;
   itemLoadingState$ = this.itemDataSource.state$;
   initialFormData?: Item;
 
   subscription?: Subscription;
-  itemChanges: ItemChanges = {};
 
   @ViewChild('content') private editContent?: ItemEditContentComponent;
 
@@ -38,6 +42,7 @@ export class ItemEditComponent implements OnDestroy {
     private currentContent: CurrentContentService,
     private itemDataSource: ItemDataSource,
     private formBuilder: FormBuilder,
+    private createItemService: CreateItemService,
     private updateItemService: UpdateItemService,
     private updateItemStringService: UpdateItemStringService,
     private messageService: MessageService
@@ -54,6 +59,10 @@ export class ItemEditComponent implements OnDestroy {
   ngOnDestroy(): void {
     this.currentContent.editState.next('non-editable');
     this.subscription?.unsubscribe();
+  }
+
+  isDirty(): boolean {
+    return this.itemForm.dirty;
   }
 
   successToast(): void {
@@ -76,23 +85,66 @@ export class ItemEditComponent implements OnDestroy {
 
   updateItemChanges(children: ChildData[]): void {
     this.itemForm.markAsDirty();
-    // FIXME: temp fix to compile and not send bad data to the service
-    this.itemChanges.children = children
-      .filter(child => child.id)
-      .map((child, idx) => ({ item_id: child.id as string, order: idx }));
+    this.itemChanges.children = children;
   }
 
+  // Update Item
+  private createChildren(): Observable<ChildDataWithId[] | undefined>{
+    if (!this.itemChanges.children) return of(undefined);
+    return forkJoin(
+      this.itemChanges.children.map(child => {
+        if (!this.initialFormData) return throwError(new Error('Invalid form'));
+        if (hasId(child)) return of(child);
+        // the child doesn't have an id so we create it
+        if (!child.title) return throwError(new Error('Something went wrong, the new child is missing his title'));
+        const newChild: NewItem = {
+          title: child.title,
+          type: child.type,
+          languageTag: 'en',
+          parent: { itemId: this.initialFormData.id }
+        };
+        return this.createItemService
+          .create(newChild)
+          .pipe(map(res => ({ id: res, ...child })));
+      })
+    );
+  }
 
-  getItemStringChanges(): ItemStringChanges | undefined {
+  private updateItem(): Observable<void> {
+    return this.createChildren().pipe(
+      switchMap(res => {
+        const changes: ItemChanges = {};
+        if (res) {
+          // save the new children (their ids) to prevent recreating them in case of error
+          this.itemChanges.children = res;
+          changes.children = res.map((child, idx) => ({ item_id: child.id, order: idx }));
+        }
+        if (!this.initialFormData) return throwError(new Error('Invalid form'));
+        return this.updateItemService.updateItem(this.initialFormData.id, changes);
+      }),
+    );
+  }
+
+  // Item string changes
+  private getItemStringChanges(): ItemStringChanges | undefined {
     const title = this.itemForm.get('title');
+    const subtitle = this.itemForm.get('subtitle');
     const description = this.itemForm.get('description');
 
-    if (title === null || description === null) return undefined;
+    if (title === null || description === null || subtitle === null) return undefined;
 
     return {
       title: (title.value as string).trim(),
-      description: (description.value as string).trim() || null
+      subtitle: (subtitle.value as string).trim() || null,
+      description: (description.value as string).trim() || null,
     };
+  }
+
+  private updateString(): Observable<void> {
+    if (!this.initialFormData) return throwError(new Error('Missing ID form'));
+    const itemStringChanges = this.getItemStringChanges();
+    if (!itemStringChanges) return throwError(new Error('Invalid form'));
+    return this.updateItemStringService.updateItem(this.initialFormData.id, itemStringChanges);
   }
 
   save(): void {
@@ -103,23 +155,17 @@ export class ItemEditComponent implements OnDestroy {
       return;
     }
 
-    const itemStringChanges = this.getItemStringChanges();
-    if (!itemStringChanges) {
-      this.errorToast();
-      return;
-    }
-
     this.itemForm.disable();
-    combineLatest([
-      this.updateItemService.updateItem(this.initialFormData.id, this.itemChanges),
-      this.updateItemStringService.updateItem(this.initialFormData.id, itemStringChanges),
+    forkJoin([
+      this.updateItem(),
+      this.updateString(),
     ]).subscribe(
       _status => {
         this.successToast();
         this.itemDataSource.refreshItem(); // which will re-enable the form
       },
       _err => {
-        this.errorToast(_err);
+        this.errorToast();
         this.itemForm.enable();
       }
     );
@@ -133,7 +179,9 @@ export class ItemEditComponent implements OnDestroy {
     this.itemForm.reset({
       title: item.string.title || '',
       description: item.string.description || '',
+      subtitle: item.string.subtitle || '',
     });
+    this.itemChanges = {};
     this.itemForm.enable();
     this.editContent?.reset();
   }
