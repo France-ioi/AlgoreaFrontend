@@ -1,8 +1,5 @@
-<!--
-  Nothing should be displayed by the routed component in case of fetching/error,
-  but angular does not allow to put a condition on the router-outlet
- -->
-<router-outlet></router-outlet>
+
+<router-outlet *ngIf="state.tag === 'ready'"></router-outlet>
 
 <p-progressSpinner *ngIf="state.tag === 'fetching'"></p-progressSpinner>
 
