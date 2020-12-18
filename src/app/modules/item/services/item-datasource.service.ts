@@ -5,7 +5,6 @@ import { bestAttemptFromResults, implicitResultStart } from 'src/app/shared/help
 import { isRouteWithAttempt, ItemRoute } from 'src/app/shared/helpers/item-route';
 import { errorState, FetchError, Fetching, fetchingState, isReady, Ready, readyState } from 'src/app/shared/helpers/state';
 import { ResultActionsService } from 'src/app/shared/http-services/result-actions.service';
-import { ItemRouter } from 'src/app/shared/services/item-router';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
 import { BreadcrumbItem, GetBreadcrumbService } from '../http-services/get-breadcrumb.service';
 import { GetItemByIdService, Item } from '../http-services/get-item-by-id.service';
@@ -40,7 +39,6 @@ export class ItemDataSource implements OnDestroy {
     private resultActionsService: ResultActionsService,
     private getResultsService: GetResultsService,
     private userSessionService: UserSessionService,
-    private itemRouter: ItemRouter,
   ) {
     this.fetchOperation.pipe(
 
@@ -83,7 +81,7 @@ export class ItemDataSource implements OnDestroy {
    */
   private fetchItemData(itemRoute: ItemRoute): Observable<ItemData> {
     return forkJoin([
-      this.getBreadcrumb(itemRoute),
+      this.getBreadcrumbService.getBreadcrumb(itemRoute),
       this.getItemByIdService.get(itemRoute.id)
     ]).pipe(
       switchMap(([ breadcrumbs, item ]) => {
@@ -126,22 +124,6 @@ export class ItemDataSource implements OnDestroy {
             }),
           )),
         );
-      }),
-    );
-  }
-
-  private getBreadcrumb(item: ItemRoute): Observable<BreadcrumbItem[]> {
-    const service = this.getBreadcrumbService.getBreadcrumb(item);
-    return service.pipe(
-      map(res => {
-        if (res === 'forbidden') {
-          // clear the route & attempt and retry to visit this item (path/attempt discovery will be called)
-          // ideally routing should not be called inside the datasource and maximum number of tries should be allowed
-          this.itemRouter.navigateToIncompleteItem(item.id);
-          throw new Error('unhandled forbidden');
-        } else {
-          return res;
-        }
       }),
     );
   }

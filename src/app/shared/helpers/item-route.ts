@@ -56,11 +56,11 @@ export function itemRouteFromParams(params: ParamMap): ItemRoute|ItemRouteError 
   const attemptId = params.get(attemptParamName);
   const parentAttemptId = params.get(parentAttemptParamName);
 
-  if (id === null) return { tag: 'error', id: undefined };
+  if (!id) return { tag: 'error', id: undefined }; // null or empty
   if (pathAsString === null) return { tag: 'error', id: id };
   const path = pathAsString === '' ? [] : pathAsString.split(',');
-  if (attemptId !== null) return { id: id, path: path, attemptId: attemptId };
-  if (parentAttemptId !== null) return { id: id, path: path, parentAttemptId: parentAttemptId };
+  if (attemptId) return { id: id, path: path, attemptId: attemptId }; // not null nor empty
+  if (parentAttemptId) return { id: id, path: path, parentAttemptId: parentAttemptId }; // not null nor empty
   return { tag: 'error', id: id, path: path };
 }
 

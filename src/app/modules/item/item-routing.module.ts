@@ -11,17 +11,14 @@ import { ItemEditComponent } from './pages/item-edit/item-edit.component';
       path: 'by-id/:id',
       component: ItemByIdComponent,
       children: [
+        { path: '', redirectTo: 'details', pathMatch: 'full' },
         {
           path: 'details',
           component: ItemDetailsComponent,
           // Children below do not use routing but there are defined here so that the router can validate the route exists
           children: [
-            {
-              path: '',
-            },
-            {
-              path: 'progress',
-            }
+            { path: '', pathMatch: 'full', },
+            { path: 'progress', }
           ]
         },
         {

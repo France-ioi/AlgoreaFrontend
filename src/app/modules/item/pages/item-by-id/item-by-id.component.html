@@ -1,1 +1,12 @@
-<router-outlet></router-outlet>
+
+<router-outlet *ngIf="state.tag === 'ready'"></router-outlet>
+
+<p-progressSpinner *ngIf="state.tag === 'fetching'"></p-progressSpinner>
+
+<ng-container *ngIf="state.tag === 'error'">
+  <p *ngIf="$any(state).error && ($any(state).error.status === 403 || $any(state).error.status === 404); else unknownError">
+    This content does not exist or you are not allowed to view it.
+  </p>
+  <ng-template #unknownError><p>Error while loading the item.</p></ng-template>
+  <p>Go back to the <a routerLink="/">home page</a></p>
+</ng-container>
