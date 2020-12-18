@@ -48,7 +48,7 @@ export class ItemByIdComponent implements OnDestroy {
       if (isItemRouteError(item)) {
         // the case where id is missing is not handled as it is unexpected as this component would not be routed
         this.state = fetchingState();
-        if (item.id) this.solveMissingPathAttempt(item.id, item.path);
+        if (item.id !== undefined) this.solveMissingPathAttempt(item.id, item.path);
         return;
       }
       // just publish to current content the new route we are navigating to (without knowing any info)
