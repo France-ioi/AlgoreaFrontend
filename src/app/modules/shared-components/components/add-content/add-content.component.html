@@ -5,13 +5,13 @@
       [hasClearButton]="true"
       (focus)="onNewFocus()"
       (blur)="onBlur()"
-      [ngClass]="{'input-light': focused === 'existingTitle'}"
-      name="newTitle"
+      [ngClass]="{'input-light': focused === 'searchExisting'}"
+      name="create"
       placeholder="Enter a title to create a new child"
       pTooltip="Enter at least 3 characters"
       tooltipEvent="focus"
       tooltipPosition="bottom"
-      [tooltipDisabled]="trimmedInputsValue.newTitle.length >= minInputLength"
+      [tooltipDisabled]="trimmedInputsValue.create.length >= minInputLength"
     >
     </alg-input>
     <span class="label">or</span>
@@ -20,18 +20,18 @@
       [hasClearButton]="true"
       (focus)="onExistingFocus()"
       (blur)="onBlur()"
-      [ngClass]="{'input-light': focused === 'newTitle'}"
-      name="existingTitle"
+      [ngClass]="{'input-light': focused === 'create'}"
+      name="searchExisting"
       placeholder="Search for existing content"
       pTooltip="Enter at least 3 characters"
       tooltipEvent="focus"
       tooltipPosition="bottom"
-      [tooltipDisabled]="trimmedInputsValue.existingTitle.length >= minInputLength"
+      [tooltipDisabled]="trimmedInputsValue.searchExisting.length >= minInputLength"
     >
     </alg-input>
   </div>
 
-  <div *ngIf="trimmedInputsValue.newTitle.length >= minInputLength" class="new-content-type">
+  <div *ngIf="trimmedInputsValue.create.length >= minInputLength" class="new-content-type">
     <div class="new-content-container">
       <div class="content-type-item-container" (click)="addNewItem('Chapter')">
         <div class="item-image-wrapper">
@@ -57,13 +57,13 @@
     </div>
   </div>
 
-  <div *ngIf="trimmedInputsValue.existingTitle.length >= minInputLength">
+  <div *ngIf="trimmedInputsValue.searchExisting.length >= minInputLength">
     <h3>Select a Content</h3>
     <p-table [value]="itemsFound">
       <ng-template pTemplate="body" let-item>
         <tr style="background-color: #dfe7f4">
           <td class="type">{{ item.type }}</td>
-          <td class="main">{{ trimmedInputsValue.existingTitle }}</td>
+          <td class="main">{{ trimmedInputsValue.searchExisting }}</td>
           <td>
             <alg-button class="p-small-button p-button-rounded" icon="fa fa-plus" label="Add" (click)="addExistingItem()"></alg-button>
           </td>

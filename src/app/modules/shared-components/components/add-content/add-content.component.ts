@@ -9,7 +9,7 @@ interface ItemFound {
   type: ItemType
 }
 
-const defaultFormValues = { newTitle: '', existingTitle: '' };
+const defaultFormValues = { create: '', searchExisting: '' };
 
 @Component({
   selector: 'alg-add-content',
@@ -25,7 +25,7 @@ export class AddContentComponent implements OnInit, OnDestroy {
   newContentForm: FormGroup = this.formBuilder.group(defaultFormValues);
   trimmedInputsValue = defaultFormValues;
 
-  focused?: 'existingTitle' | 'newTitle';
+  focused?: 'searchExisting' | 'create';
   itemsFound: ItemFound[] = [
     { title: 'test', type: 'Chapter' },
     { title: 'test', type: 'Chapter' },
@@ -43,8 +43,8 @@ export class AddContentComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.subscription = this.newContentForm.valueChanges.subscribe((changes: typeof defaultFormValues) => {
       this.trimmedInputsValue = {
-        newTitle: changes.newTitle.trim(),
-        existingTitle: changes.existingTitle.trim(),
+        create: changes.create.trim(),
+        searchExisting: changes.searchExisting.trim(),
       };
     });
   }
@@ -54,24 +54,24 @@ export class AddContentComponent implements OnInit, OnDestroy {
   }
 
   onNewFocus(): void {
-    if (this.focused === 'newTitle') return;
-    this.reset('newTitle');
+    if (this.focused === 'create') return;
+    this.reset('create');
   }
 
   onExistingFocus(): void {
-    if (this.focused === 'existingTitle') return;
-    this.reset('existingTitle');
+    if (this.focused === 'searchExisting') return;
+    this.reset('searchExisting');
   }
 
   onBlur(): void {
     // Do not un-lighten the input if there is content in the other one
-    if (this.focused === 'existingTitle' && this.trimmedInputsValue.existingTitle) return;
-    if (this.focused === 'newTitle' && this.trimmedInputsValue.newTitle) return;
+    if (this.focused === 'searchExisting' && this.trimmedInputsValue.searchExisting) return;
+    if (this.focused === 'create' && this.trimmedInputsValue.create) return;
     this.focused = undefined;
   }
 
   addNewItem(type: ItemType): void {
-    const title = this.trimmedInputsValue.newTitle;
+    const title = this.trimmedInputsValue.create;
     if (!this.checkLength(title)) return;
     this.contentAdded.emit({
       title: title,
@@ -88,7 +88,7 @@ export class AddContentComponent implements OnInit, OnDestroy {
     return s.length >= this.minInputLength;
   }
 
-  private reset(focused?: 'existingTitle' | 'newTitle'): void {
+  private reset(focused?: 'searchExisting' | 'create'): void {
     this.newContentForm.reset(defaultFormValues);
     this.focused = focused;
   }
