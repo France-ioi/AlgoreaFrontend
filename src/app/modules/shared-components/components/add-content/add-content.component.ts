@@ -54,12 +54,12 @@ export class AddContentComponent implements OnInit, OnDestroy {
   }
 
   onNewFocus(): void {
-    if (this.focused == 'newTitle') return;
+    if (this.focused === 'newTitle') return;
     this.reset('newTitle');
   }
 
   onExistingFocus(): void {
-    if (this.focused == 'existingTitle') return;
+    if (this.focused === 'existingTitle') return;
     this.reset('existingTitle');
   }
 
