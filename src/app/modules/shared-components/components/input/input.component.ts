@@ -23,9 +23,17 @@ export class InputComponent {
   @Input() buttonIcon?: string; // a font-awesome icon identifier for the input button
   @Input() hasClearButton = false;
 
-  @Output() click = new EventEmitter<void>();
+  @Input() pTooltip = '';
+  @Input() tooltipEvent = 'hover';
+  @Input() tooltipPosition = 'right';
+  @Input() tooltipDisabled = false;
 
-  constructor() {}
+  @Output() click = new EventEmitter<void>();
+  @Output() focus = new EventEmitter<FocusEvent>();
+  @Output() blur = new EventEmitter<FocusEvent>();
+
+  constructor() {
+  }
 
   onButtonClick(): void {
     this.click.emit();

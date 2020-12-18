@@ -1,5 +1,25 @@
 @import 'src/colors.scss';
 
+.add-content-wrapper {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.5rem;
+
+  span.label {
+    font-style: italic;
+    margin-left: 1.6667rem;
+    margin-right: 2rem;
+  }
+
+  alg-input {
+    flex: 1;
+  }
+}
+
+.input-light {
+  opacity: 0.5;
+}
+
 .new-content-container {
   display: flex;
   flex-wrap: wrap;

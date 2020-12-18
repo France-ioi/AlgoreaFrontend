@@ -1,23 +1,53 @@
 <alg-sub-section icon="sign-in-alt" label="Add a content">
-  <alg-input [parentForm]="newContentForm" name="title" placeholder="Enter a title to create a new child" [hasClearButton]="true"></alg-input>
+  <div class="add-content-wrapper">
+    <alg-input
+      [parentForm]="newContentForm"
+      [hasClearButton]="true"
+      (focus)="onNewFocus()"
+      (blur)="onBlur()"
+      [ngClass]="{'input-light': focused === 'searchExisting'}"
+      name="create"
+      placeholder="Enter a title to create a new child"
+      pTooltip="Enter at least 3 characters"
+      tooltipEvent="focus"
+      tooltipPosition="bottom"
+      [tooltipDisabled]="trimmedInputsValue.create.length >= minInputLength"
+    >
+    </alg-input>
+    <span class="label">or</span>
+    <alg-input
+      [parentForm]="newContentForm"
+      [hasClearButton]="true"
+      (focus)="onExistingFocus()"
+      (blur)="onBlur()"
+      [ngClass]="{'input-light': focused === 'create'}"
+      name="searchExisting"
+      placeholder="Search for existing content"
+      pTooltip="Enter at least 3 characters"
+      tooltipEvent="focus"
+      tooltipPosition="bottom"
+      [tooltipDisabled]="trimmedInputsValue.searchExisting.length >= minInputLength"
+    >
+    </alg-input>
+  </div>
 
-  <div *ngIf="state === 'opened'" class="new-content-type">
+  <div *ngIf="trimmedInputsValue.create.length >= minInputLength" class="new-content-type">
     <div class="new-content-container">
-      <div class="content-type-item-container" (click)="onClick('Chapter')">
+      <div class="content-type-item-container" (click)="addNewItem('Chapter')">
         <div class="item-image-wrapper">
           <span><i class="fa fa-book"></i></span>
         </div>
         <div class="item-title">Chapter</div>
         <div class="item-description">A new folder which can contain any activities.</div>
       </div>
-      <div class="content-type-item-container" (click)="onClick('Task')">
+      <div class="content-type-item-container" (click)="addNewItem('Task')">
         <div class="item-image-wrapper">
           <span><i class="fa fa-code"></i></span>
         </div>
         <div class="item-title">Task</div>
         <div class="item-description">A new task which users can try to solve.</div>
       </div>
-      <div *ngIf="allowSkills" class="content-type-item-container" (click)="onClick('Skill')">
+      <div *ngIf="allowSkills" class="content-type-item-container" (click)="addNewItem('Skill')">
         <div class="item-image-wrapper">
           <span><i class="fa fa-graduation-cap"></i></span>
         </div>
@@ -25,6 +55,27 @@
         <div class="item-description">A new sub-skill.</div>
       </div>
     </div>
+  </div>
+
+  <div *ngIf="trimmedInputsValue.searchExisting.length >= minInputLength">
+    <h3>Select a Content</h3>
+    <p-table [value]="itemsFound">
+      <ng-template pTemplate="body" let-item>
+        <tr style="background-color: #dfe7f4">
+          <td class="type">{{ item.type }}</td>
+          <td class="main">{{ trimmedInputsValue.searchExisting }}</td>
+          <td>
+            <alg-button class="p-small-button p-button-rounded" icon="fa fa-plus" label="Add" (click)="addExistingItem()"></alg-button>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td [attr.colspan]="1">No records found</td>
+        </tr>
+      </ng-template>
+    </p-table>
+
   </div>
 
 </alg-sub-section>

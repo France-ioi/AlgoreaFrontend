@@ -52,6 +52,7 @@ import { UserPipe } from 'src/app/shared/pipes/userDisplay';
 import { SubSectionComponent } from './components/sub-section/sub-section.component';
 import { AddContentComponent } from './components/add-content/add-content.component';
 import { FloatingSaveComponent } from './components/floating-save/floating-save.component';
+import { TooltipModule } from 'primeng/tooltip';
 
 @NgModule({
   declarations: [
@@ -109,6 +110,8 @@ import { FloatingSaveComponent } from './components/floating-save/floating-save.
 
     ClickOutsideModule,
     ReactiveFormsModule,
+    TooltipModule,
+    TooltipModule,
   ],
   exports: [
     ButtonComponent,

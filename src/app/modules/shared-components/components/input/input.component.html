@@ -5,9 +5,15 @@
     [placeholder]="placeholder"
     [ngClass]="{'has-button': buttonIcon}"
     [formControlName]="name"
+    (focus)="focus.emit($event)"
+    (blur)="blur.emit($event)"
+    [pTooltip]="pTooltip"
+    [tooltipEvent]="tooltipEvent"
+    [tooltipPosition]="tooltipPosition"
+    [tooltipDisabled]="tooltipDisabled"
   >
   <span *ngIf="hasClearButton && input.value" class="clear-button">
-    <button (click)="clearInput()">
+    <button (click)="clearInput(); input.focus()">
       <i class="pi pi-times"></i>
     </button>
   </span>
