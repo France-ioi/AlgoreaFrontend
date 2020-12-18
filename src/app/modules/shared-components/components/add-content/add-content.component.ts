@@ -3,6 +3,14 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { ItemType } from '../../../../shared/helpers/item-type';
 
+interface ItemFound {
+  // id: string,
+  title: string,
+  type: ItemType
+}
+
+const defaultFormValues = { newTitle: '', existingTitle: '' };
+
 @Component({
   selector: 'alg-add-content',
   templateUrl: './add-content.component.html',
@@ -14,9 +22,16 @@ export class AddContentComponent implements OnInit, OnDestroy {
 
   readonly minInputLength = 3;
 
-  expanded = false;
-  focused: 'existingTitle' | 'newTitle' | null = null;
-  currentValue = '';
+  newContentForm: FormGroup = this.formBuilder.group(defaultFormValues);
+  trimmedInputsValue = defaultFormValues;
+
+  focused?: 'existingTitle' | 'newTitle';
+  itemsFound: ItemFound[] = [
+    { title: 'test', type: 'Chapter' },
+    { title: 'test', type: 'Chapter' },
+    { title: 'test', type: 'Chapter' },
+    { title: 'test', type: 'Chapter' },
+  ];
 
   private subscription?: Subscription;
 
@@ -36,12 +51,11 @@ export class AddContentComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.newContentForm.valueChanges.subscribe((change: {newTitle: string, existingTitle: string}) => {
-      if (change.newTitle.length < 3 && change.existingTitle.length < 3) this.expanded = false;
-      else {
-        this.currentValue = change.newTitle.length > 2 ? change.newTitle : change.existingTitle;
-        this.expanded = true;
-      }
+    this.subscription = this.newContentForm.valueChanges.subscribe((changes: typeof defaultFormValues) => {
+      this.trimmedInputsValue = {
+        newTitle: changes.newTitle.trim(),
+        existingTitle: changes.existingTitle.trim(),
+      };
     });
   }
 
