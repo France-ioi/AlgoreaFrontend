@@ -26,7 +26,7 @@
           <context context-type="linenumber">12</context>
         </context-group>
       </trans-unit><trans-unit id="871322351859596725" datatype="html">
-        <source>Direct Children Only</source><target state="translated">Enfants uniquement</target>
+        <source>Direct Children Only</source><target state="translated">Enfants directs</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/group/components/group-composition-filter/group-composition-filter.component.ts</context>
           <context context-type="linenumber">33</context>
