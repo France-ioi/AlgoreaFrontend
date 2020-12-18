@@ -46,3 +46,14 @@ Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.
 ### Running end-to-end tests
 
 Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+
+## Internationalization
+
+Every developer who adds text into the code should localize it. See the [Angular doc](https://angular.io/guide/i18n#prepare-templates-for-translations) to know how to mark it as localizable.
+
+When a new translatable string has been added to the code, the developer runs `npm run extract-i18n` to generate the new translation file.
+
+The generated files src/locale/messages.<lang>.xlf can be translated with a XLIFF editor, e.g. Poedit.
+
+For development, the `ng serve` serve can only serve one language (by default, English). To use another language, use another configuration, for instance `ng serve --configuration=fr`.
+The build process generates one website per language in `/en`, `/fr` directories.

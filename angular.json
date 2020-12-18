@@ -41,6 +41,8 @@
               "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
               "src/styles.scss"
             ],
+            "localize": true,
+            "i18nMissingTranslation": "error",
             "scripts": []
           },
           "configurations": {
@@ -95,17 +97,31 @@
                   "maximumWarning": "6kb"
                 }
               ]
+            },
+            "en": {
+              "localize": [ "en" ],
+              "aot": true
+            },
+            "fr": {
+              "localize": [ "fr" ],
+              "aot": true
             }
           }
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "algorea:build"
+            "browserTarget": "algorea:build:en"
           },
           "configurations": {
             "production": {
-              "browserTarget": "algorea:build:production"
+              "browserTarget": "algorea:build"
+            },
+            "fr": {
+              "browserTarget": "algorea:build:fr"
+            },
+            "en": {
+              "browserTarget": "algorea:build:en"
             }
           }
         },
@@ -157,6 +173,15 @@
             "production": {
               "devServerTarget": "algorea:serve:production"
             }
+          }
+        }
+      },
+      "i18n": {
+        "sourceLocale": "en",
+        "locales": {
+          "fr": {
+            "translation": "src/locale/messages.fr.xlf",
+            "baseHref": "/fr/"
           }
         }
       }
