@@ -10,7 +10,7 @@
       pTooltip="Enter at least 3 characters"
       tooltipEvent="focus"
       tooltipPosition="bottom"
-      [tooltipDisabled]="expanded"
+      [tooltipDisabled]="trimmedInputsValue.newTitle.length >= minInputLength"
     >
     </alg-input>
     <span class="label">or</span>
@@ -24,12 +24,12 @@
       pTooltip="Enter at least 3 characters"
       tooltipEvent="focus"
       tooltipPosition="bottom"
-      [tooltipDisabled]="expanded"
+      [tooltipDisabled]="trimmedInputsValue.existingTitle.length >= minInputLength"
     >
     </alg-input>
   </div>
 
-  <div *ngIf="expanded && focused === 'newTitle'" class="new-content-type">
+  <div *ngIf="trimmedInputsValue.newTitle.length >= minInputLength" class="new-content-type">
     <div class="new-content-container">
       <div class="content-type-item-container" (click)="addNewItem('Chapter')">
         <div class="item-image-wrapper">
@@ -55,7 +55,7 @@
     </div>
   </div>
 
-  <div *ngIf="expanded && focused === 'existingTitle'">
+  <div *ngIf="trimmedInputsValue.existingTitle.length >= minInputLength">
     <h3>Select a Content</h3>
     <p-table [value]="test">
       <ng-template pTemplate="body" let-rowData>

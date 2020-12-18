@@ -12,7 +12,7 @@ export class AddContentComponent implements OnInit, OnDestroy {
   @Input() allowSkills = false;
   @Output() contentAdded = new EventEmitter<{ title: string, type: ItemType }>();
 
-  newContentForm: FormGroup = this.formBuilder.group({ newTitle: '', existingTitle: '' });
+  readonly minInputLength = 3;
 
   expanded = false;
   focused: 'existingTitle' | 'newTitle' | null = null;
