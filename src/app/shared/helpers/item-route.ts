@@ -60,7 +60,7 @@ export function itemRouteFromParams(params: ParamMap): ItemRoute|ItemRouteError 
   if (pathAsString === null) return { tag: 'error', id: id };
   const path = pathAsString === '' ? [] : pathAsString.split(',');
   if (attemptId) return { id: id, path: path, attemptId: attemptId }; // not null nor empty
-  if (parentAttemptId) return { id: id, path: path, parentAttemptId: parentAttemptId }; /* not null nor empty */
+  if (parentAttemptId) return { id: id, path: path, parentAttemptId: parentAttemptId }; // not null nor empty
   return { tag: 'error', id: id, path: path };
 }
 
