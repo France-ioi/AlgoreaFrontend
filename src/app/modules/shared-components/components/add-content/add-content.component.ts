@@ -63,6 +63,13 @@ export class AddContentComponent implements OnInit, OnDestroy {
     this.newContentForm.get('newTitle')?.setValue('');
   }
 
+  onBlur(): void {
+    // Do not un-lighten the input if there is content in the other one
+    if (this.focused === 'existingTitle' && this.trimmedInputsValue.existingTitle) return;
+    if (this.focused === 'newTitle' && this.trimmedInputsValue.newTitle) return;
+    this.focused = undefined;
+  }
+
   addNewItem(type: ItemType): void {
     if (!this.expanded) return;
 
