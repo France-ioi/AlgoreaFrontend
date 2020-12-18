@@ -54,13 +54,13 @@ export class AddContentComponent implements OnInit, OnDestroy {
   }
 
   onNewFocus(): void {
-    this.focused = 'newTitle';
-    this.newContentForm.get('existingTitle')?.setValue('');
+    if (this.focused == 'newTitle') return;
+    this.reset('newTitle');
   }
 
   onExistingFocus(): void {
-    this.focused = 'existingTitle';
-    this.newContentForm.get('newTitle')?.setValue('');
+    if (this.focused == 'existingTitle') return;
+    this.reset('existingTitle');
   }
 
   onBlur(): void {
@@ -71,13 +71,26 @@ export class AddContentComponent implements OnInit, OnDestroy {
   }
 
   addNewItem(type: ItemType): void {
-    if (!this.expanded) return;
-
+    const title = this.trimmedInputsValue.newTitle;
+    if (!this.checkLength(title)) return;
     this.contentAdded.emit({
-      title: this.currentValue,
+      title: title,
       type: type,
     });
-    this.newContentForm.reset({ title: '' });
+    this.reset();
+  }
+
+  addExistingItem(): void {
+    this.reset();
+  }
+
+  private checkLength(s: string): boolean {
+    return s.length >= this.minInputLength;
+  }
+
+  private reset(focused?: 'existingTitle' | 'newTitle'): void {
+    this.newContentForm.reset(defaultFormValues);
+    this.focused = focused;
   }
 
 }
