@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { ItemType } from '../../../../shared/helpers/item-type';
+import { ChildData } from '../../../item/components/item-children-edit/item-children-edit.component';
 
 interface ItemFound {
   // id: string,
@@ -18,7 +19,7 @@ const defaultFormValues = { create: '', searchExisting: '' };
 })
 export class AddContentComponent implements OnInit, OnDestroy {
   @Input() allowSkills = false;
-  @Output() contentAdded = new EventEmitter<{ title: string, type: ItemType }>();
+  @Output() contentAdded = new EventEmitter<ChildData>();
 
   readonly minInputLength = 3;
 
