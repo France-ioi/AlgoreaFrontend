@@ -4,8 +4,12 @@ import { Observable, Subscription, timer } from 'rxjs';
 import { ItemType } from '../../../../shared/helpers/item-type';
 import { ItemFound, SearchItemService } from '../../../item/http-services/search-item.service';
 import { debounce, filter, map, switchMap, tap } from 'rxjs/operators';
-import { ChildData } from '../../../item/components/item-children-edit/item-children-edit.component';
 
+interface AddedItem {
+  id?: string,
+  title: string,
+  type: ItemType,
+}
 
 const defaultFormValues = { create: '', searchExisting: '' };
 
@@ -16,7 +20,7 @@ const defaultFormValues = { create: '', searchExisting: '' };
 })
 export class AddContentComponent implements OnInit, OnDestroy {
   @Input() allowSkills = false;
-  @Output() contentAdded = new EventEmitter<ChildData>();
+  @Output() contentAdded = new EventEmitter<AddedItem>();
 
   readonly minInputLength = 3;
 
