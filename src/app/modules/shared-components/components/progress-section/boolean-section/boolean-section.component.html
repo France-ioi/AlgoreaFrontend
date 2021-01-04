@@ -1,0 +1,37 @@
+<alg-progress-section
+  [title]="title"
+  [icon]="icon"
+  [value]="value"
+>
+  <ng-template #description>
+    <ng-container *ngIf="descriptionTemplate" [ngTemplateOutlet]="descriptionTemplate"></ng-container>
+  </ng-template>
+  <ng-template #collapsedHeader>
+    <ng-container *ngIf="value; else no" i18n>
+      Yes
+    </ng-container>
+    <ng-template #no i18n>
+      No
+    </ng-template>
+  </ng-template>
+  <ng-template #body>
+    <div class="progress-section-item">
+      <div class="progress-control">
+        <alg-switch
+          [checked]="value"
+          (change)="onSet($event)"
+          mode="circular"
+        ></alg-switch>
+      </div>
+      <div class="progress-desc">
+        <div class="progress-desc-name" [ngClass]="{ active: value }" (click)="onSet(!value)">
+          <ng-container
+            *ngIf="labelTemplate"
+            [ngTemplateOutlet]="labelTemplate"
+            [ngTemplateOutletContext]="{ $implicit: value }"
+          ></ng-container>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</alg-progress-section>
