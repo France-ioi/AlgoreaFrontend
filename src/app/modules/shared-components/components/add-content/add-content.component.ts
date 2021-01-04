@@ -20,7 +20,7 @@ export class AddContentComponent implements OnInit, OnDestroy {
 
   readonly minInputLength = 3;
 
-  newContentForm: FormGroup = this.formBuilder.group(defaultFormValues);
+  addContentForm: FormGroup = this.formBuilder.group(defaultFormValues);
   trimmedInputsValue = defaultFormValues;
   itemsFound: ItemFound[] = [];
 
@@ -37,7 +37,7 @@ export class AddContentComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.subscriptions.push(
-      this.newContentForm.valueChanges.subscribe((changes: typeof defaultFormValues) => {
+      this.addContentForm.valueChanges.subscribe((changes: typeof defaultFormValues) => {
         this.trimmedInputsValue = {
           create: changes.create.trim(),
           searchExisting: changes.searchExisting.trim(),
@@ -45,7 +45,7 @@ export class AddContentComponent implements OnInit, OnDestroy {
       })
     );
 
-    const existingTitleControl: Observable<string> | undefined = this.newContentForm.get('searchExisting')?.valueChanges;
+    const existingTitleControl: Observable<string> | undefined = this.addContentForm.get('searchExisting')?.valueChanges;
     if (existingTitleControl) this.subscriptions.push(
       existingTitleControl.pipe(
         map(value => value.trim()),
@@ -102,7 +102,7 @@ export class AddContentComponent implements OnInit, OnDestroy {
   }
 
   private reset(focused?: 'searchExisting' | 'create'): void {
-    this.newContentForm.reset(defaultFormValues);
+    this.addContentForm.reset(defaultFormValues);
     this.focused = focused;
   }
 

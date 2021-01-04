@@ -1,7 +1,7 @@
 <alg-sub-section icon="sign-in-alt" label="Add a content">
   <div class="add-content-wrapper">
     <alg-input
-      [parentForm]="newContentForm"
+      [parentForm]="addContentForm"
       [hasClearButton]="true"
       (focus)="onNewFocus()"
       (blur)="onBlur()"
@@ -16,7 +16,7 @@
     </alg-input>
     <span class="label">or</span>
     <alg-input
-      [parentForm]="newContentForm"
+      [parentForm]="addContentForm"
       [hasClearButton]="true"
       (focus)="onExistingFocus()"
       (blur)="onBlur()"
