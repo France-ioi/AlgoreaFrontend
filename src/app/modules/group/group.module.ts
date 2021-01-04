@@ -6,7 +6,6 @@ import { SharedComponentsModule } from '../shared-components/shared-components.m
 import { GroupRoutingModule } from './group-routing.module';
 
 import { GroupHeaderComponent } from './components/group-header/group-header.component';
-import { PendingRequestComponent } from './components/pending-request/pending-request.component';
 import { GroupNoPermissionComponent } from './components/group-no-permission/group-no-permission.component';
 import { GroupJoinByCodeComponent } from './components/group-join-by-code/group-join-by-code.component';
 
@@ -29,12 +28,14 @@ import { MemberListComponent } from './components/member-list/member-list.compon
 import { GroupCompositionFilterComponent } from './components/group-composition-filter/group-composition-filter.component';
 import { PendingChangesGuard } from 'src/app/shared/guards/pending-changes-guard';
 import { JoinedGroupListComponent } from './components/joined-group-list/joined-group-list.component';
+import { UserGroupInvitationsComponent } from './components/user-group-invitations/user-group-invitations.component';
+import { PendingRequestComponent } from './components/pending-request/pending-request.component';
+import { PendingJoinRequestsComponent } from './components/pending-join-requests/pending-join-requests.component';
 
 @NgModule({
   declarations: [
     GroupHeaderComponent,
     GroupOverviewComponent,
-    PendingRequestComponent,
     GroupCompositionComponent,
     GroupAdministrationComponent,
     MyGroupsComponent,
@@ -53,6 +54,9 @@ import { JoinedGroupListComponent } from './components/joined-group-list/joined-
     MemberListComponent,
     GroupCompositionFilterComponent,
     JoinedGroupListComponent,
+    PendingJoinRequestsComponent,
+    UserGroupInvitationsComponent,
+    PendingRequestComponent
   ],
   imports: [
     CommonModule,

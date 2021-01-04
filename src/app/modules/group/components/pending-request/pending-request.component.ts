@@ -4,160 +4,40 @@ import {
   Input,
   OnChanges,
   SimpleChanges,
-  OnDestroy,
+  ContentChild, TemplateRef, Output, EventEmitter
 } from '@angular/core';
 import { SortEvent } from 'primeng/api/sortevent';
-import { MessageService } from 'primeng/api';
-import {
-  ERROR_MESSAGE,
-} from '../../../../shared/constants/api';
-import { TOAST_LENGTH } from '../../../../shared/constants/global';
-import { Observable, forkJoin, Subject, merge, of } from 'rxjs';
-import { GetRequestsService, PendingRequest } from '../../http-services/get-requests.service';
-import { Action, RequestActionsService } from '../../http-services/request-actions.service';
 import { GridColumn, GridColumnGroup } from '../../../shared-components/components/grid/grid.component';
-import { map, switchMap } from 'rxjs/operators';
-import { fetchingState, isReady, readyState } from 'src/app/shared/helpers/state';
-
-
-
-interface Result {
-  countRequests: number;
-  countSuccess: number;
-}
-
-const groupColumn = { field: 'group.name', header: 'GROUP' };
+import { Action } from 'src/app/modules/group/http-services/request-actions.service';
 
 @Component({
   selector: 'alg-pending-request',
   templateUrl: './pending-request.component.html',
   styleUrls: [ './pending-request.component.scss' ],
 })
-export class PendingRequestComponent implements OnInit, OnChanges, OnDestroy {
-  @Input() groupId?: string;
-  @Input() showSwitch = true;
+export class PendingRequestComponent<T> implements OnInit, OnChanges {
 
-  columns: GridColumn[] = [
-    { field: 'user.login', header: 'USER' },
-    { field: 'at', header: 'REQUESTED ON' },
-  ];
-  subgroupSwitchItems = [
-    { label: 'This group only', includeSubgroup: false },
-    { label: 'All subgroups', includeSubgroup: true }
-  ];
-  requests: PendingRequest[] = [];
-  selection: PendingRequest[] = [];
+  @Input() columns: GridColumn[] = [];
+  @Input() requests: T[] = [];
+  @Input() state: 'fetching' | 'processing' | 'ready' | 'fetchingError' = 'fetching';
+
+  @Output() sort = new EventEmitter<string[]>();
+  @Output() processRequests = new EventEmitter<{ data: T[], type: Action }>();
+
+  @ContentChild('sectionHeaderTemplate') sectionHeaderTemplate?: TemplateRef<any>;
+
+  selection: T[] = [];
   panel: GridColumnGroup[] = [];
-  currentSort: string[] = [];
-  includeSubgroup = false;
   collapsed = true;
-
-  state: 'fetching' | 'accepting' | 'rejecting' | 'ready' |'fetchingError' = 'fetching';
-
-  private dataFetching = new Subject<{ groupId?: string, includeSubgroup: boolean, sort: string[] }>();
-
-  constructor(
-    private getRequestsService: GetRequestsService,
-    private requestActionService: RequestActionsService,
-    private messageService: MessageService
-  ) {
-    this.dataFetching.pipe(
-      switchMap(params =>
-        merge(
-          of(fetchingState()),
-          this.getRequestsService.getPendingRequests(params.groupId, params.includeSubgroup, params.sort).pipe(map(readyState))
-        )
-      )
-    ).subscribe(
-      state => {
-        this.state = state.tag;
-        if (isReady(state)) {
-          this.requests = state.data;
-          if (this.requests.length > 0) this.collapsed = false;
-        }
-      },
-      _err => {
-        this.state = 'fetchingError';
-      }
-    );
-  }
-
-  ngOnDestroy(): void {
-    this.dataFetching.complete();
-  }
 
   ngOnInit(): void {
     this.panel.push({
       columns: this.columns,
     });
-    if (!this.showSwitch) this.columns = [ groupColumn ].concat(this.columns);
   }
 
   ngOnChanges(_changes: SimpleChanges): void {
-    this.selection = [];
-    this.dataFetching.next({ groupId: this.groupId, includeSubgroup: this.includeSubgroup, sort: this.currentSort });
-  }
-
-  private parseResults(data: Map<string, any>[]): Result {
-    const res : Result = { countRequests: 0, countSuccess: 0 };
-    data.forEach(elm => {
-      res.countRequests += elm.size;
-      res.countSuccess += Array.from(elm.values())
-        .map<number>(state => ([ 'success', 'unchanged' ].includes(state) ? 1 : 0))
-        .reduce((acc, res) => acc + res, 0);
-    });
-    return res;
-  }
-
-  private displayResponseToast(result: Result, verb: string, msg: string): void {
-    if (result.countSuccess === result.countRequests) {
-      this.messageService.add({
-        severity: 'success',
-        summary: 'Success',
-        detail: `${result.countSuccess} request(s) have been ${msg}`,
-        life: TOAST_LENGTH,
-      });
-    } else if (result.countSuccess === 0) {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Error',
-        detail: `Unable to ${verb} the selected request(s).`,
-        life: TOAST_LENGTH,
-      });
-    } else {
-      this.messageService.add({
-        severity: 'warn',
-        summary: 'Partial success',
-        detail: `${result.countSuccess} request(s) have been ${msg}, ${result.countRequests - result.countSuccess} could not be executed`,
-        life: TOAST_LENGTH,
-      });
-    }
-  }
-
-  private processRequestError(_err: any): void {
-    this.messageService.add({
-      severity: 'error',
-      summary: 'Error',
-      detail: ERROR_MESSAGE.fail,
-      life: TOAST_LENGTH,
-    });
-  }
-
-  processRequests(action: Action, requests: PendingRequest[]): Observable<Map<string, any>[]> {
-    const requestMap = new Map<string, string[]>();
-    requests.forEach(elm => {
-      const groupID = elm.group.id;
-      const memberID = elm.user.groupId;
-
-      const value = requestMap.get(groupID);
-      if (value) requestMap.set(groupID, value.concat([ memberID ]));
-      else requestMap.set(groupID, [ memberID ]);
-    });
-    return forkJoin(
-      Array.from(requestMap.entries()).map(elm =>
-        this.requestActionService.processJoinRequest(elm[0], elm[1], action)
-      )
-    );
+    this.collapsed = this.requests.length === 0;
   }
 
   onAccept(): void {
@@ -172,33 +52,8 @@ export class PendingRequestComponent implements OnInit, OnChanges, OnDestroy {
     if (this.selection.length === 0 || this.state !== 'ready') {
       return;
     }
-
-    this.state = action === Action.Accept ? 'accepting' : 'rejecting';
-
-    this.processRequests(action, this.selection)
-      .subscribe(
-        result => {
-          this.state = 'ready';
-
-          this.displayResponseToast(
-            this.parseResults(result),
-            action === Action.Accept ? 'accept' : 'reject',
-            action === Action.Accept ? 'accepted' : 'declined'
-          );
-
-          this.selection = [];
-
-          this.dataFetching.next({
-            groupId: this.groupId,
-            includeSubgroup: this.includeSubgroup,
-            sort: this.currentSort,
-          });
-        },
-        err => {
-          this.state = 'ready';
-          this.processRequestError(err);
-        }
-      );
+    this.processRequests.emit({ data: this.selection, type: action });
+    this.selection = [];
   }
 
   onSelectAll(): void {
@@ -211,20 +66,6 @@ export class PendingRequestComponent implements OnInit, OnChanges, OnDestroy {
 
   onCustomSort(event: SortEvent): void {
     const sortMeta = event.multiSortMeta?.map(meta => (meta.order === -1 ? `-${meta.field}` : meta.field));
-
-    if (sortMeta && JSON.stringify(sortMeta) !== JSON.stringify(this.currentSort)) {
-      this.currentSort = sortMeta;
-      this.dataFetching.next({ groupId: this.groupId, includeSubgroup: this.includeSubgroup, sort: this.currentSort });
-    }
+    if (sortMeta) this.sort.emit(sortMeta);
   }
-
-  onSubgroupSwitch(selectedIdx: number): void {
-    this.includeSubgroup = this.subgroupSwitchItems[selectedIdx].includeSubgroup;
-
-    this.columns = this.columns.filter(elm => elm !== groupColumn);
-    if (this.includeSubgroup) this.columns = [ groupColumn ].concat(this.columns);
-
-    this.dataFetching.next({ groupId: this.groupId, includeSubgroup: this.includeSubgroup, sort: this.currentSort });
-  }
-
 }
