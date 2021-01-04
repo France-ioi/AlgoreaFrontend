@@ -4,7 +4,6 @@ import { ActionResponse, successData, objectToMap } from 'src/app/shared/http-se
 import { map } from 'rxjs/operators';
 import { forkJoin, Observable } from 'rxjs';
 import { appConfig } from 'src/app/shared/helpers/config';
-import { Result } from '../components/pending-request/pending-request-response-handling';
 
 export enum Action {
   Accept,
@@ -69,8 +68,8 @@ export class RequestActionsService {
   }
 }
 
-export function parseResults(data: Map<string, any>[]): Result {
-  const res : Result = { countRequests: 0, countSuccess: 0 };
+export function parseResults(data: Map<string, any>[]): { countRequests: number, countSuccess: number } {
+  const res = { countRequests: 0, countSuccess: 0 };
   data.forEach(elm => {
     res.countRequests += elm.size;
     res.countSuccess += Array.from(elm.values())
