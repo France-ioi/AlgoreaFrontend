@@ -28,6 +28,7 @@
             *ngIf="editState === 'editable'"
             (edit)="onEditPage()"
           ></alg-page-navigator>
+          <alg-language-picker class="lang-picker" *ngIf="collapsed"></alg-language-picker>
           <alg-button
             *ngIf="collapsed && session && session.user.isTemp"
             i18n-label label="Log in / Sign in"

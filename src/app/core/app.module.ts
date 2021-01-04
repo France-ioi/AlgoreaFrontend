@@ -38,6 +38,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { TooltipModule } from 'primeng/tooltip';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component';
+import { LanguagePickerComponent } from './components/language-picker/language-picker.component';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: false,
@@ -56,6 +57,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     GroupNavTreeComponent,
     ItemNavComponent,
     ItemNavTreeComponent,
+    LanguagePickerComponent,
   ],
   imports: [
     BrowserModule,
