@@ -7,10 +7,10 @@
     <ng-container *ngIf="descriptionTemplate" [ngTemplateOutlet]="descriptionTemplate"></ng-container>
   </ng-template>
   <ng-template #collapsedHeader>
-    <ng-container *ngIf="value; else no">
+    <ng-container *ngIf="value; else no" i18n>
       Yes
     </ng-container>
-    <ng-template #no>
+    <ng-template #no i18n>
       No
     </ng-template>
   </ng-template>

@@ -25,6 +25,18 @@
           <context context-type="sourcefile">src/app/core/components/group-nav/group-nav.component.html</context>
           <context context-type="linenumber">12</context>
         </context-group>
+      </trans-unit><trans-unit id="11f78ba7176f45e770dc165dc9e67d99062f9983" datatype="html">
+        <source> Yes </source><target state="translated"> Oui </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/shared-components/components/progress-section/boolean-section/boolean-section.component.html</context>
+          <context context-type="linenumber">11,12</context>
+        </context-group>
+      </trans-unit><trans-unit id="c630ea158480efb7cc07ec621427f2e86098bc73" datatype="html">
+        <source> No </source><target state="translated"> Non </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/shared-components/components/progress-section/boolean-section/boolean-section.component.html</context>
+          <context context-type="linenumber">14,15</context>
+        </context-group>
       </trans-unit><trans-unit id="871322351859596725" datatype="html">
         <source>Direct Children Only</source><target state="translated">Enfants directs</target>
         <context-group purpose="location">
