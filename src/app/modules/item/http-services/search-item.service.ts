@@ -24,9 +24,8 @@ export class SearchItemService {
     excludedTypes?: ItemType[],
     limit = 4,
   ): Observable<ItemFound[]> {
-    let params = new HttpParams().set('search', searchString);
+    let params = new HttpParams().set('search', searchString).set('limit', limit.toString());
 
-    if (limit) params = params.set('limit', limit.toString());
     if (includedTypes) params = params.set('types_include', includedTypes.join(','));
     if (excludedTypes) params = params.set('types_exclude', excludedTypes.join(','));
 
