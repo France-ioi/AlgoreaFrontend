@@ -101,7 +101,7 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
           title: child.title,
           type: child.type,
           languageTag: 'en',
-          parent: { itemId: this.initialFormData.id }
+          parent: this.initialFormData.id
         };
         return this.createItemService
           .create(newChild)
