@@ -16,6 +16,7 @@ export interface Item {
   permissions: {
     can_view: 'none'|'info'|'content'|'content_with_descendants'|'solution',
     can_edit: 'none'|'children'|'all'|'all_with_grant',
+    can_grant_view: 'none'|'enter'|'content'|'content_with_descendants'|'solution'|'solution_with_grant',
   },
   type: ItemType,
 }
