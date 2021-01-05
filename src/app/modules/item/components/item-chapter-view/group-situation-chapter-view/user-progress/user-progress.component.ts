@@ -34,7 +34,7 @@ export class UserProgressComponent implements OnChanges {
     else if (this.userProgress.score === 0 && this.userProgress.timeSpent > 0) this.state = 'no-score';
     else this.state = 'not-started';
 
-    this.canAccess = this.watchedGroup.current_user_can_grant_group_access && this.item.permissions.can_grant_view !== 'none';
+    this.canAccess = true;// this.watchedGroup.current_user_can_grant_group_access && this.item.permissions.can_grant_view !== 'none';
   }
 
   onClickAccess(): void {
