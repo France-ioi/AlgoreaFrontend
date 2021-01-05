@@ -1,0 +1,86 @@
+<div mat-dialog-title>
+  <div class="dialog-header">
+    <span class="dialog-handler">
+      <i class="fa fa-lock"></i>
+    </span>
+    <span class="dialog-title"> Access given to {{ data.title }}</span>
+    <span class="dialog-close" (click)="onClose()">
+      <img src="assets/images/close.svg" alt="close">
+    </span>
+  </div>
+  <div mat-dialog-close></div>
+</div>
+
+<mat-dialog-content>
+  <div class="dialog-container">
+    <div class="dialog-content">
+      <alg-progress-section
+        title="Can view"
+        icon="fa fa-eye"
+        [defaultValue]="this.data.permissions.can_view"
+        (change)="this.data.permissions.can_view = $event"
+        [values]="canViewValues"
+      ></alg-progress-section>
+      <alg-boolean-section
+        title="Can Enter"
+        icon="fa fa-door-open"
+        [defaultValue]="this.data.permissions.can_enter_from"
+        (change)="this.data.permissions.can_enter_from = $event"
+      >
+        <ng-template #label>User(s) may enter this item (a contest or time-limited chapter)</ng-template>
+      </alg-boolean-section>
+      <alg-progress-section
+        title="Can grant view"
+        icon="fa fa-key"
+        [defaultValue]="this.data.permissions.can_grant_view"
+        (change)="this.data.permissions.can_grant_view = $event"
+        [values]="canGrantViewValues"
+      ></alg-progress-section>
+      <alg-progress-section
+        title="Can watch"
+        icon="fa fa-binoculars"
+        [defaultValue]="this.data.permissions.can_watch"
+        (change)="this.data.permissions.can_watch = $event"
+        [values]="canWatchValues"
+      ></alg-progress-section>
+      <alg-progress-section
+        title="Can edit"
+        icon="fa fa-pencil-alt"
+        [defaultValue]="this.data.permissions.can_edit"
+        (change)="this.data.permissions.can_edit = $event"
+        [values]="canEditValues"
+      ></alg-progress-section>
+      <alg-boolean-section
+        title="Can attach official sessions"
+        icon="fa fa-paperclip"
+        [defaultValue]="this.data.permissions.can_make_session_official"
+        (change)="this.data.permissions.can_make_session_official = $event"
+      >
+        <ng-template #label>User(s) may attach official sessions to this item, that will be visible to everyone in the content tab of the item</ng-template>
+      </alg-boolean-section>
+      <alg-boolean-section
+        title="Is owner"
+        icon="fa fa-user-tie"
+        [defaultValue]="this.data.permissions.is_owner"
+        (change)="this.data.permissions.is_owner = $event"
+      >
+        <ng-template #label>User(s) own this item, and get the maximum access in all categories above, and may also delete this item</ng-template>
+      </alg-boolean-section>
+
+    </div>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <alg-button
+    icon="fa fa-times"
+    label="Cancel"
+    class="p-button-rounded p-button-danger cancel-button"
+    (click)="onClose()"
+  ></alg-button>
+  <alg-button
+    icon="fa fa-check"
+    label="Proceed"
+    class="p-button-rounded"
+    (click)="onClose()"
+  ></alg-button>
+</mat-dialog-actions>
