@@ -1,14 +1,14 @@
-<alg-section-paragraph icon="fa fa-user-plus" label="Invite users" [collapsible]="true">
-  <span class="content-title">Add users name list, separated by commas.</span>
+<alg-section-paragraph icon="fa fa-user-plus" i18n-label i18n-label label="Invite users" [collapsible]="true">
+  <span class="content-title" i18n>Add users name list, separated by commas.</span>
   <div class="invite-users">
-    <alg-textarea [parentForm]="inviteForm" inputName="logins" icon="show" placeholder="login_1, login_2...">
+    <alg-textarea [parentForm]="inviteForm" inputName="logins" icon="show" i18n-placeholder placeholder="login_1, login_2...">
     </alg-textarea>
 
-    <alg-message *ngIf="state === 'too_many'" type="error" detail="You cannot invite more than 100 users at once"
+    <alg-message *ngIf="state === 'too_many'" type="error" i18n-detail detail="You cannot invite more than 100 users at once"
       [closable]="false">
     </alg-message>
 
-    <alg-button label="Invite" class="p-button-rounded" (click)="onInviteClicked()" [disabled]="state !== 'ready'">
+    <alg-button i18n-label label="Invite" class="p-button-rounded" (click)="onInviteClicked()" [disabled]="state !== 'ready'">
     </alg-button>
 
     <alg-message *ngFor="let message of messages" [type]="message.type" [detail]="message.detail"

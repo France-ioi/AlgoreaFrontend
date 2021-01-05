@@ -1,6 +1,6 @@
 <alg-section-paragraph
   icon="fa fa-check"
-  label="Pending requests"
+  i18n-label label="Pending requests"
   [collapsible]="true"
   [collapsed]="collapsed"
 >
@@ -70,7 +70,7 @@
                       {{ rowData.user | user }}
                     </span>
                     <span class="user-info-activity" *ngIf="rowData.user.grade">
-                      <em>Grade: {{ rowData.user.grade }}</em>
+                      <em><span i18n>Grade: </span>{{ rowData.user.grade }}</em>
                     </span>
                     <!-- <div class="user-info-content">
                       {{ rowData.user.content }}
@@ -96,10 +96,10 @@
             <span class="filler"></span>
             <div class="req-tools">
               <span class="accept" [ngClass]="{disabled: selection.length === 0 || this.state !== 'ready'}" (click)="onAccept()">
-                <span>Accept</span>
+                <span i18n>Accept</span>
               </span>
               <span class="reject" [ngClass]="{disabled: selection.length === 0 || this.state !== 'ready'}" (click)="onReject()">
-                <span>Reject</span>
+                <span i18n>Reject</span>
               </span>
             </div>
           </div>
