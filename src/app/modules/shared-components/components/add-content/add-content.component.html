@@ -1,7 +1,7 @@
 <alg-sub-section icon="sign-in-alt" label="Add a content">
   <div class="add-content-wrapper">
     <alg-input
-      [parentForm]="newContentForm"
+      [parentForm]="addContentForm"
       [hasClearButton]="true"
       (focus)="onNewFocus()"
       (blur)="onBlur()"
@@ -16,7 +16,7 @@
     </alg-input>
     <span class="label">or</span>
     <alg-input
-      [parentForm]="newContentForm"
+      [parentForm]="addContentForm"
       [hasClearButton]="true"
       (focus)="onExistingFocus()"
       (blur)="onBlur()"
@@ -59,13 +59,13 @@
 
   <div *ngIf="trimmedInputsValue.searchExisting.length >= minInputLength">
     <h3>Select a Content</h3>
-    <p-table [value]="itemsFound">
+    <p-table [value]="itemsFound" [loading]="state === 'loading'">
       <ng-template pTemplate="body" let-item>
         <tr style="background-color: #dfe7f4">
           <td class="type">{{ item.type }}</td>
-          <td class="main">{{ trimmedInputsValue.searchExisting }}</td>
+          <td class="main">{{ item.title }}</td>
           <td>
-            <alg-button class="p-small-button p-button-rounded" icon="fa fa-plus" label="Add" (click)="addExistingItem()"></alg-button>
+            <alg-button class="p-small-button p-button-rounded" icon="fa fa-plus" label="Add" (click)="addExistingItem(item)"></alg-button>
           </td>
         </tr>
       </ng-template>

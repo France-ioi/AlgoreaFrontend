@@ -1,12 +1,14 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription, timer } from 'rxjs';
 import { ItemType } from '../../../../shared/helpers/item-type';
+import { ItemFound, SearchItemService } from '../../../item/http-services/search-item.service';
+import { debounce, filter, map, switchMap, tap } from 'rxjs/operators';
 
-interface ItemFound {
-  // id: string,
+interface AddedItem {
+  id?: string,
   title: string,
-  type: ItemType
+  type: ItemType,
 }
 
 const defaultFormValues = { create: '', searchExisting: '' };
@@ -18,39 +20,53 @@ const defaultFormValues = { create: '', searchExisting: '' };
 })
 export class AddContentComponent implements OnInit, OnDestroy {
   @Input() allowSkills = false;
-  @Output() contentAdded = new EventEmitter<{ title: string, type: ItemType }>();
+  @Output() contentAdded = new EventEmitter<AddedItem>();
 
   readonly minInputLength = 3;
 
-  newContentForm: FormGroup = this.formBuilder.group(defaultFormValues);
+  addContentForm: FormGroup = this.formBuilder.group(defaultFormValues);
   trimmedInputsValue = defaultFormValues;
+  itemsFound: ItemFound[] = [];
 
-  focused?: 'searchExisting' | 'create';
-  itemsFound: ItemFound[] = [
-    { title: 'test', type: 'Chapter' },
-    { title: 'test', type: 'Chapter' },
-    { title: 'test', type: 'Chapter' },
-    { title: 'test', type: 'Chapter' },
-  ];
+  state: 'loading' | 'loaded' = 'loading';
+  focused?: 'create' | 'searchExisting';
 
-  private subscription?: Subscription;
+  private subscriptions: Subscription[] = [];
 
   constructor(
     private formBuilder: FormBuilder,
+    private searchItemService: SearchItemService,
   ) {
   }
 
   ngOnInit(): void {
-    this.subscription = this.newContentForm.valueChanges.subscribe((changes: typeof defaultFormValues) => {
-      this.trimmedInputsValue = {
-        create: changes.create.trim(),
-        searchExisting: changes.searchExisting.trim(),
-      };
-    });
+    this.subscriptions.push(
+      this.addContentForm.valueChanges.subscribe((changes: typeof defaultFormValues) => {
+        this.trimmedInputsValue = {
+          create: changes.create.trim(),
+          searchExisting: changes.searchExisting.trim(),
+        };
+      })
+    );
+
+    const existingTitleControl: Observable<string> | undefined = this.addContentForm.get('searchExisting')?.valueChanges;
+    if (existingTitleControl) this.subscriptions.push(
+      existingTitleControl.pipe(
+        map(value => value.trim()),
+        filter(value => this.checkLength(value)),
+        tap(_ => this.state = 'loading'),
+        debounce(() => timer(300)),
+        switchMap(value => this.searchItemService.search(value, [ 'Chapter', 'Course', 'Task' ]))
+      )
+        .subscribe(items => {
+          this.itemsFound = items;
+          this.state = 'loaded';
+        })
+    );
   }
 
   ngOnDestroy(): void {
-    this.subscription?.unsubscribe();
+    this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
   onNewFocus(): void {
@@ -80,7 +96,8 @@ export class AddContentComponent implements OnInit, OnDestroy {
     this.reset();
   }
 
-  addExistingItem(): void {
+  addExistingItem(item: ItemFound): void {
+    this.contentAdded.emit(item);
     this.reset();
   }
 
@@ -89,7 +106,7 @@ export class AddContentComponent implements OnInit, OnDestroy {
   }
 
   private reset(focused?: 'searchExisting' | 'create'): void {
-    this.newContentForm.reset(defaultFormValues);
+    this.addContentForm.reset(defaultFormValues);
     this.focused = focused;
   }
 

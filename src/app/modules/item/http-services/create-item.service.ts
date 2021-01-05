@@ -14,7 +14,7 @@ export type NewItem = {
   title: string,
   type: ItemType,
   languageTag: string
-} & ({ parent: {itemId: string} } | { asRootOfGroupId: string })
+} & ({ parent: string } | { asRootOfGroupId: string })
 
 @Injectable({
   providedIn: 'root'
@@ -30,7 +30,7 @@ export class CreateItemService {
       type: newItem.type,
       language_tag: newItem.languageTag,
     };
-    if ('parent' in newItem) body.parent = newItem.parent;
+    if ('parent' in newItem) body.parent = { item_id: newItem.parent };
     if ('asRootOfGroupId' in newItem) body.as_root_of_group_id = newItem.asRootOfGroupId;
 
     return this.http
