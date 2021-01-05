@@ -24,6 +24,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { PendingChangesGuard } from 'src/app/shared/guards/pending-changes-guard';
 import { CompositionFilterComponent }
   from './components/item-chapter-view/group-situation-chapter-view/composition-filter/composition-filter.component';
+import { DurationToReadable } from 'src/app/shared/pipes/duration';
 
 @NgModule({
   declarations: [
@@ -45,6 +46,7 @@ import { CompositionFilterComponent }
     ItemProgressComponent,
     ItemChapterViewComponent,
     CompositionFilterComponent,
+    DurationToReadable,
   ],
   imports: [
     CommonModule,
