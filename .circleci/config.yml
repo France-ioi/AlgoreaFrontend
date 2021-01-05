@@ -76,7 +76,7 @@ jobs:
       - attach_workspace:
           at: ./
       - run: npx ng build --configuration ci --base-href ./ --progress=false
-      - run: echo '<html><body><a href="en">en</a> - <a href="fr">fr</a></body></html>' > dist/algorea/index.html
+      - run: echo '<html><head><script>window.location.replace("en/");</script></head></html>' > dist/algorea/index.html
       - persist_to_workspace:
           root: ./
           paths:
