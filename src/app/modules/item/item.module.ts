@@ -24,6 +24,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { PendingChangesGuard } from 'src/app/shared/guards/pending-changes-guard';
 import { CompositionFilterComponent }
   from './components/item-chapter-view/group-situation-chapter-view/composition-filter/composition-filter.component';
+import { MatMenuModule } from '@angular/material/menu';
 import { DurationToReadable } from 'src/app/shared/pipes/duration';
 
 @NgModule({
@@ -55,6 +56,7 @@ import { DurationToReadable } from 'src/app/shared/pipes/duration';
     ReactiveFormsModule,
     FormsModule,
     TooltipModule,
+    MatMenuModule,
   ],
   providers: [
     PendingChangesGuard,

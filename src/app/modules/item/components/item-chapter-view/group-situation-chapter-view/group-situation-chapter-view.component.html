@@ -53,6 +53,9 @@
         <td *ngFor="let col of columns; let colIndex = index">
           <alg-user-progress
             [userProgress]="data.data[rowIndex][colIndex]"
+            [title]="data.rowsHeader[rowIndex]"
+            [watchedGroup]="group"
+            [item]="itemData?.item"
           ></alg-user-progress>
         </td>
       </tr>
