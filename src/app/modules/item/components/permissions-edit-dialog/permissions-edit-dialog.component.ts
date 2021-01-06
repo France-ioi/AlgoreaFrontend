@@ -11,11 +11,6 @@ export interface Permissions {
   is_owner: boolean,
 }
 
-export interface PermissionsEditData {
-  title: string,
-  permissions: Permissions
-}
-
 @Component({
   selector: 'alg-permissions-edit-dialog',
   templateUrl: './permissions-edit-dialog.component.html',
@@ -23,7 +18,8 @@ export interface PermissionsEditData {
 })
 export class PermissionsEditDialogComponent implements OnInit {
 
-  @Input() data?: PermissionsEditData;
+  @Input() title?: string;
+  @Input() permissions?: Permissions;
   @Output() close = new EventEmitter<Permissions>();
   @Input() targetType: TypeFilter = 'Users';
 
@@ -32,10 +28,20 @@ export class PermissionsEditDialogComponent implements OnInit {
   targetTypeString = '';
 
   ngOnInit(): void {
-    this.targetTypeString = this.targetType.slice(0, -1).toLowerCase();
+    switch (this.targetType) {
+      case 'Users':
+        this.targetTypeString = 'user';
+        break;
+      case 'Groups':
+        this.targetTypeString = 'group';
+        break;
+      case 'Teams':
+        this.targetTypeString = 'team';
+        break;
+    }
   }
 
   onClose(): void {
-    if (this.data) this.close.emit(this.data.permissions);
+    if (this.permissions) this.close.emit(this.permissions);
   }
 }

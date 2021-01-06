@@ -1,5 +1,5 @@
 <p-dialog
-  *ngIf="data"
+  *ngIf="permissions"
   [visible]="visible"
   [modal]="true"
   [draggable]="false"
@@ -10,7 +10,7 @@
       <span class="dialog-handler">
         <i class="fa fa-lock"></i>
       </span>
-      <span class="dialog-title"> Access given to {{ data.title }}</span>
+      <span class="dialog-title" *ngIf="title"> Access given to {{ title }}</span>
       <span class="dialog-close" (click)="onClose()">
         <img src="assets/images/close.svg" alt="close">
       </span>
@@ -22,8 +22,8 @@
       <alg-progress-section
         title="Can view"
         icon="fa fa-eye"
-        [defaultValue]="this.data.permissions.can_view"
-        (change)="this.data.permissions.can_view = $event"
+        [defaultValue]="this.permissions.can_view"
+        (change)="this.permissions.can_view = $event"
         [values]="[
         {
           value: 'none',
@@ -55,16 +55,16 @@
       <alg-boolean-section
         title="Can Enter"
         icon="fa fa-door-open"
-        [defaultValue]="this.data.permissions.can_enter_from"
-        (change)="this.data.permissions.can_enter_from = $event"
+        [defaultValue]="this.permissions.can_enter_from"
+        (change)="this.permissions.can_enter_from = $event"
       >
         <ng-template #label>The {{targetTypeString}}  may enter this item (a contest or time-limited chapter)</ng-template>
       </alg-boolean-section>
       <alg-progress-section
         title="Can grant view"
         icon="fa fa-key"
-        [defaultValue]="this.data.permissions.can_grant_view"
-        (change)="this.data.permissions.can_grant_view = $event"
+        [defaultValue]="this.permissions.can_grant_view"
+        (change)="this.permissions.can_grant_view = $event"
         [values]="[
         {
           value: 'none',
@@ -103,8 +103,8 @@
       <alg-progress-section
         title="Can watch"
         icon="fa fa-binoculars"
-        [defaultValue]="this.data.permissions.can_watch"
-        (change)="this.data.permissions.can_watch = $event"
+        [defaultValue]="this.permissions.can_watch"
+        (change)="this.permissions.can_watch = $event"
         [values]="[
         {
           value: 'none',
@@ -131,8 +131,8 @@
       <alg-progress-section
         title="Can edit"
         icon="fa fa-pencil-alt"
-        [defaultValue]="this.data.permissions.can_edit"
-        (change)="this.data.permissions.can_edit = $event"
+        [defaultValue]="this.permissions.can_edit"
+        (change)="this.permissions.can_edit = $event"
         [values]="[
         {
           value: 'none',
@@ -159,16 +159,16 @@
       <alg-boolean-section
         title="Can attach official sessions"
         icon="fa fa-paperclip"
-        [defaultValue]="this.data.permissions.can_make_session_official"
-        (change)="this.data.permissions.can_make_session_official = $event"
+        [defaultValue]="this.permissions.can_make_session_official"
+        (change)="this.permissions.can_make_session_official = $event"
       >
         <ng-template #label>The {{targetTypeString}} may attach official sessions to this item, that will be visible to everyone in the content tab of the item</ng-template>
       </alg-boolean-section>
       <alg-boolean-section
         title="Is owner"
         icon="fa fa-user-tie"
-        [defaultValue]="this.data.permissions.is_owner"
-        (change)="this.data.permissions.is_owner = $event"
+        [defaultValue]="this.permissions.is_owner"
+        (change)="this.permissions.is_owner = $event"
       >
         <ng-template #label>The {{targetTypeString}} own this item, and get the maximum access in all categories above, and may also delete this item</ng-template>
       </alg-boolean-section>

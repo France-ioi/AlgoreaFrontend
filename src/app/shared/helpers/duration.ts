@@ -4,6 +4,7 @@ export const MINUTES = 60 * SECONDS;
 export const HOURS = 60 * MINUTES;
 export const DAYS = 24 * HOURS;
 export const MONTHS = 30 * DAYS;
+export const YEARS = 12 * MONTHS;
 
 export class Duration {
 
@@ -49,10 +50,10 @@ export class Duration {
       return `${Math.floor(this.ms / HOURS)} hours`;
     } else if (this.ms < MONTHS) {
       return `${Math.floor(this.ms / DAYS)} days`;
-    } else if (this.ms < MONTHS * 12) {
+    } else if (this.ms < YEARS) {
       return `${Math.floor(this.ms / MONTHS)} months`;
     } else {
-      return `${Math.floor(this.ms / MONTHS / 12)} years`;
+      return `${Math.floor(this.ms / YEARS)} years`;
     }
   }
 
