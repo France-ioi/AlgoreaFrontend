@@ -1,7 +1,6 @@
-import { Component, Inject } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
-interface Permissions {
+export interface Permissions {
   can_view: 'none'|'info'|'content'|'content_with_descendants'|'solution'
   can_enter_from: boolean,
   can_grant_view: 'none'|'enter'|'content'|'content_with_descendants'|'solution'|'solution_with_grant',
@@ -23,15 +22,12 @@ export interface PermissionsEditData {
 })
 export class PermissionsEditDialogComponent {
 
-  constructor(
-    public dialogRef: MatDialogRef<PermissionsEditDialogComponent>,
-    public dialog: MatDialog,
-    @Inject(MAT_DIALOG_DATA) public data: PermissionsEditData,
-  ) {
+  @Input() data?: PermissionsEditData;
+  @Output() close = new EventEmitter<Permissions>();
 
-  }
+  public visible = false;
 
   onClose(): void {
-    this.dialogRef.close(this.data.permissions);
+    if (this.data) this.close.emit(this.data.permissions);
   }
 }

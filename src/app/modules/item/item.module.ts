@@ -28,7 +28,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { DurationToReadable } from 'src/app/shared/pipes/duration';
 import { ButtonModule } from 'primeng/button';
 import { PermissionsEditDialogComponent } from './components/permissions-edit-dialog/permissions-edit-dialog.component';
-import { MatDialogModule } from '@angular/material/dialog';
+import { DialogModule } from 'primeng/dialog';
 
 @NgModule({
   declarations: [
@@ -61,7 +61,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     FormsModule,
     TooltipModule,
     MatMenuModule,
-    MatDialogModule,
+    DialogModule,
     ButtonModule,
   ],
   providers: [

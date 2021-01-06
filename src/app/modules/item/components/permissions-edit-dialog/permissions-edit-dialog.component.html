@@ -1,17 +1,22 @@
-<div mat-dialog-title>
-  <div class="dialog-header">
-    <span class="dialog-handler">
-      <i class="fa fa-lock"></i>
-    </span>
-    <span class="dialog-title"> Access given to {{ data.title }}</span>
-    <span class="dialog-close" (click)="onClose()">
-      <img src="assets/images/close.svg" alt="close">
-    </span>
-  </div>
-  <div mat-dialog-close></div>
-</div>
+<p-dialog
+  *ngIf="data"
+  [visible]="visible"
+  [modal]="true"
+  [draggable]="false"
+  [closable]="false"
+>
+  <p-header>
+    <div class="dialog-header">
+      <span class="dialog-handler">
+        <i class="fa fa-lock"></i>
+      </span>
+      <span class="dialog-title"> Access given to {{ data.title }}</span>
+      <span class="dialog-close" (click)="onClose()">
+        <img src="assets/images/close.svg" alt="close">
+      </span>
+    </div>
+  </p-header>
 
-<mat-dialog-content>
   <div class="dialog-container">
     <div class="dialog-content">
       <alg-progress-section
@@ -170,18 +175,21 @@
 
     </div>
   </div>
-</mat-dialog-content>
-<mat-dialog-actions>
-  <alg-button
-    icon="fa fa-times"
-    label="Cancel"
-    class="p-button-rounded p-button-danger cancel-button"
-    (click)="onClose()"
-  ></alg-button>
-  <alg-button
-    icon="fa fa-check"
-    label="Proceed"
-    class="p-button-rounded"
-    (click)="onClose()"
-  ></alg-button>
-</mat-dialog-actions>
+
+  <p-footer>
+    <div class="footer">
+      <alg-button
+        icon="fa fa-times"
+        label="Cancel"
+        class="p-button-rounded p-button-danger"
+        (click)="onClose()"
+      ></alg-button>
+      <alg-button
+        icon="fa fa-check"
+        label="Proceed"
+        class="p-button-rounded"
+        (click)="onClose()"
+      ></alg-button>
+    </div>
+  </p-footer>
+</p-dialog>

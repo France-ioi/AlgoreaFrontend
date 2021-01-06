@@ -44,3 +44,7 @@
     <span class="indicator"></span>
   </mat-menu>
 </ng-container>
+<alg-permissions-edit-dialog
+  [data]="{ title: title ? title : '', permissions: permissions}"
+  (close)="onDialogClose($event)"
+></alg-permissions-edit-dialog>

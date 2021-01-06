@@ -1,8 +1,7 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { Component, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 import { Group } from 'src/app/modules/group/http-services/get-group-by-id.service';
 import { Item } from 'src/app/modules/item/http-services/get-item-by-id.service';
-import { PermissionsEditDialogComponent } from '../../../permissions-edit-dialog/permissions-edit-dialog.component';
+import { Permissions, PermissionsEditDialogComponent } from '../../../permissions-edit-dialog/permissions-edit-dialog.component';
 import { Progress } from '../group-situation-chapter-view.component';
 
 @Component({
@@ -20,11 +19,21 @@ export class UserProgressComponent implements OnChanges {
 
   state: 'success'|'in-progress'|'no-score'|'not-started' = 'no-score';
 
+  @ViewChild(PermissionsEditDialogComponent) dialog!: PermissionsEditDialogComponent;
+
   canAccess = false;
 
-  constructor(
-    private dialog: MatDialog,
-  ) { }
+  permissions: Permissions = {
+    can_view: 'none',
+    can_enter_from: true,
+    can_grant_view: 'none',
+    can_watch: 'none',
+    can_edit: 'none',
+    can_make_session_official: false,
+    is_owner: true,
+  };
+
+  visibleDialog = false;
 
   ngOnChanges(_changes: SimpleChanges): void {
     if (!this.userProgress || !this.watchedGroup || !this.item) return;
@@ -38,27 +47,11 @@ export class UserProgressComponent implements OnChanges {
   }
 
   onClickAccess(): void {
-    const ref = this.dialog.open(PermissionsEditDialogComponent, {
-      maxHeight: '83rem',
-      minWidth: '67rem',
-      maxWidth: '67rem',
-      minHeight: '25rem',
-      data: {
-        title: this.title,
-        comment: 'Comment',
-        permissions: {
-          can_view: 'none',
-          can_enter_from: true,
-          can_grant_view: 'none',
-          can_watch: 'none',
-          can_edit: 'none',
-          can_make_session_official: false,
-          is_owner: true,
-        }
-      }
-    });
-    ref.afterClosed().subscribe(_result => {
-      //NOTHING FOR NOW
-    });
+    this.dialog.visible = true;
+  }
+
+  onDialogClose(_permissions: Permissions): void {
+    this.dialog.visible = false;
+    //NOTHING FOR NOW
   }
 }

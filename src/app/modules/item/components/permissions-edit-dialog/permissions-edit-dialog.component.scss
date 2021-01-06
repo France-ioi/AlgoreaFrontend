@@ -2,27 +2,15 @@
 @import "src/geometry.scss";
 @import "src/typography.scss";
 
-.dialog-header {
-  display: flex;
-  align-items: center;
-  position: relative;
-
-  .dialog-handler {
-    @include section-handler($base-color,$dark-color);
-  }
-
-  .dialog-title {
-    @include h2-title;
-    font-family: "titillium";
-    flex: 1;
-  }
-
-  .dialog-close {
-    @include dialog-close;
-  }
+:host ::ng-deep .p-dialog {
+  max-height: 83rem;
+  min-width: 67rem;
+  max-width: 67rem;
+  min-height: 25rem;
 }
 
-:host ::ng-deep .mat-dialog-actions {
+:host ::ng-deep .p-dialog-footer .footer{
+  display: flex;
   justify-content: center;
 
   .cancel-button {
@@ -30,11 +18,30 @@
   }
 }
 
-:host ::ng-deep .mat-dialog-title {
-  margin-left: -2.4rem;
-  margin-right: -2.4rem;
-  padding-bottom: 1.5rem;
-  border-bottom: .1rem solid $light-border-color;
+:host ::ng-deep .p-dialog-title {
+
+  margin-left: -1rem;
+
+  width: 100%;
+  .dialog-header {
+    display: flex;
+    align-items: center;
+    position: relative;
+
+    .dialog-handler {
+      @include section-handler($base-color,$dark-color);
+    }
+
+    .dialog-title {
+      @include h2-title;
+      font-family: "titillium";
+      flex: 1;
+    }
+
+    .dialog-close {
+      @include dialog-close;
+    }
+  }
 }
 
 :host ::ng-deep .dialog-container {
@@ -86,5 +93,3 @@
     }
   }
 }
-
-
