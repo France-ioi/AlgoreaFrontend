@@ -45,6 +45,7 @@
   </mat-menu>
 </ng-container>
 <alg-permissions-edit-dialog
+  [targetType]="targetType"
   [data]="{ title: title ? title : '', permissions: permissions}"
   (close)="onDialogClose($event)"
 ></alg-permissions-edit-dialog>

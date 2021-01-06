@@ -2,6 +2,7 @@ import { Component, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/
 import { Group } from 'src/app/modules/group/http-services/get-group-by-id.service';
 import { Item } from 'src/app/modules/item/http-services/get-item-by-id.service';
 import { Permissions, PermissionsEditDialogComponent } from '../../../permissions-edit-dialog/permissions-edit-dialog.component';
+import { TypeFilter } from '../composition-filter/composition-filter.component';
 import { Progress } from '../group-situation-chapter-view.component';
 
 @Component({
@@ -16,6 +17,7 @@ export class UserProgressComponent implements OnChanges {
   @Input() watchedGroup?: Group;
   @Input() item?: Item;
   @Input() userProgress?: Progress;
+  @Input() targetType: TypeFilter = 'Users';
 
   state: 'success'|'in-progress'|'no-score'|'not-started' = 'no-score';
 

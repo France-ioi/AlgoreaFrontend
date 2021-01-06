@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { TypeFilter } from '../item-chapter-view/group-situation-chapter-view/composition-filter/composition-filter.component';
 
 export interface Permissions {
   can_view: 'none'|'info'|'content'|'content_with_descendants'|'solution'
@@ -20,12 +21,19 @@ export interface PermissionsEditData {
   templateUrl: './permissions-edit-dialog.component.html',
   styleUrls: [ './permissions-edit-dialog.component.scss' ]
 })
-export class PermissionsEditDialogComponent {
+export class PermissionsEditDialogComponent implements OnInit {
 
   @Input() data?: PermissionsEditData;
   @Output() close = new EventEmitter<Permissions>();
+  @Input() targetType: TypeFilter = 'Users';
 
   public visible = false;
+
+  targetTypeString = '';
+
+  ngOnInit(): void {
+    this.targetTypeString = this.targetType.slice(0, -1).toLowerCase();
+  }
 
   onClose(): void {
     if (this.data) this.close.emit(this.data.permissions);
