@@ -127,6 +127,7 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
 
   // Item string changes
   private getItemStringChanges(): ItemStringChanges | undefined {
+    if (this.itemForm.pristine || !this.itemForm.touched) return {};
     const title = this.itemForm.get('title');
     const subtitle = this.itemForm.get('subtitle');
     const description = this.itemForm.get('description');
@@ -144,7 +145,8 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
     if (!this.initialFormData) return throwError(new Error('Missing ID form'));
     const itemStringChanges = this.getItemStringChanges();
     if (!itemStringChanges) return throwError(new Error('Invalid form'));
-    return this.updateItemStringService.updateItem(this.initialFormData.id, itemStringChanges);
+    if (Object.keys(itemStringChanges).length) return this.updateItemStringService.updateItem(this.initialFormData.id, itemStringChanges);
+    return of(undefined);
   }
 
   save(): void {
@@ -181,6 +183,7 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
       description: item.string.description || '',
       subtitle: item.string.subtitle || '',
     });
+    this.itemForm.markAsPristine();
     this.itemChanges = {};
     this.itemForm.enable();
     this.editContent?.reset();
