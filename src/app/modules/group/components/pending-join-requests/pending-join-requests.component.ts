@@ -33,12 +33,12 @@ export class PendingJoinRequestsComponent implements OnChanges, OnDestroy {
   requests: PendingRequest[] = [];
 
   columns: GridColumn[] = [
-    { field: 'user.login', header: 'USER' },
-    { field: 'at', header: 'REQUESTED ON' },
+    { field: 'user.login', header: $localize`USER` },
+    { field: 'at', header: $localize`REQUESTED ON` },
   ];
   readonly subgroupSwitchItems = [
-    { label: 'This group only', includeSubgroup: false },
-    { label: 'All subgroups', includeSubgroup: true }
+    { label: $localize`This group only`, includeSubgroup: false },
+    { label: $localize`All subgroups`, includeSubgroup: true }
   ];
   includeSubgroup = false;
 

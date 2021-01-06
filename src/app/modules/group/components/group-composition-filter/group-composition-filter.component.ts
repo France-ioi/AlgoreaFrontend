@@ -42,12 +42,12 @@ export class GroupCompositionFilterComponent implements OnInit{
   readonly allDescendantsTypeFilters = [
     {
       icon: 'fa fa-users',
-      label: 'teams',
+      label: $localize`teams`,
       value: TypeFilter.Teams
     },
     {
       icon: 'fa fa-user',
-      label: 'users',
+      label: $localize`users`,
       value: TypeFilter.Users
     },
   ];
@@ -55,22 +55,22 @@ export class GroupCompositionFilterComponent implements OnInit{
   readonly directChildrenTypeFilters = [
     {
       icon: 'fa fa-users',
-      label: 'sub-groups',
+      label: $localize`sub-groups`,
       value: TypeFilter.Groups
     },
     {
       icon: 'fa fa-calendar',
-      label: 'sessions',
+      label: $localize`sessions`,
       value: TypeFilter.Sessions
     },
     {
       icon: 'fa fa-users',
-      label: 'teams',
+      label: $localize`teams`,
       value: TypeFilter.Teams
     },
     {
       icon: 'fa fa-user',
-      label: 'users',
+      label: $localize`users`,
       value: TypeFilter.Users
     },
   ];
@@ -88,14 +88,14 @@ export class GroupCompositionFilterComponent implements OnInit{
 
   onTypeFilterChanged(index: number): void {
     const typeFilters = this.value.directChildren ? this.directChildrenTypeFilters : this.allDescendantsTypeFilters;
-    if (index < 0 || index >= typeFilters.length) throw Error('invalid value for type filter');
+    if (index < 0 || index >= typeFilters.length) throw Error($localize`invalid value for type filter`);
     this.selectedTypeFilter = index;
     this.value.type = typeFilters[index].value;
     this.change.emit(this.value);
   }
 
   onChildrenFilterChanged(index: number): void {
-    if (index < 0 || index >= this.childrenFilters.length) throw Error('invalid value for children filter');
+    if (index < 0 || index >= this.childrenFilters.length) throw Error($localize`invalid value for children filter`);
 
     this.selectedChildrenFilter = index;
     this.value.directChildren = this.childrenFilters[index].value;

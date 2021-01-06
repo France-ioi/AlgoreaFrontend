@@ -9,28 +9,29 @@ export interface Result {
 }
 
 export function displayResponseToast(messageService: MessageService, result: Result, action: Action): void {
-  const verb = action === Action.Accept ? 'accept' : 'reject';
-  const msg = action === Action.Accept ? 'accepted' : 'declined';
+  const verb = action === Action.Accept ? $localize`accept` : $localize`reject`;
+  const msg = action === Action.Accept ? $localize`accepted` : $localize`declined`;
 
   if (result.countSuccess === result.countRequests) {
     messageService.add({
       severity: 'success',
-      summary: 'Success',
-      detail: `${result.countSuccess} request(s) have been ${msg}`,
+      summary: $localize`Success`,
+      detail: $localize`${result.countSuccess} request(s) have been ${msg}`,
       life: TOAST_LENGTH,
     });
   } else if (result.countSuccess === 0) {
     messageService.add({
       severity: 'error',
-      summary: 'Error',
-      detail: `Unable to ${verb} the selected request(s).`,
+      summary: $localize`Error`,
+      detail: $localize`Unable to ${verb} the selected request(s).`,
       life: TOAST_LENGTH,
     });
   } else {
     messageService.add({
       severity: 'warn',
-      summary: 'Partial success',
-      detail: `${result.countSuccess} request(s) have been ${msg}, ${result.countRequests - result.countSuccess} could not be executed`,
+      summary: $localize`Partial success`,
+      detail:
+        $localize`${result.countSuccess} request(s) have been ${msg}, ${result.countRequests - result.countSuccess} could not be executed`,
       life: TOAST_LENGTH,
     });
   }
@@ -39,7 +40,7 @@ export function displayResponseToast(messageService: MessageService, result: Res
 export function processRequestError(messageService: MessageService): void {
   messageService.add({
     severity: 'error',
-    summary: 'Error',
+    summary: $localize`Error`,
     detail: ERROR_MESSAGE.fail,
     life: TOAST_LENGTH,
   });

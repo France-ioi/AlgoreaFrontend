@@ -58,8 +58,8 @@ export class GroupEditComponent implements OnDestroy, PendingChangesComponent {
   successToast(): void {
     this.messageService.add({
       severity: 'success',
-      summary: 'Success',
-      detail: 'Changes successfully saved.',
+      summary: $localize`Success`,
+      detail: $localize`Changes successfully saved.`,
       life: TOAST_LENGTH,
     });
   }
@@ -67,7 +67,7 @@ export class GroupEditComponent implements OnDestroy, PendingChangesComponent {
   errorToast(message?: string): void {
     this.messageService.add({
       severity: 'error',
-      summary: 'Error',
+      summary: $localize`Error`,
       detail: message || ERROR_MESSAGE.fail,
       life: TOAST_LENGTH,
     });
@@ -85,7 +85,7 @@ export class GroupEditComponent implements OnDestroy, PendingChangesComponent {
     if (!this.initialFormData) return;
 
     if (this.groupForm.invalid) {
-      this.errorToast('You need to solve all the errors displayed in the form to save changes.');
+      this.errorToast($localize`You need to solve all the errors displayed in the form to save changes.`);
       return;
     }
 

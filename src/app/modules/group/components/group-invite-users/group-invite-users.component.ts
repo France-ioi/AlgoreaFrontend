@@ -86,29 +86,29 @@ export class GroupInviteUsersComponent implements OnInit, OnDestroy {
     if (successInvites.length > 0)
       this.messages.push({
         type: 'success',
-        summary: `${successInvites.length} user(s) invited successfully: `,
-        detail: `${successInvites.join(', ')}`,
+        summary: $localize`${successInvites.length} user(s) invited successfully: `,
+        detail: $localize`${successInvites.join(', ')}`,
       });
 
     if (alreadyInvited.length > 0)
       this.messages.push({
         type: 'info',
-        summary: `${alreadyInvited.length} user(s) have already been invited: `,
-        detail: `${alreadyInvited.join(', ')}`,
+        summary: $localize`${alreadyInvited.length} user(s) have already been invited: `,
+        detail: $localize`${alreadyInvited.join(', ')}`,
       });
 
     if (notFoundUsers.length > 0)
       this.messages.push({
         type: 'error',
-        summary: `${notFoundUsers.length} user login(s) not found: `,
-        detail: `${notFoundUsers.join(', ')}`,
+        summary: $localize`${notFoundUsers.length} user login(s) not found: `,
+        detail: $localize`${notFoundUsers.join(', ')}`,
       });
 
     if (invalidInvites.length > 0)
       this.messages.push({
         type: 'error',
-        summary: `${invalidInvites.length} user login(s) could not be invited: `,
-        detail: `${invalidInvites.join(', ')}`,
+        summary: $localize`${invalidInvites.length} user login(s) could not be invited: `,
+        detail: $localize`${invalidInvites.join(', ')}`,
       });
   }
 
