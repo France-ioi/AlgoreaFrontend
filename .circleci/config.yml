@@ -31,13 +31,13 @@ commands:
             --cache-control 'max-age=300'
       - aws-s3/copy:
           from:  << parameters.from >>en/index.html
-          to: s3://<< parameters.bucket >><< parameters.path >>/en.html
+          to: s3://<< parameters.bucket >><< parameters.path >>/en/index.html
           arguments: >-
             --acl public-read
             --cache-control 'max-age=10'
       - aws-s3/copy:
           from:  << parameters.from >>fr/index.html
-          to: s3://<< parameters.bucket >><< parameters.path >>/fr.html
+          to: s3://<< parameters.bucket >><< parameters.path >>/fr/index.html
           arguments: >-
             --acl public-read
             --cache-control 'max-age=10'
@@ -76,7 +76,7 @@ jobs:
       - attach_workspace:
           at: ./
       - run: npx ng build --configuration ci --base-href ./ --progress=false
-      - run: echo '<html><body><a href="en.html">en</a> - <a href="fr.html">fr</a></body></html>' > dist/algorea/index.html
+      - run: echo '<html><head><script>window.location.replace("en/");</script></head></html>' > dist/algorea/index.html
       - persist_to_workspace:
           root: ./
           paths:

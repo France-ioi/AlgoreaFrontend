@@ -14,7 +14,7 @@
       <span class="notification-number">{{ data.notification }}</span>
       <i class="far fa-bell"></i>
     </span> -->
-    <!-- <alg-select [items]="langs"></alg-select> -->
+    <alg-language-picker class="lang-picker"></alg-language-picker>
     <span class="sign-out" *ngIf="session && !session.user.isTemp" (click)="logout()" tabindex="2">
       <i class="fa fa-sign-out-alt"></i>
     </span>
