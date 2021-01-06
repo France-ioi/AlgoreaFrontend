@@ -18,12 +18,11 @@ export interface Permissions {
 })
 export class PermissionsEditDialogComponent implements OnInit {
 
+  @Input() visible?: boolean;
   @Input() title?: string;
   @Input() permissions?: Permissions;
   @Output() close = new EventEmitter<Permissions>();
   @Input() targetType: TypeFilter = 'Users';
-
-  public visible = false;
 
   targetTypeString = '';
 

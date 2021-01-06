@@ -1,7 +1,7 @@
-import { Component, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { Group } from 'src/app/modules/group/http-services/get-group-by-id.service';
 import { Item } from 'src/app/modules/item/http-services/get-item-by-id.service';
-import { Permissions, PermissionsEditDialogComponent } from '../../../permissions-edit-dialog/permissions-edit-dialog.component';
+import { Permissions } from '../../../permissions-edit-dialog/permissions-edit-dialog.component';
 import { TypeFilter } from '../composition-filter/composition-filter.component';
 import { Progress } from '../group-situation-chapter-view.component';
 
@@ -20,8 +20,6 @@ export class UserProgressComponent implements OnChanges {
   @Input() targetType: TypeFilter = 'Users';
 
   state: 'success'|'in-progress'|'no-score'|'not-started' = 'no-score';
-
-  @ViewChild(PermissionsEditDialogComponent) dialog!: PermissionsEditDialogComponent;
 
   canAccess = false;
 
@@ -49,11 +47,11 @@ export class UserProgressComponent implements OnChanges {
   }
 
   onClickAccess(): void {
-    this.dialog.visible = true;
+    this.visibleDialog = true;
   }
 
   onDialogClose(_permissions: Permissions): void {
-    this.dialog.visible = false;
+    this.visibleDialog = false;
     //NOTHING FOR NOW
   }
 }
