@@ -1,0 +1,20 @@
+<alg-section-paragraph icon="fa fa-sign-in-alt" label="Access to activity">
+  <div class="input-wrapper">
+    <input
+      #input
+      type="text"
+      placeholder="Group code"
+      (keyup)="0"
+    >
+    <span class="icon">
+      <i class="fa fa-font"></i>
+    </span>
+    <alg-button
+      icon="fa fa-check"
+      label="Access"
+      class="p-button-rounded"
+      [disabled]="input.value === '' || state === 'loading'"
+      (click)="onClickAccess(input.value)"
+    ></alg-button>
+  </div>
+</alg-section-paragraph>
