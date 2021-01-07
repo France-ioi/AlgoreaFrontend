@@ -68,8 +68,8 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
   successToast(): void {
     this.messageService.add({
       severity: 'success',
-      summary: 'Success',
-      detail: 'Changes successfully saved.',
+      summary: $localize`Success`,
+      detail: $localize`Changes successfully saved.`,
       life: TOAST_LENGTH,
     });
   }
@@ -77,7 +77,7 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
   errorToast(message?: string): void {
     this.messageService.add({
       severity: 'error',
-      summary: 'Error',
+      summary: $localize`Error`,
       detail: message || ERROR_MESSAGE.fail,
       life: TOAST_LENGTH,
     });
@@ -95,7 +95,7 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
       this.itemChanges.children.map(child => {
         if (!this.initialFormData) return throwError(new Error('Invalid form'));
         if (hasId(child)) return of(child);
-        // the child doesn't have an id so we create it
+        // the child doesnt have an id so we create it
         if (!child.title) return throwError(new Error('Something went wrong, the new child is missing his title'));
         const newChild: NewItem = {
           title: child.title,
@@ -151,7 +151,7 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
     if (!this.initialFormData) return;
 
     if (this.itemForm.invalid) {
-      this.errorToast('You need to solve all the errors displayed in the form to save changes.');
+      this.errorToast($localize`You need to solve all the errors displayed in the form to save changes.`);
       return;
     }
 
