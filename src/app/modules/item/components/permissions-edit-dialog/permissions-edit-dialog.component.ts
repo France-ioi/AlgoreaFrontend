@@ -37,13 +37,13 @@ export class PermissionsEditDialogComponent implements OnInit {
   ngOnInit(): void {
     switch (this.targetType) {
       case 'Users':
-        this.targetTypeString = 'user';
+        this.targetTypeString = $localize`The user`;
         break;
       case 'Groups':
-        this.targetTypeString = 'group';
+        this.targetTypeString = $localize`The group`;
         break;
       case 'Teams':
-        this.targetTypeString = 'team';
+        this.targetTypeString = $localize`The team`;
         break;
     }
 

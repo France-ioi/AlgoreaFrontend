@@ -10,7 +10,7 @@
       <span class="dialog-handler">
         <i class="fa fa-lock"></i>
       </span>
-      <span class="dialog-title" *ngIf="title"> Access given to {{ title }}</span>
+      <span class="dialog-title" *ngIf="title" i18n> Access given to {{ title }}</span>
       <span class="dialog-close" (click)="onClose()">
         <img src="assets/images/close.svg" alt="close">
       </span>
@@ -20,56 +20,56 @@
   <div class="dialog-container">
     <div class="dialog-content">
       <alg-progress-section
-        title="Can view"
+        i18n-title title="Can view"
         icon="fa fa-eye"
         [defaultValue]="this.permissions.can_view"
         (change)="this.permissions.can_view = $event"
         [values]="canViewValues"
       ></alg-progress-section>
       <alg-boolean-section
-        title="Can Enter"
+        i18n-title title="Can Enter"
         icon="fa fa-door-open"
         [defaultValue]="this.permissions.can_enter_from"
         (change)="this.permissions.can_enter_from = $event"
       >
-        <ng-template #label>The {{targetTypeString}}  may enter this item (a contest or time-limited chapter)</ng-template>
+        <ng-template #label i18n>{{targetTypeString}} may enter this item (a contest or time-limited chapter)</ng-template>
       </alg-boolean-section>
       <alg-progress-section
-        title="Can grant view"
+        i18n-title title="Can grant view"
         icon="fa fa-key"
         [defaultValue]="this.permissions.can_grant_view"
         (change)="this.permissions.can_grant_view = $event"
         [values]="canGrantViewValues"
       ></alg-progress-section>
       <alg-progress-section
-        title="Can watch"
+        i18n-title title="Can watch"
         icon="fa fa-binoculars"
         [defaultValue]="this.permissions.can_watch"
         (change)="this.permissions.can_watch = $event"
         [values]="canWatchValues"
       ></alg-progress-section>
       <alg-progress-section
-        title="Can edit"
+        i18n-title title="Can edit"
         icon="fa fa-pencil-alt"
         [defaultValue]="this.permissions.can_edit"
         (change)="this.permissions.can_edit = $event"
         [values]="canEditValues"
       ></alg-progress-section>
       <alg-boolean-section
-        title="Can attach official sessions"
+        i18n-title title="Can attach official sessions"
         icon="fa fa-paperclip"
         [defaultValue]="this.permissions.can_make_session_official"
         (change)="this.permissions.can_make_session_official = $event"
       >
-        <ng-template #label>The {{targetTypeString}} may attach official sessions to this item, that will be visible to everyone in the content tab of the item</ng-template>
+        <ng-template #label i18n>{{targetTypeString}} may attach official sessions to this item, that will be visible to everyone in the content tab of the item</ng-template>
       </alg-boolean-section>
       <alg-boolean-section
-        title="Is owner"
+        i18n-title title="Is owner"
         icon="fa fa-user-tie"
         [defaultValue]="this.permissions.is_owner"
         (change)="this.permissions.is_owner = $event"
       >
-        <ng-template #label>The {{targetTypeString}} own this item, and get the maximum access in all categories above, and may also delete this item</ng-template>
+        <ng-template #label i18n>{{targetTypeString}} own this item, and get the maximum access in all categories above, and may also delete this item</ng-template>
       </alg-boolean-section>
 
     </div>
@@ -79,13 +79,13 @@
     <div class="footer">
       <alg-button
         icon="fa fa-times"
-        label="Cancel"
+        i18n-label label="Cancel"
         class="p-button-rounded p-button-danger"
         (click)="onClose()"
       ></alg-button>
       <alg-button
         icon="fa fa-check"
-        label="Proceed"
+        i18n-label label="Proceed"
         class="p-button-rounded"
         (click)="onClose()"
       ></alg-button>
