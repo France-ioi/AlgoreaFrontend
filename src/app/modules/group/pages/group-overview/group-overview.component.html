@@ -1,4 +1,4 @@
 <alg-section icon="fa fa-users" i18n-label label="Presentation" *ngIf="group">
-  <p *ngIf="group.description ; else noDesc" i18n>{{ group.description }} </p>
+  <p *ngIf="group.description ; else noDesc">{{ group.description }}</p>
   <ng-template #noDesc i18n>This group has no description</ng-template>
 </alg-section>

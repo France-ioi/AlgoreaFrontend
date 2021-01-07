@@ -11,7 +11,7 @@
 
   <p *ngIf="state === 'fetchingError';else noFetchingError" class="error-message">
     <i class="fa fa-exclamation-triangle"></i>
-    Error while loading the pending requests.
+    <span i18n>Error while loading the pending requests.</span>
   </p>
 
   <ng-template #noFetchingError>
@@ -105,7 +105,7 @@
           </div>
         </ng-template>
       </alg-grid>
-      <p class="no-pending-requests" *ngIf="requests.length === 0">
+      <p class="no-pending-requests" *ngIf="requests.length === 0" i18n>
         No pending requests
       </p>
     </div>
