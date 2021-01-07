@@ -88,14 +88,14 @@ export class GroupCompositionFilterComponent implements OnInit{
 
   onTypeFilterChanged(index: number): void {
     const typeFilters = this.value.directChildren ? this.directChildrenTypeFilters : this.allDescendantsTypeFilters;
-    if (index < 0 || index >= typeFilters.length) throw Error($localize`invalid value for type filter`);
+    if (index < 0 || index >= typeFilters.length) throw Error('invalid value for type filter');
     this.selectedTypeFilter = index;
     this.value.type = typeFilters[index].value;
     this.change.emit(this.value);
   }
 
   onChildrenFilterChanged(index: number): void {
-    if (index < 0 || index >= this.childrenFilters.length) throw Error($localize`invalid value for children filter`);
+    if (index < 0 || index >= this.childrenFilters.length) throw Error('invalid value for children filter');
 
     this.selectedChildrenFilter = index;
     this.value.directChildren = this.childrenFilters[index].value;
