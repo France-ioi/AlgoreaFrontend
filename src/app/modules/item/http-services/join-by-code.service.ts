@@ -69,4 +69,13 @@ export class JoinByCodeService {
       } : { valid: false, reason: r.reason })));
   }
 
+  joinGroupThroughCode(code: string, approvals: string[] = []): Observable<void> {
+    let params = new HttpParams();
+    params = params.set('code', code).set('approvals', approvals.join(','));
+    return this.http
+      .post<SimpleActionResponse>(`${appConfig().apiUrl}/current-user/group-memberships/by-code`, null, { params: params })
+      .pipe(
+        map(assertSuccess)
+      );
+  }
 }
