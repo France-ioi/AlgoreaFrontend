@@ -87,28 +87,28 @@ export class GroupInviteUsersComponent implements OnInit, OnDestroy {
       this.messages.push({
         type: 'success',
         summary: $localize`${successInvites.length} user(s) invited successfully: `,
-        detail: $localize`${successInvites.join(', ')}`,
+        detail: `${successInvites.join(', ')}`,
       });
 
     if (alreadyInvited.length > 0)
       this.messages.push({
         type: 'info',
         summary: $localize`${alreadyInvited.length} user(s) have already been invited: `,
-        detail: $localize`${alreadyInvited.join(', ')}`,
+        detail: `${alreadyInvited.join(', ')}`,
       });
 
     if (notFoundUsers.length > 0)
       this.messages.push({
         type: 'error',
         summary: $localize`${notFoundUsers.length} user login(s) not found: `,
-        detail: $localize`${notFoundUsers.join(', ')}`,
+        detail: `${notFoundUsers.join(', ')}`,
       });
 
     if (invalidInvites.length > 0)
       this.messages.push({
         type: 'error',
         summary: $localize`${invalidInvites.length} user login(s) could not be invited: `,
-        detail: $localize`${invalidInvites.join(', ')}`,
+        detail: `${invalidInvites.join(', ')}`,
       });
   }
 
