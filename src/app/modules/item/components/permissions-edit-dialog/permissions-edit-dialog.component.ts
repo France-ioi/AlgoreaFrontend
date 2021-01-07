@@ -35,22 +35,10 @@ export class PermissionsEditDialogComponent implements OnInit {
   canEditValues: ProgressSectionValue<string>[] = []
 
   ngOnInit(): void {
-    switch (this.targetType) {
-      case 'Users':
-        this.targetTypeString = $localize`The user`;
-        break;
-      case 'Groups':
-        this.targetTypeString = $localize`The group`;
-        break;
-      case 'Teams':
-        this.targetTypeString = $localize`The team`;
-        break;
-    }
-
-    this.canViewValues = generateCanViewValues(this.targetTypeString);
-    this.canGrantViewValues = generateCanGrantViewValues(this.targetTypeString);
-    this.canWatchValues = generateCanWatchValues(this.targetTypeString);
-    this.canEditValues = generateCanEditValues(this.targetTypeString);
+    this.canViewValues = generateCanViewValues(this.targetType);
+    this.canGrantViewValues = generateCanGrantViewValues(this.targetType);
+    this.canWatchValues = generateCanWatchValues(this.targetType);
+    this.canEditValues = generateCanEditValues(this.targetType);
   }
 
   onClose(): void {

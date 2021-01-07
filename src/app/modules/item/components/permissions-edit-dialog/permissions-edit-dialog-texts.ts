@@ -1,6 +1,19 @@
 import { ProgressSectionValue } from 'src/app/modules/shared-components/components/progress-section/progress-section.component';
+import { TypeFilter } from '../item-chapter-view/group-situation-chapter-view/composition-filter/composition-filter.component';
 
-export function generateCanViewValues(targetTypeString: string): ProgressSectionValue<string>[]{
+function getTargetTypeString(targetType: TypeFilter): string {
+  switch (targetType) {
+    case 'Users':
+      return $localize`The user`;
+    case 'Groups':
+      return $localize`The group`;
+    case 'Teams':
+      return $localize`The team`;
+  }
+}
+
+export function generateCanViewValues(targetType: TypeFilter): ProgressSectionValue<string>[]{
+  const targetTypeString = getTargetTypeString(targetType);
   return [
     {
       value: 'none',
@@ -30,7 +43,8 @@ export function generateCanViewValues(targetTypeString: string): ProgressSection
   ];
 }
 
-export function generateCanGrantViewValues(targetTypeString: string): ProgressSectionValue<string>[]{
+export function generateCanGrantViewValues(targetType: TypeFilter): ProgressSectionValue<string>[]{
+  const targetTypeString = getTargetTypeString(targetType);
   return [
     {
       value: 'none',
@@ -68,7 +82,8 @@ export function generateCanGrantViewValues(targetTypeString: string): ProgressSe
 }
 
 
-export function generateCanWatchValues(targetTypeString: string): ProgressSectionValue<string>[]{
+export function generateCanWatchValues(targetType: TypeFilter): ProgressSectionValue<string>[]{
+  const targetTypeString = getTargetTypeString(targetType);
   return [
     {
       value: 'none',
@@ -94,7 +109,8 @@ export function generateCanWatchValues(targetTypeString: string): ProgressSectio
   ];
 }
 
-export function generateCanEditValues(targetTypeString: string): ProgressSectionValue<string>[]{
+export function generateCanEditValues(targetType: TypeFilter): ProgressSectionValue<string>[]{
+  const targetTypeString = getTargetTypeString(targetType);
   return [
     {
       value: 'none',
