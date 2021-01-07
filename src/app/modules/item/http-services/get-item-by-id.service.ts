@@ -19,6 +19,7 @@ export interface Item {
     can_grant_view: 'none'|'enter'|'content'|'content_with_descendants'|'solution'|'solution_with_grant',
   },
   type: ItemType,
+  prompt_to_join_group_by_code: boolean,
 }
 
 @Injectable({
