@@ -6,11 +6,11 @@
         <source>Log in / Sign in</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/app.component.html</context>
-          <context context-type="linenumber">33</context>
+          <context context-type="linenumber">34</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/app.component.html</context>
-          <context context-type="linenumber">33</context>
+          <context context-type="linenumber">34</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/components/navigation-tabs/navigation-tabs.component.html</context>
@@ -21,11 +21,11 @@
         <source>Log out</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/app.component.html</context>
-          <context context-type="linenumber">41</context>
+          <context context-type="linenumber">42</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/app.component.html</context>
-          <context context-type="linenumber">41</context>
+          <context context-type="linenumber">42</context>
         </context-group>
       </trans-unit>
       <trans-unit id="e9935669cab3ea24d8ffde4dc934776f3cbb2a20" datatype="html">
@@ -54,6 +54,111 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/shared-components/components/progress-section/boolean-section/boolean-section.component.html</context>
           <context context-type="linenumber">14,15</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5402924068010392760" datatype="html">
+        <source>Join the group &quot;<x id="PH" equiv-text="response.group.name"/>&quot;</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/components/item-header/access-code-view/access-code-view.component.ts</context>
+          <context context-type="linenumber">32</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="3988558682818955220" datatype="html">
+        <source>Are you sure you want to join the group &quot;<x id="PH" equiv-text="response.group.name"/>&quot;?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/components/item-header/access-code-view/access-code-view.component.ts</context>
+          <context context-type="linenumber">33</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="8307140841776883735" datatype="html">
+        <source>Join</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/components/item-header/access-code-view/access-code-view.component.ts</context>
+          <context context-type="linenumber">34</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2159130950882492111" datatype="html">
+        <source>Cancel</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/components/item-header/access-code-view/access-code-view.component.ts</context>
+          <context context-type="linenumber">36</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="151257229344188643" datatype="html">
+        <source>You are already a member of this group</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/components/item-header/access-code-view/access-code-view.component.ts</context>
+          <context context-type="linenumber">54</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6518151687965868642" datatype="html">
+        <source>There is conflicting group participation</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/components/item-header/access-code-view/access-code-view.component.ts</context>
+          <context context-type="linenumber">56</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="3080069270402983357" datatype="html">
+        <source>Your membership is frozen</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/components/item-header/access-code-view/access-code-view.component.ts</context>
+          <context context-type="linenumber">58</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="1114541607164595532" datatype="html">
+        <source>No group corresponds to this code</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/components/item-header/access-code-view/access-code-view.component.ts</context>
+          <context context-type="linenumber">60</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2037133063223675482" datatype="html">
+        <source>You don&apos;t meet the group&apos;s join conditions</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/components/item-header/access-code-view/access-code-view.component.ts</context>
+          <context context-type="linenumber">62</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="1519954996184640001" datatype="html">
+        <source>Error</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/components/item-header/access-code-view/access-code-view.component.ts</context>
+          <context context-type="linenumber">69</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4648900870671159218" datatype="html">
+        <source>Success</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/components/item-header/access-code-view/access-code-view.component.ts</context>
+          <context context-type="linenumber">78</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="3487804242455918485" datatype="html">
+        <source>Changes successfully saved.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/components/item-header/access-code-view/access-code-view.component.ts</context>
+          <context context-type="linenumber">79</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="b519e0487553e270eb6674281c3dd9e65ff91d3c" datatype="html">
+        <source>Access to activity</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/components/item-header/access-code-view/access-code-view.component.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="88070997a942eb0ca0aaa1972b71a511b57e7c92" datatype="html">
+        <source>Group code</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/components/item-header/access-code-view/access-code-view.component.html</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="fa5002e6d44382622a9752e361de52c3e81b9093" datatype="html">
+        <source>Access</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/components/item-header/access-code-view/access-code-view.component.html</context>
+          <context context-type="linenumber">14</context>
         </context-group>
       </trans-unit>
       <trans-unit id="67a18b71fa8c693dcac1160436760698bc988159" datatype="html">

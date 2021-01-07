@@ -29,11 +29,11 @@ export class AccessCodeViewComponent {
         return;
       }
       this.confirmationService.confirm({
-        header: `Join the group "${response.group.name}"`,
-        message: `Are you sure you want to join the group "${response.group.name}"?`,
-        acceptLabel: 'Join',
+        header: $localize`Join the group "${response.group.name}"`,
+        message: $localize`Are you sure you want to join the group "${response.group.name}"?`,
+        acceptLabel: $localize`Join`,
         acceptIcon: 'fa fa-check',
-        rejectLabel: 'Cancel',
+        rejectLabel: $localize`Cancel`,
         accept: () => {
           this.joinGroup(groupCode);
         }
@@ -51,22 +51,22 @@ export class AccessCodeViewComponent {
   invalidCodeReasonToString(reason: InvalidCodeReason): string {
     switch (reason) {
       case 'already_member':
-        return `You are already a member of this group`;
+        return $localize`You are already a member of this group`;
       case 'conflicting_team_participation':
-        return `There is conflicting group participation`;
+        return $localize`There is conflicting group participation`;
       case 'frozen_membership':
-        return `Your membership is frozen`;
+        return $localize`Your membership is frozen`;
       case 'no_group':
-        return `No group corresponds to this code`;
+        return $localize`No group corresponds to this code`;
       case 'team_conditions_not_met':
-        return `You don't meet the group's join conditions`;
+        return $localize`You don't meet the group's join conditions`;
     }
   }
 
   errorToast(message?: string): void {
     this.messageService.add({
       severity: 'error',
-      summary: 'Error',
+      summary: $localize`Error`,
       detail: message || ERROR_MESSAGE.fail,
       life: TOAST_LENGTH,
     });
@@ -75,8 +75,8 @@ export class AccessCodeViewComponent {
   successToast(): void {
     this.messageService.add({
       severity: 'success',
-      summary: 'Success',
-      detail: 'Changes successfully saved.',
+      summary: $localize`Success`,
+      detail: $localize`Changes successfully saved.`,
       life: TOAST_LENGTH,
     });
   }
