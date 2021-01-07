@@ -56,6 +56,284 @@
           <context context-type="linenumber">14,15</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="d0e62d4a9a46e5a481119906acbd98fd8c0ce8a5" datatype="html">
+        <source>This group has no users</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/components/item-chapter-view/group-situation-chapter-view/group-situation-chapter-view.component.html</context>
+          <context context-type="linenumber">18</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="c75ee32186268ccc840c238b99a6a0e147efa036" datatype="html">
+        <source>This group has no teams</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/components/item-chapter-view/group-situation-chapter-view/group-situation-chapter-view.component.html</context>
+          <context context-type="linenumber">19</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="606a3f5c09d637604727a3779686d9d612365f87" datatype="html">
+        <source>This group has no sub-groups</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/components/item-chapter-view/group-situation-chapter-view/group-situation-chapter-view.component.html</context>
+          <context context-type="linenumber">20</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4798f8b7d31719897a2a86d1cfd511686d95bcc8" datatype="html">
+        <source>Chapter view for user</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/components/item-chapter-view/item-chapter-view.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="80a7795888bbfdf26055b0e1db9b12c6ae67df9d" datatype="html">
+        <source>Children</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/components/item-children-edit/item-children-edit.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="b463541a7e303aa4d0b1102eaff8afbaf34e7a74" datatype="html">
+        <source>Select all</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/components/item-children-edit/item-children-edit.component.html</context>
+          <context context-type="linenumber">20</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="39095d9bc1f12307d8dcde8a3fee965bc4a44e00" datatype="html">
+        <source>Remove selected</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/components/item-children-edit/item-children-edit.component.html</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="584b04ff6f32f01c706429ba522c3be62d083c4c" datatype="html">
+        <source>No children for this chapter.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/components/item-children-edit/item-children-edit.component.html</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6080b77234e92ad41bb52653b239c4c4f851317d" datatype="html">
+        <source>Error</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/components/item-children-edit/item-children-edit.component.html</context>
+          <context context-type="linenumber">41</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="9888b1258e6c9e7c0905529c5cfe3abf81f35a21" datatype="html">
+        <source>Parent skills</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/components/parent-skills/parent-skills.component.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5de3a110d0206436e1dfe6a9428e35173b6fb050" datatype="html">
+        <source>Error while loading the skill parents</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/components/parent-skills/parent-skills.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="9b0f80478d0251023bbbb47f02ae7d0e8ddcd54d" datatype="html">
+        <source>This skill does not have parent skills.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/components/parent-skills/parent-skills.component.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="eec715de352a6b114713b30b640d319fa78207a0" datatype="html">
+        <source>Description</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/pages/item-edit-content/item-edit-content.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/pages/item-content/item-content.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/pages/item-content/item-content.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/pages/group-edit/group-edit.component.html</context>
+          <context context-type="linenumber">19</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="28ed73a3083528a369676e7a206d04b627ae4dff" datatype="html">
+        <source>Sub-skills</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/components/sub-skills/sub-skills.component.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="53bc0ed46b430ba59c6cd3277897b9f744b52608" datatype="html">
+        <source>Error while loading content</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/components/sub-skills/sub-skills.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="b8b764f87aaac9b728d394275849123b2b204dc7" datatype="html">
+        <source>This skill does not have subskills.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/components/sub-skills/sub-skills.component.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6815d42700f57670bcaa5a70394ce4f1f36eebf5" datatype="html">
+        <source>Log view</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/pages/item-log-view/item-log-view.component.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="0ed8bd6094913d1ecc0b0ed510e7cd1249877248" datatype="html">
+        <source>Unable to load the recent activity</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/pages/item-log-view/item-log-view.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="970041ed206f917791f55d3df069b06035b0844f" datatype="html">
+        <source>Loaded <x id="INTERPOLATION" equiv-text="ded {{ logData.lengt"/> results</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/pages/item-log-view/item-log-view.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6213559315741290082" datatype="html">
+        <source>Log view</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/pages/item-current-situation/item-current-situation.component.ts</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4157999209809351413" datatype="html">
+        <source>Chapter view</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/pages/item-current-situation/item-current-situation.component.ts</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="9bd32b7084d4663bebf274e8a1768aa69d877645" datatype="html">
+        <source><x id="INTERPOLATION" equiv-text=" label=&quot;{{session.watchedGroup ? &apos;Group&apos; : "/> situation</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/pages/item-progress/item-progress.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="aa3aa07e97dafc0bc8dd3c8334df7b89768b2f37" datatype="html">
+        <source>Error while loading this chapter&apos;s children</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/components/chapter-children/chapter-children.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="3d239f361b93b69caf35e8fbc03ea0d787581f18" datatype="html">
+        <source> To validate this chapter, solve at least all tasks with Validation type </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/components/chapter-children/chapter-children.component.html</context>
+          <context context-type="linenumber">8,9</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="cbc058a2d1acf1e01f9848cbc28d29b83a1519a4" datatype="html">
+        <source> This chapter has no content visible to you, so you can&apos;t validate it for now. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/components/chapter-children/chapter-children.component.html</context>
+          <context context-type="linenumber">11,12</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4648900870671159218" datatype="html">
+        <source>Success</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/pages/item-edit/item-edit.component.ts</context>
+          <context context-type="linenumber">71</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/pages/group-edit/group-edit.component.ts</context>
+          <context context-type="linenumber">61</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/pending-request/pending-request-response-handling.ts</context>
+          <context context-type="linenumber">18</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="3487804242455918485" datatype="html">
+        <source>Changes successfully saved.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/pages/item-edit/item-edit.component.ts</context>
+          <context context-type="linenumber">72</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/pages/group-edit/group-edit.component.ts</context>
+          <context context-type="linenumber">62</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="1519954996184640001" datatype="html">
+        <source>Error</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/pages/item-edit/item-edit.component.ts</context>
+          <context context-type="linenumber">80</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/pages/group-edit/group-edit.component.ts</context>
+          <context context-type="linenumber">70</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/pending-request/pending-request-response-handling.ts</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/pending-request/pending-request-response-handling.ts</context>
+          <context context-type="linenumber">43</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="1365670554525463863" datatype="html">
+        <source>You need to solve all the errors displayed in the form to save changes.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/pages/item-edit/item-edit.component.ts</context>
+          <context context-type="linenumber">154</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/pages/group-edit/group-edit.component.ts</context>
+          <context context-type="linenumber">88</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="f5629a9ff18f0f53d37c10c70a8a8dba13b10626" datatype="html">
+        <source>You do not have the permissions to edit this content.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/pages/item-edit/item-edit.component.html</context>
+          <context context-type="linenumber">34</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="8598ca8227b654988e98dbc5ef9ed314a3d483a3" datatype="html">
+        <source>Pending requests</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/pending-request/pending-request.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="c0ec686de9310e981b9da6d2d91309ffc62f77eb" datatype="html">
+        <source>Grade: </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/pending-request/pending-request.component.html</context>
+          <context context-type="linenumber">73</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6fc5e65900ae1415d3170d5d2842f0dcae1b6645" datatype="html">
+        <source>Accept</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/pending-request/pending-request.component.html</context>
+          <context context-type="linenumber">99</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="20c3d69c0b67a74df0aa3920485016b2080578f6" datatype="html">
+        <source>Reject</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/pending-request/pending-request.component.html</context>
+          <context context-type="linenumber">102</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="4326279196513339266" datatype="html">
         <source>USER</source>
         <context-group purpose="location">
@@ -102,34 +380,6 @@
           <context context-type="linenumber">24</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="8598ca8227b654988e98dbc5ef9ed314a3d483a3" datatype="html">
-        <source>Pending requests</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/components/pending-request/pending-request.component.html</context>
-          <context context-type="linenumber">3</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="c0ec686de9310e981b9da6d2d91309ffc62f77eb" datatype="html">
-        <source>Grade: </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/components/pending-request/pending-request.component.html</context>
-          <context context-type="linenumber">73</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="6fc5e65900ae1415d3170d5d2842f0dcae1b6645" datatype="html">
-        <source>Accept</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/components/pending-request/pending-request.component.html</context>
-          <context context-type="linenumber">99</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="20c3d69c0b67a74df0aa3920485016b2080578f6" datatype="html">
-        <source>Reject</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/components/pending-request/pending-request.component.html</context>
-          <context context-type="linenumber">102</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="cff1428d10d59d14e45edec3c735a27b5482db59" datatype="html">
         <source>Name</source>
         <context-group purpose="location">
@@ -153,6 +403,13 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/group/components/joined-group-list/joined-group-list.component.html</context>
           <context context-type="linenumber">33</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="e40ccdcfed45df5834314bbd73a1728fded37a45" datatype="html">
+        <source>This list is empty. Check below the different ways to add members or sub-groups.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/member-list/member-list.component.html</context>
+          <context context-type="linenumber">60</context>
         </context-group>
       </trans-unit>
       <trans-unit id="871322351859596725" datatype="html">
@@ -205,52 +462,12 @@
           <context context-type="linenumber">63</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="4957053914124041029" datatype="html">
-        <source>invalid value for type filter</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/components/group-composition-filter/group-composition-filter.component.ts</context>
-          <context context-type="linenumber">91</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="6987741314695956594" datatype="html">
-        <source>invalid value for children filter</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/components/group-composition-filter/group-composition-filter.component.ts</context>
-          <context context-type="linenumber">98</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="e40ccdcfed45df5834314bbd73a1728fded37a45" datatype="html">
-        <source>This list is empty. Check below the different ways to add members or sub-groups.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/components/member-list/member-list.component.html</context>
-          <context context-type="linenumber">60</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="4902080776299806811" datatype="html">
         <source><x id="PH" equiv-text=" 0)
       this.messa"/> user(s) invited successfully: </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/group/components/group-invite-users/group-invite-users.component.ts</context>
           <context context-type="linenumber">89</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="1737753151350322492" datatype="html">
-        <source><x id="PH" equiv-text="e`${successInvites.length"/></source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/components/group-invite-users/group-invite-users.component.ts</context>
-          <context context-type="linenumber">90</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/components/group-invite-users/group-invite-users.component.ts</context>
-          <context context-type="linenumber">97</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/components/group-invite-users/group-invite-users.component.ts</context>
-          <context context-type="linenumber">104</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/components/group-invite-users/group-invite-users.component.ts</context>
-          <context context-type="linenumber">111</context>
         </context-group>
       </trans-unit>
       <trans-unit id="9209870712097047643" datatype="html">
@@ -412,58 +629,11 @@
           <context context-type="linenumber">10</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="4648900870671159218" datatype="html">
-        <source>Success</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/pages/group-edit/group-edit.component.ts</context>
-          <context context-type="linenumber">61</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/components/pending-request/pending-request-response-handling.ts</context>
-          <context context-type="linenumber">18</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="3487804242455918485" datatype="html">
-        <source>Changes successfully saved.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/pages/group-edit/group-edit.component.ts</context>
-          <context context-type="linenumber">62</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="1519954996184640001" datatype="html">
-        <source>Error</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/pages/group-edit/group-edit.component.ts</context>
-          <context context-type="linenumber">70</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/components/pending-request/pending-request-response-handling.ts</context>
-          <context context-type="linenumber">25</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/components/pending-request/pending-request-response-handling.ts</context>
-          <context context-type="linenumber">43</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="1365670554525463863" datatype="html">
-        <source>You need to solve all the errors displayed in the form to save changes.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/pages/group-edit/group-edit.component.ts</context>
-          <context context-type="linenumber">88</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="3e48c6bacf0ab546f95db85177bd2d3b069ffe01" datatype="html">
         <source>Error while loading the group</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/group/pages/group-edit/group-edit.component.html</context>
           <context context-type="linenumber">5</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="eec715de352a6b114713b30b640d319fa78207a0" datatype="html">
-        <source>Description</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/pages/group-edit/group-edit.component.html</context>
-          <context context-type="linenumber">19</context>
         </context-group>
       </trans-unit>
       <trans-unit id="236f952ca46b781009512db6ace7d2d87e00acba" datatype="html">
