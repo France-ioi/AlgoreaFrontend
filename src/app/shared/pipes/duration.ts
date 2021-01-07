@@ -7,3 +7,10 @@ export class DurationToMinPipe implements PipeTransform {
     return duration.minutes();
   }
 }
+
+@Pipe({ name: 'duration' })
+export class DurationToReadable implements PipeTransform {
+  transform(duration: number): string {
+    return Duration.fromSeconds(duration).toReadable();
+  }
+}

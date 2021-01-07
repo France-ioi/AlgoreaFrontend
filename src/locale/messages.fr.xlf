@@ -37,7 +37,196 @@
           <context context-type="sourcefile">src/app/modules/shared-components/components/progress-section/boolean-section/boolean-section.component.html</context>
           <context context-type="linenumber">14,15</context>
         </context-group>
-      </trans-unit><trans-unit id="871322351859596725" datatype="html">
+      </trans-unit><trans-unit id="6260891589219088351" datatype="html">
+        <source>The user</source><target state="translated">L'utilisateur</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog-texts.ts</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="6272778843499478025" datatype="html">
+        <source>The group</source><target state="translated">Le groupe</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog-texts.ts</context><context context-type="linenumber">9</context></context-group></trans-unit><trans-unit id="6070393949096550098" datatype="html">
+        <source>The team</source><target state="translated">L’équipe</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog-texts.ts</context><context context-type="linenumber">11</context></context-group></trans-unit><trans-unit id="67a18b71fa8c693dcac1160436760698bc988159" datatype="html">
+        <source>Can view</source><target state="new">Can view</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog.component.html</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+      </trans-unit><trans-unit id="cc7f5b0bc9dbaeb640257cafbff0f3453e28404f" datatype="html">
+        <source>Can Enter</source><target state="new">Can Enter</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog.component.html</context>
+          <context context-type="linenumber">30</context>
+        </context-group>
+      </trans-unit><trans-unit id="da18571cfc6a8930557080a3cb7a926decfa1920" datatype="html">
+        <source>Can grant view</source><target state="new">Can grant view</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog.component.html</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+      </trans-unit><trans-unit id="a2bdbe46685aaa55d21069aa5b5862b0462592ee" datatype="html">
+        <source>Can watch</source><target state="new">Can watch</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog.component.html</context>
+          <context context-type="linenumber">45</context>
+        </context-group>
+      </trans-unit><trans-unit id="a6cff31d28aa5a55ff55444b9ff3811c549f292a" datatype="html">
+        <source>Can edit</source><target state="new">Can edit</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog.component.html</context>
+          <context context-type="linenumber">52</context>
+        </context-group>
+      </trans-unit><trans-unit id="b5558de40e75ceffc549b8763ff1f4419f1c476a" datatype="html">
+        <source>Can attach official sessions</source><target state="new">Can attach official sessions</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog.component.html</context>
+          <context context-type="linenumber">59</context>
+        </context-group>
+      </trans-unit><trans-unit id="208e3ef3e3a06dc1011f5226a8173e792360ad65" datatype="html">
+        <source>Is owner</source><target state="new">Is owner</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog.component.html</context>
+          <context context-type="linenumber">67</context>
+        </context-group>
+      </trans-unit><trans-unit id="d7b35c384aecd25a516200d6921836374613dfe7" datatype="html">
+        <source>Cancel</source><target state="translated">Annuler</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog.component.html</context>
+          <context context-type="linenumber">82</context>
+        </context-group>
+      </trans-unit><trans-unit id="41bcea7b08bbd7328312f727ae01b7f074da6233" datatype="html">
+        <source>Proceed</source><target state="translated">Valider</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog.component.html</context>
+          <context context-type="linenumber">88</context>
+        </context-group>
+      </trans-unit><trans-unit id="ed0078abbf0ece37b4be634d01b32777794b6874" datatype="html">
+        <source> Access given to <x id="INTERPOLATION" equiv-text="{{ title }}"/></source><target state="translated">Permissions de <x id="INTERPOLATION" equiv-text="{{ title }}"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog.component.html</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+      </trans-unit><trans-unit id="26ea47693c0a0fdd2bfccae8599761503f57d0c1" datatype="html">
+        <source><x id="INTERPOLATION" equiv-text="{{targetTypeString}}"/> may enter this item (a contest or time-limited chapter)</source><target state="new"><x id="INTERPOLATION" equiv-text="{{targetTypeString}}"/> may enter this item (a contest or time-limited chapter)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog.component.html</context>
+          <context context-type="linenumber">35</context>
+        </context-group>
+      </trans-unit><trans-unit id="bcd6e2da642ac52de02d26b5380ff5df922fad34" datatype="html">
+        <source><x id="INTERPOLATION" equiv-text="{{targetTypeString}}"/> may attach official sessions to this item, that will be visible to everyone in the content tab of the item</source><target state="new"><x id="INTERPOLATION" equiv-text="{{targetTypeString}}"/> may attach official sessions to this item, that will be visible to everyone in the content tab of the item</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog.component.html</context>
+          <context context-type="linenumber">64</context>
+        </context-group>
+      </trans-unit><trans-unit id="484f8bc51285dd02db7f585c2cbf7ad2ac083ffb" datatype="html">
+        <source><x id="INTERPOLATION" equiv-text="{{targetTypeString}}"/> own this item, and get the maximum access in all categories above, and may also delete this item</source><target state="new"><x id="INTERPOLATION" equiv-text="{{targetTypeString}}"/> own this item, and get the maximum access in all categories above, and may also delete this item</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog.component.html</context>
+          <context context-type="linenumber">72</context>
+        </context-group>
+      </trans-unit><trans-unit id="7508893828342265603" datatype="html">
+        <source>Nothing</source><target state="needs-l10n">Rien</target>
+        
+        
+        
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog-texts.ts</context><context context-type="linenumber">20</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog-texts.ts</context><context context-type="linenumber">51</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog-texts.ts</context><context context-type="linenumber">90</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog-texts.ts</context><context context-type="linenumber">117</context></context-group></trans-unit><trans-unit id="5158149204451635281" datatype="html">
+        <source><x id="PH" equiv-text="targetTypeString"/> can't see the item</source><target state="needs-l10n"><x id="PH" equiv-text="targetTypeString"/> can't see the item</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog-texts.ts</context><context context-type="linenumber">21</context></context-group></trans-unit><trans-unit id="314315645942131479" datatype="html">
+        <source>Info</source><target state="new">Info</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog-texts.ts</context><context context-type="linenumber">25</context></context-group></trans-unit><trans-unit id="276512967364950264" datatype="html">
+        <source><x id="PH" equiv-text="targetTypeString"/> can see the item title and description, but not its content</source><target state="new"><x id="PH" equiv-text="targetTypeString"/> can see the item title and description, but not its content</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog-texts.ts</context><context context-type="linenumber">26</context></context-group></trans-unit><trans-unit id="6205355627445317276" datatype="html">
+        <source>Content</source><target state="new">Content</target>
+        
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog-texts.ts</context><context context-type="linenumber">30</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog-texts.ts</context><context context-type="linenumber">61</context></context-group></trans-unit><trans-unit id="1459057934865952132" datatype="html">
+        <source><x id="PH" equiv-text="targetTypeString"/> can see the content of this item</source><target state="needs-l10n"><x id="PH" equiv-text="targetTypeString"/> can see the content of this item</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog-texts.ts</context><context context-type="linenumber">31</context></context-group></trans-unit><trans-unit id="240638056322492270" datatype="html">
+        <source>Content and descendants</source><target state="new">Content and descendants</target>
+        
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog-texts.ts</context><context context-type="linenumber">35</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog-texts.ts</context><context context-type="linenumber">66</context></context-group></trans-unit><trans-unit id="4367139476225965577" datatype="html">
+        <source><x id="PH" equiv-text="targetTypeString"/> can also see the content of this items descendants (when possible for this group)</source><target state="new"><x id="PH" equiv-text="targetTypeString"/> can also see the content of this items descendants (when possible for this group)</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog-texts.ts</context><context context-type="linenumber">36</context></context-group></trans-unit><trans-unit id="2577694282301310795" datatype="html">
+        <source>Solution</source><target state="new">Solution</target>
+        
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog-texts.ts</context><context context-type="linenumber">40</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog-texts.ts</context><context context-type="linenumber">71</context></context-group></trans-unit><trans-unit id="4838785989562241195" datatype="html">
+        <source><x id="PH" equiv-text="targetTypeString"/> can also see the solution of this items and its descendants (when possible for this group)</source><target state="new"><x id="PH" equiv-text="targetTypeString"/> can also see the solution of this items and its descendants (when possible for this group)</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog-texts.ts</context><context context-type="linenumber">41</context></context-group></trans-unit><trans-unit id="4704354403690851163" datatype="html">
+        <source><x id="PH" equiv-text="targetTypeString"/> can't grant any access to this item</source><target state="new"><x id="PH" equiv-text="targetTypeString"/> can't grant any access to this item</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog-texts.ts</context><context context-type="linenumber">52</context></context-group></trans-unit><trans-unit id="1656969124420182024" datatype="html">
+        <source>Info &amp; enter</source><target state="new">Info &amp; enter</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog-texts.ts</context><context context-type="linenumber">56</context></context-group></trans-unit><trans-unit id="3877952366729282439" datatype="html">
+        <source><x id="PH" equiv-text="targetTypeString"/> can grant 'Can view: info' and  'Can enter' access</source><target state="new"><x id="PH" equiv-text="targetTypeString"/> can grant 'Can view: info' and  'Can enter' access</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog-texts.ts</context><context context-type="linenumber">57</context></context-group></trans-unit><trans-unit id="4018984822711626214" datatype="html">
+        <source><x id="PH" equiv-text="targetTypeString"/> can also grant 'Can view: content' access</source><target state="new"><x id="PH" equiv-text="targetTypeString"/> can also grant 'Can view: content' access</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog-texts.ts</context><context context-type="linenumber">62</context></context-group></trans-unit><trans-unit id="7801635454394159717" datatype="html">
+        <source><x id="PH" equiv-text="targetTypeString"/> can also grant 'Can view: content and descendants' access</source><target state="new"><x id="PH" equiv-text="targetTypeString"/> can also grant 'Can view: content and descendants' access</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog-texts.ts</context><context context-type="linenumber">67</context></context-group></trans-unit><trans-unit id="8322709316676964645" datatype="html">
+        <source><x id="PH" equiv-text="targetTypeString"/> can also grant 'Can view: solution' access</source><target state="new"><x id="PH" equiv-text="targetTypeString"/> can also grant 'Can view: solution' access</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog-texts.ts</context><context context-type="linenumber">72</context></context-group></trans-unit><trans-unit id="8633307416259747737" datatype="html">
+        <source>Solution and grant</source><target state="new">Solution and grant</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog-texts.ts</context><context context-type="linenumber">77</context></context-group></trans-unit><trans-unit id="2055048329776603001" datatype="html">
+        <source><x id="PH" equiv-text="targetTypeString"/> can also grant 'Can grant view' access</source><target state="new"><x id="PH" equiv-text="targetTypeString"/> can also grant 'Can grant view' access</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog-texts.ts</context><context context-type="linenumber">78</context></context-group></trans-unit><trans-unit id="6767431387675594216" datatype="html">
+        <source><x id="PH" equiv-text="targetTypeString"/> can't watch the activity of others on this item</source><target state="new"><x id="PH" equiv-text="targetTypeString"/> can't watch the activity of others on this item</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog-texts.ts</context><context context-type="linenumber">91</context></context-group></trans-unit><trans-unit id="2525230676386818985" datatype="html">
+        <source>Result</source><target state="new">Result</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog-texts.ts</context><context context-type="linenumber">95</context></context-group></trans-unit><trans-unit id="6744117517239451341" datatype="html">
+        <source><x id="PH" equiv-text="targetTypeString"/> can view information about submissions and scores of others on this item, but not their answers</source><target state="new"><x id="PH" equiv-text="targetTypeString"/> can view information about submissions and scores of others on this item, but not their answers</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog-texts.ts</context><context context-type="linenumber">97</context></context-group></trans-unit><trans-unit id="4669216542007588508" datatype="html">
+        <source>Answer</source><target state="new">Answer</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog-texts.ts</context><context context-type="linenumber">101</context></context-group></trans-unit><trans-unit id="179825020038700385" datatype="html">
+        <source><x id="PH" equiv-text="targetTypeString"/> can also look at other people's answers on this item</source><target state="new"><x id="PH" equiv-text="targetTypeString"/> can also look at other people's answers on this item</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog-texts.ts</context><context context-type="linenumber">102</context></context-group></trans-unit><trans-unit id="8665674003252205412" datatype="html">
+        <source>Answer and grant</source><target state="new">Answer and grant</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog-texts.ts</context><context context-type="linenumber">106</context></context-group></trans-unit><trans-unit id="5037851248977334512" datatype="html">
+        <source><x id="PH" equiv-text="targetTypeString"/> can also grant 'Can watch' access to others</source><target state="new"><x id="PH" equiv-text="targetTypeString"/> can also grant 'Can watch' access to others</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog-texts.ts</context><context context-type="linenumber">107</context></context-group></trans-unit><trans-unit id="2746501966920310361" datatype="html">
+        <source><x id="PH" equiv-text="targetTypeString"/> can't make any changes to this item</source><target state="new"><x id="PH" equiv-text="targetTypeString"/> can't make any changes to this item</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog-texts.ts</context><context context-type="linenumber">118</context></context-group></trans-unit><trans-unit id="4705822664965381735" datatype="html">
+        <source>Children</source><target state="new">Children</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog-texts.ts</context><context context-type="linenumber">122</context></context-group></trans-unit><trans-unit id="1401837687305228091" datatype="html">
+        <source><x id="PH" equiv-text="targetTypeString"/> can add children to this item and edit how permissions propagate to them</source><target state="new"><x id="PH" equiv-text="targetTypeString"/> can add children to this item and edit how permissions propagate to them</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog-texts.ts</context><context context-type="linenumber">123</context></context-group></trans-unit><trans-unit id="1616102757855967475" datatype="html">
+        <source>All</source><target state="new">All</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog-texts.ts</context><context context-type="linenumber">127</context></context-group></trans-unit><trans-unit id="7027429249361248522" datatype="html">
+        <source><x id="PH" equiv-text="targetTypeString"/> can also edit the content of the item itself, but may not delete it</source><target state="new"><x id="PH" equiv-text="targetTypeString"/> can also edit the content of the item itself, but may not delete it</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog-texts.ts</context><context context-type="linenumber">128</context></context-group></trans-unit><trans-unit id="7644477740441451078" datatype="html">
+        <source>All and grant</source><target state="new">All and grant</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog-texts.ts</context><context context-type="linenumber">132</context></context-group></trans-unit><trans-unit id="1586778869242032005" datatype="html">
+        <source><x id="PH" equiv-text="targetTypeString"/> can also give 'Can edit' access to others</source><target state="new"><x id="PH" equiv-text="targetTypeString"/> can also give 'Can edit' access to others</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog-texts.ts</context><context context-type="linenumber">133</context></context-group></trans-unit><trans-unit id="871322351859596725" datatype="html">
         <source>Direct Children Only</source><target state="translated">Enfants directs</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/group/components/group-composition-filter/group-composition-filter.component.ts</context>

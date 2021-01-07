@@ -12,6 +12,8 @@ export interface Group {
   current_user_is_manager: boolean;
   current_user_can_manage?: string; /* should be not set (undefined) if not a manager */
 
+  current_user_can_grant_group_access: boolean,
+
   /* the following may be null if no code and undefined if the user is not allowed to see them */
   code?: string|null;
   code_lifetime?: string|null;
