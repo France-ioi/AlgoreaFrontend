@@ -1,5 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ProgressSectionValue } from 'src/app/modules/shared-components/components/progress-section/progress-section.component';
 import { TypeFilter } from '../item-chapter-view/group-situation-chapter-view/composition-filter/composition-filter.component';
+import { generateCanEditValues, generateCanGrantViewValues,
+  generateCanViewValues, generateCanWatchValues } from './permissions-edit-dialog-texts';
 
 export interface Permissions {
   can_view: 'none'|'info'|'content'|'content_with_descendants'|'solution'
@@ -26,6 +29,11 @@ export class PermissionsEditDialogComponent implements OnInit {
 
   targetTypeString = '';
 
+  canViewValues: ProgressSectionValue<string>[] = []
+  canGrantViewValues: ProgressSectionValue<string>[] = []
+  canWatchValues: ProgressSectionValue<string>[] = []
+  canEditValues: ProgressSectionValue<string>[] = []
+
   ngOnInit(): void {
     switch (this.targetType) {
       case 'Users':
@@ -38,6 +46,11 @@ export class PermissionsEditDialogComponent implements OnInit {
         this.targetTypeString = 'team';
         break;
     }
+
+    this.canViewValues = generateCanViewValues(this.targetTypeString);
+    this.canGrantViewValues = generateCanGrantViewValues(this.targetTypeString);
+    this.canWatchValues = generateCanWatchValues(this.targetTypeString);
+    this.canEditValues = generateCanEditValues(this.targetTypeString);
   }
 
   onClose(): void {
