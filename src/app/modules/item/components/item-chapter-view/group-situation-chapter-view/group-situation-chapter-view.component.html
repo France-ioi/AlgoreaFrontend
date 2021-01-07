@@ -15,9 +15,9 @@
   </div>
 
   <ng-container *ngIf="state === 'ready' && data.rowsHeader.length === 0" [ngSwitch]="data.type">
-    <p class="empty-message" *ngSwitchCase="'Users'">This group has no users</p>
-    <p class="empty-message" *ngSwitchCase="'Teams'">This group has no teams</p>
-    <p class="empty-message" *ngSwitchCase="'Groups'">This group has no sub-groups</p>
+    <p class="empty-message" *ngSwitchCase="'Users'" i18n>This group has no users</p>
+    <p class="empty-message" *ngSwitchCase="'Teams'" i18n>This group has no teams</p>
+    <p class="empty-message" *ngSwitchCase="'Groups'" i18n>This group has no sub-groups</p>
   </ng-container>
 
   <p-table #table

@@ -1,10 +1,10 @@
-<alg-section label="Parent skills" icon="fa fa-link">
+<alg-section i18n-label label="Parent skills" icon="fa fa-link">
 
   <p-progressSpinner *ngIf="state === 'loading'"></p-progressSpinner>
 
-  <p *ngIf="state === 'error'">Error while loading the skill parents</p>
+  <p *ngIf="state === 'error'" i18n>Error while loading the skill parents</p>
 
-  <p *ngIf="state === 'ready' && parents.length === 0">This skill does not have parent skills.</p>
+  <p *ngIf="state === 'ready' && parents.length === 0" i18n>This skill does not have parent skills.</p>
 
   <ul *ngIf="state === 'ready' && parents.length > 0" class="data-list-container sub-skill">
     <li *ngFor="let item of parents">

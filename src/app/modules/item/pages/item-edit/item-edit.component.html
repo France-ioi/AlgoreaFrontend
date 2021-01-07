@@ -31,7 +31,7 @@
     </form>
     <alg-floating-save *ngIf="itemForm.dirty" [saving]="itemForm.disabled" (save)="save()" (cancel)="resetForm()"></alg-floating-save>
     <ng-template #notAuthorized>
-      <p>You do not have the permissions to edit this content.</p>
+      <p i18n>You do not have the permissions to edit this content.</p>
     </ng-template>
   </div>
 
