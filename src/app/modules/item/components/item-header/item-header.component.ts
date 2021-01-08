@@ -14,6 +14,6 @@ export class ItemHeaderComponent implements OnChanges {
   ngOnChanges(_changes: SimpleChanges): void {
     if (!this.itemData) return;
     this.showAccessCodeField = this.itemData.item.prompt_to_join_group_by_code &&
-      this.itemData.item.permissions.can_view !== 'none';
+      this.itemData.item.permissions.can_view === 'info';
   }
 }

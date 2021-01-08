@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ERROR_MESSAGE } from 'src/app/shared/constants/api';
 import { TOAST_LENGTH } from 'src/app/shared/constants/global';
-import { InvalidCodeReason, JoinByCodeService } from '../../../http-services/join-by-code.service';
+import { InvalidCodeReason, JoinByCodeService } from '../../../../../shared/http-services/join-by-code.service';
 
 @Component({
   selector: 'alg-access-code-view',
@@ -51,15 +51,15 @@ export class AccessCodeViewComponent {
   invalidCodeReasonToString(reason: InvalidCodeReason): string {
     switch (reason) {
       case 'already_member':
-        return $localize`You are already a member of this group`;
+        return $localize`You are already a member of this group.`;
       case 'conflicting_team_participation':
-        return $localize`There is conflicting group participation`;
+        return $localize`You cannot join this team as it would conflict with another team you belong to.`;
       case 'frozen_membership':
-        return $localize`Your membership is frozen`;
+        return $localize`This group does not allow any membership change.`;
       case 'no_group':
-        return $localize`No group corresponds to this code`;
+        return $localize`No group corresponds to this code.`;
       case 'team_conditions_not_met':
-        return $localize`You don't meet the group's join conditions`;
+        return $localize`You cannot join this team as it would break the entry conditions of content it is participating to.`;
     }
   }
 
