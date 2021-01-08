@@ -88,25 +88,18 @@
           <context context-type="linenumber">41</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="8979531771736981288" datatype="html">
-        <source>TITLE</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/components/user-group-invitations/user-group-invitations.component.ts</context>
-          <context context-type="linenumber">23</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="2880983087661811596" datatype="html">
-        <source>TYPE</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/components/user-group-invitations/user-group-invitations.component.ts</context>
-          <context context-type="linenumber">24</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="8598ca8227b654988e98dbc5ef9ed314a3d483a3" datatype="html">
         <source>Pending requests</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/group/components/pending-request/pending-request.component.html</context>
           <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="03431f0b7cbc609cfb3ee4818bea639fba5997b8" datatype="html">
+        <source>Error while loading the pending requests.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/pending-request/pending-request.component.html</context>
+          <context context-type="linenumber">14</context>
         </context-group>
       </trans-unit>
       <trans-unit id="c0ec686de9310e981b9da6d2d91309ffc62f77eb" datatype="html">
@@ -130,6 +123,34 @@
           <context context-type="linenumber">102</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="5b2a696a240b3fdaad295a0fa8fe767541659d18" datatype="html">
+        <source> No pending requests </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/pending-request/pending-request.component.html</context>
+          <context context-type="linenumber">109,110</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="8979531771736981288" datatype="html">
+        <source>TITLE</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/user-group-invitations/user-group-invitations.component.ts</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2880983087661811596" datatype="html">
+        <source>TYPE</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/user-group-invitations/user-group-invitations.component.ts</context>
+          <context context-type="linenumber">24</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="0759cedb2fc1180539f985b2a1172dbd53692ba9" datatype="html">
+        <source> Error while loading the group you joined</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/joined-group-list/joined-group-list.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="cff1428d10d59d14e45edec3c735a27b5482db59" datatype="html">
         <source>Name</source>
         <context-group purpose="location">
@@ -148,11 +169,18 @@
           <context context-type="linenumber">17</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="6abbd3c842da32c3cb17f21ce773682e9437e0ac" datatype="html">
+        <source>Joined On</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/joined-group-list/joined-group-list.component.html</context>
+          <context context-type="linenumber">19</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="ccca91161f53bb85163f114924230dea5a4358a8" datatype="html">
         <source>This list is empty.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/group/components/joined-group-list/joined-group-list.component.html</context>
-          <context context-type="linenumber">33</context>
+          <context context-type="linenumber">36</context>
         </context-group>
       </trans-unit>
       <trans-unit id="871322351859596725" datatype="html">
@@ -205,18 +233,77 @@
           <context context-type="linenumber">63</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="4957053914124041029" datatype="html">
-        <source>invalid value for type filter</source>
+      <trans-unit id="8953033926734869941" datatype="html">
+        <source>Name</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/components/group-composition-filter/group-composition-filter.component.ts</context>
-          <context context-type="linenumber">91</context>
+          <context context-type="sourcefile">src/app/modules/group/components/member-list/member-list.component.ts</context>
+          <context context-type="linenumber">20</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/member-list/member-list.component.ts</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/member-list/member-list.component.ts</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/member-list/member-list.component.ts</context>
+          <context context-type="linenumber">36</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/member-list/member-list.component.ts</context>
+          <context context-type="linenumber">41</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="6987741314695956594" datatype="html">
-        <source>invalid value for children filter</source>
+      <trans-unit id="8608344061985657902" datatype="html">
+        <source>Member Since</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/components/group-composition-filter/group-composition-filter.component.ts</context>
-          <context context-type="linenumber">98</context>
+          <context context-type="sourcefile">src/app/modules/group/components/member-list/member-list.component.ts</context>
+          <context context-type="linenumber">21</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="8650499415827640724" datatype="html">
+        <source>Type</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/member-list/member-list.component.ts</context>
+          <context context-type="linenumber">26</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5338333645237581383" datatype="html">
+        <source>User Count</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/member-list/member-list.component.ts</context>
+          <context context-type="linenumber">27</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/member-list/member-list.component.ts</context>
+          <context context-type="linenumber">32</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="8177691393320717603" datatype="html">
+        <source>Parent group(s)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/member-list/member-list.component.ts</context>
+          <context context-type="linenumber">37</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/member-list/member-list.component.ts</context>
+          <context context-type="linenumber">42</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6645881887623207593" datatype="html">
+        <source>Member(s)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/member-list/member-list.component.ts</context>
+          <context context-type="linenumber">43</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7314a7b289e55334afd2c431e4acdaca3048d96f" datatype="html">
+        <source>Error while loading the group members</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/member-list/member-list.component.html</context>
+          <context context-type="linenumber">5</context>
         </context-group>
       </trans-unit>
       <trans-unit id="e40ccdcfed45df5834314bbd73a1728fded37a45" datatype="html">
@@ -226,31 +313,75 @@
           <context context-type="linenumber">60</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="6306138344256927663" datatype="html">
+        <source>Read-only</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/group-manager-list/group-manager-list.component.ts</context>
+          <context context-type="linenumber">28</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4530794177600687289" datatype="html">
+        <source>Memberships</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/group-manager-list/group-manager-list.component.ts</context>
+          <context context-type="linenumber">30</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="3529343027214918740" datatype="html">
+        <source>Memberships and group</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/group-manager-list/group-manager-list.component.ts</context>
+          <context context-type="linenumber">32</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="403f133f9a24297a26097ea7ec1ecfcc2ef0936f" datatype="html">
+        <source>Error while loading the group managers</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/group-manager-list/group-manager-list.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="cc969d4036f0daf3eb88c8e74967ca324563f08d" datatype="html">
+        <source>Managers of this group</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/group-manager-list/group-manager-list.component.html</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="a02979056908a4eb0f9103c92bc7e61ef06c0a2e" datatype="html">
+        <source> Name </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/group-manager-list/group-manager-list.component.html</context>
+          <context context-type="linenumber">19,20</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="878f6372f149ae3e94a7874c2cf0931f1b64e142" datatype="html">
+        <source> Can Manage </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/group-manager-list/group-manager-list.component.html</context>
+          <context context-type="linenumber">26,27</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="f20df348fe9749ccb92d1aff873b40b3977d2cdc" datatype="html">
+        <source> Can grant group access </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/group-manager-list/group-manager-list.component.html</context>
+          <context context-type="linenumber">33,34</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="67afa810072a06c13df704dd165e2a149c03d5aa" datatype="html">
+        <source> Can watch members </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/group-manager-list/group-manager-list.component.html</context>
+          <context context-type="linenumber">40,41</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="4902080776299806811" datatype="html">
         <source><x id="PH" equiv-text=" 0)
       this.messa"/> user(s) invited successfully: </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/group/components/group-invite-users/group-invite-users.component.ts</context>
           <context context-type="linenumber">89</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="1737753151350322492" datatype="html">
-        <source><x id="PH" equiv-text="e`${successInvites.length"/></source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/components/group-invite-users/group-invite-users.component.ts</context>
-          <context context-type="linenumber">90</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/components/group-invite-users/group-invite-users.component.ts</context>
-          <context context-type="linenumber">97</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/components/group-invite-users/group-invite-users.component.ts</context>
-          <context context-type="linenumber">104</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/components/group-invite-users/group-invite-users.component.ts</context>
-          <context context-type="linenumber">111</context>
         </context-group>
       </trans-unit>
       <trans-unit id="9209870712097047643" datatype="html">
@@ -314,27 +445,6 @@
           <context context-type="linenumber">11</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="6306138344256927663" datatype="html">
-        <source>Read-only</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/components/group-manager-list/group-manager-list.component.ts</context>
-          <context context-type="linenumber">28</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="4530794177600687289" datatype="html">
-        <source>Memberships</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/components/group-manager-list/group-manager-list.component.ts</context>
-          <context context-type="linenumber">30</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="3529343027214918740" datatype="html">
-        <source>Memberships and group</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/components/group-manager-list/group-manager-list.component.ts</context>
-          <context context-type="linenumber">32</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="4106690181112187643" datatype="html">
         <source>A new code has been generated</source>
         <context-group purpose="location">
@@ -382,6 +492,21 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.html</context>
           <context context-type="linenumber">13</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="24a39b9411c5a25169630a66c20233c2f7a04ab7" datatype="html">
+        <source> This code has been activated <x id="INTERPOLATION" equiv-text="ode has been activated {{ groupExt.durationSinceFirstCodeUse! | to"/> minutes ago, it will be disabled in <x id="INTERPOLATION_1" equiv-text="
+        it will be disabled in {{ groupExt.durationBeforeCodeExpira"/> minutes. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.html</context>
+          <context context-type="linenumber">14,17</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="705d0d93586d3bd26cf989552411454a00dcaf66" datatype="html">
+        <source> This code has expired on <x id="INTERPOLATION" equiv-text="  This code has expired on {{ groupExt.codeE"/> </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.html</context>
+          <context context-type="linenumber">18,20</context>
         </context-group>
       </trans-unit>
       <trans-unit id="68572de01b84c678be4bf8a27b990ecac2f41ce9" datatype="html">
@@ -466,6 +591,13 @@
           <context context-type="linenumber">19</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="2037721496678637423" datatype="html">
+        <source>Yourself</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/pages/current-user/current-user.component.ts</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="236f952ca46b781009512db6ace7d2d87e00acba" datatype="html">
         <source>Yourself page works</source>
         <context-group purpose="location">
@@ -505,11 +637,39 @@
           <context context-type="linenumber">12</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="df79bd5472eb586b2ce97b1a47ad3f2abfb269a0" datatype="html">
+        <source> Overview </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/pages/group-details/group-details.component.html</context>
+          <context context-type="linenumber">15,16</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="d0740d83445e430ff31d23b8d838f264e48281ca" datatype="html">
+        <source> Composition </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/pages/group-details/group-details.component.html</context>
+          <context context-type="linenumber">23,24</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="c28cb7a31beb5a065698f68fe2565e695e9e895a" datatype="html">
+        <source> Administration </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/pages/group-details/group-details.component.html</context>
+          <context context-type="linenumber">32,33</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="93cda5379c21993be8e215182118fca846149fe3" datatype="html">
+        <source> Settings </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/pages/group-details/group-details.component.html</context>
+          <context context-type="linenumber">41,42</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="e5f794d4be82ba094d11c959000fa0ec6f8b3320" datatype="html">
         <source>Error while loading the group info</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/group/pages/group-details/group-details.component.html</context>
-          <context context-type="linenumber">48</context>
+          <context context-type="linenumber">56</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3539453653991999972" datatype="html">
@@ -567,13 +727,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/group/pages/group-overview/group-overview.component.html</context>
           <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="0e11b13fec97f1fc4ccdd5655c491a14fb918099" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="&gt;{{ group.description }"/> </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/pages/group-overview/group-overview.component.html</context>
-          <context context-type="linenumber">2</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5453b8d49702e6a006ce1eda455a6e81e6f105a7" datatype="html">
