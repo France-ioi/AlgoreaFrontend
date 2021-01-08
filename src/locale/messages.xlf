@@ -377,23 +377,21 @@
         </context-group>
       </trans-unit>
       <trans-unit id="4902080776299806811" datatype="html">
-        <source><x id="PH" equiv-text=" 0)
-      this.messa"/> user(s) invited successfully: </source>
+        <source><x id="PH" equiv-text="successInvites.length"/> user(s) invited successfully: </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/group/components/group-invite-users/group-invite-users.component.ts</context>
           <context context-type="linenumber">89</context>
         </context-group>
       </trans-unit>
       <trans-unit id="9209870712097047643" datatype="html">
-        <source><x id="PH" equiv-text="d.length &gt; 0)
-      "/> user(s) have already been invited: </source>
+        <source><x id="PH" equiv-text="alreadyInvited.length"/> user(s) have already been invited: </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/group/components/group-invite-users/group-invite-users.component.ts</context>
           <context context-type="linenumber">96</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4449383996716045634" datatype="html">
-        <source><x id="PH" equiv-text="ndUsers.length &gt; 0)"/> user login(s) not found: </source>
+        <source><x id="PH" equiv-text="notFoundUsers.length"/> user login(s) not found: </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/group/components/group-invite-users/group-invite-users.component.ts</context>
           <context context-type="linenumber">103</context>
@@ -445,91 +443,6 @@
           <context context-type="linenumber">11</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="4106690181112187643" datatype="html">
-        <source>A new code has been generated</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.ts</context>
-          <context context-type="linenumber">71</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="2868875466439101736" datatype="html">
-        <source>The validity has been changed</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.ts</context>
-          <context context-type="linenumber">96</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="844587251870961613" datatype="html">
-        <source>Users will not be able to join with the former code.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.ts</context>
-          <context context-type="linenumber">118</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="6a38629e181af1ebdbc5ae43bb2d433edd667607" datatype="html">
-        <source>Let user join using a code</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.html</context>
-          <context context-type="linenumber">3</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="49d135670a1d1c657cacb92164697192f89852e0" datatype="html">
-        <source>Let users access this group using a password you send them.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.html</context>
-          <context context-type="linenumber">7</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="4923896366713bb8fa484e179bf0d1f177bf66bb" datatype="html">
-        <source>There is currently no code set.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.html</context>
-          <context context-type="linenumber">12</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="0f63dc533dae03e01116050db8000393c864b476" datatype="html">
-        <source>This code has not been used yet (or usage resetted).</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.html</context>
-          <context context-type="linenumber">13</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="24a39b9411c5a25169630a66c20233c2f7a04ab7" datatype="html">
-        <source> This code has been activated <x id="INTERPOLATION" equiv-text="ode has been activated {{ groupExt.durationSinceFirstCodeUse! | to"/> minutes ago, it will be disabled in <x id="INTERPOLATION_1" equiv-text="
-        it will be disabled in {{ groupExt.durationBeforeCodeExpira"/> minutes. </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.html</context>
-          <context context-type="linenumber">14,17</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="705d0d93586d3bd26cf989552411454a00dcaf66" datatype="html">
-        <source> This code has expired on <x id="INTERPOLATION" equiv-text="  This code has expired on {{ groupExt.codeE"/> </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.html</context>
-          <context context-type="linenumber">18,20</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="68572de01b84c678be4bf8a27b990ecac2f41ce9" datatype="html">
-        <source>Code</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.html</context>
-          <context context-type="linenumber">33</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="7ccc3bc8a5dad0fe9efe93b6db771df67d481c80" datatype="html">
-        <source>Validity</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.html</context>
-          <context context-type="linenumber">43</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="2a107981ca19e322b7a1f9b86f22855a229826d3" datatype="html">
-        <source>You are not allowed to see this page.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/components/group-no-permission/group-no-permission.component.html</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="5944812089887969249" datatype="html">
         <source>Groups</source>
         <context-group purpose="location">
@@ -545,7 +458,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/group/components/pending-request/pending-request-response-handling.ts</context>
-          <context context-type="linenumber">18</context>
+          <context context-type="linenumber">17</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3487804242455918485" datatype="html">
@@ -563,11 +476,11 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/group/components/pending-request/pending-request-response-handling.ts</context>
-          <context context-type="linenumber">25</context>
+          <context context-type="linenumber">27</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/group/components/pending-request/pending-request-response-handling.ts</context>
-          <context context-type="linenumber">43</context>
+          <context context-type="linenumber">45</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1365670554525463863" datatype="html">
@@ -596,13 +509,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/group/pages/current-user/current-user.component.ts</context>
           <context context-type="linenumber">4</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="236f952ca46b781009512db6ace7d2d87e00acba" datatype="html">
-        <source>Yourself page works</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/pages/current-user/current-user.component.html</context>
-          <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6409540537870163634" datatype="html">
@@ -690,13 +596,6 @@
           <context context-type="linenumber">3</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="0aacf67648999375ce88a52472f73e4deb1eaa15" datatype="html">
-        <source>my-groups works!</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/pages/my-groups/my-groups.component.html</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="ac5349c51de53a8fddbbf16efc57f3baa813ba3d" datatype="html">
         <source>Current Composition</source>
         <context-group purpose="location">
@@ -709,13 +608,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/group/pages/group-settings/group-settings.component.html</context>
           <context context-type="linenumber">2</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="aae776581e32a122ec15c89e9bf93eb4efe1ba55" datatype="html">
-        <source>...</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/pages/group-settings/group-settings.component.html</context>
-          <context context-type="linenumber">3</context>
         </context-group>
       </trans-unit>
       <trans-unit id="426747b42c8abcfc34073fcd20754bc1f79ae9b5" datatype="html">
@@ -736,61 +628,137 @@
           <context context-type="linenumber">3</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="7204676341315786201" datatype="html">
-        <source>accept</source>
+      <trans-unit id="4106690181112187643" datatype="html">
+        <source>A new code has been generated</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/components/pending-request/pending-request-response-handling.ts</context>
+          <context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.ts</context>
+          <context context-type="linenumber">71</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2868875466439101736" datatype="html">
+        <source>The validity has been changed</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.ts</context>
+          <context context-type="linenumber">96</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="844587251870961613" datatype="html">
+        <source>Users will not be able to join with the former code.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.ts</context>
+          <context context-type="linenumber">118</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6a38629e181af1ebdbc5ae43bb2d433edd667607" datatype="html">
+        <source>Let user join using a code</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="49d135670a1d1c657cacb92164697192f89852e0" datatype="html">
+        <source>Let users access this group using a password you send them.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4923896366713bb8fa484e179bf0d1f177bf66bb" datatype="html">
+        <source>There is currently no code set.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.html</context>
           <context context-type="linenumber">12</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="818305365037344101" datatype="html">
-        <source>reject</source>
+      <trans-unit id="0f63dc533dae03e01116050db8000393c864b476" datatype="html">
+        <source>This code has not been used yet (or usage resetted).</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/components/pending-request/pending-request-response-handling.ts</context>
-          <context context-type="linenumber">12</context>
+          <context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.html</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="24a39b9411c5a25169630a66c20233c2f7a04ab7" datatype="html">
+        <source> This code has been activated <x id="INTERPOLATION" equiv-text="tivated {{ groupExt.durationSinceFirstCodeUse! | toMin | number:&apos;1"/> minutes ago, it will be disabled in <x id="INTERPOLATION_1" equiv-text=" be disabled in {{ groupExt.durationBeforeCodeExpiration! | toMin | n"/> minutes. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.html</context>
+          <context context-type="linenumber">14,17</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="705d0d93586d3bd26cf989552411454a00dcaf66" datatype="html">
+        <source> This code has expired on <x id="INTERPOLATION" equiv-text="ired on {{ groupExt.codeExpiration | date:&apos;m"/> </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.html</context>
+          <context context-type="linenumber">18,20</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="68572de01b84c678be4bf8a27b990ecac2f41ce9" datatype="html">
+        <source>Code</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.html</context>
+          <context context-type="linenumber">33</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7ccc3bc8a5dad0fe9efe93b6db771df67d481c80" datatype="html">
+        <source>Validity</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.html</context>
+          <context context-type="linenumber">43</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2a107981ca19e322b7a1f9b86f22855a229826d3" datatype="html">
+        <source>You are not allowed to see this page.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/group-no-permission/group-no-permission.component.html</context>
+          <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8575338854283037754" datatype="html">
         <source>accepted</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/group/components/pending-request/pending-request-response-handling.ts</context>
-          <context context-type="linenumber">13</context>
+          <context context-type="linenumber">12</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6508478359091037235" datatype="html">
         <source>declined</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/group/components/pending-request/pending-request-response-handling.ts</context>
-          <context context-type="linenumber">13</context>
+          <context context-type="linenumber">12</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4099347446452783584" datatype="html">
-        <source><x id="PH" equiv-text="tail: $localize`${r"/> request(s) have been <x id="PH_1" equiv-text="st("/></source>
+        <source><x id="PH" equiv-text="result.countSuccess"/> request(s) have been <x id="PH_1" equiv-text="msg"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/group/components/pending-request/pending-request-response-handling.ts</context>
-          <context context-type="linenumber">19</context>
+          <context context-type="linenumber">18</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="4183954020912458746" datatype="html">
-        <source>Unable to <x id="PH" equiv-text="l: $"/> the selected request(s).</source>
+      <trans-unit id="561107961693281492" datatype="html">
+        <source>Unable to accept the selected request(s).</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/group/components/pending-request/pending-request-response-handling.ts</context>
-          <context context-type="linenumber">26</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5779237710015680228" datatype="html">
+        <source>Unable to reject the selected request(s).</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/pending-request/pending-request-response-handling.ts</context>
+          <context context-type="linenumber">24</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5919144248317636057" datatype="html">
         <source>Partial success</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/group/components/pending-request/pending-request-response-handling.ts</context>
-          <context context-type="linenumber">32</context>
+          <context context-type="linenumber">34</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5056103486561628561" datatype="html">
-        <source><x id="PH" equiv-text="    detail:
-      "/> request(s) have been <x id="PH_1" equiv-text="tSu"/>, <x id="PH_2" equiv-text="} request(s) have been ${msg}, ${result.co"/> could not be executed</source>
+        <source><x id="PH" equiv-text="result.countSuccess"/> request(s) have been <x id="PH_1" equiv-text="msg"/>, <x id="PH_2" equiv-text="result.countRequests - result.countSuccess"/> could not be executed</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/group/components/pending-request/pending-request-response-handling.ts</context>
-          <context context-type="linenumber">34</context>
+          <context context-type="linenumber">36</context>
         </context-group>
       </trans-unit>
     </body>

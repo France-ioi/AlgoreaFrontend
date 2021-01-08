@@ -9,7 +9,6 @@ export interface Result {
 }
 
 export function displayResponseToast(messageService: MessageService, result: Result, action: Action): void {
-  const verb = action === Action.Accept ? $localize`accept` : $localize`reject`;
   const msg = action === Action.Accept ? $localize`accepted` : $localize`declined`;
 
   if (result.countSuccess === result.countRequests) {
@@ -20,10 +19,13 @@ export function displayResponseToast(messageService: MessageService, result: Res
       life: TOAST_LENGTH,
     });
   } else if (result.countSuccess === 0) {
+    const detailMsg = action === Action.Accept ?
+      $localize`Unable to accept the selected request(s).` :
+      $localize`Unable to reject the selected request(s).`;
     messageService.add({
       severity: 'error',
       summary: $localize`Error`,
-      detail: $localize`Unable to ${verb} the selected request(s).`,
+      detail: detailMsg,
       life: TOAST_LENGTH,
     });
   } else {
