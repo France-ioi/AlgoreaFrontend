@@ -42,6 +42,20 @@
           <context context-type="linenumber">12</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="348454dfead756b953ba1b94a02d6ced2b72e411" datatype="html">
+        <source> Edition Mode </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/shared-components/components/editor-bar/editor-bar.component.html</context>
+          <context context-type="linenumber">6,7</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="072d4d4ec83a5a97345a1c13b90c213b47326d09" datatype="html">
+        <source>Customize</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/shared-components/components/grid/grid.component.html</context>
+          <context context-type="linenumber">65</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="11f78ba7176f45e770dc165dc9e67d99062f9983" datatype="html">
         <source> Yes </source>
         <context-group purpose="location">
@@ -54,6 +68,143 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/shared-components/components/progress-section/boolean-section/boolean-section.component.html</context>
           <context context-type="linenumber">14,15</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="52c9a103b812f258bcddc3d90a6e3f46871d25fe" datatype="html">
+        <source>Save</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/shared-components/components/floating-save/floating-save.component.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="a13c93a267e800f8739c1eaa78d277faf31b46e3" datatype="html">
+        <source>Cancel Changes</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/shared-components/components/floating-save/floating-save.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="1eab7cabd424b0f190d8e7d2e5a412c9ef053d96" datatype="html">
+        <source>Add a content</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/shared-components/components/add-content/add-content.component.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7de5b8682019c8bc549084bf70c7fbf2daee125a" datatype="html">
+        <source>Enter a title to create a new child</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/shared-components/components/add-content/add-content.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5c2b4c14b0264983cd5c58f3ee78b7c21c5629c8" datatype="html">
+        <source>Enter at least 3 characters</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/shared-components/components/add-content/add-content.component.html</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/shared-components/components/add-content/add-content.component.html</context>
+          <context context-type="linenumber">30</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="053e81597467a642e04109eebe934c84e6a1f467" datatype="html">
+        <source>or</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/shared-components/components/add-content/add-content.component.html</context>
+          <context context-type="linenumber">19</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="9a5000fd04ec9ad2b8eea88f70339e688086d02d" datatype="html">
+        <source>Search for existing content</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/shared-components/components/add-content/add-content.component.html</context>
+          <context context-type="linenumber">28</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="46165f706787d73157ee16ed5894f0826a65707c" datatype="html">
+        <source>Chapter</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/shared-components/components/add-content/add-content.component.html</context>
+          <context context-type="linenumber">44</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="abff75ba10fbb370d2a77ef053065ec0904fa8ce" datatype="html">
+        <source>A new folder which can contain any activities.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/shared-components/components/add-content/add-content.component.html</context>
+          <context context-type="linenumber">45</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="61435c6c3b3cca0c204ef9f5369027565d327acb" datatype="html">
+        <source>Task</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/shared-components/components/add-content/add-content.component.html</context>
+          <context context-type="linenumber">51</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ac5394e391a182f83424b24284640cf6676ee365" datatype="html">
+        <source>A new task which users can try to solve.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/shared-components/components/add-content/add-content.component.html</context>
+          <context context-type="linenumber">52</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4dd41737dd07136d8ab35e6c5622f688a55230f8" datatype="html">
+        <source>Skill</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/shared-components/components/add-content/add-content.component.html</context>
+          <context context-type="linenumber">58</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="41d6e79cce655869f3dc2dfb979424c5a631e324" datatype="html">
+        <source>A new sub-skill.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/shared-components/components/add-content/add-content.component.html</context>
+          <context context-type="linenumber">59</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="828fba1dc0726e5a3a6dcfd4fa7a94b694ad47e9" datatype="html">
+        <source>Select a Content</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/shared-components/components/add-content/add-content.component.html</context>
+          <context context-type="linenumber">65</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="f6755cff4957d5c3c89bafce5651f1b6fa2b1fd9" datatype="html">
+        <source>Add</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/shared-components/components/add-content/add-content.component.html</context>
+          <context context-type="linenumber">72</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="20c7c1d3c60ffcc8ce56a404077960a472a66760" datatype="html">
+        <source>No item found</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/shared-components/components/add-content/add-content.component.html</context>
+          <context context-type="linenumber">78</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5e6548eb9cbb0467c307b4079bc989cd21f44355" datatype="html">
+        <source>This field is required</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/shared-components/components/form-error/form-error.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="93a4bc315b44c319aa879e65da2c5bc8282c1412" datatype="html">
+        <source>This field is too short, minimum : <x id="INTERPOLATION" equiv-text=": {{err.requiredLength"/> characters.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/shared-components/components/form-error/form-error.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="e85ed63f2621932b097c430f905ce3624311c030" datatype="html">
+        <source>This field is too long, maximum : <x id="INTERPOLATION" equiv-text=" : {{err.requiredLengt"/> characters.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/shared-components/components/form-error/form-error.component.html</context>
+          <context context-type="linenumber">4</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4326279196513339266" datatype="html">
@@ -130,20 +281,6 @@
           <context context-type="linenumber">109,110</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="8979531771736981288" datatype="html">
-        <source>TITLE</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/components/user-group-invitations/user-group-invitations.component.ts</context>
-          <context context-type="linenumber">23</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="2880983087661811596" datatype="html">
-        <source>TYPE</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/components/user-group-invitations/user-group-invitations.component.ts</context>
-          <context context-type="linenumber">24</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="0759cedb2fc1180539f985b2a1172dbd53692ba9" datatype="html">
         <source> Error while loading the group you joined</source>
         <context-group purpose="location">
@@ -181,6 +318,20 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/group/components/joined-group-list/joined-group-list.component.html</context>
           <context context-type="linenumber">36</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="8979531771736981288" datatype="html">
+        <source>TITLE</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/user-group-invitations/user-group-invitations.component.ts</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2880983087661811596" datatype="html">
+        <source>TYPE</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/user-group-invitations/user-group-invitations.component.ts</context>
+          <context context-type="linenumber">24</context>
         </context-group>
       </trans-unit>
       <trans-unit id="871322351859596725" datatype="html">
