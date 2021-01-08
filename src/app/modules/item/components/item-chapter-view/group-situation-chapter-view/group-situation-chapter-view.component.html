@@ -5,7 +5,7 @@
 
 <p *ngIf="state === 'error';else noError" class="error-message">
   <i class="fa fa-exclamation-triangle"></i>
-  Error while loading the data
+  <span i18n>Error while loading the data</span>
 </p>
 
 <ng-template #noError>

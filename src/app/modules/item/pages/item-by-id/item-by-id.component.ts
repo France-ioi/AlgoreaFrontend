@@ -13,7 +13,7 @@ import { GetItemPathService } from '../../http-services/get-item-path';
 import { ItemDataSource, ItemData } from '../../services/item-datasource.service';
 import { errorHasTag, errorIsHTTPForbidden } from 'src/app/shared/helpers/errors';
 
-const itemBreadcrumbCat = 'Items';
+const itemBreadcrumbCat = $localize`Items`;
 
 /**
  * ItemByIdComponent is just a container for detail or edit page but manages the fetching on id change and (un)setting the current content.
