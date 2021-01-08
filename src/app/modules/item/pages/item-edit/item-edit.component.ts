@@ -1,7 +1,7 @@
 import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { CurrentContentService } from 'src/app/shared/services/current-content.service';
 import { ItemData, ItemDataSource } from '../../services/item-datasource.service';
-import { FormBuilder, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { forkJoin, Observable, of, Subscription, throwError } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
 import { FetchError, Fetching, isReady, Ready } from '../../../../shared/helpers/state';
@@ -63,6 +63,10 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
 
   isDirty(): boolean {
     return this.itemForm.dirty;
+  }
+
+  dirtyControl(...controls: AbstractControl[]): boolean {
+    return controls.some(elm => elm.dirty);
   }
 
   successToast(): void {
@@ -127,12 +131,12 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
 
   // Item string changes
   private getItemStringChanges(): ItemStringChanges | undefined {
-    if (this.itemForm.pristine || !this.itemForm.touched) return {};
     const title = this.itemForm.get('title');
     const subtitle = this.itemForm.get('subtitle');
     const description = this.itemForm.get('description');
 
     if (title === null || description === null || subtitle === null) return undefined;
+    if (!this.dirtyControl(title, description, subtitle)) return {};
 
     return {
       title: (title.value as string).trim(),
@@ -183,7 +187,6 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
       description: item.string.description || '',
       subtitle: item.string.subtitle || '',
     });
-    this.itemForm.markAsPristine();
     this.itemChanges = {};
     this.itemForm.enable();
     this.editContent?.reset();
