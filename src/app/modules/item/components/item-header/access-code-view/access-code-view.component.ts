@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ERROR_MESSAGE } from 'src/app/shared/constants/api';
 import { TOAST_LENGTH } from 'src/app/shared/constants/global';
 import { InvalidCodeReason, JoinByCodeService } from '../../../../../shared/http-services/join-by-code.service';
+import { ItemData } from '../../../services/item-datasource.service';
 
 @Component({
   selector: 'alg-access-code-view',
@@ -10,6 +11,8 @@ import { InvalidCodeReason, JoinByCodeService } from '../../../../../shared/http
   styleUrls: [ './access-code-view.component.scss' ]
 })
 export class AccessCodeViewComponent {
+
+  @Input() itemData?: ItemData;
 
   state: 'ready'|'loading' = 'ready';
 
@@ -28,9 +31,17 @@ export class AccessCodeViewComponent {
         this.errorToast(this.invalidCodeReasonToString(response.reason));
         return;
       }
+      if (!this.itemData) return;
+      let message = $localize`Are you sure you want to join the group "${response.group.name}"?`;
+      const id = this.itemData.item.type === 'Skill' ? response.group.rootSkillId : response.group.rootActivityId;
+      if (this.itemData.item.id !== id) {
+        message = $localize`The code does not correspond to the group attached to this page. Are you sure you want to join the group "
+          ${response.group.name}"?`;
+      }
+
       this.confirmationService.confirm({
         header: $localize`Join the group "${response.group.name}"`,
-        message: $localize`Are you sure you want to join the group "${response.group.name}"?`,
+        message: message,
         acceptLabel: $localize`Join`,
         acceptIcon: 'fa fa-check',
         rejectLabel: $localize`Cancel`,

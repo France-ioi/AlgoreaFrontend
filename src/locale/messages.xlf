@@ -56,88 +56,96 @@
           <context context-type="linenumber">14,15</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="5402924068010392760" datatype="html">
-        <source>Join the group &quot;<x id="PH" equiv-text="response.group.name"/>&quot;</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/item/components/item-header/access-code-view/access-code-view.component.ts</context>
-          <context context-type="linenumber">32</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="3988558682818955220" datatype="html">
         <source>Are you sure you want to join the group &quot;<x id="PH" equiv-text="response.group.name"/>&quot;?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/item/components/item-header/access-code-view/access-code-view.component.ts</context>
-          <context context-type="linenumber">33</context>
+          <context context-type="linenumber">35</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4452733064355596122" datatype="html">
+        <source>The code does not correspond to the group attached to this page. Are you sure you want to join the group &quot;
+          <x id="PH" equiv-text="response.group.name"/>&quot;?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/components/item-header/access-code-view/access-code-view.component.ts</context>
+          <context context-type="linenumber">38,39</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5402924068010392760" datatype="html">
+        <source>Join the group &quot;<x id="PH" equiv-text="response.group.name"/>&quot;</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/components/item-header/access-code-view/access-code-view.component.ts</context>
+          <context context-type="linenumber">43</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8307140841776883735" datatype="html">
         <source>Join</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/item/components/item-header/access-code-view/access-code-view.component.ts</context>
-          <context context-type="linenumber">34</context>
+          <context context-type="linenumber">45</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2159130950882492111" datatype="html">
         <source>Cancel</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/item/components/item-header/access-code-view/access-code-view.component.ts</context>
-          <context context-type="linenumber">36</context>
+          <context context-type="linenumber">47</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="151257229344188643" datatype="html">
-        <source>You are already a member of this group</source>
+      <trans-unit id="7798083029915432586" datatype="html">
+        <source>You are already a member of this group.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/item/components/item-header/access-code-view/access-code-view.component.ts</context>
-          <context context-type="linenumber">54</context>
+          <context context-type="linenumber">65</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="6518151687965868642" datatype="html">
-        <source>There is conflicting group participation</source>
+      <trans-unit id="5339756092671133656" datatype="html">
+        <source>You cannot join this team as it would conflict with another team you belong to.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/item/components/item-header/access-code-view/access-code-view.component.ts</context>
-          <context context-type="linenumber">56</context>
+          <context context-type="linenumber">67</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="3080069270402983357" datatype="html">
-        <source>Your membership is frozen</source>
+      <trans-unit id="3637936669302788418" datatype="html">
+        <source>This group does not allow any membership change.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/item/components/item-header/access-code-view/access-code-view.component.ts</context>
-          <context context-type="linenumber">58</context>
+          <context context-type="linenumber">69</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="1114541607164595532" datatype="html">
-        <source>No group corresponds to this code</source>
+      <trans-unit id="7557562708674395513" datatype="html">
+        <source>No group corresponds to this code.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/item/components/item-header/access-code-view/access-code-view.component.ts</context>
-          <context context-type="linenumber">60</context>
+          <context context-type="linenumber">71</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="2037133063223675482" datatype="html">
-        <source>You don&apos;t meet the group&apos;s join conditions</source>
+      <trans-unit id="4950186261013481241" datatype="html">
+        <source>You cannot join this team as it would break the entry conditions of content it is participating to.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/item/components/item-header/access-code-view/access-code-view.component.ts</context>
-          <context context-type="linenumber">62</context>
+          <context context-type="linenumber">73</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1519954996184640001" datatype="html">
         <source>Error</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/item/components/item-header/access-code-view/access-code-view.component.ts</context>
-          <context context-type="linenumber">69</context>
+          <context context-type="linenumber">80</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4648900870671159218" datatype="html">
         <source>Success</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/item/components/item-header/access-code-view/access-code-view.component.ts</context>
-          <context context-type="linenumber">78</context>
+          <context context-type="linenumber">89</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3487804242455918485" datatype="html">
         <source>Changes successfully saved.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/item/components/item-header/access-code-view/access-code-view.component.ts</context>
-          <context context-type="linenumber">79</context>
+          <context context-type="linenumber">90</context>
         </context-group>
       </trans-unit>
       <trans-unit id="b519e0487553e270eb6674281c3dd9e65ff91d3c" datatype="html">
