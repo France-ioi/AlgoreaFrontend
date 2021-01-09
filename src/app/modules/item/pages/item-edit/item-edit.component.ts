@@ -1,7 +1,7 @@
 import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { CurrentContentService } from 'src/app/shared/services/current-content.service';
 import { ItemData, ItemDataSource } from '../../services/item-datasource.service';
-import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { forkJoin, Observable, of, Subscription, throwError } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
 import { FetchError, Fetching, isReady, Ready } from '../../../../shared/helpers/state';
@@ -63,10 +63,6 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
 
   isDirty(): boolean {
     return this.itemForm.dirty;
-  }
-
-  dirtyControl(...controls: AbstractControl[]): boolean {
-    return controls.some(elm => elm.dirty);
   }
 
   successToast(): void {
