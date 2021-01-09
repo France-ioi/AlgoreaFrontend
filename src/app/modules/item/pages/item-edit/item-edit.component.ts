@@ -124,6 +124,7 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
           changes.children = res.map((child, idx) => ({ item_id: child.id, order: idx }));
         }
         if (!this.initialFormData) return throwError(new Error('Invalid form'));
+        if (!Object.keys(changes).length) return of(undefined);
         return this.updateItemService.updateItem(this.initialFormData.id, changes);
       }),
     );
