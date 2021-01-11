@@ -7,4 +7,6 @@ export const mockGroup: Group = {
   is_public: false,
 
   current_user_is_manager: false,
+
+  current_user_can_grant_group_access: true,
 };

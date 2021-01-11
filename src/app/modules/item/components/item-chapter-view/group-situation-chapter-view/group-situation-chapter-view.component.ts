@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
 import { forkJoin, merge, Observable, of, Subject } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
-import { Group } from 'src/app/core/components/group-nav-tree/group';
+import { Group } from 'src/app/modules/group/http-services/get-group-by-id.service';
 import { GetGroupChildrenService } from 'src/app/modules/group/http-services/get-group-children.service';
 import { fetchingState, isReady, readyState } from 'src/app/shared/helpers/state';
 import { formatUser } from 'src/app/shared/helpers/user';

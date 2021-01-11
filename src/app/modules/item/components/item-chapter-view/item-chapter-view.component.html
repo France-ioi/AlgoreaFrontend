@@ -1,9 +1,9 @@
 <ng-container *ngIf="session$ | async as session">
 
   <alg-group-situation-chapter-view
-    *ngIf="session.watchedGroup; else userChapterView"
+    *ngIf="session; else userChapterView"
     [itemData]="itemData"
-    [group]="session.watchedGroup"
+    [group]="session.group"
   >
   </alg-group-situation-chapter-view>
 

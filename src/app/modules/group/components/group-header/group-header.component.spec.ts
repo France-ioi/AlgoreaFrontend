@@ -15,7 +15,8 @@ describe('GroupHeaderComponent', () => {
     grades: [ -2 ],
     date: new Date(),
     description: 'dummy',
-    current_user_is_manager: false
+    current_user_is_manager: false,
+    current_user_can_grant_group_access: true,
   };
 
   beforeEach(waitForAsync(() => {

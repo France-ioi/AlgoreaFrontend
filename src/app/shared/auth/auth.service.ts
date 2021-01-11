@@ -189,6 +189,9 @@ export class AuthService implements OnDestroy {
   }
 
   private resetTokenRefresh(token: AccessToken|null): void {
+    // Max delay for Rx.timer. Otherwise, it triggers immediately (see bug https://github.com/ReactiveX/rxjs/issues/3015)
+    const maxDelay = 2147483647;
+
     this.tokenRefreshSubscription?.unsubscribe();
     if (token === null) {
       this.tokenRefreshSubscription = undefined;
@@ -198,7 +201,7 @@ export class AuthService implements OnDestroy {
       if (token.expiration.getTime() - Date.now() > minTokenLifetime) {
         refreshIn = Math.max((token.expiration.getTime() + token.creation.getTime())/2 - Date.now(), 0);
       }
-      this.tokenRefreshSubscription = timer(refreshIn, 1*MINUTES).pipe(
+      this.tokenRefreshSubscription = timer(Math.min(refreshIn, maxDelay), 1*MINUTES).pipe(
         switchMap(() => this.authHttp.refreshToken(token.accessToken)),
         map(t => AccessToken.fromTTL(t.access_token, t.expires_in, token.type))
       ).subscribe(token => this.accessToken.next(token));
