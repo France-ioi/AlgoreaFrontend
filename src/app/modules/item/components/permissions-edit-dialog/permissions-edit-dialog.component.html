@@ -29,8 +29,8 @@
       <alg-boolean-section
         i18n-title title="Can Enter"
         icon="fa fa-door-open"
-        [defaultValue]="this.permissions.can_enter_from"
-        (change)="this.permissions.can_enter_from = $event"
+        [defaultValue]="this.permissions.can_enter_from !== null"
+        (change)="this.permissions.can_enter_from = null"
       >
         <ng-template #label i18n>{{targetTypeString}} may enter this item (a contest or time-limited chapter)</ng-template>
       </alg-boolean-section>

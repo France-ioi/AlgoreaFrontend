@@ -25,7 +25,8 @@ export class UserProgressComponent implements OnChanges {
 
   permissions: Permissions = {
     can_view: 'none',
-    can_enter_from: true,
+    can_enter_from: new Date(),
+    can_enter_until: new Date(),
     can_grant_view: 'none',
     can_watch: 'none',
     can_edit: 'none',

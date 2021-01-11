@@ -6,7 +6,8 @@ import { generateCanEditValues, generateCanGrantViewValues,
 
 export interface Permissions {
   can_view: 'none'|'info'|'content'|'content_with_descendants'|'solution'
-  can_enter_from: boolean,
+  can_enter_from: Date|null,
+  can_enter_until: Date|null,
   can_grant_view: 'none'|'enter'|'content'|'content_with_descendants'|'solution'|'solution_with_grant',
   can_watch: 'none'|'result'|'answer'|'answer_with_grant',
   can_edit: 'none'|'children'|'all'|'all_with_grant',
