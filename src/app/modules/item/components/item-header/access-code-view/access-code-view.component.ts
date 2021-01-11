@@ -14,6 +14,7 @@ export class AccessCodeViewComponent {
 
   @Input() itemData?: ItemData;
 
+  code = '';
   state: 'ready'|'loading' = 'ready';
 
   constructor(
@@ -22,10 +23,10 @@ export class AccessCodeViewComponent {
     private confirmationService: ConfirmationService,
   ) { }
 
-  onClickAccess(groupCode: string): void {
+  onClickAccess(): void {
     this.state = 'loading';
 
-    this.joinByCodeService.checkCodeValidity(groupCode).subscribe(response => {
+    this.joinByCodeService.checkCodeValidity(this.code).subscribe(response => {
       this.state = 'ready';
       if (!response.valid) {
         this.errorToast(this.invalidCodeReasonToString(response.reason));
@@ -46,7 +47,7 @@ export class AccessCodeViewComponent {
         acceptIcon: 'fa fa-check',
         rejectLabel: $localize`Cancel`,
         accept: () => {
-          this.joinGroup(groupCode);
+          this.joinGroup(this.code);
         }
       });
     });
@@ -54,7 +55,10 @@ export class AccessCodeViewComponent {
 
   joinGroup(code: string): void {
     this.joinByCodeService.joinGroupThroughCode(code).subscribe(
-      _result => this.successToast(),
+      _result => {
+        this.code = '';
+        this.successToast();
+      },
       _err => this.errorToast()
     );
   }

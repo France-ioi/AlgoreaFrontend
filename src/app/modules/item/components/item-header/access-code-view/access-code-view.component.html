@@ -5,6 +5,8 @@
       type="text"
       i18n-placeholder placeholder="Group code"
       (keyup)="0"
+      [(ngModel)]="code"
+      [disabled]="state == 'loading'"
     >
     <span class="icon">
       <i class="fa fa-font"></i>
@@ -14,7 +16,7 @@
       i18n-label label="Access"
       class="p-button-rounded"
       [disabled]="input.value === '' || state === 'loading'"
-      (click)="onClickAccess(input.value)"
+      (click)="onClickAccess()"
     ></alg-button>
   </div>
 </alg-section-paragraph>
