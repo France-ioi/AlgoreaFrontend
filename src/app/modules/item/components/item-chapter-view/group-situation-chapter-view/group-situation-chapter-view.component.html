@@ -10,20 +10,20 @@
 
 <ng-template #noError>
 
-  <div class="loader" *ngIf="state === 'fetching' && data.rowsHeader.length === 0">
+  <div class="loader" *ngIf="state === 'fetching' && data.rows.length === 0">
     <p-progressSpinner></p-progressSpinner>
   </div>
 
-  <ng-container *ngIf="state === 'ready' && data.rowsHeader.length === 0" [ngSwitch]="data.type">
+  <ng-container *ngIf="state === 'ready' && data.rows.length === 0" [ngSwitch]="data.type">
     <p class="empty-message" *ngSwitchCase="'Users'">This group has no users</p>
     <p class="empty-message" *ngSwitchCase="'Teams'">This group has no teams</p>
     <p class="empty-message" *ngSwitchCase="'Groups'">This group has no sub-groups</p>
   </ng-container>
 
   <p-table #table
-    *ngIf="data.rowsHeader.length > 0"
+    *ngIf="data.rows.length > 0"
     [columns]="data.items"
-    [value]="data.data"
+    [value]="data.rows"
     class="slanted-grid"
     [loading]="state === 'fetching'"
   >
@@ -42,18 +42,17 @@
     </ng-template>
     <ng-template
       pTemplate="body"
-      let-rowData
+      let-row
       let-columns="columns"
-      let-rowIndex="rowIndex"
     >
       <tr>
-        <td class="users" pTooltip="{{ data.rowsHeader[rowIndex] }}" tooltipPosition="left" [showDelay]="100">
-          {{ data.rowsHeader[rowIndex] }}
+        <td class="users" pTooltip="{{ row.header }}" tooltipPosition="left" [showDelay]="100">
+          {{ row.header }}
         </td>
         <td *ngFor="let col of columns; let colIndex = index">
           <alg-user-progress
-            [userProgress]="data.data[rowIndex][colIndex]"
-            [title]="data.rowsHeader[rowIndex]"
+            [userProgress]="row.data[colIndex]"
+            [title]="row.header"
             [watchedGroup]="group"
             [item]="itemData?.item"
             [targetType]="currentFilter"

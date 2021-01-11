@@ -21,9 +21,12 @@ export interface Progress {
 
 interface Data {
   type: TypeFilter,
-  rowsHeader: string[],
   items: ItemChild[],
-  data: (Progress|undefined)[][],
+  rows: {
+    header: string,
+    id: string,
+    data: (Progress|undefined)[],
+  }[],
 }
 
 @Component({
@@ -44,9 +47,8 @@ export class GroupSituationChapterViewComponent implements OnChanges, OnDestroy 
 
   data: Data = {
     type: this.defaultFilter,
-    rowsHeader: [],
     items: [],
-    data: [],
+    rows: [],
   }
 
   private dataFetching = new Subject<{ groupId: string, itemId: string, attemptId: string, filter: TypeFilter }>();
@@ -133,12 +135,13 @@ export class GroupSituationChapterViewComponent implements OnChanges, OnDestroy 
       map(data => ({
         type: filter,
         items: data.items,
-        rowsHeader: data.rows.map(row => row.value),
-        data: data.rows.map(row =>
-          data.items.map(item =>
+        rows: data.rows.map(row => ({
+          header: row.value,
+          id: row.id,
+          data: data.items.map(item =>
             data.usersProgress.find(userProgress => userProgress.itemId === item.id && userProgress.groupId === row.id)
-          )
-        ),
+          ),
+        }))
       }))
     );
   }
