@@ -13,7 +13,7 @@ import { ItemData } from '../../../services/item-datasource.service';
 export class AccessCodeViewComponent {
 
   @Input() itemData?: ItemData;
-  @Output() reload = new EventEmitter<void>();
+  @Output() reloadItemPage = new EventEmitter<void>();
 
   code = '';
   state: 'ready'|'loading' = 'ready';
@@ -59,7 +59,7 @@ export class AccessCodeViewComponent {
       _result => {
         this.code = '';
         this.successToast();
-        this.reload.emit();
+        this.reloadItemPage.emit();
       },
       _err => this.errorToast()
     );
