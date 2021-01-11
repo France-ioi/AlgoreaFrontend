@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { ItemData } from '../../services/item-datasource.service';
 
 @Component({
@@ -8,6 +8,7 @@ import { ItemData } from '../../services/item-datasource.service';
 })
 export class ItemHeaderComponent implements OnChanges {
   @Input() itemData?: ItemData;
+  @Output() reloadItem = new EventEmitter<void>();
 
   showAccessCodeField = false;
 
@@ -15,5 +16,9 @@ export class ItemHeaderComponent implements OnChanges {
     if (!this.itemData) return;
     this.showAccessCodeField = this.itemData.item.prompt_to_join_group_by_code &&
       this.itemData.item.permissions.can_view === 'info';
+  }
+
+  onReload(): void {
+    this.reloadItem.emit();
   }
 }

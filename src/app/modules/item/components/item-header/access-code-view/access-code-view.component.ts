@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ERROR_MESSAGE } from 'src/app/shared/constants/api';
 import { TOAST_LENGTH } from 'src/app/shared/constants/global';
@@ -13,6 +13,7 @@ import { ItemData } from '../../../services/item-datasource.service';
 export class AccessCodeViewComponent {
 
   @Input() itemData?: ItemData;
+  @Output() reload = new EventEmitter<void>();
 
   code = '';
   state: 'ready'|'loading' = 'ready';
@@ -58,6 +59,7 @@ export class AccessCodeViewComponent {
       _result => {
         this.code = '';
         this.successToast();
+        this.reload.emit();
       },
       _err => this.errorToast()
     );
