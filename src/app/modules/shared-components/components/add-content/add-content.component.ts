@@ -1,14 +1,19 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { Observable, Subscription, timer } from 'rxjs';
-import { ItemType } from '../../../../shared/helpers/item-type';
-import { ItemFound, SearchItemService } from '../../../item/http-services/search-item.service';
-import { debounce, filter, map, switchMap, tap } from 'rxjs/operators';
+import { Observable, Subscription } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
 
-interface AddedItem {
+export interface AddedContent<T> {
   id?: string,
   title: string,
-  type: ItemType,
+  type: T,
+}
+
+export interface NewContentType<T> {
+  type: T,
+  icon: string,
+  title: string,
+  description: string,
 }
 
 const defaultFormValues = { create: '', searchExisting: '' };
@@ -18,26 +23,25 @@ const defaultFormValues = { create: '', searchExisting: '' };
   templateUrl: './add-content.component.html',
   styleUrls: [ './add-content.component.scss' ],
 })
-export class AddContentComponent implements OnInit, OnDestroy {
-  @Input() allowSkills = false;
-  @Output() contentAdded = new EventEmitter<AddedItem>();
+export class AddContentComponent<Type, SearchedValue extends AddedContent<Type>> implements OnInit, OnDestroy {
+
+  @Input() newContentTypes: NewContentType<Type>[] = [];
+  @Input() foundValues: SearchedValue[] = [];
+  @Input() state: 'loading' | 'ready' = 'loading';
+
+  @Output() search = new EventEmitter<string>();
+  @Output() contentAdded = new EventEmitter<AddedContent<Type>>();
 
   readonly minInputLength = 3;
 
   addContentForm: FormGroup = this.formBuilder.group(defaultFormValues);
   trimmedInputsValue = defaultFormValues;
-  itemsFound: ItemFound[] = [];
 
-  state: 'loading' | 'loaded' = 'loading';
   focused?: 'create' | 'searchExisting';
 
   private subscriptions: Subscription[] = [];
 
-  constructor(
-    private formBuilder: FormBuilder,
-    private searchItemService: SearchItemService,
-  ) {
-  }
+  constructor(private formBuilder: FormBuilder) {}
 
   ngOnInit(): void {
     this.subscriptions.push(
@@ -54,14 +58,9 @@ export class AddContentComponent implements OnInit, OnDestroy {
       existingTitleControl.pipe(
         map(value => value.trim()),
         filter(value => this.checkLength(value)),
-        tap(_ => this.state = 'loading'),
-        debounce(() => timer(300)),
-        switchMap(value => this.searchItemService.search(value, [ 'Chapter', 'Course', 'Task' ]))
-      )
-        .subscribe(items => {
-          this.itemsFound = items;
-          this.state = 'loaded';
-        })
+      ).subscribe(value => {
+        this.search.emit(value);
+      })
     );
   }
 
@@ -86,7 +85,7 @@ export class AddContentComponent implements OnInit, OnDestroy {
     this.focused = undefined;
   }
 
-  addNewItem(type: ItemType): void {
+  addNew(type: Type): void {
     const title = this.trimmedInputsValue.create;
     if (!this.checkLength(title)) return;
     this.contentAdded.emit({
@@ -96,7 +95,7 @@ export class AddContentComponent implements OnInit, OnDestroy {
     this.reset();
   }
 
-  addExistingItem(item: ItemFound): void {
+  addExisting(item: SearchedValue): void {
     this.contentAdded.emit(item);
     this.reset();
   }
@@ -109,5 +108,4 @@ export class AddContentComponent implements OnInit, OnDestroy {
     this.addContentForm.reset(defaultFormValues);
     this.focused = focused;
   }
-
 }

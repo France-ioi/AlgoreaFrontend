@@ -32,7 +32,7 @@
 
       </div>
 
-      <alg-add-content [allowSkills]="itemData.item.type === 'Skill'" (contentAdded)="addChild($event)"></alg-add-content>
+      <alg-add-item [allowSkills]="itemData.item.type === 'Skill'" (contentAdded)="addChild($event)"></alg-add-item>
 
     </ng-container>
 
