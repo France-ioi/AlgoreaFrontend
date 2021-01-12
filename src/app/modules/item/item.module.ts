@@ -16,10 +16,6 @@ import { SubSkillsComponent } from './components/sub-skills/sub-skills.component
 import { ParentSkillsComponent } from './components/parent-skills/parent-skills.component';
 import { ItemEditContentComponent } from './pages/item-edit-content/item-edit-content.component';
 import { ItemChildrenEditComponent } from './components/item-children-edit/item-children-edit.component';
-import { ItemChapterViewComponent } from './components/item-chapter-view/item-chapter-view.component';
-import { GroupSituationChapterViewComponent } from
-  './components/item-chapter-view/group-situation-chapter-view/group-situation-chapter-view.component';
-import { UserProgressComponent } from './components/item-chapter-view/group-situation-chapter-view/user-progress/user-progress.component';
 import { TooltipModule } from 'primeng/tooltip';
 import { PendingChangesGuard } from 'src/app/shared/guards/pending-changes-guard';
 import { MatMenuModule } from '@angular/material/menu';
@@ -29,6 +25,10 @@ import { PermissionsEditDialogComponent } from './components/permissions-edit-di
 import { DialogModule } from 'primeng/dialog';
 import { AccessCodeViewComponent } from './components/item-header/access-code-view/access-code-view.component';
 import { CompositionFilterComponent } from './components/composition-filter/composition-filter.component';
+import { UserProgressComponent } from './components/user-progress/user-progress.component';
+import { ItemChapterViewGroupSituationComponent } from
+  './pages/item-chapter-view-group-situation/item-chapter-view-group-situation.component';
+import { ItemChapterViewComponent } from './pages/item-chapter-view/item-chapter-view.component';
 
 @NgModule({
   declarations: [
@@ -45,11 +45,11 @@ import { CompositionFilterComponent } from './components/composition-filter/comp
     ParentSkillsComponent,
     ItemEditContentComponent,
     ItemChildrenEditComponent,
-    GroupSituationChapterViewComponent,
-    UserProgressComponent,
     ItemProgressComponent,
     ItemChapterViewComponent,
+    ItemChapterViewGroupSituationComponent,
     CompositionFilterComponent,
+    UserProgressComponent,
     DurationToReadable,
     PermissionsEditDialogComponent,
     AccessCodeViewComponent,
