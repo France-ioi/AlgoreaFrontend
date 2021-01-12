@@ -140,11 +140,11 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
     const title = titleControl.value as string;
     if (title !== initialValues.title) res.title = title.trim();
 
-    const subtitle = subtitleControl.value as string;
-    if (subtitle !== initialValues.subtitle) res.subtitle = subtitle.trim() || null;
+    const subtitle = (subtitleControl.value as string).trim() || null;
+    if (subtitle !== initialValues.subtitle) res.subtitle = subtitle;
 
-    const description = descriptionControl.value as string;
-    if (description !== initialValues.description) res.description = description.trim() || null;
+    const description = (descriptionControl.value as string).trim() || null;
+    if (description !== initialValues.description) res.description = description;
 
     return res;
   }
