@@ -57,7 +57,7 @@
        </context-group>
      </trans-unit><trans-unit id="c27357089524343d4da96cb643ac6efc6130a581" datatype="html">
       <source> Select all </source>
-      <target state="translated"> Tous sélectionner </target>
+      <target state="translated"> Tout sélectionner </target>
       <context-group purpose="location">
         <context context-type="sourcefile">src/app/modules/group/components/pending-request/pending-request.component.html</context>
         <context context-type="linenumber">94,95</context>
