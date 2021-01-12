@@ -55,7 +55,14 @@
          <context context-type="sourcefile">src/app/modules/group/components/pending-request/pending-request.component.html</context>
          <context context-type="linenumber">73</context>
        </context-group>
-     </trans-unit><trans-unit id="6fc5e65900ae1415d3170d5d2842f0dcae1b6645" datatype="html">
+     </trans-unit><trans-unit id="c27357089524343d4da96cb643ac6efc6130a581" datatype="html">
+      <source> Select all </source>
+      <target state="translated"> Tous sélectionner </target>
+      <context-group purpose="location">
+        <context context-type="sourcefile">src/app/modules/group/components/pending-request/pending-request.component.html</context>
+        <context context-type="linenumber">94,95</context>
+      </context-group>
+    </trans-unit><trans-unit id="6fc5e65900ae1415d3170d5d2842f0dcae1b6645" datatype="html">
        <source>Accept</source><target state="translated">Accepter</target>
        <context-group purpose="location">
          <context context-type="sourcefile">src/app/modules/group/components/pending-request/pending-request.component.html</context>
@@ -73,7 +80,14 @@
          <context context-type="sourcefile">src/app/modules/group/components/pending-request/pending-request.component.html</context>
          <context context-type="linenumber">109,110</context>
        </context-group>
-     </trans-unit><trans-unit id="4326279196513339266" datatype="html">
+     </trans-unit><trans-unit id="2197783278577016966" datatype="html">
+      <source>GROUP</source>
+      <target state="translated">GROUPE</target>
+      <context-group purpose="location">
+        <context context-type="sourcefile">src/app/modules/group/components/pending-join-requests/pending-join-requests.component.ts</context>
+        <context context-type="linenumber">20</context>
+      </context-group>
+    </trans-unit><trans-unit id="4326279196513339266" datatype="html">
        <source>USER</source><target state="translated">UTILISATEUR</target>
        <context-group purpose="location">
          <context context-type="sourcefile">src/app/modules/group/components/pending-join-requests/pending-join-requests.component.ts</context>
