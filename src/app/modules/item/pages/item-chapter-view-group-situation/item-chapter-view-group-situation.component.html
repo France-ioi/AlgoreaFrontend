@@ -32,8 +32,8 @@
         <th class="empty first"></th>
         <th *ngFor="let col of data.items">
           <div class="slanted-header">
-            <div class="slanted-header-content" pTooltip="{{ col.string.title }}" tooltipPosition="top" [showDelay]="100">
-              {{ col.string.title }}
+            <div class="slanted-header-content" pTooltip="{{ col.title }}" tooltipPosition="top" [showDelay]="100">
+              {{ col.title }}
             </div>
           </div>
         </th>
@@ -50,15 +50,23 @@
           {{ row.header }}
         </td>
         <td *ngFor="let col of columns; let colIndex = index">
-          <alg-user-progress
-            [userProgress]="row.data[colIndex]"
-            [title]="row.header"
-            [watchedGroup]="group"
-            [item]="itemData?.item"
-            [targetType]="currentFilter"
-          ></alg-user-progress>
+          <ng-container *ngIf="row.data[colIndex]">
+            <alg-user-progress
+              [userProgress]="row.data[colIndex]"
+              [canAccess]="data.can_access"
+              (access)="onAccess(row.header, row.id, col.id)"
+            ></alg-user-progress>
+          </ng-container>
         </td>
       </tr>
     </ng-template>
   </p-table>
+
+  <alg-permissions-edit-dialog
+    [visible]="dialog === 'opened'"
+    [title]="dialogTitle"
+    [targetType]="currentFilter"
+    [permissions]="permissions"
+    (close)="onDialogClose($event)"
+  ></alg-permissions-edit-dialog>
 </ng-template>
