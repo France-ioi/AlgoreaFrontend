@@ -12,5 +12,6 @@ export const mockItem: Item = {
     can_edit: 'none',
     can_grant_view: 'none',
   },
-  type: 'Task'
+  type: 'Task',
+  prompt_to_join_group_by_code: false,
 };

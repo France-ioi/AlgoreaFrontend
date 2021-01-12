@@ -28,4 +28,8 @@ export class ItemDetailsComponent implements OnDestroy {
     this.subscription.unsubscribe();
     this.currentContent.editState.next('non-editable');
   }
+
+  reloadItem(): void {
+    this.itemDataSource.refreshItem();
+  }
 }
