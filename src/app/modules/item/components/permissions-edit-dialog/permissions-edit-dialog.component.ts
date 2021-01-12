@@ -1,12 +1,11 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ProgressSectionValue } from 'src/app/modules/shared-components/components/progress-section/progress-section.component';
-import { TypeFilter } from '../item-chapter-view/group-situation-chapter-view/composition-filter/composition-filter.component';
+import { TypeFilter } from '../composition-filter/composition-filter.component';
 import { generateCanEditValues, generateCanGrantViewValues,
   generateCanViewValues, generateCanWatchValues } from './permissions-edit-dialog-texts';
 
 export interface Permissions {
   can_view: 'none'|'info'|'content'|'content_with_descendants'|'solution'
-  can_enter_from: boolean,
   can_grant_view: 'none'|'enter'|'content'|'content_with_descendants'|'solution'|'solution_with_grant',
   can_watch: 'none'|'result'|'answer'|'answer_with_grant',
   can_edit: 'none'|'children'|'all'|'all_with_grant',
