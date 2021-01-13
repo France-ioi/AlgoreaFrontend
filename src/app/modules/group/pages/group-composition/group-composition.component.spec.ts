@@ -7,6 +7,7 @@ import { GroupDataSource } from '../../services/group-datasource.service';
 import { mockGroup } from '../../mocks/group-by-id';
 import { of } from 'rxjs';
 import { readyState } from 'src/app/shared/helpers/state';
+import { MessageService } from 'primeng/api';
 
 describe('GroupCompositionComponent', () => {
   let component: GroupCompositionComponent;
@@ -21,7 +22,7 @@ describe('GroupCompositionComponent', () => {
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [{ provide: GroupDataSource, useValue: {
         group$: of(readyState(mockGroup))
-      } }]
+      } }, { provide: MessageService, useValue: { add: (_m: any) => {} } }]
     })
       .compileComponents();
   }));

@@ -934,6 +934,12 @@
           <context context-type="sourcefile">src/app/modules/group/pages/managed-groups/managed-groups.component.html</context>
           <context context-type="linenumber">3</context>
         </context-group>
+      </trans-unit><trans-unit id="8471940861423120175" datatype="html">
+        <source>Group successfully added as child group</source><target state="new">Group successfully added as child group</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/pages/group-composition/group-composition.component.ts</context>
+          <context context-type="linenumber">49</context>
+        </context-group>
       </trans-unit><trans-unit id="ac5349c51de53a8fddbbf16efc57f3baa813ba3d" datatype="html">
         <source>Current Composition</source><target state="translated">Composition actuelle</target>
         <context-group purpose="location">
