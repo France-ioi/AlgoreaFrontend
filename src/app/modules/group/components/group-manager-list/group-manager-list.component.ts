@@ -25,11 +25,11 @@ export class GroupManagerListComponent implements OnChanges {
   private getManagerLevel(manager: Manager): string {
     switch (manager.can_manage) {
       case 'none':
-        return 'Read-only';
+        return $localize`Read-only`;
       case 'memberships':
-        return 'Memberships';
+        return $localize`Memberships`;
       case 'memberships_and_group':
-        return 'Memberships and group';
+        return $localize`Memberships and group`;
     }
   }
 

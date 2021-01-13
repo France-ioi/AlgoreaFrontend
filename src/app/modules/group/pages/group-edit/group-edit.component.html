@@ -2,13 +2,13 @@
 
   <p-progressSpinner *ngIf="state.tag === 'fetching'"></p-progressSpinner>
 
-  <p *ngIf="state.tag === 'error'">Error while loading the group</p>
+  <p *ngIf="state.tag === 'error'" i18n>Error while loading the group</p>
 
   <div *ngIf="state.tag === 'ready'" style="margin: 1rem">
     <form [formGroup]="groupForm">
       <div class="field">
         <div class="field-name">
-          <label>Name</label>
+          <label i18n>Name</label>
         </div>
         <div class="field-value">
           <alg-input [parentForm]="groupForm" name="name" size="large" [isDark]='false'></alg-input>
@@ -16,7 +16,7 @@
       </div>
       <div class="field">
         <div class="field-name">
-          <label>Description</label>
+          <label i18n>Description</label>
         </div>
         <div class="field-value">
           <alg-textarea [parentForm]="groupForm" inputName="description" size="large"></alg-textarea>

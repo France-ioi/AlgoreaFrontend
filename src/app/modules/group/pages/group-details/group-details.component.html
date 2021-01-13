@@ -9,27 +9,35 @@
         [routerLink]="'./'"
         routerLinkActive #overviewTab="routerLinkActive"
         [routerLinkActiveOptions]="{exact: true}"
-        [active]="overviewTab.isActive">
+        [active]="overviewTab.isActive"
+        i18n
+      >
         Overview
       </a>
       <a mat-tab-link
         [routerLink]="'./members'"
         routerLinkActive #compositionTab="routerLinkActive"
-        [active]="compositionTab.isActive">
+        [active]="compositionTab.isActive"
+        i18n
+      >
         Composition
       </a>
       <a mat-tab-link
         *ngIf="group.canCurrentUserManageGroup"
         [routerLink]="'./managers'"
         routerLinkActive #adminTab="routerLinkActive"
-        [active]="adminTab.isActive">
+        [active]="adminTab.isActive"
+        i18n
+      >
         Administration
       </a>
       <a mat-tab-link
         *ngIf="group.canCurrentUserManageGroup"
         [routerLink]="'./settings'"
         routerLinkActive #settingsTab="routerLinkActive"
-        [active]="settingsTab.isActive">
+        [active]="settingsTab.isActive"
+        i18n
+      >
         Settings
       </a>
     </nav>
@@ -45,6 +53,6 @@
 
   <p-progressSpinner *ngIf="state.tag === 'fetching'"></p-progressSpinner>
 
-  <p *ngIf="state.tag === 'error'">Error while loading the group info</p>
+  <p *ngIf="state.tag === 'error'" i18n>Error while loading the group info</p>
 
 </ng-container>

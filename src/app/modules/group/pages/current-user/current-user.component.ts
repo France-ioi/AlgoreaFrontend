@@ -1,7 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { CurrentContentService } from 'src/app/shared/services/current-content.service';
 
-const currentUserBreadcrumbCat = 'Yourself';
+const currentUserBreadcrumbCat = $localize`Yourself`;
 
 @Component({
   selector: 'alg-current-user',

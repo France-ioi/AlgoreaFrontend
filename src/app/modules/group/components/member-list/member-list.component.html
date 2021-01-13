@@ -2,7 +2,7 @@
 
 <p *ngIf="state === 'error';else noError" class="error-message">
   <i class="fa fa-exclamation-triangle"></i>
-  Error while loading the group members
+  <span i18n>Error while loading the group members</span>
 </p>
 
 <ng-template #noError>
@@ -57,7 +57,7 @@
     <ng-template pTemplate="emptymessage" let-columns>
       <tr>
         <td [attr.colspan]="columns.length">
-          <p class="empty-message">This list is empty. Check below the different ways to add members or sub-groups.</p>
+          <p class="empty-message" i18n>This list is empty. Check below the different ways to add members or sub-groups.</p>
         </td>
       </tr>
     </ng-template>

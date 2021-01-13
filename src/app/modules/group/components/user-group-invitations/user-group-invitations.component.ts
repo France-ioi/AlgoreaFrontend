@@ -20,9 +20,9 @@ export class UserGroupInvitationsComponent implements OnDestroy, OnInit {
   requests: PendingRequest[] = [];
 
   readonly columns: GridColumn[] = [
-    { field: 'group.name', header: 'TITLE' },
-    { field: 'group.type', header: 'TYPE' },
-    { field: 'at', header: 'REQUESTED ON' },
+    { field: 'group.name', header: $localize`TITLE` },
+    { field: 'group.type', header: $localize`TYPE` },
+    { field: 'at', header: $localize`REQUESTED ON` },
   ];
 
   state: 'fetching' | 'processing' | 'ready' | 'fetchingError' = 'fetching';
