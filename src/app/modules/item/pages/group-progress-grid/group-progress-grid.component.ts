@@ -27,11 +27,11 @@ interface Data {
 }
 
 @Component({
-  selector: 'alg-item-chapter-view-group-situation',
-  templateUrl: './item-chapter-view-group-situation.component.html',
-  styleUrls: [ './item-chapter-view-group-situation.component.scss' ]
+  selector: 'alg-group-progress-grid',
+  templateUrl: './group-progress-grid.component.html',
+  styleUrls: [ './group-progress-grid.component.scss' ]
 })
-export class ItemChapterViewGroupSituationComponent implements OnChanges, OnDestroy {
+export class GroupProgressGridComponent implements OnChanges, OnDestroy {
 
   @Input() group?: Group;
   @Input() itemData?: ItemData;

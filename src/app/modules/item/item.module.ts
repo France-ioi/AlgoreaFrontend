@@ -26,9 +26,8 @@ import { DialogModule } from 'primeng/dialog';
 import { AccessCodeViewComponent } from './components/item-header/access-code-view/access-code-view.component';
 import { CompositionFilterComponent } from './components/composition-filter/composition-filter.component';
 import { UserProgressComponent } from './components/user-progress/user-progress.component';
-import { ItemChapterViewGroupSituationComponent } from
-  './pages/item-chapter-view-group-situation/item-chapter-view-group-situation.component';
 import { ItemChapterViewComponent } from './pages/item-chapter-view/item-chapter-view.component';
+import { GroupProgressGridComponent } from './pages/group-progress-grid/group-progress-grid.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +46,7 @@ import { ItemChapterViewComponent } from './pages/item-chapter-view/item-chapter
     ItemChildrenEditComponent,
     ItemProgressComponent,
     ItemChapterViewComponent,
-    ItemChapterViewGroupSituationComponent,
+    GroupProgressGridComponent,
     CompositionFilterComponent,
     UserProgressComponent,
     DurationToReadable,
