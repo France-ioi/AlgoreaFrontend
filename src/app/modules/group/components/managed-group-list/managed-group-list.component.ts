@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { merge, of, Subject } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { fetchingState, isReady, readyState } from 'src/app/shared/helpers/state';
-import { Group, ManagedGroupsService } from '../../../../core/http-services/managed-groups.service';
+import { Group, ManagedGroupsService, ManageType } from '../../../../core/http-services/managed-groups.service';
 
 @Component({
   selector: 'alg-managed-group-list',
@@ -39,6 +39,12 @@ export class ManagedGroupListComponent implements OnDestroy, OnInit {
 
   ngOnDestroy(): void {
     this.dataFetching.complete();
+  }
+
+  getCanManage(value: ManageType): string {
+    if (value === 'memberships') return 'Memberships';
+    if (value === 'memberships_and_group') return 'Memberships & Group';
+    return 'None';
   }
 
 }

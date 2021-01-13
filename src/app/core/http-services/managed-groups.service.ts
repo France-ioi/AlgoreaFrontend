@@ -5,7 +5,7 @@ import { map } from 'rxjs/operators';
 import { appConfig } from 'src/app/shared/helpers/config';
 
 type GroupType = 'Class' | 'Team' | 'Club' | 'Friends' | 'Other' | 'Session' | 'Base'
-type ManageType = 'none' | 'memberships' | 'memberships_and_group'
+export type ManageType = 'none' | 'memberships' | 'memberships_and_group'
 
 export interface Group {
   id: string,

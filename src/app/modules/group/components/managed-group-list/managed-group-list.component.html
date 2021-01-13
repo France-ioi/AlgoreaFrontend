@@ -25,7 +25,7 @@
       <tr>
         <td class="link" routerLink="../by-id/{{ group.id }}/details">{{ group.name }}</td>
         <td>{{ group.type }}</td>
-        <td>{{ group.canManage }}</td>
+        <td>{{ getCanManage(group.canManage) }}</td>
         <td>{{ group.canWatchMember}}</td>
         <td>{{ group.canGrantGroupAccess}}</td>
       </tr>
