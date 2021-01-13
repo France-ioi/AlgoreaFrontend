@@ -6,19 +6,11 @@ import { GetGroupChildrenService } from 'src/app/modules/group/http-services/get
 import { fetchingState, isReady, readyState } from 'src/app/shared/helpers/state';
 import { formatUser } from 'src/app/shared/helpers/user';
 import { GetGroupDescendantsService } from 'src/app/shared/http-services/get-group-descendants.service';
-import { GetGroupProgressService } from 'src/app/shared/http-services/get-group-progress.service';
+import { GetGroupProgressService, Progress } from 'src/app/shared/http-services/get-group-progress.service';
 import { TypeFilter } from '../../components/composition-filter/composition-filter.component';
 import { Permissions } from '../../components/permissions-edit-dialog/permissions-edit-dialog.component';
 import { GetItemChildrenService } from '../../http-services/get-item-children.service';
 import { ItemData } from '../../services/item-datasource.service';
-
-export interface Progress {
-  groupId: string,
-  itemId: string,
-  validated: boolean,
-  score: number,
-  timeSpent: number,
-}
 
 interface Data {
   type: TypeFilter,

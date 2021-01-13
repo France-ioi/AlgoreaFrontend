@@ -4,6 +4,14 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { appConfig } from 'src/app/shared/helpers/config';
 
+export interface Progress {
+  groupId: string,
+  itemId: string,
+  validated: boolean,
+  score: number,
+  timeSpent: number,
+}
+
 interface RawGroupProgress {
   group_id: string,
   item_id: string,
@@ -35,15 +43,10 @@ interface RawTeamUserProgress {
   validated: boolean,
 }
 
-export interface TeamUserProgress {
-  groupId: string,
-  itemId: string,
+export interface TeamUserProgress extends Progress{
   hintsRequested: number,
   latestActivityAt: Date|null,
-  score: number,
   submissions: number,
-  timeSpent: number,
-  validated: boolean,
 }
 
 @Injectable({

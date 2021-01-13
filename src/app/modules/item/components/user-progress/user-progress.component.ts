@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
-import { Progress } from '../../pages/item-chapter-view-group-situation/item-chapter-view-group-situation.component';
+import { Progress } from 'src/app/shared/http-services/get-group-progress.service';
 
 @Component({
   selector: 'alg-user-progress',
