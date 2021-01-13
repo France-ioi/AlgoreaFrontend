@@ -23,7 +23,7 @@
 
     <ng-template pTemplate="body" let-group>
       <tr>
-        <td>{{ group.name }}</td>
+        <td class="link" routerLink="../by-id/{{ group.id }}/details">{{ group.name }}</td>
         <td>{{ group.type }}</td>
         <td>{{ group.canManage }}</td>
         <td>{{ group.canWatchMember}}</td>
