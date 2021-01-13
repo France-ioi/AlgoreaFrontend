@@ -17,4 +17,9 @@
       <span *ngIf="itemData.item.string.subtitle">{{itemData.item.string.subtitle}}</span>
     </div>
   </div>
+  <alg-access-code-view
+    *ngIf="showAccessCodeField"
+    [itemData]="itemData"
+    (groupJoined)="onReload()"
+  ></alg-access-code-view>
 </div>

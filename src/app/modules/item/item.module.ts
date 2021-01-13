@@ -29,6 +29,7 @@ import { DurationToReadable } from 'src/app/shared/pipes/duration';
 import { ButtonModule } from 'primeng/button';
 import { PermissionsEditDialogComponent } from './components/permissions-edit-dialog/permissions-edit-dialog.component';
 import { DialogModule } from 'primeng/dialog';
+import { AccessCodeViewComponent } from './components/item-header/access-code-view/access-code-view.component';
 
 @NgModule({
   declarations: [
@@ -52,6 +53,7 @@ import { DialogModule } from 'primeng/dialog';
     CompositionFilterComponent,
     DurationToReadable,
     PermissionsEditDialogComponent,
+    AccessCodeViewComponent,
   ],
   imports: [
     CommonModule,
