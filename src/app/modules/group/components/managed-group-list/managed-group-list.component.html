@@ -1,6 +1,6 @@
 <p *ngIf="state === 'error';else noError" class="error-message">
   <i class="fa fa-exclamation-triangle"></i>
-  Error while loading the group you manage
+  <span i18n>Error while loading the group you manage</span>
 </p>
 
 <ng-template #noError>
@@ -13,18 +13,18 @@
   >
     <ng-template pTemplate="header" let-columns>
       <tr *ngIf="data.length > 0">
-        <th>Name</th>
-        <th>Type</th>
-        <th>Can Manage</th>
-        <th>Can Watch Members</th>
-        <th>Can Grant Group Access</th>
+        <th i18n>Name</th>
+        <th i18n>Type</th>
+        <th i18n>Can Manage</th>
+        <th i18n>Can Watch Members</th>
+        <th i18n>Can Grant Group Access</th>
       </tr>
     </ng-template>
 
     <ng-template pTemplate="body" let-group>
       <tr>
         <td class="link" routerLink="../by-id/{{ group.id }}/details">{{ group.name }}</td>
-        <td>{{ group.type }}</td>
+        <td>{{ getType(group.type) }}</td>
         <td>{{ getCanManage(group.canManage) }}</td>
         <td>{{ group.canWatchMember}}</td>
         <td>{{ group.canGrantGroupAccess}}</td>
@@ -34,7 +34,7 @@
     <ng-template pTemplate="emptymessage" let-columns>
       <tr>
         <td [attr.colspan]="columns.length">
-          <p class="empty-message">You do not manage any group</p>
+          <p class="empty-message" i18n>You do not manage any group</p>
         </td>
       </tr>
     </ng-template>
