@@ -11,7 +11,7 @@ export class UserProgressComponent implements OnChanges {
   @Input() userProgress?: Progress;
   @Input() canAccess?: boolean;
 
-  @Output() access = new EventEmitter<void>();
+  @Output() permEditionRequested = new EventEmitter<void>();
 
   state: 'success'|'in-progress'|'no-score'|'not-started' = 'no-score';
 
@@ -25,6 +25,6 @@ export class UserProgressComponent implements OnChanges {
   }
 
   onAccess(): void {
-    this.access.emit();
+    this.permEditionRequested.emit();
   }
 }

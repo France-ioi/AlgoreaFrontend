@@ -49,7 +49,7 @@ export class ItemChapterViewGroupSituationComponent implements OnChanges, OnDest
     can_access: false,
   }
 
-  permissions: Permissions = {
+  dialogPermissions: Permissions = {
     can_view: 'none',
     can_grant_view: 'none',
     can_watch: 'none',
@@ -178,7 +178,7 @@ export class ItemChapterViewGroupSituationComponent implements OnChanges, OnDest
     }
   }
 
-  onAccess(title: string, _targetId: string, _itemId: string): void {
+  onAccessPermissions(title: string, _targetGroupId: string, _itemId: string): void {
     this.dialogTitle = title;
     this.dialog = 'opened';
 
