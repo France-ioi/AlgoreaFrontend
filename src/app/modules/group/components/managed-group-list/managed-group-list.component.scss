@@ -28,6 +28,10 @@
         outline: transparent;
       }
 
+      &.small {
+        width: 10rem;
+      }
+
     }
 
     .p-datatable-tbody > tr:nth-child(even) {
@@ -45,6 +49,28 @@
       white-space: nowrap;
       font-size: 1.2rem;
       padding: 0 1rem;
+
+      .table-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        i {
+          font-size: 1.2rem;
+        }
+
+        &.edit {
+          color: $base-color;
+        }
+
+        &.locked {
+          color: #9acc68;
+        }
+
+        &.unlocked {
+          color: $notify-error-color;
+        }
+      }
     }
 
     .p-datatable-tbody > tr > .link{
