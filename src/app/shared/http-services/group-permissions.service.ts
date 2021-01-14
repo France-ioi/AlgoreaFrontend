@@ -1,7 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { appConfig } from '../helpers/config';
+import { assertSuccess, SimpleActionResponse } from './action-response';
 
 export interface Permissions {
   can_view: 'none'|'info'|'content'|'content_with_descendants'|'solution'
@@ -31,5 +33,11 @@ export class GroupPermissionsService {
   getPermissions(sourceGroupId: string, groupId: string, itemId: string): Observable<GroupPermissions> {
     return this.http
       .get<GroupPermissions>(`${appConfig().apiUrl}/groups/${sourceGroupId}/permissions/${groupId}/${itemId}`);
+  }
+
+  updatePermissions(sourceGroupId: string, groupId: string, itemId: string, permissions: Permissions): Observable<void> {
+    return this.http
+      .put<SimpleActionResponse>(`${appConfig().apiUrl}/groups/${sourceGroupId}/permissions/${groupId}/${itemId}`, permissions)
+      .pipe(map(assertSuccess));
   }
 }
