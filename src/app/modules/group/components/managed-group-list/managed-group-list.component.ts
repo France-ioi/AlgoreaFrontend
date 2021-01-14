@@ -42,19 +42,33 @@ export class ManagedGroupListComponent implements OnDestroy, OnInit {
   }
 
   getType(value: GroupType): string {
-    if (value === 'Class') return $localize`Class`;
-    if (value === 'Base') return $localize`Base`;
-    if (value === 'Club') return $localize`Club`;
-    if (value === 'Friends') return $localize`Friends`;
-    if (value === 'Session') return $localize`Session`;
-    if (value === 'Team') return $localize`Team`;
-    return $localize`Other`;
+    switch (value) {
+      case 'Class':
+        return $localize`Class`;
+      case 'Base':
+        return $localize`Base`;
+      case 'Club':
+        return $localize`Club`;
+      case 'Friends':
+        return $localize`Friends`;
+      case 'Session':
+        return $localize`Session`;
+      case 'Team':
+        return $localize`Team`;
+      default:
+        return $localize`Other`;
+    }
   }
 
   getCanManage(value: ManageType): string {
-    if (value === 'memberships') return $localize`Memberships`;
-    if (value === 'memberships_and_group') return $localize`Memberships & Group`;
-    return $localize`None`;
+    switch (value) {
+      case 'memberships':
+        return $localize`Memberships`;
+      case 'memberships_and_group':
+        return $localize`Memberships & Group`;
+      default:
+        return $localize`None`;
+    }
   }
 
 }
