@@ -1,6 +1,6 @@
 <alg-add-content
-  [newContentTypes]="newGroupTypes"
-  [foundValues]="groupsFound"
+  [allowedTypesForNewContent]="allowedNewGroupTypes"
+  [resultsFromSearch]="groupsFound"
   [state]="state"
   (search)="onSearch($event)"
   (contentAdded)="addChild($event)"

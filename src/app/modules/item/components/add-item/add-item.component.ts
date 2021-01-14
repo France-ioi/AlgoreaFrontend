@@ -5,7 +5,7 @@ import { NewContentType, AddedContent } from 'src/app/modules/shared-components/
 import { ItemType } from 'src/app/shared/helpers/item-type';
 import { ItemFound, SearchItemService } from '../../http-services/search-item.service';
 
-const newItemTypes: NewContentType<ItemType>[] = [
+const allowedNewItemTypes: NewContentType<ItemType>[] = [
   {
     type: 'Chapter',
     icon: 'fa fa-book',
@@ -36,7 +36,7 @@ export class AddItemComponent implements OnChanges {
   @Input() allowSkills = false;
   @Output() contentAdded = new EventEmitter<AddedContent<ItemType>>();
 
-  newItemTypes: NewContentType<ItemType>[] = [];
+  allowedNewItemTypes: NewContentType<ItemType>[] = [];
   itemsFound: ItemFound[] = [];
   state: 'loading' | 'ready' = 'loading';
 
@@ -56,7 +56,7 @@ export class AddItemComponent implements OnChanges {
   }
 
   ngOnChanges(_changes: SimpleChanges): void {
-    this.newItemTypes = this.allowSkills ? newItemTypes : newItemTypes.slice(0, -1);
+    this.allowedNewItemTypes = this.allowSkills ? allowedNewItemTypes : allowedNewItemTypes.slice(0, -1);
   }
 
   onSearch(value: string): void {

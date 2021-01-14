@@ -28,7 +28,7 @@ export class AddSubGroupComponent {
 
   private dataFetching = new Subject<string>();
 
-  newGroupTypes: NewContentType<GroupType>[] = [
+  allowedNewGroupTypes: NewContentType<GroupType>[] = [
     {
       type: 'Class',
       icon: 'fa fa-book',

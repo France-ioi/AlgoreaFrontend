@@ -25,8 +25,8 @@ const defaultFormValues = { create: '', searchExisting: '' };
 })
 export class AddContentComponent<Type, SearchedValue extends AddedContent<Type>> implements OnInit, OnDestroy {
 
-  @Input() newContentTypes: NewContentType<Type>[] = [];
-  @Input() foundValues: SearchedValue[] = [];
+  @Input() allowedTypesForNewContent: NewContentType<Type>[] = [];
+  @Input() resultsFromSearch: SearchedValue[] = [];
   @Input() state: 'loading' | 'ready' = 'loading';
 
   @Output() search = new EventEmitter<string>();
