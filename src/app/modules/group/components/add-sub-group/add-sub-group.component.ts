@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Subject, timer } from 'rxjs';
-import { debounce, map, switchMap, tap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { Group } from 'src/app/core/components/group-nav-tree/group';
 import { AddedContent, NewContentType } from 'src/app/modules/shared-components/components/add-content/add-content.component';
 import { SearchGroupService } from '../../http-services/search-group.service';
@@ -23,10 +23,6 @@ export class AddSubGroupComponent {
     title: string,
     description: string|null,
   }[] = [];
-
-  state: 'loading' | 'ready' = 'loading';
-
-  private dataFetching = new Subject<string>();
 
   allowedNewGroupTypes: NewContentType<GroupType>[] = [
     {
@@ -55,26 +51,16 @@ export class AddSubGroupComponent {
     },
   ];
 
+  searchFunction = (value: string): Observable<AddedContent<GroupType>[]> =>
+    this.searchGroupService.search(value).pipe(map(groups => groups.map(group => ({
+      type: group.type,
+      title: group.name,
+      description: group.description,
+    }))));
+
   constructor(
     private searchGroupService: SearchGroupService,
-  ) {
-    this.dataFetching.pipe(
-      tap(_ => this.state = 'loading'),
-      debounce(() => timer(300)),
-      switchMap(value => this.searchGroupService.search(value).pipe(map(groups => groups.map(group => ({
-        type: group.type,
-        title: group.name,
-        description: group.description,
-      }))))),
-    ).subscribe(groups => {
-      this.groupsFound = groups;
-      this.state = 'ready';
-    });
-  }
-
-  onSearch(value: string): void {
-    this.dataFetching.next(value);
-  }
+  ) {}
 
   addChild(group: AddedContent<GroupType>): void {
     this.addGroup.emit(group);

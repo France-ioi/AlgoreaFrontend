@@ -1,7 +1,5 @@
 <alg-add-content
   [allowedTypesForNewContent]="allowedNewGroupTypes"
-  [resultsFromSearch]="groupsFound"
-  [state]="state"
-  (search)="onSearch($event)"
+  [searchFunction]="searchFunction"
   (contentAdded)="addChild($event)"
 ></alg-add-content>

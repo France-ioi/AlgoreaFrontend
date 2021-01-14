@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
-import { Subject, timer } from 'rxjs';
-import { debounce, switchMap, tap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import { NewContentType, AddedContent } from 'src/app/modules/shared-components/components/add-content/add-content.component';
 import { ItemType } from 'src/app/shared/helpers/item-type';
 import { ItemFound, SearchItemService } from '../../http-services/search-item.service';
@@ -40,27 +39,15 @@ export class AddItemComponent implements OnChanges {
   itemsFound: ItemFound[] = [];
   state: 'loading' | 'ready' = 'loading';
 
-  private dataFetching = new Subject<string>();
+  searchFunction = (value: string): Observable<AddedContent<ItemType>[]> =>
+    this.searchItemService.search(value, [ 'Chapter', 'Course', 'Task' ]);
 
   constructor(
     private searchItemService: SearchItemService
-  ) {
-    this.dataFetching.pipe(
-      tap(_ => this.state = 'loading'),
-      debounce(() => timer(300)),
-      switchMap(value => this.searchItemService.search(value, [ 'Chapter', 'Course', 'Task' ])),
-    ).subscribe(items => {
-      this.itemsFound = items;
-      this.state = 'ready';
-    });
-  }
+  ) {}
 
   ngOnChanges(_changes: SimpleChanges): void {
     this.allowedNewItemTypes = this.allowSkills ? allowedNewItemTypes : allowedNewItemTypes.slice(0, -1);
-  }
-
-  onSearch(value: string): void {
-    this.dataFetching.next(value);
   }
 
   addChild(item: AddedContent<ItemType>): void {

@@ -1,7 +1,8 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { Observable, Subscription } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
+import { Observable, Subscription, merge, of, throwError } from 'rxjs';
+import { map, filter, switchMap, delay } from 'rxjs/operators';
+import { fetchingState, readyState, isReady } from 'src/app/shared/helpers/state';
 
 export interface AddedContent<T> {
   id?: string,
@@ -23,17 +24,17 @@ const defaultFormValues = { create: '', searchExisting: '' };
   templateUrl: './add-content.component.html',
   styleUrls: [ './add-content.component.scss' ],
 })
-export class AddContentComponent<Type, SearchedValue extends AddedContent<Type>> implements OnInit, OnDestroy {
+export class AddContentComponent<Type> implements OnInit, OnDestroy {
 
   @Input() allowedTypesForNewContent: NewContentType<Type>[] = [];
-  @Input() resultsFromSearch: SearchedValue[] = [];
-  @Input() state: 'loading' | 'ready' = 'loading';
+  @Input() searchFunction?: (searchValue: string) => Observable<AddedContent<Type>[]>;
 
-  @Output() search = new EventEmitter<string>();
   @Output() contentAdded = new EventEmitter<AddedContent<Type>>();
 
   readonly minInputLength = 3;
 
+  state: 'fetching' | 'ready' = 'fetching';
+  resultsFromSearch: AddedContent<Type>[] = [];
   addContentForm: FormGroup = this.formBuilder.group(defaultFormValues);
   trimmedInputsValue = defaultFormValues;
 
@@ -58,8 +59,15 @@ export class AddContentComponent<Type, SearchedValue extends AddedContent<Type>>
       existingTitleControl.pipe(
         map(value => value.trim()),
         filter(value => this.checkLength(value)),
-      ).subscribe(value => {
-        this.search.emit(value);
+        switchMap(value => merge(
+          of(fetchingState()),
+          of(value).pipe(delay(300), switchMap(value =>
+            (this.searchFunction ? this.searchFunction(value).pipe(map(readyState)) : throwError(new Error('no search function'))),
+          ))
+        ))
+      ).subscribe(state => {
+        this.state = state.tag;
+        if (isReady(state)) this.resultsFromSearch = state.data;
       })
     );
   }
@@ -95,7 +103,7 @@ export class AddContentComponent<Type, SearchedValue extends AddedContent<Type>>
     this.reset();
   }
 
-  addExisting(item: SearchedValue): void {
+  addExisting(item: AddedContent<Type>): void {
     this.contentAdded.emit(item);
     this.reset();
   }
