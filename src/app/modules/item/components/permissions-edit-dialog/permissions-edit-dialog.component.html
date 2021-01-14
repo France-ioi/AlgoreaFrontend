@@ -26,14 +26,14 @@
         (change)="this.permissions.can_view = $event"
         [values]="canViewValues"
       ></alg-progress-section>
-      <alg-boolean-section
+      <!--<alg-boolean-section
         i18n-title title="Can Enter"
         icon="fa fa-door-open"
         [defaultValue]="this.permissions.can_enter_from"
         (change)="this.permissions.can_enter_from = $event"
       >
         <ng-template #label i18n>{{targetTypeString}} may enter this item (a contest or time-limited chapter)</ng-template>
-      </alg-boolean-section>
+      </alg-boolean-section>-->
       <alg-progress-section
         i18n-title title="Can grant view"
         icon="fa fa-key"

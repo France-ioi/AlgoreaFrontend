@@ -1,5 +1,5 @@
 import { ProgressSectionValue } from 'src/app/modules/shared-components/components/progress-section/progress-section.component';
-import { TypeFilter } from '../item-chapter-view/group-situation-chapter-view/composition-filter/composition-filter.component';
+import { TypeFilter } from '../composition-filter/composition-filter.component';
 
 function getTargetTypeString(targetType: TypeFilter): string {
   switch (targetType) {
