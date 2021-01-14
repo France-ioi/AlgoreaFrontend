@@ -1,6 +1,6 @@
 <p *ngIf="state === 'error';else noError" class="error-message">
   <i class="fa fa-exclamation-triangle"></i>
-  Error while loading the group you joined
+  <span i18n> Error while loading the group you joined</span>
 </p>
 
 <ng-template #noError>
@@ -15,7 +15,10 @@
     <tr *ngIf="data.length > 0">
         <th i18n>Name</th>
         <th i18n>Type</th>
-        <th pSortableColumn="member_since">Joined On <p-sortIcon field="member_since"></p-sortIcon></th>
+        <th pSortableColumn="member_since">
+          <span i18n>Joined On</span>
+          <p-sortIcon field="member_since"></p-sortIcon>
+        </th>
     </tr>
   </ng-template>
 

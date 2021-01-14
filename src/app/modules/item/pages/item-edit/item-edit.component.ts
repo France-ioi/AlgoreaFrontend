@@ -120,6 +120,7 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
           changes.children = res.map((child, idx) => ({ item_id: child.id, order: idx }));
         }
         if (!this.initialFormData) return throwError(new Error('Invalid form'));
+        if (!Object.keys(changes).length) return of(undefined);
         return this.updateItemService.updateItem(this.initialFormData.id, changes);
       }),
     );
@@ -127,23 +128,32 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
 
   // Item string changes
   private getItemStringChanges(): ItemStringChanges | undefined {
-    const title = this.itemForm.get('title');
-    const subtitle = this.itemForm.get('subtitle');
-    const description = this.itemForm.get('description');
+    const titleControl = this.itemForm.get('title');
+    const subtitleControl = this.itemForm.get('subtitle');
+    const descriptionControl = this.itemForm.get('description');
+    const initialValues = this.initialFormData?.string;
 
-    if (title === null || description === null || subtitle === null) return undefined;
+    if (titleControl === null || subtitleControl === null || descriptionControl === null || !initialValues) return undefined;
 
-    return {
-      title: (title.value as string).trim(),
-      subtitle: (subtitle.value as string).trim() || null,
-      description: (description.value as string).trim() || null,
-    };
+    const res: ItemStringChanges = {};
+
+    const title = titleControl.value as string;
+    if (title !== initialValues.title) res.title = title.trim();
+
+    const subtitle = (subtitleControl.value as string).trim() || null;
+    if (subtitle !== initialValues.subtitle) res.subtitle = subtitle;
+
+    const description = (descriptionControl.value as string).trim() || null;
+    if (description !== initialValues.description) res.description = description;
+
+    return res;
   }
 
   private updateString(): Observable<void> {
     if (!this.initialFormData) return throwError(new Error('Missing ID form'));
     const itemStringChanges = this.getItemStringChanges();
-    if (!itemStringChanges) return throwError(new Error('Invalid form'));
+    if (!itemStringChanges) return throwError(new Error('Invalid form or initial data'));
+    if (!Object.keys(itemStringChanges).length) return of(undefined);
     return this.updateItemStringService.updateItem(this.initialFormData.id, itemStringChanges);
   }
 

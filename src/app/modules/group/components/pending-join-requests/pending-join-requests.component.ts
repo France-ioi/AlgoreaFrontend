@@ -17,7 +17,7 @@ import {
   processRequestError
 } from 'src/app/modules/group/components/pending-request/pending-request-response-handling';
 
-const groupColumn = { field: 'group.name', header: 'GROUP' };
+const groupColumn = { field: 'group.name', header: $localize`GROUP` };
 
 @Component({
   selector: 'alg-pending-join-requests',

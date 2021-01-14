@@ -2,7 +2,7 @@
 
   <ng-container *ngIf="state.tag === 'ready' && (itemData$ | async) as itemData">
 
-    <alg-item-header [itemData]="itemData"></alg-item-header>
+    <alg-item-header [itemData]="itemData" (reloadItem)="reloadItem()"></alg-item-header>
 
     <nav mat-tab-nav-bar>
       <a mat-tab-link

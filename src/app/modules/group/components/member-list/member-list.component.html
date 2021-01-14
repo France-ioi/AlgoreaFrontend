@@ -2,7 +2,7 @@
 
 <p *ngIf="state === 'error';else noError" class="error-message">
   <i class="fa fa-exclamation-triangle"></i>
-  Error while loading the group members
+  <span i18n>Error while loading the group members</span>
 </p>
 
 <ng-template #noError>

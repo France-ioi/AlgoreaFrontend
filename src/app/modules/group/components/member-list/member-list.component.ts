@@ -17,30 +17,30 @@ interface Column {
 }
 
 const usersColumns: Column[] = [
-  { field: 'user.login', header: 'Name', sortable: true },
-  { field: 'member_since', header: 'Member Since', sortable: true },
+  { field: 'user.login', header: $localize`Name`, sortable: true },
+  { field: 'member_since', header: $localize`Member Since`, sortable: true },
 ];
 
 const groupsColumns: Column[] = [
-  { field: 'name', header: 'Name', sortable: true },
-  { field: 'type', header: 'Type' },
-  { field: 'userCount', header: 'User Count' },
+  { field: 'name', header: $localize`Name`, sortable: true },
+  { field: 'type', header: $localize`Type` },
+  { field: 'userCount', header: $localize`User Count` },
 ];
 
 const nameUserCountColumns: Column[] = [
-  { field: 'name', header: 'Name', sortable: true },
-  { field: 'userCount', header: 'User Count' },
+  { field: 'name', header: $localize`Name`, sortable: true },
+  { field: 'userCount', header: $localize`User Count` },
 ];
 
 const descendantUsersColumns: Column[] = [
-  { field: 'login', header: 'Name' },
-  { field: 'parentGroups', header: 'Parent group(s)' },
+  { field: 'login', header: $localize`Name` },
+  { field: 'parentGroups', header: $localize`Parent group(s)` },
 ];
 
 const descendantTeamsColumns: Column[] = [
-  { field: 'name', header: 'Name', sortable: true },
-  { field: 'parentGroups', header: 'Parent group(s)' },
-  { field: 'members', header: 'Member(s)' },
+  { field: 'name', header: $localize`Name`, sortable: true },
+  { field: 'parentGroups', header: $localize`Parent group(s)` },
+  { field: 'members', header: $localize`Member(s)` },
 ];
 
 interface Data {
