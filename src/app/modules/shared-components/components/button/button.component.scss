@@ -110,6 +110,16 @@ $danger-color: #ff001f;
     }
   }
 
+  &.p-button-danger {
+    background-color: $danger-color;
+    border-color: $danger-color;
+
+    &:enabled:focus {
+      outline: none;
+      box-shadow: none;
+    }
+  }
+
   &.p-top-rounded {
     border-radius: 0;
     border-top-left-radius: 0.6667rem;

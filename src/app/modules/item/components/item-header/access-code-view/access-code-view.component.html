@@ -1,0 +1,22 @@
+<alg-section-paragraph icon="fa fa-sign-in-alt" i18n-label label="Access to activity">
+  <div class="input-wrapper">
+    <input
+      #input
+      type="text"
+      i18n-placeholder placeholder="Group code"
+      (keyup)="0"
+      [(ngModel)]="code"
+      [disabled]="state === 'loading'"
+    >
+    <span class="icon">
+      <i class="fa fa-font"></i>
+    </span>
+    <alg-button
+      icon="fa fa-check"
+      i18n-label label="Access"
+      class="p-button-rounded"
+      [disabled]="input.value === '' || state === 'loading'"
+      (click)="onClickAccess()"
+    ></alg-button>
+  </div>
+</alg-section-paragraph>

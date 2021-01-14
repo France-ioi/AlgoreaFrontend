@@ -9,7 +9,9 @@ export const mockItem: Item = {
   best_score: 100,
   permissions: {
     can_view: 'none',
-    can_edit: 'none'
+    can_edit: 'none',
+    can_grant_view: 'none',
   },
-  type: 'Task'
+  type: 'Task',
+  prompt_to_join_group_by_code: false,
 };

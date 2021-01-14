@@ -12,6 +12,8 @@ export interface Environment {
   // this item MUST be on one of all users' root and be implicitely startable
   defaultActivityId: string;
   defaultSkillId: string;
+
+  languages?: { tag: string, path: string }[];
 }
 
 type Config = Environment; // config may be someday an extension of the environment

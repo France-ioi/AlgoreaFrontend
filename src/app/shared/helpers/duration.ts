@@ -2,6 +2,9 @@
 export const SECONDS = 1000;
 export const MINUTES = 60 * SECONDS;
 export const HOURS = 60 * MINUTES;
+export const DAYS = 24 * HOURS;
+export const MONTHS = 30 * DAYS;
+export const YEARS = 365 * DAYS;
 
 export class Duration {
 
@@ -28,8 +31,30 @@ export class Duration {
     return new Duration(hours*HOURS + minutes*MINUTES + seconds*SECONDS);
   }
 
+  static fromSeconds(seconds: number): Duration {
+    return new Duration(seconds * SECONDS);
+  }
+
   toString(): string {
     return `${Math.floor(this.ms/HOURS)}:${Math.floor(this.ms%HOURS/MINUTES)}:${this.ms%MINUTES}`;
+  }
+
+  toReadable(): string {
+    if (this.ms < SECONDS) {
+      return `${Math.max(0, Math.floor(this.ms))} ms`;
+    } else if (this.ms < MINUTES) {
+      return `${Math.floor(this.ms / SECONDS)} s`;
+    } else if (this.ms < HOURS) {
+      return `${Math.floor(this.ms / MINUTES)} min`;
+    } else if (this.ms < DAYS) {
+      return `${Math.floor(this.ms / HOURS)} hours`;
+    } else if (this.ms < MONTHS) {
+      return `${Math.floor(this.ms / DAYS)} days`;
+    } else if (this.ms < YEARS) {
+      return `${Math.floor(this.ms / MONTHS)} months`;
+    } else {
+      return `${Math.floor(this.ms / YEARS)} years`;
+    }
   }
 
   minutes(): number {

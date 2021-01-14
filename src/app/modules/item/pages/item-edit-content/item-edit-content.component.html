@@ -4,6 +4,11 @@
     <alg-textarea [parentForm]="parentForm" inputName="description"></alg-textarea>
   </alg-section>
 
-  <alg-item-children-edit (childrenChanges)="childrenChanges.emit($event)" [itemData]="itemData" *ngIf="['Chapter', 'Skill'].includes(itemData.item.type)" #childrenEdit></alg-item-children-edit>
+  <alg-item-children-edit
+    #childrenEdit
+    (childrenChanges)="childrenChanges.emit($event)"
+    [itemData]="itemData" *ngIf="['Chapter', 'Skill'].includes(itemData.item.type)"
+    [ngClass]="{disabled: parentForm?.disabled}"
+  ></alg-item-children-edit>
 
 </ng-container>

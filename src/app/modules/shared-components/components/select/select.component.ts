@@ -5,20 +5,19 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
   templateUrl: './select.component.html',
   styleUrls: [ './select.component.scss' ],
 })
-export class SelectComponent<T> implements OnInit {
-  @Input() items: T[] = [];
+export class SelectComponent implements OnInit {
+  @Input() items: string[] = [];
   @Input() width = 6.5;
   @Input() opened = false;
+  @Input() selected?: string;
 
-  @Output() change = new EventEmitter<T>();
+  @Output() change = new EventEmitter<string>();
   @Output() click = new EventEmitter<void>();
-
-  selected?: T;
 
   constructor() {}
 
   ngOnInit(): void {
-    this.selected = this.items.length > 0 ? this.items[0] : undefined;
+    if (!this.selected) this.selected = this.items.length > 0 ? this.items[0] : undefined;
   }
 
   toogleDropdown(e: Event): void {
@@ -31,9 +30,11 @@ export class SelectComponent<T> implements OnInit {
     this.opened = false;
   }
 
-  selectValue(v: T): void {
-    this.selected = v;
-    this.opened = false;
-    this.change.emit(v);
+  selectValue(v: string): void {
+    if (this.selected !== v) {
+      this.selected = v;
+      this.opened = false;
+      this.change.emit(v);
+    }
   }
 }

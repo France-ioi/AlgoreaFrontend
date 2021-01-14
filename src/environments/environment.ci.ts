@@ -8,4 +8,9 @@ export const environment: Environment = {
 
   defaultActivityId: '4702',
   defaultSkillId: '3000',
+
+  languages: [
+    { tag: 'fr', path: '/fr/' },
+    { tag: 'en', path: '/en/' },
+  ],
 };
