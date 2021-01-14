@@ -1,5 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Component, OnInit } from '@angular/core';
 import { Group, GroupType, ManagedGroupsService, ManageType } from '../../../../core/http-services/managed-groups.service';
 
 @Component({
@@ -7,30 +6,24 @@ import { Group, GroupType, ManagedGroupsService, ManageType } from '../../../../
   templateUrl: './managed-group-list.component.html',
   styleUrls: [ './managed-group-list.component.scss' ],
 })
-export class ManagedGroupListComponent implements OnDestroy, OnInit {
+export class ManagedGroupListComponent implements OnInit {
 
   state: 'error' | 'ready' | 'fetching' = 'fetching';
   currentSort: string[] = [];
 
   data: Group[] = [];
 
-  private subscription?: Subscription;
-
   constructor(private managedGroupService: ManagedGroupsService) {
   }
 
   ngOnInit(): void {
-    this.subscription = this.managedGroupService.getManagedGroups().pipe().subscribe(
+    this.managedGroupService.getManagedGroups().subscribe(
       data => {
         this.state = 'ready';
         this.data = data;
       },
       _err => this.state = 'error',
     );
-  }
-
-  ngOnDestroy(): void {
-    this.subscription?.unsubscribe();
   }
 
   getType(value: GroupType): string {
