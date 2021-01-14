@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
-import { Progress } from 'src/app/shared/http-services/get-group-progress.service';
+import { TeamUserProgress } from 'src/app/shared/http-services/get-group-progress.service';
 
 @Component({
   selector: 'alg-user-progress',
@@ -8,7 +8,7 @@ import { Progress } from 'src/app/shared/http-services/get-group-progress.servic
 })
 export class UserProgressComponent implements OnChanges {
 
-  @Input() userProgress?: Progress;
+  @Input() userProgress?: TeamUserProgress;
   @Input() canAccess?: boolean;
 
   @Output() permEditionRequested = new EventEmitter<void>();

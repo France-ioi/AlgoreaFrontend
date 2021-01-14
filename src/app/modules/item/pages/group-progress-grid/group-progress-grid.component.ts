@@ -6,7 +6,7 @@ import { GetGroupChildrenService } from 'src/app/modules/group/http-services/get
 import { fetchingState, isReady, readyState } from 'src/app/shared/helpers/state';
 import { formatUser } from 'src/app/shared/helpers/user';
 import { GetGroupDescendantsService } from 'src/app/shared/http-services/get-group-descendants.service';
-import { GetGroupProgressService, Progress } from 'src/app/shared/http-services/get-group-progress.service';
+import { GetGroupProgressService, TeamUserProgress } from 'src/app/shared/http-services/get-group-progress.service';
 import { TypeFilter } from '../../components/composition-filter/composition-filter.component';
 import { Permissions } from '../../components/permissions-edit-dialog/permissions-edit-dialog.component';
 import { GetItemChildrenService } from '../../http-services/get-item-children.service';
@@ -21,7 +21,7 @@ interface Data {
   rows: {
     header: string,
     id: string,
-    data: (Progress|undefined)[],
+    data: (TeamUserProgress|undefined)[],
   }[],
   can_access: boolean,
 }
@@ -104,7 +104,7 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     });
   }
 
-  private getProgress(itemId: string, groupId: string, filter: TypeFilter): Observable<Progress[]> {
+  private getProgress(itemId: string, groupId: string, filter: TypeFilter): Observable<TeamUserProgress[]> {
     switch (filter) {
       case 'Users':
         return this.getGroupUsersProgressService.getUsersProgress(groupId, [ itemId ]);
@@ -118,6 +118,9 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
             validated: m.validationRate === 1,
             score: m.averageScore,
             timeSpent: m.avgTimeSpent,
+            hintsRequested: m.avgHintsRequested,
+            submissions: m.avgSubmissions,
+            latestActivityAt: null,
           }))));
     }
   }
