@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
-import { forkJoin, merge, Observable, of, Subject } from 'rxjs';
+import { forkJoin, merge, Observable, of, Subject, Subscription } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { Group } from 'src/app/modules/group/http-services/get-group-by-id.service';
 import { GetGroupChildrenService } from 'src/app/modules/group/http-services/get-group-children.service';
@@ -7,6 +7,7 @@ import { fetchingState, isReady, readyState } from 'src/app/shared/helpers/state
 import { formatUser } from 'src/app/shared/helpers/user';
 import { GetGroupDescendantsService } from 'src/app/shared/http-services/get-group-descendants.service';
 import { GetGroupProgressService, TeamUserProgress } from 'src/app/shared/http-services/get-group-progress.service';
+import { GetGroupPermissionsService } from 'src/app/shared/http-services/get-group-permissions.service';
 import { TypeFilter } from '../../components/composition-filter/composition-filter.component';
 import { Permissions } from '../../components/permissions-edit-dialog/permissions-edit-dialog.component';
 import { GetItemChildrenService } from '../../http-services/get-item-children.service';
@@ -63,11 +64,14 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
 
   private dataFetching = new Subject<{ groupId: string, itemId: string, attemptId: string, filter: TypeFilter }>();
 
+  private permissionsFetchingSubscription?: Subscription;
+
   constructor(
     private getItemChildrenService: GetItemChildrenService,
     private getGroupDescendantsService: GetGroupDescendantsService,
     private getGroupUsersProgressService: GetGroupProgressService,
     private getGroupChildrenService: GetGroupChildrenService,
+    private getGroupPermissionsService: GetGroupPermissionsService,
   ) {
     this.dataFetching.pipe(
       switchMap(params =>
@@ -88,6 +92,7 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
 
   ngOnDestroy(): void {
     this.dataFetching.complete();
+    this.permissionsFetchingSubscription?.unsubscribe();
   }
 
   ngOnChanges(_changes: SimpleChanges): void {
@@ -181,11 +186,25 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     }
   }
 
-  onAccessPermissions(title: string, _targetGroupId: string, _itemId: string): void {
-    this.dialogTitle = title;
-    this.dialog = 'opened';
+  onAccessPermissions(title: string, targetGroupId: string, itemId: string): void {
+    if (!this.group) return;
 
-    // TODO LOAD PERMISSIONS
+    this.dialogTitle = title;
+    this.dialog = 'loading';
+
+    this.permissionsFetchingSubscription?.unsubscribe();
+    this.permissionsFetchingSubscription = this.getGroupPermissionsService.getPermissions(this.group.id, targetGroupId, itemId)
+      .subscribe(permissions => {
+        this.dialogPermissions = {
+          can_view: permissions.can_view.granted_only_group,
+          can_grant_view: permissions.can_grant_view.granted_only_group,
+          can_watch: permissions.can_watch.granted_only_group,
+          can_edit: permissions.can_edit.granted_only_group,
+          is_owner: permissions.is_owner,
+          can_make_session_official: permissions.can_make_session_official,
+        };
+        this.dialog = 'opened';
+      });
   }
 
   onDialogClose(_permissions: Permissions): void {
