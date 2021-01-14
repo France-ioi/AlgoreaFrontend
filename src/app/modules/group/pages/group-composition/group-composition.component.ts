@@ -43,7 +43,7 @@ export class GroupCompositionComponent implements OnChanges {
 
     forkJoin({
       parentGroupId: of(this.group.id),
-      childGroupId: group.id ? of(group.id) : this.groupCreationService.create(group.title, group.type).pipe(map(res => res.data.id)),
+      childGroupId: group.id ? of(group.id) : this.groupCreationService.create(group.title, group.type),
     }).pipe(map(ids => this.groupCreationService.addSubgroup(ids.parentGroupId, ids.childGroupId))).subscribe(
       _ => {
         this.displaySuccess($localize`Group successfully added as child group`);

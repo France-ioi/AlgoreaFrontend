@@ -27,7 +27,7 @@ export class SearchGroupService {
     searchString: string,
     limit = 4,
   ): Observable<GroupFound<'Class'|'Team'|'Club'|'Friends'|'Other'>[]> {
-    const params = new HttpParams().set('search', searchString).set('limit', limit.toString());
+    const params = new HttpParams({ fromObject: { search: searchString, limit: limit.toString() } });
     return this.http.get<GroupFound<'Class'|'Team'|'Club'|'Friends'|'Other'|'Base'>[]>(
       `${appConfig().apiUrl}/current-user/available-groups`,
       { params: params },

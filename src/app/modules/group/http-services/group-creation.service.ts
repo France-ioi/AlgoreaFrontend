@@ -3,14 +3,10 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { appConfig } from 'src/app/shared/helpers/config';
-import { assertSuccess, SimpleActionResponse } from 'src/app/shared/http-services/action-response';
+import { ActionResponse, assertSuccess, SimpleActionResponse, successData } from 'src/app/shared/http-services/action-response';
 
-interface GroupCreateResponse {
-  data: {
-    id: string,
-  },
-  success: true,
-  message: 'created',
+interface NewGroupData {
+  id: string
 }
 
 @Injectable({
@@ -20,10 +16,14 @@ export class GroupCreationService {
 
   constructor(private http: HttpClient) { }
 
-  create(name: string, type: 'Class'|'Team'|'Club'|'Friends'|'Other'|'Session'): Observable<GroupCreateResponse> {
-    const params = new HttpParams().set('name', name).set('type', type);
+  create(name: string, type: 'Class'|'Team'|'Club'|'Friends'|'Other'|'Session'): Observable<string> {
+    const params = new HttpParams({ fromObject: { name: name, type: type } });
     return this.http
-      .post<GroupCreateResponse>(`${appConfig().apiUrl}/groups`, null, { params: params });
+      .post<ActionResponse<NewGroupData>>(`${appConfig().apiUrl}/groups`, null, { params: params })
+      .pipe(
+        map(successData),
+        map(response => response.id),
+      );
   }
 
   addSubgroup(parentId: string, childId: string): Observable<void> {
