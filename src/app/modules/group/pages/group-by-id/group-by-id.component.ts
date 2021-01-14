@@ -7,7 +7,7 @@ import { CurrentContentService, EditAction, GroupInfo, isGroupInfo } from 'src/a
 import { Group } from '../../http-services/get-group-by-id.service';
 import { GroupDataSource } from '../../services/group-datasource.service';
 
-const GROUP_BREADCRUMB_CAT = 'Groups';
+const GROUP_BREADCRUMB_CAT = $localize`Groups`;
 
 /**
  * GroupByIdComponent is just a container for detail or edit page but manages the fetching on id change and (un)setting the current content.

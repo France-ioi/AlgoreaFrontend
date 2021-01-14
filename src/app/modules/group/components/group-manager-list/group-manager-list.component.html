@@ -1,9 +1,9 @@
 <p-progressSpinner *ngIf="state === 'loading'"></p-progressSpinner>
 
-<p *ngIf="state === 'error'">Error while loading the group managers</p>
+<p *ngIf="state === 'error'" i18n>Error while loading the group managers</p>
 
 <ng-container *ngIf="state === 'ready'">
-  <alg-section icon="fa fa-users" label="Managers of this group">
+  <alg-section icon="fa fa-users" i18n-label label="Managers of this group">
     <alg-grid
     [data]="managers"
     sortMode="single"
@@ -15,28 +15,28 @@
         <tr style="border: none;">
           <th style="width: 160px;">
             <div class="slanted-header">
-              <div class="slanted-header-content">
+              <div class="slanted-header-content" i18n>
                 Name
               </div>
             </div>
           </th>
           <th style="min-width: 110px;">
             <div class="slanted-header">
-              <div class="slanted-header-content">
+              <div class="slanted-header-content" i18n>
                 Can Manage
               </div>
             </div>
           </th>
           <th style="width: 5rem;">
             <div class="slanted-header">
-              <div class="slanted-header-content">
+              <div class="slanted-header-content" i18n>
                 Can grant group access
               </div>
             </div>
           </th>
           <th style="width: 5rem;">
             <div class="slanted-header">
-              <div class="slanted-header-content">
+              <div class="slanted-header-content" i18n>
                 Can watch members
               </div>
             </div>

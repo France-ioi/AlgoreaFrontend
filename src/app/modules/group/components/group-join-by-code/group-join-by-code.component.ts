@@ -68,7 +68,7 @@ export class GroupJoinByCodeComponent implements OnChanges {
         finalize(() => this.processing = false)
       ).subscribe(
         _result => {
-          this.displaySuccess('A new code has been generated');
+          this.displaySuccess($localize`A new code has been generated`);
         },
         _err => {
           this.displayError();
@@ -93,7 +93,7 @@ export class GroupJoinByCodeComponent implements OnChanges {
         finalize(() => this.processing = false),
       ).subscribe(
         _result => {
-          this.displaySuccess('The validity has been changed');
+          this.displaySuccess($localize`The validity has been changed`);
         },
         _err => {
           this.displayError();
@@ -115,7 +115,7 @@ export class GroupJoinByCodeComponent implements OnChanges {
         finalize(() => this.processing = false)
       ).subscribe(
         _result => {
-          this.displaySuccess('Users will not be able to join with the former code.');
+          this.displaySuccess($localize`Users will not be able to join with the former code.`);
         },
         _err => {
           this.displayError();

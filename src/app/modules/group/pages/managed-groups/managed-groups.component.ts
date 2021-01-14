@@ -16,11 +16,11 @@ export class ManagedGroupsComponent implements OnInit, OnDestroy {
     this.currentContent.current.next({
       type: 'group',
       breadcrumbs: {
-        category: 'Groups you manage',
+        category: $localize`Groups you manage`,
         path: [],
         currentPageIdx: -1,
       },
-      title: 'Groups you manage',
+      title: $localize`Groups you manage`,
     });
   }
 

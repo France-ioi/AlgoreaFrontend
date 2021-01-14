@@ -14,11 +14,11 @@ export class JoinedGroupsComponent implements OnInit {
     this.currentContent.current.next({
       type: 'group',
       breadcrumbs: {
-        category: 'Joined Groups',
+        category: $localize`Joined Groups`,
         path: [],
         currentPageIdx: -1,
       },
-      title: 'Joined Groups',
+      title: $localize`Joined Groups`,
     });
   }
 
