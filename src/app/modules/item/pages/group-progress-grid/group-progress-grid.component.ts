@@ -7,9 +7,8 @@ import { fetchingState, isReady, readyState } from 'src/app/shared/helpers/state
 import { formatUser } from 'src/app/shared/helpers/user';
 import { GetGroupDescendantsService } from 'src/app/shared/http-services/get-group-descendants.service';
 import { GetGroupProgressService, TeamUserProgress } from 'src/app/shared/http-services/get-group-progress.service';
-import { GetGroupPermissionsService } from 'src/app/shared/http-services/get-group-permissions.service';
+import { GroupPermissionsService, Permissions } from 'src/app/shared/http-services/group-permissions.service';
 import { TypeFilter } from '../../components/composition-filter/composition-filter.component';
-import { Permissions } from '../../components/permissions-edit-dialog/permissions-edit-dialog.component';
 import { GetItemChildrenService } from '../../http-services/get-item-children.service';
 import { ItemData } from '../../services/item-datasource.service';
 
@@ -71,7 +70,7 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     private getGroupDescendantsService: GetGroupDescendantsService,
     private getGroupUsersProgressService: GetGroupProgressService,
     private getGroupChildrenService: GetGroupChildrenService,
-    private getGroupPermissionsService: GetGroupPermissionsService,
+    private groupPermissionsService: GroupPermissionsService,
   ) {
     this.dataFetching.pipe(
       switchMap(params =>
@@ -193,15 +192,15 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     this.dialog = 'loading';
 
     this.permissionsFetchingSubscription?.unsubscribe();
-    this.permissionsFetchingSubscription = this.getGroupPermissionsService.getPermissions(this.group.id, targetGroupId, itemId)
+    this.permissionsFetchingSubscription = this.groupPermissionsService.getPermissions(this.group.id, targetGroupId, itemId)
       .subscribe(permissions => {
         this.dialogPermissions = {
-          can_view: permissions.can_view.granted_only_group,
-          can_grant_view: permissions.can_grant_view.granted_only_group,
-          can_watch: permissions.can_watch.granted_only_group,
-          can_edit: permissions.can_edit.granted_only_group,
-          is_owner: permissions.is_owner,
-          can_make_session_official: permissions.can_make_session_official,
+          can_view: permissions.granted_via_group_membership.can_view,
+          can_grant_view: permissions.granted_via_group_membership.can_grant_view,
+          can_watch: permissions.granted_via_group_membership.can_watch,
+          can_edit: permissions.granted_via_group_membership.can_edit,
+          is_owner: permissions.granted_via_group_membership.is_owner,
+          can_make_session_official: permissions.granted_via_group_membership.can_make_session_official,
         };
         this.dialog = 'opened';
       });

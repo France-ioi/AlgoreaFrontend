@@ -1,17 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ProgressSectionValue } from 'src/app/modules/shared-components/components/progress-section/progress-section.component';
+import { Permissions } from 'src/app/shared/http-services/group-permissions.service';
 import { TypeFilter } from '../composition-filter/composition-filter.component';
 import { generateCanEditValues, generateCanGrantViewValues,
   generateCanViewValues, generateCanWatchValues } from './permissions-edit-dialog-texts';
-
-export interface Permissions {
-  can_view: 'none'|'info'|'content'|'content_with_descendants'|'solution'
-  can_grant_view: 'none'|'enter'|'content'|'content_with_descendants'|'solution'|'solution_with_grant',
-  can_watch: 'none'|'result'|'answer'|'answer_with_grant',
-  can_edit: 'none'|'children'|'all'|'all_with_grant',
-  can_make_session_official: boolean,
-  is_owner: boolean,
-}
 
 @Component({
   selector: 'alg-permissions-edit-dialog',
