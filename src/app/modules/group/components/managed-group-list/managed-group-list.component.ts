@@ -1,7 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { merge, of, Subject } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
-import { fetchingState, isReady, readyState } from 'src/app/shared/helpers/state';
+import { Subscription } from 'rxjs';
 import { Group, GroupType, ManagedGroupsService, ManageType } from '../../../../core/http-services/managed-groups.service';
 
 @Component({
@@ -16,29 +14,23 @@ export class ManagedGroupListComponent implements OnDestroy, OnInit {
 
   data: Group[] = [];
 
-  private dataFetching = new Subject<{}>();
+  private subscription?: Subscription;
 
   constructor(private managedGroupService: ManagedGroupsService) {
-    this.dataFetching.pipe(
-      switchMap(_ => merge(
-        of(fetchingState()),
-        this.managedGroupService.getManagedGroups().pipe(map(readyState)),
-      )),
-    ).subscribe(
-      state => {
-        this.state = state.tag;
-        if (isReady(state)) this.data = state.data;
+  }
+
+  ngOnInit(): void {
+    this.subscription = this.managedGroupService.getManagedGroups().pipe().subscribe(
+      data => {
+        this.state = 'ready';
+        this.data = data;
       },
       _err => this.state = 'error',
     );
   }
 
-  ngOnInit(): void {
-    this.dataFetching.next();
-  }
-
   ngOnDestroy(): void {
-    this.dataFetching.complete();
+    this.subscription?.unsubscribe();
   }
 
   getType(value: GroupType): string {
