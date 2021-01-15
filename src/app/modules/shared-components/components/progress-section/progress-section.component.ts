@@ -29,7 +29,7 @@ export class ProgressSectionComponent<T> implements OnChanges, OnInit {
   @Input() collapsed = true;
   @Input() disabled = false;
 
-  @Output() change = new EventEmitter<T>();
+  @Output() valueChange = new EventEmitter<T>();
 
   selected = 0;
 
@@ -50,6 +50,6 @@ export class ProgressSectionComponent<T> implements OnChanges, OnInit {
   onSet(val: T): void {
     this.value = val;
     this.selected = Math.max(0, this.values.findIndex(item => item.value === this.value));
-    this.change.emit(this.value);
+    this.valueChange.emit(this.value);
   }
 }

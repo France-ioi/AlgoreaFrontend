@@ -15,12 +15,12 @@ export class BooleanSectionComponent {
   @ContentChild('description') descriptionTemplate?: TemplateRef<any>;
   @ContentChild('label') labelTemplate?: TemplateRef<any>;
 
-  @Output() change = new EventEmitter<boolean>();
+  @Output() valueChange = new EventEmitter<boolean>();
 
   constructor() { }
 
   onSet(val: boolean): void {
     this.value = val;
-    this.change.emit(this.value);
+    this.valueChange.emit(this.value);
   }
 }
