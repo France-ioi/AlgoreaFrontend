@@ -54,15 +54,15 @@
         </context-group>
       </trans-unit><trans-unit id="11f78ba7176f45e770dc165dc9e67d99062f9983" datatype="html">
         <source> Yes </source><target state="translated"> Oui </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/shared-components/components/progress-section/boolean-section/boolean-section.component.html</context>
-          <context context-type="linenumber">11,12</context>
-        </context-group>
-      </trans-unit><trans-unit id="c630ea158480efb7cc07ec621427f2e86098bc73" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/progress-section/boolean-section/boolean-section.component.html</context><context context-type="linenumber">10</context></context-group></trans-unit><trans-unit id="c630ea158480efb7cc07ec621427f2e86098bc73" datatype="html">
         <source> No </source><target state="translated"> Non </target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/progress-section/boolean-section/boolean-section.component.html</context><context context-type="linenumber">13</context></context-group></trans-unit><trans-unit id="4449471207584645508" datatype="html">
+        <source>Permissions successfully updated.</source><target state="translated">Permissions mises à jour avec succès.</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/shared-components/components/progress-section/boolean-section/boolean-section.component.html</context>
-          <context context-type="linenumber">14,15</context>
+          <context context-type="sourcefile">src/app/modules/item/pages/group-progress-grid/group-progress-grid.component.ts</context>
+          <context context-type="linenumber">235</context>
         </context-group>
       </trans-unit><trans-unit id="5199111763891627410" datatype="html">
         <source>This page has unsaved changes. Do you want to leave this page and lose its changes?</source><target state="translated">Cette page comporte des changements non sauvegardés. Voulez-vous quitter cette page et perdre les changements ?</target>
