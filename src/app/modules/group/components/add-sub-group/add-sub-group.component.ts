@@ -29,25 +29,25 @@ export class AddSubGroupComponent {
       type: 'Class',
       icon: 'fa fa-book',
       title: $localize`Class`,
-      description: $localize`Class`,
+      description: '',
     },
     {
       type: 'Club',
       icon: 'fa fa-book',
       title: $localize`Club`,
-      description: $localize`Club`,
+      description: '',
     },
     {
       type: 'Friends',
       icon: 'fa fa-users',
       title: $localize`Friends`,
-      description: $localize`Friends`,
+      description: '',
     },
     {
       type: 'Other',
       icon: 'fa fa-book',
       title: $localize`Other`,
-      description: $localize`Other`,
+      description: '',
     },
   ];
 

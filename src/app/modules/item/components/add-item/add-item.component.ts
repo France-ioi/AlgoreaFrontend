@@ -20,7 +20,7 @@ const allowedNewItemTypes: NewContentType<ItemType>[] = [
   {
     type: 'Skill',
     icon: 'fa fa-graduation-cap',
-    title: $localize`Skill'`,
+    title: $localize`Skill`,
     description: $localize`A new sub-skill.`,
   },
 ];
