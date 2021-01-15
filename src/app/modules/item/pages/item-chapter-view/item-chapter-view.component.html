@@ -1,11 +1,11 @@
 <ng-container *ngIf="session$ | async as session">
 
-  <alg-group-situation-chapter-view
-    *ngIf="session; else userChapterView"
+  <alg-group-progress-grid
+    *ngIf="session.group; else userChapterView"
     [itemData]="itemData"
     [group]="session.group"
   >
-  </alg-group-situation-chapter-view>
+  </alg-group-progress-grid>
 
   <ng-template #userChapterView>
     <p i18n>Chapter view for user</p>

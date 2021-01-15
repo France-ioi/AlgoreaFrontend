@@ -38,12 +38,12 @@ interface RawTeamUserProgress {
 export interface TeamUserProgress {
   groupId: string,
   itemId: string,
+  validated: boolean,
+  score: number,
+  timeSpent: number,
   hintsRequested: number,
   latestActivityAt: Date|null,
-  score: number,
   submissions: number,
-  timeSpent: number,
-  validated: boolean,
 }
 
 @Injectable({
