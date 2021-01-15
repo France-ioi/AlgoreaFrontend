@@ -22,6 +22,24 @@
           <context context-type="sourcefile">src/app/core/components/group-nav/group-nav.component.html</context>
           <context context-type="linenumber">12</context>
         </context-group>
+      </trans-unit><trans-unit id="01bbbd0d1e4ed56b4c07ab5711a1bea1247309ee" datatype="html">
+        <source>This page does not exist!</source><target state="translated">Cette page n'existe pas!</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/pages/page-not-found/page-not-found.component.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="03c8fd3b2b782b41fad542e1a22a0e7963633446" datatype="html">
+        <source>Go back to the </source><target state="translated">Retour à la page d'</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/pages/page-not-found/page-not-found.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit><trans-unit id="5b7b62ae823fdd96a48d5c45e3279424b8309064" datatype="html">
+        <source>home page</source><target state="translated">accueil</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/pages/page-not-found/page-not-found.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
       </trans-unit><trans-unit id="348454dfead756b953ba1b94a02d6ced2b72e411" datatype="html">
         <source> Edition Mode </source><target state="translated"> Mode édition </target>
         <context-group purpose="location">
@@ -46,6 +64,30 @@
           <context context-type="sourcefile">src/app/modules/shared-components/components/progress-section/boolean-section/boolean-section.component.html</context>
           <context context-type="linenumber">14,15</context>
         </context-group>
+      </trans-unit><trans-unit id="5199111763891627410" datatype="html">
+        <source>This page has unsaved changes. Do you want to leave this page and lose its changes?</source><target state="translated">Cette page comporte des changements non sauvegardés. Voulez-vous quitter cette page et perdre les changements ?</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/guards/pending-changes-guard.ts</context>
+          <context context-type="linenumber">30</context>
+        </context-group>
+      </trans-unit><trans-unit id="7296226328505512523" datatype="html">
+        <source>Confirm Navigation</source><target state="translated">Confirmation de navigation</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/guards/pending-changes-guard.ts</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+      </trans-unit><trans-unit id="7683234230514741760" datatype="html">
+        <source>Yes, leave page</source><target state="translated">Oui, quitter la page</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/guards/pending-changes-guard.ts</context>
+          <context context-type="linenumber">33</context>
+        </context-group>
+      </trans-unit><trans-unit id="3542042671420335679" datatype="html">
+        <source>No</source><target state="translated">Non</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/guards/pending-changes-guard.ts</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
       </trans-unit><trans-unit id="52c9a103b812f258bcddc3d90a6e3f46871d25fe" datatype="html">
         <source>Save</source><target state="translated">Sauvegarder</target>
         <context-group purpose="location">
@@ -56,6 +98,12 @@
         <source>Cancel Changes</source><target state="translated">Annuler les changements</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/shared-components/components/floating-save/floating-save.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit><trans-unit id="9048329397389521608" datatype="html">
+        <source>The action cannot be executed. If the problem persists, contact us.</source><target state="translated">Cette action ne peut être exécutée. Contactez-nous si le problème persiste.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/constants/api.ts</context>
           <context context-type="linenumber">2</context>
         </context-group>
       </trans-unit><trans-unit id="1eab7cabd424b0f190d8e7d2e5a412c9ef053d96" datatype="html">
@@ -359,12 +407,6 @@
           <context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog.component.html</context>
           <context context-type="linenumber">23</context>
         </context-group>
-      </trans-unit><trans-unit id="cc7f5b0bc9dbaeb640257cafbff0f3453e28404f" datatype="html">
-        <source>Can Enter</source><target state="translated">Droit d'entrée</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog.component.html</context>
-          <context context-type="linenumber">30</context>
-        </context-group>
       </trans-unit><trans-unit id="da18571cfc6a8930557080a3cb7a926decfa1920" datatype="html">
         <source>Can grant view</source><target state="translated">Droit de donner des droits de visibilité</target>
         <context-group purpose="location">
@@ -412,12 +454,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog.component.html</context>
           <context context-type="linenumber">13</context>
-        </context-group>
-      </trans-unit><trans-unit id="26ea47693c0a0fdd2bfccae8599761503f57d0c1" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="{{targetTypeString}}"/> may enter this item (a contest or time-limited chapter)</source><target state="translated"><x id="INTERPOLATION" equiv-text="{{targetTypeString}}"/> peut entrer dans cette activité (concours ou chapitre en temps limité)</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog.component.html</context>
-          <context context-type="linenumber">35</context>
         </context-group>
       </trans-unit><trans-unit id="bcd6e2da642ac52de02d26b5380ff5df922fad34" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{targetTypeString}}"/> may attach official sessions to this item, that will be visible to everyone in the content tab of the item</source><target state="translated"><x id="INTERPOLATION" equiv-text="{{targetTypeString}}"/> peut attacher des sessions officielles à cet élément qui seront visibles dans son onglet contenu.</target>
