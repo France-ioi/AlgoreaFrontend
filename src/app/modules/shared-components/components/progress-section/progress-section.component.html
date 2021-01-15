@@ -12,7 +12,7 @@
       ></ng-container>
       <ng-template #defaultHeader>
         <alg-progress-level [maximum]="values.length" [value]="selected + 1" theme="revert"></alg-progress-level>
-        <span *ngIf="selected > 0" class="selected-progress-level">{{ values[selected].label }}</span>
+        <span class="selected-progress-level">{{ values[selected].label }}</span>
       </ng-template>
     </div>
     <span class="toggle-expand">

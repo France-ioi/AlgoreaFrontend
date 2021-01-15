@@ -145,16 +145,16 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
 
   private getData(itemId: string, groupId: string, attemptId: string, filter: TypeFilter): Observable<Data> {
     return forkJoin({
-      items: this.getItemChildrenService.get(itemId, attemptId).pipe(map(items => items.map(item => ({
-        id: item.id,
-        title: item.string.title,
-      })))),
+      items: this.getItemChildrenService.get(itemId, attemptId),
       rows: this.getRows(groupId, filter),
       progress: this.getProgress(itemId, groupId, filter),
     }).pipe(
       map(data => ({
         type: filter,
-        items: data.items,
+        items: data.items.map(item => ({
+          id: item.id,
+          title: item.string.title,
+        })),
         rows: data.rows.map(row => ({
           header: row.value,
           id: row.id,
