@@ -206,9 +206,11 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
       });
   }
 
-  onDialogClose(_permissions: Permissions): void {
+  onDialogClose(): void {
     this.dialog = 'closed';
+  }
 
+  onDialogSave(_permissions: Permissions): void {
     // TODO SAVE PERMISSIONS
   }
 }
