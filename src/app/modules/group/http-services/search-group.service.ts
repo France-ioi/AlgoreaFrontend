@@ -4,15 +4,21 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { appConfig } from 'src/app/shared/helpers/config';
 
-export interface GroupFound<Types> {
+interface GroupInfos {
   id: string,
   name: string,
   description: string|null,
-  type: Types,
 }
 
-function notBase(group: GroupFound<'Class'|'Team'|'Club'|'Friends'|'Other'|'Base'>):
-  group is GroupFound<'Class'|'Team'|'Club'|'Friends'|'Other'> {
+interface Group extends GroupInfos {
+  type: 'Class'|'Team'|'Club'|'Friends'|'Other'|'Base',
+}
+
+export interface GroupFound extends GroupInfos {
+  type: 'Class'|'Team'|'Club'|'Friends'|'Other',
+}
+
+function notBase(group: Group): group is GroupFound {
   return group.type !== 'Base';
 }
 
@@ -26,9 +32,9 @@ export class SearchGroupService {
   search(
     searchString: string,
     limit = 4,
-  ): Observable<GroupFound<'Class'|'Team'|'Club'|'Friends'|'Other'>[]> {
+  ): Observable<GroupFound[]> {
     const params = new HttpParams({ fromObject: { search: searchString, limit: limit.toString() } });
-    return this.http.get<GroupFound<'Class'|'Team'|'Club'|'Friends'|'Other'|'Base'>[]>(
+    return this.http.get<Group[]>(
       `${appConfig().apiUrl}/current-user/available-groups`,
       { params: params },
     ).pipe(map(groups => groups.filter(notBase)));
