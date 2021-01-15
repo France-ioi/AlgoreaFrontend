@@ -36,15 +36,15 @@
         </context-group>
       </trans-unit><trans-unit id="11f78ba7176f45e770dc165dc9e67d99062f9983" datatype="html">
         <source> Yes </source><target state="translated"> Oui </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/shared-components/components/progress-section/boolean-section/boolean-section.component.html</context>
-          <context context-type="linenumber">11,12</context>
-        </context-group>
-      </trans-unit><trans-unit id="c630ea158480efb7cc07ec621427f2e86098bc73" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/progress-section/boolean-section/boolean-section.component.html</context><context context-type="linenumber">10</context></context-group></trans-unit><trans-unit id="c630ea158480efb7cc07ec621427f2e86098bc73" datatype="html">
         <source> No </source><target state="translated"> Non </target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/progress-section/boolean-section/boolean-section.component.html</context><context context-type="linenumber">13</context></context-group></trans-unit><trans-unit id="4449471207584645508" datatype="html">
+        <source>Permissions successfully updated.</source><target state="translated">Permissions mises à jour avec succès.</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/shared-components/components/progress-section/boolean-section/boolean-section.component.html</context>
-          <context context-type="linenumber">14,15</context>
+          <context context-type="sourcefile">src/app/modules/item/pages/group-progress-grid/group-progress-grid.component.ts</context>
+          <context context-type="linenumber">235</context>
         </context-group>
       </trans-unit><trans-unit id="52c9a103b812f258bcddc3d90a6e3f46871d25fe" datatype="html">
         <source>Save</source><target state="translated">Sauvegarder</target>
@@ -359,12 +359,6 @@
           <context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog.component.html</context>
           <context context-type="linenumber">23</context>
         </context-group>
-      </trans-unit><trans-unit id="cc7f5b0bc9dbaeb640257cafbff0f3453e28404f" datatype="html">
-        <source>Can Enter</source><target state="translated">Droit d'entrée</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog.component.html</context>
-          <context context-type="linenumber">30</context>
-        </context-group>
       </trans-unit><trans-unit id="da18571cfc6a8930557080a3cb7a926decfa1920" datatype="html">
         <source>Can grant view</source><target state="translated">Droit de donner des droits de visibilité</target>
         <context-group purpose="location">
@@ -412,12 +406,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog.component.html</context>
           <context context-type="linenumber">13</context>
-        </context-group>
-      </trans-unit><trans-unit id="26ea47693c0a0fdd2bfccae8599761503f57d0c1" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="{{targetTypeString}}"/> may enter this item (a contest or time-limited chapter)</source><target state="translated"><x id="INTERPOLATION" equiv-text="{{targetTypeString}}"/> peut entrer dans cette activité (concours ou chapitre en temps limité)</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog.component.html</context>
-          <context context-type="linenumber">35</context>
         </context-group>
       </trans-unit><trans-unit id="bcd6e2da642ac52de02d26b5380ff5df922fad34" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{targetTypeString}}"/> may attach official sessions to this item, that will be visible to everyone in the content tab of the item</source><target state="translated"><x id="INTERPOLATION" equiv-text="{{targetTypeString}}"/> peut attacher des sessions officielles à cet élément qui seront visibles dans son onglet contenu.</target>

@@ -66,7 +66,7 @@
     [visible]="dialog === 'opened'"
     [title]="dialogTitle"
     [targetType]="currentFilter"
-    [initialPermissions]="dialogPermissions"
+    [initialPermissions]="dialogPermissions.permissions"
     (close)="onDialogClose()"
     (save)="onDialogSave($event)"
   ></alg-permissions-edit-dialog>
