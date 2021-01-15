@@ -36,7 +36,7 @@
           <i class="fa fa-check"></i>
         </span>
       </span>
-      <span *ngIf="canAccess" class="clickable" (click)="onClickAccess()">
+      <span *ngIf="canAccess" class="clickable" (click)="onAccess()">
         <i class="fa fa-lock"></i>
         <span>ACCESS</span>
       </span>
@@ -44,10 +44,3 @@
     <span class="indicator"></span>
   </mat-menu>
 </ng-container>
-<alg-permissions-edit-dialog
-  [visible]="visibleDialog"
-  [title]="title"
-  [targetType]="targetType"
-  [permissions]="permissions"
-  (close)="onDialogClose($event)"
-></alg-permissions-edit-dialog>

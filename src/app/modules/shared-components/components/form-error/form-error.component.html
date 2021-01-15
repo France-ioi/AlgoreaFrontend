@@ -1,5 +1,5 @@
 <div *ngIf="control && control.errors" class="input-error">
-  <div *ngIf="control.errors.required"><small>This field is required</small></div>
-  <div *ngIf="control.errors.minlength as err"><small>This field is too short, minimum : {{err.requiredLength}} characters.</small></div>
-  <div *ngIf="control.errors.maxlength as err"><small>This field is too long, maximum : {{err.requiredLength}} characters.</small></div>
+  <div *ngIf="control.errors.required"><small i18n>This field is required</small></div>
+  <div *ngIf="control.errors.minlength as err"><small i18n>This field is too short, minimum : {{err.requiredLength}} characters.</small></div>
+  <div *ngIf="control.errors.maxlength as err"><small i18n>This field is too long, maximum : {{err.requiredLength}} characters.</small></div>
 </div>

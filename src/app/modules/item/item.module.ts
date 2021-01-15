@@ -16,14 +16,8 @@ import { SubSkillsComponent } from './components/sub-skills/sub-skills.component
 import { ParentSkillsComponent } from './components/parent-skills/parent-skills.component';
 import { ItemEditContentComponent } from './pages/item-edit-content/item-edit-content.component';
 import { ItemChildrenEditComponent } from './components/item-children-edit/item-children-edit.component';
-import { ItemChapterViewComponent } from './components/item-chapter-view/item-chapter-view.component';
-import { GroupSituationChapterViewComponent } from
-  './components/item-chapter-view/group-situation-chapter-view/group-situation-chapter-view.component';
-import { UserProgressComponent } from './components/item-chapter-view/group-situation-chapter-view/user-progress/user-progress.component';
 import { TooltipModule } from 'primeng/tooltip';
 import { PendingChangesGuard } from 'src/app/shared/guards/pending-changes-guard';
-import { CompositionFilterComponent }
-  from './components/item-chapter-view/group-situation-chapter-view/composition-filter/composition-filter.component';
 import { MatMenuModule } from '@angular/material/menu';
 import { DurationToReadable } from 'src/app/shared/pipes/duration';
 import { ButtonModule } from 'primeng/button';
@@ -31,6 +25,10 @@ import { PermissionsEditDialogComponent } from './components/permissions-edit-di
 import { DialogModule } from 'primeng/dialog';
 import { AccessCodeViewComponent } from './components/item-header/access-code-view/access-code-view.component';
 import { AddItemComponent } from './components/add-item/add-item.component';
+import { CompositionFilterComponent } from './components/composition-filter/composition-filter.component';
+import { UserProgressComponent } from './components/user-progress/user-progress.component';
+import { ItemChapterViewComponent } from './pages/item-chapter-view/item-chapter-view.component';
+import { GroupProgressGridComponent } from './pages/group-progress-grid/group-progress-grid.component';
 
 @NgModule({
   declarations: [
@@ -47,11 +45,11 @@ import { AddItemComponent } from './components/add-item/add-item.component';
     ParentSkillsComponent,
     ItemEditContentComponent,
     ItemChildrenEditComponent,
-    GroupSituationChapterViewComponent,
-    UserProgressComponent,
     ItemProgressComponent,
     ItemChapterViewComponent,
+    GroupProgressGridComponent,
     CompositionFilterComponent,
+    UserProgressComponent,
     DurationToReadable,
     PermissionsEditDialogComponent,
     AccessCodeViewComponent,

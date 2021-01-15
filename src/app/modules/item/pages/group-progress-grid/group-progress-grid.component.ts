@@ -1,37 +1,38 @@
 import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
-import { forkJoin, merge, Observable, of, Subject } from 'rxjs';
+import { forkJoin, merge, Observable, of, Subject, Subscription } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { Group } from 'src/app/modules/group/http-services/get-group-by-id.service';
 import { GetGroupChildrenService } from 'src/app/modules/group/http-services/get-group-children.service';
 import { fetchingState, isReady, readyState } from 'src/app/shared/helpers/state';
 import { formatUser } from 'src/app/shared/helpers/user';
 import { GetGroupDescendantsService } from 'src/app/shared/http-services/get-group-descendants.service';
-import { GetGroupProgressService } from 'src/app/shared/http-services/get-group-progress.service';
-import { GetItemChildrenService, ItemChild } from '../../../http-services/get-item-children.service';
-import { ItemData } from '../../../services/item-datasource.service';
-import { TypeFilter } from './composition-filter/composition-filter.component';
-
-export interface Progress {
-  groupId: string,
-  itemId: string,
-  validated: boolean,
-  score: number,
-  timeSpent: number,
-}
+import { GetGroupProgressService, TeamUserProgress } from 'src/app/shared/http-services/get-group-progress.service';
+import { GetGroupPermissionsService } from 'src/app/shared/http-services/get-group-permissions.service';
+import { TypeFilter } from '../../components/composition-filter/composition-filter.component';
+import { Permissions } from '../../components/permissions-edit-dialog/permissions-edit-dialog.component';
+import { GetItemChildrenService } from '../../http-services/get-item-children.service';
+import { ItemData } from '../../services/item-datasource.service';
 
 interface Data {
   type: TypeFilter,
-  rowsHeader: string[],
-  items: ItemChild[],
-  data: (Progress|undefined)[][],
+  items: {
+    id: string,
+    title: string|null,
+  }[],
+  rows: {
+    header: string,
+    id: string,
+    data: (TeamUserProgress|undefined)[],
+  }[],
+  can_access: boolean,
 }
 
 @Component({
-  selector: 'alg-group-situation-chapter-view',
-  templateUrl: './group-situation-chapter-view.component.html',
-  styleUrls: [ './group-situation-chapter-view.component.scss' ]
+  selector: 'alg-group-progress-grid',
+  templateUrl: './group-progress-grid.component.html',
+  styleUrls: [ './group-progress-grid.component.scss' ]
 })
-export class GroupSituationChapterViewComponent implements OnChanges, OnDestroy {
+export class GroupProgressGridComponent implements OnChanges, OnDestroy {
 
   @Input() group?: Group;
   @Input() itemData?: ItemData;
@@ -44,18 +45,33 @@ export class GroupSituationChapterViewComponent implements OnChanges, OnDestroy 
 
   data: Data = {
     type: this.defaultFilter,
-    rowsHeader: [],
     items: [],
-    data: [],
+    rows: [],
+    can_access: false,
   }
 
+  dialogPermissions: Permissions = {
+    can_view: 'none',
+    can_grant_view: 'none',
+    can_watch: 'none',
+    can_edit: 'none',
+    can_make_session_official: false,
+    is_owner: true,
+  };
+
+  dialog: 'loading'|'opened'|'closed' = 'closed';
+  dialogTitle = '';
+
   private dataFetching = new Subject<{ groupId: string, itemId: string, attemptId: string, filter: TypeFilter }>();
+
+  private permissionsFetchingSubscription?: Subscription;
 
   constructor(
     private getItemChildrenService: GetItemChildrenService,
     private getGroupDescendantsService: GetGroupDescendantsService,
     private getGroupUsersProgressService: GetGroupProgressService,
     private getGroupChildrenService: GetGroupChildrenService,
+    private getGroupPermissionsService: GetGroupPermissionsService,
   ) {
     this.dataFetching.pipe(
       switchMap(params =>
@@ -76,6 +92,7 @@ export class GroupSituationChapterViewComponent implements OnChanges, OnDestroy 
 
   ngOnDestroy(): void {
     this.dataFetching.complete();
+    this.permissionsFetchingSubscription?.unsubscribe();
   }
 
   ngOnChanges(_changes: SimpleChanges): void {
@@ -83,7 +100,7 @@ export class GroupSituationChapterViewComponent implements OnChanges, OnDestroy 
       this.state = 'error';
       return;
     }
-
+    this.dialog = 'closed';
     this.dataFetching.next({
       groupId: this.group.id,
       itemId: this.itemData.item.id,
@@ -92,7 +109,7 @@ export class GroupSituationChapterViewComponent implements OnChanges, OnDestroy 
     });
   }
 
-  private getProgress(itemId: string, groupId: string, filter: TypeFilter): Observable<Progress[]> {
+  private getProgress(itemId: string, groupId: string, filter: TypeFilter): Observable<TeamUserProgress[]> {
     switch (filter) {
       case 'Users':
         return this.getGroupUsersProgressService.getUsersProgress(groupId, [ itemId ]);
@@ -106,6 +123,9 @@ export class GroupSituationChapterViewComponent implements OnChanges, OnDestroy 
             validated: m.validationRate === 1,
             score: m.averageScore,
             timeSpent: m.avgTimeSpent,
+            hintsRequested: m.avgHintsRequested,
+            submissions: m.avgSubmissions,
+            latestActivityAt: null,
           }))));
     }
   }
@@ -126,19 +146,25 @@ export class GroupSituationChapterViewComponent implements OnChanges, OnDestroy 
 
   private getData(itemId: string, groupId: string, attemptId: string, filter: TypeFilter): Observable<Data> {
     return forkJoin({
-      items: this.getItemChildrenService.get(itemId, attemptId),
+      items: this.getItemChildrenService.get(itemId, attemptId).pipe(map(items => items.map(item => ({
+        id: item.id,
+        title: item.string.title,
+      })))),
       rows: this.getRows(groupId, filter),
-      usersProgress: this.getProgress(itemId, groupId, filter),
+      progress: this.getProgress(itemId, groupId, filter),
     }).pipe(
       map(data => ({
         type: filter,
         items: data.items,
-        rowsHeader: data.rows.map(row => row.value),
-        data: data.rows.map(row =>
-          data.items.map(item =>
-            data.usersProgress.find(userProgress => userProgress.itemId === item.id && userProgress.groupId === row.id)
-          )
-        ),
+        rows: data.rows.map(row => ({
+          header: row.value,
+          id: row.id,
+          data: data.items.map(item =>
+            data.progress.find(progress => progress.itemId === item.id && progress.groupId === row.id)
+          ),
+        })),
+        can_access: (this.group?.current_user_can_grant_group_access
+          && this.itemData?.item.permissions.can_grant_view !== 'none') || false,
       }))
     );
   }
@@ -158,5 +184,32 @@ export class GroupSituationChapterViewComponent implements OnChanges, OnDestroy 
         filter: this.currentFilter
       });
     }
+  }
+
+  onAccessPermissions(title: string, targetGroupId: string, itemId: string): void {
+    if (!this.group) return;
+
+    this.dialogTitle = title;
+    this.dialog = 'loading';
+
+    this.permissionsFetchingSubscription?.unsubscribe();
+    this.permissionsFetchingSubscription = this.getGroupPermissionsService.getPermissions(this.group.id, targetGroupId, itemId)
+      .subscribe(permissions => {
+        this.dialogPermissions = {
+          can_view: permissions.can_view.granted_only_group,
+          can_grant_view: permissions.can_grant_view.granted_only_group,
+          can_watch: permissions.can_watch.granted_only_group,
+          can_edit: permissions.can_edit.granted_only_group,
+          is_owner: permissions.is_owner,
+          can_make_session_official: permissions.can_make_session_official,
+        };
+        this.dialog = 'opened';
+      });
+  }
+
+  onDialogClose(_permissions: Permissions): void {
+    this.dialog = 'closed';
+
+    // TODO SAVE PERMISSIONS
   }
 }

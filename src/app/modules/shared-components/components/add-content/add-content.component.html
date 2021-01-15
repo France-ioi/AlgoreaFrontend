@@ -1,4 +1,4 @@
-<alg-sub-section icon="sign-in-alt" label="Add a content">
+<alg-sub-section icon="sign-in-alt" i18n-label label="Add a content">
   <div class="add-content-wrapper">
     <alg-input
       [parentForm]="addContentForm"
@@ -14,7 +14,7 @@
       [tooltipDisabled]="trimmedInputsValue.create.length >= minInputLength"
     >
     </alg-input>
-    <span class="label">or</span>
+    <span class="label" i18n>or</span>
     <alg-input
       [parentForm]="addContentForm"
       [hasClearButton]="true"
@@ -51,7 +51,7 @@
           <td class="type">{{ item.type }}</td>
           <td class="main">{{ item.title }}</td>
           <td>
-            <alg-button class="p-small-button p-button-rounded" icon="fa fa-plus" label="Add" (click)="addExisting(item)"></alg-button>
+            <alg-button class="p-small-button p-button-rounded" icon="fa fa-plus" i18n-label label="Add" (click)="addExisting(item)"></alg-button>
           </td>
         </tr>
       </ng-template>
