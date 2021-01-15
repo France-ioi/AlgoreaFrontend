@@ -1,0 +1,60 @@
+<p *ngIf="state === 'error';else noError" class="error-message">
+  <i class="fa fa-exclamation-triangle"></i>
+  <span i18n>Error while loading the group you manage</span>
+</p>
+
+<ng-template #noError>
+  <p-table
+    #table
+    [value]="data"
+    [customSort]="true"
+    sortMode="multiple"
+    [loading]="state === 'fetching'"
+  >
+    <ng-template pTemplate="header" let-columns>
+      <tr *ngIf="data.length > 0">
+        <th i18n>Name</th>
+        <th class="small" i18n>Type</th>
+        <th i18n>Can Manage</th>
+        <th class="small" i18n>Can Watch Members</th>
+        <th class="small" i18n>Can Grant Group Access</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-group>
+      <tr>
+        <td class="link" routerLink="../by-id/{{ group.id }}/details">{{ group.name }}</td>
+        <td>{{ getType(group.type) }}</td>
+        <td>{{ getCanManage(group.canManage) }}</td>
+        <td>
+          <span class="table-icon"
+                [ngClass]="{
+                locked: group.canWatchMember,
+                unlocked: !group.canWatchMember
+              }">
+              <i *ngIf="!group.canWatchMember" class="fa fa-times"></i>
+              <i *ngIf="group.canWatchMember" class="fa fa-check"></i>
+            </span>
+        </td>
+        <td>
+          <span class="table-icon"
+                [ngClass]="{
+                locked: group.canGrantGroupAccess,
+                unlocked: !group.canGrantGroupAccess
+              }">
+              <i *ngIf="!group.canGrantGroupAccess" class="fa fa-times"></i>
+              <i *ngIf="group.canGrantGroupAccess" class="fa fa-check"></i>
+            </span>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage" let-columns>
+      <tr>
+        <td [attr.colspan]="columns.length">
+          <p class="empty-message" i18n>You do not manage any group</p>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</ng-template>
