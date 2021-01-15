@@ -27,15 +27,15 @@ export class PendingChangesGuard implements CanDeactivate<PendingChangesComponen
 
     if (!component.isDirty()) return of(true) ;
     this.confirmationService.confirm({
-      message: 'This page has unsaved changes. Do you want to leave this page and lose its changes?',
-      header: 'Confirm Navigation',
+      message: $localize`This page has unsaved changes. Do you want to leave this page and lose its changes?`,
+      header: $localize`Confirm Navigation`,
       icon: 'pi pi-exclamation-triangle',
-      acceptLabel: 'Yes, leave page',
+      acceptLabel: $localize`Yes, leave page`,
       accept: () => {
         dialogResponse.next(true);
         dialogResponse.complete();
       },
-      rejectLabel: 'No',
+      rejectLabel: $localize`No`,
       reject: () => {
         dialogResponse.next(false);
         dialogResponse.complete();
