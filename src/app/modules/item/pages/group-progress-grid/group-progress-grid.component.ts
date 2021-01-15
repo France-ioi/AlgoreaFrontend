@@ -210,12 +210,12 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
           itemId: itemId,
           targetGroupId: targetGroupId,
           permissions: {
-            can_view: permissions.granted_via_group_membership.can_view,
-            can_grant_view: permissions.granted_via_group_membership.can_grant_view,
-            can_watch: permissions.granted_via_group_membership.can_watch,
-            can_edit: permissions.granted_via_group_membership.can_edit,
-            is_owner: permissions.granted_via_group_membership.is_owner,
-            can_make_session_official: permissions.granted_via_group_membership.can_make_session_official,
+            can_view: permissions.granted.can_view,
+            can_grant_view: permissions.granted.can_grant_view,
+            can_watch: permissions.granted.can_watch,
+            can_edit: permissions.granted.can_edit,
+            is_owner: permissions.granted.is_owner,
+            can_make_session_official: permissions.granted.can_make_session_official,
           }
         };
         this.dialog = 'opened';
