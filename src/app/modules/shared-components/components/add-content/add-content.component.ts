@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { Observable, Subscription, merge, of, throwError } from 'rxjs';
+import { Observable, Subscription, merge, of } from 'rxjs';
 import { map, filter, switchMap, delay } from 'rxjs/operators';
 import { fetchingState, readyState, isReady } from 'src/app/shared/helpers/state';
 
@@ -45,6 +45,9 @@ export class AddContentComponent<Type> implements OnInit, OnDestroy {
   constructor(private formBuilder: FormBuilder) {}
 
   ngOnInit(): void {
+    if (!this.searchFunction) throw new Error('The input \'searchFunction\' is required');
+    const searchFunction = this.searchFunction;
+
     this.subscriptions.push(
       this.addContentForm.valueChanges.subscribe((changes: typeof defaultFormValues) => {
         this.trimmedInputsValue = {
@@ -61,8 +64,7 @@ export class AddContentComponent<Type> implements OnInit, OnDestroy {
         filter(value => this.checkLength(value)),
         switchMap(value => merge(
           of(fetchingState()),
-          of(value).pipe(delay(300), switchMap(value =>
-            (this.searchFunction ? this.searchFunction(value).pipe(map(readyState)) : throwError(new Error('no search function'))),
+          of(value).pipe(delay(300), switchMap(value => searchFunction(value).pipe(map(readyState)),
           ))
         ))
       ).subscribe(state => {
