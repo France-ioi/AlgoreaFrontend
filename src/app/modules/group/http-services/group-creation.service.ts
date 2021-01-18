@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -17,9 +17,12 @@ export class GroupCreationService {
   constructor(private http: HttpClient) { }
 
   create(name: string, type: 'Class'|'Team'|'Club'|'Friends'|'Other'|'Session'): Observable<string> {
-    const params = new HttpParams({ fromObject: { name: name, type: type } });
+    const body = {
+      name: name,
+      type: type
+    };
     return this.http
-      .post<ActionResponse<NewGroupData>>(`${appConfig().apiUrl}/groups`, null, { params: params })
+      .post<ActionResponse<NewGroupData>>(`${appConfig().apiUrl}/groups`, body, {})
       .pipe(
         map(successData),
         map(response => response.id),
