@@ -189,11 +189,8 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-header/access-code-view/access-code-view.component.html</context><context context-type="linenumber">16</context></context-group></trans-unit><trans-unit id="1eab7cabd424b0f190d8e7d2e5a412c9ef053d96" datatype="html">
         <source>Add a content</source><target state="translated">Ajouter du contenu</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/shared-components/components/add-content/add-content.component.html</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit><trans-unit id="8598ca8227b654988e98dbc5ef9ed314a3d483a3" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/add-item/add-item.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit><trans-unit id="8598ca8227b654988e98dbc5ef9ed314a3d483a3" datatype="html">
        <source>Pending requests</source><target state="translated">Demandes en attente</target>
        <context-group purpose="location">
          <context context-type="sourcefile">src/app/modules/group/components/pending-request/pending-request.component.html</context>
@@ -511,7 +508,13 @@
         <source>Other</source><target state="translated">Autre</target>
         
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/add-sub-group/add-sub-group.component.ts</context><context context-type="linenumber">49</context></context-group></trans-unit><trans-unit id="871322351859596725" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/add-sub-group/add-sub-group.component.ts</context><context context-type="linenumber">49</context></context-group></trans-unit><trans-unit id="dee904819a70b4d8c64eb123dc6ea19d91cb63da" datatype="html">
+        <source>Add subgroups</source><target state="translated">Ajouter des sous-groupes</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/add-sub-group/add-sub-group.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+      </trans-unit><trans-unit id="871322351859596725" datatype="html">
         <source>Direct Children Only</source><target state="translated">Enfants directs</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/group/components/group-composition-filter/group-composition-filter.component.ts</context>
