@@ -4,8 +4,8 @@
     <form [formGroup]="itemForm" *ngIf="['all','all_with_grant'].includes(itemData.item.permissions.can_edit); else notAuthorized">
 
       <div class="header">
-        <alg-input [parentForm]="itemForm" placeholder="Item title" name="title" size="large" [isDark]='false'></alg-input>
-        <alg-input [parentForm]="itemForm" placeholder="Item subtitle" name="subtitle" size="small" [isDark]='false'></alg-input>
+        <alg-input [parentForm]="itemForm" i18n-placeholder placeholder="Item title" name="title" size="large" [isDark]='false'></alg-input>
+        <alg-input [parentForm]="itemForm" i18n-placeholder placeholder="Item subtitle" name="subtitle" size="small" [isDark]='false'></alg-input>
       </div>
 
       <nav mat-tab-nav-bar>
@@ -13,7 +13,9 @@
            [routerLink]="'./'"
            routerLinkActive #rla1="routerLinkActive"
            [routerLinkActiveOptions]="{exact: true}"
-           [active]="rla1.isActive">
+           [active]="rla1.isActive"
+           i18n
+        >
           Content
         </a>
       </nav>
@@ -31,7 +33,7 @@
     </form>
     <alg-floating-save *ngIf="itemForm.dirty" [saving]="itemForm.disabled" (save)="save()" (cancel)="resetForm()"></alg-floating-save>
     <ng-template #notAuthorized>
-      <p>You do not have the permissions to edit this content.</p>
+      <p i18n>You do not have the permissions to edit this content.</p>
     </ng-template>
   </div>
 

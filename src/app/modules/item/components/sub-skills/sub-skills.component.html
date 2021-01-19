@@ -1,10 +1,10 @@
-<alg-section label="Sub-skills" icon="fa fa-graduation-cap">
+<alg-section i18n-label label="Sub-skills" icon="fa fa-graduation-cap">
 
   <p-progressSpinner *ngIf="state === 'loading'"></p-progressSpinner>
 
-  <p *ngIf="state === 'error'">Error while loading content</p>
+  <p *ngIf="state === 'error'" i18n>Error while loading content</p>
 
-  <p *ngIf="state === 'ready' && children.length === 0">This skill does not have subskills.</p>
+  <p *ngIf="state === 'ready' && children.length === 0" i18n>This skill does not have subskills.</p>
 
   <ul *ngIf="state === 'ready' && children.length > 0" class="data-list-container sub-skill">
     <li *ngFor="let item of children">

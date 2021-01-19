@@ -22,7 +22,7 @@
     <div class="content validated">
       <span *ngIf="userProgress">
         <i class="fa fa-clock"></i>
-        <span class="menu-label">Time spent</span>
+        <span class="menu-label" i18n>Time spent</span>
         <span class="menu-value">{{ userProgress.timeSpent | duration }}</span>
       </span>
       <span class="score">
@@ -38,7 +38,7 @@
       </span>
       <span *ngIf="canAccess" class="clickable" (click)="onAccess()">
         <i class="fa fa-lock"></i>
-        <span>ACCESS</span>
+        <span i18n>ACCESS</span>
       </span>
     </div>
     <span class="indicator"></span>
