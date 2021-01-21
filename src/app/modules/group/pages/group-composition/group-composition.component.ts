@@ -1,9 +1,11 @@
-import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, ViewChild } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { forkJoin, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { ERROR_MESSAGE } from 'src/app/shared/constants/api';
 import { TOAST_LENGTH } from 'src/app/shared/constants/global';
+import { TypeFilter } from '../../components/group-composition-filter/group-composition-filter.component';
+import { MemberListComponent } from '../../components/member-list/member-list.component';
 import { ManagementAdditions, withManagementAdditions } from '../../helpers/group-management';
 import { Group } from '../../http-services/get-group-by-id.service';
 import { GroupCreationService } from '../../http-services/group-creation.service';
@@ -24,6 +26,8 @@ export class GroupCompositionComponent implements OnChanges {
   @Input() group?: Group;
   @Output() groupRefreshRequired = new EventEmitter<void>();
   groupWithPermissions?: Group & ManagementAdditions
+
+  @ViewChild('memberList') private memberList?: MemberListComponent;
 
   constructor(
     private groupCreationService: GroupCreationService,
@@ -47,7 +51,9 @@ export class GroupCompositionComponent implements OnChanges {
     }).pipe(switchMap(ids => this.groupCreationService.addSubgroup(ids.parentGroupId, ids.childGroupId))).subscribe(
       _ => {
         this.displaySuccess($localize`Group successfully added as child group`);
-        this.refreshGroupInfo();
+        if (this.memberList) {
+          this.memberList.onFilterChange({ directChildren: true, type: TypeFilter.Groups });
+        }
       },
       _err => {
         this.displayError();
