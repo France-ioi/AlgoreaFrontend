@@ -15,6 +15,7 @@ type GroupType = 'Class'|'Team'|'Club'|'Friends'|'Other';
 export class AddSubGroupComponent {
 
   @Input() group?: Group;
+  @Input() loading = false;
 
   @Output() addGroup = new EventEmitter<AddedContent<GroupType>>();
 

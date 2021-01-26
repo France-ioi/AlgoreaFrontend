@@ -29,6 +29,8 @@ export class GroupCompositionComponent implements OnChanges {
 
   @ViewChild('memberList') private memberList?: MemberListComponent;
 
+  state: 'addingGroup' | 'ready' = 'ready';
+
   constructor(
     private groupCreationService: GroupCreationService,
     private messageService: MessageService,
@@ -45,6 +47,8 @@ export class GroupCompositionComponent implements OnChanges {
   addGroup(group: GroupChildData): void {
     if (!this.group) throw Error('Tried to add a subgroup to an undefined group');
 
+    this.state = 'addingGroup';
+
     forkJoin({
       parentGroupId: of(this.group.id),
       childGroupId: group.id ? of(group.id) : this.groupCreationService.create(group.title, group.type),
@@ -54,9 +58,11 @@ export class GroupCompositionComponent implements OnChanges {
         if (this.memberList) {
           this.memberList.setFilter({ directChildren: true, type: TypeFilter.Groups });
         }
+        this.state = 'ready';
       },
       _err => {
         this.displayError();
+        this.state = 'ready';
       }
     );
   }
