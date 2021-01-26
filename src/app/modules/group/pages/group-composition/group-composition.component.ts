@@ -52,7 +52,7 @@ export class GroupCompositionComponent implements OnChanges {
       _ => {
         this.displaySuccess($localize`Group successfully added as child group`);
         if (this.memberList) {
-          this.memberList.onFilterChange({ directChildren: true, type: TypeFilter.Groups });
+          this.memberList.setFilter({ directChildren: true, type: TypeFilter.Groups });
         }
       },
       _err => {
