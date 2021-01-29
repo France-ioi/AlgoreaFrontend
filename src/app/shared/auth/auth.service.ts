@@ -126,16 +126,8 @@ export class AuthService implements OnDestroy {
     this.accessToken.next(null);
     this.authHttp.revokeToken(currentToken.accessToken).pipe(
       catchError(_e => of(null)), // continue next step even if token revocation failed
-      switchMap(() => this.tempAuth.login())
-    ).subscribe({
-      next: token => {
-        this.accessToken.next(token);
-        this.state = 'idle';
-      },
-      error: _e => {
-        this.state = 'error';
-        // temp session creation failed :-/
-      }
+    ).subscribe(() => {
+      this.oauthService.logoutOnAuthServer();
     });
   }
 
