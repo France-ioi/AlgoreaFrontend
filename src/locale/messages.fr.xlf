@@ -30,11 +30,8 @@
         </context-group>
       </trans-unit><trans-unit id="03c8fd3b2b782b41fad542e1a22a0e7963633446" datatype="html">
         <source>Go back to the </source><target state="translated">Retour à la page d'</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/pages/page-not-found/page-not-found.component.html</context>
-          <context context-type="linenumber">3</context>
-        </context-group>
-      </trans-unit><trans-unit id="5b7b62ae823fdd96a48d5c45e3279424b8309064" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/pages/page-not-found/page-not-found.component.html</context><context context-type="linenumber">3</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-by-id.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="5b7b62ae823fdd96a48d5c45e3279424b8309064" datatype="html">
         <source>home page</source><target state="translated">accueil</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/pages/page-not-found/page-not-found.component.html</context>
@@ -352,6 +349,18 @@
           <context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-by-id.component.ts</context>
           <context context-type="linenumber">16</context>
         </context-group>
+      </trans-unit><trans-unit id="4939e322bd94d2844e80d8f9c9250b71e13aacf6" datatype="html">
+        <source> home page </source><target state="translated"> page d'accueil </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-by-id.component.html</context>
+          <context context-type="linenumber">19,20</context>
+        </context-group>
+      </trans-unit><trans-unit id="eeed11fe0de966a90c7c920fc5832f04e47796a0" datatype="html">
+        <source>Retry loading it</source><target state="translated">Recharger le contenu</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-by-id.component.html</context>
+          <context context-type="linenumber">22</context>
+        </context-group>
       </trans-unit><trans-unit id="03c8fd3b2b782b41fad542e1a22a0e7963633446" datatype="html">
         <source>Go back to the </source><target state="translated">Retour à la </target>
         <context-group purpose="location">
@@ -532,47 +541,26 @@
         </context-group>
       </trans-unit><trans-unit id="da18571cfc6a8930557080a3cb7a926decfa1920" datatype="html">
         <source>Can grant view</source><target state="translated">Droit de donner des droits de visibilité</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog.component.html</context>
-          <context context-type="linenumber">38</context>
-        </context-group>
-      </trans-unit><trans-unit id="a2bdbe46685aaa55d21069aa5b5862b0462592ee" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog.component.html</context><context context-type="linenumber">36</context></context-group></trans-unit><trans-unit id="a2bdbe46685aaa55d21069aa5b5862b0462592ee" datatype="html">
         <source>Can watch</source><target state="translated">Droit d'observation</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog.component.html</context>
-          <context context-type="linenumber">45</context>
-        </context-group>
-      </trans-unit><trans-unit id="a6cff31d28aa5a55ff55444b9ff3811c549f292a" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog.component.html</context><context context-type="linenumber">42</context></context-group></trans-unit><trans-unit id="a6cff31d28aa5a55ff55444b9ff3811c549f292a" datatype="html">
         <source>Can edit</source><target state="translated">Droit d'édition</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog.component.html</context>
-          <context context-type="linenumber">52</context>
-        </context-group>
-      </trans-unit><trans-unit id="b5558de40e75ceffc549b8763ff1f4419f1c476a" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog.component.html</context><context context-type="linenumber">48</context></context-group></trans-unit><trans-unit id="b5558de40e75ceffc549b8763ff1f4419f1c476a" datatype="html">
         <source>Can attach official sessions</source><target state="translated">Droit d'attacher des sessions officielles</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog.component.html</context>
-          <context context-type="linenumber">59</context>
-        </context-group>
-      </trans-unit><trans-unit id="208e3ef3e3a06dc1011f5226a8173e792360ad65" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog.component.html</context><context context-type="linenumber">54</context></context-group></trans-unit><trans-unit id="208e3ef3e3a06dc1011f5226a8173e792360ad65" datatype="html">
         <source>Is owner</source><target state="translated">Propriétaire</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog.component.html</context>
-          <context context-type="linenumber">67</context>
-        </context-group>
-      </trans-unit><trans-unit id="d7b35c384aecd25a516200d6921836374613dfe7" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog.component.html</context><context context-type="linenumber">61</context></context-group></trans-unit><trans-unit id="d7b35c384aecd25a516200d6921836374613dfe7" datatype="html">
         <source>Cancel</source><target state="translated">Annuler</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog.component.html</context>
-          <context context-type="linenumber">82</context>
-        </context-group>
-      </trans-unit><trans-unit id="41bcea7b08bbd7328312f727ae01b7f074da6233" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog.component.html</context><context context-type="linenumber">75</context></context-group></trans-unit><trans-unit id="41bcea7b08bbd7328312f727ae01b7f074da6233" datatype="html">
         <source>Proceed</source><target state="translated">Valider</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog.component.html</context>
-          <context context-type="linenumber">88</context>
-        </context-group>
-      </trans-unit><trans-unit id="ed0078abbf0ece37b4be634d01b32777794b6874" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog.component.html</context><context context-type="linenumber">81</context></context-group></trans-unit><trans-unit id="ed0078abbf0ece37b4be634d01b32777794b6874" datatype="html">
         <source> Access given to <x id="INTERPOLATION" equiv-text="{{ title }}"/></source><target state="translated">Permissions de <x id="INTERPOLATION" equiv-text="{{ title }}"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog.component.html</context>
@@ -580,18 +568,12 @@
         </context-group>
       </trans-unit><trans-unit id="bcd6e2da642ac52de02d26b5380ff5df922fad34" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{targetTypeString}}"/> may attach official sessions to this item, that will be visible to everyone in the content tab of the item</source><target state="translated"><x id="INTERPOLATION" equiv-text="{{targetTypeString}}"/> peut attacher des sessions officielles à cet élément qui seront visibles dans son onglet contenu.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog.component.html</context>
-          <context context-type="linenumber">64</context>
-        </context-group>
-      </trans-unit><trans-unit id="484f8bc51285dd02db7f585c2cbf7ad2ac083ffb" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog.component.html</context><context context-type="linenumber">58</context></context-group></trans-unit><trans-unit id="484f8bc51285dd02db7f585c2cbf7ad2ac083ffb" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{targetTypeString}}"/> own this item, and get the maximum access in all categories above, and may also delete this item</source><target state="translated"><x id="INTERPOLATION" equiv-text="{{targetTypeString}}"/> est propriétaire de cet
  et a donc toutes les permissions ci-dessus maximales. Il peut également l'effacer.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog.component.html</context>
-          <context context-type="linenumber">72</context>
-        </context-group>
-      </trans-unit><trans-unit id="80a7795888bbfdf26055b0e1db9b12c6ae67df9d" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog.component.html</context><context context-type="linenumber">65</context></context-group></trans-unit><trans-unit id="80a7795888bbfdf26055b0e1db9b12c6ae67df9d" datatype="html">
         <source>Children</source><target state="translated">Enfants</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/item/components/item-children-edit/item-children-edit.component.html</context>

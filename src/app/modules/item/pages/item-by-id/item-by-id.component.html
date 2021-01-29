@@ -8,8 +8,16 @@
     This content does not exist or you are not allowed to view it.
   </p>
   <ng-template #unknownError><p i18n>Error while loading the item.</p></ng-template>
-  <p>
+  <p [style.visibility]="(backToHome.isActive)?'hidden':'visible'">
     <span i18n>Go back to the </span>
-    <a routerLink="/" i18n>home page</a>
+    <a
+      [routerLink]="defaultItemRoute"
+      [routerLinkActiveOptions]="{exact: true}"
+      routerLinkActive #backToHome="routerLinkActive"
+      i18n
+    >
+      home page
+    </a>
   </p>
+  <p><a [routerLink]="" (click)="reloadContent()" i18n>Retry loading it</a></p>
 </ng-container>

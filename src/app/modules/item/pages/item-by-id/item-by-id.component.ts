@@ -3,7 +3,7 @@ import { ActivatedRoute, UrlTree } from '@angular/router';
 import { of, Subscription } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
 import { defaultAttemptId } from 'src/app/shared/helpers/attempts';
-import { isItemRouteError, itemRouteFromParams } from 'src/app/shared/helpers/item-route';
+import { appDefaultItemRoute, isItemRouteError, itemRouteFromParams } from 'src/app/shared/helpers/item-route';
 import { errorState, FetchError, Fetching, fetchingState, isError, isReady, Ready } from 'src/app/shared/helpers/state';
 import { ResultActionsService } from 'src/app/shared/http-services/result-actions.service';
 import { CurrentContentService, EditAction, isItemInfo, ItemInfo } from 'src/app/shared/services/current-content.service';
@@ -30,6 +30,8 @@ export class ItemByIdComponent implements OnDestroy {
   state: Ready<ItemData>|Fetching|FetchError = fetchingState();
   // to prevent looping indefinitely in case of bug in services (wrong path > item without path > fetch path > item with path > wrong path)
   hasRedirected = false;
+
+  readonly defaultItemRoute = this.itemRouter.urlArray(appDefaultItemRoute())
 
   private subscriptions: Subscription[] = []; // subscriptions to be freed up on destroy
 
@@ -119,6 +121,10 @@ export class ItemByIdComponent implements OnDestroy {
   ngOnDestroy(): void {
     this.currentContent.current.next(null);
     this.subscriptions.forEach(s => s.unsubscribe());
+  }
+
+  reloadContent(): void {
+    this.itemDataSource.refreshItem();
   }
 
   /**

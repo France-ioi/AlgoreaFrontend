@@ -30,17 +30,26 @@ export class ItemRouter {
 
 
   /**
-   * Return a url to given item, on the path page.
+   * Return a url to the given item, on the `path` page.
    * If page is not given and we are currently on an item page, use the same page. Otherwise, default to 'details'.
    */
   url(item: ItemRoute, path?: 'edit'|'details'): UrlTree {
+    return this.router.createUrlTree(this.urlArray(item, path));
+  }
+
+  /**
+   * Return a url array (`commands` array) to the given item, on the `path` page.
+   * If page is not given and we are currently on an item page, use the same page. Otherwise, default to 'details'.
+   */
+  urlArray(item: ItemRoute, path?: 'edit'|'details'): any[] {
     const dest = path ? [ path ] : (this.currentItemSubPage() || [ 'details' ]);
     const params: {[k: string]: any} = {};
     if (isRouteWithAttempt(item)) params[attemptParamName] = item.attemptId;
     else params[parentAttemptParamName] = item.parentAttemptId;
     params[pathParamName] = item.path;
-    return this.router.createUrlTree([ 'items', 'by-id', item.id, params ].concat(dest));
+    return [ '/', 'items', 'by-id', item.id, params ].concat(dest);
   }
+
 
   /**
    * Extract (bit hacky) the item sub-page of the current page.
