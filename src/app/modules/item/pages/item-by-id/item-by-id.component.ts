@@ -1,5 +1,5 @@
 import { Component, OnDestroy } from '@angular/core';
-import { ActivatedRoute, UrlTree } from '@angular/router';
+import { ActivatedRoute, ParamMap, UrlTree } from '@angular/router';
 import { of, Subscription } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
 import { defaultAttemptId } from 'src/app/shared/helpers/attempts';
@@ -45,24 +45,7 @@ export class ItemByIdComponent implements OnDestroy {
   ) {
 
     // on route change: refetch item if needed
-    this.activatedRoute.paramMap.subscribe(params => {
-      const item = itemRouteFromParams(params);
-      if (isItemRouteError(item)) {
-        if (item.id) {
-          this.state = fetchingState();
-          this.solveMissingPathAttempt(item.id, item.path);
-        } else this.state = errorState();
-        return;
-      }
-      // just publish to current content the new route we are navigating to (without knowing any info)
-      currentContent.current.next({
-        type: 'item',
-        data: { route: item },
-        breadcrumbs: { category: itemBreadcrumbCat, path: [], currentPageIdx: -1 }
-      } as ItemInfo);
-      // trigger the fetch of the item (which will itself re-update the current content)
-      this.itemDataSource.fetchItem(item);
-    });
+    this.activatedRoute.paramMap.subscribe(params => this.fetchItemAtRoute(params));
 
     this.subscriptions.push(
 
@@ -124,7 +107,26 @@ export class ItemByIdComponent implements OnDestroy {
   }
 
   reloadContent(): void {
-    this.itemDataSource.refreshItem();
+    this.fetchItemAtRoute(this.activatedRoute.snapshot.paramMap);
+  }
+
+  private fetchItemAtRoute(params: ParamMap): void {
+    const item = itemRouteFromParams(params);
+    if (isItemRouteError(item)) {
+      if (item.id) {
+        this.state = fetchingState();
+        this.solveMissingPathAttempt(item.id, item.path);
+      } else this.state = errorState();
+      return;
+    }
+    // just publish to current content the new route we are navigating to (without knowing any info)
+    this.currentContent.current.next({
+      type: 'item',
+      data: { route: item },
+      breadcrumbs: { category: itemBreadcrumbCat, path: [], currentPageIdx: -1 }
+    } as ItemInfo);
+    // trigger the fetch of the item (which will itself re-update the current content)
+    this.itemDataSource.fetchItem(item);
   }
 
   /**
