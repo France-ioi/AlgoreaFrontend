@@ -9,6 +9,7 @@ import { UserSessionService } from 'src/app/shared/services/user-session.service
 import { BreadcrumbItem, GetBreadcrumbService } from '../http-services/get-breadcrumb.service';
 import { GetItemByIdService, Item } from '../http-services/get-item-by-id.service';
 import { GetResultsService, Result } from '../http-services/get-results.service';
+import { canCurrentUserViewItemContent } from 'src/app/modules/item/helpers/item-permissions';
 
 export interface ItemData { route: ItemRoute, item: Item, breadcrumbs: BreadcrumbItem[], results?: Result[], currentResult?: Result}
 
@@ -85,14 +86,16 @@ export class ItemDataSource implements OnDestroy {
       this.getItemByIdService.get(itemRoute.id)
     ]).pipe(
       switchMap(([ breadcrumbs, item ]) => {
-        // emit immediately without result, then fetch and add it
+        // emit immediately without results, then, if the perm allows it, fetch results
         const initialData = { route: itemRoute, item: item, breadcrumbs: breadcrumbs };
-        return concat(
-          of(initialData),
-          this.fetchResults(itemRoute, item).pipe(
-            map(r => ({ ...initialData, ...r }))
-          )
-        );
+        if (canCurrentUserViewItemContent(item)) {
+          return concat(
+            of(initialData),
+            this.fetchResults(itemRoute, item).pipe(
+              map(r => ({ ...initialData, ...r }))
+            )
+          );
+        } else return of(initialData);
       })
     );
   }

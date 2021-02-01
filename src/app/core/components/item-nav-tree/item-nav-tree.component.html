@@ -89,16 +89,14 @@
             [isDark]="true"
           ></alg-score-ring>
           <ng-template #leafNoScore>
-            <i class="pi" [ngClass]="{ 'pi-check': node.checked, 'pi-circle-on': !node.checked }" style="font-size: 1.2rem;"></i>
+            <i class="pi" [class.pi-circle-on]="!node.checked" style="font-size: 0.6rem;"></i>
+            <i class="pi" [class.pi-check]="node.checked" style="font-size: 1.2rem;"></i>
           </ng-template>
         </span>
         <span (click)="selectNode(node)" class="node-label">
           <span class="label-container">
             <span class="node-label-title" [ngClass]="{ locked: node.locked }">
               {{ node.data.title }}
-            </span>
-            <span class="node-state" *ngIf="node.locked">
-              <i class="fa fa-lock" style="font-size: 1.2rem;"></i>
             </span>
             <!-- example of icon on the right
             <span class="node-state" *ngIf="node.state === 'never opened'">
