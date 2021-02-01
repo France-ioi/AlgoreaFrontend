@@ -55,4 +55,9 @@ export class UserSessionService implements OnDestroy {
     this.session$.next({ user: user });
   }
 
+  isCurrentUserTemp(): boolean {
+    const session = this.session$.value;
+    return !session || session.user.isTemp;
+  }
+
 }
