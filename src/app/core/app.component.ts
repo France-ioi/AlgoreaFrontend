@@ -1,11 +1,10 @@
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
-import { UserSessionService } from '../shared/services/user-session.service';
+import { UserSession, UserSessionService } from '../shared/services/user-session.service';
 import { delay, filter, skip } from 'rxjs/operators';
 import { Observable, Subscription } from 'rxjs';
 import { ContentInfo, CurrentContentService, EditAction } from '../shared/services/current-content.service';
 import { AuthService } from '../shared/auth/auth.service';
 import { Router } from '@angular/router';
-import { UserProfile } from '../shared/http-services/current-user.service';
 
 @Component({
   selector: 'alg-root',
@@ -34,10 +33,10 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     // each time there is a new user, refresh the page
-    this.subscription = this.sessionService.currentUser$.pipe(
-      filter<UserProfile|undefined, UserProfile>((user):user is UserProfile => !!user),
+    this.subscription = this.sessionService.session$.pipe(
+      filter<UserSession|undefined, UserSession>((session):session is UserSession => !!session),
       skip(1), // do not refresh when the first user is set
-    ).subscribe(_user => {
+    ).subscribe(_session => {
       // Navigate to the root with an ugly hack to make sure the full content is reloaded
       void this.router.navigateByUrl('/groups/me', { skipLocationChange: true }).then(() => this.router.navigateByUrl('/'));
     });
