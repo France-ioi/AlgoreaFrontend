@@ -78,12 +78,10 @@ export class ItemNavTreeComponent implements OnChanges {
   }
 
   selectNode(node: ItemTreeNode): void {
-    if (node.locked) return;
-
     this.selectedNode = node;
 
     // set the node to "loading" so that the user knows the children should appear shortly
-    if (node.data.hasChildren && !node.data.children) node.status = 'loading';
+    if (!node.locked && node.data.hasChildren && !node.data.children) node.status = 'loading';
 
     this.navigateToNode(node, node.data.attemptId === null ? undefined : node.data.attemptId);
   }
