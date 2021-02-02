@@ -1,14 +1,13 @@
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
 import { ItemTypeCategory } from 'src/app/shared/helpers/item-type';
 
 @Component({
-  selector: 'alg-skill-activity-tabs',
-  templateUrl: './skill-activity-tabs.component.html',
-  styleUrls: [ './skill-activity-tabs.component.scss' ],
+  selector: 'alg-left-nav',
+  templateUrl: './left-nav.component.html',
+  styleUrls: [ './left-nav.component.scss' ]
 })
-export class SkillActivityTabsComponent {
+export class LeftNavComponent {
 
-  @Input() backgroundColor: 'dark' | 'light' = 'dark';
   currentSelection: ItemTypeCategory = 'activity';
 
   onSelectionChangedByIdx(e: { index: number }): void {
@@ -18,4 +17,5 @@ export class SkillActivityTabsComponent {
   onSelectionChanged(cat: ItemTypeCategory): void {
     this.currentSelection = cat;
   }
+
 }
