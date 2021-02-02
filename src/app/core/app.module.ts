@@ -9,7 +9,6 @@ import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
 import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
 
-import { LeftNavComponent } from './components/left-nav/left-nav.component';
 import { NavigationTabsComponent } from './components//navigation-tabs/navigation-tabs.component';
 import { TopNavComponent } from './components/top-nav/top-nav.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -39,6 +38,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component';
 import { LanguagePickerComponent } from './components/language-picker/language-picker.component';
+import { LeftMenuComponent } from './components/left-menu/left-menu.component';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: false,
@@ -50,7 +50,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     PageNotFoundComponent,
     BreadcrumbComponent,
     SkillActivityTabsComponent,
-    LeftNavComponent,
+    LeftMenuComponent,
     NavigationTabsComponent,
     TopNavComponent,
     GroupNavComponent,
