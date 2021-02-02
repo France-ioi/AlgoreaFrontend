@@ -55,9 +55,7 @@ export class GroupCompositionComponent implements OnChanges {
     }).pipe(switchMap(ids => this.groupCreationService.addSubgroup(ids.parentGroupId, ids.childGroupId))).subscribe(
       _ => {
         this.displaySuccess($localize`Group successfully added as child group`);
-        if (this.memberList) {
-          this.memberList.setFilter({ directChildren: true, type: TypeFilter.Groups });
-        }
+        this.memberList?.setFilter({ directChildren: true, type: TypeFilter.Groups });
         this.state = 'ready';
       },
       _err => {

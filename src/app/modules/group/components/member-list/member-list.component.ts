@@ -183,7 +183,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
   }
 
   setFilter(filter: Filter): void {
-    if (this.compositionFilter) this.compositionFilter.setFilter(filter);
+    this.compositionFilter?.setFilter(filter);
     this.onFilterChange(filter);
   }
 }
