@@ -11,7 +11,17 @@ export class LeftNavComponent {
   currentSelection: ItemTypeCategory = 'activity';
 
   onSelectionChangedByIdx(e: { index: number }): void {
-    this.currentSelection = e.index === 0 ? 'skill' : 'activity';
+    switch (e.index) {
+      case 0:
+        this.currentSelection = 'activity';
+        break;
+      case 1:
+        this.currentSelection = 'skill';
+        break;
+      case 2:
+      default:
+        this.currentSelection = 'activity'; // change to 'groups'
+    }
   }
 
   onSelectionChanged(cat: ItemTypeCategory): void {

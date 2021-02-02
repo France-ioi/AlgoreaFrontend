@@ -6,7 +6,7 @@
         <source>Log in / Sign in</source><target state="translated">Connexion / Inscription</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/app.component.html</context><context context-type="linenumber">34</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/app.component.html</context><context context-type="linenumber">34</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/components/navigation-tabs/navigation-tabs.component.html</context><context context-type="linenumber">32</context></context-group></trans-unit><trans-unit id="3fdc751b264ca9998e1542fcf5794e274cd56344" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/app.component.html</context><context context-type="linenumber">34</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/app.component.html</context><context context-type="linenumber">34</context></context-group></trans-unit><trans-unit id="3fdc751b264ca9998e1542fcf5794e274cd56344" datatype="html">
         <source>Log out</source><target state="translated">Déconnexion</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/app.component.html</context><context context-type="linenumber">42</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/app.component.html</context><context context-type="linenumber">42</context></context-group></trans-unit><trans-unit id="e9935669cab3ea24d8ffde4dc934776f3cbb2a20" datatype="html">
@@ -22,6 +22,27 @@
           <context context-type="sourcefile">src/app/core/components/group-nav/group-nav.component.html</context>
           <context context-type="linenumber">12</context>
         </context-group>
+      </trans-unit><trans-unit id="dd3b6c367381ddfa8f317b8e9b31c55368c65136" datatype="html">
+        <source>Activities</source><target state="translated">Activités</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/components/left-nav/left-nav.component.html</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+        <note priority="1" from="description">Tab name</note>
+      </trans-unit><trans-unit id="6b32898febe308a18aa2024928bd42c3e6e06055" datatype="html">
+        <source>Skills</source><target state="translated">Compétences</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/components/left-nav/left-nav.component.html</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+        <note priority="1" from="description">Tab name</note>
+      </trans-unit><trans-unit id="c22ba03540aa3217da059f45e7eab138b51a96e2" datatype="html">
+        <source>Groups</source><target state="translated">Groupes</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/components/left-nav/left-nav.component.html</context>
+          <context context-type="linenumber">20</context>
+        </context-group>
+        <note priority="1" from="description">Tab name</note>
       </trans-unit><trans-unit id="01bbbd0d1e4ed56b4c07ab5711a1bea1247309ee" datatype="html">
         <source>This page does not exist!</source><target state="translated">Cette page n'existe pas!</target>
         <context-group purpose="location">
