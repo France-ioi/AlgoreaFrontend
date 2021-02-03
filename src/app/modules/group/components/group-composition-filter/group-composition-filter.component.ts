@@ -79,11 +79,15 @@ export class GroupCompositionFilterComponent implements OnInit{
 
   ngOnInit(): void {
     if (this.defaultValue) {
-      this.value = this.defaultValue;
-      this.selectedChildrenFilter = this.childrenFilters.findIndex(childrenFilter => childrenFilter.value === this.value.directChildren);
-      const typeFilters = this.value.directChildren ? this.directChildrenTypeFilters : this.allDescendantsTypeFilters;
-      this.selectedTypeFilter = Math.max(0, typeFilters.findIndex(typeFilter => typeFilter.value === this.value.type));
+      this.setFilter(this.defaultValue);
     }
+  }
+
+  public setFilter(filter: Filter): void {
+    this.value = filter;
+    this.selectedChildrenFilter = this.childrenFilters.findIndex(childrenFilter => childrenFilter.value === this.value.directChildren);
+    const typeFilters = this.value.directChildren ? this.directChildrenTypeFilters : this.allDescendantsTypeFilters;
+    this.selectedTypeFilter = Math.max(0, typeFilters.findIndex(typeFilter => typeFilter.value === this.value.type));
   }
 
   onTypeFilterChanged(index: number): void {

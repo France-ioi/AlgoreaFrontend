@@ -1,4 +1,6 @@
 @import 'src/colors.scss';
+@import 'src/colors.scss';
+@import 'src/geometry.scss';
 
 .add-content-wrapper {
   display: flex;
@@ -130,6 +132,43 @@
 
     .item-description {
       color: white;
+    }
+  }
+}
+
+:host ::ng-deep .p-datatable {
+
+  .p-datatable-tbody > tr {
+    background-color: #EFEFEF;
+    display: flex;
+    border-bottom: $border-filet;
+    margin-bottom: 5px;
+    border-radius: 1rem;
+    height: 3rem;
+  }
+
+  .p-datatable-tbody > tr:last-child {
+    border: none;
+  }
+
+  .p-datatable-tbody > tr:nth-child(even) {
+    background-color: #EFEFEF;
+  }
+
+  .p-datatable-tbody > tr > td {
+    color: $base-text-color;
+    border: none;
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    font-size: 1.2rem;
+
+    &.main {
+      flex: 1;
+    }
+
+    &.type {
+      color: $base-color;
     }
   }
 }

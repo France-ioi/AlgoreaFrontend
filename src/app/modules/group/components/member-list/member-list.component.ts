@@ -2,13 +2,13 @@ import { Component, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild } from
 import { SortEvent } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { merge, Observable, of, Subject } from 'rxjs';
-import { delay, map, switchMap } from 'rxjs/operators';
-import { fetchingState, isReady, readyState } from 'src/app/shared/helpers/state';
+import { catchError, delay, map, switchMap } from 'rxjs/operators';
+import { errorState, fetchingState, isReady, readyState } from 'src/app/shared/helpers/state';
 import { GetGroupDescendantsService } from 'src/app/shared/http-services/get-group-descendants.service';
 import { Group } from '../../http-services/get-group-by-id.service';
 import { GetGroupChildrenService, GroupChild } from '../../http-services/get-group-children.service';
 import { GetGroupMembersService, Member } from '../../http-services/get-group-members.service';
-import { TypeFilter, Filter } from '../group-composition-filter/group-composition-filter.component';
+import { TypeFilter, Filter, GroupCompositionFilterComponent } from '../group-composition-filter/group-composition-filter.component';
 
 interface Column {
   sortable?: boolean,
@@ -70,6 +70,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
   };
 
   @ViewChild('table') private table?: Table;
+  @ViewChild('compositionFilter') private compositionFilter?: GroupCompositionFilterComponent;
 
   private dataFetching = new Subject<{ groupId: string, filter: Filter, sort: string[] }>();
 
@@ -83,7 +84,10 @@ export class MemberListComponent implements OnChanges, OnDestroy {
       switchMap(params =>
         merge(
           of(fetchingState()),
-          this.getData(params.groupId, params.filter, params.sort).pipe(map(readyState))
+          this.getData(params.groupId, params.filter, params.sort).pipe(
+            map(readyState),
+            catchError(_err => of(errorState())),
+          )
         ))
     ).subscribe(
       state => {
@@ -176,5 +180,10 @@ export class MemberListComponent implements OnChanges, OnDestroy {
       this.table?.clear();
       this.dataFetching.next({ groupId: this.group.id, filter: this.currentFilter, sort: this.currentSort });
     }
+  }
+
+  setFilter(filter: Filter): void {
+    this.compositionFilter?.setFilter(filter);
+    this.onFilterChange(filter);
   }
 }
