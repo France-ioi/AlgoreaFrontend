@@ -1,15 +1,17 @@
 import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
+import { MessageService } from 'primeng/api';
 import { forkJoin, merge, Observable, of, Subject, Subscription } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { Group } from 'src/app/modules/group/http-services/get-group-by-id.service';
 import { GetGroupChildrenService } from 'src/app/modules/group/http-services/get-group-children.service';
+import { ERROR_MESSAGE } from 'src/app/shared/constants/api';
+import { TOAST_LENGTH } from 'src/app/shared/constants/global';
 import { fetchingState, isReady, readyState } from 'src/app/shared/helpers/state';
 import { formatUser } from 'src/app/shared/helpers/user';
 import { GetGroupDescendantsService } from 'src/app/shared/http-services/get-group-descendants.service';
 import { GetGroupProgressService, TeamUserProgress } from 'src/app/shared/http-services/get-group-progress.service';
-import { GetGroupPermissionsService } from 'src/app/shared/http-services/get-group-permissions.service';
+import { GroupPermissionsService, Permissions } from 'src/app/shared/http-services/group-permissions.service';
 import { TypeFilter } from '../../components/composition-filter/composition-filter.component';
-import { Permissions } from '../../components/permissions-edit-dialog/permissions-edit-dialog.component';
 import { GetItemChildrenService } from '../../http-services/get-item-children.service';
 import { ItemData } from '../../services/item-datasource.service';
 
@@ -50,13 +52,21 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     can_access: false,
   }
 
-  dialogPermissions: Permissions = {
-    can_view: 'none',
-    can_grant_view: 'none',
-    can_watch: 'none',
-    can_edit: 'none',
-    can_make_session_official: false,
-    is_owner: true,
+  dialogPermissions: {
+    permissions: Permissions
+    itemId: string,
+    targetGroupId: string,
+  } = {
+    itemId: '',
+    targetGroupId: '',
+    permissions: {
+      can_view: 'none',
+      can_grant_view: 'none',
+      can_watch: 'none',
+      can_edit: 'none',
+      can_make_session_official: false,
+      is_owner: true,
+    }
   };
 
   dialog: 'loading'|'opened'|'closed' = 'closed';
@@ -71,7 +81,8 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     private getGroupDescendantsService: GetGroupDescendantsService,
     private getGroupUsersProgressService: GetGroupProgressService,
     private getGroupChildrenService: GetGroupChildrenService,
-    private getGroupPermissionsService: GetGroupPermissionsService,
+    private groupPermissionsService: GroupPermissionsService,
+    private messageService: MessageService,
   ) {
     this.dataFetching.pipe(
       switchMap(params =>
@@ -146,16 +157,16 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
 
   private getData(itemId: string, groupId: string, attemptId: string, filter: TypeFilter): Observable<Data> {
     return forkJoin({
-      items: this.getItemChildrenService.get(itemId, attemptId).pipe(map(items => items.map(item => ({
-        id: item.id,
-        title: item.string.title,
-      })))),
+      items: this.getItemChildrenService.get(itemId, attemptId),
       rows: this.getRows(groupId, filter),
       progress: this.getProgress(itemId, groupId, filter),
     }).pipe(
       map(data => ({
         type: filter,
-        items: data.items,
+        items: data.items.map(item => ({
+          id: item.id,
+          title: item.string.title,
+        })),
         rows: data.rows.map(row => ({
           header: row.value,
           id: row.id,
@@ -193,23 +204,54 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     this.dialog = 'loading';
 
     this.permissionsFetchingSubscription?.unsubscribe();
-    this.permissionsFetchingSubscription = this.getGroupPermissionsService.getPermissions(this.group.id, targetGroupId, itemId)
+    this.permissionsFetchingSubscription = this.groupPermissionsService.getPermissions(this.group.id, targetGroupId, itemId)
       .subscribe(permissions => {
         this.dialogPermissions = {
-          can_view: permissions.can_view.granted_only_group,
-          can_grant_view: permissions.can_grant_view.granted_only_group,
-          can_watch: permissions.can_watch.granted_only_group,
-          can_edit: permissions.can_edit.granted_only_group,
-          is_owner: permissions.is_owner,
-          can_make_session_official: permissions.can_make_session_official,
+          itemId: itemId,
+          targetGroupId: targetGroupId,
+          permissions: {
+            can_view: permissions.granted.can_view,
+            can_grant_view: permissions.granted.can_grant_view,
+            can_watch: permissions.granted.can_watch,
+            can_edit: permissions.granted.can_edit,
+            is_owner: permissions.granted.is_owner,
+            can_make_session_official: permissions.granted.can_make_session_official,
+          }
         };
         this.dialog = 'opened';
       });
   }
 
-  onDialogClose(_permissions: Permissions): void {
+  onDialogClose(): void {
     this.dialog = 'closed';
+  }
 
-    // TODO SAVE PERMISSIONS
+  onDialogSave(permissions: Permissions): void {
+    if (!this.group) return;
+
+    this.groupPermissionsService.updatePermissions(this.group.id, this.dialogPermissions.targetGroupId,
+      this.dialogPermissions.itemId, permissions)
+      .subscribe(
+        _res => this.displaySuccess($localize`Permissions successfully updated.`),
+        _err => this.displayError()
+      );
+  }
+
+  displaySuccess(msg: string): void {
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Success',
+      detail: msg,
+      life: TOAST_LENGTH,
+    });
+  }
+
+  displayError(): void {
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Error',
+      detail: ERROR_MESSAGE.fail,
+      life: TOAST_LENGTH,
+    });
   }
 }

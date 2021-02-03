@@ -33,7 +33,7 @@ export class OAuthService {
     const url = loginServerUri + separationChar + 'response_type=code&scope=account&approval_prompt=auto' +
       '&client_id=' + encodeURIComponent(appConfig().oauthClientId) +
       '&state=' + encodeURIComponent(state) +
-      '&redirect_uri=' + encodeURIComponent(this.loginRedirectUri());
+      '&redirect_uri=' + encodeURIComponent(this.appRedirectUri());
     // should add PKCE here
     // could add '&prompt=none' here
 
@@ -66,12 +66,18 @@ export class OAuthService {
     }
     nonceStorage.removeItem(nonceStorageKey); // no need to store the nonce any longer
     // the code can be used to get a token back
-    return this.authHttp.createTokenFromCode(code, this.loginRedirectUri()).pipe(
+    return this.authHttp.createTokenFromCode(code, this.appRedirectUri()).pipe(
       map(t => AccessToken.fromTTL(t.access_token, t.expires_in, 'authenticated'))
     );
   }
 
-  private loginRedirectUri(): string {
+  logoutOnAuthServer(): void {
+    const logoutUri = appConfig().oauthServerUrl+'/logout?' + 'redirect_uri=' + encodeURIComponent(this.appRedirectUri());
+    // navigate
+    location.href = logoutUri;
+  }
+
+  private appRedirectUri(): string {
     return `${window.location.protocol}//${window.location.host}${window.location.pathname}#/`;
   }
 

@@ -1,9 +1,9 @@
 import { Component, OnDestroy } from '@angular/core';
-import { ActivatedRoute, UrlTree } from '@angular/router';
+import { ActivatedRoute, ParamMap, UrlTree } from '@angular/router';
 import { of, Subscription } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
 import { defaultAttemptId } from 'src/app/shared/helpers/attempts';
-import { isItemRouteError, itemRouteFromParams } from 'src/app/shared/helpers/item-route';
+import { appDefaultItemRoute, isItemRouteError, itemRouteFromParams } from 'src/app/shared/helpers/item-route';
 import { errorState, FetchError, Fetching, fetchingState, isError, isReady, Ready } from 'src/app/shared/helpers/state';
 import { ResultActionsService } from 'src/app/shared/http-services/result-actions.service';
 import { CurrentContentService, EditAction, isItemInfo, ItemInfo } from 'src/app/shared/services/current-content.service';
@@ -13,7 +13,7 @@ import { GetItemPathService } from '../../http-services/get-item-path';
 import { ItemDataSource, ItemData } from '../../services/item-datasource.service';
 import { errorHasTag, errorIsHTTPForbidden } from 'src/app/shared/helpers/errors';
 
-const itemBreadcrumbCat = 'Items';
+const itemBreadcrumbCat = $localize`Items`;
 
 /**
  * ItemByIdComponent is just a container for detail or edit page but manages the fetching on id change and (un)setting the current content.
@@ -31,6 +31,8 @@ export class ItemByIdComponent implements OnDestroy {
   // to prevent looping indefinitely in case of bug in services (wrong path > item without path > fetch path > item with path > wrong path)
   hasRedirected = false;
 
+  readonly defaultItemRoute = this.itemRouter.urlArray(appDefaultItemRoute())
+
   private subscriptions: Subscription[] = []; // subscriptions to be freed up on destroy
 
   constructor(
@@ -43,24 +45,7 @@ export class ItemByIdComponent implements OnDestroy {
   ) {
 
     // on route change: refetch item if needed
-    this.activatedRoute.paramMap.subscribe(params => {
-      const item = itemRouteFromParams(params);
-      if (isItemRouteError(item)) {
-        if (item.id) {
-          this.state = fetchingState();
-          this.solveMissingPathAttempt(item.id, item.path);
-        } else this.state = errorState();
-        return;
-      }
-      // just publish to current content the new route we are navigating to (without knowing any info)
-      currentContent.current.next({
-        type: 'item',
-        data: { route: item },
-        breadcrumbs: { category: itemBreadcrumbCat, path: [], currentPageIdx: -1 }
-      } as ItemInfo);
-      // trigger the fetch of the item (which will itself re-update the current content)
-      this.itemDataSource.fetchItem(item);
-    });
+    this.activatedRoute.paramMap.subscribe(params => this.fetchItemAtRoute(params));
 
     this.subscriptions.push(
 
@@ -119,6 +104,29 @@ export class ItemByIdComponent implements OnDestroy {
   ngOnDestroy(): void {
     this.currentContent.current.next(null);
     this.subscriptions.forEach(s => s.unsubscribe());
+  }
+
+  reloadContent(): void {
+    this.fetchItemAtRoute(this.activatedRoute.snapshot.paramMap);
+  }
+
+  private fetchItemAtRoute(params: ParamMap): void {
+    const item = itemRouteFromParams(params);
+    if (isItemRouteError(item)) {
+      if (item.id) {
+        this.state = fetchingState();
+        this.solveMissingPathAttempt(item.id, item.path);
+      } else this.state = errorState();
+      return;
+    }
+    // just publish to current content the new route we are navigating to (without knowing any info)
+    this.currentContent.current.next({
+      type: 'item',
+      data: { route: item },
+      breadcrumbs: { category: itemBreadcrumbCat, path: [], currentPageIdx: -1 }
+    } as ItemInfo);
+    // trigger the fetch of the item (which will itself re-update the current content)
+    this.itemDataSource.fetchItem(item);
   }
 
   /**

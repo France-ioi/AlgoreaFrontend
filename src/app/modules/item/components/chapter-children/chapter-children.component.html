@@ -1,13 +1,13 @@
 <p-progressSpinner *ngIf="state === 'loading'"></p-progressSpinner>
 
-<p *ngIf="state === 'error'">Error while loading this chapter's children</p>
+<p *ngIf="state === 'error'" i18n>Error while loading this chapter's children</p>
 
 <ng-container *ngIf="state !== 'loading' && state !== 'error'">
   <br>
-  <p class="validation-text" *ngIf="state === 'ready-missing-validation'">
+  <p class="validation-text" *ngIf="state === 'ready-missing-validation'" i18n>
     To validate this chapter, solve at least all tasks with Validation type
   </p>
-  <p class="validation-text" *ngIf="state === 'empty'">
+  <p class="validation-text" *ngIf="state === 'empty'" i18n>
     This chapter has no content visible to you, so you can't validate it for now.
   </p>
 

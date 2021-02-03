@@ -11,8 +11,8 @@ export class ItemCurrentSituationComponent {
   @Input() itemData?: ItemData;
 
   viewItems = [
-    { label: 'Log view', value: 'log' },
-    { label: 'Chapter view', value: 'chapter' },
+    { label: $localize`Log view`, value: 'log' },
+    { label: $localize`Chapter view`, value: 'chapter' },
   ];
 
   viewSelected = 0;

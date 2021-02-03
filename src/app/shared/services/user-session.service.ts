@@ -17,30 +17,27 @@ export class UserSessionService implements OnDestroy {
 
   session$ = new BehaviorSubject<UserSession|undefined>(undefined)
 
-  currentUser$ = this.authService.accessToken$.pipe(
-    switchMap(token => {
-      if (token === null) return of<UserProfile|undefined>(undefined);
-      return this.http.getProfileInfo().pipe(
-        catchError(_e => EMPTY)
-      );
-    }),
-    distinctUntilChanged((p1, p2) => p1 === p2 || (!!p1 && !!p2 && p1.id === p2.id))
-  );
-
-  private subscriptions: Subscription[] = [];
+  private subscription?: Subscription;
 
   constructor(
     private authService: AuthService,
     private http: CurrentUserHttpService,
   ) {
-    this.subscriptions.push(
-      // changing user clears out the watched group if any
-      this.currentUser$.subscribe(u => this.session$.next(u ? { user: u } : undefined)),
-    );
+    this.subscription = this.authService.accessToken$.pipe(
+      switchMap(token => {
+        if (token === null) return of<UserProfile|undefined>(undefined);
+        return this.http.getProfileInfo().pipe(
+          catchError(_e => EMPTY)
+        );
+      }),
+      distinctUntilChanged((p1, p2) => p1 === p2 || (!!p1 && !!p2 && p1.id === p2.id))
+    ).subscribe(profile => {
+      this.session$.next(profile ? { user: profile } : undefined);
+    });
   }
 
   ngOnDestroy(): void {
-    this.subscriptions.forEach(s => s.unsubscribe());
+    this.subscription?.unsubscribe();
   }
 
   startGroupWatching(group: Group): void {
@@ -53,6 +50,11 @@ export class UserSessionService implements OnDestroy {
     const user = this.session$.value?.user;
     if (!user) return; // unexpected
     this.session$.next({ user: user });
+  }
+
+  isCurrentUserTemp(): boolean {
+    const session = this.session$.value;
+    return !session || session.user.isTemp;
   }
 
 }

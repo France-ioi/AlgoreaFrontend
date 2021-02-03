@@ -32,6 +32,7 @@ import { UserGroupInvitationsComponent } from './components/user-group-invitatio
 import { PendingRequestComponent } from './components/pending-request/pending-request.component';
 import { PendingJoinRequestsComponent } from './components/pending-join-requests/pending-join-requests.component';
 import { AddSubGroupComponent } from './components/add-sub-group/add-sub-group.component';
+import { ManagedGroupListComponent } from './components/managed-group-list/managed-group-list.component';
 
 @NgModule({
   declarations: [
@@ -58,7 +59,8 @@ import { AddSubGroupComponent } from './components/add-sub-group/add-sub-group.c
     PendingJoinRequestsComponent,
     UserGroupInvitationsComponent,
     PendingRequestComponent,
-    AddSubGroupComponent
+    AddSubGroupComponent,
+    ManagedGroupListComponent,
   ],
   imports: [
     CommonModule,

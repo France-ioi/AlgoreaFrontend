@@ -9,7 +9,7 @@
         [routerLink]="'./'"
         routerLinkActive #contentTab="routerLinkActive"
         [routerLinkActiveOptions]="{exact: true}"
-        [active]="contentTab.isActive">
+        [active]="contentTab.isActive" i18n>
         Content
       </a>
       <a mat-tab-link
@@ -18,7 +18,7 @@
         [active]="progressTab.isActive">
         <i class="fa fa-chart-line"></i>
         &nbsp;
-        Progress
+        <span i18n>Progress</span>
       </a>
     </nav>
     <div class="bg-white">

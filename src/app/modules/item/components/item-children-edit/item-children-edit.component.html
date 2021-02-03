@@ -1,5 +1,5 @@
 <ng-container *ngIf="itemData">
-  <alg-section [ngSwitch]="state" icon="fa fa-book" label="Children">
+  <alg-section [ngSwitch]="state" icon="fa fa-book" i18n-label label="Children">
 
     <ng-container *ngSwitchCase="'ready'">
       <div class="section-chapter-wrapper">
@@ -17,10 +17,10 @@
           <ng-template pTemplate="summary">
             <div class="summary-container">
               <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-              <span class="select-all" (click)="onSelectAll()">Select all</span>
+              <span class="select-all" (click)="onSelectAll()" i18n>Select all</span>
               <div class="export-tools" [ngClass]="{disabled: selectedRows.length === 0}">
                 <span class="remove" (click)="onRemove()">
-                  <span>Remove selected</span>
+                  <span i18n>Remove selected</span>
                   <i class="fa fa-trash-alt"></i>
                 </span>
               </div>
@@ -28,7 +28,7 @@
           </ng-template>
         </p-table>
 
-        <span *ngIf="!data.length">No children for this chapter.</span>
+        <span *ngIf="!data.length" i18n>No children for this chapter.</span>
 
       </div>
 
@@ -38,6 +38,6 @@
 
     <p-progressSpinner *ngSwitchCase="'loading'"></p-progressSpinner>
 
-    <div *ngSwitchCase="'error'">Error</div>
+    <div *ngSwitchCase="'error'" i18n>Error</div>
   </alg-section>
 </ng-container>
