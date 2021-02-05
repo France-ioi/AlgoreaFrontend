@@ -1,10 +1,10 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { TreeNode } from 'primeng/api';
 import { NavMenuItem } from '../../http-services/item-navigation.service';
-import { ItemNavMenuData } from '../../common/item-nav-menu-data';
 import { defaultAttemptId } from 'src/app/shared/helpers/attempts';
 import { ItemTypeCategory } from 'src/app/shared/helpers/item-type';
 import { ItemRouter } from 'src/app/shared/services/item-router';
+import { NavTreeData } from '../../services/left-nav-loading/nav-tree-data';
 
 // ItemTreeNode is PrimeNG tree node with data forced to be an item
 interface ItemTreeNode extends TreeNode {
@@ -21,7 +21,7 @@ interface ItemTreeNode extends TreeNode {
   styleUrls: [ './item-nav-tree.component.scss' ]
 })
 export class ItemNavTreeComponent implements OnChanges {
-  @Input() data?: ItemNavMenuData;
+  @Input() data?: NavTreeData<NavMenuItem>;
   @Input() type: ItemTypeCategory = 'activity';
 
   nodes: ItemTreeNode[] = [];
@@ -31,10 +31,10 @@ export class ItemNavTreeComponent implements OnChanges {
     private itemRouter: ItemRouter,
   ) {}
 
-  mapItemToNodes(data: ItemNavMenuData): ItemTreeNode[] {
+  private mapItemToNodes(data: NavTreeData<NavMenuItem>): ItemTreeNode[] {
     return data.elements.map(i => {
-      const isSelected = !!(data.selectedElement && data.selectedElement.id === i.id);
-      const shouldShowChildren = i.hasChildren && (isSelected || data.extraExpandedElements?.includes(i.id)) ;
+      const isSelected = !!(data.selectedElementId && data.selectedElementId === i.id);
+      const shouldShowChildren = i.hasChildren && isSelected;
       const pathToChildren = data.pathToElements.concat([ i.id ]);
       const locked = !i.canViewContent;
       return {
@@ -44,7 +44,7 @@ export class ItemNavTreeComponent implements OnChanges {
         type: i.hasChildren ? 'folder' : 'leaf',
         leaf: i.hasChildren,
         status: i.hasChildren && isSelected && !i.children ? 'loading' : 'ready',
-        children: (shouldShowChildren && i.children) ? this.mapItemToNodes(new ItemNavMenuData(i.children, pathToChildren)) : undefined,
+        children: (shouldShowChildren && i.children) ? this.mapItemToNodes(new NavTreeData(i.children, pathToChildren)) : undefined,
         expanded: !!(shouldShowChildren && i.children),
         checked: isSelected,
         locked: locked,

@@ -1,24 +1,45 @@
 <p-tabView class="group-skills" [styleClass]="'dark'" (onChange)="onSelectionChangedByIdx($event)">
-  <p-tabPanel [selected]="currentSelection === 'activity'">
-    <ng-template pTemplate="header" tabindex="6">
+
+  <p-tabPanel [selected]="currentTab === 'activities'">
+    <ng-template pTemplate="header" tabindex="5">
       <span class="indicator" class="dark"></span>
       <i class="fa fa-hand-paper"></i>
       <span class="p-tabview-title" i18n="|Tab name">Activities</span>
     </ng-template>
   </p-tabPanel>
-  <p-tabPanel [selected]="currentSelection === 'skill'">
-    <ng-template pTemplate="header" tabindex="5">
+
+  <p-tabPanel [selected]="currentTab === 'skills'">
+    <ng-template pTemplate="header" tabindex="6">
       <span class="indicator" class="dark"></span>
       <i class="fa fa-graduation-cap"></i>
       <span class="p-tabview-title" i18n="|Tab name">Skills</span>
     </ng-template>
   </p-tabPanel>
-  <p-tabPanel>
+
+  <p-tabPanel [selected]="currentTab === 'groups'">
     <ng-template pTemplate="header" tabindex="7">
       <span class="indicator" class="dark"></span>
       <i class="fa fa-users"></i>
       <span class="p-tabview-title" i18n="|Tab name">Groups</span>
     </ng-template>
   </p-tabPanel>
+
 </p-tabView>
-<alg-item-nav [category]="currentSelection" (categoryChange)="onSelectionChanged($event)"></alg-item-nav>
+
+<p-progressSpinner
+  *ngIf="(currentTab === 'activities' && activitiesLoader.state.tag === 'fetching') ||
+    (currentTab === 'skills' && skillsLoader.state.tag === 'fetching')"
+  [style]="{width: '3.3333rem', height: '3.3333rem'}"
+></p-progressSpinner>
+
+<p
+*ngIf="(currentTab === 'activities' && activitiesLoader.state.tag === 'error') ||
+(currentTab === 'skills' && skillsLoader.state.tag === 'error')"
+ class="error"
+>Unable to load the item list</p>
+
+<alg-item-nav-tree [type]="'activity'" [data]="$any(activitiesLoader.state).data" *ngIf="currentTab === 'activities' && activitiesLoader.state.tag === 'ready'"></alg-item-nav-tree>
+<alg-item-nav-tree [type]="'skill'" [data]="$any(skillsLoader.state).data" *ngIf="currentTab === 'skills' && skillsLoader.state.tag === 'ready'"></alg-item-nav-tree>
+<!-- <alg-left-nav-tree *ngIf="currentTab === 'activities'" ></alg-left-nav-tree> -->
+<!-- <alg-left-nav-tree *ngIf="currentTab === 'skills'"></alg-left-nav-tree> -->
+
