@@ -90,13 +90,15 @@ export class LeftNavItemLoader implements LeftNavLoader {
     this.changes.next(content);
   }
 
-  initializeRoot(): void {
-    this.initialized = true;
-    this.changes.next(undefined);
+  focus(): void {
+    if (!this.initialized) {
+      this.initialized = true;
+      this.changes.next(undefined);
+    }
   }
 
   removeSelection(): void {
-    // TODO
+    this.changes.next(undefined);
   }
 
   /**

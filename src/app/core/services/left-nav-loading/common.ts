@@ -5,9 +5,9 @@ export type LeftNavTab = 'activities'|'skills'|'groups';
 export interface LeftNavLoader {
 
   /**
-   * Load root elements
+   * Prepare the data for display
    */
-  initializeRoot(): void;
+  focus(): void;
 
   /**
    * Load the given content in this tab

@@ -83,7 +83,7 @@ export class LeftNavComponent implements OnInit, OnDestroy {
   onSelectionChangedByIdx(e: { index: number }): void {
     this.currentTab = tabs[e.index];
     const loader = [ this.activitiesLoader, this.skillsLoader, this.activitiesLoader ][e.index];
-    if (!loader.initialized) loader.initializeRoot();
+    loader.focus();
   }
 
 }
