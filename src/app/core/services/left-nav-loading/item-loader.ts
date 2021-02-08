@@ -3,6 +3,7 @@ import { map, switchMap } from 'rxjs/operators';
 import { ItemRoute } from 'src/app/shared/helpers/item-route';
 import { isSkill, ItemTypeCategory } from 'src/app/shared/helpers/item-type';
 import { errorState, FetchError, Fetching, fetchingState, isReady, mapErrorToState, Ready, readyState } from 'src/app/shared/helpers/state';
+import { switchScan } from 'src/app/shared/helpers/switch-scan';
 import { ItemInfo } from 'src/app/shared/services/current-content.service';
 import { ItemNavigationService, NavMenuItem, NavMenuRootItem } from '../../http-services/item-navigation.service';
 import { LeftNavLoader } from './common';
@@ -22,10 +23,8 @@ export class LeftNavItemLoader implements LeftNavLoader {
     private itemNavService: ItemNavigationService
   ) {
     this.changes.pipe(
-      // TODO:use "scan" instead
 
-      switchMap((itemInfo):Observable<State> => {
-        const prevState = this.state;
+      switchScan((prevState: State, itemInfo) => {
 
         if (isReady(prevState)) {
           // CASE: the current content is not an item and the menu has already items displayed
@@ -76,7 +75,8 @@ export class LeftNavItemLoader implements LeftNavLoader {
 
         // CASE: The current content type matches the current tab
         return this.loadNewNav(itemInfo.data.route);
-      })
+
+      }, fetchingState()/* the switchScan accumulator seed */)
     ).subscribe({
       // As an update of `category` triggers a change and as switchMap ensures ongoing requests are cancelled when a new change happens,
       // the state updated here is on the same category as `prevState` above.
