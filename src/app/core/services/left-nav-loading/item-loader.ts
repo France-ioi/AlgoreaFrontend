@@ -98,7 +98,7 @@ export class LeftNavItemLoader implements LeftNavLoader {
   }
 
   removeSelection(): void {
-    this.changes.next(undefined);
+    if (this.initialized) this.changes.next(undefined);
   }
 
   /**
