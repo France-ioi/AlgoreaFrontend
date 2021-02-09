@@ -5,7 +5,7 @@ import { isASkill } from 'src/app/shared/helpers/item-type';
 import { CurrentContentService, isGroupInfo, isItemInfo } from 'src/app/shared/services/current-content.service';
 import { ItemNavigationService } from '../../http-services/item-navigation.service';
 import { LeftNavTab } from '../../services/left-nav-loading/common';
-import { LeftNavItemLoader } from '../../services/left-nav-loading/item-loader';
+import { LeftNavItemDataSource } from './left-nav-item-datasource';
 
 const tabs: LeftNavTab[] = [ 'activities', 'skills', 'groups' ];
 
@@ -18,8 +18,8 @@ export class LeftNavComponent implements OnInit, OnDestroy {
 
   currentTab: LeftNavTab = 'activities';
 
-  activitiesLoader = new LeftNavItemLoader('activity', this.itemNavigationService)
-  skillsLoader = new LeftNavItemLoader('skill', this.itemNavigationService)
+  activitiesLoader = new LeftNavItemDataSource('activity', this.itemNavigationService)
+  skillsLoader = new LeftNavItemDataSource('skill', this.itemNavigationService)
 
   private subscription?: Subscription;
 

@@ -6,12 +6,12 @@ import { errorState, FetchError, Fetching, fetchingState, isReady, mapErrorToSta
 import { switchScan } from 'src/app/shared/helpers/switch-scan';
 import { ItemInfo } from 'src/app/shared/services/current-content.service';
 import { ItemNavigationService, NavMenuItem, NavMenuRootItem } from '../../http-services/item-navigation.service';
-import { LeftNavLoader } from './common';
-import { NavTreeData } from './nav-tree-data';
+import { NavTreeData } from '../../services/left-nav-loading/nav-tree-data';
+import { LeftNavDataSource } from './left-nav-datasource';
 
 type State = Ready<NavTreeData<NavMenuItem>>|Fetching|FetchError;
 
-export class LeftNavItemLoader implements LeftNavLoader {
+export class LeftNavItemDataSource extends LeftNavDataSource {
 
   initialized = false;
   state: State = fetchingState();
@@ -22,6 +22,8 @@ export class LeftNavItemLoader implements LeftNavLoader {
     private category: ItemTypeCategory,
     private itemNavService: ItemNavigationService
   ) {
+    super();
+
     this.changes.pipe(
 
       switchScan((prevState: State, itemInfo) => {
