@@ -37,7 +37,12 @@
           (childrenChanges)="updateItemChanges($event)"
         >
         </alg-item-edit-content>
-        <alg-item-edit-advanced-parameters *ngIf="rla2.isActive"></alg-item-edit-advanced-parameters>
+        <alg-item-edit-advanced-parameters
+          *ngIf="rla2.isActive"
+          [parentForm]="itemForm"
+          [itemData]="itemData"
+        >
+        </alg-item-edit-advanced-parameters>
       </div>
 
     </form>

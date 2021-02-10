@@ -1,1 +1,6 @@
-<p>item-edit-advanced-parameters works!</p>
+<ng-container *ngIf="itemData && itemData.currentResult">
+  <alg-section icon="fa fa-book" i18n-label label="Advanced parameters"
+    *ngIf="itemData.item && itemData.item.type == 'Task'">
+    <alg-input [parentForm]="parentForm" inputName="url" i18n-placeholder placeholder="Url" name="url" size="small"></alg-input>
+  </alg-section>
+</ng-container>
