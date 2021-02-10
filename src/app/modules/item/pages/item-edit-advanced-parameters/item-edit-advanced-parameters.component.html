@@ -1,8 +1,25 @@
 <ng-container *ngIf="item">
   <alg-section icon="fa fa-book" i18n-label label="Advanced parameters"
     *ngIf="item.type == 'Task'">
-    <alg-input [parentForm]="parentForm" inputName="url" i18n-placeholder placeholder="Url" name="url" size="small"></alg-input>
-    <alg-switch [checked]="usesApi" (change)="handleUsesApiChanges($event)"></alg-switch>
-    <alg-input [parentForm]="parentForm" inputName="text_id" i18n-placeholder placeholder="TextId" name="text_id" size="small"></alg-input>
+    <div class="form-item-view">
+      <span class="form-item-label" i18n>Url</span>
+      <div class="form-item-control">
+        <alg-input [parentForm]="parentForm" inputName="url" i18n-placeholder placeholder="http://www..." name="url" size="small"></alg-input>
+      </div>
+    </div>
+
+    <div class="form-item-view">
+      <span class="form-item-label">Uses API</span>
+      <div class="form-item-control">
+        <alg-switch [checked]="usesApi" (change)="handleUsesApiChanges($event)" mode="white"></alg-switch>
+      </div>
+    </div>
+
+    <div class="form-item-view">
+      <span class="form-item-label">TextID</span>
+      <div class="form-item-control">
+        <alg-input [parentForm]="parentForm" inputName="text_id" name="text_id" size="small"></alg-input>
+      </div>
+    </div>
   </alg-section>
 </ng-container>
