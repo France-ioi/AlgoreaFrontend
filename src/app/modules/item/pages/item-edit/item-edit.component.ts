@@ -28,8 +28,8 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
     title: [ '', [ Validators.required, Validators.minLength(3), Validators.maxLength(200) ] ],
     subtitle: [ '', Validators.maxLength(200) ],
     description: '',
-    url: ['', Validators.maxLength(200)],
-    text_id: ['', Validators.maxLength(200)],
+    url: [ '', Validators.maxLength(200) ],
+    text_id: [ '', Validators.maxLength(200) ],
     uses_api: false
   });
   itemChanges: { children?: ChildData[] } = {};
