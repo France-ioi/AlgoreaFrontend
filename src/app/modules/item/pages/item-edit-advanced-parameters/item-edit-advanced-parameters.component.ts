@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { ItemData } from '../../services/item-datasource.service';
+import { Item } from '../../http-services/get-item-by-id.service';
 
 @Component({
   selector: 'alg-item-edit-advanced-parameters',
@@ -8,10 +8,9 @@ import { ItemData } from '../../services/item-datasource.service';
   styleUrls: ['./item-edit-advanced-parameters.component.scss']
 })
 export class ItemEditAdvancedParametersComponent implements OnInit {
-  @Input() itemData?: ItemData;
+  @Input() item?: Item;
   @Input() parentForm?: FormGroup;
 
-  @Output() usesApiChanges: EventEmitter<boolean> = new EventEmitter<boolean>();
   usesApi: boolean = false;
 
   constructor() { }
@@ -21,13 +20,15 @@ export class ItemEditAdvancedParametersComponent implements OnInit {
   }
 
   reset(): void {
-    if ( ! this.itemData ) return;
-    this.usesApi = this.itemData.item.uses_api;
+    if ( ! this.item ) return;
+    this.usesApi = this.item.uses_api;
   }
 
   handleUsesApiChanges(checked: boolean): void {
+    if (!this.parentForm || !this.parentForm.get('uses_api')) return undefined;
+    this.parentForm.get('uses_api')?.setValue(checked);
+    this.parentForm.markAsDirty();
     this.usesApi = checked;
-    this.usesApiChanges.emit(checked);
   }
 
 }

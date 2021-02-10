@@ -30,8 +30,9 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
     description: '',
     url: ['', Validators.maxLength(200)],
     text_id: ['', Validators.maxLength(200)],
+    uses_api: false
   });
-  itemChanges: { children?: ChildData[], uses_api: boolean } = { uses_api: false };
+  itemChanges: { children?: ChildData[] } = {};
 
   itemData$ = this.itemDataSource.itemData$;
   itemLoadingState$ = this.itemDataSource.state$;
@@ -87,17 +88,9 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
     });
   }
 
-  updateItemChanges(changes: { children?: ChildData[], uses_api ?: boolean }): void {
-    if ( ! changes ) return;
-
+  updateItemChanges(children?: ChildData[]): void {
     this.itemForm.markAsDirty();
-
-    if ( changes.children ) {
-      this.itemChanges.children = changes.children;
-    }
-    if ( typeof changes.uses_api == 'boolean' ) {
-      this.itemChanges.uses_api = changes.uses_api;
-    }
+    this.itemChanges.children = children;
   }
 
   // Update Item
@@ -202,13 +195,12 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
       title: item.string.title || '',
       description: item.string.description || '',
       subtitle: item.string.subtitle || '',
-      url: item.url && item.url.length ? item.url : null,
+      url: item.url || '',
       text_id: item.text_id || '',
+      uses_api: item.uses_api || false,
     });
 
-    this.itemChanges = {
-      uses_api: item.uses_api
-    };
+    this.itemChanges = {};
     this.itemForm.enable();
     this.editContent?.reset();
     this.editAdvancedParameters?.reset();

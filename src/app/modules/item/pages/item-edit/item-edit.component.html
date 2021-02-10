@@ -34,14 +34,13 @@
           *ngIf="rla1.isActive"
           [parentForm]="itemForm"
           [itemData]="itemData"
-          (childrenChanges)="updateItemChanges({children: $event})"
+          (childrenChanges)="updateItemChanges($event)"
         >
         </alg-item-edit-content>
         <alg-item-edit-advanced-parameters #advancedParameters
           *ngIf="rla2.isActive"
           [parentForm]="itemForm"
-          [itemData]="itemData"
-          (usesApiChanges)="updateItemChanges({uses_api: $event})"
+          [item]="initialFormData"
         >
         </alg-item-edit-advanced-parameters>
       </div>
