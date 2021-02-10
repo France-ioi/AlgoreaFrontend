@@ -3,5 +3,6 @@
     *ngIf="itemData.item && itemData.item.type == 'Task'">
     <alg-input [parentForm]="parentForm" inputName="url" i18n-placeholder placeholder="Url" name="url" size="small"></alg-input>
     <alg-switch [checked]="itemData.item.uses_api"></alg-switch>
+    <alg-input [parentForm]="parentForm" inputName="text_id" i18n-placeholder placeholder="TextId" name="text_id" size="small"></alg-input>
   </alg-section>
 </ng-container>
