@@ -16,11 +16,11 @@ interface ItemTreeNode extends TreeNode {
 }
 
 @Component({
-  selector: 'alg-item-nav-tree',
-  templateUrl: './item-nav-tree.component.html',
-  styleUrls: [ './item-nav-tree.component.scss' ]
+  selector: 'alg-left-nav-tree',
+  templateUrl: './left-nav-tree.component.html',
+  styleUrls: [ './left-nav-tree.component.scss' ]
 })
-export class ItemNavTreeComponent implements OnChanges {
+export class LeftNavTreeComponent implements OnChanges {
   @Input() data?: NavTreeData<NavMenuItem>;
   type: ItemTypeCategory = 'activity'; // to be fixed
 
