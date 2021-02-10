@@ -1,14 +1,12 @@
-<div  [formGroup]="parentForm">
-  <p-inputSwitch *ngIf="parentForm; else notReactive"
-    [formControl]="parentForm.get(name)"
-    [ngClass]="{
-      dark: mode === 'dark',
-      circular: mode === 'circular',
-      white: mode === 'white',
-      'dark-circular': mode === 'dark-circular'
-    }"
-  ></p-inputSwitch>
-</div>
+<p-inputSwitch *ngIf="parentForm; else notReactive"
+  [formControl]="formControl"
+  [ngClass]="{
+    dark: mode === 'dark',
+    circular: mode === 'circular',
+    white: mode === 'white',
+    'dark-circular': mode === 'dark-circular'
+  }"
+></p-inputSwitch>
 
 <ng-template #notReactive>
   <p-inputSwitch
