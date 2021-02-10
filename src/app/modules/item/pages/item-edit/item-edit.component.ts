@@ -215,6 +215,5 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
     this.itemChanges = {};
     this.itemForm.enable();
     this.editContent?.reset();
-    this.editAdvancedParameters?.reset();
   }
 }

@@ -1,11 +1,25 @@
-<p-inputSwitch
-  #switch
-  [(ngModel)]="checked"
-  [ngClass]="{
-    dark: mode === 'dark',
-    circular: mode === 'circular',
-    white: mode === 'white',
-    'dark-circular': mode === 'dark-circular'
-  }"
-  (onChange)="handleChange(switch.checked)"
-></p-inputSwitch>
+<div  [formGroup]="parentForm">
+  <p-inputSwitch *ngIf="parentForm; else notReactive"
+    [formControl]="parentForm.get(name)"
+    [ngClass]="{
+      dark: mode === 'dark',
+      circular: mode === 'circular',
+      white: mode === 'white',
+      'dark-circular': mode === 'dark-circular'
+    }"
+  ></p-inputSwitch>
+</div>
+
+<ng-template #notReactive>
+  <p-inputSwitch
+    #switch
+    [(ngModel)]="checked"
+    [ngClass]="{
+      dark: mode === 'dark',
+      circular: mode === 'circular',
+      white: mode === 'white',
+      'dark-circular': mode === 'dark-circular'
+    }"
+    (onChange)="handleChange(switch.checked)"
+  ></p-inputSwitch>
+</ng-template>

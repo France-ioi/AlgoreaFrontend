@@ -11,24 +11,9 @@ export class ItemEditAdvancedParametersComponent implements OnInit {
   @Input() item?: Item;
   @Input() parentForm?: FormGroup;
 
-  usesApi = false;
-
   constructor() { }
 
   ngOnInit(): void {
-    this.reset();
-  }
-
-  reset(): void {
-    if (!this.item) return;
-    this.usesApi = this.item.uses_api;
-  }
-
-  handleUsesApiChanges(checked: boolean): void {
-    if (!this.parentForm || !this.parentForm.get('uses_api')) return undefined;
-    this.parentForm.get('uses_api')?.setValue(checked);
-    this.parentForm.markAsDirty();
-    this.usesApi = checked;
   }
 
 }

@@ -11,7 +11,7 @@
     <div class="form-item-view">
       <span class="form-item-label">Uses API</span>
       <div class="form-item-control">
-        <alg-switch [checked]="usesApi" (change)="handleUsesApiChanges($event)" mode="white"></alg-switch>
+        <alg-switch [parentForm]="parentForm" name="uses_api" mode="white"></alg-switch>
       </div>
     </div>
 
