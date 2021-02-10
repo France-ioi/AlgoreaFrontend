@@ -2,7 +2,7 @@
   <alg-section icon="fa fa-book" i18n-label label="Advanced parameters"
     *ngIf="itemData.item && itemData.item.type == 'Task'">
     <alg-input [parentForm]="parentForm" inputName="url" i18n-placeholder placeholder="Url" name="url" size="small"></alg-input>
-    <alg-switch [checked]="itemData.item.uses_api"></alg-switch>
+    <alg-switch [checked]="usesApi" (change)="handleUsesApiChanges($event)"></alg-switch>
     <alg-input [parentForm]="parentForm" inputName="text_id" i18n-placeholder placeholder="TextId" name="text_id" size="small"></alg-input>
   </alg-section>
 </ng-container>

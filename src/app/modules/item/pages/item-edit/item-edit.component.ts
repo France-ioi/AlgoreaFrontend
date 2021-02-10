@@ -15,6 +15,7 @@ import { Item } from '../../http-services/get-item-by-id.service';
 import { ItemEditContentComponent } from '../item-edit-content/item-edit-content.component';
 import { PendingChangesComponent } from 'src/app/shared/guards/pending-changes-guard';
 import { CreateItemService, NewItem } from '../../http-services/create-item.service';
+import { ItemEditAdvancedParametersComponent } from '../item-edit-advanced-parameters/item-edit-advanced-parameters.component';
 
 @Component({
   selector: 'alg-item-edit',
@@ -27,11 +28,10 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
     title: [ '', [ Validators.required, Validators.minLength(3), Validators.maxLength(200) ] ],
     subtitle: [ '', Validators.maxLength(200) ],
     description: '',
-    url: '',
-    uses_api: false,
-    text_id: '',
+    url: ['', Validators.maxLength(200)],
+    text_id: ['', Validators.maxLength(200)],
   });
-  itemChanges: { children?: ChildData[] } = {};
+  itemChanges: { children?: ChildData[], uses_api: boolean } = { uses_api: false };
 
   itemData$ = this.itemDataSource.itemData$;
   itemLoadingState$ = this.itemDataSource.state$;
@@ -40,6 +40,7 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
   subscription?: Subscription;
 
   @ViewChild('content') private editContent?: ItemEditContentComponent;
+  @ViewChild('advancedParameters') private editAdvancedParameters?: ItemEditAdvancedParametersComponent;
 
   constructor(
     private currentContent: CurrentContentService,
@@ -86,9 +87,17 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
     });
   }
 
-  updateItemChanges(children: ChildData[]): void {
+  updateItemChanges(changes: { children?: ChildData[], uses_api ?: boolean }): void {
+    if ( ! changes ) return;
+
     this.itemForm.markAsDirty();
-    this.itemChanges.children = children;
+
+    if ( changes.children ) {
+      this.itemChanges.children = changes.children;
+    }
+    if ( typeof changes.uses_api == 'boolean' ) {
+      this.itemChanges.uses_api = changes.uses_api;
+    }
   }
 
   // Update Item
@@ -194,11 +203,14 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
       description: item.string.description || '',
       subtitle: item.string.subtitle || '',
       url: item.url && item.url.length ? item.url : null,
-      uses_api: item.uses_api,
       text_id: item.text_id || '',
     });
-    this.itemChanges = {};
+
+    this.itemChanges = {
+      uses_api: item.uses_api
+    };
     this.itemForm.enable();
     this.editContent?.reset();
+    this.editAdvancedParameters?.reset();
   }
 }
