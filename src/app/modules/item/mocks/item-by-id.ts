@@ -14,4 +14,5 @@ export const mockItem: Item = {
   },
   type: 'Task',
   prompt_to_join_group_by_code: false,
+  uses_api: false,
 };
