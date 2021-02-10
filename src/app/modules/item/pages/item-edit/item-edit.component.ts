@@ -115,17 +115,29 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
     );
   }
 
+  private getItemChanges(): ItemChanges {
+    const itemFormValues = {
+      url: this.itemForm.get('url')?.value,
+      uses_api: this.itemForm.get('uses_api')?.value,
+      text_id: this.itemForm.get('text_id')?.value
+    };
+
+    if ( ! itemFormValues.hasOwnProperty('url') || itemFormValues.url == '' ) itemFormValues.url = null;
+
+    return itemFormValues;
+  }
+
   private updateItem(): Observable<void> {
     return this.createChildren().pipe(
       switchMap(res => {
-        const changes: ItemChanges = {};
+        if (!this.initialFormData) return throwError(new Error('Invalid form'));
+        const changes: ItemChanges = this.getItemChanges();
         if (res) {
+          // @TODO: Avoid affecting component vars in Observable Operator
           // save the new children (their ids) to prevent recreating them in case of error
           this.itemChanges.children = res;
           changes.children = res.map((child, idx) => ({ item_id: child.id, order: idx }));
         }
-        if (!this.initialFormData) return throwError(new Error('Invalid form'));
-        if (!Object.keys(changes).length) return of(undefined);
         return this.updateItemService.updateItem(this.initialFormData.id, changes);
       }),
     );
