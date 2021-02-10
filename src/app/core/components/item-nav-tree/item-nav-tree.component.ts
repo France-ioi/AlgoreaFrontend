@@ -22,7 +22,7 @@ interface ItemTreeNode extends TreeNode {
 })
 export class ItemNavTreeComponent implements OnChanges {
   @Input() data?: NavTreeData<NavMenuItem>;
-  @Input() type: ItemTypeCategory = 'activity';
+  type: ItemTypeCategory = 'activity'; // to be fixed
 
   nodes: ItemTreeNode[] = [];
   selectedNode?: ItemTreeNode; // used to keep track after request that the selected is still the expected one

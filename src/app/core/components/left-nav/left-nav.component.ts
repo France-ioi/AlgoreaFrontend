@@ -9,10 +9,11 @@ import {
   isSkillInfo
 } from 'src/app/shared/services/current-content.service';
 import { ItemNavigationService } from '../../http-services/item-navigation.service';
-import { LeftNavTab } from '../../services/left-nav-loading/common';
 import { LeftNavActivityDataSource, LeftNavSkillDataSource } from './left-nav-item-datasource';
 
-const tabs: LeftNavTab[] = [ 'activities', 'skills', 'groups' ];
+const activitiesTabIdx = 0;
+const skillsTabIdx = 1;
+const groupsTabIdx = 2;
 
 @Component({
   selector: 'alg-left-nav',
@@ -21,10 +22,12 @@ const tabs: LeftNavTab[] = [ 'activities', 'skills', 'groups' ];
 })
 export class LeftNavComponent implements OnInit, OnDestroy {
 
-  currentTab: LeftNavTab = 'activities';
-
-  activitiesLoader = new LeftNavActivityDataSource('activity', this.itemNavigationService)
-  skillsLoader = new LeftNavSkillDataSource('skill', this.itemNavigationService)
+  activeTabIndex = 0;
+  loaders = [
+    new LeftNavActivityDataSource('activity', this.itemNavigationService),
+    new LeftNavSkillDataSource('skill', this.itemNavigationService),
+    new LeftNavActivityDataSource('activity', this.itemNavigationService) // to be changed
+  ];
 
   private subscription?: Subscription;
 
@@ -43,17 +46,16 @@ export class LeftNavComponent implements OnInit, OnDestroy {
 
     ).subscribe(content => {
       if (content && isGroupInfo(content)) {
-        this.contentTabChange('groups');
+        this.contentTabChange(groupsTabIdx);
         // todo: seed loader
 
       } else if (content && isSkillInfo(content)) {
-        this.contentTabChange('skills');
-        this.skillsLoader.showContent(content);
-
+        this.contentTabChange(skillsTabIdx);
+        this.loaders[skillsTabIdx].showContent(content);
 
       } else if (content && isActivityInfo(content)) {
-        this.contentTabChange('activities');
-        this.activitiesLoader.showContent(content);
+        this.contentTabChange(activitiesTabIdx);
+        this.loaders[activitiesTabIdx].showContent(content);
 
       } else { // not a group, not an item with a known type
         this.removeAllSelections();
@@ -70,23 +72,20 @@ export class LeftNavComponent implements OnInit, OnDestroy {
    * Otherwise, remove selection on all tabs and switch tab.
    * (not to be called when manually switching tab)
    */
-  private contentTabChange(tab: LeftNavTab): void {
-    if (tab !== this.currentTab) {
+  private contentTabChange(tabIdx: number): void {
+    if (tabIdx !== this.activeTabIndex) {
       this.removeAllSelections();
-      this.currentTab = tab;
+      this.activeTabIndex = tabIdx;
     }
   }
 
   private removeAllSelections(): void {
-    this.activitiesLoader.removeSelection();
-    this.skillsLoader.removeSelection();
-    // todo: add group loader
+    this.loaders.forEach(l => l.removeSelection());
   }
 
   onSelectionChangedByIdx(e: { index: number }): void {
-    this.currentTab = tabs[e.index];
-    const loader = [ this.activitiesLoader, this.skillsLoader, this.activitiesLoader ][e.index];
-    loader.focus();
+    this.activeTabIndex = e.index;
+    this.loaders[e.index].focus();
   }
 
 }
