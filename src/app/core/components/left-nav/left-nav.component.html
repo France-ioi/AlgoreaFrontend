@@ -27,15 +27,15 @@
 </p-tabView>
 
 <p-progressSpinner
-  *ngIf="loaders[activeTabIndex].state.tag === 'fetching'"
+  *ngIf="dataSources[activeTabIndex].state.tag === 'fetching'"
   [style]="{width: '3.3333rem', height: '3.3333rem'}"
 ></p-progressSpinner>
 
 <p
-*ngIf="loaders[activeTabIndex].state.tag === 'error'"
+*ngIf="dataSources[activeTabIndex].state.tag === 'error'"
  class="error"
 >Unable to load the item list</p>
 
-<alg-item-nav-tree [data]="$any(loaders[activeTabIndex].state).data" *ngIf="loaders[activeTabIndex].state.tag === 'ready'">
+<alg-item-nav-tree [data]="$any(dataSources[activeTabIndex].state).data" *ngIf="dataSources[activeTabIndex].state.tag === 'ready'">
 </alg-item-nav-tree>
 

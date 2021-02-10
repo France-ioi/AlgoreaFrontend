@@ -23,7 +23,7 @@ const groupsTabIdx = 2;
 export class LeftNavComponent implements OnInit, OnDestroy {
 
   activeTabIndex = 0;
-  loaders = [
+  dataSources = [
     new LeftNavActivityDataSource('activity', this.itemNavigationService),
     new LeftNavSkillDataSource('skill', this.itemNavigationService),
     new LeftNavActivityDataSource('activity', this.itemNavigationService) // to be changed
@@ -51,11 +51,11 @@ export class LeftNavComponent implements OnInit, OnDestroy {
 
       } else if (content && isSkillInfo(content)) {
         this.contentTabChange(skillsTabIdx);
-        this.loaders[skillsTabIdx].showContent(content);
+        this.dataSources[skillsTabIdx].showContent(content);
 
       } else if (content && isActivityInfo(content)) {
         this.contentTabChange(activitiesTabIdx);
-        this.loaders[activitiesTabIdx].showContent(content);
+        this.dataSources[activitiesTabIdx].showContent(content);
 
       } else { // not a group, not an item with a known type
         this.removeAllSelections();
@@ -80,12 +80,12 @@ export class LeftNavComponent implements OnInit, OnDestroy {
   }
 
   private removeAllSelections(): void {
-    this.loaders.forEach(l => l.removeSelection());
+    this.dataSources.forEach(l => l.removeSelection());
   }
 
   onSelectionChangedByIdx(e: { index: number }): void {
     this.activeTabIndex = e.index;
-    this.loaders[e.index].focus();
+    this.dataSources[e.index].focus();
   }
 
 }
