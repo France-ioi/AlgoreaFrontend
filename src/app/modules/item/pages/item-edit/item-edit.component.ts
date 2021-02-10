@@ -28,6 +28,7 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
     subtitle: [ '', Validators.maxLength(200) ],
     description: '',
     url: '',
+    uses_api: false
   });
   itemChanges: { children?: ChildData[] } = {};
 
@@ -191,7 +192,8 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
       title: item.string.title || '',
       description: item.string.description || '',
       subtitle: item.string.subtitle || '',
-      url: item.url || '',
+      url: item.url && item.url.length ? item.url : null,
+      uses_api: item.uses_api
     });
     this.itemChanges = {};
     this.itemForm.enable();
