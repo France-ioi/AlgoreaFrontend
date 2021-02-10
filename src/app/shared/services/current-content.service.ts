@@ -27,6 +27,14 @@ export interface ItemInfo extends ContentInfo {
   data: { route: ItemRoute, details?: ItemDetails }
 }
 
+export interface ActivityInfo extends ItemInfo {
+  data: { route: ItemRoute, details: ItemDetails }
+}
+
+export interface SkillInfo extends ItemInfo {
+  data: { route: ItemRoute, details: ItemDetails }
+}
+
 export interface ItemDetails {
   title: string|null,
   type: ItemType,
@@ -45,6 +53,14 @@ export interface GroupInfo extends ContentInfo {
 
 export function isItemInfo(info: ContentInfo|null): info is ItemInfo {
   return info !== null && info.type === 'item';
+}
+
+export function isActivityInfo(info: ItemInfo|null): info is ActivityInfo {
+  return info !== null && info.data.details !== undefined && info.data.details.type !== 'Skill';
+}
+
+export function isSkillInfo(info: ItemInfo|null): info is SkillInfo {
+  return info !== null && info.data.details !== undefined && info.data.details.type === 'Skill';
 }
 
 export function isGroupInfo(info: ContentInfo|null): info is GroupInfo {

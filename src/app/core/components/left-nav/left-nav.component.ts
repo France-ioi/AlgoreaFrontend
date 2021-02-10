@@ -1,11 +1,16 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { distinctUntilChanged, map } from 'rxjs/operators';
-import { isASkill } from 'src/app/shared/helpers/item-type';
-import { CurrentContentService, isGroupInfo, isItemInfo } from 'src/app/shared/services/current-content.service';
+import {
+  CurrentContentService,
+  isActivityInfo,
+  isGroupInfo,
+  isItemInfo,
+  isSkillInfo
+} from 'src/app/shared/services/current-content.service';
 import { ItemNavigationService } from '../../http-services/item-navigation.service';
 import { LeftNavTab } from '../../services/left-nav-loading/common';
-import { LeftNavItemDataSource } from './left-nav-item-datasource';
+import { LeftNavActivityDataSource, LeftNavSkillDataSource } from './left-nav-item-datasource';
 
 const tabs: LeftNavTab[] = [ 'activities', 'skills', 'groups' ];
 
@@ -18,8 +23,8 @@ export class LeftNavComponent implements OnInit, OnDestroy {
 
   currentTab: LeftNavTab = 'activities';
 
-  activitiesLoader = new LeftNavItemDataSource('activity', this.itemNavigationService)
-  skillsLoader = new LeftNavItemDataSource('skill', this.itemNavigationService)
+  activitiesLoader = new LeftNavActivityDataSource('activity', this.itemNavigationService)
+  skillsLoader = new LeftNavSkillDataSource('skill', this.itemNavigationService)
 
   private subscription?: Subscription;
 
@@ -41,16 +46,14 @@ export class LeftNavComponent implements OnInit, OnDestroy {
         this.contentTabChange('groups');
         // todo: seed loader
 
-      } else if (content && isItemInfo(content) && content.data.details) {
+      } else if (content && isSkillInfo(content)) {
+        this.contentTabChange('skills');
+        this.skillsLoader.showContent(content);
 
-        if (isASkill(content.data.details)) {
-          this.contentTabChange('skills');
-          this.skillsLoader.showContent(content);
 
-        } else { // activity
-          this.contentTabChange('activities');
-          this.activitiesLoader.showContent(content);
-        }
+      } else if (content && isActivityInfo(content)) {
+        this.contentTabChange('activities');
+        this.activitiesLoader.showContent(content);
 
       } else { // not a group, not an item with a known type
         this.removeAllSelections();

@@ -1,112 +1,67 @@
-import { concat, EMPTY, Observable, of, Subject } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
-import { ItemRoute } from 'src/app/shared/helpers/item-route';
+import { EMPTY, Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { isSkill, ItemTypeCategory } from 'src/app/shared/helpers/item-type';
-import { errorState, FetchError, Fetching, fetchingState, isReady, mapErrorToState, Ready, readyState } from 'src/app/shared/helpers/state';
-import { switchScan } from 'src/app/shared/helpers/switch-scan';
-import { ItemInfo } from 'src/app/shared/services/current-content.service';
-import { ItemNavigationService, NavMenuItem, NavMenuRootItem } from '../../http-services/item-navigation.service';
+import { errorState, FetchError, Fetching, mapErrorToState, Ready, readyState } from 'src/app/shared/helpers/state';
+import { ActivityInfo, ItemInfo, SkillInfo } from 'src/app/shared/services/current-content.service';
+import { ItemNavigationService, NavMenuItem } from '../../http-services/item-navigation.service';
 import { NavTreeData } from '../../services/left-nav-loading/nav-tree-data';
 import { LeftNavDataSource } from './left-nav-datasource';
 
 type State = Ready<NavTreeData<NavMenuItem>>|Fetching|FetchError;
 
-export class LeftNavItemDataSource extends LeftNavDataSource {
-
-  initialized = false;
-  state: State = fetchingState();
-
-  private changes = new Subject<ItemInfo|undefined>();
-
+export abstract class LeftNavItemDataSource<ItemT extends ItemInfo> extends LeftNavDataSource<ItemT,NavMenuItem> {
   constructor(
     private category: ItemTypeCategory,
     private itemNavService: ItemNavigationService
   ) {
     super();
-
-    this.changes.pipe(
-
-      switchScan((prevState: State, itemInfo) => {
-
-        if (isReady(prevState)) {
-          // CASE: the current content is not an item and the menu has already items displayed
-          if (!itemInfo) {
-            if (prevState.data.selectedElementId !== undefined) return of(readyState(prevState.data.withNoSelection()));
-            return EMPTY; // no change
-          }
-
-          const itemData = itemInfo.data;
-          if (!itemData.details) return of(fetchingState()); // unexpected as caller should not report a change without details
-          const itemDetails = itemData.details;
-
-          // CASE: the current content is already the selected one
-          if (prevState.data.selectedElementId === itemData.route.id) {
-            const newData = prevState.data.withUpdatedElement(itemData.route.id, el => ({
-              ...el, title: itemDetails.title, attemptId: itemDetails.attemptId ?? null,
-              bestScore: itemDetails.bestScore, currentScore: itemDetails.currentScore, validated: itemDetails.validated
-            }));
-            return concat(of(readyState(newData)), this.loadChildrenIfNeeded(newData));
-          }
-
-          // CASE: the content is among the displayed items at the root of the tree -> select the right one (might load children)
-          if (prevState.data.hasLevel1Element(itemData.route.id)) {
-            let newData = prevState.data.withSelection(itemData.route);
-            newData = newData.withUpdatedElement(itemData.route.id, el => ({
-              ...el, title: itemDetails.title, attemptId: itemDetails.attemptId ?? null,
-              bestScore: itemDetails.bestScore, currentScore: itemDetails.currentScore, validated: itemDetails.validated
-            }));
-            return concat(of(readyState(newData)), this.loadChildrenIfNeeded(newData));
-          }
-
-          // CASE: the content is a child of one item at the root of the tree -> shift the tree and select it (might load children)
-          if (prevState.data.hasLevel2Element(itemData.route.id)) {
-            let newData = prevState.data.subNavMenuData(itemData.route);
-            newData = newData.withUpdatedElement(itemData.route.id, el => ({
-              ...el, title: itemDetails.title, attemptId: itemDetails.attemptId ?? null,
-              bestScore: itemDetails.bestScore, currentScore: itemDetails.currentScore, validated: itemDetails.validated
-            }));
-            return concat(of(readyState(newData)), this.loadChildrenIfNeeded(newData));
-          }
-
-        } else /* not ready state */ if (!itemInfo) {
-          // CASE: the content is not an item and the menu has not already item displayed -> load item root
-          return this.loadDefaultNav();
-        }
-
-        // OTHERWISE: the content is an item which is not currently displayed:
-
-        // CASE: The current content type matches the current tab
-        return this.loadNewNav(itemInfo.data.route);
-
-      }, fetchingState()/* the switchScan accumulator seed */)
-    ).subscribe({
-      // As an update of `category` triggers a change and as switchMap ensures ongoing requests are cancelled when a new change happens,
-      // the state updated here is on the same category as `prevState` above.
-      next: newState => this.state = newState,
-      error: e => this.state = errorState(e),
-    });
   }
 
-  showContent(content: ItemInfo): void {
-    this.initialized = true;
-    this.changes.next(content);
+  loadRootTreeData(): Observable<NavMenuItem[]> {
+    return this.itemNavService.getRoot(this.category).pipe(
+      map(items => items.items)
+    );
   }
 
-  focus(): void {
-    if (!this.initialized) {
-      this.initialized = true;
-      this.changes.next(undefined);
+  loadNavDataFromChild(id: string, child: ItemInfo): Observable<NavTreeData<NavMenuItem>> {
+    return this.itemNavService.getNavDataFromChildRoute(id, child.data.route, isSkill(this.category)).pipe(
+      map(items => new NavTreeData(items.items, child.data.route.path, child.data.route.id, items.parent))
+    );
+  }
+
+  loadNewNavData(content: ItemInfo): Observable<NavTreeData<NavMenuItem>> {
+    const route = content.data.route;
+    if (route.path.length >= 1) {
+      const parentId = route.path[route.path.length-1];
+      return this.itemNavService.getNavDataFromChildRoute(parentId, route, isSkill(this.category)).pipe(
+        map(items => new NavTreeData(items.items, route.path, route.id, items.parent))
+      );
+    } else {
+      return this.loadRootTreeData().pipe(
+        map(items => new NavTreeData(items, route.path, route.id))
+      );
     }
   }
 
-  removeSelection(): void {
-    if (this.initialized) this.changes.next(undefined);
+  contentId(contentInfo: ItemT): string {
+    return contentInfo.data.route.id;
   }
 
-  /**
-   * Load children of the given item if it has children and has an attempt
-   */
-  private loadChildrenIfNeeded(data: NavTreeData<NavMenuItem>, item = data.selectedElement()): Observable<State> {
+  addDetailsToTreeElement(contentInfo: ItemT, treeElement: NavMenuItem): NavMenuItem {
+    const details = contentInfo.data.details;
+    if (!details) return treeElement;
+    return {
+      ...treeElement,
+      title: details.title,
+      attemptId: details.attemptId ?? null,
+      bestScore: details.bestScore,
+      currentScore: details.currentScore,
+      validated: details.validated
+    };
+  }
+
+  loadChildrenOfSelectedElement(data: NavTreeData<NavMenuItem>): Observable<State> {
+    const item = data.selectedElement();
     if (!item) return of(errorState(new Error('Cannot find selected element (or no selection) (unexpected)')));
     if (!item.hasChildren || item.attemptId === null) return EMPTY; // if no children, no need to fetch children
 
@@ -117,47 +72,12 @@ export class LeftNavItemDataSource extends LeftNavDataSource {
     );
   }
 
-  private loadDefaultNav(): Observable<State> {
-    return concat(
-      of(fetchingState()),
-      this.itemNavService.getRoot(this.category).pipe(
-        map(items => readyState(new NavTreeData(items.items, [], undefined, undefined))),
-        mapErrorToState()
-      )
-    );
+}
 
-    /*
-    load a default configured element:
-    const route = appDefaultItemRoute(this.category);
-    return concat(
-      of(fetchingState()),
-      this.itemNavService.getRoot(this.category).pipe(
-        map(items => new ItemNavMenuData(items.items, [], undefined, undefined, [ route.id ])),
-        switchMap(menuData => concat(of(readyState(menuData)), this.startResultAndLoadChildren(menuData, route))),
-        mapErrorToState()
-      )
-    );
-    */
-  }
+export class LeftNavActivityDataSource extends LeftNavItemDataSource<ActivityInfo> {
 
+}
 
-  private loadNewNav(item: ItemRoute): Observable<State> {
-    let dataFetcher: Observable<NavMenuRootItem>;
-    if (item.path.length >= 1) {
-      const parentId = item.path[item.path.length-1];
-      dataFetcher = this.itemNavService.getNavDataFromChildRoute(parentId, item, isSkill(this.category));
-    } else {
-      dataFetcher = this.itemNavService.getRoot(this.category);
-    }
-    return concat(
-      of(fetchingState()), // as the menu change completely, display the loader
-      dataFetcher.pipe(
-        map(items => new NavTreeData(items.items, item.path, item.id, items.parent)), // the new items (only first level loaded)
-        // already update the tree loaded with the first level, and if needed, load (async) children as well
-        switchMap(data => concat(of(readyState(data)), this.loadChildrenIfNeeded(data))),
-        mapErrorToState(),
-      )
-    );
-  }
+export class LeftNavSkillDataSource extends LeftNavItemDataSource<SkillInfo> {
 
 }

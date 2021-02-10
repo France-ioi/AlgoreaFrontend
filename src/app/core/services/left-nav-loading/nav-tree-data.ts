@@ -1,7 +1,6 @@
-import { ItemRoute } from 'src/app/shared/helpers/item-route';
 
 type Id = string;
-interface Element {
+export interface NavTreeElement {
   id: Id
   children?: this[]
 }
@@ -16,7 +15,7 @@ interface Element {
  *     | B3
  *     | B4
  */
-export class NavTreeData<T extends Element> {
+export class NavTreeData<T extends NavTreeElement> {
 
   constructor(
     public readonly elements: T[], // level 1 elements (which may have children)
@@ -28,8 +27,8 @@ export class NavTreeData<T extends Element> {
   /**
    * Return this with selected element changed
    */
-  withSelection(selectedElement: Element): NavTreeData<T> {
-    return new NavTreeData(this.elements, this.pathToElements, selectedElement.id, this.parent);
+  withSelection(id: Id): NavTreeData<T> {
+    return new NavTreeData(this.elements, this.pathToElements, id, this.parent);
   }
 
   /**
@@ -55,10 +54,10 @@ export class NavTreeData<T extends Element> {
    * Create a new sub-NavTreeData moving the child element and its siblings to `elements` and his parent as new parent.
    * Return this if id not found.
    */
-  subNavMenuData(childElement: ItemRoute): NavTreeData<T> {
-    const newParent = this.elements.find(i => i.children && i.children.some(c => c.id === childElement.id));
+  subNavMenuData(childElementId: Id): NavTreeData<T> {
+    const newParent = this.elements.find(i => i.children && i.children.some(c => c.id === childElementId));
     if (!newParent || !newParent.children /* unexpected */) return this;
-    return new NavTreeData(newParent.children, this.pathToElements.concat([ newParent.id ]), childElement.id, newParent);
+    return new NavTreeData(newParent.children, this.pathToElements.concat([ newParent.id ]), childElementId, newParent);
   }
 
   hasLevel1Element(id: Id): boolean {
