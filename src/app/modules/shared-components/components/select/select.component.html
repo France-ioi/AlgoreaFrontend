@@ -17,8 +17,8 @@
   [delayClickOutsideInit]="true"
 >
   <ul class="select-dropdown">
-    <li *ngFor="let item of items" (click)="selectValue(item)">
-      {{ item }}
+    <li *ngFor="let item of items" (click)="selectValue(item.value)">
+      {{ item.text }}
     </li>
   </ul>
   <span class="dropdown-icon" (click)="toogleDropdown($event)">
