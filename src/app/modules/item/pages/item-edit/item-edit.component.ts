@@ -117,8 +117,8 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
 
   private getItemChanges(): ItemChanges {
     const urlFormControl = this.itemForm.get('url');
-    const usesApiFormControl = this.itemForm.get('url');
-    const textIdFormControl = this.itemForm.get('url');
+    const usesApiFormControl = this.itemForm.get('uses_api');
+    const textIdFormControl = this.itemForm.get('text_id');
 
     if (urlFormControl === null || usesApiFormControl === null || textIdFormControl === null) return {};
 
