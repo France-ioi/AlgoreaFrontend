@@ -86,7 +86,7 @@
           <context context-type="linenumber">38</context>
         </context-group>
       </trans-unit><trans-unit id="3e7d68a4322602de77d9ddbc73b29aa31e65dc41" datatype="html">
-        <source>Advanced parameters</source><target state="new">Advanced parameters</target>
+        <source>Advanced parameters</source><target>Paramètres avancés</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/item/pages/item-edit-advanced-parameters/item-edit-advanced-parameters.component.html</context>
           <context context-type="linenumber">2</context>
@@ -96,13 +96,13 @@
           <context context-type="linenumber">2</context>
         </context-group>
       </trans-unit><trans-unit id="484d369ab6d7e37d808403e2141c38c01f6f9911" datatype="html">
-        <source>Url</source><target state="new">Url</target>
-        
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-edit-advanced-parameters/item-edit-advanced-parameters.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit><trans-unit id="c6ab757daf1d3ae47be0dfb5906df9140d475c82" datatype="html">
-        <source>http://www...</source><target state="new">http://www...</target>
+        <source>Url</source><target>Url</target>
+
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-edit-advanced-parameters/item-edit-advanced-parameters.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit><trans-unit id="2daaf1371bb3f9cb690719b224e07e9a4826a9c5" datatype="html">
+        <source>Uses API</source><target>Utilise l'API</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/item/pages/item-edit-advanced-parameters/item-edit-advanced-parameters.component.html</context>
-          <context context-type="linenumber">7</context>
+          <context context-type="linenumber">12</context>
         </context-group>
       </trans-unit><trans-unit id="d5427c17a782f9837360dc95b6067dc20d150ab9" datatype="html">
         <source>Error while loading the data</source><target state="translated">Erreur lors du chargement des données</target>
@@ -148,7 +148,7 @@
         </context-group>
       </trans-unit><trans-unit id="1eab7cabd424b0f190d8e7d2e5a412c9ef053d96" datatype="html">
         <source>Add a content</source><target state="translated">Ajouter du contenu</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/add-item/add-item.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit><trans-unit id="7de5b8682019c8bc549084bf70c7fbf2daee125a" datatype="html">
         <source>Enter a title to create a new child</source><target state="translated">Entrez un titre afin de créer un nouveau contenu</target>
         <context-group purpose="location">
@@ -179,13 +179,13 @@
         </context-group>
       </trans-unit><trans-unit id="828fba1dc0726e5a3a6dcfd4fa7a94b694ad47e9" datatype="html">
         <source>Select a Content</source><target state="translated">Sélectionnez un contenu</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/add-content/add-content.component.html</context><context context-type="linenumber">51</context></context-group></trans-unit><trans-unit id="f6755cff4957d5c3c89bafce5651f1b6fa2b1fd9" datatype="html">
         <source>Add</source><target state="translated">Ajouter</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/add-content/add-content.component.html</context><context context-type="linenumber">58</context></context-group></trans-unit><trans-unit id="6206a0f04a13a3f6ad713366d4480eb14bc15386" datatype="html">
         <source>No records found</source><target state="translated">Aucun résultat</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/add-content/add-content.component.html</context><context context-type="linenumber">64</context></context-group></trans-unit><trans-unit id="9e308eb56a9c8be2847dc3b760f4a78304da36f4" datatype="html">
         <source> Content </source><target state="translated"> Contenu </target>
         <context-group purpose="location">
@@ -200,7 +200,7 @@
         </context-group>
       </trans-unit><trans-unit id="4378796785985219718" datatype="html">
         <source>Class</source><target state="translated">Classe</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/managed-group-list/managed-group-list.component.ts</context><context context-type="linenumber">32</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/add-sub-group/add-sub-group.component.ts</context><context context-type="linenumber">32</context></context-group></trans-unit><trans-unit id="3192753641165405448" datatype="html">
         <source>Base</source><target state="translated">Système</target>
         <context-group purpose="location">
@@ -209,10 +209,10 @@
         </context-group>
       </trans-unit><trans-unit id="899582552931734709" datatype="html">
         <source>Club</source><target state="translated">Club</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/managed-group-list/managed-group-list.component.ts</context><context context-type="linenumber">36</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/add-sub-group/add-sub-group.component.ts</context><context context-type="linenumber">38</context></context-group></trans-unit><trans-unit id="8707887448880467422" datatype="html">
         <source>Friends</source><target state="translated">Amis</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/managed-group-list/managed-group-list.component.ts</context><context context-type="linenumber">38</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/add-sub-group/add-sub-group.component.ts</context><context context-type="linenumber">44</context></context-group></trans-unit><trans-unit id="5903110565317428249" datatype="html">
         <source>Session</source><target state="translated">Session</target>
         <context-group purpose="location">
@@ -227,7 +227,7 @@
         </context-group>
       </trans-unit><trans-unit id="8693603235657020323" datatype="html">
         <source>Other</source><target state="translated">Autre</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/managed-group-list/managed-group-list.component.ts</context><context context-type="linenumber">44</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/add-sub-group/add-sub-group.component.ts</context><context context-type="linenumber">50</context></context-group></trans-unit><trans-unit id="5e6548eb9cbb0467c307b4079bc989cd21f44355" datatype="html">
         <source>This field is required</source><target state="translated">Ce champ est requis</target>
         <context-group purpose="location">
@@ -1104,7 +1104,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/group-edit/group-edit.component.ts</context><context context-type="linenumber">70</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/pending-request/pending-request-response-handling.ts</context><context context-type="linenumber">27</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/pending-request/pending-request-response-handling.ts</context><context context-type="linenumber">45</context></context-group></trans-unit><trans-unit id="1365670554525463863" datatype="html">
         <source>You need to solve all the errors displayed in the form to save changes.</source><target state="translated">Vous devez résoudre toutes les erreurs affichées dans le formulaire avant de sauvegarder.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-edit/item-edit.component.ts</context><context context-type="linenumber">187</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/group-edit/group-edit.component.ts</context><context context-type="linenumber">88</context></context-group></trans-unit><trans-unit id="baa6bf1125c10752ec391ae55d3122d91729e216" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-edit/item-edit.component.ts</context><context context-type="linenumber">191</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/group-edit/group-edit.component.ts</context><context context-type="linenumber">88</context></context-group></trans-unit><trans-unit id="baa6bf1125c10752ec391ae55d3122d91729e216" datatype="html">
         <source>Item title</source><target state="translated">Titre</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/item/pages/item-edit/item-edit.component.html</context>
@@ -1123,14 +1123,14 @@
           <context context-type="linenumber">19,20</context>
         </context-group>
       </trans-unit><trans-unit id="9ca01d793c5b87d53cdd13df26c5c29ffdb9e901" datatype="html">
-        <source> Advanced parameters </source><target state="new"> Advanced parameters </target>
+        <source> Advanced parameters </source><target> Paramètres avancés </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/item/pages/item-edit/item-edit.component.html</context>
           <context context-type="linenumber">28,29</context>
         </context-group>
       </trans-unit><trans-unit id="f5629a9ff18f0f53d37c10c70a8a8dba13b10626" datatype="html">
         <source>You do not have the permissions to edit this content.</source><target state="translated">Vous n'avez pas les permissions d'éditer ce contenu.</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-edit/item-edit.component.html</context><context context-type="linenumber">51</context></context-group></trans-unit><trans-unit id="3e48c6bacf0ab546f95db85177bd2d3b069ffe01" datatype="html">
         <source>Error while loading the group</source><target state="translated">Erreur lors du chargement du groupe</target>
         <context-group purpose="location">
@@ -1270,7 +1270,7 @@
         </context-group>
       </trans-unit><trans-unit id="8471940861423120175" datatype="html">
         <source>Group successfully added as child group</source><target state="translated">Group ajouter avec succès</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/group-composition/group-composition.component.ts</context><context context-type="linenumber">57</context></context-group></trans-unit><trans-unit id="ac5349c51de53a8fddbbf16efc57f3baa813ba3d" datatype="html">
         <source>Current Composition</source><target state="translated">Composition actuelle</target>
         <context-group purpose="location">
