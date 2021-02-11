@@ -1,5 +1,5 @@
 <ng-container *ngIf="item">
-  <alg-section icon="fa fa-book" i18n-label label="Advanced parameters"
+  <alg-section icon="fa fa-cogs" i18n-label label="Global parameters"
     *ngIf="item.type === 'Task'">
     <div class="form-item-view">
       <span class="form-item-label" i18n>Url</span>
@@ -20,6 +20,19 @@
       <div class="form-item-control">
         <alg-input [parentForm]="parentForm" inputName="text_id" name="text_id" size="small"></alg-input>
       </div>
+    </div>
+  </alg-section>
+
+  <alg-section icon="fa fa-book" i18n-label label="Score & Validation"
+    *ngIf="['Chapter','Skill'].includes(item.type)">
+    <div class="form-item-view">
+      <span class="form-item-label" i18n>Validation criteria</span>
+      <alg-dropdown
+        [options]="validationCritireaOptions"
+        [parentForm]="parentForm"
+        inputName="validation_type"
+        name="validation_type"
+      ></alg-dropdown>
     </div>
   </alg-section>
 </ng-container>

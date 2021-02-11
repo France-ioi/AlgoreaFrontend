@@ -55,6 +55,7 @@ import { FloatingSaveComponent } from './components/floating-save/floating-save.
 import { TooltipModule } from 'primeng/tooltip';
 import { ProgressSectionComponent } from './components/progress-section/progress-section.component';
 import { BooleanSectionComponent } from './components/progress-section/boolean-section/boolean-section.component';
+import { DropdownComponent } from './components/dropdown/dropdown.component';
 
 @NgModule({
   declarations: [
@@ -85,6 +86,7 @@ import { BooleanSectionComponent } from './components/progress-section/boolean-s
     FloatingSaveComponent,
     ProgressSectionComponent,
     BooleanSectionComponent,
+    DropdownComponent,
   ],
   imports: [
     CommonModule,
@@ -150,6 +152,7 @@ import { BooleanSectionComponent } from './components/progress-section/boolean-s
     FloatingSaveComponent,
     ProgressSectionComponent,
     BooleanSectionComponent,
+    DropdownComponent,
   ],
   providers: [
     { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: true } }
