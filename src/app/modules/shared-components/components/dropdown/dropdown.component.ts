@@ -1,5 +1,5 @@
-import { Component, Input, OnInit } from "@angular/core";
-import { FormControl, FormGroup } from "@angular/forms";
+import { Component, Input, OnInit } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 
 export interface DropdownOption {
   label: string,
@@ -9,7 +9,7 @@ export interface DropdownOption {
 @Component({
   selector: 'alg-dropdown',
   templateUrl: './dropdown.component.html',
-  styleUrls: ['./dropdown.component.scss']
+  styleUrls: [ './dropdown.component.scss' ]
 })
 export class DropdownComponent implements OnInit {
   @Input() options: DropdownOption[] = [];
@@ -21,7 +21,7 @@ export class DropdownComponent implements OnInit {
 
   constructor() {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     if (this.parentForm && this.parentForm.get(this.name)) {
       this.formControl = this.parentForm.get(this.name) as FormControl;
     }
