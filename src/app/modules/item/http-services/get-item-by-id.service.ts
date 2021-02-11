@@ -26,6 +26,7 @@ export interface Item {
   validation_type: string,
   no_score: boolean,
   title_bar_visible: boolean,
+  full_screen: string,
 }
 
 @Injectable({

@@ -17,4 +17,5 @@ export const mockItem: Item = {
   validation_type: 'none',
   no_score: false,
   title_bar_visible: false,
+  full_screen: '',
 };

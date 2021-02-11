@@ -35,6 +35,7 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
     no_score: false,
     title_bar_visible: false,
     prompt_to_join_group_by_code: false,
+    full_screen: ''
   });
   itemChanges: { children?: ChildData[] } = {};
 
@@ -228,6 +229,7 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
       no_score: item.no_score || false,
       title_bar_visible: item.title_bar_visible || false,
       prompt_to_join_group_by_code: item.prompt_to_join_group_by_code || false,
+      full_screen: item.full_screen || '',
     });
 
     this.itemChanges = {};

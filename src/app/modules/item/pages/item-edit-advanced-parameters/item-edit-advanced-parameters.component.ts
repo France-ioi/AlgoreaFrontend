@@ -29,6 +29,17 @@ export class ItemEditAdvancedParametersComponent {
     value: 'One'
   }];
 
+  fullScreenOptions: {label: string, value: string}[] = [{
+    label: $localize`No`,
+    value: 'forceNo'
+  }, {
+    label: $localize`Based on type`,
+    value: 'default'
+  }, {
+    label: $localize`Yes mapped`,
+    value: 'forceYes'
+  }]
+
   constructor() { }
 
 }
