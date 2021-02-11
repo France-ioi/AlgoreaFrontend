@@ -23,9 +23,9 @@ export interface Item {
   url?: string | null,
   uses_api?: boolean,
   text_id?: string,
-  validation_type?: string,
-  no_score?: boolean,
-  title_bar_visible?: boolean,
+  validation_type: string,
+  no_score: boolean,
+  title_bar_visible: boolean,
 }
 
 @Injectable({
