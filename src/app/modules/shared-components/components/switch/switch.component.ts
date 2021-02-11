@@ -22,7 +22,7 @@ export class SwitchComponent implements OnChanges {
   @Output() change = new EventEmitter<boolean>();
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.parentForm && this.parentForm && this.parentForm.get(this.name)) {
+    if (Object.prototype.hasOwnProperty.call(changes, 'parentForm') && this.parentForm && this.parentForm.get(this.name)) {
       this.formControl = this.parentForm.get(this.name) as FormControl;
     }
   }
