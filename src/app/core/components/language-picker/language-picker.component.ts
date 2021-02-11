@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { SelectItemType } from 'src/app/modules/shared-components/components/select/select.component';
 import { LocaleService } from '../../services/localeService';
 
 const languagesAsText: { [lang: string]: string } = {
@@ -14,19 +13,19 @@ const languagesAsText: { [lang: string]: string } = {
 })
 export class LanguagePickerComponent {
 
-  languageOptions: SelectItemType[] = [];
+  readonly languageOptions = this.localeService.languages?.map(l => {
+    const languageAsText = languagesAsText[l.tag];
+    if(!languageAsText) return null;
+    return {
+      text: languageAsText,
+      value: l.tag
+    }
+  }).filter(l => !!l);
   current?: string;
 
   constructor(
     private localeService: LocaleService,
   ) {
-    if (this.localeService.languages) {
-      this.languageOptions = this.localeService.languages.filter(l => !!languagesAsText[l.tag]).map(l => ({
-        text: languagesAsText[l.tag],
-        value: l.tag
-      }));
-    }
-
     if (this.localeService.currentTag) this.current = languagesAsText[this.localeService.currentTag];
   }
 
