@@ -1,17 +1,12 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
-export interface SelectItemType {
-  text: string,
-  value: string,
-}
-
 @Component({
   selector: 'alg-select',
   templateUrl: './select.component.html',
   styleUrls: [ './select.component.scss' ],
 })
 export class SelectComponent implements OnInit {
-  @Input() items: SelectItemType[] = [];
+  @Input() items: string[] = [];
   @Input() width = 6.5;
   @Input() opened = false;
   @Input() selected?: string;
@@ -22,7 +17,7 @@ export class SelectComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    if (!this.selected) this.selected = this.items.length > 0 ? this.items[0].value : undefined;
+    if (!this.selected) this.selected = this.items.length > 0 ? this.items[0] : undefined;
   }
 
   toogleDropdown(e: Event): void {

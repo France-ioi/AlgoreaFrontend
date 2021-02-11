@@ -6,6 +6,13 @@ const languagesAsText: { [lang: string]: string } = {
   en: 'English',
 };
 
+function tagForLabel(label: string): string {
+  for (const key in languagesAsText) {
+    if (languagesAsText[key] === label) return key;
+  }
+  throw new Error('Unexpected: unknown language selected');
+}
+
 @Component({
   selector: 'alg-language-picker',
   templateUrl: './language-picker.component.html',
@@ -13,14 +20,7 @@ const languagesAsText: { [lang: string]: string } = {
 })
 export class LanguagePickerComponent {
 
-  readonly languageOptions = this.localeService.languages?.map(l => {
-    const languageAsText = languagesAsText[l.tag];
-    if(!languageAsText) return null;
-    return {
-      text: languageAsText,
-      value: l.tag
-    }
-  }).filter(l => !!l);
+  readonly languageLabels = this.localeService.languages?.map(l => languagesAsText[l.tag]).filter(l => !!l);
   current?: string;
 
   constructor(
@@ -29,8 +29,8 @@ export class LanguagePickerComponent {
     if (this.localeService.currentTag) this.current = languagesAsText[this.localeService.currentTag];
   }
 
-  languageChanged(langTag: string): void {
-    this.localeService.navigateTo(langTag);
+  languageChanged(langLabel: string): void {
+    this.localeService.navigateTo(tagForLabel(langLabel));
   }
 
 }
