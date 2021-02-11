@@ -27,12 +27,21 @@
     *ngIf="['Chapter','Skill'].includes(item.type)">
     <div class="form-item-view">
       <span class="form-item-label" i18n>Validation criteria</span>
-      <alg-dropdown
-        [options]="validationCritireaOptions"
-        [parentForm]="parentForm"
-        inputName="validation_type"
-        name="validation_type"
-      ></alg-dropdown>
+      <div class="form-item-control">
+        <alg-dropdown
+          [options]="validationCritireaOptions"
+          [parentForm]="parentForm"
+          inputName="validation_type"
+          name="validation_type"
+        ></alg-dropdown>
+      </div>
+    </div>
+
+    <div class="form-item-view">
+      <span class="form-item-label" i18n>Disable score</span>
+      <div class="form-item-control">
+        <alg-switch [parentForm]="parentForm" name="no_score" mode="white"></alg-switch>
+      </div>
     </div>
   </alg-section>
 </ng-container>

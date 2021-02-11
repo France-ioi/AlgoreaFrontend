@@ -23,7 +23,8 @@ export interface Item {
   url?: string,
   uses_api?: boolean,
   text_id?: string,
-  validation_type?: string
+  validation_type?: string,
+  no_score?: boolean,
 }
 
 @Injectable({
