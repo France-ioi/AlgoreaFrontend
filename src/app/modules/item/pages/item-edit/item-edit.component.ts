@@ -88,7 +88,7 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
     });
   }
 
-  updateItemChanges(children?: ChildData[]): void {
+  updateItemChanges(children: ChildData[]): void {
     this.itemForm.markAsDirty();
     this.itemChanges.children = children;
   }
@@ -115,20 +115,23 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
     );
   }
 
-  private getItemChanges(): ItemChanges {
+  private getItemChanges(): ItemChanges | undefined {
     const urlFormControl = this.itemForm.get('url');
     const usesApiFormControl = this.itemForm.get('uses_api');
     const textIdFormControl = this.itemForm.get('text_id');
 
-    if (urlFormControl === null || usesApiFormControl === null || textIdFormControl === null) return {};
+    if (urlFormControl === null || usesApiFormControl === null || textIdFormControl === null) return undefined;
 
-    const itemFormValues = {
-      url: urlFormControl.value as string | null,
-      uses_api: usesApiFormControl.value as boolean,
-      text_id: textIdFormControl.value as string,
-    };
+    const itemFormValues: ItemChanges = {};
 
-    if (itemFormValues.url === '') itemFormValues.url = null;
+    const url = urlFormControl.value as string;
+    if (url !== this.initialFormData?.url) itemFormValues.url = url !== '' ? url : null;
+
+    const usesApi = usesApiFormControl.value as boolean;
+    if (usesApi !== this.initialFormData?.uses_api) itemFormValues.uses_api = usesApi;
+
+    const textId = textIdFormControl.value as string;
+    if (textId !== '') itemFormValues.text_id = textId;
 
     return itemFormValues;
   }
@@ -136,8 +139,9 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
   private updateItem(): Observable<void> {
     return this.createChildren().pipe(
       switchMap(res => {
-        if (!this.initialFormData) return throwError(new Error('Invalid form'));
-        const changes: ItemChanges = this.getItemChanges();
+        if (!this.initialFormData) return throwError(new Error('Invalid initial data'));
+        const changes = this.getItemChanges();
+        if (!changes || !Object.keys(changes).length) return throwError(new Error('Invalid form'));
         if (res) {
           // @TODO: Avoid affecting component vars in Observable Operator
           // save the new children (their ids) to prevent recreating them in case of error
@@ -214,7 +218,7 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
       description: item.string.description || '',
       subtitle: item.string.subtitle || '',
       url: item.url || '',
-      text_id: item.text_id || '',
+      text_id: '',
       uses_api: item.uses_api || false,
     });
 
