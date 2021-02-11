@@ -44,4 +44,14 @@
       </div>
     </div>
   </alg-section>
+
+  <alg-section icon="fa fa-desktop" i18n-label label="Display"
+    *ngIf="['Chapter','Skill'].includes(item.type)">
+    <div class="form-item-view">
+      <span class="form-item-label" i18n>Display header (not implemented)</span>
+      <div class="form-item-control">
+        <alg-switch [parentForm]="parentForm" name="title_bar_visible" mode="white"></alg-switch>
+      </div>
+    </div>
+  </alg-section>
 </ng-container>

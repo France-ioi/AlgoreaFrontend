@@ -33,6 +33,7 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
     uses_api: false,
     validation_type: '',
     no_score: false,
+    title_bar_visible: false,
   });
   itemChanges: { children?: ChildData[] } = {};
 
@@ -219,7 +220,8 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
       text_id: item.text_id || '',
       uses_api: item.uses_api || false,
       validation_type: item.validation_type || '',
-      no_score: item.no_score || false
+      no_score: item.no_score || false,
+      title_bar_visible: item.title_bar_visible || false,
     });
 
     this.itemChanges = {};
