@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Item } from '../../http-services/get-item-by-id.service';
 
@@ -7,13 +7,10 @@ import { Item } from '../../http-services/get-item-by-id.service';
   templateUrl: './item-edit-advanced-parameters.component.html',
   styleUrls: [ './item-edit-advanced-parameters.component.scss' ]
 })
-export class ItemEditAdvancedParametersComponent implements OnInit {
+export class ItemEditAdvancedParametersComponent {
   @Input() item?: Item;
   @Input() parentForm?: FormGroup;
 
   constructor() { }
-
-  ngOnInit(): void {
-  }
 
 }

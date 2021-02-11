@@ -116,13 +116,19 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
   }
 
   private getItemChanges(): ItemChanges {
+    const urlFormControl = this.itemForm.get('url');
+    const usesApiFormControl = this.itemForm.get('url');
+    const textIdFormControl = this.itemForm.get('url');
+
+    if (urlFormControl === null || usesApiFormControl === null || textIdFormControl === null) return {};
+
     const itemFormValues = {
-      url: this.itemForm.get('url')?.value,
-      uses_api: this.itemForm.get('uses_api')?.value,
-      text_id: this.itemForm.get('text_id')?.value
+      url: urlFormControl.value as string | null,
+      uses_api: usesApiFormControl.value as boolean,
+      text_id: textIdFormControl.value as string,
     };
 
-    if ( ! itemFormValues.hasOwnProperty('url') || itemFormValues.url == '' ) itemFormValues.url = null;
+    if (itemFormValues.url === '') itemFormValues.url = null;
 
     return itemFormValues;
   }

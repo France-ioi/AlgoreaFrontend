@@ -1,4 +1,4 @@
-<p-inputSwitch *ngIf="parentForm; else notReactive"
+<p-inputSwitch *ngIf="parentForm && formControl; else notReactive"
   [formControl]="formControl"
   [ngClass]="{
     dark: mode === 'dark',
