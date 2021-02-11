@@ -97,15 +97,12 @@
         </context-group>
       </trans-unit><trans-unit id="484d369ab6d7e37d808403e2141c38c01f6f9911" datatype="html">
         <source>Url</source><target state="new">Url</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-edit-advanced-parameters/item-edit-advanced-parameters.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit><trans-unit id="c6ab757daf1d3ae47be0dfb5906df9140d475c82" datatype="html">
+        <source>http://www...</source><target state="new">http://www...</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/item/pages/item-edit-advanced-parameters/item-edit-advanced-parameters.component.html</context>
-          <context context-type="linenumber">4</context>
-        </context-group>
-      </trans-unit><trans-unit id="29fec04e6e04c23a9df204538f50e3b13b52ce24" datatype="html">
-        <source>TextId</source><target state="new">TextId</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/item/pages/item-edit-advanced-parameters/item-edit-advanced-parameters.component.html</context>
-          <context context-type="linenumber">6</context>
+          <context context-type="linenumber">7</context>
         </context-group>
       </trans-unit><trans-unit id="d5427c17a782f9837360dc95b6067dc20d150ab9" datatype="html">
         <source>Error while loading the data</source><target state="translated">Erreur lors du chargement des données</target>
@@ -1107,7 +1104,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/group-edit/group-edit.component.ts</context><context context-type="linenumber">70</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/pending-request/pending-request-response-handling.ts</context><context context-type="linenumber">27</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/pending-request/pending-request-response-handling.ts</context><context context-type="linenumber">45</context></context-group></trans-unit><trans-unit id="1365670554525463863" datatype="html">
         <source>You need to solve all the errors displayed in the form to save changes.</source><target state="translated">Vous devez résoudre toutes les erreurs affichées dans le formulaire avant de sauvegarder.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-edit/item-edit.component.ts</context><context context-type="linenumber">169</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/group-edit/group-edit.component.ts</context><context context-type="linenumber">88</context></context-group></trans-unit><trans-unit id="baa6bf1125c10752ec391ae55d3122d91729e216" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-edit/item-edit.component.ts</context><context context-type="linenumber">187</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/group-edit/group-edit.component.ts</context><context context-type="linenumber">88</context></context-group></trans-unit><trans-unit id="baa6bf1125c10752ec391ae55d3122d91729e216" datatype="html">
         <source>Item title</source><target state="translated">Titre</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/item/pages/item-edit/item-edit.component.html</context>
