@@ -24,7 +24,11 @@ export interface ContentInfo {
   details?: any
 }
 
-export interface ItemInfo extends ContentInfo {
+export interface RoutedContentInfo extends ContentInfo {
+  route: ContentRoute
+}
+
+export interface ItemInfo extends RoutedContentInfo {
   type: 'item',
   route: ItemRoute,
   details?: ItemDetails
@@ -47,7 +51,7 @@ export interface ItemDetails {
   validated?: boolean,
 }
 
-export interface GroupInfo extends ContentInfo {
+export interface GroupInfo extends RoutedContentInfo {
   type: 'group',
   route: ContentRoute
 }

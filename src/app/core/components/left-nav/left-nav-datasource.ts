@@ -2,10 +2,10 @@ import { concat, EMPTY, Observable, of, Subject } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { errorState, FetchError, Fetching, fetchingState, isReady, mapErrorToState, Ready, readyState } from 'src/app/shared/helpers/state';
 import { switchScan } from 'src/app/shared/helpers/switch-scan';
-import { ContentInfo } from 'src/app/shared/services/current-content.service';
+import { RoutedContentInfo } from 'src/app/shared/services/current-content.service';
 import { NavTreeData, NavTreeElement } from '../../services/left-nav-loading/nav-tree-data';
 
-export abstract class LeftNavDataSource<ContentT extends ContentInfo, MenuT extends NavTreeElement> {
+export abstract class LeftNavDataSource<ContentT extends RoutedContentInfo, MenuT extends NavTreeElement> {
 
   initialized = false;
   changes = new Subject<ContentT|undefined>();
@@ -91,13 +91,25 @@ export abstract class LeftNavDataSource<ContentT extends ContentInfo, MenuT exte
     if (this.initialized) this.changes.next(undefined);
   }
 
-  abstract contentId(contentInfo: ContentT): string;
-  abstract addDetailsToTreeElement(contentInfo: ContentT, treeElement: MenuT): MenuT;
-  abstract loadRootTreeData(): Observable<MenuT[]>;
-  abstract loadChildrenOfSelectedElement(data: NavTreeData<MenuT>): Observable<Ready<NavTreeData<MenuT>>|Fetching|FetchError>;
-  // should be common
-  abstract loadNewNavData(content: ContentT): Observable<NavTreeData<MenuT>>;
-  // abstract loadNavDataFromChild(id: string, child: ContentT): Observable<NavTreeData<MenuT>>;
+  protected abstract contentId(contentInfo: ContentT): string;
+  protected abstract addDetailsToTreeElement(contentInfo: ContentT, treeElement: MenuT): MenuT;
+  protected abstract loadRootTreeData(): Observable<MenuT[]>;
+  protected abstract loadChildrenOfSelectedElement(data: NavTreeData<MenuT>): Observable<Ready<NavTreeData<MenuT>>|Fetching|FetchError>;
+  protected abstract loadNavDataFromChild(id: string, child: ContentT): Observable<{ parent: MenuT, elements: MenuT[] }>;
+
+  private loadNewNavData(content: ContentT): Observable<NavTreeData<MenuT>> {
+    const route = content.route;
+    if (route.path.length >= 1) {
+      const parentId = route.path[route.path.length-1];
+      return this.loadNavDataFromChild(parentId, content).pipe(
+        map(data => new NavTreeData(data.elements, route.path, route.id, data.parent))
+      );
+    } else {
+      return this.loadRootTreeData().pipe(
+        map(items => new NavTreeData(items, route.path, route.id))
+      );
+    }
+  }
 
   private loadDefaultNav(): Observable<Ready<NavTreeData<MenuT>>|Fetching|FetchError> {
     return concat(

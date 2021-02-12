@@ -23,24 +23,10 @@ export abstract class LeftNavItemDataSource<ItemT extends ItemInfo> extends Left
     );
   }
 
-  loadNavDataFromChild(id: string, child: ItemInfo): Observable<NavTreeData<NavMenuItem>> {
+  loadNavDataFromChild(id: string, child: ItemT): Observable<{ parent: NavMenuItem, elements: NavMenuItem[] }> {
     return this.itemNavService.getNavDataFromChildRoute(id, child.route, isSkill(this.category)).pipe(
-      map(items => new NavTreeData(items.items, child.route.path, child.route.id, items.parent))
+      map(items => ({ parent: items.parent, elements: items.items }))
     );
-  }
-
-  loadNewNavData(content: ItemInfo): Observable<NavTreeData<NavMenuItem>> {
-    const route = content.route;
-    if (route.path.length >= 1) {
-      const parentId = route.path[route.path.length-1];
-      return this.itemNavService.getNavDataFromChildRoute(parentId, route, isSkill(this.category)).pipe(
-        map(items => new NavTreeData(items.items, route.path, route.id, items.parent))
-      );
-    } else {
-      return this.loadRootTreeData().pipe(
-        map(items => new NavTreeData(items, route.path, route.id))
-      );
-    }
   }
 
   contentId(contentInfo: ItemT): string {
