@@ -20,6 +20,8 @@ export interface Item {
   },
   type: ItemType,
   prompt_to_join_group_by_code: boolean,
+  url?: string | null,
+  uses_api?: boolean,
 }
 
 @Injectable({

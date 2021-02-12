@@ -29,6 +29,7 @@ import { CompositionFilterComponent } from './components/composition-filter/comp
 import { UserProgressComponent } from './components/user-progress/user-progress.component';
 import { ItemChapterViewComponent } from './pages/item-chapter-view/item-chapter-view.component';
 import { GroupProgressGridComponent } from './pages/group-progress-grid/group-progress-grid.component';
+import { ItemEditAdvancedParametersComponent } from './pages/item-edit-advanced-parameters/item-edit-advanced-parameters.component';
 
 @NgModule({
   declarations: [
@@ -54,6 +55,7 @@ import { GroupProgressGridComponent } from './pages/group-progress-grid/group-pr
     PermissionsEditDialogComponent,
     AccessCodeViewComponent,
     AddItemComponent,
+    ItemEditAdvancedParametersComponent,
   ],
   imports: [
     CommonModule,

@@ -15,6 +15,7 @@ import { Item } from '../../http-services/get-item-by-id.service';
 import { ItemEditContentComponent } from '../item-edit-content/item-edit-content.component';
 import { PendingChangesComponent } from 'src/app/shared/guards/pending-changes-guard';
 import { CreateItemService, NewItem } from '../../http-services/create-item.service';
+import { ItemEditAdvancedParametersComponent } from '../item-edit-advanced-parameters/item-edit-advanced-parameters.component';
 
 @Component({
   selector: 'alg-item-edit',
@@ -26,7 +27,10 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
     // eslint-disable-next-line @typescript-eslint/unbound-method
     title: [ '', [ Validators.required, Validators.minLength(3), Validators.maxLength(200) ] ],
     subtitle: [ '', Validators.maxLength(200) ],
-    description: '',
+    description: [ '' ],
+    url: [ '', Validators.maxLength(200) ],
+    text_id: [ '', Validators.maxLength(200) ],
+    uses_api: [ false ],
   });
   itemChanges: { children?: ChildData[] } = {};
 
@@ -37,6 +41,7 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
   subscription?: Subscription;
 
   @ViewChild('content') private editContent?: ItemEditContentComponent;
+  @ViewChild('advancedParameters') private editAdvancedParameters?: ItemEditAdvancedParametersComponent;
 
   constructor(
     private currentContent: CurrentContentService,
@@ -110,16 +115,39 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
     );
   }
 
+  private getItemChanges(): ItemChanges | undefined {
+    const urlFormControl = this.itemForm.get('url');
+    const usesApiFormControl = this.itemForm.get('uses_api');
+    const textIdFormControl = this.itemForm.get('text_id');
+
+    if (urlFormControl === null || usesApiFormControl === null || textIdFormControl === null) return undefined;
+
+    const itemFormValues: ItemChanges = {};
+
+    const url = urlFormControl.value !== '' ? urlFormControl.value as string : null;
+    if (url !== this.initialFormData?.url) itemFormValues.url = url;
+
+    const usesApi = usesApiFormControl.value as boolean;
+    if (usesApi !== this.initialFormData?.uses_api) itemFormValues.uses_api = usesApi;
+
+    const textId = textIdFormControl.value as string;
+    if (textId !== '') itemFormValues.text_id = textId;
+
+    return itemFormValues;
+  }
+
   private updateItem(): Observable<void> {
     return this.createChildren().pipe(
       switchMap(res => {
-        const changes: ItemChanges = {};
+        if (!this.initialFormData) return throwError(new Error('Invalid initial data'));
+        const changes = this.getItemChanges();
+        if (!changes) return throwError(new Error('Invalid form'));
         if (res) {
+          // @TODO: Avoid affecting component vars in Observable Operator
           // save the new children (their ids) to prevent recreating them in case of error
           this.itemChanges.children = res;
           changes.children = res.map((child, idx) => ({ item_id: child.id, order: idx }));
         }
-        if (!this.initialFormData) return throwError(new Error('Invalid form'));
         if (!Object.keys(changes).length) return of(undefined);
         return this.updateItemService.updateItem(this.initialFormData.id, changes);
       }),
@@ -190,7 +218,11 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
       title: item.string.title || '',
       description: item.string.description || '',
       subtitle: item.string.subtitle || '',
+      url: item.url || '',
+      text_id: '',
+      uses_api: item.uses_api || false,
     });
+
     this.itemChanges = {};
     this.itemForm.enable();
     this.editContent?.reset();
