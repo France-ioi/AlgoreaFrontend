@@ -24,9 +24,9 @@ export class LeftNavComponent implements OnInit, OnDestroy {
 
   activeTabIndex = 0;
   dataSources = [
-    new LeftNavActivityDataSource('activity', this.itemNavigationService),
-    new LeftNavSkillDataSource('skill', this.itemNavigationService),
-    new LeftNavActivityDataSource('activity', this.itemNavigationService) // to be changed
+    new LeftNavActivityDataSource(this.itemNavigationService),
+    new LeftNavSkillDataSource(this.itemNavigationService),
+    new LeftNavActivityDataSource(this.itemNavigationService) // to be changed
   ];
 
   private subscription?: Subscription;

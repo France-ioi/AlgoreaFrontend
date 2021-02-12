@@ -48,9 +48,13 @@ export abstract class LeftNavItemDataSource<ItemT extends ItemInfo> extends Left
 }
 
 export class LeftNavActivityDataSource extends LeftNavItemDataSource<ActivityInfo> {
-
+  constructor(itemNavService: ItemNavigationService) {
+    super('activity', itemNavService);
+  }
 }
 
 export class LeftNavSkillDataSource extends LeftNavItemDataSource<SkillInfo> {
-
+  constructor(itemNavService: ItemNavigationService) {
+    super('skill', itemNavService);
+  }
 }
