@@ -93,8 +93,20 @@ export abstract class LeftNavDataSource<ContentT extends RoutedContentInfo, Menu
 
   protected abstract addDetailsToTreeElement(contentInfo: ContentT, treeElement: MenuT): MenuT;
   protected abstract loadRootTreeData(): Observable<MenuT[]>;
-  protected abstract loadChildrenOfSelectedElement(data: NavTreeData<MenuT>): Observable<Ready<NavTreeData<MenuT>>|Fetching|FetchError>;
   protected abstract loadNavDataFromChild(id: string, child: ContentT): Observable<{ parent: MenuT, elements: MenuT[] }>;
+  protected abstract loadNavData(item: MenuT): Observable<{ parent: MenuT, elements: MenuT[] }>;
+
+  private loadChildrenOfSelectedElement(data: NavTreeData<MenuT>): Observable<Ready<NavTreeData<MenuT>>|Fetching|FetchError> {
+    const selected = data.selectedElement();
+    if (!selected) return of(errorState(new Error('Cannot find selected element (or no selection) (unexpected)')));
+    if (!selected.hasChildren) return EMPTY; // if no children, no need to fetch children
+
+    // We do not check if children were already known. So we might re-load again the same children, which is intended.
+    return this.loadNavData(selected).pipe(
+      map(newData => readyState(data.withUpdatedElement(selected.id, el => ({ ...el, ...newData.parent, children: newData.elements })))),
+      mapErrorToState()
+    );
+  }
 
   private loadNewNavData(content: ContentT): Observable<NavTreeData<MenuT>> {
     const route = content.route;

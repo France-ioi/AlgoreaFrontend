@@ -2,6 +2,7 @@
 type Id = string;
 export interface NavTreeElement {
   id: Id
+  hasChildren: boolean
   children?: this[]
 }
 
