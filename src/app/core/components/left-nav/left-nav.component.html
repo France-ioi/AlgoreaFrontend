@@ -36,6 +36,9 @@
  class="error"
 >Unable to load the item list</p>
 
-<alg-left-nav-tree [data]="$any(dataSources[activeTabIndex].state).data" *ngIf="dataSources[activeTabIndex].state.tag === 'ready'">
-</alg-left-nav-tree>
+<alg-left-nav-tree
+  *ngIf="dataSources[activeTabIndex].state.tag === 'ready'"
+  [data]="$any(dataSources[activeTabIndex].state).data"
+  [elementType]="$any(['activity', 'skill', 'group'][activeTabIndex])"
+></alg-left-nav-tree>
 

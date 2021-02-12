@@ -26,7 +26,7 @@
       <span class="node-item-content" [ngClass]="{ unlocked: !node.locked }">
         <span (click)="selectNode(node)" class="node-select">
           <alg-score-ring
-            *ngIf="type === 'activity' && node.data.currentScore >= 0; else folderNoScore"
+            *ngIf="elementType === 'activity' && node.data.currentScore >= 0; else folderNoScore"
             [currentScore]="node.data.currentScore"
             [bestScore]="node.data.bestScore"
             [isValidated]="node.data.validated"
@@ -56,7 +56,7 @@
             </span>
           </span>
           <alg-skill-progress
-            *ngIf="type === 'skill' && node.data.currentScore >= 0"
+            *ngIf="elementType === 'skill' && node.data.currentScore >= 0"
             [bestScore]="node.data.bestScore"
             [currentScore]="node.data.currentScore"
             [type]="'thin-horizontal'"
