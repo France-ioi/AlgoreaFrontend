@@ -24,7 +24,7 @@ export abstract class LeftNavDataSource<ContentT extends RoutedContentInfo, Menu
             return EMPTY; // no change
           }
 
-          const contentId = this.contentId(contentInfo);
+          const contentId = contentInfo.route.id;
 
           // CASE: the current content is already the selected one
           if (prevState.data.selectedElementId === contentId) {
@@ -91,7 +91,6 @@ export abstract class LeftNavDataSource<ContentT extends RoutedContentInfo, Menu
     if (this.initialized) this.changes.next(undefined);
   }
 
-  protected abstract contentId(contentInfo: ContentT): string;
   protected abstract addDetailsToTreeElement(contentInfo: ContentT, treeElement: MenuT): MenuT;
   protected abstract loadRootTreeData(): Observable<MenuT[]>;
   protected abstract loadChildrenOfSelectedElement(data: NavTreeData<MenuT>): Observable<Ready<NavTreeData<MenuT>>|Fetching|FetchError>;

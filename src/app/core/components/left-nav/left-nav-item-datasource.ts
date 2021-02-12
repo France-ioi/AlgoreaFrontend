@@ -29,10 +29,6 @@ export abstract class LeftNavItemDataSource<ItemT extends ItemInfo> extends Left
     );
   }
 
-  contentId(contentInfo: ItemT): string {
-    return contentInfo.route.id;
-  }
-
   addDetailsToTreeElement(contentInfo: ItemT, treeElement: NavMenuItem): NavMenuItem {
     const details = contentInfo.details;
     if (!details) return treeElement;
