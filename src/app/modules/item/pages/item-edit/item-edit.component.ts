@@ -130,7 +130,7 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
       titleBarVisible: this.itemForm.get('title_bar_visible'),
       promptToJoinGroupByCode: this.itemForm.get('prompt_to_join_group_by_code'),
       fullScreen: this.itemForm.get('full_screen'),
-    }
+    };
 
     if (Object.values(formControls).includes(null)) return undefined;
 
@@ -155,7 +155,8 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
     if (titleBarVisible !== this.initialFormData?.title_bar_visible) itemFormValues.title_bar_visible = titleBarVisible;
 
     const promptToJoinGroupByCode = formControls.promptToJoinGroupByCode?.value as boolean;
-    if (promptToJoinGroupByCode !== this.initialFormData?.prompt_to_join_group_by_code) itemFormValues.prompt_to_join_group_by_code = promptToJoinGroupByCode;
+    if (promptToJoinGroupByCode !== this.initialFormData?.prompt_to_join_group_by_code)
+      itemFormValues.prompt_to_join_group_by_code = promptToJoinGroupByCode;
 
     const fullScreen = formControls.fullScreen?.value as string;
     if (fullScreen !== this.initialFormData?.full_screen) itemFormValues.text_id = fullScreen;
