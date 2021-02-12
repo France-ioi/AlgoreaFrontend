@@ -136,8 +136,8 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
 
     const itemFormValues: ItemChanges = {};
 
-    const url = formControls.url?.value as string;
-    if (url !== this.initialFormData?.url) itemFormValues.url = url !== '' ? url : null;
+    const url = formControls.url?.value !== '' ? formControls.url?.value as string : null;
+    if (url !== this.initialFormData?.url) itemFormValues.url = url;
 
     const usesApi = formControls.usesApi?.value as boolean;
     if (usesApi !== this.initialFormData?.uses_api) itemFormValues.uses_api = usesApi;
@@ -169,13 +169,14 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
       switchMap(res => {
         if (!this.initialFormData) return throwError(new Error('Invalid initial data'));
         const changes = this.getItemChanges();
-        if (!changes || !Object.keys(changes).length) return throwError(new Error('Invalid form'));
+        if (!changes) return throwError(new Error('Invalid form'));
         if (res) {
           // @TODO: Avoid affecting component vars in Observable Operator
           // save the new children (their ids) to prevent recreating them in case of error
           this.itemChanges.children = res;
           changes.children = res.map((child, idx) => ({ item_id: child.id, order: idx }));
         }
+        if (!Object.keys(changes).length) return of(undefined);
         return this.updateItemService.updateItem(this.initialFormData.id, changes);
       }),
     );
