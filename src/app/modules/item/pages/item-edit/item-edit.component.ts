@@ -31,11 +31,11 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
     url: [ '', Validators.maxLength(200) ],
     text_id: [ '', Validators.maxLength(200) ],
     uses_api: [ false ],
-    validation_type: '',
-    no_score: false,
-    title_bar_visible: false,
-    prompt_to_join_group_by_code: false,
-    full_screen: ''
+    validation_type: [ '' ],
+    no_score: [ false ],
+    title_bar_visible: [ false ],
+    prompt_to_join_group_by_code: [ false ],
+    full_screen: [ '' ],
   });
   itemChanges: { children?: ChildData[] } = {};
 
