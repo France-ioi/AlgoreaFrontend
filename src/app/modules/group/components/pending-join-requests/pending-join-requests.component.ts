@@ -37,8 +37,8 @@ export class PendingJoinRequestsComponent implements OnChanges, OnDestroy {
     { field: 'at', header: $localize`REQUESTED ON` },
   ];
   readonly subgroupSwitchItems = [
-    { label: $localize`This group only`, includeSubgroup: false },
-    { label: $localize`All subgroups`, includeSubgroup: true }
+    { label: $localize`This group only`, value: false },
+    { label: $localize`All subgroups`, value: true }
   ];
   includeSubgroup = false;
 
@@ -111,7 +111,7 @@ export class PendingJoinRequestsComponent implements OnChanges, OnDestroy {
   }
 
   onSubgroupSwitch(selectedIdx: number): void {
-    this.includeSubgroup = this.subgroupSwitchItems[selectedIdx].includeSubgroup;
+    this.includeSubgroup = this.subgroupSwitchItems[selectedIdx].value;
 
     this.columns = this.columns.filter(elm => elm !== groupColumn);
     if (this.includeSubgroup) this.columns = [ groupColumn ].concat(this.columns);
