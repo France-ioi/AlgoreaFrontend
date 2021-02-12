@@ -24,13 +24,13 @@ export abstract class LeftNavItemDataSource<ItemT extends ItemInfo> extends Left
   }
 
   loadNavDataFromChild(id: string, child: ItemInfo): Observable<NavTreeData<NavMenuItem>> {
-    return this.itemNavService.getNavDataFromChildRoute(id, child.data.route, isSkill(this.category)).pipe(
-      map(items => new NavTreeData(items.items, child.data.route.path, child.data.route.id, items.parent))
+    return this.itemNavService.getNavDataFromChildRoute(id, child.route, isSkill(this.category)).pipe(
+      map(items => new NavTreeData(items.items, child.route.path, child.route.id, items.parent))
     );
   }
 
   loadNewNavData(content: ItemInfo): Observable<NavTreeData<NavMenuItem>> {
-    const route = content.data.route;
+    const route = content.route;
     if (route.path.length >= 1) {
       const parentId = route.path[route.path.length-1];
       return this.itemNavService.getNavDataFromChildRoute(parentId, route, isSkill(this.category)).pipe(
@@ -44,11 +44,11 @@ export abstract class LeftNavItemDataSource<ItemT extends ItemInfo> extends Left
   }
 
   contentId(contentInfo: ItemT): string {
-    return contentInfo.data.route.id;
+    return contentInfo.route.id;
   }
 
   addDetailsToTreeElement(contentInfo: ItemT, treeElement: NavMenuItem): NavMenuItem {
-    const details = contentInfo.data.details;
+    const details = contentInfo.details;
     if (!details) return treeElement;
     return {
       ...treeElement,

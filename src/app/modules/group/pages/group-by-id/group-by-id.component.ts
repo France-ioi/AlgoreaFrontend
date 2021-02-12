@@ -33,7 +33,7 @@ export class GroupByIdComponent implements OnDestroy {
     this.activatedRoute.paramMap.subscribe(params => {
       const id = params.get('id');
       this.currentContent.current.next({
-        id: id, type: 'group', breadcrumbs: { category: GROUP_BREADCRUMB_CAT, path: [], currentPageIdx: -1 }
+        route: { id: id, path: [] }, type: 'group', breadcrumbs: { category: GROUP_BREADCRUMB_CAT, path: [], currentPageIdx: -1 }
       } as GroupInfo);
       if (id) this.groupDataSource.fetchGroup(id);
     });
@@ -58,7 +58,7 @@ export class GroupByIdComponent implements OnDestroy {
         .subscribe(action => {
           const currentInfo = this.currentContent.current.value;
           if (isGroupInfo(currentInfo)) {
-            void this.router.navigate([ 'groups', 'by-id', currentInfo.id, action === EditAction.StartEditing ? 'edit' : 'details' ]);
+            void this.router.navigate([ 'groups', 'by-id', currentInfo.route.id, action === EditAction.StartEditing ? 'edit' : 'details' ]);
           }
         })
     );

@@ -5,17 +5,11 @@ import { switchScan } from 'src/app/shared/helpers/switch-scan';
 import { ContentInfo } from 'src/app/shared/services/current-content.service';
 import { NavTreeData, NavTreeElement } from '../../services/left-nav-loading/nav-tree-data';
 
-//type State = Ready<NavTreeData<MenuT>>|Fetching|FetchError;
-
 export abstract class LeftNavDataSource<ContentT extends ContentInfo, MenuT extends NavTreeElement> {
 
   initialized = false;
   changes = new Subject<ContentT|undefined>();
   state: Ready<NavTreeData<MenuT>>|Fetching|FetchError = fetchingState();
-
-  abstract contentId(contentInfo: ContentT): string;
-  abstract addDetailsToTreeElement(contentInfo: ContentT, treeElement: MenuT): MenuT;
-  abstract loadChildrenOfSelectedElement(data: NavTreeData<MenuT>): Observable<Ready<NavTreeData<MenuT>>|Fetching|FetchError>;
 
   constructor() {
 
@@ -70,35 +64,6 @@ export abstract class LeftNavDataSource<ContentT extends ContentInfo, MenuT exte
       error: e => this.state = errorState(e),
     });
 
-
-  }
-
-  abstract loadRootTreeData(): Observable<MenuT[]>;
-
-  private loadDefaultNav(): Observable<Ready<NavTreeData<MenuT>>|Fetching|FetchError> {
-    return concat(
-      of(fetchingState()),
-      this.loadRootTreeData().pipe(
-        map(elements => readyState(new NavTreeData(elements, [], undefined, undefined))),
-        mapErrorToState()
-      )
-    );
-  }
-
-  // abstract loadNavDataFromChild(id: string, child: ContentT): Observable<NavTreeData<MenuT>>;
-
-  // should be common
-  abstract loadNewNavData(content: ContentT): Observable<NavTreeData<MenuT>>;
-
-  private loadNewNav(content: ContentT): Observable<Ready<NavTreeData<MenuT>>|Fetching|FetchError> {
-    return concat(
-      of(fetchingState()), // as the menu change completely, display the loader
-      this.loadNewNavData(content).pipe( // the new items (only first level loaded)
-        // already update the tree with the first level, and if needed, load (async) children as well
-        switchMap(data => concat(of(readyState(data)), this.loadChildrenOfSelectedElement(data))),
-        mapErrorToState(),
-      )
-    );
   }
 
   /**
@@ -124,6 +89,35 @@ export abstract class LeftNavDataSource<ContentT extends ContentInfo, MenuT exte
    */
   removeSelection(): void {
     if (this.initialized) this.changes.next(undefined);
+  }
+
+  abstract contentId(contentInfo: ContentT): string;
+  abstract addDetailsToTreeElement(contentInfo: ContentT, treeElement: MenuT): MenuT;
+  abstract loadRootTreeData(): Observable<MenuT[]>;
+  abstract loadChildrenOfSelectedElement(data: NavTreeData<MenuT>): Observable<Ready<NavTreeData<MenuT>>|Fetching|FetchError>;
+  // should be common
+  abstract loadNewNavData(content: ContentT): Observable<NavTreeData<MenuT>>;
+  // abstract loadNavDataFromChild(id: string, child: ContentT): Observable<NavTreeData<MenuT>>;
+
+  private loadDefaultNav(): Observable<Ready<NavTreeData<MenuT>>|Fetching|FetchError> {
+    return concat(
+      of(fetchingState()),
+      this.loadRootTreeData().pipe(
+        map(elements => readyState(new NavTreeData(elements, [], undefined, undefined))),
+        mapErrorToState()
+      )
+    );
+  }
+
+  private loadNewNav(content: ContentT): Observable<Ready<NavTreeData<MenuT>>|Fetching|FetchError> {
+    return concat(
+      of(fetchingState()), // as the menu change completely, display the loader
+      this.loadNewNavData(content).pipe( // the new items (only first level loaded)
+        // already update the tree with the first level, and if needed, load (async) children as well
+        switchMap(data => concat(of(readyState(data)), this.loadChildrenOfSelectedElement(data))),
+        mapErrorToState(),
+      )
+    );
   }
 
 }

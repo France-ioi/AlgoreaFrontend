@@ -1,16 +1,14 @@
 import { ParamMap } from '@angular/router';
 import { defaultAttemptId } from './attempts';
 import { appConfig } from './config';
+import { ContentRoute } from './content-route';
 import { isSkill, ItemTypeCategory } from './item-type';
 
 type ItemId = string;
 type AttemptId = string;
-interface ItemRouteCommon {
-  id: ItemId;
-  path: ItemId[];
-}
-export type ItemRouteWithAttempt = ItemRouteCommon & { attemptId: AttemptId };
-export type ItemRouteWithParentAttempt = ItemRouteCommon & { parentAttemptId: AttemptId };
+
+export type ItemRouteWithAttempt = ContentRoute & { attemptId: AttemptId };
+export type ItemRouteWithParentAttempt = ContentRoute & { parentAttemptId: AttemptId };
 export type ItemRoute = ItemRouteWithAttempt | ItemRouteWithParentAttempt;
 
 /* url parameter names */
