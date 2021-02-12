@@ -9,7 +9,12 @@ export interface ItemChanges {
   children?: { item_id: string, order: number }[],
   url?: string | null,
   text_id?: string | null,
-  uses_api?: boolean
+  uses_api?: boolean,
+  validation_type?: string,
+  no_score?: boolean,
+  title_bar_visible?: boolean,
+  full_screen?: string,
+  prompt_to_join_group_by_code?: boolean,
 }
 
 @Injectable({
