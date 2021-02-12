@@ -16,7 +16,9 @@
     "srcDir": "src/locale",
     "genDir": "src/locale",
     "defaultLanguage": "en",
-    "languages": ["fr"],
+    "languages": [
+      "fr"
+    ],
     "removeUnusedIds": true
   },
   "private": true,
@@ -40,7 +42,7 @@
     "ng-click-outside": "^6.0.0",
     "ngx-perfect-scrollbar": "^8.0.0",
     "primeicons": "^4.0",
-    "primeng": "^10.0.3",
+    "primeng": "^11.2.1",
     "rxjs": "~6.6.3",
     "scss-bundle": "^3.1.1",
     "tslib": "^2.0.0",
