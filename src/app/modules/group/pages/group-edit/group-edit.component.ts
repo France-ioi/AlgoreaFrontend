@@ -22,6 +22,7 @@ export class GroupEditComponent implements OnDestroy, PendingChangesComponent {
     // eslint-disable-next-line @typescript-eslint/unbound-method
     name: [ '', [ Validators.required, Validators.minLength(3) ] ],
     description: [ '', [] ],
+    rootActivityId: [ '', [] ],
   })
   initialFormData?: Group;
 
@@ -75,9 +76,11 @@ export class GroupEditComponent implements OnDestroy, PendingChangesComponent {
 
   getGroupChanges(): GroupChanges {
     const description = this.groupForm.get('description')?.value as string;
+    const rootActivityId = this.groupForm.get('rootActivityId')?.value as string|null;
     return {
       name: this.groupForm.get('name')?.value as string,
       description: description === '' ? null : description,
+      root_activity_id: rootActivityId,
     };
   }
 
@@ -113,6 +116,7 @@ export class GroupEditComponent implements OnDestroy, PendingChangesComponent {
     this.groupForm.reset({
       name: group.name,
       description: group.description,
+      rootActivityId: group.root_activity_id,
     });
     this.groupForm.enable();
   }

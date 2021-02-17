@@ -18,6 +18,8 @@ export interface Group {
   code?: string|null;
   code_lifetime?: string|null;
   code_expires_at?: string|null;
+
+  root_activity_id: string|null;
 }
 
 @Injectable({

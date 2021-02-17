@@ -8,6 +8,7 @@ import { assertSuccess, SimpleActionResponse } from 'src/app/shared/http-service
 export interface GroupChanges {
   name?: string,
   description?: string|null,
+  root_activity_id?: string|null,
 }
 
 @Injectable({

@@ -22,6 +22,7 @@
           <alg-textarea [parentForm]="groupForm" inputName="description" size="large"></alg-textarea>
         </div>
       </div>
+      <alg-associated-activity formControlName="rootActivityId"></alg-associated-activity>
     </form>
 
     <alg-floating-save *ngIf="groupForm.dirty" [saving]="groupForm.disabled" (save)="save()" (cancel)="resetForm()"></alg-floating-save>
