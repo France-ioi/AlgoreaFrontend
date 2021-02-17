@@ -3,21 +3,11 @@ import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { GroupHeaderComponent } from './group-header.component';
 import { AppModule } from '../../../../core/app.module';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { mockGroup } from '../../mocks/group-by-id';
 
 describe('GroupHeaderComponent', () => {
   let component: GroupHeaderComponent;
   let fixture: ComponentFixture<GroupHeaderComponent>;
-  const mockData = {
-    id: '11',
-    name: 'CoderDojo 50',
-    type: 'Other',
-    is_public: false,
-    grades: [ -2 ],
-    date: new Date(),
-    description: 'dummy',
-    current_user_is_manager: false,
-    current_user_can_grant_group_access: true,
-  };
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -31,7 +21,7 @@ describe('GroupHeaderComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(GroupHeaderComponent);
     component = fixture.componentInstance;
-    component.group = mockData;
+    component.group = mockGroup;
     fixture.detectChanges();
   });
 
