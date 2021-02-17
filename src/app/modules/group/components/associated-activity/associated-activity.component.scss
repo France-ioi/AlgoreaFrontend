@@ -1,0 +1,56 @@
+@import 'src/colors.scss';
+
+alg-sub-section {
+
+  ::ng-deep .section-container {
+    border-top: 0.1rem solid rgba(46, 94, 149, 0.2);
+    background-color: transparent;
+  }
+
+  .activity {
+
+    width: 100%;
+    display: flex;
+
+    .remove {
+      white-space: nowrap;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 8rem;
+      color: $base-color;
+      font-size: 1.5rem;
+      cursor: pointer;
+
+      .fa {
+        padding-left: 1rem;
+      }
+    }
+
+    .activity-name {
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-family: "titillium", sans-serif;
+      font-size: 1.7rem;
+      font-weight: 100;
+      cursor: pointer;
+
+      &:hover {
+        color: $base-color;
+      }
+    }
+  }
+
+  .no-root {
+    font-family: "titillium", sans-serif;
+    font-size: 1.7rem;
+    font-weight: 100;
+  }
+
+  .error-message {
+    text-align: center;
+    font-size: 1.7rem;
+  }
+}

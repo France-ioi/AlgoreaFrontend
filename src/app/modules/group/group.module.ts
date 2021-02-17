@@ -33,6 +33,7 @@ import { PendingRequestComponent } from './components/pending-request/pending-re
 import { PendingJoinRequestsComponent } from './components/pending-join-requests/pending-join-requests.component';
 import { AddSubGroupComponent } from './components/add-sub-group/add-sub-group.component';
 import { ManagedGroupListComponent } from './components/managed-group-list/managed-group-list.component';
+import { AssociatedActivityComponent } from './components/associated-activity/associated-activity.component';
 
 @NgModule({
   declarations: [
@@ -61,6 +62,7 @@ import { ManagedGroupListComponent } from './components/managed-group-list/manag
     PendingRequestComponent,
     AddSubGroupComponent,
     ManagedGroupListComponent,
+    AssociatedActivityComponent,
   ],
   imports: [
     CommonModule,
