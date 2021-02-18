@@ -1,23 +1,29 @@
-.field {
+.group-edition {
 
-  display: flex;
+  margin: 1rem;
+  background-color: white;
 
-  .field-name {
-    float: left;
-    width: 20%;
-    margin-top: 6px;
+  .field {
 
-    label {
-      padding: 12px 12px 12px 0;
-      display: inline-block;
-      font-family: "titillium", sans-serif;
-      font-size: medium;
+    display: flex;
+
+    .field-name {
+      float: left;
+      width: 20%;
+      margin-top: 6px;
+
+      label {
+        padding: 12px 12px 12px 0;
+        display: inline-block;
+        font-family: "titillium", sans-serif;
+        font-size: medium;
+      }
     }
-  }
 
-  .field-value {
-    float: left;
-    width: 80%;
-    margin-top: 6px;
+    .field-value {
+      float: left;
+      width: 80%;
+      margin-top: 6px;
+    }
   }
 }
