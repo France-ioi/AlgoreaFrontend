@@ -36,16 +36,17 @@ export class AssociatedActivityComponent implements OnDestroy, ControlValueAcces
   ) {
     this.activityFetching.pipe(
       switchMap(activityId => {
-        if (activityId === null) return of(readyState(null));
+        if (activityId === null) return of(readyState({ id: null, name: null }));
         return merge(
           of(fetchingState()),
-          this.getItemByIdService.get(activityId).pipe(map(item => readyState(item.string.title))),
+          this.getItemByIdService.get(activityId).pipe(map(item => readyState({ id: activityId, name: item.string.title }))),
         );
       })
     ).subscribe(state => {
       this.state = state.tag;
       if (isReady(state)) {
-        this.rootActivityName = state.data;
+        this.rootActivityId = state.data.id;
+        this.rootActivityName = state.data.name;
         this.onChange(this.rootActivityId);
       }
     });
