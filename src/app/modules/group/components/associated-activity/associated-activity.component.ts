@@ -47,7 +47,6 @@ export class AssociatedActivityComponent implements OnDestroy, ControlValueAcces
       if (isReady(state)) {
         this.rootActivityId = state.data.id;
         this.rootActivityName = state.data.name;
-        this.onChange(this.rootActivityId);
       }
     });
   }
