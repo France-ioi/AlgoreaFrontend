@@ -8,7 +8,9 @@ import {
   isItemInfo,
   isSkillInfo
 } from 'src/app/shared/services/current-content.service';
+import { GroupNavigationService } from '../../http-services/group-navigation.service';
 import { ItemNavigationService } from '../../http-services/item-navigation.service';
+import { LeftNavGroupDataSource } from './left-nav-group-datasource';
 import { LeftNavActivityDataSource, LeftNavSkillDataSource } from './left-nav-item-datasource';
 
 const activitiesTabIdx = 0;
@@ -23,10 +25,10 @@ const groupsTabIdx = 2;
 export class LeftNavComponent implements OnInit, OnDestroy {
 
   activeTabIndex = 0;
-  dataSources = [
+  readonly dataSources: [LeftNavActivityDataSource, LeftNavSkillDataSource, LeftNavGroupDataSource] = [
     new LeftNavActivityDataSource(this.itemNavigationService),
     new LeftNavSkillDataSource(this.itemNavigationService),
-    new LeftNavActivityDataSource(this.itemNavigationService) // to be changed
+    new LeftNavGroupDataSource(this.groupNavigationService),
   ];
 
   private subscription?: Subscription;
@@ -34,6 +36,7 @@ export class LeftNavComponent implements OnInit, OnDestroy {
   constructor(
     private currentContent: CurrentContentService,
     private itemNavigationService: ItemNavigationService,
+    private groupNavigationService: GroupNavigationService,
   ) { }
 
   ngOnInit(): void {
@@ -47,7 +50,7 @@ export class LeftNavComponent implements OnInit, OnDestroy {
     ).subscribe(content => {
       if (content && isGroupInfo(content)) {
         this.contentTabChange(groupsTabIdx);
-        // todo: seed loader
+        this.dataSources[groupsTabIdx].showContent(content);
 
       } else if (content && isSkillInfo(content)) {
         this.contentTabChange(skillsTabIdx);
