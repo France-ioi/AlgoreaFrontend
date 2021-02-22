@@ -2,6 +2,7 @@ import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { TreeNode } from 'primeng/api';
 import { defaultAttemptId } from 'src/app/shared/helpers/attempts';
 import { ItemTypeCategory } from 'src/app/shared/helpers/item-type';
+import { GroupRouter } from 'src/app/shared/services/group-router';
 import { ItemRouter } from 'src/app/shared/services/item-router';
 import { isANavMenuItem } from '../../services/left-nav-loading/item-nav-tree-types';
 import { NavTreeData, NavTreeElement } from '../../services/left-nav-loading/nav-tree-data';
@@ -26,6 +27,7 @@ export class LeftNavTreeComponent implements OnChanges {
 
   constructor(
     private itemRouter: ItemRouter,
+    private groupRouter: GroupRouter,
   ) {}
 
   ngOnChanges(_changes: SimpleChanges): void {
@@ -61,7 +63,7 @@ export class LeftNavTreeComponent implements OnChanges {
 
     switch (this.elementType) {
       case 'group':
-        // TODO: implement group navigation
+        this.groupRouter.navigateTo({ id: parent.id, path: pathToParent });
         break;
       case 'activity':
       case 'skill':
@@ -80,21 +82,20 @@ export class LeftNavTreeComponent implements OnChanges {
 
   private navigateToNode(node: LeftNavTreeNode): void {
     if (!node.data) throw new Error('Unexpected: missing node data');
+    const routeBase = { id: node.data.element.id, path: node.data.path };
 
     switch (this.elementType) {
       case 'group':
-
+        this.groupRouter.navigateTo(routeBase);
         break;
       case 'activity':
-      case 'skill': {
+      case 'skill':
         if (!isANavMenuItem(node.data.element)) throw new Error('Unexpected: Element which is not an item in an item tree!');
-        const routeBase = { id: node.data.element.id, path: node.data.path };
         if (node.data.element.attemptId) {
           this.itemRouter.navigateTo({ ...routeBase, attemptId: node.data.element.attemptId });
         } else {
           this.itemRouter.navigateTo({ ...routeBase, parentAttemptId: this.parentAttemptForNode(node) });
         }
-      }
     }
   }
 

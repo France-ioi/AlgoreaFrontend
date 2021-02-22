@@ -1,7 +1,7 @@
 import { ParamMap } from '@angular/router';
 import { defaultAttemptId } from './attempts';
 import { appConfig } from './config';
-import { ContentRoute } from './content-route';
+import { ContentRoute, pathParamName } from './content-route';
 import { isSkill, ItemTypeCategory } from './item-type';
 
 type ItemId = string;
@@ -14,7 +14,6 @@ export type ItemRoute = ItemRouteWithAttempt | ItemRouteWithParentAttempt;
 /* url parameter names */
 export const parentAttemptParamName = 'parentAttempId';
 export const attemptParamName = 'attempId';
-export const pathParamName = 'path';
 
 export function isRouteWithAttempt(item: ItemRoute): item is ItemRouteWithAttempt {
   return 'attemptId' in item;
