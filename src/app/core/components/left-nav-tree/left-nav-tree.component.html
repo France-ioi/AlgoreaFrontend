@@ -100,7 +100,7 @@
   </ng-template>
 
   <!-- "group-folder" type -->
-  <ng-template let-node pTemplate="group-folder">
+  <ng-template let-node pTemplate="group">
     <span class="node-tree-item folder" [ngClass]="{ expanded: node.expanded, current: node.checked, locked: node.locked }">
       <span class="node-item-branch">
         <span class="top-branch">
@@ -112,12 +112,27 @@
       </span>
       <span class="node-item-content" (click)="selectNode(node)">
         <span class="node-select">
-          <i class="fa fa-users" style="font-size: 1.2rem;"></i>
+          <i class="fa fa-users" style="font-size: 1.2rem;" *ngIf="node.data.element.type !== 'User'"></i>
+          <i class="fa fa-user" style="font-size: 1.2rem;" *ngIf="node.data.element.type === 'User'"></i>
         </span>
         <span class="node-label">
           <span class="label-container">
             <span class="node-label-title">
               {{ node.label }}
+            </span>
+            <span
+              class="node-state"
+              [class.fade]="node.data.element.currentUserManagership === 'descendant'"
+              *ngIf="node.data.element.currentUserManagership !== 'none'"
+            >
+              <i class="fa fa-chalkboard-teacher" style="font-size: 1.2rem;"></i>
+            </span>
+            <span
+              class="node-state"
+              *ngIf="node.data.element.currentUserMembership !== 'none'"
+              [class.fade]="node.data.element.currentUserMembership === 'descendant'"
+            >
+              <i class="fa fa-user-friends" style="font-size: 1.2rem;"></i>
             </span>
             <span class="node-state" *ngIf="node.data.status === 'loading'">
               <p-progressSpinner [style]="{ width: '3rem', height: '3rem', 'margin-top': '-0.5rem' }"></p-progressSpinner>

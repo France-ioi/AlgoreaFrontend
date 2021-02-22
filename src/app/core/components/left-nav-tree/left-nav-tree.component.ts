@@ -125,7 +125,7 @@ export class LeftNavTreeComponent implements OnChanges {
       case 'skill':
         return e.hasChildren ? 'skill-folder' : 'skill-leaf';
       case 'group':
-        return e.hasChildren ? 'group-folder' : 'group-leaf';
+        return 'group';
     }
   }
 

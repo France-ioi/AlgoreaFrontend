@@ -32,6 +32,8 @@ export interface NavMenuGroup {
   type: 'Class' | 'Team' | 'Club' | 'Friends' | 'Other' | 'User' | 'Session' | 'Base',
   hasChildren: boolean,
   children?: NavMenuGroup[] // placeholder for children when fetched (may 'hasChildren' with 'children' not set)
+  currentUserManagership?: 'none' | 'direct' | 'ancestor' | 'descendant',
+  currentUserMembership?: 'none' | 'direct' | 'descendant',
 }
 
 export interface NavMenuRootGroup {
@@ -65,7 +67,9 @@ export class GroupNavigationService {
             id: child.id,
             title: child.name,
             type: child.type,
-            hasChildren: true, // TODO: should be fetched from backend
+            currentUserManagership: child.current_user_managership,
+            currentUserMembership: child.current_user_membership,
+            hasChildren: child.type !== 'User', // maybe should be fetched from backend
           })),
         }))
       );
@@ -80,7 +84,9 @@ export class GroupNavigationService {
             id: group.id,
             title: group.name,
             type: group.type,
-            hasChildren: true, // TODO: should be fetched from backend
+            currentUserManagership: group.current_user_managership,
+            currentUserMembership: group.current_user_membership,
+            hasChildren: group.type !== 'User', // maybe should be fetched from backend (?)
           }))
         }))
       );
