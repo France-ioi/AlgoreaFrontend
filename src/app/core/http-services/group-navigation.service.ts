@@ -28,7 +28,7 @@ interface RawNavData {
 // exported nav menu structure
 export interface NavMenuGroup {
   id: string,
-  name: string,
+  title: string, // to implement NavTreeElement
   type: 'Class' | 'Team' | 'Club' | 'Friends' | 'Other' | 'User' | 'Session' | 'Base',
   hasChildren: boolean,
   children?: NavMenuGroup[] // placeholder for children when fetched (may 'hasChildren' with 'children' not set)
@@ -57,13 +57,13 @@ export class GroupNavigationService {
         map((data: RawNavData) => ({
           parent: {
             id: data.id,
-            name: data.name,
+            title: data.name,
             type: data.type,
             hasChildren: data.children.length > 0,
           },
           groups: data.children.map(child => ({
             id: child.id,
-            name: child.name,
+            title: child.name,
             type: child.type,
             hasChildren: true, // TODO: should be fetched from backend
           })),
@@ -78,7 +78,7 @@ export class GroupNavigationService {
         map(g => ({
           groups: g.map(group => ({
             id: group.id,
-            name: group.name,
+            title: group.name,
             type: group.type,
             hasChildren: true, // TODO: should be fetched from backend
           }))

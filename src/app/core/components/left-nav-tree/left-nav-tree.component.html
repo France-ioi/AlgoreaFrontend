@@ -7,14 +7,14 @@
   <span class="tree-header-title">{{ data.parent.title }}</span>
 </div>
 
-<p-tree
-  [value]="nodes"
-  (keydown)="onKeyDown($event)"
-  emptyMessage="There is no items to display here"
->
-  <!-- Folder elements template -->
-  <ng-template let-node pTemplate="folder">
-    <span class="node-tree-item folder" [ngClass]="{ expanded: node.expanded, checked: node.checked, locked: node.locked }">
+<p-tree [value]="nodes" i18n-emptyMessage emptyMessage="There is no content to display">
+
+  <!-- "chapter" type -->
+  <ng-template let-node pTemplate="chapter">
+    <span
+      class="node-tree-item folder"
+      [ngClass]="{ expanded: node.expanded, locked: node.locked, current: node.data && node.data.current }"
+    >
       <span class="node-item-branch">
         <span class="top-branch">
           <span class="mask-branch"></span>
@@ -23,13 +23,13 @@
           <span class="mask-branch"></span>
         </span>
       </span>
-      <span class="node-item-content" [ngClass]="{ unlocked: !node.locked }">
-        <span (click)="selectNode(node)" class="node-select">
+      <span class="node-item-content" [ngClass]="{ unlocked: !node.locked }" (click)="selectNode(node)">
+        <span class="node-select">
           <alg-score-ring
-            *ngIf="elementType === 'activity' && node.data.currentScore >= 0; else folderNoScore"
-            [currentScore]="node.data.currentScore"
-            [bestScore]="node.data.bestScore"
-            [isValidated]="node.data.validated"
+            *ngIf="node.data.element.currentScore >= 0; else folderNoScore"
+            [currentScore]="node.data.element.currentScore"
+            [bestScore]="node.data.element.bestScore"
+            [isValidated]="node.data.element.validated"
             [diameter]="30"
             [forTree]="true"
             [isDark]="true"
@@ -39,16 +39,49 @@
             <i class="fa" [ngClass]="{ 'fa-folder': !node.expanded, 'fa-folder-open': node.expanded }" style="font-size: 1.2rem;"></i>
           </ng-template>
         </span>
-        <span (click)="selectNode(node)" class="node-label">
+        <span class="node-label">
           <span class="label-container">
             <span class="node-label-title" [ngClass]="{ locked: node.locked }">
               {{ node.label }}
-              <span *ngIf="node.data.groupName">(via group "{{ node.data.groupName }}")</span>
+              <span *ngIf="node.data.element.groupName">(via group "{{ node.data.element.groupName }}")</span>
             </span>
-            <span class="node-state" *ngIf="node.status === 'loading'">
+            <span class="node-state" *ngIf="node.data.status === 'loading'">
               <p-progressSpinner [style]="{ width: '3rem', height: '3rem', 'margin-top': '-0.5rem' }"></p-progressSpinner>
             </span>
-            <span class="node-state" *ngIf="node.status === 'error'">
+            <span class="node-state" *ngIf="node.data.status === 'error'">
+              <i class="fa fa-exclamation-triangle" style="font-size: 1.2rem;"></i>
+            </span>
+          </span>
+        </span>
+      </span>
+    </span>
+  </ng-template>
+
+  <!-- "skill-folder" type -->
+  <ng-template let-node pTemplate="skill-folder">
+    <span class="node-tree-item folder" [ngClass]="{ expanded: node.expanded, current: node.checked, locked: node.locked }">
+      <span class="node-item-branch">
+        <span class="top-branch">
+          <span class="mask-branch"></span>
+        </span>
+        <span class="bottom-branch folder-branch">
+          <span class="mask-branch"></span>
+        </span>
+      </span>
+      <span class="node-item-content" [ngClass]="{ unlocked: !node.locked }" (click)="selectNode(node)">
+        <span class="node-select">
+          <i class="fa" [ngClass]="{ 'fa-folder': !node.expanded, 'fa-folder-open': node.expanded }" style="font-size: 1.2rem;"></i>
+        </span>
+        <span class="node-label">
+          <span class="label-container">
+            <span class="node-label-title" [ngClass]="{ locked: node.locked }">
+              {{ node.label }}
+              <span *ngIf="node.data.element.groupName">(via group "{{ node.data.element.groupName }}")</span>
+            </span>
+            <span class="node-state" *ngIf="node.data.status === 'loading'">
+              <p-progressSpinner [style]="{ width: '3rem', height: '3rem', 'margin-top': '-0.5rem' }"></p-progressSpinner>
+            </span>
+            <span class="node-state" *ngIf="node.data.status === 'error'">
               <i class="fa fa-exclamation-triangle" style="font-size: 1.2rem;"></i>
             </span>
             <span class="node-state" *ngIf="node.locked">
@@ -56,9 +89,9 @@
             </span>
           </span>
           <alg-skill-progress
-            *ngIf="elementType === 'skill' && node.data.currentScore >= 0"
-            [bestScore]="node.data.bestScore"
-            [currentScore]="node.data.currentScore"
+            *ngIf="elementType === 'skill' && node.data.element.currentScore >= 0"
+            [bestScore]="node.data.element.bestScore"
+            [currentScore]="node.data.element.currentScore"
             [type]="'thin-horizontal'"
           ></alg-skill-progress>
         </span>
@@ -66,9 +99,41 @@
     </span>
   </ng-template>
 
-  <!-- Leaf elements template -->
-  <ng-template let-node pTemplate="leaf">
-    <span class="node-tree-item" [ngClass]="{ checked: node.checked, locked: node.locked }" >
+  <!-- "group-folder" type -->
+  <ng-template let-node pTemplate="group-folder">
+    <span class="node-tree-item folder" [ngClass]="{ expanded: node.expanded, current: node.checked, locked: node.locked }">
+      <span class="node-item-branch">
+        <span class="top-branch">
+          <span class="mask-branch"></span>
+        </span>
+        <span class="bottom-branch folder-branch">
+          <span class="mask-branch"></span>
+        </span>
+      </span>
+      <span class="node-item-content" (click)="selectNode(node)">
+        <span class="node-select">
+          <i class="fa fa-users" style="font-size: 1.2rem;"></i>
+        </span>
+        <span class="node-label">
+          <span class="label-container">
+            <span class="node-label-title">
+              {{ node.label }}
+            </span>
+            <span class="node-state" *ngIf="node.data.status === 'loading'">
+              <p-progressSpinner [style]="{ width: '3rem', height: '3rem', 'margin-top': '-0.5rem' }"></p-progressSpinner>
+            </span>
+            <span class="node-state" *ngIf="node.data.status === 'error'">
+              <i class="fa fa-exclamation-triangle" style="font-size: 1.2rem;"></i>
+            </span>
+          </span>
+        </span>
+      </span>
+    </span>
+  </ng-template>
+
+  <!-- 'task-course' type -->
+  <ng-template let-node pTemplate="task-course">
+    <span class="node-tree-item" [ngClass]="{ current: node.checked, locked: node.locked }" >
       <span class="node-item-branch">
         <span class="top-branch">
           <span class="mask-branch"></span>
@@ -77,13 +142,13 @@
           <span class="mask-branch"></span>
         </span>
       </span>
-      <span class="node-item-content">
-        <span (click)="selectNode(node)" class="node-select">
+      <span class="node-item-content" (click)="selectNode(node)">
+        <span class="node-select">
           <alg-score-ring
-            *ngIf="node.data.currentScore >= 0; else leafNoScore"
-            [currentScore]="node.data.currentScore"
-            [bestScore]="node.data.bestScore"
-            [isValidated]="node.data.validated"
+            *ngIf="node.data.element.currentScore >= 0; else leafNoScore"
+            [currentScore]="node.data.element.currentScore"
+            [bestScore]="node.data.element.bestScore"
+            [isValidated]="node.data.element.validated"
             [diameter]="30"
             [forTree]="true"
             [isDark]="true"
@@ -93,25 +158,16 @@
             <i class="pi" [class.pi-check]="node.checked" style="font-size: 1.2rem;"></i>
           </ng-template>
         </span>
-        <span (click)="selectNode(node)" class="node-label">
+        <span class="node-label">
           <span class="label-container">
-            <span class="node-label-title" [ngClass]="{ locked: node.locked }">
-              {{ node.data.title }}
+            <span class="node-label-title">
+              {{ node.data.element.title }}
             </span>
-            <!-- example of icon on the right
-            <span class="node-state" *ngIf="node.state === 'never opened'">
-              <i class="fa fa-lock" style="font-size: 1.2rem;"></i>
-            </span>-->
           </span>
-          <!-- <alg-skill-progress
-            *ngIf="node.progress && !node.ring"
-            [bestScore]="node.progress.bestScore"
-            [currentScore]="node.progress.currentScore"
-            [type]="'thin-horizontal'"
-          ></alg-skill-progress> -->
         </span>
 
       </span>
     </span>
   </ng-template>
+
 </p-tree>

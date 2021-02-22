@@ -81,7 +81,7 @@ interface Result {
 // exported nav menu structure
 export interface NavMenuItem {
   id: string,
-  title: string|null,
+  title: string, // not null to implement NavTreeElement
   hasChildren: boolean,
   groupName?: string,
   attemptId: string|null,
@@ -126,7 +126,7 @@ function createNavMenuItem(raw: {
   const currentResult = raw.results ? bestAttemptFromResults(raw.results.map(rawResultToResult)) : undefined;
   return {
     id: raw.id,
-    title: raw.string.title,
+    title: raw.string.title ?? '',
     hasChildren: raw.has_visible_children,
     attemptId: currentResult?.attemptId ?? null,
     canViewContent: canCurrentUserViewItemContent(raw),
@@ -166,7 +166,7 @@ export class ItemNavigationService {
         map((data: RawNavData) => ({
           parent: {
             id: data.id,
-            title: data.string.title,
+            title: data.string.title ?? '',
             canViewContent: canCurrentUserViewItemContent(data),
             hasChildren: data.children !== null && data.children.length > 0,
             attemptId: data.attempt_id,

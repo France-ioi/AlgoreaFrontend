@@ -177,8 +177,8 @@ $bk-secondary: #3B73B4;
       &.unlocked {
         border-top-left-radius: 0.5rem;
         border-bottom-left-radius: 0.5rem;
-        background-color: $base-bk-color;
-        color: $base-color;
+        background-color: rgba(white, 0.2);
+        color: white;
 
         .node-select {
           color: #fff;
@@ -331,7 +331,7 @@ $bk-secondary: #3B73B4;
       position: relative;
     }
 
-    &.checked {
+    &.current {
       .node-item-content {
         border-top-left-radius: 0.5rem;
         border-bottom-left-radius: 0.5rem;

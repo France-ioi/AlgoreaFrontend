@@ -13,7 +13,7 @@ export class LeftNavGroupDataSource extends LeftNavDataSource<GroupInfo, NavMenu
   }
 
   addDetailsToTreeElement(contentInfo: GroupInfo, treeElement: NavMenuGroup): NavMenuGroup {
-    return contentInfo.title ? { ...treeElement, name: contentInfo.title } : { ...treeElement };
+    return contentInfo.title ? { ...treeElement, title: contentInfo.title } : { ...treeElement };
   }
 
   loadRootTreeData(): Observable<NavMenuGroup[]> {

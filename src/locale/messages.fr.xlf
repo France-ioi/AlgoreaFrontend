@@ -22,28 +22,25 @@
           <context context-type="sourcefile">src/app/core/components/group-nav/group-nav.component.html</context>
           <context context-type="linenumber">12</context>
         </context-group>
+      </trans-unit><trans-unit id="d40be96e67cb8f0e8d69f1ecfd8f2b2d536073a6" datatype="html">
+        <source>There is no content to display</source><target state="translated">Il n'y a rien à afficher</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/components/left-nav-tree/left-nav-tree.component.html</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
       </trans-unit><trans-unit id="dd3b6c367381ddfa8f317b8e9b31c55368c65136" datatype="html">
         <source>Activities</source><target state="translated">Activités</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/components/left-nav/left-nav.component.html</context>
-          <context context-type="linenumber">6</context>
-        </context-group>
+        
         <note priority="1" from="description">Tab name</note>
-      </trans-unit><trans-unit id="6b32898febe308a18aa2024928bd42c3e6e06055" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-nav/left-nav.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="6b32898febe308a18aa2024928bd42c3e6e06055" datatype="html">
         <source>Skills</source><target state="translated">Compétences</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/components/left-nav/left-nav.component.html</context>
-          <context context-type="linenumber">13</context>
-        </context-group>
+        
         <note priority="1" from="description">Tab name</note>
-      </trans-unit><trans-unit id="c22ba03540aa3217da059f45e7eab138b51a96e2" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-nav/left-nav.component.html</context><context context-type="linenumber">15</context></context-group></trans-unit><trans-unit id="c22ba03540aa3217da059f45e7eab138b51a96e2" datatype="html">
         <source>Groups</source><target state="translated">Groupes</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/components/left-nav/left-nav.component.html</context>
-          <context context-type="linenumber">20</context>
-        </context-group>
+        
         <note priority="1" from="description">Tab name</note>
-      </trans-unit><trans-unit id="01bbbd0d1e4ed56b4c07ab5711a1bea1247309ee" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-nav/left-nav.component.html</context><context context-type="linenumber">23</context></context-group></trans-unit><trans-unit id="01bbbd0d1e4ed56b4c07ab5711a1bea1247309ee" datatype="html">
         <source>This page does not exist!</source><target state="translated">Cette page n'existe pas!</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/pages/page-not-found/page-not-found.component.html</context>

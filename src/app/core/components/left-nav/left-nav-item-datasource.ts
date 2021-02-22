@@ -37,7 +37,7 @@ export abstract class LeftNavItemDataSource<ItemT extends ItemInfo> extends Left
     if (!details) return treeElement;
     return {
       ...treeElement,
-      title: details.title,
+      title: details.title ?? '',
       attemptId: details.attemptId ?? null,
       bestScore: details.bestScore,
       currentScore: details.currentScore,

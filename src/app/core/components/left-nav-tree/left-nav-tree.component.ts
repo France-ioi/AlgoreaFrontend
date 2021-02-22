@@ -1,19 +1,17 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { TreeNode } from 'primeng/api';
-import { NavMenuItem } from '../../http-services/item-navigation.service';
 import { defaultAttemptId } from 'src/app/shared/helpers/attempts';
 import { ItemTypeCategory } from 'src/app/shared/helpers/item-type';
 import { ItemRouter } from 'src/app/shared/services/item-router';
-import { NavTreeData } from '../../services/left-nav-loading/nav-tree-data';
+import { isANavMenuItem } from '../../services/left-nav-loading/item-nav-tree-types';
+import { NavTreeData, NavTreeElement } from '../../services/left-nav-loading/nav-tree-data';
 
-// ItemTreeNode is PrimeNG tree node with data forced to be an item
-interface ItemTreeNode extends TreeNode {
-  data: NavMenuItem
-  itemPath: string[]
+type LeftNavTreeNode = TreeNode<{
+  element: NavTreeElement,
+  path: string[],
   status: 'ready'|'loading'|'error',
-  locked: boolean,
-  checked: boolean,
-}
+  current: boolean,
+}>
 
 @Component({
   selector: 'alg-left-nav-tree',
@@ -21,111 +19,113 @@ interface ItemTreeNode extends TreeNode {
   styleUrls: [ './left-nav-tree.component.scss' ]
 })
 export class LeftNavTreeComponent implements OnChanges {
-  @Input() data?: NavTreeData<NavMenuItem>;
+  @Input() data?: NavTreeData<NavTreeElement>;
   @Input() elementType: ItemTypeCategory | 'group' = 'activity';
 
-  nodes: ItemTreeNode[] = [];
-  selectedNode?: ItemTreeNode; // used to keep track after request that the selected is still the expected one
+  nodes: LeftNavTreeNode[] = [];
 
   constructor(
     private itemRouter: ItemRouter,
   ) {}
 
-  private mapItemToNodes(data: NavTreeData<NavMenuItem>): ItemTreeNode[] {
-    return data.elements.map(i => {
-      const isSelected = !!(data.selectedElementId && data.selectedElementId === i.id);
-      const shouldShowChildren = i.hasChildren && isSelected;
-      const pathToChildren = data.pathToElements.concat([ i.id ]);
-      const locked = !i.canViewContent;
-      return {
-        label: i.title ?? undefined,
-        data: i,
-        itemPath: data.pathToElements,
-        type: i.hasChildren ? 'folder' : 'leaf',
-        leaf: i.hasChildren,
-        status: i.hasChildren && isSelected && !i.children ? 'loading' : 'ready',
-        children: (shouldShowChildren && i.children) ? this.mapItemToNodes(new NavTreeData(i.children, pathToChildren)) : undefined,
-        expanded: !!(shouldShowChildren && i.children),
-        checked: isSelected,
-        locked: locked,
-        selectable: !locked,
-      };
-    });
-  }
-
   ngOnChanges(_changes: SimpleChanges): void {
     this.nodes = this.data ? this.mapItemToNodes(this.data) : [];
   }
 
-  navigateToNode(node: ItemTreeNode, attemptId?: string): void {
-    const routeBase = { id: node.data.id, path: node.itemPath };
-    if (attemptId) {
-      this.itemRouter.navigateTo({ ...routeBase, attemptId: attemptId });
-      return;
-    }
-    const parentAttemptId = this.parentAttemptForNode(node);
-    if (!parentAttemptId) return; // unexpected
-    this.itemRouter.navigateTo({ ...routeBase, parentAttemptId: parentAttemptId });
-  }
-
-  navigateToParent(): void {
-    if (!this.data?.parent?.attemptId) return; // unexpected!
-    this.itemRouter.navigateTo({
-      id: this.data.parent.id,
-      path: this.data.pathToElements.slice(0, -1),
-      attemptId: this.data.parent.attemptId,
+  private mapItemToNodes(data: NavTreeData<NavTreeElement>): LeftNavTreeNode[] {
+    return data.elements.map(e => {
+      const isSelected = !!data.selectedElementId && data.selectedElementId === e.id;
+      const shouldShowChildren = e.hasChildren && isSelected;
+      const pathToChildren = data.pathToElements.concat([ e.id ]);
+      return {
+        data: {
+          element: e,
+          path: data.pathToElements,
+          status: shouldShowChildren && !e.children ? 'loading' : 'ready',
+          current: isSelected,
+        },
+        label: e.title,
+        type: this.typeForElement(e),
+        leaf: e.hasChildren,
+        expanded: !!(shouldShowChildren && e.children),
+        children: shouldShowChildren && e.children ? this.mapItemToNodes(new NavTreeData(e.children, pathToChildren)) : undefined,
+      };
     });
   }
 
-  selectNode(node: ItemTreeNode): void {
-    this.selectedNode = node;
+  navigateToParent(): void {
+    if (!this.data) throw new Error('Unexpected: missing data for left nav tree (navigateToParent)');
+    if (!this.data.parent) throw new Error('Unexpected: missing parent when navigating to parent');
+    const parent = this.data.parent;
+    const pathToParent = this.data.pathToElements.slice(0, -1);
 
-    // set the node to "loading" so that the user knows the children should appear shortly
-    if (!node.locked && node.data.hasChildren && !node.data.children) node.status = 'loading';
-
-    this.navigateToNode(node, node.data.attemptId === null ? undefined : node.data.attemptId);
+    switch (this.elementType) {
+      case 'group':
+        // TODO: implement group navigation
+        break;
+      case 'activity':
+      case 'skill':
+        if (!isANavMenuItem(parent)) throw new Error('Unexpected: Element which is not an item as an item root!');
+        if (!parent.attemptId) throw new Error('Unexpected: missing attempt id for parent node in tree (2)');
+        this.itemRouter.navigateTo({ id: parent.id, path: pathToParent, attemptId: parent.attemptId });
+    }
   }
 
-  onKeyDown(e: KeyboardEvent): void {
-    if (e.code === 'Space' || e.code === 'Enter') {
-      e.stopPropagation();
-      e.preventDefault();
-      document.activeElement
-        ?.querySelector<HTMLElement>('.p-treenode-label .node-tree-item > .node-item-content > .node-label')
-        ?.click();
-    } else if (e.code === 'ArrowDown' || e.code === 'ArrowUp') {
-      e.stopPropagation();
-      e.preventDefault();
-      document.activeElement
-        ?.querySelector('.p-treenode-label .node-tree-item > .node-item-content > .node-label')
-        ?.scrollIntoView({
-          behavior: 'auto',
-          block: 'center',
-        });
+  selectNode(node: LeftNavTreeNode): void {
+    // set the node to "loading" so that the user knows the children should appear shortly
+    if (node.data?.element.hasChildren && !node.data.element.children) node.data.status = 'loading';
+
+    this.navigateToNode(node);
+  }
+
+  private navigateToNode(node: LeftNavTreeNode): void {
+    if (!node.data) throw new Error('Unexpected: missing node data');
+
+    switch (this.elementType) {
+      case 'group':
+
+        break;
+      case 'activity':
+      case 'skill': {
+        if (!isANavMenuItem(node.data.element)) throw new Error('Unexpected: Element which is not an item in an item tree!');
+        const routeBase = { id: node.data.element.id, path: node.data.path };
+        if (node.data.element.attemptId) {
+          this.itemRouter.navigateTo({ ...routeBase, attemptId: node.data.element.attemptId });
+        } else {
+          this.itemRouter.navigateTo({ ...routeBase, parentAttemptId: this.parentAttemptForNode(node) });
+        }
+      }
     }
   }
 
   /**
-   * Return whether the given node is at the first level of the displayed tree (root) (i.e. is not a children)
-   */
-  isFirstLevelNode(node: ItemTreeNode): boolean {
-    return this.nodes.some(n => n.data.id === node.data.id);
-  }
-
-  /**
-   * Return the parent attemp id of this node.
-   * If the node is a one of the "root" items, use this.parent
+   * Return the parent attempt id of this node.
+   * If the node is a one of the elements (niv1), use the parent
    * Otherwise use the parent node.
-   * In a regular case, this function should never return 'undefined'
    */
-  parentAttemptForNode(node: ItemTreeNode): string|undefined {
+  private parentAttemptForNode(node: LeftNavTreeNode): string {
     if (node.parent) {
-      const parent = node.parent as ItemTreeNode;
-      return parent.data.attemptId || undefined /* unexpected */;
+      if (!node.parent.data) throw new Error('Unexpected: missing data in node\'s parent');
+      if (!isANavMenuItem(node.parent.data.element)) throw new Error('Unexpected: Item node parent is not an item node!');
+      if (node.parent.data.element.attemptId === null) throw new Error('Unexpected: parent of an item node has no attempt');
+      return node.parent.data.element.attemptId;
     } else if (this.data?.parent) {
-      return this.data.parent.attemptId || undefined /* unexpected */;
+      if (!isANavMenuItem(this.data.parent)) throw new Error('Unexpected: Tree parent is not an item node while searching for attempts!');
+      if (this.data.parent.attemptId === null) throw new Error('Unexpected: item tree parent has no attempt');
+      return this.data.parent.attemptId;
     }
     return defaultAttemptId; // if the node has no parent, i.e. is a root, use default attempt
+  }
+
+  private typeForElement(e: NavTreeElement): string {
+    switch (this.elementType) {
+      case 'activity':
+        return e.hasChildren ? 'chapter' : 'task-course';
+      case 'skill':
+        return e.hasChildren ? 'skill-folder' : 'skill-leaf';
+      case 'group':
+        return e.hasChildren ? 'group-folder' : 'group-leaf';
+    }
   }
 
 }
