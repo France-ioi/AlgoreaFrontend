@@ -132,34 +132,34 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
       fullScreen: this.itemForm.get('full_screen'),
     };
 
-    if (Object.values(formControls).includes(null)) return undefined;
+    if (Object.values(formControls).includes(null) || !this.initialFormData) return undefined;
 
     const itemFormValues: ItemChanges = {};
 
     const url = formControls.url?.value !== '' ? formControls.url?.value as string : null;
-    if (url !== this.initialFormData?.url) itemFormValues.url = url;
+    if (url !== this.initialFormData.url) itemFormValues.url = url;
 
     const usesApi = formControls.usesApi?.value as boolean;
-    if (usesApi !== this.initialFormData?.uses_api) itemFormValues.uses_api = usesApi;
+    if (usesApi !== this.initialFormData.uses_api) itemFormValues.uses_api = usesApi;
 
     const textId = formControls.textId?.value as string;
     if (textId !== '') itemFormValues.text_id = textId;
 
-    const validationType = formControls.validationType?.value as string;
-    if (validationType !== this.initialFormData?.validation_type) itemFormValues.validation_type = validationType;
+    const validationType = formControls.validationType?.value as 'None' | 'All' | 'AllButOne' | 'Categories' | 'One' | 'Manual';
+    if (validationType !== this.initialFormData.validation_type) itemFormValues.validation_type = validationType;
 
     const noScore = formControls.noScore?.value as boolean;
-    if (noScore !== this.initialFormData?.no_score) itemFormValues.no_score = noScore;
+    if (noScore !== this.initialFormData.no_score) itemFormValues.no_score = noScore;
 
     const titleBarVisible = formControls.titleBarVisible?.value as boolean;
-    if (titleBarVisible !== this.initialFormData?.title_bar_visible) itemFormValues.title_bar_visible = titleBarVisible;
+    if (titleBarVisible !== this.initialFormData.title_bar_visible) itemFormValues.title_bar_visible = titleBarVisible;
 
     const promptToJoinGroupByCode = formControls.promptToJoinGroupByCode?.value as boolean;
-    if (promptToJoinGroupByCode !== this.initialFormData?.prompt_to_join_group_by_code)
+    if (promptToJoinGroupByCode !== this.initialFormData.prompt_to_join_group_by_code)
       itemFormValues.prompt_to_join_group_by_code = promptToJoinGroupByCode;
 
-    const fullScreen = formControls.fullScreen?.value as string;
-    if (fullScreen !== this.initialFormData?.full_screen) itemFormValues.text_id = fullScreen;
+    const fullScreen = formControls.fullScreen?.value as 'forceYes' | '' | 'forceNo' | 'default';
+    if (fullScreen !== this.initialFormData.full_screen) itemFormValues.full_screen = fullScreen;
 
     return itemFormValues;
   }

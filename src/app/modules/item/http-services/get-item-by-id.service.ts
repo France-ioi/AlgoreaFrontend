@@ -23,10 +23,10 @@ export interface Item {
   url?: string | null,
   uses_api?: boolean,
   text_id?: string,
-  validation_type: string,
+  validation_type: 'None' | 'All' | 'AllButOne' | 'Categories' | 'One' | 'Manual',
   no_score: boolean,
   title_bar_visible: boolean,
-  full_screen: string,
+  full_screen: 'forceYes' | '' | 'forceNo' | 'default',
 }
 
 @Injectable({

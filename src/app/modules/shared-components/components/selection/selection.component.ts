@@ -21,21 +21,32 @@ export class SelectionComponent implements OnChanges, OnDestroy {
   private subscriptions: Subscription[] = [];
 
   ngOnChanges(simpleChanges: SimpleChanges): void {
-    if (Object.prototype.hasOwnProperty.call(simpleChanges, 'parentForm') && this.parentForm && this.items.length) {
-      const formControl = this.parentForm.get(this.name);
+    if (
+      Object.prototype.hasOwnProperty.call(simpleChanges, 'parentForm')
+      || Object.prototype.hasOwnProperty.call(simpleChanges, 'items')
+      || Object.prototype.hasOwnProperty.call(simpleChanges, 'name')
+    ) {
+      if (!this.parentForm) throw Error('Invalid parent form');
+      if (!this.name) throw Error('Invalid form control name');
+      if (!this.items.length) throw Error('Invalid items');
 
-      if (formControl !== null) {
+      if (Object.prototype.hasOwnProperty.call(simpleChanges, 'parentForm')) {
+        this.unsubscribeFromSubscriptions();
+        const formControl = this.parentForm.get(this.name);
+        if (formControl === null) throw new Error('Form control inaccessible');
         this.subscriptions.push(formControl.valueChanges.subscribe(value => {
           const index = this.items.findIndex(item => item.value === value);
-          if (index !== -1) this.selected = index;
+          this.selected = index !== -1 ? index : 0;
         }));
       }
     }
   }
 
   itemChanged(index: number): void {
-    if (this.parentForm && this.parentForm.get(this.name)) {
-      this.parentForm.get(this.name)?.setValue(this.items[index].value);
+    if (this.parentForm) {
+      const formControl = this.parentForm.get(this.name);
+      if (formControl === null) throw Error('Form control inaccessible');
+      formControl.setValue(this.items[index].value);
       this.parentForm.markAsDirty();
     } else {
       this.change.emit(index);
@@ -43,7 +54,12 @@ export class SelectionComponent implements OnChanges, OnDestroy {
     this.selected = index;
   }
 
-  ngOnDestroy(): void {
+  private unsubscribeFromSubscriptions(): void {
     this.subscriptions.forEach(s => s.unsubscribe());
+    this.subscriptions = [];
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribeFromSubscriptions();
   }
 }
