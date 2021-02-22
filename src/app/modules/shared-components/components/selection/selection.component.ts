@@ -10,7 +10,7 @@ import { Subscription } from 'rxjs';
 })
 export class SelectionComponent implements OnChanges, OnDestroy {
   @Input() type: 'rounded' | 'square' = 'rounded';
-  @Input() items: { label:string, value: string | boolean | number, icon?: string }[] = [];
+  @Input() items: { label: string, value: string | boolean | number, icon?: string }[] = [];
   @Input() selected = 0;
   @Input() mode: 'light' | 'dark' | 'basic' = 'light';
 
