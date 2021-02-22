@@ -23,8 +23,6 @@ import {
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { GroupNavComponent } from './components/group-nav/group-nav.component';
-import { GroupNavTreeComponent } from './components/group-nav-tree/group-nav-tree.component';
 import { TreeModule } from 'primeng/tree';
 import { LeftNavTreeComponent } from './components/left-nav-tree/left-nav-tree.component';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
@@ -50,8 +48,6 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     LeftMenuComponent,
     LeftNavComponent,
     TopNavComponent,
-    GroupNavComponent,
-    GroupNavTreeComponent,
     LeftNavTreeComponent,
     LanguagePickerComponent,
   ],
