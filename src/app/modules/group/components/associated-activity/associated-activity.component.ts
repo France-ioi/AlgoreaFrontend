@@ -1,10 +1,10 @@
 import { Component, forwardRef, OnDestroy } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { Router } from '@angular/router';
 import { merge, of } from 'rxjs';
 import { Subject } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { GetItemByIdService } from 'src/app/modules/item/http-services/get-item-by-id.service';
+import { incompleteItemStringUrl } from 'src/app/shared/helpers/item-route';
 import { fetchingState, isReady, readyState } from 'src/app/shared/helpers/state';
 
 type ActivityId = string;
@@ -26,6 +26,7 @@ export class AssociatedActivityComponent implements OnDestroy, ControlValueAcces
   rootActivity: null|{
     id: ActivityId,
     name: string|null,
+    path: string,
   } = null;
 
   state: 'fetching'|'ready'|'error' = 'fetching';
@@ -36,7 +37,6 @@ export class AssociatedActivityComponent implements OnDestroy, ControlValueAcces
 
   constructor(
     private getItemByIdService: GetItemByIdService,
-    private router: Router,
   ) {
     this.activityFetching.pipe(
       switchMap(activityId => {
@@ -46,6 +46,7 @@ export class AssociatedActivityComponent implements OnDestroy, ControlValueAcces
           this.getItemByIdService.get(activityId).pipe(map(item => readyState({
             id: activityId,
             name: item.string.title,
+            path: incompleteItemStringUrl(activityId)
           }))),
         );
       })
@@ -70,12 +71,6 @@ export class AssociatedActivityComponent implements OnDestroy, ControlValueAcces
   }
 
   registerOnTouched(_fn: () => void): void {
-  }
-
-  onClickActivity(): void {
-    if (this.rootActivityId === null) return;
-
-    void this.router.navigate([ 'items', 'by-id', this.rootActivityId ]);
   }
 
   onRemove(): void {

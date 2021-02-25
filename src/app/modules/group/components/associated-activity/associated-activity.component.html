@@ -9,7 +9,7 @@
 
   <ng-container *ngIf="state === 'ready'">
     <div class="activity" *ngIf="rootActivity !== null; else noRootActivity">
-      <span class="activity-name" (click)="onClickActivity()">
+      <span class="activity-name" [routerLink]="rootActivity.path">
         {{rootActivity.name}}
       </span>
       <span class="remove" (click)="onRemove()">
