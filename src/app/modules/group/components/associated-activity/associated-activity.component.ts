@@ -7,6 +7,8 @@ import { map, switchMap } from 'rxjs/operators';
 import { GetItemByIdService } from 'src/app/modules/item/http-services/get-item-by-id.service';
 import { fetchingState, isReady, readyState } from 'src/app/shared/helpers/state';
 
+type ActivityId = string;
+
 @Component({
   selector: 'alg-associated-activity',
   templateUrl: './associated-activity.component.html',
@@ -21,14 +23,16 @@ import { fetchingState, isReady, readyState } from 'src/app/shared/helpers/state
 })
 export class AssociatedActivityComponent implements OnDestroy, ControlValueAccessor {
 
-  rootActivityId: string|null = null;
-  rootActivityName: string|null = null;
+  rootActivity: null|{
+    id: ActivityId,
+    name: string|null,
+  } = null;
 
   state: 'fetching'|'ready'|'error' = 'fetching';
 
-  private activityFetching = new Subject<string|null>();
+  private activityFetching = new Subject<ActivityId|null>();
 
-  private onChange: (value: string|null) => void = () => {};
+  private onChange: (value: ActivityId|null) => void = () => {};
 
   constructor(
     private getItemByIdService: GetItemByIdService,
@@ -36,17 +40,19 @@ export class AssociatedActivityComponent implements OnDestroy, ControlValueAcces
   ) {
     this.activityFetching.pipe(
       switchMap(activityId => {
-        if (activityId === null) return of(readyState({ id: null, name: null }));
+        if (activityId === null) return of(readyState(null));
         return merge(
           of(fetchingState()),
-          this.getItemByIdService.get(activityId).pipe(map(item => readyState({ id: activityId, name: item.string.title }))),
+          this.getItemByIdService.get(activityId).pipe(map(item => readyState({
+            id: activityId,
+            name: item.string.title,
+          }))),
         );
       })
     ).subscribe(state => {
       this.state = state.tag;
       if (isReady(state)) {
-        this.rootActivityId = state.data.id;
-        this.rootActivityName = state.data.name;
+        this.rootActivity = state.data;
       }
     });
   }
@@ -55,11 +61,11 @@ export class AssociatedActivityComponent implements OnDestroy, ControlValueAcces
     this.activityFetching.complete();
   }
 
-  writeValue(rootActivityId: string|null): void {
+  writeValue(rootActivityId: ActivityId|null): void {
     this.activityFetching.next(rootActivityId);
   }
 
-  registerOnChange(fn: (value: string|null) => void): void {
+  registerOnChange(fn: (value: ActivityId|null) => void): void {
     this.onChange = fn;
   }
 
@@ -73,10 +79,9 @@ export class AssociatedActivityComponent implements OnDestroy, ControlValueAcces
   }
 
   onRemove(): void {
-    if (this.rootActivityId === null) return;
+    if (this.rootActivity === null || this.state !== 'ready') return;
 
-    this.rootActivityId = null;
-    this.rootActivityName = null;
-    this.onChange(this.rootActivityId);
+    this.rootActivity = null;
+    this.onChange(null);
   }
 }

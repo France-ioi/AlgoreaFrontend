@@ -8,9 +8,9 @@
   </p>
 
   <ng-container *ngIf="state === 'ready'">
-    <div class="activity" *ngIf="rootActivityName !== null; else noRootActivity">
+    <div class="activity" *ngIf="rootActivity !== null; else noRootActivity">
       <span class="activity-name" (click)="onClickActivity()">
-        {{rootActivityName}}
+        {{rootActivity.name}}
       </span>
       <span class="remove" (click)="onRemove()">
         <span i18n>Remove</span>
