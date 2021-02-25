@@ -31,7 +31,7 @@ export function appDefaultItemRoute(cat: ItemTypeCategory = 'activity'): ItemRou
 }
 
 /**
- * Url (as string) of the item route with attemptId or path (only item id)
+ * Url (as string) of the item route without attemptId or path (only item id)
 */
 export function incompleteItemStringUrl(id: ItemId): string {
   return `/items/by-id/${id}/details`;

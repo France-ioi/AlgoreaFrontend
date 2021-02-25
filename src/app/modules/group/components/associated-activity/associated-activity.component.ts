@@ -31,14 +31,14 @@ export class AssociatedActivityComponent implements OnDestroy, ControlValueAcces
 
   state: 'fetching'|'ready'|'error' = 'fetching';
 
-  private activityData = new Subject<ActivityId|null>();
+  private activityChanges = new Subject<ActivityId|null>();
 
   private onChange: (value: ActivityId|null) => void = () => {};
 
   constructor(
     private getItemByIdService: GetItemByIdService,
   ) {
-    this.activityData.pipe(
+    this.activityChanges.pipe(
       switchMap(activityId => {
         if (activityId === null) return of(readyState(null));
         return merge(
@@ -59,11 +59,11 @@ export class AssociatedActivityComponent implements OnDestroy, ControlValueAcces
   }
 
   ngOnDestroy(): void {
-    this.activityData.complete();
+    this.activityChanges.complete();
   }
 
   writeValue(rootActivityId: ActivityId|null): void {
-    this.activityData.next(rootActivityId);
+    this.activityChanges.next(rootActivityId);
   }
 
   registerOnChange(fn: (value: ActivityId|null) => void): void {
@@ -74,7 +74,7 @@ export class AssociatedActivityComponent implements OnDestroy, ControlValueAcces
   }
 
   onRemove(): void {
-    if (this.rootActivity === null || this.state !== 'ready') return;
+    if (this.rootActivity === null || this.state !== 'ready') throw new Error('Unexpected: tried to remove root activity when not ready');
 
     this.rootActivity = null;
     this.onChange(null);
