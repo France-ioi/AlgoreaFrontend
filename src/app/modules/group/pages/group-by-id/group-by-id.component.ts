@@ -33,7 +33,7 @@ export class GroupByIdComponent implements OnDestroy {
     this.activatedRoute.paramMap.subscribe(params => {
       const id = params.get('id');
       this.currentContent.current.next({
-        id: id, type: 'group', breadcrumbs: { category: GROUP_BREADCRUMB_CAT, path: [], currentPageIdx: -1 }
+        route: { id: id, path: [] }, type: 'group', breadcrumbs: { category: GROUP_BREADCRUMB_CAT, path: [], currentPageIdx: -1 }
       } as GroupInfo);
       if (id) this.groupDataSource.fetchGroup(id);
     });
@@ -42,9 +42,9 @@ export class GroupByIdComponent implements OnDestroy {
     this.subscriptions.push(
       this.groupDataSource.state$.pipe(
         filter<Ready<Group>|Fetching|FetchError,Ready<Group>>(isReady),
-        map(state => ({
+        map((state):GroupInfo => ({
           type: 'group',
-          id: state.data.id,
+          route: { id: state.data.id, path: [] },
           breadcrumbs: {
             category: GROUP_BREADCRUMB_CAT,
             path: [{ title: state.data.name, navigateTo: this.router.createUrlTree([ 'groups', 'by-id', state.data.id, 'details' ]) }],
@@ -58,7 +58,7 @@ export class GroupByIdComponent implements OnDestroy {
         .subscribe(action => {
           const currentInfo = this.currentContent.current.value;
           if (isGroupInfo(currentInfo)) {
-            void this.router.navigate([ 'groups', 'by-id', currentInfo.id, action === EditAction.StartEditing ? 'edit' : 'details' ]);
+            void this.router.navigate([ 'groups', 'by-id', currentInfo.route.id, action === EditAction.StartEditing ? 'edit' : 'details' ]);
           }
         })
     );

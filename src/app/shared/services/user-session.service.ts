@@ -3,7 +3,7 @@ import { of, EMPTY, BehaviorSubject, Subscription } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
 import { switchMap, catchError, distinctUntilChanged } from 'rxjs/operators';
 import { CurrentUserHttpService, UserProfile } from '../http-services/current-user.service';
-import { Group } from 'src/app/core/components/group-nav-tree/group';
+import { Group } from 'src/app/modules/group/http-services/get-group-by-id.service';
 
 export interface UserSession {
   user: UserProfile,

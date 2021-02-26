@@ -1,10 +1,10 @@
 <div class="container" *ngrxLet="session$ as session">
   <div class="left" [ngClass]="{ collapsed: collapsed, expanded: !collapsed }">
-    <alg-left-nav
+    <alg-left-menu
       [collapsed]="collapsed"
       [session]="session"
       (collapse)="onCollapse($event)"
-    ></alg-left-nav>
+    ></alg-left-menu>
   </div>
   <ng-container *ngIf="editState$ | async as editState">
     <div class="top-bar"

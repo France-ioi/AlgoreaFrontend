@@ -89,6 +89,10 @@ $bk-secondary: #3B73B4;
   margin: 0 !important;
 }
 
+:host i .fa {
+  font-size: 1.2rem;
+}
+
 :host ::ng-deep .p-treenode-children {
   padding-left: 3rem !important;
 }
@@ -177,8 +181,8 @@ $bk-secondary: #3B73B4;
       &.unlocked {
         border-top-left-radius: 0.5rem;
         border-bottom-left-radius: 0.5rem;
-        background-color: $base-bk-color;
-        color: $base-color;
+        background-color: rgba(white, 0.2);
+        color: white;
 
         .node-select {
           color: #fff;
@@ -286,6 +290,10 @@ $bk-secondary: #3B73B4;
         margin-right: 1.1667rem;
       }
 
+      .fade {
+        opacity: 50%;
+      }
+
       .node-label {
         top: 0;
         bottom: 0;
@@ -302,6 +310,10 @@ $bk-secondary: #3B73B4;
 
         .node-state {
           margin-left: auto;
+          i {
+            margin-left: 0.5rem;
+            font-size: 1.2rem;
+          }
         }
 
         .node-label-title {
@@ -331,7 +343,7 @@ $bk-secondary: #3B73B4;
       position: relative;
     }
 
-    &.checked {
+    &.current {
       .node-item-content {
         border-top-left-radius: 0.5rem;
         border-bottom-left-radius: 0.5rem;

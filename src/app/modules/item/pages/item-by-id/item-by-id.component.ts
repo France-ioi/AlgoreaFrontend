@@ -67,17 +67,15 @@ export class ItemByIdComponent implements OnDestroy {
               currentPageIdx: state.data.breadcrumbs.length - 1,
             },
             title: state.data.item.string.title === null ? undefined : state.data.item.string.title,
-            data: {
-              route: state.data.route,
-              details: {
-                title: state.data.item.string.title,
-                type: state.data.item.type,
-                attemptId: state.data.currentResult?.attemptId,
-                bestScore: state.data.item.best_score,
-                currentScore: state.data.currentResult?.score,
-                validated: state.data.currentResult?.validated,
-              }
-            },
+            route: state.data.route,
+            details: {
+              title: state.data.item.string.title,
+              type: state.data.item.type,
+              attemptId: state.data.currentResult?.attemptId,
+              bestScore: state.data.item.best_score,
+              currentScore: state.data.currentResult?.score,
+              validated: state.data.currentResult?.validated,
+            }
           });
 
         } else if (isError(state)) {
@@ -95,7 +93,7 @@ export class ItemByIdComponent implements OnDestroy {
       ).subscribe(action => {
         const currentInfo = this.currentContent.current.value;
         if (isItemInfo(currentInfo)) {
-          this.itemRouter.navigateTo(currentInfo.data.route, action === EditAction.StartEditing ? 'edit' : 'details');
+          this.itemRouter.navigateTo(currentInfo.route, action === EditAction.StartEditing ? 'edit' : 'details');
         }
       })
     );
@@ -122,7 +120,7 @@ export class ItemByIdComponent implements OnDestroy {
     // just publish to current content the new route we are navigating to (without knowing any info)
     this.currentContent.current.next({
       type: 'item',
-      data: { route: item },
+      route: item,
       breadcrumbs: { category: itemBreadcrumbCat, path: [], currentPageIdx: -1 }
     } as ItemInfo);
     // trigger the fetch of the item (which will itself re-update the current content)

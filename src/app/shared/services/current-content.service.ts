@@ -1,6 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { UrlTree } from '@angular/router';
 import { BehaviorSubject, Subject } from 'rxjs';
+import { ContentRoute } from '../helpers/content-route';
 import { ItemRoute } from '../helpers/item-route';
 import { ItemType } from '../helpers/item-type';
 
@@ -19,12 +20,26 @@ export interface ContentInfo {
   breadcrumbs?: ContentBreadcrumb,
   editing?: boolean, // undefined: not allowed, otherwise: whether the current page is current being edited
   title?: string, // page title
-  data?: any,
+  route?: ContentRoute,
+  details?: any
 }
 
-export interface ItemInfo extends ContentInfo {
+export interface RoutedContentInfo extends ContentInfo {
+  route: ContentRoute
+}
+
+export interface ItemInfo extends RoutedContentInfo {
   type: 'item',
-  data: { route: ItemRoute, details?: ItemDetails }
+  route: ItemRoute,
+  details?: ItemDetails
+}
+
+export interface ActivityInfo extends ItemInfo {
+  data: { route: ItemRoute, details: ItemDetails }
+}
+
+export interface SkillInfo extends ItemInfo {
+  data: { route: ItemRoute, details: ItemDetails }
 }
 
 export interface ItemDetails {
@@ -36,15 +51,21 @@ export interface ItemDetails {
   validated?: boolean,
 }
 
-type GroupId = string;
-
-export interface GroupInfo extends ContentInfo {
-  id: GroupId,
-  type: 'group'
+export interface GroupInfo extends RoutedContentInfo {
+  type: 'group',
+  route: ContentRoute
 }
 
 export function isItemInfo(info: ContentInfo|null): info is ItemInfo {
   return info !== null && info.type === 'item';
+}
+
+export function isActivityInfo(info: ItemInfo|null): info is ActivityInfo {
+  return info !== null && info.details !== undefined && info.details.type !== 'Skill';
+}
+
+export function isSkillInfo(info: ItemInfo|null): info is SkillInfo {
+  return info !== null && info.details !== undefined && info.details.type === 'Skill';
 }
 
 export function isGroupInfo(info: ContentInfo|null): info is GroupInfo {

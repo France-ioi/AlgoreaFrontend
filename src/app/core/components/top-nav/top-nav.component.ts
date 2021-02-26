@@ -16,8 +16,6 @@ export class TopNavComponent {
 
   @Output() collapse = new EventEmitter<boolean>();
   @Output() fold = new EventEmitter<boolean>();
-  @Output() search = new EventEmitter<any>();
-  @Output() searchClose = new EventEmitter<any>();
 
   showNotification = false;
 
