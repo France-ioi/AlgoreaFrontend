@@ -18,7 +18,7 @@ export class SelectionComponent implements OnChanges, OnDestroy {
 
   @Input() parentForm?: FormGroup;
   @Input() name = '';
-  private formControlChangesSubscription: Subscription | undefined;
+  private formControlChangesSubscription?: Subscription;
 
   ngOnChanges(simpleChanges: SimpleChanges): void {
     if (
