@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { bestAttemptFromResults } from 'src/app/shared/helpers/attempts';
 import { canCurrentUserViewItemContent } from 'src/app/modules/item/helpers/item-permissions';
-import { isRouteWithAttempt, ItemRoute } from 'src/app/shared/helpers/item-route';
+import { isRouteWithAttempt, ItemRoute } from 'src/app/shared/routing/item-route';
 import { appConfig } from 'src/app/shared/helpers/config';
 import { isASkill, isSkill, ItemType, ItemTypeCategory } from 'src/app/shared/helpers/item-type';
 

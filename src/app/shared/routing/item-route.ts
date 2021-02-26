@@ -1,8 +1,8 @@
 import { ParamMap } from '@angular/router';
-import { defaultAttemptId } from './attempts';
-import { appConfig } from './config';
+import { defaultAttemptId } from '../helpers/attempts';
+import { appConfig } from '../helpers/config';
 import { ContentRoute, pathParamName } from './content-route';
-import { isSkill, ItemTypeCategory } from './item-type';
+import { isSkill, ItemTypeCategory } from '../helpers/item-type';
 
 type ItemId = string;
 type AttemptId = string;

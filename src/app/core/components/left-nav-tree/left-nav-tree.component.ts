@@ -2,8 +2,8 @@ import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { TreeNode } from 'primeng/api';
 import { defaultAttemptId } from 'src/app/shared/helpers/attempts';
 import { ItemTypeCategory } from 'src/app/shared/helpers/item-type';
-import { GroupRouter } from 'src/app/shared/services/group-router';
-import { ItemRouter } from 'src/app/shared/services/item-router';
+import { GroupRouter } from 'src/app/shared/routing/group-router';
+import { ItemRouter } from 'src/app/shared/routing/item-router';
 import { isANavMenuItem } from '../../services/left-nav-loading/item-nav-tree-types';
 import { NavTreeData, NavTreeElement } from '../../services/left-nav-loading/nav-tree-data';
 

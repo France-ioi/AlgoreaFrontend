@@ -4,7 +4,7 @@ import { canCurrentUserViewItemContent } from '../../helpers/item-permissions';
 import { GetItemChildrenService, ItemChild } from '../../http-services/get-item-children.service';
 import { ItemData } from '../../services/item-datasource.service';
 import { bestAttemptFromResults } from 'src/app/shared/helpers/attempts';
-import { ItemRouter } from 'src/app/shared/services/item-router';
+import { ItemRouter } from 'src/app/shared/routing/item-router';
 
 interface ItemChildAdditions {
   isLocked: boolean,

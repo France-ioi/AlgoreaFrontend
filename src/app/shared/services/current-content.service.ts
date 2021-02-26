@@ -1,8 +1,8 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { UrlTree } from '@angular/router';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { ContentRoute } from '../helpers/content-route';
-import { ItemRoute } from '../helpers/item-route';
+import { ContentRoute } from '../routing/content-route';
+import { ItemRoute } from '../routing/item-route';
 import { ItemType } from '../helpers/item-type';
 
 export interface ContentBreadcrumb {

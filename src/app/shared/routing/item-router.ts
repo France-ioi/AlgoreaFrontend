@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router, UrlTree } from '@angular/router';
-import { pathParamName } from '../helpers/content-route';
-import { ItemRoute, isRouteWithAttempt, attemptParamName, parentAttemptParamName } from '../helpers/item-route';
+import { pathParamName } from './content-route';
+import { ItemRoute, isRouteWithAttempt, attemptParamName, parentAttemptParamName } from './item-route';
 
 @Injectable({
   providedIn: 'root'

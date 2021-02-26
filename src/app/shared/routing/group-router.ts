@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router, UrlTree } from '@angular/router';
-import { ContentRoute, pathParamName } from '../helpers/content-route';
+import { ContentRoute, pathParamName } from './content-route';
 
 @Injectable({
   providedIn: 'root'
