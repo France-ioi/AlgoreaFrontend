@@ -46,11 +46,9 @@ export class AppComponent implements OnInit, OnDestroy {
     this.subscription?.unsubscribe();
   }
 
-  onCollapse(e: boolean): void {
-    this.collapsed = e;
-    if (!this.collapsed) {
-      this.folded = false;
-    }
+  onCollapse(collapsed: boolean): void {
+    this.collapsed = collapsed;
+    if (!collapsed) this.folded = false;
   }
 
   onFold(folded: boolean): void {

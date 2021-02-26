@@ -1,8 +1,41 @@
-<alg-top-nav
-  [collapsed]="collapsed"
-  [session]="session"
-  (collapse)="onCollapse($event)"
-  (search)="onSearchEvent()"
-  (searchClose)="onSearchCloseEvent()"
-></alg-top-nav>
-<alg-navigation-tabs *ngIf="!searchView" [session]="session"></alg-navigation-tabs>
+<p-tabView class="group-skills" [styleClass]="'dark'" (onChange)="onSelectionChangedByIdx($event)" [(activeIndex)]="activeTabIndex">
+
+  <p-tabPanel>
+    <ng-template pTemplate="header" tabindex="5">
+      <span class="indicator" class="dark"></span>
+      <i class="fa fa-hand-paper"></i>
+      <span class="p-tabview-title" i18n="|Tab name">Activities</span>
+    </ng-template>
+  </p-tabPanel>
+
+  <p-tabPanel>
+    <ng-template pTemplate="header" tabindex="6">
+      <span class="indicator" class="dark"></span>
+      <i class="fa fa-graduation-cap"></i>
+      <span class="p-tabview-title" i18n="|Tab name">Skills</span>
+    </ng-template>
+  </p-tabPanel>
+
+  <p-tabPanel>
+    <ng-template pTemplate="header" tabindex="7">
+      <span class="indicator" class="dark"></span>
+      <i class="fa fa-users"></i>
+      <span class="p-tabview-title" i18n="|Tab name">Groups</span>
+    </ng-template>
+  </p-tabPanel>
+
+</p-tabView>
+
+<p-progressSpinner
+  *ngIf="dataSources[activeTabIndex].state.tag === 'fetching'"
+  [style]="{width: '3.3333rem', height: '3.3333rem'}"
+></p-progressSpinner>
+
+<p *ngIf="dataSources[activeTabIndex].state.tag === 'error'" class="error" i18n>Unable to load the list</p>
+
+<alg-left-nav-tree
+  *ngIf="dataSources[activeTabIndex].state.tag === 'ready'"
+  [data]="$any(dataSources[activeTabIndex].state).data"
+  [elementType]="$any(['activity', 'skill', 'group'][activeTabIndex])"
+></alg-left-nav-tree>
+
