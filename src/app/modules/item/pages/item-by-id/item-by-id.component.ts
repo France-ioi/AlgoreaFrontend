@@ -62,7 +62,7 @@ export class ItemByIdComponent implements OnDestroy {
               path: state.data.breadcrumbs.map(el => ({
                 title: el.title,
                 hintNumber: el.attemptCnt,
-                navigateTo: ():UrlTree => itemRouter.url(el.route),
+                navigateTo: ():UrlTree => itemRouter.urlTree(el.route),
               })),
               currentPageIdx: state.data.breadcrumbs.length - 1,
             },

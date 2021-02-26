@@ -4,16 +4,17 @@ import { appConfig } from '../helpers/config';
 import { ContentRoute, pathParamName } from './content-route';
 import { isSkill, ItemTypeCategory } from '../helpers/item-type';
 
+// url parameter names
+const parentAttemptParamName = 'parentAttempId';
+const attemptParamName = 'attempId';
+
+// alias for better readibility
 type ItemId = string;
 type AttemptId = string;
 
 export type ItemRouteWithAttempt = ContentRoute & { attemptId: AttemptId };
 export type ItemRouteWithParentAttempt = ContentRoute & { parentAttemptId: AttemptId };
 export type ItemRoute = ItemRouteWithAttempt | ItemRouteWithParentAttempt;
-
-/* url parameter names */
-export const parentAttemptParamName = 'parentAttempId';
-export const attemptParamName = 'attempId';
 
 export function isRouteWithAttempt(item: ItemRoute): item is ItemRouteWithAttempt {
   return 'attemptId' in item;
@@ -40,15 +41,25 @@ export function incompleteItemStringUrl(id: ItemId): string {
 /**
  * Url (as string) of the details page for the given item route
  */
-export function itemStringUrl(item: ItemRoute): string {
+export function urlStringForItemRoute(item: ItemRoute, page: 'edit'|'details' = 'details'): string {
   const attemptPart = isRouteWithAttempt(item) ?
     `${attemptParamName}=${item.attemptId}` :
     `${parentAttemptParamName}=${item.parentAttemptId}`;
-
-  return `/items/by-id/${item.id};${attemptPart};${pathParamName}=${item.path.join(',')}/details`;
+  return `/items/by-id/${item.id};${attemptPart};${pathParamName}=${item.path.join(',')}/${page}`;
 }
 
-export interface ItemRouteError {
+/**
+ * Return a url array (`commands` array) to the given item, on the given page.
+ */
+export function urlArrayForItemRoute(item: ItemRoute, page: 'edit'|'details' = 'details'): any[] {
+  const params: {[k: string]: any} = {};
+  if (isRouteWithAttempt(item)) params[attemptParamName] = item.attemptId;
+  else params[parentAttemptParamName] = item.parentAttemptId;
+  params[pathParamName] = item.path;
+  return [ '/', 'items', 'by-id', item.id, params, page ];
+}
+
+interface ItemRouteError {
   tag: 'error';
   id?: ItemId;
   path?: ItemId[];
@@ -68,6 +79,6 @@ export function itemRouteFromParams(params: ParamMap): ItemRoute|ItemRouteError 
   return { tag: 'error', id: id, path: path };
 }
 
-export function isItemRouteError(resp: ItemRoute|ItemRouteError): resp is ItemRouteError {
-  return 'tag' in resp && resp.tag === 'error';
+export function isItemRouteError(route: ItemRoute|ItemRouteError): route is ItemRouteError {
+  return 'tag' in route && route.tag === 'error';
 }
