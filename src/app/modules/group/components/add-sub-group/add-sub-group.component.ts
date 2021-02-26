@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Group } from 'src/app/core/components/group-nav-tree/group';
 import { AddedContent, NewContentType } from 'src/app/modules/shared-components/components/add-content/add-content.component';
+import { Group } from '../../http-services/get-group-by-id.service';
 import { SearchGroupService } from '../../http-services/search-group.service';
 
 type GroupType = 'Class'|'Team'|'Club'|'Friends'|'Other';
