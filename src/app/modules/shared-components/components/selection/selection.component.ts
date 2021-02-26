@@ -18,7 +18,7 @@ export class SelectionComponent implements OnChanges, OnDestroy {
 
   @Input() parentForm?: FormGroup;
   @Input() name = '';
-  private subscriptions: Subscription[] = [];
+  private formControlChangesSubscription: Subscription | undefined;
 
   ngOnChanges(simpleChanges: SimpleChanges): void {
     if (
@@ -31,13 +31,13 @@ export class SelectionComponent implements OnChanges, OnDestroy {
       if (!this.items.length) throw Error('Invalid items');
 
       if (Object.prototype.hasOwnProperty.call(simpleChanges, 'parentForm')) {
-        this.unsubscribeFromSubscriptions();
+        if (this.formControlChangesSubscription) this.formControlChangesSubscription.unsubscribe();
         const formControl = this.parentForm.get(this.name);
         if (formControl === null) throw new Error('Form control inaccessible');
-        this.subscriptions.push(formControl.valueChanges.subscribe(value => {
+        this.formControlChangesSubscription = formControl.valueChanges.subscribe(value => {
           const index = this.items.findIndex(item => item.value === value);
           this.selected = index !== -1 ? index : 0;
-        }));
+        });
       }
     }
   }
@@ -54,12 +54,7 @@ export class SelectionComponent implements OnChanges, OnDestroy {
     this.selected = index;
   }
 
-  private unsubscribeFromSubscriptions(): void {
-    this.subscriptions.forEach(s => s.unsubscribe());
-    this.subscriptions = [];
-  }
-
   ngOnDestroy(): void {
-    this.unsubscribeFromSubscriptions();
+    if (this.formControlChangesSubscription) this.formControlChangesSubscription.unsubscribe();
   }
 }
