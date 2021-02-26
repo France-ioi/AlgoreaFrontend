@@ -36,7 +36,7 @@
             [icon]="node.expanded ? 'folder-open' : 'folder'"
           ></alg-score-ring>
           <ng-template #folderNoScore>
-            <i class="fa" [ngClass]="{ 'fa-folder': !node.expanded, 'fa-folder-open': node.expanded }" style="font-size: 1.2rem;"></i>
+            <i class="fa" [ngClass]="{ 'fa-folder': !node.expanded, 'fa-folder-open': node.expanded }"></i>
           </ng-template>
         </span>
         <span class="node-label">
@@ -49,7 +49,7 @@
               <p-progressSpinner [style]="{ width: '3rem', height: '3rem', 'margin-top': '-0.5rem' }"></p-progressSpinner>
             </span>
             <span class="node-state" *ngIf="node.data.status === 'error'">
-              <i class="fa fa-exclamation-triangle" style="font-size: 1.2rem;"></i>
+              <i class="fa fa-exclamation-triangle"></i>
             </span>
           </span>
         </span>
@@ -70,7 +70,7 @@
       </span>
       <span class="node-item-content" [ngClass]="{ unlocked: !node.locked }" (click)="selectNode(node)">
         <span class="node-select">
-          <i class="fa" [ngClass]="{ 'fa-folder': !node.expanded, 'fa-folder-open': node.expanded }" style="font-size: 1.2rem;"></i>
+          <i class="fa" [ngClass]="{ 'fa-folder': !node.expanded, 'fa-folder-open': node.expanded }"></i>
         </span>
         <span class="node-label">
           <span class="label-container">
@@ -82,10 +82,10 @@
               <p-progressSpinner [style]="{ width: '3rem', height: '3rem', 'margin-top': '-0.5rem' }"></p-progressSpinner>
             </span>
             <span class="node-state" *ngIf="node.data.status === 'error'">
-              <i class="fa fa-exclamation-triangle" style="font-size: 1.2rem;"></i>
+              <i class="fa fa-exclamation-triangle"></i>
             </span>
             <span class="node-state" *ngIf="node.locked">
-              <i class="fa fa-lock" style="font-size: 1.2rem;"></i>
+              <i class="fa fa-lock"></i>
             </span>
           </span>
           <alg-skill-progress
@@ -112,8 +112,8 @@
       </span>
       <span class="node-item-content" (click)="selectNode(node)">
         <span class="node-select">
-          <i class="fa fa-users" style="font-size: 1.2rem;" *ngIf="node.data.element.type !== 'User'"></i>
-          <i class="fa fa-user" style="font-size: 1.2rem;" *ngIf="node.data.element.type === 'User'"></i>
+          <i class="fa fa-users" *ngIf="node.data.element.type !== 'User'"></i>
+          <i class="fa fa-user" *ngIf="node.data.element.type === 'User'"></i>
         </span>
         <span class="node-label">
           <span class="label-container">

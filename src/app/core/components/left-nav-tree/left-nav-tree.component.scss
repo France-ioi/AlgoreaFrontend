@@ -89,6 +89,10 @@ $bk-secondary: #3B73B4;
   margin: 0 !important;
 }
 
+:host i .fa {
+  font-size: 1.2rem;
+}
+
 :host ::ng-deep .p-treenode-children {
   padding-left: 3rem !important;
 }
