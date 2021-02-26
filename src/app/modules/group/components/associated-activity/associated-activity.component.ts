@@ -31,7 +31,7 @@ export class AssociatedActivityComponent implements OnDestroy, ControlValueAcces
 
   state: 'fetching'|'ready'|'error' = 'fetching';
 
-  private activityChanges = new Subject<ActivityId|null>();
+  private activityChanges = new Subject<{id: ActivityId|null, triggerChange: boolean}>();
 
   private onChange: (value: ActivityId|null) => void = () => {};
 
@@ -39,21 +39,26 @@ export class AssociatedActivityComponent implements OnDestroy, ControlValueAcces
     private getItemByIdService: GetItemByIdService,
   ) {
     this.activityChanges.pipe(
-      switchMap(activityId => {
-        if (activityId === null) return of(readyState(null));
+      switchMap(data => {
+        const id = data.id;
+        if (id === null) return of(readyState({ activity: null, triggerChange: data.triggerChange }));
         return merge(
           of(fetchingState()),
-          this.getItemByIdService.get(activityId).pipe(map(item => readyState({
-            id: activityId,
-            name: item.string.title,
-            path: incompleteItemStringUrl(activityId)
+          this.getItemByIdService.get(id).pipe(map(item => readyState({
+            triggerChange: data.triggerChange,
+            activity: {
+              id: id,
+              name: item.string.title,
+              path: incompleteItemStringUrl(id)
+            }
           }))),
         );
       })
     ).subscribe(state => {
       this.state = state.tag;
       if (isReady(state)) {
-        this.rootActivity = state.data;
+        this.rootActivity = state.data.activity;
+        if (state.data.triggerChange) this.onChange(this.rootActivity === null ? null : this.rootActivity.id);
       }
     });
   }
@@ -63,7 +68,7 @@ export class AssociatedActivityComponent implements OnDestroy, ControlValueAcces
   }
 
   writeValue(rootActivityId: ActivityId|null): void {
-    this.activityChanges.next(rootActivityId);
+    this.activityChanges.next({ id: rootActivityId, triggerChange: false });
   }
 
   registerOnChange(fn: (value: ActivityId|null) => void): void {
@@ -75,8 +80,6 @@ export class AssociatedActivityComponent implements OnDestroy, ControlValueAcces
 
   onRemove(): void {
     if (this.rootActivity === null || this.state !== 'ready') throw new Error('Unexpected: tried to remove root activity when not ready');
-
-    this.rootActivity = null;
-    this.onChange(null);
+    this.activityChanges.next({ id: null, triggerChange: true });
   }
 }
