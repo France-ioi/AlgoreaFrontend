@@ -55,6 +55,6 @@ export class SelectionComponent implements OnChanges, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.formControlChangesSubscription) this.formControlChangesSubscription.unsubscribe();
+    this.formControlChangesSubscription?.unsubscribe();
   }
 }
