@@ -1,6 +1,7 @@
+
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { distinctUntilChanged, map } from 'rxjs/operators';
+import { map, pairwise } from 'rxjs/operators';
 import {
   CurrentContentService,
   isActivityInfo,
@@ -44,46 +45,37 @@ export class LeftNavComponent implements OnInit, OnDestroy {
     this.subscription = this.currentContent.currentContent$.pipe(
       // we are only interested in items and groups
       map(content => (content !== null && (isItemInfo(content) || isGroupInfo(content)) ? content : undefined)),
-      // prevent emitting multiple time 'undefined' as it does not change anything
-      distinctUntilChanged((v1, v2) => v1 === undefined && v2 === undefined)
+      pairwise(),
+    ).subscribe(([ prevContent, content ]) => {
+      if (!prevContent && !content) return; // if was not an item/group and still not one, do nothing
 
-    ).subscribe(content => {
-      if (content && isGroupInfo(content)) {
-        this.contentTabChange(groupsTabIdx);
+      // If the content changed (different id), clear the selection (clear all tabs as we don't really know on which tab was the selection)
+      if (prevContent?.route.id !== content?.route.id) this.dataSources.forEach(l => l.removeSelection());
+
+      if (!content) return; // no tab and no content to select
+
+      if (isGroupInfo(content)) {
+        this.activeTabIndex = groupsTabIdx;
         this.dataSources[groupsTabIdx].showContent(content);
 
-      } else if (content && isSkillInfo(content)) {
-        this.contentTabChange(skillsTabIdx);
+      } else if (isSkillInfo(content)) {
+        this.activeTabIndex = skillsTabIdx;
         this.dataSources[skillsTabIdx].showContent(content);
 
-      } else if (content && isActivityInfo(content)) {
-        this.contentTabChange(activitiesTabIdx);
+      } else if (isActivityInfo(content)) {
+        this.activeTabIndex = activitiesTabIdx;
         this.dataSources[activitiesTabIdx].showContent(content);
 
-      } else { // not a group, not an item with a known type
-        this.removeAllSelections();
+      } else { // item with an unknow type
+        // as we do not know if it is an activity or skill, we cannot show content while we would like to select ids if already listed
+        // TODO
       }
+
     });
   }
 
   ngOnDestroy(): void {
     this.subscription?.unsubscribe();
-  }
-
-  /**
-   * If the given tab is the same as the current one, do nothing.
-   * Otherwise, remove selection on all tabs and switch tab.
-   * (not to be called when manually switching tab)
-   */
-  private contentTabChange(tabIdx: number): void {
-    if (tabIdx !== this.activeTabIndex) {
-      this.removeAllSelections();
-      this.activeTabIndex = tabIdx;
-    }
-  }
-
-  private removeAllSelections(): void {
-    this.dataSources.forEach(l => l.removeSelection());
   }
 
   onSelectionChangedByIdx(e: { index: number }): void {
