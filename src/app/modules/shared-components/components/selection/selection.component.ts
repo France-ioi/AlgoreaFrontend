@@ -31,7 +31,7 @@ export class SelectionComponent implements OnChanges, OnDestroy {
       if (!this.items.length) throw Error('Invalid items');
 
       if (Object.prototype.hasOwnProperty.call(simpleChanges, 'parentForm')) {
-        if (this.formControlChangesSubscription) this.formControlChangesSubscription.unsubscribe();
+        this.formControlChangesSubscription?.unsubscribe();
         const formControl = this.parentForm.get(this.name);
         if (formControl === null) throw new Error('Form control inaccessible');
         this.formControlChangesSubscription = formControl.valueChanges.subscribe(value => {
