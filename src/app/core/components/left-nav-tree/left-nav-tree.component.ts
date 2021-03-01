@@ -63,13 +63,15 @@ export class LeftNavTreeComponent implements OnChanges {
 
     switch (this.elementType) {
       case 'group':
-        this.groupRouter.navigateTo({ id: parent.id, path: pathToParent });
+        this.groupRouter.navigateTo({ contentType: 'group', id: parent.id, path: pathToParent });
         break;
       case 'activity':
-      case 'skill':
+      case 'skill': {
         if (!isANavMenuItem(parent)) throw new Error('Unexpected: Element which is not an item as an item root!');
+        const typeCat : ItemTypeCategory = this.elementType === 'activity' ? 'activity' : 'skill';
         if (!parent.attemptId) throw new Error('Unexpected: missing attempt id for parent node in tree (2)');
-        this.itemRouter.navigateTo({ id: parent.id, path: pathToParent, attemptId: parent.attemptId });
+        this.itemRouter.navigateTo({ contentType: typeCat, id: parent.id, path: pathToParent, attemptId: parent.attemptId });
+      }
     }
   }
 
@@ -83,19 +85,20 @@ export class LeftNavTreeComponent implements OnChanges {
   private navigateToNode(node: LeftNavTreeNode): void {
     if (!node.data) throw new Error('Unexpected: missing node data');
     const routeBase = { id: node.data.element.id, path: node.data.path };
-
     switch (this.elementType) {
       case 'group':
-        this.groupRouter.navigateTo(routeBase);
+        this.groupRouter.navigateTo({ ...routeBase, contentType: 'group' });
         break;
       case 'activity':
-      case 'skill':
+      case 'skill': {
         if (!isANavMenuItem(node.data.element)) throw new Error('Unexpected: Element which is not an item in an item tree!');
+        const typeCat : ItemTypeCategory = this.elementType === 'activity' ? 'activity' : 'skill';
         if (node.data.element.attemptId) {
-          this.itemRouter.navigateTo({ ...routeBase, attemptId: node.data.element.attemptId });
+          this.itemRouter.navigateTo({ ...routeBase, contentType: typeCat, attemptId: node.data.element.attemptId });
         } else {
-          this.itemRouter.navigateTo({ ...routeBase, parentAttemptId: this.parentAttemptForNode(node) });
+          this.itemRouter.navigateTo({ ...routeBase, contentType: typeCat, parentAttemptId: this.parentAttemptForNode(node) });
         }
+      }
     }
   }
 

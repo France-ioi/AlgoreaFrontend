@@ -5,6 +5,8 @@ import { ContentRoute, pathParamName } from './content-route';
 import { isSkill, ItemTypeCategory } from '../helpers/item-type';
 
 // url parameter names
+const activityPrefix = 'activities';
+const skillPrefix = 'skills';
 const parentAttemptParamName = 'parentAttempId';
 const attemptParamName = 'attempId';
 
@@ -12,19 +14,25 @@ const attemptParamName = 'attempId';
 type ItemId = string;
 type AttemptId = string;
 
-export type ItemRouteWithAttempt = ContentRoute & { attemptId: AttemptId };
-export type ItemRouteWithParentAttempt = ContentRoute & { parentAttemptId: AttemptId };
+interface ItemRouteBase extends ContentRoute {
+  contentType: ItemTypeCategory;
+}
+export type ItemRouteWithAttempt = ItemRouteBase & { attemptId: AttemptId };
+export type ItemRouteWithParentAttempt = ItemRouteBase & { parentAttemptId: AttemptId };
 export type ItemRoute = ItemRouteWithAttempt | ItemRouteWithParentAttempt;
 
 export function isRouteWithAttempt(item: ItemRoute): item is ItemRouteWithAttempt {
   return 'attemptId' in item;
 }
 
+export const itemRoutePrefixes = [ activityPrefix, skillPrefix ];
+
 /**
  * The route to the app default (see config) item
  */
 export function appDefaultItemRoute(cat: ItemTypeCategory = 'activity'): ItemRouteWithParentAttempt {
   return {
+    contentType: 'activity',
     id: isSkill(cat) ? appConfig().defaultSkillId : appConfig().defaultActivityId,
     path: [],
     parentAttemptId: defaultAttemptId,
@@ -41,44 +49,51 @@ export function incompleteItemStringUrl(id: ItemId): string {
 /**
  * Url (as string) of the details page for the given item route
  */
-export function urlStringForItemRoute(item: ItemRoute, page: 'edit'|'details' = 'details'): string {
-  const attemptPart = isRouteWithAttempt(item) ?
-    `${attemptParamName}=${item.attemptId}` :
-    `${parentAttemptParamName}=${item.parentAttemptId}`;
-  return `/items/by-id/${item.id};${attemptPart};${pathParamName}=${item.path.join(',')}/${page}`;
+export function urlStringForItemRoute(route: ItemRoute, page: 'edit'|'details' = 'details'): string {
+  const attemptPart = isRouteWithAttempt(route) ?
+    `${attemptParamName}=${route.attemptId}` :
+    `${parentAttemptParamName}=${route.parentAttemptId}`;
+  return `/${itemTypeCategoryPrefix(route.contentType)}/by-id/${route.id};${attemptPart};${pathParamName}=${route.path.join(',')}/${page}`;
 }
 
 /**
  * Return a url array (`commands` array) to the given item, on the given page.
  */
-export function urlArrayForItemRoute(item: ItemRoute, page: 'edit'|'details' = 'details'): any[] {
+export function urlArrayForItemRoute(route: ItemRoute, page: 'edit'|'details' = 'details'): any[] {
   const params: {[k: string]: any} = {};
-  if (isRouteWithAttempt(item)) params[attemptParamName] = item.attemptId;
-  else params[parentAttemptParamName] = item.parentAttemptId;
-  params[pathParamName] = item.path;
-  return [ '/', 'items', 'by-id', item.id, params, page ];
+  if (isRouteWithAttempt(route)) params[attemptParamName] = route.attemptId;
+  else params[parentAttemptParamName] = route.parentAttemptId;
+  params[pathParamName] = route.path;
+  return [ '/', itemTypeCategoryPrefix(route.contentType), 'by-id', route.id, params, page ];
 }
 
 interface ItemRouteError {
   tag: 'error';
+  contentType: ItemTypeCategory;
   id?: ItemId;
   path?: ItemId[];
 }
 
-export function itemRouteFromParams(params: ParamMap): ItemRoute|ItemRouteError {
+export function itemRouteFromParams(prefix: string, params: ParamMap): ItemRoute|ItemRouteError {
+  if (!itemRoutePrefixes.includes(prefix)) throw new Error('Unexpecte item path prefix');
+  const cat: ItemTypeCategory = prefix === activityPrefix ? 'activity' : 'skill';
   const id = params.get('id');
   const pathAsString = params.get(pathParamName);
   const attemptId = params.get(attemptParamName);
   const parentAttemptId = params.get(parentAttemptParamName);
 
-  if (!id) return { tag: 'error', id: undefined }; // null or empty
-  if (pathAsString === null) return { tag: 'error', id: id };
+  if (!id) return { contentType: cat, tag: 'error', id: undefined }; // null or empty
+  if (pathAsString === null) return { contentType: cat, tag: 'error', id: id };
   const path = pathAsString === '' ? [] : pathAsString.split(',');
-  if (attemptId) return { id: id, path: path, attemptId: attemptId }; // not null nor empty
-  if (parentAttemptId) return { id: id, path: path, parentAttemptId: parentAttemptId }; // not null nor empty
-  return { tag: 'error', id: id, path: path };
+  if (attemptId) return { contentType: cat, id: id, path: path, attemptId: attemptId }; // not null nor empty
+  if (parentAttemptId) return { contentType: cat, id: id, path: path, parentAttemptId: parentAttemptId }; // not null nor empty
+  return { contentType: cat, tag: 'error', id: id, path: path };
 }
 
 export function isItemRouteError(route: ItemRoute|ItemRouteError): route is ItemRouteError {
   return 'tag' in route && route.tag === 'error';
+}
+
+function itemTypeCategoryPrefix(cat: ItemTypeCategory): string {
+  return cat === 'activity' ? activityPrefix : skillPrefix;
 }

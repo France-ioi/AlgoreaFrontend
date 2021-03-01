@@ -1,6 +1,7 @@
 import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { typeCategoryOfItem } from 'src/app/shared/helpers/item-type';
 import { ItemRouter } from 'src/app/shared/routing/item-router';
 import { canCurrentUserViewItemContent } from '../../helpers/item-permissions';
 import { GetItemParentsService, ItemParent } from '../../http-services/get-item-parents.service';
@@ -36,6 +37,7 @@ export class ParentSkillsComponent implements OnChanges, OnDestroy {
     if (!this.itemData || parent.isLocked) return;
 
     this.itemRouter.navigateTo({
+      contentType: typeCategoryOfItem(parent),
       id: parent.id,
       path: this.itemData.route.path.slice(0, -1),
       attemptId: parent.result.attempt_id,

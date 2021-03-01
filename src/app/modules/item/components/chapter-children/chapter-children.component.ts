@@ -5,6 +5,7 @@ import { GetItemChildrenService, ItemChild } from '../../http-services/get-item-
 import { ItemData } from '../../services/item-datasource.service';
 import { bestAttemptFromResults } from 'src/app/shared/helpers/attempts';
 import { ItemRouter } from 'src/app/shared/routing/item-router';
+import { typeCategoryOfItem } from 'src/app/shared/helpers/item-type';
 
 interface ItemChildAdditions {
   isLocked: boolean,
@@ -43,6 +44,7 @@ export class ChapterChildrenComponent implements OnChanges, OnDestroy {
     const parentAttemptId = this.itemData.currentResult?.attemptId;
     if (!parentAttemptId) return; // unexpected: children have been loaded, so we are sure this item has an attempt
     this.itemRouter.navigateTo({
+      contentType: typeCategoryOfItem(child),
       id: child.id,
       path: this.itemData.route.path.concat([ this.itemData.item.id ]),
       ...attemptId ? { attemptId: attemptId } : { parentAttemptId: parentAttemptId }

@@ -12,6 +12,7 @@ import { GetItemPathService } from '../../http-services/get-item-path';
 import { ItemDataSource, ItemData } from '../../services/item-datasource.service';
 import { errorHasTag, errorIsHTTPForbidden } from 'src/app/shared/helpers/errors';
 import { ItemRouter } from 'src/app/shared/routing/item-router';
+import { ItemTypeCategory } from 'src/app/shared/helpers/item-type';
 
 const itemBreadcrumbCat = $localize`Items`;
 
@@ -109,11 +110,14 @@ export class ItemByIdComponent implements OnDestroy {
   }
 
   private fetchItemAtRoute(params: ParamMap): void {
-    const item = itemRouteFromParams(params);
+    const snapshot = this.activatedRoute.snapshot;
+    if (!snapshot.parent) throw new Error('Unexpected: activated route snapshot has no parent');
+    if (!snapshot.parent.url.length) throw new Error('Unexpected: activated route snapshot parent has no url');
+    const item = itemRouteFromParams(snapshot.parent.url[0].path, params);
     if (isItemRouteError(item)) {
       if (item.id) {
         this.state = fetchingState();
-        this.solveMissingPathAttempt(item.id, item.path);
+        this.solveMissingPathAttempt(item.contentType, item.id, item.path);
       } else this.state = errorState();
       return;
     }
@@ -131,16 +135,16 @@ export class ItemByIdComponent implements OnDestroy {
    * Called when either path or attempt is missing. Will fetch the path if missing, then will be fetch the attempt.
    * Will redirect when relevant data has been fetched.
    */
-  private solveMissingPathAttempt(id: string, path?: string[]): void {
+  private solveMissingPathAttempt(contentType: ItemTypeCategory, id: string, path?: string[]): void {
 
     const pathObservable = path ? of(path) : this.getItemPathService.getItemPath(id);
     pathObservable.pipe(
       switchMap(path => {
         // for empty path (root items), consider the item has a (fake) parent attempt id 0
-        if (path.length === 0) return of({ id: id, path: path, parentAttemptId: defaultAttemptId });
+        if (path.length === 0) return of({ contentType: contentType, id: id, path: path, parentAttemptId: defaultAttemptId });
         // else, will start all path but the current item
         return this.resultActionsService.startWithoutAttempt(path).pipe(
-          map(attemptId => ({ id: id, path: path, parentAttemptId: attemptId }))
+          map(attemptId => ({ contentType: contentType, id: id, path: path, parentAttemptId: attemptId }))
         );
       })
     ).subscribe(
