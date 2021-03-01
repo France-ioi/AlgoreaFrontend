@@ -15,8 +15,8 @@ export class GroupRouter {
    * Navigate to given group, on the path page.
    * If page is not given and we are currently on a group page, use the same page. Otherwise, default to 'details'.
    */
-  navigateTo(group: GroupRoute, path?: 'edit'|'details'): void {
-    void this.router.navigateByUrl(this.url(group, path));
+  navigateTo(route: GroupRoute, page?: 'edit'|'details'): void {
+    void this.router.navigateByUrl(this.url(route, page));
   }
 
   /**
@@ -33,8 +33,8 @@ export class GroupRouter {
    * Return a url to the given group, on the `path` page.
    * If page is not given and we are currently on a group page, use the same page. Otherwise, default to 'details'.
    */
-  url(group: GroupRoute, path?: 'edit'|'details'): UrlTree {
-    return this.router.createUrlTree(this.urlArray(group, path));
+  url(route: GroupRoute, page?: 'edit'|'details'): UrlTree {
+    return this.router.createUrlTree(this.urlArray(route, page));
   }
 
   /**
