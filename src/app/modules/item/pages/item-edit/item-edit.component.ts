@@ -1,7 +1,7 @@
 import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { CurrentContentService } from 'src/app/shared/services/current-content.service';
 import { ItemData, ItemDataSource } from '../../services/item-datasource.service';
-import { FormBuilder, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { forkJoin, Observable, of, Subscription, throwError } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
 import { FetchError, Fetching, isReady, Ready } from '../../../../shared/helpers/state';
@@ -31,6 +31,11 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
     url: [ '', Validators.maxLength(200) ],
     text_id: [ '', Validators.maxLength(200) ],
     uses_api: [ false ],
+    validation_type: [ '' ],
+    no_score: [ false ],
+    title_bar_visible: [ false ],
+    prompt_to_join_group_by_code: [ false ],
+    full_screen: [ '' ],
   });
   itemChanges: { children?: ChildData[] } = {};
 
@@ -116,22 +121,45 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
   }
 
   private getItemChanges(): ItemChanges | undefined {
-    const urlFormControl = this.itemForm.get('url');
-    const usesApiFormControl = this.itemForm.get('uses_api');
-    const textIdFormControl = this.itemForm.get('text_id');
+    const formControls: {[key: string]: AbstractControl | null} = {
+      url: this.itemForm.get('url'),
+      textId: this.itemForm.get('text_id'),
+      usesApi: this.itemForm.get('uses_api'),
+      validationType: this.itemForm.get('validation_type'),
+      noScore: this.itemForm.get('no_score'),
+      titleBarVisible: this.itemForm.get('title_bar_visible'),
+      promptToJoinGroupByCode: this.itemForm.get('prompt_to_join_group_by_code'),
+      fullScreen: this.itemForm.get('full_screen'),
+    };
 
-    if (urlFormControl === null || usesApiFormControl === null || textIdFormControl === null) return undefined;
+    if (Object.values(formControls).includes(null) || !this.initialFormData) return undefined;
 
     const itemFormValues: ItemChanges = {};
 
-    const url = urlFormControl.value !== '' ? urlFormControl.value as string : null;
-    if (url !== this.initialFormData?.url) itemFormValues.url = url;
+    const url = formControls.url?.value !== '' ? formControls.url?.value as string : null;
+    if (url !== this.initialFormData.url) itemFormValues.url = url;
 
-    const usesApi = usesApiFormControl.value as boolean;
-    if (usesApi !== this.initialFormData?.uses_api) itemFormValues.uses_api = usesApi;
+    const usesApi = formControls.usesApi?.value as boolean;
+    if (usesApi !== this.initialFormData.uses_api) itemFormValues.uses_api = usesApi;
 
-    const textId = textIdFormControl.value as string;
+    const textId = formControls.textId?.value as string;
     if (textId !== '') itemFormValues.text_id = textId;
+
+    const validationType = formControls.validationType?.value as 'None' | 'All' | 'AllButOne' | 'Categories' | 'One' | 'Manual';
+    if (validationType !== this.initialFormData.validation_type) itemFormValues.validation_type = validationType;
+
+    const noScore = formControls.noScore?.value as boolean;
+    if (noScore !== this.initialFormData.no_score) itemFormValues.no_score = noScore;
+
+    const titleBarVisible = formControls.titleBarVisible?.value as boolean;
+    if (titleBarVisible !== this.initialFormData.title_bar_visible) itemFormValues.title_bar_visible = titleBarVisible;
+
+    const promptToJoinGroupByCode = formControls.promptToJoinGroupByCode?.value as boolean;
+    if (promptToJoinGroupByCode !== this.initialFormData.prompt_to_join_group_by_code)
+      itemFormValues.prompt_to_join_group_by_code = promptToJoinGroupByCode;
+
+    const fullScreen = formControls.fullScreen?.value as 'forceYes' | '' | 'forceNo' | 'default';
+    if (fullScreen !== this.initialFormData.full_screen) itemFormValues.full_screen = fullScreen;
 
     return itemFormValues;
   }
@@ -221,6 +249,11 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
       url: item.url || '',
       text_id: '',
       uses_api: item.uses_api || false,
+      validation_type: item.validation_type,
+      no_score: item.no_score,
+      title_bar_visible: item.title_bar_visible || false,
+      prompt_to_join_group_by_code: item.prompt_to_join_group_by_code || false,
+      full_screen: item.full_screen || '',
     });
 
     this.itemChanges = {};
