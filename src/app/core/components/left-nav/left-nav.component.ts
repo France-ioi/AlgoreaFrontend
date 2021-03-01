@@ -72,4 +72,8 @@ export class LeftNavComponent implements OnInit, OnDestroy {
     this.dataSources[e.index].focus();
   }
 
+  retryError(): void {
+    this.dataSources[this.activeTabIndex].retry();
+  }
+
 }
