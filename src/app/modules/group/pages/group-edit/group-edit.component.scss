@@ -1,41 +1,27 @@
-.field {
+.group-edition {
 
-  display: flex;
+  margin: 1rem;
+  background-color: white;
 
-  /* Clear floats after the columns */
-  :after {
-    content: "";
-    display: table;
-    clear: both;
-  }
-
-  .field-name {
-    float: left;
-    width: 20%;
-    margin-top: 6px;
-
-    label {
-      padding: 12px 12px 12px 0;
-      display: inline-block;
-      font-family: "titillium", sans-serif;
-      font-size: medium;
-    }
-  }
-
-  .field-value {
-    float: left;
-    width: 80%;
-    margin-top: 6px;
-  }
-}
-
-/* Responsive layout - when the screen is less than 1200px wide, make the two columns stack on top of each other instead of next to each other */
-@media screen and (max-width: 1200px) {
   .field {
-  display: block;
-    .field-name, .field-value {
-      width: 100%;
-      margin-top: 0;
+
+    display: flex;
+
+    .field-name {
+      float: left;
+      width: 20%;
+      margin-top: 6px;
+
+      label {
+        padding: 12px 12px 12px 0;
+        display: inline-block;
+      }
+    }
+
+    .field-value {
+      float: left;
+      width: 80%;
+      margin-top: 6px;
     }
   }
 }

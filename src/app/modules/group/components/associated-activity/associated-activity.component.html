@@ -1,0 +1,26 @@
+<alg-section i18n-label label="Associated Activity" icon="fa fa-book">
+
+  <p-progressSpinner *ngIf="state === 'fetching'"></p-progressSpinner>
+
+  <p *ngIf="state === 'error'" class="error-message">
+    <i class="fa fa-exclamation-triangle"></i>
+    <span i18n>Error while loading the root activity</span>
+  </p>
+
+  <ng-container *ngIf="state === 'ready'">
+    <div class="activity" *ngIf="rootActivity !== null; else noRootActivity">
+      <span class="activity-name" [routerLink]="rootActivity.path">
+        {{rootActivity.name}}
+      </span>
+      <span class="remove" (click)="onRemove()">
+        <span i18n>Remove</span>
+        <i class="fa fa-trash-alt"></i>
+      </span>
+    </div>
+
+    <ng-template #noRootActivity>
+      <span i18n>No Root Activity</span>
+    </ng-template>
+
+  </ng-container>
+</alg-section>

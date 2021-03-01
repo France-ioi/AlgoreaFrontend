@@ -9,4 +9,6 @@ export const mockGroup: Group = {
   current_user_is_manager: false,
 
   current_user_can_grant_group_access: true,
+
+  root_activity_id: null,
 };
