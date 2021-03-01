@@ -4,7 +4,7 @@ import { merge, of } from 'rxjs';
 import { Subject } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { GetItemByIdService } from 'src/app/modules/item/http-services/get-item-by-id.service';
-import { incompleteItemStringUrl } from 'src/app/shared/helpers/item-route';
+import { incompleteItemStringUrl } from 'src/app/shared/routing/item-route';
 import { fetchingState, isReady, readyState } from 'src/app/shared/helpers/state';
 
 type ActivityId = string;
