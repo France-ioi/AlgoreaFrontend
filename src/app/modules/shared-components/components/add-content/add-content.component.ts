@@ -26,7 +26,6 @@ const defaultFormValues = { create: '', searchExisting: '' };
 })
 export class AddContentComponent<Type> implements OnInit, OnDestroy {
 
-  @Input() title = '';
   @Input() allowedTypesForNewContent: NewContentType<Type>[] = [];
   @Input() searchFunction?: (searchValue: string) => Observable<AddedContent<Type>[]>;
   @Input() loading = false;

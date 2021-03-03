@@ -268,44 +268,29 @@
       </trans-unit><trans-unit id="1eab7cabd424b0f190d8e7d2e5a412c9ef053d96" datatype="html">
         <source>Add a content</source><target state="translated">Ajouter du contenu</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/add-item/add-item.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit><trans-unit id="7de5b8682019c8bc549084bf70c7fbf2daee125a" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/add-item/add-item.component.html</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="7de5b8682019c8bc549084bf70c7fbf2daee125a" datatype="html">
         <source>Enter a title to create a new child</source><target state="translated">Entrez un titre afin de créer un nouveau contenu</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/shared-components/components/add-content/add-content.component.html</context>
-          <context context-type="linenumber">10</context>
-        </context-group>
-      </trans-unit><trans-unit id="5c2b4c14b0264983cd5c58f3ee78b7c21c5629c8" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/add-content/add-content.component.html</context><context context-type="linenumber">9</context></context-group></trans-unit><trans-unit id="5c2b4c14b0264983cd5c58f3ee78b7c21c5629c8" datatype="html">
         <source>Enter at least 3 characters</source><target state="translated">Entrez au moins 3 caractères</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/shared-components/components/add-content/add-content.component.html</context>
-          <context context-type="linenumber">11</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/shared-components/components/add-content/add-content.component.html</context>
-          <context context-type="linenumber">26</context>
-        </context-group>
-      </trans-unit><trans-unit id="053e81597467a642e04109eebe934c84e6a1f467" datatype="html">
+        
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/add-content/add-content.component.html</context><context context-type="linenumber">10</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/add-content/add-content.component.html</context><context context-type="linenumber">25</context></context-group></trans-unit><trans-unit id="053e81597467a642e04109eebe934c84e6a1f467" datatype="html">
         <source>or</source><target state="translated">ou</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/shared-components/components/add-content/add-content.component.html</context>
-          <context context-type="linenumber">17</context>
-        </context-group>
-      </trans-unit><trans-unit id="9a5000fd04ec9ad2b8eea88f70339e688086d02d" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/add-content/add-content.component.html</context><context context-type="linenumber">16</context></context-group></trans-unit><trans-unit id="9a5000fd04ec9ad2b8eea88f70339e688086d02d" datatype="html">
         <source>Search for existing content</source><target state="translated">Chercher parmi les contenus existants</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/shared-components/components/add-content/add-content.component.html</context>
-          <context context-type="linenumber">25</context>
-        </context-group>
-      </trans-unit><trans-unit id="828fba1dc0726e5a3a6dcfd4fa7a94b694ad47e9" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/add-content/add-content.component.html</context><context context-type="linenumber">24</context></context-group></trans-unit><trans-unit id="828fba1dc0726e5a3a6dcfd4fa7a94b694ad47e9" datatype="html">
         <source>Select a Content</source><target state="translated">Sélectionnez un contenu</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/add-content/add-content.component.html</context><context context-type="linenumber">51</context></context-group></trans-unit><trans-unit id="f6755cff4957d5c3c89bafce5651f1b6fa2b1fd9" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/add-content/add-content.component.html</context><context context-type="linenumber">50</context></context-group></trans-unit><trans-unit id="f6755cff4957d5c3c89bafce5651f1b6fa2b1fd9" datatype="html">
         <source>Add</source><target state="translated">Ajouter</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/add-content/add-content.component.html</context><context context-type="linenumber">58</context></context-group></trans-unit><trans-unit id="6206a0f04a13a3f6ad713366d4480eb14bc15386" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/add-content/add-content.component.html</context><context context-type="linenumber">57</context></context-group></trans-unit><trans-unit id="6206a0f04a13a3f6ad713366d4480eb14bc15386" datatype="html">
         <source>No records found</source><target state="translated">Aucun résultat</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/add-content/add-content.component.html</context><context context-type="linenumber">64</context></context-group></trans-unit><trans-unit id="9e308eb56a9c8be2847dc3b760f4a78304da36f4" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/add-content/add-content.component.html</context><context context-type="linenumber">63</context></context-group></trans-unit><trans-unit id="9e308eb56a9c8be2847dc3b760f4a78304da36f4" datatype="html">
         <source> Content </source><target state="translated"> Contenu </target>
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-details/item-details.component.html</context><context context-type="linenumber">15</context></context-group></trans-unit><trans-unit id="15793f4cbc261bedbc60f7105533dde536a3f42b" datatype="html">
@@ -887,11 +872,8 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/add-sub-group/add-sub-group.component.ts</context><context context-type="linenumber">49</context></context-group></trans-unit><trans-unit id="dee904819a70b4d8c64eb123dc6ea19d91cb63da" datatype="html">
         <source>Add subgroups</source><target state="translated">Ajouter des sous-groupes</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/components/add-sub-group/add-sub-group.component.html</context>
-          <context context-type="linenumber">5</context>
-        </context-group>
-      </trans-unit><trans-unit id="871322351859596725" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/add-sub-group/add-sub-group.component.html</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="871322351859596725" datatype="html">
         <source>Direct Children Only</source><target state="translated">Enfants directs</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/group/components/group-composition-filter/group-composition-filter.component.ts</context>
