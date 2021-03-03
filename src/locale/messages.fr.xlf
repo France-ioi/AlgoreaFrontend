@@ -365,25 +365,22 @@
       </trans-unit><trans-unit id="5322922947143379212" datatype="html">
         <source>Chapter</source><target state="translated">Chapitre</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/add-item/add-item.component.ts</context><context context-type="linenumber">11</context></context-group></trans-unit><trans-unit id="8099822906128355643" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/helpers/new-item-types.ts</context><context context-type="linenumber">8</context></context-group></trans-unit><trans-unit id="8099822906128355643" datatype="html">
         <source>A new folder which can contain any activities.</source><target state="translated">Un nouveau dossier qui peut contenir des activités</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/add-item/add-item.component.ts</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="4578192247039196794" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/helpers/new-item-types.ts</context><context context-type="linenumber">9</context></context-group></trans-unit><trans-unit id="4578192247039196794" datatype="html">
         <source>Task</source><target state="translated">Tâche</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/add-item/add-item.component.ts</context><context context-type="linenumber">17</context></context-group></trans-unit><trans-unit id="6361086178368013800" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/helpers/new-item-types.ts</context><context context-type="linenumber">14</context></context-group></trans-unit><trans-unit id="6361086178368013800" datatype="html">
         <source>A new task which users can try to solve.</source><target state="translated">Une nouvelle tâche que les utilisateurs pourront tenter de résoudre</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/add-item/add-item.component.ts</context><context context-type="linenumber">18</context></context-group></trans-unit><trans-unit id="6387879863897234206" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/helpers/new-item-types.ts</context><context context-type="linenumber">15</context></context-group></trans-unit><trans-unit id="6387879863897234206" datatype="html">
         <source>Skill</source><target state="translated">Compétence</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/item/components/add-item/add-item.component.ts</context>
-          <context context-type="linenumber">23</context>
-        </context-group>
-      </trans-unit><trans-unit id="9108820859798349403" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/helpers/new-item-types.ts</context><context context-type="linenumber">20</context></context-group></trans-unit><trans-unit id="9108820859798349403" datatype="html">
         <source>A new sub-skill.</source><target state="translated">Une nouvelle sous-compétence.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/add-item/add-item.component.ts</context><context context-type="linenumber">24</context></context-group></trans-unit><trans-unit id="5402924068010392760" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/helpers/new-item-types.ts</context><context context-type="linenumber">21</context></context-group></trans-unit><trans-unit id="5402924068010392760" datatype="html">
         <source>Join the group "<x id="PH" equiv-text="response.group.name"/>"</source><target state="translated">Rejoindre le groupe "<x id="PH" equiv-text="response.group.name"/>"</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/access-code-view/access-code-view.component.ts</context><context context-type="linenumber">45</context></context-group></trans-unit><trans-unit id="3988558682818955220" datatype="html">
