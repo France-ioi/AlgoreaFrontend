@@ -1,5 +1,6 @@
 import { concat, EMPTY, Observable, of, Subject } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
+import { repeatLatestWhen } from 'src/app/shared/helpers/repeatLatestWhen';
 import { errorState, FetchError, Fetching, fetchingState, isReady, mapErrorToState, Ready, readyState } from 'src/app/shared/helpers/state';
 import { switchScan } from 'src/app/shared/helpers/switch-scan';
 import { RoutedContentInfo } from 'src/app/shared/services/current-content.service';
@@ -7,13 +8,16 @@ import { NavTreeData, NavTreeElement } from '../../services/left-nav-loading/nav
 
 export abstract class LeftNavDataSource<ContentT extends RoutedContentInfo, MenuT extends NavTreeElement> {
 
-  initialized = false;
-  changes = new Subject<ContentT|undefined>();
+  private initialized = false;
+  private changes = new Subject<ContentT|undefined>();
+  private retryTrigger = new Subject<void>();
   state: Ready<NavTreeData<MenuT>>|Fetching|FetchError = fetchingState();
 
   constructor() {
 
     this.changes.pipe(
+
+      repeatLatestWhen(this.retryTrigger),
 
       switchScan((prevState: Ready<NavTreeData<MenuT>>|Fetching|FetchError, contentInfo) => {
 
@@ -74,6 +78,13 @@ export abstract class LeftNavDataSource<ContentT extends RoutedContentInfo, Menu
       this.initialized = true;
       this.changes.next(undefined);
     }
+  }
+
+  /**
+   * Re-play the last change
+   */
+  retry(): void {
+    this.retryTrigger.next();
   }
 
   /**
