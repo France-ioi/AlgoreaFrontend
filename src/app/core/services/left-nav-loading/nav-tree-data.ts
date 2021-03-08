@@ -35,6 +35,7 @@ export class NavTreeData<T extends NavTreeElement> {
 
   /**
    * Return this with the element from `elements` (identified by its id) replaced by the given one
+   * If the element is not found, return this unchanged.
    */
   withUpdatedElement(id: Id, update: (el:T)=>T): NavTreeData<T> {
     const idx = this.elements.findIndex(i => i.id === id);
@@ -46,6 +47,7 @@ export class NavTreeData<T extends NavTreeElement> {
 
   /**
    * Remove the current selection but keep the item expanded if it has children
+   * If no element is selected, return this unchanged.
    */
   withNoSelection(): NavTreeData<T> {
     if (!this.selectedElementId) return this;
@@ -54,7 +56,7 @@ export class NavTreeData<T extends NavTreeElement> {
 
   /**
    * Create a new sub-NavTreeData moving the child element and its siblings to `elements` and his parent as new parent.
-   * Return this if id not found.
+   * If the element is not found, return this unchanged.
    */
   subNavMenuData(childElementId: Id): NavTreeData<T> {
     const newParent = this.elements.find(i => i.children && i.children.some(c => c.id === childElementId));
@@ -73,6 +75,13 @@ export class NavTreeData<T extends NavTreeElement> {
   selectedElement(): T|undefined {
     if (this.selectedElement === undefined) return undefined;
     return this.elements.find(e => e.id === this.selectedElementId);
+  }
+
+  /**
+   * Search among the elements (level 1) for the given id
+   */
+  elementWithId(id: Id): T|undefined {
+    return this.elements.find(i => i.id === id);
   }
 
 }

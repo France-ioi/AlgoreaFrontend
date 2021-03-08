@@ -1,10 +1,56 @@
-import { concat, EMPTY, Observable, of, Subject } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { concat, EMPTY, Observable, ObservableInput, of, OperatorFunction, Subject } from 'rxjs';
+import { catchError, map, mergeMap, switchMap } from 'rxjs/operators';
 import { repeatLatestWhen } from 'src/app/shared/helpers/repeatLatestWhen';
-import { errorState, FetchError, Fetching, fetchingState, isReady, mapErrorToState, Ready, readyState } from 'src/app/shared/helpers/state';
-import { switchScan } from 'src/app/shared/helpers/switch-scan';
+import { errorState, FetchError, Fetching, fetchingState, isReady, Ready, readyState } from 'src/app/shared/helpers/state';
 import { RoutedContentInfo } from 'src/app/shared/services/current-content.service';
 import { NavTreeData, NavTreeElement } from '../../services/left-nav-loading/nav-tree-data';
+
+type Id = string;
+
+/* Type definition for the updates */
+enum SelectionOpts { UnChanged, Deselected, Selected }
+interface DataSourceUpdate<T extends NavTreeElement> {
+  type: 'update',
+  elementId?: Id, // element to be selected or updated
+  selection: SelectionOpts,
+  elementUpdate?: (el:T) => T, // if set, function to update the element identified by elementId
+}
+interface DataSourceReplacement<T extends NavTreeElement> {
+  type: 'replace'
+  data: NavTreeData<T>
+}
+interface DataSourceLoading { type: 'loading' }
+interface DataSourceError { type: 'error', error: any }
+type DataSourceChange<T extends NavTreeElement> = DataSourceUpdate<T>|DataSourceReplacement<T>|DataSourceLoading|DataSourceError;
+function dsDeselect<T extends NavTreeElement>(): DataSourceUpdate<T> {
+  return { type: 'update', selection: SelectionOpts.Deselected };
+}
+function dsUpdateElement<T extends NavTreeElement>(id: Id, select: boolean, update: (el:T) => T): DataSourceUpdate<T> {
+  return { type: 'update', selection: select ? SelectionOpts.Selected : SelectionOpts.UnChanged, elementId: id, elementUpdate: update };
+}
+function dsReplaceWith<T extends NavTreeElement>(data: NavTreeData<T>): DataSourceReplacement<T> {
+  return { type: 'replace', data: data };
+}
+function dsLoading(): DataSourceLoading {
+  return { type: 'loading' };
+}
+function dsError(err: any): DataSourceError {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  return { type: 'error', error: err };
+}
+function isDSLoading<T extends NavTreeElement>(change: DataSourceChange<T>): change is DataSourceLoading {
+  return change.type === 'loading';
+}
+function isDSError<T extends NavTreeElement>(change: DataSourceChange<T>): change is DataSourceError {
+  return change.type === 'error';
+}
+function isDSUpdate<T extends NavTreeElement>(change: DataSourceChange<T>): change is DataSourceUpdate<T> {
+  return change.type === 'update';
+}
+function isDSReplace<T extends NavTreeElement>(change: DataSourceChange<T>): change is DataSourceReplacement<T> {
+  return change.type === 'replace';
+}
+
 
 export abstract class LeftNavDataSource<ContentT extends RoutedContentInfo, MenuT extends NavTreeElement> {
 
@@ -19,52 +65,80 @@ export abstract class LeftNavDataSource<ContentT extends RoutedContentInfo, Menu
 
       repeatLatestWhen(this.retryTrigger),
 
-      switchScan((prevState: Ready<NavTreeData<MenuT>>|Fetching|FetchError, contentInfo) => {
+      mergeMap((contentInfo):ObservableInput<DataSourceChange<MenuT>> => {
 
-        if (isReady(prevState)) {
+        if (isReady(this.state)) {
           // CASE: the current content is not an item and the menu has already items displayed
           if (!contentInfo) {
-            if (prevState.data.selectedElementId !== undefined) return of(readyState(prevState.data.withNoSelection()));
+            if (this.state.data.selectedElementId !== undefined) return of(dsDeselect());
             return EMPTY; // no change
           }
 
           const contentId = contentInfo.route.id;
 
           // CASE: the current content is already the selected one
-          if (prevState.data.selectedElementId === contentId) {
-            const newData = prevState.data.withUpdatedElement(contentId, el => this.addDetailsToTreeElement(contentInfo, el));
-            return concat(of(readyState(newData)), this.loadChildrenOfSelectedElement(newData));
+          if (this.state.data.selectedElementId === contentId) {
+            return concat(
+              of(dsUpdateElement<MenuT>(contentId, false, el => this.addDetailsToTreeElement(contentInfo, el))),
+              this.loadChildrenOfElementWithId(
+                this.state.data.withUpdatedElement(contentId, el => this.addDetailsToTreeElement(contentInfo, el)), contentId
+              )
+            );
           }
 
           // CASE: the content is among the displayed items at the root of the tree -> select the right one (might load children)
-          if (prevState.data.hasLevel1Element(contentId)) {
-            let newData = prevState.data.withSelection(contentId);
-            newData = newData.withUpdatedElement(contentId, el => this.addDetailsToTreeElement(contentInfo, el));
-            return concat(of(readyState(newData)), this.loadChildrenOfSelectedElement(newData));
+          if (this.state.data.hasLevel1Element(contentId)) {
+            return concat(
+              of(dsUpdateElement<MenuT>(contentId, true, el => this.addDetailsToTreeElement(contentInfo, el))),
+              this.loadChildrenOfElementWithId(
+                this.state.data.withUpdatedElement(contentId, el => this.addDetailsToTreeElement(contentInfo, el)), contentId
+              )
+            );
           }
 
           // CASE: the content is a child of one item at the root of the tree -> shift the tree and select it (might load children)
-          if (prevState.data.hasLevel2Element(contentId)) {
-            let newData = prevState.data.subNavMenuData(contentId);
-            newData = newData.withUpdatedElement(contentId, el => this.addDetailsToTreeElement(contentInfo, el));
-            return concat(of(readyState(newData)), this.loadChildrenOfSelectedElement(newData));
+          if (this.state.data.hasLevel2Element(contentId)) {
+            return concat(
+              of(dsUpdateElement<MenuT>(contentId, true, el => this.addDetailsToTreeElement(contentInfo, el))),
+              this.loadChildrenOfElementWithId(
+                this.state.data.subNavMenuData(contentId)
+                  .withUpdatedElement(contentId, el => this.addDetailsToTreeElement(contentInfo, el)),
+                contentId
+              )
+            );
           }
 
         } else /* not ready state */ if (!contentInfo) {
           // CASE: the content is not an item and the menu has not already item displayed -> load item root
-          return this.loadDefaultNav();
+          return concat(of(dsLoading()), this.loadDefaultNav());
         }
 
         // OTHERWISE: the content is an item which is not currently displayed:
 
         // CASE: The current content type matches the current tab
-        return this.loadNewNav(contentInfo);
+        return concat(of(dsLoading()), this.loadNewNav(contentInfo));
 
-      }, fetchingState()/* the switchScan accumulator seed */)
+      })
     ).subscribe({
       // As an update of `category` triggers a change and as switchMap ensures ongoing requests are cancelled when a new change happens,
       // the state updated here is on the same category as `prevState` above.
-      next: newState => this.state = newState,
+      next: change => {
+        if (isDSLoading(change)) this.state = fetchingState();
+        else if (isDSError(change)) this.state = errorState(change.error);
+        else if (isDSUpdate(change) && isReady(this.state)) {
+          let data = this.state.data;
+          if (change.selection === SelectionOpts.Deselected) data = data.withNoSelection();
+          if (change.elementId) {
+            const id = change.elementId;
+            if (!data.hasLevel1Element(id) && data.hasLevel2Element(id)) data = data.subNavMenuData(id);
+            if (data.hasLevel1Element(id) && change.selection === SelectionOpts.Selected) data = data.withSelection(id);
+            if (change.elementUpdate) data = data.withUpdatedElement(id, change.elementUpdate);
+          }
+          this.state = readyState(data);
+        } else if (isDSReplace(change)) {
+          this.state = readyState(change.data);
+        }
+      },
       error: e => this.state = errorState(e),
     });
 
@@ -107,15 +181,20 @@ export abstract class LeftNavDataSource<ContentT extends RoutedContentInfo, Menu
   protected abstract loadNavDataFromChild(id: string, child: ContentT): Observable<{ parent: MenuT, elements: MenuT[] }>;
   protected abstract loadNavData(item: MenuT): Observable<{ parent: MenuT, elements: MenuT[] }>;
 
-  private loadChildrenOfSelectedElement(data: NavTreeData<MenuT>): Observable<Ready<NavTreeData<MenuT>>|Fetching|FetchError> {
-    const selected = data.selectedElement();
-    if (!selected) return of(errorState(new Error('Cannot find selected element (or no selection) (unexpected)')));
-    if (!selected.hasChildren) return EMPTY; // if no children, no need to fetch children
+
+  private loadChildrenOfElementWithId(data: NavTreeData<MenuT>, id: Id): Observable<DataSourceChange<MenuT>> {
+    const element = data.elementWithId(id);
+    if (element === undefined) return EMPTY;
+    return this.loadChildrenOfElement(element);
+  }
+
+  private loadChildrenOfElement(element: MenuT): Observable<DataSourceChange<MenuT>> {
+    if (!element.hasChildren) return EMPTY; // if no children, no need to fetch children
 
     // We do not check if children were already known. So we might re-load again the same children, which is intended.
-    return this.loadNavData(selected).pipe(
-      map(newData => readyState(data.withUpdatedElement(selected.id, el => ({ ...el, ...newData.parent, children: newData.elements })))),
-      mapErrorToState()
+    return this.loadNavData(element).pipe(
+      map(newData => dsUpdateElement<MenuT>(element.id, false, el => ({ ...el, ...newData.parent, children: newData.elements }))),
+      this.mapError()
     );
   }
 
@@ -133,25 +212,27 @@ export abstract class LeftNavDataSource<ContentT extends RoutedContentInfo, Menu
     }
   }
 
-  private loadDefaultNav(): Observable<Ready<NavTreeData<MenuT>>|Fetching|FetchError> {
-    return concat(
-      of(fetchingState()),
-      this.loadRootTreeData().pipe(
-        map(elements => readyState(new NavTreeData(elements, [], undefined, undefined))),
-        mapErrorToState()
-      )
+  private loadDefaultNav(): Observable<DataSourceChange<MenuT>> {
+    return this.loadRootTreeData().pipe(
+      map(elements => dsReplaceWith(new NavTreeData(elements, [], undefined, undefined))),
+      this.mapError(),
     );
   }
 
-  private loadNewNav(content: ContentT): Observable<Ready<NavTreeData<MenuT>>|Fetching|FetchError> {
-    return concat(
-      of(fetchingState()), // as the menu change completely, display the loader
-      this.loadNewNavData(content).pipe( // the new items (only first level loaded)
-        // already update the tree with the first level, and if needed, load (async) children as well
-        switchMap(data => concat(of(readyState(data)), this.loadChildrenOfSelectedElement(data))),
-        mapErrorToState(),
-      )
+  private loadNewNav(content: ContentT): Observable<DataSourceChange<MenuT>> {
+    return this.loadNewNavData(content).pipe( // the new items (only first level loaded)
+      // already update the tree with the first level, and if needed, load (async) children as well
+      switchMap(data => {
+        const selectedEl = data.selectedElement();
+        if (!selectedEl) throw new Error('Unexpected: no selected element in new nav');
+        return concat(of(dsReplaceWith<MenuT>(data)), this.loadChildrenOfElement(selectedEl));
+      }),
+      this.mapError(),
     );
+  }
+
+  private mapError(): OperatorFunction<DataSourceChange<MenuT>, DataSourceChange<MenuT>> {
+    return catchError(e => of(dsError(e)));
   }
 
 }
