@@ -5,6 +5,7 @@ import { errorState, FetchError, Fetching, fetchingState, isReady, Ready, readyS
 import { RoutedContentInfo } from 'src/app/shared/services/current-content.service';
 import { NavTreeData, NavTreeElement } from '../../services/left-nav-loading/nav-tree-data';
 
+const msBetweenChildrenRefetch = 5000;
 type Id = string;
 
 /* Type definition for the updates */
@@ -190,6 +191,10 @@ export abstract class LeftNavDataSource<ContentT extends RoutedContentInfo, Menu
 
   private fetchChildrenOfElement(element: MenuT): Observable<DataSourceChange<MenuT>> {
     if (!element.hasChildren) return EMPTY; // if no children, no need to fetch children
+    if (element.latestChildrenFetch && Date.now() - element.latestChildrenFetch.valueOf() < msBetweenChildrenRefetch && element.children) {
+      return EMPTY;
+    }
+    element.latestChildrenFetch = new Date();
 
     // We do not check if children were already known. So we might re-load again the same children, which is intended.
     return this.fetchNavData(element).pipe(
