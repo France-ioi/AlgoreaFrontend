@@ -4,6 +4,14 @@ $border-radius: .5rem;
 
 :host {
   display: block;
+
+  .error {
+    color: $base-bk-color;
+
+    .retry {
+      cursor: pointer;
+    }
+  }
 }
 
 :host ::ng-deep .group-skills {

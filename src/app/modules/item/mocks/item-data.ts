@@ -1,4 +1,4 @@
-import { ItemRoute } from 'src/app/shared/helpers/item-route';
+import { ItemRoute } from 'src/app/shared/routing/item-route';
 import { ItemData } from '../services/item-datasource.service';
 import { mockItem } from './item-by-id';
 

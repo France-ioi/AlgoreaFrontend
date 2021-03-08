@@ -59,7 +59,10 @@
 
   <!-- "skill-folder" type -->
   <ng-template let-node pTemplate="skill-folder">
-    <span class="node-tree-item folder" [ngClass]="{ expanded: node.expanded, current: node.checked, locked: node.locked }">
+    <span
+      class="node-tree-item folder"
+      [ngClass]="{ expanded: node.expanded, locked: node.locked, current: node.data && node.data.current }"
+    >
       <span class="node-item-branch">
         <span class="top-branch">
           <span class="mask-branch"></span>
@@ -101,7 +104,10 @@
 
   <!-- "group-folder" type -->
   <ng-template let-node pTemplate="group">
-    <span class="node-tree-item folder" [ngClass]="{ expanded: node.expanded, current: node.checked, locked: node.locked }">
+    <span
+      class="node-tree-item folder"
+      [ngClass]="{ expanded: node.expanded, locked: node.locked, current: node.data && node.data.current }"
+    >
       <span class="node-item-branch">
         <span class="top-branch">
           <span class="mask-branch"></span>
@@ -141,7 +147,10 @@
 
   <!-- 'task-course' type -->
   <ng-template let-node pTemplate="task-course">
-    <span class="node-tree-item" [ngClass]="{ current: node.checked, locked: node.locked }" >
+    <span
+      class="node-tree-item folder"
+      [ngClass]="{ expanded: node.expanded, locked: node.locked, current: node.data && node.data.current }"
+    >
       <span class="node-item-branch">
         <span class="top-branch">
           <span class="mask-branch"></span>

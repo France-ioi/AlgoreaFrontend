@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router, UrlTree } from '@angular/router';
-import { ContentRoute, pathParamName } from '../helpers/content-route';
+import { GroupRoute, urlArrayForGroupRoute } from './group-route';
 
 @Injectable({
   providedIn: 'root'
@@ -15,8 +15,8 @@ export class GroupRouter {
    * Navigate to given group, on the path page.
    * If page is not given and we are currently on a group page, use the same page. Otherwise, default to 'details'.
    */
-  navigateTo(group: ContentRoute, path?: 'edit'|'details'): void {
-    void this.router.navigateByUrl(this.url(group, path));
+  navigateTo(route: GroupRoute, page?: 'edit'|'details'): void {
+    void this.router.navigateByUrl(this.url(route, page));
   }
 
   /**
@@ -33,19 +33,17 @@ export class GroupRouter {
    * Return a url to the given group, on the `path` page.
    * If page is not given and we are currently on a group page, use the same page. Otherwise, default to 'details'.
    */
-  url(group: ContentRoute, path?: 'edit'|'details'): UrlTree {
-    return this.router.createUrlTree(this.urlArray(group, path));
+  url(route: GroupRoute, page?: 'edit'|'details'): UrlTree {
+    return this.router.createUrlTree(this.urlArray(route, page));
   }
 
   /**
    * Return a url array (`commands` array) to the given group, on the `path` page.
    * If page is not given and we are currently on a group page, use the same page. Otherwise, default to 'details'.
    */
-  urlArray(group: ContentRoute, path?: 'edit'|'details'): any[] {
-    const dest = path ? [ path ] : (this.currentGroupSubPage() || [ 'details' ]);
-    const params: {[k: string]: any} = {};
-    params[pathParamName] = group.path;
-    return [ '/', 'groups', 'by-id', group.id, params ].concat(dest);
+  urlArray(route: GroupRoute, page?: 'edit'|'details'): any[] {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return urlArrayForGroupRoute(route, page ?? this.currentGroupSubPage());
   }
 
 
@@ -53,8 +51,11 @@ export class GroupRouter {
    * Extract (bit hacky) the group sub-page of the current page.
    * Return undefined if we are not on a "group" page
    */
-  private currentGroupSubPage(): string[]|undefined {
-    return this.currentGroupPagePath()?.slice(3);
+  private currentGroupSubPage(): 'edit'|'details'|undefined {
+    const subpagePart = this.currentGroupPagePath()?.slice(3);
+    if (!subpagePart || subpagePart.length === 0) return undefined;
+    const page = subpagePart[0];
+    return page === 'edit' || page === 'details' ? page : undefined;
   }
 
   private currentGroupPagePath(): string[]|undefined {

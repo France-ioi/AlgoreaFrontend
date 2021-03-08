@@ -2,13 +2,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { map, pairwise } from 'rxjs/operators';
-import {
-  CurrentContentService,
-  isActivityInfo,
-  isGroupInfo,
-  isItemInfo,
-  isSkillInfo
-} from 'src/app/shared/services/current-content.service';
+import { CurrentContentService, isActivityInfo, isGroupInfo, isItemInfo } from 'src/app/shared/services/current-content.service';
 import { GroupNavigationService } from '../../http-services/group-navigation.service';
 import { ItemNavigationService } from '../../http-services/item-navigation.service';
 import { LeftNavGroupDataSource } from './left-nav-group-datasource';
@@ -58,19 +52,14 @@ export class LeftNavComponent implements OnInit, OnDestroy {
         this.activeTabIndex = groupsTabIdx;
         this.dataSources[groupsTabIdx].showContent(content);
 
-      } else if (isSkillInfo(content)) {
-        this.activeTabIndex = skillsTabIdx;
-        this.dataSources[skillsTabIdx].showContent(content);
-
       } else if (isActivityInfo(content)) {
         this.activeTabIndex = activitiesTabIdx;
         this.dataSources[activitiesTabIdx].showContent(content);
 
-      } else { // item with an unknow type
-        // as we do not know if it is an activity or skill, we cannot show content while we would like to select ids if already listed
-        // TODO
+      } else {
+        this.activeTabIndex = skillsTabIdx;
+        this.dataSources[skillsTabIdx].showContent(content);
       }
-
     });
   }
 
@@ -81,6 +70,10 @@ export class LeftNavComponent implements OnInit, OnDestroy {
   onSelectionChangedByIdx(e: { index: number }): void {
     this.activeTabIndex = e.index;
     this.dataSources[e.index].focus();
+  }
+
+  retryError(): void {
+    this.dataSources[this.activeTabIndex].retry();
   }
 
 }

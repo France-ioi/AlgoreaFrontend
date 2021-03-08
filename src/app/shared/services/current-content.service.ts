@@ -1,8 +1,8 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { UrlTree } from '@angular/router';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { ContentRoute } from '../helpers/content-route';
-import { ItemRoute } from '../helpers/item-route';
+import { ContentRoute } from '../routing/content-route';
+import { ItemRoute } from '../routing/item-route';
 import { ItemType } from '../helpers/item-type';
 
 export interface ContentBreadcrumb {
@@ -34,14 +34,6 @@ export interface ItemInfo extends RoutedContentInfo {
   details?: ItemDetails
 }
 
-export interface ActivityInfo extends ItemInfo {
-  data: { route: ItemRoute, details: ItemDetails }
-}
-
-export interface SkillInfo extends ItemInfo {
-  data: { route: ItemRoute, details: ItemDetails }
-}
-
 export interface ItemDetails {
   title: string|null,
   type: ItemType,
@@ -60,12 +52,8 @@ export function isItemInfo(info: ContentInfo|null): info is ItemInfo {
   return info !== null && info.type === 'item';
 }
 
-export function isActivityInfo(info: ItemInfo|null): info is ActivityInfo {
-  return info !== null && info.details !== undefined && info.details.type !== 'Skill';
-}
-
-export function isSkillInfo(info: ItemInfo|null): info is SkillInfo {
-  return info !== null && info.details !== undefined && info.details.type === 'Skill';
+export function isActivityInfo(info: ItemInfo|null): boolean {
+  return info !== null && info.route.contentType === 'activity';
 }
 
 export function isGroupInfo(info: ContentInfo|null): info is GroupInfo {

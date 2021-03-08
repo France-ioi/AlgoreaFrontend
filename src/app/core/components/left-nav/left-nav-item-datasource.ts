@@ -1,7 +1,7 @@
 import { EMPTY, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { isSkill, ItemTypeCategory } from 'src/app/shared/helpers/item-type';
-import { ActivityInfo, ItemInfo, SkillInfo } from 'src/app/shared/services/current-content.service';
+import { ItemInfo } from 'src/app/shared/services/current-content.service';
 import { ItemNavigationService, NavMenuItem } from '../../http-services/item-navigation.service';
 import { LeftNavDataSource } from './left-nav-datasource';
 
@@ -47,13 +47,13 @@ export abstract class LeftNavItemDataSource<ItemT extends ItemInfo> extends Left
 
 }
 
-export class LeftNavActivityDataSource extends LeftNavItemDataSource<ActivityInfo> {
+export class LeftNavActivityDataSource extends LeftNavItemDataSource<ItemInfo> {
   constructor(itemNavService: ItemNavigationService) {
     super('activity', itemNavService);
   }
 }
 
-export class LeftNavSkillDataSource extends LeftNavItemDataSource<SkillInfo> {
+export class LeftNavSkillDataSource extends LeftNavItemDataSource<ItemInfo> {
   constructor(itemNavService: ItemNavigationService) {
     super('skill', itemNavService);
   }

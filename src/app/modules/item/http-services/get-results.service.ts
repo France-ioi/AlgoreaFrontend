@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { isRouteWithAttempt, ItemRoute } from 'src/app/shared/helpers/item-route';
+import { isRouteWithAttempt, ItemRoute } from 'src/app/shared/routing/item-route';
 import { appConfig } from 'src/app/shared/helpers/config';
 
 interface RawResult {

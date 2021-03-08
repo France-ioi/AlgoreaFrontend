@@ -33,7 +33,9 @@ export class GroupByIdComponent implements OnDestroy {
     this.activatedRoute.paramMap.subscribe(params => {
       const id = params.get('id');
       this.currentContent.current.next({
-        route: { id: id, path: [] }, type: 'group', breadcrumbs: { category: GROUP_BREADCRUMB_CAT, path: [], currentPageIdx: -1 }
+        route: { contentType: 'group', id: id, path: [] },
+        type: 'group',
+        breadcrumbs: { category: GROUP_BREADCRUMB_CAT, path: [], currentPageIdx: -1 }
       } as GroupInfo);
       if (id) this.groupDataSource.fetchGroup(id);
     });
@@ -44,7 +46,7 @@ export class GroupByIdComponent implements OnDestroy {
         filter<Ready<Group>|Fetching|FetchError,Ready<Group>>(isReady),
         map((state):GroupInfo => ({
           type: 'group',
-          route: { id: state.data.id, path: [] },
+          route: { contentType: 'group', id: state.data.id, path: [] },
           breadcrumbs: {
             category: GROUP_BREADCRUMB_CAT,
             path: [{ title: state.data.name, navigateTo: this.router.createUrlTree([ 'groups', 'by-id', state.data.id, 'details' ]) }],

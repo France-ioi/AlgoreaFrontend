@@ -3,15 +3,16 @@ import { ActivatedRoute, ParamMap, UrlTree } from '@angular/router';
 import { of, Subscription } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
 import { defaultAttemptId } from 'src/app/shared/helpers/attempts';
-import { appDefaultItemRoute, isItemRouteError, itemRouteFromParams } from 'src/app/shared/helpers/item-route';
+import { appDefaultItemRoute, isItemRouteError, itemRouteFromParams } from 'src/app/shared/routing/item-route';
 import { errorState, FetchError, Fetching, fetchingState, isError, isReady, Ready } from 'src/app/shared/helpers/state';
 import { ResultActionsService } from 'src/app/shared/http-services/result-actions.service';
 import { CurrentContentService, EditAction, isItemInfo, ItemInfo } from 'src/app/shared/services/current-content.service';
-import { ItemRouter } from 'src/app/shared/services/item-router';
 import { breadcrumbServiceTag } from '../../http-services/get-breadcrumb.service';
 import { GetItemPathService } from '../../http-services/get-item-path';
 import { ItemDataSource, ItemData } from '../../services/item-datasource.service';
 import { errorHasTag, errorIsHTTPForbidden } from 'src/app/shared/helpers/errors';
+import { ItemRouter } from 'src/app/shared/routing/item-router';
+import { ItemTypeCategory } from 'src/app/shared/helpers/item-type';
 
 const itemBreadcrumbCat = $localize`Items`;
 
@@ -62,7 +63,7 @@ export class ItemByIdComponent implements OnDestroy {
               path: state.data.breadcrumbs.map(el => ({
                 title: el.title,
                 hintNumber: el.attemptCnt,
-                navigateTo: ():UrlTree => itemRouter.url(el.route),
+                navigateTo: ():UrlTree => itemRouter.urlTree(el.route),
               })),
               currentPageIdx: state.data.breadcrumbs.length - 1,
             },
@@ -109,11 +110,14 @@ export class ItemByIdComponent implements OnDestroy {
   }
 
   private fetchItemAtRoute(params: ParamMap): void {
-    const item = itemRouteFromParams(params);
+    const snapshot = this.activatedRoute.snapshot;
+    if (!snapshot.parent) throw new Error('Unexpected: activated route snapshot has no parent');
+    if (!snapshot.parent.url.length) throw new Error('Unexpected: activated route snapshot parent has no url');
+    const item = itemRouteFromParams(snapshot.parent.url[0].path, params);
     if (isItemRouteError(item)) {
       if (item.id) {
         this.state = fetchingState();
-        this.solveMissingPathAttempt(item.id, item.path);
+        this.solveMissingPathAttempt(item.contentType, item.id, item.path);
       } else this.state = errorState();
       return;
     }
@@ -131,16 +135,16 @@ export class ItemByIdComponent implements OnDestroy {
    * Called when either path or attempt is missing. Will fetch the path if missing, then will be fetch the attempt.
    * Will redirect when relevant data has been fetched.
    */
-  private solveMissingPathAttempt(id: string, path?: string[]): void {
+  private solveMissingPathAttempt(contentType: ItemTypeCategory, id: string, path?: string[]): void {
 
     const pathObservable = path ? of(path) : this.getItemPathService.getItemPath(id);
     pathObservable.pipe(
       switchMap(path => {
         // for empty path (root items), consider the item has a (fake) parent attempt id 0
-        if (path.length === 0) return of({ id: id, path: path, parentAttemptId: defaultAttemptId });
+        if (path.length === 0) return of({ contentType: contentType, id: id, path: path, parentAttemptId: defaultAttemptId });
         // else, will start all path but the current item
         return this.resultActionsService.startWithoutAttempt(path).pipe(
-          map(attemptId => ({ id: id, path: path, parentAttemptId: attemptId }))
+          map(attemptId => ({ contentType: contentType, id: id, path: path, parentAttemptId: attemptId }))
         );
       })
     ).subscribe(

@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router, UrlTree } from '@angular/router';
-import { pathParamName } from '../helpers/content-route';
-import { ItemRoute, isRouteWithAttempt, attemptParamName, parentAttemptParamName } from '../helpers/item-route';
+import { ItemRoute, itemRoutePrefixes, urlArrayForItemRoute } from './item-route';
 
 @Injectable({
   providedIn: 'root'
@@ -16,8 +15,8 @@ export class ItemRouter {
    * Navigate to given item, on the path page.
    * If page is not given and we are currently on an item page, use the same page. Otherwise, default to 'details'.
    */
-  navigateTo(item: ItemRoute, path?: 'edit'|'details'): void {
-    void this.router.navigateByUrl(this.url(item, path));
+  navigateTo(item: ItemRoute, page?: 'edit'|'details'): void {
+    void this.router.navigateByUrl(this.urlTree(item, page));
   }
 
   /**
@@ -31,40 +30,38 @@ export class ItemRouter {
 
 
   /**
-   * Return a url to the given item, on the `path` page.
+   * Return a url to the given item, on the give page.
    * If page is not given and we are currently on an item page, use the same page. Otherwise, default to 'details'.
    */
-  url(item: ItemRoute, path?: 'edit'|'details'): UrlTree {
-    return this.router.createUrlTree(this.urlArray(item, path));
+  urlTree(item: ItemRoute, page?: 'edit'|'details'): UrlTree {
+    return this.router.createUrlTree(this.urlArray(item, page));
   }
 
   /**
-   * Return a url array (`commands` array) to the given item, on the `path` page.
+   * Return a url array (`commands` array) to the given item, on the given page.
    * If page is not given and we are currently on an item page, use the same page. Otherwise, default to 'details'.
    */
-  urlArray(item: ItemRoute, path?: 'edit'|'details'): any[] {
-    const dest = path ? [ path ] : (this.currentItemSubPage() || [ 'details' ]);
-    const params: {[k: string]: any} = {};
-    if (isRouteWithAttempt(item)) params[attemptParamName] = item.attemptId;
-    else params[parentAttemptParamName] = item.parentAttemptId;
-    params[pathParamName] = item.path;
-    return [ '/', 'items', 'by-id', item.id, params ].concat(dest);
+  urlArray(item: ItemRoute, page?: 'edit'|'details'): any[] {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return urlArrayForItemRoute(item, page ?? this.currentItemSubPage());
   }
-
 
   /**
    * Extract (bit hacky) the item sub-page of the current page.
    * Return undefined if we are not on an "item" page
    */
-  private currentItemSubPage(): string[]|undefined {
-    return this.currentItemPagePath()?.slice(3);
+  private currentItemSubPage(): 'edit'|'details'|undefined {
+    const subpagePart = this.currentItemPagePath()?.slice(3);
+    if (!subpagePart || subpagePart.length === 0) return undefined;
+    const page = subpagePart[0];
+    return page === 'edit' || page === 'details' ? page : undefined;
   }
 
   private currentItemPagePath(): string[]|undefined {
     const currentPageUrlChildren = this.router.parseUrl(this.router.url).root.children;
     if (!('primary' in currentPageUrlChildren)) return undefined;
     const segments = currentPageUrlChildren['primary'].segments;
-    if (segments.length < 3 || segments[0].path !== 'items' || segments[1].path !== 'by-id') return undefined;
+    if (segments.length < 3 || itemRoutePrefixes.includes(segments[0].path) || segments[1].path !== 'by-id') return undefined;
     return segments.map(segment => segment.path);
   }
 
