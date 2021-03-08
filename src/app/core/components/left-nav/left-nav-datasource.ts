@@ -55,53 +55,53 @@ function isDSReplace<T extends NavTreeElement>(change: DataSourceChange<T>): cha
 export abstract class LeftNavDataSource<ContentT extends RoutedContentInfo, MenuT extends NavTreeElement> {
 
   private initialized = false;
-  private changes = new Subject<ContentT|undefined>();
+  private contentChanges = new Subject<[content: ContentT|undefined, state: Ready<NavTreeData<MenuT>>|Fetching|FetchError]>();
   private retryTrigger = new Subject<void>();
   state: Ready<NavTreeData<MenuT>>|Fetching|FetchError = fetchingState();
 
   constructor() {
 
-    this.changes.pipe(
+    this.contentChanges.pipe(
 
       repeatLatestWhen(this.retryTrigger),
 
-      mergeMap((contentInfo):ObservableInput<DataSourceChange<MenuT>> => {
+      mergeMap(([ contentInfo, prevState ]):ObservableInput<DataSourceChange<MenuT>> => {
 
-        if (isReady(this.state)) {
+        if (isReady(prevState)) {
           // CASE: the current content is not an item and the menu has already items displayed
           if (!contentInfo) {
-            if (this.state.data.selectedElementId !== undefined) return of(dsDeselect());
+            if (prevState.data.selectedElementId !== undefined) return of(dsDeselect());
             return EMPTY; // no change
           }
 
           const contentId = contentInfo.route.id;
 
           // CASE: the current content is already the selected one
-          if (this.state.data.selectedElementId === contentId) {
+          if (prevState.data.selectedElementId === contentId) {
             return concat(
               of(dsUpdateElement<MenuT>(contentId, false, el => this.addDetailsToTreeElement(contentInfo, el))),
               this.loadChildrenOfElementWithId(
-                this.state.data.withUpdatedElement(contentId, el => this.addDetailsToTreeElement(contentInfo, el)), contentId
+                prevState.data.withUpdatedElement(contentId, el => this.addDetailsToTreeElement(contentInfo, el)), contentId
               )
             );
           }
 
           // CASE: the content is among the displayed items at the root of the tree -> select the right one (might load children)
-          if (this.state.data.hasLevel1Element(contentId)) {
+          if (prevState.data.hasLevel1Element(contentId)) {
             return concat(
               of(dsUpdateElement<MenuT>(contentId, true, el => this.addDetailsToTreeElement(contentInfo, el))),
               this.loadChildrenOfElementWithId(
-                this.state.data.withUpdatedElement(contentId, el => this.addDetailsToTreeElement(contentInfo, el)), contentId
+                prevState.data.withUpdatedElement(contentId, el => this.addDetailsToTreeElement(contentInfo, el)), contentId
               )
             );
           }
 
           // CASE: the content is a child of one item at the root of the tree -> shift the tree and select it (might load children)
-          if (this.state.data.hasLevel2Element(contentId)) {
+          if (prevState.data.hasLevel2Element(contentId)) {
             return concat(
               of(dsUpdateElement<MenuT>(contentId, true, el => this.addDetailsToTreeElement(contentInfo, el))),
               this.loadChildrenOfElementWithId(
-                this.state.data.subNavMenuData(contentId)
+                prevState.data.subNavMenuData(contentId)
                   .withUpdatedElement(contentId, el => this.addDetailsToTreeElement(contentInfo, el)),
                 contentId
               )
@@ -150,7 +150,7 @@ export abstract class LeftNavDataSource<ContentT extends RoutedContentInfo, Menu
   focus(): void {
     if (!this.initialized) {
       this.initialized = true;
-      this.changes.next(undefined);
+      this.contentChanges.next([ undefined, this.state ]);
     }
   }
 
@@ -166,14 +166,14 @@ export abstract class LeftNavDataSource<ContentT extends RoutedContentInfo, Menu
    */
   showContent(content: ContentT): void {
     this.initialized = true;
-    this.changes.next(content);
+    this.contentChanges.next([ content, this.state ]);
   }
 
   /**
    * If there is a selected element, unselect this selection.
    */
   removeSelection(): void {
-    if (this.initialized) this.changes.next(undefined);
+    if (this.initialized) this.contentChanges.next([ undefined, this.state ]);
   }
 
   protected abstract addDetailsToTreeElement(contentInfo: ContentT, treeElement: MenuT): MenuT;
