@@ -16,19 +16,19 @@ export class LeftNavGroupDataSource extends LeftNavDataSource<GroupInfo, NavMenu
     return contentInfo.title ? { ...treeElement, title: contentInfo.title } : { ...treeElement };
   }
 
-  loadRootTreeData(): Observable<NavMenuGroup[]> {
+  fetchRootTreeData(): Observable<NavMenuGroup[]> {
     return this.groupNavigationService.getRoot().pipe(
       map(root => root.groups)
     );
   }
 
-  loadNavDataFromChild(id: string, _child: GroupInfo): Observable<{ parent: NavMenuGroup, elements: NavMenuGroup[] }> {
+  fetchNavDataFromChild(id: string, _child: GroupInfo): Observable<{ parent: NavMenuGroup, elements: NavMenuGroup[] }> {
     return this.groupNavigationService.getNavData(id).pipe(
       map(data => ({ parent: data.parent, elements: data.groups }))
     );
   }
 
-  loadNavData(el: NavMenuGroup): Observable<{ parent: NavMenuGroup, elements: NavMenuGroup[] }> {
+  fetchNavData(el: NavMenuGroup): Observable<{ parent: NavMenuGroup, elements: NavMenuGroup[] }> {
     return this.groupNavigationService.getNavData(el.id).pipe(
       map(data => ({ parent: data.parent, elements: data.groups }))
     );

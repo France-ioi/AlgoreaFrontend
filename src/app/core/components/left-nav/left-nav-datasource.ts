@@ -80,7 +80,7 @@ export abstract class LeftNavDataSource<ContentT extends RoutedContentInfo, Menu
           if (prevState.data.selectedElementId === contentId) {
             return concat(
               of(dsUpdateElement<MenuT>(contentId, false, el => this.addDetailsToTreeElement(contentInfo, el))),
-              this.loadChildrenOfElementWithId(
+              this.fetchChildrenOfElementWithId(
                 prevState.data.withUpdatedElement(contentId, el => this.addDetailsToTreeElement(contentInfo, el)), contentId
               )
             );
@@ -90,7 +90,7 @@ export abstract class LeftNavDataSource<ContentT extends RoutedContentInfo, Menu
           if (prevState.data.hasLevel1Element(contentId)) {
             return concat(
               of(dsUpdateElement<MenuT>(contentId, true, el => this.addDetailsToTreeElement(contentInfo, el))),
-              this.loadChildrenOfElementWithId(
+              this.fetchChildrenOfElementWithId(
                 prevState.data.withUpdatedElement(contentId, el => this.addDetailsToTreeElement(contentInfo, el)), contentId
               )
             );
@@ -100,7 +100,7 @@ export abstract class LeftNavDataSource<ContentT extends RoutedContentInfo, Menu
           if (prevState.data.hasLevel2Element(contentId)) {
             return concat(
               of(dsUpdateElement<MenuT>(contentId, true, el => this.addDetailsToTreeElement(contentInfo, el))),
-              this.loadChildrenOfElementWithId(
+              this.fetchChildrenOfElementWithId(
                 prevState.data.subNavMenuData(contentId)
                   .withUpdatedElement(contentId, el => this.addDetailsToTreeElement(contentInfo, el)),
                 contentId
@@ -110,13 +110,13 @@ export abstract class LeftNavDataSource<ContentT extends RoutedContentInfo, Menu
 
         } else /* not ready state */ if (!contentInfo) {
           // CASE: the content is not an item and the menu has not already item displayed -> load item root
-          return concat(of(dsLoading()), this.loadDefaultNav());
+          return concat(of(dsLoading()), this.fetchDefaultNav());
         }
 
         // OTHERWISE: the content is an item which is not currently displayed:
 
         // CASE: The current content type matches the current tab
-        return concat(of(dsLoading()), this.loadNewNav(contentInfo));
+        return concat(of(dsLoading()), this.fetchNewNav(contentInfo));
 
       })
     ).subscribe({
@@ -177,55 +177,55 @@ export abstract class LeftNavDataSource<ContentT extends RoutedContentInfo, Menu
   }
 
   protected abstract addDetailsToTreeElement(contentInfo: ContentT, treeElement: MenuT): MenuT;
-  protected abstract loadRootTreeData(): Observable<MenuT[]>;
-  protected abstract loadNavDataFromChild(id: string, child: ContentT): Observable<{ parent: MenuT, elements: MenuT[] }>;
-  protected abstract loadNavData(item: MenuT): Observable<{ parent: MenuT, elements: MenuT[] }>;
+  protected abstract fetchRootTreeData(): Observable<MenuT[]>;
+  protected abstract fetchNavDataFromChild(id: string, child: ContentT): Observable<{ parent: MenuT, elements: MenuT[] }>;
+  protected abstract fetchNavData(item: MenuT): Observable<{ parent: MenuT, elements: MenuT[] }>;
 
 
-  private loadChildrenOfElementWithId(data: NavTreeData<MenuT>, id: Id): Observable<DataSourceChange<MenuT>> {
+  private fetchChildrenOfElementWithId(data: NavTreeData<MenuT>, id: Id): Observable<DataSourceChange<MenuT>> {
     const element = data.elementWithId(id);
     if (element === undefined) return EMPTY;
-    return this.loadChildrenOfElement(element);
+    return this.fetchChildrenOfElement(element);
   }
 
-  private loadChildrenOfElement(element: MenuT): Observable<DataSourceChange<MenuT>> {
+  private fetchChildrenOfElement(element: MenuT): Observable<DataSourceChange<MenuT>> {
     if (!element.hasChildren) return EMPTY; // if no children, no need to fetch children
 
     // We do not check if children were already known. So we might re-load again the same children, which is intended.
-    return this.loadNavData(element).pipe(
+    return this.fetchNavData(element).pipe(
       map(newData => dsUpdateElement<MenuT>(element.id, false, el => ({ ...el, ...newData.parent, children: newData.elements }))),
       this.mapError()
     );
   }
 
-  private loadNewNavData(content: ContentT): Observable<NavTreeData<MenuT>> {
+  private fetchNewNavData(content: ContentT): Observable<NavTreeData<MenuT>> {
     const route = content.route;
     if (route.path.length >= 1) {
       const parentId = route.path[route.path.length-1];
-      return this.loadNavDataFromChild(parentId, content).pipe(
+      return this.fetchNavDataFromChild(parentId, content).pipe(
         map(data => new NavTreeData(data.elements, route.path, route.id, data.parent))
       );
     } else {
-      return this.loadRootTreeData().pipe(
+      return this.fetchRootTreeData().pipe(
         map(items => new NavTreeData(items, route.path, route.id))
       );
     }
   }
 
-  private loadDefaultNav(): Observable<DataSourceChange<MenuT>> {
-    return this.loadRootTreeData().pipe(
+  private fetchDefaultNav(): Observable<DataSourceChange<MenuT>> {
+    return this.fetchRootTreeData().pipe(
       map(elements => dsReplaceWith(new NavTreeData(elements, [], undefined, undefined))),
       this.mapError(),
     );
   }
 
-  private loadNewNav(content: ContentT): Observable<DataSourceChange<MenuT>> {
-    return this.loadNewNavData(content).pipe( // the new items (only first level loaded)
+  private fetchNewNav(content: ContentT): Observable<DataSourceChange<MenuT>> {
+    return this.fetchNewNavData(content).pipe( // the new items (only first level loaded)
       // already update the tree with the first level, and if needed, load (async) children as well
       switchMap(data => {
         const selectedEl = data.selectedElement();
         if (!selectedEl) throw new Error('Unexpected: no selected element in new nav');
-        return concat(of(dsReplaceWith<MenuT>(data)), this.loadChildrenOfElement(selectedEl));
+        return concat(of(dsReplaceWith<MenuT>(data)), this.fetchChildrenOfElement(selectedEl));
       }),
       this.mapError(),
     );
