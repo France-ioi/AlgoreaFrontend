@@ -16,6 +16,8 @@ function logState(msg: string): void {
   }
 }
 
+export enum AuthServiceState { Idle, Fetching, Refreshing, Error }
+
 /**
  * This service manages the authentication workflow (login, logout, ...) for authenticated and temp sessions.
  * In this service, we use the following terms:
@@ -29,7 +31,7 @@ export class AuthService implements OnDestroy {
 
   private accessToken = new BehaviorSubject<AccessToken|null>(null);
   accessToken$ = this.accessToken.asObservable();
-  state: 'idle'|'fetching'|'refreshing'|'error';
+  state$ = new BehaviorSubject<AuthServiceState>(AuthServiceState.Fetching);
 
   private subscription: Subscription;
   private tokenRefreshSubscription?: Subscription;
@@ -41,7 +43,7 @@ export class AuthService implements OnDestroy {
   ) {
     logState('Init the auth service');
 
-    this.state = 'fetching'; // will immediately be changed if we can get a token without fetching
+    this.state$.next(AuthServiceState.Fetching); // will immediately be changed if we can get a token without fetching
 
     this.subscription = this.accessToken.pipe(pairwise()).subscribe(tokens => this.tokenChanged(tokens));
 
@@ -75,11 +77,11 @@ export class AuthService implements OnDestroy {
       },
       error: _e => {
         // if temp user creation fails, there is not much we can do
-        this.state = 'error';
+        this.state$.next(AuthServiceState.Error);
       },
       complete: () => {
         // in any of the success case
-        this.state = 'idle';
+        this.state$.next(AuthServiceState.Idle);
       }
     });
   }
@@ -106,7 +108,7 @@ export class AuthService implements OnDestroy {
       return;
     }
 
-    this.state = 'fetching';
+    this.state$.next(AuthServiceState.Fetching);
     this.oauthService.initCodeFlow();
   }
 
@@ -122,7 +124,7 @@ export class AuthService implements OnDestroy {
       return;
     }
 
-    this.state = 'fetching';
+    this.state$.next(AuthServiceState.Fetching);
     this.accessToken.next(null);
     this.authHttp.revokeToken(currentToken.accessToken).pipe(
       catchError(_e => of(null)), // continue next step even if token revocation failed
@@ -147,16 +149,16 @@ export class AuthService implements OnDestroy {
       if (currentToken.type === 'authenticated') { // user was authenticated
         this.startAuthLogin();
       } else { // user was temporary
-        this.state = 'fetching';
+        this.state$.next(AuthServiceState.Fetching);
         this.tempAuth.login().subscribe({
           next: tempUserToken => {
             logState('temp user token received');
             this.accessToken.next(tempUserToken);
-            this.state = 'idle';
+            this.state$.next(AuthServiceState.Idle);
           },
           error: _e => {
             logState('temp user creation failed');
-            this.state = 'error'; // if temp user creation fails, there is not much we can do
+            this.state$.next(AuthServiceState.Error); // if temp user creation fails, there is not much we can do
           }
         });
       }
@@ -177,7 +179,7 @@ export class AuthService implements OnDestroy {
   }
 
   private isBusy(): boolean {
-    return this.state === 'fetching';
+    return this.state$.value === AuthServiceState.Fetching;
   }
 
   private resetTokenRefresh(token: AccessToken|null): void {
@@ -202,7 +204,7 @@ export class AuthService implements OnDestroy {
 
   private debugState(): string {
     const current = this.accessToken.value;
-    return (current === null) ? `${this.state},no-token` : `${this.state},${current.type},${current.expiration.toString()}`;
+    return (current === null) ? `${this.state$.value},no-token` : `${this.state$.value},${current.type},${current.expiration.toString()}`;
   }
 
 }

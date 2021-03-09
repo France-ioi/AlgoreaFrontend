@@ -2,7 +2,25 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
   <file source-language="en" datatype="plaintext" original="ng2.template" target-language="fr">
     <body>
-      <trans-unit id="cac30a91d2ecebdb1f56ef4743dfb4a779c70857" datatype="html">
+      <trans-unit id="auth-error-modal-title" datatype="html">
+        <source>Error</source><target state="translated">Erreur</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/app.component.html</context>
+          <context context-type="linenumber">88</context>
+        </context-group>
+      </trans-unit><trans-unit id="auth-error-modal-context" datatype="html">
+        <source>We are unable to start a session for you. Are you connected to the Internet?</source><target state="translated">Impossible de démarrer une session. Êtes-vous bien connecté à Internet ?</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/app.component.html</context>
+          <context context-type="linenumber">95</context>
+        </context-group>
+      </trans-unit><trans-unit id="auth-error-modal-todo" datatype="html">
+        <source>Try to refresh the page. If this problem persists, please contact us.</source><target state="translated">Rafraichissez la page. Si le problème persiste, contactez nous.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/app.component.html</context>
+          <context context-type="linenumber">96</context>
+        </context-group>
+      </trans-unit><trans-unit id="cac30a91d2ecebdb1f56ef4743dfb4a779c70857" datatype="html">
         <source>Log in / Sign in</source><target state="translated">Connexion / Inscription</target>
 
 
@@ -716,11 +734,8 @@
         </context-group>
       </trans-unit><trans-unit id="6080b77234e92ad41bb52653b239c4c4f851317d" datatype="html">
         <source>Error</source><target state="translated">Erreur</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/item/components/item-children-edit/item-children-edit.component.html</context>
-          <context context-type="linenumber">41</context>
-        </context-group>
-      </trans-unit><trans-unit id="9888b1258e6c9e7c0905529c5cfe3abf81f35a21" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-children-edit/item-children-edit.component.html</context><context context-type="linenumber">41</context></context-group></trans-unit><trans-unit id="9888b1258e6c9e7c0905529c5cfe3abf81f35a21" datatype="html">
         <source>Parent skills</source><target state="translated">Compétences parentes</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/item/components/parent-skills/parent-skills.component.html</context>

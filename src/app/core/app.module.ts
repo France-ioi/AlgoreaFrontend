@@ -5,6 +5,7 @@ import { SharedComponentsModule } from '../modules/shared-components/shared-comp
 
 import { AccordionModule } from 'primeng/accordion';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
+import { DialogModule } from 'primeng/dialog';
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
 import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
@@ -65,6 +66,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     ProgressSpinnerModule,
     TooltipModule,
     ConfirmDialogModule,
+    DialogModule,
   ],
   providers: [
     ConfirmationService,
