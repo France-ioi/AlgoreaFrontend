@@ -33,10 +33,13 @@ alg-section {
       text-overflow: ellipsis;
       font-family: "titillium", sans-serif;
       font-weight: 100;
-      cursor: pointer;
 
-      &:hover {
-        color: $base-color;
+      &.clickable {
+        cursor: pointer;
+
+        &:hover {
+          color: $base-color;
+        }
       }
     }
   }
