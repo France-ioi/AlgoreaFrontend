@@ -11,8 +11,8 @@ interface AccessTokenInfo {
   expires_in: number;
 }
 
-const authServicesTimeout = 2000; // timeout (in ms) specific to these services
-const longAuthServicesTimeout = 5000;
+const authServicesTimeout = 5000; // timeout (in ms) specific to these services
+const longAuthServicesTimeout = 10000;
 
 @Injectable({
   providedIn: 'root'
