@@ -8,7 +8,7 @@ import { AuthHttpService } from '../http-services/auth.http-service';
 import { MINUTES } from '../helpers/duration';
 
 // as auth can be complex to debug, enable this flag to print state logs
-const debugLogEnabled = true;
+const debugLogEnabled = false;
 function logState(msg: string): void {
   if (debugLogEnabled) {
     // eslint-disable-next-line no-console
