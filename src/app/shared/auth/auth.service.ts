@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { catchError, switchMap, pairwise, map } from 'rxjs/operators';
+import { catchError, switchMap, pairwise, map, retry } from 'rxjs/operators';
 import { AccessToken, minTokenLifetime } from './access-token';
 import { BehaviorSubject, of, merge, Subscription, timer } from 'rxjs';
 import { TempAuthService } from './temp-auth.service';
@@ -67,7 +67,7 @@ export class AuthService implements OnDestroy {
         if (fromStorage !== null) return of(fromStorage);
 
         // otherwise, create a temp session
-        return this.tempAuth.login();
+        return this.tempAuth.login().pipe(retry(2));
       }),
     ).subscribe({
       next: (token: AccessToken) => {
