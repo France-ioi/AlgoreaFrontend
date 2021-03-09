@@ -39,4 +39,15 @@ export class SearchGroupService {
       { params: params },
     ).pipe(map(groups => groups.filter(notBase)));
   }
+
+  searchPossibleSubgroups(
+    searchString: string,
+    limit = 4,
+  ): Observable<GroupFound[]> {
+    const params = new HttpParams({ fromObject: { search: searchString, limit: limit.toString() } });
+    return this.http.get<Group[]>(
+      `${appConfig().apiUrl}/groups/possible-subgroups`,
+      { params: params },
+    ).pipe(map(groups => groups.filter(notBase)));
+  }
 }
