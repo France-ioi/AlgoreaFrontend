@@ -1,8 +1,9 @@
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { map, pairwise } from 'rxjs/operators';
+import { delay, map, pairwise } from 'rxjs/operators';
 import { CurrentContentService, isActivityInfo, isGroupInfo, isItemInfo } from 'src/app/shared/services/current-content.service';
+import { UserSessionService } from 'src/app/shared/services/user-session.service';
 import { GroupNavigationService } from '../../http-services/group-navigation.service';
 import { ItemNavigationService } from '../../http-services/item-navigation.service';
 import { LeftNavGroupDataSource } from './left-nav-group-datasource';
@@ -25,10 +26,12 @@ export class LeftNavComponent implements OnInit, OnDestroy {
     new LeftNavSkillDataSource(this.itemNavigationService),
     new LeftNavGroupDataSource(this.groupNavigationService),
   ];
+  session$ = this.sessionService.session$.pipe(delay(0));
 
   private subscription?: Subscription;
 
   constructor(
+    private sessionService: UserSessionService,
     private currentContent: CurrentContentService,
     private itemNavigationService: ItemNavigationService,
     private groupNavigationService: GroupNavigationService,

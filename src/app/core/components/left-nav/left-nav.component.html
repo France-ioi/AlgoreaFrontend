@@ -1,4 +1,10 @@
-<p-tabView class="group-skills" [styleClass]="'dark'" (onChange)="onSelectionChangedByIdx($event)" [(activeIndex)]="activeTabIndex">
+<p-tabView
+  class="group-skills"
+  [styleClass]="'dark'"
+  (onChange)="onSelectionChangedByIdx($event)"
+  [(activeIndex)]="activeTabIndex"
+  *ngrxLet="session$ as session"
+>
 
   <p-tabPanel>
     <ng-template pTemplate="header" tabindex="5">
@@ -16,7 +22,7 @@
     </ng-template>
   </p-tabPanel>
 
-  <p-tabPanel>
+  <p-tabPanel *ngIf="session && !session.user.isTemp">
     <ng-template pTemplate="header" tabindex="7">
       <span class="indicator" class="dark"></span>
       <i class="fa fa-users"></i>
