@@ -1,9 +1,9 @@
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { UserSession, UserSessionService } from '../shared/services/user-session.service';
-import { delay, filter, skip } from 'rxjs/operators';
+import { delay, filter, map, skip } from 'rxjs/operators';
 import { Observable, Subscription } from 'rxjs';
 import { ContentInfo, CurrentContentService, EditAction } from '../shared/services/current-content.service';
-import { AuthService } from '../shared/auth/auth.service';
+import { AuthService, AuthServiceState } from '../shared/auth/auth.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -17,6 +17,7 @@ export class AppComponent implements OnInit, OnDestroy {
   currentContent$: Observable<ContentInfo|null> = this.currentContent.currentContent$.pipe(delay(0));
   editState$ = this.currentContent.editState$.pipe(delay(0));
   session$ = this.sessionService.session$.pipe(delay(0));
+  authOnError$ = this.authService.state$.pipe(map(state => state === AuthServiceState.Error));
 
   collapsed = false;
   folded = false;
