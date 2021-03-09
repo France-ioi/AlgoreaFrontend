@@ -13,19 +13,19 @@ export abstract class LeftNavItemDataSource<ItemT extends ItemInfo> extends Left
     super();
   }
 
-  loadRootTreeData(): Observable<NavMenuItem[]> {
+  fetchRootTreeData(): Observable<NavMenuItem[]> {
     return this.itemNavService.getRoot(this.category).pipe(
       map(items => items.items)
     );
   }
 
-  loadNavDataFromChild(id: string, child: ItemT): Observable<{ parent: NavMenuItem, elements: NavMenuItem[] }> {
+  fetchNavDataFromChild(id: string, child: ItemT): Observable<{ parent: NavMenuItem, elements: NavMenuItem[] }> {
     return this.itemNavService.getNavDataFromChildRoute(id, child.route, isSkill(this.category)).pipe(
       map(items => ({ parent: items.parent, elements: items.items }))
     );
   }
 
-  loadNavData(item: NavMenuItem): Observable<{ parent: NavMenuItem, elements: NavMenuItem[] }> {
+  fetchNavData(item: NavMenuItem): Observable<{ parent: NavMenuItem, elements: NavMenuItem[] }> {
     if (item.attemptId === null) return EMPTY;
     return this.itemNavService.getNavData(item.id, item.attemptId, isSkill(this.category)).pipe(
       map(nav => ({ parent: nav.parent, elements: nav.items }))
