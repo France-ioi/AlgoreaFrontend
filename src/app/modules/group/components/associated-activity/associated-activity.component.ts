@@ -1,13 +1,18 @@
 import { Component, forwardRef, OnDestroy } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { merge, of } from 'rxjs';
+import { merge, Observable, of } from 'rxjs';
 import { Subject } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { GetItemByIdService } from 'src/app/modules/item/http-services/get-item-by-id.service';
 import { incompleteItemStringUrl } from 'src/app/shared/routing/item-route';
-import { fetchingState, readyState } from 'src/app/shared/helpers/state';
 
 type ActivityId = string;
+import { SearchItemService } from 'src/app/modules/item/http-services/search-item.service';
+import { AddedContent, NewContentType } from 'src/app/modules/shared-components/components/add-content/add-content.component';
+import { ItemType } from 'src/app/shared/helpers/item-type';
+import { getAllowedNewItemTypes } from 'src/app/shared/helpers/new-item-types';
+import { fetchingState, isReady, readyState } from 'src/app/shared/helpers/state';
+import { NoActivity, NewActivity, ExistingActivity, isExistingActivity, isNewActivity } from './associated-activity-types';
 
 @Component({
   selector: 'alg-associated-activity',
@@ -23,34 +28,42 @@ type ActivityId = string;
 })
 export class AssociatedActivityComponent implements OnDestroy, ControlValueAccessor {
 
-  rootActivity: null|{
-    id: ActivityId,
-    name: string|null,
-    path: string,
-  } = null;
+  rootActivity: NoActivity|NewActivity|ExistingActivity = { type: 'no-activity' };
+  rootActivityData: null|{name: string|null, path: string|null} = null;
 
   state: 'fetching'|'ready'|'error' = 'fetching';
 
-  private activityChanges = new Subject<{id: ActivityId|null, triggerChange: boolean}>();
+  allowedNewItemTypes: NewContentType<ItemType>[] = getAllowedNewItemTypes(false);
 
-  private onChange: (value: ActivityId|null) => void = () => {};
+  private activityChanges = new Subject<{activity: NoActivity|NewActivity|ExistingActivity, triggerChange: boolean}>();
+
+  private onChange: (value: NoActivity|NewActivity|ExistingActivity) => void = () => {};
+
+  searchFunction = (value: string): Observable<AddedContent<ItemType>[]> =>
+    this.searchItemService.search(value, [ 'Chapter', 'Course', 'Task' ]);
 
   constructor(
     private getItemByIdService: GetItemByIdService,
+    private searchItemService: SearchItemService,
   ) {
     this.activityChanges.pipe(
       switchMap(data => {
-        const id = data.id;
-        if (id === null) return of(readyState({ activity: null, triggerChange: data.triggerChange }));
+        if (!isExistingActivity(data.activity)) {
+          return of(readyState({
+            activity: data.activity,
+            activityData: isNewActivity(data.activity) ? { name: data.activity.name, path: null } : null,
+            triggerChange: data.triggerChange
+          }));
+        }
+
+        const id = data.activity.id;
+
         return merge(
           of(fetchingState()),
           this.getItemByIdService.get(id).pipe(map(item => readyState({
             triggerChange: data.triggerChange,
-            activity: {
-              id: id,
-              name: item.string.title,
-              path: incompleteItemStringUrl(id)
-            }
+            activity: { type: 'existing-activity', id: id } as ExistingActivity,
+            activityData: { name: item.string.title, path: incompleteItemStringUrl(id) },
           }))),
         );
       })
@@ -58,7 +71,8 @@ export class AssociatedActivityComponent implements OnDestroy, ControlValueAcces
       this.state = state.tag;
       if (state.isReady) {
         this.rootActivity = state.data.activity;
-        if (state.data.triggerChange) this.onChange(this.rootActivity === null ? null : this.rootActivity.id);
+        this.rootActivityData = state.data.activityData;
+        if (state.data.triggerChange) this.onChange(this.rootActivity);
       }
     });
   }
@@ -67,11 +81,11 @@ export class AssociatedActivityComponent implements OnDestroy, ControlValueAcces
     this.activityChanges.complete();
   }
 
-  writeValue(rootActivityId: ActivityId|null): void {
-    this.activityChanges.next({ id: rootActivityId, triggerChange: false });
+  writeValue(rootActivity: NoActivity|NewActivity|ExistingActivity): void {
+    this.activityChanges.next({ activity: rootActivity, triggerChange: false });
   }
 
-  registerOnChange(fn: (value: ActivityId|null) => void): void {
+  registerOnChange(fn: (value: NoActivity|NewActivity|ExistingActivity) => void): void {
     this.onChange = fn;
   }
 
@@ -79,7 +93,22 @@ export class AssociatedActivityComponent implements OnDestroy, ControlValueAcces
   }
 
   onRemove(): void {
-    if (this.rootActivity === null || this.state !== 'ready') throw new Error('Unexpected: tried to remove root activity when not ready');
-    this.activityChanges.next({ id: null, triggerChange: true });
+    if (this.rootActivity.type === 'no-activity' || this.state !== 'ready') {
+      throw new Error('Unexpected: tried to remove root activity when not ready or no prior activity');
+    }
+
+    this.activityChanges.next({ activity: { type: 'no-activity' }, triggerChange: true });
+  }
+
+  setRootActivity(activty: AddedContent<ItemType>): void {
+    if (this.rootActivity.type !== 'no-activity' || this.state !== 'ready') {
+      throw new Error('Unexpected: tried to set a root activty when not ready or already set activity');
+    }
+
+    if (activty.id !== undefined) {
+      this.activityChanges.next({ activity: { type: 'existing-activity', id: activty.id }, triggerChange: true });
+    } else {
+      this.activityChanges.next({ activity: { type: 'new-activity', name: activty.title, itemType: activty.type }, triggerChange: true });
+    }
   }
 }

@@ -1,14 +1,18 @@
 import { Component, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
-import { Subscription } from 'rxjs';
+import { readyData } from 'src/app/shared/operators/state';
+import { Mode, ModeService } from 'src/app/shared/services/mode.service';
+import { forkJoin, of, Subscription } from 'rxjs';
+import { concatMap, filter } from 'rxjs/operators';
+import { CreateItemService } from 'src/app/modules/item/http-services/create-item.service';
 import { ERROR_MESSAGE } from 'src/app/shared/constants/api';
 import { TOAST_LENGTH } from 'src/app/shared/constants/global';
 import { PendingChangesComponent } from 'src/app/shared/guards/pending-changes-guard';
-import { readyData } from 'src/app/shared/operators/state';
-import { Mode, ModeService } from 'src/app/shared/services/mode.service';
+import { NoActivity, NewActivity, ExistingActivity,
+  isNewActivity, isExistingActivity } from '../../components/associated-activity/associated-activity-types';
 import { Group } from '../../http-services/get-group-by-id.service';
-import { GroupChanges, GroupUpdateService } from '../../http-services/group-update.service';
+import { GroupUpdateService } from '../../http-services/group-update.service';
 import { GroupDataSource } from '../../services/group-datasource.service';
 
 @Component({
@@ -21,7 +25,7 @@ export class GroupEditComponent implements OnDestroy, PendingChangesComponent {
     // eslint-disable-next-line @typescript-eslint/unbound-method
     name: [ '', [ Validators.required, Validators.minLength(3) ] ],
     description: [ '', [] ],
-    rootActivityId: [ '', [] ],
+    rootActivity: [ '', [] ],
   })
   initialFormData?: Group;
 
@@ -34,7 +38,8 @@ export class GroupEditComponent implements OnDestroy, PendingChangesComponent {
     private groupDataSource: GroupDataSource,
     private messageService: MessageService,
     private formBuilder: FormBuilder,
-    private groupUpdateService: GroupUpdateService
+    private groupUpdateService: GroupUpdateService,
+    private createItemService: CreateItemService,
   ) {
     this.modeService.mode$.next(Mode.Editing);
 
@@ -73,16 +78,6 @@ export class GroupEditComponent implements OnDestroy, PendingChangesComponent {
     });
   }
 
-  getGroupChanges(): GroupChanges {
-    const description = this.groupForm.get('description')?.value as string;
-    const rootActivityId = this.groupForm.get('rootActivityId')?.value as string|null;
-    return {
-      name: this.groupForm.get('name')?.value as string,
-      description: description === '' ? null : description,
-      root_activity_id: rootActivityId,
-    };
-  }
-
   save(): void {
     if (!this.initialFormData) return;
 
@@ -90,11 +85,29 @@ export class GroupEditComponent implements OnDestroy, PendingChangesComponent {
       this.errorToast($localize`You need to solve all the errors displayed in the form to save changes.`);
       return;
     }
-
     this.groupForm.disable();
-    this.groupUpdateService.updateGroup(
-      this.initialFormData.id,
-      this.getGroupChanges(),
+
+    const rootActivity = this.groupForm.get('rootActivity')?.value as NoActivity|NewActivity|ExistingActivity;
+    const description = this.groupForm.get('description')?.value as string;
+
+    forkJoin({
+      id: of(this.initialFormData.id),
+      changes: forkJoin({
+        name: of(this.groupForm.get('name')?.value as string),
+        description: of(description === '' ? null : description),
+        root_activity_id: !isNewActivity(rootActivity) ? of(isExistingActivity(rootActivity) ? rootActivity.id : null) :
+          this.createItemService.create({
+            title: rootActivity.name,
+            type: rootActivity.itemType,
+            languageTag: 'en',
+            asRootOfGroupId: this.initialFormData.id,
+          }),
+      })
+    }).pipe(
+      concatMap(group => this.groupUpdateService.updateGroup(
+        group.id,
+        group.changes
+      ))
     ).subscribe(
       () => {
         this.groupDataSource.refetchGroup(); // will re-enable the form
@@ -112,10 +125,15 @@ export class GroupEditComponent implements OnDestroy, PendingChangesComponent {
   }
 
   private resetFormWith(group: Group): void {
+
+    const rootActivity = group.root_activity_id === null ?
+      { type: 'no-activity' } :
+      { type: 'existing-activity', id: group.root_activity_id };
+
     this.groupForm.reset({
       name: group.name,
       description: group.description,
-      rootActivityId: group.root_activity_id,
+      rootActivity: rootActivity,
     });
     this.groupForm.enable();
   }

@@ -8,19 +8,34 @@
   </p>
 
   <ng-container *ngIf="state === 'ready'">
-    <div class="activity" *ngIf="rootActivity !== null; else noRootActivity">
-      <span class="activity-name" [routerLink]="rootActivity.path">
-        {{rootActivity.name}}
-      </span>
-      <span class="remove" (click)="onRemove()">
-        <span i18n>Remove</span>
-        <i class="fa fa-trash-alt"></i>
-      </span>
-    </div>
+    <ng-container [ngSwitch]="rootActivity.type">
 
-    <ng-template #noRootActivity>
-      <span i18n>No Root Activity</span>
-    </ng-template>
+      <alg-add-content *ngSwitchCase="'no-activity'"
+        [allowedTypesForNewContent]="allowedNewItemTypes"
+        [searchFunction]="searchFunction"
+        (contentAdded)="setRootActivity($event)"
+      ></alg-add-content>
 
+      <div class="activity" *ngSwitchCase="'new-activity'">
+        <span class="activity-name">
+          {{rootActivityData!.name}}
+        </span>
+        <span class="remove" (click)="onRemove()">
+          <span i18n>Remove</span>
+          <i class="fa fa-trash-alt"></i>
+        </span>
+      </div>
+
+      <div class="activity" *ngSwitchCase="'existing-activity'">
+        <span class="activity-name" [routerLink]="rootActivityData!.path">
+          {{rootActivityData!.name}}
+        </span>
+        <span class="remove" (click)="onRemove()">
+          <span i18n>Remove</span>
+          <i class="fa fa-trash-alt"></i>
+        </span>
+      </div>
+
+    </ng-container>
   </ng-container>
 </alg-section>
