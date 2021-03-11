@@ -98,7 +98,7 @@ export class GroupEditComponent implements OnDestroy, PendingChangesComponent {
         root_activity_id: !isNewActivity(rootActivity) ? of(isExistingActivity(rootActivity) ? rootActivity.id : null) :
           this.createItemService.create({
             title: rootActivity.name,
-            type: rootActivity.itemType,
+            type: rootActivity.activityType,
             languageTag: 'en',
             asRootOfGroupId: this.initialFormData.id,
           }),

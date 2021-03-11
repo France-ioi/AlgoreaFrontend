@@ -1,7 +1,7 @@
 import { NewContentType } from 'src/app/modules/shared-components/components/add-content/add-content.component';
-import { ItemType } from './item-type';
+import { ActivityType, ItemType } from './item-type';
 
-const allowedNewItemTypes: NewContentType<ItemType>[] = [
+export const allowedNewActivityTypes: NewContentType<ActivityType>[] = [
   {
     type: 'Chapter',
     icon: 'fa fa-book',
@@ -14,14 +14,15 @@ const allowedNewItemTypes: NewContentType<ItemType>[] = [
     title: $localize`Task`,
     description: $localize`A new task which users can try to solve.`,
   },
-  {
-    type: 'Skill',
-    icon: 'fa fa-graduation-cap',
-    title: $localize`Skill`,
-    description: $localize`A new sub-skill.`,
-  },
 ];
 
+const skillNewType: NewContentType<ItemType> = {
+  type: 'Skill',
+  icon: 'fa fa-graduation-cap',
+  title: $localize`Skill`,
+  description: $localize`A new sub-skill.`,
+};
+
 export function getAllowedNewItemTypes(allowSkills: boolean): NewContentType<ItemType>[] {
-  return allowSkills ? allowedNewItemTypes : allowedNewItemTypes.slice(0, -1);
+  return allowSkills ? [ skillNewType ].concat(allowedNewActivityTypes) : allowedNewActivityTypes;
 }

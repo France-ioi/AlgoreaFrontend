@@ -1,10 +1,10 @@
-import { ItemType } from 'src/app/shared/helpers/item-type';
+import { ActivityType } from 'src/app/shared/helpers/item-type';
 
 type ActivityId = string;
 
 export interface NoActivity {type: 'no-activity'}
 
-export interface NewActivity {type: 'new-activity', name: string, itemType: ItemType}
+export interface NewActivity {type: 'new-activity', name: string, activityType: ActivityType}
 
 export interface ExistingActivity {type: 'existing-activity', id: ActivityId}
 

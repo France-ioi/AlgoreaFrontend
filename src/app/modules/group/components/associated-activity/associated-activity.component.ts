@@ -9,8 +9,8 @@ import { incompleteItemStringUrl } from 'src/app/shared/routing/item-route';
 type ActivityId = string;
 import { SearchItemService } from 'src/app/modules/item/http-services/search-item.service';
 import { AddedContent, NewContentType } from 'src/app/modules/shared-components/components/add-content/add-content.component';
-import { ItemType } from 'src/app/shared/helpers/item-type';
-import { getAllowedNewItemTypes } from 'src/app/shared/helpers/new-item-types';
+import { ActivityType, ItemType } from 'src/app/shared/helpers/item-type';
+import { allowedNewActivityTypes } from 'src/app/shared/helpers/new-item-types';
 import { fetchingState, isReady, readyState } from 'src/app/shared/helpers/state';
 import { NoActivity, NewActivity, ExistingActivity, isExistingActivity, isNewActivity } from './associated-activity-types';
 
@@ -33,7 +33,7 @@ export class AssociatedActivityComponent implements OnDestroy, ControlValueAcces
 
   state: 'fetching'|'ready'|'error' = 'fetching';
 
-  allowedNewItemTypes: NewContentType<ItemType>[] = getAllowedNewItemTypes(false);
+  allowedNewItemTypes: NewContentType<ActivityType>[] = allowedNewActivityTypes;
 
   private activityChanges = new Subject<{activity: NoActivity|NewActivity|ExistingActivity, triggerChange: boolean}>();
 
@@ -100,7 +100,7 @@ export class AssociatedActivityComponent implements OnDestroy, ControlValueAcces
     this.activityChanges.next({ activity: { type: 'no-activity' }, triggerChange: true });
   }
 
-  setRootActivity(activty: AddedContent<ItemType>): void {
+  setRootActivity(activty: AddedContent<ActivityType>): void {
     if (this.rootActivity.type !== 'no-activity' || this.state !== 'ready') {
       throw new Error('Unexpected: tried to set a root activty when not ready or already set activity');
     }
@@ -108,7 +108,10 @@ export class AssociatedActivityComponent implements OnDestroy, ControlValueAcces
     if (activty.id !== undefined) {
       this.activityChanges.next({ activity: { type: 'existing-activity', id: activty.id }, triggerChange: true });
     } else {
-      this.activityChanges.next({ activity: { type: 'new-activity', name: activty.title, itemType: activty.type }, triggerChange: true });
+      this.activityChanges.next({
+        activity: { type: 'new-activity', name: activty.title, activityType: activty.type },
+        triggerChange: true
+      });
     }
   }
 }
