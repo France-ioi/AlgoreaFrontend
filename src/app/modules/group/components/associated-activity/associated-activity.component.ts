@@ -35,7 +35,10 @@ export class AssociatedActivityComponent implements OnDestroy, ControlValueAcces
 
   readonly allowedNewItemTypes = allowedNewActivityTypes;
 
-  private activityChanges = new Subject<{activity: NoActivity|NewActivity|ExistingActivity, triggerChange: boolean}>();
+  private activityChanges = new Subject<{
+    activity: NoActivity|NewActivity|(ExistingActivity&{ name?: string|null }),
+    triggerChange: boolean,
+  }>();
 
   private onChange: (value: NoActivity|NewActivity|ExistingActivity) => void = () => {};
 
@@ -58,13 +61,15 @@ export class AssociatedActivityComponent implements OnDestroy, ControlValueAcces
         }
 
         const id = data.activity.id;
+        const name = data.activity.name !== undefined ? of(data.activity.name) :
+          this.getItemByIdService.get(id).pipe(map(item => item.string.title));
 
         return merge(
           of(fetchingState()),
-          this.getItemByIdService.get(id).pipe(map(item => readyState({
+          name.pipe(map(name => readyState({
             triggerChange: data.triggerChange,
             activity: { tag: 'existing-activity', id: id } as ExistingActivity,
-            activityData: { name: item.string.title, path: incompleteItemStringUrl(id) },
+            activityData: { name, path: incompleteItemStringUrl(id) },
           }))),
         );
       })
@@ -107,7 +112,7 @@ export class AssociatedActivityComponent implements OnDestroy, ControlValueAcces
     }
 
     if (activity.id !== undefined) {
-      this.activityChanges.next({ activity: { tag: 'existing-activity', id: activity.id }, triggerChange: true });
+      this.activityChanges.next({ activity: { tag: 'existing-activity', id: activity.id, name: activity.title }, triggerChange: true });
     } else {
       this.activityChanges.next({
         activity: { tag: 'new-activity', name: activity.title, activityType: activity.type },
