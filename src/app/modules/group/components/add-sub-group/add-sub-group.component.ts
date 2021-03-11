@@ -53,7 +53,7 @@ export class AddSubGroupComponent {
   ];
 
   searchFunction = (value: string): Observable<AddedContent<GroupType>[]> =>
-    this.searchGroupService.search(value).pipe(map(groups => groups.map(group => ({
+    this.searchGroupService.searchPossibleSubgroups(value).pipe(map(groups => groups.map(group => ({
       id: group.id,
       type: group.type,
       title: group.name,
