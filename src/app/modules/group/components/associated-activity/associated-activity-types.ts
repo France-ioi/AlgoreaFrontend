@@ -1,4 +1,5 @@
-import { ActivityType } from 'src/app/shared/helpers/item-type';
+import { ItemFound } from 'src/app/modules/item/http-services/search-item.service';
+import { ActivityType, ItemType } from 'src/app/shared/helpers/item-type';
 
 type ActivityId = string;
 
@@ -14,4 +15,8 @@ export function isExistingActivity(activity: NoActivity|NewActivity|ExistingActi
 
 export function isNewActivity(activity: NoActivity|NewActivity|ExistingActivity): activity is NewActivity {
   return activity.tag === 'new-activity';
+}
+
+export function isActivityFound(itemFound: ItemFound<ItemType>): itemFound is ItemFound<ActivityType> {
+  return itemFound.type !== 'Skill';
 }

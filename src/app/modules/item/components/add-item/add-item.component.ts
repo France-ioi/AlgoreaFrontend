@@ -16,7 +16,7 @@ export class AddItemComponent implements OnChanges {
   @Output() contentAdded = new EventEmitter<AddedContent<ItemType>>();
 
   allowedNewItemTypes: NewContentType<ItemType>[] = [];
-  itemsFound: ItemFound[] = [];
+  itemsFound: ItemFound<ItemType>[] = [];
   state: 'loading' | 'ready' = 'loading';
 
   searchFunction = (value: string): Observable<AddedContent<ItemType>[]> =>

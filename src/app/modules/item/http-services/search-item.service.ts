@@ -4,10 +4,10 @@ import { Observable } from 'rxjs';
 import { appConfig } from '../../../shared/helpers/config';
 import { ItemType } from '../../../shared/helpers/item-type';
 
-export interface ItemFound {
+export interface ItemFound<T> {
   id: string,
   title: string,
-  type: ItemType
+  type: T
 }
 
 @Injectable({
@@ -23,13 +23,13 @@ export class SearchItemService {
     includedTypes?: ItemType[],
     excludedTypes?: ItemType[],
     limit = 4,
-  ): Observable<ItemFound[]> {
+  ): Observable<ItemFound<ItemType>[]> {
     let params = new HttpParams().set('search', searchString).set('limit', limit.toString());
 
     if (includedTypes) params = params.set('types_include', includedTypes.join(','));
     if (excludedTypes) params = params.set('types_exclude', excludedTypes.join(','));
 
-    return this.http.get<ItemFound[]>(
+    return this.http.get<ItemFound<ItemType>[]>(
       `${appConfig().apiUrl}/items/search`,
       { params: params },
     );

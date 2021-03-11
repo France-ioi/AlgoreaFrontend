@@ -9,10 +9,10 @@ import { incompleteItemStringUrl } from 'src/app/shared/routing/item-route';
 type ActivityId = string;
 import { SearchItemService } from 'src/app/modules/item/http-services/search-item.service';
 import { AddedContent } from 'src/app/modules/shared-components/components/add-content/add-content.component';
-import { ActivityType, ItemType } from 'src/app/shared/helpers/item-type';
+import { ActivityType } from 'src/app/shared/helpers/item-type';
 import { allowedNewActivityTypes } from 'src/app/shared/helpers/new-item-types';
 import { fetchingState, isReady, readyState } from 'src/app/shared/helpers/state';
-import { NoActivity, NewActivity, ExistingActivity, isExistingActivity, isNewActivity } from './associated-activity-types';
+import { NoActivity, NewActivity, ExistingActivity, isExistingActivity, isNewActivity, isActivityFound } from './associated-activity-types';
 
 @Component({
   selector: 'alg-associated-activity',
@@ -39,8 +39,9 @@ export class AssociatedActivityComponent implements OnDestroy, ControlValueAcces
 
   private onChange: (value: NoActivity|NewActivity|ExistingActivity) => void = () => {};
 
-  searchFunction = (value: string): Observable<AddedContent<ItemType>[]> =>
-    this.searchItemService.search(value, [ 'Chapter', 'Course', 'Task' ]);
+  searchFunction = (value: string): Observable<AddedContent<ActivityType>[]> =>
+    this.searchItemService.search(value, [ 'Chapter', 'Course', 'Task' ])
+      .pipe(map(items => items.filter(isActivityFound)));
 
   constructor(
     private getItemByIdService: GetItemByIdService,
