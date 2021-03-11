@@ -8,13 +8,16 @@
   </p>
 
   <ng-container *ngIf="state === 'ready'">
-    <ng-container [ngSwitch]="rootActivity.type">
+    <ng-container [ngSwitch]="rootActivity.tag">
 
-      <alg-add-content *ngSwitchCase="'no-activity'"
-        [allowedTypesForNewContent]="allowedNewItemTypes"
-        [searchFunction]="searchFunction"
-        (contentAdded)="setRootActivity($event)"
-      ></alg-add-content>
+      <ng-container *ngSwitchCase="'no-activity'">
+        <p>There are currently no activities associated with this group.</p>
+        <alg-add-content
+          [allowedTypesForNewContent]="allowedNewItemTypes"
+          [searchFunction]="searchFunction"
+          (contentAdded)="setRootActivity($event)"
+        ></alg-add-content>
+      </ng-container>
 
       <div class="activity" *ngSwitchCase="'new-activity'">
         <span class="activity-name">

@@ -8,7 +8,7 @@ import { incompleteItemStringUrl } from 'src/app/shared/routing/item-route';
 
 type ActivityId = string;
 import { SearchItemService } from 'src/app/modules/item/http-services/search-item.service';
-import { AddedContent, NewContentType } from 'src/app/modules/shared-components/components/add-content/add-content.component';
+import { AddedContent } from 'src/app/modules/shared-components/components/add-content/add-content.component';
 import { ActivityType, ItemType } from 'src/app/shared/helpers/item-type';
 import { allowedNewActivityTypes } from 'src/app/shared/helpers/new-item-types';
 import { fetchingState, isReady, readyState } from 'src/app/shared/helpers/state';
@@ -28,12 +28,12 @@ import { NoActivity, NewActivity, ExistingActivity, isExistingActivity, isNewAct
 })
 export class AssociatedActivityComponent implements OnDestroy, ControlValueAccessor {
 
-  rootActivity: NoActivity|NewActivity|ExistingActivity = { type: 'no-activity' };
+  rootActivity: NoActivity|NewActivity|ExistingActivity = { tag: 'no-activity' };
   rootActivityData: null|{name: string|null, path: string|null} = null;
 
   state: 'fetching'|'ready'|'error' = 'fetching';
 
-  allowedNewItemTypes: NewContentType<ActivityType>[] = allowedNewActivityTypes;
+  readonly allowedNewItemTypes = allowedNewActivityTypes;
 
   private activityChanges = new Subject<{activity: NoActivity|NewActivity|ExistingActivity, triggerChange: boolean}>();
 
@@ -62,7 +62,7 @@ export class AssociatedActivityComponent implements OnDestroy, ControlValueAcces
           of(fetchingState()),
           this.getItemByIdService.get(id).pipe(map(item => readyState({
             triggerChange: data.triggerChange,
-            activity: { type: 'existing-activity', id: id } as ExistingActivity,
+            activity: { tag: 'existing-activity', id: id } as ExistingActivity,
             activityData: { name: item.string.title, path: incompleteItemStringUrl(id) },
           }))),
         );
@@ -93,23 +93,23 @@ export class AssociatedActivityComponent implements OnDestroy, ControlValueAcces
   }
 
   onRemove(): void {
-    if (this.rootActivity.type === 'no-activity' || this.state !== 'ready') {
+    if (this.rootActivity.tag === 'no-activity' || this.state !== 'ready') {
       throw new Error('Unexpected: tried to remove root activity when not ready or no prior activity');
     }
 
-    this.activityChanges.next({ activity: { type: 'no-activity' }, triggerChange: true });
+    this.activityChanges.next({ activity: { tag: 'no-activity' }, triggerChange: true });
   }
 
-  setRootActivity(activty: AddedContent<ActivityType>): void {
-    if (this.rootActivity.type !== 'no-activity' || this.state !== 'ready') {
+  setRootActivity(activity: AddedContent<ActivityType>): void {
+    if (this.rootActivity.tag !== 'no-activity' || this.state !== 'ready') {
       throw new Error('Unexpected: tried to set a root activty when not ready or already set activity');
     }
 
-    if (activty.id !== undefined) {
-      this.activityChanges.next({ activity: { type: 'existing-activity', id: activty.id }, triggerChange: true });
+    if (activity.id !== undefined) {
+      this.activityChanges.next({ activity: { tag: 'existing-activity', id: activity.id }, triggerChange: true });
     } else {
       this.activityChanges.next({
-        activity: { type: 'new-activity', name: activty.title, activityType: activty.type },
+        activity: { tag: 'new-activity', name: activity.title, activityType: activity.type },
         triggerChange: true
       });
     }

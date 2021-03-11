@@ -99,7 +99,7 @@ export class GroupEditComponent implements OnDestroy, PendingChangesComponent {
           this.createItemService.create({
             title: rootActivity.name,
             type: rootActivity.activityType,
-            languageTag: 'en',
+            languageTag: 'en',// FIXME
             asRootOfGroupId: this.initialFormData.id,
           }),
       })
@@ -127,8 +127,8 @@ export class GroupEditComponent implements OnDestroy, PendingChangesComponent {
   private resetFormWith(group: Group): void {
 
     const rootActivity = group.root_activity_id === null ?
-      { type: 'no-activity' } :
-      { type: 'existing-activity', id: group.root_activity_id };
+      { tag: 'no-activity' } :
+      { tag: 'existing-activity', id: group.root_activity_id };
 
     this.groupForm.reset({
       name: group.name,

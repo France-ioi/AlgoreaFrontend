@@ -2,16 +2,16 @@ import { ActivityType } from 'src/app/shared/helpers/item-type';
 
 type ActivityId = string;
 
-export interface NoActivity {type: 'no-activity'}
+export interface NoActivity { tag: 'no-activity' }
 
-export interface NewActivity {type: 'new-activity', name: string, activityType: ActivityType}
+export interface NewActivity { tag: 'new-activity', name: string, activityType: ActivityType }
 
-export interface ExistingActivity {type: 'existing-activity', id: ActivityId}
+export interface ExistingActivity { tag: 'existing-activity', id: ActivityId }
 
 export function isExistingActivity(activity: NoActivity|NewActivity|ExistingActivity): activity is ExistingActivity {
-  return activity.type === 'existing-activity';
+  return activity.tag === 'existing-activity';
 }
 
 export function isNewActivity(activity: NoActivity|NewActivity|ExistingActivity): activity is NewActivity {
-  return activity.type === 'new-activity';
+  return activity.tag === 'new-activity';
 }
