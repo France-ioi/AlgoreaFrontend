@@ -26,7 +26,7 @@ export interface Item {
   validation_type: 'None' | 'All' | 'AllButOne' | 'Categories' | 'One' | 'Manual',
   no_score: boolean,
   title_bar_visible: boolean,
-  full_screen: 'forceYes' | '' | 'forceNo' | 'default',
+  full_screen: 'forceYes' | 'forceNo' | 'default',
 }
 
 @Injectable({
