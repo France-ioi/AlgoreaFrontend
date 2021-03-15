@@ -14,6 +14,12 @@ export const allowedNewActivityTypes: NewContentType<ActivityType>[] = [
     title: $localize`Task`,
     description: $localize`A new task which users can try to solve.`,
   },
+  {
+    type: 'Course',
+    icon: 'fa fa-book',
+    title: $localize`Course`,
+    description: $localize`A new course which users can view and learn.`,
+  },
 ];
 
 const skillNewType: NewContentType<ItemType> = {
