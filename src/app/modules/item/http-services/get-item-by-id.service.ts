@@ -22,7 +22,7 @@ export interface Item {
   prompt_to_join_group_by_code: boolean,
   url?: string | null,
   uses_api?: boolean,
-  text_id?: string,
+  text_id: string|null,
   validation_type: 'None' | 'All' | 'AllButOne' | 'Categories' | 'One' | 'Manual',
   no_score: boolean,
   title_bar_visible: boolean,
