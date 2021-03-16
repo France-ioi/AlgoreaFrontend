@@ -158,7 +158,7 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
     if (promptToJoinGroupByCode !== this.initialFormData.prompt_to_join_group_by_code)
       itemFormValues.prompt_to_join_group_by_code = promptToJoinGroupByCode;
 
-    const fullScreen = formControls.fullScreen?.value as 'forceYes' | '' | 'forceNo' | 'default';
+    const fullScreen = formControls.fullScreen?.value as 'forceYes' | 'forceNo' | 'default';
     if (fullScreen !== this.initialFormData.full_screen) itemFormValues.full_screen = fullScreen;
 
     return itemFormValues;
@@ -253,7 +253,7 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
       no_score: item.no_score,
       title_bar_visible: item.title_bar_visible || false,
       prompt_to_join_group_by_code: item.prompt_to_join_group_by_code || false,
-      full_screen: item.full_screen || '',
+      full_screen: item.full_screen,
     });
 
     this.itemChanges = {};
