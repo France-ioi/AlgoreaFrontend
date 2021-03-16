@@ -1,36 +1,51 @@
-import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { Component, Input, Output, EventEmitter, forwardRef } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 /**
- * If you set parentForm it will handle the value as a usual reactive form
- * so it will not emit anything on change
+ * To use inside form, just set the formControlName
+ * ```
+ * <alg-switch formControlName="full_screen"></alg-switch>
+ * ```
+ * Otherwise you can use the 'change' output and the 'checked' input for regular uses
+ * ```
+ * <alg-switch [checked]="initialValue" (change)="onChange($event)"></alg-switch>
+ * ```
  */
 @Component({
   selector: 'alg-switch',
   templateUrl: './switch.component.html',
   styleUrls: [ './switch.component.scss' ],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => SwitchComponent),
+      multi: true,
+    }
+  ]
 })
-export class SwitchComponent implements OnChanges {
+export class SwitchComponent implements ControlValueAccessor {
+
   @Input() checked = false;
   @Input() mode: 'dark' | 'white' | 'circular' | 'dark-circular' = 'dark';
   @Input() type = 'square';
 
-  @Input() parentForm?: FormGroup;
-  @Input() name = '';
-  formControl?: FormControl;
-
   @Output() change = new EventEmitter<boolean>();
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (
-      (Object.prototype.hasOwnProperty.call(changes, 'parentForm') || Object.prototype.hasOwnProperty.call(changes, 'name'))
-      && this.parentForm && this.parentForm.get(this.name)
-    ) {
-      this.formControl = this.parentForm.get(this.name) as FormControl;
-    }
+  private onChange: (value: boolean) => void = () => {};
+
+  writeValue(value: boolean): void {
+    this.checked = value;
+  }
+
+  registerOnChange(fn: (value: boolean) => void): void {
+    this.onChange = fn;
+  }
+
+  registerOnTouched(_fn: (value: boolean) => void): void {
   }
 
   handleChange(checked: boolean): void {
     this.change.emit(checked);
+    this.onChange(checked);
   }
 }

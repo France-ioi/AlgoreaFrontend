@@ -3,8 +3,8 @@ import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { SelectionComponent } from './selection.component';
 
 describe('SelectionComponent', () => {
-  let component: SelectionComponent;
-  let fixture: ComponentFixture<SelectionComponent>;
+  let component: SelectionComponent<string>;
+  let fixture: ComponentFixture<SelectionComponent<string>>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -14,7 +14,7 @@ describe('SelectionComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SelectionComponent);
+    fixture = TestBed.createComponent<SelectionComponent<string>>(SelectionComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
