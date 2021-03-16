@@ -2,7 +2,7 @@ import { Component, forwardRef, OnDestroy } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { merge, Observable, of } from 'rxjs';
 import { Subject } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import { GetItemByIdService } from 'src/app/modules/item/http-services/get-item-by-id.service';
 import { incompleteItemStringUrl } from 'src/app/shared/routing/item-route';
 
@@ -13,6 +13,7 @@ import { ActivityType } from 'src/app/shared/helpers/item-type';
 import { allowedNewActivityTypes } from 'src/app/shared/helpers/new-item-types';
 import { fetchingState, isReady, readyState } from 'src/app/shared/helpers/state';
 import { NoActivity, NewActivity, ExistingActivity, isExistingActivity, isNewActivity, isActivityFound } from './associated-activity-types';
+import { errorIsHTTPForbidden } from 'src/app/shared/helpers/errors';
 
 @Component({
   selector: 'alg-associated-activity',
@@ -66,11 +67,18 @@ export class AssociatedActivityComponent implements OnDestroy, ControlValueAcces
 
         return merge(
           of(fetchingState()),
-          name.pipe(map(name => readyState({
-            triggerChange: data.triggerChange,
-            activity: { tag: 'existing-activity', id: id } as ExistingActivity,
-            activityData: { name, path: incompleteItemStringUrl(id) },
-          }))),
+          name.pipe(
+            map(name => ({ name, path: incompleteItemStringUrl(id) })),
+            catchError(err => {
+              if (errorIsHTTPForbidden(err)) return of({ name: $localize`You don't have access to this activity.`, path: null });
+              throw err;
+            }),
+            map(activityData => readyState({
+              triggerChange: data.triggerChange,
+              activity: { tag: 'existing-activity', id: id } as ExistingActivity,
+              activityData,
+            }))
+          ),
         );
       })
     ).subscribe(state => {
@@ -80,6 +88,8 @@ export class AssociatedActivityComponent implements OnDestroy, ControlValueAcces
         this.rootActivityData = state.data.activityData;
         if (state.data.triggerChange) this.onChange(this.rootActivity);
       }
+    }, _err => {
+      this.state = 'error';
     });
   }
 

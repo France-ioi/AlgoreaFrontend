@@ -30,9 +30,11 @@
       </div>
 
       <div class="activity" *ngSwitchCase="'existing-activity'">
-        <span class="activity-name clickable" [routerLink]="rootActivityData!.path">
-          {{rootActivityData!.name}}
-        </span>
+        <i class="fa fa-lock" *ngIf="!rootActivityData?.path"></i>
+        <span class="activity-name"
+          [routerLink]="rootActivityData!.path"
+          [ngClass]="{clickable: !!rootActivityData?.path}"
+        >{{rootActivityData!.name}}</span>
         <span class="remove" (click)="onRemove()">
           <span i18n>Remove</span>
           <i class="fa fa-trash-alt"></i>
