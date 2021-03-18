@@ -10,10 +10,6 @@
       </span> -->
       <span class="platform-name" i18n>Algorea Platform</span>
     </span>
-    <!-- <span class="notifications" *ngIf="data.notification > 0" (click)="toggleNotification()" tabindex="1">
-      <span class="notification-number">{{ data.notification }}</span>
-      <i class="far fa-bell"></i>
-    </span> -->
     <alg-language-picker class="lang-picker"></alg-language-picker>
     <span class="sign-out" *ngIf="session && !session.user.isTemp" (click)="logout()" tabindex="2">
       <i class="fa fa-sign-out-alt"></i>
@@ -43,9 +39,5 @@
   </span>
   <span class="title-collapse" (click)="onFold()" [ngClass]="{down: !folded}">
     <img src="assets/images/header-open.svg" style="width: 1rem;"/>
-  </span>
-  <span class="notifications" *ngIf="false" tabindex="1">
-    <span class="notification-number">2</span>
-    <i class="far fa-bell"></i>
   </span>
 </div>

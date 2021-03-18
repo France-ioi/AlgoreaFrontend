@@ -17,8 +17,6 @@ export class TopNavComponent {
   @Output() collapse = new EventEmitter<boolean>();
   @Output() fold = new EventEmitter<boolean>();
 
-  showNotification = false;
-
   constructor(
     private authService: AuthService
   ) { }
@@ -31,10 +29,6 @@ export class TopNavComponent {
   onFold(): void {
     this.folded = !this.folded;
     this.fold.emit(this.folded);
-  }
-
-  toggleNotification(): void {
-    this.showNotification = !this.showNotification;
   }
 
   login(): void {
