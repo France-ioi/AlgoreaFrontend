@@ -9,21 +9,23 @@ import { UserSession } from 'src/app/shared/services/user-session.service';
 })
 export class TopNavComponent {
 
-  @Input() collapsed = false;
   @Input() compactMode = false;
   @Input() folded = false;
   @Input() session?: UserSession;
 
-  @Output() collapse = new EventEmitter<boolean>();
+  @Output() displayLeftMenu = new EventEmitter<boolean>();
   @Output() fold = new EventEmitter<boolean>();
 
   constructor(
     private authService: AuthService
   ) { }
 
-  onCollapse(): void {
-    this.collapsed = !this.collapsed;
-    this.collapse.emit(this.collapsed);
+  hideLeftMenu(): void {
+    this.displayLeftMenu.emit(false);
+  }
+
+  showLeftMenu(): void {
+    this.displayLeftMenu.emit(true);
   }
 
   onFold(): void {

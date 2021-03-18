@@ -8,14 +8,12 @@ import { UserSession } from 'src/app/shared/services/user-session.service';
 })
 export class LeftMenuComponent {
 
-  @Input() collapsed = false;
   @Input() session?: UserSession;
 
-  @Output() collapse = new EventEmitter<boolean>();
+  @Output() hideLeftMenu = new EventEmitter<void>();
 
-  onCollapse(collapsed: boolean): void {
-    this.collapsed = collapsed;
-    this.collapse.emit(collapsed);
+  toggleDisplay(shown: boolean): void {
+    if (!shown) this.hideLeftMenu.emit();
   }
 
 }

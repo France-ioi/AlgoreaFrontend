@@ -1,21 +1,19 @@
 <div class="container" *ngrxLet="session$ as session">
-  <div class="left" [ngClass]="{ collapsed: collapsed, expanded: !collapsed }">
+  <div class="left" [ngClass]="{ collapsed: !leftMenuDisplayed, expanded: leftMenuDisplayed }">
     <alg-left-menu
-      [collapsed]="collapsed"
       [session]="session"
-      (collapse)="onCollapse($event)"
+      (hideLeftMenu)="toggleLeftMenuDisplay(false)"
     ></alg-left-menu>
   </div>
   <ng-container *ngIf="editState$ | async as editState">
     <div class="top-bar"
-         [ngClass]="{ editing: editState === 'editing' || editState === 'editing-noaction', collapsed: collapsed, expanded: !collapsed }"
+         [ngClass]="{ editing: editState === 'editing' || editState === 'editing-noaction', collapsed: !leftMenuDisplayed, expanded: leftMenuDisplayed }"
     >
       <alg-top-nav
-        *ngIf="collapsed"
-        [collapsed]="collapsed"
+        *ngIf="!leftMenuDisplayed"
         [folded]="folded"
         [session]="session"
-        (collapse)="onCollapse($event)"
+        (displayLeftMenu)="toggleLeftMenuDisplay($event)"
         (fold)="onFold($event)"
         [compactMode]="true"
       ></alg-top-nav>
@@ -28,9 +26,9 @@
             *ngIf="editState === 'editable'"
             (edit)="onEditPage()"
           ></alg-page-navigator>
-          <alg-language-picker class="lang-picker" *ngIf="collapsed"></alg-language-picker>
+          <alg-language-picker class="lang-picker" *ngIf="!leftMenuDisplayed"></alg-language-picker>
           <alg-button
-            *ngIf="collapsed && session && session.user.isTemp"
+            *ngIf="!leftMenuDisplayed && session && session.user.isTemp"
             i18n-label label="Log in / Sign in"
             icon="pi pi-sign-in"
             class="p-button-rounded"
@@ -38,7 +36,7 @@
             (click)="login()"
           ></alg-button>
           <alg-button
-            *ngIf="collapsed && session && !session.user.isTemp"
+            *ngIf="!leftMenuDisplayed && session && !session.user.isTemp"
             i18n-label label="Log out"
             icon="pi pi-sign-out"
             class="p-button-rounded"
@@ -74,7 +72,7 @@
     </div>
     <div
          class="right"
-         [ngClass]="{ collapsed: collapsed, expanded: !collapsed, editing: editState === 'editing' || editState === 'editing-noaction' }"
+         [ngClass]="{ collapsed: !leftMenuDisplayed, expanded: leftMenuDisplayed, editing: editState === 'editing' || editState === 'editing-noaction' }"
     >
       <div class="main-content" [ngClass]="{ folded: folded, unfolded: !folded }">
         <router-outlet></router-outlet>
