@@ -10,7 +10,7 @@ import { UserSession } from 'src/app/shared/services/user-session.service';
 export class TopNavComponent {
 
   @Input() collapsed = false;
-  @Input() templateId = 0;
+  @Input() compactMode = false;
   @Input() folded = false;
   @Input() session?: UserSession;
 

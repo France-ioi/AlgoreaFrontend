@@ -17,7 +17,7 @@
         [session]="session"
         (collapse)="onCollapse($event)"
         (fold)="onFold($event)"
-        [templateId]="1"
+        [compactMode]="true"
       ></alg-top-nav>
       <div class="top-right-bar" *ngrxLet="currentContent$ as currentContent">
         <alg-editor-bar *ngIf="editState === 'editing' || editState === 'editing-noaction'" (cancel)="onEditCancel()"></alg-editor-bar>

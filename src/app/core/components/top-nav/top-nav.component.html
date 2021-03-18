@@ -1,4 +1,4 @@
-<div class="nav-header" *ngIf="templateId === 0">
+<div class="nav-header" *ngIf="!compactMode">
   <div class="nav-control">
     <span class="nav-collapse" (click)="onCollapse()" tabindex="0">
       <!-- <i class="fa fa-bars"></i> -->
@@ -33,7 +33,7 @@
   </div>
 </div>
 
-<div class="nav-control alt" *ngIf="templateId">
+<div class="nav-control alt" *ngIf="compactMode">
   <span class="nav-collapse" (click)="onCollapse()" tabindex="0">
     <img src="assets/images/menu-open.svg" style="width: 2rem; height: 2rem;"/>
   </span>
