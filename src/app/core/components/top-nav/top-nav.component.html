@@ -37,7 +37,7 @@
   <span class="nav-collapse" (click)="showLeftMenu()" tabindex="0">
     <img src="assets/images/menu-open.svg" style="width: 2rem; height: 2rem;"/>
   </span>
-  <span class="title-collapse" (click)="onFold()" [ngClass]="{down: !folded}">
+  <span class="title-collapse" (click)="toggleHeadersDisplay()" [ngClass]="{down: !showHeaders}">
     <img src="assets/images/header-open.svg" style="width: 1rem;"/>
   </span>
 </div>

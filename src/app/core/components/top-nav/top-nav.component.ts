@@ -10,11 +10,12 @@ import { UserSession } from 'src/app/shared/services/user-session.service';
 export class TopNavComponent {
 
   @Input() compactMode = false;
-  @Input() folded = false;
   @Input() session?: UserSession;
 
   @Output() displayLeftMenu = new EventEmitter<boolean>();
-  @Output() fold = new EventEmitter<boolean>();
+  @Output() displayHeaders = new EventEmitter<boolean>();
+
+  showHeaders = true;
 
   constructor(
     private authService: AuthService
@@ -28,9 +29,9 @@ export class TopNavComponent {
     this.displayLeftMenu.emit(true);
   }
 
-  onFold(): void {
-    this.folded = !this.folded;
-    this.fold.emit(this.folded);
+  toggleHeadersDisplay(): void {
+    this.showHeaders = !this.showHeaders;
+    this.displayHeaders.emit(this.showHeaders);
   }
 
   login(): void {

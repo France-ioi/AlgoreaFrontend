@@ -20,7 +20,7 @@ export class AppComponent implements OnInit, OnDestroy {
   authOnError$ = this.authService.state$.pipe(map(state => state === AuthServiceState.Error));
 
   leftMenuDisplayed = true;
-  folded = false;
+  headersDisplayed = true;
   scrolled = false;
 
   private subscription?: Subscription;
@@ -49,11 +49,11 @@ export class AppComponent implements OnInit, OnDestroy {
 
   toggleLeftMenuDisplay(shown: boolean): void {
     this.leftMenuDisplayed = shown;
-    if (shown) this.folded = false;
+    if (shown) this.headersDisplayed = true;
   }
 
-  onFold(folded: boolean): void {
-    this.folded = folded;
+  toggleHeadersDisplay(shown: boolean): void {
+    this.headersDisplayed = shown;
   }
 
   @HostListener('window:scroll', [ '$event' ])
