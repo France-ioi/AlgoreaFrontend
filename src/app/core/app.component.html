@@ -1,9 +1,6 @@
 <div class="container" *ngrxLet="session$ as session">
   <div class="left" [ngClass]="{ collapsed: !leftMenuDisplayed, expanded: leftMenuDisplayed }">
-    <alg-left-menu
-      [session]="session"
-      (hideLeftMenu)="toggleLeftMenuDisplay(false)"
-    ></alg-left-menu>
+    <alg-left-menu (hideLeftMenu)="toggleLeftMenuDisplay(false)"></alg-left-menu>
   </div>
   <ng-container *ngIf="editState$ | async as editState">
     <div class="top-bar"
@@ -11,7 +8,6 @@
     >
       <alg-top-nav
         *ngIf="!leftMenuDisplayed"
-        [session]="session"
         (displayLeftMenu)="toggleLeftMenuDisplay($event)"
         (displayHeaders)="toggleHeadersDisplay($event)"
         [compactMode]="true"

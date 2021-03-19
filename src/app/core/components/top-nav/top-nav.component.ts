@@ -1,6 +1,5 @@
 import { Component, Output, EventEmitter, Input } from '@angular/core';
 import { AuthService } from 'src/app/shared/auth/auth.service';
-import { UserSession } from 'src/app/shared/services/user-session.service';
 
 @Component({
   selector: 'alg-top-nav',
@@ -10,7 +9,6 @@ import { UserSession } from 'src/app/shared/services/user-session.service';
 export class TopNavComponent {
 
   @Input() compactMode = false;
-  @Input() session?: UserSession;
 
   @Output() displayLeftMenu = new EventEmitter<boolean>();
   @Output() displayHeaders = new EventEmitter<boolean>();

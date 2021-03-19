@@ -1,5 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { UserSession } from 'src/app/shared/services/user-session.service';
+import { Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
   selector: 'alg-left-menu',
@@ -7,8 +6,6 @@ import { UserSession } from 'src/app/shared/services/user-session.service';
   styleUrls: [ './left-menu.component.scss' ]
 })
 export class LeftMenuComponent {
-
-  @Input() session?: UserSession;
 
   @Output() hideLeftMenu = new EventEmitter<void>();
 

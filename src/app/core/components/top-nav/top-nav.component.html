@@ -5,31 +5,8 @@
       <img src="assets/images/menu-open.svg" style="width: 2rem; height: 2rem;" />
     </span>
     <span class="platform-info">
-      <!-- <span class="platform-image">
-        <img src="assets/images/{{data.image}}" style="width: 2.3333rem; height: 2.3333rem;" />
-      </span> -->
       <span class="platform-name" i18n>Algorea Platform</span>
     </span>
-    <alg-language-picker class="lang-picker"></alg-language-picker>
-    <span class="sign-out" *ngIf="session && !session.user.isTemp" (click)="logout()" tabindex="2">
-      <i class="fa fa-sign-out-alt"></i>
-    </span>
-  </div>
-  <div class="overlay-container">
-    <alg-button
-      *ngIf="session && session.user.isTemp"
-      icon="fa fa-sign-in-alt"
-      label="Log in / Sign in"
-      class="p-button-rounded p-button-warning p-fit-parent"
-      (click)="login()"
-    ></alg-button>
-    <alg-button
-    *ngIf="session && !session.user.isTemp"
-      icon="fa fa-sign-out-alt"
-      label="Log out"
-      class="p-button-rounded p-button-warning p-fit-parent"
-      (click)="logout()"
-    ></alg-button>
   </div>
 </div>
 
