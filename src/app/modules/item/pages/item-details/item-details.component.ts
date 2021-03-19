@@ -1,6 +1,8 @@
 import { Component, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { CurrentContentService } from 'src/app/shared/services/current-content.service';
+import { UserSessionService } from 'src/app/shared/services/user-session.service';
+import { canCurrentUserViewItemContent } from '../../helpers/item-permissions';
 import { ItemDataSource } from '../../services/item-datasource.service';
 
 @Component({
@@ -12,16 +14,21 @@ export class ItemDetailsComponent implements OnDestroy {
 
   itemLoadingstate$ = this.itemDataSource.state$;
   itemData$ = this.itemDataSource.itemData$; // as template is not able to infer properly the type
+  showAccessCodeField = false;
 
   subscription: Subscription;
 
   constructor(
     private currentContent: CurrentContentService,
+    private userService: UserSessionService,
     private itemDataSource: ItemDataSource,
   ) {
-    this.subscription = this.itemDataSource.item$.subscribe(
-      item => this.currentContent.editState.next(item.permissions.can_edit === 'none' ? 'non-editable' : 'editable')
-    );
+    this.subscription = this.itemDataSource.item$.subscribe(item => {
+      this.currentContent.editState.next(item.permissions.can_edit === 'none' ? 'non-editable' : 'editable');
+      this.showAccessCodeField = item.prompt_to_join_group_by_code
+        && !canCurrentUserViewItemContent(item) && !this.userService.isCurrentUserTemp();
+
+    });
   }
 
   ngOnDestroy(): void {
