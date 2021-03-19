@@ -21,9 +21,9 @@
             *ngIf="editState === 'editable'"
             (edit)="onEditPage()"
           ></alg-page-navigator>
-          <alg-language-picker class="lang-picker" *ngIf="!leftMenuDisplayed"></alg-language-picker>
+          <alg-language-picker *ngIf="session && session.user.isTemp" class="lang-picker"></alg-language-picker>
           <alg-button
-            *ngIf="!leftMenuDisplayed && session && session.user.isTemp"
+            *ngIf="session && session.user.isTemp"
             i18n-label label="Log in / Sign in"
             icon="pi pi-sign-in"
             class="p-button-rounded"
@@ -31,7 +31,7 @@
             (click)="login()"
           ></alg-button>
           <alg-button
-            *ngIf="!leftMenuDisplayed && session && !session.user.isTemp"
+            *ngIf="session && !session.user.isTemp"
             i18n-label label="Log out"
             icon="pi pi-sign-out"
             class="p-button-rounded"
