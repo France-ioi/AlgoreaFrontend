@@ -2,8 +2,8 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ERROR_MESSAGE } from 'src/app/shared/constants/api';
 import { TOAST_LENGTH } from 'src/app/shared/constants/global';
-import { InvalidCodeReason, JoinByCodeService } from '../../../../../shared/http-services/join-by-code.service';
-import { ItemData } from '../../../services/item-datasource.service';
+import { InvalidCodeReason, JoinByCodeService } from '../../../../shared/http-services/join-by-code.service';
+import { ItemData } from '../../services/item-datasource.service';
 
 @Component({
   selector: 'alg-access-code-view',
