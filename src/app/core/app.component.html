@@ -17,10 +17,6 @@
         <div class="breadcrumb-bar"
              *ngIf="headersDisplayed && !scrolled">
           <alg-breadcrumb [contentBreadcrumb]="currentContent?.breadcrumbs"></alg-breadcrumb>
-          <alg-page-navigator
-            *ngIf="editState === 'editable'"
-            (edit)="onEditPage()"
-          ></alg-page-navigator>
           <alg-language-picker *ngIf="session && session.user.isTemp" class="lang-picker"></alg-language-picker>
           <alg-button
             *ngIf="session && session.user.isTemp"
@@ -56,12 +52,6 @@
           </div> -->
           <!-- <span class="clock-icon" [ngClass]="{ finished: false }"><i class="fa fa-clock"></i></span> -->
           <!-- <span class="remaining-time" [ngClass]="{ finished: false }">00:03:10</span> -->
-          <alg-page-navigator
-            *ngIf="editState === 'editable'"
-            [allowFullScreen]="false"
-            navigationMode="nextAndPrev"
-            (edit)="onEditPage()"
-          ></alg-page-navigator>
         </div>
       </div>
     </div>

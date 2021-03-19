@@ -16,5 +16,11 @@
       <p>{{itemData.item.string.title}}</p>
       <span *ngIf="itemData.item.string.subtitle">{{itemData.item.string.subtitle}}</span>
     </div>
+    <alg-page-navigator
+      *ngIf="itemData.item.permissions.can_edit !== 'none'"
+      [allowFullScreen]="false"
+      navigationMode="nextAndPrev"
+      (edit)="onEditButtonClicked()"
+    ></alg-page-navigator>
   </div>
 </div>
