@@ -1,5 +1,4 @@
 import { Component, OnDestroy, ViewChild } from '@angular/core';
-import { CurrentContentService } from 'src/app/shared/services/current-content.service';
 import { ItemData, ItemDataSource } from '../../services/item-datasource.service';
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { forkJoin, Observable, of, Subscription, throwError } from 'rxjs';
@@ -16,6 +15,7 @@ import { ItemEditContentComponent } from '../item-edit-content/item-edit-content
 import { PendingChangesComponent } from 'src/app/shared/guards/pending-changes-guard';
 import { CreateItemService, NewItem } from '../../http-services/create-item.service';
 import { ItemEditAdvancedParametersComponent } from '../item-edit-advanced-parameters/item-edit-advanced-parameters.component';
+import { Mode, ModeService } from 'src/app/shared/services/mode.service';
 
 @Component({
   selector: 'alg-item-edit',
@@ -49,7 +49,7 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
   @ViewChild('advancedParameters') private editAdvancedParameters?: ItemEditAdvancedParametersComponent;
 
   constructor(
-    private currentContent: CurrentContentService,
+    private modeService: ModeService,
     private itemDataSource: ItemDataSource,
     private formBuilder: FormBuilder,
     private createItemService: CreateItemService,
@@ -57,7 +57,7 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
     private updateItemStringService: UpdateItemStringService,
     private messageService: MessageService
   ) {
-    this.currentContent.editState.next('editing');
+    this.modeService.mode$.next(Mode.Editing);
     this.subscription = this.itemLoadingState$
       .pipe(filter<Ready<ItemData> | Fetching | FetchError, Ready<ItemData>>(isReady))
       .subscribe(state => {
@@ -67,7 +67,7 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
   }
 
   ngOnDestroy(): void {
-    this.currentContent.editState.next('non-editable');
+    this.modeService.mode$.next(Mode.Normal);
     this.subscription?.unsubscribe();
   }
 

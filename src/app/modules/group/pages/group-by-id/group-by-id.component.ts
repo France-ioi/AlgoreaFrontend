@@ -3,7 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { FetchError, Fetching, isReady, Ready } from 'src/app/shared/helpers/state';
-import { CurrentContentService, EditAction, GroupInfo, isGroupInfo } from 'src/app/shared/services/current-content.service';
+import { CurrentContentService, GroupInfo, isGroupInfo } from 'src/app/shared/services/current-content.service';
+import { ModeAction, ModeService } from 'src/app/shared/services/mode.service';
 import { Group } from '../../http-services/get-group-by-id.service';
 import { GroupDataSource } from '../../services/group-datasource.service';
 
@@ -26,6 +27,7 @@ export class GroupByIdComponent implements OnDestroy {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private currentContent: CurrentContentService,
+    private modeService: ModeService,
     private groupDataSource: GroupDataSource
   ) {
 
@@ -56,13 +58,13 @@ export class GroupByIdComponent implements OnDestroy {
         }))
       ).subscribe(p => this.currentContent.current.next(p)),
 
-      this.currentContent.editAction$.pipe(filter(action => [ EditAction.StartEditing, EditAction.StopEditing ].includes(action)))
-        .subscribe(action => {
-          const currentInfo = this.currentContent.current.value;
-          if (isGroupInfo(currentInfo)) {
-            void this.router.navigate([ 'groups', 'by-id', currentInfo.route.id, action === EditAction.StartEditing ? 'edit' : 'details' ]);
-          }
-        })
+      this.modeService.modeActions$.pipe(
+        filter(action => [ ModeAction.StartEditing, ModeAction.StopEditing ].includes(action))
+      ).subscribe(action => {
+        const currentInfo = this.currentContent.current.value;
+        if (!isGroupInfo(currentInfo)) throw new Error('Unexpected: in group-by-id but the current content is not a group');
+        void this.router.navigate([ 'groups', 'by-id', currentInfo.route.id, action === ModeAction.StartEditing ? 'edit' : 'details' ]);
+      })
     );
   }
 

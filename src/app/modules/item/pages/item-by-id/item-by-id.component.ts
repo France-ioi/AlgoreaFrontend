@@ -6,13 +6,14 @@ import { defaultAttemptId } from 'src/app/shared/helpers/attempts';
 import { appDefaultItemRoute, isItemRouteError, itemRouteFromParams } from 'src/app/shared/routing/item-route';
 import { errorState, FetchError, Fetching, fetchingState, isError, isReady, Ready } from 'src/app/shared/helpers/state';
 import { ResultActionsService } from 'src/app/shared/http-services/result-actions.service';
-import { CurrentContentService, EditAction, isItemInfo, ItemInfo } from 'src/app/shared/services/current-content.service';
+import { CurrentContentService, isItemInfo, ItemInfo } from 'src/app/shared/services/current-content.service';
 import { breadcrumbServiceTag } from '../../http-services/get-breadcrumb.service';
 import { GetItemPathService } from '../../http-services/get-item-path';
 import { ItemDataSource, ItemData } from '../../services/item-datasource.service';
 import { errorHasTag, errorIsHTTPForbidden } from 'src/app/shared/helpers/errors';
 import { ItemRouter } from 'src/app/shared/routing/item-router';
 import { ItemTypeCategory } from 'src/app/shared/helpers/item-type';
+import { ModeAction, ModeService } from 'src/app/shared/services/mode.service';
 
 const itemBreadcrumbCat = $localize`Items`;
 
@@ -40,6 +41,7 @@ export class ItemByIdComponent implements OnDestroy {
     private itemRouter: ItemRouter,
     private activatedRoute: ActivatedRoute,
     private currentContent: CurrentContentService,
+    private modeService: ModeService,
     private itemDataSource: ItemDataSource,
     private resultActionsService: ResultActionsService,
     private getItemPathService: GetItemPathService,
@@ -89,14 +91,13 @@ export class ItemByIdComponent implements OnDestroy {
         }
       }),
 
-      this.currentContent.editAction$.pipe(
-        filter(action => [ EditAction.StartEditing, EditAction.StopEditing ].includes(action))
+      this.modeService.modeActions$.pipe(
+        filter(action => [ ModeAction.StartEditing, ModeAction.StopEditing ].includes(action))
       ).subscribe(action => {
-        const currentInfo = this.currentContent.current.value;
-        if (isItemInfo(currentInfo)) {
-          this.itemRouter.navigateTo(currentInfo.route, action === EditAction.StartEditing ? 'edit' : 'details');
-        }
-      })
+        const current = this.currentContent.current.value;
+        if (!isItemInfo(current)) throw new Error('Unexpected: in item-by-id but the current content is not an item');
+        this.itemRouter.navigateTo(current.route, action === ModeAction.StartEditing ? 'edit' : 'details');
+      }),
     );
   }
 
