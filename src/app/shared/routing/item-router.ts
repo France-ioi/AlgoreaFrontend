@@ -61,7 +61,7 @@ export class ItemRouter {
     const currentPageUrlChildren = this.router.parseUrl(this.router.url).root.children;
     if (!('primary' in currentPageUrlChildren)) return undefined;
     const segments = currentPageUrlChildren['primary'].segments;
-    if (segments.length < 3 || itemRoutePrefixes.includes(segments[0].path) || segments[1].path !== 'by-id') return undefined;
+    if (segments.length < 3 || !itemRoutePrefixes.includes(segments[0].path) || segments[1].path !== 'by-id') return undefined;
     return segments.map(segment => segment.path);
   }
 
