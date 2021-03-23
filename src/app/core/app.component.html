@@ -1,36 +1,29 @@
 <div class="container" *ngrxLet="session$ as session">
-  <div class="left" [ngClass]="{ collapsed: collapsed, expanded: !collapsed }">
-    <alg-left-menu
-      [collapsed]="collapsed"
-      [session]="session"
-      (collapse)="onCollapse($event)"
-    ></alg-left-menu>
+  <div class="left" [ngClass]="{ collapsed: !leftMenuDisplayed, expanded: leftMenuDisplayed }">
+    <alg-left-menu (hideLeftMenu)="toggleLeftMenuDisplay(false)"></alg-left-menu>
   </div>
   <ng-container *ngIf="editState$ | async as editState">
     <div class="top-bar"
-         [ngClass]="{ editing: editState === 'editing' || editState === 'editing-noaction', collapsed: collapsed, expanded: !collapsed }"
+         [ngClass]="{ editing: editState === 'editing' || editState === 'editing-noaction', collapsed: !leftMenuDisplayed, expanded: leftMenuDisplayed }"
     >
-      <alg-top-nav
-        *ngIf="collapsed"
-        [collapsed]="collapsed"
-        [folded]="folded"
-        [session]="session"
-        (collapse)="onCollapse($event)"
-        (fold)="onFold($event)"
-        [templateId]="1"
-      ></alg-top-nav>
+      <alg-left-header
+        *ngIf="!leftMenuDisplayed"
+        (displayLeftMenu)="toggleLeftMenuDisplay($event)"
+        (displayHeaders)="toggleHeadersDisplay($event)"
+        [compactMode]="true"
+      ></alg-left-header>
       <div class="top-right-bar" *ngrxLet="currentContent$ as currentContent">
         <alg-editor-bar *ngIf="editState === 'editing' || editState === 'editing-noaction'" (cancel)="onEditCancel()"></alg-editor-bar>
         <div class="breadcrumb-bar"
-             *ngIf="!folded && !scrolled">
+             *ngIf="headersDisplayed && !scrolled">
           <alg-breadcrumb [contentBreadcrumb]="currentContent?.breadcrumbs"></alg-breadcrumb>
           <alg-page-navigator
             *ngIf="editState === 'editable'"
             (edit)="onEditPage()"
           ></alg-page-navigator>
-          <alg-language-picker class="lang-picker" *ngIf="collapsed"></alg-language-picker>
+          <alg-language-picker *ngIf="session && session.user.isTemp" class="lang-picker"></alg-language-picker>
           <alg-button
-            *ngIf="collapsed && session && session.user.isTemp"
+            *ngIf="session && session.user.isTemp"
             i18n-label label="Log in / Sign in"
             icon="pi pi-sign-in"
             class="p-button-rounded"
@@ -38,7 +31,7 @@
             (click)="login()"
           ></alg-button>
           <alg-button
-            *ngIf="collapsed && session && !session.user.isTemp"
+            *ngIf="session && !session.user.isTemp"
             i18n-label label="Log out"
             icon="pi pi-sign-out"
             class="p-button-rounded"
@@ -46,7 +39,7 @@
             (click)="logout()"
           ></alg-button>
         </div>
-        <div class="folded-top-bar" *ngIf="folded || scrolled">
+        <div class="folded-top-bar" *ngIf="!headersDisplayed || scrolled">
           <!--<alg-score-ring
             [displayedScore]="50"
             [currentScore]="60"
@@ -74,9 +67,9 @@
     </div>
     <div
          class="right"
-         [ngClass]="{ collapsed: collapsed, expanded: !collapsed, editing: editState === 'editing' || editState === 'editing-noaction' }"
+         [ngClass]="{ collapsed: !leftMenuDisplayed, expanded: leftMenuDisplayed, editing: editState === 'editing' || editState === 'editing-noaction' }"
     >
-      <div class="main-content" [ngClass]="{ folded: folded, unfolded: !folded }">
+      <div class="main-content" [ngClass]="{ folded: !headersDisplayed, unfolded: headersDisplayed }">
         <router-outlet></router-outlet>
       </div>
     </div>

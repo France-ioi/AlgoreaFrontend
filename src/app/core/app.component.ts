@@ -19,8 +19,8 @@ export class AppComponent implements OnInit, OnDestroy {
   session$ = this.sessionService.session$.pipe(delay(0));
   authOnError$ = this.authService.state$.pipe(map(state => state === AuthServiceState.Error));
 
-  collapsed = false;
-  folded = false;
+  leftMenuDisplayed = true;
+  headersDisplayed = true;
   scrolled = false;
 
   private subscription?: Subscription;
@@ -47,13 +47,13 @@ export class AppComponent implements OnInit, OnDestroy {
     this.subscription?.unsubscribe();
   }
 
-  onCollapse(collapsed: boolean): void {
-    this.collapsed = collapsed;
-    if (!collapsed) this.folded = false;
+  toggleLeftMenuDisplay(shown: boolean): void {
+    this.leftMenuDisplayed = shown;
+    if (shown) this.headersDisplayed = true;
   }
 
-  onFold(folded: boolean): void {
-    this.folded = folded;
+  toggleHeadersDisplay(shown: boolean): void {
+    this.headersDisplayed = shown;
   }
 
   @HostListener('window:scroll', [ '$event' ])

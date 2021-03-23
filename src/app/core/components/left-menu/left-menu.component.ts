@@ -1,5 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { UserSession } from 'src/app/shared/services/user-session.service';
+import { Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
   selector: 'alg-left-menu',
@@ -8,14 +7,10 @@ import { UserSession } from 'src/app/shared/services/user-session.service';
 })
 export class LeftMenuComponent {
 
-  @Input() collapsed = false;
-  @Input() session?: UserSession;
+  @Output() hideLeftMenu = new EventEmitter<void>();
 
-  @Output() collapse = new EventEmitter<boolean>();
-
-  onCollapse(collapsed: boolean): void {
-    this.collapsed = collapsed;
-    this.collapse.emit(collapsed);
+  toggleDisplay(shown: boolean): void {
+    if (!shown) this.hideLeftMenu.emit();
   }
 
 }
