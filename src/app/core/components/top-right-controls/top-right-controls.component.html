@@ -1,4 +1,4 @@
-<div class="controls-zone" *ngrxLet="session$ as session">
+<div class="controls-zone" [ngClass]="drawLeftBorder ? 'with-left-border' : 'no-left-border'" *ngrxLet="session$ as session">
   <alg-language-picker></alg-language-picker>
   <alg-button
     *ngIf="session && session.user.isTemp"

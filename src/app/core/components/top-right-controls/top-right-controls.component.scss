@@ -2,11 +2,16 @@
 
 .controls-zone {
   background-color: $nav-bk-color;
-  height: 4rem;
-  border-bottom-left-radius: 10px;
+  height: 3.75rem;
   display: flex;
   align-items: center;
-  padding-left: 0.5rem;
   padding-right: 0.5rem;
 }
 
+.no-left-border {
+  padding-left: -0.5rem;
+}
+.with-left-border {
+  padding-left: 1rem;
+  border-bottom-left-radius: 1rem;
+}
