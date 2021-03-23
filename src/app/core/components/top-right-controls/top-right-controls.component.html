@@ -1,0 +1,19 @@
+<div class="controls-zone" *ngrxLet="session$ as session">
+  <alg-language-picker></alg-language-picker>
+  <alg-button
+    *ngIf="session && session.user.isTemp"
+    i18n-label label="Log in / Sign in"
+    icon="pi pi-sign-in"
+    class="p-button-rounded"
+    style="margin-left: 0.4167rem;"
+    (click)="login()"
+  ></alg-button>
+  <alg-button
+    *ngIf="session && !session.user.isTemp"
+    i18n-label label="Log out"
+    icon="pi pi-sign-out"
+    class="p-button-rounded"
+    style="margin-left: 0.4167rem;"
+    (click)="logout()"
+  ></alg-button>
+</div>

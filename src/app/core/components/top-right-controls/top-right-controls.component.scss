@@ -1,0 +1,12 @@
+@import "src/colors.scss";
+
+.controls-zone {
+  background-color: $nav-bk-color;
+  height: 4rem;
+  border-bottom-left-radius: 10px;
+  display: flex;
+  align-items: center;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
