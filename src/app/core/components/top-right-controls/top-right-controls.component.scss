@@ -15,3 +15,13 @@
   padding-left: 1rem;
   border-bottom-left-radius: 1rem;
 }
+
+:host ::ng-deep .login-button {
+  background-color: transparent;
+  border: none;
+  margin-bottom: 0.3rem;
+
+  &:hover {
+    background-color: rgba(white, 0.1);
+  }
+}
