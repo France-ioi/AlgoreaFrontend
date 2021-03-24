@@ -1,5 +1,5 @@
 <div class="controls-zone" [ngClass]="drawLeftBorder ? 'with-left-border' : 'no-left-border'" *ngrxLet="session$ as session">
-  <alg-language-picker></alg-language-picker>
+  <alg-language-picker *ngIf="session && session.user.isTemp"></alg-language-picker>
   <p-button
     *ngIf="session && session.user.isTemp"
     i18n-label label="Log in / Sign in"
