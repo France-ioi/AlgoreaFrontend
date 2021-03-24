@@ -136,7 +136,7 @@ $border-radius: .5rem;
           }
 
           &:hover {
-            background-color: #779CCA !important;
+            background-color: $base-color-hover !important;
           }
         }
       }

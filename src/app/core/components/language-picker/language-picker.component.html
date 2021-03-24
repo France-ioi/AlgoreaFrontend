@@ -1,1 +1,7 @@
-<alg-select *ngIf="languageLabels" [items]="languageLabels" [selected]="current" [width]="7" (change)="languageChanged($event)"></alg-select>
+<p-dropdown
+  *ngIf="languageLabels"
+  [options]="languageLabels"
+  optionLabel="tag"
+  styleClass="lang-dropdown"
+  (onChange)="languageChanged($event)"
+></p-dropdown>

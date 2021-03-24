@@ -37,6 +37,7 @@ import { LanguagePickerComponent } from './components/language-picker/language-p
 import { LeftMenuComponent } from './components/left-menu/left-menu.component';
 import { LeftNavComponent } from './components/left-nav/left-nav.component';
 import { TopRightControlsComponent } from './components/top-right-controls/top-right-controls.component';
+import { DropdownModule } from 'primeng/dropdown';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: false,
@@ -69,6 +70,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     TooltipModule,
     ConfirmDialogModule,
     DialogModule,
+    DropdownModule,
   ],
   providers: [
     ConfirmationService,

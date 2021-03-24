@@ -1,17 +1,7 @@
 import { Component } from '@angular/core';
 import { LocaleService } from '../../services/localeService';
 
-const languagesAsText: { [lang: string]: string } = {
-  fr: 'Français',
-  en: 'English',
-};
-
-function tagForLabel(label: string): string {
-  for (const key in languagesAsText) {
-    if (languagesAsText[key] === label) return key;
-  }
-  throw new Error('Unexpected: unknown language selected');
-}
+interface Language { tag: string, path: string }
 
 @Component({
   selector: 'alg-language-picker',
@@ -20,17 +10,17 @@ function tagForLabel(label: string): string {
 })
 export class LanguagePickerComponent {
 
-  readonly languageLabels = this.localeService.languages?.map(l => languagesAsText[l.tag]).filter(l => !!l);
-  current?: string;
+  readonly languageLabels = this.localeService.languages;
+  current?: { tag: string, path: string };
 
   constructor(
     private localeService: LocaleService,
   ) {
-    if (this.localeService.currentTag) this.current = languagesAsText[this.localeService.currentTag];
+    if (this.localeService.currentTag) this.current = this.languageLabels?.find(l => l.tag === this.localeService.currentTag);
   }
 
-  languageChanged(langLabel: string): void {
-    this.localeService.navigateTo(tagForLabel(langLabel));
+  languageChanged(lang: { value: Language }): void {
+    this.localeService.navigateTo(lang.value.tag);
   }
 
 }
