@@ -23,7 +23,7 @@ import { DurationToReadable } from 'src/app/shared/pipes/duration';
 import { ButtonModule } from 'primeng/button';
 import { PermissionsEditDialogComponent } from './components/permissions-edit-dialog/permissions-edit-dialog.component';
 import { DialogModule } from 'primeng/dialog';
-import { AccessCodeViewComponent } from './components/item-header/access-code-view/access-code-view.component';
+import { AccessCodeViewComponent } from './components/access-code-view/access-code-view.component';
 import { AddItemComponent } from './components/add-item/add-item.component';
 import { CompositionFilterComponent } from './components/composition-filter/composition-filter.component';
 import { UserProgressComponent } from './components/user-progress/user-progress.component';

@@ -2,10 +2,8 @@
   <div class="left" [ngClass]="{ collapsed: !leftMenuDisplayed, expanded: leftMenuDisplayed }">
     <alg-left-menu (hideLeftMenu)="toggleLeftMenuDisplay(false)"></alg-left-menu>
   </div>
-  <ng-container *ngIf="editState$ | async as editState">
-    <div class="top-bar"
-         [ngClass]="{ editing: editState === 'editing' || editState === 'editing-noaction', collapsed: !leftMenuDisplayed, expanded: leftMenuDisplayed }"
-    >
+  <ng-container *ngIf="currentMode$ | async as currentMode">
+    <div class="top-bar" [ngClass]="{ editing: currentMode === 'editing', collapsed: !leftMenuDisplayed, expanded: leftMenuDisplayed }">
       <alg-left-header
         *ngIf="!leftMenuDisplayed"
         (displayLeftMenu)="toggleLeftMenuDisplay($event)"
@@ -13,14 +11,10 @@
         [compactMode]="true"
       ></alg-left-header>
       <div class="top-right-bar" *ngrxLet="currentContent$ as currentContent">
-        <alg-editor-bar *ngIf="editState === 'editing' || editState === 'editing-noaction'" (cancel)="onEditCancel()"></alg-editor-bar>
+        <alg-editor-bar *ngIf="currentMode === 'editing'" (cancel)="onEditCancel()"></alg-editor-bar>
         <div class="breadcrumb-bar"
              *ngIf="headersDisplayed && !scrolled">
           <alg-breadcrumb [contentBreadcrumb]="currentContent?.breadcrumbs"></alg-breadcrumb>
-          <alg-page-navigator
-            *ngIf="editState === 'editable'"
-            (edit)="onEditPage()"
-          ></alg-page-navigator>
           <alg-language-picker *ngIf="session && session.user.isTemp" class="lang-picker"></alg-language-picker>
           <alg-button
             *ngIf="session && session.user.isTemp"
@@ -56,19 +50,10 @@
           </div> -->
           <!-- <span class="clock-icon" [ngClass]="{ finished: false }"><i class="fa fa-clock"></i></span> -->
           <!-- <span class="remaining-time" [ngClass]="{ finished: false }">00:03:10</span> -->
-          <alg-page-navigator
-            *ngIf="editState === 'editable'"
-            [allowFullScreen]="false"
-            navigationMode="nextAndPrev"
-            (edit)="onEditPage()"
-          ></alg-page-navigator>
         </div>
       </div>
     </div>
-    <div
-         class="right"
-         [ngClass]="{ collapsed: !leftMenuDisplayed, expanded: leftMenuDisplayed, editing: editState === 'editing' || editState === 'editing-noaction' }"
-    >
+    <div class="right" [ngClass]="{ collapsed: !leftMenuDisplayed, expanded: leftMenuDisplayed, editing: currentMode === 'editing' }">
       <div class="main-content" [ngClass]="{ folded: !headersDisplayed, unfolded: headersDisplayed }">
         <router-outlet></router-outlet>
       </div>

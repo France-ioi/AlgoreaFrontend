@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { UrlTree } from '@angular/router';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { ContentRoute } from '../routing/content-route';
 import { ItemRoute } from '../routing/item-route';
 import { ItemType } from '../helpers/item-type';
@@ -59,10 +59,6 @@ export function isActivityInfo(info: ItemInfo|null): boolean {
 export function isGroupInfo(info: ContentInfo|null): info is GroupInfo {
   return info !== null && info.type === 'group';
 }
-
-export type EditState = 'non-editable'|'editable'|'editing'|'editing-noaction'; // editingNoAction is for temporary disabled actions
-export enum EditAction { StartEditing, StopEditing }
-
 /**
  * Use this service to track what's the current item display in the content (right) pane.
  */
@@ -74,17 +70,7 @@ export class CurrentContentService implements OnDestroy {
   current = new BehaviorSubject<ContentInfo|null>(null);
   currentContent$ = this.current.asObservable();
 
-  /* the current state of editing */
-  editState = new BehaviorSubject<EditState>('non-editable');
-  editState$ = this.editState.asObservable();
-
-  /* passing of edit actions */
-  editAction = new Subject<EditAction>();
-  editAction$ = this.editAction.asObservable();
-
   ngOnDestroy(): void {
     this.current.complete();
-    this.editState.complete();
-    this.editAction.complete();
   }
 }

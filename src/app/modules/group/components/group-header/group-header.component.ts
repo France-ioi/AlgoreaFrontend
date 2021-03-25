@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { ModeAction, ModeService } from 'src/app/shared/services/mode.service';
 import { Group } from '../../http-services/get-group-by-id.service';
 
 @Component({
@@ -8,4 +9,12 @@ import { Group } from '../../http-services/get-group-by-id.service';
 })
 export class GroupHeaderComponent {
   @Input() group?: Group;
+
+  constructor(
+    private modeService: ModeService,
+  ) {}
+
+  onEditButtonClicked(): void {
+    this.modeService.modeActions$.next(ModeAction.StartEditing);
+  }
 }

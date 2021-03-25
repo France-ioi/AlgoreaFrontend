@@ -5,5 +5,11 @@
         <span>{{ group?.name }}</span>
       </div>
     </div>
+    <alg-page-navigator
+      *ngIf="group?.current_user_is_manager"
+      [allowFullScreen]="false"
+      navigationMode="nextAndPrev"
+      (edit)="onEditButtonClicked()"
+    ></alg-page-navigator>
   </div>
 </div>

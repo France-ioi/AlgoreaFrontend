@@ -2,9 +2,10 @@ import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { UserSession, UserSessionService } from '../shared/services/user-session.service';
 import { delay, filter, map, skip } from 'rxjs/operators';
 import { Observable, Subscription } from 'rxjs';
-import { ContentInfo, CurrentContentService, EditAction } from '../shared/services/current-content.service';
+import { ContentInfo, CurrentContentService } from '../shared/services/current-content.service';
 import { AuthService, AuthServiceState } from '../shared/auth/auth.service';
 import { Router } from '@angular/router';
+import { ModeAction, ModeService } from '../shared/services/mode.service';
 
 @Component({
   selector: 'alg-root',
@@ -15,7 +16,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   // the delay(0) is used to prevent the UI to update itself (when the content is loaded) (ExpressionChangedAfterItHasBeenCheckedError)
   currentContent$: Observable<ContentInfo|null> = this.currentContent.currentContent$.pipe(delay(0));
-  editState$ = this.currentContent.editState$.pipe(delay(0));
+  readonly currentMode$ = this.modeService.mode$.asObservable().pipe(delay(0));
   session$ = this.sessionService.session$.pipe(delay(0));
   authOnError$ = this.authService.state$.pipe(map(state => state === AuthServiceState.Error));
 
@@ -30,6 +31,7 @@ export class AppComponent implements OnInit, OnDestroy {
     private sessionService: UserSessionService,
     private authService: AuthService,
     private currentContent: CurrentContentService,
+    private modeService: ModeService,
   ) {}
 
   ngOnInit(): void {
@@ -65,12 +67,8 @@ export class AppComponent implements OnInit, OnDestroy {
     }
   }
 
-  onEditPage(): void {
-    this.currentContent.editAction.next(EditAction.StartEditing);
-  }
-
   onEditCancel() : void{
-    this.currentContent.editAction.next(EditAction.StopEditing);
+    this.modeService.modeActions$.next(ModeAction.StopEditing);
   }
 
   login(): void {

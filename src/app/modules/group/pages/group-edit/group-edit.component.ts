@@ -7,7 +7,7 @@ import { ERROR_MESSAGE } from 'src/app/shared/constants/api';
 import { TOAST_LENGTH } from 'src/app/shared/constants/global';
 import { PendingChangesComponent } from 'src/app/shared/guards/pending-changes-guard';
 import { Ready, Fetching, FetchError, isReady } from 'src/app/shared/helpers/state';
-import { CurrentContentService } from 'src/app/shared/services/current-content.service';
+import { Mode, ModeService } from 'src/app/shared/services/mode.service';
 import { Group } from '../../http-services/get-group-by-id.service';
 import { GroupChanges, GroupUpdateService } from '../../http-services/group-update.service';
 import { GroupDataSource } from '../../services/group-datasource.service';
@@ -31,13 +31,13 @@ export class GroupEditComponent implements OnDestroy, PendingChangesComponent {
   subscription?: Subscription;
 
   constructor(
-    private currentContent: CurrentContentService,
+    private modeService: ModeService,
     private groupDataSource: GroupDataSource,
     private messageService: MessageService,
     private formBuilder: FormBuilder,
     private groupUpdateService: GroupUpdateService
   ) {
-    this.currentContent.editState.next('editing');
+    this.modeService.mode$.next(Mode.Editing);
 
     this.subscription = this.state$
       .pipe(filter<Ready<Group> | Fetching | FetchError, Ready<Group>>(isReady))
@@ -48,7 +48,7 @@ export class GroupEditComponent implements OnDestroy, PendingChangesComponent {
   }
 
   ngOnDestroy(): void {
-    this.currentContent.editState.next('non-editable');
+    this.modeService.mode$.next(Mode.Normal);
     this.subscription?.unsubscribe();
   }
 
