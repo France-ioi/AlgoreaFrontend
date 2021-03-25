@@ -1,6 +1,7 @@
 <p-dropdown
-  *ngIf="languageLabels"
-  [options]="languageLabels"
+  *ngIf="languages && current"
+  [options]="languages"
+  [ngModel]="current"
   optionLabel="tag"
   styleClass="lang-dropdown"
   (onChange)="languageChanged($event)"

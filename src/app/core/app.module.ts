@@ -40,6 +40,7 @@ import { TopRightControlsComponent } from './components/top-right-controls/top-r
 import { DropdownModule } from 'primeng/dropdown';
 import { MenuModule } from 'primeng/menu';
 import { TopRightMenuComponent } from './components/top-right-menu/top-right-menu.component';
+import { FormsModule } from '@angular/forms';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: false,
@@ -75,6 +76,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     DialogModule,
     DropdownModule,
     MenuModule,
+    FormsModule,
   ],
   providers: [
     ConfirmationService,

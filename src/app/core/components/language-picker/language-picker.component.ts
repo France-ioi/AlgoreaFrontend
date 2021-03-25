@@ -1,8 +1,6 @@
 import { Component } from '@angular/core';
 import { LocaleService } from '../../services/localeService';
 
-interface Language { tag: string, path: string }
-
 @Component({
   selector: 'alg-language-picker',
   templateUrl: './language-picker.component.html',
@@ -10,16 +8,14 @@ interface Language { tag: string, path: string }
 })
 export class LanguagePickerComponent {
 
-  readonly languageLabels = this.localeService.languages;
-  current?: { tag: string, path: string };
+  readonly languages = this.localeService.languages;
+  readonly current = this.languages?.find(l => l.tag === this.localeService.currentTag);
 
   constructor(
     private localeService: LocaleService,
-  ) {
-    if (this.localeService.currentTag) this.current = this.languageLabels?.find(l => l.tag === this.localeService.currentTag);
-  }
+  ) {}
 
-  languageChanged(lang: { value: Language }): void {
+  languageChanged(lang: { value: { tag: string } }): void {
     this.localeService.navigateTo(lang.value.tag);
   }
 
