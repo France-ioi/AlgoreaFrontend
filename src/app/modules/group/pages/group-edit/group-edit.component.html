@@ -4,8 +4,8 @@
 
   <p *ngIf="state.tag === 'error'" i18n>Error while loading the group</p>
 
-  <div class="group-edition" *ngIf="state.tag === 'ready'">
-    <form [formGroup]="groupForm">
+  <ng-container *ngIf="state.tag === 'ready'">
+    <form class="group-edition" [formGroup]="groupForm" *ngIf="state.data.current_user_is_manager; else notAuthorized">
       <alg-section icon="fa fa-cog" i18n-label label="Group information">
         <div class="field">
           <div class="field-name">
@@ -28,6 +28,10 @@
     </form>
 
     <alg-floating-save *ngIf="groupForm.dirty" [saving]="groupForm.disabled" (save)="save()" (cancel)="resetForm()"></alg-floating-save>
-  </div>
+
+    <ng-template #notAuthorized>
+      <p i18n>You do not have the permissions to edit this content.</p>
+    </ng-template>
+  </ng-container>
 
 </ng-container>
