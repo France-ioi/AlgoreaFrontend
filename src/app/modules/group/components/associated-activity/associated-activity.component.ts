@@ -30,6 +30,9 @@ import { errorIsHTTPForbidden } from 'src/app/shared/helpers/errors';
 export class AssociatedActivityComponent implements OnDestroy, ControlValueAccessor {
 
   rootActivity: NoActivity|NewActivity|ExistingActivity = { tag: 'no-activity' };
+
+  // when rootActivity is NoActivity, this is null
+  // when rootActivity is NewActivity or ExistingActivity but forbidden to the user, path is null
   rootActivityData: null|{name: string|null, path: string|null} = null;
 
   state: 'fetching'|'ready'|'error' = 'fetching';

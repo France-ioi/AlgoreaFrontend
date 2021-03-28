@@ -30,6 +30,7 @@
       </div>
 
       <div class="activity" *ngSwitchCase="'existing-activity'">
+        <!--When rootActivity is an existing activity, rootActivityData is not null-->
         <i class="fa fa-lock" *ngIf="!rootActivityData?.path"></i>
         <span class="activity-name"
           [routerLink]="rootActivityData!.path"
