@@ -3,7 +3,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { readyData } from 'src/app/shared/operators/state';
 import { Mode, ModeService } from 'src/app/shared/services/mode.service';
-import { forkJoin, of, Subscription } from 'rxjs';
+import { of, Subscription } from 'rxjs';
 import { concatMap, filter } from 'rxjs/operators';
 import { CreateItemService } from 'src/app/modules/item/http-services/create-item.service';
 import { ERROR_MESSAGE } from 'src/app/shared/constants/api';
@@ -87,27 +87,25 @@ export class GroupEditComponent implements OnDestroy, PendingChangesComponent {
     }
     this.groupForm.disable();
 
-    const rootActivity = this.groupForm.get('rootActivity')?.value as NoActivity|NewActivity|ExistingActivity;
+    const id = this.initialFormData.id;
+    const name = this.groupForm.get('name')?.value as string;
     const description = this.groupForm.get('description')?.value as string;
 
-    forkJoin({
-      id: of(this.initialFormData.id),
-      changes: forkJoin({
-        name: of(this.groupForm.get('name')?.value as string),
-        description: of(description === '' ? null : description),
-        root_activity_id: !isNewActivity(rootActivity) ? of(isExistingActivity(rootActivity) ? rootActivity.id : null) :
-          this.createItemService.create({
-            title: rootActivity.name,
-            type: rootActivity.activityType,
-            languageTag: 'en',// FIXME
-            asRootOfGroupId: this.initialFormData.id,
-          }),
-      })
-    }).pipe(
-      concatMap(group => this.groupUpdateService.updateGroup(
-        group.id,
-        group.changes
-      ))
+    const rootActivity = this.groupForm.get('rootActivity')?.value as NoActivity|NewActivity|ExistingActivity;
+    const rootActivityId = !isNewActivity(rootActivity) ? of(isExistingActivity(rootActivity) ? rootActivity.id : null) :
+      this.createItemService.create({
+        title: rootActivity.name,
+        type: rootActivity.activityType,
+        languageTag: 'en',// FIXME
+        asRootOfGroupId: this.initialFormData.id,
+      });
+
+    rootActivityId.pipe(
+      concatMap(rootActivityId => this.groupUpdateService.updateGroup(id, {
+        name,
+        description: description === '' ? null : description,
+        root_activity_id: rootActivityId
+      }))
     ).subscribe(
       () => {
         this.groupDataSource.refetchGroup(); // will re-enable the form
