@@ -1,7 +1,7 @@
 import { EMPTY, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { isSkill, ItemTypeCategory } from 'src/app/shared/helpers/item-type';
-import { ItemInfo } from 'src/app/shared/services/current-content.service';
+import { ItemInfo } from 'src/app/shared/models/content/item-info';
 import { ItemNavigationService, NavMenuItem } from '../../http-services/item-navigation.service';
 import { LeftNavDataSource } from './left-nav-datasource';
 

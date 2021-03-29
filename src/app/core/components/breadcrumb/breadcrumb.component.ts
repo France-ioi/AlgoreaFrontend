@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Router, UrlTree } from '@angular/router';
-import { ContentBreadcrumb } from 'src/app/shared/services/current-content.service';
+import { ContentBreadcrumb } from 'src/app/shared/models/content/content-breadcrumb';
 
 @Component({
   selector: 'alg-breadcrumb',

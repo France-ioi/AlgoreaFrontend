@@ -1,5 +1,5 @@
+import { ItemDetails } from 'src/app/shared/models/content/item-info';
 import { ItemRoute } from 'src/app/shared/routing/item-route';
-import { ItemDetails } from 'src/app/shared/services/current-content.service';
 import { NavMenuItem } from '../http-services/item-navigation.service';
 
 type Id = string;

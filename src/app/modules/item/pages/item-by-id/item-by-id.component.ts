@@ -6,7 +6,7 @@ import { defaultAttemptId } from 'src/app/shared/helpers/attempts';
 import { appDefaultItemRoute, isItemRouteError, itemRouteFromParams } from 'src/app/shared/routing/item-route';
 import { errorState, FetchError, Fetching, fetchingState, isError, isReady, Ready } from 'src/app/shared/helpers/state';
 import { ResultActionsService } from 'src/app/shared/http-services/result-actions.service';
-import { CurrentContentService, isItemInfo, ItemInfo } from 'src/app/shared/services/current-content.service';
+import { CurrentContentService } from 'src/app/shared/services/current-content.service';
 import { breadcrumbServiceTag } from '../../http-services/get-breadcrumb.service';
 import { GetItemPathService } from '../../http-services/get-item-path';
 import { ItemDataSource, ItemData } from '../../services/item-datasource.service';
@@ -14,6 +14,7 @@ import { errorHasTag, errorIsHTTPForbidden } from 'src/app/shared/helpers/errors
 import { ItemRouter } from 'src/app/shared/routing/item-router';
 import { ItemTypeCategory } from 'src/app/shared/helpers/item-type';
 import { ModeAction, ModeService } from 'src/app/shared/services/mode.service';
+import { isItemInfo, ItemInfo } from 'src/app/shared/models/content/item-info';
 
 const itemBreadcrumbCat = $localize`Items`;
 
