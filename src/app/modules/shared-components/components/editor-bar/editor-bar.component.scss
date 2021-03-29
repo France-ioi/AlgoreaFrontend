@@ -8,7 +8,6 @@
   font-size: 1.1667rem;
   background-color: $base-color;
   padding-left: 1.6667rem;
-  padding-right: 1.6667rem;
   position: relative;
 
   span {
@@ -72,4 +71,11 @@
     }
   }
 
+  .right-border-adapter {
+    margin-left: 0.6667rem;
+    width: 1rem;
+    height: 100%;
+    border-bottom-left-radius: 1rem;
+    background-color: $nav-bk-color;
+  }
 }

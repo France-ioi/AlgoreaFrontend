@@ -57,4 +57,12 @@ export class UserSessionService implements OnDestroy {
     return !session || session.user.isTemp;
   }
 
+  login(): void {
+    this.authService.startAuthLogin();
+  }
+
+  logout(): void {
+    this.authService.logoutAuthUser();
+  }
+
 }

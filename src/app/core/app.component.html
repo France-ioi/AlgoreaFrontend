@@ -12,26 +12,8 @@
       ></alg-left-header>
       <div class="top-right-bar" *ngrxLet="currentContent$ as currentContent">
         <alg-editor-bar *ngIf="currentMode === 'editing'" (cancel)="onEditCancel()"></alg-editor-bar>
-        <div class="breadcrumb-bar"
-             *ngIf="headersDisplayed && !scrolled">
+        <div class="breadcrumb-bar" *ngIf="headersDisplayed && !scrolled">
           <alg-breadcrumb [contentBreadcrumb]="currentContent?.breadcrumbs"></alg-breadcrumb>
-          <alg-language-picker *ngIf="session && session.user.isTemp" class="lang-picker"></alg-language-picker>
-          <alg-button
-            *ngIf="session && session.user.isTemp"
-            i18n-label label="Log in / Sign in"
-            icon="pi pi-sign-in"
-            class="p-button-rounded"
-            style="margin-right: 0.4167rem;"
-            (click)="login()"
-          ></alg-button>
-          <alg-button
-            *ngIf="session && !session.user.isTemp"
-            i18n-label label="Log out"
-            icon="pi pi-sign-out"
-            class="p-button-rounded"
-            style="margin-right: 0.4167rem;"
-            (click)="logout()"
-          ></alg-button>
         </div>
         <div class="folded-top-bar" *ngIf="!headersDisplayed || scrolled">
           <!--<alg-score-ring
@@ -52,6 +34,7 @@
           <!-- <span class="remaining-time" [ngClass]="{ finished: false }">00:03:10</span> -->
         </div>
       </div>
+      <alg-top-right-controls [drawLeftBorder]="currentMode === 'normal'"></alg-top-right-controls>
     </div>
     <div class="right" [ngClass]="{ collapsed: !leftMenuDisplayed, expanded: leftMenuDisplayed, editing: currentMode === 'editing' }">
       <div class="main-content" [ngClass]="{ folded: !headersDisplayed, unfolded: headersDisplayed }">

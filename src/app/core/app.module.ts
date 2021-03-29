@@ -36,6 +36,11 @@ import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.com
 import { LanguagePickerComponent } from './components/language-picker/language-picker.component';
 import { LeftMenuComponent } from './components/left-menu/left-menu.component';
 import { LeftNavComponent } from './components/left-nav/left-nav.component';
+import { TopRightControlsComponent } from './components/top-right-controls/top-right-controls.component';
+import { DropdownModule } from 'primeng/dropdown';
+import { MenuModule } from 'primeng/menu';
+import { TopRightMenuComponent } from './components/top-right-menu/top-right-menu.component';
+import { FormsModule } from '@angular/forms';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: false,
@@ -51,6 +56,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     LeftHeaderComponent,
     LeftNavTreeComponent,
     LanguagePickerComponent,
+    TopRightControlsComponent,
+    TopRightMenuComponent,
   ],
   imports: [
     BrowserModule,
@@ -67,6 +74,9 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     TooltipModule,
     ConfirmDialogModule,
     DialogModule,
+    DropdownModule,
+    MenuModule,
+    FormsModule,
   ],
   providers: [
     ConfirmationService,

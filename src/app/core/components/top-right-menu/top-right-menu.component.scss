@@ -1,0 +1,47 @@
+@import "src/colors.scss";
+
+:host ::ng-deep {
+
+  .menu-button {
+    background-color: transparent;
+    border: none;
+    margin-bottom: 0.3rem;
+
+    &:hover {
+      background-color: rgba(white, 0.1) !important;
+    }
+  }
+
+  .p-menu.p-menu-overlay {
+
+    background-color: $nav-bk-color;
+    padding-top: 0.5rem;
+    width: 10rem;
+    border: none;
+    box-shadow: none;
+    border-bottom-left-radius: 10px;
+    /* override the position which is computed by the lib */
+    top: 2.9rem !important;
+    left: initial !important;
+    right: 0px !important;
+
+    .p-menuitem-link {
+
+      .p-menuitem-text, .p-menuitem-icon {
+        color: white;
+      }
+
+      &:not(.p-disabled):hover {
+
+        background: $hover-mask;
+
+        .p-menuitem-text, .p-menuitem-icon {
+          color: white;
+        }
+      }
+
+    }
+
+  }
+
+}

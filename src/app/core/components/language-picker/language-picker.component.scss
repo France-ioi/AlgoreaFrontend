@@ -1,0 +1,36 @@
+@import "src/colors.scss";
+
+:host ::ng-deep .p-dropdown {
+  background-color: transparent;
+  border: none;
+  width: 4.1rem;
+
+  &:hover {
+    background-color: $hover-mask;
+  }
+
+  .p-dropdown-label {
+    text-transform: uppercase;
+    text-overflow: clip;
+    color: white;
+  }
+
+  .p-dropdown-panel {
+    background-color: $nav-bk-color;
+
+    .p-highlight {
+      background-color: $base-color;
+    }
+  }
+
+  .p-dropdown-item {
+    text-transform: uppercase;
+    font-size: 1rem;
+    color: white;
+
+    &:not(.p-highlight):not(.p-disabled):hover {
+      color: white;
+      background: $base-color-hover;
+    }
+  }
+}

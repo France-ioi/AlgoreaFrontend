@@ -71,12 +71,4 @@ export class AppComponent implements OnInit, OnDestroy {
     this.modeService.modeActions$.next(ModeAction.StopEditing);
   }
 
-  login(): void {
-    this.authService.startAuthLogin();
-  }
-
-  logout(): void {
-    this.authService.logoutAuthUser();
-  }
-
 }
