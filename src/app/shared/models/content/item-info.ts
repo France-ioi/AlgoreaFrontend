@@ -24,3 +24,10 @@ export function isItemInfo(info: ContentInfo|null): info is ItemInfo {
 export function isActivityInfo(info: ItemInfo|null): boolean {
   return info !== null && info.route.contentType === 'activity';
 }
+
+/**
+ * Create an item info
+ */
+export function itemInfo(i: Omit<ItemInfo, 'type'>): ItemInfo {
+  return { ...i, type: 'item' };
+}

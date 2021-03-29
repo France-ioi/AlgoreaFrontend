@@ -13,3 +13,10 @@ export interface ContentInfo {
 export interface RoutedContentInfo extends ContentInfo {
   route: ContentRoute
 }
+
+/**
+ * Create a misc content info
+ */
+export function contentInfo(c: Omit<ContentInfo, 'type'>): ContentInfo {
+  return { ...c, type: 'misc' };
+}

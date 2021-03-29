@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { FetchError, Fetching, isReady, Ready } from 'src/app/shared/helpers/state';
-import { GroupInfo, isGroupInfo } from 'src/app/shared/models/content/group-info';
+import { groupInfo, GroupInfo, isGroupInfo } from 'src/app/shared/models/content/group-info';
 import { CurrentContentService } from 'src/app/shared/services/current-content.service';
 import { ModeAction, ModeService } from 'src/app/shared/services/mode.service';
 import { Group } from '../../http-services/get-group-by-id.service';
@@ -35,20 +35,20 @@ export class GroupByIdComponent implements OnDestroy {
     // on route change: refetch group if needed
     this.activatedRoute.paramMap.subscribe(params => {
       const id = params.get('id');
-      this.currentContent.current.next({
-        route: { contentType: 'group', id: id, path: [] },
-        type: 'group',
-        breadcrumbs: { category: GROUP_BREADCRUMB_CAT, path: [], currentPageIdx: -1 }
-      } as GroupInfo);
-      if (id) this.groupDataSource.fetchGroup(id);
+      if (id) {
+        this.currentContent.current.next(groupInfo({
+          route: { contentType: 'group', id: id, path: [] },
+          breadcrumbs: { category: GROUP_BREADCRUMB_CAT, path: [], currentPageIdx: -1 }
+        }));
+        this.groupDataSource.fetchGroup(id);
+      }
     });
 
     // on state change, update current content page info (for breadcrumb)
     this.subscriptions.push(
       this.groupDataSource.state$.pipe(
         filter<Ready<Group>|Fetching|FetchError,Ready<Group>>(isReady),
-        map((state):GroupInfo => ({
-          type: 'group',
+        map((state):GroupInfo => groupInfo({
           route: { contentType: 'group', id: state.data.id, path: [] },
           breadcrumbs: {
             category: GROUP_BREADCRUMB_CAT,

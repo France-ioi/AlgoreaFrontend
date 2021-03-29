@@ -14,7 +14,7 @@ import { errorHasTag, errorIsHTTPForbidden } from 'src/app/shared/helpers/errors
 import { ItemRouter } from 'src/app/shared/routing/item-router';
 import { ItemTypeCategory } from 'src/app/shared/helpers/item-type';
 import { ModeAction, ModeService } from 'src/app/shared/services/mode.service';
-import { isItemInfo, ItemInfo } from 'src/app/shared/models/content/item-info';
+import { isItemInfo, itemInfo } from 'src/app/shared/models/content/item-info';
 
 const itemBreadcrumbCat = $localize`Items`;
 
@@ -59,8 +59,7 @@ export class ItemByIdComponent implements OnDestroy {
 
         if (isReady(state)) {
           this.hasRedirected = false;
-          this.currentContent.current.next({
-            type: 'item',
+          this.currentContent.current.next(itemInfo({
             breadcrumbs: {
               category: itemBreadcrumbCat,
               path: state.data.breadcrumbs.map(el => ({
@@ -80,7 +79,7 @@ export class ItemByIdComponent implements OnDestroy {
               currentScore: state.data.currentResult?.score,
               validated: state.data.currentResult?.validated,
             }
-          });
+          }));
 
         } else if (isError(state)) {
           if (errorHasTag(state.error, breadcrumbServiceTag) && errorIsHTTPForbidden(state.error)) {
@@ -124,11 +123,7 @@ export class ItemByIdComponent implements OnDestroy {
       return;
     }
     // just publish to current content the new route we are navigating to (without knowing any info)
-    this.currentContent.current.next({
-      type: 'item',
-      route: item,
-      breadcrumbs: { category: itemBreadcrumbCat, path: [], currentPageIdx: -1 }
-    } as ItemInfo);
+    this.currentContent.current.next(itemInfo({ route: item, breadcrumbs: { category: itemBreadcrumbCat, path: [], currentPageIdx: -1 } }));
     // trigger the fetch of the item (which will itself re-update the current content)
     this.itemDataSource.fetchItem(item);
   }

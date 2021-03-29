@@ -1,4 +1,5 @@
 import { Component, OnDestroy } from '@angular/core';
+import { contentInfo } from 'src/app/shared/models/content/content-info';
 import { CurrentContentService } from 'src/app/shared/services/current-content.service';
 
 const currentUserBreadcrumbCat = $localize`Yourself`;
@@ -13,10 +14,7 @@ export class CurrentUserComponent implements OnDestroy {
   constructor(
     private currentContent: CurrentContentService,
   ) {
-    this.currentContent.current.next({
-      type: 'group', breadcrumbs: { category: currentUserBreadcrumbCat, path: [], currentPageIdx: -1 }
-    });
-
+    this.currentContent.current.next(contentInfo({ breadcrumbs: { category: currentUserBreadcrumbCat, path: [], currentPageIdx: -1 } }));
   }
 
   ngOnDestroy(): void {
