@@ -1,49 +1,32 @@
-import { Component, Input, OnChanges, OnDestroy } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { ItemData } from '../../services/item-datasource.service';
-import { ActivityLogService, ActivityLog } from 'src/app/shared/http-services/activity-log.service';
-import { Subscription } from 'rxjs';
-import { UserSessionService } from 'src/app/shared/services/user-session.service';
+import { ActivityLogService } from 'src/app/shared/http-services/activity-log.service';
+import { ReplaySubject } from 'rxjs';
+import { distinct, switchMap } from 'rxjs/operators';
+import { mapToFetchState } from 'src/app/shared/operators/state';
 
 @Component({
   selector: 'alg-item-log-view',
   templateUrl: './item-log-view.component.html',
   styleUrls: [ './item-log-view.component.scss' ]
 })
-export class ItemLogViewComponent implements OnDestroy, OnChanges {
+export class ItemLogViewComponent implements OnChanges {
 
   @Input() itemData?: ItemData;
 
-  state: 'loading'|'error'|'ready' = 'loading';
-  logData: ActivityLog[] = [];
-
-  private subscription?: Subscription;
+  private readonly id$ = new ReplaySubject<string>(1);
+  readonly state$ = this.id$.pipe(
+    distinct(),
+    switchMap(id => this.activityLogService.getActivityLog(id)),
+    mapToFetchState(),
+  );
 
   constructor(
-    private sessionService: UserSessionService,
     private activityLogService: ActivityLogService
   ) {}
 
   ngOnChanges(): void {
-    this.reloadData();
-  }
-
-  ngOnDestroy(): void {
-    this.subscription?.unsubscribe();
-  }
-
-  private reloadData(): void {
-    const currentUser = this.sessionService.session$.value;
-    if (this.itemData && currentUser) {
-      this.state = 'loading';
-      this.subscription?.unsubscribe(); // cancel ongoing requests
-      this.subscription = this.activityLogService.getActivityLog(this.itemData.item.id).subscribe(
-        data => {
-          this.state = 'ready';
-          this.logData = data;
-        },
-        _err => this.state = 'error'
-      );
-    }
+    if (this.itemData) this.id$.next(this.itemData.item.id);
   }
 
 }

@@ -1,6 +1,9 @@
-<p i18n>Log view</p>
-<div [ngSwitch]="state">
-  <p-progressSpinner *ngSwitchCase="'loading'" [style]="{width: '3.3333rem', height: '3.3333rem'}"></p-progressSpinner>
-  <p *ngSwitchCase="'error'" i18n>Unable to load the recent activity</p>
-  <p *ngSwitchDefault i18n>Loaded {{ logData.length }} results</p>
-</div>
+<ng-container *ngIf="state$ | async as state">
+  <p i18n>Log view</p>
+
+  <p-progressSpinner *ngIf="state.isFetching" [style]="{width: '3.3333rem', height: '3.3333rem'}"></p-progressSpinner>
+
+  <p *ngIf="state.isError" i18n>Unable to load the recent activity</p>
+
+  <p *ngIf="state.isReady" i18n>Loaded {{ state.data.length }} results</p>
+</ng-container>
