@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { GroupInfo } from 'src/app/shared/services/current-content.service';
+import { GroupInfo } from 'src/app/shared/models/content/group-info';
 import { GroupNavigationService, NavMenuGroup } from '../../http-services/group-navigation.service';
 import { LeftNavDataSource } from './left-nav-datasource';
 

@@ -2,10 +2,11 @@ import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { UserSession, UserSessionService } from '../shared/services/user-session.service';
 import { delay, filter, map, skip } from 'rxjs/operators';
 import { Observable, Subscription } from 'rxjs';
-import { ContentInfo, CurrentContentService } from '../shared/services/current-content.service';
+import { CurrentContentService } from '../shared/services/current-content.service';
 import { AuthService, AuthServiceState } from '../shared/auth/auth.service';
 import { Router } from '@angular/router';
 import { ModeAction, ModeService } from '../shared/services/mode.service';
+import { ContentInfo } from '../shared/models/content/content-info';
 
 @Component({
   selector: 'alg-root',

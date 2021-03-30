@@ -2,7 +2,7 @@ import { concat, EMPTY, Observable, ObservableInput, of, OperatorFunction, Subje
 import { catchError, map, mergeMap, switchMap } from 'rxjs/operators';
 import { repeatLatestWhen } from 'src/app/shared/helpers/repeatLatestWhen';
 import { errorState, FetchError, Fetching, fetchingState, isReady, Ready, readyState } from 'src/app/shared/helpers/state';
-import { RoutedContentInfo } from 'src/app/shared/services/current-content.service';
+import { RoutedContentInfo } from 'src/app/shared/models/content/content-info';
 import { NavTreeData, NavTreeElement } from '../../services/left-nav-loading/nav-tree-data';
 
 const msBetweenChildrenRefetch = 5000;

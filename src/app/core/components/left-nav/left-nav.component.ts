@@ -2,7 +2,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { delay, map, pairwise } from 'rxjs/operators';
-import { CurrentContentService, isActivityInfo, isGroupInfo, isItemInfo } from 'src/app/shared/services/current-content.service';
+import { isGroupInfo } from 'src/app/shared/models/content/group-info';
+import { isActivityInfo, isItemInfo } from 'src/app/shared/models/content/item-info';
+import { CurrentContentService } from 'src/app/shared/services/current-content.service';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
 import { GroupNavigationService } from '../../http-services/group-navigation.service';
 import { ItemNavigationService } from '../../http-services/item-navigation.service';
