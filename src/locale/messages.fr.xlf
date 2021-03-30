@@ -255,11 +255,8 @@
         </context-group>
       </trans-unit><trans-unit id="7488290912485772924" datatype="html">
         <source>You don't have access to this activity.</source><target state="translated">Vous n'avez pas accès à cette activité.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/components/associated-activity/associated-activity.component.ts</context>
-          <context context-type="linenumber">75</context>
-        </context-group>
-      </trans-unit><trans-unit id="c2009bf1c9927be594c46c49dedd6804596e7be0" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/associated-activity/associated-activity.component.ts</context><context context-type="linenumber">74</context></context-group></trans-unit><trans-unit id="c2009bf1c9927be594c46c49dedd6804596e7be0" datatype="html">
         <source>Associated Activity</source><target state="translated">Activité associée</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/group/components/associated-activity/associated-activity.component.html</context>
@@ -290,13 +287,10 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/add-content/add-content.component.html</context><context context-type="linenumber">24</context></context-group></trans-unit><trans-unit id="828fba1dc0726e5a3a6dcfd4fa7a94b694ad47e9" datatype="html">
         <source>Select a Content</source><target state="translated">Sélectionnez un contenu</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/add-content/add-content.component.html</context><context context-type="linenumber">50</context></context-group></trans-unit><trans-unit id="f6755cff4957d5c3c89bafce5651f1b6fa2b1fd9" datatype="html">
-        <source>Add</source><target state="translated">Ajouter</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/add-content/add-content.component.html</context><context context-type="linenumber">57</context></context-group></trans-unit><trans-unit id="6206a0f04a13a3f6ad713366d4480eb14bc15386" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/add-content/add-content.component.html</context><context context-type="linenumber">50</context></context-group></trans-unit><trans-unit id="6206a0f04a13a3f6ad713366d4480eb14bc15386" datatype="html">
         <source>No records found</source><target state="translated">Aucun résultat</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/add-content/add-content.component.html</context><context context-type="linenumber">63</context></context-group></trans-unit><trans-unit id="9e308eb56a9c8be2847dc3b760f4a78304da36f4" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/add-content/add-content.component.html</context><context context-type="linenumber">68</context></context-group></trans-unit><trans-unit id="9e308eb56a9c8be2847dc3b760f4a78304da36f4" datatype="html">
         <source> Content </source><target state="translated"> Contenu </target>
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-details/item-details.component.html</context><context context-type="linenumber">15</context></context-group></trans-unit><trans-unit id="15793f4cbc261bedbc60f7105533dde536a3f42b" datatype="html">
@@ -308,10 +302,16 @@
           <context context-type="sourcefile">src/app/modules/group/components/associated-activity/associated-activity.component.html</context>
           <context context-type="linenumber">7</context>
         </context-group>
+      </trans-unit><trans-unit id="9ca82952a6bc860b5391d5975322d8af8ceddfa4" datatype="html">
+        <source>Select</source><target state="translated">Sélectionner</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/associated-activity/associated-activity.component.html</context>
+          <context context-type="linenumber">19</context>
+        </context-group>
       </trans-unit><trans-unit id="019d4bd6a5690f0cfa0ecf346a4e6bf7f0d8debb" datatype="html">
         <source>Remove</source><target state="translated">Supprimer</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/associated-activity/associated-activity.component.html</context><context context-type="linenumber">27</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/associated-activity/associated-activity.component.html</context><context context-type="linenumber">39</context></context-group></trans-unit><trans-unit id="4378796785985219718" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/associated-activity/associated-activity.component.html</context><context context-type="linenumber">28</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/associated-activity/associated-activity.component.html</context><context context-type="linenumber">41</context></context-group></trans-unit><trans-unit id="4378796785985219718" datatype="html">
         <source>Class</source><target state="translated">Classe</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/managed-group-list/managed-group-list.component.ts</context><context context-type="linenumber">32</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/add-sub-group/add-sub-group.component.ts</context><context context-type="linenumber">32</context></context-group></trans-unit><trans-unit id="3192753641165405448" datatype="html">
@@ -483,6 +483,12 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-by-id.component.html</context>
           <context context-type="linenumber">10</context>
+        </context-group>
+      </trans-unit><trans-unit id="3249513483374643425" datatype="html">
+        <source>Add</source><target state="translated">Ajouter</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/shared-components/components/add-content/add-content.component.ts</context>
+          <context context-type="linenumber">32</context>
         </context-group>
       </trans-unit><trans-unit id="8598ca8227b654988e98dbc5ef9ed314a3d483a3" datatype="html">
        <source>Pending requests</source><target state="translated">Demandes en attente</target>

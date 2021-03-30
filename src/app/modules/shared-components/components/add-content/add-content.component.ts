@@ -29,6 +29,7 @@ export class AddContentComponent<Type> implements OnInit, OnDestroy {
   @Input() allowedTypesForNewContent: NewContentType<Type>[] = [];
   @Input() searchFunction?: (searchValue: string) => Observable<AddedContent<Type>[]>;
   @Input() loading = false;
+  @Input() selectExistingText: string = $localize`Add`;
 
   @Output() contentAdded = new EventEmitter<AddedContent<Type>>();
 

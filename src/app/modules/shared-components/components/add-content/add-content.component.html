@@ -54,7 +54,12 @@
           <td class="type">{{ item.type }}</td>
           <td class="main">{{ item.title }}</td>
           <td>
-            <alg-button class="p-small-button p-button-rounded" icon="fa fa-plus" i18n-label label="Add" (click)="addExisting(item)"></alg-button>
+            <alg-button
+              class="p-small-button p-button-rounded"
+              [icon]="selectExistingText ==='Add' ? 'fa fa-plus' : undefined"
+              [label]="selectExistingText"
+              (click)="addExisting(item)"
+            ></alg-button>
           </td>
         </tr>
       </ng-template>
