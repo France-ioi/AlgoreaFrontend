@@ -46,16 +46,15 @@ export class LeftNavComponent implements OnInit, OnDestroy {
       map(content => (content !== null && (isItemInfo(content) || isGroupInfo(content)) ? content : undefined)),
       pairwise(),
     ).subscribe(([ prevContent, content ]) => {
-      if (!prevContent && !content) return; // if was not an item/group and still not one, do nothing
-
       // If the content changed (different id), clear the selection (clear all tabs as we don't really know on which tab was the selection)
       if (prevContent?.type !== content?.type || prevContent?.route.id !== content?.route.id) {
         this.dataSources.forEach(l => l.removeSelection());
       }
 
-      if (!content) return; // no tab and no content to select
+      if (!content) { // no tab and no content to select
+        this.dataSources[this.activeTabIndex].focus(); // if the current tab has not been initialized yet, do it now
 
-      if (isGroupInfo(content)) {
+      } else if (isGroupInfo(content)) {
         this.activeTabIndex = groupsTabIdx;
         this.dataSources[groupsTabIdx].showContent(content);
 
