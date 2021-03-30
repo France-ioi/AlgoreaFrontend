@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, OnDestroy } from '@angular/core';
 import { ItemData } from '../../services/item-datasource.service';
-import { RecentActivity, RecentActivityService } from 'src/app/shared/http-services/recent-activity.service';
+import { ActivityLogService, ActivityLog } from 'src/app/shared/http-services/activity-log.service';
 import { Subscription } from 'rxjs';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
 
@@ -14,13 +14,13 @@ export class ItemLogViewComponent implements OnDestroy, OnChanges {
   @Input() itemData?: ItemData;
 
   state: 'loading'|'error'|'ready' = 'loading';
-  logData: RecentActivity[] = [];
+  logData: ActivityLog[] = [];
 
   private subscription?: Subscription;
 
   constructor(
     private sessionService: UserSessionService,
-    private recentActivityService: RecentActivityService
+    private activityLogService: ActivityLogService
   ) {}
 
   ngOnChanges(): void {
@@ -36,7 +36,7 @@ export class ItemLogViewComponent implements OnDestroy, OnChanges {
     if (this.itemData && currentUser) {
       this.state = 'loading';
       this.subscription?.unsubscribe(); // cancel ongoing requests
-      this.subscription = this.recentActivityService.getRecentActivity(this.itemData.item.id, currentUser.user.id).subscribe(
+      this.subscription = this.activityLogService.getActivityLog(this.itemData.item.id).subscribe(
         data => {
           this.state = 'ready';
           this.logData = data;
