@@ -5,7 +5,7 @@ import { Subject } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { GetItemByIdService } from 'src/app/modules/item/http-services/get-item-by-id.service';
 import { incompleteItemStringUrl } from 'src/app/shared/routing/item-route';
-import { fetchingState, isReady, readyState } from 'src/app/shared/helpers/state';
+import { fetchingState, readyState } from 'src/app/shared/helpers/state';
 
 type ActivityId = string;
 
@@ -56,7 +56,7 @@ export class AssociatedActivityComponent implements OnDestroy, ControlValueAcces
       })
     ).subscribe(state => {
       this.state = state.tag;
-      if (isReady(state)) {
+      if (state.isReady) {
         this.rootActivity = state.data.activity;
         if (state.data.triggerChange) this.onChange(this.rootActivity === null ? null : this.rootActivity.id);
       }

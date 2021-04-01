@@ -2,15 +2,15 @@
 import { OperatorFunction, pipe } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { TestScheduler } from 'rxjs/testing';
-import { isError, isFetching, isReady, FetchState } from '../helpers/state';
+import { FetchState } from '../helpers/state';
 import { mapToFetchState } from './state';
 
 function stateToLetter(): OperatorFunction<FetchState<string>, string> {
   return pipe(
     map(state => {
-      if (isReady(state)) return state.data;
-      if (isFetching(state)) return 'l';
-      if (isError(state)) return 'e';
+      if (state.isReady) return state.data;
+      if (state.isFetching) return 'l';
+      if (state.isError) return 'e';
       return '?';
     })
   );

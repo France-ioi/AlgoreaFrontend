@@ -3,7 +3,7 @@ import { SortEvent } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { merge, Observable, of, Subject } from 'rxjs';
 import { catchError, delay, map, switchMap } from 'rxjs/operators';
-import { errorState, fetchingState, isReady, readyState } from 'src/app/shared/helpers/state';
+import { errorState, fetchingState, readyState } from 'src/app/shared/helpers/state';
 import { GetGroupDescendantsService } from 'src/app/shared/http-services/get-group-descendants.service';
 import { Group } from '../../http-services/get-group-by-id.service';
 import { GetGroupChildrenService, GroupChild } from '../../http-services/get-group-children.service';
@@ -92,7 +92,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
     ).subscribe(
       state => {
         this.state = state.tag;
-        if (isReady(state)) this.data = state.data;
+        if (state.isReady) this.data = state.data;
       },
       _err => {
         this.state = 'error';

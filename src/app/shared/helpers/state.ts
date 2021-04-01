@@ -24,14 +24,6 @@ export function isReady<T>(state: {tag: string}): state is Ready<T> {
   return state.tag === 'ready';
 }
 
-export function isFetching(state: {tag: string}): state is Fetching {
-  return state.tag === 'fetching';
-}
-
-export function isError(state: {tag: string}): state is FetchError {
-  return state.tag === 'error';
-}
-
 export function mapErrorToState<T>(): OperatorFunction<T, T|FetchError> {
   return catchError(e => of(errorState(e)));
 }

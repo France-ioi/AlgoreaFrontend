@@ -65,7 +65,7 @@ export class ItemDataSource implements OnDestroy {
   }
 
   refreshItem(): void {
-    if (isReady(this.state.value)) {
+    if (this.state.value.isReady) {
       this.fetchItem(this.state.value.data.route);
     }
   }

@@ -50,7 +50,7 @@ export class GroupDataSource implements OnDestroy {
 
   // If (and only if) a group is currently fetched (so we are not currently loading or in error), refetch it.
   refetchGroup(): void {
-    if (isReady(this.state.value)) {
+    if (this.state.value.isReady) {
       this.fetchOperation.next(this.state.value.data.id);
     }
   }
