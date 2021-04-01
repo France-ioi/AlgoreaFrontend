@@ -18,12 +18,6 @@ export function errorState(error: Error): FetchError {
   return { tag: 'error', isReady: false, isFetching: false, isError: true, error: error };
 }
 
-/* Do not use the following 3 functions in templates (!), only for type assertion in TS */
-
-export function isReady<T>(state: {tag: string}): state is Ready<T> {
-  return state.tag === 'ready';
-}
-
 export function mapErrorToState<T>(): OperatorFunction<T, T|FetchError> {
   return catchError(e => of(errorState(e)));
 }

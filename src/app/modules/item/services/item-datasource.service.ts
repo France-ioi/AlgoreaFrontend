@@ -1,15 +1,16 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject, concat, EMPTY, forkJoin, Observable, of, Subject, Subscription } from 'rxjs';
-import { catchError, filter, map, switchMap } from 'rxjs/operators';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import { bestAttemptFromResults, implicitResultStart } from 'src/app/shared/helpers/attempts';
 import { isRouteWithAttempt, ItemRoute } from 'src/app/shared/routing/item-route';
-import { errorState, FetchError, Fetching, fetchingState, isReady, Ready, readyState } from 'src/app/shared/helpers/state';
+import { errorState, FetchError, Fetching, fetchingState, Ready, readyState } from 'src/app/shared/helpers/state';
 import { ResultActionsService } from 'src/app/shared/http-services/result-actions.service';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
 import { BreadcrumbItem, GetBreadcrumbService } from '../http-services/get-breadcrumb.service';
 import { GetItemByIdService, Item } from '../http-services/get-item-by-id.service';
 import { GetResultsService, Result } from '../http-services/get-results.service';
 import { canCurrentUserViewItemContent } from 'src/app/modules/item/helpers/item-permissions';
+import { readyOnly } from 'src/app/shared/operators/state';
 
 export interface ItemData { route: ItemRoute, item: Item, breadcrumbs: BreadcrumbItem[], results?: Result[], currentResult?: Result}
 
@@ -26,7 +27,7 @@ export class ItemDataSource implements OnDestroy {
   private state = new BehaviorSubject<Ready<ItemData>|Fetching|FetchError>(fetchingState());
   state$ = this.state.asObservable();
   itemData$ = this.state.pipe( // only fetched items, to be use in template as it cannot properly infer types
-    filter<Ready<ItemData>|Fetching|FetchError, Ready<ItemData>>(isReady),
+    readyOnly(),
     map(s => s.data)
   );
   item$ = this.itemData$.pipe(map(s => s.item));

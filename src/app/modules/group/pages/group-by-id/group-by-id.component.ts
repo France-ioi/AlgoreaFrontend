@@ -2,11 +2,10 @@ import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
-import { FetchError, Fetching, isReady, Ready } from 'src/app/shared/helpers/state';
 import { groupInfo, GroupInfo, isGroupInfo } from 'src/app/shared/models/content/group-info';
+import { readyOnly } from 'src/app/shared/operators/state';
 import { CurrentContentService } from 'src/app/shared/services/current-content.service';
 import { ModeAction, ModeService } from 'src/app/shared/services/mode.service';
-import { Group } from '../../http-services/get-group-by-id.service';
 import { GroupDataSource } from '../../services/group-datasource.service';
 
 const GROUP_BREADCRUMB_CAT = $localize`Groups`;
@@ -47,7 +46,7 @@ export class GroupByIdComponent implements OnDestroy {
     // on state change, update current content page info (for breadcrumb)
     this.subscriptions.push(
       this.groupDataSource.state$.pipe(
-        filter<Ready<Group>|Fetching|FetchError,Ready<Group>>(isReady),
+        readyOnly(),
         map((state):GroupInfo => groupInfo({
           route: { contentType: 'group', id: state.data.id, path: [] },
           breadcrumbs: {

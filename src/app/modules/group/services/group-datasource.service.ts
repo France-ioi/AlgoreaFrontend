@@ -1,7 +1,8 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject, concat, of, Subject } from 'rxjs';
-import { catchError, filter, map, switchMap } from 'rxjs/operators';
-import { errorState, FetchError, Fetching, fetchingState, isReady, Ready, readyState } from 'src/app/shared/helpers/state';
+import { catchError, map, switchMap } from 'rxjs/operators';
+import { errorState, FetchError, Fetching, fetchingState, Ready, readyState } from 'src/app/shared/helpers/state';
+import { readyOnly } from 'src/app/shared/operators/state';
 import { GetGroupByIdService, Group } from '../http-services/get-group-by-id.service';
 
 type GroupId = string;
@@ -18,7 +19,7 @@ export class GroupDataSource implements OnDestroy {
   private state = new BehaviorSubject<Ready<Group>|Fetching|FetchError>(fetchingState());
   state$ = this.state.asObservable();
   group$ = this.state.pipe( // only fetched groups, to be use in template as it cannot properly infer types
-    filter<Ready<Group>|Fetching|FetchError, Ready<Group>>(isReady),
+    readyOnly(),
     map(s => s.data)
   )
 
