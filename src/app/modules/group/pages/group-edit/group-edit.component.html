@@ -1,10 +1,10 @@
 <ng-container *ngIf="state$ | async as state">
 
-  <p-progressSpinner *ngIf="state.tag === 'fetching'"></p-progressSpinner>
+  <p-progressSpinner *ngIf="state.isFetching"></p-progressSpinner>
 
-  <p *ngIf="state.tag === 'error'" i18n>Error while loading the group</p>
+  <p *ngIf="state.isError" i18n>Error while loading the group</p>
 
-  <ng-container *ngIf="state.tag === 'ready'">
+  <ng-container *ngIf="state.isReady">
     <form class="group-edition" [formGroup]="groupForm" *ngIf="state.data.current_user_is_manager; else notAuthorized">
       <alg-section icon="fa fa-cog" i18n-label label="Group information">
         <div class="field">

@@ -12,7 +12,6 @@ import { ItemDataSource } from '../../services/item-datasource.service';
 export class ItemDetailsComponent implements OnDestroy {
 
   itemLoadingstate$ = this.itemDataSource.state$;
-  itemData$ = this.itemDataSource.itemData$; // as template is not able to infer properly the type
   showAccessCodeField = false;
 
   subscription: Subscription;

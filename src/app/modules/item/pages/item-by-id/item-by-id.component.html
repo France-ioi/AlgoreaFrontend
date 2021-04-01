@@ -1,9 +1,9 @@
 
-<router-outlet *ngIf="state.tag === 'ready'"></router-outlet>
+<router-outlet *ngIf="state.isReady"></router-outlet>
 
-<p-progressSpinner *ngIf="state.tag === 'fetching'"></p-progressSpinner>
+<p-progressSpinner *ngIf="state.isFetching"></p-progressSpinner>
 
-<ng-container *ngIf="state.tag === 'error'">
+<ng-container *ngIf="state.isError">
   <p *ngIf="$any(state).error && ($any(state).error.status === 403 || $any(state).error.status === 404); else unknownError" i18n>
     This content does not exist or you are not allowed to view it.
   </p>

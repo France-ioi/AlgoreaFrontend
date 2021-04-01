@@ -39,8 +39,7 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
   });
   itemChanges: { children?: ChildData[] } = {};
 
-  itemData$ = this.itemDataSource.itemData$;
-  itemLoadingState$ = this.itemDataSource.state$;
+  fetchState$ = this.itemDataSource.state$;
   initialFormData?: Item;
 
   subscription?: Subscription;
@@ -58,7 +57,7 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
     private messageService: MessageService
   ) {
     this.modeService.mode$.next(Mode.Editing);
-    this.subscription = this.itemLoadingState$
+    this.subscription = this.fetchState$
       .pipe(readyOnly())
       .subscribe(state => {
         this.initialFormData = state.data.item;

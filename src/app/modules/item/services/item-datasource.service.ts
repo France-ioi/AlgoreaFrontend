@@ -26,11 +26,7 @@ export class ItemDataSource implements OnDestroy {
   /* state to put outputted */
   private state = new BehaviorSubject<FetchState<ItemData>>(fetchingState());
   state$ = this.state.asObservable();
-  itemData$ = this.state.pipe( // only fetched items, to be use in template as it cannot properly infer types
-    readyOnly(),
-    map(s => s.data)
-  );
-  item$ = this.itemData$.pipe(map(s => s.item));
+  item$ = this.state$.pipe(readyOnly(), map(s => s.data.item)); // shortcut to use the item via the state
 
   private fetchOperation = new Subject<ItemRoute>(); // trigger item fetching
   private subscription: Subscription;
