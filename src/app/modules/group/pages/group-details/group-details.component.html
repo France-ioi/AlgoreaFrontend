@@ -1,6 +1,6 @@
 <ng-container *ngIf="state$ | async as state">
 
-  <ng-container *ngIf="state.tag === 'ready' && (group$ | async) as group">
+  <ng-container *ngIf="state.isReady && (group$ | async) as group">
     <alg-group-header [group]="group"></alg-group-header>
     <alg-pending-join-requests *ngIf="group.isCurrentUserManager" [groupId]="group.id"></alg-pending-join-requests>
     <!-- tabs -- if only the first tab is visible, do not show the tab bar -->
@@ -51,8 +51,8 @@
 
   </ng-container>
 
-  <p-progressSpinner *ngIf="state.tag === 'fetching'"></p-progressSpinner>
+  <p-progressSpinner *ngIf="state.isFetching"></p-progressSpinner>
 
-  <p *ngIf="state.tag === 'error'" i18n>Error while loading the group info</p>
+  <p *ngIf="state.isError" i18n>Error while loading the group info</p>
 
 </ng-container>
