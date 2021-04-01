@@ -4,7 +4,7 @@ import { of, Subscription } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
 import { defaultAttemptId } from 'src/app/shared/helpers/attempts';
 import { appDefaultItemRoute, isItemRouteError, itemRouteFromParams } from 'src/app/shared/routing/item-route';
-import { errorState, FetchError, Fetching, fetchingState, Ready } from 'src/app/shared/helpers/state';
+import { errorState, fetchingState, FetchState } from 'src/app/shared/helpers/state';
 import { ResultActionsService } from 'src/app/shared/http-services/result-actions.service';
 import { CurrentContentService } from 'src/app/shared/services/current-content.service';
 import { breadcrumbServiceTag } from '../../http-services/get-breadcrumb.service';
@@ -30,7 +30,7 @@ const itemBreadcrumbCat = $localize`Items`;
 export class ItemByIdComponent implements OnDestroy {
 
   // datasource state re-used with fetching/error states of route resolution
-  state: Ready<ItemData>|Fetching|FetchError = fetchingState();
+  state: FetchState<ItemData> = fetchingState();
   // to prevent looping indefinitely in case of bug in services (wrong path > item without path > fetch path > item with path > wrong path)
   hasRedirected = false;
 

@@ -3,7 +3,7 @@ import { BehaviorSubject, concat, EMPTY, forkJoin, Observable, of, Subject, Subs
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { bestAttemptFromResults, implicitResultStart } from 'src/app/shared/helpers/attempts';
 import { isRouteWithAttempt, ItemRoute } from 'src/app/shared/routing/item-route';
-import { errorState, FetchError, Fetching, fetchingState, Ready, readyState } from 'src/app/shared/helpers/state';
+import { errorState, fetchingState, FetchState, readyState } from 'src/app/shared/helpers/state';
 import { ResultActionsService } from 'src/app/shared/http-services/result-actions.service';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
 import { BreadcrumbItem, GetBreadcrumbService } from '../http-services/get-breadcrumb.service';
@@ -24,7 +24,7 @@ export interface ItemData { route: ItemRoute, item: Item, breadcrumbs: Breadcrum
 export class ItemDataSource implements OnDestroy {
 
   /* state to put outputted */
-  private state = new BehaviorSubject<Ready<ItemData>|Fetching|FetchError>(fetchingState());
+  private state = new BehaviorSubject<FetchState<ItemData>>(fetchingState());
   state$ = this.state.asObservable();
   itemData$ = this.state.pipe( // only fetched items, to be use in template as it cannot properly infer types
     readyOnly(),

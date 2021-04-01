@@ -1,7 +1,7 @@
 import { concat, EMPTY, Observable, ObservableInput, of, OperatorFunction, Subject } from 'rxjs';
 import { catchError, map, mergeMap, switchMap } from 'rxjs/operators';
 import { repeatLatestWhen } from 'src/app/shared/helpers/repeatLatestWhen';
-import { errorState, FetchError, Fetching, fetchingState, Ready, readyState } from 'src/app/shared/helpers/state';
+import { errorState, fetchingState, FetchState, readyState } from 'src/app/shared/helpers/state';
 import { RoutedContentInfo } from 'src/app/shared/models/content/content-info';
 import { NavTreeData, NavTreeElement } from '../../services/left-nav-loading/nav-tree-data';
 
@@ -56,9 +56,9 @@ function isDSReplace<T extends NavTreeElement>(change: DataSourceChange<T>): cha
 export abstract class LeftNavDataSource<ContentT extends RoutedContentInfo, MenuT extends NavTreeElement> {
 
   private initialized = false;
-  private contentChanges = new Subject<[content: ContentT|undefined, state: Ready<NavTreeData<MenuT>>|Fetching|FetchError]>();
+  private contentChanges = new Subject<[content: ContentT|undefined, state: FetchState<NavTreeData<MenuT>>]>();
   private retryTrigger = new Subject<void>();
-  state: Ready<NavTreeData<MenuT>>|Fetching|FetchError = fetchingState();
+  state: FetchState<NavTreeData<MenuT>> = fetchingState();
 
   constructor() {
 
