@@ -2,21 +2,30 @@
 import { OperatorFunction, pipe } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { TestScheduler } from 'rxjs/testing';
-import { FetchState } from '../helpers/state';
-import { mapToFetchState } from './state';
+import { errorState, fetchingState, FetchState, readyState } from '../helpers/state';
+import { mapToFetchState, readyOnly } from './state';
 
-function stateToLetter(): OperatorFunction<FetchState<string>, string> {
-  return pipe(
-    map(state => {
-      if (state.isReady) return state.data;
-      if (state.isFetching) return 'l';
-      if (state.isError) return 'e';
-      return '?';
-    })
-  );
-}
+const stateToLetter = (): OperatorFunction<FetchState<string>, string> => pipe(
+  map(state => {
+    if (state.isReady) return state.data;
+    if (state.isFetching) return 'l';
+    if (state.isError) return 'e';
+    return '?';
+  })
+);
+
+const letterToState = (): OperatorFunction<string, FetchState<string>> => pipe(
+  map(l => {
+    switch (l) {
+      case 'f': return fetchingState();
+      case 'e': return errorState(new Error());
+      default: return readyState(l);
+    }
+  })
+);
 
 describe('mapToState', () => {
+
   let testScheduler: TestScheduler;
 
   beforeEach(() => {
@@ -97,6 +106,33 @@ describe('mapToState', () => {
         stateToLetter(),
       )).toBe(expected);
       expectSubscriptions(e1.subscriptions).toBe(subs);
+    });
+  });
+
+});
+
+
+describe('readyOnly', () => {
+
+  let testScheduler: TestScheduler;
+
+  beforeEach(() => {
+    testScheduler = new TestScheduler((actual, expected) => {
+      expect(actual).toEqual(expected);
+    });
+  });
+
+  it('should keep only ready events (and not to skip some)', () => {
+    testScheduler.run(helpers => {
+      const { cold, expectObservable } = helpers;
+      const e =   cold('-f-a-b-f-e-#');
+      const expected = '---a-b-----#';
+
+      expectObservable(e.pipe(
+        letterToState(),
+        readyOnly(),
+        stateToLetter(),
+      )).toBe(expected);
     });
   });
 
