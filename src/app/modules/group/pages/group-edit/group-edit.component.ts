@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs';
 import { ERROR_MESSAGE } from 'src/app/shared/constants/api';
 import { TOAST_LENGTH } from 'src/app/shared/constants/global';
 import { PendingChangesComponent } from 'src/app/shared/guards/pending-changes-guard';
-import { readyOnly } from 'src/app/shared/operators/state';
+import { readyData } from 'src/app/shared/operators/state';
 import { Mode, ModeService } from 'src/app/shared/services/mode.service';
 import { Group } from '../../http-services/get-group-by-id.service';
 import { GroupChanges, GroupUpdateService } from '../../http-services/group-update.service';
@@ -39,10 +39,10 @@ export class GroupEditComponent implements OnDestroy, PendingChangesComponent {
     this.modeService.mode$.next(Mode.Editing);
 
     this.subscription = this.state$
-      .pipe(readyOnly())
-      .subscribe(state => {
-        this.initialFormData = state.data;
-        this.resetFormWith(state.data);
+      .pipe(readyData())
+      .subscribe(item => {
+        this.initialFormData = item;
+        this.resetFormWith(item);
       });
   }
 

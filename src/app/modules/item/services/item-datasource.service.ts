@@ -10,7 +10,7 @@ import { BreadcrumbItem, GetBreadcrumbService } from '../http-services/get-bread
 import { GetItemByIdService, Item } from '../http-services/get-item-by-id.service';
 import { GetResultsService, Result } from '../http-services/get-results.service';
 import { canCurrentUserViewItemContent } from 'src/app/modules/item/helpers/item-permissions';
-import { readyOnly } from 'src/app/shared/operators/state';
+import { readyData } from 'src/app/shared/operators/state';
 
 export interface ItemData { route: ItemRoute, item: Item, breadcrumbs: BreadcrumbItem[], results?: Result[], currentResult?: Result}
 
@@ -26,7 +26,7 @@ export class ItemDataSource implements OnDestroy {
   /* state to put outputted */
   private state = new BehaviorSubject<FetchState<ItemData>>(fetchingState());
   state$ = this.state.asObservable();
-  item$ = this.state$.pipe(readyOnly(), map(s => s.data.item)); // shortcut to use the item via the state
+  item$ = this.state$.pipe(readyData(), map(data => data.item)); // shortcut to use the item via the state
 
   private fetchOperation = new Subject<ItemRoute>(); // trigger item fetching
   private subscription: Subscription;

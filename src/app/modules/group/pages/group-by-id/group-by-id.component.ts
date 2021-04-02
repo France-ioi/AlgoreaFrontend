@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { groupInfo, GroupInfo, isGroupInfo } from 'src/app/shared/models/content/group-info';
-import { readyOnly } from 'src/app/shared/operators/state';
+import { readyData } from 'src/app/shared/operators/state';
 import { CurrentContentService } from 'src/app/shared/services/current-content.service';
 import { ModeAction, ModeService } from 'src/app/shared/services/mode.service';
 import { GroupDataSource } from '../../services/group-datasource.service';
@@ -46,15 +46,15 @@ export class GroupByIdComponent implements OnDestroy {
     // on state change, update current content page info (for breadcrumb)
     this.subscriptions.push(
       this.groupDataSource.state$.pipe(
-        readyOnly(),
-        map((state):GroupInfo => groupInfo({
-          route: { contentType: 'group', id: state.data.id, path: [] },
+        readyData(),
+        map((group):GroupInfo => groupInfo({
+          route: { contentType: 'group', id: group.id, path: [] },
           breadcrumbs: {
             category: GROUP_BREADCRUMB_CAT,
-            path: [{ title: state.data.name, navigateTo: this.router.createUrlTree([ 'groups', 'by-id', state.data.id, 'details' ]) }],
+            path: [{ title: group.name, navigateTo: this.router.createUrlTree([ 'groups', 'by-id', group.id, 'details' ]) }],
             currentPageIdx: 0,
           },
-          title: state.data.name,
+          title: group.name,
         }))
       ).subscribe(p => this.currentContent.current.next(p)),
 

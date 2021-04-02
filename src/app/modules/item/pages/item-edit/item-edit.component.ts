@@ -15,7 +15,7 @@ import { PendingChangesComponent } from 'src/app/shared/guards/pending-changes-g
 import { CreateItemService, NewItem } from '../../http-services/create-item.service';
 import { ItemEditAdvancedParametersComponent } from '../item-edit-advanced-parameters/item-edit-advanced-parameters.component';
 import { Mode, ModeService } from 'src/app/shared/services/mode.service';
-import { readyOnly } from 'src/app/shared/operators/state';
+import { readyData } from 'src/app/shared/operators/state';
 
 @Component({
   selector: 'alg-item-edit',
@@ -58,10 +58,10 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
   ) {
     this.modeService.mode$.next(Mode.Editing);
     this.subscription = this.fetchState$
-      .pipe(readyOnly())
-      .subscribe(state => {
-        this.initialFormData = state.data.item;
-        this.resetFormWith(state.data.item);
+      .pipe(readyData())
+      .subscribe(data => {
+        this.initialFormData = data.item;
+        this.resetFormWith(data.item);
       });
   }
 
