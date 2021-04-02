@@ -1,5 +1,5 @@
 
-:host {
+:host ::ng-deep {
   position: fixed;
   bottom: 0.2rem;
   right: 1rem;
@@ -9,6 +9,10 @@
 
   .save {
     margin-right: 0.2rem;
+  }
+
+  .cancel:not(:hover) {
+    color: white !important;
   }
 
 }
