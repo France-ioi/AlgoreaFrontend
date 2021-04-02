@@ -86,7 +86,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
           of(fetchingState()),
           this.getData(params.groupId, params.filter, params.sort).pipe(
             map(readyState),
-            catchError(_err => of(errorState())),
+            catchError(err => of(errorState(err))),
           )
         ))
     ).subscribe(

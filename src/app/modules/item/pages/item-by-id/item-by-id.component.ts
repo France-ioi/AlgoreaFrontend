@@ -119,7 +119,7 @@ export class ItemByIdComponent implements OnDestroy {
       if (item.id) {
         this.state = fetchingState();
         this.solveMissingPathAttempt(item.contentType, item.id, item.path);
-      } else this.state = errorState();
+      } else this.state = errorState(new Error('No id in url'));
       return;
     }
     // just publish to current content the new route we are navigating to (without knowing any info)
