@@ -1,10 +1,10 @@
 <ng-container *ngIf="itemLoadingstate$ | async as state">
 
-  <ng-container *ngIf="state.isReady">
+  <ng-container *ngIf="state.isReady && state.data as itemData">
 
-    <alg-item-header [itemData]="state.data"></alg-item-header>
+    <alg-item-header [itemData]="itemData"></alg-item-header>
 
-    <alg-access-code-view *ngIf="showAccessCodeField" [itemData]="state.data" (groupJoined)="reloadItem()"></alg-access-code-view>
+    <alg-access-code-view *ngIf="itemData.showAccessCodeField" [itemData]="itemData" (groupJoined)="reloadItem()"></alg-access-code-view>
 
     <nav mat-tab-nav-bar>
       <a mat-tab-link
@@ -24,8 +24,8 @@
       </a>
     </nav>
     <div class="bg-white">
-      <alg-item-content *ngIf="contentTab.isActive" [itemData]="state.data"></alg-item-content>
-      <alg-item-progress *ngIf="progressTab.isActive" [itemData]="state.data"></alg-item-progress>
+      <alg-item-content *ngIf="contentTab.isActive" [itemData]="itemData"></alg-item-content>
+      <alg-item-progress *ngIf="progressTab.isActive" [itemData]="itemData"></alg-item-progress>
     </div>
 
   </ng-container>

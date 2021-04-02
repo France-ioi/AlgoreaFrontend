@@ -1,34 +1,25 @@
-import { Component, OnDestroy } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Component } from '@angular/core';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
 import { canCurrentUserViewItemContent } from '../../helpers/item-permissions';
 import { ItemDataSource } from '../../services/item-datasource.service';
+import { mapStateData } from 'src/app/shared/operators/state';
 
 @Component({
   selector: 'alg-item-details',
   templateUrl: './item-details.component.html',
   styleUrls: [ './item-details.component.scss' ],
 })
-export class ItemDetailsComponent implements OnDestroy {
+export class ItemDetailsComponent {
 
-  itemLoadingstate$ = this.itemDataSource.state$;
-  showAccessCodeField = false;
-
-  subscription: Subscription;
+  itemLoadingstate$ = this.itemDataSource.state$.pipe(
+    mapStateData(data => ({ ...data, showAccessCodeField: data.item.prompt_to_join_group_by_code &&
+      !canCurrentUserViewItemContent(data.item) && !this.userService.isCurrentUserTemp() }))
+  );
 
   constructor(
     private userService: UserSessionService,
     private itemDataSource: ItemDataSource,
-  ) {
-    this.subscription = this.itemDataSource.item$.subscribe(item => {
-      this.showAccessCodeField = item.prompt_to_join_group_by_code
-        && !canCurrentUserViewItemContent(item) && !this.userService.isCurrentUserTemp();
-    });
-  }
-
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
-  }
+  ) {}
 
   reloadItem(): void {
     this.itemDataSource.refreshItem();
