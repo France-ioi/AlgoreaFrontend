@@ -8,7 +8,7 @@ import { mapToFetchState, readyOnly } from './state';
 const stateToLetter = (): OperatorFunction<FetchState<string>, string> => pipe(
   map(state => {
     if (state.isReady) return state.data;
-    if (state.isFetching) return 'l';
+    if (state.isFetching) return 'f';
     if (state.isError) return 'e';
     return '?';
   })
@@ -36,76 +36,66 @@ describe('mapToState', () => {
 
   it('should work with 1 event', () => {
     testScheduler.run(helpers => {
-      const { cold, expectObservable, expectSubscriptions } = helpers;
+      const { cold, expectObservable } = helpers;
       const e1 =  cold('---a---|');
-      const subs =     '^------!';
-      const expected = 'l--a---|';
+      const expected = 'f--a---|';
 
       expectObservable(e1.pipe(
         mapToFetchState(),
         stateToLetter(),
       )).toBe(expected);
-      expectSubscriptions(e1.subscriptions).toBe(subs);
     });
   });
 
   it('should work with no events', () => {
     testScheduler.run(helpers => {
-      const { cold, expectObservable, expectSubscriptions } = helpers;
+      const { cold, expectObservable } = helpers;
       const e1 =  cold('-------|');
-      const subs =     '^------!';
-      const expected = 'l------|';
+      const expected = 'f------|';
 
       expectObservable(e1.pipe(
         mapToFetchState(),
         stateToLetter(),
       )).toBe(expected);
-      expectSubscriptions(e1.subscriptions).toBe(subs);
     });
   });
 
   it('should work with several events', () => {
     testScheduler.run(helpers => {
-      const { cold, expectObservable, expectSubscriptions } = helpers;
+      const { cold, expectObservable } = helpers;
       const e1 =  cold('--a-b--|');
-      const subs =     '^------!';
-      const expected = 'l-a-b--|';
+      const expected = 'f-a-b--|';
 
       expectObservable(e1.pipe(
         mapToFetchState(),
         stateToLetter(),
       )).toBe(expected);
-      expectSubscriptions(e1.subscriptions).toBe(subs);
     });
   });
 
   it('should work with an error', () => {
     testScheduler.run(helpers => {
-      const { cold, expectObservable, expectSubscriptions } = helpers;
+      const { cold, expectObservable } = helpers;
       const e1 =  cold('------- #');
-      const subs =     '^------ !';
-      const expected = 'l------(e|)';
+      const expected = 'f------(e|)';
 
       expectObservable(e1.pipe(
         mapToFetchState(),
         stateToLetter(),
       )).toBe(expected);
-      expectSubscriptions(e1.subscriptions).toBe(subs);
     });
   });
 
   it('should work with an event followed by an error', () => {
     testScheduler.run(helpers => {
-      const { cold, expectObservable, expectSubscriptions } = helpers;
+      const { cold, expectObservable } = helpers;
       const e1 =  cold('---a--- #');
-      const subs =     '^------ !';
-      const expected = 'l--a---(e|)';
+      const expected = 'f--a---(e|)';
 
       expectObservable(e1.pipe(
         mapToFetchState(),
         stateToLetter(),
       )).toBe(expected);
-      expectSubscriptions(e1.subscriptions).toBe(subs);
     });
   });
 
