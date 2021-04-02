@@ -21,3 +21,12 @@ export function readyOnly<T>(): OperatorFunction<FetchState<T>,Ready<T>> {
     filter((s): s is Ready<T> => s.isReady)
   );
 }
+
+/**
+ * Rx operator which maps the ready data using the `dataMapper` function or keep the state unchanged if the state is not ready
+ */
+export function mapStateData<T, U>(dataMapper: (data: T) => U): OperatorFunction<FetchState<T>,FetchState<U>> {
+  return pipe(
+    map(state => (state.isReady ? readyState(dataMapper(state.data)) : state))
+  );
+}
