@@ -4,7 +4,7 @@ import { MessageService } from 'primeng/api';
 import { readyData } from 'src/app/shared/operators/state';
 import { Mode, ModeService } from 'src/app/shared/services/mode.service';
 import { of, Subscription } from 'rxjs';
-import { concatMap, filter } from 'rxjs/operators';
+import { concatMap } from 'rxjs/operators';
 import { CreateItemService } from 'src/app/modules/item/http-services/create-item.service';
 import { ERROR_MESSAGE } from 'src/app/shared/constants/api';
 import { TOAST_LENGTH } from 'src/app/shared/constants/global';
