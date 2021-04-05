@@ -50,7 +50,7 @@ export class AssociatedActivityComponent implements ControlValueAccessor {
         this.getItemByIdService.get(id).pipe(map(item => item.string.title));
 
       return name.pipe(
-        map(name => ({ tag: 'existing-activity', id: id, name, path: incompleteItemStringUrl(id) })),
+        map(name => ({ tag: 'existing-activity', id: id, name, path: incompleteItemStringUrl(id, 'activity') })),
         catchError(err => {
           if (errorIsHTTPForbidden(err)) return of({
             tag: 'existing-activity', name: $localize`You don't have access to this activity.`, path: null
