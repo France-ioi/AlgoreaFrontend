@@ -1,8 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
 import { GroupDataSource } from '../../services/group-datasource.service';
 import { withManagementAdditions } from '../../helpers/group-management';
-import { map } from 'rxjs/operators';
 import { RouterLinkActive } from '@angular/router';
+import { mapStateData } from 'src/app/shared/operators/state';
 
 @Component({
   selector: 'alg-group-details',
@@ -11,8 +11,7 @@ import { RouterLinkActive } from '@angular/router';
 })
 export class GroupDetailsComponent {
 
-  state$ = this.groupDataSource.state$;
-  group$ = this.groupDataSource.group$.pipe(map(withManagementAdditions))
+  state$ = this.groupDataSource.state$.pipe(mapStateData(g => withManagementAdditions(g)));
 
   // use of ViewChild required as these elements are shown under some conditions, so may be undefined
   @ViewChild('overviewTab') overviewTab?: RouterLinkActive;

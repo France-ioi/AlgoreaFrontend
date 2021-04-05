@@ -10,7 +10,7 @@ import { Action, parseResults, RequestActionsService } from '../../http-services
 import { GridColumn } from '../../../shared-components/components/grid/grid.component';
 import { merge, of, Subject } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
-import { fetchingState, isReady, readyState } from 'src/app/shared/helpers/state';
+import { fetchingState, readyState } from 'src/app/shared/helpers/state';
 import { MessageService } from 'primeng/api';
 import {
   displayResponseToast,
@@ -63,7 +63,7 @@ export class PendingJoinRequestsComponent implements OnChanges, OnDestroy {
     ).subscribe(
       state => {
         this.state = state.tag;
-        if (isReady(state)) {
+        if (state.isReady) {
           this.requests = state.data;
         }
       },

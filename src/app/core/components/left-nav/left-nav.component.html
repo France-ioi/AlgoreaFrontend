@@ -33,18 +33,18 @@
 </p-tabView>
 
 <p-progressSpinner
-  *ngIf="dataSources[activeTabIndex].state.tag === 'fetching'"
+  *ngIf="dataSources[activeTabIndex].state.isFetching"
   [style]="{width: '3.3333rem', height: '3.3333rem'}"
 ></p-progressSpinner>
 
-<p *ngIf="dataSources[activeTabIndex].state.tag === 'error'" class="error">
+<p *ngIf="dataSources[activeTabIndex].state.isError" class="error">
   <span i18n>Unable to load the list.</span>&nbsp;
   <span (click)="retryError()" class="retry" i18n>Retry now</span>
 </p>
 
 <alg-left-nav-tree
-  *ngIf="dataSources[activeTabIndex].state.tag === 'ready'"
-  [data]="$any(dataSources[activeTabIndex].state).data"
+  *ngIf="dataSources[activeTabIndex].state.isReady"
+  [data]="dataSources[activeTabIndex].state.data"
   [elementType]="$any(['activity', 'skill', 'group'][activeTabIndex])"
 ></alg-left-nav-tree>
 

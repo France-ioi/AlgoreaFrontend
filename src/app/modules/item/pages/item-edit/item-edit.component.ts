@@ -1,9 +1,8 @@
 import { Component, OnDestroy, ViewChild } from '@angular/core';
-import { ItemData, ItemDataSource } from '../../services/item-datasource.service';
+import { ItemDataSource } from '../../services/item-datasource.service';
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { forkJoin, Observable, of, Subscription, throwError } from 'rxjs';
-import { filter, map, switchMap } from 'rxjs/operators';
-import { FetchError, Fetching, isReady, Ready } from '../../../../shared/helpers/state';
+import { map, switchMap } from 'rxjs/operators';
 import { ItemStringChanges, UpdateItemStringService } from '../../http-services/update-item-string.service';
 import { TOAST_LENGTH } from '../../../../shared/constants/global';
 import { MessageService } from 'primeng/api';
@@ -16,6 +15,7 @@ import { PendingChangesComponent } from 'src/app/shared/guards/pending-changes-g
 import { CreateItemService, NewItem } from '../../http-services/create-item.service';
 import { ItemEditAdvancedParametersComponent } from '../item-edit-advanced-parameters/item-edit-advanced-parameters.component';
 import { Mode, ModeService } from 'src/app/shared/services/mode.service';
+import { readyData } from 'src/app/shared/operators/state';
 
 @Component({
   selector: 'alg-item-edit',
@@ -39,8 +39,7 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
   });
   itemChanges: { children?: ChildData[] } = {};
 
-  itemData$ = this.itemDataSource.itemData$;
-  itemLoadingState$ = this.itemDataSource.state$;
+  fetchState$ = this.itemDataSource.state$;
   initialFormData?: Item;
 
   subscription?: Subscription;
@@ -58,11 +57,11 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
     private messageService: MessageService
   ) {
     this.modeService.mode$.next(Mode.Editing);
-    this.subscription = this.itemLoadingState$
-      .pipe(filter<Ready<ItemData> | Fetching | FetchError, Ready<ItemData>>(isReady))
-      .subscribe(state => {
-        this.initialFormData = state.data.item;
-        this.resetFormWith(state.data.item);
+    this.subscription = this.fetchState$
+      .pipe(readyData())
+      .subscribe(data => {
+        this.initialFormData = data.item;
+        this.resetFormWith(data.item);
       });
   }
 

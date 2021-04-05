@@ -3,7 +3,7 @@ import { SortEvent } from 'primeng/api';
 import { merge, of, Subject } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { JoinedGroup, JoinedGroupsService } from 'src/app/core/http-services/joined-groups.service';
-import { fetchingState, isReady, readyState } from 'src/app/shared/helpers/state';
+import { fetchingState, readyState } from 'src/app/shared/helpers/state';
 
 @Component({
   selector: 'alg-joined-group-list',
@@ -30,7 +30,7 @@ export class JoinedGroupListComponent implements OnDestroy, OnInit {
     ).subscribe(
       state => {
         this.state = state.tag;
-        if (isReady(state)) this.data = state.data;
+        if (state.isReady) this.data = state.data;
       },
       _err => this.state = 'error'
     );

@@ -7,7 +7,7 @@ import {
   displayResponseToast,
   processRequestError
 } from 'src/app/modules/group/components/pending-request/pending-request-response-handling';
-import { fetchingState, readyState, isReady } from 'src/app/shared/helpers/state';
+import { fetchingState, readyState } from 'src/app/shared/helpers/state';
 import { GetRequestsService, PendingRequest } from '../../http-services/get-requests.service';
 import { Action, parseResults, RequestActionsService } from '../../http-services/request-actions.service';
 
@@ -46,7 +46,7 @@ export class UserGroupInvitationsComponent implements OnDestroy, OnInit {
     ).subscribe(
       state => {
         this.state = state.tag;
-        if (isReady(state)) {
+        if (state.isReady) {
           this.requests = state.data;
         }
       },

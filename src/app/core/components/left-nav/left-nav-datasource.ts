@@ -1,7 +1,7 @@
 import { concat, EMPTY, Observable, ObservableInput, of, OperatorFunction, Subject } from 'rxjs';
 import { catchError, map, mergeMap, switchMap } from 'rxjs/operators';
 import { repeatLatestWhen } from 'src/app/shared/helpers/repeatLatestWhen';
-import { errorState, FetchError, Fetching, fetchingState, isReady, Ready, readyState } from 'src/app/shared/helpers/state';
+import { errorState, fetchingState, FetchState, readyState } from 'src/app/shared/helpers/state';
 import { RoutedContentInfo } from 'src/app/shared/models/content/content-info';
 import { NavTreeData, NavTreeElement } from '../../services/left-nav-loading/nav-tree-data';
 
@@ -56,9 +56,9 @@ function isDSReplace<T extends NavTreeElement>(change: DataSourceChange<T>): cha
 export abstract class LeftNavDataSource<ContentT extends RoutedContentInfo, MenuT extends NavTreeElement> {
 
   private initialized = false;
-  private contentChanges = new Subject<[content: ContentT|undefined, state: Ready<NavTreeData<MenuT>>|Fetching|FetchError]>();
+  private contentChanges = new Subject<[content: ContentT|undefined, state: FetchState<NavTreeData<MenuT>>]>();
   private retryTrigger = new Subject<void>();
-  state: Ready<NavTreeData<MenuT>>|Fetching|FetchError = fetchingState();
+  state: FetchState<NavTreeData<MenuT>> = fetchingState();
 
   constructor() {
 
@@ -68,7 +68,7 @@ export abstract class LeftNavDataSource<ContentT extends RoutedContentInfo, Menu
 
       mergeMap(([ contentInfo, prevState ]):ObservableInput<DataSourceChange<MenuT>> => {
 
-        if (isReady(prevState)) {
+        if (prevState.isReady) {
           // CASE: the current content is not an item and the menu has already items displayed
           if (!contentInfo) {
             if (prevState.data.selectedElementId !== undefined) return of(dsDeselect());
@@ -126,7 +126,7 @@ export abstract class LeftNavDataSource<ContentT extends RoutedContentInfo, Menu
       next: change => {
         if (isDSLoading(change)) this.state = fetchingState();
         else if (isDSError(change)) this.state = errorState(change.error);
-        else if (isDSUpdate(change) && isReady(this.state)) {
+        else if (isDSUpdate(change) && this.state.isReady) {
           let data = this.state.data;
           if (change.selection === SelectionOpts.Deselected) data = data.withNoSelection();
           if (change.elementId) {

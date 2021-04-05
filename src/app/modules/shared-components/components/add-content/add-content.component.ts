@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Observable, Subscription, merge, of } from 'rxjs';
 import { map, filter, switchMap, delay } from 'rxjs/operators';
-import { fetchingState, readyState, isReady } from 'src/app/shared/helpers/state';
+import { fetchingState, readyState } from 'src/app/shared/helpers/state';
 
 export interface AddedContent<T> {
   id?: string,
@@ -71,7 +71,7 @@ export class AddContentComponent<Type> implements OnInit, OnDestroy {
         ))
       ).subscribe(state => {
         this.state = state.tag;
-        if (isReady(state)) this.resultsFromSearch = state.data;
+        if (state.isReady) this.resultsFromSearch = state.data;
       })
     );
   }

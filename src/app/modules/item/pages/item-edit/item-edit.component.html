@@ -1,7 +1,7 @@
-<ng-container *ngIf="itemLoadingState$ | async as state">
+<ng-container *ngIf="fetchState$ | async as fetchState">
 
-  <div *ngIf="state.tag === 'ready' && (itemData$ | async) as itemData" style="margin: 1rem 0 0.5rem 0">
-    <form [formGroup]="itemForm" *ngIf="['all','all_with_grant'].includes(itemData.item.permissions.can_edit); else notAuthorized">
+  <div *ngIf="fetchState.isReady" style="margin: 1rem 0 0.5rem 0">
+    <form [formGroup]="itemForm" *ngIf="['all','all_with_grant'].includes(fetchState.data.item.permissions.can_edit); else notAuthorized">
 
       <div class="header">
         <alg-input [parentForm]="itemForm" i18n-placeholder placeholder="Item title" name="title" size="large" [isDark]='false'></alg-input>
@@ -33,7 +33,7 @@
         <alg-item-edit-content #content
           *ngIf="rla1.isActive"
           [parentForm]="itemForm"
-          [itemData]="itemData"
+          [itemData]="fetchState.data"
           (childrenChanges)="updateItemChanges($event)"
         >
         </alg-item-edit-content>

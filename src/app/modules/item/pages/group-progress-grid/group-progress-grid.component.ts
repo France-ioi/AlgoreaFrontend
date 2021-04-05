@@ -6,7 +6,7 @@ import { Group } from 'src/app/modules/group/http-services/get-group-by-id.servi
 import { GetGroupChildrenService } from 'src/app/modules/group/http-services/get-group-children.service';
 import { ERROR_MESSAGE } from 'src/app/shared/constants/api';
 import { TOAST_LENGTH } from 'src/app/shared/constants/global';
-import { fetchingState, isReady, readyState } from 'src/app/shared/helpers/state';
+import { fetchingState, readyState } from 'src/app/shared/helpers/state';
 import { formatUser } from 'src/app/shared/helpers/user';
 import { GetGroupDescendantsService } from 'src/app/shared/http-services/get-group-descendants.service';
 import { GetGroupProgressService, TeamUserProgress } from 'src/app/shared/http-services/get-group-progress.service';
@@ -93,7 +93,7 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
       )).subscribe(
       state => {
         this.state = state.tag;
-        if (isReady(state)) this.data = state.data;
+        if (state.isReady) this.data = state.data;
       },
       _err => {
         this.state = 'error';

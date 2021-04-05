@@ -2,11 +2,10 @@ import { Component, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { Subscription } from 'rxjs';
-import { filter } from 'rxjs/operators';
 import { ERROR_MESSAGE } from 'src/app/shared/constants/api';
 import { TOAST_LENGTH } from 'src/app/shared/constants/global';
 import { PendingChangesComponent } from 'src/app/shared/guards/pending-changes-guard';
-import { Ready, Fetching, FetchError, isReady } from 'src/app/shared/helpers/state';
+import { readyData } from 'src/app/shared/operators/state';
 import { Mode, ModeService } from 'src/app/shared/services/mode.service';
 import { Group } from '../../http-services/get-group-by-id.service';
 import { GroupChanges, GroupUpdateService } from '../../http-services/group-update.service';
@@ -40,10 +39,10 @@ export class GroupEditComponent implements OnDestroy, PendingChangesComponent {
     this.modeService.mode$.next(Mode.Editing);
 
     this.subscription = this.state$
-      .pipe(filter<Ready<Group> | Fetching | FetchError, Ready<Group>>(isReady))
-      .subscribe(state => {
-        this.initialFormData = state.data;
-        this.resetFormWith(state.data);
+      .pipe(readyData())
+      .subscribe(item => {
+        this.initialFormData = item;
+        this.resetFormWith(item);
       });
   }
 
