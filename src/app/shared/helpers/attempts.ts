@@ -18,12 +18,12 @@ export function bestAttemptFromResults<T extends Result>(results: T[]): T|null {
 }
 
 interface Item {
-  requires_explicit_entry: boolean
+  requiresExplicitEntry: boolean
   permissions: {
-    can_view: 'none'|'info'|'content'|'content_with_descendants'|'solution',
+    canView: 'none'|'info'|'content'|'content_with_descendants'|'solution',
   }
 }
 
 export function implicitResultStart(item: Item): boolean {
-  return item.permissions.can_view !== 'none' && !item.requires_explicit_entry;
+  return item.permissions.canView !== 'none' && !item.requiresExplicitEntry;
 }

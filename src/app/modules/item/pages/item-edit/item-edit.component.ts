@@ -139,26 +139,26 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
     if (url !== this.initialFormData.url) itemFormValues.url = url;
 
     const usesApi = formControls.usesApi?.value as boolean;
-    if (usesApi !== this.initialFormData.uses_api) itemFormValues.uses_api = usesApi;
+    if (usesApi !== this.initialFormData.usesApi) itemFormValues.uses_api = usesApi;
 
     const textId = formControls.textId?.value as string;
     if (textId !== '') itemFormValues.text_id = textId;
 
     const validationType = formControls.validationType?.value as 'None' | 'All' | 'AllButOne' | 'Categories' | 'One' | 'Manual';
-    if (validationType !== this.initialFormData.validation_type) itemFormValues.validation_type = validationType;
+    if (validationType !== this.initialFormData.validationType) itemFormValues.validation_type = validationType;
 
     const noScore = formControls.noScore?.value as boolean;
-    if (noScore !== this.initialFormData.no_score) itemFormValues.no_score = noScore;
+    if (noScore !== this.initialFormData.noScore) itemFormValues.no_score = noScore;
 
     const titleBarVisible = formControls.titleBarVisible?.value as boolean;
-    if (titleBarVisible !== this.initialFormData.title_bar_visible) itemFormValues.title_bar_visible = titleBarVisible;
+    if (titleBarVisible !== this.initialFormData.titleBarVisible) itemFormValues.title_bar_visible = titleBarVisible;
 
     const promptToJoinGroupByCode = formControls.promptToJoinGroupByCode?.value as boolean;
-    if (promptToJoinGroupByCode !== this.initialFormData.prompt_to_join_group_by_code)
+    if (promptToJoinGroupByCode !== this.initialFormData.promptToJoinGroupByCode)
       itemFormValues.prompt_to_join_group_by_code = promptToJoinGroupByCode;
 
     const fullScreen = formControls.fullScreen?.value as 'forceYes' | 'forceNo' | 'default';
-    if (fullScreen !== this.initialFormData.full_screen) itemFormValues.full_screen = fullScreen;
+    if (fullScreen !== this.initialFormData.fullScreen) itemFormValues.full_screen = fullScreen;
 
     return itemFormValues;
   }
@@ -247,12 +247,12 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
       subtitle: item.string.subtitle || '',
       url: item.url || '',
       text_id: '',
-      uses_api: item.uses_api || false,
-      validation_type: item.validation_type,
-      no_score: item.no_score,
-      title_bar_visible: item.title_bar_visible || false,
-      prompt_to_join_group_by_code: item.prompt_to_join_group_by_code || false,
-      full_screen: item.full_screen,
+      uses_api: item.usesApi || false,
+      validation_type: item.validationType,
+      no_score: item.noScore,
+      title_bar_visible: item.titleBarVisible || false,
+      prompt_to_join_group_by_code: item.promptToJoinGroupByCode || false,
+      full_screen: item.fullScreen,
     });
 
     this.itemChanges = {};

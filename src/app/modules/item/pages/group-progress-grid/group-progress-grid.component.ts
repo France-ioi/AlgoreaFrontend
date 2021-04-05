@@ -175,7 +175,7 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
           ),
         })),
         can_access: (this.group?.current_user_can_grant_group_access
-          && this.itemData?.item.permissions.can_grant_view !== 'none') || false,
+          && this.itemData?.item.permissions.canGrantView !== 'none') || false,
       }))
     );
   }
