@@ -18,7 +18,13 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/top-right-controls/top-right-controls.component.html</context><context context-type="linenumber">7</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/components/top-right-controls/top-right-controls.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="e9935669cab3ea24d8ffde4dc934776f3cbb2a20" datatype="html">
         <source>Algorea Platform</source><target state="translated">Plateforme Algoréa</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-header/left-header.component.html</context><context context-type="linenumber">8</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-header/left-header.component.html</context><context context-type="linenumber">8</context></context-group></trans-unit><trans-unit id="b23a27ad3c9262b6d27dab068f498fa21abe4546" datatype="html">
+        <source>My groups</source><target state="translated">Mes groupes</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/components/left-nav-tree/left-nav-tree.component.html</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="d40be96e67cb8f0e8d69f1ecfd8f2b2d536073a6" datatype="html">
         <source>There is no content to display</source><target state="translated">Il n'y a rien à afficher</target>
         
