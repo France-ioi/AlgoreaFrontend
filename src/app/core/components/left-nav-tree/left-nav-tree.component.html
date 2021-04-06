@@ -7,6 +7,13 @@
   <span class="tree-header-title">{{ data.parent.title }}</span>
 </div>
 
+<div class="tree-header" *ngIf="!data?.parent && elementType === 'group'" [routerLink]="['groups', 'mine']" routerLinkActive="selected-header">
+  <span class="tree-header-mygroups">
+    <i class="fa fa-users"></i>
+  </span>
+  <span class="tree-header-title">My groups</span>
+</div>
+
 <p-tree [value]="nodes" i18n-emptyMessage emptyMessage="There is no content to display">
 
   <!-- "chapter" type -->
