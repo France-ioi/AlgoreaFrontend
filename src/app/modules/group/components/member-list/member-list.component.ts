@@ -8,7 +8,7 @@ import { GetGroupDescendantsService } from 'src/app/shared/http-services/get-gro
 import { Group } from '../../http-services/get-group-by-id.service';
 import { GetGroupChildrenService, GroupChild } from '../../http-services/get-group-children.service';
 import { GetGroupMembersService, Member } from '../../http-services/get-group-members.service';
-import { TypeFilter, Filter, GroupCompositionFilterComponent } from '../group-composition-filter/group-composition-filter.component';
+import { Filter, GroupCompositionFilterComponent } from '../group-composition-filter/group-composition-filter.component';
 
 interface Column {
   sortable?: boolean,
@@ -59,7 +59,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
 
   state: 'error' | 'ready' | 'fetching' = 'fetching';
 
-  defaultFilter: Filter = { type: TypeFilter.Users, directChildren: true };
+  defaultFilter: Filter = { type: 'users', directChildren: true };
 
   currentSort: string[] = [];
   currentFilter: Filter = this.defaultFilter;
@@ -113,19 +113,19 @@ export class MemberListComponent implements OnChanges, OnDestroy {
 
   getData(groupId: string, filter: Filter, sort: string[]): Observable<Data> {
     switch (filter.type) {
-      case TypeFilter.Groups:
+      case 'groups':
         return this.getGroupChildrenService.getGroupChildren(groupId, sort, [], [ 'Team', 'Session', 'User' ])
           .pipe(map(children => ({
             columns: groupsColumns,
             rowData: children
           })));
-      case TypeFilter.Sessions:
+      case 'sessions':
         return this.getGroupChildrenService.getGroupChildren(groupId, sort, [ 'Session' ])
           .pipe(map(children => ({
             columns: nameUserCountColumns,
             rowData: children,
           })));
-      case TypeFilter.Teams:
+      case 'teams':
         if (!filter.directChildren) {
           return this.getGroupDescendantsService.getTeamDescendants(groupId, sort)
             .pipe(map(descendantTeams => ({
@@ -143,7 +143,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
               rowData: children,
             })));
         }
-      case TypeFilter.Users:
+      case 'users':
         if (filter.directChildren) {
           return this.getGroupMembersService.getGroupMembers(groupId, sort)
             .pipe(map(members => ({ columns: usersColumns, rowData: members })));
@@ -186,4 +186,6 @@ export class MemberListComponent implements OnChanges, OnDestroy {
     this.compositionFilter?.setFilter(filter);
     this.onFilterChange(filter);
   }
+
+  onRemove(): void {}
 }

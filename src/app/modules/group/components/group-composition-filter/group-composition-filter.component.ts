@@ -1,11 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
-export enum TypeFilter {
-  Groups,
-  Sessions,
-  Teams,
-  Users,
-}
+export type TypeFilter = 'groups' | 'sessions' | 'teams' | 'users';
 
 export interface Filter {
   directChildren: boolean,
@@ -23,7 +18,7 @@ export class GroupCompositionFilterComponent implements OnInit{
 
   @Output() change = new EventEmitter<Filter>();
 
-  value: Filter = { type: TypeFilter.Users, directChildren: true };
+  value: Filter = { type: 'users', directChildren: true };
 
   selectedChildrenFilter = 0;
   selectedTypeFilter = 0;
@@ -39,39 +34,39 @@ export class GroupCompositionFilterComponent implements OnInit{
     },
   ];
 
-  readonly allDescendantsTypeFilters = [
+  readonly allDescendantsTypeFilters: { icon: string, label: string, value: TypeFilter }[] = [
     {
       icon: 'fa fa-users',
       label: $localize`teams`,
-      value: TypeFilter.Teams
+      value: 'teams'
     },
     {
       icon: 'fa fa-user',
       label: $localize`users`,
-      value: TypeFilter.Users
+      value: 'users'
     },
   ];
 
-  readonly directChildrenTypeFilters = [
+  readonly directChildrenTypeFilters: { icon: string, label: string, value: TypeFilter }[] = [
     {
       icon: 'fa fa-users',
       label: $localize`sub-groups`,
-      value: TypeFilter.Groups
+      value: 'groups'
     },
     {
       icon: 'fa fa-calendar',
       label: $localize`sessions`,
-      value: TypeFilter.Sessions
+      value: 'sessions'
     },
     {
       icon: 'fa fa-users',
       label: $localize`teams`,
-      value: TypeFilter.Teams
+      value: 'teams'
     },
     {
       icon: 'fa fa-user',
       label: $localize`users`,
-      value: TypeFilter.Users
+      value: 'users'
     },
   ];
 
@@ -106,7 +101,7 @@ export class GroupCompositionFilterComponent implements OnInit{
 
     const typeFilters = this.value.directChildren ? this.directChildrenTypeFilters : this.allDescendantsTypeFilters;
     this.selectedTypeFilter = typeFilters.findIndex(typeFilter => typeFilter.value ===
-      (this.value.type === TypeFilter.Teams ? TypeFilter.Teams : TypeFilter.Users));
+      (this.value.type === 'teams' ? 'teams' : 'users'));
     this.value.type = typeFilters[this.selectedTypeFilter].value;
 
     this.change.emit(this.value);

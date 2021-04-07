@@ -4,7 +4,6 @@ import { forkJoin, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { ERROR_MESSAGE } from 'src/app/shared/constants/api';
 import { TOAST_LENGTH } from 'src/app/shared/constants/global';
-import { TypeFilter } from '../../components/group-composition-filter/group-composition-filter.component';
 import { MemberListComponent } from '../../components/member-list/member-list.component';
 import { ManagementAdditions, withManagementAdditions } from '../../helpers/group-management';
 import { Group } from '../../http-services/get-group-by-id.service';
@@ -55,7 +54,7 @@ export class GroupCompositionComponent implements OnChanges {
     }).pipe(switchMap(ids => this.groupCreationService.addSubgroup(ids.parentGroupId, ids.childGroupId))).subscribe(
       _ => {
         this.displaySuccess($localize`Group successfully added as child group`);
-        this.memberList?.setFilter({ directChildren: true, type: TypeFilter.Groups });
+        this.memberList?.setFilter({ directChildren: true, type: 'groups' });
         this.state = 'ready';
       },
       _err => {
