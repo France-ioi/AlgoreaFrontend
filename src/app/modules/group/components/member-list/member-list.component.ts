@@ -1,10 +1,10 @@
 import { Component, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild } from '@angular/core';
 import { SortEvent } from 'primeng/api';
 import { Table } from 'primeng/table';
-import { merge, Observable, of, Subject } from 'rxjs';
-import { catchError, delay, map, switchMap } from 'rxjs/operators';
-import { errorState, fetchingState, readyState } from 'src/app/shared/helpers/state';
+import { Observable, Subject } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 import { GetGroupDescendantsService } from 'src/app/shared/http-services/get-group-descendants.service';
+import { mapToFetchState } from 'src/app/shared/operators/state';
 import { Group } from '../../http-services/get-group-by-id.service';
 import { GetGroupChildrenService, GroupChild } from '../../http-services/get-group-children.service';
 import { GetGroupMembersService, Member } from '../../http-services/get-group-members.service';
@@ -64,6 +64,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
   currentSort: string[] = [];
   currentFilter: Filter = this.defaultFilter;
 
+  selection: Member[] = [];
   data: Data = {
     columns: [],
     rowData: [],
@@ -80,15 +81,8 @@ export class MemberListComponent implements OnChanges, OnDestroy {
     private getGroupDescendantsService: GetGroupDescendantsService,
   ) {
     this.dataFetching.pipe(
-      delay(0),
-      switchMap(params =>
-        merge(
-          of(fetchingState()),
-          this.getData(params.groupId, params.filter, params.sort).pipe(
-            map(readyState),
-            catchError(err => of(errorState(err))),
-          )
-        ))
+      switchMap(params => this.getData(params.groupId, params.filter, params.sort)),
+      mapToFetchState(),
     ).subscribe(
       state => {
         this.state = state.tag;
@@ -187,5 +181,12 @@ export class MemberListComponent implements OnChanges, OnDestroy {
     this.onFilterChange(filter);
   }
 
-  onRemove(): void {}
+  onRemove(): void {
+    if (this.selection.length === 0 || !this.group) return;
+
+    //TODO Remove users
+
+    this.table?.clear();
+    this.dataFetching.next({ groupId: this.group.id, filter: this.currentFilter, sort: this.currentSort });
+  }
 }

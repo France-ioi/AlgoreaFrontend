@@ -59,6 +59,48 @@
         text-align: center;
         font-size: medium;
       }
+
+    }
+
+    .p-datatable-footer {
+      border: none;
+
+      .footer {
+        background-color: white;
+        height: 5rem;
+        margin-bottom: -1.5rem;
+        text-align: left;
+        display: flex;
+        align-items: center;
+
+        .select-all {
+          margin-left: 2.7rem;
+          color: #9B9B9B;
+          flex: 1;
+          font-size: 1.2rem;
+        }
+
+        .export-tools {
+          display: flex;
+          align-items: center;
+          color: $base-color;
+          font-size: 1.2rem;
+
+          .button {
+            margin-right: 1rem;
+            cursor: pointer;
+
+            span {
+              margin-right: 1rem;
+            }
+          }
+
+          .disabled {
+            color: $light-text-color;;
+            cursor: default;
+          }
+        }
+      }
     }
   }
 
