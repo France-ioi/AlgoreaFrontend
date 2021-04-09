@@ -2,14 +2,14 @@
   <div class="task-header">
     <alg-score-ring
       *ngIf="itemData.item.type !== 'Skill' && itemData.currentResult"
-      [bestScore]="itemData.item.best_score"
+      [bestScore]="itemData.item.bestScore"
       [currentScore]="itemData.currentResult.score"
       [isValidated]="itemData.currentResult.validated"
       [diameter]="70"
     ></alg-score-ring>
     <alg-skill-progress
       *ngIf="itemData.item.type === 'Skill' && itemData.currentResult"
-      [bestScore]="itemData.item.best_score"
+      [bestScore]="itemData.item.bestScore"
       [currentScore]="itemData.currentResult.score"
     ></alg-skill-progress>
     <div class="task-title">
@@ -17,7 +17,7 @@
       <span *ngIf="itemData.item.string.subtitle">{{itemData.item.string.subtitle}}</span>
     </div>
     <alg-page-navigator
-      *ngIf="itemData.item.permissions.can_edit !== 'none'"
+      *ngIf="itemData.item.permissions.canEdit !== 'none'"
       [allowFullScreen]="false"
       navigationMode="nextAndPrev"
       (edit)="onEditButtonClicked()"

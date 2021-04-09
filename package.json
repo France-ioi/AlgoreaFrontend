@@ -39,6 +39,8 @@
     "@fortawesome/free-solid-svg-icons": "^5.13.0",
     "@ngrx/component": "^10.0.1",
     "@tinymce/tinymce-angular": "^4.0.0",
+    "fp-ts": "^2.9.5",
+    "io-ts": "^2.2.16",
     "ng-click-outside": "^6.0.0",
     "ngx-perfect-scrollbar": "^8.0.0",
     "primeicons": "^4.0",

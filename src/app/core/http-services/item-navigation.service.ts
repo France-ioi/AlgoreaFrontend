@@ -3,7 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { bestAttemptFromResults } from 'src/app/shared/helpers/attempts';
-import { canCurrentUserViewItemContent } from 'src/app/modules/item/helpers/item-permissions';
 import { isRouteWithAttempt, ItemRoute } from 'src/app/shared/routing/item-route';
 import { appConfig } from 'src/app/shared/helpers/config';
 import { isASkill, isSkill, ItemType, ItemTypeCategory } from 'src/app/shared/helpers/item-type';
@@ -129,7 +128,7 @@ function createNavMenuItem(raw: {
     title: raw.string.title ?? '',
     hasChildren: raw.has_visible_children,
     attemptId: currentResult?.attemptId ?? null,
-    canViewContent: canCurrentUserViewItemContent(raw),
+    canViewContent: [ 'content','content_with_descendants','solution' ].includes(raw.permissions.can_view),
     bestScore: raw.no_score ? undefined : raw.best_score,
     currentScore: raw.no_score ? undefined : currentResult?.score,
     validated: raw.no_score ? undefined : currentResult?.validated,
@@ -167,7 +166,7 @@ export class ItemNavigationService {
           parent: {
             id: data.id,
             title: data.string.title ?? '',
-            canViewContent: canCurrentUserViewItemContent(data),
+            canViewContent: [ 'content','content_with_descendants','solution' ].includes(data.permissions.can_view),
             hasChildren: data.children !== null && data.children.length > 0,
             attemptId: data.attempt_id,
           },
