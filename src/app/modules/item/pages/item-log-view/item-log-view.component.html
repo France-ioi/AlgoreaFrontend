@@ -1,9 +1,53 @@
 <ng-container *ngIf="state$ | async as state">
-  <p i18n>Log view</p>
-
   <p-progressSpinner *ngIf="state.isFetching" [style]="{width: '3.3333rem', height: '3.3333rem'}"></p-progressSpinner>
 
-  <p *ngIf="state.isError" i18n>Unable to load the recent activity</p>
+  <p *ngIf="state.isError" class="error-message">
+    <i class="fa fa-exclamation-triangle"></i>
+    <span i18n>Unable to load the recent activity</span>
+  </p>
 
-  <p *ngIf="state.isReady">Loaded {{ state.data.length }} results</p>
+  <ng-container *ngIf="state.isReady">
+      <p-table #table
+               [columns]="state.data.columns"
+               [value]="state.data.rowData">
+
+        <ng-template pTemplate="header" let-rowData let-columns>
+          <tr *ngIf="rowData.length > 0">
+            <ng-container *ngFor="let col of columns">
+              <th>
+                <div class="header-container">
+                  {{ col.header }}
+                </div>
+              </th>
+            </ng-container>
+          </tr>
+        </ng-template>
+
+        <ng-template
+            pTemplate="body"
+            let-rowData
+            let-columns="columns"
+        >
+          <tr>
+            <td *ngFor="let col of columns">
+              <ng-container [ngSwitch]="col.field">
+                <ng-container *ngSwitchCase="'activity_type'">
+                  {{ rowData.activity_type }}
+                </ng-container>
+                <ng-container *ngSwitchCase="'item.string.title'">
+                  <a [routerLink]="" (click)="navigateToItem(rowData)">{{ rowData.item.string.title }}</a>
+                </ng-container>
+                <ng-container *ngSwitchCase="'at'">
+                  {{ rowData.at | date:'short' }}
+                </ng-container>
+                <ng-container *ngSwitchDefault>
+                  {{ rowData[col.field] }}
+                </ng-container>
+              </ng-container>
+            </td>
+          </tr>
+        </ng-template>
+
+      </p-table>
+  </ng-container>
 </ng-container>
