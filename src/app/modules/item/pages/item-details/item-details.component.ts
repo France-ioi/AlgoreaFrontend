@@ -12,7 +12,7 @@ import { mapStateData } from 'src/app/shared/operators/state';
 export class ItemDetailsComponent {
 
   itemLoadingstate$ = this.itemDataSource.state$.pipe(
-    mapStateData(data => ({ ...data, showAccessCodeField: data.item.prompt_to_join_group_by_code &&
+    mapStateData(data => ({ ...data, showAccessCodeField: data.item.promptToJoinGroupByCode &&
       !canCurrentUserViewItemContent(data.item) && !this.userService.isCurrentUserTemp() }))
   );
 
