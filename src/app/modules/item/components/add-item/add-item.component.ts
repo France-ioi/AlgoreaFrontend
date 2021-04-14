@@ -2,28 +2,8 @@ import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from
 import { Observable } from 'rxjs';
 import { NewContentType, AddedContent } from 'src/app/modules/shared-components/components/add-content/add-content.component';
 import { ItemType } from 'src/app/shared/helpers/item-type';
+import { getAllowedNewItemTypes } from 'src/app/shared/helpers/new-item-types';
 import { ItemFound, SearchItemService } from '../../http-services/search-item.service';
-
-const allowedNewItemTypes: NewContentType<ItemType>[] = [
-  {
-    type: 'Chapter',
-    icon: 'fa fa-book',
-    title: $localize`Chapter`,
-    description: $localize`A new folder which can contain any activities.`,
-  },
-  {
-    type: 'Task',
-    icon: 'fa fa-code',
-    title: $localize`Task`,
-    description: $localize`A new task which users can try to solve.`,
-  },
-  {
-    type: 'Skill',
-    icon: 'fa fa-graduation-cap',
-    title: $localize`Skill`,
-    description: $localize`A new sub-skill.`,
-  },
-];
 
 @Component({
   selector: 'alg-add-item',
@@ -36,7 +16,7 @@ export class AddItemComponent implements OnChanges {
   @Output() contentAdded = new EventEmitter<AddedContent<ItemType>>();
 
   allowedNewItemTypes: NewContentType<ItemType>[] = [];
-  itemsFound: ItemFound[] = [];
+  itemsFound: ItemFound<ItemType>[] = [];
   state: 'loading' | 'ready' = 'loading';
 
   searchFunction = (value: string): Observable<AddedContent<ItemType>[]> =>
@@ -47,7 +27,7 @@ export class AddItemComponent implements OnChanges {
   ) {}
 
   ngOnChanges(_changes: SimpleChanges): void {
-    this.allowedNewItemTypes = this.allowSkills ? allowedNewItemTypes : allowedNewItemTypes.slice(0, -1);
+    this.allowedNewItemTypes = getAllowedNewItemTypes(this.allowSkills);
   }
 
   addChild(item: AddedContent<ItemType>): void {

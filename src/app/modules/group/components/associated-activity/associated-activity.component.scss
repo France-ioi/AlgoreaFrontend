@@ -21,9 +21,11 @@ alg-section {
       color: $base-color;
       cursor: pointer;
 
-      .fa {
-        padding-left: 1rem;
-      }
+    }
+
+    .fa {
+      padding-left: 1rem;
+      padding-right: 1rem;
     }
 
     .activity-name {
@@ -33,10 +35,13 @@ alg-section {
       text-overflow: ellipsis;
       font-family: "titillium", sans-serif;
       font-weight: 100;
-      cursor: pointer;
 
-      &:hover {
-        color: $base-color;
+      &.clickable {
+        cursor: pointer;
+
+        &:hover {
+          color: $base-color;
+        }
       }
     }
   }

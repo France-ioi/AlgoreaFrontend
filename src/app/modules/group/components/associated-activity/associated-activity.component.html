@@ -1,26 +1,50 @@
-<alg-section i18n-label label="Associated Activity" icon="fa fa-book">
+<ng-container *ngIf="state$ | async as state">
+  <alg-section i18n-label label="Associated Activity" icon="fa fa-book">
 
-  <p-progressSpinner *ngIf="state === 'fetching'"></p-progressSpinner>
+    <p-progressSpinner *ngIf="state.isFetching"></p-progressSpinner>
 
-  <p *ngIf="state === 'error'" class="error-message">
-    <i class="fa fa-exclamation-triangle"></i>
-    <span i18n>Error while loading the root activity</span>
-  </p>
+    <p *ngIf="state.isError" class="error-message">
+      <i class="fa fa-exclamation-triangle"></i>
+      <span i18n>Error while loading the root activity</span>
+    </p>
 
-  <ng-container *ngIf="state === 'ready'">
-    <div class="activity" *ngIf="rootActivity !== null; else noRootActivity">
-      <span class="activity-name" [routerLink]="rootActivity.path">
-        {{rootActivity.name}}
-      </span>
-      <span class="remove" (click)="onRemove()">
-        <span i18n>Remove</span>
-        <i class="fa fa-trash-alt"></i>
-      </span>
-    </div>
+    <ng-container *ngIf="state.isReady">
+      <ng-container [ngSwitch]="state.data.tag">
 
-    <ng-template #noRootActivity>
-      <span i18n>No Root Activity</span>
-    </ng-template>
+        <ng-container *ngSwitchCase="'no-activity'">
+          <p>There are currently no activities associated with this group.</p>
+          <alg-add-content
+            [allowedTypesForNewContent]="allowedNewItemTypes"
+            [searchFunction]="searchFunction"
+            (contentAdded)="setRootActivity($event)"
+            i18n-selectExistingText selectExistingText="Select"
+          ></alg-add-content>
+        </ng-container>
 
-  </ng-container>
-</alg-section>
+        <div class="activity" *ngSwitchCase="'new-activity'">
+          <span class="activity-name">
+            {{state.data.name}}
+          </span>
+          <span class="remove" (click)="onRemove()">
+            <span i18n>Remove</span>
+            <i class="fa fa-trash-alt"></i>
+          </span>
+        </div>
+
+        <div class="activity" *ngSwitchCase="'existing-activity'">
+          <!--When rootActivity is an existing activity, rootActivityData is not null-->
+          <i class="fa fa-lock" *ngIf="!state.data.path"></i>
+          <span class="activity-name"
+            [routerLink]="state.data.path"
+            [ngClass]="{clickable: !!state.data.path}"
+          >{{state.data.name}}</span>
+          <span class="remove" (click)="onRemove()">
+            <span i18n>Remove</span>
+            <i class="fa fa-trash-alt"></i>
+          </span>
+        </div>
+
+      </ng-container>
+    </ng-container>
+  </alg-section>
+</ng-container>

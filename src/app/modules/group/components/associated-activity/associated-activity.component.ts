@@ -1,13 +1,16 @@
-import { Component, forwardRef, OnDestroy } from '@angular/core';
+import { Component, forwardRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { merge, of } from 'rxjs';
-import { Subject } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { Observable, of, ReplaySubject } from 'rxjs';
+import { catchError, distinct, map, switchMap } from 'rxjs/operators';
 import { GetItemByIdService } from 'src/app/modules/item/http-services/get-item-by-id.service';
 import { incompleteItemStringUrl } from 'src/app/shared/routing/item-route';
-import { fetchingState, readyState } from 'src/app/shared/helpers/state';
-
-type ActivityId = string;
+import { SearchItemService } from 'src/app/modules/item/http-services/search-item.service';
+import { AddedContent } from 'src/app/modules/shared-components/components/add-content/add-content.component';
+import { ActivityType } from 'src/app/shared/helpers/item-type';
+import { allowedNewActivityTypes } from 'src/app/shared/helpers/new-item-types';
+import { NoActivity, NewActivity, ExistingActivity, isActivityFound, isExistingActivity, isNewActivity } from './associated-activity-types';
+import { errorIsHTTPForbidden } from 'src/app/shared/helpers/errors';
+import { mapToFetchState } from 'src/app/shared/operators/state';
 
 @Component({
   selector: 'alg-associated-activity',
@@ -21,57 +24,60 @@ type ActivityId = string;
     }
   ]
 })
-export class AssociatedActivityComponent implements OnDestroy, ControlValueAccessor {
+export class AssociatedActivityComponent implements ControlValueAccessor {
 
-  rootActivity: null|{
-    id: ActivityId,
-    name: string|null,
-    path: string,
-  } = null;
+  readonly allowedNewItemTypes = allowedNewActivityTypes;
 
-  state: 'fetching'|'ready'|'error' = 'fetching';
+  private readonly activityChanges$ = new ReplaySubject<{
+    activity: NoActivity|NewActivity|(ExistingActivity&{ name?: string }),
+    triggerChange: boolean,
+  }>();
 
-  private activityChanges = new Subject<{id: ActivityId|null, triggerChange: boolean}>();
+  readonly state$ = this.activityChanges$.pipe(
+    distinct(),
+    switchMap(data => {
+      if (data.triggerChange) this.onChange(data.activity);
 
-  private onChange: (value: ActivityId|null) => void = () => {};
+      if (!isExistingActivity(data.activity)) {
+        return of({
+          tag: data.activity.tag, id: undefined, path: null,
+          name: isNewActivity(data.activity) ? data.activity.name : undefined
+        });
+      }
+
+      const id = data.activity.id;
+      const name = data.activity.name !== undefined ? of(data.activity.name) :
+        this.getItemByIdService.get(id).pipe(map(item => item.string.title));
+
+      return name.pipe(
+        map(name => ({ tag: 'existing-activity', id: id, name, path: incompleteItemStringUrl(id, 'activity') })),
+        catchError(err => {
+          if (errorIsHTTPForbidden(err)) return of({
+            tag: 'existing-activity', name: $localize`You don't have access to this activity.`, path: null
+          });
+          throw err;
+        })
+      );
+    }),
+    mapToFetchState(),
+  );
+
+  private onChange: (value: NoActivity|NewActivity|ExistingActivity) => void = () => {};
+
+  searchFunction = (value: string): Observable<AddedContent<ActivityType>[]> =>
+    this.searchItemService.search(value, [ 'Chapter', 'Course', 'Task' ])
+      .pipe(map(items => items.filter(isActivityFound)));
 
   constructor(
     private getItemByIdService: GetItemByIdService,
-  ) {
-    this.activityChanges.pipe(
-      switchMap(data => {
-        const id = data.id;
-        if (id === null) return of(readyState({ activity: null, triggerChange: data.triggerChange }));
-        return merge(
-          of(fetchingState()),
-          this.getItemByIdService.get(id).pipe(map(item => readyState({
-            triggerChange: data.triggerChange,
-            activity: {
-              id: id,
-              name: item.string.title,
-              path: incompleteItemStringUrl(id)
-            }
-          }))),
-        );
-      })
-    ).subscribe(state => {
-      this.state = state.tag;
-      if (state.isReady) {
-        this.rootActivity = state.data.activity;
-        if (state.data.triggerChange) this.onChange(this.rootActivity === null ? null : this.rootActivity.id);
-      }
-    });
+    private searchItemService: SearchItemService,
+  ) { }
+
+  writeValue(rootActivity: NoActivity|NewActivity|ExistingActivity): void {
+    this.activityChanges$.next({ activity: rootActivity, triggerChange: false });
   }
 
-  ngOnDestroy(): void {
-    this.activityChanges.complete();
-  }
-
-  writeValue(rootActivityId: ActivityId|null): void {
-    this.activityChanges.next({ id: rootActivityId, triggerChange: false });
-  }
-
-  registerOnChange(fn: (value: ActivityId|null) => void): void {
+  registerOnChange(fn: (value: NoActivity|NewActivity|ExistingActivity) => void): void {
     this.onChange = fn;
   }
 
@@ -79,7 +85,16 @@ export class AssociatedActivityComponent implements OnDestroy, ControlValueAcces
   }
 
   onRemove(): void {
-    if (this.rootActivity === null || this.state !== 'ready') throw new Error('Unexpected: tried to remove root activity when not ready');
-    this.activityChanges.next({ id: null, triggerChange: true });
+    this.activityChanges$.next({
+      activity: { tag: 'no-activity' }, triggerChange: true });
+  }
+
+  setRootActivity(activity: AddedContent<ActivityType>): void {
+    this.activityChanges$.next({
+      activity: activity.id !== undefined ?
+        { tag: 'existing-activity', id: activity.id, name: activity.title } :
+        { tag: 'new-activity', name: activity.title, activityType: activity.type },
+      triggerChange: true
+    });
   }
 }

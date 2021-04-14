@@ -1,6 +1,7 @@
-<alg-add-content
-  [allowedTypesForNewContent]="allowedNewItemTypes"
-  [searchFunction]="searchFunction"
-  (contentAdded)="addChild($event)"
-  i18n-title title="Add a content"
-></alg-add-content>
+<alg-sub-section icon="sign-in-alt" i18n-label label="Add a content">
+  <alg-add-content
+    [allowedTypesForNewContent]="allowedNewItemTypes"
+    [searchFunction]="searchFunction"
+    (contentAdded)="addChild($event)"
+  ></alg-add-content>
+</alg-sub-section>

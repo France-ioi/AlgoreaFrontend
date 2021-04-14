@@ -1,5 +1,6 @@
 
-export type ItemType = 'Chapter'|'Task'|'Course'|'Skill';
+export type ActivityType = 'Chapter'|'Task'|'Course';
+export type ItemType = ActivityType|'Skill';
 export type ItemTypeCategory = 'activity'|'skill';
 interface ItemWithType { type: ItemType }
 

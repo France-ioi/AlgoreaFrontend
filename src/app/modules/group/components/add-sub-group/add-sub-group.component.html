@@ -1,7 +1,8 @@
-<alg-add-content
-  [allowedTypesForNewContent]="allowedNewGroupTypes"
-  [searchFunction]="searchFunction"
-  (contentAdded)="addChild($event)"
-  i18n-title title="Add subgroups"
-  [loading]="loading"
-></alg-add-content>
+<alg-sub-section icon="sign-in-alt" i18n-label label="Add subgroups">
+  <alg-add-content
+    [allowedTypesForNewContent]="allowedNewGroupTypes"
+    [searchFunction]="searchFunction"
+    (contentAdded)="addChild($event)"
+    [loading]="loading"
+  ></alg-add-content>
+</alg-sub-section>
