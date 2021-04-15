@@ -32,7 +32,7 @@
             <td *ngFor="let col of columns">
               <ng-container [ngSwitch]="col.field">
                 <ng-container *ngSwitchCase="'activity_type'">
-                  {{ rowData.activity_type }}
+                  {{ rowData.activity_type | logActionDisplay : rowData.score }}
                 </ng-container>
                 <ng-container *ngSwitchCase="'item.string.title'">
                   <a [routerLink]="" (click)="navigateToItem(rowData)">{{ rowData.item.string.title }}</a>

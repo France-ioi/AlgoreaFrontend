@@ -46,6 +46,7 @@ export interface ActivityLog {
     name: string,
     type: 'Team'|'User',
   },
+  score?: number,
 }
 
 @Injectable({
@@ -68,6 +69,7 @@ export class ActivityLogService {
           activity_type: d.activity_type,
           item: d.item,
           participant: d.participant,
+          score: d.score
         })))
       );
   }

@@ -56,6 +56,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { ProgressSectionComponent } from './components/progress-section/progress-section.component';
 import { BooleanSectionComponent } from './components/progress-section/boolean-section/boolean-section.component';
 import { DropdownComponent } from './components/dropdown/dropdown.component';
+import { LogActionDisplay } from '../../shared/pipes/logActionDisplay';
 
 @NgModule({
   declarations: [
@@ -81,6 +82,7 @@ import { DropdownComponent } from './components/dropdown/dropdown.component';
     ProgressLevelComponent,
     FormErrorComponent,
     UserPipe,
+    LogActionDisplay,
     SubSectionComponent,
     AddContentComponent,
     FloatingSaveComponent,
@@ -147,6 +149,7 @@ import { DropdownComponent } from './components/dropdown/dropdown.component';
     ProgressLevelComponent,
     FormErrorComponent,
     UserPipe,
+    LogActionDisplay,
     SubSectionComponent,
     AddContentComponent,
     FloatingSaveComponent,

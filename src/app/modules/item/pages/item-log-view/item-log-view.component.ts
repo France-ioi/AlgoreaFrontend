@@ -7,9 +7,9 @@ import { mapToFetchState } from 'src/app/shared/operators/state';
 import { Table } from 'primeng/table';
 import { Router } from '@angular/router';
 import { incompleteItemStringUrl } from 'src/app/shared/routing/item-route';
+import { typeCategoryOfItem } from 'src/app/shared/helpers/item-type';
 
 interface Column {
-  sortable?: boolean,
   field: string,
   header: string
 }
@@ -17,21 +17,21 @@ interface Column {
 const logColumns: Column[] = [
   {
     field: 'activity_type',
-    header: 'Action'
+    header: $localize`Action`
   },
   {
     field: 'item.string.title',
-    header: 'Content'
+    header: $localize`Content`
   },
   {
     field: 'at',
-    header: 'Time'
+    header: $localize`Time`
   }
 ];
 
 interface Data {
   columns: Column[],
-  rowData: any | ActivityLog[]
+  rowData: ActivityLog[]
 }
 
 @Component({
@@ -71,7 +71,8 @@ export class ItemLogViewComponent implements OnChanges {
   }
 
   navigateToItem(log: ActivityLog): void {
-    void this.router.navigateByUrl(incompleteItemStringUrl(log.item.id));
+    const itemTypeCategory = typeCategoryOfItem(log.item);
+    void this.router.navigateByUrl(incompleteItemStringUrl(log.item.id, itemTypeCategory));
   }
 
 }
