@@ -1,45 +1,31 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { appConfig } from 'src/app/shared/helpers/config';
-import { ItemType } from 'src/app/shared/helpers/item-type';
-import { ItemPermissionsInfo } from '../helpers/item-permissions';
+import { permissionsDecoder } from '../helpers/item-permissions';
+import * as D from 'io-ts/Decoder';
+import { dateDecoder } from 'src/app/shared/helpers/decoders';
+import { decodeSnakeCase } from 'src/app/shared/operators/decode';
 
-interface RawItemParent extends ItemPermissionsInfo {
-  id: string,
-  best_score: number,
-  string: {
-    title: string|null,
-  },
-  category: 'Undefined'|'Discovery'|'Application'|'Validation'|'Challenge',
-  type: ItemType,
-  result: {
-    attempt_id: string,
-    latest_activity_at: string,
-    started_at: string|null,
-    score_computed: number,
-    validated: boolean,
-  },
-}
+const itemParentDecoder = D.struct({
+  id: D.string,
+  bestScore: D.number,
+  string: D.struct({
+    title: D.nullable(D.string),
+  }),
+  category: D.literal('Undefined', 'Discovery', 'Application', 'Validation', 'Challenge'),
+  type: D.literal('Chapter','Task','Course','Skill'),
+  permissions: permissionsDecoder,
+  result: D.struct({
+    attemptId: D.string,
+    latestActivityAt: dateDecoder,
+    startedAt: D.nullable(dateDecoder),
+    scoreComputed: D.number,
+    validated: D.boolean,
+  })
+});
 
-export interface ItemParent extends ItemPermissionsInfo {
-  id: string,
-  bestScore: number,
-  string: {
-    title: string|null,
-  },
-  category: 'Undefined'|'Discovery'|'Application'|'Validation'|'Challenge',
-  type: ItemType,
-  result: {
-    attempt_id: string,
-    latestActivityAt: Date,
-    startedAt: Date|null,
-    score: number,
-    validated: boolean,
-  },
-}
-
+export type ItemParent = D.TypeOf<typeof itemParentDecoder>;
 
 @Injectable({
   providedIn: 'root'
@@ -52,23 +38,9 @@ export class GetItemParentsService {
     let params = new HttpParams();
     params = params.set('attempt_id', attemptId);
     return this.http
-      .get<RawItemParent[]>(`${appConfig().apiUrl}/items/${id}/parents`, { params: params })
+      .get<unknown[]>(`${appConfig().apiUrl}/items/${id}/parents`, { params: params })
       .pipe(
-        map(parents => parents.map(p => ({
-          id: p.id,
-          bestScore: p.best_score,
-          string: p.string,
-          category: p.category,
-          type: p.type,
-          result: {
-            attempt_id: p.result.attempt_id,
-            latestActivityAt: new Date(p.result.latest_activity_at),
-            startedAt: p.result.started_at === null ? null : new Date(p.result.started_at),
-            score: p.result.score_computed,
-            validated: p.result.validated,
-          },
-          permissions: p.permissions,
-        })))
+        decodeSnakeCase(D.array(itemParentDecoder))
       );
   }
 }
