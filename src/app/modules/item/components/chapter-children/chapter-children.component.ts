@@ -10,7 +10,7 @@ import { typeCategoryOfItem } from 'src/app/shared/helpers/item-type';
 interface ItemChildAdditions {
   isLocked: boolean,
   result?: {
-    attempt_id: string,
+    attemptId: string,
     validated: boolean,
     score: number,
   },
@@ -40,7 +40,7 @@ export class ChapterChildrenComponent implements OnChanges, OnDestroy {
 
   click(child: ItemChild&ItemChildAdditions): void {
     if (!this.itemData || child.isLocked) return;
-    const attemptId = child.result?.attempt_id;
+    const attemptId = child.result?.attemptId;
     const parentAttemptId = this.itemData.currentResult?.attemptId;
     if (!parentAttemptId) return; // unexpected: children have been loaded, so we are sure this item has an attempt
     this.itemRouter.navigateTo({
@@ -65,9 +65,9 @@ export class ChapterChildrenComponent implements OnChanges, OnDestroy {
                 ...child,
                 isLocked: !canCurrentUserViewItemContent(child),
                 result: res === null ? undefined : {
-                  attempt_id: res.attempt_id,
+                  attemptId: res.attemptId,
                   validated: res.validated,
-                  score: res.score,
+                  score: res.scoreComputed,
                 },
               };
             });
