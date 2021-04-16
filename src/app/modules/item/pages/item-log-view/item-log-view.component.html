@@ -7,8 +7,7 @@
   </p>
 
   <ng-container *ngIf="state.isReady">
-      <p-table #table
-               [columns]="state.data.columns"
+      <p-table [columns]="state.data.columns"
                [value]="state.data.rowData">
 
         <ng-template pTemplate="header" let-rowData let-columns>
@@ -35,7 +34,11 @@
                   {{ rowData.activity_type | logActionDisplay : rowData.score }}
                 </ng-container>
                 <ng-container *ngSwitchCase="'item.string.title'">
-                  <a [routerLink]="" (click)="navigateToItem(rowData)">{{ rowData.item.string.title }}</a>
+                  <a class="alg-link"
+                     [ngClass]="{'clickable': !!rowData.item}"
+                     [routerLink]="rowData.item | itemLink">
+                    {{ rowData.item.string.title }}
+                  </a>
                 </ng-container>
                 <ng-container *ngSwitchCase="'at'">
                   {{ rowData.at | date:'short' }}

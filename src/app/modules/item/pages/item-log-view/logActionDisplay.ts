@@ -15,6 +15,6 @@ function formatLogAction (type: 'result_started'|'submission'|'result_validated'
 }
 
 @Pipe({ name: 'logActionDisplay' })
-export class LogActionDisplay implements PipeTransform {
+export class LogActionDisplayPipe implements PipeTransform {
   transform = formatLogAction;
 }
