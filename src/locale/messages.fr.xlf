@@ -214,6 +214,42 @@
           <context context-type="sourcefile">src/app/modules/item/pages/item-edit-advanced-parameters/item-edit-advanced-parameters.component.html</context>
           <context context-type="linenumber">63</context>
         </context-group>
+      </trans-unit><trans-unit id="8b408824fa876c47188c0128ed95fda499ebb972" datatype="html">
+        <source>Participation</source><target state="new">Participation</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/pages/item-edit-advanced-parameters/item-edit-advanced-parameters.component.html</context>
+          <context context-type="linenumber">70</context>
+        </context-group>
+      </trans-unit><trans-unit id="5bdf2478cc13b85284d320fa95fe206736ad5253" datatype="html">
+        <source>Allow multiple attempts (not implemented)</source><target state="new">Allow multiple attempts (not implemented)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/pages/item-edit-advanced-parameters/item-edit-advanced-parameters.component.html</context>
+          <context context-type="linenumber">73</context>
+        </context-group>
+      </trans-unit><trans-unit id="993676f0d3dc56b5a4971ab6e8f3751e0365c4d7" datatype="html">
+        <source>Start participation manually</source><target state="new">Start participation manually</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/pages/item-edit-advanced-parameters/item-edit-advanced-parameters.component.html</context>
+          <context context-type="linenumber">79</context>
+        </context-group>
+      </trans-unit><trans-unit id="ff2059fb495d167c564781547bd820140a63e79e" datatype="html">
+        <source>Duration (not implemented)</source><target state="new">Duration (not implemented)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/pages/item-edit-advanced-parameters/item-edit-advanced-parameters.component.html</context>
+          <context context-type="linenumber">86</context>
+        </context-group>
+      </trans-unit><trans-unit id="a195e18200e1dbe04e039b23aa8fea8e662110f5" datatype="html">
+        <source>First allowed entering time</source><target state="new">First allowed entering time</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/pages/item-edit-advanced-parameters/item-edit-advanced-parameters.component.html</context>
+          <context context-type="linenumber">98</context>
+        </context-group>
+      </trans-unit><trans-unit id="0b38d77a0f91c3be59ed8e4c7d285a8f32de142b" datatype="html">
+        <source>Latest allowed entering time</source><target state="new">Latest allowed entering time</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/pages/item-edit-advanced-parameters/item-edit-advanced-parameters.component.html</context>
+          <context context-type="linenumber">104</context>
+        </context-group>
       </trans-unit><trans-unit id="d5427c17a782f9837360dc95b6067dc20d150ab9" datatype="html">
         <source>Error while loading the data</source><target state="translated">Erreur lors du chargement des données</target>
         <context-group purpose="location">
@@ -424,13 +460,13 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/access-code-view/access-code-view.component.ts</context><context context-type="linenumber">79</context></context-group></trans-unit><trans-unit id="1519954996184640001" datatype="html">
         <source>Error</source><target state="translated">Erreur</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/access-code-view/access-code-view.component.ts</context><context context-type="linenumber">86</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-edit/item-edit.component.ts</context><context context-type="linenumber">89</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/group-edit/group-edit.component.ts</context><context context-type="linenumber">75</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/pending-request/pending-request-response-handling.ts</context><context context-type="linenumber">27</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/pending-request/pending-request-response-handling.ts</context><context context-type="linenumber">45</context></context-group></trans-unit><trans-unit id="4648900870671159218" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/pending-request/pending-request-response-handling.ts</context><context context-type="linenumber">27</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/pending-request/pending-request-response-handling.ts</context><context context-type="linenumber">45</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/group-edit/group-edit.component.ts</context><context context-type="linenumber">75</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/access-code-view/access-code-view.component.ts</context><context context-type="linenumber">86</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-edit/item-edit.component.ts</context><context context-type="linenumber">95</context></context-group></trans-unit><trans-unit id="4648900870671159218" datatype="html">
         <source>Success</source><target state="translated">Réussite</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/access-code-view/access-code-view.component.ts</context><context context-type="linenumber">95</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-edit/item-edit.component.ts</context><context context-type="linenumber">80</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/group-edit/group-edit.component.ts</context><context context-type="linenumber">66</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/pending-request/pending-request-response-handling.ts</context><context context-type="linenumber">17</context></context-group></trans-unit><trans-unit id="3487804242455918485" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/pending-request/pending-request-response-handling.ts</context><context context-type="linenumber">17</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/group-edit/group-edit.component.ts</context><context context-type="linenumber">66</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/access-code-view/access-code-view.component.ts</context><context context-type="linenumber">95</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-edit/item-edit.component.ts</context><context context-type="linenumber">86</context></context-group></trans-unit><trans-unit id="3487804242455918485" datatype="html">
         <source>Changes successfully saved.</source><target state="translated">Modifications bien enregistrées.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/access-code-view/access-code-view.component.ts</context><context context-type="linenumber">96</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-edit/item-edit.component.ts</context><context context-type="linenumber">81</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/group-edit/group-edit.component.ts</context><context context-type="linenumber">67</context></context-group></trans-unit><trans-unit id="b519e0487553e270eb6674281c3dd9e65ff91d3c" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/group-edit/group-edit.component.ts</context><context context-type="linenumber">67</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/access-code-view/access-code-view.component.ts</context><context context-type="linenumber">96</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-edit/item-edit.component.ts</context><context context-type="linenumber">87</context></context-group></trans-unit><trans-unit id="b519e0487553e270eb6674281c3dd9e65ff91d3c" datatype="html">
         <source>Access to activity</source><target state="translated">Accès à l'activité</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/item/components/access-code-view/access-code-view.component.html</context>
@@ -1178,7 +1214,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/group-edit/group-edit.component.ts</context><context context-type="linenumber">70</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/pending-request/pending-request-response-handling.ts</context><context context-type="linenumber">27</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/pending-request/pending-request-response-handling.ts</context><context context-type="linenumber">45</context></context-group></trans-unit><trans-unit id="1365670554525463863" datatype="html">
         <source>You need to solve all the errors displayed in the form to save changes.</source><target state="translated">Vous devez résoudre toutes les erreurs affichées dans le formulaire avant de sauvegarder.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-edit/item-edit.component.ts</context><context context-type="linenumber">219</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/group-edit/group-edit.component.ts</context><context context-type="linenumber">85</context></context-group></trans-unit><trans-unit id="baa6bf1125c10752ec391ae55d3122d91729e216" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/group-edit/group-edit.component.ts</context><context context-type="linenumber">85</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-edit/item-edit.component.ts</context><context context-type="linenumber">258</context></context-group></trans-unit><trans-unit id="baa6bf1125c10752ec391ae55d3122d91729e216" datatype="html">
         <source>Item title</source><target state="translated">Titre</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/item/pages/item-edit/item-edit.component.html</context>
