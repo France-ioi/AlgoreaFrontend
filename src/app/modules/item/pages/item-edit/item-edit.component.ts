@@ -36,6 +36,12 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
     title_bar_visible: [ false ],
     prompt_to_join_group_by_code: [ false ],
     full_screen: [ '' ],
+    allows_multiple_attempts: [ false ],
+    requires_explicit_entry: [ false ],
+    durationOn: [ false ],
+    duration: [ null ],
+    entering_time_min: [ null ],
+    entering_time_max: [ null ],
   });
   itemChanges: { children?: ChildData[] } = {};
 
@@ -129,6 +135,12 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
       titleBarVisible: this.itemForm.get('title_bar_visible'),
       promptToJoinGroupByCode: this.itemForm.get('prompt_to_join_group_by_code'),
       fullScreen: this.itemForm.get('full_screen'),
+      allows_multiple_attempts: this.itemForm.get('allows_multiple_attempts'),
+      requires_explicit_entry: this.itemForm.get('requires_explicit_entry'),
+      durationOn: this.itemForm.get('durationOn'),
+      duration: this.itemForm.get('duration'),
+      entering_time_min: this.itemForm.get('entering_time_min'),
+      entering_time_max: this.itemForm.get('entering_time_max'),
     };
 
     if (Object.values(formControls).includes(null) || !this.initialFormData) return undefined;
@@ -159,6 +171,33 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
 
     const fullScreen = formControls.fullScreen?.value as 'forceYes' | 'forceNo' | 'default';
     if (fullScreen !== this.initialFormData.fullScreen) itemFormValues.full_screen = fullScreen;
+
+    const allowsMultipleAttempts = formControls.allows_multiple_attempts?.value as boolean;
+    if (allowsMultipleAttempts !== this.initialFormData.allowsMultipleAttempts) {
+      itemFormValues.allows_multiple_attempts = allowsMultipleAttempts;
+    }
+
+    const requiresExplicitEntry = formControls.requires_explicit_entry?.value as boolean;
+    if (requiresExplicitEntry !== this.initialFormData.requiresExplicitEntry) {
+      itemFormValues.requires_explicit_entry = requiresExplicitEntry;
+    }
+
+    const durationOn = formControls.durationOn?.value as boolean;
+    const duration = formControls.duration?.value as string;
+
+    if (duration !== this.initialFormData.duration || !durationOn || !requiresExplicitEntry) {
+      itemFormValues.duration = durationOn && requiresExplicitEntry ? duration : null;
+    }
+
+    const enteringTimeMin = formControls.entering_time_min?.value as string;
+    if (+new Date(enteringTimeMin) !== +new Date(this.initialFormData.enteringTimeMin)) {
+      itemFormValues.entering_time_min = enteringTimeMin;
+    }
+
+    const enteringTimeMax = formControls.entering_time_max?.value as string;
+    if (+new Date(enteringTimeMax) !== +new Date(this.initialFormData.enteringTimeMax)) {
+      itemFormValues.entering_time_max = enteringTimeMax;
+    }
 
     return itemFormValues;
   }
@@ -253,6 +292,12 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
       title_bar_visible: item.titleBarVisible || false,
       prompt_to_join_group_by_code: item.promptToJoinGroupByCode || false,
       full_screen: item.fullScreen,
+      allows_multiple_attempts: item.allowsMultipleAttempts,
+      requires_explicit_entry: item.requiresExplicitEntry,
+      durationOn: item.duration !== null,
+      duration: item.duration,
+      entering_time_min: new Date(item.enteringTimeMin),
+      entering_time_max: new Date(item.enteringTimeMax),
     });
 
     this.itemChanges = {};

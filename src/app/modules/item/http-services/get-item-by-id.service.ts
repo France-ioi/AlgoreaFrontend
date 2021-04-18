@@ -31,6 +31,10 @@ export const itemDecoder = pipe(
     noScore: D.boolean,
     titleBarVisible: D.boolean,
     fullScreen: D.literal('forceYes','forceNo','default'),
+    allowsMultipleAttempts: D.boolean,
+    duration: D.nullable(D.string),
+    enteringTimeMin: D.string,
+    enteringTimeMax: D.string,
   }),
   D.intersect(
     D.partial({
