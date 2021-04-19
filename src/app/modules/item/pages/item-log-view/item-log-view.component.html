@@ -7,50 +7,45 @@
   </p>
 
   <ng-container *ngIf="state.isReady">
-      <p-table [columns]="state.data.columns"
-               [value]="state.data.rowData">
+    <p-table [columns]="state.data.columns" [value]="state.data.rowData">
+      <ng-template pTemplate="header" let-rowData let-columns>
+        <tr *ngIf="rowData.length > 0">
+          <ng-container *ngFor="let col of columns">
+            <th>
+              <div class="header-container">
+                {{ col.header }}
+              </div>
+            </th>
+          </ng-container>
+        </tr>
+      </ng-template>
 
-        <ng-template pTemplate="header" let-rowData let-columns>
-          <tr *ngIf="rowData.length > 0">
-            <ng-container *ngFor="let col of columns">
-              <th>
-                <div class="header-container">
-                  {{ col.header }}
-                </div>
-              </th>
-            </ng-container>
-          </tr>
-        </ng-template>
-
-        <ng-template
-            pTemplate="body"
-            let-rowData
-            let-columns="columns"
-        >
-          <tr>
-            <td *ngFor="let col of columns">
-              <ng-container [ngSwitch]="col.field">
-                <ng-container *ngSwitchCase="'activity_type'">
-                  {{ rowData.activity_type | logActionDisplay : rowData.score }}
-                </ng-container>
-                <ng-container *ngSwitchCase="'item.string.title'">
-                  <a class="alg-link"
-                     [ngClass]="{'clickable': !!rowData.item}"
-                     [routerLink]="rowData.item | itemLink">
-                    {{ rowData.item.string.title }}
-                  </a>
-                </ng-container>
-                <ng-container *ngSwitchCase="'at'">
-                  {{ rowData.at | date:'short' }}
-                </ng-container>
-                <ng-container *ngSwitchDefault>
-                  {{ rowData[col.field] }}
-                </ng-container>
+      <ng-template
+          pTemplate="body"
+          let-rowData
+          let-columns="columns"
+      >
+        <tr>
+          <td *ngFor="let col of columns">
+            <ng-container [ngSwitch]="col.field">
+              <ng-container *ngSwitchCase="'activity_type'">
+                {{ rowData.activity_type | logActionDisplay : rowData.score }}
               </ng-container>
-            </td>
-          </tr>
-        </ng-template>
-
-      </p-table>
+              <ng-container *ngSwitchCase="'item.string.title'">
+                <a class="alg-link" [ngClass]="{'clickable': !!rowData.item}" [routerLink]="rowData.item | itemLink">
+                  {{ rowData.item.string.title }}
+                </a>
+              </ng-container>
+              <ng-container *ngSwitchCase="'at'">
+                {{ rowData.at | date:'short' }}
+              </ng-container>
+              <ng-container *ngSwitchDefault>
+                {{ rowData[col.field] }}
+              </ng-container>
+            </ng-container>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
   </ng-container>
 </ng-container>
