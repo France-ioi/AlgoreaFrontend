@@ -1,26 +1,32 @@
 <div class="elements">
-  <p-inputNumber class="element"
-                 placeholder="HH"
-                 [(ngModel)]="hours"
-                 [min]="0"
-                 [max]="838"
-                 [showButtons]="true"
-                 (ngModelChange)="handleChange()">
+  <p-inputNumber
+      class="element"
+      placeholder="HH"
+      [(ngModel)]="hours"
+      [min]="0"
+      [max]="838"
+      [showButtons]="true"
+      (ngModelChange)="handleChange()"
+  >
   </p-inputNumber>
-  <p-inputNumber class="element"
-                 placeholder="MM"
-                 [(ngModel)]="minutes"
-                 [min]="0"
-                 [max]="59"
-                 [showButtons]="true"
-                 (ngModelChange)="handleChange()">
+  <p-inputNumber
+      class="element"
+      placeholder="MM"
+      [(ngModel)]="minutes"
+      [min]="0"
+      [max]="59"
+      [showButtons]="true"
+      (ngModelChange)="handleChange()"
+  >
   </p-inputNumber>
-  <p-inputNumber class="element"
-                 placeholder="SS"
-                 [(ngModel)]="seconds"
-                 [min]="0"
-                 [max]="59"
-                 [showButtons]="true"
-                 (ngModelChange)="handleChange()">
+  <p-inputNumber
+      class="element"
+      placeholder="SS"
+      [(ngModel)]="seconds"
+      [min]="0"
+      [max]="59"
+      [showButtons]="true"
+      (ngModelChange)="handleChange()"
+  >
   </p-inputNumber>
 </div>

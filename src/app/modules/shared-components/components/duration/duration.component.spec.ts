@@ -10,7 +10,7 @@ describe('DurationComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [ DurationComponent ]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {
