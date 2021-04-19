@@ -384,25 +384,25 @@
         <source>A new sub-skill.</source><target state="translated">Une nouvelle sous-compétence.</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/helpers/new-item-types.ts</context><context context-type="linenumber">29</context></context-group></trans-unit><trans-unit id="875621229969091247" datatype="html">
-        <source>Submission</source><target state="new">Submission</target>
+        <source>Submission</source><target state="translated">Soumission</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/pipes/logActionDisplay.ts</context>
           <context context-type="linenumber">5</context>
         </context-group>
       </trans-unit><trans-unit id="2535576348998502417" datatype="html">
-        <source>Submission (score: <x id="PH" equiv-text="score"/>)</source><target state="new">Submission (score: <x id="PH" equiv-text="score"/>)</target>
+        <source>Submission (score: <x id="PH" equiv-text="score"/>)</source><target state="translated">Soumission (score: <x id="PH" equiv-text="score"/>)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/pipes/logActionDisplay.ts</context>
           <context context-type="linenumber">7</context>
         </context-group>
       </trans-unit><trans-unit id="4613238674011043082" datatype="html">
-        <source>Activity started</source><target state="new">Activity started</target>
+        <source>Activity started</source><target state="translated">Activité commencée</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/pipes/logActionDisplay.ts</context>
           <context context-type="linenumber">9</context>
         </context-group>
       </trans-unit><trans-unit id="5072036302681963563" datatype="html">
-        <source>Activity validated</source><target state="new">Activity validated</target>
+        <source>Activity validated</source><target state="translated">Activité validée</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/pipes/logActionDisplay.ts</context>
           <context context-type="linenumber">11</context>
@@ -1284,13 +1284,13 @@
         <source>Unable to load the recent activity</source><target state="translated">Impossible to charger les activités récentes</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-log-view/item-log-view.component.html</context><context context-type="linenumber">6</context></context-group></trans-unit><trans-unit id="9216117865911519658" datatype="html">
-        <source>Action</source><target state="new">Action</target>
+        <source>Action</source><target state="translated">Opération</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/item/pages/item-log-view/item-log-view.component.ts</context>
           <context context-type="linenumber">20</context>
         </context-group>
       </trans-unit><trans-unit id="8497528947328199741" datatype="html">
-        <source>Time</source><target state="new">Time</target>
+        <source>Time</source><target state="translated">Date/Heure</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/item/pages/item-log-view/item-log-view.component.ts</context>
           <context context-type="linenumber">28</context>
