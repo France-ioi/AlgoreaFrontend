@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormGroup, Validators } from '@angular/forms';
 import { DropdownOption } from 'src/app/modules/shared-components/components/dropdown/dropdown.component';
 import { Item } from '../../http-services/get-item-by-id.service';
 
@@ -51,7 +51,20 @@ export class ItemEditAdvancedParametersComponent {
 
   constructor() { }
 
-  onRrequiresExplicitEntryChange(): void {
+  onDurationOnChange(event: boolean): void {
+    if (event) {
+      this.parentForm?.get('duration')?.setValidators([ Validators.required ]);
+      return;
+    }
+
+    this.parentForm?.get('duration')?.setValidators(null);
+  }
+
+  onEnteringTimeOnChange(event: boolean): void {
+    if (!event) {
+      return;
+    }
+
     const nowDate = new Date();
     this.parentForm?.get('entering_time_min')?.patchValue(nowDate);
     this.parentForm?.get('entering_time_max')?.patchValue(

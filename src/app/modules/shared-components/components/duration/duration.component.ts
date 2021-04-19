@@ -1,6 +1,10 @@
 import { Component, EventEmitter, forwardRef, Output } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
+const MAX_HOURS_VALUE = 838;
+const MAX_MINUTES_VALUE = 59;
+const MAX_SECONDS_VALUE = 59;
+
 @Component({
   selector: 'alg-duration',
   templateUrl: './duration.component.html',
@@ -19,7 +23,6 @@ export class DurationComponent implements ControlValueAccessor {
   hours = '';
   minutes = '';
   seconds = '';
-  // value: string | undefined;
 
   private onChange: (value: string | null) => void = () => {};
 
@@ -42,9 +45,10 @@ export class DurationComponent implements ControlValueAccessor {
   }
 
   handleChange(): void {
-    if (this.hours && +this.hours > 838 || this.minutes && +this.minutes > 59 || this.seconds && +this.seconds > 59) {
+    if (this.hours && +this.hours > MAX_HOURS_VALUE ||
+      this.minutes && +this.minutes > MAX_MINUTES_VALUE ||
+      this.seconds && +this.seconds > MAX_SECONDS_VALUE) {
       this.setDefaultModelValues();
-      return;
     }
 
     const isValid = this.hours && this.minutes && this.seconds;
@@ -55,16 +59,16 @@ export class DurationComponent implements ControlValueAccessor {
   }
 
   setDefaultModelValues(): void {
-    if (this.hours && +this.hours > 838) {
-      this.hours = String(838);
+    if (this.hours && +this.hours > MAX_HOURS_VALUE) {
+      this.hours = String(MAX_HOURS_VALUE);
     }
 
-    if (this.minutes && +this.minutes > 59) {
-      this.minutes = String(59);
+    if (this.minutes && +this.minutes > MAX_MINUTES_VALUE) {
+      this.minutes = String(MAX_MINUTES_VALUE);
     }
 
-    if (this.seconds && +this.seconds > 59) {
-      this.seconds = String(59);
+    if (this.seconds && +this.seconds > MAX_SECONDS_VALUE) {
+      this.seconds = String(MAX_SECONDS_VALUE);
     }
   }
 
