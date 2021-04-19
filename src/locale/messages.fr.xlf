@@ -259,7 +259,7 @@
       </trans-unit><trans-unit id="7488290912485772924" datatype="html">
         <source>You don't have access to this activity.</source><target state="translated">Vous n'avez pas accès à cette activité.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/associated-activity/associated-activity.component.ts</context><context context-type="linenumber">54</context></context-group></trans-unit><trans-unit id="c2009bf1c9927be594c46c49dedd6804596e7be0" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/associated-activity/associated-activity.component.ts</context><context context-type="linenumber">56</context></context-group></trans-unit><trans-unit id="c2009bf1c9927be594c46c49dedd6804596e7be0" datatype="html">
         <source>Associated Activity</source><target state="translated">Activité associée</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/associated-activity/associated-activity.component.html</context><context context-type="linenumber">2</context></context-group></trans-unit><trans-unit id="9048329397389521608" datatype="html">
@@ -383,7 +383,31 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/helpers/new-item-types.ts</context><context context-type="linenumber">28</context></context-group></trans-unit><trans-unit id="9108820859798349403" datatype="html">
         <source>A new sub-skill.</source><target state="translated">Une nouvelle sous-compétence.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/helpers/new-item-types.ts</context><context context-type="linenumber">29</context></context-group></trans-unit><trans-unit id="5402924068010392760" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/helpers/new-item-types.ts</context><context context-type="linenumber">29</context></context-group></trans-unit><trans-unit id="875621229969091247" datatype="html">
+        <source>Submission</source><target state="translated">Soumission</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/pipes/logActionDisplay.ts</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+      </trans-unit><trans-unit id="2535576348998502417" datatype="html">
+        <source>Submission (score: <x id="PH" equiv-text="score"/>)</source><target state="translated">Soumission (score: <x id="PH" equiv-text="score"/>)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/pipes/logActionDisplay.ts</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+      </trans-unit><trans-unit id="4613238674011043082" datatype="html">
+        <source>Activity started</source><target state="translated">Activité commencée</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/pipes/logActionDisplay.ts</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
+      </trans-unit><trans-unit id="5072036302681963563" datatype="html">
+        <source>Activity validated</source><target state="translated">Activité validée</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/pipes/logActionDisplay.ts</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+      </trans-unit><trans-unit id="5402924068010392760" datatype="html">
         <source>Join the group "<x id="PH" equiv-text="response.group.name"/>"</source><target state="translated">Rejoindre le groupe "<x id="PH" equiv-text="response.group.name"/>"</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/access-code-view/access-code-view.component.ts</context><context context-type="linenumber">45</context></context-group></trans-unit><trans-unit id="3988558682818955220" datatype="html">
@@ -777,7 +801,7 @@
         <source>Content</source><target state="translated">Contenu</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog-texts.ts</context><context context-type="linenumber">30</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog-texts.ts</context><context context-type="linenumber">61</context></context-group></trans-unit><trans-unit id="1459057934865952132" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog-texts.ts</context><context context-type="linenumber">30</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog-texts.ts</context><context context-type="linenumber">61</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-log-view/item-log-view.component.ts</context><context context-type="linenumber">24</context></context-group></trans-unit><trans-unit id="1459057934865952132" datatype="html">
         <source><x id="PH" equiv-text="targetTypeString"/> can see the content of this item</source><target state="translated"><x id="PH" equiv-text="targetTypeString"/> peut voir le contenu de cet élément</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog-texts.ts</context><context context-type="linenumber">31</context></context-group></trans-unit><trans-unit id="240638056322492270" datatype="html">
@@ -1256,13 +1280,22 @@
       </trans-unit><trans-unit id="eec715de352a6b114713b30b640d319fa78207a0" datatype="html">
         <source>Description</source><target state="translated">Description</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-edit-content/item-edit-content.component.html</context><context context-type="linenumber">3</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-content/item-content.component.html</context><context context-type="linenumber">4</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-content/item-content.component.html</context><context context-type="linenumber">4</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/group-edit/group-edit.component.html</context><context context-type="linenumber">20</context></context-group></trans-unit><trans-unit id="6815d42700f57670bcaa5a70394ce4f1f36eebf5" datatype="html">
-        <source>Log view</source><target state="translated">Historique</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-log-view/item-log-view.component.html</context><context context-type="linenumber">2</context></context-group></trans-unit><trans-unit id="0ed8bd6094913d1ecc0b0ed510e7cd1249877248" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-edit-content/item-edit-content.component.html</context><context context-type="linenumber">3</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-content/item-content.component.html</context><context context-type="linenumber">4</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-content/item-content.component.html</context><context context-type="linenumber">4</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/group-edit/group-edit.component.html</context><context context-type="linenumber">20</context></context-group></trans-unit><trans-unit id="0ed8bd6094913d1ecc0b0ed510e7cd1249877248" datatype="html">
         <source>Unable to load the recent activity</source><target state="translated">Impossible to charger les activités récentes</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-log-view/item-log-view.component.html</context><context context-type="linenumber">6</context></context-group></trans-unit><trans-unit id="6213559315741290082" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-log-view/item-log-view.component.html</context><context context-type="linenumber">6</context></context-group></trans-unit><trans-unit id="9216117865911519658" datatype="html">
+        <source>Action</source><target state="translated">Opération</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/pages/item-log-view/item-log-view.component.ts</context>
+          <context context-type="linenumber">20</context>
+        </context-group>
+      </trans-unit><trans-unit id="8497528947328199741" datatype="html">
+        <source>Time</source><target state="translated">Date/Heure</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/pages/item-log-view/item-log-view.component.ts</context>
+          <context context-type="linenumber">28</context>
+        </context-group>
+      </trans-unit><trans-unit id="6213559315741290082" datatype="html">
         <source>Log view</source><target state="translated">Historique</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/item/pages/item-current-situation/item-current-situation.component.ts</context>

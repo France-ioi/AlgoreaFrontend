@@ -30,6 +30,7 @@ import { UserProgressComponent } from './components/user-progress/user-progress.
 import { ItemChapterViewComponent } from './pages/item-chapter-view/item-chapter-view.component';
 import { GroupProgressGridComponent } from './pages/group-progress-grid/group-progress-grid.component';
 import { ItemEditAdvancedParametersComponent } from './pages/item-edit-advanced-parameters/item-edit-advanced-parameters.component';
+import { LogActionDisplayPipe } from './pages/item-log-view/logActionDisplay';
 
 @NgModule({
   declarations: [
@@ -56,6 +57,7 @@ import { ItemEditAdvancedParametersComponent } from './pages/item-edit-advanced-
     AccessCodeViewComponent,
     AddItemComponent,
     ItemEditAdvancedParametersComponent,
+    LogActionDisplayPipe,
   ],
   imports: [
     CommonModule,
