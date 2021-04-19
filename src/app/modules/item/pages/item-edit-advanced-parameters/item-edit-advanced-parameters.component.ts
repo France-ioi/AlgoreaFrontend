@@ -53,6 +53,7 @@ export class ItemEditAdvancedParametersComponent {
 
   onDurationOnChange(event: boolean): void {
     if (event) {
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       this.parentForm?.get('duration')?.setValidators([ Validators.required ]);
       return;
     }
