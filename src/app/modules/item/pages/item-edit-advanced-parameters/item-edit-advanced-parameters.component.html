@@ -97,14 +97,26 @@
       <div class="form-item-view">
         <span class="form-item-label" i18n>First allowed entering time</span>
         <div class="form-item-control">
-          <p-calendar class="alg-calendar" formControlName="entering_time_min" [showIcon]="true"></p-calendar>
+          <p-calendar
+              class="alg-calendar"
+              formControlName="entering_time_min"
+              [showIcon]="true"
+              [showTime]="true"
+          >
+          </p-calendar>
         </div>
       </div>
       <div class="form-item-view">
         <span class="form-item-label" i18n>Latest allowed entering time</span>
         <div class="form-item-control">
           <div class="input-wrapper">
-            <p-calendar class="alg-calendar" formControlName="entering_time_max" [showIcon]="true"></p-calendar>
+            <p-calendar
+                class="alg-calendar"
+                formControlName="entering_time_max"
+                [showIcon]="true"
+                [showTime]="true"
+            >
+            </p-calendar>
           </div>
         </div>
       </div>
