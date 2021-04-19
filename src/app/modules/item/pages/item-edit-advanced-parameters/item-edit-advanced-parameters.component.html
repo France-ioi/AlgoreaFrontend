@@ -107,6 +107,7 @@
               formControlName="entering_time_min"
               [showIcon]="true"
               [showTime]="true"
+              (ngModelChange)="onDateChange()"
           >
           </p-calendar>
         </div>
@@ -120,6 +121,8 @@
                 formControlName="entering_time_max"
                 [showIcon]="true"
                 [showTime]="true"
+                [minDate]="minEnteringTimeMaxDate"
+                (ngModelChange)="onDateChange()"
             >
             </p-calendar>
           </div>
