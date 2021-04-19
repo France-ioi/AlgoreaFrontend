@@ -51,7 +51,7 @@ export class DurationComponent implements ControlValueAccessor {
       this.setDefaultModelValues();
     }
 
-    const isValid = this.hours && this.minutes && this.seconds;
+    const isValid = !!(+this.hours || +this.minutes || +this.seconds);
     const value = isValid ? `${this.hours}:${this.minutes}:${this.seconds}` : null;
 
     this.change.emit(value);
