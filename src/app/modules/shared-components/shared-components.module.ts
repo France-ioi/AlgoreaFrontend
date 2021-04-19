@@ -59,6 +59,7 @@ import { BooleanSectionComponent } from './components/progress-section/boolean-s
 import { DropdownComponent } from './components/dropdown/dropdown.component';
 import { DurationComponent } from './components/duration/duration.component';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { InputMaskModule } from 'primeng/inputmask';
 
 @NgModule({
   declarations: [
@@ -124,6 +125,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
     TooltipModule,
     TooltipModule,
     InputNumberModule,
+    InputMaskModule,
   ],
   exports: [
     ButtonComponent,

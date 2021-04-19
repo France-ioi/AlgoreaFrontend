@@ -39,7 +39,7 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
     allows_multiple_attempts: [ false ],
     requires_explicit_entry: [ false ],
     durationOn: [ false ],
-    duration: [ null ],
+    duration: [ null, [ Validators.required ] ],
     entering_time_min: [ null ],
     entering_time_max: [ null ],
   });
@@ -190,13 +190,13 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
     }
 
     const enteringTimeMin = formControls.entering_time_min?.value as string;
-    if (+new Date(enteringTimeMin) !== +new Date(this.initialFormData.enteringTimeMin)) {
-      itemFormValues.entering_time_min = enteringTimeMin;
+    if (+new Date(enteringTimeMin) !== +new Date(this.initialFormData.enteringTimeMin) || !requiresExplicitEntry) {
+      itemFormValues.entering_time_min = requiresExplicitEntry ? enteringTimeMin : '9999-12-31T21:59:59.000Z';
     }
 
     const enteringTimeMax = formControls.entering_time_max?.value as string;
-    if (+new Date(enteringTimeMax) !== +new Date(this.initialFormData.enteringTimeMax)) {
-      itemFormValues.entering_time_max = enteringTimeMax;
+    if (+new Date(enteringTimeMax) !== +new Date(this.initialFormData.enteringTimeMax) || !requiresExplicitEntry) {
+      itemFormValues.entering_time_max = requiresExplicitEntry ? enteringTimeMax : '9999-12-31T21:59:59.000Z';
     }
 
     return itemFormValues;
