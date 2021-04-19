@@ -40,7 +40,7 @@ export class ParentSkillsComponent implements OnChanges, OnDestroy {
       contentType: typeCategoryOfItem(parent),
       id: parent.id,
       path: this.itemData.route.path.slice(0, -1),
-      attemptId: parent.result.attempt_id,
+      attemptId: parent.result.attemptId,
     });
   }
 

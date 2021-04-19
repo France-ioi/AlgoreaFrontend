@@ -5,6 +5,7 @@ import { appConfig } from 'src/app/shared/helpers/config';
 import * as D from 'io-ts/Decoder';
 import { pipe } from 'fp-ts/lib/function';
 import { decodeSnakeCase } from 'src/app/shared/operators/decode';
+import { permissionsDecoder } from '../helpers/item-permissions';
 
 export const itemDecoder = pipe(
   D.struct({
@@ -22,11 +23,7 @@ export const itemDecoder = pipe(
       )
     ),
     bestScore: D.number,
-    permissions: D.struct({
-      canView: D.literal('none','info','content','content_with_descendants','solution'),
-      canEdit: D.literal('none','children','all','all_with_grant'),
-      canGrantView: D.literal('none','enter','content','content_with_descendants','solution','solution_with_grant'),
-    }),
+    permissions: permissionsDecoder,
     type: D.literal('Chapter','Task','Course','Skill'),
     promptToJoinGroupByCode: D.boolean,
     textId: D.nullable(D.string),
