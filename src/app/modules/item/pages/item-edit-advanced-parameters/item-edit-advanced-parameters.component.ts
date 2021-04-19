@@ -42,4 +42,10 @@ export class ItemEditAdvancedParametersComponent {
 
   constructor() { }
 
+  onRrequiresExplicitEntryChange(): void {
+    const nowDate = new Date();
+    this.parentForm?.get('entering_time_min')?.setValue(nowDate);
+    this.parentForm?.get('entering_time_max')?.setValue(nowDate);
+  }
+
 }

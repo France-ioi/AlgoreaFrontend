@@ -78,7 +78,12 @@
     <div class="form-item-view">
       <span class="form-item-label" i18n>Start participation manually</span>
       <div class="form-item-control">
-        <alg-switch formControlName="requires_explicit_entry" mode="white"></alg-switch>
+        <alg-switch
+            formControlName="requires_explicit_entry"
+            mode="white"
+            (change)="onRrequiresExplicitEntryChange()"
+        >
+        </alg-switch>
       </div>
     </div>
     <ng-container *ngIf="!!parentForm.get('requires_explicit_entry')?.value">
