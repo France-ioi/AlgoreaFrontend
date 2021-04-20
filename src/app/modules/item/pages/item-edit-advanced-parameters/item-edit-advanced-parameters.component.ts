@@ -7,7 +7,7 @@ const MIN_MAX_ALLOW_RANGE_HOURS = 1;
 const MIN_MAX_ALLOW_RANGE_MS = MIN_MAX_ALLOW_RANGE_HOURS * 3600 * 1000;
 
 function getAllowedTimeMaxDate(timeMinDate: Date): Date {
-  return new Date(+timeMinDate + MIN_MAX_ALLOW_RANGE_MS);
+  return new Date(timeMinDate.getTime() + MIN_MAX_ALLOW_RANGE_MS);
 }
 
 @Component({
@@ -61,15 +61,15 @@ export class ItemEditAdvancedParametersComponent {
     this.parentForm?.get('duration')?.setValidators(null);
   }
 
-  onEnteringTimeOnChange(event: boolean): void {
+  onEnteringTimeMaxOnChange(event: boolean): void {
     if (!event) {
       return;
     }
 
-    const nowDate = new Date();
-    this.parentForm?.get('entering_time_min')?.patchValue(nowDate);
+    const enteringTimeMin = this.parentForm?.get('entering_time_min')?.value as string;
+    const enteringTimeMinDate = new Date(enteringTimeMin);
     this.parentForm?.get('entering_time_max')?.patchValue(
-      getAllowedTimeMaxDate(nowDate)
+      getAllowedTimeMaxDate(enteringTimeMinDate)
     );
   }
 
