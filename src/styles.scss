@@ -324,7 +324,6 @@ body .p-component {
 .alg-calendar, .alg-duration {
   &.alg-duration {
     input {
-      width: 40px;
       text-align: center;
     }
   }
@@ -352,13 +351,7 @@ body .p-component {
     }
   }
 
-  .p-inputnumber-button-group, .p-datepicker-trigger {
-    &.p-inputnumber-button-group {
-      .p-inputnumber-button {
-        width: inherit;
-      }
-    }
-
+  .p-datepicker-trigger {
     width: 3rem;
   }
 

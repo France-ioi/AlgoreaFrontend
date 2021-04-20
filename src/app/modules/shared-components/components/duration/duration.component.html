@@ -4,6 +4,7 @@
       placeholder="HHH"
       slotChar="HHH"
       mask="9?99"
+      [size]="8"
       [(ngModel)]="hours"
       (ngModelChange)="handleChange()"
   >
@@ -14,6 +15,7 @@
       placeholder="MM"
       slotChar="MM"
       mask="9?9"
+      [size]="8"
       [(ngModel)]="minutes"
       (ngModelChange)="handleChange()"
   >
@@ -24,6 +26,7 @@
       placeholder="SS"
       slotChar="SS"
       mask="9?9"
+      [size]="8"
       [(ngModel)]="seconds"
       (ngModelChange)="handleChange()"
   >
