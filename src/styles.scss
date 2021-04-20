@@ -2,6 +2,9 @@
 @import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
 @import 'src/colors.scss';
 @import 'src/geometry.scss';
+@import 'assets/scss/components/table';
+@import 'assets/scss/components/editable-table';
+@import 'assets/scss/components/error-message';
 
 html {
   height: 100%;

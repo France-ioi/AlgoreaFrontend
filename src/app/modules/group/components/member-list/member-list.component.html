@@ -1,12 +1,13 @@
 <alg-group-composition-filter #compositionFilter (change)="onFilterChange($event)" [defaultValue]="defaultFilter"></alg-group-composition-filter>
 
-<p *ngIf="state === 'error';else noError" class="error-message">
+<p *ngIf="state === 'error';else noError" class="alg-error-message">
   <i class="fa fa-exclamation-triangle"></i>
   <span i18n>Error while loading the group members</span>
 </p>
 
 <ng-template #noError>
   <p-table #table
+    class="alg-table"
     [columns]="data.columns"
     [value]="data.rowData"
     [customSort]="true"

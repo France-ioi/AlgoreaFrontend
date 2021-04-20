@@ -3,7 +3,13 @@
 
     <ng-container *ngSwitchCase="'ready'">
       <div class="section-chapter-wrapper">
-        <p-table *ngIf="data.length" [value]="data" [reorderableColumns]="true" [(selection)]="selectedRows" (onRowReorder)="orderChanged()">
+        <p-table
+            class="alg-editable-table"
+            *ngIf="data.length"
+            [value]="data"
+            [reorderableColumns]="true"
+            [(selection)]="selectedRows"
+            (onRowReorder)="orderChanged()">
           <ng-template pTemplate="body" let-rowData let-index="rowIndex">
             <tr [pSelectableRow]="rowData" [pReorderableRow]="index">
               <td class="reorder-handle" [pReorderableRowHandle]="index">
