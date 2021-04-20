@@ -13,7 +13,7 @@
       class="element"
       placeholder="MM"
       slotChar="MM"
-      mask="99"
+      mask="9?9"
       [(ngModel)]="minutes"
       (ngModelChange)="handleChange()"
   >
@@ -23,9 +23,11 @@
       class="element"
       placeholder="SS"
       slotChar="SS"
-      mask="99"
+      mask="9?9"
       [(ngModel)]="seconds"
       (ngModelChange)="handleChange()"
   >
   </p-inputMask>
 </div>
+
+<alg-input-error [form]="parentForm" [inputName]="name"></alg-input-error>

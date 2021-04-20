@@ -17,7 +17,9 @@ import { ItemEditAdvancedParametersComponent } from '../item-edit-advanced-param
 import { Mode, ModeService } from 'src/app/shared/services/mode.service';
 import { readyData } from 'src/app/shared/operators/state';
 
+const INIT_DATE = '1000-01-01T00:00:00Z';
 const DEFAULT_DATE = '9999-12-31T21:59:59Z';
+const DEFAULT_DATES = [ INIT_DATE, DEFAULT_DATE ];
 
 interface InitialItemState extends Item {
   durationOn?: boolean,
@@ -75,7 +77,8 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
       .pipe(readyData(), map(data => ({
         ...data.item,
         durationOn: data.item.duration !== null,
-        enteringTimeOn: data.item.enteringTimeMin !== DEFAULT_DATE && data.item.enteringTimeMax !== DEFAULT_DATE,
+        enteringTimeOn: !DEFAULT_DATES.includes(data.item.enteringTimeMin)
+          && !DEFAULT_DATES.includes(data.item.enteringTimeMax),
       })))
       .subscribe(data => {
         this.initialFormData = data;

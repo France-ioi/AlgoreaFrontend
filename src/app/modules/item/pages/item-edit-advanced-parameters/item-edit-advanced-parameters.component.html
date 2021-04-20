@@ -99,6 +99,8 @@
             <alg-duration
                 class="alg-duration"
                 formControlName="duration"
+                name="duration"
+                [parentForm]="parentForm"
                 *ngIf="!!parentForm.get('duration_on')?.value"
             >
             </alg-duration>

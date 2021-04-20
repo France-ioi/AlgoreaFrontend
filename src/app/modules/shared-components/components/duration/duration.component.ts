@@ -1,5 +1,5 @@
-import { Component, EventEmitter, forwardRef, Output } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Component, EventEmitter, forwardRef, Input, Output } from '@angular/core';
+import { ControlValueAccessor, FormGroup, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 const MAX_HOURS_VALUE = 838;
 const MAX_MINUTES_VALUE = 59;
@@ -19,6 +19,9 @@ const MAX_SECONDS_VALUE = 59;
 })
 export class DurationComponent implements ControlValueAccessor {
   @Output() change = new EventEmitter<string | null>();
+
+  @Input() name = '';
+  @Input() parentForm?: FormGroup;
 
   hours = '';
   minutes = '';
@@ -51,7 +54,7 @@ export class DurationComponent implements ControlValueAccessor {
       this.setDefaultModelValues();
     }
 
-    const isValid = !!(+this.hours || +this.minutes || +this.seconds);
+    const isValid = !!(+this.hours && +this.minutes && +this.seconds);
     const value = isValid ? `${this.hours}:${this.minutes}:${this.seconds}` : null;
 
     this.change.emit(value);
