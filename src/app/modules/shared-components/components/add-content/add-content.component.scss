@@ -2,6 +2,10 @@
 @import 'src/colors.scss';
 @import 'src/geometry.scss';
 
+:host {
+  display: block;
+}
+
 .add-content-wrapper {
   display: flex;
   align-items: center;
@@ -31,45 +35,6 @@
     margin: 1rem;
     flex: 1 0 calc(25% - 1.6667rem);
   }
-}
-
-@media screen and (min-width: 1220px) {
-  .new-content-container {
-    .new-content-type {
-      max-width: calc(25% - 1.6667rem);
-    }
-  }
-}
-
-@media screen and (min-width: 1040px) and (max-width: 1220px) {
-  .new-content-container {
-    .new-content-type {
-      flex: 1 0 calc(33.33% - 1.6667rem);
-      max-width: calc(33.33% - 1.6667rem);
-    }
-  }
-}
-
-@media screen and (min-width: 860px) and (max-width: 1040px) {
-  .new-content-container {
-    .new-content-type {
-      flex: 1 0 calc(50% - 1.6667rem);
-      max-width: calc(50% - 1.6667rem);
-    }
-  }
-}
-
-@media screen and (max-width: 860px) {
-  .new-content-container {
-    .new-content-type {
-      flex: 1 0 calc(100% - 1.6667rem);
-      max-width: calc(100% - 1.6667rem);
-    }
-  }
-}
-
-:host {
-  display: block;
 }
 
 .content-type-item-container {
@@ -136,39 +101,37 @@
   }
 }
 
-:host ::ng-deep .p-datatable {
-
-  .p-datatable-tbody > tr {
-    background-color: #EFEFEF;
-    display: flex;
-    border-bottom: $border-filet;
-    margin-bottom: 5px;
-    border-radius: 1rem;
-    height: 3rem;
-  }
-
-  .p-datatable-tbody > tr:last-child {
-    border: none;
-  }
-
-  .p-datatable-tbody > tr:nth-child(even) {
-    background-color: #EFEFEF;
-  }
-
-  .p-datatable-tbody > tr > td {
-    color: $base-text-color;
-    border: none;
-    background-color: transparent;
-    display: flex;
-    align-items: center;
-    font-size: 1.2rem;
-
-    &.main {
-      flex: 1;
+@media screen and (min-width: 1220px) {
+  .new-content-container {
+    .new-content-type {
+      max-width: calc(25% - 1.6667rem);
     }
+  }
+}
 
-    &.type {
-      color: $base-color;
+@media screen and (min-width: 1040px) and (max-width: 1220px) {
+  .new-content-container {
+    .new-content-type {
+      flex: 1 0 calc(33.33% - 1.6667rem);
+      max-width: calc(33.33% - 1.6667rem);
+    }
+  }
+}
+
+@media screen and (min-width: 860px) and (max-width: 1040px) {
+  .new-content-container {
+    .new-content-type {
+      flex: 1 0 calc(50% - 1.6667rem);
+      max-width: calc(50% - 1.6667rem);
+    }
+  }
+}
+
+@media screen and (max-width: 860px) {
+  .new-content-container {
+    .new-content-type {
+      flex: 1 0 calc(100% - 1.6667rem);
+      max-width: calc(100% - 1.6667rem);
     }
   }
 }

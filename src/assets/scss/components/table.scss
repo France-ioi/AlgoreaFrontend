@@ -5,54 +5,111 @@
   .p-datatable {
     margin-bottom: 1rem;
     font-family: 'titillium', sans-serif;
+  }
 
-    .p-datatable-thead > tr > th {
-      padding: 0 1rem;
-      text-align: left;
-      text-transform: uppercase;
-      font-size: .9rem;
-      letter-spacing: .03em;
-      height: 3rem;
+  .p-datatable-thead > tr > th {
+    padding: 0 1rem;
+    text-align: left;
+    text-transform: uppercase;
+    font-size: .9rem;
+    letter-spacing: .03em;
+    height: 3rem;
 
-      .header-container {
-        width: 100%;
-        height: 100%;
-        position: relative;
-        display: flex;
-        align-items: center;
+    .header-container {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      display: flex;
+      align-items: center;
 
-        p-sorticon {
-          position: absolute;
-          right: 0;
-          top: 1.5rem;
-          transform: translateY(-50%);
-        }
-      }
-
-      &:focus {
-        outline: transparent;
+      p-sorticon {
+        position: absolute;
+        right: 0;
+        top: 1.5rem;
+        transform: translateY(-50%);
       }
     }
 
-    .p-datatable-tbody > tr {
-      border: 0.1rem solid #eeeeee;
+    &:focus {
+      outline: transparent;
     }
+  }
 
-    .p-datatable-tbody > tr > td {
-      border: 0.1rem solid #f0f0f0;
-      color: $base-text-color;
-      height: 4rem;
-      max-height: 4rem;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+  .p-datatable-tbody > tr {
+    border: 0.1rem solid #eeeeee;
+  }
+
+  .p-datatable-tbody > tr > td {
+    border: 0.1rem solid #f0f0f0;
+    color: $base-text-color;
+    height: 4rem;
+    max-height: 4rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 1.2rem;
+    padding: 0 1rem;
+
+    .empty-message {
+      font-style: italic;
+      text-align: center;
+      font-size: medium;
+    }
+  }
+
+  .p-checkbox {
+    width: 1.0833rem;
+    height: 1.0833rem;
+
+    .p-checkbox-box {
+      background-color: $dark-transparency-color;
+      box-shadow: 0 .1rem #bbb inset;
+      width: 1.0833rem;
+      height: 1.0833rem;
+      border: none;
+      position: relative;
+
+      &:hover {
+        background-color: #d0d0d0;
+      }
+
+      &.p-highlight:not(.p-disabled):hover {
+        background-color: #d0d0d0;
+      }
+
+      .p-checkbox-icon {
+        overflow: visible;
+        color: #505050;
+        position: absolute;
+        top: -0.5rem;
+        left: -0.3333rem;
+        font-size: 1.8333rem;
+      }
+    }
+  }
+
+  .p-datatable-footer {
+    border: none;
+    background-color: white;
+    height: 5rem;
+    line-height: 5rem;
+    margin-bottom: -1.5rem;
+    border: 0em;
+    font-weight: 700;
+
+    .export-tools {
+      display: flex;
+      align-items: center;
+      color: $base-color;
       font-size: 1.2rem;
-      padding : 0 1rem;
 
-      .empty-message {
-        font-style: italic;
-        text-align: center;
-        font-size: medium;
+      span {
+        margin-right: 1rem;
+        cursor: pointer;
+
+        span {
+          margin-right: 1rem;
+        }
       }
     }
   }
@@ -125,6 +182,77 @@
 
     .p-datatable-tbody > tr > .link {
       cursor: pointer;
+    }
+  }
+
+  &.--grid {
+    .p-datatable-thead > tr > th {
+      border-top: none;
+    }
+
+    .p-datatable-tbody > tr:nth-child(even) {
+      background-color: #fff;
+    }
+
+    .p-datatable-tbody > tr > td {
+      border: none;
+      border-bottom: 0.1rem solid #f0f0f0;
+    }
+
+    .p-datatable-tbody > tr:last-child > td {
+      border-bottom: none;
+    }
+
+    .p-datatable-tbody > tr.p-highlight > td {
+      color: #fff;
+    }
+  }
+
+  &.--add-content {
+    .p-datatable {
+      margin-bottom: 0;
+    }
+
+    .p-datatable-tbody > tr {
+      background-color: #EFEFEF;
+      display: flex;
+      border: none;
+      border-bottom: $border-filet;
+      margin-bottom: 5px;
+      border-radius: 1rem;
+      height: 3rem;
+    }
+
+    .p-datatable-tbody > tr:last-child {
+      border: none;
+    }
+
+    .p-datatable-tbody > tr:nth-child(even) {
+      background-color: #EFEFEF;
+    }
+
+    .p-datatable-tbody > tr > td {
+      color: $base-text-color;
+      border: none;
+      background-color: transparent;
+      display: flex;
+      align-items: center;
+      font-size: 1.2rem;
+      height: inherit;
+
+      &.main {
+        flex: 1;
+      }
+
+      &.type {
+        color: $base-color;
+      }
+    }
+  }
+
+  @media screen and (max-width: 64em) {
+    .p-datatable-thead > tr > th {
+      top: 8.3333rem;
     }
   }
 }
