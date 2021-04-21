@@ -52,13 +52,9 @@ export class ItemEditAdvancedParametersComponent {
   constructor() { }
 
   onDurationOnChange(event: boolean): void {
-    if (event) {
-      // eslint-disable-next-line @typescript-eslint/unbound-method
-      this.parentForm?.get('duration')?.setValidators([ Validators.required ]);
-      return;
-    }
-
-    this.parentForm?.get('duration')?.setValidators(null);
+    // eslint-disable-next-line @typescript-eslint/unbound-method
+    this.parentForm?.get('duration')?.setValidators(event ? Validators.required : null);
+    this.parentForm?.get('duration')?.updateValueAndValidity();
   }
 
   onEnteringTimeMaxOnChange(event: boolean): void {
