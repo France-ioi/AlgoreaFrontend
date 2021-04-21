@@ -74,12 +74,11 @@ export class ItemEditAdvancedParametersComponent {
     const enteringTimeMax = this.parentForm?.get('entering_time_max')?.value as string;
     const enteringTimeMinDate = new Date(enteringTimeMin);
     const enteringTimeMaxDate = new Date(enteringTimeMax);
-    const allowForTimeMaxDate = getAllowedTimeMaxDate(enteringTimeMinDate);
 
-    this.minEnteringTimeMaxDate = allowForTimeMaxDate;
+    this.minEnteringTimeMaxDate = enteringTimeMinDate;
 
-    if (+enteringTimeMinDate > (+enteringTimeMaxDate - MIN_MAX_ALLOW_RANGE_MS)) {
-      this.parentForm?.get('entering_time_max')?.patchValue(allowForTimeMaxDate);
+    if (enteringTimeMinDate.getTime() > enteringTimeMaxDate.getTime()) {
+      this.parentForm?.get('entering_time_max')?.patchValue(enteringTimeMinDate);
     }
   }
 
