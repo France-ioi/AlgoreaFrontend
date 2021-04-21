@@ -18,7 +18,7 @@ import { Mode, ModeService } from 'src/app/shared/services/mode.service';
 import { readyData } from 'src/app/shared/operators/state';
 
 const INIT_DATE = '1000-01-01T00:00:00Z';
-const DEFAULT_DATE = '9999-12-31T21:59:59Z';
+const DEFAULT_DATE = '9999-12-31T23:59:59Z';
 const DEFAULT_DATES = [ INIT_DATE, DEFAULT_DATE ];
 
 interface InitialItemState extends Item {
