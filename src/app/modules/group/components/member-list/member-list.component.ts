@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild } from '@angular/core';
-import { SortEvent } from 'primeng/api';
+import { MessageService, SortEvent } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { Observable, Subject } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
@@ -8,7 +8,9 @@ import { mapToFetchState } from 'src/app/shared/operators/state';
 import { Group } from '../../http-services/get-group-by-id.service';
 import { GetGroupChildrenService, GroupChild } from '../../http-services/get-group-children.service';
 import { GetGroupMembersService, Member } from '../../http-services/get-group-members.service';
+import { GroupUsersService } from '../../http-services/group-users.service';
 import { Filter, GroupCompositionFilterComponent } from '../group-composition-filter/group-composition-filter.component';
+import { displayResponseToast, parseResults, processRequestError } from './user-removal-response-handling';
 
 interface Column {
   sortable?: boolean,
@@ -65,6 +67,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
   currentFilter: Filter = this.defaultFilter;
 
   selection: Member[] = [];
+
   data: Data = {
     columns: [],
     rowData: [],
@@ -79,6 +82,8 @@ export class MemberListComponent implements OnChanges, OnDestroy {
     private getGroupMembersService: GetGroupMembersService,
     private getGroupChildrenService: GetGroupChildrenService,
     private getGroupDescendantsService: GetGroupDescendantsService,
+    private groupUsersService: GroupUsersService,
+    private messageService: MessageService,
   ) {
     this.dataFetching.pipe(
       switchMap(params => this.getData(params.groupId, params.filter, params.sort)),
@@ -184,9 +189,18 @@ export class MemberListComponent implements OnChanges, OnDestroy {
   onRemove(): void {
     if (this.selection.length === 0 || !this.group) return;
 
-    //TODO Remove users
-
-    this.table?.clear();
-    this.dataFetching.next({ groupId: this.group.id, filter: this.currentFilter, sort: this.currentSort });
+    this.state = 'fetching';
+    this.groupUsersService.removeUsers(this.group.id, this.selection.map(member => member.id))
+      .subscribe(result => {
+        displayResponseToast(this.messageService, parseResults(result));
+        this.table?.clear();
+        if (this.group) {
+          this.dataFetching.next({ groupId: this.group.id, filter: this.currentFilter, sort: this.currentSort });
+        }
+      },
+      _err => {
+        this.state = 'ready';
+        processRequestError(this.messageService);
+      });
   }
 }
