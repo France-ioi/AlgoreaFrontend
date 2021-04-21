@@ -116,15 +116,3 @@
     align-items: center;
   }
 }
-
-:host.compact-mode ::ng-deep .p-datatable-frozen-view tr {
-  height: 3.4167rem;
-
-  &:first-child {
-    height: 3.3333rem;
-  }
-}
-
-:host ::ng-deep .p-datatable-frozen-view tr {
-  height: 6rem;
-}

@@ -22,6 +22,7 @@
         [columns]="columns"
         [data]="requests"
         [groupInfo]="panel"
+        tableStyle="--pending-request"
         [(selection)]="selection"
         (sort)="onCustomSort($event)"
         [loading]="state !== 'ready'"

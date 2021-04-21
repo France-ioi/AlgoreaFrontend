@@ -15,6 +15,7 @@
     letter-spacing: .03em;
     height: 3rem;
 
+    // Todo: not belongs to p-datatable
     .header-container {
       width: 100%;
       height: 100%;
@@ -96,21 +97,11 @@
     margin-bottom: -1.5rem;
     border: 0em;
     font-weight: 700;
+  }
 
-    .export-tools {
-      display: flex;
-      align-items: center;
-      color: $base-color;
-      font-size: 1.2rem;
-
-      span {
-        margin-right: 1rem;
-        cursor: pointer;
-
-        span {
-          margin-right: 1rem;
-        }
-      }
+  @media screen and (max-width: 64em) {
+    .p-datatable-thead > tr > th {
+      top: 8.3333rem;
     }
   }
 
@@ -143,12 +134,6 @@
   }
 
   &.--managed-group-list {
-    .p-datatable-thead > tr > th {
-      &.small {
-        width: 10rem;
-      }
-    }
-
     .p-datatable-tbody > tr:nth-child(even) {
       background-color: #fff;
     }
@@ -156,28 +141,6 @@
     .p-datatable-tbody > tr > td {
       border: none;
       border-bottom: 0.1rem solid #f0f0f0;
-
-      .table-icon {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        i {
-          font-size: 1.2rem;
-        }
-
-        &.edit {
-          color: $base-color;
-        }
-
-        &.locked {
-          color: #9acc68;
-        }
-
-        &.unlocked {
-          color: $notify-error-color;
-        }
-      }
     }
 
     .p-datatable-tbody > tr > .link {
@@ -205,6 +168,10 @@
 
     .p-datatable-tbody > tr.p-highlight > td {
       color: #fff;
+    }
+
+    .p-datatable-tbody > tr {
+      border: none;
     }
   }
 
@@ -239,20 +206,59 @@
       align-items: center;
       font-size: 1.2rem;
       height: inherit;
-
-      &.main {
-        flex: 1;
-      }
-
-      &.type {
-        color: $base-color;
-      }
     }
   }
 
-  @media screen and (max-width: 64em) {
-    .p-datatable-thead > tr > th {
-      top: 8.3333rem;
+  &.--pending-request {
+    .p-datatable {
+      .p-datatable-footer {
+        background-color: transparent;
+      }
+
+      .p-datatable-thead > tr {
+        > th {
+          background-color: #d3dbe7;
+        }
+
+        > th:first-child {
+          width: 3.3333rem;
+          background-color: #d3dbe7;
+        }
+      }
+
+      .p-datatable-tbody > tr {
+        background-color: transparent;
+        height: 13rem;
+
+        > td {
+          border-bottom-color: $section-border-color;
+
+          &:last-child {
+            border-left: $border-filet;
+            text-align: center;
+          }
+        }
+
+        &:last-child {
+          border-bottom: 0.1rem solid $section-border-color;
+        }
+
+        &:nth-child(even) {
+          background-color: transparent;
+        }
+
+        &.p-highlight {
+          background-color: $base-color;
+        }
+      }
+    }
+
+    .p-datatable-frozen-view tr {
+      height: 6rem;
+    }
+
+    .p-datatable-tbody > tr {
+      border: none;
     }
   }
 }

@@ -31,7 +31,7 @@
       display: flex;
       flex-direction: column;
       font-size: 1.2rem;
-      color: $base-text-color;
+      color: inherit;
 
       &-name {
         font-weight: bold;
@@ -98,75 +98,33 @@
   }
 }
 
-:host ::ng-deep .pending-request-container .p-datatable .p-datatable-footer {
-  background-color: transparent;
+.summary {
+  text-align: left;
+  display: flex;
+  align-items: center;
 
-  .summary {
-    text-align: left;
-    display: flex;
-    align-items: center;
+  .select-all {
+    margin-left: 2.1rem;
+    color: #9b9b9b;
+    font-size: 1.2rem;
+    cursor: pointer;
+  }
 
-    .select-all {
-      margin-left: 2.1rem;
-      color: #9b9b9b;
-      font-size: 1.2rem;
-      cursor: pointer;
-    }
-
-    .filler {
-      flex: 1;
-    }
+  .filler {
+    flex: 1;
   }
 }
 
-:host ::ng-deep .pending-request-container .p-datatable .p-datatable-thead > tr {
-  > th {
-    background-color: #d3dbe7;
-  }
-
-  > th:first-child {
-    width: 3.3333rem;
-    background-color: #d3dbe7;
-  }
-
-  .small-column {
-    width: 13.3333rem;
-  }
+.grid-user-info-field .user-info {
+  color: white;
 }
 
-:host ::ng-deep .pending-request-container .p-datatable .p-datatable-tbody > tr {
-  background-color: transparent;
-  height: 13rem;
+.small-column {
+  width: 13.3333rem;
+}
 
-  > td {
-    border-bottom-color: $section-border-color;
-    font: 1rem;
-
-    .group-name {
-      white-space: initial;
-    }
-
-    &:last-child {
-      border-left: $border-filet;
-      text-align: center;
-    }
-  }
-
-  &:last-child {
-    border-bottom: 0.1rem solid $section-border-color;
-  }
-
-  &:nth-child(even) {
-    background-color: transparent;
-  }
-
-  &.p-highlight {
-    background-color: $base-color;
-
-    .grid-user-info-field .user-info {
-      color: white;
-    }
-  }
+.group-name {
+  white-space: initial;
 }
 
 .no-pending-requests {
