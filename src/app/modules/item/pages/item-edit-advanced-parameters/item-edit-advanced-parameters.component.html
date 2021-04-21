@@ -80,7 +80,7 @@
         <alg-switch
             formControlName="requires_explicit_entry"
             mode="white"
-            (ngModelChange)="onRequiresExplicitEntryChange($event)"
+            (ngModelChange)="onRequiresExplicitEntryChange()"
         >
         </alg-switch>
       </div>
@@ -91,9 +91,9 @@
         <div class="form-item-control another-input">
           <alg-switch
               class="first-child"
-              formControlName="duration_on"
+              formControlName="duration_enabled"
               mode="white"
-              (ngModelChange)="onDurationOnChange($event)"
+              (ngModelChange)="onDurationEnabledChange()"
           >
           </alg-switch>
           <div class="input-wrapper">
@@ -102,7 +102,7 @@
                 formControlName="duration"
                 name="duration"
                 [parentForm]="parentForm"
-                *ngIf="!!parentForm.get('duration_on')?.value"
+                *ngIf="!!parentForm.get('duration_enabled')?.value"
             >
             </alg-duration>
           </div>
@@ -126,12 +126,12 @@
         <div class="form-item-control another-input">
           <alg-switch
               class="first-child"
-              formControlName="entering_time_max_on"
+              formControlName="entering_time_max_enabled"
               mode="white"
-              (ngModelChange)="onEnteringTimeMaxOnChange($event)"
+              (ngModelChange)="onEnteringTimeMaxEnabledChange($event)"
           >
           </alg-switch>
-          <ng-container *ngIf="!!parentForm.get('entering_time_max_on')?.value">
+          <ng-container *ngIf="!!parentForm.get('entering_time_max_enabled')?.value">
             <div class="input-wrapper">
               <p-calendar
                   class="alg-calendar"

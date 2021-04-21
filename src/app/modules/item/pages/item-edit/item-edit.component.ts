@@ -17,13 +17,12 @@ import { ItemEditAdvancedParametersComponent } from '../item-edit-advanced-param
 import { Mode, ModeService } from 'src/app/shared/services/mode.service';
 import { readyData } from 'src/app/shared/operators/state';
 
-const INIT_DATE = '1000-01-01T00:00:00Z';
-const DEFAULT_DATE = '9999-12-31T23:59:59Z';
-const DEFAULT_DATES = [ INIT_DATE, DEFAULT_DATE ];
+const DEFAULT_ENTERING_TIME_MIN = '1000-01-01T00:00:00Z';
+const DEFAULT_ENTERING_TIME_MAX = '9999-12-31T23:59:59Z';
 
 interface InitialItemState extends Item {
-  durationOn?: boolean,
-  enteringTimeMaxOn?: boolean,
+  durationEnabled?: boolean,
+  enteringTimeMaxEnabled?: boolean,
 }
 
 @Component({
@@ -47,10 +46,10 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
     full_screen: [ '' ],
     allows_multiple_attempts: [ false ],
     requires_explicit_entry: [ false ],
-    duration_on: [ false ],
+    duration_enabled: [ false ],
     duration: [ null ],
     entering_time_min: [ null ],
-    entering_time_max_on: [ false ],
+    entering_time_max_enabled: [ false ],
     entering_time_max: [ null ],
   });
   itemChanges: { children?: ChildData[] } = {};
@@ -76,8 +75,8 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
     this.subscription = this.fetchState$
       .pipe(readyData(), map(data => ({
         ...data.item,
-        durationOn: data.item.duration !== null,
-        enteringTimeMaxOn: !DEFAULT_DATES.includes(data.item.enteringTimeMax),
+        durationEnabled: data.item.duration !== null,
+        enteringTimeMaxEnabled: data.item.enteringTimeMax !== DEFAULT_ENTERING_TIME_MAX
       })))
       .subscribe(data => {
         this.initialFormData = data;
@@ -151,10 +150,10 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
       fullScreen: this.itemForm.get('full_screen'),
       allowsMultipleAttempts: this.itemForm.get('allows_multiple_attempts'),
       requiresExplicitEntry: this.itemForm.get('requires_explicit_entry'),
-      durationOn: this.itemForm.get('duration_on'),
+      durationEnabled: this.itemForm.get('duration_enabled'),
       duration: this.itemForm.get('duration'),
       enteringTimeMin: this.itemForm.get('entering_time_min'),
-      enteringTimeMaxOn: this.itemForm.get('entering_time_max_on'),
+      enteringTimeMaxEnabled: this.itemForm.get('entering_time_max_enabled'),
       enteringTimeMax: this.itemForm.get('entering_time_max'),
     };
 
@@ -199,13 +198,13 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
       itemFormValues.requires_explicit_entry = requiresExplicitEntry;
     }
 
-    const durationOn = formControls.durationOn?.value as boolean;
+    const durationEnabled = formControls.durationEnabled?.value as boolean;
     const duration = formControls.duration?.value as string;
-    const hasDurationOnChanges = durationOn !== this.initialFormData.durationOn;
+    const hasDurationEnabledChanges = durationEnabled !== this.initialFormData.durationEnabled;
     const hasDurationChanges = duration !== this.initialFormData.duration;
 
-    if (hasDurationChanges || hasDurationOnChanges || hasRequiresExplicitEntryChanges) {
-      itemFormValues.duration = durationOn && requiresExplicitEntry ? duration : null;
+    if (hasDurationChanges || hasDurationEnabledChanges || hasRequiresExplicitEntryChanges) {
+      itemFormValues.duration = durationEnabled && requiresExplicitEntry ? duration : null;
     }
 
     const enteringTimeMin = formControls.enteringTimeMin?.value as string;
@@ -216,14 +215,14 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
       itemFormValues.entering_time_min = enteringTimeMin;
     }
 
-    const enteringTimeMaxOn = formControls.enteringTimeMaxOn?.value as boolean;
-    const hasEnteringTimeMaxOnChanges = enteringTimeMaxOn !== this.initialFormData.enteringTimeMaxOn;
+    const enteringTimeMaxEnabled = formControls.enteringTimeMaxEnabled?.value as boolean;
+    const hasEnteringTimeMaxEnabledChanges = enteringTimeMaxEnabled !== this.initialFormData.enteringTimeMaxEnabled;
     const enteringTimeMax = formControls.enteringTimeMax?.value as string;
     const hasEnteringTimeMaxChanges = new Date(enteringTimeMax).getTime()
       !== new Date(this.initialFormData.enteringTimeMax).getTime();
 
-    if (hasEnteringTimeMaxChanges || hasEnteringTimeMaxOnChanges) {
-      itemFormValues.entering_time_max = enteringTimeMaxOn ? enteringTimeMax : DEFAULT_DATE;
+    if (hasEnteringTimeMaxChanges || hasEnteringTimeMaxEnabledChanges) {
+      itemFormValues.entering_time_max = enteringTimeMaxEnabled ? enteringTimeMax : DEFAULT_ENTERING_TIME_MAX;
     }
 
     return itemFormValues;
@@ -321,10 +320,10 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
       full_screen: item.fullScreen,
       allows_multiple_attempts: item.allowsMultipleAttempts,
       requires_explicit_entry: item.requiresExplicitEntry,
-      duration_on: item.durationOn,
+      duration_enabled: item.durationEnabled,
       duration: item.duration,
-      entering_time_min: item.enteringTimeMin === INIT_DATE ? new Date() : new Date(item.enteringTimeMin),
-      entering_time_max_on: item.enteringTimeMaxOn,
+      entering_time_min: item.enteringTimeMin === DEFAULT_ENTERING_TIME_MIN ? new Date() : new Date(item.enteringTimeMin),
+      entering_time_max_enabled: item.enteringTimeMaxEnabled,
       entering_time_max: new Date(item.enteringTimeMax),
     });
 
