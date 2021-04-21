@@ -18,8 +18,8 @@ export interface ItemChanges {
   allows_multiple_attempts?: boolean,
   requires_explicit_entry?: boolean,
   duration?: string | null,
-  entering_time_min?: string,
-  entering_time_max?: string,
+  entering_time_min?: Date,
+  entering_time_max?: Date,
 }
 
 @Injectable({

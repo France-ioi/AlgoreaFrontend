@@ -6,6 +6,7 @@ import * as D from 'io-ts/Decoder';
 import { pipe } from 'fp-ts/lib/function';
 import { decodeSnakeCase } from 'src/app/shared/operators/decode';
 import { permissionsDecoder } from '../helpers/item-permissions';
+import { dateDecoder } from 'src/app/shared/helpers/decoders';
 
 export const itemDecoder = pipe(
   D.struct({
@@ -33,8 +34,8 @@ export const itemDecoder = pipe(
     fullScreen: D.literal('forceYes','forceNo','default'),
     allowsMultipleAttempts: D.boolean,
     duration: D.nullable(D.string),
-    enteringTimeMin: D.string,
-    enteringTimeMax: D.string,
+    enteringTimeMin: dateDecoder,
+    enteringTimeMax: dateDecoder,
   }),
   D.intersect(
     D.partial({
