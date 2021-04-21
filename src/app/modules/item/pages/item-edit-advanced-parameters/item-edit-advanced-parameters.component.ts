@@ -51,9 +51,17 @@ export class ItemEditAdvancedParametersComponent {
 
   constructor() { }
 
+  onRequiresExplicitEntryChange(event: boolean): void {
+    this.handleDurationValidation(event);
+  }
+
   onDurationOnChange(event: boolean): void {
+    this.handleDurationValidation(event);
+  }
+
+  handleDurationValidation(enable: boolean): void {
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    this.parentForm?.get('duration')?.setValidators(event ? Validators.required : null);
+    this.parentForm?.get('duration')?.setValidators(enable ? Validators.required : null);
     this.parentForm?.get('duration')?.updateValueAndValidity();
   }
 

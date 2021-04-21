@@ -80,6 +80,7 @@
         <alg-switch
             formControlName="requires_explicit_entry"
             mode="white"
+            (ngModelChange)="onRequiresExplicitEntryChange($event)"
         >
         </alg-switch>
       </div>
