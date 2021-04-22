@@ -36,7 +36,7 @@ export class Duration {
   }
 
   toString(): string {
-    return `${Math.floor(this.ms/HOURS)}:${Math.floor(this.ms%HOURS/MINUTES)}:${this.ms%MINUTES}`;
+    return `${Math.floor(this.ms/HOURS)}:${Math.floor(this.ms%HOURS/MINUTES)}:${this.ms%MINUTES/SECONDS}`;
   }
 
   toReadable(): string {
@@ -61,4 +61,19 @@ export class Duration {
     return Math.floor(this.ms/MINUTES);
   }
 
+  getHours(): string {
+    return Math.floor(this.ms/HOURS).toString();
+  }
+
+  getMinutes(): string {
+    return Math.floor(this.ms%HOURS/MINUTES).toString();
+  }
+
+  getSeconds(): string {
+    return Math.floor(this.ms%MINUTES/SECONDS).toString();
+  }
+
+  isValid(): boolean {
+    return !isNaN(this.ms);
+  }
 }

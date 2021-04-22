@@ -1,5 +1,6 @@
 import { Component, EventEmitter, forwardRef, Input, Output } from '@angular/core';
 import { ControlValueAccessor, FormGroup, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Duration } from '../../../../shared/helpers/duration';
 
 const MAX_HOURS_VALUE = 838;
 const MAX_MINUTES_VALUE = 59;
@@ -34,10 +35,15 @@ export class DurationComponent implements ControlValueAccessor {
       return;
     }
 
-    const [ hours, minutes, seconds ] = value.split(':');
-    this.hours = hours;
-    this.minutes = minutes;
-    this.seconds = seconds;
+    const duration: Duration | null = Duration.fromString(value);
+
+    if (!duration) {
+      return;
+    }
+
+    this.hours = duration.getHours();
+    this.minutes = duration.getMinutes();
+    this.seconds = duration.getSeconds();
   }
 
   registerOnChange(fn: (value: string | null) => void): void {
@@ -54,8 +60,8 @@ export class DurationComponent implements ControlValueAccessor {
       this.setDefaultModelValues();
     }
 
-    const isValid = !!(+this.hours && +this.minutes && +this.seconds);
-    const value = isValid ? `${this.hours}:${this.minutes}:${this.seconds}` : null;
+    const duration: Duration = Duration.fromHMS(+this.hours, +this.minutes, +this.seconds);
+    const value = duration.isValid() ? duration.toString() : null;
 
     this.change.emit(value);
     this.onChange(value);
