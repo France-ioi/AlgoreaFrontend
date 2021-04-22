@@ -1,6 +1,6 @@
 import { Component, EventEmitter, forwardRef, Input, Output } from '@angular/core';
 import { ControlValueAccessor, FormGroup, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { Duration } from '../../../../shared/helpers/duration';
+import { Duration } from 'src/app/shared/helpers/duration';
 
 const MAX_HOURS_VALUE = 838;
 const MAX_MINUTES_VALUE = 59;
@@ -19,7 +19,7 @@ const MAX_SECONDS_VALUE = 59;
   ]
 })
 export class DurationComponent implements ControlValueAccessor {
-  @Output() change = new EventEmitter<string | null>();
+  @Output() change = new EventEmitter<Duration | null>();
 
   @Input() name = '';
   @Input() parentForm?: FormGroup;
@@ -28,16 +28,10 @@ export class DurationComponent implements ControlValueAccessor {
   minutes = '';
   seconds = '';
 
-  private onChange: (value: string | null) => void = () => {};
+  private onChange: (duration: Duration | null) => void = () => {};
 
-  writeValue(value: string): void {
-    if (!value) {
-      return;
-    }
-
-    const duration: Duration | null = Duration.fromString(value);
-
-    if (!duration) {
+  writeValue(duration: Duration | null): void {
+    if (!duration || !duration.isValid()) {
       return;
     }
 
@@ -46,14 +40,24 @@ export class DurationComponent implements ControlValueAccessor {
     this.seconds = duration.getSeconds();
   }
 
-  registerOnChange(fn: (value: string | null) => void): void {
+  registerOnChange(fn: (duration: Duration | null) => void): void {
     this.onChange = fn;
   }
 
-  registerOnTouched(_fn: (value: string | null) => void): void {
+  registerOnTouched(_fn: (duration: Duration | null) => void): void {
+  }
+
+  emitValue(duration: Duration | null): void {
+    this.change.emit(duration);
+    this.onChange(duration);
   }
 
   handleChange(): void {
+    if (this.hours === '' || this.minutes === '' || this.seconds === '') {
+      this.emitValue(null);
+      return;
+    }
+
     if (this.hours && +this.hours > MAX_HOURS_VALUE ||
       this.minutes && +this.minutes > MAX_MINUTES_VALUE ||
       this.seconds && +this.seconds > MAX_SECONDS_VALUE) {
@@ -61,10 +65,8 @@ export class DurationComponent implements ControlValueAccessor {
     }
 
     const duration: Duration = Duration.fromHMS(+this.hours, +this.minutes, +this.seconds);
-    const value = duration.isValid() ? duration.toString() : null;
 
-    this.change.emit(value);
-    this.onChange(value);
+    this.emitValue(duration.isValid() ? duration : null);
   }
 
   setDefaultModelValues(): void {

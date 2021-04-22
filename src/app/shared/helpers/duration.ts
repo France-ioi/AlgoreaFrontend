@@ -57,6 +57,10 @@ export class Duration {
     }
   }
 
+  getMS(): number {
+    return this.ms;
+  }
+
   minutes(): number {
     return Math.floor(this.ms/MINUTES);
   }

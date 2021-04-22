@@ -16,6 +16,7 @@ import { CreateItemService, NewItem } from '../../http-services/create-item.serv
 import { ItemEditAdvancedParametersComponent } from '../item-edit-advanced-parameters/item-edit-advanced-parameters.component';
 import { Mode, ModeService } from 'src/app/shared/services/mode.service';
 import { readyData } from 'src/app/shared/operators/state';
+import { Duration } from '../../../../shared/helpers/duration';
 
 const DEFAULT_ENTERING_TIME_MIN = '1000-01-01T00:00:00Z';
 const DEFAULT_ENTERING_TIME_MAX = '9999-12-31T23:59:59Z';
@@ -199,12 +200,12 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
     }
 
     const durationEnabled = formControls.durationEnabled?.value as boolean;
-    const duration = formControls.duration?.value as string;
+    const duration = formControls.duration?.value as Duration;
     const hasDurationEnabledChanges = durationEnabled !== this.initialFormData.durationEnabled;
-    const hasDurationChanges = duration !== this.initialFormData.duration;
+    const hasDurationChanges = duration?.getMS() !== this.initialFormData?.duration?.getMS();
 
     if (hasDurationChanges || hasDurationEnabledChanges || hasRequiresExplicitEntryChanges) {
-      itemFormValues.duration = durationEnabled && requiresExplicitEntry ? duration : null;
+      itemFormValues.duration = durationEnabled && requiresExplicitEntry ? duration?.toString() : null;
     }
 
     const enteringTimeMin = formControls.enteringTimeMin?.value as Date;
