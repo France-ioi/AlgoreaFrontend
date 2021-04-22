@@ -1,10 +1,11 @@
-<p *ngIf="state === 'error';else noError" class="error-message">
+<p *ngIf="state === 'error';else noError" class="alg-error-message">
   <i class="fa fa-exclamation-triangle"></i>
   <span i18n> Error while loading the group you joined</span>
 </p>
 
 <ng-template #noError>
   <p-table #table
+    class="alg-table --joined-group-list"
     [value]="data"
     [customSort]="true"
     sortMode="multiple"

@@ -1,13 +1,13 @@
 <ng-container *ngIf="state$ | async as state">
   <p-progressSpinner *ngIf="state.isFetching" [style]="{width: '3.3333rem', height: '3.3333rem'}"></p-progressSpinner>
 
-  <p *ngIf="state.isError" class="error-message">
+  <p *ngIf="state.isError" class="alg-error-message">
     <i class="fa fa-exclamation-triangle"></i>
     <span i18n>Unable to load the recent activity</span>
   </p>
 
   <ng-container *ngIf="state.isReady">
-    <p-table [columns]="state.data.columns" [value]="state.data.rowData">
+    <p-table class="alg-table" [columns]="state.data.columns" [value]="state.data.rowData">
       <ng-template pTemplate="header" let-rowData let-columns>
         <tr *ngIf="rowData.length > 0">
           <ng-container *ngFor="let col of columns">

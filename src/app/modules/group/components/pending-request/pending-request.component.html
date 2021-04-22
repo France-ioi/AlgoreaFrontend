@@ -9,7 +9,7 @@
     <ng-container [ngTemplateOutlet]="sectionHeaderTemplate" [ngTemplateOutletContext]="{ $implicit: state }"></ng-container>
   </ng-template>
 
-  <p *ngIf="state === 'fetchingError';else noFetchingError" class="error-message">
+  <p *ngIf="state === 'fetchingError';else noFetchingError" class="alg-error-message">
     <i class="fa fa-exclamation-triangle"></i>
     <span i18n>Error while loading the pending requests.</span>
   </p>
@@ -22,6 +22,7 @@
         [columns]="columns"
         [data]="requests"
         [groupInfo]="panel"
+        tableStyle="--pending-request"
         [(selection)]="selection"
         (sort)="onCustomSort($event)"
         [loading]="state !== 'ready'"
