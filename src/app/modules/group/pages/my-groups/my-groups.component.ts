@@ -12,7 +12,13 @@ export class MyGroupsComponent implements OnDestroy {
   constructor(
     private currentContent: CurrentContentService,
   ) {
-    this.currentContent.current.next(contentInfo({ breadcrumbs: { category: $localize`My groups`, path: [], currentPageIdx: -1 } }));
+    this.currentContent.current.next(contentInfo({
+      breadcrumbs: {
+        category: $localize`My groups`,
+        path: [],
+        currentPageIdx: -1
+      }
+    }));
   }
 
   ngOnDestroy(): void {

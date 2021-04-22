@@ -20,6 +20,7 @@ export class PendingRequestComponent<T> implements OnInit, OnChanges {
   @Input() columns: GridColumn[] = [];
   @Input() requests: T[] = [];
   @Input() state: 'fetching' | 'processing' | 'ready' | 'fetchingError' = 'fetching';
+  @Input() label = '';
 
   @Output() sort = new EventEmitter<string[]>();
   @Output() processRequests = new EventEmitter<{ data: T[], type: Action }>();

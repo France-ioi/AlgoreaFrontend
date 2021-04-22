@@ -1,1 +1,27 @@
-<p>my-groups works!</p>
+<div class="group-info-container">
+  <div class="group-info-header">
+    <span class="group-title" i18n>Joined Groups</span>
+    <span class="group-subtitle" i18n>All the groups you have joined and you manage</span>
+  </div>
+  <div class="group-info-content">
+    <alg-user-group-invitations></alg-user-group-invitations>
+  </div>
+  <div class="group-info-content">
+    <alg-pending-join-requests [showSwitch]="false"></alg-pending-join-requests>
+  </div>
+  <div class="group-table bg-white">
+    <alg-section i18n-label label="The teams you joined" icon="fa fa-users">
+      <alg-joined-group-list></alg-joined-group-list>
+    </alg-section>
+  </div>
+  <div class="group-table bg-white">
+    <alg-section label="The groups you manage" icon="fa fa-users">
+      <alg-managed-group-list></alg-managed-group-list>
+    </alg-section>
+  </div>
+</div>
+
+
+
+
+
