@@ -20,7 +20,7 @@ export class AddItemComponent implements OnChanges {
   state: 'loading' | 'ready' = 'loading';
 
   searchFunction = (value: string): Observable<AddedContent<ItemType>[]> =>
-    this.searchItemService.search(value, [ 'Chapter', 'Course', 'Task' ]);
+    this.searchItemService.search(value, getAllowedNewItemTypes(this.allowSkills).map(item => item.type));
 
   constructor(
     private searchItemService: SearchItemService
