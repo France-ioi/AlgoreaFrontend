@@ -77,6 +77,7 @@ export class ItemChildrenEditComponent implements OnChanges {
   onRemove(): void {
     this.data = this.data.filter(elm => !this.selectedRows.includes(elm));
     this.childrenChanges.emit(this.data);
+    this.selectedRows = [];
   }
 
   orderChanged(): void {
