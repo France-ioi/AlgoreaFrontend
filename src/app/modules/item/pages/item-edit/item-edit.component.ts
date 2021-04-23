@@ -21,11 +21,6 @@ import { Duration } from '../../../../shared/helpers/duration';
 const DEFAULT_ENTERING_TIME_MIN = '1000-01-01T00:00:00Z';
 const DEFAULT_ENTERING_TIME_MAX = '9999-12-31T23:59:59Z';
 
-interface InitialItemState extends Item {
-  durationEnabled?: boolean,
-  enteringTimeMaxEnabled?: boolean,
-}
-
 @Component({
   selector: 'alg-item-edit',
   templateUrl: './item-edit.component.html',
@@ -56,7 +51,7 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
   itemChanges: { children?: ChildData[] } = {};
 
   fetchState$ = this.itemDataSource.state$;
-  initialFormData?: InitialItemState;
+  initialFormData?: Item & {durationEnabled?: boolean, enteringTimeMaxEnabled?: boolean};
 
   subscription?: Subscription;
 
@@ -81,7 +76,7 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
       })))
       .subscribe(data => {
         this.initialFormData = data;
-        this.resetFormWith(data);
+        this.resetForm();
       });
   }
 
@@ -302,11 +297,17 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
     );
   }
 
-  resetForm(): void {
-    if (this.initialFormData) this.resetFormWith(this.initialFormData);
+  onCancel(): void {
+    this.resetForm();
   }
 
-  private resetFormWith(item: InitialItemState): void {
+  private resetForm(): void {
+    if (!this.initialFormData) {
+      return;
+    }
+
+    const item = this.initialFormData;
+
     this.itemForm.reset({
       title: item.string.title || '',
       description: item.string.description || '',
