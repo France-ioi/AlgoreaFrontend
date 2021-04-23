@@ -65,16 +65,12 @@ export class Duration {
     return Math.floor(this.ms/MINUTES);
   }
 
-  getHours(): string {
-    return Math.floor(this.ms/HOURS).toString();
-  }
-
-  getMinutes(): string {
-    return Math.floor(this.ms%HOURS/MINUTES).toString();
-  }
-
-  getSeconds(): string {
-    return Math.floor(this.ms%MINUTES/SECONDS).toString();
+  getHMS(): [string, string, string] {
+    return [
+      Math.floor(this.ms/HOURS).toString(),
+      Math.floor(this.ms%HOURS/MINUTES).toString(),
+      Math.floor(this.ms%MINUTES/SECONDS).toString()
+    ];
   }
 
   isValid(): boolean {

@@ -35,9 +35,7 @@ export class DurationComponent implements ControlValueAccessor {
       return;
     }
 
-    this.hours = duration.getHours();
-    this.minutes = duration.getMinutes();
-    this.seconds = duration.getSeconds();
+    [ this.hours, this.minutes, this.seconds ] = duration.getHMS();
   }
 
   registerOnChange(fn: (duration: Duration | null) => void): void {
