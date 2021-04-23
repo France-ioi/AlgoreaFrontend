@@ -20,6 +20,6 @@ export const durationDecoder: D.Decoder<unknown, Duration> = pipe(
   D.string,
   D.parse(s => {
     const duration = Duration.fromString(s);
-    return !duration?.isValid() ? D.failure(s, "DurationFromString") : D.success(duration);
+    return !duration.isValid() ? D.failure(s, "DurationFromString") : D.success(duration);
   })
 );

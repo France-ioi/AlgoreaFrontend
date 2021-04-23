@@ -5,6 +5,7 @@ export const HOURS = 60 * MINUTES;
 export const DAYS = 24 * HOURS;
 export const MONTHS = 30 * DAYS;
 export const YEARS = 365 * DAYS;
+export const MAX_DURATION = 838*HOURS + 59*MINUTES + 59*SECONDS;
 
 export class Duration {
 
@@ -15,16 +16,9 @@ export class Duration {
   }
 
   // Create a duration from a ^\d{1,3}:[0-5]?\d:[0-5]?\d$ formatted string, e.g. "838:59:59"
-  // If invalid format, return null
-  static fromString(s: string): Duration|null {
-    const MAX_DURATION = 838*HOURS + 59*MINUTES + 59*SECONDS; // 838:59:59 in ms
-    const values = s.split(':');
-    if (values.length != 3) return null;
-    const sec = +values[2];
-    const min = +values[1];
-    const hou = +values[0];
-    if (isNaN(sec) || isNaN(min) || isNaN(hou) || hou > MAX_DURATION) return null;
-    return this.fromHMS(hou, min, sec) ;
+  static fromString(s: string): Duration {
+    const [ hr, min, sec ] = s.split(':');
+    return this.fromHMS(+hr, +min, +sec);
   }
 
   static fromHMS(hours: number, minutes: number, seconds: number): Duration {
@@ -74,6 +68,6 @@ export class Duration {
   }
 
   isValid(): boolean {
-    return !isNaN(this.ms);
+    return !isNaN(this.ms) && this.ms <= MAX_DURATION;
   }
 }
