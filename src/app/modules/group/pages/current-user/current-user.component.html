@@ -1,1 +1,25 @@
 <div>Yourself page works</div>
+
+<div class="bg-white">
+  <alg-section i18n-label label="Personal Information" icon="fa fa-users">
+    {{ currentUser$ | async | json }}
+  </alg-section>
+</div>
+
+<div class="bg-white">
+  <alg-section i18n-label label="School Information" icon="fa fa-graduation-cap">
+    {{ currentUser$ | async | json }}
+  </alg-section>
+</div>
+
+<div class="bg-white">
+  <alg-section i18n-label label="Contact Information" icon="fa fa-envelope">
+    {{ currentUser$ | async | json }}
+  </alg-section>
+</div>
+
+<div class="bg-white">
+  <alg-section i18n-label label="Parameters" icon="fa fa-cog">
+    {{ currentUser$ | async | json }}
+  </alg-section>
+</div>

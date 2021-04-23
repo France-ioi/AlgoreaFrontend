@@ -1,6 +1,9 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { contentInfo } from 'src/app/shared/models/content/content-info';
 import { CurrentContentService } from 'src/app/shared/services/current-content.service';
+import { CurrentUserHttpService, UserProfile } from '../../../../shared/http-services/current-user.service';
+import { Observable } from 'rxjs';
+import { share } from 'rxjs/operators';
 
 const currentUserBreadcrumbCat = $localize`Yourself`;
 
@@ -9,12 +12,18 @@ const currentUserBreadcrumbCat = $localize`Yourself`;
   templateUrl: './current-user.component.html',
   styleUrls: [ './current-user.component.scss' ],
 })
-export class CurrentUserComponent implements OnDestroy {
+export class CurrentUserComponent implements OnInit, OnDestroy {
+  currentUser$?: Observable<UserProfile>;
 
   constructor(
     private currentContent: CurrentContentService,
+    private currentUserHttpService: CurrentUserHttpService
   ) {
     this.currentContent.current.next(contentInfo({ breadcrumbs: { category: currentUserBreadcrumbCat, path: [], currentPageIdx: -1 } }));
+  }
+
+  ngOnInit(): void {
+    this.currentUser$ = this.currentUserHttpService.getProfileInfo().pipe(share());
   }
 
   ngOnDestroy(): void {
