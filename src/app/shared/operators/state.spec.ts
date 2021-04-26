@@ -99,6 +99,48 @@ describe('mapToState', () => {
     });
   });
 
+  it('should retry work with a resetter not completing immediately', () => {
+    testScheduler.run(helpers => {
+      const { cold, expectObservable } = helpers;
+      const e1 =  cold('-a|');
+      const res = cold('----b----|');
+      const expected = 'fa--fa---|';
+
+      expectObservable(e1.pipe(
+        mapToFetchState({ resetter: res }),
+        stateToLetter(),
+      )).toBe(expected);
+    });
+  });
+
+  it('should retry work with multiple resets', () => {
+    testScheduler.run(helpers => {
+      const { cold, expectObservable } = helpers;
+      const e1 =  cold('-a|');
+      const res = cold('----b--b-----b|');
+      const expected = 'fa--fa-fa----fa|';
+
+      expectObservable(e1.pipe(
+        mapToFetchState({ resetter: res }),
+        stateToLetter(),
+      )).toBe(expected);
+    });
+  });
+
+  it('should retry even after a source failure', () => {
+    testScheduler.run(helpers => {
+      const { cold, expectObservable } = helpers;
+      const e1 =  cold('-e|');
+      const res = cold('----b--b--|');
+      const expected = 'fe--fe-fe-|';
+
+      expectObservable(e1.pipe(
+        mapToFetchState({ resetter: res }),
+        stateToLetter(),
+      )).toBe(expected);
+    });
+  });
+
 });
 
 

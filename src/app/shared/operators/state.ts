@@ -1,15 +1,23 @@
-import { of, OperatorFunction, pipe } from 'rxjs';
-import { catchError, filter, map, startWith } from 'rxjs/operators';
+import { EMPTY, noop, Observable, of, OperatorFunction, pipe } from 'rxjs';
+import { catchError, filter, map, startWith, switchMapTo } from 'rxjs/operators';
 import { errorState, fetchingState, FetchState, Ready, readyState } from 'src/app/shared/helpers/state';
 
 /**
  * Rx operator which first emits a loading state and then emit a ready or error state depending on the source. Never fails.
+ * If resetter is given in arg, resubscribe the source each time the resetter emits.
+ * If a resetter is given, the returned observable completes only when the resetter (and the source) completes (so do not forget to complete
+ * the resetter)
  */
-export function mapToFetchState<T>(): OperatorFunction<T,FetchState<T>> {
+export function mapToFetchState<T>(config?: { resetter?: Observable<unknown> }): OperatorFunction<T,FetchState<T>> {
+  const resetter = config?.resetter ? config?.resetter : EMPTY;
   return pipe(
     map(val => readyState(val)),
     startWith(fetchingState()),
     catchError(e => of(errorState(e))),
+    source => resetter.pipe(
+      startWith(noop),
+      switchMapTo(source)
+    ),
   );
 }
 
