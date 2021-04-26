@@ -1,3 +1,23 @@
-.alg-data-list-container {
+@import 'src/colors.scss';
 
+.alg-data-list {
+  list-style: none;
+  padding-left: 0;
+  color: $dark-text-color;
+}
+
+.alg-data-list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: .1rem solid rgba(74,74,74,.1);
+  height: 3rem;
+}
+
+.alg-data-list-item-caption {
+  color: #787878;
+}
+
+.alg-data-list-item-value {
+  color: #4a90e2;
 }
