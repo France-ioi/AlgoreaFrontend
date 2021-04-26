@@ -2,6 +2,7 @@ import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/
 import { MessageService } from 'primeng/api';
 import { forkJoin, merge, Observable, of, Subject, Subscription } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
+import { canCurrentUserGrantGroupAccess } from 'src/app/modules/group/helpers/group-management';
 import { Group } from 'src/app/modules/group/http-services/get-group-by-id.service';
 import { GetGroupChildrenService } from 'src/app/modules/group/http-services/get-group-children.service';
 import { ERROR_MESSAGE } from 'src/app/shared/constants/api';
@@ -174,7 +175,7 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
             data.progress.find(progress => progress.itemId === item.id && progress.groupId === row.id)
           ),
         })),
-        can_access: (this.group?.current_user_can_grant_group_access
+        can_access: (this.group && canCurrentUserGrantGroupAccess(this.group)
           && this.itemData?.item.permissions.canGrantView !== 'none') || false,
       }))
     );

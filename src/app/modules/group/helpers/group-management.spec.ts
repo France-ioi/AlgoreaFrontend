@@ -2,8 +2,8 @@ import { withManagementAdditions } from './group-management';
 
 describe('GroupManagement', () => {
 
-  describe('when the user is not manager', () => {
-    const group = { current_user_is_manager: false };
+  describe('when the user is not manager (1)', () => {
+    const group = { currentUserManagership: 'none' };
 
     it('should set expected values', () => {
       const g = withManagementAdditions(group);
@@ -13,8 +13,31 @@ describe('GroupManagement', () => {
     });
   });
 
-  describe('when the user manager with no perm', () => {
-    const group = { current_user_is_manager: true, current_user_can_manage: 'none' };
+  describe('when the user is not manager (2)', () => {
+    const group = { currentUserManagership: 'descendant' };
+
+    it('should set expected values', () => {
+      const g = withManagementAdditions(group);
+      expect(g.isCurrentUserManager).toBeFalsy();
+      expect(g.canCurrentUserManageMembers).toBeFalsy();
+      expect(g.canCurrentUserManageGroup).toBeFalsy();
+    });
+  });
+
+
+  describe('when the user manager with no perm (1)', () => {
+    const group = { currentUserManagership: 'direct', currentUserCanManage: 'none' };
+
+    it('should set expected values', () => {
+      const g = withManagementAdditions(group);
+      expect(g.isCurrentUserManager).toBeTruthy();
+      expect(g.canCurrentUserManageMembers).toBeFalsy();
+      expect(g.canCurrentUserManageGroup).toBeFalsy();
+    });
+  });
+
+  describe('when the user manager with no perm (2)', () => {
+    const group = { currentUserManagership: 'ancestor', currentUserCanManage: 'none' };
 
     it('should set expected values', () => {
       const g = withManagementAdditions(group);
@@ -25,7 +48,7 @@ describe('GroupManagement', () => {
   });
 
   describe('when the user manager with "memberships" perm', () => {
-    const group = { current_user_is_manager: true, current_user_can_manage: 'memberships' };
+    const group = { currentUserManagership: 'direct', currentUserCanManage: 'memberships' };
 
     it('should set expected values', () => {
       const g = withManagementAdditions(group);
@@ -36,7 +59,7 @@ describe('GroupManagement', () => {
   });
 
   describe('when the user manager with max perm', () => {
-    const group = { current_user_is_manager: true, current_user_can_manage: 'memberships_and_group' };
+    const group = { currentUserManagership: 'direct', currentUserCanManage: 'memberships_and_group' };
 
     it('should set expected values', () => {
       const g = withManagementAdditions(group);

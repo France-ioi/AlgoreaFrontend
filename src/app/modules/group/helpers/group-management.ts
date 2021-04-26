@@ -1,7 +1,49 @@
+import { pipe } from 'fp-ts/lib/function';
+import * as D from 'io-ts/Decoder';
 
-export interface ManagementInfo {
-  current_user_is_manager: boolean;
-  current_user_can_manage?: string;
+const managershipOpts = {
+  none: 'none',
+  direct: 'direct',
+  ancestor: 'ancestor',
+  descendant: 'descendant',
+};
+
+const managementLevelOpts = {
+  none: 'none',
+  memberships: 'memberships',
+  membershipsAndGroup: 'memberships_and_group'
+};
+
+export const groupManagershipDecoder = pipe(
+  D.struct({
+    currentUserManagership: D.literal(managershipOpts.none, managershipOpts.descendant, managershipOpts.direct, managershipOpts.ancestor),
+  }),
+  D.intersect(
+    D.partial({
+      currentUserCanGrantGroupAccess: D.boolean,
+      currentUserCanManage: D.literal(managementLevelOpts.none, managementLevelOpts.memberships, managementLevelOpts.membershipsAndGroup),
+      currentUserCanWatchMembers: D.boolean,
+    })
+  )
+);
+
+type GroupManagership = D.TypeOf<typeof groupManagershipDecoder>;
+
+function isCurrentUserManager<T extends GroupManagership>(g: T): boolean {
+  return [ managershipOpts.direct, managershipOpts.ancestor ].includes(g.currentUserManagership);
+}
+
+export function canCurrentUserGrantGroupAccess<T extends GroupManagership>(g: T): boolean {
+  return !!g.currentUserCanGrantGroupAccess;
+}
+
+export function canCurrentUserManageMembers<T extends GroupManagership>(g: T): boolean {
+  return !!g.currentUserCanManage &&
+    [ managementLevelOpts.memberships, managementLevelOpts.membershipsAndGroup ].includes(g.currentUserCanManage);
+}
+
+export function canCurrentUserManageGroup<T extends GroupManagership>(g: T): boolean {
+  return g.currentUserCanManage === managementLevelOpts.membershipsAndGroup;
 }
 
 export interface ManagementAdditions {
@@ -12,32 +54,11 @@ export interface ManagementAdditions {
 
 // Adds to the given group some new computed attributes (as value)
 // The resulting object can be used in templates as value will not be recomputed
-export function withManagementAdditions<T extends ManagementInfo>(group: T): T & ManagementAdditions {
-  return Object.assign({}, group, {
-    isCurrentUserManager: group.current_user_is_manager,
-    canCurrentUserManageMembers: canCurrentUserManageMembers(group),
-    canCurrentUserManageGroup: canCurrentUserManageGroup(group),
-  });
-}
-
-enum ManagementLevel {
-  None = 'none',
-  Memberships = 'memberships',
-  MembershipsAndGroup = 'memberships_and_group'
-}
-
-export function canCurrentUserManageMembers(group: ManagementInfo): boolean {
-  if (group.current_user_is_manager && group.current_user_can_manage) {
-    return [ ManagementLevel.Memberships as string, ManagementLevel.MembershipsAndGroup as string ].includes(group.current_user_can_manage);
-  } else {
-    return false;
-  }
-}
-
-export function canCurrentUserManageGroup(group: ManagementInfo): boolean {
-  if (group.current_user_is_manager && group.current_user_can_manage) {
-    return group.current_user_can_manage === ManagementLevel.MembershipsAndGroup;
-  } else {
-    return false;
-  }
+export function withManagementAdditions<T extends GroupManagership>(g: T): T & ManagementAdditions {
+  return {
+    ...g,
+    isCurrentUserManager: isCurrentUserManager(g),
+    canCurrentUserManageMembers: canCurrentUserManageMembers(g),
+    canCurrentUserManageGroup: canCurrentUserManageGroup(g),
+  };
 }

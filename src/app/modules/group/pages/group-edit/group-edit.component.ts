@@ -1,7 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
-import { readyData } from 'src/app/shared/operators/state';
+import { mapStateData, readyData } from 'src/app/shared/operators/state';
 import { Mode, ModeService } from 'src/app/shared/services/mode.service';
 import { of, Subscription } from 'rxjs';
 import { concatMap } from 'rxjs/operators';
@@ -14,6 +14,7 @@ import { NoActivity, NewActivity, ExistingActivity,
 import { Group } from '../../http-services/get-group-by-id.service';
 import { GroupUpdateService } from '../../http-services/group-update.service';
 import { GroupDataSource } from '../../services/group-datasource.service';
+import { withManagementAdditions } from '../../helpers/group-management';
 
 @Component({
   selector: 'alg-group-edit',
@@ -29,7 +30,7 @@ export class GroupEditComponent implements OnDestroy, PendingChangesComponent {
   })
   initialFormData?: Group;
 
-  state$ = this.groupDataSource.state$;
+  state$ = this.groupDataSource.state$.pipe(mapStateData(g => withManagementAdditions(g)))
 
   subscription?: Subscription;
 
@@ -124,9 +125,9 @@ export class GroupEditComponent implements OnDestroy, PendingChangesComponent {
 
   private resetFormWith(group: Group): void {
 
-    const rootActivity = group.root_activity_id === null ?
+    const rootActivity = group.rootActivityId === null ?
       { tag: 'no-activity' } :
-      { tag: 'existing-activity', id: group.root_activity_id };
+      { tag: 'existing-activity', id: group.rootActivityId };
 
     this.groupForm.reset({
       name: group.name,

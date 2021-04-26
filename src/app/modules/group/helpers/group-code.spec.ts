@@ -9,7 +9,7 @@ describe('GroupCode', () => {
     it('should set expected values', () => {
       const g = withCodeAdditions(group);
       expect(g.codeExpiration).toBeUndefined();
-      expect(g.codeLifetime).toBeUndefined();
+      expect(g.codeLifetimeParsed).toBeUndefined();
       expect(g.hasCodeNotSet).toBeTruthy(); // even if irrelevant
       expect(g.hasCodeUnused).toBeFalsy();
       expect(g.hasCodeInUse).toBeFalsy();
@@ -21,12 +21,12 @@ describe('GroupCode', () => {
   });
 
   describe('when the group has no code set', () => {
-    const group = { code: null as string|null, code_lifetime: null as string|null, code_expires_at: null as string|null };
+    const group = { code: null as string|null, codeLifetime: null as string|null, codeExpiresAt: null as string|null };
 
     it('should set expected values', () => {
       const g = withCodeAdditions(group);
       expect(g.codeExpiration).toBeUndefined();
-      expect(g.codeLifetime).toBeUndefined();
+      expect(g.codeLifetimeParsed).toBeUndefined();
       expect(g.hasCodeNotSet).toBeTruthy();
       expect(g.hasCodeUnused).toBeFalsy();
       expect(g.hasCodeInUse).toBeFalsy();
@@ -38,12 +38,12 @@ describe('GroupCode', () => {
   });
 
   describe('when the group has a unused code', () => {
-    const group = { code: 'abcd', code_lifetime: '1:02:03', code_expires_at: null as string|null };
+    const group = { code: 'abcd', codeLifetime: '1:02:03', codeExpiresAt: null as string|null };
 
     it('should set expected values', () => {
       const g = withCodeAdditions(group);
       expect(g.codeExpiration).toBeUndefined();
-      expect(g.codeLifetime).toEqual(Duration.fromHMS(1,2,3));
+      expect(g.codeLifetimeParsed).toEqual(Duration.fromHMS(1,2,3));
       expect(g.hasCodeNotSet).toBeFalsy();
       expect(g.hasCodeUnused).toBeTruthy();
       expect(g.hasCodeInUse).toBeFalsy();
@@ -55,7 +55,7 @@ describe('GroupCode', () => {
   });
 
   describe('when the group has a code already used', () => {
-    const group = { code: 'abcd', code_lifetime: '1:02:03', code_expires_at: '2020-01-01T10:02:03.00' };
+    const group = { code: 'abcd', codeLifetime: '1:02:03', codeExpiresAt: '2020-01-01T10:02:03.00' };
 
     beforeEach(() => {
       jasmine.clock().install();
@@ -65,7 +65,7 @@ describe('GroupCode', () => {
     it('should set expected values', () => {
       const g = withCodeAdditions(group);
       expect(g.codeExpiration).toEqual(new Date('2020-01-01 10:02:03'));
-      expect(g.codeLifetime).toEqual(Duration.fromHMS(1,2,3));
+      expect(g.codeLifetimeParsed).toEqual(Duration.fromHMS(1,2,3));
       expect(g.hasCodeNotSet).toBeFalsy();
       expect(g.hasCodeUnused).toBeFalsy();
       expect(g.hasCodeInUse).toBeTruthy();
@@ -81,7 +81,7 @@ describe('GroupCode', () => {
   });
 
   describe('when the group has an expired code', () => {
-    const group = { code: 'abcd', code_lifetime: '1:02:03', code_expires_at: '2020-01-01T10:02:03.00' };
+    const group = { code: 'abcd', codeLifetime: '1:02:03', codeExpiresAt: '2020-01-01T10:02:03.00' };
 
     beforeEach(() => {
       jasmine.clock().install();
@@ -91,7 +91,7 @@ describe('GroupCode', () => {
     it('should set expected values', () => {
       const g = withCodeAdditions(group);
       expect(g.codeExpiration).toEqual(new Date('2020-01-01 10:02:03'));
-      expect(g.codeLifetime).toEqual(Duration.fromHMS(1,2,3));
+      expect(g.codeLifetimeParsed).toEqual(Duration.fromHMS(1,2,3));
       expect(g.hasCodeNotSet).toBeFalsy();
       expect(g.hasCodeUnused).toBeFalsy();
       expect(g.hasCodeInUse).toBeFalsy();
