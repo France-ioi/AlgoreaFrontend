@@ -41,7 +41,8 @@ export function codeExpiration(group: CodeInfo): Date|undefined {
 export function codeLifetime(group: CodeInfo): Duration|undefined {
   const lifetime = group.code_lifetime;
   if (!lifetime) return undefined;
-  return Duration.fromString(lifetime)||undefined;
+  const duration = Duration.fromString(lifetime);
+  return duration.isValid() ? duration : undefined;
 }
 
 export function hasCodeNotSet(group: CodeInfo): boolean {
