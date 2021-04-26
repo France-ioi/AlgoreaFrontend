@@ -21,8 +21,8 @@ describe('duration', () => {
   });
 
   it('should return ms result', () => {
-    expect(Duration.fromString(DURATION_STRING).getMS()).toEqual(DURATION_STRING_IN_MS);
-    expect(new Duration(MAX_DURATION).getMS()).toEqual(MAX_DURATION);
+    expect(Duration.fromString(DURATION_STRING).getMs()).toEqual(DURATION_STRING_IN_MS);
+    expect(new Duration(MAX_DURATION).getMs()).toEqual(MAX_DURATION);
   });
 
   it('should return hours, minutes, seconds tuple', () => {
