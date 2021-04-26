@@ -51,7 +51,7 @@ export class Duration {
     }
   }
 
-  getMS(): number {
+  getMs(): number {
     return this.ms;
   }
 
