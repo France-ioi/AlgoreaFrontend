@@ -3,8 +3,7 @@ import { FormGroup, Validators } from '@angular/forms';
 import { DropdownOption } from 'src/app/modules/shared-components/components/dropdown/dropdown.component';
 import { Item } from '../../http-services/get-item-by-id.service';
 
-const INIT_MAX_RANGE_HOURS = 1;
-const INIT_MAX_RANGE_MS = INIT_MAX_RANGE_HOURS * 3600 * 1000;
+const HOURS = 1;
 
 @Component({
   selector: 'alg-item-edit-advanced-parameters',
@@ -77,7 +76,7 @@ export class ItemEditAdvancedParametersComponent implements OnInit {
     const enteringTimeMin = this.parentForm?.get('entering_time_min')?.value as string;
     const enteringTimeMinDate = new Date(enteringTimeMin);
     this.parentForm?.get('entering_time_max')?.patchValue(
-      new Date(enteringTimeMinDate.getTime() + INIT_MAX_RANGE_MS)
+      new Date(enteringTimeMinDate.getTime() + (HOURS * 3600 * 1000))
     );
   }
 
