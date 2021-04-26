@@ -66,4 +66,86 @@
       </div>
     </div>
   </alg-section>
+
+  <alg-section icon="fa fa-desktop" i18n-label label="Participation" *ngIf="item.type !== 'Skill'">
+    <div class="form-item-view">
+      <span class="form-item-label" i18n>Allow multiple attempts (not implemented)</span>
+      <div class="form-item-control">
+        <alg-switch formControlName="allows_multiple_attempts" mode="white"></alg-switch>
+      </div>
+    </div>
+    <div class="form-item-view">
+      <span class="form-item-label" i18n>Start participation manually</span>
+      <div class="form-item-control">
+        <alg-switch
+            formControlName="requires_explicit_entry"
+            mode="white"
+            (ngModelChange)="onRequiresExplicitEntryChange()"
+        >
+        </alg-switch>
+      </div>
+    </div>
+    <ng-container *ngIf="!!parentForm.get('requires_explicit_entry')?.value">
+      <div class="form-item-view">
+        <span class="form-item-label" i18n>Duration (not implemented)</span>
+        <div class="form-item-control another-input">
+          <alg-switch
+              class="first-child"
+              formControlName="duration_enabled"
+              mode="white"
+              (ngModelChange)="onDurationEnabledChange()"
+          >
+          </alg-switch>
+          <div class="input-wrapper">
+            <alg-duration
+                class="alg-duration"
+                formControlName="duration"
+                name="duration"
+                [parentForm]="parentForm"
+                *ngIf="!!parentForm.get('duration_enabled')?.value"
+            >
+            </alg-duration>
+          </div>
+        </div>
+      </div>
+      <div class="form-item-view">
+        <span class="form-item-label" i18n>First allowed entering time</span>
+        <div class="form-item-control">
+          <p-calendar
+              class="alg-calendar"
+              formControlName="entering_time_min"
+              [showIcon]="true"
+              [showTime]="true"
+              (ngModelChange)="onDateChange()"
+          >
+          </p-calendar>
+        </div>
+      </div>
+      <div class="form-item-view">
+        <span class="form-item-label" i18n>Latest allowed entering time</span>
+        <div class="form-item-control another-input">
+          <alg-switch
+              class="first-child"
+              formControlName="entering_time_max_enabled"
+              mode="white"
+              (ngModelChange)="onEnteringTimeMaxEnabledChange($event)"
+          >
+          </alg-switch>
+          <ng-container *ngIf="!!parentForm.get('entering_time_max_enabled')?.value">
+            <div class="input-wrapper">
+              <p-calendar
+                  class="alg-calendar"
+                  formControlName="entering_time_max"
+                  [showIcon]="true"
+                  [showTime]="true"
+                  [minDate]="minEnteringTimeMaxDate"
+                  (ngModelChange)="onDateChange()"
+              >
+              </p-calendar>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </ng-container>
+  </alg-section>
 </form>

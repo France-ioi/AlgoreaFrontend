@@ -1,0 +1,43 @@
+<div class="elements">
+  <div class="element">
+    <p class="label">H</p>
+    <p-inputMask
+        placeholder="HHH"
+        slotChar="HHH"
+        mask="9?99"
+        [unmask]="true"
+        [size]="8"
+        [(ngModel)]="hours"
+        (ngModelChange)="handleChange()"
+    >
+    </p-inputMask>
+  </div>
+  <div class="element">
+    <p class="label">M</p>
+    <p-inputMask
+        placeholder="MM"
+        slotChar="MM"
+        mask="9?9"
+        [unmask]="true"
+        [size]="8"
+        [(ngModel)]="minutes"
+        (ngModelChange)="handleChange()"
+    >
+    </p-inputMask>
+  </div>
+  <div class="element">
+    <p class="label">S</p>
+    <p-inputMask
+        placeholder="SS"
+        slotChar="SS"
+        mask="9?9"
+        [unmask]="true"
+        [size]="8"
+        [(ngModel)]="seconds"
+        (ngModelChange)="handleChange()"
+    >
+    </p-inputMask>
+  </div>
+</div>
+
+<alg-input-error [form]="parentForm" [inputName]="name"></alg-input-error>

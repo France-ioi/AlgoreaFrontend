@@ -15,6 +15,11 @@ export interface ItemChanges {
   title_bar_visible?: boolean,
   full_screen?: 'forceYes' | 'forceNo' | 'default',
   prompt_to_join_group_by_code?: boolean,
+  allows_multiple_attempts?: boolean,
+  requires_explicit_entry?: boolean,
+  duration?: string | null,
+  entering_time_min?: Date,
+  entering_time_max?: Date,
 }
 
 @Injectable({

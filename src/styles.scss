@@ -321,6 +321,64 @@ body .p-component {
   }
 }
 
+.alg-calendar, .alg-duration {
+  &.alg-duration {
+    input {
+      text-align: center;
+    }
+  }
+
+  input {
+    font-family: "titillium", sans-serif;
+    width: 100%;
+    display: flex;
+    background-color: $input-transparency-color;
+    border: none;
+    box-shadow: 0 .1rem #00000019 inset;
+    border-radius: $border-radius;
+    font-size: 1.2rem;
+    color: $base-text-color;
+
+    &:focus, &:active {
+      outline: none;
+    }
+
+    &::placeholder {
+      font-style: italic;
+      color: rgb(118, 118, 121);
+      font-size: 1.2rem;
+    }
+  }
+
+  .p-datepicker-trigger {
+    width: 3rem;
+  }
+
+  .p-button {
+    background-color: $base-color;
+    border-color: $base-color;
+  }
+}
+
+.alg-link {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: "titillium", sans-serif;
+  font-weight: 100;
+  text-decoration: none;
+
+  color: $base-text-color;
+
+  &.clickable {
+    cursor: pointer;
+
+    &:hover {
+      color: $base-color;
+    }
+  }
+}
 
 @media screen and (max-width: 800px) {
   html { font-size: 55.66%; }
