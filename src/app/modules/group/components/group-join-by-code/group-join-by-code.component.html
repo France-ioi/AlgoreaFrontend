@@ -41,7 +41,7 @@
       </div>
       <div class="validity-selector">
         <span class="label" i18n>Validity</span>
-        <alg-time-picker [initialValue]="groupExt?.codeLifetime" (submit)="changeValidity($event)"></alg-time-picker>
+        <alg-time-picker [initialValue]="groupExt?.codeLifetimeParsed" (submit)="changeValidity($event)"></alg-time-picker>
       </div>
     </div>
 
