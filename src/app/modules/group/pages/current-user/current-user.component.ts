@@ -5,7 +5,7 @@ import { UserProfile } from 'src/app/shared/http-services/current-user.service';
 import { Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { UserSession, UserSessionService } from 'src/app/shared/services/user-session.service';
-import { inputIsNotNullOrUndefined } from 'src/app/shared/helpers/input-is-not-null-or-undefined';
+import { isNotNullOrUndefined } from 'src/app/shared/helpers/is-not-null-or-undefined';
 
 const currentUserBreadcrumbCat = $localize`Yourself`;
 
@@ -26,7 +26,7 @@ export class CurrentUserComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.currentUser$ = this.userSessionService.session$.pipe(
-      filter(inputIsNotNullOrUndefined),
+      filter(isNotNullOrUndefined),
       map((session: UserSession) => session.user)
     );
   }
