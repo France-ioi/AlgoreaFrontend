@@ -1,9 +1,7 @@
 import { Component, EventEmitter, Input, OnChanges, Output, ViewChild } from '@angular/core';
-import { MessageService } from 'primeng/api';
 import { forkJoin, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { ERROR_MESSAGE } from 'src/app/shared/constants/api';
-import { TOAST_LENGTH } from 'src/app/shared/constants/global';
+import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
 import { TypeFilter } from '../../components/group-composition-filter/group-composition-filter.component';
 import { MemberListComponent } from '../../components/member-list/member-list.component';
 import { ManagementAdditions, withManagementAdditions } from '../../helpers/group-management';
@@ -33,7 +31,7 @@ export class GroupCompositionComponent implements OnChanges {
 
   constructor(
     private groupCreationService: GroupCreationService,
-    private messageService: MessageService,
+    private actionFeedbackService: ActionFeedbackService,
   ) {}
 
   ngOnChanges(): void {
@@ -54,33 +52,15 @@ export class GroupCompositionComponent implements OnChanges {
       childGroupId: group.id ? of(group.id) : this.groupCreationService.create(group.title, group.type),
     }).pipe(switchMap(ids => this.groupCreationService.addSubgroup(ids.parentGroupId, ids.childGroupId))).subscribe(
       _ => {
-        this.displaySuccess($localize`Group successfully added as child group`);
+        this.actionFeedbackService.success($localize`Group successfully added as child group`);
         this.memberList?.setFilter({ directChildren: true, type: TypeFilter.Groups });
         this.state = 'ready';
       },
       _err => {
-        this.displayError();
+        this.actionFeedbackService.unexpectedError();
         this.state = 'ready';
       }
     );
-  }
-
-  displaySuccess(msg: string): void {
-    this.messageService.add({
-      severity: 'success',
-      summary: 'Success',
-      detail: msg,
-      life: TOAST_LENGTH,
-    });
-  }
-
-  displayError(): void {
-    this.messageService.add({
-      severity: 'error',
-      summary: 'Error',
-      detail: ERROR_MESSAGE.fail,
-      life: TOAST_LENGTH,
-    });
   }
 
 }
