@@ -32,6 +32,7 @@ import { GroupProgressGridComponent } from './pages/group-progress-grid/group-pr
 import { ItemEditAdvancedParametersComponent } from './pages/item-edit-advanced-parameters/item-edit-advanced-parameters.component';
 import { CalendarModule } from 'primeng/calendar';
 import { LogActionDisplayPipe } from './pages/item-log-view/logActionDisplay';
+import { InputTextModule } from 'primeng/inputtext';
 
 @NgModule({
   declarations: [
@@ -71,6 +72,7 @@ import { LogActionDisplayPipe } from './pages/item-log-view/logActionDisplay';
     DialogModule,
     ButtonModule,
     CalendarModule,
+    InputTextModule,
   ],
   providers: [
     PendingChangesGuard,

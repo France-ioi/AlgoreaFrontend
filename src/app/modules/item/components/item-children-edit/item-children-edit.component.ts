@@ -30,6 +30,7 @@ export class ItemChildrenEditComponent implements OnChanges {
   state: 'loading' | 'error' | 'ready' = 'ready';
   data: ChildData[] = [];
   selectedRows: ChildData[] = [];
+  enableScoreWeight = false;
 
   private subscription?: Subscription;
   @Output() childrenChanges = new EventEmitter<ChildData[]>();
@@ -51,7 +52,12 @@ export class ItemChildrenEditComponent implements OnChanges {
         .pipe(
           map(children => children
             .sort((a, b) => a.order - b.order)
-            .map(child => ({ id: child.id, title: child.string.title, type: child.type }))
+            .map(child => ({
+              id: child.id,
+              title: child.string.title,
+              type: child.type,
+              scoreWeight: child.scoreWeight
+            }))
           )
         ).subscribe(children => {
           this.data = children;
