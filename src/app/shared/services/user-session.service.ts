@@ -30,7 +30,7 @@ export class UserSessionService implements OnDestroy {
           catchError(_e => EMPTY)
         );
       }),
-      distinctUntilChanged((p1, p2) => p1 === p2 || (!!p1 && !!p2 && p1.id === p2.id))
+      distinctUntilChanged((p1, p2) => p1 === p2 || (!!p1 && !!p2 && p1.groupId === p2.groupId))
     ).subscribe(profile => {
       this.session$.next(profile ? { user: profile } : undefined);
     });
@@ -54,7 +54,7 @@ export class UserSessionService implements OnDestroy {
 
   isCurrentUserTemp(): boolean {
     const session = this.session$.value;
-    return !session || session.user.isTemp;
+    return !session || session.user.tempUser;
   }
 
   login(): void {

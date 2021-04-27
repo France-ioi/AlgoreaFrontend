@@ -22,7 +22,7 @@
     </ng-template>
   </p-tabPanel>
 
-  <p-tabPanel *ngIf="activeTabIndex === 2 || (session && !session.user.isTemp)">
+  <p-tabPanel *ngIf="activeTabIndex === 2 || (session && !session.user.tempUser)">
     <ng-template pTemplate="header" tabindex="7">
       <span class="indicator" class="dark"></span>
       <i class="fa fa-users"></i>

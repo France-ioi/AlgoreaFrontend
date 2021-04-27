@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { appConfig } from '../helpers/config';
 import * as D from 'io-ts/Decoder';
 import { pipe } from 'fp-ts/lib/function';
@@ -9,7 +8,7 @@ import { decodeSnakeCase } from 'src/app/shared/operators/decode';
 
 export const currentUserDecoder = pipe(
   D.struct({
-    id: D.string,
+    groupId: D.string,
     login: D.string,
     firstName: D.nullable(D.string),
     lastName: D.nullable(D.string),
@@ -27,16 +26,11 @@ export const currentUserDecoder = pipe(
     zipCode: D.nullable(D.string),
     cellPhoneNumber: D.nullable(D.string),
     timeZone: D.nullable(D.string),
-    isTemp: D.boolean
+    tempUser: D.boolean
   })
 );
 
 export type UserProfile = D.TypeOf<typeof currentUserDecoder>;
-
-interface RawUserProfile {
-  group_id: string,
-  temp_user: boolean,
-}
 
 @Injectable({
   providedIn: 'root'
@@ -47,13 +41,8 @@ export class CurrentUserHttpService {
 
   getProfileInfo(): Observable<UserProfile> {
     return this.http
-      .get<RawUserProfile>(`${appConfig().apiUrl}/current-user`)
+      .get<unknown>(`${appConfig().apiUrl}/current-user`)
       .pipe(
-        map(raw => ({
-          ...raw,
-          id: raw.group_id,
-          isTemp: raw.temp_user,
-        })),
         decodeSnakeCase(currentUserDecoder)
       );
   }
