@@ -1,5 +1,4 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { MessageService } from 'primeng/api';
 import { merge, of, Subject } from 'rxjs';
 import { switchMap, map } from 'rxjs/operators';
 import { GridColumn } from 'src/app/modules/shared-components/components/grid/grid.component';
@@ -10,6 +9,7 @@ import {
 import { fetchingState, readyState } from 'src/app/shared/helpers/state';
 import { GetRequestsService, PendingRequest } from '../../http-services/get-requests.service';
 import { Action, parseResults, RequestActionsService } from '../../http-services/request-actions.service';
+import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
 
 @Component({
   selector: 'alg-user-group-invitations',
@@ -33,7 +33,7 @@ export class UserGroupInvitationsComponent implements OnDestroy, OnInit {
   constructor(
     private getRequestsService: GetRequestsService,
     private requestActionService: RequestActionsService,
-    private messageService: MessageService,
+    private actionFeedbackService: ActionFeedbackService,
   ) {
     this.dataFetching.pipe(
       switchMap(params =>
@@ -70,12 +70,12 @@ export class UserGroupInvitationsComponent implements OnDestroy, OnInit {
       .subscribe(
         result => {
           this.state = 'ready';
-          displayResponseToast(this.messageService, parseResults(result), params.type);
+          displayResponseToast(this.actionFeedbackService, parseResults(result), params.type);
           this.dataFetching.next({ sort: this.currentSort });
         },
         _err => {
           this.state = 'ready';
-          processRequestError(this.messageService);
+          processRequestError(this.actionFeedbackService);
         }
       );
   }
