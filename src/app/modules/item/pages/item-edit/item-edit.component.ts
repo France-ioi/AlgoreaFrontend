@@ -55,6 +55,10 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
 
   subscription?: Subscription;
 
+  get enableParticipation(): boolean {
+    return this.initialFormData?.type !== 'Skill';
+  }
+
   @ViewChild('content') private editContent?: ItemEditContentComponent;
   @ViewChild('advancedParameters') private editAdvancedParameters?: ItemEditAdvancedParametersComponent;
 
@@ -144,13 +148,15 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
       titleBarVisible: this.itemForm.get('title_bar_visible'),
       promptToJoinGroupByCode: this.itemForm.get('prompt_to_join_group_by_code'),
       fullScreen: this.itemForm.get('full_screen'),
-      allowsMultipleAttempts: this.itemForm.get('allows_multiple_attempts'),
-      requiresExplicitEntry: this.itemForm.get('requires_explicit_entry'),
-      durationEnabled: this.itemForm.get('duration_enabled'),
-      duration: this.itemForm.get('duration'),
-      enteringTimeMin: this.itemForm.get('entering_time_min'),
-      enteringTimeMaxEnabled: this.itemForm.get('entering_time_max_enabled'),
-      enteringTimeMax: this.itemForm.get('entering_time_max'),
+      ...(this.enableParticipation ? {
+        allowsMultipleAttempts: this.itemForm.get('allows_multiple_attempts'),
+        requiresExplicitEntry: this.itemForm.get('requires_explicit_entry'),
+        durationEnabled: this.itemForm.get('duration_enabled'),
+        duration: this.itemForm.get('duration'),
+        enteringTimeMin: this.itemForm.get('entering_time_min'),
+        enteringTimeMaxEnabled: this.itemForm.get('entering_time_max_enabled'),
+        enteringTimeMax: this.itemForm.get('entering_time_max'),
+      } : {})
     };
 
     if (Object.values(formControls).includes(null) || !this.initialFormData) return undefined;
@@ -182,43 +188,45 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
     const fullScreen = formControls.fullScreen?.value as 'forceYes' | 'forceNo' | 'default';
     if (fullScreen !== this.initialFormData.fullScreen) itemFormValues.full_screen = fullScreen;
 
-    const allowsMultipleAttempts = formControls.allowsMultipleAttempts?.value as boolean;
-    if (allowsMultipleAttempts !== this.initialFormData.allowsMultipleAttempts) {
-      itemFormValues.allows_multiple_attempts = allowsMultipleAttempts;
-    }
+    if (this.enableParticipation) {
+      const allowsMultipleAttempts = formControls.allowsMultipleAttempts?.value as boolean;
+      if (allowsMultipleAttempts !== this.initialFormData.allowsMultipleAttempts) {
+        itemFormValues.allows_multiple_attempts = allowsMultipleAttempts;
+      }
 
-    const requiresExplicitEntry = formControls.requiresExplicitEntry?.value as boolean;
-    const hasRequiresExplicitEntryChanges = requiresExplicitEntry !== this.initialFormData.requiresExplicitEntry;
+      const requiresExplicitEntry = formControls.requiresExplicitEntry?.value as boolean;
+      const hasRequiresExplicitEntryChanges = requiresExplicitEntry !== this.initialFormData.requiresExplicitEntry;
 
-    if (hasRequiresExplicitEntryChanges) {
-      itemFormValues.requires_explicit_entry = requiresExplicitEntry;
-    }
+      if (hasRequiresExplicitEntryChanges) {
+        itemFormValues.requires_explicit_entry = requiresExplicitEntry;
+      }
 
-    const durationEnabled = formControls.durationEnabled?.value as boolean;
-    const duration = formControls.duration?.value as Duration;
-    const hasDurationEnabledChanges = durationEnabled !== this.initialFormData.durationEnabled;
-    const hasDurationChanges = duration.getMs() !== this.initialFormData?.duration?.getMs();
+      const durationEnabled = formControls.durationEnabled?.value as boolean;
+      const duration = formControls.duration?.value as Duration;
+      const hasDurationEnabledChanges = durationEnabled !== this.initialFormData.durationEnabled;
+      const hasDurationChanges = duration.getMs() !== this.initialFormData?.duration?.getMs();
 
-    if (hasDurationChanges || hasDurationEnabledChanges || hasRequiresExplicitEntryChanges) {
-      itemFormValues.duration = durationEnabled && requiresExplicitEntry ? duration.toString() : null;
-    }
+      if (hasDurationChanges || hasDurationEnabledChanges || hasRequiresExplicitEntryChanges) {
+        itemFormValues.duration = durationEnabled && requiresExplicitEntry ? duration.toString() : null;
+      }
 
-    const enteringTimeMin = formControls.enteringTimeMin?.value as Date;
-    const hasEnteringTimeMinChanges = enteringTimeMin.getTime()
-      !== this.initialFormData.enteringTimeMin.getTime();
+      const enteringTimeMin = formControls.enteringTimeMin?.value as Date;
+      const hasEnteringTimeMinChanges = enteringTimeMin.getTime()
+        !== this.initialFormData.enteringTimeMin.getTime();
 
-    if (hasEnteringTimeMinChanges) {
-      itemFormValues.entering_time_min = enteringTimeMin;
-    }
+      if (hasEnteringTimeMinChanges) {
+        itemFormValues.entering_time_min = enteringTimeMin;
+      }
 
-    const enteringTimeMaxEnabled = formControls.enteringTimeMaxEnabled?.value as boolean;
-    const hasEnteringTimeMaxEnabledChanges = enteringTimeMaxEnabled !== this.initialFormData.enteringTimeMaxEnabled;
-    const enteringTimeMax = formControls.enteringTimeMax?.value as Date;
-    const hasEnteringTimeMaxChanges = enteringTimeMax.getTime()
-      !== this.initialFormData.enteringTimeMax.getTime();
+      const enteringTimeMaxEnabled = formControls.enteringTimeMaxEnabled?.value as boolean;
+      const hasEnteringTimeMaxEnabledChanges = enteringTimeMaxEnabled !== this.initialFormData.enteringTimeMaxEnabled;
+      const enteringTimeMax = formControls.enteringTimeMax?.value as Date;
+      const hasEnteringTimeMaxChanges = enteringTimeMax.getTime()
+        !== this.initialFormData.enteringTimeMax.getTime();
 
-    if (hasEnteringTimeMaxChanges || hasEnteringTimeMaxEnabledChanges) {
-      itemFormValues.entering_time_max = enteringTimeMaxEnabled ? enteringTimeMax : new Date(DEFAULT_ENTERING_TIME_MAX);
+      if (hasEnteringTimeMaxChanges || hasEnteringTimeMaxEnabledChanges) {
+        itemFormValues.entering_time_max = enteringTimeMaxEnabled ? enteringTimeMax : new Date(DEFAULT_ENTERING_TIME_MAX);
+      }
     }
 
     return itemFormValues;
@@ -320,16 +328,17 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
       title_bar_visible: item.titleBarVisible || false,
       prompt_to_join_group_by_code: item.promptToJoinGroupByCode || false,
       full_screen: item.fullScreen,
-      allows_multiple_attempts: item.allowsMultipleAttempts,
-      requires_explicit_entry: item.requiresExplicitEntry,
-      duration_enabled: item.durationEnabled,
-      duration: item.duration,
-      entering_time_min: item.enteringTimeMin.getTime() === new Date(DEFAULT_ENTERING_TIME_MIN).getTime() ? new Date()
-        : item.enteringTimeMin,
-      entering_time_max_enabled: item.enteringTimeMaxEnabled,
-      entering_time_max: item.enteringTimeMax,
+      ...(this.enableParticipation ? {
+        allows_multiple_attempts: item.allowsMultipleAttempts,
+        requires_explicit_entry: item.requiresExplicitEntry,
+        duration_enabled: item.durationEnabled,
+        duration: item.duration,
+        entering_time_min: item.enteringTimeMin.getTime() === new Date(DEFAULT_ENTERING_TIME_MIN).getTime() ? new Date()
+          : item.enteringTimeMin,
+        entering_time_max_enabled: item.enteringTimeMaxEnabled,
+        entering_time_max: item.enteringTimeMax,
+      } : {})
     });
-
     this.itemChanges = {};
     this.itemForm.enable();
     this.editContent?.reset();
