@@ -4,9 +4,6 @@ import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { forkJoin, Observable, of, Subscription, throwError } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { ItemStringChanges, UpdateItemStringService } from '../../http-services/update-item-string.service';
-import { TOAST_LENGTH } from '../../../../shared/constants/global';
-import { MessageService } from 'primeng/api';
-import { ERROR_MESSAGE } from '../../../../shared/constants/api';
 import { ItemChanges, UpdateItemService } from '../../http-services/update-item.service';
 import { ChildData, ChildDataWithId, hasId } from '../../components/item-children-edit/item-children-edit.component';
 import { Item } from '../../http-services/get-item-by-id.service';
@@ -17,6 +14,7 @@ import { ItemEditAdvancedParametersComponent } from '../item-edit-advanced-param
 import { Mode, ModeService } from 'src/app/shared/services/mode.service';
 import { readyData } from 'src/app/shared/operators/state';
 import { Duration } from '../../../../shared/helpers/duration';
+import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
 
 const DEFAULT_ENTERING_TIME_MIN = '1000-01-01T00:00:00Z';
 const DEFAULT_ENTERING_TIME_MAX = '9999-12-31T23:59:59Z';
@@ -65,7 +63,7 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
     private createItemService: CreateItemService,
     private updateItemService: UpdateItemService,
     private updateItemStringService: UpdateItemStringService,
-    private messageService: MessageService
+    private actionFeedbackService: ActionFeedbackService,
   ) {
     this.modeService.mode$.next(Mode.Editing);
     this.subscription = this.fetchState$
@@ -87,24 +85,6 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
 
   isDirty(): boolean {
     return this.itemForm.dirty;
-  }
-
-  successToast(): void {
-    this.messageService.add({
-      severity: 'success',
-      summary: $localize`Success`,
-      detail: $localize`Changes successfully saved.`,
-      life: TOAST_LENGTH,
-    });
-  }
-
-  errorToast(message?: string): void {
-    this.messageService.add({
-      severity: 'error',
-      summary: $localize`Error`,
-      detail: message || ERROR_MESSAGE.fail,
-      life: TOAST_LENGTH,
-    });
   }
 
   updateItemChanges(children: ChildData[]): void {
@@ -277,7 +257,7 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
     if (!this.initialFormData) return;
 
     if (this.itemForm.invalid) {
-      this.errorToast($localize`You need to solve all the errors displayed in the form to save changes.`);
+      this.actionFeedbackService.error($localize`You need to solve all the errors displayed in the form to save changes.`);
       return;
     }
 
@@ -287,11 +267,11 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
       this.updateString(),
     ]).subscribe(
       _status => {
-        this.successToast();
+        this.actionFeedbackService.success($localize`Changes successfully saved.`);
         this.itemDataSource.refreshItem(); // which will re-enable the form
       },
       _err => {
-        this.errorToast();
+        this.actionFeedbackService.unexpectedError();
         this.itemForm.enable();
       }
     );
