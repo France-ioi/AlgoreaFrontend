@@ -1,7 +1,7 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { MessageService } from 'primeng/api';
 import { of, Subject } from 'rxjs';
+import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
 import { GetRequestsService, PendingRequest } from '../../http-services/get-requests.service';
 import { Action, RequestActionsService } from '../../http-services/request-actions.service';
 import { UserGroupInvitationsComponent } from './user-group-invitations.component';
@@ -29,7 +29,7 @@ describe('UserGroupInvitationsComponent', () => {
   let fixture: ComponentFixture<UserGroupInvitationsComponent>;
   let requestActionsService: RequestActionsService;
   let getRequestsService: GetRequestsService;
-  let messageService: MessageService;
+  let actionFeedbackService: ActionFeedbackService;
   let serviceResponder$: Subject<Map<string,any>[]>;
 
   beforeEach(waitForAsync(() => {
@@ -43,7 +43,12 @@ describe('UserGroupInvitationsComponent', () => {
         { provide: RequestActionsService, useValue: {
           processGroupInvitations: (_groupId: any[], _action: any) => serviceResponder$.asObservable()
         } },
-        { provide: MessageService, useValue: { add: (_m: any) => {} } }
+        { provide: ActionFeedbackService, useValue: {
+          success: (_m: any) => {},
+          partial: (_m: any) => {},
+          error: (_m: any) => {},
+          unexpectedError: () => {},
+        } }
       ]
     }).compileComponents();
   }));
@@ -55,8 +60,11 @@ describe('UserGroupInvitationsComponent', () => {
     fixture.detectChanges();
     requestActionsService = TestBed.inject(RequestActionsService);
     getRequestsService = TestBed.inject(GetRequestsService);
-    messageService = TestBed.inject(MessageService);
-    spyOn(messageService, 'add').and.callThrough();
+    actionFeedbackService = TestBed.inject(ActionFeedbackService);
+    spyOn(actionFeedbackService, 'success').and.callThrough();
+    spyOn(actionFeedbackService, 'partial').and.callThrough();
+    spyOn(actionFeedbackService, 'error').and.callThrough();
+    spyOn(actionFeedbackService, 'unexpectedError').and.callThrough();
     spyOn(getRequestsService, 'getGroupInvitations').and.callThrough();
     spyOn(requestActionsService, 'processGroupInvitations').and.callThrough();
     component.ngOnInit();
@@ -102,13 +110,8 @@ describe('UserGroupInvitationsComponent', () => {
     serviceResponder$.complete();
 
     expect(component.state).toEqual('ready');
-    expect(messageService.add).toHaveBeenCalledTimes(1);
-    expect(messageService.add).toHaveBeenCalledWith({
-      severity: 'success',
-      summary: 'Success',
-      detail: '1 request(s) have been accepted',
-      life: 5000
-    });
+    expect(actionFeedbackService.success).toHaveBeenCalledTimes(1);
+    expect(actionFeedbackService.success).toHaveBeenCalledWith('1 request(s) have been accepted');
     expect(getRequestsService.getGroupInvitations).toHaveBeenCalledTimes(2);
   });
 
@@ -126,13 +129,8 @@ describe('UserGroupInvitationsComponent', () => {
     serviceResponder$.complete();
 
     expect(component.state).toEqual('ready');
-    expect(messageService.add).toHaveBeenCalledTimes(1);
-    expect(messageService.add).toHaveBeenCalledWith({
-      severity: 'success',
-      summary: 'Success',
-      detail: '1 request(s) have been declined',
-      life: 5000
-    });
+    expect(actionFeedbackService.success).toHaveBeenCalledTimes(1);
+    expect(actionFeedbackService.success).toHaveBeenCalledWith('1 request(s) have been declined');
     expect(getRequestsService.getGroupInvitations).toHaveBeenCalledTimes(2);
   });
 
@@ -142,12 +140,7 @@ describe('UserGroupInvitationsComponent', () => {
     serviceResponder$.next([ new Map([ [ '12', 'unchanged' ] ]) ]);
     serviceResponder$.complete();
 
-    expect(messageService.add).toHaveBeenCalledWith({
-      severity: 'success',
-      summary: 'Success',
-      detail: '1 request(s) have been accepted',
-      life: 5000
-    });
+    expect(actionFeedbackService.success).toHaveBeenCalledWith('1 request(s) have been accepted');
   });
 
   it('should display an appropriate message on partial success', () => {
@@ -162,13 +155,8 @@ describe('UserGroupInvitationsComponent', () => {
     serviceResponder$.complete();
 
     expect(component.state).toEqual('ready');
-    expect(messageService.add).toHaveBeenCalledTimes(1);
-    expect(messageService.add).toHaveBeenCalledWith({
-      severity: 'warn',
-      summary: 'Partial success',
-      detail: '2 request(s) have been accepted, 1 could not be executed',
-      life: 5000
-    });
+    expect(actionFeedbackService.partial).toHaveBeenCalledTimes(1);
+    expect(actionFeedbackService.partial).toHaveBeenCalledWith('2 request(s) have been accepted, 1 could not be executed');
     expect(getRequestsService.getGroupInvitations).toHaveBeenCalledTimes(2);
   });
 
@@ -183,13 +171,8 @@ describe('UserGroupInvitationsComponent', () => {
     serviceResponder$.complete();
 
     expect(component.state).toEqual('ready');
-    expect(messageService.add).toHaveBeenCalledTimes(1);
-    expect(messageService.add).toHaveBeenCalledWith({
-      severity: 'error',
-      summary: 'Error',
-      detail: 'Unable to accept the selected request(s).',
-      life: 5000
-    });
+    expect(actionFeedbackService.error).toHaveBeenCalledTimes(1);
+    expect(actionFeedbackService.error).toHaveBeenCalledWith('Unable to accept the selected request(s).');
     expect(getRequestsService.getGroupInvitations).toHaveBeenCalledTimes(2);
   });
 
@@ -204,13 +187,8 @@ describe('UserGroupInvitationsComponent', () => {
     serviceResponder$.complete();
 
     expect(component.state).toEqual('ready');
-    expect(messageService.add).toHaveBeenCalledTimes(1);
-    expect(messageService.add).toHaveBeenCalledWith({
-      severity: 'error',
-      summary: 'Error',
-      detail: 'Unable to reject the selected request(s).',
-      life: 5000
-    });
+    expect(actionFeedbackService.error).toHaveBeenCalledTimes(1);
+    expect(actionFeedbackService.error).toHaveBeenCalledWith('Unable to reject the selected request(s).');
     expect(getRequestsService.getGroupInvitations).toHaveBeenCalledTimes(2);
   });
 
@@ -222,13 +200,8 @@ describe('UserGroupInvitationsComponent', () => {
     serviceResponder$.complete();
 
     expect(component.state).toEqual('ready');
-    expect(messageService.add).toHaveBeenCalledTimes(1);
-    expect(messageService.add).toHaveBeenCalledWith({
-      severity: 'error',
-      summary: 'Error',
-      detail: 'The action cannot be executed. If the problem persists, contact us.',
-      life: 5000
-    });
+    expect(actionFeedbackService.unexpectedError).toHaveBeenCalledTimes(1);
+    expect(actionFeedbackService.unexpectedError).toHaveBeenCalledWith();
     expect(getRequestsService.getGroupInvitations).toHaveBeenCalledTimes(1); // service error does not reload content
   });
 
