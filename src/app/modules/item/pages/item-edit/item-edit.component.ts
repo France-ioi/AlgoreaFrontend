@@ -202,12 +202,12 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
       }
 
       const durationEnabled = formControls.durationEnabled?.value as boolean;
-      const duration = formControls.duration?.value as Duration;
+      const duration = formControls.duration?.value as Duration | null;
       const hasDurationEnabledChanges = durationEnabled !== this.initialFormData.durationEnabled;
-      const hasDurationChanges = duration.getMs() !== this.initialFormData?.duration?.getMs();
+      const hasDurationChanges = duration?.getMs() !== this.initialFormData?.duration?.getMs();
 
       if (hasDurationChanges || hasDurationEnabledChanges || hasRequiresExplicitEntryChanges) {
-        itemFormValues.duration = durationEnabled && requiresExplicitEntry ? duration.toString() : null;
+        itemFormValues.duration = durationEnabled && requiresExplicitEntry ? duration?.toString() : null;
       }
 
       const enteringTimeMin = formControls.enteringTimeMin?.value as Date;
