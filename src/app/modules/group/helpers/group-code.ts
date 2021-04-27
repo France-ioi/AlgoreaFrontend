@@ -24,7 +24,8 @@ export interface CodeAdditions {
 // Adds to the given group some new computed attributes (as value)
 // The resulting object can be used in templates as value will not be recomputed
 export function withCodeAdditions<T extends CodeInfo>(g: T): T & CodeAdditions {
-  return Object.assign({}, g, {
+  return {
+    ...g,
     codeExpiration: codeExpiration(g),
     codeLifetimeParsed: codeLifetime(g),
     hasCodeNotSet: hasCodeNotSet(g),
@@ -34,7 +35,7 @@ export function withCodeAdditions<T extends CodeInfo>(g: T): T & CodeAdditions {
     codeFirstUseDate: codeFirstUseDate(g),
     durationSinceFirstCodeUse: durationSinceFirstCodeUse(g),
     durationBeforeCodeExpiration: durationBeforeCodeExpiration(g),
-  });
+  };
 }
 
 export function codeExpiration(group: CodeInfo): Date|undefined {
