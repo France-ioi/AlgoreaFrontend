@@ -109,6 +109,42 @@
     </span>
   </ng-template>
 
+  <!-- 'skill-leaf' type -->
+  <ng-template let-node pTemplate="skill-leaf">
+    <span
+        class="node-tree-item folder"
+        [ngClass]="{ expanded: node.expanded, locked: node.locked, current: node.data && node.data.current }"
+    >
+      <span class="node-item-branch">
+        <span class="top-branch">
+          <span class="mask-branch"></span>
+        </span>
+        <span class="bottom-branch">
+          <span class="mask-branch"></span>
+        </span>
+      </span>
+      <span class="node-item-content" (click)="selectNode(node)">
+        <span class="node-select">
+          <i class="pi" [class.pi-circle-on]="!node.checked" style="font-size: 0.6rem;"></i>
+          <i class="pi" [class.pi-check]="node.checked" style="font-size: 1.2rem;"></i>
+        </span>
+        <span class="node-label">
+          <span class="label-container">
+            <span class="node-label-title">
+              {{ node.data.element.title }}
+            </span>
+          </span>
+          <alg-skill-progress
+              *ngIf="elementType === 'skill' && node.data.element.currentScore >= 0"
+              [bestScore]="node.data.element.bestScore"
+              [currentScore]="node.data.element.currentScore"
+              [type]="'thin-horizontal'"
+          ></alg-skill-progress>
+        </span>
+      </span>
+    </span>
+  </ng-template>
+
   <!-- "group-folder" type -->
   <ng-template let-node pTemplate="group">
     <span
