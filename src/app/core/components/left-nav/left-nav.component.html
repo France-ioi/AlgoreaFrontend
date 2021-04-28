@@ -8,7 +8,7 @@
 
   <p-tabPanel>
     <ng-template pTemplate="header" tabindex="5">
-      <span class="indicator" class="dark"></span>
+      <span class="indicator dark"></span>
       <i class="fa fa-hand-paper"></i>
       <span class="p-tabview-title" i18n="|Tab name">Activities</span>
     </ng-template>
@@ -16,15 +16,15 @@
 
   <p-tabPanel>
     <ng-template pTemplate="header" tabindex="6">
-      <span class="indicator" class="dark"></span>
+      <span class="indicator dark"></span>
       <i class="fa fa-graduation-cap"></i>
       <span class="p-tabview-title" i18n="|Tab name">Skills</span>
     </ng-template>
   </p-tabPanel>
 
-  <p-tabPanel *ngIf="activeTabIndex === 2 || (session && !session.user.isTemp)">
+  <p-tabPanel *ngIf="activeTabIndex === 2 || (session && !session.user.tempUser)">
     <ng-template pTemplate="header" tabindex="7">
-      <span class="indicator" class="dark"></span>
+      <span class="indicator dark"></span>
       <i class="fa fa-users"></i>
       <span class="p-tabview-title" i18n="|Tab name">Groups</span>
     </ng-template>

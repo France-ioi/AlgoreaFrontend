@@ -1,9 +1,9 @@
 <div class="controls-zone" [ngClass]="drawLeftBorder ? 'with-left-border' : 'no-left-border'" *ngrxLet="session$ as session">
-  <alg-language-picker *ngIf="!session || (session && session.user.isTemp)"></alg-language-picker>
-  <alg-top-right-menu *ngIf="session && !session.user.isTemp; else notConnected"></alg-top-right-menu>
+  <alg-language-picker *ngIf="!session || (session && session.user.tempUser)"></alg-language-picker>
+  <alg-top-right-menu *ngIf="session && !session.user.tempUser; else notConnected"></alg-top-right-menu>
   <ng-template #notConnected>
     <p-button
-      *ngIf="!session || (session && session.user.isTemp)"
+      *ngIf="!session || (session && session.user.tempUser)"
       i18n-label label="Log in / Sign in"
       icon="pi pi-power-off"
       iconPos="right"
