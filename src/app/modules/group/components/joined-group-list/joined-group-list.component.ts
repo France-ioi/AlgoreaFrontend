@@ -1,10 +1,11 @@
 import { Component, OnDestroy } from '@angular/core';
-import { ConfirmationService, SortEvent } from 'primeng/api';
+import { ConfirmationService, MessageService, SortEvent } from 'primeng/api';
 import { ReplaySubject, Subject } from 'rxjs';
 import { distinctUntilChanged, startWith, switchMap, map } from 'rxjs/operators';
 import { JoinedGroup, JoinedGroupsService } from 'src/app/core/http-services/joined-groups.service';
 import { NO_SORT, sortEquals, multisortEventToOptions, SortOptions } from 'src/app/shared/helpers/sort-options';
 import { mapToFetchState } from 'src/app/shared/operators/state';
+import { TOAST_LENGTH } from '../../../../shared/constants/global';
 
 @Component({
   selector: 'alg-joined-group-list',
@@ -22,7 +23,9 @@ export class JoinedGroupListComponent implements OnDestroy {
     mapToFetchState({ resetter: this.refresh$.asObservable() }),
   );
 
-  constructor(private joinedGroupsService: JoinedGroupsService, private confirmationService: ConfirmationService) {}
+  constructor(private joinedGroupsService: JoinedGroupsService,
+              private confirmationService: ConfirmationService,
+              private messageService: MessageService) {}
 
   ngOnDestroy(): void {
     this.sort$.complete();
@@ -49,7 +52,22 @@ export class JoinedGroupListComponent implements OnDestroy {
   leaveGroup(group: JoinedGroup): void {
     const groupId = group.group.id;
     this.joinedGroupsService.leave(groupId)
-      .subscribe(() => this.refresh$.next());
+      .subscribe(() => {
+        this.refresh$.next();
+        this.messageService.add({
+          severity: 'success',
+          summary: $localize`Success`,
+          detail: $localize`You've leave group #${groupId}`,
+          life: TOAST_LENGTH,
+        });
+      }, _err => {
+        this.messageService.add({
+          severity: 'error',
+          summary: $localize`Error`,
+          detail: $localize`Failed to leave group #${groupId}`,
+          life: TOAST_LENGTH,
+        });
+      });
   }
 
 }

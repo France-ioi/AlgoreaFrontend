@@ -49,7 +49,7 @@
 
     <ng-template pTemplate="emptymessage" let-columns>
       <tr>
-        <td [attr.colspan]="columns.length">
+        <td [attr.colspan]="columns?.length">
           <p class="empty-message" i18n>This list is empty.</p>
         </td>
       </tr>
