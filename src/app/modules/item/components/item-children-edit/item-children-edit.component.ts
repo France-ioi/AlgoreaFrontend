@@ -31,7 +31,7 @@ export class ItemChildrenEditComponent implements OnChanges {
   state: 'loading' | 'error' | 'ready' = 'ready';
   data: ChildData[] = [];
   selectedRows: ChildData[] = [];
-  enableScoreWeight = false;
+  scoreWeightEnable = false;
 
   private subscription?: Subscription;
   @Output() childrenChanges = new EventEmitter<ChildData[]>();
@@ -62,7 +62,7 @@ export class ItemChildrenEditComponent implements OnChanges {
           )
         ).subscribe(children => {
           this.data = children;
-          this.enableScoreWeight = this.getEnableScoreWeight();
+          this.scoreWeightEnable = this.getScoreWeightEnable();
           this.state = 'ready';
         },
         _err => {
@@ -96,8 +96,19 @@ export class ItemChildrenEditComponent implements OnChanges {
     this.reloadData();
   }
 
-  getEnableScoreWeight(): boolean {
-    return this.data.filter(c => c.scoreWeight && c.scoreWeight > 1).length > 1;
+  getScoreWeightEnable(): boolean {
+    return this.data.filter(c => c.scoreWeight && c.scoreWeight > 1).length > 0;
+  }
+
+  onEnableScoreWeightChange(event: boolean): void {
+    if (!event) {
+      this.resetScoreWeight();
+    }
+  }
+
+  resetScoreWeight(): void {
+    this.data = this.data.map(c => ({ ...c, scoreWeight: 1 }));
+    this.onScoreWeightChange();
   }
 
   onScoreWeightChange(): void {

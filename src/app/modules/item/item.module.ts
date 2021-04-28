@@ -33,6 +33,7 @@ import { ItemEditAdvancedParametersComponent } from './pages/item-edit-advanced-
 import { CalendarModule } from 'primeng/calendar';
 import { LogActionDisplayPipe } from './pages/item-log-view/logActionDisplay';
 import { InputTextModule } from 'primeng/inputtext';
+import { InputNumberModule } from 'primeng/inputnumber';
 
 @NgModule({
   declarations: [
@@ -73,6 +74,7 @@ import { InputTextModule } from 'primeng/inputtext';
     ButtonModule,
     CalendarModule,
     InputTextModule,
+    InputNumberModule,
   ],
   providers: [
     PendingChangesGuard,

@@ -61,13 +61,17 @@
   }
 }
 
+.score-weight-container {
+  display: flex;
+  justify-content: flex-end;
+}
+
 .score-weight {
   display: flex;
-  justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
 }
 
-.score-weight-input {
-  width: 3.6rem;
+.score-weight-label {
+  margin-right: 1rem;
 }
