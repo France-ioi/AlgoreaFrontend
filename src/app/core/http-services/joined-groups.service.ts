@@ -5,7 +5,7 @@ import { map } from 'rxjs/operators';
 import { appConfig } from 'src/app/shared/helpers/config';
 import { SortOptions, sortOptionsToHTTP } from 'src/app/shared/helpers/sort-options';
 
-interface RawJoinedGroup{
+interface RawJoinedGroup {
   action: 'invitation_accepted' | 'join_request_accepted' | 'joined_by_code' | 'added_directly',
   group: {
     description: string|null,
@@ -16,7 +16,7 @@ interface RawJoinedGroup{
   member_since: string|null,
 }
 
-export interface JoinedGroup{
+export interface JoinedGroup {
   action: 'invitation_accepted' | 'join_request_accepted' | 'joined_by_code' | 'added_directly',
   group: {
     description: string|null,
@@ -25,6 +25,12 @@ export interface JoinedGroup{
     type: 'Class' | 'Team' | 'Club' | 'Friends' | 'Other' | 'Base',
   },
   memberSince: Date|null,
+}
+
+interface LeaveGroupResponse {
+  success: boolean,
+  message: string,
+  data: { changed: boolean }
 }
 
 @Injectable({
@@ -46,6 +52,8 @@ export class JoinedGroupsService {
       );
   }
 
+  leave(id: string): Observable<LeaveGroupResponse> {
+    return this.http.delete<LeaveGroupResponse>(`${appConfig().apiUrl}/current-user/group-memberships/${id}`);
+  }
+
 }
-
-

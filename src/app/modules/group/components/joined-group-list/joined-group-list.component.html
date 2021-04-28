@@ -21,6 +21,9 @@
             <span i18n>Joined On</span>
             <p-sortIcon field="member_since"></p-sortIcon>
           </th>
+        <th>
+          Action
+        </th>
       </tr>
     </ng-template>
 
@@ -29,6 +32,18 @@
         <td>{{ group.group.name }}</td>
         <td>{{ group.group.type }}</td>
         <td>{{ group.memberSince | date:'short' }}</td>
+        <td>
+          <div class="actions">
+            <button
+                pButton
+                pRipple
+                type="button"
+                icon="fa fa-sign-out-alt"
+                class="p-button-rounded p-button-outlined"
+                (click)="onGroupLeaveClick(group)"
+            ></button>
+          </div>
+        </td>
       </tr>
     </ng-template>
 
