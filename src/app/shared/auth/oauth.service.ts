@@ -19,7 +19,7 @@ export class OAuthService {
   private clientId: string;
 
   constructor(private authHttp: AuthHttpService) {
-    this.clientId = appConfig().oauthClientId;
+    this.clientId = appConfig.oauthClientId;
   }
 
   /**
@@ -27,11 +27,11 @@ export class OAuthService {
    */
   initCodeFlow(): void {
     const state = this.createNonce();
-    const loginServerUri = appConfig().oauthServerUrl+'/oauth/authorize';
+    const loginServerUri = appConfig.oauthServerUrl+'/oauth/authorize';
     const separationChar = loginServerUri.indexOf('?') > -1 ? '&' : '?';
 
     const url = loginServerUri + separationChar + 'response_type=code&scope=account&approval_prompt=auto' +
-      '&client_id=' + encodeURIComponent(appConfig().oauthClientId) +
+      '&client_id=' + encodeURIComponent(appConfig.oauthClientId) +
       '&state=' + encodeURIComponent(state) +
       '&redirect_uri=' + encodeURIComponent(this.appRedirectUri());
     // should add PKCE here
@@ -72,7 +72,7 @@ export class OAuthService {
   }
 
   logoutOnAuthServer(): void {
-    const logoutUri = appConfig().oauthServerUrl+'/logout?' + 'redirect_uri=' + encodeURIComponent(this.appRedirectUri());
+    const logoutUri = appConfig.oauthServerUrl+'/logout?' + 'redirect_uri=' + encodeURIComponent(this.appRedirectUri());
     // navigate
     location.href = logoutUri;
   }

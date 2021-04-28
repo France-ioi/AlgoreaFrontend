@@ -158,7 +158,7 @@ export class ItemNavigationService {
     Observable<NavMenuRootItemWithParent> {
 
     return this.http
-      .get<RawNavData>(`${appConfig().apiUrl}/items/${itemId}/navigation`, {
+      .get<RawNavData>(`${appConfig.apiUrl}/items/${itemId}/navigation`, {
         params: parameters
       })
       .pipe(
@@ -177,7 +177,7 @@ export class ItemNavigationService {
 
   getRootActivities(): Observable<NavMenuRootItem> {
     return this.http
-      .get<RootActivity[]>(`${appConfig().apiUrl}/current-user/group-memberships/activities`)
+      .get<RootActivity[]>(`${appConfig.apiUrl}/current-user/group-memberships/activities`)
       .pipe(
         map(acts => ({
           items: acts.map(act => ({ ...createNavMenuItem(act.activity), groupName: act.name }))
@@ -187,7 +187,7 @@ export class ItemNavigationService {
 
   getRootSkills(): Observable<NavMenuRootItem> {
     return this.http
-      .get<RootSkill[]>(`${appConfig().apiUrl}/current-user/group-memberships/skills`)
+      .get<RootSkill[]>(`${appConfig.apiUrl}/current-user/group-memberships/skills`)
       .pipe(
         map(skills => ({
           items: skills.map(sk => ({ ...createNavMenuItem(sk.skill), groupName: sk.name }))

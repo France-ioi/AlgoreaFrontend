@@ -17,7 +17,7 @@ export class AuthTokenInjector implements HttpInterceptor {
   constructor(public auth: AuthService) { }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    if (!req.url.toLowerCase().startsWith(appConfig().apiUrl)) {
+    if (!req.url.toLowerCase().startsWith(appConfig.apiUrl)) {
       return next.handle(req);
     }
 
@@ -33,7 +33,7 @@ export class AuthTokenInjector implements HttpInterceptor {
         // when we get a 401 - we retry once (as the token should have been replaced)
         retryWhen(errors => errors.pipe(
           mergeMap((err, idx) => (idx === 0 && err instanceof HttpErrorResponse && err.status === 401 &&
-            req.url.toLowerCase().startsWith(appConfig().apiUrl) ? of(err) : throwError(err)))
+            req.url.toLowerCase().startsWith(appConfig.apiUrl) ? of(err) : throwError(err)))
         ))
       );
   }

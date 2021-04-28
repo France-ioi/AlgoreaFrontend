@@ -29,6 +29,6 @@ export class GetGroupManagersService {
       params = params.set('sort', sort.join(','));
     }
     return this.http
-      .get<Manager[]>(`${appConfig().apiUrl}/groups/${groupId}/managers`, { params: params });
+      .get<Manager[]>(`${appConfig.apiUrl}/groups/${groupId}/managers`, { params: params });
   }
 }

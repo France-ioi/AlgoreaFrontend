@@ -28,7 +28,7 @@ export class UpdateItemStringService {
     // Fixme: Get languageTag properly
     const tag = languageTag || 'default';
     return this.http.put<SimpleActionResponse>(
-      `${appConfig().apiUrl}/items/${itemId}/strings/${tag}`,
+      `${appConfig.apiUrl}/items/${itemId}/strings/${tag}`,
       changes,
     ).pipe(
       map(assertSuccess)

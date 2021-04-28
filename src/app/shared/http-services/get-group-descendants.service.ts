@@ -82,7 +82,7 @@ export class GetGroupDescendantsService {
     let params = new HttpParams();
     if (sort.length > 0) params = params.set('sort', sort.join(','));
     return this.http
-      .get<RawUserDescendant[]>(`${appConfig().apiUrl}/groups/${groupId}/user-descendants`, { params: params })
+      .get<RawUserDescendant[]>(`${appConfig.apiUrl}/groups/${groupId}/user-descendants`, { params: params })
       .pipe(
         map(rawUserDescendants => rawUserDescendants.map(m => ({
           id: m.id,
@@ -105,7 +105,7 @@ export class GetGroupDescendantsService {
     let params = new HttpParams();
     if (sort.length > 0) params = params.set('sort', sort.join(','));
     return this.http
-      .get<RawTeamDescendants[]>(`${appConfig().apiUrl}/groups/${groupId}/team-descendants`, { params: params })
+      .get<RawTeamDescendants[]>(`${appConfig.apiUrl}/groups/${groupId}/team-descendants`, { params: params })
       .pipe(
         map(rawTeamDescendants => rawTeamDescendants.map(t => ({
           id: t.id,

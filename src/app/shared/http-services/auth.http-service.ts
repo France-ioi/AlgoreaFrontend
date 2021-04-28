@@ -29,7 +29,7 @@ export class AuthHttpService {
 
   createTempUser(): Observable<AccessTokenInfo> {
     return this.http
-      .post<ActionResponse<AccessTokenInfo>>(`${appConfig().apiUrl}/auth/temp-user`, null, {})
+      .post<ActionResponse<AccessTokenInfo>>(`${appConfig.apiUrl}/auth/temp-user`, null, {})
       .pipe(
         timeout(authServicesTimeout),
         map(successData),
@@ -38,7 +38,7 @@ export class AuthHttpService {
 
   createTokenFromCode(code: string, redirectUri: string): Observable<AccessTokenInfo> {
     return this.http
-      .post<ActionResponse<AccessTokenInfo>>(`${appConfig().apiUrl}/auth/token`, {
+      .post<ActionResponse<AccessTokenInfo>>(`${appConfig.apiUrl}/auth/token`, {
         code: code,
         redirect_uri: redirectUri
       }, {})
@@ -50,7 +50,7 @@ export class AuthHttpService {
 
   refreshToken(token: string): Observable<AccessTokenInfo> {
     return this.http
-      .post<ActionResponse<AccessTokenInfo>>(`${appConfig().apiUrl}/auth/token`, {}, { headers: headersForAuth(token) })
+      .post<ActionResponse<AccessTokenInfo>>(`${appConfig.apiUrl}/auth/token`, {}, { headers: headersForAuth(token) })
       .pipe(
         timeout(longAuthServicesTimeout),
         map(successData),
@@ -59,7 +59,7 @@ export class AuthHttpService {
 
   revokeToken(token: string): Observable<void> {
     return this.http
-      .post<SimpleActionResponse>(`${appConfig().apiUrl}/auth/logout`, null, { headers: headersForAuth(token) })
+      .post<SimpleActionResponse>(`${appConfig.apiUrl}/auth/logout`, null, { headers: headersForAuth(token) })
       .pipe(
         map(assertSuccess)
       );

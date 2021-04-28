@@ -50,7 +50,7 @@ export class GetGroupByIdService {
   constructor(private http: HttpClient) {}
 
   get(id: string): Observable<Group> {
-    return this.http.get<unknown>(`${appConfig().apiUrl}/groups/${id}`).pipe(
+    return this.http.get<unknown>(`${appConfig.apiUrl}/groups/${id}`).pipe(
       decodeSnakeCase(decoder),
     );
   }

@@ -32,7 +32,7 @@ export class GetUserService {
   }
 
   getForId(id: string): Observable<User> {
-    return this.http.get<unknown>(`${appConfig().apiUrl}/users/${ id }`)
+    return this.http.get<unknown>(`${appConfig.apiUrl}/users/${ id }`)
       .pipe(
         decodeSnakeCase(userDecoder)
       );

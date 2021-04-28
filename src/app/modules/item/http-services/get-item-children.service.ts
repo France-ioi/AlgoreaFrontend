@@ -40,7 +40,7 @@ export class GetItemChildrenService {
     let params = new HttpParams();
     params = params.set('attempt_id', attemptId);
     return this.http
-      .get<unknown[]>(`${appConfig().apiUrl}/items/${id}/children`, { params: params })
+      .get<unknown[]>(`${appConfig.apiUrl}/items/${id}/children`, { params: params })
       .pipe(
         decodeSnakeCase(D.array(itemChildDecoder))
       );

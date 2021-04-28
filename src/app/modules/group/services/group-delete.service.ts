@@ -12,7 +12,7 @@ export class GroupDeleteService {
   }
 
   delete(groupId: string): Observable<void> {
-    return this.http.delete<SimpleActionResponse>(`${appConfig().apiUrl}/groups/${groupId}`).pipe(
+    return this.http.delete<SimpleActionResponse>(`${appConfig.apiUrl}/groups/${groupId}`).pipe(
       map(assertSuccess),
     );
   }

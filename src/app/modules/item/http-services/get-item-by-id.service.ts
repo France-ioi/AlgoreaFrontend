@@ -59,7 +59,7 @@ export class GetItemByIdService {
   constructor(private http: HttpClient) {}
 
   get(id: string): Observable<Item> {
-    return this.http.get<unknown>(`${appConfig().apiUrl}/items/${id}`).pipe(
+    return this.http.get<unknown>(`${appConfig.apiUrl}/items/${id}`).pipe(
       decodeSnakeCase(itemDecoder),
     );
   }

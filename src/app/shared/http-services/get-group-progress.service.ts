@@ -59,7 +59,7 @@ export class GetGroupProgressService {
   ): Observable<TeamUserProgress[]> {
     const params = new HttpParams().set('parent_item_ids', parentItemIds.join(','));
     return this.http
-      .get<RawTeamUserProgress[]>(`${appConfig().apiUrl}/groups/${groupId}/user-progress`, { params: params })
+      .get<RawTeamUserProgress[]>(`${appConfig.apiUrl}/groups/${groupId}/user-progress`, { params: params })
       .pipe(
         map(rawGroupUsersProgress => rawGroupUsersProgress.map(m => ({
           groupId: m.group_id,
@@ -80,7 +80,7 @@ export class GetGroupProgressService {
   ): Observable<TeamUserProgress[]> {
     const params = new HttpParams().set('parent_item_ids', parentItemIds.join(','));
     return this.http
-      .get<RawTeamUserProgress[]>(`${appConfig().apiUrl}/groups/${groupId}/team-progress`, { params: params })
+      .get<RawTeamUserProgress[]>(`${appConfig.apiUrl}/groups/${groupId}/team-progress`, { params: params })
       .pipe(
         map(rawGroupTeamsProgress => rawGroupTeamsProgress.map(m => ({
           groupId: m.group_id,
@@ -101,7 +101,7 @@ export class GetGroupProgressService {
   ): Observable<GroupProgress[]> {
     const params = new HttpParams().set('parent_item_ids', parentItemIds.join(','));
     return this.http
-      .get<RawGroupProgress[]>(`${appConfig().apiUrl}/groups/${groupId}/group-progress`, { params: params })
+      .get<RawGroupProgress[]>(`${appConfig.apiUrl}/groups/${groupId}/group-progress`, { params: params })
       .pipe(
         map(rawGroupsProgress => rawGroupsProgress.map(m => ({
           groupId: m.group_id,

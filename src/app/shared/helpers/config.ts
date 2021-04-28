@@ -18,6 +18,4 @@ export interface Environment {
 
 type Config = Environment; // config may be someday an extension of the environment
 
-export function appConfig(): Config {
-  return environment;
-}
+export const appConfig: Config = environment;

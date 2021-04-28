@@ -43,14 +43,14 @@ export class CurrentUserHttpService {
 
   getProfileInfo(): Observable<UserProfile> {
     return this.http
-      .get<unknown>(`${appConfig().apiUrl}/current-user`)
+      .get<unknown>(`${appConfig.apiUrl}/current-user`)
       .pipe(
         decodeSnakeCase(currentUserDecoder)
       );
   }
 
   update(changes: object): Observable<any> {
-    return this.http.put<SimpleActionResponse>(`${appConfig().apiUrl}/current-user`, changes)
+    return this.http.put<SimpleActionResponse>(`${appConfig.apiUrl}/current-user`, changes)
       .pipe(
         map(assertSuccess)
       );

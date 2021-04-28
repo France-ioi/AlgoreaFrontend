@@ -18,7 +18,7 @@ export class UnauthorizedResponseInterceptor implements HttpInterceptor {
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(req).pipe(
       catchError((err: any) => {
-        if (err instanceof HttpErrorResponse && err.status === 401 && req.url.toLowerCase().startsWith(appConfig().apiUrl)) {
+        if (err instanceof HttpErrorResponse && err.status === 401 && req.url.toLowerCase().startsWith(appConfig.apiUrl)) {
           const token = tokenFromHeaders(req.headers);
           if (token) this.auth.invalidToken(token);
         }
