@@ -13,6 +13,7 @@ interface NewItemData {
 export type NewItem = {
   title: string,
   type: ItemType,
+  scoreWeight?: number,
   languageTag: string
 } & ({ parent: string } | { asRootOfGroupId: string })
 

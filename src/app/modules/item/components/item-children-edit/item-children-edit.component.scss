@@ -60,3 +60,14 @@
     align-items: center;
   }
 }
+
+.score-weight {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.score-weight-input {
+  width: 3.6rem;
+}

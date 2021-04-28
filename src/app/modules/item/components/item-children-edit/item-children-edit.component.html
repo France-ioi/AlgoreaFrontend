@@ -4,8 +4,8 @@
     <ng-container *ngSwitchCase="'ready'">
       <div class="section-chapter-wrapper">
 
-        <div class="p-d-flex">
-          <span>Enable score weight</span>
+        <div class="score-weight">
+          <b>Enable score weight</b>
           <alg-switch mode="white" [(ngModel)]="enableScoreWeight"></alg-switch>
         </div>
 
@@ -22,16 +22,24 @@
                 <i class="fa fa-sort" [pReorderableRowHandle]="index"></i>
               </td>
               <td><p-tableCheckbox [value]="rowData"></p-tableCheckbox></td>
-              <td pEditableColumn>
-                <p-cellEditor>
-                  <ng-template pTemplate="input">
-                    <input pInputText type="text" [(ngModel)]="rowData.scoreWeight">
-                  </ng-template>
-                  <ng-template pTemplate="output">
-                    x{{ rowData.scoreWeight }}
-                  </ng-template>
-                </p-cellEditor>
-              </td>
+              <ng-container *ngIf="enableScoreWeight">
+                <td pEditableColumn>
+                  <p-cellEditor>
+                    <ng-template pTemplate="input">
+                      <input
+                          class="score-weight-input"
+                          pInputText
+                          type="text"
+                          [(ngModel)]="rowData.scoreWeight"
+                          (ngModelChange)="onScoreWeightChange()"
+                      >
+                    </ng-template>
+                    <ng-template pTemplate="output">
+                      x{{ rowData.scoreWeight }}
+                    </ng-template>
+                  </p-cellEditor>
+                </td>
+              </ng-container>
               <td><span class="type">{{ rowData.type }}</span></td>
               <td><span class="main">{{ rowData.title }}</span></td>
             </tr>

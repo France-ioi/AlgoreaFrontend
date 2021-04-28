@@ -8,6 +8,7 @@ export interface AddedContent<T> {
   id?: string,
   title: string,
   type: T,
+  scoreWeight?: number,
 }
 
 export interface NewContentType<T> {

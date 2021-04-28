@@ -9,6 +9,7 @@ export interface ChildData {
   id?: string,
   title: string | null,
   type: ItemType,
+  scoreWeight?: number,
 }
 
 export interface ChildDataWithId extends ChildData{
@@ -61,6 +62,7 @@ export class ItemChildrenEditComponent implements OnChanges {
           )
         ).subscribe(children => {
           this.data = children;
+          this.enableScoreWeight = this.getEnableScoreWeight();
           this.state = 'ready';
         },
         _err => {
@@ -94,4 +96,11 @@ export class ItemChildrenEditComponent implements OnChanges {
     this.reloadData();
   }
 
+  getEnableScoreWeight(): boolean {
+    return this.data.filter(c => c.scoreWeight && c.scoreWeight > 1).length > 1;
+  }
+
+  onScoreWeightChange(): void {
+    this.childrenChanges.emit(this.data);
+  }
 }
