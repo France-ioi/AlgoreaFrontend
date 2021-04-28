@@ -3,7 +3,12 @@
   display: block;
 }
 
+.th-action {
+  width: 8rem;
+}
+
 .actions {
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
+  align-items: center;
 }
