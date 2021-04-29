@@ -1,11 +1,9 @@
 import { Component, Input, Output, EventEmitter, OnDestroy, OnInit } from '@angular/core';
-import { MessageService } from 'primeng/api';
-import { ERROR_MESSAGE } from 'src/app/shared/constants/api';
-import { TOAST_LENGTH } from 'src/app/shared/constants/global';
 import { CreateGroupInvitationsService, InvitationResult } from '../../http-services/create-group-invitations.service';
 import { Group } from '../../http-services/get-group-by-id.service';
 import { FormBuilder } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
 
 interface Message
 {
@@ -34,7 +32,7 @@ export class GroupInviteUsersComponent implements OnInit, OnDestroy {
 
   constructor(
     private createGroupInvitationsService: CreateGroupInvitationsService,
-    private messageService: MessageService,
+    private actionFeedbackService: ActionFeedbackService,
     private formBuilder: FormBuilder,
   ) {
   }
@@ -65,15 +63,6 @@ export class GroupInviteUsersComponent implements OnInit, OnDestroy {
     } else if (logins.length >= 100) {
       this.setState('too_many');
     }
-  }
-
-  private processRequestError(_err: any): void {
-    this.messageService.add({
-      severity: 'error',
-      summary: 'Error',
-      detail: ERROR_MESSAGE.fail,
-      life: TOAST_LENGTH,
-    });
   }
 
   private displayResponse(response: Map<string, InvitationResult>): void {
@@ -141,9 +130,8 @@ export class GroupInviteUsersComponent implements OnInit, OnDestroy {
 
         this.setState('empty');
       },
-      err => {
-        this.processRequestError(err);
-
+      _err => {
+        this.actionFeedbackService.unexpectedError();
         this.setState('ready');
       }
     );

@@ -11,11 +11,11 @@ import { GridColumn } from '../../../shared-components/components/grid/grid.comp
 import { merge, of, Subject } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { fetchingState, readyState } from 'src/app/shared/helpers/state';
-import { MessageService } from 'primeng/api';
 import {
   displayResponseToast,
   processRequestError
 } from 'src/app/modules/group/components/pending-request/pending-request-response-handling';
+import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
 
 const groupColumn = { field: 'group.name', header: $localize`GROUP` };
 
@@ -50,7 +50,7 @@ export class PendingJoinRequestsComponent implements OnChanges, OnDestroy {
   constructor(
     private getRequestsService: GetRequestsService,
     private requestActionService: RequestActionsService,
-    private messageService: MessageService,
+    private actionFeedbackService: ActionFeedbackService,
   ) {
     this.dataFetching.pipe(
       switchMap(params =>
@@ -100,12 +100,12 @@ export class PendingJoinRequestsComponent implements OnChanges, OnDestroy {
       .subscribe(
         result => {
           this.state = 'ready';
-          displayResponseToast(this.messageService, parseResults(result), params.type);
+          displayResponseToast(this.actionFeedbackService, parseResults(result), params.type);
           this.dataFetching.next({ groupId: this.groupId, includeSubgroup: this.includeSubgroup, sort: this.currentSort });
         },
         _err => {
           this.state = 'ready';
-          processRequestError(this.messageService);
+          processRequestError(this.actionFeedbackService);
         }
       );
   }

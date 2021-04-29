@@ -1,13 +1,11 @@
 import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy, OnChanges } from '@angular/core';
-import { MessageService } from 'primeng/api';
 import { finalize, tap } from 'rxjs/operators';
-import { TOAST_LENGTH } from '../../../../shared/constants/global';
-import { ERROR_MESSAGE } from '../../../../shared/constants/api';
 import { Duration } from '../../../../shared/helpers/duration';
 import { Group } from '../../http-services/get-group-by-id.service';
 import { CodeAdditions, withCodeAdditions } from '../../helpers/group-code';
 import { GroupActionsService } from '../../http-services/group-actions.service';
 import { CodeActionsService } from '../../http-services/code-actions.service';
+import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
 
 @Component({
   selector: 'alg-group-join-by-code',
@@ -25,31 +23,13 @@ export class GroupJoinByCodeComponent implements OnChanges {
   processing = false;
 
   constructor(
-    private messageService: MessageService,
     private groupActionsService: GroupActionsService,
     private codeActionsService: CodeActionsService,
+    private actionFeedbackService: ActionFeedbackService,
   ) { }
 
   ngOnChanges(): void {
     this.groupExt = this.group ? withCodeAdditions(this.group) : undefined;
-  }
-
-  displaySuccess(msg: string): void {
-    this.messageService.add({
-      severity: 'success',
-      summary: 'Success',
-      detail: msg,
-      life: TOAST_LENGTH,
-    });
-  }
-
-  displayError(): void {
-    this.messageService.add({
-      severity: 'error',
-      summary: 'Error',
-      detail: ERROR_MESSAGE.fail,
-      life: TOAST_LENGTH,
-    });
   }
 
   /* events */
@@ -67,12 +47,8 @@ export class GroupJoinByCodeComponent implements OnChanges {
         tap(() => this.refreshRequired.emit()),
         finalize(() => this.processing = false)
       ).subscribe(
-        _result => {
-          this.displaySuccess($localize`A new code has been generated`);
-        },
-        _err => {
-          this.displayError();
-        }
+        _result => this.actionFeedbackService.success($localize`A new code has been generated`),
+        _err => this.actionFeedbackService.unexpectedError(),
       );
   }
 
@@ -92,12 +68,8 @@ export class GroupJoinByCodeComponent implements OnChanges {
         tap(() => this.refreshRequired.emit()),
         finalize(() => this.processing = false),
       ).subscribe(
-        _result => {
-          this.displaySuccess($localize`The validity has been changed`);
-        },
-        _err => {
-          this.displayError();
-        }
+        _result => this.actionFeedbackService.success($localize`The validity has been changed`),
+        _err => this.actionFeedbackService.unexpectedError(),
       );
   }
 
@@ -114,12 +86,8 @@ export class GroupJoinByCodeComponent implements OnChanges {
         tap(() => this.refreshRequired.emit()),
         finalize(() => this.processing = false)
       ).subscribe(
-        _result => {
-          this.displaySuccess($localize`Users will not be able to join with the former code.`);
-        },
-        _err => {
-          this.displayError();
-        }
+        _result => this.actionFeedbackService.success($localize`Users will not be able to join with the former code.`),
+        _err => this.actionFeedbackService.unexpectedError(),
       );
   }
 
