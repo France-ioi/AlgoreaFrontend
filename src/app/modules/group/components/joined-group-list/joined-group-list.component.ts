@@ -36,8 +36,10 @@ export class JoinedGroupListComponent implements OnDestroy {
     if (sort) this.sort$.next(sort);
   }
 
-  onGroupLeaveClick(group: JoinedGroup): void {
+  onGroupLeaveClick(event: Event, group: JoinedGroup): void {
     this.confirmationService.confirm({
+      target: event.target || undefined,
+      key: 'commonPopup',
       message: $localize`Are you sure you want to leave this group?`,
       header: $localize`Confirm Action`,
       icon: 'pi pi-exclamation-triangle',
@@ -51,20 +53,21 @@ export class JoinedGroupListComponent implements OnDestroy {
 
   leaveGroup(group: JoinedGroup): void {
     const groupId = group.group.id;
+    const groupName = group.group.name;
     this.joinedGroupsService.leave(groupId)
       .subscribe(() => {
         this.refresh$.next();
         this.messageService.add({
           severity: 'success',
           summary: $localize`Success`,
-          detail: $localize`You've leave group #${groupId}`,
+          detail: $localize`You have left ${groupName}`,
           life: TOAST_LENGTH,
         });
       }, _err => {
         this.messageService.add({
           severity: 'error',
           summary: $localize`Error`,
-          detail: $localize`Failed to leave group #${groupId}`,
+          detail: $localize`Failed to leave ${groupName}`,
           life: TOAST_LENGTH,
         });
       });
