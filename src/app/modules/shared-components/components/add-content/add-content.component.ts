@@ -20,6 +20,8 @@ export interface NewContentType<T> {
 
 const defaultFormValues = { create: '', searchExisting: '' };
 
+const DEFAULT_SCORE_WEIGHT = 1;
+
 @Component({
   selector: 'alg-add-content',
   templateUrl: './add-content.component.html',
@@ -104,12 +106,13 @@ export class AddContentComponent<Type> implements OnInit, OnDestroy {
     this.contentAdded.emit({
       title: title,
       type: type,
+      scoreWeight: DEFAULT_SCORE_WEIGHT
     });
     this.reset();
   }
 
   addExisting(item: AddedContent<Type>): void {
-    this.contentAdded.emit(item);
+    this.contentAdded.emit({ ...item, scoreWeight: DEFAULT_SCORE_WEIGHT });
     this.reset();
   }
 
