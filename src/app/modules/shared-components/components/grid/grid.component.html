@@ -1,5 +1,7 @@
 <p-table
   #table
+  class="alg-table --grid"
+  [ngClass]="tableStyle"
   [columns]="selectedColumns!"
   [value]="data!"
   [scrollable]="scrollWhenExpanded || scrollable"

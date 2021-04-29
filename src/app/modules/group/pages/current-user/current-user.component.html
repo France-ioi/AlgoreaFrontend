@@ -1,1 +1,81 @@
-<div>Yourself page works</div>
+<ng-container *ngIf="currentUser$ | async as currentUser">
+  <div class="alg-page-header">
+    <div class="alg-page-header-title">{{ currentUser.firstName }} {{ currentUser.lastName }}</div>
+  </div>
+
+  <div class="bg-white">
+    <alg-section i18n-label label="Personal Information" icon="fa fa-users">
+      <ul class="alg-data-list">
+        <li class="alg-data-list-item">
+          <span class="alg-data-list-item-caption" i18n>Login</span>
+          <span class="alg-data-list-item-value">{{ currentUser.login }}</span>
+        </li>
+        <li class="alg-data-list-item">
+          <span class="alg-data-list-item-caption" i18n>First Name</span>
+          <span class="alg-data-list-item-value">{{ currentUser.firstName }}</span>
+        </li>
+        <li class="alg-data-list-item">
+          <span class="alg-data-list-item-caption" i18n>Last Name</span>
+          <span class="alg-data-list-item-value">{{ currentUser.lastName }}</span>
+        </li>
+        <li class="alg-data-list-item">
+          <span class="alg-data-list-item-caption" i18n>Birth date</span>
+          <span class="alg-data-list-item-value">{{ currentUser.birthDate }}</span>
+        </li>
+        <li class="alg-data-list-item">
+          <span class="alg-data-list-item-caption" i18n>Student ID</span>
+          <span class="alg-data-list-item-value">{{ currentUser.studentId }}</span>
+        </li>
+        <li class="alg-data-list-item">
+          <span class="alg-data-list-item-caption" i18n>Sex</span>
+          <span class="alg-data-list-item-value">{{ currentUser.sex }}</span>
+        </li>
+        <li class="alg-data-list-item">
+          <span class="alg-data-list-item-caption" i18n>Nationality</span>
+          <span class="alg-data-list-item-value">{{ currentUser.countryCode }}</span>
+        </li>
+        <li class="alg-data-list-item">
+          <span class="alg-data-list-item-caption" i18n>Personal Web page</span>
+          <span class="alg-data-list-item-value">{{ currentUser.webSite }}</span>
+        </li>
+      </ul>
+    </alg-section>
+  </div>
+
+  <div class="bg-white">
+    <alg-section i18n-label label="School Information" icon="fa fa-graduation-cap">
+      <ul class="alg-data-list">
+        <li class="alg-data-list-item">
+          <span class="alg-data-list-item-caption" i18n>Your grade</span>
+          <span class="alg-data-list-item-value">{{ currentUser.grade }}</span>
+        </li>
+        <li class="alg-data-list-item">
+          <span class="alg-data-list-item-caption" i18n>Highschool graduation year</span>
+          <span class="alg-data-list-item-value">{{ currentUser.graduationYear }}</span>
+        </li>
+      </ul>
+    </alg-section>
+  </div>
+
+  <div class="bg-white">
+    <alg-section i18n-label label="Contact Information" icon="fa fa-envelope">
+      <ul class="alg-data-list">
+        <li class="alg-data-list-item">
+          <span class="alg-data-list-item-caption" i18n>Primary email</span>
+          <span class="alg-data-list-item-value">{{ currentUser.email }}</span>
+        </li>
+      </ul>
+    </alg-section>
+  </div>
+
+  <div class="bg-white">
+    <alg-section i18n-label label="Parameters" icon="fa fa-cog">
+      <ul class="alg-data-list">
+        <li class="alg-data-list-item">
+          <span class="alg-data-list-item-caption" i18n>Language</span>
+          <span class="alg-data-list-item-value">{{ currentUser.defaultLanguage }}</span>
+        </li>
+      </ul>
+    </alg-section>
+  </div>
+</ng-container>

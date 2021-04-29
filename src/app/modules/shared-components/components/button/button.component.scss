@@ -118,6 +118,22 @@ $danger-color: #ff001f;
       outline: none;
       box-shadow: none;
     }
+
+    &.p-button-outlined {
+      background-color: unset;
+
+      .p-button-label {
+        color: $danger-color;
+      }
+
+      &:hover {
+        background-color: $danger-color;
+
+        .p-button-label {
+          color: #fff;
+        }
+      }
+    }
   }
 
   &.p-top-rounded {

@@ -3,15 +3,21 @@
 
     <ng-container *ngSwitchCase="'ready'">
       <div class="section-chapter-wrapper">
-        <p-table *ngIf="data.length" [value]="data" [reorderableColumns]="true" [(selection)]="selectedRows" (onRowReorder)="orderChanged()">
+        <p-table
+            class="alg-editable-table"
+            *ngIf="data.length"
+            [value]="data"
+            [reorderableColumns]="true"
+            [(selection)]="selectedRows"
+            (onRowReorder)="orderChanged()">
           <ng-template pTemplate="body" let-rowData let-index="rowIndex">
             <tr [pSelectableRow]="rowData" [pReorderableRow]="index">
               <td class="reorder-handle" [pReorderableRowHandle]="index">
                 <i class="fa fa-sort" [pReorderableRowHandle]="index"></i>
               </td>
               <td><p-tableCheckbox [value]="rowData"></p-tableCheckbox></td>
-              <td class="type">{{ rowData.type }}</td>
-              <td class="main">{{ rowData.title }}</td>
+              <td><span class="type">{{ rowData.type }}</span></td>
+              <td><span class="main">{{ rowData.title }}</span></td>
             </tr>
           </ng-template>
           <ng-template pTemplate="summary">

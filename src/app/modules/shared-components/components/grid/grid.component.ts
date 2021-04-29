@@ -56,6 +56,7 @@ export class GridComponent implements OnChanges {
   @Input() frozenWidth?: string;
   @Input() showGear = true;
   @Input() loading = false;
+  @Input() tableStyle = '';
 
   @Output() expandWholeWidth = new EventEmitter<boolean>();
   @Output() sort = new EventEmitter<SortEvent>();

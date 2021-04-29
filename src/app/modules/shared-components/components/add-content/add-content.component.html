@@ -48,10 +48,10 @@
 
   <div *ngIf="trimmedInputsValue.searchExisting.length >= minInputLength">
     <h3 i18n>Select a Content</h3>
-    <p-table [value]="resultsFromSearch" [loading]="state === 'fetching'">
+    <p-table class="alg-table --add-content" [value]="resultsFromSearch" [loading]="state === 'fetching'">
       <ng-template pTemplate="body" let-item>
         <tr style="background-color: #dfe7f4">
-          <td class="type">{{ item.type }}</td>
+          <td><span class="type">{{ item.type }}</span></td>
           <td class="main">{{ item.title }}</td>
           <td>
             <alg-button

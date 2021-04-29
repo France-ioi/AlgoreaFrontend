@@ -1,11 +1,5 @@
 @import 'src/colors.scss';
 
-:host ::ng-deep alg-section .p-datatable .p-datatable-tbody > tr > td {
-  &:first-child {
-    border: none;
-  }
-}
-
 alg-grid {
   margin-right: -1.6667rem;
   margin-left: -3.3333rem;

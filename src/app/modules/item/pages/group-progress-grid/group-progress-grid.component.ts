@@ -1,16 +1,15 @@
 import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
-import { MessageService } from 'primeng/api';
 import { forkJoin, merge, Observable, of, Subject, Subscription } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
+import { canCurrentUserGrantGroupAccess } from 'src/app/modules/group/helpers/group-management';
 import { Group } from 'src/app/modules/group/http-services/get-group-by-id.service';
 import { GetGroupChildrenService } from 'src/app/modules/group/http-services/get-group-children.service';
-import { ERROR_MESSAGE } from 'src/app/shared/constants/api';
-import { TOAST_LENGTH } from 'src/app/shared/constants/global';
 import { fetchingState, readyState } from 'src/app/shared/helpers/state';
 import { formatUser } from 'src/app/shared/helpers/user';
 import { GetGroupDescendantsService } from 'src/app/shared/http-services/get-group-descendants.service';
 import { GetGroupProgressService, TeamUserProgress } from 'src/app/shared/http-services/get-group-progress.service';
 import { GroupPermissionsService, Permissions } from 'src/app/shared/http-services/group-permissions.service';
+import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
 import { TypeFilter } from '../../components/composition-filter/composition-filter.component';
 import { GetItemChildrenService } from '../../http-services/get-item-children.service';
 import { ItemData } from '../../services/item-datasource.service';
@@ -82,7 +81,7 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     private getGroupUsersProgressService: GetGroupProgressService,
     private getGroupChildrenService: GetGroupChildrenService,
     private groupPermissionsService: GroupPermissionsService,
-    private messageService: MessageService,
+    private actionFeedbackService: ActionFeedbackService,
   ) {
     this.dataFetching.pipe(
       switchMap(params =>
@@ -174,7 +173,7 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
             data.progress.find(progress => progress.itemId === item.id && progress.groupId === row.id)
           ),
         })),
-        can_access: (this.group?.current_user_can_grant_group_access
+        can_access: (this.group && canCurrentUserGrantGroupAccess(this.group)
           && this.itemData?.item.permissions.canGrantView !== 'none') || false,
       }))
     );
@@ -232,26 +231,9 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     this.groupPermissionsService.updatePermissions(this.group.id, this.dialogPermissions.targetGroupId,
       this.dialogPermissions.itemId, permissions)
       .subscribe(
-        _res => this.displaySuccess($localize`Permissions successfully updated.`),
-        _err => this.displayError()
+        _res => this.actionFeedbackService.success($localize`Permissions successfully updated.`),
+        _err => this.actionFeedbackService.unexpectedError(),
       );
   }
 
-  displaySuccess(msg: string): void {
-    this.messageService.add({
-      severity: 'success',
-      summary: 'Success',
-      detail: msg,
-      life: TOAST_LENGTH,
-    });
-  }
-
-  displayError(): void {
-    this.messageService.add({
-      severity: 'error',
-      summary: 'Error',
-      detail: ERROR_MESSAGE.fail,
-      life: TOAST_LENGTH,
-    });
-  }
 }

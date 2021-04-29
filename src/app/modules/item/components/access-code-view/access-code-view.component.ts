@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ConfirmationService, MessageService } from 'primeng/api';
-import { ERROR_MESSAGE } from 'src/app/shared/constants/api';
-import { TOAST_LENGTH } from 'src/app/shared/constants/global';
+import { ConfirmationService } from 'primeng/api';
+import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
 import { InvalidCodeReason, JoinByCodeService } from '../../../../shared/http-services/join-by-code.service';
 import { ItemData } from '../../services/item-datasource.service';
 
@@ -20,7 +19,7 @@ export class AccessCodeViewComponent {
 
   constructor(
     private joinByCodeService: JoinByCodeService,
-    private messageService: MessageService,
+    private actionFeedbackService: ActionFeedbackService,
     private confirmationService: ConfirmationService,
   ) { }
 
@@ -30,7 +29,7 @@ export class AccessCodeViewComponent {
     this.joinByCodeService.checkCodeValidity(this.code).subscribe(response => {
       this.state = 'ready';
       if (!response.valid) {
-        this.errorToast(this.invalidCodeReasonToString(response.reason));
+        this.actionFeedbackService.error(this.invalidCodeReasonToString(response.reason));
         return;
       }
       if (!this.itemData) return;
@@ -58,10 +57,10 @@ export class AccessCodeViewComponent {
     this.joinByCodeService.joinGroupThroughCode(code).subscribe(
       _result => {
         this.code = '';
-        this.successToast();
+        this.actionFeedbackService.success($localize`Changes successfully saved.`);
         this.groupJoined.emit();
       },
-      _err => this.errorToast()
+      _err => this.actionFeedbackService.unexpectedError()
     );
   }
 
@@ -80,21 +79,4 @@ export class AccessCodeViewComponent {
     }
   }
 
-  errorToast(message?: string): void {
-    this.messageService.add({
-      severity: 'error',
-      summary: $localize`Error`,
-      detail: message || ERROR_MESSAGE.fail,
-      life: TOAST_LENGTH,
-    });
-  }
-
-  successToast(): void {
-    this.messageService.add({
-      severity: 'success',
-      summary: $localize`Success`,
-      detail: $localize`Changes successfully saved.`,
-      life: TOAST_LENGTH,
-    });
-  }
 }

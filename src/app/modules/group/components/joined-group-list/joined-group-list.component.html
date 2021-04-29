@@ -1,41 +1,44 @@
-<p *ngIf="state === 'error';else noError" class="error-message">
-  <i class="fa fa-exclamation-triangle"></i>
-  <span i18n> Error while loading the group you joined</span>
-</p>
+<ng-container *ngIf="state$ | async as state">
+  <p *ngIf="state.isError" class="alg-error-message">
+    <i class="fa fa-exclamation-triangle"></i>
+    <span i18n> Error while loading the group you joined</span>
+  </p>
 
-<ng-template #noError>
-  <p-table #table
-    [value]="data"
+  <p-table
+    *ngIf="!state.isError"
+    class="alg-table --joined-group-list"
+    [value]="state.data || []"
     [customSort]="true"
     sortMode="multiple"
     (sortFunction)="onCustomSort($event)"
-    [loading]="state === 'fetching'"
+    [loading]="state.isFetching"
   >
-  <ng-template pTemplate="header" let-columns>
-    <tr *ngIf="data.length > 0">
-        <th i18n>Name</th>
-        <th i18n>Type</th>
-        <th pSortableColumn="member_since">
-          <span i18n>Joined On</span>
-          <p-sortIcon field="member_since"></p-sortIcon>
-        </th>
-    </tr>
-  </ng-template>
+    <ng-template pTemplate="header" let-columns>
+      <tr *ngIf="state.isReady && state.data.length > 0">
+          <th i18n>Name</th>
+          <th i18n>Type</th>
+          <th pSortableColumn="member_since">
+            <span i18n>Joined On</span>
+            <p-sortIcon field="member_since"></p-sortIcon>
+          </th>
+      </tr>
+    </ng-template>
 
-  <ng-template pTemplate="body" let-group>
-    <tr>
-      <td>{{ group.group.name }}</td>
-      <td>{{ group.group.type }}</td>
-      <td>{{ group.memberSince | date:'short' }}</td>
-    </tr>
-  </ng-template>
+    <ng-template pTemplate="body" let-group>
+      <tr>
+        <td>{{ group.group.name }}</td>
+        <td>{{ group.group.type }}</td>
+        <td>{{ group.memberSince | date:'short' }}</td>
+      </tr>
+    </ng-template>
 
-  <ng-template pTemplate="emptymessage" let-columns>
-    <tr>
-      <td [attr.colspan]="columns.length">
-        <p class="empty-message" i18n>This list is empty.</p>
-      </td>
-    </tr>
-  </ng-template>
-</p-table>
-</ng-template>
+    <ng-template pTemplate="emptymessage" let-columns>
+      <tr>
+        <td [attr.colspan]="columns.length">
+          <p class="empty-message" i18n>This list is empty.</p>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+</ng-container>

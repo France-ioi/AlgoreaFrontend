@@ -2,6 +2,12 @@
 @import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
 @import 'src/colors.scss';
 @import 'src/geometry.scss';
+@import 'assets/scss/helpers';
+@import 'assets/scss/components/page-header';
+@import 'assets/scss/components/table';
+@import 'assets/scss/components/editable-table';
+@import 'assets/scss/components/error-message';
+@import 'assets/scss/components/data-list-container';
 
 html {
   height: 100%;
@@ -297,20 +303,6 @@ body .p-component {
 
 }
 
-
-/*
-*  COMMONS
-*/
-
-.tri-tag {
-  position: absolute;
-  top: -.8rem;
-  left: 3rem;
-  border-left: 1rem solid transparent;
-  border-right: 1rem solid transparent;
-  border-bottom: .8rem solid $light-color;
-}
-
 .mat-dialog-container {
   box-shadow: none;
   padding: 1.5rem !important;
@@ -327,6 +319,45 @@ body .p-component {
 
   .dialog-title {
     font-family: "titillium", sans-serif;
+  }
+}
+
+.alg-calendar, .alg-duration {
+  &.alg-duration {
+    input {
+      text-align: center;
+    }
+  }
+
+  input {
+    font-family: "titillium", sans-serif;
+    width: 100%;
+    display: flex;
+    background-color: $input-transparency-color;
+    border: none;
+    box-shadow: 0 .1rem #00000019 inset;
+    border-radius: $border-radius;
+    font-size: 1.2rem;
+    color: $base-text-color;
+
+    &:focus, &:active {
+      outline: none;
+    }
+
+    &::placeholder {
+      font-style: italic;
+      color: rgb(118, 118, 121);
+      font-size: 1.2rem;
+    }
+  }
+
+  .p-datepicker-trigger {
+    width: 3rem;
+  }
+
+  .p-button {
+    background-color: $base-color;
+    border-color: $base-color;
   }
 }
 

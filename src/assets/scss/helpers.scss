@@ -1,0 +1,30 @@
+@import 'src/colors.scss';
+
+.tri-tag {
+  position: absolute;
+  top: -.8rem;
+  left: 3rem;
+  border-left: 1rem solid transparent;
+  border-right: 1rem solid transparent;
+  border-bottom: .8rem solid $light-color;
+}
+
+.alg-link {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: "titillium", sans-serif;
+  font-weight: 100;
+  text-decoration: none;
+
+  color: $base-text-color;
+
+  &.clickable {
+    cursor: pointer;
+
+    &:hover {
+      color: $base-color;
+    }
+  }
+}

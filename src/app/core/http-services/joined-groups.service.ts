@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { appConfig } from 'src/app/shared/helpers/config';
+import { SortOptions, sortOptionsToHTTP } from 'src/app/shared/helpers/sort-options';
 
 interface RawJoinedGroup{
   action: 'invitation_accepted' | 'join_request_accepted' | 'joined_by_code' | 'added_directly',
@@ -33,13 +34,9 @@ export class JoinedGroupsService {
 
   constructor(private http: HttpClient) {}
 
-  getJoinedGroups(
-    sort: string[] = [],
-  ): Observable<JoinedGroup[]> {
-    let params = new HttpParams();
-    if (sort.length > 0) params = params.set('sort', sort.join(','));
+  getJoinedGroups(sort: SortOptions): Observable<JoinedGroup[]> {
     return this.http
-      .get<RawJoinedGroup[]>(`${appConfig().apiUrl}/current-user/group-memberships`, { params: params })
+      .get<RawJoinedGroup[]>(`${appConfig().apiUrl}/current-user/group-memberships`, { params: sortOptionsToHTTP(sort) })
       .pipe(
         map(groups => groups.map(g => ({
           action: g.action,

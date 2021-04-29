@@ -1,19 +1,18 @@
 import { Component, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { MessageService } from 'primeng/api';
-import { readyData } from 'src/app/shared/operators/state';
+import { mapStateData, readyData } from 'src/app/shared/operators/state';
 import { Mode, ModeService } from 'src/app/shared/services/mode.service';
 import { of, Subscription } from 'rxjs';
 import { concatMap } from 'rxjs/operators';
 import { CreateItemService } from 'src/app/modules/item/http-services/create-item.service';
-import { ERROR_MESSAGE } from 'src/app/shared/constants/api';
-import { TOAST_LENGTH } from 'src/app/shared/constants/global';
 import { PendingChangesComponent } from 'src/app/shared/guards/pending-changes-guard';
 import { NoActivity, NewActivity, ExistingActivity,
   isNewActivity, isExistingActivity } from '../../components/associated-activity/associated-activity-types';
 import { Group } from '../../http-services/get-group-by-id.service';
 import { GroupUpdateService } from '../../http-services/group-update.service';
 import { GroupDataSource } from '../../services/group-datasource.service';
+import { withManagementAdditions } from '../../helpers/group-management';
+import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
 
 @Component({
   selector: 'alg-group-edit',
@@ -29,14 +28,14 @@ export class GroupEditComponent implements OnDestroy, PendingChangesComponent {
   })
   initialFormData?: Group;
 
-  state$ = this.groupDataSource.state$;
+  state$ = this.groupDataSource.state$.pipe(mapStateData(g => withManagementAdditions(g)))
 
   subscription?: Subscription;
 
   constructor(
     private modeService: ModeService,
     private groupDataSource: GroupDataSource,
-    private messageService: MessageService,
+    private actionFeedbackService: ActionFeedbackService,
     private formBuilder: FormBuilder,
     private groupUpdateService: GroupUpdateService,
     private createItemService: CreateItemService,
@@ -60,29 +59,11 @@ export class GroupEditComponent implements OnDestroy, PendingChangesComponent {
     return this.groupForm.dirty;
   }
 
-  successToast(): void {
-    this.messageService.add({
-      severity: 'success',
-      summary: $localize`Success`,
-      detail: $localize`Changes successfully saved.`,
-      life: TOAST_LENGTH,
-    });
-  }
-
-  errorToast(message?: string): void {
-    this.messageService.add({
-      severity: 'error',
-      summary: $localize`Error`,
-      detail: message || ERROR_MESSAGE.fail,
-      life: TOAST_LENGTH,
-    });
-  }
-
   save(): void {
     if (!this.initialFormData) return;
 
     if (this.groupForm.invalid) {
-      this.errorToast($localize`You need to solve all the errors displayed in the form to save changes.`);
+      this.actionFeedbackService.error($localize`You need to solve all the errors displayed in the form to save changes.`);
       return;
     }
     this.groupForm.disable();
@@ -109,11 +90,11 @@ export class GroupEditComponent implements OnDestroy, PendingChangesComponent {
     ).subscribe(
       () => {
         this.groupDataSource.refetchGroup(); // will re-enable the form
-        this.successToast();
+        this.actionFeedbackService.success($localize`Changes successfully saved.`);
       },
       _err => {
         this.groupForm.enable();
-        this.errorToast();
+        this.actionFeedbackService.unexpectedError();
       }
     );
   }
@@ -124,9 +105,9 @@ export class GroupEditComponent implements OnDestroy, PendingChangesComponent {
 
   private resetFormWith(group: Group): void {
 
-    const rootActivity = group.root_activity_id === null ?
+    const rootActivity = group.rootActivityId === null ?
       { tag: 'no-activity' } :
-      { tag: 'existing-activity', id: group.root_activity_id };
+      { tag: 'existing-activity', id: group.rootActivityId };
 
     this.groupForm.reset({
       name: group.name,

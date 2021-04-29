@@ -57,6 +57,9 @@ import { TooltipModule } from 'primeng/tooltip';
 import { ProgressSectionComponent } from './components/progress-section/progress-section.component';
 import { BooleanSectionComponent } from './components/progress-section/boolean-section/boolean-section.component';
 import { DropdownComponent } from './components/dropdown/dropdown.component';
+import { DurationComponent } from './components/duration/duration.component';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { InputMaskModule } from 'primeng/inputmask';
 
 @NgModule({
   declarations: [
@@ -89,6 +92,7 @@ import { DropdownComponent } from './components/dropdown/dropdown.component';
     ProgressSectionComponent,
     BooleanSectionComponent,
     DropdownComponent,
+    DurationComponent,
   ],
   imports: [
     CommonModule,
@@ -120,6 +124,8 @@ import { DropdownComponent } from './components/dropdown/dropdown.component';
     ReactiveFormsModule,
     TooltipModule,
     TooltipModule,
+    InputNumberModule,
+    InputMaskModule,
   ],
   exports: [
     ButtonComponent,
@@ -156,6 +162,7 @@ import { DropdownComponent } from './components/dropdown/dropdown.component';
     ProgressSectionComponent,
     BooleanSectionComponent,
     DropdownComponent,
+    DurationComponent,
   ],
   providers: [
     { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: true } }
