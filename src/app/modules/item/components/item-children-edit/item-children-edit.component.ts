@@ -97,7 +97,7 @@ export class ItemChildrenEditComponent implements OnChanges {
   }
 
   getScoreWeightEnable(): boolean {
-    return this.data.filter(c => c.scoreWeight && c.scoreWeight > 1).length > 0;
+    return this.data.filter(c => c.scoreWeight !== 1).length > 0;
   }
 
   onEnableScoreWeightChange(event: boolean): void {
