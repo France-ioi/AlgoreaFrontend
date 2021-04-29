@@ -32,8 +32,10 @@ import { PendingJoinRequestsComponent } from './components/pending-join-requests
 import { AddSubGroupComponent } from './components/add-sub-group/add-sub-group.component';
 import { ManagedGroupListComponent } from './components/managed-group-list/managed-group-list.component';
 import { AssociatedActivityComponent } from './components/associated-activity/associated-activity.component';
+import { GroupIndicatorComponent } from './components/group-indicator/group-indicator.component';
 import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';
+import { GroupChipListComponent } from './components/group-chip-list/group-chip-list.component';
 
 @NgModule({
   declarations: [
@@ -61,6 +63,8 @@ import { RippleModule } from 'primeng/ripple';
     AddSubGroupComponent,
     ManagedGroupListComponent,
     AssociatedActivityComponent,
+    GroupIndicatorComponent,
+    GroupChipListComponent,
   ],
   imports: [
     CommonModule,

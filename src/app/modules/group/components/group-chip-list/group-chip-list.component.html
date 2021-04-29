@@ -1,0 +1,7 @@
+<ng-container *ngFor="let item of items | slice : 0 : 3; let i = index; last as isLast;">
+  <button pButton pRipple type="button" label="{{ item.name }}" class="p-button-rounded"></button>
+  <span *ngIf="!isLast">&nbsp;{{ i < 1 || hasMoreItems ? ',' : 'and' }}</span>
+  <span *ngIf="hasMoreItems && isLast">
+    &nbsp;and {{ items.length - 3 }} more
+  </span>
+</ng-container>

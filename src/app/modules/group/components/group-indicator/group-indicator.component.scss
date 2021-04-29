@@ -1,0 +1,19 @@
+@import 'src/colors';
+@import 'src/geometry';
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 1.5rem;
+  color: $base-color;
+  background-color: $section-color;
+  border-radius: $border-radius;
+}
+
+.content {
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+}
+
