@@ -4,7 +4,6 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { appConfig } from 'src/app/shared/helpers/config';
 import { SortOptions, sortOptionsToHTTP } from 'src/app/shared/helpers/sort-options';
-import { ActionResponse, successData } from '../../shared/http-services/action-response';
 
 interface RawJoinedGroup {
   action: 'invitation_accepted' | 'join_request_accepted' | 'joined_by_code' | 'added_directly',
@@ -28,10 +27,6 @@ export interface JoinedGroup {
   memberSince: Date|null,
 }
 
-interface LeaveGroupResponse {
-  changed: boolean
-}
-
 @Injectable({
   providedIn: 'root'
 })
@@ -48,14 +43,6 @@ export class JoinedGroupsService {
           group: g.group,
           memberSince: g.member_since === null ? null : new Date(g.member_since),
         })))
-      );
-  }
-
-  leave(groupId: string): Observable<boolean> {
-    return this.http.delete<ActionResponse<LeaveGroupResponse>>(`${appConfig().apiUrl}/current-user/group-memberships/${groupId}`)
-      .pipe(
-        map(successData),
-        map((data: LeaveGroupResponse) => data.changed)
       );
   }
 

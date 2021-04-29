@@ -1,11 +1,12 @@
 import { Component, OnDestroy } from '@angular/core';
 import { ConfirmationService, MessageService, SortEvent } from 'primeng/api';
 import { ReplaySubject, Subject } from 'rxjs';
-import { distinctUntilChanged, startWith, switchMap, map, take, first } from 'rxjs/operators';
+import { distinctUntilChanged, startWith, switchMap, map, first } from 'rxjs/operators';
 import { JoinedGroup, JoinedGroupsService } from 'src/app/core/http-services/joined-groups.service';
 import { NO_SORT, sortEquals, multisortEventToOptions, SortOptions } from 'src/app/shared/helpers/sort-options';
 import { mapToFetchState } from 'src/app/shared/operators/state';
-import { TOAST_LENGTH } from '../../../../shared/constants/global';
+import { TOAST_LENGTH } from 'src/app/shared/constants/global';
+import { GroupLeaveService } from 'src/app/core/http-services/group-leave.service';
 
 @Component({
   selector: 'alg-joined-group-list',
@@ -24,6 +25,7 @@ export class JoinedGroupListComponent implements OnDestroy {
   );
 
   constructor(private joinedGroupsService: JoinedGroupsService,
+              private groupLeaveService: GroupLeaveService,
               private confirmationService: ConfirmationService,
               private messageService: MessageService) {}
 
@@ -54,7 +56,7 @@ export class JoinedGroupListComponent implements OnDestroy {
   leaveGroup(group: JoinedGroup): void {
     const groupId = group.group.id;
     const groupName = group.group.name;
-    this.joinedGroupsService.leave(groupId)
+    this.groupLeaveService.leave(groupId)
       .pipe(first())
       .subscribe(() => {
         this.refresh$.next();
