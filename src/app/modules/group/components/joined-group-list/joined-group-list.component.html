@@ -15,13 +15,13 @@
   >
     <ng-template pTemplate="header" let-columns>
       <tr *ngIf="state.isReady && state.data.length > 0">
-          <th i18n>Name</th>
-          <th i18n>Type</th>
-          <th pSortableColumn="member_since">
-            <span i18n>Joined On</span>
-            <p-sortIcon field="member_since"></p-sortIcon>
-          </th>
-        <th class="th-action">
+        <th i18n>Name</th>
+        <th i18n>Type</th>
+        <th pSortableColumn="member_since">
+          <span i18n>Joined On</span>
+          <p-sortIcon field="member_since"></p-sortIcon>
+        </th>
+        <th class="th-action" i18n>
           Action
         </th>
       </tr>
