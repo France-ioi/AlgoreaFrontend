@@ -52,8 +52,8 @@ export class JoinedGroupsService {
       );
   }
 
-  leave(id: string): Observable<LeaveGroupResponse> {
-    return this.http.delete<LeaveGroupResponse>(`${appConfig().apiUrl}/current-user/group-memberships/${id}`);
+  leave(groupId: string): Observable<LeaveGroupResponse> {
+    return this.http.delete<LeaveGroupResponse>(`${appConfig().apiUrl}/current-user/group-memberships/${groupId}`);
   }
 
 }
