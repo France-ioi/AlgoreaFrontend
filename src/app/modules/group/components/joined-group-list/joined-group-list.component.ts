@@ -1,7 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { ConfirmationService, MessageService, SortEvent } from 'primeng/api';
 import { ReplaySubject, Subject } from 'rxjs';
-import { distinctUntilChanged, startWith, switchMap, map } from 'rxjs/operators';
+import { distinctUntilChanged, startWith, switchMap, map, take, first } from 'rxjs/operators';
 import { JoinedGroup, JoinedGroupsService } from 'src/app/core/http-services/joined-groups.service';
 import { NO_SORT, sortEquals, multisortEventToOptions, SortOptions } from 'src/app/shared/helpers/sort-options';
 import { mapToFetchState } from 'src/app/shared/operators/state';
@@ -55,6 +55,7 @@ export class JoinedGroupListComponent implements OnDestroy {
     const groupId = group.group.id;
     const groupName = group.group.name;
     this.joinedGroupsService.leave(groupId)
+      .pipe(first())
       .subscribe(() => {
         this.refresh$.next();
         this.messageService.add({
