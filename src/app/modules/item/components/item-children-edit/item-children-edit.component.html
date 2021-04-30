@@ -9,7 +9,7 @@
             <b class="score-weight-label" i18n>Enable score weight</b>
             <alg-switch
                 mode="white"
-                [(ngModel)]="scoreWeightEnable"
+                [(ngModel)]="scoreWeightEnabled"
                 (ngModelChange)="onEnableScoreWeightChange($event)"
             ></alg-switch>
           </div>
@@ -28,7 +28,7 @@
                 <i class="fa fa-sort" [pReorderableRowHandle]="index"></i>
               </td>
               <td><p-tableCheckbox [value]="rowData"></p-tableCheckbox></td>
-              <ng-container *ngIf="scoreWeightEnable">
+              <ng-container *ngIf="scoreWeightEnabled">
                 <td pEditableColumn>
                   <p-cellEditor>
                     <ng-template pTemplate="input">

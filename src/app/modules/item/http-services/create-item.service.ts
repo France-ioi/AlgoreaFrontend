@@ -13,9 +13,10 @@ interface NewItemData {
 export type NewItem = {
   title: string,
   type: ItemType,
-  scoreWeight?: number,
   languageTag: string
 } & ({ parent: string } | { asRootOfGroupId: string })
+
+export const DEFAULT_SCORE_WEIGHT = 1;
 
 @Injectable({
   providedIn: 'root'

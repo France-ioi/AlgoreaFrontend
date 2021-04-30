@@ -128,7 +128,6 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
         const newChild: NewItem = {
           title: child.title,
           type: child.type,
-          scoreWeight: child.scoreWeight,
           languageTag: 'en',
           parent: this.initialFormData.id
         };

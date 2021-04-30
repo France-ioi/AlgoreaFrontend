@@ -4,12 +4,14 @@ import { GetItemChildrenService } from '../../http-services/get-item-children.se
 import { Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ItemType } from '../../../../shared/helpers/item-type';
+import { DEFAULT_SCORE_WEIGHT } from '../../http-services/create-item.service';
+import { AddedContent } from '../../../shared-components/components/add-content/add-content.component';
 
 export interface ChildData {
   id?: string,
   title: string | null,
   type: ItemType,
-  scoreWeight?: number,
+  scoreWeight: number,
 }
 
 export interface ChildDataWithId extends ChildData{
@@ -31,7 +33,7 @@ export class ItemChildrenEditComponent implements OnChanges {
   state: 'loading' | 'error' | 'ready' = 'ready';
   data: ChildData[] = [];
   selectedRows: ChildData[] = [];
-  scoreWeightEnable = false;
+  scoreWeightEnabled = false;
 
   private subscription?: Subscription;
   @Output() childrenChanges = new EventEmitter<ChildData[]>();
@@ -62,7 +64,7 @@ export class ItemChildrenEditComponent implements OnChanges {
           )
         ).subscribe(children => {
           this.data = children;
-          this.scoreWeightEnable = this.getScoreWeightEnable();
+          this.scoreWeightEnabled = this.data.some(c => c.scoreWeight !== 1);
           this.state = 'ready';
         },
         _err => {
@@ -73,8 +75,8 @@ export class ItemChildrenEditComponent implements OnChanges {
     }
   }
 
-  addChild(child: ChildData): void {
-    this.data.push(child);
+  addChild(child: AddedContent<ItemType>): void {
+    this.data.push({ ...child, scoreWeight: DEFAULT_SCORE_WEIGHT });
     this.childrenChanges.emit(this.data);
   }
 
@@ -96,10 +98,6 @@ export class ItemChildrenEditComponent implements OnChanges {
     this.reloadData();
   }
 
-  getScoreWeightEnable(): boolean {
-    return this.data.filter(c => c.scoreWeight !== 1).length > 0;
-  }
-
   onEnableScoreWeightChange(event: boolean): void {
     if (!event) {
       this.resetScoreWeight();
@@ -107,7 +105,7 @@ export class ItemChildrenEditComponent implements OnChanges {
   }
 
   resetScoreWeight(): void {
-    this.data = this.data.map(c => ({ ...c, scoreWeight: 1 }));
+    this.data = this.data.map(c => ({ ...c, scoreWeight: DEFAULT_SCORE_WEIGHT }));
     this.onScoreWeightChange();
   }
 
