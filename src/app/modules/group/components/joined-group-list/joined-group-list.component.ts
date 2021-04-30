@@ -1,12 +1,12 @@
 import { Component, OnDestroy } from '@angular/core';
-import { ConfirmationService, MessageService, SortEvent } from 'primeng/api';
+import { ConfirmationService, SortEvent } from 'primeng/api';
 import { ReplaySubject, Subject } from 'rxjs';
 import { distinctUntilChanged, startWith, switchMap } from 'rxjs/operators';
 import { JoinedGroup, JoinedGroupsService } from 'src/app/core/http-services/joined-groups.service';
 import { NO_SORT, sortEquals, multisortEventToOptions, SortOptions } from 'src/app/shared/helpers/sort-options';
 import { mapToFetchState } from 'src/app/shared/operators/state';
-import { TOAST_LENGTH } from 'src/app/shared/constants/global';
 import { GroupLeaveService } from 'src/app/core/http-services/group-leave.service';
+import { ActionFeedbackService } from '../../../../shared/services/action-feedback.service';
 
 @Component({
   selector: 'alg-joined-group-list',
@@ -26,7 +26,7 @@ export class JoinedGroupListComponent implements OnDestroy {
   constructor(private joinedGroupsService: JoinedGroupsService,
               private groupLeaveService: GroupLeaveService,
               private confirmationService: ConfirmationService,
-              private messageService: MessageService) {}
+              private actionFeedbackService: ActionFeedbackService) {}
 
   ngOnDestroy(): void {
     this.sort$.complete();
@@ -59,20 +59,10 @@ export class JoinedGroupListComponent implements OnDestroy {
       .subscribe(
         () => {
           this.refresh$.next();
-          this.messageService.add({
-            severity: 'success',
-            summary: $localize`Success`,
-            detail: $localize`You have left "${groupName}"`,
-            life: TOAST_LENGTH,
-          });
+          this.actionFeedbackService.success($localize`You have left "${groupName}"`);
         },
         _err => {
-          this.messageService.add({
-            severity: 'error',
-            summary: $localize`Error`,
-            detail: $localize`Failed to leave "${groupName}"`,
-            life: TOAST_LENGTH,
-          });
+          this.actionFeedbackService.error($localize`Failed to leave "${groupName}"`);
         }
       );
   }
