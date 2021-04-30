@@ -1,0 +1,8 @@
+<alg-group-indicator
+    class="indicator"
+    *ngIf="showIndicator"
+    [currentUserMembership]="group?.currentUserMembership"
+    [currentUserManagership]="group?.currentUserManagership"
+    [membershipGroups]="group?.descendantsCurrentUserIsMemberOf"
+    [managershipGroups]="group?.descendantsCurrentUserIsManagerOf"
+></alg-group-indicator>

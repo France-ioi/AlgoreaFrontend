@@ -3,7 +3,7 @@
   <ng-container *ngIf="state.isReady && state.data as group">
     <alg-group-header [group]="group"></alg-group-header>
     <alg-pending-join-requests *ngIf="group.isCurrentUserManager" [groupId]="group.id"></alg-pending-join-requests>
-    <alg-group-indicator [group]="group"></alg-group-indicator>
+    <alg-group-indicator-root [group]="group"></alg-group-indicator-root>
     <!-- tabs -- if only the first tab is visible, do not show the tab bar -->
     <nav mat-tab-nav-bar *ngIf="group.isCurrentUserManager">
       <a mat-tab-link

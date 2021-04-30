@@ -40,6 +40,7 @@ const decoder = pipe(
 );
 
 export type Group = D.TypeOf<typeof decoder>;
+export type GroupShortInfo = D.TypeOf<typeof groupShortInfo>;
 
 @Injectable({
   providedIn: 'root',

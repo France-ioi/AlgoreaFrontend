@@ -1,24 +1,28 @@
 <div class="container">
-  <div class="content" *ngIf="group?.currentUserMembership === 'direct'">
-    You are member of this group
-  </div>
+  <ng-container [ngSwitch]="currentUserMembership">
+      <div class="content" *ngSwitchCase="'direct'">
+        You are member of this group.
+      </div>
 
-  <div class="content" *ngIf="group?.currentUserMembership === 'descendant'">
-    As a member of &nbsp;<alg-group-chip-list class="chips" [items]="group?.descendantsCurrentUserIsMemberOf || []"></alg-group-chip-list>,
-    you are a member of this group.
-  </div>
+      <div class="content" *ngSwitchCase="'descendant'">
+        As a member of &nbsp;<alg-group-chip-list [items]="membershipGroups"></alg-group-chip-list>,
+        you are a member of this group.
+      </div>
+  </ng-container>
 
-  <div class="content" *ngIf="group?.currentUserManagership === 'direct'">
-    You are a manager of this group.
-  </div>
+  <ng-container [ngSwitch]="currentUserManagership">
+    <div class="content" *ngSwitchCase="'direct'">
+      You are a manager of this group.
+    </div>
 
-  <div class="content" *ngIf="group?.currentUserManagership === 'ancestor'">
-    As a manager of &nbsp;<alg-group-chip-list class="chips" [items]="group?.descendantsCurrentUserIsManagerOf || []"></alg-group-chip-list>,
-    you can manage this group.
-  </div>
+    <div class="content" *ngSwitchCase="'direct'">
+      As a manager of &nbsp;<alg-group-chip-list class="chips" [items]="managershipGroups"></alg-group-chip-list>,
+      you can manage this group.
+    </div>
 
-  <div class="content" *ngIf="group?.currentUserManagership === 'descendant'">
-    As a manager of &nbsp;<alg-group-chip-list class="chips" [items]="group?.descendantsCurrentUserIsManagerOf || []"></alg-group-chip-list>,
-    you can view this group.
-  </div>
+    <div class="content" *ngSwitchCase="'descendant'">
+      As a manager of &nbsp;<alg-group-chip-list class="chips" [items]="managershipGroups"></alg-group-chip-list>,
+      you can view this group.
+    </div>
+  </ng-container>
 </div>

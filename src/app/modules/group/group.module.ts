@@ -36,6 +36,7 @@ import { GroupIndicatorComponent } from './components/group-indicator/group-indi
 import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';
 import { GroupChipListComponent } from './components/group-chip-list/group-chip-list.component';
+import { GroupIndicatorRootComponent } from './components/group-indicator-root/group-indicator-root.component';
 
 @NgModule({
   declarations: [
@@ -65,6 +66,7 @@ import { GroupChipListComponent } from './components/group-chip-list/group-chip-
     AssociatedActivityComponent,
     GroupIndicatorComponent,
     GroupChipListComponent,
+    GroupIndicatorRootComponent,
   ],
   imports: [
     CommonModule,
@@ -74,6 +76,9 @@ import { GroupChipListComponent } from './components/group-chip-list/group-chip-
     FormsModule,
     ButtonModule,
     RippleModule,
+  ],
+  exports: [
+    GroupIndicatorComponent
   ],
   providers: [
     PendingChangesGuard,
