@@ -100,7 +100,19 @@
       </trans-unit><trans-unit id="3542042671420335679" datatype="html">
         <source>No</source><target state="translated">Non</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/joined-group-list/joined-group-list.component.ts</context><context context-type="linenumber">50</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-edit-advanced-parameters/item-edit-advanced-parameters.component.ts</context><context context-type="linenumber">34</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/guards/pending-changes-guard.ts</context><context context-type="linenumber">38</context></context-group></trans-unit><trans-unit id="8372007266188249803" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/joined-group-list/joined-group-list.component.ts</context><context context-type="linenumber">51</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-edit-advanced-parameters/item-edit-advanced-parameters.component.ts</context><context context-type="linenumber">34</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/guards/pending-changes-guard.ts</context><context context-type="linenumber">38</context></context-group></trans-unit><trans-unit id="6595442071355967826" datatype="html">
+        <source>You have left "<x id="PH" equiv-text="groupName"/>"</source><target state="new">You have left "<x id="PH" equiv-text="groupName"/>"</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/joined-group-list/joined-group-list.component.ts</context>
+          <context context-type="linenumber">62</context>
+        </context-group>
+      </trans-unit><trans-unit id="689769633489535411" datatype="html">
+        <source>Failed to leave "<x id="PH" equiv-text="groupName"/>"</source><target state="new">Failed to leave "<x id="PH" equiv-text="groupName"/>"</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/joined-group-list/joined-group-list.component.ts</context>
+          <context context-type="linenumber">65</context>
+        </context-group>
+      </trans-unit><trans-unit id="8372007266188249803" datatype="html">
         <source>Never</source><target>Jamais</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-edit-advanced-parameters/item-edit-advanced-parameters.component.ts</context><context context-type="linenumber">17</context></context-group></trans-unit><trans-unit id="5019596727368640757" datatype="html">
@@ -255,11 +267,8 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/associated-activity/associated-activity.component.html</context><context context-type="linenumber">2</context></context-group></trans-unit><trans-unit id="9048329397389521608" datatype="html">
         <source>The action cannot be executed. If the problem persists, contact us.</source><target state="translated">Cette action ne peut être exécutée. Contactez-nous si le problème persiste.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/constants/api.ts</context>
-          <context context-type="linenumber">2</context>
-        </context-group>
-      </trans-unit><trans-unit id="1eab7cabd424b0f190d8e7d2e5a412c9ef053d96" datatype="html">
+
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/services/action-feedback.service.ts</context><context context-type="linenumber">21</context></context-group></trans-unit><trans-unit id="1eab7cabd424b0f190d8e7d2e5a412c9ef053d96" datatype="html">
         <source>Add a content</source><target state="translated">Ajouter du contenu</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/add-item/add-item.component.html</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="7de5b8682019c8bc549084bf70c7fbf2daee125a" datatype="html">
