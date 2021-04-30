@@ -1,22 +1,14 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { catchError, switchMap, pairwise, map, retry } from 'rxjs/operators';
-import { AccessToken, minTokenLifetime } from './access-token';
-import { BehaviorSubject, of, merge, Subscription, timer } from 'rxjs';
-import { TempAuthService } from './temp-auth.service';
+import { catchError, switchMap, retry, mapTo } from 'rxjs/operators';
+import { BehaviorSubject, of, timer, throwError, Subject, EMPTY } from 'rxjs';
 import { OAuthService } from './oauth.service';
 import { AuthHttpService } from '../http-services/auth.http-service';
 import { MINUTES } from '../helpers/duration';
+import { appConfig } from '../helpers/config';
+import { tokenAuthFromStorage, AuthStatus, notAuthenticated, AuthResult, clearTokenFromStorage } from './auth-info';
 
-// as auth can be complex to debug, enable this flag to print state logs
-const debugLogEnabled = false;
-function logState(msg: string): void {
-  if (debugLogEnabled) {
-    // eslint-disable-next-line no-console
-    console.log(msg);
-  }
-}
-
-export enum AuthServiceState { Idle, Fetching, Refreshing, Error }
+// Lifetime under which we refresh the token.
+export const minTokenLifetime = 5*MINUTES;
 
 /**
  * This service manages the authentication workflow (login, logout, ...) for authenticated and temp sessions.
@@ -29,105 +21,79 @@ export enum AuthServiceState { Idle, Fetching, Refreshing, Error }
 })
 export class AuthService implements OnDestroy {
 
-  private accessToken = new BehaviorSubject<AccessToken|null>(null);
-  accessToken$ = this.accessToken.asObservable();
-  state$ = new BehaviorSubject<AuthServiceState>(AuthServiceState.Fetching);
-
-  private subscription: Subscription;
-  private tokenRefreshSubscription?: Subscription;
+  status$ = new BehaviorSubject<AuthStatus>(notAuthenticated());
+  failure$ = new Subject<void>();
 
   constructor(
     private oauthService: OAuthService,
-    private tempAuth: TempAuthService,
     private authHttp: AuthHttpService
   ) {
-    logState('Init the auth service');
-
-    this.state$.next(AuthServiceState.Fetching); // will immediately be changed if we can get a token without fetching
-
-    this.subscription = this.accessToken.pipe(pairwise()).subscribe(tokens => this.tokenChanged(tokens));
-
-    // First, check if a code/state is given in URL (i.e., we are back from a oauth login redirect) and try to get a token from it.
+    // (1) check if a code/state is given in URL (i.e., we are back from a oauth login redirect) and try to get a token from it.
     oauthService.tryCompletingCodeFlowLogin().pipe(
-      catchError(_e => of<AccessToken|null>(null)),
-      switchMap(newToken => {
-        const fromStorage = AccessToken.fromStorage();
-
-        // If can get a token from these code/state, use this one in priority
-        if (newToken !== null) {
-          // if there was a stored token, revoke the token
-          if (fromStorage === null) return of(newToken);
-          else return merge(
-            of(newToken),
-            this.authHttp.revokeToken(fromStorage.accessToken).pipe(
-              switchMap(() => of<AccessToken>()) // just completing without emitting anything new
-            )
-          );
+      catchError(_e => {
+        // (2) use the ongoing authentication if any
+        if (appConfig.useTokens) {
+          const token = tokenAuthFromStorage();
+          return token ? of(token) : throwError(new Error('no token stored for token auth'));
+        } else {
+          return this.authHttp.refreshCookie(); // will fail if the browser has no cookie
         }
-
-        // if there is a valid token in storage, use it
-        if (fromStorage !== null) return of(fromStorage);
-
-        // otherwise, create a temp session
-        return this.tempAuth.login().pipe(retry(2));
       }),
+      catchError(_e =>
+        // (3) otherwise, create a temp session
+        this.authHttp.createTempUser().pipe(retry(2))
+      ),
     ).subscribe({
-      next: (token: AccessToken) => {
-        this.accessToken.next(token);
+      next: (auth: AuthResult) => {
+        this.status$.next(auth);
       },
       error: _e => {
         // if temp user creation fails, there is not much we can do
-        this.state$.next(AuthServiceState.Error);
-      },
-      complete: () => {
-        // in any of the success case
-        this.state$.next(AuthServiceState.Idle);
+        this.failure$.next();
       }
+    });
+
+    // setup auto-refresh after delay
+    this.status$.pipe(
+      switchMap(auth => {
+        const maxDelay = 2147483647;
+        if (!auth.authenticated) return EMPTY;
+        // Refresh if the token is valid < `minTokenLifetime` or when it will have reached 50% of its lifetime. Retry every minute.
+        const refreshIn = auth.expiration.getTime() - Date.now() <= minTokenLifetime ? 0 :
+          Math.max((auth.expiration.getTime() + auth.creation.getTime())/2 - Date.now(), 0);
+        return timer(Math.min(refreshIn, maxDelay), 1*MINUTES).pipe(mapTo(auth));
+      }),
+      switchMap(auth =>
+        this.authHttp.refreshAuth(auth)
+      )
+    ).subscribe(auth => {
+      this.status$.next(auth);
     });
   }
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
-    this.accessToken.complete();
-  }
-
-  /**
-   * Return whether an authenticated user (i.e. non-temp) is connected
-   */
-  authUserConnected(): boolean {
-    return this.accessToken.value?.type === 'authenticated';
+    this.status$.complete();
+    this.failure$.complete();
   }
 
   /**
    * Start the auth session login workflow (i.e., redirect to login prompt)
    */
   startAuthLogin(): void {
-    logState('startLogin');
-    if (this.isBusy() || this.authUserConnected()) {
-      logState(`cannot startLogin if busy or already connected (${this.debugState()})`);
-      return;
-    }
-
-    this.state$.next(AuthServiceState.Fetching);
     this.oauthService.initCodeFlow();
   }
 
   /**
-   * Log the authenticated user out and start a new temp session.
+   * Log the non-temp user out (redirect to auth website). (new temp user will be recreate when coming back on the app)
    */
   logoutAuthUser(): void {
-    logState('endAuthSession');
-    const currentToken = this.accessToken.value;
+    const currentauth = this.status$.value;
+    if (!currentauth.authenticated) throw new Error('unable to logout while no user is logged in');
+    this.status$.next(notAuthenticated());
 
-    if (this.isBusy() || !currentToken || currentToken.type !== 'authenticated') {
-      logState(`cannot endAuthSession if busy or not connected (${this.debugState()})`);
-      return;
-    }
-
-    this.state$.next(AuthServiceState.Fetching);
-    this.accessToken.next(null);
-    this.authHttp.revokeToken(currentToken.accessToken).pipe(
-      catchError(_e => of(null)), // continue next step even if token revocation failed
+    if (appConfig.useTokens) clearTokenFromStorage();
+    this.authHttp.revokeAuth(currentauth).pipe(
+      catchError(_e => of(undefined)), // continue next step even if token revocation failed
     ).subscribe(() => {
       this.oauthService.logoutOnAuthServer();
     });
@@ -135,76 +101,23 @@ export class AuthService implements OnDestroy {
 
   /**
    * Called when the API token is invalid (typically by an interceptor) and so that a fallback solution has to be found.
-   * The token arg is the token which was used with the request that was considered as invalid, so that a more recent token which has been
-   * added in the meantime is not dropped.
+   * The auth arg is what was used with the request that was considered as invalid, so that we can check it is still in use.
    */
-  invalidToken(invalidToken: string): void {
-    const currentToken = this.accessToken.value;
-    if (currentToken?.accessToken === invalidToken) {
+  invalidToken(auth: AuthResult): void {
+    const currentauth = this.status$.value;
+    if (!currentauth.authenticated) return; // not the first time we are not notified of that, ignore.
+    if (currentauth.expiration.getDate() !== auth.expiration.getDate()) return; // auth has been renewed in the meantime
 
-      // invalidate the current token only if it is the one which is still used now
-      this.accessToken.next(null);
-      if (this.isBusy()) return;
-
-      if (currentToken.type === 'authenticated') { // user was authenticated
-        this.startAuthLogin();
-      } else { // user was temporary
-        this.state$.next(AuthServiceState.Fetching);
-        this.tempAuth.login().subscribe({
-          next: tempUserToken => {
-            logState('temp user token received');
-            this.accessToken.next(tempUserToken);
-            this.state$.next(AuthServiceState.Idle);
-          },
-          error: _e => {
-            logState('temp user creation failed');
-            this.state$.next(AuthServiceState.Error); // if temp user creation fails, there is not much we can do
-          }
-        });
+    this.status$.next(notAuthenticated());
+    this.authHttp.createTempUser().pipe(retry(2)).subscribe({
+      next: auth => {
+        this.status$.next(auth);
+      },
+      error: _e => {
+        this.failure$.next(); // if temp user creation fails, there is not much we can do
       }
-    }
-  }
+    });
 
-  private tokenChanged([ oldToken, newToken ]: [AccessToken|null, AccessToken|null]): void {
-    logState('token changed');
-
-    if (JSON.stringify(oldToken) === JSON.stringify(newToken)) return;
-    // make sure to replace/clear the token in storage
-    if (newToken === null) {
-      AccessToken.clearFromStorage();
-    } else {
-      newToken.saveToStorage();
-    }
-    this.resetTokenRefresh(newToken);
-  }
-
-  private isBusy(): boolean {
-    return this.state$.value === AuthServiceState.Fetching;
-  }
-
-  private resetTokenRefresh(token: AccessToken|null): void {
-    // Max delay for Rx.timer. Otherwise, it triggers immediately (see bug https://github.com/ReactiveX/rxjs/issues/3015)
-    const maxDelay = 2147483647;
-
-    this.tokenRefreshSubscription?.unsubscribe();
-    if (token === null) {
-      this.tokenRefreshSubscription = undefined;
-    } else {
-      // Refresh if the token is valid < `minTokenLifetime` or when it will have reached 50% of its lifetime. Retry every minute.
-      let refreshIn = 0;
-      if (token.expiration.getTime() - Date.now() > minTokenLifetime) {
-        refreshIn = Math.max((token.expiration.getTime() + token.creation.getTime())/2 - Date.now(), 0);
-      }
-      this.tokenRefreshSubscription = timer(Math.min(refreshIn, maxDelay), 1*MINUTES).pipe(
-        switchMap(() => this.authHttp.refreshToken(token.accessToken)),
-        map(t => AccessToken.fromTTL(t.access_token, t.expires_in, token.type))
-      ).subscribe(token => this.accessToken.next(token));
-    }
-  }
-
-  private debugState(): string {
-    const current = this.accessToken.value;
-    return (current === null) ? `${this.state$.value},no-token` : `${this.state$.value},${current.type},${current.expiration.toString()}`;
   }
 
 }

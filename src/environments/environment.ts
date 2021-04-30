@@ -17,6 +17,8 @@ export const environment: Environment = {
     { tag: 'fr', path: '/fr/' },
     { tag: 'en', path: '/en/' },
   ],
+  useTokens: true,
+  useCookies: false,
 };
 
 /*

@@ -1,9 +1,9 @@
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { UserSessionService } from '../shared/services/user-session.service';
-import { delay, map, skip, switchMap } from 'rxjs/operators';
+import { delay, skip, switchMap } from 'rxjs/operators';
 import { Observable, Subscription } from 'rxjs';
 import { CurrentContentService } from '../shared/services/current-content.service';
-import { AuthService, AuthServiceState } from '../shared/auth/auth.service';
+import { AuthService } from '../shared/auth/auth.service';
 import { Router } from '@angular/router';
 import { ModeAction, ModeService } from '../shared/services/mode.service';
 import { ContentInfo } from '../shared/models/content/content-info';
@@ -19,7 +19,7 @@ export class AppComponent implements OnInit, OnDestroy {
   currentContent$: Observable<ContentInfo|null> = this.currentContent.currentContent$.pipe(delay(0));
   readonly currentMode$ = this.modeService.mode$.asObservable().pipe(delay(0));
   session$ = this.sessionService.session$.pipe(delay(0));
-  authOnError$ = this.authService.state$.pipe(map(state => state === AuthServiceState.Error));
+  authOnError$ = this.authService.failure$;
 
   leftMenuDisplayed = true;
   headersDisplayed = true;

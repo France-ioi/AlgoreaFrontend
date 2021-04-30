@@ -1,6 +1,10 @@
 import { environment } from 'src/environments/environment';
 
-export interface Environment {
+interface TokenConfig { useTokens: true, useCookies: false }
+type CookieConfig = { useTokens: false, useCookies: true } & ({ secure: true, sameSite: boolean } | { secure: boolean, sameSite: true })
+export type AuthTypeConfig = TokenConfig | CookieConfig;
+
+export type Environment = {
   production: boolean;
 
   apiUrl: string; // full url (not including the trailing slash) of the backend
@@ -14,7 +18,10 @@ export interface Environment {
   defaultSkillId: string;
 
   languages?: { tag: string, path: string }[];
-}
+
+  // The auth type used with API is either `useToken: true` or `useCookies: true` (not both).
+  // If using cookie `secure` or `sameSite` must be true (may be both). If `secure` the api has to be on the same domain as the API.st
+} & AuthTypeConfig;
 
 type Config = Environment; // config may be someday an extension of the environment
 

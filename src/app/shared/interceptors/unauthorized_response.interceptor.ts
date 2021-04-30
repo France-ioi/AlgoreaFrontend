@@ -3,7 +3,6 @@ import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HttpErrorResponse
 import { Observable } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
 import { catchError } from 'rxjs/operators';
-import { tokenFromHeaders } from '../helpers/auth';
 import { appConfig } from '../helpers/config';
 
 /**
@@ -16,11 +15,11 @@ export class UnauthorizedResponseInterceptor implements HttpInterceptor {
   constructor(public auth: AuthService) { }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    const requestAuth = this.auth.status$.value;
     return next.handle(req).pipe(
       catchError((err: any) => {
         if (err instanceof HttpErrorResponse && err.status === 401 && req.url.toLowerCase().startsWith(appConfig.apiUrl)) {
-          const token = tokenFromHeaders(req.headers);
-          if (token) this.auth.invalidToken(token);
+          if (requestAuth.authenticated) this.auth.invalidToken(requestAuth);
         }
         throw err; // rethrow the error anyway (401 or not)
       })
