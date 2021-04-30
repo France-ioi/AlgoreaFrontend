@@ -5,7 +5,7 @@ import { map } from 'rxjs/operators';
 import { appConfig } from 'src/app/shared/helpers/config';
 import { ActionResponse, successData } from 'src/app/shared/http-services/action-response';
 
-interface LeaveGroupResponse {
+interface LeaveGroupResponseData {
   changed: boolean
 }
 
@@ -17,10 +17,10 @@ export class GroupLeaveService {
   constructor(private http: HttpClient) {}
 
   leave(groupId: string): Observable<boolean> {
-    return this.http.delete<ActionResponse<LeaveGroupResponse>>(`${appConfig().apiUrl}/current-user/group-memberships/${groupId}`)
+    return this.http.delete<ActionResponse<LeaveGroupResponseData>>(`${appConfig().apiUrl}/current-user/group-memberships/${groupId}`)
       .pipe(
         map(successData),
-        map((data: LeaveGroupResponse) => data.changed)
+        map((data: LeaveGroupResponseData) => data.changed)
       );
   }
 

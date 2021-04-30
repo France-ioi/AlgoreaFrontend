@@ -1,7 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { ConfirmationService, MessageService, SortEvent } from 'primeng/api';
 import { ReplaySubject, Subject } from 'rxjs';
-import { distinctUntilChanged, startWith, switchMap, map, first } from 'rxjs/operators';
+import { distinctUntilChanged, startWith, switchMap } from 'rxjs/operators';
 import { JoinedGroup, JoinedGroupsService } from 'src/app/core/http-services/joined-groups.service';
 import { NO_SORT, sortEquals, multisortEventToOptions, SortOptions } from 'src/app/shared/helpers/sort-options';
 import { mapToFetchState } from 'src/app/shared/operators/state';
@@ -14,13 +14,12 @@ import { GroupLeaveService } from 'src/app/core/http-services/group-leave.servic
   styleUrls: [ './joined-group-list.component.scss' ]
 })
 export class JoinedGroupListComponent implements OnDestroy {
-  refresh$ = new Subject();
+  private refresh$ = new Subject<void>();
   private readonly sort$ = new ReplaySubject<SortOptions>(1);
   readonly state$ = this.sort$.pipe(
     startWith(NO_SORT),
     distinctUntilChanged(sortEquals),
     switchMap(sort => this.joinedGroupsService.getJoinedGroups(sort)),
-    map(group => group.filter(g => g.group.type !== 'Base')),
     mapToFetchState({ resetter: this.refresh$.asObservable() }),
   );
 
@@ -57,23 +56,25 @@ export class JoinedGroupListComponent implements OnDestroy {
     const groupId = group.group.id;
     const groupName = group.group.name;
     this.groupLeaveService.leave(groupId)
-      .pipe(first())
-      .subscribe(() => {
-        this.refresh$.next();
-        this.messageService.add({
-          severity: 'success',
-          summary: $localize`Success`,
-          detail: $localize`You have left ${groupName}`,
-          life: TOAST_LENGTH,
-        });
-      }, _err => {
-        this.messageService.add({
-          severity: 'error',
-          summary: $localize`Error`,
-          detail: $localize`Failed to leave ${groupName}`,
-          life: TOAST_LENGTH,
-        });
-      });
+      .subscribe(
+        () => {
+          this.refresh$.next();
+          this.messageService.add({
+            severity: 'success',
+            summary: $localize`Success`,
+            detail: $localize`You have left "${groupName}"`,
+            life: TOAST_LENGTH,
+          });
+        },
+        _err => {
+          this.messageService.add({
+            severity: 'error',
+            summary: $localize`Error`,
+            detail: $localize`Failed to leave "${groupName}"`,
+            life: TOAST_LENGTH,
+          });
+        }
+      );
   }
 
 }

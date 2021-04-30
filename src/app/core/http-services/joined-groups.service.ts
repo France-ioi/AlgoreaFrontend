@@ -38,11 +38,14 @@ export class JoinedGroupsService {
     return this.http
       .get<RawJoinedGroup[]>(`${appConfig().apiUrl}/current-user/group-memberships`, { params: sortOptionsToHTTP(sort) })
       .pipe(
-        map(groups => groups.map(g => ({
-          action: g.action,
-          group: g.group,
-          memberSince: g.member_since === null ? null : new Date(g.member_since),
-        })))
+        map(groups => groups
+          .map(g => ({
+            action: g.action,
+            group: g.group,
+            memberSince: g.member_since === null ? null : new Date(g.member_since),
+          }))
+          .filter(g => g.group.type !== 'Base')
+        ),
       );
   }
 
