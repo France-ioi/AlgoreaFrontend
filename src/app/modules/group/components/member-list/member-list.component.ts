@@ -194,6 +194,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
       .subscribe(result => {
         displayResponseToast(this.messageService, parseResults(result));
         this.table?.clear();
+        this.selection = [];
         if (this.group) {
           this.dataFetching.next({ groupId: this.group.id, filter: this.currentFilter, sort: this.currentSort });
         }
