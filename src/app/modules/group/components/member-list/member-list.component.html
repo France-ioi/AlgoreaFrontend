@@ -70,7 +70,7 @@
       </tr>
     </ng-template>
     <ng-template pTemplate="summary">
-      <div class="footer" *ngIf="currentFilter.type === 'users'">
+      <div class="footer" *ngIf="currentFilter.type === 'users' && state === 'ready'">
         <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
         <span class="select-all" i18n>
           Select all

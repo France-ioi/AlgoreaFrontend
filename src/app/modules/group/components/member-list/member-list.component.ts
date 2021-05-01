@@ -86,8 +86,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
     private messageService: MessageService,
   ) {
     this.dataFetching.pipe(
-      switchMap(params => this.getData(params.groupId, params.filter, params.sort)),
-      mapToFetchState(),
+      switchMap(params => this.getData(params.groupId, params.filter, params.sort).pipe(mapToFetchState())),
     ).subscribe(
       state => {
         this.state = state.tag;
