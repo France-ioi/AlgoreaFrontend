@@ -10,7 +10,7 @@ describe('GroupIndicatorComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [ GroupIndicatorComponent ]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {

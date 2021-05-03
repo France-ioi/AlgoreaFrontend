@@ -1,13 +1,13 @@
 <div class="container">
   <ng-container [ngSwitch]="group?.currentUserMembership">
-      <div class="content" *ngSwitchCase="'direct'" i18n>
-        You are member of this group.
-      </div>
+    <div class="content" *ngSwitchCase="'direct'" i18n>
+      You are member of this group.
+    </div>
 
-      <div class="content" *ngSwitchCase="'descendant'" i18n>
-        As a member of <alg-group-links class="links" [items]="group?.descendantsCurrentUserIsMemberOf"></alg-group-links>,
-        you are a member of this group.
-      </div>
+    <div class="content" *ngSwitchCase="'descendant'" i18n>
+      As a member of <alg-group-links class="links" [items]="group?.descendantsCurrentUserIsMemberOf"></alg-group-links>,
+      you are a member of this group.
+    </div>
   </ng-container>
 
   <ng-container [ngSwitch]="group?.currentUserManagership">
