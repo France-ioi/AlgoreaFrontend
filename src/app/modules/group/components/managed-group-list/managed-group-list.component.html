@@ -52,7 +52,7 @@
 
     <ng-template pTemplate="emptymessage" let-columns>
       <tr>
-        <td [attr.colspan]="columns.length">
+        <td [attr.colspan]="columns?.length">
           <p class="empty-message" i18n>You do not manage any group</p>
         </td>
       </tr>

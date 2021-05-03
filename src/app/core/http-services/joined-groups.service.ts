@@ -5,7 +5,7 @@ import { map } from 'rxjs/operators';
 import { appConfig } from 'src/app/shared/helpers/config';
 import { SortOptions, sortOptionsToHTTP } from 'src/app/shared/helpers/sort-options';
 
-interface RawJoinedGroup{
+interface RawJoinedGroup {
   action: 'invitation_accepted' | 'join_request_accepted' | 'joined_by_code' | 'added_directly',
   group: {
     description: string|null,
@@ -16,7 +16,7 @@ interface RawJoinedGroup{
   member_since: string|null,
 }
 
-export interface JoinedGroup{
+export interface JoinedGroup {
   action: 'invitation_accepted' | 'join_request_accepted' | 'joined_by_code' | 'added_directly',
   group: {
     description: string|null,
@@ -38,14 +38,15 @@ export class JoinedGroupsService {
     return this.http
       .get<RawJoinedGroup[]>(`${appConfig().apiUrl}/current-user/group-memberships`, { params: sortOptionsToHTTP(sort) })
       .pipe(
-        map(groups => groups.map(g => ({
-          action: g.action,
-          group: g.group,
-          memberSince: g.member_since === null ? null : new Date(g.member_since),
-        })))
+        map(groups => groups
+          .map(g => ({
+            action: g.action,
+            group: g.group,
+            memberSince: g.member_since === null ? null : new Date(g.member_since),
+          }))
+          .filter(g => g.group.type !== 'Base')
+        ),
       );
   }
 
 }
-
-
