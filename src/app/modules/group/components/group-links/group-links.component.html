@@ -1,0 +1,12 @@
+<ng-container *ngFor="let item of items | slice : 0 : maxItemsDisplay; let i = index; last as isLast;">
+  <a
+    class="link alg-link clickable base-color underline"
+    (click)="onButtonClick(item)"
+  >
+    <strong>{{ item.name }}</strong>
+  </a>
+  <span class="separator" *ngIf="!isLast">{{ i < (maxItemsDisplay - 2) || hasMoreItems ? ',' : 'and' }}</span>
+  <span class="more" *ngIf="hasMoreItems && isLast">
+    and {{ moreItemsCount }} more
+  </span>
+</ng-container>

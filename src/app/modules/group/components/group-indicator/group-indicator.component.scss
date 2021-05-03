@@ -3,6 +3,7 @@
 
 .container {
   display: flex;
+  flex-wrap: nowrap;
   flex-direction: column;
   justify-content: center;
   color: $base-color;
@@ -17,3 +18,6 @@
   font-weight: bold;
 }
 
+.links {
+  margin-left: .4rem;
+}

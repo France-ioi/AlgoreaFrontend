@@ -10,10 +10,6 @@
 }
 
 .alg-link {
-  flex: 1;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
   font-family: "titillium", sans-serif;
   font-weight: 100;
   text-decoration: none;
@@ -26,5 +22,19 @@
     &:hover {
       color: $base-color;
     }
+  }
+
+  &.base-color {
+    color: $base-color;
+  }
+
+  &.underline {
+    text-decoration: underline;
+  }
+
+  &.dots {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
