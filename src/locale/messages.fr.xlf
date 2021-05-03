@@ -601,13 +601,13 @@
 
      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/joined-group-list/joined-group-list.component.html</context><context context-type="linenumber">53</context></context-group></trans-unit><trans-unit id="2575397017094639736" datatype="html">
         <source>Are you sure you want to leave this group?</source><target state="new">Are you sure you want to leave this group?</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/joined-group-list/joined-group-list.component.ts</context><context context-type="linenumber">44</context></context-group></trans-unit><trans-unit id="496016127703941341" datatype="html">
         <source>Confirm Action</source><target state="new">Confirm Action</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/joined-group-list/joined-group-list.component.ts</context><context context-type="linenumber">45</context></context-group></trans-unit><trans-unit id="194816385249516309" datatype="html">
         <source>Yes, leave group</source><target state="new">Yes, leave group</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/joined-group-list/joined-group-list.component.ts</context><context context-type="linenumber">47</context></context-group></trans-unit><trans-unit id="6260891589219088351" datatype="html">
      <source>The user</source><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog-texts.ts</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="2b16d754538c43298a40b3efa2b957beb1d29f27" datatype="html">
         <source>Personal Information</source><target state="new">Personal Information</target>
