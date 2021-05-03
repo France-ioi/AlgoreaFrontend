@@ -4,7 +4,6 @@ import { GetItemChildrenService } from '../../http-services/get-item-children.se
 import { Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ItemType } from '../../../../shared/helpers/item-type';
-import { DEFAULT_SCORE_WEIGHT } from '../../http-services/create-item.service';
 import { AddedContent } from '../../../shared-components/components/add-content/add-content.component';
 
 export interface ChildData {
@@ -21,6 +20,8 @@ export interface ChildDataWithId extends ChildData{
 export function hasId(child: ChildData): child is ChildDataWithId {
   return !!child.id;
 }
+
+export const DEFAULT_SCORE_WEIGHT = 1;
 
 @Component({
   selector: 'alg-item-children-edit',

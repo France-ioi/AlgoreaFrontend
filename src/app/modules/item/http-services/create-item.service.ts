@@ -16,8 +16,6 @@ export type NewItem = {
   languageTag: string
 } & ({ parent: string } | { asRootOfGroupId: string })
 
-export const DEFAULT_SCORE_WEIGHT = 1;
-
 @Injectable({
   providedIn: 'root'
 })
