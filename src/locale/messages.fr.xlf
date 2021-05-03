@@ -438,10 +438,10 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/group-edit/group-edit.component.ts</context><context context-type="linenumber">93</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-edit/item-edit.component.ts</context><context context-type="linenumber">279</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/access-code-view/access-code-view.component.ts</context><context context-type="linenumber">67</context></context-group></trans-unit><trans-unit id="b519e0487553e270eb6674281c3dd9e65ff91d3c" datatype="html">
         <source>Access to activity</source><target state="translated">Accès à l'activité</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-details/item-details.component.html</context><context context-type="linenumber">9</context></context-group></trans-unit><trans-unit id="88070997a942eb0ca0aaa1972b71a511b57e7c92" datatype="html">
         <source>Group code</source><target state="translated">Code du groupe</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/access-code-view/access-code-view.component.html</context><context context-type="linenumber">6</context></context-group></trans-unit><trans-unit id="fa5002e6d44382622a9752e361de52c3e81b9093" datatype="html">
         <source>Access</source><target state="translated">Rejoindre</target>
 
@@ -1014,6 +1014,36 @@
           <context context-type="sourcefile">src/app/modules/group/components/group-composition-filter/group-composition-filter.component.ts</context>
           <context context-type="linenumber">63</context>
         </context-group>
+      </trans-unit><trans-unit id="f4b93cdc5e73e6c34bcecdb0623e4201e1787023" datatype="html">
+        <source> You are member of this group. </source><target state="new"> You are member of this group. </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/group-indicator/group-indicator.component.html</context>
+          <context context-type="linenumber">4,5</context>
+        </context-group>
+      </trans-unit><trans-unit id="dcf895cb6edfa0125a5c81db5b4cd0b04a4a3f8b" datatype="html">
+        <source> As a member of <x id="START_TAG_ALG_GROUP_LINKS" ctype="x-alg_group_links" equiv-text="&lt;alg-group-links class=&quot;links&quot; [items]=&quot;group?.descendantsCurrentUserIsMemberOf&quot;>"/><x id="CLOSE_TAG_ALG_GROUP_LINKS" ctype="x-alg_group_links" equiv-text="&lt;/alg-group-links>"/>, you are a member of this group. </source><target state="new"> As a member of <x id="START_TAG_ALG_GROUP_LINKS" ctype="x-alg_group_links" equiv-text="&lt;alg-group-links class=&quot;links&quot; [items]=&quot;group?.descendantsCurrentUserIsMemberOf&quot;>"/><x id="CLOSE_TAG_ALG_GROUP_LINKS" ctype="x-alg_group_links" equiv-text="&lt;/alg-group-links>"/>, you are a member of this group. </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/group-indicator/group-indicator.component.html</context>
+          <context context-type="linenumber">8,10</context>
+        </context-group>
+      </trans-unit><trans-unit id="cd61bd90d43f235a486db7eb9676449a7790371d" datatype="html">
+        <source> You are a manager of this group. </source><target state="new"> You are a manager of this group. </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/group-indicator/group-indicator.component.html</context>
+          <context context-type="linenumber">15,16</context>
+        </context-group>
+      </trans-unit><trans-unit id="d6c6f9744244d36fa57b88f5f282c8c20d1c7f94" datatype="html">
+        <source> As a manager of <x id="START_TAG_ALG_GROUP_LINKS" ctype="x-alg_group_links" equiv-text="&lt;alg-group-links class=&quot;links&quot; [items]=&quot;group?.descendantsCurrentUserIsManagerOf&quot;>"/><x id="CLOSE_TAG_ALG_GROUP_LINKS" ctype="x-alg_group_links" equiv-text="&lt;/alg-group-links>"/>, you can manage this group. </source><target state="new"> As a manager of <x id="START_TAG_ALG_GROUP_LINKS" ctype="x-alg_group_links" equiv-text="&lt;alg-group-links class=&quot;links&quot; [items]=&quot;group?.descendantsCurrentUserIsManagerOf&quot;>"/><x id="CLOSE_TAG_ALG_GROUP_LINKS" ctype="x-alg_group_links" equiv-text="&lt;/alg-group-links>"/>, you can manage this group. </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/group-indicator/group-indicator.component.html</context>
+          <context context-type="linenumber">19,21</context>
+        </context-group>
+      </trans-unit><trans-unit id="8c0dfa095d771e73986d28206e7637e78d1972b0" datatype="html">
+        <source> As a manager of <x id="START_TAG_ALG_GROUP_LINKS" ctype="x-alg_group_links" equiv-text="&lt;alg-group-links class=&quot;links&quot; [items]=&quot;group?.descendantsCurrentUserIsManagerOf&quot;>"/><x id="CLOSE_TAG_ALG_GROUP_LINKS" ctype="x-alg_group_links" equiv-text="&lt;/alg-group-links>"/>, you can view this group. </source><target state="new"> As a manager of <x id="START_TAG_ALG_GROUP_LINKS" ctype="x-alg_group_links" equiv-text="&lt;alg-group-links class=&quot;links&quot; [items]=&quot;group?.descendantsCurrentUserIsManagerOf&quot;>"/><x id="CLOSE_TAG_ALG_GROUP_LINKS" ctype="x-alg_group_links" equiv-text="&lt;/alg-group-links>"/>, you can view this group. </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/group-indicator/group-indicator.component.html</context>
+          <context context-type="linenumber">24,26</context>
+        </context-group>
       </trans-unit><trans-unit id="8953033926734869941" datatype="html">
         <source>Name</source><target state="translated">Nom</target>
         <context-group purpose="location">
@@ -1154,16 +1184,16 @@
         </context-group>
       </trans-unit><trans-unit id="4902080776299806811" datatype="html">
         <source><x id="PH" equiv-text="successInvites.length"/> user(s) invited successfully: </source><target state="translated"><x id="PH" equiv-text="successInvites.length"/> utilisateur(s) invité(s) avec succès : </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-invite-users/group-invite-users.component.ts</context><context context-type="linenumber">78</context></context-group></trans-unit><trans-unit id="9209870712097047643" datatype="html">
         <source><x id="PH" equiv-text="alreadyInvited.length"/> user(s) have already been invited: </source><target state="translated"><x id="PH" equiv-text="alreadyInvited.length"/> utilisateur(s) a/ont déjà été invité(s) : </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-invite-users/group-invite-users.component.ts</context><context context-type="linenumber">85</context></context-group></trans-unit><trans-unit id="4449383996716045634" datatype="html">
         <source><x id="PH" equiv-text="notFoundUsers.length"/> user login(s) not found: </source><target state="translated"><x id="PH" equiv-text="notFoundUsers.length"/> identifiant(s) d'utilisateur(s) non trouvé(s) : </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-invite-users/group-invite-users.component.ts</context><context context-type="linenumber">92</context></context-group></trans-unit><trans-unit id="8385107467455078164" datatype="html">
         <source><x id="PH" equiv-text="invalidInvites.length"/> user login(s) could not be invited: </source><target state="translated"><x id="PH" equiv-text="invalidInvites.length"/> utilisateur(s) n'a/ont pas pu être invité(s) : </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-invite-users/group-invite-users.component.ts</context><context context-type="linenumber">99</context></context-group></trans-unit><trans-unit id="6bd2f0853db4b0fdd084502433f5d658cdb05a0e" datatype="html">
         <source>Invite users</source><target state="translated">Inviter des utilisateurs</target>
         <context-group purpose="location">
@@ -1200,13 +1230,13 @@
         </context-group>
       </trans-unit><trans-unit id="4106690181112187643" datatype="html">
         <source>A new code has been generated</source><target state="translated">Un nouveau code a été généré</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.ts</context><context context-type="linenumber">50</context></context-group></trans-unit><trans-unit id="2868875466439101736" datatype="html">
         <source>The validity has been changed</source><target state="translated">La validité a été modifiée</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.ts</context><context context-type="linenumber">71</context></context-group></trans-unit><trans-unit id="844587251870961613" datatype="html">
         <source>Users will not be able to join with the former code.</source><target state="translated">Les utilisateurs ne pourront plus rejoindre le groupe avec le code précédent.</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.ts</context><context context-type="linenumber">89</context></context-group></trans-unit><trans-unit id="6a38629e181af1ebdbc5ae43bb2d433edd667607" datatype="html">
         <source>Let user join using a code</source><target state="translated">Rejoindre le groupe par code</target>
         <context-group purpose="location">
@@ -1474,10 +1504,10 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/pending-request/pending-request-response-handling.ts</context><context context-type="linenumber">13</context></context-group></trans-unit><trans-unit id="561107961693281492" datatype="html">
         <source>Unable to accept the selected request(s).</source><target state="translated">Erreur lors de l'acceptation des requête(s) sélectionnée(s)</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/pending-request/pending-request-response-handling.ts</context><context context-type="linenumber">16</context></context-group></trans-unit><trans-unit id="5779237710015680228" datatype="html">
         <source>Unable to reject the selected request(s).</source><target state="translated">Erreur lors du refus des requête(s) sélectionnée(s)</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/pending-request/pending-request-response-handling.ts</context><context context-type="linenumber">17</context></context-group></trans-unit><trans-unit id="5919144248317636057" datatype="html">
         <source>Partial success</source><target state="translated">Succès partiel</target>
 
