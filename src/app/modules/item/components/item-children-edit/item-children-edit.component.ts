@@ -4,11 +4,13 @@ import { GetItemChildrenService } from '../../http-services/get-item-children.se
 import { Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ItemType } from '../../../../shared/helpers/item-type';
+import { AddedContent } from '../../../shared-components/components/add-content/add-content.component';
 
 export interface ChildData {
   id?: string,
   title: string | null,
   type: ItemType,
+  scoreWeight: number,
 }
 
 export interface ChildDataWithId extends ChildData{
@@ -18,6 +20,8 @@ export interface ChildDataWithId extends ChildData{
 export function hasId(child: ChildData): child is ChildDataWithId {
   return !!child.id;
 }
+
+export const DEFAULT_SCORE_WEIGHT = 1;
 
 @Component({
   selector: 'alg-item-children-edit',
@@ -30,6 +34,7 @@ export class ItemChildrenEditComponent implements OnChanges {
   state: 'loading' | 'error' | 'ready' = 'ready';
   data: ChildData[] = [];
   selectedRows: ChildData[] = [];
+  scoreWeightEnabled = false;
 
   private subscription?: Subscription;
   @Output() childrenChanges = new EventEmitter<ChildData[]>();
@@ -51,10 +56,16 @@ export class ItemChildrenEditComponent implements OnChanges {
         .pipe(
           map(children => children
             .sort((a, b) => a.order - b.order)
-            .map(child => ({ id: child.id, title: child.string.title, type: child.type }))
+            .map(child => ({
+              id: child.id,
+              title: child.string.title,
+              type: child.type,
+              scoreWeight: child.scoreWeight
+            }))
           )
         ).subscribe(children => {
           this.data = children;
+          this.scoreWeightEnabled = this.data.some(c => c.scoreWeight !== 1);
           this.state = 'ready';
         },
         _err => {
@@ -65,8 +76,8 @@ export class ItemChildrenEditComponent implements OnChanges {
     }
   }
 
-  addChild(child: ChildData): void {
-    this.data.push(child);
+  addChild(child: AddedContent<ItemType>): void {
+    this.data.push({ ...child, scoreWeight: DEFAULT_SCORE_WEIGHT });
     this.childrenChanges.emit(this.data);
   }
 
@@ -88,4 +99,18 @@ export class ItemChildrenEditComponent implements OnChanges {
     this.reloadData();
   }
 
+  onEnableScoreWeightChange(event: boolean): void {
+    if (!event) {
+      this.resetScoreWeight();
+    }
+  }
+
+  resetScoreWeight(): void {
+    this.data = this.data.map(c => ({ ...c, scoreWeight: DEFAULT_SCORE_WEIGHT }));
+    this.onScoreWeightChange();
+  }
+
+  onScoreWeightChange(): void {
+    this.childrenChanges.emit(this.data);
+  }
 }

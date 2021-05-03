@@ -60,3 +60,18 @@
     align-items: center;
   }
 }
+
+.score-weight-container {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.score-weight {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.score-weight-label {
+  margin-right: 1rem;
+}

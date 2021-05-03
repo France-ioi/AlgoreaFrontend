@@ -3,6 +3,18 @@
 
     <ng-container *ngSwitchCase="'ready'">
       <div class="section-chapter-wrapper">
+
+        <div class="score-weight-container">
+          <div class="score-weight">
+            <b class="score-weight-label" i18n>Enable score weight</b>
+            <alg-switch
+                mode="white"
+                [(ngModel)]="scoreWeightEnabled"
+                (ngModelChange)="onEnableScoreWeightChange($event)"
+            ></alg-switch>
+          </div>
+        </div>
+
         <p-table
             class="alg-editable-table"
             *ngIf="data.length"
@@ -16,6 +28,25 @@
                 <i class="fa fa-sort" [pReorderableRowHandle]="index"></i>
               </td>
               <td><p-tableCheckbox [value]="rowData"></p-tableCheckbox></td>
+              <ng-container *ngIf="scoreWeightEnabled">
+                <td pEditableColumn>
+                  <p-cellEditor>
+                    <ng-template pTemplate="input">
+                      <p-inputNumber
+                          [size]="3"
+                          [(ngModel)]="rowData.scoreWeight"
+                          (ngModelChange)="onScoreWeightChange()"
+                          [min]="0"
+                          [max]="100"
+                          [ariaRequired]="true"
+                      ></p-inputNumber>
+                    </ng-template>
+                    <ng-template pTemplate="output">
+                      x{{ rowData.scoreWeight }}
+                    </ng-template>
+                  </p-cellEditor>
+                </td>
+              </ng-container>
               <td><span class="type">{{ rowData.type }}</span></td>
               <td><span class="main">{{ rowData.title }}</span></td>
             </tr>

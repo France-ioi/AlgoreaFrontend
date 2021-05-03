@@ -23,7 +23,8 @@ export const itemChildDecoder = D.struct({
     startedAt: D.nullable(dateDecoder),
     scoreComputed: D.number,
     validated: D.boolean,
-  }))
+  })),
+  scoreWeight: D.number
 });
 
 export type ItemChild = D.TypeOf<typeof itemChildDecoder>;
