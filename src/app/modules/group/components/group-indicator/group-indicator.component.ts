@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { GroupShortInfo } from '../../http-services/get-group-by-id.service';
+import { Group } from '../../http-services/get-group-by-id.service';
+import { ManagementAdditions } from '../../helpers/group-management';
 
 @Component({
   selector: 'alg-group-indicator',
@@ -7,10 +8,7 @@ import { GroupShortInfo } from '../../http-services/get-group-by-id.service';
   styleUrls: [ './group-indicator.component.scss' ]
 })
 export class GroupIndicatorComponent {
-  @Input() currentUserMembership: string | undefined;
-  @Input() currentUserManagership: string | undefined;
-  @Input() membershipGroups: GroupShortInfo[] = [];
-  @Input() managershipGroups: GroupShortInfo[] = [];
+  @Input() group?: Group & ManagementAdditions;
 
   constructor() { }
 }

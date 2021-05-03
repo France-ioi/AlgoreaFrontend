@@ -36,7 +36,6 @@ import { GroupIndicatorComponent } from './components/group-indicator/group-indi
 import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';
 import { GroupLinksComponent } from './components/group-links/group-links.component';
-import { GroupIndicatorRootComponent } from './components/group-indicator-root/group-indicator-root.component';
 
 @NgModule({
   declarations: [
@@ -66,7 +65,6 @@ import { GroupIndicatorRootComponent } from './components/group-indicator-root/g
     AssociatedActivityComponent,
     GroupIndicatorComponent,
     GroupLinksComponent,
-    GroupIndicatorRootComponent,
   ],
   imports: [
     CommonModule,

@@ -10,16 +10,16 @@ const MAX_ITEMS_DISPLAY = 3;
   styleUrls: [ './group-links.component.scss' ]
 })
 export class GroupLinksComponent {
-  @Input() items: GroupShortInfo[] = [];
+  @Input() items?: GroupShortInfo[];
 
   maxItemsDisplay = MAX_ITEMS_DISPLAY;
 
   get hasMoreItems(): boolean {
-    return this.items.length > this.maxItemsDisplay;
+    return (this.items || []).length > this.maxItemsDisplay;
   }
 
   get moreItemsCount(): number {
-    return this.items.length - this.maxItemsDisplay;
+    return (this.items || []).length - this.maxItemsDisplay;
   }
 
   constructor(private router: Router) { }
