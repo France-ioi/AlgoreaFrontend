@@ -1,6 +1,5 @@
 import { Component, Input } from '@angular/core';
 import { Group } from '../../http-services/get-group-by-id.service';
-import { ManagementAdditions } from '../../helpers/group-management';
 
 @Component({
   selector: 'alg-group-indicator',
@@ -8,7 +7,7 @@ import { ManagementAdditions } from '../../helpers/group-management';
   styleUrls: [ './group-indicator.component.scss' ]
 })
 export class GroupIndicatorComponent {
-  @Input() group?: Group & ManagementAdditions;
+  @Input() group?: Group;
 
   constructor() { }
 }
