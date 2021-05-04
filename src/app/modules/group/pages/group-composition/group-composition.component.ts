@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnChanges, Output, ViewChild } from '@a
 import { forkJoin, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
+import { TypeFilter } from '../../components/group-composition-filter/group-composition-filter.component';
 import { MemberListComponent } from '../../components/member-list/member-list.component';
 import { ManagementAdditions, withManagementAdditions } from '../../helpers/group-management';
 import { Group } from '../../http-services/get-group-by-id.service';
@@ -52,7 +53,7 @@ export class GroupCompositionComponent implements OnChanges {
     }).pipe(switchMap(ids => this.groupCreationService.addSubgroup(ids.parentGroupId, ids.childGroupId))).subscribe(
       _ => {
         this.actionFeedbackService.success($localize`Group successfully added as child group`);
-        this.memberList?.setFilter({ directChildren: true, type: 'groups' });
+        this.memberList?.setFilter({ directChildren: true, type: TypeFilter.Groups });
         this.state = 'ready';
       },
       _err => {

@@ -1,7 +1,11 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
-export type TypeFilter = 'groups' | 'sessions' | 'teams' | 'users';
-
+export enum TypeFilter {
+  Groups = 'groups',
+  Sessions = 'sessions',
+  Teams = 'teams',
+  Users = 'users',
+}
 export interface Filter {
   directChildren: boolean,
   type: TypeFilter,
@@ -18,7 +22,7 @@ export class GroupCompositionFilterComponent implements OnInit{
 
   @Output() change = new EventEmitter<Filter>();
 
-  value: Filter = { type: 'users', directChildren: true };
+  value: Filter = { type: TypeFilter.Users, directChildren: true };
 
   selectedChildrenFilter = 0;
   selectedTypeFilter = 0;
@@ -38,12 +42,12 @@ export class GroupCompositionFilterComponent implements OnInit{
     {
       icon: 'fa fa-users',
       label: $localize`teams`,
-      value: 'teams'
+      value: TypeFilter.Teams
     },
     {
       icon: 'fa fa-user',
       label: $localize`users`,
-      value: 'users'
+      value: TypeFilter.Users
     },
   ];
 
@@ -51,22 +55,22 @@ export class GroupCompositionFilterComponent implements OnInit{
     {
       icon: 'fa fa-users',
       label: $localize`sub-groups`,
-      value: 'groups'
+      value: TypeFilter.Groups
     },
     {
       icon: 'fa fa-calendar',
       label: $localize`sessions`,
-      value: 'sessions'
+      value: TypeFilter.Sessions
     },
     {
       icon: 'fa fa-users',
       label: $localize`teams`,
-      value: 'teams'
+      value: TypeFilter.Teams
     },
     {
       icon: 'fa fa-user',
       label: $localize`users`,
-      value: 'users'
+      value: TypeFilter.Users
     },
   ];
 
