@@ -5,10 +5,14 @@
   >
     <strong>{{ item.name }}</strong>
   </a>
-  <span class="separator" *ngIf="!isLast">
-    {{ i < (maxItemsDisplay - 2) || (items || []).length > maxItemsDisplay ? ',' : 'and' }}
+  <span class="separator">
+    ,
+    <span
+      *ngIf="(items || []).length <= maxItemsDisplay && i >= (items || []).length - 2 && !isLast || (items || []).length > maxItemsDisplay && isLast"
+      i18n
+    >and</span>
   </span>
-  <span class="more" *ngIf="(items || []).length > maxItemsDisplay && isLast">
-    and {{ (items || []).length - maxItemsDisplay }} more
+  <span class="more" *ngIf="(items || []).length > maxItemsDisplay && isLast" i18n>
+    {{ (items || []).length - maxItemsDisplay }} more
   </span>
 </ng-container>
