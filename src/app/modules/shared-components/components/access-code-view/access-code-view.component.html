@@ -1,4 +1,4 @@
-<alg-section-paragraph icon="fa fa-sign-in-alt" i18n-label label="Access to activity">
+<alg-section-paragraph icon="fa fa-sign-in-alt" [label]="sectionLabel" [ngClass]="sectionStyleClass">
   <div class="input-wrapper">
     <input
       #input
@@ -13,7 +13,7 @@
     </span>
     <alg-button
       icon="fa fa-check"
-      i18n-label label="Access"
+      [label]="buttonLabel"
       class="p-button-rounded"
       [disabled]="input.value === '' || state === 'loading'"
       (click)="onClickAccess()"

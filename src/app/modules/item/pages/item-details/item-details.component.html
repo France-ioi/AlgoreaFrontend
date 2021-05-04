@@ -4,7 +4,13 @@
 
     <alg-item-header [itemData]="itemData"></alg-item-header>
 
-    <alg-access-code-view *ngIf="itemData.showAccessCodeField" [itemData]="itemData" (groupJoined)="reloadItem()"></alg-access-code-view>
+    <alg-access-code-view
+        *ngIf="itemData.showAccessCodeField"
+        i18n-sectionLabel sectionLabel="Access to activity"
+        i18n-buttonLabel buttonLabel="Access"
+        [itemData]="itemData"
+        (groupJoined)="reloadItem()"
+    ></alg-access-code-view>
 
     <nav mat-tab-nav-bar>
       <a mat-tab-link

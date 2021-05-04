@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ConfirmationService } from 'primeng/api';
 import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
 import { InvalidCodeReason, JoinByCodeService } from '../../../../shared/http-services/join-by-code.service';
-import { ItemData } from '../../services/item-datasource.service';
+import { ItemData } from '../../../item/services/item-datasource.service';
 
 @Component({
   selector: 'alg-access-code-view',
@@ -10,8 +10,10 @@ import { ItemData } from '../../services/item-datasource.service';
   styleUrls: [ './access-code-view.component.scss' ]
 })
 export class AccessCodeViewComponent {
-
+  @Input() sectionLabel = '';
+  @Input() buttonLabel = '';
   @Input() itemData?: ItemData;
+  @Input() sectionStyleClass = '';
   @Output() groupJoined = new EventEmitter<void>();
 
   code = '';
@@ -28,16 +30,21 @@ export class AccessCodeViewComponent {
 
     this.joinByCodeService.checkCodeValidity(this.code).subscribe(response => {
       this.state = 'ready';
+
       if (!response.valid) {
         this.actionFeedbackService.error(this.invalidCodeReasonToString(response.reason));
         return;
       }
-      if (!this.itemData) return;
+
       let message = $localize`Are you sure you want to join the group "${response.group.name}"?`;
-      const id = this.itemData.item.type === 'Skill' ? response.group.rootSkillId : response.group.rootActivityId;
-      if (this.itemData.item.id !== id) {
-        message = $localize`The code does not correspond to the group attached to this page. Are you sure you want to join the group "
+
+      if (this.itemData) {
+        const id = this.itemData.item.type === 'Skill' ? response.group.rootSkillId : response.group.rootActivityId;
+
+        if (this.itemData.item.id !== id) {
+          message = $localize`The code does not correspond to the group attached to this page. Are you sure you want to join the group "
           ${response.group.name}"?`;
+        }
       }
 
       this.confirmationService.confirm({
