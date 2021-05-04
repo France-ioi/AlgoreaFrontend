@@ -20,7 +20,7 @@
   >
     <ng-template pTemplate="header" let-columns>
       <tr *ngIf="data.rowData.length > 0">
-        <th *ngIf="currentFilter.type === 'users'" style="width: 3.2499rem"></th>
+        <th class="thin" *ngIf="currentFilter.type === 'users'"></th>
         <ng-container *ngFor="let col of data.columns">
           <th [pSortableColumn]="col.field" *ngIf="col.sortable">
             <div class="header-container">
@@ -43,7 +43,7 @@
       let-columns="columns"
     >
       <tr>
-        <td *ngIf="currentFilter.type === 'users'" style="width: 3.2499remrem; text-overflow: clip;">
+        <td class="thin" *ngIf="currentFilter.type === 'users'">
           <p-tableCheckbox class="p-chkbox" [value]="rowData"></p-tableCheckbox>
         </td>
         <td *ngFor="let col of columns">

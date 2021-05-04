@@ -5,17 +5,29 @@
   position: relative;
   display: block;
 
-  ::ng-deep .p-datatable {
+  ::ng-deep {
+
+    .p-datatable-thead > tr > th {
+      &.thin {
+        width: 3.2499rem;
+      }
+    }
+
+    .p-datatable-tbody > tr > td {
+      &.thin {
+        width: 3.2499rem;
+        text-overflow: clip;
+      }
+    }
 
     .p-datatable-footer {
       border: none;
-
       background-color: transparent;
+      margin-bottom: 0rem;
 
       .footer {
         display: flex;
         align-items: center;
-        margin-bottom: 0;
 
         p-tableheadercheckbox {
           .p-checkbox {
