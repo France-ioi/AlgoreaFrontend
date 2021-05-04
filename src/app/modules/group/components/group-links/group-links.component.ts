@@ -14,14 +14,6 @@ export class GroupLinksComponent {
 
   maxItemsDisplay = MAX_ITEMS_DISPLAY;
 
-  get hasMoreItems(): boolean {
-    return (this.items || []).length > this.maxItemsDisplay;
-  }
-
-  get moreItemsCount(): number {
-    return (this.items || []).length - this.maxItemsDisplay;
-  }
-
   constructor(private router: Router) { }
 
   onButtonClick(item: GroupShortInfo): void {

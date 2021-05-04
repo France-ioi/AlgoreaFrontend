@@ -5,8 +5,10 @@
   >
     <strong>{{ item.name }}</strong>
   </a>
-  <span class="separator" *ngIf="!isLast">{{ i < (maxItemsDisplay - 2) || hasMoreItems ? ',' : 'and' }}</span>
-  <span class="more" *ngIf="hasMoreItems && isLast">
-    and {{ moreItemsCount }} more
+  <span class="separator" *ngIf="!isLast">
+    {{ i < (maxItemsDisplay - 2) || (items || []).length > maxItemsDisplay ? ',' : 'and' }}
+  </span>
+  <span class="more" *ngIf="(items || []).length > maxItemsDisplay && isLast">
+    and {{ (items || []).length - maxItemsDisplay }} more
   </span>
 </ng-container>
