@@ -1,7 +1,7 @@
 <div class="container">
   <ng-container [ngSwitch]="group?.currentUserMembership">
     <div class="content" *ngSwitchCase="'direct'" i18n>
-      You are member of this group.
+      You are a member of this group.
     </div>
 
     <div class="content" *ngSwitchCase="'descendant'" i18n>
