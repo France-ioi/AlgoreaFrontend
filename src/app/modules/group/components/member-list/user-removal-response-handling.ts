@@ -16,12 +16,3 @@ export function displayResponseToast(feedbackService: ActionFeedbackService, res
     );
   }
 }
-
-export function parseResults(data: Map<string, any>): { countRequests: number, countSuccess: number } {
-  const res = {
-    countRequests: data.size,
-    countSuccess: Array.from(data.values())
-      .map<number>(state => ([ 'success', 'unchanged' ].includes(state) ? 1 : 0))
-      .reduce((acc, res) => acc + res, 0) };
-  return res;
-}
