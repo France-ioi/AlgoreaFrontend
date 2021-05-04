@@ -1,16 +1,17 @@
 import { Component, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild } from '@angular/core';
-import { MessageService, SortEvent } from 'primeng/api';
+import { SortEvent } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { Observable, Subject } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { GetGroupDescendantsService } from 'src/app/shared/http-services/get-group-descendants.service';
 import { mapToFetchState } from 'src/app/shared/operators/state';
+import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
 import { Group } from '../../http-services/get-group-by-id.service';
 import { GetGroupChildrenService, GroupChild } from '../../http-services/get-group-children.service';
 import { GetGroupMembersService, Member } from '../../http-services/get-group-members.service';
 import { GroupUsersService } from '../../http-services/group-users.service';
 import { Filter, GroupCompositionFilterComponent, TypeFilter } from '../group-composition-filter/group-composition-filter.component';
-import { displayResponseToast, parseResults, processRequestError } from './user-removal-response-handling';
+import { displayResponseToast, parseResults } from './user-removal-response-handling';
 
 interface Column {
   sortable?: boolean,
@@ -83,7 +84,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
     private getGroupChildrenService: GetGroupChildrenService,
     private getGroupDescendantsService: GetGroupDescendantsService,
     private groupUsersService: GroupUsersService,
-    private messageService: MessageService,
+    private actionFeedbackService: ActionFeedbackService,
   ) {
     this.dataFetching.pipe(
       switchMap(params => this.getData(params.groupId, params.filter, params.sort).pipe(mapToFetchState())),
@@ -191,7 +192,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
     this.state = 'fetching';
     this.groupUsersService.removeUsers(this.group.id, this.selection.map(member => member.id))
       .subscribe(result => {
-        displayResponseToast(this.messageService, parseResults(result));
+        displayResponseToast(this.actionFeedbackService, parseResults(result));
         this.table?.clear();
         this.selection = [];
         if (this.group) {
@@ -200,7 +201,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
       },
       _err => {
         this.state = 'ready';
-        processRequestError(this.messageService);
+        this.actionFeedbackService.unexpectedError();
       });
   }
 }
