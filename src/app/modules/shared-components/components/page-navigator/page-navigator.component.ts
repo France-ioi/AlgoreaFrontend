@@ -13,8 +13,4 @@ export class PageNavigatorComponent {
 
   @Output() edit = new EventEmitter<void>();
   @Output() watch = new EventEmitter<void>();
-
-  editPage(): void {
-    this.edit.emit();
-  }
 }
