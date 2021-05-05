@@ -6,7 +6,7 @@
       </div>
     </div>
     <alg-page-navigator
-      *ngIf="groupWithManagement?.isCurrentUserManager"
+      [allowEditing]="!!groupWithManagement && groupWithManagement.isCurrentUserManager"
       [allowFullScreen]="false"
       navigationMode="nextAndPrev"
       (edit)="onEditButtonClicked()"
