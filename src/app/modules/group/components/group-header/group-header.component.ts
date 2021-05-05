@@ -1,7 +1,8 @@
 import { Component, Input, OnChanges } from '@angular/core';
-import { ModeAction, ModeService } from 'src/app/shared/services/mode.service';
+import { ModeAction, ModeService, Mode } from 'src/app/shared/services/mode.service';
 import { Group } from '../../http-services/get-group-by-id.service';
 import { withManagementAdditions, ManagementAdditions } from '../../helpers/group-management';
+import { UserSessionService } from 'src/app/shared/services/user-session.service';
 
 @Component({
   selector: 'alg-group-header',
@@ -14,6 +15,7 @@ export class GroupHeaderComponent implements OnChanges {
 
   constructor(
     private modeService: ModeService,
+    private session: UserSessionService,
   ) {}
 
   ngOnChanges(): void {
@@ -25,5 +27,8 @@ export class GroupHeaderComponent implements OnChanges {
   }
 
   onWatchButtonClicked(): void {
+    if (!this.group) throw new Error("unexpected group not set in 'onWatchButtonClicked'");
+    this.modeService.mode$.next(Mode.Observing);
+    this.session.startGroupWatching(this.group);
   }
 }
