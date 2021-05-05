@@ -86,9 +86,9 @@
 }
 
 :host {
-  &.no-top-round-borders {
+  &.no-rounded-borders {
     .section-container {
-      border-radius: 0 0 $border-radius !important;
+      border-radius: 0;
     }
   }
 }
