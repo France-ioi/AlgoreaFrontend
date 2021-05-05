@@ -28,7 +28,7 @@ export class GroupHeaderComponent implements OnChanges {
 
   onWatchButtonClicked(): void {
     if (!this.group) throw new Error("unexpected group not set in 'onWatchButtonClicked'");
-    this.modeService.mode$.next(Mode.Observing);
+    this.modeService.mode$.next(Mode.Watching);
     this.session.startGroupWatching(this.group);
   }
 }

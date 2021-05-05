@@ -4,7 +4,7 @@ import { BehaviorSubject, Subject } from 'rxjs';
 export enum Mode {
   Normal = 'normal',
   Editing = 'editing',
-  Observing = 'observing',
+  Watching = 'watching',
 }
 export enum ModeAction { StartEditing, StopEditing }
 
