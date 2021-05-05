@@ -60,7 +60,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
 
   @Input() group? : Group;
 
-  state: 'error' | 'ready' | 'fetching' = 'fetching';
+  state: 'error' | 'ready' | 'fetching' | 'processing' = 'fetching';
 
   defaultFilter: Filter = { type: TypeFilter.Users, directChildren: true };
 
@@ -199,7 +199,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
   onRemove(): void {
     if (this.selection.length === 0 || !this.group) return;
 
-    this.state = 'fetching';
+    this.state = 'processing';
     this.groupUsersService.removeUsers(this.group.id, this.selection.map(member => member.id))
       .subscribe(result => {
         displayResponseToast(this.actionFeedbackService, parseResults(result));

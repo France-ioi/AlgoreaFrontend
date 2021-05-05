@@ -13,7 +13,7 @@
     [customSort]="true"
     sortMode="multiple"
     (sortFunction)="onCustomSort($event)"
-    [loading]="state === 'fetching'"
+    [loading]="state === 'fetching' || state === 'processing'"
     [(selection)]="selection"
     selectionMode="multiple"
     dataKey="id"
@@ -70,14 +70,14 @@
       </tr>
     </ng-template>
     <ng-template pTemplate="summary">
-      <div class="summary" *ngIf="currentFilter.type === 'users' && state === 'ready'">
+      <div class="summary" *ngIf="currentFilter.type === 'users'">
         <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
         <span class="select-all" (click)="onSelectAll()" i18n>
           Select all
         </span>
         <span class="filler"></span>
         <div class="summary-actions">
-          <span (click)="onRemove()" [ngClass]="{disabled: selection.length === 0}">
+          <span (click)="onRemove()" [ngClass]="{disabled: state !== 'ready' || selection.length === 0}">
             <span i18n>Remove</span>
             <i class="fa fa-trash-alt"></i>
           </span>
