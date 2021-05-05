@@ -9,18 +9,18 @@
 
 <div class="bg-white">
   <alg-section i18n-label label="The groups you joined" icon="fa fa-users">
-    <alg-joined-group-list></alg-joined-group-list>
+    <alg-joined-group-list #joinedGroupList></alg-joined-group-list>
   </alg-section>
+  <alg-access-code-view
+      sectionStyleClass="no-top-round-borders"
+      i18n-sectionLabel sectionLabel="Join a group by code"
+      i18n-buttonLabel buttonLabel="Join"
+      (groupJoined)="onGroupJoined()"
+  ></alg-access-code-view>
   <alg-section label="The groups you manage" icon="fa fa-users">
     <alg-managed-group-list></alg-managed-group-list>
   </alg-section>
 </div>
-
-<alg-access-code-view
-    sectionStyleClass="no-top-round-borders"
-    i18n-sectionLabel sectionLabel="Join a group by code"
-    i18n-buttonLabel buttonLabel="Join"
-></alg-access-code-view>
 
 
 

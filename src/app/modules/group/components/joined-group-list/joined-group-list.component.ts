@@ -58,13 +58,17 @@ export class JoinedGroupListComponent implements OnDestroy {
     this.groupLeaveService.leave(groupId)
       .subscribe(
         () => {
-          this.refresh$.next();
+          this.refresh();
           this.actionFeedbackService.success($localize`You have left "${groupName}"`);
         },
         _err => {
           this.actionFeedbackService.error($localize`Failed to leave "${groupName}"`);
         }
       );
+  }
+
+  refresh(): void {
+    this.refresh$.next();
   }
 
 }
