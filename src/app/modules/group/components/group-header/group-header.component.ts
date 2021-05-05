@@ -23,4 +23,7 @@ export class GroupHeaderComponent implements OnChanges {
   onEditButtonClicked(): void {
     this.modeService.modeActions$.next(ModeAction.StartEditing);
   }
+
+  onWatchButtonClicked(): void {
+  }
 }
