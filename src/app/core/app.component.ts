@@ -19,7 +19,7 @@ export class AppComponent implements OnInit, OnDestroy {
   currentContent$: Observable<ContentInfo|null> = this.currentContent.currentContent$.pipe(delay(0));
   readonly currentMode$ = this.modeService.mode$.asObservable().pipe(delay(0));
   session$ = this.sessionService.session$.pipe(delay(0));
-  authOnError$ = this.authService.failure$;
+  authError$ = this.authService.failure$;
 
   leftMenuDisplayed = true;
   headersDisplayed = true;

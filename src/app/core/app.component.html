@@ -48,8 +48,9 @@
 <p-confirmDialog></p-confirmDialog>
 <p-confirmPopup key="commonPopup"></p-confirmPopup>
 <p-dialog
+  *ngrxLet="authError$"
   i18n-header="@@auth-error-modal-title" header="Error"
-  [visible]="!!(authOnError$ | async)"
+  [visible]="true"
   [style]="{width: '50vw'}"
   [modal]="true"
   [closeOnEscape]="false"

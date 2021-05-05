@@ -10,6 +10,10 @@ import { tokenAuthFromStorage, AuthStatus, notAuthenticated, AuthResult, clearTo
 // Lifetime under which we refresh the token.
 export const minTokenLifetime = 5*MINUTES;
 
+// max number of invalid token (401) for which we try to get a new token.
+// (useful to prevent infinite loop of requesting a new token -> token does not work  -> requesting a new token --> ...)
+export const maxInvalidToken = 6;
+
 /**
  * This service manages the authentication workflow (login, logout, ...) for authenticated and temp sessions.
  * In this service, we use the following terms:
@@ -23,6 +27,8 @@ export class AuthService implements OnDestroy {
 
   status$ = new BehaviorSubject<AuthStatus>(notAuthenticated());
   failure$ = new Subject<void>();
+
+  private countInvalidToken = 0;
 
   constructor(
     private oauthService: OAuthService,
@@ -108,7 +114,13 @@ export class AuthService implements OnDestroy {
     if (!currentauth.authenticated) return; // not the first time we are not notified of that, ignore.
     if (currentauth.expiration.getDate() !== auth.expiration.getDate()) return; // auth has been renewed in the meantime
 
+    this.countInvalidToken ++;
     this.status$.next(notAuthenticated());
+    if (this.countInvalidToken > maxInvalidToken) {
+      this.failure$.next();
+      return;
+    }
+
     this.authHttp.createTempUser().pipe(retry(2)).subscribe({
       next: auth => {
         this.status$.next(auth);
