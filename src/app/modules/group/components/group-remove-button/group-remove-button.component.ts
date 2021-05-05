@@ -1,13 +1,13 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Group } from '../../http-services/get-group-by-id.service';
-import { map, tap } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
 import { BehaviorSubject, merge, Observable, of } from 'rxjs';
 import { GetGroupChildrenService, GroupChild } from '../../http-services/get-group-children.service';
 import { ConfirmationService } from 'primeng/api';
 import { ActionFeedbackService } from '../../../../shared/services/action-feedback.service';
 import { GroupDeleteService } from '../../services/group-delete.service';
 
-type GroupChildrenState = 'loading' | 'hasChildren' | 'empty';
+type GroupChildrenState = 'loading' | 'hasChildren' | 'empty' | 'error';
 
 @Component({
   selector: 'alg-group-remove-button',
@@ -32,7 +32,8 @@ export class GroupRemoveButtonComponent implements OnInit {
     this.state$ = merge<GroupChildrenState>(
       of('loading'),
       this.getGroupChildrenService.getGroupChildren(this.group.id).pipe(
-        map((groupChild: GroupChild[]) => (groupChild.length > 0 ? 'hasChildren' : 'empty'))
+        map((groupChild: GroupChild[]) => (groupChild.length > 0 ? 'hasChildren' : 'empty')),
+        catchError(() => of<GroupChildrenState>('error'))
       )
     );
   }
