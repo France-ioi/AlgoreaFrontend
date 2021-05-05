@@ -361,26 +361,6 @@ body .p-component {
   }
 }
 
-.alg-link {
-  flex: 1;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-family: "titillium", sans-serif;
-  font-weight: 100;
-  text-decoration: none;
-
-  color: $base-text-color;
-
-  &.clickable {
-    cursor: pointer;
-
-    &:hover {
-      color: $base-color;
-    }
-  }
-}
-
 @media screen and (max-width: 800px) {
   html { font-size: 55.66%; }
 }

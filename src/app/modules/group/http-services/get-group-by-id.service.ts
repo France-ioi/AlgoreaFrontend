@@ -26,6 +26,7 @@ const decoder = pipe(
     grade: D.number,
 
     currentUserMembership: D.literal('none', 'direct', 'descendant'),
+    currentUserManagership: D.literal('none', 'direct', 'ancestor', 'descendant'),
     ancestorsCurrentUserIsManagerOf: D.array(groupShortInfo),
     descendantsCurrentUserIsManagerOf: D.array(groupShortInfo),
     descendantsCurrentUserIsMemberOf: D.array(groupShortInfo),
@@ -39,6 +40,7 @@ const decoder = pipe(
 );
 
 export type Group = D.TypeOf<typeof decoder>;
+export type GroupShortInfo = D.TypeOf<typeof groupShortInfo>;
 
 @Injectable({
   providedIn: 'root',
