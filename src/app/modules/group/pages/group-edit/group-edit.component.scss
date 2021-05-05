@@ -1,7 +1,4 @@
-@import 'src/colors.scss';
-
 .group-edition {
-
   margin: 1rem;
   background-color: white;
 
@@ -28,16 +25,7 @@
   }
 }
 
-.delete-button-container {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-
+.delete-button {
   margin-top: 1rem;
   margin-right: 1rem;
-}
-
-.group-has-children {
-  margin-right: .4rem;
-  color: $notify-error-color;
 }

@@ -2,8 +2,8 @@ import { Component, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { mapStateData, readyData } from 'src/app/shared/operators/state';
 import { Mode, ModeService } from 'src/app/shared/services/mode.service';
-import { Observable, of, Subscription } from 'rxjs';
-import { concatMap, filter, switchMap, map } from 'rxjs/operators';
+import { of, Subscription } from 'rxjs';
+import { concatMap } from 'rxjs/operators';
 import { CreateItemService } from 'src/app/modules/item/http-services/create-item.service';
 import { PendingChangesComponent } from 'src/app/shared/guards/pending-changes-guard';
 import { NoActivity, NewActivity, ExistingActivity,
@@ -13,10 +13,6 @@ import { GroupUpdateService } from '../../http-services/group-update.service';
 import { GroupDataSource } from '../../services/group-datasource.service';
 import { withManagementAdditions } from '../../helpers/group-management';
 import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
-import { GroupDeleteService } from '../../services/group-delete.service';
-import { ConfirmationService } from 'primeng/api';
-import { GetGroupChildrenService } from '../../http-services/get-group-children.service';
-import { isNotNullOrUndefined } from '../../../../shared/helpers/is-not-null-or-undefined';
 
 @Component({
   selector: 'alg-group-edit',
@@ -33,7 +29,6 @@ export class GroupEditComponent implements OnDestroy, PendingChangesComponent {
   initialFormData?: Group;
 
   state$ = this.groupDataSource.state$.pipe(mapStateData(g => withManagementAdditions(g)))
-  hasChildren$?: Observable<boolean>;
 
   subscription?: Subscription;
 
@@ -44,9 +39,6 @@ export class GroupEditComponent implements OnDestroy, PendingChangesComponent {
     private formBuilder: FormBuilder,
     private groupUpdateService: GroupUpdateService,
     private createItemService: CreateItemService,
-    private groupDeleteService: GroupDeleteService,
-    private confirmationService: ConfirmationService,
-    private getGroupChildrenService: GetGroupChildrenService
   ) {
     this.modeService.mode$.next(Mode.Editing);
 
@@ -56,17 +48,6 @@ export class GroupEditComponent implements OnDestroy, PendingChangesComponent {
         this.initialFormData = item;
         this.resetFormWith(item);
       });
-
-    this.hasChildren$ = this.state$.pipe(
-      filter(isNotNullOrUndefined),
-      map(state => state.data),
-      filter(isNotNullOrUndefined),
-      switchMap(data =>
-        this.getGroupChildrenService.getGroupChildren(data.id).pipe(
-          map(response => response.length > 0)
-        )
-      )
-    );
   }
 
   ngOnDestroy(): void {
@@ -134,23 +115,5 @@ export class GroupEditComponent implements OnDestroy, PendingChangesComponent {
       rootActivity: rootActivity,
     });
     this.groupForm.enable();
-  }
-
-  onDeleteGroup(group: Group): void {
-    this.confirmationService.confirm({
-      message: $localize`Are you sure you want to delete the group "${ group.name }"`,
-      header: $localize`Confirm Action`,
-      icon: 'pi pi-exclamation-triangle',
-      acceptLabel: $localize`Delete it`,
-      accept: () => {
-        this.deleteGroup(group);
-      },
-      rejectLabel: $localize`No`,
-    });
-  }
-
-  deleteGroup(group: Group): void {
-    const id = group.id;
-    this.groupDeleteService.delete(id).subscribe();
   }
 }
