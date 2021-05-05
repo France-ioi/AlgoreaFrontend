@@ -3,7 +3,7 @@
     <alg-left-menu (hideLeftMenu)="toggleLeftMenuDisplay(false)"></alg-left-menu>
   </div>
   <ng-container *ngIf="currentMode$ | async as currentMode">
-    <div class="top-bar" [ngClass]="{ editing: currentMode === 'editing', collapsed: !leftMenuDisplayed, expanded: leftMenuDisplayed }">
+    <div class="top-bar" [ngClass]="{ 'with-mode-bar': currentMode !== 'normal', collapsed: !leftMenuDisplayed, expanded: leftMenuDisplayed }">
       <alg-left-header
         *ngIf="!leftMenuDisplayed"
         (displayLeftMenu)="toggleLeftMenuDisplay($event)"
@@ -36,7 +36,7 @@
       </div>
       <alg-top-right-controls [drawLeftBorder]="currentMode === 'normal'"></alg-top-right-controls>
     </div>
-    <div class="right" [ngClass]="{ collapsed: !leftMenuDisplayed, expanded: leftMenuDisplayed, editing: currentMode === 'editing' }">
+    <div class="right" [ngClass]="{ collapsed: !leftMenuDisplayed, expanded: leftMenuDisplayed, 'with-mode-bar': currentMode !== 'normal' }">
       <div class="main-content" [ngClass]="{ folded: !headersDisplayed, unfolded: headersDisplayed }">
         <router-outlet></router-outlet>
       </div>
