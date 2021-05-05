@@ -12,51 +12,6 @@
   color: $base-color;
 }
 
-.disabled {
-  cursor: not-allowed;
-
-  > * {
-    color: #bbb;
-    pointer-events: none;
-  }
-}
-
-.summary-container {
-  display: flex;
-  align-items: center;
-
-  .select-all {
-    font-weight: bold;
-    font-size: 1.2rem;
-    flex: 1;
-    text-align: left;
-    margin-left: 2.1rem;
-    color: #9b9b9b;
-    cursor: pointer;
-  }
-
-  .export-tools {
-    display: flex;
-    align-items: center;
-    color: $base-color;
-    font-size: 1.2rem;
-
-    span {
-      margin-right: 1rem;
-      cursor: pointer;
-
-      span {
-        margin-right: 1rem;
-      }
-
-      &:last-child {
-        margin-right: 0;
-      }
-    }
-  }
-
-  p-tableHeaderCheckbox {
-    display: flex;
-    align-items: center;
-  }
+.spacer {
+  width: 2.9rem;
 }

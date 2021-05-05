@@ -7,67 +7,9 @@
 
   ::ng-deep {
 
-    .p-datatable-thead > tr > th {
-      &.thin {
-        width: 3.2499rem;
-      }
-    }
-
-    .p-datatable-tbody > tr > td {
-      &.thin {
-        width: 3.2499rem;
-        text-overflow: clip;
-      }
-    }
-
     .p-datatable-footer {
-      border: none;
       background-color: transparent;
       margin-bottom: 0rem;
-
-      .footer {
-        display: flex;
-        align-items: center;
-
-        p-tableheadercheckbox {
-          .p-checkbox {
-            display: block;
-          }
-        }
-
-        .select-all {
-          margin-left: 2.7rem;
-          color: #9B9B9B;
-          flex: 1;
-          font-size: 1.2rem;
-        }
-
-        .export-tools {
-          display: flex;
-          align-items: center;
-          color: $base-color;
-          font-size: 1.2rem;
-
-          .button {
-            margin-right: 1rem;
-            cursor: pointer;
-
-            span {
-              margin-right: 1rem;
-            }
-          }
-
-          .disabled {
-            color: $light-text-color;;
-            cursor: default;
-          }
-        }
-      }
     }
-  }
-
-  .error-message {
-    text-align: center;
-    font-size: medium;
   }
 }

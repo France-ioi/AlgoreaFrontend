@@ -21,11 +21,13 @@
             </tr>
           </ng-template>
           <ng-template pTemplate="summary">
-            <div class="summary-container">
+            <div class="summary">
+              <span class="spacer"></span>
               <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
               <span class="select-all" (click)="onSelectAll()" i18n>Select all</span>
-              <div class="export-tools" [ngClass]="{disabled: selectedRows.length === 0}">
-                <span class="remove" (click)="onRemove()">
+              <span class="filler"></span>
+              <div class="summary-actions">
+                <span (click)="onRemove()" [ngClass]="{disabled: selectedRows.length === 0}">
                   <span i18n>Remove selected</span>
                   <i class="fa fa-trash-alt"></i>
                 </span>

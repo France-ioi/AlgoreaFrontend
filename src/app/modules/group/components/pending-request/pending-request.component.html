@@ -95,11 +95,11 @@
               Select all
             </span>
             <span class="filler"></span>
-            <div class="req-tools">
-              <span class="accept" [ngClass]="{disabled: selection.length === 0 || this.state !== 'ready'}" (click)="onAccept()">
+            <div class="summary-actions">
+              <span [ngClass]="{disabled: selection.length === 0 || this.state !== 'ready'}" (click)="onAccept()">
                 <span i18n>Accept</span>
               </span>
-              <span class="reject" [ngClass]="{disabled: selection.length === 0 || this.state !== 'ready'}" (click)="onReject()">
+              <span [ngClass]="{disabled: selection.length === 0 || this.state !== 'ready'}" (click)="onReject()">
                 <span i18n>Reject</span>
               </span>
             </div>

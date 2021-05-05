@@ -186,6 +186,16 @@ export class MemberListComponent implements OnChanges, OnDestroy {
     this.onFilterChange(filter);
   }
 
+  onSelectAll(): void {
+    if (this.currentFilter.type !== TypeFilter.Users) return;
+
+    if (this.selection.length === this.data.rowData.length) {
+      this.selection = [];
+    } else {
+      this.selection = this.data.rowData as Member[];
+    }
+  }
+
   onRemove(): void {
     if (this.selection.length === 0 || !this.group) return;
 

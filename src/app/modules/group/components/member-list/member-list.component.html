@@ -70,13 +70,14 @@
       </tr>
     </ng-template>
     <ng-template pTemplate="summary">
-      <div class="footer" *ngIf="currentFilter.type === 'users' && state === 'ready'">
+      <div class="summary" *ngIf="currentFilter.type === 'users' && state === 'ready'">
         <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-        <span class="select-all" i18n>
+        <span class="select-all" (click)="onSelectAll()" i18n>
           Select all
         </span>
-        <div class="export-tools">
-          <span class="button" (click)="onRemove()" [ngClass]="{disabled: selection.length === 0}">
+        <span class="filler"></span>
+        <div class="summary-actions">
+          <span (click)="onRemove()" [ngClass]="{disabled: selection.length === 0}">
             <span i18n>Remove</span>
             <i class="fa fa-trash-alt"></i>
           </span>
