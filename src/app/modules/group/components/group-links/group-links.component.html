@@ -6,11 +6,11 @@
     <strong>{{ item.name }}</strong>
   </a>
   <span class="separator">
-    ,
+    <span *ngIf="(items || []).length > maxItemsDisplay && !isLast || (items || []).length === 1 || (items || []).length <= maxItemsDisplay && i < (items || []).length - 2">,</span>
     <span
       *ngIf="(items || []).length <= maxItemsDisplay && i >= (items || []).length - 2 && !isLast || (items || []).length > maxItemsDisplay && isLast"
       i18n
-    >and</span>
+    >, and</span>
   </span>
   <span class="more" *ngIf="(items || []).length > maxItemsDisplay && isLast" i18n>
     {{ (items || []).length - maxItemsDisplay }} more
