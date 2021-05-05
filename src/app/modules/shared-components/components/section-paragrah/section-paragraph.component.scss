@@ -83,11 +83,17 @@
     padding: 0 2rem 3rem 5.8333rem;
     color: $base-text-color;
   }
+}
 
+:host {
+  &.no-rounded-borders {
+    .section-container {
+      border-radius: 0;
+    }
+  }
 }
 
 .section-container {
-
   &.success {
     @include section-format($section-color, $base-color, $dark-color);
   }
