@@ -5,6 +5,18 @@
   <p *ngIf="state.isError" i18n>Error while loading the group</p>
 
   <ng-container *ngIf="state.isReady">
+    <div class="delete-button-container" *ngIf="hasChildren$ | async as hasChildren">
+      <span class="group-has-children" *ngIf="hasChildren">Only an empty group can be deleted.</span>
+      <button
+          pButton
+          type="button"
+          class="p-button-rounded p-button-danger"
+          label="Delete this group"
+          (click)="onDeleteGroup(state.data)"
+          [disabled]="hasChildren"
+      ></button>
+    </div>
+
     <form class="group-edition" [formGroup]="groupForm" *ngIf="state.data.isCurrentUserManager; else notAuthorized">
       <alg-section icon="fa fa-cog" i18n-label label="Group information">
         <div class="field">

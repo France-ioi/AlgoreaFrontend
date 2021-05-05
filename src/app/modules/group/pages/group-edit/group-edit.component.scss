@@ -1,3 +1,5 @@
+@import 'src/colors.scss';
+
 .group-edition {
 
   margin: 1rem;
@@ -24,4 +26,18 @@
       margin-top: 6px;
     }
   }
+}
+
+.delete-button-container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+
+  margin-top: 1rem;
+  margin-right: 1rem;
+}
+
+.group-has-children {
+  margin-right: .4rem;
+  color: $notify-error-color;
 }
