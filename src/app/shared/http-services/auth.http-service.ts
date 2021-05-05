@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpBackend } from '@angular/common/http';
+import { HttpClient, HttpBackend, HttpParams } from '@angular/common/http';
 import { ActionResponse, SimpleActionResponse, successData, assertSuccess } from './action-response';
 import { map, timeout } from 'rxjs/operators';
 import { Observable } from 'rxjs';
@@ -20,11 +20,11 @@ const longAuthServicesTimeout = 10000;
 export class AuthHttpService {
 
   private http: HttpClient; // an http client specific to this class, skipping all http interceptors
-  private cookieOptions = appConfig.useCookies ? {
-    use_cookie: true,
-    cookie_secure: appConfig.secure,
-    cookie_same_site: appConfig.sameSite,
-  } : {};
+  private cookieParams = new HttpParams({ fromObject: appConfig.useCookies ? {
+    use_cookie: '1',
+    cookie_secure: appConfig.secure ? '1' : '0',
+    cookie_same_site: appConfig.sameSite ? '1' : '0',
+  } : {} });
 
   constructor(
     private handler: HttpBackend,
@@ -34,7 +34,7 @@ export class AuthHttpService {
 
   createTempUser(): Observable<AuthResult> {
     return this.http
-      .post<ActionResponse<AuthPayload>>(`${appConfig.apiUrl}/auth/temp-user`, this.cookieOptions)
+      .post<ActionResponse<AuthPayload>>(`${appConfig.apiUrl}/auth/temp-user`, null, { params: this.cookieParams })
       .pipe(
         timeout(authServicesTimeout),
         map(successData),
@@ -46,7 +46,8 @@ export class AuthHttpService {
     return this.http
       .post<ActionResponse<AuthPayload>>(
         `${appConfig.apiUrl}/auth/token`,
-        { code: code, redirect_uri: redirectUri, ...this.cookieOptions } // payload data
+        { code: code, redirect_uri: redirectUri }, // payload data
+        { params: this.cookieParams }
       ).pipe(
         timeout(longAuthServicesTimeout),
         map(successData),
@@ -71,7 +72,7 @@ export class AuthHttpService {
   refreshCookie(): Observable<AuthResult> {
     if (!appConfig.useCookies) throw new Error('try not to provide token while app uses token');
     return this.http
-      .post<ActionResponse<CookieAuthPayload>>(`${appConfig.apiUrl}/auth/token`, this.cookieOptions).pipe(
+      .post<ActionResponse<CookieAuthPayload>>(`${appConfig.apiUrl}/auth/token`, null, { params: this.cookieParams }).pipe(
         timeout(longAuthServicesTimeout),
         map(successData),
         map(p => this.authPayloadToResult(p))
