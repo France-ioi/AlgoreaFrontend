@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -52,9 +52,17 @@ export class GroupNavigationService {
 
   constructor(private http: HttpClient) {}
 
-  getNavData(groupId: string): Observable<NavMenuRootGroupWithParent> {
+  getNavData(groupId: string, limit?: number): Observable<NavMenuRootGroupWithParent> {
+    const params: {[param: string]: string} = {};
+
+    if (limit) {
+      params.limit = limit.toString();
+    }
+
     return this.http
-      .get<RawNavData>(`${appConfig().apiUrl}/groups/${groupId}/navigation`)
+      .get<RawNavData>(`${appConfig().apiUrl}/groups/${groupId}/navigation`, {
+        params: new HttpParams({ fromObject: params })
+      })
       .pipe(
         map((data: RawNavData) => ({
           parent: {

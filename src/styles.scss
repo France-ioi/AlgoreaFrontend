@@ -361,6 +361,17 @@ body .p-component {
   }
 }
 
+.alg-navigate-pagination-button {
+  display: block;
+  margin: .4rem auto;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  color: white;
+  text-align: center;
+  font-weight: bold;
+}
+
 @media screen and (max-width: 800px) {
   html { font-size: 55.66%; }
 }

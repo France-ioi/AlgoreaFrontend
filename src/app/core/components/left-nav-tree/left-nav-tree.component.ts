@@ -133,4 +133,11 @@ export class LeftNavTreeComponent implements OnChanges {
     }
   }
 
+  onPaginateButtonClick() {
+  }
+
+  trackByFn = (index: number): number => {
+    return index;
+  }
+
 }

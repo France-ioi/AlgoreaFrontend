@@ -42,6 +42,7 @@ import { MenuModule } from 'primeng/menu';
 import { TopRightMenuComponent } from './components/top-right-menu/top-right-menu.component';
 import { FormsModule } from '@angular/forms';
 import { ConfirmPopupModule } from 'primeng/confirmpopup';
+import { LeftNavTreePaginationDirective } from './components/left-nav-tree/left-nav-tree-pagination.directive';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: false,
@@ -56,6 +57,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     LeftNavComponent,
     LeftHeaderComponent,
     LeftNavTreeComponent,
+    LeftNavTreePaginationDirective,
     LanguagePickerComponent,
     TopRightControlsComponent,
     TopRightMenuComponent,
