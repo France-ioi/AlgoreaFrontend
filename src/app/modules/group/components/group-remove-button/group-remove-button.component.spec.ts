@@ -10,7 +10,7 @@ describe('GroupRemoveButtonComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [ GroupRemoveButtonComponent ]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {
