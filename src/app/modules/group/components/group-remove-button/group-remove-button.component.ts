@@ -6,6 +6,7 @@ import { GetGroupChildrenService, GroupChild } from '../../http-services/get-gro
 import { ConfirmationService } from 'primeng/api';
 import { ActionFeedbackService } from '../../../../shared/services/action-feedback.service';
 import { GroupDeleteService } from '../../services/group-delete.service';
+import { Router } from '@angular/router';
 
 type GroupChildrenState = 'loading' | 'hasChildren' | 'empty' | 'error';
 
@@ -26,6 +27,7 @@ export class GroupRemoveButtonComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private getGroupChildrenService: GetGroupChildrenService,
     private groupDeleteService: GroupDeleteService,
+    private router: Router,
   ) { }
 
   ngOnInit(): void {
@@ -60,11 +62,16 @@ export class GroupRemoveButtonComponent implements OnInit {
       .subscribe(
         () => {
           this.actionFeedbackService.success($localize`You have delete "${groupName}"`);
+          this.navigateToMyGroups();
         },
         _err => {
           this.actionFeedbackService.error($localize`Failed to delete "${groupName}"`);
         }
       );
+  }
+
+  navigateToMyGroups(): void {
+    void this.router.navigate([ '/groups/mine' ]);
   }
 
 }
