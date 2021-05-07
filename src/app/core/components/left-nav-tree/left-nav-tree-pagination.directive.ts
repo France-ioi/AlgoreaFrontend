@@ -8,8 +8,10 @@ import {
   ContentChildren, QueryList, Optional, Host, Self, OnDestroy
 } from '@angular/core';
 import { Tree, UITreeNode } from 'primeng/tree';
-import { Subject, timer } from 'rxjs';
+import { Subject, timer, fromEvent } from 'rxjs';
 import { distinctUntilChanged, filter, map, takeUntil, tap } from 'rxjs/operators';
+import { isNotNullOrUndefined } from '../../../shared/helpers/is-not-null-or-undefined';
+import { LeftNavTreeNode } from './left-nav-tree.component';
 
 @Directive({
   selector: '[algLeftNavTreePagination]'
@@ -17,7 +19,7 @@ import { distinctUntilChanged, filter, map, takeUntil, tap } from 'rxjs/operator
 export class LeftNavTreePaginationDirective implements AfterViewInit, OnDestroy {
   @ContentChildren(UITreeNode) treeNode!: QueryList<UITreeNode>;
 
-  @Output() clickPaginateButton = new EventEmitter();
+  @Output() clickPaginateButton = new EventEmitter<Event>();
 
   private readonly unsubscribe$ = new Subject<void>();
 
@@ -31,8 +33,9 @@ export class LeftNavTreePaginationDirective implements AfterViewInit, OnDestroy 
     console.log('hostTree: ', this.hostTree);
 
     timer(100, 0).pipe(
-      filter(() => this.hostTree.value.some((v: any) => !!v.checked && (v.children || []).length > 1)),
-      map(() => this.hostTree.value),
+      map(() => this.hostTree.value.find((value: LeftNavTreeNode) => value.type === 'group' && value.data?.current)),
+      filter(isNotNullOrUndefined),
+      filter((value: LeftNavTreeNode) => (value.children || []).length > 6),
       distinctUntilChanged(),
       tap(console.log),
       takeUntil(this.unsubscribe$)
@@ -57,6 +60,12 @@ export class LeftNavTreePaginationDirective implements AfterViewInit, OnDestroy 
     this.renderer.appendChild(loadMoreButton, loadMoreButtonText);
     this.renderer.addClass(loadMoreButton, 'alg-navigate-pagination-button');
     this.renderer.appendChild(this.hostTree.el.nativeElement.querySelector('.p-treenode-children'), loadMoreButton);
+    this.onClickListener(loadMoreButton);
   }
 
+  onClickListener(loadMoreButton: HTMLElement): void {
+    fromEvent(loadMoreButton, 'click')
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((e: Event) => this.clickPaginateButton.emit(e), () => {}, () => console.log('complete'));
+  }
 }

@@ -52,7 +52,7 @@ export class GroupNavigationService {
 
   constructor(private http: HttpClient) {}
 
-  getNavData(groupId: string, limit?: number): Observable<NavMenuRootGroupWithParent> {
+  getNavData(groupId: string, limit = 7): Observable<NavMenuRootGroupWithParent> {
     const params: {[param: string]: string} = {};
 
     if (limit) {

@@ -7,7 +7,7 @@ import { ItemRouter } from 'src/app/shared/routing/item-router';
 import { isANavMenuItem } from '../../services/left-nav-loading/item-nav-tree-types';
 import { NavTreeData, NavTreeElement } from '../../services/left-nav-loading/nav-tree-data';
 
-type LeftNavTreeNode = TreeNode<{
+export type LeftNavTreeNode = TreeNode<{
   element: NavTreeElement,
   path: string[],
   status: 'ready'|'loading'|'error',
@@ -45,6 +45,7 @@ export class LeftNavTreeComponent implements OnChanges {
           path: data.pathToElements,
           status: shouldShowChildren && !e.children ? 'loading' : 'ready',
           current: isSelected,
+          hasMoreChildren: (e.children || []).length > 6,
         },
         label: e.title,
         type: this.typeForElement(e),
@@ -133,7 +134,7 @@ export class LeftNavTreeComponent implements OnChanges {
     }
   }
 
-  onPaginateButtonClick() {
+  onPaginateButtonClick(): void {
   }
 
   trackByFn = (index: number): number => {
