@@ -45,6 +45,8 @@ export interface NavMenuRootGroupWithParent extends NavMenuRootGroup {
   parent: NavMenuGroup,
 }
 
+const LIMIT = 7;
+
 @Injectable({
   providedIn: 'root'
 })
@@ -52,17 +54,11 @@ export class GroupNavigationService {
 
   constructor(private http: HttpClient) {}
 
-  getNavData(groupId: string, limit = 7): Observable<NavMenuRootGroupWithParent> {
-    const params: {[param: string]: string} = {};
-
-    if (limit) {
-      params.limit = limit.toString();
-    }
+  getNavData(groupId: string): Observable<NavMenuRootGroupWithParent> {
+    const params = new HttpParams({ fromObject: { limit: String(LIMIT) } });
 
     return this.http
-      .get<RawNavData>(`${appConfig().apiUrl}/groups/${groupId}/navigation`, {
-        params: new HttpParams({ fromObject: params })
-      })
+      .get<RawNavData>(`${appConfig().apiUrl}/groups/${groupId}/navigation`, { params })
       .pipe(
         map((data: RawNavData) => ({
           parent: {
@@ -70,6 +66,7 @@ export class GroupNavigationService {
             title: data.name,
             type: data.type,
             hasChildren: data.children.length > 0,
+            hasMoreChildren: data.children.length > LIMIT - 1
           },
           groups: data.children.map(child => ({
             id: child.id,
@@ -78,7 +75,7 @@ export class GroupNavigationService {
             currentUserManagership: child.current_user_managership,
             currentUserMembership: child.current_user_membership,
             hasChildren: child.type !== 'User', // maybe should be fetched from backend
-          })),
+          })).slice(0, LIMIT - 2),
         }))
       );
   }

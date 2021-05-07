@@ -7,8 +7,8 @@ export interface GroupRoute extends ContentRoute {
 /**
  * Return a url array (`commands` array) to the given group, on the given page.
  */
-export function urlArrayForGroupRoute(route: GroupRoute, page: 'edit'|'details' = 'details'): any[] {
+export function urlArrayForGroupRoute(route: GroupRoute, page: 'edit'|'details'|'details/members' = 'details'): any[] {
   const params: {[k: string]: any} = {};
   params[pathParamName] = route.path;
-  return [ '/', 'groups', 'by-id', route.id, params, page ];
+  return [ '/', 'groups', 'by-id', route.id, params, ...(page.includes('/') ? page.split('/') : [ page ]) ];
 }

@@ -12,6 +12,7 @@ export type LeftNavTreeNode = TreeNode<{
   path: string[],
   status: 'ready'|'loading'|'error',
   current: boolean,
+  hasMoreChildren?: boolean,
 }>
 
 @Component({
@@ -45,7 +46,7 @@ export class LeftNavTreeComponent implements OnChanges {
           path: data.pathToElements,
           status: shouldShowChildren && !e.children ? 'loading' : 'ready',
           current: isSelected,
-          hasMoreChildren: (e.children || []).length > 6,
+          hasMoreChildren: e.hasMoreChildren
         },
         label: e.title,
         type: this.typeForElement(e),
@@ -134,11 +135,12 @@ export class LeftNavTreeComponent implements OnChanges {
     }
   }
 
-  onPaginateButtonClick(): void {
+  onPaginateButtonClick(node: LeftNavTreeNode): void {
+    if (!node.data) return;
+    const routeBase = { id: node.data.element.id, path: node.data.path };
+    this.groupRouter.navigateTo({ ...routeBase, contentType: 'group' }, 'details/members');
   }
 
-  trackByFn = (index: number): number => {
-    return index;
-  }
+  trackByFn = (index: number): number => index;
 
 }
