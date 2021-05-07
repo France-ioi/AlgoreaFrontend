@@ -106,19 +106,13 @@
       </trans-unit><trans-unit id="3542042671420335679" datatype="html">
         <source>No</source><target state="translated">Non</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-remove-button/group-remove-button.component.ts</context><context context-type="linenumber">49</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/joined-group-list/joined-group-list.component.ts</context><context context-type="linenumber">51</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-edit-advanced-parameters/item-edit-advanced-parameters.component.ts</context><context context-type="linenumber">34</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/guards/pending-changes-guard.ts</context><context context-type="linenumber">38</context></context-group></trans-unit><trans-unit id="3538887675032003480" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-remove-button/group-remove-button.component.ts</context><context context-type="linenumber">56</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/joined-group-list/joined-group-list.component.ts</context><context context-type="linenumber">51</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-edit-advanced-parameters/item-edit-advanced-parameters.component.ts</context><context context-type="linenumber">34</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/guards/pending-changes-guard.ts</context><context context-type="linenumber">38</context></context-group></trans-unit><trans-unit id="3538887675032003480" datatype="html">
         <source>You have delete "<x id="PH" equiv-text="groupName"/>"</source><target state="new">You have delete "<x id="PH" equiv-text="groupName"/>"</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/components/group-remove-button/group-remove-button.component.ts</context>
-          <context context-type="linenumber">61</context>
-        </context-group>
-      </trans-unit><trans-unit id="1644598469773894329" datatype="html">
+
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-remove-button/group-remove-button.component.ts</context><context context-type="linenumber">69</context></context-group></trans-unit><trans-unit id="1644598469773894329" datatype="html">
         <source>Failed to delete "<x id="PH" equiv-text="groupName"/>"</source><target state="new">Failed to delete "<x id="PH" equiv-text="groupName"/>"</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/components/group-remove-button/group-remove-button.component.ts</context>
-          <context context-type="linenumber">64</context>
-        </context-group>
-      </trans-unit><trans-unit id="6595442071355967826" datatype="html">
+
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-remove-button/group-remove-button.component.ts</context><context context-type="linenumber">74</context></context-group></trans-unit><trans-unit id="6595442071355967826" datatype="html">
         <source>You have left "<x id="PH" equiv-text="groupName"/>"</source><target state="new">You have left "<x id="PH" equiv-text="groupName"/>"</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/group/components/joined-group-list/joined-group-list.component.ts</context>
@@ -1351,11 +1345,8 @@
         </context-group>
       </trans-unit><trans-unit id="625198541404386219" datatype="html">
         <source>Are you sure you want to delete the group "<x id="PH" equiv-text="this.group.name"/>"</source><target state="new">Are you sure you want to delete the group "<x id="PH" equiv-text="this.group.name"/>"</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/components/group-remove-button/group-remove-button.component.ts</context>
-          <context context-type="linenumber">42</context>
-        </context-group>
-      </trans-unit><trans-unit id="52c9a103b812f258bcddc3d90a6e3f46871d25fe" datatype="html">
+
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-remove-button/group-remove-button.component.ts</context><context context-type="linenumber">49</context></context-group></trans-unit><trans-unit id="52c9a103b812f258bcddc3d90a6e3f46871d25fe" datatype="html">
         <source>Save</source><target state="translated">Sauvegarder</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/shared-components/components/floating-save/floating-save.component.html</context>
@@ -1502,7 +1493,13 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/group-details/group-details.component.html</context><context context-type="linenumber">47</context></context-group></trans-unit><trans-unit id="e5f794d4be82ba094d11c959000fa0ec6f8b3320" datatype="html">
         <source>Error while loading the group info</source><target state="translated">Error lors du chargement du groupe</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/group-details/group-details.component.html</context><context context-type="linenumber">62</context></context-group></trans-unit><trans-unit id="8675432263399119284" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-remove-button/group-remove-button.component.html</context><context context-type="linenumber">11</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/group-details/group-details.component.html</context><context context-type="linenumber">62</context></context-group></trans-unit><trans-unit id="666577e66fe41cdcc2c0aeaa27b263a9a66e526a" datatype="html">
+        <source>Delete this group</source><target state="new">Delete this group</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/group-remove-button/group-remove-button.component.html</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+      </trans-unit><trans-unit id="8675432263399119284" datatype="html">
         <source>My groups</source><target state="translated">Mes groupes</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/my-groups/my-groups.component.ts</context><context context-type="linenumber">19</context></context-group></trans-unit><trans-unit id="8471940861423120175" datatype="html">
