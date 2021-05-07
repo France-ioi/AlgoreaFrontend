@@ -1,26 +1,30 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { Group } from '../../http-services/get-group-by-id.service';
-import { catchError, map, tap } from 'rxjs/operators';
-import { BehaviorSubject, merge, Observable, of } from 'rxjs';
+import { distinct, switchMap, map } from 'rxjs/operators';
+import { Observable, ReplaySubject, Subject } from 'rxjs';
 import { GetGroupChildrenService, GroupChild } from '../../http-services/get-group-children.service';
 import { ConfirmationService } from 'primeng/api';
 import { ActionFeedbackService } from '../../../../shared/services/action-feedback.service';
 import { GroupDeleteService } from '../../services/group-delete.service';
 import { Router } from '@angular/router';
-
-type GroupChildrenState = 'loading' | 'hasChildren' | 'empty' | 'error';
+import { mapToFetchState } from '../../../../shared/operators/state';
 
 @Component({
   selector: 'alg-group-remove-button',
   templateUrl: './group-remove-button.component.html',
   styleUrls: [ './group-remove-button.component.scss' ]
 })
-export class GroupRemoveButtonComponent implements OnInit {
+export class GroupRemoveButtonComponent implements OnChanges {
   @Input() group!: Group;
 
-  loadingSubject$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  loading$: Observable<boolean> = this.loadingSubject$.asObservable();
-  state$?: Observable<GroupChildrenState>;
+  deletionInProgress$: Subject<boolean> = new Subject();
+
+  private readonly id$ = new ReplaySubject<string>(1);
+  readonly state$ = this.id$.pipe(
+    distinct(),
+    switchMap(id => this.hasGroupChildren$(id)),
+    mapToFetchState(),
+  );
 
   constructor(
     private actionFeedbackService: ActionFeedbackService,
@@ -30,13 +34,13 @@ export class GroupRemoveButtonComponent implements OnInit {
     private router: Router,
   ) { }
 
-  ngOnInit(): void {
-    this.state$ = merge<GroupChildrenState>(
-      of('loading'),
-      this.getGroupChildrenService.getGroupChildren(this.group.id).pipe(
-        map((groupChild: GroupChild[]) => (groupChild.length > 0 ? 'hasChildren' : 'empty')),
-        catchError(() => of<GroupChildrenState>('error'))
-      )
+  ngOnChanges(): void {
+    this.id$.next(this.group.id);
+  }
+
+  hasGroupChildren$(groupId: string): Observable<boolean> {
+    return this.getGroupChildrenService.getGroupChildren(groupId).pipe(
+      map((groupChild: GroupChild[]) => groupChild.length > 0)
     );
   }
 
@@ -56,15 +60,17 @@ export class GroupRemoveButtonComponent implements OnInit {
   deleteGroup(): void {
     const id = this.group.id;
     const groupName = this.group.name;
-    this.loadingSubject$.next(true);
+
+    this.deletionInProgress$.next(true);
     this.groupDeleteService.delete(id)
-      .pipe(tap(() => this.loadingSubject$.next(false)))
       .subscribe(
         () => {
+          this.deletionInProgress$.next(false);
           this.actionFeedbackService.success($localize`You have delete "${groupName}"`);
           this.navigateToMyGroups();
         },
         _err => {
+          this.deletionInProgress$.next(false);
           this.actionFeedbackService.error($localize`Failed to delete "${groupName}"`);
         }
       );
