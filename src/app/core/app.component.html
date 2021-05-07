@@ -12,7 +12,7 @@
       ></alg-left-header>
       <div class="top-right-bar" *ngrxLet="currentContent$ as currentContent">
         <alg-editor-bar *ngIf="currentMode === 'editing'" (cancel)="onEditCancel()"></alg-editor-bar>
-        <alg-observation-bar *ngIf="currentMode === 'watching'"></alg-observation-bar>
+        <alg-observation-bar *ngIf="currentMode === 'watching'" [groupName]="session?.watchedGroup?.name || ''" (cancel)="onWatchCancel()"></alg-observation-bar>
         <div class="breadcrumb-bar" *ngIf="headersDisplayed && !scrolled">
           <alg-breadcrumb [contentBreadcrumb]="currentContent?.breadcrumbs"></alg-breadcrumb>
         </div>

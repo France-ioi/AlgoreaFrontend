@@ -1,15 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'alg-observation-bar',
   templateUrl: './observation-bar.component.html',
-  styleUrls: ['./observation-bar.component.scss']
+  styleUrls: [ './observation-bar.component.scss' ]
 })
-export class ObservationBarComponent implements OnInit {
+export class ObservationBarComponent {
+  @Input() groupName = '';
+  @Output() cancel = new EventEmitter<void>();
 
-  constructor() { }
-
-  ngOnInit(): void {
+  onCancelClick(): void {
+    this.cancel.emit();
   }
 
 }

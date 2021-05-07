@@ -72,4 +72,8 @@ export class AppComponent implements OnInit, OnDestroy {
     this.modeService.modeActions$.next(ModeAction.StopEditing);
   }
 
+  onWatchCancel(): void {
+    this.modeService.stopObserving();
+  }
+
 }

@@ -1,1 +1,13 @@
-<p>observation-bar works!</p>
+<div class="modebar-wrapper editor-bar-wrapper ">
+  <span class="modebar-left-icon">
+    <i class="fa fa-eye"></i>
+  </span>
+  <span class="modebar-title" >
+    <ng-container i18n>Observation Mode</ng-container>
+    <ng-container *ngIf="groupName">: {{ groupName }}</ng-container>
+  </span>
+
+  <button pButton type="button" icon="pi pi-times" class="p-button-rounded" (click)="onCancelClick()"></button>
+
+  <div class="right-border-adapter">&nbsp;</div>
+</div>

@@ -1,0 +1,10 @@
+@import 'src/colors.scss';
+
+.editor-bar-wrapper {
+  background-color: $secondary-color;
+
+  .p-button {
+    background-color: $dark-secondary-color;
+    border-color: $dark-secondary-color;
+  }
+}
