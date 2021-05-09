@@ -270,6 +270,15 @@
       border: none;
     }
   }
+
+  &.--member-list {
+    .p-datatable {
+      .p-datatable-footer {
+        background-color: transparent;
+        margin-bottom: 0rem;
+      }
+    }
+  }
 }
 
 .summary {
@@ -303,16 +312,6 @@
     > span {
       margin-right: 1rem;
       cursor: pointer;
-
-      ::ng-deep p-progressSpinner {
-        display: flex;
-        align-items: center;
-
-        .p-progress-spinner {
-          width: 1.2rem;
-          height: 1.2rem;
-        }
-      }
 
       &.disabled {
         cursor: not-allowed;

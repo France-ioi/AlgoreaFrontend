@@ -4,12 +4,4 @@
 :host {
   position: relative;
   display: block;
-
-  ::ng-deep {
-
-    .p-datatable-footer {
-      background-color: transparent;
-      margin-bottom: 0rem;
-    }
-  }
 }
