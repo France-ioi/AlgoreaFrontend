@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild } from '@angular/core';
 import { SortEvent } from 'primeng/api';
 import { Table } from 'primeng/table';
-import { Observable, Subject } from 'rxjs';
+import { Observable, ReplaySubject, Subject } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { GetGroupDescendantsService } from 'src/app/shared/http-services/get-group-descendants.service';
 import { mapToFetchState } from 'src/app/shared/operators/state';
@@ -60,7 +60,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
 
   @Input() group? : Group;
 
-  state: 'error' | 'ready' | 'fetching' | 'processing' = 'fetching';
+  state: 'error' | 'ready' | 'fetching' = 'fetching';
 
   defaultFilter: Filter = { type: TypeFilter.Users, directChildren: true };
 
@@ -78,6 +78,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
   @ViewChild('compositionFilter') private compositionFilter?: GroupCompositionFilterComponent;
 
   private dataFetching = new Subject<{ groupId: string, filter: Filter, sort: string[] }>();
+  removalInProgress$ = new ReplaySubject<boolean>();
 
   constructor(
     private getGroupMembersService: GetGroupMembersService,
@@ -199,7 +200,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
   onRemove(): void {
     if (this.selection.length === 0 || !this.group) return;
 
-    this.state = 'processing';
+    this.removalInProgress$.next(true);
     this.groupUsersService.removeUsers(this.group.id, this.selection.map(member => member.id))
       .subscribe(result => {
         displayResponseToast(this.actionFeedbackService, parseResults(result));
@@ -208,9 +209,10 @@ export class MemberListComponent implements OnChanges, OnDestroy {
         if (this.group) {
           this.dataFetching.next({ groupId: this.group.id, filter: this.currentFilter, sort: this.currentSort });
         }
+        this.removalInProgress$.next(false);
       },
       _err => {
-        this.state = 'ready';
+        this.removalInProgress$.next(false);
         this.actionFeedbackService.unexpectedError();
       });
   }
