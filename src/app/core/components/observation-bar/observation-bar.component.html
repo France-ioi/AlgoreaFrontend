@@ -1,9 +1,10 @@
 <div class="modebar-wrapper editor-bar-wrapper ">
   <span class="modebar-left-icon">
-    <i class="fa fa-edit"></i>
+    <i class="fa fa-eye"></i>
   </span>
-  <span class="modebar-title" i18n style="flex:1">
-    Edition Mode
+  <span class="modebar-title" >
+    <ng-container i18n>Observation Mode</ng-container>
+    <ng-container *ngIf="groupName">: {{ groupName }}</ng-container>
   </span>
 
   <button pButton type="button" icon="pi pi-times" class="p-button-rounded" (click)="onCancelClick()"></button>
