@@ -12,6 +12,7 @@
             <alg-language-picker
                 class="dark"
                 [defaultLang]="currentUser.defaultLanguage"
+                [autoRefresh]="false"
                 (changeLang)="onChangeLang($event)"
             ></alg-language-picker>
           </span>

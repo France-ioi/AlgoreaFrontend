@@ -9,6 +9,7 @@ import { LocaleService } from '../../services/localeService';
 export class LanguagePickerComponent implements OnChanges {
   @Output() changeLang = new EventEmitter<string>();
   @Input() defaultLang?: string;
+  @Input() autoRefresh = true;
 
   readonly languages = this.localeService.languages;
   current = this.languages?.find(l => l.tag === this.localeService.currentTag);
@@ -25,7 +26,10 @@ export class LanguagePickerComponent implements OnChanges {
 
   languageChanged(lang: { value: { tag: string } }): void {
     this.changeLang.emit(lang.value.tag);
-    this.localeService.navigateTo(lang.value.tag);
+
+    if (this.autoRefresh) {
+      this.localeService.navigateTo(lang.value.tag);
+    }
   }
 
 }

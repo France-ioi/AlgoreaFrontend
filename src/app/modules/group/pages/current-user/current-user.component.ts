@@ -7,6 +7,7 @@ import { filter, map } from 'rxjs/operators';
 import { UserSession, UserSessionService } from 'src/app/shared/services/user-session.service';
 import { isNotNullOrUndefined } from 'src/app/shared/helpers/is-not-null-or-undefined';
 import { ActionFeedbackService } from '../../../../shared/services/action-feedback.service';
+import { LocaleService } from '../../../../core/services/localeService';
 
 const currentUserBreadcrumbCat = $localize`Yourself`;
 
@@ -23,6 +24,7 @@ export class CurrentUserComponent implements OnInit, OnDestroy {
     private userSessionService: UserSessionService,
     private currentUser: CurrentUserHttpService,
     private actionFeedbackService: ActionFeedbackService,
+    private localeService: LocaleService,
   ) {
     this.currentContent.current.next(contentInfo({ breadcrumbs: { category: currentUserBreadcrumbCat, path: [], currentPageIdx: -1 } }));
   }
@@ -42,10 +44,15 @@ export class CurrentUserComponent implements OnInit, OnDestroy {
     this.update({ default_language: event });
   }
 
-  update(changes: object): void {
+  update(changes: { default_language: string }): void {
     this.currentUser.update(changes).subscribe(
       () => {
         this.actionFeedbackService.success($localize`Changes successfully saved.`);
+
+        if (changes.default_language) {
+          this.localeService.navigateTo(changes.default_language);
+        }
+
       }, _err => {
         this.actionFeedbackService.unexpectedError();
       }
