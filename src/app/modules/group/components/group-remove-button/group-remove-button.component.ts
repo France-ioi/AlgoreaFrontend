@@ -15,9 +15,9 @@ import { mapToFetchState } from '../../../../shared/operators/state';
   styleUrls: [ './group-remove-button.component.scss' ]
 })
 export class GroupRemoveButtonComponent implements OnChanges {
-  @Input() group!: Group;
+  @Input() group?: Group;
 
-  deletionInProgress$: Subject<boolean> = new Subject();
+  deletionInProgress$ = new Subject<boolean>();
 
   private readonly id$ = new ReplaySubject<string>(1);
   readonly state$ = this.id$.pipe(
@@ -35,7 +35,9 @@ export class GroupRemoveButtonComponent implements OnChanges {
   ) { }
 
   ngOnChanges(): void {
-    this.id$.next(this.group.id);
+    if (this.group) {
+      this.id$.next(this.group.id);
+    }
   }
 
   hasGroupChildren$(groupId: string): Observable<boolean> {
@@ -45,6 +47,10 @@ export class GroupRemoveButtonComponent implements OnChanges {
   }
 
   onDeleteGroup(): void {
+    if (!this.group) {
+      return;
+    }
+
     this.confirmationService.confirm({
       message: $localize`Are you sure you want to delete the group "${ this.group.name }"`,
       header: $localize`Confirm Action`,
@@ -58,6 +64,10 @@ export class GroupRemoveButtonComponent implements OnChanges {
   }
 
   deleteGroup(): void {
+    if (!this.group) {
+      return;
+    }
+
     const id = this.group.id;
     const groupName = this.group.name;
 

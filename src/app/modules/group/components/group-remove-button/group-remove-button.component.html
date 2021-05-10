@@ -5,7 +5,7 @@
       [style]="{width: '24px', height: '24px'}"
   >
   </p-progressSpinner>
-  <span class="has-children" *ngIf="state.data" i18n>
+  <span class="has-children" *ngIf="state.isReady && state.data" i18n>
     Only an empty group can be deleted.
   </span>
   <span class="error" *ngIf="state.isError" i18n>Error while loading the group info</span>
@@ -15,6 +15,6 @@
       class="p-button-rounded p-button-danger"
       i18n-label label="Delete this group"
       (click)="onDeleteGroup()"
-      [disabled]="state.data || state.isFetching || state.isError || (deletionInProgress$ | async)"
+      [disabled]="(state.isReady && state.data) || state.isFetching || state.isError || (deletionInProgress$ | async)"
   ></button>
 </div>
