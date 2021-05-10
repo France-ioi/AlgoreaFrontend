@@ -7,7 +7,7 @@ $secondary-color: #F5A623;
 $base-color-hover: #779CCA;
 $hover-mask: rgba(white, 0.1);
 
-$light-text-color: #DBDBDB;
+$light-text-color: #dbdbdb;
 // $light-color: #DBE9F9;
 $light-color: #DFE7F4;
 $light-border-color: #EBEBEB;
@@ -21,10 +21,28 @@ $dark-transparency-color: rgba(74,74,74,.1);
 $input-transparency-color: rgba(0,0,0,.05);
 
 $nav-bk-color: #4E4E4E;
-$nav-dark-color: #474747;
-$nav-dark-secondary-color: #373738;
-$nav-dark-handle-color: #2C2C2C;
+
+// Light nav theme
+$nav-bg-color: $base-color;
+$nav-bg-secondary-color: #3B73B4;
+$nav-bg-handle-color: #3B73B4;
+$nav-border-color: #2e5e95;
+$nav-border-secondary-color: #4587D4;
+$nav-handle-icon-color: rgb(99, 150, 209);
+$nav-bg-hover-color: $base-color-hover;
+$nav-bg-hover-secondary-color: #578CCA;
+$nav-text-color: $base-color;
+
+// Dark nav theme
+$nav-dark-bg-color: #373738;
+$nav-dark-bg-secondary-color: #474747;
+$nav-dark-bg-handle-color: #2C2C2C;
 $nav-dark-border-color: #313132;
+$nav-dark-border-secondary-color: #313132;
+$nav-dark-handle-icon-color: rgb(255, 255, 255, .6);
+$nav-dark-bg-hover-color: #373738;
+$nav-dark-bg-hover-secondary-color: #373738;
+$nav-dark-text-color: $dark-black-color;
 
 // Section colors
 $section-color: #DFE7F4;
