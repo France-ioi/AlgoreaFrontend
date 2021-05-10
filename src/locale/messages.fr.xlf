@@ -359,6 +359,18 @@
           <context context-type="sourcefile">src/app/modules/shared-components/components/form-error/form-error.component.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
+      </trans-unit><trans-unit id="30a5224e4c88c6b8a4e2f961644b68a389e483e5" datatype="html">
+        <source>Invalid value, minimum: <x id="INTERPOLATION" equiv-text="{{ err.min }}"/></source><target state="new">Invalid value, minimum: <x id="INTERPOLATION" equiv-text="{{ err.min }}"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/shared-components/components/form-error/form-error.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+      </trans-unit><trans-unit id="d356465d67ece833b9115074734375a240179a80" datatype="html">
+        <source>Invalid value, maximum: <x id="INTERPOLATION" equiv-text="{{ err.max }}"/></source><target state="new">Invalid value, maximum: <x id="INTERPOLATION" equiv-text="{{ err.max }}"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/shared-components/components/form-error/form-error.component.html</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
       </trans-unit><trans-unit id="5322922947143379212" datatype="html">
         <source>Chapter</source><target state="translated">Chapitre</target>
 
