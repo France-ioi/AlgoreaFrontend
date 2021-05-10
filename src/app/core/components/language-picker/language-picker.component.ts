@@ -7,7 +7,7 @@ import { LocaleService } from '../../services/localeService';
   styleUrls: [ './language-picker.component.scss' ]
 })
 export class LanguagePickerComponent implements OnChanges {
-  @Output() changeLang = new EventEmitter<void>();
+  @Output() changeLang = new EventEmitter<string>();
   @Input() defaultLang?: string;
 
   readonly languages = this.localeService.languages;
@@ -24,6 +24,7 @@ export class LanguagePickerComponent implements OnChanges {
   }
 
   languageChanged(lang: { value: { tag: string } }): void {
+    this.changeLang.emit(lang.value.tag);
     this.localeService.navigateTo(lang.value.tag);
   }
 

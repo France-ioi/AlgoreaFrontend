@@ -1,5 +1,15 @@
 @import "src/colors.scss";
 
+:host {
+  &.dark {
+    ::ng-deep .p-dropdown {
+      .p-dropdown-label {
+        color: $base-color;
+      }
+    }
+  }
+}
+
 :host ::ng-deep .p-dropdown {
   background-color: transparent;
   border: none;

@@ -9,10 +9,11 @@
         <li class="alg-data-list-item">
           <span class="alg-data-list-item-caption" i18n>Platform language</span>
           <span class="alg-data-list-item-value">
-            {{ currentUser.defaultLanguage }}
-
-            <alg-language-picker [defaultLang]="currentUser.defaultLanguage"></alg-language-picker>
-
+            <alg-language-picker
+                class="dark"
+                [defaultLang]="currentUser.defaultLanguage"
+                (changeLang)="onChangeLang($event)"
+            ></alg-language-picker>
           </span>
         </li>
       </ul>
