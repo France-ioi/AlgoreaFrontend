@@ -12,6 +12,7 @@ import { HOURS } from 'src/app/shared/helpers/duration';
 export class ItemEditAdvancedParametersComponent implements OnInit {
   @Input() item?: Item;
   @Input() parentForm?: FormGroup;
+  @Input() enableTeamSection?: boolean
 
   validationCritireaOptions: DropdownOption[] = [{
     label: $localize`Never`,
@@ -42,6 +43,20 @@ export class ItemEditAdvancedParametersComponent implements OnInit {
   }]
 
   minEnteringTimeMaxDate = new Date();
+
+  minAdmittedMembersRatioOptions: DropdownOption[] = [{
+    label: $localize`All the members must be admitted`,
+    value: 'All'
+  }, {
+    label: $localize`Half the members must be admitted`,
+    value: 'Half'
+  }, {
+    label: $localize`One of the members must be admitted`,
+    value: 'One'
+  }, {
+    label: $localize`None of the members has to be admitted`,
+    value: 'None'
+  }]
 
   constructor() { }
 
