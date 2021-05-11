@@ -35,6 +35,7 @@ import { AssociatedActivityComponent } from './components/associated-activity/as
 import { GroupIndicatorComponent } from './components/group-indicator/group-indicator.component';
 import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';
+import { TooltipModule } from 'primeng/tooltip';
 import { GroupLinksComponent } from './components/group-links/group-links.component';
 
 @NgModule({
@@ -74,6 +75,7 @@ import { GroupLinksComponent } from './components/group-links/group-links.compon
     FormsModule,
     ButtonModule,
     RippleModule,
+    TooltipModule,
   ],
   exports: [
     GroupIndicatorComponent
