@@ -149,7 +149,7 @@
     </ng-container>
   </alg-section>
 
-  <alg-section icon="fa fa-users" i18n-label label="Team" *ngIf="enableTeamSection">
+  <alg-section icon="fa fa-users" i18n-label label="Team" *ngIf="item.type !== 'Skill'">
     <div class="form-item-view">
       <span class="form-item-label" i18n>Participation as a team (only) (not implemented)</span>
       <div class="form-item-control">

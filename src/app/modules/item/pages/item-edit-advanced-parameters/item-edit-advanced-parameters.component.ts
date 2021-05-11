@@ -12,7 +12,6 @@ import { HOURS } from 'src/app/shared/helpers/duration';
 export class ItemEditAdvancedParametersComponent implements OnInit {
   @Input() item?: Item;
   @Input() parentForm?: FormGroup;
-  @Input() enableTeamSection?: boolean
 
   validationCritireaOptions: DropdownOption[] = [{
     label: $localize`Never`,

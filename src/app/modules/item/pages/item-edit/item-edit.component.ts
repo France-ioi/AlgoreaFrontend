@@ -61,7 +61,7 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
     return this.initialFormData?.type !== 'Skill';
   }
 
-  get enableTeamSection(): boolean {
+  get enableTeam(): boolean {
     return this.initialFormData?.type !== 'Skill';
   }
 
@@ -145,7 +145,7 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
         enteringTimeMaxEnabled: this.itemForm.get('entering_time_max_enabled'),
         enteringTimeMax: this.itemForm.get('entering_time_max'),
       } : {}),
-      ...(this.enableTeamSection ? {
+      ...(this.enableTeam ? {
         entryParticipantType: this.itemForm.get('entry_participant_type'),
         entryFrozenTeams: this.itemForm.get('entry_frozen_teams'),
         entryMaxTeamSize: this.itemForm.get('entry_max_team_size'),
@@ -223,7 +223,7 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
       }
     }
 
-    if (this.enableTeamSection) {
+    if (this.enableTeam) {
       const entryParticipantType = (formControls.entryParticipantType?.value as boolean | undefined) ? 'Team' : 'User';
       const hasEntryParticipantTypeChanges = entryParticipantType !== this.initialFormData.entryParticipantType;
       if (hasEntryParticipantTypeChanges) {
@@ -359,7 +359,7 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
         entering_time_max_enabled: item.enteringTimeMaxEnabled,
         entering_time_max: item.enteringTimeMax,
       } : {}),
-      ...(this.enableTeamSection ? {
+      ...(this.enableTeam ? {
         entry_participant_type: item.entryParticipantType === 'Team',
         entry_frozen_teams: item.entryFrozenTeams,
         entry_max_team_size: item.entryMaxTeamSize,
