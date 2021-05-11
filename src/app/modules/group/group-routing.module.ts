@@ -6,6 +6,7 @@ import { CurrentUserComponent } from './pages/current-user/current-user.componen
 import { GroupEditComponent } from './pages/group-edit/group-edit.component';
 import { GroupByIdComponent } from './pages/group-by-id/group-by-id.component';
 import { PendingChangesGuard } from 'src/app/shared/guards/pending-changes-guard';
+import { GroupUserComponent } from './pages/group-user/group-user.component';
 
 const routes: Routes = [
   {
@@ -15,6 +16,10 @@ const routes: Routes = [
   {
     path: 'mine',
     component: MyGroupsComponent,
+  },
+  {
+    path: 'users/:id',
+    component: GroupUserComponent,
   },
   {
     path: 'by-id/:id',

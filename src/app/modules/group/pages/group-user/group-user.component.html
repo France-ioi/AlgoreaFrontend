@@ -1,0 +1,38 @@
+<ng-container *ngIf="state$ | async as state">
+  <div *ngIf="state.isFetching">
+    Loading...
+  </div>
+
+  <div *ngIf="state.isError">
+    Error
+  </div>
+
+  <ng-container *ngIf="state.isReady && state.data as user">
+
+    <div class="alg-page-header">
+      <div class="alg-page-header-title">
+        <span *ngIf="user.firstName || user.lastName; else login">
+          {{ user.firstName }} {{ user.lastName }}
+        </span>
+
+        <ng-template #login>{{ user.login }}</ng-template>
+      </div>
+
+      <div class="alg-page-header-subtitle" *ngIf="user.freeText">
+        {{ user.freeText }}
+      </div>
+    </div>
+
+    <div class="bg-white" *ngIf="user.webSite">
+      <alg-section i18n-label label="Personal Information" icon="fa fa-users">
+        <ul class="alg-data-list">
+          <li class="alg-data-list-item">
+            <span class="alg-data-list-item-caption" i18n>Personal Web page</span>
+            <span class="alg-data-list-item-value">{{ user.webSite }}</span>
+          </li>
+        </ul>
+      </alg-section>
+    </div>
+
+  </ng-container>
+</ng-container>
