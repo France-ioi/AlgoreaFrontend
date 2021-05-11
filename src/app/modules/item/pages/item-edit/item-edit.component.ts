@@ -227,7 +227,7 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
       const entryParticipantType = (formControls.entryParticipantType?.value as boolean | undefined) ? 'Team' : 'User';
       const hasEntryParticipantTypeChanges = entryParticipantType !== this.initialFormData.entryParticipantType;
       if (hasEntryParticipantTypeChanges) {
-        itemFormValues.entry_participant_type = entryParticipantType ? 'Team' : 'User';
+        itemFormValues.entry_participant_type = entryParticipantType;
       }
 
       const entryFrozenTeams = formControls.entryFrozenTeams?.value as boolean | undefined;
