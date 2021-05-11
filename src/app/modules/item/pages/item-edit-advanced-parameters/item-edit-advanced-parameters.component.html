@@ -156,29 +156,31 @@
         <alg-switch formControlName="entry_participant_type" mode="white"></alg-switch>
       </div>
     </div>
-    <div class="form-item-view">
-      <span class="form-item-label" i18n>Freeze team on entry</span>
-      <div class="form-item-control">
-        <alg-switch formControlName="entry_frozen_teams" mode="white"></alg-switch>
+    <ng-container *ngIf="!!parentForm.get('entry_participant_type')?.value">
+      <div class="form-item-view">
+        <span class="form-item-label" i18n>Freeze team on entry</span>
+        <div class="form-item-control">
+          <alg-switch formControlName="entry_frozen_teams" mode="white"></alg-switch>
+        </div>
       </div>
-    </div>
-    <div class="form-item-view">
-      <span class="form-item-label" i18n>Maximum team size</span>
-      <div class="form-item-control">
-        <p-inputNumber formControlName="entry_max_team_size"></p-inputNumber>
-        <alg-input-error [form]="this.parentForm" inputName="entry_max_team_size"></alg-input-error>
+      <div class="form-item-view">
+        <span class="form-item-label" i18n>Maximum team size</span>
+        <div class="form-item-control">
+          <p-inputNumber formControlName="entry_max_team_size"></p-inputNumber>
+          <alg-input-error [form]="this.parentForm" inputName="entry_max_team_size"></alg-input-error>
+        </div>
       </div>
-    </div>
-    <div class="form-item-view">
-      <span class="form-item-label" i18n>Minimum admitted members</span>
-      <div class="form-item-control">
-        <alg-dropdown
-          [options]="minAdmittedMembersRatioOptions"
-          [parentForm]="parentForm"
-          inputName="entry_min_admitted_members_ratio"
-          name="entry_min_admitted_members_ratio"
-        ></alg-dropdown>
+      <div class="form-item-view">
+        <span class="form-item-label" i18n>Minimum admitted members</span>
+        <div class="form-item-control">
+          <alg-dropdown
+            [options]="minAdmittedMembersRatioOptions"
+            [parentForm]="parentForm"
+            inputName="entry_min_admitted_members_ratio"
+            name="entry_min_admitted_members_ratio"
+          ></alg-dropdown>
+        </div>
       </div>
-    </div>
+    </ng-container>
   </alg-section>
 </form>
