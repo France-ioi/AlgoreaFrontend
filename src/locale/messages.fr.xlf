@@ -651,10 +651,28 @@
           <context context-type="sourcefile">src/app/modules/group/components/joined-group-list/joined-group-list.component.html</context>
           <context context-type="linenumber">25,26</context>
         </context-group>
+      </trans-unit><trans-unit id="51896c69c5360260485a456f5fe2ad3955959121" datatype="html">
+        <source>This team membership is now frozen and cannot be modified.</source><target state="new">This team membership is now frozen and cannot be modified.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/joined-group-list/joined-group-list.component.html</context>
+          <context context-type="linenumber">42</context>
+        </context-group>
+      </trans-unit><trans-unit id="ee108d81fc5e7ed5ef36b607f3b8d1b15d3bea2d" datatype="html">
+        <source>You cannot leave this team as it would break entry condition to some content your team participating to.</source><target state="new">You cannot leave this team as it would break entry condition to some content your team participating to.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/joined-group-list/joined-group-list.component.html</context>
+          <context context-type="linenumber">49</context>
+        </context-group>
+      </trans-unit><trans-unit id="a7bc45615d82d8a4e3b833db7c51ebaf659bbbfe" datatype="html">
+        <source>You cannot leave the group for the moment. Contact the group manager for more information.</source><target state="new">You cannot leave the group for the moment. Contact the group manager for more information.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/joined-group-list/joined-group-list.component.html</context>
+          <context context-type="linenumber">59</context>
+        </context-group>
       </trans-unit><trans-unit id="ccca91161f53bb85163f114924230dea5a4358a8" datatype="html">
        <source>This list is empty.</source><target state="translated">Cette liste est vide.</target>
 
-     <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/joined-group-list/joined-group-list.component.html</context><context context-type="linenumber">53</context></context-group></trans-unit><trans-unit id="2575397017094639736" datatype="html">
+     <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/joined-group-list/joined-group-list.component.html</context><context context-type="linenumber">84</context></context-group></trans-unit><trans-unit id="2575397017094639736" datatype="html">
         <source>Are you sure you want to leave this group?</source><target state="new">Are you sure you want to leave this group?</target>
 &lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
 
