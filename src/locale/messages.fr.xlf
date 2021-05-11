@@ -417,36 +417,36 @@
         <source>Join the group "<x id="PH" equiv-text="response.group.name"/>"</source><target state="translated">Rejoindre le groupe "<x id="PH" equiv-text="response.group.name"/>"</target>
 
       <source>The code does not correspond to the group attached to this page. Are you sure you want to join the group "
-          <x id="PH" equiv-text="response.group.name"/>"?</source><context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/access-code-view/access-code-view.component.ts</context><context context-type="linenumber">45</context></context-group></trans-unit><trans-unit id="3988558682818955220" datatype="html">
+          <x id="PH" equiv-text="response.group.name"/>"?</source><context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/access-code-view/access-code-view.component.ts</context><context context-type="linenumber">51</context></context-group></trans-unit><trans-unit id="3988558682818955220" datatype="html">
         <source>Are you sure you want to join the group "<x id="PH" equiv-text="response.group.name"/>"?</source><target state="translated">Êtes vous sûr de vouloir rejoindre le groupe "<x id="PH" equiv-text="response.group.name"/>"?</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/access-code-view/access-code-view.component.ts</context><context context-type="linenumber">36</context></context-group></trans-unit><trans-unit id="4452733064355596122" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/access-code-view/access-code-view.component.ts</context><context context-type="linenumber">39</context></context-group></trans-unit><trans-unit id="4452733064355596122" datatype="html">
         <source>The code does not correspond to the group attached to this page. Are you sure you want to join the group "
           <x id="PH" equiv-text="response.group.name"/>"?</source><target state="translated">Le code ne correspond pas à un groupe lié à cette page. Êtes-vous sûr de vouloir rejoindre le groupe "
           <x id="PH" equiv-text="response.group.name"/>" ?</target>
 
-      <source>Error</source><context-group purpose="location"><context context-type="sourcefile">src/app/shared/services/action-feedback.service.ts</context><context context-type="linenumber">17</context></context-group></trans-unit><trans-unit id="8307140841776883735" datatype="html">
+      <source>Error</source><context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/access-code-view/access-code-view.component.ts</context><context context-type="linenumber">45</context></context-group></trans-unit><trans-unit id="8307140841776883735" datatype="html">
         <source>Join</source><target state="translated">Rejoindre</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/access-code-view/access-code-view.component.ts</context><context context-type="linenumber">46</context></context-group></trans-unit><trans-unit id="2159130950882492111" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/access-code-view/access-code-view.component.ts</context><context context-type="linenumber">53</context></context-group></trans-unit><trans-unit id="2159130950882492111" datatype="html">
         <source>Cancel</source><target state="translated">Annuler</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/access-code-view/access-code-view.component.ts</context><context context-type="linenumber">48</context></context-group></trans-unit><trans-unit id="7798083029915432586" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/access-code-view/access-code-view.component.ts</context><context context-type="linenumber">55</context></context-group></trans-unit><trans-unit id="7798083029915432586" datatype="html">
         <source>You are already a member of this group.</source><target state="translated">Vous êtes déjà membre de ce groupe.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/access-code-view/access-code-view.component.ts</context><context context-type="linenumber">70</context></context-group></trans-unit><trans-unit id="5339756092671133656" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/access-code-view/access-code-view.component.ts</context><context context-type="linenumber">77</context></context-group></trans-unit><trans-unit id="5339756092671133656" datatype="html">
         <source>You cannot join this team as it would conflict with another team you belong to.</source><target state="translated">Vous ne pouvez pas rejoindre cette équipe, cela est incompatible avec une autre équipe à laquelle vous appartenez.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/access-code-view/access-code-view.component.ts</context><context context-type="linenumber">72</context></context-group></trans-unit><trans-unit id="3637936669302788418" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/access-code-view/access-code-view.component.ts</context><context context-type="linenumber">79</context></context-group></trans-unit><trans-unit id="3637936669302788418" datatype="html">
         <source>This group does not allow any membership change.</source><target state="translated">Ce groupe ne permet plus de changement de membre.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/access-code-view/access-code-view.component.ts</context><context context-type="linenumber">74</context></context-group></trans-unit><trans-unit id="7557562708674395513" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/access-code-view/access-code-view.component.ts</context><context context-type="linenumber">81</context></context-group></trans-unit><trans-unit id="7557562708674395513" datatype="html">
         <source>No group corresponds to this code.</source><target state="translated">Aucun groupe ne correspond à ce code.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/access-code-view/access-code-view.component.ts</context><context context-type="linenumber">76</context></context-group></trans-unit><trans-unit id="4950186261013481241" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/access-code-view/access-code-view.component.ts</context><context context-type="linenumber">83</context></context-group></trans-unit><trans-unit id="4950186261013481241" datatype="html">
         <source>You cannot join this team as it would break the entry conditions of content it is participating to.</source><target state="translated">Vous ne pouvez pas rejoindre cette équipe, c'est incompatible avec certains contenus dans lesquels cette équipe est engagée.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/access-code-view/access-code-view.component.ts</context><context context-type="linenumber">78</context></context-group></trans-unit><trans-unit id="1519954996184640001" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/access-code-view/access-code-view.component.ts</context><context context-type="linenumber">85</context></context-group></trans-unit><trans-unit id="1519954996184640001" datatype="html">
 
         <source>Error</source><target state="translated">Erreur</target>
 
@@ -622,7 +622,7 @@
      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/joined-group-list/joined-group-list.component.html</context><context context-type="linenumber">53</context></context-group></trans-unit><trans-unit id="2575397017094639736" datatype="html">
         <source>Are you sure you want to leave this group?</source><target state="new">Are you sure you want to leave this group?</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/joined-group-list/joined-group-list.component.ts</context><context context-type="linenumber">47</context></context-group></trans-unit><trans-unit id="496016127703941341" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/joined-group-list/joined-group-list.component.ts</context><context context-type="linenumber">44</context></context-group></trans-unit><trans-unit id="496016127703941341" datatype="html">
         <source>Confirm Action</source><target state="new">Confirm Action</target>
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/joined-group-list/joined-group-list.component.ts</context><context context-type="linenumber">45</context></context-group></trans-unit><trans-unit id="194816385249516309" datatype="html">
@@ -1205,7 +1205,7 @@
       </trans-unit><trans-unit id="4902080776299806811" datatype="html">
         <source><x id="PH" equiv-text="successInvites.length"/> user(s) invited successfully: </source><target state="translated"><x id="PH" equiv-text="successInvites.length"/> utilisateur(s) invité(s) avec succès : </target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-invite-users/group-invite-users.component.ts</context><context context-type="linenumber">99</context></context-group></trans-unit><trans-unit id="9209870712097047643" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-invite-users/group-invite-users.component.ts</context><context context-type="linenumber">78</context></context-group></trans-unit><trans-unit id="9209870712097047643" datatype="html">
         <source><x id="PH" equiv-text="alreadyInvited.length"/> user(s) have already been invited: </source><target state="translated"><x id="PH" equiv-text="alreadyInvited.length"/> utilisateur(s) a/ont déjà été invité(s) : </target>
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-invite-users/group-invite-users.component.ts</context><context context-type="linenumber">85</context></context-group></trans-unit><trans-unit id="4449383996716045634" datatype="html">
@@ -1519,7 +1519,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/pending-request/pending-request-response-handling.ts</context><context context-type="linenumber">13</context></context-group></trans-unit><trans-unit id="561107961693281492" datatype="html">
         <source>Unable to accept the selected request(s).</source><target state="translated">Erreur lors de l'acceptation des requête(s) sélectionnée(s)</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/pending-request/pending-request-response-handling.ts</context><context context-type="linenumber">17</context></context-group></trans-unit><trans-unit id="5779237710015680228" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/pending-request/pending-request-response-handling.ts</context><context context-type="linenumber">16</context></context-group></trans-unit><trans-unit id="5779237710015680228" datatype="html">
         <source>Unable to reject the selected request(s).</source><target state="translated">Erreur lors du refus des requête(s) sélectionnée(s)</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/pending-request/pending-request-response-handling.ts</context><context context-type="linenumber">17</context></context-group></trans-unit><trans-unit id="5919144248317636057" datatype="html">
