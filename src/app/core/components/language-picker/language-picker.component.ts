@@ -7,6 +7,7 @@ import { LocaleService } from '../../services/localeService';
   styleUrls: [ './language-picker.component.scss' ]
 })
 export class LanguagePickerComponent implements OnChanges {
+  @Input() styleClass?: string;
   @Input() defaultLang?: string;
   @Input() redirectOnChange = true;
   @Output() changeLang = new EventEmitter<string>();
