@@ -18,7 +18,13 @@ const joinedGroupDecoder = pipe(
       type: D.literal('Class', 'Team', 'Club', 'Friends', 'Other', 'Base'),
     }),
     memberSince: D.nullable(dateDecoder),
+    isMembershipLocked: D.boolean,
   }),
+  D.intersect(
+    D.partial({
+      canLeaveTeam: D.literal('free_to_leave', 'frozen_membership', 'would_break_entry_conditions'),
+    })
+  ),
 );
 
 export type JoinedGroup = D.TypeOf<typeof joinedGroupDecoder>
