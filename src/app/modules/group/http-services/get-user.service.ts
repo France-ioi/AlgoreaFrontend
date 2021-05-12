@@ -6,7 +6,7 @@ import { pipe } from 'fp-ts/function';
 import * as D from 'io-ts/Decoder';
 import { decodeSnakeCase } from '../../../shared/operators/decode';
 
-export const viewUserDecoder = pipe(
+export const userDecoder = pipe(
   D.struct({
     groupId: D.string,
     login: D.string,
@@ -22,19 +22,19 @@ export const viewUserDecoder = pipe(
   )
 );
 
-export type UserView = D.TypeOf<typeof viewUserDecoder>;
+export type User = D.TypeOf<typeof userDecoder>;
 
 @Injectable({
   providedIn: 'root'
 })
-export class UserViewService {
+export class GetUserService {
   constructor(private http: HttpClient) {
   }
 
-  getForId(id: string): Observable<UserView> {
+  getForId(id: string): Observable<User> {
     return this.http.get<unknown>(`${appConfig().apiUrl}/users/${ id }`)
       .pipe(
-        decodeSnakeCase(viewUserDecoder)
+        decodeSnakeCase(userDecoder)
       );
   }
 }

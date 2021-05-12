@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { UserView, UserViewService } from '../../services/user-view.service';
+import { User, GetUserService } from '../../http-services/get-user.service';
 import { mapToFetchState } from '../../../../shared/operators/state';
 import { Observable } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
@@ -16,9 +16,9 @@ export class GroupUserComponent {
     mapToFetchState()
   );
 
-  constructor(private route: ActivatedRoute, private userView: UserViewService) { }
+  constructor(private route: ActivatedRoute, private getUserService: GetUserService) { }
 
-  getUser$(id: string): Observable<UserView> {
-    return this.userView.getForId(id);
+  getUser$(id: string): Observable<User> {
+    return this.getUserService.getForId(id);
   }
 }
