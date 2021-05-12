@@ -324,12 +324,13 @@
         left: 4.1667rem;
         right: 0;
         position: absolute;
-        display: block;
+        display: flex;
+        align-items: center;
         padding-right: 1.6667rem;
 
         .label-container {
           display: flex;
-          margin-top: 1.1rem;
+          flex: 1;
         }
 
         .node-state {
