@@ -7,6 +7,7 @@ import * as D from 'io-ts/Decoder';
 import { pipe } from 'fp-ts/lib/function';
 import { dateDecoder } from 'src/app/shared/helpers/decoders';
 import { decodeSnakeCase } from 'src/app/shared/operators/decode';
+import { map } from 'rxjs/operators';
 
 const joinedGroupDecoder = pipe(
   D.struct({
@@ -41,6 +42,7 @@ export class JoinedGroupsService {
       .get(`${appConfig().apiUrl}/current-user/group-memberships`, { params: sortOptionsToHTTP(sort) })
       .pipe(
         decodeSnakeCase(D.array(joinedGroupDecoder)),
+        map(joinedGroups => joinedGroups.filter(joinedGroup => joinedGroup.group.type !== 'Base')),
       );
   }
 
