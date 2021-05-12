@@ -45,6 +45,10 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
     entering_time_min: [ null ],
     entering_time_max_enabled: [ false ],
     entering_time_max: [ null ],
+    entry_participant_type: [ false ],
+    entry_frozen_teams: [ false ],
+    entry_max_team_size: [ '', Validators.min(1) ],
+    entry_min_admitted_members_ratio: [ '' ],
   });
   itemChanges: { children?: ChildData[] } = {};
 
@@ -54,6 +58,10 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
   subscription?: Subscription;
 
   get enableParticipation(): boolean {
+    return this.initialFormData?.type !== 'Skill';
+  }
+
+  get enableTeam(): boolean {
     return this.initialFormData?.type !== 'Skill';
   }
 
@@ -136,7 +144,13 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
         enteringTimeMin: this.itemForm.get('entering_time_min'),
         enteringTimeMaxEnabled: this.itemForm.get('entering_time_max_enabled'),
         enteringTimeMax: this.itemForm.get('entering_time_max'),
-      } : {})
+      } : {}),
+      ...(this.enableTeam ? {
+        entryParticipantType: this.itemForm.get('entry_participant_type'),
+        entryFrozenTeams: this.itemForm.get('entry_frozen_teams'),
+        entryMaxTeamSize: this.itemForm.get('entry_max_team_size'),
+        entryMinAdmittedMembersRatio: this.itemForm.get('entry_min_admitted_members_ratio'),
+      } : {}),
     };
 
     if (Object.values(formControls).includes(null) || !this.initialFormData) return undefined;
@@ -206,6 +220,32 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
 
       if (hasEnteringTimeMaxChanges || hasEnteringTimeMaxEnabledChanges) {
         itemFormValues.entering_time_max = enteringTimeMaxEnabled ? enteringTimeMax : new Date(DEFAULT_ENTERING_TIME_MAX);
+      }
+    }
+
+    if (this.enableTeam) {
+      const entryParticipantType = (formControls.entryParticipantType?.value as boolean | undefined) ? 'Team' : 'User';
+      const hasEntryParticipantTypeChanges = entryParticipantType !== this.initialFormData.entryParticipantType;
+      if (hasEntryParticipantTypeChanges) {
+        itemFormValues.entry_participant_type = entryParticipantType;
+      }
+
+      const entryFrozenTeams = formControls.entryFrozenTeams?.value as boolean | undefined;
+      const hasEntryFrozenTeamsChanges = entryFrozenTeams !== this.initialFormData.entryFrozenTeams;
+      if (hasEntryFrozenTeamsChanges) {
+        itemFormValues.entry_frozen_teams = entryFrozenTeams;
+      }
+
+      const entryMaxTeamSize = formControls.entryMaxTeamSize?.value as number | undefined;
+      const hasEntryMaxTeamSizeChanges = entryMaxTeamSize !== this.initialFormData.entryMaxTeamSize;
+      if (hasEntryMaxTeamSizeChanges) {
+        itemFormValues.entry_max_team_size = entryMaxTeamSize;
+      }
+
+      const entryMinAdmittedMembersRatio = formControls.entryMinAdmittedMembersRatio?.value as 'None' | 'All' | 'One' | 'Half' | undefined;
+      const hasEntryMinAdmittedMembersRatioChanges = entryMinAdmittedMembersRatio !== this.initialFormData.entryMinAdmittedMembersRatio;
+      if (hasEntryMinAdmittedMembersRatioChanges) {
+        itemFormValues.entry_min_admitted_members_ratio = entryMinAdmittedMembersRatio;
       }
     }
 
@@ -318,7 +358,13 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
           : item.enteringTimeMin,
         entering_time_max_enabled: item.enteringTimeMaxEnabled,
         entering_time_max: item.enteringTimeMax,
-      } : {})
+      } : {}),
+      ...(this.enableTeam ? {
+        entry_participant_type: item.entryParticipantType === 'Team',
+        entry_frozen_teams: item.entryFrozenTeams,
+        entry_max_team_size: item.entryMaxTeamSize,
+        entry_min_admitted_members_ratio: item.entryMinAdmittedMembersRatio,
+      } : {}),
     });
     this.itemChanges = {};
     this.itemForm.enable();

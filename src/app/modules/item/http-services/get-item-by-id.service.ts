@@ -36,6 +36,10 @@ export const itemDecoder = pipe(
     duration: D.nullable(durationDecoder),
     enteringTimeMin: dateDecoder,
     enteringTimeMax: dateDecoder,
+    entryParticipantType: D.literal('Team', 'User'),
+    entryFrozenTeams: D.boolean,
+    entryMaxTeamSize: D.number,
+    entryMinAdmittedMembersRatio: D.literal('All', 'Half', 'One', 'None'),
   }),
   D.intersect(
     D.partial({

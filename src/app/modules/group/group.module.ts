@@ -36,6 +36,8 @@ import { GroupIndicatorComponent } from './components/group-indicator/group-indi
 import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';
 import { TooltipModule } from 'primeng/tooltip';
+import { GroupDeleteService } from './services/group-delete.service';
+import { GroupRemoveButtonComponent } from './components/group-remove-button/group-remove-button.component';
 import { GroupLinksComponent } from './components/group-links/group-links.component';
 
 @NgModule({
@@ -64,6 +66,7 @@ import { GroupLinksComponent } from './components/group-links/group-links.compon
     AddSubGroupComponent,
     ManagedGroupListComponent,
     AssociatedActivityComponent,
+    GroupRemoveButtonComponent,
     GroupIndicatorComponent,
     GroupLinksComponent,
   ],
@@ -82,6 +85,7 @@ import { GroupLinksComponent } from './components/group-links/group-links.compon
   ],
   providers: [
     PendingChangesGuard,
+    GroupDeleteService
   ]
 })
 
