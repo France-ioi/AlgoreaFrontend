@@ -6,6 +6,13 @@
       .p-dropdown-label {
         color: $base-color;
       }
+
+      .p-dropdown-item {
+        &:not(.p-highlight) {
+          color: $base-text-color;
+          background-color: white;
+        }
+      }
     }
   }
 
