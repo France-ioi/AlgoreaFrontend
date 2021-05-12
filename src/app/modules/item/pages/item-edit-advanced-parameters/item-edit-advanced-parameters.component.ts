@@ -47,7 +47,7 @@ export class ItemEditAdvancedParametersComponent implements OnInit {
     label: $localize`All the members must be admitted`,
     value: 'All'
   }, {
-    label: $localize`Half the members must be admitted`,
+    label: $localize`Half of the members must be admitted`,
     value: 'Half'
   }, {
     label: $localize`One of the members must be admitted`,
