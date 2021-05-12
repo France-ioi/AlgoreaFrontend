@@ -27,16 +27,16 @@
       </tr>
     </ng-template>
 
-    <ng-template pTemplate="body" let-group>
+    <ng-template pTemplate="body" let-membership>
       <tr>
-        <td>{{ group.group.name }}</td>
-        <td>{{ group.group.type }}</td>
-        <td>{{ group.memberSince | date:'short' }}</td>
+        <td>{{ membership.group.name }}</td>
+        <td>{{ membership.group.type }}</td>
+        <td>{{ membership.memberSince | date:'short' }}</td>
         <td>
           <div class="actions">
-            <ng-container *ngIf="group.isMembershipLocked || (group.group.type === 'Team' && group.canLeaveTeam !== 'free_to_leave'); then cannotLeaveActions else canLeaveActions"></ng-container>
+            <ng-container *ngIf="membership.isMembershipLocked || (membership.group.type === 'Team' && membership.canLeaveTeam !== 'free_to_leave'); then cannotLeaveActions else canLeaveActions"></ng-container>
             <ng-template #cannotLeaveActions>
-                <ng-container *ngIf="group.group.type === 'Team'" [ngSwitch]="group.canLeaveTeam">
+                <ng-container *ngIf="membership.group.type === 'Team'" [ngSwitch]="membership.canLeaveTeam">
                   <div
                     *ngSwitchCase="'frozen_membership'"
                     i18n-pTooltip pTooltip="This team membership is now frozen and cannot be modified."
@@ -54,7 +54,7 @@
                   <div *ngSwitchDefault class="fa fa-lock"></div>
                 </ng-container>
 
-                <ng-container *ngIf="group.group.type !== 'Team'">
+                <ng-container *ngIf="membership.group.type !== 'Team'">
                   <div
                     i18n-pTooltip pTooltip="You cannot leave the group for the moment. Contact the group manager for more information."
                     tooltipPosition="left"
@@ -70,7 +70,7 @@
                   type="button"
                   icon="fa fa-sign-out-alt"
                   class="p-button-rounded p-button-outlined"
-                  (click)="onGroupLeaveClick($event, group)"
+                  (click)="onGroupLeaveClick($event, membership)"
               ></button>
             </ng-template>
           </div>
