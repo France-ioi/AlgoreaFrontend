@@ -9,7 +9,7 @@ import { dateDecoder } from 'src/app/shared/helpers/decoders';
 import { decodeSnakeCase } from 'src/app/shared/operators/decode';
 import { map } from 'rxjs/operators';
 
-const joinedGroupDecoder = pipe(
+const groupMembershipDecoder = pipe(
   D.struct({
     action: D.literal('invitation_accepted', 'join_request_accepted', 'joined_by_code', 'added_directly'),
     group: D.struct({
@@ -28,7 +28,7 @@ const joinedGroupDecoder = pipe(
   ),
 );
 
-export type JoinedGroup = D.TypeOf<typeof joinedGroupDecoder>
+export type GroupMembership = D.TypeOf<typeof groupMembershipDecoder>
 
 @Injectable({
   providedIn: 'root'
@@ -37,12 +37,12 @@ export class JoinedGroupsService {
 
   constructor(private http: HttpClient) {}
 
-  getJoinedGroups(sort: SortOptions): Observable<JoinedGroup[]> {
+  getJoinedGroups(sort: SortOptions): Observable<GroupMembership[]> {
     return this.http
       .get(`${appConfig().apiUrl}/current-user/group-memberships`, { params: sortOptionsToHTTP(sort) })
       .pipe(
-        decodeSnakeCase(D.array(joinedGroupDecoder)),
-        map(joinedGroups => joinedGroups.filter(joinedGroup => joinedGroup.group.type !== 'Base')),
+        decodeSnakeCase(D.array(groupMembershipDecoder)),
+        map(memberships => memberships.filter(membership => membership.group.type !== 'Base')),
       );
   }
 

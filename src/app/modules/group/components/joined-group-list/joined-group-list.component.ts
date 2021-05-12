@@ -2,7 +2,7 @@ import { Component, OnDestroy } from '@angular/core';
 import { ConfirmationService, SortEvent } from 'primeng/api';
 import { ReplaySubject, Subject } from 'rxjs';
 import { distinctUntilChanged, startWith, switchMap } from 'rxjs/operators';
-import { JoinedGroup, JoinedGroupsService } from 'src/app/core/http-services/joined-groups.service';
+import { GroupMembership, JoinedGroupsService } from 'src/app/core/http-services/joined-groups.service';
 import { NO_SORT, sortEquals, multisortEventToOptions, SortOptions } from 'src/app/shared/helpers/sort-options';
 import { mapToFetchState } from 'src/app/shared/operators/state';
 import { GroupLeaveService } from 'src/app/core/http-services/group-leave.service';
@@ -37,7 +37,7 @@ export class JoinedGroupListComponent implements OnDestroy {
     if (sort) this.sort$.next(sort);
   }
 
-  onGroupLeaveClick(event: Event, group: JoinedGroup): void {
+  onGroupLeaveClick(event: Event, membership: GroupMembership): void {
     this.confirmationService.confirm({
       target: event.target || undefined,
       key: 'commonPopup',
@@ -46,15 +46,15 @@ export class JoinedGroupListComponent implements OnDestroy {
       icon: 'pi pi-exclamation-triangle',
       acceptLabel: $localize`Yes, leave group`,
       accept: () => {
-        this.leaveGroup(group);
+        this.leaveGroup(membership);
       },
       rejectLabel: $localize`No`,
     });
   }
 
-  leaveGroup(group: JoinedGroup): void {
-    const groupId = group.group.id;
-    const groupName = group.group.name;
+  leaveGroup(membership: GroupMembership): void {
+    const groupId = membership.group.id;
+    const groupName = membership.group.name;
     this.groupLeaveService.leave(groupId)
       .subscribe(
         () => {
