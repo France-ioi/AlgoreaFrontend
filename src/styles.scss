@@ -9,6 +9,9 @@
 @import 'assets/scss/components/error-message';
 @import 'assets/scss/components/data-list-container';
 @import 'assets/scss/components/mode-bar';
+@import 'assets/scss/components/calendar';
+@import 'assets/scss/components/duration';
+@import 'assets/scss/components/input-number';
 
 html {
   height: 100%;
@@ -320,45 +323,6 @@ body .p-component {
 
   .dialog-title {
     font-family: "titillium", sans-serif;
-  }
-}
-
-.alg-calendar, .alg-duration, .alg-input-number {
-  &.alg-duration {
-    input {
-      text-align: center;
-    }
-  }
-
-  input {
-    font-family: "titillium", sans-serif;
-    width: 100%;
-    display: flex;
-    background-color: $input-transparency-color;
-    border: none;
-    box-shadow: 0 .1rem #00000019 inset;
-    border-radius: $border-radius;
-    font-size: 1.2rem;
-    color: $base-text-color;
-
-    &:focus, &:active {
-      outline: none;
-    }
-
-    &::placeholder {
-      font-style: italic;
-      color: rgb(118, 118, 121);
-      font-size: 1.2rem;
-    }
-  }
-
-  .p-datepicker-trigger {
-    width: 3rem;
-  }
-
-  .p-button {
-    background-color: $base-color;
-    border-color: $base-color;
   }
 }
 
