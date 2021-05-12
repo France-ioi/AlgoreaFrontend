@@ -35,6 +35,7 @@ import { AssociatedActivityComponent } from './components/associated-activity/as
 import { GroupIndicatorComponent } from './components/group-indicator/group-indicator.component';
 import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';
+import { TooltipModule } from 'primeng/tooltip';
 import { GroupDeleteService } from './services/group-delete.service';
 import { GroupRemoveButtonComponent } from './components/group-remove-button/group-remove-button.component';
 import { GroupLinksComponent } from './components/group-links/group-links.component';
@@ -77,6 +78,7 @@ import { GroupLinksComponent } from './components/group-links/group-links.compon
     FormsModule,
     ButtonModule,
     RippleModule,
+    TooltipModule,
   ],
   exports: [
     GroupIndicatorComponent
