@@ -1,6 +1,7 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { Group } from '../../http-services/get-group-by-id.service';
 import { GetGroupManagersService, Manager } from '../../http-services/get-group-managers.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'alg-group-manager-list',
@@ -15,7 +16,7 @@ export class GroupManagerListComponent implements OnChanges {
 
   state: 'loading' | 'ready' | 'error' = 'loading';
 
-  constructor(private getGroupManagersService: GetGroupManagersService) {}
+  constructor(private getGroupManagersService: GetGroupManagersService, private router: Router) {}
 
 
   ngOnChanges(_changes: SimpleChanges): void {
@@ -47,5 +48,9 @@ export class GroupManagerListComponent implements OnChanges {
           this.state = 'error';
         }
       );
+  }
+
+  onClick(manager: Manager): void {
+    void this.router.navigate([ '/', 'groups', 'users', manager.id ]);
   }
 }

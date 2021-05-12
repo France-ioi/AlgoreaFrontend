@@ -9,9 +9,9 @@
   <ul *ngIf="state === 'ready' && parents.length > 0" class="data-list-container sub-skill">
     <li *ngFor="let item of parents">
       <div class="skill-content" (click)="click(item)" [ngClass]="{ locked: item.isLocked }">
-        <span class="skill-title">
+        <a class="skill-title alg-link clickable">
           {{ item.string.title }}
-        </span>
+        </a>
         <span *ngIf="item.isLocked" class="skill-status">
           <i *ngIf="item.isLocked" class="fa fa-lock"></i>
         </span>

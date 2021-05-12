@@ -47,7 +47,7 @@
                   </p-cellEditor>
                 </td>
               </ng-container>
-              <td><span class="type">{{ rowData.type }}</span></td>
+              <td><a class="type alg-link clickable" [routerLink]="rowData | itemLink">{{ rowData.type }}</a></td>
               <td><span class="main">{{ rowData.title }}</span></td>
             </tr>
           </ng-template>

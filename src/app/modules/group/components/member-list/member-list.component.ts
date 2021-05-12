@@ -9,6 +9,8 @@ import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.s
 import { Group } from '../../http-services/get-group-by-id.service';
 import { GetGroupChildrenService, GroupChild } from '../../http-services/get-group-children.service';
 import { GetGroupMembersService, Member } from '../../http-services/get-group-members.service';
+import { TypeFilter, Filter, GroupCompositionFilterComponent } from '../group-composition-filter/group-composition-filter.component';
+import { Router } from '@angular/router';
 import { GroupUsersService, parseResults } from '../../http-services/group-users.service';
 import { Filter, GroupCompositionFilterComponent, TypeFilter } from '../group-composition-filter/group-composition-filter.component';
 import { displayResponseToast } from './user-removal-response-handling';
@@ -86,6 +88,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
     private getGroupDescendantsService: GetGroupDescendantsService,
     private groupUsersService: GroupUsersService,
     private actionFeedbackService: ActionFeedbackService,
+    private router: Router,
   ) {
     this.dataFetching.pipe(
       switchMap(params => this.getData(params.groupId, params.filter, params.sort).pipe(mapToFetchState())),
@@ -185,6 +188,10 @@ export class MemberListComponent implements OnChanges, OnDestroy {
   setFilter(filter: Filter): void {
     this.compositionFilter?.setFilter(filter);
     this.onFilterChange(filter);
+  }
+
+  onClick(member: Member): void {
+    void this.router.navigate([ '/', 'groups', 'users', member.id ]);
   }
 
   onSelectAll(): void {
