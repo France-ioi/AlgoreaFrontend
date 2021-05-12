@@ -91,10 +91,10 @@ export class LeftNavTreeComponent implements OnChanges {
     switch (this.elementType) {
       case 'group':
         if (node.data?.element?.type === 'User') {
-          this.groupRouter.navigateTo({ ...routeBase, contentType: 'group' }, 'users');
-          return;
+          void this.router.navigate([ '/', 'groups', 'users', routeBase.id ]);
+        } else {
+          this.groupRouter.navigateTo({ ...routeBase, contentType: 'group' });
         }
-        this.groupRouter.navigateTo({ ...routeBase, contentType: 'group' });
         break;
       case 'activity':
       case 'skill': {
