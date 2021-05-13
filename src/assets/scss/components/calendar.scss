@@ -1,0 +1,9 @@
+@import 'src/assets/scss/components/input-base';
+
+.alg-calendar {
+  @include input-base;
+
+  .p-datepicker-trigger {
+    width: 3rem;
+  }
+}
