@@ -3,7 +3,7 @@
   [styleClass]="'dark'"
   (onChange)="onSelectionChangedByIdx($event)"
   [(activeIndex)]="activeTabIndex"
-  *ngrxLet="session$ as session"
+  *ngIf="currentUser$|async as currentUser"
 >
 
   <p-tabPanel>
@@ -22,7 +22,7 @@
     </ng-template>
   </p-tabPanel>
 
-  <p-tabPanel *ngIf="activeTabIndex === 2 || (session && !session.user.tempUser)">
+  <p-tabPanel *ngIf="activeTabIndex === 2 || currentUser.tempUser">
     <ng-template pTemplate="header" tabindex="7">
       <span class="indicator dark"></span>
       <i class="fa fa-users"></i>
