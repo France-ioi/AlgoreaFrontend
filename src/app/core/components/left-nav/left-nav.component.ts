@@ -1,5 +1,5 @@
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, Output, EventEmitter } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { delay, map, pairwise } from 'rxjs/operators';
 import { isGroupInfo } from 'src/app/shared/models/content/group-info';
@@ -21,6 +21,7 @@ const groupsTabIdx = 2;
   styleUrls: [ './left-nav.component.scss' ]
 })
 export class LeftNavComponent implements OnInit, OnDestroy {
+  @Output() themeChange = new EventEmitter<string | null>();
 
   activeTabIndex = 0;
   readonly dataSources: [LeftNavActivityDataSource, LeftNavSkillDataSource, LeftNavGroupDataSource] = [
@@ -76,10 +77,15 @@ export class LeftNavComponent implements OnInit, OnDestroy {
   onSelectionChangedByIdx(e: { index: number }): void {
     this.activeTabIndex = e.index;
     this.dataSources[e.index].focus();
+    this.switchThemeColor();
   }
 
   retryError(): void {
     this.dataSources[this.activeTabIndex].retry();
+  }
+
+  switchThemeColor(): void {
+    this.themeChange.emit(this.activeTabIndex === 2 ? 'dark' : null);
   }
 
 }
