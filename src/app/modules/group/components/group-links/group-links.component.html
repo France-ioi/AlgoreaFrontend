@@ -1,6 +1,6 @@
 <ng-container *ngFor="let item of items | slice : 0 : maxItemsDisplay; let i = index; last as isLast;">
   <a
-    class="alg-link clickable base-color"
+    class="alg-link base-color"
     (click)="onButtonClick(item)"
   >
     <strong>{{ item.name }}</strong>

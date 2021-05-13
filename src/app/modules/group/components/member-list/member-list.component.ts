@@ -190,10 +190,6 @@ export class MemberListComponent implements OnChanges, OnDestroy {
     this.onFilterChange(filter);
   }
 
-  onClick(member: Member): void {
-    void this.router.navigate([ '/', 'groups', 'users', member.id ]);
-  }
-
   onSelectAll(): void {
     if (this.currentFilter.type !== TypeFilter.Users) return;
 

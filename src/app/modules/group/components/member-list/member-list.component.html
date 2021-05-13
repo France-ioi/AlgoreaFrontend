@@ -49,7 +49,12 @@
         <td *ngFor="let col of columns">
           <ng-container [ngSwitch]="col.field">
             <ng-container *ngSwitchCase="'user.login'">
-              <a class="alg-link clickable" (click)="onClick(rowData)">{{ rowData.user | user }}</a>
+              <a
+                  class="alg-link"
+                  [routerLink]="[ '/', 'groups', 'users', rowData.id ]"
+                  >
+                {{ rowData.user | user }}
+              </a>
             </ng-container>
             <ng-container *ngSwitchCase="'member_since'">
               {{ rowData.memberSince | date:'short' }}

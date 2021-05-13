@@ -13,7 +13,7 @@
         (click)="click(item)"
         [ngClass]="{ locked: item.isLocked }"
       >
-        <a class="skill-title alg-link clickable">
+        <a class="skill-title alg-link">
           {{ item.string.title }}
         </a>
         <span *ngIf="item.isLocked" class="skill-status">
