@@ -5,7 +5,6 @@ import { Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ItemType } from '../../../../shared/helpers/item-type';
 import { AddedContent } from '../../../shared-components/components/add-content/add-content.component';
-import { Router } from '@angular/router';
 
 export interface ChildData {
   id?: string,
@@ -42,7 +41,6 @@ export class ItemChildrenEditComponent implements OnChanges {
 
   constructor(
     private getItemChildrenService: GetItemChildrenService,
-    private router: Router,
   ) {}
 
   ngOnChanges(): void {
@@ -114,9 +112,5 @@ export class ItemChildrenEditComponent implements OnChanges {
 
   onScoreWeightChange(): void {
     this.childrenChanges.emit(this.data);
-  }
-
-  onClick(data: ChildData): void {
-    void this.router.navigate([ '/' ]);
   }
 }

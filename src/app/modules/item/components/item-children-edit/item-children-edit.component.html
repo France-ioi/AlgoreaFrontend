@@ -47,7 +47,15 @@
                   </p-cellEditor>
                 </td>
               </ng-container>
-              <td><a class="type alg-link" [routerLink]="rowData | itemLink">{{ rowData.type }}</a></td>
+              <td>
+                <a
+                    class="type alg-link"
+                    [ngClass]="{'disabled': !rowData.id}"
+                    [routerLink]="rowData | itemLink : 'edit'"
+                >
+                  {{ rowData.type }}
+                </a>
+              </td>
               <td><span class="main">{{ rowData.title }}</span></td>
             </tr>
           </ng-template>
