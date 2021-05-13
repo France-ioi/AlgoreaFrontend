@@ -39,6 +39,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { GroupDeleteService } from './services/group-delete.service';
 import { GroupRemoveButtonComponent } from './components/group-remove-button/group-remove-button.component';
 import { GroupLinksComponent } from './components/group-links/group-links.component';
+import { GroupUserComponent } from './pages/group-user/group-user.component';
 
 @NgModule({
   declarations: [
@@ -69,6 +70,7 @@ import { GroupLinksComponent } from './components/group-links/group-links.compon
     GroupRemoveButtonComponent,
     GroupIndicatorComponent,
     GroupLinksComponent,
+    GroupUserComponent,
   ],
   imports: [
     CommonModule,
