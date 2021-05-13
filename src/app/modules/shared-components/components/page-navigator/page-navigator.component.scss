@@ -12,6 +12,10 @@
     justify-content: center;
     color: white;
     cursor: pointer;
+
+    &.watched {
+      background-color: $secondary-color;
+    }
   }
 
   .round-icon-action-button {
@@ -19,6 +23,12 @@
     border-radius: 1.5rem;
     margin-right: .5rem;
     margin-left: 1rem;
+
+    &.watch {
+      color: $base-color;
+      background-color: #fff;
+      border: 1px solid $light-border-color;
+    }
   }
 
   .navigator {
@@ -61,4 +71,8 @@
       align-items: center;
       justify-content: center;
   }
+}
+
+.button {
+  height: 3rem;
 }

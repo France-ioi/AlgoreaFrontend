@@ -1,5 +1,8 @@
 <div class="page-nav">
-  <span *ngIf="allowWatching" class="round-icon-action-button" (click)="watch.emit()">
+  <span *ngIf="allowWatching && !(isCurrentGroupWatched$ | async)" class="round-icon-action-button watch" (click)="watch.emit()">
+    <i class="fa fa-eye"></i>
+  </span>
+  <span *ngIf="isCurrentGroupWatched$ | async" class="round-icon-action-button watched" (click)="stopWatch.emit()">
     <i class="fa fa-eye"></i>
   </span>
   <span *ngIf="!allowFullScreen && allowEditing" class="round-icon-action-button" (click)="edit.emit()">
