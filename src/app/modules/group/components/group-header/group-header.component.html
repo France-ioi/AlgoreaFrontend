@@ -10,7 +10,7 @@
       [allowEditing]="groupWithManagement.isCurrentUserManager"
       [allowWatching]="!!groupWithManagement.currentUserCanWatchMembers"
       [allowFullScreen]="false"
-      [groupId]="group.id"
+      [groupId]="group?.id"
       navigationMode="nextAndPrev"
       (edit)="onEditButtonClicked()"
       (watch)="onStartWatchButtonClicked()"
