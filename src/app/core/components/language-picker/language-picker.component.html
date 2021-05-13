@@ -3,6 +3,6 @@
   [options]="languages"
   [ngModel]="current"
   optionLabel="tag"
-  styleClass="lang-dropdown"
+  [styleClass]="styleClass || 'alg-language-picker-dropdown'"
   (onChange)="languageChanged($event)"
 ></p-dropdown>

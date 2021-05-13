@@ -4,6 +4,24 @@
   </div>
 
   <div class="bg-white">
+    <alg-section i18n-label label="Parameters" icon="fa fa-cog">
+      <ul class="alg-data-list">
+        <li class="alg-data-list-item">
+          <span class="alg-data-list-item-caption" i18n>Platform language</span>
+          <span class="alg-data-list-item-value">
+            <alg-language-picker
+                styleClass="alg-language-picker-dropdown base"
+                [defaultLang]="currentUser.defaultLanguage"
+                [redirectOnChange]="false"
+                (changeLang)="onChangeLang($event)"
+            ></alg-language-picker>
+          </span>
+        </li>
+      </ul>
+    </alg-section>
+  </div>
+
+  <div class="bg-white">
     <alg-section i18n-label label="Personal Information" icon="fa fa-users">
       <ul class="alg-data-list">
         <li class="alg-data-list-item">
@@ -63,17 +81,6 @@
         <li class="alg-data-list-item">
           <span class="alg-data-list-item-caption" i18n>Primary email</span>
           <span class="alg-data-list-item-value">{{ currentUser.email }}</span>
-        </li>
-      </ul>
-    </alg-section>
-  </div>
-
-  <div class="bg-white">
-    <alg-section i18n-label label="Parameters" icon="fa fa-cog">
-      <ul class="alg-data-list">
-        <li class="alg-data-list-item">
-          <span class="alg-data-list-item-caption" i18n>Language</span>
-          <span class="alg-data-list-item-value">{{ currentUser.defaultLanguage }}</span>
         </li>
       </ul>
     </alg-section>
