@@ -5,7 +5,7 @@ import { CurrentUserHttpService, UserProfile } from 'src/app/shared/http-service
 import { Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { UserSession, UserSessionService } from 'src/app/shared/services/user-session.service';
-import { isNotNullOrUndefined } from 'src/app/shared/helpers/is-not-null-or-undefined';
+import { isNotNullOrUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
 import { ActionFeedbackService } from '../../../../shared/services/action-feedback.service';
 import { LocaleService } from '../../../../core/services/localeService';
 
