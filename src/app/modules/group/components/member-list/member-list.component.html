@@ -77,7 +77,7 @@
         </span>
         <span class="filler"></span>
         <div class="summary-actions">
-          <span (click)="onRemove()" [ngClass]="{disabled: (removalInProgress$ | async) || state !== 'ready' || selection.length === 0}">
+            <span (click)="onRemove()" [class.disabled]="(removalInProgress$ | async) || state !== 'ready' || selection.length === 0">
             <span i18n>Remove</span>
             <i class="fa fa-trash-alt"></i>
           </span>
