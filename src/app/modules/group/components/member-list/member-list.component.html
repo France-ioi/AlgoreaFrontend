@@ -56,6 +56,14 @@
                 {{ rowData.user | user }}
               </a>
             </ng-container>
+            <ng-container *ngSwitchCase="'name'">
+              <a
+                  class="alg-link"
+                  [routerLink]="[ '/', 'groups', 'by-id', rowData.id, 'details' ]"
+                  >
+                {{ rowData.name }}
+              </a>
+            </ng-container>
             <ng-container *ngSwitchCase="'member_since'">
               {{ rowData.memberSince | date:'short' }}
             </ng-container>
