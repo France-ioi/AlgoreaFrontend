@@ -8,11 +8,7 @@
 
     <div class="alg-page-header">
       <div class="alg-page-header-title">
-        <span *ngIf="user.firstName && user.lastName; else login">
-          {{ user.firstName }} {{ user.lastName }} ({{ user.login }})
-        </span>
-
-        <ng-template #login>{{ user.login }}</ng-template>
+        {{ user | userCaption }}
       </div>
 
       <div class="alg-page-header-subtitle" *ngIf="user.webSite">
