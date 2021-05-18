@@ -81,15 +81,11 @@ export class LeftNavComponent implements OnInit, OnDestroy {
   changeTab(index: number): void {
     this.activeTabIndex = index;
     this.dataSources[index].focus();
-    this.switchThemeColor();
+    this.themeChange.emit(this.activeTabIndex === 2 ? 'dark' : null);
   }
 
   retryError(): void {
     this.dataSources[this.activeTabIndex].retry();
-  }
-
-  switchThemeColor(): void {
-    this.themeChange.emit(this.activeTabIndex === 2 ? 'dark' : null);
   }
 
 }
