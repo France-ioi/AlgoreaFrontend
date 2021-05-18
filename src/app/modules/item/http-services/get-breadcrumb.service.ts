@@ -32,7 +32,7 @@ export class GetBreadcrumbService {
 
   getBreadcrumb(itemRoute: ItemRoute): Observable<BreadcrumbItem[]> {
     return this.http
-      .get<RawBreadcrumbItem[]>(`${appConfig().apiUrl}/items/${itemRoute.path.concat([ itemRoute.id ]).join('/')}/breadcrumbs`, {
+      .get<RawBreadcrumbItem[]>(`${appConfig.apiUrl}/items/${itemRoute.path.concat([ itemRoute.id ]).join('/')}/breadcrumbs`, {
         params: isRouteWithAttempt(itemRoute) ? { attempt_id: itemRoute.attemptId } : { parent_attempt_id: itemRoute.parentAttemptId }
       })
       .pipe(

@@ -10,7 +10,7 @@ export class LocaleService {
   readonly currentTag?: string;
 
   constructor() {
-    this.languages = appConfig().languages;
+    this.languages = appConfig.languages;
     this.currentTag = this.languages?.find(l => window.location.pathname.endsWith(l.path))?.tag;
   }
 

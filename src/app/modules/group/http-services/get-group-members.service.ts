@@ -45,7 +45,7 @@ export class GetGroupMembersService {
     let params = new HttpParams();
     if (sort.length > 0) params = params.set('sort', sort.join(','));
     return this.http
-      .get<RawMember[]>(`${appConfig().apiUrl}/groups/${groupId}/members`, { params: params })
+      .get<RawMember[]>(`${appConfig.apiUrl}/groups/${groupId}/members`, { params: params })
       .pipe(
         map(rawMembers => rawMembers.filter(m => m.user).map(m => ({
           id: m.id,

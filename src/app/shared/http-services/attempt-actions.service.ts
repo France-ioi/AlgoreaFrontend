@@ -15,7 +15,7 @@ export class AttemptActionsService {
   create(itemIdPath: string[], parentAttemptId: string): Observable<string> {
     const path = itemIdPath.join('/');
     return this.http
-      .post<CreateResponse>(`${appConfig().apiUrl}/items/${path}/attempts`, null, {
+      .post<CreateResponse>(`${appConfig.apiUrl}/items/${path}/attempts`, null, {
         params: {
           parent_attempt_id: parentAttemptId
         }

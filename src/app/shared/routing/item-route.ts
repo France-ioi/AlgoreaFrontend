@@ -33,7 +33,7 @@ export const itemRoutePrefixes = [ activityPrefix, skillPrefix ];
 export function appDefaultItemRoute(cat: ItemTypeCategory = 'activity'): ItemRouteWithParentAttempt {
   return {
     contentType: 'activity',
-    id: isSkill(cat) ? appConfig().defaultSkillId : appConfig().defaultActivityId,
+    id: isSkill(cat) ? appConfig.defaultSkillId : appConfig.defaultActivityId,
     path: [],
     parentAttemptId: defaultAttemptId,
   };

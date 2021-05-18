@@ -39,7 +39,7 @@ export class UpdateItemService {
     changes: ItemChanges,
   ): Observable<void> {
     return this.http.put<SimpleActionResponse>(
-      `${appConfig().apiUrl}/items/${itemId}`,
+      `${appConfig.apiUrl}/items/${itemId}`,
       changes,
       { headers: { timeout: '20000' } },
     ).pipe(

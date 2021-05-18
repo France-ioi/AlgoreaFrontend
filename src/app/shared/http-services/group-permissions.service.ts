@@ -32,12 +32,12 @@ export class GroupPermissionsService {
 
   getPermissions(sourceGroupId: string, groupId: string, itemId: string): Observable<GroupPermissions> {
     return this.http
-      .get<GroupPermissions>(`${appConfig().apiUrl}/groups/${sourceGroupId}/permissions/${groupId}/${itemId}`);
+      .get<GroupPermissions>(`${appConfig.apiUrl}/groups/${sourceGroupId}/permissions/${groupId}/${itemId}`);
   }
 
   updatePermissions(sourceGroupId: string, groupId: string, itemId: string, permissions: Permissions): Observable<void> {
     return this.http
-      .put<SimpleActionResponse>(`${appConfig().apiUrl}/groups/${sourceGroupId}/permissions/${groupId}/${itemId}`, permissions)
+      .put<SimpleActionResponse>(`${appConfig.apiUrl}/groups/${sourceGroupId}/permissions/${groupId}/${itemId}`, permissions)
       .pipe(map(assertSuccess));
   }
 }
