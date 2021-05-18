@@ -12,8 +12,8 @@
             <alg-language-picker
                 styleClass="alg-language-picker-dropdown base"
                 [defaultLang]="currentUser.defaultLanguage"
-                [redirectOnChange]="false"
-                (changeLang)="onChangeLang($event)"
+                (languageChanged)="onLanguageChanged()"
+                (languageChangeError)="onLanguageChangeError()"
             ></alg-language-picker>
           </span>
         </li>
