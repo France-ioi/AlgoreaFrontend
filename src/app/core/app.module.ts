@@ -12,7 +12,7 @@ import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
 
 import { LeftHeaderComponent } from './components/left-header/left-header.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { BreadcrumbComponent } from './components//breadcrumb/breadcrumb.component';
+import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.component';
 
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 

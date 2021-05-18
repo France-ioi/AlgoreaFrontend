@@ -10,10 +10,12 @@
       [logColumns]="logColumns"
     ></alg-item-log-view>
 
-    <alg-item-chapter-view
-      *ngIf="viewSelected?.value === 'chapter'"
-      [itemData]="itemData"
-    ></alg-item-chapter-view>
+    <div class="item-chapter-view">
+      <alg-item-chapter-view
+        *ngIf="viewSelected?.value === 'chapter'"
+        [itemData]="itemData"
+      ></alg-item-chapter-view>
+    </div>
 
     <alg-chapter-user-progress
         *ngIf="viewSelected?.value === 'chapter-user-progress'"
