@@ -28,7 +28,7 @@ export class LocaleService implements OnDestroy {
       if (!session) return;
 
       const userDefaultLanguage = session.user.defaultLanguage;
-      const hasLanguageMismatch = !session.user.tempUser && !!this.currentTag && session.user.defaultLanguage !== this.currentTag;
+      const hasLanguageMismatch = !!this.currentTag && session.user.defaultLanguage !== this.currentTag;
       if (hasLanguageMismatch) {
         this.languageMismatch$.next({
           platformLanguage: this.currentTag,
