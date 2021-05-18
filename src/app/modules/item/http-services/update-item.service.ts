@@ -20,6 +20,10 @@ export interface ItemChanges {
   duration?: string | null,
   entering_time_min?: Date,
   entering_time_max?: Date,
+  entry_participant_type?: 'Team' | 'User',
+  entry_frozen_teams?: boolean,
+  entry_max_team_size?: number,
+  entry_min_admitted_members_ratio?: 'All' | 'Half' | 'One' | 'None',
 }
 
 @Injectable({
@@ -35,7 +39,7 @@ export class UpdateItemService {
     changes: ItemChanges,
   ): Observable<void> {
     return this.http.put<SimpleActionResponse>(
-      `${appConfig().apiUrl}/items/${itemId}`,
+      `${appConfig.apiUrl}/items/${itemId}`,
       changes,
       { headers: { timeout: '20000' } },
     ).pipe(

@@ -5,7 +5,8 @@ export interface NavTreeElement {
   title: string
   hasChildren: boolean
   children?: this[]
-  latestChildrenFetch?: Date
+  latestChildrenFetch?: Date,
+  type?: string;
 }
 
 /**

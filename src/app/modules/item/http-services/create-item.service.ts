@@ -34,7 +34,7 @@ export class CreateItemService {
     if ('asRootOfGroupId' in newItem) body.as_root_of_group_id = newItem.asRootOfGroupId;
 
     return this.http
-      .post<ActionResponse<NewItemData>>(`${appConfig().apiUrl}/items`, body)
+      .post<ActionResponse<NewItemData>>(`${appConfig.apiUrl}/items`, body)
       .pipe(
         map(successData),
         map(response => response.id)

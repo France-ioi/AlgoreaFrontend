@@ -5,6 +5,8 @@ import { appConfig } from '../helpers/config';
 import * as D from 'io-ts/Decoder';
 import { pipe } from 'fp-ts/lib/function';
 import { decodeSnakeCase } from 'src/app/shared/operators/decode';
+import { assertSuccess, SimpleActionResponse } from './action-response';
+import { map } from 'rxjs/operators';
 
 export const currentUserDecoder = pipe(
   D.struct({
@@ -41,9 +43,16 @@ export class CurrentUserHttpService {
 
   getProfileInfo(): Observable<UserProfile> {
     return this.http
-      .get<unknown>(`${appConfig().apiUrl}/current-user`)
+      .get<unknown>(`${appConfig.apiUrl}/current-user`)
       .pipe(
         decodeSnakeCase(currentUserDecoder)
+      );
+  }
+
+  update(changes: object): Observable<any> {
+    return this.http.put<SimpleActionResponse>(`${appConfig.apiUrl}/current-user`, changes)
+      .pipe(
+        map(assertSuccess)
       );
   }
 

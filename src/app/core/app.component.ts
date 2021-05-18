@@ -1,9 +1,9 @@
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
-import { UserSession, UserSessionService } from '../shared/services/user-session.service';
-import { delay, filter, map, skip } from 'rxjs/operators';
+import { UserSessionService } from '../shared/services/user-session.service';
+import { delay, skip, switchMap } from 'rxjs/operators';
 import { Observable, Subscription } from 'rxjs';
 import { CurrentContentService } from '../shared/services/current-content.service';
-import { AuthService, AuthServiceState } from '../shared/auth/auth.service';
+import { AuthService } from '../shared/auth/auth.service';
 import { Router } from '@angular/router';
 import { ModeAction, ModeService } from '../shared/services/mode.service';
 import { ContentInfo } from '../shared/models/content/content-info';
@@ -19,7 +19,7 @@ export class AppComponent implements OnInit, OnDestroy {
   currentContent$: Observable<ContentInfo|null> = this.currentContent.currentContent$.pipe(delay(0));
   readonly currentMode$ = this.modeService.mode$.asObservable().pipe(delay(0));
   session$ = this.sessionService.session$.pipe(delay(0));
-  authOnError$ = this.authService.state$.pipe(map(state => state === AuthServiceState.Error));
+  authError$ = this.authService.failure$;
 
   leftMenuDisplayed = true;
   headersDisplayed = true;
@@ -36,14 +36,11 @@ export class AppComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    // each time there is a new user, refresh the page
-    this.subscription = this.sessionService.session$.pipe(
-      filter<UserSession|undefined, UserSession>((session):session is UserSession => !!session),
+    // if user changes, navigate back to the root
+    this.subscription = this.sessionService.user$.pipe(
       skip(1), // do not refresh when the first user is set
-    ).subscribe(_session => {
-      // Navigate to the root with an ugly hack to make sure the full content is reloaded
-      void this.router.navigateByUrl('/groups/me', { skipLocationChange: true }).then(() => this.router.navigateByUrl('/'));
-    });
+      switchMap(() => this.router.navigateByUrl('/')),
+    ).subscribe();
   }
 
   ngOnDestroy(): void {
@@ -70,6 +67,10 @@ export class AppComponent implements OnInit, OnDestroy {
 
   onEditCancel() : void{
     this.modeService.modeActions$.next(ModeAction.StopEditing);
+  }
+
+  onWatchCancel(): void {
+    this.modeService.stopObserving();
   }
 
 }

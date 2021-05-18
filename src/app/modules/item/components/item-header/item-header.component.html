@@ -17,7 +17,7 @@
       <span *ngIf="itemData.item.string.subtitle">{{itemData.item.string.subtitle}}</span>
     </div>
     <alg-page-navigator
-      *ngIf="itemData.item.permissions.canEdit !== 'none'"
+      [allowEditing]="itemData.item.permissions.canEdit !== 'none'"
       [allowFullScreen]="false"
       navigationMode="nextAndPrev"
       (edit)="onEditButtonClicked()"

@@ -1,7 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, ParamMap, UrlTree } from '@angular/router';
 import { of, Subscription } from 'rxjs';
-import { filter, map, switchMap } from 'rxjs/operators';
+import { filter, map, skip, switchMap } from 'rxjs/operators';
 import { defaultAttemptId } from 'src/app/shared/helpers/attempts';
 import { appDefaultItemRoute, isItemRouteError, itemRouteFromParams } from 'src/app/shared/routing/item-route';
 import { errorState, fetchingState, FetchState } from 'src/app/shared/helpers/state';
@@ -15,6 +15,8 @@ import { ItemRouter } from 'src/app/shared/routing/item-router';
 import { ItemTypeCategory } from 'src/app/shared/helpers/item-type';
 import { ModeAction, ModeService } from 'src/app/shared/services/mode.service';
 import { isItemInfo, itemInfo } from 'src/app/shared/models/content/item-info';
+import { repeatLatestWhen } from 'src/app/shared/helpers/repeatLatestWhen';
+import { UserSessionService } from 'src/app/shared/services/user-session.service';
 
 const itemBreadcrumbCat = $localize`Items`;
 
@@ -44,12 +46,15 @@ export class ItemByIdComponent implements OnDestroy {
     private currentContent: CurrentContentService,
     private modeService: ModeService,
     private itemDataSource: ItemDataSource,
+    private userSessionService: UserSessionService,
     private resultActionsService: ResultActionsService,
     private getItemPathService: GetItemPathService,
   ) {
 
-    // on route change: refetch item if needed
-    this.activatedRoute.paramMap.subscribe(params => this.fetchItemAtRoute(params));
+    // on route change or user change: refetch item if needed
+    this.activatedRoute.paramMap.pipe(
+      repeatLatestWhen(this.userSessionService.user$.pipe(skip(1)))
+    ).subscribe(params => this.fetchItemAtRoute(params)),
 
     this.subscriptions.push(
 

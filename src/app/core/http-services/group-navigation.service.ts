@@ -54,7 +54,7 @@ export class GroupNavigationService {
 
   getNavData(groupId: string): Observable<NavMenuRootGroupWithParent> {
     return this.http
-      .get<RawNavData>(`${appConfig().apiUrl}/groups/${groupId}/navigation`)
+      .get<RawNavData>(`${appConfig.apiUrl}/groups/${groupId}/navigation`)
       .pipe(
         map((data: RawNavData) => ({
           parent: {
@@ -77,7 +77,7 @@ export class GroupNavigationService {
 
   getRoot(): Observable<NavMenuRootGroup> {
     return this.http
-      .get<RawRootGroups[]>(`${appConfig().apiUrl}/groups/roots`)
+      .get<RawRootGroups[]>(`${appConfig.apiUrl}/groups/roots`)
       .pipe(
         map(g => ({
           groups: g.map(group => ({

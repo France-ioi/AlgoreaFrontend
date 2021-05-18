@@ -3,7 +3,7 @@
     <alg-left-menu (hideLeftMenu)="toggleLeftMenuDisplay(false)"></alg-left-menu>
   </div>
   <ng-container *ngIf="currentMode$ | async as currentMode">
-    <div class="top-bar" [ngClass]="{ editing: currentMode === 'editing', collapsed: !leftMenuDisplayed, expanded: leftMenuDisplayed }">
+    <div class="top-bar" [ngClass]="{ 'with-mode-bar': currentMode !== 'normal', collapsed: !leftMenuDisplayed, expanded: leftMenuDisplayed }">
       <alg-left-header
         *ngIf="!leftMenuDisplayed"
         (displayLeftMenu)="toggleLeftMenuDisplay($event)"
@@ -12,6 +12,7 @@
       ></alg-left-header>
       <div class="top-right-bar" *ngrxLet="currentContent$ as currentContent">
         <alg-editor-bar *ngIf="currentMode === 'editing'" (cancel)="onEditCancel()"></alg-editor-bar>
+        <alg-observation-bar *ngIf="currentMode === 'watching'" [groupName]="session?.watchedGroup?.name || ''" (cancel)="onWatchCancel()"></alg-observation-bar>
         <div class="breadcrumb-bar" *ngIf="headersDisplayed && !scrolled">
           <alg-breadcrumb [contentBreadcrumb]="currentContent?.breadcrumbs"></alg-breadcrumb>
         </div>
@@ -36,7 +37,7 @@
       </div>
       <alg-top-right-controls [drawLeftBorder]="currentMode === 'normal'"></alg-top-right-controls>
     </div>
-    <div class="right" [ngClass]="{ collapsed: !leftMenuDisplayed, expanded: leftMenuDisplayed, editing: currentMode === 'editing' }">
+    <div class="right" [ngClass]="{ collapsed: !leftMenuDisplayed, expanded: leftMenuDisplayed, 'with-mode-bar': currentMode !== 'normal' }">
       <div class="main-content" [ngClass]="{ folded: !headersDisplayed, unfolded: headersDisplayed }">
         <router-outlet></router-outlet>
       </div>
@@ -45,9 +46,11 @@
 </div>
 <p-toast></p-toast>
 <p-confirmDialog></p-confirmDialog>
+<p-confirmPopup key="commonPopup"></p-confirmPopup>
 <p-dialog
+  *ngrxLet="authError$"
   i18n-header="@@auth-error-modal-title" header="Error"
-  [visible]="!!(authOnError$ | async)"
+  [visible]="true"
   [style]="{width: '50vw'}"
   [modal]="true"
   [closeOnEscape]="false"

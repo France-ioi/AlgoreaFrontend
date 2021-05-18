@@ -25,7 +25,7 @@ export class RequestActionsService {
       Array.from(ids.entries()).map(groupMembersIds =>
         this.http
           .post<ActionResponse<{[user: string]: Status}>>(
-            `${appConfig().apiUrl}/groups/${groupMembersIds[0]}/join-requests/${type}`, null, {
+            `${appConfig.apiUrl}/groups/${groupMembersIds[0]}/join-requests/${type}`, null, {
               params: {
                 group_ids: groupMembersIds[1].join(','),
               },
@@ -44,7 +44,7 @@ export class RequestActionsService {
       Array.from(ids.entries()).map(groupMembersIds =>
         this.http
           .post<ActionResponse<{[user: string]: Status}>>(
-            `${appConfig().apiUrl}/groups/${groupMembersIds[0]}/leave-requests/${type}`, null, {
+            `${appConfig.apiUrl}/groups/${groupMembersIds[0]}/leave-requests/${type}`, null, {
               params: {
                 group_ids: groupMembersIds[1].join(','),
               },
@@ -62,7 +62,7 @@ export class RequestActionsService {
     return forkJoin(
       groupIds.map(groupId =>
         this.http
-          .post<ActionResponse<{[user: string]: Status}>>(`${appConfig().apiUrl}/current-user/group-invitations/${groupId}/${type}`, null)
+          .post<ActionResponse<{[user: string]: Status}>>(`${appConfig.apiUrl}/current-user/group-invitations/${groupId}/${type}`, null)
           .pipe(
             map(successData),
             map(data => new Map(Object.entries(data)))

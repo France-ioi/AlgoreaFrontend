@@ -9,8 +9,14 @@ export class LeftMenuComponent {
 
   @Output() hideLeftMenu = new EventEmitter<void>();
 
+  isNavThemeDark = false;
+
   toggleDisplay(shown: boolean): void {
     if (!shown) this.hideLeftMenu.emit();
+  }
+
+  onNavThemeChange(event: string | null): void {
+    this.isNavThemeDark = event === 'dark';
   }
 
 }

@@ -34,7 +34,7 @@ export class ManagedGroupsService {
 
   getManagedGroups(): Observable<Group[]> {
     return this.http
-      .get<RawGroup[]>(`${appConfig().apiUrl}/current-user/managed-groups`)
+      .get<RawGroup[]>(`${appConfig.apiUrl}/current-user/managed-groups`)
       .pipe(
         map(groups =>
           groups.map(g => ({

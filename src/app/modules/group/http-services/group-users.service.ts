@@ -16,7 +16,7 @@ export class GroupUsersService {
 
   removeUsers(groupId: string, usersId: string[]): Observable<Map<string, Status>> {
     const httpParams = new HttpParams().set('user_ids', usersId.join(','));
-    return this.http.delete<ActionResponse<{[user: string]: Status}>>(`${appConfig().apiUrl}/groups/${groupId}/members`, {
+    return this.http.delete<ActionResponse<{[user: string]: Status}>>(`${appConfig.apiUrl}/groups/${groupId}/members`, {
       params: httpParams
     }).pipe(
       map(successData),

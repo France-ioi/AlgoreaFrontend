@@ -23,7 +23,6 @@ import { DurationToReadable } from 'src/app/shared/pipes/duration';
 import { ButtonModule } from 'primeng/button';
 import { PermissionsEditDialogComponent } from './components/permissions-edit-dialog/permissions-edit-dialog.component';
 import { DialogModule } from 'primeng/dialog';
-import { AccessCodeViewComponent } from './components/access-code-view/access-code-view.component';
 import { AddItemComponent } from './components/add-item/add-item.component';
 import { CompositionFilterComponent } from './components/composition-filter/composition-filter.component';
 import { UserProgressComponent } from './components/user-progress/user-progress.component';
@@ -32,6 +31,7 @@ import { GroupProgressGridComponent } from './pages/group-progress-grid/group-pr
 import { ItemEditAdvancedParametersComponent } from './pages/item-edit-advanced-parameters/item-edit-advanced-parameters.component';
 import { CalendarModule } from 'primeng/calendar';
 import { LogActionDisplayPipe } from './pages/item-log-view/logActionDisplay';
+import { InputNumberModule } from 'primeng/inputnumber';
 
 @NgModule({
   declarations: [
@@ -55,7 +55,6 @@ import { LogActionDisplayPipe } from './pages/item-log-view/logActionDisplay';
     UserProgressComponent,
     DurationToReadable,
     PermissionsEditDialogComponent,
-    AccessCodeViewComponent,
     AddItemComponent,
     ItemEditAdvancedParametersComponent,
     LogActionDisplayPipe,
@@ -71,7 +70,9 @@ import { LogActionDisplayPipe } from './pages/item-log-view/logActionDisplay';
     DialogModule,
     ButtonModule,
     CalendarModule,
+    InputNumberModule,
   ],
+  exports: [],
   providers: [
     PendingChangesGuard,
   ]

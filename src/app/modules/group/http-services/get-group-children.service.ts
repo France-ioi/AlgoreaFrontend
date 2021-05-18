@@ -38,7 +38,7 @@ export class GetGroupChildrenService {
     if (typesInclude.length > 0) params = params.set('types_include', typesInclude.join(','));
     if (typesExclude.length > 0) params = params.set('types_exclude', typesExclude.join(','));
     return this.http
-      .get<RawGroupChild[]>(`${appConfig().apiUrl}/groups/${groupId}/children`, { params: params })
+      .get<RawGroupChild[]>(`${appConfig.apiUrl}/groups/${groupId}/children`, { params: params })
       .pipe(
         map(rawGroupChildren => rawGroupChildren.map(c => ({
           id: c.id,

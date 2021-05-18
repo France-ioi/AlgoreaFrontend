@@ -22,7 +22,7 @@ export class GroupCreationService {
       type: type
     };
     return this.http
-      .post<ActionResponse<NewGroupData>>(`${appConfig().apiUrl}/groups`, body, {})
+      .post<ActionResponse<NewGroupData>>(`${appConfig.apiUrl}/groups`, body, {})
       .pipe(
         map(successData),
         map(response => response.id),
@@ -31,7 +31,7 @@ export class GroupCreationService {
 
   addSubgroup(parentId: string, childId: string): Observable<void> {
     return this.http
-      .post<SimpleActionResponse>(`${appConfig().apiUrl}/groups/${parentId}/relations/${childId}`, null, {})
+      .post<SimpleActionResponse>(`${appConfig.apiUrl}/groups/${parentId}/relations/${childId}`, null, {})
       .pipe(map(assertSuccess));
   }
 }

@@ -23,7 +23,8 @@ export const itemChildDecoder = D.struct({
     startedAt: D.nullable(dateDecoder),
     scoreComputed: D.number,
     validated: D.boolean,
-  }))
+  })),
+  scoreWeight: D.number
 });
 
 export type ItemChild = D.TypeOf<typeof itemChildDecoder>;
@@ -39,7 +40,7 @@ export class GetItemChildrenService {
     let params = new HttpParams();
     params = params.set('attempt_id', attemptId);
     return this.http
-      .get<unknown[]>(`${appConfig().apiUrl}/items/${id}/children`, { params: params })
+      .get<unknown[]>(`${appConfig.apiUrl}/items/${id}/children`, { params: params })
       .pipe(
         decodeSnakeCase(D.array(itemChildDecoder))
       );

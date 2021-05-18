@@ -1,5 +1,8 @@
 <div class="page-nav">
-  <span *ngIf="!allowFullScreen" class="page-edit" (click)="editPage()">
+  <span *ngIf="allowWatching" class="round-icon-action-button" (click)="watch.emit()">
+    <i class="fa fa-eye"></i>
+  </span>
+  <span *ngIf="!allowFullScreen && allowEditing" class="round-icon-action-button" (click)="edit.emit()">
     <i class="fa fa-pencil-alt"></i>
   </span>
   <span *ngIf="allowFullScreen" class="top-bar-expand">

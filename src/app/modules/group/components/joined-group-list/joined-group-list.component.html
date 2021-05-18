@@ -15,26 +15,72 @@
   >
     <ng-template pTemplate="header" let-columns>
       <tr *ngIf="state.isReady && state.data.length > 0">
-          <th i18n>Name</th>
-          <th i18n>Type</th>
-          <th pSortableColumn="member_since">
-            <span i18n>Joined On</span>
-            <p-sortIcon field="member_since"></p-sortIcon>
-          </th>
+        <th i18n>Name</th>
+        <th i18n>Type</th>
+        <th pSortableColumn="member_since">
+          <span i18n>Joined On</span>
+          <p-sortIcon field="member_since"></p-sortIcon>
+        </th>
+        <th class="th-action" i18n>
+          Action
+        </th>
       </tr>
     </ng-template>
 
-    <ng-template pTemplate="body" let-group>
+    <ng-template pTemplate="body" let-membership>
       <tr>
-        <td>{{ group.group.name }}</td>
-        <td>{{ group.group.type }}</td>
-        <td>{{ group.memberSince | date:'short' }}</td>
+        <td>{{ membership.group.name }}</td>
+        <td>{{ membership.group.type }}</td>
+        <td>{{ membership.memberSince | date:'short' }}</td>
+        <td>
+          <div class="actions">
+            <ng-container *ngIf="membership.isMembershipLocked || (membership.group.type === 'Team' && membership.canLeaveTeam !== 'free_to_leave'); then cannotLeaveActions else canLeaveActions"></ng-container>
+            <ng-template #cannotLeaveActions>
+                <ng-container *ngIf="membership.group.type === 'Team'" [ngSwitch]="membership.canLeaveTeam">
+                  <div
+                    *ngSwitchCase="'frozen_membership'"
+                    i18n-pTooltip pTooltip="This team membership is now frozen and cannot be modified."
+                    tooltipPosition="left"
+                    tooltipEvent="hover"
+                    class="fa fa-lock"
+                  ></div>
+                  <div
+                    *ngSwitchCase="'would_break_entry_conditions'"
+                    i18n-pTooltip pTooltip="You cannot leave this team as it would break entry condition to some content your team participating to."
+                    tooltipPosition="left"
+                    tooltipEvent="hover"
+                    class="fa fa-lock"
+                  ></div>
+                  <div *ngSwitchDefault class="fa fa-lock"></div>
+                </ng-container>
+
+                <ng-container *ngIf="membership.group.type !== 'Team'">
+                  <div
+                    i18n-pTooltip pTooltip="You cannot leave the group for the moment. Contact the group manager for more information."
+                    tooltipPosition="left"
+                    tooltipEvent="hover"
+                    class="fa fa-lock"
+                  ></div>
+                </ng-container>
+            </ng-template>
+            <ng-template #canLeaveActions>
+              <button
+                  pButton
+                  pRipple
+                  type="button"
+                  icon="fa fa-sign-out-alt"
+                  class="p-button-rounded p-button-outlined"
+                  (click)="onGroupLeaveClick($event, membership)"
+              ></button>
+            </ng-template>
+          </div>
+        </td>
       </tr>
     </ng-template>
 
     <ng-template pTemplate="emptymessage" let-columns>
       <tr>
-        <td [attr.colspan]="columns.length">
+        <td [attr.colspan]="columns?.length">
           <p class="empty-message" i18n>This list is empty.</p>
         </td>
       </tr>

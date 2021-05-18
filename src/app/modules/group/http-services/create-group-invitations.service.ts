@@ -25,7 +25,7 @@ export class CreateGroupInvitationsService {
   ) : Observable<Map<string, InvitationResult>> {
     return this.http
       .post<ActionResponse<Object>>(
-        `${appConfig().apiUrl}/groups/${groupId}/invitations`,
+        `${appConfig.apiUrl}/groups/${groupId}/invitations`,
         { logins: logins }, {})
       .pipe(
         map(successData),

@@ -6,10 +6,13 @@
       </div>
     </div>
     <alg-page-navigator
-      *ngIf="groupWithManagement?.isCurrentUserManager"
+      *ngIf="!!groupWithManagement"
+      [allowEditing]="groupWithManagement.isCurrentUserManager"
+      [allowWatching]="!!groupWithManagement.currentUserCanWatchMembers"
       [allowFullScreen]="false"
       navigationMode="nextAndPrev"
       (edit)="onEditButtonClicked()"
+      (watch)="onWatchButtonClicked()"
     ></alg-page-navigator>
   </div>
 </div>

@@ -148,4 +148,39 @@
       </div>
     </ng-container>
   </alg-section>
+
+  <alg-section icon="fa fa-users" i18n-label label="Team" *ngIf="item.type !== 'Skill'">
+    <div class="form-item-view">
+      <span class="form-item-label" i18n>Participation as a team (only) (not implemented)</span>
+      <div class="form-item-control">
+        <alg-switch formControlName="entry_participant_type" mode="white"></alg-switch>
+      </div>
+    </div>
+    <ng-container *ngIf="!!parentForm.get('entry_participant_type')?.value">
+      <div class="form-item-view">
+        <span class="form-item-label" i18n>Freeze team on entry</span>
+        <div class="form-item-control">
+          <alg-switch formControlName="entry_frozen_teams" mode="white"></alg-switch>
+        </div>
+      </div>
+      <div class="form-item-view">
+        <span class="form-item-label" i18n>Maximum team size</span>
+        <div class="form-item-control">
+          <p-inputNumber class="alg-input-number" formControlName="entry_max_team_size"></p-inputNumber>
+          <alg-input-error [form]="this.parentForm" inputName="entry_max_team_size"></alg-input-error>
+        </div>
+      </div>
+      <div class="form-item-view">
+        <span class="form-item-label" i18n>Minimum admitted members</span>
+        <div class="form-item-control">
+          <alg-dropdown
+            [options]="minAdmittedMembersRatioOptions"
+            [parentForm]="parentForm"
+            inputName="entry_min_admitted_members_ratio"
+            name="entry_min_admitted_members_ratio"
+          ></alg-dropdown>
+        </div>
+      </div>
+    </ng-container>
+  </alg-section>
 </form>

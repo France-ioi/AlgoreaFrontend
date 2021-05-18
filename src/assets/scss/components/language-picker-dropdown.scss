@@ -1,0 +1,53 @@
+@import "src/colors.scss";
+
+.alg-language-picker-dropdown {
+  &.base {
+    &.p-dropdown {
+      .p-dropdown-label {
+        color: $base-color;
+      }
+
+      .p-dropdown-item {
+        &:not(.p-highlight) {
+          color: $base-text-color;
+          background-color: white;
+        }
+      }
+    }
+  }
+
+  &.p-dropdown {
+    background-color: transparent;
+    border: none;
+    width: 4.1rem;
+
+    &:hover {
+      background-color: $hover-mask;
+    }
+
+    .p-dropdown-label {
+      text-transform: uppercase;
+      text-overflow: clip;
+      color: white;
+    }
+
+    .p-dropdown-panel {
+      background-color: $nav-bk-color;
+
+      .p-highlight {
+        background-color: $base-color;
+      }
+    }
+
+    .p-dropdown-item {
+      text-transform: uppercase;
+      font-size: 1rem;
+      color: white;
+
+      &:not(.p-highlight):not(.p-disabled):hover {
+        color: white;
+        background: $base-color-hover;
+      }
+    }
+  }
+}

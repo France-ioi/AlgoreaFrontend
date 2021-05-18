@@ -48,7 +48,7 @@ export class JoinByCodeService {
     let params = new HttpParams();
     params = params.set('code', code);
     return this.http
-      .get<{valid: false, reason: InvalidCodeReason}|{valid: true, group: RawGroupInfos}>(`${appConfig().apiUrl}/groups/is-code-valid`,
+      .get<{valid: false, reason: InvalidCodeReason}|{valid: true, group: RawGroupInfos}>(`${appConfig.apiUrl}/groups/is-code-valid`,
         { params: params })
       .pipe(map(r => (r.valid ? {
         valid: true,
@@ -74,7 +74,7 @@ export class JoinByCodeService {
     let params = new HttpParams();
     params = params.set('code', code).set('approvals', approvals.join(','));
     return this.http
-      .post<SimpleActionResponse>(`${appConfig().apiUrl}/current-user/group-memberships/by-code`, null, { params: params })
+      .post<SimpleActionResponse>(`${appConfig.apiUrl}/current-user/group-memberships/by-code`, null, { params: params })
       .pipe(
         map(assertSuccess)
       );

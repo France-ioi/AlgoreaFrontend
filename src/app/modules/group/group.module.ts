@@ -32,6 +32,14 @@ import { PendingJoinRequestsComponent } from './components/pending-join-requests
 import { AddSubGroupComponent } from './components/add-sub-group/add-sub-group.component';
 import { ManagedGroupListComponent } from './components/managed-group-list/managed-group-list.component';
 import { AssociatedActivityComponent } from './components/associated-activity/associated-activity.component';
+import { GroupIndicatorComponent } from './components/group-indicator/group-indicator.component';
+import { ButtonModule } from 'primeng/button';
+import { RippleModule } from 'primeng/ripple';
+import { TooltipModule } from 'primeng/tooltip';
+import { GroupDeleteService } from './services/group-delete.service';
+import { GroupRemoveButtonComponent } from './components/group-remove-button/group-remove-button.component';
+import { GroupLinksComponent } from './components/group-links/group-links.component';
+import { GroupUserComponent } from './pages/group-user/group-user.component';
 
 @NgModule({
   declarations: [
@@ -59,6 +67,10 @@ import { AssociatedActivityComponent } from './components/associated-activity/as
     AddSubGroupComponent,
     ManagedGroupListComponent,
     AssociatedActivityComponent,
+    GroupRemoveButtonComponent,
+    GroupIndicatorComponent,
+    GroupLinksComponent,
+    GroupUserComponent,
   ],
   imports: [
     CommonModule,
@@ -66,9 +78,16 @@ import { AssociatedActivityComponent } from './components/associated-activity/as
     SharedComponentsModule,
     ReactiveFormsModule,
     FormsModule,
+    ButtonModule,
+    RippleModule,
+    TooltipModule,
+  ],
+  exports: [
+    GroupIndicatorComponent
   ],
   providers: [
     PendingChangesGuard,
+    GroupDeleteService
   ]
 })
 

@@ -14,7 +14,7 @@ export class GroupActionsService {
 
   updateGroup(id: string, changes: object): Observable<void> {
     return this.http
-      .put<SimpleActionResponse>(`${appConfig().apiUrl}/groups/${id}`, changes)
+      .put<SimpleActionResponse>(`${appConfig.apiUrl}/groups/${id}`, changes)
       .pipe(
         map(assertSuccess)
       );

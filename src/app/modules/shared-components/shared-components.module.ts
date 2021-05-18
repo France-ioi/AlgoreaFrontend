@@ -60,6 +60,8 @@ import { DropdownComponent } from './components/dropdown/dropdown.component';
 import { DurationComponent } from './components/duration/duration.component';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputMaskModule } from 'primeng/inputmask';
+import { AccessCodeViewComponent } from './components/access-code-view/access-code-view.component';
+import { LanguagePickerComponent } from '../../core/components/language-picker/language-picker.component';
 
 @NgModule({
   declarations: [
@@ -93,6 +95,8 @@ import { InputMaskModule } from 'primeng/inputmask';
     BooleanSectionComponent,
     DropdownComponent,
     DurationComponent,
+    AccessCodeViewComponent,
+    LanguagePickerComponent,
   ],
   imports: [
     CommonModule,
@@ -163,6 +167,8 @@ import { InputMaskModule } from 'primeng/inputmask';
     BooleanSectionComponent,
     DropdownComponent,
     DurationComponent,
+    AccessCodeViewComponent,
+    LanguagePickerComponent,
   ],
   providers: [
     { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: true } }

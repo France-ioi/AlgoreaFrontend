@@ -17,7 +17,7 @@ export class ResultActionsService {
   start(itemIdPath: string[], attemptId: string): Observable<void> {
     const path = itemIdPath.join('/');
     return this.http
-      .post<SimpleActionResponse>(`${appConfig().apiUrl}/items/${path}/start-result`, null, {
+      .post<SimpleActionResponse>(`${appConfig.apiUrl}/items/${path}/start-result`, null, {
         params: {
           attempt_id: attemptId
         }
@@ -33,7 +33,7 @@ export class ResultActionsService {
   startWithoutAttempt(itemIdPath: string[]): Observable<AttemptId> {
     const path = itemIdPath.join('/');
     return this.http
-      .post<ActionResponse<{ attempt_id: string }>>(`${appConfig().apiUrl}/items/${path}/start-result-path`, null, {})
+      .post<ActionResponse<{ attempt_id: string }>>(`${appConfig.apiUrl}/items/${path}/start-result-path`, null, {})
       .pipe(
         map(successData),
         map(data => data.attempt_id)
