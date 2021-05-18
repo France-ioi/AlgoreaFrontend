@@ -1,0 +1,61 @@
+<p-dialog
+  *ngrxLet="languageMismatch$; let languageMismatch"
+  i18n-header header="Language mismatch"
+  [visible]="!!languageMismatch"
+  [style]="{width: '50vw'}"
+  [modal]="true"
+  [closeOnEscape]="false"
+  [closable]="false"
+  >
+  <div class="spinner-overlay" *ngIf="updateUserState?.isFetching">
+    <p-progressSpinner></p-progressSpinner>
+  </div>
+
+  <ng-container *ngIf="languageMismatch">
+    <ng-container *ngIf="languageMismatch.userDefaultLanguageIsSupported">
+      <div i18n>
+        The current language "{{ languageMismatch.platformLanguage }}" does not correspond to your account's default language "{{ languageMismatch.userDefaultLanguage }}".
+        Do you want to continue in this language?
+      </div>
+
+      <div class="actions">
+        <p-button
+          type="button"
+          (click)="onUpdateUserLanguage(languageMismatch.platformLanguage)"
+        >
+          <ng-template pTemplate="content">
+            <span i18n>
+              Continue in "{{ languageMismatch.platformLanguage }}" and change my default language to "{{ languageMismatch.platformLanguage }}" for this platform
+            </span>
+          </ng-template>
+        </p-button>
+        <p-button
+          type="button"
+          (click)="onVisitPlatformInUserLanguage(languageMismatch.userDefaultLanguage)"
+        >
+          <ng-template pTemplate="content" i18n>
+            Visit the platform in "{{ languageMismatch.userDefaultLanguage }}"
+          </ng-template>
+        </p-button>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="!languageMismatch.userDefaultLanguageIsSupported">
+      <div i18n>
+        The platform does not exist in your default language "{{ languageMismatch.userDefaultLanguage }}".
+      </div>
+      <div class="actions">
+        <p-button
+          type="button"
+          (click)="onUpdateUserLanguage(languageMismatch.platformLanguage)"
+        >
+          <ng-template pTemplate="content" i18n>
+            Continue in "{{ languageMismatch.platformLanguage }}" and change my default language to "{{ languageMismatch.platformLanguage }}" for this platform.
+          </ng-template>
+        </p-button>
+      </div>
+    </ng-container>
+
+    <small i18n>The language can always be modified through your profile page.</small>
+  </ng-container>
+</p-dialog>

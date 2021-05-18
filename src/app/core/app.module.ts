@@ -41,7 +41,9 @@ import { MenuModule } from 'primeng/menu';
 import { TopRightMenuComponent } from './components/top-right-menu/top-right-menu.component';
 import { FormsModule } from '@angular/forms';
 import { ConfirmPopupModule } from 'primeng/confirmpopup';
+import { ButtonModule } from 'primeng/button';
 import { ObservationBarComponent } from './components/observation-bar/observation-bar.component';
+import { LanguageMismatchComponent } from './components/language-mismatch/language-mismatch.component';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: false,
@@ -59,6 +61,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     TopRightControlsComponent,
     TopRightMenuComponent,
     ObservationBarComponent,
+    LanguageMismatchComponent,
   ],
   imports: [
     BrowserModule,
@@ -79,6 +82,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     MenuModule,
     FormsModule,
     ConfirmPopupModule,
+    ButtonModule,
   ],
   providers: [
     ConfirmationService,
