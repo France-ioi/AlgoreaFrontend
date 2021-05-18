@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { catchError, switchMap, retry, mapTo } from 'rxjs/operators';
-import { BehaviorSubject, of, timer, throwError, Subject, EMPTY } from 'rxjs';
+import { BehaviorSubject, of, timer, Subject, EMPTY } from 'rxjs';
 import { OAuthService } from './oauth.service';
 import { AuthHttpService } from '../http-services/auth.http-service';
 import { MINUTES } from '../helpers/duration';
