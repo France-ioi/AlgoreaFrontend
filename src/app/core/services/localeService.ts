@@ -46,8 +46,11 @@ export class LocaleService implements OnDestroy {
   navigateTo(langTag: string): void {
     const nextLang = this.languages?.find(l => l.tag === langTag);
     const currentLang = this.languages?.find(l => l.tag === this.currentTag);
-    if (!nextLang || !currentLang) throw new Error('Cannot find new or current lang in configured languages');
-    window.location.href = `${window.location.pathname.replace(currentLang.path, nextLang.path)}${window.location.hash}`;
+    if (!nextLang) throw new Error('Cannot find new or current lang in configured languages');
+    const pathname = currentLang && window.location.pathname.includes(currentLang.path)
+      ? window.location.pathname.replace(currentLang.path, nextLang.path)
+      : nextLang.path;
+    window.location.href = `${pathname}${window.location.hash}`;
   }
 
 }
