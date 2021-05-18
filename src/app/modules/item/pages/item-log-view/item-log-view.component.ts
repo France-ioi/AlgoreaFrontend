@@ -5,25 +5,10 @@ import { Observable, ReplaySubject } from 'rxjs';
 import { distinct, switchMap, map } from 'rxjs/operators';
 import { mapToFetchState } from 'src/app/shared/operators/state';
 
-interface Column {
+export interface Column {
   field: string,
   header: string
 }
-
-const logColumns: Column[] = [
-  {
-    field: 'activity_type',
-    header: $localize`Action`
-  },
-  {
-    field: 'item.string.title',
-    header: $localize`Content`
-  },
-  {
-    field: 'at',
-    header: $localize`Time`
-  }
-];
 
 interface Data {
   columns: Column[],
@@ -38,6 +23,7 @@ interface Data {
 export class ItemLogViewComponent implements OnChanges {
 
   @Input() itemData?: ItemData;
+  @Input() logColumns?: Column[];
 
   private readonly id$ = new ReplaySubject<string>(1);
   readonly state$ = this.id$.pipe(
@@ -57,7 +43,7 @@ export class ItemLogViewComponent implements OnChanges {
   getData$(id: string): Observable<Data> {
     return this.activityLogService.getActivityLog(id).pipe(
       map((data: ActivityLog[]) => ({
-        columns: logColumns,
+        columns: this.logColumns || [],
         rowData: data
       }))
     );

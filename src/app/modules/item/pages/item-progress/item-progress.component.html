@@ -1,5 +1,13 @@
 <ng-container *ngIf="session$ | async as session">
-  <alg-section icon="fa fa-list" i18n-label label="{{session.watchedGroup ? 'Group' : 'User'}} situation">
-    <alg-item-current-situation [itemData]="itemData"></alg-item-current-situation>
+  <alg-section
+      icon="fa fa-list"
+      *ngIf="itemData"
+      [label]="itemData.item.type | itemProgressLabel : session?.watchedGroup"
+  >
+    <alg-item-current-situation
+        [itemData]="itemData"
+        [session]="session"
+        [watchedGroup]="session.watchedGroup"
+    ></alg-item-current-situation>
   </alg-section>
 </ng-container>

@@ -32,6 +32,8 @@ import { ItemEditAdvancedParametersComponent } from './pages/item-edit-advanced-
 import { CalendarModule } from 'primeng/calendar';
 import { LogActionDisplayPipe } from './pages/item-log-view/logActionDisplay';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { ChapterUserProgressComponent } from './pages/chapter-user-progress/chapter-user-progress.component';
+import { ItemProgressLabelPipe } from './pages/item-progress/itemProgressLabel';
 
 @NgModule({
   declarations: [
@@ -58,6 +60,8 @@ import { InputNumberModule } from 'primeng/inputnumber';
     AddItemComponent,
     ItemEditAdvancedParametersComponent,
     LogActionDisplayPipe,
+    ChapterUserProgressComponent,
+    ItemProgressLabelPipe,
   ],
   imports: [
     CommonModule,
