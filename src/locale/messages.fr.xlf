@@ -283,7 +283,7 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-edit-advanced-parameters/item-edit-advanced-parameters.component.html</context><context context-type="linenumber">125</context></context-group></trans-unit><trans-unit id="3724068243287682962" datatype="html">
         <source>Team</source><target state="new">Team</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/managed-group-list/managed-group-list.component.ts</context><context context-type="linenumber">42</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-edit-advanced-parameters/item-edit-advanced-parameters.component.html</context><context context-type="linenumber">152</context></context-group></trans-unit><trans-unit id="8976459511097559041" datatype="html">
         <source>Participation as a team (only) (not implemented)</source><target state="new">Participation as a team (only) (not implemented)</target>
         <context-group purpose="location">
@@ -884,7 +884,7 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog.component.html</context><context context-type="linenumber">65</context></context-group></trans-unit><trans-unit id="4705822664965381735" datatype="html">
         <source>Children</source><target state="translated">Enfants</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-children-edit/item-children-edit.component.html</context><context context-type="linenumber">2</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog-texts.ts</context><context context-type="linenumber">122</context></context-group></trans-unit><trans-unit id="8052476462144624454" datatype="html">
         <source>Enable score weight</source><target state="new">Enable score weight</target>
         <context-group purpose="location">
@@ -981,7 +981,7 @@
         <source>Content</source><target state="translated">Contenu</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog-texts.ts</context><context context-type="linenumber">30</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog-texts.ts</context><context context-type="linenumber">61</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-log-view/item-log-view.component.ts</context><context context-type="linenumber">20</context></context-group></trans-unit><trans-unit id="1459057934865952132" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog-texts.ts</context><context context-type="linenumber">30</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog-texts.ts</context><context context-type="linenumber">61</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-current-situation/item-current-situation.component.ts</context><context context-type="linenumber">76</context></context-group></trans-unit><trans-unit id="1459057934865952132" datatype="html">
         <source><x id="PH" equiv-text="targetTypeString"/> can see the content of this item</source><target state="translated"><x id="PH" equiv-text="targetTypeString"/> peut voir le contenu de cet élément</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog-texts.ts</context><context context-type="linenumber">31</context></context-group></trans-unit><trans-unit id="240638056322492270" datatype="html">
@@ -1452,16 +1452,19 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-log-view/item-log-view.component.html</context><context context-type="linenumber">6</context></context-group></trans-unit><trans-unit id="9216117865911519658" datatype="html">
         <source>Action</source><target state="translated">Opération</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-log-view/item-log-view.component.ts</context><context context-type="linenumber">16</context></context-group></trans-unit><trans-unit id="8497528947328199741" datatype="html">
-        <source>Time</source><target state="translated">Date/Heure</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-log-view/item-log-view.component.ts</context><context context-type="linenumber">24</context></context-group></trans-unit><trans-unit id="6213559315741290082" datatype="html">
-        <source>Log view</source><target state="translated">Historique</target>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-current-situation/item-current-situation.component.ts</context><context context-type="linenumber">71</context></context-group></trans-unit><trans-unit id="2392488717875840729" datatype="html">
+        <source>User</source><target state="new">User</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/item/pages/item-current-situation/item-current-situation.component.ts</context>
-          <context context-type="linenumber">14</context>
+          <context context-type="linenumber">81</context>
         </context-group>
-      </trans-unit><trans-unit id="4157999209809351413" datatype="html">
+      </trans-unit><trans-unit id="8497528947328199741" datatype="html">
+        <source>Time</source><target state="translated">Date/Heure</target>
+
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-current-situation/item-current-situation.component.ts</context><context context-type="linenumber">86</context></context-group></trans-unit><trans-unit id="6213559315741290082" datatype="html">
+        <source>Log view</source><target state="translated">Historique</target>
+
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-current-situation/item-current-situation.component.ts</context><context context-type="linenumber">45</context></context-group></trans-unit><trans-unit id="4157999209809351413" datatype="html">
         <source>Chapter view</source><target state="translated">Vue chapitre</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/item/pages/item-current-situation/item-current-situation.component.ts</context>
