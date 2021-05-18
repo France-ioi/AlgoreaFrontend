@@ -46,15 +46,9 @@ export class AuthService implements OnDestroy {
     oauthService.tryCompletingCodeFlowLogin().pipe(
       catchError(_e => {
         // (2) use the ongoing authentication if any
-        if (appConfig.allowForcedToken && hasForcedToken()) {
-          const token = forcedTokenAuthFromStorage();
-          return token ? of(token) : throwError(new Error('unexpected error while loading forced token'));
-        } else if (appConfig.authType === 'tokens') {
-          const token = tokenAuthFromStorage();
-          return token ? of(token) : throwError(new Error('no token stored for token auth'));
-        } else {
-          return this.authHttp.refreshCookie(); // will fail if the browser has no cookie
-        }
+        if (appConfig.allowForcedToken && hasForcedToken()) return of(forcedTokenAuthFromStorage());
+        else if (appConfig.authType === 'tokens') return of(tokenAuthFromStorage());
+        else return this.authHttp.refreshCookie(); // will fail if the browser has no cookie
       }),
       catchError(_e =>
         // (3) otherwise, create a temp session

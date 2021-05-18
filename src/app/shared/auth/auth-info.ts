@@ -30,16 +30,16 @@ const storageExpirationKey = 'access_token_exp';
 const storageForcedTokenKey = 'forced_token';
 const tokenStorage = sessionStorage;
 
-export function tokenAuthFromStorage(): TokenAuthenticated|undefined {
+export function tokenAuthFromStorage(): TokenAuthenticated {
   const token = tokenStorage.getItem(storageTokenKey);
   const exp = tokenStorage.getItem(storageExpirationKey);
   const creation = tokenStorage.getItem(storageCreationKey);
-  if (!token || !exp || !creation) return undefined;
+  if (!token || !exp || !creation) throw new Error('unable to load the token from storage');
   const expMs = +exp;
   const createMs = +creation;
   if (isNaN(expMs) || expMs <= Date.now() || isNaN(createMs)) {
     clearTokenFromStorage();
-    return undefined; // invalid or expired expiration
+    throw new Error('unable to load the stored token: invalid/expired creation or expiration date');
   }
   return tokenAuthenticated(token, new Date(expMs), new Date(createMs));
 }
@@ -81,9 +81,9 @@ export function setForcedTokenInStorage(token: string): void {
  * The expiration / creation are just values which will prevent the app to refresh the token, the actual security measures (and actual
  * validity duration) are handled by the backend.
  */
-export function forcedTokenAuthFromStorage(): TokenAuthenticated|undefined {
+export function forcedTokenAuthFromStorage(): TokenAuthenticated {
   const token = tokenStorage.getItem(storageForcedTokenKey);
-  if (!token) return undefined;
+  if (!token) throw new Error('no forced token');
   return tokenAuthenticated(token, new Date(Date.now() + 1*YEARS), new Date()); // assume the token is valid for 1 year
 }
 

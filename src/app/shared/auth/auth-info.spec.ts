@@ -31,31 +31,26 @@ describe('auth-info', () => {
     expect(auth.creation.getTime()-now).toBeCloseTo(0,precision);
     expect(auth.expiration.getTime()-now).toBeCloseTo(expiresInMS,precision);
 
-    expect(loaded?.accessToken).toEqual(expectedToken);
-    if (loaded) {
-      expect(loaded.creation.getTime()).toBeCloseTo(now,precision);
-      expect(loaded.expiration.getTime()).toBeCloseTo(now+expiresInMS,precision);
-    }
+    expect(loaded.accessToken).toEqual(expectedToken);
+    expect(loaded.creation.getTime()).toBeCloseTo(now,precision);
+    expect(loaded.expiration.getTime()).toBeCloseTo(now+expiresInMS,precision);
   });
 
   it('should fail when loading a token with no token', () => {
     tokenAuthFromServiceResp(expectedToken, expiresInSec);
     sessionStorage.removeItem('access_token');
-    const loaded = tokenAuthFromStorage();
-    expect(loaded).toBeUndefined();
+    expect(tokenAuthFromStorage).toThrowError();
   });
 
   it('should fail when loading a token with no expiration', () => {
     tokenAuthFromServiceResp(expectedToken, expiresInSec);
     sessionStorage.removeItem('access_token_exp');
-    const loaded = tokenAuthFromStorage();
-    expect(loaded).toBeUndefined();
+    expect(tokenAuthFromStorage).toThrowError();
   });
 
   it('should fail (and clear) when loading a expired token', () => {
     tokenAuthFromServiceResp(expectedToken, -1 /* expired 1sec ago */);
-    const loaded = tokenAuthFromStorage();
-    expect(loaded).toBeUndefined();
+    expect(tokenAuthFromStorage).toThrowError();
     expect(sessionStorage.getItem('access_token')).toBeNull();
     expect(sessionStorage.getItem('access_token_exp')).toBeNull();
   });
@@ -63,8 +58,7 @@ describe('auth-info', () => {
   it('should fail (and clear) when loading an invalid token', () => {
     tokenAuthFromServiceResp(expectedToken, -1 /* expired 1sec ago */);
     sessionStorage.setItem('access_token_exp', 'not a number');
-    const loaded = tokenAuthFromStorage();
-    expect(loaded).toBeUndefined();
+    expect(tokenAuthFromStorage).toThrowError();
     expect(sessionStorage.getItem('access_token')).toBeNull();
     expect(sessionStorage.getItem('access_token_exp')).toBeNull();
   });
@@ -72,22 +66,21 @@ describe('auth-info', () => {
   it('should clear token with clearTokenFromStorage()', () => {
     tokenAuthFromServiceResp(expectedToken, expiresInSec);
     const loaded = tokenAuthFromStorage();
-    expect(loaded?.authenticated).toBeTrue();
-    expect(loaded?.useCookie).toBeFalse();
+    expect(loaded.authenticated).toBeTrue();
+    expect(loaded.useCookie).toBeFalse();
     clearTokenFromStorage();
-    const loaded2 = tokenAuthFromStorage();
-    expect(loaded2).toBeUndefined();
+    expect(tokenAuthFromStorage).toThrowError();
   });
 
   it('should not load forced token when none is defined', () => {
     expect(hasForcedToken()).toBeFalse();
-    expect(forcedTokenAuthFromStorage()).toBeUndefined();
+    expect(forcedTokenAuthFromStorage).toThrowError();
   });
 
   it('should load forced token when defined', () => {
     setForcedTokenInStorage(expectedToken);
     expect(hasForcedToken()).toBeTrue();
-    expect(forcedTokenAuthFromStorage()?.accessToken).toEqual(expectedToken);
+    expect(forcedTokenAuthFromStorage().accessToken).toEqual(expectedToken);
   });
 
 });
