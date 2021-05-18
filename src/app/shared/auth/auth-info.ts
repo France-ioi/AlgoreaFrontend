@@ -43,6 +43,10 @@ export function tokenAuthFromStorage(): TokenAuthenticated|undefined {
   return tokenAuthenticated(token, new Date(expMs), new Date(createMs));
 }
 
+/**
+ * Create a token from a service response.
+ * @param expiresIn is the number of seconds before expiration
+ */
 export function tokenAuthFromServiceResp(token: string, expiresIn: number): TokenAuthenticated {
   const creation = new Date(); // now
   const expiration = expiresInToDate(expiresIn);
