@@ -30,7 +30,7 @@ export class GetResultsService {
 
   getResults(item: ItemRoute): Observable<Result[]> {
     return this.http
-      .get<RawResult[]>(`${appConfig().apiUrl}/items/${item.id}/attempts`, {
+      .get<RawResult[]>(`${appConfig.apiUrl}/items/${item.id}/attempts`, {
         params: isRouteWithAttempt(item) ? { attempt_id: item.attemptId } : { parent_attempt_id: item.parentAttemptId }
       })
       .pipe(

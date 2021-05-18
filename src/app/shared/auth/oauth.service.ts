@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
 import { getArgsFromUrl, clearHash } from '../helpers/url';
-import { Observable, throwError, of } from 'rxjs';
-import { AccessToken } from './access-token';
+import { Observable, throwError } from 'rxjs';
 import { AuthHttpService } from '../http-services/auth.http-service';
-import { map } from 'rxjs/operators';
 import { base64UrlEncode } from '../helpers/base64';
 import { appConfig } from '../helpers/config';
+import { AuthResult } from './auth-info';
 
 // Use localStorage for nonce if possible localStorage is the only storage who survives a redirect in ALL browsers (also IE)
 const nonceStorage = localStorage;
@@ -19,7 +18,7 @@ export class OAuthService {
   private clientId: string;
 
   constructor(private authHttp: AuthHttpService) {
-    this.clientId = appConfig().oauthClientId;
+    this.clientId = appConfig.oauthClientId;
   }
 
   /**
@@ -27,11 +26,11 @@ export class OAuthService {
    */
   initCodeFlow(): void {
     const state = this.createNonce();
-    const loginServerUri = appConfig().oauthServerUrl+'/oauth/authorize';
+    const loginServerUri = appConfig.oauthServerUrl+'/oauth/authorize';
     const separationChar = loginServerUri.indexOf('?') > -1 ? '&' : '?';
 
     const url = loginServerUri + separationChar + 'response_type=code&scope=account&approval_prompt=auto' +
-      '&client_id=' + encodeURIComponent(appConfig().oauthClientId) +
+      '&client_id=' + encodeURIComponent(appConfig.oauthClientId) +
       '&state=' + encodeURIComponent(state) +
       '&redirect_uri=' + encodeURIComponent(this.appRedirectUri());
     // should add PKCE here
@@ -46,16 +45,16 @@ export class OAuthService {
 
   /**
    * Try to find "code flow" args in URL (from login callback) and to use them.
-   * If they are not present or wrong, the result will be immediate (either a null token or an observable error).
+   * If they are not present or wrong, the result will be immediate (either null or an observable error).
    */
-  tryCompletingCodeFlowLogin(): Observable<AccessToken|null> {
+  tryCompletingCodeFlowLogin(): Observable<AuthResult> {
     const parts = getArgsFromUrl();
     const code = parts.get('code');
     const state = parts.get('state');
     // get and store 'sesssionState' as well?
     clearHash([ 'code', 'state' ]);
     if (!code || !state) {
-      return of<AccessToken|null>(null);
+      return throwError(new Error('No code or state for code flow'));
     }
     if (parts.has('errors')) {
       return throwError(new Error(`Error received from authenticator: ${parts.get('errors')||'no error'}`));
@@ -66,13 +65,11 @@ export class OAuthService {
     }
     nonceStorage.removeItem(nonceStorageKey); // no need to store the nonce any longer
     // the code can be used to get a token back
-    return this.authHttp.createTokenFromCode(code, this.appRedirectUri()).pipe(
-      map(t => AccessToken.fromTTL(t.access_token, t.expires_in, 'authenticated'))
-    );
+    return this.authHttp.createTokenFromCode(code, this.appRedirectUri());
   }
 
   logoutOnAuthServer(): void {
-    const logoutUri = appConfig().oauthServerUrl+'/logout?' + 'redirect_uri=' + encodeURIComponent(this.appRedirectUri());
+    const logoutUri = appConfig.oauthServerUrl+'/logout?' + 'redirect_uri=' + encodeURIComponent(this.appRedirectUri());
     // navigate
     location.href = logoutUri;
   }

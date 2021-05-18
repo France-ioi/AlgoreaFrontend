@@ -35,7 +35,7 @@ export class SearchGroupService {
   ): Observable<GroupFound[]> {
     const params = new HttpParams({ fromObject: { search: searchString, limit: limit.toString() } });
     return this.http.get<Group[]>(
-      `${appConfig().apiUrl}/current-user/available-groups`,
+      `${appConfig.apiUrl}/current-user/available-groups`,
       { params: params },
     ).pipe(map(groups => groups.filter(notBase)));
   }
@@ -46,7 +46,7 @@ export class SearchGroupService {
   ): Observable<GroupFound[]> {
     const params = new HttpParams({ fromObject: { search: searchString, limit: limit.toString() } });
     return this.http.get<Group[]>(
-      `${appConfig().apiUrl}/groups/possible-subgroups`,
+      `${appConfig.apiUrl}/groups/possible-subgroups`,
       { params: params },
     ).pipe(map(groups => groups.filter(notBase)));
   }

@@ -21,7 +21,7 @@ export class LocaleService implements OnDestroy {
   private userSessionSubscription: Subscription
 
   constructor(private userSession: UserSessionService) {
-    this.languages = appConfig().languages;
+    this.languages = appConfig.languages;
     this.currentTag = this.languages?.find(l => window.location.pathname.endsWith(l.path))?.tag;
 
     this.userSessionSubscription = this.userSession.session$.subscribe(session => {

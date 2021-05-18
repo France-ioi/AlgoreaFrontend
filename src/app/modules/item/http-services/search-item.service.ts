@@ -30,7 +30,7 @@ export class SearchItemService {
     if (excludedTypes) params = params.set('types_exclude', excludedTypes.join(','));
 
     return this.http.get<ItemFound<ItemType>[]>(
-      `${appConfig().apiUrl}/items/search`,
+      `${appConfig.apiUrl}/items/search`,
       { params: params },
     );
   }

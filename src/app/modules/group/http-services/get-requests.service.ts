@@ -112,7 +112,7 @@ export class GetRequestsService {
     }
     if (sort.length > 0) params = params.set('sort', sort.join(','));
     return this.http
-      .get<RawGroupPendingRequest[]>(`${appConfig().apiUrl}/groups/user-requests`, { params: params })
+      .get<RawGroupPendingRequest[]>(`${appConfig.apiUrl}/groups/user-requests`, { params: params })
       .pipe(
         map(pendingRequests => pendingRequests.map(r => ({
           at: r.at === null ? null : new Date(r.at),
@@ -136,7 +136,7 @@ export class GetRequestsService {
     let params = new HttpParams();
     if (sort.length > 0) params = params.set('sort', sort.join(','));
     return this.http
-      .get<RawGroupInvitationRequest[]>(`${appConfig().apiUrl}/current-user/group-invitations`, { params: params })
+      .get<RawGroupInvitationRequest[]>(`${appConfig.apiUrl}/current-user/group-invitations`, { params: params })
       .pipe(
         map(groupInvitations => groupInvitations.filter(isInvitation).map(r => ({
           at: r.at === null ? null : new Date(r.at),

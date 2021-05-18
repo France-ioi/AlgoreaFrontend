@@ -38,7 +38,7 @@ export class GetItemParentsService {
     let params = new HttpParams();
     params = params.set('attempt_id', attemptId);
     return this.http
-      .get<unknown[]>(`${appConfig().apiUrl}/items/${id}/parents`, { params: params })
+      .get<unknown[]>(`${appConfig.apiUrl}/items/${id}/parents`, { params: params })
       .pipe(
         decodeSnakeCase(D.array(itemParentDecoder))
       );

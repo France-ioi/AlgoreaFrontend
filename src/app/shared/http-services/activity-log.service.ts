@@ -62,7 +62,7 @@ export class ActivityLogService {
     let params = new HttpParams();
     params = params.set('limit', '20');
     return this.http
-      .get<RawActivityLog[]>(`${appConfig().apiUrl}/items/${itemId}/log`, { params: params })
+      .get<RawActivityLog[]>(`${appConfig.apiUrl}/items/${itemId}/log`, { params: params })
       .pipe(
         map(data => data.map(d => ({
           at: new Date(d.at),

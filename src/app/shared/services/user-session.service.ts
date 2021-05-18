@@ -31,9 +31,9 @@ export class UserSessionService implements OnDestroy {
     private authService: AuthService,
     private http: CurrentUserHttpService,
   ) {
-    this.subscription = this.authService.accessToken$.pipe(
-      switchMap(token => {
-        if (token === null) return of<UserProfile|undefined>(undefined);
+    this.subscription = this.authService.status$.pipe(
+      switchMap(auth => {
+        if (!auth.authenticated) return of<UserProfile|undefined>(undefined);
         return this.http.getProfileInfo().pipe(
           catchError(_e => EMPTY)
         );

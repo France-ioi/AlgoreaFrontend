@@ -39,7 +39,7 @@ export class JoinedGroupsService {
 
   getJoinedGroups(sort: SortOptions): Observable<GroupMembership[]> {
     return this.http
-      .get(`${appConfig().apiUrl}/current-user/group-memberships`, { params: sortOptionsToHTTP(sort) })
+      .get(`${appConfig.apiUrl}/current-user/group-memberships`, { params: sortOptionsToHTTP(sort) })
       .pipe(
         decodeSnakeCase(D.array(groupMembershipDecoder)),
         map(memberships => memberships.filter(membership => membership.group.type !== 'Base')),
