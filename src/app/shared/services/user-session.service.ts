@@ -1,10 +1,11 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { EMPTY, BehaviorSubject, Subscription, Observable, Subject, merge } from 'rxjs';
+import { EMPTY, BehaviorSubject, Subscription, Observable, Subject, of } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
 import { switchMap, catchError, distinctUntilChanged, map, filter, tap } from 'rxjs/operators';
 import { CurrentUserHttpService, UpdateUserBody, UserProfile } from '../http-services/current-user.service';
 import { Group } from 'src/app/modules/group/http-services/get-group-by-id.service';
 import { isNotUndefined } from '../helpers/null-undefined-predicates';
+import { repeatLatestWhen } from '../helpers/repeatLatestWhen';
 
 export interface UserSession {
   user: UserProfile,
@@ -32,16 +33,17 @@ export class UserSessionService implements OnDestroy {
     private authService: AuthService,
     private currentUserService: CurrentUserHttpService,
   ) {
-    this.subscription = merge(
-      this.authService.status$.pipe(filter(auth => auth.authenticated)),
-      this.refresh$,
-    ).pipe(
-      switchMap(() => this.currentUserService.getProfileInfo().pipe(
-        catchError(_e => EMPTY)
-      )),
-      distinctUntilChanged((p1, p2) => p1 === p2 || (p1.groupId === p2.groupId))
+    this.subscription = this.authService.status$.pipe(
+      repeatLatestWhen(this.refresh$),
+      switchMap(auth => {
+        if (!auth.authenticated) return of<UserProfile | undefined>(undefined);
+        return this.currentUserService.getProfileInfo().pipe(
+          catchError(_e => EMPTY)
+        );
+      }),
+      distinctUntilChanged((p1, p2) => p1 === p2 || (!!p1 && !!p2 && p1.groupId === p2.groupId)),
     ).subscribe(profile => {
-      this.session$.next({ user: profile });
+      this.session$.next(profile ? { user: profile } : undefined);
     });
   }
 
