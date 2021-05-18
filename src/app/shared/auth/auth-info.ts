@@ -1,4 +1,4 @@
-import { SECONDS } from '../helpers/duration';
+import { SECONDS, YEARS } from '../helpers/duration';
 
 export type AuthStatus = NotAuthenticated|CookieAuthenticated|TokenAuthenticated;
 export type AuthResult = CookieAuthenticated|TokenAuthenticated;
@@ -27,6 +27,7 @@ export function cookieAuthFromServiceResp(expiresIn: number): CookieAuthenticate
 const storageTokenKey = 'access_token';
 const storageCreationKey = 'access_token_creation';
 const storageExpirationKey = 'access_token_exp';
+const storageForcedTokenKey = 'forced_token';
 const tokenStorage = sessionStorage;
 
 export function tokenAuthFromStorage(): TokenAuthenticated|undefined {
@@ -60,6 +61,30 @@ export function clearTokenFromStorage(): void {
   tokenStorage.removeItem(storageTokenKey);
   tokenStorage.removeItem(storageCreationKey);
   tokenStorage.removeItem(storageExpirationKey);
+}
+
+export function hasForcedToken(): boolean {
+  return tokenStorage.getItem(storageForcedTokenKey) !== null;
+}
+
+export function clearForcedTokenFromStorage(): void {
+  tokenStorage.removeItem(storageForcedTokenKey);
+}
+
+export function setForcedTokenInStorage(token: string): void {
+  tokenStorage.setItem(storageForcedTokenKey, token);
+}
+
+/**
+ * Create a token-authentication which is valid for one year based on the value stored in `storageForcedTokenKey` in the store.
+ * This is useful for dev to force a token for testing a user.
+ * The expiration / creation are just values which will prevent the app to refresh the token, the actual security measures (and actual
+ * validity duration) are handled by the backend.
+ */
+export function forcedTokenAuthFromStorage(): TokenAuthenticated|undefined {
+  const token = tokenStorage.getItem(storageForcedTokenKey);
+  if (!token) return undefined;
+  return tokenAuthenticated(token, new Date(Date.now() + 1*YEARS), new Date()); // assume the token is valid for 1 year
 }
 
 function expiresInToDate(expiresIn: number): Date {

@@ -5,7 +5,15 @@ import { OAuthService } from './oauth.service';
 import { AuthHttpService } from '../http-services/auth.http-service';
 import { MINUTES } from '../helpers/duration';
 import { appConfig } from '../helpers/config';
-import { tokenAuthFromStorage, AuthStatus, notAuthenticated, AuthResult, clearTokenFromStorage } from './auth-info';
+import {
+  tokenAuthFromStorage,
+  AuthStatus,
+  notAuthenticated,
+  AuthResult,
+  clearTokenFromStorage,
+  hasForcedToken,
+  forcedTokenAuthFromStorage
+} from './auth-info';
 
 // Lifetime under which we refresh the token.
 export const minTokenLifetime = 5*MINUTES;
@@ -38,7 +46,10 @@ export class AuthService implements OnDestroy {
     oauthService.tryCompletingCodeFlowLogin().pipe(
       catchError(_e => {
         // (2) use the ongoing authentication if any
-        if (appConfig.authType === 'tokens') {
+        if (appConfig.allowForcedToken && hasForcedToken()) {
+          const token = forcedTokenAuthFromStorage();
+          return token ? of(token) : throwError(new Error('unexpected error while loading forced token'));
+        } else if (appConfig.authType === 'tokens') {
           const token = tokenAuthFromStorage();
           return token ? of(token) : throwError(new Error('no token stored for token auth'));
         } else {

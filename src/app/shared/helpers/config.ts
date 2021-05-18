@@ -19,6 +19,7 @@ export type Environment = {
 
   languages?: { tag: string, path: string }[];
 
+  allowForcedToken: boolean, // for dev: allow devs to define 'forced_token' in storage so that this token is used in any case
   // The authType used with API is either 'tokens' or 'cookies'.
   // If using cookie `secure` or `sameSite` must be true (may be both). If `secure` the api has to be on the same domain as the API.
 } & AuthTypeConfig;

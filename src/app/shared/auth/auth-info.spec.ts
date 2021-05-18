@@ -1,5 +1,13 @@
 import { SECONDS } from '../helpers/duration';
-import { clearTokenFromStorage, tokenAuthFromServiceResp, tokenAuthFromStorage } from './auth-info';
+import {
+  clearForcedTokenFromStorage,
+  clearTokenFromStorage,
+  forcedTokenAuthFromStorage,
+  hasForcedToken,
+  setForcedTokenInStorage,
+  tokenAuthFromServiceResp,
+  tokenAuthFromStorage
+} from './auth-info';
 
 describe('auth-info', () => {
 
@@ -9,6 +17,7 @@ describe('auth-info', () => {
 
   beforeEach(function() {
     clearTokenFromStorage();
+    clearForcedTokenFromStorage();
   });
 
   it('should save & load successfully a token', () => {
@@ -67,6 +76,17 @@ describe('auth-info', () => {
     clearTokenFromStorage();
     const loaded2 = tokenAuthFromStorage();
     expect(loaded2).toBeUndefined();
+  });
+
+  it('should not load forced token when none is defined', () => {
+    expect(hasForcedToken()).toBeFalse();
+    expect(forcedTokenAuthFromStorage()).toBeUndefined();
+  });
+
+  it('should load forced token when defined', () => {
+    setForcedTokenInStorage('atemptok');
+    expect(hasForcedToken()).toBeTrue();
+    expect(forcedTokenAuthFromStorage()?.accessToken).toEqual('atemptok');
   });
 
 });
