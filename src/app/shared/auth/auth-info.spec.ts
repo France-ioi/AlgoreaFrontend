@@ -56,7 +56,7 @@ describe('auth-info', () => {
   });
 
   it('should fail (and clear) when loading an invalid token', () => {
-    tokenAuthFromServiceResp(expectedToken, -1 /* expired 1sec ago */);
+    tokenAuthFromServiceResp(expectedToken, expiresInSec);
     sessionStorage.setItem('access_token_exp', 'not a number');
     expect(tokenAuthFromStorage).toThrowError();
     expect(sessionStorage.getItem('access_token')).toBeNull();
