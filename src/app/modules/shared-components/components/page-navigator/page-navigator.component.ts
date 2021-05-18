@@ -21,7 +21,7 @@ export class PageNavigatorComponent {
 
   isCurrentGroupWatched$ = this.userSessionService.session$.pipe(
     filter(isNotNullOrUndefined),
-    map(data => data?.watchedGroup?.id === this.groupId)
+    map(data => this.groupId !== undefined && data.watchedGroup?.id === this.groupId)
   );
 
   constructor(private userSessionService: UserSessionService) {
