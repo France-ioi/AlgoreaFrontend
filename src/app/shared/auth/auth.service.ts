@@ -1,11 +1,19 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { catchError, switchMap, retry, mapTo } from 'rxjs/operators';
-import { BehaviorSubject, of, timer, throwError, Subject, EMPTY } from 'rxjs';
+import { BehaviorSubject, of, timer, Subject, EMPTY } from 'rxjs';
 import { OAuthService } from './oauth.service';
 import { AuthHttpService } from '../http-services/auth.http-service';
 import { MINUTES } from '../helpers/duration';
 import { appConfig } from '../helpers/config';
-import { tokenAuthFromStorage, AuthStatus, notAuthenticated, AuthResult, clearTokenFromStorage } from './auth-info';
+import {
+  tokenAuthFromStorage,
+  AuthStatus,
+  notAuthenticated,
+  AuthResult,
+  clearTokenFromStorage,
+  hasForcedToken,
+  forcedTokenAuthFromStorage
+} from './auth-info';
 
 // Lifetime under which we refresh the token.
 export const minTokenLifetime = 5*MINUTES;
@@ -38,12 +46,9 @@ export class AuthService implements OnDestroy {
     oauthService.tryCompletingCodeFlowLogin().pipe(
       catchError(_e => {
         // (2) use the ongoing authentication if any
-        if (appConfig.authType === 'tokens') {
-          const token = tokenAuthFromStorage();
-          return token ? of(token) : throwError(new Error('no token stored for token auth'));
-        } else {
-          return this.authHttp.refreshCookie(); // will fail if the browser has no cookie
-        }
+        if (appConfig.allowForcedToken && hasForcedToken()) return of(forcedTokenAuthFromStorage());
+        else if (appConfig.authType === 'tokens') return of(tokenAuthFromStorage());
+        else return this.authHttp.refreshCookie(); // will fail if the browser has no cookie
       }),
       catchError(_e =>
         // (3) otherwise, create a temp session
