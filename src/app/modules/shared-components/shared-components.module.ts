@@ -61,7 +61,7 @@ import { DurationComponent } from './components/duration/duration.component';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputMaskModule } from 'primeng/inputmask';
 import { AccessCodeViewComponent } from './components/access-code-view/access-code-view.component';
-import { LanguagePickerComponent } from '../../core/components/language-picker/language-picker.component';
+import { LanguagePickerComponent } from './components/language-picker/language-picker.component';
 
 @NgModule({
   declarations: [

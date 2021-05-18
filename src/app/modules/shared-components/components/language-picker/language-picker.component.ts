@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, Output, EventEmitter } from '@angular/core';
 import { CurrentUserHttpService } from 'src/app/shared/http-services/current-user.service';
-import { LocaleService } from '../../services/localeService';
+import { LocaleService } from '../../../../core/services/localeService';
 
 @Component({
   selector: 'alg-language-picker',
