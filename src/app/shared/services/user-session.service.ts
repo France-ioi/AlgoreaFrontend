@@ -17,7 +17,7 @@ export interface UserSession {
 export class UserSessionService implements OnDestroy {
 
   session$ = new BehaviorSubject<UserSession|undefined>(undefined)
-  refresh$ = new Subject()
+  refresh$ = new Subject<void>()
 
   /** currently-connected user profile, temporary or not, excluding transient (undefined) states */
   user$ = this.session$.pipe(
@@ -47,6 +47,8 @@ export class UserSessionService implements OnDestroy {
 
   ngOnDestroy(): void {
     this.subscription?.unsubscribe();
+    this.session$.complete();
+    this.refresh$.complete();
   }
 
   startGroupWatching(group: Group): void {
