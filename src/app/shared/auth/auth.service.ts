@@ -62,7 +62,8 @@ export class AuthService implements OnDestroy {
     // setup auto-refresh after delay
     this.status$.pipe(
       switchMap(auth => {
-        const maxDelay = 2147483647;
+        // Max delay for Rx.timer. Otherwise, it triggers immediately (see bug https://github.com/ReactiveX/rxjs/issues/3015)
+        const maxDelay = 2147483647; // 2^31-1
         if (!auth.authenticated) return EMPTY;
         // Refresh if the token is valid < `minTokenLifetime` or when it will have reached 50% of its lifetime. Retry every minute.
         const refreshIn = auth.expiration.getTime() - Date.now() <= minTokenLifetime ? 0 :
