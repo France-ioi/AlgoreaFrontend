@@ -55,36 +55,6 @@
     cursor: not-allowed !important;
   }
 
-  .req-tools {
-    display: flex;
-    align-items: center;
-    color: $base-color;
-    font-size: 1.2rem;
-
-    > span {
-      margin-right: 1rem;
-      cursor: pointer;
-
-      ::ng-deep p-progressSpinner {
-        display: flex;
-        align-items: center;
-
-        .p-progress-spinner {
-          width: 1.2rem;
-          height: 1.2rem;
-        }
-      }
-
-      &.accept, &.reject {
-        display: flex;
-        align-items: center;
-      }
-
-      span {
-        margin-right: 1rem;
-      }
-    }
-  }
 }
 
 // FIXME: find a more restrictive selector
@@ -95,23 +65,6 @@
   > * {
     opacity: 70%;
     pointer-events: none;
-  }
-}
-
-.summary {
-  text-align: left;
-  display: flex;
-  align-items: center;
-
-  .select-all {
-    margin-left: 2.1rem;
-    color: #9b9b9b;
-    font-size: 1.2rem;
-    cursor: pointer;
-  }
-
-  .filler {
-    flex: 1;
   }
 }
 

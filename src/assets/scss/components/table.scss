@@ -16,6 +16,10 @@
     letter-spacing: .03em;
     height: 3rem;
 
+    &.thin {
+      width: 3.3333rem;
+    }
+
     // Todo: not belongs to p-datatable
     .header-container {
       width: 100%;
@@ -56,6 +60,11 @@
       font-style: italic;
       text-align: center;
       font-size: medium;
+    }
+
+    &.thin {
+      width: 3.3333rem;
+      text-overflow: clip;
     }
   }
 
@@ -260,6 +269,62 @@
 
     .p-datatable-tbody > tr {
       border: none;
+    }
+  }
+
+  &.--member-list {
+    .p-datatable {
+      .p-datatable-footer {
+        background-color: transparent;
+        margin-bottom: 0rem;
+      }
+    }
+  }
+}
+
+.summary {
+  text-align: left;
+  display: flex;
+  align-items: center;
+
+  p-tableheadercheckbox {
+    .p-checkbox {
+      display: block;
+    }
+  }
+
+  .select-all {
+    margin-left: 2.1rem;
+    color: #9b9b9b;
+    font-size: 1.2rem;
+    cursor: pointer;
+  }
+
+  .filler {
+    flex: 1;
+  }
+
+  .summary-actions {
+    display: flex;
+    align-items: center;
+    color: $base-color;
+    font-size: 1.2rem;
+
+    > span {
+      margin-right: 1rem;
+      cursor: pointer;
+
+      &.disabled {
+        cursor: not-allowed;
+        > * {
+          color: #bbb;
+          pointer-events: none;
+        }
+      }
+
+      span {
+        margin-right: 1rem;
+      }
     }
   }
 }

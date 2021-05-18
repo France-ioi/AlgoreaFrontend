@@ -1,14 +1,17 @@
 import { Component, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild } from '@angular/core';
 import { SortEvent } from 'primeng/api';
 import { Table } from 'primeng/table';
-import { merge, Observable, of, Subject } from 'rxjs';
-import { catchError, delay, map, switchMap } from 'rxjs/operators';
-import { errorState, fetchingState, readyState } from 'src/app/shared/helpers/state';
+import { Observable, ReplaySubject, Subject } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 import { GetGroupDescendantsService } from 'src/app/shared/http-services/get-group-descendants.service';
+import { mapToFetchState } from 'src/app/shared/operators/state';
+import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
 import { Group } from '../../http-services/get-group-by-id.service';
 import { GetGroupChildrenService, GroupChild } from '../../http-services/get-group-children.service';
 import { GetGroupMembersService, Member } from '../../http-services/get-group-members.service';
-import { TypeFilter, Filter, GroupCompositionFilterComponent } from '../group-composition-filter/group-composition-filter.component';
+import { GroupUsersService, parseResults } from '../../http-services/group-users.service';
+import { Filter, GroupCompositionFilterComponent, TypeFilter } from '../group-composition-filter/group-composition-filter.component';
+import { displayResponseToast } from './user-removal-response-handling';
 
 interface Column {
   sortable?: boolean,
@@ -64,6 +67,8 @@ export class MemberListComponent implements OnChanges, OnDestroy {
   currentSort: string[] = [];
   currentFilter: Filter = this.defaultFilter;
 
+  selection: Member[] = [];
+
   data: Data = {
     columns: [],
     rowData: [],
@@ -73,22 +78,17 @@ export class MemberListComponent implements OnChanges, OnDestroy {
   @ViewChild('compositionFilter') private compositionFilter?: GroupCompositionFilterComponent;
 
   private dataFetching = new Subject<{ groupId: string, filter: Filter, sort: string[] }>();
+  removalInProgress$ = new ReplaySubject<boolean>();
 
   constructor(
     private getGroupMembersService: GetGroupMembersService,
     private getGroupChildrenService: GetGroupChildrenService,
     private getGroupDescendantsService: GetGroupDescendantsService,
+    private groupUsersService: GroupUsersService,
+    private actionFeedbackService: ActionFeedbackService,
   ) {
     this.dataFetching.pipe(
-      delay(0),
-      switchMap(params =>
-        merge(
-          of(fetchingState()),
-          this.getData(params.groupId, params.filter, params.sort).pipe(
-            map(readyState),
-            catchError(err => of(errorState(err))),
-          )
-        ))
+      switchMap(params => this.getData(params.groupId, params.filter, params.sort).pipe(mapToFetchState())),
     ).subscribe(
       state => {
         this.state = state.tag;
@@ -185,5 +185,35 @@ export class MemberListComponent implements OnChanges, OnDestroy {
   setFilter(filter: Filter): void {
     this.compositionFilter?.setFilter(filter);
     this.onFilterChange(filter);
+  }
+
+  onSelectAll(): void {
+    if (this.currentFilter.type !== TypeFilter.Users) return;
+
+    if (this.selection.length === this.data.rowData.length) {
+      this.selection = [];
+    } else {
+      this.selection = this.data.rowData as Member[];
+    }
+  }
+
+  onRemove(): void {
+    if (this.selection.length === 0 || !this.group) return;
+
+    this.removalInProgress$.next(true);
+    this.groupUsersService.removeUsers(this.group.id, this.selection.map(member => member.id))
+      .subscribe(result => {
+        displayResponseToast(this.actionFeedbackService, parseResults(result));
+        this.table?.clear();
+        this.selection = [];
+        if (this.group) {
+          this.dataFetching.next({ groupId: this.group.id, filter: this.currentFilter, sort: this.currentSort });
+        }
+        this.removalInProgress$.next(false);
+      },
+      _err => {
+        this.removalInProgress$.next(false);
+        this.actionFeedbackService.unexpectedError();
+      });
   }
 }

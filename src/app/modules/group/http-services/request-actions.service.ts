@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { ActionResponse, successData, objectToMap } from 'src/app/shared/http-services/action-response';
+import { ActionResponse, successData } from 'src/app/shared/http-services/action-response';
 import { map } from 'rxjs/operators';
 import { forkJoin, Observable } from 'rxjs';
 import { appConfig } from 'src/app/shared/helpers/config';
+
+type Status = "invalid"|"success"|"unchanged"|"not_found";
 
 export enum Action {
   Accept,
@@ -17,58 +19,60 @@ export class RequestActionsService {
 
   constructor(private http: HttpClient) {}
 
-  processJoinRequests(ids: Map<string, string[]>, action: Action): Observable<Map<string, any>[]> {
+  processJoinRequests(ids: Map<string, string[]>, action: Action): Observable<Map<string, Status>[]> {
     const type = action === Action.Accept ? 'accept' : 'reject';
     return forkJoin(
       Array.from(ids.entries()).map(groupMembersIds =>
         this.http
-          .post<ActionResponse<Object>>(`${appConfig.apiUrl}/groups/${groupMembersIds[0]}/join-requests/${type}`, null, {
-            params: {
-              group_ids: groupMembersIds[1].join(','),
-            },
-          })
+          .post<ActionResponse<{[user: string]: Status}>>(
+            `${appConfig.apiUrl}/groups/${groupMembersIds[0]}/join-requests/${type}`, null, {
+              params: {
+                group_ids: groupMembersIds[1].join(','),
+              },
+            })
           .pipe(
             map(successData),
-            map(objectToMap)
+            map(data => new Map(Object.entries(data)))
           )
       )
     );
   }
 
-  processLeaveRequests(ids: Map<string, string[]>, action: Action): Observable<Map<string, any>[]> {
+  processLeaveRequests(ids: Map<string, string[]>, action: Action): Observable<Map<string, Status>[]> {
     const type = action === Action.Accept ? 'accept' : 'reject';
     return forkJoin(
       Array.from(ids.entries()).map(groupMembersIds =>
         this.http
-          .post<ActionResponse<Object>>(`${appConfig.apiUrl}/groups/${groupMembersIds[0]}/leave-requests/${type}`, null, {
-            params: {
-              group_ids: groupMembersIds[1].join(','),
-            },
-          })
+          .post<ActionResponse<{[user: string]: Status}>>(
+            `${appConfig.apiUrl}/groups/${groupMembersIds[0]}/leave-requests/${type}`, null, {
+              params: {
+                group_ids: groupMembersIds[1].join(','),
+              },
+            })
           .pipe(
             map(successData),
-            map(objectToMap)
+            map(data => new Map(Object.entries(data)))
           )
       )
     );
   }
 
-  processGroupInvitations(groupIds: string[], action: Action): Observable<Map<string, any>[]> {
+  processGroupInvitations(groupIds: string[], action: Action): Observable<Map<string, Status>[]> {
     const type = action === Action.Accept ? 'accept' : 'reject';
     return forkJoin(
       groupIds.map(groupId =>
         this.http
-          .post<ActionResponse<Object>>(`${appConfig.apiUrl}/current-user/group-invitations/${groupId}/${type}`, null)
+          .post<ActionResponse<{[user: string]: Status}>>(`${appConfig.apiUrl}/current-user/group-invitations/${groupId}/${type}`, null)
           .pipe(
             map(successData),
-            map(objectToMap)
+            map(data => new Map(Object.entries(data)))
           )
       )
     );
   }
 }
 
-export function parseResults(data: Map<string, any>[]): { countRequests: number, countSuccess: number } {
+export function parseResults(data: Map<string, Status>[]): { countRequests: number, countSuccess: number } {
   const res = { countRequests: 0, countSuccess: 0 };
   data.forEach(elm => {
     res.countRequests += elm.size;

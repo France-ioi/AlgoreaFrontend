@@ -1,12 +1,11 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 export enum TypeFilter {
-  Groups,
-  Sessions,
-  Teams,
-  Users,
+  Groups = 'groups',
+  Sessions = 'sessions',
+  Teams = 'teams',
+  Users = 'users',
 }
-
 export interface Filter {
   directChildren: boolean,
   type: TypeFilter,
@@ -39,7 +38,7 @@ export class GroupCompositionFilterComponent implements OnInit{
     },
   ];
 
-  readonly allDescendantsTypeFilters = [
+  readonly allDescendantsTypeFilters: { icon: string, label: string, value: TypeFilter }[] = [
     {
       icon: 'fa fa-users',
       label: $localize`teams`,
@@ -52,7 +51,7 @@ export class GroupCompositionFilterComponent implements OnInit{
     },
   ];
 
-  readonly directChildrenTypeFilters = [
+  readonly directChildrenTypeFilters: { icon: string, label: string, value: TypeFilter }[] = [
     {
       icon: 'fa fa-users',
       label: $localize`sub-groups`,
@@ -106,7 +105,7 @@ export class GroupCompositionFilterComponent implements OnInit{
 
     const typeFilters = this.value.directChildren ? this.directChildrenTypeFilters : this.allDescendantsTypeFilters;
     this.selectedTypeFilter = typeFilters.findIndex(typeFilter => typeFilter.value ===
-      (this.value.type === TypeFilter.Teams ? TypeFilter.Teams : TypeFilter.Users));
+      (this.value.type === 'teams' ? 'teams' : 'users'));
     this.value.type = typeFilters[this.selectedTypeFilter].value;
 
     this.change.emit(this.value);

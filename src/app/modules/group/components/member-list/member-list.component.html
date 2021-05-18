@@ -7,16 +7,20 @@
 
 <ng-template #noError>
   <p-table #table
-    class="alg-table"
+    class="alg-table --member-list"
     [columns]="data.columns"
     [value]="data.rowData"
     [customSort]="true"
     sortMode="multiple"
     (sortFunction)="onCustomSort($event)"
-    [loading]="state === 'fetching'"
+    [loading]="(removalInProgress$ | async) || state === 'fetching'"
+    [(selection)]="selection"
+    selectionMode="multiple"
+    dataKey="id"
   >
     <ng-template pTemplate="header" let-columns>
       <tr *ngIf="data.rowData.length > 0">
+        <th class="thin" *ngIf="currentFilter.type === 'users'"></th>
         <ng-container *ngFor="let col of data.columns">
           <th [pSortableColumn]="col.field" *ngIf="col.sortable">
             <div class="header-container">
@@ -39,6 +43,9 @@
       let-columns="columns"
     >
       <tr>
+        <td class="thin" *ngIf="currentFilter.type === 'users'">
+          <p-tableCheckbox class="p-chkbox" [value]="rowData"></p-tableCheckbox>
+        </td>
         <td *ngFor="let col of columns">
           <ng-container [ngSwitch]="col.field">
             <ng-container *ngSwitchCase="'user.login'">
@@ -61,6 +68,21 @@
           <p class="empty-message" i18n>This list is empty. Check below the different ways to add members or sub-groups.</p>
         </td>
       </tr>
+    </ng-template>
+    <ng-template pTemplate="summary">
+      <div class="summary" *ngIf="currentFilter.type === 'users'">
+        <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+        <span class="select-all" (click)="onSelectAll()" i18n>
+          Select all
+        </span>
+        <span class="filler"></span>
+        <div class="summary-actions">
+            <span (click)="onRemove()" [class.disabled]="(removalInProgress$ | async) || state !== 'ready' || selection.length === 0">
+            <span i18n>Remove</span>
+            <i class="fa fa-trash-alt"></i>
+          </span>
+        </div>
+      </div>
     </ng-template>
   </p-table>
 </ng-template>
