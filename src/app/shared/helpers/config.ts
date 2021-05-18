@@ -1,7 +1,7 @@
 import { environment } from 'src/environments/environment';
 
-interface TokenConfig { useTokens: true, useCookies: false }
-type CookieConfig = { useTokens: false, useCookies: true } & ({ secure: true, sameSite: boolean } | { secure: boolean, sameSite: true })
+interface TokenConfig { authType: 'tokens' }
+type CookieConfig = { authType: 'cookies' } & ({ secure: true, sameSite: boolean } | { secure: boolean, sameSite: true })
 export type AuthTypeConfig = TokenConfig | CookieConfig;
 
 export type Environment = {
@@ -19,8 +19,8 @@ export type Environment = {
 
   languages?: { tag: string, path: string }[];
 
-  // The auth type used with API is either `useToken: true` or `useCookies: true` (not both).
-  // If using cookie `secure` or `sameSite` must be true (may be both). If `secure` the api has to be on the same domain as the API.st
+  // The authType used with API is either 'tokens' or 'cookies'.
+  // If using cookie `secure` or `sameSite` must be true (may be both). If `secure` the api has to be on the same domain as the API.
 } & AuthTypeConfig;
 
 type Config = Environment; // config may be someday an extension of the environment

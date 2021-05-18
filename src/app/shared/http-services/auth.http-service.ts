@@ -20,7 +20,7 @@ const longAuthServicesTimeout = 10000;
 export class AuthHttpService {
 
   private http: HttpClient; // an http client specific to this class, skipping all http interceptors
-  private cookieParams = new HttpParams({ fromObject: appConfig.useCookies ? {
+  private cookieParams = new HttpParams({ fromObject: appConfig.authType === 'cookies' ? {
     use_cookie: '1',
     cookie_secure: appConfig.secure ? '1' : '0',
     cookie_same_site: appConfig.sameSite ? '1' : '0',
@@ -60,7 +60,7 @@ export class AuthHttpService {
   }
 
   refreshToken(token: string): Observable<AuthResult> {
-    if (!appConfig.useTokens) throw new Error('try to refresh token while app does not use token');
+    if (appConfig.authType !== 'tokens') throw new Error('try to refresh token while app does not use token');
     return this.http
       .post<ActionResponse<TokenAuthPayload>>(`${appConfig.apiUrl}/auth/token`, null, { headers: headersForAuth(token) }).pipe(
         timeout(longAuthServicesTimeout),
@@ -70,7 +70,7 @@ export class AuthHttpService {
   }
 
   refreshCookie(): Observable<AuthResult> {
-    if (!appConfig.useCookies) throw new Error('try not to provide token while app uses token');
+    if (appConfig.authType !== 'cookies') throw new Error('try not to provide token while app uses token');
     return this.http
       .post<ActionResponse<CookieAuthPayload>>(`${appConfig.apiUrl}/auth/token`, null, { params: this.cookieParams }).pipe(
         timeout(longAuthServicesTimeout),
@@ -92,10 +92,10 @@ export class AuthHttpService {
 
   private authPayloadToResult(payload: AuthPayload): AuthResult {
     if ('access_token' in payload) {
-      if (!appConfig.useTokens) throw new Error('token received while not using tokens');
+      if (appConfig.authType !== 'tokens') throw new Error('token received while not using tokens');
       return tokenAuthFromServiceResp(payload.access_token, payload.expires_in);
     } else {
-      if (appConfig.useTokens) throw new Error('no token received while using tokens');
+      if (appConfig.authType === 'tokens') throw new Error('no token received while using tokens');
       return cookieAuthFromServiceResp(payload.expires_in);
     }
   }

@@ -38,7 +38,7 @@ export class AuthService implements OnDestroy {
     oauthService.tryCompletingCodeFlowLogin().pipe(
       catchError(_e => {
         // (2) use the ongoing authentication if any
-        if (appConfig.useTokens) {
+        if (appConfig.authType === 'tokens') {
           const token = tokenAuthFromStorage();
           return token ? of(token) : throwError(new Error('no token stored for token auth'));
         } else {
@@ -98,7 +98,7 @@ export class AuthService implements OnDestroy {
     if (!currentauth.authenticated) throw new Error('unable to logout while no user is logged in');
     this.status$.next(notAuthenticated());
 
-    if (appConfig.useTokens) clearTokenFromStorage();
+    if (appConfig.authType === 'tokens') clearTokenFromStorage();
     this.authHttp.revokeAuth(currentauth).pipe(
       catchError(_e => of(undefined)), // continue next step even if token revocation failed
     ).subscribe(() => {
