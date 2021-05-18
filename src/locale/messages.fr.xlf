@@ -11,7 +11,49 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/app.component.html</context><context context-type="linenumber">58</context></context-group></trans-unit><trans-unit id="auth-error-modal-todo" datatype="html">
         <source>Try to refresh the page. If this problem persists, please contact us.</source><target state="translated">Rafraichissez la page. Si le problème persiste, contactez nous.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/app.component.html</context><context context-type="linenumber">59</context></context-group></trans-unit><trans-unit id="cac30a91d2ecebdb1f56ef4743dfb4a779c70857" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/app.component.html</context><context context-type="linenumber">59</context></context-group></trans-unit><trans-unit id="3857c442569eb51150df5cf4ddf9d7e8ffc3ef2f" datatype="html">
+        <source>Language mismatch</source><target state="new">Language mismatch</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/components/language-mismatch/language-mismatch.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit><trans-unit id="6e49520b984b9b7b0f7dc1138aeb06bf3dfcfe6d" datatype="html">
+        <source> The current language "<x id="INTERPOLATION" equiv-text="{{ languageMismatch.platformLanguage }}"/>" does not correspond to your account's default language "<x id="INTERPOLATION_1" equiv-text="{{ languageMismatch.userDefaultLanguage }}"/>". Do you want to continue in this language? </source><target state="new"> The current language "<x id="INTERPOLATION" equiv-text="{{ languageMismatch.platformLanguage }}"/>" does not correspond to your account's default language "<x id="INTERPOLATION_1" equiv-text="{{ languageMismatch.userDefaultLanguage }}"/>". Do you want to continue in this language? </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/components/language-mismatch/language-mismatch.component.html</context>
+          <context context-type="linenumber">16,19</context>
+        </context-group>
+      </trans-unit><trans-unit id="11737dfe391b42f741d7b0971227c8b505d72fd1" datatype="html">
+        <source> Continue in "<x id="INTERPOLATION" equiv-text="{{ languageMismatch.platformLanguage }}"/>" and change my default language to "<x id="INTERPOLATION" equiv-text="{{ languageMismatch.platformLanguage }}"/>" for this platform </source><target state="new"> Continue in "<x id="INTERPOLATION" equiv-text="{{ languageMismatch.platformLanguage }}"/>" and change my default language to "<x id="INTERPOLATION" equiv-text="{{ languageMismatch.platformLanguage }}"/>" for this platform </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/components/language-mismatch/language-mismatch.component.html</context>
+          <context context-type="linenumber">27,29</context>
+        </context-group>
+      </trans-unit><trans-unit id="040cb438ba58717b1463cf202d661c37657b63a3" datatype="html">
+        <source> Visit the platform in "<x id="INTERPOLATION" equiv-text="{{ languageMismatch.userDefaultLanguage }}"/>" </source><target state="new"> Visit the platform in "<x id="INTERPOLATION" equiv-text="{{ languageMismatch.userDefaultLanguage }}"/>" </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/components/language-mismatch/language-mismatch.component.html</context>
+          <context context-type="linenumber">36,38</context>
+        </context-group>
+      </trans-unit><trans-unit id="d39cdddc562e28a840d20db2ea2ece74b3571e77" datatype="html">
+        <source> The platform does not exist in your default language "<x id="INTERPOLATION" equiv-text="{{ languageMismatch.userDefaultLanguage }}"/>". </source><target state="new"> The platform does not exist in your default language "<x id="INTERPOLATION" equiv-text="{{ languageMismatch.userDefaultLanguage }}"/>". </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/components/language-mismatch/language-mismatch.component.html</context>
+          <context context-type="linenumber">44,46</context>
+        </context-group>
+      </trans-unit><trans-unit id="87ca0196d2dc8ca2f33b78526002ba582eeb9aae" datatype="html">
+        <source> Continue in "<x id="INTERPOLATION" equiv-text="{{ languageMismatch.platformLanguage }}"/>" and change my default language to "<x id="INTERPOLATION" equiv-text="{{ languageMismatch.platformLanguage }}"/>" for this platform. </source><target state="new"> Continue in "<x id="INTERPOLATION" equiv-text="{{ languageMismatch.platformLanguage }}"/>" and change my default language to "<x id="INTERPOLATION" equiv-text="{{ languageMismatch.platformLanguage }}"/>" for this platform. </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/components/language-mismatch/language-mismatch.component.html</context>
+          <context context-type="linenumber">52,54</context>
+        </context-group>
+      </trans-unit><trans-unit id="dc8f34accf0848ae473c76c9917d9d14e78b2f0e" datatype="html">
+        <source>The language can always be modified through your profile page.</source><target state="new">The language can always be modified through your profile page.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/components/language-mismatch/language-mismatch.component.html</context>
+          <context context-type="linenumber">59</context>
+        </context-group>
+      </trans-unit><trans-unit id="cac30a91d2ecebdb1f56ef4743dfb4a779c70857" datatype="html">
         <source>Log in / Sign in</source><target state="translated">Connexion / Inscription</target>
 
 
@@ -499,7 +541,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/services/action-feedback.service.ts</context><context context-type="linenumber">29</context></context-group></trans-unit><trans-unit id="3487804242455918485" datatype="html">
         <source>Changes successfully saved.</source><target state="translated">Modifications bien enregistrées.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/current-user/current-user.component.ts</context><context context-type="linenumber">50</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/group-edit/group-edit.component.ts</context><context context-type="linenumber">93</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-edit/item-edit.component.ts</context><context context-type="linenumber">319</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/access-code-view/access-code-view.component.ts</context><context context-type="linenumber">67</context></context-group></trans-unit><trans-unit id="b519e0487553e270eb6674281c3dd9e65ff91d3c" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/current-user/current-user.component.ts</context><context context-type="linenumber">40</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/group-edit/group-edit.component.ts</context><context context-type="linenumber">93</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-edit/item-edit.component.ts</context><context context-type="linenumber">319</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/access-code-view/access-code-view.component.ts</context><context context-type="linenumber">67</context></context-group></trans-unit><trans-unit id="b519e0487553e270eb6674281c3dd9e65ff91d3c" datatype="html">
       <source>Access to activity</source><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-details/item-details.component.html</context><context context-type="linenumber">9</context></context-group></trans-unit><trans-unit id="b519e0487553e270eb6674281c3dd9e65ff91d3c" datatype="html">
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/group-edit/group-edit.component.ts</context><context context-type="linenumber">93</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-edit/item-edit.component.ts</context><context context-type="linenumber">279</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/access-code-view/access-code-view.component.ts</context><context context-type="linenumber">67</context></context-group></trans-unit><trans-unit id="b519e0487553e270eb6674281c3dd9e65ff91d3c" datatype="html">
         <source>Access to activity</source><target state="translated">Accès à l'activité</target>
@@ -513,7 +555,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-details/item-details.component.html</context><context context-type="linenumber">10</context></context-group></trans-unit><trans-unit id="6162691442834560200" datatype="html">
         <source>Items</source><target state="translated">Élements</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-by-id.component.ts</context><context context-type="linenumber">19</context></context-group></trans-unit><trans-unit id="4939e322bd94d2844e80d8f9c9250b71e13aacf6" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-by-id.component.ts</context><context context-type="linenumber">21</context></context-group></trans-unit><trans-unit id="4939e322bd94d2844e80d8f9c9250b71e13aacf6" datatype="html">
         <source> home page </source><target state="translated"> page d'accueil </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-by-id.component.html</context>
@@ -1479,7 +1521,7 @@
       </trans-unit><trans-unit id="2037721496678637423" datatype="html">
         <source>Yourself</source><target state="translated">Vous</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/current-user/current-user.component.ts</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="49c67a2e461ff3a843f1eca3ba08aa46bbb60be6" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/current-user/current-user.component.ts</context><context context-type="linenumber">26</context></context-group></trans-unit><trans-unit id="49c67a2e461ff3a843f1eca3ba08aa46bbb60be6" datatype="html">
         <source>All the groups you have joined and you manage</source><target state="new">All the groups you have joined and you manage</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/my-groups/my-groups.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit><trans-unit id="0a0055d40aeb98c781660c355deecda503288089" datatype="html">
