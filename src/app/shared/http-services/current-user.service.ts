@@ -34,6 +34,10 @@ export const currentUserDecoder = pipe(
 
 export type UserProfile = D.TypeOf<typeof currentUserDecoder>;
 
+export interface UpdateUserBody {
+  default_language: string
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -49,7 +53,7 @@ export class CurrentUserHttpService {
       );
   }
 
-  update(changes: object): Observable<any> {
+  update(changes: UpdateUserBody): Observable<void> {
     return this.http.put<SimpleActionResponse>(`${appConfig.apiUrl}/current-user`, changes)
       .pipe(
         map(assertSuccess)
