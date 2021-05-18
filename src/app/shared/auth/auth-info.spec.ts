@@ -11,6 +11,7 @@ import {
 
 describe('auth-info', () => {
 
+  const expectedToken = 'atoken';
   const expiresInSec = 60;
   const expiresInMS = expiresInSec*SECONDS;
   const precision = -3; // the 3 lower digits may be different = 1s precison
@@ -23,14 +24,14 @@ describe('auth-info', () => {
   it('should save & load successfully a token', () => {
     const now = Date.now();
 
-    const auth = tokenAuthFromServiceResp('atemptok', expiresInSec);
+    const auth = tokenAuthFromServiceResp(expectedToken, expiresInSec);
     const loaded = tokenAuthFromStorage();
 
-    expect(auth.accessToken).toEqual('atemptok');
+    expect(auth.accessToken).toEqual(expectedToken);
     expect(auth.creation.getTime()-now).toBeCloseTo(0,precision);
     expect(auth.expiration.getTime()-now).toBeCloseTo(expiresInMS,precision);
 
-    expect(loaded?.accessToken).toEqual('atemptok');
+    expect(loaded?.accessToken).toEqual(expectedToken);
     if (loaded) {
       expect(loaded.creation.getTime()).toBeCloseTo(now,precision);
       expect(loaded.expiration.getTime()).toBeCloseTo(now+expiresInMS,precision);
@@ -38,21 +39,21 @@ describe('auth-info', () => {
   });
 
   it('should fail when loading a token with no token', () => {
-    tokenAuthFromServiceResp('atemptok', expiresInSec);
+    tokenAuthFromServiceResp(expectedToken, expiresInSec);
     sessionStorage.removeItem('access_token');
     const loaded = tokenAuthFromStorage();
     expect(loaded).toBeUndefined();
   });
 
   it('should fail when loading a token with no expiration', () => {
-    tokenAuthFromServiceResp('atemptok', expiresInSec);
+    tokenAuthFromServiceResp(expectedToken, expiresInSec);
     sessionStorage.removeItem('access_token_exp');
     const loaded = tokenAuthFromStorage();
     expect(loaded).toBeUndefined();
   });
 
   it('should fail (and clear) when loading a expired token', () => {
-    tokenAuthFromServiceResp('atemptok', -1 /* expired 1sec ago */);
+    tokenAuthFromServiceResp(expectedToken, -1 /* expired 1sec ago */);
     const loaded = tokenAuthFromStorage();
     expect(loaded).toBeUndefined();
     expect(sessionStorage.getItem('access_token')).toBeNull();
@@ -60,7 +61,7 @@ describe('auth-info', () => {
   });
 
   it('should fail (and clear) when loading an invalid token', () => {
-    tokenAuthFromServiceResp('atemptok', -1 /* expired 1sec ago */);
+    tokenAuthFromServiceResp(expectedToken, -1 /* expired 1sec ago */);
     sessionStorage.setItem('access_token_exp', 'not a number');
     const loaded = tokenAuthFromStorage();
     expect(loaded).toBeUndefined();
@@ -69,7 +70,7 @@ describe('auth-info', () => {
   });
 
   it('should clear token with clearTokenFromStorage()', () => {
-    tokenAuthFromServiceResp('atemptok', expiresInSec);
+    tokenAuthFromServiceResp(expectedToken, expiresInSec);
     const loaded = tokenAuthFromStorage();
     expect(loaded?.authenticated).toBeTrue();
     expect(loaded?.useCookie).toBeFalse();
@@ -84,9 +85,9 @@ describe('auth-info', () => {
   });
 
   it('should load forced token when defined', () => {
-    setForcedTokenInStorage('atemptok');
+    setForcedTokenInStorage(expectedToken);
     expect(hasForcedToken()).toBeTrue();
-    expect(forcedTokenAuthFromStorage()?.accessToken).toEqual('atemptok');
+    expect(forcedTokenAuthFromStorage()?.accessToken).toEqual(expectedToken);
   });
 
 });
