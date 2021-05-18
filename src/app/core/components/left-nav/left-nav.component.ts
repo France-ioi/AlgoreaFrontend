@@ -56,15 +56,15 @@ export class LeftNavComponent implements OnInit, OnDestroy {
         this.dataSources[this.activeTabIndex].focus(); // if the current tab has not been initialized yet, do it now
 
       } else if (isGroupInfo(content)) {
-        this.activeTabIndex = groupsTabIdx;
+        this.changeTab(groupsTabIdx);
         this.dataSources[groupsTabIdx].showContent(content);
 
       } else if (isActivityInfo(content)) {
-        this.activeTabIndex = activitiesTabIdx;
+        this.changeTab(activitiesTabIdx);
         this.dataSources[activitiesTabIdx].showContent(content);
 
       } else {
-        this.activeTabIndex = skillsTabIdx;
+        this.changeTab(skillsTabIdx);
         this.dataSources[skillsTabIdx].showContent(content);
       }
     });
@@ -75,17 +75,17 @@ export class LeftNavComponent implements OnInit, OnDestroy {
   }
 
   onSelectionChangedByIdx(e: { index: number }): void {
-    this.activeTabIndex = e.index;
-    this.dataSources[e.index].focus();
-    this.switchThemeColor();
+    this.changeTab(e.index);
+  }
+
+  changeTab(index: number): void {
+    this.activeTabIndex = index;
+    this.dataSources[index].focus();
+    this.themeChange.emit(this.activeTabIndex === 2 ? 'dark' : null);
   }
 
   retryError(): void {
     this.dataSources[this.activeTabIndex].retry();
-  }
-
-  switchThemeColor(): void {
-    this.themeChange.emit(this.activeTabIndex === 2 ? 'dark' : null);
   }
 
 }
