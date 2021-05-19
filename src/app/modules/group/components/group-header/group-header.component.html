@@ -10,9 +10,11 @@
       [allowEditing]="groupWithManagement.isCurrentUserManager"
       [allowWatching]="!!groupWithManagement.currentUserCanWatchMembers"
       [allowFullScreen]="false"
+      [groupId]="group?.id"
       navigationMode="nextAndPrev"
       (edit)="onEditButtonClicked()"
-      (watch)="onWatchButtonClicked()"
+      (watch)="onStartWatchButtonClicked()"
+      (stopWatch)="onStopWatchButtonClicked()"
     ></alg-page-navigator>
   </div>
 </div>
