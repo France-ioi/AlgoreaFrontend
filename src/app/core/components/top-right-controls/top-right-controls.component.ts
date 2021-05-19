@@ -20,8 +20,4 @@ export class TopRightControlsComponent{
     this.sessionService.login();
   }
 
-  logout(): void {
-    this.sessionService.logout();
-  }
-
 }

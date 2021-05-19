@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { distinctUntilChanged, map } from 'rxjs/operators';
 import { AuthService } from 'src/app/shared/auth/auth.service';
 import { appConfig } from 'src/app/shared/helpers/config';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
@@ -19,7 +20,7 @@ export class TopRightMenuComponent {
     { label: 'Log out', icon: 'pi pi-power-off', command: ():void => this.sessionService.logout() },
   ]
 
-  sessions$ = this.sessionService.session$;
+  userLogin$ = this.sessionService.session$.pipe(map(session => session?.user.login), distinctUntilChanged())
 
   constructor(
     private sessionService: UserSessionService,
