@@ -17,7 +17,7 @@ export enum ModeAction { StartEditing, StopEditing }
   providedIn: 'root'
 })
 export class ModeService implements OnDestroy {
-  mode$ = new BehaviorSubject<Mode>(Mode.Watching);
+  mode$ = new BehaviorSubject<Mode>(Mode.Normal);
   modeActions$ = new Subject<ModeAction>();
 
   constructor(
