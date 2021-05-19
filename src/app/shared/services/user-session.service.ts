@@ -18,6 +18,7 @@ export interface UserSession {
 export class UserSessionService implements OnDestroy {
 
   session$ = new BehaviorSubject<UserSession|undefined>(undefined)
+  userProfileError$ = new Subject<void>()
   watchedGroup$ = this.session$.pipe(map(session => session?.watchedGroup), distinctUntilChanged())
 
   /** currently-connected user profile, temporary or not, excluding transient (undefined) states */
@@ -41,7 +42,10 @@ export class UserSessionService implements OnDestroy {
       switchMap(auth => {
         if (!auth.authenticated) return of<UserProfile | undefined>(undefined);
         return this.currentUserService.getProfileInfo().pipe(
-          catchError(_e => EMPTY)
+          catchError(_e => {
+            this.userProfileError$.next();
+            return EMPTY;
+          })
         );
       }),
       distinctUntilChanged(), // skip two undefined values in a row
