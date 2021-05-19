@@ -1,6 +1,6 @@
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { UserSessionService } from '../shared/services/user-session.service';
-import { delay, skip, switchMap } from 'rxjs/operators';
+import { delay, switchMap } from 'rxjs/operators';
 import { Observable, Subscription } from 'rxjs';
 import { CurrentContentService } from '../shared/services/current-content.service';
 import { AuthService } from '../shared/auth/auth.service';
@@ -37,8 +37,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     // if user changes, navigate back to the root
-    this.subscription = this.sessionService.user$.pipe(
-      skip(1), // do not refresh when the first user is set
+    this.subscription = this.sessionService.userChanged$.pipe(
       switchMap(() => this.router.navigateByUrl('/')),
     ).subscribe();
   }

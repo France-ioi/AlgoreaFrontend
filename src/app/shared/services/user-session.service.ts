@@ -24,7 +24,6 @@ export class UserSessionService implements OnDestroy {
   user$ = this.session$.pipe(
     filter(isNotUndefined),
     map(session => session.user),
-    distinctUntilChanged((u1, u2) => u1.groupId === u2.groupId)
   );
 
   /** triggered when the user identity changes, which happens when auth token is invalidated */
