@@ -18,6 +18,7 @@ export interface UserSession {
 export class UserSessionService implements OnDestroy {
 
   session$ = new BehaviorSubject<UserSession|undefined>(undefined)
+  watchedGroup$ = this.session$.pipe(map(session => session?.watchedGroup), distinctUntilChanged())
 
   /** currently-connected user profile, temporary or not, excluding transient (undefined) states */
   user$ = this.session$.pipe(
