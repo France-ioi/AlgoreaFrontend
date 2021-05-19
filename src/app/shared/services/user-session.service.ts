@@ -18,7 +18,6 @@ export interface UserSession {
 export class UserSessionService implements OnDestroy {
 
   session$ = new BehaviorSubject<UserSession|undefined>(undefined)
-  refresh$ = new Subject<void>()
 
   /** currently-connected user profile, temporary or not, excluding transient (undefined) states */
   user$ = this.session$.pipe(
@@ -28,6 +27,7 @@ export class UserSessionService implements OnDestroy {
   );
 
   private subscription?: Subscription;
+  private refresh$ = new Subject<void>()
 
   constructor(
     private authService: AuthService,
