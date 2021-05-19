@@ -44,7 +44,7 @@ export class UserSessionService implements OnDestroy {
           catchError(_e => EMPTY)
         );
       }),
-      distinctUntilChanged((p1, p2) => p1 === p2 || (!!p1 && !!p2 && p1.groupId === p2.groupId)),
+      distinctUntilChanged(), // skip two undefined values in a row
     ).subscribe(profile => {
       this.session$.next(profile ? { user: profile } : undefined);
     });
