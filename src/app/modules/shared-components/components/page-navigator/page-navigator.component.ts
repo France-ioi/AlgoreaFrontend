@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { UserSessionService } from '../../../../shared/services/user-session.service';
 import { filter, map } from 'rxjs/operators';
-import { isNotNullOrUndefined } from '../../../../shared/helpers/is-not-null-or-undefined';
+import { isNotNullOrUndefined } from '../../../../shared/helpers/null-undefined-predicates';
 
 @Component({
   selector: 'alg-page-navigator',
