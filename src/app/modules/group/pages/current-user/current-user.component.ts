@@ -11,7 +11,7 @@ import { UserSessionService } from 'src/app/shared/services/user-session.service
   styleUrls: [ './current-user.component.scss' ],
 })
 export class CurrentUserComponent implements OnInit, OnDestroy {
-  currentUser$ = this.userSessionService.user$;
+  currentUser$ = this.userSessionService.userProfile$;
 
   constructor(
     private currentContent: CurrentContentService,
