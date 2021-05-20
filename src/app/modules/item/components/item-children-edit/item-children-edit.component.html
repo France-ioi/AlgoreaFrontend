@@ -52,7 +52,7 @@
                 <a
                     class="main alg-link"
                     [ngClass]="{'disabled': !rowData.id}"
-                    [routerLink]="rowData | itemLink : 'edit'"
+                    (click)="onClick(rowData)"
                 >
                   {{ rowData.title }}
                 </a>
