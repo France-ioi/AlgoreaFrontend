@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { EMPTY, BehaviorSubject, Subscription, Observable, Subject, of } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
-import { switchMap, catchError, distinctUntilChanged, map, filter, tap, mapTo, skip } from 'rxjs/operators';
+import { switchMap, catchError, distinctUntilChanged, map, filter, mapTo, skip, delayWhen, share } from 'rxjs/operators';
 import { CurrentUserHttpService, UpdateUserBody, UserProfile } from '../http-services/current-user.service';
 import { Group } from 'src/app/modules/group/http-services/get-group-by-id.service';
 import { isNotUndefined } from '../helpers/null-undefined-predicates';
@@ -78,11 +78,13 @@ export class UserSessionService implements OnDestroy {
   }
 
   updateCurrentUser(changes: UpdateUserBody): Observable<void> {
-    return this.currentUserService.update(changes).pipe(
-      tap(() => {
-        this.refresh$.next();
-      }),
-    );
+    const update$ = this.currentUserService.update(changes).pipe(share());
+
+    of(null).pipe(
+      delayWhen(() => update$),
+    ).subscribe(() => this.refresh$.next());
+
+    return update$;
   }
 
   login(): void {
