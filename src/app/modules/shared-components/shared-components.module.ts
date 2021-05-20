@@ -24,6 +24,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatDialogModule, MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 import { MatNativeDateModule, MatRippleModule } from '@angular/material/core';
 import { MatMenuModule } from '@angular/material/menu';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
 
 import { ClickOutsideModule } from 'ng-click-outside';
 
@@ -123,6 +124,7 @@ import { LanguagePickerComponent } from '../../core/components/language-picker/l
     MatTabsModule,
     MatDialogModule,
     MatMenuModule,
+    OverlayPanelModule,
 
     ClickOutsideModule,
     ReactiveFormsModule,
