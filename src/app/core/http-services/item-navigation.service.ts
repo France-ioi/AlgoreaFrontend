@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { bestAttemptFromResults } from 'src/app/shared/helpers/attempts';
@@ -175,9 +175,17 @@ export class ItemNavigationService {
       );
   }
 
-  getRootActivities(): Observable<NavMenuRootItem> {
+  getRootActivities(watchedGroupId?: string): Observable<NavMenuRootItem> {
+    let httpParams = new HttpParams();
+
+    if (watchedGroupId) {
+      httpParams = httpParams.set('watched_group_id', watchedGroupId);
+    }
+
     return this.http
-      .get<RootActivity[]>(`${appConfig.apiUrl}/current-user/group-memberships/activities`)
+      .get<RootActivity[]>(`${appConfig.apiUrl}/current-user/group-memberships/activities`, {
+        params: httpParams
+      })
       .pipe(
         map(acts => ({
           items: acts.map(act => ({ ...createNavMenuItem(act.activity), groupName: act.name }))

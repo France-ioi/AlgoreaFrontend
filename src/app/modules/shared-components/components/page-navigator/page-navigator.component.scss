@@ -76,3 +76,13 @@
 .button {
   height: 3rem;
 }
+
+.activity-name {
+  color: $base-color;
+}
+
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

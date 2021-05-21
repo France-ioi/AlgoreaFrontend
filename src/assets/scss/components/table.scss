@@ -185,7 +185,17 @@
     }
   }
 
-  &.--add-content {
+  &.--add-content, &.--overlay-panel {
+    &.--overlay-panel {
+      .p-datatable-tbody > tr {
+        background-color: #fff;
+      }
+
+      .p-datatable-tbody > tr:nth-child(even) {
+        background-color: #fff;
+      }
+    }
+
     .p-datatable {
       margin-bottom: 0;
     }

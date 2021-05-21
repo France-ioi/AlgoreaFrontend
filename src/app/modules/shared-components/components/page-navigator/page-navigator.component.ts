@@ -1,12 +1,15 @@
-import { Component, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 import { UserSessionService } from '../../../../shared/services/user-session.service';
-import { filter, map, switchMap, tap } from 'rxjs/operators';
+import { filter, map, switchMap } from 'rxjs/operators';
 import { isNotNullOrUndefined } from '../../../../shared/helpers/null-undefined-predicates';
 import { OverlayPanel } from 'primeng/overlaypanel';
 import { Observable } from 'rxjs';
-import { appConfig } from '../../../../shared/helpers/config';
-import { HttpClient } from '@angular/common/http';
 import { mapToFetchState } from '../../../../shared/operators/state';
+import {
+  ItemNavigationService,
+  NavMenuItem,
+  NavMenuRootItem
+} from '../../../../core/http-services/item-navigation.service';
 
 @Component({
   selector: 'alg-page-navigator',
@@ -25,7 +28,8 @@ export class PageNavigatorComponent {
   @Output() stopWatch = new EventEmitter<void>();
 
   @ViewChild('op') private op?: OverlayPanel;
-  @ViewChild('startWatch') private startWatchRef?: ElementRef;
+
+  overlayPanelMarginTop = true;
 
   isCurrentGroupWatched$ = this.userSessionService.session$.pipe(
     filter(isNotNullOrUndefined),
@@ -40,20 +44,23 @@ export class PageNavigatorComponent {
     mapToFetchState()
   );
 
-  constructor(private userSessionService: UserSessionService, private http: HttpClient) {
+  constructor(private userSessionService: UserSessionService,
+              private itemNavigationService: ItemNavigationService) {
   }
 
   onStartWatchClick(e: Event): void {
     this.op?.show(e);
 
+    this.overlayPanelMarginTop = !document.querySelector('alg-observation-bar');
+
     setTimeout(() => {
       this.watch.emit();
-    }, 250);
+    });
   }
 
-  getList$(watchedGroupId: string): Observable<any> {
-    return this.http.get(`${appConfig.apiUrl}/current-user/group-memberships/activities`, {
-      params: { watched_group_id: watchedGroupId }
-    });
+  getList$(watchedGroupId: string): Observable<NavMenuItem[]> {
+    return this.itemNavigationService.getRootActivities(watchedGroupId).pipe(
+      map((navMenuRootItem: NavMenuRootItem) => navMenuRootItem.items)
+    );
   }
 }
