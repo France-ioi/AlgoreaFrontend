@@ -9,7 +9,6 @@ import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.s
 import { Group } from '../../http-services/get-group-by-id.service';
 import { GetGroupChildrenService, GroupChild } from '../../http-services/get-group-children.service';
 import { GetGroupMembersService, Member } from '../../http-services/get-group-members.service';
-import { TypeFilter, Filter, GroupCompositionFilterComponent } from '../group-composition-filter/group-composition-filter.component';
 import { Router } from '@angular/router';
 import { GroupUsersService, parseResults } from '../../http-services/group-users.service';
 import { Filter, GroupCompositionFilterComponent, TypeFilter } from '../group-composition-filter/group-composition-filter.component';
