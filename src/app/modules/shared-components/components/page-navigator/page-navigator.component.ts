@@ -1,15 +1,21 @@
-import { Component, Input, Output, EventEmitter, ViewChild } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ViewChild, OnInit } from '@angular/core';
 import { UserSessionService } from '../../../../shared/services/user-session.service';
-import { filter, map, switchMap } from 'rxjs/operators';
+import {
+  catchError,
+  debounceTime,
+  filter,
+  map,
+  switchMap,
+} from 'rxjs/operators';
 import { isNotNullOrUndefined } from '../../../../shared/helpers/null-undefined-predicates';
 import { OverlayPanel } from 'primeng/overlaypanel';
-import { Observable } from 'rxjs';
-import { mapToFetchState } from '../../../../shared/operators/state';
+import { concat, Observable, of } from 'rxjs';
 import {
   ItemNavigationService,
   NavMenuItem,
   NavMenuRootItem
 } from '../../../../core/http-services/item-navigation.service';
+import { errorState, fetchingState, readyState } from '../../../../shared/helpers/state';
 
 @Component({
   selector: 'alg-page-navigator',
@@ -36,12 +42,17 @@ export class PageNavigatorComponent {
     map(data => this.groupId !== undefined && data.watchedGroup?.id === this.groupId)
   );
 
-  state$ = this.userSessionService.session$.pipe(
-    filter(isNotNullOrUndefined),
-    map(data => data.watchedGroup),
-    filter(isNotNullOrUndefined),
-    switchMap(watchedGroup => this.getList$(watchedGroup.id)),
-    mapToFetchState()
+  state$ = this.userSessionService.group$.pipe(
+    debounceTime(0),
+    switchMap(watchedGroup =>
+      concat(
+        of(fetchingState()),
+        this.getList$(watchedGroup.id).pipe(
+          map(readyState),
+          catchError(e => of(errorState(e))),
+        )
+      )
+    ),
   );
 
   constructor(private userSessionService: UserSessionService,

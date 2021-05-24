@@ -29,29 +29,28 @@
     [style]="{ width: '450px', marginTop: overlayPanelMarginTop ? '40px' : null }"
     appendTo="body"
 >
-  <ng-template pTemplate *ngIf="state$ | async as state">
-    <div class="spinner-container" *ngIf="state.isFetching">
-      <p-progressSpinner
-          *ngIf="state.isFetching"
-          [style]="{width: '24px', height: '24px'}"
+  <ng-template pTemplate>
+    <ng-container *ngIf="state$ | async as state">
+      <div class="spinner-container" *ngIf="state.isFetching">
+        <p-progressSpinner [style]="{width: '24px', height: '24px'}"></p-progressSpinner>
+      </div>
+      <div *ngIf="state.isError" i18n>Error while loading the activities</div>
+      <div *ngIf="!state.isFetching && state.isReady && state.data?.length === 0" i18n>
+        There are no activities
+      </div>
+      <p-table
+          class="alg-table --overlay-panel"
+          [value]="state.data"
+          *ngIf="state.isReady && (state.data || []).length > 0"
       >
-      </p-progressSpinner>
-    </div>
-    <div *ngIf="state.isError" i18n>Error while loading the activities</div>
-    <div *ngIf="!state.isFetching && state.isReady && state.data?.length === 0" i18n>
-      There are no activities
-    </div>
-    <p-table
-        class="alg-table --overlay-panel"
-        [value]="state.data"
-        *ngIf="state.isReady && (state.data || []).length > 0"
-    >
-      <ng-template pTemplate="body" let-item>
-        <tr>
-          <td><span class="activity-name">{{ item.groupName }}</span></td>
-          <td><a class="alg-link" [routerLink]="item | itemLink">{{ item.title }}</a></td>
-        </tr>
-      </ng-template>
-    </p-table>
+        <ng-template pTemplate="body" let-item>
+          <tr>
+            <td><span class="activity-name">{{ item.groupName }}</span></td>
+            <td><a class="alg-link" [routerLink]="item | itemLink">{{ item.title }}</a></td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </ng-container>
   </ng-template>
 </p-overlayPanel>
+
