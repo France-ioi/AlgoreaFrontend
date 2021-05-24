@@ -1,6 +1,5 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { ItemData } from '../../services/item-datasource.service';
-import { UserSession } from '../../../../shared/services/user-session.service';
 import { Group } from '../../../group/http-services/get-group-by-id.service';
 import { Column } from '../item-log-view/item-log-view.component';
 
@@ -16,7 +15,6 @@ interface ViewItem {
 })
 export class ItemCurrentSituationComponent implements OnChanges {
   @Input() itemData?: ItemData;
-  @Input() session: UserSession | null |undefined;
   @Input() watchedGroup?: Group;
 
   viewItems?: ViewItem[];

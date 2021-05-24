@@ -49,8 +49,8 @@ export interface ActivityLog {
   score?: number,
   user?: {
     id: string,
-    first_name: string|null,
-    last_name: string|null,
+    first_name: string|null|undefined,
+    last_name: string|null|undefined,
     login: string,
   },
 }
