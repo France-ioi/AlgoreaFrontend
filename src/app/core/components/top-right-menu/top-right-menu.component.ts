@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { MenuItem } from 'primeng/api';
 import { distinctUntilChanged, map } from 'rxjs/operators';
 import { AuthService } from 'src/app/shared/auth/auth.service';
 import { appConfig } from 'src/app/shared/helpers/config';
@@ -13,10 +14,7 @@ export class TopRightMenuComponent {
 
   readonly menuItems = [
     { label: 'Profile', icon: 'pi pi-user', routerLink: [ 'groups', 'me' ] },
-    ...(!appConfig.production
-      ? [{ label: 'Invalidate token', icon: 'pi pi-refresh', command: (): void => this.invalidateToken() }]
-      : []
-    ),
+    ...this.getDevelopmentMenuItems(),
     { label: 'Log out', icon: 'pi pi-power-off', command: ():void => this.sessionService.logout() },
   ]
 
@@ -31,4 +29,12 @@ export class TopRightMenuComponent {
     const authStatus = this.authService.status$.value;
     if (authStatus.authenticated) this.authService.invalidToken(authStatus);
   }
+
+  private getDevelopmentMenuItems(): MenuItem[] {
+    if (appConfig.production) return [];
+    return [
+      { label: 'Invalidate token', icon: 'pi pi-refresh', command: (): void => this.invalidateToken() },
+    ];
+  }
+
 }
