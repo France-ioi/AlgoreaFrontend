@@ -13,7 +13,7 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/app.component.html</context><context context-type="linenumber">60</context></context-group></trans-unit><trans-unit id="727030606410719950" datatype="html">
         <source>Language mismatch</source><target state="new">Language mismatch</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/language-mismatch/language-mismatch.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit><trans-unit id="6895619751331935307" datatype="html">
         <source> The current language "<x id="INTERPOLATION" equiv-text="{{ currentLanguage }}"/>" does not correspond to your account's default language "<x id="INTERPOLATION_1" equiv-text="{{ languageMismatch.userDefaultLanguage }}"/>". Do you want to continue in this language? </source><target state="new"> The current language "<x id="INTERPOLATION" equiv-text="{{ currentLanguage }}"/>" does not correspond to your account's default language "<x id="INTERPOLATION_1" equiv-text="{{ languageMismatch.userDefaultLanguage }}"/>". Do you want to continue in this language? </target>
         <context-group purpose="location">
@@ -46,7 +46,7 @@
         </context-group>
       </trans-unit><trans-unit id="7605133703064965893" datatype="html">
         <source>The language can always be modified through your profile page.</source><target state="new">The language can always be modified through your profile page.</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/language-mismatch/language-mismatch.component.html</context><context context-type="linenumber">59</context></context-group></trans-unit><trans-unit id="8226505868853996593" datatype="html">
         <source>Log in / Sign in</source><target state="translated">Connexion / Inscription</target>
 
@@ -531,13 +531,13 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/services/action-feedback.service.ts</context><context context-type="linenumber">17</context></context-group></trans-unit><trans-unit id="465834534537881731" datatype="html">
         <source>Unable to remove the selected user(s)</source><target state="translated">Erreur lors de la suppression des utilisateurs sélectionés du groupe</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/member-list/user-removal-response-handling.ts</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="4648900870671159218" datatype="html">
         <source>Success</source><target state="translated">Réussite</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/services/action-feedback.service.ts</context><context context-type="linenumber">29</context></context-group></trans-unit><trans-unit id="8000159602075761978" datatype="html">
         <source><x id="PH" equiv-text="result.countSuccess"/> user(s) have been removed</source><target state="translated"><x id="PH" equiv-text="result.countSuccess"/> utilisateur(s) ont été retirés du groupe</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/member-list/user-removal-response-handling.ts</context><context context-type="linenumber">10</context></context-group></trans-unit><trans-unit id="3487804242455918485" datatype="html">
         <source>Changes successfully saved.</source><target state="translated">Modifications bien enregistrées.</target>
 
@@ -1104,7 +1104,7 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-composition-filter/group-composition-filter.component.ts</context><context context-type="linenumber">57</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/composition-filter/composition-filter.component.ts</context><context context-type="linenumber">21</context></context-group></trans-unit><trans-unit id="7741873707372237131" datatype="html">
         <source>sessions</source><target state="translated">sessions</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-composition-filter/group-composition-filter.component.ts</context><context context-type="linenumber">62</context></context-group></trans-unit><trans-unit id="2778681880262367513" datatype="html">
         <source> You are a member of this group. </source><target state="new"> You are a member of this group. </target>
         <context-group purpose="location">
@@ -1170,7 +1170,7 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/member-list/member-list.component.html</context><context context-type="linenumber">81</context></context-group></trans-unit><trans-unit id="1916930465370171483" datatype="html">
         <source> Select all </source><target state="translated"> Tout sélectionner </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/member-list/member-list.component.html</context><context context-type="linenumber">89</context></context-group></trans-unit><trans-unit id="6306138344256927663" datatype="html">
         <source>Read-only</source><target state="translated">Lecture seule</target>
         <context-group purpose="location">
@@ -1578,7 +1578,7 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/services/action-feedback.service.ts</context><context context-type="linenumber">25</context></context-group></trans-unit><trans-unit id="6484380298436821462" datatype="html">
         <source><x id="PH" equiv-text="result.countSuccess"/> user(s) have been removed, <x id="PH_1" equiv-text="result.countRequests - result.countSuccess"/> could not be removed</source><target state="translated"><x id="PH" equiv-text="result.countSuccess"/> utilisateur(s) ont été retirés, <x id="PH_1" equiv-text="result.countRequests - result.countSuccess"/> n'ont pas pu être retiré du groupe</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/member-list/user-removal-response-handling.ts</context><context context-type="linenumber">15</context></context-group></trans-unit><trans-unit id="5056103486561628561" datatype="html">
         <source><x id="PH" equiv-text="result.countSuccess"/> request(s) have been <x id="PH_1" equiv-text="msg"/>, <x id="PH_2" equiv-text="errCnt"/> could not be executed</source><target state="translated"><x id="PH" equiv-text="result.countSuccess"/> requête(s) ont été <x id="PH_1" equiv-text="msg"/>, <x id="PH_2" equiv-text="result.countRequests - result.countSuccess"/> n'ont pas pu être appliquées</target>
 
