@@ -78,7 +78,7 @@ export class UserSessionService implements OnDestroy {
   }
 
   updateCurrentUser(changes: UpdateUserBody): Observable<void> {
-    const update$ = this.currentUserService.update(changes).pipe(shareReplay());
+    const update$ = this.currentUserService.update(changes).pipe(shareReplay(1));
     update$.subscribe(() => this.userProfileUpdated$.next());
     return update$;
   }
