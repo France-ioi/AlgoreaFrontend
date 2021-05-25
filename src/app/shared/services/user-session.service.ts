@@ -34,14 +34,14 @@ export class UserSessionService implements OnDestroy {
   userChanged$ = this.userProfile$.pipe(distinctUntilChanged((u1, u2) => u1.groupId === u2.groupId), mapTo(undefined), skip(1))
 
   private subscription?: Subscription;
-  private refresh$ = new Subject<void>()
+  private userProfileUpdated$ = new Subject<void>()
 
   constructor(
     private authService: AuthService,
     private currentUserService: CurrentUserHttpService,
   ) {
     this.subscription = this.authService.status$.pipe(
-      repeatLatestWhen(this.refresh$),
+      repeatLatestWhen(this.userProfileUpdated$),
       switchMap(auth => {
         if (!auth.authenticated) return of<UserProfile | undefined>(undefined);
         return this.currentUserService.getProfileInfo().pipe(
@@ -60,7 +60,7 @@ export class UserSessionService implements OnDestroy {
   ngOnDestroy(): void {
     this.subscription?.unsubscribe();
     this.session$.complete();
-    this.refresh$.complete();
+    this.userProfileUpdated$.complete();
   }
 
   startGroupWatching(group: Group): void {
@@ -82,7 +82,7 @@ export class UserSessionService implements OnDestroy {
 
   updateCurrentUser(changes: UpdateUserBody): Observable<void> {
     const update$ = this.currentUserService.update(changes).pipe(shareReplay());
-    update$.subscribe(() => this.refresh$.next());
+    update$.subscribe(() => this.userProfileUpdated$.next());
     return update$;
   }
 
