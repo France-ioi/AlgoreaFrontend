@@ -1,24 +1,52 @@
 <ng-container *ngIf="itemData">
   <div class="selection-center" *ngIf="!hideSelection">
-    <alg-selection (change)="onViewChanged($event)" [items]="viewItems" [selected]="viewSelectedIndex"></alg-selection>
+    <nav class="tab-rounded">
+      <a class="tab-rounded-item"
+         [ngClass]="{'active': historyTab.isActive, 'prev': chapterTab?.isActive}"
+         [routerLink]="'./progress/history'"
+         routerLinkActive #historyTab="routerLinkActive"
+      >
+        {{ logItemCaption }}
+      </a>
+
+      <a class="tab-rounded-item"
+         [ngClass]="{'active': chapterTab.isActive, 'prev': chapterUserProgressTab?.isActive}"
+         [routerLink]="'./progress/chapter'"
+         routerLinkActive #chapterTab="routerLinkActive"
+         *ngIf="!showChapterUserProgress"
+         i18n
+      >
+        Chapter view
+      </a>
+
+      <a class="tab-rounded-item"
+         [ngClass]="{'active': chapterUserProgressTab?.isActive}"
+         [routerLink]="'./progress/chapter-user-progress'"
+         routerLinkActive #chapterUserProgressTab="routerLinkActive"
+         *ngIf="showChapterUserProgress"
+         i18n
+      >
+        Chapter view
+      </a>
+    </nav>
   </div>
 
   <div>
     <alg-item-log-view
-      *ngIf="viewSelected?.value === 'log'"
+      *ngIf="historyTab?.isActive"
       [itemData]="itemData"
       [logColumns]="logColumns"
     ></alg-item-log-view>
 
     <div class="item-chapter-view">
       <alg-item-chapter-view
-        *ngIf="viewSelected?.value === 'chapter'"
+        *ngIf="chapterTab?.isActive"
         [itemData]="itemData"
       ></alg-item-chapter-view>
     </div>
 
     <alg-chapter-user-progress
-        *ngIf="viewSelected?.value === 'chapter-user-progress'"
+        *ngIf="chapterUserProgressTab?.isActive"
     ></alg-chapter-user-progress>
   </div>
 </ng-container>

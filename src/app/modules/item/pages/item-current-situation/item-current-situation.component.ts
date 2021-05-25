@@ -1,12 +1,10 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges, ViewChild } from '@angular/core';
 import { ItemData } from '../../services/item-datasource.service';
 import { Group } from '../../../group/http-services/get-group-by-id.service';
 import { Column } from '../item-log-view/item-log-view.component';
+import { RouterLinkActive } from '@angular/router';
 
-interface ViewItem {
-  label: string,
-  value: string,
-}
+type ItemType = 'Chapter'|'Task'|'Course'|'Skill';
 
 @Component({
   selector: 'alg-item-current-situation',
@@ -17,52 +15,36 @@ export class ItemCurrentSituationComponent implements OnChanges {
   @Input() itemData?: ItemData;
   @Input() watchedGroup?: Group;
 
-  viewItems?: ViewItem[];
-  viewSelectedIndex = 0;
-  viewSelected?: ViewItem;
+  @ViewChild('historyTab') historyTab?: RouterLinkActive;
+  @ViewChild('chapterTab') chapterTab?: RouterLinkActive;
+  @ViewChild('chapterUserProgressTab') chapterUserProgressTab?: RouterLinkActive;
+
   hideSelection = false;
-  type?: 'Chapter' | 'Task' | 'Course' | 'Skill';
+  showChapterUserProgress = false;
   logColumns?: Column[];
+  logItemCaption?: string;
 
   constructor() {}
 
   ngOnChanges(): void {
-    if (!this.itemData) {
+    const type = this.itemData?.item?.type;
+
+    if (!type) {
       return;
     }
 
-    this.type = this.itemData.item.type;
-    this.viewItems = this.getViewItems();
-    this.hideSelection = this.getHideSelection();
-    this.logColumns = this.getLogColumns();
-    this.changeView(this.viewSelectedIndex);
-  }
+    this.hideSelection = this.getHideSelection(type);
+    this.logColumns = this.getLogColumns(type);
+    this.logItemCaption = this.getLogItemCaption(type);
 
-  getViewItems(): ViewItem[] {
-    const logItemCaption = !this.watchedGroup && this.type === 'Chapter'
-      || !!this.watchedGroup && !!this.type && [ 'Task', 'Course' ].includes(this.type) ? $localize`History` : $localize`Log view`;
-    const chapterViewValue = !this.watchedGroup && this.type === 'Chapter' ? 'chapter-user-progress' : 'chapter';
-
-    return [
-      { label: logItemCaption, value: 'log' },
-      { label: $localize`Chapter view`, value: chapterViewValue },
-    ];
-  }
-
-  onViewChanged(selectedIdx: number): void {
-    this.changeView(selectedIdx);
-  }
-
-  changeView(index: number): void {
-    if (!this.viewItems) {
+    if (this.hideSelection) {
       return;
     }
 
-    this.viewSelectedIndex = index;
-    this.viewSelected = this.viewItems[index];
+    this.showChapterUserProgress = this.getShowChapterUserProgress(type);
   }
 
-  getLogColumns(): Column[] {
+  getLogColumns(type: ItemType): Column[] {
     const columns = [
       {
         field: 'activity_type',
@@ -72,12 +54,12 @@ export class ItemCurrentSituationComponent implements OnChanges {
       {
         field: 'item.string.title',
         header: $localize`Content`,
-        enabled: !!this.type && ![ 'Task', 'Course' ].includes(this.type),
+        enabled: ![ 'Task', 'Course' ].includes(type),
       },
       {
         field: 'item.user',
         header: $localize`User`,
-        enabled: !!this.watchedGroup && !!this.type && [ 'Chapter', 'Task', 'Course' ].includes(this.type),
+        enabled: !!this.watchedGroup && [ 'Chapter', 'Task', 'Course' ].includes(type),
       },
       {
         field: 'at',
@@ -92,8 +74,17 @@ export class ItemCurrentSituationComponent implements OnChanges {
     }));
   }
 
-  getHideSelection(): boolean {
-    return !this.watchedGroup && !!this.type && [ 'Task', 'Course' ].includes(this.type);
+  getHideSelection(type: ItemType): boolean {
+    return !this.watchedGroup && !!type && [ 'Task', 'Course' ].includes(type);
+  }
+
+  getLogItemCaption(type: ItemType): string {
+    return !this.watchedGroup && type === 'Chapter' || !!this.watchedGroup && [ 'Task', 'Course' ].includes(type)
+      ? $localize`History` : $localize`Log view`;
+  }
+
+  getShowChapterUserProgress(type: ItemType): boolean {
+    return !this.watchedGroup && type === 'Chapter';
   }
 
 }
