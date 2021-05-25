@@ -19,7 +19,10 @@ export class UserSessionService implements OnDestroy {
 
   session$ = new BehaviorSubject<UserSession|undefined>(undefined)
   userProfileError$ = new Subject<void>()
-  watchedGroup$ = this.session$.pipe(map(session => session?.watchedGroup), distinctUntilChanged())
+  watchedGroup$ = this.session$.pipe(
+    map(session => session?.watchedGroup),
+    distinctUntilChanged(), // filter out repeated undefined values
+  )
 
   /** currently-connected user profile, temporary or not, excluding transient (undefined) states */
   userProfile$ = this.session$.pipe(
@@ -27,7 +30,7 @@ export class UserSessionService implements OnDestroy {
     map(session => session.user),
   );
 
-  /** triggered when the user identity changes, which happens when auth token is invalidated */
+  /** triggered when the user identity changes (but skipping first user value), which happens when auth token is invalidated */
   userChanged$ = this.userProfile$.pipe(distinctUntilChanged((u1, u2) => u1.groupId === u2.groupId), mapTo(undefined), skip(1))
 
   private subscription?: Subscription;
