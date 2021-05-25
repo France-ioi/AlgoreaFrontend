@@ -8,6 +8,7 @@ import { AddedContent } from '../../../shared-components/components/add-content/
 import { ItemRouter } from '../../../../shared/routing/item-router';
 import { bestAttemptFromResults } from '../../../../shared/helpers/attempts';
 import { canCurrentUserViewItemContent } from '../../helpers/item-permissions';
+import { isNotUndefined } from '../../../../shared/helpers/null-undefined-predicates';
 
 export interface ChildData {
   id?: string,
@@ -43,6 +44,7 @@ export class ItemChildrenEditComponent implements OnChanges {
   data: ChildData[] = [];
   selectedRows: ChildData[] = [];
   scoreWeightEnabled = false;
+  addedItemIds: string[] = [];
 
   private subscription?: Subscription;
   @Output() childrenChanges = new EventEmitter<ChildData[]>();
@@ -84,6 +86,7 @@ export class ItemChildrenEditComponent implements OnChanges {
         ).subscribe(children => {
           this.data = children;
           this.scoreWeightEnabled = this.data.some(c => c.scoreWeight !== 1);
+          this.onChildAdded();
           this.state = 'ready';
         },
         _err => {
@@ -96,6 +99,7 @@ export class ItemChildrenEditComponent implements OnChanges {
 
   addChild(child: AddedContent<ItemType>): void {
     this.data.push({ ...child, scoreWeight: DEFAULT_SCORE_WEIGHT });
+    this.onChildAdded();
     this.childrenChanges.emit(this.data);
   }
 
@@ -105,6 +109,7 @@ export class ItemChildrenEditComponent implements OnChanges {
 
   onRemove(): void {
     this.data = this.data.filter(elm => !this.selectedRows.includes(elm));
+    this.onChildAdded();
     this.childrenChanges.emit(this.data);
     this.selectedRows = [];
   }
@@ -125,11 +130,20 @@ export class ItemChildrenEditComponent implements OnChanges {
 
   resetScoreWeight(): void {
     this.data = this.data.map(c => ({ ...c, scoreWeight: DEFAULT_SCORE_WEIGHT }));
+    this.onChildAdded();
     this.onScoreWeightChange();
   }
 
   onScoreWeightChange(): void {
     this.childrenChanges.emit(this.data);
+  }
+
+  onChildAdded(): void {
+    this.addedItemIds = this.getAddedItemIds();
+  }
+
+  getAddedItemIds(): string[] {
+    return this.data.map(item => item.id).filter(isNotUndefined);
   }
 
   onClick(child: ChildData): void {

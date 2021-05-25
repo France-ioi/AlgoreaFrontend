@@ -13,6 +13,7 @@ import { ItemFound, SearchItemService } from '../../http-services/search-item.se
 export class AddItemComponent implements OnChanges {
 
   @Input() allowSkills = false;
+  @Input() addedItemIds: string[] = [];
   @Output() contentAdded = new EventEmitter<AddedContent<ItemType>>();
 
   allowedNewItemTypes: NewContentType<ItemType>[] = [];

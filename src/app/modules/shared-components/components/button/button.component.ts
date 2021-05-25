@@ -16,6 +16,11 @@ export class ButtonComponent {
 
   onClickEvent(event: any): void {
     (event as Event).stopPropagation();
+
+    if (this.disabled) {
+      return;
+    }
+
     this.click.emit();
   }
 }

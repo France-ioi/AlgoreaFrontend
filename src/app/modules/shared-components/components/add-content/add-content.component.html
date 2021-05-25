@@ -56,8 +56,9 @@
           <td>
             <alg-button
               class="p-small-button p-button-rounded"
-              [icon]="selectExistingText ==='Add' ? 'fa fa-plus' : undefined"
-              [label]="selectExistingText"
+              [icon]="addedItemIds.includes(item.id) ? 'fa fa-check' : selectExistingText === 'Add' ? 'fa fa-plus' : undefined"
+              [label]="addedItemIds.includes(item.id) ? addedText : selectExistingText"
+              [disabled]="addedItemIds.includes(item.id)"
               (click)="addExisting(item)"
             ></alg-button>
           </td>
