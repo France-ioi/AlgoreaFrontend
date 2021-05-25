@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { EMPTY, BehaviorSubject, Subscription, Observable, Subject, of } from 'rxjs';
+import { BehaviorSubject, Subscription, Observable, Subject, of } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
-import { switchMap, catchError, distinctUntilChanged, map, filter, mapTo, skip, shareReplay } from 'rxjs/operators';
+import { switchMap, distinctUntilChanged, map, filter, mapTo, skip, shareReplay, retry } from 'rxjs/operators';
 import { CurrentUserHttpService, UpdateUserBody, UserProfile } from '../http-services/current-user.service';
 import { Group } from 'src/app/modules/group/http-services/get-group-by-id.service';
 import { isNotUndefined } from '../helpers/null-undefined-predicates';
@@ -44,16 +44,13 @@ export class UserSessionService implements OnDestroy {
       repeatLatestWhen(this.userProfileUpdated$),
       switchMap(auth => {
         if (!auth.authenticated) return of<UserProfile | undefined>(undefined);
-        return this.currentUserService.getProfileInfo().pipe(
-          catchError(_e => {
-            this.userProfileError$.next();
-            return EMPTY;
-          })
-        );
+        return this.currentUserService.getProfileInfo().pipe(retry(1));
       }),
       distinctUntilChanged(), // skip two undefined values in a row
     ).subscribe(profile => {
       this.session$.next(profile ? { user: profile } : undefined);
+    }, () => {
+      this.userProfileError$.next();
     });
   }
 
