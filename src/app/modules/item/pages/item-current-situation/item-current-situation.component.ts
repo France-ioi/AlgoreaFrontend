@@ -3,8 +3,7 @@ import { ItemData } from '../../services/item-datasource.service';
 import { Group } from '../../../group/http-services/get-group-by-id.service';
 import { Column } from '../item-log-view/item-log-view.component';
 import { RouterLinkActive } from '@angular/router';
-
-type ItemType = 'Chapter'|'Task'|'Course'|'Skill';
+import { ItemType } from 'src/app/shared/helpers/item-type';
 
 @Component({
   selector: 'alg-item-current-situation',
@@ -22,7 +21,6 @@ export class ItemCurrentSituationComponent implements OnChanges {
   hideSelection = false;
   showChapterUserProgress = false;
   logColumns?: Column[];
-  logItemCaption?: string;
 
   constructor() {}
 
@@ -35,7 +33,6 @@ export class ItemCurrentSituationComponent implements OnChanges {
 
     this.hideSelection = this.getHideSelection(type);
     this.logColumns = this.getLogColumns(type);
-    this.logItemCaption = this.getLogItemCaption(type);
 
     if (this.hideSelection) {
       return;
@@ -44,7 +41,7 @@ export class ItemCurrentSituationComponent implements OnChanges {
     this.showChapterUserProgress = this.getShowChapterUserProgress(type);
   }
 
-  getLogColumns(type: ItemType): Column[] {
+  private getLogColumns(type: ItemType): Column[] {
     const columns = [
       {
         field: 'activity_type',
@@ -74,16 +71,11 @@ export class ItemCurrentSituationComponent implements OnChanges {
     }));
   }
 
-  getHideSelection(type: ItemType): boolean {
-    return !this.watchedGroup && !!type && [ 'Task', 'Course' ].includes(type);
+  private getHideSelection(type: ItemType): boolean {
+    return !this.watchedGroup && [ 'Task', 'Course' ].includes(type);
   }
 
-  getLogItemCaption(type: ItemType): string {
-    return !this.watchedGroup && type === 'Chapter' || !!this.watchedGroup && [ 'Task', 'Course' ].includes(type)
-      ? $localize`History` : $localize`Log view`;
-  }
-
-  getShowChapterUserProgress(type: ItemType): boolean {
+  private getShowChapterUserProgress(type: ItemType): boolean {
     return !this.watchedGroup && type === 'Chapter';
   }
 

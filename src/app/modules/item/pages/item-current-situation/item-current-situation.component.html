@@ -2,11 +2,12 @@
   <div class="selection-center" *ngIf="!hideSelection">
     <nav class="tab-rounded">
       <a class="tab-rounded-item"
-         [ngClass]="{'active': historyTab.isActive, 'prev': chapterTab?.isActive}"
+         [ngClass]="{'active': historyTab.isActive, 'prev': chapterTab?.isActive || chapterUserProgressTab?.isActive}"
          [routerLink]="'./progress/history'"
          routerLinkActive #historyTab="routerLinkActive"
+         i18n
       >
-        {{ logItemCaption }}
+        History
       </a>
 
       <a class="tab-rounded-item"
