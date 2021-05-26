@@ -3,7 +3,12 @@
 
     <!-- category -->
     <li class="home"><i class="fa fa-folder"></i></li>
-    <li><span class="label">{{ contentBreadcrumb.category }}</span></li>
+    <li
+        [pTooltip]="contentBreadcrumb.category"
+        tooltipPosition="bottom"
+    >
+      <span class="label">{{ contentBreadcrumb.category }}</span>
+    </li>
 
     <!-- elements -->
     <ng-container *ngFor="let element of contentBreadcrumb.path; index as idx;">
@@ -17,7 +22,12 @@
           \
         </ng-template>
       </li>
-      <li [ngClass]="{'active': idx === contentBreadcrumb.currentPageIdx, 'routable': element.navigateTo }" (click)="onElementClick(element)">
+      <li
+          [ngClass]="{'active': idx === contentBreadcrumb.currentPageIdx, 'routable': element.navigateTo }"
+          (click)="onElementClick(element)"
+          [pTooltip]="element.title"
+          tooltipPosition="bottom"
+      >
         <span class="label">{{element.title}}</span>
         <span *ngIf="element.hintNumber" class="attempt-badge">{{element.hintNumber}}</span>
       </li>

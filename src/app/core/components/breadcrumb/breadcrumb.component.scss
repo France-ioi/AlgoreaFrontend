@@ -2,6 +2,10 @@
 
 $breadcrumb-bottom-color: #E0E1E5;
 
+:host {
+  max-width: 100%;
+}
+
 .breadcrumb-container {
   position: relative;
   padding: 0;
@@ -22,6 +26,9 @@ $breadcrumb-bottom-color: #E0E1E5;
       overflow: hidden;
       min-width: 0;
       border-top: 0.25rem solid transparent;
+
+      text-overflow: ellipsis;
+      white-space: nowrap;
 
       &.routable {
         cursor: pointer;
