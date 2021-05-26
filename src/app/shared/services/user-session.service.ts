@@ -47,11 +47,10 @@ export class UserSessionService implements OnDestroy {
         return this.currentUserService.getProfileInfo().pipe(retry(1));
       }),
       distinctUntilChanged(), // skip two undefined values in a row
-    ).subscribe(profile => {
-      this.session$.next(profile ? { user: profile } : undefined);
-    }, () => {
-      this.userProfileError$.next();
-    });
+    ).subscribe(
+      profile => this.session$.next(profile ? { user: profile } : undefined),
+      () => this.userProfileError$.next()
+    );
   }
 
   ngOnDestroy(): void {
