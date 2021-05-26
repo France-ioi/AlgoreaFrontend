@@ -9,11 +9,13 @@ export class LocaleService {
 
   readonly languages: Language[];
   readonly currentTag: string;
+  readonly currentTagError: boolean
 
   constructor() {
     this.languages = appConfig.languages;
     const fallbackTag = appConfig.production ? '' : 'en';
     this.currentTag = this.languages.find(l => window.location.pathname.endsWith(l.path))?.tag ?? fallbackTag;
+    this.currentTagError = !this.currentTag;
   }
 
   navigateTo(langTag: string): void {
