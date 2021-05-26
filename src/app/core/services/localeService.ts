@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { appConfig, Language } from 'src/app/shared/helpers/config';
+import { appConfig, LanguageConfig } from 'src/app/shared/helpers/config';
 
 
 @Injectable({
@@ -7,7 +7,7 @@ import { appConfig, Language } from 'src/app/shared/helpers/config';
 })
 export class LocaleService {
 
-  readonly languages: Language[];
+  readonly languages: LanguageConfig[];
   readonly currentTag: string;
   readonly currentTagError: boolean
 
@@ -30,11 +30,11 @@ export class LocaleService {
     window.location.href = `${pathname}${window.location.hash}`;
   }
 
-  private getNextPathnameForDevelopment(nextLang: Language): string {
+  private getNextPathnameForDevelopment(nextLang: LanguageConfig): string {
     return nextLang.path;
   }
 
-  private getNextPathname(currentLang: Language, nextLang: Language): string {
+  private getNextPathname(currentLang: LanguageConfig, nextLang: LanguageConfig): string {
     return window.location.pathname.replace(currentLang.path, nextLang.path);
   }
 
