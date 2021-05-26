@@ -14,10 +14,6 @@ export interface ChildData {
   title: string | null,
   type: ItemType,
   scoreWeight: number,
-}
-
-interface ChildDataAdditions {
-  isLocked?: boolean,
   result?: {
     attemptId: string,
     validated: boolean,
@@ -44,12 +40,12 @@ export class ItemChildrenEditComponent implements OnChanges {
   @Input() itemData?: ItemData;
 
   state: 'loading' | 'error' | 'ready' = 'ready';
-  data: (ChildData&ChildDataAdditions)[] = [];
-  selectedRows: (ChildData&ChildDataAdditions)[] = [];
+  data: ChildData[] = [];
+  selectedRows: ChildData[] = [];
   scoreWeightEnabled = false;
 
   private subscription?: Subscription;
-  @Output() childrenChanges = new EventEmitter<(ChildData&ChildDataAdditions)[]>();
+  @Output() childrenChanges = new EventEmitter<ChildData[]>();
 
   constructor(
     private getItemChildrenService: GetItemChildrenService,
@@ -136,8 +132,8 @@ export class ItemChildrenEditComponent implements OnChanges {
     this.childrenChanges.emit(this.data);
   }
 
-  onClick(child: ChildData&ChildDataAdditions): void {
-    if (!this.itemData || child.isLocked || !child.id) {
+  onClick(child: ChildData): void {
+    if (!this.itemData || !child.id) {
       return;
     }
 
