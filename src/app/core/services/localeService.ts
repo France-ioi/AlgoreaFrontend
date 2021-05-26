@@ -21,7 +21,19 @@ export class LocaleService {
     const currentLang = this.languages.find(l => l.tag === this.currentTag);
 
     if (!nextLang || !currentLang) throw new Error('Cannot find new or current lang in configured languages');
-    window.location.href = `${window.location.pathname.replace(currentLang.path, nextLang.path)}${window.location.hash}`;
+
+    const pathname = appConfig.production
+      ? this.getNextPathname(currentLang, nextLang)
+      : this.getNextPathnameForDevelopment(nextLang);
+    window.location.href = `${pathname}${window.location.hash}`;
+  }
+
+  private getNextPathnameForDevelopment(nextLang: Language): string {
+    return nextLang.path;
+  }
+
+  private getNextPathname(currentLang: Language, nextLang: Language): string {
+    return window.location.pathname.replace(currentLang.path, nextLang.path);
   }
 
 }
