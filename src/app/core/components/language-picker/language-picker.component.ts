@@ -13,7 +13,7 @@ export class LanguagePickerComponent implements OnChanges {
   @Output() changeLang = new EventEmitter<string>();
 
   readonly languages = this.localeService.languages;
-  current = this.languages?.find(l => l.tag === this.localeService.currentTag);
+  current = this.languages.find(l => l.tag === this.localeService.currentTag);
 
   constructor(
     private localeService: LocaleService,
