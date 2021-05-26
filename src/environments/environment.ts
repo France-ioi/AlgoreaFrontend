@@ -15,7 +15,7 @@ export const environment: Environment = {
 
   languages: [
     { tag: 'fr', path: '/fr/' },
-    { tag: 'en', path: '/en/' },
+    { tag: 'en', path: '/' },
   ],
   allowForcedToken: true,
   authType: 'tokens',
