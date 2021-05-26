@@ -1,8 +1,17 @@
-<p-dropdown
-  *ngIf="languages && current"
-  [options]="languages"
-  [ngModel]="current"
-  optionLabel="tag"
-  [styleClass]="styleClass || 'alg-language-picker-dropdown'"
-  (onChange)="languageChanged($event)"
-></p-dropdown>
+<ng-container *ngIf="languages.length > 1; then picker else readonlyContainer"></ng-container>
+<ng-template #picker>
+  <p-dropdown
+    *ngIf="current"
+    [options]="languages"
+    [ngModel]="current"
+    optionLabel="tag"
+    [styleClass]="styleClass || 'alg-language-picker-dropdown'"
+    (onChange)="languageChanged($event)"
+  ></p-dropdown>
+</ng-template>
+
+<ng-template #readonlyContainer>
+  <span *ngIf="current">
+    {{ current.tag | uppercase }}
+  </span>
+</ng-template>
