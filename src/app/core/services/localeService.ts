@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { EMPTY, Observable, of } from 'rxjs';
 import { appConfig, LanguageConfig } from 'src/app/shared/helpers/config';
 
 
@@ -9,12 +10,12 @@ export class LocaleService {
 
   readonly languages: LanguageConfig[];
   readonly currentLang: LanguageConfig | undefined;
-  readonly currentTagError
+  readonly currentLangError$: Observable<boolean>
 
   constructor() {
     this.languages = appConfig.languages;
     this.currentLang = this.languages.find(l => window.location.pathname.endsWith(l.path));
-    this.currentTagError = !this.currentLang;
+    this.currentLangError$ = this.currentLang ? EMPTY : of(true);
   }
 
   navigateTo(langTag: string): void {

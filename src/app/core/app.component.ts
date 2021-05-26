@@ -20,8 +20,11 @@ export class AppComponent implements OnInit, OnDestroy {
   currentContent$: Observable<ContentInfo|null> = this.currentContent.currentContent$.pipe(delay(0));
   readonly currentMode$ = this.modeService.mode$.asObservable().pipe(delay(0));
   session$ = this.sessionService.session$.pipe(delay(0));
-  fatalError$ = merge(this.authService.failure$, this.sessionService.userProfileError$);
-  hasLanguageError = this.localeService.currentTagError;
+  fatalError$ = merge(
+    this.authService.failure$,
+    this.sessionService.userProfileError$,
+    this.localeService.currentLangError$,
+  );
 
   leftMenuDisplayed = true;
   headersDisplayed = true;

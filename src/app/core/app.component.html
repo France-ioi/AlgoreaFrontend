@@ -59,16 +59,3 @@
   <p i18n="@@auth-error-modal-context">Oops, we are unable to make the site work properly. Are you connected to the Internet?</p>
   <p i18n="@@auth-error-modal-todo">Try to refresh the page. If this problem persists, please contact us.</p>
 </p-dialog>
-<p-dialog
-  *ngIf="hasLanguageError"
-  i18n-header header="Configuration error"
-  [visible]="true"
-  [style]="{width: '50vw'}"
-  [modal]="true"
-  [closeOnEscape]="false"
-  [closable]="false"
->
-  <p i18n>
-    Language unknown, try <a href="/">reloading the application</a>. If the problem persist, please contact us.
-  </p>
-</p-dialog>

@@ -11,19 +11,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/app.component.html</context><context context-type="linenumber">59</context></context-group></trans-unit><trans-unit id="auth-error-modal-todo" datatype="html">
         <source>Try to refresh the page. If this problem persists, please contact us.</source><target state="translated">Rafraichissez la page. Si le problème persiste, contactez nous.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/app.component.html</context><context context-type="linenumber">60</context></context-group></trans-unit><trans-unit id="e35ed50001b9b0439dd9639c3480baa90ee23340" datatype="html">
-        <source>Configuration error</source><target state="new">Configuration error</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/app.component.html</context>
-          <context context-type="linenumber">64</context>
-        </context-group>
-      </trans-unit><trans-unit id="a058b179b21b4f1e33f9ec6b1a783d3f89e72504" datatype="html">
-        <source> Language unknown, try <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;/&quot;>"/>reloading the application<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/>. If the problem persist, please contact us. </source><target state="new"> Language unknown, try <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;/&quot;>"/>reloading the application<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/>. If the problem persist, please contact us. </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/app.component.html</context>
-          <context context-type="linenumber">72,73</context>
-        </context-group>
-      </trans-unit><trans-unit id="cac30a91d2ecebdb1f56ef4743dfb4a779c70857" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/app.component.html</context><context context-type="linenumber">60</context></context-group></trans-unit><trans-unit id="cac30a91d2ecebdb1f56ef4743dfb4a779c70857" datatype="html">
         <source>Log in / Sign in</source><target state="translated">Connexion / Inscription</target>
 
 
