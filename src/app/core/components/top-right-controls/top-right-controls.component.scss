@@ -2,10 +2,14 @@
 
 .controls-zone {
   background-color: $nav-bk-color;
+  color: #fff;
   height: 3.75rem;
   display: flex;
   align-items: center;
   padding-right: 0.5rem;
+  > * + * {
+    margin-left: 0.25rem;
+  }
 }
 
 .no-left-border {
@@ -19,7 +23,6 @@
 :host ::ng-deep .login-button {
   background-color: transparent;
   border: none;
-  margin-bottom: 0.3rem;
 
   &:hover {
     background-color: rgba(white, 0.1);
