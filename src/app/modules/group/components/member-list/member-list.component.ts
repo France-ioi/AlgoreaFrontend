@@ -87,7 +87,6 @@ export class MemberListComponent implements OnChanges, OnDestroy {
     private getGroupDescendantsService: GetGroupDescendantsService,
     private groupUsersService: GroupUsersService,
     private actionFeedbackService: ActionFeedbackService,
-    private router: Router,
   ) {
     this.dataFetching.pipe(
       switchMap(params => this.getData(params.groupId, params.filter, params.sort).pipe(mapToFetchState())),
