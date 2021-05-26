@@ -1,7 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { contentInfo } from 'src/app/shared/models/content/content-info';
 import { CurrentContentService } from 'src/app/shared/services/current-content.service';
-import { CurrentUserHttpService } from 'src/app/shared/http-services/current-user.service';
 import { ActionFeedbackService } from '../../../../shared/services/action-feedback.service';
 import { LocaleService } from '../../../../core/services/localeService';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
@@ -12,12 +11,11 @@ import { UserSessionService } from 'src/app/shared/services/user-session.service
   styleUrls: [ './current-user.component.scss' ],
 })
 export class CurrentUserComponent implements OnInit, OnDestroy {
-  currentUser$ = this.userSessionService.user$;
+  currentUser$ = this.userSessionService.userProfile$;
 
   constructor(
     private currentContent: CurrentContentService,
     private userSessionService: UserSessionService,
-    private currentUser: CurrentUserHttpService,
     private actionFeedbackService: ActionFeedbackService,
     private localeService: LocaleService,
   ) {}
@@ -35,7 +33,7 @@ export class CurrentUserComponent implements OnInit, OnDestroy {
   }
 
   update(changes: { default_language: string }): void {
-    this.currentUser.update(changes).subscribe(
+    this.userSessionService.updateCurrentUser(changes).subscribe(
       () => {
         this.actionFeedbackService.success($localize`Changes successfully saved.`);
 

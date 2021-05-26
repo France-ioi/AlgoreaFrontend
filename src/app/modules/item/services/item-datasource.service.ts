@@ -52,7 +52,7 @@ export class ItemDataSource implements OnDestroy {
 
     ).subscribe(state => this.state.next(state));
 
-    this.subscription = this.userSessionService.session$.subscribe(_s => this.refreshItem());
+    this.subscription = this.userSessionService.userChanged$.subscribe(_s => this.refreshItem());
   }
 
   fetchItem(item: ItemRoute): void {

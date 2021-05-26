@@ -48,7 +48,7 @@
 <p-confirmDialog></p-confirmDialog>
 <p-confirmPopup key="commonPopup"></p-confirmPopup>
 <p-dialog
-  *ngrxLet="authError$"
+  *ngrxLet="fatalError$"
   i18n-header="@@auth-error-modal-title" header="Error"
   [visible]="true"
   [style]="{width: '50vw'}"
@@ -56,6 +56,6 @@
   [closeOnEscape]="false"
   [closable]="false"
 >
-  <p i18n="@@auth-error-modal-context">We are unable to start a session for you. Are you connected to the Internet?</p>
+  <p i18n="@@auth-error-modal-context">Oops, we are unable to make the site work properly. Are you connected to the Internet?</p>
   <p i18n="@@auth-error-modal-todo">Try to refresh the page. If this problem persists, please contact us.</p>
 </p-dialog>

@@ -29,7 +29,7 @@ export class LeftNavComponent implements OnInit, OnDestroy {
     new LeftNavSkillDataSource(this.itemNavigationService),
     new LeftNavGroupDataSource(this.groupNavigationService),
   ];
-  currentUser$ = this.sessionService.user$.pipe(delay(0));
+  currentUser$ = this.sessionService.userProfile$.pipe(delay(0));
 
   private subscription?: Subscription;
 

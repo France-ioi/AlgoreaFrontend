@@ -1,9 +1,9 @@
 <p-menu #menu [popup]="true" [model]="menuItems"></p-menu>
 <p-button
-  *ngIf="sessions$ | async as session"
+  *ngIf="userLogin$ | async as userLogin"
   icon="pi pi-chevron-down"
   iconPos="right"
-  [label]="session.user.login"
+  [label]="userLogin"
   (click)="menu.toggle($event)"
   styleClass="menu-button"
 ></p-button>

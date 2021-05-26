@@ -1,7 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, ParamMap, UrlTree } from '@angular/router';
 import { of, Subscription } from 'rxjs';
-import { filter, map, skip, switchMap } from 'rxjs/operators';
+import { filter, map, switchMap } from 'rxjs/operators';
 import { defaultAttemptId } from 'src/app/shared/helpers/attempts';
 import { appDefaultItemRoute, isItemRouteError, itemRouteFromParams } from 'src/app/shared/routing/item-route';
 import { errorState, fetchingState, FetchState } from 'src/app/shared/helpers/state';
@@ -53,7 +53,7 @@ export class ItemByIdComponent implements OnDestroy {
 
     // on route change or user change: refetch item if needed
     this.activatedRoute.paramMap.pipe(
-      repeatLatestWhen(this.userSessionService.user$.pipe(skip(1)))
+      repeatLatestWhen(this.userSessionService.userChanged$)
     ).subscribe(params => this.fetchItemAtRoute(params)),
 
     this.subscriptions.push(
