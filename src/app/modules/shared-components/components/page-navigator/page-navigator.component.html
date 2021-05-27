@@ -35,13 +35,13 @@
         <p-progressSpinner [style]="{width: '24px', height: '24px'}"></p-progressSpinner>
       </div>
       <div *ngIf="state.isError" i18n>Error while loading the activities</div>
-      <div *ngIf="!state.isFetching && state.isReady && state.data?.length === 0" i18n>
+      <div *ngIf="state.isReady && state.data.length === 0" i18n>
         There are no activities
       </div>
       <p-table
           class="alg-table --overlay-panel"
           [value]="state.data"
-          *ngIf="state.isReady && (state.data || []).length > 0"
+          *ngIf="state.isReady && state.data.length > 0"
       >
         <ng-template pTemplate="body" let-item>
           <tr>
