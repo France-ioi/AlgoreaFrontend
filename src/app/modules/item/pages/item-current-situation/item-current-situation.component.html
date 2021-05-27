@@ -34,9 +34,9 @@
 
   <div>
     <alg-item-log-view
-      *ngIf="historyTab?.isActive"
+      *ngIf="historyTab?.isActive || !historyTab"
       [itemData]="itemData"
-      [logColumns]="logColumns"
+      [isWatchedGroup]="!!watchedGroup"
     ></alg-item-log-view>
 
     <div class="item-chapter-view">

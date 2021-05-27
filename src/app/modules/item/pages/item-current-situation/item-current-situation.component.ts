@@ -1,7 +1,6 @@
 import { Component, Input, OnChanges, ViewChild } from '@angular/core';
 import { ItemData } from '../../services/item-datasource.service';
 import { Group } from '../../../group/http-services/get-group-by-id.service';
-import { Column } from '../item-log-view/item-log-view.component';
 import { RouterLinkActive } from '@angular/router';
 import { ItemType } from 'src/app/shared/helpers/item-type';
 
@@ -20,7 +19,6 @@ export class ItemCurrentSituationComponent implements OnChanges {
 
   hideSelection = false;
   showChapterUserProgress = false;
-  logColumns?: Column[];
 
   constructor() {}
 
@@ -32,43 +30,12 @@ export class ItemCurrentSituationComponent implements OnChanges {
     }
 
     this.hideSelection = this.getHideSelection(type);
-    this.logColumns = this.getLogColumns(type);
 
     if (this.hideSelection) {
       return;
     }
 
     this.showChapterUserProgress = this.getShowChapterUserProgress(type);
-  }
-
-  private getLogColumns(type: ItemType): Column[] {
-    const columns = [
-      {
-        field: 'activity_type',
-        header: $localize`Action`,
-        enabled: true,
-      },
-      {
-        field: 'item.string.title',
-        header: $localize`Content`,
-        enabled: ![ 'Task', 'Course' ].includes(type),
-      },
-      {
-        field: 'item.user',
-        header: $localize`User`,
-        enabled: !!this.watchedGroup && [ 'Chapter', 'Task', 'Course' ].includes(type),
-      },
-      {
-        field: 'at',
-        header: $localize`Time`,
-        enabled: true,
-      }
-    ];
-
-    return columns.filter(item => item.enabled).map(item => ({
-      field: item.field,
-      header: item.header,
-    }));
   }
 
   private getHideSelection(type: ItemType): boolean {

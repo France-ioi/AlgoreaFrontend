@@ -4,6 +4,7 @@ import { ActivityLog, ActivityLogService } from 'src/app/shared/http-services/ac
 import { Observable, ReplaySubject } from 'rxjs';
 import { distinct, switchMap, map } from 'rxjs/operators';
 import { mapToFetchState } from 'src/app/shared/operators/state';
+import { ItemType } from '../../../../shared/helpers/item-type';
 
 export interface Column {
   field: string,
@@ -23,7 +24,9 @@ interface Data {
 export class ItemLogViewComponent implements OnChanges {
 
   @Input() itemData?: ItemData;
-  @Input() logColumns?: Column[];
+  @Input() isWatchedGroup = false;
+
+  logColumns?: Column[];
 
   private readonly id$ = new ReplaySubject<string>(1);
   readonly state$ = this.id$.pipe(
@@ -38,15 +41,51 @@ export class ItemLogViewComponent implements OnChanges {
 
   ngOnChanges(): void {
     if (this.itemData) this.id$.next(this.itemData.item.id);
+
+    if (!this.itemData?.item.type) {
+      return;
+    }
+
+    this.logColumns = this.getLogColumns(this.itemData.item.type);
   }
 
-  getData$(id: string): Observable<Data> {
+  private getData$(id: string): Observable<Data> {
     return this.activityLogService.getActivityLog(id).pipe(
       map((data: ActivityLog[]) => ({
         columns: this.logColumns || [],
         rowData: data
       }))
     );
+  }
+
+  private getLogColumns(type: ItemType): Column[] {
+    const columns = [
+      {
+        field: 'activity_type',
+        header: $localize`Action`,
+        enabled: true,
+      },
+      {
+        field: 'item.string.title',
+        header: $localize`Content`,
+        enabled: ![ 'Task', 'Course' ].includes(type),
+      },
+      {
+        field: 'item.user',
+        header: $localize`User`,
+        enabled: this.isWatchedGroup && [ 'Chapter', 'Task', 'Course' ].includes(type),
+      },
+      {
+        field: 'at',
+        header: $localize`Time`,
+        enabled: true,
+      }
+    ];
+
+    return columns.filter(item => item.enabled).map(item => ({
+      field: item.field,
+      header: item.header,
+    }));
   }
 
 }
