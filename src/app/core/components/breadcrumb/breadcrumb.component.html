@@ -1,6 +1,6 @@
 <div class="breadcrumb-container">
-  <ul *ngIf="contentBreadcrumb"> <!-- TODO: handle "smart" ellipsis (as in https://codepen.io/shippin/pen/YrwrYa) -->
-
+  <!-- TODO: handle "smart" ellipsis (as in https://codepen.io/shippin/pen/YrwrYa) -->
+  <ul *ngIf="contentBreadcrumb" [ngClass]="{'compact-breadcrumb': contentBreadcrumb.path.length > 2}">
     <!-- category -->
     <li class="home"><i class="fa fa-folder"></i></li>
     <li

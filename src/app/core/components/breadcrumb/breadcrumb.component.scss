@@ -17,6 +17,24 @@ $breadcrumb-bottom-color: #E0E1E5;
     padding-left: 1.25rem;
     display: flex;
 
+    &.compact-breadcrumb {
+      li {
+        display: none;
+
+        &:nth-last-child(-n + 4) {
+          display: flex;
+          white-space: normal;
+        }
+
+        &:nth-last-child(4) {
+          &:before {
+            content: '...';
+            margin-right: 1rem;
+          }
+        }
+      }
+    }
+
     li {
       display: flex;
       margin: 0 .25em;
@@ -26,6 +44,10 @@ $breadcrumb-bottom-color: #E0E1E5;
       overflow: hidden;
       min-width: 0;
       border-top: 0.25rem solid transparent;
+
+      &:last-child {
+        white-space: normal;
+      }
 
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -66,9 +88,6 @@ $breadcrumb-bottom-color: #E0E1E5;
         line-height: normal;
 
         &.label {
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
           min-width: 0;
           flex: 1;
         }
