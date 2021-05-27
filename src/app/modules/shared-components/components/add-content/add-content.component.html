@@ -56,9 +56,9 @@
           <td>
             <alg-button
               class="p-small-button p-button-rounded"
-              [icon]="addedItemIds.includes(item.id) ? 'fa fa-check' : selectExistingText === 'Add' ? 'fa fa-plus' : undefined"
-              [label]="addedItemIds.includes(item.id) ? addedText : selectExistingText"
-              [disabled]="addedItemIds.includes(item.id)"
+              [icon]="addedIds.includes(item.id) ? 'fa fa-check' : selectExistingText === 'Add' ? 'fa fa-plus' : undefined"
+              [label]="addedIds.includes(item.id) ? addedText : selectExistingText"
+              [disabled]="addedIds.includes(item.id)"
               (click)="addExisting(item)"
             ></alg-button>
           </td>
