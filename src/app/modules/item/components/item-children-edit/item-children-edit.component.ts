@@ -86,7 +86,7 @@ export class ItemChildrenEditComponent implements OnChanges {
         ).subscribe(children => {
           this.data = children;
           this.scoreWeightEnabled = this.data.some(c => c.scoreWeight !== 1);
-          this.onChildAdded();
+          this.onChildrenListUpdate();
           this.state = 'ready';
         },
         _err => {
@@ -99,7 +99,7 @@ export class ItemChildrenEditComponent implements OnChanges {
 
   addChild(child: AddedContent<ItemType>): void {
     this.data.push({ ...child, scoreWeight: DEFAULT_SCORE_WEIGHT });
-    this.onChildAdded();
+    this.onChildrenListUpdate();
     this.childrenChanges.emit(this.data);
   }
 
@@ -109,7 +109,7 @@ export class ItemChildrenEditComponent implements OnChanges {
 
   onRemove(): void {
     this.data = this.data.filter(elm => !this.selectedRows.includes(elm));
-    this.onChildAdded();
+    this.onChildrenListUpdate();
     this.childrenChanges.emit(this.data);
     this.selectedRows = [];
   }
@@ -130,7 +130,7 @@ export class ItemChildrenEditComponent implements OnChanges {
 
   resetScoreWeight(): void {
     this.data = this.data.map(c => ({ ...c, scoreWeight: DEFAULT_SCORE_WEIGHT }));
-    this.onChildAdded();
+    this.onChildrenListUpdate();
     this.onScoreWeightChange();
   }
 
@@ -138,7 +138,7 @@ export class ItemChildrenEditComponent implements OnChanges {
     this.childrenChanges.emit(this.data);
   }
 
-  onChildAdded(): void {
+  onChildrenListUpdate(): void {
     this.addedItemIds = this.getAddedItemIds();
   }
 
