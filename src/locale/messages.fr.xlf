@@ -486,8 +486,8 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-log-view/logActionDisplay.ts</context><context context-type="linenumber">11</context></context-group></trans-unit><trans-unit id="3217263117156136606" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{session.watchedGroup ? 'Group' : 'User'}}"/> situation</source><target state="new"><x id="INTERPOLATION" equiv-text="{{session.watchedGroup ? 'Group' : 'User'}}"/> situation</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/item/pages/item-progress/item-progress.component.html</context>
-          <context context-type="linenumber">2</context>
+          <context context-type="sourcefile">src/app/modules/item/pages/item-progress/itemProgressLabel.ts</context>
+          <context context-type="linenumber">11</context>
         </context-group>
       </trans-unit><trans-unit id="5402924068010392760" datatype="html">
         <source>Join the group "<x id="PH" equiv-text="response.group.name"/>"</source><target state="translated">Rejoindre le groupe "<x id="PH" equiv-text="response.group.name"/>"</target>
@@ -981,7 +981,7 @@
         <source>Content</source><target state="translated">Contenu</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog-texts.ts</context><context context-type="linenumber">30</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog-texts.ts</context><context context-type="linenumber">61</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-current-situation/item-current-situation.component.ts</context><context context-type="linenumber">56</context></context-group></trans-unit><trans-unit id="1459057934865952132" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog-texts.ts</context><context context-type="linenumber">30</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog-texts.ts</context><context context-type="linenumber">61</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-log-view/item-log-view.component.ts</context><context context-type="linenumber">70</context></context-group></trans-unit><trans-unit id="1459057934865952132" datatype="html">
         <source><x id="PH" equiv-text="targetTypeString"/> can see the content of this item</source><target state="translated"><x id="PH" equiv-text="targetTypeString"/> peut voir le contenu de cet élément</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog-texts.ts</context><context context-type="linenumber">31</context></context-group></trans-unit><trans-unit id="240638056322492270" datatype="html">
@@ -1452,10 +1452,10 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-log-view/item-log-view.component.html</context><context context-type="linenumber">6</context></context-group></trans-unit><trans-unit id="9216117865911519658" datatype="html">
         <source>Action</source><target state="translated">Opération</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-current-situation/item-current-situation.component.ts</context><context context-type="linenumber">51</context></context-group></trans-unit><trans-unit id="2392488717875840729" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-log-view/item-log-view.component.ts</context><context context-type="linenumber">65</context></context-group></trans-unit><trans-unit id="2392488717875840729" datatype="html">
         <source>User</source><target state="new">User</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-current-situation/item-current-situation.component.ts</context><context context-type="linenumber">61</context></context-group></trans-unit><trans-unit id="8497528947328199741" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-log-view/item-log-view.component.ts</context><context context-type="linenumber">75</context></context-group></trans-unit><trans-unit id="8497528947328199741" datatype="html">
         <source>Time</source><target state="translated">Date/Heure</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-current-situation/item-current-situation.component.ts</context><context context-type="linenumber">66</context></context-group></trans-unit><trans-unit id="6213559315741290082" datatype="html">
