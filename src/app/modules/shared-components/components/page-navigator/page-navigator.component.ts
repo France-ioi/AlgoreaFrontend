@@ -7,7 +7,7 @@ import {
   map,
   switchMap,
 } from 'rxjs/operators';
-import { isNotNullOrUndefined } from '../../../../shared/helpers/null-undefined-predicates';
+import { isNotNullOrUndefined, isNotUndefined } from '../../../../shared/helpers/null-undefined-predicates';
 import { OverlayPanel } from 'primeng/overlaypanel';
 import { concat, Observable, of } from 'rxjs';
 import {
@@ -42,8 +42,9 @@ export class PageNavigatorComponent {
     map(data => this.groupId !== undefined && data.watchedGroup?.id === this.groupId)
   );
 
-  state$ = this.userSessionService.group$.pipe(
+  state$ = this.userSessionService.watchedGroup$.pipe(
     debounceTime(0),
+    filter(isNotUndefined),
     switchMap(watchedGroup =>
       concat(
         of(fetchingState()),
