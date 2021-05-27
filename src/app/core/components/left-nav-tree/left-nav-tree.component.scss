@@ -200,9 +200,9 @@
 
 :host ::ng-deep .p-treenode-content {
 
-  padding: 0em !important;
+  padding: 0 !important;
 
-  &:focus {
+  &:active {
     .node-tree-item .node-item-content {
       &.unlocked {
         border-top-left-radius: 0.5rem;
