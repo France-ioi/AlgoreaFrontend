@@ -48,7 +48,15 @@
                 </td>
               </ng-container>
               <td><span class="type">{{ rowData.type }}</span></td>
-              <td><span class="main">{{ rowData.title }}</span></td>
+              <td>
+                <a
+                    class="main alg-link"
+                    [ngClass]="{'disabled': !rowData.id}"
+                    (click)="onClick(rowData)"
+                >
+                  {{ rowData.title }}
+                </a>
+              </td>
             </tr>
           </ng-template>
           <ng-template pTemplate="summary">

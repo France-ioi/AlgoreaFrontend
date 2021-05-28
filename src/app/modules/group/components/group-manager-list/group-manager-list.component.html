@@ -57,7 +57,11 @@
             tooltipPosition="top"
             tooltipStyleClass="tooltip-custom"
           >
-            {{ rowData.name }}
+            <a class="alg-link"
+               [routerLink]="[ '/', 'groups', 'users', rowData.id ]"
+            >
+              {{ rowData.name }}
+            </a>
           </td>
           <td style="min-width: 110px;">
             {{ rowData.can_manage_as_text }}

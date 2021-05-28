@@ -3,17 +3,25 @@ import { ItemData } from '../../services/item-datasource.service';
 import { GetItemChildrenService } from '../../http-services/get-item-children.service';
 import { Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ItemType } from '../../../../shared/helpers/item-type';
+import { ItemType, typeCategoryOfItem } from '../../../../shared/helpers/item-type';
 import { AddedContent } from '../../../shared-components/components/add-content/add-content.component';
+import { ItemRouter } from '../../../../shared/routing/item-router';
+import { bestAttemptFromResults } from '../../../../shared/helpers/attempts';
+import { canCurrentUserViewItemContent } from '../../helpers/item-permissions';
 
 export interface ChildData {
   id?: string,
   title: string | null,
   type: ItemType,
   scoreWeight: number,
+  result?: {
+    attemptId: string,
+    validated: boolean,
+    score: number,
+  },
 }
 
-export interface ChildDataWithId extends ChildData{
+export interface ChildDataWithId extends ChildData {
   id: string;
 }
 
@@ -41,6 +49,7 @@ export class ItemChildrenEditComponent implements OnChanges {
 
   constructor(
     private getItemChildrenService: GetItemChildrenService,
+    private itemRouter: ItemRouter,
   ) {}
 
   ngOnChanges(): void {
@@ -56,12 +65,21 @@ export class ItemChildrenEditComponent implements OnChanges {
         .pipe(
           map(children => children
             .sort((a, b) => a.order - b.order)
-            .map(child => ({
-              id: child.id,
-              title: child.string.title,
-              type: child.type,
-              scoreWeight: child.scoreWeight
-            }))
+            .map(child => {
+              const res = bestAttemptFromResults(child.results);
+              return {
+                id: child.id,
+                title: child.string.title,
+                type: child.type,
+                scoreWeight: child.scoreWeight,
+                isLocked: !canCurrentUserViewItemContent(child),
+                result: res === null ? undefined : {
+                  attemptId: res.attemptId,
+                  validated: res.validated,
+                  score: res.scoreComputed,
+                },
+              };
+            })
           )
         ).subscribe(children => {
           this.data = children;
@@ -112,5 +130,26 @@ export class ItemChildrenEditComponent implements OnChanges {
 
   onScoreWeightChange(): void {
     this.childrenChanges.emit(this.data);
+  }
+
+  onClick(child: ChildData): void {
+    if (!this.itemData || !child.id) {
+      return;
+    }
+
+    const attemptId = child.result?.attemptId;
+    const parentAttemptId = this.itemData.currentResult?.attemptId;
+
+    // unexpected: children have been loaded, so we are sure this item has an attempt
+    if (!parentAttemptId) {
+      return;
+    }
+
+    this.itemRouter.navigateTo({
+      contentType: typeCategoryOfItem(child),
+      id: child.id,
+      path: this.itemData.route.path.concat([ this.itemData.item.id ]),
+      ...attemptId ? { attemptId: attemptId } : { parentAttemptId: parentAttemptId }
+    });
   }
 }

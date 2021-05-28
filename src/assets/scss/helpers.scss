@@ -15,11 +15,18 @@
 
   color: $base-text-color;
 
-  &.clickable {
-    cursor: pointer;
+  cursor: pointer;
+
+  &:hover {
+    color: $base-color;
+  }
+
+  &.disabled {
+    cursor: auto;
+    pointer-events: none;
 
     &:hover {
-      color: $base-color;
+      color: initial;
     }
   }
 
