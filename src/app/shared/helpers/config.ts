@@ -22,6 +22,7 @@ export type Environment = {
   defaultActivityId: string;
   defaultSkillId: string;
 
+  // To add a default/fallback language, use a config with path = "/" and place it at the end.
   languages: LanguageConfig[];
 
   allowForcedToken: boolean, // for dev: allow devs to define 'forced_token' in storage so that this token is used in any case
