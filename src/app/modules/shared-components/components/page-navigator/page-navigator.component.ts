@@ -72,7 +72,7 @@ export class PageNavigatorComponent {
 
   getList$(watchedGroupId: string): Observable<NavMenuItem[]> {
     return this.itemNavigationService.getRootActivities(watchedGroupId).pipe(
-      map((navMenuRootItem: NavMenuRootItem) => navMenuRootItem.items)
+      map((navMenuRootItem: NavMenuRootItem) => navMenuRootItem.items.slice(0, 5))
     );
   }
 }
