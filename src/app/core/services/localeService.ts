@@ -9,7 +9,7 @@ import { appConfig, LanguageConfig } from 'src/app/shared/helpers/config';
 export class LocaleService {
 
   readonly languages: LanguageConfig[];
-  readonly currentLang: LanguageConfig | undefined;
+  readonly currentLang?: LanguageConfig;
   readonly currentLangError$: Observable<boolean>
 
   constructor() {
