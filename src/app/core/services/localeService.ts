@@ -10,12 +10,12 @@ export class LocaleService {
 
   readonly languages: LanguageConfig[];
   readonly currentLang?: LanguageConfig;
-  readonly currentLangError$: Observable<boolean>
+  readonly currentLangError$: Observable<void>
 
   constructor() {
     this.languages = appConfig.languages;
     this.currentLang = this.languages.find(l => window.location.pathname.endsWith(l.path));
-    this.currentLangError$ = this.currentLang ? EMPTY : of(true);
+    this.currentLangError$ = this.currentLang ? EMPTY : of(undefined);
   }
 
   navigateTo(langTag: string): void {
