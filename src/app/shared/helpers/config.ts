@@ -4,6 +4,11 @@ interface TokenConfig { authType: 'tokens' }
 type CookieConfig = { authType: 'cookies' } & ({ secure: true, sameSite: boolean } | { secure: boolean, sameSite: true })
 export type AuthTypeConfig = TokenConfig | CookieConfig;
 
+export interface LanguageConfig {
+  tag: string,
+  path: string,
+}
+
 export type Environment = {
   production: boolean;
 
@@ -17,7 +22,8 @@ export type Environment = {
   defaultActivityId: string;
   defaultSkillId: string;
 
-  languages?: { tag: string, path: string }[];
+  // To add a default/fallback language, use a config with path = "/" and place it at the end.
+  languages: LanguageConfig[];
 
   allowForcedToken: boolean, // for dev: allow devs to define 'forced_token' in storage so that this token is used in any case
   // The authType used with API is either 'tokens' or 'cookies'.

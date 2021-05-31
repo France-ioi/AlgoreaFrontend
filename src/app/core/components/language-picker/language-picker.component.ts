@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, Output, EventEmitter } from '@angular/core';
+import { Component, Input, OnChanges, Output, EventEmitter, OnInit } from '@angular/core';
 import { LocaleService } from '../../services/localeService';
 
 @Component({
@@ -6,31 +6,37 @@ import { LocaleService } from '../../services/localeService';
   templateUrl: './language-picker.component.html',
   styleUrls: [ './language-picker.component.scss' ]
 })
-export class LanguagePickerComponent implements OnChanges {
+export class LanguagePickerComponent implements OnInit, OnChanges {
   @Input() styleClass?: string;
   @Input() defaultLang?: string;
   @Input() redirectOnChange = true;
   @Output() changeLang = new EventEmitter<string>();
 
-  readonly languages = this.localeService.languages;
-  current = this.languages?.find(l => l.tag === this.localeService.currentTag);
+  readonly languages = this.localeService.languages.map(({ tag }) => ({ label: tag, value: tag }));
+  current?: string
 
   constructor(
     private localeService: LocaleService,
   ) {}
 
+  ngOnInit(): void {
+    this.initCurrentLang();
+  }
+
   ngOnChanges(): void {
-    if (this.defaultLang) {
-      this.current = this.languages?.find(l => l.tag === this.defaultLang);
+    this.initCurrentLang();
+  }
+
+  languageChanged(lang: { value: string }): void {
+    this.changeLang.emit(lang.value);
+
+    if (this.redirectOnChange) {
+      this.localeService.navigateTo(lang.value);
     }
   }
 
-  languageChanged(lang: { value: { tag: string } }): void {
-    this.changeLang.emit(lang.value.tag);
-
-    if (this.redirectOnChange) {
-      this.localeService.navigateTo(lang.value.tag);
-    }
+  private initCurrentLang(): void {
+    this.current = this.defaultLang ?? this.localeService.currentLang?.tag;
   }
 
 }

@@ -7,6 +7,7 @@ import { AuthService } from '../shared/auth/auth.service';
 import { Router } from '@angular/router';
 import { ModeAction, ModeService } from '../shared/services/mode.service';
 import { ContentInfo } from '../shared/models/content/content-info';
+import { LocaleService } from './services/localeService';
 
 @Component({
   selector: 'alg-root',
@@ -19,7 +20,11 @@ export class AppComponent implements OnInit, OnDestroy {
   currentContent$: Observable<ContentInfo|null> = this.currentContent.currentContent$.pipe(delay(0));
   readonly currentMode$ = this.modeService.mode$.asObservable().pipe(delay(0));
   session$ = this.sessionService.session$.pipe(delay(0));
-  fatalError$ = merge(this.authService.failure$, this.sessionService.userProfileError$);
+  fatalError$ = merge(
+    this.authService.failure$,
+    this.sessionService.userProfileError$,
+    this.localeService.currentLangError$,
+  );
 
   leftMenuDisplayed = true;
   headersDisplayed = true;
@@ -33,6 +38,7 @@ export class AppComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private currentContent: CurrentContentService,
     private modeService: ModeService,
+    private localeService: LocaleService,
   ) {}
 
   ngOnInit(): void {
