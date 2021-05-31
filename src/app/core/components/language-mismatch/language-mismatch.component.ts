@@ -19,8 +19,8 @@ export class LanguageMismatchComponent {
       userDefaultLanguage: profile.defaultLanguage,
       userDefaultLanguageIsSupported: this.localeService.languages.some(({ tag }) => tag === profile.defaultLanguage),
     })),
-  )
-  updating$?: Observable<boolean>
+  );
+  updating$?: Observable<boolean>;
 
   constructor(
     private localeService: LocaleService,
