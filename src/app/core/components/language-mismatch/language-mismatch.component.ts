@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { mapPending } from 'src/app/shared/operators/map-pending';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
@@ -20,7 +19,7 @@ export class LanguageMismatchComponent {
       userDefaultLanguageIsSupported: this.localeService.languages.some(({ tag }) => tag === profile.defaultLanguage),
     })),
   );
-  updating$?: Observable<boolean>;
+  updating = false;
 
   constructor(
     private localeService: LocaleService,
@@ -29,7 +28,9 @@ export class LanguageMismatchComponent {
 
   onUpdateUserLanguage(language?: string): void {
     if (!language) throw new Error('language should be defined');
-    this.updating$ = this.sessionService.updateCurrentUser({ default_language: language }).pipe(mapPending());
+    this.sessionService.updateCurrentUser({ default_language: language })
+      .pipe(mapPending())
+      .subscribe(updating => (this.updating = updating));
   }
 
   onVisitPlatformInUserLanguage(language: string): void {

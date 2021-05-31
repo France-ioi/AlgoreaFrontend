@@ -8,7 +8,7 @@
     [closeOnEscape]="false"
     [closable]="false"
     >
-    <div class="spinner-overlay" *ngIf="updating$ | async">
+    <div class="spinner-overlay" *ngIf="updating">
       <p-progressSpinner></p-progressSpinner>
     </div>
 
