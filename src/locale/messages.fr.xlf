@@ -67,12 +67,6 @@
           <context context-type="sourcefile">src/app/core/pages/page-not-found/page-not-found.component.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
-      </trans-unit><trans-unit id="348454dfead756b953ba1b94a02d6ced2b72e411" datatype="html">
-        <source> Edition Mode </source><target state="translated"> Mode édition </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/shared-components/components/editor-bar/editor-bar.component.html</context>
-          <context context-type="linenumber">6,7</context>
-        </context-group>
       </trans-unit><trans-unit id="072d4d4ec83a5a97345a1c13b90c213b47326d09" datatype="html">
         <source>Customize</source><target state="translated">Personnaliser</target>
 
@@ -354,7 +348,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/associated-activity/associated-activity.component.html</context><context context-type="linenumber">20</context></context-group></trans-unit><trans-unit id="019d4bd6a5690f0cfa0ecf346a4e6bf7f0d8debb" datatype="html">
         <source>Remove</source><target state="translated">Supprimer</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/associated-activity/associated-activity.component.html</context><context context-type="linenumber">29</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/associated-activity/associated-activity.component.html</context><context context-type="linenumber">42</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/member-list/member-list.component.html</context><context context-type="linenumber">81</context></context-group></trans-unit><trans-unit id="4378796785985219718" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/associated-activity/associated-activity.component.html</context><context context-type="linenumber">29</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/associated-activity/associated-activity.component.html</context><context context-type="linenumber">42</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/member-list/member-list.component.html</context><context context-type="linenumber">94</context></context-group></trans-unit><trans-unit id="4378796785985219718" datatype="html">
         <source>Class</source><target state="translated">Classe</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/managed-group-list/managed-group-list.component.ts</context><context context-type="linenumber">32</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/add-sub-group/add-sub-group.component.ts</context><context context-type="linenumber">32</context></context-group></trans-unit><trans-unit id="3192753641165405448" datatype="html">
@@ -564,7 +558,13 @@
       </trans-unit><trans-unit id="3249513483374643425" datatype="html">
         <source>Add</source><target state="translated">Ajouter</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/add-content/add-content.component.ts</context><context context-type="linenumber">32</context></context-group></trans-unit><trans-unit id="8598ca8227b654988e98dbc5ef9ed314a3d483a3" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/add-content/add-content.component.ts</context><context context-type="linenumber">32</context></context-group></trans-unit><trans-unit id="9107cef68cae93bb4ffbf589d10362269de703f2" datatype="html">
+        <source> Edit Mode </source><target state="new"> Edit Mode </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/shared-components/components/editor-bar/editor-bar.component.html</context>
+          <context context-type="linenumber">6,7</context>
+        </context-group>
+      </trans-unit><trans-unit id="8598ca8227b654988e98dbc5ef9ed314a3d483a3" datatype="html">
        <source>Pending requests</source><target state="translated">Demandes en attente</target>
 
      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/pending-join-requests/pending-join-requests.component.html</context><context context-type="linenumber">2</context></context-group></trans-unit><trans-unit id="03431f0b7cbc609cfb3ee4818bea639fba5997b8" datatype="html">
@@ -858,16 +858,16 @@
       </trans-unit><trans-unit id="b463541a7e303aa4d0b1102eaff8afbaf34e7a74" datatype="html">
         <source>Select all</source><target state="translated">Sélectionner tout</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-children-edit/item-children-edit.component.html</context><context context-type="linenumber">58</context></context-group></trans-unit><trans-unit id="39095d9bc1f12307d8dcde8a3fee965bc4a44e00" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-children-edit/item-children-edit.component.html</context><context context-type="linenumber">66</context></context-group></trans-unit><trans-unit id="39095d9bc1f12307d8dcde8a3fee965bc4a44e00" datatype="html">
         <source>Remove selected</source><target state="translated">Supprimer la sélection</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-children-edit/item-children-edit.component.html</context><context context-type="linenumber">62</context></context-group></trans-unit><trans-unit id="584b04ff6f32f01c706429ba522c3be62d083c4c" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-children-edit/item-children-edit.component.html</context><context context-type="linenumber">70</context></context-group></trans-unit><trans-unit id="584b04ff6f32f01c706429ba522c3be62d083c4c" datatype="html">
         <source>No children for this chapter.</source><target state="translated">Aucun enfant dans ce chapitre.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-children-edit/item-children-edit.component.html</context><context context-type="linenumber">70</context></context-group></trans-unit><trans-unit id="6080b77234e92ad41bb52653b239c4c4f851317d" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-children-edit/item-children-edit.component.html</context><context context-type="linenumber">78</context></context-group></trans-unit><trans-unit id="6080b77234e92ad41bb52653b239c4c4f851317d" datatype="html">
         <source>Error</source><target state="translated">Erreur</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-children-edit/item-children-edit.component.html</context><context context-type="linenumber">80</context></context-group></trans-unit><trans-unit id="9888b1258e6c9e7c0905529c5cfe3abf81f35a21" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-children-edit/item-children-edit.component.html</context><context context-type="linenumber">88</context></context-group></trans-unit><trans-unit id="9888b1258e6c9e7c0905529c5cfe3abf81f35a21" datatype="html">
         <source>Parent skills</source><target state="translated">Compétences parentes</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/item/components/parent-skills/parent-skills.component.html</context>
@@ -1132,10 +1132,10 @@
       </trans-unit><trans-unit id="e40ccdcfed45df5834314bbd73a1728fded37a45" datatype="html">
         <source>This list is empty. Check below the different ways to add members or sub-groups.</source><target state="translated">La liste est vide. Voyez ci-dessous comment vous pouvez ajouter des membres et sous-groupes.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/member-list/member-list.component.html</context><context context-type="linenumber">68</context></context-group></trans-unit><trans-unit id="8f9514a6712d9f571de20ef06701d8c2f21a9d34" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/member-list/member-list.component.html</context><context context-type="linenumber">81</context></context-group></trans-unit><trans-unit id="8f9514a6712d9f571de20ef06701d8c2f21a9d34" datatype="html">
         <source> Select all </source><target state="translated"> Tout sélectionner </target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/member-list/member-list.component.html</context><context context-type="linenumber">76</context></context-group></trans-unit><trans-unit id="6306138344256927663" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/member-list/member-list.component.html</context><context context-type="linenumber">89</context></context-group></trans-unit><trans-unit id="6306138344256927663" datatype="html">
         <source>Read-only</source><target state="translated">Lecture seule</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/group/components/group-manager-list/group-manager-list.component.ts</context>
