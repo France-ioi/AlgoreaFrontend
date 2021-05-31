@@ -31,7 +31,7 @@ export class LanguageMismatchComponent {
     private sessionService: UserSessionService,
   ) { }
 
-  onUpdateUserLanguage(language: string | undefined): void {
+  onUpdateUserLanguage(language?: string): void {
     if (!language) return;
     this.updating$ = this.sessionService.updateCurrentUser({ default_language: language }).pipe(mapPending());
   }
