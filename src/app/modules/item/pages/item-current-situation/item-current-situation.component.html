@@ -39,11 +39,11 @@
       [isWatchedGroup]="!!watchedGroup"
     ></alg-item-log-view>
 
-    <div class="item-chapter-view">
-      <alg-item-chapter-view
+    <div class="chapter-group-progress">
+      <alg-chapter-group-progress
         *ngIf="chapterTab?.isActive"
         [itemData]="itemData"
-      ></alg-item-chapter-view>
+      ></alg-chapter-group-progress>
     </div>
 
     <alg-chapter-user-progress

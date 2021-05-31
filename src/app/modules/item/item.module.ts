@@ -26,7 +26,7 @@ import { DialogModule } from 'primeng/dialog';
 import { AddItemComponent } from './components/add-item/add-item.component';
 import { CompositionFilterComponent } from './components/composition-filter/composition-filter.component';
 import { UserProgressComponent } from './components/user-progress/user-progress.component';
-import { ItemChapterViewComponent } from './pages/item-chapter-view/item-chapter-view.component';
+import { ChapterGroupProgressComponent } from './pages/chapter-group-progress/chapter-group-progress.component';
 import { GroupProgressGridComponent } from './pages/group-progress-grid/group-progress-grid.component';
 import { ItemEditAdvancedParametersComponent } from './pages/item-edit-advanced-parameters/item-edit-advanced-parameters.component';
 import { CalendarModule } from 'primeng/calendar';
@@ -51,7 +51,7 @@ import { ItemProgressLabelPipe } from './pages/item-progress/itemProgressLabel';
     ItemEditContentComponent,
     ItemChildrenEditComponent,
     ItemProgressComponent,
-    ItemChapterViewComponent,
+    ChapterGroupProgressComponent,
     GroupProgressGridComponent,
     CompositionFilterComponent,
     UserProgressComponent,

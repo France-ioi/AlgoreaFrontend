@@ -6,11 +6,11 @@ import { UserSessionService } from 'src/app/shared/services/user-session.service
 import { ItemData } from '../../services/item-datasource.service';
 
 @Component({
-  selector: 'alg-item-chapter-view',
-  templateUrl: './item-chapter-view.component.html',
-  styleUrls: [ './item-chapter-view.component.scss' ]
+  selector: 'alg-chapter-group-progress',
+  templateUrl: './chapter-group-progress.component.html',
+  styleUrls: [ './chapter-group-progress.component.scss' ]
 })
-export class ItemChapterViewComponent {
+export class ChapterGroupProgressComponent {
 
   @Input() itemData?: ItemData;
 
