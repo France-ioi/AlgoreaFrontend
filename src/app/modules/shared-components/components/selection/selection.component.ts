@@ -27,7 +27,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 export class SelectionComponent<T> implements OnChanges, ControlValueAccessor {
 
   @Input() type: 'rounded' | 'square' = 'rounded';
-  @Input() items?: { label: string, value: T, icon?: string }[] = [];
+  @Input() items: { label: string, value: T, icon?: string }[] = [];
   @Input() selected = 0;
   @Input() mode: 'light' | 'dark' | 'basic' = 'light';
 
@@ -36,13 +36,13 @@ export class SelectionComponent<T> implements OnChanges, ControlValueAccessor {
   private onChange: (value: T) => void = () => {};
 
   ngOnChanges(_simpleChanges: SimpleChanges): void {
-    if (this.items?.length === 0) throw Error('Invalid items');
-    if (!this.items || this.selected < 0 || this.selected >= this.items.length) throw Error('Invalid selected index');
+    if (this.items.length === 0) throw Error('Invalid items');
+    if (this.selected < 0 || this.selected >= this.items.length) throw Error('Invalid selected index');
   }
 
   writeValue(value: T): void {
-    const index = this.items?.findIndex(item => item.value === value);
-    if (!index || index === -1) throw Error('Invalid value set by form');
+    const index = this.items.findIndex(item => item.value === value);
+    if (index === -1) throw Error('Invalid value set by form');
     this.selected = index;
   }
 
@@ -54,7 +54,7 @@ export class SelectionComponent<T> implements OnChanges, ControlValueAccessor {
   }
 
   itemChanged(index: number): void {
-    if (!this.items || index < 0 || index >= this.items.length) throw Error('Invalid index');
+    if (index < 0 || index >= this.items.length) throw Error('Invalid index');
 
     this.selected = index;
     this.change.emit(this.selected);
