@@ -56,7 +56,7 @@ export class AuthService implements OnDestroy {
         // (3) otherwise, create a temp session
         const defaultLanguage = this.localeService.currentLang?.tag;
         // If no default language, the app is in error state, no need to create a temp user.
-        if (!defaultLanguage) return EMPTY;
+        if (!defaultLanguage) throw new Error('default language should be defined');
         return this.authHttp.createTempUser(defaultLanguage).pipe(retry(2));
       }),
     ).subscribe({
@@ -134,7 +134,7 @@ export class AuthService implements OnDestroy {
 
     const defaultLanguage = this.localeService.currentLang?.tag;
     // If no default language, the app is in error state, no need to create a temp user.
-    if (!defaultLanguage) return;
+    if (!defaultLanguage) throw new Error('default language should be defined');
 
     this.authHttp.createTempUser(defaultLanguage).pipe(retry(2)).subscribe({
       next: auth => {
