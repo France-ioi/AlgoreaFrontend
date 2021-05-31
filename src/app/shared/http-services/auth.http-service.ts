@@ -20,11 +20,11 @@ const longAuthServicesTimeout = 10000;
 export class AuthHttpService {
 
   private http: HttpClient; // an http client specific to this class, skipping all http interceptors
-  private cookieParams = new HttpParams({ fromObject: appConfig.authType === 'cookies' ? {
+  private cookieParams = appConfig.authType === 'cookies' ? {
     use_cookie: '1',
     cookie_secure: appConfig.secure ? '1' : '0',
     cookie_same_site: appConfig.sameSite ? '1' : '0',
-  } : {} });
+  } : undefined;
 
   constructor(
     private handler: HttpBackend,
@@ -32,9 +32,11 @@ export class AuthHttpService {
     this.http = new HttpClient(this.handler);
   }
 
-  createTempUser(): Observable<AuthResult> {
+  createTempUser(defaultLanguage: string): Observable<AuthResult> {
     return this.http
-      .post<ActionResponse<AuthPayload>>(`${appConfig.apiUrl}/auth/temp-user`, null, { params: this.cookieParams })
+      .post<ActionResponse<AuthPayload>>(`${appConfig.apiUrl}/auth/temp-user`, null, {
+        params: new HttpParams({ fromObject: { ...this.cookieParams, default_language: defaultLanguage } }),
+      })
       .pipe(
         timeout(authServicesTimeout),
         map(successData),
@@ -47,7 +49,7 @@ export class AuthHttpService {
       .post<ActionResponse<AuthPayload>>(
         `${appConfig.apiUrl}/auth/token`,
         { code: code, redirect_uri: redirectUri }, // payload data
-        { params: this.cookieParams }
+        { params: new HttpParams({ fromObject: this.cookieParams }) }
       ).pipe(
         timeout(longAuthServicesTimeout),
         map(successData),
@@ -72,7 +74,9 @@ export class AuthHttpService {
   refreshCookie(): Observable<AuthResult> {
     if (appConfig.authType !== 'cookies') throw new Error('try not to provide token while app uses token');
     return this.http
-      .post<ActionResponse<CookieAuthPayload>>(`${appConfig.apiUrl}/auth/token`, null, { params: this.cookieParams }).pipe(
+      .post<ActionResponse<CookieAuthPayload>>(`${appConfig.apiUrl}/auth/token`, null, {
+        params: new HttpParams({ fromObject: this.cookieParams }),
+      }).pipe(
         timeout(longAuthServicesTimeout),
         map(successData),
         map(p => this.authPayloadToResult(p))
