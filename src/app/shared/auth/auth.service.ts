@@ -14,6 +14,7 @@ import {
   hasForcedToken,
   forcedTokenAuthFromStorage
 } from './auth-info';
+import { LocaleService } from 'src/app/core/services/localeService';
 
 // Lifetime under which we refresh the token.
 export const minTokenLifetime = 5*MINUTES;
@@ -40,7 +41,8 @@ export class AuthService implements OnDestroy {
 
   constructor(
     private oauthService: OAuthService,
-    private authHttp: AuthHttpService
+    private authHttp: AuthHttpService,
+    private localeService: LocaleService
   ) {
     // (1) check if a code/state is given in URL (i.e., we are back from a oauth login redirect) and try to get a token from it.
     oauthService.tryCompletingCodeFlowLogin().pipe(
@@ -50,10 +52,13 @@ export class AuthService implements OnDestroy {
         else if (appConfig.authType === 'tokens') return of(tokenAuthFromStorage());
         else return this.authHttp.refreshCookie(); // will fail if the browser has no cookie
       }),
-      catchError(_e =>
+      catchError(_e => {
         // (3) otherwise, create a temp session
-        this.authHttp.createTempUser().pipe(retry(2))
-      ),
+        const defaultLanguage = this.localeService.currentLang?.tag;
+        // If no default language, the app is in error state, no need to create a temp user.
+        if (!defaultLanguage) throw new Error('default language should be defined');
+        return this.authHttp.createTempUser(defaultLanguage).pipe(retry(2));
+      }),
     ).subscribe({
       next: (auth: AuthResult) => {
         this.status$.next(auth);
@@ -127,7 +132,11 @@ export class AuthService implements OnDestroy {
       return;
     }
 
-    this.authHttp.createTempUser().pipe(retry(2)).subscribe({
+    const defaultLanguage = this.localeService.currentLang?.tag;
+    // If no default language, the app is in error state, no need to create a temp user.
+    if (!defaultLanguage) throw new Error('default language should be defined');
+
+    this.authHttp.createTempUser(defaultLanguage).pipe(retry(2)).subscribe({
       next: auth => {
         this.status$.next(auth);
       },
