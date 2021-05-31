@@ -138,12 +138,12 @@ export class ItemChildrenEditComponent implements OnChanges {
     this.childrenChanges.emit(this.data);
   }
 
-  onChildrenListUpdate(): void {
-    this.addedItemIds = this.getAddedItemIds();
+  private onChildrenListUpdate(): void {
+    this.recomputeAddedItemIds();
   }
 
-  getAddedItemIds(): string[] {
-    return this.data.map(item => item.id).filter(isNotUndefined);
+  recomputeAddedItemIds(): void {
+    this.addedItemIds = this.data.map(item => item.id).filter(isNotUndefined);
   }
 
   onClick(child: ChildData): void {
