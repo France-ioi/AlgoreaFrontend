@@ -2,7 +2,7 @@
   <div class="selection-center" *ngIf="!hideSelection">
     <nav class="tab-rounded">
       <a class="tab-rounded-item"
-         [ngClass]="{'active': historyTab.isActive, 'prev': chapterTab?.isActive || chapterUserProgressTab?.isActive}"
+         [ngClass]="{'active': historyTab.isActive, 'prev': chapterGroupProgressTab?.isActive || chapterUserProgressTab?.isActive}"
          [routerLink]="'./progress/history'"
          routerLinkActive #historyTab="routerLinkActive"
          i18n
@@ -11,9 +11,9 @@
       </a>
 
       <a class="tab-rounded-item"
-         [ngClass]="{'active': chapterTab.isActive, 'prev': chapterUserProgressTab?.isActive}"
+         [ngClass]="{'active': chapterGroupProgressTab.isActive, 'prev': chapterUserProgressTab?.isActive}"
          [routerLink]="'./progress/chapter'"
-         routerLinkActive #chapterTab="routerLinkActive"
+         routerLinkActive #chapterGroupProgressTab="routerLinkActive"
          *ngIf="!showChapterUserProgress"
          i18n
       >
@@ -41,7 +41,7 @@
 
     <div class="chapter-group-progress">
       <alg-chapter-group-progress
-        *ngIf="chapterTab?.isActive"
+        *ngIf="chapterGroupProgressTab?.isActive"
         [itemData]="itemData"
       ></alg-chapter-group-progress>
     </div>

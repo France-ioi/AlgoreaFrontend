@@ -14,7 +14,7 @@ export class ItemCurrentSituationComponent implements OnChanges {
   @Input() watchedGroup?: Group;
 
   @ViewChild('historyTab') historyTab?: RouterLinkActive;
-  @ViewChild('chapterTab') chapterTab?: RouterLinkActive;
+  @ViewChild('chapterGroupProgressTab') chapterGroupProgressTab?: RouterLinkActive;
   @ViewChild('chapterUserProgressTab') chapterUserProgressTab?: RouterLinkActive;
 
   hideSelection = false;
