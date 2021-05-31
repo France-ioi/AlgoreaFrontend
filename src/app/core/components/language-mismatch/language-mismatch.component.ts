@@ -32,7 +32,7 @@ export class LanguageMismatchComponent {
   ) { }
 
   onUpdateUserLanguage(language?: string): void {
-    if (!language) return;
+    if (!language) throw new Error('language should be defined');
     this.updating$ = this.sessionService.updateCurrentUser({ default_language: language }).pipe(mapPending());
   }
 
