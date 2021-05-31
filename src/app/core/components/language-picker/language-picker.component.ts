@@ -36,7 +36,7 @@ export class LanguagePickerComponent implements OnInit, OnChanges {
   }
 
   private initCurrentLang(): void {
-    this.current = this.defaultLang || this.localeService.currentLang?.tag;
+    this.current = this.defaultLang ?? this.localeService.currentLang?.tag;
   }
 
 }
