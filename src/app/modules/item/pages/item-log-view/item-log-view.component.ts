@@ -40,12 +40,11 @@ export class ItemLogViewComponent implements OnChanges {
   ) {}
 
   ngOnChanges(): void {
-    if (this.itemData) this.id$.next(this.itemData.item.id);
-
-    if (!this.itemData?.item.type) {
+    if (!this.itemData) {
       return;
     }
 
+    this.id$.next(this.itemData.item.id);
     this.logColumns = this.getLogColumns(this.itemData.item.type);
   }
 
