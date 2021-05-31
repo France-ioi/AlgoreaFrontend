@@ -1,5 +1,5 @@
 <ng-container *ngIf="itemData">
-  <div class="selection-center" *ngIf="!hideSelection">
+  <div class="selection-center" *ngIf="selectors !== 'none'">
     <nav class="tab-rounded">
       <a class="tab-rounded-item"
          [ngClass]="{'active': historyTab.isActive, 'prev': chapterGroupProgressTab?.isActive || chapterUserProgressTab?.isActive}"
@@ -14,7 +14,7 @@
          [ngClass]="{'active': chapterGroupProgressTab.isActive, 'prev': chapterUserProgressTab?.isActive}"
          [routerLink]="'./progress/chapter'"
          routerLinkActive #chapterGroupProgressTab="routerLinkActive"
-         *ngIf="!showChapterUserProgress"
+         *ngIf="selectors === 'withGroupProgress'"
          i18n
       >
         Chapter view
@@ -24,7 +24,7 @@
          [ngClass]="{'active': chapterUserProgressTab?.isActive}"
          [routerLink]="'./progress/chapter-user-progress'"
          routerLinkActive #chapterUserProgressTab="routerLinkActive"
-         *ngIf="showChapterUserProgress"
+         *ngIf="selectors === 'withUserProgress'"
          i18n
       >
         Chapter view

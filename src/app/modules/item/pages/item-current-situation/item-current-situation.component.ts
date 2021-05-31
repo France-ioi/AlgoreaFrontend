@@ -2,7 +2,6 @@ import { Component, Input, OnChanges, ViewChild } from '@angular/core';
 import { ItemData } from '../../services/item-datasource.service';
 import { Group } from '../../../group/http-services/get-group-by-id.service';
 import { RouterLinkActive } from '@angular/router';
-import { ItemType } from 'src/app/shared/helpers/item-type';
 
 @Component({
   selector: 'alg-item-current-situation',
@@ -17,8 +16,7 @@ export class ItemCurrentSituationComponent implements OnChanges {
   @ViewChild('chapterGroupProgressTab') chapterGroupProgressTab?: RouterLinkActive;
   @ViewChild('chapterUserProgressTab') chapterUserProgressTab?: RouterLinkActive;
 
-  hideSelection = false;
-  showChapterUserProgress = false;
+  selectors: 'none' | 'withUserProgress' | 'withGroupProgress' = 'withGroupProgress';
 
   constructor() {}
 
@@ -29,21 +27,13 @@ export class ItemCurrentSituationComponent implements OnChanges {
       return;
     }
 
-    this.hideSelection = this.getHideSelection(type);
-
-    if (this.hideSelection) {
-      return;
+    if (!this.watchedGroup && [ 'Task', 'Course' ].includes(type)) {
+      this.selectors = 'none';
+    } else if (!this.watchedGroup && type === 'Chapter') {
+      this.selectors = 'withUserProgress';
+    } else {
+      this.selectors = 'withGroupProgress';
     }
-
-    this.showChapterUserProgress = this.getShowChapterUserProgress(type);
-  }
-
-  private getHideSelection(type: ItemType): boolean {
-    return !this.watchedGroup && [ 'Task', 'Course' ].includes(type);
-  }
-
-  private getShowChapterUserProgress(type: ItemType): boolean {
-    return !this.watchedGroup && type === 'Chapter';
   }
 
 }
