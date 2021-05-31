@@ -13,16 +13,12 @@ import { LocaleService } from '../../services/localeService';
 export class LanguageMismatchComponent {
 
   readonly currentLanguage = this.localeService.currentLang?.tag;
-  readonly languages = this.localeService.languages;
 
   languageMismatch$ = this.sessionService.userProfile$.pipe(
-    map(profile => {
-      const hasLanguageMismatch = !!this.currentLanguage && profile.defaultLanguage !== this.currentLanguage;
-      return hasLanguageMismatch ? {
-        userDefaultLanguage: profile.defaultLanguage,
-        userDefaultLanguageIsSupported: this.languages.some(({ tag }) => tag === profile.defaultLanguage),
-      } : undefined;
-    }),
+    map(profile => (profile.defaultLanguage === this.currentLanguage ? undefined : {
+      userDefaultLanguage: profile.defaultLanguage,
+      userDefaultLanguageIsSupported: this.localeService.languages.some(({ tag }) => tag === profile.defaultLanguage),
+    })),
   )
   updating$?: Observable<boolean>
 
