@@ -1,7 +1,7 @@
 import { map } from 'rxjs/operators';
 import * as D from 'io-ts/Decoder';
-import { pipe } from 'fp-ts/lib/function';
-import { fold } from 'fp-ts/lib/Either';
+import { pipe } from 'fp-ts/function';
+import { fold } from 'fp-ts/Either';
 import { OperatorFunction, pipe as rxpipe } from 'rxjs';
 import { snakeToCamelKeys } from '../helpers/case_conversion';
 
