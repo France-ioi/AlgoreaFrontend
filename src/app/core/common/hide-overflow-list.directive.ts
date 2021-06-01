@@ -11,8 +11,8 @@ import { distinctUntilChanged, map } from 'rxjs/operators';
   selector: '[algHideOverflowList]',
 })
 export class HideOverflowListDirective implements OnInit, OnDestroy {
-  @Input('algHideOverflowListStyleClass') hideOverflowListStyleClass?: string;
-  @Input('algHideOverflowListTarget') hideOverflowListTarget?: string;
+  @Input() algHideOverflowListStyleClass?: string;
+  @Input() algHideOverflowListTarget?: string;
 
   private subscription?: Subscription;
   private nextElIdxForHide = 0;
@@ -35,7 +35,7 @@ export class HideOverflowListDirective implements OnInit, OnDestroy {
   }
 
   private resetOverflowStylesAndSettings(): void {
-    if (!this.hideOverflowListStyleClass) {
+    if (!this.algHideOverflowListStyleClass) {
       return;
     }
 
@@ -47,16 +47,16 @@ export class HideOverflowListDirective implements OnInit, OnDestroy {
       this.renderer.removeClass(el, 'hidden');
     });
 
-    this.renderer.removeClass(this.el.nativeElement, this.hideOverflowListStyleClass);
+    this.renderer.removeClass(this.el.nativeElement, this.algHideOverflowListStyleClass);
   }
 
   private checkAndHideOverflowedElements(): void {
-    if (!this.hideOverflowListTarget || !this.hideOverflowListStyleClass) {
+    if (!this.algHideOverflowListTarget || !this.algHideOverflowListStyleClass) {
       return;
     }
 
     const { clientWidth, scrollWidth } = this.el.nativeElement;
-    const targetElements: HTMLElement[] = this.el.nativeElement.querySelectorAll(this.hideOverflowListTarget);
+    const targetElements: HTMLElement[] = this.el.nativeElement.querySelectorAll(this.algHideOverflowListTarget);
     const hiddenElements: HTMLElement[] = this.el.nativeElement.querySelectorAll('.hidden');
     let checkAgain = false;
 
@@ -72,7 +72,7 @@ export class HideOverflowListDirective implements OnInit, OnDestroy {
         this.nextElIdxForHide += 1;
       }
 
-      this.renderer.addClass(this.el.nativeElement, this.hideOverflowListStyleClass);
+      this.renderer.addClass(this.el.nativeElement, this.algHideOverflowListStyleClass);
     }
 
     if (checkAgain) {
