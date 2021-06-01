@@ -3,7 +3,8 @@
 $breadcrumb-bottom-color: #E0E1E5;
 
 :host {
-  max-width: 100%;
+  display: block;
+  width: 100%;
 }
 
 .breadcrumb-container {
@@ -13,31 +14,28 @@ $breadcrumb-bottom-color: #E0E1E5;
   ul {
     list-style: none;
     margin: 0;
+    width: 100%;
     height: 100%;
     padding-left: 1.25rem;
     display: flex;
 
-    &.compact-breadcrumb {
-      li {
-        display: none;
-
+    li {
+      &:not(&:last-child) {
         .label {
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
         }
+      }
+    }
 
-        &:nth-child(-n + 2) {
-          display: flex;
-          white-space: normal;
-        }
+    &.compact-breadcrumb {
+      .home {
+        display: none;
+      }
 
-        &:nth-last-child(-n + 2) {
-          display: flex;
-          white-space: normal;
-        }
-
-        &:nth-last-child(2) {
+      li {
+        &.hidden + li {
           &:before {
             content: '...';
             margin-right: 1rem;
@@ -48,7 +46,6 @@ $breadcrumb-bottom-color: #E0E1E5;
 
     li {
       display: flex;
-      margin: 0 .25em;
       color: $base-text-color;
       align-items: center;
       height: 3.75rem;
@@ -75,6 +72,8 @@ $breadcrumb-bottom-color: #E0E1E5;
       }
 
       &.separator {
+        margin: 0 .25rem;
+
         i.fa-arrow-right {
           color: $base-color;
         }

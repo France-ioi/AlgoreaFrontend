@@ -1,9 +1,10 @@
 <div class="breadcrumb-container">
   <!-- TODO: handle "smart" ellipsis (as in https://codepen.io/shippin/pen/YrwrYa) -->
   <ul
-      *ngIf="contentBreadcrumb"
-      trwOverflowStyleClass
-      trwOverflowStyleClassNames="compact-breadcrumb"
+      *ngIf="contentBreadcrumb && contentBreadcrumb.path"
+      algHideOverflowList
+      algHideOverflowListStyleClass="compact-breadcrumb"
+      algHideOverflowListTarget="li"
   >
     <!-- category -->
     <li class="home"><i class="fa fa-folder"></i></li>
@@ -15,7 +16,7 @@
     </li>
 
     <!-- elements -->
-    <ng-container *ngFor="let element of contentBreadcrumb.path; index as idx;">
+    <ng-container *ngFor="let element of contentBreadcrumb.path; index as idx; trackBy: trackByFn">
       <li class="separator" [ngClass]="{'active': idx === contentBreadcrumb.currentPageIdx}">
         <ng-container *ngIf="idx === 0; then arrowBlock else slashBlock">
         </ng-container>

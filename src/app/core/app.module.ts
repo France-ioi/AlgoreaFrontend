@@ -42,7 +42,7 @@ import { TopRightMenuComponent } from './components/top-right-menu/top-right-men
 import { FormsModule } from '@angular/forms';
 import { ConfirmPopupModule } from 'primeng/confirmpopup';
 import { ObservationBarComponent } from './components/observation-bar/observation-bar.component';
-import { OverflowStyleClassDirective } from './common/overflow-style-class.directive';
+import { HideOverflowListDirective } from './common/hide-overflow-list.directive';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: false,
@@ -60,7 +60,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     TopRightControlsComponent,
     TopRightMenuComponent,
     ObservationBarComponent,
-    OverflowStyleClassDirective,
+    HideOverflowListDirective,
   ],
   imports: [
     BrowserModule,
