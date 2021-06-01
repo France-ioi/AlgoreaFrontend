@@ -71,7 +71,7 @@ export abstract class LeftNavDataSource<ContentT extends RoutedContentInfo, Menu
         if (prevState.isReady) {
           // CASE: the current content is not an item and the menu has already items displayed
           if (!contentInfo) {
-            if (prevState.data.selectedElementId !== undefined) return of(dsDeselect());
+            if (prevState.data.selectedElementId !== undefined) return of(dsDeselect<MenuT>());
             return EMPTY; // no change
           }
 
