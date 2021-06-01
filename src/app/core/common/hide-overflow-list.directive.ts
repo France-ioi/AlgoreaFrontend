@@ -1,32 +1,37 @@
 import {
   Directive,
   ElementRef,
-  Input, OnInit,
+  Input, OnDestroy, OnInit,
   Renderer2
 } from '@angular/core';
-import { timer } from 'rxjs';
+import { Subscription, timer } from 'rxjs';
 import { distinctUntilChanged, map } from 'rxjs/operators';
 
 @Directive({
   selector: '[algHideOverflowList]',
 })
-export class HideOverflowListDirective implements OnInit {
+export class HideOverflowListDirective implements OnInit, OnDestroy {
   @Input('algHideOverflowListStyleClass') hideOverflowListStyleClass?: string;
   @Input('algHideOverflowListTarget') hideOverflowListTarget?: string;
 
-  nextElIdxForHide = 0;
+  private subscription?: Subscription;
+  private nextElIdxForHide = 0;
 
   constructor(private el: ElementRef, private renderer: Renderer2) {
   }
 
   ngOnInit(): void {
-    timer(0, 100).pipe(
+    this.subscription = timer(0, 100).pipe(
       map(() => this.el.nativeElement.scrollWidth),
       distinctUntilChanged(),
     ).subscribe(() => {
       this.resetOverflowStylesAndSettings();
       this.checkAndHideOverflowedElements();
     });
+  }
+
+  ngOnDestroy(): void {
+    this.subscription?.unsubscribe();
   }
 
   private resetOverflowStylesAndSettings(): void {
