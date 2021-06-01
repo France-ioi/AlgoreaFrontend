@@ -17,7 +17,7 @@ export class HideOverflowListDirective implements OnInit, OnDestroy {
   private subscription?: Subscription;
   private nextElIdxForHide = 0;
 
-  constructor(private el: ElementRef, private renderer: Renderer2) {
+  constructor(private el: ElementRef<HTMLElement>, private renderer: Renderer2) {
   }
 
   ngOnInit(): void {
@@ -41,7 +41,7 @@ export class HideOverflowListDirective implements OnInit, OnDestroy {
 
     this.nextElIdxForHide = 0;
 
-    const hiddenElements: HTMLElement[] = this.el.nativeElement.querySelectorAll('.hidden');
+    const hiddenElements: NodeListOf<Element> = this.el.nativeElement.querySelectorAll('.hidden');
 
     hiddenElements.forEach(el => {
       this.renderer.removeClass(el, 'hidden');
@@ -56,8 +56,8 @@ export class HideOverflowListDirective implements OnInit, OnDestroy {
     }
 
     const { clientWidth, scrollWidth } = this.el.nativeElement;
-    const targetElements: HTMLElement[] = this.el.nativeElement.querySelectorAll(this.algHideOverflowListTarget);
-    const hiddenElements: HTMLElement[] = this.el.nativeElement.querySelectorAll('.hidden');
+    const targetElements: NodeListOf<Element> = this.el.nativeElement.querySelectorAll(this.algHideOverflowListTarget);
+    const hiddenElements: NodeListOf<Element> = this.el.nativeElement.querySelectorAll('.hidden');
     let checkAgain = false;
 
     if (scrollWidth > clientWidth) {
