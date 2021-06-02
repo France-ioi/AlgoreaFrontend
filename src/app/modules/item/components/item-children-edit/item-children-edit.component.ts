@@ -142,7 +142,7 @@ export class ItemChildrenEditComponent implements OnChanges {
     this.recomputeAddedItemIds();
   }
 
-  recomputeAddedItemIds(): void {
+  private recomputeAddedItemIds(): void {
     this.addedItemIds = this.data.map(item => item.id).filter(isNotUndefined);
   }
 
