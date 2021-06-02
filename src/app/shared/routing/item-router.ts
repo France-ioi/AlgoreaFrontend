@@ -59,8 +59,7 @@ export class ItemRouter {
   }
 
   private currentItemPagePath(): string[]|undefined {
-    const currentPageUrlChildren = this.router.parseUrl(this.router.url).root.children;
-    const { primary } = currentPageUrlChildren;
+    const { primary } = this.router.parseUrl(this.router.url).root.children;
     if (!primary) return undefined;
     const { segments } = primary;
     if (
