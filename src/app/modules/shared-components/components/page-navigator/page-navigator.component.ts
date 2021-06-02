@@ -1,19 +1,10 @@
 import { Component, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 import { UserSessionService } from '../../../../shared/services/user-session.service';
-import {
-  catchError,
-  debounceTime,
-  filter,
-  map,
-  switchMap,
-} from 'rxjs/operators';
+import { catchError, debounceTime, filter, map, switchMap } from 'rxjs/operators';
 import { isNotNullOrUndefined, isNotUndefined } from '../../../../shared/helpers/null-undefined-predicates';
 import { OverlayPanel } from 'primeng/overlaypanel';
 import { concat, Observable, of } from 'rxjs';
-import {
-  ItemNavigationService,
-  RootActivity
-} from '../../../../core/http-services/item-navigation.service';
+import { ItemNavigationService, RootActivity } from '../../../../core/http-services/item-navigation.service';
 import { errorState, fetchingState, readyState } from '../../../../shared/helpers/state';
 
 @Component({
