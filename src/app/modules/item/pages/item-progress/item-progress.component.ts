@@ -19,7 +19,7 @@ export class ItemProgressComponent implements OnChanges {
   @ViewChild('chapterGroupProgressTab') chapterGroupProgressTab?: RouterLinkActive;
   @ViewChild('chapterUserProgressTab') chapterUserProgressTab?: RouterLinkActive;
 
-  readonly session$ = this.sessionService.session$.pipe(delay(0));
+  readonly session$ = this.sessionService.session$;
   private readonly type$ = new ReplaySubject<ItemType>(1);
   readonly selectors$ = this.getSelectors$();
 
