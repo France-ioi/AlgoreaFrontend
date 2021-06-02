@@ -46,9 +46,10 @@ export class PageNavigatorComponent {
     ),
   );
 
-  constructor(private userSessionService: UserSessionService,
-              private itemNavigationService: ItemNavigationService) {
-  }
+  constructor(
+    private userSessionService: UserSessionService,
+    private itemNavigationService: ItemNavigationService
+  ) {}
 
   onStartWatchClick(e: Event): void {
     this.op?.show(e);
