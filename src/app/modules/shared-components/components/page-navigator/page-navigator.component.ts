@@ -72,7 +72,7 @@ export class PageNavigatorComponent {
   getList$(watchedGroupId: string): Observable<RootActivity[]> {
     return this.itemNavigationService.getRootActivities(watchedGroupId).pipe(
       map((rootActivity: RootActivity[]) =>
-        rootActivity.sort(item => item.group_id === watchedGroupId ? -1 : 1).slice(0, 5)
+        rootActivity.sort((item) => item.group_id === watchedGroupId ? -1 : 1).slice(0, 5)
       )
     );
   }
