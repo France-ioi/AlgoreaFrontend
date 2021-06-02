@@ -24,7 +24,7 @@ interface Data {
 export class ItemLogViewComponent implements OnChanges {
 
   @Input() itemData?: ItemData;
-  @Input() isWatchedGroup = false;
+  @Input() isWatchingGroup = false;
 
   logColumns?: Column[];
 
@@ -72,7 +72,7 @@ export class ItemLogViewComponent implements OnChanges {
       {
         field: 'item.user',
         header: $localize`User`,
-        enabled: this.isWatchedGroup && [ 'Chapter', 'Task', 'Course' ].includes(type),
+        enabled: this.isWatchingGroup && [ 'Chapter', 'Task', 'Course' ].includes(type),
       },
       {
         field: 'at',
