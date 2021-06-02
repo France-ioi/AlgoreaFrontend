@@ -15,11 +15,7 @@ const nonceStorageKey = 'oauth_nonce';
 })
 export class OAuthService {
 
-  private clientId: string;
-
-  constructor(private authHttp: AuthHttpService) {
-    this.clientId = appConfig.oauthClientId;
-  }
+  constructor(private authHttp: AuthHttpService) {}
 
   /**
    * Init authorization code flow login anf redirect the user to the auth server login url.
