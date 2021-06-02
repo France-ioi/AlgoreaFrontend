@@ -25,7 +25,7 @@ interface ActivityOrSkill {
   results: RawResult[]
 }
 
-interface RootActivity {
+export interface RootActivity {
   // Some attributes are omitted as they are not used for the moment. Read the doc for the full list.
   group_id: string,
   name: string,
@@ -89,7 +89,6 @@ export interface NavMenuItem {
   validated?: boolean,
   canViewContent: boolean,
   children?: NavMenuItem[], // placeholder for children when fetched (may 'hasChildren' with 'children' not set)
-  type?: string,
 }
 
 export interface NavMenuRootItem {
@@ -122,7 +121,6 @@ function createNavMenuItem(raw: {
   permissions: {
     can_view: 'none'|'info'|'content'|'content_with_descendants'|'solution'
   },
-  type?: string,
 }): NavMenuItem {
   const currentResult = raw.results ? bestAttemptFromResults(raw.results.map(rawResultToResult)) : undefined;
   return {
@@ -134,7 +132,6 @@ function createNavMenuItem(raw: {
     bestScore: raw.no_score ? undefined : raw.best_score,
     currentScore: raw.no_score ? undefined : currentResult?.score,
     validated: raw.no_score ? undefined : currentResult?.validated,
-    type: raw.type,
   };
 }
 
@@ -178,7 +175,7 @@ export class ItemNavigationService {
       );
   }
 
-  getRootActivities(watchedGroupId?: string): Observable<NavMenuRootItem> {
+  getRootActivities(watchedGroupId?: string): Observable<RootActivity[]> {
     let httpParams = new HttpParams();
 
     if (watchedGroupId) {
@@ -188,12 +185,15 @@ export class ItemNavigationService {
     return this.http
       .get<RootActivity[]>(`${appConfig.apiUrl}/current-user/group-memberships/activities`, {
         params: httpParams
-      })
-      .pipe(
-        map(acts => ({
-          items: acts.map(act => ({ ...createNavMenuItem(act.activity), groupName: act.name }))
-        }))
-      );
+      });
+  }
+
+  getRootActivitiesForNavMenu(): Observable<NavMenuRootItem> {
+    return this.getRootActivities().pipe(
+      map(acts => ({
+        items: acts.map(act => ({ ...createNavMenuItem(act.activity), groupName: act.name }))
+      }))
+    );
   }
 
   getRootSkills(): Observable<NavMenuRootItem> {
@@ -207,7 +207,7 @@ export class ItemNavigationService {
   }
 
   getRoot(type: ItemTypeCategory): Observable<NavMenuRootItem> {
-    return (isSkill(type)) ? this.getRootSkills() : this.getRootActivities();
+    return (isSkill(type)) ? this.getRootSkills() : this.getRootActivitiesForNavMenu();
   }
 
 }

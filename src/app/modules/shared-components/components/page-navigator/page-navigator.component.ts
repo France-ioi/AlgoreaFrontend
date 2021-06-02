@@ -12,8 +12,7 @@ import { OverlayPanel } from 'primeng/overlaypanel';
 import { concat, Observable, of } from 'rxjs';
 import {
   ItemNavigationService,
-  NavMenuItem,
-  NavMenuRootItem
+  RootActivity
 } from '../../../../core/http-services/item-navigation.service';
 import { errorState, fetchingState, readyState } from '../../../../shared/helpers/state';
 
@@ -70,9 +69,11 @@ export class PageNavigatorComponent {
     });
   }
 
-  getList$(watchedGroupId: string): Observable<NavMenuItem[]> {
+  getList$(watchedGroupId: string): Observable<RootActivity[]> {
     return this.itemNavigationService.getRootActivities(watchedGroupId).pipe(
-      map((navMenuRootItem: NavMenuRootItem) => navMenuRootItem.items.slice(0, 5))
+      map((rootActivity: RootActivity[]) =>
+        rootActivity.sort(item => item.group_id === watchedGroupId ? -1 : 1).slice(0, 5)
+      )
     );
   }
 }
