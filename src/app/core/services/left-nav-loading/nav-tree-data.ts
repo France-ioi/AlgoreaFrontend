@@ -1,3 +1,4 @@
+import { ensureDefined } from 'src/app/shared/helpers/null-undefined-predicates';
 
 type Id = string;
 export interface NavTreeElement {
@@ -43,7 +44,7 @@ export class NavTreeData<T extends NavTreeElement> {
     const idx = this.elements.findIndex(i => i.id === id);
     if (idx === -1) return this;
     const elements = [ ...this.elements ];
-    elements[idx] = update(elements[idx]);
+    elements[idx] = update(ensureDefined(elements[idx]));
     return new NavTreeData(elements, this.pathToElements, this.selectedElementId, this.parent);
   }
 

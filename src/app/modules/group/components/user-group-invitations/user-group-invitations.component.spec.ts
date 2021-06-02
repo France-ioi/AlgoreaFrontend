@@ -6,17 +6,18 @@ import { GetRequestsService, PendingRequest } from '../../http-services/get-requ
 import { Action, RequestActionsService } from '../../http-services/request-actions.service';
 import { UserGroupInvitationsComponent } from './user-group-invitations.component';
 
+const MOCK_RESPONSE_2: PendingRequest = {
+  at: null,
+  user: { id: '12', login: 'FredGast', firstName: 'Frederique', lastName: 'Gastard' },
+  group: { id: '601', name: 'Dojo 50' }
+};
 const MOCK_RESPONSE: PendingRequest[] = [
   {
     at: null,
     user: { id: '11', login: 'MadameSoso', firstName: 'Marie-Sophie', lastName: 'Denis' },
     group: { id: '501', name: 'Dojo 50' }
   },
-  {
-    at: null,
-    user: { id: '12', login: 'FredGast', firstName: 'Frederique', lastName: 'Gastard' },
-    group: { id: '601', name: 'Dojo 50' }
-  },
+  MOCK_RESPONSE_2,
   {
     at: null,
     user: { id: '10', login: 'Jeandu88', firstName: 'Jean', lastName: 'Dujardin' },
@@ -99,7 +100,7 @@ describe('UserGroupInvitationsComponent', () => {
   it('should, when accept is pressed, call the appropriate service and reload', () => {
 
     // step 1: select one and 'accept'
-    component.onProcessRequests({ type: Action.Accept, data: [ MOCK_RESPONSE[1] ] });
+    component.onProcessRequests({ type: Action.Accept, data: [ MOCK_RESPONSE_2 ] });
 
     expect(component.state).toEqual('processing');
     expect(requestActionsService.processGroupInvitations).toHaveBeenCalledWith([ '601' ], Action.Accept);
@@ -118,7 +119,7 @@ describe('UserGroupInvitationsComponent', () => {
   it('should, when reject is pressed, call the appropriate service and reload', () => {
 
     // step 1: select one and 'reject'
-    component.onProcessRequests({ type: Action.Reject, data: [ MOCK_RESPONSE[1] ] });
+    component.onProcessRequests({ type: Action.Reject, data: [ MOCK_RESPONSE_2 ] });
 
     expect(component.state).toEqual('processing');
     expect(requestActionsService.processGroupInvitations).toHaveBeenCalledWith([ '601' ], Action.Reject);
@@ -135,7 +136,7 @@ describe('UserGroupInvitationsComponent', () => {
   });
 
   it('should consider "unchanged" in response as success', () => {
-    component.onProcessRequests({ type: Action.Accept, data: [ MOCK_RESPONSE[1] ] });
+    component.onProcessRequests({ type: Action.Accept, data: [ MOCK_RESPONSE_2 ] });
 
     serviceResponder$.next([ new Map([ [ '12', 'unchanged' ] ]) ]);
     serviceResponder$.complete();
@@ -194,7 +195,7 @@ describe('UserGroupInvitationsComponent', () => {
 
   it('should display an appropriate error message when the service fails', () => {
 
-    component.onProcessRequests({ type: Action.Accept, data: [ MOCK_RESPONSE[1] ] });
+    component.onProcessRequests({ type: Action.Accept, data: [ MOCK_RESPONSE_2 ] });
 
     serviceResponder$.error(new Error('...'));
     serviceResponder$.complete();

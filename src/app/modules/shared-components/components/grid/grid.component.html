@@ -74,7 +74,7 @@
           {{ col.header }}
         </span>
         <alg-switch
-          [checked]="selected[col.field]"
+          [checked]="!!selected[col.field]"
           (change)="handleColumnChanges(col)"
         ></alg-switch>
       </li>

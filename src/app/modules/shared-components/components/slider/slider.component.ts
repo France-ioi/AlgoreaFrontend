@@ -6,6 +6,7 @@ import {
   Output,
   EventEmitter,
 } from '@angular/core';
+import { ensureDefined } from 'src/app/shared/helpers/null-undefined-predicates';
 
 @Component({
   selector: 'alg-slider',
@@ -31,8 +32,8 @@ export class SliderComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    this.posStart = (this.ranges[0] * 100) / this.max;
-    this.posEnd = (this.ranges[1] * 100) / this.max;
+    this.posStart = (ensureDefined(this.ranges[0]) * 100) / this.max;
+    this.posEnd = (ensureDefined(this.ranges[1]) * 100) / this.max;
   }
 
   handleChange(): void {

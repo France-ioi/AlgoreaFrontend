@@ -60,9 +60,10 @@ export class GroupRouter {
 
   private currentGroupPagePath(): string[]|undefined {
     const currentPageUrlChildren = this.router.parseUrl(this.router.url).root.children;
-    if (!('primary' in currentPageUrlChildren)) return undefined;
-    const segments = currentPageUrlChildren['primary'].segments;
-    if (segments.length < 3 || segments[0].path !== 'groups' || segments[1].path !== 'by-id') return undefined;
+    const { primary } = currentPageUrlChildren;
+    if (!primary) return undefined;
+    const { segments } = primary;
+    if (segments.length < 3 || segments[0]?.path !== 'groups' || segments[1]?.path !== 'by-id') return undefined;
     return segments.map(segment => segment.path);
   }
 

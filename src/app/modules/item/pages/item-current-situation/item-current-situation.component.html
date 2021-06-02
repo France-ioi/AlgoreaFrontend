@@ -5,12 +5,12 @@
 
   <div>
     <alg-item-log-view
-      *ngIf="viewItems[viewSelected].value === 'log'"
+      *ngIf="viewItems[viewSelected]?.value === 'log'"
       [itemData]="itemData"
     ></alg-item-log-view>
 
     <alg-item-chapter-view
-      *ngIf="viewItems[viewSelected].value === 'chapter'"
+      *ngIf="viewItems[viewSelected]?.value === 'chapter'"
       [itemData]="itemData"
     ></alg-item-chapter-view>
   </div>

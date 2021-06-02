@@ -18,7 +18,7 @@ export class SelectionTreeComponent implements OnChanges {
     while (this.data.length > 1) {
       this.data.pop();
     }
-    if (this.data.length > 0) {
+    if (this.data[0]) {
       this.data[0].root = true;
       this.data[0].expanded = true;
     }

@@ -5,6 +5,7 @@ import { catchError, map } from 'rxjs/operators';
 import { isRouteWithAttempt, ItemRoute } from 'src/app/shared/routing/item-route';
 import { appConfig } from 'src/app/shared/helpers/config';
 import { tagError } from 'src/app/shared/helpers/errors';
+import { ensureDefined } from 'src/app/shared/helpers/null-undefined-predicates';
 
 export const breadcrumbServiceTag = 'breadcrumbservice';
 
@@ -37,7 +38,8 @@ export class GetBreadcrumbService {
       })
       .pipe(
         map(items => {
-          const last = items[items.length - 1];
+          const last = ensureDefined(items[items.length - 1]);
+
           // all but last are ensured to have attempt_id, treat the last one separetely
           return items.slice(0,-1).map((item, idx) => ({
             itemId: item.item_id,
