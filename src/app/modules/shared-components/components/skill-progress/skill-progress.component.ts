@@ -14,7 +14,7 @@ export enum ProgressColor {
   Thin = '#CFD0D4',
 }
 
-type ProgressType = 'thin-horizontal'|'thick-horizontal'|'vertical'
+type ProgressType = 'thin-horizontal'|'thick-horizontal'|'vertical';
 
 enum ProgressHeight {
   Thin = 0.4167,

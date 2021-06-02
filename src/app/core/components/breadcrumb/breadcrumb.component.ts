@@ -9,7 +9,7 @@ import { ContentBreadcrumb } from 'src/app/shared/models/content/content-breadcr
 })
 export class BreadcrumbComponent {
 
-  @Input() contentBreadcrumb?: ContentBreadcrumb
+  @Input() contentBreadcrumb?: ContentBreadcrumb;
 
   constructor(
     private router: Router,

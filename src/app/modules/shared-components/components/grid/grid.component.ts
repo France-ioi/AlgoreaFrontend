@@ -34,7 +34,7 @@ export interface GridColumnGroup {
 })
 export class GridComponent implements OnChanges {
 
-  @Input() selection?: any[]
+  @Input() selection?: any[];
 
   constructor() {}
   @ViewChild('table', { static: true }) table?: Table;

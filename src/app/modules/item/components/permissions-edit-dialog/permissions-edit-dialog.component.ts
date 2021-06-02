@@ -21,10 +21,10 @@ export class PermissionsEditDialogComponent implements OnChanges {
 
   targetTypeString = '';
 
-  canViewValues: ProgressSectionValue<string>[] = []
-  canGrantViewValues: ProgressSectionValue<string>[] = []
-  canWatchValues: ProgressSectionValue<string>[] = []
-  canEditValues: ProgressSectionValue<string>[] = []
+  canViewValues: ProgressSectionValue<string>[] = [];
+  canGrantViewValues: ProgressSectionValue<string>[] = [];
+  canWatchValues: ProgressSectionValue<string>[] = [];
+  canEditValues: ProgressSectionValue<string>[] = [];
 
   permissions: Permissions = {
     can_view: 'none',

@@ -40,7 +40,7 @@ module.exports = {
       'error',
       { suffix: '$' }
     ],
-    'semi': ['error'],
+    '@typescript-eslint/semi': ['error'],
     'max-len': [
       'error',
       { 'code': 140 },

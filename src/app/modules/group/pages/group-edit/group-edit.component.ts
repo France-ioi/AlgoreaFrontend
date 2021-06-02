@@ -25,10 +25,10 @@ export class GroupEditComponent implements OnDestroy, PendingChangesComponent {
     name: [ '', [ Validators.required, Validators.minLength(3) ] ],
     description: [ '', [] ],
     rootActivity: [ '', [] ],
-  })
+  });
   initialFormData?: Group;
 
-  state$ = this.groupDataSource.state$.pipe(mapStateData(g => withManagementAdditions(g)))
+  state$ = this.groupDataSource.state$.pipe(mapStateData(g => withManagementAdditions(g)));
 
   subscription?: Subscription;
 

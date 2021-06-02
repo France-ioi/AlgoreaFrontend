@@ -14,7 +14,7 @@ export type NewItem = {
   title: string,
   type: ItemType,
   languageTag: string
-} & ({ parent: string } | { asRootOfGroupId: string })
+} & ({ parent: string } | { asRootOfGroupId: string });
 
 @Injectable({
   providedIn: 'root'

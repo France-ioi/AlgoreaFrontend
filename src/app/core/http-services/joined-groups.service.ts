@@ -28,7 +28,7 @@ const groupMembershipDecoder = pipe(
   ),
 );
 
-export type GroupMembership = D.TypeOf<typeof groupMembershipDecoder>
+export type GroupMembership = D.TypeOf<typeof groupMembershipDecoder>;
 
 @Injectable({
   providedIn: 'root'

@@ -23,7 +23,7 @@ export class GroupCompositionComponent implements OnChanges {
 
   @Input() group?: Group;
   @Output() groupRefreshRequired = new EventEmitter<void>();
-  groupWithPermissions?: Group & ManagementAdditions
+  groupWithPermissions?: Group & ManagementAdditions;
 
   @ViewChild('memberList') private memberList?: MemberListComponent;
 

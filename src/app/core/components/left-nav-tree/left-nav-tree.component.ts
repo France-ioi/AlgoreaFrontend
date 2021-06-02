@@ -13,7 +13,7 @@ type LeftNavTreeNode = TreeNode<{
   path: string[],
   status: 'ready'|'loading'|'error',
   current: boolean,
-}>
+}>;
 
 @Component({
   selector: 'alg-left-nav-tree',

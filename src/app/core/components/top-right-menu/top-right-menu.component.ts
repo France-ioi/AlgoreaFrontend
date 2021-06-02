@@ -16,9 +16,9 @@ export class TopRightMenuComponent {
     { label: 'Profile', icon: 'pi pi-user', routerLink: [ 'groups', 'me' ] },
     ...this.getDevelopmentMenuItems(),
     { label: 'Log out', icon: 'pi pi-power-off', command: ():void => this.sessionService.logout() },
-  ]
+  ];
 
-  userLogin$ = this.sessionService.session$.pipe(map(session => session?.user.login), distinctUntilChanged())
+  userLogin$ = this.sessionService.session$.pipe(map(session => session?.user.login), distinctUntilChanged());
 
   constructor(
     private sessionService: UserSessionService,
