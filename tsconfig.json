@@ -28,6 +28,7 @@
     // compiler linter checks
     "noFallthroughCasesInSwitch": true,
     "noImplicitReturns": true,
+    "noUnusedLocals": true,
 
     // "strict" enables all strict type checking option
     "strict": true,

@@ -10,7 +10,6 @@ import { Item } from '../../http-services/get-item-by-id.service';
 import { ItemEditContentComponent } from '../item-edit-content/item-edit-content.component';
 import { PendingChangesComponent } from 'src/app/shared/guards/pending-changes-guard';
 import { CreateItemService, NewItem } from '../../http-services/create-item.service';
-import { ItemEditAdvancedParametersComponent } from '../item-edit-advanced-parameters/item-edit-advanced-parameters.component';
 import { Mode, ModeService } from 'src/app/shared/services/mode.service';
 import { readyData } from 'src/app/shared/operators/state';
 import { Duration } from '../../../../shared/helpers/duration';
@@ -66,7 +65,6 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
   }
 
   @ViewChild('content') private editContent?: ItemEditContentComponent;
-  @ViewChild('advancedParameters') private editAdvancedParameters?: ItemEditAdvancedParametersComponent;
 
   constructor(
     private modeService: ModeService,
