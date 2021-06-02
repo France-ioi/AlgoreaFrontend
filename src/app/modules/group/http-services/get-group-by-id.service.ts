@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { appConfig } from 'src/app/shared/helpers/config';
-import { pipe } from 'fp-ts/lib/function';
+import { pipe } from 'fp-ts/function';
 import * as D from 'io-ts/Decoder';
 import { dateDecoder } from 'src/app/shared/helpers/decoders';
 import { decodeSnakeCase } from 'src/app/shared/operators/decode';

@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { appConfig } from 'src/app/shared/helpers/config';
 import { SortOptions, sortOptionsToHTTP } from 'src/app/shared/helpers/sort-options';
 import * as D from 'io-ts/Decoder';
-import { pipe } from 'fp-ts/lib/function';
+import { pipe } from 'fp-ts/function';
 import { dateDecoder } from 'src/app/shared/helpers/decoders';
 import { decodeSnakeCase } from 'src/app/shared/operators/decode';
 import { map } from 'rxjs/operators';

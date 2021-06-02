@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { appConfig } from '../helpers/config';
 import * as D from 'io-ts/Decoder';
-import { pipe } from 'fp-ts/lib/function';
+import { pipe } from 'fp-ts/function';
 import { decodeSnakeCase } from 'src/app/shared/operators/decode';
 import { assertSuccess, SimpleActionResponse } from './action-response';
 import { map } from 'rxjs/operators';
