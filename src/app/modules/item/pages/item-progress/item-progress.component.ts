@@ -22,7 +22,7 @@ export class ItemProgressComponent implements OnChanges {
   readonly session$ = this.sessionService.session$.pipe(delay(0));
   private readonly type$ = new ReplaySubject<ItemType>(1);
   readonly selectors$ = this.getSelectors$();
-  
+
   constructor(private sessionService: UserSessionService) {}
 
   ngOnChanges(): void {
@@ -48,6 +48,6 @@ export class ItemProgressComponent implements OnChanges {
         })
       )),
       delay(0)
-    )
+    );
   }
 }
