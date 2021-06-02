@@ -9,7 +9,7 @@
   </ng-template>
 
   <ng-template #notAuthenticated>
-    <alg-language-picker></alg-language-picker>
+    <alg-language-picker *ngIf="languages.length > 1"></alg-language-picker>
     <p-button
       i18n-label label="Log in / Sign in"
       icon="pi pi-power-off"
