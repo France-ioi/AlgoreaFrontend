@@ -12,7 +12,7 @@ interface Message
   detail: string
 }
 
-type GroupInviteState = 'empty'|'too_many'|'loading'|'ready'
+type GroupInviteState = 'empty'|'too_many'|'loading'|'ready';
 
 @Component({
   selector: 'alg-group-invite-users',
@@ -21,7 +21,7 @@ type GroupInviteState = 'empty'|'too_many'|'loading'|'ready'
 })
 export class GroupInviteUsersComponent implements OnInit, OnDestroy {
 
-  @Input() group?: Group
+  @Input() group?: Group;
   @Output() refreshRequired = new EventEmitter<void>();
 
   inviteForm = this.formBuilder.group({ logins: '' });

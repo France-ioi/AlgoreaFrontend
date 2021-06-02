@@ -10,7 +10,7 @@ export class LocaleService {
 
   readonly languages: LanguageConfig[];
   readonly currentLang?: LanguageConfig;
-  readonly currentLangError$: Observable<void>
+  readonly currentLangError$: Observable<void>;
 
   constructor() {
     this.languages = appConfig.languages;

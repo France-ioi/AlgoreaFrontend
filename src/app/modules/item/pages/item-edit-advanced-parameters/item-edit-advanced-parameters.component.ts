@@ -39,7 +39,7 @@ export class ItemEditAdvancedParametersComponent implements OnInit {
   }, {
     label: $localize`Yes mapped`,
     value: 'forceYes'
-  }]
+  }];
 
   minEnteringTimeMaxDate = new Date();
 
@@ -55,7 +55,7 @@ export class ItemEditAdvancedParametersComponent implements OnInit {
   }, {
     label: $localize`None of the members has to be admitted`,
     value: 'None'
-  }]
+  }];
 
   constructor() { }
 

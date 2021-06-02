@@ -4,8 +4,8 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { appConfig } from 'src/app/shared/helpers/config';
 
-export type GroupType = 'Class' | 'Team' | 'Club' | 'Friends' | 'Other' | 'Session' | 'Base'
-export type ManageType = 'none' | 'memberships' | 'memberships_and_group'
+export type GroupType = 'Class' | 'Team' | 'Club' | 'Friends' | 'Other' | 'Session' | 'Base';
+export type ManageType = 'none' | 'memberships' | 'memberships_and_group';
 
 export interface Group {
   id: string,

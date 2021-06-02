@@ -11,7 +11,7 @@ export class GroupAdministrationComponent implements OnChanges{
 
   @Input() group?: Group;
   @Output() groupRefreshRequired = new EventEmitter<void>();
-  groupWithPermissions?: Group & ManagementAdditions
+  groupWithPermissions?: Group & ManagementAdditions;
 
   ngOnChanges(): void {
     this.groupWithPermissions = this.group ? withManagementAdditions(this.group) : undefined;

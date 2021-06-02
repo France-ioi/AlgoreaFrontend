@@ -16,7 +16,7 @@ import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.s
 
 export class GroupJoinByCodeComponent implements OnChanges {
 
-  @Input() group?: Group
+  @Input() group?: Group;
   @Output() refreshRequired = new EventEmitter<void>();
 
   groupExt?: Group & CodeAdditions; // group extended with code related attributes

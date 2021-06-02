@@ -49,7 +49,7 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     items: [],
     rows: [],
     can_access: false,
-  }
+  };
 
   dialogPermissions: {
     permissions: Permissions
