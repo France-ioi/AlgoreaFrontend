@@ -10,7 +10,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ItemContentComponent } from './pages/item-content/item-content.component';
 import { ChapterChildrenComponent } from './components/chapter-children/chapter-children.component';
 import { ItemProgressComponent } from './pages/item-progress/item-progress.component';
-import { ItemCurrentSituationComponent } from './pages/item-current-situation/item-current-situation.component';
 import { ItemLogViewComponent } from './pages/item-log-view/item-log-view.component';
 import { SubSkillsComponent } from './components/sub-skills/sub-skills.component';
 import { ParentSkillsComponent } from './components/parent-skills/parent-skills.component';
@@ -44,7 +43,6 @@ import { ItemProgressLabelPipe } from './pages/item-progress/itemProgressLabel';
     ItemContentComponent,
     ChapterChildrenComponent,
     ItemProgressComponent,
-    ItemCurrentSituationComponent,
     ItemLogViewComponent,
     SubSkillsComponent,
     ParentSkillsComponent,
