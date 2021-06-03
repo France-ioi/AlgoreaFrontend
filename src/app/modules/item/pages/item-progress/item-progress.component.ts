@@ -1,9 +1,7 @@
 import { Component, Input, OnChanges, ViewChild } from '@angular/core';
-import { delay, map, switchMap, filter } from 'rxjs/operators';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
 import { ItemData } from '../../services/item-datasource.service';
 import { RouterLinkActive } from '@angular/router';
-import { Observable, ReplaySubject } from 'rxjs';
 import { ItemType } from '../../../../shared/helpers/item-type';
 
 @Component({
@@ -20,8 +18,8 @@ export class ItemProgressComponent implements OnChanges {
   @ViewChild('chapterUserProgressTab') chapterUserProgressTab?: RouterLinkActive;
 
   readonly session$ = this.sessionService.session$;
-  private readonly type$ = new ReplaySubject<ItemType>(1);
-  readonly selectors$ = this.getSelectors$();
+
+  selectors: 'none' | 'withUserProgress' | 'withGroupProgress' = 'withUserProgress';
 
   constructor(private sessionService: UserSessionService) {}
 
@@ -30,24 +28,18 @@ export class ItemProgressComponent implements OnChanges {
       return;
     }
 
-    this.type$.next(this.itemData.item.type);
+    this.recomputeSelector(this.itemData.item.type);
   }
 
-  private getSelectors$(): Observable<'none' | 'withUserProgress' | 'withGroupProgress'> {
-    return this.type$.pipe(
-      filter(type => !!type),
-      switchMap(type => this.sessionService.watchedGroup$.pipe(
-        map(watchedGroup => {
-          if (!watchedGroup && [ 'Task', 'Course' ].includes(type)) {
-            return 'none';
-          } else if (!watchedGroup && type === 'Chapter') {
-            return 'withUserProgress';
-          } else {
-            return 'withGroupProgress';
-          }
-        })
-      )),
-      delay(0)
-    );
+  private recomputeSelector(type: ItemType): void {
+    const isCurrentWatching = this.sessionService.isCurrentWatching;
+
+    if (!isCurrentWatching && [ 'Task', 'Course' ].includes(type)) {
+      this.selectors = 'none';
+    } else if (!isCurrentWatching && type === 'Chapter') {
+      this.selectors = 'withUserProgress';
+    } else {
+      this.selectors = 'withGroupProgress';
+    }
   }
 }

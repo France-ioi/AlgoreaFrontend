@@ -36,6 +36,10 @@ export class UserSessionService implements OnDestroy {
   private subscription?: Subscription;
   private userProfileUpdated$ = new Subject<void>();
 
+  get isCurrentWatching(): boolean {
+    return !!this.session$.value?.watchedGroup;
+  }
+
   constructor(
     private authService: AuthService,
     private currentUserService: CurrentUserHttpService,
