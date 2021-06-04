@@ -26,7 +26,7 @@ export class ItemLogViewComponent implements OnChanges {
   @Input() itemData?: ItemData;
   @Input() isWatchingGroup = false;
 
-  logColumns?: Column[];
+  private logColumns?: Column[];
 
   private readonly id$ = new ReplaySubject<string>(1);
   readonly state$ = this.id$.pipe(
