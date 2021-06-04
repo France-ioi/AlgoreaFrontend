@@ -6,7 +6,7 @@ import { distinct, switchMap, map } from 'rxjs/operators';
 import { mapToFetchState } from 'src/app/shared/operators/state';
 import { ItemType } from '../../../../shared/helpers/item-type';
 
-export interface Column {
+interface Column {
   field: string,
   header: string
 }
