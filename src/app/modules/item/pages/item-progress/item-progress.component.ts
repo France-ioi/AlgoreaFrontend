@@ -32,11 +32,11 @@ export class ItemProgressComponent implements OnChanges {
   }
 
   private recomputeSelector(type: ItemType): void {
-    const isCurrentWatching = this.sessionService.isCurrentWatching;
+    const isCurrentlyWatching = this.sessionService.isCurrentlyWatching;
 
-    if (!isCurrentWatching && [ 'Task', 'Course' ].includes(type)) {
+    if (!isCurrentlyWatching && [ 'Task', 'Course' ].includes(type)) {
       this.selectors = 'none';
-    } else if (!isCurrentWatching && type === 'Chapter') {
+    } else if (!isCurrentlyWatching && type === 'Chapter') {
       this.selectors = 'withUserProgress';
     } else {
       this.selectors = 'withGroupProgress';
