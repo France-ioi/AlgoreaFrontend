@@ -1,8 +1,8 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { ItemData } from '../../services/item-datasource.service';
 import { ActivityLog, ActivityLogService } from 'src/app/shared/http-services/activity-log.service';
-import { Observable, ReplaySubject } from 'rxjs';
-import { distinct, switchMap, map } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { distinct, switchMap, map, tap } from 'rxjs/operators';
 import { mapToFetchState } from 'src/app/shared/operators/state';
 import { ItemType } from '../../../../shared/helpers/item-type';
 import { Item } from '../../http-services/get-item-by-id.service';
@@ -27,8 +27,10 @@ export class ItemLogViewComponent implements OnChanges {
   @Input() itemData?: ItemData;
   @Input() isWatchingGroup = false;
 
-  private readonly item$ = new ReplaySubject<Item>(1);
-  readonly state$ = this.getData$().pipe(
+  private readonly item$ = new Subject<Item>();
+  readonly state$ = this.item$.pipe(
+    distinct(),
+    switchMap((item: Item) => this.getData$(item)),
     mapToFetchState(),
   );
 
@@ -44,15 +46,12 @@ export class ItemLogViewComponent implements OnChanges {
     this.item$.next(this.itemData.item);
   }
 
-  private getData$(): Observable<Data> {
-    return this.item$.pipe(
-      distinct(),
-      switchMap(item => this.activityLogService.getActivityLog(item.id).pipe(
-        map((data: ActivityLog[]) => ({
-          columns: this.getLogColumns(item.type),
-          rowData: data
-        }))
-      ))
+  private getData$(item: Item): Observable<Data> {
+    return this.activityLogService.getActivityLog(item.id).pipe(
+      map((data: ActivityLog[]) => ({
+        columns: this.getLogColumns(item.type),
+        rowData: data
+      }))
     );
   }
 
