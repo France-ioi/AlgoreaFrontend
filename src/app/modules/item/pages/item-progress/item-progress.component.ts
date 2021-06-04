@@ -36,7 +36,7 @@ export class ItemProgressComponent implements OnChanges {
 
     if (!isCurrentlyWatching && [ 'Task', 'Course' ].includes(type)) {
       this.selectors = 'none';
-    } else if (!isCurrentlyWatching && type === 'Chapter') {
+    } else if (!isCurrentlyWatching && ![ 'Task', 'Course' ].includes(type)) {
       this.selectors = 'withUserProgress';
     } else {
       this.selectors = 'withGroupProgress';
