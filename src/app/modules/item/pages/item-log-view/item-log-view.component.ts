@@ -1,8 +1,8 @@
 import { Component, Input, OnChanges, OnDestroy } from '@angular/core';
 import { ItemData } from '../../services/item-datasource.service';
 import { ActivityLog, ActivityLogService } from 'src/app/shared/http-services/activity-log.service';
-import { BehaviorSubject, Observable, ReplaySubject, Subject } from 'rxjs';
-import { distinct, switchMap, map, tap } from 'rxjs/operators';
+import { Observable, ReplaySubject } from 'rxjs';
+import { distinct, switchMap, map } from 'rxjs/operators';
 import { mapToFetchState } from 'src/app/shared/operators/state';
 import { ItemType } from '../../../../shared/helpers/item-type';
 import { Item } from '../../http-services/get-item-by-id.service';
