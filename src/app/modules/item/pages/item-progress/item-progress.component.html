@@ -2,7 +2,7 @@
   <alg-section
       icon="fa fa-list"
       *ngIf="itemData"
-      [label]="itemData.item.type | itemProgressLabel : session?.watchedGroup"
+      [label]="session?.watchedGroup | itemProgressLabel"
   >
     <div class="selection-center" *ngIf="selectors !== 'none'">
       <nav class="tab-rounded">
