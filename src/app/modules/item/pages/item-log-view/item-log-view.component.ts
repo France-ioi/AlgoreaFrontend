@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy } from '@angular/core';
 import { ItemData } from '../../services/item-datasource.service';
 import { ActivityLog, ActivityLogService } from 'src/app/shared/http-services/activity-log.service';
 import { Observable, Subject } from 'rxjs';
@@ -22,7 +22,7 @@ interface Data {
   templateUrl: './item-log-view.component.html',
   styleUrls: [ './item-log-view.component.scss' ],
 })
-export class ItemLogViewComponent implements OnChanges {
+export class ItemLogViewComponent implements OnChanges, OnDestroy {
 
   @Input() itemData?: ItemData;
   @Input() isWatchingGroup = false;
@@ -44,6 +44,10 @@ export class ItemLogViewComponent implements OnChanges {
     }
 
     this.item$.next(this.itemData.item);
+  }
+
+  ngOnDestroy(): void {
+    this.item$.complete();
   }
 
   private getData$(item: Item): Observable<Data> {
