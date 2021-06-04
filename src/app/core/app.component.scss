@@ -107,6 +107,7 @@ a:hover {
       display: flex;
       flex-direction: column;
       justify-content: center;
+      overflow: hidden;
 
       .breadcrumb-bar {
         display: flex;
