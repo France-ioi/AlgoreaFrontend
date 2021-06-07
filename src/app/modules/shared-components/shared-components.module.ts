@@ -21,7 +21,7 @@ import { ToastModule } from 'primeng/toast';
 
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatDialogModule, MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
-import { MatNativeDateModule, MatRippleModule } from '@angular/material/core';
+import { MatNativeDateModule } from '@angular/material/core';
 import { MatMenuModule } from '@angular/material/menu';
 
 import { ClickOutsideModule } from 'ng-click-outside';
@@ -117,7 +117,6 @@ import { UserCaptionPipe } from '../../shared/pipes/userCaption';
     ProgressSpinnerModule,
     ToastModule,
     MatNativeDateModule,
-    MatRippleModule,
     MatTabsModule,
     MatDialogModule,
     MatMenuModule,
