@@ -20,7 +20,6 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ToastModule } from 'primeng/toast';
 
 import { MatTabsModule } from '@angular/material/tabs';
-import { MatNativeDateModule } from '@angular/material/core';
 import { MatMenuModule } from '@angular/material/menu';
 
 import { ClickOutsideModule } from 'ng-click-outside';
@@ -115,7 +114,6 @@ import { UserCaptionPipe } from '../../shared/pipes/userCaption';
     TabViewModule,
     ProgressSpinnerModule,
     ToastModule,
-    MatNativeDateModule,
     MatTabsModule,
     MatMenuModule,
 
