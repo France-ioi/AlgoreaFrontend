@@ -19,7 +19,6 @@ import { TabViewModule } from 'primeng/tabview';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ToastModule } from 'primeng/toast';
 
-import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatDialogModule, MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 import { MatNativeDateModule, MatRippleModule } from '@angular/material/core';
@@ -117,7 +116,6 @@ import { UserCaptionPipe } from '../../shared/pipes/userCaption';
     TabViewModule,
     ProgressSpinnerModule,
     ToastModule,
-    MatIconModule,
     MatNativeDateModule,
     MatRippleModule,
     MatTabsModule,
