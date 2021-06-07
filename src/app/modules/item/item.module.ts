@@ -10,7 +10,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ItemContentComponent } from './pages/item-content/item-content.component';
 import { ChapterChildrenComponent } from './components/chapter-children/chapter-children.component';
 import { ItemProgressComponent } from './pages/item-progress/item-progress.component';
-import { ItemCurrentSituationComponent } from './pages/item-current-situation/item-current-situation.component';
 import { ItemLogViewComponent } from './pages/item-log-view/item-log-view.component';
 import { SubSkillsComponent } from './components/sub-skills/sub-skills.component';
 import { ParentSkillsComponent } from './components/parent-skills/parent-skills.component';
@@ -26,12 +25,14 @@ import { DialogModule } from 'primeng/dialog';
 import { AddItemComponent } from './components/add-item/add-item.component';
 import { CompositionFilterComponent } from './components/composition-filter/composition-filter.component';
 import { UserProgressComponent } from './components/user-progress/user-progress.component';
-import { ItemChapterViewComponent } from './pages/item-chapter-view/item-chapter-view.component';
+import { ChapterGroupProgressComponent } from './pages/chapter-group-progress/chapter-group-progress.component';
 import { GroupProgressGridComponent } from './pages/group-progress-grid/group-progress-grid.component';
 import { ItemEditAdvancedParametersComponent } from './pages/item-edit-advanced-parameters/item-edit-advanced-parameters.component';
 import { CalendarModule } from 'primeng/calendar';
 import { LogActionDisplayPipe } from './pages/item-log-view/logActionDisplay';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { ChapterUserProgressComponent } from './pages/chapter-user-progress/chapter-user-progress.component';
+import { ItemProgressLabelPipe } from './pages/item-progress/itemProgressLabel';
 
 @NgModule({
   declarations: [
@@ -42,14 +43,13 @@ import { InputNumberModule } from 'primeng/inputnumber';
     ItemContentComponent,
     ChapterChildrenComponent,
     ItemProgressComponent,
-    ItemCurrentSituationComponent,
     ItemLogViewComponent,
     SubSkillsComponent,
     ParentSkillsComponent,
     ItemEditContentComponent,
     ItemChildrenEditComponent,
     ItemProgressComponent,
-    ItemChapterViewComponent,
+    ChapterGroupProgressComponent,
     GroupProgressGridComponent,
     CompositionFilterComponent,
     UserProgressComponent,
@@ -58,6 +58,8 @@ import { InputNumberModule } from 'primeng/inputnumber';
     AddItemComponent,
     ItemEditAdvancedParametersComponent,
     LogActionDisplayPipe,
+    ChapterUserProgressComponent,
+    ItemProgressLabelPipe,
   ],
   imports: [
     CommonModule,
