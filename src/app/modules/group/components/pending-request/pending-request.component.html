@@ -68,7 +68,7 @@
                   /> -->
                   <div class="user-info">
                     <span class="user-info-name">
-                      {{ rowData.user | user }}
+                      {{ rowData.user | userCaption }}
                     </span>
                     <span class="user-info-activity" *ngIf="rowData.user.grade">
                       <em><span i18n>Grade: </span>{{ rowData.user.grade }}</em>

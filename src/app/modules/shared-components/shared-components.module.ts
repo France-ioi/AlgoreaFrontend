@@ -48,7 +48,6 @@ import { SectionParagraphComponent } from './components/section-paragrah/section
 import { MessageComponent } from './components/message/message.component';
 import { ProgressLevelComponent } from './components/progress-level/progress-level.component';
 import { FormErrorComponent } from './components/form-error/form-error.component';
-import { UserPipe } from 'src/app/shared/pipes/userDisplay';
 import { ItemLinkPipe } from 'src/app/shared/pipes/itemLink';
 import { SubSectionComponent } from './components/sub-section/sub-section.component';
 import { AddContentComponent } from './components/add-content/add-content.component';
@@ -87,7 +86,6 @@ import { UserCaptionPipe } from '../../shared/pipes/userCaption';
     MessageComponent,
     ProgressLevelComponent,
     FormErrorComponent,
-    UserPipe,
     ItemLinkPipe,
     UserCaptionPipe,
     SubSectionComponent,
@@ -160,7 +158,6 @@ import { UserCaptionPipe } from '../../shared/pipes/userCaption';
     MessageComponent,
     ProgressLevelComponent,
     FormErrorComponent,
-    UserPipe,
     ItemLinkPipe,
     UserCaptionPipe,
     SubSectionComponent,
