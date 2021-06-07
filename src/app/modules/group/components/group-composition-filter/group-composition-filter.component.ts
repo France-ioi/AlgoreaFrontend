@@ -92,7 +92,6 @@ export class GroupCompositionFilterComponent implements OnInit{
 
   onTypeFilterChanged(index: number): void {
     const typeFilters = this.value.directChildren ? this.directChildrenTypeFilters : this.allDescendantsTypeFilters;
-    if (index < 0 || index >= typeFilters.length) throw Error('invalid value for type filter');
     this.selectedTypeFilter = index;
     this.value.type = ensureDefined(typeFilters[index]).value;
     this.change.emit(this.value);
