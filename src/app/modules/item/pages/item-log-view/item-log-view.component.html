@@ -36,6 +36,9 @@
                   {{ rowData.item.string.title }}
                 </a>
               </ng-container>
+              <ng-container *ngSwitchCase="'item.user'">
+                {{ rowData.user | userCaption }}
+              </ng-container>
               <ng-container *ngSwitchCase="'at'">
                 {{ rowData.at | date:'short' }}
               </ng-container>

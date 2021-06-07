@@ -1,29 +1,16 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy } from '@angular/core';
 import { ItemData } from '../../services/item-datasource.service';
 import { ActivityLog, ActivityLogService } from 'src/app/shared/http-services/activity-log.service';
 import { Observable, ReplaySubject } from 'rxjs';
 import { distinct, switchMap, map } from 'rxjs/operators';
 import { mapToFetchState } from 'src/app/shared/operators/state';
+import { ItemType } from '../../../../shared/helpers/item-type';
+import { Item } from '../../http-services/get-item-by-id.service';
 
 interface Column {
   field: string,
   header: string
 }
-
-const logColumns: Column[] = [
-  {
-    field: 'activity_type',
-    header: $localize`Action`
-  },
-  {
-    field: 'item.string.title',
-    header: $localize`Content`
-  },
-  {
-    field: 'at',
-    header: $localize`Time`
-  }
-];
 
 interface Data {
   columns: Column[],
@@ -35,14 +22,15 @@ interface Data {
   templateUrl: './item-log-view.component.html',
   styleUrls: [ './item-log-view.component.scss' ],
 })
-export class ItemLogViewComponent implements OnChanges {
+export class ItemLogViewComponent implements OnChanges, OnDestroy {
 
   @Input() itemData?: ItemData;
+  @Input() isWatchingGroup = false;
 
-  private readonly id$ = new ReplaySubject<string>(1);
-  readonly state$ = this.id$.pipe(
+  private readonly item$ = new ReplaySubject<Item>(1);
+  readonly state$ = this.item$.pipe(
     distinct(),
-    switchMap(id => this.getData$(id)),
+    switchMap((item: Item) => this.getData$(item)),
     mapToFetchState(),
   );
 
@@ -51,16 +39,54 @@ export class ItemLogViewComponent implements OnChanges {
   ) {}
 
   ngOnChanges(): void {
-    if (this.itemData) this.id$.next(this.itemData.item.id);
+    if (!this.itemData) {
+      return;
+    }
+
+    this.item$.next(this.itemData.item);
   }
 
-  getData$(id: string): Observable<Data> {
-    return this.activityLogService.getActivityLog(id).pipe(
+  ngOnDestroy(): void {
+    this.item$.complete();
+  }
+
+  private getData$(item: Item): Observable<Data> {
+    return this.activityLogService.getActivityLog(item.id).pipe(
       map((data: ActivityLog[]) => ({
-        columns: logColumns,
+        columns: this.getLogColumns(item.type),
         rowData: data
       }))
     );
+  }
+
+  private getLogColumns(type: ItemType): Column[] {
+    const columns = [
+      {
+        field: 'activity_type',
+        header: $localize`Action`,
+        enabled: true,
+      },
+      {
+        field: 'item.string.title',
+        header: $localize`Content`,
+        enabled: ![ 'Task', 'Course' ].includes(type),
+      },
+      {
+        field: 'item.user',
+        header: $localize`User`,
+        enabled: this.isWatchingGroup && [ 'Chapter', 'Task', 'Course' ].includes(type),
+      },
+      {
+        field: 'at',
+        header: $localize`Time`,
+        enabled: true,
+      }
+    ];
+
+    return columns.filter(item => item.enabled).map(item => ({
+      field: item.field,
+      header: item.header,
+    }));
   }
 
 }
