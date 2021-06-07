@@ -20,7 +20,6 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ToastModule } from 'primeng/toast';
 
 import { MatTabsModule } from '@angular/material/tabs';
-import { MatDialogModule, MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatMenuModule } from '@angular/material/menu';
 
@@ -118,7 +117,6 @@ import { UserCaptionPipe } from '../../shared/pipes/userCaption';
     ToastModule,
     MatNativeDateModule,
     MatTabsModule,
-    MatDialogModule,
     MatMenuModule,
 
     ClickOutsideModule,
@@ -167,9 +165,7 @@ import { UserCaptionPipe } from '../../shared/pipes/userCaption';
     AccessCodeViewComponent,
     LanguagePickerComponent,
   ],
-  providers: [
-    { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: true } }
-  ],
+  providers: [],
   entryComponents: [
   ]
 })
