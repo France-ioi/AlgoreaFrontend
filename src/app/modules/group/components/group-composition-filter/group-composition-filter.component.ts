@@ -98,10 +98,8 @@ export class GroupCompositionFilterComponent implements OnInit{
   }
 
   onChildrenFilterChanged(index: number): void {
-    if (index < 0 || index >= this.childrenFilters.length) throw Error('invalid value for children filter');
-
-    this.selectedChildrenFilter = index;
     this.value.directChildren = ensureDefined(this.childrenFilters[index]).value;
+    this.selectedChildrenFilter = index;
 
     const typeFilters = this.value.directChildren ? this.directChildrenTypeFilters : this.allDescendantsTypeFilters;
     this.selectedTypeFilter = typeFilters.findIndex(typeFilter => typeFilter.value ===

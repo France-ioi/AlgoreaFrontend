@@ -43,9 +43,8 @@ export class CompositionFilterComponent implements OnInit {
   }
 
   onTypeFilterChanged(index: number): void {
-    if (index < 0 || index >= this.typeFilters.length) throw Error('invalid value for type filter');
-    this.selectedTypeFilter = index;
     this.change.emit(ensureDefined(this.typeFilters[index]).value);
+    this.selectedTypeFilter = index;
   }
 
 }
