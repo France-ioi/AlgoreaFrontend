@@ -19,7 +19,6 @@ import { TabViewModule } from 'primeng/tabview';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ToastModule } from 'primeng/toast';
 
-import { MatTabsModule } from '@angular/material/tabs';
 
 import { ClickOutsideModule } from 'ng-click-outside';
 
@@ -113,7 +112,6 @@ import { UserCaptionPipe } from '../../shared/pipes/userCaption';
     TabViewModule,
     ProgressSpinnerModule,
     ToastModule,
-    MatTabsModule,
 
     ClickOutsideModule,
     ReactiveFormsModule,
@@ -125,7 +123,6 @@ import { UserCaptionPipe } from '../../shared/pipes/userCaption';
   exports: [
     ButtonComponent,
     SectionComponent,
-    MatTabsModule,
     PageNavigatorComponent,
     SkillProgressComponent,
     ScoreRingComponent,

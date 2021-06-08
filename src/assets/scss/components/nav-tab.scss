@@ -1,0 +1,16 @@
+@import 'src/colors.scss';
+@import 'src/geometry.scss';
+
+.nav-tab {
+  display: flex;
+  font-family: inherit;
+  overflow: hidden;
+
+  .nav-tab-item {
+    @include main-tabs;
+
+    &.active {
+      @include main-tab-active;
+    }
+  }
+}
