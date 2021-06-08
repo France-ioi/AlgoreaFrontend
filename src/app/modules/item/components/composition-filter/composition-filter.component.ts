@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ensureDefined } from 'src/app/shared/helpers/null-undefined-predicates';
 
 export type TypeFilter = 'Groups'|'Teams'|'Users';
 
@@ -42,9 +43,8 @@ export class CompositionFilterComponent implements OnInit {
   }
 
   onTypeFilterChanged(index: number): void {
-    if (index < 0 || index >= this.typeFilters.length) throw Error('invalid value for type filter');
+    this.change.emit(ensureDefined(this.typeFilters[index]).value);
     this.selectedTypeFilter = index;
-    this.change.emit(this.typeFilters[index].value);
   }
 
 }

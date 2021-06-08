@@ -16,6 +16,7 @@ import {
   processRequestError
 } from 'src/app/modules/group/components/pending-request/pending-request-response-handling';
 import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
+import { ensureDefined } from 'src/app/shared/helpers/null-undefined-predicates';
 
 const groupColumn = { field: 'group.name', header: $localize`GROUP` };
 
@@ -111,7 +112,7 @@ export class PendingJoinRequestsComponent implements OnChanges, OnDestroy {
   }
 
   onSubgroupSwitch(selectedIdx: number): void {
-    this.includeSubgroup = this.subgroupSwitchItems[selectedIdx].value;
+    this.includeSubgroup = ensureDefined(this.subgroupSwitchItems[selectedIdx]).value;
 
     this.columns = this.columns.filter(elm => elm !== groupColumn);
     if (this.includeSubgroup) this.columns = [ groupColumn ].concat(this.columns);

@@ -118,7 +118,7 @@ export class ItemByIdComponent implements OnDestroy {
   private fetchItemAtRoute(params: ParamMap): void {
     const snapshot = this.activatedRoute.snapshot;
     if (!snapshot.parent) throw new Error('Unexpected: activated route snapshot has no parent');
-    if (!snapshot.parent.url.length) throw new Error('Unexpected: activated route snapshot parent has no url');
+    if (!snapshot.parent.url[0]) throw new Error('Unexpected: activated route snapshot parent has no url');
     const item = itemRouteFromParams(snapshot.parent.url[0].path, params);
     if (isItemRouteError(item)) {
       if (item.id) {

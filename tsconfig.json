@@ -30,6 +30,7 @@
     "noImplicitReturns": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
+    "noUncheckedIndexedAccess": true,
 
     // "strict" enables all strict type checking option
     "strict": true,

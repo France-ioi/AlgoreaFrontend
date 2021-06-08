@@ -1,5 +1,6 @@
 import { concat, EMPTY, Observable, ObservableInput, of, OperatorFunction, Subject } from 'rxjs';
 import { catchError, map, mergeMap, switchMap } from 'rxjs/operators';
+import { isDefined } from 'src/app/shared/helpers/null-undefined-predicates';
 import { repeatLatestWhen } from 'src/app/shared/helpers/repeatLatestWhen';
 import { errorState, fetchingState, FetchState, readyState } from 'src/app/shared/helpers/state';
 import { RoutedContentInfo } from 'src/app/shared/models/content/content-info';
@@ -205,8 +206,8 @@ export abstract class LeftNavDataSource<ContentT extends RoutedContentInfo, Menu
 
   private fetchNewNavData(content: ContentT): Observable<NavTreeData<MenuT>> {
     const route = content.route;
-    if (route.path.length >= 1) {
-      const parentId = route.path[route.path.length-1];
+    const parentId = route.path[route.path.length-1];
+    if (isDefined(parentId)) {
       return this.fetchNavDataFromChild(parentId, content).pipe(
         map(data => new NavTreeData(data.elements, route.path, route.id, data.parent))
       );

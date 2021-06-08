@@ -53,7 +53,7 @@ export class LeftNavComponent implements OnInit, OnDestroy {
       }
 
       if (!content) { // no tab and no content to select
-        this.dataSources[this.activeTabIndex].focus(); // if the current tab has not been initialized yet, do it now
+        this.dataSources[this.activeTabIndex]?.focus(); // if the current tab has not been initialized yet, do it now
 
       } else if (isGroupInfo(content)) {
         this.changeTab(groupsTabIdx);
@@ -80,12 +80,12 @@ export class LeftNavComponent implements OnInit, OnDestroy {
 
   changeTab(index: number): void {
     this.activeTabIndex = index;
-    this.dataSources[index].focus();
+    this.dataSources[index]?.focus();
     this.themeChange.emit(this.activeTabIndex === 2 ? 'dark' : null);
   }
 
   retryError(): void {
-    this.dataSources[this.activeTabIndex].retry();
+    this.dataSources[this.activeTabIndex]?.retry();
   }
 
 }

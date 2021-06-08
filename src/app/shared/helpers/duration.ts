@@ -18,7 +18,7 @@ export class Duration {
   // Create a duration from a ^\d{1,3}:[0-5]?\d:[0-5]?\d$ formatted string, e.g. "838:59:59"
   static fromString(s: string): Duration {
     const [ hr, min, sec ] = s.split(':');
-    return this.fromHMS(+hr, +min, +sec);
+    return this.fromHMS(Number(hr), Number(min), Number(sec));
   }
 
   static fromHMS(hours: number, minutes: number, seconds: number): Duration {

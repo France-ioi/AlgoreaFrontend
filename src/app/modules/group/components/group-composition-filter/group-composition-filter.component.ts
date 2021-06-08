@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ensureDefined } from 'src/app/shared/helpers/null-undefined-predicates';
 
 export enum TypeFilter {
   Groups = 'groups',
@@ -91,22 +92,19 @@ export class GroupCompositionFilterComponent implements OnInit{
 
   onTypeFilterChanged(index: number): void {
     const typeFilters = this.value.directChildren ? this.directChildrenTypeFilters : this.allDescendantsTypeFilters;
-    if (index < 0 || index >= typeFilters.length) throw Error('invalid value for type filter');
     this.selectedTypeFilter = index;
-    this.value.type = typeFilters[index].value;
+    this.value.type = ensureDefined(typeFilters[index]).value;
     this.change.emit(this.value);
   }
 
   onChildrenFilterChanged(index: number): void {
-    if (index < 0 || index >= this.childrenFilters.length) throw Error('invalid value for children filter');
-
+    this.value.directChildren = ensureDefined(this.childrenFilters[index]).value;
     this.selectedChildrenFilter = index;
-    this.value.directChildren = this.childrenFilters[index].value;
 
     const typeFilters = this.value.directChildren ? this.directChildrenTypeFilters : this.allDescendantsTypeFilters;
     this.selectedTypeFilter = typeFilters.findIndex(typeFilter => typeFilter.value ===
       (this.value.type === 'teams' ? 'teams' : 'users'));
-    this.value.type = typeFilters[this.selectedTypeFilter].value;
+    this.value.type = ensureDefined(typeFilters[this.selectedTypeFilter]).value;
 
     this.change.emit(this.value);
   }
