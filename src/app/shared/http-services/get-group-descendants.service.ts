@@ -62,8 +62,8 @@ export interface UserDescendant {
   }[],
   user: {
     login: string,
-    firstName: string|null,
-    lastName: string|null,
+    firstName?: string|null,
+    lastName?: string|null,
     grade: number|null,
   },
 }
