@@ -2,7 +2,7 @@
   <div
     class="group-situation-data"
     [ngClass]="state"
-    (click)="op.toggle($event)"
+    (click)="onClick($event)"
   >
     <alg-score-ring
       *ngIf="state !== 'success' && state !== 'not-started'"
