@@ -144,7 +144,7 @@ describe('mapToState', () => {
 });
 
 
-describe('readyState', () => {
+describe('readyData', () => {
 
   let testScheduler: TestScheduler;
 
