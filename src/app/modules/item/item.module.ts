@@ -17,7 +17,6 @@ import { ItemEditContentComponent } from './pages/item-edit-content/item-edit-co
 import { ItemChildrenEditComponent } from './components/item-children-edit/item-children-edit.component';
 import { TooltipModule } from 'primeng/tooltip';
 import { PendingChangesGuard } from 'src/app/shared/guards/pending-changes-guard';
-import { MatMenuModule } from '@angular/material/menu';
 import { DurationToReadable } from 'src/app/shared/pipes/duration';
 import { ButtonModule } from 'primeng/button';
 import { PermissionsEditDialogComponent } from './components/permissions-edit-dialog/permissions-edit-dialog.component';
@@ -69,7 +68,6 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
     ReactiveFormsModule,
     FormsModule,
     TooltipModule,
-    MatMenuModule,
     DialogModule,
     ButtonModule,
     CalendarModule,

@@ -20,7 +20,6 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ToastModule } from 'primeng/toast';
 
 import { MatTabsModule } from '@angular/material/tabs';
-import { MatMenuModule } from '@angular/material/menu';
 
 import { ClickOutsideModule } from 'ng-click-outside';
 
@@ -115,7 +114,6 @@ import { UserCaptionPipe } from '../../shared/pipes/userCaption';
     ProgressSpinnerModule,
     ToastModule,
     MatTabsModule,
-    MatMenuModule,
 
     ClickOutsideModule,
     ReactiveFormsModule,
