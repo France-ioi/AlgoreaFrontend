@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
-import { forkJoin, merge, Observable, of, Subject, Subscription } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { animationFrames, forkJoin, merge, Observable, of, Subject, Subscription } from 'rxjs';
+import { map, scan, switchMap, takeUntil, takeWhile } from 'rxjs/operators';
 import { canCurrentUserGrantGroupAccess } from 'src/app/modules/group/helpers/group-management';
 import { Group } from 'src/app/modules/group/http-services/get-group-by-id.service';
 import { GetGroupChildrenService } from 'src/app/modules/group/http-services/get-group-children.service';
@@ -72,8 +72,8 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
   dialogTitle = '';
 
   private dataFetching = new Subject<{ groupId: string, itemId: string, attemptId: string, filter: TypeFilter }>();
-
   private permissionsFetchingSubscription?: Subscription;
+  private destroy$ = new Subject<void>();
 
   constructor(
     private getItemChildrenService: GetItemChildrenService,
@@ -92,7 +92,7 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
       )).subscribe(
       state => {
         this.state = state.tag;
-        if (state.isReady) this.data = state.data;
+        if (state.isReady) this.setDataByBatch(state.data);
       },
       _err => {
         this.state = 'error';
@@ -101,6 +101,8 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
     this.dataFetching.complete();
     this.permissionsFetchingSubscription?.unsubscribe();
   }
@@ -121,6 +123,21 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
 
   trackByRow(_index: number, row: Data['rows'][number]): string {
     return row.id;
+  }
+
+  private setDataByBatch(data: Data, size = 25): void {
+    const { rows } = data;
+    const maxCount = Math.ceil(rows.length / size);
+
+    this.data = { ...data, rows: [] };
+    animationFrames().pipe(
+      takeUntil(this.destroy$),
+      scan(count => count + 1, 0),
+      takeWhile(count => count <= maxCount),
+      map(count => count * size),
+    ).subscribe(lastIndex => {
+      this.data.rows = rows.slice(0, lastIndex);
+    });
   }
 
   private getProgress(itemId: string, groupId: string, filter: TypeFilter): Observable<TeamUserProgress[]> {
