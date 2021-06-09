@@ -19,11 +19,6 @@ import { TabViewModule } from 'primeng/tabview';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ToastModule } from 'primeng/toast';
 
-import { MatIconModule } from '@angular/material/icon';
-import { MatTabsModule } from '@angular/material/tabs';
-import { MatDialogModule, MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
-import { MatNativeDateModule, MatRippleModule } from '@angular/material/core';
-import { MatMenuModule } from '@angular/material/menu';
 
 import { ClickOutsideModule } from 'ng-click-outside';
 
@@ -117,12 +112,6 @@ import { UserCaptionPipe } from '../../shared/pipes/userCaption';
     TabViewModule,
     ProgressSpinnerModule,
     ToastModule,
-    MatIconModule,
-    MatNativeDateModule,
-    MatRippleModule,
-    MatTabsModule,
-    MatDialogModule,
-    MatMenuModule,
 
     ClickOutsideModule,
     ReactiveFormsModule,
@@ -134,7 +123,6 @@ import { UserCaptionPipe } from '../../shared/pipes/userCaption';
   exports: [
     ButtonComponent,
     SectionComponent,
-    MatTabsModule,
     PageNavigatorComponent,
     SkillProgressComponent,
     ScoreRingComponent,
@@ -170,9 +158,7 @@ import { UserCaptionPipe } from '../../shared/pipes/userCaption';
     AccessCodeViewComponent,
     LanguagePickerComponent,
   ],
-  providers: [
-    { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: true } }
-  ],
+  providers: [],
   entryComponents: [
   ]
 })

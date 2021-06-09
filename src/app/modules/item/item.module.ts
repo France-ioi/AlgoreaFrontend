@@ -17,7 +17,6 @@ import { ItemEditContentComponent } from './pages/item-edit-content/item-edit-co
 import { ItemChildrenEditComponent } from './components/item-children-edit/item-children-edit.component';
 import { TooltipModule } from 'primeng/tooltip';
 import { PendingChangesGuard } from 'src/app/shared/guards/pending-changes-guard';
-import { MatMenuModule } from '@angular/material/menu';
 import { DurationToReadable } from 'src/app/shared/pipes/duration';
 import { ButtonModule } from 'primeng/button';
 import { PermissionsEditDialogComponent } from './components/permissions-edit-dialog/permissions-edit-dialog.component';
@@ -33,6 +32,7 @@ import { LogActionDisplayPipe } from './pages/item-log-view/logActionDisplay';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { ChapterUserProgressComponent } from './pages/chapter-user-progress/chapter-user-progress.component';
 import { ItemProgressLabelPipe } from './pages/item-progress/itemProgressLabel';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
 
 @NgModule({
   declarations: [
@@ -68,11 +68,11 @@ import { ItemProgressLabelPipe } from './pages/item-progress/itemProgressLabel';
     ReactiveFormsModule,
     FormsModule,
     TooltipModule,
-    MatMenuModule,
     DialogModule,
     ButtonModule,
     CalendarModule,
     InputNumberModule,
+    OverlayPanelModule,
   ],
   exports: [],
   providers: [

@@ -12,18 +12,20 @@
         (groupJoined)="reloadItem()"
     ></alg-access-code-view>
 
-    <nav mat-tab-nav-bar>
-      <a mat-tab-link
+    <nav class="nav-tab">
+      <a
+        class="nav-tab-item"
         [routerLink]="'./'"
         routerLinkActive #contentTab="routerLinkActive"
         [routerLinkActiveOptions]="{exact: true}"
-        [active]="contentTab.isActive" i18n>
+        [class.active]="contentTab.isActive" i18n>
         Content
       </a>
-      <a mat-tab-link
+      <a
+        class="nav-tab-item"
         [routerLink]="'./progress'"
         routerLinkActive #progressTab="routerLinkActive"
-        [active]="progressTab.isActive">
+        [class.active]="progressTab.isActive">
         <i class="fa fa-chart-line"></i>
         &nbsp;
         <span i18n>Progress</span>

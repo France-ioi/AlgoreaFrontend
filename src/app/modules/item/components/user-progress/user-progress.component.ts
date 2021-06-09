@@ -1,5 +1,6 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { TeamUserProgress } from 'src/app/shared/http-services/get-group-progress.service';
+import { OverlayPanel } from 'primeng/overlaypanel';
 
 @Component({
   selector: 'alg-user-progress',
@@ -13,6 +14,8 @@ export class UserProgressComponent implements OnChanges {
 
   @Output() permEditionRequested = new EventEmitter<void>();
 
+  @ViewChild('op') op?: OverlayPanel;
+
   state: 'success'|'in-progress'|'no-score'|'not-started' = 'no-score';
 
   ngOnChanges(_changes: SimpleChanges): void {
@@ -25,6 +28,15 @@ export class UserProgressComponent implements OnChanges {
   }
 
   onAccess(): void {
+    this.op?.hide();
     this.permEditionRequested.emit();
+  }
+
+  onClick(event: Event): void {
+    if (this.state === 'not-started') {
+      return;
+    }
+
+    this.op?.toggle(event);
   }
 }

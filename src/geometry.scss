@@ -89,6 +89,12 @@ $left-panel-size: 34rem;
   height: 5rem;
   line-height: 5rem;
   border-radius: $border-radius $border-radius 0 0;
+
+  position: relative;
+  flex: 1;
+  text-align: center;
+  color: #808183;
+  text-decoration: none;
 }
 
 @mixin main-tab-active {
