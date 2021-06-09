@@ -1,5 +1,5 @@
 import { EMPTY, noop, Observable, of, OperatorFunction, pipe } from 'rxjs';
-import { catchError, filter, map, pairwise, startWith, switchMapTo } from 'rxjs/operators';
+import { catchError, filter, map, startWith, switchMapTo } from 'rxjs/operators';
 import { errorState, fetchingState, FetchState, Ready, readyState } from 'src/app/shared/helpers/state';
 
 /**
@@ -10,6 +10,7 @@ import { errorState, fetchingState, FetchState, Ready, readyState } from 'src/ap
  */
 export function mapToFetchState<T>(config?: { resetter?: Observable<unknown> }): OperatorFunction<T,FetchState<T>> {
   const resetter = config?.resetter ? config?.resetter : EMPTY;
+  let previousData: T|undefined;
   return pipe(
     map(val => readyState(val)),
     startWith(fetchingState()),
@@ -18,9 +19,11 @@ export function mapToFetchState<T>(config?: { resetter?: Observable<unknown> }):
       startWith(noop),
       switchMapTo(source)
     ),
-    startWith(fetchingState()), // to seed pairwise with an initial value, this one will never be emitted
-    pairwise(),
-    map(([ prevState, newState ]) => (newState.isFetching ? fetchingState(prevState.data) : newState)),
+    map(state => {
+      if (state.isReady) previousData = state.data;
+      if (state.isError) previousData = undefined;
+      return state.isFetching ? fetchingState(previousData) : state;
+    }),
   );
 }
 

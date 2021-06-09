@@ -148,6 +148,62 @@ describe('mapToState', () => {
     });
   });
 
+  it('should allow several fetching states with no data', () => {
+    testScheduler.run(helpers => {
+      const { cold, expectObservable } = helpers;
+      const e1 =  cold('---1|');
+      const res = cold('-0------|'); // the values are not important for the resetter
+      const expected = 'ff--a---|';
+
+      expectObservable(e1.pipe(
+        mapToFetchState({ resetter: res }),
+        stateToLetter(),
+      )).toBe(expected);
+    });
+  });
+
+  it('should pass data between fetching states', () => {
+    testScheduler.run(helpers => {
+      const { cold, expectObservable } = helpers;
+      const e1 =  cold('--1|');
+      const res = cold('----00----|'); // the values are not important for the resetter
+      const expected = 'f-a-gg-a--|';
+
+      expectObservable(e1.pipe(
+        mapToFetchState({ resetter: res }),
+        stateToLetter(),
+      )).toBe(expected);
+    });
+  });
+
+  it('should not replay the last data after a failure', () => {
+    testScheduler.run(helpers => {
+      const { cold, expectObservable } = helpers;
+      const e1 =  cold('-1-#');
+      const res = cold('-------0------|');
+      const expected = 'fa-x---fa-x---|';
+
+      expectObservable(e1.pipe(
+        mapToFetchState({ resetter: res }),
+        stateToLetter(),
+      )).toBe(expected);
+    });
+  });
+
+  it('should change the data in state as expected', () => {
+    testScheduler.run(helpers => {
+      const { cold, expectObservable } = helpers;
+      const e1 =  cold('--1--2|');
+      const res = cold('----0------0-----|'); // the values are not important for the resetter
+      const expected = 'f-a-g-a--b-h-a--b|';
+
+      expectObservable(e1.pipe(
+        mapToFetchState({ resetter: res }),
+        stateToLetter(),
+      )).toBe(expected);
+    });
+  });
+
 });
 
 
