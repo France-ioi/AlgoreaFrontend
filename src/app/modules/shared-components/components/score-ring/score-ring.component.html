@@ -3,7 +3,6 @@
     viewBox="0 0 64 64"
   >
     <path
-      *ngIf="isStarted"
       stroke="black"
       d="M32,2 a30,30 0 0,1 0,60  a30,30 0 1,1 0,-60"
       fill="none"
@@ -11,7 +10,6 @@
       stroke-opacity="0.2"
     />
     <path
-      *ngIf="isStarted"
       attr.stroke="{{ scoreFill }}"
       attr.d="{{ scorePath }}"
       fill="none"
@@ -20,7 +18,6 @@
       transform="translate(32,32)"
     />
     <path
-      *ngIf="isStarted"
       attr.stroke="{{ greyedFill }}"
       attr.d="{{ greyedPath }}"
       fill="none"
@@ -29,7 +26,7 @@
       transform="translate(32,32)"
     />
     <path
-      *ngIf="isStarted && isDark"
+      *ngIf="isDark"
       d="M32,4 a28,28 0 0,1 0,56  a28,28 0 1,1 0,-56"
       fill="black"
       fill-opacity="0.4"
