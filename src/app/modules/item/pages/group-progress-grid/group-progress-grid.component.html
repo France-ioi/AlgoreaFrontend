@@ -51,13 +51,11 @@
           {{ row.header }}
         </td>
         <td *ngFor="let col of columns; let colIndex = index">
-          <ng-container *ngIf="row.data[colIndex]">
-            <alg-user-progress
-              [userProgress]="row.data[colIndex]"
-              [canAccess]="data.can_access"
-              (permEditionRequested)="onAccessPermissions(row.header, row.id, col.id)"
-            ></alg-user-progress>
-          </ng-container>
+          <alg-user-progress
+            [userProgress]="row.data[colIndex]"
+            [canAccess]="data.can_access"
+            (permEditionRequested)="onAccessPermissions(row.header, row.id, col.id)"
+          ></alg-user-progress>
         </td>
       </tr>
     </ng-template>
