@@ -28,14 +28,15 @@ export class UserProgressComponent implements OnChanges {
   }
 
   onAccess(): void {
+    this.op?.hide();
     this.permEditionRequested.emit();
   }
 
   onClick(event: Event): void {
-    if (!this.op || this.state === 'not-started') {
+    if (this.state === 'not-started') {
       return;
     }
 
-    this.op.toggle(event);
+    this.op?.toggle(event);
   }
 }
