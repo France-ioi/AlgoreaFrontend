@@ -21,5 +21,40 @@
       </div>
     </div>
 
+    <nav class="nav-tab">
+      <a
+          class="nav-tab-item"
+          [routerLink]="'./'"
+          routerLinkActive #progress="routerLinkActive"
+          [routerLinkActiveOptions]="{exact: true}"
+          [class.active]="progress.isActive"
+          i18n
+      >
+        Progress
+      </a>
+      <a
+          class="nav-tab-item"
+          [routerLink]="'./personal-data'"
+          routerLinkActive #personalData="routerLinkActive"
+          [routerLinkActiveOptions]="{exact: true}"
+          [class.active]="personalData.isActive"
+          i18n
+      >
+        Personal data
+      </a>
+    </nav>
+
+    <ng-container *ngIf="progress.isActive">
+      <p i18n>List progress</p>
+    </ng-container>
+
+    <ng-container *ngIf="personalData.isActive">
+      <ng-container *ngIf="currentUserGroupId$ | async as currentUserGroupId">
+        <p *ngIf="currentUserGroupId !== user.groupId" i18n>You cannot access this page for this user</p>
+
+        <alg-current-user *ngIf="currentUserGroupId === user.groupId"></alg-current-user>
+      </ng-container>
+    </ng-container>
+
   </ng-container>
 </ng-container>

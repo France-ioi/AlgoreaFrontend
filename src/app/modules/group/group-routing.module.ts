@@ -20,6 +20,11 @@ const routes: Routes = [
   {
     path: 'users/:id',
     component: GroupUserComponent,
+    children: [
+      {
+        path: 'personal-data'
+      }
+    ]
   },
   {
     path: 'by-id/:id',
