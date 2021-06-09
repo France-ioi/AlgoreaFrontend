@@ -2,6 +2,7 @@
   <div
     class="group-situation-data"
     [ngClass]="state"
+    [class.pointer]="state !== 'not-started'"
     (click)="onClick($event)"
   >
     <alg-score-ring

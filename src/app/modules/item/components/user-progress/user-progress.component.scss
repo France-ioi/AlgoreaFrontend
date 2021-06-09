@@ -9,6 +9,10 @@
   padding: 0.4167rem;
   height: 3.5833rem;
 
+  &.pointer {
+    cursor: pointer;
+  }
+
   &.success {
     background-color: #9ACC68;
   }
