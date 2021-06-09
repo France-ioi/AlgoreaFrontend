@@ -1,48 +1,45 @@
-<ng-container *ngIf="userProgress">
-  <div
-    class="group-situation-data"
-    [ngClass]="state"
-    [class.pointer]="state !== 'not-started'"
-    (click)="onClick($event)"
-  >
-    <alg-score-ring
-      *ngIf="state !== 'success' && state !== 'not-started'"
-      [currentScore]="userProgress.score"
-      [diameter]="32"
-      [scoreFillColor]="'#FFF'"
-    ></alg-score-ring>
-    <span class="situation-check" *ngIf="state === 'success'">
-      <i class="fa fa-check"></i>
-    </span>
-  </div>
+<div
+  class="group-situation-data"
+  [ngClass]="state"
+  [class.pointer]="state !== 'not-started'"
+  (click)="onClick($event)"
+>
+  <alg-score-ring
+    *ngIf="state !== 'success' && state !== 'not-started'"
+    [currentScore]="userProgress.score"
+    [diameter]="32"
+    [scoreFillColor]="'#FFF'"
+  ></alg-score-ring>
+  <span class="situation-check" *ngIf="state === 'success'">
+    <i class="fa fa-check"></i>
+  </span>
+</div>
 
-  <p-overlayPanel #op appendTo="body" styleClass="user-progress-overlay-panel">
-    <ng-template pTemplate>
-      <div class="user-progress-info">
-        <div class="content validated">
-          <span *ngIf="userProgress">
-            <i class="fa fa-clock"></i>
-            <span class="menu-label" i18n>Time spent</span>
-            <span class="menu-value">{{ userProgress.timeSpent | duration }}</span>
+<p-overlayPanel #op appendTo="body" styleClass="user-progress-overlay-panel">
+  <ng-template pTemplate>
+    <div class="user-progress-info">
+      <div class="content validated">
+        <span *ngIf="userProgress">
+          <i class="fa fa-clock"></i>
+          <span class="menu-label" i18n>Time spent</span>
+          <span class="menu-value">{{ userProgress.timeSpent | duration }}</span>
+        </span>
+        <span class="score">
+          <alg-score-ring
+            *ngIf="state !== 'success' && state !== 'not-started'"
+            [isDark]="true"
+            [currentScore]="userProgress.score"
+            [diameter]="32"
+          ></alg-score-ring>
+          <span class="situation-check" *ngIf="state === 'success'">
+            <i class="fa fa-check"></i>
           </span>
-          <span class="score">
-            <alg-score-ring
-              *ngIf="state !== 'success' && state !== 'not-started'"
-              [isDark]="true"
-              [currentScore]="userProgress.score"
-              [diameter]="32"
-            ></alg-score-ring>
-            <span class="situation-check" *ngIf="state === 'success'">
-              <i class="fa fa-check"></i>
-            </span>
-          </span>
-          <span *ngIf="canAccess" class="clickable" (click)="onAccess()">
-            <i class="fa fa-lock"></i>
-            <span i18n>ACCESS</span>
-          </span>
-        </div>
+        </span>
+        <span *ngIf="canAccess" class="clickable" (click)="onAccess()">
+          <i class="fa fa-lock"></i>
+          <span i18n>ACCESS</span>
+        </span>
       </div>
-    </ng-template>
-  </p-overlayPanel>
-
-</ng-container>
+    </div>
+  </ng-template>
+</p-overlayPanel>
