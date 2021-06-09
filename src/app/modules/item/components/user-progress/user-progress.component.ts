@@ -1,7 +1,6 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { assertNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
 import { TeamUserProgress } from 'src/app/shared/http-services/get-group-progress.service';
-import { OverlayPanel } from 'primeng/overlaypanel';
 
 @Component({
   selector: 'alg-user-progress',
@@ -11,11 +10,6 @@ import { OverlayPanel } from 'primeng/overlaypanel';
 export class UserProgressComponent implements OnInit, OnChanges {
 
   @Input() userProgress!: TeamUserProgress;
-  @Input() canAccess?: boolean;
-
-  @Output() permEditionRequested = new EventEmitter<void>();
-
-  @ViewChild('op') op?: OverlayPanel;
 
   state: 'success'|'in-progress'|'no-score'|'not-started' = 'no-score';
 
@@ -34,16 +28,4 @@ export class UserProgressComponent implements OnInit, OnChanges {
     else this.state = 'not-started';
   }
 
-  onAccess(): void {
-    this.op?.hide();
-    this.permEditionRequested.emit();
-  }
-
-  onClick(event: Event): void {
-    if (this.state === 'not-started') {
-      return;
-    }
-
-    this.op?.toggle(event);
-  }
 }

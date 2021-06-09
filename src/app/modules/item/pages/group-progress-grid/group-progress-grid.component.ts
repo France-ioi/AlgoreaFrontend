@@ -1,6 +1,7 @@
-import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild } from '@angular/core';
+import { OverlayPanel } from 'primeng/overlaypanel';
 import { animationFrames, forkJoin, merge, Observable, of, Subject, Subscription } from 'rxjs';
-import { map, scan, switchMap, takeUntil, takeWhile } from 'rxjs/operators';
+import { map, mapTo, scan, switchMap, take, takeUntil, takeWhile } from 'rxjs/operators';
 import { canCurrentUserGrantGroupAccess } from 'src/app/modules/group/helpers/group-management';
 import { Group } from 'src/app/modules/group/http-services/get-group-by-id.service';
 import { GetGroupChildrenService } from 'src/app/modules/group/http-services/get-group-children.service';
@@ -38,6 +39,8 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
   @Input() group?: Group;
   @Input() itemData?: ItemData;
 
+  @ViewChild('progressOverlayPanel') progressOverlayPanel?: OverlayPanel;
+
   defaultFilter: TypeFilter = 'Users';
 
   currentFilter = this.defaultFilter;
@@ -66,6 +69,15 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
       can_make_session_official: false,
       is_owner: true,
     }
+  };
+
+  progressDetail?: {
+    userProgress: TeamUserProgress,
+    title: string,
+    groupId: string,
+    itemId: string,
+    hasScore: boolean,
+    isSuccess: boolean,
   };
 
   dialog: 'loading'|'opened'|'closed' = 'closed';
@@ -123,6 +135,50 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
 
   trackByRow(_index: number, row: Data['rows'][number]): string {
     return row.id;
+  }
+
+  showProgressDetail(
+    event: Event,
+    target: HTMLElement,
+    userProgress: TeamUserProgress,
+    row: Data['rows'][number],
+    col: Data['items'][number],
+  ): void {
+    const isSuccess = userProgress.validated || userProgress.score === 100;
+    const isStarted = isSuccess || userProgress.score > 0 || userProgress.timeSpent > 0;
+
+    const isCurrentDetail = this.progressDetail?.userProgress === userProgress;
+    if (isCurrentDetail || !isStarted) return;
+    if (!this.progressOverlayPanel) throw new Error('progressOverlayPanel should be defined');
+
+    const isAlreadyOpened = !!this.progressDetail;
+    const showPanel$ = isAlreadyOpened
+      ? this.progressOverlayPanel.onHide.asObservable()
+      : of(undefined);
+
+    showPanel$.pipe(
+      switchMap(() => animationFrames()),
+      take(1),
+      mapTo(this.progressOverlayPanel),
+    ).subscribe(panel => {
+      this.progressDetail = {
+        userProgress,
+        title: row.header,
+        groupId: row.id,
+        itemId: col.id,
+        hasScore: isStarted && !isSuccess,
+        isSuccess,
+      };
+      panel.show(event, target);
+    });
+
+    if (isAlreadyOpened) this.hideProgressDetail();
+  }
+
+  hideProgressDetail(): void {
+    if (!this.progressDetail) return;
+    this.progressDetail = undefined;
+    this.progressOverlayPanel?.hide();
   }
 
   private setDataByBatch(data: Data, size = 25): void {
@@ -220,6 +276,7 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
   onAccessPermissions(title: string, targetGroupId: string, itemId: string): void {
     if (!this.group) return;
 
+    this.hideProgressDetail();
     this.dialogTitle = title;
     this.dialog = 'loading';
 
