@@ -4,6 +4,7 @@
   [class.pointer]="state !== 'not-started'"
   (click)="onClick($event)"
 >
+  <!-- [matMenuTriggerFor]="menu" -->
   <alg-score-ring
     *ngIf="state !== 'success' && state !== 'not-started'"
     [currentScore]="userProgress.score"
