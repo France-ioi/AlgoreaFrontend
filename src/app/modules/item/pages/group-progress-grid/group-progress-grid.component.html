@@ -25,6 +25,7 @@
     [columns]="data.items"
     [value]="data.rows"
     class="slanted-grid"
+    [rowTrackBy]="trackByRow"
     [loading]="state === 'fetching'"
   >
     <ng-template pTemplate="header" let-columns>

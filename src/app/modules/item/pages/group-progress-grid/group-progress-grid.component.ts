@@ -119,6 +119,10 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     });
   }
 
+  trackByRow(_index: number, row: Data['rows'][number]): string {
+    return row.id;
+  }
+
   private getProgress(itemId: string, groupId: string, filter: TypeFilter): Observable<TeamUserProgress[]> {
     switch (filter) {
       case 'Users':
