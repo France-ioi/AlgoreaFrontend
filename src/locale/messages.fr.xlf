@@ -64,19 +64,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-nav-tree/left-nav-tree.component.html</context><context context-type="linenumber">17</context></context-group></trans-unit><trans-unit id="4996073393875425335" datatype="html">
         <source>via group</source><target state="translated">via le groupe</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-nav-tree/left-nav-tree.component.html</context><context context-type="linenumber">89</context></context-group></trans-unit><trans-unit id="187187500641108332" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="{{ node.data.element.currentUserManagership === 'descendant' ? 'You are a manager of one of the descendant of the group' : 'You are a manager of the group' }}"/></source><target state="new"><x id="INTERPOLATION" equiv-text="{{ node.data.element.currentUserManagership === 'descendant' ? 'You are a manager of one of the descendant of the group' : 'You are a manager of the group' }}"/></target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/components/left-nav-tree/left-nav-tree.component.html</context>
-          <context context-type="linenumber">177</context>
-        </context-group>
-      </trans-unit><trans-unit id="1298975301426242340" datatype="html">
-        <source>You are a member of the group</source><target state="new">You are a member of the group</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/components/left-nav-tree/left-nav-tree.component.html</context>
-          <context context-type="linenumber">182</context>
-        </context-group>
-      </trans-unit><trans-unit id="2309808536212982229" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-nav-tree/left-nav-tree.component.html</context><context context-type="linenumber">89</context></context-group></trans-unit><trans-unit id="2309808536212982229" datatype="html">
         <source>Activities</source><target state="translated">Activités</target>
 
         <note priority="1" from="description">Tab name</note>
@@ -127,7 +115,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/progress-section/boolean-section/boolean-section.component.html</context><context context-type="linenumber">13</context></context-group></trans-unit><trans-unit id="4449471207584645508" datatype="html">
         <source>Permissions successfully updated.</source><target state="translated">Permissions mises à jour avec succès.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/group-progress-grid/group-progress-grid.component.ts</context><context context-type="linenumber">283</context></context-group></trans-unit><trans-unit id="5199111763891627410" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/group-progress-grid/group-progress-grid.component.ts</context><context context-type="linenumber">234</context></context-group></trans-unit><trans-unit id="5199111763891627410" datatype="html">
         <source>This page has unsaved changes. Do you want to leave this page and lose its changes?</source><target state="translated">Cette page comporte des changements non sauvegardés. Voulez-vous quitter cette page et perdre les changements ?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/guards/pending-changes-guard.ts</context>
@@ -384,7 +372,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-details/item-details.component.html</context><context context-type="linenumber">22</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-edit/item-edit.component.html</context><context context-type="linenumber">20</context></context-group></trans-unit><trans-unit id="3419681791450150574" datatype="html">
         <source>Progress</source><target state="translated">Avancement</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-details/item-details.component.html</context><context context-type="linenumber">31</context></context-group></trans-unit><trans-unit id="792911798404302156" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/group-user/group-user.component.ts</context><context context-type="linenumber">66</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-details/item-details.component.html</context><context context-type="linenumber">31</context></context-group></trans-unit><trans-unit id="792911798404302156" datatype="html">
         <source>Error while loading the root activity</source><target state="translated">Erreur lors du chargement de l'activité à la racine du groupe</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/associated-activity/associated-activity.component.html</context><context context-type="linenumber">8</context></context-group></trans-unit><trans-unit id="3797570084942068182" datatype="html">
@@ -572,7 +560,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/member-list/user-removal-response-handling.ts</context><context context-type="linenumber">10</context></context-group></trans-unit><trans-unit id="3487804242455918485" datatype="html">
         <source>Changes successfully saved.</source><target state="translated">Modifications bien enregistrées.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/current-user/current-user.component.ts</context><context context-type="linenumber">38</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/group-edit/group-edit.component.ts</context><context context-type="linenumber">93</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-edit/item-edit.component.ts</context><context context-type="linenumber">317</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/access-code-view/access-code-view.component.ts</context><context context-type="linenumber">67</context></context-group></trans-unit><trans-unit id="6941980323724778673" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/current-user/current-user.component.ts</context><context context-type="linenumber">27</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/group-edit/group-edit.component.ts</context><context context-type="linenumber">93</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-edit/item-edit.component.ts</context><context context-type="linenumber">317</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/access-code-view/access-code-view.component.ts</context><context context-type="linenumber">67</context></context-group></trans-unit><trans-unit id="6941980323724778673" datatype="html">
       <source>Access to activity</source><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-details/item-details.component.html</context><context context-type="linenumber">9</context></context-group></trans-unit><trans-unit id="6941980323724778673" datatype="html">
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/group-edit/group-edit.component.ts</context><context context-type="linenumber">93</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-edit/item-edit.component.ts</context><context context-type="linenumber">279</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/access-code-view/access-code-view.component.ts</context><context context-type="linenumber">67</context></context-group></trans-unit><trans-unit id="6941980323724778673" datatype="html">
         <source>Access to activity</source><target state="translated">Accès à l'activité</target>
@@ -767,55 +755,52 @@
      <source>The user</source><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog-texts.ts</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="3465962430409924123" datatype="html">
         <source>Personal Information</source><target state="new">Personal Information</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/current-user/current-user.component.html</context><context context-type="linenumber">25</context></context-group></trans-unit><trans-unit id="2454050363478003966" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/current-user/current-user.component.html</context><context context-type="linenumber">21</context></context-group></trans-unit><trans-unit id="2454050363478003966" datatype="html">
         <source>Login</source><target state="new">Login</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/current-user/current-user.component.html</context><context context-type="linenumber">28</context></context-group></trans-unit><trans-unit id="6028371114637047813" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/current-user/current-user.component.html</context><context context-type="linenumber">24</context></context-group></trans-unit><trans-unit id="6028371114637047813" datatype="html">
         <source>First Name</source><target state="new">First Name</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/current-user/current-user.component.html</context><context context-type="linenumber">32</context></context-group></trans-unit><trans-unit id="4407559560004943843" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/current-user/current-user.component.html</context><context context-type="linenumber">28</context></context-group></trans-unit><trans-unit id="4407559560004943843" datatype="html">
         <source>Last Name</source><target state="new">Last Name</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/current-user/current-user.component.html</context><context context-type="linenumber">36</context></context-group></trans-unit><trans-unit id="9022391343105663744" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/current-user/current-user.component.html</context><context context-type="linenumber">32</context></context-group></trans-unit><trans-unit id="9022391343105663744" datatype="html">
         <source>Birth date</source><target state="new">Birth date</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/current-user/current-user.component.html</context><context context-type="linenumber">40</context></context-group></trans-unit><trans-unit id="3974724489654440199" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/current-user/current-user.component.html</context><context context-type="linenumber">36</context></context-group></trans-unit><trans-unit id="3974724489654440199" datatype="html">
         <source>Student ID</source><target state="new">Student ID</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/current-user/current-user.component.html</context><context context-type="linenumber">44</context></context-group></trans-unit><trans-unit id="2742532852742169962" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/current-user/current-user.component.html</context><context context-type="linenumber">40</context></context-group></trans-unit><trans-unit id="2742532852742169962" datatype="html">
         <source>Sex</source><target state="new">Sex</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/current-user/current-user.component.html</context><context context-type="linenumber">48</context></context-group></trans-unit><trans-unit id="4903497133433980780" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/current-user/current-user.component.html</context><context context-type="linenumber">44</context></context-group></trans-unit><trans-unit id="4903497133433980780" datatype="html">
         <source>Nationality</source><target state="new">Nationality</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/current-user/current-user.component.html</context><context context-type="linenumber">52</context></context-group></trans-unit><trans-unit id="6388538668958737105" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/current-user/current-user.component.html</context><context context-type="linenumber">48</context></context-group></trans-unit><trans-unit id="6388538668958737105" datatype="html">
         <source>Personal Web page</source><target state="new">Personal Web page</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/current-user/current-user.component.html</context><context context-type="linenumber">56</context></context-group></trans-unit><trans-unit id="5269993788752318389" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/current-user/current-user.component.html</context><context context-type="linenumber">52</context></context-group></trans-unit><trans-unit id="5269993788752318389" datatype="html">
         <source>School Information</source><target state="new">School Information</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/current-user/current-user.component.html</context><context context-type="linenumber">64</context></context-group></trans-unit><trans-unit id="731248065624656155" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/current-user/current-user.component.html</context><context context-type="linenumber">60</context></context-group></trans-unit><trans-unit id="731248065624656155" datatype="html">
         <source>Your grade</source><target state="new">Your grade</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/current-user/current-user.component.html</context><context context-type="linenumber">67</context></context-group></trans-unit><trans-unit id="5089329810257931149" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/current-user/current-user.component.html</context><context context-type="linenumber">63</context></context-group></trans-unit><trans-unit id="5089329810257931149" datatype="html">
         <source>Highschool graduation year</source><target state="new">Highschool graduation year</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/current-user/current-user.component.html</context><context context-type="linenumber">71</context></context-group></trans-unit><trans-unit id="4090160044021470261" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/current-user/current-user.component.html</context><context context-type="linenumber">67</context></context-group></trans-unit><trans-unit id="4090160044021470261" datatype="html">
         <source>Contact Information</source><target state="new">Contact Information</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/current-user/current-user.component.html</context><context context-type="linenumber">79</context></context-group></trans-unit><trans-unit id="126971847219968204" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/current-user/current-user.component.html</context><context context-type="linenumber">75</context></context-group></trans-unit><trans-unit id="126971847219968204" datatype="html">
         <source>Primary email</source><target state="new">Primary email</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/current-user/current-user.component.html</context><context context-type="linenumber">82</context></context-group></trans-unit><trans-unit id="2250922476634643797" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/current-user/current-user.component.html</context><context context-type="linenumber">78</context></context-group></trans-unit><trans-unit id="2250922476634643797" datatype="html">
         <source>Parameters</source><target state="new">Parameters</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/current-user/current-user.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="634301439602995598" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/current-user/current-user.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit><trans-unit id="634301439602995598" datatype="html">
         <source>Platform language</source><target state="new">Platform language</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/pages/current-user/current-user.component.html</context>
-          <context context-type="linenumber">10</context>
-        </context-group>
-      </trans-unit><trans-unit id="2250922476634643797" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/current-user/current-user.component.html</context><context context-type="linenumber">6</context></context-group></trans-unit><trans-unit id="2250922476634643797" datatype="html">
         <source>Parameters</source><target state="new">Parameters</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/current-user/current-user.component.html</context><context context-type="linenumber">72</context></context-group></trans-unit><trans-unit id="1500422324547006465" datatype="html">
@@ -1473,14 +1458,17 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-log-view/item-log-view.component.ts</context><context context-type="linenumber">81</context></context-group></trans-unit><trans-unit id="1848556306631120071" datatype="html">
         <source>Time spent</source><target state="translated">Temps écoulé</target>
-        
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/user-progress-details/user-progress-details.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="6629094035123468873" datatype="html">
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/components/user-progress/user-progress.component.html</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+      </trans-unit><trans-unit id="6629094035123468873" datatype="html">
         <source>ACCESS</source><target state="translated">ACCÈS</target>
-        
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/user-progress-details/user-progress-details.component.html</context><context context-type="linenumber">26</context></context-group></trans-unit><trans-unit id="2037721496678637423" datatype="html">
-        <source>Yourself</source><target state="translated">Vous</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/current-user/current-user.component.ts</context><context context-type="linenumber">24</context></context-group></trans-unit><trans-unit id="8604389299042909377" datatype="html">
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/components/user-progress/user-progress.component.html</context>
+          <context context-type="linenumber">41</context>
+        </context-group>
+      </trans-unit><trans-unit id="8604389299042909377" datatype="html">
         <source>All the groups you have joined and you manage</source><target state="new">All the groups you have joined and you manage</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/my-groups/my-groups.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit><trans-unit id="6774795715471269377" datatype="html">
@@ -1539,6 +1527,42 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/group/pages/group-user/group-user.component.html</context>
           <context context-type="linenumber">5</context>
+        </context-group>
+      </trans-unit><trans-unit id="2624846324402649932" datatype="html">
+        <source> Progress </source><target state="new"> Progress </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/pages/group-user/group-user.component.html</context>
+          <context context-type="linenumber">33,34</context>
+        </context-group>
+      </trans-unit><trans-unit id="4301389120920899318" datatype="html">
+        <source> Personal data </source><target state="new"> Personal data </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/pages/group-user/group-user.component.html</context>
+          <context context-type="linenumber">43,44</context>
+        </context-group>
+      </trans-unit><trans-unit id="8385231750466805800" datatype="html">
+        <source>List progress</source><target state="new">List progress</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/pages/group-user/group-user.component.html</context>
+          <context context-type="linenumber">48</context>
+        </context-group>
+      </trans-unit><trans-unit id="4480933489956077341" datatype="html">
+        <source>You cannot access this page for this user</source><target state="new">You cannot access this page for this user</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/pages/group-user/group-user.component.html</context>
+          <context context-type="linenumber">53</context>
+        </context-group>
+      </trans-unit><trans-unit id="4555457172864212828" datatype="html">
+        <source>Users</source><target state="new">Users</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/pages/group-user/group-user.component.ts</context>
+          <context context-type="linenumber">59</context>
+        </context-group>
+      </trans-unit><trans-unit id="2618743771935093938" datatype="html">
+        <source>Personal info</source><target state="new">Personal info</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/pages/group-user/group-user.component.ts</context>
+          <context context-type="linenumber">66</context>
         </context-group>
       </trans-unit><trans-unit id="1758440051293769579" datatype="html">
         <source>Presentation</source><target state="translated">Présentation</target>
