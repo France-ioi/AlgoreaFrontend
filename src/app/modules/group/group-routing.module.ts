@@ -2,17 +2,12 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { MyGroupsComponent } from './pages/my-groups/my-groups.component';
 import { GroupDetailsComponent } from './pages/group-details/group-details.component';
-import { CurrentUserComponent } from './pages/current-user/current-user.component';
 import { GroupEditComponent } from './pages/group-edit/group-edit.component';
 import { GroupByIdComponent } from './pages/group-by-id/group-by-id.component';
 import { PendingChangesGuard } from 'src/app/shared/guards/pending-changes-guard';
 import { GroupUserComponent } from './pages/group-user/group-user.component';
 
 const routes: Routes = [
-  {
-    path: 'me',
-    component: CurrentUserComponent
-  },
   {
     path: 'mine',
     component: MyGroupsComponent,
