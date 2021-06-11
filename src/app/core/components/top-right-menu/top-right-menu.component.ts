@@ -13,7 +13,7 @@ import { UserSessionService } from 'src/app/shared/services/user-session.service
 export class TopRightMenuComponent {
 
   readonly menuItems = [
-    { label: 'Profile', icon: 'pi pi-user', routerLink: [ 'groups', 'me' ] },
+    { label: 'Profile', icon: 'pi pi-user', routerLink: [ 'groups', 'users', this.sessionService.userGroupId, 'personal-data' ] },
     ...this.getDevelopmentMenuItems(),
     { label: 'Log out', icon: 'pi pi-power-off', command: ():void => this.sessionService.logout() },
   ];
