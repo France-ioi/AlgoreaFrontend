@@ -28,8 +28,8 @@
         <tr>
           <td *ngFor="let col of columns">
             <ng-container [ngSwitch]="col.field">
-              <ng-container *ngSwitchCase="'activity_type'">
-                {{ rowData.activity_type | logActionDisplay : rowData.score }}
+              <ng-container *ngSwitchCase="'activityType'">
+                {{ rowData.activityType | logActionDisplay : rowData.score }}
               </ng-container>
               <ng-container *ngSwitchCase="'item.string.title'">
                 <a class="alg-link" [ngClass]="{'disabled': !rowData.item}" [routerLink]="rowData.item | itemLink">

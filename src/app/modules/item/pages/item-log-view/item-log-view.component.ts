@@ -62,7 +62,7 @@ export class ItemLogViewComponent implements OnChanges, OnDestroy {
   private getLogColumns(type: ItemType): Column[] {
     const columns = [
       {
-        field: 'activity_type',
+        field: 'activityType',
         header: $localize`Action`,
         enabled: true,
       },
