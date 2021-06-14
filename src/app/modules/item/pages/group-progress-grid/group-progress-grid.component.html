@@ -87,7 +87,10 @@
           #overlayTarget
           (click)="showProgressDetail($event, overlayTarget, row.data[colIndex], row, col)"
         >
-          <alg-user-progress [userProgress]="row.data[colIndex]"></alg-user-progress>
+          <alg-user-progress
+            *ngIf="row.data[colIndex]"
+            [userProgress]="row.data[colIndex]"
+          ></alg-user-progress>
         </td>
       </tr>
     </ng-template>
