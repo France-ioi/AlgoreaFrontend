@@ -1,7 +1,6 @@
-import { Component, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild } from '@angular/core';
-import { OverlayPanel } from 'primeng/overlaypanel';
+import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
 import { animationFrames, forkJoin, merge, Observable, of, Subject, Subscription } from 'rxjs';
-import { map, mapTo, scan, switchMap, take, takeUntil, takeWhile } from 'rxjs/operators';
+import { map, scan, switchMap, takeUntil, takeWhile } from 'rxjs/operators';
 import { canCurrentUserGrantGroupAccess } from 'src/app/modules/group/helpers/group-management';
 import { Group } from 'src/app/modules/group/http-services/get-group-by-id.service';
 import { GetGroupChildrenService } from 'src/app/modules/group/http-services/get-group-children.service';
@@ -39,8 +38,6 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
   @Input() group?: Group;
   @Input() itemData?: ItemData;
 
-  @ViewChild('progressOverlayPanel') progressOverlayPanel?: OverlayPanel;
-
   defaultFilter: TypeFilter = 'Users';
 
   currentFilter = this.defaultFilter;
@@ -71,13 +68,14 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     }
   };
 
-  progressDetail?: {
-    userProgress: TeamUserProgress,
-    title: string,
-    groupId: string,
-    itemId: string,
-    hasScore: boolean,
-    isSuccess: boolean,
+  progressOverlay?: {
+    progress: TeamUserProgress,
+    target: Element,
+    accessPermissions: {
+      title: string,
+      groupId: string,
+      itemId: string,
+    };
   };
 
   dialog: 'loading'|'opened'|'closed' = 'closed';
@@ -134,51 +132,24 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
   }
 
   trackByRow(_index: number, row: Data['rows'][number]): string {
+    end(_index);
     return row.id;
   }
 
-  showProgressDetail(
-    event: Event,
-    target: HTMLElement,
-    userProgress: TeamUserProgress,
-    row: Data['rows'][number],
-    col: Data['items'][number],
-  ): void {
-    const isSuccess = userProgress.validated || userProgress.score === 100;
-    const isStarted = isSuccess || userProgress.score > 0 || userProgress.timeSpent > 0;
-
-    const isCurrentDetail = this.progressDetail?.userProgress === userProgress;
-    if (isCurrentDetail || !isStarted) return;
-    if (!this.progressOverlayPanel) throw new Error('progressOverlayPanel should be defined');
-
-    const isAlreadyOpened = !!this.progressDetail;
-    const showPanel$ = isAlreadyOpened
-      ? this.progressOverlayPanel.onHide.asObservable()
-      : of(undefined);
-
-    showPanel$.pipe(
-      switchMap(() => animationFrames()),
-      take(1),
-      mapTo(this.progressOverlayPanel),
-    ).subscribe(panel => {
-      this.progressDetail = {
-        userProgress,
+  showProgressDetail(target: HTMLElement, userProgress: TeamUserProgress, row: Data['rows'][number], col: Data['items'][number]): void {
+    this.progressOverlay = {
+      accessPermissions: {
         title: row.header,
         groupId: row.id,
         itemId: col.id,
-        hasScore: isStarted && !isSuccess,
-        isSuccess,
-      };
-      panel.show(event, target);
-    });
-
-    if (isAlreadyOpened) this.hideProgressDetail();
+      },
+      target,
+      progress: userProgress,
+    };
   }
 
   hideProgressDetail(): void {
-    if (!this.progressDetail) return;
-    this.progressDetail = undefined;
-    this.progressOverlayPanel?.hide();
+    this.progressOverlay = undefined;
   }
 
   private setDataByBatch(data: Data, size = 25): void {
@@ -273,8 +244,9 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     }
   }
 
-  onAccessPermissions(title: string, targetGroupId: string, itemId: string): void {
-    if (!this.group) return;
+  onAccessPermissions(): void {
+    if (!this.group || !this.progressOverlay) return;
+    const { title, groupId: targetGroupId, itemId } = this.progressOverlay.accessPermissions;
 
     this.hideProgressDetail();
     this.dialogTitle = title;

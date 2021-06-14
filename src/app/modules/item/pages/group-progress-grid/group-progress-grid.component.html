@@ -20,37 +20,13 @@
     <p class="empty-message" *ngSwitchCase="'Groups'" i18n>This group has no sub-groups</p>
   </ng-container>
 
-  <p-overlayPanel #progressOverlayPanel appendTo="body" styleClass="user-progress-overlay-panel">
-    <ng-template pTemplate>
-      <div class="user-progress-info" *ngIf="progressDetail">
-        <div class="content validated">
-          <span>
-            <i class="fa fa-clock"></i>
-            <span class="menu-label" i18n>Time spent</span>
-            <span class="menu-value">{{ progressDetail.userProgress.timeSpent | duration }}</span>
-          </span>
-          <span class="score" *ngIf="progressDetail.hasScore">
-            <alg-score-ring
-              [isDark]="true"
-              [currentScore]="progressDetail.userProgress.score"
-              [diameter]="32"
-            ></alg-score-ring>
-            <span class="situation-check" *ngIf="progressDetail.isSuccess">
-              <i class="fa fa-check"></i>
-            </span>
-          </span>
-          <span
-            *ngIf="data.can_access"
-            class="clickable"
-            (click)="onAccessPermissions(progressDetail.title, progressDetail.groupId, progressDetail.itemId)"
-          >
-            <i class="fa fa-lock"></i>
-            <span i18n>ACCESS</span>
-          </span>
-        </div>
-      </div>
-    </ng-template>
-  </p-overlayPanel>
+  <alg-user-progress-details
+    [canAccess]="data.can_access"
+    [progress]="progressOverlay?.progress"
+    [target]="progressOverlay?.target"
+    (hide)="hideProgressDetail()"
+    (accessPermissions)="onAccessPermissions()"
+  ></alg-user-progress-details>
 
   <p-table #table
     *ngIf="data.rows.length > 0"
@@ -85,7 +61,7 @@
         <td
           *ngFor="let col of columns; let colIndex = index"
           #overlayTarget
-          (click)="showProgressDetail($event, overlayTarget, row.data[colIndex], row, col)"
+          (click)="showProgressDetail(overlayTarget, row.data[colIndex], row, col)"
         >
           <alg-user-progress
             *ngIf="row.data[colIndex]"
