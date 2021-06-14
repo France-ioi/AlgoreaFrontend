@@ -22,6 +22,7 @@ interface Data {
 export class GroupLogViewComponent implements OnChanges, OnDestroy {
 
   @Input() groupId?: string;
+  @Input() showUserColumn = true;
 
   private readonly groupId$ = new ReplaySubject<string>(1);
   readonly state$ = this.groupId$.pipe(
@@ -67,7 +68,7 @@ export class GroupLogViewComponent implements OnChanges, OnDestroy {
       {
         field: 'item.user',
         header: $localize`User`,
-        disabled: false,
+        disabled: !this.showUserColumn,
       },
       {
         field: 'at',

@@ -49,6 +49,13 @@
           </td>
         </tr>
       </ng-template>
+      <ng-template pTemplate="emptymessage" let-columns>
+        <tr>
+          <td [attr.colspan]="columns.length">
+            <span i18n>There is no progress to report for this group/user.</span>
+          </td>
+        </tr>
+      </ng-template>
     </p-table>
   </ng-container>
 </ng-container>

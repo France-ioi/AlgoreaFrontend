@@ -44,8 +44,15 @@
       </a>
     </nav>
 
-    <ng-container *ngIf="progress?.isActive || !progress && (currentUserGroupId$ | async) !== user.groupId">
-      <p i18n>List progress</p>
+    <ng-container *ngIf="progress?.isActive">
+      <div class="bg-white">
+        <alg-section icon="fa fa-chart-line" i18n-label label="Progress">
+          <alg-group-log-view
+              [groupId]="user.groupId"
+              [showUserColumn]="false"
+          ></alg-group-log-view>
+        </alg-section>
+      </div>
     </ng-container>
 
     <ng-container *ngIf="personalData?.isActive">
