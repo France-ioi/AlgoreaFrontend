@@ -1,9 +1,10 @@
-<alg-section icon="fa fa-users" i18n-label label="Presentation" *ngIf="group">
-  <p *ngIf="group.description ; else noDesc">{{ group.description }}</p>
-  <ng-template #noDesc i18n>This group has no description</ng-template>
+<ng-container *ngIf="group">
+  <alg-section icon="fa fa-users" i18n-label label="Presentation">
+    <p *ngIf="group.description ; else noDesc">{{ group.description }}</p>
+    <ng-template #noDesc i18n>This group has no description</ng-template>
+  </alg-section>
 
-  <alg-group-log-view
-      *ngIf="isCurrentGroupWatched$ | async"
-      [groupId]="group.id"
-  ></alg-group-log-view>
-</alg-section>
+  <alg-section icon="fa fa-chart-line" i18n-label label="Progress" *ngIf="isCurrentGroupWatched$ | async">
+    <alg-group-log-view [groupId]="group.id"></alg-group-log-view>
+  </alg-section>
+</ng-container>

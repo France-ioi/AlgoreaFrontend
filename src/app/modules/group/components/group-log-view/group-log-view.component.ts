@@ -22,7 +22,6 @@ interface Data {
 export class GroupLogViewComponent implements OnChanges, OnDestroy {
 
   @Input() groupId?: string;
-  @Input() isWatchingGroup = true;
 
   private readonly groupId$ = new ReplaySubject<string>(1);
   readonly state$ = this.groupId$.pipe(
