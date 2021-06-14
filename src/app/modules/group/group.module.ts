@@ -40,6 +40,7 @@ import { GroupDeleteService } from './services/group-delete.service';
 import { GroupRemoveButtonComponent } from './components/group-remove-button/group-remove-button.component';
 import { GroupLinksComponent } from './components/group-links/group-links.component';
 import { UserComponent } from './pages/user/user.component';
+import { GroupLogViewComponent } from './components/group-log-view/group-log-view.component';
 
 @NgModule({
   declarations: [
@@ -71,6 +72,7 @@ import { UserComponent } from './pages/user/user.component';
     GroupIndicatorComponent,
     GroupLinksComponent,
     UserComponent,
+    GroupLogViewComponent,
   ],
   imports: [
     CommonModule,
