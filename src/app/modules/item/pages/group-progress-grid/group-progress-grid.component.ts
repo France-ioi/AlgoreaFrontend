@@ -132,7 +132,6 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
   }
 
   trackByRow(_index: number, row: Data['rows'][number]): string {
-    end(_index);
     return row.id;
   }
 
