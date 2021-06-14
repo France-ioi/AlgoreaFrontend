@@ -62,6 +62,17 @@ export class ActivityLogService {
 
   constructor(private http: HttpClient) { }
 
+  onSuccess = (activityLog: RawActivityLog[]) => {
+    return activityLog.map(d => ({
+      at: new Date(d.at),
+      activity_type: d.activity_type,
+      item: d.item,
+      participant: d.participant,
+      score: d.score,
+      user: d.user,
+    }));
+  };
+
   getActivityLog(
     itemId: string,
   ): Observable<ActivityLog[]> {
@@ -69,15 +80,21 @@ export class ActivityLogService {
     params = params.set('limit', '20');
     return this.http
       .get<RawActivityLog[]>(`${appConfig.apiUrl}/items/${itemId}/log`, { params: params })
-      .pipe(
-        map(data => data.map(d => ({
-          at: new Date(d.at),
-          activity_type: d.activity_type,
-          item: d.item,
-          participant: d.participant,
-          score: d.score,
-          user: d.user,
-        })))
-      );
+      .pipe(map(this.onSuccess));
+  }
+
+  getAllActivityLog(
+    watchedGroupId?: string,
+  ): Observable<ActivityLog[]> {
+    let params = new HttpParams();
+    params = params.set('limit', '20');
+
+    if (watchedGroupId) {
+      params = params.set('watched_group_id', watchedGroupId);
+    }
+
+    return this.http
+      .get<RawActivityLog[]>(`${appConfig.apiUrl}/items/log`, { params: params })
+      .pipe(map(this.onSuccess));
   }
 }
