@@ -58,7 +58,7 @@ export class GroupLogViewComponent implements OnChanges, OnDestroy {
   private getLogColumns(): Column[] {
     const columns = [
       {
-        field: 'activity_type',
+        field: 'activityType',
         header: $localize`Action`,
       },
       {
