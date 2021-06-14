@@ -62,7 +62,7 @@ export class ActivityLogService {
 
   constructor(private http: HttpClient) { }
 
-  onSuccess = (activityLog: RawActivityLog[]) => {
+  onSuccess(activityLog: RawActivityLog[]): ActivityLog[] {
     return activityLog.map(d => ({
       at: new Date(d.at),
       activity_type: d.activity_type,

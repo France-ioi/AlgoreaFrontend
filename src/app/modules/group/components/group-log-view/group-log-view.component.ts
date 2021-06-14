@@ -17,7 +17,7 @@ interface Data {
 @Component({
   selector: 'alg-group-log-view',
   templateUrl: './group-log-view.component.html',
-  styleUrls: ['./group-log-view.component.scss'],
+  styleUrls: [ './group-log-view.component.scss' ],
 })
 export class GroupLogViewComponent implements OnChanges, OnDestroy {
 
