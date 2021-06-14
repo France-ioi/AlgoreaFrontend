@@ -34,6 +34,7 @@ import { ItemProgressLabelPipe } from './pages/item-progress/itemProgressLabel';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { UserProgressDetailsComponent } from './components/user-progress-details/user-progress-details.component';
 import { PropagationEditMenuComponent } from './components/propagation-edit-menu/propagation-edit-menu.component';
+import { ItemDisplayComponent } from './pages/item-display/item-display.component';
 
 @NgModule({
   declarations: [
@@ -62,6 +63,7 @@ import { PropagationEditMenuComponent } from './components/propagation-edit-menu
     ItemProgressLabelPipe,
     UserProgressDetailsComponent,
     PropagationEditMenuComponent,
+    ItemDisplayComponent,
   ],
   imports: [
     CommonModule,
