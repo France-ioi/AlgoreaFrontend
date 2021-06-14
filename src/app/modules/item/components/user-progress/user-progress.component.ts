@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { assertNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
+import { mustNotBeUndefined } from 'src/app/shared/helpers/assert';
 import { TeamUserProgress } from 'src/app/shared/http-services/get-group-progress.service';
 
 @Component({
@@ -16,11 +16,11 @@ export class UserProgressComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     // When the component has no inputs, the hook onChange is not executed.
     // Therefore, the user progress assertion must be declared also at init.
-    assertNotUndefined(this.userProgress, 'user progress must be defined');
+    mustNotBeUndefined(this.userProgress, 'user progress must be defined');
   }
 
   ngOnChanges(_changes: SimpleChanges): void {
-    assertNotUndefined(this.userProgress, 'user progress must be defined');
+    mustNotBeUndefined(this.userProgress, 'user progress must be defined');
 
     if (this.userProgress.validated || this.userProgress.score === 100) this.state = 'success';
     else if (this.userProgress.score > 0) this.state = 'in-progress';
