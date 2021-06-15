@@ -3,25 +3,7 @@
 $nav-control-border: #5c5c5c;
 
 .nav-header {
-  // height: 8.3333rem;
   position: relative;
-
-  .overlay-container {
-    position: absolute;
-    top: 3.75rem;
-    left: 0;
-    right: 0;
-
-    alg-button {
-      margin: 0.4167rem;
-      margin-top: 1rem;
-      display: block;
-
-      ::ng-deep p-button {
-        width: 100%;
-      }
-    }
-  }
 }
 
 .nav-control {
@@ -59,11 +41,6 @@ $nav-control-border: #5c5c5c;
         transform: rotate(180deg);
       }
     }
-
-    .notifications {
-      margin-left: 0.4167rem;
-      margin-right: 0;
-    }
   }
 
   span {
@@ -86,55 +63,10 @@ $nav-control-border: #5c5c5c;
     display: flex;
     align-items: center;
     justify-content: center;
-    .platform-image {
-      display: flex;
-      align-items: center;
-      border-radius: 0.3333rem;
-      img {
-        display: block;
-        margin-right: 1rem;
-        border-radius: 0.3333rem;
-      }
-    }
 
     .platform-name {
       text-transform: uppercase;
       font-weight: bold;
     }
-  }
-
-  .sign-out {
-    margin-right: 0.5rem;
-    margin-left: 0.5rem;
-    cursor: pointer;
-  }
-
-  .lang-picker {
-    margin-top: 1rem;
-  }
-
-  .notifications {
-    margin-right: 1rem;
-    width: 2.5rem;
-    position: relative;
-    cursor: pointer;
-
-    .notification-number {
-      position: absolute;
-      display: inline-block;
-      top: 0.25rem;
-      left: 0.1667rem;
-      background-color: $secondary-color;
-      border-radius: 9rem;
-      width: 1.3333rem;
-      height: 1.3333rem;
-      color: white;
-      line-height: 1.3333rem;
-      font-size: 0.75rem;
-    }
-  }
-
-  alg-select {
-    margin-top: 1rem;
   }
 }
