@@ -14,10 +14,10 @@ import { TeamUserProgress } from 'src/app/shared/http-services/get-group-progres
 export class UserProgressDetailsComponent implements OnChanges, OnDestroy, AfterViewInit {
 
   @Input() progress?: TeamUserProgress;
-  @Input() canAccess?: boolean;
+  @Input() canEditPermissions?: boolean;
   @Input() target?: Element;
 
-  @Output() accessPermissions = new EventEmitter<void>();
+  @Output() editPermissions = new EventEmitter<void>();
   @Output() hide = new EventEmitter<void>();
 
   @ViewChild('panel') panel?: OverlayPanel;

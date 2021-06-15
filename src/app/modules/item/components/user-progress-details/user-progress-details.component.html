@@ -18,9 +18,9 @@
           </span>
         </span>
         <span
-          *ngIf="canAccess"
+          *ngIf="canEditPermissions"
           class="clickable"
-          (click)="accessPermissions.emit()"
+          (click)="editPermissions.emit()"
           >
           <i class="fa fa-lock"></i>
           <span i18n>ACCESS</span>

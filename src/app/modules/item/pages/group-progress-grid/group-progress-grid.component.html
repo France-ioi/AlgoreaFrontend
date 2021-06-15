@@ -21,11 +21,11 @@
   </ng-container>
 
   <alg-user-progress-details
-    [canAccess]="data.can_access"
+    [canEditPermissions]="data.can_access"
     [progress]="progressOverlay?.progress"
     [target]="progressOverlay?.target"
     (hide)="hideProgressDetail()"
-    (accessPermissions)="onAccessPermissions()"
+    (editPermissions)="onAccessPermissions()"
   ></alg-user-progress-details>
 
   <p-table #table
