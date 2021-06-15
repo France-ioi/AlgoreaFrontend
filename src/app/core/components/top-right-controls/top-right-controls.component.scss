@@ -19,12 +19,3 @@
   padding-left: 1rem;
   border-bottom-left-radius: 1rem;
 }
-
-:host ::ng-deep .login-button {
-  background-color: transparent;
-  border: none;
-
-  &:hover {
-    background-color: rgba(white, 0.1);
-  }
-}
