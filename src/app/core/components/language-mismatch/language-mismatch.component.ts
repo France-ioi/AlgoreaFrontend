@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { map } from 'rxjs/operators';
+import { filter, map } from 'rxjs/operators';
 import { mapPending } from 'src/app/shared/operators/map-pending';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
 import { LocaleService } from '../../services/localeService';
@@ -14,6 +14,7 @@ export class LanguageMismatchComponent {
   readonly currentLanguage = this.localeService.currentLang?.tag;
 
   languageMismatch$ = this.sessionService.userProfile$.pipe(
+    filter(profile => !profile.tempUser),
     map(profile => (profile.defaultLanguage === this.currentLanguage ? undefined : {
       userDefaultLanguage: profile.defaultLanguage,
       userDefaultLanguageIsSupported: this.localeService.languages.some(({ tag }) => tag === profile.defaultLanguage),
