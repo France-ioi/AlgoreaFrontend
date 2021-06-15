@@ -33,6 +33,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { ChapterUserProgressComponent } from './pages/chapter-user-progress/chapter-user-progress.component';
 import { ItemProgressLabelPipe } from './pages/item-progress/itemProgressLabel';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { UserProgressDetailsComponent } from './components/user-progress-details/user-progress-details.component';
 
 @NgModule({
   declarations: [
@@ -60,6 +61,7 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
     LogActionDisplayPipe,
     ChapterUserProgressComponent,
     ItemProgressLabelPipe,
+    UserProgressDetailsComponent,
   ],
   imports: [
     CommonModule,

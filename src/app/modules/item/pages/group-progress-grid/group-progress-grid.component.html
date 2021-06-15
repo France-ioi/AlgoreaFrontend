@@ -20,11 +20,20 @@
     <p class="empty-message" *ngSwitchCase="'Groups'" i18n>This group has no sub-groups</p>
   </ng-container>
 
+  <alg-user-progress-details
+    [canEditPermissions]="data.can_access"
+    [progress]="progressOverlay?.progress"
+    [target]="progressOverlay?.target"
+    (hide)="hideProgressDetail()"
+    (editPermissions)="onAccessPermissions()"
+  ></alg-user-progress-details>
+
   <p-table #table
     *ngIf="data.rows.length > 0"
     [columns]="data.items"
     [value]="data.rows"
     class="slanted-grid"
+    [rowTrackBy]="trackByRow"
     [loading]="state === 'fetching'"
   >
     <ng-template pTemplate="header" let-columns>
@@ -49,14 +58,15 @@
         <td class="users" pTooltip="{{ row.header }}" tooltipPosition="left" [showDelay]="100">
           {{ row.header }}
         </td>
-        <td *ngFor="let col of columns; let colIndex = index">
-          <ng-container *ngIf="row.data[colIndex]">
-            <alg-user-progress
-              [userProgress]="row.data[colIndex]"
-              [canAccess]="data.can_access"
-              (permEditionRequested)="onAccessPermissions(row.header, row.id, col.id)"
-            ></alg-user-progress>
-          </ng-container>
+        <td
+          *ngFor="let col of columns; let colIndex = index"
+          #overlayTarget
+          (click)="showProgressDetail(overlayTarget, row.data[colIndex], row, col)"
+        >
+          <alg-user-progress
+            *ngIf="row.data[colIndex]"
+            [userProgress]="row.data[colIndex]"
+          ></alg-user-progress>
         </td>
       </tr>
     </ng-template>
