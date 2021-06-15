@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { map } from 'rxjs/operators';
+import { map, takeUntil } from 'rxjs/operators';
 import { mapPending } from 'src/app/shared/operators/map-pending';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
 import { LocaleService } from '../../services/localeService';
@@ -18,6 +18,7 @@ export class LanguageMismatchComponent {
       userDefaultLanguage: profile.defaultLanguage,
       userDefaultLanguageIsSupported: this.localeService.languages.some(({ tag }) => tag === profile.defaultLanguage),
     })),
+    takeUntil(this.localeService.navigatingToNewLanguage$),
   );
   updating = false;
 
