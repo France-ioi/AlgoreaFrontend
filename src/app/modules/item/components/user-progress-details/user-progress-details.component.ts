@@ -2,7 +2,8 @@ import { AfterViewInit, OnDestroy, SimpleChanges } from '@angular/core';
 import { Component, EventEmitter, Input, Output, ViewChild, OnChanges } from '@angular/core';
 import { OverlayPanel } from 'primeng/overlaypanel';
 import { animationFrames, merge, ReplaySubject, Subscription } from 'rxjs';
-import { filter, mapTo, switchMap, take } from 'rxjs/operators';
+import { filter, mapTo, startWith, switchMap, take, withLatestFrom } from 'rxjs/operators';
+import { ensureDefined } from 'src/app/shared/helpers/null-undefined-predicates';
 import { TeamUserProgress } from 'src/app/shared/http-services/get-group-progress.service';
 
 @Component({
@@ -21,57 +22,44 @@ export class UserProgressDetailsComponent implements OnChanges, OnDestroy, After
 
   @ViewChild('panel') panel?: OverlayPanel;
 
-  // NOTE: when the progress changes, there is a time between closing the previous overlay and opening a new one
-  // `displayedProgress` is the progress displayed in the overlay
-  // This value is populated *only* when the overlay is shown, not before.
-  displayedProgress?: TeamUserProgress;
-  isSuccess?: boolean;
-  hasScore?: boolean;
-  forwardHideEvent = false;
-
-  private subscriptions = new Subscription();
   private overlay$ = new ReplaySubject<{ previousTarget?: Element, nextTarget?: Element, progress?: TeamUserProgress }>(1);
 
-  private overlayWithProgress = this.overlay$.pipe(
+  private overlayWithProgress$ = this.overlay$.pipe(
     filter(({ progress }) => !!progress && (progress.validated || progress.score > 0 || progress.timeSpent > 0)),
   );
-  private open$ = this.overlayWithProgress.pipe(filter(({ previousTarget, nextTarget }) => !previousTarget && !!nextTarget));
-  private reopen$ = this.overlayWithProgress.pipe(
+  private hiddenOverlayToOpen$ = this.overlayWithProgress$.pipe(
+    filter(({ previousTarget, nextTarget }) => !previousTarget && !!nextTarget)
+  );
+  private openedOverlayToReopen$ = this.overlayWithProgress$.pipe(
     filter(({ previousTarget, nextTarget }) => !!nextTarget && !!previousTarget && previousTarget !== nextTarget),
   );
-  private hide$ = merge(
+  private hiddenOverlayToReopen$ = this.openedOverlayToReopen$.pipe(
+    switchMap(data => ensureDefined(this.panel).onHide.asObservable().pipe(mapTo(data), take(1))),
+  );
+  private hiddenOverlay$ = merge(
     this.overlay$.pipe(filter(({ nextTarget }) => !nextTarget)),
-    this.reopen$,
-  );
-  private openOrReopen$ = merge(
-    this.open$,
-    this.reopen$.pipe(
-      switchMap(data => {
-        if (!this.panel) throw new Error('panel must be defined');
-        return this.panel.onHide.asObservable().pipe(mapTo(data), take(1));
-      }),
-    )
-  );
+    this.openedOverlayToReopen$,
+  ).pipe(switchMap(data => animationFrames().pipe(take(1), mapTo(data))));
+
+  openedOverlay$ = merge(
+    this.hiddenOverlayToOpen$,
+    this.hiddenOverlayToReopen$,
+  ).pipe(switchMap(data => animationFrames().pipe(take(1), mapTo(data))));
+
+  private overlayIsReopening$ = merge(
+    this.openedOverlayToReopen$.pipe(mapTo(true)),
+    this.hiddenOverlayToReopen$.pipe(mapTo(false)),
+  ).pipe(startWith(false));
+
+  private onHideSubscription?: Subscription;
 
   ngAfterViewInit(): void {
-    this.subscriptions.add(
-      this.hide$.subscribe(() => {
-        this.forwardHideEvent = false;
-        this.panel?.hide();
-      })
-    );
-    this.subscriptions.add(
-      this.openOrReopen$
-        .pipe(switchMap(data => animationFrames().pipe(mapTo(data), take(1))))
-        .subscribe(({ nextTarget, progress }) => {
-          if (!this.panel) throw new Error('panel must be defined');
-          this.forwardHideEvent = true;
-          this.displayedProgress = progress;
-          this.isSuccess = progress && (progress.validated || progress.score === 100);
-          this.hasScore = !this.isSuccess;
-          this.panel.show(null, nextTarget);
-        })
-    );
+    this.hiddenOverlay$.subscribe(() => this.panel?.hide());
+    this.openedOverlay$.subscribe(({ nextTarget }) => ensureDefined(this.panel).show(null, nextTarget));
+    this.onHideSubscription = ensureDefined(this.panel).onHide.pipe(
+      withLatestFrom(this.overlayIsReopening$),
+      filter(([ , isReopening ]) => !isReopening),
+    ).subscribe(() => this.hide.emit());
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -85,11 +73,8 @@ export class UserProgressDetailsComponent implements OnChanges, OnDestroy, After
   }
 
   ngOnDestroy(): void {
-    this.subscriptions.unsubscribe();
-  }
-
-  onOverlayHide(): void {
-    if (this.forwardHideEvent) this.hide.emit();
+    this.overlay$.complete();
+    this.onHideSubscription?.unsubscribe();
   }
 
 }
