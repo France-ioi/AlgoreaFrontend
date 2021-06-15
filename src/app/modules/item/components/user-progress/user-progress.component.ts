@@ -3,7 +3,7 @@ import { mustNotBeUndefined } from 'src/app/shared/helpers/assert';
 import { TeamUserProgress } from 'src/app/shared/http-services/get-group-progress.service';
 
 @Component({
-  selector: 'alg-user-progress',
+  selector: 'alg-user-progress[userProgress]',
   templateUrl: './user-progress.component.html',
   styleUrls: [ './user-progress.component.scss' ]
 })
