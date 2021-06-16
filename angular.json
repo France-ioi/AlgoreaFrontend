@@ -128,9 +128,6 @@
             "production": {
               "browserTarget": "algorea:build"
             },
-            "ci": {
-              "browserTarget": "algorea:build:ci"
-            },
             "e2e": {
               "browserTarget": "algorea:build:e2e"
             },
