@@ -21,7 +21,7 @@
       </div>
     </div>
 
-    <nav class="nav-tab">
+    <nav class="nav-tab" *ngIf="(currentUserGroupId$ | async) === user.groupId || isInitPagePersonal">
       <a
           class="nav-tab-item"
           [routerLink]="'./'"
@@ -44,13 +44,15 @@
       </a>
     </nav>
 
-    <ng-container *ngIf="progress.isActive">
+    <ng-container *ngIf="progress?.isActive || !progress && (currentUserGroupId$ | async) !== user.groupId">
       <p i18n>List progress</p>
     </ng-container>
 
-    <ng-container *ngIf="personalData.isActive">
+    <ng-container *ngIf="personalData?.isActive">
       <ng-container *ngIf="currentUserGroupId$ | async as currentUserGroupId">
-        <p *ngIf="currentUserGroupId !== user.groupId" i18n>You cannot access this page for this user</p>
+        <div class="bg-white" *ngIf="currentUserGroupId !== user.groupId">
+          <p class="no-access" i18n>You cannot access this page for this user</p>
+        </div>
 
         <alg-current-user *ngIf="currentUserGroupId === user.groupId"></alg-current-user>
       </ng-container>
