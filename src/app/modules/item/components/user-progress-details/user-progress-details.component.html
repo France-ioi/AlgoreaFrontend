@@ -1,0 +1,31 @@
+<p-overlayPanel #panel appendTo="body" styleClass="user-progress-overlay-panel">
+  <ng-container *ngIf="openedOverlay$ | async as overlay">
+    <div class="user-progress-info" *ngIf="overlay?.progress as progress">
+      <div class="content validated">
+        <span>
+          <i class="fa fa-clock"></i>
+          <span class="menu-label" i18n>Time spent</span>
+          <span class="menu-value">{{ progress.timeSpent | duration }}</span>
+        </span>
+        <span class="score" *ngIf="!progress.validated">
+          <alg-score-ring
+            [isDark]="true"
+            [currentScore]="progress.score"
+            [diameter]="32"
+          ></alg-score-ring>
+          <span class="situation-check" *ngIf="progress.validated">
+            <i class="fa fa-check"></i>
+          </span>
+        </span>
+        <span
+          *ngIf="canEditPermissions"
+          class="clickable"
+          (click)="editPermissions.emit()"
+          >
+          <i class="fa fa-lock"></i>
+          <span i18n>ACCESS</span>
+        </span>
+      </div>
+    </div>
+  </ng-container>
+</p-overlayPanel>

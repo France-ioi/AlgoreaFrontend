@@ -13,7 +13,7 @@
     [tooltipDisabled]="tooltipDisabled"
   >
   <span *ngIf="hasClearButton && input.value" class="clear-button">
-    <button (click)="clearInput(); input.focus()">
+    <button type="button" (click)="clearInput(); input.focus()" tabindex="-1">
       <i class="pi pi-times"></i>
     </button>
   </span>

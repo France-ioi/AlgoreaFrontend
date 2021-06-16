@@ -10,6 +10,7 @@ import { errorState, fetchingState, FetchState, Ready, readyState } from 'src/ap
  */
 export function mapToFetchState<T>(config?: { resetter?: Observable<unknown> }): OperatorFunction<T,FetchState<T>> {
   const resetter = config?.resetter ? config?.resetter : EMPTY;
+  let previousData: T|undefined;
   return pipe(
     map(val => readyState(val)),
     startWith(fetchingState()),
@@ -18,6 +19,11 @@ export function mapToFetchState<T>(config?: { resetter?: Observable<unknown> }):
       startWith(noop),
       switchMapTo(source)
     ),
+    map(state => {
+      if (state.isReady) previousData = state.data;
+      if (state.isError) previousData = undefined;
+      return state.isFetching ? fetchingState(previousData) : state;
+    }),
   );
 }
 
@@ -32,10 +38,14 @@ export function readyData<T>(): OperatorFunction<FetchState<T>,T> {
 }
 
 /**
- * Rx operator which maps the ready data using the `dataMapper` function or keep the state unchanged if the state is not ready
+ * Rx operator which maps the data (if any) using the `dataMapper` function and keeps the state unchanged
  */
 export function mapStateData<T, U>(dataMapper: (data: T) => U): OperatorFunction<FetchState<T>,FetchState<U>> {
   return pipe(
-    map(state => (state.isReady ? readyState(dataMapper(state.data)) : state))
+    map(state => {
+      if (state.isReady) return readyState(dataMapper(state.data));
+      if (state.isFetching) return fetchingState(state.data === undefined ? undefined : dataMapper(state.data));
+      return state; // error state is not changed
+    }),
   );
 }

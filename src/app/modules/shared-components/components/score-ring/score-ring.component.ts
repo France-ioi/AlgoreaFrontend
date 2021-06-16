@@ -18,9 +18,7 @@ export class ScoreRingComponent implements OnChanges {
   @Input() currentScore = 0;
   @Input() bestScore = 0;
   @Input() isValidated = false;
-  @Input() isStarted = true;
   @Input() isDark = false;
-  @Input() isFailed = false;
   @Input() icon?: string; // a font-awesome icon identifier
   @Input() scoreFillColor?: string;
   @Input() forTree = false;
@@ -84,17 +82,11 @@ export class ScoreRingComponent implements OnChanges {
     } else if (this.isValidated) {
       this.icon = 'check';
       this.iconFill = ScoreRingColor.Success;
-    } else if (this.isFailed) {
-      this.icon = 'times';
-      this.iconFill = ScoreRingColor.Initial;
     } else {
       this.icon = undefined;
     }
 
 
-    this.fontSize = Math.floor((2 * this.diameter) / 64);
-    if (this.forTree) {
-      this.fontSize = 1;
-    }
+    this.fontSize = this.forTree ? 1 : Math.floor((2 * this.diameter) / 64);
   }
 }
