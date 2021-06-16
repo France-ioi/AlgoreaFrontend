@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./out-tsc/mock-server",
+    "moduleResolution": "node",
+    "target": "ES2020",
+    "module": "CommonJS"
+  },
+  "files": [
+    "mocks/server.ts"
+  ],
+  "include": [
+    "mocks/**/*.d.ts"
+  ],
+}
