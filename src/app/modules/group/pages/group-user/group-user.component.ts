@@ -1,8 +1,8 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { User, GetUserService } from '../../http-services/get-user.service';
 import { mapToFetchState } from '../../../../shared/operators/state';
 import { Observable, Subscription } from 'rxjs';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router, RouterLinkActive } from '@angular/router';
 import { delay, switchMap, map, filter, startWith } from 'rxjs/operators';
 import { contentInfo } from '../../../../shared/models/content/content-info';
 import { CurrentContentService } from '../../../../shared/services/current-content.service';
@@ -14,6 +14,9 @@ import { UserSessionService } from '../../../../shared/services/user-session.ser
   styleUrls: [ './group-user.component.scss' ]
 })
 export class GroupUserComponent implements OnInit, OnDestroy {
+  @ViewChild('progress') progress?: RouterLinkActive;
+  @ViewChild('personalData') personalData?: RouterLinkActive;
+
   readonly state$ = this.route.params.pipe(
     switchMap(({ id }) => this.getUser$(id)),
     mapToFetchState(),
@@ -25,6 +28,8 @@ export class GroupUserComponent implements OnInit, OnDestroy {
   );
 
   private subscription?: Subscription;
+
+  isInitPagePersonal = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -43,6 +48,8 @@ export class GroupUserComponent implements OnInit, OnDestroy {
       .subscribe(() => {
         this.updateBreadcrumbs();
       });
+
+    this.isInitPagePersonal = this.router.url.includes('personal-data');
   }
 
   ngOnDestroy(): void {
