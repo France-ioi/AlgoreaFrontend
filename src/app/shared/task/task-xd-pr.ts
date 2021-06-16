@@ -7,6 +7,8 @@
 
 import { build, MessagingChannel } from "jschannel";
 
+// Type CompleteFunction is the type for replying through jschannel, and can't be more specific
+// as we don't know the type of the function on the other side of the channel
 export type CompleteFunction = (result? : any) => void;
 export type ErrorFunction = (...params : any) => void;
 
@@ -20,8 +22,13 @@ export interface TaskParams {
 }
 export type TaskParamsValue = TaskParams | Object | string | number | undefined;
 
-export interface UpdateDisplayParams {
+export interface RawUpdateDisplayParams {
   height?: number | string,
+  views?: Object,
+  scrollTop?: number,
+}
+export interface UpdateDisplayParams {
+  height?: number,
   views?: Object,
   scrollTop?: number,
 }
@@ -163,8 +170,12 @@ export class Task {
       that.platform?.askHint(hintToken, trans.complete, trans.error);
       trans.delayReturn(true);
     });
-    this.chan.bind('platform.updateDisplay', function (trans, data) {
-      that.platform?.updateDisplay(data, trans.complete, trans.error);
+    this.chan.bind('platform.updateDisplay', function (trans, rawData : RawUpdateDisplayParams) {
+      const data = { ...rawData };
+      if (typeof data.height === 'string') {
+        data.height = parseInt(data.height);
+      }
+      that.platform?.updateDisplay(data as UpdateDisplayParams, trans.complete, trans.error);
       trans.delayReturn(true);
     });
     this.chan.bind('platform.openUrl', function (trans, url) {
@@ -204,7 +215,7 @@ export class Task {
   /**
    * Task API functions
    */
-  load(views : Object, success : CompleteFunction, error? : ErrorFunction) : void {
+  load(views : Object, success : () => void, error? : ErrorFunction) : void {
     this.chan?.call({ method: "task.load",
       params: views,
       success: success,
@@ -212,7 +223,7 @@ export class Task {
     });
   }
 
-  unload(success : CompleteFunction, error? : ErrorFunction) : void {
+  unload(success : () => void, error? : ErrorFunction) : void {
     this.chan?.call({ method: "task.unload",
       timeout: 2000,
       error: error,
@@ -228,7 +239,7 @@ export class Task {
     });
   }
 
-  updateToken(token : string, success : CompleteFunction, error? : ErrorFunction) : void {
+  updateToken(token : string, success : () => void, error? : ErrorFunction) : void {
     this.chan?.call({ method: "task.updateToken",
       params: token,
       timeout: 10000,
@@ -253,7 +264,7 @@ export class Task {
     });
   }
 
-  reloadAnswer(answer : string, success : CompleteFunction, error? : ErrorFunction) : void {
+  reloadAnswer(answer : string, success : () => void, error? : ErrorFunction) : void {
     this.chan?.call({ method: "task.reloadAnswer",
       params: answer,
       error: error,
@@ -270,7 +281,7 @@ export class Task {
     });
   }
 
-  reloadState(state : string, success : CompleteFunction, error? : ErrorFunction) : void {
+  reloadState(state : string, success : () => void, error? : ErrorFunction) : void {
     this.chan?.call({ method: "task.reloadState",
       params: state,
       error: error,
@@ -287,7 +298,7 @@ export class Task {
     });
   }
 
-  showViews(views : Object, success : CompleteFunction, error? : ErrorFunction) : void {
+  showViews(views : Object, success : () => void, error? : ErrorFunction) : void {
     this.chan?.call({ method: "task.showViews",
       params: views,
       error: error,
@@ -312,7 +323,7 @@ export class Task {
     });
   }
 
-  getResources(success : (result : any) => void, error? : ErrorFunction) : void {
+  getResources(success : CompleteFunction, error? : ErrorFunction) : void {
     this.chan?.call({ method: "task.getResources",
       params: [],
       error: error,
