@@ -1,4 +1,4 @@
-<p-overlayPanel #panel appendTo="body" styleClass="user-progress-overlay-panel">
+<p-overlayPanel #panel appendTo="body" styleClass="user-progress-overlay-panel" hideTransitionOptions="0s">
   <ng-container *ngIf="openedOverlay$ | async as overlay">
     <div class="user-progress-info" *ngIf="overlay?.progress as progress">
       <div class="content validated">
