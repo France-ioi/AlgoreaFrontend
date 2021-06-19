@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'alg-left-menu',
@@ -7,13 +7,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
 })
 export class LeftMenuComponent {
 
-  @Output() hideLeftMenu = new EventEmitter<void>();
-
   isNavThemeDark = false;
-
-  toggleDisplay(shown: boolean): void {
-    if (!shown) this.hideLeftMenu.emit();
-  }
 
   onNavThemeChange(event: string | null): void {
     this.isNavThemeDark = event === 'dark';

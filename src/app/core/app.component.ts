@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { ModeAction, ModeService } from '../shared/services/mode.service';
 import { ContentInfo } from '../shared/models/content/content-info';
 import { LocaleService } from './services/localeService';
+import { LayoutService } from '../shared/services/layout.service';
 
 @Component({
   selector: 'alg-root',
@@ -26,8 +27,8 @@ export class AppComponent implements OnInit, OnDestroy {
     this.localeService.currentLangError$,
   );
 
-  leftMenuDisplayed = true;
-  headersDisplayed = true;
+  leftMenuAndHeaders = true;
+  leftMenuAndHeadersSubscription? : Subscription;
   scrolled = false;
 
   private subscription?: Subscription;
@@ -39,7 +40,12 @@ export class AppComponent implements OnInit, OnDestroy {
     private currentContent: CurrentContentService,
     private modeService: ModeService,
     private localeService: LocaleService,
-  ) {}
+    private layoutService: LayoutService,
+  ) {
+    this.leftMenuAndHeadersSubscription = this.layoutService.leftMenuAndHeadersDisplayed$.subscribe(shown => {
+      this.leftMenuAndHeaders = shown;
+    });
+  }
 
   ngOnInit(): void {
     // if user changes, navigate back to the root
@@ -50,15 +56,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscription?.unsubscribe();
-  }
-
-  toggleLeftMenuDisplay(shown: boolean): void {
-    this.leftMenuDisplayed = shown;
-    if (shown) this.headersDisplayed = true;
-  }
-
-  toggleHeadersDisplay(shown: boolean): void {
-    this.headersDisplayed = shown;
+    this.leftMenuAndHeadersSubscription?.unsubscribe();
   }
 
   @HostListener('window:scroll', [ '$event' ])

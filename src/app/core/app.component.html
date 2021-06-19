@@ -1,22 +1,19 @@
 <div class="container" *ngrxLet="session$ as session">
-  <div class="left" [ngClass]="{ collapsed: !leftMenuDisplayed, expanded: leftMenuDisplayed }">
-    <alg-left-menu (hideLeftMenu)="toggleLeftMenuDisplay(false)"></alg-left-menu>
+  <div class="left" [ngClass]="{ collapsed: !leftMenuAndHeaders, expanded: leftMenuAndHeaders }">
+    <alg-left-menu></alg-left-menu>
   </div>
   <ng-container *ngIf="currentMode$ | async as currentMode">
-    <div class="top-bar" [ngClass]="{ 'with-mode-bar': currentMode !== 'normal', collapsed: !leftMenuDisplayed, expanded: leftMenuDisplayed }">
-      <alg-left-header
-        *ngIf="!leftMenuDisplayed"
-        (displayLeftMenu)="toggleLeftMenuDisplay($event)"
-        (displayHeaders)="toggleHeadersDisplay($event)"
-        [compactMode]="true"
-      ></alg-left-header>
+    <div class="top-bar"
+      [ngClass]="{ 'with-mode-bar': currentMode !== 'normal', collapsed: !leftMenuAndHeaders, expanded: leftMenuAndHeaders }">
+      <alg-left-header *ngIf="!leftMenuAndHeaders" [compactMode]="true"></alg-left-header>
       <div class="top-right-bar" *ngrxLet="currentContent$ as currentContent">
         <alg-editor-bar *ngIf="currentMode === 'editing'" (cancel)="onEditCancel()"></alg-editor-bar>
-        <alg-observation-bar *ngIf="currentMode === 'watching'" [groupName]="session?.watchedGroup?.name || ''" (cancel)="onWatchCancel()"></alg-observation-bar>
-        <div class="breadcrumb-bar" *ngIf="headersDisplayed && !scrolled">
+        <alg-observation-bar *ngIf="currentMode === 'watching'" [groupName]="session?.watchedGroup?.name || ''"
+          (cancel)="onWatchCancel()"></alg-observation-bar>
+        <div class="breadcrumb-bar" *ngIf="leftMenuAndHeaders && !scrolled">
           <alg-breadcrumb [contentBreadcrumb]="currentContent?.breadcrumbs"></alg-breadcrumb>
         </div>
-        <div class="folded-top-bar" *ngIf="!headersDisplayed || scrolled">
+        <div class="folded-top-bar" *ngIf="!leftMenuAndHeaders || scrolled">
           <!--<alg-score-ring
             [displayedScore]="50"
             [currentScore]="60"
@@ -37,8 +34,9 @@
       </div>
       <alg-top-right-controls [drawLeftBorder]="currentMode === 'normal'"></alg-top-right-controls>
     </div>
-    <div class="right" [ngClass]="{ collapsed: !leftMenuDisplayed, expanded: leftMenuDisplayed, 'with-mode-bar': currentMode !== 'normal' }">
-      <div class="main-content" [ngClass]="{ folded: !headersDisplayed, unfolded: headersDisplayed }">
+    <div class="right"
+      [ngClass]="{ collapsed: !leftMenuAndHeaders, expanded: leftMenuAndHeaders, 'with-mode-bar': currentMode !== 'normal' }">
+      <div class="main-content" [ngClass]="{ folded: !leftMenuAndHeaders, unfolded: leftMenuAndHeaders }">
         <router-outlet></router-outlet>
       </div>
     </div>
@@ -47,16 +45,10 @@
 <p-toast></p-toast>
 <p-confirmDialog></p-confirmDialog>
 <p-confirmPopup key="commonPopup"></p-confirmPopup>
-<p-dialog
-  *ngrxLet="fatalError$"
-  i18n-header="@@auth-error-modal-title" header="Error"
-  [visible]="true"
-  [style]="{width: '50vw'}"
-  [modal]="true"
-  [closeOnEscape]="false"
-  [closable]="false"
->
-  <p i18n="@@auth-error-modal-context">Oops, we are unable to make the site work properly. Are you connected to the Internet?</p>
+<p-dialog *ngrxLet="fatalError$" i18n-header="@@auth-error-modal-title" header="Error" [visible]="true"
+  [style]="{width: '50vw'}" [modal]="true" [closeOnEscape]="false" [closable]="false">
+  <p i18n="@@auth-error-modal-context">Oops, we are unable to make the site work properly. Are you connected to the
+    Internet?</p>
   <p i18n="@@auth-error-modal-todo">Try to refresh the page. If this problem persists, please contact us.</p>
 </p-dialog>
 <alg-language-mismatch></alg-language-mismatch>
