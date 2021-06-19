@@ -29,7 +29,7 @@ $nav-control-border: #5c5c5c;
   height: 4rem;
   padding-left: 1rem;
   padding-right: 1rem;
-  border-bottom: .1rem solid $nav-control-border;
+  border-bottom: 0.1rem solid $nav-control-border;
   position: relative;
   text-align: center;
   display: flex;
@@ -41,22 +41,6 @@ $nav-control-border: #5c5c5c;
     .nav-collapse {
       img {
         transform: rotate(360deg);
-      }
-    }
-
-    .title-collapse {
-      margin-left: 1rem;
-      margin-right: 1rem;
-      padding-left: 1rem;
-      padding-right: 1rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      flex-direction: column;
-      justify-content: center;
-
-      &.down {
-        transform: rotate(180deg);
       }
     }
 
