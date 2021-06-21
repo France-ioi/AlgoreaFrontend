@@ -3,7 +3,7 @@
   <ng-container *ngIf="state.isReady && state.data as group">
     <alg-group-header [group]="group"></alg-group-header>
     <alg-pending-join-requests
-        *ngIf="group.isCurrentUserManager && group?.currentUserCanManage !== 'none'"
+        *ngIf="group.isCurrentUserManager && group.currentUserCanManage !== 'none'"
         [groupId]="group.id"
     ></alg-pending-join-requests>
     <alg-group-indicator
