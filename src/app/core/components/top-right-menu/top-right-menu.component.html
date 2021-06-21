@@ -1,9 +1,9 @@
-<p-menu #menu [popup]="true" [model]="menuItems"></p-menu>
+<p-menu styleClass="alg-top-right-menu" #menu [popup]="true" [model]="menuItems"></p-menu>
 <p-button
   *ngIf="userLogin$ | async as userLogin"
   icon="pi pi-chevron-down"
   iconPos="right"
   [label]="userLogin"
   (click)="menu.toggle($event)"
-  styleClass="menu-button"
+  styleClass="alg-top-right-menu-button"
 ></p-button>
