@@ -1,6 +1,4 @@
-@import "src/colors.scss";
-
-perfect-scrollbar {
+.scrollbar {
   background-color: var(--nav-bg-color);
   width: 100%;
   height: calc(100% - 2rem); /* 2rem is half of the height of the top-bar nav control */
