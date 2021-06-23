@@ -1,6 +1,5 @@
 <p-tabView
-  class="group-skills"
-  [styleClass]="'dark'"
+  styleClass="dark tab-left-nav"
   (onChange)="onSelectionChangedByIdx($event)"
   [(activeIndex)]="activeTabIndex"
   *ngIf="currentUser$|async as currentUser"
