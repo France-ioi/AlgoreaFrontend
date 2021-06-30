@@ -1,47 +1,39 @@
 @import 'src/colors.scss';
 
-alg-section {
+.activity {
 
-  ::ng-deep .section-container {
-    border-top: 0.1rem solid rgba(46, 94, 149, 0.2);
-    background-color: transparent;
+  width: 100%;
+  display: flex;
+
+  .remove {
+    white-space: nowrap;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 8rem;
+    color: $base-color;
+    cursor: pointer;
+
   }
 
-  .activity {
+  .fa {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
 
-    width: 100%;
-    display: flex;
+  .activity-name {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-family: "titillium", sans-serif;
+    font-weight: 100;
 
-    .remove {
-      white-space: nowrap;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 8rem;
-      color: $base-color;
+    &.clickable {
       cursor: pointer;
 
-    }
-
-    .fa {
-      padding-left: 1rem;
-      padding-right: 1rem;
-    }
-
-    .activity-name {
-      flex: 1;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      font-family: "titillium", sans-serif;
-      font-weight: 100;
-
-      &.clickable {
-        cursor: pointer;
-
-        &:hover {
-          color: $base-color;
-        }
+      &:hover {
+        color: $base-color;
       }
     }
   }
