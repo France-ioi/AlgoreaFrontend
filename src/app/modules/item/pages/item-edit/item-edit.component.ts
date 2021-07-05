@@ -1,6 +1,6 @@
 import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { ItemDataSource } from '../../services/item-datasource.service';
-import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, ValidatorFn, Validators } from '@angular/forms';
 import { forkJoin, Observable, of, Subscription, throwError } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { ItemStringChanges, UpdateItemStringService } from '../../http-services/update-item-string.service';
@@ -48,6 +48,8 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
     entry_frozen_teams: [ false ],
     entry_max_team_size: [ '' ],
     entry_min_admitted_members_ratio: [ '' ],
+  }, {
+    validators: [ this.maxTeamSizeValidator() ],
   });
   itemChanges: { children?: ChildData[] } = {};
 
@@ -55,7 +57,6 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
   initialFormData?: Item & {durationEnabled?: boolean, enteringTimeMaxEnabled?: boolean};
 
   subscription?: Subscription;
-  maxTeamSizeSubscription?: Subscription;
 
   get enableParticipation(): boolean {
     return this.initialFormData?.type !== 'Skill';
@@ -87,20 +88,11 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
         this.initialFormData = data;
         this.resetForm();
       });
-
-    this.maxTeamSizeSubscription = this.itemForm
-      .get('entry_participant_type')
-      ?.valueChanges
-      .subscribe((isParticipationAsTeamOnly: boolean) => {
-        this.itemForm.get('entry_max_team_size')?.setValidators(isParticipationAsTeamOnly ? [ Validators.min(1) ] : []);
-        this.itemForm.get('entry_max_team_size')?.updateValueAndValidity();
-      });
   }
 
   ngOnDestroy(): void {
     this.modeService.mode$.next(Mode.Normal);
     this.subscription?.unsubscribe();
-    this.maxTeamSizeSubscription?.unsubscribe();
   }
 
   isDirty(): boolean {
@@ -377,5 +369,17 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
     this.itemChanges = {};
     this.itemForm.enable();
     this.editContent?.reset();
+  }
+
+  private maxTeamSizeValidator(): ValidatorFn {
+    return (itemForm): null => {
+      const isParticipationAsTeamOnly = itemForm.get('entry_participant_type')?.value as boolean;
+      const maxTeamSizeControl = itemForm.get('entry_max_team_size');
+      if (!maxTeamSizeControl) return null;
+
+      const errors = isParticipationAsTeamOnly ? Validators.min(1)(maxTeamSizeControl) : null;
+      maxTeamSizeControl.setErrors(errors);
+      return null;
+    };
   }
 }
