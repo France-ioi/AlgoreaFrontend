@@ -46,7 +46,7 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
     entering_time_max: [ null ],
     entry_participant_type: [ false ],
     entry_frozen_teams: [ false ],
-    entry_max_team_size: [ '', Validators.min(1) ],
+    entry_max_team_size: [ '' ],
     entry_min_admitted_members_ratio: [ '' ],
   });
   itemChanges: { children?: ChildData[] } = {};
@@ -55,6 +55,7 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
   initialFormData?: Item & {durationEnabled?: boolean, enteringTimeMaxEnabled?: boolean};
 
   subscription?: Subscription;
+  maxTeamSizeSubscription?: Subscription;
 
   get enableParticipation(): boolean {
     return this.initialFormData?.type !== 'Skill';
@@ -86,11 +87,20 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
         this.initialFormData = data;
         this.resetForm();
       });
+
+    this.maxTeamSizeSubscription = this.itemForm
+      .get('entry_participant_type')
+      ?.valueChanges
+      .subscribe((isParticipationAsTeamOnly: boolean) => {
+        this.itemForm.get('entry_max_team_size')?.setValidators(isParticipationAsTeamOnly ? [ Validators.min(1) ] : []);
+        this.itemForm.get('entry_max_team_size')?.updateValueAndValidity();
+      });
   }
 
   ngOnDestroy(): void {
     this.modeService.mode$.next(Mode.Normal);
     this.subscription?.unsubscribe();
+    this.maxTeamSizeSubscription?.unsubscribe();
   }
 
   isDirty(): boolean {
