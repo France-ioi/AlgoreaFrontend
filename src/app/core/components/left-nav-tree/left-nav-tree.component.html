@@ -174,10 +174,12 @@
                 *ngIf="node.data.element.currentUserManagership !== 'none'"
                 class="fa fa-chalkboard-teacher"
                 [class.fade]="node.data.element.currentUserManagership === 'descendant'"
+                i18n-pTooltip pTooltip="{{ node.data.element.currentUserManagership === 'descendant' ? 'You are a manager of one of the descendant of the group' : 'You are a manager of the group' }}"
               ></i>
               <i
                 *ngIf="node.data.element.currentUserMembership !== 'none'"
                 class="fa fa-user-friends"
+                i18n-pTooltip pTooltip="You are a member of the group"
               ></i>
               <p-progressSpinner class="loader" [style]="{ width: '3rem', height: '3rem', 'margin-top': '-0.5rem' }" *ngIf="node.data.status === 'loading'"></p-progressSpinner>
               <i *ngIf="node.data.status === 'error'" class="fa fa-exclamation-triangle"></i>
