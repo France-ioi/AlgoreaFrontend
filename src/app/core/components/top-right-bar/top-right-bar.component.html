@@ -1,0 +1,25 @@
+<div class="top-right-bar" *ngrxLet="currentContent$ as currentContent">
+  <ng-container *ngrxLet="currentMode$ as currentMode">
+    <alg-editor-bar *ngIf="currentMode === 'editing'" (cancel)="onEditCancel()"></alg-editor-bar>
+    <alg-observation-bar
+      *ngIf="currentMode === 'watching'"
+      [groupName]="(watchedGroupName$ | async) ?? ''"
+      (cancel)="onWatchCancel()"
+    ></alg-observation-bar>
+  </ng-container>
+
+  <ng-container *ngIf="headerDisplayed && !scrolled; then breadcrumbBar else foldedTopBar"></ng-container>
+  <ng-template #breadcrumbBar>
+    <div class="breadcrumb-bar">
+      <alg-breadcrumb [contentBreadcrumb]="currentContent?.breadcrumbs"></alg-breadcrumb>
+    </div>
+  </ng-template>
+
+  <ng-template #foldedTopBar>
+    <div class="folded-top-bar">
+      <div class="rightpane-title">
+        <p *ngIf="currentContent?.title">{{ currentContent?.title }}</p>
+      </div>
+    </div>
+  </ng-template>
+</div>

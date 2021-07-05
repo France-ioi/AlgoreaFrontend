@@ -10,31 +10,7 @@
         (displayHeaders)="toggleHeadersDisplay($event)"
         [compactMode]="true"
       ></alg-left-header>
-      <div class="top-right-bar" *ngrxLet="currentContent$ as currentContent">
-        <alg-editor-bar *ngIf="currentMode === 'editing'" (cancel)="onEditCancel()"></alg-editor-bar>
-        <alg-observation-bar *ngIf="currentMode === 'watching'" [groupName]="session?.watchedGroup?.name || ''" (cancel)="onWatchCancel()"></alg-observation-bar>
-        <div class="breadcrumb-bar" *ngIf="headersDisplayed && !scrolled">
-          <alg-breadcrumb [contentBreadcrumb]="currentContent?.breadcrumbs"></alg-breadcrumb>
-        </div>
-        <div class="folded-top-bar" *ngIf="!headersDisplayed || scrolled">
-          <!--<alg-score-ring
-            [displayedScore]="50"
-            [currentScore]="60"
-            [diameter]="30"
-          ></alg-score-ring>-->
-          <div class="rightpane-title">
-            <p *ngIf="currentContent && currentContent.title">{{ currentContent.title }}</p>
-          </div>
-          <!-- <div *ngIf="collapsed" class="user-info">
-            <span class="user-avatar">
-              <img src="assets/images/Male.svg" style="width: 3rem; height: 3rem;" />
-            </span>
-            <span class="user-id">CyrilK89</span>
-          </div> -->
-          <!-- <span class="clock-icon" [ngClass]="{ finished: false }"><i class="fa fa-clock"></i></span> -->
-          <!-- <span class="remaining-time" [ngClass]="{ finished: false }">00:03:10</span> -->
-        </div>
-      </div>
+      <alg-top-right-bar [headerDisplayed]="headersDisplayed"></alg-top-right-bar>
       <alg-top-right-controls [drawLeftBorder]="currentMode === 'normal'"></alg-top-right-controls>
     </div>
     <div class="right" [ngClass]="{ collapsed: !leftMenuDisplayed, expanded: leftMenuDisplayed, 'with-mode-bar': currentMode !== 'normal' }">

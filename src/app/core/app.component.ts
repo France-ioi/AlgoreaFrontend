@@ -1,12 +1,10 @@
-import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { UserSessionService } from '../shared/services/user-session.service';
 import { delay, switchMap } from 'rxjs/operators';
-import { merge, Observable, Subscription } from 'rxjs';
-import { CurrentContentService } from '../shared/services/current-content.service';
+import { merge, Subscription } from 'rxjs';
 import { AuthService } from '../shared/auth/auth.service';
 import { Router } from '@angular/router';
-import { ModeAction, ModeService } from '../shared/services/mode.service';
-import { ContentInfo } from '../shared/models/content/content-info';
+import { ModeService } from '../shared/services/mode.service';
 import { LocaleService } from './services/localeService';
 
 @Component({
@@ -17,7 +15,6 @@ import { LocaleService } from './services/localeService';
 export class AppComponent implements OnInit, OnDestroy {
 
   // the delay(0) is used to prevent the UI to update itself (when the content is loaded) (ExpressionChangedAfterItHasBeenCheckedError)
-  currentContent$: Observable<ContentInfo|null> = this.currentContent.currentContent$.pipe(delay(0));
   readonly currentMode$ = this.modeService.mode$.asObservable().pipe(delay(0));
   session$ = this.sessionService.session$.pipe(delay(0));
   fatalError$ = merge(
@@ -28,7 +25,6 @@ export class AppComponent implements OnInit, OnDestroy {
 
   leftMenuDisplayed = true;
   headersDisplayed = true;
-  scrolled = false;
 
   private subscription?: Subscription;
 
@@ -36,7 +32,6 @@ export class AppComponent implements OnInit, OnDestroy {
     private router: Router,
     private sessionService: UserSessionService,
     private authService: AuthService,
-    private currentContent: CurrentContentService,
     private modeService: ModeService,
     private localeService: LocaleService,
   ) {}
@@ -59,23 +54,6 @@ export class AppComponent implements OnInit, OnDestroy {
 
   toggleHeadersDisplay(shown: boolean): void {
     this.headersDisplayed = shown;
-  }
-
-  @HostListener('window:scroll', [ '$event' ])
-  onScrollContent(): void{
-    if (window.pageYOffset > 40 && !this.scrolled) {
-      this.scrolled = true;
-    } else if (window.pageYOffset <= 40 && this.scrolled) {
-      this.scrolled = false;
-    }
-  }
-
-  onEditCancel() : void{
-    this.modeService.modeActions$.next(ModeAction.StopEditing);
-  }
-
-  onWatchCancel(): void {
-    this.modeService.stopObserving();
   }
 
 }
