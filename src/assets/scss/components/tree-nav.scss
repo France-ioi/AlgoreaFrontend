@@ -55,10 +55,6 @@
     padding-left: 3rem !important;
   }
 
-  /* :host ::ng-deep p-treenode:last-child > .p-treenode > .p-treenode-children {
-    border-left: .1rem solid transparent;
-  } */
-
   .p-treenode-children {
     border-left: .1rem solid var(--nav-border-color);
   }
