@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { EMPTY, Observable, of, Subject } from 'rxjs';
 import { appConfig, LanguageConfig } from 'src/app/shared/helpers/config';
 
@@ -6,7 +6,7 @@ import { appConfig, LanguageConfig } from 'src/app/shared/helpers/config';
 @Injectable({
   providedIn: 'root'
 })
-export class LocaleService {
+export class LocaleService implements OnDestroy {
 
   readonly languages: LanguageConfig[];
   readonly currentLang?: LanguageConfig;
@@ -26,6 +26,10 @@ export class LocaleService {
     if (!nextLang || !this.currentLang) throw new Error('Cannot find new or current lang in configured languages');
     this.navigating$.next();
     window.location.href = `${window.location.pathname.replace(this.currentLang.path, nextLang.path)}${window.location.hash}`;
+  }
+
+  ngOnDestroy(): void {
+    this.navigating$.complete();
   }
 
 }
