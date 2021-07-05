@@ -25,6 +25,9 @@ export class AuthHttpService {
     cookie_secure: appConfig.secure ? '1' : '0',
     cookie_same_site: appConfig.sameSite ? '1' : '0',
   } : undefined;
+  private requestConfig = {
+    withCredentials: appConfig.authType === 'cookies' && !appConfig.sameSite,
+  };
 
   constructor(
     private handler: HttpBackend,
@@ -36,6 +39,7 @@ export class AuthHttpService {
     return this.http
       .post<ActionResponse<AuthPayload>>(`${appConfig.apiUrl}/auth/temp-user`, null, {
         params: new HttpParams({ fromObject: { ...this.cookieParams, default_language: defaultLanguage } }),
+        ...this.requestConfig,
       })
       .pipe(
         timeout(authServicesTimeout),
@@ -49,7 +53,7 @@ export class AuthHttpService {
       .post<ActionResponse<AuthPayload>>(
         `${appConfig.apiUrl}/auth/token`,
         { code: code, redirect_uri: redirectUri }, // payload data
-        { params: new HttpParams({ fromObject: this.cookieParams }) }
+        { params: new HttpParams({ fromObject: this.cookieParams }), ...this.requestConfig }
       ).pipe(
         timeout(longAuthServicesTimeout),
         map(successData),
@@ -76,6 +80,7 @@ export class AuthHttpService {
     return this.http
       .post<ActionResponse<CookieAuthPayload>>(`${appConfig.apiUrl}/auth/token`, null, {
         params: new HttpParams({ fromObject: this.cookieParams }),
+        ...this.requestConfig,
       }).pipe(
         timeout(longAuthServicesTimeout),
         map(successData),
@@ -88,7 +93,7 @@ export class AuthHttpService {
       .post<SimpleActionResponse>(
         `${appConfig.apiUrl}/auth/logout`,
         null, // payload data
-        !auth.useCookie ? { headers: headersForAuth(auth.accessToken) } : {} // options
+        { ...this.requestConfig, ...(!auth.useCookie && { headers: headersForAuth(auth.accessToken) }) },
       ).pipe(
         map(assertSuccess)
       );
