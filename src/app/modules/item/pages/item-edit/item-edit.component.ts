@@ -377,8 +377,9 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
       const maxTeamSizeControl = itemForm.get('entry_max_team_size');
       if (!maxTeamSizeControl) return null;
 
-      const errors = isParticipationAsTeamOnly ? Validators.min(1)(maxTeamSizeControl) : null;
-      maxTeamSizeControl.setErrors(errors);
+      isParticipationAsTeamOnly
+        ? maxTeamSizeControl.setErrors(Validators.min(1)(maxTeamSizeControl))
+        : maxTeamSizeControl.setErrors(null);
       return null;
     };
   }
