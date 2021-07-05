@@ -1,6 +1,6 @@
 import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { ItemDataSource } from '../../services/item-datasource.service';
-import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, ValidatorFn, Validators } from '@angular/forms';
 import { forkJoin, Observable, of, Subscription, throwError } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { ItemStringChanges, UpdateItemStringService } from '../../http-services/update-item-string.service';
@@ -46,8 +46,10 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
     entering_time_max: [ null ],
     entry_participant_type: [ false ],
     entry_frozen_teams: [ false ],
-    entry_max_team_size: [ '', Validators.min(1) ],
+    entry_max_team_size: [ '' ],
     entry_min_admitted_members_ratio: [ '' ],
+  }, {
+    validators: [ this.maxTeamSizeValidator() ],
   });
   itemChanges: { children?: ChildData[] } = {};
 
@@ -367,5 +369,18 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
     this.itemChanges = {};
     this.itemForm.enable();
     this.editContent?.reset();
+  }
+
+  private maxTeamSizeValidator(): ValidatorFn {
+    return (itemForm): null => {
+      const isParticipationAsTeamOnly = itemForm.get('entry_participant_type')?.value as boolean;
+      const maxTeamSizeControl = itemForm.get('entry_max_team_size');
+      if (!maxTeamSizeControl) return null;
+
+      isParticipationAsTeamOnly
+        ? maxTeamSizeControl.setErrors(Validators.min(1)(maxTeamSizeControl))
+        : maxTeamSizeControl.setErrors(null);
+      return null;
+    };
   }
 }
