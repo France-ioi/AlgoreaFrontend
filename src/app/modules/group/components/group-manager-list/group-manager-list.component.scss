@@ -108,27 +108,5 @@
 
   tr {
     height: 5rem;
-
-    &.p-highlight {
-      td {
-        background-color: $base-color;
-
-        ::ng-deep app-progress-level {
-          .progress-level-container {
-            .progress-level-item, .progress-level-item-link {
-              background-color: $dark-base-color;
-
-              &.active {
-                background-color: white;
-              }
-            }
-          }
-        }
-
-        .table-icon.edit {
-          color: white;
-        }
-      }
-    }
   }
 }
