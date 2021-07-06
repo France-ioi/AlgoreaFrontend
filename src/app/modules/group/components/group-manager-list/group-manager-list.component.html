@@ -64,26 +64,26 @@
             </a>
           </td>
           <td style="min-width: 110px;">
-            {{ rowData.can_manage_as_text }}
+            {{ rowData.canManageAsText }}
           </td>
           <td style="width: 5rem;">
             <span class="table-icon"
               [ngClass]="{
-                locked: rowData[rowData.can_grant_group_access],
-                unlocked: !rowData[rowData.can_grant_group_access]
+                locked: rowData[rowData.canGrantGroupAccess],
+                unlocked: !rowData[rowData.canGrantGroupAccess]
               }">
-              <i *ngIf="!rowData[rowData.can_grant_group_access]" class="fa fa-times"></i>
-              <i *ngIf="rowData[rowData.can_grant_group_access]" class="fa fa-check"></i>
+              <i *ngIf="!rowData[rowData.canGrantGroupAccess]" class="fa fa-times"></i>
+              <i *ngIf="rowData[rowData.canGrantGroupAccess]" class="fa fa-check"></i>
             </span>
           </td>
           <td style="width: 5rem;">
             <span class="table-icon"
               [ngClass]="{
-                locked: rowData[rowData.can_watch_members],
-                unlocked: !rowData[rowData.can_watch_members]
+                locked: rowData[rowData.canWatchMembers],
+                unlocked: !rowData[rowData.canWatchMembers]
               }">
-              <i *ngIf="!rowData[rowData.can_watch_members]" class="fa fa-times"></i>
-              <i *ngIf="rowData[rowData.can_watch_members]" class="fa fa-check"></i>
+              <i *ngIf="!rowData[rowData.canWatchMembers]" class="fa fa-times"></i>
+              <i *ngIf="rowData[rowData.canWatchMembers]" class="fa fa-check"></i>
             </span>
           </td>
           <td style="width: 110px;"></td>

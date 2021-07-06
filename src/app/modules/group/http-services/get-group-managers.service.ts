@@ -2,16 +2,28 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { appConfig } from 'src/app/shared/helpers/config';
+import * as D from 'io-ts/Decoder';
+import { pipe } from 'fp-ts/function';
+import { decodeSnakeCase } from '../../../shared/operators/decode';
 
-export interface Manager {
-  id: string,
-  name: string,
+export const managerDecoder = pipe(
+  D.struct({
+    id: D.string,
+    name: D.string,
+    canManage: D.literal('none', 'memberships', 'memberships_and_group'),
+    canGrantGroupAccess: D.boolean,
+    canWatchMembers: D.boolean,
+  }),
+  D.intersect(
+    D.partial({
+      login: D.string,
+      firstName: D.nullable(D.string),
+      lastName: D.nullable(D.string),
+    }),
+  )
+);
 
-  can_manage: 'none' | 'memberships' | 'memberships_and_group',
-  can_grant_group_access: boolean,
-  can_watch_members: boolean,
-}
-
+export type Manager = D.TypeOf<typeof managerDecoder>;
 
 @Injectable({
   providedIn: 'root'
@@ -29,6 +41,8 @@ export class GetGroupManagersService {
       params = params.set('sort', sort.join(','));
     }
     return this.http
-      .get<Manager[]>(`${appConfig.apiUrl}/groups/${groupId}/managers`, { params: params });
+      .get<unknown>(`${appConfig.apiUrl}/groups/${groupId}/managers`, { params: params }).pipe(
+        decodeSnakeCase(D.array(managerDecoder)),
+      );
   }
 }
