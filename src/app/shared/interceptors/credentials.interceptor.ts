@@ -18,6 +18,6 @@ export class CredentialsInterceptor implements HttpInterceptor {
       return next.handle(req);
     }
 
-    return next.handle(req.clone({ withCredentials: appConfig.authType === 'cookies' }));
+    return next.handle(req.clone({ withCredentials: appConfig.authType === 'cookies' && !appConfig.sameSite }));
   }
 }
