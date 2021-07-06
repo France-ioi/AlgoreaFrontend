@@ -69,21 +69,21 @@
           <td style="width: 5rem;">
             <span class="table-icon"
               [ngClass]="{
-                locked: rowData[rowData.canGrantGroupAccess],
-                unlocked: !rowData[rowData.canGrantGroupAccess]
+                locked: rowData.canGrantGroupAccess,
+                unlocked: !rowData.canGrantGroupAccess
               }">
-              <i *ngIf="!rowData[rowData.canGrantGroupAccess]" class="fa fa-times"></i>
-              <i *ngIf="rowData[rowData.canGrantGroupAccess]" class="fa fa-check"></i>
+              <i *ngIf="!rowData.canGrantGroupAccess" class="fa fa-times"></i>
+              <i *ngIf="rowData.canGrantGroupAccess" class="fa fa-check"></i>
             </span>
           </td>
           <td style="width: 5rem;">
             <span class="table-icon"
               [ngClass]="{
-                locked: rowData[rowData.canWatchMembers],
-                unlocked: !rowData[rowData.canWatchMembers]
+                locked: rowData.canWatchMembers,
+                unlocked: !rowData.canWatchMembers
               }">
-              <i *ngIf="!rowData[rowData.canWatchMembers]" class="fa fa-times"></i>
-              <i *ngIf="rowData[rowData.canWatchMembers]" class="fa fa-check"></i>
+              <i *ngIf="!rowData.canWatchMembers" class="fa fa-times"></i>
+              <i *ngIf="rowData.canWatchMembers" class="fa fa-check"></i>
             </span>
           </td>
           <td style="width: 110px;"></td>
