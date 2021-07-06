@@ -89,7 +89,7 @@
           Select all
         </span>
         <span class="filler"></span>
-        <div class="summary-actions">
+        <div class="summary-actions" *ngIf="group?.currentUserCanManage !== 'none'">
             <span (click)="onRemove()" [class.disabled]="(removalInProgress$ | async) || state !== 'ready' || selection.length === 0">
             <span i18n>Remove</span>
             <i class="fa fa-trash-alt"></i>
