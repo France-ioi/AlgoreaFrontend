@@ -11,19 +11,18 @@ export class GroupManagerListComponent implements OnChanges {
 
   @Input() group?: Group;
 
-  managers: (Manager&{can_manage_as_text: string})[] = [];
+  managers: (Manager&{canManageAsText: string})[] = [];
 
   state: 'loading' | 'ready' | 'error' = 'loading';
 
   constructor(private getGroupManagersService: GetGroupManagersService) {}
-
 
   ngOnChanges(_changes: SimpleChanges): void {
     this.reloadData();
   }
 
   private getManagerLevel(manager: Manager): string {
-    switch (manager.can_manage) {
+    switch (manager.canManage) {
       case 'none':
         return $localize`Read-only`;
       case 'memberships':
@@ -40,7 +39,7 @@ export class GroupManagerListComponent implements OnChanges {
       .getGroupManagers(this.group.id)
       .subscribe(
         (managers: Manager[]) => {
-          this.managers = managers.map(manager => ({ ...manager, can_manage_as_text: this.getManagerLevel(manager) }));
+          this.managers = managers.map(manager => ({ ...manager, canManageAsText: this.getManagerLevel(manager) }));
           this.state = 'ready';
         },
         _err => {
