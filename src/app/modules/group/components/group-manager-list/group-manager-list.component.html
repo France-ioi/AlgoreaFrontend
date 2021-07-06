@@ -60,7 +60,7 @@
             <a class="alg-link"
                [routerLink]="rowData.login ? [ '/', 'groups', 'users', rowData.id ] : [ '/', 'groups', 'by-id', rowData.id, 'details' ]"
             >
-              {{ rowData.name }}
+              {{ rowData.login ? (rowData | userCaption) : rowData.name }}
             </a>
           </td>
           <td style="min-width: 110px;">
