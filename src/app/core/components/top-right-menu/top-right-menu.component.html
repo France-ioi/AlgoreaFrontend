@@ -1,9 +1,11 @@
-<p-menu #menu [popup]="true" [model]="menuItems"></p-menu>
-<p-button
-  *ngIf="userLogin$ | async as userLogin"
-  icon="pi pi-chevron-down"
-  iconPos="right"
-  [label]="userLogin"
-  (click)="menu.toggle($event)"
-  styleClass="menu-button"
-></p-button>
+<ng-container *ngIf="menuItems$ | async as menuItems">
+  <p-menu #menu [popup]="true" [model]="menuItems"></p-menu>
+  <p-button
+      *ngIf="userLogin$ | async as userLogin"
+      icon="pi pi-chevron-down"
+      iconPos="right"
+      [label]="userLogin"
+      (click)="menu.toggle($event)"
+      styleClass="menu-button"
+  ></p-button>
+</ng-container>
