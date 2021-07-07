@@ -162,7 +162,7 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
     if (isNotUndefined(this.initialFormData.url) && url !== this.initialFormData.url) itemFormValues.url = url;
 
     const usesApi = formControls.usesApi?.value as boolean;
-    if (usesApi !== this.initialFormData.usesApi) itemFormValues.uses_api = usesApi;
+    if (isNotUndefined(this.initialFormData.usesApi) && usesApi !== this.initialFormData.usesApi) itemFormValues.uses_api = usesApi;
 
     const textId = formControls.textId?.value as string;
     if (textId !== '') itemFormValues.text_id = textId;
