@@ -9,11 +9,11 @@ import { CurrentContentService } from '../../../../shared/services/current-conte
 import { UserSessionService } from '../../../../shared/services/user-session.service';
 
 @Component({
-  selector: 'alg-group-user',
-  templateUrl: './group-user.component.html',
-  styleUrls: [ './group-user.component.scss' ]
+  selector: 'alg-user',
+  templateUrl: './user.component.html',
+  styleUrls: [ './user.component.scss' ]
 })
-export class GroupUserComponent implements OnInit, OnDestroy {
+export class UserComponent implements OnInit, OnDestroy {
   @ViewChild('progress') progress?: RouterLinkActive;
   @ViewChild('personalData') personalData?: RouterLinkActive;
 

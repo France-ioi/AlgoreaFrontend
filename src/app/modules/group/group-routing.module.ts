@@ -5,7 +5,7 @@ import { GroupDetailsComponent } from './pages/group-details/group-details.compo
 import { GroupEditComponent } from './pages/group-edit/group-edit.component';
 import { GroupByIdComponent } from './pages/group-by-id/group-by-id.component';
 import { PendingChangesGuard } from 'src/app/shared/guards/pending-changes-guard';
-import { GroupUserComponent } from './pages/group-user/group-user.component';
+import { UserComponent } from './pages/user/user.component';
 
 const routes: Routes = [
   {
@@ -14,7 +14,7 @@ const routes: Routes = [
   },
   {
     path: 'users/:id',
-    component: GroupUserComponent,
+    component: UserComponent,
     children: [
       {
         path: 'personal-data'
