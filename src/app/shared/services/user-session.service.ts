@@ -40,10 +40,6 @@ export class UserSessionService implements OnDestroy {
     return !!this.session$.value?.watchedGroup;
   }
 
-  get userGroupId(): string | undefined {
-    return this.session$.value?.user.groupId;
-  }
-
   constructor(
     private authService: AuthService,
     private currentUserService: CurrentUserHttpService,
