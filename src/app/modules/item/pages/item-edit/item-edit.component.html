@@ -1,9 +1,9 @@
 <ng-container *ngIf="fetchState$ | async as fetchState">
 
   <div *ngIf="fetchState.isReady" style="margin: 1rem 0 0.5rem 0">
-    <form [formGroup]="itemForm" *ngIf="['all','all_with_grant'].includes(fetchState.data.item.permissions.canEdit); else notAuthorized">
+    <form [formGroup]="itemForm" *ngIf="['all','all_with_grant', 'children'].includes(fetchState.data.item.permissions.canEdit); else notAuthorized">
 
-      <div class="header">
+      <div class="header" *ngIf="['all', 'all_with_grant'].includes(fetchState.data.item.permissions.canEdit)">
         <alg-input [parentForm]="itemForm" i18n-placeholder placeholder="Item title" name="title" size="large" [isDark]='false'></alg-input>
         <alg-input [parentForm]="itemForm" i18n-placeholder placeholder="Item subtitle" name="subtitle" size="small" [isDark]='false'></alg-input>
       </div>
@@ -20,6 +20,7 @@
           Content
         </a>
         <a
+          [hidden]="!['all','all_with_grant'].includes(fetchState.data.item.permissions.canEdit)"
           class="nav-tab-item"
           [routerLink]="'./advanced-parameters'"
           routerLinkActive #rla2="routerLinkActive"
@@ -40,7 +41,7 @@
         >
         </alg-item-edit-content>
         <alg-item-edit-advanced-parameters #advancedParameters
-          *ngIf="rla2.isActive"
+          *ngIf="['all','all_with_grant'].includes(fetchState.data.item.permissions.canEdit) && rla2.isActive"
           [parentForm]="itemForm"
           [item]="initialFormData"
         >
