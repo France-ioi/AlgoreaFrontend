@@ -9,5 +9,6 @@ export class SectionComponent {
   @Input() icon?: string; // icon class, for instance a fa icon
   @Input() label = '';
   @Input() hideBorder = false;
+  @Input() styleClass = '';
 
 }

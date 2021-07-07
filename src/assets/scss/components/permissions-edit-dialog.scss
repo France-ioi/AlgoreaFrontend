@@ -1,0 +1,19 @@
+.alg-permissions-edit-dialog {
+  &.p-dialog {
+    max-height: 83rem;
+    min-width: 67rem;
+    max-width: 67rem;
+    min-height: 25rem;
+  }
+
+  .p-dialog-footer {
+    display: flex;
+    justify-content: center;
+  }
+
+  .p-dialog-title {
+    margin-left: -1rem;
+
+    width: 100%;
+  }
+}

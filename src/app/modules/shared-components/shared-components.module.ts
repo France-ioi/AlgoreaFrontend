@@ -36,9 +36,7 @@ import { TimePickerComponent } from './components/time-picker/time-picker.compon
 import { TextareaComponent } from './components/textarea/textarea.component';
 import { EditorBarComponent } from './components/editor-bar/editor-bar.component';
 import { InputComponent } from './components/input/input.component';
-import { SelectionTreeComponent } from './components/selection-tree/selection-tree.component';
 import { SelectComponent } from './components/select/select.component';
-import { SliderComponent } from './components/slider/slider.component';
 import { SectionParagraphComponent } from './components/section-paragrah/section-paragraph.component';
 import { MessageComponent } from './components/message/message.component';
 import { ProgressLevelComponent } from './components/progress-level/progress-level.component';
@@ -74,9 +72,7 @@ import { UserCaptionPipe } from '../../shared/pipes/userCaption';
     TextareaComponent,
     EditorBarComponent,
     InputComponent,
-    SelectionTreeComponent,
     SelectComponent,
-    SliderComponent,
     SectionParagraphComponent,
     MessageComponent,
     ProgressLevelComponent,
@@ -135,9 +131,7 @@ import { UserCaptionPipe } from '../../shared/pipes/userCaption';
     TextareaComponent,
     EditorBarComponent,
     InputComponent,
-    SelectionTreeComponent,
     SelectComponent,
-    SliderComponent,
     SectionParagraphComponent,
     ProgressSpinnerModule,
     ToastModule,
