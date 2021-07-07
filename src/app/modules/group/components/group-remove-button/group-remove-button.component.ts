@@ -73,17 +73,17 @@ export class GroupRemoveButtonComponent implements OnChanges {
 
     this.deletionInProgress$.next(true);
     this.groupDeleteService.delete(id)
-      .subscribe(
-        () => {
+      .subscribe({
+        next: () => {
           this.deletionInProgress$.next(false);
           this.actionFeedbackService.success($localize`You have delete "${groupName}"`);
           this.navigateToMyGroups();
         },
-        _err => {
+        error: _err => {
           this.deletionInProgress$.next(false);
           this.actionFeedbackService.error($localize`Failed to delete "${groupName}"`);
         }
-      );
+      });
   }
 
   navigateToMyGroups(): void {

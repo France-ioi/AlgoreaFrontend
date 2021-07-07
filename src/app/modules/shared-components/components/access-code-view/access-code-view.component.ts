@@ -61,14 +61,14 @@ export class AccessCodeViewComponent {
   }
 
   joinGroup(code: string): void {
-    this.joinByCodeService.joinGroupThroughCode(code).subscribe(
-      _result => {
+    this.joinByCodeService.joinGroupThroughCode(code).subscribe({
+      next: _result => {
         this.code = '';
         this.actionFeedbackService.success($localize`Changes successfully saved.`);
         this.groupJoined.emit();
       },
-      _err => this.actionFeedbackService.unexpectedError()
-    );
+      error: _err => this.actionFeedbackService.unexpectedError()
+    });
   }
 
   invalidCodeReasonToString(reason: InvalidCodeReason): string {

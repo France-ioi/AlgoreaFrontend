@@ -314,16 +314,16 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
     forkJoin([
       this.updateItem(),
       this.updateString(),
-    ]).subscribe(
-      _status => {
+    ]).subscribe({
+      next: _status => {
         this.actionFeedbackService.success($localize`Changes successfully saved.`);
         this.itemDataSource.refreshItem(); // which will re-enable the form
       },
-      _err => {
+      error: _err => {
         this.actionFeedbackService.unexpectedError();
         this.itemForm.enable();
       }
-    );
+    });
   }
 
   onCancel(): void {

@@ -57,8 +57,8 @@ export class ChapterChildrenComponent implements OnChanges, OnDestroy {
       this.subscription?.unsubscribe();
       this.subscription = this.getItemChildrenService
         .get(this.itemData.item.id, this.itemData.currentResult.attemptId)
-        .subscribe(
-          children => {
+        .subscribe({
+          next: children => {
             this.children = children.map(child => {
               const res = bestAttemptFromResults(child.results);
               return {
@@ -78,10 +78,10 @@ export class ChapterChildrenComponent implements OnChanges, OnDestroy {
                 .every(item => item.result && item.result.validated)) this.state = 'ready';
             else this.state = 'ready-missing-validation';
           },
-          _err => {
+          error: _err => {
             this.state = 'error';
           }
-        );
+        });
     } else {
       this.state = 'error';
     }

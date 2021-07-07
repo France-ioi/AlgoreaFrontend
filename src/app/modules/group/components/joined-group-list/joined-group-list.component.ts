@@ -56,15 +56,15 @@ export class JoinedGroupListComponent implements OnDestroy {
     const groupId = membership.group.id;
     const groupName = membership.group.name;
     this.groupLeaveService.leave(groupId)
-      .subscribe(
-        () => {
+      .subscribe({
+        next: () => {
           this.refresh();
           this.actionFeedbackService.success($localize`You have left "${groupName}"`);
         },
-        _err => {
+        error: _err => {
           this.actionFeedbackService.error($localize`Failed to leave "${groupName}"`);
         }
-      );
+      });
   }
 
   refresh(): void {

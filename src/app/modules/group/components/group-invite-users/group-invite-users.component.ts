@@ -121,8 +121,8 @@ export class GroupInviteUsersComponent implements OnInit, OnDestroy {
     // disable UI
     this.setState('loading');
 
-    this.createGroupInvitationsService.createInvitations(this.group.id, logins).subscribe(
-      res => {
+    this.createGroupInvitationsService.createInvitations(this.group.id, logins).subscribe({
+      next: res => {
         this.displayResponse(res);
 
         // Clear the textarea
@@ -130,10 +130,10 @@ export class GroupInviteUsersComponent implements OnInit, OnDestroy {
 
         this.setState('empty');
       },
-      _err => {
+      error: _err => {
         this.actionFeedbackService.unexpectedError();
         this.setState('ready');
       }
-    );
+    });
   }
 }
