@@ -27,7 +27,7 @@
       <alg-associated-activity formControlName="rootActivity"></alg-associated-activity>
     </form>
 
-    <div class="delete-button">
+    <div class="delete-button" *ngIf="state.data.isCurrentUserManager">
       <alg-group-remove-button [group]="state.data"></alg-group-remove-button>
     </div>
 
