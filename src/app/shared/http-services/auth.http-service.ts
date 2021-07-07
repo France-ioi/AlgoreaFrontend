@@ -23,7 +23,14 @@ export class AuthHttpService {
   private cookieParams = appConfig.authType === 'cookies' ? {
     use_cookie: '1',
     cookie_secure: appConfig.secure ? '1' : '0',
-    cookie_same_site: appConfig.sameSite ? '1' : '0',
+    /**
+     * NOTE on cookie_same_site:
+     * The 'same-site' policy only applies for auth by third-party cookie.
+     * Safari and Firefox both disable third-party cookies by default, and Chrome will in 2021 (but postponed for 2023)
+     * Since third-party cookies will be removed in a near future, we chose not to enable this type of authentication,
+     * making the 'same-site' policy always true.
+     */
+    cookie_same_site: '1',
   } : undefined;
 
   constructor(

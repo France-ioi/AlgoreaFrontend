@@ -1,7 +1,7 @@
 import { environment } from 'src/environments/environment';
 
 interface TokenConfig { authType: 'tokens' }
-type CookieConfig = { authType: 'cookies' } & ({ secure: true, sameSite: boolean } | { secure: boolean, sameSite: true });
+interface CookieConfig { authType: 'cookies', secure: boolean }
 export type AuthTypeConfig = TokenConfig | CookieConfig;
 
 export interface LanguageConfig {

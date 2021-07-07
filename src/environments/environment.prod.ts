@@ -16,5 +16,4 @@ export const environment: Environment = {
   allowForcedToken: true,
   authType: 'cookies',
   secure: true,
-  sameSite: true,
 };
