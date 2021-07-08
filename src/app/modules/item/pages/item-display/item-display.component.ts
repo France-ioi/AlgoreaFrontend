@@ -1,7 +1,8 @@
 import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ItemData } from '../../services/item-datasource.service';
-import { CompleteFunction, ErrorFunction, Platform, Task, TaskParams, TaskProxyManager } from 'src/app/shared/task/task-xd-pr';
+import { Platform, Task, TaskParams, TaskProxyManager } from 'src/app/modules/item/task/task-xd-pr';
+import { CompleteFunction, ErrorFunction } from 'src/app/modules/item/task/rxjschannel';
 import { interval, Subscription } from 'rxjs';
 
 interface TaskTab {
@@ -102,7 +103,7 @@ export class ItemDisplayComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  reloadAnswerState(answer : string, state : string, callback : CompleteFunction): void {
+  reloadAnswerState(answer : string, state : string, callback : CompleteFunction<void>): void {
     this.task?.reloadAnswer(answer, () => {
       this.task?.reloadState(state, callback);
     });
@@ -146,7 +147,7 @@ export class ItemDisplayPlatform extends Platform {
     this.taskParams = taskParams;
   }
 
-  validate(mode : string, success : CompleteFunction, _error : ErrorFunction) : void {
+  validate(mode : string, success : CompleteFunction<void>, _error : ErrorFunction) : void {
     if (mode == 'cancel') {
       // TODO reload answer
     }
