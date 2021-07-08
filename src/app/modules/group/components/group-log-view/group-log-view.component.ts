@@ -76,9 +76,9 @@ export class GroupLogViewComponent implements OnChanges, OnDestroy {
       }
     ];
 
-    return columns.filter(item => !item.disabled).map(item => ({
-      field: item.field,
-      header: item.header,
+    return columns.filter(col => !col.disabled).map(col => ({
+      field: col.field,
+      header: col.header,
     }));
   }
 
