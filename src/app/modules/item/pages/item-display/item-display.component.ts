@@ -3,7 +3,8 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ItemData } from '../../services/item-datasource.service';
 import { Platform, Task, TaskParams, TaskProxyManager } from 'src/app/modules/item/task/task-xd-pr';
 import { CompleteFunction, ErrorFunction } from 'src/app/modules/item/task/rxjschannel';
-import { interval, Subscription } from 'rxjs';
+import { forkJoin, interval, Subscription } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 interface TaskTab {
   name: string
@@ -76,7 +77,7 @@ export class ItemDisplayComponent implements OnInit, AfterViewInit, OnDestroy {
     this.task.setPlatform(this.platform);
 
     const initialViews = { task: true, solution: true, editor: true, hints: true, grader: true, metadata: true };
-    task.load(initialViews, this.taskLoaded.bind(this));
+    task.load(initialViews).subscribe(() => this.taskLoaded());
   }
 
   // task.load done
@@ -87,26 +88,34 @@ export class ItemDisplayComponent implements OnInit, AfterViewInit, OnDestroy {
     this.heightInterval = interval(1000).subscribe(() => this.updateHeight());
     this.saveInterval = interval(1000).subscribe(() => this.getAnswerState());
 
-    this.task?.showViews({ task: true }, () => {});
+    this.task?.showViews({ task: true }).subscribe(() => {});
 
-    this.task?.getViews((views : any) => {
+    this.task?.getViews().subscribe((views : any) => {
       this.setViews(views);
     });
   }
 
   // Communication with the task
   getAnswerState(): void {
-    this.task?.getAnswer((answer : string) => {
-      this.task?.getState((state: string) => {
-        this.saveAnswerState(answer, state);
-      });
-    });
+    if (!this.task) {
+      return;
+    }
+    forkJoin([
+      this.task.getAnswer(),
+      this.task.getState()
+    ]).subscribe(([ answer, state ]) => this.saveAnswerState(answer, state));
   }
 
-  reloadAnswerState(answer : string, state : string, callback : CompleteFunction<void>): void {
-    this.task?.reloadAnswer(answer, () => {
-      this.task?.reloadState(state, callback);
-    });
+  reloadAnswerState(answer : string, state : string): void {
+    if (!this.task) {
+      return;
+    }
+    const task = this.task;
+    task.reloadAnswer(answer)
+      .pipe(switchMap(() =>
+        task.reloadState(state)
+      ))
+      .subscribe(() => {});
   }
 
   saveAnswerState(answer : string, state : string) : void {
@@ -118,7 +127,7 @@ export class ItemDisplayComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   updateHeight(): void {
-    this.task?.getHeight(this.setHeight.bind(this));
+    this.task?.getHeight().subscribe(this.setHeight.bind(this));
   }
 
   // Views management
@@ -152,11 +161,12 @@ export class ItemDisplayPlatform extends Platform {
       // TODO reload answer
     }
     if (mode == 'validate') {
-      this.task.getAnswer((answer: string) => {
-        this.task.gradeAnswer(answer, '', (results : any) => {
+      this.task.getAnswer()
+        .pipe(switchMap((answer: string) => this.task.gradeAnswer(answer, '')
+        ))
+        .subscribe((results : any) => {
           success(results);
         });
-      });
     }
   }
 
