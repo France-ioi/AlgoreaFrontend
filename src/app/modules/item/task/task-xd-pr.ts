@@ -5,6 +5,7 @@
  * It depends on jschannel.
  */
 
+import { interval, Observable, Subscription } from "rxjs";
 import { CompleteFunction, ErrorFunction, rxBuild, RxMessagingChannel } from "./rxjschannel";
 
 export interface TaskParams {
@@ -24,7 +25,11 @@ export interface UpdateDisplayParams {
 }
 
 // TODO : actual types
+export type TaskMetaData = any;
 export type TaskView = any;
+export type TaskViews = any;
+export type TaskGrade = any;
+export type TaskResources = any;
 export type TaskDisplayData = any;
 export type TaskLog = any;
 
@@ -33,6 +38,9 @@ export type TaskLog = any;
 export class TaskProxyManager {
   task? : Task;
   platform? : Platform;
+  checkInterval? : Subscription;
+  chan? : RxMessagingChannel;
+  nbSecs = 0;
   getRandomID(): string {
     const low = Math.floor(Math.random() * 922337203).toString();
     const high = Math.floor(Math.random() * 2000000000).toString();
@@ -46,15 +54,40 @@ export class TaskProxyManager {
         this.deleteTaskProxy();
       }
       const that = this;
-      this.task = new Task(iframe, function() {
-        if (that.platform) {
-          that.task?.setPlatform(that.platform);
+      this.checkInterval = interval(1000).subscribe(function() {
+        if (that.nbSecs > 300) {
+          if (errorFun) {
+            errorFun();
+          }
+          that.checkInterval?.unsubscribe();
         }
-        if (that.task) {
-          success(that.task);
+        that.nbSecs++;
+        if (!iframe.contentWindow) {
+          return;
         }
-      }, errorFun);
+        that.checkInterval?.unsubscribe();
+        that.chan = rxBuild({
+          window: iframe.contentWindow,
+          origin: "*",
+          //      scope: "test",
+          scope: that.getUrlParameterByName('channelId', iframe.src),
+          onReady: () => {
+            if (!that.chan) {
+              return;
+            }
+            that.task = new Task(iframe, that.chan);
+            if (that.platform) {
+              that.task?.setPlatform(that.platform);
+            }
+            success(that.task);
+          } });
+      });
     }
+  }
+  getUrlParameterByName(name : string, url : string) : string {
+    const regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+      results = regex.exec(url);
+    return results && results[1] ? decodeURIComponent(results[1].replace(/\+/g, " ")) : "";
   }
   setPlatform(task : Task, platform : Platform) : void {
     this.platform = platform;
@@ -62,7 +95,7 @@ export class TaskProxyManager {
   }
   deleteTaskProxy() : void {
     const task = this.task;
-    if (task && task.chan) {
+    if (task) {
       task.chan.destroy();
     }
     delete(this.task);
@@ -95,56 +128,19 @@ export class Task {
   taskId: string | null;
   platform?: Platform;
   platformSet: boolean;
-  nbSecs = 0;
-  checkInterval?;
-  chan?: RxMessagingChannel;
+  chan: RxMessagingChannel;
 
-  constructor(iframe : HTMLIFrameElement, success: () => void, error? : ErrorFunction) {
+  constructor(iframe : HTMLIFrameElement, chan: RxMessagingChannel) {
     this.iframe = iframe;
     this.taskId = iframe.getAttribute('id');
     this.platformSet = false;
-    const that = this;
-    this.checkInterval = setInterval(function() {
-      if (that.nbSecs > 300) {
-        if (error) {
-          error();
-        }
-        if (that.checkInterval) {
-          clearInterval(that.checkInterval);
-        }
-        that.checkInterval = undefined;
-      }
-      that.nbSecs++;
-    }, 1000);
-    if (!iframe.contentWindow) {
-      return;
-    }
-    this.chan = rxBuild({
-      window: iframe.contentWindow,
-      origin: "*",
-      //      scope: "test",
-      scope: this.getUrlParameterByName('channelId', iframe.src),
-      onReady: function() {
-        if (that.checkInterval) {
-          clearInterval(that.checkInterval);
-          success();
-        }
-      }
-    });
-  }
-  getUrlParameterByName(name : string, url : string) : string {
-    const regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-      results = regex.exec(url);
-    return results && results[1] ? decodeURIComponent(results[1].replace(/\+/g, " ")) : "";
+    this.chan = chan;
   }
   setPlatform(platform : Platform): void {
     const that = this;
     that.platform = platform;
     if (this.platformSet) {
       // in this case, the bound functions will call the new platform
-      return;
-    }
-    if (!this.chan) {
       return;
     }
     this.chan.bind('platform.validate', function (trans, mode : string) {
@@ -206,119 +202,106 @@ export class Task {
   /**
    * Task API functions
    */
-  load(views : Object, success : CompleteFunction<void>, error? : ErrorFunction) : void {
-    this.chan?.call({ method: "task.load",
+  load(views : Object): Observable<void> {
+    return this.chan.call({
+      method: "task.load",
       params: views,
-      success: success,
-      error: error
     });
   }
 
-  unload(success : CompleteFunction<void>, error? : ErrorFunction) : void {
-    this.chan?.call({ method: "task.unload",
+  unload() : Observable<void> {
+    return this.chan.call({
+      method: "task.unload",
       timeout: 2000,
-      error: error,
-      success: success
     });
   }
 
-  getHeight(success : (result : number) => void, error? : ErrorFunction) : void {
-    this.chan?.call({ method: "task.getHeight",
+  getHeight() : Observable<number> {
+    // TODO: validator
+    return this.chan.call({
+      method: "task.getHeight",
       timeout: 500,
-      error: error,
-      success: success
     });
   }
 
-  updateToken(token : string, success : CompleteFunction<void>, error? : ErrorFunction) : void {
-    this.chan?.call({ method: "task.updateToken",
+  updateToken(token : string) : Observable<void> {
+    return this.chan.call({
+      method: "task.updateToken",
       params: token,
       timeout: 10000,
-      error: error,
-      success: success
     });
   }
 
-  getMetaData(success : (result : any) => void, error? : ErrorFunction) : void {
-    this.chan?.call({ method: "task.getMetaData",
-      timeout: 2000,
-      error: error,
-      success: success
-    });
-  }
-
-  getAnswer(success : (result : string) => void, error? : ErrorFunction) : void {
-    this.chan?.call({ method: "task.getAnswer",
-      error: error,
-      success: success,
+  getMetaData() : Observable<TaskMetaData> {
+    // TODO: validator
+    return this.chan.call({
+      method: "task.getMetaData",
       timeout: 2000
     });
   }
 
-  reloadAnswer(answer : string, success : CompleteFunction<void>, error? : ErrorFunction) : void {
-    this.chan?.call({ method: "task.reloadAnswer",
+  getAnswer() : Observable<string> {
+    // TODO: validator
+    return this.chan.call({
+      method: "task.getAnswer",
+      timeout: 2000
+    });
+  }
+
+  reloadAnswer(answer : string) : Observable<void> {
+    return this.chan.call({
+      method: "task.reloadAnswer",
       params: answer,
-      error: error,
-      success: success,
       timeout: 2000
     });
   }
 
-  getState(success : (result : any) => void, error? : ErrorFunction) : void {
-    this.chan?.call({ method: "task.getState",
-      error: error,
-      success: success,
+  getState() : Observable<string> {
+    // TODO: validator
+    return this.chan.call({
+      method: "task.getState",
       timeout: 2000
     });
   }
 
-  reloadState(state : string, success : CompleteFunction<void>, error? : ErrorFunction) : void {
-    this.chan?.call({ method: "task.reloadState",
+  reloadState(state : string) : Observable<void> {
+    return this.chan.call({
+      method: "task.reloadState",
       params: state,
-      error: error,
-      success: success,
       timeout: 2000
     });
   }
 
-  getViews(success : (result : any) => void, error? : ErrorFunction) : void {
-    this.chan?.call({ method: "task.getViews",
-      error: error,
-      success: success,
+  getViews() : Observable<TaskViews> {
+    // TODO: validator
+    return this.chan.call({
+      method: "task.getViews",
       timeout: 2000
     });
   }
 
-  showViews(views : Object, success : CompleteFunction<void>, error? : ErrorFunction) : void {
-    this.chan?.call({ method: "task.showViews",
+  showViews(views : Object) : Observable<void> {
+    return this.chan.call({
+      method: "task.showViews",
       params: views,
-      error: error,
-      success: success,
       timeout: 2000
     });
   }
 
-  gradeAnswer(answer : string, answerToken : string, success : (...result : any) => void, error? : ErrorFunction) : void {
-    const newSuccess = function(successMonoArg : any) : void {
-      if (successMonoArg instanceof Array) {
-        success(...successMonoArg);
-      } else {
-        success(successMonoArg);
-      }
-    };
-    this.chan?.call({ method: "task.gradeAnswer",
+  gradeAnswer(answer : string, answerToken : string) : Observable<TaskGrade> {
+    // TODO: validator
+    return this.chan.call({
+      method: "task.gradeAnswer",
       params: [ answer, answerToken ],
-      error: error,
-      success: newSuccess,
       timeout: 40000
     });
   }
 
-  getResources(success : (result : any) => void, error? : ErrorFunction) : void {
-    this.chan?.call({ method: "task.getResources",
+  getResources() : Observable<TaskResources> {
+    // TODO: validator
+    return this.chan.call({
+      method: "task.getResources",
       params: [],
-      error: error,
-      success: success,
       timeout: 2000
     });
   }

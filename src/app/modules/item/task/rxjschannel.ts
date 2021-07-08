@@ -1,9 +1,9 @@
 import { build, ChannelConfiguration, MessageTransaction, MessagingChannel } from "jschannel";
+import { Observable } from "rxjs";
 
-export interface RxMessage<S, T> {
+export interface RxMessage<T> {
   method: string;
-  success?: ((result: T) => void);
-  params?: S;
+  params?: T;
   timeout?: number;
   error?: (error: any, message: string) => void;
 }
@@ -11,7 +11,7 @@ export interface RxMessage<S, T> {
 export type CompleteFunction<T> = (result? : T) => void;
 export type ErrorFunction = (...params : any) => void;
 
-/** Build a RxMessagingChannel, which is  */
+/** Build a RxMessagingChannel, which is a jschannel with rxjs calls */
 export function rxBuild(config: ChannelConfiguration): RxMessagingChannel {
   return new RxMessagingChannel(build(config));
 }
@@ -31,11 +31,22 @@ export class RxMessagingChannel {
     return this.innerChan.bind(method, callback, doNotPublish);
   }
 
-  call<S, T>(message: RxMessage<S, T>): void {
-    this.innerChan.call(message);
+  call<S, T>(message: RxMessage<S>, validator?: (result?: any) => T): Observable<T> {
+    // Create an Observable wrapping the inner jschannel call
+    return new Observable<T>(subscriber => {
+      const innerMessage = {
+        ...message,
+        success: (result?: any): void => {
+          subscriber.next(validator ? validator(result) : result as T);
+          subscriber.complete();
+        },
+        error: (error: any, _message: string): void => subscriber.error(error)
+      };
+      this.innerChan.call(innerMessage);
+    });
   }
 
-  notify<S>(message: RxMessage<S, undefined>): void{
+  notify<T>(message: RxMessage<T>): void {
     this.innerChan.notify(message);
   }
 
