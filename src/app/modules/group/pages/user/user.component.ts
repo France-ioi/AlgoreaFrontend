@@ -2,11 +2,12 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { User, GetUserService } from '../../http-services/get-user.service';
 import { mapToFetchState } from '../../../../shared/operators/state';
 import { Observable, Subscription } from 'rxjs';
-import { ActivatedRoute, NavigationEnd, Router, RouterLinkActive } from '@angular/router';
-import { delay, switchMap, map, filter, startWith } from 'rxjs/operators';
+import { ActivatedRoute, Router, RouterLinkActive } from '@angular/router';
+import { delay, switchMap, map } from 'rxjs/operators';
 import { contentInfo } from '../../../../shared/models/content/content-info';
 import { CurrentContentService } from '../../../../shared/services/current-content.service';
 import { UserSessionService } from '../../../../shared/services/user-session.service';
+import { formatUser } from '../../../../shared/helpers/user';
 
 @Component({
   selector: 'alg-user',
@@ -40,13 +41,26 @@ export class UserComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.subscription = this.router.events
+    this.subscription = this.state$
       .pipe(
-        filter(event => event instanceof NavigationEnd),
-        startWith(null),
+        map((state) => contentInfo({
+          breadcrumbs: {
+            category: $localize`Users`,
+            path: [
+              {
+                title: state.isFetching || state.isError ? '...' : formatUser(state.data),
+                navigateTo: this.router.createUrlTree([ 'groups', 'users', this.route.snapshot.params.id ]),
+              },
+              {
+                title: this.router.url.includes('personal-data') ? $localize`Personal info` : $localize`Progress`,
+              }
+            ],
+            currentPageIdx: -1,
+          }
+        }))
       )
-      .subscribe(() => {
-        this.updateBreadcrumbs();
+      .subscribe(contentInfo => {
+        this.currentContent.current.next(contentInfo);
       });
 
     this.isInitPagePersonal = this.router.url.includes('personal-data');
@@ -58,23 +72,5 @@ export class UserComponent implements OnInit, OnDestroy {
 
   private getUser$(id: string): Observable<User> {
     return this.getUserService.getForId(id);
-  }
-
-  private updateBreadcrumbs(): void {
-    this.currentContent.current.next(contentInfo({
-      breadcrumbs: {
-        category: $localize`Users`,
-        path: [
-          {
-            title: 'Login',
-            navigateTo: this.router.createUrlTree([ 'groups', 'users', this.route.snapshot.params.id ]),
-          },
-          {
-            title: this.router.url.includes('personal-data') ? $localize`Personal info` : $localize`Progress`,
-          }
-        ],
-        currentPageIdx: -1,
-      }
-    }));
   }
 }
