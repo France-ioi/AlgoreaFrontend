@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { User, GetUserService } from '../../http-services/get-user.service';
+import { GetUserService } from '../../http-services/get-user.service';
 import { mapToFetchState } from '../../../../shared/operators/state';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { ActivatedRoute, Router, RouterLinkActive } from '@angular/router';
 import { delay, switchMap, map } from 'rxjs/operators';
 import { contentInfo } from '../../../../shared/models/content/content-info';
@@ -19,7 +19,7 @@ export class UserComponent implements OnInit, OnDestroy {
   @ViewChild('personalData') personalData?: RouterLinkActive;
 
   readonly state$ = this.route.params.pipe(
-    switchMap(({ id }) => this.getUser$(id)),
+    switchMap(({ id }) => this.getUserService.getForId(id)),
     mapToFetchState(),
   );
 
@@ -68,9 +68,5 @@ export class UserComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscription?.unsubscribe();
-  }
-
-  private getUser$(id: string): Observable<User> {
-    return this.getUserService.getForId(id);
   }
 }
