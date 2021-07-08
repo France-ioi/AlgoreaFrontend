@@ -43,7 +43,7 @@ export class UserComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.subscription = this.state$
       .pipe(
-        map((state) => contentInfo({
+        map(state => contentInfo({
           breadcrumbs: {
             category: $localize`Users`,
             path: [
