@@ -1,14 +1,11 @@
-/*
+/**
  * Cross-domain task proxy implementation for Bebras task API in TypeScript
  * Adapted from task-xd-pr.js from https://github.com/France-ioi/pem-platform/
  *
  * It depends on jschannel.
  */
 
-import { build, MessagingChannel } from "jschannel";
-
-export type CompleteFunction = (result? : any) => void;
-export type ErrorFunction = (...params : any) => void;
+import { CompleteFunction, ErrorFunction, rxBuild, RxMessagingChannel } from "./rxjschannel";
 
 export interface TaskParams {
   minScore: number,
@@ -25,6 +22,11 @@ export interface UpdateDisplayParams {
   views?: Object,
   scrollTop?: number,
 }
+
+// TODO : actual types
+export type TaskView = any;
+export type TaskDisplayData = any;
+export type TaskLog = any;
 
 // TODO This TaskProxyManager was imported from the original task-xd-pr,
 // but some aspects can probably be simplified
@@ -95,7 +97,7 @@ export class Task {
   platformSet: boolean;
   nbSecs = 0;
   checkInterval?;
-  chan?: MessagingChannel;
+  chan?: RxMessagingChannel;
 
   constructor(iframe : HTMLIFrameElement, success: () => void, error? : ErrorFunction) {
     this.iframe = iframe;
@@ -117,7 +119,7 @@ export class Task {
     if (!iframe.contentWindow) {
       return;
     }
-    this.chan = build({
+    this.chan = rxBuild({
       window: iframe.contentWindow,
       origin: "*",
       //      scope: "test",
@@ -145,7 +147,7 @@ export class Task {
     if (!this.chan) {
       return;
     }
-    this.chan.bind('platform.validate', function (trans, mode) {
+    this.chan.bind('platform.validate', function (trans, mode : string) {
       that.platform?.validate(mode, trans.complete, trans.error);
       trans.delayReturn(true);
     });
@@ -155,23 +157,23 @@ export class Task {
       that.platform?.getTaskParams(key, defaultValue, trans.complete, trans.error);
       trans.delayReturn(true);
     });
-    this.chan.bind('platform.showView', function (trans, view) {
+    this.chan.bind('platform.showView', function (trans, view : TaskView) {
       that.platform?.showView(view, trans.complete, trans.error);
       trans.delayReturn(true);
     });
-    this.chan.bind('platform.askHint', function (trans, hintToken) {
+    this.chan.bind('platform.askHint', function (trans, hintToken : string) {
       that.platform?.askHint(hintToken, trans.complete, trans.error);
       trans.delayReturn(true);
     });
-    this.chan.bind('platform.updateDisplay', function (trans, data) {
+    this.chan.bind('platform.updateDisplay', function (trans, data : TaskDisplayData) {
       that.platform?.updateDisplay(data, trans.complete, trans.error);
       trans.delayReturn(true);
     });
-    this.chan.bind('platform.openUrl', function (trans, url) {
+    this.chan.bind('platform.openUrl', function (trans, url : string) {
       that.platform?.openUrl(url, trans.complete, trans.error);
       trans.delayReturn(true);
     });
-    this.chan.bind('platform.log', function (trans, data) {
+    this.chan.bind('platform.log', function (trans, data : TaskLog) {
       that.platform?.log(data, trans.complete, trans.error);
       trans.delayReturn(true);
     });
@@ -204,7 +206,7 @@ export class Task {
   /**
    * Task API functions
    */
-  load(views : Object, success : CompleteFunction, error? : ErrorFunction) : void {
+  load(views : Object, success : CompleteFunction<void>, error? : ErrorFunction) : void {
     this.chan?.call({ method: "task.load",
       params: views,
       success: success,
@@ -212,7 +214,7 @@ export class Task {
     });
   }
 
-  unload(success : CompleteFunction, error? : ErrorFunction) : void {
+  unload(success : CompleteFunction<void>, error? : ErrorFunction) : void {
     this.chan?.call({ method: "task.unload",
       timeout: 2000,
       error: error,
@@ -228,7 +230,7 @@ export class Task {
     });
   }
 
-  updateToken(token : string, success : CompleteFunction, error? : ErrorFunction) : void {
+  updateToken(token : string, success : CompleteFunction<void>, error? : ErrorFunction) : void {
     this.chan?.call({ method: "task.updateToken",
       params: token,
       timeout: 10000,
@@ -253,7 +255,7 @@ export class Task {
     });
   }
 
-  reloadAnswer(answer : string, success : CompleteFunction, error? : ErrorFunction) : void {
+  reloadAnswer(answer : string, success : CompleteFunction<void>, error? : ErrorFunction) : void {
     this.chan?.call({ method: "task.reloadAnswer",
       params: answer,
       error: error,
@@ -270,7 +272,7 @@ export class Task {
     });
   }
 
-  reloadState(state : string, success : CompleteFunction, error? : ErrorFunction) : void {
+  reloadState(state : string, success : CompleteFunction<void>, error? : ErrorFunction) : void {
     this.chan?.call({ method: "task.reloadState",
       params: state,
       error: error,
@@ -287,7 +289,7 @@ export class Task {
     });
   }
 
-  showViews(views : Object, success : CompleteFunction, error? : ErrorFunction) : void {
+  showViews(views : Object, success : CompleteFunction<void>, error? : ErrorFunction) : void {
     this.chan?.call({ method: "task.showViews",
       params: views,
       error: error,
@@ -341,31 +343,31 @@ export class Platform {
    * platform's specific functions (for each platform object)
    */
 
-  validate(_mode : string, _success : CompleteFunction, error : ErrorFunction) : void {
+  validate(_mode : string, _success : CompleteFunction<void>, error : ErrorFunction) : void {
     error('platform.validate is not defined');
   }
-  showView(_views : any, _success : CompleteFunction, error : ErrorFunction) : void {
+  showView(_views : any, _success : CompleteFunction<void>, error : ErrorFunction) : void {
     error('platform.validate is not defined');
   }
-  askHint(_platformToken : string, _success : CompleteFunction, error : ErrorFunction) : void {
+  askHint(_platformToken : string, _success : CompleteFunction<string>, error : ErrorFunction) : void {
     error('platform.validate is not defined');
   }
-  updateHeight(height : number, success : CompleteFunction, error : ErrorFunction) : void {
+  updateHeight(height : number, success : CompleteFunction<void>, error : ErrorFunction) : void {
     this.updateDisplay({ height: height }, success, error);
   }
-  updateDisplay(data : UpdateDisplayParams, success : CompleteFunction, _? : ErrorFunction) : void {
+  updateDisplay(data : UpdateDisplayParams, success : CompleteFunction<void>, _? : ErrorFunction) : void {
     if (data.height !== undefined) {
       const height = Number(data.height);
       this.task.iframe.setAttribute('height', String(height + 40));
       success();
     }
   }
-  openUrl(_url : string, _success : CompleteFunction, error? : ErrorFunction) : void {
+  openUrl(_url : string, _success : CompleteFunction<void>, error? : ErrorFunction) : void {
     if (error) {
       error('platform.openUrl is not defined!');
     }
   }
-  log(_data : any, _success : CompleteFunction, error? : ErrorFunction) : void {
+  log(_data : any, _success : CompleteFunction<void>, error? : ErrorFunction) : void {
     if (error){
       error('platform.log is not defined!');
     }
