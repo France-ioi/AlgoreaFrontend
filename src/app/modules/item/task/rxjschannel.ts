@@ -12,8 +12,18 @@ export type CompleteFunction<T> = (result? : T) => void;
 export type ErrorFunction = (...params : any) => void;
 
 /** Build a RxMessagingChannel, which is a jschannel with rxjs calls */
-export function rxBuild(config: ChannelConfiguration): RxMessagingChannel {
-  return new RxMessagingChannel(build(config));
+export function rxBuild(config: ChannelConfiguration): Observable<RxMessagingChannel> {
+  return new Observable<RxMessagingChannel>(subscriber => {
+    let chan : RxMessagingChannel | null = null;
+    const innerConfig = {
+      onReady: () : void => {
+        subscriber.next(chan as RxMessagingChannel);
+        subscriber.complete();
+      },
+      ...config
+    };
+    chan = new RxMessagingChannel(build(innerConfig));
+  });
 }
 
 export class RxMessagingChannel {
