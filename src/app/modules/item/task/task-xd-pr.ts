@@ -5,7 +5,8 @@
  * It depends on jschannel.
  */
 
-import { interval, Observable, Subscription } from "rxjs";
+import { interval, Observable } from "rxjs";
+import { filter, map, switchMap, take } from "rxjs/operators";
 import { CompleteFunction, ErrorFunction, rxBuild, RxMessagingChannel } from "./rxjschannel";
 
 export interface TaskParams {
@@ -33,170 +34,128 @@ export type TaskResources = any;
 export type TaskDisplayData = any;
 export type TaskLog = any;
 
-// TODO This TaskProxyManager was imported from the original task-xd-pr,
-// but some aspects can probably be simplified
-export class TaskProxyManager {
-  task? : Task;
-  platform? : Platform;
-  checkInterval? : Subscription;
-  chan? : RxMessagingChannel;
-  nbSecs = 0;
-  getRandomID(): string {
-    const low = Math.floor(Math.random() * 922337203).toString();
-    const high = Math.floor(Math.random() * 2000000000).toString();
-    return high + low;
-  }
-  getTaskProxy(iframe : HTMLIFrameElement, success : (task: Task) => void, force : boolean, errorFun?: ErrorFunction): void {
-    if (this.task && !force) {
-      success(this.task);
-    } else {
-      if (force) {
-        this.deleteTaskProxy();
-      }
-      const that = this;
-      this.checkInterval = interval(1000).subscribe(function() {
-        if (that.nbSecs > 300) {
-          if (errorFun) {
-            errorFun();
-          }
-          that.checkInterval?.unsubscribe();
-        }
-        that.nbSecs++;
-        if (!iframe.contentWindow) {
-          return;
-        }
-        that.checkInterval?.unsubscribe();
-        that.chan = rxBuild({
-          window: iframe.contentWindow,
-          origin: "*",
-          //      scope: "test",
-          scope: that.getUrlParameterByName('channelId', iframe.src),
-          onReady: () => {
-            if (!that.chan) {
-              return;
-            }
-            that.task = new Task(iframe, that.chan);
-            if (that.platform) {
-              that.task?.setPlatform(that.platform);
-            }
-            success(that.task);
-          } });
-      });
-    }
-  }
-  getUrlParameterByName(name : string, url : string) : string {
-    const regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-      results = regex.exec(url);
-    return results && results[1] ? decodeURIComponent(results[1].replace(/\+/g, " ")) : "";
-  }
-  setPlatform(task : Task, platform : Platform) : void {
-    this.platform = platform;
-    task?.setPlatform(platform);
-  }
-  deleteTaskProxy() : void {
-    const task = this.task;
-    if (task) {
-      task.chan.destroy();
-    }
-    delete(this.task);
-    delete(this.platform);
-  }
-  getUrl(taskUrl : string, sToken : string, sPlatform : string, prefix? : string, sLocale? : string) : string {
-    const channelId = (prefix || '') + this.getRandomID();
-    if (taskUrl.indexOf('?') == -1) {
-      // the idea is not to change the base url even if we change token, so we put token after #
-      taskUrl = taskUrl + '?';
-    } else {
-      taskUrl = taskUrl + '&';
-    }
-    let url = taskUrl
-      + 'sToken=' + encodeURIComponent(sToken)
-      + '&sPlatform=' + encodeURIComponent(sPlatform)
-      + '&channelId=' + encodeURIComponent(channelId);
-    if (sLocale) {
-      url += '&sLocale=' + encodeURIComponent(sLocale);
-    }
-    return url;
-  }
+function getUrlParameterByName(name : string, url : string) : string {
+  const regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+    results = regex.exec(url);
+  return results && results[1] ? decodeURIComponent(results[1].replace(/\+/g, " ")) : "";
 }
 
-/*
+function getRandomID(): string {
+  const low = Math.floor(Math.random() * 922337203).toString();
+  const high = Math.floor(Math.random() * 2000000000).toString();
+  return high + low;
+}
+
+/** Get URL for a task with specific parameters */
+export function getTaskUrl(taskUrl : string, token : string, platform : string, prefix? : string, locale? : string) : string {
+  const channelId = (prefix || '') + getRandomID();
+  if (taskUrl.indexOf('?') == -1) {
+    // the idea is not to change the base url even if we change token, so we put token after #
+    taskUrl = taskUrl + '?';
+  } else {
+    taskUrl = taskUrl + '&';
+  }
+  let url = taskUrl
+      + 'sToken=' + encodeURIComponent(token)
+      + '&sPlatform=' + encodeURIComponent(platform)
+      + '&channelId=' + encodeURIComponent(channelId);
+  if (locale) {
+    url += '&sLocale=' + encodeURIComponent(locale);
+  }
+  return url;
+}
+
+/** Get Task object from an iframe */
+export function getTaskProxy(iframe : HTMLIFrameElement): Observable<Task> {
+  // Check every second whether the iframe loaded
+  return interval(1000)
+    .pipe(
+      // Abort after 300 seconds
+      map(
+        n => {
+          if (n > 300) {
+            throw Error("IFrame load waiting timeout");
+          }
+          return n;
+        }
+      ),
+
+      // Get contentWindow when it exists
+      filter(_ => !!iframe.contentWindow),
+      take(1),
+      map(_ => iframe.contentWindow as Window),
+
+      // Get the RxMessagingChannel from the contentWindow
+      switchMap((contentWindow: Window) =>
+        rxBuild({
+          window: contentWindow,
+          origin: "*",
+          scope: getUrlParameterByName('channelId', iframe.src),
+        })
+      ),
+
+      // Get the Task from the channel
+      map((chan: RxMessagingChannel) => new Task(chan))
+    );
+}
+
+
+/**
  * Task object, created from an iframe DOM element
  */
 export class Task {
-  iframe: HTMLIFrameElement;
-  taskId: string | null;
-  platform?: Platform;
-  platformSet: boolean;
+  platformSet = false;;
   chan: RxMessagingChannel;
 
-  constructor(iframe : HTMLIFrameElement, chan: RxMessagingChannel) {
-    this.iframe = iframe;
-    this.taskId = iframe.getAttribute('id');
-    this.platformSet = false;
+  constructor(chan: RxMessagingChannel) {
     this.chan = chan;
   }
+
+  destroy(): void {
+    this.chan.destroy();
+  }
+
   setPlatform(platform : Platform): void {
-    const that = this;
-    that.platform = platform;
     if (this.platformSet) {
-      // in this case, the bound functions will call the new platform
-      return;
+      throw new Error("Task already has a platform set");
     }
     this.chan.bind('platform.validate', function (trans, mode : string) {
-      that.platform?.validate(mode, trans.complete, trans.error);
+      platform.validate(mode, trans.complete, trans.error);
       trans.delayReturn(true);
     });
     this.chan.bind('platform.getTaskParams', function (trans, keyDefault? : [string, TaskParamsValue]) {
       const key = keyDefault ? keyDefault[0] : undefined;
       const defaultValue = keyDefault ? keyDefault[1] : undefined;
-      that.platform?.getTaskParams(key, defaultValue, trans.complete, trans.error);
+      platform.getTaskParams(key, defaultValue, trans.complete, trans.error);
       trans.delayReturn(true);
     });
     this.chan.bind('platform.showView', function (trans, view : TaskView) {
-      that.platform?.showView(view, trans.complete, trans.error);
+      platform.showView(view, trans.complete, trans.error);
       trans.delayReturn(true);
     });
     this.chan.bind('platform.askHint', function (trans, hintToken : string) {
-      that.platform?.askHint(hintToken, trans.complete, trans.error);
+      platform.askHint(hintToken, trans.complete, trans.error);
       trans.delayReturn(true);
     });
     this.chan.bind('platform.updateDisplay', function (trans, data : TaskDisplayData) {
-      that.platform?.updateDisplay(data, trans.complete, trans.error);
+      platform.updateDisplay(data, trans.complete, trans.error);
       trans.delayReturn(true);
     });
     this.chan.bind('platform.openUrl', function (trans, url : string) {
-      that.platform?.openUrl(url, trans.complete, trans.error);
+      platform.openUrl(url, trans.complete, trans.error);
       trans.delayReturn(true);
     });
     this.chan.bind('platform.log', function (trans, data : TaskLog) {
-      that.platform?.log(data, trans.complete, trans.error);
+      platform.log(data, trans.complete, trans.error);
       trans.delayReturn(true);
     });
-    this.platformSet = true;
 
     // Legacy calls
     this.chan.bind('platform.updateHeight', function (trans, height : number) {
-      that.platform?.updateDisplay({ height: height }, trans.complete, trans.error);
+      platform.updateDisplay({ height: height }, trans.complete, trans.error);
       trans.delayReturn(true);
     });
-  }
 
-  getSourceId() : string {
-    return this.taskId || '';
-  }
-
-  getTargetUrl() : string | null {
-    return this.iframe.getAttribute('src');
-  }
-
-  getTarget() : HTMLIFrameElement["contentWindow"] {
-    return this.iframe.contentWindow;
-  }
-
-  getDomain() : string {
-    const url = this.getTargetUrl() || '';
-    return url.substr(0, url.indexOf('/', 7));
   }
 
   /**
@@ -342,12 +301,10 @@ export class Platform {
     // TODO: validator
     this.updateDisplay({ height: height }, success, error);
   }
-  updateDisplay(data : UpdateDisplayParams, success : CompleteFunction<void>, _? : ErrorFunction) : void {
+  updateDisplay(_data : UpdateDisplayParams, _success : CompleteFunction<void>, error? : ErrorFunction) : void {
     // TODO: validator
-    if (data.height !== undefined) {
-      const height = Number(data.height);
-      this.task.iframe.setAttribute('height', String(height + 40));
-      success();
+    if (error) {
+      error('platform.updateDisplay is not defined!');
     }
   }
   openUrl(_url : string, _success : CompleteFunction<void>, error? : ErrorFunction) : void {

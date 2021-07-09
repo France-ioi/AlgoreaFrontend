@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ItemData } from '../../services/item-datasource.service';
-import { Platform, Task, TaskParams, TaskProxyManager } from 'src/app/modules/item/task/task-xd-pr';
+import { getTaskProxy, getTaskUrl, Platform, Task, TaskParams } from 'src/app/modules/item/task/task-xd-pr';
 import { CompleteFunction, ErrorFunction } from 'src/app/modules/item/task/rxjschannel';
 import { forkJoin, interval, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
@@ -26,7 +26,6 @@ export class ItemDisplayComponent implements OnInit, AfterViewInit, OnDestroy {
   tabs: TaskTab[] = [];
   activeTab: TaskTab;
 
-  taskProxyManager: TaskProxyManager;
   task?: Task;
   platform? : Platform;
 
@@ -44,7 +43,6 @@ export class ItemDisplayComponent implements OnInit, AfterViewInit, OnDestroy {
     this.tabs = [ initialTab ];
     this.tabs.push({ name: 'Editor' });
     this.activeTab = initialTab;
-    this.taskProxyManager = new TaskProxyManager();
   }
 
 
@@ -53,20 +51,20 @@ export class ItemDisplayComponent implements OnInit, AfterViewInit, OnDestroy {
     const url = this.itemData?.item.url || '';
     // TODO get sToken
     const sToken = '';
-    this.setUrl(this.taskProxyManager.getUrl(url, sToken, 'http://algorea.pem.dev', 'task-'));
+    this.setUrl(getTaskUrl(url, sToken, 'http://algorea.pem.dev', 'task-'));
   }
 
   ngAfterViewInit(): void {
     if (this.iframe) {
       const iframe = this.iframe.nativeElement;
-      this.taskProxyManager.getTaskProxy(iframe, this.taskIframeLoaded.bind(this), false);
+      getTaskProxy(iframe).subscribe((task: Task) => this.taskIframeLoaded(task));
     }
   }
 
   ngOnDestroy(): void {
     this.heightInterval?.unsubscribe();
     this.saveInterval?.unsubscribe();
-    this.taskProxyManager.deleteTaskProxy();
+    this.task?.destroy();
   }
 
   // Task iframe is ready
