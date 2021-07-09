@@ -71,7 +71,7 @@ export class UserGroupInvitationsComponent implements OnDestroy, OnInit {
         next: result => {
           this.state = 'ready';
           displayResponseToast(this.actionFeedbackService, parseResults(result), params.type);
-          this.dataFetching.next({sort: this.currentSort});
+          this.dataFetching.next({ sort: this.currentSort });
         },
         error: _err => {
           this.state = 'ready';
