@@ -327,18 +327,23 @@ export class Platform {
    */
 
   validate(_mode : string, _success : CompleteFunction<void>, error : ErrorFunction) : void {
+    // TODO: validator
     error('platform.validate is not defined');
   }
   showView(_views : any, _success : CompleteFunction<void>, error : ErrorFunction) : void {
+    // TODO: validator
     error('platform.validate is not defined');
   }
   askHint(_platformToken : string, _success : CompleteFunction<string>, error : ErrorFunction) : void {
+    // TODO: validator
     error('platform.validate is not defined');
   }
   updateHeight(height : number, success : CompleteFunction<void>, error : ErrorFunction) : void {
+    // TODO: validator
     this.updateDisplay({ height: height }, success, error);
   }
   updateDisplay(data : UpdateDisplayParams, success : CompleteFunction<void>, _? : ErrorFunction) : void {
+    // TODO: validator
     if (data.height !== undefined) {
       const height = Number(data.height);
       this.task.iframe.setAttribute('height', String(height + 40));
@@ -346,16 +351,19 @@ export class Platform {
     }
   }
   openUrl(_url : string, _success : CompleteFunction<void>, error? : ErrorFunction) : void {
+    // TODO: validator
     if (error) {
       error('platform.openUrl is not defined!');
     }
   }
-  log(_data : any, _success : CompleteFunction<void>, error? : ErrorFunction) : void {
+  log(_data : TaskLog, _success : CompleteFunction<void>, error? : ErrorFunction) : void {
+    // TODO: validator
     if (error){
       error('platform.log is not defined!');
     }
   }
   getTaskParams(key : string | undefined, defaultValue : TaskParamsValue,
+    // TODO: validator
     success : (result : TaskParamsValue) => void, _? : ErrorFunction) : void {
     const res : {[key: string]: TaskParamsValue} = { minScore: -3, maxScore: 10, randomSeed: 0, noScore: 0, readOnly: false, options: {} };
     if (key) {
