@@ -5,9 +5,9 @@
  * It depends on jschannel.
  */
 
-import { interval, Observable } from "rxjs";
+import { interval, Observable, of, throwError } from "rxjs";
 import { filter, map, switchMap, take } from "rxjs/operators";
-import { CompleteFunction, ErrorFunction, rxBuild, RxMessagingChannel } from "./rxjschannel";
+import { rxBuild, RxMessagingChannel } from "./rxjschannel";
 
 export interface TaskParams {
   minScore: number,
@@ -119,43 +119,16 @@ export class Task {
     if (this.platformSet) {
       throw new Error("Task already has a platform set");
     }
-    this.chan.bind('platform.validate', function (trans, mode : string) {
-      platform.validate(mode, trans.complete, trans.error);
-      trans.delayReturn(true);
-    });
-    this.chan.bind('platform.getTaskParams', function (trans, keyDefault? : [string, TaskParamsValue]) {
-      const key = keyDefault ? keyDefault[0] : undefined;
-      const defaultValue = keyDefault ? keyDefault[1] : undefined;
-      platform.getTaskParams(key, defaultValue, trans.complete, trans.error);
-      trans.delayReturn(true);
-    });
-    this.chan.bind('platform.showView', function (trans, view : TaskView) {
-      platform.showView(view, trans.complete, trans.error);
-      trans.delayReturn(true);
-    });
-    this.chan.bind('platform.askHint', function (trans, hintToken : string) {
-      platform.askHint(hintToken, trans.complete, trans.error);
-      trans.delayReturn(true);
-    });
-    this.chan.bind('platform.updateDisplay', function (trans, data : TaskDisplayData) {
-      platform.updateDisplay(data, trans.complete, trans.error);
-      trans.delayReturn(true);
-    });
-    this.chan.bind('platform.openUrl', function (trans, url : string) {
-      platform.openUrl(url, trans.complete, trans.error);
-      trans.delayReturn(true);
-    });
-    this.chan.bind('platform.log', function (trans, data : TaskLog) {
-      platform.log(data, trans.complete, trans.error);
-      trans.delayReturn(true);
-    });
+    this.chan.bind('platform.validate', (mode: string) => platform.validate(mode));
+    this.chan.bind('platform.getTaskParams', (keyDefault? : [string, TaskParamsValue]) => platform.getTaskParams(keyDefault));
+    this.chan.bind('platform.showView', (view : TaskView) => platform.showView(view));
+    this.chan.bind('platform.askHint', (hintToken : string) => platform.askHint(hintToken));
+    this.chan.bind('platform.updateDisplay', (data : TaskDisplayData) => platform.updateDisplay(data));
+    this.chan.bind('platform.openUrl', (url : string) => platform.openUrl(url));
+    this.chan.bind('platform.log', (data : TaskLog) => platform.log(data));
 
     // Legacy calls
-    this.chan.bind('platform.updateHeight', function (trans, height : number) {
-      platform.updateDisplay({ height: height }, trans.complete, trans.error);
-      trans.delayReturn(true);
-    });
-
+    this.chan.bind('platform.updateHeight', (height : number) => platform.updateDisplay({ height: height }));
   }
 
   /**
@@ -285,51 +258,46 @@ export class Platform {
    * platform's specific functions (for each platform object)
    */
 
-  validate(_mode : string, _success : CompleteFunction<void>, error : ErrorFunction) : void {
+  validate(_mode : string) : Observable<void> {
     // TODO: validator
-    error('platform.validate is not defined');
+    return throwError(() => new Error('platform.validate is not defined'));
   }
-  showView(_views : any, _success : CompleteFunction<void>, error : ErrorFunction) : void {
+  showView(_views : any) : Observable<void> {
     // TODO: validator
-    error('platform.validate is not defined');
+    return throwError(() => new Error('platform.showView is not defined'));
   }
-  askHint(_platformToken : string, _success : CompleteFunction<string>, error : ErrorFunction) : void {
+  askHint(_platformToken : string) : Observable<void> {
     // TODO: validator
-    error('platform.validate is not defined');
+    return throwError(() => new Error('platform.validate is not defined'));
   }
-  updateHeight(height : number, success : CompleteFunction<void>, error : ErrorFunction) : void {
+  updateHeight(height : number) : Observable<void> {
     // TODO: validator
-    this.updateDisplay({ height: height }, success, error);
+    return this.updateDisplay({ height: height });
   }
-  updateDisplay(_data : UpdateDisplayParams, _success : CompleteFunction<void>, error? : ErrorFunction) : void {
+  updateDisplay(_data : UpdateDisplayParams) : Observable<void> {
     // TODO: validator
-    if (error) {
-      error('platform.updateDisplay is not defined!');
-    }
+    return throwError(() => new Error('platform.updateDisplay is not defined!'));
   }
-  openUrl(_url : string, _success : CompleteFunction<void>, error? : ErrorFunction) : void {
+  openUrl(_url : string) : Observable<void> {
     // TODO: validator
-    if (error) {
-      error('platform.openUrl is not defined!');
-    }
+    return throwError(() => new Error('platform.openUrl is not defined!'));
   }
-  log(_data : TaskLog, _success : CompleteFunction<void>, error? : ErrorFunction) : void {
+  log(_data : TaskLog) : Observable<void> {
     // TODO: validator
-    if (error){
-      error('platform.log is not defined!');
-    }
+    return throwError(() => new Error('platform.log is not defined!'));
   }
-  getTaskParams(key : string | undefined, defaultValue : TaskParamsValue,
+  getTaskParams(keyDefault? : [string, TaskParamsValue]) : Observable<TaskParamsValue> {
     // TODO: validator
-    success : (result : TaskParamsValue) => void, _? : ErrorFunction) : void {
+    const key = keyDefault ? keyDefault[0] : undefined;
+    const defaultValue = keyDefault ? keyDefault[1] : undefined;
     const res : {[key: string]: TaskParamsValue} = { minScore: -3, maxScore: 10, randomSeed: 0, noScore: 0, readOnly: false, options: {} };
     if (key) {
       if (key !== 'options' && key in res) {
-        return success(res[key]);
+        return of(res[key]);
       } else {
-        return success(defaultValue);
+        return of(defaultValue);
       }
     }
-    success(res);
+    return of(res);
   }
 }
