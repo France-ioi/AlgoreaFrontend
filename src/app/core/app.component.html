@@ -40,7 +40,7 @@
     <div
       class="right"
       *ngrxLet="leftMenuAndHeaders$ as leftMenuAndHeaders"
-      [ngClass]="{ collapsed: !leftMenuAndHeaders, expanded: leftMenuAndHeaders, 'with-mode-bar': currentMode !== 'normal' }"
+      [ngClass]="{ collapsed: !leftMenuAndHeaders, expanded: leftMenuAndHeaders, 'with-mode-bar': currentMode !== 'normal', 'with-task': withTask$ | async }"
       >
       <div class="main-content">
         <router-outlet></router-outlet>
