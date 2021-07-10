@@ -14,12 +14,8 @@ export class LayoutService {
   private withTask = new BehaviorSubject<boolean>(false);
   withTask$ = this.withTask.asObservable().pipe(delay(0));
 
-  toggleLeftMenuAndHeaders(shown?: boolean): void {
-    if (shown !== undefined) {
-      this.leftMenuAndHeadersDisplayed.next(shown);
-    } else {
-      this.leftMenuAndHeadersDisplayed.next(!this.leftMenuAndHeadersDisplayed.value);
-    }
+  toggleLeftMenuAndHeaders(shown: boolean): void {
+    this.leftMenuAndHeadersDisplayed.next(shown);
   }
 
   toggleWithTask(newState: boolean): void {
