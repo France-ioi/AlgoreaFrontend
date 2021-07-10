@@ -8,9 +8,6 @@ export interface RxMessage<T> {
   error?: (error: any, message: string) => void;
 }
 
-export type CompleteFunction<T> = (result? : T) => void;
-export type ErrorFunction = (...params : any) => void;
-
 /** Build a RxMessagingChannel, which is a jschannel with rxjs calls */
 export function rxBuild(config: ChannelConfiguration): Observable<RxMessagingChannel> {
   return new Observable<RxMessagingChannel>(subscriber => {
@@ -37,7 +34,19 @@ export class RxMessagingChannel {
     return this.innerChan.unbind(method, doNotPublish);
   }
 
-  bind<T>(method: string, callback?: (transaction: MessageTransaction, params: T) => void, doNotPublish?: boolean): MessagingChannel {
+  bind<T>(method: string, observable?: (params: T) => Observable<any>, doNotPublish?: boolean): MessagingChannel {
+    // Create a callback wrapping the observable bound
+    function callback(transaction: MessageTransaction, params: T): void {
+      if (!observable) {
+        return;
+      }
+      const cb$ = observable(params);
+      cb$.subscribe({
+        next: transaction.complete,
+        error: error => transaction.error(error, '')
+      });
+      transaction.delayReturn(true);
+    }
     return this.innerChan.bind(method, callback, doNotPublish);
   }
 

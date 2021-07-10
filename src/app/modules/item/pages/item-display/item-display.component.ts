@@ -1,9 +1,8 @@
 import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ItemData } from '../../services/item-datasource.service';
-import { getTaskProxy, getTaskUrl, Platform, Task, TaskParams } from 'src/app/modules/item/task/task-xd-pr';
-import { CompleteFunction, ErrorFunction } from 'src/app/modules/item/task/rxjschannel';
-import { forkJoin, interval, Subscription } from 'rxjs';
+import { getTaskProxy, getTaskUrl, Platform, Task, TaskParams, TaskParamsValue } from 'src/app/modules/item/task/task-xd-pr';
+import { forkJoin, interval, Observable, of, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
 interface TaskTab {
@@ -148,27 +147,32 @@ export class ItemDisplayComponent implements OnInit, AfterViewInit, OnDestroy {
 }
 
 export class ItemDisplayPlatform extends Platform {
-  taskParams: any;
+  taskParams: TaskParams;
   constructor(task: Task, taskParams: TaskParams) {
     super(task);
     this.taskParams = taskParams;
   }
 
-  validate(mode : string, success : CompleteFunction<void>, _error : ErrorFunction) : void {
+  validate(mode : string) : Observable<void> {
     if (mode == 'cancel') {
       // TODO reload answer
+      return of();
     }
     if (mode == 'validate') {
-      this.task.getAnswer()
-        .pipe(switchMap((answer: string) => this.task.gradeAnswer(answer, '')
-        ))
-        .subscribe((results : any) => {
-          success(results);
-        });
+      return this.task.getAnswer()
+        .pipe(
+          switchMap((answer: string) => this.task.gradeAnswer(answer, '')),
+          switchMap((_results : any) =>
+            // TODO Do something with the results
+            of()
+          )
+        );
     }
+    // Other unimplemented modes
+    return of();
   }
 
-  getTaskParams(_key : string | undefined, _defaultValue : any, success : (result : any) => void, _? : ErrorFunction) : void {
-    success(this.taskParams);
+  getTaskParams(_keydefault?: [string, TaskParamsValue]) : Observable<TaskParamsValue> {
+    return of(this.taskParams);
   }
 }
