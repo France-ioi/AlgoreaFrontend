@@ -216,6 +216,10 @@ a:hover {
       }
     }
 
+    &.with-task {
+      padding-bottom: 0;
+    }
+
     .main-content {
       padding-left: 1.6667rem;
       // background-color: $base-bk-color;

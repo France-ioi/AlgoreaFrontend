@@ -28,6 +28,7 @@ export class AppComponent implements OnInit, OnDestroy {
   );
 
   leftMenuAndHeaders$ = this.layoutService.leftMenuAndHeadersDisplayed$;
+  withTask$ = this.layoutService.withTask$;
   scrolled = false;
 
   private subscription?: Subscription;
