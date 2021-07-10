@@ -27,8 +27,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.localeService.currentLangError$,
   );
 
-  leftMenuAndHeaders = true;
-  leftMenuAndHeadersSubscription? : Subscription;
+  leftMenuAndHeaders$ = this.layoutService.leftMenuAndHeadersDisplayed$;
   scrolled = false;
 
   private subscription?: Subscription;
@@ -41,11 +40,7 @@ export class AppComponent implements OnInit, OnDestroy {
     private modeService: ModeService,
     private localeService: LocaleService,
     private layoutService: LayoutService,
-  ) {
-    this.leftMenuAndHeadersSubscription = this.layoutService.leftMenuAndHeadersDisplayed$.subscribe(shown => {
-      this.leftMenuAndHeaders = shown;
-    });
-  }
+  ) {}
 
   ngOnInit(): void {
     // if user changes, navigate back to the root
@@ -56,7 +51,6 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscription?.unsubscribe();
-    this.leftMenuAndHeadersSubscription?.unsubscribe();
   }
 
   @HostListener('window:scroll', [ '$event' ])
