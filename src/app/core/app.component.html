@@ -1,10 +1,13 @@
 <div class="container" *ngrxLet="session$ as session">
-  <div class="left" [ngClass]="{ collapsed: !leftMenuAndHeaders, expanded: leftMenuAndHeaders }">
+  <div class="left" *ngrxLet="leftMenuAndHeaders$ as leftMenuAndHeaders" [ngClass]="{ collapsed: !leftMenuAndHeaders, expanded: leftMenuAndHeaders }">
     <alg-left-menu></alg-left-menu>
   </div>
   <ng-container *ngIf="currentMode$ | async as currentMode">
-    <div class="top-bar"
-      [ngClass]="{ 'with-mode-bar': currentMode !== 'normal', collapsed: !leftMenuAndHeaders, expanded: leftMenuAndHeaders }">
+    <div
+      class="top-bar"
+      *ngrxLet="leftMenuAndHeaders$ as leftMenuAndHeaders"
+      [ngClass]="{ 'with-mode-bar': currentMode !== 'normal', collapsed: !leftMenuAndHeaders, expanded: leftMenuAndHeaders }"
+      >
       <alg-left-header *ngIf="!leftMenuAndHeaders" [compactMode]="true"></alg-left-header>
       <div class="top-right-bar" *ngrxLet="currentContent$ as currentContent">
         <alg-editor-bar *ngIf="currentMode === 'editing'" (cancel)="onEditCancel()"></alg-editor-bar>
@@ -34,9 +37,12 @@
       </div>
       <alg-top-right-controls [drawLeftBorder]="currentMode === 'normal'"></alg-top-right-controls>
     </div>
-    <div class="right"
-      [ngClass]="{ collapsed: !leftMenuAndHeaders, expanded: leftMenuAndHeaders, 'with-mode-bar': currentMode !== 'normal' }">
-      <div class="main-content" [ngClass]="{ folded: !leftMenuAndHeaders, unfolded: leftMenuAndHeaders }">
+    <div
+      class="right"
+      *ngrxLet="leftMenuAndHeaders$ as leftMenuAndHeaders"
+      [ngClass]="{ collapsed: !leftMenuAndHeaders, expanded: leftMenuAndHeaders, 'with-mode-bar': currentMode !== 'normal' }"
+      >
+      <div class="main-content">
         <router-outlet></router-outlet>
       </div>
     </div>
@@ -45,10 +51,16 @@
 <p-toast></p-toast>
 <p-confirmDialog></p-confirmDialog>
 <p-confirmPopup key="commonPopup"></p-confirmPopup>
-<p-dialog *ngrxLet="fatalError$" i18n-header="@@auth-error-modal-title" header="Error" [visible]="true"
-  [style]="{width: '50vw'}" [modal]="true" [closeOnEscape]="false" [closable]="false">
-  <p i18n="@@auth-error-modal-context">Oops, we are unable to make the site work properly. Are you connected to the
-    Internet?</p>
+<p-dialog
+  *ngrxLet="fatalError$"
+  i18n-header="@@auth-error-modal-title" header="Error"
+  [visible]="true"
+  [style]="{width: '50vw'}"
+  [modal]="true"
+  [closeOnEscape]="false"
+  [closable]="false"
+>
+  <p i18n="@@auth-error-modal-context">Oops, we are unable to make the site work properly. Are you connected to the Internet?</p>
   <p i18n="@@auth-error-modal-todo">Try to refresh the page. If this problem persists, please contact us.</p>
 </p-dialog>
 <alg-language-mismatch></alg-language-mismatch>
