@@ -1,6 +1,10 @@
-import { build, ChannelConfiguration, MessageTransaction, MessagingChannel } from 'jschannel';
-import { Observable } from 'rxjs';
+import { build, ChannelConfiguration, MessageTransaction, MessagingChannel } from "jschannel";
+import { Observable } from "rxjs";
 import { take } from 'rxjs/operators';
+import * as D from 'io-ts/Decoder';
+import { pipe as fppipe } from 'fp-ts/function';
+import { fold } from "fp-ts/lib/Either";
+
 
 export interface RxMessage {
   method: string;
@@ -35,13 +39,29 @@ export class RxMessagingChannel {
     return this.innerChan.unbind(method, doNotPublish);
   }
 
-  bind<T>(method: string, observable?: (params: T) => Observable<unknown>, doNotPublish?: boolean): MessagingChannel {
+  /** Bind a local method, allowing the remote task to call it */
+  bind<T>(method: string, observable?: (params: T) => Observable<unknown>, validator?: D.Decoder<unknown, T>,
+    doNotPublish?: boolean): MessagingChannel {
     // Create a callback wrapping the observable bound
-    function callback(transaction: MessageTransaction, params: T): void {
+    function callback(transaction: MessageTransaction, params: unknown): void {
       if (!observable) {
         return;
       }
-      const cb$ = observable(params);
+      // Validate params before passing them, if there is a validator
+      const decodedParams = validator
+        ? fppipe(
+          validator.decode(params),
+          fold(
+            error => {
+              transaction.error(error, D.draw(error));
+              // Also throw the error locally so we know something went wrong
+              throw new Error(D.draw(error));
+            },
+            decoded => decoded
+          ))
+        : params as T;
+
+      const cb$ = observable(decodedParams);
       cb$
         .pipe(take(1))
         .subscribe({
@@ -53,13 +73,26 @@ export class RxMessagingChannel {
     return this.innerChan.bind(method, callback, doNotPublish);
   }
 
-  call<T>(message: RxMessage, validator?: (result?: any) => T): Observable<T> {
+  /** Call a remote method through jschannel, return the result through an Observable */
+  call<T>(message: RxMessage, validator?: D.Decoder<unknown, T>): Observable<T> {
     // Create an Observable wrapping the inner jschannel call
     return new Observable<T>(subscriber => {
       const innerMessage = {
         ...message,
         success: (result?: any): void => {
-          subscriber.next(validator ? validator(result) : result as T);
+          // Validate result before passing it, if there is a validator
+          const decodedResult = validator
+            ? fppipe(
+              validator.decode(result),
+              fold(
+                error => {
+                  throw new Error(D.draw(error));
+                },
+                decoded => decoded
+              ))
+            : result as T;
+
+          subscriber.next(decodedResult);
           subscriber.complete();
         },
         error: (error: any, _message: string): void => subscriber.error(error)

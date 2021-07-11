@@ -5,35 +5,56 @@
  * It depends on jschannel.
  */
 
-import { Observable, of, throwError } from 'rxjs';
-import { delay, map, retryWhen, switchMap, take } from 'rxjs/operators';
+import { Observable, of, throwError } from "rxjs";
+import { delay, map, retryWhen, switchMap, take } from "rxjs/operators";
 import { parseQueryString } from 'src/app/shared/helpers/url';
-import { rxBuild, RxMessagingChannel } from './rxjschannel';
+import { rxBuild, RxMessagingChannel } from "./rxjschannel";
+import * as D from 'io-ts/Decoder';
 
-export interface TaskParams {
-  minScore: number,
-  maxScore: number,
-  noScore: number,
-  randomSeed: number,
-  readOnly: boolean,
-  options: Object,
-}
-export type TaskParamsValue = TaskParams | Object | string | number | undefined;
+// Parameters passed to the task
+export const taskParamsDecoder = D.struct({
+  minScore: D.number,
+  maxScore: D.number,
+  noScore: D.number,
+  randomSeed: D.number,
+  readOnly: D.boolean,
+  options: D.UnknownRecord,
+});
+export type TaskParams = D.TypeOf<typeof taskParamsDecoder>;
 
-export interface UpdateDisplayParams {
-  height?: number | string,
-  views?: Object,
-  scrollTop?: number,
-}
+// Type returned by getTaskParams
+export const taskParamsValueDecoder = D.union(taskParamsDecoder, D.UnknownRecord, D.string, D.number, D.boolean);
+export type TaskParamsValue = D.TypeOf<typeof taskParamsValueDecoder> | undefined;
 
-// TODO : actual types
-export type TaskMetaData = any;
-export type TaskView = any;
-export type TaskViews = any;
+// Views offered by the task
+// For instance, taskViews = { task: { includes: ["editor"] }, solution : {}}
+export const taskViewDecoder = D.partial({
+  requires: D.string,
+  includes: D.array(D.string)
+});
+export type TaskView = D.TypeOf<typeof taskViewDecoder>;
+
+export const taskViewsDecoder = D.record(taskViewDecoder);
+export type TaskViews = D.TypeOf<typeof taskViewsDecoder>;
+
+// TODO
 export type TaskGrade = any;
+
+// Parameters sent by the task to platform.updateDisplay
+export const updateDisplayParamsDecoder = D.partial({
+  height: D.number,
+  views: taskViewsDecoder,
+  scrollTop: D.number
+});
+export type UpdateDisplayParams = D.TypeOf<typeof updateDisplayParamsDecoder>;
+
+// Log data sent by the task
+export const taskLogDecoder = D.array(D.string);
+export type TaskLog = D.TypeOf<typeof taskLogDecoder>;
+
+// Currently unused
+export type TaskMetaData = any;
 export type TaskResources = any;
-export type TaskDisplayData = any;
-export type TaskLog = any;
 
 function getRandomID(): string {
   const low = Math.floor(Math.random() * 922337203).toString();
@@ -103,16 +124,45 @@ export class Task {
     if (this.platformSet) {
       throw new Error('Task already has a platform set');
     }
-    this.chan.bind('platform.validate', (mode: string) => platform.validate(mode));
+    this.chan.bind(
+      'platform.validate',
+      (mode: string) => platform.validate(mode),
+      D.string
+    );
+    // TODO validator
     this.chan.bind('platform.getTaskParams', (keyDefault? : [string, TaskParamsValue]) => platform.getTaskParams(keyDefault));
-    this.chan.bind('platform.showView', (view : TaskView) => platform.viewsShownByTask(view));
-    this.chan.bind('platform.askHint', (hintToken : string) => platform.askHint(hintToken));
-    this.chan.bind('platform.updateDisplay', (data : TaskDisplayData) => platform.updateDisplay(data));
-    this.chan.bind('platform.openUrl', (url : string) => platform.openUrl(url));
-    this.chan.bind('platform.log', (data : TaskLog) => platform.log(data));
+    this.chan.bind(
+      'platform.showView',
+      (view : string) => platform.viewsShownByTask(view),
+      D.string
+    );
+    this.chan.bind(
+      'platform.askHint',
+      (hintToken : string) => platform.askHint(hintToken),
+      D.string
+    );
+    this.chan.bind(
+      'platform.updateDisplay',
+      (data : UpdateDisplayParams) => platform.updateDisplay(data),
+      updateDisplayParamsDecoder
+    );
+    this.chan.bind(
+      'platform.openUrl',
+      (url : string) => platform.openUrl(url),
+      D.string
+    );
+    this.chan.bind(
+      'platform.log',
+      (data : TaskLog) => platform.log(data),
+      taskLogDecoder
+    );
 
     // Legacy calls
-    this.chan.bind('platform.updateHeight', (height : number) => platform.updateDisplay({ height: height }));
+    this.chan.bind(
+      'platform.updateHeight',
+      (height : number) => platform.updateDisplay({ height: height }),
+      D.number
+    );
     this.platformSet = true;
   }
 
@@ -134,11 +184,10 @@ export class Task {
   }
 
   getHeight() : Observable<number> {
-    // TODO: validator
     return this.chan.call({
       method: 'task.getHeight',
       timeout: 500,
-    });
+    }, D.number);
   }
 
   updateToken(token : string) : Observable<void> {
@@ -158,11 +207,10 @@ export class Task {
   }
 
   getAnswer() : Observable<string> {
-    // TODO: validator
     return this.chan.call({
       method: 'task.getAnswer',
       timeout: 2000
-    });
+    }, D.string);
   }
 
   reloadAnswer(answer : string) : Observable<void> {
@@ -174,11 +222,10 @@ export class Task {
   }
 
   getState() : Observable<string> {
-    // TODO: validator
     return this.chan.call({
       method: 'task.getState',
       timeout: 2000
-    });
+    }, D.string);
   }
 
   reloadState(state : string) : Observable<void> {
@@ -190,11 +237,10 @@ export class Task {
   }
 
   getViews() : Observable<TaskViews> {
-    // TODO: validator
     return this.chan.call({
       method: 'task.getViews',
       timeout: 2000
-    });
+    }, taskViewsDecoder);
   }
 
   showViewsInTask(views : Object) : Observable<void> {
@@ -245,7 +291,6 @@ export class TaskListener {
    */
 
   validate(_mode : string) : Observable<void> {
-    // TODO: validator
     return throwError(() => new Error('platform.validate is not defined'));
   }
   viewsShownByTask(_views : any) : Observable<void> {
@@ -253,27 +298,21 @@ export class TaskListener {
     return throwError(() => new Error('platform.showView is not defined'));
   }
   askHint(_platformToken : string) : Observable<void> {
-    // TODO: validator
     return throwError(() => new Error('platform.validate is not defined'));
   }
   updateHeight(height : number) : Observable<void> {
-    // TODO: validator
     return this.updateDisplay({ height: height });
   }
   updateDisplay(_data : UpdateDisplayParams) : Observable<void> {
-    // TODO: validator
     return throwError(() => new Error('platform.updateDisplay is not defined!'));
   }
   openUrl(_url : string) : Observable<void> {
-    // TODO: validator
     return throwError(() => new Error('platform.openUrl is not defined!'));
   }
   log(_data : TaskLog) : Observable<void> {
-    // TODO: validator
     return throwError(() => new Error('platform.log is not defined!'));
   }
   getTaskParams(keyDefault? : [string, TaskParamsValue]) : Observable<TaskParamsValue> {
-    // TODO: validator
     const key = keyDefault ? keyDefault[0] : undefined;
     const defaultValue = keyDefault ? keyDefault[1] : undefined;
     const res : {[key: string]: TaskParamsValue} = { minScore: -3, maxScore: 10, randomSeed: 0, noScore: 0, readOnly: false, options: {} };
