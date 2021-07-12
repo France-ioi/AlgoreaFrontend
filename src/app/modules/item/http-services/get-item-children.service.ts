@@ -24,7 +24,12 @@ export const itemChildDecoder = D.struct({
     scoreComputed: D.number,
     validated: D.boolean,
   })),
-  scoreWeight: D.number
+  scoreWeight: D.number,
+  contentViewPropagation: D.literal('none', 'as_info', 'as_content'),
+  editPropagation: D.boolean,
+  grantViewPropagation: D.boolean,
+  upperViewLevelsPropagation: D.literal('use_content_view_propagation', 'as_content_with_descendants', 'as_is'),
+  watchPropagation: D.boolean,
 });
 
 export type ItemChild = D.TypeOf<typeof itemChildDecoder>;
