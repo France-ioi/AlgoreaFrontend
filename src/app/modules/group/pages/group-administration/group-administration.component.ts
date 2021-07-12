@@ -17,8 +17,4 @@ export class GroupAdministrationComponent implements OnChanges{
     this.groupWithPermissions = this.group ? withManagementAdditions(this.group) : undefined;
   }
 
-  refreshGroupInfo(): void {
-    this.groupRefreshRequired.emit();
-  }
-
 }
