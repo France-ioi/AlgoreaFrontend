@@ -1,8 +1,10 @@
 import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ItemData } from '../../services/item-datasource.service';
-import { CompleteFunction, ErrorFunction, Platform, Task, TaskParams, TaskProxyManager } from 'src/app/shared/task/task-xd-pr';
-import { interval, Subscription } from 'rxjs';
+import { taskProxyFromIframe, taskUrlWithParameters, Platform, Task, TaskParams, TaskParamsValue }
+  from 'src/app/modules/item/task/task-xd-pr';
+import { forkJoin, interval, Observable, of, Subscription } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 interface TaskTab {
   name: string
@@ -24,7 +26,6 @@ export class ItemDisplayComponent implements OnInit, AfterViewInit, OnDestroy {
   tabs: TaskTab[] = [];
   activeTab: TaskTab;
 
-  taskProxyManager: TaskProxyManager;
   task?: Task;
   platform? : Platform;
 
@@ -42,7 +43,6 @@ export class ItemDisplayComponent implements OnInit, AfterViewInit, OnDestroy {
     this.tabs = [ initialTab ];
     this.tabs.push({ name: 'Editor' });
     this.activeTab = initialTab;
-    this.taskProxyManager = new TaskProxyManager();
   }
 
 
@@ -51,20 +51,20 @@ export class ItemDisplayComponent implements OnInit, AfterViewInit, OnDestroy {
     const url = this.itemData?.item.url || '';
     // TODO get sToken
     const sToken = '';
-    this.setUrl(this.taskProxyManager.getUrl(url, sToken, 'http://algorea.pem.dev', 'task-'));
+    this.setUrl(taskUrlWithParameters(url, sToken, 'http://algorea.pem.dev', 'task-'));
   }
 
   ngAfterViewInit(): void {
     if (this.iframe) {
       const iframe = this.iframe.nativeElement;
-      this.taskProxyManager.getTaskProxy(iframe, this.taskIframeLoaded.bind(this), false);
+      taskProxyFromIframe(iframe).subscribe((task: Task) => this.taskIframeLoaded(task));
     }
   }
 
   ngOnDestroy(): void {
     this.heightInterval?.unsubscribe();
     this.saveInterval?.unsubscribe();
-    this.taskProxyManager.deleteTaskProxy();
+    this.task?.destroy();
   }
 
   // Task iframe is ready
@@ -72,10 +72,10 @@ export class ItemDisplayComponent implements OnInit, AfterViewInit, OnDestroy {
     this.task = task;
     const taskParams = { minScore: -3, maxScore: 10, randomSeed: 0, noScore: 0, readOnly: false, options: {} };
     this.platform = new ItemDisplayPlatform(task, taskParams);
-    this.task.setPlatform(this.platform);
+    this.task.bindPlatform(this.platform);
 
     const initialViews = { task: true, solution: true, editor: true, hints: true, grader: true, metadata: true };
-    task.load(initialViews, this.taskLoaded.bind(this));
+    task.load(initialViews).subscribe(() => this.taskLoaded());
   }
 
   // task.load done
@@ -86,26 +86,34 @@ export class ItemDisplayComponent implements OnInit, AfterViewInit, OnDestroy {
     this.heightInterval = interval(1000).subscribe(() => this.updateHeight());
     this.saveInterval = interval(1000).subscribe(() => this.getAnswerState());
 
-    this.task?.showViews({ task: true }, () => {});
+    this.task?.showViews({ task: true }).subscribe(() => {});
 
-    this.task?.getViews((views : any) => {
+    this.task?.getViews().subscribe((views : any) => {
       this.setViews(views);
     });
   }
 
   // Communication with the task
   getAnswerState(): void {
-    this.task?.getAnswer((answer : string) => {
-      this.task?.getState((state: string) => {
-        this.saveAnswerState(answer, state);
-      });
-    });
+    if (!this.task) {
+      return;
+    }
+    forkJoin([
+      this.task.getAnswer(),
+      this.task.getState()
+    ]).subscribe(([ answer, state ]) => this.saveAnswerState(answer, state));
   }
 
-  reloadAnswerState(answer : string, state : string, callback : CompleteFunction): void {
-    this.task?.reloadAnswer(answer, () => {
-      this.task?.reloadState(state, callback);
-    });
+  reloadAnswerState(answer : string, state : string): void {
+    if (!this.task) {
+      return;
+    }
+    const task = this.task;
+    task.reloadAnswer(answer)
+      .pipe(switchMap(() =>
+        task.reloadState(state)
+      ))
+      .subscribe();
   }
 
   saveAnswerState(answer : string, state : string) : void {
@@ -117,7 +125,7 @@ export class ItemDisplayComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   updateHeight(): void {
-    this.task?.getHeight(this.setHeight.bind(this));
+    this.task?.getHeight().subscribe(height => this.setHeight(height));
   }
 
   // Views management
@@ -140,26 +148,32 @@ export class ItemDisplayComponent implements OnInit, AfterViewInit, OnDestroy {
 }
 
 export class ItemDisplayPlatform extends Platform {
-  taskParams: any;
+  taskParams: TaskParams;
   constructor(task: Task, taskParams: TaskParams) {
     super(task);
     this.taskParams = taskParams;
   }
 
-  validate(mode : string, success : CompleteFunction, _error : ErrorFunction) : void {
+  validate(mode : string) : Observable<void> {
     if (mode == 'cancel') {
       // TODO reload answer
+      return of();
     }
     if (mode == 'validate') {
-      this.task.getAnswer((answer: string) => {
-        this.task.gradeAnswer(answer, '', (results : any) => {
-          success(results);
-        });
-      });
+      return this.task.getAnswer()
+        .pipe(
+          switchMap((answer: string) => this.task.gradeAnswer(answer, '')),
+          switchMap((_results : any) =>
+            // TODO Do something with the results
+            of()
+          )
+        );
     }
+    // Other unimplemented modes
+    return of();
   }
 
-  getTaskParams(_key : string | undefined, _defaultValue : any, success : (result : any) => void, _? : ErrorFunction) : void {
-    success(this.taskParams);
+  getTaskParams(_keydefault?: [string, TaskParamsValue]) : Observable<TaskParamsValue> {
+    return of(this.taskParams);
   }
 }
