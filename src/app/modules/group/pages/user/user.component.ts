@@ -51,7 +51,7 @@ export class UserComponent implements OnInit, OnDestroy {
       this.state$,
     ])
       .pipe(
-        map(([, state]) => contentInfo({
+        map(([ , state ]) => contentInfo({
           breadcrumbs: {
             category: $localize`Users`,
             path: [
