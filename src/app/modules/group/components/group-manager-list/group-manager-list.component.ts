@@ -37,14 +37,14 @@ export class GroupManagerListComponent implements OnChanges {
     this.state = 'loading';
     this.getGroupManagersService
       .getGroupManagers(this.group.id)
-      .subscribe(
-        (managers: Manager[]) => {
+      .subscribe({
+        next: (managers: Manager[]) => {
           this.managers = managers.map(manager => ({ ...manager, canManageAsText: this.getManagerLevel(manager) }));
           this.state = 'ready';
         },
-        _err => {
+        error: _err => {
           this.state = 'error';
         }
-      );
+      });
   }
 }

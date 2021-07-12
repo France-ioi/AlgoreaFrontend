@@ -149,12 +149,12 @@ export class ItemByIdComponent implements OnDestroy {
           map(attemptId => ({ contentType: contentType, id: id, path: path, parentAttemptId: attemptId }))
         );
       })
-    ).subscribe(
-      itemRoute => this.itemRouter.navigateTo(itemRoute),
-      err => {
+    ).subscribe({
+      next: itemRoute => this.itemRouter.navigateTo(itemRoute),
+      error: err => {
         this.state = errorState(err);
       }
-    );
+    });
   }
 
 }

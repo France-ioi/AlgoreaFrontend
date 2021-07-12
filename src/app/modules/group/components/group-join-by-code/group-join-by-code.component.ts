@@ -46,10 +46,10 @@ export class GroupJoinByCodeComponent implements OnChanges {
       .pipe(
         tap(() => this.refreshRequired.emit()),
         finalize(() => this.processing = false)
-      ).subscribe(
-        _result => this.actionFeedbackService.success($localize`A new code has been generated`),
-        _err => this.actionFeedbackService.unexpectedError(),
-      );
+      ).subscribe({
+        next: _result => this.actionFeedbackService.success($localize`A new code has been generated`),
+        error: _err => this.actionFeedbackService.unexpectedError(),
+      });
   }
 
   changeValidity(newDuration: Duration): void {
@@ -67,10 +67,10 @@ export class GroupJoinByCodeComponent implements OnChanges {
       .pipe(
         tap(() => this.refreshRequired.emit()),
         finalize(() => this.processing = false),
-      ).subscribe(
-        _result => this.actionFeedbackService.success($localize`The validity has been changed`),
-        _err => this.actionFeedbackService.unexpectedError(),
-      );
+      ).subscribe({
+        next: _result => this.actionFeedbackService.success($localize`The validity has been changed`),
+        error: _err => this.actionFeedbackService.unexpectedError(),
+      });
   }
 
   removeCode(): void {
@@ -85,10 +85,10 @@ export class GroupJoinByCodeComponent implements OnChanges {
       .pipe(
         tap(() => this.refreshRequired.emit()),
         finalize(() => this.processing = false)
-      ).subscribe(
-        _result => this.actionFeedbackService.success($localize`Users will not be able to join with the former code.`),
-        _err => this.actionFeedbackService.unexpectedError(),
-      );
+      ).subscribe({
+        next: _result => this.actionFeedbackService.success($localize`Users will not be able to join with the former code.`),
+        error: _err => this.actionFeedbackService.unexpectedError(),
+      });
   }
 
 }

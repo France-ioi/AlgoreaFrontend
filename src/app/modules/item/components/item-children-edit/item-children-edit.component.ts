@@ -83,14 +83,16 @@ export class ItemChildrenEditComponent implements OnChanges {
               };
             })
           )
-        ).subscribe(children => {
-          this.data = children;
-          this.scoreWeightEnabled = this.data.some(c => c.scoreWeight !== 1);
-          this.onChildrenListUpdate();
-          this.state = 'ready';
-        },
-        _err => {
-          this.state = 'error';
+        ).subscribe({
+          next: children => {
+            this.data = children;
+            this.scoreWeightEnabled = this.data.some(c => c.scoreWeight !== 1);
+            this.onChildrenListUpdate();
+            this.state = 'ready';
+          },
+          error: _err => {
+            this.state = 'error';
+          }
         });
     } else {
       this.state = 'error';

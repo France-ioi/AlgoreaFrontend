@@ -71,15 +71,15 @@ export class SubSkillsComponent implements OnChanges, OnDestroy {
               };
             })
         )
-      ).subscribe(
-        children => {
+      ).subscribe({
+        next: children => {
           this.children = children;
           this.state = 'ready';
         },
-        _err => {
+        error: _err => {
           this.state = 'error';
         }
-      );
+      });
     } else {
       this.state = 'error';
     }

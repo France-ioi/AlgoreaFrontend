@@ -17,13 +17,13 @@ export class ManagedGroupListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.managedGroupService.getManagedGroups().subscribe(
-      data => {
+    this.managedGroupService.getManagedGroups().subscribe({
+      next: data => {
         this.state = 'ready';
         this.data = data;
       },
-      _err => this.state = 'error',
-    );
+      error: _err => this.state = 'error',
+    });
   }
 
   getType(value: GroupType): string {

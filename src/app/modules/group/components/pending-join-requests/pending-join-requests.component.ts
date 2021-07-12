@@ -61,17 +61,17 @@ export class PendingJoinRequestsComponent implements OnChanges, OnDestroy {
             .pipe(map(readyState))
         )
       )
-    ).subscribe(
-      state => {
+    ).subscribe({
+      next: state => {
         this.state = state.tag;
         if (state.isReady) {
           this.requests = state.data;
         }
       },
-      _err => {
+      error: _err => {
         this.state = 'fetchingError';
       }
-    );
+    });
   }
 
   ngOnChanges(_changes: SimpleChanges): void {
@@ -98,17 +98,17 @@ export class PendingJoinRequestsComponent implements OnChanges, OnDestroy {
     });
 
     this.requestActionService.processJoinRequests(requestMap, params.type)
-      .subscribe(
-        result => {
+      .subscribe({
+        next: result => {
           this.state = 'ready';
           displayResponseToast(this.actionFeedbackService, parseResults(result), params.type);
           this.dataFetching.next({ groupId: this.groupId, includeSubgroup: this.includeSubgroup, sort: this.currentSort });
         },
-        _err => {
+        error: _err => {
           this.state = 'ready';
           processRequestError(this.actionFeedbackService);
         }
-      );
+      });
   }
 
   onSubgroupSwitch(selectedIdx: number): void {

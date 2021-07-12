@@ -87,16 +87,16 @@ export class GroupEditComponent implements OnDestroy, PendingChangesComponent {
         description: description === '' ? null : description,
         root_activity_id: rootActivityId
       }))
-    ).subscribe(
-      () => {
+    ).subscribe({
+      next: () => {
         this.groupDataSource.refetchGroup(); // will re-enable the form
         this.actionFeedbackService.success($localize`Changes successfully saved.`);
       },
-      _err => {
+      error: _err => {
         this.groupForm.enable();
         this.actionFeedbackService.unexpectedError();
       }
-    );
+    });
   }
 
   resetForm(): void {

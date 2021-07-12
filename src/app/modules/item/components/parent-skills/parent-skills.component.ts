@@ -50,15 +50,15 @@ export class ParentSkillsComponent implements OnChanges, OnDestroy {
       this.subscription?.unsubscribe();
       this.subscription = this.getItemParentsService.get(this.itemData.item.id, this.itemData.currentResult.attemptId).pipe(
         map(parents => parents.map(parent => ({ ...parent, isLocked: !canCurrentUserViewItemContent(parent) })))
-      ).subscribe(
-        parents => {
+      ).subscribe({
+        next: parents => {
           this.parents = parents;
           this.state = 'ready';
         },
-        _err => {
+        error: _err => {
           this.state = 'error';
         }
-      );
+      });
     } else {
       this.state = 'error';
     }

@@ -43,17 +43,17 @@ export class UserGroupInvitationsComponent implements OnDestroy, OnInit {
             .pipe(map(readyState))
         )
       )
-    ).subscribe(
-      state => {
+    ).subscribe({
+      next: state => {
         this.state = state.tag;
         if (state.isReady) {
           this.requests = state.data;
         }
       },
-      _err => {
+      error: _err => {
         this.state = 'fetchingError';
       }
-    );
+    });
   }
 
   ngOnInit(): void {
@@ -67,17 +67,17 @@ export class UserGroupInvitationsComponent implements OnDestroy, OnInit {
   onProcessRequests(params: { data: PendingRequest[], type: Action }): void {
     this.state = 'processing';
     this.requestActionService.processGroupInvitations(params.data.map(r => r.group.id), params.type)
-      .subscribe(
-        result => {
+      .subscribe({
+        next: result => {
           this.state = 'ready';
           displayResponseToast(this.actionFeedbackService, parseResults(result), params.type);
           this.dataFetching.next({ sort: this.currentSort });
         },
-        _err => {
+        error: _err => {
           this.state = 'ready';
           processRequestError(this.actionFeedbackService);
         }
-      );
+      });
   }
 
   onFetch(sort: string[]): void {

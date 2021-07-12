@@ -99,15 +99,15 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
           of(fetchingState()),
           this.getData(params.itemId, params.groupId, params.attemptId, params.filter).pipe(map(readyState))
         )
-      )).subscribe(
-      state => {
+      )).subscribe({
+      next: state => {
         this.state = state.tag;
         if (state.isReady) this.setDataByBatch(state.data);
       },
-      _err => {
+      error: _err => {
         this.state = 'error';
       }
-    );
+    });
   }
 
   ngOnDestroy(): void {
@@ -279,10 +279,10 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
 
     this.groupPermissionsService.updatePermissions(this.group.id, this.dialogPermissions.targetGroupId,
       this.dialogPermissions.itemId, permissions)
-      .subscribe(
-        _res => this.actionFeedbackService.success($localize`Permissions successfully updated.`),
-        _err => this.actionFeedbackService.unexpectedError(),
-      );
+      .subscribe({
+        next: _res => this.actionFeedbackService.success($localize`Permissions successfully updated.`),
+        error: _err => this.actionFeedbackService.unexpectedError(),
+      });
   }
 
 }

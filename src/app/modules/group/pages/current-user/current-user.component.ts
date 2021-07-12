@@ -33,18 +33,18 @@ export class CurrentUserComponent implements OnInit, OnDestroy {
   }
 
   update(changes: { default_language: string }): void {
-    this.userSessionService.updateCurrentUser(changes).subscribe(
-      () => {
+    this.userSessionService.updateCurrentUser(changes).subscribe({
+      next: () => {
         this.actionFeedbackService.success($localize`Changes successfully saved.`);
 
         if (changes.default_language) {
           this.localeService.navigateTo(changes.default_language);
         }
-
-      }, _err => {
+      },
+      error: _err => {
         this.actionFeedbackService.unexpectedError();
       }
-    );
+    });
   }
 
 }

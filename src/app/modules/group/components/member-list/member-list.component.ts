@@ -89,14 +89,15 @@ export class MemberListComponent implements OnChanges, OnDestroy {
   ) {
     this.dataFetching.pipe(
       switchMap(params => this.getData(params.groupId, params.filter, params.sort).pipe(mapToFetchState())),
-    ).subscribe(
-      state => {
+    ).subscribe({
+      next: state => {
         this.state = state.tag;
         if (state.isReady) this.data = state.data;
       },
-      _err => {
+      error: _err => {
         this.state = 'error';
-      });
+      }
+    });
   }
 
   ngOnDestroy(): void {
@@ -202,18 +203,20 @@ export class MemberListComponent implements OnChanges, OnDestroy {
 
     this.removalInProgress$.next(true);
     this.groupUsersService.removeUsers(this.group.id, this.selection.map(member => member.id))
-      .subscribe(result => {
-        displayResponseToast(this.actionFeedbackService, parseResults(result));
-        this.table?.clear();
-        this.selection = [];
-        if (this.group) {
-          this.dataFetching.next({ groupId: this.group.id, filter: this.currentFilter, sort: this.currentSort });
+      .subscribe({
+        next: result => {
+          displayResponseToast(this.actionFeedbackService, parseResults(result));
+          this.table?.clear();
+          this.selection = [];
+          if (this.group) {
+            this.dataFetching.next({ groupId: this.group.id, filter: this.currentFilter, sort: this.currentSort });
+          }
+          this.removalInProgress$.next(false);
+        },
+        error: _err => {
+          this.removalInProgress$.next(false);
+          this.actionFeedbackService.unexpectedError();
         }
-        this.removalInProgress$.next(false);
-      },
-      _err => {
-        this.removalInProgress$.next(false);
-        this.actionFeedbackService.unexpectedError();
       });
   }
 }
