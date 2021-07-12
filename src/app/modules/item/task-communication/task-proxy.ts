@@ -37,8 +37,18 @@ export type TaskView = D.TypeOf<typeof taskViewDecoder>;
 export const taskViewsDecoder = D.record(taskViewDecoder);
 export type TaskViews = D.TypeOf<typeof taskViewsDecoder>;
 
-// TODO
-export type TaskGrade = any;
+// Task grading results
+export interface RawTaskGrade {
+  score?: unknown,
+  message?: unknown,
+  scoreToken?: unknown
+}
+const taskGradeDecoder = D.partial({
+  score: D.number,
+  message: D.string,
+  scoreToken: D.string,
+});
+export type TaskGrade = D.TypeOf<typeof taskGradeDecoder>;
 
 // Parameters sent by the task to platform.updateDisplay
 export const updateDisplayParamsDecoder = D.partial({
@@ -252,12 +262,23 @@ export class Task {
   }
 
   gradeAnswer(answer : string, answerToken : string) : Observable<TaskGrade> {
-    // TODO: validator
+    function convertToTaskGrade(...result: any[]) : RawTaskGrade {
+      if (result.length == 0) {
+        throw new Error('task.gradeAnswer returned no arguments');
+      }
+      const resultArray = Array.isArray(result[0]) ? result[0] : result;
+      return {
+        score: resultArray[0],
+        message: resultArray[1],
+        scoreToken: resultArray[2]
+      };
+    }
     return this.chan.call({
       method: 'task.gradeAnswer',
       params: [ answer, answerToken ],
+      selector: convertToTaskGrade,
       timeout: 40000
-    });
+    }, taskGradeDecoder);
   }
 
   getResources() : Observable<TaskResources> {
