@@ -63,7 +63,7 @@ export class UserComponent implements OnInit, OnDestroy {
                 title: this.router.url.includes('personal-data') ? $localize`Personal info` : $localize`Progress`,
               }
             ],
-            currentPageIdx: -1,
+            currentPageIdx: 1,
           }
         }))
       )
