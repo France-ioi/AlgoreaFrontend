@@ -1,9 +1,9 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { GetUserService } from '../../http-services/get-user.service';
 import { mapToFetchState } from '../../../../shared/operators/state';
-import { Subscription } from 'rxjs';
-import { ActivatedRoute, Router, RouterLinkActive } from '@angular/router';
-import { delay, switchMap, map } from 'rxjs/operators';
+import { combineLatest, Subscription } from 'rxjs';
+import { ActivatedRoute, NavigationEnd, Router, RouterLinkActive } from '@angular/router';
+import { delay, switchMap, map, startWith, filter, share } from 'rxjs/operators';
 import { contentInfo } from '../../../../shared/models/content/content-info';
 import { CurrentContentService } from '../../../../shared/services/current-content.service';
 import { UserSessionService } from '../../../../shared/services/user-session.service';
@@ -21,6 +21,7 @@ export class UserComponent implements OnInit, OnDestroy {
   readonly state$ = this.route.params.pipe(
     switchMap(({ id }) => this.getUserService.getForId(id)),
     mapToFetchState(),
+    share(),
   );
 
   readonly currentUserGroupId$ = this.userSessionService.userProfile$.pipe(
@@ -41,9 +42,16 @@ export class UserComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.subscription = this.state$
+    this.subscription = combineLatest([
+      this.router.events
+        .pipe(
+          filter(event => event instanceof NavigationEnd),
+          startWith(null),
+        ),
+      this.state$,
+    ])
       .pipe(
-        map(state => contentInfo({
+        map(([, state]) => contentInfo({
           breadcrumbs: {
             category: $localize`Users`,
             path: [
