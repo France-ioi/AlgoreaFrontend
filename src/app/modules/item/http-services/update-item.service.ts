@@ -6,7 +6,15 @@ import { appConfig } from '../../../shared/helpers/config';
 import { map } from 'rxjs/operators';
 
 export interface ItemChanges {
-  children?: { item_id: string, order: number }[],
+  children?: {
+    item_id: string,
+    order: number,
+    content_view_propagation?: 'none' | 'as_info' | 'as_content',
+    edit_propagation?: boolean,
+    grant_view_propagation?: boolean,
+    upper_view_levels_propagation?: 'use_content_view_propagation' | 'as_content_with_descendants' | 'as_is',
+    watch_propagation?: boolean,
+  }[],
   url?: string | null,
   text_id?: string | null,
   uses_api?: boolean,

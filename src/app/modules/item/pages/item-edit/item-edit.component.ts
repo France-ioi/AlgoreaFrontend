@@ -262,8 +262,16 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
           // @TODO: Avoid affecting component vars in Observable Operator
           // save the new children (their ids) to prevent recreating them in case of error
           this.itemChanges.children = res;
-          changes.children = res.map((child, idx) =>
-            ({ item_id: child.id, order: idx, score_weight: child.scoreWeight }));
+          changes.children = res.map((child, idx) => ({
+            item_id: child.id,
+            order: idx,
+            score_weight: child.scoreWeight,
+            content_view_propagation: child.contentViewPropagation,
+            edit_propagation: child.editPropagation,
+            grant_view_propagation: child.grantViewPropagation,
+            upper_view_levels_propagation: child.upperViewLevelsPropagation,
+            watch_propagation: child.watchPropagation,
+          }));
         }
         if (!Object.keys(changes).length) return of(undefined);
         return this.updateItemService.updateItem(this.initialFormData.id, changes);

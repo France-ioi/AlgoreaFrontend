@@ -20,6 +20,11 @@ export interface ChildData {
     validated: boolean,
     score: number,
   },
+  contentViewPropagation?: 'none' | 'as_info' | 'as_content',
+  editPropagation?: boolean,
+  grantViewPropagation?: boolean,
+  upperViewLevelsPropagation?: 'use_content_view_propagation' | 'as_content_with_descendants' | 'as_is',
+  watchPropagation?: boolean,
 }
 
 export interface ChildDataWithId extends ChildData {
@@ -80,6 +85,11 @@ export class ItemChildrenEditComponent implements OnChanges {
                   validated: res.validated,
                   score: res.scoreComputed,
                 },
+                contentViewPropagation: child.contentViewPropagation,
+                editPropagation: child.editPropagation,
+                grantViewPropagation: child.grantViewPropagation,
+                upperViewLevelsPropagation: child.upperViewLevelsPropagation,
+                watchPropagation: child.watchPropagation,
               };
             })
           )
