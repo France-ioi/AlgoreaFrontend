@@ -9,6 +9,7 @@ export interface RxMessage<T> {
   method: string;
   params?: T;
   timeout?: number;
+  selector?: (...result: any[]) => unknown;
   error?: (error: any, message: string) => void;
 }
 
@@ -74,20 +75,25 @@ export class RxMessagingChannel {
   call<S, T>(message: RxMessage<S>, validator?: D.Decoder<unknown, T>): Observable<T> {
     // Create an Observable wrapping the inner jschannel call
     return new Observable<T>(subscriber => {
+      const selector = message.selector
+        ? message.selector
+        : (...result: any[]) : unknown => (result.length > 0 && result[0]) || undefined;
+
       const innerMessage = {
         ...message,
-        success: (result?: any): void => {
+        success: (...result: any[]): void => {
           // Validate result before passing it, if there is a validator
+          const filteredResult = selector(result);
           const decodedResult = validator
             ? fppipe(
-              validator.decode(result),
+              validator.decode(filteredResult),
               fold(
                 error => {
                   throw new Error(D.draw(error));
                 },
                 decoded => decoded
               ))
-            : result as T;
+            : filteredResult as T;
 
           subscriber.next(decodedResult);
           subscriber.complete();
