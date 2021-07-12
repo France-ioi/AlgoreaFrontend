@@ -14,8 +14,8 @@ import { Mode, ModeService } from 'src/app/shared/services/mode.service';
 import { readyData } from 'src/app/shared/operators/state';
 import { Duration } from '../../../../shared/helpers/duration';
 import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
+import { isNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
 
-const DEFAULT_ENTERING_TIME_MIN = '1000-01-01T00:00:00Z';
 const DEFAULT_ENTERING_TIME_MAX = '9999-12-31T23:59:59Z';
 
 @Component({
@@ -158,10 +158,10 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
     const itemFormValues: ItemChanges = {};
 
     const url = formControls.url?.value !== '' ? formControls.url?.value as string : null;
-    if (url !== this.initialFormData.url) itemFormValues.url = url;
+    if (isNotUndefined(this.initialFormData.url) && url !== this.initialFormData.url) itemFormValues.url = url;
 
     const usesApi = formControls.usesApi?.value as boolean;
-    if (usesApi !== this.initialFormData.usesApi) itemFormValues.uses_api = usesApi;
+    if (isNotUndefined(this.initialFormData.usesApi) && usesApi !== this.initialFormData.usesApi) itemFormValues.uses_api = usesApi;
 
     const textId = formControls.textId?.value as string;
     if (textId !== '') itemFormValues.text_id = textId;
@@ -354,8 +354,7 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
         requires_explicit_entry: item.requiresExplicitEntry,
         duration_enabled: item.durationEnabled,
         duration: item.duration,
-        entering_time_min: item.enteringTimeMin.getTime() === new Date(DEFAULT_ENTERING_TIME_MIN).getTime() ? new Date()
-          : item.enteringTimeMin,
+        entering_time_min: item.enteringTimeMin,
         entering_time_max_enabled: item.enteringTimeMaxEnabled,
         entering_time_max: item.enteringTimeMax,
       } : {}),
