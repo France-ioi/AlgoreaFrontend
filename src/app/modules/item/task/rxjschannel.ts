@@ -1,10 +1,15 @@
 import { build, ChannelConfiguration, MessageTransaction, MessagingChannel } from "jschannel";
 import { Observable } from "rxjs";
+import * as D from 'io-ts/Decoder';
+import { pipe as fppipe } from 'fp-ts/function';
+import { fold } from "fp-ts/lib/Either";
+
 
 export interface RxMessage<T> {
   method: string;
   params?: T;
   timeout?: number;
+  selector?: (...result: any[]) => unknown;
   error?: (error: any, message: string) => void;
 }
 
@@ -34,29 +39,68 @@ export class RxMessagingChannel {
     return this.innerChan.unbind(method, doNotPublish);
   }
 
-  bind<T>(method: string, observable?: (params: T) => Observable<any>, doNotPublish?: boolean): MessagingChannel {
+  /** Bind a local method, allowing the remote task to call it */
+  bind<T>(method: string, observable?: (params: T) => Observable<any>, validator?: D.Decoder<unknown, T>,
+    selector?: (params: any[]) => unknown, doNotPublish?: boolean): MessagingChannel {
     // Create a callback wrapping the observable bound
-    function callback(transaction: MessageTransaction, params: T): void {
+    function callback(transaction: MessageTransaction, ...params: any[]): void {
       if (!observable) {
         return;
       }
-      const cb$ = observable(params);
+      // Select params
+      const actualSelector = selector
+        ? selector
+        : (result: any[]) : unknown => (result.length > 0 ? result[0] : undefined);
+
+      const selectedParams = actualSelector(params);
+
+      // Validate params before passing them, if there is a validator
+      const decodedParams = validator
+        ? fppipe(
+          validator.decode(selectedParams),
+          fold(
+            error => {
+              throw new Error(D.draw(error));
+            },
+            decoded => decoded
+          ))
+        : selectedParams as T;
+
+      const cb$ = observable(decodedParams);
       cb$.subscribe({
         next: transaction.complete,
-        error: error => transaction.error(error, '')
+        error: error => transaction.error(error, error instanceof Error ? error.toString() : '')
       });
       transaction.delayReturn(true);
     }
     return this.innerChan.bind(method, callback, doNotPublish);
   }
 
-  call<S, T>(message: RxMessage<S>, validator?: (result?: any) => T): Observable<T> {
+  /** Call a remote method through jschannel, return the result through an Observable */
+  call<S, T>(message: RxMessage<S>, validator?: D.Decoder<unknown, T>): Observable<T> {
     // Create an Observable wrapping the inner jschannel call
     return new Observable<T>(subscriber => {
+      const selector = message.selector
+        ? message.selector
+        : (result: any[]) : unknown => (result.length > 0 ? result[0] : undefined);
+
       const innerMessage = {
         ...message,
-        success: (result?: any): void => {
-          subscriber.next(validator ? validator(result) : result as T);
+        success: (...result: any[]): void => {
+          // Validate result before passing it, if there is a validator
+          const selectedResult = selector(result);
+          const decodedResult = validator
+            ? fppipe(
+              validator.decode(selectedResult),
+              fold(
+                error => {
+                  throw new Error(D.draw(error));
+                },
+                decoded => decoded
+              ))
+            : selectedResult as T;
+
+          subscriber.next(decodedResult);
           subscriber.complete();
         },
         error: (error: any, _message: string): void => subscriber.error(error)
