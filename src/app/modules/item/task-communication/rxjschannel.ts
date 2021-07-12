@@ -42,23 +42,30 @@ export class RxMessagingChannel {
 
   /** Bind a local method, allowing the remote task to call it */
   bind<T>(method: string, observable?: (params: T) => Observable<unknown>, validator?: D.Decoder<unknown, T>,
-    doNotPublish?: boolean): MessagingChannel {
+    selector?: (params: any[]) => unknown, doNotPublish?: boolean): MessagingChannel {
     // Create a callback wrapping the observable bound
-    function callback(transaction: MessageTransaction, params: unknown): void {
+    function callback(transaction: MessageTransaction, ...params: any[]): void {
       if (!observable) {
         return;
       }
+      // Select params
+      const actualSelector = selector
+        ? selector
+        : (result: any[]) : unknown => (result.length > 0 ? result[0] : undefined);
+
+      const selectedParams = actualSelector(params);
+
       // Validate params before passing them, if there is a validator
       const decodedParams = validator
         ? fppipe(
-          validator.decode(params),
+          validator.decode(selectedParams),
           fold(
             error => {
               throw new Error(D.draw(error));
             },
             decoded => decoded
           ))
-        : params as T;
+        : selectedParams as T;
 
       const cb$ = observable(decodedParams);
       cb$

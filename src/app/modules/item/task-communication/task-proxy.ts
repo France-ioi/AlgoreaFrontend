@@ -10,61 +10,8 @@ import { delay, map, retryWhen, switchMap, take } from "rxjs/operators";
 import { parseQueryString } from 'src/app/shared/helpers/url';
 import { rxBuild, RxMessagingChannel } from "./rxjschannel";
 import * as D from 'io-ts/Decoder';
-
-// Parameters passed to the task
-export const taskParamsDecoder = D.struct({
-  minScore: D.number,
-  maxScore: D.number,
-  noScore: D.number,
-  randomSeed: D.number,
-  readOnly: D.boolean,
-  options: D.UnknownRecord,
-});
-export type TaskParams = D.TypeOf<typeof taskParamsDecoder>;
-
-// Type returned by getTaskParams
-export const taskParamsValueDecoder = D.union(taskParamsDecoder, D.UnknownRecord, D.string, D.number, D.boolean);
-export type TaskParamsValue = D.TypeOf<typeof taskParamsValueDecoder> | undefined;
-
-// Views offered by the task
-// For instance, taskViews = { task: { includes: ["editor"] }, solution : {}}
-export const taskViewDecoder = D.partial({
-  requires: D.string,
-  includes: D.array(D.string)
-});
-export type TaskView = D.TypeOf<typeof taskViewDecoder>;
-
-export const taskViewsDecoder = D.record(taskViewDecoder);
-export type TaskViews = D.TypeOf<typeof taskViewsDecoder>;
-
-// Task grading results
-export interface RawTaskGrade {
-  score?: unknown,
-  message?: unknown,
-  scoreToken?: unknown
-}
-const taskGradeDecoder = D.partial({
-  score: D.number,
-  message: D.string,
-  scoreToken: D.string,
-});
-export type TaskGrade = D.TypeOf<typeof taskGradeDecoder>;
-
-// Parameters sent by the task to platform.updateDisplay
-export const updateDisplayParamsDecoder = D.partial({
-  height: D.number,
-  views: taskViewsDecoder,
-  scrollTop: D.number
-});
-export type UpdateDisplayParams = D.TypeOf<typeof updateDisplayParamsDecoder>;
-
-// Log data sent by the task
-export const taskLogDecoder = D.array(D.string);
-export type TaskLog = D.TypeOf<typeof taskLogDecoder>;
-
-// Currently unused
-export type TaskMetaData = any;
-export type TaskResources = any;
+import { TaskParamsValue, taskParamsKeyDefaultDecoder, TaskParamsKeyDefault, taskViewsDecoder, TaskViews, RawTaskGrade, taskGradeDecoder,
+  TaskGrade, updateDisplayParamsDecoder, UpdateDisplayParams, taskLogDecoder, TaskLog, TaskMetaData, TaskResources } from "./types";
 
 function getRandomID(): string {
   const low = Math.floor(Math.random() * 922337203).toString();
@@ -139,8 +86,16 @@ export class Task {
       (mode: string) => platform.validate(mode),
       D.string
     );
-    // TODO validator
-    this.chan.bind('platform.getTaskParams', (keyDefault? : [string, TaskParamsValue]) => platform.getTaskParams(keyDefault));
+    this.chan.bind(
+      'platform.getTaskParams',
+      (keyDefault?: TaskParamsKeyDefault) => platform.getTaskParams(keyDefault),
+      taskParamsKeyDefaultDecoder,
+      (keyDefault?: unknown[]) =>
+        (keyDefault && keyDefault.length > 0 && Array.isArray(keyDefault[0]) ? {
+          key: keyDefault[0][0] !== null ? keyDefault[0][0] as unknown : undefined,
+          defaultValue: keyDefault[0][1] !== null ? keyDefault[0][1] as unknown : undefined
+        } : {})
+    );
     this.chan.bind(
       'platform.showView',
       (view : string) => platform.viewsShownByTask(view),
@@ -333,9 +288,9 @@ export class TaskListener {
   log(_data : TaskLog) : Observable<void> {
     return throwError(() => new Error('platform.log is not defined!'));
   }
-  getTaskParams(keyDefault? : [string, TaskParamsValue]) : Observable<TaskParamsValue> {
-    const key = keyDefault ? keyDefault[0] : undefined;
-    const defaultValue = keyDefault ? keyDefault[1] : undefined;
+  getTaskParams(keyDefault?: TaskParamsKeyDefault) : Observable<TaskParamsValue> {
+    const key = keyDefault ? keyDefault.key : undefined;
+    const defaultValue = keyDefault ? keyDefault.defaultValue : undefined;
     const res : {[key: string]: TaskParamsValue} = { minScore: -3, maxScore: 10, randomSeed: 0, noScore: 0, readOnly: false, options: {} };
     if (key) {
       if (key !== 'options' && key in res) {
