@@ -2,10 +2,10 @@
 @import 'src/geometry.scss';
 
 .validation-text {
-  padding-left: 5.8333rem;
   color: $base-color;
   font-size: 1.6rem;
-  margin: 2rem 0;
+  padding: 0 0 2rem 0;
+  text-align: center;
 }
 .validation-text+* {
   margin-top: 0;
