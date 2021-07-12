@@ -54,8 +54,6 @@ export class RxMessagingChannel {
           validator.decode(params),
           fold(
             error => {
-              transaction.error(error, D.draw(error));
-              // Also throw the error locally so we know something went wrong
               throw new Error(D.draw(error));
             },
             decoded => decoded
@@ -67,7 +65,7 @@ export class RxMessagingChannel {
         .pipe(take(1))
         .subscribe({
           next: transaction.complete,
-          error: error => transaction.error(error, '')
+          error: error => transaction.error(error, error instanceof Error ? error.toString() : '')
         });
       transaction.delayReturn(true);
     }
@@ -80,23 +78,23 @@ export class RxMessagingChannel {
     return new Observable<T>(subscriber => {
       const selector = message.selector
         ? message.selector
-        : (...result: any[]) : unknown => (result.length > 0 && result[0]) || undefined;
+        : (result: any[]) : unknown => (result.length > 0 ? result[0] : undefined);
 
       const innerMessage = {
         ...message,
         success: (...result: any[]): void => {
           // Validate result before passing it, if there is a validator
-          const filteredResult = selector(result);
+          const selectedResult = selector(result);
           const decodedResult = validator
             ? fppipe(
-              validator.decode(filteredResult),
+              validator.decode(selectedResult),
               fold(
                 error => {
                   throw new Error(D.draw(error));
                 },
                 decoded => decoded
               ))
-            : filteredResult as T;
+            : selectedResult as T;
 
           subscriber.next(decodedResult);
           subscriber.complete();

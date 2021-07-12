@@ -209,7 +209,7 @@ export class Task {
   }
 
   getMetaData() : Observable<TaskMetaData> {
-    // TODO: validator
+    // TODO: validator (currently unused)
     return this.chan.call({
       method: 'task.getMetaData',
       timeout: 2000
@@ -262,7 +262,7 @@ export class Task {
   }
 
   gradeAnswer(answer : string, answerToken : string) : Observable<TaskGrade> {
-    function convertToTaskGrade(...result: any[]) : RawTaskGrade {
+    function convertToTaskGrade(result: any[]) : RawTaskGrade {
       if (result.length == 0) {
         throw new Error('task.gradeAnswer returned no arguments');
       }
@@ -282,7 +282,7 @@ export class Task {
   }
 
   getResources() : Observable<TaskResources> {
-    // TODO: validator
+    // TODO: validator (currently unused)
     return this.chan.call({
       method: 'task.getResources',
       params: [],
