@@ -1,7 +1,8 @@
 import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ItemData } from '../../services/item-datasource.service';
-import { getTaskProxy, getTaskUrl, Platform, Task, TaskParams, TaskParamsValue } from 'src/app/modules/item/task/task-xd-pr';
+import { taskProxyFromIframe, taskUrlWithParameters, Platform, Task, TaskParams, TaskParamsValue }
+  from 'src/app/modules/item/task/task-xd-pr';
 import { forkJoin, interval, Observable, of, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
@@ -50,13 +51,13 @@ export class ItemDisplayComponent implements OnInit, AfterViewInit, OnDestroy {
     const url = this.itemData?.item.url || '';
     // TODO get sToken
     const sToken = '';
-    this.setUrl(getTaskUrl(url, sToken, 'http://algorea.pem.dev', 'task-'));
+    this.setUrl(taskUrlWithParameters(url, sToken, 'http://algorea.pem.dev', 'task-'));
   }
 
   ngAfterViewInit(): void {
     if (this.iframe) {
       const iframe = this.iframe.nativeElement;
-      getTaskProxy(iframe).subscribe((task: Task) => this.taskIframeLoaded(task));
+      taskProxyFromIframe(iframe).subscribe((task: Task) => this.taskIframeLoaded(task));
     }
   }
 
@@ -71,7 +72,7 @@ export class ItemDisplayComponent implements OnInit, AfterViewInit, OnDestroy {
     this.task = task;
     const taskParams = { minScore: -3, maxScore: 10, randomSeed: 0, noScore: 0, readOnly: false, options: {} };
     this.platform = new ItemDisplayPlatform(task, taskParams);
-    this.task.setPlatform(this.platform);
+    this.task.bindPlatform(this.platform);
 
     const initialViews = { task: true, solution: true, editor: true, hints: true, grader: true, metadata: true };
     task.load(initialViews).subscribe(() => this.taskLoaded());
@@ -112,7 +113,7 @@ export class ItemDisplayComponent implements OnInit, AfterViewInit, OnDestroy {
       .pipe(switchMap(() =>
         task.reloadState(state)
       ))
-      .subscribe(() => {});
+      .subscribe();
   }
 
   saveAnswerState(answer : string, state : string) : void {
@@ -124,7 +125,7 @@ export class ItemDisplayComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   updateHeight(): void {
-    this.task?.getHeight().subscribe(this.setHeight.bind(this));
+    this.task?.getHeight().subscribe(height => this.setHeight(height));
   }
 
   // Views management

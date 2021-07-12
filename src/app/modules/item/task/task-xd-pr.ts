@@ -5,9 +5,9 @@
  * It depends on jschannel.
  */
 
-import { interval, Observable, of, throwError } from "rxjs";
-import { filter, map, switchMap, take } from "rxjs/operators";
-import { rxBuild, RxMessagingChannel } from "./rxjschannel";
+import { Observable, of, throwError } from 'rxjs';
+import { delay, map, retryWhen, switchMap, take } from 'rxjs/operators';
+import { rxBuild, RxMessagingChannel } from './rxjschannel';
 
 export interface TaskParams {
   minScore: number,
@@ -35,9 +35,9 @@ export type TaskDisplayData = any;
 export type TaskLog = any;
 
 function getUrlParameterByName(name : string, url : string) : string {
-  const regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+  const regex = new RegExp('[\\?&]' + name + '=([^&#]*)'),
     results = regex.exec(url);
-  return results && results[1] ? decodeURIComponent(results[1].replace(/\+/g, " ")) : "";
+  return results && results[1] ? decodeURIComponent(results[1].replace(/\+/g, ' ')) : '';
 }
 
 function getRandomID(): string {
@@ -47,8 +47,8 @@ function getRandomID(): string {
 }
 
 /** Get URL for a task with specific parameters */
-export function getTaskUrl(taskUrl : string, token : string, platform : string, prefix? : string, locale? : string) : string {
-  const channelId = (prefix || '') + getRandomID();
+export function taskUrlWithParameters(taskUrl : string, token : string, platform : string, prefix = '', locale? : string) : string {
+  const channelId = prefix + getRandomID();
   if (taskUrl.indexOf('?') == -1) {
     // the idea is not to change the base url even if we change token, so we put token after #
     taskUrl = taskUrl + '?';
@@ -66,58 +66,47 @@ export function getTaskUrl(taskUrl : string, token : string, platform : string, 
 }
 
 /** Get Task object from an iframe */
-export function getTaskProxy(iframe : HTMLIFrameElement): Observable<Task> {
-  // Check every second whether the iframe loaded
-  return interval(1000)
-    .pipe(
-      // Abort after 300 seconds
-      map(
-        n => {
-          if (n > 300) {
-            throw Error("IFrame load waiting timeout");
-          }
-          return n;
-        }
-      ),
+export function taskProxyFromIframe(iframe : HTMLIFrameElement): Observable<Task> {
+  return new Observable<Window>(observer => {
+    if (iframe.contentWindow) {
+    // Get contentWindow when it exists
+      observer.next(iframe.contentWindow);
+      observer.complete();
+    } else observer.error(new Error('contentWindow not set for iframe'));
+  }).pipe(
+    // Check every 100ms whether the iframe loaded, for 5 minutes
+    retryWhen(err => err.pipe(delay(100), take(3000))),
 
-      // Get contentWindow when it exists
-      filter(_ => !!iframe.contentWindow),
-      take(1),
-      map(_ => iframe.contentWindow as Window),
+    // Get the RxMessagingChannel from the contentWindow
+    switchMap((contentWindow: Window) =>
+      rxBuild({
+        window: contentWindow,
+        origin: '*',
+        scope: getUrlParameterByName('channelId', iframe.src),
+      })
+    ),
 
-      // Get the RxMessagingChannel from the contentWindow
-      switchMap((contentWindow: Window) =>
-        rxBuild({
-          window: contentWindow,
-          origin: "*",
-          scope: getUrlParameterByName('channelId', iframe.src),
-        })
-      ),
-
-      // Get the Task from the channel
-      map((chan: RxMessagingChannel) => new Task(chan))
-    );
+    // Get the Task from the channel
+    map((chan: RxMessagingChannel) => new Task(chan))
+  );
 }
 
 
 /**
- * Task object, created from an iframe DOM element
+ * Task object, created from a RxMessagingChannel
  */
 export class Task {
-  platformSet = false;;
-  chan: RxMessagingChannel;
+  private platformSet = false;
 
-  constructor(chan: RxMessagingChannel) {
-    this.chan = chan;
-  }
+  constructor(private chan: RxMessagingChannel) {}
 
   destroy(): void {
     this.chan.destroy();
   }
 
-  setPlatform(platform : Platform): void {
+  bindPlatform(platform : Platform): void {
     if (this.platformSet) {
-      throw new Error("Task already has a platform set");
+      throw new Error('Task already has a platform set');
     }
     this.chan.bind('platform.validate', (mode: string) => platform.validate(mode));
     this.chan.bind('platform.getTaskParams', (keyDefault? : [string, TaskParamsValue]) => platform.getTaskParams(keyDefault));
@@ -129,6 +118,7 @@ export class Task {
 
     // Legacy calls
     this.chan.bind('platform.updateHeight', (height : number) => platform.updateDisplay({ height: height }));
+    this.platformSet = true;
   }
 
   /**
@@ -136,14 +126,14 @@ export class Task {
    */
   load(views : Object): Observable<void> {
     return this.chan.call({
-      method: "task.load",
+      method: 'task.load',
       params: views,
     });
   }
 
   unload() : Observable<void> {
     return this.chan.call({
-      method: "task.unload",
+      method: 'task.unload',
       timeout: 2000,
     });
   }
@@ -151,14 +141,14 @@ export class Task {
   getHeight() : Observable<number> {
     // TODO: validator
     return this.chan.call({
-      method: "task.getHeight",
+      method: 'task.getHeight',
       timeout: 500,
     });
   }
 
   updateToken(token : string) : Observable<void> {
     return this.chan.call({
-      method: "task.updateToken",
+      method: 'task.updateToken',
       params: token,
       timeout: 10000,
     });
@@ -167,7 +157,7 @@ export class Task {
   getMetaData() : Observable<TaskMetaData> {
     // TODO: validator
     return this.chan.call({
-      method: "task.getMetaData",
+      method: 'task.getMetaData',
       timeout: 2000
     });
   }
@@ -175,14 +165,14 @@ export class Task {
   getAnswer() : Observable<string> {
     // TODO: validator
     return this.chan.call({
-      method: "task.getAnswer",
+      method: 'task.getAnswer',
       timeout: 2000
     });
   }
 
   reloadAnswer(answer : string) : Observable<void> {
     return this.chan.call({
-      method: "task.reloadAnswer",
+      method: 'task.reloadAnswer',
       params: answer,
       timeout: 2000
     });
@@ -191,14 +181,14 @@ export class Task {
   getState() : Observable<string> {
     // TODO: validator
     return this.chan.call({
-      method: "task.getState",
+      method: 'task.getState',
       timeout: 2000
     });
   }
 
   reloadState(state : string) : Observable<void> {
     return this.chan.call({
-      method: "task.reloadState",
+      method: 'task.reloadState',
       params: state,
       timeout: 2000
     });
@@ -207,14 +197,14 @@ export class Task {
   getViews() : Observable<TaskViews> {
     // TODO: validator
     return this.chan.call({
-      method: "task.getViews",
+      method: 'task.getViews',
       timeout: 2000
     });
   }
 
   showViews(views : Object) : Observable<void> {
     return this.chan.call({
-      method: "task.showViews",
+      method: 'task.showViews',
       params: views,
       timeout: 2000
     });
@@ -223,7 +213,7 @@ export class Task {
   gradeAnswer(answer : string, answerToken : string) : Observable<TaskGrade> {
     // TODO: validator
     return this.chan.call({
-      method: "task.gradeAnswer",
+      method: 'task.gradeAnswer',
       params: [ answer, answerToken ],
       timeout: 40000
     });
@@ -232,7 +222,7 @@ export class Task {
   getResources() : Observable<TaskResources> {
     // TODO: validator
     return this.chan.call({
-      method: "task.getResources",
+      method: 'task.getResources',
       params: [],
       timeout: 2000
     });

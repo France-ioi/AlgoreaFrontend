@@ -1,5 +1,5 @@
-import { build, ChannelConfiguration, MessageTransaction, MessagingChannel } from "jschannel";
-import { Observable } from "rxjs";
+import { build, ChannelConfiguration, MessageTransaction, MessagingChannel } from 'jschannel';
+import { Observable } from 'rxjs';
 
 export interface RxMessage<T> {
   method: string;
