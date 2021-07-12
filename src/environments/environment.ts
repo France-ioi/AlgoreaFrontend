@@ -6,7 +6,7 @@ import { Environment } from 'src/app/shared/helpers/config';
 
 export const environment: Environment = {
   production: false,
-  apiUrl: 'https://dev.algorea.org/api',
+  apiUrl: 'http://localhost:3000/api',
   oauthServerUrl: 'https://login.france-ioi.org',
   oauthClientId: '43',
 
