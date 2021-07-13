@@ -6,7 +6,6 @@ import { Observable } from 'rxjs';
 import { headersForAuth } from '../helpers/auth';
 import { appConfig } from '../helpers/config';
 import { AuthResult, cookieAuthFromServiceResp, tokenAuthFromServiceResp } from '../auth/auth-info';
-import { getDomain } from '../helpers/domain';
 
 interface CookieAuthPayload { expires_in: number }
 interface TokenAuthPayload { access_token: string, expires_in: number }
@@ -22,7 +21,6 @@ export class AuthHttpService {
 
   private http: HttpClient; // an http client specific to this class, skipping all http interceptors
   private apiUrl = new URL(appConfig.apiUrl);
-  private isSameDomain = getDomain(appConfig.apiUrl) === getDomain(globalThis.location.href);
   private cookieParams = appConfig.authType === 'cookies' ? {
     use_cookie: '1',
     cookie_secure: this.apiUrl.protocol === 'https:' || this.apiUrl.hostname === 'localhost' ? '1' : '0',
@@ -58,13 +56,7 @@ export class AuthHttpService {
   } : undefined;
 
   private requestConfig = appConfig.authType === 'cookies' ? {
-    withCredentials: !this.isSameDomain,
-    /**
-     * NOTE:
-     * withCredentials is necessary to allow cross-origin resources to set cookies, even if the resources share the same domain.
-     * For instance, dev.algorea.org calling api.algorea.org is a cross-origin request,
-     * but a cookie with domain "algorea.org" is a first-party cookie, see note on cookie_same_site.
-     */
+    withCredentials: true, // adds appropriate cookies to the request
   } : undefined;
 
   constructor(

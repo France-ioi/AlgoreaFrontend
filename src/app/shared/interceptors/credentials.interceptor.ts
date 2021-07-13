@@ -11,9 +11,6 @@ import { appConfig } from '../helpers/config';
 @Injectable()
 export class CredentialsInterceptor implements HttpInterceptor {
 
-  private isSameOrigin = new URL(appConfig.apiUrl).hostname === globalThis.location.hostname;
-  private withCredentials = appConfig.authType === 'cookies' && !this.isSameOrigin;
-
   constructor() {}
 
   intercept(req: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
@@ -21,6 +18,7 @@ export class CredentialsInterceptor implements HttpInterceptor {
       return next.handle(req);
     }
 
-    return next.handle(req.clone({ withCredentials: this.withCredentials }));
+    // `withCredentials: true` adds appropriate cookies to the request
+    return next.handle(req.clone({ withCredentials: true }));
   }
 }
