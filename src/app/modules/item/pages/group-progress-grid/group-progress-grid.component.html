@@ -6,6 +6,7 @@
 <p *ngIf="state === 'error';else noError" class="alg-error-message">
   <i class="fa fa-exclamation-triangle"></i>
   <span i18n>Error while loading the data</span>
+  <p-button icon="pi pi-refresh" (click)="refresh()" styleClass="p-button-sm"></p-button>
 </p>
 
 <ng-template #noError>
@@ -14,11 +15,14 @@
     <p-progressSpinner></p-progressSpinner>
   </div>
 
-  <ng-container *ngIf="state === 'ready' && data.rows.length === 0" [ngSwitch]="data.type">
-    <p class="empty-message" *ngSwitchCase="'Users'" i18n>This group has no users</p>
-    <p class="empty-message" *ngSwitchCase="'Teams'" i18n>This group has no teams</p>
-    <p class="empty-message" *ngSwitchCase="'Groups'" i18n>This group has no sub-groups</p>
-  </ng-container>
+  <p class="empty-message" *ngIf="state === 'ready' && data.rows.length === 0">
+    <ng-container *ngIf="state === 'ready' && data.rows.length === 0" [ngSwitch]="data.type">
+      <span *ngSwitchCase="'Users'" i18n>This group has no users</span>
+      <span *ngSwitchCase="'Teams'" i18n>This group has no teams</span>
+      <span *ngSwitchCase="'Groups'" i18n>This group has no sub-groups</span>
+    </ng-container>
+    <p-button icon="pi pi-refresh" (click)="refresh()" styleClass="p-button-sm"></p-button>
+  </p>
 
   <alg-user-progress-details
     [canEditPermissions]="data.can_access"
@@ -38,7 +42,9 @@
   >
     <ng-template pTemplate="header" let-columns>
       <tr>
-        <th class="empty first"></th>
+        <th class="empty first header-refresh">
+          <p-button icon="pi pi-refresh" (click)="refresh()"></p-button>
+        </th>
         <th *ngFor="let col of data.items">
           <div class="slanted-header">
             <div class="slanted-header-content" pTooltip="{{ col.title }}" tooltipPosition="top" [showDelay]="100">
