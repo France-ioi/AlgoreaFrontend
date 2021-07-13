@@ -13,7 +13,7 @@
     >
       <ng-template #headerTemplate let-columns>
         <tr style="border: none;">
-          <th style="width: 160px;">
+          <th style="min-width: 160px;">
             <div class="slanted-header">
               <div class="slanted-header-content" i18n>
                 Name
@@ -53,7 +53,7 @@
       >
         <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
           <td
-            style="text-align: left;width: 160px;padding-left: 0.5rem;"
+            style="text-align: left;min-width: 160px;padding-left: 0.5rem;"
             tooltipPosition="top"
             tooltipStyleClass="tooltip-custom"
           >
