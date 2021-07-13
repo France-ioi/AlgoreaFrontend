@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { headersForAuth } from '../helpers/auth';
 import { appConfig } from '../helpers/config';
 import { AuthResult, cookieAuthFromServiceResp, tokenAuthFromServiceResp } from '../auth/auth-info';
+import { getDomain } from '../helpers/domain';
 
 interface CookieAuthPayload { expires_in: number }
 interface TokenAuthPayload { access_token: string, expires_in: number }
@@ -20,10 +21,31 @@ const longAuthServicesTimeout = 10000;
 export class AuthHttpService {
 
   private http: HttpClient; // an http client specific to this class, skipping all http interceptors
+  private apiUrl = new URL(appConfig.apiUrl);
+  private isSameDomain = getDomain(appConfig.apiUrl) === getDomain(globalThis.location.href);
   private cookieParams = appConfig.authType === 'cookies' ? {
     use_cookie: '1',
-    cookie_secure: appConfig.secure ? '1' : '0',
-    cookie_same_site: appConfig.sameSite ? '1' : '0',
+    cookie_secure: this.apiUrl.protocol === 'https:' || this.apiUrl.hostname === 'localhost' ? '1' : '0',
+    cookie_same_site: '1',
+    /**
+     * NOTE on cookie_same_site:
+     * The 'same-site' policy only applies for auth by third-party cookie.
+     * A cookie party is defined by its domain:
+     * - first-party cookies have domain "dev.algorea.org", "api.algorea.org" or "algorea.org"
+     * - third-party cookies have domain or "complete-other-site.com"
+     * Safari and Firefox both disable third-party cookies by default, and Chrome will in 2021 (but postponed for 2023)
+     * Since third-party cookies will be removed in a near future, we chose not to enable this type of authentication,
+     * making the 'same-site' policy always true.
+     */
+  } : undefined;
+  private requestConfig = appConfig.authType === 'cookies' ? {
+    withCredentials: !this.isSameDomain,
+    /**
+     * NOTE:
+     * withCredentials is necessary to allow cross-origin resources to set cookies, even if the resources share the same domain.
+     * For instance, dev.algorea.org calling api.algorea.org is a cross-origin request,
+     * but a cookie with domain "algorea.org" is a first-party cookie, see note on cookie_same_site.
+     */
   } : undefined;
 
   constructor(
@@ -36,6 +58,7 @@ export class AuthHttpService {
     return this.http
       .post<ActionResponse<AuthPayload>>(`${appConfig.apiUrl}/auth/temp-user`, null, {
         params: new HttpParams({ fromObject: { ...this.cookieParams, default_language: defaultLanguage } }),
+        ...this.requestConfig,
       })
       .pipe(
         timeout(authServicesTimeout),
@@ -49,7 +72,7 @@ export class AuthHttpService {
       .post<ActionResponse<AuthPayload>>(
         `${appConfig.apiUrl}/auth/token`,
         { code: code, redirect_uri: redirectUri }, // payload data
-        { params: new HttpParams({ fromObject: this.cookieParams }) }
+        { params: new HttpParams({ fromObject: this.cookieParams }), ...this.requestConfig }
       ).pipe(
         timeout(longAuthServicesTimeout),
         map(successData),
@@ -76,6 +99,7 @@ export class AuthHttpService {
     return this.http
       .post<ActionResponse<CookieAuthPayload>>(`${appConfig.apiUrl}/auth/token`, null, {
         params: new HttpParams({ fromObject: this.cookieParams }),
+        ...this.requestConfig,
       }).pipe(
         timeout(longAuthServicesTimeout),
         map(successData),
@@ -88,7 +112,7 @@ export class AuthHttpService {
       .post<SimpleActionResponse>(
         `${appConfig.apiUrl}/auth/logout`,
         null, // payload data
-        !auth.useCookie ? { headers: headersForAuth(auth.accessToken) } : {} // options
+        !auth.useCookie ? { headers: headersForAuth(auth.accessToken) } : this.requestConfig // options
       ).pipe(
         map(assertSuccess)
       );

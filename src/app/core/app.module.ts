@@ -17,6 +17,7 @@ import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.componen
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 
 import { AuthTokenInjector } from '../shared/interceptors/auth_token_injector.interceptor';
+import { CredentialsInterceptor } from '../shared/interceptors/credentials.interceptor';
 import {
   TimeoutInterceptor,
   DEFAULT_TIMEOUT,
@@ -97,6 +98,11 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthTokenInjector,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: CredentialsInterceptor,
       multi: true,
     },
     {
