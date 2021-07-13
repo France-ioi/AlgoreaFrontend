@@ -1,6 +1,6 @@
 <ng-container *ngIf="groupWithPermissions">
   <ng-container *ngIf="groupWithPermissions.canCurrentUserManageGroup; else noPermission">
-    <alg-group-manager-list [group]="group" (refreshRequired)="refreshGroupInfo()" *ngIf="groupWithPermissions.canCurrentUserManageMembers">
+    <alg-group-manager-list [group]="group" *ngIf="groupWithPermissions.canCurrentUserManageMembers">
     </alg-group-manager-list>
   </ng-container>
   <ng-template #noPermission>
