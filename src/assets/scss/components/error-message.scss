@@ -1,4 +1,9 @@
 .alg-error-message {
-  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   font-size: medium;
+  > * + * {
+    margin-left: 0.25rem;
+  }
 }
