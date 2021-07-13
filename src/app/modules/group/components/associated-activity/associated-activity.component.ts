@@ -1,5 +1,4 @@
 import { Component, forwardRef } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Observable, of, ReplaySubject } from 'rxjs';
 import { catchError, distinct, map, switchMap } from 'rxjs/operators';
 import { GetItemByIdService } from 'src/app/modules/item/http-services/get-item-by-id.service';
@@ -11,6 +10,8 @@ import { allowedNewActivityTypes } from 'src/app/shared/helpers/new-item-types';
 import { NoActivity, NewActivity, ExistingActivity, isActivityFound, isExistingActivity, isNewActivity } from './associated-activity-types';
 import { errorIsHTTPForbidden } from 'src/app/shared/helpers/errors';
 import { mapToFetchState } from 'src/app/shared/operators/state';
+import { ControlValueAccessor } from '@ngneat/reactive-forms';
+import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
   selector: 'alg-associated-activity',
@@ -24,7 +25,7 @@ import { mapToFetchState } from 'src/app/shared/operators/state';
     }
   ]
 })
-export class AssociatedActivityComponent implements ControlValueAccessor {
+export class AssociatedActivityComponent implements ControlValueAccessor<NoActivity|NewActivity|ExistingActivity> {
 
   readonly allowedNewItemTypes = allowedNewActivityTypes;
 
@@ -62,7 +63,7 @@ export class AssociatedActivityComponent implements ControlValueAccessor {
     mapToFetchState(),
   );
 
-  private onChange: (value: NoActivity|NewActivity|ExistingActivity) => void = () => {};
+  onChange: (value: NoActivity|NewActivity|ExistingActivity|null) => void = () => {};
 
   searchFunction = (value: string): Observable<AddedContent<ActivityType>[]> =>
     this.searchItemService.search(value, [ 'Chapter', 'Course', 'Task' ])
@@ -77,7 +78,7 @@ export class AssociatedActivityComponent implements ControlValueAccessor {
     this.activityChanges$.next({ activity: rootActivity, triggerChange: false });
   }
 
-  registerOnChange(fn: (value: NoActivity|NewActivity|ExistingActivity) => void): void {
+  registerOnChange(fn: (value: NoActivity|NewActivity|ExistingActivity|null) => void): void {
     this.onChange = fn;
   }
 

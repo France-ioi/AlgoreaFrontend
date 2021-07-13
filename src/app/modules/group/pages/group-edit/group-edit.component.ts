@@ -1,5 +1,4 @@
 import { Component, OnDestroy } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
 import { mapStateData, readyData } from 'src/app/shared/operators/state';
 import { Mode, ModeService } from 'src/app/shared/services/mode.service';
 import { of, Subscription } from 'rxjs';
@@ -13,6 +12,14 @@ import { GroupUpdateService } from '../../http-services/group-update.service';
 import { GroupDataSource } from '../../services/group-datasource.service';
 import { withManagementAdditions } from '../../helpers/group-management';
 import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
+import { FormBuilder } from '@ngneat/reactive-forms';
+import { Validators } from '@angular/forms';
+
+interface GroupForm {
+  name: string,
+  description: string|null,
+  rootActivity: NoActivity|NewActivity|ExistingActivity,
+}
 
 @Component({
   selector: 'alg-group-edit',
@@ -20,11 +27,11 @@ import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.s
   styleUrls: [ './group-edit.component.scss' ]
 })
 export class GroupEditComponent implements OnDestroy, PendingChangesComponent {
-  groupForm = this.formBuilder.group({
+  groupForm = this.formBuilder.group<GroupForm>({
     // eslint-disable-next-line @typescript-eslint/unbound-method
     name: [ '', [ Validators.required, Validators.minLength(3) ] ],
     description: [ '', [] ],
-    rootActivity: [ '', [] ],
+    rootActivity: [{ tag: 'no-activity' }, [] ],
   });
   initialFormData?: Group;
 
@@ -69,10 +76,9 @@ export class GroupEditComponent implements OnDestroy, PendingChangesComponent {
     this.groupForm.disable();
 
     const id = this.initialFormData.id;
-    const name = this.groupForm.get('name')?.value as string;
-    const description = this.groupForm.get('description')?.value as string;
+    const description = this.groupForm.value.description;
 
-    const rootActivity = this.groupForm.get('rootActivity')?.value as NoActivity|NewActivity|ExistingActivity;
+    const rootActivity = this.groupForm.value.rootActivity;
     const rootActivityId = !isNewActivity(rootActivity) ? of(isExistingActivity(rootActivity) ? rootActivity.id : null) :
       this.createItemService.create({
         title: rootActivity.name,
@@ -83,7 +89,7 @@ export class GroupEditComponent implements OnDestroy, PendingChangesComponent {
 
     rootActivityId.pipe(
       concatMap(rootActivityId => this.groupUpdateService.updateGroup(id, {
-        name,
+        name: this.groupForm.value.name,
         description: description === '' ? null : description,
         root_activity_id: rootActivityId
       }))
@@ -105,7 +111,7 @@ export class GroupEditComponent implements OnDestroy, PendingChangesComponent {
 
   private resetFormWith(group: Group): void {
 
-    const rootActivity = group.rootActivityId === null ?
+    const rootActivity: NoActivity|ExistingActivity = group.rootActivityId === null ?
       { tag: 'no-activity' } :
       { tag: 'existing-activity', id: group.rootActivityId };
 

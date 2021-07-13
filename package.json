@@ -36,6 +36,7 @@
     "@fortawesome/fontawesome-free": "^5.13.0",
     "@fortawesome/fontawesome-svg-core": "^1.2.28",
     "@fortawesome/free-solid-svg-icons": "^5.13.0",
+    "@ngneat/reactive-forms": "^1.7.3",
     "@ngrx/component": "^10.0.1",
     "@tinymce/tinymce-angular": "^4.0.0",
     "fp-ts": "^2.9.5",
