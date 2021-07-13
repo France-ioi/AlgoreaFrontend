@@ -44,7 +44,7 @@
       </a>
     </nav>
 
-    <ng-container *ngIf="progress?.isActive">
+    <ng-container *ngIf="progress?.isActive || !progress">
       <div class="bg-white">
         <alg-section icon="fa fa-chart-line" i18n-label label="Progress">
           <alg-group-log-view
