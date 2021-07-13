@@ -12,11 +12,13 @@ import { UserSessionService } from 'src/app/shared/services/user-session.service
 })
 export class TopRightMenuComponent {
 
-  readonly menuItems = [
-    { label: 'Profile', icon: 'pi pi-user', routerLink: [ 'groups', 'me' ] },
-    ...this.getDevelopmentMenuItems(),
-    { label: 'Log out', icon: 'pi pi-power-off', command: ():void => this.sessionService.logout() },
-  ];
+  readonly menuItems$ = this.sessionService.userProfile$.pipe(
+    map(profile => ([
+      { label: 'Profile', icon: 'pi pi-user', routerLink: [ 'groups', 'users', profile.groupId, 'personal-data' ] },
+      ...this.getDevelopmentMenuItems(),
+      { label: 'Log out', icon: 'pi pi-power-off', command: ():void => this.sessionService.logout() },
+    ]))
+  );
 
   userLogin$ = this.sessionService.session$.pipe(map(session => session?.user.login), distinctUntilChanged());
 

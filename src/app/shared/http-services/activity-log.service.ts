@@ -1,59 +1,49 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { appConfig } from '../helpers/config';
+import * as D from 'io-ts/Decoder';
+import { pipe } from 'fp-ts/function';
+import { decodeSnakeCase } from 'src/app/shared/operators/decode';
+import { dateDecoder } from '../helpers/decoders';
 
-interface RawActivityLog {
-  activity_type: 'result_started'|'submission'|'result_validated',
-  answer_id?: string,
-  at: string,
-  attempt_id: string,
-  from_answer_id: string,
-  item: {
-    id: string,
-    string: {
-      title: string,
-    },
-    type: 'Chapter'|'Task'|'Course'|'Skill',
-  },
-  participant: {
-    id: string,
-    name: string,
-    type: 'Team'|'User',
-  },
-  score?: number,
-  user?: {
-    id: string,
-    first_name: string|null,
-    last_name: string|null,
-    login: string,
-  },
-}
+const activityLogDecoder = pipe(
+  D.struct({
+    activityType: D.literal('result_started', 'submission', 'result_validated'),
+    at: dateDecoder,
+    item: D.struct({
+      id: D.string,
+      string: D.struct({
+        title: D.string,
+      }),
+      type: D.literal('Chapter', 'Task', 'Course', 'Skill'),
+    }),
+    participant: D.struct({
+      id: D.string,
+      name: D.string,
+      type: D.literal('Team', 'User'),
+    }),
+  }),
+  D.intersect(
+    D.partial({
+      score: D.number,
+      user: pipe(
+        D.struct({
+          id: D.string,
+          login: D.string,
+        }),
+        D.intersect(
+          D.partial({
+            firstName: D.nullable(D.string),
+            lastName: D.nullable(D.string),
+          }),
+        ),
+      ),
+    }),
+  ),
+);
 
-export interface ActivityLog {
-  activity_type: 'result_started'|'submission'|'result_validated',
-  at: Date,
-  item: {
-    id: string,
-    string: {
-      title: string,
-    },
-    type: 'Chapter'|'Task'|'Course'|'Skill',
-  },
-  participant: {
-    id: string,
-    name: string,
-    type: 'Team'|'User',
-  },
-  score?: number,
-  user?: {
-    id: string,
-    first_name: string|null|undefined,
-    last_name: string|null|undefined,
-    login: string,
-  },
-}
+export type ActivityLog = D.TypeOf<typeof activityLogDecoder>;
 
 @Injectable({
   providedIn: 'root'
@@ -68,16 +58,22 @@ export class ActivityLogService {
     let params = new HttpParams();
     params = params.set('limit', '20');
     return this.http
-      .get<RawActivityLog[]>(`${appConfig.apiUrl}/items/${itemId}/log`, { params: params })
-      .pipe(
-        map(data => data.map(d => ({
-          at: new Date(d.at),
-          activity_type: d.activity_type,
-          item: d.item,
-          participant: d.participant,
-          score: d.score,
-          user: d.user,
-        })))
-      );
+      .get<unknown[]>(`${appConfig.apiUrl}/items/${itemId}/log`, { params: params })
+      .pipe(decodeSnakeCase(D.array(activityLogDecoder)));
+  }
+
+  getAllActivityLog(
+    watchedGroupId?: string,
+  ): Observable<ActivityLog[]> {
+    let params = new HttpParams();
+    params = params.set('limit', '20');
+
+    if (watchedGroupId) {
+      params = params.set('watched_group_id', watchedGroupId);
+    }
+
+    return this.http
+      .get<unknown[]>(`${appConfig.apiUrl}/items/log`, { params: params })
+      .pipe(decodeSnakeCase(D.array(activityLogDecoder)));
   }
 }

@@ -1,0 +1,73 @@
+<ng-container *ngIf="state$ | async as state">
+
+  <p-progressSpinner *ngIf="state.isFetching"></p-progressSpinner>
+
+  <p *ngIf="state.isError" i18n>Error while loading the user info</p>
+
+  <ng-container *ngIf="state.isReady && state.data as user">
+
+    <div class="alg-page-header">
+      <div class="alg-page-header-title">
+        {{ user | userCaption }}
+      </div>
+
+      <div class="alg-page-header-subtitle" *ngIf="user.webSite">
+        <i class="fa fa-external-link-alt"></i>
+        <a class="web-site alg-link base-color" [attr.href]="user.webSite" target="_blank">{{ user.webSite }}</a>
+      </div>
+
+      <div class="free-text alg-page-header-subtitle" *ngIf="user.freeText">
+        {{ user.freeText }}
+      </div>
+    </div>
+
+    <nav class="nav-tab" *ngIf="(currentUserGroupId$ | async) === user.groupId || isInitPagePersonal">
+      <a
+          class="nav-tab-item"
+          [routerLink]="'./'"
+          routerLinkActive #progress="routerLinkActive"
+          [routerLinkActiveOptions]="{exact: true}"
+          [class.active]="progress.isActive"
+          i18n
+      >
+        Progress
+      </a>
+      <a
+          class="nav-tab-item"
+          [routerLink]="'./personal-data'"
+          routerLinkActive #personalData="routerLinkActive"
+          [routerLinkActiveOptions]="{exact: true}"
+          [class.active]="personalData.isActive"
+          i18n
+      >
+        Personal data
+      </a>
+    </nav>
+
+    <ng-container *ngIf="progress?.isActive || !progress">
+      <div class="bg-white">
+        <alg-section icon="fa fa-chart-line" i18n-label label="Progress">
+          <alg-group-log-view
+              [groupId]="user.groupId"
+              [showUserColumn]="false"
+          ></alg-group-log-view>
+        </alg-section>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="personalData?.isActive">
+      <ng-container *ngIf="(currentUserGroupId$ | async) === user.groupId; then currentUser; else forbidden"></ng-container>
+
+      <ng-template #currentUser>
+        <alg-current-user></alg-current-user>
+      </ng-template>
+
+      <ng-template #forbidden>
+        <div class="bg-white">
+          <p class="no-access" i18n>You cannot access this page for this user</p>
+        </div>
+      </ng-template>
+    </ng-container>
+
+  </ng-container>
+</ng-container>

@@ -28,7 +28,6 @@ import { ChapterGroupProgressComponent } from './pages/chapter-group-progress/ch
 import { GroupProgressGridComponent } from './pages/group-progress-grid/group-progress-grid.component';
 import { ItemEditAdvancedParametersComponent } from './pages/item-edit-advanced-parameters/item-edit-advanced-parameters.component';
 import { CalendarModule } from 'primeng/calendar';
-import { LogActionDisplayPipe } from './pages/item-log-view/logActionDisplay';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { ChapterUserProgressComponent } from './pages/chapter-user-progress/chapter-user-progress.component';
 import { ItemProgressLabelPipe } from './pages/item-progress/itemProgressLabel';
@@ -58,7 +57,6 @@ import { UserProgressDetailsComponent } from './components/user-progress-details
     PermissionsEditDialogComponent,
     AddItemComponent,
     ItemEditAdvancedParametersComponent,
-    LogActionDisplayPipe,
     ChapterUserProgressComponent,
     ItemProgressLabelPipe,
     UserProgressDetailsComponent,

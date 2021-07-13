@@ -1,6 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { contentInfo } from 'src/app/shared/models/content/content-info';
-import { CurrentContentService } from 'src/app/shared/services/current-content.service';
+import { Component } from '@angular/core';
 import { ActionFeedbackService } from '../../../../shared/services/action-feedback.service';
 import { LocaleService } from '../../../../core/services/localeService';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
@@ -10,23 +8,14 @@ import { UserSessionService } from 'src/app/shared/services/user-session.service
   templateUrl: './current-user.component.html',
   styleUrls: [ './current-user.component.scss' ],
 })
-export class CurrentUserComponent implements OnInit, OnDestroy {
+export class CurrentUserComponent {
   currentUser$ = this.userSessionService.userProfile$;
 
   constructor(
-    private currentContent: CurrentContentService,
     private userSessionService: UserSessionService,
     private actionFeedbackService: ActionFeedbackService,
     private localeService: LocaleService,
   ) {}
-
-  ngOnInit(): void {
-    this.currentContent.current.next(contentInfo({ breadcrumbs: { category: $localize`Yourself`, path: [], currentPageIdx: -1 } }));
-  }
-
-  ngOnDestroy(): void {
-    this.currentContent.current.next(null);
-  }
 
   onChangeLang(event: string): void {
     this.update({ default_language: event });

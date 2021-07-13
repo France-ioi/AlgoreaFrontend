@@ -55,6 +55,7 @@ import { InputMaskModule } from 'primeng/inputmask';
 import { AccessCodeViewComponent } from './components/access-code-view/access-code-view.component';
 import { LanguagePickerComponent } from '../../core/components/language-picker/language-picker.component';
 import { UserCaptionPipe } from '../../shared/pipes/userCaption';
+import { LogActionDisplayPipe } from '../../shared/pipes/logActionDisplay';
 
 @NgModule({
   declarations: [
@@ -79,6 +80,7 @@ import { UserCaptionPipe } from '../../shared/pipes/userCaption';
     FormErrorComponent,
     ItemLinkPipe,
     UserCaptionPipe,
+    LogActionDisplayPipe,
     SubSectionComponent,
     AddContentComponent,
     FloatingSaveComponent,
@@ -142,6 +144,7 @@ import { UserCaptionPipe } from '../../shared/pipes/userCaption';
     FormErrorComponent,
     ItemLinkPipe,
     UserCaptionPipe,
+    LogActionDisplayPipe,
     SubSectionComponent,
     AddContentComponent,
     FloatingSaveComponent,
