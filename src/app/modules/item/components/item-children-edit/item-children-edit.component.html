@@ -48,7 +48,7 @@
                 </td>
               </ng-container>
               <td><span class="type">{{ rowData.type }}</span></td>
-              <td>
+              <td class="flex-1">
                 <a
                     class="main alg-link"
                     [ngClass]="{'disabled': !rowData.id}"
@@ -56,6 +56,17 @@
                 >
                   {{ rowData.title }}
                 </a>
+              </td>
+              <td>
+                <div class="chapter-type-control">
+                  <button class="alg-button-icon base-color" type="button">
+                    <i class="fa" [ngClass]="{
+                      'fa-eye': rowData.contentViewPropagation === 'as_content',
+                      'fa-lock': rowData.contentViewPropagation === 'as_info',
+                      'fa-eye-slash': rowData.contentViewPropagation === 'none'
+                    }"></i>
+                  </button>
+                </div>
               </td>
             </tr>
           </ng-template>
