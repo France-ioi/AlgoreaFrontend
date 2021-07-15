@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, Output, EventEmitter } from '@angular/core';
+import { Component, Input, OnChanges, Output, EventEmitter, ViewChild } from '@angular/core';
 import { ItemData } from '../../services/item-datasource.service';
 import { GetItemChildrenService } from '../../http-services/get-item-children.service';
 import { Subscription } from 'rxjs';
@@ -9,6 +9,7 @@ import { ItemRouter } from '../../../../shared/routing/item-router';
 import { bestAttemptFromResults } from '../../../../shared/helpers/attempts';
 import { canCurrentUserViewItemContent } from '../../helpers/item-permissions';
 import { isNotUndefined } from '../../../../shared/helpers/null-undefined-predicates';
+import { OverlayPanel } from 'primeng/overlaypanel';
 
 export interface ChildData {
   id?: string,
@@ -45,11 +46,14 @@ export const DEFAULT_SCORE_WEIGHT = 1;
 export class ItemChildrenEditComponent implements OnChanges {
   @Input() itemData?: ItemData;
 
+  @ViewChild('op') op?: OverlayPanel;
+
   state: 'loading' | 'error' | 'ready' = 'ready';
   data: ChildData[] = [];
   selectedRows: ChildData[] = [];
   scoreWeightEnabled = false;
   addedItemIds: string[] = [];
+  propagationEditIndex: number | null = null;
 
   private subscription?: Subscription;
   @Output() childrenChanges = new EventEmitter<ChildData[]>();
@@ -147,6 +151,26 @@ export class ItemChildrenEditComponent implements OnChanges {
   }
 
   onScoreWeightChange(): void {
+    this.childrenChanges.emit(this.data);
+  }
+
+  openPropagationEditMenu(event: MouseEvent, idx: number): void {
+    this.op?.show(event);
+    this.propagationEditIndex = idx;
+  }
+
+  onContentViewPropagationChanged(contentViewPropagation: 'none' | 'as_info' | 'as_content'): void {
+    this.op?.hide();
+    this.data = this.data.map((c, idx) => {
+      if (idx === this.propagationEditIndex) {
+        return {
+          ...c,
+          contentViewPropagation,
+        }
+      }
+      return c;
+    });
+    this.propagationEditIndex = null;
     this.childrenChanges.emit(this.data);
   }
 

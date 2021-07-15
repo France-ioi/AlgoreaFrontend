@@ -1,0 +1,28 @@
+<ul class="menu">
+  <li class="menu-item">
+    <div class="menu-item-title uppercase">Default access</div>
+    <div class="menu-item-icon">
+      <div class="rounded-wrapper">
+        <i class="fa fa-question"></i>
+      </div>
+    </div>
+  </li>
+  <li class="menu-item cursor-pointer" (click)="onClick('none')">
+    <div class="menu-item-title">Locked and hidden</div>
+    <div class="menu-item-icon">
+      <i class="fa fa-eye-slash"></i>
+    </div>
+  </li>
+  <li class="menu-item cursor-pointer" (click)="onClick('as_info')">
+    <div class="menu-item-title">Locked</div>
+    <div class="menu-item-icon">
+      <i class="fa fa-lock"></i>
+    </div>
+  </li>
+  <li class="menu-item cursor-pointer" (click)="onClick('as_content')">
+    <div class="menu-item-title">Open</div>
+    <div class="menu-item-icon">
+      <i class="fa fa-eye"></i>
+    </div>
+  </li>
+</ul>

@@ -58,15 +58,13 @@
                 </a>
               </td>
               <td>
-                <div class="chapter-type-control">
-                  <button class="alg-button-icon base-color" type="button">
-                    <i class="fa" [ngClass]="{
-                      'fa-eye': rowData.contentViewPropagation === 'as_content',
-                      'fa-lock': rowData.contentViewPropagation === 'as_info',
-                      'fa-eye-slash': rowData.contentViewPropagation === 'none'
-                    }"></i>
-                  </button>
-                </div>
+                <button class="alg-button-icon base-color" type="button" (click)="openPropagationEditMenu($event, index)">
+                  <i class="fa" [ngClass]="{
+                    'fa-eye': rowData.contentViewPropagation === 'as_content',
+                    'fa-lock': rowData.contentViewPropagation === 'as_info',
+                    'fa-eye-slash': rowData.contentViewPropagation === 'none'
+                  }"></i>
+                </button>
               </td>
             </tr>
           </ng-template>
@@ -103,3 +101,9 @@
     <div *ngSwitchCase="'error'" i18n>Error</div>
   </alg-section>
 </ng-container>
+
+<p-overlayPanel [style]="{minWidth: '112px', maxWidth: '280px'}" styleClass="alg-propagation-edit-menu" #op appendTo="body">
+  <ng-template pTemplate>
+    <alg-propagation-edit-menu (clickEvent)="onContentViewPropagationChanged($event)"></alg-propagation-edit-menu>
+  </ng-template>
+</p-overlayPanel>

@@ -1,0 +1,40 @@
+.menu {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+.menu-item {
+  display: flex;
+  padding: .1rem .4rem;
+  align-items: center;
+  height: 3rem;
+  font-size: 1.2rem;
+  border-bottom: .1rem solid #4587d4;
+  color: #fff;
+  font-weight: 700;
+}
+
+.menu-item-title {
+  flex: 1;
+  font-size: 1.2rem;
+  text-align: right;
+}
+
+.menu-item-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 1rem;
+  width: 2.5rem;
+}
+
+.rounded-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 2.4rem;
+  width: 2.4rem;
+  height: 2.4rem;
+  background-color: #2e5e95;
+}
