@@ -31,7 +31,7 @@ export class SearchGroupService {
 
   search(
     searchString: string,
-    limit = 4,
+    limit = 5,
   ): Observable<GroupFound[]> {
     const params = new HttpParams({ fromObject: { search: searchString, limit: limit.toString() } });
     return this.http.get<Group[]>(
