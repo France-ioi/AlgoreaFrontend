@@ -108,6 +108,11 @@
   }
 }
 
+.more-items {
+  color: $base-text-color;
+  font-size: 1.2rem;
+}
+
 @media screen and (min-width: 1220px) {
   .new-content-container {
     .new-content-type {

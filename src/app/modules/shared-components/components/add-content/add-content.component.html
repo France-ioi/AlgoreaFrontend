@@ -48,7 +48,7 @@
 
   <div *ngIf="trimmedInputsValue.searchExisting.length >= minInputLength">
     <h3 i18n>Select a Content</h3>
-    <p-table class="alg-table --add-content" [value]="resultsFromSearch" [loading]="state === 'fetching'">
+    <p-table class="alg-table --add-content" [value]="resultsFromSearch | slice : 0 : 4" [loading]="state === 'fetching'">
       <ng-template pTemplate="body" let-item>
         <tr style="background-color: #dfe7f4">
           <td><span class="type">{{ item.type }}</span></td>
@@ -70,5 +70,8 @@
         </tr>
       </ng-template>
     </p-table>
+    <p class="more-items text-center" *ngIf="resultsFromSearch.length > 4">
+      More than 4 results match your search terms. If you have not found what you are looking for, make your search more specific.
+    </p>
   </div>
 </ng-template>
