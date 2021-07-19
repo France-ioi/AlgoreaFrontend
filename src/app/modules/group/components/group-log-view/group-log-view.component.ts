@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, OnDestroy } from '@angular/core';
-import { Observable, ReplaySubject } from 'rxjs';
+import { Observable, ReplaySubject, Subject } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { mapToFetchState } from '../../../../shared/operators/state';
 import { ActivityLog, ActivityLogService } from '../../../../shared/http-services/activity-log.service';
@@ -25,9 +25,10 @@ export class GroupLogViewComponent implements OnChanges, OnDestroy {
   @Input() showUserColumn = true;
 
   private readonly groupId$ = new ReplaySubject<string>(1);
+  private readonly refresh$ = new Subject<void>();
   readonly state$ = this.groupId$.pipe(
     switchMap((groupId: string) => this.getData$(groupId)),
-    mapToFetchState(),
+    mapToFetchState({ resetter: this.refresh$ }),
   );
 
   constructor(
@@ -44,6 +45,11 @@ export class GroupLogViewComponent implements OnChanges, OnDestroy {
 
   ngOnDestroy(): void {
     this.groupId$.complete();
+    this.refresh$.complete();
+  }
+
+  refresh(): void {
+    this.refresh$.next();
   }
 
   private getData$(groupId: string): Observable<Data> {
