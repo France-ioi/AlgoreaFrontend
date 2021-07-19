@@ -12,7 +12,7 @@
       <ng-template pTemplate="header" let-rowData let-columns>
         <tr *ngIf="rowData.length > 0">
           <th [colSpan]="columns.length">
-            <div class="header-container">
+            <div class="header-container header-refresh">
               <p-button icon="pi pi-refresh" (click)="refresh()"></p-button>
             </div>
           </th>
