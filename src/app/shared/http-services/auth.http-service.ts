@@ -20,10 +20,43 @@ const longAuthServicesTimeout = 10000;
 export class AuthHttpService {
 
   private http: HttpClient; // an http client specific to this class, skipping all http interceptors
+  private apiUrl = new URL(appConfig.apiUrl);
   private cookieParams = appConfig.authType === 'cookies' ? {
     use_cookie: '1',
-    cookie_secure: appConfig.secure ? '1' : '0',
-    cookie_same_site: appConfig.sameSite ? '1' : '0',
+    cookie_secure: this.apiUrl.protocol === 'https:' || this.apiUrl.hostname === 'localhost' ? '1' : '0',
+    cookie_same_site: '1',
+    /**
+     * NOTE on cookie_same_site and the cookie attribute "SameSite":
+     * Safari and Firefox both disable third-party cookies by default, and Chrome will in 2021 (but postponed for 2023)
+     * Since third-party cookies will be removed in a near future, we chose not to enable this type of authentication,
+     * making the 'same-site' policy always true.
+     *
+     * NOTE on cookie party:
+     * A cookie party is determined by its "Domain" attribute, which defaults to the hostname.
+     * As defined by the MDN glossary, the domain represents an "authority", an organization to which belongs the cookie.
+     * For instance, the authority is "algorea.org".
+     * First-party cookies are all the cookies belonging to the authority "algorea.org", no matter the subdomain.
+     *
+     * NOTE on request cookies (cookies added to a request via header "cookie" by the browser) and Domain attribute:
+     * For a given request (with credentials, to simplify), among the cookies with attribute "SameSite=Strict", the browser will
+     * send only the first-party cookies which "Domain" attribute matches the requested server hostname.
+     * IE:
+     * - Cookies with "Domain=algorea.org" will match server "*.algorea.org" and "algorea.org"
+     * - Cookies with "Domain=api.algorea.org" will only match server "api.algorea.org"
+     * NB: Keep in mind that the browser filters request cookies by other attributes too, like "Path", "Secure", etc.
+     *
+     * NOTE on response cookies (cookies added to a reponse via header "Set-Cookie" by a server and treated by the browser):
+     * 1. For requests between same domain but different subdomains (ie "demo.algorea.org" and "api.algorea.org"),
+     *    since the cookies are first-party (aka they share the same authority "algorea.org"), the browser will set them.
+     * 2. For requests between same domain and subdomain, cookies are first-party, the browser will accept them. Same as 1.
+     * 3. For requests between different _root domain_ (ie "demo.algorea.org" and "fonts.google.com"),
+     *    since the cookies sent are third-party Firefox and Safari will not set them.
+     *    Chrome currently sets them, but will stop doing so in 2023.
+     */
+  } : undefined;
+
+  private requestConfig = appConfig.authType === 'cookies' ? {
+    withCredentials: true, // adds appropriate cookies to the request
   } : undefined;
 
   constructor(
@@ -36,6 +69,7 @@ export class AuthHttpService {
     return this.http
       .post<ActionResponse<AuthPayload>>(`${appConfig.apiUrl}/auth/temp-user`, null, {
         params: new HttpParams({ fromObject: { ...this.cookieParams, default_language: defaultLanguage } }),
+        ...this.requestConfig,
       })
       .pipe(
         timeout(authServicesTimeout),
@@ -49,7 +83,7 @@ export class AuthHttpService {
       .post<ActionResponse<AuthPayload>>(
         `${appConfig.apiUrl}/auth/token`,
         { code: code, redirect_uri: redirectUri }, // payload data
-        { params: new HttpParams({ fromObject: this.cookieParams }) }
+        { params: new HttpParams({ fromObject: this.cookieParams }), ...this.requestConfig }
       ).pipe(
         timeout(longAuthServicesTimeout),
         map(successData),
@@ -76,6 +110,7 @@ export class AuthHttpService {
     return this.http
       .post<ActionResponse<CookieAuthPayload>>(`${appConfig.apiUrl}/auth/token`, null, {
         params: new HttpParams({ fromObject: this.cookieParams }),
+        ...this.requestConfig,
       }).pipe(
         timeout(longAuthServicesTimeout),
         map(successData),
@@ -88,7 +123,7 @@ export class AuthHttpService {
       .post<SimpleActionResponse>(
         `${appConfig.apiUrl}/auth/logout`,
         null, // payload data
-        !auth.useCookie ? { headers: headersForAuth(auth.accessToken) } : {} // options
+        !auth.useCookie ? { headers: headersForAuth(auth.accessToken) } : this.requestConfig // options
       ).pipe(
         map(assertSuccess)
       );
