@@ -20,12 +20,6 @@ $nav-control-border: #5c5c5c;
   &.alt {
     background-color: $nav-bk-color;
 
-    .nav-collapse {
-      img {
-        transform: rotate(360deg);
-      }
-    }
-
     .notifications {
       margin-left: 0.4167rem;
       margin-right: 0;
@@ -42,8 +36,9 @@ $nav-control-border: #5c5c5c;
     display: flex;
     align-items: center;
     cursor: pointer;
-    img {
-      transform: rotate(180deg);
+
+    > i {
+      font-size: 2rem;
     }
   }
 
