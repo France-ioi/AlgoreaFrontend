@@ -3,87 +3,90 @@
   (change)="onFilterChange($event)"
 ></alg-composition-filter>
 
-<p *ngIf="state === 'error';else noError" class="alg-error-message">
-  <i class="fa fa-exclamation-triangle"></i>
-  <span i18n>Error while loading the data</span>
-  <p-button icon="pi pi-refresh" (click)="refresh()" styleClass="p-button-sm"></p-button>
-</p>
-
-<ng-template #noError>
-
-  <div class="loader" *ngIf="state === 'fetching' && data.rows.length === 0">
-    <p-progressSpinner></p-progressSpinner>
-  </div>
-
-  <p class="empty-message" *ngIf="state === 'ready' && data.rows.length === 0">
-    <ng-container *ngIf="state === 'ready' && data.rows.length === 0" [ngSwitch]="data.type">
-      <span *ngSwitchCase="'Users'" i18n>This group has no users</span>
-      <span *ngSwitchCase="'Teams'" i18n>This group has no teams</span>
-      <span *ngSwitchCase="'Groups'" i18n>This group has no sub-groups</span>
-    </ng-container>
+<ng-container *ngIf="state$ | async as state">
+  <p *ngIf="state.isError || isError; else noError" class="alg-error-message">
+    <i class="fa fa-exclamation-triangle"></i>
+    <span i18n>Error while loading the data</span>
     <p-button icon="pi pi-refresh" (click)="refresh()" styleClass="p-button-sm"></p-button>
   </p>
 
-  <alg-user-progress-details
-    [canEditPermissions]="data.can_access"
-    [progress]="progressOverlay?.progress"
-    [target]="progressOverlay?.target"
-    (hide)="hideProgressDetail()"
-    (editPermissions)="onAccessPermissions()"
-  ></alg-user-progress-details>
+  <ng-template #noError>
+    <div class="loader" *ngIf="state.isFetching && (!state.data || state.data.rows.length === 0)">
+      <p-progressSpinner></p-progressSpinner>
+    </div>
 
-  <p-table #table
-    *ngIf="data.rows.length > 0"
-    [columns]="data.items"
-    [value]="data.rows"
-    class="slanted-grid"
-    [rowTrackBy]="trackByRow"
-    [loading]="state === 'fetching'"
-  >
-    <ng-template pTemplate="header" let-columns>
-      <tr>
-        <th class="empty first header-refresh">
-          <p-button icon="pi pi-refresh" (click)="refresh()"></p-button>
-        </th>
-        <th *ngFor="let col of data.items">
-          <div class="slanted-header">
-            <div class="slanted-header-content" pTooltip="{{ col.title }}" tooltipPosition="top" [showDelay]="100">
-              {{ col.title }}
-            </div>
-          </div>
-        </th>
-        <th class="empty last"></th>
-      </tr>
-    </ng-template>
-    <ng-template
-      pTemplate="body"
-      let-row
-      let-columns="columns"
-    >
-      <tr>
-        <td class="users" pTooltip="{{ row.header }}" tooltipPosition="left" [showDelay]="100">
-          {{ row.header }}
-        </td>
-        <td
-          *ngFor="let col of columns; let colIndex = index"
-          #overlayTarget
-          (click)="showProgressDetail(overlayTarget, row.data[colIndex], row, col)"
+    <p class="empty-message" *ngIf="state.isReady && state.data.rows.length === 0">
+      <ng-container [ngSwitch]="state.data.type">
+        <span *ngSwitchCase="'Users'" i18n>This group has no users</span>
+        <span *ngSwitchCase="'Teams'" i18n>This group has no teams</span>
+        <span *ngSwitchCase="'Groups'" i18n>This group has no sub-groups</span>
+      </ng-container>
+      <p-button icon="pi pi-refresh" (click)="refresh()" styleClass="p-button-sm"></p-button>
+    </p>
+
+    <alg-user-progress-details
+      [canEditPermissions]="state.data?.can_access"
+      [progress]="progressOverlay?.progress"
+      [target]="progressOverlay?.target"
+      (hide)="hideProgressDetail()"
+      (editPermissions)="onAccessPermissions()"
+    ></alg-user-progress-details>
+
+    <ng-container *ngIf="rowsByBatch$ | async as rowsByBatch">
+      <p-table #table
+        *ngIf="state.data && rowsByBatch.length > 0"
+        [columns]="state.data.items"
+        [value]="rowsByBatch"
+        class="slanted-grid"
+        [rowTrackBy]="trackByRow"
+        [loading]="state.isFetching"
+      >
+        <ng-template pTemplate="header" let-columns>
+          <tr>
+            <th class="empty first header-refresh">
+              <p-button icon="pi pi-refresh" (click)="refresh()"></p-button>
+            </th>
+            <th *ngFor="let col of state.data.items">
+              <div class="slanted-header">
+                <div class="slanted-header-content" pTooltip="{{ col.title }}" tooltipPosition="top" [showDelay]="100">
+                  {{ col.title }}
+                </div>
+              </div>
+            </th>
+            <th class="empty last"></th>
+          </tr>
+        </ng-template>
+        <ng-template
+          pTemplate="body"
+          let-row
+          let-columns="columns"
         >
-          <alg-user-progress
-            *ngIf="row.data[colIndex]"
-            [userProgress]="row.data[colIndex]"
-          ></alg-user-progress>
-        </td>
-      </tr>
-    </ng-template>
-  </p-table>
+          <tr>
+            <td class="users" pTooltip="{{ row.header }}" tooltipPosition="left" [showDelay]="100">
+              {{ row.header }}
+            </td>
+            <td
+              *ngFor="let col of columns; let colIndex = index"
+              #overlayTarget
+              (click)="showProgressDetail(overlayTarget, row.data[colIndex], row, col)"
+            >
+              <alg-user-progress
+                *ngIf="row.data[colIndex]"
+                [userProgress]="row.data[colIndex]"
+              ></alg-user-progress>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </ng-container>
 
-  <alg-permissions-edit-dialog
-    [visible]="dialog === 'opened'"
-    [title]="dialogTitle"
-    [targetType]="currentFilter"
-    [initialPermissions]="dialogPermissions.permissions"
-    (close)="onDialogClose()"
-    (save)="onDialogSave($event)"
-  ></alg-permissions-edit-dialog>
-</ng-template>
+    <alg-permissions-edit-dialog
+      [visible]="dialog === 'opened'"
+      [title]="dialogTitle"
+      [targetType]="currentFilter"
+      [initialPermissions]="dialogPermissions.permissions"
+      (close)="onDialogClose()"
+      (save)="onDialogSave($event)"
+    ></alg-permissions-edit-dialog>
+  </ng-template>
+</ng-container>

@@ -1,13 +1,15 @@
 import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
-import { animationFrames, forkJoin, Observable, ReplaySubject, Subject, Subscription } from 'rxjs';
-import { map, scan, switchMap, takeUntil, takeWhile } from 'rxjs/operators';
+import { forkJoin, merge, Observable, ReplaySubject, Subject, Subscription } from 'rxjs';
+import { filter, map, share, switchMap } from 'rxjs/operators';
 import { canCurrentUserGrantGroupAccess } from 'src/app/modules/group/helpers/group-management';
 import { Group } from 'src/app/modules/group/http-services/get-group-by-id.service';
 import { GetGroupChildrenService } from 'src/app/modules/group/http-services/get-group-children.service';
+import { isNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
 import { formatUser } from 'src/app/shared/helpers/user';
 import { GetGroupDescendantsService } from 'src/app/shared/http-services/get-group-descendants.service';
 import { GetGroupProgressService, TeamUserProgress } from 'src/app/shared/http-services/get-group-progress.service';
 import { GroupPermissionsService, Permissions } from 'src/app/shared/http-services/group-permissions.service';
+import { setListByBatch } from 'src/app/shared/operators/set-list-by-batch';
 import { mapToFetchState } from 'src/app/shared/operators/state';
 import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
 import { TypeFilter } from '../../components/composition-filter/composition-filter.component';
@@ -42,15 +44,6 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
 
   currentFilter = this.defaultFilter;
 
-  state: 'error' | 'ready' | 'fetching' = 'fetching';
-
-  data: Data = {
-    type: this.defaultFilter,
-    items: [],
-    rows: [],
-    can_access: false,
-  };
-
   dialogPermissions: {
     permissions: Permissions
     itemId: string,
@@ -80,11 +73,25 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
 
   dialog: 'loading'|'opened'|'closed' = 'closed';
   dialogTitle = '';
+  isError = false;
 
   private dataFetching = new ReplaySubject<{ groupId: string, itemId: string, attemptId: string, filter: TypeFilter }>(1);
   private permissionsFetchingSubscription?: Subscription;
   private refresh$ = new Subject<void>();
   private destroy$ = new Subject<void>();
+
+  state$ = this.dataFetching.pipe(
+    switchMap(params => this.getData(params.itemId, params.groupId, params.attemptId, params.filter).pipe(
+      mapToFetchState({ resetter: this.refresh$ })
+    )),
+    share(),
+  );
+
+  rowsByBatch$ = this.state$.pipe(
+    map(state => state.data?.rows),
+    filter(isNotUndefined),
+    setListByBatch({ until: merge(this.destroy$, this.refresh$) })
+  );
 
   constructor(
     private getItemChildrenService: GetItemChildrenService,
@@ -93,20 +100,7 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     private getGroupChildrenService: GetGroupChildrenService,
     private groupPermissionsService: GroupPermissionsService,
     private actionFeedbackService: ActionFeedbackService,
-  ) {
-    this.dataFetching.pipe(
-      switchMap(params => this.getData(params.itemId, params.groupId, params.attemptId, params.filter)),
-      mapToFetchState({ resetter: this.refresh$ }),
-    ).subscribe({
-      next: state => {
-        this.state = state.tag;
-        if (state.isReady) this.setDataByBatch(state.data);
-      },
-      error: _err => {
-        this.state = 'error';
-      }
-    });
-  }
+  ) {}
 
   ngOnDestroy(): void {
     this.destroy$.next();
@@ -118,7 +112,7 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
 
   ngOnChanges(_changes: SimpleChanges): void {
     if (!this.itemData || !this.itemData.currentResult || !this.group) {
-      this.state = 'error';
+      this.isError = true;
       return;
     }
     this.dialog = 'closed';
@@ -154,22 +148,6 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     this.refresh$.next();
   }
 
-  private setDataByBatch(data: Data, size = 25): void {
-    const { rows } = data;
-    const startIndex = this.data.rows.length;
-    const numberOfRowsToAppend = Math.max(rows.length - startIndex, 0);
-    const maxCount = Math.ceil(numberOfRowsToAppend / size);
-    this.data = { ...data, rows: rows.slice(0, startIndex) };
-
-    animationFrames().pipe(
-      takeUntil(this.destroy$),
-      scan(count => count + 1, 0),
-      takeWhile(count => count <= maxCount),
-      map(count => count * size),
-    ).subscribe(lastIndex => {
-      this.data.rows = rows.slice(0, startIndex + lastIndex);
-    });
-  }
 
   private getProgress(itemId: string, groupId: string, filter: TypeFilter): Observable<TeamUserProgress[]> {
     switch (filter) {
@@ -233,7 +211,7 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
 
   onFilterChange(typeFilter: TypeFilter): void {
     if (!this.itemData || !this.itemData.currentResult || !this.group) {
-      this.state = 'error';
+      this.isError = true;
       return;
     }
 
