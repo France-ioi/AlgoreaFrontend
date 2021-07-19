@@ -5,7 +5,7 @@ import { map } from 'rxjs/operators';
 import { appConfig } from 'src/app/shared/helpers/config';
 import { ActionResponse, successData } from 'src/app/shared/http-services/action-response';
 
-type Status = "invalid"|"success"|"unchanged"|"not_found";
+type Status = 'invalid'|'success'|'unchanged'|'not_found';
 
 @Injectable({
   providedIn: 'root'

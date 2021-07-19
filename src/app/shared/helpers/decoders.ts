@@ -9,7 +9,7 @@ export const dateDecoder: D.Decoder<unknown, Date> = pipe(
   D.string,
   D.parse(s => {
     const date = Date.parse(s);
-    return isNaN(date) ? D.failure(s, "DateFromString") : D.success(new Date(date));
+    return isNaN(date) ? D.failure(s, 'DateFromString') : D.success(new Date(date));
   })
 );
 
@@ -20,6 +20,6 @@ export const durationDecoder: D.Decoder<unknown, Duration> = pipe(
   D.string,
   D.parse(s => {
     const duration = Duration.fromString(s);
-    return duration.isValid() ? D.success(duration) : D.failure(s, "DurationFromString");
+    return duration.isValid() ? D.success(duration) : D.failure(s, 'DurationFromString');
   })
 );
