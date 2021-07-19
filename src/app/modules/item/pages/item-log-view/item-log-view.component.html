@@ -10,7 +10,7 @@
   <ng-container *ngIf="state.data">
     <p-table class="alg-table" [columns]="state.data.columns" [value]="state.data.rowData" [loading]="state.isFetching">
       <ng-template pTemplate="header" let-rowData let-columns>
-        <tr *ngIf="rowData.length > 0">
+        <tr>
           <th [colSpan]="columns.length">
             <div class="header-container header-refresh">
               <p-button icon="pi pi-refresh" (click)="refresh()"></p-button>
