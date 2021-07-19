@@ -202,7 +202,8 @@ a:hover {
   .right {
     margin-left: 34rem;
     padding-top: 3.75rem;
-    padding-bottom: 5rem;
+    padding-bottom: 0;
+
     // background-color: $base-bk-color;
     position: relative;
 
@@ -216,8 +217,8 @@ a:hover {
       }
     }
 
-    &.with-task {
-      padding-bottom: 0;
+    &.with-footer {
+      padding-bottom: 5rem;
     }
 
     .main-content {

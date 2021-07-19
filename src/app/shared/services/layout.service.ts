@@ -8,17 +8,17 @@ import { delay } from 'rxjs/operators';
 export class LayoutService {
   // Service allowing modifications of the layout
 
-  private leftMenuAndHeadersDisplayed = new BehaviorSubject<boolean>(true);
-  leftMenuAndHeadersDisplayed$ = this.leftMenuAndHeadersDisplayed.asObservable().pipe(delay(0));
+  private fullFrameContent = new BehaviorSubject<boolean>(true);
+  fullFrameContent$ = this.fullFrameContent.asObservable().pipe(delay(0));
 
-  private withTask = new BehaviorSubject<boolean>(false);
-  withTask$ = this.withTask.asObservable().pipe(delay(0));
+  private footer = new BehaviorSubject<boolean>(false);
+  footer$ = this.footer.asObservable().pipe(delay(0));
 
-  toggleLeftMenuAndHeaders(shown: boolean): void {
-    this.leftMenuAndHeadersDisplayed.next(shown);
+  toggleFullFrameContent(shown: boolean): void {
+    this.fullFrameContent.next(shown);
   }
 
-  toggleWithTask(newState: boolean): void {
-    this.withTask.next(newState);
+  toggleWithFooter(shown: boolean): void {
+    this.footer.next(shown);
   }
 }

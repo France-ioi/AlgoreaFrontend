@@ -18,12 +18,12 @@ export class LeftHeaderComponent {
     private layoutService: LayoutService
   ) { }
 
-  hideLeftMenuAndHeaders(): void {
-    this.layoutService.toggleLeftMenuAndHeaders(false);
+  setFullFrameContent(): void {
+    this.layoutService.toggleFullFrameContent(false);
   }
 
-  showLeftMenuAndHeaders(): void {
-    this.layoutService.toggleLeftMenuAndHeaders(true);
+  unsetFullFrameContent(): void {
+    this.layoutService.toggleFullFrameContent(true);
   }
 
   login(): void {
