@@ -27,7 +27,7 @@ export class ItemLogViewComponent implements OnChanges, OnDestroy {
   @Input() itemData?: ItemData;
   @Input() isWatchingGroup = false;
 
-  private refresh$ = new Subject<void>();
+  private readonly refresh$ = new Subject<void>();
   private readonly item$ = new ReplaySubject<Item>(1);
   readonly state$ = this.item$.pipe(
     distinct(),
