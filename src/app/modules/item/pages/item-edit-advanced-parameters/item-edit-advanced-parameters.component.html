@@ -1,6 +1,6 @@
 <form *ngIf="item && parentForm" [formGroup]="parentForm">
   <alg-section icon="fa fa-cogs" i18n-label label="Global parameters"
-    *ngIf="item.type === 'Task'">
+    *ngIf="['Task', 'Course'].includes(item.type)">
     <div class="form-item-view">
       <span class="form-item-label" i18n>Url</span>
       <div class="form-item-control">
