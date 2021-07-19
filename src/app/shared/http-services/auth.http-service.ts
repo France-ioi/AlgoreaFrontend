@@ -34,7 +34,7 @@ export class AuthHttpService {
      * NOTE on cookie party:
      * A cookie party is determined by its "Domain" attribute, which defaults to the hostname.
      * As defined by the MDN glossary, the domain represents an "authority", an organization to which belongs the cookie.
-     * In our case, the authority is "algorea.org".
+     * For instance, the authority is "algorea.org".
      * First-party cookies are all the cookies belonging to the authority "algorea.org", no matter the subdomain.
      *
      * NOTE on request cookies (cookies added to a request via header "cookie" by the browser) and Domain attribute:
