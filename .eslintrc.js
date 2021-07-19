@@ -80,6 +80,10 @@ module.exports = {
       allowNullableNumber: true,
       allowNullableBoolean: true
     }],
+    'quotes': ['error', 'single', {
+      avoidEscape: true,
+      allowTemplateLiterals: true
+    }]
   },
   overrides: [
     {

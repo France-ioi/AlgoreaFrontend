@@ -1,5 +1,5 @@
-import { HttpParams } from "@angular/common/http";
-import { SortEvent } from "primeng/api";
+import { HttpParams } from '@angular/common/http';
+import { SortEvent } from 'primeng/api';
 
 export interface SortOption {
   field: string;

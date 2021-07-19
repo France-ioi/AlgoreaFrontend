@@ -5,7 +5,7 @@ import { map } from 'rxjs/operators';
 import { forkJoin, Observable } from 'rxjs';
 import { appConfig } from 'src/app/shared/helpers/config';
 
-type Status = "invalid"|"success"|"unchanged"|"not_found";
+type Status = 'invalid'|'success'|'unchanged'|'not_found';
 
 export enum Action {
   Accept,
