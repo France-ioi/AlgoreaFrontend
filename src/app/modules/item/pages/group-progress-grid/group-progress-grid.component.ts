@@ -75,14 +75,14 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
   dialog: 'loading'|'opened'|'closed' = 'closed';
   dialogTitle = '';
 
-  private dataFetching = new ReplaySubject<{ groupId: string, itemId: string, attemptId: string, filter: TypeFilter }>(1);
+  private dataFetching$ = new ReplaySubject<{ groupId: string, itemId: string, attemptId: string, filter: TypeFilter }>(1);
   private permissionsFetchingSubscription?: Subscription;
   private refresh$ = new Subject<void>();
   private destroy$ = new Subject<void>();
   private error$ = new Subject<Error>();
 
   state$ = merge(
-    this.dataFetching.pipe(
+    this.dataFetching$.pipe(
       switchMap(params => this.getData(params.itemId, params.groupId, params.attemptId, params.filter).pipe(
         mapToFetchState({ resetter: this.refresh$ })
       )),
@@ -109,7 +109,7 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
-    this.dataFetching.complete();
+    this.dataFetching$.complete();
     this.permissionsFetchingSubscription?.unsubscribe();
     this.refresh$.complete();
     this.error$.complete();
@@ -121,7 +121,7 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
       return;
     }
     this.dialog = 'closed';
-    this.dataFetching.next({
+    this.dataFetching$.next({
       groupId: this.group.id,
       itemId: this.itemData.item.id,
       attemptId: this.itemData.currentResult.attemptId,
@@ -222,7 +222,7 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
 
     if (typeFilter !== this.currentFilter) {
       this.currentFilter = typeFilter;
-      this.dataFetching.next({
+      this.dataFetching$.next({
         groupId: this.group.id,
         itemId: this.itemData.item.id,
         attemptId: this.itemData.currentResult.attemptId,
