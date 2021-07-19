@@ -5,6 +5,7 @@ import { canCurrentUserGrantGroupAccess } from 'src/app/modules/group/helpers/gr
 import { Group } from 'src/app/modules/group/http-services/get-group-by-id.service';
 import { GetGroupChildrenService } from 'src/app/modules/group/http-services/get-group-children.service';
 import { isNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
+import { errorState } from 'src/app/shared/helpers/state';
 import { formatUser } from 'src/app/shared/helpers/user';
 import { GetGroupDescendantsService } from 'src/app/shared/http-services/get-group-descendants.service';
 import { GetGroupProgressService, TeamUserProgress } from 'src/app/shared/http-services/get-group-progress.service';
@@ -73,18 +74,21 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
 
   dialog: 'loading'|'opened'|'closed' = 'closed';
   dialogTitle = '';
-  isError = false;
 
   private dataFetching = new ReplaySubject<{ groupId: string, itemId: string, attemptId: string, filter: TypeFilter }>(1);
   private permissionsFetchingSubscription?: Subscription;
   private refresh$ = new Subject<void>();
   private destroy$ = new Subject<void>();
+  private error$ = new Subject<Error>();
 
-  state$ = this.dataFetching.pipe(
-    switchMap(params => this.getData(params.itemId, params.groupId, params.attemptId, params.filter).pipe(
-      mapToFetchState({ resetter: this.refresh$ })
-    )),
-    share(),
+  state$ = merge(
+    this.dataFetching.pipe(
+      switchMap(params => this.getData(params.itemId, params.groupId, params.attemptId, params.filter).pipe(
+        mapToFetchState({ resetter: this.refresh$ })
+      )),
+      share(),
+    ),
+    this.error$.pipe(map(error => errorState(error)))
   );
 
   rowsByBatch$ = this.state$.pipe(
@@ -108,11 +112,12 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     this.dataFetching.complete();
     this.permissionsFetchingSubscription?.unsubscribe();
     this.refresh$.complete();
+    this.error$.complete();
   }
 
   ngOnChanges(_changes: SimpleChanges): void {
     if (!this.itemData || !this.itemData.currentResult || !this.group) {
-      this.isError = true;
+      this.error$.next(new Error('error'));
       return;
     }
     this.dialog = 'closed';
@@ -211,7 +216,7 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
 
   onFilterChange(typeFilter: TypeFilter): void {
     if (!this.itemData || !this.itemData.currentResult || !this.group) {
-      this.isError = true;
+      this.error$.next(new Error('error'));
       return;
     }
 
