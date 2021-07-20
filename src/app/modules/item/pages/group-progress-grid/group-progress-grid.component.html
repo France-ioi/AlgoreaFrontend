@@ -10,11 +10,11 @@
 
 <ng-template #noError>
 
-  <div class="loader" *ngIf="state === 'fetching' && data.rows.length === 0">
+  <div class="loader" *ngIf="state === 'fetching' && data.items.length === 0">
     <p-progressSpinner></p-progressSpinner>
   </div>
 
-  <ng-container *ngIf="state === 'ready' && data.rows.length === 0" [ngSwitch]="data.type">
+  <ng-container *ngIf="state === 'ready' && data.items.length === 0" [ngSwitch]="data.type">
     <p class="empty-message" *ngSwitchCase="'Users'" i18n>This group has no users</p>
     <p class="empty-message" *ngSwitchCase="'Teams'" i18n>This group has no teams</p>
     <p class="empty-message" *ngSwitchCase="'Groups'" i18n>This group has no sub-groups</p>
@@ -29,7 +29,7 @@
   ></alg-user-progress-details>
 
   <p-table #table
-    *ngIf="data.rows.length > 0"
+    *ngIf="data.items.length > 0"
     [columns]="data.items"
     [value]="data.rows"
     class="slanted-grid"
