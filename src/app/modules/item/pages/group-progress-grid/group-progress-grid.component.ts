@@ -5,7 +5,6 @@ import { canCurrentUserGrantGroupAccess } from 'src/app/modules/group/helpers/gr
 import { Group } from 'src/app/modules/group/http-services/get-group-by-id.service';
 import { GetGroupChildrenService } from 'src/app/modules/group/http-services/get-group-children.service';
 import { isNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
-import { errorState } from 'src/app/shared/helpers/state';
 import { formatUser } from 'src/app/shared/helpers/user';
 import { GetGroupDescendantsService } from 'src/app/shared/http-services/get-group-descendants.service';
 import { GetGroupProgressService, TeamUserProgress } from 'src/app/shared/http-services/get-group-progress.service';
@@ -79,16 +78,12 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
   private permissionsFetchingSubscription?: Subscription;
   private refresh$ = new Subject<void>();
   private destroy$ = new Subject<void>();
-  private error$ = new Subject<Error>();
 
-  state$ = merge(
-    this.dataFetching$.pipe(
-      switchMap(params => this.getData(params.itemId, params.groupId, params.attemptId, params.filter).pipe(
-        mapToFetchState({ resetter: this.refresh$ })
-      )),
-      share(),
-    ),
-    this.error$.pipe(map(error => errorState(error)))
+  state$ = this.dataFetching$.pipe(
+    switchMap(params => this.getData(params.itemId, params.groupId, params.attemptId, params.filter).pipe(
+      mapToFetchState({ resetter: this.refresh$ })
+    )),
+    share(),
   );
 
   rowsByBatch$ = this.state$.pipe(
@@ -112,14 +107,11 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     this.dataFetching$.complete();
     this.permissionsFetchingSubscription?.unsubscribe();
     this.refresh$.complete();
-    this.error$.complete();
   }
 
   ngOnChanges(_changes: SimpleChanges): void {
-    if (!this.itemData || !this.itemData.currentResult || !this.group) {
-      this.error$.next(new Error('error'));
-      return;
-    }
+    if (!this.itemData || !this.itemData.currentResult || !this.group) throw new Error('properties are missing');
+
     this.dialog = 'closed';
     this.dataFetching$.next({
       groupId: this.group.id,
@@ -215,10 +207,7 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
   }
 
   onFilterChange(typeFilter: TypeFilter): void {
-    if (!this.itemData || !this.itemData.currentResult || !this.group) {
-      this.error$.next(new Error('error'));
-      return;
-    }
+    if (!this.itemData || !this.itemData.currentResult || !this.group) throw new Error('properties are missing');
 
     if (typeFilter !== this.currentFilter) {
       this.currentFilter = typeFilter;
