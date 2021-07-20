@@ -58,7 +58,7 @@
                 </a>
               </td>
               <td>
-                <button class="alg-button-icon base-color" type="button" (click)="openPropagationEditMenu($event, index)">
+                <button class="alg-button-icon base-color" type="button" (click)="openPropagationEditMenu($event, rowData)">
                   <i class="fa" [ngClass]="{
                     'fa-eye': rowData.contentViewPropagation === 'as_content',
                     'fa-lock': rowData.contentViewPropagation === 'as_info',
@@ -104,6 +104,9 @@
 
 <p-overlayPanel [style]="{minWidth: '112px', maxWidth: '280px'}" styleClass="alg-propagation-edit-menu" #op appendTo="body">
   <ng-template pTemplate>
-    <alg-propagation-edit-menu (clickEvent)="onContentViewPropagationChanged($event)"></alg-propagation-edit-menu>
+    <alg-propagation-edit-menu
+        [childData]="propagationEditItem"
+        (clickEvent)="onContentViewPropagationChanged($event)"
+    ></alg-propagation-edit-menu>
   </ng-template>
 </p-overlayPanel>

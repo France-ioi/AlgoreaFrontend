@@ -7,7 +7,7 @@ import { ItemType, typeCategoryOfItem } from '../../../../shared/helpers/item-ty
 import { AddedContent } from '../../../shared-components/components/add-content/add-content.component';
 import { ItemRouter } from '../../../../shared/routing/item-router';
 import { bestAttemptFromResults } from '../../../../shared/helpers/attempts';
-import { canCurrentUserViewItemContent } from '../../helpers/item-permissions';
+import { canCurrentUserViewItemContent, PermissionsInfo } from '../../helpers/item-permissions';
 import { isNotUndefined } from '../../../../shared/helpers/null-undefined-predicates';
 import { OverlayPanel } from 'primeng/overlaypanel';
 
@@ -26,6 +26,7 @@ export interface ChildData {
   grantViewPropagation?: boolean,
   upperViewLevelsPropagation?: 'use_content_view_propagation' | 'as_content_with_descendants' | 'as_is',
   watchPropagation?: boolean,
+  permissions?: PermissionsInfo,
 }
 
 export interface ChildDataWithId extends ChildData {
@@ -53,7 +54,7 @@ export class ItemChildrenEditComponent implements OnChanges {
   selectedRows: ChildData[] = [];
   scoreWeightEnabled = false;
   addedItemIds: string[] = [];
-  propagationEditIndex: number | null = null;
+  propagationEditItem?: ChildData | null = null;
 
   private subscription?: Subscription;
   @Output() childrenChanges = new EventEmitter<ChildData[]>();
@@ -94,6 +95,7 @@ export class ItemChildrenEditComponent implements OnChanges {
                 grantViewPropagation: child.grantViewPropagation,
                 upperViewLevelsPropagation: child.upperViewLevelsPropagation,
                 watchPropagation: child.watchPropagation,
+                permissions: child.permissions,
               };
             })
           )
@@ -154,23 +156,23 @@ export class ItemChildrenEditComponent implements OnChanges {
     this.childrenChanges.emit(this.data);
   }
 
-  openPropagationEditMenu(event: MouseEvent, idx: number): void {
-    this.op?.show(event);
-    this.propagationEditIndex = idx;
+  openPropagationEditMenu(event: MouseEvent, rowData: ChildData): void {
+    this.op?.toggle(event);
+    this.propagationEditItem = rowData;
   }
 
   onContentViewPropagationChanged(contentViewPropagation: 'none' | 'as_info' | 'as_content'): void {
     this.op?.hide();
-    this.data = this.data.map((c, idx) => {
-      if (idx === this.propagationEditIndex) {
+    this.data = this.data.map(c => {
+      if (c.id === this.propagationEditItem?.id) {
         return {
           ...c,
           contentViewPropagation,
-        }
+        };
       }
       return c;
     });
-    this.propagationEditIndex = null;
+    this.propagationEditItem = null;
     this.childrenChanges.emit(this.data);
   }
 

@@ -13,13 +13,21 @@
       <i class="fa fa-eye-slash"></i>
     </div>
   </li>
-  <li class="menu-item cursor-pointer" (click)="onClick('as_info')">
+  <li
+      class="menu-item cursor-pointer"
+      (click)="onClick('as_info')"
+      *ngIf="childData?.permissions?.canGrantView !== 'none' || [ 'as_info', 'as_content' ].includes(childData?.contentViewPropagation || '')"
+  >
     <div class="menu-item-title">Locked</div>
     <div class="menu-item-icon">
       <i class="fa fa-lock"></i>
     </div>
   </li>
-  <li class="menu-item cursor-pointer" (click)="onClick('as_content')">
+  <li
+      class="menu-item cursor-pointer"
+      (click)="onClick('as_content')"
+      *ngIf="['content', 'content_with_descendants', 'solution', 'solution_with_grant'].includes(childData?.permissions?.canGrantView || '') || childData?.contentViewPropagation === 'as_content'"
+  >
     <div class="menu-item-title">Open</div>
     <div class="menu-item-icon">
       <i class="fa fa-eye"></i>
