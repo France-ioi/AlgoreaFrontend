@@ -1,16 +1,16 @@
 import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
-import { forkJoin, merge, Observable, ReplaySubject, Subject, Subscription } from 'rxjs';
-import { filter, map, share, switchMap } from 'rxjs/operators';
+import { forkJoin, Observable, of, ReplaySubject, Subject, Subscription } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 import { canCurrentUserGrantGroupAccess } from 'src/app/modules/group/helpers/group-management';
 import { Group } from 'src/app/modules/group/http-services/get-group-by-id.service';
 import { GetGroupChildrenService } from 'src/app/modules/group/http-services/get-group-children.service';
-import { isNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
 import { formatUser } from 'src/app/shared/helpers/user';
 import { GetGroupDescendantsService } from 'src/app/shared/http-services/get-group-descendants.service';
 import { GetGroupProgressService, TeamUserProgress } from 'src/app/shared/http-services/get-group-progress.service';
 import { GroupPermissionsService, Permissions } from 'src/app/shared/http-services/group-permissions.service';
-import { setListByBatch } from 'src/app/shared/operators/set-list-by-batch';
+import { progressiveListFromList } from 'src/app/shared/operators/progressive-list-from-list';
 import { mapToFetchState } from 'src/app/shared/operators/state';
+import { withPreviousFetchState } from 'src/app/shared/operators/with-previous-fetch-state';
 import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
 import { TypeFilter } from '../../components/composition-filter/composition-filter.component';
 import { GetItemChildrenService } from '../../http-services/get-item-children.service';
@@ -77,19 +77,18 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
   private dataFetching$ = new ReplaySubject<{ groupId: string, itemId: string, attemptId: string, filter: TypeFilter }>(1);
   private permissionsFetchingSubscription?: Subscription;
   private refresh$ = new Subject<void>();
-  private destroy$ = new Subject<void>();
 
   state$ = this.dataFetching$.pipe(
     switchMap(params => this.getData(params.itemId, params.groupId, params.attemptId, params.filter).pipe(
       mapToFetchState({ resetter: this.refresh$ })
     )),
-    share(),
-  );
-
-  rowsByBatch$ = this.state$.pipe(
-    map(state => state.data?.rows),
-    filter(isNotUndefined),
-    setListByBatch({ until: merge(this.destroy$, this.refresh$) })
+    withPreviousFetchState(),
+    switchMap(([ previousState, state ]) => {
+      if (!state.data) return of(state);
+      return progressiveListFromList(state.data.rows, { startIndex: previousState.data?.rows.length }).pipe(
+        map(rows => ({ ...state, data: { ...state.data, rows } })),
+      );
+    }),
   );
 
   constructor(
@@ -102,8 +101,6 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
   ) {}
 
   ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
     this.dataFetching$.complete();
     this.permissionsFetchingSubscription?.unsubscribe();
     this.refresh$.complete();
