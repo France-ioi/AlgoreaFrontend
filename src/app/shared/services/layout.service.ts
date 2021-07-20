@@ -13,7 +13,9 @@ export class LayoutService {
   fullFrameContent$ = this.fullFrameContent.asObservable().pipe(delay(0));
 
   private contentFooter = new BehaviorSubject<boolean>(true);
-  /** Adds a blank footer to the content area */
+  /**
+   * Adds a blank footer to the content area
+   * Disabled for instance for displaying a task, as the task iframe is set to fill the screen to the bottom */
   contentFooter$ = this.contentFooter.asObservable().pipe(delay(0));
 
   /** Set fullFrameContent, which expands the content by hiding the left menu and select headers */
