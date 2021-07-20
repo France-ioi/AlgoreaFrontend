@@ -1,5 +1,6 @@
-import { Component, Output, EventEmitter, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { AuthService } from 'src/app/shared/auth/auth.service';
+import { LayoutService } from 'src/app/shared/services/layout.service';
 
 @Component({
   selector: 'alg-left-header',
@@ -10,26 +11,19 @@ export class LeftHeaderComponent {
 
   @Input() compactMode = false;
 
-  @Output() displayLeftMenu = new EventEmitter<boolean>();
-  @Output() displayHeaders = new EventEmitter<boolean>();
-
   showHeaders = true;
 
   constructor(
-    private authService: AuthService
+    private authService: AuthService,
+    private layoutService: LayoutService
   ) { }
 
-  hideLeftMenu(): void {
-    this.displayLeftMenu.emit(false);
+  setFullFrameContent(): void {
+    this.layoutService.toggleFullFrameContent(true);
   }
 
-  showLeftMenu(): void {
-    this.displayLeftMenu.emit(true);
-  }
-
-  toggleHeadersDisplay(): void {
-    this.showHeaders = !this.showHeaders;
-    this.displayHeaders.emit(this.showHeaders);
+  unsetFullFrameContent(): void {
+    this.layoutService.toggleFullFrameContent(false);
   }
 
   login(): void {
