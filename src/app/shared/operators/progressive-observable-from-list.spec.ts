@@ -1,6 +1,6 @@
 import { switchMap } from 'rxjs/operators';
 import { TestScheduler } from 'rxjs/testing';
-import { progressiveListFromList } from './progressive-list-from-list';
+import { progressiveObservableFromList } from './progressive-observable-from-list';
 
 describe('progressiveListFromList operator', () => {
 
@@ -21,7 +21,7 @@ describe('progressiveListFromList operator', () => {
         2: [ 1, 2, 3, 4 ],
         3: [ 1, 2, 3, 4, 5 ],
       });
-      const list = result.pipe(switchMap(list => progressiveListFromList(list, { chunkSize: 2, interval: () => interval })));
+      const list = result.pipe(switchMap(list => progressiveObservableFromList(list, { incrementSize: 2, interval: () => interval })));
       expectObservable(list).toEqual(expected);
     });
   });
@@ -35,7 +35,9 @@ describe('progressiveListFromList operator', () => {
         2: [ 1, 2, 3, 4, 5 ],
         3: [ 1, 2, 3, 4, 5, 6 ],
       });
-      const list = result.pipe(switchMap(list => progressiveListFromList(list, { chunkSize: 2, startIndex: 3, interval: () => interval })));
+      const list = result.pipe(
+        switchMap(list => progressiveObservableFromList(list, { incrementSize: 2, initialIncrementSize: 3, interval: () => interval })),
+      );
       expectObservable(list).toEqual(expected);
     });
   });
@@ -45,7 +47,9 @@ describe('progressiveListFromList operator', () => {
       const interval = hot(' -x-- x ');
       const result = cold('  -(1|   ', { 1: [ 1, 2, 3, 4, 5 ] });
       const expected = cold('----(1|', { 1: [ 1, 2, 3, 4, 5 ] });
-      const list = result.pipe(switchMap(list => progressiveListFromList(list, { chunkSize: 2, startIndex: 5, interval: () => interval })));
+      const list = result.pipe(
+        switchMap(list => progressiveObservableFromList(list, { incrementSize: 2, initialIncrementSize: 5, interval: () => interval })),
+      );
       expectObservable(list).toEqual(expected);
     });
   });
@@ -55,7 +59,7 @@ describe('progressiveListFromList operator', () => {
       const interval = hot(' -x-- x ');
       const result = cold('  -(1|   ', { 1: [ 1, 2, 3, 4, 5 ] });
       const expected = cold('----(1|', { 1: [ 1, 2, 3, 4, 5 ] });
-      const list = result.pipe(switchMap(list => progressiveListFromList(list, { chunkSize: 5, interval: () => interval })));
+      const list = result.pipe(switchMap(list => progressiveObservableFromList(list, { incrementSize: 5, interval: () => interval })));
       expectObservable(list).toEqual(expected);
     });
   });

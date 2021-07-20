@@ -8,7 +8,7 @@ import { formatUser } from 'src/app/shared/helpers/user';
 import { GetGroupDescendantsService } from 'src/app/shared/http-services/get-group-descendants.service';
 import { GetGroupProgressService, TeamUserProgress } from 'src/app/shared/http-services/get-group-progress.service';
 import { GroupPermissionsService, Permissions } from 'src/app/shared/http-services/group-permissions.service';
-import { progressiveListFromList } from 'src/app/shared/operators/progressive-list-from-list';
+import { progressiveObservableFromList } from 'src/app/shared/operators/progressive-observable-from-list';
 import { mapToFetchState } from 'src/app/shared/operators/state';
 import { withPreviousFetchState } from 'src/app/shared/operators/with-previous-fetch-state';
 import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
@@ -85,7 +85,7 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     withPreviousFetchState(),
     switchMap(([ previousState, state ]) => {
       if (!state.data) return of(state);
-      return progressiveListFromList(state.data.rows, { startIndex: previousState.data?.rows.length }).pipe(
+      return progressiveObservableFromList(state.data.rows, { initialIncrementSize: previousState.data?.rows.length }).pipe(
         map(rows => ({ ...state, data: { ...state.data, rows } })),
       );
     }),
