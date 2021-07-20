@@ -40,7 +40,7 @@
     <div
       class="right"
       *ngrxLet="fullFrameContent$ as fullFrameContent"
-      [ngClass]="{ collapsed: !fullFrameContent, expanded: fullFrameContent, 'with-mode-bar': currentMode !== 'normal', 'with-footer': footer$ | async }"
+      [ngClass]="{ collapsed: !fullFrameContent, expanded: fullFrameContent, 'with-mode-bar': currentMode !== 'normal', 'with-footer': contentFooter$ | async }"
       >
       <div class="main-content">
         <router-outlet></router-outlet>

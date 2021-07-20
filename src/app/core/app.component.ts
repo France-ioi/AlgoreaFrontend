@@ -28,7 +28,7 @@ export class AppComponent implements OnInit, OnDestroy {
   );
 
   fullFrameContent$ = this.layoutService.fullFrameContent$;
-  footer$ = this.layoutService.footer$;
+  contentFooter$ = this.layoutService.contentFooter$;
   scrolled = false;
 
   private subscription?: Subscription;
