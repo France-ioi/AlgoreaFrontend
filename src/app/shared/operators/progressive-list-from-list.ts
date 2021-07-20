@@ -4,12 +4,12 @@ import { map, scan, take } from 'rxjs/operators';
 /**
  * Generate stream providing a list populated by chunks at each interval
  *
- * IE: size = 2, list = [1, 2, 3, 4, 5, 6] streams following values:
+ * IE: chunkSize = 2, list = [1, 2, 3, 4, 5, 6] streams following values:
  * 1. [1, 2]             → merge 2 first items
  * 2. [1, 2, 3, 4]       → merge 2 new items
  * 3. [1, 2, 3, 4, 5, 6] → merge 2 new items
  *
- * IE: size = 2, startIndex = 3, list = [1, 2, 3, 4, 5, 6] streams following values:
+ * IE: chunkSize = 2, startIndex = 3, list = [1, 2, 3, 4, 5, 6] streams following values:
  * 1. [1, 2, 3]          → until startIndex
  * 2. [1, 2, 3, 4, 5]    → merge 2 new items
  * 3. [1, 2, 3, 4, 5, 6] → merge the last remaining item
