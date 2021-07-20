@@ -1,7 +1,7 @@
 import { TestScheduler } from 'rxjs/testing';
 import { setListByBatch } from './set-list-by-batch';
 
-fdescribe('setListByBatch operator', () => {
+describe('setListByBatch operator', () => {
 
   let testScheduler: TestScheduler;
 
