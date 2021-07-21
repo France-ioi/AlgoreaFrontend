@@ -7,6 +7,7 @@
 
 import { Observable, of, throwError } from 'rxjs';
 import { delay, map, retryWhen, switchMap, take } from 'rxjs/operators';
+import { parseQueryString } from 'src/app/shared/helpers/url';
 import { rxBuild, RxMessagingChannel } from './rxjschannel';
 
 export interface TaskParams {
@@ -33,12 +34,6 @@ export type TaskGrade = any;
 export type TaskResources = any;
 export type TaskDisplayData = any;
 export type TaskLog = any;
-
-function getUrlParameterByName(name : string, url : string) : string {
-  const regex = new RegExp('[\\?&]' + name + '=([^&#]*)'),
-    results = regex.exec(url);
-  return results && results[1] ? decodeURIComponent(results[1].replace(/\+/g, ' ')) : '';
-}
 
 function getRandomID(): string {
   const low = Math.floor(Math.random() * 922337203).toString();
@@ -82,7 +77,7 @@ export function taskProxyFromIframe(iframe : HTMLIFrameElement): Observable<Task
       rxBuild({
         window: contentWindow,
         origin: '*',
-        scope: getUrlParameterByName('channelId', iframe.src),
+        scope: parseQueryString(iframe.src).get('channelId') || '',
       })
     ),
 
