@@ -2,7 +2,7 @@
   <alg-add-content
       [allowedTypesForNewContent]="allowedNewGroupTypes"
       (contentAdded)="addChild($event)"
-      [loading]="false"
+      [loading]="state === 'addingGroup'"
       [showSearchUI]="false"
       inputCreatePlaceholder="Enter a title to create a new group"
   ></alg-add-content>

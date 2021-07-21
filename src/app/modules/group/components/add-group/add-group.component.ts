@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { AddedContent, NewContentType } from 'src/app/modules/shared-components/components/add-content/add-content.component';
 import { GroupCreationService } from '../../http-services/group-creation.service';
 import { Router } from '@angular/router';
+import { ActionFeedbackService } from '../../../../shared/services/action-feedback.service';
 
 type GroupType = 'Class'|'Team'|'Club'|'Friends'|'Other'|'Session';
 
@@ -38,14 +39,25 @@ export class AddGroupComponent {
     },
   ];
 
+  state: 'addingGroup' | 'ready' = 'ready';
+
   constructor(
     private groupCreationService: GroupCreationService,
+    private actionFeedbackService: ActionFeedbackService,
     private router: Router,
   ) {}
 
   addChild(group: AddedContent<GroupType>): void {
-    this.groupCreationService.create(group.title, group.type).subscribe(createdId => {
-      void this.router.navigate([ 'groups', 'by-id', createdId, 'details' ]);
+    this.state = 'addingGroup';
+    this.groupCreationService.create(group.title, group.type).subscribe({
+      next: createdId => {
+        this.state = 'ready';
+        void this.router.navigate([ 'groups', 'by-id', createdId, 'details' ]);
+      },
+      error: () => {
+        this.state = 'ready';
+        this.actionFeedbackService.unexpectedError();
+      }
     });
   }
 }
