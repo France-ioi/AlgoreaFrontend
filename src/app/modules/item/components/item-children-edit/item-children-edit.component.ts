@@ -54,6 +54,7 @@ export class ItemChildrenEditComponent implements OnChanges {
   selectedRows: ChildData[] = [];
   scoreWeightEnabled = false;
   addedItemIds: string[] = [];
+  propagationEditItemIdx: number | null = null;
   propagationEditItem?: ChildData | null = null;
 
   private subscription?: Subscription;
@@ -116,7 +117,18 @@ export class ItemChildrenEditComponent implements OnChanges {
   }
 
   addChild(child: AddedContent<ItemType>): void {
-    this.data.push({ ...child, scoreWeight: DEFAULT_SCORE_WEIGHT });
+    this.data.push({
+      ...child,
+      scoreWeight: DEFAULT_SCORE_WEIGHT,
+      ...(!child.id ? {
+        contentViewPropagation: 'as_info',
+        permissions: {
+          canView: 'solution',
+          canEdit: 'all_with_grant',
+          canGrantView: 'solution_with_grant',
+        },
+      } : {})
+    });
     this.onChildrenListUpdate();
     this.childrenChanges.emit(this.data);
   }
@@ -156,15 +168,16 @@ export class ItemChildrenEditComponent implements OnChanges {
     this.childrenChanges.emit(this.data);
   }
 
-  openPropagationEditMenu(event: MouseEvent, actualTarget: HTMLDivElement, rowData: ChildData): void {
+  openPropagationEditMenu(event: MouseEvent, actualTarget: HTMLDivElement, rowData: ChildData, itemIdx: number): void {
     this.propagationEditItem = rowData;
+    this.propagationEditItemIdx = itemIdx;
     this.op?.toggle(event, actualTarget);
   }
 
   onContentViewPropagationChanged(contentViewPropagation: 'none' | 'as_info' | 'as_content'): void {
     this.op?.hide();
-    this.data = this.data.map(c => {
-      if (c.id === this.propagationEditItem?.id) {
+    this.data = this.data.map((c, index) => {
+      if (index === this.propagationEditItemIdx) {
         return {
           ...c,
           contentViewPropagation,
@@ -173,6 +186,7 @@ export class ItemChildrenEditComponent implements OnChanges {
       return c;
     });
     this.propagationEditItem = null;
+    this.propagationEditItemIdx = null;
     this.childrenChanges.emit(this.data);
   }
 

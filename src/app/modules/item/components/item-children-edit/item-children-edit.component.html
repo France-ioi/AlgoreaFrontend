@@ -57,9 +57,13 @@
                   {{ rowData.title }}
                 </a>
               </td>
-              <td>
+              <td *ngIf="rowData.contentViewPropagation">
                 <div class="propagation-state-wrapper" #propagationStateWrapperTarget>
-                  <button class="alg-button-icon base-color" type="button" (click)="openPropagationEditMenu($event, propagationStateWrapperTarget, rowData)">
+                  <button
+                      class="alg-button-icon base-color"
+                      type="button"
+                      (click)="openPropagationEditMenu($event, propagationStateWrapperTarget, rowData, index)"
+                  >
                     <i class="fa" [ngClass]="{
                     'fa-eye': rowData.contentViewPropagation === 'as_content',
                     'fa-lock': rowData.contentViewPropagation === 'as_info',
