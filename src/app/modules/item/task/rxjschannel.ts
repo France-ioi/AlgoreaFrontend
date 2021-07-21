@@ -1,9 +1,9 @@
 import { build, ChannelConfiguration, MessageTransaction, MessagingChannel } from 'jschannel';
 import { Observable } from 'rxjs';
 
-export interface RxMessage<T> {
+export interface RxMessage {
   method: string;
-  params?: T;
+  params?: unknown;
   timeout?: number;
   error?: (error: any, message: string) => void;
 }
@@ -50,7 +50,7 @@ export class RxMessagingChannel {
     return this.innerChan.bind(method, callback, doNotPublish);
   }
 
-  call<S, T>(message: RxMessage<S>, validator?: (result?: any) => T): Observable<T> {
+  call<T>(message: RxMessage, validator?: (result?: any) => T): Observable<T> {
     // Create an Observable wrapping the inner jschannel call
     return new Observable<T>(subscriber => {
       const innerMessage = {
@@ -65,7 +65,7 @@ export class RxMessagingChannel {
     });
   }
 
-  notify<T>(message: RxMessage<T>): void {
+  notify(message: RxMessage): void {
     this.innerChan.notify(message);
   }
 
