@@ -157,20 +157,20 @@ export class ItemDisplayPlatform extends Platform {
   validate(mode : string) : Observable<void> {
     if (mode == 'cancel') {
       // TODO reload answer
-      return of();
+      return EMPTY;
     }
     if (mode == 'validate') {
       return this.task.getAnswer()
         .pipe(
-          switchMap((answer: string) => this.task.gradeAnswer(answer, '')),
+          switchMap(answer => this.task.gradeAnswer(answer, '')),
           switchMap((_results : any) =>
             // TODO Do something with the results
-            of()
+            EMPTY
           )
         );
     }
     // Other unimplemented modes
-    return of();
+    return EMPTY;
   }
 
   getTaskParams(_keydefault?: [string, TaskParamsValue]) : Observable<TaskParamsValue> {
