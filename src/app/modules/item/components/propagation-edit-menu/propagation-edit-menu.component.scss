@@ -1,3 +1,5 @@
+@import "src/colors.scss";
+
 .menu {
   margin: 0;
   padding: 0;
@@ -6,6 +8,7 @@
 
 .menu-item {
   display: flex;
+  margin: 0 -.1rem;
   padding: .1rem .4rem;
   align-items: center;
   height: 3rem;
@@ -13,6 +16,10 @@
   border-bottom: .1rem solid #4587d4;
   color: #fff;
   font-weight: 700;
+
+  &:not(.no-hover):hover {
+    background-color: $dark-color;
+  }
 }
 
 .menu-item-title {
@@ -27,14 +34,4 @@
   align-items: center;
   margin-left: 1rem;
   width: 2.5rem;
-}
-
-.rounded-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 2.4rem;
-  width: 2.4rem;
-  height: 2.4rem;
-  background-color: #2e5e95;
 }
