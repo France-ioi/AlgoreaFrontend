@@ -8,15 +8,18 @@
 
     <p-progressSpinner *ngIf="processing"></p-progressSpinner>
 
-    <div class="code-state" *ngIf="!processing && groupExt">
-      <span class="label" *ngIf="groupExt.hasCodeNotSet" i18n>There is currently no code set.</span>
-      <span class="label" *ngIf="groupExt.hasCodeUnused" i18n>This code has not been used yet (or usage resetted).</span>
-      <span class="label green" *ngIf="groupExt.hasCodeInUse" i18n>
-        This code has been activated {{ groupExt.durationSinceFirstCodeUse! | toMin | number:'1.0-0' }} minutes ago,
-        it will be disabled in {{ groupExt.durationBeforeCodeExpiration! | toMin | number:'1.0-0' }} minutes.
+    <div class="code-state" *ngIf="!processing && groupCodeInfo">
+      <span class="label" *ngIf="groupCodeInfo.hasCodeNotSet" i18n>There is currently no code set.</span>
+      <span class="label" *ngIf="groupCodeInfo.hasCodeUnused" i18n>This code has not been used yet (or usage resetted).</span>
+      <span
+        class="label green"
+        *ngIf="groupCodeInfo.hasCodeInUse && groupCodeInfo.durationSinceFirstCodeUse && groupCodeInfo.durationBeforeCodeExpiration" i18n
+      >
+        This code has been activated {{ groupCodeInfo.durationSinceFirstCodeUse | toMin | number:'1.0-0' }} minutes ago,
+        it will be disabled in {{ groupCodeInfo.durationBeforeCodeExpiration | toMin | number:'1.0-0' }} minutes.
       </span>
-      <span class="label red" *ngIf="groupExt.hasCodeExpired" i18n>
-        This code has expired on {{ groupExt.codeExpiration | date:'medium'}}
+      <span class="label red" *ngIf="groupCodeInfo.hasCodeExpired" i18n>
+        This code has expired on {{ groupCodeInfo.codeExpiration | date:'medium' }}
       </span>
       <alg-button
         label="Generate a code"
@@ -24,7 +27,7 @@
         class="p-button-rounded"
         (click)="generateNewCode()"
         [disabled]="processing"
-        *ngIf="groupExt.hasCodeNotSet"
+        *ngIf="groupCodeInfo.hasCodeNotSet"
       ></alg-button>
     </div>
 
@@ -41,7 +44,7 @@
       </div>
       <div class="validity-selector">
         <span class="label" i18n>Validity</span>
-        <alg-time-picker [initialValue]="groupExt?.codeLifetimeParsed" (submit)="changeValidity($event)"></alg-time-picker>
+        <alg-time-picker [initialValue]="initialCodeLifetimeDuration" (submit)="submitCodeLifetime($event)"></alg-time-picker>
       </div>
     </div>
 
