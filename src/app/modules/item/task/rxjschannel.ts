@@ -9,7 +9,7 @@ export interface RxMessage<T> {
 }
 
 /** Build a RxMessagingChannel, which is a jschannel with rxjs calls */
-export function rxBuild(config: ChannelConfiguration): Observable<RxMessagingChannel> {
+export function rxBuild(config: Omit<ChannelConfiguration, 'onReady'>): Observable<RxMessagingChannel> {
   return new Observable<RxMessagingChannel>(subscriber => {
     let chan : RxMessagingChannel | null = null;
     const innerConfig = {
@@ -34,7 +34,7 @@ export class RxMessagingChannel {
     return this.innerChan.unbind(method, doNotPublish);
   }
 
-  bind<T>(method: string, observable?: (params: T) => Observable<any>, doNotPublish?: boolean): MessagingChannel {
+  bind<T>(method: string, observable?: (params: T) => Observable<unknown>, doNotPublish?: boolean): MessagingChannel {
     // Create a callback wrapping the observable bound
     function callback(transaction: MessageTransaction, params: T): void {
       if (!observable) {
