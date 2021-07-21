@@ -1,32 +1,10 @@
 import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { Duration } from '../../../../shared/helpers/duration';
 import { Group } from '../../http-services/get-group-by-id.service';
-import {
-  codeExpiration,
-  CodeLifetime,
-  codeLifetime,
-  durationBeforeCodeExpiration,
-  durationSinceFirstCodeUse,
-  hasCodeExpired,
-  hasCodeInUse,
-  hasCodeNotSet,
-  hasCodeUnused,
-  isSameCodeLifetime,
-} from '../../helpers/group-code';
+import { CodeLifetime, codeAdditions, CodeAdditions, isSameCodeLifetime } from '../../helpers/group-code';
 import { GroupActionsService } from '../../http-services/group-actions.service';
 import { CodeActionsService } from '../../http-services/code-actions.service';
 import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
-
-interface GroupCodeInfo {
-  hasCodeNotSet: boolean;
-  hasCodeUnused: boolean;
-  hasCodeInUse: boolean;
-  hasCodeExpired: boolean;
-  durationSinceFirstCodeUse?: Duration;
-  durationBeforeCodeExpiration?: Duration;
-  codeExpiration?: Date;
-  codeLifetime?: CodeLifetime;
-}
 
 @Component({
   selector: 'alg-group-join-by-code',
@@ -39,7 +17,7 @@ export class GroupJoinByCodeComponent implements OnChanges {
   @Input() group?: Group;
   @Output() refreshRequired = new EventEmitter<void>();
 
-  groupCodeInfo?: GroupCodeInfo;
+  codeAdditions?: CodeAdditions;
   initialCodeLifetime?: CodeLifetime;
   codeLifetimeDuration?: Duration;
   processing = false;
@@ -60,26 +38,17 @@ export class GroupJoinByCodeComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.group && this.group) {
-      this.groupCodeInfo = {
-        hasCodeNotSet: hasCodeNotSet(this.group),
-        hasCodeUnused: hasCodeUnused(this.group),
-        hasCodeInUse: hasCodeInUse(this.group),
-        hasCodeExpired: hasCodeExpired(this.group),
-        durationSinceFirstCodeUse: durationSinceFirstCodeUse(this.group),
-        durationBeforeCodeExpiration: durationBeforeCodeExpiration(this.group),
-        codeExpiration: codeExpiration(this.group),
-        codeLifetime: codeLifetime(this.group)
-      };
+      this.codeAdditions = codeAdditions(this.group);
 
       const codeLifetimeHasChanged = this.initialCodeLifetime === undefined
-        || !isSameCodeLifetime(this.initialCodeLifetime, this.groupCodeInfo.codeLifetime);
+        || !isSameCodeLifetime(this.initialCodeLifetime, this.codeAdditions.codeLifetime);
 
       if (codeLifetimeHasChanged) {
-        this.initialCodeLifetime = this.groupCodeInfo.codeLifetime;
-        this.codeLifetimeDuration = this.groupCodeInfo.codeLifetime instanceof Duration
-          ? this.groupCodeInfo.codeLifetime
+        this.initialCodeLifetime = this.codeAdditions.codeLifetime;
+        this.codeLifetimeDuration = this.codeAdditions.codeLifetime instanceof Duration
+          ? this.codeAdditions.codeLifetime
           : undefined;
-        this.selectedCodeLifetimeOption = this.getSelectedCodeLifetimeOption(this.groupCodeInfo.codeLifetime);
+        this.selectedCodeLifetimeOption = this.getSelectedCodeLifetimeOption(this.codeAdditions.codeLifetime);
       }
     }
   }
@@ -107,8 +76,8 @@ export class GroupJoinByCodeComponent implements OnChanges {
   }
 
   submitCodeLifetime(newCodeLifetime: CodeLifetime): void {
-    if (!this.group || !this.groupCodeInfo) return;
-    if (this.groupCodeInfo.hasCodeNotSet || isSameCodeLifetime(this.groupCodeInfo.codeLifetime, newCodeLifetime)) return;
+    if (!this.group || !this.codeAdditions) return;
+    if (this.codeAdditions.hasCodeNotSet || isSameCodeLifetime(this.codeAdditions.codeLifetime, newCodeLifetime)) return;
 
     // disable UI
     this.processing = true;

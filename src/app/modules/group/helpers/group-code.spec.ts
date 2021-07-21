@@ -1,15 +1,4 @@
-import {
-  codeExpiration,
-  codeFirstUseDate,
-  codeLifetime,
-  durationBeforeCodeExpiration,
-  durationSinceFirstCodeUse,
-  hasCodeExpired,
-  hasCodeInUse,
-  hasCodeNotSet,
-  hasCodeUnused,
-  isSameCodeLifetime,
-} from './group-code';
+import { codeAdditions,isSameCodeLifetime } from './group-code';
 import { Duration } from 'src/app/shared/helpers/duration';
 
 describe('GroupCode', () => {
@@ -18,15 +7,15 @@ describe('GroupCode', () => {
     const group = {};
 
     it('should return expected values', () => {
-      expect(codeExpiration(group)).toBeUndefined();
-      expect(codeLifetime(group)).toBeUndefined();
-      expect(hasCodeNotSet(group)).toBeTruthy(); // even if irrelevant
-      expect(hasCodeUnused(group)).toBeFalsy();
-      expect(hasCodeInUse(group)).toBeFalsy();
-      expect(hasCodeExpired(group)).toBeFalsy();
-      expect(codeFirstUseDate(group)).toBeUndefined();
-      expect(durationBeforeCodeExpiration(group)).toBeUndefined();
-      expect(durationSinceFirstCodeUse(group)).toBeUndefined();
+      const g = codeAdditions(group);
+      expect(g.codeExpiration).toBeUndefined();
+      expect(g.codeLifetime).toBeUndefined();
+      expect(g.hasCodeUnused).toBeFalse();
+      expect(g.hasCodeInUse).toBeFalsy();
+      expect(g.hasCodeExpired).toBeFalsy();
+      expect(g.codeFirstUseDate).toBeUndefined();
+      expect(g.durationBeforeCodeExpiration).toBeUndefined();
+      expect(g.durationSinceFirstCodeUse).toBeUndefined();
     });
   });
 
@@ -34,15 +23,15 @@ describe('GroupCode', () => {
     const group = { code: null as string|null, codeLifetime: null as string|null, codeExpiresAt: null as string|null };
 
     it('should return expected values', () => {
-      expect(codeExpiration(group)).toBeUndefined();
-      expect(codeLifetime(group)).toBeNull();
-      expect(hasCodeNotSet(group)).toBeTruthy();
-      expect(hasCodeUnused(group)).toBeFalsy();
-      expect(hasCodeInUse(group)).toBeFalsy();
-      expect(hasCodeExpired(group)).toBeFalsy();
-      expect(codeFirstUseDate(group)).toBeUndefined();
-      expect(durationBeforeCodeExpiration(group)).toBeUndefined();
-      expect(durationSinceFirstCodeUse(group)).toBeUndefined();
+      const g = codeAdditions(group);
+      expect(g.codeExpiration).toBeUndefined();
+      expect(g.codeLifetime).toBeNull();
+      expect(g.hasCodeUnused).toBeFalsy();
+      expect(g.hasCodeInUse).toBeFalsy();
+      expect(g.hasCodeExpired).toBeFalsy();
+      expect(g.codeFirstUseDate).toBeUndefined();
+      expect(g.durationBeforeCodeExpiration).toBeUndefined();
+      expect(g.durationSinceFirstCodeUse).toBeUndefined();
     });
   });
 
@@ -50,15 +39,15 @@ describe('GroupCode', () => {
     const group = { code: 'abcd', codeLifetime: '1:02:03', codeExpiresAt: null as string|null };
 
     it('should return expected values', () => {
-      expect(codeExpiration(group)).toBeUndefined();
-      expect(codeLifetime(group)).toEqual(Duration.fromHMS(1,2,3));
-      expect(hasCodeNotSet(group)).toBeFalsy();
-      expect(hasCodeUnused(group)).toBeTruthy();
-      expect(hasCodeInUse(group)).toBeFalsy();
-      expect(hasCodeExpired(group)).toBeFalsy();
-      expect(codeFirstUseDate(group)).toBeUndefined();
-      expect(durationBeforeCodeExpiration(group)).toBeUndefined();
-      expect(durationSinceFirstCodeUse(group)).toBeUndefined();
+      const g = codeAdditions(group);
+      expect(g.codeExpiration).toBeUndefined();
+      expect(g.codeLifetime).toEqual(Duration.fromHMS(1,2,3));
+      expect(g.hasCodeUnused).toBeTruthy();
+      expect(g.hasCodeInUse).toBeFalsy();
+      expect(g.hasCodeExpired).toBeFalsy();
+      expect(g.codeFirstUseDate).toBeUndefined();
+      expect(g.durationBeforeCodeExpiration).toBeUndefined();
+      expect(g.durationSinceFirstCodeUse).toBeUndefined();
     });
   });
 
@@ -71,15 +60,15 @@ describe('GroupCode', () => {
     });
 
     it('should return expected values', () => {
-      expect(codeExpiration(group)).toEqual(new Date('2020-01-01 10:02:03'));
-      expect(codeLifetime(group)).toEqual(Duration.fromHMS(1,2,3));
-      expect(hasCodeNotSet(group)).toBeFalsy();
-      expect(hasCodeUnused(group)).toBeFalsy();
-      expect(hasCodeInUse(group)).toBeTruthy();
-      expect(hasCodeExpired(group)).toBeFalsy();
-      expect(codeFirstUseDate(group)).toEqual(new Date('2020-01-01 09:00'));
-      expect(durationBeforeCodeExpiration(group)).toEqual(Duration.fromHMS(0,32,3));
-      expect(durationSinceFirstCodeUse(group)).toEqual(Duration.fromHMS(0,30,0));
+      const g = codeAdditions(group);
+      expect(g.codeExpiration).toEqual(new Date('2020-01-01 10:02:03'));
+      expect(g.codeLifetime).toEqual(Duration.fromHMS(1,2,3));
+      expect(g.hasCodeUnused).toBeFalsy();
+      expect(g.hasCodeInUse).toBeTruthy();
+      expect(g.hasCodeExpired).toBeFalsy();
+      expect(g.codeFirstUseDate).toEqual(new Date('2020-01-01 09:00'));
+      expect(g.durationBeforeCodeExpiration).toEqual(Duration.fromHMS(0,32,3));
+      expect(g.durationSinceFirstCodeUse).toEqual(Duration.fromHMS(0,30,0));
     });
 
     afterEach(() => {
@@ -96,13 +85,13 @@ describe('GroupCode', () => {
     });
 
     it('should return expected values', () => {
-      expect(codeExpiration(group)).toEqual(new Date('2020-01-01 10:02:03'));
-      expect(codeLifetime(group)).toEqual(Duration.fromHMS(1,2,3));
-      expect(hasCodeNotSet(group)).toBeFalsy();
-      expect(hasCodeUnused(group)).toBeFalsy();
-      expect(hasCodeInUse(group)).toBeFalsy();
-      expect(hasCodeExpired(group)).toBeTruthy();
-      expect(codeFirstUseDate(group)).toEqual(new Date('2020-01-01 09:00'));
+      const g = codeAdditions(group);
+      expect(g.codeExpiration).toEqual(new Date('2020-01-01 10:02:03'));
+      expect(g.codeLifetime).toEqual(Duration.fromHMS(1,2,3));
+      expect(g.hasCodeUnused).toBeFalsy();
+      expect(g.hasCodeInUse).toBeFalsy();
+      expect(g.hasCodeExpired).toBeTruthy();
+      expect(g.codeFirstUseDate).toEqual(new Date('2020-01-01 09:00'));
     });
 
     afterEach(() => {

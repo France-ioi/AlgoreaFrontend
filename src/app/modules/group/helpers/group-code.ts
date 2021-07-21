@@ -8,7 +8,33 @@ export const groupCodeDecoder = D.partial({
 });
 
 type CodeInfo = D.TypeOf<typeof groupCodeDecoder>;
+
+export interface CodeAdditions {
+  codeExpiration?: Date;
+  codeLifetime?: CodeLifetime;
+  hasCodeNotSet: boolean;
+  hasCodeUnused: boolean;
+  hasCodeInUse: boolean;
+  hasCodeExpired: boolean;
+  codeFirstUseDate?: Date;
+  durationSinceFirstCodeUse?: Duration;
+  durationBeforeCodeExpiration?: Duration;
+}
 export type CodeLifetime = Duration | 0 | null;
+
+export function codeAdditions(g: CodeInfo): CodeAdditions {
+  return {
+    codeExpiration: codeExpiration(g),
+    codeLifetime: codeLifetime(g),
+    hasCodeNotSet: hasCodeNotSet(g),
+    hasCodeUnused: hasCodeUnused(g),
+    hasCodeInUse: hasCodeInUse(g),
+    hasCodeExpired: hasCodeExpired(g),
+    codeFirstUseDate: codeFirstUseDate(g),
+    durationSinceFirstCodeUse: durationSinceFirstCodeUse(g),
+    durationBeforeCodeExpiration: durationBeforeCodeExpiration(g),
+  };
+}
 
 export function codeExpiration(group: CodeInfo): Date|undefined {
   return group.codeExpiresAt ? new Date(group.codeExpiresAt) : undefined;
