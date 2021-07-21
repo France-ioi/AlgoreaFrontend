@@ -2,7 +2,7 @@ import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChi
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ItemData } from '../../services/item-datasource.service';
 import { taskProxyFromIframe, taskUrlWithParameters, Platform, Task, TaskParams, TaskParamsValue }
-  from 'src/app/modules/item/task/task-xd-pr';
+  from 'src/app/modules/item/task-communication/task-proxy';
 import { EMPTY, forkJoin, interval, Observable, of, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
