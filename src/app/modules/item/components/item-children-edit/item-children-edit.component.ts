@@ -156,9 +156,9 @@ export class ItemChildrenEditComponent implements OnChanges {
     this.childrenChanges.emit(this.data);
   }
 
-  openPropagationEditMenu(event: MouseEvent, rowData: ChildData): void {
-    this.op?.toggle(event);
+  openPropagationEditMenu(event: MouseEvent, actualTarget: HTMLDivElement, rowData: ChildData): void {
     this.propagationEditItem = rowData;
+    this.op?.toggle(event, actualTarget);
   }
 
   onContentViewPropagationChanged(contentViewPropagation: 'none' | 'as_info' | 'as_content'): void {

@@ -4,13 +4,17 @@
 .alg-propagation-edit-menu {
   background: $base-color;
 
-  &:before, &:after {
-    display: none;
+  &:before {
+    border-bottom-color: $base-color;
+  }
+
+  &.p-overlaypanel-flipped {
+    &:after {
+      border-top-color: $base-color;
+    }
   }
 
   &.p-overlaypanel {
-    margin-top: 0;
-
     border-radius: $border-radius;
   }
 
