@@ -44,7 +44,16 @@
       </div>
       <div class="validity-selector">
         <span class="label" i18n>Validity</span>
-        <alg-time-picker [initialValue]="initialCodeLifetimeDuration" (submit)="submitCodeLifetime($event)"></alg-time-picker>
+        <alg-selection
+          [items]="codeLifetimeOptions"
+          [selected]="selectedCodeLifetimeOption"
+          (change)="changeCodeLifetime($event)"
+        ></alg-selection>
+        <alg-time-picker
+          *ngIf="selectedCodeLifetimeOption === customCodeLifetimeOption"
+          [initialValue]="initialCodeLifetimeDuration"
+          (submit)="submitCodeLifetime($event)"
+        ></alg-time-picker>
       </div>
     </div>
 

@@ -12,6 +12,9 @@
     color: #7C7C7C;
     margin-right: 2rem;
   }
+  .validity-selector > * + * {
+    margin-right: 2rem;
+  }
   /* ** */
 
   .content-title {

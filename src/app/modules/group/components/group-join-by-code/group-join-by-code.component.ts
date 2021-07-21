@@ -44,6 +44,14 @@ export class GroupJoinByCodeComponent implements OnChanges {
   initialCodeLifetimeDuration?: Duration;
   processing = false;
 
+  codeLifetimeOptions = [
+    { label: $localize`Infinite`, value: 'infinite' },
+    { label: $localize`Usable once`, value: 'usable_once' },
+    { label: $localize`Custom`, value: 'custom' },
+  ];
+  customCodeLifetimeOption = this.codeLifetimeOptions.findIndex(({ value }) => value === 'custom');
+  selectedCodeLifetimeOption = 0;
+
   constructor(
     private groupActionsService: GroupActionsService,
     private codeActionsService: CodeActionsService,
@@ -65,6 +73,7 @@ export class GroupJoinByCodeComponent implements OnChanges {
       this.initialCodeLifetimeDuration = this.groupCodeInfo.codeLifetime instanceof Duration
         ? this.groupCodeInfo.codeLifetime
         : undefined;
+      this.selectedCodeLifetimeOption = this.getSelectedCodeLifetimeOption(this.groupCodeInfo.codeLifetime);
     }
   }
 
@@ -132,6 +141,26 @@ export class GroupJoinByCodeComponent implements OnChanges {
         this.processing = false;
       },
     });
+  }
+
+  changeCodeLifetime(selected: number): void {
+    const optionValue = this.codeLifetimeOptions[selected]?.value;
+    if (optionValue === 'infinite') this.submitCodeLifetime(null);
+    if (optionValue === 'usable_once') this.submitCodeLifetime(0);
+
+    this.selectedCodeLifetimeOption = selected;
+  }
+
+  private getSelectedCodeLifetimeOption(codeLifetime?: CodeLifetime): number {
+    switch (codeLifetime) {
+      case null:
+      case undefined:
+        return this.codeLifetimeOptions.findIndex(({ value }) => value === 'infinite');
+      case 0:
+        return this.codeLifetimeOptions.findIndex(({ value }) => value === 'usable_once');
+      default:
+        return this.codeLifetimeOptions.findIndex(({ value }) => value === 'custom');
+    }
   }
 
 }
