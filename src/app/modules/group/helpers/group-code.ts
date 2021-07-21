@@ -3,7 +3,7 @@ import * as D from 'io-ts/Decoder';
 
 export const groupCodeDecoder = D.partial({
   code: D.nullable(D.string),
-  codeLifetime: D.nullable(D.union(D.string, D.literal(0))),
+  codeLifetime: D.nullable(D.union(D.number, D.literal(0))),
   codeExpiresAt: D.nullable(D.string),
 });
 
@@ -42,8 +42,8 @@ export function codeExpiration(group: CodeInfo): Date|undefined {
 
 export function codeLifetime(group: CodeInfo): CodeLifetime | undefined {
   const lifetime = group.codeLifetime;
-  if (typeof lifetime !== 'string') return lifetime;
-  const duration = Duration.fromString(lifetime);
+  if (typeof lifetime !== 'number' || lifetime === 0) return lifetime;
+  const duration = Duration.fromSeconds(lifetime);
   return duration.isValid() ? duration : undefined;
 }
 

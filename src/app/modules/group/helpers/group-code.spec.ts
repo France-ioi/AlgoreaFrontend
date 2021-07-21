@@ -20,7 +20,7 @@ describe('GroupCode', () => {
   });
 
   describe('when the group has no code set', () => {
-    const group = { code: null as string|null, codeLifetime: null as string|null, codeExpiresAt: null as string|null };
+    const group = { code: null as string|null, codeLifetime: null as number|null, codeExpiresAt: null as string|null };
 
     it('should return expected values', () => {
       const g = codeAdditions(group);
@@ -36,7 +36,7 @@ describe('GroupCode', () => {
   });
 
   describe('when the group has a unused code', () => {
-    const group = { code: 'abcd', codeLifetime: '1:02:03', codeExpiresAt: null as string|null };
+    const group = { code: 'abcd', codeLifetime: Duration.fromString('1:02:03').ms / 1000, codeExpiresAt: null as string|null };
 
     it('should return expected values', () => {
       const g = codeAdditions(group);
@@ -52,7 +52,7 @@ describe('GroupCode', () => {
   });
 
   describe('when the group has a code already used', () => {
-    const group = { code: 'abcd', codeLifetime: '1:02:03', codeExpiresAt: '2020-01-01T10:02:03.00' };
+    const group = { code: 'abcd', codeLifetime: Duration.fromString('1:02:03').ms / 1000, codeExpiresAt: '2020-01-01T10:02:03.00' };
 
     beforeEach(() => {
       jasmine.clock().install();
@@ -77,7 +77,7 @@ describe('GroupCode', () => {
   });
 
   describe('when the group has an expired code', () => {
-    const group = { code: 'abcd', codeLifetime: '1:02:03', codeExpiresAt: '2020-01-01T10:02:03.00' };
+    const group = { code: 'abcd', codeLifetime: Duration.fromString('1:02:03').ms / 1000, codeExpiresAt: '2020-01-01T10:02:03.00' };
 
     beforeEach(() => {
       jasmine.clock().install();
