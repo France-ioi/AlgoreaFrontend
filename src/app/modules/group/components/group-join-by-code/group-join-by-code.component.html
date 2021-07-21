@@ -1,3 +1,4 @@
+<div *ngIf="processing" class="block-ui"></div>
 <alg-section-paragraph
   icon="fa fa-user-plus"
   i18n-label label="Let user join using a code"
@@ -6,14 +7,13 @@
   <div class="invitation-code">
     <span class="content-title" i18n>Let users access this group using a password you send them.</span>
 
-    <p-progressSpinner *ngIf="processing"></p-progressSpinner>
-
-    <div class="code-state" *ngIf="!processing && groupCodeInfo">
+    <div class="code-state" *ngIf="groupCodeInfo">
       <span class="label" *ngIf="groupCodeInfo.hasCodeNotSet" i18n>There is currently no code set.</span>
       <span class="label" *ngIf="groupCodeInfo.hasCodeUnused" i18n>This code has not been used yet (or usage resetted).</span>
       <span
         class="label green"
-        *ngIf="groupCodeInfo.hasCodeInUse && groupCodeInfo.durationSinceFirstCodeUse && groupCodeInfo.durationBeforeCodeExpiration" i18n
+        *ngIf="groupCodeInfo.hasCodeInUse && groupCodeInfo.durationSinceFirstCodeUse && groupCodeInfo.durationBeforeCodeExpiration"
+        i18n
       >
         This code has been activated {{ groupCodeInfo.durationSinceFirstCodeUse | toMin | number:'1.0-0' }} minutes ago,
         it will be disabled in {{ groupCodeInfo.durationBeforeCodeExpiration | toMin | number:'1.0-0' }} minutes.
@@ -31,7 +31,7 @@
       ></alg-button>
     </div>
 
-    <div class="code-info" *ngIf="group && group.code && !processing">
+    <div class="code-info" *ngIf="group && group.code">
       <div class="code-show">
         <span class="label" i18n>Code</span>
         <alg-code-token

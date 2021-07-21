@@ -1,6 +1,10 @@
 @import 'src/colors.scss';
 @import 'src/geometry.scss';
 
+:host {
+  position: relative;
+  display: block;
+}
 .invitation-code {
   display: flex;
   flex-direction: column;

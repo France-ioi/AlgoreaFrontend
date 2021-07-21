@@ -40,6 +40,7 @@ export class GroupJoinByCodeComponent implements OnChanges {
   @Output() refreshRequired = new EventEmitter<void>();
 
   groupCodeInfo?: GroupCodeInfo;
+  initialCodeLifetime?: CodeLifetime;
   codeLifetimeDuration?: Duration;
   processing = false;
 
@@ -69,10 +70,17 @@ export class GroupJoinByCodeComponent implements OnChanges {
         codeExpiration: codeExpiration(this.group),
         codeLifetime: codeLifetime(this.group)
       };
-      this.codeLifetimeDuration = this.groupCodeInfo.codeLifetime instanceof Duration
-        ? this.groupCodeInfo.codeLifetime
-        : undefined;
-      this.selectedCodeLifetimeOption = this.getSelectedCodeLifetimeOption(this.groupCodeInfo.codeLifetime);
+
+      const codeLifetimeHasChanged = this.initialCodeLifetime === undefined
+        || !isSameCodeLifetime(this.initialCodeLifetime, this.groupCodeInfo.codeLifetime);
+
+      if (codeLifetimeHasChanged) {
+        this.initialCodeLifetime = this.groupCodeInfo.codeLifetime;
+        this.codeLifetimeDuration = this.groupCodeInfo.codeLifetime instanceof Duration
+          ? this.groupCodeInfo.codeLifetime
+          : undefined;
+        this.selectedCodeLifetimeOption = this.getSelectedCodeLifetimeOption(this.groupCodeInfo.codeLifetime);
+      }
     }
   }
 

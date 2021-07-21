@@ -1,6 +1,7 @@
 <ng-container *ngIf="state$ | async as state">
 
-  <ng-container *ngIf="state.isReady && state.data as group">
+  <ng-container *ngIf="state.data as group">
+    <div *ngIf="state.isFetching" class="block-ui"></div>
     <alg-group-header [group]="group"></alg-group-header>
     <alg-pending-join-requests
         *ngIf="group.isCurrentUserManager && group.currentUserCanManage !== 'none'"
@@ -64,7 +65,7 @@
 
   </ng-container>
 
-  <p-progressSpinner *ngIf="state.isFetching"></p-progressSpinner>
+  <p-progressSpinner *ngIf="state.isFetching && !state.data"></p-progressSpinner>
 
   <p *ngIf="state.isError" i18n>Error while loading the group info</p>
 
