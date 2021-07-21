@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { Duration } from '../../../../shared/helpers/duration';
 import { Group } from '../../http-services/get-group-by-id.service';
 import {
@@ -32,7 +32,6 @@ interface GroupCodeInfo {
   selector: 'alg-group-join-by-code',
   templateUrl: './group-join-by-code.component.html',
   styleUrls: [ './group-join-by-code.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class GroupJoinByCodeComponent implements OnChanges {
@@ -41,7 +40,7 @@ export class GroupJoinByCodeComponent implements OnChanges {
   @Output() refreshRequired = new EventEmitter<void>();
 
   groupCodeInfo?: GroupCodeInfo;
-  initialCodeLifetimeDuration?: Duration;
+  codeLifetimeDuration?: Duration;
   processing = false;
 
   codeLifetimeOptions = [
@@ -70,7 +69,7 @@ export class GroupJoinByCodeComponent implements OnChanges {
         codeExpiration: codeExpiration(this.group),
         codeLifetime: codeLifetime(this.group)
       };
-      this.initialCodeLifetimeDuration = this.groupCodeInfo.codeLifetime instanceof Duration
+      this.codeLifetimeDuration = this.groupCodeInfo.codeLifetime instanceof Duration
         ? this.groupCodeInfo.codeLifetime
         : undefined;
       this.selectedCodeLifetimeOption = this.getSelectedCodeLifetimeOption(this.groupCodeInfo.codeLifetime);

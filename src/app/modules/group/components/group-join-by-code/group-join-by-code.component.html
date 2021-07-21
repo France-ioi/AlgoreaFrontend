@@ -49,11 +49,21 @@
           [selected]="selectedCodeLifetimeOption"
           (change)="changeCodeLifetime($event)"
         ></alg-selection>
-        <alg-time-picker
-          *ngIf="selectedCodeLifetimeOption === customCodeLifetimeOption"
-          [initialValue]="initialCodeLifetimeDuration"
-          (submit)="submitCodeLifetime($event)"
-        ></alg-time-picker>
+
+        <div class="duration-form-group" *ngIf="selectedCodeLifetimeOption === customCodeLifetimeOption">
+          <alg-duration
+            class="alg-duration"
+            ngDefaultControl
+            [(ngModel)]="codeLifetimeDuration"
+            #control="ngModel"
+          ></alg-duration>
+          <alg-button
+            icon="fa fa-check"
+            class="submit-duration-button"
+            (click)="codeLifetimeDuration && submitCodeLifetime(codeLifetimeDuration)"
+            [disabled]="processing || !codeLifetimeDuration || !control.dirty"
+          ></alg-button>
+        </div>
       </div>
     </div>
 
