@@ -5,13 +5,13 @@
  * It depends on jschannel.
  */
 
-import { Observable, of, throwError } from "rxjs";
-import { delay, map, retryWhen, switchMap, take } from "rxjs/operators";
+import { Observable, of, throwError } from 'rxjs';
+import { delay, map, retryWhen, switchMap, take } from 'rxjs/operators';
 import { parseQueryString } from 'src/app/shared/helpers/url';
-import { rxBuild, RxMessagingChannel } from "./rxjschannel";
+import { rxBuild, RxMessagingChannel } from './rxjschannel';
 import * as D from 'io-ts/Decoder';
 import { TaskParamsValue, taskParamsKeyDefaultDecoder, TaskParamsKeyDefault, taskViewsDecoder, TaskViews, RawTaskGrade, taskGradeDecoder,
-  TaskGrade, updateDisplayParamsDecoder, UpdateDisplayParams, taskLogDecoder, TaskLog, TaskMetaData, TaskResources } from "./types";
+  TaskGrade, updateDisplayParamsDecoder, UpdateDisplayParams, taskLogDecoder, TaskLog, TaskMetaData, TaskResources } from './types';
 
 function getRandomID(): string {
   const low = Math.floor(Math.random() * 922337203).toString();

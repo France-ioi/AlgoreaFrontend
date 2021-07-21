@@ -1,9 +1,9 @@
-import { build, ChannelConfiguration, MessageTransaction, MessagingChannel } from "jschannel";
-import { Observable } from "rxjs";
+import { build, ChannelConfiguration, MessageTransaction, MessagingChannel } from 'jschannel';
+import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 import * as D from 'io-ts/Decoder';
 import { pipe as fppipe } from 'fp-ts/function';
-import { fold } from "fp-ts/lib/Either";
+import { fold } from 'fp-ts/lib/Either';
 
 
 export interface RxMessage {
