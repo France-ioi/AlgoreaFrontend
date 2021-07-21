@@ -111,8 +111,10 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
       this.itemChanges.children.map(child => {
         if (!this.initialFormData) return throwError(new Error('Invalid form'));
         if (hasId(child)) return of(child);
+
         // the child doesnt have an id so we create it
         if (!child.title) return throwError(new Error('Something went wrong, the new child is missing his title'));
+        if (!child.type) return throwError(new Error('Something went wrong, the new child is missing his type'));
         const newChild: NewItem = {
           title: child.title,
           type: child.type,

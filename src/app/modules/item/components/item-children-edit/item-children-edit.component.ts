@@ -7,14 +7,15 @@ import { ItemType, typeCategoryOfItem } from '../../../../shared/helpers/item-ty
 import { AddedContent } from '../../../shared-components/components/add-content/add-content.component';
 import { ItemRouter } from '../../../../shared/routing/item-router';
 import { bestAttemptFromResults } from '../../../../shared/helpers/attempts';
-import { canCurrentUserViewItemContent } from '../../helpers/item-permissions';
+import { isVisibleChild } from '../../helpers/item-permissions';
 import { isNotUndefined } from '../../../../shared/helpers/null-undefined-predicates';
 
 export interface ChildData {
   id?: string,
   title: string | null,
-  type: ItemType,
+  type: ItemType | null,
   scoreWeight: number,
+  isVisible: boolean;
   result?: {
     attemptId: string,
     validated: boolean,
@@ -68,18 +69,18 @@ export class ItemChildrenEditComponent implements OnChanges {
       this.state = 'loading';
       this.subscription?.unsubscribe();
       this.subscription = this.getItemChildrenService
-        .get(this.itemData.item.id, this.itemData.currentResult.attemptId)
+        .getWithInvisibleItems(this.itemData.item.id, this.itemData.currentResult.attemptId)
         .pipe(
           map(children => children
             .sort((a, b) => a.order - b.order)
             .map(child => {
-              const res = bestAttemptFromResults(child.results);
+              const res = isVisibleChild(child) ? bestAttemptFromResults(child.results) : null;
               return {
                 id: child.id,
-                title: child.string.title,
-                type: child.type,
+                title: isVisibleChild(child) ? child.string.title : null,
+                type: isVisibleChild(child) ? child.type : null,
                 scoreWeight: child.scoreWeight,
-                isLocked: !canCurrentUserViewItemContent(child),
+                isVisible: isVisibleChild(child),
                 result: res === null ? undefined : {
                   attemptId: res.attemptId,
                   validated: res.validated,
@@ -110,7 +111,7 @@ export class ItemChildrenEditComponent implements OnChanges {
   }
 
   addChild(child: AddedContent<ItemType>): void {
-    this.data.push({ ...child, scoreWeight: DEFAULT_SCORE_WEIGHT });
+    this.data.push({ ...child, isVisible: true, scoreWeight: DEFAULT_SCORE_WEIGHT });
     this.onChildrenListUpdate();
     this.childrenChanges.emit(this.data);
   }
@@ -159,7 +160,7 @@ export class ItemChildrenEditComponent implements OnChanges {
   }
 
   onClick(child: ChildData): void {
-    if (!this.itemData || !child.id) {
+    if (!this.itemData || !child.id || !child.type) {
       return;
     }
 
@@ -172,7 +173,7 @@ export class ItemChildrenEditComponent implements OnChanges {
     }
 
     this.itemRouter.navigateTo({
-      contentType: typeCategoryOfItem(child),
+      contentType: typeCategoryOfItem(child as { type: ItemType }),
       id: child.id,
       path: this.itemData.route.path.concat([ this.itemData.item.id ]),
       ...attemptId ? { attemptId: attemptId } : { parentAttemptId: parentAttemptId }

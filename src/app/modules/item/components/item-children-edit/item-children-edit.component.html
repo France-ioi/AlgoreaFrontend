@@ -47,16 +47,22 @@
                   </p-cellEditor>
                 </td>
               </ng-container>
-              <td><span class="type">{{ rowData.type }}</span></td>
-              <td>
-                <a
+              <ng-container *ngIf="rowData.isVisible; else invisibleChildCells">
+                <td><span class="type">{{ rowData.type }}</span></td>
+                <td>
+                  <a
                     class="main alg-link"
                     [ngClass]="{'disabled': !rowData.id}"
                     (click)="onClick(rowData)"
-                >
-                  {{ rowData.title }}
-                </a>
-              </td>
+                  >
+                    {{ rowData.title }}
+                  </a>
+                </td>
+              </ng-container>
+              <ng-template #invisibleChildCells>
+                <td i18n>Non-visible</td>
+                <td i18n>item {{ rowData.id }}</td>
+              </ng-template>
             </tr>
           </ng-template>
           <ng-template pTemplate="summary">
