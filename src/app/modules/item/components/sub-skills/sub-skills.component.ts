@@ -5,7 +5,7 @@ import { bestAttemptFromResults } from 'src/app/shared/helpers/attempts';
 import { isASkill, typeCategoryOfItem } from 'src/app/shared/helpers/item-type';
 import { ItemRouter } from 'src/app/shared/routing/item-router';
 import { canCurrentUserViewItemContent } from '../../helpers/item-permissions';
-import { GetItemChildrenService, ItemChild } from '../../http-services/get-item-children.service';
+import { GetItemChildrenService, ItemVisibleChild } from '../../http-services/get-item-children.service';
 import { ItemData } from '../../services/item-datasource.service';
 
 interface SubSkillAdditions {
@@ -25,7 +25,7 @@ export class SubSkillsComponent implements OnChanges, OnDestroy {
   @Input() itemData?: ItemData;
 
   state: 'loading' | 'error' | 'ready' = 'loading';
-  children: (ItemChild&SubSkillAdditions)[] = [];
+  children: (ItemVisibleChild&SubSkillAdditions)[] = [];
 
   private subscription?: Subscription;
 
@@ -38,7 +38,7 @@ export class SubSkillsComponent implements OnChanges, OnDestroy {
     this.reloadData();
   }
 
-  click(child: ItemChild&SubSkillAdditions): void {
+  click(child: ItemVisibleChild&SubSkillAdditions): void {
     if (!this.itemData || child.isLocked) return;
     const attemptId = child.result?.attemptId;
     const parentAttemptId = this.itemData.currentResult?.attemptId;

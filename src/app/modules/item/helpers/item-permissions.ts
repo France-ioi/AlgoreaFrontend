@@ -1,4 +1,5 @@
 import * as D from 'io-ts/Decoder';
+import { ItemVisibleChild } from '../http-services/get-item-children.service';
 
 export const permissionsDecoder = D.struct({
   canView: D.literal('none','info','content','content_with_descendants','solution'),
@@ -14,4 +15,8 @@ export interface ItemPermissionsInfo {
 
 export function canCurrentUserViewItemContent(item: ItemPermissionsInfo): boolean {
   return [ 'content','content_with_descendants','solution' ].includes(item.permissions.canView);
+}
+
+export function isVisibleChild(item: ItemPermissionsInfo): item is ItemVisibleChild {
+  return item.permissions.canView !== 'none';
 }

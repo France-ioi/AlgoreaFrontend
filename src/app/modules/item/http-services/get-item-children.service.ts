@@ -7,23 +7,11 @@ import * as D from 'io-ts/Decoder';
 import { decodeSnakeCase } from 'src/app/shared/operators/decode';
 import { dateDecoder } from 'src/app/shared/helpers/decoders';
 
-export const itemChildDecoder = D.struct({
+const baseItemChildDecoder = D.struct({
   id: D.string,
-  bestScore: D.number,
   order: D.number,
-  string: D.struct({
-    title: D.nullable(D.string),
-  }),
   category: D.literal('Undefined', 'Discovery', 'Application', 'Validation', 'Challenge'),
-  type: D.literal('Chapter','Task','Course','Skill'),
   permissions: permissionsDecoder,
-  results: D.array(D.struct({
-    attemptId: D.string,
-    latestActivityAt: dateDecoder,
-    startedAt: D.nullable(dateDecoder),
-    scoreComputed: D.number,
-    validated: D.boolean,
-  })),
   scoreWeight: D.number,
   contentViewPropagation: D.literal('none', 'as_info', 'as_content'),
   editPropagation: D.boolean,
@@ -32,7 +20,33 @@ export const itemChildDecoder = D.struct({
   watchPropagation: D.boolean,
 });
 
-export type ItemChild = D.TypeOf<typeof itemChildDecoder>;
+const itemVisibleChildDecoder = D.intersect(baseItemChildDecoder)(
+  D.struct({
+    bestScore: D.number,
+    string: D.struct({
+      title: D.nullable(D.string),
+    }),
+    type: D.literal('Chapter','Task','Course','Skill'),
+    results: D.array(D.struct({
+      attemptId: D.string,
+      latestActivityAt: dateDecoder,
+      startedAt: D.nullable(dateDecoder),
+      scoreComputed: D.number,
+      validated: D.boolean,
+    })),
+  }),
+);
+
+const itemInvisibleChildDecoder = baseItemChildDecoder;
+
+const itemChildDecoder = D.union(
+  itemVisibleChildDecoder,
+  itemInvisibleChildDecoder,
+);
+
+export type ItemVisibleChild = D.TypeOf<typeof itemVisibleChildDecoder>;
+export type ItemInvisibleChild = D.TypeOf<typeof itemInvisibleChildDecoder>;
+type ItemChild = D.TypeOf<typeof itemChildDecoder>;
 
 @Injectable({
   providedIn: 'root'
@@ -41,11 +55,22 @@ export class GetItemChildrenService {
 
   constructor(private http: HttpClient) { }
 
-  get(id: string, attemptId: string): Observable<ItemChild[]> {
+  get(id: string, attemptId: string): Observable<ItemVisibleChild[]> {
     let params = new HttpParams();
     params = params.set('attempt_id', attemptId);
     return this.http
       .get<unknown[]>(`${appConfig.apiUrl}/items/${id}/children`, { params: params })
+      .pipe(
+        decodeSnakeCase(D.array(itemVisibleChildDecoder))
+      );
+  }
+
+  getWithInvisibleItems(id: string, attemptId: string): Observable<ItemChild[]> {
+    const params = new HttpParams()
+      .set('attempt_id', attemptId)
+      .set('show_invisible_items', '1');
+    return this.http
+      .get<unknown[]>(`${appConfig.apiUrl}/items/${id}/children`, { params })
       .pipe(
         decodeSnakeCase(D.array(itemChildDecoder))
       );
