@@ -33,6 +33,10 @@
 
   .p-treenode-content {
     border: none !important;
+
+    &:focus {
+      box-shadow: none !important;
+    }
   }
 
   .p-tree
