@@ -3,6 +3,7 @@ import { GroupDataSource } from '../../services/group-datasource.service';
 import { withManagementAdditions } from '../../helpers/group-management';
 import { RouterLinkActive } from '@angular/router';
 import { mapStateData } from 'src/app/shared/operators/state';
+import { LayoutService } from '../../../../shared/services/layout.service';
 
 @Component({
   selector: 'alg-group-details',
@@ -12,6 +13,7 @@ import { mapStateData } from 'src/app/shared/operators/state';
 export class GroupDetailsComponent {
 
   state$ = this.groupDataSource.state$.pipe(mapStateData(g => withManagementAdditions(g)));
+  fullFrameContent$ = this.layoutService.fullFrameContent$;
 
   // use of ViewChild required as these elements are shown under some conditions, so may be undefined
   @ViewChild('overviewTab') overviewTab?: RouterLinkActive;
@@ -21,6 +23,7 @@ export class GroupDetailsComponent {
 
   constructor(
     private groupDataSource: GroupDataSource,
+    private layoutService: LayoutService,
   ) {}
 
   onGroupRefreshRequired(): void {
