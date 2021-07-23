@@ -1,39 +1,47 @@
 import { Component, Input, OnChanges, Output, EventEmitter } from '@angular/core';
 import { ItemData } from '../../services/item-datasource.service';
-import { GetItemChildrenService } from '../../http-services/get-item-children.service';
+import { GetItemChildrenService, isVisibleItemChild } from '../../http-services/get-item-children.service';
 import { Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ItemType, typeCategoryOfItem } from '../../../../shared/helpers/item-type';
 import { AddedContent } from '../../../shared-components/components/add-content/add-content.component';
 import { ItemRouter } from '../../../../shared/routing/item-router';
 import { bestAttemptFromResults } from '../../../../shared/helpers/attempts';
-import { isVisibleChild } from '../../helpers/item-permissions';
 import { isNotUndefined } from '../../../../shared/helpers/null-undefined-predicates';
 
-export interface ChildData {
-  id?: string,
-  title: string | null,
-  type: ItemType | null,
+interface BaseChildData {
+  contentViewPropagation?: 'none' | 'as_info' | 'as_content',
+  editPropagation?: boolean,
+  grantViewPropagation?: boolean,
+  upperViewLevelsPropagation?: 'use_content_view_propagation' | 'as_content_with_descendants' | 'as_is',
   scoreWeight: number,
-  isVisible: boolean;
+  watchPropagation?: boolean,
+}
+interface InvisibleChildData extends BaseChildData {
+  id: string,
+  isVisible: false,
+}
+interface ChildData extends BaseChildData {
+  id?: string;
+  isVisible: true,
+  title: string | null;
+  type: ItemType;
   result?: {
     attemptId: string,
     validated: boolean,
     score: number,
   },
-  contentViewPropagation?: 'none' | 'as_info' | 'as_content',
-  editPropagation?: boolean,
-  grantViewPropagation?: boolean,
-  upperViewLevelsPropagation?: 'use_content_view_propagation' | 'as_content_with_descendants' | 'as_is',
-  watchPropagation?: boolean,
 }
 
-export interface ChildDataWithId extends ChildData {
-  id: string;
-}
+export type PossiblyInvisibleChildData = ChildData | InvisibleChildData;
 
-export function hasId(child: ChildData): child is ChildDataWithId {
+export type ChildDataWithId = InvisibleChildData | (ChildData & { id: string });
+
+export function hasId(child: PossiblyInvisibleChildData): child is ChildDataWithId {
   return !!child.id;
+}
+export function isVisibleChildData(child: PossiblyInvisibleChildData): child is ChildData {
+  return child.isVisible;
 }
 
 export const DEFAULT_SCORE_WEIGHT = 1;
@@ -47,13 +55,13 @@ export class ItemChildrenEditComponent implements OnChanges {
   @Input() itemData?: ItemData;
 
   state: 'loading' | 'error' | 'ready' = 'ready';
-  data: ChildData[] = [];
-  selectedRows: ChildData[] = [];
+  data: PossiblyInvisibleChildData[] = [];
+  selectedRows: PossiblyInvisibleChildData[] = [];
   scoreWeightEnabled = false;
   addedItemIds: string[] = [];
 
   private subscription?: Subscription;
-  @Output() childrenChanges = new EventEmitter<ChildData[]>();
+  @Output() childrenChanges = new EventEmitter<PossiblyInvisibleChildData[]>();
 
   constructor(
     private getItemChildrenService: GetItemChildrenService,
@@ -73,24 +81,36 @@ export class ItemChildrenEditComponent implements OnChanges {
         .pipe(
           map(children => children
             .sort((a, b) => a.order - b.order)
-            .map(child => {
-              const res = isVisibleChild(child) ? bestAttemptFromResults(child.results) : null;
-              return {
-                id: child.id,
-                title: isVisibleChild(child) ? child.string.title : null,
-                type: isVisibleChild(child) ? child.type : null,
+            .map((child): PossiblyInvisibleChildData => {
+              const baseChildData: BaseChildData = {
                 scoreWeight: child.scoreWeight,
-                isVisible: isVisibleChild(child),
-                result: res === null ? undefined : {
-                  attemptId: res.attemptId,
-                  validated: res.validated,
-                  score: res.scoreComputed,
-                },
                 contentViewPropagation: child.contentViewPropagation,
                 editPropagation: child.editPropagation,
                 grantViewPropagation: child.grantViewPropagation,
                 upperViewLevelsPropagation: child.upperViewLevelsPropagation,
                 watchPropagation: child.watchPropagation,
+              };
+
+              if (isVisibleItemChild(child)) {
+                const res = bestAttemptFromResults(child.results);
+                return {
+                  ...baseChildData,
+                  id: child.id,
+                  title: child.string.title,
+                  type: child.type,
+                  isVisible: true,
+                  result: res ? {
+                    attemptId: res.attemptId,
+                    validated: res.validated,
+                    score: res.scoreComputed,
+                  } : undefined,
+                };
+              }
+
+              return {
+                ...baseChildData,
+                id: child.id,
+                isVisible: false,
               };
             })
           )
@@ -159,8 +179,8 @@ export class ItemChildrenEditComponent implements OnChanges {
     this.addedItemIds = this.data.map(item => item.id).filter(isNotUndefined);
   }
 
-  onClick(child: ChildData): void {
-    if (!this.itemData || !child.id || !child.type) {
+  onClick(child: PossiblyInvisibleChildData): void {
+    if (!this.itemData || !child.id || !isVisibleChildData(child)) {
       return;
     }
 
@@ -173,7 +193,7 @@ export class ItemChildrenEditComponent implements OnChanges {
     }
 
     this.itemRouter.navigateTo({
-      contentType: typeCategoryOfItem(child as { type: ItemType }),
+      contentType: typeCategoryOfItem(child),
       id: child.id,
       path: this.itemData.route.path.concat([ this.itemData.item.id ]),
       ...attemptId ? { attemptId: attemptId } : { parentAttemptId: parentAttemptId }

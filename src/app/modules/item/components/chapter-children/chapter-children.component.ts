@@ -1,7 +1,7 @@
 import { Subscription } from 'rxjs';
 import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
 import { canCurrentUserViewItemContent } from '../../helpers/item-permissions';
-import { GetItemChildrenService, ItemVisibleChild } from '../../http-services/get-item-children.service';
+import { GetItemChildrenService, ItemChild } from '../../http-services/get-item-children.service';
 import { ItemData } from '../../services/item-datasource.service';
 import { bestAttemptFromResults } from 'src/app/shared/helpers/attempts';
 import { ItemRouter } from 'src/app/shared/routing/item-router';
@@ -25,7 +25,7 @@ export class ChapterChildrenComponent implements OnChanges, OnDestroy {
   @Input() itemData?: ItemData;
 
   state: 'loading' | 'error' | 'empty' | 'ready' | 'ready-missing-validation' = 'loading';
-  children: (ItemVisibleChild&ItemChildAdditions)[] = [];
+  children: (ItemChild&ItemChildAdditions)[] = [];
 
   constructor(
     private getItemChildrenService: GetItemChildrenService,
@@ -38,7 +38,7 @@ export class ChapterChildrenComponent implements OnChanges, OnDestroy {
     this.reloadData();
   }
 
-  click(child: ItemVisibleChild&ItemChildAdditions): void {
+  click(child: ItemChild&ItemChildAdditions): void {
     if (!this.itemData || child.isLocked) return;
     const attemptId = child.result?.attemptId;
     const parentAttemptId = this.itemData.currentResult?.attemptId;

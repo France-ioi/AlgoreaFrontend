@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { appConfig } from 'src/app/shared/helpers/config';
-import { permissionsDecoder } from '../helpers/item-permissions';
+import { canCurrentUserViewItem, ItemPermissionsInfo, permissionsDecoder } from '../helpers/item-permissions';
 import * as D from 'io-ts/Decoder';
 import { decodeSnakeCase } from 'src/app/shared/operators/decode';
 import { dateDecoder } from 'src/app/shared/helpers/decoders';
@@ -20,7 +20,7 @@ const baseItemChildDecoder = D.struct({
   watchPropagation: D.boolean,
 });
 
-const itemVisibleChildDecoder = D.intersect(baseItemChildDecoder)(
+const itemChildDecoder = D.intersect(baseItemChildDecoder)(
   D.struct({
     bestScore: D.number,
     string: D.struct({
@@ -37,16 +37,21 @@ const itemVisibleChildDecoder = D.intersect(baseItemChildDecoder)(
   }),
 );
 
-const itemInvisibleChildDecoder = baseItemChildDecoder;
+const invisibleItemChildDecoder = baseItemChildDecoder;
 
-const itemChildDecoder = D.union(
-  itemVisibleChildDecoder,
-  itemInvisibleChildDecoder,
+const possiblyInvisibleItemChild = D.union(
+  itemChildDecoder,
+  invisibleItemChildDecoder,
 );
 
-export type ItemVisibleChild = D.TypeOf<typeof itemVisibleChildDecoder>;
-export type ItemInvisibleChild = D.TypeOf<typeof itemInvisibleChildDecoder>;
-type ItemChild = D.TypeOf<typeof itemChildDecoder>;
+export type ItemChild = D.TypeOf<typeof itemChildDecoder>;
+export type InvisibleItemChild = D.TypeOf<typeof invisibleItemChildDecoder>;
+type PossiblyInvisibleItemChild = D.TypeOf<typeof possiblyInvisibleItemChild>;
+
+export function isVisibleItemChild(item: ItemPermissionsInfo): item is ItemChild {
+  return canCurrentUserViewItem(item);
+}
+
 
 @Injectable({
   providedIn: 'root'
@@ -55,24 +60,24 @@ export class GetItemChildrenService {
 
   constructor(private http: HttpClient) { }
 
-  get(id: string, attemptId: string): Observable<ItemVisibleChild[]> {
+  get(id: string, attemptId: string): Observable<ItemChild[]> {
     let params = new HttpParams();
     params = params.set('attempt_id', attemptId);
     return this.http
       .get<unknown[]>(`${appConfig.apiUrl}/items/${id}/children`, { params: params })
       .pipe(
-        decodeSnakeCase(D.array(itemVisibleChildDecoder))
+        decodeSnakeCase(D.array(itemChildDecoder))
       );
   }
 
-  getWithInvisibleItems(id: string, attemptId: string): Observable<ItemChild[]> {
+  getWithInvisibleItems(id: string, attemptId: string): Observable<PossiblyInvisibleItemChild[]> {
     const params = new HttpParams()
       .set('attempt_id', attemptId)
       .set('show_invisible_items', '1');
     return this.http
       .get<unknown[]>(`${appConfig.apiUrl}/items/${id}/children`, { params })
       .pipe(
-        decodeSnakeCase(D.array(itemChildDecoder))
+        decodeSnakeCase(D.array(possiblyInvisibleItemChild))
       );
   }
 }

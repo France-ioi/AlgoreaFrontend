@@ -5,7 +5,7 @@ import { forkJoin, Observable, of, Subscription, throwError } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { ItemStringChanges, UpdateItemStringService } from '../../http-services/update-item-string.service';
 import { ItemChanges, UpdateItemService } from '../../http-services/update-item.service';
-import { ChildData, ChildDataWithId, hasId } from '../../components/item-children-edit/item-children-edit.component';
+import { PossiblyInvisibleChildData, ChildDataWithId, hasId } from '../../components/item-children-edit/item-children-edit.component';
 import { Item } from '../../http-services/get-item-by-id.service';
 import { ItemEditContentComponent } from '../item-edit-content/item-edit-content.component';
 import { PendingChangesComponent } from 'src/app/shared/guards/pending-changes-guard';
@@ -51,7 +51,7 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
   }, {
     validators: [ this.maxTeamSizeValidator() ],
   });
-  itemChanges: { children?: ChildData[] } = {};
+  itemChanges: { children?: PossiblyInvisibleChildData[] } = {};
 
   fetchState$ = this.itemDataSource.state$;
   initialFormData?: Item & {durationEnabled?: boolean, enteringTimeMaxEnabled?: boolean};
@@ -99,7 +99,7 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
     return this.itemForm.dirty;
   }
 
-  updateItemChanges(children: ChildData[]): void {
+  updateItemChanges(children: PossiblyInvisibleChildData[]): void {
     this.itemForm.markAsDirty();
     this.itemChanges.children = children;
   }
