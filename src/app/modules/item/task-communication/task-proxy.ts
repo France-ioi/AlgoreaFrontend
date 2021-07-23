@@ -105,7 +105,7 @@ export class Task {
     }
     this.chan.bind('platform.validate', (mode: string) => platform.validate(mode));
     this.chan.bind('platform.getTaskParams', (keyDefault? : [string, TaskParamsValue]) => platform.getTaskParams(keyDefault));
-    this.chan.bind('platform.showView', (view : TaskView) => platform.showView(view));
+    this.chan.bind('platform.showView', (view : TaskView) => platform.viewsShownByTask(view));
     this.chan.bind('platform.askHint', (hintToken : string) => platform.askHint(hintToken));
     this.chan.bind('platform.updateDisplay', (data : TaskDisplayData) => platform.updateDisplay(data));
     this.chan.bind('platform.openUrl', (url : string) => platform.openUrl(url));
@@ -197,7 +197,7 @@ export class Task {
     });
   }
 
-  showViews(views : Object) : Observable<void> {
+  showViewsInTask(views : Object) : Observable<void> {
     return this.chan.call({
       method: 'task.showViews',
       params: views,
@@ -247,7 +247,7 @@ export class Platform {
     // TODO: validator
     return throwError(() => new Error('platform.validate is not defined'));
   }
-  showView(_views : any) : Observable<void> {
+  viewsShownByTask(_views : any) : Observable<void> {
     // TODO: validator
     return throwError(() => new Error('platform.showView is not defined'));
   }
