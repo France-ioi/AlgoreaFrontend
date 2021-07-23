@@ -1,5 +1,6 @@
 import { build, ChannelConfiguration, MessageTransaction, MessagingChannel } from 'jschannel';
 import { Observable } from 'rxjs';
+import { take } from 'rxjs/operators';
 
 export interface RxMessage {
   method: string;
@@ -41,10 +42,12 @@ export class RxMessagingChannel {
         return;
       }
       const cb$ = observable(params);
-      cb$.subscribe({
-        next: transaction.complete,
-        error: error => transaction.error(error, '')
-      });
+      cb$
+        .pipe(take(1))
+        .subscribe({
+          next: transaction.complete,
+          error: error => transaction.error(error, '')
+        });
       transaction.delayReturn(true);
     }
     return this.innerChan.bind(method, callback, doNotPublish);
