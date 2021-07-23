@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ItemData } from '../../services/item-datasource.service';
-import { taskProxyFromIframe, taskUrlWithParameters, Platform, Task, TaskParams, TaskParamsValue }
+import { taskProxyFromIframe, taskUrlWithParameters, TaskListener, Task, TaskParams, TaskParamsValue }
   from 'src/app/modules/item/task-communication/task-proxy';
 import { EMPTY, forkJoin, interval, Observable, of, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
@@ -27,7 +27,7 @@ export class ItemDisplayComponent implements OnInit, AfterViewInit, OnDestroy {
   activeTab: TaskTab;
 
   task?: Task;
-  platform? : Platform;
+  platform? : TaskListener;
 
   height: number;
   heightInterval? : Subscription;
@@ -147,7 +147,7 @@ export class ItemDisplayComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 }
 
-export class ItemDisplayPlatform extends Platform {
+export class ItemDisplayPlatform extends TaskListener {
   taskParams: TaskParams;
   constructor(task: Task, taskParams: TaskParams) {
     super(task);
