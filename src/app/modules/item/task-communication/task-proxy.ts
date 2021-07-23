@@ -99,7 +99,7 @@ export class Task {
     this.chan.destroy();
   }
 
-  bindPlatform(platform : Platform): void {
+  bindPlatform(platform : TaskListener): void {
     if (this.platformSet) {
       throw new Error('Task already has a platform set');
     }
@@ -225,10 +225,11 @@ export class Task {
 }
 
 /*
- * Platform object definition, created from a Task object (see below)
+ * TaskListener object definition, created from a Task object (see below)
+ * Note : this will soon be merged into item-display.
  */
 
-export class Platform {
+export class TaskListener {
   task : Task;
   constructor(task : Task) {
     this.task = task;
@@ -239,8 +240,8 @@ export class Platform {
   }
 
   /*
-   * Simple prototypes for platform API functions, to be overriden by your
-   * platform's specific functions (for each platform object)
+   * Simple prototypes for Bebras platform API functions, to be overriden by your
+   * "platform"'s specific functions (for each platform object).
    */
 
   validate(_mode : string) : Observable<void> {
