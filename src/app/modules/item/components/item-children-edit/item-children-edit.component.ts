@@ -40,9 +40,6 @@ export type ChildDataWithId = InvisibleChildData | (ChildData & { id: string });
 export function hasId(child: PossiblyInvisibleChildData): child is ChildDataWithId {
   return !!child.id;
 }
-export function isVisibleChildData(child: PossiblyInvisibleChildData): child is ChildData {
-  return child.isVisible;
-}
 
 export const DEFAULT_SCORE_WEIGHT = 1;
 
@@ -180,7 +177,7 @@ export class ItemChildrenEditComponent implements OnChanges {
   }
 
   onClick(child: PossiblyInvisibleChildData): void {
-    if (!this.itemData || !child.id || !isVisibleChildData(child)) {
+    if (!this.itemData || !child.id || !child.isVisible) {
       return;
     }
 
