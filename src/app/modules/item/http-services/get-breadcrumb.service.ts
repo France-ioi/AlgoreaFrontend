@@ -6,6 +6,7 @@ import { isRouteWithAttempt, ItemRoute } from 'src/app/shared/routing/item-route
 import { appConfig } from 'src/app/shared/helpers/config';
 import { tagError } from 'src/app/shared/helpers/errors';
 import { ensureDefined } from 'src/app/shared/helpers/null-undefined-predicates';
+import { ItemType, typeCategoryOfItem } from '../../../shared/helpers/item-type';
 
 export const breadcrumbServiceTag = 'breadcrumbservice';
 
@@ -15,6 +16,7 @@ interface RawBreadcrumbItem {
   language_tag: string,
   attempt_id?: string, // set in all but the last one if parent_attempt_id param has been given
   attempt_number?: string, //  set in all but the last one if parent_attempt_id param has been given
+  type: ItemType,
 }
 
 export interface BreadcrumbItem {
@@ -49,7 +51,7 @@ export class GetBreadcrumbService {
               path: items.slice(0,idx).map(it => it.item_id),
               // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
               attemptId: item.attempt_id!, // the service ensures the attempt for all but last is given
-              contentType: itemRoute.contentType,
+              contentType: typeCategoryOfItem(item),
             } as ItemRoute,
             attemptCnt: item.attempt_number ? +item.attempt_number : undefined,
           })).concat([{
