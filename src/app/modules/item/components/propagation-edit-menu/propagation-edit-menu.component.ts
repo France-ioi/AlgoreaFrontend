@@ -7,7 +7,7 @@ import { ChildData } from '../item-children-edit/item-children-edit.component';
   styleUrls: [ 'propagation-edit-menu.component.scss' ],
 })
 export class PropagationEditMenuComponent {
-  @Input() childData?: ChildData | null;
+  @Input() childData?: ChildData;
   @Output() clickEvent = new EventEmitter<'none' | 'as_info' | 'as_content'>();
 
   onClick(contentViewPropagation: 'none' | 'as_info' | 'as_content'): void {

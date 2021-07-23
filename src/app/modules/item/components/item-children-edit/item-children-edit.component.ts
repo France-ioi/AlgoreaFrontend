@@ -54,8 +54,7 @@ export class ItemChildrenEditComponent implements OnChanges {
   selectedRows: ChildData[] = [];
   scoreWeightEnabled = false;
   addedItemIds: string[] = [];
-  propagationEditItemIdx: number | null = null;
-  propagationEditItem?: ChildData | null = null;
+  propagationEditItemIdx?: number;
 
   private subscription?: Subscription;
   @Output() childrenChanges = new EventEmitter<ChildData[]>();
@@ -168,8 +167,7 @@ export class ItemChildrenEditComponent implements OnChanges {
     this.childrenChanges.emit(this.data);
   }
 
-  openPropagationEditMenu(event: MouseEvent, actualTarget: HTMLDivElement, rowData: ChildData, itemIdx: number): void {
-    this.propagationEditItem = rowData;
+  openPropagationEditMenu(event: MouseEvent, actualTarget: HTMLDivElement, itemIdx: number): void {
     this.propagationEditItemIdx = itemIdx;
     this.op?.toggle(event, actualTarget);
   }
@@ -185,8 +183,7 @@ export class ItemChildrenEditComponent implements OnChanges {
       }
       return c;
     });
-    this.propagationEditItem = null;
-    this.propagationEditItemIdx = null;
+    this.propagationEditItemIdx = undefined;
     this.childrenChanges.emit(this.data);
   }
 
