@@ -5,13 +5,13 @@
       <trans-unit id="auth-error-modal-title" datatype="html">
         <source>Error</source><target state="translated">Erreur</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/app.component.html</context><context context-type="linenumber">52</context></context-group></trans-unit><trans-unit id="auth-error-modal-context" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/app.component.html</context><context context-type="linenumber">56</context></context-group></trans-unit><trans-unit id="auth-error-modal-context" datatype="html">
         <source>Oops, we are unable to make the site work properly. Are you connected to the Internet?</source><target state="translated">Impossible de démarrer une session. Êtes-vous bien connecté à Internet ?</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/app.component.html</context><context context-type="linenumber">59</context></context-group></trans-unit><trans-unit id="auth-error-modal-todo" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/app.component.html</context><context context-type="linenumber">63</context></context-group></trans-unit><trans-unit id="auth-error-modal-todo" datatype="html">
         <source>Try to refresh the page. If this problem persists, please contact us.</source><target state="translated">Rafraichissez la page. Si le problème persiste, contactez nous.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/app.component.html</context><context context-type="linenumber">60</context></context-group></trans-unit><trans-unit id="727030606410719950" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/app.component.html</context><context context-type="linenumber">64</context></context-group></trans-unit><trans-unit id="727030606410719950" datatype="html">
         <source>Language mismatch</source><target state="new">Language mismatch</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/language-mismatch/language-mismatch.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit><trans-unit id="6895619751331935307" datatype="html">
@@ -54,7 +54,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/top-right-controls/top-right-controls.component.html</context><context context-type="linenumber">14</context></context-group></trans-unit><trans-unit id="1827560163024636569" datatype="html">
         <source>Algorea Platform</source><target state="translated">Plateforme Algoréa</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-header/left-header.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="8675432263399119284" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-header/left-header.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit><trans-unit id="8675432263399119284" datatype="html">
         <source>My groups</source><target state="translated">Mes groupes</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-nav-tree/left-nav-tree.component.html</context><context context-type="linenumber">14</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/my-groups/my-groups.component.html</context><context context-type="linenumber">2</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/my-groups/my-groups.component.ts</context><context context-type="linenumber">19</context></context-group></trans-unit>
@@ -114,6 +114,12 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/pages/page-not-found/page-not-found.component.html</context>
           <context context-type="linenumber">4</context>
+        </context-group>
+      </trans-unit><trans-unit id="9167217071684260011" datatype="html">
+        <source>Create a new group</source><target state="new">Create a new group</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/add-group/add-group.component.html</context>
+          <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="6673660887182833564" datatype="html">
         <source>Customize</source><target state="translated">Personnaliser</target>
@@ -347,7 +353,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/add-item/add-item.component.html</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="1620208179561029065" datatype="html">
         <source>Enter a title to create a new child</source><target state="translated">Entrez un titre afin de créer un nouveau contenu</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/add-content/add-content.component.html</context><context context-type="linenumber">9</context></context-group></trans-unit><trans-unit id="5927075152207031281" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/add-content/add-content.component.ts</context><context context-type="linenumber">35</context></context-group></trans-unit><trans-unit id="5927075152207031281" datatype="html">
         <source>Enter at least 3 characters</source><target state="translated">Entrez au moins 3 caractères</target>
 
 
@@ -360,10 +366,10 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/add-content/add-content.component.html</context><context context-type="linenumber">24</context></context-group></trans-unit><trans-unit id="311477701555546678" datatype="html">
         <source>Select a Content</source><target state="translated">Sélectionnez un contenu</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/add-content/add-content.component.html</context><context context-type="linenumber">50</context></context-group></trans-unit><trans-unit id="3781733569549468335" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/add-content/add-content.component.html</context><context context-type="linenumber">51</context></context-group></trans-unit><trans-unit id="3781733569549468335" datatype="html">
         <source>No records found</source><target state="translated">Aucun résultat</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/add-content/add-content.component.html</context><context context-type="linenumber">69</context></context-group></trans-unit><trans-unit id="5928181193903168495" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/add-content/add-content.component.html</context><context context-type="linenumber">70</context></context-group></trans-unit><trans-unit id="5928181193903168495" datatype="html">
         <source> Content </source><target state="translated"> Contenu </target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-details/item-details.component.html</context><context context-type="linenumber">22</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-edit/item-edit.component.html</context><context context-type="linenumber">20</context></context-group></trans-unit><trans-unit id="3419681791450150574" datatype="html">
@@ -381,7 +387,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/associated-activity/associated-activity.component.html</context><context context-type="linenumber">29</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/associated-activity/associated-activity.component.html</context><context context-type="linenumber">42</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/member-list/member-list.component.html</context><context context-type="linenumber">94</context></context-group></trans-unit><trans-unit id="4378796785985219718" datatype="html">
         <source>Class</source><target state="translated">Classe</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/managed-group-list/managed-group-list.component.ts</context><context context-type="linenumber">32</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/add-sub-group/add-sub-group.component.ts</context><context context-type="linenumber">32</context></context-group></trans-unit><trans-unit id="3192753641165405448" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/add-group/add-group.component.ts</context><context context-type="linenumber">19</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/add-sub-group/add-sub-group.component.ts</context><context context-type="linenumber">32</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/managed-group-list/managed-group-list.component.ts</context><context context-type="linenumber">32</context></context-group></trans-unit><trans-unit id="3192753641165405448" datatype="html">
         <source>Base</source><target state="translated">Système</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/group/components/managed-group-list/managed-group-list.component.ts</context>
@@ -390,10 +396,10 @@
       </trans-unit><trans-unit id="899582552931734709" datatype="html">
         <source>Club</source><target state="translated">Club</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/managed-group-list/managed-group-list.component.ts</context><context context-type="linenumber">36</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/add-sub-group/add-sub-group.component.ts</context><context context-type="linenumber">38</context></context-group></trans-unit><trans-unit id="8707887448880467422" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/add-group/add-group.component.ts</context><context context-type="linenumber">25</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/add-sub-group/add-sub-group.component.ts</context><context context-type="linenumber">38</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/managed-group-list/managed-group-list.component.ts</context><context context-type="linenumber">36</context></context-group></trans-unit><trans-unit id="8707887448880467422" datatype="html">
         <source>Friends</source><target state="translated">Amis</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/managed-group-list/managed-group-list.component.ts</context><context context-type="linenumber">38</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/add-sub-group/add-sub-group.component.ts</context><context context-type="linenumber">44</context></context-group></trans-unit><trans-unit id="5903110565317428249" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/add-group/add-group.component.ts</context><context context-type="linenumber">31</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/add-sub-group/add-sub-group.component.ts</context><context context-type="linenumber">44</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/managed-group-list/managed-group-list.component.ts</context><context context-type="linenumber">38</context></context-group></trans-unit><trans-unit id="5903110565317428249" datatype="html">
         <source>Session</source><target state="translated">Session</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/group/components/managed-group-list/managed-group-list.component.ts</context>
@@ -408,7 +414,13 @@
       </trans-unit><trans-unit id="8693603235657020323" datatype="html">
         <source>Other</source><target state="translated">Autre</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/managed-group-list/managed-group-list.component.ts</context><context context-type="linenumber">44</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/add-sub-group/add-sub-group.component.ts</context><context context-type="linenumber">50</context></context-group></trans-unit><trans-unit id="2501969335659826225" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/add-group/add-group.component.ts</context><context context-type="linenumber">37</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/add-sub-group/add-sub-group.component.ts</context><context context-type="linenumber">50</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/managed-group-list/managed-group-list.component.ts</context><context context-type="linenumber">44</context></context-group></trans-unit><trans-unit id="1859175171919450719" datatype="html">
+        <source>Group successfully created</source><target state="new">Group successfully created</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/add-group/add-group.component.ts</context>
+          <context context-type="linenumber">55</context>
+        </context-group>
+      </trans-unit><trans-unit id="2501969335659826225" datatype="html">
         <source>This field is required</source><target state="translated">Ce champ est requis</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/shared-components/components/form-error/form-error.component.html</context>

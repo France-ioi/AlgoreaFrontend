@@ -41,6 +41,7 @@ import { GroupRemoveButtonComponent } from './components/group-remove-button/gro
 import { GroupLinksComponent } from './components/group-links/group-links.component';
 import { UserComponent } from './pages/user/user.component';
 import { GroupLogViewComponent } from './components/group-log-view/group-log-view.component';
+import { AddGroupComponent } from './components/add-group/add-group.component';
 
 @NgModule({
   declarations: [
@@ -73,6 +74,7 @@ import { GroupLogViewComponent } from './components/group-log-view/group-log-vie
     GroupLinksComponent,
     UserComponent,
     GroupLogViewComponent,
+    AddGroupComponent,
   ],
   imports: [
     CommonModule,
