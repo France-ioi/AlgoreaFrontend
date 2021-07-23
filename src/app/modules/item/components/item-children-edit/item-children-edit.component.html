@@ -111,7 +111,7 @@
 <p-overlayPanel [style]="{minWidth: '112px', maxWidth: '280px'}" styleClass="alg-propagation-edit-menu" #op appendTo="body">
   <ng-template pTemplate>
     <alg-propagation-edit-menu
-        *ngIf="propagationEditItemIdx !== undefined"
+      *ngIf="propagationEditItemIdx !== undefined"
       [childData]="data[propagationEditItemIdx]"
       (clickEvent)="onContentViewPropagationChanged($event)"
     ></alg-propagation-edit-menu>
