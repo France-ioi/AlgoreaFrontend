@@ -48,7 +48,7 @@
                 </td>
               </ng-container>
               <td><span class="type">{{ rowData.type }}</span></td>
-              <td>
+              <td class="flex-1">
                 <a
                     class="main alg-link"
                     [ngClass]="{'disabled': !rowData.id}"
@@ -56,6 +56,21 @@
                 >
                   {{ rowData.title }}
                 </a>
+              </td>
+              <td *ngIf="rowData.contentViewPropagation">
+                <div class="propagation-state-wrapper" #propagationStateWrapperTarget>
+                  <button
+                      class="alg-button-icon base-color"
+                      type="button"
+                      (click)="openPropagationEditMenu($event, propagationStateWrapperTarget, index)"
+                  >
+                    <i class="fa" [ngClass]="{
+                    'fa-eye': rowData.contentViewPropagation === 'as_content',
+                    'fa-lock': rowData.contentViewPropagation === 'as_info',
+                    'fa-eye-slash': rowData.contentViewPropagation === 'none'
+                  }"></i>
+                  </button>
+                </div>
               </td>
             </tr>
           </ng-template>
@@ -92,3 +107,13 @@
     <div *ngSwitchCase="'error'" i18n>Error</div>
   </alg-section>
 </ng-container>
+
+<p-overlayPanel [style]="{minWidth: '112px', maxWidth: '280px'}" styleClass="alg-propagation-edit-menu" #op appendTo="body">
+  <ng-template pTemplate>
+    <alg-propagation-edit-menu
+      *ngIf="propagationEditItemIdx !== undefined"
+      [childData]="data[propagationEditItemIdx]"
+      (clickEvent)="onContentViewPropagationChanged($event)"
+    ></alg-propagation-edit-menu>
+  </ng-template>
+</p-overlayPanel>

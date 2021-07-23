@@ -1,0 +1,35 @@
+<ul class="menu">
+  <li class="menu-item menu-header no-hover">
+    <div class="menu-item-title uppercase text-center" i18n>Default access</div>
+  </li>
+  <li class="menu-item cursor-pointer"
+      [ngClass]="{'active': childData?.contentViewPropagation === 'none'}"
+      (click)="onClick('none')">
+    <div class="menu-item-title" i18n>Locked and hidden</div>
+    <div class="menu-item-icon">
+      <i class="fa fa-eye-slash"></i>
+    </div>
+  </li>
+  <li
+      class="menu-item active cursor-pointer"
+      [ngClass]="{'active': childData?.contentViewPropagation === 'as_info'}"
+      (click)="onClick('as_info')"
+      *ngIf="childData?.permissions?.canGrantView !== 'none' || [ 'as_info', 'as_content' ].includes(childData?.contentViewPropagation || '')"
+  >
+    <div class="menu-item-title" i18n>Locked</div>
+    <div class="menu-item-icon">
+      <i class="fa fa-lock"></i>
+    </div>
+  </li>
+  <li
+      class="menu-item cursor-pointer"
+      [ngClass]="{'active': childData?.contentViewPropagation === 'as_content'}"
+      (click)="onClick('as_content')"
+      *ngIf="['content', 'content_with_descendants', 'solution', 'solution_with_grant'].includes(childData?.permissions?.canGrantView || '') || childData?.contentViewPropagation === 'as_content'"
+  >
+    <div class="menu-item-title" i18n>Open</div>
+    <div class="menu-item-icon">
+      <i class="fa fa-eye"></i>
+    </div>
+  </li>
+</ul>
