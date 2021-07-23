@@ -52,7 +52,7 @@ export class AddGroupComponent {
     this.groupCreationService.create(group.title, group.type).subscribe({
       next: createdId => {
         this.state = 'ready';
-        this.actionFeedbackService.success('Group successfully created');
+        this.actionFeedbackService.success($localize`Group successfully created`);
         void this.router.navigate([ 'groups', 'by-id', createdId, 'details' ]);
       },
       error: () => {
