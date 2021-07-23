@@ -86,7 +86,7 @@ export class ItemDisplayComponent implements OnInit, AfterViewInit, OnDestroy {
     this.heightInterval = interval(1000).subscribe(() => this.updateHeight());
     this.saveInterval = interval(1000).subscribe(() => this.getAnswerState());
 
-    this.task?.showViews({ task: true }).subscribe(() => {});
+    this.task?.showViewsInTask({ task: true }).subscribe(() => {});
 
     this.task?.getViews().subscribe((views : any) => {
       this.setViews(views);
