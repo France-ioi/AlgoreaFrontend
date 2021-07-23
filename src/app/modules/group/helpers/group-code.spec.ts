@@ -9,7 +9,6 @@ describe('GroupCode', () => {
     it('should return expected values', () => {
       const g = codeAdditions(group);
       expect(g.codeExpiration).toBeUndefined();
-      expect(g.codeLifetime).toBeUndefined();
       expect(g.hasCodeUnused).toBeFalse();
       expect(g.hasCodeInUse).toBeFalsy();
       expect(g.hasCodeExpired).toBeFalsy();
@@ -20,12 +19,11 @@ describe('GroupCode', () => {
   });
 
   describe('when the group has no code set', () => {
-    const group = { code: null as string|null, codeLifetime: null as number|null, codeExpiresAt: null as string|null };
+    const group = { code: null as string|null, codeLifetime: null as Duration|null, codeExpiresAt: null as string|null };
 
     it('should return expected values', () => {
       const g = codeAdditions(group);
       expect(g.codeExpiration).toBeUndefined();
-      expect(g.codeLifetime).toBeNull();
       expect(g.hasCodeUnused).toBeFalsy();
       expect(g.hasCodeInUse).toBeFalsy();
       expect(g.hasCodeExpired).toBeFalsy();
@@ -36,12 +34,11 @@ describe('GroupCode', () => {
   });
 
   describe('when the group has a unused code', () => {
-    const group = { code: 'abcd', codeLifetime: Duration.fromString('1:02:03').ms / 1000, codeExpiresAt: null as string|null };
+    const group = { code: 'abcd', codeLifetime: Duration.fromString('1:02:03'), codeExpiresAt: null as string|null };
 
     it('should return expected values', () => {
       const g = codeAdditions(group);
       expect(g.codeExpiration).toBeUndefined();
-      expect(g.codeLifetime).toEqual(Duration.fromHMS(1,2,3));
       expect(g.hasCodeUnused).toBeTruthy();
       expect(g.hasCodeInUse).toBeFalsy();
       expect(g.hasCodeExpired).toBeFalsy();
@@ -52,7 +49,7 @@ describe('GroupCode', () => {
   });
 
   describe('when the group has a code already used', () => {
-    const group = { code: 'abcd', codeLifetime: Duration.fromString('1:02:03').ms / 1000, codeExpiresAt: '2020-01-01T10:02:03.00' };
+    const group = { code: 'abcd', codeLifetime: Duration.fromString('1:02:03'), codeExpiresAt: '2020-01-01T10:02:03.00' };
 
     beforeEach(() => {
       jasmine.clock().install();
@@ -62,7 +59,6 @@ describe('GroupCode', () => {
     it('should return expected values', () => {
       const g = codeAdditions(group);
       expect(g.codeExpiration).toEqual(new Date('2020-01-01 10:02:03'));
-      expect(g.codeLifetime).toEqual(Duration.fromHMS(1,2,3));
       expect(g.hasCodeUnused).toBeFalsy();
       expect(g.hasCodeInUse).toBeTruthy();
       expect(g.hasCodeExpired).toBeFalsy();
@@ -77,7 +73,7 @@ describe('GroupCode', () => {
   });
 
   describe('when the group has an expired code', () => {
-    const group = { code: 'abcd', codeLifetime: Duration.fromString('1:02:03').ms / 1000, codeExpiresAt: '2020-01-01T10:02:03.00' };
+    const group = { code: 'abcd', codeLifetime: Duration.fromString('1:02:03'), codeExpiresAt: '2020-01-01T10:02:03.00' };
 
     beforeEach(() => {
       jasmine.clock().install();
@@ -87,7 +83,6 @@ describe('GroupCode', () => {
     it('should return expected values', () => {
       const g = codeAdditions(group);
       expect(g.codeExpiration).toEqual(new Date('2020-01-01 10:02:03'));
-      expect(g.codeLifetime).toEqual(Duration.fromHMS(1,2,3));
       expect(g.hasCodeUnused).toBeFalsy();
       expect(g.hasCodeInUse).toBeFalsy();
       expect(g.hasCodeExpired).toBeTruthy();
@@ -103,15 +98,13 @@ describe('GroupCode', () => {
 
     it('should return true', () => {
       expect(isSameCodeLifetime(new Duration(1000), new Duration(1000))).toBeTrue();
+      expect(isSameCodeLifetime(new Duration(0), new Duration(0))).toBeTrue();
       expect(isSameCodeLifetime(null, null)).toBeTrue();
-      expect(isSameCodeLifetime(0, 0)).toBeTrue();
     });
 
     it('should return false', () => {
       expect(isSameCodeLifetime(new Duration(1), null)).toBeFalse();
-      expect(isSameCodeLifetime(new Duration(1), 0)).toBeFalse();
-      expect(isSameCodeLifetime(null, 0)).toBeFalse();
-      expect(isSameCodeLifetime(new Duration(1), new Duration(2))).toBeFalse();
+      expect(isSameCodeLifetime(new Duration(0), new Duration(1))).toBeFalse();
     });
   });
 });

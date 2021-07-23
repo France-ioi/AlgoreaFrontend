@@ -41,14 +41,14 @@ export class GroupJoinByCodeComponent implements OnChanges {
       this.codeAdditions = codeAdditions(this.group);
 
       const codeLifetimeHasChanged = this.initialCodeLifetime === undefined
-        || !isSameCodeLifetime(this.initialCodeLifetime, this.codeAdditions.codeLifetime);
+        || !isSameCodeLifetime(this.initialCodeLifetime, this.group.codeLifetime);
 
       if (codeLifetimeHasChanged) {
-        this.initialCodeLifetime = this.codeAdditions.codeLifetime;
-        this.codeLifetimeDuration = this.codeAdditions.codeLifetime instanceof Duration
-          ? this.codeAdditions.codeLifetime
+        this.initialCodeLifetime = this.group.codeLifetime;
+        this.codeLifetimeDuration = this.group.codeLifetime instanceof Duration
+          ? this.group.codeLifetime
           : undefined;
-        this.selectedCodeLifetimeOption = this.getSelectedCodeLifetimeOption(this.codeAdditions.codeLifetime);
+        this.selectedCodeLifetimeOption = this.getSelectedCodeLifetimeOption(this.group.codeLifetime);
       }
     }
   }
@@ -77,7 +77,7 @@ export class GroupJoinByCodeComponent implements OnChanges {
 
   submitCodeLifetime(newCodeLifetime: CodeLifetime): void {
     if (!this.group || !this.codeAdditions) return;
-    if (this.codeAdditions.hasCodeNotSet || isSameCodeLifetime(this.codeAdditions.codeLifetime, newCodeLifetime)) return;
+    if (this.codeAdditions.hasCodeNotSet || isSameCodeLifetime(this.group.codeLifetime, newCodeLifetime)) return;
 
     // disable UI
     this.processing = true;
@@ -122,21 +122,19 @@ export class GroupJoinByCodeComponent implements OnChanges {
   changeCodeLifetime(selected: number): void {
     const optionValue = this.codeLifetimeOptions[selected]?.value;
     if (optionValue === 'infinite') this.submitCodeLifetime(null);
-    if (optionValue === 'usable_once') this.submitCodeLifetime(0);
+    if (optionValue === 'usable_once') this.submitCodeLifetime(new Duration(0));
 
     this.selectedCodeLifetimeOption = selected;
   }
 
   private getSelectedCodeLifetimeOption(codeLifetime?: CodeLifetime): number {
-    switch (codeLifetime) {
-      case null:
-      case undefined:
-        return this.codeLifetimeOptions.findIndex(({ value }) => value === 'infinite');
-      case 0:
-        return this.codeLifetimeOptions.findIndex(({ value }) => value === 'usable_once');
-      default:
-        return this.codeLifetimeOptions.findIndex(({ value }) => value === 'custom');
+    if (codeLifetime instanceof Duration) {
+      return codeLifetime.ms === 0
+        ? this.codeLifetimeOptions.findIndex(({ value }) => value === 'usable_once')
+        : this.codeLifetimeOptions.findIndex(({ value }) => value === 'custom');
     }
+
+    return this.codeLifetimeOptions.findIndex(({ value }) => value === 'infinite');
   }
 
 }
