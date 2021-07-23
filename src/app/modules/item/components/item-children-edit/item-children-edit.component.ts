@@ -99,11 +99,11 @@ export class ItemChildrenEditComponent implements OnChanges {
                   title: child.string.title,
                   type: child.type,
                   isVisible: true,
-                  result: res ? {
+                  result: res === null ? undefined : {
                     attemptId: res.attemptId,
                     validated: res.validated,
                     score: res.scoreComputed,
-                  } : undefined,
+                  },
                 };
               }
 

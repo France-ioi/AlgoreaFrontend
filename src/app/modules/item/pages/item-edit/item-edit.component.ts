@@ -5,7 +5,12 @@ import { forkJoin, Observable, of, Subscription, throwError } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { ItemStringChanges, UpdateItemStringService } from '../../http-services/update-item-string.service';
 import { ItemChanges, UpdateItemService } from '../../http-services/update-item.service';
-import { PossiblyInvisibleChildData, ChildDataWithId, hasId } from '../../components/item-children-edit/item-children-edit.component';
+import {
+  PossiblyInvisibleChildData,
+  ChildDataWithId,
+  hasId,
+  isVisibleChildData,
+} from '../../components/item-children-edit/item-children-edit.component';
 import { Item } from '../../http-services/get-item-by-id.service';
 import { ItemEditContentComponent } from '../item-edit-content/item-edit-content.component';
 import { PendingChangesComponent } from 'src/app/shared/guards/pending-changes-guard';
@@ -110,11 +115,9 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
     return forkJoin(
       this.itemChanges.children.map(child => {
         if (!this.initialFormData) return throwError(new Error('Invalid form'));
-        if (hasId(child)) return of(child);
-
+        if (hasId(child) || !isVisibleChildData(child)) return of(child);
         // the child doesnt have an id so we create it
         if (!child.title) return throwError(new Error('Something went wrong, the new child is missing his title'));
-        if (!child.type) return throwError(new Error('Something went wrong, the new child is missing his type'));
         const newChild: NewItem = {
           title: child.title,
           type: child.type,
