@@ -31,10 +31,9 @@
 
 </p-tabView>
 
-<p-progressSpinner
-  *ngIf="dataSources[activeTabIndex]?.state?.isFetching"
-  [style]="{width: '3.3333rem', height: '3.3333rem'}"
-></p-progressSpinner>
+<div class="spinner" *ngIf="dataSources[activeTabIndex]?.state?.isFetching">
+  <p-progressSpinner [style]="{width: '3.3333rem', height: '3.3333rem'}"></p-progressSpinner>
+</div>
 
 <p *ngIf="dataSources[activeTabIndex]?.state?.isError" class="error">
   <span i18n>Unable to load the list.</span>&nbsp;
