@@ -107,6 +107,11 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
   // Update Item
   private createChildren(): Observable<ChildDataWithId[] | undefined>{
     if (!this.itemChanges.children) return of(undefined);
+
+    if (this.itemChanges.children.length === 0) {
+      return of([]);
+    }
+
     return forkJoin(
       this.itemChanges.children.map(child => {
         if (!this.initialFormData) return throwError(new Error('Invalid form'));

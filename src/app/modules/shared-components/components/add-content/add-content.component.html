@@ -6,14 +6,14 @@
     (blur)="onBlur()"
     [ngClass]="{'input-light': focused === 'searchExisting'}"
     name="create"
-    i18n-placeholder placeholder="Enter a title to create a new child"
+    [placeholder]="inputCreatePlaceholder"
     i18n-pTooltip pTooltip="Enter at least 3 characters"
     tooltipEvent="focus"
     tooltipPosition="bottom"
     [tooltipDisabled]="trimmedInputsValue.create.length >= minInputLength"
   >
   </alg-input>
-  <span class="label" i18n>or</span>
+  <span class="label" i18n *ngIf="showSearchUI">or</span>
   <alg-input
     [parentForm]="addContentForm"
     [hasClearButton]="true"
@@ -26,6 +26,7 @@
     tooltipEvent="focus"
     tooltipPosition="bottom"
     [tooltipDisabled]="trimmedInputsValue.searchExisting.length >= minInputLength"
+    *ngIf="showSearchUI"
   >
   </alg-input>
 </div>

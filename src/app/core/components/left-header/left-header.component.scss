@@ -8,10 +8,10 @@ $nav-control-border: #5c5c5c;
 
 .nav-control {
   color: white;
-  height: 4rem;
+  height: 3.75rem;
   padding-left: 1rem;
   padding-right: 1rem;
-  border-bottom: .1rem solid $nav-control-border;
+  border-bottom: 0.1rem solid $nav-control-border;
   position: relative;
   text-align: center;
   display: flex;
@@ -19,28 +19,6 @@ $nav-control-border: #5c5c5c;
 
   &.alt {
     background-color: $nav-bk-color;
-
-    .nav-collapse {
-      img {
-        transform: rotate(360deg);
-      }
-    }
-
-    .title-collapse {
-      margin-left: 1rem;
-      margin-right: 1rem;
-      padding-left: 1rem;
-      padding-right: 1rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      flex-direction: column;
-      justify-content: center;
-
-      &.down {
-        transform: rotate(180deg);
-      }
-    }
   }
 
   span {
@@ -53,8 +31,9 @@ $nav-control-border: #5c5c5c;
     display: flex;
     align-items: center;
     cursor: pointer;
-    img {
-      transform: rotate(180deg);
+
+    > i {
+      font-size: 2rem;
     }
   }
 

@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, Output, EventEmitter } from '@angular/core';
+import { Component, Input, OnChanges, Output, EventEmitter, ViewChild } from '@angular/core';
 import { ItemData } from '../../services/item-datasource.service';
 import { GetItemChildrenService, isVisibleItemChild } from '../../http-services/get-item-children.service';
 import { Subscription } from 'rxjs';
@@ -7,7 +7,9 @@ import { ItemType, typeCategoryOfItem } from '../../../../shared/helpers/item-ty
 import { AddedContent } from '../../../shared-components/components/add-content/add-content.component';
 import { ItemRouter } from '../../../../shared/routing/item-router';
 import { bestAttemptFromResults } from '../../../../shared/helpers/attempts';
+import { PermissionsInfo } from '../../helpers/item-permissions';
 import { isNotUndefined } from '../../../../shared/helpers/null-undefined-predicates';
+import { OverlayPanel } from 'primeng/overlaypanel';
 
 interface BaseChildData {
   contentViewPropagation?: 'none' | 'as_info' | 'as_content',
@@ -16,6 +18,7 @@ interface BaseChildData {
   upperViewLevelsPropagation?: 'use_content_view_propagation' | 'as_content_with_descendants' | 'as_is',
   scoreWeight: number,
   watchPropagation?: boolean,
+  permissions?: PermissionsInfo,
 }
 interface InvisibleChildData extends BaseChildData {
   id: string,
@@ -51,11 +54,14 @@ export const DEFAULT_SCORE_WEIGHT = 1;
 export class ItemChildrenEditComponent implements OnChanges {
   @Input() itemData?: ItemData;
 
+  @ViewChild('op') op?: OverlayPanel;
+
   state: 'loading' | 'error' | 'ready' = 'ready';
   data: PossiblyInvisibleChildData[] = [];
   selectedRows: PossiblyInvisibleChildData[] = [];
   scoreWeightEnabled = false;
   addedItemIds: string[] = [];
+  propagationEditItemIdx?: number;
 
   private subscription?: Subscription;
   @Output() childrenChanges = new EventEmitter<PossiblyInvisibleChildData[]>();
@@ -86,6 +92,7 @@ export class ItemChildrenEditComponent implements OnChanges {
                 grantViewPropagation: child.grantViewPropagation,
                 upperViewLevelsPropagation: child.upperViewLevelsPropagation,
                 watchPropagation: child.watchPropagation,
+                permissions: child.permissions,
               };
 
               if (isVisibleItemChild(child)) {
@@ -128,7 +135,19 @@ export class ItemChildrenEditComponent implements OnChanges {
   }
 
   addChild(child: AddedContent<ItemType>): void {
-    this.data.push({ ...child, isVisible: true, scoreWeight: DEFAULT_SCORE_WEIGHT });
+    this.data.push({
+      ...child,
+      scoreWeight: DEFAULT_SCORE_WEIGHT,
+      isVisible: true,
+      ...(!child.id ? {
+        contentViewPropagation: 'as_info',
+        permissions: {
+          canView: 'solution',
+          canEdit: 'all_with_grant',
+          canGrantView: 'solution_with_grant',
+        },
+      } : {})
+    });
     this.onChildrenListUpdate();
     this.childrenChanges.emit(this.data);
   }
@@ -165,6 +184,26 @@ export class ItemChildrenEditComponent implements OnChanges {
   }
 
   onScoreWeightChange(): void {
+    this.childrenChanges.emit(this.data);
+  }
+
+  openPropagationEditMenu(event: MouseEvent, actualTarget: HTMLDivElement, itemIdx: number): void {
+    this.propagationEditItemIdx = itemIdx;
+    this.op?.toggle(event, actualTarget);
+  }
+
+  onContentViewPropagationChanged(contentViewPropagation: 'none' | 'as_info' | 'as_content'): void {
+    this.op?.hide();
+    this.data = this.data.map((c, index) => {
+      if (index === this.propagationEditItemIdx) {
+        return {
+          ...c,
+          contentViewPropagation,
+        };
+      }
+      return c;
+    });
+    this.propagationEditItemIdx = undefined;
     this.childrenChanges.emit(this.data);
   }
 

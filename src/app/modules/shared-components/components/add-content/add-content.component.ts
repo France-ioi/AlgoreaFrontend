@@ -32,6 +32,8 @@ export class AddContentComponent<Type> implements OnInit, OnDestroy {
   @Input() addedIds: string[] = [];
   @Input() selectExistingText: string = $localize`Add`;
   @Input() addedText: string = $localize`Already added`;
+  @Input() inputCreatePlaceholder = $localize`Enter a title to create a new child`;
+  @Input() showSearchUI = true;
 
   @Output() contentAdded = new EventEmitter<AddedContent<Type>>();
 
@@ -49,7 +51,7 @@ export class AddContentComponent<Type> implements OnInit, OnDestroy {
   constructor(private formBuilder: FormBuilder) {}
 
   ngOnInit(): void {
-    if (!this.searchFunction) throw new Error('The input \'searchFunction\' is required');
+    if (!this.searchFunction && this.showSearchUI) throw new Error('The input \'searchFunction\' is required');
     const searchFunction = this.searchFunction;
 
     this.subscriptions.push(
@@ -60,6 +62,10 @@ export class AddContentComponent<Type> implements OnInit, OnDestroy {
         };
       })
     );
+
+    if (!searchFunction) {
+      return;
+    }
 
     const existingTitleControl: Observable<string> | undefined = this.addContentForm.get('searchExisting')?.valueChanges;
     if (existingTitleControl) this.subscriptions.push(

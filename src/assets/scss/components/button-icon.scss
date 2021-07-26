@@ -1,0 +1,13 @@
+@import 'src/colors.scss';
+
+.alg-button-icon {
+  border: none;
+  cursor: pointer;
+
+  &.base-color {
+    i {
+      color: $base-color;
+    }
+  }
+
+}
