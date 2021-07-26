@@ -73,7 +73,7 @@ export class UserComponent implements OnInit, OnDestroy {
               ],
               currentPageIdx: 1,
             }
-          })
+          });
         })
       )
       .subscribe(contentInfo => {
