@@ -3,11 +3,13 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { appConfig } from '../../../shared/helpers/config';
 import { ItemType } from '../../../shared/helpers/item-type';
+import { PermissionsInfo } from '../helpers/item-permissions';
 
 export interface ItemFound<T> {
   id: string,
   title: string,
-  type: T
+  type: T,
+  permissions: PermissionsInfo,
 }
 
 @Injectable({
