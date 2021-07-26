@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { NewContentType, AddedContent } from 'src/app/modules/shared-components/components/add-content/add-content.component';
 import { ItemType } from 'src/app/shared/helpers/item-type';
 import { getAllowedNewItemTypes } from 'src/app/shared/helpers/new-item-types';
-import { ItemFound, SearchItemService } from '../../http-services/search-item.service';
+import { SearchItemService } from '../../http-services/search-item.service';
 
 @Component({
   selector: 'alg-add-item',
@@ -17,7 +17,6 @@ export class AddItemComponent implements OnChanges {
   @Output() contentAdded = new EventEmitter<AddedContent<ItemType>>();
 
   allowedNewItemTypes: NewContentType<ItemType>[] = [];
-  itemsFound: ItemFound<ItemType>[] = [];
   state: 'loading' | 'ready' = 'loading';
 
   searchFunction = (value: string): Observable<AddedContent<ItemType>[]> =>
