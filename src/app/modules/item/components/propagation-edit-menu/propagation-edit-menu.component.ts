@@ -1,5 +1,5 @@
 import { Component, Output, EventEmitter, Input } from '@angular/core';
-import { ChildData } from '../item-children-edit/item-children-edit.component';
+import { PossiblyInvisibleChildData } from '../item-children-edit/item-children-edit.component';
 
 @Component({
   selector: 'alg-propagation-edit-menu',
@@ -7,7 +7,7 @@ import { ChildData } from '../item-children-edit/item-children-edit.component';
   styleUrls: [ 'propagation-edit-menu.component.scss' ],
 })
 export class PropagationEditMenuComponent {
-  @Input() childData?: ChildData;
+  @Input() childData?: PossiblyInvisibleChildData;
   @Output() clickEvent = new EventEmitter<'none' | 'as_info' | 'as_content'>();
 
   onClick(contentViewPropagation: 'none' | 'as_info' | 'as_content'): void {

@@ -2,28 +2,16 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { appConfig } from 'src/app/shared/helpers/config';
-import { permissionsDecoder } from '../helpers/item-permissions';
+import { canCurrentUserViewItem, ItemPermissionsInfo, permissionsDecoder } from '../helpers/item-permissions';
 import * as D from 'io-ts/Decoder';
 import { decodeSnakeCase } from 'src/app/shared/operators/decode';
 import { dateDecoder } from 'src/app/shared/helpers/decoders';
 
-export const itemChildDecoder = D.struct({
+const baseItemChildDecoder = D.struct({
   id: D.string,
-  bestScore: D.number,
   order: D.number,
-  string: D.struct({
-    title: D.nullable(D.string),
-  }),
   category: D.literal('Undefined', 'Discovery', 'Application', 'Validation', 'Challenge'),
-  type: D.literal('Chapter','Task','Course','Skill'),
   permissions: permissionsDecoder,
-  results: D.array(D.struct({
-    attemptId: D.string,
-    latestActivityAt: dateDecoder,
-    startedAt: D.nullable(dateDecoder),
-    scoreComputed: D.number,
-    validated: D.boolean,
-  })),
   scoreWeight: D.number,
   contentViewPropagation: D.literal('none', 'as_info', 'as_content'),
   editPropagation: D.boolean,
@@ -32,7 +20,38 @@ export const itemChildDecoder = D.struct({
   watchPropagation: D.boolean,
 });
 
+const itemChildDecoder = D.intersect(baseItemChildDecoder)(
+  D.struct({
+    bestScore: D.number,
+    string: D.struct({
+      title: D.nullable(D.string),
+    }),
+    type: D.literal('Chapter','Task','Course','Skill'),
+    results: D.array(D.struct({
+      attemptId: D.string,
+      latestActivityAt: dateDecoder,
+      startedAt: D.nullable(dateDecoder),
+      scoreComputed: D.number,
+      validated: D.boolean,
+    })),
+  }),
+);
+
+const invisibleItemChildDecoder = baseItemChildDecoder;
+
+const possiblyInvisibleItemChild = D.union(
+  itemChildDecoder,
+  invisibleItemChildDecoder,
+);
+
 export type ItemChild = D.TypeOf<typeof itemChildDecoder>;
+export type InvisibleItemChild = D.TypeOf<typeof invisibleItemChildDecoder>;
+type PossiblyInvisibleItemChild = D.TypeOf<typeof possiblyInvisibleItemChild>;
+
+export function isVisibleItemChild(item: ItemPermissionsInfo): item is ItemChild {
+  return canCurrentUserViewItem(item);
+}
+
 
 @Injectable({
   providedIn: 'root'
@@ -48,6 +67,17 @@ export class GetItemChildrenService {
       .get<unknown[]>(`${appConfig.apiUrl}/items/${id}/children`, { params: params })
       .pipe(
         decodeSnakeCase(D.array(itemChildDecoder))
+      );
+  }
+
+  getWithInvisibleItems(id: string, attemptId: string): Observable<PossiblyInvisibleItemChild[]> {
+    const params = new HttpParams()
+      .set('attempt_id', attemptId)
+      .set('show_invisible_items', '1');
+    return this.http
+      .get<unknown[]>(`${appConfig.apiUrl}/items/${id}/children`, { params })
+      .pipe(
+        decodeSnakeCase(D.array(possiblyInvisibleItemChild))
       );
   }
 }

@@ -1,39 +1,46 @@
 import { Component, Input, OnChanges, Output, EventEmitter, ViewChild } from '@angular/core';
 import { ItemData } from '../../services/item-datasource.service';
-import { GetItemChildrenService } from '../../http-services/get-item-children.service';
+import { GetItemChildrenService, isVisibleItemChild } from '../../http-services/get-item-children.service';
 import { Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ItemType, typeCategoryOfItem } from '../../../../shared/helpers/item-type';
 import { AddedContent } from '../../../shared-components/components/add-content/add-content.component';
 import { ItemRouter } from '../../../../shared/routing/item-router';
 import { bestAttemptFromResults } from '../../../../shared/helpers/attempts';
-import { canCurrentUserViewItemContent, PermissionsInfo } from '../../helpers/item-permissions';
+import { PermissionsInfo } from '../../helpers/item-permissions';
 import { isNotUndefined } from '../../../../shared/helpers/null-undefined-predicates';
 import { OverlayPanel } from 'primeng/overlaypanel';
 
-export interface ChildData {
-  id?: string,
-  title: string | null,
-  type: ItemType,
+interface BaseChildData {
+  contentViewPropagation?: 'none' | 'as_info' | 'as_content',
+  editPropagation?: boolean,
+  grantViewPropagation?: boolean,
+  upperViewLevelsPropagation?: 'use_content_view_propagation' | 'as_content_with_descendants' | 'as_is',
   scoreWeight: number,
+  watchPropagation?: boolean,
+  permissions?: PermissionsInfo,
+}
+interface InvisibleChildData extends BaseChildData {
+  id: string,
+  isVisible: false,
+}
+interface ChildData extends BaseChildData {
+  id?: string;
+  isVisible: true,
+  title: string | null;
+  type: ItemType;
   result?: {
     attemptId: string,
     validated: boolean,
     score: number,
   },
-  contentViewPropagation?: 'none' | 'as_info' | 'as_content',
-  editPropagation?: boolean,
-  grantViewPropagation?: boolean,
-  upperViewLevelsPropagation?: 'use_content_view_propagation' | 'as_content_with_descendants' | 'as_is',
-  watchPropagation?: boolean,
-  permissions?: PermissionsInfo,
 }
 
-export interface ChildDataWithId extends ChildData {
-  id: string;
-}
+export type PossiblyInvisibleChildData = ChildData | InvisibleChildData;
 
-export function hasId(child: ChildData): child is ChildDataWithId {
+export type ChildDataWithId = InvisibleChildData | (ChildData & { id: string });
+
+export function hasId(child: PossiblyInvisibleChildData): child is ChildDataWithId {
   return !!child.id;
 }
 
@@ -50,14 +57,14 @@ export class ItemChildrenEditComponent implements OnChanges {
   @ViewChild('op') op?: OverlayPanel;
 
   state: 'loading' | 'error' | 'ready' = 'ready';
-  data: ChildData[] = [];
-  selectedRows: ChildData[] = [];
+  data: PossiblyInvisibleChildData[] = [];
+  selectedRows: PossiblyInvisibleChildData[] = [];
   scoreWeightEnabled = false;
   addedItemIds: string[] = [];
   propagationEditItemIdx?: number;
 
   private subscription?: Subscription;
-  @Output() childrenChanges = new EventEmitter<ChildData[]>();
+  @Output() childrenChanges = new EventEmitter<PossiblyInvisibleChildData[]>();
 
   constructor(
     private getItemChildrenService: GetItemChildrenService,
@@ -73,29 +80,41 @@ export class ItemChildrenEditComponent implements OnChanges {
       this.state = 'loading';
       this.subscription?.unsubscribe();
       this.subscription = this.getItemChildrenService
-        .get(this.itemData.item.id, this.itemData.currentResult.attemptId)
+        .getWithInvisibleItems(this.itemData.item.id, this.itemData.currentResult.attemptId)
         .pipe(
           map(children => children
             .sort((a, b) => a.order - b.order)
-            .map(child => {
-              const res = bestAttemptFromResults(child.results);
-              return {
-                id: child.id,
-                title: child.string.title,
-                type: child.type,
+            .map((child): PossiblyInvisibleChildData => {
+              const baseChildData: BaseChildData = {
                 scoreWeight: child.scoreWeight,
-                isLocked: !canCurrentUserViewItemContent(child),
-                result: res === null ? undefined : {
-                  attemptId: res.attemptId,
-                  validated: res.validated,
-                  score: res.scoreComputed,
-                },
                 contentViewPropagation: child.contentViewPropagation,
                 editPropagation: child.editPropagation,
                 grantViewPropagation: child.grantViewPropagation,
                 upperViewLevelsPropagation: child.upperViewLevelsPropagation,
                 watchPropagation: child.watchPropagation,
                 permissions: child.permissions,
+              };
+
+              if (isVisibleItemChild(child)) {
+                const res = bestAttemptFromResults(child.results);
+                return {
+                  ...baseChildData,
+                  id: child.id,
+                  title: child.string.title,
+                  type: child.type,
+                  isVisible: true,
+                  result: res === null ? undefined : {
+                    attemptId: res.attemptId,
+                    validated: res.validated,
+                    score: res.scoreComputed,
+                  },
+                };
+              }
+
+              return {
+                ...baseChildData,
+                id: child.id,
+                isVisible: false,
               };
             })
           )
@@ -119,6 +138,7 @@ export class ItemChildrenEditComponent implements OnChanges {
     this.data.push({
       ...child,
       scoreWeight: DEFAULT_SCORE_WEIGHT,
+      isVisible: true,
       ...(!child.id ? {
         contentViewPropagation: 'as_info',
         permissions: {
@@ -195,8 +215,8 @@ export class ItemChildrenEditComponent implements OnChanges {
     this.addedItemIds = this.data.map(item => item.id).filter(isNotUndefined);
   }
 
-  onClick(child: ChildData): void {
-    if (!this.itemData || !child.id) {
+  onClick(child: PossiblyInvisibleChildData): void {
+    if (!this.itemData || !child.id || !child.isVisible) {
       return;
     }
 
