@@ -70,13 +70,47 @@ jobs:
           at: ./
       - run: npm run lint
 
-  build:
+  build-branch-en:
     docker: *node_image
     steps:
       - attach_workspace:
           at: ./
-      - run: npx ng build --configuration ci --base-href //d39se6ub293skr.cloudfront.net/branch/<< pipeline.git.branch >> --progress=false
+      - run: npx ng build --configuration en --base-href /branch/<< pipeline.git.branch >>/en/ --deploy-url //d39se6ub293skr.cloudfront.net/branch/<< pipeline.git.branch >>/en/ --progress=false
       - run: echo '<html><head><script>window.location.replace("en/");</script></head></html>' > dist/algorea/index.html
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - dist/algorea
+
+  build-branch-fr:
+    docker: *node_image
+    steps:
+      - attach_workspace:
+          at: ./
+      - run: npx ng build --configuration fr --base-href /branch/<< pipeline.git.branch >>/fr/ --deploy-url //d39se6ub293skr.cloudfront.net/branch/<< pipeline.git.branch >>/fr/ --progress=false
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - dist/algorea
+
+  build-master-en:
+    docker: *node_image
+    steps:
+      - attach_workspace:
+          at: ./
+      - run: npx ng build --configuration en --base-href /en/ --deploy-url //d39se6ub293skr.cloudfront.net/en/ --progress=false
+      - run: echo '<html><head><script>window.location.replace("en/");</script></head></html>' > dist/algorea/index.html
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - dist/algorea
+
+  build-master-fr:
+    docker: *node_image
+    steps:
+      - attach_workspace:
+          at: ./
+      - run: npx ng build --configuration fr --base-href /fr/ --deploy-url //d39se6ub293skr.cloudfront.net/fr/ --progress=false
       - persist_to_workspace:
           root: ./
           paths:
@@ -140,9 +174,18 @@ workflows:
       - lint:
           requires:
           - deps
-      - build:
+      - build-branch-en:
           requires:
             - deps
+          filters:
+            branches:
+              ignore: master
+      - build-branch-fr:
+          requires:
+            - deps
+          filters:
+            branches:
+              ignore: master
       - tests:
           requires:
             - deps
@@ -151,10 +194,23 @@ workflows:
             - deps
       - deploy-branch:
           requires:
-            - build
+            - build-branch-en
+            - build-branch-fr
+          filters:
+            branches:
+              ignore: master
+      - build-master-en:
+          filters:
+            branches:
+              only: master
+      - build-master-fr:
+          filters:
+            branches:
+              only: master
       - deploy-master:
           filters:
             branches:
               only: master
           requires:
-            - build
+            - build-master-en
+            - build-master-fr
