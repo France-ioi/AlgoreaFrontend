@@ -9,7 +9,8 @@ describe('GroupCode', () => {
     it('should return expected values', () => {
       const g = codeAdditions(group);
       expect(g.codeExpiration).toBeUndefined();
-      expect(g.hasCodeUnused).toBeFalse();
+      expect(g.hasCodeNotSet).toBeTruthy(); // even if irrelevant
+      expect(g.hasCodeUnused).toBeFalsy();
       expect(g.hasCodeInUse).toBeFalsy();
       expect(g.hasCodeExpired).toBeFalsy();
       expect(g.codeFirstUseDate).toBeUndefined();
@@ -24,6 +25,7 @@ describe('GroupCode', () => {
     it('should return expected values', () => {
       const g = codeAdditions(group);
       expect(g.codeExpiration).toBeUndefined();
+      expect(g.hasCodeNotSet).toBeTruthy();
       expect(g.hasCodeUnused).toBeFalsy();
       expect(g.hasCodeInUse).toBeFalsy();
       expect(g.hasCodeExpired).toBeFalsy();
@@ -39,6 +41,7 @@ describe('GroupCode', () => {
     it('should return expected values', () => {
       const g = codeAdditions(group);
       expect(g.codeExpiration).toBeUndefined();
+      expect(g.hasCodeNotSet).toBeFalsy();
       expect(g.hasCodeUnused).toBeTruthy();
       expect(g.hasCodeInUse).toBeFalsy();
       expect(g.hasCodeExpired).toBeFalsy();
@@ -59,6 +62,7 @@ describe('GroupCode', () => {
     it('should return expected values', () => {
       const g = codeAdditions(group);
       expect(g.codeExpiration).toEqual(new Date('2020-01-01 10:02:03'));
+      expect(g.hasCodeNotSet).toBeFalsy();
       expect(g.hasCodeUnused).toBeFalsy();
       expect(g.hasCodeInUse).toBeTruthy();
       expect(g.hasCodeExpired).toBeFalsy();
@@ -83,6 +87,7 @@ describe('GroupCode', () => {
     it('should return expected values', () => {
       const g = codeAdditions(group);
       expect(g.codeExpiration).toEqual(new Date('2020-01-01 10:02:03'));
+      expect(g.hasCodeNotSet).toBeFalsy();
       expect(g.hasCodeUnused).toBeFalsy();
       expect(g.hasCodeInUse).toBeFalsy();
       expect(g.hasCodeExpired).toBeTruthy();
