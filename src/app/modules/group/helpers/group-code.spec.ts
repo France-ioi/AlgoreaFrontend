@@ -11,6 +11,7 @@ describe('GroupCode', () => {
       expect(g.codeExpiration).toBeUndefined();
       expect(g.hasCodeNotSet).toBeTruthy(); // even if irrelevant
       expect(g.hasCodeUnused).toBeFalsy();
+      expect(g.hasUnexpiringCode).toBeFalsy();
       expect(g.hasCodeInUse).toBeFalsy();
       expect(g.hasCodeExpired).toBeFalsy();
       expect(g.codeFirstUseDate).toBeUndefined();
@@ -27,6 +28,7 @@ describe('GroupCode', () => {
       expect(g.codeExpiration).toBeUndefined();
       expect(g.hasCodeNotSet).toBeTruthy();
       expect(g.hasCodeUnused).toBeFalsy();
+      expect(g.hasUnexpiringCode).toBeFalsy();
       expect(g.hasCodeInUse).toBeFalsy();
       expect(g.hasCodeExpired).toBeFalsy();
       expect(g.codeFirstUseDate).toBeUndefined();
@@ -43,6 +45,7 @@ describe('GroupCode', () => {
       expect(g.codeExpiration).toBeUndefined();
       expect(g.hasCodeNotSet).toBeFalsy();
       expect(g.hasCodeUnused).toBeTruthy();
+      expect(g.hasUnexpiringCode).toBeFalsy();
       expect(g.hasCodeInUse).toBeFalsy();
       expect(g.hasCodeExpired).toBeFalsy();
       expect(g.codeFirstUseDate).toBeUndefined();
@@ -64,6 +67,7 @@ describe('GroupCode', () => {
       expect(g.codeExpiration).toEqual(new Date('2020-01-01 10:02:03'));
       expect(g.hasCodeNotSet).toBeFalsy();
       expect(g.hasCodeUnused).toBeFalsy();
+      expect(g.hasUnexpiringCode).toBeFalsy();
       expect(g.hasCodeInUse).toBeTruthy();
       expect(g.hasCodeExpired).toBeFalsy();
       expect(g.codeFirstUseDate).toEqual(new Date('2020-01-01 09:00'));
@@ -88,6 +92,7 @@ describe('GroupCode', () => {
       const g = codeAdditions(group);
       expect(g.codeExpiration).toEqual(new Date('2020-01-01 10:02:03'));
       expect(g.hasCodeNotSet).toBeFalsy();
+      expect(g.hasUnexpiringCode).toBeFalsy();
       expect(g.hasCodeUnused).toBeFalsy();
       expect(g.hasCodeInUse).toBeFalsy();
       expect(g.hasCodeExpired).toBeTruthy();
@@ -96,6 +101,23 @@ describe('GroupCode', () => {
 
     afterEach(() => {
       jasmine.clock().uninstall();
+    });
+  });
+
+  describe('when the group has an unexpiring code', () => {
+    const group = { code: 'abcd', codeLifetime: null as Duration | null, codeExpiresAt: null as string|null };
+
+    it('should return expected values', () => {
+      const g = codeAdditions(group);
+      expect(g.codeExpiration).toBeUndefined();
+      expect(g.hasCodeNotSet).toBeFalsy();
+      expect(g.hasCodeUnused).toBeFalsy();
+      expect(g.hasUnexpiringCode).toBeTruthy();
+      expect(g.hasCodeInUse).toBeFalsy();
+      expect(g.hasCodeExpired).toBeFalsy();
+      expect(g.codeFirstUseDate).toBeUndefined();
+      expect(g.durationBeforeCodeExpiration).toBeUndefined();
+      expect(g.durationSinceFirstCodeUse).toBeUndefined();
     });
   });
 

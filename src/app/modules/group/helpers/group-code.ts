@@ -14,6 +14,7 @@ export interface CodeAdditions {
   codeExpiration?: Date;
   hasCodeNotSet: boolean;
   hasCodeUnused: boolean;
+  hasUnexpiringCode: boolean;
   hasCodeInUse: boolean;
   hasCodeExpired: boolean;
   codeFirstUseDate?: Date;
@@ -27,6 +28,7 @@ export function codeAdditions(g: CodeInfo): CodeAdditions {
     codeExpiration: codeExpiration(g),
     hasCodeNotSet: hasCodeNotSet(g),
     hasCodeUnused: hasCodeUnused(g),
+    hasUnexpiringCode: hasUnexpiringCode(g),
     hasCodeInUse: hasCodeInUse(g),
     hasCodeExpired: hasCodeExpired(g),
     codeFirstUseDate: codeFirstUseDate(g),
@@ -49,7 +51,10 @@ export function hasCodeNotSet(group: CodeInfo): boolean {
 }
 
 export function hasCodeUnused(group: CodeInfo): boolean {
-  return !!group.code && !group.codeExpiresAt;
+  return !!group.code && group.codeLifetime !== null && !group.codeExpiresAt;
+}
+export function hasUnexpiringCode(group: CodeInfo): boolean {
+  return !!group.code && group.codeLifetime === null;
 }
 
 export function hasCodeInUse(group: CodeInfo): boolean {
