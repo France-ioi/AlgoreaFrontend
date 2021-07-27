@@ -1,0 +1,43 @@
+@import "src/colors.scss";
+
+.menu {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+.menu-header {
+  background-color: $dark-color;
+}
+
+.menu-item {
+  display: flex;
+  margin: 0;
+  padding: .1rem .4rem;
+  align-items: center;
+  height: 3rem;
+  font-size: 1.2rem;
+  border-bottom: .1rem solid #4587d4;
+  color: #fff;
+
+  &:not(.no-hover):hover {
+    background-color: $base-dark-color-hover;
+  }
+
+  &.active {
+    font-weight: 700;
+  }
+}
+
+.menu-item-title {
+  flex: 1;
+  font-size: 1.2rem;
+}
+
+.menu-item-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 1rem;
+  width: 2.5rem;
+}

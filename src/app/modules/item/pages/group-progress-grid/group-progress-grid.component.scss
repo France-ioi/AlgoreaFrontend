@@ -10,6 +10,13 @@
     font-style: italic;
     text-align: center;
     font-size: medium;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    > * + * {
+      margin-left: 0.5rem;
+    }
   }
 
   .slanted-grid {
@@ -95,5 +102,11 @@
         }
       }
     }
+  }
+
+  .header-refresh {
+    vertical-align: bottom;
+    text-align: right;
+    padding-left: 0;
   }
 }

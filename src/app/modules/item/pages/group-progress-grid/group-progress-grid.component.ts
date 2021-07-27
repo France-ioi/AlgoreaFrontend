@@ -1,14 +1,16 @@
 import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
-import { animationFrames, forkJoin, merge, Observable, of, Subject, Subscription } from 'rxjs';
-import { map, scan, switchMap, takeUntil, takeWhile } from 'rxjs/operators';
+import { forkJoin, Observable, of, ReplaySubject, Subject, Subscription } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 import { canCurrentUserGrantGroupAccess } from 'src/app/modules/group/helpers/group-management';
 import { Group } from 'src/app/modules/group/http-services/get-group-by-id.service';
 import { GetGroupChildrenService } from 'src/app/modules/group/http-services/get-group-children.service';
-import { fetchingState, readyState } from 'src/app/shared/helpers/state';
 import { formatUser } from 'src/app/shared/helpers/user';
 import { GetGroupDescendantsService } from 'src/app/shared/http-services/get-group-descendants.service';
 import { GetGroupProgressService, TeamUserProgress } from 'src/app/shared/http-services/get-group-progress.service';
 import { GroupPermissionsService, Permissions } from 'src/app/shared/http-services/group-permissions.service';
+import { progressiveObservableFromList } from 'src/app/shared/operators/progressive-observable-from-list';
+import { mapToFetchState } from 'src/app/shared/operators/state';
+import { withPreviousFetchState } from 'src/app/shared/operators/with-previous-fetch-state';
 import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
 import { TypeFilter } from '../../components/composition-filter/composition-filter.component';
 import { GetItemChildrenService } from '../../http-services/get-item-children.service';
@@ -42,15 +44,6 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
 
   currentFilter = this.defaultFilter;
 
-  state: 'error' | 'ready' | 'fetching' = 'fetching';
-
-  data: Data = {
-    type: this.defaultFilter,
-    items: [],
-    rows: [],
-    can_access: false,
-  };
-
   dialogPermissions: {
     permissions: Permissions
     itemId: string,
@@ -81,9 +74,22 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
   dialog: 'loading'|'opened'|'closed' = 'closed';
   dialogTitle = '';
 
-  private dataFetching = new Subject<{ groupId: string, itemId: string, attemptId: string, filter: TypeFilter }>();
+  private dataFetching$ = new ReplaySubject<{ groupId: string, itemId: string, attemptId: string, filter: TypeFilter }>(1);
   private permissionsFetchingSubscription?: Subscription;
-  private destroy$ = new Subject<void>();
+  private refresh$ = new Subject<void>();
+
+  state$ = this.dataFetching$.pipe(
+    switchMap(params => this.getData(params.itemId, params.groupId, params.attemptId, params.filter).pipe(
+      mapToFetchState({ resetter: this.refresh$ })
+    )),
+    withPreviousFetchState(),
+    switchMap(([ previousState, state ]) => {
+      if (!state.data) return of(state);
+      return progressiveObservableFromList(state.data.rows, { initialIncrementSize: previousState.data?.rows.length }).pipe(
+        map(rows => ({ ...state, data: { ...state.data, rows } })),
+      );
+    }),
+  );
 
   constructor(
     private getItemChildrenService: GetItemChildrenService,
@@ -92,38 +98,19 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     private getGroupChildrenService: GetGroupChildrenService,
     private groupPermissionsService: GroupPermissionsService,
     private actionFeedbackService: ActionFeedbackService,
-  ) {
-    this.dataFetching.pipe(
-      switchMap(params =>
-        merge(
-          of(fetchingState()),
-          this.getData(params.itemId, params.groupId, params.attemptId, params.filter).pipe(map(readyState))
-        )
-      )).subscribe({
-      next: state => {
-        this.state = state.tag;
-        if (state.isReady) this.setDataByBatch(state.data);
-      },
-      error: _err => {
-        this.state = 'error';
-      }
-    });
-  }
+  ) {}
 
   ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-    this.dataFetching.complete();
+    this.dataFetching$.complete();
     this.permissionsFetchingSubscription?.unsubscribe();
+    this.refresh$.complete();
   }
 
   ngOnChanges(_changes: SimpleChanges): void {
-    if (!this.itemData || !this.itemData.currentResult || !this.group) {
-      this.state = 'error';
-      return;
-    }
+    if (!this.itemData || !this.itemData.currentResult || !this.group) throw new Error('properties are missing');
+
     this.dialog = 'closed';
-    this.dataFetching.next({
+    this.dataFetching$.next({
       groupId: this.group.id,
       itemId: this.itemData.item.id,
       attemptId: this.itemData.currentResult.attemptId,
@@ -151,20 +138,10 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     this.progressOverlay = undefined;
   }
 
-  private setDataByBatch(data: Data, size = 25): void {
-    const { rows } = data;
-    const maxCount = Math.ceil(rows.length / size);
-
-    this.data = { ...data, rows: [] };
-    animationFrames().pipe(
-      takeUntil(this.destroy$),
-      scan(count => count + 1, 0),
-      takeWhile(count => count <= maxCount),
-      map(count => count * size),
-    ).subscribe(lastIndex => {
-      this.data.rows = rows.slice(0, lastIndex);
-    });
+  refresh(): void {
+    this.refresh$.next();
   }
+
 
   private getProgress(itemId: string, groupId: string, filter: TypeFilter): Observable<TeamUserProgress[]> {
     switch (filter) {
@@ -227,14 +204,11 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
   }
 
   onFilterChange(typeFilter: TypeFilter): void {
-    if (!this.itemData || !this.itemData.currentResult || !this.group) {
-      this.state = 'error';
-      return;
-    }
+    if (!this.itemData || !this.itemData.currentResult || !this.group) throw new Error('properties are missing');
 
     if (typeFilter !== this.currentFilter) {
       this.currentFilter = typeFilter;
-      this.dataFetching.next({
+      this.dataFetching$.next({
         groupId: this.group.id,
         itemId: this.itemData.item.id,
         attemptId: this.itemData.currentResult.attemptId,

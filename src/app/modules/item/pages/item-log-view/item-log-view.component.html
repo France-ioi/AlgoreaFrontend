@@ -1,14 +1,22 @@
 <ng-container *ngIf="state$ | async as state">
-  <p-progressSpinner *ngIf="state.isFetching" [style]="{width: '3.3333rem', height: '3.3333rem'}"></p-progressSpinner>
+  <p-progressSpinner *ngIf="state.isFetching && !state.data" [style]="{width: '3.3333rem', height: '3.3333rem'}"></p-progressSpinner>
 
   <p *ngIf="state.isError" class="alg-error-message">
     <i class="fa fa-exclamation-triangle"></i>
     <span i18n>Unable to load the recent activity</span>
+    <p-button icon="pi pi-refresh" (click)="refresh()" styleClass="p-button-sm"></p-button>
   </p>
 
-  <ng-container *ngIf="state.isReady">
-    <p-table class="alg-table" [columns]="state.data.columns" [value]="state.data.rowData">
+  <ng-container *ngIf="state.data">
+    <p-table class="alg-table" [columns]="state.data.columns" [value]="state.data.rowData" [loading]="state.isFetching">
       <ng-template pTemplate="header" let-rowData let-columns>
+        <tr>
+          <th [colSpan]="columns.length">
+            <div class="header-container header-refresh">
+              <p-button icon="pi pi-refresh" (click)="refresh()"></p-button>
+            </div>
+          </th>
+        </tr>
         <tr *ngIf="rowData.length > 0">
           <ng-container *ngFor="let col of columns">
             <th>

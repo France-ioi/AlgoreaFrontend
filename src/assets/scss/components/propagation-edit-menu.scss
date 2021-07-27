@@ -1,0 +1,26 @@
+@import 'src/colors';
+@import 'src/geometry';
+
+.alg-propagation-edit-menu {
+  background: $base-color;
+
+  &:after {
+    border-bottom-color: $base-color;
+  }
+
+  &.p-overlaypanel-flipped {
+    &:after {
+      border-top-color: $base-color;
+    }
+  }
+
+  &.p-overlaypanel {
+    border-radius: $border-radius;
+  }
+
+  .p-overlaypanel-content {
+    padding: 0;
+    border-radius: 0.5rem;
+    overflow: hidden;
+  }
+}
