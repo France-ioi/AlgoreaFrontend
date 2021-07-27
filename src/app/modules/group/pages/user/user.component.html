@@ -6,20 +6,7 @@
 
   <ng-container *ngIf="state.isReady && state.data as user">
 
-    <div class="alg-page-header" *ngIf="!(fullFrameContent$ | async)">
-      <div class="alg-page-header-title">
-        {{ user | userCaption }}
-      </div>
-
-      <div class="alg-page-header-subtitle" *ngIf="user.webSite">
-        <i class="fa fa-external-link-alt"></i>
-        <a class="web-site alg-link base-color" [attr.href]="user.webSite" target="_blank">{{ user.webSite }}</a>
-      </div>
-
-      <div class="free-text alg-page-header-subtitle" *ngIf="user.freeText">
-        {{ user.freeText }}
-      </div>
-    </div>
+    <alg-user-header [user]="user" *ngIf="!(fullFrameContent$ | async)"></alg-user-header>
 
     <nav class="nav-tab" *ngIf="(currentUserGroupId$ | async) === user.groupId || isInitPagePersonal">
       <a
