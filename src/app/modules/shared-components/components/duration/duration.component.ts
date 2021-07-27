@@ -66,6 +66,7 @@ export class DurationComponent implements OnInit, ControlValueAccessor, Validato
   validate(control: AbstractControl): ValidationErrors | null {
     const duration = control.value as Duration | null;
     if (!duration) return null;
+    if (!duration.isValid()) return { invalidDuration: { invalidDuration: true } };
     if (duration.ms > this.maxDuration) return { max: { max: new Duration(this.maxDuration).toString() } };
     return null;
   }
@@ -101,7 +102,7 @@ export class DurationComponent implements OnInit, ControlValueAccessor, Validato
 
     const duration: Duration = Duration.fromHMS(+this.hours, +this.minutes, +this.seconds);
 
-    this.emitValue(duration.isValid() ? duration : null);
+    this.emitValue(duration);
   }
 
   setDefaultModelValues(): void {
