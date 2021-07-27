@@ -40,4 +40,5 @@
   </div>
 </div>
 
-<alg-input-error [form]="parentForm" [inputName]="name"></alg-input-error>
+<alg-input-error [control]="control"></alg-input-error>
+<div *ngIf="!control?.invalid">&nbsp;</div>

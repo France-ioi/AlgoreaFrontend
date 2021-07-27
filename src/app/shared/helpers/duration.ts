@@ -5,7 +5,8 @@ export const HOURS = 60 * MINUTES;
 export const DAYS = 24 * HOURS;
 export const MONTHS = 30 * DAYS;
 export const YEARS = 365 * DAYS;
-export const MAX_DURATION = 838*HOURS + 59*MINUTES + 59*SECONDS;
+export const MAX_TIME_FORMAT_DURATION = 838*HOURS + 59*MINUTES + 59*SECONDS;
+export const MAX_SECONDS_FORMAT_DURATION = 2147483647 * SECONDS;
 
 export class Duration {
 
@@ -59,6 +60,10 @@ export class Duration {
     return Math.floor(this.ms/MINUTES);
   }
 
+  seconds(): number {
+    return Math.floor(this.ms/SECONDS);
+  }
+
   getHMS(): [string, string, string] {
     return [
       Math.floor(this.ms/HOURS).toString(),
@@ -68,6 +73,7 @@ export class Duration {
   }
 
   isValid(): boolean {
-    return !isNaN(this.ms) && this.ms <= MAX_DURATION;
+    return !isNaN(this.ms);
   }
+
 }
