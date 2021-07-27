@@ -1,4 +1,4 @@
-<div class="alg-page-header">
+<div class="alg-page-header" *ngIf="!(fullFrameContent$ | async)">
   <span class="alg-page-header-title" i18n>My groups</span>
   <span class="alg-page-header-subtitle" i18n>All the groups you have joined and you manage</span>
 </div>

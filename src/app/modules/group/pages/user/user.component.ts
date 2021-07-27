@@ -8,6 +8,7 @@ import { contentInfo } from '../../../../shared/models/content/content-info';
 import { CurrentContentService } from '../../../../shared/services/current-content.service';
 import { UserSessionService } from '../../../../shared/services/user-session.service';
 import { formatUser } from '../../../../shared/helpers/user';
+import { LayoutService } from '../../../../shared/services/layout.service';
 
 @Component({
   selector: 'alg-user',
@@ -29,6 +30,8 @@ export class UserComponent implements OnInit, OnDestroy {
     map(userProfile => userProfile.groupId),
   );
 
+  fullFrameContent$ = this.layoutService.fullFrameContent$;
+
   private subscription?: Subscription;
 
   isInitPagePersonal = false;
@@ -39,6 +42,7 @@ export class UserComponent implements OnInit, OnDestroy {
     private getUserService: GetUserService,
     private userSessionService: UserSessionService,
     private currentContent: CurrentContentService,
+    private layoutService: LayoutService,
   ) {}
 
   ngOnInit(): void {
@@ -51,21 +55,26 @@ export class UserComponent implements OnInit, OnDestroy {
       this.state$,
     ])
       .pipe(
-        map(([ , state ]) => contentInfo({
-          breadcrumbs: {
-            category: $localize`Users`,
-            path: [
-              {
-                title: state.isFetching || state.isError ? '...' : formatUser(state.data),
-                navigateTo: this.router.createUrlTree([ 'groups', 'users', this.route.snapshot.params.id ]),
-              },
-              {
-                title: this.router.url.includes('personal-data') ? $localize`Personal info` : $localize`Progress`,
-              }
-            ],
-            currentPageIdx: 1,
-          }
-        }))
+        map(([ , state ]) => {
+          const title = state.isFetching || state.isError ? '...' : formatUser(state.data);
+
+          return contentInfo({
+            title,
+            breadcrumbs: {
+              category: $localize`Users`,
+              path: [
+                {
+                  title,
+                  navigateTo: this.router.createUrlTree([ 'groups', 'users', this.route.snapshot.params.id ]),
+                },
+                {
+                  title: this.router.url.includes('personal-data') ? $localize`Personal info` : $localize`Progress`,
+                }
+              ],
+              currentPageIdx: 1,
+            }
+          });
+        })
       )
       .subscribe(contentInfo => {
         this.currentContent.current.next(contentInfo);
