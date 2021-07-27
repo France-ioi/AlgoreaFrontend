@@ -23,9 +23,9 @@ export class GroupJoinByCodeComponent implements OnChanges {
   processing = false;
 
   codeLifetimeOptions = [
-    { label: $localize`Infinite`, value: 'infinite' },
-    { label: $localize`Usable once`, value: 'usable_once' },
-    { label: $localize`Custom`, value: 'custom' },
+    { label: $localize`Infinite`, value: 'infinite', tooltip: 'This code will never expire (reset current expiration)' },
+    { label: $localize`Usable once`, value: 'usable_once', tooltip: 'This code will be usable only once (reset current expiration)' },
+    { label: $localize`Custom`, value: 'custom', tooltip: 'This code will expire after the given duration (reset current expiration)' },
   ];
   customCodeLifetimeOption = this.codeLifetimeOptions.findIndex(({ value }) => value === 'custom');
   selectedCodeLifetimeOption = 0;

@@ -64,6 +64,9 @@
             class="submit-duration-button"
             (click)="codeLifetimeDuration && submitCodeLifetime(codeLifetimeDuration)"
             [disabled]="processing || !codeLifetimeDuration || !control.dirty || codeLifetimeDuration.ms === initialCodeLifetime?.ms"
+            i18n-pTooltip pTooltip="This code will expire after the given duration (reset current expiration)"
+            tooltipPosition="right"
+            tooltipEvent="hover"
           ></alg-button>
         </div>
       </div>
