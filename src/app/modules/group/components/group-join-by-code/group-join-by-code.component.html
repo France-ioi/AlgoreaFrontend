@@ -10,15 +10,16 @@
     <div class="code-state" *ngIf="codeAdditions">
       <span class="label" *ngIf="codeAdditions.hasCodeNotSet" i18n>There is currently no code set.</span>
       <span class="label" *ngIf="codeAdditions.hasCodeUnused" i18n>This code has not been used yet (or usage resetted).</span>
-      <span
-        class="label green"
-        *ngIf="codeAdditions.hasCodeInUse && codeAdditions.durationSinceFirstCodeUse && codeAdditions.durationBeforeCodeExpiration"
-        i18n
-      >
-        This code has been activated {{ codeAdditions.durationSinceFirstCodeUse | toMin | number:'1.0-0' }} minutes ago,
-        it will be disabled in {{ codeAdditions.durationBeforeCodeExpiration | toMin | number:'1.0-0' }} minutes.
-      </span>
-      <span class="label red" *ngIf="codeAdditions.hasCodeExpired" i18n>
+      <ng-container *ngIf="codeAdditions.hasCodeInUse && codeAdditions.durationSinceFirstCodeUse && codeAdditions.durationBeforeCodeExpiration">
+        <span class="label green" i18n *ngIf="codeAdditions.durationSinceFirstCodeUse.ms > 0; else disabledUntil">
+          This code has been activated {{ codeAdditions.durationSinceFirstCodeUse | toMin | number:'1.0-0' }} minutes ago,
+          it will be disabled in {{ codeAdditions.durationBeforeCodeExpiration | toMin | number:'1.0-0' }} minutes.
+        </span>
+        <ng-template #disabledUntil>
+          <span class="label green" i18n>This code will be disabled in {{ codeAdditions.durationBeforeCodeExpiration | toMin | number:'1.0-0' }} minutes.</span>
+        </ng-template>
+      </ng-container>
+      <span class="label red" *ngIf="!codeAdditions.hasCodeNotSet && codeAdditions.hasCodeExpired" i18n>
         This code has expired on {{ codeAdditions.codeExpiration | date:'medium' }}
       </span>
       <alg-button
