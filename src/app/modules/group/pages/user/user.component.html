@@ -6,7 +6,7 @@
 
   <ng-container *ngIf="state.isReady && state.data as user">
 
-    <div class="alg-page-header">
+    <div class="alg-page-header" *ngIf="!(fullFrameContent$ | async)">
       <div class="alg-page-header-title">
         {{ user | userCaption }}
       </div>
