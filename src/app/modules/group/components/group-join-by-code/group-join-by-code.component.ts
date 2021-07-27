@@ -58,7 +58,7 @@ export class GroupJoinByCodeComponent implements OnChanges {
   generateNewCode(): void {
     if (!this.group) return;
 
-    // Disable UI
+    // disable UI
     this.processing = true;
 
     // call code refresh service, then group refresh data
@@ -84,7 +84,7 @@ export class GroupJoinByCodeComponent implements OnChanges {
 
     // call code refresh service, then group refresh data
     this.groupActionsService.updateGroup(this.group.id, {
-      code_lifetime: newCodeLifetime instanceof Duration ? Math.round(newCodeLifetime.ms / 1000) : newCodeLifetime,
+      code_lifetime: newCodeLifetime instanceof Duration ? newCodeLifetime.seconds() : newCodeLifetime,
       code_expires_at: null,
     }).subscribe({
       next: () => {

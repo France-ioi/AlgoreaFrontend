@@ -450,6 +450,12 @@
           <context context-type="sourcefile">src/app/modules/shared-components/components/form-error/form-error.component.html</context>
           <context context-type="linenumber">6</context>
         </context-group>
+      </trans-unit><trans-unit id="7550645954278337301" datatype="html">
+        <source>Invalid duration</source><target state="new">Invalid duration</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/shared-components/components/form-error/form-error.component.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
       </trans-unit><trans-unit id="5322922947143379212" datatype="html">
         <source>Chapter</source><target state="translated">Chapitre</target>
 
@@ -1287,13 +1293,13 @@
       </trans-unit><trans-unit id="4106690181112187643" datatype="html">
         <source>A new code has been generated</source><target state="translated">Un nouveau code a été généré</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.ts</context><context context-type="linenumber">98</context></context-group></trans-unit><trans-unit id="2868875466439101736" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.ts</context><context context-type="linenumber">67</context></context-group></trans-unit><trans-unit id="2868875466439101736" datatype="html">
         <source>The validity has been changed</source><target state="translated">La validité a été modifiée</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.ts</context><context context-type="linenumber">122</context></context-group></trans-unit><trans-unit id="844587251870961613" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.ts</context><context context-type="linenumber">91</context></context-group></trans-unit><trans-unit id="844587251870961613" datatype="html">
         <source>Users will not be able to join with the former code.</source><target state="translated">Les utilisateurs ne pourront plus rejoindre le groupe avec le code précédent.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.ts</context><context context-type="linenumber">142</context></context-group></trans-unit><trans-unit id="690250592654745090" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.ts</context><context context-type="linenumber">111</context></context-group></trans-unit><trans-unit id="690250592654745090" datatype="html">
         <source>, and</source><target state="new">, and</target>
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-links/group-links.component.html</context><context context-type="linenumber">14</context></context-group></trans-unit><trans-unit id="9128077364077202523" datatype="html">
@@ -1312,10 +1318,10 @@
         <source>This code has not been used yet (or usage resetted).</source><target state="translated">Ce code n'a pas encore été utilisé (ou a été réinitialisé).</target>
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="3593273375283998688" datatype="html">
-        <source> This code has been activated <x id="INTERPOLATION" equiv-text="{{ groupCodeInfo.durationSinceFirstCodeUse | toMin | number:'1.0-0' }}"/> minutes ago, it will be disabled in <x id="INTERPOLATION_1" equiv-text="{{ groupCodeInfo.durationBeforeCodeExpiration | toMin | number:'1.0-0' }}"/> minutes. </source><target state="translated"> Ce code a été activé il y a <x id="INTERPOLATION" equiv-text="tivated {{ groupExt.durationSinceFirstCodeUse! | toMin | number:'1"/> minutes, il sera désactivé dans <x id="INTERPOLATION_1" equiv-text=" be disabled in {{ groupExt.durationBeforeCodeExpiration! | toMin | n"/> minutes. </target>
+        <source> This code has been activated <x id="INTERPOLATION" equiv-text="{{ codeAdditions.durationSinceFirstCodeUse | toMin | number:'1.0-0' }}"/> minutes ago, it will be disabled in <x id="INTERPOLATION_1" equiv-text="{{ codeAdditions.durationBeforeCodeExpiration | toMin | number:'1.0-0' }}"/> minutes. </source><target state="translated"> Ce code a été activé il y a <x id="INTERPOLATION" equiv-text="tivated {{ groupExt.durationSinceFirstCodeUse! | toMin | number:'1"/> minutes, il sera désactivé dans <x id="INTERPOLATION_1" equiv-text=" be disabled in {{ groupExt.durationBeforeCodeExpiration! | toMin | n"/> minutes. </target>
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.html</context><context context-type="linenumber">17</context></context-group></trans-unit><trans-unit id="2565482429239064406" datatype="html">
-        <source> This code has expired on <x id="INTERPOLATION" equiv-text="{{ groupCodeInfo.codeExpiration | date:'medium' }}"/> </source><target state="translated"> Ce code a expiré le <x id="INTERPOLATION" equiv-text="ired on {{ groupExt.codeExpiration | date:'m"/></target>
+        <source> This code has expired on <x id="INTERPOLATION" equiv-text="{{ codeAdditions.codeExpiration | date:'medium' }}"/> </source><target state="translated"> Ce code a expiré le <x id="INTERPOLATION" equiv-text="ired on {{ groupExt.codeExpiration | date:'m"/></target>
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.html</context><context context-type="linenumber">21</context></context-group></trans-unit><trans-unit id="8186013988289067040" datatype="html">
         <source>Code</source><target state="translated">Code</target>
@@ -1325,23 +1331,14 @@
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.html</context><context context-type="linenumber">46</context></context-group></trans-unit><trans-unit id="872456877046948009" datatype="html">
         <source>Infinite</source><target state="new">Infinite</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.ts</context>
-          <context context-type="linenumber">48</context>
-        </context-group>
-      </trans-unit><trans-unit id="3604869065785906427" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.ts</context><context context-type="linenumber">26</context></context-group></trans-unit><trans-unit id="3604869065785906427" datatype="html">
         <source>Usable once</source><target state="new">Usable once</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.ts</context>
-          <context context-type="linenumber">49</context>
-        </context-group>
-      </trans-unit><trans-unit id="7590013429208346303" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.ts</context><context context-type="linenumber">27</context></context-group></trans-unit><trans-unit id="7590013429208346303" datatype="html">
         <source>Custom</source><target state="new">Custom</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.ts</context>
-          <context context-type="linenumber">50</context>
-        </context-group>
-      </trans-unit><trans-unit id="8388874893104562881" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.ts</context><context context-type="linenumber">28</context></context-group></trans-unit><trans-unit id="8388874893104562881" datatype="html">
         <source>You are not allowed to see this page.</source><target state="translated">Vous n'êtes pas autorisé à visiter cette page.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/group/components/group-no-permission/group-no-permission.component.html</context>
