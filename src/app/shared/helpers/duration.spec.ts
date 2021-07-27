@@ -11,6 +11,10 @@ describe('duration', () => {
     expect(Duration.fromString(DURATION_STRING)).toEqual(duration);
   });
 
+  it('should return duration object from days-hours-minutes tuple', () => {
+    expect(Duration.fromDHM(1, 2, 30).getDHM()).toEqual([ '1', '2', '30' ]);
+  });
+
   it('should return valid state', () => {
     expect(new Duration(MAX_TIME_FORMAT_DURATION).isValid()).toBeTrue();
   });
@@ -37,5 +41,9 @@ describe('duration', () => {
 
   it('should return result in seconds', () => {
     expect(Duration.fromString(DURATION_STRING).seconds()).toEqual(DURATION_STRING_IN_MS / 1000);
+  });
+
+  it('should return days, hours, minutes tuple', () => {
+    expect(Duration.fromHMS(24 + 2, 30, 0).getDHM()).toEqual([ '1', '2', '30' ]);
   });
 });

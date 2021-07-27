@@ -26,6 +26,10 @@ export class Duration {
     return new Duration(hours*HOURS + minutes*MINUTES + seconds*SECONDS);
   }
 
+  static fromDHM(days: number, hours: number, minutes: number): Duration {
+    return new Duration(days*DAYS + hours*HOURS + minutes*MINUTES);
+  }
+
   static fromSeconds(seconds: number): Duration {
     return new Duration(seconds * SECONDS);
   }
@@ -69,6 +73,14 @@ export class Duration {
       Math.floor(this.ms/HOURS).toString(),
       Math.floor(this.ms%HOURS/MINUTES).toString(),
       Math.floor(this.ms%MINUTES/SECONDS).toString()
+    ];
+  }
+
+  getDHM(): [string, string, string] {
+    return [
+      Math.floor(this.ms/DAYS).toString(),
+      Math.floor(this.ms%DAYS/HOURS).toString(),
+      Math.floor(this.ms%HOURS/MINUTES).toString(),
     ];
   }
 
