@@ -55,7 +55,9 @@
             class="alg-duration"
             ngDefaultControl
             [(ngModel)]="codeLifetimeDuration"
+            format="seconds"
             #control="ngModel"
+            required
           ></alg-duration>
           <alg-button
             icon="fa fa-check"
