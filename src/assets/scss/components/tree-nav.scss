@@ -256,12 +256,17 @@
 
           .label-container {
             display: flex;
+            align-items: center;
             flex: 1;
             max-width: 100%;
+            height: 100%;
           }
 
           .node-state {
+            display: flex;
+            align-items: center;
             margin-left: auto;
+            height: 100%;
 
             i {
               margin-left: 0.5rem;

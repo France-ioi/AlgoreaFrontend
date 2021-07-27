@@ -6,6 +6,12 @@ $border-radius: .5rem;
   display: block;
 }
 
+.spinner {
+  display: flex;
+  justify-content: center;
+  padding: 1rem;
+}
+
 .error {
   color: $base-bk-color;
 
