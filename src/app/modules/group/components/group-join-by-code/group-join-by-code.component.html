@@ -63,7 +63,7 @@
             icon="fa fa-check"
             class="submit-duration-button"
             (click)="codeLifetimeDuration && submitCodeLifetime(codeLifetimeDuration)"
-            [disabled]="processing || !codeLifetimeDuration || !control.dirty"
+            [disabled]="processing || !codeLifetimeDuration || !control.dirty || codeLifetimeDuration.ms === initialCodeLifetime?.ms"
           ></alg-button>
         </div>
       </div>
