@@ -11,7 +11,7 @@ import {
 } from '@angular/forms';
 import { Duration, MAX_SECONDS_FORMAT_DURATION, MAX_TIME_FORMAT_DURATION } from 'src/app/shared/helpers/duration';
 
-const MAX_HOURS_VALUE = 24;
+const MAX_HOURS_VALUE = 23;
 const MAX_MINUTES_VALUE = 59;
 
 @Component({
