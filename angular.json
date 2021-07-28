@@ -52,7 +52,14 @@
             "namedChunks": true
           },
           "configurations": {
-            "production": {
+            "en": {
+              "localize": [ "en" ]
+            },
+            "fr": {
+              "localize": [ "fr" ]
+            },
+            "production-en": {
+              "localize": [ "en" ],
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -78,64 +85,7 @@
                 }
               ]
             },
-            "ci": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.ci.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "namedChunks": false,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb"
-                }
-              ]
-            },
-            "en-dev": {
-              "localize": [ "en" ]
-            },
-            "fr-dev": {
-              "localize": [ "fr" ]
-            },
-            "en": {
-              "localize": [ "en" ],
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "namedChunks": false,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb"
-                }
-              ]
-            },
-            "fr": {
+            "production-fr": {
               "localize": [ "fr" ],
               "fileReplacements": [
                 {
@@ -145,6 +95,7 @@
               ],
               "optimization": true,
               "outputHashing": "all",
+              "sourceMap": false,
               "namedChunks": false,
               "extractLicenses": true,
               "vendorChunk": false,
@@ -166,17 +117,17 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "algorea:build:en-dev"
+            "browserTarget": "algorea:build:en"
           },
           "configurations": {
-            "production": {
-              "browserTarget": "algorea:build"
+            "production-en": {
+              "browserTarget": "algorea:build:production-en"
             },
             "fr": {
-              "browserTarget": "algorea:build:fr-dev"
+              "browserTarget": "algorea:build:fr"
             },
             "en": {
-              "browserTarget": "algorea:build:en-dev"
+              "browserTarget": "algorea:build:en"
             }
           }
         },
@@ -225,8 +176,8 @@
             "devServerTarget": "algorea:serve"
           },
           "configurations": {
-            "production": {
-              "devServerTarget": "algorea:serve:production"
+            "production-en": {
+              "devServerTarget": "algorea:serve:production-en"
             }
           }
         }
