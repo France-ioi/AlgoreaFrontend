@@ -139,7 +139,7 @@ export class ItemChildrenEditComponent implements OnChanges {
       ...child,
       scoreWeight: DEFAULT_SCORE_WEIGHT,
       isVisible: true,
-      contentViewPropagation: 'as_info',
+      contentViewPropagation: child?.permissions?.canGrantView === 'none' ? 'none' : 'as_info',
       permissions: child.permissions || {
         canView: 'solution',
         canEdit: 'all_with_grant',
