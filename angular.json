@@ -103,6 +103,12 @@
                 }
               ]
             },
+            "en-dev": {
+              "localize": [ "en" ]
+            },
+            "fr-dev": {
+              "localize": [ "fr" ]
+            },
             "en": {
               "localize": [ "en" ],
               "fileReplacements": [
@@ -160,17 +166,17 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "algorea:build:en"
+            "browserTarget": "algorea:build:en-dev"
           },
           "configurations": {
             "production": {
               "browserTarget": "algorea:build"
             },
             "fr": {
-              "browserTarget": "algorea:build:fr"
+              "browserTarget": "algorea:build:fr-dev"
             },
             "en": {
-              "browserTarget": "algorea:build:en"
+              "browserTarget": "algorea:build:en-dev"
             }
           }
         },
