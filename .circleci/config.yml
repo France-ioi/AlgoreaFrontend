@@ -75,7 +75,7 @@ jobs:
     steps:
       - attach_workspace:
           at: ./
-      - run: npx ng build --configuration en --base-href /branch/<< pipeline.git.branch >>/en/ --deploy-url //d39se6ub293skr.cloudfront.net/branch/<< pipeline.git.branch >>/en/ --progress=false
+      - run: npx ng build --configuration en --base-href /branch/<< pipeline.git.branch >>/ --deploy-url //d39se6ub293skr.cloudfront.net/branch/<< pipeline.git.branch >>/en/ --progress=false
       - run: echo '<html><head><script>window.location.replace("en/");</script></head></html>' > dist/algorea/index.html
       - persist_to_workspace:
           root: ./
@@ -87,7 +87,7 @@ jobs:
     steps:
       - attach_workspace:
           at: ./
-      - run: npx ng build --configuration fr --base-href /branch/<< pipeline.git.branch >>/fr/ --deploy-url //d39se6ub293skr.cloudfront.net/branch/<< pipeline.git.branch >>/fr/ --progress=false
+      - run: npx ng build --configuration fr --base-href /branch/<< pipeline.git.branch >>/ --deploy-url //d39se6ub293skr.cloudfront.net/branch/<< pipeline.git.branch >>/fr/ --progress=false
       - persist_to_workspace:
           root: ./
           paths:
@@ -98,7 +98,7 @@ jobs:
     steps:
       - attach_workspace:
           at: ./
-      - run: npx ng build --configuration en --base-href /en/ --deploy-url //d39se6ub293skr.cloudfront.net/en/ --progress=false
+      - run: npx ng build --configuration en --base-href / --deploy-url //d39se6ub293skr.cloudfront.net/en/ --progress=false
       - run: echo '<html><head><script>window.location.replace("en/");</script></head></html>' > dist/algorea/index.html
       - persist_to_workspace:
           root: ./
@@ -110,7 +110,7 @@ jobs:
     steps:
       - attach_workspace:
           at: ./
-      - run: npx ng build --configuration fr --base-href /fr/ --deploy-url //d39se6ub293skr.cloudfront.net/fr/ --progress=false
+      - run: npx ng build --configuration fr --base-href / --deploy-url //d39se6ub293skr.cloudfront.net/fr/ --progress=false
       - persist_to_workspace:
           root: ./
           paths:
