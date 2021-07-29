@@ -15,14 +15,14 @@
   </div>
 
   <alg-page-navigator
-      *ngIf="true"
-      [allowEditing]="false"
-      [allowWatching]="user.currentUserCanWatchUser && !user.isCurrentUser"
-      [isWatched]="!!(isCurrentGroupWatched$ | async)"
-      [allowFullScreen]="false"
-      navigationMode="nextAndPrev"
-      (edit)="onEditButtonClicked()"
-      (watch)="onStartWatchButtonClicked()"
-      (stopWatch)="onStopWatchButtonClicked()"
+    *ngIf="true"
+    [allowEditing]="false"
+    [allowWatching]="user.currentUserCanWatchUser && !user.isCurrentUser"
+    [isWatched]="!!(isCurrentGroupWatched$ | async)"
+    [allowFullScreen]="false"
+    navigationMode="nextAndPrev"
+    (edit)="onEditButtonClicked()"
+    (watch)="onStartWatchButtonClicked()"
+    (stopWatch)="onStopWatchButtonClicked()"
   ></alg-page-navigator>
 </div>
