@@ -13,6 +13,9 @@ export const userDecoder = pipe(
     tempUser: D.boolean,
     webSite: D.nullable(D.string),
     freeText: D.nullable(D.string),
+    isCurrentUser: D.boolean,
+    currentUserCanWatchUser: D.boolean,
+    currentUserCanGrantUserAccess: D.boolean,
   }),
   D.intersect(
     D.partial({

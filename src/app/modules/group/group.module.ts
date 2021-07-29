@@ -40,6 +40,7 @@ import { GroupDeleteService } from './services/group-delete.service';
 import { GroupRemoveButtonComponent } from './components/group-remove-button/group-remove-button.component';
 import { GroupLinksComponent } from './components/group-links/group-links.component';
 import { UserComponent } from './pages/user/user.component';
+import { UserHeaderComponent } from './components/user-header/user-header.component';
 import { GroupLogViewComponent } from './components/group-log-view/group-log-view.component';
 import { AddGroupComponent } from './components/add-group/add-group.component';
 
@@ -73,6 +74,7 @@ import { AddGroupComponent } from './components/add-group/add-group.component';
     GroupIndicatorComponent,
     GroupLinksComponent,
     UserComponent,
+    UserHeaderComponent,
     GroupLogViewComponent,
     AddGroupComponent,
   ],
