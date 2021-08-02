@@ -148,6 +148,7 @@
   <!-- "group-folder" type -->
   <ng-template let-node pTemplate="group">
     <span
+      id="nav-{{ node.data.element.id }}"
       class="node-tree-item folder"
       [ngClass]="{ expanded: node.expanded, locked: node.locked, current: node.data && node.data.current }"
     >

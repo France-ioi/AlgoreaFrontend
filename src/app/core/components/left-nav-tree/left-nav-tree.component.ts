@@ -1,4 +1,12 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  SimpleChanges
+} from '@angular/core';
 import { TreeNode } from 'primeng/api';
 import { defaultAttemptId } from 'src/app/shared/helpers/attempts';
 import { ItemTypeCategory } from 'src/app/shared/helpers/item-type';
@@ -7,8 +15,11 @@ import { ItemRouter } from 'src/app/shared/routing/item-router';
 import { isANavMenuItem } from '../../services/left-nav-loading/item-nav-tree-types';
 import { NavTreeData, NavTreeElement } from '../../services/left-nav-loading/nav-tree-data';
 import { Router } from '@angular/router';
+import { combineLatest, Subscription } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
+import { LeftNavScrollService } from '../../services/left-nav-scroll.service';
 
-type LeftNavTreeNode = TreeNode<{
+export type LeftNavTreeNode = TreeNode<{
   element: NavTreeElement,
   path: string[],
   status: 'ready'|'loading'|'error',
@@ -20,20 +31,40 @@ type LeftNavTreeNode = TreeNode<{
   templateUrl: './left-nav-tree.component.html',
   styleUrls: [ './left-nav-tree.component.scss' ]
 })
-export class LeftNavTreeComponent implements OnChanges {
+export class LeftNavTreeComponent implements OnInit, OnChanges, OnDestroy {
   @Input() data?: NavTreeData<NavTreeElement>;
   @Input() elementType: ItemTypeCategory | 'group' = 'activity';
 
+  subscription?: Subscription;
+  selectNodeIdEvent = new EventEmitter<string>();
+  componentStateChange = new EventEmitter<void>();
   nodes: LeftNavTreeNode[] = [];
 
   constructor(
     private itemRouter: ItemRouter,
     private groupRouter: GroupRouter,
     private router: Router,
+    private leftNavScrollService: LeftNavScrollService,
   ) {}
+
+  ngOnInit(): void {
+    this.subscription = combineLatest([
+      this.selectNodeIdEvent.asObservable(),
+      this.componentStateChange.asObservable(),
+    ]).pipe(
+      debounceTime(500),
+    ).subscribe(([ id ]) => {
+      this.leftNavScrollService.scrollToMenuItemForId(id);
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.subscription?.unsubscribe();
+  }
 
   ngOnChanges(_changes: SimpleChanges): void {
     this.nodes = this.data ? this.mapItemToNodes(this.data) : [];
+    this.componentStateChange.emit();
   }
 
   private mapItemToNodes(data: NavTreeData<NavTreeElement>): LeftNavTreeNode[] {
@@ -87,6 +118,7 @@ export class LeftNavTreeComponent implements OnChanges {
 
   private navigateToNode(node: LeftNavTreeNode): void {
     if (!node.data) throw new Error('Unexpected: missing node data');
+    this.selectNodeIdEvent.emit(node.data.element.id);
     const routeBase = { id: node.data.element.id, path: node.data.path };
     switch (this.elementType) {
       case 'group':
