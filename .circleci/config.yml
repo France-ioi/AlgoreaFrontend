@@ -89,11 +89,10 @@ jobs:
       - build:
           lang: en
           path: /branch/<< pipeline.git.branch >>/
-      - run: echo '<html><head><script>window.location.replace("en/");</script></head></html>' > dist/algorea/index.html
       - persist_to_workspace:
           root: ./
           paths:
-            - dist/algorea
+            - dist/algorea/en
 
   build-branch-fr:
     docker: *node_image
@@ -106,7 +105,7 @@ jobs:
       - persist_to_workspace:
           root: ./
           paths:
-            - dist/algorea
+            - dist/algorea/fr
 
   build-master-en:
     docker: *node_image
@@ -116,11 +115,10 @@ jobs:
       - build:
           lang: en
           path: /
-      - run: echo '<html><head><script>window.location.replace("en/");</script></head></html>' > dist/algorea/index.html
       - persist_to_workspace:
           root: ./
           paths:
-            - dist/algorea
+            - dist/algorea/en
 
   build-master-fr:
     docker: *node_image
@@ -133,7 +131,7 @@ jobs:
       - persist_to_workspace:
           root: ./
           paths:
-            - dist/algorea
+            - dist/algorea/fr
 
   tests:
     docker: &node_browsers_image
@@ -167,6 +165,7 @@ jobs:
     steps:
       - attach_workspace:
           at: ./
+      - run: echo '<html><head><script>window.location.replace("en/");</script></head></html>' > dist/algorea/index.html
       - deploy-to-s3:
           from: ./dist/algorea/
           bucket: $DEPLOYMENT_BUCKET
@@ -180,6 +179,7 @@ jobs:
     steps:
       - attach_workspace:
           at: ./
+      - run: echo '<html><head><script>window.location.replace("en/");</script></head></html>' > dist/algorea/index.html
       - deploy-to-s3:
           from: ./dist/algorea/
           bucket: $DEPLOYMENT_BUCKET
