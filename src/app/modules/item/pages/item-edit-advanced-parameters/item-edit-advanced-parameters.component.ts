@@ -3,6 +3,7 @@ import { FormGroup, Validators } from '@angular/forms';
 import { DropdownOption } from 'src/app/modules/shared-components/components/dropdown/dropdown.component';
 import { Item } from '../../http-services/get-item-by-id.service';
 import { HOURS } from 'src/app/shared/helpers/duration';
+import { DEFAULT_ENTERING_TIME_MAX, DEFAULT_ENTERING_TIME_MIN } from '../item-edit/item-edit.component';
 
 @Component({
   selector: 'alg-item-edit-advanced-parameters',
@@ -60,18 +61,18 @@ export class ItemEditAdvancedParametersComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    this.handleDurationValidation();
+    this.handleDurationValidators();
   }
 
   onRequiresExplicitEntryChange(): void {
-    this.handleDurationValidation();
+    this.handleDurationValidators();
   }
 
   onDurationEnabledChange(): void {
-    this.handleDurationValidation();
+    this.handleDurationValidators();
   }
 
-  handleDurationValidation(): void {
+  handleDurationValidators(): void {
     const requiresExplicitEntryValue = this.parentForm?.get('requires_explicit_entry')?.value as boolean;
     const durationEnabledValue = this.parentForm?.get('duration_enabled')?.value as boolean;
     const enableValidation = requiresExplicitEntryValue && durationEnabledValue;
@@ -86,11 +87,15 @@ export class ItemEditAdvancedParametersComponent implements OnInit {
       return;
     }
 
-    this.parentForm?.get('entering_time_min')?.patchValue(
-      new Date()
-    );
+    const enteringTimeMin = this.parentForm?.get('entering_time_min')?.value as Date;
 
-    this.computeEnteringTimeMaxValue();
+    if (enteringTimeMin.getTime() === new Date(DEFAULT_ENTERING_TIME_MIN).getTime()) {
+      this.parentForm?.get('entering_time_min')?.patchValue(
+        new Date()
+      );
+
+      this.computeEnteringTimeMaxValue();
+    }
   }
 
   onEnteringTimeMaxEnabledChange(event: boolean): void {
@@ -102,12 +107,17 @@ export class ItemEditAdvancedParametersComponent implements OnInit {
   }
 
   computeEnteringTimeMaxValue(): void {
-    const enteringTimeMinEnabled = this.parentForm?.get('entering_time_min_enabled')?.value as boolean;
-    const enteringTimeMin = this.parentForm?.get('entering_time_min')?.value as string;
-    const enteringTimeMinDate = enteringTimeMinEnabled ? new Date(enteringTimeMin) : new Date();
-    this.parentForm?.get('entering_time_max')?.patchValue(
-      new Date(enteringTimeMinDate.getTime() + HOURS)
-    );
+    const enteringTimeMaxEnabled = this.parentForm?.get('entering_time_max_enabled')?.value as boolean;
+    const enteringTimeMax = this.parentForm?.get('entering_time_max')?.value as Date;
+
+    if (enteringTimeMaxEnabled && enteringTimeMax.getTime() === new Date(DEFAULT_ENTERING_TIME_MAX).getTime()) {
+      const enteringTimeMinEnabled = this.parentForm?.get('entering_time_min_enabled')?.value as boolean;
+      const enteringTimeMin = enteringTimeMinEnabled ? this.parentForm?.get('entering_time_min')?.value as Date : new Date();
+
+      this.parentForm?.get('entering_time_max')?.patchValue(
+        new Date(enteringTimeMin.getTime() + HOURS)
+      );
+    }
   }
 
   onDateChange(): void {
