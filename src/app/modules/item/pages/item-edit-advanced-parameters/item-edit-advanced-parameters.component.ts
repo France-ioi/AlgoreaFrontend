@@ -113,9 +113,10 @@ export class ItemEditAdvancedParametersComponent implements OnInit {
     if (enteringTimeMaxEnabled && enteringTimeMax.getTime() === new Date(DEFAULT_ENTERING_TIME_MAX).getTime()) {
       const enteringTimeMinEnabled = this.parentForm?.get('entering_time_min_enabled')?.value as boolean;
       const enteringTimeMin = enteringTimeMinEnabled ? this.parentForm?.get('entering_time_min')?.value as Date : new Date();
+      const newTimeMax = enteringTimeMinEnabled ? enteringTimeMin.getTime() + HOURS : enteringTimeMin.getTime();
 
       this.parentForm?.get('entering_time_max')?.patchValue(
-        new Date(enteringTimeMin.getTime() + HOURS)
+        new Date(newTimeMax)
       );
     }
   }
