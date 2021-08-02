@@ -42,6 +42,17 @@ commands:
             --acl public-read
             --cache-control 'max-age=10'
 
+  build:
+    parameters:
+      # the 2 letters deployment language
+      lang:
+        type: string
+      # path (from the root of the domain) where it will be deployed (with heading and trailing slash)
+      path:
+        type: string
+    steps:
+      - run: npx ng build --configuration production-<< parameters.lang >> --base-href << parameters.path >> --deploy-url //d39se6ub293skr.cloudfront.net/<< parameters.path >><< parameters.lang >>/ --progress=false
+
 jobs:
   # deps has to be run before the other jobs and basically run "npm install" and cache it
   deps:
@@ -75,7 +86,9 @@ jobs:
     steps:
       - attach_workspace:
           at: ./
-      - run: npx ng build --configuration production-en --base-href /branch/<< pipeline.git.branch >>/ --deploy-url //d39se6ub293skr.cloudfront.net/branch/<< pipeline.git.branch >>/en/ --progress=false
+      - build:
+          lang: en
+          path: /branch/<< pipeline.git.branch >>/
       - run: echo '<html><head><script>window.location.replace("en/");</script></head></html>' > dist/algorea/index.html
       - persist_to_workspace:
           root: ./
@@ -87,7 +100,9 @@ jobs:
     steps:
       - attach_workspace:
           at: ./
-      - run: npx ng build --configuration production-fr --base-href /branch/<< pipeline.git.branch >>/ --deploy-url //d39se6ub293skr.cloudfront.net/branch/<< pipeline.git.branch >>/fr/ --progress=false
+      - build:
+          lang: fr
+          path: /branch/<< pipeline.git.branch >>/
       - persist_to_workspace:
           root: ./
           paths:
@@ -98,7 +113,9 @@ jobs:
     steps:
       - attach_workspace:
           at: ./
-      - run: npx ng build --configuration production-en --base-href / --deploy-url //d39se6ub293skr.cloudfront.net/en/ --progress=false
+      - build:
+          lang: en
+          path: /
       - run: echo '<html><head><script>window.location.replace("en/");</script></head></html>' > dist/algorea/index.html
       - persist_to_workspace:
           root: ./
@@ -110,7 +127,9 @@ jobs:
     steps:
       - attach_workspace:
           at: ./
-      - run: npx ng build --configuration production-fr --base-href / --deploy-url //d39se6ub293skr.cloudfront.net/fr/ --progress=false
+      - build:
+          lang: fr
+          path: /
       - persist_to_workspace:
           root: ./
           paths:
