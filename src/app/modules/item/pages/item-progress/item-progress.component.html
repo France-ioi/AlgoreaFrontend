@@ -42,6 +42,7 @@
           *ngIf="historyTab?.isActive || !historyTab"
           [itemData]="itemData"
           [isWatchingGroup]="!!session?.watchedGroup"
+          [watchingGroupId]="session?.watchedGroup?.id"
       ></alg-item-log-view>
 
       <div class="chapter-group-progress">

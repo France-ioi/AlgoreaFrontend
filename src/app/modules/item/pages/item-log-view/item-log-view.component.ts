@@ -26,6 +26,7 @@ export class ItemLogViewComponent implements OnChanges, OnDestroy {
 
   @Input() itemData?: ItemData;
   @Input() isWatchingGroup = false;
+  @Input() watchingGroupId?: string;
 
   private readonly refresh$ = new Subject<void>();
   private readonly item$ = new ReplaySubject<Item>(1);
@@ -57,7 +58,7 @@ export class ItemLogViewComponent implements OnChanges, OnDestroy {
   }
 
   private getData$(item: Item): Observable<Data> {
-    return this.activityLogService.getActivityLog(item.id).pipe(
+    return this.activityLogService.getActivityLog(item.id, this.watchingGroupId).pipe(
       map((data: ActivityLog[]) => ({
         columns: this.getLogColumns(item.type),
         rowData: data
