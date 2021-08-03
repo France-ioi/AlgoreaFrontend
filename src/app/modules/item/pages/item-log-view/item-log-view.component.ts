@@ -1,11 +1,12 @@
 import { Component, Input, OnChanges, OnDestroy } from '@angular/core';
 import { ItemData } from '../../services/item-datasource.service';
 import { ActivityLog, ActivityLogService } from 'src/app/shared/http-services/activity-log.service';
-import { Observable, ReplaySubject, Subject } from 'rxjs';
+import { combineLatest, Observable, ReplaySubject, Subject } from 'rxjs';
 import { distinct, switchMap, map } from 'rxjs/operators';
 import { mapToFetchState } from 'src/app/shared/operators/state';
 import { ItemType } from '../../../../shared/helpers/item-type';
 import { Item } from '../../http-services/get-item-by-id.service';
+import { UserSessionService } from '../../../../shared/services/user-session.service';
 
 interface Column {
   field: string,
@@ -25,19 +26,20 @@ interface Data {
 export class ItemLogViewComponent implements OnChanges, OnDestroy {
 
   @Input() itemData?: ItemData;
-  @Input() isWatchingGroup = false;
-  @Input() watchingGroupId?: string;
 
   private readonly refresh$ = new Subject<void>();
   private readonly item$ = new ReplaySubject<Item>(1);
-  readonly state$ = this.item$.pipe(
-    distinct(),
-    switchMap((item: Item) => this.getData$(item)),
+  readonly state$ = combineLatest([
+    this.item$.pipe(distinct()),
+    this.sessionService.session$,
+  ]).pipe(
+    switchMap(([ item, session ]) => this.getData$(item, session?.watchedGroup?.id)),
     mapToFetchState({ resetter: this.refresh$ }),
   );
 
   constructor(
     private activityLogService: ActivityLogService,
+    private sessionService: UserSessionService,
   ) {}
 
   ngOnChanges(): void {
@@ -57,8 +59,8 @@ export class ItemLogViewComponent implements OnChanges, OnDestroy {
     this.refresh$.next();
   }
 
-  private getData$(item: Item): Observable<Data> {
-    return this.activityLogService.getActivityLog(item.id, this.watchingGroupId).pipe(
+  private getData$(item: Item, watchingGroupId?: string): Observable<Data> {
+    return this.activityLogService.getActivityLog(item.id, watchingGroupId).pipe(
       map((data: ActivityLog[]) => ({
         columns: this.getLogColumns(item.type),
         rowData: data
@@ -81,7 +83,7 @@ export class ItemLogViewComponent implements OnChanges, OnDestroy {
       {
         field: 'item.user',
         header: $localize`User`,
-        enabled: this.isWatchingGroup && [ 'Chapter', 'Task', 'Course' ].includes(type),
+        enabled: this.sessionService.isCurrentlyWatching && [ 'Chapter', 'Task', 'Course' ].includes(type),
       },
       {
         field: 'at',
