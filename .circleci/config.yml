@@ -42,6 +42,17 @@ commands:
             --acl public-read
             --cache-control 'max-age=10'
 
+  build:
+    parameters:
+      # the 2 letters deployment language
+      lang:
+        type: string
+      # path (from the root of the domain) where it will be deployed (with heading and trailing slash)
+      path:
+        type: string
+    steps:
+      - run: npx ng build --configuration production-<< parameters.lang >> --base-href << parameters.path >> --deploy-url //d39se6ub293skr.cloudfront.net/<< parameters.path >><< parameters.lang >>/ --progress=false
+
 jobs:
   # deps has to be run before the other jobs and basically run "npm install" and cache it
   deps:
@@ -70,17 +81,57 @@ jobs:
           at: ./
       - run: npm run lint
 
-  build:
+  build-branch-en:
     docker: *node_image
     steps:
       - attach_workspace:
           at: ./
-      - run: npx ng build --configuration ci --base-href ./ --progress=false
-      - run: echo '<html><head><script>window.location.replace("en/");</script></head></html>' > dist/algorea/index.html
+      - build:
+          lang: en
+          path: /branch/<< pipeline.git.branch >>/
       - persist_to_workspace:
           root: ./
           paths:
-            - dist/algorea
+            - dist/algorea/en
+
+  build-branch-fr:
+    docker: *node_image
+    steps:
+      - attach_workspace:
+          at: ./
+      - build:
+          lang: fr
+          path: /branch/<< pipeline.git.branch >>/
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - dist/algorea/fr
+
+  build-master-en:
+    docker: *node_image
+    steps:
+      - attach_workspace:
+          at: ./
+      - build:
+          lang: en
+          path: /
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - dist/algorea/en
+
+  build-master-fr:
+    docker: *node_image
+    steps:
+      - attach_workspace:
+          at: ./
+      - build:
+          lang: fr
+          path: /
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - dist/algorea/fr
 
   tests:
     docker: &node_browsers_image
@@ -114,6 +165,7 @@ jobs:
     steps:
       - attach_workspace:
           at: ./
+      - run: echo '<html><head><script>window.location.replace("en/");</script></head></html>' > dist/algorea/index.html
       - deploy-to-s3:
           from: ./dist/algorea/
           bucket: $DEPLOYMENT_BUCKET
@@ -127,6 +179,7 @@ jobs:
     steps:
       - attach_workspace:
           at: ./
+      - run: echo '<html><head><script>window.location.replace("en/");</script></head></html>' > dist/algorea/index.html
       - deploy-to-s3:
           from: ./dist/algorea/
           bucket: $DEPLOYMENT_BUCKET
@@ -140,9 +193,18 @@ workflows:
       - lint:
           requires:
           - deps
-      - build:
+      - build-branch-en:
           requires:
             - deps
+          filters:
+            branches:
+              ignore: master
+      - build-branch-fr:
+          requires:
+            - deps
+          filters:
+            branches:
+              ignore: master
       - tests:
           requires:
             - deps
@@ -151,10 +213,23 @@ workflows:
             - deps
       - deploy-branch:
           requires:
-            - build
+            - build-branch-en
+            - build-branch-fr
+          filters:
+            branches:
+              ignore: master
+      - build-master-en:
+          filters:
+            branches:
+              only: master
+      - build-master-fr:
+          filters:
+            branches:
+              only: master
       - deploy-master:
           filters:
             branches:
               only: master
           requires:
-            - build
+            - build-master-en
+            - build-master-fr
