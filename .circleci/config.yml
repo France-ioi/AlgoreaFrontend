@@ -219,6 +219,8 @@ workflows:
             branches:
               ignore: master
       - build-master-en:
+          requires:
+            - deps
           filters:
             branches:
               only: master
