@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { groupInfo, GroupInfo, isGroupInfo } from 'src/app/shared/models/content/group-info';
 import { readyData } from 'src/app/shared/operators/state';
+import { groupRoute } from 'src/app/shared/routing/group-route';
 import { CurrentContentService } from 'src/app/shared/services/current-content.service';
 import { ModeAction, ModeService } from 'src/app/shared/services/mode.service';
 import { GroupDataSource } from '../../services/group-datasource.service';
@@ -36,7 +37,7 @@ export class GroupByIdComponent implements OnDestroy {
       const id = params.get('id');
       if (id) {
         this.currentContent.current.next(groupInfo({
-          route: { contentType: 'group', id: id, path: [] },
+          route: groupRoute(id),
           breadcrumbs: { category: GROUP_BREADCRUMB_CAT, path: [], currentPageIdx: -1 }
         }));
         this.groupDataSource.fetchGroup(id);
@@ -48,7 +49,7 @@ export class GroupByIdComponent implements OnDestroy {
       this.groupDataSource.state$.pipe(
         readyData(),
         map((group):GroupInfo => groupInfo({
-          route: { contentType: 'group', id: group.id, path: [] },
+          route: groupRoute(group.id),
           breadcrumbs: {
             category: GROUP_BREADCRUMB_CAT,
             path: [{ title: group.name, navigateTo: this.router.createUrlTree([ 'groups', 'by-id', group.id, 'details' ]) }],
