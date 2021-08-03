@@ -77,14 +77,14 @@ export class UserComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe(contentInfo => {
-        this.currentContent.current.next(contentInfo);
+        this.currentContent.replace(contentInfo);
       });
 
     this.isInitPagePersonal = this.router.url.includes('personal-data');
   }
 
   ngOnDestroy(): void {
-    this.currentContent.current.next(null);
+    this.currentContent.clear();
     this.subscription?.unsubscribe();
   }
 }

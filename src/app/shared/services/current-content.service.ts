@@ -3,17 +3,40 @@ import { BehaviorSubject } from 'rxjs';
 import { ContentInfo } from '../models/content/content-info';
 
 /**
- * Use this service to track what's the current item display in the content (right) pane.
+ * Service for tracking what is current displayed in the content (right) pane.
+ * This component does not change the content but is used to broadcast the information to those
+ * which wants to be informed.
  */
 @Injectable({
   providedIn: 'root'
 })
 export class CurrentContentService implements OnDestroy {
-  /* info about the currently displayed content */
-  current = new BehaviorSubject<ContentInfo|null>(null);
-  currentContent$ = this.current.asObservable();
+
+  private content = new BehaviorSubject<ContentInfo|null>(null);
+  currentContent$ = this.content.asObservable();
+
+  /**
+   * The current content
+   */
+  current(): ContentInfo|null {
+    return this.content.value;
+  }
+
+  /**
+   * Replace the current content by the given content.
+   */
+  replace(content: ContentInfo): void {
+    this.content.next(content);
+  }
+
+  /**
+   * Clear the current content. Typically called when leave a component which displays a content.
+   */
+  clear(): void {
+    this.content.next(null);
+  }
 
   ngOnDestroy(): void {
-    this.current.complete();
+    this.content.complete();
   }
 }
