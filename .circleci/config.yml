@@ -223,13 +223,15 @@ workflows:
             branches:
               only: master
       - build-master-fr:
+          requires:
+            - deps
           filters:
             branches:
               only: master
       - deploy-master:
-          filters:
-            branches:
-              only: master
           requires:
             - build-master-en
             - build-master-fr
+          filters:
+            branches:
+              only: master
