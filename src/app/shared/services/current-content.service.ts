@@ -13,7 +13,7 @@ import { ContentInfo } from '../models/content/content-info';
 export class CurrentContentService implements OnDestroy {
 
   private content = new BehaviorSubject<ContentInfo|null>(null);
-  currentContent$ = this.content.asObservable();
+  content$ = this.content.asObservable();
 
   /**
    * The current content
