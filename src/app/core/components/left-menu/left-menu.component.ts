@@ -1,30 +1,24 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { PerfectScrollbarComponent } from 'ngx-perfect-scrollbar';
-import { LeftNavScrollService } from '../../services/left-nav-scroll.service';
 
 @Component({
   selector: 'alg-left-menu',
   templateUrl: './left-menu.component.html',
   styleUrls: [ './left-menu.component.scss' ]
 })
-export class LeftMenuComponent implements AfterViewInit {
+export class LeftMenuComponent {
   @ViewChild(PerfectScrollbarComponent, { static: false }) componentRef?: PerfectScrollbarComponent;
 
   isNavThemeDark = false;
 
-  constructor(private leftNavScrollService: LeftNavScrollService) {
-  }
-
-  ngAfterViewInit(): void {
-    if (!this.componentRef?.directiveRef) {
-      return;
-    }
-
-    this.leftNavScrollService.registerScroll(this.componentRef.directiveRef);
-  }
-
   onNavThemeChange(event: string | null): void {
     this.isNavThemeDark = event === 'dark';
+  }
+
+  onSelectId(id: string): void {
+    setTimeout(() => {
+      this.componentRef?.directiveRef?.scrollToElement(`#nav-${ id }`, -8, 300);
+    });
   }
 
 }
