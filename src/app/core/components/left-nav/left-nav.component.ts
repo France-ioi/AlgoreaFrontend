@@ -42,7 +42,7 @@ export class LeftNavComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     // Follow page change and trigger changes.
-    this.subscription = this.currentContent.currentContent$.pipe(
+    this.subscription = this.currentContent.content$.pipe(
       // we are only interested in items and groups
       map(content => (content !== null && (isItemInfo(content) || isGroupInfo(content)) ? content : undefined)),
       pairwise(),

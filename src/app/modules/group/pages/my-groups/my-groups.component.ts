@@ -18,7 +18,7 @@ export class MyGroupsComponent implements OnDestroy {
     private currentContent: CurrentContentService,
     private layoutService: LayoutService,
   ) {
-    this.currentContent.current.next(contentInfo({
+    this.currentContent.replace(contentInfo({
       title: $localize`My groups`,
       breadcrumbs: {
         category: $localize`My groups`,
@@ -29,7 +29,7 @@ export class MyGroupsComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.currentContent.current.next(null);
+    this.currentContent.clear();
   }
 
   onGroupJoined(): void {

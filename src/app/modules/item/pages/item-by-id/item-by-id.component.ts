@@ -64,7 +64,7 @@ export class ItemByIdComponent implements OnDestroy {
 
         if (state.isReady) {
           this.hasRedirected = false;
-          this.currentContent.current.next(itemInfo({
+          this.currentContent.replace(itemInfo({
             breadcrumbs: {
               category: itemBreadcrumbCat,
               path: state.data.breadcrumbs.map(el => ({
@@ -92,14 +92,14 @@ export class ItemByIdComponent implements OnDestroy {
             this.hasRedirected = true;
             this.itemRouter.navigateToIncompleteItemOfCurrentPage();
           }
-          this.currentContent.current.next(null);
+          this.currentContent.clear();
         }
       }),
 
       this.modeService.modeActions$.pipe(
         filter(action => [ ModeAction.StartEditing, ModeAction.StopEditing ].includes(action))
       ).subscribe(action => {
-        const current = this.currentContent.current.value;
+        const current = this.currentContent.current();
         if (!isItemInfo(current)) throw new Error('Unexpected: in item-by-id but the current content is not an item');
         this.itemRouter.navigateTo(current.route, action === ModeAction.StartEditing ? 'edit' : 'details');
       }),
@@ -107,7 +107,7 @@ export class ItemByIdComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.currentContent.current.next(null);
+    this.currentContent.clear();
     this.subscriptions.forEach(s => s.unsubscribe());
   }
 
@@ -128,7 +128,7 @@ export class ItemByIdComponent implements OnDestroy {
       return;
     }
     // just publish to current content the new route we are navigating to (without knowing any info)
-    this.currentContent.current.next(itemInfo({ route: item, breadcrumbs: { category: itemBreadcrumbCat, path: [], currentPageIdx: -1 } }));
+    this.currentContent.replace(itemInfo({ route: item, breadcrumbs: { category: itemBreadcrumbCat, path: [], currentPageIdx: -1 } }));
     // trigger the fetch of the item (which will itself re-update the current content)
     this.itemDataSource.fetchItem(item);
   }
