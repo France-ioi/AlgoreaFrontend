@@ -1,4 +1,4 @@
-<ng-container *ngIf="itemLoadingstate$ | async as state">
+<ng-container *ngIf="itemLoadingState$ | async as state">
 
   <ng-container *ngIf="state.isReady && state.data as itemData">
 
@@ -22,10 +22,11 @@
         Content
       </a>
       <a
+        *ngIf="!(watchedGroup$ | async) || !!(watchedGroup$ | async) && itemData.item.permissions.canView !== 'none'"
         class="nav-tab-item"
         [routerLink]="'./progress'"
         routerLinkActive #progressTab="routerLinkActive"
-        [class.active]="progressTab.isActive">
+        [class.active]="progressTab?.isActive">
         <i class="fa fa-chart-line"></i>
         &nbsp;
         <span i18n>Progress</span>
@@ -33,7 +34,7 @@
     </nav>
     <div class="bg-white">
       <alg-item-content *ngIf="contentTab.isActive" [itemData]="itemData"></alg-item-content>
-      <alg-item-progress *ngIf="progressTab.isActive" [itemData]="itemData"></alg-item-progress>
+      <alg-item-progress *ngIf="progressTab?.isActive" [itemData]="itemData"></alg-item-progress>
     </div>
 
   </ng-container>

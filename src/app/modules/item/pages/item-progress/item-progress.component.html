@@ -4,6 +4,11 @@
       *ngIf="itemData"
       [label]="session?.watchedGroup | itemProgressLabel"
   >
+
+    <p class="not-allow-caption" *ngIf="!!session?.watchedGroup && itemData.item.permissions.canView === 'none'" i18n>
+      You are not allowed to watch the progress of other users on this content.
+    </p>
+
     <div class="selection-center" *ngIf="selectors !== 'none'">
       <nav class="tab-rounded">
         <a class="tab-rounded-item"
