@@ -51,7 +51,7 @@ commands:
       path:
         type: string
     steps:
-      - run: npx ng build --configuration production-<< parameters.lang >> --base-href << parameters.path >> --deploy-url //assets.algorea.org/<< parameters.path >><< parameters.lang >>/ --progress=false
+      - run: npx ng build --configuration production-<< parameters.lang >> --base-href << parameters.path >> --deploy-url //assets.algorea.org<< parameters.path >><< parameters.lang >>/ --progress=false
 
 jobs:
   # deps has to be run before the other jobs and basically run "npm install" and cache it
