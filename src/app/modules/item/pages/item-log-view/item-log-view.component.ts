@@ -31,9 +31,9 @@ export class ItemLogViewComponent implements OnChanges, OnDestroy {
   private readonly item$ = new ReplaySubject<Item>(1);
   readonly state$ = combineLatest([
     this.item$.pipe(distinct()),
-    this.sessionService.session$,
+    this.sessionService.watchedGroup$,
   ]).pipe(
-    switchMap(([ item, session ]) => this.getData$(item, session?.watchedGroup?.id)),
+    switchMap(([ item, watchedGroup ]) => this.getData$(item, watchedGroup?.id)),
     mapToFetchState({ resetter: this.refresh$ }),
   );
 
@@ -62,13 +62,13 @@ export class ItemLogViewComponent implements OnChanges, OnDestroy {
   private getData$(item: Item, watchingGroupId?: string): Observable<Data> {
     return this.activityLogService.getActivityLog(item.id, watchingGroupId).pipe(
       map((data: ActivityLog[]) => ({
-        columns: this.getLogColumns(item.type),
+        columns: this.getLogColumns(item.type, watchingGroupId),
         rowData: data
       }))
     );
   }
 
-  private getLogColumns(type: ItemType): Column[] {
+  private getLogColumns(type: ItemType, watchingGroupId?: string): Column[] {
     const columns = [
       {
         field: 'activityType',
@@ -83,7 +83,7 @@ export class ItemLogViewComponent implements OnChanges, OnDestroy {
       {
         field: 'item.user',
         header: $localize`User`,
-        enabled: this.sessionService.isCurrentlyWatching && [ 'Chapter', 'Task', 'Course' ].includes(type),
+        enabled: watchingGroupId && [ 'Chapter', 'Task', 'Course' ].includes(type),
       },
       {
         field: 'at',
