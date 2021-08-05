@@ -42,6 +42,12 @@
     text-decoration: underline;
   }
 
+  &.hover-underline {
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
   &.dots {
     white-space: nowrap;
     overflow: hidden;
