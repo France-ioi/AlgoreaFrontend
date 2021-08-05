@@ -126,7 +126,7 @@ function createNavMenuItem(raw: {
   return {
     id: raw.id,
     title: raw.string.title ?? '',
-    hasChildren: raw.has_visible_children,
+    hasChildren: raw.has_visible_children && ![ 'none', 'info' ].includes(raw.permissions.can_view),
     attemptId: currentResult?.attemptId ?? null,
     canViewContent: [ 'content','content_with_descendants','solution' ].includes(raw.permissions.can_view),
     bestScore: raw.no_score ? undefined : raw.best_score,
