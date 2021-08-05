@@ -20,7 +20,6 @@ export class AppComponent implements OnInit, OnDestroy {
   // the delay(0) is used to prevent the UI to update itself (when the content is loaded) (ExpressionChangedAfterItHasBeenCheckedError)
   currentContent$: Observable<ContentInfo|null> = this.currentContent.content$.pipe(delay(0));
   readonly currentMode$ = this.modeService.mode$.asObservable().pipe(delay(0));
-  session$ = this.sessionService.session$.pipe(delay(0));
   fatalError$ = merge(
     this.authService.failure$,
     this.sessionService.userProfileError$,
@@ -65,10 +64,6 @@ export class AppComponent implements OnInit, OnDestroy {
 
   onEditCancel() : void{
     this.modeService.modeActions$.next(ModeAction.StopEditing);
-  }
-
-  onWatchCancel(): void {
-    this.modeService.stopObserving();
   }
 
 }

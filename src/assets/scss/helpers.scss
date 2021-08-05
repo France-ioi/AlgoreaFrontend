@@ -34,8 +34,18 @@
     color: $base-color;
   }
 
+  &.white-color {
+    color: #fff;
+  }
+
   &.underline {
     text-decoration: underline;
+  }
+
+  &.hover-underline {
+    &:hover {
+      text-decoration: underline;
+    }
   }
 
   &.dots {
