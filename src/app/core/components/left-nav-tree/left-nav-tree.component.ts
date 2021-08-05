@@ -1,9 +1,4 @@
-import {
-  Component,
-  Input,
-  OnChanges,
-  SimpleChanges
-} from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { TreeNode } from 'primeng/api';
 import { defaultAttemptId } from 'src/app/shared/helpers/attempts';
 import { ItemTypeCategory } from 'src/app/shared/helpers/item-type';
