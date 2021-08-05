@@ -51,7 +51,10 @@ export class LeftNavComponent implements OnInit, OnDestroy {
       // If the content changed (different id), clear the selection (clear all tabs as we don't really know on which tab was the selection)
       if (prevContent?.type !== content?.type || prevContent?.route.id !== content?.route.id) {
         this.dataSources.forEach(l => l.removeSelection());
-        this.selectId.emit(content?.route.id);
+
+        if (content) {
+          this.selectId.emit(content.route.id);
+        }
       }
 
       if (!content) { // no tab and no content to select
