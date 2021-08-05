@@ -32,6 +32,7 @@ export class UserHeaderComponent {
     this.modeService.startObserving({
       id: this.user.groupId,
       name: formatUser(this.user),
+      login: this.user.login,
     });
   }
 

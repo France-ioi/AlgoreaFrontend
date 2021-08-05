@@ -9,6 +9,7 @@ import { repeatLatestWhen } from '../helpers/repeatLatestWhen';
 export interface WatchedGroup {
   id: string,
   name: string,
+  login?: string,
 }
 
 export interface UserSession {
