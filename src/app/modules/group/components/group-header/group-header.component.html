@@ -11,7 +11,6 @@
       [allowWatching]="!!groupWithManagement.currentUserCanWatchMembers"
       [isWatched]="!!(isCurrentGroupWatched$ | async)"
       [allowFullScreen]="false"
-      navigationMode="nextAndPrev"
       (edit)="onEditButtonClicked()"
       (watch)="onStartWatchButtonClicked()"
       (stopWatch)="onStopWatchButtonClicked()"
