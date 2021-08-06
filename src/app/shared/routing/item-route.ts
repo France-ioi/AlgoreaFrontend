@@ -3,6 +3,7 @@ import { defaultAttemptId } from '../helpers/attempts';
 import { appConfig } from '../helpers/config';
 import { ContentRoute, pathParamName } from './content-route';
 import { isSkill, ItemTypeCategory } from '../helpers/item-type';
+import { isString } from '../helpers/type-checkers';
 
 // url parameter names
 const activityPrefix = 'activities';
@@ -42,29 +43,31 @@ export function appDefaultItemRoute(cat: ItemTypeCategory = 'activity'): ItemRou
 /**
  * Url (as string) of the item route without attemptId or path (only item id)
 */
-export function incompleteItemStringUrl(id: ItemId, cat: ItemTypeCategory, page: 'details' | 'edit' = 'details'): string {
-  return `/${itemTypeCategoryPrefix(cat)}/by-id/${id}/${page}`;
+export function incompleteItemStringUrl(id: ItemId, cat: ItemTypeCategory, page: string|string[] = 'details'): string {
+  return `/${itemTypeCategoryPrefix(cat)}/by-id/${id}/${pageToPagePath(page).join('/')}`;
 }
 
 /**
  * Url (as string) of the details page for the given item route
  */
-export function urlStringForItemRoute(route: ItemRoute, page: 'edit'|'details' = 'details'): string {
+export function urlStringForItemRoute(route: ItemRoute, page: string|string[] = 'details'): string {
   const attemptPart = isRouteWithAttempt(route) ?
     `${attemptParamName}=${route.attemptId}` :
     `${parentAttemptParamName}=${route.parentAttemptId}`;
-  return `/${itemTypeCategoryPrefix(route.contentType)}/by-id/${route.id};${attemptPart};${pathParamName}=${route.path.join(',')}/${page}`;
+  const prefix = itemTypeCategoryPrefix(route.contentType);
+  const pageAsStr = pageToPagePath(page).join('/');
+  return `/${prefix}/by-id/${route.id};${attemptPart};${pathParamName}=${route.path.join(',')}/${pageAsStr}`;
 }
 
 /**
  * Return a url array (`commands` array) to the given item, on the given page.
  */
-export function urlArrayForItemRoute(route: ItemRoute, page: 'edit'|'details' = 'details'): any[] {
+export function urlArrayForItemRoute(route: ItemRoute, page: string|string[] = 'details'): (string|{[k: string]: any})[] {
   const params: {[k: string]: any} = {};
   if (isRouteWithAttempt(route)) params[attemptParamName] = route.attemptId;
   else params[parentAttemptParamName] = route.parentAttemptId;
   params[pathParamName] = route.path;
-  return [ '/', itemTypeCategoryPrefix(route.contentType), 'by-id', route.id, params, page ];
+  return [ '/', itemTypeCategoryPrefix(route.contentType), 'by-id', route.id, params, ...pageToPagePath(page) ];
 }
 
 interface ItemRouteError {
@@ -96,4 +99,8 @@ export function isItemRouteError(route: ItemRoute|ItemRouteError): route is Item
 
 function itemTypeCategoryPrefix(cat: ItemTypeCategory): string {
   return cat === 'activity' ? activityPrefix : skillPrefix;
+}
+
+function pageToPagePath(page: string|string[]): string[] {
+  return isString(page) ? [ page ] : page;
 }

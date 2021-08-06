@@ -16,7 +16,7 @@ export class ItemRouter {
    * Navigate to given item, on the path page.
    * If page is not given and we are currently on an item page, use the same page. Otherwise, default to 'details'.
    */
-  navigateTo(item: ItemRoute, page?: 'edit'|'details'): void {
+  navigateTo(item: ItemRoute, page?: string|string[]): void {
     void this.router.navigateByUrl(this.urlTree(item, page));
   }
 
@@ -31,10 +31,10 @@ export class ItemRouter {
 
 
   /**
-   * Return a url to the given item, on the give page.
+   * Return a url to the given item, on the given page.
    * If page is not given and we are currently on an item page, use the same page. Otherwise, default to 'details'.
    */
-  urlTree(item: ItemRoute, page?: 'edit'|'details'): UrlTree {
+  urlTree(item: ItemRoute, page?: string|string[]): UrlTree {
     return this.router.createUrlTree(this.urlArray(item, page));
   }
 
@@ -42,20 +42,18 @@ export class ItemRouter {
    * Return a url array (`commands` array) to the given item, on the given page.
    * If page is not given and we are currently on an item page, use the same page. Otherwise, default to 'details'.
    */
-  urlArray(item: ItemRoute, page?: 'edit'|'details'): any[] {
+  urlArray(item: ItemRoute, page?: string|string[]): (string|{[k: string]: any})[] {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return urlArrayForItemRoute(item, page ?? this.currentItemSubPage());
+    return urlArrayForItemRoute(item, page ?? this.currentItemPage());
   }
 
   /**
-   * Extract (bit hacky) the item sub-page of the current page.
+   * Extract (bit hacky) the item page from what is currently displayed.
    * Return undefined if we are not on an "item" page
    */
-  private currentItemSubPage(): 'edit'|'details'|undefined {
-    const subpagePart = this.currentItemPagePath()?.slice(3);
-    if (!subpagePart || subpagePart.length === 0) return undefined;
-    const page = subpagePart[0];
-    return page === 'edit' || page === 'details' ? page : undefined;
+  private currentItemPage(): string[]|undefined {
+    const page = this.currentItemPagePath()?.slice(3);
+    return page && page.length > 0 ? page : undefined;
   }
 
   private currentItemPagePath(): string[]|undefined {
