@@ -135,16 +135,18 @@ export class ItemChildrenEditComponent implements OnChanges {
   }
 
   addChild(child: AddedContent<ItemType>): void {
+    const permissionsForCreatedItem: PermissionsInfo = {
+      canView: 'solution',
+      canEdit: 'all_with_grant',
+      canGrantView: 'solution_with_grant',
+    };
+
     this.data.push({
       ...child,
       scoreWeight: DEFAULT_SCORE_WEIGHT,
       isVisible: true,
-      contentViewPropagation: child?.permissions?.canGrantView === 'none' ? 'none' : 'as_info',
-      permissions: child.permissions || {
-        canView: 'solution',
-        canEdit: 'all_with_grant',
-        canGrantView: 'solution_with_grant',
-      },
+      contentViewPropagation: child.permissions?.canGrantView === 'none' ? 'none' : 'as_info',
+      permissions: child.permissions || permissionsForCreatedItem,
     });
     this.onChildrenListUpdate();
     this.childrenChanges.emit(this.data);
