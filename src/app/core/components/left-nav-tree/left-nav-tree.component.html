@@ -132,6 +132,7 @@
           <span class="label-container">
             <span class="node-label-title">
               {{ node.data.element.title }}
+              <span *ngIf="node.data.element.groupName">(via group "{{ node.data.element.groupName }}")</span>
             </span>
           </span>
           <alg-skill-progress
@@ -228,6 +229,7 @@
           <span class="label-container">
             <span class="node-label-title">
               {{ node.data.element.title }}
+              <span *ngIf="node.data.element.groupName">(via group "{{ node.data.element.groupName }}")</span>
             </span>
           </span>
         </span>
