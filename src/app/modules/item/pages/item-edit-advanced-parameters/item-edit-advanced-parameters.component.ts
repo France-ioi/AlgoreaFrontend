@@ -93,8 +93,6 @@ export class ItemEditAdvancedParametersComponent implements OnInit {
       this.parentForm?.get('entering_time_min')?.patchValue(
         new Date()
       );
-
-      this.computeEnteringTimeMaxValue();
     }
   }
 
