@@ -43,7 +43,6 @@ export class ItemRouter {
    * If page is not given and we are currently on an item page, use the same page. Otherwise, default to 'details'.
    */
   urlArray(item: ItemRoute, page?: string|string[]): (string|{[k: string]: any})[] {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return urlArrayForItemRoute(item, page ?? this.currentItemPage());
   }
 
