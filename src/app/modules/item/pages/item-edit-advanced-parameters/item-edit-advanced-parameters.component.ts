@@ -72,7 +72,7 @@ export class ItemEditAdvancedParametersComponent implements OnInit {
     this.handleDurationValidators();
   }
 
-  handleDurationValidators(): void {
+  private handleDurationValidators(): void {
     const requiresExplicitEntryValue = this.parentForm?.get('requires_explicit_entry')?.value as boolean;
     const durationEnabledValue = this.parentForm?.get('duration_enabled')?.value as boolean;
     const enableValidation = requiresExplicitEntryValue && durationEnabledValue;
