@@ -48,18 +48,6 @@ export function incompleteItemStringUrl(id: ItemId, cat: ItemTypeCategory, page:
 }
 
 /**
- * Url (as string) of the details page for the given item route
- */
-export function urlStringForItemRoute(route: ItemRoute, page: string|string[] = 'details'): string {
-  const attemptPart = isRouteWithAttempt(route) ?
-    `${attemptParamName}=${route.attemptId}` :
-    `${parentAttemptParamName}=${route.parentAttemptId}`;
-  const prefix = itemTypeCategoryPrefix(route.contentType);
-  const pageAsStr = pageToPagePath(page).join('/');
-  return `/${prefix}/by-id/${route.id};${attemptPart};${pathParamName}=${route.path.join(',')}/${pageAsStr}`;
-}
-
-/**
  * Return a url array (`commands` array) to the given item, on the given page.
  */
 export function urlArrayForItemRoute(route: ItemRoute, page: string|string[] = 'details'): (string|{[k: string]: any})[] {

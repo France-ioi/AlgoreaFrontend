@@ -1,3 +1,4 @@
+import { isString } from './type-checkers';
 
 export function getHashFragmentParams(): Map<string, string>{
   let hash = window.location.hash;
@@ -53,5 +54,22 @@ export function clearHash(paramNames: string[]): void {
     href = href.replace(new RegExp('[&\\?]'+param+'=[^&\\$]*'), '');
   }
   history.replaceState(null, window.name, href);
+}
+
+/**
+ * Convert a valid url array (`commands` array) to the string url
+ */
+export function urlStringFromArray(urlAsArray: (string|{[k: string]: string|string[]})[]): string {
+  // do not try to understand the implementation, just check the tests
+  return urlAsArray.map((part, idx) => {
+    if (part === '/') return '';
+    else if (isString(part)) return (idx === 0 ? '' : '/') + part;
+    else return Object.keys(part).map(key => {
+      const val = part[key];
+      if (val === undefined) throw new Error('unexpected: cannot find key in a dict while iterating over keys');
+      const valStr = isString(val) ? val : val.join(',');
+      return ';' + key + '=' + valStr;
+    }).join('');
+  }).join('');
 }
 
