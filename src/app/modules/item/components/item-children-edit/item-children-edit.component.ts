@@ -145,8 +145,8 @@ export class ItemChildrenEditComponent implements OnChanges {
       ...child,
       scoreWeight: DEFAULT_SCORE_WEIGHT,
       isVisible: true,
-      contentViewPropagation: child.permissions?.canGrantView === 'none' ? 'none' : 'as_info',
-      permissions: child.permissions || permissionsForCreatedItem,
+      contentViewPropagation: (child.permissions ?? permissionsForCreatedItem).canGrantView === 'none' ? 'none' : 'as_info',
+      permissions: child.permissions ?? permissionsForCreatedItem,
     });
     this.onChildrenListUpdate();
     this.childrenChanges.emit(this.data);
