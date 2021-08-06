@@ -1,4 +1,4 @@
-import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
+import { Component, NgZone, OnDestroy, OnInit } from '@angular/core';
 import { UserSessionService } from '../shared/services/user-session.service';
 import { delay, switchMap } from 'rxjs/operators';
 import { merge, Observable, Subscription } from 'rxjs';
@@ -40,6 +40,7 @@ export class AppComponent implements OnInit, OnDestroy {
     private modeService: ModeService,
     private localeService: LocaleService,
     private layoutService: LayoutService,
+    private ngZone: NgZone,
   ) {}
 
   ngOnInit(): void {
@@ -47,18 +48,27 @@ export class AppComponent implements OnInit, OnDestroy {
     this.subscription = this.sessionService.userChanged$.pipe(
       switchMap(() => this.router.navigateByUrl('/')),
     ).subscribe();
+
+    this.ngZone.runOutsideAngular(() => {
+      window.addEventListener('scroll', () => {
+        this.onScrollContent();
+      });
+    });
   }
 
   ngOnDestroy(): void {
     this.subscription?.unsubscribe();
   }
 
-  @HostListener('window:scroll', [ '$event' ])
-  onScrollContent(): void{
+  onScrollContent(): void {
     if (window.pageYOffset > 40 && !this.scrolled) {
-      this.scrolled = true;
+      this.ngZone.run(() => {
+        this.scrolled = true;
+      });
     } else if (window.pageYOffset <= 40 && this.scrolled) {
-      this.scrolled = false;
+      this.ngZone.run(() => {
+        this.scrolled = false;
+      });
     }
   }
 
