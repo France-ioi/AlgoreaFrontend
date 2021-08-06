@@ -22,7 +22,7 @@
         Content
       </a>
       <a
-        *ngIf="!(watchedGroup$ | async) || !!(watchedGroup$ | async) && itemData.item.permissions.canView !== 'none'"
+        *ngIf="!(watchedGroup$ | async) || !!(watchedGroup$ | async) && itemData.item.permissions.canWatch !== 'none'"
         class="nav-tab-item"
         [routerLink]="'./progress'"
         routerLinkActive #progressTab="routerLinkActive"

@@ -5,7 +5,7 @@
       [label]="session?.watchedGroup | itemProgressLabel"
   >
 
-    <p class="not-allow-caption" *ngIf="!!session?.watchedGroup && itemData.item.permissions.canView === 'none'" i18n>
+    <p class="not-allow-caption" *ngIf="!!session?.watchedGroup && itemData.item.permissions.canWatch === 'none'" i18n>
       You are not allowed to watch the progress of other users on this content.
     </p>
 
