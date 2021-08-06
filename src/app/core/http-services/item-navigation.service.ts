@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { EMPTY, Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { bestAttemptFromResults } from 'src/app/shared/helpers/attempts';
 import { isRouteWithAttempt, ItemRoute } from 'src/app/shared/routing/item-route';
@@ -199,4 +199,41 @@ export class ItemNavigationService {
     return (isSkill(type)) ? this.getRootSkills() : this.getRootActivities();
   }
 
+  getNavigationNeighbors(itemRoute: ItemRoute): Observable<{parent: ItemRoute|null, left: ItemRoute|null, right: ItemRoute|null}> {
+    if (!isRouteWithAttempt(itemRoute)) return EMPTY;
+
+    // Root activity => no parent/left/right activity
+    if (itemRoute.path.length === 0) return of({ parent: null, left: null, right: null });
+
+    const parentId = itemRoute.path[itemRoute.path.length - 1] as string;
+
+    return this.getNavDataFromChildRoute(parentId, itemRoute).pipe(map(navParent => {
+      const index = navParent.items.findIndex(item => item.id === itemRoute.id);
+
+      if (index === -1) throw new Error(`Unexpected: item is missing from its parent children list`);
+
+      const left: ItemRoute|null = index === 0 ? null : {
+        id: navParent.items[index - 1]?.id as string,
+        contentType: 'activity',
+        attemptId: itemRoute.attemptId,
+        path: itemRoute.path,
+      };
+
+      const right: ItemRoute|null = index === navParent.items.length - 1 ? null : {
+        id: navParent.items[index + 1]?.id as string,
+        contentType: 'activity',
+        attemptId: itemRoute.attemptId,
+        path: itemRoute.path,
+      };
+
+      const parent: ItemRoute = {
+        id: parentId,
+        contentType: 'activity',
+        path: itemRoute.path.slice(0, -1),
+        attemptId: itemRoute.attemptId,
+      };
+
+      return { parent, left, right };
+    }));
+  }
 }
