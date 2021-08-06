@@ -22,7 +22,7 @@
         Content
       </a>
       <a
-        *ngIf="!(watchedGroup$ | async) || !!(watchedGroup$ | async) && itemData.item.permissions.canWatch !== 'none'"
+        *ngIf="!(watchedGroup$ | async) || !!(watchedGroup$ | async) && itemData.item.permissions.canWatch !== 'none' || !!(watchedGroup$ | async) && itemData.item.permissions.canWatch === 'none' && !contentTab.isActive"
         class="nav-tab-item"
         [routerLink]="'./progress'"
         routerLinkActive #progressTab="routerLinkActive"
@@ -34,7 +34,10 @@
     </nav>
     <div class="bg-white">
       <alg-item-content *ngIf="contentTab.isActive" [itemData]="itemData"></alg-item-content>
-      <alg-item-progress *ngIf="progressTab?.isActive" [itemData]="itemData"></alg-item-progress>
+      <alg-item-progress
+        *ngIf="progressTab?.isActive || !!(watchedGroup$ | async) && !contentTab.isActive"
+        [itemData]="itemData"
+      ></alg-item-progress>
     </div>
 
   </ng-container>
