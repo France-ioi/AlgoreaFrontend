@@ -17,7 +17,7 @@ export class ItemRouter {
    * If page is not given and we are currently on an item page, use the same page. Otherwise, default to 'details'.
    */
   navigateTo(item: ItemRoute, page?: string|string[]): void {
-    void this.router.navigateByUrl(this.urlTree(item, page));
+    void this.router.navigateByUrl(this.url(item, page));
   }
 
   /**
@@ -34,16 +34,8 @@ export class ItemRouter {
    * Return a url to the given item, on the given page.
    * If page is not given and we are currently on an item page, use the same page. Otherwise, default to 'details'.
    */
-  urlTree(item: ItemRoute, page?: string|string[]): UrlTree {
-    return this.router.createUrlTree(this.urlArray(item, page));
-  }
-
-  /**
-   * Return a url array (`commands` array) to the given item, on the given page.
-   * If page is not given and we are currently on an item page, use the same page. Otherwise, default to 'details'.
-   */
-  urlArray(item: ItemRoute, page?: string|string[]): (string|{[k: string]: any})[] {
-    return urlArrayForItemRoute(item, page ?? this.currentItemPage());
+  url(item: ItemRoute, page?: string|string[]): UrlTree {
+    return this.router.createUrlTree(urlArrayForItemRoute(item, page ?? this.currentItemPage()));
   }
 
   /**
