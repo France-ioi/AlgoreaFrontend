@@ -22,6 +22,7 @@ const groupsTabIdx = 2;
 })
 export class LeftNavComponent implements OnInit, OnDestroy {
   @Output() themeChange = new EventEmitter<string | null>();
+  @Output() selectId = new EventEmitter<string>();
 
   activeTabIndex = 0;
   readonly dataSources: [LeftNavActivityDataSource, LeftNavSkillDataSource, LeftNavGroupDataSource] = [
@@ -50,6 +51,10 @@ export class LeftNavComponent implements OnInit, OnDestroy {
       // If the content changed (different id), clear the selection (clear all tabs as we don't really know on which tab was the selection)
       if (prevContent?.type !== content?.type || prevContent?.route.id !== content?.route.id) {
         this.dataSources.forEach(l => l.removeSelection());
+
+        if (content) {
+          this.selectId.emit(content.route.id);
+        }
       }
 
       if (!content) { // no tab and no content to select

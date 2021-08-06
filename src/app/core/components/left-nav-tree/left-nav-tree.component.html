@@ -19,6 +19,7 @@
   <!-- "chapter" type -->
   <ng-template let-node pTemplate="chapter">
     <span
+      id="nav-{{ node.data.element.id }}"
       class="node-tree-item folder"
       [ngClass]="{ expanded: node.expanded, locked: node.locked, current: node.data && node.data.current }"
     >
@@ -67,6 +68,7 @@
   <!-- "skill-folder" type -->
   <ng-template let-node pTemplate="skill-folder">
     <span
+      id="nav-{{ node.data.element.id }}"
       class="node-tree-item folder"
       [ngClass]="{ expanded: node.expanded, locked: node.locked, current: node.data && node.data.current }"
     >
@@ -112,8 +114,9 @@
   <!-- 'skill-leaf' type -->
   <ng-template let-node pTemplate="skill-leaf">
     <span
-        class="node-tree-item folder"
-        [ngClass]="{ expanded: node.expanded, locked: node.locked, current: node.data && node.data.current }"
+      id="nav-{{ node.data.element.id }}"
+      class="node-tree-item folder"
+      [ngClass]="{ expanded: node.expanded, locked: node.locked, current: node.data && node.data.current }"
     >
       <span class="node-item-branch">
         <span class="top-branch">
@@ -148,6 +151,7 @@
   <!-- "group-folder" type -->
   <ng-template let-node pTemplate="group">
     <span
+      id="nav-{{ node.data.element.id }}"
       class="node-tree-item folder"
       [ngClass]="{ expanded: node.expanded, locked: node.locked, current: node.data && node.data.current }"
     >
@@ -197,6 +201,7 @@
   <!-- 'task-course' type -->
   <ng-template let-node pTemplate="task-course">
     <span
+      id="nav-{{ node.data.element.id }}"
       class="node-tree-item folder"
       [ngClass]="{ expanded: node.expanded, locked: node.locked, current: node.data && node.data.current }"
     >
