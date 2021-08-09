@@ -72,7 +72,7 @@ export function urlStringFromArray(urlAsArray: UrlCommand): string {
       const val = part[key];
       if (val === undefined) throw new Error('unexpected: cannot find key in a dict while iterating over keys');
       const valStr = isString(val) ? val : val.join(',');
-      return ';' + key + '=' + valStr;
+      return `;${ key }=${ valStr }`;
     }).join('');
   }).join('');
 }

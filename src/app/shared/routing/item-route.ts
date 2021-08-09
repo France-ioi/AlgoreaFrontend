@@ -49,7 +49,7 @@ export function appDefaultItemRoute(cat: ItemTypeCategory = 'activity'): ItemRou
  * Utility functions for finding the item route from router information
  * ********************************************************************************************************** */
 
- interface ItemRouteError {
+interface ItemRouteError {
   tag: 'error';
   contentType: ItemTypeCategory;
   id?: ItemId;
