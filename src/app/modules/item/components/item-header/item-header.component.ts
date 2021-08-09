@@ -13,7 +13,7 @@ import { ItemData } from '../../services/item-datasource.service';
 export class ItemHeaderComponent implements OnChanges {
   @Input() itemData?: ItemData;
 
-  navigationNeighbors: {parent: ItemRoute|null, left: ItemRoute|null, right: ItemRoute|null}|null = null;
+  navigationNeighbors: { parent: ItemRoute|null, left: ItemRoute|null, right: ItemRoute|null } = { parent: null, left: null, right: null };
 
   constructor(
     private modeService: ModeService,
@@ -33,14 +33,20 @@ export class ItemHeaderComponent implements OnChanges {
     this.modeService.modeActions$.next(ModeAction.StartEditing);
   }
 
-  onNavigationClicked(mode: 'parent'|'left'|'right'): void {
-    if (!this.itemData || !this.navigationNeighbors) return;
-
-    if (mode === 'parent' && this.navigationNeighbors.parent) {
+  onParentClicked(): void {
+    if (this.navigationNeighbors?.parent) {
       this.itemRouter.navigateTo(this.navigationNeighbors.parent);
-    } else if (mode === 'left' && this.navigationNeighbors.left) {
+    }
+  }
+
+  onLeftClicked(): void {
+    if (this.navigationNeighbors?.left) {
       this.itemRouter.navigateTo(this.navigationNeighbors.left);
-    } else if (mode === 'right' && this.navigationNeighbors.right) {
+    }
+  }
+
+  onRightClicked(): void {
+    if (this.navigationNeighbors?.right) {
       this.itemRouter.navigateTo(this.navigationNeighbors.right);
     }
   }

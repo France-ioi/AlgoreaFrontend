@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { EMPTY, Observable, of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { bestAttemptFromResults } from 'src/app/shared/helpers/attempts';
 import { isRouteWithAttempt, ItemRoute } from 'src/app/shared/routing/item-route';
@@ -199,38 +199,42 @@ export class ItemNavigationService {
     return (isSkill(type)) ? this.getRootSkills() : this.getRootActivities();
   }
 
-  getNavigationNeighbors(itemRoute: ItemRoute): Observable<{parent: ItemRoute|null, left: ItemRoute|null, right: ItemRoute|null}> {
-    if (!isRouteWithAttempt(itemRoute)) return EMPTY;
+  getNavigationNeighbors(itemRoute: ItemRoute): Observable<{ parent: ItemRoute|null, left: ItemRoute|null, right: ItemRoute|null }> {
+    const parentId = itemRoute.path[itemRoute.path.length - 1];
 
     // Root activity => no parent/left/right activity
-    if (itemRoute.path.length === 0) return of({ parent: null, left: null, right: null });
-
-    const parentId = itemRoute.path[itemRoute.path.length - 1] as string;
+    if (!parentId) return of({ parent: null, left: null, right: null });
 
     return this.getNavDataFromChildRoute(parentId, itemRoute).pipe(map(navParent => {
       const index = navParent.items.findIndex(item => item.id === itemRoute.id);
-
       if (index === -1) throw new Error(`Unexpected: item is missing from its parent children list`);
 
-      const left: ItemRoute|null = index === 0 ? null : {
-        id: navParent.items[index - 1]?.id as string,
-        contentType: 'activity',
-        attemptId: itemRoute.attemptId,
-        path: itemRoute.path,
-      };
+      const parentAttemptId = navParent.parent.attemptId;
+      if (parentAttemptId === null) throw new Error('Unexpected: parent of an item node has no attempt');
 
-      const right: ItemRoute|null = index === navParent.items.length - 1 ? null : {
-        id: navParent.items[index + 1]?.id as string,
-        contentType: 'activity',
-        attemptId: itemRoute.attemptId,
+      const typeCat : ItemTypeCategory = itemRoute.contentType === 'activity' ? 'activity' : 'skill';
+
+      const leftItem = navParent.items[index - 1];
+      const left: ItemRoute|null = leftItem ? {
+        id: leftItem.id,
+        contentType: typeCat,
+        ...(leftItem.attemptId ? { attemptId: leftItem.attemptId } : { parentAttemptId }),
         path: itemRoute.path,
-      };
+      } : null;
+
+      const rightItem = navParent.items[index + 1];
+      const right: ItemRoute|null = rightItem ? {
+        id: rightItem.id,
+        contentType: typeCat,
+        ...(rightItem.attemptId ? { attemptId: rightItem.attemptId } : { parentAttemptId }),
+        path: itemRoute.path,
+      } : null;
 
       const parent: ItemRoute = {
         id: parentId,
-        contentType: 'activity',
+        contentType: typeCat,
         path: itemRoute.path.slice(0, -1),
-        attemptId: itemRoute.attemptId,
+        attemptId: isRouteWithAttempt(itemRoute) ? itemRoute.attemptId : itemRoute.parentAttemptId,
       };
 
       return { parent, left, right };
