@@ -1,12 +1,13 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { appDefaultItemRoute, urlStringForItemRoute } from '../shared/routing/item-route';
+import { urlStringFromArray } from '../shared/helpers/url';
+import { appDefaultItemRoute, urlArrayForItemRoute } from '../shared/routing/item-route';
 import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component';
 
 const routes: Routes = [
   {
     path: '',
-    redirectTo: urlStringForItemRoute(appDefaultItemRoute('activity')),
+    redirectTo: urlStringFromArray(urlArrayForItemRoute(appDefaultItemRoute('activity'))),
     pathMatch: 'full',
   },
   {

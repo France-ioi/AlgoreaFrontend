@@ -3,16 +3,23 @@ import { defaultAttemptId } from '../helpers/attempts';
 import { appConfig } from '../helpers/config';
 import { ContentRoute, pathParamName } from './content-route';
 import { isSkill, ItemTypeCategory } from '../helpers/item-type';
+import { isString } from '../helpers/type-checkers';
+import { UrlCommand, UrlCommandParameters } from '../helpers/url';
 
 // url parameter names
 const activityPrefix = 'activities';
 const skillPrefix = 'skills';
 const parentAttemptParamName = 'parentAttempId';
 const attemptParamName = 'attempId';
+export const itemRoutePrefixes = [ activityPrefix, skillPrefix ];
 
 // alias for better readibility
 type ItemId = string;
 type AttemptId = string;
+
+/* **********************************************************************************************************
+ * Item Route: Object storing information required to navigate to an item without need for fetching a path
+ * ********************************************************************************************************** */
 
 interface ItemRouteBase extends ContentRoute {
   contentType: ItemTypeCategory;
@@ -25,47 +32,22 @@ export function isRouteWithAttempt(item: ItemRoute): item is ItemRouteWithAttemp
   return 'attemptId' in item;
 }
 
-export const itemRoutePrefixes = [ activityPrefix, skillPrefix ];
-
 /**
  * The route to the app default (see config) item
  */
 export function appDefaultItemRoute(cat: ItemTypeCategory = 'activity'): ItemRouteWithParentAttempt {
   return {
-    contentType: 'activity',
+    contentType: cat,
     id: isSkill(cat) ? appConfig.defaultSkillId : appConfig.defaultActivityId,
     path: [],
     parentAttemptId: defaultAttemptId,
   };
 }
 
-/**
- * Url (as string) of the item route without attemptId or path (only item id)
-*/
-export function incompleteItemStringUrl(id: ItemId, cat: ItemTypeCategory, page: 'details' | 'edit' = 'details'): string {
-  return `/${itemTypeCategoryPrefix(cat)}/by-id/${id}/${page}`;
-}
 
-/**
- * Url (as string) of the details page for the given item route
- */
-export function urlStringForItemRoute(route: ItemRoute, page: 'edit'|'details' = 'details'): string {
-  const attemptPart = isRouteWithAttempt(route) ?
-    `${attemptParamName}=${route.attemptId}` :
-    `${parentAttemptParamName}=${route.parentAttemptId}`;
-  return `/${itemTypeCategoryPrefix(route.contentType)}/by-id/${route.id};${attemptPart};${pathParamName}=${route.path.join(',')}/${page}`;
-}
-
-/**
- * Return a url array (`commands` array) to the given item, on the given page.
- */
-export function urlArrayForItemRoute(route: ItemRoute, page: 'edit'|'details' = 'details'): any[] {
-  const params: {[k: string]: any} = {};
-  if (isRouteWithAttempt(route)) params[attemptParamName] = route.attemptId;
-  else params[parentAttemptParamName] = route.parentAttemptId;
-  params[pathParamName] = route.path;
-  return [ '/', itemTypeCategoryPrefix(route.contentType), 'by-id', route.id, params, page ];
-}
+/* **********************************************************************************************************
+ * Utility functions for finding the item route from router information
+ * ********************************************************************************************************** */
 
 interface ItemRouteError {
   tag: 'error';
@@ -94,6 +76,34 @@ export function isItemRouteError(route: ItemRoute|ItemRouteError): route is Item
   return 'tag' in route && route.tag === 'error';
 }
 
-function itemTypeCategoryPrefix(cat: ItemTypeCategory): string {
-  return cat === 'activity' ? activityPrefix : skillPrefix;
+
+/* **********************************************************************************************************
+ * Utility functions for converting item info to a navigable url command
+ * ********************************************************************************************************** */
+
+/**
+ * Url (as string) of the item route without attemptId or path (only item id)
+ * `urlArrayForItemRoute` should always be preferred to this one, using raw item means further requests will be required to fetch
+ * path and attempt information
+*/
+export function urlArrayForRawItem(id: ItemId, cat: ItemTypeCategory, page: string|string[] = 'details'): UrlCommand {
+  return urlArrayForItem(id, cat, {}, page);
+}
+
+/**
+ * Return a url array (`commands` array) to the given item, on the given page.
+ */
+export function urlArrayForItemRoute(route: ItemRoute, page: string|string[] = 'details'): UrlCommand {
+  const params: UrlCommandParameters = {};
+  if (isRouteWithAttempt(route)) params[attemptParamName] = route.attemptId;
+  else params[parentAttemptParamName] = route.parentAttemptId;
+  params[pathParamName] = route.path;
+  return urlArrayForItem(route.id, route.contentType, params, page);
+}
+
+function urlArrayForItem(id: ItemId, cat: ItemTypeCategory, params: UrlCommandParameters, page: string|string[]):
+  UrlCommand {
+  const prefix = cat === 'activity' ? activityPrefix : skillPrefix;
+  const pagePath = isString(page) ? [ page ] : page;
+  return [ '/', prefix, 'by-id', id, params, ...pagePath ];
 }

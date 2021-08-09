@@ -36,7 +36,7 @@ export class ItemByIdComponent implements OnDestroy {
   // to prevent looping indefinitely in case of bug in services (wrong path > item without path > fetch path > item with path > wrong path)
   hasRedirected = false;
 
-  readonly defaultItemRoute = this.itemRouter.urlArray(appDefaultItemRoute());
+  readonly defaultItemRoute = this.itemRouter.url(appDefaultItemRoute()).toString();
 
   private subscriptions: Subscription[] = []; // subscriptions to be freed up on destroy
 
@@ -70,7 +70,7 @@ export class ItemByIdComponent implements OnDestroy {
               path: state.data.breadcrumbs.map(el => ({
                 title: el.title,
                 hintNumber: el.attemptCnt,
-                navigateTo: ():UrlTree => itemRouter.urlTree(el.route),
+                navigateTo: ():UrlTree => itemRouter.url(el.route),
               })),
               currentPageIdx: state.data.breadcrumbs.length - 1,
             },
@@ -90,7 +90,7 @@ export class ItemByIdComponent implements OnDestroy {
           if (errorHasTag(state.error, breadcrumbServiceTag) && errorIsHTTPForbidden(state.error)) {
             if (this.hasRedirected) throw new Error('Too many redirections (unexpected)');
             this.hasRedirected = true;
-            this.itemRouter.navigateToIncompleteItemOfCurrentPage();
+            this.itemRouter.navigateToRawItemOfCurrentPage();
           }
           this.currentContent.clear();
         }

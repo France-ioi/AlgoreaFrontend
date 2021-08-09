@@ -23,7 +23,7 @@ export class GroupRouter {
    * Navigate to the current page without path if we are on a group page.
    * If we are not on an group page, do nothing.
    */
-  navigateToIncompleteGroupOfCurrentPage(): void {
+  navigateToRawGroupOfCurrentPage(): void {
     const currentPage = this.currentGroupPagePath();
     if (currentPage) void this.router.navigate(currentPage);
   }
