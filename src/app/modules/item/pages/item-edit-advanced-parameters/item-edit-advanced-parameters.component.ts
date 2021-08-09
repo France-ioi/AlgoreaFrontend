@@ -82,8 +82,8 @@ export class ItemEditAdvancedParametersComponent implements OnInit {
     this.parentForm?.get('duration')?.updateValueAndValidity();
   }
 
-  onEnteringTimeMinEnabledChange(event: boolean): void {
-    if (!event) {
+  onEnteringTimeMinEnabledChange(enabled: boolean): void {
+    if (!enabled) {
       return;
     }
 
@@ -96,19 +96,14 @@ export class ItemEditAdvancedParametersComponent implements OnInit {
     }
   }
 
-  onEnteringTimeMaxEnabledChange(event: boolean): void {
-    if (!event) {
+  onEnteringTimeMaxEnabledChange(enabled: boolean): void {
+    if (!enabled) {
       return;
     }
 
-    this.computeEnteringTimeMaxValue();
-  }
-
-  computeEnteringTimeMaxValue(): void {
-    const enteringTimeMaxEnabled = this.parentForm?.get('entering_time_max_enabled')?.value as boolean;
     const enteringTimeMax = this.parentForm?.get('entering_time_max')?.value as Date;
 
-    if (enteringTimeMaxEnabled && enteringTimeMax.getTime() === new Date(DEFAULT_ENTERING_TIME_MAX).getTime()) {
+    if (enteringTimeMax.getTime() === new Date(DEFAULT_ENTERING_TIME_MAX).getTime()) {
       const enteringTimeMinEnabled = this.parentForm?.get('entering_time_min_enabled')?.value as boolean;
       const enteringTimeMin = enteringTimeMinEnabled ? this.parentForm?.get('entering_time_min')?.value as Date : new Date();
       const newTimeMax = enteringTimeMinEnabled ? enteringTimeMin.getTime() + HOURS : enteringTimeMin.getTime();
@@ -124,11 +119,8 @@ export class ItemEditAdvancedParametersComponent implements OnInit {
     const enteringTimeMin = this.parentForm?.get('entering_time_min')?.value as Date;
     const enteringTimeMax = this.parentForm?.get('entering_time_max')?.value as Date;
 
-    this.minEnteringTimeMaxDate = enteringTimeMinEnabled ? enteringTimeMin : new Date();
-
-    if (enteringTimeMin.getTime() > enteringTimeMax.getTime()) {
-      this.parentForm?.get('entering_time_max')?.patchValue(enteringTimeMin);
-    }
+    this.minEnteringTimeMaxDate = enteringTimeMinEnabled ?
+      new Date(Math.min(enteringTimeMin.getTime(), enteringTimeMax.getTime())) : new Date();
   }
 
 }
