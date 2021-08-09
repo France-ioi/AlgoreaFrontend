@@ -9,7 +9,7 @@ import { urlArrayForRawItem } from '../routing/item-route';
  */
 @Pipe({ name: 'rawItemLink', pure: true })
 export class RawItemLinkPipe implements PipeTransform {
-  transform({ id, type }: {id: string, type: ItemType}, page?: 'details' | 'edit'): UrlCommand {
+  transform({ id, type }: {id: string, type: ItemType}, page?: string|string[]): UrlCommand {
     return urlArrayForRawItem(id, typeCategoryOfItem({ type }), page);
   }
 }
