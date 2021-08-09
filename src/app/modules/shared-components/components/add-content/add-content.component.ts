@@ -3,11 +3,13 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { Observable, Subscription, merge, of } from 'rxjs';
 import { map, filter, switchMap, delay } from 'rxjs/operators';
 import { fetchingState, readyState } from 'src/app/shared/helpers/state';
+import { PermissionsInfo } from '../../../item/helpers/item-permissions';
 
 export interface AddedContent<T> {
   id?: string,
   title: string,
   type: T,
+  permissions?: PermissionsInfo,
 }
 
 export interface NewContentType<T> {
