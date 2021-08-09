@@ -4,7 +4,7 @@ import { appConfig } from '../helpers/config';
 import { ContentRoute, pathParamName } from './content-route';
 import { isSkill, ItemTypeCategory } from '../helpers/item-type';
 import { isString } from '../helpers/type-checkers';
-import { UrlCommand } from '../helpers/url';
+import { UrlCommand, UrlCommandParameters } from '../helpers/url';
 
 // url parameter names
 const activityPrefix = 'activities';
@@ -44,19 +44,24 @@ export function appDefaultItemRoute(cat: ItemTypeCategory = 'activity'): ItemRou
 /**
  * Url (as string) of the item route without attemptId or path (only item id)
 */
-export function rawItemStringUrl(id: ItemId, cat: ItemTypeCategory, page: string|string[] = 'details'): string {
-  return `/${itemTypeCategoryPrefix(cat)}/by-id/${id}/${pageToPagePath(page).join('/')}`;
+export function urlArrayForRawItem(id: ItemId, cat: ItemTypeCategory, page: string|string[] = 'details'): UrlCommand {
+  return urlArrayForItem(id, cat, {}, page);
 }
 
 /**
  * Return a url array (`commands` array) to the given item, on the given page.
  */
 export function urlArrayForItemRoute(route: ItemRoute, page: string|string[] = 'details'): UrlCommand {
-  const params: {[k: string]: any} = {};
+  const params: UrlCommandParameters = {};
   if (isRouteWithAttempt(route)) params[attemptParamName] = route.attemptId;
   else params[parentAttemptParamName] = route.parentAttemptId;
   params[pathParamName] = route.path;
-  return [ '/', itemTypeCategoryPrefix(route.contentType), 'by-id', route.id, params, ...pageToPagePath(page) ];
+  return urlArrayForItem(route.id, route.contentType, params, page);
+}
+
+function urlArrayForItem(id: ItemId, cat: ItemTypeCategory, params: UrlCommandParameters, page: string|string[]):
+  UrlCommand {
+  return [ '/', itemTypeCategoryPrefix(cat), 'by-id', id, params, ...pageToPagePath(page) ];
 }
 
 interface ItemRouteError {
