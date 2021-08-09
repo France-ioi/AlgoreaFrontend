@@ -5,11 +5,11 @@
       [label]="session?.watchedGroup | itemProgressLabel"
   >
 
-    <p class="not-allow-caption" *ngIf="!!session?.watchedGroup && itemData.item.permissions.canWatch === 'none'" i18n>
+    <p class="not-allow-caption" *ngIf="!!session?.watchedGroup && itemData.item.permissions.canWatch === 'none'; else content" i18n>
       You are not allowed to watch the progress of other users on this content.
     </p>
 
-    <ng-container *ngIf="!session?.watchedGroup || !!session?.watchedGroup && itemData.item.permissions.canWatch !== 'none'">
+    <ng-template #content>
 
       <div class="selection-center" *ngIf="selectors !== 'none'">
         <nav class="tab-rounded">
@@ -62,6 +62,6 @@
         ></alg-chapter-user-progress>
       </div>
 
-    </ng-container>
+    </ng-template>
   </alg-section>
 </ng-container>
