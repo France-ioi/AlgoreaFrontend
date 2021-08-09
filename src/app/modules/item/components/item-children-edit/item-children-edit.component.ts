@@ -137,6 +137,7 @@ export class ItemChildrenEditComponent implements OnChanges {
   addChild(child: AddedContent<ItemType>): void {
     const permissionsForCreatedItem: PermissionsInfo = {
       canView: 'solution',
+      canWatch: 'answer_with_grant',
       canEdit: 'all_with_grant',
       canGrantView: 'solution_with_grant',
     };
