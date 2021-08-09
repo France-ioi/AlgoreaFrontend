@@ -4,6 +4,7 @@ import { appConfig } from '../helpers/config';
 import { ContentRoute, pathParamName } from './content-route';
 import { isSkill, ItemTypeCategory } from '../helpers/item-type';
 import { isString } from '../helpers/type-checkers';
+import { UrlCommand } from '../helpers/url';
 
 // url parameter names
 const activityPrefix = 'activities';
@@ -50,7 +51,7 @@ export function rawItemStringUrl(id: ItemId, cat: ItemTypeCategory, page: string
 /**
  * Return a url array (`commands` array) to the given item, on the given page.
  */
-export function urlArrayForItemRoute(route: ItemRoute, page: string|string[] = 'details'): (string|{[k: string]: any})[] {
+export function urlArrayForItemRoute(route: ItemRoute, page: string|string[] = 'details'): UrlCommand {
   const params: {[k: string]: any} = {};
   if (isRouteWithAttempt(route)) params[attemptParamName] = route.attemptId;
   else params[parentAttemptParamName] = route.parentAttemptId;

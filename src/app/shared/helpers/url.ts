@@ -1,5 +1,9 @@
 import { isString } from './type-checkers';
 
+// Url array (`command` array used in some api of angular)
+export interface UrlCommandParameters { [k: string]: string|string[] }
+export type UrlCommand = (string|UrlCommandParameters)[];
+
 export function getHashFragmentParams(): Map<string, string>{
   let hash = window.location.hash;
   hash = decodeURIComponent(hash);
@@ -59,7 +63,7 @@ export function clearHash(paramNames: string[]): void {
 /**
  * Convert a valid url array (`commands` array) to the string url
  */
-export function urlStringFromArray(urlAsArray: (string|{[k: string]: string|string[]})[]): string {
+export function urlStringFromArray(urlAsArray: UrlCommand): string {
   // do not try to understand the implementation, just check the tests
   return urlAsArray.map((part, idx) => {
     if (part === '/') return '';
