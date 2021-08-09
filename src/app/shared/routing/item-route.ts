@@ -83,6 +83,8 @@ export function isItemRouteError(route: ItemRoute|ItemRouteError): route is Item
 
 /**
  * Url (as string) of the item route without attemptId or path (only item id)
+ * `urlArrayForItemRoute` should always be preferred to this one, using raw item means further requests will be required to fetch
+ * path and attempt information
 */
 export function urlArrayForRawItem(id: ItemId, cat: ItemTypeCategory, page: string|string[] = 'details'): UrlCommand {
   return urlArrayForItem(id, cat, {}, page);

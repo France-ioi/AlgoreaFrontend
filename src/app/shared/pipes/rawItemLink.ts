@@ -3,8 +3,12 @@ import { ItemType, typeCategoryOfItem } from '../helpers/item-type';
 import { UrlCommand } from '../helpers/url';
 import { urlArrayForRawItem } from '../routing/item-route';
 
-@Pipe({ name: 'itemLink', pure: true })
-export class ItemLinkPipe implements PipeTransform {
+/**
+ * Functions using item route should always be preferred to raw item.
+ * Using raw item means further requests will be required to fetch path and attempt information.
+ */
+@Pipe({ name: 'rawItemLink', pure: true })
+export class RawItemLinkPipe implements PipeTransform {
   transform({ id, type }: {id: string, type: ItemType}, page?: 'details' | 'edit'): UrlCommand {
     return urlArrayForRawItem(id, typeCategoryOfItem({ type }), page);
   }
