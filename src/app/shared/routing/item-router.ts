@@ -24,7 +24,7 @@ export class ItemRouter {
    * Navigate to the current page without path and attempt if we are on an item page.
    * If we are not on an item page, do nothing.
    */
-  navigateToIncompleteItemOfCurrentPage(): void {
+  navigateToRawItemOfCurrentPage(): void {
     const currentPage = this.currentItemPagePath();
     if (currentPage) void this.router.navigate(currentPage);
   }

@@ -43,7 +43,7 @@ export function appDefaultItemRoute(cat: ItemTypeCategory = 'activity'): ItemRou
 /**
  * Url (as string) of the item route without attemptId or path (only item id)
 */
-export function incompleteItemStringUrl(id: ItemId, cat: ItemTypeCategory, page: string|string[] = 'details'): string {
+export function rawItemStringUrl(id: ItemId, cat: ItemTypeCategory, page: string|string[] = 'details'): string {
   return `/${itemTypeCategoryPrefix(cat)}/by-id/${id}/${pageToPagePath(page).join('/')}`;
 }
 

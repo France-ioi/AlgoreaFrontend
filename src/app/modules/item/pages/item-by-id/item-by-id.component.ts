@@ -90,7 +90,7 @@ export class ItemByIdComponent implements OnDestroy {
           if (errorHasTag(state.error, breadcrumbServiceTag) && errorIsHTTPForbidden(state.error)) {
             if (this.hasRedirected) throw new Error('Too many redirections (unexpected)');
             this.hasRedirected = true;
-            this.itemRouter.navigateToIncompleteItemOfCurrentPage();
+            this.itemRouter.navigateToRawItemOfCurrentPage();
           }
           this.currentContent.clear();
         }
