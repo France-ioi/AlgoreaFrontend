@@ -10,9 +10,7 @@
     <p-progressSpinner [style]="{ width: '3.3333rem', height: '3.3333rem' }"></p-progressSpinner>
   </div>
 
-  <ng-template #userChapterView>
-    <p>Chapter view for user (To be implemented)</p>
-  </ng-template>
+  <p class="error" *ngIf="state.isError" i18n>Error while loading the group progress</p>
 </ng-container>
 
 
