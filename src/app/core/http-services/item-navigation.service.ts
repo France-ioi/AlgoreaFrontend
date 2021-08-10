@@ -88,7 +88,8 @@ export interface NavMenuItem {
   currentScore?: number,
   validated?: boolean,
   canViewContent: boolean,
-  children?: NavMenuItem[] // placeholder for children when fetched (may 'hasChildren' with 'children' not set)
+  children?: NavMenuItem[], // placeholder for children when fetched (may 'hasChildren' with 'children' not set)
+  disabled: boolean,
 }
 
 export interface NavMenuRootItem {
@@ -132,6 +133,7 @@ function createNavMenuItem(raw: {
     bestScore: raw.no_score ? undefined : raw.best_score,
     currentScore: raw.no_score ? undefined : currentResult?.score,
     validated: raw.no_score ? undefined : currentResult?.validated,
+    disabled: raw.permissions.can_view === 'info',
   };
 }
 
@@ -169,6 +171,7 @@ export class ItemNavigationService {
             canViewContent: [ 'content','content_with_descendants','solution' ].includes(data.permissions.can_view),
             hasChildren: data.children !== null && data.children.length > 0,
             attemptId: data.attempt_id,
+            disabled: data.permissions.can_view === 'info',
           },
           items: data.children === null ? [] : data.children.filter(i => !skillsOnly || isASkill(i)).map(i => createNavMenuItem(i)),
         }))

@@ -59,6 +59,13 @@
             <span class="node-state" *ngIf="node.data.status === 'error'">
               <i class="fa fa-exclamation-triangle"></i>
             </span>
+            <span
+              class="node-state"
+              *ngIf="node.data.element.isLocked"
+              i18n-pTooltip pTooltip="{{ 'Your current access rights do not allow you to list the content of this chapter/skill.' }}"
+            >
+              <i class="fa fa-lock"></i>
+            </span>
           </span>
         </span>
       </span>
@@ -116,7 +123,7 @@
     <span
       id="nav-{{ node.data.element.id }}"
       class="node-tree-item folder"
-      [ngClass]="{ expanded: node.expanded, locked: node.locked, current: node.data && node.data.current }"
+      [ngClass]="{ expanded: node.expanded, locked: node.locked, current: node.data && node.data.current, disabled: node.data.element.disabled }"
     >
       <span class="node-item-branch">
         <span class="top-branch">
@@ -136,6 +143,13 @@
             <span class="node-label-title">
               {{ node.data.element.title }}
               <span *ngIf="node.data.element.groupName">(via group "{{ node.data.element.groupName }}")</span>
+            </span>
+            <span
+              class="node-state"
+              *ngIf="node.data.element.disabled"
+              i18n-pTooltip pTooltip="Your current access rights do not allow you to list the content of this chapter/skill."
+            >
+              <i class="fa fa-lock"></i>
             </span>
           </span>
           <alg-skill-progress
@@ -204,7 +218,7 @@
     <span
       id="nav-{{ node.data.element.id }}"
       class="node-tree-item folder"
-      [ngClass]="{ expanded: node.expanded, locked: node.locked, current: node.data && node.data.current }"
+      [ngClass]="{ expanded: node.expanded, locked: node.locked, current: node.data && node.data.current, disabled: node.data.element.disabled }"
     >
       <span class="node-item-branch">
         <span class="top-branch">
@@ -235,6 +249,13 @@
             <span class="node-label-title">
               {{ node.data.element.title }}
               <span *ngIf="node.data.element.groupName">(via group "{{ node.data.element.groupName }}")</span>
+            </span>
+            <span
+              class="node-state"
+              *ngIf="node.data.element.disabled"
+              i18n-pTooltip pTooltip="Your current access rights do not allow you to start the activity."
+            >
+              <i class="fa fa-lock"></i>
             </span>
           </span>
         </span>
