@@ -83,7 +83,7 @@ export class ItemLogViewComponent implements OnChanges, OnDestroy {
       {
         field: 'item.user',
         header: $localize`User`,
-        enabled: watchingGroup && !watchingGroup.login,
+        enabled: watchingGroup && !watchingGroup.login, // only if in watching mode and watch group is not a user
       },
       {
         field: 'at',
