@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { PerfectScrollbarComponent } from 'ngx-perfect-scrollbar';
 
 @Component({
@@ -17,8 +17,24 @@ export class LeftMenuComponent {
 
   onSelectId(id: string): void {
     setTimeout(() => {
-      this.componentRef?.directiveRef?.scrollToElement(`#nav-${ id }`, -8, 300);
-    });
+      if (!this.componentRef?.directiveRef?.elementRef) {
+        return;
+      }
+
+      const elRef = <ElementRef<HTMLElement>> this.componentRef?.directiveRef?.elementRef;
+      const scrollTop: number = elRef.nativeElement.scrollTop;
+      const menuItemEl: HTMLElement | null = elRef.nativeElement.querySelector(`#nav-${ id }`);
+
+      if (!menuItemEl?.offsetTop) {
+        return;
+      }
+
+      const menuItemOffsetTop = menuItemEl.offsetTop;
+
+      if ((menuItemOffsetTop - scrollTop) <= 0) {
+        this.componentRef?.directiveRef?.scrollToElement(`#nav-${ id }`, -8, 300);
+      }
+    }, 250);
   }
 
 }
