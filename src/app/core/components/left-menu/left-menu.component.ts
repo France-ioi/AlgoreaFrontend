@@ -17,22 +17,15 @@ export class LeftMenuComponent {
 
   onSelectId(id: string): void {
     setTimeout(() => {
-      if (!this.componentRef?.directiveRef?.elementRef) {
-        return;
-      }
+      const scrollbarDirectiveRef = this.componentRef?.directiveRef;
+      if (!scrollbarDirectiveRef) return;
+      const scrollbarElement = (scrollbarDirectiveRef.elementRef as ElementRef<HTMLElement>).nativeElement;
 
-      const elRef = <ElementRef<HTMLElement>> this.componentRef?.directiveRef?.elementRef;
-      const scrollTop: number = elRef.nativeElement.scrollTop;
-      const menuItemEl: HTMLElement | null = elRef.nativeElement.querySelector(`#nav-${ id }`);
+      const menuItemEl = scrollbarElement.querySelector<HTMLElement>(`#nav-${ id }`);
+      if (!menuItemEl) return;
 
-      if (!menuItemEl?.offsetTop) {
-        return;
-      }
-
-      const menuItemOffsetTop = menuItemEl.offsetTop;
-
-      if ((menuItemOffsetTop - scrollTop) <= 0) {
-        this.componentRef?.directiveRef?.scrollToElement(`#nav-${ id }`, -8, 300);
+      if (menuItemEl.offsetTop - scrollbarElement.scrollTop <= 0) {
+        scrollbarDirectiveRef.scrollToElement(`#nav-${ id }`, -8, 300);
       }
     }, 250);
   }
