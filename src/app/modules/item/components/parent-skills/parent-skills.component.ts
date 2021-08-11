@@ -34,7 +34,7 @@ export class ParentSkillsComponent implements OnChanges, OnDestroy {
   }
 
   click(parent: ItemParent&ParentSkillAdditions): void {
-    if (!this.itemData || parent.isLocked) return;
+    if (!this.itemData) return;
 
     this.itemRouter.navigateTo({
       contentType: typeCategoryOfItem(parent),
