@@ -184,9 +184,6 @@
 
       &.disabled {
         opacity: .8;
-        &:active {
-          pointer-events: none;
-        }
       }
 
       .node-item-branch {
