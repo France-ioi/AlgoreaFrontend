@@ -207,17 +207,15 @@ export class ItemNavigationService {
 
     return this.getNavDataFromChildRoute(parentId, itemRoute).pipe(map(navParent => {
       const index = navParent.items.findIndex(item => item.id === itemRoute.id);
-      if (index === -1) throw new Error(`Unexpected: item is missing from its parent children list`);
+      if (index === -1) throw new Error('Unexpected: item is missing from its parent children list');
 
       const parentAttemptId = navParent.parent.attemptId;
       if (parentAttemptId === null) throw new Error('Unexpected: parent of an item node has no attempt');
 
-      const typeCat : ItemTypeCategory = itemRoute.contentType === 'activity' ? 'activity' : 'skill';
-
       const leftItem = navParent.items[index - 1];
       const left: ItemRoute|null = leftItem ? {
         id: leftItem.id,
-        contentType: typeCat,
+        contentType: itemRoute.contentType,
         ...(leftItem.attemptId ? { attemptId: leftItem.attemptId } : { parentAttemptId }),
         path: itemRoute.path,
       } : null;
@@ -225,16 +223,16 @@ export class ItemNavigationService {
       const rightItem = navParent.items[index + 1];
       const right: ItemRoute|null = rightItem ? {
         id: rightItem.id,
-        contentType: typeCat,
+        contentType: itemRoute.contentType,
         ...(rightItem.attemptId ? { attemptId: rightItem.attemptId } : { parentAttemptId }),
         path: itemRoute.path,
       } : null;
 
       const parent: ItemRoute = {
         id: parentId,
-        contentType: typeCat,
+        contentType: itemRoute.contentType,
         path: itemRoute.path.slice(0, -1),
-        attemptId: isRouteWithAttempt(itemRoute) ? itemRoute.attemptId : itemRoute.parentAttemptId,
+        attemptId: parentAttemptId,
       };
 
       return { parent, left, right };
