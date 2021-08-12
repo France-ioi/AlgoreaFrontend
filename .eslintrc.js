@@ -82,7 +82,7 @@ module.exports = {
     }],
     'quotes': ['error', 'single', {
       avoidEscape: true,
-      allowTemplateLiterals: true
+      allowTemplateLiterals: false
     }]
   },
   overrides: [
