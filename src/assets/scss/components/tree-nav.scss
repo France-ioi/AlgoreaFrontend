@@ -57,6 +57,16 @@
 
   .p-treenode-children {
     padding-left: 3rem !important;
+
+    background-color: var(--nav-bg-child-color);
+
+    .node-item-content {
+      border-bottom-color: var(--nav-child-border-color) !important;
+    }
+
+    .mask-branch {
+      background-color: var(--nav-bg-child-color) !important;
+    }
   }
 
   .p-treenode-children {
@@ -91,6 +101,14 @@
   .bottom-branch {
     border-right: none;
     border-left: none;
+  }
+
+  p-treenode:last-child
+  > .p-treenode
+  > .p-treenode-content
+  .node-tree-item
+  .node-item-content {
+    border-bottom: none;
   }
 
   p-treenode:first-child
@@ -154,14 +172,14 @@
 
       .node-item-branch {
         display: block;
-        width: 3.1667rem;
-        min-height: 4.1667rem;
+        width: 3.2rem;
+        min-height: 4.5rem;
         z-index: 10;
 
         .top-branch {
           display: block;
           border-right: .1rem solid var(--nav-border-color);
-          min-height: 2.0833rem;
+          min-height: 2.25rem;
           position: relative;
 
           .mask-branch {
@@ -178,7 +196,7 @@
         .bottom-branch {
           display: block;
           border-right: .1rem solid var(--nav-border-color);
-          min-height: 2.0833rem;
+          min-height: 2.25rem;
           position: relative;
 
           .mask-branch {
@@ -187,7 +205,7 @@
             right: -.1rem;
             width: 0.1667rem;
             top: 0;
-            height: 1.25rem;
+            height: 1.2rem;
             background-color: var(--nav-bg-color);
           }
         }

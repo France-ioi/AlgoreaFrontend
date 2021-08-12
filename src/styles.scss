@@ -101,6 +101,8 @@ body .p-component {
 .left-nav-theme {
   --nav-bg-color: #{$nav-bg-color};
   --nav-bg-secondary-color: #{$nav-bg-secondary-color};
+  --nav-bg-child-color: #{$nav-bg-child-color};
+  --nav-child-border-color: #{$nav-child-border-color};
   --nav-bg-handle-color: #{$nav-bg-handle-color};
   --nav-border-color: #{$nav-border-color};
   --nav-border-secondary-color: #{$nav-border-secondary-color};
@@ -112,6 +114,8 @@ body .p-component {
   &.dark {
     --nav-bg-color: #{$nav-dark-bg-color};
     --nav-bg-secondary-color: #{$nav-dark-bg-secondary-color};
+    --nav-bg-child-color: #{$nav-dark-bg-child-color};
+    --nav-child-border-color: #{$nav-dark-child-border-color};
     --nav-bg-handle-color: #{$nav-dark-bg-handle-color};
     --nav-border-color: #{$nav-dark-border-color};
     --nav-border-secondary-color: #{$nav-dark-border-secondary-color};
