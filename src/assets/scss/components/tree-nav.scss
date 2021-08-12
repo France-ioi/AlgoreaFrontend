@@ -183,7 +183,9 @@
       cursor: pointer;
 
       &.disabled {
-        opacity: .8;
+        .node-label-title {
+          opacity: .8;
+        }
       }
 
       .node-item-branch {
