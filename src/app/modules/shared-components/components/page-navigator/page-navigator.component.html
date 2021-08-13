@@ -13,7 +13,7 @@
   <span *ngIf="allowFullScreen" class="top-bar-expand">
     <i class="fa fa-expand-arrows-alt"></i>
   </span>
-  <span class="navigator">
+  <span class="navigator" *ngIf="navigationMode">
     <span class="p-buttonset">
       <button pButton type="button" icon="fa fa-arrow-up" (click)="parent.emit()" [disabled]="!navigationMode.parent"></button>
       <button pButton type="button" icon="fa fa-chevron-left" (click)="left.emit()" [disabled]="!navigationMode.left"></button>

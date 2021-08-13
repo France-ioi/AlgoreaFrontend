@@ -11,7 +11,7 @@ export class PageNavigatorComponent {
   @Input() allowEditing = false;
   @Input() allowFullScreen = false;
 
-  @Input() navigationMode: {parent: boolean, left: boolean, right: boolean} = { parent: false, left: false, right: false };
+  @Input() navigationMode?: {parent: boolean, left: boolean, right: boolean};
 
   @Output() edit = new EventEmitter<void>();
   @Output() watch = new EventEmitter<void>();
