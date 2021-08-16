@@ -16,8 +16,8 @@ export class SuggestionOfActivitiesComponent {
     switchMap(watchedGroup =>
       this.itemNavigationService.getRootActivities(watchedGroup.id).pipe(
         map((rootActivity: RootActivity[]) =>
-          rootActivity.sort(item => (item.group_id === item.group_id ? -1 : 1)).slice(0, 5)
-        )
+          rootActivity.sort(item => (item.group_id === watchedGroup.id ? -1 : 1)).slice(0, 4)
+        ),
       )
     ),
     mapToFetchState(),
