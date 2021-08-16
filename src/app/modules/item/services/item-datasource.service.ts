@@ -2,7 +2,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject, concat, EMPTY, forkJoin, Observable, of, Subject, Subscription } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { bestAttemptFromResults, implicitResultStart } from 'src/app/shared/helpers/attempts';
-import { isRouteWithAttempt, ItemRoute } from 'src/app/shared/routing/item-route';
+import { isRouteWithSelfAttempt, ItemRoute } from 'src/app/shared/routing/item-route';
 import { errorState, fetchingState, FetchState, readyState } from 'src/app/shared/helpers/state';
 import { ResultActionsService } from 'src/app/shared/http-services/result-actions.service';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
@@ -99,7 +99,7 @@ export class ItemDataSource implements OnDestroy {
     return this.getResultsService.getResults(itemRoute).pipe(
       switchMap(results => {
         // 1) if attempt_id was given as arg, try to select the matching result
-        if (isRouteWithAttempt(itemRoute)) {
+        if (isRouteWithSelfAttempt(itemRoute)) {
           const currentResult = results.find(r => r.attemptId === itemRoute.attemptId);
           if (currentResult) return of({ results: results, currentResult: currentResult });
         }
@@ -109,7 +109,7 @@ export class ItemDataSource implements OnDestroy {
         // 3) if no suitable one and this item does not allow implicit result start or perms are not sufficent, continue without result
         if (!implicitResultStart(item)) return of({ results: results });
         // 4) otherwise, start a result
-        const attemptId = isRouteWithAttempt(itemRoute) ? itemRoute.attemptId : itemRoute.parentAttemptId;
+        const attemptId = isRouteWithSelfAttempt(itemRoute) ? itemRoute.attemptId : itemRoute.parentAttemptId;
         if (!attemptId) return EMPTY; // unexpected
         return this.resultActionsService.start(itemRoute.path.concat([ itemRoute.id ]), attemptId).pipe(
           // once a result has been created, fetch it

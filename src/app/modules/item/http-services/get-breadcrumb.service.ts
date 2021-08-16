@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { isRouteWithAttempt, ItemRoute } from 'src/app/shared/routing/item-route';
+import { isRouteWithSelfAttempt, ItemRoute } from 'src/app/shared/routing/item-route';
 import { appConfig } from 'src/app/shared/helpers/config';
 import { tagError } from 'src/app/shared/helpers/errors';
 import { ensureDefined } from 'src/app/shared/helpers/null-undefined-predicates';
@@ -36,7 +36,7 @@ export class GetBreadcrumbService {
   getBreadcrumb(itemRoute: ItemRoute): Observable<BreadcrumbItem[]> {
     return this.http
       .get<RawBreadcrumbItem[]>(`${appConfig.apiUrl}/items/${itemRoute.path.concat([ itemRoute.id ]).join('/')}/breadcrumbs`, {
-        params: isRouteWithAttempt(itemRoute) ? { attempt_id: itemRoute.attemptId } : { parent_attempt_id: itemRoute.parentAttemptId }
+        params: isRouteWithSelfAttempt(itemRoute) ? { attempt_id: itemRoute.attemptId } : { parent_attempt_id: itemRoute.parentAttemptId }
       })
       .pipe(
         map(items => {

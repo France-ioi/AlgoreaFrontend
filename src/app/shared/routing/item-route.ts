@@ -23,12 +23,14 @@ type AttemptId = string;
 
 interface ItemRouteBase extends ContentRoute {
   contentType: ItemTypeCategory;
+  attemptId?: AttemptId;
+  parentAttemptId?: AttemptId;
 }
-export type ItemRouteWithAttempt = ItemRouteBase & { attemptId: AttemptId };
-export type ItemRouteWithParentAttempt = ItemRouteBase & { parentAttemptId: AttemptId };
-export type ItemRoute = ItemRouteWithAttempt | ItemRouteWithParentAttempt;
+type ItemRouteWithSelfAttempt = ItemRouteBase & { attemptId: AttemptId };
+type ItemRouteWithParentAttempt = ItemRouteBase & { parentAttemptId: AttemptId };
+export type ItemRoute = ItemRouteWithSelfAttempt | ItemRouteWithParentAttempt;
 
-export function isRouteWithAttempt(item: ItemRoute): item is ItemRouteWithAttempt {
+export function isRouteWithSelfAttempt(item: ItemRoute): item is ItemRouteWithSelfAttempt {
   return 'attemptId' in item;
 }
 
@@ -95,7 +97,7 @@ export function urlArrayForRawItem(id: ItemId, cat: ItemTypeCategory, page: stri
  */
 export function urlArrayForItemRoute(route: ItemRoute, page: string|string[] = 'details'): UrlCommand {
   const params: UrlCommandParameters = {};
-  if (isRouteWithAttempt(route)) params[attemptParamName] = route.attemptId;
+  if (isRouteWithSelfAttempt(route)) params[attemptParamName] = route.attemptId;
   else params[parentAttemptParamName] = route.parentAttemptId;
   params[pathParamName] = route.path;
   return urlArrayForItem(route.id, route.contentType, params, page);
