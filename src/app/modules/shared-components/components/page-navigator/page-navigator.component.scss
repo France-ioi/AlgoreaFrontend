@@ -34,13 +34,20 @@
   .navigator {
     border-top-left-radius: 2.3333rem;
     border-bottom-left-radius: 2.3333rem;
-    padding-left: 1rem;
+    padding-left: 1.2rem;
     color: #D0DDEC;
-    i {
+
+    button {
       cursor: pointer;
-      margin-right: 1rem;
+      background-color: transparent;
+      border: transparent;
+
       &:last-child {
         margin-right: 0.4167rem;
+      }
+
+      &:disabled {
+        cursor: not-allowed;
       }
     }
   }

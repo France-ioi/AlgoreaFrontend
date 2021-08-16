@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { bestAttemptFromResults } from 'src/app/shared/helpers/attempts';
 import { isRouteWithAttempt, ItemRoute } from 'src/app/shared/routing/item-route';
@@ -199,4 +199,43 @@ export class ItemNavigationService {
     return (isSkill(type)) ? this.getRootSkills() : this.getRootActivities();
   }
 
+  getNavigationNeighbors(itemRoute: ItemRoute): Observable<{ parent: ItemRoute|null, left: ItemRoute|null, right: ItemRoute|null }> {
+    const parentId = itemRoute.path[itemRoute.path.length - 1];
+
+    // Root activity => no parent/left/right activity
+    if (!parentId) return of({ parent: null, left: null, right: null });
+
+    return this.getNavDataFromChildRoute(parentId, itemRoute).pipe(map(navParent => {
+      const index = navParent.items.findIndex(item => item.id === itemRoute.id);
+      if (index === -1) throw new Error('Unexpected: item is missing from its parent children list');
+
+      const parentAttemptId = navParent.parent.attemptId;
+      if (parentAttemptId === null) throw new Error('Unexpected: parent of an item node has no attempt');
+
+      const leftItem = navParent.items[index - 1];
+      const left: ItemRoute|null = leftItem ? {
+        id: leftItem.id,
+        contentType: itemRoute.contentType,
+        ...(leftItem.attemptId ? { attemptId: leftItem.attemptId } : { parentAttemptId }),
+        path: itemRoute.path,
+      } : null;
+
+      const rightItem = navParent.items[index + 1];
+      const right: ItemRoute|null = rightItem ? {
+        id: rightItem.id,
+        contentType: itemRoute.contentType,
+        ...(rightItem.attemptId ? { attemptId: rightItem.attemptId } : { parentAttemptId }),
+        path: itemRoute.path,
+      } : null;
+
+      const parent: ItemRoute = {
+        id: parentId,
+        contentType: itemRoute.contentType,
+        path: itemRoute.path.slice(0, -1),
+        attemptId: parentAttemptId,
+      };
+
+      return { parent, left, right };
+    }));
+  }
 }

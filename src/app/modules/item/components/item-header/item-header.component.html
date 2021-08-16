@@ -19,7 +19,10 @@
     <alg-page-navigator
       [allowEditing]="itemData.item.permissions.canEdit !== 'none'"
       [allowFullScreen]="false"
-      navigationMode="nextAndPrev"
+      [navigationMode]="{parent: navigationNeighbors?.parent !== null, left: navigationNeighbors?.left !== null, right: navigationNeighbors?.right !== null}"
+      (parent)="onParentClicked()"
+      (left)="onLeftClicked()"
+      (right)="onRightClicked()"
       (edit)="onEditButtonClicked()"
     ></alg-page-navigator>
   </div>

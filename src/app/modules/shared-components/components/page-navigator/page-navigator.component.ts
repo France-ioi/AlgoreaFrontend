@@ -10,11 +10,16 @@ export class PageNavigatorComponent {
   @Input() isWatched = false;
   @Input() allowEditing = false;
   @Input() allowFullScreen = false;
-  @Input() navigationMode = 'nextAndPrev';
+
+  @Input() navigationMode?: {parent: boolean, left: boolean, right: boolean};
 
   @Output() edit = new EventEmitter<void>();
   @Output() watch = new EventEmitter<void>();
   @Output() stopWatch = new EventEmitter<void>();
+
+  @Output() parent = new EventEmitter<void>();
+  @Output() left = new EventEmitter<void>();
+  @Output() right = new EventEmitter<void>();
 
   constructor() {
   }

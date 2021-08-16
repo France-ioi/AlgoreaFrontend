@@ -20,7 +20,6 @@
     [allowWatching]="user.currentUserCanWatchUser && !user.isCurrentUser"
     [isWatched]="!!(isCurrentGroupWatched$ | async)"
     [allowFullScreen]="false"
-    navigationMode="nextAndPrev"
     (edit)="onEditButtonClicked()"
     (watch)="onStartWatchButtonClicked()"
     (stopWatch)="onStopWatchButtonClicked()"
