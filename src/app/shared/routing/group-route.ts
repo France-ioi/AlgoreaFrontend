@@ -1,4 +1,4 @@
-import { ContentRoute, pathParamName } from './content-route';
+import { ContentRoute, pathAsParameter } from './content-route';
 
 type GroupId = string;
 
@@ -14,7 +14,5 @@ export function groupRoute(id: GroupId): GroupRoute {
  * Return a url array (`commands` array) to the given group, on the given page.
  */
 export function urlArrayForGroupRoute(route: GroupRoute, page: 'edit'|'details' = 'details'): any[] {
-  const params: {[k: string]: any} = {};
-  params[pathParamName] = route.path;
-  return [ '/', 'groups', 'by-id', route.id, params, page ];
+  return [ '/', 'groups', 'by-id', route.id, pathAsParameter(route.path), page ];
 }

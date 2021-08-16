@@ -1,7 +1,7 @@
 import { ParamMap } from '@angular/router';
 import { defaultAttemptId } from '../helpers/attempts';
 import { appConfig } from '../helpers/config';
-import { ContentRoute, pathParamName } from './content-route';
+import { ContentRoute, pathAsParameter, pathFromRouterParameters } from './content-route';
 import { ItemTypeCategory } from '../helpers/item-type';
 import { isString } from '../helpers/type-checkers';
 import { UrlCommand, UrlCommandParameters } from '../helpers/url';
@@ -57,7 +57,7 @@ export function decodeItemRouterParameters(params: ParamMap): {
 } {
   return {
     id: params.get('id'),
-    path: params.get(pathParamName),
+    path: pathFromRouterParameters(params),
     attemptId: params.get(attemptParamName),
     parentAttemptId: params.get(parentAttemptParamName)
   };
@@ -88,10 +88,9 @@ export function urlArrayForRawItem(id: ItemId, cat: ItemTypeCategory, page: stri
  * Return a url array (`commands` array) to the given item, on the given page.
  */
 export function urlArrayForItemRoute(route: FullItemRoute, page: string|string[] = 'details'): UrlCommand {
-  const params: UrlCommandParameters = {};
+  const params = pathAsParameter(route.path);
   if (isRouteWithSelfAttempt(route)) params[attemptParamName] = route.attemptId;
   else params[parentAttemptParamName] = route.parentAttemptId;
-  params[pathParamName] = route.path;
   return urlArrayForItem(route.id, route.contentType, params, page);
 }
 
