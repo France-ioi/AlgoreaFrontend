@@ -90,7 +90,7 @@
   .node-tree-item
   .node-item-branch
   .bottom-branch {
-    border-left: .1rem solid var(--nav-border-color);
+    border-left: .1rem solid var(--nav-branch-border-color);
   }
 
   .p-tree-container
@@ -128,20 +128,20 @@
   .p-treenode-children .node-tree-item {
     .node-item-branch {
       .top-branch {
-        border-left: .1rem solid var(--nav-border-color);
-        border-bottom: .1rem solid var(--nav-border-color);
+        border-left: .1rem solid var(--nav-branch-border-color);
+        border-bottom: .1rem solid var(--nav-branch-border-color);
         border-right: none;
       }
 
       .bottom-branch {
-        border-left: .1rem solid var(--nav-border-color);
+        border-left: .1rem solid var(--nav-branch-border-color);
         border-right: none;
       }
     }
   }
 
   .p-treenode-children .node-tree-item.folder.expanded .node-item-branch .bottom-branch {
-    border-right: .1rem solid var(--nav-border-color);
+    border-right: .1rem solid var(--nav-branch-border-color);
   }
 
   .p-treenode-children .node-tree-item .node-item-branch .top-branch {
