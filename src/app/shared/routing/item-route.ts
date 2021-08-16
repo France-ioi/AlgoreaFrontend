@@ -47,14 +47,12 @@ export function rawItemRoute(contentType: ItemTypeCategory, id: ItemId): RawItem
 /**
  * The route to the app default (see config) item
  */
-export function appDefaultItemRoute(): FullItemRoute {
-  return {
-    contentType: 'activity',
-    id: appConfig.defaultActivityId,
-    path: [],
-    parentAttemptId: defaultAttemptId,
-  };
-}
+export const appDefaultItemRoute: FullItemRoute = {
+  contentType: 'activity',
+  id: appConfig.defaultActivityId,
+  path: [],
+  parentAttemptId: defaultAttemptId,
+};
 
 
 /* **********************************************************************************************************

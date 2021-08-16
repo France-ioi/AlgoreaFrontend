@@ -37,7 +37,7 @@ export class ItemByIdComponent implements OnDestroy {
   // to prevent looping indefinitely in case of bug in services (wrong path > item without path > fetch path > item with path > wrong path)
   hasRedirected = false;
 
-  readonly defaultItemRoute = this.itemRouter.url(appDefaultItemRoute()).toString();
+  readonly defaultItemRoute = this.itemRouter.url(appDefaultItemRoute).toString();
 
   private subscriptions: Subscription[] = []; // subscriptions to be freed up on destroy
 
