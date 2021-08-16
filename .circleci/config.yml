@@ -234,6 +234,8 @@ workflows:
           requires:
             - build-master-en
             - build-master-fr
+            - tests
+            - e2e
           filters:
             branches:
               only: master
