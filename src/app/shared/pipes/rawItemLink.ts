@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { ItemType, typeCategoryOfItem } from '../helpers/item-type';
 import { UrlCommand } from '../helpers/url';
-import { urlArrayForRawItem } from '../routing/item-route';
+import { rawItemRoute, urlArrayForItemRoute } from '../routing/item-route';
 
 /**
  * Functions using item route should always be preferred to raw item.
@@ -10,6 +10,6 @@ import { urlArrayForRawItem } from '../routing/item-route';
 @Pipe({ name: 'rawItemLink', pure: true })
 export class RawItemLinkPipe implements PipeTransform {
   transform({ id, type }: {id: string, type: ItemType}, page?: string|string[]): UrlCommand {
-    return urlArrayForRawItem(id, typeCategoryOfItem({ type }), page);
+    return urlArrayForItemRoute(rawItemRoute(typeCategoryOfItem({ type }), id), page);
   }
 }

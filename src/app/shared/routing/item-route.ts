@@ -4,7 +4,7 @@ import { appConfig } from '../helpers/config';
 import { ContentRoute, pathAsParameter, pathFromRouterParameters } from './content-route';
 import { ItemTypeCategory } from '../helpers/item-type';
 import { isString } from '../helpers/type-checkers';
-import { UrlCommand, UrlCommandParameters } from '../helpers/url';
+import { UrlCommand } from '../helpers/url';
 
 // url parameter names
 const activityPrefix = 'activities';
@@ -20,6 +20,12 @@ type AttemptId = string;
  * Item Route: Object storing information required to navigate to an item without need for fetching a path
  * ********************************************************************************************************** */
 
+// FullItemRoute contains all required info (path and (self or parent) attempt) so that no more queries are required after navigation
+// ItemRoute may miss the (self and parent) attempt, will require fetching results to determine attempt after navigation.
+// RawItemRoute may miss path and attempt, will required fetching the path and attempts after navigation.
+//
+// When navigating, as many information as possible should be given to the item router so that the navigation is not slowed down.
+// So always prefer usage of FullItemRoute over ItemRoute over RawItemRoute.
 export interface ItemRoute extends ContentRoute {
   contentType: ItemTypeCategory;
   attemptId?: AttemptId;
@@ -28,9 +34,14 @@ export interface ItemRoute extends ContentRoute {
 type ItemRouteWithSelfAttempt = ItemRoute & { attemptId: AttemptId };
 type ItemRouteWithParentAttempt = ItemRoute & { parentAttemptId: AttemptId };
 export type FullItemRoute = ItemRouteWithSelfAttempt | ItemRouteWithParentAttempt;
+export type RawItemRoute = Omit<ItemRoute, 'path'> & Partial<Pick<ItemRoute, 'path'>>;
 
 export function isRouteWithSelfAttempt(item: FullItemRoute): item is ItemRouteWithSelfAttempt {
-  return 'attemptId' in item;
+  return item.attemptId !== undefined;
+}
+
+export function rawItemRoute(contentType: ItemTypeCategory, id: ItemId): RawItemRoute {
+  return { contentType, id };
 }
 
 /**
@@ -76,27 +87,14 @@ export function itemCategoryFromPrefix(prefix: string): ItemTypeCategory|null {
  * ********************************************************************************************************** */
 
 /**
- * Url (as string) of the item route without attemptId or path (only item id)
- * `urlArrayForItemRoute` should always be preferred to this one, using raw item means further requests will be required to fetch
- * path and attempt information
-*/
-export function urlArrayForRawItem(id: ItemId, cat: ItemTypeCategory, page: string|string[] = 'details'): UrlCommand {
-  return urlArrayForItem(id, cat, {}, page);
-}
-
-/**
  * Return a url array (`commands` array) to the given item, on the given page.
  */
-export function urlArrayForItemRoute(route: FullItemRoute, page: string|string[] = 'details'): UrlCommand {
-  const params = pathAsParameter(route.path);
-  if (isRouteWithSelfAttempt(route)) params[attemptParamName] = route.attemptId;
-  else params[parentAttemptParamName] = route.parentAttemptId;
-  return urlArrayForItem(route.id, route.contentType, params, page);
-}
+export function urlArrayForItemRoute(route: RawItemRoute, page: string|string[] = 'details'): UrlCommand {
+  const params = route.path ? pathAsParameter(route.path) : {};
+  if (route.attemptId) params[attemptParamName] = route.attemptId;
+  else if (route.parentAttemptId) params[attemptParamName] = route.parentAttemptId;
 
-function urlArrayForItem(id: ItemId, cat: ItemTypeCategory, params: UrlCommandParameters, page: string|string[]):
-  UrlCommand {
-  const prefix = cat === 'activity' ? activityPrefix : skillPrefix;
+  const prefix = route.contentType === 'activity' ? activityPrefix : skillPrefix;
   const pagePath = isString(page) ? [ page ] : page;
-  return [ '/', prefix, 'by-id', id, params, ...pagePath ];
+  return [ '/', prefix, 'by-id', route.id, params, ...pagePath ];
 }
