@@ -1,4 +1,9 @@
-.error {
+@import 'src/colors.scss';
+
+.validation-text {
   margin: 0;
   padding: 1rem;
+  color: $base-color;
+  font-size: 1.6rem;
+  text-align: center;
 }
