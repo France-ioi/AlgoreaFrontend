@@ -90,7 +90,7 @@ export function itemCategoryFromPrefix(prefix: string): ItemTypeCategory|null {
 export function urlArrayForItemRoute(route: RawItemRoute, page: string|string[] = 'details'): UrlCommand {
   const params = route.path ? pathAsParameter(route.path) : {};
   if (route.attemptId) params[attemptParamName] = route.attemptId;
-  else if (route.parentAttemptId) params[attemptParamName] = route.parentAttemptId;
+  else if (route.parentAttemptId) params[parentAttemptParamName] = route.parentAttemptId;
 
   const prefix = route.contentType === 'activity' ? activityPrefix : skillPrefix;
   const pagePath = isString(page) ? [ page ] : page;
