@@ -11,7 +11,6 @@ const activityPrefix = 'activities';
 const skillPrefix = 'skills';
 const parentAttemptParamName = 'parentAttempId';
 const attemptParamName = 'attempId';
-export const itemRoutePrefixes = [ activityPrefix, skillPrefix ];
 
 // alias for better readibility
 type ItemId = string;
@@ -48,36 +47,29 @@ export function appDefaultItemRoute(): FullItemRoute {
 
 
 /* **********************************************************************************************************
- * Utility functions for finding the item route from router information
+ * Utility functions for decoding the item route
  * ********************************************************************************************************** */
-
-interface ItemRouteError {
-  tag: 'error';
-  contentType: ItemTypeCategory;
-  id?: ItemId;
-  path?: ItemId[];
+export function decodeItemRouterParameters(params: ParamMap): {
+  id: string|null,
+  path: string|null,
+  attemptId: string|null,
+  parentAttemptId: string|null
+} {
+  return {
+    id: params.get('id'),
+    path: params.get(pathParamName),
+    attemptId: params.get(attemptParamName),
+    parentAttemptId: params.get(parentAttemptParamName)
+  };
 }
 
-export function itemRouteFromParams(prefix: string, params: ParamMap): FullItemRoute|ItemRouteError {
-  if (!itemRoutePrefixes.includes(prefix)) throw new Error('Unexpecte item path prefix');
-  const cat: ItemTypeCategory = prefix === activityPrefix ? 'activity' : 'skill';
-  const id = params.get('id');
-  const pathAsString = params.get(pathParamName);
-  const attemptId = params.get(attemptParamName);
-  const parentAttemptId = params.get(parentAttemptParamName);
-
-  if (!id) return { contentType: cat, tag: 'error', id: undefined }; // null or empty
-  if (pathAsString === null) return { contentType: cat, tag: 'error', id: id };
-  const path = pathAsString === '' ? [] : pathAsString.split(',');
-  if (attemptId) return { contentType: cat, id: id, path: path, attemptId: attemptId }; // not null nor empty
-  if (parentAttemptId) return { contentType: cat, id: id, path: path, parentAttemptId: parentAttemptId }; // not null nor empty
-  return { contentType: cat, tag: 'error', id: id, path: path };
+export function itemCategoryFromPrefix(prefix: string): ItemTypeCategory|null {
+  switch (prefix) {
+    case activityPrefix: return 'activity';
+    case skillPrefix: return 'skill';
+    default: return null;
+  }
 }
-
-export function isItemRouteError(route: FullItemRoute|ItemRouteError): route is ItemRouteError {
-  return 'tag' in route && route.tag === 'error';
-}
-
 
 /* **********************************************************************************************************
  * Utility functions for converting item info to a navigable url command

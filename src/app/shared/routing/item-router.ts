@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router, UrlTree } from '@angular/router';
 import { ensureDefined } from '../helpers/null-undefined-predicates';
-import { FullItemRoute, itemRoutePrefixes, urlArrayForItemRoute } from './item-route';
+import { FullItemRoute, itemCategoryFromPrefix, urlArrayForItemRoute } from './item-route';
 
 @Injectable({
   providedIn: 'root'
@@ -53,7 +53,7 @@ export class ItemRouter {
     const { segments } = primary;
     if (
       segments.length < 3 ||
-      !itemRoutePrefixes.includes(ensureDefined(segments[0]).path) ||
+      itemCategoryFromPrefix(ensureDefined(segments[0]).path) === null ||
       ensureDefined(segments[1]).path !== 'by-id'
     ) return undefined;
     return segments.map(segment => segment.path);
