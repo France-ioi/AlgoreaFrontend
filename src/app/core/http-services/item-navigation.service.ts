@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { bestAttemptFromResults } from 'src/app/shared/helpers/attempts';
@@ -25,7 +25,7 @@ interface ActivityOrSkill {
   results: RawResult[]
 }
 
-interface RootActivity {
+export interface RootActivity {
   // Some attributes are omitted as they are not used for the moment. Read the doc for the full list.
   group_id: string,
   name: string,
@@ -175,17 +175,28 @@ export class ItemNavigationService {
       );
   }
 
-  getRootActivities(): Observable<NavMenuRootItem> {
+  getRootActivities(watchedGroupId?: string): Observable<RootActivity[]> {
+    let httpParams = new HttpParams();
+
+    if (watchedGroupId) {
+      httpParams = httpParams.set('watched_group_id', watchedGroupId);
+    }
+
     return this.http
-      .get<RootActivity[]>(`${appConfig.apiUrl}/current-user/group-memberships/activities`)
-      .pipe(
-        map(acts => ({
-          items: acts.map(act => ({ ...createNavMenuItem(act.activity), groupName: act.name }))
-        }))
-      );
+      .get<RootActivity[]>(`${appConfig.apiUrl}/current-user/group-memberships/activities`, {
+        params: httpParams
+      });
   }
 
-  getRootSkills(): Observable<NavMenuRootItem> {
+  getRootActivitiesForNavMenu(): Observable<NavMenuRootItem> {
+    return this.getRootActivities().pipe(
+      map(acts => ({
+        items: acts.map(act => ({ ...createNavMenuItem(act.activity), groupName: act.name }))
+      }))
+    );
+  }
+
+  getRootSkillsForNavMenu(): Observable<NavMenuRootItem> {
     return this.http
       .get<RootSkill[]>(`${appConfig.apiUrl}/current-user/group-memberships/skills`)
       .pipe(
@@ -196,7 +207,7 @@ export class ItemNavigationService {
   }
 
   getRoot(type: ItemTypeCategory): Observable<NavMenuRootItem> {
-    return (isSkill(type)) ? this.getRootSkills() : this.getRootActivities();
+    return (isSkill(type)) ? this.getRootSkillsForNavMenu() : this.getRootActivitiesForNavMenu();
   }
 
   getNavigationNeighbors(itemRoute: FullItemRoute):

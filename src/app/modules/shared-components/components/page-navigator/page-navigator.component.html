@@ -3,7 +3,7 @@
     *ngIf="allowWatching"
     class="round-icon-action-button"
     [ngClass]="isWatched ? 'watched' : 'watch'"
-    (click)="isWatched ? stopWatch.emit() : watch.emit()"
+    (click)="isWatched ? stopWatch.emit() : watch.emit($event)"
   >
     <i class="fa fa-eye"></i>
   </span>

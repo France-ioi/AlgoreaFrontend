@@ -14,7 +14,7 @@ export class PageNavigatorComponent {
   @Input() navigationMode?: {parent: boolean, left: boolean, right: boolean};
 
   @Output() edit = new EventEmitter<void>();
-  @Output() watch = new EventEmitter<void>();
+  @Output() watch = new EventEmitter<Event>();
   @Output() stopWatch = new EventEmitter<void>();
 
   @Output() parent = new EventEmitter<void>();

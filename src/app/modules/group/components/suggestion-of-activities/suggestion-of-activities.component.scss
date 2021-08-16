@@ -1,0 +1,11 @@
+@import 'src/colors';
+
+.type {
+  color: $base-color;
+}
+
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

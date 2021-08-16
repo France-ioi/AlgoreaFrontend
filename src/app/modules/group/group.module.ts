@@ -43,6 +43,8 @@ import { UserComponent } from './pages/user/user.component';
 import { UserHeaderComponent } from './components/user-header/user-header.component';
 import { GroupLogViewComponent } from './components/group-log-view/group-log-view.component';
 import { AddGroupComponent } from './components/add-group/add-group.component';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { SuggestionOfActivitiesComponent } from './components/suggestion-of-activities/suggestion-of-activities.component';
 
 @NgModule({
   declarations: [
@@ -77,6 +79,7 @@ import { AddGroupComponent } from './components/add-group/add-group.component';
     UserHeaderComponent,
     GroupLogViewComponent,
     AddGroupComponent,
+    SuggestionOfActivitiesComponent,
   ],
   imports: [
     CommonModule,
@@ -87,6 +90,7 @@ import { AddGroupComponent } from './components/add-group/add-group.component';
     ButtonModule,
     RippleModule,
     TooltipModule,
+    OverlayPanelModule,
   ],
   exports: [
     GroupIndicatorComponent
