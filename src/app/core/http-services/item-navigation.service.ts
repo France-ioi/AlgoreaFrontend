@@ -199,7 +199,9 @@ export class ItemNavigationService {
     return (isSkill(type)) ? this.getRootSkills() : this.getRootActivities();
   }
 
-  getNavigationNeighbors(itemRoute: ItemRoute): Observable<{ parent: ItemRoute|null, left: ItemRoute|null, right: ItemRoute|null }> {
+  getNavigationNeighbors(itemRoute: FullItemRoute):
+    Observable<{ parent: FullItemRoute|null, left: FullItemRoute|null, right: FullItemRoute|null }> {
+
     const parentId = itemRoute.path[itemRoute.path.length - 1];
 
     // Root activity => no parent/left/right activity
@@ -213,7 +215,7 @@ export class ItemNavigationService {
       if (parentAttemptId === null) throw new Error('Unexpected: parent of an item node has no attempt');
 
       const leftItem = navParent.items[index - 1];
-      const left: ItemRoute|null = leftItem ? {
+      const left: FullItemRoute|null = leftItem ? {
         id: leftItem.id,
         contentType: itemRoute.contentType,
         ...(leftItem.attemptId ? { attemptId: leftItem.attemptId } : { parentAttemptId }),
@@ -221,14 +223,14 @@ export class ItemNavigationService {
       } : null;
 
       const rightItem = navParent.items[index + 1];
-      const right: ItemRoute|null = rightItem ? {
+      const right: FullItemRoute|null = rightItem ? {
         id: rightItem.id,
         contentType: itemRoute.contentType,
         ...(rightItem.attemptId ? { attemptId: rightItem.attemptId } : { parentAttemptId }),
         path: itemRoute.path,
       } : null;
 
-      const parent: ItemRoute = {
+      const parent: FullItemRoute = {
         id: parentId,
         contentType: itemRoute.contentType,
         path: itemRoute.path.slice(0, -1),
