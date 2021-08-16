@@ -93,6 +93,19 @@
     border-left: .1rem solid var(--nav-border-color);
   }
 
+  .p-tree-container
+  > p-treenode:last-child
+  > .p-treenode
+  > .p-treenode-children
+  > p-treenode:last-child
+  > .p-treenode
+  > .p-treenode-content
+  .node-tree-item
+  .node-item-branch
+  .bottom-branch {
+    border-left: none;
+  }
+
   p-treenode:last-child
   > .p-treenode
   > .p-treenode-content
@@ -101,14 +114,6 @@
   .bottom-branch {
     border-right: none;
     border-left: none;
-  }
-
-  p-treenode:last-child
-  > .p-treenode
-  > .p-treenode-content
-  .node-tree-item
-  .node-item-content {
-    border-bottom: none;
   }
 
   p-treenode:first-child
@@ -139,6 +144,13 @@
     border-right: .1rem solid var(--nav-border-color);
   }
 
+  .p-treenode-children .node-tree-item .node-item-branch .top-branch {
+    border-right: none !important;
+  }
+
+  .p-treenode-children .node-tree-item .node-item-branch .bottom-branch {
+    border-right: none !important;
+  }
 
   .p-treenode-content {
 
@@ -178,9 +190,10 @@
 
         .top-branch {
           display: block;
-          border-right: .1rem solid var(--nav-border-color);
+          border-right: .1rem solid var(--nav-branch-border-color);
           min-height: 2.25rem;
           position: relative;
+          margin-top: -.05rem;
 
           .mask-branch {
             display: block;
@@ -195,9 +208,10 @@
 
         .bottom-branch {
           display: block;
-          border-right: .1rem solid var(--nav-border-color);
+          border-right: .1rem solid var(--nav-branch-border-color);
           min-height: 2.25rem;
           position: relative;
+          margin-bottom: -.05rem;
 
           .mask-branch {
             display: block;

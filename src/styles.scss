@@ -106,6 +106,7 @@ body .p-component {
   --nav-bg-handle-color: #{$nav-bg-handle-color};
   --nav-border-color: #{$nav-border-color};
   --nav-border-secondary-color: #{$nav-border-secondary-color};
+  --nav-branch-border-color: #{$nav-branch-border-color};
   --nav-handle-icon-color: #{$nav-handle-icon-color};
   --nav-bg-hover-color: #{$nav-bg-hover-color};
   --nav-bg-hover-secondary-color: #{$nav-bg-hover-secondary-color};
@@ -119,6 +120,7 @@ body .p-component {
     --nav-bg-handle-color: #{$nav-dark-bg-handle-color};
     --nav-border-color: #{$nav-dark-border-color};
     --nav-border-secondary-color: #{$nav-dark-border-secondary-color};
+    --nav-branch-border-color: #{$nav-dark-branch-border-color};
     --nav-handle-icon-color: #{$nav-dark-handle-icon-color};
     --nav-bg-hover-color: #{$nav-dark-bg-hover-color};
     --nav-bg-hover-secondary-color: #{$nav-dark-bg-hover-secondary-color};
