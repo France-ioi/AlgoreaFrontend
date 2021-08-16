@@ -21,16 +21,16 @@ type AttemptId = string;
  * Item Route: Object storing information required to navigate to an item without need for fetching a path
  * ********************************************************************************************************** */
 
-interface ItemRouteBase extends ContentRoute {
+export interface ItemRoute extends ContentRoute {
   contentType: ItemTypeCategory;
   attemptId?: AttemptId;
   parentAttemptId?: AttemptId;
 }
-type ItemRouteWithSelfAttempt = ItemRouteBase & { attemptId: AttemptId };
-type ItemRouteWithParentAttempt = ItemRouteBase & { parentAttemptId: AttemptId };
-export type ItemRoute = ItemRouteWithSelfAttempt | ItemRouteWithParentAttempt;
+type ItemRouteWithSelfAttempt = ItemRoute & { attemptId: AttemptId };
+type ItemRouteWithParentAttempt = ItemRoute & { parentAttemptId: AttemptId };
+export type FullItemRoute = ItemRouteWithSelfAttempt | ItemRouteWithParentAttempt;
 
-export function isRouteWithSelfAttempt(item: ItemRoute): item is ItemRouteWithSelfAttempt {
+export function isRouteWithSelfAttempt(item: FullItemRoute): item is ItemRouteWithSelfAttempt {
   return 'attemptId' in item;
 }
 
@@ -58,7 +58,7 @@ interface ItemRouteError {
   path?: ItemId[];
 }
 
-export function itemRouteFromParams(prefix: string, params: ParamMap): ItemRoute|ItemRouteError {
+export function itemRouteFromParams(prefix: string, params: ParamMap): FullItemRoute|ItemRouteError {
   if (!itemRoutePrefixes.includes(prefix)) throw new Error('Unexpecte item path prefix');
   const cat: ItemTypeCategory = prefix === activityPrefix ? 'activity' : 'skill';
   const id = params.get('id');
@@ -74,7 +74,7 @@ export function itemRouteFromParams(prefix: string, params: ParamMap): ItemRoute
   return { contentType: cat, tag: 'error', id: id, path: path };
 }
 
-export function isItemRouteError(route: ItemRoute|ItemRouteError): route is ItemRouteError {
+export function isItemRouteError(route: FullItemRoute|ItemRouteError): route is ItemRouteError {
   return 'tag' in route && route.tag === 'error';
 }
 
@@ -95,7 +95,7 @@ export function urlArrayForRawItem(id: ItemId, cat: ItemTypeCategory, page: stri
 /**
  * Return a url array (`commands` array) to the given item, on the given page.
  */
-export function urlArrayForItemRoute(route: ItemRoute, page: string|string[] = 'details'): UrlCommand {
+export function urlArrayForItemRoute(route: FullItemRoute, page: string|string[] = 'details'): UrlCommand {
   const params: UrlCommandParameters = {};
   if (isRouteWithSelfAttempt(route)) params[attemptParamName] = route.attemptId;
   else params[parentAttemptParamName] = route.parentAttemptId;

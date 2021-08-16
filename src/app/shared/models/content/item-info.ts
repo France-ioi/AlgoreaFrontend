@@ -1,10 +1,10 @@
 import { ItemType } from '../../helpers/item-type';
-import { ItemRoute } from '../../routing/item-route';
+import { FullItemRoute } from '../../routing/item-route';
 import { ContentInfo, RoutedContentInfo } from './content-info';
 
 export interface ItemInfo extends RoutedContentInfo {
   type: 'item',
-  route: ItemRoute,
+  route: FullItemRoute,
   details?: ItemDetails
 }
 

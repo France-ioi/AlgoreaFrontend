@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { isRouteWithSelfAttempt, ItemRoute } from 'src/app/shared/routing/item-route';
+import { isRouteWithSelfAttempt, FullItemRoute } from 'src/app/shared/routing/item-route';
 import { appConfig } from 'src/app/shared/helpers/config';
 
 interface RawResult {
@@ -28,7 +28,7 @@ export class GetResultsService {
 
   constructor(private http: HttpClient) {}
 
-  getResults(item: ItemRoute): Observable<Result[]> {
+  getResults(item: FullItemRoute): Observable<Result[]> {
     return this.http
       .get<RawResult[]>(`${appConfig.apiUrl}/items/${item.id}/attempts`, {
         params: isRouteWithSelfAttempt(item) ? { attempt_id: item.attemptId } : { parent_attempt_id: item.parentAttemptId }

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router, UrlTree } from '@angular/router';
 import { ensureDefined } from '../helpers/null-undefined-predicates';
-import { ItemRoute, itemRoutePrefixes, urlArrayForItemRoute } from './item-route';
+import { FullItemRoute, itemRoutePrefixes, urlArrayForItemRoute } from './item-route';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +16,7 @@ export class ItemRouter {
    * Navigate to given item, on the path page.
    * If page is not given and we are currently on an item page, use the same page. Otherwise, default to 'details'.
    */
-  navigateTo(item: ItemRoute, page?: string|string[]): void {
+  navigateTo(item: FullItemRoute, page?: string|string[]): void {
     void this.router.navigateByUrl(this.url(item, page));
   }
 
@@ -34,7 +34,7 @@ export class ItemRouter {
    * Return a url to the given item, on the given page.
    * If page is not given and we are currently on an item page, use the same page. Otherwise, default to 'details'.
    */
-  url(item: ItemRoute, page?: string|string[]): UrlTree {
+  url(item: FullItemRoute, page?: string|string[]): UrlTree {
     return this.router.createUrlTree(urlArrayForItemRoute(item, page ?? this.currentItemPage()));
   }
 

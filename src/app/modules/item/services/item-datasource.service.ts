@@ -2,7 +2,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject, concat, EMPTY, forkJoin, Observable, of, Subject, Subscription } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { bestAttemptFromResults, implicitResultStart } from 'src/app/shared/helpers/attempts';
-import { isRouteWithSelfAttempt, ItemRoute } from 'src/app/shared/routing/item-route';
+import { isRouteWithSelfAttempt, FullItemRoute } from 'src/app/shared/routing/item-route';
 import { errorState, fetchingState, FetchState, readyState } from 'src/app/shared/helpers/state';
 import { ResultActionsService } from 'src/app/shared/http-services/result-actions.service';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
@@ -11,7 +11,7 @@ import { GetItemByIdService, Item } from '../http-services/get-item-by-id.servic
 import { GetResultsService, Result } from '../http-services/get-results.service';
 import { canCurrentUserViewItemContent } from 'src/app/modules/item/helpers/item-permissions';
 
-export interface ItemData { route: ItemRoute, item: Item, breadcrumbs: BreadcrumbItem[], results?: Result[], currentResult?: Result}
+export interface ItemData { route: FullItemRoute, item: Item, breadcrumbs: BreadcrumbItem[], results?: Result[], currentResult?: Result}
 
 /**
  * A datasource which allows fetching a item using a proper state and sharing it among several components.
@@ -26,7 +26,7 @@ export class ItemDataSource implements OnDestroy {
   private state = new BehaviorSubject<FetchState<ItemData>>(fetchingState());
   state$ = this.state.asObservable();
 
-  private fetchOperation = new Subject<ItemRoute>(); // trigger item fetching
+  private fetchOperation = new Subject<FullItemRoute>(); // trigger item fetching
   private subscription: Subscription;
 
   constructor(
@@ -55,7 +55,7 @@ export class ItemDataSource implements OnDestroy {
     this.subscription = this.userSessionService.userChanged$.subscribe(_s => this.refreshItem());
   }
 
-  fetchItem(item: ItemRoute): void {
+  fetchItem(item: FullItemRoute): void {
     this.fetchOperation.next(item);
   }
 
@@ -75,7 +75,7 @@ export class ItemDataSource implements OnDestroy {
    * Observable of the item data fetching.
    * In parallel: breadcrumb and (in serial: get info and start result)
    */
-  private fetchItemData(itemRoute: ItemRoute): Observable<ItemData> {
+  private fetchItemData(itemRoute: FullItemRoute): Observable<ItemData> {
     return forkJoin([
       this.getBreadcrumbService.getBreadcrumb(itemRoute),
       this.getItemByIdService.get(itemRoute.id)
@@ -95,7 +95,7 @@ export class ItemDataSource implements OnDestroy {
     );
   }
 
-  private fetchResults(itemRoute: ItemRoute, item: Item): Observable<{ results: Result[], currentResult?: Result }> {
+  private fetchResults(itemRoute: FullItemRoute, item: Item): Observable<{ results: Result[], currentResult?: Result }> {
     return this.getResultsService.getResults(itemRoute).pipe(
       switchMap(results => {
         // 1) if attempt_id was given as arg, try to select the matching result
