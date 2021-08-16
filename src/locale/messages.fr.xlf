@@ -67,10 +67,10 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-nav-tree/left-nav-tree.component.html</context><context context-type="linenumber">91</context></context-group></trans-unit><trans-unit id="187187500641108332" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ node.data.element.currentUserManagership === 'descendant' ? 'You are a manager of one of the descendant of the group' : 'You are a manager of the group' }}"/></source><target state="new"><x id="INTERPOLATION" equiv-text="{{ node.data.element.currentUserManagership === 'descendant' ? 'You are a manager of one of the descendant of the group' : 'You are a manager of the group' }}"/></target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-nav-tree/left-nav-tree.component.html</context><context context-type="linenumber">182</context></context-group></trans-unit><trans-unit id="1298975301426242340" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-nav-tree/left-nav-tree.component.html</context><context context-type="linenumber">187</context></context-group></trans-unit><trans-unit id="1298975301426242340" datatype="html">
         <source>You are a member of the group</source><target state="new">You are a member of the group</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-nav-tree/left-nav-tree.component.html</context><context context-type="linenumber">187</context></context-group></trans-unit><trans-unit id="2309808536212982229" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-nav-tree/left-nav-tree.component.html</context><context context-type="linenumber">192</context></context-group></trans-unit><trans-unit id="2309808536212982229" datatype="html">
         <source>Activities</source><target state="translated">Activités</target>
 
         <note priority="1" from="description">Tab name</note>
@@ -486,11 +486,11 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/pipes/logActionDisplay.ts</context><context context-type="linenumber">11</context></context-group></trans-unit><trans-unit id="2919237623258423230" datatype="html">
         <source> History </source><target state="new"> History </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-progress/item-progress.component.html</context><context context-type="linenumber">20</context></context-group></trans-unit><trans-unit id="517269442590539627" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-progress/item-progress.component.html</context><context context-type="linenumber">22</context></context-group></trans-unit><trans-unit id="517269442590539627" datatype="html">
         <source> Chapter view </source><target state="new"> Chapter view </target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-progress/item-progress.component.html</context><context context-type="linenumber">30</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-progress/item-progress.component.html</context><context context-type="linenumber">40</context></context-group></trans-unit><trans-unit id="7069121178850359614" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-progress/item-progress.component.html</context><context context-type="linenumber">32</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-progress/item-progress.component.html</context><context context-type="linenumber">42</context></context-group></trans-unit><trans-unit id="7069121178850359614" datatype="html">
         <source>Situation of <x id="PH" equiv-text="watchedGroup.name"/></source><target state="new">Situation of <x id="PH" equiv-text="watchedGroup.name"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/item/pages/item-progress/itemProgressLabel.ts</context>
@@ -656,7 +656,19 @@
      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/pending-request/pending-request.component.html</context><context context-type="linenumber">103</context></context-group></trans-unit><trans-unit id="8161873802480256431" datatype="html">
        <source> No pending requests </source><target state="translated"> Aucune demande en attente </target>
 
-     <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/pending-request/pending-request.component.html</context><context context-type="linenumber">110</context></context-group></trans-unit><trans-unit id="7668019104010759211" datatype="html">
+     <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/pending-request/pending-request.component.html</context><context context-type="linenumber">110</context></context-group></trans-unit><trans-unit id="4391050282469768523" datatype="html">
+        <source>Error while loading the activities</source><target state="new">Error while loading the activities</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/suggestion-of-activities/suggestion-of-activities.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+      </trans-unit><trans-unit id="1461099379581338378" datatype="html">
+        <source> There are no activities </source><target state="new"> There are no activities </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/suggestion-of-activities/suggestion-of-activities.component.html</context>
+          <context context-type="linenumber">7,8</context>
+        </context-group>
+      </trans-unit><trans-unit id="7668019104010759211" datatype="html">
         <source>Pending invitations</source><target state="new">Pending invitations</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/group/components/user-group-invitations/user-group-invitations.component.html</context>
