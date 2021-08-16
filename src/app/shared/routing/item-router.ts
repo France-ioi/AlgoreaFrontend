@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router, UrlTree } from '@angular/router';
 import { ensureDefined } from '../helpers/null-undefined-predicates';
-import { ItemRoute, itemRoutePrefixes, urlArrayForItemRoute } from './item-route';
+import { itemCategoryFromPrefix, RawItemRoute, urlArrayForItemRoute } from './item-route';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +16,7 @@ export class ItemRouter {
    * Navigate to given item, on the path page.
    * If page is not given and we are currently on an item page, use the same page. Otherwise, default to 'details'.
    */
-  navigateTo(item: ItemRoute, page?: string|string[]): void {
+  navigateTo(item: RawItemRoute, page?: string|string[]): void {
     void this.router.navigateByUrl(this.url(item, page));
   }
 
@@ -34,7 +34,7 @@ export class ItemRouter {
    * Return a url to the given item, on the given page.
    * If page is not given and we are currently on an item page, use the same page. Otherwise, default to 'details'.
    */
-  url(item: ItemRoute, page?: string|string[]): UrlTree {
+  url(item: RawItemRoute, page?: string|string[]): UrlTree {
     return this.router.createUrlTree(urlArrayForItemRoute(item, page ?? this.currentItemPage()));
   }
 
@@ -53,7 +53,7 @@ export class ItemRouter {
     const { segments } = primary;
     if (
       segments.length < 3 ||
-      !itemRoutePrefixes.includes(ensureDefined(segments[0]).path) ||
+      itemCategoryFromPrefix(ensureDefined(segments[0]).path) === null ||
       ensureDefined(segments[1]).path !== 'by-id'
     ) return undefined;
     return segments.map(segment => segment.path);

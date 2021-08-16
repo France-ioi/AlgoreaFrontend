@@ -3,7 +3,7 @@ import { ActivatedRoute, ParamMap, UrlTree } from '@angular/router';
 import { of, Subscription } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
 import { defaultAttemptId } from 'src/app/shared/helpers/attempts';
-import { appDefaultItemRoute, isItemRouteError, itemRouteFromParams } from 'src/app/shared/routing/item-route';
+import { appDefaultItemRoute } from 'src/app/shared/routing/item-route';
 import { errorState, fetchingState, FetchState } from 'src/app/shared/helpers/state';
 import { ResultActionsService } from 'src/app/shared/http-services/result-actions.service';
 import { CurrentContentService } from 'src/app/shared/services/current-content.service';
@@ -17,6 +17,7 @@ import { ModeAction, ModeService } from 'src/app/shared/services/mode.service';
 import { isItemInfo, itemInfo } from 'src/app/shared/models/content/item-info';
 import { repeatLatestWhen } from 'src/app/shared/helpers/repeatLatestWhen';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
+import { isItemRouteError, itemRouteFromParams } from './item-route-validation';
 
 const itemBreadcrumbCat = $localize`Items`;
 
@@ -36,7 +37,7 @@ export class ItemByIdComponent implements OnDestroy {
   // to prevent looping indefinitely in case of bug in services (wrong path > item without path > fetch path > item with path > wrong path)
   hasRedirected = false;
 
-  readonly defaultItemRoute = this.itemRouter.url(appDefaultItemRoute()).toString();
+  readonly defaultItemRoute = this.itemRouter.url(appDefaultItemRoute).toString();
 
   private subscriptions: Subscription[] = []; // subscriptions to be freed up on destroy
 

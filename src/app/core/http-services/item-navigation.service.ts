@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { bestAttemptFromResults } from 'src/app/shared/helpers/attempts';
-import { isRouteWithAttempt, ItemRoute } from 'src/app/shared/routing/item-route';
+import { isRouteWithSelfAttempt, FullItemRoute } from 'src/app/shared/routing/item-route';
 import { appConfig } from 'src/app/shared/helpers/config';
 import { isASkill, isSkill, ItemType, ItemTypeCategory } from 'src/app/shared/helpers/item-type';
 
@@ -146,10 +146,10 @@ export class ItemNavigationService {
     return this.getNavDataGeneric(itemId, { attempt_id: attemptId }, skillsOnly);
   }
 
-  getNavDataFromChildRoute(itemId: string, childRoute: ItemRoute, skillsOnly = false): Observable<NavMenuRootItemWithParent> {
+  getNavDataFromChildRoute(itemId: string, childRoute: FullItemRoute, skillsOnly = false): Observable<NavMenuRootItemWithParent> {
     return this.getNavDataGeneric(
       itemId,
-      isRouteWithAttempt(childRoute) ? { child_attempt_id: childRoute.attemptId } : { attempt_id: childRoute.parentAttemptId },
+      isRouteWithSelfAttempt(childRoute) ? { child_attempt_id: childRoute.attemptId } : { attempt_id: childRoute.parentAttemptId },
       skillsOnly
     );
   }
