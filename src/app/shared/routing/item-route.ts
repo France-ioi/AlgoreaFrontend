@@ -2,7 +2,7 @@ import { ParamMap } from '@angular/router';
 import { defaultAttemptId } from '../helpers/attempts';
 import { appConfig } from '../helpers/config';
 import { ContentRoute, pathParamName } from './content-route';
-import { isSkill, ItemTypeCategory } from '../helpers/item-type';
+import { ItemTypeCategory } from '../helpers/item-type';
 import { isString } from '../helpers/type-checkers';
 import { UrlCommand, UrlCommandParameters } from '../helpers/url';
 
@@ -37,10 +37,10 @@ export function isRouteWithSelfAttempt(item: FullItemRoute): item is ItemRouteWi
 /**
  * The route to the app default (see config) item
  */
-export function appDefaultItemRoute(cat: ItemTypeCategory = 'activity'): ItemRouteWithParentAttempt {
+export function appDefaultItemRoute(): FullItemRoute {
   return {
-    contentType: cat,
-    id: isSkill(cat) ? appConfig.defaultSkillId : appConfig.defaultActivityId,
+    contentType: 'activity',
+    id: appConfig.defaultActivityId,
     path: [],
     parentAttemptId: defaultAttemptId,
   };
