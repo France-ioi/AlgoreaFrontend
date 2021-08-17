@@ -193,7 +193,6 @@
           border-right: .1rem solid var(--nav-branch-border-color);
           min-height: 2.25rem;
           position: relative;
-          margin-top: -.05rem;
 
           .mask-branch {
             display: block;
@@ -211,7 +210,7 @@
           border-right: .1rem solid var(--nav-branch-border-color);
           min-height: 2.25rem;
           position: relative;
-          margin-bottom: -.05rem;
+          z-index: 1;
 
           .mask-branch {
             display: block;
