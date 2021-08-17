@@ -12,8 +12,16 @@
       [isWatched]="!!(isCurrentGroupWatched$ | async)"
       [allowFullScreen]="false"
       (edit)="onEditButtonClicked()"
-      (watch)="onStartWatchButtonClicked()"
+      (watch)="onStartWatchButtonClicked($event)"
       (stopWatch)="onStopWatchButtonClicked()"
     ></alg-page-navigator>
   </div>
 </div>
+
+<p-overlayPanel
+    #op
+    [style]="{ width: '450px' }"
+    appendTo="body"
+>
+  <alg-suggestion-of-activities *ngIf="op.overlayVisible"></alg-suggestion-of-activities>
+</p-overlayPanel>

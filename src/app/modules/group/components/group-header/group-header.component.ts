@@ -1,9 +1,10 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges, ViewChild } from '@angular/core';
 import { ModeAction, ModeService } from 'src/app/shared/services/mode.service';
 import { Group } from '../../http-services/get-group-by-id.service';
 import { withManagementAdditions, ManagementAdditions } from '../../helpers/group-management';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
 import { map } from 'rxjs/operators';
+import { OverlayPanel } from 'primeng/overlaypanel';
 
 @Component({
   selector: 'alg-group-header',
@@ -12,6 +13,8 @@ import { map } from 'rxjs/operators';
 })
 export class GroupHeaderComponent implements OnChanges {
   @Input() group?: Group;
+
+  @ViewChild('op') op?: OverlayPanel;
 
   groupWithManagement?: Group & ManagementAdditions;
   isCurrentGroupWatched$ = this.userSessionService.watchedGroup$.pipe(
@@ -31,12 +34,24 @@ export class GroupHeaderComponent implements OnChanges {
     this.modeService.modeActions$.next(ModeAction.StartEditing);
   }
 
-  onStartWatchButtonClicked(): void {
+  onStartWatchButtonClicked(event: Event): void {
     if (!this.group) throw new Error("unexpected group not set in 'onWatchButtonClicked'");
     this.modeService.startObserving(this.group);
+    this.openSuggestionOfActivitiesOverlayPanel(event);
   }
 
   onStopWatchButtonClicked(): void {
     this.modeService.stopObserving();
+  }
+
+  openSuggestionOfActivitiesOverlayPanel(event: Event): void {
+    this.op?.show(event);
+
+    // Align method needs to be called because top banner of observing group
+    // changes position of the page and as result we have a bug with wrong tooltip positioning.
+    // Async function/wrapper setTimeout - guarantees to call align method after position of page changed
+    setTimeout(() => {
+      this.op?.align();
+    });
   }
 }
