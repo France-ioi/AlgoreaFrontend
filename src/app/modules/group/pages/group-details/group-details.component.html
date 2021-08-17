@@ -36,14 +36,13 @@
         Composition
       </a>
       <a
-        *ngIf="group.canCurrentUserManageGroup"
         class="nav-tab-item"
         [routerLink]="'./managers'"
         routerLinkActive #adminTab="routerLinkActive"
         [class.active]="adminTab.isActive"
         i18n
       >
-        Administration
+        Managers
       </a>
       <a
         *ngIf="group.canCurrentUserManageGroup"
@@ -60,7 +59,7 @@
     <div class="bg-white">
       <alg-group-overview *ngIf="!group.isCurrentUserManager || !!overviewTab?.isActive" [group]="group"></alg-group-overview>
       <alg-group-composition *ngIf="!!compositionTab?.isActive" [group]="group" (groupRefreshRequired)="onGroupRefreshRequired()"></alg-group-composition>
-      <alg-group-administration *ngIf="!!adminTab?.isActive" [group]="group" (groupRefreshRequired)="onGroupRefreshRequired()"></alg-group-administration>
+      <alg-group-manager-list *ngIf="!!adminTab?.isActive" [group]="group"></alg-group-manager-list>
       <alg-group-settings *ngIf="!!settingsTab?.isActive" [group]="group" (groupRefreshRequired)="onGroupRefreshRequired()"></alg-group-settings>
     </div>
 
