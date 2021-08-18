@@ -1,0 +1,9 @@
+<ng-container *ngIf="group?.currentUserCanGrantGroupAccess; else noAccess">
+  <alg-section icon="fa fa-users" i18n-label label="Activity associated to {{ group?.name }}">
+    Permissions content
+  </alg-section>
+</ng-container>
+
+<ng-template #noAccess>
+  <p i18n>You are not allowed to manage permissions of this group.</p>
+</ng-template>
