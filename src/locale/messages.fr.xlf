@@ -64,8 +64,8 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-nav-tree/left-nav-tree.component.html</context><context context-type="linenumber">17</context></context-group></trans-unit><trans-unit id="4996073393875425335" datatype="html">
         <source>via group</source><target state="translated">via le groupe</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-nav-tree/left-nav-tree.component.html</context><context context-type="linenumber">98</context></context-group></trans-unit><trans-unit id="2449221758848041313" datatype="html">
-        <source>Your current access rights do not allow you to list the content of this chapter/skill.</source><target state="new">Your current access rights do not allow you to list the content of this chapter/skill.</target>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-nav-tree/left-nav-tree.component.html</context><context context-type="linenumber">98</context></context-group></trans-unit><trans-unit id="1679971178283595016" datatype="html">
+        <source>Your current access rights do not allow you to list the content of this skill.</source><target state="new">Your current access rights do not allow you to list the content of this skill.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/components/left-nav-tree/left-nav-tree.component.html</context>
           <context context-type="linenumber">150</context>
