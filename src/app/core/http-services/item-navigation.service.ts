@@ -87,9 +87,8 @@ export interface NavMenuItem {
   bestScore?: number,
   currentScore?: number,
   validated?: boolean,
-  canViewContent: boolean,
   children?: NavMenuItem[], // placeholder for children when fetched (may 'hasChildren' with 'children' not set)
-  disabled: boolean,
+  locked: boolean,
 }
 
 export interface NavMenuRootItem {
@@ -129,11 +128,10 @@ function createNavMenuItem(raw: {
     title: raw.string.title ?? '',
     hasChildren: raw.has_visible_children && ![ 'none', 'info' ].includes(raw.permissions.can_view),
     attemptId: currentResult?.attemptId ?? null,
-    canViewContent: [ 'content','content_with_descendants','solution' ].includes(raw.permissions.can_view),
     bestScore: raw.no_score ? undefined : raw.best_score,
     currentScore: raw.no_score ? undefined : currentResult?.score,
     validated: raw.no_score ? undefined : currentResult?.validated,
-    disabled: raw.permissions.can_view === 'info',
+    locked: raw.permissions.can_view === 'info',
   };
 }
 
@@ -168,10 +166,9 @@ export class ItemNavigationService {
           parent: {
             id: data.id,
             title: data.string.title ?? '',
-            canViewContent: [ 'content','content_with_descendants','solution' ].includes(data.permissions.can_view),
             hasChildren: data.children !== null && data.children.length > 0,
             attemptId: data.attempt_id,
-            disabled: data.permissions.can_view === 'info',
+            locked: data.permissions.can_view === 'info',
           },
           items: data.children === null ? [] : data.children.filter(i => !skillsOnly || isASkill(i)).map(i => createNavMenuItem(i)),
         }))
