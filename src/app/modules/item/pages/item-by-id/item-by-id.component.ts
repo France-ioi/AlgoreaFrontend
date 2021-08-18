@@ -102,7 +102,7 @@ export class ItemByIdComponent implements OnDestroy {
       ).subscribe(action => {
         const current = this.currentContent.current();
         if (!isItemInfo(current)) throw new Error('Unexpected: in item-by-id but the current content is not an item');
-        this.itemRouter.navigateTo(current.route, action === ModeAction.StartEditing ? 'edit' : 'details');
+        this.itemRouter.navigateTo(current.route, { page: action === ModeAction.StartEditing ? 'edit' : 'details' });
       }),
     );
   }
@@ -151,7 +151,7 @@ export class ItemByIdComponent implements OnDestroy {
         );
       })
     ).subscribe({
-      next: itemRoute => this.itemRouter.navigateTo(itemRoute),
+      next: itemRoute => this.itemRouter.navigateTo(itemRoute, { navExtras: { replaceUrl: true } }),
       error: err => {
         this.state = errorState(err);
       }
