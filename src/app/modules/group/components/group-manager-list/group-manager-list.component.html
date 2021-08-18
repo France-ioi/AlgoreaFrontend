@@ -5,11 +5,12 @@
 <ng-container *ngIf="state === 'ready'">
   <alg-section icon="fa fa-users" i18n-label label="Managers of this group">
     <alg-grid
-    [data]="managers"
-    sortMode="single"
-    [showGear]="false"
-    [scrollable]="true"
-    class="slanted-grid"
+      *ngIf="managers.length > 0; else noManagers"
+      [data]="managers"
+      sortMode="single"
+      [showGear]="false"
+      [scrollable]="true"
+      class="slanted-grid"
     >
       <ng-template #headerTemplate let-columns>
         <tr style="border: none;">
@@ -90,5 +91,11 @@
         </tr>
       </ng-template>
     </alg-grid>
+
+    <ng-template #noManagers>
+      <div class="validation-text" i18n>
+        This group has no dedicated managers.
+      </div>
+    </ng-template>
   </alg-section>
 </ng-container>

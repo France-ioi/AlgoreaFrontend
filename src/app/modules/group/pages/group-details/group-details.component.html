@@ -10,13 +10,13 @@
     ></alg-pending-join-requests>
     <alg-group-indicator
         class="group-indicator"
-        *ngIf="group?.currentUserManagership !== 'none' || group?.currentUserMembership !== 'none'"
+        *ngIf="group.currentUserManagership !== 'none' || group.currentUserMembership !== 'none'"
         [group]="group"
     >
     </alg-group-indicator>
     <!-- tabs -- if only the first tab is visible, do not show the tab bar -->
-    <div class="nav-tab" *ngIf="group.isCurrentUserManager">
-      <div
+    <div class="nav-tab" *ngIf="group.isCurrentUserManager || group.currentUserManagership !== 'none' || group.currentUserMembership !== 'none'">
+      <a
         class="nav-tab-item"
         [routerLink]="'./'"
         routerLinkActive #overviewTab="routerLinkActive"
@@ -25,8 +25,9 @@
         i18n
       >
         Overview
-      </div>
+      </a>
       <a
+        *ngIf="group.isCurrentUserManager"
         class="nav-tab-item"
         [routerLink]="'./members'"
         routerLinkActive #compositionTab="routerLinkActive"
@@ -57,7 +58,7 @@
     </div>
 
     <div class="bg-white">
-      <alg-group-overview *ngIf="!group.isCurrentUserManager || !!overviewTab?.isActive" [group]="group"></alg-group-overview>
+      <alg-group-overview *ngIf="overviewTab?.isActive || !overviewTab && group.currentUserManagership === 'none' && group.currentUserMembership === 'none'" [group]="group"></alg-group-overview>
       <alg-group-composition *ngIf="!!compositionTab?.isActive" [group]="group" (groupRefreshRequired)="onGroupRefreshRequired()"></alg-group-composition>
       <alg-group-manager-list *ngIf="!!adminTab?.isActive" [group]="group"></alg-group-manager-list>
       <alg-group-settings *ngIf="!!settingsTab?.isActive" [group]="group" (groupRefreshRequired)="onGroupRefreshRequired()"></alg-group-settings>
