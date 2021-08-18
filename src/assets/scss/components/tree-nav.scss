@@ -158,17 +158,15 @@
 
     &:active {
       .node-tree-item .node-item-content {
-        &.unlocked {
-          border-top-left-radius: 0.5rem;
-          border-bottom-left-radius: 0.5rem;
-          background-color: rgba(white, 0.2);
-          color: white;
+        border-top-left-radius: 0.5rem;
+        border-bottom-left-radius: 0.5rem;
+        background-color: rgba(255, 255, 255, 0.2);
+        color: white;
 
-          .node-select {
-            color: #fff;
-            background-color: #f5a623;
-            border-radius: 9rem;
-          }
+        .node-select {
+          color: #fff;
+          background-color: #f5a623;
+          border-radius: 9rem;
         }
       }
     }
@@ -181,6 +179,12 @@
       min-height: 4.5rem;
       position: relative;
       cursor: pointer;
+
+      &.locked {
+        .node-label-title {
+          opacity: .8;
+        }
+      }
 
       .node-item-branch {
         display: block;
@@ -313,10 +317,6 @@
             margin-right: 1rem;
             font-size: 1.2rem;
             font-weight: 700;
-
-            &.locked {
-              color: #cacaca;
-            }
           }
 
           alg-skill-progress {

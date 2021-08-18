@@ -34,6 +34,7 @@ export interface NavMenuGroup {
   children?: NavMenuGroup[] // placeholder for children when fetched (may 'hasChildren' with 'children' not set)
   currentUserManagership?: 'none' | 'direct' | 'ancestor' | 'descendant',
   currentUserMembership?: 'none' | 'direct' | 'descendant',
+  locked: boolean,
 }
 
 export interface NavMenuRootGroup {
@@ -62,6 +63,7 @@ export class GroupNavigationService {
             title: data.name,
             type: data.type,
             hasChildren: data.children.length > 0,
+            locked: false,
           },
           groups: data.children.map(child => ({
             id: child.id,
@@ -70,6 +72,7 @@ export class GroupNavigationService {
             currentUserManagership: child.current_user_managership,
             currentUserMembership: child.current_user_membership,
             hasChildren: child.type !== 'User', // maybe should be fetched from backend
+            locked: false,
           })),
         }))
       );
@@ -87,6 +90,7 @@ export class GroupNavigationService {
             currentUserManagership: group.current_user_managership,
             currentUserMembership: group.current_user_membership,
             hasChildren: group.type !== 'User', // maybe should be fetched from backend (?)
+            locked: false,
           }))
         }))
       );
