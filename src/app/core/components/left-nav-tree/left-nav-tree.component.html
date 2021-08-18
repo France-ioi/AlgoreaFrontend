@@ -31,7 +31,7 @@
           <span class="mask-branch"></span>
         </span>
       </span>
-      <span class="node-item-content" [ngClass]="{ unlocked: !node.data.element.locked }" (click)="selectNode(node)">
+      <span class="node-item-content" (click)="selectNode(node)">
         <span class="node-select">
           <alg-score-ring
             *ngIf="node.data.element.currentScore >= 0; else folderNoScore"
@@ -87,7 +87,7 @@
           <span class="mask-branch"></span>
         </span>
       </span>
-      <span class="node-item-content" [ngClass]="{ unlocked: !node.data.element.locked }" (click)="selectNode(node)">
+      <span class="node-item-content" (click)="selectNode(node)">
         <span class="node-select">
           <i class="fa" [ngClass]="{ 'fa-folder': !node.expanded, 'fa-folder-open': node.expanded }"></i>
         </span>
