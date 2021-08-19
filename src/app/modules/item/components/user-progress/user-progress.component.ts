@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, Output, SimpleChanges, EventEmitter } from '@angular/core';
 import { mustNotBeUndefined } from 'src/app/shared/helpers/assert';
 import { TeamUserProgress } from 'src/app/shared/http-services/get-group-progress.service';
 
@@ -10,6 +10,8 @@ import { TeamUserProgress } from 'src/app/shared/http-services/get-group-progres
 export class UserProgressComponent implements OnInit, OnChanges {
 
   @Input() userProgress!: TeamUserProgress;
+
+  @Output() clickEvent = new EventEmitter<void>();
 
   state: 'success'|'in-progress'|'no-score'|'not-started' = 'no-score';
 
@@ -26,6 +28,14 @@ export class UserProgressComponent implements OnInit, OnChanges {
     else if (this.userProgress.score > 0) this.state = 'in-progress';
     else if (this.userProgress.score === 0 && this.userProgress.timeSpent > 0) this.state = 'no-score';
     else this.state = 'not-started';
+  }
+
+  onClick(): void {
+    if (this.state === 'success' || this.state === 'not-started') {
+      return;
+    }
+
+    this.clickEvent.emit();
   }
 
 }

@@ -67,11 +67,11 @@
           <td
             *ngFor="let col of columns; let colIndex = index"
             #overlayTarget
-            (click)="showProgressDetail(overlayTarget, row.data[colIndex], row, col)"
           >
             <alg-user-progress
               *ngIf="row.data[colIndex]"
               [userProgress]="row.data[colIndex]"
+              (clickEvent)="showProgressDetail(overlayTarget, row.data[colIndex], row, col)"
             ></alg-user-progress>
           </td>
         </tr>
