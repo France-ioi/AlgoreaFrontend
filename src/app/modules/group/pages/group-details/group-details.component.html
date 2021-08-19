@@ -15,46 +15,48 @@
     >
     </alg-group-indicator>
     <!-- tabs -- if only the first tab is visible, do not show the tab bar -->
-    <div class="nav-tab" *ngIf="group.isCurrentUserManager || group.currentUserManagership !== 'none' || group.currentUserMembership !== 'none'">
-      <a
-        class="nav-tab-item"
-        [routerLink]="'./'"
-        routerLinkActive #overviewTab="routerLinkActive"
-        [routerLinkActiveOptions]="{exact: true}"
-        [class.active]="overviewTab.isActive"
-        i18n
-      >
-        Overview
-      </a>
-      <a
-        *ngIf="group.isCurrentUserManager"
-        class="nav-tab-item"
-        [routerLink]="'./members'"
-        routerLinkActive #compositionTab="routerLinkActive"
-        [class.active]="compositionTab.isActive"
-        i18n
-      >
-        Composition
-      </a>
-      <a
-        class="nav-tab-item"
-        [routerLink]="'./managers'"
-        routerLinkActive #adminTab="routerLinkActive"
-        [class.active]="adminTab.isActive"
-        i18n
-      >
-        Managers
-      </a>
-      <a
-        *ngIf="group.canCurrentUserManageGroup"
-        class="nav-tab-item"
-        [routerLink]="'./settings'"
-        routerLinkActive #settingsTab="routerLinkActive"
-        [class.active]="settingsTab.isActive"
-        i18n
-      >
-        Settings
-      </a>
+    <div [hidden]="!group.isCurrentUserManager && group.currentUserMembership === 'none' && !adminTab.isActive">
+      <div class="nav-tab">
+        <a
+          class="nav-tab-item"
+          [routerLink]="'./'"
+          routerLinkActive #overviewTab="routerLinkActive"
+          [routerLinkActiveOptions]="{exact: true}"
+          [class.active]="overviewTab.isActive"
+          i18n
+        >
+          Overview
+        </a>
+        <a
+          *ngIf="group.isCurrentUserManager"
+          class="nav-tab-item"
+          [routerLink]="'./members'"
+          routerLinkActive #compositionTab="routerLinkActive"
+          [class.active]="compositionTab.isActive"
+          i18n
+        >
+          Composition
+        </a>
+        <a
+          class="nav-tab-item"
+          [routerLink]="'./managers'"
+          routerLinkActive #adminTab="routerLinkActive"
+          [class.active]="adminTab.isActive"
+          i18n
+        >
+          Managers
+        </a>
+        <a
+          *ngIf="group.canCurrentUserManageGroup"
+          class="nav-tab-item"
+          [routerLink]="'./settings'"
+          routerLinkActive #settingsTab="routerLinkActive"
+          [class.active]="settingsTab.isActive"
+          i18n
+        >
+          Settings
+        </a>
+      </div>
     </div>
 
     <div class="bg-white">

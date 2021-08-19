@@ -1,6 +1,6 @@
 <p-progressSpinner *ngIf="state === 'loading'"></p-progressSpinner>
 
-<p *ngIf="state === 'error'" i18n>Error while loading the group managers</p>
+<div *ngIf="state === 'error'" class="error validation-text" i18n>Error while loading the group managers</div>
 
 <ng-container *ngIf="state === 'ready'">
   <alg-section icon="fa fa-users" i18n-label label="Managers of this group">
