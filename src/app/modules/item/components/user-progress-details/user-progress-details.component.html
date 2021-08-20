@@ -2,7 +2,7 @@
   <ng-container *ngIf="openedOverlay$ | async as overlay">
     <div class="user-progress-info" *ngIf="overlay?.progress as progress">
       <div class="content validated">
-        <ng-container *ngIf="progress.timeSpent > 0 && progress.score > 0; else notStarted">
+        <ng-container *ngIf="progress.timeSpent > 0 || progress.score > 0; else notStarted">
           <span>
             <i class="fa fa-clock"></i>
             <span class="menu-label" i18n>Time spent</span>
