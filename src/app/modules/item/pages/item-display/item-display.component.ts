@@ -4,7 +4,7 @@ import { ItemData } from '../../services/item-datasource.service';
 import { taskProxyFromIframe, taskUrlWithParameters, TaskListener, Task, } from 'src/app/modules/item/task-communication/task-proxy';
 import { EMPTY, forkJoin, interval, Observable, of, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { TaskParams, TaskParamsKeyDefault, TaskParamsValue } from '../../task-communication/types';
+import { TaskParamsKeyDefault, TaskParamsValue, TaskViews } from '../../task-communication/types';
 
 interface TaskTab {
   name: string
@@ -19,30 +19,30 @@ export class ItemDisplayComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() itemData?: ItemData;
   @ViewChild('iframe') iframe?: ElementRef<HTMLIFrameElement>;
 
-  state : 'loading' | 'loaded' | 'unloading';
-  url? : SafeResourceUrl;
+  // Iframe state
+  state: 'loading' | 'loaded' | 'unloading' | 'error' = 'loading';
+  url?: SafeResourceUrl;
   msg = '';
 
-  tabs: TaskTab[] = [];
-  activeTab: TaskTab;
+  // Tabs displayed above the task
+  // TODO get views from the task and make actual tabs
+  activeTab: TaskTab = { name: 'Task' };
+  tabs: TaskTab[] = [ this.activeTab ];
 
+  // Task
   task?: Task;
-  platform? : TaskListener;
 
-  height: number;
-  heightInterval? : Subscription;
+  // Iframe height
+  height = 400;
+  heightInterval?: Subscription;
 
+  // Answer/state data from the task
   lastAnswer = '';
   lastState = '';
-  saveInterval? : Subscription;
+  saveInterval?: Subscription;
 
   constructor(private sanitizer: DomSanitizer) {
-    this.state = 'loading';
-    this.height = 400;
-    const initialTab = { name: 'Task' };
-    this.tabs = [ initialTab ];
-    this.tabs.push({ name: 'Editor' });
-    this.activeTab = initialTab;
+    super();
   }
 
 
