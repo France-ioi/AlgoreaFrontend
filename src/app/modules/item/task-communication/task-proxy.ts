@@ -252,14 +252,8 @@ export class Task {
  */
 
 export class TaskListener {
-  task : Task;
-  constructor(task : Task) {
-    this.task = task;
-  }
-
-  getTask() : Task {
-    return this.task;
-  }
+  task? : Task;
+  constructor() {}
 
   /*
    * Simple prototypes for Bebras platform API functions, to be overriden by your
