@@ -56,7 +56,7 @@
           Settings
         </a>
         <a
-            *ngIf="group.currentUserCanGrantGroupAccess"
+            [hidden]="!group.currentUserCanGrantGroupAccess && !accessTab?.isActive"
             class="nav-tab-item"
             [routerLink]="'./access'"
             routerLinkActive #accessTab="routerLinkActive"
@@ -73,7 +73,7 @@
       <alg-group-composition *ngIf="!!compositionTab?.isActive" [group]="group" (groupRefreshRequired)="onGroupRefreshRequired()"></alg-group-composition>
       <alg-group-managers *ngIf="!!adminTab?.isActive" [groupData]="state.data"></alg-group-managers>
       <alg-group-settings *ngIf="!!settingsTab?.isActive" [group]="group" (groupRefreshRequired)="onGroupRefreshRequired()"></alg-group-settings>
-      <alg-group-access *ngIf="accessTab?.isActive" [group]="group"></alg-group-access>
+      <alg-group-access *ngIf="!!accessTab?.isActive" [group]="group"></alg-group-access>
     </div>
 
   </ng-container>
