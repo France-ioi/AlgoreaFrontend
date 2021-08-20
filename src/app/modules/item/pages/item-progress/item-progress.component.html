@@ -60,7 +60,8 @@
         </div>
 
         <alg-chapter-user-progress
-          *ngIf="!!chapterUserProgressTab?.isActive"
+            *ngIf="!!chapterUserProgressTab?.isActive"
+            [id]="itemData.item.id"
         ></alg-chapter-user-progress>
       </div>
 
