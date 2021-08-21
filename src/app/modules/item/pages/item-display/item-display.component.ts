@@ -51,9 +51,8 @@ export class ItemDisplayComponent extends TaskListener implements OnInit, AfterV
 
     if (!url) {
       this.state = 'error';
-      //this.msg = $localize`No URL defined for this task.`;
       // TODO better behavior when there is no URL defined for the task?
-      this.msg = 'No URL defined for this task.';
+      this.msg = $localize`No URL defined for this task.`;
       return;
     }
     // TODO get sToken
