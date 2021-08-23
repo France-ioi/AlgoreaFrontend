@@ -1,6 +1,6 @@
 <ng-container *ngIf="state$ | async as state">
   <div *ngIf="state.isReady">
-    <p-table class="alg-table" [columns]="columns" [value]="state.data" [loading]="state.isFetching">
+    <p-table class="alg-table alg-table chapter-user-progress" [columns]="columns" [value]="state.data" [loading]="state.isFetching">
       <ng-template pTemplate="header" let-rowData let-columns>
         <tr *ngIf="rowData.length > 0">
           <ng-container *ngFor="let col of columns">
