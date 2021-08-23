@@ -28,7 +28,6 @@ interface RowData {
   styleUrls: [ './chapter-user-progress.component.scss' ]
 })
 export class ChapterUserProgressComponent implements OnChanges {
-  @Input() id?: string;
   @Input() item?: Item;
 
   private readonly item$ = new ReplaySubject<Item>(1);
