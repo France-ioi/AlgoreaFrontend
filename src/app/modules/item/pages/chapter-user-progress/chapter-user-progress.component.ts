@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { GetParticipantProgressService } from '../../http-services/get-participant-progress.service';
 import { Observable, ReplaySubject } from 'rxjs';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { mapToFetchState } from '../../../../shared/operators/state';
 import { Item } from '../../http-services/get-item-by-id.service';
 import { FetchState } from '../../../../shared/helpers/state';
