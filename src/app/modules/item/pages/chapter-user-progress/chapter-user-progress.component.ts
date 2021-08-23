@@ -53,7 +53,7 @@ export class ChapterUserProgressComponent implements OnChanges {
           submissions: itemData.submissions,
           score: itemData.score,
         })),
-      ])), tap(console.log))
+      ])))
     ),
     mapToFetchState(),
   );
