@@ -7,8 +7,11 @@ import { distinctUntilChanged, map, mapTo, switchMap, take, tap } from 'rxjs/ope
 import { TaskParamsKeyDefault, TaskParamsValue } from '../../task-communication/types';
 import { errorState, fetchingState, FetchState, readyState } from 'src/app/shared/helpers/state';
 import { readyData } from 'src/app/shared/operators/state';
+import { SECONDS } from 'src/app/shared/helpers/duration';
 
 const initialHeight = 400;
+const heightSyncInterval = 0.2*SECONDS;
+const answerAndStateSaveInterval = 1*SECONDS;
 
 interface TaskTab {
   name: string
@@ -113,7 +116,7 @@ export class ItemDisplayComponent extends TaskListener implements OnInit, AfterV
   private syncedHeight(): Observable<number> {
     // Start updating the iframe height to match the task's height
     return this.state$.pipe(
-      switchMap(s => interval(1000).pipe(mapTo(s))),
+      switchMap(s => interval(heightSyncInterval).pipe(mapTo(s))),
       readyData(),
       switchMap(task => task.getHeight()),
     );
@@ -122,7 +125,7 @@ export class ItemDisplayComponent extends TaskListener implements OnInit, AfterV
   private registerRecurringAnswerAndStateSave(): Subscription {
     // Automatically save the answer and state
     return this.state$.pipe(
-      switchMap(s => interval(1000).pipe(mapTo(s))),
+      switchMap(s => interval(answerAndStateSaveInterval).pipe(mapTo(s))),
       readyData(),
       switchMap(task => forkJoin([
         task.getAnswer(),
