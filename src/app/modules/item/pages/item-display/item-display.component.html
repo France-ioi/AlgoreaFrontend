@@ -5,7 +5,7 @@
     </a>
   </nav>
   <div *ngIf="state.isError" i18n>Unable to load the task</div>
-  <div class="iframe-container" [style.height.px]="height" *ngIf="!state.isError">
+  <div class="iframe-container" [style.height.px]="height$|async" *ngIf="!state.isError">
     <iframe #iframe [src]="url" *ngIf="url"></iframe>
     <div *ngIf="state.isFetching" class="loading" i18n>Loading...</div>
   </div>

@@ -8,6 +8,8 @@ import { TaskParamsKeyDefault, TaskParamsValue } from '../../task-communication/
 import { errorState, fetchingState, FetchState, readyState } from 'src/app/shared/helpers/state';
 import { readyData } from 'src/app/shared/operators/state';
 
+const initialHeight = 400;
+
 interface TaskTab {
   name: string
 }
@@ -30,11 +32,10 @@ export class ItemDisplayComponent extends TaskListener implements OnInit, AfterV
 
   // display of the iframe
   url?: SafeResourceUrl; // used by the iframe to load the task, set at view init
-  height = 400;
+  height$ = concat(of(initialHeight), this.syncedHeight());
 
   private subscriptions = [
     this.registerTaskViewLoading(),
-    this.registerRecurringHeightSync(),
     this.registerRecurringAnswerAndStateSave()
   ];
 
@@ -109,13 +110,13 @@ export class ItemDisplayComponent extends TaskListener implements OnInit, AfterV
     });
   }
 
-  registerRecurringHeightSync(): Subscription {
+  syncedHeight(): Observable<number> {
     // Start updating the iframe height to match the task's height
     return this.state$.pipe(
       switchMap(s => interval(1000).pipe(mapTo(s))),
       readyData(),
       switchMap(task => task.getHeight()),
-    ).subscribe(height => this.setIframeHeight(height));
+    );
   }
 
   registerRecurringAnswerAndStateSave(): Subscription {
@@ -143,13 +144,6 @@ export class ItemDisplayComponent extends TaskListener implements OnInit, AfterV
   // Views management
   setTaskViews(_views: any): void {
     // TODO
-  }
-
-  // Utility functions
-  setIframeHeight(height?: number): void {
-    if (height !== undefined) {
-      this.height = height;
-    }
   }
 
   setActiveTab(tab: TaskTab): void {
