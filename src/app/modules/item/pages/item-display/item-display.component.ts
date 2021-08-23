@@ -82,7 +82,7 @@ export class ItemDisplayComponent extends TaskListener implements OnInit, AfterV
   }
 
   /** Initializes a task once the URL has been loaded in the iframe */
-  loadTaskFromIframe(iframe: HTMLIFrameElement): void {
+  private loadTaskFromIframe(iframe: HTMLIFrameElement): void {
     taskProxyFromIframe(iframe).pipe(
       switchMap(task => {
         // Got task proxy from the iframe, ask task to load
@@ -98,7 +98,7 @@ export class ItemDisplayComponent extends TaskListener implements OnInit, AfterV
 
   /* Communication with the task */
 
-  registerTaskViewLoading(): Subscription {
+  private registerTaskViewLoading(): Subscription {
     // Load views once the task has been loaded
     return this.state$.pipe(
       readyData(),
@@ -110,7 +110,7 @@ export class ItemDisplayComponent extends TaskListener implements OnInit, AfterV
     });
   }
 
-  syncedHeight(): Observable<number> {
+  private syncedHeight(): Observable<number> {
     // Start updating the iframe height to match the task's height
     return this.state$.pipe(
       switchMap(s => interval(1000).pipe(mapTo(s))),
@@ -119,7 +119,7 @@ export class ItemDisplayComponent extends TaskListener implements OnInit, AfterV
     );
   }
 
-  registerRecurringAnswerAndStateSave(): Subscription {
+  private registerRecurringAnswerAndStateSave(): Subscription {
     // Automatically save the answer and state
     return this.state$.pipe(
       switchMap(s => interval(1000).pipe(mapTo(s))),
@@ -142,7 +142,7 @@ export class ItemDisplayComponent extends TaskListener implements OnInit, AfterV
   }
 
   // Views management
-  setTaskViews(_views: any): void {
+  private setTaskViews(_views: any): void {
     // TODO
   }
 
