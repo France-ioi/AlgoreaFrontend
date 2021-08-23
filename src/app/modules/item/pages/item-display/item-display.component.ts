@@ -1,10 +1,12 @@
-import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ItemData } from '../../services/item-datasource.service';
 import { taskProxyFromIframe, taskUrlWithParameters, TaskListener, Task, } from 'src/app/modules/item/task-communication/task-proxy';
-import { EMPTY, forkJoin, interval, Observable, of, OperatorFunction, Subscription, throwError } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
-import { TaskParamsKeyDefault, TaskParamsValue, TaskViews } from '../../task-communication/types';
+import { BehaviorSubject, concat, EMPTY, forkJoin, interval, Observable, of, Subscription } from 'rxjs';
+import { map, mapTo, switchMap, take, tap } from 'rxjs/operators';
+import { TaskParamsKeyDefault, TaskParamsValue } from '../../task-communication/types';
+import { errorState, fetchingState, FetchState, readyState } from 'src/app/shared/helpers/state';
+import { readyData } from 'src/app/shared/operators/state';
 
 interface TaskTab {
   name: string
@@ -15,31 +17,26 @@ interface TaskTab {
   templateUrl: './item-display.component.html',
   styleUrls: [ './item-display.component.scss' ]
 })
-export class ItemDisplayComponent extends TaskListener implements OnInit, AfterViewInit, OnDestroy {
+export class ItemDisplayComponent extends TaskListener implements OnInit, AfterViewInit, OnChanges, OnDestroy {
   @Input() itemData?: ItemData;
   @ViewChild('iframe') iframe?: ElementRef<HTMLIFrameElement>;
 
-  // Iframe state
-  state: 'loading' | 'loaded' | 'unloading' | 'error' = 'loading';
-  url?: SafeResourceUrl;
-  msg = '';
+  state$ = new BehaviorSubject<FetchState<Task>>(fetchingState());
 
   // Tabs displayed above the task
   // TODO get views from the task and make actual tabs
   activeTab: TaskTab = { name: 'Task' };
   tabs: TaskTab[] = [ this.activeTab ];
 
-  // Task
-  task?: Task;
-
-  // Iframe height
+  // display of the iframe
+  url?: SafeResourceUrl; // used by the iframe to load the task, set at view init
   height = 400;
-  heightInterval?: Subscription;
 
   // Answer/state data from the task
-  lastAnswer = '';
-  lastState = '';
-  saveInterval?: Subscription;
+  private lastAnswer = '';
+  private lastState = '';
+
+  private subscriptions = [ this.registerTaskViewLoading(), this.registerRecurringHeightSync(), this.registerRecurringSave() ];
 
   constructor(private sanitizer: DomSanitizer) {
     super();
@@ -47,116 +44,98 @@ export class ItemDisplayComponent extends TaskListener implements OnInit, AfterV
 
   // Lifecycle functions
   ngOnInit(): void {
-    const url = this.itemData?.item.url || '';
+    if (!this.itemData) throw new Error('itemData must be set in ItemDisplayComponent');
 
-    if (!url) {
-      this.state = 'error';
+    const rawUrl = this.itemData.item.url;
+
+    if (!rawUrl) {
       // TODO better behavior when there is no URL defined for the task?
-      this.msg = $localize`No URL defined for this task.`;
+      this.state$.next(errorState(new Error($localize`No URL defined for this task.`)));
       return;
     }
     // TODO get sToken
     const taskToken = '';
     // TODO get platformId from configuration
     const platformId = 'http://algorea.pem.dev';
-    this.setIframeUrl(taskUrlWithParameters(url, taskToken, platformId, 'task-'));
+    const urlWithParams = taskUrlWithParameters(rawUrl, taskToken, platformId, 'task-');
+    this.url = this.sanitizer.bypassSecurityTrustResourceUrl(urlWithParams);
   }
 
   ngAfterViewInit(): void {
-    // Wait for the ViewChild to be initialized
-    if (this.iframe) {
-      const iframe = this.iframe.nativeElement;
-      this.loadTaskFromIframe(iframe);
-    }
+    // ngAfterViewInit waits for the ViewChild to be initialized
+    if (!this.iframe) throw new Error('Expecting the iframe to exist');
+    const iframe = this.iframe.nativeElement;
+    this.loadTaskFromIframe(iframe);
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.itemData) throw new Error('This component does not support change of its itemData input');
   }
 
   ngOnDestroy(): void {
-    this.heightInterval?.unsubscribe();
-    this.saveInterval?.unsubscribe();
-    this.task?.destroy();
-  }
+    this.subscriptions.forEach(s => s.unsubscribe());
 
-  /**
-   * Returns the task if loaded, an error otherwise
-   * Helpful to cancel Observable chains as soon as the task is unloaded
-   */
-  getTaskOperator(): OperatorFunction<unknown, Task> {
-    return switchMap(() => {
-      if (!this.task) {
-        return throwError(() => new Error('No task loaded.'));
-      }
-      return of(this.task);
-    });
+    // destroy the task
+    const state = this.state$.value;
+    if (state.isReady) state.data.destroy();
   }
 
   /** Initializes a task once the URL has been loaded in the iframe */
   loadTaskFromIframe(iframe: HTMLIFrameElement): void {
-    taskProxyFromIframe(iframe)
-      .pipe(
-        switchMap((task: Task) => {
-          // Got task proxy from the iframe, ask task to load
-          this.task = task;
-          this.task.bindPlatform(this);
-
-          const initialViews = { task: true, solution: true, editor: true, hints: true, grader: true, metadata: true };
-          return task.load(initialViews);
-        }),
-        this.getTaskOperator(),
-        switchMap(task => {
-          // Task loaded
-          this.state = 'loaded';
-
-          // Start intervals
-          this.startHeightInterval();
-          this.startSaveInterval();
-
-          // Get the task views
-          return task.getViews();
-        }),
-        switchMap((views: TaskViews) => {
-          // Set the views the task should display
-          // TODO Actual logic for tasks with more views than just task
-          this.setTaskViews(views);
-          return this.task?.showViewsInTask({ task: true }) || EMPTY;
-        })
-      )
-      .subscribe();
+    taskProxyFromIframe(iframe).pipe(
+      switchMap(task => {
+        // Got task proxy from the iframe, ask task to load
+        task.bindPlatform(this);
+        const initialViews = { task: true, solution: true, editor: true, hints: true, grader: true, metadata: true };
+        return task.load(initialViews).pipe(mapTo(task));
+      })
+    ).subscribe({
+      next: task => this.state$.next(readyState(task)),
+      error: err => this.state$.next(errorState(err))
+    });
   }
 
-  // Communication with the task
-  startHeightInterval(): void {
+  /* Communication with the task */
+
+  registerTaskViewLoading(): Subscription {
+    // Load views once the task has been loaded
+    return this.state$.pipe(
+      readyData(),
+      switchMap(task => task.getViews().pipe(map(views => ({ task, views })))),
+      tap(({ task: _, views }) => this.setTaskViews(views)),
+      switchMap(({ task, views: _ }) => task.showViewsInTask({ task: true })),
+    ).subscribe({
+      error: err => this.state$.next(errorState(err))
+    });
+  }
+
+  registerRecurringHeightSync(): Subscription {
     // Start updating the iframe height to match the task's height
-    this.heightInterval = interval(1000)
-      .pipe(
-        this.getTaskOperator(),
-        switchMap(task => task.getHeight())
-      )
-      .subscribe(height => this.setIframeHeight(height));
+    return this.state$.pipe(
+      switchMap(s => interval(1000).pipe(mapTo(s))),
+      readyData(),
+      switchMap(task => task.getHeight()),
+    ).subscribe(height => this.setIframeHeight(height));
   }
 
-  startSaveInterval(): void {
+  registerRecurringSave(): Subscription {
     // Automatically save the answer and state
-    this.saveInterval = interval(1000)
-      .pipe(
-        this.getTaskOperator(),
-        switchMap(task => forkJoin([
-          task.getAnswer(),
-          task.getState()
-        ]))
-      )
-      .subscribe(([ answer, state ]) => this.saveAnswerState(answer, state));
+    return this.state$.pipe(
+      switchMap(s => interval(1000).pipe(mapTo(s))),
+      readyData(),
+      switchMap(task => forkJoin([
+        task.getAnswer(),
+        task.getState()
+      ]))
+    ).subscribe(([ answer, state ]) => this.saveAnswerState(answer, state));
   }
 
   reloadAnswerState(answer: string, state: string): void {
-    if (!this.task) {
-      return;
-    }
-    const task = this.task;
-    task.reloadState(state)
-      .pipe(switchMap(() =>
-        task.reloadAnswer(answer)
-      ))
-      .subscribe();
+    this.state$.pipe(
+      take(1),
+      readyData(),
+      switchMap(task => concat(task.reloadState(state), task.reloadAnswer(answer))),
+    ).subscribe();
   }
 
   saveAnswerState(answer: string, state: string): void {
@@ -179,34 +158,26 @@ export class ItemDisplayComponent extends TaskListener implements OnInit, AfterV
     }
   }
 
-  setIframeUrl(url?: string | null): void {
-    this.url = url ? this.sanitizer.bypassSecurityTrustResourceUrl(url) : undefined;
-  }
-
   setActiveTab(tab: TaskTab): void {
     this.activeTab = tab;
   }
 
   // *** TaskListener Implementation ***
   validate(mode: string): Observable<void> {
-    if (!this.task) {
-      return EMPTY;
-    }
-
     if (mode == 'cancel') {
       // TODO reload answer
       return EMPTY;
     }
 
     if (mode == 'validate') {
-      return this.task.getAnswer()
-        .pipe(
-          switchMap(answer => this.task?.gradeAnswer(answer, '') || throwError(() => new Error('Task disappeared.'))),
-          switchMap((_results: any) =>
-            // TODO Do something with the results
-            EMPTY
-          )
-        );
+      return this.state$.pipe( // so that switchMap interrupts request if state changes
+        switchMap(state => (state.isReady ? state.data.getAnswer().pipe(map(answer => ({ task: state.data, answer }))) : EMPTY)),
+        switchMap(({ task, answer }) => task.gradeAnswer(answer, '')),
+        switchMap((_results: any) =>
+          // TODO Do something with the results
+          EMPTY
+        )
+      );
     }
     // Other unimplemented modes
     return EMPTY;

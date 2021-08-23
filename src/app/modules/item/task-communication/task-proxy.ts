@@ -252,7 +252,6 @@ export class Task {
  */
 
 export class TaskListener {
-  task? : Task;
   constructor() {}
 
   /*
