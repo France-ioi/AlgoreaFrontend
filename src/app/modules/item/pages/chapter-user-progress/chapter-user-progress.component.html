@@ -1,6 +1,6 @@
 <ng-container *ngIf="state$ | async as state">
   <div *ngIf="state.isReady">
-    <p-table class="alg-table" [columns]="columns" [value]="state.data.children" [loading]="state.isFetching">
+    <p-table class="alg-table" [columns]="columns" [value]="state.data" [loading]="state.isFetching">
       <ng-template pTemplate="header" let-rowData let-columns>
         <tr *ngIf="rowData.length > 0">
           <ng-container *ngFor="let col of columns">
@@ -21,6 +21,25 @@
         <tr>
           <td *ngFor="let col of columns">
             <ng-container [ngSwitch]="col.field">
+              <ng-container *ngSwitchCase="'title'">
+                <a
+                  class="alg-link"
+                  [routerLink]="rowData | rawItemLink"
+                >
+                  {{ rowData.title }}
+                </a>
+              </ng-container>
+              <ng-container *ngSwitchCase="'latestActivityAt'">
+                {{ rowData.latestActivityAt | date:'YY-MM-dd HH:MM' }}
+              </ng-container>
+              <ng-container *ngSwitchCase="'timeSpent'">
+                {{ rowData.timeSpent | duration }}
+              </ng-container>
+              <ng-container *ngSwitchCase="'score'">
+                <div class="score-ring">
+                  <alg-score-ring [diameter]="42" [currentScore]="rowData.score"></alg-score-ring>
+                </div>
+              </ng-container>
               <ng-container *ngSwitchDefault>
                 {{ rowData[col.field] }}
               </ng-container>
