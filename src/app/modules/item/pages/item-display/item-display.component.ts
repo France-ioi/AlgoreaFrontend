@@ -3,7 +3,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ItemData } from '../../services/item-datasource.service';
 import { taskProxyFromIframe, taskUrlWithParameters, TaskListener, Task, } from 'src/app/modules/item/task-communication/task-proxy';
 import { BehaviorSubject, concat, EMPTY, forkJoin, interval, Observable, of, Subscription } from 'rxjs';
-import { map, mapTo, switchMap, take, tap } from 'rxjs/operators';
+import { distinctUntilChanged, map, mapTo, switchMap, take, tap } from 'rxjs/operators';
 import { TaskParamsKeyDefault, TaskParamsValue } from '../../task-communication/types';
 import { errorState, fetchingState, FetchState, readyState } from 'src/app/shared/helpers/state';
 import { readyData } from 'src/app/shared/operators/state';
@@ -32,11 +32,11 @@ export class ItemDisplayComponent extends TaskListener implements OnInit, AfterV
   url?: SafeResourceUrl; // used by the iframe to load the task, set at view init
   height = 400;
 
-  // Answer/state data from the task
-  private lastAnswer = '';
-  private lastState = '';
-
-  private subscriptions = [ this.registerTaskViewLoading(), this.registerRecurringHeightSync(), this.registerRecurringSave() ];
+  private subscriptions = [
+    this.registerTaskViewLoading(),
+    this.registerRecurringHeightSync(),
+    this.registerRecurringAnswerAndStateSave()
+  ];
 
   constructor(private sanitizer: DomSanitizer) {
     super();
@@ -118,7 +118,7 @@ export class ItemDisplayComponent extends TaskListener implements OnInit, AfterV
     ).subscribe(height => this.setIframeHeight(height));
   }
 
-  registerRecurringSave(): Subscription {
+  registerRecurringAnswerAndStateSave(): Subscription {
     // Automatically save the answer and state
     return this.state$.pipe(
       switchMap(s => interval(1000).pipe(mapTo(s))),
@@ -126,8 +126,10 @@ export class ItemDisplayComponent extends TaskListener implements OnInit, AfterV
       switchMap(task => forkJoin([
         task.getAnswer(),
         task.getState()
-      ]))
-    ).subscribe(([ answer, state ]) => this.saveAnswerState(answer, state));
+      ])),
+      distinctUntilChanged(([ answer1, state1 ], [ answer2, state2 ]) => answer1 === answer2 && state1 === state2),
+      /* TODO: save */
+    ).subscribe();
   }
 
   reloadAnswerState(answer: string, state: string): void {
@@ -136,14 +138,6 @@ export class ItemDisplayComponent extends TaskListener implements OnInit, AfterV
       readyData(),
       switchMap(task => concat(task.reloadState(state), task.reloadAnswer(answer))),
     ).subscribe();
-  }
-
-  saveAnswerState(answer: string, state: string): void {
-    if (answer != this.lastAnswer || state != this.lastState) {
-      // TODO Save
-    }
-    this.lastAnswer = answer;
-    this.lastState = state;
   }
 
   // Views management
