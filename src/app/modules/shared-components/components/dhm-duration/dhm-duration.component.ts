@@ -37,15 +37,12 @@ export class DHMDurationComponent implements OnInit, ControlValueAccessor, Valid
 
   @Input() name = '';
   @Input() parentForm?: FormGroup;
-  @Input() format: 'time' | 'seconds' = 'time';
+  @Input() limitToTimeMax = false;
 
   control?: AbstractControl;
 
   get maxDuration(): number {
-    switch (this.format) {
-      case 'time': return MAX_TIME_FORMAT_DURATION;
-      case 'seconds': return MAX_SECONDS_FORMAT_DURATION;
-    }
+    return this.limitToTimeMax ? MAX_TIME_FORMAT_DURATION : MAX_SECONDS_FORMAT_DURATION;
   }
 
   days = '';
