@@ -20,8 +20,7 @@ export class GroupJoinByCodeComponent implements OnChanges {
   @Output() refreshRequired = new EventEmitter<void>();
 
   codeAdditions?: CodeAdditions;
-  initialCodeLifetime?: CodeLifetime;
-  codeLifetimeDuration?: Duration;
+  codeLifetimeControlValue?: Duration;
   processing = false;
 
   codeLifetimeOptions = [
@@ -54,12 +53,13 @@ export class GroupJoinByCodeComponent implements OnChanges {
     if (changes.group && this.group) {
       this.codeAdditions = codeAdditions(this.group);
 
-      const codeLifetimeHasChanged = this.initialCodeLifetime === undefined
-        || !isSameCodeLifetime(this.initialCodeLifetime, this.group.codeLifetime);
+      const codeLifetimeHasChanged = !isSameCodeLifetime(
+        (changes.group.previousValue as Group | undefined)?.codeLifetime,
+        (changes.group.currentValue as Group | undefined)?.codeLifetime,
+      );
 
       if (codeLifetimeHasChanged) {
-        this.initialCodeLifetime = this.group.codeLifetime;
-        this.codeLifetimeDuration = this.group.codeLifetime instanceof Duration
+        this.codeLifetimeControlValue = this.group.codeLifetime instanceof Duration
           ? this.group.codeLifetime
           : undefined;
         this.selectedCodeLifetimeOption = this.getSelectedCodeLifetimeOption(this.group.codeLifetime);

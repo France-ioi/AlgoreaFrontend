@@ -56,15 +56,15 @@
           <alg-dhm-duration
             class="alg-duration"
             ngDefaultControl
-            [(ngModel)]="codeLifetimeDuration"
+            [(ngModel)]="codeLifetimeControlValue"
             #control="ngModel"
             required
           ></alg-dhm-duration>
           <alg-button
             icon="fa fa-check"
             class="submit-duration-button"
-            (click)="codeLifetimeDuration && submitCodeLifetime(codeLifetimeDuration)"
-            [disabled]="processing || !codeLifetimeDuration || !control.dirty || codeLifetimeDuration.ms === initialCodeLifetime?.ms"
+            (click)="codeLifetimeControlValue && submitCodeLifetime(codeLifetimeControlValue)"
+            [disabled]="processing || !codeLifetimeControlValue || !control.dirty || codeLifetimeControlValue.ms === group.codeLifetime?.ms"
             i18n-pTooltip pTooltip="This code will expire after the given duration (reset current expiration)"
             tooltipPosition="right"
             tooltipEvent="hover"
