@@ -56,7 +56,6 @@ import { AccessCodeViewComponent } from './components/access-code-view/access-co
 import { LanguagePickerComponent } from '../../core/components/language-picker/language-picker.component';
 import { UserCaptionPipe } from '../../shared/pipes/userCaption';
 import { LogActionDisplayPipe } from '../../shared/pipes/logActionDisplay';
-import { DHMDurationComponent } from './components/dhm-duration/dhm-duration.component';
 
 @NgModule({
   declarations: [
@@ -91,7 +90,6 @@ import { DHMDurationComponent } from './components/dhm-duration/dhm-duration.com
     DurationComponent,
     AccessCodeViewComponent,
     LanguagePickerComponent,
-    DHMDurationComponent,
   ],
   imports: [
     CommonModule,
@@ -156,7 +154,6 @@ import { DHMDurationComponent } from './components/dhm-duration/dhm-duration.com
     DurationComponent,
     AccessCodeViewComponent,
     LanguagePickerComponent,
-    DHMDurationComponent,
   ],
   providers: [],
   entryComponents: [

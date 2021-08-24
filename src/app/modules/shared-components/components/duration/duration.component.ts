@@ -1,4 +1,4 @@
-import { Component, EventEmitter, forwardRef, Injector, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, forwardRef, Injector, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import {
   AbstractControl,
   ControlValueAccessor,
@@ -11,6 +11,7 @@ import {
 } from '@angular/forms';
 import { Duration, MAX_SECONDS_FORMAT_DURATION, MAX_TIME_FORMAT_DURATION } from 'src/app/shared/helpers/duration';
 
+const MAX_HOURS_VALUE = 23;
 const MAX_MINUTES_VALUE = 59;
 const MAX_SECONDS_VALUE = 59;
 
@@ -31,25 +32,31 @@ const MAX_SECONDS_VALUE = 59;
     },
   ]
 })
-export class DurationComponent implements OnInit, ControlValueAccessor, Validator {
+export class DurationComponent implements OnInit, OnChanges, ControlValueAccessor, Validator {
   @Output() change = new EventEmitter<Duration | null>();
 
   @Input() name = '';
   @Input() parentForm?: FormGroup;
-  @Input() format: 'time' | 'seconds' = 'time';
+  @Input() layout: 'DHM' | 'HMS' = 'HMS';
+  @Input() limitToTimeMax = false;
 
   control?: AbstractControl;
 
   get maxDuration(): number {
-    switch (this.format) {
-      case 'time': return MAX_TIME_FORMAT_DURATION;
-      case 'seconds': return MAX_SECONDS_FORMAT_DURATION;
-    }
+    return this.limitToTimeMax ? MAX_TIME_FORMAT_DURATION : MAX_SECONDS_FORMAT_DURATION;
   }
 
+  days = '';
   hours = '';
   minutes = '';
   seconds = '';
+
+  showField = {
+    days: false,
+    hours: false,
+    minutes: false,
+    seconds: false,
+  };
 
   constructor(private injector: Injector) {}
 
@@ -59,6 +66,16 @@ export class DurationComponent implements OnInit, ControlValueAccessor, Validato
     this.control = this.parentForm && this.name
       ? this.parentForm.get(this.name) ?? undefined
       : this.injector.get(NgControl, null)?.control ?? undefined;
+    this.showField = {
+      days: this.layout === 'DHM',
+      hours: this.layout === 'DHM' || this.layout === 'HMS',
+      minutes: this.layout === 'DHM' || this.layout === 'HMS',
+      seconds: this.layout === 'HMS',
+    };
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.layout && !changes.layout.firstChange) throw new Error('layout must not change');
   }
 
   private onChange: (duration: Duration | null) => void = () => {};
@@ -67,13 +84,28 @@ export class DurationComponent implements OnInit, ControlValueAccessor, Validato
     const duration = control.value as Duration | null;
     if (!duration) return null;
     if (!duration.isValid()) return { invalidDuration: { invalidDuration: true } };
-    if (duration.ms > this.maxDuration) return { max: { max: new Duration(this.maxDuration).toString() } };
+    if (duration.ms > this.maxDuration) {
+      const duration = new Duration(this.maxDuration);
+      switch (this.layout) {
+        case 'DHM':
+          return { max: { max: duration.getDHM().join(':') } };
+        case 'HMS':
+          return { max: { max: duration.getHMS().join(':') } };
+      }
+    }
     return null;
   }
 
   writeValue(duration: Duration | null): void {
     if (!duration) return;
-    [ this.hours, this.minutes, this.seconds ] = duration.getHMS();
+    switch (this.layout) {
+      case 'HMS':
+        [ this.hours, this.minutes, this.seconds ] = duration.getHMS();
+        break;
+      case 'DHM':
+        [ this.days, this.hours, this.minutes ] = duration.getDHM();
+        break;
+    }
   }
 
   registerOnChange(fn: (duration: Duration | null) => void): void {
@@ -89,30 +121,30 @@ export class DurationComponent implements OnInit, ControlValueAccessor, Validato
   }
 
   handleChange(): void {
-    if (this.hours === '' || this.minutes === '' || this.seconds === '') {
-      this.emitValue(null);
-      return;
+    switch (this.layout) {
+      case 'DHM':
+        return this.emitValue(this.handleDHMChange());
+      case 'HMS':
+        return this.emitValue(this.handleHMSChange());
     }
-
-    if (
-      this.minutes && +this.minutes > MAX_MINUTES_VALUE ||
-      this.seconds && +this.seconds > MAX_SECONDS_VALUE) {
-      this.setDefaultModelValues();
-    }
-
-    const duration: Duration = Duration.fromHMS(+this.hours, +this.minutes, +this.seconds);
-
-    this.emitValue(duration);
   }
 
-  setDefaultModelValues(): void {
-    if (this.minutes && +this.minutes > MAX_MINUTES_VALUE) {
-      this.minutes = String(MAX_MINUTES_VALUE);
-    }
+  private handleHMSChange(): Duration | null {
+    if (this.hours === '' || this.minutes === '' || this.seconds === '') return null;
 
-    if (this.seconds && +this.seconds > MAX_SECONDS_VALUE) {
-      this.seconds = String(MAX_SECONDS_VALUE);
-    }
+    if (+this.minutes > MAX_MINUTES_VALUE) this.minutes = String(MAX_MINUTES_VALUE);
+    if (+this.seconds > MAX_SECONDS_VALUE) this.seconds = String(MAX_SECONDS_VALUE);
+
+    return Duration.fromHMS(+this.hours, +this.minutes, +this.seconds);
+  }
+
+  private handleDHMChange(): Duration | null {
+    if (this.days === '' || this.hours === '' || this.minutes === '') return null;
+
+    if (+this.hours > MAX_HOURS_VALUE) this.hours = String(MAX_HOURS_VALUE);
+    if (+this.minutes > MAX_MINUTES_VALUE) this.minutes = String(MAX_MINUTES_VALUE);
+
+    return Duration.fromDHM(+this.days, +this.hours, +this.minutes);
   }
 
 }

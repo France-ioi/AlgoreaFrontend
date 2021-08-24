@@ -102,6 +102,8 @@
                 formControlName="duration"
                 name="duration"
                 [parentForm]="parentForm"
+                layout="HMS"
+                [limitToTimeMax]="true"
                 *ngIf="!!parentForm.get('duration_enabled')?.value"
             >
             </alg-duration>

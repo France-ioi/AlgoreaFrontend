@@ -53,13 +53,14 @@
         ></alg-selection>
 
         <div class="duration-form-group" *ngIf="selectedCodeLifetimeOption === customCodeLifetimeOption">
-          <alg-dhm-duration
+          <alg-duration
             class="alg-duration"
             ngDefaultControl
+            layout="DHM"
             [(ngModel)]="codeLifetimeControlValue"
             #control="ngModel"
             required
-          ></alg-dhm-duration>
+          ></alg-duration>
           <alg-button
             icon="fa fa-check"
             class="submit-duration-button"
