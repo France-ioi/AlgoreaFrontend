@@ -1,6 +1,8 @@
 <div class="elements">
   <div class="element" *ngIf="showField.days">
-    <p class="label">D</p>
+    <p class="label">
+      <small i18n>Days</small>
+    </p>
     <p-inputMask
         placeholder="DDD"
         slotChar="DDD"
@@ -13,11 +15,13 @@
     </p-inputMask>
   </div>
   <div class="element" *ngIf="showField.hours">
-    <p class="label">H</p>
+    <p class="label">
+      <small i18n>Hours</small>
+    </p>
     <p-inputMask
-        placeholder="HHH"
-        slotChar="HHH"
-        mask="9?99"
+        [placeholder]="showField.days ? 'HH' : 'HHH'"
+        [slotChar]="showField.days ? 'HH' : 'HHH'"
+        [mask]="showField.days ? '9?9' : '9?99'"
         [unmask]="true"
         [size]="8"
         [(ngModel)]="hours"
@@ -26,7 +30,9 @@
     </p-inputMask>
   </div>
   <div class="element" *ngIf="showField.minutes">
-    <p class="label">M</p>
+    <p class="label">
+      <small i18n>Minutes</small>
+    </p>
     <p-inputMask
         placeholder="MM"
         slotChar="MM"
@@ -39,7 +45,9 @@
     </p-inputMask>
   </div>
   <div class="element" *ngIf="showField.seconds">
-    <p class="label">S</p>
+    <p class="label">
+      <small i18n>Seconds</small>
+    </p>
     <p-inputMask
         placeholder="SS"
         slotChar="SS"
