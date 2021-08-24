@@ -16,7 +16,7 @@ interface RowData {
   id: string,
   type: ItemType,
   title: string,
-  latestActivityAt: Date,
+  latestActivityAt: Date | null,
   timeSpent: number,
   submissions: number,
   score: number,

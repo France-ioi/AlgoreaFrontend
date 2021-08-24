@@ -12,7 +12,7 @@ const participantProgressDecoder = D.struct({
     currentUserPermissions: permissionsDecoder,
     hintsRequested: D.number,
     itemId: D.string,
-    latestActivityAt: dateDecoder,
+    latestActivityAt: D.nullable(dateDecoder),
     noScore: D.boolean,
     score: D.number,
     string: D.struct({
