@@ -1,0 +1,8 @@
+<alg-group-manager-list
+  [group]="group"
+  *ngIf="group?.isCurrentUserManager || group?.currentUserMembership !== 'none'; else noPermission"
+></alg-group-manager-list>
+
+<ng-template #noPermission>
+  <div class="error validation-text" i18n>You are not allowed to see this page.</div>
+</ng-template>
