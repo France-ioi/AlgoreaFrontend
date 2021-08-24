@@ -1329,13 +1329,13 @@
       </trans-unit><trans-unit id="4106690181112187643" datatype="html">
         <source>A new code has been generated</source><target state="translated">Un nouveau code a été généré</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.ts</context><context context-type="linenumber">77</context></context-group></trans-unit><trans-unit id="2868875466439101736" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.ts</context><context context-type="linenumber">89</context></context-group></trans-unit><trans-unit id="2868875466439101736" datatype="html">
         <source>The validity has been changed</source><target state="translated">La validité a été modifiée</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.ts</context><context context-type="linenumber">101</context></context-group></trans-unit><trans-unit id="844587251870961613" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.ts</context><context context-type="linenumber">113</context></context-group></trans-unit><trans-unit id="844587251870961613" datatype="html">
         <source>Users will not be able to join with the former code.</source><target state="translated">Les utilisateurs ne pourront plus rejoindre le groupe avec le code précédent.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.ts</context><context context-type="linenumber">129</context></context-group></trans-unit><trans-unit id="690250592654745090" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.ts</context><context context-type="linenumber">141</context></context-group></trans-unit><trans-unit id="690250592654745090" datatype="html">
         <source>, and</source><target state="new">, and</target>
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-links/group-links.component.html</context><context context-type="linenumber">14</context></context-group></trans-unit><trans-unit id="9128077364077202523" datatype="html">
@@ -1379,20 +1379,29 @@
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.html</context><context context-type="linenumber">48</context></context-group></trans-unit><trans-unit id="757601207356150612" datatype="html">
         <source>This code will expire after the given duration (reset current expiration)</source><target state="new">This code will expire after the given duration (reset current expiration)</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.html</context>
-          <context context-type="linenumber">69</context>
-        </context-group>
-      </trans-unit><trans-unit id="872456877046948009" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.html</context><context context-type="linenumber">69</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.ts</context><context context-type="linenumber">41</context></context-group></trans-unit><trans-unit id="872456877046948009" datatype="html">
         <source>Infinite</source><target state="new">Infinite</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.ts</context><context context-type="linenumber">28</context></context-group></trans-unit><trans-unit id="3604869065785906427" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.ts</context><context context-type="linenumber">29</context></context-group></trans-unit><trans-unit id="3567546184406709579" datatype="html">
+        <source>This code will never expire (reset current expiration)</source><target state="new">This code will never expire (reset current expiration)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.ts</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+      </trans-unit><trans-unit id="3604869065785906427" datatype="html">
         <source>Usable once</source><target state="new">Usable once</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.ts</context><context context-type="linenumber">29</context></context-group></trans-unit><trans-unit id="7590013429208346303" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.ts</context><context context-type="linenumber">34</context></context-group></trans-unit><trans-unit id="317145956187906576" datatype="html">
+        <source>This code will be usable only once (reset current expiration)</source><target state="new">This code will be usable only once (reset current expiration)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.ts</context>
+          <context context-type="linenumber">36</context>
+        </context-group>
+      </trans-unit><trans-unit id="7590013429208346303" datatype="html">
         <source>Custom</source><target state="new">Custom</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.ts</context><context context-type="linenumber">30</context></context-group></trans-unit><trans-unit id="8388874893104562881" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.ts</context><context context-type="linenumber">39</context></context-group></trans-unit><trans-unit id="8388874893104562881" datatype="html">
         <source>You are not allowed to see this page.</source><target state="translated">Vous n'êtes pas autorisé à visiter cette page.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/group/components/group-no-permission/group-no-permission.component.html</context>
