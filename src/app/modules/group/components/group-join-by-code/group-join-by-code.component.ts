@@ -2,11 +2,12 @@ import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from
 import { switchMap } from 'rxjs/operators';
 import { Duration } from '../../../../shared/helpers/duration';
 import { Group } from '../../http-services/get-group-by-id.service';
-import { CodeLifetime, codeAdditions, CodeAdditions, isSameCodeLifetime } from '../../helpers/group-code';
+import { codeInfo, CodeInfo } from '../../helpers/group-code';
 import { GroupActionsService } from '../../http-services/group-actions.service';
 import { CodeActionsService } from '../../http-services/code-actions.service';
 import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
 import { of } from 'rxjs';
+import { CodeLifetime } from '../../helpers/code-lifetime';
 
 @Component({
   selector: 'alg-group-join-by-code',
@@ -19,7 +20,7 @@ export class GroupJoinByCodeComponent implements OnChanges {
   @Input() group?: Group;
   @Output() refreshRequired = new EventEmitter<void>();
 
-  codeAdditions?: CodeAdditions;
+  codeInfo?: CodeInfo;
   codeLifetimeControlValue?: Duration;
   processing = false;
 
@@ -50,18 +51,15 @@ export class GroupJoinByCodeComponent implements OnChanges {
   ) { }
 
   ngOnChanges(changes: SimpleChanges): void {
+    if (changes.group && !this.group) this.codeInfo = undefined;
     if (changes.group && this.group) {
-      this.codeAdditions = codeAdditions(this.group);
+      this.codeInfo = codeInfo(this.group);
 
-      const codeLifetimeHasChanged = !isSameCodeLifetime(
-        (changes.group.previousValue as Group | undefined)?.codeLifetime,
-        (changes.group.currentValue as Group | undefined)?.codeLifetime,
-      );
+      const codeLifetimeHasChanged = (changes.group.previousValue as Group | undefined)?.codeLifetime?.valueInSeconds !==
+        (changes.group.currentValue as Group | undefined)?.codeLifetime?.valueInSeconds;
 
       if (codeLifetimeHasChanged) {
-        this.codeLifetimeControlValue = this.group.codeLifetime instanceof Duration
-          ? this.group.codeLifetime
-          : undefined;
+        this.codeLifetimeControlValue = this.group.codeLifetime?.duration;
         this.selectedCodeLifetimeOption = this.getSelectedCodeLifetimeOption(this.group.codeLifetime);
       }
     }
@@ -97,17 +95,18 @@ export class GroupJoinByCodeComponent implements OnChanges {
       });
   }
 
-  submitCodeLifetime(newCodeLifetime: CodeLifetime): void {
-    if (!this.group || !this.codeAdditions) throw new Error('cannot submit new code lifetime when group is undefined');
-    if (this.codeAdditions.hasCodeNotSet) throw new Error('cannot submit code lifetime when no code is set');
-    if (isSameCodeLifetime(this.group.codeLifetime, newCodeLifetime)) throw new Error('code lifetime has not changed');
+  submitCodeLifetime(ms: number): void {
+    if (!this.group || !this.codeInfo) throw new Error('cannot submit new code lifetime when group is undefined');
+    if (this.codeInfo.hasCodeNotSet) throw new Error('cannot submit code lifetime when no code is set');
+    const newCodeLifetime = new CodeLifetime(ms);
+    if (this.group.codeLifetime?.valueInSeconds === newCodeLifetime.valueInSeconds) throw new Error('code lifetime has not changed');
 
     // disable UI
     this.processing = true;
 
     // call code refresh service, then group refresh data
     this.groupActionsService.updateGroup(this.group.id, {
-      code_lifetime: newCodeLifetime instanceof Duration ? newCodeLifetime.seconds() : newCodeLifetime,
+      code_lifetime: newCodeLifetime.valueInSeconds,
       code_expires_at: null,
     }).subscribe({
       next: () => {
@@ -153,20 +152,16 @@ export class GroupJoinByCodeComponent implements OnChanges {
 
   changeCodeLifetime(selected: number): void {
     const optionValue = this.codeLifetimeOptions[selected]?.value;
-    if (optionValue === 'infinite') this.submitCodeLifetime(null);
-    if (optionValue === 'usable_once') this.submitCodeLifetime(new Duration(0));
+    if (optionValue === 'infinite') this.submitCodeLifetime(CodeLifetime.infiniteValue);
+    if (optionValue === 'usable_once') this.submitCodeLifetime(CodeLifetime.usableOnceValue);
 
     this.selectedCodeLifetimeOption = selected;
   }
 
   private getSelectedCodeLifetimeOption(codeLifetime?: CodeLifetime): number {
-    if (codeLifetime instanceof Duration) {
-      return codeLifetime.ms === 0
-        ? this.codeLifetimeOptions.findIndex(({ value }) => value === 'usable_once')
-        : this.codeLifetimeOptions.findIndex(({ value }) => value === 'custom');
-    }
-
-    return this.codeLifetimeOptions.findIndex(({ value }) => value === 'infinite');
+    if (codeLifetime?.usableOnce) return this.codeLifetimeOptions.findIndex(({ value }) => value === 'usable_once');
+    if (codeLifetime?.infinite) return this.codeLifetimeOptions.findIndex(({ value }) => value === 'infinite');
+    return this.codeLifetimeOptions.findIndex(({ value }) => value === 'custom');
   }
 
 }

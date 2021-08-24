@@ -1,16 +1,16 @@
 import { Duration } from 'src/app/shared/helpers/duration';
 import * as D from 'io-ts/Decoder';
-import { durationFromSecondsDecoder } from 'src/app/shared/helpers/decoders';
+import { codeLifetimeDecoder } from './code-lifetime';
 
 export const groupCodeDecoder = D.partial({
   code: D.nullable(D.string),
-  codeLifetime: D.nullable(durationFromSecondsDecoder),
+  codeLifetime: codeLifetimeDecoder,
   codeExpiresAt: D.nullable(D.string),
 });
 
-type CodeInfo = D.TypeOf<typeof groupCodeDecoder>;
+type GroupCode = D.TypeOf<typeof groupCodeDecoder>;
 
-export interface CodeAdditions {
+export interface CodeInfo {
   codeExpiration?: Date;
   hasCodeNotSet: boolean;
   hasCodeUnused: boolean;
@@ -21,9 +21,8 @@ export interface CodeAdditions {
   durationSinceFirstCodeUse?: Duration;
   durationBeforeCodeExpiration?: Duration;
 }
-export type CodeLifetime = Duration | null;
 
-export function codeAdditions(g: CodeInfo): CodeAdditions {
+export function codeInfo(g: GroupCode): CodeInfo {
   return {
     codeExpiration: codeExpiration(g),
     hasCodeNotSet: hasCodeNotSet(g),
@@ -37,49 +36,44 @@ export function codeAdditions(g: CodeInfo): CodeAdditions {
   };
 }
 
-export function codeExpiration(group: CodeInfo): Date|undefined {
+export function codeExpiration(group: GroupCode): Date|undefined {
   return group.codeExpiresAt ? new Date(group.codeExpiresAt) : undefined;
 }
 
-export function isSameCodeLifetime(a: CodeLifetime | undefined, b: CodeLifetime | undefined): boolean {
-  if (a && b) return a.ms === b.ms;
-  return a === b;
-}
-
-export function hasCodeNotSet(group: CodeInfo): boolean {
+export function hasCodeNotSet(group: GroupCode): boolean {
   return !group.code;
 }
 
-export function hasCodeUnused(group: CodeInfo): boolean {
-  return !!group.code && group.codeLifetime !== null && !group.codeExpiresAt;
+export function hasCodeUnused(group: GroupCode): boolean {
+  return !!group.code && !group.codeLifetime?.infinite && !group.codeExpiresAt;
 }
-export function hasUnexpiringCode(group: CodeInfo): boolean {
-  return !!group.code && group.codeLifetime === null;
+export function hasUnexpiringCode(group: GroupCode): boolean {
+  return !!group.code && !!group.codeLifetime?.infinite;
 }
 
-export function hasCodeInUse(group: CodeInfo): boolean {
+export function hasCodeInUse(group: GroupCode): boolean {
   const expiration = codeExpiration(group);
   return !!expiration && new Date() < expiration;
 }
 
-export function hasCodeExpired(group: CodeInfo): boolean {
+export function hasCodeExpired(group: GroupCode): boolean {
   const expiration = codeExpiration(group);
   return !!expiration && expiration < new Date();
 }
 
-export function codeFirstUseDate(group: CodeInfo): Date|undefined {
+export function codeFirstUseDate(group: GroupCode): Date|undefined {
   const expiration = codeExpiration(group);
-  if (!expiration || !(group.codeLifetime instanceof Duration)) return undefined;
+  if (!expiration || !group.codeLifetime || group.codeLifetime.infinite) return undefined;
   return new Date(expiration.valueOf() - group.codeLifetime.ms);
 }
 
-export function durationSinceFirstCodeUse(group: CodeInfo): Duration|undefined {
+export function durationSinceFirstCodeUse(group: GroupCode): Duration|undefined {
   const firstUse = codeFirstUseDate(group);
   if (!firstUse) return undefined;
   return new Duration(Date.now() - firstUse.valueOf());
 }
 
-export function durationBeforeCodeExpiration(group: CodeInfo): Duration|undefined {
+export function durationBeforeCodeExpiration(group: GroupCode): Duration|undefined {
   const expiration = codeExpiration(group);
   if (!expiration) return undefined;
   return new Duration(expiration.valueOf() - Date.now());

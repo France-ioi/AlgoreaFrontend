@@ -1,5 +1,6 @@
-import { codeAdditions,isSameCodeLifetime } from './group-code';
+import { codeInfo } from './group-code';
 import { Duration } from 'src/app/shared/helpers/duration';
+import { CodeLifetime } from './code-lifetime';
 
 describe('GroupCode', () => {
 
@@ -7,7 +8,7 @@ describe('GroupCode', () => {
     const group = {};
 
     it('should return expected values', () => {
-      const g = codeAdditions(group);
+      const g = codeInfo(group);
       expect(g.codeExpiration).toBeUndefined();
       expect(g.hasCodeNotSet).toBeTruthy(); // even if irrelevant
       expect(g.hasCodeUnused).toBeFalsy();
@@ -21,10 +22,10 @@ describe('GroupCode', () => {
   });
 
   describe('when the group has no code set', () => {
-    const group = { code: null as string|null, codeLifetime: null as Duration|null, codeExpiresAt: null as string|null };
+    const group = { code: null as string|null, codeLifetime: new CodeLifetime(Infinity), codeExpiresAt: null as string|null };
 
     it('should return expected values', () => {
-      const g = codeAdditions(group);
+      const g = codeInfo(group);
       expect(g.codeExpiration).toBeUndefined();
       expect(g.hasCodeNotSet).toBeTruthy();
       expect(g.hasCodeUnused).toBeFalsy();
@@ -38,10 +39,14 @@ describe('GroupCode', () => {
   });
 
   describe('when the group has a unused code', () => {
-    const group = { code: 'abcd', codeLifetime: Duration.fromString('1:02:03'), codeExpiresAt: null as string|null };
+    const group = {
+      code: 'abcd',
+      codeLifetime: new CodeLifetime(Duration.fromString('1:02:03').ms),
+      codeExpiresAt: null as string|null,
+    };
 
     it('should return expected values', () => {
-      const g = codeAdditions(group);
+      const g = codeInfo(group);
       expect(g.codeExpiration).toBeUndefined();
       expect(g.hasCodeNotSet).toBeFalsy();
       expect(g.hasCodeUnused).toBeTruthy();
@@ -55,7 +60,11 @@ describe('GroupCode', () => {
   });
 
   describe('when the group has a code already used', () => {
-    const group = { code: 'abcd', codeLifetime: Duration.fromString('1:02:03'), codeExpiresAt: '2020-01-01T10:02:03.00' };
+    const group = {
+      code: 'abcd',
+      codeLifetime: new CodeLifetime(Duration.fromString('1:02:03').ms),
+      codeExpiresAt: '2020-01-01T10:02:03.00',
+    };
 
     beforeEach(() => {
       jasmine.clock().install();
@@ -63,7 +72,7 @@ describe('GroupCode', () => {
     });
 
     it('should return expected values', () => {
-      const g = codeAdditions(group);
+      const g = codeInfo(group);
       expect(g.codeExpiration).toEqual(new Date('2020-01-01 10:02:03'));
       expect(g.hasCodeNotSet).toBeFalsy();
       expect(g.hasCodeUnused).toBeFalsy();
@@ -81,7 +90,11 @@ describe('GroupCode', () => {
   });
 
   describe('when the group has an expired code', () => {
-    const group = { code: 'abcd', codeLifetime: Duration.fromString('1:02:03'), codeExpiresAt: '2020-01-01T10:02:03.00' };
+    const group = {
+      code: 'abcd',
+      codeLifetime: new CodeLifetime(Duration.fromString('1:02:03').ms),
+      codeExpiresAt: '2020-01-01T10:02:03.00',
+    };
 
     beforeEach(() => {
       jasmine.clock().install();
@@ -89,7 +102,7 @@ describe('GroupCode', () => {
     });
 
     it('should return expected values', () => {
-      const g = codeAdditions(group);
+      const g = codeInfo(group);
       expect(g.codeExpiration).toEqual(new Date('2020-01-01 10:02:03'));
       expect(g.hasCodeNotSet).toBeFalsy();
       expect(g.hasUnexpiringCode).toBeFalsy();
@@ -105,10 +118,10 @@ describe('GroupCode', () => {
   });
 
   describe('when the group has an unexpiring code', () => {
-    const group = { code: 'abcd', codeLifetime: null as Duration | null, codeExpiresAt: null as string|null };
+    const group = { code: 'abcd', codeLifetime: new CodeLifetime(Infinity), codeExpiresAt: null as string|null };
 
     it('should return expected values', () => {
-      const g = codeAdditions(group);
+      const g = codeInfo(group);
       expect(g.codeExpiration).toBeUndefined();
       expect(g.hasCodeNotSet).toBeFalsy();
       expect(g.hasCodeUnused).toBeFalsy();
@@ -118,20 +131,6 @@ describe('GroupCode', () => {
       expect(g.codeFirstUseDate).toBeUndefined();
       expect(g.durationBeforeCodeExpiration).toBeUndefined();
       expect(g.durationSinceFirstCodeUse).toBeUndefined();
-    });
-  });
-
-  describe('isSameCodeLifetime', () => {
-
-    it('should return true', () => {
-      expect(isSameCodeLifetime(new Duration(1000), new Duration(1000))).toBeTrue();
-      expect(isSameCodeLifetime(new Duration(0), new Duration(0))).toBeTrue();
-      expect(isSameCodeLifetime(null, null)).toBeTrue();
-    });
-
-    it('should return false', () => {
-      expect(isSameCodeLifetime(new Duration(1), null)).toBeFalse();
-      expect(isSameCodeLifetime(new Duration(0), new Duration(1))).toBeFalse();
     });
   });
 });
