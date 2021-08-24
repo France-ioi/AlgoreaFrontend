@@ -14,7 +14,7 @@
     >
     </alg-group-indicator>
     <!-- tabs -- if only the first tab is visible, do not show the tab bar -->
-    <div [hidden]="!group.isCurrentUserManager && group.currentUserMembership === 'none' && !adminTab.isActive">
+    <div [hidden]="!group.isCurrentUserManager && group.currentUserMembership === 'none' && !adminTab.isActive && !accessTab?.isActive">
       <div class="nav-tab">
         <a
           class="nav-tab-item"
@@ -46,16 +46,6 @@
           Managers
         </a>
         <a
-          *ngIf="group.canCurrentUserManageGroup"
-          class="nav-tab-item"
-          [routerLink]="'./settings'"
-          routerLinkActive #settingsTab="routerLinkActive"
-          [class.active]="settingsTab.isActive"
-          i18n
-        >
-          Settings
-        </a>
-        <a
             [hidden]="!group.currentUserCanGrantGroupAccess && !accessTab?.isActive"
             class="nav-tab-item"
             [routerLink]="'./access'"
@@ -64,6 +54,16 @@
             i18n
         >
           Access
+        </a>
+        <a
+          *ngIf="group.canCurrentUserManageGroup"
+          class="nav-tab-item"
+          [routerLink]="'./settings'"
+          routerLinkActive #settingsTab="routerLinkActive"
+          [class.active]="settingsTab.isActive"
+          i18n
+        >
+          Settings
         </a>
       </div>
     </div>
