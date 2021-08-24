@@ -16,18 +16,10 @@ export const dateDecoder: D.Decoder<unknown, Date> = pipe(
 /**
  * Decoder for Duration type
  */
-export const durationFromStringDecoder: D.Decoder<unknown, Duration> = pipe(
+export const durationDecoder: D.Decoder<unknown, Duration> = pipe(
   D.string,
   D.parse(s => {
     const duration = Duration.fromString(s);
-    return duration.isValid() ? D.success(duration) : D.failure(s, 'DurationFromString');
-  })
-);
-
-export const durationFromSecondsDecoder: D.Decoder<unknown, Duration> = pipe(
-  D.number,
-  D.parse(s => {
-    const duration = Duration.fromSeconds(s);
     return duration.isValid() ? D.success(duration) : D.failure(s, 'DurationFromString');
   })
 );
