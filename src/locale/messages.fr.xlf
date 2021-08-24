@@ -619,23 +619,17 @@
           <context context-type="sourcefile">src/app/modules/group/pages/group-access/group-access.component.html</context>
           <context context-type="linenumber">2</context>
         </context-group>
-      </trans-unit><trans-unit id="1321691759402754571" datatype="html">
-        <source> This group has no activity. </source><target state="new"> This group has no activity. </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/pages/group-access/group-access.component.html</context>
-          <context context-type="linenumber">4,5</context>
-        </context-group>
       </trans-unit><trans-unit id="394480495243219114" datatype="html">
         <source> Error while loading the root activity. </source><target state="new"> Error while loading the root activity. </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/pages/group-access/group-access.component.html</context>
-          <context context-type="linenumber">13,14</context>
-        </context-group>
-      </trans-unit><trans-unit id="104198068484921859" datatype="html">
+
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/group-access/group-access.component.html</context><context context-type="linenumber">9</context></context-group></trans-unit><trans-unit id="104198068484921859" datatype="html">
         <source>Root activity: <x id="INTERPOLATION" equiv-text="{{ itemState.data.string.title }}"/></source><target state="new">Root activity: <x id="INTERPOLATION" equiv-text="{{ itemState.data.string.title }}"/></target>
+
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/group-access/group-access.component.html</context><context context-type="linenumber">15</context></context-group></trans-unit><trans-unit id="936247180843553773" datatype="html">
+        <source>This group has no activity.</source><target state="new">This group has no activity.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/group/pages/group-access/group-access.component.html</context>
-          <context context-type="linenumber">19</context>
+          <context context-type="linenumber">21</context>
         </context-group>
       </trans-unit><trans-unit id="4611536703147831594" datatype="html">
         <source>You are not allowed to manage permissions of this group.</source><target state="new">You are not allowed to manage permissions of this group.</target>
@@ -1617,13 +1611,10 @@
       </trans-unit><trans-unit id="4426319772533875265" datatype="html">
         <source> Settings </source><target state="translated"> Paramètres </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/group-details/group-details.component.html</context><context context-type="linenumber">57</context></context-group></trans-unit><trans-unit id="7288998356732151629" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/group-details/group-details.component.html</context><context context-type="linenumber">68</context></context-group></trans-unit><trans-unit id="7288998356732151629" datatype="html">
         <source> Access </source><target state="new"> Access </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/pages/group-details/group-details.component.html</context>
-          <context context-type="linenumber">67,68</context>
-        </context-group>
-      </trans-unit><trans-unit id="80384927579662477" datatype="html">
+
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/group-details/group-details.component.html</context><context context-type="linenumber">58</context></context-group></trans-unit><trans-unit id="80384927579662477" datatype="html">
         <source>Error while loading the group info</source><target state="translated">Error lors du chargement du groupe</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-remove-button/group-remove-button.component.html</context><context context-type="linenumber">11</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/group-details/group-details.component.html</context><context context-type="linenumber">72</context></context-group></trans-unit><trans-unit id="3835604152936342866" datatype="html">

@@ -1,10 +1,6 @@
 <ng-container *ngIf="group?.currentUserCanGrantGroupAccess; else noAccess">
   <alg-section icon="fa fa-users" i18n-label label="Activity associated to {{ group?.name }}">
-    <div *ngIf="!group?.rootActivityId" i18n>
-      This group has no activity.
-    </div>
-
-    <ng-container *ngIf="itemState$ | async as itemState">
+    <ng-container *ngIf="itemState$ | async as itemState; else noActivity">
       <div class="spinner" *ngIf="itemState.isFetching">
         <p-progressSpinner [style]="{width: '3.3333rem', height: '3.3333rem'}"></p-progressSpinner>
       </div>
@@ -20,6 +16,10 @@
         </div>
       </ng-container>
     </ng-container>
+
+    <ng-template #noActivity>
+      <div i18n>This group has no activity.</div>
+    </ng-template>
   </alg-section>
 </ng-container>
 

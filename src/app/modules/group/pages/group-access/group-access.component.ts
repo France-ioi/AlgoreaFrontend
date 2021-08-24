@@ -1,9 +1,8 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { Group } from '../../http-services/get-group-by-id.service';
 import { GetItemByIdService } from '../../../item/http-services/get-item-by-id.service';
-import { ReplaySubject } from 'rxjs';
-import { switchMap, filter } from 'rxjs/operators';
-import { isNotNull } from '../../../../shared/helpers/null-undefined-predicates';
+import { ReplaySubject, of } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 import { mapToFetchState } from '../../../../shared/operators/state';
 
 @Component({
@@ -17,12 +16,14 @@ export class GroupAccessComponent implements OnChanges {
   private readonly rootActivityId$ = new ReplaySubject<string | null>(1);
 
   itemState$ = this.rootActivityId$.pipe(
-    filter(isNotNull),
-    switchMap(rootActivityId =>
-      this.getItemByIdService.get(rootActivityId).pipe(
-        mapToFetchState(),
-      )
-    ),
+    switchMap(rootActivityId => {
+      if (!rootActivityId) {
+        return of(null);
+      }
+      return this.getItemByIdService.get(rootActivityId).pipe(
+        mapToFetchState()
+      );
+    })
   );
 
   constructor(private getItemByIdService: GetItemByIdService) {
