@@ -22,7 +22,11 @@ describe('GroupCode', () => {
   });
 
   describe('when the group has no code set', () => {
-    const group = { code: null as string|null, codeLifetime: new CodeLifetime(Infinity), codeExpiresAt: null as string|null };
+    const group = {
+      code: null as string|null,
+      codeLifetime: new CodeLifetime(CodeLifetime.infiniteValue),
+      codeExpiresAt: null as string|null,
+    };
 
     it('should return expected values', () => {
       const g = codeInfo(group);

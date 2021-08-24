@@ -65,7 +65,7 @@
             icon="fa fa-check"
             class="submit-duration-button"
             (click)="codeLifetimeControlValue && submitCodeLifetime(codeLifetimeControlValue.ms)"
-            [disabled]="processing || !codeLifetimeControlValue || !control.dirty || codeLifetimeControlValue.ms === group.codeLifetime?.duration?.ms"
+            [disabled]="processing || !codeLifetimeControlValue || !control.dirty || codeLifetimeControlValue.ms === group.codeLifetime?.ms"
             i18n-pTooltip pTooltip="This code will expire after the given duration (reset current expiration)"
             tooltipPosition="right"
             tooltipEvent="hover"

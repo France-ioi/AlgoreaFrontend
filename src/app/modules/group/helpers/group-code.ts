@@ -45,10 +45,10 @@ export function hasCodeNotSet(group: GroupCode): boolean {
 }
 
 export function hasCodeUnused(group: GroupCode): boolean {
-  return !!group.code && !group.codeLifetime?.infinite && !group.codeExpiresAt;
+  return !!group.code && !group.codeLifetime?.isInfinite && !group.codeExpiresAt;
 }
 export function hasUnexpiringCode(group: GroupCode): boolean {
-  return !!group.code && !!group.codeLifetime?.infinite;
+  return !!group.code && !!group.codeLifetime?.isInfinite;
 }
 
 export function hasCodeInUse(group: GroupCode): boolean {
@@ -63,7 +63,7 @@ export function hasCodeExpired(group: GroupCode): boolean {
 
 export function codeFirstUseDate(group: GroupCode): Date|undefined {
   const expiration = codeExpiration(group);
-  if (!expiration || !group.codeLifetime || group.codeLifetime.infinite) return undefined;
+  if (!expiration || !group.codeLifetime || group.codeLifetime.isInfinite) return undefined;
   return new Date(expiration.valueOf() - group.codeLifetime.ms);
 }
 

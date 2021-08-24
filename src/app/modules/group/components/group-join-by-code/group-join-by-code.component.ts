@@ -59,7 +59,7 @@ export class GroupJoinByCodeComponent implements OnChanges {
         (changes.group.currentValue as Group | undefined)?.codeLifetime?.valueInSeconds;
 
       if (codeLifetimeHasChanged) {
-        this.codeLifetimeControlValue = this.group.codeLifetime?.duration;
+        this.codeLifetimeControlValue = this.group.codeLifetime?.asDuration;
         this.selectedCodeLifetimeOption = this.getSelectedCodeLifetimeOption(this.group.codeLifetime);
       }
     }
@@ -160,8 +160,8 @@ export class GroupJoinByCodeComponent implements OnChanges {
   }
 
   private getSelectedCodeLifetimeOption(codeLifetime?: CodeLifetime): number {
-    if (codeLifetime?.usableOnce) return this.codeLifetimeOptions.findIndex(({ value }) => value === 'usable_once');
-    if (codeLifetime?.infinite) return this.codeLifetimeOptions.findIndex(({ value }) => value === 'infinite');
+    if (codeLifetime?.isUsableOnce) return this.codeLifetimeOptions.findIndex(({ value }) => value === 'usable_once');
+    if (codeLifetime?.isInfinite) return this.codeLifetimeOptions.findIndex(({ value }) => value === 'infinite');
     return this.codeLifetimeOptions.findIndex(({ value }) => value === 'custom');
   }
 

@@ -1,15 +1,14 @@
-import { Duration } from 'src/app/shared/helpers/duration';
 import { CodeLifetime } from './code-lifetime';
 
 describe('CodeLifetime', () => {
   describe('when infinite', () => {
     const lifetime = new CodeLifetime(CodeLifetime.infiniteValue);
     it('should be marked as infinite', () => {
-      expect(lifetime.infinite).toBeTrue();
+      expect(lifetime.isInfinite).toBeTrue();
     });
 
     it('should not be marked as usable once', () => {
-      expect(lifetime.usableOnce).toBeFalse();
+      expect(lifetime.isUsableOnce).toBeFalse();
     });
 
     it('should have a null value in seconds', () => {
@@ -21,11 +20,11 @@ describe('CodeLifetime', () => {
     const lifetime = new CodeLifetime(CodeLifetime.usableOnceValue);
 
     it('should not be marked as infinite', () => {
-      expect(lifetime.infinite).toBeFalse();
+      expect(lifetime.isInfinite).toBeFalse();
     });
 
     it('should be marked as usable once', () => {
-      expect(lifetime.usableOnce).toBeTrue();
+      expect(lifetime.isUsableOnce).toBeTrue();
     });
 
     it('should have "0" as value in seconds', () => {
@@ -35,14 +34,14 @@ describe('CodeLifetime', () => {
 
   describe('when a duration is defined', () => {
     const seconds = 10;
-    const lifetime = new CodeLifetime(Duration.fromSeconds(seconds).ms);
+    const lifetime = new CodeLifetime(seconds * 1000);
 
     it('should not be marked as infinite', () => {
-      expect(lifetime.infinite).toBeFalse();
+      expect(lifetime.isInfinite).toBeFalse();
     });
 
     it('should be marked as usable once', () => {
-      expect(lifetime.usableOnce).toBeFalse();
+      expect(lifetime.isUsableOnce).toBeFalse();
     });
 
     it('should have value in seconds', () => {
