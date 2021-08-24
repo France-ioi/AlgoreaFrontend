@@ -98,8 +98,9 @@ export class GroupJoinByCodeComponent implements OnChanges {
   }
 
   submitCodeLifetime(newCodeLifetime: CodeLifetime): void {
-    if (!this.group || !this.codeAdditions) return;
-    if (this.codeAdditions.hasCodeNotSet || isSameCodeLifetime(this.group.codeLifetime, newCodeLifetime)) return;
+    if (!this.group || !this.codeAdditions) throw new Error('cannot submit new code lifetime when group is undefined');
+    if (this.codeAdditions.hasCodeNotSet) throw new Error('cannot submit code lifetime when no code is set');
+    if (isSameCodeLifetime(this.group.codeLifetime, newCodeLifetime)) throw new Error('code lifetime has not changed');
 
     // disable UI
     this.processing = true;
@@ -122,7 +123,7 @@ export class GroupJoinByCodeComponent implements OnChanges {
   }
 
   removeCode(): void {
-    if (!this.group) return;
+    if (!this.group) throw new Error('cannot remove code when group is undefined');
 
     // disable UI
     this.processing = true;
