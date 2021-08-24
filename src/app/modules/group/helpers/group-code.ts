@@ -42,7 +42,7 @@ export function codeExpiration(group: CodeInfo): Date|undefined {
 }
 
 export function isSameCodeLifetime(a: CodeLifetime | undefined, b: CodeLifetime | undefined): boolean {
-  if (a instanceof Duration && b instanceof Duration) return a.toString() === b.toString();
+  if (a && b) return a.ms === b.ms;
   return a === b;
 }
 
