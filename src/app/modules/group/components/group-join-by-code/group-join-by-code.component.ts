@@ -79,6 +79,7 @@ export class GroupJoinByCodeComponent implements OnChanges {
     this.codeActionsService.createNewCode(groupId)
       .pipe(
         switchMap(() =>
+        // if a code expiration was defined, reset it to null
           (expiresAt === null ? of(undefined) : this.groupActionsService.updateGroup(groupId, { code_expires_at: null }))
         ),
       )
