@@ -19,8 +19,9 @@
   <!-- "chapter" type -->
   <ng-template let-node pTemplate="chapter">
     <span
+      id="nav-{{ node.data.element.id }}"
       class="node-tree-item folder"
-      [ngClass]="{ expanded: node.expanded, locked: node.locked, current: node.data && node.data.current }"
+      [ngClass]="{ expanded: node.expanded, locked: node.data.element.locked, current: node.data && node.data.current }"
     >
       <span class="node-item-branch">
         <span class="top-branch">
@@ -30,7 +31,7 @@
           <span class="mask-branch"></span>
         </span>
       </span>
-      <span class="node-item-content" [ngClass]="{ unlocked: !node.locked }" (click)="selectNode(node)">
+      <span class="node-item-content" (click)="selectNode(node)">
         <span class="node-select">
           <alg-score-ring
             *ngIf="node.data.element.currentScore >= 0; else folderNoScore"
@@ -48,7 +49,7 @@
         </span>
         <span class="node-label">
           <span class="label-container">
-            <span class="node-label-title" [ngClass]="{ locked: node.locked }">
+            <span class="node-label-title">
               {{ node.label }}
               <span *ngIf="node.data.element.groupName">(via group "{{ node.data.element.groupName }}")</span>
             </span>
@@ -57,6 +58,13 @@
             </span>
             <span class="node-state" *ngIf="node.data.status === 'error'">
               <i class="fa fa-exclamation-triangle"></i>
+            </span>
+            <span
+              class="node-state"
+              *ngIf="node.data.element.locked"
+              i18n-pTooltip pTooltip="{{ 'Your current access rights do not allow you to list the content of this chapter.' }}"
+            >
+              <i class="fa fa-lock"></i>
             </span>
           </span>
         </span>
@@ -67,8 +75,9 @@
   <!-- "skill-folder" type -->
   <ng-template let-node pTemplate="skill-folder">
     <span
+      id="nav-{{ node.data.element.id }}"
       class="node-tree-item folder"
-      [ngClass]="{ expanded: node.expanded, locked: node.locked, current: node.data && node.data.current }"
+      [ngClass]="{ expanded: node.expanded, locked: node.data.element.locked, current: node.data && node.data.current }"
     >
       <span class="node-item-branch">
         <span class="top-branch">
@@ -78,13 +87,13 @@
           <span class="mask-branch"></span>
         </span>
       </span>
-      <span class="node-item-content" [ngClass]="{ unlocked: !node.locked }" (click)="selectNode(node)">
+      <span class="node-item-content" (click)="selectNode(node)">
         <span class="node-select">
           <i class="fa" [ngClass]="{ 'fa-folder': !node.expanded, 'fa-folder-open': node.expanded }"></i>
         </span>
         <span class="node-label">
           <span class="label-container">
-            <span class="node-label-title" [ngClass]="{ locked: node.locked }">
+            <span class="node-label-title">
               {{ node.label }}
               <span *ngIf="node.data.element.groupName">(<span i18n>via group</span> "{{ node.data.element.groupName }}")</span>
             </span>
@@ -94,7 +103,7 @@
             <span class="node-state" *ngIf="node.data.status === 'error'">
               <i class="fa fa-exclamation-triangle"></i>
             </span>
-            <span class="node-state" *ngIf="node.locked">
+            <span class="node-state" *ngIf="node.data.element.locked">
               <i class="fa fa-lock"></i>
             </span>
           </span>
@@ -112,8 +121,9 @@
   <!-- 'skill-leaf' type -->
   <ng-template let-node pTemplate="skill-leaf">
     <span
-        class="node-tree-item folder"
-        [ngClass]="{ expanded: node.expanded, locked: node.locked, current: node.data && node.data.current }"
+      id="nav-{{ node.data.element.id }}"
+      class="node-tree-item folder"
+      [ngClass]="{ expanded: node.expanded, locked: node.data.element.locked, current: node.data && node.data.current }"
     >
       <span class="node-item-branch">
         <span class="top-branch">
@@ -132,6 +142,14 @@
           <span class="label-container">
             <span class="node-label-title">
               {{ node.data.element.title }}
+              <span *ngIf="node.data.element.groupName">(via group "{{ node.data.element.groupName }}")</span>
+            </span>
+            <span
+              class="node-state"
+              *ngIf="node.data.element.locked"
+              i18n-pTooltip pTooltip="Your current access rights do not allow you to list the content of this skill."
+            >
+              <i class="fa fa-lock"></i>
             </span>
           </span>
           <alg-skill-progress
@@ -148,8 +166,9 @@
   <!-- "group-folder" type -->
   <ng-template let-node pTemplate="group">
     <span
+      id="nav-{{ node.data.element.id }}"
       class="node-tree-item folder"
-      [ngClass]="{ expanded: node.expanded, locked: node.locked, current: node.data && node.data.current }"
+      [ngClass]="{ expanded: node.expanded, locked: node.data.element.locked, current: node.data && node.data.current }"
     >
       <span class="node-item-branch">
         <span class="top-branch">
@@ -197,8 +216,9 @@
   <!-- 'task-course' type -->
   <ng-template let-node pTemplate="task-course">
     <span
+      id="nav-{{ node.data.element.id }}"
       class="node-tree-item folder"
-      [ngClass]="{ expanded: node.expanded, locked: node.locked, current: node.data && node.data.current }"
+      [ngClass]="{ expanded: node.expanded, locked: node.data.element.locked, current: node.data && node.data.current }"
     >
       <span class="node-item-branch">
         <span class="top-branch">
@@ -228,6 +248,14 @@
           <span class="label-container">
             <span class="node-label-title">
               {{ node.data.element.title }}
+              <span *ngIf="node.data.element.groupName">(via group "{{ node.data.element.groupName }}")</span>
+            </span>
+            <span
+              class="node-state"
+              *ngIf="node.data.element.locked"
+              i18n-pTooltip pTooltip="Your current access rights do not allow you to start the activity."
+            >
+              <i class="fa fa-lock"></i>
             </span>
           </span>
         </span>

@@ -38,7 +38,8 @@
               "node_modules/primeng/resources/themes/nova/theme.css",
               "node_modules/primeng/resources/primeng.min.css",
               "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
-              "src/styles.scss"
+              "src/styles.scss",
+              "src/assets/fonts/titillium/stylesheet.css"
             ],
             "localize": true,
             "i18nMissingTranslation": "error",
@@ -51,7 +52,14 @@
             "namedChunks": true
           },
           "configurations": {
-            "production": {
+            "en": {
+              "localize": [ "en" ]
+            },
+            "fr": {
+              "localize": [ "fr" ]
+            },
+            "production-en": {
+              "localize": [ "en" ],
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -77,15 +85,17 @@
                 }
               ]
             },
-            "ci": {
+            "production-fr": {
+              "localize": [ "fr" ],
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.ci.ts"
+                  "with": "src/environments/environment.prod.ts"
                 }
               ],
               "optimization": true,
               "outputHashing": "all",
+              "sourceMap": false,
               "namedChunks": false,
               "extractLicenses": true,
               "vendorChunk": false,
@@ -101,12 +111,6 @@
                   "maximumWarning": "6kb"
                 }
               ]
-            },
-            "en": {
-              "localize": [ "en" ]
-            },
-            "fr": {
-              "localize": [ "fr" ]
             }
           }
         },
@@ -116,8 +120,8 @@
             "browserTarget": "algorea:build:en"
           },
           "configurations": {
-            "production": {
-              "browserTarget": "algorea:build"
+            "production-en": {
+              "browserTarget": "algorea:build:production-en"
             },
             "fr": {
               "browserTarget": "algorea:build:fr"
@@ -172,8 +176,8 @@
             "devServerTarget": "algorea:serve"
           },
           "configurations": {
-            "production": {
-              "devServerTarget": "algorea:serve:production"
+            "production-en": {
+              "devServerTarget": "algorea:serve:production-en"
             }
           }
         }
@@ -181,12 +185,12 @@
       "i18n": {
         "sourceLocale": {
           "code": "en",
-          "baseHref": ""
+          "baseHref": "/en/"
         },
         "locales": {
           "fr": {
             "translation": "src/locale/messages.fr.xlf",
-            "baseHref": "/"
+            "baseHref": "/fr/"
           }
         }
       }

@@ -1,9 +1,9 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { Group } from '../../../group/http-services/get-group-by-id.service';
+import { WatchedGroup } from '../../../../shared/services/user-session.service';
 
 @Pipe({ name: 'itemProgressLabel', pure: true })
 export class ItemProgressLabelPipe implements PipeTransform {
-  transform(watchedGroup?: Group): any {
+  transform(watchedGroup?: WatchedGroup): any {
     if (watchedGroup) {
       return $localize`Situation of ${ watchedGroup.name }`;
     }

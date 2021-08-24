@@ -54,9 +54,15 @@ export class ActivityLogService {
 
   getActivityLog(
     itemId: string,
+    watchedGroupId?: string,
   ): Observable<ActivityLog[]> {
     let params = new HttpParams();
     params = params.set('limit', '20');
+
+    if (watchedGroupId) {
+      params = params.set('watched_group_id', watchedGroupId);
+    }
+
     return this.http
       .get<unknown[]>(`${appConfig.apiUrl}/items/${itemId}/log`, { params: params })
       .pipe(decodeSnakeCase(D.array(activityLogDecoder)));

@@ -40,7 +40,7 @@
                 {{ rowData.activityType | logActionDisplay : rowData.score }}
               </ng-container>
               <ng-container *ngSwitchCase="'item.string.title'">
-                <a class="alg-link" [ngClass]="{'disabled': !rowData.item}" [routerLink]="rowData.item | itemLink">
+                <a class="alg-link" [ngClass]="{'disabled': !rowData.item}" [routerLink]="rowData.item | rawItemLink">
                   {{ rowData.item.string.title }}
                 </a>
               </ng-container>

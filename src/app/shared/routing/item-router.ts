@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Router, UrlTree } from '@angular/router';
+import { NavigationExtras, Router, UrlTree } from '@angular/router';
 import { ensureDefined } from '../helpers/null-undefined-predicates';
-import { ItemRoute, itemRoutePrefixes, urlArrayForItemRoute } from './item-route';
+import { itemCategoryFromPrefix, RawItemRoute, urlArrayForItemRoute } from './item-route';
 
 @Injectable({
   providedIn: 'root'
@@ -16,46 +16,35 @@ export class ItemRouter {
    * Navigate to given item, on the path page.
    * If page is not given and we are currently on an item page, use the same page. Otherwise, default to 'details'.
    */
-  navigateTo(item: ItemRoute, page?: 'edit'|'details'): void {
-    void this.router.navigateByUrl(this.urlTree(item, page));
+  navigateTo(item: RawItemRoute, options?: { page?: string|string[], navExtras?: NavigationExtras }): void {
+    void this.router.navigateByUrl(this.url(item, options?.page), options?.navExtras);
   }
 
   /**
    * Navigate to the current page without path and attempt if we are on an item page.
    * If we are not on an item page, do nothing.
    */
-  navigateToIncompleteItemOfCurrentPage(): void {
+  navigateToRawItemOfCurrentPage(): void {
     const currentPage = this.currentItemPagePath();
     if (currentPage) void this.router.navigate(currentPage);
   }
 
 
   /**
-   * Return a url to the given item, on the give page.
+   * Return a url to the given item, on the given page.
    * If page is not given and we are currently on an item page, use the same page. Otherwise, default to 'details'.
    */
-  urlTree(item: ItemRoute, page?: 'edit'|'details'): UrlTree {
-    return this.router.createUrlTree(this.urlArray(item, page));
+  url(item: RawItemRoute, page?: string|string[]): UrlTree {
+    return this.router.createUrlTree(urlArrayForItemRoute(item, page ?? this.currentItemPage()));
   }
 
   /**
-   * Return a url array (`commands` array) to the given item, on the given page.
-   * If page is not given and we are currently on an item page, use the same page. Otherwise, default to 'details'.
-   */
-  urlArray(item: ItemRoute, page?: 'edit'|'details'): any[] {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return urlArrayForItemRoute(item, page ?? this.currentItemSubPage());
-  }
-
-  /**
-   * Extract (bit hacky) the item sub-page of the current page.
+   * Extract (bit hacky) the item page from what is currently displayed.
    * Return undefined if we are not on an "item" page
    */
-  private currentItemSubPage(): 'edit'|'details'|undefined {
-    const subpagePart = this.currentItemPagePath()?.slice(3);
-    if (!subpagePart || subpagePart.length === 0) return undefined;
-    const page = subpagePart[0];
-    return page === 'edit' || page === 'details' ? page : undefined;
+  private currentItemPage(): string[]|undefined {
+    const page = this.currentItemPagePath()?.slice(3);
+    return page && page.length > 0 ? page : undefined;
   }
 
   private currentItemPagePath(): string[]|undefined {
@@ -64,7 +53,7 @@ export class ItemRouter {
     const { segments } = primary;
     if (
       segments.length < 3 ||
-      !itemRoutePrefixes.includes(ensureDefined(segments[0]).path) ||
+      itemCategoryFromPrefix(ensureDefined(segments[0]).path) === null ||
       ensureDefined(segments[1]).path !== 'by-id'
     ) return undefined;
     return segments.map(segment => segment.path);

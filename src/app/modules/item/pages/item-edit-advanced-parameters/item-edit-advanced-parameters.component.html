@@ -86,7 +86,7 @@
       </div>
     </div>
     <ng-container *ngIf="!!parentForm.get('requires_explicit_entry')?.value">
-      <div class="form-item-view">
+      <div class="form-item-view form-item-duration">
         <span class="form-item-label" i18n>Duration (not implemented)</span>
         <div class="form-item-control another-input">
           <alg-switch
@@ -110,20 +110,31 @@
           </div>
         </div>
       </div>
-      <div class="form-item-view">
+      <div class="form-item-view form-item-datepicker">
         <span class="form-item-label" i18n>First allowed entering time</span>
-        <div class="form-item-control">
-          <p-calendar
-              class="alg-calendar"
-              formControlName="entering_time_min"
-              [showIcon]="true"
-              [showTime]="true"
-              (ngModelChange)="onDateChange()"
+        <div class="form-item-control another-input">
+          <alg-switch
+              class="first-child"
+              formControlName="entering_time_min_enabled"
+              mode="white"
+              (ngModelChange)="onEnteringTimeMinEnabledChange($event)"
           >
-          </p-calendar>
+          </alg-switch>
+          <ng-container *ngIf="!!parentForm.get('entering_time_min_enabled')?.value">
+            <div class="input-wrapper">
+              <p-calendar
+                  class="alg-calendar"
+                  formControlName="entering_time_min"
+                  [showIcon]="true"
+                  [showTime]="true"
+                  (ngModelChange)="onDateChange()"
+              >
+              </p-calendar>
+            </div>
+          </ng-container>
         </div>
       </div>
-      <div class="form-item-view">
+      <div class="form-item-view form-item-datepicker">
         <span class="form-item-label" i18n>Latest allowed entering time</span>
         <div class="form-item-control another-input">
           <alg-switch

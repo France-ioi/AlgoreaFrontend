@@ -3,7 +3,7 @@ import { ActivatedRoute, ParamMap, UrlTree } from '@angular/router';
 import { of, Subscription } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
 import { defaultAttemptId } from 'src/app/shared/helpers/attempts';
-import { appDefaultItemRoute, isItemRouteError, itemRouteFromParams } from 'src/app/shared/routing/item-route';
+import { appDefaultItemRoute } from 'src/app/shared/routing/item-route';
 import { errorState, fetchingState, FetchState } from 'src/app/shared/helpers/state';
 import { ResultActionsService } from 'src/app/shared/http-services/result-actions.service';
 import { CurrentContentService } from 'src/app/shared/services/current-content.service';
@@ -17,6 +17,7 @@ import { ModeAction, ModeService } from 'src/app/shared/services/mode.service';
 import { isItemInfo, itemInfo } from 'src/app/shared/models/content/item-info';
 import { repeatLatestWhen } from 'src/app/shared/helpers/repeatLatestWhen';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
+import { isItemRouteError, itemRouteFromParams } from './item-route-validation';
 
 const itemBreadcrumbCat = $localize`Items`;
 
@@ -36,7 +37,7 @@ export class ItemByIdComponent implements OnDestroy {
   // to prevent looping indefinitely in case of bug in services (wrong path > item without path > fetch path > item with path > wrong path)
   hasRedirected = false;
 
-  readonly defaultItemRoute = this.itemRouter.urlArray(appDefaultItemRoute());
+  readonly defaultItemRoute = this.itemRouter.url(appDefaultItemRoute).toString();
 
   private subscriptions: Subscription[] = []; // subscriptions to be freed up on destroy
 
@@ -64,13 +65,13 @@ export class ItemByIdComponent implements OnDestroy {
 
         if (state.isReady) {
           this.hasRedirected = false;
-          this.currentContent.current.next(itemInfo({
+          this.currentContent.replace(itemInfo({
             breadcrumbs: {
               category: itemBreadcrumbCat,
               path: state.data.breadcrumbs.map(el => ({
                 title: el.title,
                 hintNumber: el.attemptCnt,
-                navigateTo: ():UrlTree => itemRouter.urlTree(el.route),
+                navigateTo: ():UrlTree => itemRouter.url(el.route),
               })),
               currentPageIdx: state.data.breadcrumbs.length - 1,
             },
@@ -90,24 +91,24 @@ export class ItemByIdComponent implements OnDestroy {
           if (errorHasTag(state.error, breadcrumbServiceTag) && errorIsHTTPForbidden(state.error)) {
             if (this.hasRedirected) throw new Error('Too many redirections (unexpected)');
             this.hasRedirected = true;
-            this.itemRouter.navigateToIncompleteItemOfCurrentPage();
+            this.itemRouter.navigateToRawItemOfCurrentPage();
           }
-          this.currentContent.current.next(null);
+          this.currentContent.clear();
         }
       }),
 
       this.modeService.modeActions$.pipe(
         filter(action => [ ModeAction.StartEditing, ModeAction.StopEditing ].includes(action))
       ).subscribe(action => {
-        const current = this.currentContent.current.value;
+        const current = this.currentContent.current();
         if (!isItemInfo(current)) throw new Error('Unexpected: in item-by-id but the current content is not an item');
-        this.itemRouter.navigateTo(current.route, action === ModeAction.StartEditing ? 'edit' : 'details');
+        this.itemRouter.navigateTo(current.route, { page: action === ModeAction.StartEditing ? 'edit' : 'details' });
       }),
     );
   }
 
   ngOnDestroy(): void {
-    this.currentContent.current.next(null);
+    this.currentContent.clear();
     this.subscriptions.forEach(s => s.unsubscribe());
   }
 
@@ -128,7 +129,7 @@ export class ItemByIdComponent implements OnDestroy {
       return;
     }
     // just publish to current content the new route we are navigating to (without knowing any info)
-    this.currentContent.current.next(itemInfo({ route: item, breadcrumbs: { category: itemBreadcrumbCat, path: [], currentPageIdx: -1 } }));
+    this.currentContent.replace(itemInfo({ route: item, breadcrumbs: { category: itemBreadcrumbCat, path: [], currentPageIdx: -1 } }));
     // trigger the fetch of the item (which will itself re-update the current content)
     this.itemDataSource.fetchItem(item);
   }
@@ -150,7 +151,7 @@ export class ItemByIdComponent implements OnDestroy {
         );
       })
     ).subscribe({
-      next: itemRoute => this.itemRouter.navigateTo(itemRoute),
+      next: itemRoute => this.itemRouter.navigateTo(itemRoute, { navExtras: { replaceUrl: true } }),
       error: err => {
         this.state = errorState(err);
       }

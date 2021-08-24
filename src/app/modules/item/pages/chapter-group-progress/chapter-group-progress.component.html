@@ -1,10 +1,16 @@
-<alg-group-progress-grid
-  *ngIf="group$ | async as group; else userChapterView"
-  [itemData]="itemData"
-  [group]="group"
->
-</alg-group-progress-grid>
+<ng-container *ngIf="state$ | async as state">
+  <alg-group-progress-grid
+    *ngIf="state.isReady"
+    [itemData]="itemData"
+    [group]="state.data"
+  >
+  </alg-group-progress-grid>
 
-<ng-template #userChapterView>
-  <p>Chapter view for user</p>
-</ng-template>
+  <div class="spinner" *ngIf="state.isFetching">
+    <p-progressSpinner [style]="{ width: '3.3333rem', height: '3.3333rem' }"></p-progressSpinner>
+  </div>
+
+  <p class="error" *ngIf="state.isError" i18n>Error while loading the group progress</p>
+</ng-container>
+
+

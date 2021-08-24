@@ -1,4 +1,6 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
+import { UserSessionService } from '../../../shared/services/user-session.service';
+import { ModeService } from '../../../shared/services/mode.service';
 
 @Component({
   selector: 'alg-observation-bar',
@@ -6,11 +8,18 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
   styleUrls: [ './observation-bar.component.scss' ]
 })
 export class ObservationBarComponent {
-  @Input() groupName = '';
   @Output() cancel = new EventEmitter<void>();
 
+  watchedGroup$ = this.sessionService.watchedGroup$;
+
+  constructor(
+    private sessionService: UserSessionService,
+    private modeService: ModeService,
+  ) {
+  }
+
   onCancelClick(): void {
-    this.cancel.emit();
+    this.modeService.stopObserving();
   }
 
 }

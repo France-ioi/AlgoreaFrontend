@@ -4,56 +4,66 @@
       *ngIf="itemData"
       [label]="session?.watchedGroup | itemProgressLabel"
   >
-    <div class="selection-center" *ngIf="selectors !== 'none'">
-      <nav class="tab-rounded">
-        <a class="tab-rounded-item"
-           [ngClass]="{'active': historyTab.isActive, 'prev': chapterGroupProgressTab?.isActive || chapterUserProgressTab?.isActive}"
-           [routerLink]="'./progress/history'"
-           routerLinkActive #historyTab="routerLinkActive"
-           i18n
-        >
-          History
-        </a>
 
-        <a class="tab-rounded-item"
-           [ngClass]="{'active': chapterGroupProgressTab.isActive, 'prev': chapterUserProgressTab?.isActive}"
-           [routerLink]="'./progress/chapter'"
-           routerLinkActive #chapterGroupProgressTab="routerLinkActive"
-           *ngIf="selectors === 'withGroupProgress'"
-           i18n
-        >
-          Chapter view
-        </a>
+    <p class="not-allow-caption" *ngIf="!!session?.watchedGroup && itemData.item.permissions.canWatch === 'none'; else content" i18n>
+      You are not allowed to watch the progress of other users on this content.
+    </p>
 
-        <a class="tab-rounded-item"
-           [ngClass]="{'active': chapterUserProgressTab?.isActive}"
-           [routerLink]="'./progress/chapter-user-progress'"
-           routerLinkActive #chapterUserProgressTab="routerLinkActive"
-           *ngIf="selectors === 'withUserProgress'"
-           i18n
-        >
-          Chapter view
-        </a>
-      </nav>
-    </div>
+    <ng-template #content>
 
-    <div>
-      <alg-item-log-view
-          *ngIf="historyTab?.isActive || !historyTab"
-          [itemData]="itemData"
-          [isWatchingGroup]="!!session?.watchedGroup"
-      ></alg-item-log-view>
+      <div [hidden]="selectors === 'none'">
+        <div class="selection-center">
+          <nav class="tab-rounded">
+            <a class="tab-rounded-item"
+               [ngClass]="{'active': !!historyTab.isActive, 'prev': !!chapterGroupProgressTab?.isActive || !!chapterUserProgressTab?.isActive}"
+               [routerLink]="'./progress/history'"
+               routerLinkActive #historyTab="routerLinkActive"
+               i18n
+            >
+              History
+            </a>
 
-      <div class="chapter-group-progress">
-        <alg-chapter-group-progress
-            *ngIf="chapterGroupProgressTab?.isActive"
-            [itemData]="itemData"
-        ></alg-chapter-group-progress>
+            <a class="tab-rounded-item"
+               [ngClass]="{'active': !!chapterGroupProgressTab.isActive, 'prev': !!chapterUserProgressTab?.isActive}"
+               [routerLink]="'./progress/chapter'"
+               routerLinkActive #chapterGroupProgressTab="routerLinkActive"
+               *ngIf="selectors === 'withGroupProgress'"
+               i18n
+            >
+              Chapter view
+            </a>
+
+            <a class="tab-rounded-item"
+               [ngClass]="{'active': !!chapterUserProgressTab?.isActive}"
+               [routerLink]="'./progress/chapter-user-progress'"
+               routerLinkActive #chapterUserProgressTab="routerLinkActive"
+               *ngIf="selectors === 'withUserProgress'"
+               i18n
+            >
+              Chapter view
+            </a>
+          </nav>
+        </div>
       </div>
 
-      <alg-chapter-user-progress
-          *ngIf="chapterUserProgressTab?.isActive"
-      ></alg-chapter-user-progress>
-    </div>
+      <div>
+        <alg-item-log-view
+          *ngIf="!!historyTab?.isActive"
+          [itemData]="itemData"
+        ></alg-item-log-view>
+
+        <div class="chapter-group-progress">
+          <alg-chapter-group-progress
+            *ngIf="!!chapterGroupProgressTab?.isActive"
+            [itemData]="itemData"
+          ></alg-chapter-group-progress>
+        </div>
+
+        <alg-chapter-user-progress
+          *ngIf="!!chapterUserProgressTab?.isActive"
+        ></alg-chapter-user-progress>
+      </div>
+
+    </ng-template>
   </alg-section>
 </ng-container>

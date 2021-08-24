@@ -1,4 +1,4 @@
-import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
+import { Component, NgZone, OnDestroy, OnInit } from '@angular/core';
 import { UserSessionService } from '../shared/services/user-session.service';
 import { delay, switchMap } from 'rxjs/operators';
 import { merge, Observable, Subscription } from 'rxjs';
@@ -18,9 +18,8 @@ import { LayoutService } from '../shared/services/layout.service';
 export class AppComponent implements OnInit, OnDestroy {
 
   // the delay(0) is used to prevent the UI to update itself (when the content is loaded) (ExpressionChangedAfterItHasBeenCheckedError)
-  currentContent$: Observable<ContentInfo|null> = this.currentContent.currentContent$.pipe(delay(0));
+  currentContent$: Observable<ContentInfo|null> = this.currentContent.content$.pipe(delay(0));
   readonly currentMode$ = this.modeService.mode$.asObservable().pipe(delay(0));
-  session$ = this.sessionService.session$.pipe(delay(0));
   fatalError$ = merge(
     this.authService.failure$,
     this.sessionService.userProfileError$,
@@ -41,6 +40,7 @@ export class AppComponent implements OnInit, OnDestroy {
     private modeService: ModeService,
     private localeService: LocaleService,
     private layoutService: LayoutService,
+    private ngZone: NgZone,
   ) {}
 
   ngOnInit(): void {
@@ -48,27 +48,32 @@ export class AppComponent implements OnInit, OnDestroy {
     this.subscription = this.sessionService.userChanged$.pipe(
       switchMap(() => this.router.navigateByUrl('/')),
     ).subscribe();
+
+    this.ngZone.runOutsideAngular(() => {
+      window.addEventListener('scroll', () => {
+        this.onScrollContent();
+      });
+    });
   }
 
   ngOnDestroy(): void {
     this.subscription?.unsubscribe();
   }
 
-  @HostListener('window:scroll', [ '$event' ])
-  onScrollContent(): void{
+  onScrollContent(): void {
     if (window.pageYOffset > 40 && !this.scrolled) {
-      this.scrolled = true;
+      this.ngZone.run(() => {
+        this.scrolled = true;
+      });
     } else if (window.pageYOffset <= 40 && this.scrolled) {
-      this.scrolled = false;
+      this.ngZone.run(() => {
+        this.scrolled = false;
+      });
     }
   }
 
   onEditCancel() : void{
     this.modeService.modeActions$.next(ModeAction.StopEditing);
-  }
-
-  onWatchCancel(): void {
-    this.modeService.stopObserving();
   }
 
 }
