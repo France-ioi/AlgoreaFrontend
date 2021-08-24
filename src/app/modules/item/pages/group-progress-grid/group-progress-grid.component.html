@@ -65,6 +65,7 @@
             {{ row.header }}
           </td>
           <td
+            class="cursor-pointer"
             *ngFor="let col of columns; let colIndex = index"
             #overlayTarget
             (click)="showProgressDetail(overlayTarget, row.data[colIndex], row, col)"
