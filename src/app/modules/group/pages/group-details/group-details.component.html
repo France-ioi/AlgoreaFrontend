@@ -62,7 +62,7 @@
     <div class="bg-white">
       <alg-group-overview *ngIf="overviewTab?.isActive || !overviewTab && group.currentUserManagership === 'none' && group.currentUserMembership === 'none'" [group]="group"></alg-group-overview>
       <alg-group-composition *ngIf="!!compositionTab?.isActive" [group]="group" (groupRefreshRequired)="onGroupRefreshRequired()"></alg-group-composition>
-      <alg-group-manager *ngIf="!!adminTab?.isActive" [group]="group"></alg-group-manager>
+      <alg-group-managers *ngIf="!!adminTab?.isActive" [group]="group"></alg-group-managers>
       <alg-group-settings *ngIf="!!settingsTab?.isActive" [group]="group" (groupRefreshRequired)="onGroupRefreshRequired()"></alg-group-settings>
     </div>
 

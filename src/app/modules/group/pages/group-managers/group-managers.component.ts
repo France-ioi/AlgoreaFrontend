@@ -3,10 +3,11 @@ import { Group } from '../../http-services/get-group-by-id.service';
 import { ManagementAdditions } from '../../helpers/group-management';
 
 @Component({
-  selector: 'alg-group-manager',
-  templateUrl: './group-manager.component.html',
-  styleUrls: [ './group-manager.component.scss' ],
+  selector: 'alg-group-managers',
+  templateUrl: './group-managers.component.html',
+  styleUrls: [ './group-managers.component.scss' ],
 })
-export class GroupManagerComponent {
+export class GroupManagersComponent {
   @Input() group?: Group & ManagementAdditions;
 }
+
