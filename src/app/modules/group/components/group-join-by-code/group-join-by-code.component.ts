@@ -100,7 +100,7 @@ export class GroupJoinByCodeComponent implements OnChanges {
     if (!this.group || !this.codeInfo) throw new Error('cannot submit new code lifetime when group is undefined');
     if (this.codeInfo.hasCodeNotSet) throw new Error('cannot submit code lifetime when no code is set');
     const newCodeLifetime = new CodeLifetime(ms);
-    if (this.group.codeLifetime?.valueInSeconds === newCodeLifetime.valueInSeconds) throw new Error('code lifetime has not changed');
+    if (this.group.codeLifetime?.valueInSeconds === newCodeLifetime.valueInSeconds) return;
 
     // disable UI
     this.processing = true;
