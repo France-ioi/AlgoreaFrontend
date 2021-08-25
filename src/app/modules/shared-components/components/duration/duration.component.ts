@@ -38,6 +38,15 @@ export class DurationComponent implements OnInit, OnChanges, ControlValueAccesso
   @Input() name = '';
   @Input() parentForm?: FormGroup;
   @Input() layout: 'DHM' | 'HMS' = 'HMS';
+  /**
+   * Currently, the backend stores duration values with 2 distinct formats:
+   * - 'time': uses MySQL 'time' column, has the shape "h:m:s" and is limited to 838:59:59
+   * - 'seconds': the duration is stored as a number of seconds, the limit is the integer limit which is `2147483647`
+   *
+   * This property allows to decide which limit to apply for validation.
+   *
+   * If you are using the 'time' format, set `limitToTimeMax` to true.
+   */
   @Input() limitToTimeMax = false;
 
   control?: AbstractControl;
