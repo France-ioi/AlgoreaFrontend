@@ -46,10 +46,10 @@ export class DurationComponent implements OnInit, OnChanges, ControlValueAccesso
     return this.limitToTimeMax ? MAX_TIME_FORMAT_DURATION : MAX_SECONDS_FORMAT_DURATION;
   }
 
-  days = '';
-  hours = '';
-  minutes = '';
-  seconds = '';
+  days = '0';
+  hours = '0';
+  minutes = '0';
+  seconds = '0';
 
   showField = {
     days: false,
