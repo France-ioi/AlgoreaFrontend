@@ -132,8 +132,8 @@ export class DurationComponent implements OnInit, OnChanges, ControlValueAccesso
   private handleHMSChange(): Duration | null {
     if (this.hours === '' || this.minutes === '' || this.seconds === '') return null;
 
-    if (+this.minutes > MAX_MINUTES_VALUE) this.minutes = String(MAX_MINUTES_VALUE);
-    if (+this.seconds > MAX_SECONDS_VALUE) this.seconds = String(MAX_SECONDS_VALUE);
+    if (+this.minutes > MAX_MINUTES_VALUE) this.minutes = MAX_MINUTES_VALUE.toString();
+    if (+this.seconds > MAX_SECONDS_VALUE) this.seconds = MAX_SECONDS_VALUE.toString();
 
     return Duration.fromHMS(+this.hours, +this.minutes, +this.seconds);
   }
@@ -141,8 +141,8 @@ export class DurationComponent implements OnInit, OnChanges, ControlValueAccesso
   private handleDHMChange(): Duration | null {
     if (this.days === '' || this.hours === '' || this.minutes === '') return null;
 
-    if (+this.hours > MAX_HOURS_VALUE) this.hours = String(MAX_HOURS_VALUE);
-    if (+this.minutes > MAX_MINUTES_VALUE) this.minutes = String(MAX_MINUTES_VALUE);
+    if (+this.hours > MAX_HOURS_VALUE) this.hours = MAX_HOURS_VALUE.toString();
+    if (+this.minutes > MAX_MINUTES_VALUE) this.minutes = MAX_MINUTES_VALUE.toString();
 
     return Duration.fromDHM(+this.days, +this.hours, +this.minutes);
   }
