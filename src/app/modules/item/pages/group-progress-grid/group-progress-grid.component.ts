@@ -78,14 +78,16 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
 
   isCSVDataFetching = false;
 
-  private dataFetching$ = new ReplaySubject<{ groupId: string, itemId: string, attemptId: string, filter: TypeFilter }>(1);
+  private dataFetching$ = new ReplaySubject<{ groupId: string, itemId: string, attemptId: string, filter: TypeFilter, title: string | null }>(1);
   private permissionsFetchingSubscription?: Subscription;
   private refresh$ = new Subject<void>();
 
   state$ = this.dataFetching$.pipe(
-    switchMap(params => this.getData(params.itemId, params.groupId, params.attemptId, params.filter).pipe(
-      mapToFetchState({ resetter: this.refresh$ })
-    )),
+    switchMap(({ itemId, groupId, attemptId, filter, title }) =>
+      this.getData(itemId, groupId, attemptId, filter, title).pipe(
+        mapToFetchState({ resetter: this.refresh$ })
+      )
+    ),
     withPreviousFetchState(),
     switchMap(([ previousState, state ]) => {
       if (!state.data) return of(state);
@@ -119,7 +121,8 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
       groupId: this.group.id,
       itemId: this.itemData.item.id,
       attemptId: this.itemData.currentResult.attemptId,
-      filter: this.currentFilter
+      filter: this.currentFilter,
+      title: this.itemData.item.string.title,
     });
   }
 
@@ -183,7 +186,7 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     }
   }
 
-  private getData(itemId: string, groupId: string, attemptId: string, filter: TypeFilter): Observable<Data> {
+  private getData(itemId: string, groupId: string, attemptId: string, filter: TypeFilter, title: string | null): Observable<Data> {
     return forkJoin({
       items: this.getItemChildrenService.get(itemId, attemptId),
       rows: this.getRows(groupId, filter),
@@ -191,16 +194,25 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     }).pipe(
       map(data => ({
         type: filter,
-        items: data.items.map(item => ({
-          id: item.id,
-          title: item.string.title,
-        })),
+        items: [
+          {
+            id: itemId,
+            title: title,
+          },
+          ...data.items.map(item => ({
+            id: item.id,
+            title: item.string.title,
+          }))
+        ],
         rows: data.rows.map(row => ({
           header: row.value,
           id: row.id,
-          data: data.items.map(item =>
-            data.progress.find(progress => progress.itemId === item.id && progress.groupId === row.id)
-          ),
+          data: [
+            data.progress.find(progress => progress.itemId === itemId),
+            ...data.items.map(item =>
+              data.progress.find(progress => progress.itemId === item.id && progress.groupId === row.id)
+            )
+          ],
         })),
         can_access: (this.group && canCurrentUserGrantGroupAccess(this.group)
           && this.itemData?.item.permissions.canGrantView !== 'none') || false,
@@ -217,7 +229,8 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
         groupId: this.group.id,
         itemId: this.itemData.item.id,
         attemptId: this.itemData.currentResult.attemptId,
-        filter: this.currentFilter
+        filter: this.currentFilter,
+        title: this.itemData.item.string.title,
       });
     }
   }
