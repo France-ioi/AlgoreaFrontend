@@ -5,7 +5,8 @@ export const HOURS = 60 * MINUTES;
 export const DAYS = 24 * HOURS;
 export const MONTHS = 30 * DAYS;
 export const YEARS = 365 * DAYS;
-export const MAX_DURATION = 838*HOURS + 59*MINUTES + 59*SECONDS;
+export const MAX_TIME_FORMAT_DURATION = 838*HOURS + 59*MINUTES + 59*SECONDS;
+export const MAX_SECONDS_FORMAT_DURATION = 2147483647 * SECONDS;
 
 export class Duration {
 
@@ -23,6 +24,10 @@ export class Duration {
 
   static fromHMS(hours: number, minutes: number, seconds: number): Duration {
     return new Duration(hours*HOURS + minutes*MINUTES + seconds*SECONDS);
+  }
+
+  static fromDHM(days: number, hours: number, minutes: number): Duration {
+    return new Duration(days*DAYS + hours*HOURS + minutes*MINUTES);
   }
 
   static fromSeconds(seconds: number): Duration {
@@ -59,6 +64,10 @@ export class Duration {
     return Math.floor(this.ms/MINUTES);
   }
 
+  seconds(): number {
+    return Math.floor(this.ms/SECONDS);
+  }
+
   getHMS(): [string, string, string] {
     return [
       Math.floor(this.ms/HOURS).toString(),
@@ -67,7 +76,16 @@ export class Duration {
     ];
   }
 
-  isValid(): boolean {
-    return !isNaN(this.ms) && this.ms <= MAX_DURATION;
+  getDHM(): [string, string, string] {
+    return [
+      Math.floor(this.ms/DAYS).toString(),
+      Math.floor(this.ms%DAYS/HOURS).toString(),
+      Math.floor(this.ms%HOURS/MINUTES).toString(),
+    ];
   }
+
+  isValid(): boolean {
+    return !isNaN(this.ms);
+  }
+
 }

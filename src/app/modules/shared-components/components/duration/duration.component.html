@@ -1,10 +1,27 @@
 <div class="elements">
-  <div class="element">
-    <p class="label">H</p>
+  <div class="element" *ngIf="showField.days">
+    <p class="label">
+      <small i18n>Days</small>
+    </p>
     <p-inputMask
-        placeholder="HHH"
-        slotChar="HHH"
+        placeholder="DDD"
+        slotChar="DDD"
         mask="9?99"
+        [unmask]="true"
+        [size]="8"
+        [(ngModel)]="days"
+        (ngModelChange)="handleChange()"
+    >
+    </p-inputMask>
+  </div>
+  <div class="element" *ngIf="showField.hours">
+    <p class="label">
+      <small i18n>Hours</small>
+    </p>
+    <p-inputMask
+        [placeholder]="showField.days ? 'HH' : 'HHH'"
+        [slotChar]="showField.days ? 'HH' : 'HHH'"
+        [mask]="showField.days ? '9?9' : '9?99'"
         [unmask]="true"
         [size]="8"
         [(ngModel)]="hours"
@@ -12,8 +29,10 @@
     >
     </p-inputMask>
   </div>
-  <div class="element">
-    <p class="label">M</p>
+  <div class="element" *ngIf="showField.minutes">
+    <p class="label">
+      <small i18n>Minutes</small>
+    </p>
     <p-inputMask
         placeholder="MM"
         slotChar="MM"
@@ -25,8 +44,10 @@
     >
     </p-inputMask>
   </div>
-  <div class="element">
-    <p class="label">S</p>
+  <div class="element" *ngIf="showField.seconds">
+    <p class="label">
+      <small i18n>Seconds</small>
+    </p>
     <p-inputMask
         placeholder="SS"
         slotChar="SS"
@@ -40,4 +61,5 @@
   </div>
 </div>
 
-<alg-input-error [form]="parentForm" [inputName]="name"></alg-input-error>
+<alg-input-error [control]="control"></alg-input-error>
+<div *ngIf="!control?.invalid">&nbsp;</div>

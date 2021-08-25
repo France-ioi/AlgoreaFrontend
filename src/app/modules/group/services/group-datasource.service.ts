@@ -1,8 +1,8 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { BehaviorSubject, concat, of, Subject } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
-import { errorState, fetchingState, FetchState, readyState } from 'src/app/shared/helpers/state';
-import { GetGroupByIdService, Group } from '../http-services/get-group-by-id.service';
+import { ReplaySubject, Subject } from 'rxjs';
+import { share, switchMap } from 'rxjs/operators';
+import { mapToFetchState } from 'src/app/shared/operators/state';
+import { GetGroupByIdService } from '../http-services/get-group-by-id.service';
 
 type GroupId = string;
 
@@ -15,30 +15,20 @@ type GroupId = string;
 @Injectable()
 export class GroupDataSource implements OnDestroy {
 
-  private state = new BehaviorSubject<FetchState<Group>>(fetchingState());
-  state$ = this.state.asObservable();
+  private fetchOperation = new ReplaySubject<GroupId>(1); // trigger item fetching
+  private refresh$ = new Subject<void>();
 
-  private fetchOperation = new Subject<GroupId>(); // trigger item fetching
+  state$ = this.fetchOperation.pipe(
+    // switchMap does cancel the previous ongoing processing if a new one comes
+    // on new fetch operation to be done: set "fetching" state and fetch the data which will result in a ready or error state
+    switchMap(id => this.getGroupByIdService.get(id)),
+    mapToFetchState({ resetter: this.refresh$ }),
+    share(),
+  );
 
   constructor(
     private getGroupByIdService: GetGroupByIdService,
-  ) {
-    this.fetchOperation.pipe(
-
-      // switchMap does cancel the previous ongoing processing if a new one comes
-      // on new fetch operation to be done: set "fetching" state and fetch the data which will result in a ready or error state
-      switchMap(id =>
-        concat(
-          of(fetchingState()),
-          this.getGroupByIdService.get(id).pipe(
-            map(res => readyState(res)),
-            catchError(e => of(errorState(e)))
-          )
-        )
-      ),
-
-    ).subscribe(state => this.state.next(state));
-  }
+  ) {}
 
   fetchGroup(id: GroupId): void {
     this.fetchOperation.next(id);
@@ -46,13 +36,11 @@ export class GroupDataSource implements OnDestroy {
 
   // If (and only if) a group is currently fetched (so we are not currently loading or in error), refetch it.
   refetchGroup(): void {
-    if (this.state.value.isReady) {
-      this.fetchOperation.next(this.state.value.data.id);
-    }
+    this.refresh$.next();
   }
 
   ngOnDestroy(): void {
-    this.state.complete();
+    this.refresh$.complete();
     this.fetchOperation.complete();
   }
 

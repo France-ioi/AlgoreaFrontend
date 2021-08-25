@@ -1,6 +1,10 @@
 @import 'src/colors.scss';
 @import 'src/geometry.scss';
 
+:host {
+  position: relative;
+  display: block;
+}
 .invitation-code {
   display: flex;
   flex-direction: column;
@@ -107,3 +111,14 @@
   // }
 }
 
+.validity-selector {
+  display: flex;
+  align-items: center;
+  > * + * {
+    margin-right: 2rem;
+  }
+}
+.duration-form-group {
+  display: flex;
+  align-items: center;
+}

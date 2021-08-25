@@ -1,17 +1,18 @@
-import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy, OnChanges } from '@angular/core';
-import { finalize, tap } from 'rxjs/operators';
+import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import { switchMap } from 'rxjs/operators';
 import { Duration } from '../../../../shared/helpers/duration';
 import { Group } from '../../http-services/get-group-by-id.service';
-import { CodeAdditions, withCodeAdditions } from '../../helpers/group-code';
+import { codeInfo, CodeInfo } from '../../helpers/group-code';
 import { GroupActionsService } from '../../http-services/group-actions.service';
 import { CodeActionsService } from '../../http-services/code-actions.service';
 import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
+import { of } from 'rxjs';
+import { CodeLifetime } from '../../helpers/code-lifetime';
 
 @Component({
   selector: 'alg-group-join-by-code',
   templateUrl: './group-join-by-code.component.html',
   styleUrls: [ './group-join-by-code.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class GroupJoinByCodeComponent implements OnChanges {
@@ -19,8 +20,29 @@ export class GroupJoinByCodeComponent implements OnChanges {
   @Input() group?: Group;
   @Output() refreshRequired = new EventEmitter<void>();
 
-  groupExt?: Group & CodeAdditions; // group extended with code related attributes
+  codeInfo?: CodeInfo;
+  codeLifetimeControlValue?: Duration;
   processing = false;
+
+  codeLifetimeOptions = [
+    {
+      label: $localize`Infinite`,
+      value: 'infinite',
+      tooltip: $localize`This code will never expire (reset current expiration)`,
+    },
+    {
+      label: $localize`Usable once`,
+      value: 'usable_once',
+      tooltip: $localize`This code will be usable only once (reset current expiration)`,
+    },
+    {
+      label: $localize`Custom`,
+      value: 'custom',
+      tooltip: $localize`This code will expire after the given duration (reset current expiration)`,
+    },
+  ];
+  customCodeLifetimeOption = this.codeLifetimeOptions.findIndex(({ value }) => value === 'custom');
+  selectedCodeLifetimeOption = 0;
 
   constructor(
     private groupActionsService: GroupActionsService,
@@ -28,8 +50,19 @@ export class GroupJoinByCodeComponent implements OnChanges {
     private actionFeedbackService: ActionFeedbackService,
   ) { }
 
-  ngOnChanges(): void {
-    this.groupExt = this.group ? withCodeAdditions(this.group) : undefined;
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.group && !this.group) this.codeInfo = undefined;
+    if (changes.group && this.group) {
+      this.codeInfo = codeInfo(this.group);
+
+      const codeLifetimeHasChanged = (changes.group.previousValue as Group | undefined)?.codeLifetime?.valueInSeconds !==
+        (changes.group.currentValue as Group | undefined)?.codeLifetime?.valueInSeconds;
+
+      if (codeLifetimeHasChanged) {
+        this.codeLifetimeControlValue = this.group.codeLifetime?.asDuration;
+        this.selectedCodeLifetimeOption = this.getSelectedCodeLifetimeOption(this.group.codeLifetime);
+      }
+    }
   }
 
   /* events */
@@ -40,55 +73,96 @@ export class GroupJoinByCodeComponent implements OnChanges {
     // disable UI
     this.processing = true;
 
+    const groupId = this.group.id;
+    const expiresAt = this.group.codeExpiresAt;
     // call code refresh service, then group refresh data
-    this.codeActionsService
-      .createNewCode(this.group.id)
+    this.codeActionsService.createNewCode(groupId)
       .pipe(
-        tap(() => this.refreshRequired.emit()),
-        finalize(() => this.processing = false)
-      ).subscribe({
-        next: _result => this.actionFeedbackService.success($localize`A new code has been generated`),
-        error: _err => this.actionFeedbackService.unexpectedError(),
+        switchMap(() =>
+        // if a code expiration was defined, reset it to null
+          (expiresAt === null ? of(undefined) : this.groupActionsService.updateGroup(groupId, { code_expires_at: null }))
+        ),
+      )
+      .subscribe({
+        next: () => {
+          this.actionFeedbackService.success($localize`A new code has been generated`);
+          this.processing = false;
+          this.refreshRequired.emit();
+        },
+        error: () => {
+          this.actionFeedbackService.unexpectedError();
+          this.processing = false;
+        },
       });
   }
 
-  changeValidity(newDuration: Duration): void {
-    if (!this.groupExt) return;
-
-    // check valid state
-    if (this.groupExt.hasCodeNotSet) return;
+  submitCodeLifetime(ms: number): void {
+    if (!this.group || !this.codeInfo) throw new Error('cannot submit new code lifetime when group is undefined');
+    if (this.codeInfo.hasCodeNotSet) throw new Error('cannot submit code lifetime when no code is set');
+    const newCodeLifetime = new CodeLifetime(ms);
+    if (this.group.codeLifetime?.valueInSeconds === newCodeLifetime.valueInSeconds) return;
 
     // disable UI
     this.processing = true;
 
     // call code refresh service, then group refresh data
-    this.groupActionsService
-      .updateGroup(this.groupExt.id, { code_lifetime: newDuration.toString(), code_expires_at: null })
-      .pipe(
-        tap(() => this.refreshRequired.emit()),
-        finalize(() => this.processing = false),
-      ).subscribe({
-        next: _result => this.actionFeedbackService.success($localize`The validity has been changed`),
-        error: _err => this.actionFeedbackService.unexpectedError(),
-      });
+    this.groupActionsService.updateGroup(this.group.id, {
+      code_lifetime: newCodeLifetime.valueInSeconds,
+      code_expires_at: null,
+    }).subscribe({
+      next: () => {
+        this.actionFeedbackService.success($localize`The validity has been changed`);
+        this.processing = false;
+        this.refreshRequired.emit();
+      },
+      error: () => {
+        this.actionFeedbackService.unexpectedError();
+        this.processing = false;
+      },
+    });
   }
 
   removeCode(): void {
-    if (!this.group) return;
+    if (!this.group) throw new Error('cannot remove code when group is undefined');
 
     // disable UI
     this.processing = true;
 
+    const groupId = this.group.id;
+    const expiresAt = this.group.codeExpiresAt;
     // call code refresh service, then group refresh data
-    this.codeActionsService
-      .removeCode(this.group.id)
+    this.codeActionsService.removeCode(groupId)
       .pipe(
-        tap(() => this.refreshRequired.emit()),
-        finalize(() => this.processing = false)
-      ).subscribe({
-        next: _result => this.actionFeedbackService.success($localize`Users will not be able to join with the former code.`),
-        error: _err => this.actionFeedbackService.unexpectedError(),
+        switchMap(() =>
+          // if a code expiration was defined, reset it to null
+          (expiresAt === null ? of(undefined) : this.groupActionsService.updateGroup(groupId, { code_expires_at: null }))
+        ),
+      )
+      .subscribe({
+        next: () => {
+          this.actionFeedbackService.success($localize`Users will not be able to join with the former code.`);
+          this.processing = false;
+          this.refreshRequired.emit();
+        },
+        error: () => {
+          this.actionFeedbackService.unexpectedError();
+          this.processing = false;
+        },
       });
+  }
+
+  changeCodeLifetime(selected: number): void {
+    const optionValue = this.codeLifetimeOptions[selected]?.value;
+    if (optionValue === 'infinite') this.submitCodeLifetime(CodeLifetime.infiniteValue);
+    if (optionValue === 'usable_once') this.submitCodeLifetime(CodeLifetime.usableOnceValue);
+
+    this.selectedCodeLifetimeOption = selected;
+  }
+
+  private getSelectedCodeLifetimeOption(codeLifetime?: CodeLifetime): number {
+    if (codeLifetime?.isUsableOnce) return this.codeLifetimeOptions.findIndex(({ value }) => value === 'usable_once');
+    if (codeLifetime?.isInfinite) return this.codeLifetimeOptions.findIndex(({ value }) => value === 'infinite');
+    return this.codeLifetimeOptions.findIndex(({ value }) => value === 'custom');
   }
 
 }

@@ -28,7 +28,7 @@ import { ensureDefined } from 'src/app/shared/helpers/null-undefined-predicates'
 export class SelectionComponent<T> implements OnChanges, ControlValueAccessor {
 
   @Input() type: 'rounded' | 'square' = 'rounded';
-  @Input() items: { label: string, value: T, icon?: string }[] = [];
+  @Input() items: { label: string, value: T, icon?: string, tooltip?: string }[] = [];
   @Input() selected = 0;
   @Input() mode: 'light' | 'dark' | 'basic' = 'light';
 

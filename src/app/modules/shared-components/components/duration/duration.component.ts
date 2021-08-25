@@ -1,13 +1,22 @@
-import { Component, EventEmitter, forwardRef, Input, Output } from '@angular/core';
-import { ControlValueAccessor, FormGroup, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { Duration } from 'src/app/shared/helpers/duration';
+import { Component, EventEmitter, forwardRef, Injector, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import {
+  AbstractControl,
+  ControlValueAccessor,
+  FormGroup,
+  NgControl,
+  NG_VALIDATORS,
+  NG_VALUE_ACCESSOR,
+  ValidationErrors,
+  Validator,
+} from '@angular/forms';
+import { Duration, MAX_SECONDS_FORMAT_DURATION, MAX_TIME_FORMAT_DURATION } from 'src/app/shared/helpers/duration';
 
-const MAX_HOURS_VALUE = 838;
+const MAX_HOURS_VALUE = 23;
 const MAX_MINUTES_VALUE = 59;
 const MAX_SECONDS_VALUE = 59;
 
 @Component({
-  selector: 'alg-duration',
+  selector: 'alg-duration[ngModel], alg-duration[formControl], alg-duration[formControlName]',
   templateUrl: './duration.component.html',
   styleUrls: [ './duration.component.scss' ],
   providers: [
@@ -15,27 +24,97 @@ const MAX_SECONDS_VALUE = 59;
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => DurationComponent),
       multi: true,
-    }
+    },
+    {
+      provide: NG_VALIDATORS,
+      useExisting: forwardRef(() => DurationComponent),
+      multi: true,
+    },
   ]
 })
-export class DurationComponent implements ControlValueAccessor {
+export class DurationComponent implements OnInit, OnChanges, ControlValueAccessor, Validator {
   @Output() change = new EventEmitter<Duration | null>();
 
   @Input() name = '';
   @Input() parentForm?: FormGroup;
+  @Input() layout: 'DHM' | 'HMS' = 'HMS';
+  /**
+   * Currently, the backend stores duration values with 2 distinct formats:
+   * - 'time': uses MySQL 'time' column, has the shape "h:m:s" and is limited to 838:59:59
+   * - 'seconds': the duration is stored as a number of seconds, the limit is the integer limit which is `2147483647`
+   *
+   * This property allows to decide which limit to apply for validation.
+   *
+   * If you are using the 'time' format, set `limitToTimeMax` to true.
+   */
+  @Input() limitToTimeMax = false;
 
-  hours = '';
-  minutes = '';
-  seconds = '';
+  control?: AbstractControl;
+
+  get maxDuration(): number {
+    return this.limitToTimeMax ? MAX_TIME_FORMAT_DURATION : MAX_SECONDS_FORMAT_DURATION;
+  }
+
+  days = '0';
+  hours = '0';
+  minutes = '0';
+  seconds = '0';
+
+  showField = {
+    days: false,
+    hours: false,
+    minutes: false,
+    seconds: false,
+  };
+
+  constructor(private injector: Injector) {}
+
+  ngOnInit(): void {
+    // Inject NgControl at init to avoid circular dependency
+    // https://stackoverflow.com/questions/39809084/injecting-ngcontrol-in-custom-validator-directive-causes-cyclic-dependency
+    this.control = this.parentForm && this.name
+      ? this.parentForm.get(this.name) ?? undefined
+      : this.injector.get(NgControl, null)?.control ?? undefined;
+    this.showField = {
+      days: this.layout === 'DHM',
+      hours: this.layout === 'DHM' || this.layout === 'HMS',
+      minutes: this.layout === 'DHM' || this.layout === 'HMS',
+      seconds: this.layout === 'HMS',
+    };
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.layout && !changes.layout.firstChange) throw new Error('layout must not change');
+  }
 
   private onChange: (duration: Duration | null) => void = () => {};
 
-  writeValue(duration: Duration | null): void {
-    if (!duration || !duration.isValid()) {
-      return;
+  validate(control: AbstractControl): ValidationErrors | null {
+    const duration = control.value as Duration | null;
+    if (!duration) return null;
+    if (!duration.isValid()) return { invalidDuration: { invalidDuration: true } };
+    if (duration.ms > this.maxDuration) {
+      const duration = new Duration(this.maxDuration);
+      switch (this.layout) {
+        case 'DHM':
+          return { max: { max: duration.getDHM().join(':') } };
+        case 'HMS':
+          return { max: { max: duration.getHMS().join(':') } };
+      }
     }
+    return null;
+  }
 
-    [ this.hours, this.minutes, this.seconds ] = duration.getHMS();
+  writeValue(duration: Duration | null): void {
+    if (!duration) return;
+    switch (this.layout) {
+      case 'HMS':
+        [ this.hours, this.minutes, this.seconds ] = duration.getHMS();
+        break;
+      case 'DHM':
+        [ this.days, this.hours, this.minutes ] = duration.getDHM();
+        break;
+    }
   }
 
   registerOnChange(fn: (duration: Duration | null) => void): void {
@@ -51,34 +130,30 @@ export class DurationComponent implements ControlValueAccessor {
   }
 
   handleChange(): void {
-    if (this.hours === '' || this.minutes === '' || this.seconds === '') {
-      this.emitValue(null);
-      return;
+    switch (this.layout) {
+      case 'DHM':
+        return this.emitValue(this.handleDHMChange());
+      case 'HMS':
+        return this.emitValue(this.handleHMSChange());
     }
-
-    if (this.hours && +this.hours > MAX_HOURS_VALUE ||
-      this.minutes && +this.minutes > MAX_MINUTES_VALUE ||
-      this.seconds && +this.seconds > MAX_SECONDS_VALUE) {
-      this.setDefaultModelValues();
-    }
-
-    const duration: Duration = Duration.fromHMS(+this.hours, +this.minutes, +this.seconds);
-
-    this.emitValue(duration.isValid() ? duration : null);
   }
 
-  setDefaultModelValues(): void {
-    if (this.hours && +this.hours > MAX_HOURS_VALUE) {
-      this.hours = String(MAX_HOURS_VALUE);
-    }
+  private handleHMSChange(): Duration | null {
+    if (this.hours === '' || this.minutes === '' || this.seconds === '') return null;
 
-    if (this.minutes && +this.minutes > MAX_MINUTES_VALUE) {
-      this.minutes = String(MAX_MINUTES_VALUE);
-    }
+    if (+this.minutes > MAX_MINUTES_VALUE) this.minutes = MAX_MINUTES_VALUE.toString();
+    if (+this.seconds > MAX_SECONDS_VALUE) this.seconds = MAX_SECONDS_VALUE.toString();
 
-    if (this.seconds && +this.seconds > MAX_SECONDS_VALUE) {
-      this.seconds = String(MAX_SECONDS_VALUE);
-    }
+    return Duration.fromHMS(+this.hours, +this.minutes, +this.seconds);
+  }
+
+  private handleDHMChange(): Duration | null {
+    if (this.days === '' || this.hours === '' || this.minutes === '') return null;
+
+    if (+this.hours > MAX_HOURS_VALUE) this.hours = MAX_HOURS_VALUE.toString();
+    if (+this.minutes > MAX_MINUTES_VALUE) this.minutes = MAX_MINUTES_VALUE.toString();
+
+    return Duration.fromDHM(+this.days, +this.hours, +this.minutes);
   }
 
 }

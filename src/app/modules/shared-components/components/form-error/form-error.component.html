@@ -4,4 +4,5 @@
   <div *ngIf="control.errors.maxlength as err"><small i18n>This field is too long, maximum : {{err.requiredLength}} characters.</small></div>
   <div *ngIf="control.errors.min as err"><small i18n>Invalid value, minimum: {{ err.min }}</small></div>
   <div *ngIf="control.errors.max as err"><small i18n>Invalid value, maximum: {{ err.max }}</small></div>
+  <div *ngIf="control.errors.invalidDuration as err"><small i18n>Invalid duration</small></div>
 </div>
