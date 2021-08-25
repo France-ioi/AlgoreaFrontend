@@ -10,7 +10,6 @@ import { GroupNoPermissionComponent } from './components/group-no-permission/gro
 import { GroupJoinByCodeComponent } from './components/group-join-by-code/group-join-by-code.component';
 
 import { GroupOverviewComponent } from './pages/group-overview/group-overview.component';
-import { GroupAdministrationComponent } from './pages/group-administration/group-administration.component';
 import { GroupSettingsComponent } from './pages/group-settings/group-settings.component';
 import { GroupCompositionComponent } from './pages/group-composition/group-composition.component';
 import { MyGroupsComponent } from './pages/my-groups/my-groups.component';
@@ -45,13 +44,13 @@ import { GroupLogViewComponent } from './components/group-log-view/group-log-vie
 import { AddGroupComponent } from './components/add-group/add-group.component';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { SuggestionOfActivitiesComponent } from './components/suggestion-of-activities/suggestion-of-activities.component';
+import { GroupManagersComponent } from './pages/group-managers/group-managers.component';
 
 @NgModule({
   declarations: [
     GroupHeaderComponent,
     GroupOverviewComponent,
     GroupCompositionComponent,
-    GroupAdministrationComponent,
     MyGroupsComponent,
     GroupDetailsComponent,
     GroupSettingsComponent,
@@ -79,6 +78,7 @@ import { SuggestionOfActivitiesComponent } from './components/suggestion-of-acti
     UserHeaderComponent,
     GroupLogViewComponent,
     AddGroupComponent,
+    GroupManagersComponent,
     SuggestionOfActivitiesComponent,
   ],
   imports: [
