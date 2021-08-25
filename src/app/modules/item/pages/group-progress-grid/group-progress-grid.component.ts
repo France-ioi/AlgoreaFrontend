@@ -78,7 +78,13 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
 
   isCSVDataFetching = false;
 
-  private dataFetching$ = new ReplaySubject<{ groupId: string, itemId: string, attemptId: string, filter: TypeFilter, title: string | null }>(1);
+  private dataFetching$ = new ReplaySubject<{
+    groupId: string,
+    itemId: string,
+    attemptId: string,
+    filter: TypeFilter,
+    title: string | null,
+  }>(1);
   private permissionsFetchingSubscription?: Subscription;
   private refresh$ = new Subject<void>();
 
