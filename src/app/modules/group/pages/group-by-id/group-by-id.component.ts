@@ -2,9 +2,11 @@ import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
+import { GetGroupPathService } from 'src/app/modules/item/http-services/get-group-path';
 import { groupInfo, GroupInfo, isGroupInfo } from 'src/app/shared/models/content/group-info';
 import { readyData } from 'src/app/shared/operators/state';
 import { decodeGroupRouterParameters, groupRoute } from 'src/app/shared/routing/group-route';
+import { GroupRouter } from 'src/app/shared/routing/group-router';
 import { CurrentContentService } from 'src/app/shared/services/current-content.service';
 import { ModeAction, ModeService } from 'src/app/shared/services/mode.service';
 import { GroupDataSource } from '../../services/group-datasource.service';
@@ -23,13 +25,16 @@ const GROUP_BREADCRUMB_CAT = $localize`Groups`;
 export class GroupByIdComponent implements OnDestroy {
 
   private subscriptions: Subscription[] = []; // subscriptions to be freed up on destroy
+  private hasRedirected = false;
 
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private currentContent: CurrentContentService,
     private modeService: ModeService,
-    private groupDataSource: GroupDataSource
+    private groupDataSource: GroupDataSource,
+    private groupRouter: GroupRouter,
+    private getGroupPath: GetGroupPathService,
   ) {
 
     // on route change: refetch group if needed
@@ -68,18 +73,23 @@ export class GroupByIdComponent implements OnDestroy {
 
   private fetchGroupAtRoute(params: ParamMap): void {
     const { id, path } = decodeGroupRouterParameters(params);
-    if (!id) throw new Error('a group id is required to open group details')
+    if (!id) throw new Error('a group id is required to open group details');
     if (!path) return this.solveMissingPathAttempt(id);
 
+    this.hasRedirected = false;
     const route = groupRoute(id, path);
     this.currentContent.replace(groupInfo({
       route,
       breadcrumbs: { category: GROUP_BREADCRUMB_CAT, path: [], currentPageIdx: -1 },
-    }))
+    }));
     this.groupDataSource.fetchGroup(route);
   }
 
-  private solveMissingPathAttempt(_groupId: string): void {
-    // TODO.
+  private solveMissingPathAttempt(groupId: string): void {
+    if (this.hasRedirected) throw new Error('too many redirections');
+    this.hasRedirected = true;
+    this.subscriptions.push(
+      this.getGroupPath.getGroupPath(groupId).subscribe(path => this.groupRouter.navigateTo(groupRoute(groupId, path))),
+    );
   }
 }
