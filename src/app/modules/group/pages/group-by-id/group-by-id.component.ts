@@ -1,10 +1,10 @@
 import { Component, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { groupInfo, GroupInfo, isGroupInfo } from 'src/app/shared/models/content/group-info';
 import { readyData } from 'src/app/shared/operators/state';
-import { groupRoute } from 'src/app/shared/routing/group-route';
+import { decodeGroupRouterParameters, groupRoute } from 'src/app/shared/routing/group-route';
 import { CurrentContentService } from 'src/app/shared/services/current-content.service';
 import { ModeAction, ModeService } from 'src/app/shared/services/mode.service';
 import { GroupDataSource } from '../../services/group-datasource.service';
@@ -33,30 +33,22 @@ export class GroupByIdComponent implements OnDestroy {
   ) {
 
     // on route change: refetch group if needed
-    this.activatedRoute.paramMap.subscribe(params => {
-      const id = params.get('id');
-      if (id) {
-        this.currentContent.replace(groupInfo({
-          route: groupRoute(id),
-          breadcrumbs: { category: GROUP_BREADCRUMB_CAT, path: [], currentPageIdx: -1 }
-        }));
-        this.groupDataSource.fetchGroup(id);
-      }
-    });
 
     // on state change, update current content page info (for breadcrumb)
     this.subscriptions.push(
+      this.activatedRoute.paramMap.subscribe(params => this.fetchGroupAtRoute(params)),
+
       this.groupDataSource.state$.pipe(
         readyData(),
-        map((group):GroupInfo => groupInfo({
-          route: groupRoute(group.id),
+        map((state):GroupInfo => groupInfo({
+          route: groupRoute(state.group.id, state.route.path),
           breadcrumbs: {
             category: GROUP_BREADCRUMB_CAT,
-            path: [{ title: group.name, navigateTo: this.router.createUrlTree([ 'groups', 'by-id', group.id, 'details' ]) }],
+            path: [{ title: state.group.name, navigateTo: this.router.createUrlTree([ 'groups', 'by-id', state.group.id, 'details' ]) }],
             currentPageIdx: 0,
           },
-          title: group.name,
-        }))
+          title: state.group.name,
+        })),
       ).subscribe(p => this.currentContent.replace(p)),
 
       this.modeService.modeActions$.pipe(
@@ -72,5 +64,22 @@ export class GroupByIdComponent implements OnDestroy {
   ngOnDestroy(): void {
     this.currentContent.clear();
     this.subscriptions.forEach(s => s.unsubscribe());
+  }
+
+  private fetchGroupAtRoute(params: ParamMap): void {
+    const { id, path } = decodeGroupRouterParameters(params);
+    if (!id) throw new Error('a group id is required to open group details')
+    if (!path) return this.solveMissingPathAttempt(id);
+
+    const route = groupRoute(id, path);
+    this.currentContent.replace(groupInfo({
+      route,
+      breadcrumbs: { category: GROUP_BREADCRUMB_CAT, path: [], currentPageIdx: -1 },
+    }))
+    this.groupDataSource.fetchGroup(route);
+  }
+
+  private solveMissingPathAttempt(_groupId: string): void {
+    // TODO.
   }
 }

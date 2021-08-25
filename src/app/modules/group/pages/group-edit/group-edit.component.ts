@@ -28,7 +28,7 @@ export class GroupEditComponent implements OnDestroy, PendingChangesComponent {
   });
   initialFormData?: Group;
 
-  state$ = this.groupDataSource.state$.pipe(mapStateData(g => withManagementAdditions(g)));
+  state$ = this.groupDataSource.state$.pipe(mapStateData(state => withManagementAdditions(state.group)));
 
   subscription?: Subscription;
 
