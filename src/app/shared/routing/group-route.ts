@@ -19,8 +19,8 @@ export function groupRoute(id: GroupId, path: string[]): GroupRoute {
 /**
  * Return a url array (`commands` array) to the given group, on the given page.
  */
-export function urlArrayForGroupRoute(route: GroupRoute, page: 'edit'|'details' = 'details'): any[] {
-  return [ '/', 'groups', 'by-id', route.id, pathAsParameter(route.path), page ];
+export function urlArrayForGroup(id: string, path?: string[], page: 'edit' | 'details' = 'details'): any[] {
+  return [ '/', 'groups', 'by-id', id, path && pathAsParameter(path), page ].filter(Boolean);
 }
 
 export function decodeGroupRouterParameters(params: ParamMap): { id: string | null; path: string | null } {

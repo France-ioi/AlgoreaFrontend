@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { NavigationExtras, Router, UrlTree } from '@angular/router';
-import { GroupRoute, urlArrayForGroupRoute } from './group-route';
+import { GroupRoute, urlArrayForGroup } from './group-route';
 
 @Injectable({
   providedIn: 'root'
@@ -43,7 +43,7 @@ export class GroupRouter {
    */
   urlArray(route: GroupRoute, page?: 'edit'|'details'): any[] {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return urlArrayForGroupRoute(route, page ?? this.currentGroupSubPage());
+    return urlArrayForGroup(route.id, route.path, page ?? this.currentGroupSubPage());
   }
 
 
