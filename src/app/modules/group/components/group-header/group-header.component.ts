@@ -5,7 +5,6 @@ import { withManagementAdditions, ManagementAdditions } from '../../helpers/grou
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
 import { map } from 'rxjs/operators';
 import { OverlayPanel } from 'primeng/overlaypanel';
-import { urlArrayForGroup } from 'src/app/shared/routing/group-route';
 import { GroupData } from '../../services/group-datasource.service';
 
 @Component({
@@ -41,7 +40,6 @@ export class GroupHeaderComponent implements OnChanges {
     this.modeService.startObserving({
       route: this.groupData.route,
       name: this.groupData.group.name,
-      link: urlArrayForGroup(this.group.id, this.path),
     });
     this.openSuggestionOfActivitiesOverlayPanel(event);
   }

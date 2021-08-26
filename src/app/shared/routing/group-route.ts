@@ -1,4 +1,6 @@
 import { ParamMap } from '@angular/router';
+import { isNotUndefined } from '../helpers/null-undefined-predicates';
+import { UrlCommand } from '../helpers/url';
 import { ContentRoute, pathAsParameter, pathFromRouterParameters } from './content-route';
 
 type GroupId = string;
@@ -6,6 +8,7 @@ type GroupId = string;
 export interface GroupRoute extends ContentRoute {
   contentType: 'group';
 }
+
 export interface GroupRouteError {
   tag: 'error';
   path?: string[];
@@ -19,8 +22,8 @@ export function groupRoute(id: GroupId, path: string[]): GroupRoute {
 /**
  * Return a url array (`commands` array) to the given group, on the given page.
  */
-export function urlArrayForGroup(id: string, path?: string[], page: 'edit' | 'details' = 'details'): any[] {
-  return [ '/', 'groups', 'by-id', id, path && pathAsParameter(path), page ].filter(Boolean);
+export function urlArrayForGroup(id: string, path?: string[], page: 'edit' | 'details' = 'details', isUser = false): UrlCommand {
+  return [ '/', 'groups', isUser ? 'users' : 'by-id', id, path && pathAsParameter(path), page ].filter(isNotUndefined);
 }
 
 export function decodeGroupRouterParameters(params: ParamMap): { id: string | null; path: string | null } {

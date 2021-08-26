@@ -34,7 +34,6 @@ export class UserHeaderComponent {
       route: groupRoute(this.user.groupId, []),
       name: formatUser(this.user),
       login: this.user.login,
-      link: [ '/', 'groups', 'users', this.user.groupId ],
     });
   }
 

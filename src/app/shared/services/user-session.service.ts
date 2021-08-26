@@ -11,7 +11,6 @@ export interface WatchedGroup {
   route: GroupRoute,
   name: string,
   login?: string,
-  link?: any[] | string,
 }
 
 export interface UserSession {
