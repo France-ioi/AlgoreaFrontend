@@ -101,7 +101,8 @@
               type="button"
               icon="pi pi-pencil"
               class="p-button-text"
-              (click)="openPermissionsEditDialog()"
+              (click)="openPermissionsEditDialog(rowData)"
+              *ngIf="rowData.canManage === 'memberships_and_group'"
             ></button>
           </td>
         </tr>
@@ -135,6 +136,7 @@
 <alg-manager-permission-dialog
   [visible]="isPermissionsEditDialogOpened"
   [group]="group"
+  [manager]="dialogManager"
   (close)="closePermissionsEditDialog()"
   *ngIf="isPermissionsEditDialogOpened"
 ></alg-manager-permission-dialog>

@@ -10,8 +10,8 @@
       <span class="dialog-handler">
         <i class="fa fa-lock"></i>
       </span>
-      <span class="dialog-title" *ngIf="group?.name" i18n>
-        {{ group?.name }}: manager access given to [receiver group/user name]
+      <span class="dialog-title" *ngIf="group && manager" i18n>
+        {{ group.name }}: manager access given to {{ manager.name }}
       </span>
       <span class="dialog-close" (click)="onClose()">
         <img src="assets/images/close.svg" alt="close">
@@ -24,23 +24,65 @@
       <p i18n>
         This panel lets you select what you allow the selected user or group of users to do on the current group and its descendants.
       </p>
+
+      {{ managerValues.canManage }}
+
+      <alg-progress-section
+          i18n-title title="Management level"
+          icon="fa fa-eye"
+          [(value)]="managerValues.canManage"
+          [values]="managementLevelValues"
+          [collapsed]="false"
+      ></alg-progress-section>
+
+      <alg-boolean-section
+          i18n-title title="Can grant view"
+          icon="fa fa-paperclip"
+          [(value)]="managerValues.canGrantGroupAccess"
+          [collapsed]="false"
+      >
+        <ng-template #label>
+          <span i18n>
+            User(s) can give and revoke members access to some content
+          </span>
+        </ng-template>
+      </alg-boolean-section>
+
+      <alg-boolean-section
+          i18n-title title="Can watch members"
+          icon="fa fa-paperclip"
+          [(value)]="managerValues.canWatchMembers"
+          [collapsed]="false"
+      >
+        <ng-template #label>
+          <span i18n>
+            User(s) can watch the members' activity on some content
+          </span>
+        </ng-template>
+      </alg-boolean-section>
     </div>
   </div>
 
   <p-footer>
     <div class="footer">
-      <alg-button
-          icon="fa fa-times"
-          i18n-label label="Cancel"
-          class="p-button-rounded p-button-danger"
-          (click)="onClose()"
-      ></alg-button>
-      <alg-button
-          icon="fa fa-check"
-          i18n-label label="Proceed"
-          class="p-button-rounded"
-          (click)="onAccept()"
-      ></alg-button>
+      <ng-container *ngIf="isUpdating; else buttons">
+        <p-progressSpinner [style]="{ width: '3rem', height: '3rem' }"></p-progressSpinner>
+      </ng-container>
+
+      <ng-template #buttons>
+        <alg-button
+            icon="fa fa-times"
+            i18n-label label="Cancel"
+            class="p-button-rounded p-button-danger"
+            (click)="onClose()"
+        ></alg-button>
+        <alg-button
+            icon="fa fa-check"
+            i18n-label label="Proceed"
+            class="p-button-rounded"
+            (click)="onAccept()"
+        ></alg-button>
+      </ng-template>
     </div>
   </p-footer>
 </p-dialog>
