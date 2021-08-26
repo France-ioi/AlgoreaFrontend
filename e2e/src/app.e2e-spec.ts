@@ -1,48 +1,48 @@
-import {AppPage} from './app.po';
-import {browser, by, logging} from 'protractor';
+import { AppPage } from './app.po';
+import { browser, by, logging } from 'protractor';
 
 describe('Algorea Frontend', () => {
   let page: AppPage;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     page = new AppPage();
-    page.navigateTo();
+    await page.navigateTo();
     page.waitForContent();
   });
 
   describe('page static elements', () => {
-    it('should shows the title', () => {
-      void expect(
+    it('should shows the title', async () => {
+      await expect(
         page.getTitleElement().getText()).toEqual('ALGOREA PLATFORM');
     });
 
-    it('should have a working item-detail', () => {
+    it('should have a working item-detail', async () => {
       // Check if the first item exists and is working
-      void page.getFirstActivityElement().click();
+      await page.getFirstActivityElement().click();
 
-      void expect(page.getMainContentElement()).toBeTruthy();
-      //void expect(page.getMainContentElement().getText()).toEqual('item-details works!');
+      await expect(page.getMainContentElement()).toBeTruthy();
+      //await expect(page.getMainContentElement().getText()).toEqual('item-details works!');
     });
 
-    it('should have a working collapse button', () => {
+    it('should have a working collapse button', async () => {
 
-      void expect(page.getLeftElement().getAttribute('class')).toMatch('expanded');
-      void expect(page.getTopBarElement().getAttribute('class')).toMatch('expanded');
-      void expect(page.getRightElement().getAttribute('class')).toMatch('expanded');
+      await expect(page.getLeftElement().getAttribute('class')).toMatch('expanded');
+      await expect(page.getTopBarElement().getAttribute('class')).toMatch('expanded');
+      await expect(page.getRightElement().getAttribute('class')).toMatch('expanded');
 
-      void page.getCollapseButtonElement().click();
+      await page.getCollapseButtonElement().click();
 
-      void expect(page.getLeftElement().getAttribute('class')).toMatch('collapsed');
-      void expect(page.getTopBarElement().getAttribute('class')).toMatch('collapsed');
-      void expect(page.getRightElement().getAttribute('class')).toMatch('collapsed');
+      await expect(page.getLeftElement().getAttribute('class')).toMatch('collapsed');
+      await expect(page.getTopBarElement().getAttribute('class')).toMatch('collapsed');
+      await expect(page.getRightElement().getAttribute('class')).toMatch('collapsed');
     });
   });
 
   describe('activities elements', () => {
-    it('should shows the first element of the activity tree', () => {
-      void browser.waitForAngular();
+    it('should shows the first element of the activity tree', async () => {
+      await browser.waitForAngular();
 
-      void expect(
+      await expect(
         page
           .getFirstActivityElement()
           .element(by.css('.node-label-title'))
