@@ -22,6 +22,6 @@ export function decodeGroupRouterParameters(params: ParamMap): { id: string | nu
   const path = pathFromRouterParameters(params);
   return {
     id: params.get('id') || null,
-    path: path ? path.split(',') : null,
+    path: typeof path === 'string' ? path.split(',') : null,
   };
 }
