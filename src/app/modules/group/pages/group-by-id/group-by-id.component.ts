@@ -74,7 +74,11 @@ export class GroupByIdComponent implements OnDestroy {
   private fetchGroupAtRoute(params: ParamMap): void {
     const { id, path } = decodeGroupRouterParameters(params);
     if (!id) throw new Error('a group id is required to open group details');
-    if (!path) return this.solveMissingPathAttempt(id);
+    if (!path) {
+      if (this.hasRedirected) throw new Error('too many redirections');
+      else this.solveMissingPathAttempt(id);
+      return;
+    }
 
     this.hasRedirected = false;
     const route = groupRoute(id, path);
@@ -86,10 +90,9 @@ export class GroupByIdComponent implements OnDestroy {
   }
 
   private solveMissingPathAttempt(groupId: string): void {
-    if (this.hasRedirected) throw new Error('too many redirections');
-    this.hasRedirected = true;
-    this.subscriptions.push(
-      this.getGroupPath.getGroupPath(groupId).subscribe(path => this.groupRouter.navigateTo(groupRoute(groupId, path))),
-    );
+    this.getGroupPath.getGroupPath(groupId).subscribe(path => {
+      this.hasRedirected = true;
+      this.groupRouter.navigateTo(groupRoute(groupId, path));
+    });
   }
 }
