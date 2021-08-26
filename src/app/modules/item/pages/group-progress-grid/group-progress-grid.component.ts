@@ -214,7 +214,7 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
           header: row.value,
           id: row.id,
           data: [
-            data.progress.find(progress => progress.itemId === itemId),
+            data.progress.find(progress => progress.itemId === itemId && progress.groupId === row.id),
             ...data.items.map(item =>
               data.progress.find(progress => progress.itemId === item.id && progress.groupId === row.id)
             )
