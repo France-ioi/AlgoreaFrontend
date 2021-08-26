@@ -92,7 +92,7 @@ export class GroupByIdComponent implements OnDestroy {
   private solveMissingPathAttempt(groupId: string): void {
     this.getGroupPath.getGroupPath(groupId).subscribe(path => {
       this.hasRedirected = true;
-      this.groupRouter.navigateTo(groupRoute(groupId, path));
+      this.groupRouter.navigateTo(groupRoute(groupId, path), { navExtras: { replaceUrl: true } });
     });
   }
 }
