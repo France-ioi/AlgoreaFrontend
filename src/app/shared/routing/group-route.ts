@@ -21,7 +21,7 @@ export function urlArrayForGroupRoute(route: GroupRoute, page: 'edit'|'details' 
 export function decodeGroupRouterParameters(params: ParamMap): { id: string | null; path: string[] | null } {
   const path = pathFromRouterParameters(params);
   return {
-    id: params.get('id') || null,
+    id: params.get('id'),
     path: typeof path === 'string' ? path.split(',') : null,
   };
 }
