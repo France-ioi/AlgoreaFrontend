@@ -3,7 +3,6 @@ import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { GetGroupPathService } from 'src/app/modules/item/http-services/get-group-path';
-import { errorState, fetchingState, FetchState } from 'src/app/shared/helpers/state';
 import { groupInfo, GroupInfo, isGroupInfo } from 'src/app/shared/models/content/group-info';
 import { readyData } from 'src/app/shared/operators/state';
 import { groupRoute, groupRouteFromParams, isGroupRouteError } from 'src/app/shared/routing/group-route';
@@ -25,7 +24,7 @@ const GROUP_BREADCRUMB_CAT = $localize`Groups`;
 })
 export class GroupByIdComponent implements OnDestroy {
 
-  state: FetchState<unknown> = fetchingState();
+  navigationError = false;
   private subscriptions: Subscription[] = []; // subscriptions to be freed up on destroy
   private hasRedirected = false;
 
@@ -56,10 +55,6 @@ export class GroupByIdComponent implements OnDestroy {
           title: group.name,
         })),
       ).subscribe(p => this.currentContent.replace(p)),
-
-      this.groupDataSource.state$.subscribe(state => {
-        this.state = state;
-      }),
 
       this.modeService.modeActions$.pipe(
         filter(action => [ ModeAction.StartEditing, ModeAction.StopEditing ].includes(action))
@@ -104,8 +99,8 @@ export class GroupByIdComponent implements OnDestroy {
         this.hasRedirected = true;
         this.groupRouter.navigateTo(groupRoute(groupId, path), { navExtras: { replaceUrl: true } });
       },
-      error: error => {
-        this.state = errorState(error);
+      error: () => {
+        this.navigationError = true;
       }
     });
   }
