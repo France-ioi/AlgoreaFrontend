@@ -5,7 +5,7 @@ import { filter, map } from 'rxjs/operators';
 import { GetGroupPathService } from 'src/app/modules/item/http-services/get-group-path';
 import { groupInfo, GroupInfo, isGroupInfo } from 'src/app/shared/models/content/group-info';
 import { readyData } from 'src/app/shared/operators/state';
-import { groupRoute, groupRouteFromParams, isGroupRouteError } from 'src/app/shared/routing/group-route';
+import { groupRoute, groupRouteFromParams, isGroupRouteError, urlArrayForGroupRoute } from 'src/app/shared/routing/group-route';
 import { GroupRouter } from 'src/app/shared/routing/group-router';
 import { CurrentContentService } from 'src/app/shared/services/current-content.service';
 import { ModeAction, ModeService } from 'src/app/shared/services/mode.service';
@@ -24,6 +24,7 @@ const GROUP_BREADCRUMB_CAT = $localize`Groups`;
 })
 export class GroupByIdComponent implements OnDestroy {
 
+  navigationError = false;
   private subscriptions: Subscription[] = []; // subscriptions to be freed up on destroy
   private hasRedirected = false;
 
@@ -48,7 +49,7 @@ export class GroupByIdComponent implements OnDestroy {
           route: groupRoute(group.id, route.path),
           breadcrumbs: {
             category: GROUP_BREADCRUMB_CAT,
-            path: [{ title: group.name, navigateTo: this.router.createUrlTree([ 'groups', 'by-id', group.id, 'details' ]) }],
+            path: [{ title: group.name, navigateTo: this.router.createUrlTree(urlArrayForGroupRoute(route, 'details')) }],
             currentPageIdx: 0,
           },
           title: group.name,
@@ -70,6 +71,10 @@ export class GroupByIdComponent implements OnDestroy {
     this.subscriptions.forEach(s => s.unsubscribe());
   }
 
+  reloadContent(): void {
+    this.fetchGroupAtRoute(this.activatedRoute.snapshot.paramMap);
+  }
+
   private fetchGroupAtRoute(params: ParamMap): void {
     const route = groupRouteFromParams(params);
 
@@ -89,9 +94,14 @@ export class GroupByIdComponent implements OnDestroy {
   }
 
   private solveMissingPathAttempt(groupId: string): void {
-    this.getGroupPath.getGroupPath(groupId).subscribe(path => {
-      this.hasRedirected = true;
-      this.groupRouter.navigateTo(groupRoute(groupId, path), { navExtras: { replaceUrl: true } });
+    this.getGroupPath.getGroupPath(groupId).subscribe({
+      next: path => {
+        this.hasRedirected = true;
+        this.groupRouter.navigateTo(groupRoute(groupId, path), { navExtras: { replaceUrl: true } });
+      },
+      error: () => {
+        this.navigationError = true;
+      }
     });
   }
 }

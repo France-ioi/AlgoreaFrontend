@@ -33,10 +33,9 @@ export function decodeGroupRouterParameters(params: ParamMap): { id: string | nu
 export function groupRouteFromParams(params: ParamMap): GroupRoute | GroupRouteError {
   const id = params.get('id') ?? undefined;
   const path = pathFromRouterParameters(params);
-  const pathList = path === null ? undefined : path.split(',');
+  if (!id || path === null) return { tag: 'error', id };
 
-  if (!id || !pathList) return { tag: 'error', id, path: pathList };
-
+  const pathList = path === '' ? [] : path.split(',');
   return groupRoute(id, pathList);
 }
 
