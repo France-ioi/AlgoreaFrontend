@@ -6,7 +6,7 @@ export class AppPage {
   }
 
   waitForContent() {
-    browser.wait(ExpectedConditions.presenceOf(this.getFirstActivityElement()), 10000, 'Element taking too long to appear in the DOM');
+    return browser.wait(ExpectedConditions.presenceOf(this.getFirstActivityElement()), 10000, 'Element taking too long to appear in the DOM');
   }
 
   getTitleElement() {

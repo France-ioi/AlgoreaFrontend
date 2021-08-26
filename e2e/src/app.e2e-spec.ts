@@ -7,7 +7,7 @@ describe('Algorea Frontend', () => {
   beforeEach(async () => {
     page = new AppPage();
     await page.navigateTo();
-    page.waitForContent();
+    await page.waitForContent();
   });
 
   describe('page static elements', () => {
