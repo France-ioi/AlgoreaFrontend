@@ -12,7 +12,7 @@ export interface GroupRouteError {
   id?: string;
 }
 
-export function groupRoute(id: GroupId, path: string[] = []): GroupRoute {
+export function groupRoute(id: GroupId, path: string[]): GroupRoute {
   return { contentType: 'group', id: id, path };
 }
 
