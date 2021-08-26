@@ -102,7 +102,7 @@
         <source>Groups</source><target state="translated">Groupes</target>
 
         <note priority="1" from="description">Tab name</note>
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-nav/left-nav.component.html</context><context context-type="linenumber">28</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/group-by-id/group-by-id.component.ts</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="2192178401851161061" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-nav/left-nav.component.html</context><context context-type="linenumber">28</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/group-by-id/group-by-id.component.ts</context><context context-type="linenumber">15</context></context-group></trans-unit><trans-unit id="2192178401851161061" datatype="html">
         <source>Unable to load the list.</source><target state="translated">Erreur lors du chargement de la liste.</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-nav/left-nav.component.html</context><context context-type="linenumber">39</context></context-group></trans-unit><trans-unit id="6599854887630038646" datatype="html">
@@ -641,11 +641,8 @@
         </context-group>
       </trans-unit><trans-unit id="7803285677819095346" datatype="html">
         <source>Retry loading it</source><target state="translated">Recharger le contenu</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-by-id.component.html</context>
-          <context context-type="linenumber">22</context>
-        </context-group>
-      </trans-unit><trans-unit id="569741268651615075" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/group-by-id/group-by-id.component.html</context><context context-type="linenumber">5</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-by-id.component.html</context><context context-type="linenumber">22</context></context-group></trans-unit><trans-unit id="569741268651615075" datatype="html">
         <source>Go back to the </source><target state="translated">Retour à la </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-by-id.component.html</context>
@@ -665,11 +662,8 @@
         </context-group>
       </trans-unit><trans-unit id="9041444757418829014" datatype="html">
         <source>Error while loading the item.</source><target state="translated">Erreur lors du chargement du contenu.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-by-id.component.html</context>
-          <context context-type="linenumber">10</context>
-        </context-group>
-      </trans-unit><trans-unit id="3249513483374643425" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/group-by-id/group-by-id.component.html</context><context context-type="linenumber">4</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-by-id.component.html</context><context context-type="linenumber">10</context></context-group></trans-unit><trans-unit id="3249513483374643425" datatype="html">
         <source>Add</source><target state="translated">Ajouter</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/add-content/add-content.component.ts</context><context context-type="linenumber">35</context></context-group></trans-unit><trans-unit id="5932939510039092507" datatype="html">
