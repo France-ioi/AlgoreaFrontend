@@ -1,0 +1,46 @@
+<p-dialog
+    [(visible)]="visible"
+    [modal]="true"
+    [draggable]="false"
+    [closable]="false"
+    styleClass="alg-permissions-edit-dialog">
+
+  <p-header>
+    <div class="dialog-header">
+      <span class="dialog-handler">
+        <i class="fa fa-lock"></i>
+      </span>
+      <span class="dialog-title" *ngIf="group?.name" i18n>
+        {{ group?.name }}: manager access given to [receiver group/user name]
+      </span>
+      <span class="dialog-close" (click)="onClose()">
+        <img src="assets/images/close.svg" alt="close">
+      </span>
+    </div>
+  </p-header>
+
+  <div class="dialog-container">
+    <div class="dialog-content">
+      <p i18n>
+        This panel lets you select what you allow the selected user or group of users to do on the current group and its descendants.
+      </p>
+    </div>
+  </div>
+
+  <p-footer>
+    <div class="footer">
+      <alg-button
+          icon="fa fa-times"
+          i18n-label label="Cancel"
+          class="p-button-rounded p-button-danger"
+          (click)="onClose()"
+      ></alg-button>
+      <alg-button
+          icon="fa fa-check"
+          i18n-label label="Proceed"
+          class="p-button-rounded"
+          (click)="onAccept()"
+      ></alg-button>
+    </div>
+  </p-footer>
+</p-dialog>

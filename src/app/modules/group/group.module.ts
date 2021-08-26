@@ -46,6 +46,8 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { SuggestionOfActivitiesComponent } from './components/suggestion-of-activities/suggestion-of-activities.component';
 import { GroupAccessComponent } from './pages/group-access/group-access.component';
 import { GroupManagersComponent } from './pages/group-managers/group-managers.component';
+import { DialogModule } from 'primeng/dialog';
+import { ManagerPermissionDialogComponent } from './components/manager-permission-dialog/manager-permission-dialog.component';
 
 @NgModule({
   declarations: [
@@ -82,6 +84,7 @@ import { GroupManagersComponent } from './pages/group-managers/group-managers.co
     GroupManagersComponent,
     SuggestionOfActivitiesComponent,
     GroupAccessComponent,
+    ManagerPermissionDialogComponent,
   ],
   imports: [
     CommonModule,
@@ -93,6 +96,7 @@ import { GroupManagersComponent } from './pages/group-managers/group-managers.co
     RippleModule,
     TooltipModule,
     OverlayPanelModule,
+    DialogModule,
   ],
   exports: [
     GroupIndicatorComponent
