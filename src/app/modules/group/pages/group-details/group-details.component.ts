@@ -12,7 +12,7 @@ import { LayoutService } from '../../../../shared/services/layout.service';
 })
 export class GroupDetailsComponent {
 
-  state$ = this.groupDataSource.state$.pipe(mapStateData(g => withManagementAdditions(g)));
+  state$ = this.groupDataSource.state$.pipe(mapStateData(state => withManagementAdditions(state.group)));
   fullFrameContent$ = this.layoutService.fullFrameContent$;
 
   // use of ViewChild required as these elements are shown under some conditions, so may be undefined

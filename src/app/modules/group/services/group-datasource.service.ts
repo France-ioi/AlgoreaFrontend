@@ -1,10 +1,11 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { ReplaySubject, Subject } from 'rxjs';
-import { share, switchMap } from 'rxjs/operators';
+import { map, share, switchMap } from 'rxjs/operators';
 import { mapToFetchState } from 'src/app/shared/operators/state';
-import { GetGroupByIdService } from '../http-services/get-group-by-id.service';
+import { GroupRoute } from 'src/app/shared/routing/group-route';
+import { GetGroupByIdService, Group } from '../http-services/get-group-by-id.service';
 
-type GroupId = string;
+export interface GroupData { route: GroupRoute, group: Group }
 
 /**
  * A datasource which allows fetching a group using a proper state and sharing it among several components.
@@ -15,13 +16,13 @@ type GroupId = string;
 @Injectable()
 export class GroupDataSource implements OnDestroy {
 
-  private fetchOperation = new ReplaySubject<GroupId>(1); // trigger item fetching
+  private fetchOperation = new ReplaySubject<GroupRoute>(1); // trigger item fetching
   private refresh$ = new Subject<void>();
 
   state$ = this.fetchOperation.pipe(
     // switchMap does cancel the previous ongoing processing if a new one comes
     // on new fetch operation to be done: set "fetching" state and fetch the data which will result in a ready or error state
-    switchMap(id => this.getGroupByIdService.get(id)),
+    switchMap(route => this.getGroupByIdService.get(route.id).pipe(map(group => ({ route, group })))),
     mapToFetchState({ resetter: this.refresh$ }),
     share(),
   );
@@ -30,8 +31,8 @@ export class GroupDataSource implements OnDestroy {
     private getGroupByIdService: GetGroupByIdService,
   ) {}
 
-  fetchGroup(id: GroupId): void {
-    this.fetchOperation.next(id);
+  fetchGroup(route: GroupRoute): void {
+    this.fetchOperation.next(route);
   }
 
   // If (and only if) a group is currently fetched (so we are not currently loading or in error), refetch it.
