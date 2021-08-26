@@ -38,11 +38,10 @@ export class GroupByIdComponent implements OnDestroy {
   ) {
 
     // on route change: refetch group if needed
+    this.activatedRoute.paramMap.subscribe(params => this.fetchGroupAtRoute(params));
 
     // on state change, update current content page info (for breadcrumb)
     this.subscriptions.push(
-      this.activatedRoute.paramMap.subscribe(params => this.fetchGroupAtRoute(params)),
-
       this.groupDataSource.state$.pipe(
         readyData(),
         map(({ group, route }): GroupInfo => groupInfo({
