@@ -6,6 +6,11 @@ type GroupId = string;
 export interface GroupRoute extends ContentRoute {
   contentType: 'group';
 }
+export interface GroupRouteError {
+  tag: 'error';
+  path?: string[];
+  id?: string;
+}
 
 export function groupRoute(id: GroupId, path: string[] = []): GroupRoute {
   return { contentType: 'group', id: id, path };
@@ -18,10 +23,23 @@ export function urlArrayForGroupRoute(route: GroupRoute, page: 'edit'|'details' 
   return [ '/', 'groups', 'by-id', route.id, pathAsParameter(route.path), page ];
 }
 
-export function decodeGroupRouterParameters(params: ParamMap): { id: string | null; path: string[] | null } {
-  const path = pathFromRouterParameters(params);
+export function decodeGroupRouterParameters(params: ParamMap): { id: string | null; path: string | null } {
   return {
     id: params.get('id'),
-    path: typeof path === 'string' ? path.split(',') : null,
+    path: pathFromRouterParameters(params),
   };
+}
+
+export function groupRouteFromParams(params: ParamMap): GroupRoute | GroupRouteError {
+  const id = params.get('id') ?? undefined;
+  const path = pathFromRouterParameters(params);
+  const pathList = path === null ? undefined : path.split(',');
+
+  if (!id || !pathList) return { tag: 'error', id, path: pathList };
+
+  return groupRoute(id, pathList);
+}
+
+export function isGroupRouteError(route: GroupRoute | GroupRouteError): route is GroupRouteError {
+  return 'tag' in route && route.tag === 'error';
 }
