@@ -3,13 +3,15 @@ import { SortEvent } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { Observable, ReplaySubject, Subject } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
+import { UrlCommand } from 'src/app/shared/helpers/url';
 import { GetGroupDescendantsService } from 'src/app/shared/http-services/get-group-descendants.service';
 import { mapToFetchState } from 'src/app/shared/operators/state';
+import { groupRoute, urlArrayForGroupRoute } from 'src/app/shared/routing/group-route';
 import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
-import { Group } from '../../http-services/get-group-by-id.service';
 import { GetGroupChildrenService, GroupChild } from '../../http-services/get-group-children.service';
 import { GetGroupMembersService, Member } from '../../http-services/get-group-members.service';
 import { GroupUsersService, parseResults } from '../../http-services/group-users.service';
+import { GroupData } from '../../services/group-datasource.service';
 import { Filter, GroupCompositionFilterComponent, TypeFilter } from '../group-composition-filter/group-composition-filter.component';
 import { displayResponseToast } from './user-removal-response-handling';
 
@@ -58,7 +60,7 @@ interface Data {
 })
 export class MemberListComponent implements OnChanges, OnDestroy {
 
-  @Input() group? : Group;
+  @Input() groupData? : GroupData;
 
   state: 'error' | 'ready' | 'fetching' = 'fetching';
 
@@ -105,11 +107,11 @@ export class MemberListComponent implements OnChanges, OnDestroy {
   }
 
   ngOnChanges(_changes: SimpleChanges): void {
-    if (!this.group) return;
+    if (!this.groupData) return;
     this.currentFilter = { ...this.defaultFilter };
     this.currentSort = [];
     this.table?.clear();
-    this.dataFetching.next({ groupId: this.group.id, filter: this.currentFilter, sort: this.currentSort });
+    this.dataFetching.next({ groupId: this.groupData.group.id, filter: this.currentFilter, sort: this.currentSort });
   }
 
   getData(groupId: string, filter: Filter, sort: string[]): Observable<Data> {
@@ -162,24 +164,24 @@ export class MemberListComponent implements OnChanges, OnDestroy {
   }
 
   onCustomSort(event: SortEvent): void {
-    if (!this.group) return;
+    if (!this.groupData) return;
 
     const sortMeta = event.multiSortMeta?.map(meta => (meta.order === -1 ? `-${meta.field}` : meta.field));
 
     if (sortMeta && JSON.stringify(sortMeta) !== JSON.stringify(this.currentSort)) {
       this.currentSort = sortMeta;
-      this.dataFetching.next({ groupId: this.group.id, filter: this.currentFilter, sort: this.currentSort });
+      this.dataFetching.next({ groupId: this.groupData.group.id, filter: this.currentFilter, sort: this.currentSort });
     }
   }
 
   onFilterChange(filter: Filter): void {
-    if (!this.group) return;
+    if (!this.groupData) return;
 
     if (filter !== this.currentFilter) {
       this.currentFilter = { ...filter };
       this.currentSort = [];
       this.table?.clear();
-      this.dataFetching.next({ groupId: this.group.id, filter: this.currentFilter, sort: this.currentSort });
+      this.dataFetching.next({ groupId: this.groupData.group.id, filter: this.currentFilter, sort: this.currentSort });
     }
   }
 
@@ -199,17 +201,17 @@ export class MemberListComponent implements OnChanges, OnDestroy {
   }
 
   onRemove(): void {
-    if (this.selection.length === 0 || !this.group) return;
+    if (this.selection.length === 0 || !this.groupData) return;
 
     this.removalInProgress$.next(true);
-    this.groupUsersService.removeUsers(this.group.id, this.selection.map(member => member.id))
+    this.groupUsersService.removeUsers(this.groupData.group.id, this.selection.map(member => member.id))
       .subscribe({
         next: result => {
           displayResponseToast(this.actionFeedbackService, parseResults(result));
           this.table?.clear();
           this.selection = [];
-          if (this.group) {
-            this.dataFetching.next({ groupId: this.group.id, filter: this.currentFilter, sort: this.currentSort });
+          if (this.groupData) {
+            this.dataFetching.next({ groupId: this.groupData.group.id, filter: this.currentFilter, sort: this.currentSort });
           }
           this.removalInProgress$.next(false);
         },
@@ -218,5 +220,10 @@ export class MemberListComponent implements OnChanges, OnDestroy {
           this.actionFeedbackService.unexpectedError();
         }
       });
+  }
+
+  getSubGroupUrl(subGroupId: string): UrlCommand {
+    if (!this.groupData) throw new Error('groupData must be defined');
+    return urlArrayForGroupRoute(groupRoute(subGroupId, [ ...this.groupData.route.path, this.groupData.group.id ]), 'details');
   }
 }
