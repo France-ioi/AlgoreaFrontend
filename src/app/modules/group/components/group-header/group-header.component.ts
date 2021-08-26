@@ -5,6 +5,7 @@ import { withManagementAdditions, ManagementAdditions } from '../../helpers/grou
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
 import { map } from 'rxjs/operators';
 import { OverlayPanel } from 'primeng/overlaypanel';
+import { pathAsParameter } from 'src/app/shared/routing/content-route';
 
 @Component({
   selector: 'alg-group-header',
@@ -13,6 +14,7 @@ import { OverlayPanel } from 'primeng/overlaypanel';
 })
 export class GroupHeaderComponent implements OnChanges {
   @Input() group?: Group;
+  @Input() path?: string[];
 
   @ViewChild('op') op?: OverlayPanel;
 
@@ -36,7 +38,10 @@ export class GroupHeaderComponent implements OnChanges {
 
   onStartWatchButtonClicked(event: Event): void {
     if (!this.group) throw new Error("unexpected group not set in 'onWatchButtonClicked'");
-    this.modeService.startObserving(this.group);
+    this.modeService.startObserving({
+      ...this.group,
+      link: [ '/', 'groups', 'by-id', this.group.id, this.path && pathAsParameter(this.path), 'details' ].filter(Boolean),
+    });
     this.openSuggestionOfActivitiesOverlayPanel(event);
   }
 

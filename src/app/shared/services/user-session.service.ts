@@ -10,6 +10,7 @@ export interface WatchedGroup {
   id: string,
   name: string,
   login?: string,
+  link?: any[] | string,
 }
 
 export interface UserSession {

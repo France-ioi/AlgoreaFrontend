@@ -33,6 +33,7 @@ export class UserHeaderComponent {
       id: this.user.groupId,
       name: formatUser(this.user),
       login: this.user.login,
+      link: [ '/', 'groups', 'users', this.user.groupId ],
     });
   }
 
