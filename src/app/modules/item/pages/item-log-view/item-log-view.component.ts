@@ -60,7 +60,7 @@ export class ItemLogViewComponent implements OnChanges, OnDestroy {
   }
 
   private getData$(item: Item, watchingGroup?: WatchedGroup): Observable<Data> {
-    return this.activityLogService.getActivityLog(item.id, watchingGroup?.id).pipe(
+    return this.activityLogService.getActivityLog(item.id, watchingGroup?.route.id).pipe(
       map((data: ActivityLog[]) => ({
         columns: this.getLogColumns(item.type, watchingGroup),
         rowData: data

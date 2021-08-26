@@ -5,9 +5,10 @@ import { switchMap, distinctUntilChanged, map, filter, mapTo, skip, shareReplay,
 import { CurrentUserHttpService, UpdateUserBody, UserProfile } from '../http-services/current-user.service';
 import { isNotUndefined } from '../helpers/null-undefined-predicates';
 import { repeatLatestWhen } from '../helpers/repeatLatestWhen';
+import { GroupRoute } from '../routing/group-route';
 
 export interface WatchedGroup {
-  id: string,
+  route: GroupRoute,
   name: string,
   login?: string,
   link?: any[] | string,

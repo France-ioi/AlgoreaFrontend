@@ -20,7 +20,7 @@ export class GroupHeaderComponent implements OnChanges {
 
   groupWithManagement?: Group & ManagementAdditions;
   isCurrentGroupWatched$ = this.userSessionService.watchedGroup$.pipe(
-    map(watchedGroup => !!(watchedGroup && watchedGroup.id === this.group?.id)),
+    map(watchedGroup => !!(watchedGroup && watchedGroup.route.id === this.group?.id)),
   );
 
   constructor(
@@ -38,8 +38,10 @@ export class GroupHeaderComponent implements OnChanges {
 
   onStartWatchButtonClicked(event: Event): void {
     if (!this.group) throw new Error("unexpected group not set in 'onWatchButtonClicked'");
+    if (!this.path) throw new Error('path must be defined');
     this.modeService.startObserving({
-      ...this.group,
+      route: { id: this.group.id, path: this.path },
+      name: this.groupData.group.name,
       link: urlArrayForGroup(this.group.id, this.path),
     });
     this.openSuggestionOfActivitiesOverlayPanel(event);

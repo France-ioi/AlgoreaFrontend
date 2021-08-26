@@ -17,7 +17,7 @@ export class ChapterGroupProgressComponent {
 
   state$ = this.sessionService.watchedGroup$.pipe(
     filter(isNotUndefined),
-    switchMap(watchedGroup => this.getGroupByIdService.get(watchedGroup.id)),
+    switchMap(watchedGroup => this.getGroupByIdService.get(watchedGroup.route.id)),
     mapToFetchState(),
   );
 
