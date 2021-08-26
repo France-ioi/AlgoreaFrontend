@@ -6,6 +6,7 @@ import { UserSessionService } from 'src/app/shared/services/user-session.service
 import { map } from 'rxjs/operators';
 import { OverlayPanel } from 'primeng/overlaypanel';
 import { urlArrayForGroup } from 'src/app/shared/routing/group-route';
+import { GroupData } from '../../services/group-datasource.service';
 
 @Component({
   selector: 'alg-group-header',
@@ -13,14 +14,13 @@ import { urlArrayForGroup } from 'src/app/shared/routing/group-route';
   styleUrls: [ './group-header.component.scss' ],
 })
 export class GroupHeaderComponent implements OnChanges {
-  @Input() group?: Group;
-  @Input() path?: string[];
+  @Input() groupData?: GroupData;
 
   @ViewChild('op') op?: OverlayPanel;
 
   groupWithManagement?: Group & ManagementAdditions;
   isCurrentGroupWatched$ = this.userSessionService.watchedGroup$.pipe(
-    map(watchedGroup => !!(watchedGroup && watchedGroup.route.id === this.group?.id)),
+    map(watchedGroup => !!(watchedGroup && watchedGroup.route.id === this.groupData?.group?.id)),
   );
 
   constructor(
@@ -29,7 +29,7 @@ export class GroupHeaderComponent implements OnChanges {
   ) {}
 
   ngOnChanges(): void {
-    this.groupWithManagement = this.group ? withManagementAdditions(this.group) : undefined;
+    this.groupWithManagement = this.groupData?.group ? withManagementAdditions(this.groupData.group) : undefined;
   }
 
   onEditButtonClicked(): void {
@@ -37,10 +37,9 @@ export class GroupHeaderComponent implements OnChanges {
   }
 
   onStartWatchButtonClicked(event: Event): void {
-    if (!this.group) throw new Error("unexpected group not set in 'onWatchButtonClicked'");
-    if (!this.path) throw new Error('path must be defined');
+    if (!this.groupData?.group) throw new Error("unexpected group not set in 'onWatchButtonClicked'");
     this.modeService.startObserving({
-      route: { id: this.group.id, path: this.path },
+      route: this.groupData.route,
       name: this.groupData.group.name,
       link: urlArrayForGroup(this.group.id, this.path),
     });
