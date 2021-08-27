@@ -4,6 +4,7 @@ import { Manager } from '../../http-services/get-group-managers.service';
 import { ProgressSectionValue } from '../../../shared-components/components/progress-section/progress-section.component';
 import { UpdateGroupManagersService } from '../../http-services/update-group-managers.service';
 import { formatUser } from '../../../../shared/helpers/user';
+import { ActionFeedbackService } from '../../../../shared/services/action-feedback.service';
 
 @Component({
   selector: 'alg-manager-permission-dialog',
@@ -44,8 +45,10 @@ export class ManagerPermissionDialogComponent implements OnChanges {
   userCaption?: string;
   isUpdating = false;
 
-  constructor(private updateGroupManagersService: UpdateGroupManagersService) {
-  }
+  constructor(
+    private updateGroupManagersService: UpdateGroupManagersService,
+    private actionFeedbackService: ActionFeedbackService
+  ) {}
 
   ngOnChanges(): void {
     if (this.manager) {
@@ -76,9 +79,13 @@ export class ManagerPermissionDialogComponent implements OnChanges {
     this.updateGroupManagersService.update(this.group.id, this.manager.id, this.managerValues).subscribe({
       next: () => {
         this.isUpdating = false;
+        this.actionFeedbackService.success($localize`New permissions successfully saved.`);
         this.close.emit({ updated: true });
       },
-      error: () => this.isUpdating = false,
+      error: () => {
+        this.isUpdating = false;
+        this.actionFeedbackService.error($localize`Failed to save permissions.`);
+      }
     });
   }
 }
