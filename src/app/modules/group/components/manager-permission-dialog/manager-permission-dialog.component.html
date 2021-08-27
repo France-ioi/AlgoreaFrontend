@@ -10,8 +10,8 @@
       <span class="dialog-handler">
         <i class="fa fa-lock"></i>
       </span>
-      <span class="dialog-title" *ngIf="group && manager" i18n>
-        {{ group.name }}: manager access given to {{ manager.name }}
+      <span class="dialog-title" i18n>
+        {{ group?.name }}: manager access given to {{ userCaption }}
       </span>
       <span class="dialog-close" (click)="onClose()">
         <img src="assets/images/close.svg" alt="close">
@@ -31,7 +31,12 @@
           [(value)]="managerValues.canManage"
           [values]="managementLevelValues"
           [collapsed]="false"
-      ></alg-progress-section>
+          type="simple"
+      >
+        <ng-template #description>
+          <span i18n>The permissions that the user(s) has on this group</span>
+        </ng-template>
+      </alg-progress-section>
 
       <alg-boolean-section
           i18n-title title="Can grant view"

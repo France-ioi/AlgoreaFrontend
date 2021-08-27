@@ -28,6 +28,7 @@ export class ProgressSectionComponent<T> implements OnChanges, OnInit {
 
   @Input() collapsed = true;
   @Input() disabled = false;
+  @Input() type: 'simple' | 'checksWithLock' = 'checksWithLock';
 
   @Output() valueChange = new EventEmitter<T>();
 

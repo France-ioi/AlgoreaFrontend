@@ -137,6 +137,6 @@
   [visible]="isPermissionsEditDialogOpened"
   [group]="group"
   [manager]="dialogManager"
-  (close)="closePermissionsEditDialog()"
+  (close)="closePermissionsEditDialog($event)"
   *ngIf="isPermissionsEditDialogOpened"
 ></alg-manager-permission-dialog>

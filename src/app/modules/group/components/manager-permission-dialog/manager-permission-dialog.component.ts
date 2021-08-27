@@ -3,6 +3,7 @@ import { Group } from '../../http-services/get-group-by-id.service';
 import { Manager } from '../../http-services/get-group-managers.service';
 import { ProgressSectionValue } from '../../../shared-components/components/progress-section/progress-section.component';
 import { UpdateGroupManagersService } from '../../http-services/update-group-managers.service';
+import { formatUser } from '../../../../shared/helpers/user';
 
 @Component({
   selector: 'alg-manager-permission-dialog',
@@ -14,13 +15,7 @@ export class ManagerPermissionDialogComponent implements OnChanges {
   @Input() group?: Group;
   @Input() manager?: Manager;
 
-  managerValues = {
-    canManage: 'none',
-    canGrantGroupAccess: false,
-    canWatchMembers: false,
-  };
-
-  @Output() close = new EventEmitter<void>();
+  @Output() close = new EventEmitter<{ updated: boolean }>();
 
   managementLevelValues: ProgressSectionValue<string>[] = [
     {
@@ -40,6 +35,13 @@ export class ManagerPermissionDialogComponent implements OnChanges {
     },
   ];
 
+  managerValues = {
+    canManage: 'none',
+    canGrantGroupAccess: false,
+    canWatchMembers: false,
+  };
+
+  userCaption?: string;
   isUpdating = false;
 
   constructor(private updateGroupManagersService: UpdateGroupManagersService) {
@@ -52,11 +54,17 @@ export class ManagerPermissionDialogComponent implements OnChanges {
         canGrantGroupAccess: this.manager.canGrantGroupAccess,
         canWatchMembers: this.manager.canWatchMembers,
       };
+
+      this.userCaption = this.manager.login ? formatUser({
+        login: this.manager.login,
+        firstName: this.manager.firstName,
+        lastName: this.manager.lastName,
+      }) : this.manager.name;
     }
   }
 
   onClose(): void {
-    this.close.emit();
+    this.close.emit({ updated: false });
   }
 
   onAccept(): void {
@@ -65,10 +73,10 @@ export class ManagerPermissionDialogComponent implements OnChanges {
     }
 
     this.isUpdating = true;
-    this.updateGroupManagersService.update(this.manager.id, this.group.id, this.managerValues).subscribe({
+    this.updateGroupManagersService.update(this.group.id, this.manager.id, this.managerValues).subscribe({
       next: () => {
         this.isUpdating = false;
-        this.onClose();
+        this.close.emit({ updated: true });
       },
       error: () => this.isUpdating = false,
     });

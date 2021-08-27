@@ -16,6 +16,10 @@ export class UpdateGroupManagersService {
     managerId: string,
     payload: { canManage: string, canGrantGroupAccess: boolean, canWatchMembers: boolean }
   ): Observable<SimpleActionResponse> {
-    return this.http.put<SimpleActionResponse>(`${appConfig.apiUrl}/groups/${groupId}/managers/${managerId}`, payload);
+    return this.http.put<SimpleActionResponse>(`${appConfig.apiUrl}/groups/${groupId}/managers/${managerId}`, {
+      can_manage: payload.canManage,
+      can_grant_group_access: payload.canGrantGroupAccess,
+      can_watch_members: payload.canWatchMembers,
+    });
   }
 }

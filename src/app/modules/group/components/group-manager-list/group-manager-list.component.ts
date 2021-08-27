@@ -102,8 +102,12 @@ export class GroupManagerListComponent implements OnChanges {
     this.dialogManager = manager;
   }
 
-  closePermissionsEditDialog(): void {
+  closePermissionsEditDialog(event: { updated: boolean }): void {
     this.isPermissionsEditDialogOpened = false;
     this.dialogManager = undefined;
+
+    if (event.updated) {
+      this.reloadData();
+    }
   }
 }
