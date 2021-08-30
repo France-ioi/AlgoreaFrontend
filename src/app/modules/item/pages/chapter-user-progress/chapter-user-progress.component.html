@@ -36,7 +36,7 @@
                 </a>
               </ng-container>
               <ng-container *ngSwitchCase="'latestActivityAt'">
-                {{ rowData.latestActivityAt | date:'YY-MM-dd HH:MM' }}
+                {{ rowData.latestActivityAt | date:'short' }}
               </ng-container>
               <ng-container *ngSwitchCase="'timeSpent'">
                 {{ rowData.timeSpent | duration }}

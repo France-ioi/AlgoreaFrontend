@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy } from '@angular/core';
 import { GetParticipantProgressService } from '../../http-services/get-participant-progress.service';
 import { Observable, ReplaySubject } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
@@ -27,7 +27,7 @@ interface RowData {
   templateUrl: './chapter-user-progress.component.html',
   styleUrls: [ './chapter-user-progress.component.scss' ]
 })
-export class ChapterUserProgressComponent implements OnChanges {
+export class ChapterUserProgressComponent implements OnChanges, OnDestroy {
   @Input() item?: Item;
 
   private readonly item$ = new ReplaySubject<Item>(1);
@@ -86,6 +86,10 @@ export class ChapterUserProgressComponent implements OnChanges {
     if (this.item) {
       this.item$.next(this.item);
     }
+  }
+
+  ngOnDestroy(): void {
+    this.item$.complete();
   }
 
 }
