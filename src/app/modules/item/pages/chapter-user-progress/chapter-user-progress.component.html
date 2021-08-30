@@ -1,13 +1,20 @@
 <ng-container *ngIf="state$ | async as state">
-  <div class="spinner" *ngIf="state.isFetching">
+  <div class="spinner" *ngIf="state.isFetching && !state.data">
     <p-progressSpinner [style]="{ width: '3rem', height: '3rem' }"></p-progressSpinner>
   </div>
 
   <p class="error" *ngIf="state.isError" i18n>Error while loading the user progress</p>
 
-  <div *ngIf="state.isReady">
+  <div *ngIf="state.data">
     <p-table class="alg-table alg-table chapter-user-progress" [columns]="columns" [value]="state.data" [loading]="state.isFetching">
       <ng-template pTemplate="header" let-rowData let-columns>
+        <tr>
+          <th [colSpan]="columns.length">
+            <div class="header-container header-refresh">
+              <p-button icon="pi pi-refresh" (click)="refresh()"></p-button>
+            </div>
+          </th>
+        </tr>
         <tr *ngIf="rowData.length > 0">
           <ng-container *ngFor="let col of columns">
             <th>

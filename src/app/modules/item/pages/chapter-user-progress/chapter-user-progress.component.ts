@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, OnDestroy } from '@angular/core';
 import { GetParticipantProgressService } from '../../http-services/get-participant-progress.service';
-import { Observable, ReplaySubject } from 'rxjs';
+import { Observable, ReplaySubject, Subject } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { mapToFetchState } from '../../../../shared/operators/state';
 import { Item } from '../../http-services/get-item-by-id.service';
@@ -31,6 +31,7 @@ export class ChapterUserProgressComponent implements OnChanges, OnDestroy {
   @Input() item?: Item;
 
   private readonly item$ = new ReplaySubject<Item>(1);
+  private readonly refresh$ = new Subject<void>();
   state$: Observable<FetchState<RowData[]>> = this.item$.pipe(
     switchMap(item =>
       this.getParticipantProgressService.get(item.id).pipe(map(participantProgress => ([
@@ -54,7 +55,7 @@ export class ChapterUserProgressComponent implements OnChanges, OnDestroy {
         })),
       ])))
     ),
-    mapToFetchState(),
+    mapToFetchState({ resetter: this.refresh$ }),
   );
 
   columns: Column[] = [
@@ -90,6 +91,11 @@ export class ChapterUserProgressComponent implements OnChanges, OnDestroy {
 
   ngOnDestroy(): void {
     this.item$.complete();
+    this.refresh$.complete();
+  }
+
+  refresh(): void {
+    this.refresh$.next();
   }
 
 }
