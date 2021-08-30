@@ -1,6 +1,6 @@
 <alg-group-manager-list
-  [group]="group"
-  *ngIf="group?.isCurrentUserManager || group?.currentUserMembership !== 'none'; else noPermission"
+  [groupData]="groupData"
+  *ngIf="groupData?.group?.isCurrentUserManager || groupData?.group?.currentUserMembership !== 'none'; else noPermission"
 ></alg-group-manager-list>
 
 <ng-template #noPermission>
