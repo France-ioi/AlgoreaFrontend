@@ -49,7 +49,7 @@ export class GroupByIdComponent implements OnDestroy {
           route: groupRoute(group.id, route.path),
           breadcrumbs: {
             category: GROUP_BREADCRUMB_CAT,
-            path: [{ title: group.name, navigateTo: this.router.createUrlTree(urlArrayForGroup(route.id, route.path, 'details')) }],
+            path: [{ title: group.name, navigateTo: this.router.createUrlTree(urlArrayForGroup(route, 'details')) }],
             currentPageIdx: 0,
           },
           title: group.name,
