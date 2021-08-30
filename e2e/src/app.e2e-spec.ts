@@ -8,6 +8,7 @@ describe('Algorea Frontend', () => {
     page = new AppPage();
     await page.navigateTo();
     await page.waitForContent();
+    await browser.waitForAngular();
   });
 
   describe('page static elements', () => {
@@ -40,8 +41,6 @@ describe('Algorea Frontend', () => {
 
   describe('activities elements', () => {
     it('should shows the first element of the activity tree', async () => {
-      await browser.waitForAngular();
-
       await expect(
         page
           .getFirstActivityElement()
