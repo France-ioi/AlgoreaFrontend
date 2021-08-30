@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { NavigationExtras, Router, UrlTree } from '@angular/router';
+import { UrlCommand } from '../helpers/url';
 import { GroupRoute, urlArrayForGroupRoute } from './group-route';
 
 @Injectable({
@@ -41,7 +42,7 @@ export class GroupRouter {
    * Return a url array (`commands` array) to the given group, on the `path` page.
    * If page is not given and we are currently on a group page, use the same page. Otherwise, default to 'details'.
    */
-  urlArray(route: GroupRoute, page?: 'edit'|'details'): any[] {
+  urlArray(route: GroupRoute, page?: 'edit'|'details'): UrlCommand {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return urlArrayForGroupRoute(route, page ?? this.currentGroupSubPage());
   }

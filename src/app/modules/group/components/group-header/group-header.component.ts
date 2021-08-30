@@ -5,6 +5,7 @@ import { withManagementAdditions, ManagementAdditions } from '../../helpers/grou
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
 import { map } from 'rxjs/operators';
 import { OverlayPanel } from 'primeng/overlaypanel';
+import { GroupData } from '../../services/group-datasource.service';
 
 @Component({
   selector: 'alg-group-header',
@@ -12,13 +13,13 @@ import { OverlayPanel } from 'primeng/overlaypanel';
   styleUrls: [ './group-header.component.scss' ],
 })
 export class GroupHeaderComponent implements OnChanges {
-  @Input() group?: Group;
+  @Input() groupData?: GroupData;
 
   @ViewChild('op') op?: OverlayPanel;
 
   groupWithManagement?: Group & ManagementAdditions;
   isCurrentGroupWatched$ = this.userSessionService.watchedGroup$.pipe(
-    map(watchedGroup => !!(watchedGroup && watchedGroup.id === this.group?.id)),
+    map(watchedGroup => !!(watchedGroup && watchedGroup.route.id === this.groupData?.group?.id)),
   );
 
   constructor(
@@ -27,7 +28,7 @@ export class GroupHeaderComponent implements OnChanges {
   ) {}
 
   ngOnChanges(): void {
-    this.groupWithManagement = this.group ? withManagementAdditions(this.group) : undefined;
+    this.groupWithManagement = this.groupData?.group ? withManagementAdditions(this.groupData.group) : undefined;
   }
 
   onEditButtonClicked(): void {
@@ -35,8 +36,11 @@ export class GroupHeaderComponent implements OnChanges {
   }
 
   onStartWatchButtonClicked(event: Event): void {
-    if (!this.group) throw new Error("unexpected group not set in 'onWatchButtonClicked'");
-    this.modeService.startObserving(this.group);
+    if (!this.groupData?.group) throw new Error("unexpected group not set in 'onWatchButtonClicked'");
+    this.modeService.startObserving({
+      route: this.groupData.route,
+      name: this.groupData.group.name,
+    });
     this.openSuggestionOfActivitiesOverlayPanel(event);
   }
 

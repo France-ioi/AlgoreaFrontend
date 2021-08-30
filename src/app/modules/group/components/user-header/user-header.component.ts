@@ -4,6 +4,7 @@ import { map } from 'rxjs/operators';
 import { UserSessionService } from '../../../../shared/services/user-session.service';
 import { ModeAction, ModeService } from '../../../../shared/services/mode.service';
 import { formatUser } from '../../../../shared/helpers/user';
+import { groupRoute } from 'src/app/shared/routing/group-route';
 
 @Component({
   selector: 'alg-user-header',
@@ -14,7 +15,7 @@ export class UserHeaderComponent {
   @Input() user?: User;
 
   isCurrentGroupWatched$ = this.userSessionService.watchedGroup$.pipe(
-    map(watchedGroup => !!(watchedGroup && watchedGroup.id === this.user?.groupId)),
+    map(watchedGroup => !!(watchedGroup && watchedGroup.route.id === this.user?.groupId)),
   );
 
   constructor(
@@ -30,7 +31,7 @@ export class UserHeaderComponent {
   onStartWatchButtonClicked(): void {
     if (!this.user) throw new Error("unexpected user not set in 'onWatchButtonClicked'");
     this.modeService.startObserving({
-      id: this.user.groupId,
+      route: groupRoute(this.user.groupId, []),
       name: formatUser(this.user),
       login: this.user.login,
     });

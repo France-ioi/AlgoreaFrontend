@@ -1,4 +1,5 @@
 import { ParamMap } from '@angular/router';
+import { UrlCommand } from '../helpers/url';
 import { ContentRoute, pathAsParameter, pathFromRouterParameters } from './content-route';
 
 type GroupId = string;
@@ -6,6 +7,7 @@ type GroupId = string;
 export interface GroupRoute extends ContentRoute {
   contentType: 'group';
 }
+
 export interface GroupRouteError {
   tag: 'error';
   path?: string[];
@@ -19,8 +21,10 @@ export function groupRoute(id: GroupId, path: string[]): GroupRoute {
 /**
  * Return a url array (`commands` array) to the given group, on the given page.
  */
-export function urlArrayForGroupRoute(route: GroupRoute, page: 'edit'|'details' = 'details'): any[] {
-  return [ '/', 'groups', 'by-id', route.id, pathAsParameter(route.path), page ];
+export function urlArrayForGroupRoute(route: GroupRoute, page: 'edit' | 'details' = 'details', isUser = false): UrlCommand {
+  return isUser
+    ? [ '/', 'groups', 'users', route.id, pathAsParameter(route.path) ]
+    : [ '/', 'groups', 'by-id', route.id, pathAsParameter(route.path), page ];
 }
 
 export function decodeGroupRouterParameters(params: ParamMap): { id: string | null; path: string | null } {
