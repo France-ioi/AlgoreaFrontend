@@ -15,15 +15,14 @@ export class GroupAccessComponent implements OnChanges {
 
   private readonly rootActivityId$ = new ReplaySubject<string | null>(1);
 
-  itemState$ = this.rootActivityId$.pipe(
+  rootActivityState$ = this.rootActivityId$.pipe(
     switchMap(rootActivityId => {
       if (!rootActivityId) {
         return of(null);
       }
-      return this.getItemByIdService.get(rootActivityId).pipe(
-        mapToFetchState()
-      );
-    })
+      return this.getItemByIdService.get(rootActivityId);
+    }),
+    mapToFetchState(),
   );
 
   constructor(private getItemByIdService: GetItemByIdService) {
