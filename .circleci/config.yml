@@ -190,52 +190,52 @@ workflows:
   default:
     jobs:
       - deps
-      - lint:
-          requires:
-          - deps
-      - build-branch-en:
-          requires:
-            - deps
-          filters:
-            branches:
-              ignore: master
-      - build-branch-fr:
-          requires:
-            - deps
-          filters:
-            branches:
-              ignore: master
-      - tests:
-          requires:
-            - deps
+      # - lint:
+      #     requires:
+      #     - deps
+      # - build-branch-en:
+      #     requires:
+      #       - deps
+      #     filters:
+      #       branches:
+      #         ignore: master
+      # - build-branch-fr:
+      #     requires:
+      #       - deps
+      #     filters:
+      #       branches:
+      #         ignore: master
+      # - tests:
+      #     requires:
+      #       - deps
       - e2e:
           requires:
             - deps
-      - deploy-branch:
-          requires:
-            - build-branch-en
-            - build-branch-fr
-          filters:
-            branches:
-              ignore: master
-      - build-master-en:
-          requires:
-            - deps
-          filters:
-            branches:
-              only: master
-      - build-master-fr:
-          requires:
-            - deps
-          filters:
-            branches:
-              only: master
-      - deploy-master:
-          requires:
-            - build-master-en
-            - build-master-fr
-            - tests
-            - e2e
-          filters:
-            branches:
-              only: master
+      # - deploy-branch:
+      #     requires:
+      #       - build-branch-en
+      #       - build-branch-fr
+      #     filters:
+      #       branches:
+      #         ignore: master
+      # - build-master-en:
+      #     requires:
+      #       - deps
+      #     filters:
+      #       branches:
+      #         only: master
+      # - build-master-fr:
+      #     requires:
+      #       - deps
+      #     filters:
+      #       branches:
+      #         only: master
+      # - deploy-master:
+      #     requires:
+      #       - build-master-en
+      #       - build-master-fr
+      #       - tests
+      #       - e2e
+      #     filters:
+      #       branches:
+      #         only: master
