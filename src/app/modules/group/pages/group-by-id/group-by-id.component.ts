@@ -61,7 +61,7 @@ export class GroupByIdComponent implements OnDestroy {
       ).subscribe(action => {
         const currentInfo = this.currentContent.current();
         if (!isGroupInfo(currentInfo)) throw new Error('Unexpected: in group-by-id but the current content is not a group');
-        void this.router.navigate([ 'groups', 'by-id', currentInfo.route.id, action === ModeAction.StartEditing ? 'edit' : 'details' ]);
+        this.groupRouter.navigateTo(currentInfo.route, { page: action === ModeAction.StartEditing ? 'edit' : 'details' });
       })
     );
   }
