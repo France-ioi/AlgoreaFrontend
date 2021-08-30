@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-floating-promises */
 import { AppPage } from './app.po';
-import { browser, logging } from 'protractor';
+import { browser, ExpectedConditions, logging } from 'protractor';
 
 describe('Algorea Frontend', () => {
   let page: AppPage;
@@ -17,7 +17,7 @@ describe('Algorea Frontend', () => {
     });
 
     it('should have a working item-detail', () => {
-      page.waitForElement(page.getFirstActivityElement());
+      browser.wait(ExpectedConditions.elementToBeClickable(page.getFirstActivityElement()), 10000);
       // Check if the first item exists and is working
       page.getFirstActivityElement().click();
       page.waitForElement(page.getMainContentElement());
@@ -40,7 +40,7 @@ describe('Algorea Frontend', () => {
 
   describe('activities elements', () => {
     it('should shows the first element of the activity tree', () => {
-      page.waitForElement(page.getFirstActivityLabelElement());
+      browser.wait(ExpectedConditions.textToBePresentInElement(page.getFirstActivityLabelElement(), 'Parcours officiels'), 10000);
       expect(page.getFirstActivityLabelElement().getText()).toContain('Parcours officiels');
     });
   });
