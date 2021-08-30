@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { UrlCommand } from '../helpers/url';
 import { GroupRoute } from '../routing/group-route';
-import { urlArrayForGroup } from '../routing/group-route';
+import { urlArrayForGroupRoute } from '../routing/group-route';
 
 /**
  * Functions using item route should always be preferred to raw item.
@@ -10,6 +10,6 @@ import { urlArrayForGroup } from '../routing/group-route';
 @Pipe({ name: 'groupLink', pure: true })
 export class GroupLinkPipe implements PipeTransform {
   transform(route: GroupRoute, isUser?: boolean): UrlCommand {
-    return urlArrayForGroup(route, 'details', isUser);
+    return urlArrayForGroupRoute(route, 'details', isUser);
   }
 }

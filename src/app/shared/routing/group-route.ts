@@ -21,7 +21,7 @@ export function groupRoute(id: GroupId, path: string[]): GroupRoute {
 /**
  * Return a url array (`commands` array) to the given group, on the given page.
  */
-export function urlArrayForGroup(route: GroupRoute, page: 'edit' | 'details' = 'details', isUser = false): UrlCommand {
+export function urlArrayForGroupRoute(route: GroupRoute, page: 'edit' | 'details' = 'details', isUser = false): UrlCommand {
   return isUser
     ? [ '/', 'groups', 'users', route.id, pathAsParameter(route.path) ]
     : [ '/', 'groups', 'by-id', route.id, pathAsParameter(route.path), page ];
