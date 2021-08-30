@@ -1,5 +1,5 @@
 import { Component, OnDestroy } from '@angular/core';
-import { ActivatedRoute, ParamMap, Router, UrlTree } from '@angular/router';
+import { ActivatedRoute, ParamMap, UrlTree } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { GetGroupPathService } from 'src/app/modules/item/http-services/get-group-path';
@@ -29,7 +29,6 @@ export class GroupByIdComponent implements OnDestroy {
   private hasRedirected = false;
 
   constructor(
-    private router: Router,
     private activatedRoute: ActivatedRoute,
     private currentContent: CurrentContentService,
     private modeService: ModeService,
