@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { ReplaySubject, Subject } from 'rxjs';
-import { map, share, switchMap } from 'rxjs/operators';
+import { map, shareReplay, switchMap } from 'rxjs/operators';
 import { mapToFetchState } from 'src/app/shared/operators/state';
 import { GroupRoute } from 'src/app/shared/routing/group-route';
 import { GetGroupByIdService, Group } from '../http-services/get-group-by-id.service';
@@ -24,7 +24,7 @@ export class GroupDataSource implements OnDestroy {
     // on new fetch operation to be done: set "fetching" state and fetch the data which will result in a ready or error state
     switchMap(route => this.getGroupByIdService.get(route.id).pipe(map(group => ({ route, group })))),
     mapToFetchState({ resetter: this.refresh$ }),
-    share(),
+    shareReplay(1),
   );
 
   constructor(
