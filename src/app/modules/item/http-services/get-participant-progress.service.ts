@@ -17,7 +17,7 @@ const participantProgressDecoder = D.struct({
     score: D.number,
     string: D.struct({
       languageTag: D.string,
-      title: D.string,
+      title: D.nullable(D.string),
     }),
     submissions: D.number,
     timeSpent: D.number,
@@ -27,7 +27,7 @@ const participantProgressDecoder = D.struct({
   item: D.struct({
     hintsRequested: D.number,
     itemId: D.string,
-    latestActivityAt: dateDecoder,
+    latestActivityAt: D.nullable(dateDecoder),
     score: D.number,
     submissions: D.number,
     timeSpent: D.number,
