@@ -30,6 +30,7 @@
           icon="fa fa-users-cog"
           [(value)]="managerValues.canManage"
           [values]="managementLevelValues"
+          [collapsible]="false"
           [collapsed]="false"
           type="simple"
       >
@@ -42,6 +43,7 @@
           i18n-title title="Can grant view"
           icon="fa fa-key"
           [(value)]="managerValues.canGrantGroupAccess"
+          [collapsible]="false"
           [collapsed]="false"
       >
         <ng-template #label>
@@ -55,6 +57,7 @@
           i18n-title title="Can watch members"
           icon="fa fa-binoculars"
           [(value)]="managerValues.canWatchMembers"
+          [collapsible]="false"
           [collapsed]="false"
       >
         <ng-template #label>

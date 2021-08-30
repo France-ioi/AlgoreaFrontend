@@ -11,6 +11,7 @@ export class BooleanSectionComponent {
   @Input() icon = '';
 
   @Input() value = false;
+  @Input() collapsible = true;
   @Input() collapsed = true;
 
   @ContentChild('description') descriptionTemplate?: TemplateRef<any>;

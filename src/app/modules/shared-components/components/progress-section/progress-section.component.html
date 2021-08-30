@@ -15,7 +15,7 @@
         <span class="selected-progress-level">{{ values[selected]?.label }}</span>
       </ng-template>
     </div>
-    <span class="toggle-expand">
+    <span class="toggle-expand" *ngIf="collapsible">
       <i *ngIf="collapsed" class="fa fa-caret-down"></i>
       <i *ngIf="!collapsed" class="fa fa-caret-up"></i>
     </span>

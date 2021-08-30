@@ -26,6 +26,7 @@ export class ProgressSectionComponent<T> implements OnChanges, OnInit {
   @ContentChild('description') descriptionTemplate?: TemplateRef<any>;
   @ContentChild('body') bodyTemplate?: TemplateRef<any>;
 
+  @Input() collapsible = true;
   @Input() collapsed = true;
   @Input() disabled = false;
   @Input() type: 'simple' | 'checksWithLock' = 'checksWithLock';
@@ -45,6 +46,10 @@ export class ProgressSectionComponent<T> implements OnChanges, OnInit {
   }
 
   onCollapse(): void {
+    if (!this.collapsible) {
+      return;
+    }
+
     this.collapsed = !this.collapsed;
   }
 
