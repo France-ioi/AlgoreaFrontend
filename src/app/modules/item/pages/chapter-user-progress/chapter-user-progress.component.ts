@@ -5,7 +5,9 @@ import { map, switchMap } from 'rxjs/operators';
 import { mapToFetchState } from '../../../../shared/operators/state';
 import { Item } from '../../http-services/get-item-by-id.service';
 import { FetchState } from '../../../../shared/helpers/state';
-import { ItemType } from '../../../../shared/helpers/item-type';
+import { ItemType, typeCategoryOfItem } from '../../../../shared/helpers/item-type';
+import { ItemData } from '../../services/item-datasource.service';
+import { ItemRouter } from '../../../../shared/routing/item-router';
 
 interface Column {
   field: string,
@@ -28,7 +30,7 @@ interface RowData {
   styleUrls: [ './chapter-user-progress.component.scss' ]
 })
 export class ChapterUserProgressComponent implements OnChanges, OnDestroy {
-  @Input() item?: Item;
+  @Input() itemData?: ItemData;
 
   private readonly item$ = new ReplaySubject<Item>(1);
   private readonly refresh$ = new Subject<void>();
@@ -81,11 +83,14 @@ export class ChapterUserProgressComponent implements OnChanges, OnDestroy {
     }
   ];
 
-  constructor(private getParticipantProgressService: GetParticipantProgressService) { }
+  constructor(
+    private getParticipantProgressService: GetParticipantProgressService,
+    private itemRouter: ItemRouter,
+  ) { }
 
   ngOnChanges(): void {
-    if (this.item) {
-      this.item$.next(this.item);
+    if (this.itemData) {
+      this.item$.next(this.itemData.item);
     }
   }
 
@@ -96,6 +101,18 @@ export class ChapterUserProgressComponent implements OnChanges, OnDestroy {
 
   refresh(): void {
     this.refresh$.next();
+  }
+
+  onClick(rowData: RowData): void {
+    if (!this.itemData || this.itemData.item.id === rowData.id) return;
+    const parentAttemptId = this.itemData.currentResult?.attemptId;
+    if (!parentAttemptId) return; // unexpected: children have been loaded, so we are sure this item has an attempt
+    this.itemRouter.navigateTo({
+      contentType: typeCategoryOfItem(rowData),
+      id: rowData.id,
+      path: this.itemData.route.path.concat([ this.itemData.item.id ]),
+      parentAttemptId,
+    });
   }
 
 }

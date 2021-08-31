@@ -37,7 +37,8 @@
               <ng-container *ngSwitchCase="'title'">
                 <a
                   class="alg-link"
-                  [routerLink]="rowData | rawItemLink"
+                  [ngClass]="{'disabled': rowData.id === itemData?.item?.id}"
+                  (click)="onClick(rowData)"
                 >
                   {{ rowData.title }}
                 </a>
