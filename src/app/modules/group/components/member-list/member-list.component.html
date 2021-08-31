@@ -50,16 +50,16 @@
           <ng-container [ngSwitch]="col.field">
             <ng-container *ngSwitchCase="'user.login'">
               <a
-                  class="alg-link"
-                  [routerLink]="[ '/', 'groups', 'users', rowData.id ]"
-                  >
+                class="alg-link"
+                [routerLink]="rowData.route | groupLink:true"
+              >
                 {{ rowData.user | userCaption }}
               </a>
             </ng-container>
             <ng-container *ngSwitchCase="'name'">
               <a
                 class="alg-link"
-                [routerLink]="getSubGroupUrl(rowData.id)"
+                [routerLink]="rowData.route | groupLink:!!rowData.login"
               >
                 {{ rowData.name }}
               </a>

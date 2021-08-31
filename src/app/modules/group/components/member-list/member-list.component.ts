@@ -3,10 +3,9 @@ import { SortEvent } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { Observable, ReplaySubject, Subject } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
-import { UrlCommand } from 'src/app/shared/helpers/url';
 import { GetGroupDescendantsService } from 'src/app/shared/http-services/get-group-descendants.service';
 import { mapToFetchState } from 'src/app/shared/operators/state';
-import { groupRoute, urlArrayForGroupRoute } from 'src/app/shared/routing/group-route';
+import { GroupRoute, groupRoute, rawGroupRoute, RawGroupRoute } from 'src/app/shared/routing/group-route';
 import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
 import { GetGroupChildrenService, GroupChild } from '../../http-services/get-group-children.service';
 import { GetGroupMembersService, Member } from '../../http-services/get-group-members.service';
@@ -50,7 +49,10 @@ const descendantTeamsColumns: Column[] = [
 
 interface Data {
   columns: Column[],
-  rowData: (Member|GroupChild|{ login: string, parentGroups: string }|{ name: string, parentGroups: string, members: string })[],
+  rowData: (
+    (Member|GroupChild|{ login: string, parentGroups: string }|{ name: string, parentGroups: string, members: string }) &
+    { route: RawGroupRoute }
+  )[],
 }
 
 @Component({
@@ -79,7 +81,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
   @ViewChild('table') private table?: Table;
   @ViewChild('compositionFilter') private compositionFilter?: GroupCompositionFilterComponent;
 
-  private dataFetching = new Subject<{ groupId: string, filter: Filter, sort: string[] }>();
+  private dataFetching = new Subject<{ route: GroupRoute, filter: Filter, sort: string[] }>();
   removalInProgress$ = new ReplaySubject<boolean>();
 
   constructor(
@@ -90,7 +92,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
     private actionFeedbackService: ActionFeedbackService,
   ) {
     this.dataFetching.pipe(
-      switchMap(params => this.getData(params.groupId, params.filter, params.sort).pipe(mapToFetchState())),
+      switchMap(params => this.getData(params.route, params.filter, params.sort).pipe(mapToFetchState())),
     ).subscribe({
       next: state => {
         this.state = state.tag;
@@ -111,52 +113,71 @@ export class MemberListComponent implements OnChanges, OnDestroy {
     this.currentFilter = { ...this.defaultFilter };
     this.currentSort = [];
     this.table?.clear();
-    this.dataFetching.next({ groupId: this.groupData.group.id, filter: this.currentFilter, sort: this.currentSort });
+    this.dataFetching.next({ route: this.groupData.route, filter: this.currentFilter, sort: this.currentSort });
   }
 
-  getData(groupId: string, filter: Filter, sort: string[]): Observable<Data> {
+  getData(route: GroupRoute, filter: Filter, sort: string[]): Observable<Data> {
     switch (filter.type) {
       case TypeFilter.Groups:
-        return this.getGroupChildrenService.getGroupChildren(groupId, sort, [], [ 'Team', 'Session', 'User' ])
+        return this.getGroupChildrenService.getGroupChildren(route.id, sort, [], [ 'Team', 'Session', 'User' ])
           .pipe(map(children => ({
             columns: groupsColumns,
-            rowData: children
+            rowData: children.map(child => ({
+              ...child,
+              route: groupRoute(child.id, [ ...route.path, route.id ]),
+            })),
           })));
       case TypeFilter.Sessions:
-        return this.getGroupChildrenService.getGroupChildren(groupId, sort, [ 'Session' ])
+        return this.getGroupChildrenService.getGroupChildren(route.id, sort, [ 'Session' ])
           .pipe(map(children => ({
             columns: nameUserCountColumns,
-            rowData: children,
+            rowData: children.map(child => ({
+              ...child,
+              route: groupRoute(child.id, [ ...route.path, route.id ]),
+            })),
           })));
       case TypeFilter.Teams:
         if (!filter.directChildren) {
-          return this.getGroupDescendantsService.getTeamDescendants(groupId, sort)
+          return this.getGroupDescendantsService.getTeamDescendants(route.id, sort)
             .pipe(map(descendantTeams => ({
               columns: descendantTeamsColumns,
               rowData: descendantTeams.map(descendantTeam => ({
                 name: descendantTeam.name,
                 parentGroups: descendantTeam.parents.map(parent => parent.name).join(', '),
                 members: descendantTeam.members.map(member => member.login).join(', '),
+                route: rawGroupRoute(descendantTeam.id),
               })),
             })));
         } else {
-          return this.getGroupChildrenService.getGroupChildren(groupId, sort, [ 'Team' ])
+          return this.getGroupChildrenService.getGroupChildren(route.id, sort, [ 'Team' ])
             .pipe(map(children => ({
               columns: nameUserCountColumns,
-              rowData: children,
+              rowData: children.map(child => ({
+                ...child,
+                route: groupRoute(child.id, [ ...route.path, route.id ]),
+              })),
             })));
         }
       case TypeFilter.Users:
         if (filter.directChildren) {
-          return this.getGroupMembersService.getGroupMembers(groupId, sort)
-            .pipe(map(members => ({ columns: usersColumns, rowData: members })));
+          return this.getGroupMembersService.getGroupMembers(route.id, sort)
+            .pipe(
+              map(members => ({
+                columns: usersColumns,
+                rowData: members.map(member => ({
+                  ...member,
+                  route: groupRoute(member.id, [ ...route.path, route.id ])
+                })),
+              }))
+            );
         } else {
-          return this.getGroupDescendantsService.getUserDescendants(groupId, sort)
+          return this.getGroupDescendantsService.getUserDescendants(route.id, sort)
             .pipe(map(descendantUsers => ({
               columns: descendantUsersColumns,
               rowData: descendantUsers.map(descendantUser => ({
                 login: descendantUser.user.login,
-                parentGroups: descendantUser.parents.map(parent => parent.name).join(', ')
+                parentGroups: descendantUser.parents.map(parent => parent.name).join(', '),
+                route: rawGroupRoute(descendantUser.id),
               }))
             })));
         }
@@ -170,7 +191,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
 
     if (sortMeta && JSON.stringify(sortMeta) !== JSON.stringify(this.currentSort)) {
       this.currentSort = sortMeta;
-      this.dataFetching.next({ groupId: this.groupData.group.id, filter: this.currentFilter, sort: this.currentSort });
+      this.dataFetching.next({ route: this.groupData.route, filter: this.currentFilter, sort: this.currentSort });
     }
   }
 
@@ -181,7 +202,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
       this.currentFilter = { ...filter };
       this.currentSort = [];
       this.table?.clear();
-      this.dataFetching.next({ groupId: this.groupData.group.id, filter: this.currentFilter, sort: this.currentSort });
+      this.dataFetching.next({ route: this.groupData.route, filter: this.currentFilter, sort: this.currentSort });
     }
   }
 
@@ -211,7 +232,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
           this.table?.clear();
           this.selection = [];
           if (this.groupData) {
-            this.dataFetching.next({ groupId: this.groupData.group.id, filter: this.currentFilter, sort: this.currentSort });
+            this.dataFetching.next({ route: this.groupData.route, filter: this.currentFilter, sort: this.currentSort });
           }
           this.removalInProgress$.next(false);
         },
@@ -220,10 +241,5 @@ export class MemberListComponent implements OnChanges, OnDestroy {
           this.actionFeedbackService.unexpectedError();
         }
       });
-  }
-
-  getSubGroupUrl(subGroupId: string): UrlCommand {
-    if (!this.groupData) throw new Error('groupData must be defined');
-    return urlArrayForGroupRoute(groupRoute(subGroupId, [ ...this.groupData.route.path, this.groupData.group.id ]), 'details');
   }
 }
