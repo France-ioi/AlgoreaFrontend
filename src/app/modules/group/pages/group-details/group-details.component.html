@@ -37,6 +37,7 @@
           Composition
         </a>
         <a
+          [hidden]="!group.isCurrentUserManager && group.currentUserMembership === 'none' && !adminTab?.isActive"
           class="nav-tab-item"
           [routerLink]="'./managers'"
           routerLinkActive #adminTab="routerLinkActive"
@@ -69,7 +70,7 @@
     </div>
 
     <div class="bg-white">
-      <alg-group-overview *ngIf="overviewTab?.isActive || !overviewTab && group.currentUserManagership === 'none' && group.currentUserMembership === 'none'" [group]="group"></alg-group-overview>
+      <alg-group-overview *ngIf="overviewTab?.isActive || !overviewTab && !group.isCurrentUserManager && group.currentUserMembership === 'none'" [group]="group"></alg-group-overview>
       <alg-group-composition *ngIf="!!compositionTab?.isActive" [group]="group" (groupRefreshRequired)="onGroupRefreshRequired()"></alg-group-composition>
       <alg-group-managers *ngIf="!!adminTab?.isActive" [groupData]="state.data"></alg-group-managers>
       <alg-group-settings *ngIf="!!settingsTab?.isActive" [group]="group" (groupRefreshRequired)="onGroupRefreshRequired()"></alg-group-settings>
