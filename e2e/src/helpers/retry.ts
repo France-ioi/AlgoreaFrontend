@@ -8,20 +8,21 @@ import { browser } from 'protractor';
  * that blog post: https://christianlydemann.com/life-saving-protractor-utilities-to-fix-flaky-end-to-end-tests/
  */
 
-export async function expectOrRetry(
-  expectFn: () => unknown | Promise<unknown>,
+export async function retry(
+  fn: () => unknown | Promise<unknown>,
   pollInMs = 500,
-  maxTries = 10,
+  maxTries = 20,
   currentTry = 1,
 ): Promise<unknown> {
+  if (currentTry > 1) console.info('retry', currentTry - 1);
   if (currentTry > maxTries) throw new Error('should not happen');
-  if (currentTry === maxTries) return expectFn();
+  if (currentTry === maxTries) return fn();
   try {
     // NOTE: to catch the error properly, we need to await the result and not return directly
-    const result = await expectFn();
+    const result = await fn();
     return result;
   } catch (error) {
     await browser.sleep(pollInMs);
-    return expectOrRetry(expectFn, pollInMs, maxTries, currentTry + 1);
+    return retry(fn, pollInMs, maxTries, currentTry + 1);
   }
 }

@@ -1,6 +1,6 @@
 import { AppPage } from './app.po';
 import { browser, ExpectedConditions, logging } from 'protractor';
-import { expectOrRetry } from './helpers/expect';
+import { retry } from './helpers/retry';
 
 describe('Algorea Frontend', () => {
   let page: AppPage;
@@ -19,9 +19,10 @@ describe('Algorea Frontend', () => {
     it('should have a working item-detail', async () => {
       await browser.wait(ExpectedConditions.elementToBeClickable(page.getFirstActivityElement()), 10000);
       // Check if the first item exists and is working
-      await page.getFirstActivityElement().click();
+      await retry(() => page.getFirstActivityElement().click());
+
       await page.waitForElement(page.getMainContentElement());
-      await expectOrRetry(() => expect(page.getMainContentElement().getText()).toBeTruthy());
+      await retry(() => expect(page.getMainContentElement().getText()).toBeTruthy());
       // await expect(page.getMainContentElement().getText()).toEqual('item-details works!');
     });
 
@@ -41,7 +42,7 @@ describe('Algorea Frontend', () => {
   describe('activities elements', () => {
     it('should shows the first element of the activity tree', async () => {
       await browser.wait(ExpectedConditions.textToBePresentInElement(page.getFirstActivityLabelElement(), 'Parcours officiels'), 10000);
-      await expectOrRetry(() => expect(page.getFirstActivityLabelElement().getText()).toContain('Parcours officiels'));
+      await retry(() => expect(page.getFirstActivityLabelElement().getText()).toContain('Parcours officiels'));
     });
   });
 
