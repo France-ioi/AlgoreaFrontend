@@ -1,53 +1,54 @@
-/* eslint-disable @typescript-eslint/no-floating-promises */
 import { AppPage } from './app.po';
-import { browser, logging } from 'protractor';
+import { browser, ExpectedConditions, logging } from 'protractor';
+import { retry } from './helpers/retry';
 
 describe('Algorea Frontend', () => {
   let page: AppPage;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     page = new AppPage();
-    page.navigateTo();
+    await page.navigateTo();
   });
 
   describe('page static elements', () => {
-    it('should shows the title', () => {
-      page.waitForElement(page.getTitleElement());
-      expect(page.getTitleElement().getText()).toEqual('ALGOREA PLATFORM');
+    it('should shows the title', async () => {
+      await page.waitForElement(page.getTitleElement());
+      await expect(page.getTitleElement().getText()).toEqual('ALGOREA PLATFORM');
     });
 
-    it('should have a working item-detail', () => {
-      page.waitForElement(page.getFirstActivityElement());
+    it('should have a working item-detail', async () => {
+      await browser.wait(ExpectedConditions.elementToBeClickable(page.getFirstActivityElement()), 10000);
       // Check if the first item exists and is working
-      page.getFirstActivityElement().click();
-      page.waitForElement(page.getMainContentElement());
-      expect(page.getMainContentElement().getText()).toBeTruthy();
-      // expect(page.getMainContentElement().getText()).toEqual('item-details works!');
+      await retry(() => page.getFirstActivityElement().click());
+
+      await page.waitForElement(page.getMainContentElement());
+      await retry(() => expect(page.getMainContentElement().getText()).toBeTruthy());
+      // await expect(page.getMainContentElement().getText()).toEqual('item-details works!');
     });
 
-    it('should have a working collapse button', () => {
-      expect(page.getLeftElement().getAttribute('class')).toMatch('expanded');
-      expect(page.getTopBarElement().getAttribute('class')).toMatch('expanded');
-      expect(page.getRightElement().getAttribute('class')).toMatch('expanded');
+    it('should have a working collapse button', async () => {
+      await expect(page.getLeftElement().getAttribute('class')).toMatch('expanded');
+      await expect(page.getTopBarElement().getAttribute('class')).toMatch('expanded');
+      await expect(page.getRightElement().getAttribute('class')).toMatch('expanded');
 
-      page.getCollapseButtonElement().click();
+      await page.getCollapseButtonElement().click();
 
-      expect(page.getLeftElement().getAttribute('class')).toMatch('collapsed');
-      expect(page.getTopBarElement().getAttribute('class')).toMatch('collapsed');
-      expect(page.getRightElement().getAttribute('class')).toMatch('collapsed');
+      await expect(page.getLeftElement().getAttribute('class')).toMatch('collapsed');
+      await expect(page.getTopBarElement().getAttribute('class')).toMatch('collapsed');
+      await expect(page.getRightElement().getAttribute('class')).toMatch('collapsed');
     });
   });
 
   describe('activities elements', () => {
-    it('should shows the first element of the activity tree', () => {
-      page.waitForElement(page.getFirstActivityLabelElement());
-      expect(page.getFirstActivityLabelElement().getText()).toContain('Parcours officiels');
+    it('should shows the first element of the activity tree', async () => {
+      await browser.wait(ExpectedConditions.textToBePresentInElement(page.getFirstActivityLabelElement(), 'Parcours officiels'), 10000);
+      await retry(() => expect(page.getFirstActivityLabelElement().getText()).toContain('Parcours officiels'));
     });
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     // Assert that there are no errors emitted from the browser
-    const logs = browser.manage().logs().get(logging.Type.BROWSER);
+    const logs = await browser.manage().logs().get(logging.Type.BROWSER);
     expect(logs).not.toContain(jasmine.objectContaining({
       level: logging.Level.SEVERE,
     } as logging.Entry));
