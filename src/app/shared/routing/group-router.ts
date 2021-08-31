@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { NavigationExtras, Router, UrlTree } from '@angular/router';
 import { UrlCommand } from '../helpers/url';
-import { GroupRoute, urlArrayForGroupRoute } from './group-route';
+import { RawGroupRoute, urlArrayForGroupRoute } from './group-route';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +16,7 @@ export class GroupRouter {
    * Navigate to given group, on the path page.
    * If page is not given and we are currently on a group page, use the same page. Otherwise, default to 'details'.
    */
-  navigateTo(route: GroupRoute, options?: { page?: 'edit'|'details'; navExtras?: NavigationExtras }): void {
+  navigateTo(route: RawGroupRoute, options?: { page?: 'edit'|'details'; navExtras?: NavigationExtras }): void {
     void this.router.navigateByUrl(this.url(route, options?.page), options?.navExtras);
   }
 
@@ -34,7 +34,7 @@ export class GroupRouter {
    * Return a url to the given group, on the `path` page.
    * If page is not given and we are currently on a group page, use the same page. Otherwise, default to 'details'.
    */
-  url(route: GroupRoute, page?: 'edit'|'details'): UrlTree {
+  url(route: RawGroupRoute, page?: 'edit'|'details'): UrlTree {
     return this.router.createUrlTree(this.urlArray(route, page));
   }
 
@@ -42,8 +42,7 @@ export class GroupRouter {
    * Return a url array (`commands` array) to the given group, on the `path` page.
    * If page is not given and we are currently on a group page, use the same page. Otherwise, default to 'details'.
    */
-  urlArray(route: GroupRoute, page?: 'edit'|'details'): UrlCommand {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+  urlArray(route: RawGroupRoute, page?: 'edit'|'details'): UrlCommand {
     return urlArrayForGroupRoute(route, page ?? this.currentGroupSubPage());
   }
 
