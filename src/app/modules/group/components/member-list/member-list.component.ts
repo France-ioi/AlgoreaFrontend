@@ -37,7 +37,7 @@ const nameUserCountColumns: Column[] = [
 ];
 
 const descendantUsersColumns: Column[] = [
-  { field: 'login', header: $localize`Name` },
+  { field: 'user.login', header: $localize`Name` },
   { field: 'parentGroups', header: $localize`Parent group(s)` },
 ];
 
@@ -176,6 +176,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
               columns: descendantUsersColumns,
               rowData: descendantUsers.map(descendantUser => ({
                 login: descendantUser.user.login,
+                user: descendantUser.user,
                 parentGroups: descendantUser.parents.map(parent => parent.name).join(', '),
                 route: rawGroupRoute(descendantUser.id),
               }))
