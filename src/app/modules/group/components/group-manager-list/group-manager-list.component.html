@@ -59,7 +59,7 @@
             tooltipStyleClass="tooltip-custom"
           >
             <a class="alg-link"
-              [routerLink]="rowData.route | rawGroupLink:!!rowData.login"
+              [routerLink]="rowData.route | groupLink:!!rowData.login"
             >
               {{ rowData.login ? (rowData | userCaption) : rowData.name }}
             </a>
