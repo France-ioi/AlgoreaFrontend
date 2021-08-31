@@ -44,6 +44,7 @@ import { GroupLogViewComponent } from './components/group-log-view/group-log-vie
 import { AddGroupComponent } from './components/add-group/add-group.component';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { SuggestionOfActivitiesComponent } from './components/suggestion-of-activities/suggestion-of-activities.component';
+import { GroupAccessComponent } from './pages/group-access/group-access.component';
 import { GroupManagersComponent } from './pages/group-managers/group-managers.component';
 
 @NgModule({
@@ -80,6 +81,7 @@ import { GroupManagersComponent } from './pages/group-managers/group-managers.co
     AddGroupComponent,
     GroupManagersComponent,
     SuggestionOfActivitiesComponent,
+    GroupAccessComponent,
   ],
   imports: [
     CommonModule,
