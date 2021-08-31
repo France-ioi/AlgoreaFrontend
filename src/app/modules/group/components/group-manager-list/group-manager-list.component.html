@@ -59,7 +59,7 @@
             tooltipStyleClass="tooltip-custom"
           >
             <a class="alg-link"
-               [routerLink]="rowData.login ? [ '/', 'groups', 'users', rowData.id ] : [ '/', 'groups', 'by-id', rowData.id, 'details' ]"
+              [routerLink]="rowData.route | groupLink:!!rowData.login"
             >
               {{ rowData.login ? (rowData | userCaption) : rowData.name }}
             </a>
