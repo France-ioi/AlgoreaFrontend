@@ -6,6 +6,11 @@ import { bestAttemptFromResults } from 'src/app/shared/helpers/attempts';
 import { isRouteWithSelfAttempt, FullItemRoute } from 'src/app/shared/routing/item-route';
 import { appConfig } from 'src/app/shared/helpers/config';
 import { isASkill, isSkill, ItemType, ItemTypeCategory } from 'src/app/shared/helpers/item-type';
+import { decodeSnakeCase } from 'src/app/shared/operators/decode';
+import { pipe } from 'fp-ts/lib/function';
+import * as D from 'io-ts/Decoder';
+import { permissionsDecoder } from 'src/app/modules/item/helpers/item-permissions';
+import { dateDecoder } from 'src/app/shared/helpers/decoders';
 
 interface ItemStrings {
   title: string|null,
@@ -135,12 +140,75 @@ function createNavMenuItem(raw: {
   };
 }
 
+const itemNavigationDataDecoder = D.struct({
+  id: D.string,
+  attemptId: D.string,
+  permissions: permissionsDecoder,
+  string: D.struct({
+    languageTag: D.string,
+    title: D.nullable(D.string),
+  }),
+  type: D.literal('Chapter','Task','Course','Skill'),
+  children: D.array(
+    pipe(
+      D.struct({
+        bestScore: D.number,
+        entryParticipantType: D.literal('User', 'Team'),
+        hasVisibleChildren: D.boolean,
+        id: D.string,
+        noScore: D.boolean,
+        permissions: permissionsDecoder,
+        requiresExplicitEntry: D.boolean,
+        results: D.array(D.struct({
+          attemptAllowsSubmissionsUntil: dateDecoder,
+          attemptId: D.string,
+          endedAt: D.nullable(dateDecoder),
+          latestActivityAt: dateDecoder,
+          scoreComputed: D.number,
+          startedAt: D.nullable(dateDecoder),
+          validated: D.boolean,
+        })),
+        string: D.struct({
+          languageTag: D.string,
+          title: D.nullable(D.string),
+        }),
+        type: D.literal('Chapter','Task','Course','Skill'),
+      }),
+      D.intersect(
+        D.partial({
+          watchedGroup: pipe(
+            D.struct({
+              canView: D.literal('none','info','content','content_with_descendants','solution'),
+            }),
+            D.intersect(
+              D.partial({
+                allValidated: D.boolean,
+                avgScore: D.number,
+              })
+            )
+          ),
+        })
+      )
+    )
+  ),
+});
+
+export type ItemNavigationData = D.TypeOf<typeof itemNavigationDataDecoder>;
+
 @Injectable({
   providedIn: 'root'
 })
 export class ItemNavigationService {
 
   constructor(private http: HttpClient) {}
+
+  getItemNavigation(itemId: string, attemptId: string, skillsOnly = false): Observable<ItemNavigationData> {
+    const params = new HttpParams({ fromObject: { attempt_id: attemptId } });
+    return this.http.get<unknown>(`${appConfig.apiUrl}/items/${itemId}/navigation`, { params: params }).pipe(
+      decodeSnakeCase(itemNavigationDataDecoder),
+      map(data => (skillsOnly ? { ...data, children: data.children.filter(c => c.type === 'Skill') } : data))
+    );
+  }
 
   getNavData(itemId: string, attemptId: string, skillsOnly = false): Observable<NavMenuRootItemWithParent> {
     return this.getNavDataGeneric(itemId, { attempt_id: attemptId }, skillsOnly);

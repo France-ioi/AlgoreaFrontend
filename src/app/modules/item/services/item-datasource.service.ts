@@ -11,8 +11,16 @@ import { GetResultsService, Result } from '../http-services/get-results.service'
 import { canCurrentUserViewItemContent } from 'src/app/modules/item/helpers/item-permissions';
 import { mapToFetchState } from 'src/app/shared/operators/state';
 import { buildUp } from 'src/app/shared/operators/build-up';
+import { ItemNavigationData, ItemNavigationService } from 'src/app/core/http-services/item-navigation.service';
 
-export interface ItemData { route: FullItemRoute, item: Item, breadcrumbs: BreadcrumbItem[], results?: Result[], currentResult?: Result}
+export interface ItemData {
+  route: FullItemRoute,
+  item: Item,
+  breadcrumbs: BreadcrumbItem[],
+  results?: Result[],
+  currentResult?: Result,
+  itemNavigationData?: ItemNavigationData
+}
 
 /**
  * A datasource which allows fetching a item using a proper state and sharing it among several components.
@@ -39,6 +47,7 @@ export class ItemDataSource implements OnDestroy {
     private getItemByIdService: GetItemByIdService,
     private resultActionsService: ResultActionsService,
     private getResultsService: GetResultsService,
+    private itemNavigationService: ItemNavigationService,
     private userSessionService: UserSessionService,
   ) {
     this.subscription = this.userSessionService.userChanged$.subscribe(_s => this.refreshItem());
@@ -68,7 +77,14 @@ export class ItemDataSource implements OnDestroy {
       item: this.getItemByIdService.get(itemRoute.id),
       breadcrumbs: this.getBreadcrumbService.getBreadcrumb(itemRoute),
     }).pipe(
-      buildUp(data => (canCurrentUserViewItemContent(data.item) ? this.fetchResults(data.route, data.item) : EMPTY))
+      buildUp(data => (canCurrentUserViewItemContent(data.item) ? this.fetchResults(data.route, data.item) : EMPTY)),
+      buildUp(data => (data.currentResult ? this.fetchNavigationData(data.route, data.currentResult): EMPTY)),
+    );
+  }
+
+  private fetchNavigationData(itemRoute: FullItemRoute, currentResult: Result): Observable<{ itemNavigationData: ItemNavigationData }> {
+    return this.itemNavigationService.getItemNavigation(itemRoute.id, currentResult.attemptId).pipe(
+      map(nav => ({ itemNavigationData: nav }))
     );
   }
 
