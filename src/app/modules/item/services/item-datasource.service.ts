@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { concat, EMPTY, forkJoin, merge, Observable, of, ReplaySubject, Subject, Subscription } from 'rxjs';
+import { concat, EMPTY, forkJoin, Observable, of, ReplaySubject, Subject, Subscription } from 'rxjs';
 import { map, shareReplay, switchMap } from 'rxjs/operators';
 import { bestAttemptFromResults, implicitResultStart } from 'src/app/shared/helpers/attempts';
 import { isRouteWithSelfAttempt, FullItemRoute } from 'src/app/shared/routing/item-route';
@@ -27,8 +27,7 @@ export class ItemDataSource implements OnDestroy {
 
   /* state to put outputted */
   readonly state$ = this.fetchOperation$.pipe(
-    switchMap(item => this.fetchItemData(item)),
-    mapToFetchState({ resetter: merge(this.refresh$, this.fetchOperation$) }),
+    switchMap(item => this.fetchItemData(item).pipe(mapToFetchState({ resetter: this.refresh$ }))),
     shareReplay(1),
   );
 
