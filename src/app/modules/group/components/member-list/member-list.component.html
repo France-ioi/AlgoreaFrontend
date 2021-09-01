@@ -51,7 +51,7 @@
             <ng-container *ngSwitchCase="'user.login'">
               <a
                 class="alg-link"
-                [routerLink]="rowData.route | groupLink:true"
+                [routerLink]="rowData.route | userLink"
               >
                 {{ rowData.user | userCaption }}
               </a>
