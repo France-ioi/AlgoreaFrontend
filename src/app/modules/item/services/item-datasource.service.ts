@@ -1,15 +1,15 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { BehaviorSubject, concat, EMPTY, forkJoin, Observable, of, Subject, Subscription } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { concat, EMPTY, forkJoin, Observable, of, ReplaySubject, Subject, Subscription } from 'rxjs';
+import { map, shareReplay, switchMap } from 'rxjs/operators';
 import { bestAttemptFromResults, implicitResultStart } from 'src/app/shared/helpers/attempts';
 import { isRouteWithSelfAttempt, FullItemRoute } from 'src/app/shared/routing/item-route';
-import { errorState, fetchingState, FetchState, readyState } from 'src/app/shared/helpers/state';
 import { ResultActionsService } from 'src/app/shared/http-services/result-actions.service';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
 import { BreadcrumbItem, GetBreadcrumbService } from '../http-services/get-breadcrumb.service';
 import { GetItemByIdService, Item } from '../http-services/get-item-by-id.service';
 import { GetResultsService, Result } from '../http-services/get-results.service';
 import { canCurrentUserViewItemContent } from 'src/app/modules/item/helpers/item-permissions';
+import { mapToFetchState } from 'src/app/shared/operators/state';
 
 export interface ItemData { route: FullItemRoute, item: Item, breadcrumbs: BreadcrumbItem[], results?: Result[], currentResult?: Result}
 
@@ -22,11 +22,15 @@ export interface ItemData { route: FullItemRoute, item: Item, breadcrumbs: Bread
 @Injectable()
 export class ItemDataSource implements OnDestroy {
 
-  /* state to put outputted */
-  private state = new BehaviorSubject<FetchState<ItemData>>(fetchingState());
-  state$ = this.state.asObservable();
+  private readonly fetchOperation$ = new ReplaySubject<FullItemRoute>(1); // trigger item fetching
+  private readonly refresh$ = new Subject<void>();
 
-  private fetchOperation = new Subject<FullItemRoute>(); // trigger item fetching
+  /* state to put outputted */
+  readonly state$ = this.fetchOperation$.pipe(
+    switchMap(item => this.fetchItemData(item).pipe(mapToFetchState({ resetter: this.refresh$ }))),
+    shareReplay(1),
+  );
+
   private subscription: Subscription;
 
   constructor(
@@ -36,38 +40,20 @@ export class ItemDataSource implements OnDestroy {
     private getResultsService: GetResultsService,
     private userSessionService: UserSessionService,
   ) {
-    this.fetchOperation.pipe(
-
-      // switchMap does cancel the previous ongoing processing if a new one comes
-      // on new fetch operation to be done: set "fetching" state and fetch the data which will result in a ready or error state
-      switchMap(item =>
-        concat(
-          of(fetchingState()),
-          this.fetchItemData(item).pipe(
-            map(res => readyState(res)),
-            catchError(e => of(errorState(e)))
-          )
-        )
-      ),
-
-    ).subscribe(state => this.state.next(state));
-
     this.subscription = this.userSessionService.userChanged$.subscribe(_s => this.refreshItem());
   }
 
   fetchItem(item: FullItemRoute): void {
-    this.fetchOperation.next(item);
+    this.fetchOperation$.next(item);
   }
 
   refreshItem(): void {
-    if (this.state.value.isReady) {
-      this.fetchItem(this.state.value.data.route);
-    }
+    this.refresh$.next();
   }
 
   ngOnDestroy(): void {
-    this.state.complete();
-    this.fetchOperation.complete();
+    this.refresh$.complete();
+    this.fetchOperation$.complete();
     this.subscription.unsubscribe();
   }
 
