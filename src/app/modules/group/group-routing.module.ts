@@ -41,6 +41,9 @@ const routes: Routes = [
           {
             path: 'settings',
           },
+          {
+            path: 'access',
+          },
         ]
       },
       {

@@ -1,6 +1,7 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { Group } from '../../http-services/get-group-by-id.service';
+import { RawGroupRoute, rawGroupRoute } from 'src/app/shared/routing/group-route';
 import { GetGroupManagersService, Manager } from '../../http-services/get-group-managers.service';
+import { GroupData } from '../../services/group-datasource.service';
 
 @Component({
   selector: 'alg-group-manager-list',
@@ -9,9 +10,9 @@ import { GetGroupManagersService, Manager } from '../../http-services/get-group-
 })
 export class GroupManagerListComponent implements OnChanges {
 
-  @Input() group?: Group;
+  @Input() groupData?: GroupData;
 
-  managers: (Manager&{canManageAsText: string})[] = [];
+  managers: (Manager & { canManageAsText: string; route: RawGroupRoute })[] = [];
 
   state: 'loading' | 'ready' | 'error' = 'loading';
 
@@ -33,13 +34,17 @@ export class GroupManagerListComponent implements OnChanges {
   }
 
   private reloadData(): void {
-    if (!this.group) return;
+    if (!this.groupData) return;
     this.state = 'loading';
     this.getGroupManagersService
-      .getGroupManagers(this.group.id)
+      .getGroupManagers(this.groupData.group.id)
       .subscribe({
         next: (managers: Manager[]) => {
-          this.managers = managers.map(manager => ({ ...manager, canManageAsText: this.getManagerLevel(manager) }));
+          this.managers = managers.map(manager => ({
+            ...manager,
+            canManageAsText: this.getManagerLevel(manager),
+            route: rawGroupRoute(manager.id),
+          }));
           this.state = 'ready';
         },
         error: _err => {

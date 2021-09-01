@@ -7,6 +7,7 @@ type GroupId = string;
 export interface GroupRoute extends ContentRoute {
   contentType: 'group';
 }
+export type RawGroupRoute = Omit<GroupRoute, 'path'> & Partial<Pick<ContentRoute, 'path'>>;
 
 export interface GroupRouteError {
   tag: 'error';
@@ -18,13 +19,18 @@ export function groupRoute(id: GroupId, path: string[]): GroupRoute {
   return { contentType: 'group', id: id, path };
 }
 
+export function rawGroupRoute(id: GroupId): RawGroupRoute {
+  return { contentType: 'group', id };
+}
+
 /**
  * Return a url array (`commands` array) to the given group, on the given page.
  */
-export function urlArrayForGroupRoute(route: GroupRoute, page: 'edit' | 'details' = 'details', isUser = false): UrlCommand {
+export function urlArrayForGroupRoute(route: RawGroupRoute, page: 'edit' | 'details' = 'details', isUser = false): UrlCommand {
+  const path = route.path ? pathAsParameter(route.path) : {};
   return isUser
-    ? [ '/', 'groups', 'users', route.id, pathAsParameter(route.path) ]
-    : [ '/', 'groups', 'by-id', route.id, pathAsParameter(route.path), page ];
+    ? [ '/', 'groups', 'users', route.id, path ]
+    : [ '/', 'groups', 'by-id', route.id, path, page ];
 }
 
 export function decodeGroupRouterParameters(params: ParamMap): { id: string | null; path: string | null } {

@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { Group } from '../../http-services/get-group-by-id.service';
 import { ManagementAdditions } from '../../helpers/group-management';
+import { GroupData } from '../../services/group-datasource.service';
 
 @Component({
   selector: 'alg-group-managers',
@@ -8,6 +8,6 @@ import { ManagementAdditions } from '../../helpers/group-management';
   styleUrls: [ './group-managers.component.scss' ],
 })
 export class GroupManagersComponent {
-  @Input() group?: Group & ManagementAdditions;
+  @Input() groupData?: GroupData & { group: GroupData['group'] & ManagementAdditions };
 }
 
