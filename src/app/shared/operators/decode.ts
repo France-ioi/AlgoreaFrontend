@@ -1,8 +1,7 @@
 import { map } from 'rxjs/operators';
 import * as D from 'io-ts/Decoder';
-import { pipe } from 'fp-ts/function';
-import { fold } from 'fp-ts/Either';
 import { OperatorFunction, pipe as rxpipe } from 'rxjs';
+import { decode } from '../helpers/decoders';
 import { snakeToCamelKeys } from '../helpers/case_conversion';
 
 /**
@@ -10,12 +9,7 @@ import { snakeToCamelKeys } from '../helpers/case_conversion';
  */
 export function decodeSnakeCase<T>(decoder: D.Decoder<unknown, T>): OperatorFunction<unknown,T> {
   return rxpipe(
-    map(input => pipe(decoder.decode(snakeToCamelKeys(input)), fold(
-      // just throw the error if decode failed and retrun the value otherwise.
-      error => {
-        throw new Error(D.draw(error));
-      },
-      decoded => decoded,
-    )))
+    map(snakeToCamelKeys),
+    map(decode(decoder)),
   );
 }
