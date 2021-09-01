@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { concat, EMPTY, forkJoin, Observable, of, ReplaySubject, Subject, Subscription } from 'rxjs';
+import { EMPTY, forkJoin, Observable, of, ReplaySubject, Subject, Subscription } from 'rxjs';
 import { map, shareReplay, switchMap } from 'rxjs/operators';
 import { bestAttemptFromResults, implicitResultStart } from 'src/app/shared/helpers/attempts';
 import { isRouteWithSelfAttempt, FullItemRoute } from 'src/app/shared/routing/item-route';
@@ -10,6 +10,7 @@ import { GetItemByIdService, Item } from '../http-services/get-item-by-id.servic
 import { GetResultsService, Result } from '../http-services/get-results.service';
 import { canCurrentUserViewItemContent } from 'src/app/modules/item/helpers/item-permissions';
 import { mapToFetchState } from 'src/app/shared/operators/state';
+import { buildUp } from 'src/app/shared/operators/build-up';
 
 export interface ItemData { route: FullItemRoute, item: Item, breadcrumbs: BreadcrumbItem[], results?: Result[], currentResult?: Result}
 
@@ -62,22 +63,12 @@ export class ItemDataSource implements OnDestroy {
    * In parallel: breadcrumb and (in serial: get info and start result)
    */
   private fetchItemData(itemRoute: FullItemRoute): Observable<ItemData> {
-    return forkJoin([
-      this.getBreadcrumbService.getBreadcrumb(itemRoute),
-      this.getItemByIdService.get(itemRoute.id)
-    ]).pipe(
-      switchMap(([ breadcrumbs, item ]) => {
-        // emit immediately without results, then, if the perm allows it, fetch results
-        const initialData = { route: itemRoute, item: item, breadcrumbs: breadcrumbs };
-        if (canCurrentUserViewItemContent(item)) {
-          return concat(
-            of(initialData),
-            this.fetchResults(itemRoute, item).pipe(
-              map(r => ({ ...initialData, ...r }))
-            )
-          );
-        } else return of(initialData);
-      })
+    return forkJoin({
+      route: of(itemRoute),
+      item: this.getItemByIdService.get(itemRoute.id),
+      breadcrumbs: this.getBreadcrumbService.getBreadcrumb(itemRoute),
+    }).pipe(
+      buildUp(data => (canCurrentUserViewItemContent(data.item) ? this.fetchResults(data.route, data.item) : EMPTY))
     );
   }
 
