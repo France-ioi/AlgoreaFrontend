@@ -23,6 +23,7 @@ export class GroupDetailsComponent {
   @ViewChild('compositionTab') compositionTab?: RouterLinkActive;
   @ViewChild('adminTab') adminTab?: RouterLinkActive;
   @ViewChild('settingsTab') settingsTab?: RouterLinkActive;
+  @ViewChild('accessTab') accessTab?: RouterLinkActive;
 
   constructor(
     private groupDataSource: GroupDataSource,
