@@ -4,8 +4,8 @@ import { RawGroupRoute } from '../routing/group-route';
 import { urlArrayForGroupRoute } from '../routing/group-route';
 
 /**
- * Functions using item route should always be preferred to raw item.
- * Using raw item means further requests will be required to fetch path and attempt information.
+ * Pipe to format group links, with or without the path
+ * Since a user is considered as a group of one person, user routes are formatted using this pipe too.
  */
 @Pipe({ name: 'groupLink', pure: true })
 export class GroupLinkPipe implements PipeTransform {
