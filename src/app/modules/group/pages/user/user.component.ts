@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { GetUserService } from '../../http-services/get-user.service';
 import { mapToFetchState } from '../../../../shared/operators/state';
-import { combineLatest, Subscription } from 'rxjs';
+import { combineLatest, of, Subscription, throwError } from 'rxjs';
 import { ActivatedRoute, NavigationEnd, Router, RouterLinkActive } from '@angular/router';
 import { delay, switchMap, map, startWith, filter, share } from 'rxjs/operators';
 import { contentInfo } from '../../../../shared/models/content/content-info';
@@ -9,7 +9,8 @@ import { CurrentContentService } from '../../../../shared/services/current-conte
 import { UserSessionService } from '../../../../shared/services/user-session.service';
 import { formatUser } from '../../../../shared/helpers/user';
 import { LayoutService } from '../../../../shared/services/layout.service';
-import { rawGroupRoute } from 'src/app/shared/routing/group-route';
+import { GetGroupBreadcrumbsService } from '../../http-services/get-group-breadcrumbs.service';
+import { groupRoute, groupRouteFromParams, rawGroupRoute } from 'src/app/shared/routing/group-route';
 import { GroupRouter } from 'src/app/shared/routing/group-router';
 
 @Component({
@@ -34,6 +35,16 @@ export class UserComponent implements OnInit, OnDestroy {
 
   fullFrameContent$ = this.layoutService.fullFrameContent$;
 
+  private readonly breadcrumbs$ = this.route.paramMap.pipe(
+    switchMap(params => {
+      const { id, path } = groupRouteFromParams(params);
+      if (!id) return throwError(new Error('user id must be defined'));
+      return path
+        ? this.getGroupBreadcrumbsService.getBreadcrumbs(groupRoute({ id, isUser: true }, path))
+        : of(undefined);
+    })
+  );
+
   private subscription?: Subscription;
 
   isInitPagePersonal = false;
@@ -46,6 +57,7 @@ export class UserComponent implements OnInit, OnDestroy {
     private currentContent: CurrentContentService,
     private layoutService: LayoutService,
     private groupRouter: GroupRouter,
+    private getGroupBreadcrumbsService: GetGroupBreadcrumbsService,
   ) {}
 
   ngOnInit(): void {
@@ -56,25 +68,35 @@ export class UserComponent implements OnInit, OnDestroy {
           startWith(null),
         ),
       this.state$,
+      this.breadcrumbs$,
     ])
       .pipe(
-        map(([ , state ]) => {
+        map(([ , state, breadcrumbs ]) => {
           const title = state.isFetching || state.isError ? '...' : formatUser(state.data);
+          const lastPath = {
+            title: this.router.url.includes('personal-data') ? $localize`Personal info` : $localize`Progress`,
+          };
 
           return contentInfo({
             title,
             breadcrumbs: {
               category: $localize`Users`,
-              path: [
+              path: breadcrumbs ? [
+                ...breadcrumbs.map(breadcrumb => ({
+                  title: breadcrumb.type === 'User' && breadcrumb.id === state.data?.groupId
+                    ? formatUser(state.data)
+                    : breadcrumb.name,
+                  navigateTo: this.groupRouter.url(breadcrumb.route, breadcrumb.type === 'User' ? undefined : 'details'),
+                })),
+                lastPath,
+              ] : [
                 {
                   title,
                   navigateTo: this.groupRouter.url(rawGroupRoute({ id: this.route.snapshot.params.id as string, isUser: true })),
                 },
-                {
-                  title: this.router.url.includes('personal-data') ? $localize`Personal info` : $localize`Progress`,
-                }
+                lastPath,
               ],
-              currentPageIdx: 1,
+              currentPageIdx: breadcrumbs ? breadcrumbs.length : 1,
             }
           });
         })
