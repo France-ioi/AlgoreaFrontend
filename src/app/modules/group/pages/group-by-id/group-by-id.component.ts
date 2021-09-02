@@ -24,7 +24,6 @@ const GROUP_BREADCRUMB_CAT = $localize`Groups`;
 })
 export class GroupByIdComponent implements OnDestroy {
 
-  navigationError = false;
   private subscriptions: Subscription[] = []; // subscriptions to be freed up on destroy
   private hasRedirected = false;
 
@@ -99,7 +98,7 @@ export class GroupByIdComponent implements OnDestroy {
         this.groupRouter.navigateTo(groupRoute(groupId, path), { navExtras: { replaceUrl: true } });
       },
       error: () => {
-        this.navigationError = true;
+        this.groupRouter.navigateTo(groupRoute(groupId, []), { navExtras: { replaceUrl: true } });
       }
     });
   }
