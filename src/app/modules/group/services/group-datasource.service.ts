@@ -1,11 +1,16 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { ReplaySubject, Subject } from 'rxjs';
+import { forkJoin, ReplaySubject, Subject } from 'rxjs';
 import { map, shareReplay, switchMap } from 'rxjs/operators';
 import { mapToFetchState } from 'src/app/shared/operators/state';
 import { GroupRoute } from 'src/app/shared/routing/group-route';
+import { GetGroupBreadcrumbsService, GroupBreadcrumb } from '../http-services/get-group-breadcrumbs.service';
 import { GetGroupByIdService, Group } from '../http-services/get-group-by-id.service';
 
-export interface GroupData { route: GroupRoute, group: Group }
+export interface GroupData {
+  route: GroupRoute,
+  group: Group,
+  breadcrumbs: GroupBreadcrumb[],
+}
 
 /**
  * A datasource which allows fetching a group using a proper state and sharing it among several components.
@@ -22,8 +27,11 @@ export class GroupDataSource implements OnDestroy {
   state$ = this.fetchOperation.pipe(
     // switchMap does cancel the previous ongoing processing if a new one comes
     // on new fetch operation to be done: set "fetching" state and fetch the data which will result in a ready or error state
-    switchMap(route => this.getGroupByIdService.get(route.id).pipe(
-      map(group => ({ route, group })),
+    switchMap(route => forkJoin({
+      group: this.getGroupByIdService.get(route.id),
+      breadcrumbs: this.getGroupBreadcrumbsService.getBreadcrumbs(route),
+    }).pipe(
+      map(({ group, breadcrumbs }) => ({ route, group, breadcrumbs })),
       mapToFetchState({ resetter: this.refresh$ }),
     )),
     shareReplay(1),
@@ -31,6 +39,7 @@ export class GroupDataSource implements OnDestroy {
 
   constructor(
     private getGroupByIdService: GetGroupByIdService,
+    private getGroupBreadcrumbsService: GetGroupBreadcrumbsService
   ) {}
 
   fetchGroup(route: GroupRoute): void {
