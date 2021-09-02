@@ -1,4 +1,5 @@
 import { ParamMap } from '@angular/router';
+import { isNotUndefined } from '../helpers/null-undefined-predicates';
 import { UrlCommand } from '../helpers/url';
 import { ContentRoute, pathAsParameter, pathFromRouterParameters } from './content-route';
 
@@ -23,14 +24,27 @@ export function rawGroupRoute(id: GroupId): RawGroupRoute {
   return { contentType: 'group', id };
 }
 
+export type UserPage = 'personal-data';
+export type GroupPage = 'edit' | 'details';
+
 /**
  * Return a url array (`commands` array) to the given group, on the given page.
  */
-export function urlArrayForGroupRoute(route: RawGroupRoute, options?: { isUser?: boolean, page?: 'edit' | 'details' }): UrlCommand {
+export function urlArrayForGroupRoute(
+  route: RawGroupRoute,
+  { isUser, page }: { isUser?: boolean, page?: GroupPage | UserPage } = {},
+): UrlCommand {
   const path = route.path ? pathAsParameter(route.path) : {};
-  return options?.isUser
-    ? [ '/', 'groups', 'users', route.id, path ]
-    : [ '/', 'groups', 'by-id', route.id, path, options?.page ?? 'details' ];
+  return isUser
+    ? [ '/', 'groups', 'users', route.id, path, page && isUserPage(page) ? page : undefined ].filter(isNotUndefined)
+    : [ '/', 'groups', 'by-id', route.id, path, page && isGroupPage(page) ? page : 'details' ];
+}
+
+function isUserPage(page: string): page is UserPage {
+  return [ 'personal-data' ].includes(page);
+}
+function isGroupPage(page: string): page is GroupPage {
+  return [ 'edit', 'details' ].includes(page);
 }
 
 export function decodeGroupRouterParameters(params: ParamMap): { id: string | null; path: string | null } {

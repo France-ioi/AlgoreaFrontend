@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { NavigationExtras, Router, UrlTree } from '@angular/router';
 import { UrlCommand } from '../helpers/url';
-import { RawGroupRoute, urlArrayForGroupRoute } from './group-route';
+import { GroupPage, RawGroupRoute, urlArrayForGroupRoute, UserPage } from './group-route';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +16,10 @@ export class GroupRouter {
    * Navigate to given group, on the path page.
    * If page is not given and we are currently on a group page, use the same page. Otherwise, default to 'details'.
    */
-  navigateTo(route: RawGroupRoute, options?: { page?: 'edit'|'details'; isUser?: boolean; navExtras?: NavigationExtras }): void {
+  navigateTo(
+    route: RawGroupRoute,
+    options?: { page?: GroupPage | UserPage; isUser?: boolean; navExtras?: NavigationExtras },
+  ): void {
     void this.router.navigateByUrl(this.url(route, options?.page, options?.isUser), options?.navExtras);
   }
 
@@ -34,7 +37,7 @@ export class GroupRouter {
    * Return a url to the given group, on the `path` page.
    * If page is not given and we are currently on a group page, use the same page. Otherwise, default to 'details'.
    */
-  url(route: RawGroupRoute, page?: 'edit'|'details', isUser?: boolean): UrlTree {
+  url(route: RawGroupRoute, page?: GroupPage | UserPage, isUser?: boolean): UrlTree {
     return this.router.createUrlTree(this.urlArray(route, page, isUser));
   }
 
@@ -42,7 +45,7 @@ export class GroupRouter {
    * Return a url array (`commands` array) to the given group, on the `path` page.
    * If page is not given and we are currently on a group page, use the same page. Otherwise, default to 'details'.
    */
-  urlArray(route: RawGroupRoute, page?: 'edit'|'details', isUser?: boolean): UrlCommand {
+  urlArray(route: RawGroupRoute, page?: GroupPage | UserPage, isUser?: boolean): UrlCommand {
     return urlArrayForGroupRoute(route, { page: page ?? this.currentGroupSubPage(), isUser });
   }
 
@@ -51,7 +54,7 @@ export class GroupRouter {
    * Extract (bit hacky) the group sub-page of the current page.
    * Return undefined if we are not on a "group" page
    */
-  private currentGroupSubPage(): 'edit'|'details'|undefined {
+  private currentGroupSubPage(): GroupPage | UserPage | undefined {
     const subpagePart = this.currentGroupPagePath()?.slice(3);
     if (!subpagePart || subpagePart.length === 0) return undefined;
     const page = subpagePart[0];
