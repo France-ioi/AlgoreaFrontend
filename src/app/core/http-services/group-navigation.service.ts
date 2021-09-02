@@ -25,20 +25,20 @@ const groupNavigationDecoder = D.struct({
 
 export type GroupNavigation = D.TypeOf<typeof groupNavigationDecoder>;
 
-interface RawRootGroups {
-  id: string,
-  name: string,
-  type: 'Class' | 'Team' | 'Club' | 'Friends' | 'Other' | 'User' | 'Session' | 'Base',
-  current_user_managership: 'none' | 'direct' | 'ancestor' | 'descendant',
-  current_user_membership: 'none' | 'direct' | 'descendant',
-}
-
 type BaseGroupData = Pick<GroupNavigation, 'id' | 'name' | 'type'>;
 type WithNavigationData<T extends BaseGroupData> = Omit<T, 'name'> & {
   title: BaseGroupData['name'];
   hasChildren: boolean;
   locked: boolean;
 };
+function withNavData<T extends BaseGroupData>({ name, ...groupData }: T & { children?: unknown[] }): WithNavigationData<T> {
+  return {
+    ...groupData,
+    title: name,
+    hasChildren: groupData.children ? groupData.children.length > 0 : groupData.type !== 'User', // maybe should be fetched from backend
+    locked: false,
+  };
+}
 
 type GroupNavigationParent = Omit<GroupNavigation, 'children'>;
 
@@ -50,12 +50,6 @@ export interface NavMenuRootGroup {
   parent: NavMenuParentGroup,
   groups: NavMenuChildGroup[],
 }
-
-export interface NavMenuRootGroupWithoutParent {
-  groups: NavMenuChildGroup[],
-}
-
-
 
 
 @Injectable({
@@ -74,39 +68,17 @@ export class GroupNavigationService {
   getNavData(groupId: string): Observable<NavMenuRootGroup> {
     return this.getGroupNavigation(groupId).pipe(
       map(data => ({
-        parent: {
-          id: data.id,
-          title: data.name,
-          type: data.type,
-          hasChildren: data.children.length > 0,
-          locked: false,
-        },
-        groups: data.children.map(({ name, ...child }) => ({
-          ...child,
-          title: name,
-          hasChildren: child.type !== 'User', // maybe should be fetched from backend
-          locked: false,
-        })),
-      }))
+        parent: withNavData(data),
+        groups: data.children.map(withNavData),
+      })),
     );
   }
 
-  getRoot(): Observable<NavMenuRootGroupWithoutParent> {
-    return this.http
-      .get<RawRootGroups[]>(`${appConfig.apiUrl}/groups/roots`)
-      .pipe(
-        map(g => ({
-          groups: g.map(group => ({
-            id: group.id,
-            title: group.name,
-            type: group.type,
-            currentUserManagership: group.current_user_managership,
-            currentUserMembership: group.current_user_membership,
-            hasChildren: group.type !== 'User', // maybe should be fetched from backend (?)
-            locked: false,
-          }))
-        }))
-      );
+  getRoot(): Observable<NavMenuChildGroup[]> {
+    return this.http.get<unknown>(`${appConfig.apiUrl}/groups/roots`).pipe(
+      decodeSnakeCase(D.array(groupNavigationChildDecoder)),
+      map(groups => groups.map(withNavData)),
+    );
   }
 
 }
