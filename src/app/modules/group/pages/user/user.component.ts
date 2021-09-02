@@ -9,6 +9,7 @@ import { CurrentContentService } from '../../../../shared/services/current-conte
 import { UserSessionService } from '../../../../shared/services/user-session.service';
 import { formatUser } from '../../../../shared/helpers/user';
 import { LayoutService } from '../../../../shared/services/layout.service';
+import { rawGroupRoute, urlArrayForGroupRoute } from 'src/app/shared/routing/group-route';
 
 @Component({
   selector: 'alg-user',
@@ -65,7 +66,9 @@ export class UserComponent implements OnInit, OnDestroy {
               path: [
                 {
                   title,
-                  navigateTo: this.router.createUrlTree([ 'groups', 'users', this.route.snapshot.params.id ]),
+                  navigateTo: this.router.createUrlTree(
+                    urlArrayForGroupRoute(rawGroupRoute(this.route.snapshot.params.id), { isUser: true })
+                  ),
                 },
                 {
                   title: this.router.url.includes('personal-data') ? $localize`Personal info` : $localize`Progress`,
