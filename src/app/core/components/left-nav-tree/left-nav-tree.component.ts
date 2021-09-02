@@ -6,7 +6,7 @@ import { GroupRouter } from 'src/app/shared/routing/group-router';
 import { ItemRouter } from 'src/app/shared/routing/item-router';
 import { isANavMenuItem } from '../../services/left-nav-loading/item-nav-tree-types';
 import { NavTreeData, NavTreeElement } from '../../services/left-nav-loading/nav-tree-data';
-import { Router } from '@angular/router';
+import { groupRoute } from 'src/app/shared/routing/group-route';
 
 type LeftNavTreeNode = TreeNode<{
   element: NavTreeElement,
@@ -29,7 +29,6 @@ export class LeftNavTreeComponent implements OnChanges {
   constructor(
     private itemRouter: ItemRouter,
     private groupRouter: GroupRouter,
-    private router: Router,
   ) {}
 
   ngOnChanges(_changes: SimpleChanges): void {
@@ -90,11 +89,7 @@ export class LeftNavTreeComponent implements OnChanges {
     const routeBase = { id: node.data.element.id, path: node.data.path };
     switch (this.elementType) {
       case 'group':
-        if (node.data?.element?.type === 'User') {
-          void this.router.navigate([ '/', 'groups', 'users', routeBase.id ]);
-        } else {
-          this.groupRouter.navigateTo({ ...routeBase, contentType: 'group' });
-        }
+        this.groupRouter.navigateTo(groupRoute(routeBase.id, routeBase.path), { isUser: node.data?.element?.type === 'User' });
         break;
       case 'activity':
       case 'skill': {
