@@ -22,8 +22,10 @@ export class GroupDataSource implements OnDestroy {
   state$ = this.fetchOperation.pipe(
     // switchMap does cancel the previous ongoing processing if a new one comes
     // on new fetch operation to be done: set "fetching" state and fetch the data which will result in a ready or error state
-    switchMap(route => this.getGroupByIdService.get(route.id).pipe(map(group => ({ route, group })))),
-    mapToFetchState({ resetter: this.refresh$ }),
+    switchMap(route => this.getGroupByIdService.get(route.id).pipe(
+      map(group => ({ route, group })),
+      mapToFetchState({ resetter: this.refresh$ }),
+    )),
     shareReplay(1),
   );
 
