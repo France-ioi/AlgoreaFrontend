@@ -3,6 +3,7 @@ import { MenuItem } from 'primeng/api';
 import { distinctUntilChanged, map } from 'rxjs/operators';
 import { AuthService } from 'src/app/shared/auth/auth.service';
 import { appConfig } from 'src/app/shared/helpers/config';
+import { rawGroupRoute, urlArrayForGroupRoute } from 'src/app/shared/routing/group-route';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
 
 @Component({
@@ -14,7 +15,11 @@ export class TopRightMenuComponent {
 
   readonly menuItems$ = this.sessionService.userProfile$.pipe(
     map(profile => ([
-      { label: 'Profile', icon: 'pi pi-user', routerLink: [ 'groups', 'users', profile.groupId, 'personal-data' ] },
+      {
+        label: 'Profile',
+        icon: 'pi pi-user',
+        routerLink: urlArrayForGroupRoute(rawGroupRoute(profile.groupId), { isUser: true, page: 'personal-data' }),
+      },
       ...this.getDevelopmentMenuItems(),
       { label: 'Log out', icon: 'pi pi-power-off', command: ():void => this.sessionService.logout() },
     ]))
