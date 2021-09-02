@@ -6,19 +6,21 @@ import * as D from 'io-ts/Decoder';
 import { appConfig } from 'src/app/shared/helpers/config';
 import { decodeSnakeCase } from 'src/app/shared/operators/decode';
 
+const groupNavigationChildDecoder = D.struct({
+  id: D.string,
+  name: D.string,
+  type: D.literal('Class', 'Team', 'Club', 'Friends', 'Other', 'User', 'Session', 'Base'),
+  currentUserManagership: D.literal('none', 'direct', 'ancestor', 'descendant'),
+  currentUserMembership: D.literal('none', 'direct', 'descendant'),
+});
+
+type GroupNavigationChild = D.TypeOf<typeof groupNavigationChildDecoder>;
+
 const groupNavigationDecoder = D.struct({
   id: D.string,
   name: D.string,
   type: D.literal('Class', 'Team', 'Club', 'Friends', 'Other', 'User', 'Session', 'Base'),
-  children: D.array(
-    D.struct({
-      id: D.string,
-      name: D.string,
-      type: D.literal('Class', 'Team', 'Club', 'Friends', 'Other', 'User', 'Session', 'Base'),
-      currentUserManagership: D.literal('none', 'direct', 'ancestor', 'descendant'),
-      currentUserMembership: D.literal('none', 'direct', 'descendant'),
-    }),
-  ),
+  children: D.array(groupNavigationChildDecoder),
 });
 
 export type GroupNavigation = D.TypeOf<typeof groupNavigationDecoder>;
@@ -31,39 +33,30 @@ interface RawRootGroups {
   current_user_membership: 'none' | 'direct' | 'descendant',
 }
 
-interface RawNavData {
-  id: string,
-  name: string,
-  type: 'Class' | 'Team' | 'Club' | 'Friends' | 'Other' | 'User' | 'Session' | 'Base',
-  children: {
-    id: string,
-    name: string,
-    type: 'Class' | 'Team' | 'Club' | 'Friends' | 'Other' | 'User' | 'Session' | 'Base',
-    current_user_managership: 'none' | 'direct' | 'ancestor' | 'descendant',
-    current_user_membership: 'none' | 'direct' | 'descendant',
-  }[]
-}
+type BaseGroupData = Pick<GroupNavigation, 'id' | 'name' | 'type'>;
+type WithNavigationData<T extends BaseGroupData> = Omit<T, 'name'> & {
+  title: BaseGroupData['name'];
+  hasChildren: boolean;
+  locked: boolean;
+};
 
-// exported nav menu structure
-export interface NavMenuGroup {
-  id: string,
-  title: string, // to implement NavTreeElement
-  type: 'Class' | 'Team' | 'Club' | 'Friends' | 'Other' | 'User' | 'Session' | 'Base',
-  hasChildren: boolean,
-  children?: NavMenuGroup[] // placeholder for children when fetched (may 'hasChildren' with 'children' not set)
-  currentUserManagership?: 'none' | 'direct' | 'ancestor' | 'descendant',
-  currentUserMembership?: 'none' | 'direct' | 'descendant',
-  locked: boolean,
-}
+type GroupNavigationParent = Omit<GroupNavigation, 'children'>;
+
+export type NavMenuParentGroup = WithNavigationData<GroupNavigationParent>;
+export type NavMenuChildGroup = WithNavigationData<GroupNavigationChild>;
+export type NavMenuGroup = NavMenuParentGroup | NavMenuChildGroup;
 
 export interface NavMenuRootGroup {
-  parent?: NavMenuGroup,
-  groups: NavMenuGroup[]
+  parent: NavMenuParentGroup,
+  groups: NavMenuChildGroup[],
 }
 
-export interface NavMenuRootGroupWithParent extends NavMenuRootGroup {
-  parent: NavMenuGroup,
+export interface NavMenuRootGroupWithoutParent {
+  groups: NavMenuChildGroup[],
 }
+
+
+
 
 @Injectable({
   providedIn: 'root'
@@ -78,32 +71,27 @@ export class GroupNavigationService {
     );
   }
 
-  getNavData(groupId: string): Observable<NavMenuRootGroupWithParent> {
-    return this.http
-      .get<RawNavData>(`${appConfig.apiUrl}/groups/${groupId}/navigation`)
-      .pipe(
-        map((data: RawNavData) => ({
-          parent: {
-            id: data.id,
-            title: data.name,
-            type: data.type,
-            hasChildren: data.children.length > 0,
-            locked: false,
-          },
-          groups: data.children.map(child => ({
-            id: child.id,
-            title: child.name,
-            type: child.type,
-            currentUserManagership: child.current_user_managership,
-            currentUserMembership: child.current_user_membership,
-            hasChildren: child.type !== 'User', // maybe should be fetched from backend
-            locked: false,
-          })),
-        }))
-      );
+  getNavData(groupId: string): Observable<NavMenuRootGroup> {
+    return this.getGroupNavigation(groupId).pipe(
+      map(data => ({
+        parent: {
+          id: data.id,
+          title: data.name,
+          type: data.type,
+          hasChildren: data.children.length > 0,
+          locked: false,
+        },
+        groups: data.children.map(({ name, ...child }) => ({
+          ...child,
+          title: name,
+          hasChildren: child.type !== 'User', // maybe should be fetched from backend
+          locked: false,
+        })),
+      }))
+    );
   }
 
-  getRoot(): Observable<NavMenuRootGroup> {
+  getRoot(): Observable<NavMenuRootGroupWithoutParent> {
     return this.http
       .get<RawRootGroups[]>(`${appConfig.apiUrl}/groups/roots`)
       .pipe(
