@@ -26,11 +26,11 @@ export function rawGroupRoute(id: GroupId): RawGroupRoute {
 /**
  * Return a url array (`commands` array) to the given group, on the given page.
  */
-export function urlArrayForGroupRoute(route: RawGroupRoute, page: 'edit' | 'details' = 'details', isUser = false): UrlCommand {
+export function urlArrayForGroupRoute(route: RawGroupRoute, options?: { isUser?: boolean, page?: 'edit' | 'details' }): UrlCommand {
   const path = route.path ? pathAsParameter(route.path) : {};
-  return isUser
+  return options?.isUser
     ? [ '/', 'groups', 'users', route.id, path ]
-    : [ '/', 'groups', 'by-id', route.id, path, page ];
+    : [ '/', 'groups', 'by-id', route.id, path, options?.page ?? 'details' ];
 }
 
 export function decodeGroupRouterParameters(params: ParamMap): { id: string | null; path: string | null } {

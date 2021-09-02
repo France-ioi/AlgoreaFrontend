@@ -34,17 +34,16 @@ export class GroupRouter {
    * Return a url to the given group, on the `path` page.
    * If page is not given and we are currently on a group page, use the same page. Otherwise, default to 'details'.
    */
-  url(route: RawGroupRoute, page?: 'edit'|'details'): UrlTree {
-    return this.router.createUrlTree(this.urlArray(route, page));
+  url(route: RawGroupRoute, page?: 'edit'|'details', isUser?: boolean): UrlTree {
+    return this.router.createUrlTree(this.urlArray(route, page, isUser));
   }
 
   /**
    * Return a url array (`commands` array) to the given group, on the `path` page.
    * If page is not given and we are currently on a group page, use the same page. Otherwise, default to 'details'.
    */
-  urlArray(route: RawGroupRoute, page?: 'edit'|'details'): UrlCommand {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return urlArrayForGroupRoute(route, page ?? this.currentGroupSubPage());
+  urlArray(route: RawGroupRoute, page?: 'edit'|'details', isUser?: boolean): UrlCommand {
+    return urlArrayForGroupRoute(route, { page: page ?? this.currentGroupSubPage(), isUser });
   }
 
 

@@ -10,6 +10,6 @@ import { urlArrayForGroupRoute } from '../routing/group-route';
 @Pipe({ name: 'groupLink', pure: true })
 export class GroupLinkPipe implements PipeTransform {
   transform(route: RawGroupRoute, isUser?: boolean): UrlCommand {
-    return urlArrayForGroupRoute(route, 'details', isUser);
+    return urlArrayForGroupRoute(route, { page: 'details', isUser });
   }
 }
