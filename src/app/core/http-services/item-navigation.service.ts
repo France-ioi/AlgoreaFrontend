@@ -7,7 +7,7 @@ import { isRouteWithSelfAttempt, FullItemRoute } from 'src/app/shared/routing/it
 import { appConfig } from 'src/app/shared/helpers/config';
 import { isASkill, isSkill, ItemType, ItemTypeCategory } from 'src/app/shared/helpers/item-type';
 import { decodeSnakeCase } from 'src/app/shared/operators/decode';
-import { pipe } from 'fp-ts/lib/function';
+import { pipe } from 'fp-ts/function';
 import * as D from 'io-ts/Decoder';
 import { permissionsDecoder } from 'src/app/modules/item/helpers/item-permissions';
 import { dateDecoder } from 'src/app/shared/helpers/decoders';
