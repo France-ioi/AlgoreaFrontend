@@ -23,9 +23,9 @@ const groupNavigationDecoder = D.struct({
   children: D.array(groupNavigationChildDecoder),
 });
 
-export type GroupNavigation = D.TypeOf<typeof groupNavigationDecoder>;
+export type GroupNavigationData = D.TypeOf<typeof groupNavigationDecoder>;
 
-type BaseGroupData = Pick<GroupNavigation, 'id' | 'name' | 'type'>;
+type BaseGroupData = Pick<GroupNavigationData, 'id' | 'name' | 'type'>;
 type WithNavigationData<T extends BaseGroupData> = Omit<T, 'name'> & {
   title: BaseGroupData['name'];
   hasChildren: boolean;
@@ -40,7 +40,7 @@ function withNavData<T extends BaseGroupData>({ name, ...groupData }: T & { chil
   };
 }
 
-type GroupNavigationParent = Omit<GroupNavigation, 'children'>;
+type GroupNavigationParent = Omit<GroupNavigationData, 'children'>;
 
 export type NavMenuParentGroup = WithNavigationData<GroupNavigationParent>;
 export type NavMenuChildGroup = WithNavigationData<GroupNavigationChild>;
@@ -59,7 +59,7 @@ export class GroupNavigationService {
 
   constructor(private http: HttpClient) {}
 
-  getGroupNavigation(groupId: string): Observable<GroupNavigation> {
+  getGroupNavigation(groupId: string): Observable<GroupNavigationData> {
     return this.http.get<unknown>(`${appConfig.apiUrl}/groups/${groupId}/navigation`).pipe(
       decodeSnakeCase(groupNavigationDecoder),
     );
