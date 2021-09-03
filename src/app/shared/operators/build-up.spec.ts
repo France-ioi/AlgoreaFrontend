@@ -4,7 +4,7 @@ import { delay } from 'rxjs/operators';
 import { TestScheduler } from 'rxjs/testing';
 import { buildUp } from './build-up';
 
-describe('progressiveListFromList operator', () => {
+describe('buildUp operator', () => {
 
   let testScheduler: TestScheduler;
 
