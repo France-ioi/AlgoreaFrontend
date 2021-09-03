@@ -152,6 +152,12 @@
     }
   }
 
+  &.--group-manager-list {
+    .p-datatable-tbody > tr.p-highlight > td {
+      color: $base-text-color !important;
+    }
+  }
+
   &.--grid {
     .p-datatable-thead > tr > th {
       border-top: none;
