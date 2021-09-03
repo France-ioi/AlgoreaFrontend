@@ -6,7 +6,6 @@ export interface ContentInfo {
   breadcrumbs?: ContentBreadcrumb,
   title?: string, // page title
   route?: ContentRoute,
-  details?: any
 }
 
 export interface RoutedContentInfo extends ContentInfo {

@@ -1,3 +1,4 @@
+import { ItemNavigationData } from 'src/app/core/http-services/item-navigation.service';
 import { ItemType } from '../../helpers/item-type';
 import { FullItemRoute } from '../../routing/item-route';
 import { ContentInfo, RoutedContentInfo } from './content-info';
@@ -5,7 +6,8 @@ import { ContentInfo, RoutedContentInfo } from './content-info';
 export interface ItemInfo extends RoutedContentInfo {
   type: 'item',
   route: FullItemRoute,
-  details?: ItemDetails
+  details?: ItemDetails,
+  navData?: ItemNavigationData,
 }
 
 export interface ItemDetails {
