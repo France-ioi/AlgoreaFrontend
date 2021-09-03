@@ -2,6 +2,9 @@ import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { RawGroupRoute, rawGroupRoute } from 'src/app/shared/routing/group-route';
 import { GetGroupManagersService, Manager } from '../../http-services/get-group-managers.service';
 import { GroupData } from '../../services/group-datasource.service';
+import { RemoveGroupManagerService } from '../../../../core/http-services/remove-group-manager.service';
+import { ActionFeedbackService } from '../../../../shared/services/action-feedback.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'alg-group-manager-list',
@@ -16,7 +19,15 @@ export class GroupManagerListComponent implements OnChanges {
 
   state: 'loading' | 'ready' | 'error' = 'loading';
 
-  constructor(private getGroupManagersService: GetGroupManagersService) {}
+  selection: Manager[] = [];
+  removalInProgress = false;
+
+  constructor(
+    private getGroupManagersService: GetGroupManagersService,
+    private removeGroupManagerService: RemoveGroupManagerService,
+    private actionFeedbackService: ActionFeedbackService,
+    private feedbackService: ActionFeedbackService,
+  ) {}
 
   ngOnChanges(_changes: SimpleChanges): void {
     this.reloadData();
@@ -51,5 +62,38 @@ export class GroupManagerListComponent implements OnChanges {
           this.state = 'error';
         }
       });
+  }
+
+  onSelectAll(): void {
+    if (this.selection.length === this.managers.length) {
+      this.selection = [];
+      return;
+    }
+    this.selection = this.managers;
+  }
+
+  onRemove(): void {
+    if (this.selection.length === 0 || !this.groupData) {
+      return;
+    }
+
+    const groupId = this.groupData.group.id;
+
+    this.removalInProgress = true;
+
+    forkJoin(
+      this.selection.map(manager => this.removeGroupManagerService.remove(groupId, manager.id))
+    ).subscribe({
+      next: () => {
+        this.removalInProgress = false;
+        this.feedbackService.success($localize`User(s) have been removed`);
+        this.selection = [];
+        this.reloadData();
+      },
+      error: () => {
+        this.removalInProgress = false;
+        this.actionFeedbackService.unexpectedError();
+      }
+    });
   }
 }
