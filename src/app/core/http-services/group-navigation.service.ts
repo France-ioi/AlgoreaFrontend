@@ -2,7 +2,26 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import * as D from 'io-ts/Decoder';
 import { appConfig } from 'src/app/shared/helpers/config';
+import { decodeSnakeCase } from 'src/app/shared/operators/decode';
+
+const groupNavigationDecoder = D.struct({
+  id: D.string,
+  name: D.string,
+  type: D.literal('Class', 'Team', 'Club', 'Friends', 'Other', 'User', 'Session', 'Base'),
+  children: D.array(
+    D.struct({
+      id: D.string,
+      name: D.string,
+      type: D.literal('Class', 'Team', 'Club', 'Friends', 'Other', 'User', 'Session', 'Base'),
+      currentUserManagership: D.literal('none', 'direct', 'ancestor', 'descendant'),
+      currentUserMembership: D.literal('none', 'direct', 'descendant'),
+    }),
+  ),
+});
+
+export type GroupNavigation = D.TypeOf<typeof groupNavigationDecoder>;
 
 interface RawRootGroups {
   id: string,
@@ -52,6 +71,12 @@ export interface NavMenuRootGroupWithParent extends NavMenuRootGroup {
 export class GroupNavigationService {
 
   constructor(private http: HttpClient) {}
+
+  getGroupNavigation(groupId: string): Observable<GroupNavigation> {
+    return this.http.get<unknown>(`${appConfig.apiUrl}/groups/${groupId}/navigation`).pipe(
+      decodeSnakeCase(groupNavigationDecoder),
+    );
+  }
 
   getNavData(groupId: string): Observable<NavMenuRootGroupWithParent> {
     return this.http

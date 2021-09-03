@@ -15,6 +15,7 @@ export class GroupDetailsComponent {
   state$ = this.groupDataSource.state$.pipe(mapStateData(state => ({
     group: withManagementAdditions(state.group),
     route: state.route,
+    navigation: state.navigation,
   })));
   fullFrameContent$ = this.layoutService.fullFrameContent$;
 
