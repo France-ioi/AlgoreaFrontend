@@ -1,6 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { forkJoin, ReplaySubject, Subject } from 'rxjs';
 import { map, shareReplay, switchMap } from 'rxjs/operators';
+import { GroupNavigation, GroupNavigationService } from 'src/app/core/http-services/group-navigation.service';
 import { mapToFetchState } from 'src/app/shared/operators/state';
 import { GroupRoute } from 'src/app/shared/routing/group-route';
 import { GetGroupBreadcrumbsService, GroupBreadcrumb } from '../http-services/get-group-breadcrumbs.service';
@@ -9,6 +10,7 @@ import { GetGroupByIdService, Group } from '../http-services/get-group-by-id.ser
 export interface GroupData {
   route: GroupRoute,
   group: Group,
+  navigation: GroupNavigation;
   breadcrumbs: GroupBreadcrumb[],
 }
 
@@ -30,8 +32,9 @@ export class GroupDataSource implements OnDestroy {
     switchMap(route => forkJoin({
       group: this.getGroupByIdService.get(route.id),
       breadcrumbs: this.getGroupBreadcrumbsService.getBreadcrumbs(route),
+      navigation: this.groupNavigationService.getGroupNavigation(route.id),
     }).pipe(
-      map(({ group, breadcrumbs }) => ({ route, group, breadcrumbs })),
+      map(({ group, navigation, breadcrumbs }) => ({ route, group, navigation, breadcrumbs })),
       mapToFetchState({ resetter: this.refresh$ }),
     )),
     shareReplay(1),
@@ -39,7 +42,8 @@ export class GroupDataSource implements OnDestroy {
 
   constructor(
     private getGroupByIdService: GetGroupByIdService,
-    private getGroupBreadcrumbsService: GetGroupBreadcrumbsService
+    private groupNavigationService: GroupNavigationService,
+    private getGroupBreadcrumbsService: GetGroupBreadcrumbsService,
   ) {}
 
   fetchGroup(route: GroupRoute): void {
