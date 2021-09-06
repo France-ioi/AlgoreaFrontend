@@ -10,8 +10,22 @@ import { delay, map, retryWhen, switchMap, take } from 'rxjs/operators';
 import { parseQueryString } from 'src/app/shared/helpers/url';
 import { rxBuild, RxMessagingChannel } from './rxjschannel';
 import * as D from 'io-ts/Decoder';
-import { TaskParamsValue, taskParamsKeyDefaultDecoder, TaskParamsKeyDefault, taskViewsDecoder, TaskViews, RawTaskGrade, taskGradeDecoder,
-  TaskGrade, updateDisplayParamsDecoder, UpdateDisplayParams, taskLogDecoder, TaskLog, TaskMetaData, TaskResources } from './types';
+import {
+  RawTaskGrade,
+  TaskGrade,
+  taskGradeDecoder,
+  TaskLog,
+  taskLogDecoder,
+  TaskMetaData,
+  TaskParamsKeyDefault,
+  taskParamsKeyDefaultDecoder,
+  TaskParamsValue,
+  TaskResources,
+  TaskViews,
+  taskViewsDecoder,
+  UpdateDisplayParams,
+  updateDisplayParamsDecoder,
+} from './types';
 import { decode } from 'src/app/shared/helpers/decoders';
 
 function getRandomID(): string {
