@@ -1,16 +1,11 @@
 import { build, ChannelConfiguration, MessageTransaction, MessagingChannel } from 'jschannel';
 import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
-import * as D from 'io-ts/Decoder';
-import { pipe as fppipe } from 'fp-ts/function';
-import { fold } from 'fp-ts/lib/Either';
-
 
 export interface RxMessage {
   method: string;
   params?: unknown;
   timeout?: number;
-  selector?: (...result: any[]) => unknown;
   error?: (error: any, message: string) => void;
 }
 
@@ -59,30 +54,14 @@ export class RxMessagingChannel {
   }
 
   /** Call a remote method through jschannel, return the result through an Observable */
-  call<T>(message: RxMessage, validator?: D.Decoder<unknown, T>): Observable<T> {
+  call(message: RxMessage): Observable<unknown[]> {
     // Create an Observable wrapping the inner jschannel call
-    return new Observable<T>(subscriber => {
-      const selector = message.selector
-        ? message.selector
-        : (result: any[]) : unknown => (result.length > 0 ? result[0] : undefined);
+    return new Observable<unknown[]>(subscriber => {
 
       const innerMessage = {
         ...message,
-        success: (...result: any[]): void => {
-          // Validate result before passing it, if there is a validator
-          const selectedResult = selector(result);
-          const decodedResult = validator
-            ? fppipe(
-              validator.decode(selectedResult),
-              fold(
-                error => {
-                  throw new Error(D.draw(error));
-                },
-                decoded => decoded
-              ))
-            : selectedResult as T;
-
-          subscriber.next(decodedResult);
+        success: (...results: unknown[]): void => {
+          subscriber.next(results);
           subscriber.complete();
         },
         error: (error: any, _message: string): void => subscriber.error(error)
