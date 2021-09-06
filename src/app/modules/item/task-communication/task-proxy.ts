@@ -11,7 +11,6 @@ import { parseQueryString } from 'src/app/shared/helpers/url';
 import { rxBuild, RxMessagingChannel } from './rxjschannel';
 import * as D from 'io-ts/Decoder';
 import {
-  RawTaskGrade,
   TaskGrade,
   taskGradeDecoder,
   TaskLog,
@@ -225,22 +224,18 @@ export class Task {
   }
 
   gradeAnswer(answer: string, answerToken: string): Observable<TaskGrade> {
-    function convertToTaskGrade(result: any[]) : RawTaskGrade {
-      if (result.length == 0) {
-        throw new Error('task.gradeAnswer returned no arguments');
-      }
-      const resultArray = Array.isArray(result[0]) ? result[0] : result;
-      return {
-        score: resultArray[0],
-        message: resultArray[1],
-        scoreToken: resultArray[2]
-      };
-    }
     return this.chan.call({
       method: 'task.gradeAnswer',
       params: [ answer, answerToken ],
       timeout: 40000
-    }).pipe(map(convertToTaskGrade), map(decode(taskGradeDecoder)));
+    }).pipe(
+      map(result => {
+        if (result.length === 0) throw new Error('task.gradeAnswer returned no arguments');
+        const [ score, message, scoreToken ] = (Array.isArray(result[0]) ? result[0] : result) as unknown[];
+        return { score, message, scoreToken };
+      }),
+      map(decode(taskGradeDecoder)),
+    );
   }
 
   getResources() : Observable<TaskResources> {

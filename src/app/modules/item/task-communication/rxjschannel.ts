@@ -32,11 +32,7 @@ export class RxMessagingChannel {
   }
 
   /** Bind a local method, allowing the remote task to call it */
-  bind<T>(
-    method: string,
-    observable?: (params: unknown) => Observable<T>,
-    doNotPublish?: boolean,
-  ): MessagingChannel {
+  bind<T>(method: string, observable?: (params: unknown) => Observable<T>, doNotPublish?: boolean): MessagingChannel {
     // Create a callback wrapping the observable bound
     function callback(transaction: MessageTransaction, params: unknown): void {
       if (!observable) return;
