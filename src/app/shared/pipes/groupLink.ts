@@ -4,8 +4,7 @@ import { GroupLike, isRawGroupRoute, RawGroupRoute, rawGroupRoute } from '../rou
 import { urlArrayForGroupRoute } from '../routing/group-route';
 
 /**
- * Pipe to format group links, with or without the path
- * Since a user is considered as a group of one person, user routes are formatted using this pipe too.
+ * Pipe to format group links from a group object, a user/profile object or a group route object.
  */
 @Pipe({ name: 'groupLink', pure: true })
 export class GroupLinkPipe implements PipeTransform {
