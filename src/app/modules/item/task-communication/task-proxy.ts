@@ -290,17 +290,11 @@ export class TaskListener {
   log(_data : TaskLog) : Observable<void> {
     return throwError(() => new Error('platform.log is not defined!'));
   }
-  getTaskParams(keyDefault?: TaskParamsKeyDefault) : Observable<TaskParamsValue> {
-    const key = keyDefault ? keyDefault.key : undefined;
-    const defaultValue = keyDefault ? keyDefault.defaultValue : undefined;
-    const res : {[key: string]: TaskParamsValue} = { minScore: -3, maxScore: 10, randomSeed: 0, noScore: 0, readOnly: false, options: {} };
-    if (key) {
-      if (key !== 'options' && key in res) {
-        return of(res[key]);
-      } else {
-        return of(defaultValue);
-      }
-    }
-    return of(res);
+  getTaskParams({ key, defaultValue }: TaskParamsKeyDefault = {}) : Observable<TaskParamsValue> {
+    const res: {[key: string]: TaskParamsValue} = { minScore: -3, maxScore: 10, randomSeed: 0, noScore: 0, readOnly: false, options: {} };
+    if (!key) return of(res);
+    return key !== 'options' && key in res
+      ? of(res[key])
+      : of(defaultValue);
   }
 }
