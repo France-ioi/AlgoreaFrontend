@@ -142,28 +142,28 @@ export class Task {
   /**
    * Task API functions
    */
-  load(views : Object): Observable<void> {
+  load(views: Object): Observable<unknown> {
     return this.chan.call({
       method: 'task.load',
       params: views,
     });
   }
 
-  unload() : Observable<void> {
+  unload(): Observable<unknown> {
     return this.chan.call({
       method: 'task.unload',
       timeout: 2000,
     });
   }
 
-  getHeight() : Observable<number> {
+  getHeight(): Observable<number> {
     return this.chan.call({
       method: 'task.getHeight',
       timeout: 500,
-    }, D.number);
+    }).pipe(map(([ height ]) => decode(D.number)(height)));
   }
 
-  updateToken(token : string) : Observable<void> {
+  updateToken(token: string): Observable<unknown> {
     return this.chan.call({
       method: 'task.updateToken',
       params: token,
@@ -171,7 +171,7 @@ export class Task {
     });
   }
 
-  getMetaData() : Observable<TaskMetaData> {
+  getMetaData(): Observable<TaskMetaData> {
     // TODO: validator (currently unused)
     return this.chan.call({
       method: 'task.getMetaData',
@@ -179,14 +179,14 @@ export class Task {
     });
   }
 
-  getAnswer() : Observable<string> {
+  getAnswer(): Observable<string> {
     return this.chan.call({
       method: 'task.getAnswer',
       timeout: 2000
-    }, D.string);
+    }).pipe(map(([ answer ]) => decode(D.string)(answer)));
   }
 
-  reloadAnswer(answer : string) : Observable<void> {
+  reloadAnswer(answer: string): Observable<unknown> {
     return this.chan.call({
       method: 'task.reloadAnswer',
       params: answer,
@@ -194,14 +194,14 @@ export class Task {
     });
   }
 
-  getState() : Observable<string> {
+  getState(): Observable<string> {
     return this.chan.call({
       method: 'task.getState',
       timeout: 2000
-    }, D.string);
+    }).pipe(map(([ state ]) => decode(D.string)(state)));
   }
 
-  reloadState(state : string) : Observable<void> {
+  reloadState(state: string): Observable<unknown> {
     return this.chan.call({
       method: 'task.reloadState',
       params: state,
@@ -209,14 +209,14 @@ export class Task {
     });
   }
 
-  getViews() : Observable<TaskViews> {
+  getViews(): Observable<TaskViews> {
     return this.chan.call({
       method: 'task.getViews',
       timeout: 2000
-    }, taskViewsDecoder);
+    }).pipe(map(([ taskViews ]) => decode(taskViewsDecoder)(taskViews)));
   }
 
-  showViewsInTask(views : Object) : Observable<void> {
+  showViewsInTask(views: Object): Observable<unknown> {
     return this.chan.call({
       method: 'task.showViews',
       params: views,
@@ -224,7 +224,7 @@ export class Task {
     });
   }
 
-  gradeAnswer(answer : string, answerToken : string) : Observable<TaskGrade> {
+  gradeAnswer(answer: string, answerToken: string): Observable<TaskGrade> {
     function convertToTaskGrade(result: any[]) : RawTaskGrade {
       if (result.length == 0) {
         throw new Error('task.gradeAnswer returned no arguments');
@@ -239,9 +239,8 @@ export class Task {
     return this.chan.call({
       method: 'task.gradeAnswer',
       params: [ answer, answerToken ],
-      selector: convertToTaskGrade,
       timeout: 40000
-    }, taskGradeDecoder);
+    }).pipe(map(convertToTaskGrade), map(decode(taskGradeDecoder)));
   }
 
   getResources() : Observable<TaskResources> {

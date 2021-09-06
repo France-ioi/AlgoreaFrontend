@@ -66,5 +66,5 @@ export const taskLogDecoder = D.array(D.string);
 export type TaskLog = D.TypeOf<typeof taskLogDecoder>;
 
 // Currently unused
-export type TaskMetaData = any;
-export type TaskResources = any;
+export type TaskMetaData = unknown;
+export type TaskResources = unknown;
