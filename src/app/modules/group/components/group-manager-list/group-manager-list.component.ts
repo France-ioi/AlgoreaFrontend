@@ -2,7 +2,7 @@ import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { RawGroupRoute, rawGroupRoute } from 'src/app/shared/routing/group-route';
 import { GetGroupManagersService, Manager } from '../../http-services/get-group-managers.service';
 import { GroupData } from '../../services/group-datasource.service';
-import { RemoveGroupManagerService } from '../../../../core/http-services/remove-group-manager.service';
+import { RemoveGroupManagerService } from '../../http-services/remove-group-manager.service';
 import { ActionFeedbackService } from '../../../../shared/services/action-feedback.service';
 import { forkJoin } from 'rxjs';
 
