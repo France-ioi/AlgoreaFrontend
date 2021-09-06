@@ -3,7 +3,6 @@ import { Observable, ReplaySubject, Subject } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { mapToFetchState } from '../../../../shared/operators/state';
 import { ActivityLog, ActivityLogService } from '../../../../shared/http-services/activity-log.service';
-import { rawGroupRoute, RawGroupRoute } from 'src/app/shared/routing/group-route';
 
 interface Column {
   field: string,
@@ -12,7 +11,7 @@ interface Column {
 
 interface Data {
   columns: Column[],
-  rowData: (ActivityLog & { route?: RawGroupRoute })[]
+  rowData: ActivityLog[]
 }
 
 @Component({
@@ -57,7 +56,7 @@ export class GroupLogViewComponent implements OnChanges, OnDestroy {
     return this.activityLogService.getAllActivityLog(groupId).pipe(
       map((data: ActivityLog[]) => ({
         columns: this.getLogColumns(),
-        rowData: data.map(log => ({ ...log, route: log.user && rawGroupRoute(log.user.id) }))
+        rowData: data
       }))
     );
   }

@@ -1,5 +1,4 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { RawGroupRoute, rawGroupRoute } from 'src/app/shared/routing/group-route';
 import { GetGroupManagersService, Manager } from '../../http-services/get-group-managers.service';
 import { GroupData } from '../../services/group-datasource.service';
 
@@ -12,7 +11,7 @@ export class GroupManagerListComponent implements OnChanges {
 
   @Input() groupData?: GroupData;
 
-  managers: (Manager & { canManageAsText: string; route: RawGroupRoute })[] = [];
+  managers: (Manager & { canManageAsText: string })[] = [];
 
   state: 'loading' | 'ready' | 'error' = 'loading';
 
@@ -43,7 +42,6 @@ export class GroupManagerListComponent implements OnChanges {
           this.managers = managers.map(manager => ({
             ...manager,
             canManageAsText: this.getManagerLevel(manager),
-            route: rawGroupRoute(manager.id),
           }));
           this.state = 'ready';
         },

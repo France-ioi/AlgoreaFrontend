@@ -45,7 +45,7 @@ export class GroupByIdComponent implements OnDestroy {
       this.groupDataSource.state$.pipe(
         readyData(),
         map(({ group, route }): GroupInfo => groupInfo({
-          route: groupRoute(group.id, route.path),
+          route,
           breadcrumbs: {
             category: GROUP_BREADCRUMB_CAT,
             path: [{ title: group.name, navigateTo: (): UrlTree => this.groupRouter.url(route, 'details') }],
@@ -96,7 +96,7 @@ export class GroupByIdComponent implements OnDestroy {
     this.getGroupPath.getGroupPath(groupId).subscribe({
       next: path => {
         this.hasRedirected = true;
-        this.groupRouter.navigateTo(groupRoute(groupId, path), { navExtras: { replaceUrl: true } });
+        this.groupRouter.navigateTo(groupRoute({ id: groupId }, path), { navExtras: { replaceUrl: true } });
       },
       error: () => {
         this.navigationError = true;

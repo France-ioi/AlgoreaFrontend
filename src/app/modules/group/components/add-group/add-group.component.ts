@@ -54,7 +54,7 @@ export class AddGroupComponent {
       next: createdId => {
         this.state = 'ready';
         this.actionFeedbackService.success($localize`Group successfully created`);
-        this.groupRouter.navigateTo(rawGroupRoute(createdId));
+        this.groupRouter.navigateTo(rawGroupRoute({ id: createdId }));
       },
       error: () => {
         this.state = 'ready';

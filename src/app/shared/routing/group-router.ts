@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { NavigationExtras, Router, UrlTree } from '@angular/router';
 import { UrlCommand } from '../helpers/url';
-import { GroupPage, RawGroupRoute, urlArrayForGroupRoute, UserPage } from './group-route';
+import { RawGroupRoute, urlArrayForGroupRoute } from './group-route';
 
 @Injectable({
   providedIn: 'root'
@@ -18,9 +18,9 @@ export class GroupRouter {
    */
   navigateTo(
     route: RawGroupRoute,
-    options?: { page?: GroupPage | UserPage; isUser?: boolean; navExtras?: NavigationExtras },
+    options?: { page?: string; navExtras?: NavigationExtras },
   ): void {
-    void this.router.navigateByUrl(this.url(route, options?.page, options?.isUser), options?.navExtras);
+    void this.router.navigateByUrl(this.url(route, options?.page), options?.navExtras);
   }
 
   /**
@@ -37,16 +37,16 @@ export class GroupRouter {
    * Return a url to the given group, on the `path` page.
    * If page is not given and we are currently on a group page, use the same page. Otherwise, default to 'details'.
    */
-  url(route: RawGroupRoute, page?: GroupPage | UserPage, isUser?: boolean): UrlTree {
-    return this.router.createUrlTree(this.urlArray(route, page, isUser));
+  url(route: RawGroupRoute, page?: string): UrlTree {
+    return this.router.createUrlTree(this.urlArray(route, page));
   }
 
   /**
    * Return a url array (`commands` array) to the given group, on the `path` page.
    * If page is not given and we are currently on a group page, use the same page. Otherwise, default to 'details'.
    */
-  urlArray(route: RawGroupRoute, page?: GroupPage | UserPage, isUser?: boolean): UrlCommand {
-    return urlArrayForGroupRoute(route, { page: page ?? this.currentGroupSubPage(), isUser });
+  urlArray(route: RawGroupRoute, page?: string): UrlCommand {
+    return urlArrayForGroupRoute(route, page ?? this.currentGroupSubPage());
   }
 
 
@@ -54,7 +54,7 @@ export class GroupRouter {
    * Extract (bit hacky) the group sub-page of the current page.
    * Return undefined if we are not on a "group" page
    */
-  private currentGroupSubPage(): GroupPage | UserPage | undefined {
+  private currentGroupSubPage(): string | undefined {
     const subpagePart = this.currentGroupPagePath()?.slice(3);
     if (!subpagePart || subpagePart.length === 0) return undefined;
     const page = subpagePart[0];

@@ -1,12 +1,13 @@
 import { ParamMap } from '@angular/router';
+import { Group } from 'src/app/modules/group/http-services/get-group-by-id.service';
+import { User } from 'src/app/modules/group/http-services/get-user.service';
 import { isNotUndefined } from '../helpers/null-undefined-predicates';
 import { UrlCommand } from '../helpers/url';
 import { ContentRoute, pathAsParameter, pathFromRouterParameters } from './content-route';
 
-type GroupId = string;
-
 export interface GroupRoute extends ContentRoute {
   contentType: 'group';
+  isUser: boolean;
 }
 export type RawGroupRoute = Omit<GroupRoute, 'path'> & Partial<Pick<ContentRoute, 'path'>>;
 
@@ -16,33 +17,47 @@ export interface GroupRouteError {
   id?: string;
 }
 
-export function groupRoute(id: GroupId, path: string[]): GroupRoute {
-  return { contentType: 'group', id: id, path };
+
+export type GroupLike =
+  | { id: Group['id'], type?: string }
+  | Pick<User, 'groupId' | 'login'>;
+
+function isUser(group: GroupLike): boolean {
+  return ('login' in group && !!group.login) || ('type' in group && group.type === 'User');
 }
 
-export function rawGroupRoute(id: GroupId): RawGroupRoute {
-  return { contentType: 'group', id };
+export function groupRoute(group: GroupLike, path: string[]): GroupRoute {
+  const groupId = 'id' in group ? group.id : group.groupId;
+  return { contentType: 'group', id: groupId, path, isUser: isUser(group) };
 }
 
-export type UserPage = 'personal-data';
-export type GroupPage = 'edit' | 'details';
+export function rawGroupRoute(group: GroupLike): RawGroupRoute {
+  const groupId = 'id' in group ? group.id : group.groupId;
+  return { contentType: 'group', id: groupId, isUser: isUser(group) };
+}
+
+export function isRawGroupRoute(route?: any): route is RawGroupRoute {
+  return typeof route === 'object' && (route as Record<string, unknown> | null)?.contentType === 'group';
+}
 
 /**
  * Return a url array (`commands` array) to the given group, on the given page.
  */
 export function urlArrayForGroupRoute(
   route: RawGroupRoute,
-  { isUser, page }: { isUser?: boolean, page?: GroupPage | UserPage } = {},
+  page?: string,
 ): UrlCommand {
   const path = route.path ? pathAsParameter(route.path) : {};
-  return isUser
+  return route.isUser
     ? [ '/', 'groups', 'users', route.id, path, page && isUserPage(page) ? page : undefined ].filter(isNotUndefined)
     : [ '/', 'groups', 'by-id', route.id, path, page && isGroupPage(page) ? page : 'details' ];
 }
 
+type UserPage = 'personal-data';
 function isUserPage(page: string): page is UserPage {
   return [ 'personal-data' ].includes(page);
 }
+type GroupPage = 'edit' | 'details';
 function isGroupPage(page: string): page is GroupPage {
   return [ 'edit', 'details' ].includes(page);
 }
@@ -60,7 +75,8 @@ export function groupRouteFromParams(params: ParamMap): GroupRoute | GroupRouteE
   if (!id || path === null) return { tag: 'error', id };
 
   const pathList = path === '' ? [] : path.split(',');
-  return groupRoute(id, pathList);
+
+  return groupRoute({ id }, pathList);
 }
 
 export function isGroupRouteError(route: GroupRoute | GroupRouteError): route is GroupRouteError {

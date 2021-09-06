@@ -9,7 +9,8 @@ import { CurrentContentService } from '../../../../shared/services/current-conte
 import { UserSessionService } from '../../../../shared/services/user-session.service';
 import { formatUser } from '../../../../shared/helpers/user';
 import { LayoutService } from '../../../../shared/services/layout.service';
-import { rawGroupRoute, urlArrayForGroupRoute } from 'src/app/shared/routing/group-route';
+import { rawGroupRoute } from 'src/app/shared/routing/group-route';
+import { GroupRouter } from 'src/app/shared/routing/group-router';
 
 @Component({
   selector: 'alg-user',
@@ -44,6 +45,7 @@ export class UserComponent implements OnInit, OnDestroy {
     private userSessionService: UserSessionService,
     private currentContent: CurrentContentService,
     private layoutService: LayoutService,
+    private groupRouter: GroupRouter,
   ) {}
 
   ngOnInit(): void {
@@ -66,9 +68,7 @@ export class UserComponent implements OnInit, OnDestroy {
               path: [
                 {
                   title,
-                  navigateTo: this.router.createUrlTree(
-                    urlArrayForGroupRoute(rawGroupRoute(this.route.snapshot.params.id), { isUser: true })
-                  ),
+                  navigateTo: this.groupRouter.url(rawGroupRoute({ id: this.route.snapshot.params.id as string, type: 'User' })),
                 },
                 {
                   title: this.router.url.includes('personal-data') ? $localize`Personal info` : $localize`Progress`,

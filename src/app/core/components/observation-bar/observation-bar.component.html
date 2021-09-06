@@ -7,7 +7,7 @@
     <ng-container *ngIf="watchedGroup.name">
       : <a
         class="modebar-link alg-link white-color hover-underline"
-        [routerLink]="watchedGroup.route | groupLink:!!watchedGroup.login">
+        [routerLink]="watchedGroup.route | groupLink">
         {{ watchedGroup.name }}
       </a>
     </ng-container>

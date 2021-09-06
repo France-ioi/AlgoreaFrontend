@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { UrlCommand } from '../helpers/url';
-import { RawGroupRoute } from '../routing/group-route';
+import { GroupLike, isRawGroupRoute, RawGroupRoute, rawGroupRoute } from '../routing/group-route';
 import { urlArrayForGroupRoute } from '../routing/group-route';
 
 /**
@@ -9,7 +9,8 @@ import { urlArrayForGroupRoute } from '../routing/group-route';
  */
 @Pipe({ name: 'groupLink', pure: true })
 export class GroupLinkPipe implements PipeTransform {
-  transform(route: RawGroupRoute, isUser?: boolean): UrlCommand {
-    return urlArrayForGroupRoute(route, { page: 'details', isUser });
+  transform(groupOrRoute: GroupLike | RawGroupRoute, page?: string): UrlCommand {
+    const route = isRawGroupRoute(groupOrRoute) ? groupOrRoute : rawGroupRoute(groupOrRoute);
+    return urlArrayForGroupRoute(route, page);
   }
 }

@@ -18,7 +18,7 @@ export class TopRightMenuComponent {
       {
         label: 'Profile',
         icon: 'pi pi-user',
-        routerLink: urlArrayForGroupRoute(rawGroupRoute(profile.groupId), { isUser: true, page: 'personal-data' }),
+        routerLink: urlArrayForGroupRoute(rawGroupRoute(profile), 'personal-data'),
       },
       ...this.getDevelopmentMenuItems(),
       { label: 'Log out', icon: 'pi pi-power-off', command: ():void => this.sessionService.logout() },
