@@ -3,15 +3,17 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ItemData } from '../../services/item-datasource.service';
 import { taskProxyFromIframe, taskUrlWithParameters, Task, } from 'src/app/modules/item/task-communication/task-proxy';
 import { BehaviorSubject, concat, forkJoin, interval, merge, Subject } from 'rxjs';
-import { distinctUntilChanged, map, mapTo, startWith, switchMap, take } from 'rxjs/operators';
+import { distinctUntilChanged, filter, map, mapTo, startWith, switchMap, take } from 'rxjs/operators';
 import { UpdateDisplayParams } from '../../task-communication/types';
 import { errorState, fetchingState, FetchState, readyState } from 'src/app/shared/helpers/state';
 import { readyData } from 'src/app/shared/operators/state';
 import { SECONDS } from 'src/app/shared/helpers/duration';
 import { appConfig } from 'src/app/shared/helpers/config';
 import { ItemTaskPlatform } from './task-platform';
+import { isNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
 
 const initialHeight = 1200;
+const heightSyncInterval = 0.2*SECONDS;
 const answerAndStateSaveInterval = 1*SECONDS;
 
 interface TaskTab {
@@ -40,9 +42,9 @@ export class ItemDisplayComponent implements OnInit, AfterViewInit, OnChanges, O
   private taskDisplay$ = new Subject<UpdateDisplayParams>();
   // Start updating the iframe height to match the task's height
   iframeHeight$ = merge(
-    this.task$.pipe(switchMap(task => task.getHeight())),
-    this.taskDisplay$.pipe(map(({ height }) => height))
-  ).pipe(startWith(initialHeight));
+    this.task$.pipe(switchMap(task => interval(heightSyncInterval).pipe(switchMap(() => task.getHeight())))),
+    this.taskDisplay$.pipe(map(({ height }) => height), filter(isNotUndefined)),
+  ).pipe(startWith(initialHeight), map(height => height + 40));
 
   // Automatically save the answer and state
   private saveAnswerAndState$ = this.state$.pipe(
