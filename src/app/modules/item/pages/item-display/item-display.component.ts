@@ -1,14 +1,15 @@
 import { AfterViewInit, Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ItemData } from '../../services/item-datasource.service';
-import { taskProxyFromIframe, taskUrlWithParameters, TaskListener, Task, } from 'src/app/modules/item/task-communication/task-proxy';
-import { BehaviorSubject, concat, EMPTY, forkJoin, interval, Observable, of, Subscription } from 'rxjs';
+import { taskProxyFromIframe, taskUrlWithParameters, Task, } from 'src/app/modules/item/task-communication/task-proxy';
+import { BehaviorSubject, concat, forkJoin, interval, Observable, of, Subject, Subscription } from 'rxjs';
 import { distinctUntilChanged, map, mapTo, switchMap, take, tap } from 'rxjs/operators';
-import { TaskParamsKeyDefault, TaskParamsValue } from '../../task-communication/types';
+import { UpdateDisplayParams } from '../../task-communication/types';
 import { errorState, fetchingState, FetchState, readyState } from 'src/app/shared/helpers/state';
 import { readyData } from 'src/app/shared/operators/state';
 import { SECONDS } from 'src/app/shared/helpers/duration';
-import { appConfig } from 'src/app/shared/helpers/config'
+import { appConfig } from 'src/app/shared/helpers/config';
+import { ItemTaskPlatform } from './task-platform';
 
 const initialHeight = 400;
 const heightSyncInterval = 0.2*SECONDS;
@@ -23,11 +24,13 @@ interface TaskTab {
   templateUrl: './item-display.component.html',
   styleUrls: [ './item-display.component.scss' ]
 })
-export class ItemDisplayComponent extends TaskListener implements OnInit, AfterViewInit, OnChanges, OnDestroy {
+export class ItemDisplayComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
   @Input() itemData?: ItemData;
   @ViewChild('iframe') iframe?: ElementRef<HTMLIFrameElement>;
 
   state$ = new BehaviorSubject<FetchState<Task>>(fetchingState());
+  task$ = this.state$.pipe(readyData());
+  display$ = new Subject<UpdateDisplayParams>();
 
   // Tabs displayed above the task
   // TODO get views from the task and make actual tabs
@@ -38,14 +41,14 @@ export class ItemDisplayComponent extends TaskListener implements OnInit, AfterV
   url?: SafeResourceUrl; // used by the iframe to load the task, set at view init
   height$ = concat(of(initialHeight), this.syncedHeight());
 
+  private platform = new ItemTaskPlatform(this.task$, this.display$);
+
   private subscriptions = [
     this.registerTaskViewLoading(),
     this.registerRecurringAnswerAndStateSave()
   ];
 
-  constructor(private sanitizer: DomSanitizer) {
-    super();
-  }
+  constructor(private sanitizer: DomSanitizer) {}
 
   // Lifecycle functions
   ngOnInit(): void {
@@ -89,7 +92,7 @@ export class ItemDisplayComponent extends TaskListener implements OnInit, AfterV
     taskProxyFromIframe(iframe).pipe(
       switchMap(task => {
         // Got task proxy from the iframe, ask task to load
-        task.bindPlatform(this);
+        task.bindPlatform(this.platform);
         const initialViews = { task: true, solution: true, editor: true, hints: true, grader: true, metadata: true };
         return task.load(initialViews).pipe(mapTo(task));
       })
@@ -151,31 +154,5 @@ export class ItemDisplayComponent extends TaskListener implements OnInit, AfterV
 
   setActiveTab(tab: TaskTab): void {
     this.activeTab = tab;
-  }
-
-  // *** TaskListener Implementation ***
-  validate(mode: string): Observable<void> {
-    if (mode == 'cancel') {
-      // TODO reload answer
-      return EMPTY;
-    }
-
-    if (mode == 'validate') {
-      return this.state$.pipe( // so that switchMap interrupts request if state changes
-        switchMap(state => (state.isReady ? state.data.getAnswer().pipe(map(answer => ({ task: state.data, answer }))) : EMPTY)),
-        switchMap(({ task, answer }) => task.gradeAnswer(answer, '')),
-        switchMap((_results: any) =>
-          // TODO Do something with the results
-          EMPTY
-        )
-      );
-    }
-    // Other unimplemented modes
-    return EMPTY;
-  }
-
-  getTaskParams(_keyDefault?: TaskParamsKeyDefault): Observable<TaskParamsValue> {
-    const taskParams = { minScore: -3, maxScore: 10, randomSeed: 0, noScore: 0, readOnly: false, options: {} };
-    return of(taskParams);
   }
 }
