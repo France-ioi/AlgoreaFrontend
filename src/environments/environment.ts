@@ -19,6 +19,8 @@ export const environment: Environment = {
   ],
   allowForcedToken: true,
   authType: 'tokens',
+
+  itemPlatformId: 'http://algorea.pem.dev',
 };
 
 /*

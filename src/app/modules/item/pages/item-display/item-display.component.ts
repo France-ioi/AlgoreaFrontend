@@ -8,6 +8,7 @@ import { TaskParamsKeyDefault, TaskParamsValue } from '../../task-communication/
 import { errorState, fetchingState, FetchState, readyState } from 'src/app/shared/helpers/state';
 import { readyData } from 'src/app/shared/operators/state';
 import { SECONDS } from 'src/app/shared/helpers/duration';
+import { appConfig } from 'src/app/shared/helpers/config';
 
 const initialHeight = 400;
 const heightSyncInterval = 0.2*SECONDS;
@@ -60,8 +61,7 @@ export class ItemDisplayComponent extends TaskListener implements OnInit, AfterV
     // TODO get sToken
     const taskToken = '';
     // TODO get platformId from configuration
-    const platformId = 'http://algorea.pem.dev';
-    const urlWithParams = taskUrlWithParameters(rawUrl, taskToken, platformId, 'task-');
+    const urlWithParams = taskUrlWithParameters(rawUrl, taskToken, appConfig.itemPlatformId, 'task-');
     this.url = this.sanitizer.bypassSecurityTrustResourceUrl(urlWithParams);
   }
 
