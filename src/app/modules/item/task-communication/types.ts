@@ -48,9 +48,11 @@ export interface RawTaskGrade {
 export const taskGradeDecoder = D.partial({
   score: D.number,
   message: D.string,
-  scoreToken: D.string,
+  scoreToken: D.nullable(D.string),
 });
 export type TaskGrade = D.TypeOf<typeof taskGradeDecoder>;
+export type TaskScore = NonNullable<TaskGrade['score']>;
+export type TaskScoreToken = NonNullable<TaskGrade['scoreToken']>;
 
 
 // Parameters sent by the task to platform.updateDisplay

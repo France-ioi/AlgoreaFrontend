@@ -36,7 +36,7 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
   activeTab: TaskTab = { name: 'Task' };
   tabs: TaskTab[] = [ this.activeTab ];
 
-  iframeSrc$ = this.taskPlatform.iframeSrc$;
+  iframeSrc$ = this.taskService.iframeSrc$;
 
   // Start updating the iframe height to match the task's height
   iframeHeight$ = merge(
