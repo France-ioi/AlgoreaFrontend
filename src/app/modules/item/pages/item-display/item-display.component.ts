@@ -76,7 +76,7 @@ export class ItemDisplayComponent implements OnInit, AfterViewInit, OnChanges, O
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.itemData) throw new Error('This component does not support change of its itemData input');
+    if (changes.itemData && !changes.itemData.firstChange) throw new Error('This component does not support change of its itemData input');
   }
 
   ngOnDestroy(): void {
