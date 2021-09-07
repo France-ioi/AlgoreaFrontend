@@ -12,23 +12,21 @@ export interface RxMessage {
 /** Build a RxMessagingChannel, which is a jschannel with rxjs calls */
 export function rxBuild(config: Omit<ChannelConfiguration, 'onReady'>): Observable<RxMessagingChannel> {
   return new Observable<RxMessagingChannel>(subscriber => {
-    let chan : RxMessagingChannel | null = null;
-    const innerConfig = {
-      onReady: () : void => {
-        subscriber.next(chan as RxMessagingChannel);
+    const channel = new RxMessagingChannel(build({
+      ...config,
+      onReady: (): void => {
+        subscriber.next(channel);
         subscriber.complete();
       },
-      ...config
-    };
-    chan = new RxMessagingChannel(build(innerConfig));
+    }));
   });
 }
 
 export class RxMessagingChannel {
-  constructor(public innerChan: MessagingChannel) {}
+  constructor(private channel: MessagingChannel) {}
 
   unbind(method: string, doNotPublish?: boolean): boolean {
-    return this.innerChan.unbind(method, doNotPublish);
+    return this.channel.unbind(method, doNotPublish);
   }
 
   /** Bind a local method, allowing the remote task to call it */
@@ -46,7 +44,7 @@ export class RxMessagingChannel {
         });
       transaction.delayReturn(true);
     }
-    return this.innerChan.bind(method, callback, doNotPublish);
+    return this.channel.bind(method, callback, doNotPublish);
   }
 
   /** Call a remote method through jschannel, return the result through an Observable */
@@ -62,15 +60,15 @@ export class RxMessagingChannel {
         },
         error: (error: any, _message: string): void => subscriber.error(error)
       };
-      this.innerChan.call(innerMessage);
+      this.channel.call(innerMessage);
     });
   }
 
   notify(message: RxMessage): void {
-    this.innerChan.notify(message);
+    this.channel.notify(message);
   }
 
   destroy(): void{
-    this.innerChan.destroy();
+    this.channel.destroy();
   }
 }
