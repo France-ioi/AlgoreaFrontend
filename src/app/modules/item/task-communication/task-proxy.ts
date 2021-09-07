@@ -9,31 +9,23 @@ import { Observable, of, throwError } from 'rxjs';
 import { delay, map, retryWhen, switchMap, take } from 'rxjs/operators';
 import { parseQueryString } from 'src/app/shared/helpers/url';
 import { rxBuild, RxMessagingChannel } from './rxjschannel';
-
-export interface TaskParams {
-  minScore: number,
-  maxScore: number,
-  noScore: number,
-  randomSeed: number,
-  readOnly: boolean,
-  options: Object,
-}
-export type TaskParamsValue = TaskParams | Object | string | number | undefined;
-
-export interface UpdateDisplayParams {
-  height?: number | string,
-  views?: Object,
-  scrollTop?: number,
-}
-
-// TODO : actual types
-export type TaskMetaData = any;
-export type TaskView = any;
-export type TaskViews = any;
-export type TaskGrade = any;
-export type TaskResources = any;
-export type TaskDisplayData = any;
-export type TaskLog = any;
+import * as D from 'io-ts/Decoder';
+import {
+  TaskGrade,
+  taskGradeDecoder,
+  TaskLog,
+  taskLogDecoder,
+  TaskMetaData,
+  TaskParamsKeyDefault,
+  taskParamsKeyDefaultDecoder,
+  TaskParamsValue,
+  TaskResources,
+  TaskViews,
+  taskViewsDecoder,
+  UpdateDisplayParams,
+  updateDisplayParamsDecoder,
+} from './types';
+import { decode } from 'src/app/shared/helpers/decoders';
 
 function getRandomID(): string {
   const low = Math.floor(Math.random() * 922337203).toString();
@@ -99,49 +91,78 @@ export class Task {
     this.chan.destroy();
   }
 
-  bindPlatform(platform : TaskListener): void {
-    if (this.platformSet) {
-      throw new Error('Task already has a platform set');
-    }
-    this.chan.bind('platform.validate', (mode: string) => platform.validate(mode));
-    this.chan.bind('platform.getTaskParams', (keyDefault? : [string, TaskParamsValue]) => platform.getTaskParams(keyDefault));
-    this.chan.bind('platform.showView', (view : TaskView) => platform.viewsShownByTask(view));
-    this.chan.bind('platform.askHint', (hintToken : string) => platform.askHint(hintToken));
-    this.chan.bind('platform.updateDisplay', (data : TaskDisplayData) => platform.updateDisplay(data));
-    this.chan.bind('platform.openUrl', (url : string) => platform.openUrl(url));
-    this.chan.bind('platform.log', (data : TaskLog) => platform.log(data));
+  bindPlatform(platform: TaskPlatform): void {
+    if (this.platformSet) throw new Error('Task already has a platform set');
+
+    this.chan.bind(
+      'platform.validate',
+      mode => platform.validate(decode(D.string)(mode)),
+    );
+
+    this.chan.bind(
+      'platform.getTaskParams',
+      params => {
+        const [ key, defaultValue ] = (Array.isArray(params) ? params : []) as unknown[];
+        return platform.getTaskParams(decode(taskParamsKeyDefaultDecoder)({
+          key: key ?? undefined,
+          defaultValue: defaultValue ?? undefined,
+        }));
+      }
+    );
+    this.chan.bind(
+      'platform.showView',
+      view => platform.viewsShownByTask(decode(D.string)(view)),
+    );
+    this.chan.bind(
+      'platform.askHint',
+      hintToken => platform.askHint(decode(D.string)(hintToken)),
+    );
+    this.chan.bind(
+      'platform.updateDisplay',
+      data => platform.updateDisplay(decode(updateDisplayParamsDecoder)(data)),
+    );
+    this.chan.bind(
+      'platform.openUrl',
+      url => platform.openUrl(decode(D.string)(url)),
+    );
+    this.chan.bind(
+      'platform.log',
+      data => platform.log(decode(taskLogDecoder)(data)),
+    );
 
     // Legacy calls
-    this.chan.bind('platform.updateHeight', (height : number) => platform.updateDisplay({ height: height }));
+    this.chan.bind(
+      'platform.updateHeight',
+      height => platform.updateDisplay({ height: decode(D.number)(height) }),
+    );
     this.platformSet = true;
   }
 
   /**
    * Task API functions
    */
-  load(views : Object): Observable<void> {
+  load(views: Object): Observable<unknown> {
     return this.chan.call({
       method: 'task.load',
       params: views,
     });
   }
 
-  unload() : Observable<void> {
+  unload(): Observable<unknown> {
     return this.chan.call({
       method: 'task.unload',
       timeout: 2000,
     });
   }
 
-  getHeight() : Observable<number> {
-    // TODO: validator
+  getHeight(): Observable<number> {
     return this.chan.call({
       method: 'task.getHeight',
       timeout: 500,
-    });
+    }).pipe(map(([ height ]) => decode(D.number)(height)));
   }
 
-  updateToken(token : string) : Observable<void> {
+  updateToken(token: string): Observable<unknown> {
     return this.chan.call({
       method: 'task.updateToken',
       params: token,
@@ -149,23 +170,22 @@ export class Task {
     });
   }
 
-  getMetaData() : Observable<TaskMetaData> {
-    // TODO: validator
+  getMetaData(): Observable<TaskMetaData> {
+    // TODO: validator (currently unused)
     return this.chan.call({
       method: 'task.getMetaData',
       timeout: 2000
     });
   }
 
-  getAnswer() : Observable<string> {
-    // TODO: validator
+  getAnswer(): Observable<string> {
     return this.chan.call({
       method: 'task.getAnswer',
       timeout: 2000
-    });
+    }).pipe(map(([ answer ]) => decode(D.string)(answer)));
   }
 
-  reloadAnswer(answer : string) : Observable<void> {
+  reloadAnswer(answer: string): Observable<unknown> {
     return this.chan.call({
       method: 'task.reloadAnswer',
       params: answer,
@@ -173,15 +193,14 @@ export class Task {
     });
   }
 
-  getState() : Observable<string> {
-    // TODO: validator
+  getState(): Observable<string> {
     return this.chan.call({
       method: 'task.getState',
       timeout: 2000
-    });
+    }).pipe(map(([ state ]) => decode(D.string)(state)));
   }
 
-  reloadState(state : string) : Observable<void> {
+  reloadState(state: string): Observable<unknown> {
     return this.chan.call({
       method: 'task.reloadState',
       params: state,
@@ -189,15 +208,14 @@ export class Task {
     });
   }
 
-  getViews() : Observable<TaskViews> {
-    // TODO: validator
+  getViews(): Observable<TaskViews> {
     return this.chan.call({
       method: 'task.getViews',
       timeout: 2000
-    });
+    }).pipe(map(([ taskViews ]) => decode(taskViewsDecoder)(taskViews)));
   }
 
-  showViewsInTask(views : Object) : Observable<void> {
+  showViewsInTask(views: Object): Observable<unknown> {
     return this.chan.call({
       method: 'task.showViews',
       params: views,
@@ -205,17 +223,23 @@ export class Task {
     });
   }
 
-  gradeAnswer(answer : string, answerToken : string) : Observable<TaskGrade> {
-    // TODO: validator
+  gradeAnswer(answer: string, answerToken: string): Observable<TaskGrade> {
     return this.chan.call({
       method: 'task.gradeAnswer',
       params: [ answer, answerToken ],
       timeout: 40000
-    });
+    }).pipe(
+      map(result => {
+        if (result.length === 0) throw new Error('task.gradeAnswer returned no arguments');
+        const [ score, message, scoreToken ] = (Array.isArray(result[0]) ? result[0] : result) as unknown[];
+        return { score, message, scoreToken };
+      }),
+      map(decode(taskGradeDecoder)),
+    );
   }
 
   getResources() : Observable<TaskResources> {
-    // TODO: validator
+    // TODO: validator (currently unused)
     return this.chan.call({
       method: 'task.getResources',
       params: [],
@@ -224,66 +248,37 @@ export class Task {
   }
 }
 
-/*
- * TaskListener object definition, created from a Task object (see below)
- * Note : this will soon be merged into item-display.
- */
-
-export class TaskListener {
-  task : Task;
-  constructor(task : Task) {
-    this.task = task;
-  }
-
-  getTask() : Task {
-    return this.task;
-  }
-
+export abstract class TaskPlatform {
   /*
    * Simple prototypes for Bebras platform API functions, to be overriden by your
    * "platform"'s specific functions (for each platform object).
    */
-
-  validate(_mode : string) : Observable<void> {
-    // TODO: validator
+  validate(_mode: string): Observable<void> {
     return throwError(() => new Error('platform.validate is not defined'));
   }
-  viewsShownByTask(_views : any) : Observable<void> {
-    // TODO: validator
+  viewsShownByTask(_views: unknown): Observable<void> {
     return throwError(() => new Error('platform.showView is not defined'));
   }
-  askHint(_platformToken : string) : Observable<void> {
-    // TODO: validator
+  askHint(_platformToken: string): Observable<void> {
     return throwError(() => new Error('platform.validate is not defined'));
   }
-  updateHeight(height : number) : Observable<void> {
-    // TODO: validator
-    return this.updateDisplay({ height: height });
+  updateHeight(height: number): Observable<void> {
+    return this.updateDisplay({ height });
   }
-  updateDisplay(_data : UpdateDisplayParams) : Observable<void> {
-    // TODO: validator
+  updateDisplay(_data: UpdateDisplayParams): Observable<void> {
     return throwError(() => new Error('platform.updateDisplay is not defined!'));
   }
-  openUrl(_url : string) : Observable<void> {
-    // TODO: validator
+  openUrl(_url: string): Observable<void> {
     return throwError(() => new Error('platform.openUrl is not defined!'));
   }
-  log(_data : TaskLog) : Observable<void> {
-    // TODO: validator
+  log(_data: TaskLog): Observable<void> {
     return throwError(() => new Error('platform.log is not defined!'));
   }
-  getTaskParams(keyDefault? : [string, TaskParamsValue]) : Observable<TaskParamsValue> {
-    // TODO: validator
-    const key = keyDefault ? keyDefault[0] : undefined;
-    const defaultValue = keyDefault ? keyDefault[1] : undefined;
-    const res : {[key: string]: TaskParamsValue} = { minScore: -3, maxScore: 10, randomSeed: 0, noScore: 0, readOnly: false, options: {} };
-    if (key) {
-      if (key !== 'options' && key in res) {
-        return of(res[key]);
-      } else {
-        return of(defaultValue);
-      }
-    }
-    return of(res);
+  getTaskParams({ key, defaultValue }: TaskParamsKeyDefault = {}): Observable<TaskParamsValue> {
+    const res: Record<string, TaskParamsValue> = { minScore: -3, maxScore: 10, randomSeed: 0, noScore: 0, readOnly: false, options: {} };
+    if (!key) return of(res);
+    return key !== 'options' && key in res
+      ? of(res[key])
+      : of(defaultValue);
   }
 }

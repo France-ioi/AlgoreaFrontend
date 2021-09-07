@@ -1,12 +1,12 @@
-<div>{{ msg }}</div>
-<div class="item-display">
+<div class="item-display" *ngIf="state$ | async as state">
   <nav *ngIf="tabs.length > 1" class="nav-tab">
     <a class="nav-tab-item" *ngFor="let tab of tabs" (click)="setActiveTab(tab)" [class.active]="activeTab === tab">
       {{tab.name}}
     </a>
   </nav>
-  <div class="iframe-container" [style.height.px]="height">
-    <iframe #iframe [src]="url"></iframe>
-    <div *ngIf="state == 'loading' ||state == 'unloading'" class="loading">Loading...</div>
+  <div *ngIf="state.isError" i18n>Unable to load the task</div>
+  <div class="iframe-container" [style.height.px]="iframeHeight$ | async" *ngIf="!state.isError">
+    <iframe #iframe [src]="iframeSrc" *ngIf="iframeSrc"></iframe>
+    <div *ngIf="state.isFetching" class="loading" i18n>Loading...</div>
   </div>
 </div>

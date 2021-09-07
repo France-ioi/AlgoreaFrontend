@@ -25,41 +25,39 @@ export function rxBuild(config: Omit<ChannelConfiguration, 'onReady'>): Observab
 }
 
 export class RxMessagingChannel {
-  innerChan: MessagingChannel;
-
-  constructor(innerChan: MessagingChannel) {
-    this.innerChan = innerChan;
-  }
+  constructor(public innerChan: MessagingChannel) {}
 
   unbind(method: string, doNotPublish?: boolean): boolean {
     return this.innerChan.unbind(method, doNotPublish);
   }
 
-  bind<T>(method: string, observable?: (params: T) => Observable<unknown>, doNotPublish?: boolean): MessagingChannel {
+  /** Bind a local method, allowing the remote task to call it */
+  bind<T>(method: string, observable?: (params: unknown) => Observable<T>, doNotPublish?: boolean): MessagingChannel {
     // Create a callback wrapping the observable bound
-    function callback(transaction: MessageTransaction, params: T): void {
-      if (!observable) {
-        return;
-      }
+    function callback(transaction: MessageTransaction, params: unknown): void {
+      if (!observable) return;
+
       const cb$ = observable(params);
       cb$
         .pipe(take(1))
         .subscribe({
           next: transaction.complete,
-          error: error => transaction.error(error, '')
+          error: error => transaction.error(error, error instanceof Error ? error.toString() : '')
         });
       transaction.delayReturn(true);
     }
     return this.innerChan.bind(method, callback, doNotPublish);
   }
 
-  call<T>(message: RxMessage, validator?: (result?: any) => T): Observable<T> {
+  /** Call a remote method through jschannel, return the result through an Observable */
+  call(message: RxMessage): Observable<unknown[]> {
     // Create an Observable wrapping the inner jschannel call
-    return new Observable<T>(subscriber => {
+    return new Observable<unknown[]>(subscriber => {
+
       const innerMessage = {
         ...message,
-        success: (result?: any): void => {
-          subscriber.next(validator ? validator(result) : result as T);
+        success: (...results: unknown[]): void => {
+          subscriber.next(results);
           subscriber.complete();
         },
         error: (error: any, _message: string): void => subscriber.error(error)
