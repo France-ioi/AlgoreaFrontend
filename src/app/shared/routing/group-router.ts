@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Router, UrlTree } from '@angular/router';
-import { GroupRoute, urlArrayForGroupRoute } from './group-route';
+import { NavigationExtras, Router, UrlTree } from '@angular/router';
+import { UrlCommand } from '../helpers/url';
+import { RawGroupRoute, urlArrayForGroupRoute } from './group-route';
 
 @Injectable({
   providedIn: 'root'
@@ -15,15 +16,15 @@ export class GroupRouter {
    * Navigate to given group, on the path page.
    * If page is not given and we are currently on a group page, use the same page. Otherwise, default to 'details'.
    */
-  navigateTo(route: GroupRoute, page?: 'edit'|'details'): void {
-    void this.router.navigateByUrl(this.url(route, page));
+  navigateTo(route: RawGroupRoute, options?: { page?: 'edit'|'details'; navExtras?: NavigationExtras }): void {
+    void this.router.navigateByUrl(this.url(route, options?.page), options?.navExtras);
   }
 
   /**
    * Navigate to the current page without path if we are on a group page.
    * If we are not on an group page, do nothing.
    */
-  navigateToIncompleteGroupOfCurrentPage(): void {
+  navigateToRawGroupOfCurrentPage(): void {
     const currentPage = this.currentGroupPagePath();
     if (currentPage) void this.router.navigate(currentPage);
   }
@@ -33,7 +34,7 @@ export class GroupRouter {
    * Return a url to the given group, on the `path` page.
    * If page is not given and we are currently on a group page, use the same page. Otherwise, default to 'details'.
    */
-  url(route: GroupRoute, page?: 'edit'|'details'): UrlTree {
+  url(route: RawGroupRoute, page?: 'edit'|'details'): UrlTree {
     return this.router.createUrlTree(this.urlArray(route, page));
   }
 
@@ -41,7 +42,7 @@ export class GroupRouter {
    * Return a url array (`commands` array) to the given group, on the `path` page.
    * If page is not given and we are currently on a group page, use the same page. Otherwise, default to 'details'.
    */
-  urlArray(route: GroupRoute, page?: 'edit'|'details'): any[] {
+  urlArray(route: RawGroupRoute, page?: 'edit'|'details'): UrlCommand {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return urlArrayForGroupRoute(route, page ?? this.currentGroupSubPage());
   }

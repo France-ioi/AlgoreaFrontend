@@ -10,7 +10,6 @@ import { GroupNoPermissionComponent } from './components/group-no-permission/gro
 import { GroupJoinByCodeComponent } from './components/group-join-by-code/group-join-by-code.component';
 
 import { GroupOverviewComponent } from './pages/group-overview/group-overview.component';
-import { GroupAdministrationComponent } from './pages/group-administration/group-administration.component';
 import { GroupSettingsComponent } from './pages/group-settings/group-settings.component';
 import { GroupCompositionComponent } from './pages/group-composition/group-composition.component';
 import { MyGroupsComponent } from './pages/my-groups/my-groups.component';
@@ -43,13 +42,16 @@ import { UserComponent } from './pages/user/user.component';
 import { UserHeaderComponent } from './components/user-header/user-header.component';
 import { GroupLogViewComponent } from './components/group-log-view/group-log-view.component';
 import { AddGroupComponent } from './components/add-group/add-group.component';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { SuggestionOfActivitiesComponent } from './components/suggestion-of-activities/suggestion-of-activities.component';
+import { GroupAccessComponent } from './pages/group-access/group-access.component';
+import { GroupManagersComponent } from './pages/group-managers/group-managers.component';
 
 @NgModule({
   declarations: [
     GroupHeaderComponent,
     GroupOverviewComponent,
     GroupCompositionComponent,
-    GroupAdministrationComponent,
     MyGroupsComponent,
     GroupDetailsComponent,
     GroupSettingsComponent,
@@ -77,6 +79,9 @@ import { AddGroupComponent } from './components/add-group/add-group.component';
     UserHeaderComponent,
     GroupLogViewComponent,
     AddGroupComponent,
+    GroupManagersComponent,
+    SuggestionOfActivitiesComponent,
+    GroupAccessComponent,
   ],
   imports: [
     CommonModule,
@@ -87,6 +92,7 @@ import { AddGroupComponent } from './components/add-group/add-group.component';
     ButtonModule,
     RippleModule,
     TooltipModule,
+    OverlayPanelModule,
   ],
   exports: [
     GroupIndicatorComponent

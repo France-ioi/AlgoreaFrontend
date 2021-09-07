@@ -1,9 +1,10 @@
 import { Component, Input } from '@angular/core';
-import { of } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, filter } from 'rxjs/operators';
 import { GetGroupByIdService } from 'src/app/modules/group/http-services/get-group-by-id.service';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
 import { ItemData } from '../../services/item-datasource.service';
+import { mapToFetchState } from '../../../../shared/operators/state';
+import { isNotUndefined } from '../../../../shared/helpers/null-undefined-predicates';
 
 @Component({
   selector: 'alg-chapter-group-progress',
@@ -14,11 +15,10 @@ export class ChapterGroupProgressComponent {
 
   @Input() itemData?: ItemData;
 
-  group$ = this.sessionService.watchedGroup$.pipe(
-    switchMap(watchedGroup => {
-      if (!watchedGroup) return of(undefined);
-      return this.getGroupByIdService.get(watchedGroup.id);
-    })
+  state$ = this.sessionService.watchedGroup$.pipe(
+    filter(isNotUndefined),
+    switchMap(watchedGroup => this.getGroupByIdService.get(watchedGroup.route.id)),
+    mapToFetchState(),
   );
 
   constructor(

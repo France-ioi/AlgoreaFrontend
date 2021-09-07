@@ -2,7 +2,7 @@
   <div class="group-header unfolded">
     <div class="user-info">
       <div class="user-name">
-        <span>{{ group?.name }}</span>
+        <span>{{ groupData?.group?.name }}</span>
       </div>
     </div>
     <alg-page-navigator
@@ -11,10 +11,17 @@
       [allowWatching]="!!groupWithManagement.currentUserCanWatchMembers"
       [isWatched]="!!(isCurrentGroupWatched$ | async)"
       [allowFullScreen]="false"
-      navigationMode="nextAndPrev"
       (edit)="onEditButtonClicked()"
-      (watch)="onStartWatchButtonClicked()"
+      (watch)="onStartWatchButtonClicked($event)"
       (stopWatch)="onStopWatchButtonClicked()"
     ></alg-page-navigator>
   </div>
 </div>
+
+<p-overlayPanel
+    #op
+    [style]="{ width: '450px' }"
+    appendTo="body"
+>
+  <alg-suggestion-of-activities *ngIf="op.overlayVisible"></alg-suggestion-of-activities>
+</p-overlayPanel>

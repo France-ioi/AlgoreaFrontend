@@ -1,0 +1,30 @@
+<ng-container *ngIf="group?.currentUserCanGrantGroupAccess; else noAccess">
+  <alg-section icon="fa fa-users" i18n-label label="Activity associated to {{ group?.name }}">
+    <ng-container *ngIf="rootActivityState$ | async as rootActivityState">
+      <div class="spinner" *ngIf="rootActivityState.isFetching">
+        <p-progressSpinner [style]="{width: '3.3333rem', height: '3.3333rem'}"></p-progressSpinner>
+      </div>
+
+      <div class="error alg-error-text" *ngIf="rootActivityState.isError" i18n>
+        Error while loading the root activity.
+      </div>
+
+      <ng-container *ngIf="rootActivityState.isReady">
+        <ng-container *ngIf="rootActivityState.data; else noActivity">
+          <div class="item">
+            <i class="icon fa fa-folder"></i>
+            <strong i18n>Root activity: {{ rootActivityState.data.string.title }}</strong>
+          </div>
+        </ng-container>
+
+        <ng-template #noActivity>
+          <div i18n>This group has no activity.</div>
+        </ng-template>
+      </ng-container>
+    </ng-container>
+  </alg-section>
+</ng-container>
+
+<ng-template #noAccess>
+  <p class="error alg-error-text" i18n>You are not allowed to manage permissions of this group.</p>
+</ng-template>

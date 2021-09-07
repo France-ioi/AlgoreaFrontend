@@ -57,6 +57,16 @@
 
   .p-treenode-children {
     padding-left: 3rem !important;
+
+    background-color: var(--nav-bg-child-color);
+
+    .node-item-content {
+      border-bottom-color: var(--nav-child-border-color) !important;
+    }
+
+    .mask-branch {
+      background-color: var(--nav-bg-child-color) !important;
+    }
   }
 
   .p-treenode-children {
@@ -80,7 +90,20 @@
   .node-tree-item
   .node-item-branch
   .bottom-branch {
-    border-left: .1rem solid var(--nav-border-color);
+    border-left: .1rem solid var(--nav-branch-border-color);
+  }
+
+  .p-tree-container
+  > p-treenode:last-child
+  > .p-treenode
+  > .p-treenode-children
+  > p-treenode:last-child
+  > .p-treenode
+  > .p-treenode-content
+  .node-tree-item
+  .node-item-branch
+  .bottom-branch {
+    border-left: none;
   }
 
   p-treenode:last-child
@@ -105,22 +128,29 @@
   .p-treenode-children .node-tree-item {
     .node-item-branch {
       .top-branch {
-        border-left: .1rem solid var(--nav-border-color);
-        border-bottom: .1rem solid var(--nav-border-color);
+        border-left: .1rem solid var(--nav-branch-border-color);
+        border-bottom: .1rem solid var(--nav-branch-border-color);
         border-right: none;
       }
 
       .bottom-branch {
-        border-left: .1rem solid var(--nav-border-color);
+        border-left: .1rem solid var(--nav-branch-border-color);
         border-right: none;
       }
     }
   }
 
   .p-treenode-children .node-tree-item.folder.expanded .node-item-branch .bottom-branch {
-    border-right: .1rem solid var(--nav-border-color);
+    border-right: .1rem solid var(--nav-branch-border-color);
   }
 
+  .p-treenode-children .node-tree-item .node-item-branch .top-branch {
+    border-right: none !important;
+  }
+
+  .p-treenode-children .node-tree-item .node-item-branch .bottom-branch {
+    border-right: none !important;
+  }
 
   .p-treenode-content {
 
@@ -128,17 +158,15 @@
 
     &:active {
       .node-tree-item .node-item-content {
-        &.unlocked {
-          border-top-left-radius: 0.5rem;
-          border-bottom-left-radius: 0.5rem;
-          background-color: rgba(white, 0.2);
-          color: white;
+        border-top-left-radius: 0.5rem;
+        border-bottom-left-radius: 0.5rem;
+        background-color: rgba(255, 255, 255, 0.2);
+        color: white;
 
-          .node-select {
-            color: #fff;
-            background-color: #f5a623;
-            border-radius: 9rem;
-          }
+        .node-select {
+          color: #fff;
+          background-color: #f5a623;
+          border-radius: 9rem;
         }
       }
     }
@@ -152,16 +180,22 @@
       position: relative;
       cursor: pointer;
 
+      &.locked {
+        .node-label-title {
+          opacity: .8;
+        }
+      }
+
       .node-item-branch {
         display: block;
-        width: 3.1667rem;
-        min-height: 4.1667rem;
+        width: 3.2rem;
+        min-height: 4.5rem;
         z-index: 10;
 
         .top-branch {
           display: block;
-          border-right: .1rem solid var(--nav-border-color);
-          min-height: 2.0833rem;
+          border-right: .1rem solid var(--nav-branch-border-color);
+          min-height: 2.25rem;
           position: relative;
 
           .mask-branch {
@@ -177,9 +211,10 @@
 
         .bottom-branch {
           display: block;
-          border-right: .1rem solid var(--nav-border-color);
-          min-height: 2.0833rem;
+          border-right: .1rem solid var(--nav-branch-border-color);
+          min-height: 2.25rem;
           position: relative;
+          z-index: 1;
 
           .mask-branch {
             display: block;
@@ -187,7 +222,7 @@
             right: -.1rem;
             width: 0.1667rem;
             top: 0;
-            height: 1.25rem;
+            height: 1.2rem;
             background-color: var(--nav-bg-color);
           }
         }
@@ -282,10 +317,6 @@
             margin-right: 1rem;
             font-size: 1.2rem;
             font-weight: 700;
-
-            &.locked {
-              color: #cacaca;
-            }
           }
 
           alg-skill-progress {

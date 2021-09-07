@@ -41,7 +41,8 @@ import { SectionParagraphComponent } from './components/section-paragrah/section
 import { MessageComponent } from './components/message/message.component';
 import { ProgressLevelComponent } from './components/progress-level/progress-level.component';
 import { FormErrorComponent } from './components/form-error/form-error.component';
-import { ItemLinkPipe } from 'src/app/shared/pipes/itemLink';
+import { RawItemLinkPipe } from 'src/app/shared/pipes/rawItemLink';
+import { GroupLinkPipe } from 'src/app/shared/pipes/groupLink';
 import { SubSectionComponent } from './components/sub-section/sub-section.component';
 import { AddContentComponent } from './components/add-content/add-content.component';
 import { FloatingSaveComponent } from './components/floating-save/floating-save.component';
@@ -78,7 +79,8 @@ import { LogActionDisplayPipe } from '../../shared/pipes/logActionDisplay';
     MessageComponent,
     ProgressLevelComponent,
     FormErrorComponent,
-    ItemLinkPipe,
+    RawItemLinkPipe,
+    GroupLinkPipe,
     UserCaptionPipe,
     LogActionDisplayPipe,
     SubSectionComponent,
@@ -142,7 +144,8 @@ import { LogActionDisplayPipe } from '../../shared/pipes/logActionDisplay';
     MessageComponent,
     ProgressLevelComponent,
     FormErrorComponent,
-    ItemLinkPipe,
+    RawItemLinkPipe,
+    GroupLinkPipe,
     UserCaptionPipe,
     LogActionDisplayPipe,
     SubSectionComponent,

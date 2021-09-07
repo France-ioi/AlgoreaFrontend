@@ -1,1 +1,7 @@
-<router-outlet></router-outlet>
+<router-outlet *ngIf="!navigationError; else error"></router-outlet>
+
+<ng-template #error>
+  <p i18n>Error while loading the item.</p>
+  <p><a [routerLink]="" (click)="reloadContent()" i18n>Retry loading it</a></p>
+</ng-template>
+

@@ -3,7 +3,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Observable, of, ReplaySubject } from 'rxjs';
 import { catchError, distinct, map, switchMap } from 'rxjs/operators';
 import { GetItemByIdService } from 'src/app/modules/item/http-services/get-item-by-id.service';
-import { incompleteItemStringUrl } from 'src/app/shared/routing/item-route';
+import { rawItemRoute, urlArrayForItemRoute } from 'src/app/shared/routing/item-route';
 import { SearchItemService } from 'src/app/modules/item/http-services/search-item.service';
 import { AddedContent } from 'src/app/modules/shared-components/components/add-content/add-content.component';
 import { ActivityType } from 'src/app/shared/helpers/item-type';
@@ -50,7 +50,7 @@ export class AssociatedActivityComponent implements ControlValueAccessor {
         this.getItemByIdService.get(id).pipe(map(item => item.string.title));
 
       return name.pipe(
-        map(name => ({ tag: 'existing-activity', id: id, name, path: incompleteItemStringUrl(id, 'activity') })),
+        map(name => ({ tag: 'existing-activity', id: id, name, path: urlArrayForItemRoute(rawItemRoute('activity', id)) })),
         catchError(err => {
           if (errorIsHTTPForbidden(err)) return of({
             tag: 'existing-activity', name: $localize`You don't have access to this activity.`, path: null

@@ -1,53 +1,48 @@
-import {AppPage} from './app.po';
-import {browser, by, logging} from 'protractor';
+import { AppPage } from './app.po';
+import { browser, ExpectedConditions, logging } from 'protractor';
+import { retry } from './helpers/retry';
 
 describe('Algorea Frontend', () => {
   let page: AppPage;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     page = new AppPage();
-    page.navigateTo();
-    page.waitForContent();
+    await page.navigateTo();
   });
 
   describe('page static elements', () => {
-    it('should shows the title', () => {
-      void expect(
-        page.getTitleElement().getText()).toEqual('ALGOREA PLATFORM');
+    it('should shows the title', async () => {
+      await page.waitForElement(page.getTitleElement());
+      await expect(page.getTitleElement().getText()).toEqual('ALGOREA PLATFORM');
     });
 
-    it('should have a working item-detail', () => {
+    it('should have a working item-detail', async () => {
+      await browser.wait(ExpectedConditions.elementToBeClickable(page.getFirstActivityElement()), 10000);
       // Check if the first item exists and is working
-      void page.getFirstActivityElement().click();
+      await retry(() => page.getFirstActivityElement().click());
 
-      void expect(page.getMainContentElement()).toBeTruthy();
-      //void expect(page.getMainContentElement().getText()).toEqual('item-details works!');
+      await page.waitForElement(page.getMainContentElement());
+      await retry(() => expect(page.getMainContentElement().getText()).toBeTruthy());
+      // await expect(page.getMainContentElement().getText()).toEqual('item-details works!');
     });
 
-    it('should have a working collapse button', () => {
+    it('should have a working collapse button', async () => {
+      await expect(page.getLeftElement().getAttribute('class')).toMatch('expanded');
+      await expect(page.getTopBarElement().getAttribute('class')).toMatch('expanded');
+      await expect(page.getRightElement().getAttribute('class')).toMatch('expanded');
 
-      void expect(page.getLeftElement().getAttribute('class')).toMatch('expanded');
-      void expect(page.getTopBarElement().getAttribute('class')).toMatch('expanded');
-      void expect(page.getRightElement().getAttribute('class')).toMatch('expanded');
+      await page.getCollapseButtonElement().click();
 
-      void page.getCollapseButtonElement().click();
-
-      void expect(page.getLeftElement().getAttribute('class')).toMatch('collapsed');
-      void expect(page.getTopBarElement().getAttribute('class')).toMatch('collapsed');
-      void expect(page.getRightElement().getAttribute('class')).toMatch('collapsed');
+      await expect(page.getLeftElement().getAttribute('class')).toMatch('collapsed');
+      await expect(page.getTopBarElement().getAttribute('class')).toMatch('collapsed');
+      await expect(page.getRightElement().getAttribute('class')).toMatch('collapsed');
     });
   });
 
   describe('activities elements', () => {
-    it('should shows the first element of the activity tree', () => {
-      void browser.waitForAngular();
-
-      void expect(
-        page
-          .getFirstActivityElement()
-          .element(by.css('.node-label-title'))
-          .getText()
-      ).toContain('Parcours officiels');
+    it('should shows the first element of the activity tree', async () => {
+      await browser.wait(ExpectedConditions.textToBePresentInElement(page.getFirstActivityLabelElement(), 'Parcours officiels'), 10000);
+      await retry(() => expect(page.getFirstActivityLabelElement().getText()).toContain('Parcours officiels'));
     });
   });
 

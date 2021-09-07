@@ -12,7 +12,11 @@ import { LayoutService } from '../../../../shared/services/layout.service';
 })
 export class GroupDetailsComponent {
 
-  state$ = this.groupDataSource.state$.pipe(mapStateData(g => withManagementAdditions(g)));
+  state$ = this.groupDataSource.state$.pipe(mapStateData(state => ({
+    group: withManagementAdditions(state.group),
+    route: state.route,
+    navigation: state.navigation,
+  })));
   fullFrameContent$ = this.layoutService.fullFrameContent$;
 
   // use of ViewChild required as these elements are shown under some conditions, so may be undefined
@@ -20,6 +24,7 @@ export class GroupDetailsComponent {
   @ViewChild('compositionTab') compositionTab?: RouterLinkActive;
   @ViewChild('adminTab') adminTab?: RouterLinkActive;
   @ViewChild('settingsTab') settingsTab?: RouterLinkActive;
+  @ViewChild('accessTab') accessTab?: RouterLinkActive;
 
   constructor(
     private groupDataSource: GroupDataSource,

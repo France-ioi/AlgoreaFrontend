@@ -39,7 +39,7 @@ export class SubSkillsComponent implements OnChanges, OnDestroy {
   }
 
   click(child: ItemChild&SubSkillAdditions): void {
-    if (!this.itemData || child.isLocked) return;
+    if (!this.itemData) return;
     const attemptId = child.result?.attemptId;
     const parentAttemptId = this.itemData.currentResult?.attemptId;
     if (!parentAttemptId) return; // unexpected: children have been loaded, so we are sure this item has an attempt

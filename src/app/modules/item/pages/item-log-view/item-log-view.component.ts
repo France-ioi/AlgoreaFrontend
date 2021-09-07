@@ -6,7 +6,7 @@ import { distinct, switchMap, map } from 'rxjs/operators';
 import { mapToFetchState } from 'src/app/shared/operators/state';
 import { ItemType } from '../../../../shared/helpers/item-type';
 import { Item } from '../../http-services/get-item-by-id.service';
-import { UserSessionService } from '../../../../shared/services/user-session.service';
+import { UserSessionService, WatchedGroup } from '../../../../shared/services/user-session.service';
 
 interface Column {
   field: string,
@@ -33,7 +33,7 @@ export class ItemLogViewComponent implements OnChanges, OnDestroy {
     this.item$.pipe(distinct()),
     this.sessionService.watchedGroup$,
   ]).pipe(
-    switchMap(([ item, watchedGroup ]) => this.getData$(item, watchedGroup?.id)),
+    switchMap(([ item, watchedGroup ]) => this.getData$(item, watchedGroup)),
     mapToFetchState({ resetter: this.refresh$ }),
   );
 
@@ -59,16 +59,16 @@ export class ItemLogViewComponent implements OnChanges, OnDestroy {
     this.refresh$.next();
   }
 
-  private getData$(item: Item, watchingGroupId?: string): Observable<Data> {
-    return this.activityLogService.getActivityLog(item.id, watchingGroupId).pipe(
+  private getData$(item: Item, watchingGroup?: WatchedGroup): Observable<Data> {
+    return this.activityLogService.getActivityLog(item.id, watchingGroup?.route.id).pipe(
       map((data: ActivityLog[]) => ({
-        columns: this.getLogColumns(item.type, watchingGroupId),
+        columns: this.getLogColumns(item.type, watchingGroup),
         rowData: data
       }))
     );
   }
 
-  private getLogColumns(type: ItemType, watchingGroupId?: string): Column[] {
+  private getLogColumns(type: ItemType, watchingGroup?: WatchedGroup): Column[] {
     const columns = [
       {
         field: 'activityType',
@@ -83,7 +83,7 @@ export class ItemLogViewComponent implements OnChanges, OnDestroy {
       {
         field: 'item.user',
         header: $localize`User`,
-        enabled: watchingGroupId && [ 'Chapter', 'Task', 'Course' ].includes(type),
+        enabled: watchingGroup && !watchingGroup.login, // only if in watching mode and watch group is not a user
       },
       {
         field: 'at',

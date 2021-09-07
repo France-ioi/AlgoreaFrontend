@@ -1,72 +1,85 @@
 <ng-container *ngIf="state$ | async as state">
 
-  <ng-container *ngIf="state.isReady && state.data as group">
-
-    <alg-group-header [group]="group" *ngIf="!(fullFrameContent$ | async)"></alg-group-header>
-
+  <ng-container *ngIf="state.data?.group as group">
+    <div *ngIf="state.isFetching" class="block-ui"></div>
+    <alg-group-header [groupData]="state.data" *ngIf="!(fullFrameContent$ | async)"></alg-group-header>
     <alg-pending-join-requests
         *ngIf="group.isCurrentUserManager && group.currentUserCanManage !== 'none'"
         [groupId]="group.id"
     ></alg-pending-join-requests>
     <alg-group-indicator
         class="group-indicator"
-        *ngIf="group?.currentUserManagership !== 'none' || group?.currentUserMembership !== 'none'"
+        *ngIf="group.currentUserManagership !== 'none' || group.currentUserMembership !== 'none'"
         [group]="group"
     >
     </alg-group-indicator>
     <!-- tabs -- if only the first tab is visible, do not show the tab bar -->
-    <div class="nav-tab" *ngIf="group.isCurrentUserManager">
-      <div
-        class="nav-tab-item"
-        [routerLink]="'./'"
-        routerLinkActive #overviewTab="routerLinkActive"
-        [routerLinkActiveOptions]="{exact: true}"
-        [class.active]="overviewTab.isActive"
-        i18n
-      >
-        Overview
+    <div [hidden]="!group.isCurrentUserManager && group.currentUserMembership === 'none' && !adminTab.isActive && !accessTab?.isActive">
+      <div class="nav-tab">
+        <a
+          class="nav-tab-item"
+          [routerLink]="'./'"
+          routerLinkActive #overviewTab="routerLinkActive"
+          [routerLinkActiveOptions]="{exact: true}"
+          [class.active]="overviewTab.isActive"
+          i18n
+        >
+          Overview
+        </a>
+        <a
+          *ngIf="group.isCurrentUserManager"
+          class="nav-tab-item"
+          [routerLink]="'./members'"
+          routerLinkActive #compositionTab="routerLinkActive"
+          [class.active]="compositionTab.isActive"
+          i18n
+        >
+          Composition
+        </a>
+        <a
+          [hidden]="!group.isCurrentUserManager && group.currentUserMembership === 'none' && !adminTab?.isActive"
+          class="nav-tab-item"
+          [routerLink]="'./managers'"
+          routerLinkActive #adminTab="routerLinkActive"
+          [class.active]="adminTab.isActive"
+          i18n
+        >
+          Managers
+        </a>
+        <a
+            [hidden]="!group.currentUserCanGrantGroupAccess && !accessTab?.isActive"
+            class="nav-tab-item"
+            [routerLink]="'./access'"
+            routerLinkActive #accessTab="routerLinkActive"
+            [class.active]="accessTab.isActive"
+            i18n
+        >
+          Access
+        </a>
+        <a
+          *ngIf="group.canCurrentUserManageGroup"
+          class="nav-tab-item"
+          [routerLink]="'./settings'"
+          routerLinkActive #settingsTab="routerLinkActive"
+          [class.active]="settingsTab.isActive"
+          i18n
+        >
+          Settings
+        </a>
       </div>
-      <a
-        class="nav-tab-item"
-        [routerLink]="'./members'"
-        routerLinkActive #compositionTab="routerLinkActive"
-        [class.active]="compositionTab.isActive"
-        i18n
-      >
-        Composition
-      </a>
-      <a
-        *ngIf="group.canCurrentUserManageGroup"
-        class="nav-tab-item"
-        [routerLink]="'./managers'"
-        routerLinkActive #adminTab="routerLinkActive"
-        [class.active]="adminTab.isActive"
-        i18n
-      >
-        Administration
-      </a>
-      <a
-        *ngIf="group.canCurrentUserManageGroup"
-        class="nav-tab-item"
-        [routerLink]="'./settings'"
-        routerLinkActive #settingsTab="routerLinkActive"
-        [class.active]="settingsTab.isActive"
-        i18n
-      >
-        Settings
-      </a>
     </div>
 
     <div class="bg-white">
-      <alg-group-overview *ngIf="!group.isCurrentUserManager || !!overviewTab?.isActive" [group]="group"></alg-group-overview>
+      <alg-group-overview *ngIf="overviewTab?.isActive || !overviewTab && !group.isCurrentUserManager && group.currentUserMembership === 'none'" [group]="group"></alg-group-overview>
       <alg-group-composition *ngIf="!!compositionTab?.isActive" [group]="group" (groupRefreshRequired)="onGroupRefreshRequired()"></alg-group-composition>
-      <alg-group-administration *ngIf="!!adminTab?.isActive" [group]="group" (groupRefreshRequired)="onGroupRefreshRequired()"></alg-group-administration>
+      <alg-group-managers *ngIf="!!adminTab?.isActive" [groupData]="state.data"></alg-group-managers>
       <alg-group-settings *ngIf="!!settingsTab?.isActive" [group]="group" (groupRefreshRequired)="onGroupRefreshRequired()"></alg-group-settings>
+      <alg-group-access *ngIf="!!accessTab?.isActive" [group]="group"></alg-group-access>
     </div>
 
   </ng-container>
 
-  <p-progressSpinner *ngIf="state.isFetching"></p-progressSpinner>
+  <p-progressSpinner *ngIf="state.isFetching && !state.data"></p-progressSpinner>
 
   <p *ngIf="state.isError" i18n>Error while loading the group info</p>
 

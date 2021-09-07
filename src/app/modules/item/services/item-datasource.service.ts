@@ -1,17 +1,17 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { BehaviorSubject, concat, EMPTY, forkJoin, Observable, of, Subject, Subscription } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { concat, EMPTY, forkJoin, Observable, of, ReplaySubject, Subject, Subscription } from 'rxjs';
+import { map, shareReplay, switchMap } from 'rxjs/operators';
 import { bestAttemptFromResults, implicitResultStart } from 'src/app/shared/helpers/attempts';
-import { isRouteWithAttempt, ItemRoute } from 'src/app/shared/routing/item-route';
-import { errorState, fetchingState, FetchState, readyState } from 'src/app/shared/helpers/state';
+import { isRouteWithSelfAttempt, FullItemRoute } from 'src/app/shared/routing/item-route';
 import { ResultActionsService } from 'src/app/shared/http-services/result-actions.service';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
 import { BreadcrumbItem, GetBreadcrumbService } from '../http-services/get-breadcrumb.service';
 import { GetItemByIdService, Item } from '../http-services/get-item-by-id.service';
 import { GetResultsService, Result } from '../http-services/get-results.service';
 import { canCurrentUserViewItemContent } from 'src/app/modules/item/helpers/item-permissions';
+import { mapToFetchState } from 'src/app/shared/operators/state';
 
-export interface ItemData { route: ItemRoute, item: Item, breadcrumbs: BreadcrumbItem[], results?: Result[], currentResult?: Result}
+export interface ItemData { route: FullItemRoute, item: Item, breadcrumbs: BreadcrumbItem[], results?: Result[], currentResult?: Result}
 
 /**
  * A datasource which allows fetching a item using a proper state and sharing it among several components.
@@ -22,11 +22,15 @@ export interface ItemData { route: ItemRoute, item: Item, breadcrumbs: Breadcrum
 @Injectable()
 export class ItemDataSource implements OnDestroy {
 
-  /* state to put outputted */
-  private state = new BehaviorSubject<FetchState<ItemData>>(fetchingState());
-  state$ = this.state.asObservable();
+  private readonly fetchOperation$ = new ReplaySubject<FullItemRoute>(1); // trigger item fetching
+  private readonly refresh$ = new Subject<void>();
 
-  private fetchOperation = new Subject<ItemRoute>(); // trigger item fetching
+  /* state to put outputted */
+  readonly state$ = this.fetchOperation$.pipe(
+    switchMap(item => this.fetchItemData(item).pipe(mapToFetchState({ resetter: this.refresh$ }))),
+    shareReplay(1),
+  );
+
   private subscription: Subscription;
 
   constructor(
@@ -36,38 +40,20 @@ export class ItemDataSource implements OnDestroy {
     private getResultsService: GetResultsService,
     private userSessionService: UserSessionService,
   ) {
-    this.fetchOperation.pipe(
-
-      // switchMap does cancel the previous ongoing processing if a new one comes
-      // on new fetch operation to be done: set "fetching" state and fetch the data which will result in a ready or error state
-      switchMap(item =>
-        concat(
-          of(fetchingState()),
-          this.fetchItemData(item).pipe(
-            map(res => readyState(res)),
-            catchError(e => of(errorState(e)))
-          )
-        )
-      ),
-
-    ).subscribe(state => this.state.next(state));
-
     this.subscription = this.userSessionService.userChanged$.subscribe(_s => this.refreshItem());
   }
 
-  fetchItem(item: ItemRoute): void {
-    this.fetchOperation.next(item);
+  fetchItem(item: FullItemRoute): void {
+    this.fetchOperation$.next(item);
   }
 
   refreshItem(): void {
-    if (this.state.value.isReady) {
-      this.fetchItem(this.state.value.data.route);
-    }
+    this.refresh$.next();
   }
 
   ngOnDestroy(): void {
-    this.state.complete();
-    this.fetchOperation.complete();
+    this.refresh$.complete();
+    this.fetchOperation$.complete();
     this.subscription.unsubscribe();
   }
 
@@ -75,7 +61,7 @@ export class ItemDataSource implements OnDestroy {
    * Observable of the item data fetching.
    * In parallel: breadcrumb and (in serial: get info and start result)
    */
-  private fetchItemData(itemRoute: ItemRoute): Observable<ItemData> {
+  private fetchItemData(itemRoute: FullItemRoute): Observable<ItemData> {
     return forkJoin([
       this.getBreadcrumbService.getBreadcrumb(itemRoute),
       this.getItemByIdService.get(itemRoute.id)
@@ -95,11 +81,11 @@ export class ItemDataSource implements OnDestroy {
     );
   }
 
-  private fetchResults(itemRoute: ItemRoute, item: Item): Observable<{ results: Result[], currentResult?: Result }> {
+  private fetchResults(itemRoute: FullItemRoute, item: Item): Observable<{ results: Result[], currentResult?: Result }> {
     return this.getResultsService.getResults(itemRoute).pipe(
       switchMap(results => {
         // 1) if attempt_id was given as arg, try to select the matching result
-        if (isRouteWithAttempt(itemRoute)) {
+        if (isRouteWithSelfAttempt(itemRoute)) {
           const currentResult = results.find(r => r.attemptId === itemRoute.attemptId);
           if (currentResult) return of({ results: results, currentResult: currentResult });
         }
@@ -109,7 +95,7 @@ export class ItemDataSource implements OnDestroy {
         // 3) if no suitable one and this item does not allow implicit result start or perms are not sufficent, continue without result
         if (!implicitResultStart(item)) return of({ results: results });
         // 4) otherwise, start a result
-        const attemptId = isRouteWithAttempt(itemRoute) ? itemRoute.attemptId : itemRoute.parentAttemptId;
+        const attemptId = isRouteWithSelfAttempt(itemRoute) ? itemRoute.attemptId : itemRoute.parentAttemptId;
         if (!attemptId) return EMPTY; // unexpected
         return this.resultActionsService.start(itemRoute.path.concat([ itemRoute.id ]), attemptId).pipe(
           // once a result has been created, fetch it

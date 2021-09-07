@@ -9,16 +9,15 @@ import { AbstractControl, FormGroup } from '@angular/forms';
 export class FormErrorComponent implements OnChanges {
   @Input() form?: FormGroup;
   @Input() inputName = '';
-
-  control?: AbstractControl;
+  @Input() control?: AbstractControl;
 
   constructor() {
   }
 
   ngOnChanges(): void {
-    const control = this.form?.get(this.inputName);
-    if (control === null) return;
-    this.control = control;
+    if (!this.control && this.form && this.inputName) {
+      this.control = this.form.get(this.inputName) ?? undefined;
+    }
   }
 
 }

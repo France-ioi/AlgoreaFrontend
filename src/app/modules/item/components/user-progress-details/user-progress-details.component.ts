@@ -25,7 +25,7 @@ export class UserProgressDetailsComponent implements OnChanges, OnDestroy, After
   private overlay$ = new ReplaySubject<{ previousTarget?: Element, nextTarget?: Element, progress?: TeamUserProgress }>(1);
 
   private overlayWithProgress$ = this.overlay$.pipe(
-    filter(({ progress }) => !!progress && (progress.validated || progress.score > 0 || progress.timeSpent > 0)),
+    filter(({ progress }) => !!progress),
   );
   private hiddenOverlayToOpen$ = this.overlayWithProgress$.pipe(
     filter(({ previousTarget, nextTarget }) => !previousTarget && !!nextTarget)

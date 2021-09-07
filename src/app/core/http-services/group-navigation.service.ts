@@ -2,7 +2,26 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import * as D from 'io-ts/Decoder';
 import { appConfig } from 'src/app/shared/helpers/config';
+import { decodeSnakeCase } from 'src/app/shared/operators/decode';
+
+const groupNavigationDecoder = D.struct({
+  id: D.string,
+  name: D.string,
+  type: D.literal('Class', 'Team', 'Club', 'Friends', 'Other', 'User', 'Session', 'Base'),
+  children: D.array(
+    D.struct({
+      id: D.string,
+      name: D.string,
+      type: D.literal('Class', 'Team', 'Club', 'Friends', 'Other', 'User', 'Session', 'Base'),
+      currentUserManagership: D.literal('none', 'direct', 'ancestor', 'descendant'),
+      currentUserMembership: D.literal('none', 'direct', 'descendant'),
+    }),
+  ),
+});
+
+export type GroupNavigation = D.TypeOf<typeof groupNavigationDecoder>;
 
 interface RawRootGroups {
   id: string,
@@ -34,6 +53,7 @@ export interface NavMenuGroup {
   children?: NavMenuGroup[] // placeholder for children when fetched (may 'hasChildren' with 'children' not set)
   currentUserManagership?: 'none' | 'direct' | 'ancestor' | 'descendant',
   currentUserMembership?: 'none' | 'direct' | 'descendant',
+  locked: boolean,
 }
 
 export interface NavMenuRootGroup {
@@ -52,6 +72,12 @@ export class GroupNavigationService {
 
   constructor(private http: HttpClient) {}
 
+  getGroupNavigation(groupId: string): Observable<GroupNavigation> {
+    return this.http.get<unknown>(`${appConfig.apiUrl}/groups/${groupId}/navigation`).pipe(
+      decodeSnakeCase(groupNavigationDecoder),
+    );
+  }
+
   getNavData(groupId: string): Observable<NavMenuRootGroupWithParent> {
     return this.http
       .get<RawNavData>(`${appConfig.apiUrl}/groups/${groupId}/navigation`)
@@ -62,6 +88,7 @@ export class GroupNavigationService {
             title: data.name,
             type: data.type,
             hasChildren: data.children.length > 0,
+            locked: false,
           },
           groups: data.children.map(child => ({
             id: child.id,
@@ -70,6 +97,7 @@ export class GroupNavigationService {
             currentUserManagership: child.current_user_managership,
             currentUserMembership: child.current_user_membership,
             hasChildren: child.type !== 'User', // maybe should be fetched from backend
+            locked: false,
           })),
         }))
       );
@@ -87,6 +115,7 @@ export class GroupNavigationService {
             currentUserManagership: group.current_user_managership,
             currentUserMembership: group.current_user_membership,
             hasChildren: group.type !== 'User', // maybe should be fetched from backend (?)
+            locked: false,
           }))
         }))
       );

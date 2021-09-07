@@ -1,12 +1,12 @@
-import { browser, by, element, ExpectedConditions } from 'protractor';
+import { browser, by, element, ElementFinder, ExpectedConditions } from 'protractor';
 
 export class AppPage {
-  navigateTo() {
-    return browser.get(browser.baseUrl) as Promise<any>;
+  async navigateTo() {
+    await browser.get(browser.baseUrl) as Promise<any>;
   }
 
-  waitForContent() {
-    browser.wait(ExpectedConditions.presenceOf(this.getFirstActivityElement()), 10000, 'Element taking too long to appear in the DOM');
+  async waitForElement(element: ElementFinder) {
+    await browser.wait(ExpectedConditions.visibilityOf(element), 10000, 'Element taking too long to appear in the DOM');
   }
 
   getTitleElement() {
@@ -20,6 +20,10 @@ export class AppPage {
 
   getFirstActivityElement() {
     return element(by.css('.p-treenode-content'));
+  }
+
+  getFirstActivityLabelElement() {
+    return this.getFirstActivityElement().element(by.css('.node-label-title'));
   }
 
   getLeftElement() {
