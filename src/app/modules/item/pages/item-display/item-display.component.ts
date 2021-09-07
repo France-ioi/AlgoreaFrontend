@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewChecked, Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ItemData } from '../../services/item-datasource.service';
 import { taskProxyFromIframe, taskUrlWithParameters, Task, } from 'src/app/modules/item/task-communication/task-proxy';
@@ -11,6 +11,7 @@ import { SECONDS } from 'src/app/shared/helpers/duration';
 import { appConfig } from 'src/app/shared/helpers/config';
 import { ItemTaskPlatform } from './task-platform';
 import { isNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
+import { GenerateTaskTokenService } from '../../http-services/generate-task-token.service';
 
 const initialHeight = 1200;
 const heightSyncInterval = 0.2*SECONDS;
@@ -25,7 +26,7 @@ interface TaskTab {
   templateUrl: './item-display.component.html',
   styleUrls: [ './item-display.component.scss' ]
 })
-export class ItemDisplayComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
+export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges, OnDestroy {
   @Input() itemData?: ItemData;
   @ViewChild('iframe') iframe?: ElementRef<HTMLIFrameElement>;
 
@@ -60,6 +61,7 @@ export class ItemDisplayComponent implements OnInit, AfterViewInit, OnChanges, O
   private showViewsInTask$ = this.taskViews$.pipe(switchMap(({ task }) => task.showViewsInTask({ task: true })));
 
   private platform = new ItemTaskPlatform(this.task$, this.taskDisplay$);
+  private loadTaskHasBeenInvoked = false;
 
   private subscriptions = [
     this.taskViews$.subscribe({
@@ -70,7 +72,10 @@ export class ItemDisplayComponent implements OnInit, AfterViewInit, OnChanges, O
     this.saveAnswerAndState$.subscribe(),
   ];
 
-  constructor(private sanitizer: DomSanitizer) {}
+  constructor(
+    private sanitizer: DomSanitizer,
+    private generateTaskTokenService: GenerateTaskTokenService,
+  ) {}
 
   // Lifecycle functions
   ngOnInit(): void {
@@ -79,17 +84,24 @@ export class ItemDisplayComponent implements OnInit, AfterViewInit, OnChanges, O
     const rawUrl = this.itemData.item.url;
     if (!rawUrl) return this.state$.next(errorState(new Error($localize`No URL defined for this task.`)));
 
-    // TODO get sToken
-    const taskToken = '';
-    // TODO get platformId from configuration
-    const urlWithParams = taskUrlWithParameters(rawUrl, taskToken, appConfig.itemPlatformId, 'task-');
-    this.iframeSrc = this.sanitizer.bypassSecurityTrustResourceUrl(urlWithParams);
+    const attemptId = this.itemData.route.attemptId || this.itemData.currentResult?.attemptId;
+    if (!attemptId) return this.state$.next(errorState(new Error($localize`No attempt found for this task.`)));
+
+    this.generateTaskTokenService.generateToken(this.itemData.item.id, attemptId).subscribe({
+      next: taskToken => {
+        const urlWithParams = taskUrlWithParameters(rawUrl, taskToken, appConfig.itemPlatformId, 'task-');
+        this.iframeSrc = this.sanitizer.bypassSecurityTrustResourceUrl(urlWithParams);
+      },
+      error: () => this.state$.next(errorState(new Error($localize`Could not create a token for this task`)))
+    });
   }
 
-  ngAfterViewInit(): void {
-    // ngAfterViewInit waits for the ViewChild to be initialized
-    if (!this.iframe) throw new Error('Expecting the iframe to exist');
+  ngAfterViewChecked(): void {
+    // Because we call a task token, the iframe won't be available at init.
+    // When it is available, load ONCE the task from the iframe.
+    if (!this.iframe || this.loadTaskHasBeenInvoked) return;
     this.loadTaskFromIframe(this.iframe.nativeElement);
+    this.loadTaskHasBeenInvoked = true;
   }
 
   ngOnChanges(changes: SimpleChanges): void {
