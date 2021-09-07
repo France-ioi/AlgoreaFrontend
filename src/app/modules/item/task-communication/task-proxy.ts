@@ -77,10 +77,9 @@ export class Task {
     this.chan.destroy();
   }
 
-  bindPlatform(platform : TaskPlatform): void {
-    if (this.platformSet) {
-      throw new Error('Task already has a platform set');
-    }
+  bindPlatform(platform: TaskPlatform): void {
+    if (this.platformSet) throw new Error('Task already has a platform set');
+
     this.chan.bind(
       'platform.validate',
       (mode: string) => platform.validate(mode),
