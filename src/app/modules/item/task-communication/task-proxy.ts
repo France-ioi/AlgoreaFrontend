@@ -7,7 +7,6 @@
 
 import { Observable, of, throwError } from 'rxjs';
 import { delay, map, retryWhen, switchMap, take } from 'rxjs/operators';
-import { parseQueryString } from 'src/app/shared/helpers/url';
 import { rxBuild, RxMessagingChannel } from './rxjschannel';
 import * as D from 'io-ts/Decoder';
 import {
@@ -34,22 +33,16 @@ function getRandomID(): string {
 }
 
 /** Get URL for a task with specific parameters */
-export function taskUrlWithParameters(taskUrl : string, token : string, platform : string, prefix = '', locale? : string) : string {
+export function taskUrlWithParameters(taskUrl: string, token: string, platform: string, prefix = '', locale?: string): string {
   const channelId = prefix + getRandomID();
-  if (taskUrl.indexOf('?') == -1) {
-    // the idea is not to change the base url even if we change token, so we put token after #
-    taskUrl = taskUrl + '?';
-  } else {
-    taskUrl = taskUrl + '&';
-  }
-  let url = taskUrl
-      + 'sToken=' + encodeURIComponent(token)
-      + '&sPlatform=' + encodeURIComponent(platform)
-      + '&channelId=' + encodeURIComponent(channelId);
-  if (locale) {
-    url += '&sLocale=' + encodeURIComponent(locale);
-  }
-  return url;
+  const url = new URL(taskUrl);
+
+  url.searchParams.set('sToken', token);
+  url.searchParams.set('sPlatform', platform);
+  url.searchParams.set('channelId', channelId);
+  if (locale) url.searchParams.set('sLocale', locale);
+
+  return url.href;
 }
 
 /** Get Task object from an iframe */
@@ -65,13 +58,11 @@ export function taskProxyFromIframe(iframe : HTMLIFrameElement): Observable<Task
     retryWhen(err => err.pipe(delay(100), take(3000))),
 
     // Get the RxMessagingChannel from the contentWindow
-    switchMap((contentWindow: Window) =>
-      rxBuild({
-        window: contentWindow,
-        origin: '*',
-        scope: parseQueryString(iframe.src).get('channelId') || '',
-      })
-    ),
+    switchMap(window => rxBuild({
+      window,
+      origin: '*',
+      scope: new URL(iframe.src).searchParams.get('channelId') || '',
+    })),
 
     // Get the Task from the channel
     map((chan: RxMessagingChannel) => new Task(chan))
