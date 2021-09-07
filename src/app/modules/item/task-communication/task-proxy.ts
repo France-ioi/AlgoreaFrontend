@@ -77,10 +77,9 @@ export class Task {
     this.chan.destroy();
   }
 
-  bindPlatform(platform : TaskListener): void {
-    if (this.platformSet) {
-      throw new Error('Task already has a platform set');
-    }
+  bindPlatform(platform: TaskPlatform): void {
+    if (this.platformSet) throw new Error('Task already has a platform set');
+
     this.chan.bind(
       'platform.validate',
       (mode: string) => platform.validate(mode),
@@ -246,52 +245,37 @@ export class Task {
   }
 }
 
-/*
- * TaskListener object definition, created from a Task object (see below)
- * Note : this will soon be merged into item-display.
- */
-
-export class TaskListener {
-  constructor() {}
-
+export abstract class TaskPlatform {
   /*
    * Simple prototypes for Bebras platform API functions, to be overriden by your
    * "platform"'s specific functions (for each platform object).
    */
-
-  validate(_mode : string) : Observable<void> {
+  validate(_mode: string): Observable<void> {
     return throwError(() => new Error('platform.validate is not defined'));
   }
-  viewsShownByTask(_views : any) : Observable<void> {
-    // TODO: validator
+  viewsShownByTask(_views: unknown): Observable<void> {
     return throwError(() => new Error('platform.showView is not defined'));
   }
-  askHint(_platformToken : string) : Observable<void> {
+  askHint(_platformToken: string): Observable<void> {
     return throwError(() => new Error('platform.validate is not defined'));
   }
-  updateHeight(height : number) : Observable<void> {
-    return this.updateDisplay({ height: height });
+  updateHeight(height: number): Observable<void> {
+    return this.updateDisplay({ height });
   }
-  updateDisplay(_data : UpdateDisplayParams) : Observable<void> {
+  updateDisplay(_data: UpdateDisplayParams): Observable<void> {
     return throwError(() => new Error('platform.updateDisplay is not defined!'));
   }
-  openUrl(_url : string) : Observable<void> {
+  openUrl(_url: string): Observable<void> {
     return throwError(() => new Error('platform.openUrl is not defined!'));
   }
-  log(_data : TaskLog) : Observable<void> {
+  log(_data: TaskLog): Observable<void> {
     return throwError(() => new Error('platform.log is not defined!'));
   }
-  getTaskParams(keyDefault?: TaskParamsKeyDefault) : Observable<TaskParamsValue> {
-    const key = keyDefault ? keyDefault.key : undefined;
-    const defaultValue = keyDefault ? keyDefault.defaultValue : undefined;
-    const res : {[key: string]: TaskParamsValue} = { minScore: -3, maxScore: 10, randomSeed: 0, noScore: 0, readOnly: false, options: {} };
-    if (key) {
-      if (key !== 'options' && key in res) {
-        return of(res[key]);
-      } else {
-        return of(defaultValue);
-      }
-    }
-    return of(res);
+  getTaskParams({ key, defaultValue }: TaskParamsKeyDefault = {}): Observable<TaskParamsValue> {
+    const res: Record<string, TaskParamsValue> = { minScore: -3, maxScore: 10, randomSeed: 0, noScore: 0, readOnly: false, options: {} };
+    if (!key) return of(res);
+    return key !== 'options' && key in res
+      ? of(res[key])
+      : of(defaultValue);
   }
 }
