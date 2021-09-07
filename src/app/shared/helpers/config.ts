@@ -25,6 +25,8 @@ export interface Environment {
   // The authType used with API is either 'tokens' or 'cookies'.
 
   authType: 'tokens' | 'cookies',
+
+  itemPlatformId: string,
 }
 
 type Config = Environment; // config may be someday an extension of the environment
