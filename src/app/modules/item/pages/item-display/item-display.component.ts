@@ -8,7 +8,7 @@ import { TaskParamsKeyDefault, TaskParamsValue } from '../../task-communication/
 import { errorState, fetchingState, FetchState, readyState } from 'src/app/shared/helpers/state';
 import { readyData } from 'src/app/shared/operators/state';
 import { SECONDS } from 'src/app/shared/helpers/duration';
-import { appConfig } from 'src/app/shared/helpers/config'
+import { appConfig } from 'src/app/shared/helpers/config';
 
 const initialHeight = 400;
 const heightSyncInterval = 0.2*SECONDS;
