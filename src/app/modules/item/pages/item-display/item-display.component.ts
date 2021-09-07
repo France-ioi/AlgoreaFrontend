@@ -7,7 +7,7 @@ import { errorState, fetchingState, FetchState, readyState } from 'src/app/share
 import { readyData } from 'src/app/shared/operators/state';
 import { SECONDS } from 'src/app/shared/helpers/duration';
 import { isNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
-import { ItemTaskPlatformService } from '../../services/task-platform.service';
+import { ItemTaskPlatformService } from '../../services/item-task-platform.service';
 import { Task } from '../../task-communication/task-proxy';
 
 const initialHeight = 1200;
