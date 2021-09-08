@@ -63,23 +63,23 @@ export class ChapterUserProgressComponent implements OnChanges, OnDestroy {
   columns: Column[] = [
     {
       field: 'title',
-      header: 'Content',
+      header: $localize`Content`,
     },
     {
       field: 'latestActivityAt',
-      header: 'Latest activity',
+      header: $localize`Latest activity`,
     },
     {
       field: 'timeSpent',
-      header: 'Time spent',
+      header: $localize`Time spent`,
     },
     {
       field: 'submissions',
-      header: '# subm.',
+      header: $localize`# subm.`,
     },
     {
       field: 'score',
-      header: 'Score',
+      header: $localize`Score`,
     }
   ];
 
