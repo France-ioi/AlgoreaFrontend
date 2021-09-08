@@ -1,7 +1,8 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { BehaviorSubject, combineLatest, concat, EMPTY, forkJoin, interval, merge, Observable, of, ReplaySubject, throwError } from 'rxjs';
+import { BehaviorSubject, combineLatest, concat, EMPTY, forkJoin, interval, merge, Observable, of, ReplaySubject } from 'rxjs';
 import { distinctUntilChanged, filter, map, mapTo, switchMap, take, takeUntil, timeout } from 'rxjs/operators';
+import { GenerateTaskTokenService } from 'src/app/core/http-services/generate-task-token.service';
 import { appConfig } from 'src/app/shared/helpers/config';
 import { SECONDS } from 'src/app/shared/helpers/duration';
 import { isNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
@@ -22,13 +23,16 @@ export class ItemTaskService implements OnDestroy {
   private displaySubject = new ReplaySubject<UpdateDisplayParams>(1);
   display$ = this.displaySubject.asObservable().pipe(takeUntil(this.error$));
 
+  private iframeSrcSubject = new ReplaySubject<SafeResourceUrl>(1);
+  iframeSrc$ = this.iframeSrcSubject.asObservable();
+
   views$ = merge(
     this.task$.pipe(switchMap(task => task.getViews())), // Load views once the task has been loaded
     this.display$.pipe(map(({ views }) => views), filter(isNotUndefined)), // listen to display updates
   );
   activeView$ = new BehaviorSubject<string>('task');
 
-  private lastIframe?: HTMLIFrameElement;
+  initialized = false;
 
   private subscriptions = [
     this.task$.subscribe({ error: err => this.errorSubject.next(err) }),
@@ -48,7 +52,10 @@ export class ItemTaskService implements OnDestroy {
     },
   });
 
-  constructor(private sanitizer: DomSanitizer) {}
+  constructor(
+    private sanitizer: DomSanitizer,
+    private generateTaskTokenService: GenerateTaskTokenService,
+  ) {}
 
   ngOnDestroy(): void {
     // the task comes from a Replay Subject.
@@ -58,20 +65,22 @@ export class ItemTaskService implements OnDestroy {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
-  getIframeConfig(item: Item): Observable<{ iframeSrc: SafeResourceUrl }> {
-    if (!item.url) return throwError(new Error($localize`No URL defined for this task.`));
+  getIframeConfig(item: Item, attemptId?: string): void {
+    const url = item.url;
+    if (!url) return this.errorSubject.next(new Error('No URL defined for this task'));
+    if (!attemptId) return this.errorSubject.next(new Error('an attempt id is required to retrieve task token'));
 
-    // TODO get sToken
-    const taskToken = '';
-    // TODO get platformId from configuration
-    const urlWithParams = taskUrlWithParameters(item.url, taskToken, appConfig.itemPlatformId, 'task-');
-    const iframeSrc = this.sanitizer.bypassSecurityTrustResourceUrl(urlWithParams);
-    return of({ iframeSrc });
+    this.generateTaskTokenService.generateToken(item.id, attemptId).pipe(
+      map(taskToken => {
+        const urlWithParams = taskUrlWithParameters(url, taskToken, appConfig.itemPlatformId, 'task-');
+        return this.sanitizer.bypassSecurityTrustResourceUrl(urlWithParams);
+      }),
+    ).subscribe(this.iframeSrcSubject);
   }
 
   initTask(iframe: HTMLIFrameElement): void {
-    if (iframe === this.lastIframe) return;
-    this.lastIframe = iframe;
+    if (this.initialized) return;
+    this.initialized = true;
 
     taskProxyFromIframe(iframe).pipe(
       switchMap(task => {
