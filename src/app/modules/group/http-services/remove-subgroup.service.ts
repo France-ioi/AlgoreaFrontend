@@ -17,9 +17,13 @@ export class RemoveSubgroupService {
     return this.http.delete<SimpleActionResponse>(`${appConfig.apiUrl}/groups/${parentGroupId}/relations/${childGroupId}`);
   }
 
-  removeBatch(parentGroupId: string, ids: string[]): Observable<{ countRequests: number, countSuccess: number }> {
+  removeBatch(parentGroupId: string, ids: string[]): Observable<{
+    countRequests: number,
+    countSuccess: number,
+    additionalMessage?: string,
+  }> {
     return forkJoin(
-      ids.map(id => this.remove(parentGroupId, id).pipe(catchError(data => of(data))))
+      ids.map(id => this.remove(parentGroupId, id).pipe(catchError(({ error }) => of(error))))
     ).pipe(
       map(data => parseResults(new Map(Object.entries(data))))
     );
