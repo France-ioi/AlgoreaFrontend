@@ -1,17 +1,19 @@
 import { AfterViewChecked, Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { ItemData } from '../../services/item-datasource.service';
-import { interval, merge } from 'rxjs';
+import { interval, merge, Observable } from 'rxjs';
 import { filter, map, startWith, switchMap } from 'rxjs/operators';
 import { SECONDS } from 'src/app/shared/helpers/duration';
 import { isNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
 import { ItemTaskService } from '../../services/item-task.service';
 import { mapToFetchState } from 'src/app/shared/operators/state';
+import { capitalize } from 'src/app/shared/helpers/case_conversion';
 
 const initialHeight = 1200;
 const heightSyncInterval = 0.2*SECONDS;
 
 interface TaskTab {
-  name: string
+  name: string,
+  view: string,
 }
 
 @Component({
@@ -26,10 +28,10 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
 
   state$ = this.taskService.task$.pipe(mapToFetchState());
 
-  // Tabs displayed above the task
-  // TODO get views from the task and make actual tabs
-  activeTab: TaskTab = { name: 'Task' };
-  tabs: TaskTab[] = [ this.activeTab ];
+  tabs$: Observable<TaskTab[]> = this.taskService.views$.pipe(
+    map(views => views.map(view => ({ view, name: this.getTabNameByView(view) }))),
+  );
+  activeTabView$ = this.taskService.activeView$;
 
   iframeSrc$ = this.taskService.iframeSrc$;
 
@@ -56,6 +58,18 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
   }
 
   setActiveTab(tab: TaskTab): void {
-    this.activeTab = tab;
+    this.taskService.activeView$.next(tab.view);
+  }
+
+  private getTabNameByView(view: string): string {
+    switch (view) {
+      case 'editor': return $localize`Editor`;
+      case 'forum': return $localize`Forum`;
+      case 'hints': return $localize`Hints`;
+      case 'solution': return $localize`Solution`;
+      case 'submission': return $localize`Submission`;
+      case 'task': return $localize`Task`;
+      default: return capitalize(view);
+    }
   }
 }

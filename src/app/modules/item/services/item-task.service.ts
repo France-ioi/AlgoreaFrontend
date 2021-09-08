@@ -26,7 +26,7 @@ export class ItemTaskService implements OnDestroy {
   views$ = merge(
     this.task$.pipe(switchMap(task => task.getViews())), // Load views once the task has been loaded
     this.display$.pipe(map(({ views }) => views), filter(isNotUndefined)), // listen to display updates
-  );
+  ).pipe(map(views => Object.entries(views).filter(([ , view ]) => !view.requires).map(([ name ]) => name)));
   activeView$ = new BehaviorSubject<string>('task');
   showViews$ = combineLatest([ this.task$, this.activeView$ ]).pipe(switchMap(([ task, view ]) => task.showViewsInTask({ [view]: true })));
 
