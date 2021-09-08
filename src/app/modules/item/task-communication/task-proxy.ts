@@ -206,7 +206,7 @@ export class Task {
     }).pipe(map(([ taskViews ]) => decode(taskViewsDecoder)(taskViews)));
   }
 
-  showViewsInTask(views: Object): Observable<unknown> {
+  showViewsInTask(views: Record<string, boolean>): Observable<unknown> {
     return this.chan.call({
       method: 'task.showViews',
       params: views,
@@ -239,7 +239,10 @@ export class Task {
   }
 }
 
-export abstract class TaskPlatform {
+export class TaskPlatform {
+  constructor(implementation: Partial<TaskPlatform>) {
+    Object.assign(this, implementation); // assigning implementation object to self will override methods
+  }
   /*
    * Simple prototypes for Bebras platform API functions, to be overriden by your
    * "platform"'s specific functions (for each platform object).
