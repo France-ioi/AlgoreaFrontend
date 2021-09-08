@@ -1,7 +1,8 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { BehaviorSubject, combineLatest, concat, EMPTY, forkJoin, interval, merge, Observable, of, ReplaySubject, throwError } from 'rxjs';
+import { BehaviorSubject, combineLatest, concat, EMPTY, forkJoin, interval, merge, Observable, of, ReplaySubject } from 'rxjs';
 import { distinctUntilChanged, filter, map, mapTo, switchMap, take, timeout } from 'rxjs/operators';
+import { GenerateTaskTokenService } from 'src/app/core/http-services/generate-task-token.service';
 import { appConfig } from 'src/app/shared/helpers/config';
 import { SECONDS } from 'src/app/shared/helpers/duration';
 import { isNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
@@ -19,6 +20,9 @@ export class ItemTaskService implements OnDestroy {
   private displaySubject = new ReplaySubject<UpdateDisplayParams>(1);
   display$ = this.displaySubject.asObservable();
 
+  private iframeSrcSubject = new ReplaySubject<SafeResourceUrl>(1);
+  iframeSrc$ = this.iframeSrcSubject.asObservable();
+
   views$ = merge(
     this.task$.pipe(switchMap(task => task.getViews())), // Load views once the task has been loaded
     this.display$.pipe(map(({ views }) => views), filter(isNotUndefined)), // listen to display updates
@@ -26,12 +30,13 @@ export class ItemTaskService implements OnDestroy {
   activeView$ = new BehaviorSubject<string>('task');
   showViews$ = combineLatest([ this.task$, this.activeView$ ]).pipe(switchMap(([ task, view ]) => task.showViewsInTask({ [view]: true })));
 
-  private lastIframe?: HTMLIFrameElement;
+  initialized = false;
 
   private subscriptions = [
     this.task$.subscribe({
       error: () => {
         if (!this.displaySubject.closed) this.displaySubject.complete();
+        if (!this.iframeSrcSubject.closed) this.iframeSrcSubject.complete();
       }
     }),
     this.saveAnswerAndState().subscribe({ error: err => this.taskSubject.error(err) }),
@@ -48,7 +53,10 @@ export class ItemTaskService implements OnDestroy {
     },
   });
 
-  constructor(private sanitizer: DomSanitizer) {}
+  constructor(
+    private sanitizer: DomSanitizer,
+    private generateTaskTokenService: GenerateTaskTokenService,
+  ) {}
 
   ngOnDestroy(): void {
     // task is a Replay Subject. If one has been emitted: destroy it, else: nothing to destroy
@@ -56,21 +64,28 @@ export class ItemTaskService implements OnDestroy {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
     if (!this.taskSubject.closed) this.taskSubject.complete();
     if (!this.displaySubject.closed) this.displaySubject.complete();
+    if (!this.iframeSrcSubject.closed) this.iframeSrcSubject.complete();
   }
 
-  getIframeConfig(item: Item): Observable<{ iframeSrc: SafeResourceUrl }> {
-    if (!item.url) return throwError(new Error($localize`No URL defined for this task.`));
+  getIframeConfig(item: Item, attemptId?: string): void {
+    const url = item.url;
+    if (!url) return this.taskSubject.error(new Error('No URL defined for this task'));
+    if (!attemptId) return this.taskSubject.error(new Error('an attempt id is required to retrieve task token'));
 
-    // TODO get sToken
-    const taskToken = '';
-    const urlWithParams = taskUrlWithParameters(item.url, taskToken, appConfig.itemPlatformId, 'task-');
-    const iframeSrc = this.sanitizer.bypassSecurityTrustResourceUrl(urlWithParams);
-    return of({ iframeSrc });
+    this.generateTaskTokenService.generateToken(item.id, attemptId).pipe(
+      map(taskToken => {
+        const urlWithParams = taskUrlWithParameters(url, taskToken, appConfig.itemPlatformId, 'task-');
+        return this.sanitizer.bypassSecurityTrustResourceUrl(urlWithParams);
+      }),
+    ).subscribe({
+      next: src => this.iframeSrcSubject.next(src),
+      error: err => this.taskSubject.error(err),
+    });
   }
 
   initTask(iframe: HTMLIFrameElement): void {
-    if (iframe === this.lastIframe) return;
-    this.lastIframe = iframe;
+    if (this.initialized) return;
+    this.initialized = true;
 
     taskProxyFromIframe(iframe).pipe(
       switchMap(task => {

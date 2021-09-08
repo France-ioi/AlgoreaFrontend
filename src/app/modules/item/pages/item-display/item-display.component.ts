@@ -1,5 +1,4 @@
-import { AfterViewInit, Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
-import { SafeResourceUrl } from '@angular/platform-browser';
+import { AfterViewChecked, Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { ItemData } from '../../services/item-datasource.service';
 import { interval, merge } from 'rxjs';
 import { filter, map, startWith, switchMap } from 'rxjs/operators';
@@ -21,7 +20,7 @@ interface TaskTab {
   styleUrls: [ './item-display.component.scss' ],
   providers: [ ItemTaskService ],
 })
-export class ItemDisplayComponent implements OnInit, AfterViewInit, OnChanges {
+export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges {
   @Input() itemData?: ItemData;
   @ViewChild('iframe') iframe?: ElementRef<HTMLIFrameElement>;
 
@@ -32,7 +31,7 @@ export class ItemDisplayComponent implements OnInit, AfterViewInit, OnChanges {
   activeTab: TaskTab = { name: 'Task' };
   tabs: TaskTab[] = [ this.activeTab ];
 
-  iframeSrc?: SafeResourceUrl; // used by the iframe to load the task, set at view init
+  iframeSrc$ = this.taskService.iframeSrc$;
 
   // Start updating the iframe height to match the task's height
   iframeHeight$ = merge(
@@ -42,15 +41,13 @@ export class ItemDisplayComponent implements OnInit, AfterViewInit, OnChanges {
 
   constructor(private taskService: ItemTaskService) {}
 
-  // Lifecycle functions
   ngOnInit(): void {
     if (!this.itemData) throw new Error('itemData must be set in ItemDisplayComponent');
-    this.taskService.getIframeConfig(this.itemData.item).subscribe(({ iframeSrc }) => this.iframeSrc = iframeSrc);
+    this.taskService.getIframeConfig(this.itemData.item, this.itemData.route.attemptId ?? this.itemData.currentResult?.attemptId);
   }
 
-  ngAfterViewInit(): void {
-    // ngAfterViewInit waits for the ViewChild to be initialized
-    if (!this.iframe) throw new Error('Expecting the iframe to exist');
+  ngAfterViewChecked(): void {
+    if (!this.iframe || this.taskService.initialized) return;
     this.taskService.initTask(this.iframe.nativeElement);
   }
 
