@@ -104,9 +104,18 @@ export class ChapterUserProgressComponent implements OnChanges, OnDestroy {
   }
 
   onClick(rowData: RowData): void {
-    if (!this.itemData || this.itemData.item.id === rowData.id) return;
+    if (!this.itemData) {
+      throw new Error('Unexpected: Missed input itemData of component');
+    }
+
+    if (this.itemData.item.id === rowData.id) {
+      return;
+    }
+
     const parentAttemptId = this.itemData.currentResult?.attemptId;
-    if (!parentAttemptId) return; // unexpected: children have been loaded, so we are sure this item has an attempt
+
+    if (!parentAttemptId) throw new Error('Unexpected: Children have been loaded, so we are sure this item has an attempt');
+
     this.itemRouter.navigateTo({
       contentType: typeCategoryOfItem(rowData),
       id: rowData.id,
