@@ -263,7 +263,8 @@ export class MemberListComponent implements OnChanges, OnDestroy {
       target: event.target || undefined,
       key: 'commonPopup',
       icon: 'pi pi-exclamation-triangle',
-      message: $localize`Are you sure you want to permanently delete ${getSelectedGroupChildCaptions(this.selection as GroupChild[])}? This operation cannot be undone.`,
+      message: $localize`Are you sure you want to permanently delete ${getSelectedGroupChildCaptions(this.selection as GroupChild[])}?
+       This operation cannot be undone.`,
       acceptLabel: $localize`Yes`,
       acceptIcon: 'fa fa-check',
       rejectLabel: $localize`No`,
@@ -276,7 +277,8 @@ export class MemberListComponent implements OnChanges, OnDestroy {
       target: event.target || undefined,
       key: 'commonPopup',
       icon: 'pi pi-exclamation-triangle',
-      message: $localize`By removing ${getSelectedGroupChildCaptions(this.selection as GroupChild[])} from the group, you may loose manager access to them (if no explicit permission or through other parent group). Are you sure you want to proceed?`,
+      message: $localize`By removing ${getSelectedGroupChildCaptions(this.selection as GroupChild[])} from the group, you may loose
+       manager access to them (if no explicit permission or through other parent group). Are you sure you want to proceed?`,
       acceptLabel: $localize`Yes`,
       acceptIcon: 'fa fa-check',
       rejectLabel: $localize`No`,

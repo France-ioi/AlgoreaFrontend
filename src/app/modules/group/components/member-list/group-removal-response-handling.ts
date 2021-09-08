@@ -3,6 +3,7 @@ import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.s
 export interface Result {
   countRequests: number;
   countSuccess: number;
+  additionalMessage?: string;
 }
 
 export function displayGroupResponseToast(feedbackService: ActionFeedbackService, result: Result): void {
@@ -14,5 +15,9 @@ export function displayGroupResponseToast(feedbackService: ActionFeedbackService
     feedbackService.partial(
       $localize`${result.countSuccess} group(s) have been removed, ${result.countRequests - result.countSuccess} could not be removed`
     );
+  }
+
+  if (result.additionalMessage) {
+    feedbackService.error(result.additionalMessage);
   }
 }
