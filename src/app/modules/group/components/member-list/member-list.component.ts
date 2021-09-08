@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild } from '@angular/core';
-import { SortEvent } from 'primeng/api';
+import { ConfirmationService, SortEvent } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { Observable, ReplaySubject, Subject } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
@@ -12,6 +12,13 @@ import { GetGroupMembersService, Member } from '../../http-services/get-group-me
 import { GroupUsersService, parseResults } from '../../http-services/group-users.service';
 import { Filter, GroupCompositionFilterComponent, TypeFilter } from '../group-composition-filter/group-composition-filter.component';
 import { displayResponseToast } from './user-removal-response-handling';
+import { displayGroupResponseToast } from './group-removal-response-handling';
+import { RemoveSubgroupService } from '../../http-services/remove-subgroup.service';
+import { RemoveGroupService } from '../../http-services/remove-group.service';
+
+function getSelectedGroupChildCaptions(selection: GroupChild[]): string {
+  return selection.map(selected => selected.name).join(', ');
+}
 
 interface Column {
   sortable?: boolean,
@@ -67,7 +74,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
   currentSort: string[] = [];
   currentFilter: Filter = this.defaultFilter;
 
-  selection: Member[] = [];
+  selection: (Member | GroupChild)[] = [];
 
   data: Data = {
     columns: [],
@@ -86,6 +93,9 @@ export class MemberListComponent implements OnChanges, OnDestroy {
     private getGroupDescendantsService: GetGroupDescendantsService,
     private groupUsersService: GroupUsersService,
     private actionFeedbackService: ActionFeedbackService,
+    private removeSubgroupService: RemoveSubgroupService,
+    private confirmationService: ConfirmationService,
+    private removeGroupService: RemoveGroupService,
   ) {
     this.dataFetching.pipe(
       switchMap(params => this.getData(params.groupId, params.filter, params.sort).pipe(mapToFetchState())),
@@ -93,6 +103,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
       next: state => {
         this.state = state.tag;
         if (state.isReady) this.data = state.data;
+        this.unselectAll();
       },
       error: _err => {
         this.state = 'error';
@@ -109,6 +120,11 @@ export class MemberListComponent implements OnChanges, OnDestroy {
     this.currentFilter = { ...this.defaultFilter };
     this.currentSort = [];
     this.table?.clear();
+    this.dataFetching.next({ groupId: this.group.id, filter: this.currentFilter, sort: this.currentSort });
+  }
+
+  fetchData(): void {
+    if (!this.group) return;
     this.dataFetching.next({ groupId: this.group.id, filter: this.currentFilter, sort: this.currentSort });
   }
 
@@ -189,28 +205,26 @@ export class MemberListComponent implements OnChanges, OnDestroy {
   }
 
   onSelectAll(): void {
-    if (this.currentFilter.type !== TypeFilter.Users) return;
-
     if (this.selection.length === this.data.rowData.length) {
       this.selection = [];
     } else {
-      this.selection = this.data.rowData as Member[];
+      this.selection = this.data.rowData as (Member | GroupChild)[];
     }
   }
 
-  onRemove(): void {
-    if (this.selection.length === 0 || !this.group) return;
+  unselectAll(): void {
+    this.selection = [];
+  }
 
+  removeUsers(groupId: string, selectedIds: string[]): void {
     this.removalInProgress$.next(true);
-    this.groupUsersService.removeUsers(this.group.id, this.selection.map(member => member.id))
+    this.groupUsersService.removeUsers(groupId, selectedIds)
       .subscribe({
         next: result => {
           displayResponseToast(this.actionFeedbackService, parseResults(result));
           this.table?.clear();
-          this.selection = [];
-          if (this.group) {
-            this.dataFetching.next({ groupId: this.group.id, filter: this.currentFilter, sort: this.currentSort });
-          }
+          this.unselectAll();
+          this.fetchData();
           this.removalInProgress$.next(false);
         },
         error: _err => {
@@ -218,5 +232,84 @@ export class MemberListComponent implements OnChanges, OnDestroy {
           this.actionFeedbackService.unexpectedError();
         }
       });
+  }
+
+  onRemoveGroup(event: Event, selectedIds: string[]): void {
+    this.confirmationService.confirm({
+      target: event.target || undefined,
+      key: 'commonPopup',
+      icon: 'pi pi-exclamation-triangle',
+      message: $localize`Are you sure you want to permanently delete ${getSelectedGroupChildCaptions(this.selection as GroupChild[])}? This operation cannot be undone.`,
+      acceptLabel: $localize`Yes`,
+      acceptIcon: 'fa fa-check',
+      rejectLabel: $localize`No`,
+      accept: () => this.removeGroupsOrSubgroups(selectedIds),
+    });
+  }
+
+  onRemoveSubgroups(event: Event, groupId: string, selectedIds: string[]): void {
+    this.confirmationService.confirm({
+      target: event.target || undefined,
+      key: 'commonPopup',
+      icon: 'pi pi-exclamation-triangle',
+      message: $localize`By removing ${getSelectedGroupChildCaptions(this.selection as GroupChild[])} from the group, you may loose manager access to them (if no explicit permission or through other parent group). Are you sure you want to proceed?`,
+      acceptLabel: $localize`Yes`,
+      acceptIcon: 'fa fa-check',
+      rejectLabel: $localize`No`,
+      accept: () => this.removeGroupsOrSubgroups(selectedIds, groupId),
+    });
+  }
+
+  removeGroupsOrSubgroups(selectedIds: string[], groupId?: string): void {
+    this.removalInProgress$.next(true);
+    const request$ = groupId ?
+      this.removeSubgroupService.removeBatch(groupId, selectedIds) : this.removeGroupService.removeBatch(selectedIds);
+
+    request$.subscribe({
+      next: response => {
+        displayGroupResponseToast(this.actionFeedbackService, response);
+        this.table?.clear();
+        this.unselectAll();
+        this.fetchData();
+        this.removalInProgress$.next(false);
+      },
+      error: _err => {
+        this.removalInProgress$.next(false);
+        this.actionFeedbackService.unexpectedError();
+      }
+    });
+  }
+
+  onRemove(event: Event): void {
+    if (this.selection.length === 0 || !this.group) return;
+
+    const groupId = this.group.id;
+    const selectedIds = this.selection.map(member => member.id);
+
+    if (this.currentFilter.type === 'users') {
+      this.removeUsers(groupId, selectedIds);
+      return;
+    }
+
+    this.confirmationService.confirm({
+      target: event.target || undefined,
+      key: 'commonPopup',
+      icon: 'pi pi-question-circle',
+      message: $localize`Do you want to also delete the selected group(s)? (will only work if those are empty)`,
+      acceptLabel: $localize`Yes`,
+      acceptIcon: 'fa fa-check',
+      rejectLabel: $localize`No`,
+      accept: () => {
+        // ISSUE: https://github.com/primefaces/primeng/issues/10589
+        setTimeout(() => {
+          this.onRemoveGroup(event, selectedIds);
+        }, 250);
+      },
+      reject: () => {
+        setTimeout(() => {
+          this.onRemoveSubgroups(event, groupId, selectedIds);
+        }, 250);
+      }
+    });
   }
 }
