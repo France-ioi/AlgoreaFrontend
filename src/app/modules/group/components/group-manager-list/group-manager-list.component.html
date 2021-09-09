@@ -18,7 +18,7 @@
     >
       <ng-template #headerTemplate let-columns>
         <tr style="border: none;">
-          <th class="thin"></th>
+          <th class="thin" *ngIf="groupData?.group?.currentUserCanManage === 'memberships_and_group'"></th>
           <th style="min-width: 160px;">
             <div class="slanted-header">
               <div class="slanted-header-content" i18n>
@@ -58,7 +58,7 @@
         let-rowIndex="rowIndex"
       >
         <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
-          <td class="thin">
+          <td class="thin" *ngIf="groupData?.group?.currentUserCanManage === 'memberships_and_group'">
             <p-tableCheckbox class="p-chkbox" [value]="rowData"></p-tableCheckbox>
           </td>
           <td
@@ -99,14 +99,14 @@
         </tr>
       </ng-template>
 
-      <ng-template #summaryTemplate>
+      <ng-template *ngIf="groupData?.group?.currentUserCanManage === 'memberships_and_group'" #summaryTemplate>
         <div class="summary">
           <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
           <span class="select-all" (click)="onSelectAll()" i18n>
             Select all
           </span>
           <span class="filler"></span>
-          <div class="summary-actions" *ngIf="groupData?.group?.currentUserCanManage === 'memberships_and_group'">
+          <div class="summary-actions">
             <span (click)="onRemove()" [class.disabled]="removalInProgress || state !== 'ready' || selection.length === 0">
             <span i18n>Remove</span>
               <i class="fa fa-trash-alt"></i>
