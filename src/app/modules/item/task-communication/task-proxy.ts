@@ -102,7 +102,7 @@ export class Task {
     );
     this.chan.bind(
       'platform.showView',
-      view => platform.viewsShownByTask(decode(D.string)(view)),
+      view => platform.showView(decode(D.string)(view)),
     );
     this.chan.bind(
       'platform.askHint',
@@ -206,7 +206,7 @@ export class Task {
     }).pipe(map(([ taskViews ]) => decode(taskViewsDecoder)(taskViews)));
   }
 
-  showViewsInTask(views: Record<string, boolean>): Observable<unknown> {
+  showViews(views: Record<string, boolean>): Observable<unknown> {
     return this.chan.call({
       method: 'task.showViews',
       params: views,
@@ -250,7 +250,7 @@ export class TaskPlatform {
   validate(_mode: string): Observable<void> {
     return throwError(() => new Error('platform.validate is not defined'));
   }
-  viewsShownByTask(_views: unknown): Observable<void> {
+  showView(_views: string): Observable<void> {
     return throwError(() => new Error('platform.showView is not defined'));
   }
   askHint(_platformToken: string): Observable<void> {
