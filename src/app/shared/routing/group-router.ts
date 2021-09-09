@@ -43,7 +43,6 @@ export class GroupRouter {
    * If page is not given and we are currently on a group page, use the same page. Otherwise, default to 'details'.
    */
   urlArray(route: RawGroupRoute, page?: 'edit'|'details'): UrlCommand {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return urlArrayForGroupRoute(route, page ?? this.currentGroupSubPage());
   }
 
