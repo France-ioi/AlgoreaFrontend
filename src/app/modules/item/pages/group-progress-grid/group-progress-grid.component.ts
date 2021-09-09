@@ -289,7 +289,7 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
       .subscribe({
         next: data => {
           this.isCSVDataFetching = false;
-          downloadFile([ data ], `${parentItemId}-${new Date().toDateString()}`, 'text/csv');
+          downloadFile([ data ], `${parentItemId}-${new Date().toDateString()}.csv`, 'text/csv');
         },
         error: () => {
           this.isCSVDataFetching = false;
