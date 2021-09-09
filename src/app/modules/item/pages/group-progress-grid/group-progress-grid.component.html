@@ -32,52 +32,65 @@
       (editPermissions)="onAccessPermissions()"
     ></alg-user-progress-details>
 
-    <p-table #table
-      *ngIf="state.data && state.data.items && state.data.rows.length > 0"
-      [columns]="state.data.items"
-      [value]="state.data.rows"
-      class="slanted-grid"
-      [rowTrackBy]="trackByRow"
-      [loading]="state.isFetching"
-    >
-      <ng-template pTemplate="header" let-columns>
-        <tr>
-          <th class="empty first header-refresh">
-            <p-button icon="pi pi-refresh" (click)="refresh()"></p-button>
-          </th>
-          <th *ngFor="let col of state.data.items">
-            <div class="slanted-header">
-              <div class="slanted-header-content" pTooltip="{{ col.title }}" tooltipPosition="top" [showDelay]="100">
-                {{ col.title }}
-              </div>
-            </div>
-          </th>
-          <th class="empty last"></th>
-        </tr>
-      </ng-template>
-      <ng-template
-        pTemplate="body"
-        let-row
-        let-columns="columns"
+    <ng-container *ngIf="state.data && state.data.items && state.data.rows.length > 0">
+      <div class="operations">
+        <button
+          pButton
+          type="button"
+          i18n-label label="Export as CSV"
+          icon="fa fa-file-download"
+          class="p-button-sm"
+          (click)="onCSVExport()"
+          [disabled]="isCSVDataFetching"
+        ></button>
+      </div>
+
+      <p-table #table
+        [columns]="state.data.items"
+        [value]="state.data.rows"
+        class="slanted-grid"
+        [rowTrackBy]="trackByRow"
+        [loading]="state.isFetching"
       >
-        <tr>
-          <td class="users" pTooltip="{{ row.header }}" tooltipPosition="left" [showDelay]="100">
-            {{ row.header }}
-          </td>
-          <td
-            class="cursor-pointer"
-            *ngFor="let col of columns; let colIndex = index"
-            #overlayTarget
-            (click)="showProgressDetail(overlayTarget, row.data[colIndex], row, col)"
-          >
-            <alg-user-progress
-              *ngIf="row.data[colIndex]"
-              [userProgress]="row.data[colIndex]"
-            ></alg-user-progress>
-          </td>
-        </tr>
-      </ng-template>
-    </p-table>
+        <ng-template pTemplate="header" let-columns>
+          <tr>
+            <th class="empty first header-refresh">
+              <p-button icon="pi pi-refresh" (click)="refresh()"></p-button>
+            </th>
+            <th *ngFor="let col of state.data.items">
+              <div class="slanted-header">
+                <div class="slanted-header-content" pTooltip="{{ col.title }}" tooltipPosition="top" [showDelay]="100">
+                  {{ col.title }}
+                </div>
+              </div>
+            </th>
+            <th class="empty last"></th>
+          </tr>
+        </ng-template>
+        <ng-template
+          pTemplate="body"
+          let-row
+          let-columns="columns"
+        >
+          <tr>
+            <td class="users" pTooltip="{{ row.header }}" tooltipPosition="left" [showDelay]="100">
+              {{ row.header }}
+            </td>
+            <td
+              class="cursor-pointer"
+              *ngFor="let col of columns; let colIndex = index"
+              #overlayTarget
+              (click)="showProgressDetail(overlayTarget, row.data[colIndex], row, col)"
+            >
+              <alg-user-progress
+                *ngIf="row.data[colIndex]"
+                [userProgress]="row.data[colIndex]"
+              ></alg-user-progress>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </ng-container>
 
     <alg-permissions-edit-dialog
       [visible]="dialog === 'opened'"
