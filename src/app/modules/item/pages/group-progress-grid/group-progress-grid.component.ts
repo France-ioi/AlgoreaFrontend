@@ -277,7 +277,7 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
 
   onCSVExport(): void {
     if (!this.group || !this.itemData) {
-      return;
+      throw new Error('Unexpected: input component params is required');
     }
 
     const parentItemId = this.itemData.item.id;
