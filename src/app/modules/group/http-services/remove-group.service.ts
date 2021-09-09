@@ -5,13 +5,13 @@ import { appConfig } from '../../../shared/helpers/config';
 import { SimpleActionResponse } from '../../../shared/http-services/action-response';
 import { catchError, map } from 'rxjs/operators';
 
-export function parseResults(data: Map<string, SimpleActionResponse>): { countRequests: number, countSuccess: number, additionalMessage?: string } {
+export function parseResults(data: Map<string, SimpleActionResponse>): { countRequests: number, countSuccess: number, errorText?: string } {
   const values = Array.from(data.values());
 
   return {
     countRequests: data.size,
     countSuccess: values.map<number>(state => (state.success ? 1 : 0)).reduce((acc, res) => acc + res, 0),
-    additionalMessage: values.some(value => !!value.error_text) ? values.map(value => value.error_text).join(', ') : undefined,
+    errorText: values.some(value => !!value.error_text) ? $localize`The group(s) must be empty` : undefined,
   };
 }
 
