@@ -13,7 +13,7 @@ import { GroupUsersService, parseResults } from '../../http-services/group-users
 import { GroupData } from '../../services/group-datasource.service';
 import { Filter, GroupCompositionFilterComponent, TypeFilter } from '../group-composition-filter/group-composition-filter.component';
 import { displayResponseToast } from './user-removal-response-handling';
-import { displayGroupResponseToast } from './group-removal-response-handling';
+import { displayGroupRemovalResponseToast } from './group-removal-response-handling';
 import { RemoveSubgroupService } from '../../http-services/remove-subgroup.service';
 import { RemoveGroupService } from '../../http-services/remove-group.service';
 
@@ -293,7 +293,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
 
     request$.subscribe({
       next: response => {
-        displayGroupResponseToast(this.actionFeedbackService, response);
+        displayGroupRemovalResponseToast(this.actionFeedbackService, response);
         this.table?.clear();
         this.unselectAll();
         this.fetchData();

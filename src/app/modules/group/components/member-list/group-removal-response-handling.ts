@@ -6,7 +6,7 @@ export interface Result {
   errorText?: string;
 }
 
-export function displayGroupResponseToast(feedbackService: ActionFeedbackService, result: Result): void {
+export function displayGroupRemovalResponseToast(feedbackService: ActionFeedbackService, result: Result): void {
   if (result.countSuccess === result.countRequests) {
     feedbackService.success($localize`${result.countSuccess} group(s) have been removed`);
   } else if (result.countSuccess === 0) {
