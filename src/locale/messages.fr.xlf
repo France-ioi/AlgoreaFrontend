@@ -771,7 +771,13 @@
          <context context-type="sourcefile">src/app/modules/group/components/user-group-invitations/user-group-invitations.component.ts</context>
          <context context-type="linenumber">24</context>
        </context-group>
-     </trans-unit><trans-unit id="1500422324547006465" datatype="html">
+     </trans-unit><trans-unit id="544102334421307622" datatype="html">
+        <source>The group(s) must be empty</source><target state="new">The group(s) must be empty</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/http-services/remove-group.service.ts</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+      </trans-unit><trans-unit id="1500422324547006465" datatype="html">
        <source> Error while loading the group you joined</source><target state="translated"> Erreur lors du chargement de la liste de vos groupes</target>
 
      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/joined-group-list/joined-group-list.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit><trans-unit id="8953033926734869941" datatype="html">
@@ -1414,17 +1420,19 @@
           <context context-type="sourcefile">src/app/modules/group/components/member-list/group-removal-response-handling.ts</context>
           <context context-type="linenumber">11</context>
         </context-group>
-      </trans-unit><trans-unit id="2313987689811687223" datatype="html">
-        <source>Unable to remove the selected group(s)</source><target state="new">Unable to remove the selected group(s)</target>
+      </trans-unit><trans-unit id="1106207969165116579" datatype="html">
+        <source>Unable to remove the selected group(s). <x id="PH" equiv-text="result.errorText || ''"/></source><target state="new">Unable to remove the selected group(s). <x id="PH" equiv-text="result.errorText || ''"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/group/components/member-list/group-removal-response-handling.ts</context>
           <context context-type="linenumber">13</context>
         </context-group>
-      </trans-unit><trans-unit id="5578427181077941914" datatype="html">
-        <source><x id="PH" equiv-text="result.countSuccess"/> group(s) have been removed, <x id="PH_1" equiv-text="result.countRequests - result.countSuccess"/> could not be removed</source><target state="new"><x id="PH" equiv-text="result.countSuccess"/> group(s) have been removed, <x id="PH_1" equiv-text="result.countRequests - result.countSuccess"/> could not be removed</target>
+      </trans-unit><trans-unit id="5417333858764397073" datatype="html">
+        <source><x id="PH" equiv-text="result.countSuccess"/> group(s) have been removed, <x id="PH_1" equiv-text="result.countRequests - result.countSuccess"/> could
+       not be removed. <x id="PH_2" equiv-text="result.errorText || ''"/></source><target state="new"><x id="PH" equiv-text="result.countSuccess"/> group(s) have been removed, <x id="PH_1" equiv-text="result.countRequests - result.countSuccess"/> could
+       not be removed. <x id="PH_2" equiv-text="result.errorText || ''"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/group/components/member-list/group-removal-response-handling.ts</context>
-          <context context-type="linenumber">16</context>
+          <context context-type="linenumber">16,17</context>
         </context-group>
       </trans-unit><trans-unit id="924686070752449719" datatype="html">
         <source>Error while loading the group you manage</source><target state="translated">Erreur lors du chargement des groupes dont vous êtes gestionnaire</target>
