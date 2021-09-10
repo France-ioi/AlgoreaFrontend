@@ -72,7 +72,7 @@ export class ManagerPermissionDialogComponent implements OnChanges {
 
   onAccept(): void {
     if (!this.manager || !this.group) {
-      return;
+      throw new Error('Unexpected: Missed input component params');
     }
 
     this.isUpdating = true;
