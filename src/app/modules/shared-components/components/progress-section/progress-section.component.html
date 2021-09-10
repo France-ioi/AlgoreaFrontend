@@ -1,5 +1,5 @@
 <div class="progress-section-container">
-  <div class="progress-section-header" [ngClass]="{disabled: disabled}" (click)="onCollapse()">
+  <div class="progress-section-header" [ngClass]="{disabled: disabled, 'cursor-pointer': collapsed}" (click)="onCollapse()">
     <span class="header-icon">
       <i class="{{ icon }}"></i>
     </span>
