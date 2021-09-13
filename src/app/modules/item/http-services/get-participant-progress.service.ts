@@ -1,0 +1,54 @@
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { appConfig } from '../../../shared/helpers/config';
+import { decodeSnakeCase } from '../../../shared/operators/decode';
+import * as D from 'io-ts/Decoder';
+import { dateDecoder } from 'src/app/shared/helpers/decoders';
+import { permissionsDecoder } from '../helpers/item-permissions';
+
+const participantProgressDecoder = D.struct({
+  children: D.array(D.struct({
+    currentUserPermissions: permissionsDecoder,
+    hintsRequested: D.number,
+    itemId: D.string,
+    latestActivityAt: D.nullable(dateDecoder),
+    noScore: D.boolean,
+    score: D.number,
+    string: D.struct({
+      languageTag: D.string,
+      title: D.nullable(D.string),
+    }),
+    submissions: D.number,
+    timeSpent: D.number,
+    type: D.literal('Chapter', 'Task', 'Course', 'Skill'),
+    validated: D.boolean,
+  })),
+  item: D.struct({
+    hintsRequested: D.number,
+    itemId: D.string,
+    latestActivityAt: D.nullable(dateDecoder),
+    score: D.number,
+    submissions: D.number,
+    timeSpent: D.number,
+    validated: D.boolean,
+  })
+});
+
+export type ParticipantProgress = D.TypeOf<typeof participantProgressDecoder>;
+
+@Injectable({
+  providedIn: 'root'
+})
+export class GetParticipantProgressService {
+
+  constructor(private http: HttpClient) { }
+
+  get(id: string): Observable<ParticipantProgress> {
+    return this.http
+      .get<unknown[]>(`${appConfig.apiUrl}/items/${id}/participant-progress`)
+      .pipe(
+        decodeSnakeCase(participantProgressDecoder)
+      );
+  }
+}

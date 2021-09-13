@@ -1,0 +1,31 @@
+@import 'src/colors';
+
+.spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+}
+
+.error {
+  margin: 0;
+  padding: 1rem;
+  color: $base-color;
+  font-size: 1.6rem;
+  text-align: center;
+}
+
+.score-ring {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: .4rem;
+}
+
+tr {
+  &:first-child {
+    td {
+      background-color: #f6f6f6;
+    }
+  }
+}

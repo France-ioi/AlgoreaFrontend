@@ -44,12 +44,15 @@ export class GroupByIdComponent implements OnDestroy {
     this.subscriptions.push(
       this.groupDataSource.state$.pipe(
         readyData(),
-        map(({ group, route }): GroupInfo => groupInfo({
+        map(({ group, route, breadcrumbs }): GroupInfo => groupInfo({
           route,
           breadcrumbs: {
             category: GROUP_BREADCRUMB_CAT,
-            path: [{ title: group.name, navigateTo: (): UrlTree => this.groupRouter.url(route, 'details') }],
-            currentPageIdx: 0,
+            path: breadcrumbs.map(breadcrumb => ({
+              title: breadcrumb.name,
+              navigateTo: (): UrlTree => this.groupRouter.url(breadcrumb.route, 'details'),
+            })),
+            currentPageIdx: breadcrumbs.length - 1,
           },
           title: group.name,
         })),

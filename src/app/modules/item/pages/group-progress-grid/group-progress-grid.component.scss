@@ -1,3 +1,5 @@
+@import 'src/colors';
+
 :host {
 
   .loader {
@@ -34,6 +36,14 @@
         position: relative;
         background-color: #F8F8F8;
         min-width: 3.3333rem;
+
+        &:nth-child(2) {
+          background-color: $base-color !important;
+
+          .slanted-header {
+            color: #fff !important;
+          }
+        }
 
         .slanted-header {
           position: absolute;
@@ -109,4 +119,11 @@
     text-align: right;
     padding-left: 0;
   }
+}
+
+.operations {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-bottom: 1rem;
 }
