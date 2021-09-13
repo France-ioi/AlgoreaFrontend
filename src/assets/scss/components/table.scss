@@ -284,6 +284,24 @@
       }
     }
   }
+
+  &.chapter-user-progress {
+    table {
+      table-layout: auto;
+    }
+
+    .p-datatable .p-datatable-thead > tr > th {
+      &:first-child {
+        width: 40%;
+      }
+    }
+
+    .p-datatable .p-datatable-thead > tr > th {
+      &:last-child {
+        width: 6rem;
+      }
+    }
+  }
 }
 
 .summary {
