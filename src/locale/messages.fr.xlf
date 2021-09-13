@@ -585,7 +585,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/my-groups/my-groups.component.html</context><context context-type="linenumber">17</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/access-code-view/access-code-view.component.ts</context><context context-type="linenumber">53</context></context-group></trans-unit><trans-unit id="2159130950882492111" datatype="html">
         <source>Cancel</source><target state="translated">Annuler</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/manager-permission-dialog/manager-permission-dialog.component.html</context><context context-type="linenumber">81</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog.component.html</context><context context-type="linenumber">76</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/access-code-view/access-code-view.component.ts</context><context context-type="linenumber">55</context></context-group></trans-unit><trans-unit id="7798083029915432586" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/manager-permission-dialog/manager-permission-dialog.component.html</context><context context-type="linenumber">84</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog.component.html</context><context context-type="linenumber">76</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/access-code-view/access-code-view.component.ts</context><context context-type="linenumber">55</context></context-group></trans-unit><trans-unit id="7798083029915432586" datatype="html">
         <source>You are already a member of this group.</source><target state="translated">Vous êtes déjà membre de ce groupe.</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/access-code-view/access-code-view.component.ts</context><context context-type="linenumber">77</context></context-group></trans-unit><trans-unit id="5339756092671133656" datatype="html">
@@ -935,25 +935,16 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog.component.html</context><context context-type="linenumber">24</context></context-group></trans-unit><trans-unit id="2619974973973470112" datatype="html">
         <source>Can grant view</source><target state="translated">Droit de donner des droits de visibilité</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/manager-permission-dialog/manager-permission-dialog.component.html</context><context context-type="linenumber">43</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog.component.html</context><context context-type="linenumber">37</context></context-group></trans-unit><trans-unit id="5086832329438229437" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog.component.html</context><context context-type="linenumber">37</context></context-group></trans-unit><trans-unit id="5086832329438229437" datatype="html">
         <source> User(s) can give and revoke members access to some content </source><target state="new"> User(s) can give and revoke members access to some content </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/components/manager-permission-dialog/manager-permission-dialog.component.html</context>
-          <context context-type="linenumber">51,52</context>
-        </context-group>
-      </trans-unit><trans-unit id="7308369809380680356" datatype="html">
+
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/manager-permission-dialog/manager-permission-dialog.component.html</context><context context-type="linenumber">53</context></context-group></trans-unit><trans-unit id="7308369809380680356" datatype="html">
         <source>Can watch members</source><target state="new">Can watch members</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/components/manager-permission-dialog/manager-permission-dialog.component.html</context>
-          <context context-type="linenumber">57</context>
-        </context-group>
-      </trans-unit><trans-unit id="731959018199918793" datatype="html">
+
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/manager-permission-dialog/manager-permission-dialog.component.html</context><context context-type="linenumber">59</context></context-group></trans-unit><trans-unit id="731959018199918793" datatype="html">
         <source> User(s) can watch the members' activity on some content </source><target state="new"> User(s) can watch the members' activity on some content </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/components/manager-permission-dialog/manager-permission-dialog.component.html</context>
-          <context context-type="linenumber">65,66</context>
-        </context-group>
-      </trans-unit><trans-unit id="6674111336491636600" datatype="html">
+
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/manager-permission-dialog/manager-permission-dialog.component.html</context><context context-type="linenumber">68</context></context-group></trans-unit><trans-unit id="6674111336491636600" datatype="html">
         <source>Can watch</source><target state="translated">Droit d'observation</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog.component.html</context><context context-type="linenumber">43</context></context-group></trans-unit><trans-unit id="1898683424750626599" datatype="html">
@@ -971,7 +962,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog.component.html</context><context context-type="linenumber">75</context></context-group></trans-unit><trans-unit id="1181910457994920507" datatype="html">
         <source>Proceed</source><target state="translated">Valider</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/manager-permission-dialog/manager-permission-dialog.component.html</context><context context-type="linenumber">87</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog.component.html</context><context context-type="linenumber">82</context></context-group></trans-unit><trans-unit id="9119511347263876873" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/manager-permission-dialog/manager-permission-dialog.component.html</context><context context-type="linenumber">90</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog.component.html</context><context context-type="linenumber">82</context></context-group></trans-unit><trans-unit id="9119511347263876873" datatype="html">
         <source>Can list the members</source><target state="new">Can list the members</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/group/components/manager-permission-dialog/manager-permission-dialog.component.ts</context>
@@ -1003,17 +994,11 @@
         </context-group>
       </trans-unit><trans-unit id="5697804787450123368" datatype="html">
         <source>New permissions successfully saved.</source><target state="new">New permissions successfully saved.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/components/manager-permission-dialog/manager-permission-dialog.component.ts</context>
-          <context context-type="linenumber">82</context>
-        </context-group>
-      </trans-unit><trans-unit id="1850357961340956981" datatype="html">
+
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/manager-permission-dialog/manager-permission-dialog.component.ts</context><context context-type="linenumber">84</context></context-group></trans-unit><trans-unit id="1850357961340956981" datatype="html">
         <source>Failed to save permissions.</source><target state="new">Failed to save permissions.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/components/manager-permission-dialog/manager-permission-dialog.component.ts</context>
-          <context context-type="linenumber">87</context>
-        </context-group>
-      </trans-unit><trans-unit id="1195043541071899024" datatype="html">
+
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/manager-permission-dialog/manager-permission-dialog.component.ts</context><context context-type="linenumber">90</context></context-group></trans-unit><trans-unit id="1195043541071899024" datatype="html">
         <source>Default access</source><target state="new">Default access</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/item/components/propagation-edit-menu/propagation-edit-menu.component.html</context>
@@ -1380,9 +1365,12 @@
         </context-group>
       </trans-unit><trans-unit id="367178788667281065" datatype="html">
         <source>The permissions that the user(s) has on this group</source><target state="new">The permissions that the user(s) has on this group</target>
+
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/manager-permission-dialog/manager-permission-dialog.component.html</context><context context-type="linenumber">39</context></context-group></trans-unit><trans-unit id="3077731577529874277" datatype="html">
+        <source>Can grant access</source><target state="new">Can grant access</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/group/components/manager-permission-dialog/manager-permission-dialog.component.html</context>
-          <context context-type="linenumber">38</context>
+          <context context-type="linenumber">44</context>
         </context-group>
       </trans-unit><trans-unit id="924686070752449719" datatype="html">
         <source>Error while loading the group you manage</source><target state="translated">Erreur lors du chargement des groupes dont vous êtes gestionnaire</target>
