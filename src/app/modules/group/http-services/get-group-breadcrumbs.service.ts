@@ -33,7 +33,7 @@ export class GetGroupBreadcrumbsService {
       decodeSnakeCase(D.array(breadcrumbDecoder)),
       map(breadcrumbs => breadcrumbs.map((breadcrumb, index) => ({
         ...breadcrumb,
-        route: groupRoute(breadcrumb.id, breadcrumbs.slice(0, index).map(({ id }) => id)),
+        route: groupRoute(breadcrumb, breadcrumbs.slice(0, index).map(({ id }) => id)),
       }))),
     );
   }
