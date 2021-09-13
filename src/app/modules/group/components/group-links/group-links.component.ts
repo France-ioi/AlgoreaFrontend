@@ -18,7 +18,7 @@ export class GroupLinksComponent {
   constructor(private groupRouter: GroupRouter) { }
 
   onButtonClick(item: GroupShortInfo): void {
-    this.groupRouter.navigateTo(rawGroupRoute(item));
+    this.groupRouter.navigateTo(rawGroupRoute({ id: item.id, isUser: false }));
   }
 
 }

@@ -65,7 +65,7 @@ export class LeftNavTreeComponent implements OnChanges {
 
     switch (this.elementType) {
       case 'group':
-        this.groupRouter.navigateTo(groupRoute(parent, pathToParent));
+        this.groupRouter.navigateTo(groupRoute({ id: parent.id, isUser: false }, pathToParent));
         break;
       case 'activity':
       case 'skill': {
@@ -89,7 +89,7 @@ export class LeftNavTreeComponent implements OnChanges {
     const routeBase = { id: node.data.element.id, path: node.data.path };
     switch (this.elementType) {
       case 'group':
-        this.groupRouter.navigateTo(groupRoute(node.data.element, routeBase.path));
+        this.groupRouter.navigateTo(groupRoute({ id: node.data.element.id, isUser: false }, routeBase.path));
         break;
       case 'activity':
       case 'skill': {

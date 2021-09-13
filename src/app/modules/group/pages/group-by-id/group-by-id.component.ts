@@ -96,7 +96,7 @@ export class GroupByIdComponent implements OnDestroy {
     this.getGroupPath.getGroupPath(groupId).subscribe({
       next: path => {
         this.hasRedirected = true;
-        this.groupRouter.navigateTo(groupRoute({ id: groupId }, path), { navExtras: { replaceUrl: true } });
+        this.groupRouter.navigateTo(groupRoute({ id: groupId, isUser: false }, path), { navExtras: { replaceUrl: true } });
       },
       error: () => {
         this.navigationError = true;

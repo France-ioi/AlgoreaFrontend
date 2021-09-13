@@ -19,24 +19,24 @@ export interface GroupRouteError {
 
 
 export type GroupLike =
-  | { id: Group['id'], type?: string }
+  | { id: Group['id'], isUser: boolean }
+  | { id: Group['id'], type: string }
   | Pick<User, 'groupId' | 'login'>;
 
 function isUser(group: GroupLike): boolean {
-  return ('login' in group && !!group.login) || ('type' in group && group.type === 'User');
+  return ('isUser' in group && group.isUser) || ('login' in group && !!group.login) || ('type' in group && group.type === 'User');
 }
 
-export function groupRoute(group: GroupLike, path: string[]): GroupRoute {
+export function rawGroupRoute(group: GroupLike, forceIsUser?: boolean): RawGroupRoute {
   const groupId = 'id' in group ? group.id : group.groupId;
-  return { contentType: 'group', id: groupId, path, isUser: isUser(group) };
+  return { contentType: 'group', id: groupId, isUser: forceIsUser ?? isUser(group) };
 }
 
-export function rawGroupRoute(group: GroupLike): RawGroupRoute {
-  const groupId = 'id' in group ? group.id : group.groupId;
-  return { contentType: 'group', id: groupId, isUser: isUser(group) };
+export function groupRoute(group: GroupLike, path: string[], forceIsUser?: boolean): GroupRoute {
+  return { ...rawGroupRoute(group, forceIsUser), path };
 }
 
-export function isRawGroupRoute(route?: any): route is RawGroupRoute {
+export function isRawGroupRoute(route?: unknown): route is RawGroupRoute {
   return typeof route === 'object' && (route as Record<string, unknown> | null)?.contentType === 'group';
 }
 
@@ -69,14 +69,14 @@ export function decodeGroupRouterParameters(params: ParamMap): { id: string | nu
   };
 }
 
-export function groupRouteFromParams(params: ParamMap): GroupRoute | GroupRouteError {
+export function groupRouteFromParams(params: ParamMap, isUser = false): GroupRoute | GroupRouteError {
   const id = params.get('id') ?? undefined;
   const path = pathFromRouterParameters(params);
   if (!id || path === null) return { tag: 'error', id };
 
   const pathList = path === '' ? [] : path.split(',');
 
-  return groupRoute({ id }, pathList);
+  return groupRoute({ id, isUser }, pathList);
 }
 
 export function isGroupRouteError(route: GroupRoute | GroupRouteError): route is GroupRouteError {

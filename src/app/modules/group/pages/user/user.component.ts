@@ -68,7 +68,7 @@ export class UserComponent implements OnInit, OnDestroy {
               path: [
                 {
                   title,
-                  navigateTo: this.groupRouter.url(rawGroupRoute({ id: this.route.snapshot.params.id as string, type: 'User' })),
+                  navigateTo: this.groupRouter.url(rawGroupRoute({ id: this.route.snapshot.params.id as string, isUser: true })),
                 },
                 {
                   title: this.router.url.includes('personal-data') ? $localize`Personal info` : $localize`Progress`,
