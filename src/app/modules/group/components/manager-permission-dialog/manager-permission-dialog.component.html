@@ -33,6 +33,7 @@
           [collapsible]="false"
           [collapsed]="false"
           type="simple"
+          (valueChange)="onValueChange()"
       >
         <ng-template #description>
           <span i18n>The permissions that the user(s) has on this group</span>
@@ -45,6 +46,7 @@
           [(value)]="managerValues.canGrantGroupAccess"
           [collapsible]="false"
           [collapsed]="false"
+          (valueChange)="onValueChange()"
       >
         <ng-template #label>
           <span i18n>
@@ -59,6 +61,7 @@
           [(value)]="managerValues.canWatchMembers"
           [collapsible]="false"
           [collapsed]="false"
+          (valueChange)="onValueChange()"
       >
         <ng-template #label>
           <span i18n>
@@ -87,6 +90,7 @@
             i18n-label label="Proceed"
             class="p-button-rounded"
             (click)="onAccept()"
+            [disabled]="!valuesChanged"
         ></alg-button>
       </ng-template>
     </div>

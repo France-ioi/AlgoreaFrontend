@@ -44,6 +44,7 @@ export class ManagerPermissionDialogComponent implements OnChanges {
 
   userCaption?: string;
   isUpdating = false;
+  valuesChanged = false;
 
   constructor(
     private updateGroupManagersService: UpdateGroupManagersService,
@@ -68,6 +69,7 @@ export class ManagerPermissionDialogComponent implements OnChanges {
 
   onClose(): void {
     this.close.emit({ updated: false });
+    this.valuesChanged = false;
   }
 
   onAccept(): void {
@@ -81,11 +83,16 @@ export class ManagerPermissionDialogComponent implements OnChanges {
         this.isUpdating = false;
         this.actionFeedbackService.success($localize`New permissions successfully saved.`);
         this.close.emit({ updated: true });
+        this.valuesChanged = false;
       },
       error: () => {
         this.isUpdating = false;
         this.actionFeedbackService.error($localize`Failed to save permissions.`);
       }
     });
+  }
+
+  onValueChange(): void {
+    this.valuesChanged = true;
   }
 }
