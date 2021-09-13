@@ -27,13 +27,13 @@ function isUser(group: GroupLike): boolean {
   return ('isUser' in group && group.isUser) || ('login' in group && !!group.login) || ('type' in group && group.type === 'User');
 }
 
-export function rawGroupRoute(group: GroupLike, forceIsUser?: boolean): RawGroupRoute {
+export function rawGroupRoute(group: GroupLike): RawGroupRoute {
   const groupId = 'id' in group ? group.id : group.groupId;
-  return { contentType: 'group', id: groupId, isUser: forceIsUser ?? isUser(group) };
+  return { contentType: 'group', id: groupId, isUser: isUser(group) };
 }
 
-export function groupRoute(group: GroupLike, path: string[], forceIsUser?: boolean): GroupRoute {
-  return { ...rawGroupRoute(group, forceIsUser), path };
+export function groupRoute(group: GroupLike, path: string[]): GroupRoute {
+  return { ...rawGroupRoute(group), path };
 }
 
 export function isRawGroupRoute(route?: unknown): route is RawGroupRoute {
