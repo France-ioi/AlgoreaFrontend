@@ -158,6 +158,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
             .pipe(map(descendantTeams => ({
               columns: descendantTeamsColumns,
               rowData: descendantTeams.map(descendantTeam => ({
+                id: descendantTeam.id,
                 name: descendantTeam.name,
                 parentGroups: descendantTeam.parents.map(parent => parent.name).join(', '),
                 members: descendantTeam.members.map(member => member.login).join(', '),
