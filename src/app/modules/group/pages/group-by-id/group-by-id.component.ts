@@ -69,10 +69,6 @@ export class GroupByIdComponent implements OnDestroy {
     this.subscriptions.forEach(s => s.unsubscribe());
   }
 
-  reloadContent(): void {
-    this.fetchGroupAtRoute(this.activatedRoute.snapshot.paramMap);
-  }
-
   private fetchGroupAtRoute(params: ParamMap): void {
     const route = groupRouteFromParams(params);
 
