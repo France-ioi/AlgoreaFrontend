@@ -140,6 +140,7 @@ export class ItemChildrenEditComponent implements OnChanges {
       canWatch: 'answer_with_grant',
       canEdit: 'all_with_grant',
       canGrantView: 'solution_with_grant',
+      isOwner: true,
     };
 
     this.data.push({
