@@ -5,15 +5,20 @@
 <ng-container *ngIf="state === 'ready'">
   <alg-section icon="fa fa-users" i18n-label label="Managers of this group">
     <alg-grid
+      tableStyle="--group-manager-list"
+      class="slanted-grid"
       *ngIf="managers.length > 0; else noManagers"
+      [loading]="removalInProgress"
       [data]="managers"
+      [(selection)]="selection"
       sortMode="single"
       [showGear]="false"
       [scrollable]="true"
-      class="slanted-grid"
+      dataKey="id"
     >
       <ng-template #headerTemplate let-columns>
         <tr style="border: none;">
+          <th class="thin" *ngIf="groupData?.group?.currentUserCanManage === 'memberships_and_group'"></th>
           <th style="min-width: 160px;">
             <div class="slanted-header">
               <div class="slanted-header-content" i18n>
@@ -53,13 +58,16 @@
         let-rowIndex="rowIndex"
       >
         <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
+          <td class="thin" *ngIf="groupData?.group?.currentUserCanManage === 'memberships_and_group'">
+            <p-tableCheckbox class="p-chkbox" [value]="rowData"></p-tableCheckbox>
+          </td>
           <td
             style="text-align: left;min-width: 160px;padding-left: 0.5rem;"
             tooltipPosition="top"
             tooltipStyleClass="tooltip-custom"
           >
             <a class="alg-link"
-              [routerLink]="rowData.route | groupLink:!!rowData.login"
+              [routerLink]="rowData | groupLink"
             >
               {{ rowData.login ? (rowData | userCaption) : rowData.name }}
             </a>
@@ -89,6 +97,22 @@
           </td>
           <td style="width: 110px;"></td>
         </tr>
+      </ng-template>
+
+      <ng-template *ngIf="groupData?.group?.currentUserCanManage === 'memberships_and_group'" #summaryTemplate>
+        <div class="summary">
+          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+          <span class="select-all" (click)="onSelectAll()" i18n>
+            Select all
+          </span>
+          <span class="filler"></span>
+          <div class="summary-actions">
+            <span (click)="onRemove()" [class.disabled]="removalInProgress || state !== 'ready' || selection.length === 0">
+            <span i18n>Remove</span>
+              <i class="fa fa-trash-alt"></i>
+            </span>
+          </div>
+        </div>
       </ng-template>
     </alg-grid>
 

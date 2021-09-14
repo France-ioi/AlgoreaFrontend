@@ -44,12 +44,15 @@ export class GroupByIdComponent implements OnDestroy {
     this.subscriptions.push(
       this.groupDataSource.state$.pipe(
         readyData(),
-        map(({ group, route }): GroupInfo => groupInfo({
-          route: groupRoute(group.id, route.path),
+        map(({ group, route, breadcrumbs }): GroupInfo => groupInfo({
+          route,
           breadcrumbs: {
             category: GROUP_BREADCRUMB_CAT,
-            path: [{ title: group.name, navigateTo: (): UrlTree => this.groupRouter.url(route, 'details') }],
-            currentPageIdx: 0,
+            path: breadcrumbs.map(breadcrumb => ({
+              title: breadcrumb.name,
+              navigateTo: (): UrlTree => this.groupRouter.url(breadcrumb.route, 'details'),
+            })),
+            currentPageIdx: breadcrumbs.length - 1,
           },
           title: group.name,
         })),
@@ -96,7 +99,7 @@ export class GroupByIdComponent implements OnDestroy {
     this.getGroupPath.getGroupPath(groupId).subscribe({
       next: path => {
         this.hasRedirected = true;
-        this.groupRouter.navigateTo(groupRoute(groupId, path), { navExtras: { replaceUrl: true } });
+        this.groupRouter.navigateTo(groupRoute({ id: groupId, isUser: false }, path), { navExtras: { replaceUrl: true } });
       },
       error: () => {
         this.navigationError = true;

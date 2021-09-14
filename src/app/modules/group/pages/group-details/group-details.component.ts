@@ -13,8 +13,8 @@ import { LayoutService } from '../../../../shared/services/layout.service';
 export class GroupDetailsComponent {
 
   state$ = this.groupDataSource.state$.pipe(mapStateData(state => ({
+    ...state,
     group: withManagementAdditions(state.group),
-    route: state.route,
   })));
   fullFrameContent$ = this.layoutService.fullFrameContent$;
 

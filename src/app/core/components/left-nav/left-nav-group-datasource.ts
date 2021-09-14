@@ -17,9 +17,7 @@ export class LeftNavGroupDataSource extends LeftNavDataSource<GroupInfo, NavMenu
   }
 
   fetchRootTreeData(): Observable<NavMenuGroup[]> {
-    return this.groupNavigationService.getRoot().pipe(
-      map(root => root.groups)
-    );
+    return this.groupNavigationService.getRoot();
   }
 
   fetchNavDataFromChild(id: string, _child: GroupInfo): Observable<{ parent: NavMenuGroup, elements: NavMenuGroup[] }> {
