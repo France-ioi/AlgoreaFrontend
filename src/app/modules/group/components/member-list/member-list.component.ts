@@ -124,7 +124,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
             columns: groupsColumns,
             rowData: children.map(child => ({
               ...child,
-              route: groupRoute(child.id, [ ...route.path, route.id ]),
+              route: groupRoute(child, [ ...route.path, route.id ]),
             })),
           })));
       case TypeFilter.Sessions:
@@ -133,7 +133,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
             columns: nameUserCountColumns,
             rowData: children.map(child => ({
               ...child,
-              route: groupRoute(child.id, [ ...route.path, route.id ]),
+              route: groupRoute(child, [ ...route.path, route.id ]),
             })),
           })));
       case TypeFilter.Teams:
@@ -145,7 +145,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
                 name: descendantTeam.name,
                 parentGroups: descendantTeam.parents.map(parent => parent.name).join(', '),
                 members: descendantTeam.members.map(member => member.login).join(', '),
-                route: rawGroupRoute(descendantTeam.id),
+                route: rawGroupRoute({ id: descendantTeam.id, isUser: false }),
               })),
             })));
         } else {
@@ -154,7 +154,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
               columns: nameUserCountColumns,
               rowData: children.map(child => ({
                 ...child,
-                route: groupRoute(child.id, [ ...route.path, route.id ]),
+                route: groupRoute(child, [ ...route.path, route.id ]),
               })),
             })));
         }
@@ -166,7 +166,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
                 columns: usersColumns,
                 rowData: members.map(member => ({
                   ...member,
-                  route: groupRoute(member.id, [ ...route.path, route.id ])
+                  route: groupRoute(member.user ?? { id: member.id, isUser: false }, [ ...route.path, route.id ])
                 })),
               }))
             );
@@ -178,7 +178,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
                 login: descendantUser.user.login,
                 user: descendantUser.user,
                 parentGroups: descendantUser.parents.map(parent => parent.name).join(', '),
-                route: rawGroupRoute(descendantUser.id),
+                route: rawGroupRoute({ id: descendantUser.id, isUser: true }),
               }))
             })));
         }
