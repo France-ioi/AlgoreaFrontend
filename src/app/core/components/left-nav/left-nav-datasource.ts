@@ -229,9 +229,14 @@ export abstract class LeftNavDataSource<ContentT extends RoutedContentInfo, Menu
     return this.fetchNewNavData(content).pipe( // the new items (only first level loaded)
       // already update the tree with the first level, and if needed, load (async) children as well
       switchMap(data => {
+        if (!data.selectedElementId) throw new Error('Unexpected: no selected element in new nav');
         const selectedEl = data.selectedElement();
-        if (!selectedEl) throw new Error('Unexpected: no selected element in new nav');
-        return concat(of(dsReplaceWith<MenuT>(data)), this.fetchChildrenOfElement(selectedEl));
+        return concat(
+          of(dsReplaceWith<MenuT>(data)),
+          selectedEl
+            ? this.fetchChildrenOfElement(selectedEl)
+            : EMPTY // This can happen for groups when a group is public but unlisted
+        );
       }),
       this.mapError(),
     );
