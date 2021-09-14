@@ -20,6 +20,8 @@ export class GroupManagerListComponent implements OnChanges {
 
   selection: Manager[] = [];
   removalInProgress = false;
+  isPermissionsEditDialogOpened = false;
+  dialogManager?: Manager & { canManageAsText: string };
 
   constructor(
     private getGroupManagersService: GetGroupManagersService,
@@ -93,5 +95,19 @@ export class GroupManagerListComponent implements OnChanges {
         this.actionFeedbackService.unexpectedError();
       }
     });
+  }
+
+  openPermissionsEditDialog(manager: Manager & { canManageAsText: string }): void {
+    this.isPermissionsEditDialogOpened = true;
+    this.dialogManager = manager;
+  }
+
+  closePermissionsEditDialog(event: { updated: boolean }): void {
+    this.isPermissionsEditDialogOpened = false;
+    this.dialogManager = undefined;
+
+    if (event.updated) {
+      this.reloadData();
+    }
   }
 }

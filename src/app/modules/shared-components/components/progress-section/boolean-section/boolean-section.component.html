@@ -1,6 +1,8 @@
 <alg-progress-section
   [title]="title"
   [icon]="icon"
+  [collapsible]="collapsible"
+  [collapsed]="collapsed"
 >
   <ng-template #description>
     <ng-container *ngIf="descriptionTemplate" [ngTemplateOutlet]="descriptionTemplate"></ng-container>

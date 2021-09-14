@@ -47,8 +47,8 @@
               </div>
             </div>
           </th>
-          <th style="width: 110px;"></th>
-      </tr>
+          <th style="width: 5rem;"></th>
+        </tr>
       </ng-template>
 
       <ng-template
@@ -95,7 +95,16 @@
               <i *ngIf="rowData.canWatchMembers" class="fa fa-check"></i>
             </span>
           </td>
-          <td style="width: 110px;"></td>
+          <td style="width: 5rem;">
+            <button
+              pButton
+              type="button"
+              icon="pi pi-pencil"
+              class="p-button-text"
+              (click)="openPermissionsEditDialog(rowData)"
+              *ngIf="groupData?.group?.currentUserCanManage === 'memberships_and_group'"
+            ></button>
+          </td>
         </tr>
       </ng-template>
 
@@ -123,3 +132,10 @@
     </ng-template>
   </alg-section>
 </ng-container>
+
+<alg-manager-permission-dialog
+  [visible]="isPermissionsEditDialogOpened"
+  [group]="groupData?.group"
+  [manager]="dialogManager"
+  (close)="closePermissionsEditDialog($event)"
+></alg-manager-permission-dialog>
