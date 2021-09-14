@@ -166,7 +166,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
                 columns: usersColumns,
                 rowData: members.map(member => ({
                   ...member,
-                  route: rawGroupRoute({ id: member.id, isUser: false }),
+                  route: groupRoute({ id: member.id, isUser: true }, [ ...route.path, route.id ]),
                 })),
               }))
             );
