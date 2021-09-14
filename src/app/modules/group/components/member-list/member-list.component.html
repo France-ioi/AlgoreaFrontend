@@ -20,7 +20,7 @@
   >
     <ng-template pTemplate="header" let-columns>
       <tr *ngIf="data.rowData.length > 0">
-        <th class="thin"></th>
+        <th class="thin" *ngIf="groupData?.group?.currentUserCanManage !== 'none'"></th>
         <ng-container *ngFor="let col of data.columns">
           <th [pSortableColumn]="col.field" *ngIf="col.sortable">
             <div class="header-container">
@@ -43,7 +43,7 @@
       let-columns="columns"
     >
       <tr>
-        <td class="thin">
+        <td class="thin" *ngIf="groupData?.group?.currentUserCanManage !== 'none'">
           <p-tableCheckbox class="p-chkbox" [value]="rowData"></p-tableCheckbox>
         </td>
         <td *ngFor="let col of columns">
@@ -82,14 +82,14 @@
         </td>
       </tr>
     </ng-template>
-    <ng-template pTemplate="summary">
+    <ng-template pTemplate="summary" *ngIf="groupData?.group?.currentUserCanManage !== 'none'">
       <div class="summary">
         <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
         <span class="select-all" (click)="onSelectAll()" i18n>
           Select all
         </span>
         <span class="filler"></span>
-        <div class="summary-actions" *ngIf="groupData?.group?.currentUserCanManage !== 'none'">
+        <div class="summary-actions">
             <span (click)="onRemove($event)" [class.disabled]="(removalInProgress$ | async) || state !== 'ready' || selection.length === 0">
             <span i18n>{{ currentFilter.type === 'users' ? 'Remove': 'Remove from group' }}</span>
             <i class="fa fa-trash-alt"></i>
