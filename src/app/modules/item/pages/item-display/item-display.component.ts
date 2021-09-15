@@ -45,7 +45,7 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
 
   ngOnInit(): void {
     if (!this.itemData) throw new Error('itemData must be set in ItemDisplayComponent');
-    this.taskService.getIframeConfig(this.itemData.item, this.itemData.route.attemptId ?? this.itemData.currentResult?.attemptId);
+    this.taskService.configure(this.itemData.item, this.itemData.route.attemptId ?? this.itemData.currentResult?.attemptId);
   }
 
   ngAfterViewChecked(): void {
