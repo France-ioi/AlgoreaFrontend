@@ -141,3 +141,19 @@ $left-panel-size: 34rem;
 .bg-section {
   background-color: $section-color;
 }
+
+// If browser does not support -webkit-line-clamp
+.line-clamp-2 {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+@supports (display: -webkit-box) {
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    white-space: normal;
+  }
+}
