@@ -1,23 +1,21 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { BehaviorSubject, combineLatest, concat, EMPTY, forkJoin, interval, merge, Observable, of, ReplaySubject } from 'rxjs';
-import { distinctUntilChanged, filter, map, mapTo, shareReplay, switchMap, timeout } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, EMPTY, merge, Observable, of, ReplaySubject } from 'rxjs';
+import { filter, map, mapTo, shareReplay, switchMap, timeout } from 'rxjs/operators';
 import { GenerateTaskTokenService } from 'src/app/core/http-services/generate-task-token.service';
 import { appConfig } from 'src/app/shared/helpers/config';
-import { SECONDS } from 'src/app/shared/helpers/duration';
 import { isNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
 import { Item } from '../http-services/get-item-by-id.service';
 import { TaskPlatform, taskUrlWithParameters, taskProxyFromIframe, Task } from '../task-communication/task-proxy';
 import { TaskParamsValue, UpdateDisplayParams } from '../task-communication/types';
 
-const answerAndStateSaveInterval = 1*SECONDS;
-
 @Injectable()
 export class ItemTaskService implements OnDestroy {
-  private config$ = new ReplaySubject<{ itemId: string, url: string, attemptId: string }>(1);
+  private configSubject = new ReplaySubject<{ itemId: string, url: string, attemptId: string }>(1);
   private iframe$ = new ReplaySubject<HTMLIFrameElement>(1);
 
-  readonly iframeSrc$ = this.config$.pipe(
+  readonly config$ = this.configSubject.asObservable();
+  readonly iframeSrc$ = this.configSubject.pipe(
     switchMap(({ attemptId, itemId, url }) => this.generateTaskTokenService.generateToken(itemId, attemptId).pipe(
       map(taskToken => taskUrlWithParameters(url, taskToken, appConfig.itemPlatformId, 'task-')),
       map(urlWithParams => this.sanitizer.bypassSecurityTrustResourceUrl(urlWithParams)),
@@ -50,7 +48,6 @@ export class ItemTaskService implements OnDestroy {
   initialized = false;
 
   private subscriptions = [
-    this.saveAnswerAndState().subscribe({ error: err => this.setError(err) }),
     this.showViews$.subscribe({ error: err => this.setError(err) }),
   ];
 
@@ -63,7 +60,7 @@ export class ItemTaskService implements OnDestroy {
     // task replays last (and its only) value. If one has been emitted: destroy it, else: nothing to destroy
     this.task$.pipe(timeout(0)).subscribe(task => task.destroy());
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
-    if (!this.config$.closed) this.config$.complete();
+    if (!this.configSubject.closed) this.configSubject.complete();
     if (!this.iframe$.closed) this.iframe$.complete();
   }
 
@@ -71,13 +68,18 @@ export class ItemTaskService implements OnDestroy {
     const url = item.url;
     if (!url) return this.setError(new Error('No URL defined for this task'));
     if (!attemptId) return this.setError(new Error('an attempt id is required to retrieve task token'));
-    this.config$.next({ itemId: item.id, url, attemptId });
+    this.configSubject.next({ itemId: item.id, url, attemptId });
   }
 
   initTask(iframe: HTMLIFrameElement): void {
     if (this.initialized) return;
     this.initialized = true;
     this.iframe$.next(iframe);
+  }
+
+  setError(error: unknown): void {
+    if (!this.configSubject.closed) this.configSubject.error(error);
+    if (!this.iframe$.closed) this.iframe$.error(error);
   }
 
   private validate(mode: string): Observable<void> {
@@ -99,28 +101,6 @@ export class ItemTaskService implements OnDestroy {
     }
     // Other unimplemented modes
     return EMPTY;
-  }
-
-  // Automatically save the answer and state
-  private saveAnswerAndState(): Observable<void> {
-    return this.task$.pipe(
-      switchMap(task => interval(answerAndStateSaveInterval).pipe(mapTo(task))),
-      switchMap(task => forkJoin([ task.getAnswer(), task.getState() ])),
-      distinctUntilChanged(([ answer1, state1 ], [ answer2, state2 ]) => answer1 === answer2 && state1 === state2),
-      /* TODO: save */
-      mapTo(undefined),
-    );
-  }
-
-  /* private */ reloadAnswerState(answer: string, state: string): void {
-    this.task$.pipe(
-      switchMap(task => concat(task.reloadState(state), task.reloadAnswer(answer))),
-    ).subscribe({ error: err => this.setError(err) });
-  }
-
-  private setError(error: unknown): void {
-    if (!this.config$.closed) this.config$.error(error);
-    if (!this.iframe$.closed) this.iframe$.error(error);
   }
 
   private bindPlatform(task: Task): void {

@@ -7,6 +7,7 @@ import { isNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates
 import { ItemTaskService } from '../../services/item-task.service';
 import { mapToFetchState } from 'src/app/shared/operators/state';
 import { capitalize } from 'src/app/shared/helpers/case_conversion';
+import { ItemTaskAnswerService } from '../../services/item-task-answer.service';
 
 const initialHeight = 1200;
 const heightSyncInterval = 0.2*SECONDS;
@@ -20,7 +21,7 @@ interface TaskTab {
   selector: 'alg-item-display',
   templateUrl: './item-display.component.html',
   styleUrls: [ './item-display.component.scss' ],
-  providers: [ ItemTaskService ],
+  providers: [ ItemTaskService, ItemTaskAnswerService ],
 })
 export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges {
   @Input() itemData?: ItemData;
@@ -41,11 +42,15 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
     this.taskService.display$.pipe(map(({ height }) => height), filter(isNotUndefined)),
   ).pipe(startWith(initialHeight), map(height => height + 40));
 
-  constructor(private taskService: ItemTaskService) {}
+  constructor(
+    private taskService: ItemTaskService,
+    private taskAnswerService: ItemTaskAnswerService,
+  ) {}
 
   ngOnInit(): void {
     if (!this.itemData) throw new Error('itemData must be set in ItemDisplayComponent');
     this.taskService.configure(this.itemData.item, this.itemData.route.attemptId ?? this.itemData.currentResult?.attemptId);
+    this.taskAnswerService.init();
   }
 
   ngAfterViewChecked(): void {
