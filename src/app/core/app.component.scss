@@ -37,11 +37,8 @@ a:hover {
 }
 
 .container {
-  // max-width: 960px;
-  // margin: 0 auto;
   width: 100%;
   position: relative;
-  // background-color: $base-bk-color;
 
   .left {
     width: $left-panel-size;
@@ -80,122 +77,17 @@ a:hover {
     background-color: $base-bk-color;
     z-index: 900;
 
+    transition: left 1s;
+    -webkit-transition: left 1s;
+    -moz-transition: left 1s;
+    -o-transition: left 1s;
+
     &.with-mode-bar {
       height: 7.5rem;
     }
 
     &.collapsed {
       left: 0;
-      transition: left 1s;
-      -webkit-transition: left 1s;
-      -moz-transition: left 1s;
-      -o-transition: left 1s;
-    }
-
-    &.expanded {
-      transition: left 1s;
-      -webkit-transition: left 1s;
-      -moz-transition: left 1s;
-      -o-transition: left 1s;
-    }
-
-    .top-right-bar {
-      width: 100%;
-      height: 100%;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      overflow: hidden;
-
-      .breadcrumb-bar {
-        display: flex;
-        align-items: center;
-        flex: 1;
-
-        alg-breadcrumb {
-          flex: 1;
-        }
-
-        .lang-picker {
-          margin-right: 0.1rem;
-        }
-      }
-
-      .folded-top-bar {
-        margin-left: 1rem;
-        display: flex;
-        align-items: center;
-        height: 3.75rem;
-        flex: 1;
-        min-width: 0;
-
-        .task-user-image {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          img {
-            border-radius: 9rem;
-          }
-        }
-
-        .rightpane-title {
-          margin-left: 1.25rem;
-          flex: 1;
-          font-size: 1.6rem;
-          margin-bottom: 0.4167rem;
-          min-width: 0;
-
-          p {
-            color: $base-text-color;
-            text-overflow: ellipsis;
-            overflow: hidden;
-            white-space: nowrap;
-          }
-        }
-
-        .user-info {
-          display: flex;
-          align-items: center;
-          margin-right: 0.4167rem;
-
-          span {
-            display: block;
-
-            &.user-avatar {
-              position: relative;
-            }
-
-            &.user-id {
-              color: $base-color;
-              font-size: 1.6667rem;
-              font-weight: bold;
-            }
-          }
-        }
-
-        .clock-icon {
-          color: $dark-text-color;
-          font-size: 2rem;
-          font-weight: bold;
-          margin-right: 0.4167rem;
-
-          &.finished {
-            color: $light-text-color;
-          }
-        }
-
-        .remaining-time {
-          color: $dark-text-color;
-          font-size: 2rem;
-          font-weight: bold;
-          margin-right: 20px;
-
-          &.finished {
-            color: $light-text-color;
-          }
-        }
-      }
     }
   }
 
@@ -203,9 +95,11 @@ a:hover {
     margin-left: 34rem;
     padding-top: 3.75rem;
     padding-bottom: 0;
-
-    // background-color: $base-bk-color;
     position: relative;
+    transition: margin-left 1s;
+    -webkit-transition: margin-left 1s;
+    -moz-transition: margin-left 1s;
+    -o-transition: margin-left 1s;
 
     &.with-mode-bar {
       padding-top: 7.5rem;
@@ -223,43 +117,12 @@ a:hover {
 
     .main-content {
       padding-left: 1.6667rem;
-      // background-color: $base-bk-color;
     }
 
     &.collapsed {
       margin-left: 0;
-      transition: margin-left 1s;
-      -webkit-transition: margin-left 1s;
-      -moz-transition: margin-left 1s;
-      -o-transition: margin-left 1s;
 
       .main-content {
-        margin-top: 1rem;
-      }
-    }
-
-    &.expanded {
-      transition: margin-left 1s;
-      -webkit-transition: margin-left 1s;
-      -moz-transition: margin-left 1s;
-      -o-transition: margin-left 1s;
-
-      .main-content {
-        margin-top: 0 !important;
-        transition: margin-top 1s;
-        -webkit-transition: margin-top 1s;
-        -moz-transition: margin-top 1s;
-        -o-transition: margin-top 1s;
-      }
-    }
-
-    .button-container {
-      margin-top: 1rem;
-      display: flex;
-      flex-wrap: wrap;
-
-      alg-button {
-        margin-right: 1rem;
         margin-top: 1rem;
       }
     }

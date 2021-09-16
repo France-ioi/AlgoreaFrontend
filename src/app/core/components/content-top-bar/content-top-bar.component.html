@@ -1,0 +1,10 @@
+<alg-editor-bar *ngIf="currentMode === 'editing'" (cancel)="onEditCancel()"></alg-editor-bar>
+<alg-observation-bar *ngIf="currentMode === 'watching'"></alg-observation-bar>
+<div class="breadcrumb-bar" *ngIf="!fullFrameContent && !scrolled">
+  <alg-breadcrumb [contentBreadcrumb]="currentContent?.breadcrumbs"></alg-breadcrumb>
+</div>
+<div class="full-frame-content-top-bar" *ngIf="fullFrameContent || scrolled">
+  <div class="right-pane-title">
+    <p *ngIf="currentContent && currentContent.title">{{ currentContent.title }}</p>
+  </div>
+</div>
