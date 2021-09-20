@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { EMPTY, Observable, of } from 'rxjs';
-import { map, mapTo, switchMap } from 'rxjs/operators';
+import { animationFrames, EMPTY, Observable, of } from 'rxjs';
+import { map, mapTo, switchMap, take } from 'rxjs/operators';
 import { ItemNavigationService } from 'src/app/core/http-services/item-navigation.service';
 import { FullItemRoute } from 'src/app/shared/routing/item-route';
 import { ItemRouter } from 'src/app/shared/routing/item-router';
@@ -63,19 +63,11 @@ export class ItemTaskService {
 
   private validate(mode: string): Observable<unknown> {
     switch (mode) {
-      case 'cancel':
-        return this.answerService.reloadAnswer();
-
-      case 'validate':
-      case 'done':
-        return this.answerService.submitAnswer();
-
-      case 'nextImmediate':
-        return this.navigateToNextItem();
-
-      default:
-        // Other unimplemented modes
-        return EMPTY;
+      case 'cancel': return this.answerService.reloadAnswer();
+      case 'nextImmediate': return this.navigateToNextItem();
+      case 'next': return this.answerService.submitAnswer().pipe(switchMap(() => this.navigateToNextItem()));
+      case 'top': return this.answerService.submitAnswer().pipe(switchMap(() => this.scrollTop()));
+      default: return this.answerService.submitAnswer();
     }
   }
 
@@ -86,5 +78,9 @@ export class ItemTaskService {
         if (data.right) this.itemRouter.navigateTo(data.right);
       }),
     );
+  }
+
+  private scrollTop(): Observable<void> {
+    return animationFrames().pipe(take(1), map(() => window.scrollTo({ behavior: 'smooth', top: 0 })));
   }
 }
