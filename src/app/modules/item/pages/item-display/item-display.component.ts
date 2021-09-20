@@ -7,7 +7,9 @@ import { isNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates
 import { ItemTaskService } from '../../services/item-task.service';
 import { mapToFetchState } from 'src/app/shared/operators/state';
 import { capitalize } from 'src/app/shared/helpers/case_conversion';
+import { ItemTaskInitService } from '../../services/item-task-init.service';
 import { ItemTaskAnswerService } from '../../services/item-task-answer.service';
+import { ItemTaskViewsService } from '../../services/item-task-views.service';
 
 const initialHeight = 1200;
 const heightSyncInterval = 0.2*SECONDS;
@@ -21,7 +23,7 @@ interface TaskTab {
   selector: 'alg-item-display',
   templateUrl: './item-display.component.html',
   styleUrls: [ './item-display.component.scss' ],
-  providers: [ ItemTaskService, ItemTaskAnswerService ],
+  providers: [ ItemTaskService, ItemTaskInitService, ItemTaskAnswerService, ItemTaskViewsService ],
 })
 export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges {
   @Input() itemData?: ItemData;
@@ -44,13 +46,15 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
 
   constructor(
     private taskService: ItemTaskService,
-    private taskAnswerService: ItemTaskAnswerService,
   ) {}
 
   ngOnInit(): void {
     if (!this.itemData) throw new Error('itemData must be set in ItemDisplayComponent');
-    this.taskService.configure(this.itemData.item, this.itemData.route.attemptId ?? this.itemData.currentResult?.attemptId);
-    this.taskAnswerService.init();
+    this.taskService.configure(
+      this.itemData.route,
+      this.itemData.item.url ?? undefined,
+      this.itemData.route.attemptId ?? this.itemData.currentResult?.attemptId,
+    );
   }
 
   ngAfterViewChecked(): void {
@@ -63,7 +67,7 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
   }
 
   setActiveTab(tab: TaskTab): void {
-    this.taskService.activeView$.next(tab.view);
+    this.taskService.showView(tab.view);
   }
 
   private getTabNameByView(view: string): string {

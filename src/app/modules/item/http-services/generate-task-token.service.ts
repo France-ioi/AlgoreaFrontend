@@ -24,7 +24,7 @@ export class GenerateTaskTokenService {
 
   constructor(private http: HttpClient) {}
 
-  generateToken(itemId: string, attemptId: string, asTeamId?: string): Observable<TaskToken> {
+  generate(itemId: string, attemptId: string, asTeamId?: string): Observable<TaskToken> {
     const params = asTeamId ? new HttpParams({ fromObject: { as_team_id: asTeamId } }) : undefined;
     return this.http.post<unknown>(
       `${appConfig.apiUrl}/items/${itemId}/attempts/${attemptId}/generate-task-token`,
