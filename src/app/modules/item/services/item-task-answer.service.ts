@@ -1,10 +1,8 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { combineLatest, EMPTY, forkJoin, interval, Observable, of, Subject } from 'rxjs';
-import { distinctUntilChanged, filter, map, mapTo, shareReplay, skip, switchMap, withLatestFrom } from 'rxjs/operators';
-import { ItemNavigationService } from 'src/app/core/http-services/item-navigation.service';
+import { distinctUntilChanged, filter, mapTo, shareReplay, skip, switchMap, withLatestFrom } from 'rxjs/operators';
 import { SECONDS } from 'src/app/shared/helpers/duration';
 import { repeatLatestWhen } from 'src/app/shared/helpers/repeatLatestWhen';
-import { ItemRouter } from 'src/app/shared/routing/item-router';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
 import { CreateCurrentAnswerService } from '../http-services/create-current-answer.service';
 import { GenerateAnswerTokenService } from '../http-services/generate-answer-token.service';
@@ -69,50 +67,25 @@ export class ItemTaskAnswerService implements OnDestroy {
     private updateCurrentAnswerService: UpdateCurrentAnswerService,
     private generateAnswerTokenService: GenerateAnswerTokenService,
     private saveGradeService: SaveGradeService,
-    private itemRouter: ItemRouter,
-    private itemNavigationService: ItemNavigationService,
   ) {}
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
-  validate(mode: string): Observable<void> {
-    switch (mode) {
-      case 'cancel':
-        return this.reloadAnswer().pipe(mapTo(undefined));
-
-      case 'validate':
-      case 'done':
-        return this.submitAnswer().pipe(mapTo(undefined));
-
-      case 'nextImmediate':
-        return this.config$.pipe(
-          switchMap(({ route }) => this.itemNavigationService.getNavigationNeighbors(route)),
-          map(data => {
-            if (data.right) this.itemRouter.navigateTo(data.right);
-          }),
-        );
-
-      default:
-        // Other unimplemented modes
-        return EMPTY;
-    }
-  }
-
-  private submitAnswer(): Observable<unknown> {
+  submitAnswer(): Observable<unknown> {
     return this.task$.pipe(
       // Step 1: get answer from task
       switchMap(task => combineLatest([ task.getAnswer(), this.taskToken$ ]).pipe(
 
         // Step 2: generate answer token with backend
-        switchMap(([ answer, taskToken ]) => this.generateAnswerTokenService.generateToken(answer, taskToken).pipe(
+        switchMap(([ answer, taskToken ]) => this.generateAnswerTokenService.generate(answer, taskToken).pipe(
 
           // Step 3: get grade for answer with answer token from task
           switchMap(answerToken => task.gradeAnswer(answer, answerToken).pipe(
 
             // Step 4: Save grade in backend
-            switchMap(grade => this.saveGradeService.saveGrade(
+            switchMap(grade => this.saveGradeService.save(
               taskToken,
               answerToken,
               grade.score,
@@ -124,7 +97,7 @@ export class ItemTaskAnswerService implements OnDestroy {
     );
   }
 
-  private reloadAnswer(): Observable<unknown> {
+  reloadAnswer(): Observable<unknown> {
     this.reloadAnswerAndStateSubject.next();
     return EMPTY;
   }

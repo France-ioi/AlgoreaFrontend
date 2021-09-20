@@ -11,22 +11,24 @@ export class ItemTaskViewsService implements OnDestroy {
   readonly display$ = this.displaySubject.asObservable();
 
   readonly views$ = merge(
-    this.itemTaskInit.task$.pipe(switchMap(task => task.getViews())), // Load views once the task has been loaded
-    this.display$.pipe(map(({ views }) => views), filter(isNotUndefined)), // listen to display updates
+    this.initService.task$.pipe(switchMap(task => task.getViews())),
+    this.display$.pipe(map(({ views }) => views), filter(isNotUndefined)),
   ).pipe(map(views => Object.entries(views).filter(([ , view ]) => !view.requires).map(([ name ]) => name)));
 
   private activeViewSubject = new BehaviorSubject<string>('task');
   readonly activeView$ = this.activeViewSubject.asObservable();
-  private showViews$ = combineLatest([ this.itemTaskInit.task$, this.activeViewSubject ]).pipe(
-    switchMap(([ task, view ]) => task.showViews({ [view]: true }))
+
+  // By default, load 'task' view when the task is initialized
+  private showViews$ = combineLatest([ this.initService.task$, this.activeView$ ]).pipe(
+    switchMap(([ task, view ]) => task.showViews({ [view]: true })),
   );
 
   private subscriptions = [
-    this.showViews$.subscribe({ error: err => this.itemTaskInit.setError(err) }),
+    this.showViews$.subscribe({ error: err => this.initService.setError(err) }),
   ];
 
   constructor(
-    private itemTaskInit: ItemTaskInitService,
+    private initService: ItemTaskInitService,
   ) {}
 
   ngOnDestroy(): void {

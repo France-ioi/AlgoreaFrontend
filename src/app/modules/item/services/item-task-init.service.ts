@@ -20,7 +20,7 @@ export class ItemTaskInitService implements OnDestroy {
 
   readonly config$ = this.configFromItem$.asObservable();
   readonly taskToken$: Observable<TaskToken> = this.config$.pipe(
-    switchMap(({ attemptId, route }) => this.generateTaskTokenService.generateToken(route.id, attemptId)),
+    switchMap(({ attemptId, route }) => this.generateTaskTokenService.generate(route.id, attemptId)),
     shareReplay(1),
   );
   readonly iframeSrc$ = this.taskToken$.pipe(
@@ -50,6 +50,7 @@ export class ItemTaskInitService implements OnDestroy {
   ) {}
 
   ngOnDestroy(): void {
+    // task is a one replayed value observable. If a task has been emitted, destroy it ; else nothing to do.
     this.task$.pipe(timeout(0)).subscribe(task => task.destroy());
   }
 

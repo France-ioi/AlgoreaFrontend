@@ -26,7 +26,7 @@ export class SaveGradeService {
 
   constructor(private http: HttpClient) {}
 
-  saveGrade(
+  save(
     taskToken: TaskToken,
     answerToken?: AnswerToken,
     score?: TaskScore,

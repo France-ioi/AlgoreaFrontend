@@ -24,7 +24,7 @@ export class GenerateAnswerTokenService {
 
   constructor(private http: HttpClient) {}
 
-  generateToken(answer: string, taskToken: string): Observable<AnswerToken> {
+  generate(answer: string, taskToken: string): Observable<AnswerToken> {
     return this.http.post<unknown>(`${appConfig.apiUrl}/answers`, {
       answer,
       task_token: taskToken,
