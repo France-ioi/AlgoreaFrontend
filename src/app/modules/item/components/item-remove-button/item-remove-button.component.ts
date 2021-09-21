@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { ReplaySubject } from 'rxjs';
-import { distinct, map, switchMap } from 'rxjs/operators';
+import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { mapToFetchState } from '../../../../shared/operators/state';
 import { GetItemChildrenService, ItemChild } from '../../http-services/get-item-children.service';
 import { Item } from '../../http-services/get-item-by-id.service';
@@ -20,7 +20,7 @@ export class ItemRemoveButtonComponent implements OnChanges {
 
   private readonly params$ = new ReplaySubject<{ id: string, attemptId: string }>(1);
   readonly state$ = this.params$.pipe(
-    distinct(),
+    distinctUntilChanged((a, b) => a.id === b.id && a.attemptId === b.attemptId),
     switchMap(({ id, attemptId }) =>
       this.getItemChildrenService.get(id, attemptId).pipe(
         map((itemChildren: ItemChild[]) => itemChildren.length > 0)
