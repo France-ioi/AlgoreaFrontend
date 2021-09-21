@@ -308,7 +308,9 @@ export class MemberListComponent implements OnChanges, OnDestroy {
   }
 
   onRemove(event: Event): void {
-    if (this.selection.length === 0 || !this.groupData) return;
+    if (this.selection.length === 0 || !this.groupData) {
+      throw new Error('Unexpected: Missed group data or selected models');
+    }
 
     const groupId = this.groupData.group.id;
     const selectedIds = this.selection.map(member => member.id);
