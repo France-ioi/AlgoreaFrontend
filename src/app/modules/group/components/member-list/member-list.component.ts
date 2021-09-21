@@ -241,9 +241,15 @@ export class MemberListComponent implements OnChanges, OnDestroy {
     this.selection = [];
   }
 
-  removeUsers(groupId: string, selectedIds: string[]): void {
+  removeUsers(groupId: string): void {
+    if (this.selection.length === 0) {
+      throw new Error('Unexpected: Missed selected members');
+    }
+
+    const selectedMemberIds = this.selection.map(member => member.id);
+
     this.removalInProgress$.next(true);
-    this.groupUsersService.removeUsers(groupId, selectedIds)
+    this.groupUsersService.removeUsers(groupId, selectedMemberIds)
       .subscribe({
         next: result => {
           displayResponseToast(this.actionFeedbackService, parseResults(result));
@@ -259,7 +265,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
       });
   }
 
-  onRemoveGroup(event: Event, selectedIds: string[]): void {
+  onRemoveGroup(event: Event): void {
     this.confirmationService.confirm({
       target: event.target || undefined,
       key: 'commonPopup',
@@ -269,11 +275,11 @@ export class MemberListComponent implements OnChanges, OnDestroy {
       acceptLabel: $localize`Yes`,
       acceptIcon: 'fa fa-check',
       rejectLabel: $localize`No`,
-      accept: () => this.removeGroupsOrSubgroups(selectedIds),
+      accept: () => this.removeGroupsOrSubgroups(),
     });
   }
 
-  onRemoveSubgroups(event: Event, groupId: string, selectedIds: string[]): void {
+  onRemoveSubgroups(event: Event, groupId: string): void {
     this.confirmationService.confirm({
       target: event.target || undefined,
       key: 'commonPopup',
@@ -283,14 +289,20 @@ export class MemberListComponent implements OnChanges, OnDestroy {
       acceptLabel: $localize`Yes`,
       acceptIcon: 'fa fa-check',
       rejectLabel: $localize`No`,
-      accept: () => this.removeGroupsOrSubgroups(selectedIds, groupId),
+      accept: () => this.removeGroupsOrSubgroups(groupId),
     });
   }
 
-  removeGroupsOrSubgroups(selectedIds: string[], groupId?: string): void {
+  removeGroupsOrSubgroups(groupId?: string): void {
+    if (this.selection.length === 0) {
+      throw new Error('Unexpected: Missed selected groups');
+    }
+
+    const selectedGroupIds = this.selection.map(group => group.id);
+
     this.removalInProgress$.next(true);
     const request$ = groupId ?
-      this.removeSubgroupService.removeBatch(groupId, selectedIds) : this.removeGroupService.removeBatch(selectedIds);
+      this.removeSubgroupService.removeBatch(groupId, selectedGroupIds) : this.removeGroupService.removeBatch(selectedGroupIds);
 
     request$.subscribe({
       next: response => {
@@ -313,10 +325,9 @@ export class MemberListComponent implements OnChanges, OnDestroy {
     }
 
     const groupId = this.groupData.group.id;
-    const selectedIds = this.selection.map(member => member.id);
 
     if (this.currentFilter.type === 'users') {
-      this.removeUsers(groupId, selectedIds);
+      this.removeUsers(groupId);
       return;
     }
 
@@ -331,12 +342,12 @@ export class MemberListComponent implements OnChanges, OnDestroy {
       accept: () => {
         // ISSUE: https://github.com/primefaces/primeng/issues/10589
         setTimeout(() => {
-          this.onRemoveGroup(event, selectedIds);
+          this.onRemoveGroup(event);
         }, 250);
       },
       reject: () => {
         setTimeout(() => {
-          this.onRemoveSubgroups(event, groupId, selectedIds);
+          this.onRemoveSubgroups(event, groupId);
         }, 250);
       }
     });
