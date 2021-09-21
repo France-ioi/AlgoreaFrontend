@@ -10,6 +10,8 @@ import { delay, map, retryWhen, switchMap, take } from 'rxjs/operators';
 import { rxBuild, RxMessagingChannel } from './rxjschannel';
 import * as D from 'io-ts/Decoder';
 import {
+  OpenUrlParams,
+  openUrlParamsDecoder,
   TaskGrade,
   taskGradeDecoder,
   TaskLog,
@@ -114,7 +116,7 @@ export class Task {
     );
     this.chan.bind(
       'platform.openUrl',
-      url => platform.openUrl(decode(D.string)(url)),
+      url => platform.openUrl(decode(openUrlParamsDecoder)(url)),
     );
     this.chan.bind(
       'platform.log',
@@ -262,7 +264,7 @@ export class TaskPlatform {
   updateDisplay(_data: UpdateDisplayParams): Observable<void> {
     return throwError(() => new Error('platform.updateDisplay is not defined!'));
   }
-  openUrl(_url: string): Observable<void> {
+  openUrl(_url: OpenUrlParams): Observable<void> {
     return throwError(() => new Error('platform.openUrl is not defined!'));
   }
   log(_data: TaskLog): Observable<void> {

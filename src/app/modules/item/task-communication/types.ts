@@ -1,5 +1,6 @@
 /** Types and decoders for types used in platform-task communication */
 
+import { pipe } from 'fp-ts/function';
 import * as D from 'io-ts/Decoder';
 
 
@@ -54,7 +55,6 @@ export type TaskGrade = D.TypeOf<typeof taskGradeDecoder>;
 export type TaskScore = NonNullable<TaskGrade['score']>;
 export type TaskScoreToken = NonNullable<TaskGrade['scoreToken']>;
 
-
 // Parameters sent by the task to platform.updateDisplay
 export const updateDisplayParamsDecoder = D.partial({
   height: D.number,
@@ -70,3 +70,17 @@ export type TaskLog = D.TypeOf<typeof taskLogDecoder>;
 // Currently unused
 export type TaskMetaData = unknown;
 export type TaskResources = unknown;
+
+export const openUrlParamsDecoder = D.union(
+  D.string,
+  pipe(
+    D.struct({ path: D.string }),
+    D.intersect(D.partial({ newTab: D.boolean }))
+  ),
+  pipe(
+    D.struct({ url: D.string }),
+    D.intersect(D.partial({ newTab: D.boolean }))
+  ),
+);
+
+export type OpenUrlParams = D.TypeOf<typeof openUrlParamsDecoder>;
