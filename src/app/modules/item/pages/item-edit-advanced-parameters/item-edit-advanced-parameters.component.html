@@ -198,8 +198,11 @@
   </alg-section>
 </form>
 
-<div class="delete-button">
-  <alg-item-remove-button [item]="item"></alg-item-remove-button>
-</div>
+<ng-container *ngIf="attemptId$ | async as attemptId">
+  <div class="delete-button">
+    <alg-item-remove-button [item]="item" [attemptId]="attemptId"></alg-item-remove-button>
+  </div>
+</ng-container>
+
 
 

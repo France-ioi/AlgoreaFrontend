@@ -1,11 +1,9 @@
 import { Component, Input, OnChanges } from '@angular/core';
-import { ReplaySubject, combineLatest } from 'rxjs';
-import { distinct, map, switchMap, filter } from 'rxjs/operators';
+import { ReplaySubject } from 'rxjs';
+import { distinct, map, switchMap } from 'rxjs/operators';
 import { mapToFetchState } from '../../../../shared/operators/state';
 import { GetItemChildrenService, ItemChild } from '../../http-services/get-item-children.service';
 import { Item } from '../../http-services/get-item-by-id.service';
-import { ItemDataSource } from '../../services/item-datasource.service';
-import { isNotNullOrUndefined } from '../../../../shared/helpers/null-undefined-predicates';
 import { ConfirmationService } from 'primeng/api';
 import { RemoveItemService } from '../../http-services/remove-item.service';
 import { ActionFeedbackService } from '../../../../shared/services/action-feedback.service';
@@ -18,22 +16,12 @@ import { Router } from '@angular/router';
 })
 export class ItemRemoveButtonComponent implements OnChanges {
   @Input() item?: Item;
+  @Input() attemptId?: string;
 
-  private readonly id$ = new ReplaySubject<string>(1);
-  readonly state$ = combineLatest([
-    this.id$,
-    this.itemDataSource.state$.pipe(
-      map(state => {
-        if (state.isReady) {
-          return state.data.route.attemptId || state.data.route.parentAttemptId;
-        }
-        return null;
-      }),
-      filter(isNotNullOrUndefined),
-    ),
-  ]).pipe(
+  private readonly params$ = new ReplaySubject<{ id: string, attemptId: string }>(1);
+  readonly state$ = this.params$.pipe(
     distinct(),
-    switchMap(([ id, attemptId ]) =>
+    switchMap(({ id, attemptId }) =>
       this.getItemChildrenService.get(id, attemptId).pipe(
         map((itemChildren: ItemChild[]) => itemChildren.length > 0)
       )
@@ -45,7 +33,6 @@ export class ItemRemoveButtonComponent implements OnChanges {
 
   constructor(
     private getItemChildrenService: GetItemChildrenService,
-    private itemDataSource: ItemDataSource,
     private confirmationService: ConfirmationService,
     private removeItemService: RemoveItemService,
     private actionFeedbackService: ActionFeedbackService,
@@ -54,8 +41,11 @@ export class ItemRemoveButtonComponent implements OnChanges {
   }
 
   ngOnChanges(): void {
-    if (this.item) {
-      this.id$.next(this.item.id);
+    if (this.item && this.attemptId) {
+      this.params$.next({
+        id: this.item.id,
+        attemptId: this.attemptId,
+      });
     }
   }
 
