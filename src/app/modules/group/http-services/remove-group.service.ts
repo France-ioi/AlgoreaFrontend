@@ -4,8 +4,9 @@ import { HttpClient } from '@angular/common/http';
 import { appConfig } from '../../../shared/helpers/config';
 import { SimpleActionResponse } from '../../../shared/http-services/action-response';
 import { catchError, map } from 'rxjs/operators';
+import { Result } from '../components/member-list/group-removal-response-handling';
 
-export function parseResults(data: Map<string, SimpleActionResponse>): { countRequests: number, countSuccess: number, errorText?: string } {
+export function parseResults(data: Map<string, SimpleActionResponse>): Result {
   const values = Array.from(data.values());
 
   return {
@@ -26,7 +27,7 @@ export class RemoveGroupService {
     return this.http.delete<SimpleActionResponse>(`${appConfig.apiUrl}/groups/${id}`);
   }
 
-  removeBatch(ids: string[]): Observable<{ countRequests: number, countSuccess: number, additionalMessage?: string }> {
+  removeBatch(ids: string[]): Observable<Result> {
     return forkJoin(
       ids.map(id => this.remove(id).pipe(catchError(({ error }) => of(error))))
     ).pipe(
