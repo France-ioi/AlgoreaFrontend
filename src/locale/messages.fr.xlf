@@ -1945,7 +1945,7 @@
         <source>Solution</source><target state="new">Solution</target>
         
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog-texts.ts</context><context context-type="linenumber">40</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog-texts.ts</context><context context-type="linenumber">71</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-display/item-display.component.ts</context><context context-type="linenumber">69</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog-texts.ts</context><context context-type="linenumber">40</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog-texts.ts</context><context context-type="linenumber">71</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-display/item-display.component.ts</context><context context-type="linenumber">78</context></context-group></trans-unit>
       <trans-unit id="4838785989562241195" datatype="html">
         <source><x id="PH" equiv-text="targetTypeString"/> can also see the solution of this items and its descendants (when possible for this group)</source><target state="new"><x id="PH" equiv-text="targetTypeString"/> can also see the solution of this items and its descendants (when possible for this group)</target>
         <context-group purpose="location">
@@ -2350,28 +2350,16 @@
         <source>Unable to load the task</source><target state="new">Unable to load the task</target>
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-display/item-display.component.html</context><context context-type="linenumber">9</context></context-group></trans-unit>
-      <trans-unit id="3894950702316166331" datatype="html">
-        <source>Loading...</source><target state="new">Loading...</target>
-        
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-display/item-display.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="3742657416068781599" datatype="html">
+      <trans-unit id="3742657416068781599" datatype="html">
         <source>Editor</source><target state="new">Editor</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/item/pages/item-display/item-display.component.ts</context>
-          <context context-type="linenumber">66</context>
-        </context-group>
-      </trans-unit><trans-unit id="1961103453220395122" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-display/item-display.component.ts</context><context context-type="linenumber">75</context></context-group></trans-unit><trans-unit id="1961103453220395122" datatype="html">
         <source>Forum</source><target state="new">Forum</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/item/pages/item-display/item-display.component.ts</context>
-          <context context-type="linenumber">67</context>
-        </context-group>
-      </trans-unit><trans-unit id="4579430119993221119" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-display/item-display.component.ts</context><context context-type="linenumber">76</context></context-group></trans-unit><trans-unit id="4579430119993221119" datatype="html">
         <source>Hints</source><target state="new">Hints</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/item/pages/item-display/item-display.component.ts</context>
-          <context context-type="linenumber">68</context>
-        </context-group>
-      </trans-unit>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-display/item-display.component.ts</context><context context-type="linenumber">77</context></context-group></trans-unit>
       
       <trans-unit id="186460519743457757" datatype="html">
         <source>Global parameters</source><target state="new">Global parameters</target>
@@ -2946,7 +2934,7 @@
       <trans-unit id="4578192247039196794" datatype="html">
         <source>Task</source><target state="new">Task</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-display/item-display.component.ts</context><context context-type="linenumber">71</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/helpers/new-item-types.ts</context><context context-type="linenumber">14</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-display/item-display.component.ts</context><context context-type="linenumber">80</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/helpers/new-item-types.ts</context><context context-type="linenumber">14</context></context-group></trans-unit>
       <trans-unit id="6361086178368013800" datatype="html">
         <source>A new task which users can try to solve.</source><target state="new">A new task which users can try to solve.</target>
         <context-group purpose="location">
@@ -2985,7 +2973,7 @@
       <trans-unit id="875621229969091247" datatype="html">
         <source>Submission</source><target state="new">Submission</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-display/item-display.component.ts</context><context context-type="linenumber">70</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/pipes/logActionDisplay.ts</context><context context-type="linenumber">5</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-display/item-display.component.ts</context><context context-type="linenumber">79</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/pipes/logActionDisplay.ts</context><context context-type="linenumber">5</context></context-group></trans-unit>
       <trans-unit id="2535576348998502417" datatype="html">
         <source>Submission (score: <x id="PH" equiv-text="score"/>)</source><target state="new">Submission (score: <x id="PH" equiv-text="score"/>)</target>
         <context-group purpose="location">
