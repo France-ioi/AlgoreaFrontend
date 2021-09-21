@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { animationFrames, EMPTY, Observable, of } from 'rxjs';
 import { map, mapTo, switchMap, take } from 'rxjs/operators';
 import { ItemNavigationService } from 'src/app/core/http-services/item-navigation.service';
-import { FullItemRoute } from 'src/app/shared/routing/item-route';
+import { LocaleService } from 'src/app/core/services/localeService';
+import { FullItemRoute, itemRoute } from 'src/app/shared/routing/item-route';
 import { ItemRouter } from 'src/app/shared/routing/item-router';
 import { Task, TaskPlatform } from '../task-communication/task-proxy';
 import { TaskParamsValue } from '../task-communication/types';
@@ -30,6 +32,8 @@ export class ItemTaskService {
     private viewsService: ItemTaskViewsService,
     private itemRouter: ItemRouter,
     private itemNavigationService: ItemNavigationService,
+    private router: Router,
+    private localeService: LocaleService,
   ) {}
 
   configure(route: FullItemRoute, url?: string, attemptId?: string): void {
@@ -57,6 +61,12 @@ export class ItemTaskService {
         this.viewsService.showView(view);
         return EMPTY;
       },
+      openUrl: (params): Observable<void> => {
+        if (typeof params === 'string') return this.navigateToItem(params);
+        if ('path' in params) return this.navigateToItem(params.path, params.newTab);
+        this.navigate(params.url, params.newTab);
+        return EMPTY;
+      }
     });
     task.bindPlatform(platform);
   }
@@ -82,5 +92,31 @@ export class ItemTaskService {
 
   private scrollTop(): Observable<void> {
     return animationFrames().pipe(take(1), map(() => window.scrollTo({ behavior: 'smooth', top: 0 })));
+  }
+
+  private navigateToItem(path: string, newTab = false): Observable<void> {
+    const [ , ...parentIds ] = path.split('/');
+    const id = parentIds.pop();
+    if (!id) throw new Error('id must be defined');
+
+    const route = itemRoute('activity', id, parentIds);
+    newTab
+      ? this.navigate(this.router.serializeUrl(this.itemRouter.url(route)), true)
+      : this.itemRouter.navigateTo(route);
+    return EMPTY;
+  }
+
+  private navigate(href: string, newTab = false): void {
+    const url = this.formatUrl(href);
+    newTab
+      ? window.open(url, '_blank')
+      : window.location.href = url;
+  }
+
+  private formatUrl(href: string): string {
+    if (href.startsWith('http')) return href;
+    const url = new URL(this.localeService.currentLang?.path ?? '/', window.location.href);
+    url.hash = href;
+    return url.href;
   }
 }
