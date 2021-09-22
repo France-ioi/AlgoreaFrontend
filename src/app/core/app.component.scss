@@ -49,19 +49,13 @@ a:hover {
     background-color: $nav-bk-color;
     height: 100%;
 
+    transition: left 1s;
+    -webkit-transition: left 1s;
+    -moz-transition: left 1s;
+    -o-transition: left 1s;
+
     &.collapsed {
       left: calc(0rem - #{$left-panel-size});
-      transition: left 1s;
-      -webkit-transition: left 1s;
-      -moz-transition: left 1s;
-      -o-transition: left 1s;
-    }
-
-    &.expanded {
-      transition: left 1s;
-      -webkit-transition: left 1s;
-      -moz-transition: left 1s;
-      -o-transition: left 1s;
     }
   }
 

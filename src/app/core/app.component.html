@@ -1,5 +1,5 @@
 <div class="container">
-  <div class="left" *ngrxLet="fullFrameContent$ as fullFrameContent" [ngClass]="{ collapsed: fullFrameContent, expanded: !fullFrameContent }">
+  <div class="left" *ngrxLet="fullFrameContent$ as fullFrameContent" [ngClass]="{ collapsed: fullFrameContent }">
     <alg-left-menu></alg-left-menu>
   </div>
   <ng-container *ngIf="currentMode$ | async as currentMode">
