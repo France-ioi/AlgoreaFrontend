@@ -340,6 +340,6 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
   }
 
   navigateToGroup(row: { header: string, id: string, data: (TeamUserProgress|undefined)[] }): void {
-    this.groupRouter.navigateTo(rawGroupRoute({ id: row.id, isUser: this.currentFilter !== 'Groups' }));
+    this.groupRouter.navigateTo(rawGroupRoute({ id: row.id, isUser: this.currentFilter === 'Users' }));
   }
 }
