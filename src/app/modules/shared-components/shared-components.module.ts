@@ -57,6 +57,7 @@ import { AccessCodeViewComponent } from './components/access-code-view/access-co
 import { LanguagePickerComponent } from '../../core/components/language-picker/language-picker.component';
 import { UserCaptionPipe } from '../../shared/pipes/userCaption';
 import { LogActionDisplayPipe } from '../../shared/pipes/logActionDisplay';
+import { ErrorComponent } from './components/error/error.component';
 
 @NgModule({
   declarations: [
@@ -92,6 +93,7 @@ import { LogActionDisplayPipe } from '../../shared/pipes/logActionDisplay';
     DurationComponent,
     AccessCodeViewComponent,
     LanguagePickerComponent,
+    ErrorComponent,
   ],
   imports: [
     CommonModule,
@@ -157,6 +159,7 @@ import { LogActionDisplayPipe } from '../../shared/pipes/logActionDisplay';
     DurationComponent,
     AccessCodeViewComponent,
     LanguagePickerComponent,
+    ErrorComponent,
   ],
   providers: [],
   entryComponents: [

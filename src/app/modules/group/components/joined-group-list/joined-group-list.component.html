@@ -1,8 +1,9 @@
 <ng-container *ngIf="state$ | async as state">
-  <p *ngIf="state.isError" class="alg-error-message">
-    <i class="fa fa-exclamation-triangle"></i>
-    <span i18n> Error while loading the group you joined</span>
-  </p>
+  <alg-error
+    *ngIf="state.isError"
+    icon="fa fa-exclamation-triangle"
+    i18n-message message="Error while loading the group you joined"
+  ></alg-error>
 
   <p-table
     *ngIf="!state.isError"

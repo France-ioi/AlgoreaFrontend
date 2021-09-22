@@ -1,0 +1,7 @@
+<div class="wrapper">
+  <div class="message-container">
+    <i *ngIf="icon" class="icon" [ngClass]="icon"></i>
+    <span class="message">{{ message }}</span>
+  </div>
+  <span *ngIf="allowRetry" class="retry cursor-pointer" (click)="onRetryError()" i18n>Retry now</span>
+</div>
