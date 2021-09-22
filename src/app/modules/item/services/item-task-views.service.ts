@@ -2,7 +2,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject, combineLatest, merge, ReplaySubject } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
 import { isNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
-import { UpdateDisplayParams } from '../task-communication/types';
+import { TaskViews, UpdateDisplayParams } from '../task-communication/types';
 import { ItemTaskInitService } from './item-task-init.service';
 
 @Injectable()
@@ -13,7 +13,7 @@ export class ItemTaskViewsService implements OnDestroy {
   readonly views$ = merge(
     this.initService.task$.pipe(switchMap(task => task.getViews())),
     this.display$.pipe(map(({ views }) => views), filter(isNotUndefined)),
-  ).pipe(map(views => Object.entries(views).filter(([ , view ]) => !view.requires).map(([ name ]) => name)));
+  ).pipe(map(views => this.getAvailableViews(views)));
 
   private activeViewSubject = new BehaviorSubject<string>('task');
   readonly activeView$ = this.activeViewSubject.asObservable();
@@ -41,5 +41,15 @@ export class ItemTaskViewsService implements OnDestroy {
 
   showView(view: string): void {
     this.activeViewSubject.next(view);
+  }
+
+  private getAvailableViews(views: TaskViews): string[] {
+    return Object.entries(views)
+      .filter(([ name, view ], _index, entries) => {
+        const requiresOtherView = !!view.requires;
+        const isIncludedInOtherView = entries.some(([ , otherView ]) => !!otherView.includes?.includes(name));
+        return !requiresOtherView && !isIncludedInOtherView;
+      })
+      .map(([ name ]) => name);
   }
 }
