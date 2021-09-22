@@ -4,8 +4,6 @@ import { DropdownOption } from 'src/app/modules/shared-components/components/dro
 import { Item } from '../../http-services/get-item-by-id.service';
 import { HOURS } from 'src/app/shared/helpers/duration';
 import { DEFAULT_ENTERING_TIME_MAX, DEFAULT_ENTERING_TIME_MIN } from '../item-edit/item-edit.component';
-import { map } from 'rxjs/operators';
-import { ItemDataSource } from '../../services/item-datasource.service';
 
 @Component({
   selector: 'alg-item-edit-advanced-parameters',
@@ -15,6 +13,7 @@ import { ItemDataSource } from '../../services/item-datasource.service';
 export class ItemEditAdvancedParametersComponent implements OnInit {
   @Input() item?: Item;
   @Input() parentForm?: FormGroup;
+  @Input() attemptId?: string;
 
   validationCritireaOptions: DropdownOption[] = [{
     label: $localize`Never`,
@@ -60,16 +59,7 @@ export class ItemEditAdvancedParametersComponent implements OnInit {
     value: 'None'
   }];
 
-  attemptId$ = this.itemDataSource.state$.pipe(
-    map(state => {
-      if (state.isReady) {
-        return state.data.route.attemptId || state.data.route.parentAttemptId;
-      }
-      return undefined;
-    })
-  );
-
-  constructor(private itemDataSource: ItemDataSource) { }
+  constructor() { }
 
   ngOnInit(): void {
     this.handleDurationValidators();
