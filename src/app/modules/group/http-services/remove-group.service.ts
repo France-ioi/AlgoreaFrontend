@@ -6,13 +6,11 @@ import { SimpleActionResponse } from '../../../shared/http-services/action-respo
 import { catchError, map } from 'rxjs/operators';
 import { Result } from '../components/member-list/group-removal-response-handling';
 
-export function parseResults(data: Map<string, SimpleActionResponse>): Result {
-  const values = Array.from(data.values());
-
+export function parseResults(data: SimpleActionResponse[]): Result {
   return {
-    countRequests: data.size,
-    countSuccess: values.map<number>(state => (state.success ? 1 : 0)).reduce((acc, res) => acc + res, 0),
-    errorText: values.some(value => !!value.error_text) ? $localize`The group(s) must be empty` : undefined,
+    countRequests: data.length,
+    countSuccess: data.filter(state => state.success).length,
+    errorText: data.some(state => !!state.error_text) ? $localize`The group(s) must be empty` : undefined,
   };
 }
 
@@ -31,7 +29,7 @@ export class RemoveGroupService {
     return forkJoin(
       ids.map(id => this.remove(id).pipe(catchError(({ error }) => of(error))))
     ).pipe(
-      map(data => parseResults(new Map(Object.entries(data)))),
+      map(parseResults),
     );
   }
 }

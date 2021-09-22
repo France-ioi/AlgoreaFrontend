@@ -22,7 +22,7 @@ export class RemoveSubgroupService {
     return forkJoin(
       ids.map(id => this.remove(parentGroupId, id).pipe(catchError(({ error }) => of(error))))
     ).pipe(
-      map(data => parseResults(new Map(Object.entries(data))))
+      map(parseResults)
     );
   }
 }
