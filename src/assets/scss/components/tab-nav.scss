@@ -7,7 +7,6 @@
   overflow: hidden;
 
   .nav-tab-item {
-    cursor: pointer;
     @include main-tabs;
 
     &.active {

@@ -1,7 +1,7 @@
 <div class="item-display" *ngIf="state$ | async as state">
   <ng-container *ngIf="tabs$ | async as tabs">
     <nav *ngIf="tabs.length > 1" class="nav-tab">
-      <a class="nav-tab-item" *ngFor="let tab of tabs" (click)="setActiveTab(tab)" [class.active]="tab.view === (activeTabView$ | async)">
+      <a class="nav-tab-item cursor-pointer" *ngFor="let tab of tabs" (click)="setActiveTab(tab)" [class.active]="tab.view === (activeTabView$ | async)">
         {{tab.name}}
       </a>
     </nav>
