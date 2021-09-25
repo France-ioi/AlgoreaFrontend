@@ -29,6 +29,10 @@ describe('Algorea Frontend', () => {
     it('should have a working collapse button', async () => {
       await page.getCollapseButtonElement().click();
 
+      await expect(page.getLeftElement().getAttribute('class')).not.toMatch('collapsed');
+      await expect(page.getTopBarElement().getAttribute('class')).not.toMatch('collapsed');
+      await expect(page.getRightElement().getAttribute('class')).not.toMatch('collapsed');
+
       await expect(page.getLeftElement().getAttribute('class')).toMatch('collapsed');
       await expect(page.getTopBarElement().getAttribute('class')).toMatch('collapsed');
       await expect(page.getRightElement().getAttribute('class')).toMatch('collapsed');
