@@ -11,7 +11,7 @@ export class ContentTopBarComponent {
   @Input() fullFrameContent?: boolean;
   @Input() currentMode?: string;
   @Input() currentContent?: ContentInfo | null;
-  @Input() scrolled?: boolean;
+  @Input() scrolled = false;
 
   constructor(private modeService: ModeService) {
   }
