@@ -60,7 +60,7 @@
             <th *ngFor="let col of state.data.items">
               <div class="slanted-header">
                 <div class="slanted-header-content" pTooltip="{{ col.title }}" tooltipPosition="top" [showDelay]="100">
-                  <span class="cursor-pointer" (click)="navigateToItem(col)">{{ col.title }}</span>
+                  <span class="slanted-header-link alg-link cursor-pointer" (click)="navigateToItem(col)">{{ col.title }}</span>
                 </div>
               </div>
             </th>
@@ -74,7 +74,7 @@
         >
           <tr>
             <td class="users" pTooltip="{{ row.header }}" tooltipPosition="left" [showDelay]="100">
-              <span class="cursor-pointer" (click)="navigateToGroup(row)">{{ row.header }}</span>
+              <span class="alg-link cursor-pointer" (click)="navigateToGroup(row)">{{ row.header }}</span>
             </td>
             <td
               class="cursor-pointer"
