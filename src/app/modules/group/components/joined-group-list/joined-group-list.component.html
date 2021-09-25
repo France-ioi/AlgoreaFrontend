@@ -29,7 +29,9 @@
 
     <ng-template pTemplate="body" let-membership>
       <tr>
-        <td>{{ membership.group.name }}</td>
+        <td>
+          <a class="alg-link" routerLink="../by-id/{{ membership.group.id }}/details">{{ membership.group.name }}</a>
+        </td>
         <td>{{ membership.group.type }}</td>
         <td>{{ membership.memberSince | date:'short' }}</td>
         <td>
