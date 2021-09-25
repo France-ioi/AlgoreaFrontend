@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { ContentInfo } from '../../../shared/models/content/content-info';
 import { delay } from 'rxjs/operators';
 import { CurrentContentService } from '../../../shared/services/current-content.service';
-import { Mode, ModeAction, ModeService } from '../../../shared/services/mode.service';
+import { Mode } from '../../../shared/services/mode.service';
 
 @Component({
   selector: 'alg-top-bar',
@@ -19,10 +19,6 @@ export class TopBarComponent {
 
   constructor(
     private currentContent: CurrentContentService,
-    private modeService: ModeService,
   ) {}
 
-  onEditCancel(): void {
-    this.modeService.modeActions$.next(ModeAction.StopEditing);
-  }
 }

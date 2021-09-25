@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { ModeAction, ModeService } from '../../../shared/services/mode.service';
 
 @Component({
   selector: 'alg-content-top-bar',
@@ -11,5 +12,10 @@ export class ContentTopBarComponent {
   @Input() currentContent?: any;
   @Input() scrolled?: boolean;
 
-  onEditCancel(): void {}
+  constructor(private modeService: ModeService) {
+  }
+
+  onEditCancel(): void {
+    this.modeService.modeActions$.next(ModeAction.StopEditing);
+  }
 }
