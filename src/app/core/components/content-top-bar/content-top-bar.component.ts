@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { ModeAction, ModeService } from '../../../shared/services/mode.service';
+import { ContentInfo } from '../../../shared/models/content/content-info';
 
 @Component({
   selector: 'alg-content-top-bar',
@@ -9,7 +10,7 @@ import { ModeAction, ModeService } from '../../../shared/services/mode.service';
 export class ContentTopBarComponent {
   @Input() fullFrameContent?: boolean;
   @Input() currentMode?: string;
-  @Input() currentContent?: any;
+  @Input() currentContent?: ContentInfo | null;
   @Input() scrolled?: boolean;
 
   constructor(private modeService: ModeService) {
