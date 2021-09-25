@@ -1,7 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ContentInfo } from '../../../shared/models/content/content-info';
-import { delay } from 'rxjs/operators';
 import { CurrentContentService } from '../../../shared/services/current-content.service';
 import { Mode } from '../../../shared/services/mode.service';
 
@@ -15,7 +14,7 @@ export class TopBarComponent {
   @Input() currentMode?: Mode;
   @Input() fullFrameContent?: boolean;
 
-  currentContent$: Observable<ContentInfo|null> = this.currentContent.content$.pipe(delay(0));
+  currentContent$: Observable<ContentInfo|null> = this.currentContent.content$;
 
   constructor(
     private currentContent: CurrentContentService,
