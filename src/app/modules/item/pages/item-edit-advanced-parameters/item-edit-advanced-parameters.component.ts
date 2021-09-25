@@ -13,6 +13,7 @@ import { DEFAULT_ENTERING_TIME_MAX, DEFAULT_ENTERING_TIME_MIN } from '../item-ed
 export class ItemEditAdvancedParametersComponent implements OnInit {
   @Input() item?: Item;
   @Input() parentForm?: FormGroup;
+  @Input() attemptId?: string;
 
   validationCritireaOptions: DropdownOption[] = [{
     label: $localize`Never`,

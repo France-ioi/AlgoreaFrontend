@@ -60,6 +60,15 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
 
   subscription?: Subscription;
 
+  attemptId$ = this.itemDataSource.state$.pipe(
+    map(state => {
+      if (state.isReady) {
+        return state.data.route.attemptId || state.data.route.parentAttemptId;
+      }
+      return undefined;
+    })
+  );
+
   get enableParticipation(): boolean {
     return this.initialFormData?.type !== 'Skill';
   }
