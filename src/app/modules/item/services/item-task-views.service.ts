@@ -33,6 +33,8 @@ export class ItemTaskViewsService implements OnDestroy {
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
+    this.displaySubject.complete();
+    this.activeViewSubject.complete();
   }
 
   updateDisplay(display: UpdateDisplayParams): void {
