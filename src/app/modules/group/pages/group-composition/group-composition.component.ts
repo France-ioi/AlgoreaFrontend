@@ -7,6 +7,7 @@ import { MemberListComponent } from '../../components/member-list/member-list.co
 import { ManagementAdditions, withManagementAdditions } from '../../helpers/group-management';
 import { Group } from '../../http-services/get-group-by-id.service';
 import { GroupCreationService } from '../../http-services/group-creation.service';
+import { GroupData } from '../../services/group-datasource.service';
 
 export interface GroupChildData {
   id?: string,
@@ -21,7 +22,8 @@ export interface GroupChildData {
 })
 export class GroupCompositionComponent implements OnChanges {
 
-  @Input() group?: Group;
+  @Input() groupData?: GroupData;
+
   @Output() groupRefreshRequired = new EventEmitter<void>();
   groupWithPermissions?: Group & ManagementAdditions;
 
@@ -35,7 +37,7 @@ export class GroupCompositionComponent implements OnChanges {
   ) {}
 
   ngOnChanges(): void {
-    this.groupWithPermissions = this.group ? withManagementAdditions(this.group) : undefined;
+    this.groupWithPermissions = this.groupData ? withManagementAdditions(this.groupData.group) : undefined;
   }
 
   refreshGroupInfo(): void {
@@ -43,12 +45,12 @@ export class GroupCompositionComponent implements OnChanges {
   }
 
   addGroup(group: GroupChildData): void {
-    if (!this.group) throw Error('Tried to add a subgroup to an undefined group');
+    if (!this.groupData) throw Error('Tried to add a subgroup to an undefined group');
 
     this.state = 'addingGroup';
 
     forkJoin({
-      parentGroupId: of(this.group.id),
+      parentGroupId: of(this.groupData.group.id),
       childGroupId: group.id ? of(group.id) : this.groupCreationService.create(group.title, group.type),
     }).pipe(switchMap(ids => this.groupCreationService.addSubgroup(ids.parentGroupId, ids.childGroupId))).subscribe({
       next: _ => {

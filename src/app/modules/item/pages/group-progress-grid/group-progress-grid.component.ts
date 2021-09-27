@@ -15,6 +15,12 @@ import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.s
 import { TypeFilter } from '../../components/composition-filter/composition-filter.component';
 import { GetItemChildrenService } from '../../http-services/get-item-children.service';
 import { ItemData } from '../../services/item-datasource.service';
+import { ProgressCSVService } from '../../../../shared/http-services/progress-csv.service';
+import { downloadFile } from '../../../../shared/helpers/download-file';
+import { typeCategoryOfItem } from '../../../../shared/helpers/item-type';
+import { ItemRouter } from '../../../../shared/routing/item-router';
+import { GroupRouter } from '../../../../shared/routing/group-router';
+import { rawGroupRoute } from '../../../../shared/routing/group-route';
 
 interface Data {
   type: TypeFilter,
@@ -74,14 +80,24 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
   dialog: 'loading'|'opened'|'closed' = 'closed';
   dialogTitle = '';
 
-  private dataFetching$ = new ReplaySubject<{ groupId: string, itemId: string, attemptId: string, filter: TypeFilter }>(1);
+  isCSVDataFetching = false;
+
+  private dataFetching$ = new ReplaySubject<{
+    groupId: string,
+    itemId: string,
+    attemptId: string,
+    filter: TypeFilter,
+    title: string | null,
+  }>(1);
   private permissionsFetchingSubscription?: Subscription;
   private refresh$ = new Subject<void>();
 
   state$ = this.dataFetching$.pipe(
-    switchMap(params => this.getData(params.itemId, params.groupId, params.attemptId, params.filter).pipe(
-      mapToFetchState({ resetter: this.refresh$ })
-    )),
+    switchMap(({ itemId, groupId, attemptId, filter, title }) =>
+      this.getData(itemId, groupId, attemptId, filter, title).pipe(
+        mapToFetchState({ resetter: this.refresh$ })
+      )
+    ),
     withPreviousFetchState(),
     switchMap(([ previousState, state ]) => {
       if (!state.data) return of(state);
@@ -98,6 +114,9 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     private getGroupChildrenService: GetGroupChildrenService,
     private groupPermissionsService: GroupPermissionsService,
     private actionFeedbackService: ActionFeedbackService,
+    private progressCSVService: ProgressCSVService,
+    private itemRouter: ItemRouter,
+    private groupRouter: GroupRouter,
   ) {}
 
   ngOnDestroy(): void {
@@ -114,7 +133,8 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
       groupId: this.group.id,
       itemId: this.itemData.item.id,
       attemptId: this.itemData.currentResult.attemptId,
-      filter: this.currentFilter
+      filter: this.currentFilter,
+      title: this.itemData.item.string.title,
     });
   }
 
@@ -141,7 +161,6 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
   refresh(): void {
     this.refresh$.next();
   }
-
 
   private getProgress(itemId: string, groupId: string, filter: TypeFilter): Observable<TeamUserProgress[]> {
     switch (filter) {
@@ -178,7 +197,7 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     }
   }
 
-  private getData(itemId: string, groupId: string, attemptId: string, filter: TypeFilter): Observable<Data> {
+  private getData(itemId: string, groupId: string, attemptId: string, filter: TypeFilter, title: string | null): Observable<Data> {
     return forkJoin({
       items: this.getItemChildrenService.get(itemId, attemptId),
       rows: this.getRows(groupId, filter),
@@ -186,16 +205,25 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     }).pipe(
       map(data => ({
         type: filter,
-        items: data.items.map(item => ({
-          id: item.id,
-          title: item.string.title,
-        })),
+        items: [
+          {
+            id: itemId,
+            title: title,
+          },
+          ...data.items.map(item => ({
+            id: item.id,
+            title: item.string.title,
+          }))
+        ],
         rows: data.rows.map(row => ({
           header: row.value,
           id: row.id,
-          data: data.items.map(item =>
-            data.progress.find(progress => progress.itemId === item.id && progress.groupId === row.id)
-          ),
+          data: [
+            data.progress.find(progress => progress.itemId === itemId && progress.groupId === row.id),
+            ...data.items.map(item =>
+              data.progress.find(progress => progress.itemId === item.id && progress.groupId === row.id)
+            )
+          ],
         })),
         can_access: (this.group && canCurrentUserGrantGroupAccess(this.group)
           && this.itemData?.item.permissions.canGrantView !== 'none') || false,
@@ -212,7 +240,8 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
         groupId: this.group.id,
         itemId: this.itemData.item.id,
         attemptId: this.itemData.currentResult.attemptId,
-        filter: this.currentFilter
+        filter: this.currentFilter,
+        title: this.itemData.item.string.title,
       });
     }
   }
@@ -259,4 +288,58 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
       });
   }
 
+  getCSVDownloadTypeByFilter(): 'group' | 'team' | 'user' {
+    switch (this.currentFilter) {
+      case 'Groups':
+        return 'group';
+      case 'Users':
+        return 'user';
+      case 'Teams':
+        return 'team';
+    }
+  }
+
+  onCSVExport(): void {
+    if (!this.group || !this.itemData) {
+      throw new Error('Unexpected: input component params is required');
+    }
+
+    const parentItemId = this.itemData.item.id;
+    const downloadDataType = this.getCSVDownloadTypeByFilter();
+
+    this.isCSVDataFetching = true;
+    this.progressCSVService
+      .getCSVData(this.group.id, downloadDataType, [ parentItemId ])
+      .subscribe({
+        next: data => {
+          this.isCSVDataFetching = false;
+          downloadFile([ data ], `${parentItemId}-${new Date().toDateString()}.csv`, 'text/csv');
+        },
+        error: () => {
+          this.isCSVDataFetching = false;
+          this.actionFeedbackService.unexpectedError();
+        },
+      });
+  }
+
+  navigateToItem(item: { id: string, title: string | null }): void {
+    if (!this.itemData) {
+      throw new Error('Unexpected: Missed input itemData of component');
+    }
+
+    const parentAttemptId = this.itemData.currentResult?.attemptId;
+
+    if (!parentAttemptId) throw new Error('Unexpected: Children have been loaded, so we are sure this item has an attempt');
+
+    this.itemRouter.navigateTo({
+      contentType: typeCategoryOfItem(this.itemData.item),
+      id: item.id,
+      path: this.itemData.route.path.concat([ this.itemData.item.id ]),
+      parentAttemptId,
+    });
+  }
+
+  navigateToGroup(row: { header: string, id: string, data: (TeamUserProgress|undefined)[] }): void {
+    this.groupRouter.navigateTo(rawGroupRoute({ id: row.id, isUser: this.currentFilter === 'Users' }));
+  }
 }

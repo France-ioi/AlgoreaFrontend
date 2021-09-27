@@ -16,7 +16,7 @@ const groupMembershipDecoder = pipe(
       description: D.nullable(D.string),
       id: D.string,
       name: D.string,
-      type: D.literal('Class', 'Team', 'Club', 'Friends', 'Other', 'Base'),
+      type: D.literal('Class', 'Team', 'Club', 'Friends', 'Other', 'Base', 'Session'),
     }),
     memberSince: D.nullable(dateDecoder),
     isMembershipLocked: D.boolean,

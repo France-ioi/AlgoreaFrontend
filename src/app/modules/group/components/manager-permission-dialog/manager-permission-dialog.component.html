@@ -1,0 +1,98 @@
+<p-dialog
+    [(visible)]="visible"
+    [modal]="true"
+    [draggable]="false"
+    [closable]="false"
+    styleClass="alg-permissions-edit-dialog">
+
+  <p-header>
+    <div class="dialog-header">
+      <span class="dialog-handler">
+        <i class="fa fa-lock"></i>
+      </span>
+      <span class="dialog-title" i18n>
+        {{ group?.name }}: manager access given to {{ userCaption }}
+      </span>
+      <span class="dialog-close" (click)="onClose()">
+        <img src="assets/images/close.svg" alt="close">
+      </span>
+    </div>
+  </p-header>
+
+  <div class="dialog-container">
+    <div class="dialog-content">
+      <p i18n>
+        This panel lets you select what you allow the selected user or group of users to do on the current group and its descendants.
+      </p>
+
+      <alg-progress-section
+          i18n-title title="Management level"
+          icon="fa fa-users-cog"
+          [(value)]="managerValues.canManage"
+          [values]="managementLevelValues"
+          [collapsible]="false"
+          [collapsed]="false"
+          type="simple"
+          (valueChange)="onValueChange()"
+      >
+        <ng-template #description>
+          <span i18n>The permissions that the user(s) has on this group</span>
+        </ng-template>
+      </alg-progress-section>
+
+      <alg-boolean-section
+          i18n-title title="Can grant access"
+          icon="fa fa-key"
+          [(value)]="managerValues.canGrantGroupAccess"
+          [collapsible]="false"
+          [collapsed]="false"
+          (valueChange)="onValueChange()"
+      >
+        <ng-template #label>
+          <span i18n>
+            User(s) can give and revoke members access to some content
+          </span>
+        </ng-template>
+      </alg-boolean-section>
+
+      <alg-boolean-section
+          i18n-title title="Can watch members"
+          icon="fa fa-binoculars"
+          [(value)]="managerValues.canWatchMembers"
+          [collapsible]="false"
+          [collapsed]="false"
+          (valueChange)="onValueChange()"
+      >
+        <ng-template #label>
+          <span i18n>
+            User(s) can watch the members' activity on some content
+          </span>
+        </ng-template>
+      </alg-boolean-section>
+    </div>
+  </div>
+
+  <p-footer>
+    <div class="footer">
+      <ng-container *ngIf="isUpdating; else buttons">
+        <p-progressSpinner [style]="{ width: '3rem', height: '3rem' }"></p-progressSpinner>
+      </ng-container>
+
+      <ng-template #buttons>
+        <alg-button
+            icon="fa fa-times"
+            i18n-label label="Cancel"
+            class="p-button-rounded p-button-danger"
+            (click)="onClose()"
+        ></alg-button>
+        <alg-button
+            icon="fa fa-check"
+            i18n-label label="Proceed"
+            class="p-button-rounded"
+            (click)="onAccept()"
+            [disabled]="!valuesChanged"
+        ></alg-button>
+      </ng-template>
+    </div>
+  </p-footer>
+</p-dialog>

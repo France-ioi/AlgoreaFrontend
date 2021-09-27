@@ -24,7 +24,9 @@
 
     <ng-template pTemplate="body" let-group>
       <tr>
-        <td class="link" routerLink="../by-id/{{ group.id }}/details">{{ group.name }}</td>
+        <td>
+          <a class="alg-link" routerLink="../by-id/{{ group.id }}/details">{{ group.name }}</a>
+        </td>
         <td>{{ getType(group.type) }}</td>
         <td>{{ getCanManage(group.canManage) }}</td>
         <td>

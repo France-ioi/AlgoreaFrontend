@@ -40,12 +40,15 @@
           (childrenChanges)="updateItemChanges($event)"
         >
         </alg-item-edit-content>
-        <alg-item-edit-advanced-parameters #advancedParameters
-          *ngIf="['all','all_with_grant'].includes(fetchState.data.item.permissions.canEdit) && rla2.isActive"
-          [parentForm]="itemForm"
-          [item]="initialFormData"
-        >
-        </alg-item-edit-advanced-parameters>
+        <ng-container *ngIf="attemptId$ | async as attemptId">
+          <alg-item-edit-advanced-parameters #advancedParameters
+            *ngIf="['all','all_with_grant'].includes(fetchState.data.item.permissions.canEdit) && rla2.isActive"
+            [parentForm]="itemForm"
+            [item]="initialFormData"
+            [attemptId]="attemptId"
+          >
+          </alg-item-edit-advanced-parameters>
+        </ng-container>
       </div>
 
     </form>

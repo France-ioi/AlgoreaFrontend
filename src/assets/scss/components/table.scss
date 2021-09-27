@@ -152,6 +152,12 @@
     }
   }
 
+  &.--group-manager-list {
+    .p-datatable-tbody > tr.p-highlight > td {
+      color: $base-text-color !important;
+    }
+  }
+
   &.--grid {
     .p-datatable-thead > tr > th {
       border-top: none;
@@ -281,6 +287,24 @@
       .p-datatable-footer {
         background-color: transparent;
         margin-bottom: 0rem;
+      }
+    }
+  }
+
+  &.chapter-user-progress {
+    table {
+      table-layout: auto;
+    }
+
+    .p-datatable .p-datatable-thead > tr > th {
+      &:first-child {
+        width: 40%;
+      }
+    }
+
+    .p-datatable .p-datatable-thead > tr > th {
+      &:last-child {
+        width: 6rem;
       }
     }
   }

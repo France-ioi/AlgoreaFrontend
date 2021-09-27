@@ -1,0 +1,27 @@
+<ng-container *ngIf="item">
+  <div class="container" *ngIf="state$ | async as state">
+    <p-progressSpinner
+        class="spinner"
+        *ngIf="state.isFetching || deletionInProgress"
+        [style]="{width: '24px', height: '24px'}"
+    >
+    </p-progressSpinner>
+    <ng-container *ngIf="item.permissions.isOwner; else notOwner">
+      <span class="message" *ngIf="state.isReady && state.data && ['Chapter', 'Skill'].includes(item.type)" i18n>
+        {{ item.type === 'Chapter' ? 'Only empty chapters can be deleted.' : 'Only empty skills can be deleted.' }}
+      </span>
+    </ng-container>
+    <ng-template #notOwner>
+      <span class="message" i18n>Only owner can delete items</span>
+    </ng-template>
+    <span class="message" *ngIf="state.isError" i18n>Error while loading the item info</span>
+    <button
+        pButton
+        type="button"
+        class="p-button-rounded p-button-danger"
+        i18n-label label="Delete this item"
+        (click)="onDeleteItem()"
+        [disabled]="(state.isReady && state.data && ['Chapter', 'Skill'].includes(item.type)) || state.isFetching || state.isError || deletionInProgress || !item.permissions.isOwner"
+    ></button>
+  </div>
+</ng-container>

@@ -5,10 +5,10 @@ import { switchMap, distinctUntilChanged, map, filter, mapTo, skip, shareReplay,
 import { CurrentUserHttpService, UpdateUserBody, UserProfile } from '../http-services/current-user.service';
 import { isNotUndefined } from '../helpers/null-undefined-predicates';
 import { repeatLatestWhen } from '../helpers/repeatLatestWhen';
-import { GroupRoute } from '../routing/group-route';
+import { RawGroupRoute } from '../routing/group-route';
 
 export interface WatchedGroup {
-  route: GroupRoute,
+  route: RawGroupRoute,
   name: string,
   login?: string,
 }
@@ -41,10 +41,6 @@ export class UserSessionService implements OnDestroy {
 
   private subscription?: Subscription;
   private userProfileUpdated$ = new Subject<void>();
-
-  get isCurrentlyWatching(): boolean {
-    return !!this.session$.value?.watchedGroup;
-  }
 
   constructor(
     private authService: AuthService,
