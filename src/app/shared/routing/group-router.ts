@@ -16,7 +16,7 @@ export class GroupRouter {
    * Navigate to given group, on the path page.
    * If page is not given and we are currently on a group page, use the same page. Otherwise, default to 'details'.
    */
-  navigateTo(route: RawGroupRoute, options?: { page?: string; navExtras?: NavigationExtras }): void {
+  navigateTo(route: RawGroupRoute, options?: { page?: string[]; navExtras?: NavigationExtras }): void {
     void this.router.navigateByUrl(this.url(route, options?.page), options?.navExtras);
   }
 
@@ -34,7 +34,7 @@ export class GroupRouter {
    * Return a url to the given group, on the `path` page.
    * If page is not given and we are currently on a group page, use the same page. Otherwise, default to 'details'.
    */
-  url(route: RawGroupRoute, page?: string): UrlTree {
+  url(route: RawGroupRoute, page?: string[]): UrlTree {
     return this.router.createUrlTree(this.urlArray(route, page));
   }
 
@@ -42,8 +42,8 @@ export class GroupRouter {
    * Return a url array (`commands` array) to the given group, on the `path` page.
    * If page is not given and we are currently on a group page, use the same page. Otherwise, default to 'details'.
    */
-  urlArray(route: RawGroupRoute, page?: string): UrlCommand {
-    return urlArrayForGroupRoute(route, page ?? this.currentGroupSubPage());
+  urlArray(route: RawGroupRoute, page?: string[]): UrlCommand {
+    return urlArrayForGroupRoute(route, page ?? this.currentGroupPage());
   }
 
 
@@ -51,11 +51,10 @@ export class GroupRouter {
    * Extract (bit hacky) the group sub-page of the current page.
    * Return undefined if we are not on a "group" page
    */
-  private currentGroupSubPage(): string | undefined {
-    const subpagePart = this.currentGroupPagePath()?.slice(3);
-    if (!subpagePart || subpagePart.length === 0) return undefined;
-    const page = subpagePart[0];
-    return page === 'edit' || page === 'details' ? page : undefined;
+  private currentGroupPage(): string[] | undefined {
+    const page = this.currentGroupPagePath()?.slice(3);
+    if (!page || page.length === 0) return undefined;
+    return page;
   }
 
   private currentGroupPagePath(): string[]|undefined {

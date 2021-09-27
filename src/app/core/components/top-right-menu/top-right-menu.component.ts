@@ -3,7 +3,8 @@ import { MenuItem } from 'primeng/api';
 import { distinctUntilChanged, map } from 'rxjs/operators';
 import { AuthService } from 'src/app/shared/auth/auth.service';
 import { appConfig } from 'src/app/shared/helpers/config';
-import { rawGroupRoute, urlArrayForGroupRoute } from 'src/app/shared/routing/group-route';
+import { rawGroupRoute } from 'src/app/shared/routing/group-route';
+import { GroupRouter } from 'src/app/shared/routing/group-router';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
 
 @Component({
@@ -18,7 +19,7 @@ export class TopRightMenuComponent {
       {
         label: 'Profile',
         icon: 'pi pi-user',
-        routerLink: urlArrayForGroupRoute(rawGroupRoute(profile), 'personal-data'),
+        routerLink: this.groupRouter.urlArray(rawGroupRoute(profile), [ 'personal-data' ]),
       },
       ...this.getDevelopmentMenuItems(),
       { label: 'Log out', icon: 'pi pi-power-off', command: ():void => this.sessionService.logout() },
@@ -30,6 +31,7 @@ export class TopRightMenuComponent {
   constructor(
     private sessionService: UserSessionService,
     private authService: AuthService,
+    private groupRouter: GroupRouter,
   ) { }
 
   private invalidateToken(): void {

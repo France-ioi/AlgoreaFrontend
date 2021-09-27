@@ -45,21 +45,19 @@ export function isRawGroupRoute(route?: unknown): route is RawGroupRoute {
  */
 export function urlArrayForGroupRoute(
   route: RawGroupRoute,
-  page?: string,
+  page?: string[],
 ): UrlCommand {
   const path = route.path ? pathAsParameter(route.path) : {};
   return route.isUser
-    ? [ '/', 'groups', 'users', route.id, path, page && isUserPage(page) ? page : undefined ].filter(isNotUndefined)
-    : [ '/', 'groups', 'by-id', route.id, path, page && isGroupPage(page) ? page : 'details' ];
+    ? [ '/', 'groups', 'users', route.id, path, ...(page && isUserPage(page) ? page : []) ].filter(isNotUndefined)
+    : [ '/', 'groups', 'by-id', route.id, path, ...(page && isGroupPage(page) ? page : [ 'details' ]) ];
 }
 
-type UserPage = 'personal-data';
-function isUserPage(page: string): page is UserPage {
-  return [ 'personal-data' ].includes(page);
+function isUserPage(page: string[]): boolean {
+  return !isGroupPage(page);
 }
-type GroupPage = 'edit' | 'details';
-function isGroupPage(page: string): page is GroupPage {
-  return [ 'edit', 'details' ].includes(page);
+function isGroupPage(page: string[]): boolean {
+  return page[0] === 'edit' || page[0] === 'details';
 }
 
 export function decodeGroupRouterParameters(params: ParamMap): { id: string | null; path: string | null } {
