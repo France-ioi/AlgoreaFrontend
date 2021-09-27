@@ -4,7 +4,7 @@ import { Observable, ReplaySubject } from 'rxjs';
 import { map, mapTo, shareReplay, switchMap, timeout, withLatestFrom } from 'rxjs/operators';
 import { appConfig } from 'src/app/shared/helpers/config';
 import { FullItemRoute } from 'src/app/shared/routing/item-route';
-import { GenerateTaskTokenService, TaskToken } from '../http-services/generate-task-token.service';
+import { TaskTokenService, TaskToken } from '../http-services/task-token.service';
 import { Task, taskProxyFromIframe, taskUrlWithParameters } from '../task-communication/task-proxy';
 
 export interface ItemTaskConfig {
@@ -20,7 +20,7 @@ export class ItemTaskInitService implements OnDestroy {
 
   readonly config$ = this.configFromItem$.asObservable();
   readonly taskToken$: Observable<TaskToken> = this.config$.pipe(
-    switchMap(({ attemptId, route }) => this.generateTaskTokenService.generate(route.id, attemptId)),
+    switchMap(({ attemptId, route }) => this.taskTokenService.generate(route.id, attemptId)),
     shareReplay(1),
   );
   readonly iframeSrc$ = this.taskToken$.pipe(
@@ -46,7 +46,7 @@ export class ItemTaskInitService implements OnDestroy {
 
   constructor(
     private sanitizer: DomSanitizer,
-    private generateTaskTokenService: GenerateTaskTokenService,
+    private taskTokenService: TaskTokenService,
   ) {}
 
   ngOnDestroy(): void {
