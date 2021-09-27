@@ -5,7 +5,7 @@ import { SECONDS } from 'src/app/shared/helpers/duration';
 import { repeatLatestWhen } from 'src/app/shared/helpers/repeatLatestWhen';
 import { AnswerTokenService } from '../http-services/answer-token.service';
 import { Answer, GetCurrentAnswerService } from '../http-services/get-current-answer.service';
-import { SaveGradeService } from '../http-services/save-grade.service';
+import { GradeService } from '../http-services/grade.service';
 import { UpdateCurrentAnswerService } from '../http-services/update-current-answer.service';
 import { ItemTaskInitService } from './item-task-init.service';
 
@@ -62,7 +62,7 @@ export class ItemTaskAnswerService implements OnDestroy {
     private getCurrentAnswerService: GetCurrentAnswerService,
     private updateCurrentAnswerService: UpdateCurrentAnswerService,
     private answerTokenService: AnswerTokenService,
-    private saveGradeService: SaveGradeService,
+    private gradeService: GradeService,
   ) {}
 
   ngOnDestroy(): void {
@@ -81,7 +81,7 @@ export class ItemTaskAnswerService implements OnDestroy {
           switchMap(answerToken => task.gradeAnswer(answer, answerToken).pipe(
 
             // Step 4: Save grade in backend
-            switchMap(grade => this.saveGradeService.save(
+            switchMap(grade => this.gradeService.save(
               taskToken,
               answerToken,
               grade.score,
