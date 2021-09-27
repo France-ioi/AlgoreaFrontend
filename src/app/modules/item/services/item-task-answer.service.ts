@@ -1,10 +1,8 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { combineLatest, EMPTY, forkJoin, interval, Observable, of, Subject } from 'rxjs';
-import { distinctUntilChanged, filter, mapTo, shareReplay, skip, switchMap, withLatestFrom } from 'rxjs/operators';
+import { catchError, distinctUntilChanged, mapTo, shareReplay, skip, switchMap, withLatestFrom } from 'rxjs/operators';
 import { SECONDS } from 'src/app/shared/helpers/duration';
 import { repeatLatestWhen } from 'src/app/shared/helpers/repeatLatestWhen';
-import { UserSessionService } from 'src/app/shared/services/user-session.service';
-import { CreateCurrentAnswerService } from '../http-services/create-current-answer.service';
 import { GenerateAnswerTokenService } from '../http-services/generate-answer-token.service';
 import { Answer, GetCurrentAnswerService } from '../http-services/get-current-answer.service';
 import { SaveGradeService } from '../http-services/save-grade.service';
@@ -19,16 +17,17 @@ export class ItemTaskAnswerService implements OnDestroy {
   private config$ = this.taskInitService.config$;
   private taskToken$ = this.taskInitService.taskToken$;
 
-  private currentAnswer$: Observable<Answer | null> = combineLatest([ this.config$, this.userSession.userProfile$ ]).pipe(
-    switchMap(([{ route, attemptId }, profile ]) => this.getCurrentAnswerService.get(route.id, attemptId, profile.groupId)),
+  private currentAnswer$: Observable<Answer | null> = this.config$.pipe(
+    switchMap(({ route, attemptId }) => this.getCurrentAnswerService.get(route.id, attemptId).pipe(
+      catchError(() => this.task$.pipe(
+        switchMap(task => combineLatest([ task.getAnswer(), task.getState() ])),
+        switchMap(([ answer, state ]) => this.updateCurrentAnswerService.update(route.id, attemptId, { answer, state })),
+        switchMap(() => this.getCurrentAnswerService.get(route.id, attemptId)),
+      )),
+    )),
     shareReplay(1), // avoid duplicate xhr calls on multiple subscriptions.
   );
-  private createCurrentAnswerIfNoneExists$ = this.currentAnswer$.pipe(
-    filter(currentAnswer => currentAnswer === null),
-    switchMap(() => this.task$),
-    switchMap(task => combineLatest([ task.getAnswer(), task.getState(), this.config$ ])),
-    switchMap(([ answer, state, { route, attemptId }]) => this.createCurrentAnswerService.create(route.id, attemptId, { answer, state })),
-  );
+
   private reloadAnswerAndStateSubject = new Subject<void>();
   private reloadAnswerAndState$ = combineLatest([ this.currentAnswer$, this.task$ ]).pipe(
     repeatLatestWhen(this.reloadAnswerAndStateSubject),
@@ -54,7 +53,6 @@ export class ItemTaskAnswerService implements OnDestroy {
   );
 
   private subscriptions = [
-    this.createCurrentAnswerIfNoneExists$.subscribe(),
     this.reloadAnswerAndState$.subscribe({ error: err => this.taskInitService.setError(err) }),
     this.saveAnswerAndStateInterval$.subscribe({ error: err => this.taskInitService.setError(err) }),
   ];
@@ -62,8 +60,6 @@ export class ItemTaskAnswerService implements OnDestroy {
   constructor(
     private taskInitService: ItemTaskInitService,
     private getCurrentAnswerService: GetCurrentAnswerService,
-    private createCurrentAnswerService: CreateCurrentAnswerService,
-    private userSession: UserSessionService,
     private updateCurrentAnswerService: UpdateCurrentAnswerService,
     private generateAnswerTokenService: GenerateAnswerTokenService,
     private saveGradeService: SaveGradeService,
@@ -81,7 +77,7 @@ export class ItemTaskAnswerService implements OnDestroy {
         // Step 2: generate answer token with backend
         switchMap(([ answer, taskToken ]) => this.generateAnswerTokenService.generate(answer, taskToken).pipe(
 
-          // Step 3: get grade for answer with answer token from task
+          // Step 3: get answer grade with answer token from task
           switchMap(answerToken => task.gradeAnswer(answer, answerToken).pipe(
 
             // Step 4: Save grade in backend
