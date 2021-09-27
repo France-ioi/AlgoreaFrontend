@@ -10,7 +10,8 @@
     <p-progressSpinner [style]="{ width: '3.3333rem', height: '3.3333rem' }"></p-progressSpinner>
   </div>
 
-  <p class="error" *ngIf="state.isError" i18n>Error while loading the group progress</p>
+  <alg-error *ngIf="state.isError" i18n-message message="Error while loading the group progress"></alg-error>
+
 </ng-container>
 
 
