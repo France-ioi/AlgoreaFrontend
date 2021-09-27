@@ -52,6 +52,8 @@ export class ItemTaskInitService implements OnDestroy {
   ngOnDestroy(): void {
     // task is a one replayed value observable. If a task has been emitted, destroy it ; else nothing to do.
     this.task$.pipe(timeout(0)).subscribe(task => task.destroy());
+    if (!this.configFromItem$.closed) this.configFromItem$.complete();
+    if (!this.configFromIframe$.closed) this.configFromIframe$.complete();
   }
 
   configure(route: FullItemRoute, url?: string, attemptId?: string): void {
