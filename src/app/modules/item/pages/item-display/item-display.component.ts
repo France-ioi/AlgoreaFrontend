@@ -12,6 +12,7 @@ import { ItemTaskAnswerService } from '../../services/item-task-answer.service';
 import { ItemTaskViewsService } from '../../services/item-task-views.service';
 
 const initialHeight = 1200;
+const additionalHeightToPreventInnerScrollIssues = 40;
 const heightSyncInterval = 0.2*SECONDS;
 
 interface TaskTab {
@@ -42,7 +43,7 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
   iframeHeight$ = merge(
     this.taskService.task$.pipe(switchMap(task => interval(heightSyncInterval).pipe(switchMap(() => task.getHeight())))),
     this.taskService.display$.pipe(map(({ height }) => height), filter(isNotUndefined)),
-  ).pipe(startWith(initialHeight), map(height => height + 40));
+  ).pipe(startWith(initialHeight), map(height => height + additionalHeightToPreventInnerScrollIssues));
 
   constructor(
     private taskService: ItemTaskService,
