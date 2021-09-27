@@ -3,7 +3,7 @@ import { combineLatest, EMPTY, forkJoin, interval, Observable, of, Subject } fro
 import { catchError, distinctUntilChanged, mapTo, shareReplay, skip, switchMap, withLatestFrom } from 'rxjs/operators';
 import { SECONDS } from 'src/app/shared/helpers/duration';
 import { repeatLatestWhen } from 'src/app/shared/helpers/repeatLatestWhen';
-import { GenerateAnswerTokenService } from '../http-services/generate-answer-token.service';
+import { AnswerTokenService } from '../http-services/answer-token.service';
 import { Answer, GetCurrentAnswerService } from '../http-services/get-current-answer.service';
 import { SaveGradeService } from '../http-services/save-grade.service';
 import { UpdateCurrentAnswerService } from '../http-services/update-current-answer.service';
@@ -61,7 +61,7 @@ export class ItemTaskAnswerService implements OnDestroy {
     private taskInitService: ItemTaskInitService,
     private getCurrentAnswerService: GetCurrentAnswerService,
     private updateCurrentAnswerService: UpdateCurrentAnswerService,
-    private generateAnswerTokenService: GenerateAnswerTokenService,
+    private answerTokenService: AnswerTokenService,
     private saveGradeService: SaveGradeService,
   ) {}
 
@@ -75,7 +75,7 @@ export class ItemTaskAnswerService implements OnDestroy {
       switchMap(task => combineLatest([ task.getAnswer(), this.taskToken$ ]).pipe(
 
         // Step 2: generate answer token with backend
-        switchMap(([ answer, taskToken ]) => this.generateAnswerTokenService.generate(answer, taskToken).pipe(
+        switchMap(([ answer, taskToken ]) => this.answerTokenService.generate(answer, taskToken).pipe(
 
           // Step 3: get answer grade with answer token from task
           switchMap(answerToken => task.gradeAnswer(answer, answerToken).pipe(

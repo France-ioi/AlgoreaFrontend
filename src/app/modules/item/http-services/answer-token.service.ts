@@ -5,32 +5,30 @@ import { appConfig } from 'src/app/shared/helpers/config';
 import * as D from 'io-ts/Decoder';
 import { decodeSnakeCase } from 'src/app/shared/operators/decode';
 import { map } from 'rxjs/operators';
+import { ActionResponse, successData } from 'src/app/shared/http-services/action-response';
 
-export const answerTokenResponseDecoder = D.struct({
-  data: D.struct({
-    answerToken: D.string,
-  }),
-  message: D.string,
-  success: D.boolean,
+const answerTokenDataDecoder = D.struct({
+  answerToken: D.string,
 });
 
-type AnswerTokenResponse = D.TypeOf<typeof answerTokenResponseDecoder>;
-export type AnswerToken = AnswerTokenResponse['data']['answerToken'];
+type AnswerTokenData = D.TypeOf<typeof answerTokenDataDecoder>;
+export type AnswerToken = AnswerTokenData['answerToken'];
 
 @Injectable({
   providedIn: 'root',
 })
-export class GenerateAnswerTokenService {
+export class AnswerTokenService {
 
   constructor(private http: HttpClient) {}
 
   generate(answer: string, taskToken: string): Observable<AnswerToken> {
-    return this.http.post<unknown>(`${appConfig.apiUrl}/answers`, {
+    return this.http.post<ActionResponse<unknown>>(`${appConfig.apiUrl}/answers`, {
       answer,
       task_token: taskToken,
     }).pipe(
-      decodeSnakeCase(answerTokenResponseDecoder),
-      map(({ data }) => data.answerToken),
+      map(successData),
+      decodeSnakeCase(answerTokenDataDecoder),
+      map(data => data.answerToken),
     );
   }
 

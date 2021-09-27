@@ -6,7 +6,7 @@ import * as D from 'io-ts/Decoder';
 import { decodeSnakeCase } from 'src/app/shared/operators/decode';
 import { TaskToken } from './task-token.service';
 import { TaskScore, TaskScoreToken } from '../task-communication/types';
-import { AnswerToken } from './generate-answer-token.service';
+import { AnswerToken } from './answer-token.service';
 
 export const saveGradeResponseDecoder = D.struct({
   data: D.struct({
