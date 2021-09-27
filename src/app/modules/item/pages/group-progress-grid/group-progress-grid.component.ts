@@ -17,6 +17,10 @@ import { GetItemChildrenService } from '../../http-services/get-item-children.se
 import { ItemData } from '../../services/item-datasource.service';
 import { ProgressCSVService } from '../../../../shared/http-services/progress-csv.service';
 import { downloadFile } from '../../../../shared/helpers/download-file';
+import { typeCategoryOfItem } from '../../../../shared/helpers/item-type';
+import { ItemRouter } from '../../../../shared/routing/item-router';
+import { GroupRouter } from '../../../../shared/routing/group-router';
+import { rawGroupRoute } from '../../../../shared/routing/group-route';
 
 interface Data {
   type: TypeFilter,
@@ -111,6 +115,8 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     private groupPermissionsService: GroupPermissionsService,
     private actionFeedbackService: ActionFeedbackService,
     private progressCSVService: ProgressCSVService,
+    private itemRouter: ItemRouter,
+    private groupRouter: GroupRouter,
   ) {}
 
   ngOnDestroy(): void {
@@ -155,7 +161,6 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
   refresh(): void {
     this.refresh$.next();
   }
-
 
   private getProgress(itemId: string, groupId: string, filter: TypeFilter): Observable<TeamUserProgress[]> {
     switch (filter) {
@@ -315,5 +320,26 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
           this.actionFeedbackService.unexpectedError();
         },
       });
+  }
+
+  navigateToItem(item: { id: string, title: string | null }): void {
+    if (!this.itemData) {
+      throw new Error('Unexpected: Missed input itemData of component');
+    }
+
+    const parentAttemptId = this.itemData.currentResult?.attemptId;
+
+    if (!parentAttemptId) throw new Error('Unexpected: Children have been loaded, so we are sure this item has an attempt');
+
+    this.itemRouter.navigateTo({
+      contentType: typeCategoryOfItem(this.itemData.item),
+      id: item.id,
+      path: this.itemData.route.path.concat([ this.itemData.item.id ]),
+      parentAttemptId,
+    });
+  }
+
+  navigateToGroup(row: { header: string, id: string, data: (TeamUserProgress|undefined)[] }): void {
+    this.groupRouter.navigateTo(rawGroupRoute({ id: row.id, isUser: this.currentFilter === 'Users' }));
   }
 }
