@@ -35,10 +35,13 @@
   <p-progressSpinner [style]="{width: '3.3333rem', height: '3.3333rem'}"></p-progressSpinner>
 </div>
 
-<p *ngIf="dataSources[activeTabIndex]?.state?.isError" class="error">
-  <span i18n>Unable to load the list.</span>&nbsp;
-  <span (click)="retryError()" class="retry" i18n>Retry now</span>
-</p>
+<alg-error
+  *ngIf="dataSources[activeTabIndex]?.state?.isError"
+  class="light"
+  i18n-message message="Unable to load the list."
+  [allowRetry]="true"
+  (retryError)="retryError()"
+></alg-error>
 
 <alg-left-nav-tree
   *ngIf="dataSources[activeTabIndex]?.state?.isReady"

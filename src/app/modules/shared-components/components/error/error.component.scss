@@ -1,5 +1,27 @@
 @import 'src/colors';
 
+:host {
+  &.light {
+    .message {
+      color: $base-bk-color;
+    }
+
+    .retry {
+      color: $base-bk-color;
+    }
+  }
+
+  &.dark {
+    .message {
+      color: $base-text-color;
+    }
+
+    .retry {
+      color: $base-text-color;
+    }
+  }
+}
+
 .wrapper {
   margin: 0;
   padding: 1rem;
@@ -28,4 +50,8 @@
 
 .retry {
 
+}
+
+.refresh-button {
+  margin-left: 0.5rem;
 }

@@ -10,7 +10,8 @@ export class ErrorComponent {
 
   @Input() message?: string;
   @Input() icon?: string;
-  @Input() allowRetry?: boolean;
+  @Input() allowRetry = false;
+  @Input() showRefreshButton = false;
 
   onRetryError(): void {
     this.retryError.emit();
