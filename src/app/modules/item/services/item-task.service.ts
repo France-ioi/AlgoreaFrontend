@@ -36,7 +36,7 @@ export class ItemTaskService {
     private localeService: LocaleService,
   ) {}
 
-  configure(route: FullItemRoute, url?: string, attemptId?: string): void {
+  configure(route: FullItemRoute, url: string, attemptId: string): void {
     this.initService.configure(route, url, attemptId);
   }
 

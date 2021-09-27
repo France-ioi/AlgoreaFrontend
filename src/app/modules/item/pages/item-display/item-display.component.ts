@@ -31,6 +31,7 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
   @ViewChild('iframe') iframe?: ElementRef<HTMLIFrameElement>;
 
   state$ = this.taskService.task$.pipe(mapToFetchState());
+  cannotLoadTaskError?: string;
 
   tabs$: Observable<TaskTab[]> = this.taskService.views$.pipe(
     map(views => views.map(view => ({ view, name: this.getTabNameByView(view) }))),
@@ -51,11 +52,12 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
 
   ngOnInit(): void {
     if (!this.itemData) throw new Error('itemData must be set in ItemDisplayComponent');
-    this.taskService.configure(
-      this.itemData.route,
-      this.itemData.item.url ?? undefined,
-      this.itemData.route.attemptId ?? this.itemData.currentResult?.attemptId,
-    );
+    const url = this.itemData.item.url;
+    const attemptId = this.itemData.route.attemptId ?? this.itemData.currentResult?.attemptId;
+
+    url && attemptId
+      ? this.taskService.configure(this.itemData.route, url, attemptId)
+      : this.cannotLoadTaskError = 'cannot load the task because item url or attempt is missing';
   }
 
   ngAfterViewChecked(): void {

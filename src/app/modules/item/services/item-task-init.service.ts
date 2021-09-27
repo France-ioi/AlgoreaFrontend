@@ -56,11 +56,9 @@ export class ItemTaskInitService implements OnDestroy {
     if (!this.configFromIframe$.closed) this.configFromIframe$.complete();
   }
 
-  configure(route: FullItemRoute, url?: string, attemptId?: string): void {
+  configure(route: FullItemRoute, url: string, attemptId: string): void {
     if (this.configFromItem$.closed) return;
 
-    if (!url) return this.setError(new Error('No URL defined for this task'));
-    if (!attemptId) return this.setError(new Error('an attempt id is required to retrieve task token'));
     this.configFromItem$.next({ route, url, attemptId });
     this.configFromItem$.complete();
   }
