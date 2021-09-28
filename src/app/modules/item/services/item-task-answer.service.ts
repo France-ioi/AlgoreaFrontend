@@ -5,9 +5,8 @@ import { SECONDS } from 'src/app/shared/helpers/duration';
 import { errorIsHTTPForbidden } from 'src/app/shared/helpers/errors';
 import { repeatLatestWhen } from 'src/app/shared/helpers/repeatLatestWhen';
 import { AnswerTokenService } from '../http-services/answer-token.service';
-import { Answer, GetCurrentAnswerService } from '../http-services/get-current-answer.service';
+import { Answer, CurrentAnswerService } from '../http-services/current-answer.service';
 import { GradeService } from '../http-services/grade.service';
-import { UpdateCurrentAnswerService } from '../http-services/update-current-answer.service';
 import { ItemTaskInitService } from './item-task-init.service';
 
 const answerAndStateSaveInterval = 1*SECONDS;
@@ -22,7 +21,7 @@ export class ItemTaskAnswerService implements OnDestroy {
   private taskToken$ = this.taskInitService.taskToken$.pipe(takeUntil(this.error$));
 
   private currentAnswer$: Observable<Answer | null> = this.config$.pipe(
-    switchMap(({ route, attemptId }) => this.getCurrentAnswerService.get(route.id, attemptId)),
+    switchMap(({ route, attemptId }) => this.currentAnswerService.get(route.id, attemptId)),
     catchError(error => {
       // currently, the backend returns a 403 status when no current answer exist for user+item+attempt
       if (errorIsHTTPForbidden(error)) return of(null);
@@ -51,7 +50,7 @@ export class ItemTaskAnswerService implements OnDestroy {
     skip(1), // avoid saving an answer right after fetching it
     withLatestFrom(this.config$),
     switchMap(([ [ answer, state ], { route, attemptId }]) =>
-      this.updateCurrentAnswerService.update(route.id, attemptId, { answer, state })
+      this.currentAnswerService.update(route.id, attemptId, { answer, state })
     ),
   );
 
@@ -62,8 +61,7 @@ export class ItemTaskAnswerService implements OnDestroy {
 
   constructor(
     private taskInitService: ItemTaskInitService,
-    private getCurrentAnswerService: GetCurrentAnswerService,
-    private updateCurrentAnswerService: UpdateCurrentAnswerService,
+    private currentAnswerService: CurrentAnswerService,
     private answerTokenService: AnswerTokenService,
     private gradeService: GradeService,
   ) {}
