@@ -20,6 +20,18 @@
       color: $base-text-color;
     }
   }
+
+  &.warning {
+    .message {
+      color: $notify-error-color;
+    }
+  }
+
+  &.small {
+    .message {
+      font-size: 1.2rem;
+    }
+  }
 }
 
 .wrapper {
@@ -46,10 +58,6 @@
   color: $base-color;
   font-size: 1.6rem;
   text-align: center;
-}
-
-.retry {
-
 }
 
 .refresh-button {
