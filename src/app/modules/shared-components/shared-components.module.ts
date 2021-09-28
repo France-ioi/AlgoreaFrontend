@@ -59,6 +59,7 @@ import { UserCaptionPipe } from '../../shared/pipes/userCaption';
 import { LogActionDisplayPipe } from '../../shared/pipes/logActionDisplay';
 import { ErrorComponent } from './components/error/error.component';
 import { LoadingComponent } from './components/loading/loading.component';
+import { SmallSectionComponent } from './components/small-section/small-section.component';
 
 @NgModule({
   declarations: [
@@ -96,6 +97,7 @@ import { LoadingComponent } from './components/loading/loading.component';
     LanguagePickerComponent,
     ErrorComponent,
     LoadingComponent,
+    SmallSectionComponent,
   ],
   imports: [
     CommonModule,
@@ -162,6 +164,7 @@ import { LoadingComponent } from './components/loading/loading.component';
     LanguagePickerComponent,
     ErrorComponent,
     LoadingComponent,
+    SmallSectionComponent,
   ],
   providers: [],
   entryComponents: [
