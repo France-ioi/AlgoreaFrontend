@@ -1,5 +1,16 @@
-import { Component, ContentChild, EventEmitter, Input, Output, TemplateRef } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
+/**
+ * To add a label to the switch, just add an element inside.
+ * A description can also be provided with an element with the `description` attribute
+ * For example:
+ * ```html
+ * <alg-boolean-section>
+ *   <p description> description </p>
+ *   <p> label </p>
+ * </alg-boolean-section>
+ * ```
+ */
 @Component({
   selector: 'alg-boolean-section',
   templateUrl: './boolean-section.component.html',
@@ -13,9 +24,6 @@ export class BooleanSectionComponent {
   @Input() value = false;
   @Input() collapsible = true;
   @Input() collapsed = true;
-
-  @ContentChild('description') descriptionTemplate?: TemplateRef<any>;
-  @ContentChild('label') labelTemplate?: TemplateRef<any>;
 
   @Output() valueChange = new EventEmitter<boolean>();
 

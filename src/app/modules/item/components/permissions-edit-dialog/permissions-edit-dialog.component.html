@@ -56,14 +56,14 @@
         icon="fa fa-paperclip"
         [(value)]="permissions.can_make_session_official"
       >
-        <ng-template #label i18n>{{targetTypeString}} may attach official sessions to this item, that will be visible to everyone in the content tab of the item</ng-template>
+        <span i18n>{{targetTypeString}} may attach official sessions to this item, that will be visible to everyone in the content tab of the item</span>
       </alg-boolean-section>
       <alg-boolean-section
         i18n-title title="Is owner"
         icon="fa fa-user-tie"
         [(value)]="permissions.is_owner"
       >
-        <ng-template #label i18n>{{targetTypeString}} own this item, and get the maximum access in all categories above, and may also delete this item</ng-template>
+        <span i18n>{{targetTypeString}} own this item, and get the maximum access in all categories above, and may also delete this item</span>
       </alg-boolean-section>
 
     </div>
