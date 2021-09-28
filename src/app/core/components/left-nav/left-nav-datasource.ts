@@ -4,7 +4,7 @@ import { isDefined } from 'src/app/shared/helpers/null-undefined-predicates';
 import { repeatLatestWhen } from 'src/app/shared/helpers/repeatLatestWhen';
 import { errorState, fetchingState, FetchState, readyState } from 'src/app/shared/helpers/state';
 import { RoutedContentInfo } from 'src/app/shared/models/content/content-info';
-import { NavTreeData, NavTreeElement } from '../../services/left-nav-loading/nav-tree-data';
+import { NavTreeData, NavTreeElement } from '../../models/left-nav-loading/nav-tree-data';
 
 const msBetweenChildrenRefetch = 5000;
 type Id = string;

@@ -4,8 +4,8 @@ import { defaultAttemptId } from 'src/app/shared/helpers/attempts';
 import { ItemTypeCategory } from 'src/app/shared/helpers/item-type';
 import { GroupRouter } from 'src/app/shared/routing/group-router';
 import { ItemRouter } from 'src/app/shared/routing/item-router';
-import { isANavMenuItem } from '../../services/left-nav-loading/item-nav-tree-types';
-import { NavTreeData, NavTreeElement } from '../../services/left-nav-loading/nav-tree-data';
+import { isANavMenuItem } from '../../models/left-nav-loading/item-nav-tree-types';
+import { NavTreeData, NavTreeElement } from '../../models/left-nav-loading/nav-tree-data';
 import { groupRoute } from 'src/app/shared/routing/group-route';
 
 type LeftNavTreeNode = TreeNode<{
