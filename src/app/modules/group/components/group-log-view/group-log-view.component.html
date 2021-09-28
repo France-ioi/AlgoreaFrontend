@@ -6,7 +6,7 @@
     icon="fa fa-exclamation-triangle"
     i18n-message message="Unable to load the recent activity"
     [showRefreshButton]="true"
-    (retryError)="refresh()"
+    (refresh)="refresh()"
   ></alg-error>
 
   <ng-container *ngIf="state.data">

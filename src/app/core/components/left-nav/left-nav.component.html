@@ -39,8 +39,9 @@
   *ngIf="dataSources[activeTabIndex]?.state?.isError"
   class="light"
   i18n-message message="Unable to load the list."
-  [allowRetry]="true"
-  (retryError)="retryError()"
+  [showRefreshButton]="true"
+  refreshButtonType="retry"
+  (refresh)="retryError()"
 ></alg-error>
 
 <alg-left-nav-tree

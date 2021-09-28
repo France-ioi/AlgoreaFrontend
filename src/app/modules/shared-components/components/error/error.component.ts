@@ -6,14 +6,14 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
   styleUrls: [ './error.component.scss' ],
 })
 export class ErrorComponent {
-  @Output() retryError = new EventEmitter<void>();
+  @Output() refresh = new EventEmitter<void>();
 
   @Input() message?: string;
   @Input() icon?: string;
-  @Input() allowRetry = false;
   @Input() showRefreshButton = false;
+  @Input() refreshButtonType: 'refresh' | 'retry' = 'refresh';
 
-  onRetryError(): void {
-    this.retryError.emit();
+  onRefresh(): void {
+    this.refresh.emit();
   }
 }
