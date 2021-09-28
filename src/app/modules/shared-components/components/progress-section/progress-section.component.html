@@ -1,60 +1,42 @@
-<div class="progress-section-container">
-  <div class="progress-section-header" [ngClass]="{disabled: disabled, 'cursor-pointer': collapsed}" (click)="onCollapse()">
-    <span class="header-icon">
-      <i class="{{ icon }}"></i>
-    </span>
-    <span class="header-title">{{ title }}</span>
-    <div *ngIf="collapsed" class="header-content">
-      <ng-container
-        *ngIf="collapsedHeaderTemplate; else defaultHeader"
-        [ngTemplateOutlet]="collapsedHeaderTemplate"
-        [ngTemplateOutletContext]="{ $implicit: value }"
-      ></ng-container>
-      <ng-template #defaultHeader>
-        <alg-progress-level [maximum]="values.length" [value]="selected + 1" theme="revert"></alg-progress-level>
-        <span class="selected-progress-level">{{ values[selected]?.label }}</span>
-      </ng-template>
-    </div>
-    <span class="toggle-expand" *ngIf="collapsible">
-      <i *ngIf="collapsed" class="fa fa-caret-down"></i>
-      <i *ngIf="!collapsed" class="fa fa-caret-up"></i>
-    </span>
-  </div>
-  <div *ngIf="!collapsed" class="progress-section-body">
+<alg-small-section
+  [title]="title"
+  [icon]="icon"
+  [disabled]="disabled"
+  [collapsed]="collapsed"
+  [collapsible]="collapsible"
+>
+  <ng-container header>
+    <alg-progress-level [maximum]="values.length" [value]="selected + 1" theme="revert"></alg-progress-level>
+    <span class="selected-progress-level">{{ values[selected]?.label }}</span>
+  </ng-container>
+
+  <ng-container>
     <div class="progress-section-item">
       <div class="progress-control">
         <span *ngIf="values.length > 0" class="progress-branch" [ngClass]="{active: selected >= 0}"></span>
       </div>
       <div class="progress-desc header-comment">
-        <ng-container *ngIf="descriptionTemplate" [ngTemplateOutlet]="descriptionTemplate" [ngTemplateOutletContext]="{ $implicit: value }"></ng-container>
+        <ng-content select="[description]"></ng-content>
       </div>
     </div>
-    <ng-container
-      *ngIf="bodyTemplate; else defaultBody"
-      [ngTemplateOutlet]="bodyTemplate"
-      [ngTemplateOutletContext]="{ $implicit: value }"
-    ></ng-container>
-    <ng-template #defaultBody>
-      <div *ngFor="let item of values; let idx = index;" class="progress-section-item">
-        <div class="progress-control">
-          <span class="progress-point" [ngClass]="{active: idx < selected + 1, last: idx + 1 == selected + 1}" (click)="onSet(item.value)">
-            <i *ngIf="type === 'checksWithLock' && idx < selected" class="fa fa-check"></i>
-            <i
-              *ngIf="idx === selected"
-              class="fa"
-              [ngClass]="{'fa-lock-open': type === 'checksWithLock', 'fa-check': type === 'simple'}"
-            ></i>
-          </span>
-          <span *ngIf="idx + 1 < values.length" class="progress-branch" [ngClass]="{active: idx < selected}"></span>
-        </div>
-        <div class="progress-desc">
-          <div class="progress-desc-name" [ngClass]="{active: idx < selected + 1}" (click)="onSet(item.value)">{{ item.label }}</div>
-          <div class="progress-desc-comment">{{ item.comment }}</div>
-        </div>
-        <div *ngIf="item.disabled" class="gray-overlay"></div>
+    <div *ngFor="let item of values; let idx = index;" class="progress-section-item">
+      <div class="progress-control">
+        <span class="progress-point" [ngClass]="{active: idx < selected + 1, last: idx + 1 == selected + 1}" (click)="onSet(item.value)">
+          <i *ngIf="type === 'checksWithLock' && idx < selected" class="fa fa-check"></i>
+          <i
+            *ngIf="idx === selected"
+            class="fa"
+            [ngClass]="{'fa-lock-open': type === 'checksWithLock', 'fa-check': type === 'simple'}"
+          ></i>
+        </span>
+        <span *ngIf="idx + 1 < values.length" class="progress-branch" [ngClass]="{active: idx < selected}"></span>
       </div>
-    </ng-template>
-    <div *ngIf="disabled" class="gray-overlay">
+      <div class="progress-desc">
+        <div class="progress-desc-name" [ngClass]="{active: idx < selected + 1}" (click)="onSet(item.value)">{{ item.label }}</div>
+        <div class="progress-desc-comment">{{ item.comment }}</div>
+      </div>
+      <div *ngIf="item.disabled" class="gray-overlay"></div>
     </div>
-  </div>
-</div>
+  </ng-container>
+  <div *ngIf="disabled" class="gray-overlay"></div>
+</alg-small-section>

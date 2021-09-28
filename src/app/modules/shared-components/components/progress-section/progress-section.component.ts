@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges, Output, EventEmitter, ContentChild, TemplateRef, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges, Output, EventEmitter, OnInit } from '@angular/core';
 
 export interface ProgressSectionValue<T> {
   label: string,
@@ -7,6 +7,15 @@ export interface ProgressSectionValue<T> {
   disabled?: boolean,
 }
 
+/**
+ * To add a description to the switch, just add an element with the `description` attribute inside.
+ * For example:
+ * ```html
+ * <alg-progress-section>
+ *   <p description> description </p>
+ * </alg-progress-section>
+ * ```
+ */
 @Component({
   selector: 'alg-progress-section',
   templateUrl: './progress-section.component.html',
@@ -22,13 +31,9 @@ export class ProgressSectionComponent<T> implements OnChanges, OnInit {
 
   @Input() values: ProgressSectionValue<T>[] = [];
 
-  @ContentChild('collapsedHeader') collapsedHeaderTemplate?: TemplateRef<any>;
-  @ContentChild('description') descriptionTemplate?: TemplateRef<any>;
-  @ContentChild('body') bodyTemplate?: TemplateRef<any>;
-
+  @Input() disabled = false;
   @Input() collapsible = true;
   @Input() collapsed = true;
-  @Input() disabled = false;
   @Input() type: 'simple' | 'checksWithLock' = 'checksWithLock';
 
   @Output() valueChange = new EventEmitter<T>();
@@ -43,14 +48,6 @@ export class ProgressSectionComponent<T> implements OnChanges, OnInit {
 
   ngOnChanges(_changes: SimpleChanges): void {
     this.selected = Math.max(0, this.values.findIndex(item => item.value === this.value));
-  }
-
-  onCollapse(): void {
-    if (!this.collapsible) {
-      return;
-    }
-
-    this.collapsed = !this.collapsed;
   }
 
   onSet(val: T): void {

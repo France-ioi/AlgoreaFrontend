@@ -35,9 +35,7 @@
           type="simple"
           (valueChange)="onValueChange()"
       >
-        <ng-template #description>
-          <span i18n>The permissions that the user(s) has on this group</span>
-        </ng-template>
+        <span description i18n>The permissions that the user(s) has on this group</span>
       </alg-progress-section>
 
       <alg-boolean-section
@@ -49,8 +47,8 @@
           (valueChange)="onValueChange()"
       >
         <span label i18n>
-            User(s) can give and revoke members access to some content
-          </span>
+          User(s) can give and revoke members access to some content
+        </span>
       </alg-boolean-section>
 
       <alg-boolean-section
@@ -62,8 +60,8 @@
           (valueChange)="onValueChange()"
       >
         <span label i18n>
-            User(s) can watch the members' activity on some content
-          </span>
+          User(s) can watch the members' activity on some content
+        </span>
       </alg-boolean-section>
     </div>
   </div>
