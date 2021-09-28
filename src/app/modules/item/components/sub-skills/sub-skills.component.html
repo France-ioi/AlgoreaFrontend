@@ -2,7 +2,11 @@
 
   <p-progressSpinner *ngIf="state === 'loading'"></p-progressSpinner>
 
-  <p *ngIf="state === 'error'" i18n>Error while loading content</p>
+  <alg-error
+    *ngIf="state === 'error'"
+    class="dark"
+    i18n-message message="Error while loading content"
+  ></alg-error>
 
   <p *ngIf="state === 'ready' && children.length === 0" i18n>This skill does not have subskills.</p>
 
