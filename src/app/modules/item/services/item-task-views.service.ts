@@ -1,17 +1,21 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { BehaviorSubject, combineLatest, merge, ReplaySubject } from 'rxjs';
-import { filter, map, switchMap } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, merge, ReplaySubject, Subject } from 'rxjs';
+import { filter, map, switchMap, takeUntil } from 'rxjs/operators';
 import { isNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
 import { TaskViews, UpdateDisplayParams } from '../task-communication/types';
 import { ItemTaskInitService } from './item-task-init.service';
 
 @Injectable()
 export class ItemTaskViewsService implements OnDestroy {
+  private errorSubject = new Subject<void>();
+  readonly error$ = this.errorSubject.asObservable();
+
   private displaySubject = new ReplaySubject<UpdateDisplayParams>(1);
-  readonly display$ = this.displaySubject.asObservable();
+  readonly display$ = this.displaySubject.asObservable().pipe(takeUntil(this.error$));
+  private task$ = this.initService.task$.pipe(takeUntil(this.error$));
 
   readonly views$ = merge(
-    this.initService.task$.pipe(switchMap(task => task.getViews())),
+    this.task$.pipe(switchMap(task => task.getViews())),
     this.display$.pipe(map(({ views }) => views), filter(isNotUndefined)),
   ).pipe(map(views => this.getAvailableViews(views)));
 
@@ -24,7 +28,7 @@ export class ItemTaskViewsService implements OnDestroy {
   );
 
   private subscriptions = [
-    this.showViews$.subscribe({ error: err => this.initService.setError(err) }),
+    this.showViews$.subscribe({ error: err => this.errorSubject.next(err) }),
   ];
 
   constructor(
@@ -35,6 +39,7 @@ export class ItemTaskViewsService implements OnDestroy {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
     this.displaySubject.complete();
     this.activeViewSubject.complete();
+    this.errorSubject.complete();
   }
 
   updateDisplay(display: UpdateDisplayParams): void {

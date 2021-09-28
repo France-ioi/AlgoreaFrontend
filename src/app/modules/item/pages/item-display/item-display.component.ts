@@ -31,7 +31,6 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
   @ViewChild('iframe') iframe?: ElementRef<HTMLIFrameElement>;
 
   state$ = this.taskService.task$.pipe(mapToFetchState());
-  cannotLoadTaskError?: string;
 
   tabs$: Observable<TaskTab[]> = this.taskService.views$.pipe(
     map(views => views.map(view => ({ view, name: this.getTabNameByView(view) }))),
@@ -54,10 +53,9 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
     if (!this.itemData) throw new Error('itemData must be set in ItemDisplayComponent');
     const url = this.itemData.item.url;
     const attemptId = this.itemData.route.attemptId ?? this.itemData.currentResult?.attemptId;
+    if (!url || !attemptId) throw new Error('cannot load the task when item url or attempt is missing');
 
-    url && attemptId
-      ? this.taskService.configure(this.itemData.route, url, attemptId)
-      : this.cannotLoadTaskError = 'cannot load the task because item url or attempt is missing';
+    this.taskService.configure(this.itemData.route, url, attemptId);
   }
 
   ngAfterViewChecked(): void {
@@ -66,7 +64,13 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.itemData && !changes.itemData.firstChange) throw new Error('This component does not support change of its itemData input');
+    if (
+      changes.itemData &&
+      !changes.itemData.firstChange &&
+      (changes.itemData.previousValue as ItemData | undefined)?.item.id !== this.itemData?.item.id
+    ) {
+      throw new Error('This component does not support change of its itemData input');
+    }
   }
 
   setActiveTab(tab: TaskTab): void {

@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { animationFrames, EMPTY, Observable, of } from 'rxjs';
-import { map, mapTo, switchMap, take } from 'rxjs/operators';
+import { animationFrames, EMPTY, merge, Observable, of, throwError } from 'rxjs';
+import { map, mapTo, switchMap, take, tap } from 'rxjs/operators';
 import { ItemNavigationService } from 'src/app/core/http-services/item-navigation.service';
 import { LocaleService } from 'src/app/core/services/localeService';
+import { openNewTab, replaceWindowUrl } from 'src/app/shared/helpers/url';
 import { FullItemRoute, itemRoute } from 'src/app/shared/routing/item-route';
 import { ItemRouter } from 'src/app/shared/routing/item-router';
 import { Task, TaskPlatform } from '../task-communication/task-proxy';
@@ -14,15 +15,20 @@ import { ItemTaskViewsService } from './item-task-views.service';
 
 @Injectable()
 export class ItemTaskService {
-  task$ = this.initService.task$;
-  iframeSrc$ = this.initService.iframeSrc$;
+  private error$ = merge(
+    this.answerService.error$,
+    this.viewsService.error$,
+  ).pipe(switchMap(error => throwError(() => error)));
+
+  readonly task$ = merge(this.initService.task$, this.error$);
+  readonly iframeSrc$ = this.initService.iframeSrc$;
   get initialized(): boolean {
     return this.initService.initialized;
   }
 
-  views$ = this.viewsService.views$;
-  display$ = this.viewsService.display$;
-  activeView$ = this.viewsService.activeView$;
+  readonly views$ = this.viewsService.views$;
+  readonly display$ = this.viewsService.display$;
+  readonly activeView$ = this.viewsService.activeView$;
 
   private config$ = this.initService.config$;
 
@@ -83,10 +89,12 @@ export class ItemTaskService {
 
   private navigateToNextItem(): Observable<void> {
     return this.config$.pipe(
+      take(1),
       switchMap(({ route }) => this.itemNavigationService.getNavigationNeighbors(route)),
-      map(data => {
+      tap(data => {
         if (data.right) this.itemRouter.navigateTo(data.right);
       }),
+      mapTo(undefined),
     );
   }
 
@@ -100,23 +108,13 @@ export class ItemTaskService {
     if (!id) throw new Error('id must be defined');
 
     const route = itemRoute('activity', id, parentIds);
-    newTab
-      ? this.navigate(this.router.serializeUrl(this.itemRouter.url(route)), true)
-      : this.itemRouter.navigateTo(route);
+    if (newTab) this.navigate(this.router.serializeUrl(this.itemRouter.url(route)), true);
+    else this.itemRouter.navigateTo(route);
     return EMPTY;
   }
 
   private navigate(href: string, newTab = false): void {
-    const url = this.formatUrl(href);
-    newTab
-      ? window.open(url, '_blank')
-      : window.location.href = url;
-  }
-
-  private formatUrl(href: string): string {
-    if (href.startsWith('http')) return href;
-    const url = new URL(this.localeService.currentLang?.path ?? '/', window.location.href);
-    url.hash = href;
-    return url.href;
+    if (newTab) openNewTab(href, this.localeService.currentLang);
+    else replaceWindowUrl(href, this.localeService.currentLang);
   }
 }

@@ -1,3 +1,4 @@
+import { LanguageConfig } from './config';
 import { isString } from './type-checkers';
 
 // Url array (`command` array used in some api of angular)
@@ -75,5 +76,20 @@ export function urlStringFromArray(urlAsArray: UrlCommand): string {
       return `;${ key }=${ valStr }`;
     }).join('');
   }).join('');
+}
+
+function formatUrl(href: string, currentLang?: LanguageConfig): string {
+  const isAbsoluteHref = href.startsWith('http');
+  if (isAbsoluteHref) return href;
+  const url = new URL(currentLang?.path ?? '/', window.location.href);
+  url.hash = href;
+  return url.href;
+}
+
+export function replaceWindowUrl(href: string, currentLang?: LanguageConfig): void {
+  window.location.href = formatUrl(href, currentLang);
+}
+export function openNewTab(href: string, currentLang?: LanguageConfig): void {
+  window.open(formatUrl(href, currentLang), '_blank');
 }
 

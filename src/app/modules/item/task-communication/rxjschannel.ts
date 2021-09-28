@@ -6,7 +6,7 @@ export interface RxMessage {
   method: string;
   params?: unknown;
   timeout?: number;
-  error?: (error: any, message: string) => void;
+  error?: (error: unknown, message: string) => void;
 }
 
 /** Build a RxMessagingChannel, which is a jschannel with rxjs calls */

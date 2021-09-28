@@ -40,9 +40,8 @@ export class ItemTaskInitService implements OnDestroy {
     shareReplay(1),
   );
 
-  get initialized(): boolean {
-    return this.configFromIframe$.closed;
-  }
+  initialized = false;
+  configured = false;
 
   constructor(
     private sanitizer: DomSanitizer,
@@ -57,21 +56,18 @@ export class ItemTaskInitService implements OnDestroy {
   }
 
   configure(route: FullItemRoute, url: string, attemptId: string): void {
-    if (this.configFromItem$.closed) return;
+    if (this.configured) throw new Error('task init service can be configured once only');
+    this.configured = true;
 
     this.configFromItem$.next({ route, url, attemptId });
     this.configFromItem$.complete();
   }
 
   initTask(iframe: HTMLIFrameElement, bindPlatform: (task: Task) => void): void {
-    if (this.configFromIframe$.closed) return;
+    if (this.initialized) throw new Error('task init service can be initialized once only');
+    this.initialized = true;
 
     this.configFromIframe$.next({ iframe, bindPlatform });
     this.configFromIframe$.complete();
-  }
-
-  setError(error: unknown): void {
-    if (!this.configFromItem$.closed) this.configFromItem$.error(error);
-    if (!this.configFromIframe$.closed) this.configFromIframe$.error(error);
   }
 }

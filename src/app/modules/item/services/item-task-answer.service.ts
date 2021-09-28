@@ -1,7 +1,8 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { combineLatest, EMPTY, forkJoin, interval, Observable, of, Subject } from 'rxjs';
-import { catchError, distinctUntilChanged, mapTo, shareReplay, skip, switchMap, withLatestFrom } from 'rxjs/operators';
+import { catchError, distinctUntilChanged, mapTo, shareReplay, skip, switchMap, take, takeUntil, withLatestFrom } from 'rxjs/operators';
 import { SECONDS } from 'src/app/shared/helpers/duration';
+import { errorIsHTTPForbidden } from 'src/app/shared/helpers/errors';
 import { repeatLatestWhen } from 'src/app/shared/helpers/repeatLatestWhen';
 import { AnswerTokenService } from '../http-services/answer-token.service';
 import { Answer, GetCurrentAnswerService } from '../http-services/get-current-answer.service';
@@ -13,24 +14,26 @@ const answerAndStateSaveInterval = 1*SECONDS;
 
 @Injectable()
 export class ItemTaskAnswerService implements OnDestroy {
-  private task$ = this.taskInitService.task$;
-  private config$ = this.taskInitService.config$;
-  private taskToken$ = this.taskInitService.taskToken$;
+  private errorSubject = new Subject<Error>();
+  readonly error$ = this.errorSubject.asObservable();
+
+  private task$ = this.taskInitService.task$.pipe(takeUntil(this.error$));
+  private config$ = this.taskInitService.config$.pipe(takeUntil(this.error$));
+  private taskToken$ = this.taskInitService.taskToken$.pipe(takeUntil(this.error$));
 
   private currentAnswer$: Observable<Answer | null> = this.config$.pipe(
-    switchMap(({ route, attemptId }) => this.getCurrentAnswerService.get(route.id, attemptId).pipe(
-      catchError(() => this.task$.pipe(
-        switchMap(task => combineLatest([ task.getAnswer(), task.getState() ])),
-        switchMap(([ answer, state ]) => this.updateCurrentAnswerService.update(route.id, attemptId, { answer, state })),
-        switchMap(() => this.getCurrentAnswerService.get(route.id, attemptId)),
-      )),
-    )),
+    switchMap(({ route, attemptId }) => this.getCurrentAnswerService.get(route.id, attemptId)),
+    catchError(error => {
+      // currently, the backend returns a 403 status when no current answer exist for user+item+attempt
+      if (errorIsHTTPForbidden(error)) return of(null);
+      throw error;
+    }),
     shareReplay(1), // avoid duplicate xhr calls on multiple subscriptions.
   );
 
-  private reloadAnswerAndStateSubject = new Subject<void>();
-  private reloadAnswerAndState$ = combineLatest([ this.currentAnswer$, this.task$ ]).pipe(
-    repeatLatestWhen(this.reloadAnswerAndStateSubject),
+  private reloadAnswerAndState$ = new Subject<void>();
+  private reloadedAnswerAndState$ = combineLatest([ this.currentAnswer$, this.task$ ]).pipe(
+    repeatLatestWhen(this.reloadAnswerAndState$),
     switchMap(([ currentAnswer, task ]) =>
       (currentAnswer?.state ? task.reloadState(currentAnswer.state).pipe(mapTo({ currentAnswer, task })) : of({ currentAnswer, task }))
     ),
@@ -40,7 +43,7 @@ export class ItemTaskAnswerService implements OnDestroy {
     shareReplay(1),
   );
 
-  private saveAnswerAndStateInterval$ = this.reloadAnswerAndState$.pipe(
+  private saveAnswerAndStateInterval$ = this.reloadedAnswerAndState$.pipe(
     switchMap(() => this.task$),
     switchMap(task => interval(answerAndStateSaveInterval).pipe(mapTo(task))),
     switchMap(task => forkJoin([ task.getAnswer(), task.getState() ])),
@@ -53,8 +56,8 @@ export class ItemTaskAnswerService implements OnDestroy {
   );
 
   private subscriptions = [
-    this.reloadAnswerAndState$.subscribe({ error: err => this.taskInitService.setError(err) }),
-    this.saveAnswerAndStateInterval$.subscribe({ error: err => this.taskInitService.setError(err) }),
+    this.reloadAnswerAndState$.subscribe({ error: err => this.errorSubject.next(err) }),
+    this.saveAnswerAndStateInterval$.subscribe({ error: err => this.errorSubject.next(err) }),
   ];
 
   constructor(
@@ -67,10 +70,14 @@ export class ItemTaskAnswerService implements OnDestroy {
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
+    this.errorSubject.complete();
+    this.reloadAnswerAndState$.complete();
   }
 
   submitAnswer(): Observable<unknown> {
     return this.task$.pipe(
+      take(1),
+
       // Step 1: get answer from task
       switchMap(task => combineLatest([ task.getAnswer(), this.taskToken$ ]).pipe(
 
@@ -94,7 +101,7 @@ export class ItemTaskAnswerService implements OnDestroy {
   }
 
   reloadAnswer(): Observable<unknown> {
-    this.reloadAnswerAndStateSubject.next();
+    this.reloadAnswerAndState$.next();
     return EMPTY;
   }
 }
