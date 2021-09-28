@@ -1,6 +1,9 @@
 import { Component, Input } from '@angular/core';
 import { Mode, ModeAction, ModeService } from '../../../shared/services/mode.service';
 import { ContentInfo } from '../../../shared/models/content/content-info';
+import { Observable } from 'rxjs';
+import { CurrentContentService } from '../../../shared/services/current-content.service';
+import { delay } from 'rxjs/operators';
 
 @Component({
   selector: 'alg-content-top-bar',
@@ -10,10 +13,16 @@ import { ContentInfo } from '../../../shared/models/content/content-info';
 export class ContentTopBarComponent {
   @Input() fullFrameContent = false;
   @Input() currentMode?: Mode;
-  @Input() currentContent?: ContentInfo | null;
   @Input() scrolled = false;
 
-  constructor(private modeService: ModeService) {
+  currentContent$: Observable<ContentInfo | null> = this.currentContentService.content$.pipe(
+    delay(0),
+  );
+
+  constructor(
+    private modeService: ModeService,
+    private currentContentService: CurrentContentService,
+  ) {
   }
 
   onEditCancel(): void {

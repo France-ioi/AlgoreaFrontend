@@ -1,7 +1,4 @@
 import { Component, Input } from '@angular/core';
-import { Observable } from 'rxjs';
-import { ContentInfo } from '../../../shared/models/content/content-info';
-import { CurrentContentService } from '../../../shared/services/current-content.service';
 import { Mode } from '../../../shared/services/mode.service';
 
 @Component({
@@ -13,11 +10,4 @@ export class TopBarComponent {
   @Input() scrolled = false;
   @Input() currentMode?: Mode;
   @Input() fullFrameContent = false;
-
-  currentContent$: Observable<ContentInfo|null> = this.currentContent.content$;
-
-  constructor(
-    private currentContent: CurrentContentService,
-  ) {}
-
 }
