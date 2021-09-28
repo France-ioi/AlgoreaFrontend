@@ -12,7 +12,7 @@ import { Mode } from '../../../shared/services/mode.service';
 export class TopBarComponent {
   @Input() scrolled = false;
   @Input() currentMode?: Mode;
-  @Input() fullFrameContent?: boolean;
+  @Input() fullFrameContent = false;
 
   currentContent$: Observable<ContentInfo|null> = this.currentContent.content$;
 

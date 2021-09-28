@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { ModeAction, ModeService } from '../../../shared/services/mode.service';
+import { Mode, ModeAction, ModeService } from '../../../shared/services/mode.service';
 import { ContentInfo } from '../../../shared/models/content/content-info';
 
 @Component({
@@ -8,8 +8,8 @@ import { ContentInfo } from '../../../shared/models/content/content-info';
   styleUrls: [ './content-top-bar.component.scss' ],
 })
 export class ContentTopBarComponent {
-  @Input() fullFrameContent?: boolean;
-  @Input() currentMode?: string;
+  @Input() fullFrameContent = false;
+  @Input() currentMode?: Mode;
   @Input() currentContent?: ContentInfo | null;
   @Input() scrolled = false;
 

@@ -9,7 +9,7 @@
       [ngClass]="{ 'with-mode-bar': currentMode !== 'normal', collapsed: fullFrameContent }"
       [scrolled]="scrolled"
       [currentMode]="currentMode"
-      [fullFrameContent]="fullFrameContent"
+      [fullFrameContent]="!!fullFrameContent"
     ></alg-top-bar>
     <div
       class="right"
