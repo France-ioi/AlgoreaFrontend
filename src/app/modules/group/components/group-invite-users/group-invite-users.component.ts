@@ -9,7 +9,7 @@ interface Message
 {
   type: 'success' | 'info' | 'error',
   summary?: string,
-  detail: string
+  detail: string,
 }
 
 type GroupInviteState = 'empty'|'too_many'|'loading'|'ready';

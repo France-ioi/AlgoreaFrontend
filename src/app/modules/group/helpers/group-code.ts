@@ -11,15 +11,15 @@ export const groupCodeDecoder = D.partial({
 type GroupCode = D.TypeOf<typeof groupCodeDecoder>;
 
 export interface CodeInfo {
-  codeExpiration?: Date;
-  hasCodeNotSet: boolean;
-  hasCodeUnused: boolean;
-  hasUnexpiringCode: boolean;
-  hasCodeInUse: boolean;
-  hasCodeExpired: boolean;
-  codeFirstUseDate?: Date;
-  durationSinceFirstCodeUse?: Duration;
-  durationBeforeCodeExpiration?: Duration;
+  codeExpiration?: Date,
+  hasCodeNotSet: boolean,
+  hasCodeUnused: boolean,
+  hasUnexpiringCode: boolean,
+  hasCodeInUse: boolean,
+  hasCodeExpired: boolean,
+  codeFirstUseDate?: Date,
+  durationSinceFirstCodeUse?: Duration,
+  durationBeforeCodeExpiration?: Duration,
 }
 
 export function codeInfo(g: GroupCode): CodeInfo {

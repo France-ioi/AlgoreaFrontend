@@ -1,11 +1,11 @@
 
 // ActionResponse is the response format returned by the backend on action (PUT/POST/DELETE) services.
 export interface ActionResponse<T> {
-  message: string;
-  success: boolean;
-  data?: T;
-  errors?: object;
-  error_text?: string;
+  message: string,
+  success: boolean,
+  data?: T,
+  errors?: object,
+  error_text?: string,
 }
 
 // SimpleActionResponse is an action response with no "data"

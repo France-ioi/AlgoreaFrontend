@@ -47,9 +47,9 @@ export function canCurrentUserManageGroup<T extends GroupManagership>(g: T): boo
 }
 
 export interface ManagementAdditions {
-  isCurrentUserManager: boolean;
-  canCurrentUserManageMembers: boolean;
-  canCurrentUserManageGroup: boolean;
+  isCurrentUserManager: boolean,
+  canCurrentUserManageMembers: boolean,
+  canCurrentUserManageGroup: boolean,
 }
 
 // Adds to the given group some new computed attributes (as value)

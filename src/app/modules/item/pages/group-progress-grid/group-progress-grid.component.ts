@@ -51,7 +51,7 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
   currentFilter = this.defaultFilter;
 
   dialogPermissions: {
-    permissions: Permissions
+    permissions: Permissions,
     itemId: string,
     targetGroupId: string,
   } = {
@@ -74,7 +74,7 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
       title: string,
       groupId: string,
       itemId: string,
-    };
+    },
   };
 
   dialog: 'loading'|'opened'|'closed' = 'closed';

@@ -10,7 +10,7 @@ import { GetGroupByIdService, Group } from '../http-services/get-group-by-id.ser
 export interface GroupData {
   route: GroupRoute,
   group: Group,
-  navigation: GroupNavigationData;
+  navigation: GroupNavigationData,
   breadcrumbs: GroupBreadcrumb[],
 }
 

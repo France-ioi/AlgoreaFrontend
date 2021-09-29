@@ -17,8 +17,8 @@ interface DataSourceUpdate<T extends NavTreeElement> {
   elementUpdate?: (el:T) => T, // if set, function to update the element identified by elementId
 }
 interface DataSourceReplacement<T extends NavTreeElement> {
-  type: 'replace'
-  data: NavTreeData<T>
+  type: 'replace',
+  data: NavTreeData<T>,
 }
 interface DataSourceLoading { type: 'loading' }
 interface DataSourceError { type: 'error', error: any }

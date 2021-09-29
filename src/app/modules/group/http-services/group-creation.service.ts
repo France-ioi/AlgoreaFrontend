@@ -6,7 +6,7 @@ import { appConfig } from 'src/app/shared/helpers/config';
 import { ActionResponse, assertSuccess, SimpleActionResponse, successData } from 'src/app/shared/http-services/action-response';
 
 interface NewGroupData {
-  id: string
+  id: string,
 }
 
 @Injectable({

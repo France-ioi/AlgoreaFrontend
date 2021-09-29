@@ -6,7 +6,7 @@ import { appConfig } from 'src/app/shared/helpers/config';
 import { ActionResponse, successData } from 'src/app/shared/http-services/action-response';
 
 interface LeaveGroupResponseData {
-  changed: boolean
+  changed: boolean,
 }
 
 @Injectable({
