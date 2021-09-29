@@ -15,10 +15,8 @@ export class LeftNavGroupDataSource extends LeftNavDataSource<GroupInfo, NavTree
 
   addDetailsToTreeElement(contentInfo: GroupInfo, treeElement: NavTreeElement): NavTreeElement {
     let group = treeElement;
-    if (contentInfo.title) group = { ...treeElement, title: contentInfo.title };
-    if (contentInfo.navData) group = { ...treeElement,
-      children: contentInfo.navData.children.map(mapChild)
-    };
+    if (contentInfo.title) group = { ...group, title: contentInfo.title };
+    if (contentInfo.navData) group = { ...group, children: contentInfo.navData.children.map(mapChild) };
     return group;
   }
 
