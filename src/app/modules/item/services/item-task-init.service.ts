@@ -7,6 +7,8 @@ import { FullItemRoute } from 'src/app/shared/routing/item-route';
 import { TaskTokenService, TaskToken } from '../http-services/task-token.service';
 import { Task, taskProxyFromIframe, taskUrlWithParameters } from '../task-communication/task-proxy';
 
+const taskChannelIdPrefix = 'task-';
+
 export interface ItemTaskConfig {
   route: FullItemRoute,
   url: string,
@@ -25,7 +27,7 @@ export class ItemTaskInitService implements OnDestroy {
   );
   readonly iframeSrc$ = this.taskToken$.pipe(
     withLatestFrom(this.config$),
-    map(([ taskToken, { url }]) => taskUrlWithParameters(url, taskToken, appConfig.itemPlatformId, 'task-')),
+    map(([ taskToken, { url }]) => taskUrlWithParameters(url, taskToken, appConfig.itemPlatformId, taskChannelIdPrefix)),
     map(urlWithParams => this.sanitizer.bypassSecurityTrustResourceUrl(urlWithParams)),
   );
 
