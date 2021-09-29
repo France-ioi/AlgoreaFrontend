@@ -14,7 +14,12 @@ export class LeftNavGroupDataSource extends LeftNavDataSource<GroupInfo, NavTree
   }
 
   addDetailsToTreeElement(contentInfo: GroupInfo, treeElement: NavTreeElement): NavTreeElement {
-    return contentInfo.title ? { ...treeElement, title: contentInfo.title } : { ...treeElement };
+    let group = treeElement;
+    if (contentInfo.title) group = { ...treeElement, title: contentInfo.title };
+    if (contentInfo.navData) group = { ...treeElement,
+      children: contentInfo.navData.children.map(mapChild)
+    };
+    return group;
   }
 
   fetchRootTreeData(): Observable<NavTreeElement[]> {

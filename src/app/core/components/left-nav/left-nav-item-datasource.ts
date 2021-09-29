@@ -1,5 +1,6 @@
-import { EMPTY, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { bestAttemptFromResults } from 'src/app/shared/helpers/attempts';
 import { isSkill, ItemTypeCategory } from 'src/app/shared/helpers/item-type';
 import { ItemInfo } from 'src/app/shared/models/content/item-info';
 import { ItemNavigationService, NavMenuItem } from '../../http-services/item-navigation.service';
@@ -25,23 +26,34 @@ export abstract class LeftNavItemDataSource<ItemT extends ItemInfo> extends Left
     );
   }
 
-  fetchNavData(item: NavMenuItem): Observable<{ parent: NavMenuItem, elements: NavMenuItem[] }> {
-    if (item.attemptId === null) return EMPTY;
-    return this.itemNavService.getNavData(item.id, item.attemptId, isSkill(this.category)).pipe(
-      map(nav => ({ parent: nav.parent, elements: nav.items }))
-    );
-  }
-
   addDetailsToTreeElement(contentInfo: ItemT, treeElement: NavMenuItem): NavMenuItem {
     const details = contentInfo.details;
     if (!details) return treeElement;
-    return {
+    const navMenuItem = {
       ...treeElement,
       title: details.title ?? '',
       attemptId: details.attemptId ?? null,
       bestScore: details.bestScore,
       currentScore: details.currentScore,
       validated: details.validated
+    };
+    const navData = contentInfo.navData;
+    if (!navData) return navMenuItem;
+    return {
+      ...navMenuItem,
+      children: navData.children.map(c => {
+        const currentResult = bestAttemptFromResults(c.results);
+        return {
+          id: c.id,
+          title: c.string.title ?? '',
+          hasChildren: c.hasVisibleChildren && ![ 'none', 'info' ].includes(c.permissions.canView),
+          attemptId: currentResult?.attemptId ?? null,
+          bestScore: c.noScore ? undefined : c.bestScore,
+          currentScore: c.noScore ? undefined : currentResult?.scoreComputed,
+          validated: c.noScore ? undefined : currentResult?.validated,
+          locked: c.permissions.canView === 'info',
+        };
+      })
     };
   }
 
