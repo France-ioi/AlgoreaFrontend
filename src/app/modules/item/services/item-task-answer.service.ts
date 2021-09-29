@@ -73,27 +73,31 @@ export class ItemTaskAnswerService implements OnDestroy {
   }
 
   submitAnswer(): Observable<unknown> {
-    return this.task$.pipe(
+    // Step 1: get answer from task
+    const answer$ = this.task$.pipe(take(1), switchMap(task => task.getAnswer()), shareReplay(1));
+
+    // Step 2: generate answer token with backend
+    const answerToken$ = combineLatest([ this.taskToken$, answer$ ]).pipe(
       take(1),
+      switchMap(([ taskToken, answer ]) => this.answerTokenService.generate(answer, taskToken)),
+      shareReplay(1),
+    );
 
-      // Step 1: get answer from task
-      switchMap(task => combineLatest([ task.getAnswer(), this.taskToken$ ]).pipe(
+    // Step 3: get answer grade with answer token from task
+    const grade$ = combineLatest([ this.task$, answer$, answerToken$ ]).pipe(
+      take(1),
+      switchMap(([ task, answer, answerToken ]) => task.gradeAnswer(answer, answerToken)),
+      shareReplay(1),
+    );
 
-        // Step 2: generate answer token with backend
-        switchMap(([ answer, taskToken ]) => this.answerTokenService.generate(answer, taskToken).pipe(
-
-          // Step 3: get answer grade with answer token from task
-          switchMap(answerToken => task.gradeAnswer(answer, answerToken).pipe(
-
-            // Step 4: Save grade in backend
-            switchMap(grade => this.gradeService.save(
-              taskToken,
-              answerToken,
-              grade.score,
-              grade.scoreToken ?? undefined,
-            )),
-          )),
-        )),
+    // Step 4: Save grade in backend
+    return combineLatest([ this.taskToken$, answerToken$, grade$ ]).pipe(
+      take(1),
+      switchMap(([ taskToken, answerToken, grade ]) => this.gradeService.save(
+        taskToken,
+        answerToken,
+        grade.score,
+        grade.scoreToken ?? undefined,
       )),
     );
   }
