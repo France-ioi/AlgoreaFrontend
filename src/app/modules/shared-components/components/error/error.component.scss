@@ -9,6 +9,10 @@
     .retry {
       color: $base-bk-color;
     }
+
+    .icon {
+      color: $base-bk-color;
+    }
   }
 
   &.dark {
@@ -19,10 +23,18 @@
     .retry {
       color: $base-text-color;
     }
+
+    .icon {
+      color: $base-text-color;
+    }
   }
 
   &.warning {
     .message {
+      color: $notify-error-color;
+    }
+
+    .icon {
       color: $notify-error-color;
     }
   }
@@ -52,6 +64,7 @@
 .icon {
   margin-right: 0.25rem;
   font-size: 1.6rem;
+  color: $base-color;
 }
 
 .message {
