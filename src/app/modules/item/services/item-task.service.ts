@@ -72,7 +72,12 @@ export class ItemTaskService {
         if ('path' in params) return this.navigateToItem(params.path, params.newTab);
         this.navigate(params.url, params.newTab);
         return EMPTY;
-      }
+      },
+      log: (data): Observable<void> => {
+        // eslint-disable-next-line no-console
+        console.log('platform:', ...data);
+        return EMPTY;
+      },
     });
     task.bindPlatform(platform);
   }
