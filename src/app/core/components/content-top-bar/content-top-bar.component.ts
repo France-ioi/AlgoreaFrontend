@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Mode, ModeAction, ModeService } from '../../../shared/services/mode.service';
+import { ModeAction, ModeService } from '../../../shared/services/mode.service';
 import { ContentInfo } from '../../../shared/models/content/content-info';
 import { Observable } from 'rxjs';
 import { CurrentContentService } from '../../../shared/services/current-content.service';
@@ -12,8 +12,9 @@ import { delay } from 'rxjs/operators';
 })
 export class ContentTopBarComponent {
   @Input() fullFrameContent = false;
-  @Input() currentMode?: Mode;
   @Input() scrolled = false;
+
+  currentMode$ = this.modeService.mode$.asObservable();
 
   currentContent$: Observable<ContentInfo | null> = this.currentContentService.content$.pipe(
     delay(0),
