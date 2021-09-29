@@ -44,7 +44,7 @@ export class GroupByIdComponent implements OnDestroy {
       this.groupDataSource.state$.pipe(
         readyData(),
         map(({ group, route, breadcrumbs, navigation }): GroupInfo => groupInfo({
-          route: groupRoute(group, route.path),
+          route: route,
           breadcrumbs: {
             category: GROUP_BREADCRUMB_CAT,
             path: breadcrumbs.map(breadcrumb => ({
