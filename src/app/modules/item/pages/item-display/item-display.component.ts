@@ -62,7 +62,13 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.route && !changes.route.firstChange) throw new Error('this component does not support changing its route input');
+    if (
+      changes.route &&
+      !changes.route.firstChange &&
+      (changes.route.previousValue as FullItemRoute | undefined)?.id !== (changes.route.currentValue as FullItemRoute | undefined)?.id
+    ) {
+      throw new Error('this component does not support changing its route input');
+    }
     if (changes.url && !changes.url.firstChange) throw new Error('this component does not support changing its url input');
     if (changes.attemptId && !changes.attemptId.firstChange) {
       throw new Error('this component does not support changing its attemptId input');
