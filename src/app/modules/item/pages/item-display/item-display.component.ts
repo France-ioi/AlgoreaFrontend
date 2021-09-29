@@ -1,5 +1,4 @@
 import { AfterViewChecked, Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
-import { ItemData } from '../../services/item-datasource.service';
 import { interval, merge, Observable } from 'rxjs';
 import { filter, map, startWith, switchMap } from 'rxjs/operators';
 import { SECONDS } from 'src/app/shared/helpers/duration';
@@ -10,6 +9,7 @@ import { capitalize } from 'src/app/shared/helpers/case_conversion';
 import { ItemTaskInitService } from '../../services/item-task-init.service';
 import { ItemTaskAnswerService } from '../../services/item-task-answer.service';
 import { ItemTaskViewsService } from '../../services/item-task-views.service';
+import { FullItemRoute } from 'src/app/shared/routing/item-route';
 
 const initialHeight = 1200;
 const additionalHeightToPreventInnerScrollIssues = 40;
@@ -21,13 +21,16 @@ interface TaskTab {
 }
 
 @Component({
-  selector: 'alg-item-display',
+  selector: 'alg-item-display[url][attemptId][route]',
   templateUrl: './item-display.component.html',
   styleUrls: [ './item-display.component.scss' ],
   providers: [ ItemTaskService, ItemTaskInitService, ItemTaskAnswerService, ItemTaskViewsService ],
 })
 export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges {
-  @Input() itemData?: ItemData;
+  @Input() route!: FullItemRoute;
+  @Input() url!: string;
+  @Input() attemptId!: string;
+
   @ViewChild('iframe') iframe?: ElementRef<HTMLIFrameElement>;
 
   state$ = this.taskService.task$.pipe(mapToFetchState());
@@ -50,12 +53,7 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
   ) {}
 
   ngOnInit(): void {
-    if (!this.itemData) throw new Error('itemData must be set in ItemDisplayComponent');
-    const url = this.itemData.item.url;
-    const attemptId = this.itemData.route.attemptId ?? this.itemData.currentResult?.attemptId;
-    if (!url || !attemptId) throw new Error('cannot load the task when item url or attempt is missing');
-
-    this.taskService.configure(this.itemData.route, url, attemptId);
+    this.taskService.configure(this.route, this.url, this.attemptId);
   }
 
   ngAfterViewChecked(): void {
@@ -64,12 +62,10 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (
-      changes.itemData &&
-      !changes.itemData.firstChange &&
-      (changes.itemData.previousValue as ItemData | undefined)?.item.id !== this.itemData?.item.id
-    ) {
-      throw new Error('This component does not support change of its itemData input');
+    if (changes.route && !changes.route.firstChange) throw new Error('this component does not support changing its route input');
+    if (changes.url && !changes.url.firstChange) throw new Error('this component does not support changing its url input');
+    if (changes.attemptId && !changes.attemptId.firstChange) {
+      throw new Error('this component does not support changing its attemptId input');
     }
   }
 

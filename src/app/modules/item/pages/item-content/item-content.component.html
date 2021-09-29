@@ -9,8 +9,10 @@
       <alg-chapter-children [itemData]="itemData" *ngIf="itemData.item.type === 'Chapter'"></alg-chapter-children>
 
       <alg-item-display
-        [itemData]="itemData"
-        *ngIf="(itemData.item.type === 'Task' || itemData.item.type === 'Course') && itemData.item.url && (itemData.route.attemptId || itemData.currentResult.attemptId)"
+        *ngIf="(itemData.item.type === 'Task' || itemData.item.type === 'Course') && itemData.item.url && attemptId"
+        [route]="itemData.route"
+        [url]="itemData.item.url"
+        [attemptId]="attemptId"
       ></alg-item-display>
 
       <alg-sub-skills [itemData]="itemData" *ngIf="itemData.item.type === 'Skill'"></alg-sub-skills>
