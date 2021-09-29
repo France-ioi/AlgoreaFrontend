@@ -9,7 +9,8 @@
     [closable]="false"
     >
     <div class="spinner-overlay" *ngIf="updating">
-      <p-progressSpinner></p-progressSpinner>
+      <alg-loading></alg-loading>
+<!--      <p-progressSpinner></p-progressSpinner>-->
     </div>
 
     <ng-container *ngIf="languageMismatch.userDefaultLanguageIsSupported">

@@ -32,7 +32,8 @@
 </p-tabView>
 
 <div class="spinner" *ngIf="dataSources[activeTabIndex]?.state?.isFetching">
-  <p-progressSpinner [style]="{width: '3.3333rem', height: '3.3333rem'}"></p-progressSpinner>
+  <alg-loading size="medium"></alg-loading>
+<!--  <p-progressSpinner [style]="{width: '3.3333rem', height: '3.3333rem'}"></p-progressSpinner>-->
 </div>
 
 <alg-error

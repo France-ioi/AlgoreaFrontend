@@ -1,5 +1,7 @@
 <ng-container *ngIf="state$ | async as state">
-  <p-progressSpinner *ngIf="state.isFetching && !state.data" [style]="{width: '3.3333rem', height: '3.3333rem'}"></p-progressSpinner>
+  <alg-loading size="medium" *ngIf="state.isFetching && !state.data"></alg-loading>
+
+<!--  <p-progressSpinner *ngIf="state.isFetching && !state.data" [style]="{width: '3.3333rem', height: '3.3333rem'}"></p-progressSpinner>-->
 
   <alg-error
     *ngIf="state.isError"

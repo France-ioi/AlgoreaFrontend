@@ -1,10 +1,13 @@
 <div class="container" *ngIf="state$ | async as state">
-  <p-progressSpinner
+
+  <alg-loading class="spinner" size="small" *ngIf="state.isFetching || (deletionInProgress$ | async)"></alg-loading>
+
+<!--  <p-progressSpinner
       class="spinner"
       *ngIf="state.isFetching || (deletionInProgress$ | async)"
       [style]="{width: '24px', height: '24px'}"
   >
-  </p-progressSpinner>
+  </p-progressSpinner>-->
   <span class="has-children" *ngIf="state.isReady && state.data" i18n>
     Only an empty group can be deleted.
   </span>

@@ -1,3 +1,5 @@
-:host {
-  display: inline-block;
+.wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

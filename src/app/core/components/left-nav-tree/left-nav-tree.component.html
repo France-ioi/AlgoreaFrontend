@@ -53,8 +53,9 @@
               {{ node.label }}
               <span *ngIf="node.data.element.groupName">(via group "{{ node.data.element.groupName }}")</span>
             </span>
-            <span class="node-state" *ngIf="node.data.status === 'loading'">
-              <p-progressSpinner [style]="{ width: '3rem', height: '3rem' }"></p-progressSpinner>
+            <span class="node-state" *ngIf="node.data.status === 'loading' || true">
+              <alg-loading size="medium"></alg-loading>
+<!--              <p-progressSpinner [style]="{ width: '3rem', height: '3rem' }"></p-progressSpinner>-->
             </span>
             <span class="node-state" *ngIf="node.data.status === 'error'">
               <i class="fa fa-exclamation-triangle"></i>
@@ -98,7 +99,8 @@
               <span *ngIf="node.data.element.groupName">(<span i18n>via group</span> "{{ node.data.element.groupName }}")</span>
             </span>
             <span class="node-state" *ngIf="node.data.status === 'loading'">
-              <p-progressSpinner [style]="{ width: '3rem', height: '3rem' }"></p-progressSpinner>
+              <alg-loading size="medium"></alg-loading>
+<!--              <p-progressSpinner [style]="{ width: '3rem', height: '3rem' }"></p-progressSpinner>-->
             </span>
             <span class="node-state" *ngIf="node.data.status === 'error'">
               <i class="fa fa-exclamation-triangle"></i>
@@ -189,11 +191,12 @@
               {{ node.label }}
             </span>
             <span class="node-state" *ngIf="node.data.element.type !== 'User'">
-              <p-progressSpinner
+              <alg-loading size="medium" *ngIf="node.data.status === 'loading'"></alg-loading>
+              <!--<p-progressSpinner
                   class="loader"
                   [style]="{ width: '3rem', height: '3rem' }"
                   *ngIf="node.data.status === 'loading'"
-              ></p-progressSpinner>
+              ></p-progressSpinner>-->
               <i
                 *ngIf="node.data.element.currentUserManagership !== 'none'"
                 class="fa fa-chalkboard-teacher"
