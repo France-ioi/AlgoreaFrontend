@@ -1,8 +1,8 @@
 import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
 
 export interface Result {
-  countRequests: number;
-  countSuccess: number;
+  countRequests: number,
+  countSuccess: number,
 }
 
 export function displayResponseToast(feedbackService: ActionFeedbackService, result: Result): void {

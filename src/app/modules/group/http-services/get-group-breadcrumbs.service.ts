@@ -16,7 +16,7 @@ const breadcrumbDecoder = D.struct({
 type Breadcrumb = D.TypeOf<typeof breadcrumbDecoder>;
 
 export interface GroupBreadcrumb extends Breadcrumb {
-  route: GroupRoute
+  route: GroupRoute,
 }
 
 @Injectable({

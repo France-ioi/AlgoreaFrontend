@@ -10,12 +10,12 @@ import { UserSessionService, WatchedGroup } from '../../../../shared/services/us
 
 interface Column {
   field: string,
-  header: string
+  header: string,
 }
 
 interface Data {
   columns: Column[],
-  rowData: ActivityLog[]
+  rowData: ActivityLog[],
 }
 
 @Component({

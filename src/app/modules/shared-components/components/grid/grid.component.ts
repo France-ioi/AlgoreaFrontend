@@ -10,12 +10,12 @@ export function tableFactory(wrapper: GridComponent): Table|undefined {
 
 export interface GridColumn {
   field: string,
-  header: string
+  header: string,
 }
 
 export interface GridColumnGroup {
   columns: GridColumn[],
-  name?: string
+  name?: string,
 }
 
 @Component({

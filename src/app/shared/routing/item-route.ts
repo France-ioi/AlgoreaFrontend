@@ -27,9 +27,9 @@ type AttemptId = string;
 // When navigating, as many information as possible should be given to the item router so that the navigation is not slowed down.
 // So always prefer usage of FullItemRoute over ItemRoute over RawItemRoute.
 export interface ItemRoute extends ContentRoute {
-  contentType: ItemTypeCategory;
-  attemptId?: AttemptId;
-  parentAttemptId?: AttemptId;
+  contentType: ItemTypeCategory,
+  attemptId?: AttemptId,
+  parentAttemptId?: AttemptId,
 }
 type ItemRouteWithSelfAttempt = ItemRoute & { attemptId: AttemptId };
 type ItemRouteWithParentAttempt = ItemRoute & { parentAttemptId: AttemptId };
@@ -65,7 +65,7 @@ export function decodeItemRouterParameters(params: ParamMap): {
   id: string|null,
   path: string|null,
   attemptId: string|null,
-  parentAttemptId: string|null
+  parentAttemptId: string|null,
 } {
   return {
     id: params.get('id'),

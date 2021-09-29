@@ -18,10 +18,10 @@ export function bestAttemptFromResults<T extends Result>(results: T[]): T|null {
 }
 
 interface Item {
-  requiresExplicitEntry: boolean
+  requiresExplicitEntry: boolean,
   permissions: {
     canView: 'none'|'info'|'content'|'content_with_descendants'|'solution',
-  }
+  },
 }
 
 export function implicitResultStart(item: Item): boolean {

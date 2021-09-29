@@ -21,8 +21,8 @@ interface RawBreadcrumbItem {
 
 export interface BreadcrumbItem {
   itemId: string,
-  title: string
-  route: FullItemRoute
+  title: string,
+  route: FullItemRoute,
   attemptCnt?: number,
 }
 

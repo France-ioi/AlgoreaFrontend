@@ -35,7 +35,7 @@ export const currentUserDecoder = pipe(
 export type UserProfile = D.TypeOf<typeof currentUserDecoder>;
 
 export interface UpdateUserBody {
-  default_language: string
+  default_language: string,
 }
 
 @Injectable({

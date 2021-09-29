@@ -11,7 +11,7 @@ export const permissionsDecoder = D.struct({
 export type PermissionsInfo = D.TypeOf<typeof permissionsDecoder>;
 
 export interface ItemPermissionsInfo {
-  permissions: PermissionsInfo
+  permissions: PermissionsInfo,
 }
 
 export function canCurrentUserViewItemContent(item: ItemPermissionsInfo): boolean {

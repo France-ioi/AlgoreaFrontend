@@ -2,8 +2,8 @@ import { HttpParams } from '@angular/common/http';
 import { SortEvent } from 'primeng/api';
 
 export interface SortOption {
-  field: string;
-  ascending: boolean;
+  field: string,
+  ascending: boolean,
 }
 export type SortOptions = readonly SortOption[];
 

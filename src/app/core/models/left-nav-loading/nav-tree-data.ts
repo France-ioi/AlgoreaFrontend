@@ -2,12 +2,12 @@ import { ensureDefined } from 'src/app/shared/helpers/null-undefined-predicates'
 
 type Id = string;
 export interface NavTreeElement {
-  id: Id
-  title: string
-  hasChildren: boolean
-  children?: this[]
-  type?: string
-  locked: boolean
+  id: Id,
+  title: string,
+  hasChildren: boolean,
+  children?: this[],
+  type?: string,
+  locked: boolean,
 }
 
 /**

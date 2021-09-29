@@ -25,22 +25,22 @@ interface ActivityOrSkill {
   no_score: boolean,
   has_visible_children: boolean,
   permissions: {
-    can_view: 'none'|'info'|'content'|'content_with_descendants'|'solution'
+    can_view: 'none'|'info'|'content'|'content_with_descendants'|'solution',
   },
-  results: RawResult[]
+  results: RawResult[],
 }
 
 export interface RootActivity {
   // Some attributes are omitted as they are not used for the moment. Read the doc for the full list.
   group_id: string,
   name: string,
-  activity: ActivityOrSkill
+  activity: ActivityOrSkill,
 }
 
 interface RootSkill {
   group_id: string,
   name: string,
-  skill: ActivityOrSkill
+  skill: ActivityOrSkill,
 }
 
 interface RawResult {
@@ -58,7 +58,7 @@ interface RawNavData {
   string: ItemStrings,
   type: ItemType,
   permissions: {
-    can_view: 'none'|'info'|'content'|'content_with_descendants'|'solution'
+    can_view: 'none'|'info'|'content'|'content_with_descendants'|'solution',
   },
   children: {
     id: string,
@@ -68,10 +68,10 @@ interface RawNavData {
     no_score: boolean,
     has_visible_children: boolean,
     permissions: {
-      can_view: 'none'|'info'|'content'|'content_with_descendants'|'solution'
+      can_view: 'none'|'info'|'content'|'content_with_descendants'|'solution',
     },
     results: RawResult[],
-  }[]
+  }[],
 }
 
 interface Result {
@@ -98,7 +98,7 @@ export interface NavMenuItem {
 
 export interface NavMenuRootItem {
   parent?: NavMenuItem,
-  items: NavMenuItem[]
+  items: NavMenuItem[],
 }
 
 
@@ -124,7 +124,7 @@ function createNavMenuItem(raw: {
   no_score: boolean,
   best_score: number,
   permissions: {
-    can_view: 'none'|'info'|'content'|'content_with_descendants'|'solution'
+    can_view: 'none'|'info'|'content'|'content_with_descendants'|'solution',
   },
 }): NavMenuItem {
   const currentResult = raw.results ? bestAttemptFromResults(raw.results.map(rawResultToResult)) : undefined;

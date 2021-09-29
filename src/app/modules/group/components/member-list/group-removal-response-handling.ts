@@ -1,9 +1,9 @@
 import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
 
 export interface Result {
-  countRequests: number;
-  countSuccess: number;
-  errorText?: string;
+  countRequests: number,
+  countSuccess: number,
+  errorText?: string,
 }
 
 export function displayGroupRemovalResponseToast(feedbackService: ActionFeedbackService, result: Result): void {

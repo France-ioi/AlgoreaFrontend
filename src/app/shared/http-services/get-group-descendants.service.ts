@@ -13,7 +13,7 @@ interface RawTeamDescendants {
     group_id: string,
     first_name: string|null,
     last_name: string|null,
-    grade: number|null;
+    grade: number|null,
   }[],
   parents: {
     id: string,
@@ -30,7 +30,7 @@ export interface TeamDescendants {
     groupId: string,
     firstName: string|null,
     lastName: string|null,
-    grade: number|null;
+    grade: number|null,
   }[],
   parents: {
     id: string,

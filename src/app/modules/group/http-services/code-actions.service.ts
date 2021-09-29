@@ -6,7 +6,7 @@ import { map } from 'rxjs/operators';
 import { appConfig } from 'src/app/shared/helpers/config';
 
 export interface NewCodeSuccessResponse {
-  code: string
+  code: string,
 }
 
 @Injectable({

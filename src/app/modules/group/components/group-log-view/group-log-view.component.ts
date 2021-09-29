@@ -6,12 +6,12 @@ import { ActivityLog, ActivityLogService } from '../../../../shared/http-service
 
 interface Column {
   field: string,
-  header: string
+  header: string,
 }
 
 interface Data {
   columns: Column[],
-  rowData: ActivityLog[]
+  rowData: ActivityLog[],
 }
 
 @Component({

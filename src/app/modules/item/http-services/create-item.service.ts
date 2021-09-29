@@ -7,13 +7,13 @@ import { map } from 'rxjs/operators';
 import { ActionResponse, successData } from '../../../shared/http-services/action-response';
 
 interface NewItemData {
-  id: string;
+  id: string,
 }
 
 export type NewItem = {
   title: string,
   type: ItemType,
-  languageTag: string
+  languageTag: string,
 } & ({ parent: string } | { asRootOfGroupId: string });
 
 @Injectable({

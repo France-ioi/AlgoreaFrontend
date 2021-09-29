@@ -16,7 +16,7 @@ export class GroupRouter {
    * Navigate to given group, on the path page.
    * If page is not given and we are currently on a group page, use the same page. Otherwise, default to 'details'.
    */
-  navigateTo(route: RawGroupRoute, options?: { page?: string; navExtras?: NavigationExtras }): void {
+  navigateTo(route: RawGroupRoute, options?: { page?: string, navExtras?: NavigationExtras }): void {
     void this.router.navigateByUrl(this.url(route, options?.page), options?.navExtras);
   }
 

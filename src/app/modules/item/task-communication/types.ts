@@ -44,7 +44,7 @@ export type TaskViews = D.TypeOf<typeof taskViewsDecoder>;
 export interface RawTaskGrade {
   score?: unknown,
   message?: unknown,
-  scoreToken?: unknown
+  scoreToken?: unknown,
 }
 export const taskGradeDecoder = D.partial({
   score: D.number,

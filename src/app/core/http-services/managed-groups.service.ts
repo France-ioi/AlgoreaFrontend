@@ -13,7 +13,7 @@ export interface Group {
   type: GroupType,
   canManage: ManageType,
   canWatchMember: boolean,
-  canGrantGroupAccess: boolean
+  canGrantGroupAccess: boolean,
 }
 
 interface RawGroup {
