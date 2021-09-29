@@ -8,6 +8,13 @@
 
       <alg-chapter-children [itemData]="itemData" *ngIf="itemData.item.type === 'Chapter'"></alg-chapter-children>
 
+      <alg-item-display
+        *ngIf="(itemData.item.type === 'Task' || itemData.item.type === 'Course') && itemData.item.url && attemptId"
+        [route]="itemData.route"
+        [url]="itemData.item.url"
+        [attemptId]="attemptId"
+      ></alg-item-display>
+
       <alg-sub-skills [itemData]="itemData" *ngIf="itemData.item.type === 'Skill'"></alg-sub-skills>
       <alg-parent-skills [itemData]="itemData" *ngIf="itemData.item.type === 'Skill'"></alg-parent-skills>
     </ng-container>
