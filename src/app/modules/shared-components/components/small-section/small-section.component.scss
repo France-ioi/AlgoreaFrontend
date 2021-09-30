@@ -2,13 +2,13 @@
 
 $inactive-bk-color: #d8d8d8;
 
-.progress-section-container {
+.section-container {
   display: flex;
   flex-direction: column;
   margin-top: 0.4167rem;
   margin-bottom: 0.4167rem;
 
-  .progress-section-header {
+  .section-header {
     display: flex;
     align-items: center;
     height: 3rem;
@@ -36,11 +36,6 @@ $inactive-bk-color: #d8d8d8;
       flex: 1;
     }
 
-    .header-content {
-      display: flex;
-      align-items: center;
-    }
-
     .toggle-expand {
       display: flex;
       align-items: center;
@@ -48,11 +43,5 @@ $inactive-bk-color: #d8d8d8;
       width: 2.0833rem;
       height: 2.0833rem;
     }
-  }
-
-  .progress-section-body {
-    display: flex;
-    flex-direction: column;
-    position: relative;
   }
 }

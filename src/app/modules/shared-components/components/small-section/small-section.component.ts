@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, ContentChild, Input, TemplateRef } from '@angular/core';
 
 @Component({
   selector: 'alg-small-section',
@@ -13,6 +13,8 @@ export class SmallSectionComponent {
   @Input() disabled = false;
   @Input() collapsed = true;
   @Input() collapsible = true;
+
+  @ContentChild('content') contentTemplate?: TemplateRef<any>;
 
   constructor() { }
 

@@ -1,18 +1,21 @@
-<div class="progress-section-container">
-  <div class="progress-section-header" [ngClass]="{disabled: disabled, 'cursor-pointer': collapsed}" (click)="onCollapse()">
+<div class="section-container">
+  <div class="section-header" [ngClass]="{disabled: disabled, 'cursor-pointer': collapsed}" (click)="onCollapse()">
     <span class="header-icon">
       <i class="{{ icon }}"></i>
     </span>
     <span class="header-title">{{ title }}</span>
-    <div *ngIf="collapsed" class="header-content">
-      <ng-content select="[header]"></ng-content>
-    </div>
+    <ng-container *ngIf="contentTemplate && collapsed"
+      [ngTemplateOutlet]="contentTemplate"
+      [ngTemplateOutletContext]="{ $implicit: true }"
+    ></ng-container>
     <span class="toggle-expand" *ngIf="collapsible">
       <i *ngIf="collapsed" class="fa fa-caret-down"></i>
       <i *ngIf="!collapsed" class="fa fa-caret-up"></i>
     </span>
   </div>
-  <div *ngIf="!collapsed" class="progress-section-body">
-    <ng-content></ng-content>
-  </div>
+  <ng-container
+    *ngIf="contentTemplate && !collapsed"
+    [ngTemplateOutlet]="contentTemplate"
+    [ngTemplateOutletContext]="{ $implicit: false }"
+  ></ng-container>
 </div>
