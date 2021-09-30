@@ -2,7 +2,7 @@
   <div class="spinner-container" *ngIf="state.isFetching">
     <p-progressSpinner [style]="{width: '24px', height: '24px'}"></p-progressSpinner>
   </div>
-  <div *ngIf="state.isError" i18n>Error while loading the activities</div>
+  <alg-error *ngIf="state.isError" i18n-message message="Error while loading the activities"></alg-error>
   <div *ngIf="state.isReady && state.data.length === 0" i18n>
     There are no activities
   </div>

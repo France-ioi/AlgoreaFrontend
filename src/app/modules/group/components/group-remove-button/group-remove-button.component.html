@@ -8,7 +8,11 @@
   <span class="has-children" *ngIf="state.isReady && state.data" i18n>
     Only an empty group can be deleted.
   </span>
-  <span class="error" *ngIf="state.isError" i18n>Error while loading the group info</span>
+  <alg-error
+    *ngIf="state.isError"
+    class="warning small"
+    i18n-message message="Error while loading the group info"
+  ></alg-error>
   <button
       pButton
       type="button"

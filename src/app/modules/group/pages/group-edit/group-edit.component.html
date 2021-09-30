@@ -2,7 +2,7 @@
 
   <p-progressSpinner *ngIf="state.isFetching"></p-progressSpinner>
 
-  <p *ngIf="state.isError" i18n>Error while loading the group</p>
+  <alg-error *ngIf="state.isError" class="dark" i18n-message message="Error while loading the group"></alg-error>
 
   <ng-container *ngIf="state.isReady">
     <form class="group-edition" [formGroup]="groupForm" *ngIf="state.data.isCurrentUserManager; else notAuthorized">

@@ -1,0 +1,14 @@
+<div class="wrapper">
+  <div class="message-container">
+    <i *ngIf="icon" class="icon" [ngClass]="icon"></i>
+    <span class="message">{{ message }}</span>
+    <p-button
+      *ngIf="showRefreshButton && refreshButtonType === 'refresh'"
+      class="refresh-button"
+      icon="pi pi-refresh"
+      (click)="onRefresh()"
+      styleClass="p-button-sm"
+    ></p-button>
+  </div>
+  <span *ngIf="showRefreshButton && refreshButtonType === 'retry'" class="retry cursor-pointer" (click)="onRefresh()" i18n>Retry now</span>
+</div>

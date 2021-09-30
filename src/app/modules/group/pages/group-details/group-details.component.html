@@ -81,6 +81,6 @@
 
   <p-progressSpinner *ngIf="state.isFetching && !state.data"></p-progressSpinner>
 
-  <p *ngIf="state.isError" i18n>Error while loading the group info</p>
+  <alg-error *ngIf="state.isError" class="dark" i18n-message message="Error while loading the group info"></alg-error>
 
 </ng-container>

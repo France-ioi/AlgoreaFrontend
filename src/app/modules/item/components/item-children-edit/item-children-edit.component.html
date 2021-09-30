@@ -110,7 +110,7 @@
 
     <p-progressSpinner *ngSwitchCase="'loading'"></p-progressSpinner>
 
-    <div *ngSwitchCase="'error'" i18n>Error</div>
+    <alg-error *ngSwitchCase="'error'" class="dark" i18n-message message="Error while loading the children item"></alg-error>
   </alg-section>
 </ng-container>
 
