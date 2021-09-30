@@ -25,18 +25,26 @@
         This panel lets you select what you allow the selected user or group of users to do on the current group and its descendants.
       </p>
 
-      <alg-progress-section
-          i18n-title title="Management level"
-          icon="fa fa-users-cog"
-          [(value)]="managerValues.canManage"
-          [values]="managementLevelValues"
-          [collapsible]="false"
-          [collapsed]="false"
-          type="simple"
-          (valueChange)="onValueChange()"
+      <alg-small-section
+        [collapsible]="false"
+        [collapsed]="false"
+        i18n-title title="Management level"
+        icon="fa fa-users-cog"
       >
-        <span description i18n>The permissions that the user(s) has on this group</span>
-      </alg-progress-section>
+        <ng-template #content let-collapsed>
+          <alg-progress-section
+            [(value)]="managerValues.canManage"
+            [values]="managementLevelValues"
+            [collapsed]="collapsed"
+            type="simple"
+            (valueChange)="onValueChange()"
+          >
+            <ng-container #description>
+              <span description i18n>The permissions that the user(s) has on this group</span>
+            </ng-container>
+          </alg-progress-section>
+        </ng-template>
+      </alg-small-section>
 
       <alg-small-section
         [collapsible]="false"

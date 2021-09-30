@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges, Output, EventEmitter, OnInit, ContentChild, TemplateRef } from '@angular/core';
 
 export interface ProgressSectionValue<T> {
   label: string,
@@ -23,18 +23,15 @@ export interface ProgressSectionValue<T> {
 })
 export class ProgressSectionComponent<T> implements OnChanges, OnInit {
 
-  @Input() title = '';
-  @Input() icon = '';
+  @Input() collapsed = true;
 
+  @Input() values: ProgressSectionValue<T>[] = [];
   @Input() defaultValue?: T;
   @Input() value?: T;
 
-  @Input() values: ProgressSectionValue<T>[] = [];
-
-  @Input() disabled = false;
-  @Input() collapsible = true;
-  @Input() collapsed = true;
   @Input() type: 'simple' | 'checksWithLock' = 'checksWithLock';
+
+  @ContentChild('description') descriptionTemplate?: TemplateRef<any>;
 
   @Output() valueChange = new EventEmitter<T>();
 

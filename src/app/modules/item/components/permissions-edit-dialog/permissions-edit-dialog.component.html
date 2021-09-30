@@ -20,12 +20,17 @@
 
   <div class="dialog-container">
     <div class="dialog-content">
-      <alg-progress-section
-        i18n-title title="Can view"
-        icon="fa fa-eye"
-        [(value)]="permissions.can_view"
-        [values]="canViewValues"
-      ></alg-progress-section>
+
+      <alg-small-section i18n-title title="Can view" icon="fa fa-eye">
+        <ng-template #content let-collapsed>
+          <alg-progress-section
+            [collapsed]="collapsed"
+            [(value)]="permissions.can_view"
+            [values]="canViewValues"
+          ></alg-progress-section>
+        </ng-template>
+      </alg-small-section>
+
       <!--<alg-boolean-section
         i18n-title title="Can Enter"
         icon="fa fa-door-open"
@@ -33,24 +38,36 @@
       >
         <ng-template #label i18n>{{targetTypeString}} may enter this item (a contest or time-limited chapter)</ng-template>
       </alg-boolean-section>-->
-      <alg-progress-section
-        i18n-title title="Can grant view"
-        icon="fa fa-key"
-        [(value)]="permissions.can_grant_view"
-        [values]="canGrantViewValues"
-      ></alg-progress-section>
-      <alg-progress-section
-        i18n-title title="Can watch"
-        icon="fa fa-binoculars"
-        [(value)]="permissions.can_watch"
-        [values]="canWatchValues"
-      ></alg-progress-section>
-      <alg-progress-section
-        i18n-title title="Can edit"
-        icon="fa fa-pencil-alt"
-        [(value)]="permissions.can_edit"
-        [values]="canEditValues"
-      ></alg-progress-section>
+
+      <alg-small-section i18n-title title="Can grant view" icon="fa fa-key">
+        <ng-template #content let-collapsed>
+          <alg-progress-section
+            [collapsed]="collapsed"
+            [(value)]="permissions.can_grant_view"
+            [values]="canGrantViewValues"
+          ></alg-progress-section>
+        </ng-template>
+      </alg-small-section>
+
+      <alg-collapsible-section i18n-title title="Can watch" icon="fa fa-binoculars">
+        <ng-template #content let-collapsed>
+          <alg-progress-section
+            [collapsed]="collapsed"
+            [(value)]="permissions.can_watch"
+            [values]="canWatchValues"
+          ></alg-progress-section>
+        </ng-template>
+      </alg-small-section>
+
+      <alg-small-section i18n-title title="Can edit" icon="fa fa-pencil-alt">
+        <ng-template #content let-collapsed>
+          <alg-progress-section
+            [collapsed]="collapsed"
+            [(value)]="permissions.can_edit"
+            [values]="canEditValues"
+          ></alg-progress-section>
+        </ng-template>
+      </alg-small-section>
 
       <alg-small-section i18n-title title="Can attach official sessions" icon="fa fa-paperclip">
         <ng-template #content let-collapsed>
