@@ -1,7 +1,5 @@
 <alg-loading size="medium" *ngIf="state === 'loading'"></alg-loading>
 
-<!--<p-progressSpinner *ngIf="state === 'loading'"></p-progressSpinner>-->
-
 <alg-error *ngIf="state === 'error'" i18n-message message="Error while loading the group managers"></alg-error>
 
 <ng-container *ngIf="state === 'ready'">

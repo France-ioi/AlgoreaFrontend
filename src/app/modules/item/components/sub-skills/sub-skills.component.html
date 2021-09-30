@@ -1,6 +1,6 @@
 <alg-section i18n-label label="Sub-skills" icon="fa fa-graduation-cap">
 
-  <p-progressSpinner *ngIf="state === 'loading'"></p-progressSpinner>
+  <alg-loading *ngIf="state === 'loading'"></alg-loading>
 
   <alg-error
     *ngIf="state === 'error'"

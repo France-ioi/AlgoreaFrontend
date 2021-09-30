@@ -1,12 +1,6 @@
 <ng-container *ngIf="item">
   <div class="container" *ngIf="state$ | async as state">
     <alg-loading size="small" *ngIf="state.isFetching || deletionInProgress"></alg-loading>
-<!--    <p-progressSpinner
-        class="spinner"
-        *ngIf="state.isFetching || deletionInProgress"
-        [style]="{width: '24px', height: '24px'}"
-    >
-    </p-progressSpinner>-->
     <ng-container *ngIf="item.permissions.isOwner; else notOwner">
       <span class="message" *ngIf="state.isReady && state.data && ['Chapter', 'Skill'].includes(item.type)" i18n>
         {{ item.type === 'Chapter' ? 'Only empty chapters can be deleted.' : 'Only empty skills can be deleted.' }}

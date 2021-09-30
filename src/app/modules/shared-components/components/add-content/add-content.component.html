@@ -32,7 +32,7 @@
 </div>
 
 <ng-container *ngIf="loading; else ready" style="text-align: center;">
-  <p-progressSpinner></p-progressSpinner>
+  <alg-loading size="medium"></alg-loading>
 </ng-container>
 <ng-template #ready>
   <div *ngIf="trimmedInputsValue.create.length >= minInputLength" class="new-content-type">
