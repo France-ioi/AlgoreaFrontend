@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { combineLatest, EMPTY, forkJoin, interval, Observable, of, Subject } from 'rxjs';
+import { combineLatest, forkJoin, interval, Observable, of, Subject } from 'rxjs';
 import { catchError, distinctUntilChanged, mapTo, shareReplay, skip, switchMap, take, takeUntil, withLatestFrom } from 'rxjs/operators';
 import { SECONDS } from 'src/app/shared/helpers/duration';
 import { errorIsHTTPForbidden } from 'src/app/shared/helpers/errors';
@@ -103,7 +103,9 @@ export class ItemTaskAnswerService implements OnDestroy {
   }
 
   reloadAnswer(): Observable<unknown> {
-    this.reloadAnswerAndState$.next();
-    return EMPTY;
+    return this.task$.pipe(
+      take(1),
+      switchMap(task => task.reloadAnswer(''))
+    );
   }
 }
