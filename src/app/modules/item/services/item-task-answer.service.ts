@@ -3,7 +3,6 @@ import { combineLatest, forkJoin, interval, Observable, of, Subject } from 'rxjs
 import { catchError, distinctUntilChanged, mapTo, shareReplay, skip, switchMap, take, takeUntil, withLatestFrom } from 'rxjs/operators';
 import { SECONDS } from 'src/app/shared/helpers/duration';
 import { errorIsHTTPForbidden } from 'src/app/shared/helpers/errors';
-import { repeatLatestWhen } from 'src/app/shared/helpers/repeatLatestWhen';
 import { AnswerTokenService } from '../http-services/answer-token.service';
 import { Answer, CurrentAnswerService } from '../http-services/current-answer.service';
 import { GradeService } from '../http-services/grade.service';
@@ -30,9 +29,7 @@ export class ItemTaskAnswerService implements OnDestroy {
     shareReplay(1), // avoid duplicate xhr calls on multiple subscriptions.
   );
 
-  private reloadAnswerAndState$ = new Subject<void>();
   private reloadedAnswerAndState$ = combineLatest([ this.currentAnswer$, this.task$ ]).pipe(
-    repeatLatestWhen(this.reloadAnswerAndState$),
     switchMap(([ currentAnswer, task ]) =>
       (currentAnswer?.state ? task.reloadState(currentAnswer.state).pipe(mapTo({ currentAnswer, task })) : of({ currentAnswer, task }))
     ),
@@ -55,7 +52,7 @@ export class ItemTaskAnswerService implements OnDestroy {
   );
 
   private subscriptions = [
-    this.reloadAnswerAndState$.subscribe({ error: err => this.errorSubject.next(err) }),
+    this.reloadedAnswerAndState$.subscribe({ error: err => this.errorSubject.next(err) }),
     this.saveAnswerAndStateInterval$.subscribe({ error: err => this.errorSubject.next(err) }),
   ];
 
@@ -69,7 +66,6 @@ export class ItemTaskAnswerService implements OnDestroy {
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
     this.errorSubject.complete();
-    this.reloadAnswerAndState$.complete();
   }
 
   submitAnswer(): Observable<unknown> {
