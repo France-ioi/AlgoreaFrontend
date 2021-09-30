@@ -1,29 +1,26 @@
-<alg-small-section
-  [title]="title"
-  [icon]="icon"
-  [collapsed]="collapsed"
-  [collapsible]="collapsible"
->
-<ng-container header>
+<div *ngIf="collapsed" class="header-content">
   <ng-container *ngIf="value; else no" i18n>Yes</ng-container>
   <ng-template #no i18n>No</ng-template>
-</ng-container>
+</div>
 
-<ng-container>
-  <div class="progress-section-item">
-    <div class="progress-desc header-comment">
-      <ng-content select="[description]"></ng-content>
+<div *ngIf="!collapsed" class="body">
+  <div class="item">
+    <div class="desc header-comment" *ngIf="descriptionTemplate">
+      <ng-container [ngTemplateOutlet]="descriptionTemplate"></ng-container>
     </div>
   </div>
-  <div class="progress-section-item">
-    <div class="progress-control">
+  <div class="item">
+    <div class="switch">
       <alg-switch [checked]="value" (change)="onSet($event)" mode="circular"></alg-switch>
     </div>
-    <div class="progress-desc">
-      <div class="progress-desc-name" [ngClass]="{ active: value }" (click)="onSet(!value)">
-        <ng-content></ng-content>
+    <div class="desc">
+      <div class="desc-name" [ngClass]="{ active: value }" (click)="onSet(!value)">
+        <ng-container
+          *ngIf="labelTemplate"
+          [ngTemplateOutlet]="labelTemplate"
+          [ngTemplateOutletContext]="{ $implicit: value }"
+        ></ng-container>
       </div>
     </div>
   </div>
-</ng-container>
-</alg-small-section>
+</div>

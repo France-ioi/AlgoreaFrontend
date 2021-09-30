@@ -38,31 +38,48 @@
         <span description i18n>The permissions that the user(s) has on this group</span>
       </alg-progress-section>
 
-      <alg-boolean-section
-          i18n-title title="Can grant access"
-          icon="fa fa-key"
-          [(value)]="managerValues.canGrantGroupAccess"
-          [collapsible]="false"
-          [collapsed]="false"
-          (valueChange)="onValueChange()"
+      <alg-small-section
+        [collapsible]="false"
+        [collapsed]="false"
+        i18n-title title="Can grant access"
+        icon="fa fa-key"
       >
-        <span label i18n>
-          User(s) can give and revoke members access to some content
-        </span>
-      </alg-boolean-section>
+        <ng-template #content let-collapsed>
+          <alg-boolean-section
+            [(value)]="managerValues.canGrantGroupAccess"
+            [collapsed]="collapsed"
+            (valueChange)="onValueChange()"
+          >
+            <ng-template #label>
+              <span label i18n>
+                User(s) can give and revoke members access to some content
+              </span>
+            </ng-template>
+          </alg-boolean-section>
+        </ng-template>
+      </alg-small-section>
 
-      <alg-boolean-section
-          i18n-title title="Can watch members"
-          icon="fa fa-binoculars"
-          [(value)]="managerValues.canWatchMembers"
-          [collapsible]="false"
-          [collapsed]="false"
-          (valueChange)="onValueChange()"
+      <alg-small-section
+        [collapsible]="false"
+        [collapsed]="false"
+        i18n-title title="Can watch members"
+        icon="fa fa-binoculars"
       >
-        <span label i18n>
-          User(s) can watch the members' activity on some content
-        </span>
+        <ng-template #content let-collapsed>
+          <alg-boolean-section
+            [collapsed]="collapsed"
+            [(value)]="managerValues.canWatchMembers"
+            (valueChange)="onValueChange()"
+          >
+          <ng-template #label>
+            <span i18n>
+              User(s) can watch the members' activity on some content
+            </span>
+          </ng-template>
       </alg-boolean-section>
+        </ng-template>
+      </alg-small-section>
+
     </div>
   </div>
 

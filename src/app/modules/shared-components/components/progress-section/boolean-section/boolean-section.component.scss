@@ -2,45 +2,57 @@
 
 $inactive-bk-color: #d8d8d8;
 
-.progress-section-item {
+.header-content {
   display: flex;
+  align-items: center;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
   position: relative;
-  height: 5rem;
 
-  &:first-child {
-    height: 3rem;
-  }
-
-  .progress-control {
-    margin-right: 1.8rem;
-    width: 2.5rem;
+  .item {
     display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    flex-direction: column;
-    padding-left: 1.5rem;
-  }
+    position: relative;
+    height: 5rem;
 
-  .progress-desc {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    font-size: 1.2rem;
-    color: $base-text-color;
-    min-height: 2.5rem;
-
-    &.header-comment {
-      padding-top: 0.4167rem;
+    &:first-child {
+      height: 3rem;
     }
 
-    .progress-desc-name {
-      color: $dark-text-color;
-      font-weight: bold;
-      // margin-bottom: 0.4167rem;
-      cursor: pointer;
+    .switch {
+      height: 3rem;
+      margin-right: 1.8rem;
+      width: 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      flex-direction: column;
+      padding-left: 1.5rem;
+    }
 
-      &.active {
-        color: $base-color;
+    .desc {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      font-size: 1.2rem;
+      color: $base-text-color;
+      min-height: 2.5rem;
+
+      &.header-comment {
+        padding-top: 0.4167rem;
+      }
+
+      .desc-name {
+        color: $dark-text-color;
+        font-weight: bold;
+        // margin-bottom: 0.4167rem;
+        cursor: pointer;
+
+        &.active {
+          color: $base-color;
+        }
       }
     }
   }
