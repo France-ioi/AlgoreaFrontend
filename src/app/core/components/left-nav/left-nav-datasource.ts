@@ -1,10 +1,10 @@
-import { concat, EMPTY, Observable, of, ReplaySubject, Subject } from 'rxjs';
+import { EMPTY, Observable, of, ReplaySubject, Subject } from 'rxjs';
 import { map, switchScan } from 'rxjs/operators';
 import { isDefined } from 'src/app/shared/helpers/null-undefined-predicates';
 import { repeatLatestWhen } from 'src/app/shared/helpers/repeatLatestWhen';
 import { fetchingState, FetchState, readyState } from 'src/app/shared/helpers/state';
 import { RoutedContentInfo } from 'src/app/shared/models/content/content-info';
-import { mapErrorToState, mapStateData } from 'src/app/shared/operators/state';
+import { mapStateData, mapToFetchState } from 'src/app/shared/operators/state';
 import { NavTreeData, NavTreeElement } from '../../models/left-nav-loading/nav-tree-data';
 
 export abstract class LeftNavDataSource<ContentT extends RoutedContentInfo, MenuT extends NavTreeElement> {
@@ -39,16 +39,13 @@ export abstract class LeftNavDataSource<ContentT extends RoutedContentInfo, Menu
       } else /* prevState is not ready */ if (!contentInfo) {
 
         // CASE: the content is not an item and the menu has not already item displayed -> load item root
-        return concat(of(fetchingState()), this.fetchDefaultNav());
+        return this.fetchDefaultNav();
       }
 
       // OTHERWISE: the content is an item which is not currently displayed:
       // CASE: The current content type matches the current tab
-      return concat(
-        of(fetchingState()),
-        this.fetchNewNav(contentInfo).pipe(
-          mapStateData(data => data.withUpdatedElement(contentInfo.route.id, el => this.addDetailsToTreeElement(contentInfo, el)))
-        ),
+      return this.fetchNewNav(contentInfo).pipe(
+        mapStateData(data => data.withUpdatedElement(contentInfo.route.id, el => this.addDetailsToTreeElement(contentInfo, el)))
       );
     }, fetchingState<NavTreeData<MenuT>>() /* the switchScan seed */)
   );
@@ -89,32 +86,27 @@ export abstract class LeftNavDataSource<ContentT extends RoutedContentInfo, Menu
   protected abstract fetchRootTreeData(): Observable<MenuT[]>;
   protected abstract fetchNavDataFromChild(id: string, child: ContentT): Observable<{ parent: MenuT, elements: MenuT[] }>;
 
-  private fetchNewNavData(content: ContentT): Observable<NavTreeData<MenuT>> {
-    const route = content.route;
-    const parentId = route.path[route.path.length-1];
-    if (isDefined(parentId)) {
-      return this.fetchNavDataFromChild(parentId, content).pipe(
-        map(data => new NavTreeData(data.elements, route.path, route.id, data.parent))
-      );
-    } else {
-      return this.fetchRootTreeData().pipe(
-        map(items => new NavTreeData(items, route.path, route.id))
-      );
-    }
-  }
-
   private fetchDefaultNav(): Observable<FetchState<NavTreeData<MenuT>>> {
     return this.fetchRootTreeData().pipe(
-      map(elements => readyState(new NavTreeData(elements, [], undefined, undefined))),
-      mapErrorToState(),
+      map(elements => new NavTreeData(elements, [], undefined, undefined)),
+      mapToFetchState(),
     );
   }
 
   private fetchNewNav(content: ContentT): Observable<FetchState<NavTreeData<MenuT>>> {
-    return this.fetchNewNavData(content).pipe( // the new items (only first level loaded)
-      map(data => readyState(data)),
-      mapErrorToState(),
-    );
+    const route = content.route;
+    const parentId = route.path[route.path.length-1];
+    if (isDefined(parentId)) {
+      return this.fetchNavDataFromChild(parentId, content).pipe(
+        map(data => new NavTreeData(data.elements, route.path, route.id, data.parent)),
+        mapToFetchState(),
+      );
+    } else {
+      return this.fetchRootTreeData().pipe(
+        map(items => new NavTreeData(items, route.path, route.id)),
+        mapToFetchState(),
+      );
+    }
   }
 
 }
