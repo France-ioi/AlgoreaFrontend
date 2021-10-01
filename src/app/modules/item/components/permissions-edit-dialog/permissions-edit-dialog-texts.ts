@@ -1,4 +1,5 @@
-import { ProgressSectionValue } from 'src/app/modules/shared-components/components/progress-section/progress-section.component';
+import { ProgressSectionValue } from
+  'src/app/modules/shared-components/components/collapsible-section/progress-section/progress-section.component';
 import { TypeFilter } from '../composition-filter/composition-filter.component';
 
 function getTargetTypeString(targetType: TypeFilter): string {
