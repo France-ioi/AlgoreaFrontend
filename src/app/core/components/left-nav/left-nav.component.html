@@ -31,22 +31,25 @@
 
 </p-tabView>
 
-<div class="spinner" *ngIf="dataSources[activeTabIndex]?.state?.isFetching">
-  <alg-loading size="medium"></alg-loading>
-</div>
+<ng-container *ngIf="$any($any(dataSources[activeTabIndex]!.state$) | async) as state">
 
-<alg-error
-  *ngIf="dataSources[activeTabIndex]?.state?.isError"
-  class="light"
-  i18n-message message="Unable to load the list."
-  [showRefreshButton]="true"
-  refreshButtonType="retry"
-  (refresh)="retryError()"
-></alg-error>
+  <div class="spinner" *ngIf="state.isFetching">
+    <alg-loading size="medium"></alg-loading>
+  </div>
 
-<alg-left-nav-tree
-  *ngIf="dataSources[activeTabIndex]?.state?.isReady"
-  [data]="dataSources[activeTabIndex]?.state?.data"
-  [elementType]="$any(['activity', 'skill', 'group'][activeTabIndex])"
-></alg-left-nav-tree>
+  <alg-error
+    *ngIf="state.isError"
+    class="light"
+    i18n-message message="Unable to load the list."
+    [showRefreshButton]="true"
+    refreshButtonType="retry"
+    (refresh)="retryError()"
+  ></alg-error>
 
+  <alg-left-nav-tree
+    *ngIf="state.isReady"
+    [data]="state.data"
+    [elementType]="$any(['activity', 'skill', 'group'][activeTabIndex])"
+  ></alg-left-nav-tree>
+
+</ng-container>
