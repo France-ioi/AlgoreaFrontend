@@ -8,6 +8,14 @@
     <alg-breadcrumb [contentBreadcrumb]="currentContent?.breadcrumbs"></alg-breadcrumb>
   </div>
   <div class="full-frame-content-top-bar" *ngIf="fullFrameContent || scrolled">
+    <ng-container *ngIf="currentContent.score">
+      <alg-score-ring
+        [bestScore]="currentContent.score.bestScore"
+        [currentScore]="currentContent.score.currentScore"
+        [isValidated]="currentContent.score.isValidated"
+        [diameter]="34"
+      ></alg-score-ring>
+    </ng-container>
     <div class="right-pane-title">
       <p *ngIf="currentContent && currentContent.title">{{ currentContent.title }}</p>
     </div>

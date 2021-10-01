@@ -86,6 +86,11 @@ export class ItemByIdComponent implements OnDestroy {
               validated: state.data.currentResult?.validated,
             },
             navData: state.data.itemNavigationData,
+            score: state.data.currentResult?.score ? {
+              bestScore: state.data.item.bestScore,
+              currentScore: state.data.currentResult.score,
+              isValidated: state.data.currentResult.validated,
+            } : undefined,
           }));
 
         } else if (state.isError) {
