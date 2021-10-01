@@ -25,10 +25,10 @@ interface InvisibleChildData extends BaseChildData {
   isVisible: false,
 }
 interface ChildData extends BaseChildData {
-  id?: string;
+  id?: string,
   isVisible: true,
-  title: string | null;
-  type: ItemType;
+  title: string | null,
+  type: ItemType,
   result?: {
     attemptId: string,
     validated: boolean,

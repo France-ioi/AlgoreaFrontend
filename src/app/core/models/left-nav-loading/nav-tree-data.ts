@@ -2,13 +2,12 @@ import { ensureDefined } from 'src/app/shared/helpers/null-undefined-predicates'
 
 type Id = string;
 export interface NavTreeElement {
-  id: Id
-  title: string
-  hasChildren: boolean
-  children?: this[]
-  latestChildrenFetch?: Date
-  type?: string
-  locked: boolean
+  id: Id,
+  title: string,
+  hasChildren: boolean,
+  children?: this[],
+  type?: string,
+  locked: boolean,
 }
 
 /**
@@ -69,7 +68,7 @@ export class NavTreeData<T extends NavTreeElement> {
   }
 
   hasLevel1Element(id: Id): boolean {
-    return this.elements.some(e => e.id === id);
+    return this.selectedElementId == id || this.elements.some(e => e.id === id);
   }
 
   hasLevel2Element(id: Id): boolean {

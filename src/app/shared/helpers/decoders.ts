@@ -1,6 +1,18 @@
 import { pipe } from 'fp-ts/function';
+import { fold } from 'fp-ts/Either';
 import * as D from 'io-ts/Decoder';
 import { Duration } from './duration';
+
+export function decode<T>(decoder: D.Decoder<unknown, T>) {
+  return (input: unknown): T => pipe(decoder.decode(input), fold(
+    // just throw the error if decode failed and return the value otherwise.
+    error => {
+      throw new Error(D.draw(error));
+    },
+    decoded => decoded,
+  ));
+}
+
 
 /**
  * Decoder for Date type

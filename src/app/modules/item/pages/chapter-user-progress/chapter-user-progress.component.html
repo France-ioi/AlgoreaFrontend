@@ -3,7 +3,7 @@
     <p-progressSpinner [style]="{ width: '3rem', height: '3rem' }"></p-progressSpinner>
   </div>
 
-  <p class="error" *ngIf="state.isError" i18n>Error while loading the user progress</p>
+  <alg-error *ngIf="state.isError" i18n-message message="Error while loading the user progress"></alg-error>
 
   <div *ngIf="state.data">
     <p-table class="alg-table alg-table chapter-user-progress" [columns]="columns" [value]="state.data" [loading]="state.isFetching">

@@ -9,7 +9,7 @@ export interface ItemStringChanges {
   description?: string | null,
   image_url?: string | null,
   subtitle?: string | null,
-  title?: string
+  title?: string,
 }
 
 @Injectable({

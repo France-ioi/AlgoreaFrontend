@@ -5,9 +5,7 @@
         <p-progressSpinner [style]="{width: '3.3333rem', height: '3.3333rem'}"></p-progressSpinner>
       </div>
 
-      <div class="error alg-error-text" *ngIf="rootActivityState.isError" i18n>
-        Error while loading the root activity.
-      </div>
+      <alg-error *ngIf="rootActivityState.isError" i18n-message message="Error while loading the root activity."></alg-error>
 
       <ng-container *ngIf="rootActivityState.isReady">
         <ng-container *ngIf="rootActivityState.data; else noActivity">

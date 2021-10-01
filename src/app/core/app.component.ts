@@ -1,12 +1,10 @@
 import { Component, NgZone, OnDestroy, OnInit } from '@angular/core';
 import { UserSessionService } from '../shared/services/user-session.service';
 import { delay, switchMap } from 'rxjs/operators';
-import { merge, Observable, Subscription } from 'rxjs';
-import { CurrentContentService } from '../shared/services/current-content.service';
+import { merge, Subscription } from 'rxjs';
 import { AuthService } from '../shared/auth/auth.service';
 import { Router } from '@angular/router';
 import { ModeAction, ModeService } from '../shared/services/mode.service';
-import { ContentInfo } from '../shared/models/content/content-info';
 import { LocaleService } from './services/localeService';
 import { LayoutService } from '../shared/services/layout.service';
 
@@ -18,7 +16,6 @@ import { LayoutService } from '../shared/services/layout.service';
 export class AppComponent implements OnInit, OnDestroy {
 
   // the delay(0) is used to prevent the UI to update itself (when the content is loaded) (ExpressionChangedAfterItHasBeenCheckedError)
-  currentContent$: Observable<ContentInfo|null> = this.currentContent.content$.pipe(delay(0));
   readonly currentMode$ = this.modeService.mode$.asObservable().pipe(delay(0));
   fatalError$ = merge(
     this.authService.failure$,
@@ -36,7 +33,6 @@ export class AppComponent implements OnInit, OnDestroy {
     private router: Router,
     private sessionService: UserSessionService,
     private authService: AuthService,
-    private currentContent: CurrentContentService,
     private modeService: ModeService,
     private localeService: LocaleService,
     private layoutService: LayoutService,

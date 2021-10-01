@@ -1,10 +1,11 @@
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { GroupInfo } from 'src/app/shared/models/content/group-info';
-import { GroupNavigationService, NavMenuGroup } from '../../http-services/group-navigation.service';
+import { GroupNavigationService, GroupNavigationChild, GroupNavigationData } from '../../http-services/group-navigation.service';
+import { NavTreeElement } from '../../models/left-nav-loading/nav-tree-data';
 import { LeftNavDataSource } from './left-nav-datasource';
 
-export class LeftNavGroupDataSource extends LeftNavDataSource<GroupInfo, NavMenuGroup> {
+export class LeftNavGroupDataSource extends LeftNavDataSource<GroupInfo, NavTreeElement> {
 
   constructor(
     private groupNavigationService: GroupNavigationService,
@@ -12,25 +13,52 @@ export class LeftNavGroupDataSource extends LeftNavDataSource<GroupInfo, NavMenu
     super();
   }
 
-  addDetailsToTreeElement(contentInfo: GroupInfo, treeElement: NavMenuGroup): NavMenuGroup {
-    return contentInfo.title ? { ...treeElement, title: contentInfo.title } : { ...treeElement };
+  addDetailsToTreeElement(contentInfo: GroupInfo, treeElement: NavTreeElement): NavTreeElement {
+    let group = treeElement;
+    if (contentInfo.title) group = { ...group, title: contentInfo.title };
+    if (contentInfo.navData) group = { ...group, children: contentInfo.navData.children.map(mapChild) };
+    return group;
   }
 
-  fetchRootTreeData(): Observable<NavMenuGroup[]> {
-    return this.groupNavigationService.getRoot();
-  }
-
-  fetchNavDataFromChild(id: string, _child: GroupInfo): Observable<{ parent: NavMenuGroup, elements: NavMenuGroup[] }> {
-    return this.groupNavigationService.getNavData(id).pipe(
-      map(data => ({ parent: data.parent, elements: data.groups }))
+  fetchRootTreeData(): Observable<NavTreeElement[]> {
+    return this.groupNavigationService.getRoot().pipe(
+      map(groups => groups.map(mapChild))
     );
   }
 
-  fetchNavData(el: NavMenuGroup): Observable<{ parent: NavMenuGroup, elements: NavMenuGroup[] }> {
-    return this.groupNavigationService.getNavData(el.id).pipe(
-      map(data => ({ parent: data.parent, elements: data.groups }))
+  fetchNavDataFromChild(id: string, _child: GroupInfo): Observable<{ parent: NavTreeElement, elements: NavTreeElement[] }> {
+    return this.groupNavigationService.getGroupNavigation(id).pipe(
+      map(mapNavData)
     );
   }
 
+  fetchNavData(el: NavTreeElement): Observable<{ parent: NavTreeElement, elements: NavTreeElement[] }> {
+    return this.groupNavigationService.getGroupNavigation(el.id).pipe(
+      map(mapNavData)
+    );
+  }
 
+}
+
+function mapChild(child: GroupNavigationChild): NavTreeElement {
+  return {
+    id: child.id,
+    title: child.name,
+    hasChildren: child.type !== 'User',
+    type: child.type,
+    locked: false,
+  };
+}
+
+function mapNavData(data: GroupNavigationData): { parent: NavTreeElement, elements: NavTreeElement[] } {
+  return {
+    parent: {
+      id: data.id,
+      title: data.name,
+      type: data.type,
+      hasChildren: data.children.length > 0,
+      locked: false,
+    },
+    elements: data.children.map(g => mapChild(g))
+  };
 }

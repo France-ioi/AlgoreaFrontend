@@ -6,8 +6,8 @@ import { map } from 'rxjs/operators';
 
 interface RawMember {
   id: string,
-  member_since: string|null;
-  action: 'invitation_accepted'|'join_request_accepted'|'joined_by_code'|'added_directly';
+  member_since: string|null,
+  action: 'invitation_accepted'|'join_request_accepted'|'joined_by_code'|'added_directly',
   user: null|{
     login: string,
     first_name: string|null,
@@ -19,8 +19,8 @@ interface RawMember {
 
 export interface Member {
   id: string,
-  memberSince: Date|null;
-  action: 'invitation_accepted'|'join_request_accepted'|'joined_by_code'|'added_directly';
+  memberSince: Date|null,
+  action: 'invitation_accepted'|'join_request_accepted'|'joined_by_code'|'added_directly',
   user: null|{
     login: string,
     firstName: string|null,

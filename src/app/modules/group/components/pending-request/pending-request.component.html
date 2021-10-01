@@ -9,10 +9,12 @@
     <ng-container [ngTemplateOutlet]="sectionHeaderTemplate" [ngTemplateOutletContext]="{ $implicit: state }"></ng-container>
   </ng-template>
 
-  <p *ngIf="state === 'fetchingError';else noFetchingError" class="alg-error-message">
-    <i class="fa fa-exclamation-triangle"></i>
-    <span i18n>Error while loading the pending requests.</span>
-  </p>
+  <alg-error
+    *ngIf="state === 'fetchingError'; else noFetchingError"
+    class="dark"
+    icon="fa fa-exclamation-triangle"
+    i18n-message message="Error while loading the pending requests."
+  ></alg-error>
 
   <ng-template #noFetchingError>
     <div class="pending-request-container" #noError>

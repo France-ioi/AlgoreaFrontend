@@ -6,15 +6,15 @@ import { UrlCommand } from '../helpers/url';
 import { ContentRoute, pathAsParameter, pathFromRouterParameters } from './content-route';
 
 export interface GroupRoute extends ContentRoute {
-  contentType: 'group';
-  isUser: boolean;
+  contentType: 'group',
+  isUser: boolean,
 }
 export type RawGroupRoute = Omit<GroupRoute, 'path'> & Partial<Pick<ContentRoute, 'path'>>;
 
 export interface GroupRouteError {
-  tag: 'error';
-  path?: string[];
-  id?: string;
+  tag: 'error',
+  path?: string[],
+  id?: string,
 }
 
 
@@ -60,7 +60,7 @@ function isGroupPage(page: string[]): boolean {
   return page[0] === 'edit' || page[0] === 'details';
 }
 
-export function decodeGroupRouterParameters(params: ParamMap): { id: string | null; path: string | null } {
+export function decodeGroupRouterParameters(params: ParamMap): { id: string | null, path: string | null } {
   return {
     id: params.get('id'),
     path: pathFromRouterParameters(params),

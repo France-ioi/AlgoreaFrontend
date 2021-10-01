@@ -19,7 +19,7 @@ export interface ItemData {
   breadcrumbs: BreadcrumbItem[],
   results?: Result[],
   currentResult?: Result,
-  itemNavigationData?: ItemNavigationData
+  itemNavigationData?: ItemNavigationData,
 }
 
 /**

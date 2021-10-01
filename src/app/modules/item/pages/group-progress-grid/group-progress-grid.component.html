@@ -4,11 +4,14 @@
 ></alg-composition-filter>
 
 <ng-container *ngIf="state$ | async as state">
-  <p *ngIf="state.isError; else noError" class="alg-error-message">
-    <i class="fa fa-exclamation-triangle"></i>
-    <span i18n>Error while loading the data</span>
-    <p-button icon="pi pi-refresh" (click)="refresh()" styleClass="p-button-sm"></p-button>
-  </p>
+  <alg-error
+    *ngIf="state.isError; else noError"
+    class="dark"
+    i18n-message message="Error while loading the data"
+    icon="fa fa-exclamation-triangle"
+    [showRefreshButton]="true"
+    (refresh)="refresh()"
+  ></alg-error>
 
   <ng-template #noError>
     <div class="loader" *ngIf="state.isFetching && (!state.data || state.data.rows.length === 0)">
@@ -60,7 +63,7 @@
             <th *ngFor="let col of state.data.items">
               <div class="slanted-header">
                 <div class="slanted-header-content" pTooltip="{{ col.title }}" tooltipPosition="top" [showDelay]="100">
-                  {{ col.title }}
+                  <span class="slanted-header-link alg-link cursor-pointer" (click)="navigateToItem(col)">{{ col.title }}</span>
                 </div>
               </div>
             </th>
@@ -74,7 +77,7 @@
         >
           <tr>
             <td class="users" pTooltip="{{ row.header }}" tooltipPosition="left" [showDelay]="100">
-              {{ row.header }}
+              <span class="alg-link cursor-pointer" (click)="navigateToGroup(row)">{{ row.header }}</span>
             </td>
             <td
               class="cursor-pointer"

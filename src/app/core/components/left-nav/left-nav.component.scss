@@ -11,11 +11,3 @@ $border-radius: .5rem;
   justify-content: center;
   padding: 1rem;
 }
-
-.error {
-  color: $base-bk-color;
-
-  .retry {
-    cursor: pointer;
-  }
-}

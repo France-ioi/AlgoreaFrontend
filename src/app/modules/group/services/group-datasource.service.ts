@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { forkJoin, ReplaySubject, Subject } from 'rxjs';
 import { map, shareReplay, switchMap } from 'rxjs/operators';
-import { GroupNavigation, GroupNavigationService } from 'src/app/core/http-services/group-navigation.service';
+import { GroupNavigationData, GroupNavigationService } from 'src/app/core/http-services/group-navigation.service';
 import { mapToFetchState } from 'src/app/shared/operators/state';
 import { GroupRoute } from 'src/app/shared/routing/group-route';
 import { GetGroupBreadcrumbsService, GroupBreadcrumb } from '../http-services/get-group-breadcrumbs.service';
@@ -10,7 +10,7 @@ import { GetGroupByIdService, Group } from '../http-services/get-group-by-id.ser
 export interface GroupData {
   route: GroupRoute,
   group: Group,
-  navigation: GroupNavigation;
+  navigation: GroupNavigationData,
   breadcrumbs: GroupBreadcrumb[],
 }
 

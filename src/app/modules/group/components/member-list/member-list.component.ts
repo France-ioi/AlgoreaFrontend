@@ -24,7 +24,7 @@ function getSelectedGroupChildCaptions(selection: GroupChild[]): string {
 interface Column {
   sortable?: boolean,
   field: string,
-  header: string
+  header: string,
 }
 
 const usersColumns: Column[] = [

@@ -7,9 +7,9 @@ const pathParamName = 'path';
 type Id = string;
 
 export interface ContentRoute {
-  contentType: string;
-  id: Id;
-  path: Id[];
+  contentType: string,
+  id: Id,
+  path: Id[],
 }
 
 export function pathFromRouterParameters(params: ParamMap): string|null {

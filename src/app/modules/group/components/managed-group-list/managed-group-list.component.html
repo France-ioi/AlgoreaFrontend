@@ -1,7 +1,9 @@
-<p *ngIf="state === 'error';else noError" class="alg-error-message">
-  <i class="fa fa-exclamation-triangle"></i>
-  <span i18n>Error while loading the group you manage</span>
-</p>
+<alg-error
+    *ngIf="state === 'error'; else noError"
+    class="dark"
+    icon="fa fa-exclamation-triangle"
+    i18n-message message="Error while loading the group you manage"
+></alg-error>
 
 <ng-template #noError>
   <p-table

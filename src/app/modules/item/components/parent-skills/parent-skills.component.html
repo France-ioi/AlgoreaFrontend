@@ -2,7 +2,11 @@
 
   <p-progressSpinner *ngIf="state === 'loading'"></p-progressSpinner>
 
-  <p *ngIf="state === 'error'" i18n>Error while loading the skill parents</p>
+  <alg-error
+    *ngIf="state === 'error'"
+    class="dark"
+    i18n-message message="Error while loading the skill parents"
+  ></alg-error>
 
   <p *ngIf="state === 'ready' && parents.length === 0" i18n>This skill does not have parent skills.</p>
 

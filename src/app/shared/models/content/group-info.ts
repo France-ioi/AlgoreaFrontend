@@ -1,9 +1,11 @@
+import { GroupNavigationData } from 'src/app/core/http-services/group-navigation.service';
 import { GroupRoute } from '../../routing/group-route';
 import { ContentInfo, RoutedContentInfo } from './content-info';
 
 export interface GroupInfo extends RoutedContentInfo {
   type: 'group',
-  route: GroupRoute
+  route: GroupRoute,
+  navData?: GroupNavigationData,
 }
 
 export function isGroupInfo(info: ContentInfo|null): info is GroupInfo {

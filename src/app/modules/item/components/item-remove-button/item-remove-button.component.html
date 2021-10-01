@@ -14,7 +14,11 @@
     <ng-template #notOwner>
       <span class="message" i18n>Only owner can delete items</span>
     </ng-template>
-    <span class="message" *ngIf="state.isError" i18n>Error while loading the item info</span>
+    <alg-error
+      *ngIf="state.isError"
+      class="warning small"
+      i18n-message message="Error while loading the item info"
+    ></alg-error>
     <button
         pButton
         type="button"

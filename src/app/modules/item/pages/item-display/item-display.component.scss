@@ -1,0 +1,25 @@
+:host {
+  .iframe-container {
+    position: relative;
+    margin-right: 8px;
+  }
+
+  .loading {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: white;
+    text-align: center;
+    font-size: 2em;
+    opacity: 0.9;
+    z-index: 10;
+  }
+
+  iframe {
+    height: 100%;
+    width: 100%;
+    border: none;
+  }
+}

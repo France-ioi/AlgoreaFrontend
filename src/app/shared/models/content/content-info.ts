@@ -2,15 +2,14 @@ import { ContentBreadcrumb } from './content-breadcrumb';
 import { ContentRoute } from '../../routing/content-route';
 
 export interface ContentInfo {
-  type: string
+  type: string,
   breadcrumbs?: ContentBreadcrumb,
   title?: string, // page title
   route?: ContentRoute,
-  details?: any
 }
 
 export interface RoutedContentInfo extends ContentInfo {
-  route: ContentRoute
+  route: ContentRoute,
 }
 
 /**

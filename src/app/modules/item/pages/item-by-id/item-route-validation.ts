@@ -6,10 +6,10 @@ import { decodeItemRouterParameters, FullItemRoute, itemCategoryFromPrefix } fro
 type ItemId = string;
 
 interface ItemRouteError {
-  tag: 'error';
-  contentType: ItemTypeCategory;
-  id?: ItemId;
-  path?: ItemId[];
+  tag: 'error',
+  contentType: ItemTypeCategory,
+  id?: ItemId,
+  path?: ItemId[],
 }
 
 export function itemRouteFromParams(prefix: string, params: ParamMap): FullItemRoute|ItemRouteError {

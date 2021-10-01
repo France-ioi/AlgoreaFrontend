@@ -7,7 +7,7 @@ export interface PendingChangesComponent {
   /**
    * Whether this component has pending changes
    */
-  isDirty(): boolean;
+  isDirty(): boolean,
 }
 
 @Injectable()

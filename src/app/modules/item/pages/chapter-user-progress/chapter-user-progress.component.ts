@@ -11,7 +11,7 @@ import { ItemRouter } from '../../../../shared/routing/item-router';
 
 interface Column {
   field: string,
-  header: string
+  header: string,
 }
 
 interface RowData {

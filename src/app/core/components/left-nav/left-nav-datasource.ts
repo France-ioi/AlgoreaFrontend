@@ -1,12 +1,11 @@
 import { concat, EMPTY, Observable, ObservableInput, of, OperatorFunction, Subject } from 'rxjs';
-import { catchError, map, mergeMap, switchMap } from 'rxjs/operators';
+import { catchError, map, mergeMap } from 'rxjs/operators';
 import { isDefined } from 'src/app/shared/helpers/null-undefined-predicates';
 import { repeatLatestWhen } from 'src/app/shared/helpers/repeatLatestWhen';
 import { errorState, fetchingState, FetchState, readyState } from 'src/app/shared/helpers/state';
 import { RoutedContentInfo } from 'src/app/shared/models/content/content-info';
-import { NavTreeData, NavTreeElement } from '../../services/left-nav-loading/nav-tree-data';
+import { NavTreeData, NavTreeElement } from '../../models/left-nav-loading/nav-tree-data';
 
-const msBetweenChildrenRefetch = 5000;
 type Id = string;
 
 /* Type definition for the updates */
@@ -18,8 +17,8 @@ interface DataSourceUpdate<T extends NavTreeElement> {
   elementUpdate?: (el:T) => T, // if set, function to update the element identified by elementId
 }
 interface DataSourceReplacement<T extends NavTreeElement> {
-  type: 'replace'
-  data: NavTreeData<T>
+  type: 'replace',
+  data: NavTreeData<T>,
 }
 interface DataSourceLoading { type: 'loading' }
 interface DataSourceError { type: 'error', error: any }
@@ -79,35 +78,11 @@ export abstract class LeftNavDataSource<ContentT extends RoutedContentInfo, Menu
           const contentId = contentInfo.route.id;
 
           // CASE: the current content is already the selected one
-          if (prevState.data.selectedElementId === contentId) {
-            return concat(
-              of(dsUpdateElement<MenuT>(contentId, false, el => this.addDetailsToTreeElement(contentInfo, el))),
-              this.fetchChildrenOfElementWithId(
-                prevState.data.withUpdatedElement(contentId, el => this.addDetailsToTreeElement(contentInfo, el)), contentId
-              )
-            );
-          }
-
-          // CASE: the content is among the displayed items at the root of the tree -> select the right one (might load children)
-          if (prevState.data.hasLevel1Element(contentId)) {
-            return concat(
-              of(dsUpdateElement<MenuT>(contentId, true, el => this.addDetailsToTreeElement(contentInfo, el))),
-              this.fetchChildrenOfElementWithId(
-                prevState.data.withUpdatedElement(contentId, el => this.addDetailsToTreeElement(contentInfo, el)), contentId
-              )
-            );
-          }
-
-          // CASE: the content is a child of one item at the root of the tree -> shift the tree and select it (might load children)
-          if (prevState.data.hasLevel2Element(contentId)) {
-            return concat(
-              of(dsUpdateElement<MenuT>(contentId, true, el => this.addDetailsToTreeElement(contentInfo, el))),
-              this.fetchChildrenOfElementWithId(
-                prevState.data.subNavMenuData(contentId)
-                  .withUpdatedElement(contentId, el => this.addDetailsToTreeElement(contentInfo, el)),
-                contentId
-              )
-            );
+          //       OR the content is among the displayed items at the root of the tree -> select the right one
+          //       OR the content is a child of one item at the root of the tree -> shift the tree and select it
+          if (prevState.data.hasLevel1Element(contentId) || prevState.data.hasLevel2Element(contentId)) {
+            const select = prevState.data.selectedElementId !== contentId;
+            return of(dsUpdateElement<MenuT>(contentId, select, el => this.addDetailsToTreeElement(contentInfo, el)));
           }
 
         } else /* not ready state */ if (!contentInfo) {
@@ -118,7 +93,11 @@ export abstract class LeftNavDataSource<ContentT extends RoutedContentInfo, Menu
         // OTHERWISE: the content is an item which is not currently displayed:
 
         // CASE: The current content type matches the current tab
-        return concat(of(dsLoading()), this.fetchNewNav(contentInfo));
+        return concat(
+          of(dsLoading()),
+          this.fetchNewNav(contentInfo),
+          of(dsUpdateElement<MenuT>(contentInfo.route.id, true, el => this.addDetailsToTreeElement(contentInfo, el)))
+        );
 
       })
     ).subscribe({
@@ -181,28 +160,6 @@ export abstract class LeftNavDataSource<ContentT extends RoutedContentInfo, Menu
   protected abstract addDetailsToTreeElement(contentInfo: ContentT, treeElement: MenuT): MenuT;
   protected abstract fetchRootTreeData(): Observable<MenuT[]>;
   protected abstract fetchNavDataFromChild(id: string, child: ContentT): Observable<{ parent: MenuT, elements: MenuT[] }>;
-  protected abstract fetchNavData(item: MenuT): Observable<{ parent: MenuT, elements: MenuT[] }>;
-
-
-  private fetchChildrenOfElementWithId(data: NavTreeData<MenuT>, id: Id): Observable<DataSourceChange<MenuT>> {
-    const element = data.elementWithId(id);
-    if (element === undefined) return EMPTY;
-    return this.fetchChildrenOfElement(element);
-  }
-
-  private fetchChildrenOfElement(element: MenuT): Observable<DataSourceChange<MenuT>> {
-    if (!element.hasChildren) return EMPTY; // if no children, no need to fetch children
-    if (element.latestChildrenFetch && Date.now() - element.latestChildrenFetch.valueOf() < msBetweenChildrenRefetch && element.children) {
-      return EMPTY;
-    }
-    element.latestChildrenFetch = new Date();
-
-    // We do not check if children were already known. So we might re-load again the same children, which is intended.
-    return this.fetchNavData(element).pipe(
-      map(newData => dsUpdateElement<MenuT>(element.id, false, el => ({ ...el, ...newData.parent, children: newData.elements }))),
-      this.mapError()
-    );
-  }
 
   private fetchNewNavData(content: ContentT): Observable<NavTreeData<MenuT>> {
     const route = content.route;
@@ -227,17 +184,7 @@ export abstract class LeftNavDataSource<ContentT extends RoutedContentInfo, Menu
 
   private fetchNewNav(content: ContentT): Observable<DataSourceChange<MenuT>> {
     return this.fetchNewNavData(content).pipe( // the new items (only first level loaded)
-      // already update the tree with the first level, and if needed, load (async) children as well
-      switchMap(data => {
-        if (!data.selectedElementId) throw new Error('Unexpected: no selected element in new nav');
-        const selectedEl = data.selectedElement();
-        return concat(
-          of(dsReplaceWith<MenuT>(data)),
-          selectedEl
-            ? this.fetchChildrenOfElement(selectedEl)
-            : EMPTY // This can happen for groups when a group is public but unlisted
-        );
-      }),
+      map(data => dsReplaceWith<MenuT>(data)),
       this.mapError(),
     );
   }

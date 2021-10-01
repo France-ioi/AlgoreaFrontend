@@ -1,0 +1,78 @@
+@import 'src/colors';
+
+:host {
+  &.light {
+    .message {
+      color: $base-bk-color;
+    }
+
+    .retry {
+      color: $base-bk-color;
+    }
+
+    .icon {
+      color: $base-bk-color;
+    }
+  }
+
+  &.dark {
+    .message {
+      color: $base-text-color;
+    }
+
+    .retry {
+      color: $base-text-color;
+    }
+
+    .icon {
+      color: $base-text-color;
+    }
+  }
+
+  &.warning {
+    .message {
+      color: $notify-error-color;
+    }
+
+    .icon {
+      color: $notify-error-color;
+    }
+  }
+
+  &.small {
+    .message {
+      font-size: 1.2rem;
+    }
+  }
+}
+
+.wrapper {
+  margin: 0;
+  padding: 1rem;
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.message-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.icon {
+  margin-right: 0.25rem;
+  font-size: 1.6rem;
+  color: $base-color;
+}
+
+.message {
+  color: $base-color;
+  font-size: 1.6rem;
+  text-align: center;
+}
+
+.refresh-button {
+  margin-left: 0.5rem;
+}

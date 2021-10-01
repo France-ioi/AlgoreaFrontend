@@ -1,45 +1,20 @@
 <div class="container">
-  <div class="left" *ngrxLet="fullFrameContent$ as fullFrameContent" [ngClass]="{ collapsed: fullFrameContent, expanded: !fullFrameContent }">
+  <div class="left" *ngrxLet="fullFrameContent$ as fullFrameContent" [ngClass]="{ collapsed: fullFrameContent }">
     <alg-left-menu></alg-left-menu>
   </div>
   <ng-container *ngIf="currentMode$ | async as currentMode">
-    <div
+    <alg-top-bar
       class="top-bar"
       *ngrxLet="fullFrameContent$ as fullFrameContent"
-      [ngClass]="{ 'with-mode-bar': currentMode !== 'normal', collapsed: fullFrameContent, expanded: !fullFrameContent }"
-      >
-      <alg-left-header *ngIf="fullFrameContent" [compactMode]="true"></alg-left-header>
-      <div class="top-right-bar" *ngrxLet="currentContent$ as currentContent">
-        <alg-editor-bar *ngIf="currentMode === 'editing'" (cancel)="onEditCancel()"></alg-editor-bar>
-        <alg-observation-bar *ngIf="currentMode === 'watching'"></alg-observation-bar>
-        <div class="breadcrumb-bar" *ngIf="!fullFrameContent && !scrolled">
-          <alg-breadcrumb [contentBreadcrumb]="currentContent?.breadcrumbs"></alg-breadcrumb>
-        </div>
-        <div class="folded-top-bar" *ngIf="fullFrameContent || scrolled">
-          <!--<alg-score-ring
-            [displayedScore]="50"
-            [currentScore]="60"
-            [diameter]="30"
-          ></alg-score-ring>-->
-          <div class="rightpane-title">
-            <p *ngIf="currentContent && currentContent.title">{{ currentContent.title }}</p>
-          </div>
-          <!-- <div *ngIf="collapsed" class="user-info">
-            <span class="user-avatar">
-              <img src="assets/images/Male.svg" style="width: 3rem; height: 3rem;" />
-            </span>
-            <span class="user-id">CyrilK89</span>
-          </div> -->
-          <!-- <span class="clock-icon" [ngClass]="{ finished: false }"><i class="fa fa-clock"></i></span> -->
-          <!-- <span class="remaining-time" [ngClass]="{ finished: false }">00:03:10</span> -->
-        </div>
-      </div>
-      <alg-top-right-controls [drawLeftBorder]="currentMode === 'normal'"></alg-top-right-controls>
-    </div>
+      [ngClass]="{ 'with-mode-bar': currentMode !== 'normal', collapsed: fullFrameContent }"
+      [scrolled]="scrolled"
+      [currentMode]="currentMode"
+      [fullFrameContent]="!!fullFrameContent"
+    ></alg-top-bar>
     <div
       class="right"
       *ngrxLet="fullFrameContent$ as fullFrameContent"
-      [ngClass]="{ collapsed: fullFrameContent, expanded: !fullFrameContent, 'with-mode-bar': currentMode !== 'normal', 'with-footer': contentFooter$ | async }"
+      [ngClass]="{ collapsed: fullFrameContent, 'with-mode-bar': currentMode !== 'normal', 'with-footer': contentFooter$ | async }"
       >
       <div class="main-content">
         <router-outlet></router-outlet>
