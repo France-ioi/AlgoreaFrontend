@@ -3,8 +3,8 @@
   <span class="selected-progress-level">{{ values[selected]?.label }}</span>
 </div>
 
-<div *ngIf="!collapsed" class="progress-section-body">
-  <div class="progress-section-item">
+<div *ngIf="!collapsed" class="progress-form-body">
+  <div class="progress-form-item">
     <div class="progress-control">
       <span *ngIf="values.length > 0" class="progress-branch" [ngClass]="{active: selected >= 0}"></span>
     </div>
@@ -12,7 +12,7 @@
       <ng-container *ngIf="descriptionTemplate" [ngTemplateOutlet]="descriptionTemplate" [ngTemplateOutletContext]="{ $implicit: value }"></ng-container>
     </div>
   </div>
-  <div *ngFor="let item of values; let idx = index;" class="progress-section-item">
+  <div *ngFor="let item of values; let idx = index;" class="progress-form-item">
     <div class="progress-control">
       <span class="progress-point" [ngClass]="{active: idx < selected + 1, last: idx + 1 == selected + 1}" (click)="onSet(item.value)">
         <i *ngIf="type === 'checksWithLock' && idx < selected" class="fa fa-check"></i>

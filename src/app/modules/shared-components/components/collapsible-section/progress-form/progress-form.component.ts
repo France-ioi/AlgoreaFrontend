@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, SimpleChanges, Output, EventEmitter, OnInit, ContentChild, TemplateRef } from '@angular/core';
 
-export interface ProgressSectionValue<T> {
+export interface ProgressFormValue<T> {
   label: string,
   comment: string,
   value: T,
@@ -8,24 +8,28 @@ export interface ProgressSectionValue<T> {
 }
 
 /**
- * To add a description to the switch, just add an element with the `description` attribute inside.
- * For example:
- * ```html
- * <alg-progress-section>
- *   <p description> description </p>
- * </alg-progress-section>
+ * This component is to be used in a `collapsible-section` component
+ * ```
+ * <alg-collapsible-section ... >
+ *      <ng-template #content let-collapsed>
+ *        <alg-progress-form
+ *          [collapsed]="collapsed"
+ *          ...
+ *        ></alg-progress-form>
+ *      </ng-template>
+ *    </alg-collapsible-section>
  * ```
  */
 @Component({
-  selector: 'alg-progress-section',
-  templateUrl: './progress-section.component.html',
-  styleUrls: [ './progress-section.component.scss' ]
+  selector: 'alg-progress-form',
+  templateUrl: './progress-form.component.html',
+  styleUrls: [ './progress-form.component.scss' ]
 })
-export class ProgressSectionComponent<T> implements OnChanges, OnInit {
+export class ProgressFormComponent<T> implements OnChanges, OnInit {
 
   @Input() collapsed = true;
 
-  @Input() values: ProgressSectionValue<T>[] = [];
+  @Input() values: ProgressFormValue<T>[] = [];
   @Input() defaultValue?: T;
   @Input() value?: T;
 

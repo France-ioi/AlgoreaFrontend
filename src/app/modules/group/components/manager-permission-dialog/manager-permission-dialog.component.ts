@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { Group } from '../../http-services/get-group-by-id.service';
 import { Manager } from '../../http-services/get-group-managers.service';
-import { ProgressSectionValue } from
-  '../../../shared-components/components/collapsible-section/progress-section/progress-section.component';
+import { ProgressFormValue } from
+  '../../../shared-components/components/collapsible-section/progress-form/progress-form.component';
 import { UpdateGroupManagersService } from '../../http-services/update-group-managers.service';
 import { formatUser } from '../../../../shared/helpers/user';
 import { ActionFeedbackService } from '../../../../shared/services/action-feedback.service';
@@ -19,7 +19,7 @@ export class ManagerPermissionDialogComponent implements OnChanges {
 
   @Output() close = new EventEmitter<{ updated: boolean }>();
 
-  managementLevelValues: ProgressSectionValue<string>[] = [
+  managementLevelValues: ProgressFormValue<string>[] = [
     {
       value: 'none',
       label: $localize`Read-only`,
