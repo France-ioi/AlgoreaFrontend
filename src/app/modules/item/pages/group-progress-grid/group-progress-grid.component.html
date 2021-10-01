@@ -15,7 +15,7 @@
 
   <ng-template #noError>
     <div class="loader" *ngIf="state.isFetching && (!state.data || state.data.rows.length === 0)">
-      <p-progressSpinner></p-progressSpinner>
+      <alg-loading></alg-loading>
     </div>
 
     <p class="empty-message" *ngIf="state.isReady && state.data.rows.length === 0">

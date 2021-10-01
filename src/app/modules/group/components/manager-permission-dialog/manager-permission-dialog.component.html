@@ -75,7 +75,7 @@
   <p-footer>
     <div class="footer">
       <ng-container *ngIf="isUpdating; else buttons">
-        <p-progressSpinner [style]="{ width: '3rem', height: '3rem' }"></p-progressSpinner>
+        <alg-loading size="medium"></alg-loading>
       </ng-container>
 
       <ng-template #buttons>

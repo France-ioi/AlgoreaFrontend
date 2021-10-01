@@ -1,7 +1,7 @@
 <ng-container *ngIf="state$ | async as state">
   <alg-section i18n-label label="Associated Activity" icon="fa fa-book" styleClass="associated-activity">
 
-    <p-progressSpinner *ngIf="state.isFetching"></p-progressSpinner>
+    <alg-loading size="medium" *ngIf="state.isFetching"></alg-loading>
 
     <alg-error
       *ngIf="state.isError"

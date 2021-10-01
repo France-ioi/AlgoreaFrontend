@@ -1,7 +1,7 @@
 
 <router-outlet *ngIf="state.isReady"></router-outlet>
 
-<p-progressSpinner *ngIf="state.isFetching"></p-progressSpinner>
+<alg-loading *ngIf="state.isFetching"></alg-loading>
 
 <ng-container *ngIf="state.isError">
   <p *ngIf="$any(state).error && ($any(state).error.status === 403 || $any(state).error.status === 404); else unknownError" i18n>

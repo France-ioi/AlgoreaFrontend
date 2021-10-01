@@ -58,6 +58,7 @@ import { LanguagePickerComponent } from '../../core/components/language-picker/l
 import { UserCaptionPipe } from '../../shared/pipes/userCaption';
 import { LogActionDisplayPipe } from '../../shared/pipes/logActionDisplay';
 import { ErrorComponent } from './components/error/error.component';
+import { LoadingComponent } from './components/loading/loading.component';
 
 @NgModule({
   declarations: [
@@ -94,6 +95,7 @@ import { ErrorComponent } from './components/error/error.component';
     AccessCodeViewComponent,
     LanguagePickerComponent,
     ErrorComponent,
+    LoadingComponent,
   ],
   imports: [
     CommonModule,
@@ -139,7 +141,6 @@ import { ErrorComponent } from './components/error/error.component';
     InputComponent,
     SelectComponent,
     SectionParagraphComponent,
-    ProgressSpinnerModule,
     ToastModule,
     TableModule,
     TabViewModule,
@@ -160,6 +161,7 @@ import { ErrorComponent } from './components/error/error.component';
     AccessCodeViewComponent,
     LanguagePickerComponent,
     ErrorComponent,
+    LoadingComponent,
   ],
   providers: [],
   entryComponents: [
