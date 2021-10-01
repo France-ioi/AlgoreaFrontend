@@ -1,11 +1,11 @@
 import { Component, ContentChild, Input, TemplateRef } from '@angular/core';
 
 @Component({
-  selector: 'alg-small-section',
-  templateUrl: './small-section.component.html',
-  styleUrls: [ './small-section.component.scss' ]
+  selector: 'alg-collapsible-section',
+  templateUrl: './collapsible-section.component.html',
+  styleUrls: [ './collapsible-section.component.scss' ]
 })
-export class SmallSectionComponent {
+export class CollapsibleSectionComponent {
 
   @Input() title = '';
   @Input() icon = '';
