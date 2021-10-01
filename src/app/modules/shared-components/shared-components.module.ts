@@ -48,7 +48,7 @@ import { AddContentComponent } from './components/add-content/add-content.compon
 import { FloatingSaveComponent } from './components/floating-save/floating-save.component';
 import { TooltipModule } from 'primeng/tooltip';
 import { ProgressSectionComponent } from './components/collapsible-section/progress-section/progress-section.component';
-import { BooleanSectionComponent } from './components/collapsible-section/boolean-section/boolean-section.component';
+import { BooleanFormComponent } from './components/collapsible-section/boolean-form/boolean-form.component';
 import { DropdownComponent } from './components/dropdown/dropdown.component';
 import { DurationComponent } from './components/duration/duration.component';
 import { InputNumberModule } from 'primeng/inputnumber';
@@ -90,7 +90,7 @@ import { CollapsibleSectionComponent } from './components/collapsible-section/co
     AddContentComponent,
     FloatingSaveComponent,
     ProgressSectionComponent,
-    BooleanSectionComponent,
+    BooleanFormComponent,
     DropdownComponent,
     DurationComponent,
     AccessCodeViewComponent,
@@ -157,7 +157,7 @@ import { CollapsibleSectionComponent } from './components/collapsible-section/co
     AddContentComponent,
     FloatingSaveComponent,
     ProgressSectionComponent,
-    BooleanSectionComponent,
+    BooleanFormComponent,
     DropdownComponent,
     DurationComponent,
     AccessCodeViewComponent,

@@ -53,7 +53,7 @@
         icon="fa fa-key"
       >
         <ng-template #content let-collapsed>
-          <alg-boolean-section
+          <alg-boolean-form
             [(value)]="managerValues.canGrantGroupAccess"
             [collapsed]="collapsed"
             (valueChange)="onValueChange()"
@@ -63,7 +63,7 @@
                 User(s) can give and revoke members access to some content
               </span>
             </ng-template>
-          </alg-boolean-section>
+          </alg-boolean-form>
         </ng-template>
       </alg-collapsible-section>
 
@@ -74,7 +74,7 @@
         icon="fa fa-binoculars"
       >
         <ng-template #content let-collapsed>
-          <alg-boolean-section
+          <alg-boolean-form
             [collapsed]="collapsed"
             [(value)]="managerValues.canWatchMembers"
             (valueChange)="onValueChange()"
@@ -84,7 +84,7 @@
               User(s) can watch the members' activity on some content
             </span>
           </ng-template>
-      </alg-boolean-section>
+      </alg-boolean-form>
         </ng-template>
       </alg-collapsible-section>
 
