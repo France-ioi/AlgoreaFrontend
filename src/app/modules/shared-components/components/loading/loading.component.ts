@@ -10,8 +10,8 @@ export class LoadingComponent {
 
   styles = {
     'small': {
-      width: '24px',
-      height: '24px',
+      width: '2.4rem',
+      height: '2.4rem',
     },
     'medium': {
       width: '3.3333rem',
