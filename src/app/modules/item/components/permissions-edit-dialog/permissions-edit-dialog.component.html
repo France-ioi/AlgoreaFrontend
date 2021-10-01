@@ -23,11 +23,11 @@
 
       <alg-collapsible-section i18n-title title="Can view" icon="fa fa-eye">
         <ng-template #content let-collapsed>
-          <alg-progress-form
+          <alg-progress-select
             [collapsed]="collapsed"
             [(value)]="permissions.can_view"
             [values]="canViewValues"
-          ></alg-progress-form>
+          ></alg-progress-select>
         </ng-template>
       </alg-collapsible-section>
 
@@ -41,31 +41,31 @@
 
       <alg-collapsible-section i18n-title title="Can grant view" icon="fa fa-key">
         <ng-template #content let-collapsed>
-          <alg-progress-form
+          <alg-progress-select
             [collapsed]="collapsed"
             [(value)]="permissions.can_grant_view"
             [values]="canGrantViewValues"
-          ></alg-progress-form>
+          ></alg-progress-select>
         </ng-template>
       </alg-collapsible-section>
 
       <alg-collapsible-section i18n-title title="Can watch" icon="fa fa-binoculars">
         <ng-template #content let-collapsed>
-          <alg-progress-form
+          <alg-progress-select
             [collapsed]="collapsed"
             [(value)]="permissions.can_watch"
             [values]="canWatchValues"
-          ></alg-progress-form>
+          ></alg-progress-select>
         </ng-template>
       </alg-collapsible-section>
 
       <alg-collapsible-section i18n-title title="Can edit" icon="fa fa-pencil-alt">
         <ng-template #content let-collapsed>
-          <alg-progress-form
+          <alg-progress-select
             [collapsed]="collapsed"
             [(value)]="permissions.can_edit"
             [values]="canEditValues"
-          ></alg-progress-form>
+          ></alg-progress-select>
         </ng-template>
       </alg-collapsible-section>
 

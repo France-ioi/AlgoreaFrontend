@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, SimpleChanges, Output, EventEmitter, OnInit, ContentChild, TemplateRef } from '@angular/core';
 
-export interface ProgressFormValue<T> {
+export interface ProgressSelectValue<T> {
   label: string,
   comment: string,
   value: T,
@@ -12,24 +12,24 @@ export interface ProgressFormValue<T> {
  * ```
  * <alg-collapsible-section ... >
  *      <ng-template #content let-collapsed>
- *        <alg-progress-form
+ *        <alg-progress-select
  *          [collapsed]="collapsed"
  *          ...
- *        ></alg-progress-form>
+ *        ></alg-progress-select>
  *      </ng-template>
  *    </alg-collapsible-section>
  * ```
  */
 @Component({
-  selector: 'alg-progress-form',
-  templateUrl: './progress-form.component.html',
-  styleUrls: [ './progress-form.component.scss' ]
+  selector: 'alg-progress-select',
+  templateUrl: './progress-select.component.html',
+  styleUrls: [ './progress-select.component.scss' ]
 })
-export class ProgressFormComponent<T> implements OnChanges, OnInit {
+export class ProgressSelectComponent<T> implements OnChanges, OnInit {
 
-  @Input() collapsed = true;
+  @Input() collapsed = false;
 
-  @Input() values: ProgressFormValue<T>[] = [];
+  @Input() values: ProgressSelectValue<T>[] = [];
   @Input() defaultValue?: T;
   @Input() value?: T;
 

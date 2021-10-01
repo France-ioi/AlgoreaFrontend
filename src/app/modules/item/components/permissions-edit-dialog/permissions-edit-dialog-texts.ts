@@ -1,4 +1,5 @@
-import { ProgressFormValue } from 'src/app/modules/shared-components/components/collapsible-section/progress-form/progress-form.component';
+import { ProgressSelectValue } from
+  'src/app/modules/shared-components/components/collapsible-section/progress-select/progress-select.component';
 import { TypeFilter } from '../composition-filter/composition-filter.component';
 
 function getTargetTypeString(targetType: TypeFilter): string {
@@ -12,7 +13,7 @@ function getTargetTypeString(targetType: TypeFilter): string {
   }
 }
 
-export function generateCanViewValues(targetType: TypeFilter): ProgressFormValue<string>[]{
+export function generateCanViewValues(targetType: TypeFilter): ProgressSelectValue<string>[]{
   const targetTypeString = getTargetTypeString(targetType);
   return [
     {
@@ -43,7 +44,7 @@ export function generateCanViewValues(targetType: TypeFilter): ProgressFormValue
   ];
 }
 
-export function generateCanGrantViewValues(targetType: TypeFilter): ProgressFormValue<string>[]{
+export function generateCanGrantViewValues(targetType: TypeFilter): ProgressSelectValue<string>[]{
   const targetTypeString = getTargetTypeString(targetType);
   return [
     {
@@ -82,7 +83,7 @@ export function generateCanGrantViewValues(targetType: TypeFilter): ProgressForm
 }
 
 
-export function generateCanWatchValues(targetType: TypeFilter): ProgressFormValue<string>[]{
+export function generateCanWatchValues(targetType: TypeFilter): ProgressSelectValue<string>[]{
   const targetTypeString = getTargetTypeString(targetType);
   return [
     {
@@ -109,7 +110,7 @@ export function generateCanWatchValues(targetType: TypeFilter): ProgressFormValu
   ];
 }
 
-export function generateCanEditValues(targetType: TypeFilter): ProgressFormValue<string>[]{
+export function generateCanEditValues(targetType: TypeFilter): ProgressSelectValue<string>[]{
   const targetTypeString = getTargetTypeString(targetType);
   return [
     {

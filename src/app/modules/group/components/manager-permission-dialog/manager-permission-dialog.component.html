@@ -32,7 +32,7 @@
         icon="fa fa-users-cog"
       >
         <ng-template #content let-collapsed>
-          <alg-progress-form
+          <alg-progress-select
             [(value)]="managerValues.canManage"
             [values]="managementLevelValues"
             [collapsed]="collapsed"
@@ -42,7 +42,7 @@
             <ng-container #description>
               <span description i18n>The permissions that the user(s) has on this group</span>
             </ng-container>
-          </alg-progress-form>
+          </alg-progress-select>
         </ng-template>
       </alg-collapsible-section>
 
