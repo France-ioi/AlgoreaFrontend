@@ -1,6 +1,6 @@
 <div class="container" *ngIf="state$ | async as state">
 
-  <alg-loading class="spinner" size="small" *ngIf="state.isFetching || (deletionInProgress$ | async)"></alg-loading>
+  <alg-loading size="small" *ngIf="state.isFetching || (deletionInProgress$ | async)"></alg-loading>
 
   <span class="has-children" *ngIf="state.isReady && state.data" i18n>
     Only an empty group can be deleted.
