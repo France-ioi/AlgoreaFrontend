@@ -5,20 +5,20 @@ import { Component, ContentChild, EventEmitter, Input, Output, TemplateRef } fro
  * ```
  * <alg-collapsible-section ... >
  *      <ng-template #content let-collapsed>
- *        <alg-boolean-form
+ *        <alg-switch-select
  *          [collapsed]="collapsed"
  *          ...
- *        ></alg-boolean-form>
+ *        ></alg-switch-select>
  *      </ng-template>
  *    </alg-collapsible-section>
  * ```
  */
 @Component({
-  selector: 'alg-boolean-form',
-  templateUrl: './boolean-form.component.html',
-  styleUrls: [ './boolean-form.component.scss' ]
+  selector: 'alg-switch-select',
+  templateUrl: './switch-select.component.html',
+  styleUrls: [ './switch-select.component.scss' ]
 })
-export class BooleanFormComponent {
+export class SwitchSelectComponent {
 
   @Input() value = false;
   @Input() collapsed = false;
