@@ -86,7 +86,7 @@ export class UserComponent implements OnInit, OnDestroy {
                   title: breadcrumb.type === 'User' && breadcrumb.id === state.data?.groupId
                     ? formatUser(state.data)
                     : breadcrumb.name,
-                  navigateTo: this.groupRouter.url(breadcrumb.route, breadcrumb.type === 'User' ? undefined : 'details'),
+                  navigateTo: this.groupRouter.url(breadcrumb.route),
                 })),
                 lastPath,
               ] : [

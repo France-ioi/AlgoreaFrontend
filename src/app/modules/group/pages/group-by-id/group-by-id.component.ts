@@ -49,7 +49,7 @@ export class GroupByIdComponent implements OnDestroy {
             category: GROUP_BREADCRUMB_CAT,
             path: breadcrumbs.map(breadcrumb => ({
               title: breadcrumb.name,
-              navigateTo: (): UrlTree => this.groupRouter.url(breadcrumb.route, 'details'),
+              navigateTo: (): UrlTree => this.groupRouter.url(breadcrumb.route),
             })),
             currentPageIdx: breadcrumbs.length - 1,
           },
@@ -63,7 +63,7 @@ export class GroupByIdComponent implements OnDestroy {
       ).subscribe(action => {
         const currentInfo = this.currentContent.current();
         if (!isGroupInfo(currentInfo)) throw new Error('Unexpected: in group-by-id but the current content is not a group');
-        this.groupRouter.navigateTo(currentInfo.route, { page: action === ModeAction.StartEditing ? 'edit' : 'details' });
+        this.groupRouter.navigateTo(currentInfo.route, { page: [ action === ModeAction.StartEditing ? 'edit' : 'details' ] });
       })
     );
   }

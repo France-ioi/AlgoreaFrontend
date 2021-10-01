@@ -27,7 +27,7 @@
           Overview
         </a>
         <a
-          *ngIf="group.isCurrentUserManager"
+          [hidden]="!group.isCurrentUserManager && !compositionTab?.isActive"
           class="nav-tab-item"
           [routerLink]="'./members'"
           routerLinkActive #compositionTab="routerLinkActive"
@@ -57,7 +57,7 @@
           Access
         </a>
         <a
-          *ngIf="group.canCurrentUserManageGroup"
+          [hidden]="!group.canCurrentUserManageGroup && !settingsTab?.isActive"
           class="nav-tab-item"
           [routerLink]="'./settings'"
           routerLinkActive #settingsTab="routerLinkActive"
