@@ -27,7 +27,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { TreeModule } from 'primeng/tree';
 import { LeftNavTreeComponent } from './components/left-nav-tree/left-nav-tree.component';
-import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { UnauthorizedResponseInterceptor } from '../shared/interceptors/unauthorized_response.interceptor';
 import { ReactiveComponentModule } from '@ngrx/component';
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -78,7 +77,6 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     PerfectScrollbarModule,
     SharedComponentsModule,
     TreeModule,
-    ProgressSpinnerModule,
     TooltipModule,
     ConfirmDialogModule,
     DialogModule,

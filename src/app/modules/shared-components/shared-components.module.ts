@@ -141,7 +141,6 @@ import { LoadingComponent } from './components/loading/loading.component';
     InputComponent,
     SelectComponent,
     SectionParagraphComponent,
-    ProgressSpinnerModule,
     ToastModule,
     TableModule,
     TabViewModule,
