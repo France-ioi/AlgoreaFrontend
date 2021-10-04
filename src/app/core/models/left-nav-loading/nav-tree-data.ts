@@ -1,13 +1,21 @@
 import { ensureDefined } from 'src/app/shared/helpers/null-undefined-predicates';
 
 type Id = string;
+export enum GroupManagership { False = 'false', True = 'true', Descendant = 'descendant' }
+
 export interface NavTreeElement {
+  // generic
   id: Id,
   title: string,
   hasChildren: boolean,
   children?: this[],
-  type?: string,
-  locked: boolean,
+  navigateTo: (path: Id[]) => void,
+
+  // specific uses
+  locked?: boolean, // considering 'not set' as false
+  associatedGroup?: string,
+  score?: { bestScore: number, currentScore: number, validated: boolean },
+  groupRelation?: { isMember: boolean, isManager: GroupManagership },
 }
 
 /**
@@ -20,19 +28,19 @@ export interface NavTreeElement {
  *     | B3
  *     | B4
  */
-export class NavTreeData<T extends NavTreeElement> {
+export class NavTreeData {
 
   constructor(
-    public readonly elements: T[], // level 1 elements (which may have children)
+    public readonly elements: NavTreeElement[], // level 1 elements (which may have children)
     public readonly pathToElements: Id[], // path from root to the elements (so including the parent if any)
     public readonly selectedElementId?: Id, // the selected element is among elements
-    public readonly parent?: T, // level 0 element
+    public readonly parent?: NavTreeElement, // level 0 element
   ) {}
 
   /**
    * Return this with selected element changed
    */
-  withSelection(id: Id): NavTreeData<T> {
+  withSelection(id: Id): NavTreeData {
     return new NavTreeData(this.elements, this.pathToElements, id, this.parent);
   }
 
@@ -40,7 +48,7 @@ export class NavTreeData<T extends NavTreeElement> {
    * Return this with the element from `elements` (identified by its id) replaced by the given one
    * If the element is not found, return this unchanged.
    */
-  withUpdatedElement(id: Id, update: (el:T)=>T): NavTreeData<T> {
+  withUpdatedElement(id: Id, update: (el:NavTreeElement)=>NavTreeElement): NavTreeData {
     const idx = this.elements.findIndex(i => i.id === id);
     if (idx === -1) return this;
     const elements = [ ...this.elements ];
@@ -52,7 +60,7 @@ export class NavTreeData<T extends NavTreeElement> {
    * Remove the current selection but keep the item expanded if it has children
    * If no element is selected, return this unchanged.
    */
-  withNoSelection(): NavTreeData<T> {
+  withNoSelection(): NavTreeData {
     if (!this.selectedElementId) return this;
     return new NavTreeData(this.elements, this.pathToElements, undefined, this.parent);
   }
@@ -61,7 +69,7 @@ export class NavTreeData<T extends NavTreeElement> {
    * Create a new sub-NavTreeData moving the child element and its siblings to `elements` and his parent as new parent.
    * If the element is not found, return this unchanged.
    */
-  subNavMenuData(childElementId: Id): NavTreeData<T> {
+  subNavMenuData(childElementId: Id): NavTreeData {
     const newParent = this.elements.find(i => i.children && i.children.some(c => c.id === childElementId));
     if (!newParent || !newParent.children /* unexpected */) return this;
     return new NavTreeData(newParent.children, this.pathToElements.concat([ newParent.id ]), childElementId, newParent);
@@ -75,7 +83,7 @@ export class NavTreeData<T extends NavTreeElement> {
     return this.elements.some(e => e.children && e.children.some(c => c.id === id));
   }
 
-  selectedElement(): T|undefined {
+  selectedElement(): NavTreeElement|undefined {
     if (this.selectedElement === undefined) return undefined;
     return this.elements.find(e => e.id === this.selectedElementId);
   }
@@ -83,7 +91,7 @@ export class NavTreeData<T extends NavTreeElement> {
   /**
    * Search among the elements (level 1) for the given id
    */
-  elementWithId(id: Id): T|undefined {
+  elementWithId(id: Id): NavTreeElement|undefined {
     return this.elements.find(i => i.id === id);
   }
 

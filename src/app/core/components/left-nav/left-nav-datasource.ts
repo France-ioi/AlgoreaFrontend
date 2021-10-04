@@ -7,14 +7,14 @@ import { RoutedContentInfo } from 'src/app/shared/models/content/content-info';
 import { mapStateData, mapToFetchState } from 'src/app/shared/operators/state';
 import { NavTreeData, NavTreeElement } from '../../models/left-nav-loading/nav-tree-data';
 
-export abstract class LeftNavDataSource<ContentT extends RoutedContentInfo, MenuT extends NavTreeElement> {
+export abstract class LeftNavDataSource<ContentT extends RoutedContentInfo> {
 
   private initialized = false;
   private contentChanges = new ReplaySubject<ContentT|undefined>(1);
   private retryTrigger = new Subject<void>();
   state$ = this.contentChanges.pipe(
     repeatLatestWhen(this.retryTrigger),
-    switchScan((prevState: FetchState<NavTreeData<MenuT>>, contentInfo) => {
+    switchScan((prevState: FetchState<NavTreeData>, contentInfo) => {
 
       if (prevState.isReady) {
         const prevData = prevState.data;
@@ -47,7 +47,7 @@ export abstract class LeftNavDataSource<ContentT extends RoutedContentInfo, Menu
       return this.fetchNewNav(contentInfo).pipe(
         mapStateData(data => data.withUpdatedElement(contentInfo.route.id, el => this.addDetailsToTreeElement(contentInfo, el)))
       );
-    }, fetchingState<NavTreeData<MenuT>>() /* the switchScan seed */),
+    }, fetchingState<NavTreeData>() /* the switchScan seed */),
     delay(0),
   );
 
@@ -83,18 +83,18 @@ export abstract class LeftNavDataSource<ContentT extends RoutedContentInfo, Menu
     if (this.initialized) this.contentChanges.next(undefined);
   }
 
-  protected abstract addDetailsToTreeElement(contentInfo: ContentT, treeElement: MenuT): MenuT;
-  protected abstract fetchRootTreeData(): Observable<MenuT[]>;
-  protected abstract fetchNavDataFromChild(id: string, child: ContentT): Observable<{ parent: MenuT, elements: MenuT[] }>;
+  protected abstract addDetailsToTreeElement(contentInfo: ContentT, treeElement: NavTreeElement): NavTreeElement;
+  protected abstract fetchRootTreeData(): Observable<NavTreeElement[]>;
+  protected abstract fetchNavDataFromChild(id: string, child: ContentT): Observable<{ parent: NavTreeElement, elements: NavTreeElement[] }>;
 
-  private fetchDefaultNav(): Observable<FetchState<NavTreeData<MenuT>>> {
+  private fetchDefaultNav(): Observable<FetchState<NavTreeData>> {
     return this.fetchRootTreeData().pipe(
       map(elements => new NavTreeData(elements, [], undefined, undefined)),
       mapToFetchState(),
     );
   }
 
-  private fetchNewNav(content: ContentT): Observable<FetchState<NavTreeData<MenuT>>> {
+  private fetchNewNav(content: ContentT): Observable<FetchState<NavTreeData>> {
     const route = content.route;
     const parentId = route.path[route.path.length-1];
     if (isDefined(parentId)) {

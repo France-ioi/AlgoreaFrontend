@@ -4,6 +4,8 @@ import { Subscription } from 'rxjs';
 import { delay, map, pairwise } from 'rxjs/operators';
 import { isGroupInfo } from 'src/app/shared/models/content/group-info';
 import { isActivityInfo, isItemInfo } from 'src/app/shared/models/content/item-info';
+import { GroupRouter } from 'src/app/shared/routing/group-router';
+import { ItemRouter } from 'src/app/shared/routing/item-router';
 import { CurrentContentService } from 'src/app/shared/services/current-content.service';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
 import { GroupNavigationService } from '../../http-services/group-navigation.service';
@@ -26,9 +28,9 @@ export class LeftNavComponent implements OnInit, OnDestroy {
 
   activeTabIndex = 0;
   readonly dataSources: [LeftNavActivityDataSource, LeftNavSkillDataSource, LeftNavGroupDataSource] = [
-    new LeftNavActivityDataSource(this.itemNavigationService),
-    new LeftNavSkillDataSource(this.itemNavigationService),
-    new LeftNavGroupDataSource(this.groupNavigationService),
+    new LeftNavActivityDataSource(this.itemNavigationService, this.itemRouter),
+    new LeftNavSkillDataSource(this.itemNavigationService, this.itemRouter),
+    new LeftNavGroupDataSource(this.groupNavigationService, this.groupRouter),
   ];
   currentUser$ = this.sessionService.userProfile$.pipe(delay(0));
 
@@ -39,6 +41,8 @@ export class LeftNavComponent implements OnInit, OnDestroy {
     private currentContent: CurrentContentService,
     private itemNavigationService: ItemNavigationService,
     private groupNavigationService: GroupNavigationService,
+    private itemRouter: ItemRouter,
+    private groupRouter: GroupRouter,
   ) { }
 
   ngOnInit(): void {
