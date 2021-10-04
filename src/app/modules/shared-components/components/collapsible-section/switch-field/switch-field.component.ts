@@ -5,20 +5,20 @@ import { Component, ContentChild, EventEmitter, Input, Output, TemplateRef } fro
  * ```
  * <alg-collapsible-section ... >
  *      <ng-template #content let-collapsed>
- *        <alg-switch-select
+ *        <alg-switch-field
  *          [collapsed]="collapsed"
  *          ...
- *        ></alg-switch-select>
+ *        ></alg-switch-field>
  *      </ng-template>
  *    </alg-collapsible-section>
  * ```
  */
 @Component({
-  selector: 'alg-switch-select',
-  templateUrl: './switch-select.component.html',
-  styleUrls: [ './switch-select.component.scss' ]
+  selector: 'alg-switch-field',
+  templateUrl: './switch-field.component.html',
+  styleUrls: [ './switch-field.component.scss' ]
 })
-export class SwitchSelectComponent {
+export class SwitchFieldComponent {
 
   @Input() value = false;
   @Input() collapsed = false;
