@@ -6,6 +6,7 @@ export interface ContentInfo {
   breadcrumbs?: ContentBreadcrumb,
   title?: string, // page title
   route?: ContentRoute,
+  score?: { currentScore: number, bestScore: number, isValidated: boolean },
 }
 
 export interface RoutedContentInfo extends ContentInfo {
