@@ -17,32 +17,6 @@ interface ItemStrings {
   language_tag: string,
 }
 
-interface ActivityOrSkill {
-  id: string,
-  string: ItemStrings,
-  type: ItemType,
-  best_score: number,
-  no_score: boolean,
-  has_visible_children: boolean,
-  permissions: {
-    can_view: 'none'|'info'|'content'|'content_with_descendants'|'solution',
-  },
-  results: RawResult[],
-}
-
-export interface RootActivity {
-  // Some attributes are omitted as they are not used for the moment. Read the doc for the full list.
-  group_id: string,
-  name: string,
-  activity: ActivityOrSkill,
-}
-
-interface RootSkill {
-  group_id: string,
-  name: string,
-  skill: ActivityOrSkill,
-}
-
 interface RawResult {
   attempt_id: string,
   /* on 10/2020, the service defines latest_activity_at as nullable but this should be a mistake. The bug has been submitted. */
@@ -224,7 +198,7 @@ const rootSkillsDecoder = D.array(
 export type RootSkills = D.TypeOf<typeof rootSkillsDecoder>;
 
 // common type to RootActivities and RootSkills if the activity/skill key is renamed 'item'
-export type RootItems = (Pick<RootActivities[number], 'groupId'|'name'|'type'> & { item: RootActivities[number]['activity']})[];
+export type RootItems = (Omit<RootActivities[number], 'activity'> & { item: RootActivities[number]['activity']})[];
 
 @Injectable({
   providedIn: 'root'
@@ -315,41 +289,6 @@ export class ItemNavigationService {
     return isSkill(type) ?
       this.getRootSkills().pipe(map(groups => groups.map(g => ({ ...g, item: g.skill })))) :
       this.getRootActivities().pipe(map(groups => groups.map(g => ({ ...g, item: g.activity }))));
-  }
-
-  getRootActivitiesLegacy(watchedGroupId?: string): Observable<RootActivity[]> {
-    let httpParams = new HttpParams();
-
-    if (watchedGroupId) {
-      httpParams = httpParams.set('watched_group_id', watchedGroupId);
-    }
-
-    return this.http
-      .get<RootActivity[]>(`${appConfig.apiUrl}/current-user/group-memberships/activities`, {
-        params: httpParams
-      });
-  }
-
-  getRootActivitiesForNavMenu(): Observable<NavMenuRootItem> {
-    return this.getRootActivitiesLegacy().pipe(
-      map(acts => ({
-        items: acts.map(act => ({ ...createNavMenuItem(act.activity), groupName: act.name }))
-      }))
-    );
-  }
-
-  getRootSkillsForNavMenu(): Observable<NavMenuRootItem> {
-    return this.http
-      .get<RootSkill[]>(`${appConfig.apiUrl}/current-user/group-memberships/skills`)
-      .pipe(
-        map(skills => ({
-          items: skills.map(sk => ({ ...createNavMenuItem(sk.skill), groupName: sk.name }))
-        }))
-      );
-  }
-
-  getRoot(type: ItemTypeCategory): Observable<NavMenuRootItem> {
-    return (isSkill(type)) ? this.getRootSkillsForNavMenu() : this.getRootActivitiesForNavMenu();
   }
 
   getNavigationNeighbors(itemRoute: FullItemRoute):
