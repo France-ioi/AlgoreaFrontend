@@ -3,21 +3,9 @@ import { map } from 'rxjs/operators';
 import { bestAttemptFromResults } from 'src/app/shared/helpers/attempts';
 import { isSkill, ItemTypeCategory } from 'src/app/shared/helpers/item-type';
 import { ItemInfo } from 'src/app/shared/models/content/item-info';
+import { NavMenuItem } from '../../common/nav-menu-item';
 import { ItemNavigationChild, ItemNavigationData, ItemNavigationService } from '../../http-services/item-navigation.service';
 import { LeftNavDataSource } from './left-nav-datasource';
-
-export interface NavMenuItem {
-  id: string,
-  title: string, // not null to implement NavTreeElement
-  hasChildren: boolean,
-  groupName?: string,
-  attemptId: string|null,
-  bestScore?: number,
-  currentScore?: number,
-  validated?: boolean,
-  children?: NavMenuItem[], // placeholder for children when fetched (may 'hasChildren' with 'children' not set)
-  locked: boolean,
-}
 
 export abstract class LeftNavItemDataSource<ItemT extends ItemInfo> extends LeftNavDataSource<ItemT,NavMenuItem> {
   constructor(
