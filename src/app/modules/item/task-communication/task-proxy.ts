@@ -5,7 +5,7 @@
  * It depends on jschannel.
  */
 
-import { Observable, of, throwError } from 'rxjs';
+import { Observable } from 'rxjs';
 import { delay, map, retryWhen, switchMap, take } from 'rxjs/operators';
 import { rxBuild, RxMessagingChannel } from './rxjschannel';
 import * as D from 'io-ts/Decoder';
@@ -241,40 +241,17 @@ export class Task {
   }
 }
 
-export class TaskPlatform {
-  constructor(implementation: Partial<TaskPlatform>) {
-    Object.assign(this, implementation); // assigning implementation object to self will override methods
-  }
+export interface TaskPlatform {
   /*
    * Simple prototypes for Bebras platform API functions, to be overriden by your
    * "platform"'s specific functions (for each platform object).
    */
-  validate(_mode: string): Observable<void> {
-    return throwError(() => new Error('platform.validate is not defined'));
-  }
-  showView(_views: string): Observable<void> {
-    return throwError(() => new Error('platform.showView is not defined'));
-  }
-  askHint(_platformToken: string): Observable<void> {
-    return throwError(() => new Error('platform.validate is not defined'));
-  }
-  updateHeight(height: number): Observable<void> {
-    return this.updateDisplay({ height });
-  }
-  updateDisplay(_data: UpdateDisplayParams): Observable<void> {
-    return throwError(() => new Error('platform.updateDisplay is not defined!'));
-  }
-  openUrl(_url: OpenUrlParams): Observable<void> {
-    return throwError(() => new Error('platform.openUrl is not defined!'));
-  }
-  log(_data: TaskLog): Observable<void> {
-    return throwError(() => new Error('platform.log is not defined!'));
-  }
-  getTaskParams({ key, defaultValue }: TaskParamsKeyDefault = {}): Observable<TaskParamsValue> {
-    const res: Record<string, TaskParamsValue> = { minScore: -3, maxScore: 10, randomSeed: 0, noScore: 0, readOnly: false, options: {} };
-    if (!key) return of(res);
-    return key !== 'options' && key in res
-      ? of(res[key])
-      : of(defaultValue);
-  }
+  validate(mode: string): Observable<void>,
+  showView(views: string): void,
+  askHint(platformToken: string): Observable<void>,
+  updateHeight(height: number): void,
+  updateDisplay(data: UpdateDisplayParams): void,
+  openUrl(url: OpenUrlParams): void,
+  log(data: TaskLog): void,
+  getTaskParams(keyAndDefaultValue: TaskParamsKeyDefault): TaskParamsValue,
 }

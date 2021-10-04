@@ -1,5 +1,5 @@
 import { build, ChannelConfiguration, MessageTransaction, MessagingChannel } from 'jschannel';
-import { Observable } from 'rxjs';
+import { isObservable, Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 
 export interface RxMessage {
@@ -30,19 +30,26 @@ export class RxMessagingChannel {
   }
 
   /** Bind a local method, allowing the remote task to call it */
-  bind<T>(method: string, observable?: (params: unknown) => Observable<T>, doNotPublish?: boolean): MessagingChannel {
+  bind<T extends Observable<any> | any>(method: string, mapper?: (params: unknown) => T, doNotPublish?: boolean): MessagingChannel {
     // Create a callback wrapping the observable bound
     function callback(transaction: MessageTransaction, params: unknown): void {
-      if (!observable) return;
+      if (!mapper) return;
 
-      const cb$ = observable(params);
-      cb$
-        .pipe(take(1))
-        .subscribe({
-          next: transaction.complete,
-          error: error => transaction.error(error, error instanceof Error ? error.toString() : '')
-        });
-      transaction.delayReturn(true);
+      const forwardError = (error: unknown): void => transaction.error(error, error instanceof Error ? error.toString() : '');
+      try {
+        const result = mapper(params);
+        if (!isObservable(result)) return transaction.complete(result);
+
+        transaction.delayReturn(true);
+        result
+          .pipe(take(1))
+          .subscribe({
+            next: data => transaction.complete(data),
+            error: forwardError,
+          });
+      } catch (error) {
+        forwardError(error);
+      }
     }
     return this.channel.bind(method, callback, doNotPublish);
   }
