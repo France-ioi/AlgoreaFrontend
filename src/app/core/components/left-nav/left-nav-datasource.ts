@@ -1,5 +1,5 @@
 import { EMPTY, Observable, of, ReplaySubject, Subject } from 'rxjs';
-import { map, switchScan } from 'rxjs/operators';
+import { delay, map, switchScan } from 'rxjs/operators';
 import { isDefined } from 'src/app/shared/helpers/null-undefined-predicates';
 import { repeatLatestWhen } from 'src/app/shared/helpers/repeatLatestWhen';
 import { fetchingState, FetchState, readyState } from 'src/app/shared/helpers/state';
@@ -47,7 +47,8 @@ export abstract class LeftNavDataSource<ContentT extends RoutedContentInfo, Menu
       return this.fetchNewNav(contentInfo).pipe(
         mapStateData(data => data.withUpdatedElement(contentInfo.route.id, el => this.addDetailsToTreeElement(contentInfo, el)))
       );
-    }, fetchingState<NavTreeData<MenuT>>() /* the switchScan seed */)
+    }, fetchingState<NavTreeData<MenuT>>() /* the switchScan seed */),
+    delay(0),
   );
 
   /**
