@@ -3,7 +3,7 @@ import { OperatorFunction, pipe } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { TestScheduler } from 'rxjs/testing';
 import { errorState, fetchingState, FetchState, readyState } from '../helpers/state';
-import { mapStateData, mapToFetchState, readyData } from './state';
+import { mapErrorToState, mapStateData, mapToFetchState, readyData } from './state';
 
 const stateToLetter = (): OperatorFunction<FetchState<string>, string> => pipe(
   map(state => {
@@ -254,6 +254,34 @@ describe('mapStateData', () => {
         mapStateData(_x => '2'),
         stateToLetter(),
       )).toBe(expected);
+    });
+  });
+
+});
+
+
+describe('mapErrorToState', () => {
+
+  let testScheduler: TestScheduler;
+
+  beforeEach(() => {
+    testScheduler = new TestScheduler((actual, expected) => {
+      expect(actual).toEqual(expected);
+    });
+  });
+
+  it('should work as expected', () => {
+    testScheduler.run(helpers => {
+      const { cold, expectObservable } = helpers;
+      const e =   cold('-1-#');
+      const expected = '-a-(x|)';
+
+      expectObservable(e.pipe(
+        map(v => readyState(v)),
+        mapErrorToState(),
+        stateToLetter(),
+      )).toBe(expected);
+
     });
   });
 

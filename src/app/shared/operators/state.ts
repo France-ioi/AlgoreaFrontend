@@ -14,7 +14,7 @@ export function mapToFetchState<T>(config?: { resetter?: Observable<unknown> }):
   return pipe(
     map(val => readyState(val)),
     startWith(fetchingState()),
-    catchError(e => of(errorState(e))),
+    mapErrorToState<T>(),
     source => resetter.pipe(
       startWith(noop),
       switchMapTo(source)
@@ -47,5 +47,14 @@ export function mapStateData<T, U>(dataMapper: (data: T) => U): OperatorFunction
       if (state.isFetching) return fetchingState(state.data === undefined ? undefined : dataMapper(state.data));
       return state; // error state is not changed
     }),
+  );
+}
+
+/**
+ * Rx operator which convert observable error to "error state". To be used when the state is built "manually".
+ */
+export function mapErrorToState<T>(): OperatorFunction<FetchState<T>,FetchState<T>> {
+  return pipe(
+    catchError(e => of(errorState(e))),
   );
 }

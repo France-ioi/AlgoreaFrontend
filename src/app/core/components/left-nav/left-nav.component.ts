@@ -21,7 +21,7 @@ const groupsTabIdx = 2;
   styleUrls: [ './left-nav.component.scss' ]
 })
 export class LeftNavComponent implements OnInit, OnDestroy {
-  @Output() themeChange = new EventEmitter<string | null>();
+  @Output() themeChange = new EventEmitter<string | null>(true /* async */);
   @Output() selectId = new EventEmitter<string>();
 
   activeTabIndex = 0;
@@ -83,7 +83,7 @@ export class LeftNavComponent implements OnInit, OnDestroy {
     this.changeTab(e.index);
   }
 
-  changeTab(index: number): void {
+  private changeTab(index: number): void {
     this.activeTabIndex = index;
     this.dataSources[index]?.focus();
     this.themeChange.emit(this.activeTabIndex === 2 ? 'dark' : null);
