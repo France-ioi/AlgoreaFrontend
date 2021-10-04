@@ -14,7 +14,7 @@ export class SuggestionOfActivitiesComponent {
   readonly state$ = this.sessionService.watchedGroup$.pipe(
     filter(isNotUndefined),
     switchMap(watchedGroup =>
-      this.itemNavigationService.getRootActivities(watchedGroup.route.id).pipe(
+      this.itemNavigationService.getRootActivitiesLegacy(watchedGroup.route.id).pipe(
         map((rootActivity: RootActivity[]) =>
           rootActivity.sort(item => (item.group_id === watchedGroup.route.id ? -1 : 1)).slice(0, 4)
         ),
