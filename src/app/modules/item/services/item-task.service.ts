@@ -1,14 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { animationFrames, EMPTY, merge, Observable, of, throwError } from 'rxjs';
-import { map, mapTo, switchMap, take, tap } from 'rxjs/operators';
+import { animationFrames, merge, Observable, throwError } from 'rxjs';
+import { mapTo, switchMap, take, tap } from 'rxjs/operators';
 import { ItemNavigationService } from 'src/app/core/http-services/item-navigation.service';
 import { LocaleService } from 'src/app/core/services/localeService';
 import { openNewTab, replaceWindowUrl } from 'src/app/shared/helpers/url';
 import { FullItemRoute, itemRoute } from 'src/app/shared/routing/item-route';
 import { ItemRouter } from 'src/app/shared/routing/item-router';
 import { Task, TaskPlatform } from '../task-communication/task-proxy';
-import { TaskParamsValue } from '../task-communication/types';
 import { ItemTaskAnswerService } from './item-task-answer.service';
 import { ItemTaskInitService } from './item-task-init.service';
 import { ItemTaskViewsService } from './item-task-views.service';
@@ -55,25 +54,24 @@ export class ItemTaskService {
   }
 
   private bindPlatform(task: Task): void {
-    const platform = new TaskPlatform({
-      validate: (mode): Observable<void> => this.validate(mode).pipe(mapTo(undefined)),
-      getTaskParams: (): Observable<TaskParamsValue> =>
-        of({ minScore: -3, maxScore: 10, randomSeed: 0, noScore: 0, readOnly: false, options: {} }),
-      updateDisplay: (display): Observable<void> => {
-        this.viewsService.updateDisplay(display);
-        return EMPTY;
-      },
-      showView: (view): Observable<void> => {
-        this.viewsService.showView(view);
-        return EMPTY;
-      },
-      openUrl: (params): Observable<void> => {
+    const platform: TaskPlatform = {
+      validate: mode => this.validate(mode).pipe(mapTo(undefined)),
+      getTaskParams: () => ({ minScore: -3, maxScore: 10, randomSeed: 0, noScore: 0, readOnly: false, options: {} }),
+      updateHeight: height => platform.updateDisplay({ height }),
+      updateDisplay: display => this.viewsService.updateDisplay(display),
+      showView: view => this.viewsService.showView(view),
+      openUrl: params => {
         if (typeof params === 'string') return this.navigateToItem(params);
         if ('path' in params) return this.navigateToItem(params.path, params.newTab);
-        this.navigate(params.url, params.newTab);
-        return EMPTY;
-      }
-    });
+        return this.navigate(params.url, params.newTab);
+      },
+      askHint: () => {
+        throw new Error('unimplemented method "askHint"');
+      },
+      log: () => {
+        throw new Error('unimplemented method "askHint"');
+      },
+    };
     task.bindPlatform(platform);
   }
 
@@ -99,10 +97,10 @@ export class ItemTaskService {
   }
 
   private scrollTop(): Observable<void> {
-    return animationFrames().pipe(take(1), map(() => window.scrollTo({ behavior: 'smooth', top: 0 })));
+    return animationFrames().pipe(take(1), tap(() => window.scrollTo({ behavior: 'smooth', top: 0 })), mapTo(undefined));
   }
 
-  private navigateToItem(path: string, newTab = false): Observable<void> {
+  private navigateToItem(path: string, newTab = false): void {
     const [ , ...parentIds ] = path.split('/');
     const id = parentIds.pop();
     if (!id) throw new Error('id must be defined');
@@ -110,7 +108,6 @@ export class ItemTaskService {
     const route = itemRoute('activity', id, parentIds);
     if (newTab) this.navigate(this.router.serializeUrl(this.itemRouter.url(route)), true);
     else this.itemRouter.navigateTo(route);
-    return EMPTY;
   }
 
   private navigate(href: string, newTab = false): void {
