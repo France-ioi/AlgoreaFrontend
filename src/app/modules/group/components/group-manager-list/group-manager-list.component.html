@@ -1,141 +1,143 @@
-<alg-loading size="medium" *ngIf="state === 'loading'"></alg-loading>
+<ng-container *ngIf="state$ | async as state">
+  <alg-loading size="medium" *ngIf="state.isFetching"></alg-loading>
 
-<alg-error *ngIf="state === 'error'" i18n-message message="Error while loading the group managers"></alg-error>
+  <alg-error *ngIf="state.isError" i18n-message message="Error while loading the group managers"></alg-error>
 
-<ng-container *ngIf="state === 'ready'">
-  <alg-section icon="fa fa-users" i18n-label label="Managers of this group">
-    <alg-grid
-      tableStyle="--group-manager-list"
-      class="slanted-grid"
-      *ngIf="managers.length > 0; else noManagers"
-      [loading]="removalInProgress"
-      [data]="managers"
-      [(selection)]="selection"
-      sortMode="single"
-      [showGear]="false"
-      [scrollable]="true"
-      dataKey="id"
-    >
-      <ng-template #headerTemplate let-columns>
-        <tr style="border: none;">
-          <th class="thin" *ngIf="groupData?.group?.currentUserCanManage === 'memberships_and_group'"></th>
-          <th style="min-width: 160px;">
-            <div class="slanted-header">
-              <div class="slanted-header-content" i18n>
-                Name
-              </div>
-            </div>
-          </th>
-          <th style="min-width: 110px;">
-            <div class="slanted-header">
-              <div class="slanted-header-content" i18n>
-                Can Manage
-              </div>
-            </div>
-          </th>
-          <th style="width: 5rem;">
-            <div class="slanted-header">
-              <div class="slanted-header-content" i18n>
-                Can grant group access
-              </div>
-            </div>
-          </th>
-          <th style="width: 5rem;">
-            <div class="slanted-header">
-              <div class="slanted-header-content" i18n>
-                Can watch members
-              </div>
-            </div>
-          </th>
-          <th style="width: 11rem;"></th>
-        </tr>
-      </ng-template>
-
-      <ng-template
-        #bodyTemplate
-        let-rowData
-        let-columns="columns"
-        let-rowIndex="rowIndex"
+  <ng-container *ngIf="state.isReady && state.data as managers">
+    <alg-section icon="fa fa-users" i18n-label label="Managers of this group">
+      <alg-grid
+        tableStyle="--group-manager-list"
+        class="slanted-grid"
+        *ngIf="managers.length > 0; else noManagers"
+        [loading]="removalInProgress"
+        [data]="managers"
+        [(selection)]="selection"
+        sortMode="single"
+        [showGear]="false"
+        [scrollable]="true"
+        dataKey="id"
       >
-        <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
-          <td class="thin" *ngIf="groupData?.group?.currentUserCanManage === 'memberships_and_group'">
-            <p-tableCheckbox class="p-chkbox" [value]="rowData"></p-tableCheckbox>
-          </td>
-          <td
-            style="text-align: left;min-width: 160px;padding-left: 0.5rem;"
-            tooltipPosition="top"
-            tooltipStyleClass="tooltip-custom"
-          >
-            <a class="alg-link"
-              [routerLink]="rowData | groupLink"
-            >
-              {{ rowData.login ? (rowData | userCaption) : rowData.name }}
-            </a>
-          </td>
-          <td style="min-width: 110px;">
-            {{ rowData.canManageAsText }}
-          </td>
-          <td style="width: 5rem;">
-            <span class="table-icon"
-              [ngClass]="{
-                locked: rowData.canGrantGroupAccess,
-                unlocked: !rowData.canGrantGroupAccess
-              }">
-              <i *ngIf="!rowData.canGrantGroupAccess" class="fa fa-times"></i>
-              <i *ngIf="rowData.canGrantGroupAccess" class="fa fa-check"></i>
-            </span>
-          </td>
-          <td style="width: 5rem;">
-            <span class="table-icon"
-              [ngClass]="{
-                locked: rowData.canWatchMembers,
-                unlocked: !rowData.canWatchMembers
-              }">
-              <i *ngIf="!rowData.canWatchMembers" class="fa fa-times"></i>
-              <i *ngIf="rowData.canWatchMembers" class="fa fa-check"></i>
-            </span>
-          </td>
-          <td style="width: 11rem;">
-            <button
-              pButton
-              type="button"
-              icon="pi pi-pencil"
-              class="p-button-text"
-              (click)="openPermissionsEditDialog(rowData)"
-              *ngIf="groupData?.group?.currentUserCanManage === 'memberships_and_group'"
-            ></button>
-          </td>
-        </tr>
-      </ng-template>
+        <ng-template #headerTemplate let-columns>
+          <tr style="border: none;">
+            <th class="thin" *ngIf="groupData?.group?.currentUserCanManage === 'memberships_and_group'"></th>
+            <th style="min-width: 160px;">
+              <div class="slanted-header">
+                <div class="slanted-header-content" i18n>
+                  Name
+                </div>
+              </div>
+            </th>
+            <th style="min-width: 110px;">
+              <div class="slanted-header">
+                <div class="slanted-header-content" i18n>
+                  Can Manage
+                </div>
+              </div>
+            </th>
+            <th style="width: 5rem;">
+              <div class="slanted-header">
+                <div class="slanted-header-content" i18n>
+                  Can grant group access
+                </div>
+              </div>
+            </th>
+            <th style="width: 5rem;">
+              <div class="slanted-header">
+                <div class="slanted-header-content" i18n>
+                  Can watch members
+                </div>
+              </div>
+            </th>
+            <th style="width: 11rem;"></th>
+          </tr>
+        </ng-template>
 
-      <ng-template *ngIf="groupData?.group?.currentUserCanManage === 'memberships_and_group'" #summaryTemplate>
-        <div class="summary">
-          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-          <span class="select-all" (click)="onSelectAll()" i18n>
-            Select all
-          </span>
-          <span class="filler"></span>
-          <div class="summary-actions">
-            <span (click)="onRemove()" [class.disabled]="removalInProgress || state !== 'ready' || selection.length === 0">
-            <span i18n>Remove</span>
-              <i class="fa fa-trash-alt"></i>
+        <ng-template
+          #bodyTemplate
+          let-rowData
+          let-columns="columns"
+          let-rowIndex="rowIndex"
+        >
+          <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
+            <td class="thin" *ngIf="groupData?.group?.currentUserCanManage === 'memberships_and_group'">
+              <p-tableCheckbox class="p-chkbox" [value]="rowData"></p-tableCheckbox>
+            </td>
+            <td
+              style="text-align: left;min-width: 160px;padding-left: 0.5rem;"
+              tooltipPosition="top"
+              tooltipStyleClass="tooltip-custom"
+            >
+              <a class="alg-link"
+                [routerLink]="rowData | groupLink"
+              >
+                {{ rowData.login ? (rowData | userCaption) : rowData.name }}
+              </a>
+            </td>
+            <td style="min-width: 110px;">
+              {{ rowData.canManageAsText }}
+            </td>
+            <td style="width: 5rem;">
+              <span class="table-icon"
+                [ngClass]="{
+                  locked: rowData.canGrantGroupAccess,
+                  unlocked: !rowData.canGrantGroupAccess
+                }">
+                <i *ngIf="!rowData.canGrantGroupAccess" class="fa fa-times"></i>
+                <i *ngIf="rowData.canGrantGroupAccess" class="fa fa-check"></i>
+              </span>
+            </td>
+            <td style="width: 5rem;">
+              <span class="table-icon"
+                [ngClass]="{
+                  locked: rowData.canWatchMembers,
+                  unlocked: !rowData.canWatchMembers
+                }">
+                <i *ngIf="!rowData.canWatchMembers" class="fa fa-times"></i>
+                <i *ngIf="rowData.canWatchMembers" class="fa fa-check"></i>
+              </span>
+            </td>
+            <td style="width: 11rem;">
+              <button
+                pButton
+                type="button"
+                icon="pi pi-pencil"
+                class="p-button-text"
+                (click)="openPermissionsEditDialog(rowData)"
+                *ngIf="groupData?.group?.currentUserCanManage === 'memberships_and_group'"
+              ></button>
+            </td>
+          </tr>
+        </ng-template>
+
+        <ng-template *ngIf="groupData?.group?.currentUserCanManage === 'memberships_and_group'" #summaryTemplate>
+          <div class="summary">
+            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+            <span class="select-all" (click)="onSelectAll(managers)" i18n>
+              Select all
             </span>
+            <span class="filler"></span>
+            <div class="summary-actions">
+              <span (click)="onRemove()" [class.disabled]="removalInProgress || !state.isReady || selection.length === 0">
+              <span i18n>Remove</span>
+                <i class="fa fa-trash-alt"></i>
+              </span>
+            </div>
           </div>
+        </ng-template>
+      </alg-grid>
+
+      <ng-template #noManagers>
+        <div class="validation-text" i18n>
+          This group has no dedicated managers.
         </div>
       </ng-template>
-    </alg-grid>
+    </alg-section>
+  </ng-container>
 
-    <ng-template #noManagers>
-      <div class="validation-text" i18n>
-        This group has no dedicated managers.
-      </div>
-    </ng-template>
-  </alg-section>
+  <alg-manager-permission-dialog
+    [visible]="isPermissionsEditDialogOpened"
+    [group]="groupData?.group"
+    [manager]="dialogManager"
+    (close)="closePermissionsEditDialog($event)"
+  ></alg-manager-permission-dialog>
 </ng-container>
-
-<alg-manager-permission-dialog
-  [visible]="isPermissionsEditDialogOpened"
-  [group]="groupData?.group"
-  [manager]="dialogManager"
-  (close)="closePermissionsEditDialog($event)"
-></alg-manager-permission-dialog>
