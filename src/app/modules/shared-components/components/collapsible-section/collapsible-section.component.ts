@@ -19,6 +19,8 @@ export class CollapsibleSectionComponent {
   constructor() { }
 
   onCollapse(): void {
-    this.collapsed = !this.collapsed;
+    if (this.collapsible) {
+      this.collapsed = !this.collapsed;
+    }
   }
 }

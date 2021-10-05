@@ -1,5 +1,5 @@
 <div class="section-container">
-  <div class="section-header cursor-pointer" [ngClass]="{disabled: disabled}" (click)="onCollapse()">
+  <div class="section-header" [ngClass]="{disabled: disabled, 'cursor-pointer': collapsible}" (click)="onCollapse()">
     <span class="header-icon">
       <i class="{{ icon }}"></i>
     </span>
