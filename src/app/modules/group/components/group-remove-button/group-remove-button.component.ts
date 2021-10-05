@@ -20,10 +20,11 @@ export class GroupRemoveButtonComponent implements OnChanges {
   deletionInProgress$ = new Subject<boolean>();
 
   private readonly id$ = new ReplaySubject<string>(1);
+  private refresh$ = new Subject<void>();
   readonly state$ = this.id$.pipe(
     distinct(),
     switchMap(id => this.hasGroupChildren$(id)),
-    mapToFetchState(),
+    mapToFetchState({ resetter: this.refresh$ }),
   );
 
   constructor(
@@ -88,6 +89,10 @@ export class GroupRemoveButtonComponent implements OnChanges {
 
   navigateToMyGroups(): void {
     void this.router.navigate([ '/groups/mine' ]);
+  }
+
+  refresh(): void {
+    this.refresh$.next();
   }
 
 }
