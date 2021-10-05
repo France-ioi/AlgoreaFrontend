@@ -20,51 +20,74 @@
 
   <div class="dialog-container">
     <div class="dialog-content">
-      <alg-progress-section
-        i18n-title title="Can view"
-        icon="fa fa-eye"
-        [(value)]="permissions.can_view"
-        [values]="canViewValues"
-      ></alg-progress-section>
-      <!--<alg-boolean-section
+
+      <alg-collapsible-section i18n-title title="Can view" icon="fa fa-eye">
+        <ng-template #content let-collapsed>
+          <alg-progress-select
+            [collapsed]="collapsed"
+            [(value)]="permissions.can_view"
+            [values]="canViewValues"
+          ></alg-progress-select>
+        </ng-template>
+      </alg-collapsible-section>
+
+      <!--<alg-switch-field
         i18n-title title="Can Enter"
         icon="fa fa-door-open"
         [(value)]="permissions.can_enter_from"
       >
         <ng-template #label i18n>{{targetTypeString}} may enter this item (a contest or time-limited chapter)</ng-template>
-      </alg-boolean-section>-->
-      <alg-progress-section
-        i18n-title title="Can grant view"
-        icon="fa fa-key"
-        [(value)]="permissions.can_grant_view"
-        [values]="canGrantViewValues"
-      ></alg-progress-section>
-      <alg-progress-section
-        i18n-title title="Can watch"
-        icon="fa fa-binoculars"
-        [(value)]="permissions.can_watch"
-        [values]="canWatchValues"
-      ></alg-progress-section>
-      <alg-progress-section
-        i18n-title title="Can edit"
-        icon="fa fa-pencil-alt"
-        [(value)]="permissions.can_edit"
-        [values]="canEditValues"
-      ></alg-progress-section>
-      <alg-boolean-section
-        i18n-title title="Can attach official sessions"
-        icon="fa fa-paperclip"
-        [(value)]="permissions.can_make_session_official"
-      >
-        <ng-template #label i18n>{{targetTypeString}} may attach official sessions to this item, that will be visible to everyone in the content tab of the item</ng-template>
-      </alg-boolean-section>
-      <alg-boolean-section
-        i18n-title title="Is owner"
-        icon="fa fa-user-tie"
-        [(value)]="permissions.is_owner"
-      >
-        <ng-template #label i18n>{{targetTypeString}} own this item, and get the maximum access in all categories above, and may also delete this item</ng-template>
-      </alg-boolean-section>
+      </alg-switch-field>-->
+
+      <alg-collapsible-section i18n-title title="Can grant view" icon="fa fa-key">
+        <ng-template #content let-collapsed>
+          <alg-progress-select
+            [collapsed]="collapsed"
+            [(value)]="permissions.can_grant_view"
+            [values]="canGrantViewValues"
+          ></alg-progress-select>
+        </ng-template>
+      </alg-collapsible-section>
+
+      <alg-collapsible-section i18n-title title="Can watch" icon="fa fa-binoculars">
+        <ng-template #content let-collapsed>
+          <alg-progress-select
+            [collapsed]="collapsed"
+            [(value)]="permissions.can_watch"
+            [values]="canWatchValues"
+          ></alg-progress-select>
+        </ng-template>
+      </alg-collapsible-section>
+
+      <alg-collapsible-section i18n-title title="Can edit" icon="fa fa-pencil-alt">
+        <ng-template #content let-collapsed>
+          <alg-progress-select
+            [collapsed]="collapsed"
+            [(value)]="permissions.can_edit"
+            [values]="canEditValues"
+          ></alg-progress-select>
+        </ng-template>
+      </alg-collapsible-section>
+
+      <alg-collapsible-section i18n-title title="Can attach official sessions" icon="fa fa-paperclip">
+        <ng-template #content let-collapsed>
+          <alg-switch-field [collapsed]="collapsed" [(value)]="permissions.can_make_session_official">
+            <ng-template #label>
+              <span i18n>{{targetTypeString}} may attach official sessions to this item, that will be visible to everyone in the content tab of the item</span>
+            </ng-template>
+          </alg-switch-field>
+        </ng-template>
+      </alg-collapsible-section>
+
+      <alg-collapsible-section i18n-title title="Is owner" icon="fa fa-user-tie">
+        <ng-template #content let-collapsed>
+          <alg-switch-field [collapsed]="collapsed" [(value)]="permissions.is_owner">
+            <ng-template #label>
+              <span i18n>{{targetTypeString}} own this item, and get the maximum access in all categories above, and may also delete this item</span>
+            </ng-template>
+          </alg-switch-field>
+        </ng-template>
+      </alg-collapsible-section>
 
     </div>
   </div>

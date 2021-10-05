@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
-import { ProgressSectionValue } from 'src/app/modules/shared-components/components/progress-section/progress-section.component';
+import { ProgressSelectValue } from
+  'src/app/modules/shared-components/components/collapsible-section/progress-select/progress-select.component';
 import { Permissions } from 'src/app/shared/http-services/group-permissions.service';
 import { TypeFilter } from '../composition-filter/composition-filter.component';
 import { generateCanEditValues, generateCanGrantViewValues,
@@ -21,10 +22,10 @@ export class PermissionsEditDialogComponent implements OnChanges {
 
   targetTypeString = '';
 
-  canViewValues: ProgressSectionValue<string>[] = [];
-  canGrantViewValues: ProgressSectionValue<string>[] = [];
-  canWatchValues: ProgressSectionValue<string>[] = [];
-  canEditValues: ProgressSectionValue<string>[] = [];
+  canViewValues: ProgressSelectValue<string>[] = [];
+  canGrantViewValues: ProgressSelectValue<string>[] = [];
+  canWatchValues: ProgressSelectValue<string>[] = [];
+  canEditValues: ProgressSelectValue<string>[] = [];
 
   permissions: Permissions = {
     can_view: 'none',

@@ -25,50 +25,69 @@
         This panel lets you select what you allow the selected user or group of users to do on the current group and its descendants.
       </p>
 
-      <alg-progress-section
-          i18n-title title="Management level"
-          icon="fa fa-users-cog"
-          [(value)]="managerValues.canManage"
-          [values]="managementLevelValues"
-          [collapsible]="false"
-          [collapsed]="false"
-          type="simple"
-          (valueChange)="onValueChange()"
+      <alg-collapsible-section
+        [collapsible]="false"
+        [collapsed]="false"
+        i18n-title title="Management level"
+        icon="fa fa-users-cog"
       >
-        <ng-template #description>
-          <span i18n>The permissions that the user(s) has on this group</span>
+        <ng-template #content let-collapsed>
+          <alg-progress-select
+            [(value)]="managerValues.canManage"
+            [values]="managementLevelValues"
+            [collapsed]="collapsed"
+            type="simple"
+            (valueChange)="onValueChange()"
+          >
+            <ng-container #description>
+              <span description i18n>The permissions that the user(s) has on this group</span>
+            </ng-container>
+          </alg-progress-select>
         </ng-template>
-      </alg-progress-section>
+      </alg-collapsible-section>
 
-      <alg-boolean-section
-          i18n-title title="Can grant access"
-          icon="fa fa-key"
-          [(value)]="managerValues.canGrantGroupAccess"
-          [collapsible]="false"
-          [collapsed]="false"
-          (valueChange)="onValueChange()"
+      <alg-collapsible-section
+        [collapsible]="false"
+        [collapsed]="false"
+        i18n-title title="Can grant access"
+        icon="fa fa-key"
       >
-        <ng-template #label>
-          <span i18n>
-            User(s) can give and revoke members access to some content
-          </span>
+        <ng-template #content let-collapsed>
+          <alg-switch-field
+            [(value)]="managerValues.canGrantGroupAccess"
+            [collapsed]="collapsed"
+            (valueChange)="onValueChange()"
+          >
+            <ng-template #label>
+              <span label i18n>
+                User(s) can give and revoke members access to some content
+              </span>
+            </ng-template>
+          </alg-switch-field>
         </ng-template>
-      </alg-boolean-section>
+      </alg-collapsible-section>
 
-      <alg-boolean-section
-          i18n-title title="Can watch members"
-          icon="fa fa-binoculars"
-          [(value)]="managerValues.canWatchMembers"
-          [collapsible]="false"
-          [collapsed]="false"
-          (valueChange)="onValueChange()"
+      <alg-collapsible-section
+        [collapsible]="false"
+        [collapsed]="false"
+        i18n-title title="Can watch members"
+        icon="fa fa-binoculars"
       >
-        <ng-template #label>
-          <span i18n>
-            User(s) can watch the members' activity on some content
-          </span>
+        <ng-template #content let-collapsed>
+          <alg-switch-field
+            [collapsed]="collapsed"
+            [(value)]="managerValues.canWatchMembers"
+            (valueChange)="onValueChange()"
+          >
+          <ng-template #label>
+            <span i18n>
+              User(s) can watch the members' activity on some content
+            </span>
+          </ng-template>
+      </alg-switch-field>
         </ng-template>
-      </alg-boolean-section>
+      </alg-collapsible-section>
+
     </div>
   </div>
 
