@@ -1,6 +1,6 @@
 import { ItemDetails } from 'src/app/shared/models/content/item-info';
 import { FullItemRoute } from 'src/app/shared/routing/item-route';
-import { NavMenuItem } from '../http-services/item-navigation.service';
+import { NavMenuItem } from './nav-menu-item';
 
 type Id = string;
 

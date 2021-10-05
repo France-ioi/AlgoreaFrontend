@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ItemNavigationService, RootActivity } from '../../../../core/http-services/item-navigation.service';
+import { ItemNavigationService } from '../../../../core/http-services/item-navigation.service';
 import { UserSessionService } from '../../../../shared/services/user-session.service';
 import { switchMap, filter, map } from 'rxjs/operators';
 import { isNotUndefined } from '../../../../shared/helpers/null-undefined-predicates';
@@ -15,8 +15,8 @@ export class SuggestionOfActivitiesComponent {
     filter(isNotUndefined),
     switchMap(watchedGroup =>
       this.itemNavigationService.getRootActivities(watchedGroup.route.id).pipe(
-        map((rootActivity: RootActivity[]) =>
-          rootActivity.sort(item => (item.group_id === watchedGroup.route.id ? -1 : 1)).slice(0, 4)
+        map(rootActivity =>
+          rootActivity.sort(item => (item.groupId === watchedGroup.route.id ? -1 : 1)).slice(0, 4)
         ),
       )
     ),

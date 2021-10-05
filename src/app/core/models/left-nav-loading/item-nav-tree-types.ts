@@ -1,4 +1,4 @@
-import { NavMenuItem } from '../../http-services/item-navigation.service';
+import { NavMenuItem } from '../../common/nav-menu-item';
 import { NavTreeElement } from './nav-tree-data';
 
 export function isANavMenuItem(e: NavTreeElement): e is NavMenuItem {

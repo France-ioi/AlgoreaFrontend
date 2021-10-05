@@ -3,7 +3,8 @@ import { map } from 'rxjs/operators';
 import { bestAttemptFromResults } from 'src/app/shared/helpers/attempts';
 import { isSkill, ItemTypeCategory } from 'src/app/shared/helpers/item-type';
 import { ItemInfo } from 'src/app/shared/models/content/item-info';
-import { ItemNavigationService, NavMenuItem } from '../../http-services/item-navigation.service';
+import { NavMenuItem } from '../../common/nav-menu-item';
+import { ItemNavigationChild, ItemNavigationData, ItemNavigationService } from '../../http-services/item-navigation.service';
 import { LeftNavDataSource } from './left-nav-datasource';
 
 export abstract class LeftNavItemDataSource<ItemT extends ItemInfo> extends LeftNavDataSource<ItemT,NavMenuItem> {
@@ -15,14 +16,17 @@ export abstract class LeftNavItemDataSource<ItemT extends ItemInfo> extends Left
   }
 
   fetchRootTreeData(): Observable<NavMenuItem[]> {
-    return this.itemNavService.getRoot(this.category).pipe(
-      map(items => items.items)
+    return this.itemNavService.getRoots(this.category).pipe(
+      map(groups => groups.map(g => ({
+        ...mapChild(g.item),
+        groupName: g.name,
+      })))
     );
   }
 
   fetchNavDataFromChild(id: string, child: ItemT): Observable<{ parent: NavMenuItem, elements: NavMenuItem[] }> {
-    return this.itemNavService.getNavDataFromChildRoute(id, child.route, isSkill(this.category)).pipe(
-      map(items => ({ parent: items.parent, elements: items.items }))
+    return this.itemNavService.getItemNavigationFromChildRoute(id, child.route, isSkill(this.category)).pipe(
+      map(mapNavData)
     );
   }
 
@@ -69,4 +73,31 @@ export class LeftNavSkillDataSource extends LeftNavItemDataSource<ItemInfo> {
   constructor(itemNavService: ItemNavigationService) {
     super('skill', itemNavService);
   }
+}
+
+function mapChild(child: ItemNavigationChild): NavMenuItem {
+  const currentResult = bestAttemptFromResults(child.results);
+  return {
+    id: child.id,
+    title: child.string.title ?? '',
+    hasChildren: child.hasVisibleChildren && ![ 'none', 'info' ].includes(child.permissions.canView),
+    attemptId: currentResult?.attemptId ?? null,
+    bestScore: child.noScore ? undefined : child.bestScore,
+    currentScore: child.noScore ? undefined : currentResult?.scoreComputed,
+    validated: child.noScore ? undefined : currentResult?.validated,
+    locked: child.permissions.canView === 'info',
+  };
+}
+
+function mapNavData(data: ItemNavigationData): { parent: NavMenuItem, elements: NavMenuItem[] } {
+  return {
+    parent: {
+      id: data.id,
+      title: data.string.title ?? '',
+      hasChildren: data.children.length > 0,
+      attemptId: data.attemptId,
+      locked: data.permissions.canView === 'info'
+    },
+    elements: data.children.map(mapChild)
+  };
 }
