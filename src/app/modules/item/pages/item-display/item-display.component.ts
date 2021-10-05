@@ -10,6 +10,7 @@ import { ItemTaskInitService } from '../../services/item-task-init.service';
 import { ItemTaskAnswerService } from '../../services/item-task-answer.service';
 import { ItemTaskViewsService } from '../../services/item-task-views.service';
 import { FullItemRoute } from 'src/app/shared/routing/item-route';
+import { DomSanitizer } from '@angular/platform-browser';
 
 const initialHeight = 1200;
 const additionalHeightToPreventInnerScrollIssues = 40;
@@ -40,7 +41,7 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
   );
   activeTabView$ = this.taskService.activeView$;
 
-  iframeSrc$ = this.taskService.iframeSrc$;
+  iframeSrc$ = this.taskService.iframeSrc$.pipe(map(url => this.sanitizer.bypassSecurityTrustResourceUrl(url)));
 
   // Start updating the iframe height to match the task's height
   iframeHeight$ = merge(
@@ -50,6 +51,7 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
 
   constructor(
     private taskService: ItemTaskService,
+    private sanitizer: DomSanitizer,
   ) {}
 
   ngOnInit(): void {

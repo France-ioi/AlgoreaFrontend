@@ -17,6 +17,7 @@ export class ItemTaskService {
   private error$ = merge(
     this.answerService.error$,
     this.viewsService.error$,
+    this.initService.iframeSrcError$,
   ).pipe(switchMap(error => throwError(() => error)));
 
   readonly task$ = merge(this.initService.task$, this.error$);

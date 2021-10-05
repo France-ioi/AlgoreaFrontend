@@ -1,7 +1,7 @@
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable, OnDestroy } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
-import { Observable, ReplaySubject } from 'rxjs';
-import { map, mapTo, shareReplay, switchMap, timeout, withLatestFrom } from 'rxjs/operators';
+import { Observable, of, ReplaySubject } from 'rxjs';
+import { catchError, filter, map, mapTo, shareReplay, switchMap, take, timeout, withLatestFrom } from 'rxjs/operators';
 import { appConfig } from 'src/app/shared/helpers/config';
 import { FullItemRoute } from 'src/app/shared/routing/item-route';
 import { TaskTokenService, TaskToken } from '../http-services/task-token.service';
@@ -25,10 +25,18 @@ export class ItemTaskInitService implements OnDestroy {
     switchMap(({ attemptId, route }) => this.taskTokenService.generate(route.id, attemptId)),
     shareReplay(1),
   );
+
   readonly iframeSrc$ = this.taskToken$.pipe(
     withLatestFrom(this.config$),
     map(([ taskToken, { url }]) => taskUrlWithParameters(url, taskToken, appConfig.itemPlatformId, taskChannelIdPrefix)),
-    map(urlWithParams => this.sanitizer.bypassSecurityTrustResourceUrl(urlWithParams)),
+    switchMap(url => this.assertUrlIsAvailable(url).pipe(mapTo(url))),
+    shareReplay(1), // avoid duplicate xhr calls
+  );
+
+  readonly iframeSrcError$: Observable<HttpErrorResponse> = this.iframeSrc$.pipe(
+    catchError(error => of(error)),
+    filter(value => value instanceof HttpErrorResponse),
+    take(1),
   );
 
   readonly task$ = this.configFromIframe$.pipe(
@@ -46,8 +54,8 @@ export class ItemTaskInitService implements OnDestroy {
   configured = false;
 
   constructor(
-    private sanitizer: DomSanitizer,
     private taskTokenService: TaskTokenService,
+    private http: HttpClient,
   ) {}
 
   ngOnDestroy(): void {
@@ -71,5 +79,9 @@ export class ItemTaskInitService implements OnDestroy {
 
     this.configFromIframe$.next({ iframe, bindPlatform });
     this.configFromIframe$.complete();
+  }
+
+  private assertUrlIsAvailable(url: string): Observable<void> {
+    return this.http.head(url, { observe: 'response' }).pipe(mapTo(undefined));
   }
 }
