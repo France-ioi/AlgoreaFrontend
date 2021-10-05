@@ -111,7 +111,7 @@ export class ItemTaskAnswerService implements OnDestroy {
     );
   }
 
-  reloadAnswer(): Observable<unknown> {
+  clearAnswer(): Observable<unknown> {
     return this.task$.pipe(take(1), switchMap(task => task.reloadAnswer('')));
   }
 }
