@@ -178,10 +178,10 @@
             </span>
             <span class="node-state">
               <i
-                *ngIf="node.data.groupRelation.isManager !== 'false'"
+                *ngIf="node.data.groupRelation.managership !== 'none'"
                 class="fa fa-chalkboard-teacher"
-                [class.fade]="node.data.groupRelation.isManager === 'descendant'"
-                i18n-pTooltip pTooltip="{{ node.data.groupRelation.isManager === 'descendant' ? 'You are a manager of one of the descendant of the group' : 'You are a manager of the group' }}"
+                [class.fade]="node.data.groupRelation.managership === 'descendant'"
+                i18n-pTooltip pTooltip="{{ node.data.groupRelation.managership === 'descendant' ? 'You are a manager of one of the descendant of the group' : 'You are a manager of the group' }}"
               ></i>
               <i
                 *ngIf="node.data.groupRelation.isMember"

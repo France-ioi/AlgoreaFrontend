@@ -15,7 +15,7 @@ export interface NavTreeElement {
   locked?: boolean, // considering 'not set' as false
   associatedGroup?: string,
   score?: { bestScore: number, currentScore: number, validated: boolean },
-  groupRelation?: { isMember: boolean, isManager: GroupManagership },
+  groupRelation?: { isMember: boolean, managership: 'none'|'direct'|'ancestor'|'descendant' },
 }
 
 /**

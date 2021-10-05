@@ -4,7 +4,7 @@ import { GroupInfo } from 'src/app/shared/models/content/group-info';
 import { groupRoute } from 'src/app/shared/routing/group-route';
 import { GroupRouter } from 'src/app/shared/routing/group-router';
 import { GroupNavigationService, GroupNavigationChild, GroupNavigationData } from '../../http-services/group-navigation.service';
-import { GroupManagership, NavTreeElement } from '../../models/left-nav-loading/nav-tree-data';
+import { NavTreeElement } from '../../models/left-nav-loading/nav-tree-data';
 import { LeftNavDataSource } from './left-nav-datasource';
 
 export class LeftNavGroupDataSource extends LeftNavDataSource<GroupInfo> {
@@ -47,7 +47,7 @@ export class LeftNavGroupDataSource extends LeftNavDataSource<GroupInfo> {
       title: child.name,
       hasChildren: child.type !== 'User',
       navigateTo: (path): void => this.groupRouter.navigateTo(groupRoute({ id: child.id, isUser: false }, path)),
-      groupRelation: { isMember: child.currentUserMembership !== 'none', isManager: mapMananagership(child.currentUserManagership) }
+      groupRelation: { isMember: child.currentUserMembership !== 'none', managership: child.currentUserManagership }
     };
   }
 
@@ -63,10 +63,4 @@ export class LeftNavGroupDataSource extends LeftNavDataSource<GroupInfo> {
     };
   }
 
-}
-
-function mapMananagership(managership: 'none'|'direct'|'ancestor'|'descendant'): GroupManagership {
-  if (managership === 'none') return GroupManagership.False;
-  if (managership === 'descendant') return GroupManagership.Descendant;
-  return GroupManagership.True;
 }
