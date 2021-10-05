@@ -111,7 +111,7 @@
     <span
       id="nav-{{ node.data.id }}"
       class="node-tree-item folder"
-      [ngClass]="{ expanded: node.expanded, locked: node.data.locked, current: node.partialSelected }"
+      [ngClass]="{ locked: node.data.locked, current: node.partialSelected }"
     >
       <span class="node-item-branch">
         <span class="top-branch">
@@ -123,8 +123,8 @@
       </span>
       <span class="node-item-content" (click)="selectNode(node)">
         <span class="node-select">
-          <i class="pi" [class.pi-circle-on]="!node.checked" style="font-size: 0.6rem;"></i>
-          <i class="pi" [class.pi-check]="node.checked" style="font-size: 1.2rem;"></i>
+          <i class="pi" [class.pi-circle-on]="!node.partialSelected" style="font-size: 0.6rem;"></i>
+          <i class="pi" [class.pi-check]="node.partialSelected" style="font-size: 1.2rem;"></i>
         </span>
         <span class="node-label">
           <span class="label-container">
@@ -223,8 +223,8 @@
             [isDark]="true"
           ></alg-score-ring>
           <ng-template #leafNoScore>
-            <i class="pi" [class.pi-circle-on]="!node.checked" style="font-size: 0.6rem;"></i>
-            <i class="pi" [class.pi-check]="node.checked" style="font-size: 1.2rem;"></i>
+            <i class="pi" [class.pi-circle-on]="!node.partialSelected" style="font-size: 0.6rem;"></i>
+            <i class="pi" [class.pi-check]="node.partialSelected" style="font-size: 1.2rem;"></i>
           </ng-template>
         </span>
         <span class="node-label">
