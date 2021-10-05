@@ -73,30 +73,26 @@ const itemNavigationDataDecoder = D.struct({
 
 export type ItemNavigationData = D.TypeOf<typeof itemNavigationDataDecoder>;
 
-const rootActivitiesDecoder = D.array(
-  D.struct({
-    groupId: D.string,
-    name: D.string,
-    type: D.literal('Class', 'Team', 'Club', 'Friends', 'Other', 'User', 'Session', 'Base', 'ContestParticipants'),
-    activity: itemNavigationChildDecoderBase
-  })
-);
+const rootActivityDecoder = D.struct({
+  groupId: D.string,
+  name: D.string,
+  type: D.literal('Class', 'Team', 'Club', 'Friends', 'Other', 'User', 'Session', 'Base', 'ContestParticipants'),
+  activity: itemNavigationChildDecoderBase
+});
 
-export type RootActivities = D.TypeOf<typeof rootActivitiesDecoder>;
+export type RootActivity = D.TypeOf<typeof rootActivityDecoder>;
 
-const rootSkillsDecoder = D.array(
-  D.struct({
-    groupId: D.string,
-    name: D.string,
-    type: D.literal('Class', 'Team', 'Club', 'Friends', 'Other', 'User', 'Session', 'Base', 'ContestParticipants'),
-    skill: itemNavigationChildDecoderBase
-  })
-);
+const rootSkillDecoder = D.struct({
+  groupId: D.string,
+  name: D.string,
+  type: D.literal('Class', 'Team', 'Club', 'Friends', 'Other', 'User', 'Session', 'Base', 'ContestParticipants'),
+  skill: itemNavigationChildDecoderBase
+});
 
-export type RootSkills = D.TypeOf<typeof rootSkillsDecoder>;
+export type RootSkill = D.TypeOf<typeof rootSkillDecoder>;
 
-// common type to RootActivities and RootSkills if the activity/skill key is renamed 'item'
-export type RootItems = (Omit<RootActivities[number], 'activity'> & { item: RootActivities[number]['activity']})[];
+// common type to RootActivity and RootSkill if the activity/skill key is renamed 'item'
+export type RootItem = Omit<RootActivity, 'activity'> & { item: RootActivity['activity']};
 
 @Injectable({
   providedIn: 'root'
@@ -126,7 +122,7 @@ export class ItemNavigationService {
     );
   }
 
-  getRootActivities(watchedGroupId?: string): Observable<RootActivities> {
+  getRootActivities(watchedGroupId?: string): Observable<RootActivity[]> {
     let httpParams = new HttpParams();
 
     if (watchedGroupId) {
@@ -134,11 +130,11 @@ export class ItemNavigationService {
     }
 
     return this.http.get<unknown[]>(`${appConfig.apiUrl}/current-user/group-memberships/activities`, { params: httpParams }).pipe(
-      decodeSnakeCase(rootActivitiesDecoder),
+      decodeSnakeCase(D.array(rootActivityDecoder)),
     );
   }
 
-  getRootSkills(watchedGroupId?: string): Observable<RootSkills> {
+  getRootSkills(watchedGroupId?: string): Observable<RootSkill[]> {
     let httpParams = new HttpParams();
 
     if (watchedGroupId) {
@@ -146,11 +142,11 @@ export class ItemNavigationService {
     }
 
     return this.http.get<unknown[]>(`${appConfig.apiUrl}/current-user/group-memberships/skills`, { params: httpParams }).pipe(
-      decodeSnakeCase(rootSkillsDecoder),
+      decodeSnakeCase(D.array(rootSkillDecoder)),
     );
   }
 
-  getRoots(type: ItemTypeCategory): Observable<RootItems> {
+  getRoots(type: ItemTypeCategory): Observable<RootItem[]> {
     return isSkill(type) ?
       this.getRootSkills().pipe(map(groups => groups.map(g => ({ ...g, item: g.skill })))) :
       this.getRootActivities().pipe(map(groups => groups.map(g => ({ ...g, item: g.activity }))));
