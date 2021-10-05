@@ -31,7 +31,7 @@ export class ItemTaskAnswerService implements OnDestroy {
   private config$ = this.taskInitService.config$.pipe(takeUntil(this.error$));
   private taskToken$ = this.taskInitService.taskToken$.pipe(takeUntil(this.error$));
 
-  private initialCurrentAnswer$: Observable<Answer | null> = this.config$.pipe(
+  private initialAnswer$: Observable<Answer | null> = this.config$.pipe(
     switchMap(({ route, attemptId }) => this.currentAnswerService.get(route.id, attemptId)),
     catchError(error => {
       // currently, the backend returns a 403 status when no current answer exist for user+item+attempt
@@ -41,15 +41,15 @@ export class ItemTaskAnswerService implements OnDestroy {
     shareReplay(1), // avoid duplicate xhr calls on multiple subscriptions.
   );
 
-  private initializedTaskState$ = combineLatest([ this.initialCurrentAnswer$, this.task$ ]).pipe(
-    switchMap(([ currentAnswer, task ]) =>
-      (currentAnswer?.state ? task.reloadState(currentAnswer.state).pipe(mapTo(undefined)) : of(undefined))
+  private initializedTaskState$ = combineLatest([ this.initialAnswer$, this.task$ ]).pipe(
+    switchMap(([ initialAnswer, task ]) =>
+      (initialAnswer?.state ? task.reloadState(initialAnswer.state).pipe(mapTo(undefined)) : of(undefined))
     ),
   );
-  private initializedTaskAnswer$ = combineLatest([ this.initialCurrentAnswer$, this.task$ ]).pipe(
+  private initializedTaskAnswer$ = combineLatest([ this.initialAnswer$, this.task$ ]).pipe(
     delayWhen(() => this.initializedTaskState$),
-    switchMap(([ currentAnswer, task ]) =>
-      (currentAnswer?.answer ? task.reloadAnswer(currentAnswer.answer).pipe(mapTo(undefined)) : of(undefined))
+    switchMap(([ initialAnswer, task ]) =>
+      (initialAnswer?.answer ? task.reloadAnswer(initialAnswer.answer).pipe(mapTo(undefined)) : of(undefined))
     ),
   );
 
