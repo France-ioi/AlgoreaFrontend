@@ -22,7 +22,7 @@ export abstract class LeftNavItemDataSource extends LeftNavDataSource<ItemInfo> 
     return this.itemNavService.getRoots(this.category).pipe(
       map(groups => groups.map(g => ({
         ...this.mapChild(g.item, defaultAttemptId),
-        associatedGroup: g.name,
+        associatedGroupName: g.name,
       })))
     );
   }

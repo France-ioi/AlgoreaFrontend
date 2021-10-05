@@ -13,7 +13,7 @@ export interface NavTreeElement {
 
   // specific uses
   locked?: boolean, // considering 'not set' as false
-  associatedGroup?: string,
+  associatedGroupName?: string,
   score?: { bestScore: number, currentScore: number, validated: boolean },
   groupRelation?: { isMember: boolean, managership: 'none'|'direct'|'ancestor'|'descendant' },
 }

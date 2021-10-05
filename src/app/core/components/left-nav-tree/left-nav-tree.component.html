@@ -51,7 +51,7 @@
           <span class="label-container">
             <span class="node-label-title">
               {{ node.label }}
-              <span *ngIf="node.data.associatedGroup">(via group "{{ node.data.associatedGroup }}")</span>
+              <span *ngIf="node.data.associatedGroupName">(via group "{{ node.data.associatedGroupName }}")</span>
             </span>
             <span
               class="node-state"
@@ -89,7 +89,7 @@
           <span class="label-container">
             <span class="node-label-title">
               {{ node.label }}
-              <span *ngIf="node.data.associatedGroup">(<span i18n>via group</span> "{{ node.data.associatedGroup }}")</span>
+              <span *ngIf="node.data.associatedGroupName">(<span i18n>via group</span> "{{ node.data.associatedGroupName }}")</span>
             </span>
             <span class="node-state" *ngIf="node.data.locked">
               <i class="fa fa-lock"></i>
@@ -130,7 +130,7 @@
           <span class="label-container">
             <span class="node-label-title">
               {{ node.data.title }}
-              <span *ngIf="node.data.associatedGroup">(via group "{{ node.data.associatedGroup }}")</span>
+              <span *ngIf="node.data.associatedGroupName">(via group "{{ node.data.associatedGroupName }}")</span>
             </span>
             <span
               class="node-state"
@@ -231,7 +231,7 @@
           <span class="label-container">
             <span class="node-label-title">
               {{ node.data.title }}
-              <span *ngIf="node.data.associatedGroup">(via group "{{ node.data.associatedGroup }}")</span>
+              <span *ngIf="node.data.associatedGroupName">(via group "{{ node.data.associatedGroupName }}")</span>
             </span>
             <span
               class="node-state"
