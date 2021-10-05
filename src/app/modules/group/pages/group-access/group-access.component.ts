@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { Group } from '../../http-services/get-group-by-id.service';
 import { GetItemByIdService } from '../../../item/http-services/get-item-by-id.service';
-import { ReplaySubject, of } from 'rxjs';
+import { ReplaySubject, of, Subject } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { mapToFetchState } from '../../../../shared/operators/state';
 
@@ -15,6 +15,7 @@ export class GroupAccessComponent implements OnChanges {
 
   private readonly rootActivityId$ = new ReplaySubject<string | null>(1);
 
+  private refresh$ = new Subject<void>();
   rootActivityState$ = this.rootActivityId$.pipe(
     switchMap(rootActivityId => {
       if (!rootActivityId) {
@@ -22,7 +23,7 @@ export class GroupAccessComponent implements OnChanges {
       }
       return this.getItemByIdService.get(rootActivityId);
     }),
-    mapToFetchState(),
+    mapToFetchState({ resetter: this.refresh$ }),
   );
 
   constructor(private getItemByIdService: GetItemByIdService) {
@@ -32,6 +33,10 @@ export class GroupAccessComponent implements OnChanges {
     if (this.group) {
       this.rootActivityId$.next(this.group.rootActivityId);
     }
+  }
+
+  refresh(): void {
+    this.refresh$.next();
   }
 
 }
