@@ -1,8 +1,8 @@
-import { Component, Input, OnChanges, Output, EventEmitter, ViewChild } from '@angular/core';
+import { Component, Input, OnChanges, Output, EventEmitter, ViewChild, OnInit, OnDestroy } from '@angular/core';
 import { ItemData } from '../../services/item-datasource.service';
 import { GetItemChildrenService, isVisibleItemChild } from '../../http-services/get-item-children.service';
-import { Subscription } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, ReplaySubject, Subject, Subscription } from 'rxjs';
+import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { ItemType, typeCategoryOfItem } from '../../../../shared/helpers/item-type';
 import { AddedContent } from '../../../shared-components/components/add-content/add-content.component';
 import { ItemRouter } from '../../../../shared/routing/item-router';
@@ -10,6 +10,8 @@ import { bestAttemptFromResults } from '../../../../shared/helpers/attempts';
 import { PermissionsInfo } from '../../helpers/item-permissions';
 import { isNotUndefined } from '../../../../shared/helpers/null-undefined-predicates';
 import { OverlayPanel } from 'primeng/overlaypanel';
+import { mapToFetchState } from '../../../../shared/operators/state';
+import { FetchState } from '../../../../shared/helpers/state';
 
 interface BaseChildData {
   contentViewPropagation?: 'none' | 'as_info' | 'as_content',
@@ -51,12 +53,11 @@ export const DEFAULT_SCORE_WEIGHT = 1;
   templateUrl: './item-children-edit.component.html',
   styleUrls: [ './item-children-edit.component.scss' ]
 })
-export class ItemChildrenEditComponent implements OnChanges {
+export class ItemChildrenEditComponent implements OnInit, OnDestroy, OnChanges {
   @Input() itemData?: ItemData;
 
   @ViewChild('op') op?: OverlayPanel;
 
-  state: 'loading' | 'error' | 'ready' = 'ready';
   data: PossiblyInvisibleChildData[] = [];
   selectedRows: PossiblyInvisibleChildData[] = [];
   scoreWeightEnabled = false;
@@ -66,21 +67,13 @@ export class ItemChildrenEditComponent implements OnChanges {
   private subscription?: Subscription;
   @Output() childrenChanges = new EventEmitter<PossiblyInvisibleChildData[]>();
 
-  constructor(
-    private getItemChildrenService: GetItemChildrenService,
-    private itemRouter: ItemRouter,
-  ) {}
-
-  ngOnChanges(): void {
-    this.reloadData();
-  }
-
-  reloadData(): void {
-    if (this.itemData?.currentResult) {
-      this.state = 'loading';
-      this.subscription?.unsubscribe();
-      this.subscription = this.getItemChildrenService
-        .getWithInvisibleItems(this.itemData.item.id, this.itemData.currentResult.attemptId)
+  private readonly params$ = new ReplaySubject<{ id: string, attemptId: string }>(1);
+  private readonly refresh$ = new Subject<void>();
+  readonly state$: Observable<FetchState<PossiblyInvisibleChildData[]>> = this.params$.pipe(
+    distinctUntilChanged((a, b) => a.id === b.id && a.attemptId === b.attemptId),
+    switchMap(({ id, attemptId }) =>
+      this.getItemChildrenService
+        .getWithInvisibleItems(id, attemptId)
         .pipe(
           map(children => children
             .sort((a, b) => a.order - b.order)
@@ -118,20 +111,42 @@ export class ItemChildrenEditComponent implements OnChanges {
               };
             })
           )
-        ).subscribe({
-          next: children => {
-            this.data = children;
-            this.scoreWeightEnabled = this.data.some(c => c.scoreWeight !== 1);
-            this.onChildrenListUpdate();
-            this.state = 'ready';
-          },
-          error: _err => {
-            this.state = 'error';
-          }
-        });
-    } else {
-      this.state = 'error';
+        )
+    ),
+    mapToFetchState({ resetter: this.refresh$ }),
+  );
+
+  constructor(
+    private getItemChildrenService: GetItemChildrenService,
+    private itemRouter: ItemRouter,
+  ) {}
+
+  ngOnInit(): void {
+    this.subscription = this.state$.subscribe(state => {
+      if (state.isReady) {
+        this.data = state.data;
+        this.scoreWeightEnabled = this.data.some(c => c.scoreWeight !== 1);
+        this.onChildrenListUpdate();
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.refresh$.complete();
+    this.subscription?.unsubscribe();
+  }
+
+  ngOnChanges(): void {
+    if (this.itemData?.currentResult) {
+      this.params$.next({
+        id: this.itemData.item.id,
+        attemptId: this.itemData.currentResult.attemptId,
+      });
     }
+  }
+
+  reloadData(): void {
+    this.refresh$.next();
   }
 
   addChild(child: AddedContent<ItemType>): void {
