@@ -3,7 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { bestAttemptFromResults } from 'src/app/shared/helpers/attempts';
-import { isRouteWithSelfAttempt, FullItemRoute, ItemRoute } from 'src/app/shared/routing/item-route';
+import { isRouteWithSelfAttempt, FullItemRoute, ItemRoute, fullItemRoute } from 'src/app/shared/routing/item-route';
 import { appConfig } from 'src/app/shared/helpers/config';
 import { isSkill, ItemTypeCategory, typeCategoryOfItem } from 'src/app/shared/helpers/item-type';
 import { decodeSnakeCase } from 'src/app/shared/operators/decode';
@@ -185,10 +185,5 @@ export class ItemNavigationService {
 
 function siblingRoute(child: ItemNavigationChild, parentAttemptId: string, itemRoute: ItemRoute): FullItemRoute {
   const bestResult = bestAttemptFromResults(child.results);
-  return {
-    id: child.id,
-    contentType: typeCategoryOfItem(child),
-    ...(bestResult ? { attemptId: bestResult.attemptId } : { parentAttemptId }),
-    path: itemRoute.path,
-  };
+  return fullItemRoute(typeCategoryOfItem(child), child.id, itemRoute.path, { attemptId: bestResult?.attemptId, parentAttemptId });
 }
