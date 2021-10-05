@@ -45,12 +45,14 @@ export class ItemTaskAnswerService implements OnDestroy {
     switchMap(([ initialAnswer, task ]) =>
       (initialAnswer?.state ? task.reloadState(initialAnswer.state).pipe(mapTo(undefined)) : of(undefined))
     ),
+    shareReplay(1),
   );
   private initializedTaskAnswer$ = combineLatest([ this.initialAnswer$, this.task$ ]).pipe(
     delayWhen(() => this.initializedTaskState$),
     switchMap(([ initialAnswer, task ]) =>
       (initialAnswer?.answer ? task.reloadAnswer(initialAnswer.answer).pipe(mapTo(undefined)) : of(undefined))
     ),
+    shareReplay(1),
   );
 
   private saveAnswerAndStateInterval$ = this.task$.pipe(
