@@ -1,6 +1,6 @@
 import { Component, forwardRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { Observable, of, ReplaySubject } from 'rxjs';
+import { Observable, of, ReplaySubject, Subject } from 'rxjs';
 import { catchError, distinct, map, switchMap } from 'rxjs/operators';
 import { GetItemByIdService } from 'src/app/modules/item/http-services/get-item-by-id.service';
 import { rawItemRoute, urlArrayForItemRoute } from 'src/app/shared/routing/item-route';
@@ -33,6 +33,7 @@ export class AssociatedActivityComponent implements ControlValueAccessor {
     triggerChange: boolean,
   }>();
 
+  private refresh$ = new Subject<void>();
   readonly state$ = this.activityChanges$.pipe(
     distinct(),
     switchMap(data => {
@@ -59,7 +60,7 @@ export class AssociatedActivityComponent implements ControlValueAccessor {
         })
       );
     }),
-    mapToFetchState(),
+    mapToFetchState({ resetter: this.refresh$ }),
   );
 
   private onChange: (value: NoActivity|NewActivity|ExistingActivity) => void = () => {};
@@ -96,5 +97,9 @@ export class AssociatedActivityComponent implements ControlValueAccessor {
         { tag: 'new-activity', name: activity.title, activityType: activity.type },
       triggerChange: true
     });
+  }
+
+  refresh(): void {
+    this.refresh$.next();
   }
 }

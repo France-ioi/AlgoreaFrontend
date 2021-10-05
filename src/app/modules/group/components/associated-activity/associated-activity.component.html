@@ -8,6 +8,9 @@
       class="dark"
       icon="fa fa-exclamation-triangle"
       i18n-message message="Error while loading the root activity"
+      [showRefreshButton]="true"
+      refreshButtonType="refresh"
+      (refresh)="refresh()"
     ></alg-error>
 
     <ng-container *ngIf="state.isReady">
