@@ -47,8 +47,8 @@ export function itemRoute(contentType: ItemTypeCategory, id: ItemId, path: strin
   return { ...rawItemRoute(contentType, id), path };
 }
 
-type MandatoryAttempt = { attemptId: AttemptId } | { parentAttemptId: AttemptId };
-export function fullItemRoute(contentType: ItemTypeCategory, id: ItemId, path: string[], attempt: MandatoryAttempt): FullItemRoute {
+type RequiredAttempt = { attemptId: AttemptId } | { parentAttemptId: AttemptId };
+export function fullItemRoute(contentType: ItemTypeCategory, id: ItemId, path: string[], attempt: RequiredAttempt): FullItemRoute {
   return { ...itemRoute(contentType, id, path), ...attempt };
 }
 
