@@ -4,6 +4,7 @@ import { UserSessionService } from '../../../../shared/services/user-session.ser
 import { switchMap, filter, map } from 'rxjs/operators';
 import { isNotUndefined } from '../../../../shared/helpers/null-undefined-predicates';
 import { mapToFetchState } from '../../../../shared/operators/state';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'alg-suggestion-of-activities',
@@ -11,6 +12,7 @@ import { mapToFetchState } from '../../../../shared/operators/state';
   styleUrls: [ './suggestion-of-activities.component.scss' ],
 })
 export class SuggestionOfActivitiesComponent {
+  private refresh$ = new Subject<void>();
   readonly state$ = this.sessionService.watchedGroup$.pipe(
     filter(isNotUndefined),
     switchMap(watchedGroup =>
@@ -20,12 +22,16 @@ export class SuggestionOfActivitiesComponent {
         ),
       )
     ),
-    mapToFetchState(),
+    mapToFetchState({ resetter: this.refresh$ }),
   );
 
   constructor(
     private sessionService: UserSessionService,
     private itemNavigationService: ItemNavigationService) {
+  }
+
+  refresh(): void {
+    this.refresh$.next();
   }
 
 }
