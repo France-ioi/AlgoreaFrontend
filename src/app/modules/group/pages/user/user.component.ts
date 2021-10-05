@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { GetUserService } from '../../http-services/get-user.service';
 import { mapToFetchState } from '../../../../shared/operators/state';
-import { combineLatest, of, Subscription, throwError } from 'rxjs';
+import { combineLatest, of, Subject, Subscription, throwError } from 'rxjs';
 import { ActivatedRoute, NavigationEnd, Router, RouterLinkActive } from '@angular/router';
 import { delay, switchMap, map, startWith, filter, share } from 'rxjs/operators';
 import { contentInfo } from '../../../../shared/models/content/content-info';
@@ -22,9 +22,10 @@ export class UserComponent implements OnInit, OnDestroy {
   @ViewChild('progress') progress?: RouterLinkActive;
   @ViewChild('personalData') personalData?: RouterLinkActive;
 
+  private refresh$ = new Subject<void>();
   readonly state$ = this.route.params.pipe(
     switchMap(({ id }) => this.getUserService.getForId(id)),
-    mapToFetchState(),
+    mapToFetchState({ resetter: this.refresh$ }),
     share(),
   );
 
@@ -111,5 +112,9 @@ export class UserComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.currentContent.clear();
     this.subscription?.unsubscribe();
+  }
+
+  refresh(): void {
+    this.refresh$.next();
   }
 }
