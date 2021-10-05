@@ -12,6 +12,7 @@ import { canCurrentUserViewItemContent } from 'src/app/modules/item/helpers/item
 import { mapToFetchState } from 'src/app/shared/operators/state';
 import { buildUp } from 'src/app/shared/operators/build-up';
 import { ItemNavigationData, ItemNavigationService } from 'src/app/core/http-services/item-navigation.service';
+import { isSkill } from 'src/app/shared/helpers/item-type';
 
 export interface ItemData {
   route: FullItemRoute,
@@ -83,7 +84,7 @@ export class ItemDataSource implements OnDestroy {
   }
 
   private fetchNavigationData(itemRoute: FullItemRoute, currentResult: Result): Observable<{ itemNavigationData: ItemNavigationData }> {
-    return this.itemNavigationService.getItemNavigation(itemRoute.id, currentResult.attemptId).pipe(
+    return this.itemNavigationService.getItemNavigation(itemRoute.id, currentResult.attemptId, isSkill(itemRoute.contentType)).pipe(
       map(nav => ({ itemNavigationData: nav }))
     );
   }
