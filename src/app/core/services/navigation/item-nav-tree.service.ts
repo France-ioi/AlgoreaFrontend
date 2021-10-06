@@ -1,3 +1,4 @@
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { bestAttemptFromResults, defaultAttemptId } from 'src/app/shared/helpers/attempts';
@@ -7,9 +8,10 @@ import { fullItemRoute } from 'src/app/shared/routing/item-route';
 import { ItemRouter } from 'src/app/shared/routing/item-router';
 import { ItemNavigationChild, ItemNavigationData, ItemNavigationService } from '../../http-services/item-navigation.service';
 import { NavTreeElement } from '../../models/left-nav-loading/nav-tree-data';
-import { LeftNavDataSource } from './left-nav-datasource';
+import { NavTreeService } from './nav-tree.service';
 
-export abstract class LeftNavItemDataSource extends LeftNavDataSource<ItemInfo> {
+abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
+
   constructor(
     private category: ItemTypeCategory,
     private itemNavService: ItemNavigationService,
@@ -93,13 +95,19 @@ export abstract class LeftNavItemDataSource extends LeftNavDataSource<ItemInfo> 
 
 }
 
-export class LeftNavActivityDataSource extends LeftNavItemDataSource {
+@Injectable({
+  providedIn: 'root'
+})
+export class ActivityNavTreeService extends ItemNavTreeService {
   constructor(itemNavService: ItemNavigationService, itemRouter: ItemRouter) {
     super('activity', itemNavService, itemRouter);
   }
 }
 
-export class LeftNavSkillDataSource extends LeftNavItemDataSource {
+@Injectable({
+  providedIn: 'root'
+})
+export class SkillNavTreeService extends ItemNavTreeService {
   constructor(itemNavService: ItemNavigationService, itemRouter: ItemRouter) {
     super('skill', itemNavService, itemRouter);
   }

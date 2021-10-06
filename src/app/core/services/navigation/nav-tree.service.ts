@@ -7,7 +7,7 @@ import { RoutedContentInfo } from 'src/app/shared/models/content/content-info';
 import { mapStateData, mapToFetchState } from 'src/app/shared/operators/state';
 import { NavTreeData, NavTreeElement } from '../../models/left-nav-loading/nav-tree-data';
 
-export abstract class LeftNavDataSource<ContentT extends RoutedContentInfo> {
+export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
 
   private initialized = false;
   private contentChanges = new ReplaySubject<ContentT|undefined>(1);

@@ -1,3 +1,4 @@
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { GroupInfo } from 'src/app/shared/models/content/group-info';
@@ -5,9 +6,12 @@ import { groupRoute } from 'src/app/shared/routing/group-route';
 import { GroupRouter } from 'src/app/shared/routing/group-router';
 import { GroupNavigationService, GroupNavigationChild, GroupNavigationData } from '../../http-services/group-navigation.service';
 import { NavTreeElement } from '../../models/left-nav-loading/nav-tree-data';
-import { LeftNavDataSource } from './left-nav-datasource';
+import { NavTreeService } from './nav-tree.service';
 
-export class LeftNavGroupDataSource extends LeftNavDataSource<GroupInfo> {
+@Injectable({
+  providedIn: 'root'
+})
+export class GroupNavTreeService extends NavTreeService<GroupInfo> {
 
   constructor(
     private groupNavigationService: GroupNavigationService,

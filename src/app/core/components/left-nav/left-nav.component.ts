@@ -4,14 +4,10 @@ import { Subscription } from 'rxjs';
 import { delay, map, pairwise } from 'rxjs/operators';
 import { isGroupInfo } from 'src/app/shared/models/content/group-info';
 import { isActivityInfo, isItemInfo } from 'src/app/shared/models/content/item-info';
-import { GroupRouter } from 'src/app/shared/routing/group-router';
-import { ItemRouter } from 'src/app/shared/routing/item-router';
 import { CurrentContentService } from 'src/app/shared/services/current-content.service';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
-import { GroupNavigationService } from '../../http-services/group-navigation.service';
-import { ItemNavigationService } from '../../http-services/item-navigation.service';
-import { LeftNavGroupDataSource } from './left-nav-group-datasource';
-import { LeftNavActivityDataSource, LeftNavSkillDataSource } from './left-nav-item-datasource';
+import { GroupNavTreeService } from '../../services/navigation/group-nav-tree.service';
+import { ActivityNavTreeService, SkillNavTreeService } from '../../services/navigation/item-nav-tree.service';
 
 const activitiesTabIdx = 0;
 const skillsTabIdx = 1;
@@ -27,11 +23,8 @@ export class LeftNavComponent implements OnInit, OnDestroy {
   @Output() selectId = new EventEmitter<string>();
 
   activeTabIndex = 0;
-  readonly dataSources: [LeftNavActivityDataSource, LeftNavSkillDataSource, LeftNavGroupDataSource] = [
-    new LeftNavActivityDataSource(this.itemNavigationService, this.itemRouter),
-    new LeftNavSkillDataSource(this.itemNavigationService, this.itemRouter),
-    new LeftNavGroupDataSource(this.groupNavigationService, this.groupRouter),
-  ];
+  readonly navTreeServices: [ActivityNavTreeService, SkillNavTreeService, GroupNavTreeService] =
+    [ this.activityNavTreeService, this.skillNavTreeService, this.groupNavTreeService ];
   currentUser$ = this.sessionService.userProfile$.pipe(delay(0));
 
   private subscription?: Subscription;
@@ -39,10 +32,9 @@ export class LeftNavComponent implements OnInit, OnDestroy {
   constructor(
     private sessionService: UserSessionService,
     private currentContent: CurrentContentService,
-    private itemNavigationService: ItemNavigationService,
-    private groupNavigationService: GroupNavigationService,
-    private itemRouter: ItemRouter,
-    private groupRouter: GroupRouter,
+    private activityNavTreeService: ActivityNavTreeService,
+    private skillNavTreeService: SkillNavTreeService,
+    private groupNavTreeService: GroupNavTreeService,
   ) { }
 
   ngOnInit(): void {
@@ -54,7 +46,7 @@ export class LeftNavComponent implements OnInit, OnDestroy {
     ).subscribe(([ prevContent, content ]) => {
       // If the content changed (different id), clear the selection (clear all tabs as we don't really know on which tab was the selection)
       if (prevContent?.type !== content?.type || prevContent?.route.id !== content?.route.id) {
-        this.dataSources.forEach(l => l.removeSelection());
+        this.navTreeServices.forEach(l => l.removeSelection());
 
         if (content) {
           this.selectId.emit(content.route.id);
@@ -62,19 +54,19 @@ export class LeftNavComponent implements OnInit, OnDestroy {
       }
 
       if (!content) { // no tab and no content to select
-        this.dataSources[this.activeTabIndex]?.focus(); // if the current tab has not been initialized yet, do it now
+        this.navTreeServices[this.activeTabIndex]?.focus(); // if the current tab has not been initialized yet, do it now
 
       } else if (isGroupInfo(content)) {
         this.changeTab(groupsTabIdx);
-        this.dataSources[groupsTabIdx].showContent(content);
+        this.navTreeServices[groupsTabIdx].showContent(content);
 
       } else if (isActivityInfo(content)) {
         this.changeTab(activitiesTabIdx);
-        this.dataSources[activitiesTabIdx].showContent(content);
+        this.navTreeServices[activitiesTabIdx].showContent(content);
 
       } else {
         this.changeTab(skillsTabIdx);
-        this.dataSources[skillsTabIdx].showContent(content);
+        this.navTreeServices[skillsTabIdx].showContent(content);
       }
     });
   }
@@ -89,12 +81,12 @@ export class LeftNavComponent implements OnInit, OnDestroy {
 
   private changeTab(index: number): void {
     this.activeTabIndex = index;
-    this.dataSources[index]?.focus();
+    this.navTreeServices[index]?.focus();
     this.themeChange.emit(this.activeTabIndex === 2 ? 'dark' : null);
   }
 
   retryError(): void {
-    this.dataSources[this.activeTabIndex]?.retry();
+    this.navTreeServices[this.activeTabIndex]?.retry();
   }
 
 }

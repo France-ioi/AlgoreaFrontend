@@ -31,7 +31,7 @@
 
 </p-tabView>
 
-<ng-container *ngIf="$any($any(dataSources[activeTabIndex]!.state$) | async) as state">
+<ng-container *ngIf="$any($any(navTreeServices[activeTabIndex]!.state$) | async) as state">
 
   <div class="spinner" *ngIf="state.isFetching">
     <alg-loading size="medium"></alg-loading>
