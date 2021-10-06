@@ -1,5 +1,5 @@
 
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component, Output } from '@angular/core';
 import { merge, Subject } from 'rxjs';
 import { delay, distinct, distinctUntilChanged, filter, map, startWith } from 'rxjs/operators';
 import { isDefined } from 'src/app/shared/helpers/null-undefined-predicates';
@@ -21,11 +21,11 @@ const groupsTabIdx = 2;
   styleUrls: [ './left-nav.component.scss' ]
 })
 export class LeftNavComponent {
-  @Output() themeChange = new EventEmitter<string | null>(true /* async */);
   @Output() selectId = this.currentContent.content$.pipe(
     filter((content): content is RoutedContentInfo => !!content?.route),
     map(content => content.route.id),
     distinct(), // only emit 1x a change of id
+    delay(0),
   );
 
   private manualTabChange = new Subject<number>();
@@ -41,6 +41,8 @@ export class LeftNavComponent {
     map(idx => ({ index: idx })), // using object so that Angular ngIf does not ignore the "0" index
   );
 
+  @Output() themeChange = this.activeTab$.pipe(map(tab => (tab.index === 2 ? 'dark' : null)), delay(0));
+
   readonly navTreeServices: [ActivityNavTreeService, SkillNavTreeService, GroupNavTreeService] =
     [ this.activityNavTreeService, this.skillNavTreeService, this.groupNavTreeService ];
   currentUser$ = this.sessionService.userProfile$.pipe(delay(0));
@@ -54,12 +56,7 @@ export class LeftNavComponent {
   ) { }
 
   onSelectionChangedByIdx(e: { index: number }): void {
-    this.changeTab(e.index);
-  }
-
-  private changeTab(index: number): void {
-    this.manualTabChange.next(index);
-    this.themeChange.emit(index === 2 ? 'dark' : null);
+    this.manualTabChange.next(e.index);
   }
 
   retryError(tabIndex: number): void {
