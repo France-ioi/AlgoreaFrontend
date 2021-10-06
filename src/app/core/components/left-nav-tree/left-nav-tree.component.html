@@ -19,9 +19,9 @@
   <!-- "chapter" type -->
   <ng-template let-node pTemplate="chapter">
     <span
-      id="nav-{{ node.data.element.id }}"
+      id="nav-{{ node.data.id }}"
       class="node-tree-item folder"
-      [ngClass]="{ expanded: node.expanded, locked: node.data.element.locked, current: node.data && node.data.current }"
+      [ngClass]="{ expanded: node.expanded, locked: node.data.locked, current: node.partialSelected }"
     >
       <span class="node-item-branch">
         <span class="top-branch">
@@ -34,10 +34,10 @@
       <span class="node-item-content" (click)="selectNode(node)">
         <span class="node-select">
           <alg-score-ring
-            *ngIf="node.data.element.currentScore >= 0; else folderNoScore"
-            [currentScore]="node.data.element.currentScore"
-            [bestScore]="node.data.element.bestScore"
-            [isValidated]="node.data.element.validated"
+            *ngIf="node.data.score; else folderNoScore"
+            [currentScore]="node.data.score.currentScore"
+            [bestScore]="node.data.score.bestScore"
+            [isValidated]="node.data.score.validated"
             [diameter]="30"
             [forTree]="true"
             [isDark]="true"
@@ -51,17 +51,11 @@
           <span class="label-container">
             <span class="node-label-title">
               {{ node.label }}
-              <span *ngIf="node.data.element.groupName">(via group "{{ node.data.element.groupName }}")</span>
-            </span>
-            <span class="node-state" *ngIf="node.data.status === 'loading'">
-              <alg-loading class="no-padding" size="medium"></alg-loading>
-            </span>
-            <span class="node-state" *ngIf="node.data.status === 'error'">
-              <i class="fa fa-exclamation-triangle"></i>
+              <span *ngIf="node.data.associatedGroupName">(via group "{{ node.data.associatedGroupName }}")</span>
             </span>
             <span
               class="node-state"
-              *ngIf="node.data.element.locked"
+              *ngIf="node.data.locked"
               i18n-pTooltip pTooltip="{{ 'Your current access rights do not allow you to list the content of this chapter.' }}"
             >
               <i class="fa fa-lock"></i>
@@ -75,9 +69,9 @@
   <!-- "skill-folder" type -->
   <ng-template let-node pTemplate="skill-folder">
     <span
-      id="nav-{{ node.data.element.id }}"
+      id="nav-{{ node.data.id }}"
       class="node-tree-item folder"
-      [ngClass]="{ expanded: node.expanded, locked: node.data.element.locked, current: node.data && node.data.current }"
+      [ngClass]="{ expanded: node.expanded, locked: node.data.locked, current: node.partialSelected }"
     >
       <span class="node-item-branch">
         <span class="top-branch">
@@ -95,22 +89,16 @@
           <span class="label-container">
             <span class="node-label-title">
               {{ node.label }}
-              <span *ngIf="node.data.element.groupName">(<span i18n>via group</span> "{{ node.data.element.groupName }}")</span>
+              <span *ngIf="node.data.associatedGroupName">(<span i18n>via group</span> "{{ node.data.associatedGroupName }}")</span>
             </span>
-            <span class="node-state" *ngIf="node.data.status === 'loading'">
-              <alg-loading class="no-padding" size="medium"></alg-loading>
-            </span>
-            <span class="node-state" *ngIf="node.data.status === 'error'">
-              <i class="fa fa-exclamation-triangle"></i>
-            </span>
-            <span class="node-state" *ngIf="node.data.element.locked">
+            <span class="node-state" *ngIf="node.data.locked">
               <i class="fa fa-lock"></i>
             </span>
           </span>
           <alg-skill-progress
-            *ngIf="elementType === 'skill' && node.data.element.currentScore >= 0"
-            [bestScore]="node.data.element.bestScore"
-            [currentScore]="node.data.element.currentScore"
+            *ngIf="elementType === 'skill' && node.data.score"
+            [bestScore]="node.data.score.bestScore"
+            [currentScore]="node.data.score.currentScore"
             [type]="'thin-horizontal'"
           ></alg-skill-progress>
         </span>
@@ -121,9 +109,9 @@
   <!-- 'skill-leaf' type -->
   <ng-template let-node pTemplate="skill-leaf">
     <span
-      id="nav-{{ node.data.element.id }}"
+      id="nav-{{ node.data.id }}"
       class="node-tree-item folder"
-      [ngClass]="{ expanded: node.expanded, locked: node.data.element.locked, current: node.data && node.data.current }"
+      [ngClass]="{ locked: node.data.locked, current: node.partialSelected }"
     >
       <span class="node-item-branch">
         <span class="top-branch">
@@ -135,27 +123,27 @@
       </span>
       <span class="node-item-content" (click)="selectNode(node)">
         <span class="node-select">
-          <i class="pi" [class.pi-circle-on]="!node.checked" style="font-size: 0.6rem;"></i>
-          <i class="pi" [class.pi-check]="node.checked" style="font-size: 1.2rem;"></i>
+          <i class="pi" [class.pi-circle-on]="!node.partialSelected" style="font-size: 0.6rem;"></i>
+          <i class="pi" [class.pi-check]="node.partialSelected" style="font-size: 1.2rem;"></i>
         </span>
         <span class="node-label">
           <span class="label-container">
             <span class="node-label-title">
-              {{ node.data.element.title }}
-              <span *ngIf="node.data.element.groupName">(via group "{{ node.data.element.groupName }}")</span>
+              {{ node.data.title }}
+              <span *ngIf="node.data.associatedGroupName">(via group "{{ node.data.associatedGroupName }}")</span>
             </span>
             <span
               class="node-state"
-              *ngIf="node.data.element.locked"
+              *ngIf="node.data.locked"
               i18n-pTooltip pTooltip="Your current access rights do not allow you to list the content of this skill."
             >
               <i class="fa fa-lock"></i>
             </span>
           </span>
           <alg-skill-progress
-              *ngIf="elementType === 'skill' && node.data.element.currentScore >= 0"
-              [bestScore]="node.data.element.bestScore"
-              [currentScore]="node.data.element.currentScore"
+              *ngIf="elementType === 'skill' && node.data.score"
+              [bestScore]="node.data.score.bestScore"
+              [currentScore]="node.data.score.currentScore"
               [type]="'thin-horizontal'"
           ></alg-skill-progress>
         </span>
@@ -166,9 +154,9 @@
   <!-- "group-folder" type -->
   <ng-template let-node pTemplate="group">
     <span
-      id="nav-{{ node.data.element.id }}"
+      id="nav-{{ node.data.id }}"
       class="node-tree-item folder"
-      [ngClass]="{ expanded: node.expanded, locked: node.data.element.locked, current: node.data && node.data.current }"
+      [ngClass]="{ expanded: node.expanded, locked: node.data.locked, current: node.data && node.partialSelected }"
     >
       <span class="node-item-branch">
         <span class="top-branch">
@@ -180,24 +168,23 @@
       </span>
       <span class="node-item-content" (click)="selectNode(node)">
         <span class="node-select">
-          <i class="fa fa-users" *ngIf="node.data.element.type !== 'User'"></i>
-          <i class="fa fa-user" *ngIf="node.data.element.type === 'User'"></i>
+          <i class="fa fa-users" *ngIf="node.data.type !== 'User'"></i>
+          <i class="fa fa-user" *ngIf="node.data.type === 'User'"></i>
         </span>
         <span class="node-label">
           <span class="label-container">
             <span class="node-label-title">
               {{ node.label }}
             </span>
-            <span class="node-state" *ngIf="node.data.element.type !== 'User'">
-              <alg-loading class="no-padding" size="medium" *ngIf="node.data.status === 'loading'"></alg-loading>
+            <span class="node-state">
               <i
-                *ngIf="node.data.element.currentUserManagership !== 'none'"
+                *ngIf="node.data.groupRelation.managership !== 'none'"
                 class="fa fa-chalkboard-teacher"
-                [class.fade]="node.data.element.currentUserManagership === 'descendant'"
-                i18n-pTooltip pTooltip="{{ node.data.element.currentUserManagership === 'descendant' ? 'You are a manager of one of the descendant of the group' : 'You are a manager of the group' }}"
+                [class.fade]="node.data.groupRelation.managership === 'descendant'"
+                i18n-pTooltip pTooltip="{{ node.data.groupRelation.managership === 'descendant' ? 'You are a manager of one of the descendant of the group' : 'You are a manager of the group' }}"
               ></i>
               <i
-                *ngIf="node.data.element.currentUserMembership !== 'none'"
+                *ngIf="node.data.groupRelation.isMember"
                 class="fa fa-user-friends"
                 i18n-pTooltip pTooltip="You are a member of the group"
               ></i>
@@ -212,9 +199,9 @@
   <!-- 'task-course' type -->
   <ng-template let-node pTemplate="task-course">
     <span
-      id="nav-{{ node.data.element.id }}"
+      id="nav-{{ node.data.id }}"
       class="node-tree-item folder"
-      [ngClass]="{ expanded: node.expanded, locked: node.data.element.locked, current: node.data && node.data.current }"
+      [ngClass]="{ locked: node.data.locked, current: node.partialSelected }"
     >
       <span class="node-item-branch">
         <span class="top-branch">
@@ -227,28 +214,28 @@
       <span class="node-item-content" (click)="selectNode(node)">
         <span class="node-select">
           <alg-score-ring
-            *ngIf="node.data.element.currentScore >= 0; else leafNoScore"
-            [currentScore]="node.data.element.currentScore"
-            [bestScore]="node.data.element.bestScore"
-            [isValidated]="node.data.element.validated"
+            *ngIf="node.data.score !== undefined; else leafNoScore"
+            [currentScore]="node.data.score.currentScore"
+            [bestScore]="node.data.score.bestScore"
+            [isValidated]="node.data.score.validated"
             [diameter]="30"
             [forTree]="true"
             [isDark]="true"
           ></alg-score-ring>
           <ng-template #leafNoScore>
-            <i class="pi" [class.pi-circle-on]="!node.checked" style="font-size: 0.6rem;"></i>
-            <i class="pi" [class.pi-check]="node.checked" style="font-size: 1.2rem;"></i>
+            <i class="pi" [class.pi-circle-on]="!node.partialSelected" style="font-size: 0.6rem;"></i>
+            <i class="pi" [class.pi-check]="node.partialSelected" style="font-size: 1.2rem;"></i>
           </ng-template>
         </span>
         <span class="node-label">
           <span class="label-container">
             <span class="node-label-title">
-              {{ node.data.element.title }}
-              <span *ngIf="node.data.element.groupName">(via group "{{ node.data.element.groupName }}")</span>
+              {{ node.data.title }}
+              <span *ngIf="node.data.associatedGroupName">(via group "{{ node.data.associatedGroupName }}")</span>
             </span>
             <span
               class="node-state"
-              *ngIf="node.data.element.locked"
+              *ngIf="node.data.locked"
               i18n-pTooltip pTooltip="Your current access rights do not allow you to start the activity."
             >
               <i class="fa fa-lock"></i>
