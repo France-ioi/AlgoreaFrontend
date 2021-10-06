@@ -12,7 +12,7 @@ import { canCurrentUserViewItemContent } from 'src/app/modules/item/helpers/item
 import { mapToFetchState } from 'src/app/shared/operators/state';
 import { buildUp } from 'src/app/shared/operators/build-up';
 import { ItemNavigationData, ItemNavigationService } from 'src/app/core/http-services/item-navigation.service';
-import { isSkill } from 'src/app/shared/helpers/item-type';
+import { isSkill, mayHaveChildren } from 'src/app/shared/helpers/item-type';
 
 export interface ItemData {
   route: FullItemRoute,
@@ -79,7 +79,7 @@ export class ItemDataSource implements OnDestroy {
       breadcrumbs: this.getBreadcrumbService.getBreadcrumb(itemRoute),
     }).pipe(
       buildUp(data => (canCurrentUserViewItemContent(data.item) ? this.fetchResults(data.route, data.item) : EMPTY)),
-      buildUp(data => (data.currentResult ? this.fetchNavigationData(data.route, data.currentResult): EMPTY)),
+      buildUp(data => (data.currentResult && mayHaveChildren(data.item) ? this.fetchNavigationData(data.route, data.currentResult): EMPTY)),
     );
   }
 
