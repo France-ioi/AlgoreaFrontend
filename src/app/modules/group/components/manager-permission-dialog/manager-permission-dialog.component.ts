@@ -42,9 +42,9 @@ export class ManagerPermissionDialogComponent implements OnChanges {
   isUpdating = false;
 
   form = this.fb.group({
-    'canManage': [ 'none' ],
-    'canGrantGroupAccess': [ false ],
-    'canWatchMembers': [ false ],
+    canManage: [ 'none' ],
+    canGrantGroupAccess: [ false ],
+    canWatchMembers: [ false ],
   });
 
   constructor(
@@ -78,16 +78,10 @@ export class ManagerPermissionDialogComponent implements OnChanges {
       throw new Error('Unexpected: Missed input component params');
     }
 
-    const formControls = {
-      canManage: this.form.get('canManage'),
-      canGrantGroupAccess: this.form.get('canGrantGroupAccess'),
-      canWatchMembers: this.form.get('canWatchMembers'),
-    };
-
     const managerPermissions: GroupManagerPermissionChanges = {
-      canManage: formControls.canManage?.value as GroupManagerPermissionChanges['canManage'],
-      canGrantGroupAccess: formControls.canGrantGroupAccess?.value as GroupManagerPermissionChanges['canGrantGroupAccess'],
-      canWatchMembers: formControls.canWatchMembers?.value as GroupManagerPermissionChanges['canWatchMembers'],
+      canManage: this.form.get('canManage')?.value as GroupManagerPermissionChanges['canManage'],
+      canGrantGroupAccess: this.form.get('canGrantGroupAccess')?.value as GroupManagerPermissionChanges['canGrantGroupAccess'],
+      canWatchMembers: this.form.get('canWatchMembers')?.value as GroupManagerPermissionChanges['canWatchMembers'],
     };
 
     this.isUpdating = true;

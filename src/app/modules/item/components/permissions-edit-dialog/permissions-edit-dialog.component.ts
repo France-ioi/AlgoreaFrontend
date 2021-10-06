@@ -29,12 +29,12 @@ export class PermissionsEditDialogComponent implements OnChanges {
   canEditValues: ProgressSelectValue<string>[] = [];
 
   form = this.fb.group({
-    'can_view': [ 'none' ],
-    'can_grant_view': [ 'none' ],
-    'can_watch': [ 'none' ],
-    'can_edit': [ 'none' ],
-    'can_make_session_official': [ false ],
-    'is_owner': [ true ],
+    canView: [ 'none' ],
+    canGrantView: [ 'none' ],
+    canWatch: [ 'none' ],
+    canEdit: [ 'none' ],
+    canMakeSessionOfficial: [ false ],
+    isOwner: [ true ],
   });
 
   constructor(private fb: FormBuilder) {}
@@ -57,22 +57,13 @@ export class PermissionsEditDialogComponent implements OnChanges {
   }
 
   onAccept(): void {
-    const formControls = {
-      can_view: this.form.get('can_view'),
-      can_grant_view: this.form.get('can_grant_view'),
-      can_watch: this.form.get('can_watch'),
-      can_edit: this.form.get('can_edit'),
-      can_make_session_official: this.form.get('can_make_session_official'),
-      is_owner: this.form.get('is_owner'),
-    };
-
     const permissions: Permissions = {
-      can_view: formControls.can_view?.value as Permissions['can_view'],
-      can_grant_view: formControls.can_grant_view?.value as Permissions['can_grant_view'],
-      can_watch: formControls.can_watch?.value as Permissions['can_watch'],
-      can_edit: formControls.can_edit?.value as Permissions['can_edit'],
-      can_make_session_official: formControls.can_make_session_official?.value as Permissions['can_make_session_official'],
-      is_owner: formControls.is_owner?.value as Permissions['is_owner'],
+      can_view: this.form.get('canView')?.value as Permissions['can_view'],
+      can_grant_view: this.form.get('canGrantView')?.value as Permissions['can_grant_view'],
+      can_watch: this.form.get('canWatch')?.value as Permissions['can_watch'],
+      can_edit: this.form.get('canEdit')?.value as Permissions['can_edit'],
+      can_make_session_official: this.form.get('canMakeSessionOfficial')?.value as Permissions['can_make_session_official'],
+      is_owner: this.form.get('isOwner')?.value as Permissions['is_owner'],
     };
 
     this.save.emit(permissions);
