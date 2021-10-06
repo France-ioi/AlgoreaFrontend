@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { fromEvent, Observable, ReplaySubject } from 'rxjs';
-import { delayWhen, map, mapTo, shareReplay, switchMap, timeout, withLatestFrom } from 'rxjs/operators';
+import { fromEvent, Observable, of, ReplaySubject, TimeoutError } from 'rxjs';
+import { catchError, delayWhen, filter, map, mapTo, shareReplay, switchMap, timeout, withLatestFrom } from 'rxjs/operators';
 import { appConfig } from 'src/app/shared/helpers/config';
 import { SECONDS } from 'src/app/shared/helpers/duration';
 import { FullItemRoute } from 'src/app/shared/routing/item-route';
@@ -29,6 +29,7 @@ export class ItemTaskInitService implements OnDestroy {
   readonly iframeSrc$ = this.taskToken$.pipe(
     withLatestFrom(this.config$),
     map(([ taskToken, { url }]) => taskUrlWithParameters(url, taskToken, appConfig.itemPlatformId, taskChannelIdPrefix)),
+    map(url => this.checkUrlProtocol(url)),
     shareReplay(1), // avoid duplicate xhr calls
   );
 
@@ -44,6 +45,15 @@ export class ItemTaskInitService implements OnDestroy {
     )),
     shareReplay(1),
   );
+
+  readonly initError$ = this.task$.pipe(
+    catchError(timeoutError => of(timeoutError)),
+    filter(error => error instanceof TimeoutError),
+  );
+  readonly urlError$ = this.iframeSrc$.pipe(
+    catchError((urlError: Error) => of(urlError)),
+    filter(error => error instanceof Error),
+  ) as Observable<Error>;
 
   initialized = false;
   configured = false;
@@ -72,5 +82,13 @@ export class ItemTaskInitService implements OnDestroy {
     this.initialized = true;
     this.configFromIframe$.next({ iframe, bindPlatform });
     this.configFromIframe$.complete();
+  }
+
+  private checkUrlProtocol(url: string): string {
+    // Avoid mixed-content error: https://developer.mozilla.org/en-US/docs/Web/Security/Mixed_content/How_to_fix_website_with_mixed_content
+    // mixed-content is when an https website tries to load an http content, ie: iframe.src, script.src, etc.
+    const isMixedContent = globalThis.location.protocol === 'https:' && url.startsWith('http:');
+    if (isMixedContent) throw new Error($localize`Invalid url, please provide a secure task url (https)`);
+    return url;
   }
 }

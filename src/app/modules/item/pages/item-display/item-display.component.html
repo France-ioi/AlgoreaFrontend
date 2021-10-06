@@ -15,6 +15,11 @@
       ></alg-error>
 
       <alg-error
+        *ngIf="urlError$ | async as urlError"
+        message="{{ urlError.message }}"
+      ></alg-error>
+
+      <alg-error
         *ngIf="taskError$ | async as error"
         i18n-message message="An unknown error occurred: “{{ error.message }}”. If this problem persists, please contact us."
       ></alg-error>

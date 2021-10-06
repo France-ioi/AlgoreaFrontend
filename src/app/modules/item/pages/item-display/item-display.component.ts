@@ -1,6 +1,6 @@
 import { AfterViewChecked, Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { interval, merge, Observable } from 'rxjs';
-import { filter, map, shareReplay, startWith, switchMap } from 'rxjs/operators';
+import { filter, map, startWith, switchMap } from 'rxjs/operators';
 import { SECONDS } from 'src/app/shared/helpers/duration';
 import { isNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
 import { ItemTaskService } from '../../services/item-task.service';
@@ -37,8 +37,9 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
   @ViewChild('iframe') iframe?: ElementRef<HTMLIFrameElement>;
 
   state$ = this.taskService.task$.pipe(mapToFetchState());
-  taskError$ = this.taskService.taskError$.pipe(shareReplay(1));
-  initError$ = this.taskService.initError$.pipe(shareReplay(1));
+  taskError$ = this.taskService.unknownError$;
+  initError$ = this.taskService.initError$;
+  urlError$ = this.taskService.urlError$;
 
   tabs$: Observable<TaskTab[]> = this.taskService.views$.pipe(
     map(views => views.map(view => ({ view, name: this.getTabNameByView(view) }))),
