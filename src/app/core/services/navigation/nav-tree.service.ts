@@ -1,19 +1,23 @@
-import { EMPTY, Observable, of, ReplaySubject, Subject } from 'rxjs';
-import { delay, map, switchScan } from 'rxjs/operators';
+import { EMPTY, Observable, of, Subject } from 'rxjs';
+import { delay, distinct, map, startWith, switchScan } from 'rxjs/operators';
 import { isDefined } from 'src/app/shared/helpers/null-undefined-predicates';
 import { repeatLatestWhen } from 'src/app/shared/helpers/repeatLatestWhen';
 import { fetchingState, FetchState, readyState } from 'src/app/shared/helpers/state';
-import { RoutedContentInfo } from 'src/app/shared/models/content/content-info';
+import { ContentInfo, RoutedContentInfo } from 'src/app/shared/models/content/content-info';
 import { mapStateData, mapToFetchState } from 'src/app/shared/operators/state';
+import { CurrentContentService } from 'src/app/shared/services/current-content.service';
 import { NavTreeData, NavTreeElement } from '../../models/left-nav-loading/nav-tree-data';
 
 export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
 
-  private initialized = false;
-  private contentChanges = new ReplaySubject<ContentT|undefined>(1);
-  private retryTrigger = new Subject<void>();
-  state$ = this.contentChanges.pipe(
-    repeatLatestWhen(this.retryTrigger),
+  private reloadTrigger = new Subject<void>();
+
+  state$ = this.currentContent.content$.pipe(
+    // map those which are not of interest to `undefined`
+    map(content => (this.isOfContentType(content) ? content : undefined)),
+    distinct(), // remove multiple `undefined`
+    startWith(undefined),
+    repeatLatestWhen(this.reloadTrigger),
     switchScan((prevState: FetchState<NavTreeData>, contentInfo) => {
 
       if (prevState.isReady) {
@@ -51,36 +55,18 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
     delay(0),
   );
 
+  constructor(private currentContent: CurrentContentService) {}
+
   /**
-   * Prepare the data for display
+   * Return whether the given content info has the type expected in the nav tree
    */
-  focus(): void {
-    if (!this.initialized) {
-      this.initialized = true;
-      this.contentChanges.next(undefined);
-    }
-  }
+  protected abstract isOfContentType(content: ContentInfo|null): content is ContentT;
 
   /**
    * Re-play the last change
    */
   retry(): void {
-    this.retryTrigger.next();
-  }
-
-  /**
-   * Load the given content in this tab
-   */
-  showContent(content: ContentT): void {
-    this.initialized = true;
-    this.contentChanges.next(content);
-  }
-
-  /**
-   * If there is a selected element, unselect this selection.
-   */
-  removeSelection(): void {
-    if (this.initialized) this.contentChanges.next(undefined);
+    this.reloadTrigger.next();
   }
 
   protected abstract addDetailsToTreeElement(contentInfo: ContentT, treeElement: NavTreeElement): NavTreeElement;

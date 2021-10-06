@@ -45,28 +45,16 @@ export class LeftNavComponent implements OnInit, OnDestroy {
       pairwise(),
     ).subscribe(([ prevContent, content ]) => {
       // If the content changed (different id), clear the selection (clear all tabs as we don't really know on which tab was the selection)
-      if (prevContent?.type !== content?.type || prevContent?.route.id !== content?.route.id) {
-        this.navTreeServices.forEach(l => l.removeSelection());
-
-        if (content) {
-          this.selectId.emit(content.route.id);
-        }
+      if (content && (prevContent?.type !== content.type || prevContent?.route.id !== content.route.id)) {
+        this.selectId.emit(content.route.id);
       }
 
-      if (!content) { // no tab and no content to select
-        this.navTreeServices[this.activeTabIndex]?.focus(); // if the current tab has not been initialized yet, do it now
-
-      } else if (isGroupInfo(content)) {
+      if (!content) return;
+      if (isGroupInfo(content)) {
         this.changeTab(groupsTabIdx);
-        this.navTreeServices[groupsTabIdx].showContent(content);
-
-      } else if (isActivityInfo(content)) {
-        this.changeTab(activitiesTabIdx);
-        this.navTreeServices[activitiesTabIdx].showContent(content);
-
-      } else {
-        this.changeTab(skillsTabIdx);
-        this.navTreeServices[skillsTabIdx].showContent(content);
+      } else if (isItemInfo(content)) {
+        if (isActivityInfo(content)) this.changeTab(activitiesTabIdx);
+        else this.changeTab(skillsTabIdx);
       }
     });
   }
@@ -81,7 +69,6 @@ export class LeftNavComponent implements OnInit, OnDestroy {
 
   private changeTab(index: number): void {
     this.activeTabIndex = index;
-    this.navTreeServices[index]?.focus();
     this.themeChange.emit(this.activeTabIndex === 2 ? 'dark' : null);
   }
 
