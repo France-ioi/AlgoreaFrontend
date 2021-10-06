@@ -10,19 +10,23 @@
     <alg-error i18n-message message="Unable to load the task"></alg-error>
     <ng-container *ngIf="['all', 'all_with_grant'].includes(canEdit)">
       <alg-error
-        *ngIf="initError$ | async"
+        *ngIf="initError$ | async; else urlError"
         i18n-message message="It usually occurs when task url is invalid, if the task url is valid and the problem persists, please contact us."
       ></alg-error>
 
-      <alg-error
-        *ngIf="urlError$ | async as urlError"
-        message="{{ urlError.message }}"
-      ></alg-error>
+      <ng-template #urlError>
+        <alg-error
+          *ngIf="urlError$ | async as error; else unknownError"
+          message="{{ error.message }}"
+        ></alg-error>
+      </ng-template>
 
-      <alg-error
-        *ngIf="taskError$ | async as error"
-        i18n-message message="An unknown error occurred: “{{ error.message }}”. If this problem persists, please contact us."
-      ></alg-error>
+      <ng-template #unknownError>
+        <alg-error
+          *ngIf="unknownError$ | async as error"
+          i18n-message message="An unknown error occurred: “{{ error.message }}”. If this problem persists, please contact us."
+        ></alg-error>
+      </ng-template>
     </ng-container>
   </div>
   <div class="iframe-container" [style.height.px]="iframeHeight$ | async" *ngIf="!state.isError">

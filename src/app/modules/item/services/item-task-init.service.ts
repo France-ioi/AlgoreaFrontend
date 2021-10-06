@@ -49,7 +49,7 @@ export class ItemTaskInitService implements OnDestroy {
   readonly initError$ = this.task$.pipe(
     catchError(timeoutError => of(timeoutError)),
     filter(error => error instanceof TimeoutError),
-  );
+  ) as Observable<TimeoutError>;
   readonly urlError$ = this.iframeSrc$.pipe(
     catchError((urlError: Error) => of(urlError)),
     filter(error => error instanceof Error),

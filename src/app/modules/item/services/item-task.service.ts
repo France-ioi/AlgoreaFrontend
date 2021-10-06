@@ -18,7 +18,7 @@ export class ItemTaskService {
   readonly initError$ = this.initService.initError$.pipe(shareReplay(1));
   readonly urlError$ = this.initService.urlError$.pipe(shareReplay(1));
 
-  private error$ = merge(this.unknownError$, this.urlError$).pipe(switchMap(error => throwError(() => error)));
+  private error$ = merge(this.initError$, this.urlError$, this.unknownError$).pipe(switchMap(error => throwError(() => error)));
 
   readonly task$ = merge(this.initService.task$, this.error$);
   readonly iframeSrc$ = this.initService.iframeSrc$;

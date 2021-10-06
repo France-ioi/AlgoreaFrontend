@@ -37,9 +37,9 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
   @ViewChild('iframe') iframe?: ElementRef<HTMLIFrameElement>;
 
   state$ = this.taskService.task$.pipe(mapToFetchState());
-  taskError$ = this.taskService.unknownError$;
   initError$ = this.taskService.initError$;
   urlError$ = this.taskService.urlError$;
+  unknownError$ = this.taskService.unknownError$;
 
   tabs$: Observable<TaskTab[]> = this.taskService.views$.pipe(
     map(views => views.map(view => ({ view, name: this.getTabNameByView(view) }))),
