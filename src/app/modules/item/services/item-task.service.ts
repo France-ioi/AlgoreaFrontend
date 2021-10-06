@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { animationFrames, merge, Observable, throwError } from 'rxjs';
-import { mapTo, switchMap, take, tap } from 'rxjs/operators';
+import { animationFrames, merge, Observable, of, throwError, TimeoutError } from 'rxjs';
+import { catchError, filter, mapTo, switchMap, take, tap } from 'rxjs/operators';
 import { ItemNavigationService } from 'src/app/core/http-services/item-navigation.service';
 import { LocaleService } from 'src/app/core/services/localeService';
 import { openNewTab, replaceWindowUrl } from 'src/app/shared/helpers/url';
@@ -14,11 +14,10 @@ import { ItemTaskViewsService } from './item-task-views.service';
 
 @Injectable()
 export class ItemTaskService {
-  private error$ = merge(
-    this.answerService.error$,
-    this.viewsService.error$,
-    this.initService.iframeSrcError$,
-  ).pipe(switchMap(error => throwError(() => error)));
+  readonly taskError$ = merge(this.answerService.error$, this.viewsService.error$);
+  readonly initError$ = this.initService.task$.pipe(catchError(error => of(error)), filter(error => error instanceof TimeoutError));
+
+  private error$ = this.taskError$.pipe(switchMap(error => throwError(() => error)));
 
   readonly task$ = merge(this.initService.task$, this.error$);
   readonly iframeSrc$ = this.initService.iframeSrc$;

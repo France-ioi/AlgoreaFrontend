@@ -1,8 +1,8 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable, OnDestroy } from '@angular/core';
-import { Observable, of, ReplaySubject } from 'rxjs';
-import { catchError, filter, map, mapTo, shareReplay, switchMap, take, timeout, withLatestFrom } from 'rxjs/operators';
+import { fromEvent, Observable, ReplaySubject } from 'rxjs';
+import { delayWhen, map, mapTo, shareReplay, switchMap, timeout, withLatestFrom } from 'rxjs/operators';
 import { appConfig } from 'src/app/shared/helpers/config';
+import { SECONDS } from 'src/app/shared/helpers/duration';
 import { FullItemRoute } from 'src/app/shared/routing/item-route';
 import { TaskTokenService, TaskToken } from '../http-services/task-token.service';
 import { Task, taskProxyFromIframe, taskUrlWithParameters } from '../task-communication/task-proxy';
@@ -29,24 +29,19 @@ export class ItemTaskInitService implements OnDestroy {
   readonly iframeSrc$ = this.taskToken$.pipe(
     withLatestFrom(this.config$),
     map(([ taskToken, { url }]) => taskUrlWithParameters(url, taskToken, appConfig.itemPlatformId, taskChannelIdPrefix)),
-    switchMap(url => this.assertUrlIsAvailable(url).pipe(mapTo(url))),
     shareReplay(1), // avoid duplicate xhr calls
   );
 
-  readonly iframeSrcError$: Observable<HttpErrorResponse> = this.iframeSrc$.pipe(
-    catchError(error => of(error)),
-    filter(value => value instanceof HttpErrorResponse),
-    take(1),
-  );
-
   readonly task$ = this.configFromIframe$.pipe(
+    delayWhen(({ iframe }) => fromEvent(iframe, 'load')),
     switchMap(({ iframe, bindPlatform }) => taskProxyFromIframe(iframe).pipe(
       switchMap(task => {
         bindPlatform(task);
         const initialViews = { task: true, solution: true, editor: true, hints: true, grader: true, metadata: true };
         return task.load(initialViews).pipe(mapTo(task));
-      })),
-    ),
+      }),
+      timeout(15 * SECONDS), // after the iframe has loaded, if no connection to jschannel is made, consider the task broken
+    )),
     shareReplay(1),
   );
 
@@ -55,7 +50,6 @@ export class ItemTaskInitService implements OnDestroy {
 
   constructor(
     private taskTokenService: TaskTokenService,
-    private http: HttpClient,
   ) {}
 
   ngOnDestroy(): void {
@@ -76,12 +70,7 @@ export class ItemTaskInitService implements OnDestroy {
   initTask(iframe: HTMLIFrameElement, bindPlatform: (task: Task) => void): void {
     if (this.initialized) throw new Error('task init service can be initialized once only');
     this.initialized = true;
-
     this.configFromIframe$.next({ iframe, bindPlatform });
     this.configFromIframe$.complete();
-  }
-
-  private assertUrlIsAvailable(url: string): Observable<void> {
-    return this.http.head(url, { observe: 'response' }).pipe(mapTo(undefined));
   }
 }

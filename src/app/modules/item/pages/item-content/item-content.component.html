@@ -11,6 +11,7 @@
       <alg-item-display
         *ngIf="(itemData.item.type === 'Task' || itemData.item.type === 'Course') && itemData.item.url && attemptId"
         [route]="itemData.route"
+        [canEdit]="itemData.item.permissions.canEdit"
         [url]="itemData.item.url"
         [attemptId]="attemptId"
       ></alg-item-display>

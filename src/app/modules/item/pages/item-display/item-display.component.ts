@@ -1,6 +1,6 @@
 import { AfterViewChecked, Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { interval, merge, Observable } from 'rxjs';
-import { filter, map, startWith, switchMap } from 'rxjs/operators';
+import { filter, map, shareReplay, startWith, switchMap } from 'rxjs/operators';
 import { SECONDS } from 'src/app/shared/helpers/duration';
 import { isNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
 import { ItemTaskService } from '../../services/item-task.service';
@@ -11,8 +11,9 @@ import { ItemTaskAnswerService } from '../../services/item-task-answer.service';
 import { ItemTaskViewsService } from '../../services/item-task-views.service';
 import { FullItemRoute } from 'src/app/shared/routing/item-route';
 import { DomSanitizer } from '@angular/platform-browser';
+import { PermissionsInfo } from '../../helpers/item-permissions';
 
-const initialHeight = 1200;
+const initialHeight = 0;
 const additionalHeightToPreventInnerScrollIssues = 40;
 const heightSyncInterval = 0.2*SECONDS;
 
@@ -30,11 +31,14 @@ interface TaskTab {
 export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges {
   @Input() route!: FullItemRoute;
   @Input() url!: string;
+  @Input() canEdit: PermissionsInfo['canEdit'] = 'none';
   @Input() attemptId!: string;
 
   @ViewChild('iframe') iframe?: ElementRef<HTMLIFrameElement>;
 
   state$ = this.taskService.task$.pipe(mapToFetchState());
+  taskError$ = this.taskService.taskError$.pipe(shareReplay(1));
+  initError$ = this.taskService.initError$.pipe(shareReplay(1));
 
   tabs$: Observable<TaskTab[]> = this.taskService.views$.pipe(
     map(views => views.map(view => ({ view, name: this.getTabNameByView(view) }))),
@@ -47,7 +51,7 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
   iframeHeight$ = merge(
     this.taskService.task$.pipe(switchMap(task => interval(heightSyncInterval).pipe(switchMap(() => task.getHeight())))),
     this.taskService.display$.pipe(map(({ height }) => height), filter(isNotUndefined)),
-  ).pipe(startWith(initialHeight), map(height => height + additionalHeightToPreventInnerScrollIssues));
+  ).pipe(map(height => height + additionalHeightToPreventInnerScrollIssues), startWith(initialHeight));
 
   constructor(
     private taskService: ItemTaskService,
