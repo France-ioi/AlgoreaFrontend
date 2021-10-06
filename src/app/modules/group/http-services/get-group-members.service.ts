@@ -2,34 +2,35 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { appConfig } from 'src/app/shared/helpers/config';
-import { map } from 'rxjs/operators';
+import { pipe } from 'fp-ts/function';
+import * as D from 'io-ts/Decoder';
+import { dateDecoder } from '../../../shared/helpers/decoders';
+import { decodeSnakeCase } from '../../../shared/operators/decode';
 
-interface RawMember {
-  id: string,
-  member_since: string|null,
-  action: 'invitation_accepted'|'join_request_accepted'|'joined_by_code'|'added_directly',
-  user: null|{
-    login: string,
-    first_name: string|null,
-    last_name: string|null,
-    grade: number|null,
-    group_id: string,
-  },
-}
+const userDecoder = pipe(
+  D.struct({
+    grade: D.nullable(D.number),
+    groupId: D.string,
+    login: D.string,
+  }),
+  D.intersect(
+    D.partial({
+      firstName: D.nullable(D.string),
+      lastName: D.nullable(D.string),
+    }),
+  ),
+);
 
-export interface Member {
-  id: string,
-  memberSince: Date|null,
-  action: 'invitation_accepted'|'join_request_accepted'|'joined_by_code'|'added_directly',
-  user: null|{
-    login: string,
-    firstName: string|null,
-    lastName: string|null,
-    grade: number|null,
-    groupId: string,
-  },
-}
+const memberDecoder = pipe(
+  D.struct({
+    id: D.string,
+    memberSince: D.nullable(dateDecoder),
+    action: D.literal('invitation_accepted', 'join_request_accepted', 'joined_by_code', 'added_directly'),
+    user: D.nullable(userDecoder),
+  })
+);
 
+export type Member = D.TypeOf<typeof memberDecoder>;
 
 @Injectable({
   providedIn: 'root'
@@ -45,20 +46,9 @@ export class GetGroupMembersService {
     let params = new HttpParams();
     if (sort.length > 0) params = params.set('sort', sort.join(','));
     return this.http
-      .get<RawMember[]>(`${appConfig.apiUrl}/groups/${groupId}/members`, { params: params })
+      .get<unknown>(`${appConfig.apiUrl}/groups/${groupId}/members`, { params: params })
       .pipe(
-        map(rawMembers => rawMembers.filter(m => m.user).map(m => ({
-          id: m.id,
-          memberSince: m.member_since === null ? null : new Date(m.member_since),
-          action: m.action,
-          user: m.user === null ? null :{
-            login: m.user.login,
-            firstName: m.user.first_name,
-            lastName: m.user.last_name,
-            grade: m.user.grade,
-            groupId: m.user.group_id,
-          },
-        })))
+        decodeSnakeCase(D.array(memberDecoder)),
       );
   }
 }
