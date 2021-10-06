@@ -43,8 +43,7 @@ export class LeftNavComponent {
 
   @Output() themeChange = this.activeTab$.pipe(map(tab => (tab.index === 2 ? 'dark' : null)), delay(0));
 
-  readonly navTreeServices: [ActivityNavTreeService, SkillNavTreeService, GroupNavTreeService] =
-    [ this.activityNavTreeService, this.skillNavTreeService, this.groupNavTreeService ];
+  readonly navTreeServices = [ this.activityNavTreeService, this.skillNavTreeService, this.groupNavTreeService ];
   currentUser$ = this.sessionService.userProfile$.pipe(delay(0));
 
   constructor(
