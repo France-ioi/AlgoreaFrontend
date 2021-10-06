@@ -33,7 +33,7 @@ export class ItemTaskInitService implements OnDestroy {
   );
 
   readonly task$ = this.configFromIframe$.pipe(
-    delayWhen(({ iframe }) => fromEvent(iframe, 'load')),
+    delayWhen(({ iframe }) => fromEvent(iframe, 'load')), // triggered for good & bad url, not for not responding servers
     switchMap(({ iframe, bindPlatform }) => taskProxyFromIframe(iframe).pipe(
       switchMap(task => {
         bindPlatform(task);
