@@ -7,7 +7,7 @@ import * as D from 'io-ts/Decoder';
 import { decodeSnakeCase } from '../../shared/operators/decode';
 
 const typeDecoder = D.literal('Class', 'Team', 'Club', 'Friends', 'Other', 'Session', 'Base');
-const manageTypeDecoder = D.literal('none', 'memberships', 'memberships_and_group');
+export const manageTypeDecoder = D.literal('none', 'memberships', 'memberships_and_group');
 
 const groupDecoder = pipe(
   D.struct({
