@@ -1,7 +1,8 @@
 
 import { Component, OnDestroy, OnInit, Output, EventEmitter } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { delay, map, pairwise } from 'rxjs/operators';
+import { delay, distinct, filter, map } from 'rxjs/operators';
+import { RoutedContentInfo } from 'src/app/shared/models/content/content-info';
 import { isGroupInfo } from 'src/app/shared/models/content/group-info';
 import { isActivityInfo, isItemInfo } from 'src/app/shared/models/content/item-info';
 import { CurrentContentService } from 'src/app/shared/services/current-content.service';
@@ -20,7 +21,11 @@ const groupsTabIdx = 2;
 })
 export class LeftNavComponent implements OnInit, OnDestroy {
   @Output() themeChange = new EventEmitter<string | null>(true /* async */);
-  @Output() selectId = new EventEmitter<string>();
+  @Output() selectId = this.currentContent.content$.pipe(
+    filter((content): content is RoutedContentInfo => !!content?.route),
+    map(content => content.route.id),
+    distinct(), // only emit 1x a change of id
+  );
 
   activeTabIndex = 0;
   readonly navTreeServices: [ActivityNavTreeService, SkillNavTreeService, GroupNavTreeService] =
@@ -42,13 +47,7 @@ export class LeftNavComponent implements OnInit, OnDestroy {
     this.subscription = this.currentContent.content$.pipe(
       // we are only interested in items and groups
       map(content => (content !== null && (isItemInfo(content) || isGroupInfo(content)) ? content : undefined)),
-      pairwise(),
-    ).subscribe(([ prevContent, content ]) => {
-      // If the content changed (different id), clear the selection (clear all tabs as we don't really know on which tab was the selection)
-      if (content && (prevContent?.type !== content.type || prevContent?.route.id !== content.route.id)) {
-        this.selectId.emit(content.route.id);
-      }
-
+    ).subscribe(content => {
       if (!content) return;
       if (isGroupInfo(content)) {
         this.changeTab(groupsTabIdx);
