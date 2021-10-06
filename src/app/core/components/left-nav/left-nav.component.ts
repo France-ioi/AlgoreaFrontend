@@ -1,8 +1,9 @@
 
-import { Component, OnDestroy, OnInit, Output, EventEmitter } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { delay, distinct, filter, map } from 'rxjs/operators';
-import { RoutedContentInfo } from 'src/app/shared/models/content/content-info';
+import { Component, Output, EventEmitter } from '@angular/core';
+import { merge, Subject } from 'rxjs';
+import { delay, distinct, distinctUntilChanged, filter, map, startWith } from 'rxjs/operators';
+import { isDefined } from 'src/app/shared/helpers/null-undefined-predicates';
+import { ContentInfo, RoutedContentInfo } from 'src/app/shared/models/content/content-info';
 import { isGroupInfo } from 'src/app/shared/models/content/group-info';
 import { isActivityInfo, isItemInfo } from 'src/app/shared/models/content/item-info';
 import { CurrentContentService } from 'src/app/shared/services/current-content.service';
@@ -19,7 +20,7 @@ const groupsTabIdx = 2;
   templateUrl: './left-nav.component.html',
   styleUrls: [ './left-nav.component.scss' ]
 })
-export class LeftNavComponent implements OnInit, OnDestroy {
+export class LeftNavComponent {
   @Output() themeChange = new EventEmitter<string | null>(true /* async */);
   @Output() selectId = this.currentContent.content$.pipe(
     filter((content): content is RoutedContentInfo => !!content?.route),
@@ -27,12 +28,22 @@ export class LeftNavComponent implements OnInit, OnDestroy {
     distinct(), // only emit 1x a change of id
   );
 
-  activeTabIndex = 0;
+  private manualTabChange = new Subject<number>();
+  activeTab$ = merge(
+    this.manualTabChange,
+    this.currentContent.content$.pipe(
+      distinctUntilChanged((x,y) => x?.type === y?.type && x?.route?.id === y?.route?.id), // do not re-emit several time for a same content
+      map(content => contentToTabIndex(content)),
+      filter(isDefined),
+    )
+  ).pipe(
+    startWith(0),
+    map(idx => ({ index: idx })), // using object so that Angular ngIf does not ignore the "0" index
+  );
+
   readonly navTreeServices: [ActivityNavTreeService, SkillNavTreeService, GroupNavTreeService] =
     [ this.activityNavTreeService, this.skillNavTreeService, this.groupNavTreeService ];
   currentUser$ = this.sessionService.userProfile$.pipe(delay(0));
-
-  private subscription?: Subscription;
 
   constructor(
     private sessionService: UserSessionService,
@@ -42,37 +53,26 @@ export class LeftNavComponent implements OnInit, OnDestroy {
     private groupNavTreeService: GroupNavTreeService,
   ) { }
 
-  ngOnInit(): void {
-    // Follow page change and trigger changes.
-    this.subscription = this.currentContent.content$.pipe(
-      // we are only interested in items and groups
-      map(content => (content !== null && (isItemInfo(content) || isGroupInfo(content)) ? content : undefined)),
-    ).subscribe(content => {
-      if (!content) return;
-      if (isGroupInfo(content)) {
-        this.changeTab(groupsTabIdx);
-      } else if (isItemInfo(content)) {
-        if (isActivityInfo(content)) this.changeTab(activitiesTabIdx);
-        else this.changeTab(skillsTabIdx);
-      }
-    });
-  }
-
-  ngOnDestroy(): void {
-    this.subscription?.unsubscribe();
-  }
-
   onSelectionChangedByIdx(e: { index: number }): void {
     this.changeTab(e.index);
   }
 
   private changeTab(index: number): void {
-    this.activeTabIndex = index;
-    this.themeChange.emit(this.activeTabIndex === 2 ? 'dark' : null);
+    this.manualTabChange.next(index);
+    this.themeChange.emit(index === 2 ? 'dark' : null);
   }
 
-  retryError(): void {
-    this.navTreeServices[this.activeTabIndex]?.retry();
+  retryError(tabIndex: number): void {
+    this.navTreeServices[tabIndex]?.retry();
   }
 
+}
+
+function contentToTabIndex(content: ContentInfo|null): number|undefined {
+  if (content === null) return undefined;
+  if (isGroupInfo(content)) return groupsTabIdx;
+  if (isItemInfo(content)) {
+    return isActivityInfo(content) ? activitiesTabIdx : skillsTabIdx;
+  }
+  return undefined;
 }
