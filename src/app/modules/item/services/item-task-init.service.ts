@@ -8,6 +8,7 @@ import { TaskTokenService, TaskToken } from '../http-services/task-token.service
 import { Task, taskProxyFromIframe, taskUrlWithParameters } from '../task-communication/task-proxy';
 
 const taskChannelIdPrefix = 'task-';
+const loadTaskTimeout = 15 * SECONDS;
 
 export interface ItemTaskConfig {
   route: FullItemRoute,
@@ -41,7 +42,7 @@ export class ItemTaskInitService implements OnDestroy {
         const initialViews = { task: true, solution: true, editor: true, hints: true, grader: true, metadata: true };
         return task.load(initialViews).pipe(mapTo(task));
       }),
-      timeout(15 * SECONDS), // after the iframe has loaded, if no connection to jschannel is made, consider the task broken
+      timeout(loadTaskTimeout), // after the iframe has loaded, if no connection to jschannel is made, consider the task broken
     )),
     shareReplay(1),
   );
