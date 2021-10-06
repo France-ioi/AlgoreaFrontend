@@ -1,29 +1,29 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { appConfig } from 'src/app/shared/helpers/config';
+import { pipe } from 'fp-ts/function';
+import * as D from 'io-ts/Decoder';
+import { decodeSnakeCase } from '../../shared/operators/decode';
 
-export type GroupType = 'Class' | 'Team' | 'Club' | 'Friends' | 'Other' | 'Session' | 'Base';
-export type ManageType = 'none' | 'memberships' | 'memberships_and_group';
+const typeDecoder = D.literal('Class', 'Team', 'Club', 'Friends', 'Other', 'Session', 'Base');
+const manageTypeDecoder = D.literal('none', 'memberships', 'memberships_and_group');
 
-export interface Group {
-  id: string,
-  name: string,
-  type: GroupType,
-  canManage: ManageType,
-  canWatchMember: boolean,
-  canGrantGroupAccess: boolean,
-}
+const groupDecoder = pipe(
+  D.struct({
+    id: D.string,
+    name: D.string,
+    description: D.nullable(D.string),
+    type: typeDecoder,
+    canManage: manageTypeDecoder,
+    canWatchMembers: D.boolean,
+    canGrantGroupAccess: D.boolean,
+  }),
+);
 
-interface RawGroup {
-  id: string,
-  name: string,
-  type: GroupType,
-  can_manage: ManageType,
-  can_watch_members: boolean,
-  can_grant_group_access: boolean,
-}
+export type GroupType = D.TypeOf<typeof typeDecoder>;
+export type ManageType = D.TypeOf<typeof manageTypeDecoder>;
+export type Group = D.TypeOf<typeof groupDecoder>;
 
 @Injectable({
   providedIn: 'root'
@@ -34,18 +34,9 @@ export class ManagedGroupsService {
 
   getManagedGroups(): Observable<Group[]> {
     return this.http
-      .get<RawGroup[]>(`${appConfig.apiUrl}/current-user/managed-groups`)
+      .get<unknown>(`${appConfig.apiUrl}/current-user/managed-groups`)
       .pipe(
-        map(groups =>
-          groups.map(g => ({
-            id: g.id,
-            name: g.name,
-            type: g.type,
-            canManage: g.can_manage,
-            canWatchMember: g.can_watch_members,
-            canGrantGroupAccess: g.can_grant_group_access,
-          }))
-        )
+        decodeSnakeCase(D.array(groupDecoder)),
       );
   }
 

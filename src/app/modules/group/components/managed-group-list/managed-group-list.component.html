@@ -35,13 +35,13 @@
         <td>{{ getCanManage(group.canManage) }}</td>
         <td>
           <span class="table-icon"
-                [ngClass]="{
-                locked: group.canWatchMember,
-                unlocked: !group.canWatchMember
-              }">
-              <i *ngIf="!group.canWatchMember" class="fa fa-times"></i>
-              <i *ngIf="group.canWatchMember" class="fa fa-check"></i>
-            </span>
+            [ngClass]="{
+            locked: group.canWatchMembers,
+            unlocked: !group.canWatchMembers
+          }">
+            <i *ngIf="!group.canWatchMembers" class="fa fa-times"></i>
+            <i *ngIf="group.canWatchMembers" class="fa fa-check"></i>
+          </span>
         </td>
         <td>
           <span class="table-icon"
