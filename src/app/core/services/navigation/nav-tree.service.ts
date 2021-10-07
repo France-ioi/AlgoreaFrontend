@@ -53,6 +53,7 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
       );
     }, fetchingState<NavTreeData>() /* the switchScan seed */),
     delay(0),
+    shareReplay(1),
   );
 
   constructor(private currentContent: CurrentContentService) {}
