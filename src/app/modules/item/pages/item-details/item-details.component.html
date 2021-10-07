@@ -29,8 +29,8 @@
           *ngFor="let tab of taskTabs"
           class="nav-tab-item cursor-pointer"
           [routerLink]="'./'"
-          [class.active]="contentTab.isActive && tab.active"
-          (click)="tab.setActive()"
+          [class.active]="contentTab.isActive && tab.view === taskView"
+          (click)="setTaskTabActive(tab)"
         >
           {{ tab.name }}
         </a>
@@ -51,7 +51,7 @@
       <alg-item-content
         *ngIf="contentTab.isActive"
         [itemData]="itemData"
-        [defaultTaskView]="defaultTaskView"
+        [(taskView)]="taskView"
         (taskTabsChange)="setTaskTabs($event)"
       ></alg-item-content>
       <alg-item-progress

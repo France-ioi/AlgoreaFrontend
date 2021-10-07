@@ -21,7 +21,7 @@ export class ItemDetailsComponent implements OnDestroy {
   );
 
   taskTabs: TaskTab[] = [];
-  defaultTaskView?: TaskTab['view'];
+  taskView?: TaskTab['view'];
 
   fullFrameContent$ = this.layoutService.fullFrameContent$;
   readonly watchedGroup$ = this.userService.watchedGroup$;
@@ -47,7 +47,10 @@ export class ItemDetailsComponent implements OnDestroy {
 
   setTaskTabs(taskTabs: TaskTab[]): void {
     this.taskTabs = taskTabs;
-    this.defaultTaskView = taskTabs.find(tab => tab.active)?.view;
+  }
+
+  setTaskTabActive(tab: TaskTab): void {
+    this.taskView = tab.view;
   }
 
 }

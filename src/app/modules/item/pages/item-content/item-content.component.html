@@ -13,7 +13,8 @@
         [route]="itemData.route"
         [url]="itemData.item.url"
         [attemptId]="attemptId"
-        [defaultTaskView]="defaultTaskView"
+        [view]="taskView"
+        (viewChange)="taskViewChange.emit($event)"
         (tabsChange)="taskTabsChange.emit($event)"
       ></alg-item-display>
 
