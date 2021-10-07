@@ -7,7 +7,7 @@ import * as D from 'io-ts/Decoder';
 import { dateDecoder } from '../../../shared/helpers/decoders';
 import { decodeSnakeCase } from '../../../shared/operators/decode';
 
-const userDecoder = pipe(
+export const userDecoder = pipe(
   D.struct({
     grade: D.nullable(D.number),
     groupId: D.string,

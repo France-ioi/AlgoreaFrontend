@@ -1,72 +1,52 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { appConfig } from 'src/app/shared/helpers/config';
+import * as D from 'io-ts/Decoder';
+import { pipe } from 'fp-ts/function';
+import { decodeSnakeCase } from 'src/app/shared/operators/decode';
+import { userDecoder as memberDecoder } from 'src/app/modules/group/http-services/get-group-members.service';
 
-interface RawTeamDescendants {
-  id: string,
-  name: string,
-  grade: number,
-  members: {
-    login: string,
-    group_id: string,
-    first_name: string|null,
-    last_name: string|null,
-    grade: number|null,
-  }[],
-  parents: {
-    id: string,
-    name: string,
-  }[],
-}
+const parentDecoder = D.struct({
+  id: D.string,
+  name: D.string,
+});
 
-export interface TeamDescendants {
-  id: string,
-  name: string,
-  grade: number,
-  members: {
-    login: string,
-    groupId: string,
-    firstName: string|null,
-    lastName: string|null,
-    grade: number|null,
-  }[],
-  parents: {
-    id: string,
-    name: string,
-  }[],
-}
+const teamDescendantDecoder = pipe(
+  D.struct({
+    grade: D.number,
+    id: D.string,
+    members: D.array(memberDecoder),
+    name: D.string,
+    parents: D.array(parentDecoder),
+  }),
+);
 
-interface RawUserDescendant {
-  id: string,
-  name: string,
-  parents: {
-    id: string,
-    name: string,
-  }[],
-  user: {
-    login: string,
-    first_name: string|null,
-    last_name: string|null,
-    grade: number|null,
-  },
-}
+export type TeamDescendants = D.TypeOf<typeof teamDescendantDecoder>;
 
-export interface UserDescendant {
-  id: string,
-  name: string,
-  parents: {
-    id: string,
-    name: string,
-  }[],
-  user: {
-    login: string,
-    firstName?: string|null,
-    lastName?: string|null,
-    grade: number|null,
-  },
-}
+const userDecoder = pipe(
+  D.struct({
+    grade: D.nullable(D.number),
+    login: D.string,
+  }),
+  D.intersect(
+    D.partial({
+      firstName: D.string,
+      lastName: D.string,
+    })
+  )
+);
+
+const userDescendantDecoder = pipe(
+  D.struct({
+    id: D.string,
+    name: D.string,
+    parents: D.array(parentDecoder),
+    user: userDecoder,
+  }),
+);
+
+export type UserDescendant = D.TypeOf<typeof userDescendantDecoder>;
 
 @Injectable({
   providedIn: 'root'
@@ -82,19 +62,9 @@ export class GetGroupDescendantsService {
     let params = new HttpParams();
     if (sort.length > 0) params = params.set('sort', sort.join(','));
     return this.http
-      .get<RawUserDescendant[]>(`${appConfig.apiUrl}/groups/${groupId}/user-descendants`, { params: params })
+      .get<unknown>(`${appConfig.apiUrl}/groups/${groupId}/user-descendants`, { params: params })
       .pipe(
-        map(rawUserDescendants => rawUserDescendants.map(m => ({
-          id: m.id,
-          name: m.name,
-          parents: m.parents,
-          user: {
-            login: m.user.login,
-            firstName: m.user.first_name,
-            lastName: m.user.last_name,
-            grade: m.user.grade,
-          },
-        })))
+        decodeSnakeCase(D.array(userDescendantDecoder)),
       );
   }
 
@@ -105,21 +75,9 @@ export class GetGroupDescendantsService {
     let params = new HttpParams();
     if (sort.length > 0) params = params.set('sort', sort.join(','));
     return this.http
-      .get<RawTeamDescendants[]>(`${appConfig.apiUrl}/groups/${groupId}/team-descendants`, { params: params })
+      .get<unknown>(`${appConfig.apiUrl}/groups/${groupId}/team-descendants`, { params: params })
       .pipe(
-        map(rawTeamDescendants => rawTeamDescendants.map(t => ({
-          id: t.id,
-          name: t.name,
-          grade: t.grade,
-          members: t.members.map(m => ({
-            login: m.login,
-            groupId: m.group_id,
-            firstName: m.first_name,
-            lastName: m.last_name,
-            grade: m.grade,
-          })),
-          parents: t.parents,
-        })))
+        decodeSnakeCase(D.array(teamDescendantDecoder)),
       );
   }
 }
