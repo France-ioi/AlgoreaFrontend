@@ -1,7 +1,7 @@
 
 import { Component, Output } from '@angular/core';
 import { merge, Subject } from 'rxjs';
-import { delay, distinct, distinctUntilChanged, filter, map, startWith } from 'rxjs/operators';
+import { delay, distinctUntilChanged, filter, map, startWith } from 'rxjs/operators';
 import { isDefined } from 'src/app/shared/helpers/null-undefined-predicates';
 import { ContentInfo, RoutedContentInfo } from 'src/app/shared/models/content/content-info';
 import { isGroupInfo } from 'src/app/shared/models/content/group-info';
@@ -24,7 +24,7 @@ export class LeftNavComponent {
   @Output() selectId = this.currentContent.content$.pipe(
     filter((content): content is RoutedContentInfo => !!content?.route),
     map(content => content.route.id),
-    distinct(), // only emit 1x a change of id
+    distinctUntilChanged(), // only emit 1x a change of id
     delay(0),
   );
 

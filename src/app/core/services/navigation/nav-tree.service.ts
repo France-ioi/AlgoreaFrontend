@@ -1,5 +1,5 @@
 import { EMPTY, Observable, of, Subject } from 'rxjs';
-import { delay, distinct, map, startWith, switchScan } from 'rxjs/operators';
+import { delay, distinctUntilChanged, map, shareReplay, startWith, switchScan } from 'rxjs/operators';
 import { isDefined } from 'src/app/shared/helpers/null-undefined-predicates';
 import { repeatLatestWhen } from 'src/app/shared/helpers/repeatLatestWhen';
 import { fetchingState, FetchState, readyState } from 'src/app/shared/helpers/state';
@@ -15,7 +15,7 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
   state$ = this.currentContent.content$.pipe(
     // map those which are not of interest to `undefined`
     map(content => (this.isOfContentType(content) ? content : undefined)),
-    distinct(), // remove multiple `undefined`
+    distinctUntilChanged(), // remove multiple `undefined`
     startWith(undefined),
     repeatLatestWhen(this.reloadTrigger),
     switchScan((prevState: FetchState<NavTreeData>, contentInfo) => {
