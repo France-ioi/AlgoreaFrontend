@@ -68,8 +68,9 @@ export class ItemTaskService {
       askHint: () => {
         throw new Error('unimplemented method "askHint"');
       },
-      log: () => {
-        throw new Error('unimplemented method "askHint"');
+      log: (messages: string[]) => {
+        // eslint-disable-next-line no-console
+        console.log(...messages);
       },
     };
     task.bindPlatform(platform);
