@@ -28,24 +28,21 @@ export class SubSkillsComponent implements OnChanges, OnDestroy {
   private readonly params$ = new ReplaySubject<{ id: string, attemptId: string }>(1);
   readonly state$ = this.params$.pipe(
     distinctUntilChanged((a, b) => a.id === b.id && a.attemptId === b.attemptId),
-    switchMap(({ id, attemptId }) =>
-      this.getItemChildrenService.get(id, attemptId).pipe(
-        map(children =>
-          children
-            .filter(child => isASkill(child))
-            .map(child => {
-              const res = bestAttemptFromResults(child.results);
-              return {
-                ...child,
-                isLocked: !canCurrentUserViewItemContent(child),
-                result: res === null ? undefined : {
-                  attemptId: res.attemptId,
-                  score: res.scoreComputed,
-                },
-              };
-            })
-        )
-      )
+    switchMap(({ id, attemptId }) => this.getItemChildrenService.get(id, attemptId)),
+    map(children =>
+      children
+        .filter(child => isASkill(child))
+        .map(child => {
+          const res = bestAttemptFromResults(child.results);
+          return {
+            ...child,
+            isLocked: !canCurrentUserViewItemContent(child),
+            result: res === null ? undefined : {
+              attemptId: res.attemptId,
+              score: res.scoreComputed,
+            },
+          };
+        })
     ),
     mapToFetchState(),
   );

@@ -23,11 +23,8 @@ export class ParentSkillsComponent implements OnChanges, OnDestroy {
   private readonly params$ = new ReplaySubject<{ id: string, attemptId: string }>(1);
   readonly state$ = this.params$.pipe(
     distinctUntilChanged((a, b) => a.id === b.id && a.attemptId === b.attemptId),
-    switchMap(({ id, attemptId }) =>
-      this.getItemParentsService.get(id, attemptId).pipe(
-        map(parents => parents.map(parent => ({ ...parent, isLocked: !canCurrentUserViewItemContent(parent) })))
-      )
-    ),
+    switchMap(({ id, attemptId }) => this.getItemParentsService.get(id, attemptId)),
+    map(parents => parents.map(parent => ({ ...parent, isLocked: !canCurrentUserViewItemContent(parent) }))),
     mapToFetchState(),
   );
 

@@ -29,29 +29,27 @@ export class ChapterChildrenComponent implements OnChanges, OnDestroy {
   private readonly params$ = new ReplaySubject<{ id: string, attemptId: string }>(1);
   readonly state$ = this.params$.pipe(
     distinctUntilChanged((a, b) => a.id === b.id && a.attemptId === b.attemptId),
-    switchMap(({ id, attemptId }) =>
-      this.getItemChildrenService.get(id, attemptId).pipe(
-        map((itemChildren: ItemChild[]) => {
-          const children = itemChildren.map(child => {
-            const res = bestAttemptFromResults(child.results);
-            return {
-              ...child,
-              isLocked: !canCurrentUserViewItemContent(child),
-              result: res === null ? undefined : {
-                attemptId: res.attemptId,
-                validated: res.validated,
-                score: res.scoreComputed,
-              },
-            };
-          });
+    switchMap(({ id, attemptId }) => this.getItemChildrenService.get(id, attemptId)),
+    map((itemChildren: ItemChild[]) => {
+      const children = itemChildren.map(child => {
+        const res = bestAttemptFromResults(child.results);
+        return {
+          ...child,
+          isLocked: !canCurrentUserViewItemContent(child),
+          result: res === null ? undefined : {
+            attemptId: res.attemptId,
+            validated: res.validated,
+            score: res.scoreComputed,
+          },
+        };
+      });
 
-          return {
-            children,
-            missingValidation: !(this.itemData?.currentResult?.validated || children.filter(item => item.category === 'Validation')
-              .every(item => item.result && item.result.validated)),
-          };
-        })),
-    ),
+      return {
+        children,
+        missingValidation: !(this.itemData?.currentResult?.validated || children.filter(item => item.category === 'Validation')
+          .every(item => item.result && item.result.validated)),
+      };
+    }),
     mapToFetchState(),
   );
 

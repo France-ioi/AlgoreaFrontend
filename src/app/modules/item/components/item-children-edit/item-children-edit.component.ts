@@ -71,47 +71,42 @@ export class ItemChildrenEditComponent implements OnInit, OnDestroy, OnChanges {
   private readonly refresh$ = new Subject<void>();
   readonly state$: Observable<FetchState<PossiblyInvisibleChildData[]>> = this.params$.pipe(
     distinctUntilChanged((a, b) => a.id === b.id && a.attemptId === b.attemptId),
-    switchMap(({ id, attemptId }) =>
-      this.getItemChildrenService
-        .getWithInvisibleItems(id, attemptId)
-        .pipe(
-          map(children => children
-            .sort((a, b) => a.order - b.order)
-            .map((child): PossiblyInvisibleChildData => {
-              const baseChildData: BaseChildData = {
-                scoreWeight: child.scoreWeight,
-                contentViewPropagation: child.contentViewPropagation,
-                editPropagation: child.editPropagation,
-                grantViewPropagation: child.grantViewPropagation,
-                upperViewLevelsPropagation: child.upperViewLevelsPropagation,
-                watchPropagation: child.watchPropagation,
-                permissions: child.permissions,
-              };
+    switchMap(({ id, attemptId }) => this.getItemChildrenService.getWithInvisibleItems(id, attemptId)),
+    map(children => children
+      .sort((a, b) => a.order - b.order)
+      .map((child): PossiblyInvisibleChildData => {
+        const baseChildData: BaseChildData = {
+          scoreWeight: child.scoreWeight,
+          contentViewPropagation: child.contentViewPropagation,
+          editPropagation: child.editPropagation,
+          grantViewPropagation: child.grantViewPropagation,
+          upperViewLevelsPropagation: child.upperViewLevelsPropagation,
+          watchPropagation: child.watchPropagation,
+          permissions: child.permissions,
+        };
 
-              if (isVisibleItemChild(child)) {
-                const res = bestAttemptFromResults(child.results);
-                return {
-                  ...baseChildData,
-                  id: child.id,
-                  title: child.string.title,
-                  type: child.type,
-                  isVisible: true,
-                  result: res === null ? undefined : {
-                    attemptId: res.attemptId,
-                    validated: res.validated,
-                    score: res.scoreComputed,
-                  },
-                };
-              }
+        if (isVisibleItemChild(child)) {
+          const res = bestAttemptFromResults(child.results);
+          return {
+            ...baseChildData,
+            id: child.id,
+            title: child.string.title,
+            type: child.type,
+            isVisible: true,
+            result: res === null ? undefined : {
+              attemptId: res.attemptId,
+              validated: res.validated,
+              score: res.scoreComputed,
+            },
+          };
+        }
 
-              return {
-                ...baseChildData,
-                id: child.id,
-                isVisible: false,
-              };
-            })
-          )
-        )
+        return {
+          ...baseChildData,
+          id: child.id,
+          isVisible: false,
+        };
+      })
     ),
     mapToFetchState({ resetter: this.refresh$ }),
   );
