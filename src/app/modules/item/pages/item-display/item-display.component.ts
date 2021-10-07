@@ -32,18 +32,14 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
   @Input() attemptId!: string;
   @Input() view?: TaskTab['view'];
 
+  @Output() viewChange = this.taskService.activeView$;
+  @Output() tabsChange: Observable<TaskTab[]> = this.taskService.views$.pipe(
+    map(views => views.map(view => ({ view, name: this.getTabNameByView(view) }))),
+  );
+
   @ViewChild('iframe') iframe?: ElementRef<HTMLIFrameElement>;
 
   state$ = this.taskService.task$.pipe(mapToFetchState());
-
-  private tabs$: Observable<TaskTab[]> = this.taskService.views$.pipe(
-    map(views => views.map(view => ({ view, name: this.getTabNameByView(view) }))),
-  );
-  private activeTabView$ = this.taskService.activeView$;
-
-  @Output() tabsChange = this.tabs$;
-  @Output() viewChange = this.activeTabView$;
-
   iframeSrc$ = this.taskService.iframeSrc$;
 
   // Start updating the iframe height to match the task's height
