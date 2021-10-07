@@ -19,12 +19,12 @@
         routerLinkActive #contentTab="routerLinkActive"
         [routerLinkActiveOptions]="{exact: true}"
         [class.active]="contentTab.isActive"
-        [hidden]="taskTabs.length > 0"
+        [hidden]="taskTabs.length > 1"
         i18n
       >
         Content
       </a>
-      <ng-container *ngIf="taskTabs.length > 0">
+      <ng-container *ngIf="taskTabs.length > 1">
         <a
           *ngFor="let tab of taskTabs"
           class="nav-tab-item cursor-pointer"
