@@ -18,22 +18,35 @@
         [routerLink]="'./'"
         routerLinkActive #contentTab="routerLinkActive"
         [routerLinkActiveOptions]="{exact: true}"
-        [class.active]="contentTab.isActive" i18n>
+        [class.active]="contentTab.isActive" i18n
+        [hidden]="contentTab.isActive && taskTabs.length > 0"
+      >
         Content
       </a>
+      <ng-container *ngIf="contentTab.isActive && taskTabs.length > 0">
+        <a
+          *ngFor="let tab of taskTabs"
+          class="nav-tab-item cursor-pointer"
+          [class.active]="contentTab.isActive && tab.active"
+          (click)="tab.setActive()"
+        >
+          {{ tab.name }}
+        </a>
+      </ng-container>
       <a
         *ngIf="!(watchedGroup$ | async) || itemData.item.permissions.canWatch !== 'none' || !contentTab.isActive"
         class="nav-tab-item"
         [routerLink]="'./progress'"
         routerLinkActive #progressTab="routerLinkActive"
-        [class.active]="progressTab?.isActive">
+        [class.active]="progressTab?.isActive"
+      >
         <i class="fa fa-chart-line"></i>
         &nbsp;
         <span i18n>Progress</span>
       </a>
     </nav>
     <div class="bg-white">
-      <alg-item-content *ngIf="contentTab.isActive" [itemData]="itemData"></alg-item-content>
+      <alg-item-content *ngIf="contentTab.isActive" [itemData]="itemData" (tabs)="taskTabs = $event"></alg-item-content>
       <alg-item-progress
         *ngIf="progressTab?.isActive || !!(watchedGroup$ | async) && !contentTab.isActive"
         [itemData]="itemData"

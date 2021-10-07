@@ -13,6 +13,7 @@
         [route]="itemData.route"
         [url]="itemData.item.url"
         [attemptId]="attemptId"
+        (tabs)="tabs.emit($event)"
       ></alg-item-display>
 
       <alg-sub-skills [itemData]="itemData" *ngIf="itemData.item.type === 'Skill'"></alg-sub-skills>

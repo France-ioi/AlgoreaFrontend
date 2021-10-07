@@ -1,5 +1,5 @@
-import { AfterViewChecked, Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
-import { interval, merge, Observable } from 'rxjs';
+import { AfterViewChecked, Component, ElementRef, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { combineLatest, interval, merge, Observable } from 'rxjs';
 import { filter, map, startWith, switchMap } from 'rxjs/operators';
 import { SECONDS } from 'src/app/shared/helpers/duration';
 import { isNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
@@ -15,9 +15,13 @@ const initialHeight = 1200;
 const additionalHeightToPreventInnerScrollIssues = 40;
 const heightSyncInterval = 0.2*SECONDS;
 
-interface TaskTab {
+interface Tab {
   name: string,
   view: string,
+}
+export interface TaskTab extends Tab {
+  active: boolean,
+  setActive: () => void,
 }
 
 @Component({
@@ -35,10 +39,18 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
 
   state$ = this.taskService.task$.pipe(mapToFetchState());
 
-  tabs$: Observable<TaskTab[]> = this.taskService.views$.pipe(
+  private tabs$: Observable<Tab[]> = this.taskService.views$.pipe(
     map(views => views.map(view => ({ view, name: this.getTabNameByView(view) }))),
   );
-  activeTabView$ = this.taskService.activeView$;
+  private activeTabView$ = this.taskService.activeView$;
+
+  @Output() tabs = combineLatest([ this.tabs$, this.activeTabView$ ]).pipe(
+    map(([ tabs, activeView ]) => tabs.map(tab => ({
+      ...tab,
+      active: tab.view === activeView,
+      setActive: (): void => this.taskService.showView(tab.view),
+    })))
+  );
 
   iframeSrc$ = this.taskService.iframeSrc$;
 
@@ -75,7 +87,7 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
     }
   }
 
-  setActiveTab(tab: TaskTab): void {
+  setActiveTab(tab: Tab): void {
     this.taskService.showView(tab.view);
   }
 
