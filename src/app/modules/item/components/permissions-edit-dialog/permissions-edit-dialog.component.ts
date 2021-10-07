@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from
 import { FormBuilder } from '@angular/forms';
 import { ProgressSelectValue } from
   'src/app/modules/shared-components/components/collapsible-section/progress-select/progress-select.component';
-import { Permissions } from 'src/app/shared/http-services/group-permissions.service';
+import { GroupPermissions } from 'src/app/shared/http-services/group-permissions.service';
 import { TypeFilter } from '../composition-filter/composition-filter.component';
 import { generateCanEditValues, generateCanGrantViewValues,
   generateCanViewValues, generateCanWatchValues } from './permissions-edit-dialog-texts';
@@ -16,10 +16,10 @@ export class PermissionsEditDialogComponent implements OnChanges {
 
   @Input() visible?: boolean;
   @Input() title?: string;
-  @Input() permissions?: Permissions;
+  @Input() permissions?: GroupPermissions;
   @Input() targetType: TypeFilter = 'Users';
   @Output() close = new EventEmitter<void>();
-  @Output() save = new EventEmitter<Permissions>();
+  @Output() save = new EventEmitter<Partial<GroupPermissions>>();
 
   targetTypeString = '';
 
@@ -48,14 +48,7 @@ export class PermissionsEditDialogComponent implements OnChanges {
     }
 
     if (this.permissions) {
-      this.form.reset({
-        canView: this.permissions.can_view,
-        canGrantView: this.permissions.can_grant_view,
-        canWatch: this.permissions.can_watch,
-        canEdit: this.permissions.can_edit,
-        canMakeSessionOfficial: this.permissions.can_make_session_official,
-        isOwner: this.permissions.is_owner,
-      }, { emitEvent: false });
+      this.form.reset({ ...this.permissions }, { emitEvent: false });
     }
   }
 
@@ -64,16 +57,16 @@ export class PermissionsEditDialogComponent implements OnChanges {
   }
 
   onAccept(): void {
-    const permissions: Permissions = {
-      can_view: this.form.get('canView')?.value as Permissions['can_view'],
-      can_grant_view: this.form.get('canGrantView')?.value as Permissions['can_grant_view'],
-      can_watch: this.form.get('canWatch')?.value as Permissions['can_watch'],
-      can_edit: this.form.get('canEdit')?.value as Permissions['can_edit'],
-      can_make_session_official: this.form.get('canMakeSessionOfficial')?.value as Permissions['can_make_session_official'],
-      is_owner: this.form.get('isOwner')?.value as Permissions['is_owner'],
+    const groupPermissions: Partial<GroupPermissions> = {
+      canView: this.form.get('canView')?.value as GroupPermissions['canView'],
+      canGrantView: this.form.get('canGrantView')?.value as GroupPermissions['canGrantView'],
+      canWatch: this.form.get('canWatch')?.value as GroupPermissions['canWatch'],
+      canEdit: this.form.get('canEdit')?.value as GroupPermissions['canEdit'],
+      canMakeSessionOfficial: this.form.get('canMakeSessionOfficial')?.value as GroupPermissions['canMakeSessionOfficial'],
+      isOwner: this.form.get('isOwner')?.value as GroupPermissions['isOwner'],
     };
 
-    this.save.emit(permissions);
+    this.save.emit(groupPermissions);
     this.close.emit();
   }
 }

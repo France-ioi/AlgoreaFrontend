@@ -4,24 +4,36 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { appConfig } from '../helpers/config';
 import { assertSuccess, SimpleActionResponse } from './action-response';
+import * as D from 'io-ts/Decoder';
+import { permissionsDecoder } from 'src/app/modules/item/helpers/item-permissions';
+import { pipe } from 'fp-ts/lib/function';
+import { decodeSnakeCase } from '../operators/decode';
+import { dateDecoder } from '../helpers/decoders';
 
-export interface Permissions {
-  can_view: 'none'|'info'|'content'|'content_with_descendants'|'solution',
-  can_grant_view: 'none'|'enter'|'content'|'content_with_descendants'|'solution'|'solution_with_grant',
-  can_watch: 'none'|'result'|'answer'|'answer_with_grant',
-  can_edit: 'none'|'children'|'all'|'all_with_grant',
-  can_make_session_official: boolean,
-  is_owner: boolean,
-}
+const groupPermissionsDecoder = pipe(
+  permissionsDecoder,
+  D.intersect(
+    D.struct({
+      canMakeSessionOfficial: D.boolean,
+      canEnterFrom: dateDecoder
+    })
+  )
+);
 
-interface GroupPermissions {
-  granted: Permissions,
-  computed: Permissions,
-  granted_via_group_membership: Permissions,
-  granted_via_item_unlocking: Permissions,
-  granted_via_self: Permissions,
-  granted_via_other: Permissions,
-}
+const groupPermissionsInfoDecoder = D.struct({
+  granted: pipe(groupPermissionsDecoder, D.intersect(D.struct({
+    canEnterUntil: dateDecoder
+  }))),
+  computed: groupPermissionsDecoder,
+  grantedViaGroupMembership: groupPermissionsDecoder,
+  grantedViaItemUnlocking: groupPermissionsDecoder,
+  grantedViaSelf: groupPermissionsDecoder,
+  grantedViaOther: groupPermissionsDecoder,
+});
+
+export type GroupPermissionsInfo = D.TypeOf<typeof groupPermissionsInfoDecoder>;
+
+export type GroupPermissions = GroupPermissionsInfo['granted'];
 
 @Injectable({
   providedIn: 'root'
@@ -30,14 +42,28 @@ export class GroupPermissionsService {
 
   constructor(private http: HttpClient) { }
 
-  getPermissions(sourceGroupId: string, groupId: string, itemId: string): Observable<GroupPermissions> {
+  getPermissions(sourceGroupId: string, groupId: string, itemId: string): Observable<GroupPermissionsInfo> {
     return this.http
-      .get<GroupPermissions>(`${appConfig.apiUrl}/groups/${sourceGroupId}/permissions/${groupId}/${itemId}`);
+      .get<GroupPermissionsInfo>(`${appConfig.apiUrl}/groups/${sourceGroupId}/permissions/${groupId}/${itemId}`).pipe(
+        decodeSnakeCase(groupPermissionsInfoDecoder),
+      );
   }
 
-  updatePermissions(sourceGroupId: string, groupId: string, itemId: string, permissions: Permissions): Observable<void> {
+  updatePermissions(sourceGroupId: string, groupId: string, itemId: string,
+    permissions: Partial<GroupPermissions>): Observable<void> {
+
+    const body = {
+      can_view: permissions.canView,
+      can_grant_view: permissions.canGrantView,
+      can_watch: permissions.canWatch,
+      can_edit: permissions.canEdit,
+      can_make_session_official: permissions.canMakeSessionOfficial,
+      is_owner: permissions.isOwner,
+      can_enter_from: undefined,
+      can_enter_until: undefined,
+    };
     return this.http
-      .put<SimpleActionResponse>(`${appConfig.apiUrl}/groups/${sourceGroupId}/permissions/${groupId}/${itemId}`, permissions)
+      .put<SimpleActionResponse>(`${appConfig.apiUrl}/groups/${sourceGroupId}/permissions/${groupId}/${itemId}`, body)
       .pipe(map(assertSuccess));
   }
 }
