@@ -48,7 +48,14 @@ export class PermissionsEditDialogComponent implements OnChanges {
     }
 
     if (this.permissions) {
-      this.form.reset({ ...this.permissions }, { emitEvent: false });
+      this.form.reset({
+        canView: this.permissions.can_view,
+        canGrantView: this.permissions.can_grant_view,
+        canWatch: this.permissions.can_watch,
+        canEdit: this.permissions.can_edit,
+        canMakeSessionOfficial: this.permissions.can_make_session_official,
+        isOwner: this.permissions.is_owner,
+      }, { emitEvent: false });
     }
   }
 

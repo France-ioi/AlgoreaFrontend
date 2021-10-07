@@ -26,7 +26,7 @@
           <ng-template #content let-collapsed>
             <alg-progress-select
               [collapsed]="collapsed"
-              formControlName="can_view"
+              formControlName="canView"
               [values]="canViewValues"
             ></alg-progress-select>
           </ng-template>
@@ -44,7 +44,7 @@
           <ng-template #content let-collapsed>
             <alg-progress-select
               [collapsed]="collapsed"
-              formControlName="can_grant_view"
+              formControlName="canGrantView"
               [values]="canGrantViewValues"
             ></alg-progress-select>
           </ng-template>
@@ -54,7 +54,7 @@
           <ng-template #content let-collapsed>
             <alg-progress-select
               [collapsed]="collapsed"
-              formControlName="can_watch"
+              formControlName="canWatch"
               [values]="canWatchValues"
             ></alg-progress-select>
           </ng-template>
@@ -64,7 +64,7 @@
           <ng-template #content let-collapsed>
             <alg-progress-select
               [collapsed]="collapsed"
-              formControlName="can_edit"
+              formControlName="canEdit"
               [values]="canEditValues"
             ></alg-progress-select>
           </ng-template>
@@ -72,7 +72,7 @@
 
         <alg-collapsible-section i18n-title title="Can attach official sessions" icon="fa fa-paperclip">
           <ng-template #content let-collapsed>
-            <alg-switch-field [collapsed]="collapsed" formControlName="can_make_session_official">
+            <alg-switch-field [collapsed]="collapsed" formControlName="canMakeSessionOfficial">
               <ng-template #label>
                 <span i18n>{{targetTypeString}} may attach official sessions to this item, that will be visible to everyone in the content tab of the item</span>
               </ng-template>
@@ -82,7 +82,7 @@
 
         <alg-collapsible-section i18n-title title="Is owner" icon="fa fa-user-tie">
           <ng-template #content let-collapsed>
-            <alg-switch-field [collapsed]="collapsed" formControlName="is_owner">
+            <alg-switch-field [collapsed]="collapsed" formControlName="isOwner">
               <ng-template #label>
                 <span i18n>{{targetTypeString}} own this item, and get the maximum access in all categories above, and may also delete this item</span>
               </ng-template>
