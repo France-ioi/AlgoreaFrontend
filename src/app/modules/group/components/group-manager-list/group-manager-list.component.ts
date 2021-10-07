@@ -4,7 +4,7 @@ import { GroupData } from '../../services/group-datasource.service';
 import { RemoveGroupManagerService } from '../../http-services/remove-group-manager.service';
 import { ActionFeedbackService } from '../../../../shared/services/action-feedback.service';
 import { forkJoin, ReplaySubject, Subject } from 'rxjs';
-import { distinct, switchMap, map } from 'rxjs/operators';
+import { switchMap, map, distinctUntilChanged } from 'rxjs/operators';
 import { mapToFetchState } from '../../../../shared/operators/state';
 
 @Component({
@@ -24,7 +24,7 @@ export class GroupManagerListComponent implements OnChanges, OnDestroy {
   private refresh$ = new Subject<void>();
   private readonly groupId$ = new ReplaySubject<string>(1);
   readonly state$ = this.groupId$.pipe(
-    distinct(),
+    distinctUntilChanged(),
     switchMap(id => this.getGroupManagersService.getGroupManagers(id).pipe(
       map(managers => managers.map(manager => ({
         ...manager,
