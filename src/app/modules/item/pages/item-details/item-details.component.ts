@@ -44,4 +44,8 @@ export class ItemDetailsComponent implements OnDestroy {
     this.itemDataSource.refreshItem();
   }
 
+  setTaskTabs(taskTabs: TaskTab[]): void {
+    this.taskTabs = taskTabs;
+  }
+
 }

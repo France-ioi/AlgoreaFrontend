@@ -44,7 +44,7 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
   );
   private activeTabView$ = this.taskService.activeView$;
 
-  @Output() tabs = combineLatest([ this.tabs$, this.activeTabView$ ]).pipe(
+  @Output() tabsChange = combineLatest([ this.tabs$, this.activeTabView$ ]).pipe(
     map(([ tabs, activeView ]) => tabs.map(tab => ({
       ...tab,
       active: tab.view === activeView,

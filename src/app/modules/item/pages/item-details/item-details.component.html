@@ -46,7 +46,7 @@
       </a>
     </nav>
     <div class="bg-white">
-      <alg-item-content *ngIf="contentTab.isActive" [itemData]="itemData" (tabs)="taskTabs = $event"></alg-item-content>
+      <alg-item-content *ngIf="contentTab.isActive" [itemData]="itemData" (taskTabsChange)="setTaskTabs($event)"></alg-item-content>
       <alg-item-progress
         *ngIf="progressTab?.isActive || !!(watchedGroup$ | async) && !contentTab.isActive"
         [itemData]="itemData"
