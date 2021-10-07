@@ -133,6 +133,7 @@ export class ItemChildrenEditComponent implements OnInit, OnDestroy, OnChanges {
 
   ngOnDestroy(): void {
     this.refresh$.complete();
+    this.params$.complete();
     this.subscription?.unsubscribe();
   }
 

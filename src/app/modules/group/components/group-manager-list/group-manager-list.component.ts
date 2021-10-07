@@ -49,6 +49,7 @@ export class GroupManagerListComponent implements OnChanges, OnDestroy {
 
   ngOnDestroy(): void {
     this.refresh$.complete();
+    this.groupId$.complete();
   }
 
   private getManagerLevel(manager: Manager): string {
