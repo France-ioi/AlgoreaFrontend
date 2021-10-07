@@ -34,6 +34,7 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
   @Input() route!: FullItemRoute;
   @Input() url!: string;
   @Input() attemptId!: string;
+  @Input() defaultTaskView?: TaskTab['view'];
 
   @ViewChild('iframe') iframe?: ElementRef<HTMLIFrameElement>;
 
@@ -66,6 +67,7 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
 
   ngOnInit(): void {
     this.taskService.configure(this.route, this.url, this.attemptId);
+    if (this.defaultTaskView) this.taskService.showView(this.defaultTaskView);
   }
 
   ngAfterViewChecked(): void {

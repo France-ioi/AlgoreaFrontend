@@ -10,6 +10,7 @@ import { TaskTab } from '../item-display/item-display.component';
 export class ItemContentComponent implements OnChanges {
 
   @Input() itemData?: ItemData;
+  @Input() defaultTaskView?: TaskTab['view'];
   @Output() taskTabsChange = new EventEmitter<TaskTab[]>();
 
   attemptId?: string;

@@ -4,7 +4,7 @@ import { canCurrentUserViewItemContent } from '../../helpers/item-permissions';
 import { ItemDataSource } from '../../services/item-datasource.service';
 import { mapStateData } from 'src/app/shared/operators/state';
 import { LayoutService } from '../../../../shared/services/layout.service';
-import { NavigationEnd, Router, RouterLinkActive } from '@angular/router';
+import { ActivatedRoute, RouterLinkActive } from '@angular/router';
 import { TaskTab } from '../item-display/item-display.component';
 
 @Component({
@@ -21,19 +21,20 @@ export class ItemDetailsComponent implements OnDestroy {
   );
 
   taskTabs: TaskTab[] = [];
+  defaultTaskView?: TaskTab['view'];
 
   fullFrameContent$ = this.layoutService.fullFrameContent$;
   readonly watchedGroup$ = this.userService.watchedGroup$;
 
-  private subscription = this.router.events.subscribe(event => {
-    if (event instanceof NavigationEnd) this.taskTabs = [];
+  private subscription = this.activatedRoute.params.subscribe(() => {
+    this.taskTabs = []; // reset task tabs when item changes.
   });
 
   constructor(
     private userService: UserSessionService,
     private itemDataSource: ItemDataSource,
     private layoutService: LayoutService,
-    private router: Router,
+    private activatedRoute: ActivatedRoute,
   ) {}
 
   ngOnDestroy(): void {
@@ -46,6 +47,7 @@ export class ItemDetailsComponent implements OnDestroy {
 
   setTaskTabs(taskTabs: TaskTab[]): void {
     this.taskTabs = taskTabs;
+    this.defaultTaskView = taskTabs.find(tab => tab.active)?.view;
   }
 
 }
