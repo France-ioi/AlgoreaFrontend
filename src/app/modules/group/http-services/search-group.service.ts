@@ -3,18 +3,19 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { appConfig } from 'src/app/shared/helpers/config';
+import * as D from 'io-ts/Decoder';
+import { decodeSnakeCase } from '../../../shared/operators/decode';
 
-interface GroupInfos {
-  id: string,
-  name: string,
-  description: string|null,
-}
+const groupInfoDecoder = D.struct({
+  id: D.string,
+  name: D.string,
+  description: D.nullable(D.string),
+  type: D.literal('Class', 'Team', 'Club', 'Friends', 'Other', 'User', 'Base'),
+});
 
-interface Group extends GroupInfos {
-  type: 'Class'|'Team'|'Club'|'Friends'|'Other'|'Base',
-}
+export type Group = D.TypeOf<typeof groupInfoDecoder>;
 
-export interface GroupFound extends GroupInfos {
+export interface GroupFound extends Group {
   type: 'Class'|'Team'|'Club'|'Friends'|'Other',
 }
 
@@ -37,7 +38,10 @@ export class SearchGroupService {
     return this.http.get<Group[]>(
       `${appConfig.apiUrl}/current-user/available-groups`,
       { params: params },
-    ).pipe(map(groups => groups.filter(notBase)));
+    ).pipe(
+      decodeSnakeCase(D.array(groupInfoDecoder)),
+      map(groups => groups.filter(notBase)),
+    );
   }
 
   searchPossibleSubgroups(
@@ -48,6 +52,9 @@ export class SearchGroupService {
     return this.http.get<Group[]>(
       `${appConfig.apiUrl}/groups/possible-subgroups`,
       { params: params },
-    ).pipe(map(groups => groups.filter(notBase)));
+    ).pipe(
+      decodeSnakeCase(D.array(groupInfoDecoder)),
+      map(groups => groups.filter(notBase))
+    );
   }
 }
