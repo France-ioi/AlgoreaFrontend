@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { concat, Observable, of, OperatorFunction, pipe } from 'rxjs';
+import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { ContentInfo } from 'src/app/shared/models/content/content-info';
 import { GroupInfo, isGroupInfo } from 'src/app/shared/models/content/group-info';
 import { groupRoute } from 'src/app/shared/routing/group-route';
@@ -13,7 +13,7 @@ import { NavTreeService } from './nav-tree.service';
 @Injectable({
   providedIn: 'root'
 })
-export class GroupNavTreeService extends NavTreeService<GroupInfo> {
+export class GroupNavTreeService extends NavTreeService<GroupInfo, GroupNavigationData> {
 
   constructor(
     currentContent: CurrentContentService,
@@ -23,14 +23,24 @@ export class GroupNavTreeService extends NavTreeService<GroupInfo> {
     super(currentContent);
   }
 
+  childrenNavigation(): OperatorFunction<GroupInfo|undefined,GroupNavigationData|undefined> {
+    return pipe(
+      distinctUntilChanged((g1, g2) => g1?.route.id === g2?.route.id),
+      switchMap(group => {
+        if (!group) return of(undefined);
+        return concat(of(undefined), this.groupNavigationService.getGroupNavigation(group.route.id));
+      })
+    );
+  }
+
   isOfContentType(content: ContentInfo|null): content is GroupInfo {
     return isGroupInfo(content);
   }
 
-  addDetailsToTreeElement(contentInfo: GroupInfo, treeElement: NavTreeElement): NavTreeElement {
+  addDetailsToTreeElement(treeElement: NavTreeElement, contentInfo: GroupInfo, children?: GroupNavigationData): NavTreeElement {
     let group = treeElement;
     if (contentInfo.title) group = { ...group, title: contentInfo.title };
-    if (contentInfo.navData) group = { ...group, children: contentInfo.navData.children.map(g => this.mapChild(g)) };
+    if (children) group = { ...group, children: children.children.map(g => this.mapChild(g)) };
     return group;
   }
 

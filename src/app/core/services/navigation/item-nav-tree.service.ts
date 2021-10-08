@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { concat, Observable, of, OperatorFunction, pipe } from 'rxjs';
+import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { bestAttemptFromResults, defaultAttemptId } from 'src/app/shared/helpers/attempts';
 import { isSkill, ItemTypeCategory, typeCategoryOfItem } from 'src/app/shared/helpers/item-type';
 import { ContentInfo } from 'src/app/shared/models/content/content-info';
@@ -12,7 +12,7 @@ import { ItemNavigationChild, ItemNavigationData, ItemNavigationService } from '
 import { NavTreeElement } from '../../models/left-nav-loading/nav-tree-data';
 import { NavTreeService } from './nav-tree.service';
 
-abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
+abstract class ItemNavTreeService extends NavTreeService<ItemInfo, ItemNavigationData> {
 
   constructor(
     private category: ItemTypeCategory,
@@ -21,6 +21,22 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
     private itemRouter: ItemRouter,
   ) {
     super(currentContent);
+  }
+
+  childrenNavigation(): OperatorFunction<ItemInfo|undefined,ItemNavigationData|undefined> {
+    return pipe(
+      map(content => {
+        if (!content) return undefined;
+        if (content.details && ![ 'Chapter', 'Skill' ].includes(content.details?.type)) return undefined;
+        const attemptId = content.details?.attemptId;
+        return attemptId ? { ...content.route, attemptId } : undefined;
+      }),
+      distinctUntilChanged((x, y) => x?.id === y?.id),
+      switchMap(route => {
+        if (!route) return of(undefined);
+        return concat(of(undefined), this.itemNavService.getItemNavigation(route.id, route.attemptId, isSkill(route.contentType)));
+      })
+    );
   }
 
   fetchRootTreeData(): Observable<NavTreeElement[]> {
@@ -38,7 +54,7 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
     );
   }
 
-  addDetailsToTreeElement(contentInfo: ItemInfo, treeElement: NavTreeElement): NavTreeElement {
+  addDetailsToTreeElement(treeElement: NavTreeElement, contentInfo: ItemInfo, children?: ItemNavigationData): NavTreeElement {
     let element = treeElement;
     if (contentInfo.details) {
       const details = contentInfo.details;
@@ -54,11 +70,8 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
       };
     }
     const attemptId = contentInfo.details?.attemptId;
-    if (contentInfo.navData && attemptId) {
-      element = {
-        ...element,
-        children: contentInfo.navData.children.map(c => this.mapChild(c, attemptId)),
-      };
+    if (children && attemptId) {
+      element = { ...element, children: children.children.map(c => this.mapChild(c, attemptId)) };
     }
     return element;
   }
