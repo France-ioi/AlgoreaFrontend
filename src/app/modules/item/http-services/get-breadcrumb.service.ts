@@ -6,18 +6,27 @@ import { isRouteWithSelfAttempt, FullItemRoute } from 'src/app/shared/routing/it
 import { appConfig } from 'src/app/shared/helpers/config';
 import { tagError } from 'src/app/shared/helpers/errors';
 import { ensureDefined } from 'src/app/shared/helpers/null-undefined-predicates';
-import { ItemType, typeCategoryOfItem } from '../../../shared/helpers/item-type';
+import { typeCategoryOfItem } from '../../../shared/helpers/item-type';
+import { pipe } from 'fp-ts/function';
+import * as D from 'io-ts/Decoder';
+import { decodeSnakeCase } from '../../../shared/operators/decode';
 
 export const breadcrumbServiceTag = 'breadcrumbservice';
 
-interface RawBreadcrumbItem {
-  item_id: string,
-  title: string,
-  language_tag: string,
-  attempt_id?: string, // set in all but the last one if parent_attempt_id param has been given
-  attempt_number?: string, //  set in all but the last one if parent_attempt_id param has been given
-  type: ItemType,
-}
+const breadcrumbItemDecoder = pipe(
+  D.struct({
+    itemId: D.string,
+    languageTag: D.string,
+    title: D.string,
+    type: D.literal('Chapter', 'Task', 'Course', 'Skill'),
+  }),
+  D.intersect(
+    D.partial({
+      attemptId: D.string,
+      attemptNumber: D.string,
+    })
+  )
+);
 
 export interface BreadcrumbItem {
   itemId: string,
@@ -35,29 +44,30 @@ export class GetBreadcrumbService {
 
   getBreadcrumb(itemRoute: FullItemRoute): Observable<BreadcrumbItem[]> {
     return this.http
-      .get<RawBreadcrumbItem[]>(`${appConfig.apiUrl}/items/${itemRoute.path.concat([ itemRoute.id ]).join('/')}/breadcrumbs`, {
+      .get<unknown>(`${appConfig.apiUrl}/items/${itemRoute.path.concat([ itemRoute.id ]).join('/')}/breadcrumbs`, {
         params: isRouteWithSelfAttempt(itemRoute) ? { attempt_id: itemRoute.attemptId } : { parent_attempt_id: itemRoute.parentAttemptId }
       })
       .pipe(
+        decodeSnakeCase(D.array(breadcrumbItemDecoder)),
         map(items => {
           const last = ensureDefined(items[items.length - 1]);
 
           // all but last are ensured to have attempt_id, treat the last one separetely
           return items.slice(0,-1).map((item, idx) => ({
-            itemId: item.item_id,
+            itemId: item.itemId,
             title: item.title,
             route: {
-              id: item.item_id,
-              path: items.slice(0,idx).map(it => it.item_id),
+              id: item.itemId,
+              path: items.slice(0,idx).map(it => it.itemId),
               // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-              attemptId: item.attempt_id!, // the service ensures the attempt for all but last is given
+              attemptId: item.attemptId!, // the service ensures the attempt for all but last is given
               contentType: typeCategoryOfItem(item),
             } as FullItemRoute,
-            attemptCnt: item.attempt_number ? +item.attempt_number : undefined,
+            attemptCnt: item.attemptNumber ? +item.attemptNumber : undefined,
           })).concat([{
-            itemId: last.item_id,
+            itemId: last.itemId,
             title: last.title,
-            attemptCnt: last.attempt_number ? +last.attempt_number : undefined,
+            attemptCnt: last.attemptNumber ? +last.attemptNumber : undefined,
             route: itemRoute
           }]);
         }),
