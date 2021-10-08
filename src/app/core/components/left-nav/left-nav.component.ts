@@ -38,6 +38,7 @@ export class LeftNavComponent {
     )
   ).pipe(
     startWith(0),
+    distinctUntilChanged(),
     map(idx => ({ index: idx })), // using object so that Angular ngIf does not ignore the "0" index
   );
 
