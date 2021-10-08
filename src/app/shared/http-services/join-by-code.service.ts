@@ -4,38 +4,51 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { appConfig } from 'src/app/shared/helpers/config';
 import { assertSuccess, SimpleActionResponse } from 'src/app/shared/http-services/action-response';
+import * as D from 'io-ts/Decoder';
+import { pipe } from 'fp-ts/function';
+import { decodeSnakeCase } from 'src/app/shared/operators/decode';
+import { dateDecoder } from '../helpers/decoders';
 
-interface RawGroupInfos {
-  managers: {
-    id: string,
-    login: string,
-    first_name: string|null,
-    last_name: string|null,
-  }[],
-  name: string,
-  require_lock_membership_approval_until: string|null,
-  require_personal_info_access_approval: 'none'|'view'|'edit',
-  require_watch_approval: boolean,
-  root_activity_id: string|null,
-  root_skill_id: string|null,
-}
+const managerDecoder = D.struct({
+  id: D.string,
+  firstName: D.nullable(D.string),
+  lastName: D.nullable(D.string),
+  login: D.string,
+});
 
-export interface GroupInfos {
-  managers: {
-    id: string,
-    login: string,
-    firstName: string|null,
-    lastName: string|null,
-  }[],
-  name: string,
-  requireLockMembershipApprovalUntil: Date|null,
-  requirePersonalInfoAccessApproval: 'none'|'view'|'edit',
-  requireWatchApproval: boolean,
-  rootActivityId: string|null,
-  rootSkillId: string|null,
-}
+const groupDecoder = D.struct({
+  name: D.string,
+  requireLockMembershipApprovalUntil: D.nullable(dateDecoder),
+  requirePersonalInfoAccessApproval: D.literal('none', 'view', 'edit'),
+  requireWatchApproval: D.boolean,
+  rootActivityId: D.nullable(D.string),
+  rootSkillId: D.nullable(D.string),
+  managers: D.array(managerDecoder),
+});
 
-export type InvalidCodeReason = 'no_group'|'frozen_membership'|'already_member'|'conflicting_team_participation'|'team_conditions_not_met';
+const invalidReasonDecoder = D.literal(
+  'no_group',
+  'frozen_membership',
+  'already_member',
+  'conflicting_team_participation',
+  'team_conditions_not_met'
+);
+
+const isCodeValidDecoder = pipe(
+  D.struct({
+    valid: D.boolean,
+  }),
+  D.intersect(
+    D.partial({
+      group: groupDecoder,
+      reason: invalidReasonDecoder,
+    }),
+  ),
+);
+
+export type IsCodeValid = D.TypeOf<typeof isCodeValidDecoder>;
+
+export type InvalidCodeReason = D.TypeOf<typeof invalidReasonDecoder>;
 
 @Injectable({
   providedIn: 'root'
@@ -44,30 +57,15 @@ export class JoinByCodeService {
 
   constructor(private http: HttpClient) { }
 
-  checkCodeValidity(code: string): Observable<{valid: false, reason: InvalidCodeReason} | {valid: true, group: GroupInfos}> {
+  checkCodeValidity(code: string): Observable<IsCodeValid> {
     let params = new HttpParams();
     params = params.set('code', code);
     return this.http
-      .get<{valid: false, reason: InvalidCodeReason}|{valid: true, group: RawGroupInfos}>(`${appConfig.apiUrl}/groups/is-code-valid`,
+      .get<unknown>(`${appConfig.apiUrl}/groups/is-code-valid`,
         { params: params })
-      .pipe(map(r => (r.valid ? {
-        valid: true,
-        group: {
-          managers: r.group.managers.map(m => ({
-            id: m.id,
-            login: m.login,
-            firstName: m.first_name,
-            lastName: m.last_name,
-          })),
-          name: r.group.name,
-          requireLockMembershipApprovalUntil:
-            r.group.require_lock_membership_approval_until === null ? null : new Date(r.group.require_lock_membership_approval_until),
-          requirePersonalInfoAccessApproval: r.group.require_personal_info_access_approval,
-          requireWatchApproval: r.group.require_watch_approval,
-          rootActivityId: r.group.root_activity_id,
-          rootSkillId: r.group.root_skill_id,
-        }
-      } : { valid: false, reason: r.reason })));
+      .pipe(
+        decodeSnakeCase(isCodeValidDecoder),
+      );
   }
 
   joinGroupThroughCode(code: string, approvals: string[] = []): Observable<void> {

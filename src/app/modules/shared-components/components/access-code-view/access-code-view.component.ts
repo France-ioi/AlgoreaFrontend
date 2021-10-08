@@ -31,9 +31,13 @@ export class AccessCodeViewComponent {
     this.joinByCodeService.checkCodeValidity(this.code).subscribe(response => {
       this.state = 'ready';
 
-      if (!response.valid) {
+      if (!response.valid && response.reason) {
         this.actionFeedbackService.error(this.invalidCodeReasonToString(response.reason));
         return;
+      }
+
+      if (!response.group) {
+        throw new Error('Unexpected: Missed group for invalid state');
       }
 
       let message = $localize`Are you sure you want to join the group "${response.group.name}"?`;
