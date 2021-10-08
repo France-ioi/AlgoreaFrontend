@@ -27,7 +27,7 @@ export class GroupNavTreeService extends NavTreeService<GroupInfo, GroupNavigati
     return pipe(
       distinctUntilChanged((g1, g2) => g1?.route.id === g2?.route.id),
       switchMap(group => {
-        if (!group) return of(undefined);
+        if (!group || group.route.isUser) return of(undefined);
         return concat(of(undefined), this.groupNavigationService.getGroupNavigation(group.route.id));
       })
     );
