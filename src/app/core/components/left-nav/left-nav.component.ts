@@ -42,7 +42,7 @@ export class LeftNavComponent {
     map(idx => ({ index: idx })), // using object so that Angular ngIf does not ignore the "0" index
   );
 
-  @Output() themeChange = this.activeTab$.pipe(map(tab => (tab.index === 2 ? 'dark' : null)), delay(0));
+  @Output() useDarkTheme = this.activeTab$.pipe(map(tab => tab.index === groupsTabIdx), delay(0));
 
   readonly navTreeServices = [ this.activityNavTreeService, this.skillNavTreeService, this.groupNavTreeService ];
   currentUser$ = this.sessionService.userProfile$.pipe(delay(0));
