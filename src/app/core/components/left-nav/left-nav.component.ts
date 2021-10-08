@@ -24,7 +24,7 @@ export class LeftNavComponent {
   @Output() selectId = this.currentContent.content$.pipe(
     filter((content): content is RoutedContentInfo => !!content?.route),
     map(content => content.route.id),
-    distinctUntilChanged(), // only emit 1x a change of id
+    distinctUntilChanged(), // only emit once the id changes
     delay(0),
   );
 
