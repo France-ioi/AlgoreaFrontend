@@ -7,7 +7,7 @@ import { pipe } from 'fp-ts/function';
 import { decodeSnakeCase } from 'src/app/shared/operators/decode';
 import { userDecoder as memberDecoder } from 'src/app/modules/group/http-services/get-group-members.service';
 
-const parentDecoder = D.struct({
+const descendantParentDecoder = D.struct({
   id: D.string,
   name: D.string,
 });
@@ -18,7 +18,7 @@ const teamDescendantDecoder = pipe(
     id: D.string,
     members: D.array(memberDecoder),
     name: D.string,
-    parents: D.array(parentDecoder),
+    parents: D.array(descendantParentDecoder),
   }),
 );
 
@@ -41,7 +41,7 @@ const userDescendantDecoder = pipe(
   D.struct({
     id: D.string,
     name: D.string,
-    parents: D.array(parentDecoder),
+    parents: D.array(descendantParentDecoder),
     user: userDecoder,
   }),
 );
