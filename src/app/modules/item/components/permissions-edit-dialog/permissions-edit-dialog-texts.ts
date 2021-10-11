@@ -71,13 +71,11 @@ export function generateCanGrantViewValues(targetType: TypeFilter): ProgressSele
       value: 'solution',
       label: $localize`Solution`,
       comment: $localize`${targetTypeString} can also grant \'Can view: solution\' access`,
-      disabled: true
     },
     {
       value: 'solution_with_grant',
       label: $localize`Solution and grant`,
       comment: $localize`${targetTypeString} can also grant \'Can grant view\' access`,
-      disabled: true
     }
   ];
 }
