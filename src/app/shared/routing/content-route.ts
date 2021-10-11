@@ -21,3 +21,8 @@ export function pathAsParameter(value: string[]): UrlCommandParameters {
   params[pathParamName] = value;
   return params;
 }
+
+export function pathEquals(path1: Id[], path2: Id[]): boolean {
+  if (path1.length !== path2.length) return false;
+  return path1.every((id, idx) => id === path2[idx]);
+}

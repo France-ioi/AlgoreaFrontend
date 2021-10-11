@@ -27,8 +27,8 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo, ItemNavigatio
     return pipe(
       map(content => {
         if (!content) return undefined;
-        if (content.details && ![ 'Chapter', 'Skill' ].includes(content.details?.type)) return undefined;
-        const attemptId = content.details?.attemptId;
+        if (!content.details || ![ 'Chapter', 'Skill' ].includes(content.details?.type)) return undefined;
+        const attemptId = content.route.attemptId ? content.route.attemptId : content.details?.attemptId;
         return attemptId ? { ...content.route, attemptId } : undefined;
       }),
       distinctUntilChanged((x, y) => x?.id === y?.id),
