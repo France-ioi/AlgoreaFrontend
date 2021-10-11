@@ -32,6 +32,8 @@ export class SwitchFieldComponent implements ControlValueAccessor {
   @Input() value = false;
   @Input() collapsed = false;
 
+  @Input() validationErrors?: string[];
+
   @ContentChild('description') descriptionTemplate?: TemplateRef<any>;
   @ContentChild('label') labelTemplate?: TemplateRef<any>;
 

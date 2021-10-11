@@ -23,4 +23,10 @@
       </div>
     </div>
   </div>
+  <div class="item error" *ngIf="validationErrors">
+    <i class="icon" [ngClass]="'fa fa-exclamation-triangle'"></i>
+    <div class="errors">
+      <p *ngFor="let error of validationErrors">{{error}}</p>
+    </div>
+  </div>
 </div>

@@ -19,7 +19,11 @@
         <i
           *ngIf="idx === selected"
           class="fa"
-          [ngClass]="{'fa-lock-open': type === 'checksWithLock', 'fa-check': type === 'simple'}"
+          [ngClass]="{
+            'fa-lock': validationErrors && type === 'checksWithLock',
+            'fa-lock-open': !validationErrors && type === 'checksWithLock',
+            'fa-check': type === 'simple'
+          }"
         ></i>
       </span>
       <span *ngIf="idx + 1 < values.length" class="progress-branch" [ngClass]="{active: idx < selected}"></span>
@@ -29,5 +33,11 @@
       <div class="progress-desc-comment">{{ item.comment }}</div>
     </div>
     <div *ngIf="item.disabled" class="gray-overlay"></div>
+  </div>
+  <div class="progress-select-item error" *ngIf="validationErrors">
+    <i class="icon" [ngClass]="'fa fa-exclamation-triangle'"></i>
+    <div class="errors">
+      <p *ngFor="let error of validationErrors">{{error}}</p>
+    </div>
   </div>
 </div>
