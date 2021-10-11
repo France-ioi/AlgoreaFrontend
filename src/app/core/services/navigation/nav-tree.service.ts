@@ -12,7 +12,7 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo, Childre
 
   private reloadTrigger = new Subject<void>();
 
-  contentInfo$ = this.currentContent.content$.pipe( // only keep those of interest for the current nav tree
+  private contentInfo$ = this.currentContent.content$.pipe( // only keep those of interest for the current nav tree
     // map those which are not of interest to `undefined`
     map(content => (this.isOfContentType(content) ? content : undefined)),
     distinctUntilChanged(), // remove multiple `undefined`
@@ -35,8 +35,8 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo, Childre
         // CASE: the content is among the displayed items
         //       -> updates its data, and either select it if at root or shift the tree "to the left" otherwise
         const contentId = contentInfo.route.id;
-        const contentInMenuLev1 = prevState.data.hasLevel1Element(contentId);
-        const contentInMenuLev2 = prevState.data.hasLevel2Element(contentId);
+        const contentInMenuLev1 = prevData.hasLevel1Element(contentId);
+        const contentInMenuLev2 = prevData.hasLevel2Element(contentId);
         if (contentInMenuLev1 || contentInMenuLev2) {
           let data = contentInMenuLev1 ? prevData.withSelection(contentId) : prevData.subNavMenuData(contentId);
           data = data.withUpdatedElement(contentId, el => this.addDetailsToTreeElement(el, contentInfo, children));
