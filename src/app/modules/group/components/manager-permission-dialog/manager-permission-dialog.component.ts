@@ -33,7 +33,7 @@ export class ManagerPermissionDialogComponent implements OnChanges {
     },
     {
       value: 'memberships_and_group',
-      label: $localize`Full`,
+      label: $localize`Memberships and group`,
       comment: $localize`Can manage members, managers, and change group settings`
     },
   ];

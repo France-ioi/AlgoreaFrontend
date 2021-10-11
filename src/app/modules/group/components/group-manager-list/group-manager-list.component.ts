@@ -86,7 +86,7 @@ export class GroupManagerListComponent implements OnChanges {
     ).subscribe({
       next: () => {
         this.removalInProgress = false;
-        this.feedbackService.success($localize`User(s) have been removed`);
+        this.feedbackService.success($localize`Selected managers have been removed.`);
         this.selection = [];
         this.reloadData();
       },
