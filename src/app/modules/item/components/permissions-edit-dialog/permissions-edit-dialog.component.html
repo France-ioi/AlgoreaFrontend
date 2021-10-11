@@ -1,5 +1,5 @@
 <p-dialog
-  *ngIf="permissions"
+  *ngIf="permissions && giverPermissions"
   [visible]="visible"
   [modal]="true"
   [draggable]="false"
@@ -22,12 +22,16 @@
     <div class="dialog-content">
 
       <form [formGroup]="form">
-        <alg-collapsible-section i18n-title title="Can view" icon="fa fa-eye">
+        <alg-collapsible-section
+          i18n-title title="Can view" icon="fa fa-eye"
+          [collapsible]="!form.errors?.canView"
+        >
           <ng-template #content let-collapsed>
             <alg-progress-select
               [collapsed]="collapsed"
               formControlName="canView"
               [values]="canViewValues"
+              [validationErrors]="form.errors?.canView"
             ></alg-progress-select>
           </ng-template>
         </alg-collapsible-section>
@@ -40,39 +44,58 @@
           <ng-template #label i18n>{{targetTypeString}} may enter this item (a contest or time-limited chapter)</ng-template>
         </alg-switch-field>-->
 
-        <alg-collapsible-section i18n-title title="Can grant view" icon="fa fa-key">
+        <alg-collapsible-section
+          i18n-title title="Can grant view" icon="fa fa-key"
+          [collapsible]="!form.errors?.canGrantView"
+        >
           <ng-template #content let-collapsed>
             <alg-progress-select
               [collapsed]="collapsed"
               formControlName="canGrantView"
               [values]="canGrantViewValues"
+              [validationErrors]="form.errors?.canGrantView"
             ></alg-progress-select>
           </ng-template>
         </alg-collapsible-section>
 
-        <alg-collapsible-section i18n-title title="Can watch" icon="fa fa-binoculars">
+        <alg-collapsible-section
+          i18n-title title="Can watch" icon="fa fa-binoculars"
+          [collapsible]="!form.errors?.canWatch"
+        >
           <ng-template #content let-collapsed>
             <alg-progress-select
               [collapsed]="collapsed"
               formControlName="canWatch"
               [values]="canWatchValues"
+              [validationErrors]="form.errors?.canWatch"
             ></alg-progress-select>
           </ng-template>
         </alg-collapsible-section>
 
-        <alg-collapsible-section i18n-title title="Can edit" icon="fa fa-pencil-alt">
+        <alg-collapsible-section
+          i18n-title title="Can edit" icon="fa fa-pencil-alt"
+          [collapsible]="!form.errors?.canEdit"
+        >
           <ng-template #content let-collapsed>
             <alg-progress-select
               [collapsed]="collapsed"
               formControlName="canEdit"
               [values]="canEditValues"
+              [validationErrors]="form.errors?.canEdit"
             ></alg-progress-select>
           </ng-template>
         </alg-collapsible-section>
 
-        <alg-collapsible-section i18n-title title="Can attach official sessions" icon="fa fa-paperclip">
+        <alg-collapsible-section
+          i18n-title title="Can attach official sessions" icon="fa fa-paperclip"
+          [collapsible]="!form.errors?.canMakeSessionOfficial"
+        >
           <ng-template #content let-collapsed>
-            <alg-switch-field [collapsed]="collapsed" formControlName="canMakeSessionOfficial">
+            <alg-switch-field
+              [collapsed]="collapsed"
+              formControlName="canMakeSessionOfficial"
+              [validationErrors]="form.errors?.canMakeSessionOfficial"
+            >
               <ng-template #label>
                 <span i18n>{{targetTypeString}} may attach official sessions to this item, that will be visible to everyone in the content tab of the item</span>
               </ng-template>
@@ -80,9 +103,16 @@
           </ng-template>
         </alg-collapsible-section>
 
-        <alg-collapsible-section i18n-title title="Is owner" icon="fa fa-user-tie">
+        <alg-collapsible-section
+          i18n-title title="Is owner" icon="fa fa-user-tie"
+          [collapsible]="!form.errors?.isOwner"
+        >
           <ng-template #content let-collapsed>
-            <alg-switch-field [collapsed]="collapsed" formControlName="isOwner">
+            <alg-switch-field
+              [collapsed]="collapsed"
+              formControlName="isOwner"
+              [validationErrors]="form.errors?.isOwner"
+            >
               <ng-template #label>
                 <span i18n>{{targetTypeString}} own this item, and get the maximum access in all categories above, and may also delete this item</span>
               </ng-template>
@@ -90,7 +120,6 @@
           </ng-template>
         </alg-collapsible-section>
       </form>
-
     </div>
   </div>
 
@@ -107,7 +136,7 @@
         i18n-label label="Proceed"
         class="p-button-rounded"
         (click)="onAccept()"
-        [disabled]="!form.dirty"
+        [disabled]="!form.dirty || form.invalid"
       ></alg-button>
     </div>
   </p-footer>
