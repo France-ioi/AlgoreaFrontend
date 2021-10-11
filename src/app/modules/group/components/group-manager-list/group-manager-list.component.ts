@@ -3,9 +3,11 @@ import { GetGroupManagersService, Manager } from '../../http-services/get-group-
 import { GroupData } from '../../services/group-datasource.service';
 import { RemoveGroupManagerService } from '../../http-services/remove-group-manager.service';
 import { ActionFeedbackService } from '../../../../shared/services/action-feedback.service';
-import { forkJoin, ReplaySubject, Subject } from 'rxjs';
+import { concat, forkJoin, ReplaySubject, Subject } from 'rxjs';
 import { switchMap, map, distinctUntilChanged } from 'rxjs/operators';
 import { mapToFetchState } from '../../../../shared/operators/state';
+import { UserSessionService } from '../../../../shared/services/user-session.service';
+import { ConfirmationService } from 'primeng/api';
 
 @Component({
   selector: 'alg-group-manager-list',
@@ -39,6 +41,8 @@ export class GroupManagerListComponent implements OnChanges, OnDestroy {
     private removeGroupManagerService: RemoveGroupManagerService,
     private actionFeedbackService: ActionFeedbackService,
     private feedbackService: ActionFeedbackService,
+    private userService: UserSessionService,
+    private confirmationService: ConfirmationService,
   ) {}
 
   ngOnChanges(_changes: SimpleChanges): void {
@@ -75,29 +79,73 @@ export class GroupManagerListComponent implements OnChanges, OnDestroy {
     this.selection = managers;
   }
 
-  onRemove(): void {
-    if (this.selection.length === 0 || !this.groupData) {
+  onRemove(event: Event): void {
+    if (this.selection.length === 0) {
       return;
+    }
+
+    const currentUserId = this.userService.session$.getValue()?.user.groupId;
+
+    if (!currentUserId) {
+      throw new Error('Unexpected: Missed current user ID');
+    }
+
+    if (this.selection.some(manager => manager.id === currentUserId)) {
+      this.confirmationService.confirm({
+        target: event.target || undefined,
+        key: 'commonPopup',
+        icon: 'pi pi-exclamation-triangle',
+        message: $localize`Are you sure to remove yourself from the managers of this group. You may lose manager access and 
+          not be able to restore it.`,
+        acceptLabel: $localize`Yes, remove me from the group managers`,
+        acceptButtonStyleClass: 'p-button-danger',
+        acceptIcon: 'fa fa-check',
+        rejectLabel: $localize`No`,
+        accept: () => this.remove(),
+      });
+
+      return;
+    }
+
+    this.remove();
+  }
+
+  remove(): void {
+    if (!this.groupData) {
+      throw new Error('Unexpected: Missed groupData');
+    }
+
+    const currentUserId = this.userService.session$.getValue()?.user.groupId;
+
+    if (!currentUserId) {
+      throw new Error('Unexpected: Missed current user ID');
+    }
+
+    if (this.selection.some(manager => manager.id === currentUserId)) {
+      const foundIndex = this.selection.findIndex(manager => manager.id === currentUserId);
+      const currentUser = this.selection.splice(foundIndex, 1);
+      this.selection = [ ...this.selection, ...currentUser ];
     }
 
     const groupId = this.groupData.group.id;
 
     this.removalInProgress = true;
 
-    forkJoin(
-      this.selection.map(manager => this.removeGroupManagerService.remove(groupId, manager.id))
-    ).subscribe({
-      next: () => {
-        this.removalInProgress = false;
-        this.feedbackService.success($localize`Selected managers have been removed.`);
-        this.selection = [];
-        this.reloadData();
-      },
-      error: () => {
-        this.removalInProgress = false;
-        this.actionFeedbackService.unexpectedError();
-      }
-    });
+    forkJoin([
+      concat(...this.selection.map(manager => this.removeGroupManagerService.remove(groupId, manager.id))),
+    ])
+      .subscribe({
+        next: () => {
+          this.removalInProgress = false;
+          this.feedbackService.success($localize`Selected managers have been removed.`);
+          this.selection = [];
+          this.reloadData();
+        },
+        error: () => {
+          this.removalInProgress = false;
+          this.actionFeedbackService.unexpectedError();
+        }
+      });
   }
 
   openPermissionsEditDialog(manager: Manager & { canManageAsText: string }): void {
