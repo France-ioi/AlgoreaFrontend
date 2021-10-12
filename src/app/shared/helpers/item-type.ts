@@ -9,6 +9,10 @@ export function isASkill(item: ItemWithType): boolean {
   return item.type === 'Skill';
 }
 
+export function mayHaveChildren(item: ItemWithType): boolean {
+  return item.type === 'Chapter' || item.type === 'Skill';
+}
+
 export function typeCategoryOfItem(item: ItemWithType): ItemTypeCategory {
   return item.type === 'Skill' ? 'skill' : 'activity';
 }

@@ -25,50 +25,61 @@
         This panel lets you select what you allow the selected user or group of users to do on the current group and its descendants.
       </p>
 
-      <alg-progress-section
+      <form [formGroup]="form">
+        <alg-collapsible-section
+          [collapsible]="false"
+          [collapsed]="false"
           i18n-title title="Management level"
           icon="fa fa-users-cog"
-          [(value)]="managerValues.canManage"
-          [values]="managementLevelValues"
+        >
+          <ng-template #content let-collapsed>
+            <alg-progress-select
+              formControlName="canManage"
+              [values]="managementLevelValues"
+              [collapsed]="collapsed"
+              type="simple"
+            >
+              <ng-container #description>
+                <span description i18n>The permissions that the user(s) has on this group</span>
+              </ng-container>
+            </alg-progress-select>
+          </ng-template>
+        </alg-collapsible-section>
+
+        <alg-collapsible-section
           [collapsible]="false"
           [collapsed]="false"
-          type="simple"
-          (valueChange)="onValueChange()"
-      >
-        <ng-template #description>
-          <span i18n>The permissions that the user(s) has on this group</span>
-        </ng-template>
-      </alg-progress-section>
-
-      <alg-boolean-section
           i18n-title title="Can grant access"
           icon="fa fa-key"
-          [(value)]="managerValues.canGrantGroupAccess"
+        >
+          <ng-template #content let-collapsed>
+            <alg-switch-field [collapsed]="collapsed" formControlName="canGrantGroupAccess">
+              <ng-template #label>
+                <span label i18n>
+                  User(s) can give and revoke members access to some content
+                </span>
+              </ng-template>
+            </alg-switch-field>
+          </ng-template>
+        </alg-collapsible-section>
+
+        <alg-collapsible-section
           [collapsible]="false"
           [collapsed]="false"
-          (valueChange)="onValueChange()"
-      >
-        <ng-template #label>
-          <span i18n>
-            User(s) can give and revoke members access to some content
-          </span>
-        </ng-template>
-      </alg-boolean-section>
-
-      <alg-boolean-section
           i18n-title title="Can watch members"
           icon="fa fa-binoculars"
-          [(value)]="managerValues.canWatchMembers"
-          [collapsible]="false"
-          [collapsed]="false"
-          (valueChange)="onValueChange()"
-      >
-        <ng-template #label>
-          <span i18n>
-            User(s) can watch the members' activity on some content
-          </span>
-        </ng-template>
-      </alg-boolean-section>
+        >
+          <ng-template #content let-collapsed>
+            <alg-switch-field [collapsed]="collapsed" formControlName="canWatchMembers">
+              <ng-template #label>
+                <span i18n>
+                  User(s) can watch the members' activity on some content
+                </span>
+              </ng-template>
+            </alg-switch-field>
+          </ng-template>
+        </alg-collapsible-section>
+      </form>
     </div>
   </div>
 
@@ -80,17 +91,17 @@
 
       <ng-template #buttons>
         <alg-button
-            icon="fa fa-times"
-            i18n-label label="Cancel"
-            class="p-button-rounded p-button-danger"
-            (click)="onClose()"
+          icon="fa fa-times"
+          i18n-label label="Cancel"
+          class="p-button-rounded p-button-danger"
+          (click)="onClose()"
         ></alg-button>
         <alg-button
-            icon="fa fa-check"
-            i18n-label label="Proceed"
-            class="p-button-rounded"
-            (click)="onAccept()"
-            [disabled]="!valuesChanged"
+          icon="fa fa-check"
+          i18n-label label="Save"
+          class="p-button-rounded"
+          (click)="onAccept()"
+          [disabled]="!form.dirty"
         ></alg-button>
       </ng-template>
     </div>

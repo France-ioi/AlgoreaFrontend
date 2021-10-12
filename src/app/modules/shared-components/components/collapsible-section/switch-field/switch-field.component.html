@@ -1,0 +1,26 @@
+<div *ngIf="collapsed" class="header-content">
+  <ng-container *ngIf="value; else no" i18n>Yes</ng-container>
+  <ng-template #no i18n>No</ng-template>
+</div>
+
+<div *ngIf="!collapsed" class="body">
+  <div class="item">
+    <div class="desc header-comment" *ngIf="descriptionTemplate">
+      <ng-container [ngTemplateOutlet]="descriptionTemplate"></ng-container>
+    </div>
+  </div>
+  <div class="item">
+    <div class="switch">
+      <alg-switch [checked]="value" (change)="onSet($event)" mode="circular"></alg-switch>
+    </div>
+    <div class="desc">
+      <div class="desc-name" [ngClass]="{ active: value }" (click)="onSet(!value)">
+        <ng-container
+          *ngIf="labelTemplate"
+          [ngTemplateOutlet]="labelTemplate"
+          [ngTemplateOutletContext]="{ $implicit: value }"
+        ></ng-container>
+      </div>
+    </div>
+  </div>
+</div>

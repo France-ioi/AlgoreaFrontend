@@ -1,11 +1,4 @@
 <div class="item-display" *ngIf="state$ | async as state">
-  <ng-container *ngIf="tabs$ | async as tabs">
-    <nav *ngIf="tabs.length > 1" class="nav-tab">
-      <a class="nav-tab-item cursor-pointer" *ngFor="let tab of tabs" (click)="setActiveTab(tab)" [class.active]="tab.view === (activeTabView$ | async)">
-        {{tab.name}}
-      </a>
-    </nav>
-  </ng-container>
   <div *ngIf="state.isError" class="errors">
     <alg-error i18n-message message="Unable to load the task"></alg-error>
     <ng-container *ngIf="['all', 'all_with_grant'].includes(canEdit)">

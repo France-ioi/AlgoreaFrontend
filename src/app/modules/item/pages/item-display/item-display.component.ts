@@ -1,4 +1,4 @@
-import { AfterViewChecked, Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewChecked, Component, ElementRef, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { interval, merge, Observable } from 'rxjs';
 import { filter, map, startWith, switchMap } from 'rxjs/operators';
 import { SECONDS } from 'src/app/shared/helpers/duration';
@@ -17,7 +17,7 @@ const initialHeight = 0;
 const additionalHeightToPreventInnerScrollIssues = 40;
 const heightSyncInterval = 0.2*SECONDS;
 
-interface TaskTab {
+export interface TaskTab {
   name: string,
   view: string,
 }
@@ -33,6 +33,7 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
   @Input() url!: string;
   @Input() canEdit: PermissionsInfo['canEdit'] = 'none';
   @Input() attemptId!: string;
+  @Input() view?: TaskTab['view'];
 
   @ViewChild('iframe') iframe?: ElementRef<HTMLIFrameElement>;
 
@@ -40,13 +41,13 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
   initError$ = this.taskService.initError$;
   urlError$ = this.taskService.urlError$;
   unknownError$ = this.taskService.unknownError$;
+  iframeSrc$ = this.taskService.iframeSrc$.pipe(map(url => this.sanitizer.bypassSecurityTrustResourceUrl(url)));
 
-  tabs$: Observable<TaskTab[]> = this.taskService.views$.pipe(
+  @Output() viewChange = this.taskService.activeView$;
+  @Output() tabsChange: Observable<TaskTab[]> = this.taskService.views$.pipe(
     map(views => views.map(view => ({ view, name: this.getTabNameByView(view) }))),
   );
-  activeTabView$ = this.taskService.activeView$;
 
-  iframeSrc$ = this.taskService.iframeSrc$.pipe(map(url => this.sanitizer.bypassSecurityTrustResourceUrl(url)));
 
   // Start updating the iframe height to match the task's height
   iframeHeight$ = merge(
@@ -61,6 +62,7 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
 
   ngOnInit(): void {
     this.taskService.configure(this.route, this.url, this.attemptId);
+    this.taskService.showView(this.view ?? 'task');
   }
 
   ngAfterViewChecked(): void {
@@ -69,6 +71,7 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    if (changes.view && this.view) this.taskService.showView(this.view);
     if (
       changes.route &&
       !changes.route.firstChange &&
@@ -80,10 +83,6 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
     if (changes.attemptId && !changes.attemptId.firstChange) {
       throw new Error('this component does not support changing its attemptId input');
     }
-  }
-
-  setActiveTab(tab: TaskTab): void {
-    this.taskService.showView(tab.view);
   }
 
   private getTabNameByView(view: string): string {

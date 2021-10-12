@@ -1,5 +1,6 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { ItemData } from '../../services/item-datasource.service';
+import { TaskTab } from '../item-display/item-display.component';
 
 @Component({
   selector: 'alg-item-content',
@@ -9,6 +10,10 @@ import { ItemData } from '../../services/item-datasource.service';
 export class ItemContentComponent implements OnChanges {
 
   @Input() itemData?: ItemData;
+  @Input() taskView?: TaskTab['view'];
+
+  @Output() taskTabsChange = new EventEmitter<TaskTab[]>();
+  @Output() taskViewChange = new EventEmitter<TaskTab['view']>();
 
   attemptId?: string;
 

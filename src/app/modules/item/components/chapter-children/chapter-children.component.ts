@@ -1,4 +1,4 @@
-import { Subscription } from 'rxjs';
+import { ReplaySubject } from 'rxjs';
 import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
 import { canCurrentUserViewItemContent } from '../../helpers/item-permissions';
 import { GetItemChildrenService, ItemChild } from '../../http-services/get-item-children.service';
@@ -6,6 +6,8 @@ import { ItemData } from '../../services/item-datasource.service';
 import { bestAttemptFromResults } from 'src/app/shared/helpers/attempts';
 import { ItemRouter } from 'src/app/shared/routing/item-router';
 import { typeCategoryOfItem } from 'src/app/shared/helpers/item-type';
+import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
+import { mapToFetchState } from '../../../../shared/operators/state';
 
 interface ItemChildAdditions {
   isLocked: boolean,
@@ -24,18 +26,45 @@ interface ItemChildAdditions {
 export class ChapterChildrenComponent implements OnChanges, OnDestroy {
   @Input() itemData?: ItemData;
 
-  state: 'loading' | 'error' | 'empty' | 'ready' | 'ready-missing-validation' = 'loading';
-  children: (ItemChild&ItemChildAdditions)[] = [];
+  private readonly params$ = new ReplaySubject<{ id: string, attemptId: string }>(1);
+  readonly state$ = this.params$.pipe(
+    distinctUntilChanged((a, b) => a.id === b.id && a.attemptId === b.attemptId),
+    switchMap(({ id, attemptId }) => this.getItemChildrenService.get(id, attemptId)),
+    map((itemChildren: ItemChild[]) => {
+      const children = itemChildren.map(child => {
+        const res = bestAttemptFromResults(child.results);
+        return {
+          ...child,
+          isLocked: !canCurrentUserViewItemContent(child),
+          result: res === null ? undefined : {
+            attemptId: res.attemptId,
+            validated: res.validated,
+            score: res.scoreComputed,
+          },
+        };
+      });
+
+      return {
+        children,
+        missingValidation: !(this.itemData?.currentResult?.validated || children.filter(item => item.category === 'Validation')
+          .every(item => item.result && item.result.validated)),
+      };
+    }),
+    mapToFetchState(),
+  );
 
   constructor(
     private getItemChildrenService: GetItemChildrenService,
     private itemRouter: ItemRouter,
   ) {}
 
-  private subscription?: Subscription;
-
   ngOnChanges(_changes: SimpleChanges): void {
-    this.reloadData();
+    if (this.itemData?.currentResult) {
+      this.params$.next({
+        id: this.itemData.item.id,
+        attemptId: this.itemData.currentResult.attemptId,
+      });
+    }
   }
 
   click(child: ItemChild&ItemChildAdditions): void {
@@ -51,43 +80,7 @@ export class ChapterChildrenComponent implements OnChanges, OnDestroy {
     });
   }
 
-  private reloadData(): void {
-    if (this.itemData?.currentResult) {
-      this.state = 'loading';
-      this.subscription?.unsubscribe();
-      this.subscription = this.getItemChildrenService
-        .get(this.itemData.item.id, this.itemData.currentResult.attemptId)
-        .subscribe({
-          next: children => {
-            this.children = children.map(child => {
-              const res = bestAttemptFromResults(child.results);
-              return {
-                ...child,
-                isLocked: !canCurrentUserViewItemContent(child),
-                result: res === null ? undefined : {
-                  attemptId: res.attemptId,
-                  validated: res.validated,
-                  score: res.scoreComputed,
-                },
-              };
-            });
-
-            if (this.children.length === 0) this.state = 'empty';
-            else if (this.itemData?.currentResult?.validated ||
-              this.children.filter(item => item.category === 'Validation')
-                .every(item => item.result && item.result.validated)) this.state = 'ready';
-            else this.state = 'ready-missing-validation';
-          },
-          error: _err => {
-            this.state = 'error';
-          }
-        });
-    } else {
-      this.state = 'error';
-    }
-  }
-
   ngOnDestroy(): void {
-    this.subscription?.unsubscribe();
+    this.params$.complete();
   }
 }

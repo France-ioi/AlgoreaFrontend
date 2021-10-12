@@ -69,8 +69,9 @@ export class ItemTaskService {
       askHint: () => {
         throw new Error('unimplemented method "askHint"');
       },
-      log: () => {
-        throw new Error('unimplemented method "askHint"');
+      log: (messages: string[]) => {
+        // eslint-disable-next-line no-console
+        console.log(...messages);
       },
     };
     task.bindPlatform(platform);
@@ -78,7 +79,7 @@ export class ItemTaskService {
 
   private validate(mode: string): Observable<unknown> {
     switch (mode) {
-      case 'cancel': return this.answerService.reloadAnswer();
+      case 'cancel': return this.answerService.clearAnswer();
       case 'nextImmediate': return this.navigateToNextItem();
       case 'next': return this.answerService.submitAnswer().pipe(switchMap(() => this.navigateToNextItem()));
       case 'top': return this.answerService.submitAnswer().pipe(switchMap(() => this.scrollTop()));

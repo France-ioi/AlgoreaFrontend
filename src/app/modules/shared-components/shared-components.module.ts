@@ -47,8 +47,8 @@ import { SubSectionComponent } from './components/sub-section/sub-section.compon
 import { AddContentComponent } from './components/add-content/add-content.component';
 import { FloatingSaveComponent } from './components/floating-save/floating-save.component';
 import { TooltipModule } from 'primeng/tooltip';
-import { ProgressSectionComponent } from './components/progress-section/progress-section.component';
-import { BooleanSectionComponent } from './components/progress-section/boolean-section/boolean-section.component';
+import { ProgressSelectComponent } from './components/collapsible-section/progress-select/progress-select.component';
+import { SwitchFieldComponent } from './components/collapsible-section/switch-field/switch-field.component';
 import { DropdownComponent } from './components/dropdown/dropdown.component';
 import { DurationComponent } from './components/duration/duration.component';
 import { InputNumberModule } from 'primeng/inputnumber';
@@ -59,6 +59,7 @@ import { UserCaptionPipe } from '../../shared/pipes/userCaption';
 import { LogActionDisplayPipe } from '../../shared/pipes/logActionDisplay';
 import { ErrorComponent } from './components/error/error.component';
 import { LoadingComponent } from './components/loading/loading.component';
+import { CollapsibleSectionComponent } from './components/collapsible-section/collapsible-section.component';
 
 @NgModule({
   declarations: [
@@ -88,14 +89,15 @@ import { LoadingComponent } from './components/loading/loading.component';
     SubSectionComponent,
     AddContentComponent,
     FloatingSaveComponent,
-    ProgressSectionComponent,
-    BooleanSectionComponent,
+    ProgressSelectComponent,
+    SwitchFieldComponent,
     DropdownComponent,
     DurationComponent,
     AccessCodeViewComponent,
     LanguagePickerComponent,
     ErrorComponent,
     LoadingComponent,
+    CollapsibleSectionComponent,
   ],
   imports: [
     CommonModule,
@@ -154,14 +156,15 @@ import { LoadingComponent } from './components/loading/loading.component';
     SubSectionComponent,
     AddContentComponent,
     FloatingSaveComponent,
-    ProgressSectionComponent,
-    BooleanSectionComponent,
+    ProgressSelectComponent,
+    SwitchFieldComponent,
     DropdownComponent,
     DurationComponent,
     AccessCodeViewComponent,
     LanguagePickerComponent,
     ErrorComponent,
     LoadingComponent,
+    CollapsibleSectionComponent,
   ],
   providers: [],
   entryComponents: [
