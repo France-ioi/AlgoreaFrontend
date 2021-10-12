@@ -10,7 +10,7 @@ import { bestAttemptFromResults } from '../../../../shared/helpers/attempts';
 import { PermissionsInfo } from '../../helpers/item-permissions';
 import { isNotUndefined } from '../../../../shared/helpers/null-undefined-predicates';
 import { OverlayPanel } from 'primeng/overlaypanel';
-import { mapToFetchState } from '../../../../shared/operators/state';
+import { mapToFetchState, readyData } from '../../../../shared/operators/state';
 import { FetchState } from '../../../../shared/helpers/state';
 
 interface BaseChildData {
@@ -117,12 +117,10 @@ export class ItemChildrenEditComponent implements OnInit, OnDestroy, OnChanges {
   ) {}
 
   ngOnInit(): void {
-    this.subscription = this.state$.subscribe(state => {
-      if (state.isReady) {
-        this.data = state.data;
-        this.scoreWeightEnabled = this.data.some(c => c.scoreWeight !== 1);
-        this.onChildrenListUpdate();
-      }
+    this.subscription = this.state$.pipe(readyData()).subscribe(data => {
+      this.data = data;
+      this.scoreWeightEnabled = this.data.some(c => c.scoreWeight !== 1);
+      this.onChildrenListUpdate();
     });
   }
 
