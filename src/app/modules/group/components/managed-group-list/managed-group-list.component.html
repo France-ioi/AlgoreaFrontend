@@ -3,6 +3,8 @@
     class="dark"
     icon="fa fa-exclamation-triangle"
     i18n-message message="Error while loading the group you manage"
+    [showRefreshButton]="true"
+    (refresh)="fetchData()"
 ></alg-error>
 
 <ng-template #noError>

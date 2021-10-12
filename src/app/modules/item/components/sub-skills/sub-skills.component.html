@@ -7,6 +7,8 @@
       *ngIf="state.isError"
       class="dark"
       i18n-message message="Error while loading content"
+      [showRefreshButton]="true"
+      (refresh)="refresh()"
     ></alg-error>
 
     <ng-container *ngIf="state.isReady && state.data as children">

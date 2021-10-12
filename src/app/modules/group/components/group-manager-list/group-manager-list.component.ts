@@ -67,7 +67,7 @@ export class GroupManagerListComponent implements OnChanges, OnDestroy {
     }
   }
 
-  private reloadData(): void {
+  reloadData(): void {
     this.refresh$.next();
   }
 

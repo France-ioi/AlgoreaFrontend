@@ -2,7 +2,7 @@ import { Component, Input, OnChanges, Output, EventEmitter, ViewChild, OnInit, O
 import { ItemData } from '../../services/item-datasource.service';
 import { GetItemChildrenService, isVisibleItemChild } from '../../http-services/get-item-children.service';
 import { Observable, ReplaySubject, Subject, Subscription } from 'rxjs';
-import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
+import { distinctUntilChanged, map, share, switchMap } from 'rxjs/operators';
 import { ItemType, typeCategoryOfItem } from '../../../../shared/helpers/item-type';
 import { AddedContent } from '../../../shared-components/components/add-content/add-content.component';
 import { ItemRouter } from '../../../../shared/routing/item-router';
@@ -109,6 +109,7 @@ export class ItemChildrenEditComponent implements OnInit, OnDestroy, OnChanges {
       })
     ),
     mapToFetchState({ resetter: this.refresh$ }),
+    share(),
   );
 
   constructor(

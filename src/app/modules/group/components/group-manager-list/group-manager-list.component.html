@@ -1,7 +1,12 @@
 <ng-container *ngIf="state$ | async as state">
   <alg-loading size="medium" *ngIf="state.isFetching"></alg-loading>
 
-  <alg-error *ngIf="state.isError" i18n-message message="Error while loading the group managers"></alg-error>
+  <alg-error
+    *ngIf="state.isError"
+    i18n-message message="Error while loading the group managers"
+    [showRefreshButton]="true"
+    (refresh)="reloadData()"
+  ></alg-error>
 
   <ng-container *ngIf="state.isReady && state.data as managers">
     <alg-section icon="fa fa-users" i18n-label label="Managers of this group">
