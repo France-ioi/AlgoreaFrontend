@@ -4,7 +4,7 @@ import { canCurrentUserViewItemContent } from '../../helpers/item-permissions';
 import { ItemDataSource } from '../../services/item-datasource.service';
 import { mapStateData } from 'src/app/shared/operators/state';
 import { LayoutService } from '../../../../shared/services/layout.service';
-import { ActivatedRoute, RouterLinkActive } from '@angular/router';
+import { RouterLinkActive } from '@angular/router';
 import { TaskTab } from '../item-display/item-display.component';
 
 @Component({
@@ -26,15 +26,14 @@ export class ItemDetailsComponent implements OnDestroy {
   fullFrameContent$ = this.layoutService.fullFrameContent$;
   readonly watchedGroup$ = this.userService.watchedGroup$;
 
-  private subscription = this.activatedRoute.params.subscribe(() => {
-    this.taskTabs = []; // reset task tabs when item changes.
+  private subscription = this.itemDataSource.state$.subscribe(state => {
+    if (state.isFetching) this.taskTabs = []; // reset task tabs when item changes.
   });
 
   constructor(
     private userService: UserSessionService,
     private itemDataSource: ItemDataSource,
     private layoutService: LayoutService,
-    private activatedRoute: ActivatedRoute,
   ) {}
 
   ngOnDestroy(): void {
