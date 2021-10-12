@@ -1,18 +1,19 @@
-<alg-loading *ngIf="state === 'loading'"></alg-loading>
+<ng-container *ngIf="state$ | async as state">
+  <alg-loading *ngIf="state.isFetching"></alg-loading>
 
-<alg-error *ngIf="state === 'error'" i18n-message message="Error while loading this chapter's children"></alg-error>
+  <alg-error *ngIf="state.isError" i18n-message message="Error while loading this chapter's children"></alg-error>
 
-<ng-container *ngIf="state !== 'loading' && state !== 'error'">
-  <br>
-  <p class="validation-text" *ngIf="state === 'ready-missing-validation'" i18n>
-    To validate this chapter, solve at least all tasks with Validation type
-  </p>
-  <p class="validation-text" *ngIf="state === 'empty'" i18n>
-    This chapter has no content visible to you, so you can't validate it for now.
-  </p>
+  <ng-container *ngIf="state.isReady && state.data as data">
+    <br>
+    <p class="validation-text" *ngIf="data.missingValidation" i18n>
+      To validate this chapter, solve at least all tasks with Validation type
+    </p>
+    <p class="validation-text" *ngIf="data.children.length === 0" i18n>
+      This chapter has no content visible to you, so you can't validate it for now.
+    </p>
 
-  <ul class="data-list-container activity" *ngIf="state !== 'empty'">
-    <li *ngFor="let item of children; index as ln">
+    <ul class="data-list-container activity" *ngIf="data.children.length > 0">
+      <li *ngFor="let item of data.children; index as ln">
       <span class="activity-progress">
         <alg-score-ring
           *ngIf="!item.isLocked && item.result"
@@ -37,7 +38,8 @@
           [type]="item.category"
         ></alg-state-widget>
       </span>
-    </li>
-  </ul>
+      </li>
+    </ul>
 
+  </ng-container>
 </ng-container>

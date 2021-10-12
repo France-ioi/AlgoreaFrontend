@@ -1,12 +1,13 @@
 import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { ReplaySubject } from 'rxjs';
+import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { bestAttemptFromResults } from 'src/app/shared/helpers/attempts';
 import { isASkill, typeCategoryOfItem } from 'src/app/shared/helpers/item-type';
 import { ItemRouter } from 'src/app/shared/routing/item-router';
 import { canCurrentUserViewItemContent } from '../../helpers/item-permissions';
 import { GetItemChildrenService, ItemChild } from '../../http-services/get-item-children.service';
 import { ItemData } from '../../services/item-datasource.service';
+import { mapToFetchState } from '../../../../shared/operators/state';
 
 interface SubSkillAdditions {
   isLocked: boolean,
@@ -24,10 +25,27 @@ interface SubSkillAdditions {
 export class SubSkillsComponent implements OnChanges, OnDestroy {
   @Input() itemData?: ItemData;
 
-  state: 'loading' | 'error' | 'ready' = 'loading';
-  children: (ItemChild&SubSkillAdditions)[] = [];
-
-  private subscription?: Subscription;
+  private readonly params$ = new ReplaySubject<{ id: string, attemptId: string }>(1);
+  readonly state$ = this.params$.pipe(
+    distinctUntilChanged((a, b) => a.id === b.id && a.attemptId === b.attemptId),
+    switchMap(({ id, attemptId }) => this.getItemChildrenService.get(id, attemptId)),
+    map(children =>
+      children
+        .filter(child => isASkill(child))
+        .map(child => {
+          const res = bestAttemptFromResults(child.results);
+          return {
+            ...child,
+            isLocked: !canCurrentUserViewItemContent(child),
+            result: res === null ? undefined : {
+              attemptId: res.attemptId,
+              score: res.scoreComputed,
+            },
+          };
+        })
+    ),
+    mapToFetchState(),
+  );
 
   constructor(
     private getItemChildrenService: GetItemChildrenService,
@@ -35,7 +53,12 @@ export class SubSkillsComponent implements OnChanges, OnDestroy {
   ) {}
 
   ngOnChanges(_changes: SimpleChanges): void {
-    this.reloadData();
+    if (this.itemData?.currentResult) {
+      this.params$.next({
+        id: this.itemData.item.id,
+        attemptId: this.itemData.currentResult.attemptId,
+      });
+    }
   }
 
   click(child: ItemChild&SubSkillAdditions): void {
@@ -51,41 +74,7 @@ export class SubSkillsComponent implements OnChanges, OnDestroy {
     });
   }
 
-  private reloadData(): void {
-    if (this.itemData?.currentResult) {
-      this.state = 'loading';
-      this.subscription?.unsubscribe();
-      this.subscription = this.getItemChildrenService.get(this.itemData.item.id, this.itemData.currentResult.attemptId).pipe(
-        map(children =>
-          children
-            .filter(child => isASkill(child))
-            .map(child => {
-              const res = bestAttemptFromResults(child.results);
-              return {
-                ...child,
-                isLocked: !canCurrentUserViewItemContent(child),
-                result: res === null ? undefined : {
-                  attemptId: res.attemptId,
-                  score: res.scoreComputed,
-                },
-              };
-            })
-        )
-      ).subscribe({
-        next: children => {
-          this.children = children;
-          this.state = 'ready';
-        },
-        error: _err => {
-          this.state = 'error';
-        }
-      });
-    } else {
-      this.state = 'error';
-    }
-  }
-
   ngOnDestroy(): void {
-    this.subscription?.unsubscribe();
+    this.params$.complete();
   }
 }

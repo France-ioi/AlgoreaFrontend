@@ -17,7 +17,6 @@ export class AddItemComponent implements OnChanges {
   @Output() contentAdded = new EventEmitter<AddedContent<ItemType>>();
 
   allowedNewItemTypes: NewContentType<ItemType>[] = [];
-  state: 'loading' | 'ready' = 'loading';
 
   searchFunction = (value: string): Observable<AddedContent<ItemType>[]> =>
     this.searchItemService.search(value, getAllowedNewItemTypes(this.allowSkills).map(item => item.type));
