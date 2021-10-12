@@ -413,10 +413,13 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-display/item-display.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit><trans-unit id="1143295073021866312" datatype="html">
         <source>It usually occurs when task url is invalid, if the task url is valid and the problem persists, please contact us.</source><target state="new">It usually occurs when task url is invalid, if the task url is valid and the problem persists, please contact us.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-display/item-display.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="1076949163890777109" datatype="html">
-        <source>An unknown error occurred: “<x id="INTERPOLATION" equiv-text="{{ error.message }}"/>”. If this problem persists, please contact us.</source><target state="new">An unknown error occurred: “<x id="INTERPOLATION" equiv-text="{{ error.message }}"/>”. If this problem persists, please contact us.</target>
-        
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-display/item-display.component.html</context><context context-type="linenumber">20</context></context-group></trans-unit><trans-unit id="3742657416068781599" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-display/item-display.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="3835920457327748126" datatype="html">
+        <source>An unknown error occurred. If this problem persists, please contact us.</source><target state="new">An unknown error occurred. If this problem persists, please contact us.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/pages/item-display/item-display.component.html</context>
+          <context context-type="linenumber">20</context>
+        </context-group>
+      </trans-unit><trans-unit id="3742657416068781599" datatype="html">
         <source>Editor</source><target state="new">Editor</target>
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-display/item-display.component.ts</context><context context-type="linenumber">90</context></context-group></trans-unit><trans-unit id="1961103453220395122" datatype="html">
