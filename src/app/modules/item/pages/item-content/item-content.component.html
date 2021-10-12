@@ -13,6 +13,9 @@
         [route]="itemData.route"
         [url]="itemData.item.url"
         [attemptId]="attemptId"
+        [view]="taskView"
+        (viewChange)="taskViewChange.emit($event)"
+        (tabsChange)="taskTabsChange.emit($event)"
       ></alg-item-display>
 
       <alg-sub-skills [itemData]="itemData" *ngIf="itemData.item.type === 'Skill'"></alg-sub-skills>
