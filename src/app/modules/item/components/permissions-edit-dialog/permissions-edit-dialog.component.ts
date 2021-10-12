@@ -65,12 +65,12 @@ export class PermissionsEditDialogComponent implements OnChanges {
 
   onAccept(): void {
     const permissions: Permissions = {
-      can_view: this.form.get('canView')?.value as Permissions['can_view'],
-      can_grant_view: this.form.get('canGrantView')?.value as Permissions['can_grant_view'],
-      can_watch: this.form.get('canWatch')?.value as Permissions['can_watch'],
-      can_edit: this.form.get('canEdit')?.value as Permissions['can_edit'],
-      can_make_session_official: this.form.get('canMakeSessionOfficial')?.value as Permissions['can_make_session_official'],
-      is_owner: this.form.get('isOwner')?.value as Permissions['is_owner'],
+      canView: this.form.get('canView')?.value as Permissions['canView'],
+      canGrantView: this.form.get('canGrantView')?.value as Permissions['canGrantView'],
+      canWatch: this.form.get('canWatch')?.value as Permissions['canWatch'],
+      canEdit: this.form.get('canEdit')?.value as Permissions['canEdit'],
+      canMakeSessionOfficial: this.form.get('canMakeSessionOfficial')?.value as Permissions['canMakeSessionOfficial'],
+      isOwner: this.form.get('isOwner')?.value as Permissions['isOwner'],
     };
 
     this.save.emit(permissions);
