@@ -1,5 +1,6 @@
+import { arraysEqual } from 'src/app/shared/helpers/array';
 import { ensureDefined } from 'src/app/shared/helpers/null-undefined-predicates';
-import { ContentRoute, pathEquals } from 'src/app/shared/routing/content-route';
+import { ContentRoute } from 'src/app/shared/routing/content-route';
 
 type Id = string;
 export enum GroupManagership { False = 'false', True = 'true', Descendant = 'descendant' }
@@ -50,7 +51,7 @@ export class NavTreeData {
    * If the element is not found, return this unchanged.
    */
   withUpdatedElement(route: ContentRoute, update: (el:NavTreeElement)=>NavTreeElement): NavTreeData {
-    if (!pathEquals(route.path, this.pathToElements)) return this; // the element in not in tree as their paths do not match
+    if (!arraysEqual(route.path, this.pathToElements)) return this; // the element in not in tree as their paths do not match
     const idx = this.elements.findIndex(i => i.id === route.id);
     if (idx === -1) return this;
     const elements = [ ...this.elements ];
@@ -82,11 +83,11 @@ export class NavTreeData {
   }
 
   hasLevel1Element(route: ContentRoute): boolean {
-    return pathEquals(route.path, this.pathToElements) && this.elements.some(e => e.id === route.id);
+    return arraysEqual(route.path, this.pathToElements) && this.elements.some(e => e.id === route.id);
   }
 
   hasLevel2Element(route: ContentRoute): boolean {
-    if (!pathEquals(route.path.slice(0,-1), this.pathToElements)) return false;
+    if (!arraysEqual(route.path.slice(0,-1), this.pathToElements)) return false;
     const parent = this.elements.find(e => e.id === route.path[route.path.length-1]);
     if (!parent || !parent.children) return false;
     return parent.children.some(c => c.id === route.id);
