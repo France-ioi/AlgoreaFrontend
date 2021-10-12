@@ -7,7 +7,7 @@ import { ItemTaskInitService } from './item-task-init.service';
 
 @Injectable()
 export class ItemTaskViewsService implements OnDestroy {
-  private errorSubject = new Subject<void>();
+  private errorSubject = new Subject<Error>();
   readonly error$ = this.errorSubject.asObservable();
 
   private displaySubject = new ReplaySubject<UpdateDisplayParams>(1);

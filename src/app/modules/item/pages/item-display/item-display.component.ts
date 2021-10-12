@@ -10,8 +10,10 @@ import { ItemTaskInitService } from '../../services/item-task-init.service';
 import { ItemTaskAnswerService } from '../../services/item-task-answer.service';
 import { ItemTaskViewsService } from '../../services/item-task-views.service';
 import { FullItemRoute } from 'src/app/shared/routing/item-route';
+import { DomSanitizer } from '@angular/platform-browser';
+import { PermissionsInfo } from '../../helpers/item-permissions';
 
-const initialHeight = 1200;
+const initialHeight = 0;
 const additionalHeightToPreventInnerScrollIssues = 40;
 const heightSyncInterval = 0.2*SECONDS;
 
@@ -29,27 +31,33 @@ export interface TaskTab {
 export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges {
   @Input() route!: FullItemRoute;
   @Input() url!: string;
+  @Input() canEdit: PermissionsInfo['canEdit'] = 'none';
   @Input() attemptId!: string;
   @Input() view?: TaskTab['view'];
+
+  @ViewChild('iframe') iframe?: ElementRef<HTMLIFrameElement>;
+
+  state$ = this.taskService.task$.pipe(mapToFetchState());
+  initError$ = this.taskService.initError$;
+  urlError$ = this.taskService.urlError$;
+  unknownError$ = this.taskService.unknownError$;
+  iframeSrc$ = this.taskService.iframeSrc$.pipe(map(url => this.sanitizer.bypassSecurityTrustResourceUrl(url)));
 
   @Output() viewChange = this.taskService.activeView$;
   @Output() tabsChange: Observable<TaskTab[]> = this.taskService.views$.pipe(
     map(views => views.map(view => ({ view, name: this.getTabNameByView(view) }))),
   );
 
-  @ViewChild('iframe') iframe?: ElementRef<HTMLIFrameElement>;
-
-  state$ = this.taskService.task$.pipe(mapToFetchState());
-  iframeSrc$ = this.taskService.iframeSrc$;
 
   // Start updating the iframe height to match the task's height
   iframeHeight$ = merge(
     this.taskService.task$.pipe(switchMap(task => interval(heightSyncInterval).pipe(switchMap(() => task.getHeight())))),
     this.taskService.display$.pipe(map(({ height }) => height), filter(isNotUndefined)),
-  ).pipe(startWith(initialHeight), map(height => height + additionalHeightToPreventInnerScrollIssues));
+  ).pipe(map(height => height + additionalHeightToPreventInnerScrollIssues), startWith(initialHeight));
 
   constructor(
     private taskService: ItemTaskService,
+    private sanitizer: DomSanitizer,
   ) {}
 
   ngOnInit(): void {
