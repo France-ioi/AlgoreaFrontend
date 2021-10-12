@@ -29,8 +29,7 @@ export class ItemTaskInitService implements OnDestroy {
 
   readonly iframeSrc$ = this.taskToken$.pipe(
     withLatestFrom(this.config$),
-    map(([ taskToken, { url }]) => taskUrlWithParameters(url, taskToken, appConfig.itemPlatformId, taskChannelIdPrefix)),
-    map(url => this.checkUrlProtocol(url)),
+    map(([ taskToken, { url }]) => taskUrlWithParameters(this.checkUrl(url), taskToken, appConfig.itemPlatformId, taskChannelIdPrefix)),
     shareReplay(1), // avoid duplicate xhr calls
   );
 
@@ -85,7 +84,15 @@ export class ItemTaskInitService implements OnDestroy {
     this.configFromIframe$.complete();
   }
 
-  private checkUrlProtocol(url: string): string {
+  private checkUrl(url: string): string {
+    try {
+      new URL(url);
+    } catch (error) {
+      throw new Error($localize`Maformed url: "${url}"`);
+    }
+
+    if (!url.startsWith('http')) throw new Error($localize`Invalid url "${url}": please provide an http link`);
+
     // Avoid mixed-content error: https://developer.mozilla.org/en-US/docs/Web/Security/Mixed_content/How_to_fix_website_with_mixed_content
     // mixed-content is when an https website tries to load an http content, ie: iframe.src, script.src, etc.
     const isMixedContent = globalThis.location.protocol === 'https:' && url.startsWith('http:');
