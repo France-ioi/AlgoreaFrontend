@@ -1,4 +1,4 @@
-import { Component, forwardRef } from '@angular/core';
+import { Component, forwardRef, OnDestroy } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Observable, of, ReplaySubject, Subject } from 'rxjs';
 import { catchError, distinct, map, switchMap } from 'rxjs/operators';
@@ -24,7 +24,7 @@ import { mapToFetchState } from 'src/app/shared/operators/state';
     }
   ]
 })
-export class AssociatedActivityComponent implements ControlValueAccessor {
+export class AssociatedActivityComponent implements ControlValueAccessor, OnDestroy {
 
   readonly allowedNewItemTypes = allowedNewActivityTypes;
 
@@ -73,6 +73,10 @@ export class AssociatedActivityComponent implements ControlValueAccessor {
     private getItemByIdService: GetItemByIdService,
     private searchItemService: SearchItemService,
   ) { }
+
+  ngOnDestroy(): void {
+    this.refresh$.complete();
+  }
 
   writeValue(rootActivity: NoActivity|NewActivity|ExistingActivity): void {
     this.activityChanges$.next({ activity: rootActivity, triggerChange: false });

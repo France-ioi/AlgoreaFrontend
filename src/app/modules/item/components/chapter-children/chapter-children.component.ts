@@ -83,6 +83,7 @@ export class ChapterChildrenComponent implements OnChanges, OnDestroy {
 
   ngOnDestroy(): void {
     this.params$.complete();
+    this.refresh$.complete();
   }
 
   refresh(): void {

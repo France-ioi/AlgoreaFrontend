@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { ItemNavigationService } from '../../../../core/http-services/item-navigation.service';
 import { UserSessionService } from '../../../../shared/services/user-session.service';
 import { switchMap, filter, map } from 'rxjs/operators';
@@ -11,7 +11,7 @@ import { Subject } from 'rxjs';
   templateUrl: './suggestion-of-activities.component.html',
   styleUrls: [ './suggestion-of-activities.component.scss' ],
 })
-export class SuggestionOfActivitiesComponent {
+export class SuggestionOfActivitiesComponent implements OnDestroy {
   private refresh$ = new Subject<void>();
   readonly state$ = this.sessionService.watchedGroup$.pipe(
     filter(isNotUndefined),
@@ -28,6 +28,10 @@ export class SuggestionOfActivitiesComponent {
   constructor(
     private sessionService: UserSessionService,
     private itemNavigationService: ItemNavigationService) {
+  }
+
+  ngOnDestroy(): void {
+    this.refresh$.complete();
   }
 
   refresh(): void {

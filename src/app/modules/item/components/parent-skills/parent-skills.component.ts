@@ -56,6 +56,7 @@ export class ParentSkillsComponent implements OnChanges, OnDestroy {
 
   ngOnDestroy(): void {
     this.params$.complete();
+    this.refresh$.complete();
   }
 
   refresh(): void {

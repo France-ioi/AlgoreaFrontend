@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnDestroy } from '@angular/core';
 import { switchMap, filter } from 'rxjs/operators';
 import { GetGroupByIdService } from 'src/app/modules/group/http-services/get-group-by-id.service';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
@@ -12,7 +12,7 @@ import { Subject } from 'rxjs';
   templateUrl: './chapter-group-progress.component.html',
   styleUrls: [ './chapter-group-progress.component.scss' ]
 })
-export class ChapterGroupProgressComponent {
+export class ChapterGroupProgressComponent implements OnDestroy {
 
   @Input() itemData?: ItemData;
 
@@ -27,6 +27,10 @@ export class ChapterGroupProgressComponent {
     private sessionService: UserSessionService,
     private getGroupByIdService: GetGroupByIdService,
   ) {}
+
+  ngOnDestroy(): void {
+    this.refresh$.complete();
+  }
 
   refresh(): void {
     this.refresh$.next();

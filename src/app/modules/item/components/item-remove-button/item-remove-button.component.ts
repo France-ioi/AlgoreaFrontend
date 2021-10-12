@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy } from '@angular/core';
 import { ReplaySubject, Subject } from 'rxjs';
 import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { mapToFetchState } from '../../../../shared/operators/state';
@@ -14,7 +14,7 @@ import { Router } from '@angular/router';
   templateUrl: './item-remove-button.component.html',
   styleUrls: [ './item-remove-button.component.scss' ],
 })
-export class ItemRemoveButtonComponent implements OnChanges {
+export class ItemRemoveButtonComponent implements OnChanges, OnDestroy {
   @Input() item?: Item;
   @Input() attemptId?: string;
 
@@ -48,6 +48,10 @@ export class ItemRemoveButtonComponent implements OnChanges {
         attemptId: this.attemptId,
       });
     }
+  }
+
+  ngOnDestroy(): void {
+    this.refresh$.complete();
   }
 
   onDeleteItem(): void {

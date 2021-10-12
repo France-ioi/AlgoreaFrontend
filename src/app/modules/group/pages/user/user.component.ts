@@ -112,6 +112,7 @@ export class UserComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.currentContent.clear();
     this.subscription?.unsubscribe();
+    this.refresh$.complete();
   }
 
   refresh(): void {
