@@ -8,7 +8,7 @@ import { mapStateData, mapToFetchState } from 'src/app/shared/operators/state';
 import { CurrentContentService } from 'src/app/shared/services/current-content.service';
 import { NavTreeData, NavTreeElement } from '../../models/left-nav-loading/nav-tree-data';
 
-export abstract class NavTreeService<ContentT extends RoutedContentInfo, ChildrenInfoT> {
+export abstract class NavTreeService<ContentT extends RoutedContentInfo, ChildrenInfoT extends { id: string }> {
 
   private reloadTrigger = new Subject<void>();
 
@@ -20,8 +20,8 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo, Childre
     repeatLatestWhen(this.reloadTrigger),
   );
   private children$ = this.content$.pipe(this.childrenNavigation());
-  state$ = combineLatest([ this.content$, this.children$ ]).pipe(
-    mergeScan((prevState: FetchState<NavTreeData>, [ content, children ]) => {
+  state$ = combineLatest([ this.children$, this.content$ ]).pipe(
+    mergeScan((prevState: FetchState<NavTreeData>, [ children, content ]) => {
 
       // CASE 1: the content is not of type of this menu
       if (!content) {
