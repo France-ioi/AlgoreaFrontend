@@ -41,9 +41,10 @@ const groupInvitationDecoder = pipe(
     group: D.struct({
       id: D.string,
       name: D.string,
-      description: D.string,
+      description: D.nullable(D.string),
       type: D.literal('Class', 'Team', 'Club', 'Friends', 'Other'),
     }),
+    groupId: D.string,
     invitingUser: D.struct({
       id: D.string,
       firstName: D.string,
