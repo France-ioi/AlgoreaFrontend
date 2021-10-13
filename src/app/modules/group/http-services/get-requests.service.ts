@@ -42,7 +42,7 @@ const groupInvitationDecoder = pipe(
       id: D.string,
       name: D.string,
       description: D.nullable(D.string),
-      type: D.literal('Class', 'Team', 'Club', 'Friends', 'Other'),
+      type: D.literal('Class', 'Team', 'Club', 'Friends', 'Other', 'Session'),
     }),
     groupId: D.string,
     invitingUser: D.struct({
@@ -83,7 +83,7 @@ export interface GroupInvitation extends PendingRequest {
     id: string,
     name: string,
     description: string|null,
-    type: 'Class' | 'Team' | 'Club' | 'Friends' | 'Other',
+    type: 'Class' | 'Team' | 'Club' | 'Friends' | 'Other' | 'Session',
   },
 }
 
