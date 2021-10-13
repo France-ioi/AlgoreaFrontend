@@ -7,6 +7,7 @@ import { GroupManagerPermissionChanges, UpdateGroupManagersService } from '../..
 import { formatUser } from '../../../../shared/helpers/user';
 import { ActionFeedbackService } from '../../../../shared/services/action-feedback.service';
 import { FormBuilder } from '@angular/forms';
+import { ConfirmationService } from 'primeng/api';
 
 @Component({
   selector: 'alg-manager-permission-dialog',
@@ -51,6 +52,7 @@ export class ManagerPermissionDialogComponent implements OnChanges {
     private updateGroupManagersService: UpdateGroupManagersService,
     private actionFeedbackService: ActionFeedbackService,
     private fb: FormBuilder,
+    private confirmationService: ConfirmationService,
   ) {}
 
   ngOnChanges(): void {
@@ -74,6 +76,32 @@ export class ManagerPermissionDialogComponent implements OnChanges {
   }
 
   onAccept(): void {
+    if (!this.manager) {
+      throw new Error('Unexpected: Missed manager data');
+    }
+
+    const canManageValue = this.form.get('canManage')?.value as GroupManagerPermissionChanges['canManage'];
+
+    if (this.manager.canManage === 'memberships_and_group' && canManageValue !== 'memberships_and_group') {
+      this.confirmationService.confirm({
+        message: $localize`Are you sure to remove from yourself the permission to edit group settings and edit managers ? 
+          You may lose manager access and not be able to restore it.`,
+        header: $localize`Confirm Action`,
+        icon: 'pi pi-exclamation-triangle',
+        acceptLabel: $localize`Yes, save these changes.`,
+        acceptButtonStyleClass: 'p-button-danger',
+        accept: () => {
+          this.update();
+        },
+        rejectLabel: $localize`No`,
+      });
+      return;
+    }
+
+    this.update();
+  }
+
+  update(): void {
     if (!this.manager || !this.group) {
       throw new Error('Unexpected: Missed input component params');
     }
