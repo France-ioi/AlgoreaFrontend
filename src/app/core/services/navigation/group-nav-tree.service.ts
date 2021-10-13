@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { concat, Observable, of, OperatorFunction, pipe } from 'rxjs';
+import { EMPTY, Observable, OperatorFunction, pipe } from 'rxjs';
 import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { ContentInfo } from 'src/app/shared/models/content/content-info';
 import { GroupInfo, isGroupInfo } from 'src/app/shared/models/content/group-info';
@@ -23,15 +23,12 @@ export class GroupNavTreeService extends NavTreeService<GroupInfo> {
     super(currentContent);
   }
 
-  childrenNavigation(): OperatorFunction<GroupInfo|undefined,NavTreeElement[]|undefined> {
+  childrenNavData(): OperatorFunction<GroupInfo|undefined,NavTreeElement[]> {
     return pipe(
       distinctUntilChanged((g1, g2) => g1?.route.id === g2?.route.id),
       switchMap(group => {
-        if (!group || group.route.isUser) return of(undefined);
-        return concat(
-          of(undefined),
-          this.groupNavigationService.getGroupNavigation(group.route.id).pipe(map(data => this.mapNavData(data).elements))
-        );
+        if (!group || group.route.isUser) return EMPTY;
+        return this.groupNavigationService.getGroupNavigation(group.route.id).pipe(map(data => this.mapNavData(data).elements));
       })
     );
   }

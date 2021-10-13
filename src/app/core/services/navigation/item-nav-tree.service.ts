@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { concat, Observable, of, OperatorFunction, pipe } from 'rxjs';
+import { EMPTY, Observable, OperatorFunction, pipe } from 'rxjs';
 import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { bestAttemptFromResults, defaultAttemptId } from 'src/app/shared/helpers/attempts';
 import { isSkill, ItemTypeCategory, typeCategoryOfItem } from 'src/app/shared/helpers/item-type';
@@ -23,7 +23,7 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
     super(currentContent);
   }
 
-  childrenNavigation(): OperatorFunction<ItemInfo|undefined,NavTreeElement[]|undefined> {
+  childrenNavData(): OperatorFunction<ItemInfo|undefined,NavTreeElement[]> {
     return pipe(
       map(content => {
         if (!content) return undefined;
@@ -33,12 +33,9 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
       }),
       distinctUntilChanged((x, y) => x?.id === y?.id),
       switchMap(route => {
-        if (!route) return of(undefined);
-        return concat(
-          of(undefined),
-          this.itemNavService.getItemNavigation(route.id, route.attemptId, isSkill(route.contentType)).pipe(
-            map(data => this.mapNavData(data).elements)
-          )
+        if (!route) return EMPTY;
+        return this.itemNavService.getItemNavigation(route.id, route.attemptId, isSkill(route.contentType)).pipe(
+          map(data => this.mapNavData(data).elements)
         );
       }),
     );
