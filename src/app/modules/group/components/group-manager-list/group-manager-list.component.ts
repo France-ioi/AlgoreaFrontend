@@ -3,7 +3,7 @@ import { GetGroupManagersService, Manager } from '../../http-services/get-group-
 import { GroupData } from '../../services/group-datasource.service';
 import { RemoveGroupManagerService } from '../../http-services/remove-group-manager.service';
 import { ActionFeedbackService } from '../../../../shared/services/action-feedback.service';
-import { concat, forkJoin, ReplaySubject, Subject } from 'rxjs';
+import { concat, ReplaySubject, Subject } from 'rxjs';
 import { switchMap, map, distinctUntilChanged } from 'rxjs/operators';
 import { mapToFetchState } from '../../../../shared/operators/state';
 import { UserSessionService } from '../../../../shared/services/user-session.service';
@@ -95,7 +95,7 @@ export class GroupManagerListComponent implements OnChanges, OnDestroy {
         target: event.target || undefined,
         key: 'commonPopup',
         icon: 'pi pi-exclamation-triangle',
-        message: $localize`Are you sure to remove yourself from the managers of this group. You may lose manager access and 
+        message: $localize`Are you sure to remove yourself from the managers of this group? You may lose manager access and 
           not be able to restore it.`,
         acceptLabel: $localize`Yes, remove me from the group managers`,
         acceptButtonStyleClass: 'p-button-danger',
@@ -131,11 +131,9 @@ export class GroupManagerListComponent implements OnChanges, OnDestroy {
 
     this.removalInProgress = true;
 
-    forkJoin([
-      concat(...this.selection.map(manager => this.removeGroupManagerService.remove(groupId, manager.id))),
-    ])
+    concat(...this.selection.map(manager => this.removeGroupManagerService.remove(groupId, manager.id)))
       .subscribe({
-        next: () => {
+        complete: () => {
           this.removalInProgress = false;
           this.feedbackService.success($localize`Selected managers have been removed.`);
           this.selection = [];
