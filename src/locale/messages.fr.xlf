@@ -1383,9 +1383,9 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/managed-group-list/managed-group-list.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit><trans-unit id="3529343027214918740" datatype="html">
         <source>Memberships and group</source><target state="translated">Membres et groupe</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-manager-list/group-manager-list.component.ts</context><context context-type="linenumber">66</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/manager-permission-dialog/manager-permission-dialog.component.ts</context><context context-type="linenumber">36</context></context-group></trans-unit><trans-unit id="4957465686116871006" datatype="html">
-        <source>Are you sure to remove yourself from the managers of this group. You may lose manager access and 
-          not be able to restore it.</source><target state="new">Are you sure to remove yourself from the managers of this group. You may lose manager access and 
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-manager-list/group-manager-list.component.ts</context><context context-type="linenumber">66</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/manager-permission-dialog/manager-permission-dialog.component.ts</context><context context-type="linenumber">36</context></context-group></trans-unit><trans-unit id="20138795597280749" datatype="html">
+        <source>Are you sure to remove yourself from the managers of this group? You may lose manager access and 
+          not be able to restore it.</source><target state="new">Are you sure to remove yourself from the managers of this group? You may lose manager access and 
           not be able to restore it.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/group/components/group-manager-list/group-manager-list.component.ts</context>
@@ -1400,7 +1400,7 @@
       </trans-unit><trans-unit id="5386279908080197775" datatype="html">
         <source>Selected managers have been removed.</source><target state="new">Selected managers have been removed.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-manager-list/group-manager-list.component.ts</context><context context-type="linenumber">140</context></context-group></trans-unit><trans-unit id="2665063333072587702" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-manager-list/group-manager-list.component.ts</context><context context-type="linenumber">138</context></context-group></trans-unit><trans-unit id="2665063333072587702" datatype="html">
         <source>Error while loading the group managers</source><target state="translated">Erreur lors du chargement des gestionnaires de groupe</target>
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-manager-list/group-manager-list.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit><trans-unit id="2978634377936697829" datatype="html">
