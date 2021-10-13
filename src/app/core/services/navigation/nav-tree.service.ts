@@ -8,7 +8,7 @@ import { mapStateData, mapToFetchState } from 'src/app/shared/operators/state';
 import { CurrentContentService } from 'src/app/shared/services/current-content.service';
 import { NavTreeData, NavTreeElement } from '../../models/left-nav-loading/nav-tree-data';
 
-export abstract class NavTreeService<ContentT extends RoutedContentInfo, ChildrenInfoT extends { id: string }> {
+export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
 
   private reloadTrigger = new Subject<void>();
 
@@ -38,14 +38,16 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo, Childre
           // CASE 2A : the content is among the displayed elements -> either select it if at root or shift the tree "to the left" otherwise
           const prevData = prevState.data;
           let data = prevData.hasLevel1Element(route) ? prevData.withSelection(route.id) : prevData.subNavMenuData(route);
-          data = data.withUpdatedElement(route, el => this.addDetailsToTreeElement(el, content, children));
+          if (children) data = data.withChildren(route, children);
+          data = data.withUpdatedElement(route, el => this.addDetailsToTreeElement(el, content));
           return of(readyState(data));
 
           // CASE 2B: the content is not among the displayed elements -> fetch all nav
         } else {
           return this.fetchNewNav(content).pipe(
             mapStateData(data => {
-              data = data.withUpdatedElement(route, el => this.addDetailsToTreeElement(el, content, children));
+              if (children) data = data.withChildren(route, children);
+              data = data.withUpdatedElement(route, el => this.addDetailsToTreeElement(el, content));
               return data;
             })
           );
@@ -66,7 +68,7 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo, Childre
   /**
    * Operator which emit the children (or undefined if none or not known yet) of a content stream
    */
-  protected abstract childrenNavigation(): OperatorFunction<ContentT|undefined,ChildrenInfoT|undefined>;
+  protected abstract childrenNavigation(): OperatorFunction<ContentT|undefined,NavTreeElement[]|undefined>;
 
   /**
    * Re-play the last change
@@ -75,7 +77,7 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo, Childre
     this.reloadTrigger.next();
   }
 
-  protected abstract addDetailsToTreeElement(treeElement: NavTreeElement, contentInfo: ContentT, children?: ChildrenInfoT): NavTreeElement;
+  protected abstract addDetailsToTreeElement(treeElement: NavTreeElement, contentInfo: ContentT): NavTreeElement;
   protected abstract fetchRootTreeData(): Observable<NavTreeElement[]>;
   protected abstract fetchNavDataFromChild(id: string, child: ContentT): Observable<{ parent: NavTreeElement, elements: NavTreeElement[] }>;
 

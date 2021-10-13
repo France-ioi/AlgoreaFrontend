@@ -12,7 +12,7 @@ import { ItemNavigationChild, ItemNavigationData, ItemNavigationService } from '
 import { NavTreeElement } from '../../models/left-nav-loading/nav-tree-data';
 import { NavTreeService } from './nav-tree.service';
 
-abstract class ItemNavTreeService extends NavTreeService<ItemInfo, ItemNavigationData> {
+abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
 
   constructor(
     private category: ItemTypeCategory,
@@ -23,7 +23,7 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo, ItemNavigatio
     super(currentContent);
   }
 
-  childrenNavigation(): OperatorFunction<ItemInfo|undefined,ItemNavigationData|undefined> {
+  childrenNavigation(): OperatorFunction<ItemInfo|undefined,NavTreeElement[]|undefined> {
     return pipe(
       map(content => {
         if (!content) return undefined;
@@ -34,8 +34,13 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo, ItemNavigatio
       distinctUntilChanged((x, y) => x?.id === y?.id),
       switchMap(route => {
         if (!route) return of(undefined);
-        return concat(of(undefined), this.itemNavService.getItemNavigation(route.id, route.attemptId, isSkill(route.contentType)));
-      })
+        return concat(
+          of(undefined),
+          this.itemNavService.getItemNavigation(route.id, route.attemptId, isSkill(route.contentType)).pipe(
+            map(data => this.mapNavData(data).elements)
+          )
+        );
+      }),
     );
   }
 
@@ -54,26 +59,19 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo, ItemNavigatio
     );
   }
 
-  addDetailsToTreeElement(treeElement: NavTreeElement, contentInfo: ItemInfo, children?: ItemNavigationData): NavTreeElement {
-    let element = treeElement;
-    if (contentInfo.details) {
-      const details = contentInfo.details;
-      element = {
-        ...element,
-        title: details.title ?? '',
-        navigateTo: (): void => this.itemRouter.navigateTo(contentInfo.route),
-        score: details.bestScore !== undefined && details.currentScore !== undefined && details.validated !== undefined ? {
-          bestScore: details.bestScore,
-          currentScore: details.bestScore,
-          validated: details.validated,
-        } : undefined,
-      };
-    }
-    const attemptId = contentInfo.details?.attemptId;
-    if (children && attemptId) {
-      element = { ...element, children: children.children.map(c => this.mapChild(c, attemptId)) };
-    }
-    return element;
+  addDetailsToTreeElement(treeElement: NavTreeElement, contentInfo: ItemInfo): NavTreeElement {
+    const details = contentInfo.details;
+    if (!details) return treeElement;
+    return {
+      ...treeElement,
+      title: details.title ?? '',
+      navigateTo: (): void => this.itemRouter.navigateTo(contentInfo.route),
+      score: details.bestScore !== undefined && details.currentScore !== undefined && details.validated !== undefined ? {
+        bestScore: details.bestScore,
+        currentScore: details.bestScore,
+        validated: details.validated,
+      } : undefined,
+    };
   }
 
   private mapChild(child: ItemNavigationChild, parentAttemptId: string): NavTreeElement {
