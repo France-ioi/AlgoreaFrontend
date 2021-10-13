@@ -1,16 +1,16 @@
 <div class="task-header-container" *ngIf="itemData">
-  <div class="task-header">
+  <div class="task-header" *ngIf="content$ | async as content">
     <alg-score-ring
-      *ngIf="itemData.item.type !== 'Skill' && itemData.currentResult"
-      [bestScore]="itemData.item.bestScore"
-      [currentScore]="itemData.currentResult.score"
-      [isValidated]="itemData.currentResult.validated"
+      *ngIf="itemData.item.type !== 'Skill' && content.score"
+      [bestScore]="content.score.bestScore"
+      [currentScore]="content.score.currentScore"
+      [isValidated]="content.score.isValidated"
       [diameter]="70"
     ></alg-score-ring>
     <alg-skill-progress
-      *ngIf="itemData.item.type === 'Skill' && itemData.currentResult"
-      [bestScore]="itemData.item.bestScore"
-      [currentScore]="itemData.currentResult.score"
+      *ngIf="itemData.item.type === 'Skill' && content.score"
+      [bestScore]="content.score.bestScore"
+      [currentScore]="content.score.currentScore"
     ></alg-skill-progress>
     <div class="task-title">
       <p>{{itemData.item.string.title}}</p>

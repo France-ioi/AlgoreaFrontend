@@ -15,6 +15,8 @@ import {
 import { SECONDS } from 'src/app/shared/helpers/duration';
 import { errorIsHTTPForbidden } from 'src/app/shared/helpers/errors';
 import { repeatLatestWhen } from 'src/app/shared/helpers/repeatLatestWhen';
+import { isItemInfo, itemInfo } from 'src/app/shared/models/content/item-info';
+import { CurrentContentService } from 'src/app/shared/services/current-content.service';
 import { AnswerTokenService } from '../http-services/answer-token.service';
 import { Answer, CurrentAnswerService } from '../http-services/current-answer.service';
 import { GradeService } from '../http-services/grade.service';
@@ -76,6 +78,7 @@ export class ItemTaskAnswerService implements OnDestroy {
     private currentAnswerService: CurrentAnswerService,
     private answerTokenService: AnswerTokenService,
     private gradeService: GradeService,
+    private currentContent: CurrentContentService,
   ) {}
 
   ngOnDestroy(): void {
@@ -102,7 +105,7 @@ export class ItemTaskAnswerService implements OnDestroy {
     );
 
     // Step 4: Save grade in backend
-    return combineLatest([ this.taskToken$, answerToken$, grade$ ]).pipe(
+    const saveGrade$ = combineLatest([ this.taskToken$, answerToken$, grade$ ]).pipe(
       take(1),
       switchMap(([ taskToken, answerToken, grade ]) => this.gradeService.save(
         taskToken,
@@ -110,10 +113,38 @@ export class ItemTaskAnswerService implements OnDestroy {
         grade.score,
         grade.scoreToken ?? undefined,
       )),
+      shareReplay(1),
     );
+    combineLatest([ grade$, saveGrade$ ]).subscribe(([ grade ]) => {
+      if (grade.score !== undefined) this.updateCurrentContentScore(grade.score);
+    });
+    return saveGrade$;
   }
 
   clearAnswer(): Observable<unknown> {
     return this.task$.pipe(take(1), switchMap(task => task.reloadAnswer('')));
+  }
+
+  private updateCurrentContentScore(currentScore: number): void {
+    const content = this.currentContent.current();
+    if (!content) throw new Error('unexpected: no content to update');
+    if (!isItemInfo(content)) throw new Error('unexpected: content is not item info');
+
+    const bestScore = Math.max(content.score?.bestScore ?? 0, currentScore);
+    const isValidated = bestScore === 100;
+    this.currentContent.replace(itemInfo({
+      ...content,
+      details: content.details ? {
+        ...content.details,
+        bestScore,
+        currentScore,
+        validated: isValidated,
+      } : undefined,
+      score: {
+        bestScore,
+        currentScore,
+        isValidated,
+      },
+    }));
   }
 }
