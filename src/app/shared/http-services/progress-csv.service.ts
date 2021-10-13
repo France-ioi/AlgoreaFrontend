@@ -2,6 +2,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { appConfig } from '../helpers/config';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { decodeSnakeCase } from '../operators/decode';
+import * as D from 'io-ts/Decoder';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +17,8 @@ export class ProgressCSVService {
       .get(`${appConfig.apiUrl}/groups/${ groupId }/${ type }-progress-csv`, {
         params: params,
         responseType: 'text',
-      });
+      }).pipe(
+        decodeSnakeCase(D.string),
+      );
   }
 }
