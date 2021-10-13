@@ -1,19 +1,30 @@
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { GroupInfo } from 'src/app/shared/models/content/group-info';
+import { ContentInfo } from 'src/app/shared/models/content/content-info';
+import { GroupInfo, isGroupInfo } from 'src/app/shared/models/content/group-info';
 import { groupRoute } from 'src/app/shared/routing/group-route';
 import { GroupRouter } from 'src/app/shared/routing/group-router';
+import { CurrentContentService } from 'src/app/shared/services/current-content.service';
 import { GroupNavigationService, GroupNavigationChild, GroupNavigationData } from '../../http-services/group-navigation.service';
 import { NavTreeElement } from '../../models/left-nav-loading/nav-tree-data';
-import { LeftNavDataSource } from './left-nav-datasource';
+import { NavTreeService } from './nav-tree.service';
 
-export class LeftNavGroupDataSource extends LeftNavDataSource<GroupInfo> {
+@Injectable({
+  providedIn: 'root'
+})
+export class GroupNavTreeService extends NavTreeService<GroupInfo> {
 
   constructor(
+    currentContent: CurrentContentService,
     private groupNavigationService: GroupNavigationService,
     private groupRouter: GroupRouter,
   ) {
-    super();
+    super(currentContent);
+  }
+
+  isOfContentType(content: ContentInfo|null): content is GroupInfo {
+    return isGroupInfo(content);
   }
 
   addDetailsToTreeElement(contentInfo: GroupInfo, treeElement: NavTreeElement): NavTreeElement {

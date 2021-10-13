@@ -1,21 +1,26 @@
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { bestAttemptFromResults, defaultAttemptId } from 'src/app/shared/helpers/attempts';
 import { isSkill, ItemTypeCategory, typeCategoryOfItem } from 'src/app/shared/helpers/item-type';
-import { ItemInfo } from 'src/app/shared/models/content/item-info';
+import { ContentInfo } from 'src/app/shared/models/content/content-info';
+import { isActivityInfo, isItemInfo, ItemInfo } from 'src/app/shared/models/content/item-info';
 import { fullItemRoute } from 'src/app/shared/routing/item-route';
 import { ItemRouter } from 'src/app/shared/routing/item-router';
+import { CurrentContentService } from 'src/app/shared/services/current-content.service';
 import { ItemNavigationChild, ItemNavigationData, ItemNavigationService } from '../../http-services/item-navigation.service';
 import { NavTreeElement } from '../../models/left-nav-loading/nav-tree-data';
-import { LeftNavDataSource } from './left-nav-datasource';
+import { NavTreeService } from './nav-tree.service';
 
-export abstract class LeftNavItemDataSource extends LeftNavDataSource<ItemInfo> {
+abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
+
   constructor(
     private category: ItemTypeCategory,
+    currentContent: CurrentContentService,
     private itemNavService: ItemNavigationService,
     private itemRouter: ItemRouter,
   ) {
-    super();
+    super(currentContent);
   }
 
   fetchRootTreeData(): Observable<NavTreeElement[]> {
@@ -93,14 +98,28 @@ export abstract class LeftNavItemDataSource extends LeftNavDataSource<ItemInfo> 
 
 }
 
-export class LeftNavActivityDataSource extends LeftNavItemDataSource {
-  constructor(itemNavService: ItemNavigationService, itemRouter: ItemRouter) {
-    super('activity', itemNavService, itemRouter);
+@Injectable({
+  providedIn: 'root'
+})
+export class ActivityNavTreeService extends ItemNavTreeService {
+  constructor(currentContent: CurrentContentService, itemNavService: ItemNavigationService, itemRouter: ItemRouter) {
+    super('activity', currentContent, itemNavService, itemRouter);
+  }
+
+  isOfContentType(content: ContentInfo|null): content is ItemInfo {
+    return isItemInfo(content) && isActivityInfo(content);
   }
 }
 
-export class LeftNavSkillDataSource extends LeftNavItemDataSource {
-  constructor(itemNavService: ItemNavigationService, itemRouter: ItemRouter) {
-    super('skill', itemNavService, itemRouter);
+@Injectable({
+  providedIn: 'root'
+})
+export class SkillNavTreeService extends ItemNavTreeService {
+  constructor(currentContent: CurrentContentService, itemNavService: ItemNavigationService, itemRouter: ItemRouter) {
+    super('skill', currentContent, itemNavService, itemRouter);
+  }
+
+  isOfContentType(content: ContentInfo|null): content is ItemInfo {
+    return isItemInfo(content) && !isActivityInfo(content);
   }
 }

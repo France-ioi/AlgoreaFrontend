@@ -1,55 +1,59 @@
-<p-tabView
-  styleClass="dark tab-left-nav"
-  (onChange)="onSelectionChangedByIdx($event)"
-  [(activeIndex)]="activeTabIndex"
-  *ngIf="currentUser$|async as currentUser"
->
+<ng-container *ngIf="activeTab$ | async as activeTab;">
 
-  <p-tabPanel>
-    <ng-template pTemplate="header" tabindex="5">
-      <span class="indicator dark"></span>
-      <i class="fa fa-hand-paper"></i>
-      <span class="p-tabview-title" i18n="|Tab name">Activities</span>
-    </ng-template>
-  </p-tabPanel>
+  <p-tabView
+    styleClass="dark tab-left-nav"
+    (onChange)="onSelectionChangedByIdx($event)"
+    [activeIndex]="activeTab.index"
+    *ngIf="currentUser$|async as currentUser"
+  >
 
-  <p-tabPanel>
-    <ng-template pTemplate="header" tabindex="6">
-      <span class="indicator dark"></span>
-      <i class="fa fa-graduation-cap"></i>
-      <span class="p-tabview-title" i18n="|Tab name">Skills</span>
-    </ng-template>
-  </p-tabPanel>
+    <p-tabPanel>
+      <ng-template pTemplate="header" tabindex="5">
+        <span class="indicator dark"></span>
+        <i class="fa fa-hand-paper"></i>
+        <span class="p-tabview-title" i18n="|Tab name">Activities</span>
+      </ng-template>
+    </p-tabPanel>
 
-  <p-tabPanel *ngIf="activeTabIndex === 2 || !currentUser.tempUser">
-    <ng-template pTemplate="header" tabindex="7">
-      <span class="indicator dark"></span>
-      <i class="fa fa-users"></i>
-      <span class="p-tabview-title" i18n="|Tab name">Groups</span>
-    </ng-template>
-  </p-tabPanel>
+    <p-tabPanel>
+      <ng-template pTemplate="header" tabindex="6">
+        <span class="indicator dark"></span>
+        <i class="fa fa-graduation-cap"></i>
+        <span class="p-tabview-title" i18n="|Tab name">Skills</span>
+      </ng-template>
+    </p-tabPanel>
 
-</p-tabView>
+    <p-tabPanel *ngIf="activeTab.index === 2 || !currentUser.tempUser">
+      <ng-template pTemplate="header" tabindex="7">
+        <span class="indicator dark"></span>
+        <i class="fa fa-users"></i>
+        <span class="p-tabview-title" i18n="|Tab name">Groups</span>
+      </ng-template>
+    </p-tabPanel>
 
-<ng-container *ngIf="$any($any(dataSources[activeTabIndex]!.state$) | async) as state">
+  </p-tabView>
 
-  <div class="spinner" *ngIf="state.isFetching">
-    <alg-loading size="medium"></alg-loading>
-  </div>
+  <ng-container *ngIf="navTreeServices[activeTab.index]!.state$ | async as state">
 
-  <alg-error
-    *ngIf="state.isError"
-    class="light"
-    i18n-message message="Unable to load the list."
-    [showRefreshButton]="true"
-    refreshButtonType="retry"
-    (refresh)="retryError()"
-  ></alg-error>
+    <div class="spinner" *ngIf="state.isFetching">
+      <alg-loading size="medium"></alg-loading>
+    </div>
 
-  <alg-left-nav-tree
-    *ngIf="state.isReady"
-    [data]="state.data"
-    [elementType]="$any(['activity', 'skill', 'group'][activeTabIndex])"
-  ></alg-left-nav-tree>
+    <alg-error
+      *ngIf="state.isError"
+      class="light"
+      i18n-message message="Unable to load the list."
+      [showRefreshButton]="true"
+      refreshButtonType="retry"
+      (refresh)="retryError(activeTab.index)"
+    ></alg-error>
+
+    <alg-left-nav-tree
+      *ngIf="state.isReady"
+      [data]="state.data"
+      [elementType]="$any(['activity', 'skill', 'group'][activeTab.index])"
+    ></alg-left-nav-tree>
+
+  </ng-container>
 
 </ng-container>

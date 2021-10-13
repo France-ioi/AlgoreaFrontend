@@ -11,8 +11,8 @@ export class LeftMenuComponent {
 
   isNavThemeDark = false;
 
-  onNavThemeChange(event: string | null): void {
-    this.isNavThemeDark = event === 'dark';
+  onNavThemeChange(dark: boolean): void {
+    this.isNavThemeDark = dark;
   }
 
   onSelectId(id: string): void {

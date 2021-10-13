@@ -1,17 +1,15 @@
 
-import { Component, OnDestroy, OnInit, Output, EventEmitter } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { delay, map, pairwise } from 'rxjs/operators';
+import { Component, Output } from '@angular/core';
+import { merge, Subject } from 'rxjs';
+import { delay, distinctUntilChanged, filter, map, startWith } from 'rxjs/operators';
+import { isDefined } from 'src/app/shared/helpers/null-undefined-predicates';
+import { ContentInfo, RoutedContentInfo } from 'src/app/shared/models/content/content-info';
 import { isGroupInfo } from 'src/app/shared/models/content/group-info';
 import { isActivityInfo, isItemInfo } from 'src/app/shared/models/content/item-info';
-import { GroupRouter } from 'src/app/shared/routing/group-router';
-import { ItemRouter } from 'src/app/shared/routing/item-router';
 import { CurrentContentService } from 'src/app/shared/services/current-content.service';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
-import { GroupNavigationService } from '../../http-services/group-navigation.service';
-import { ItemNavigationService } from '../../http-services/item-navigation.service';
-import { LeftNavGroupDataSource } from './left-nav-group-datasource';
-import { LeftNavActivityDataSource, LeftNavSkillDataSource } from './left-nav-item-datasource';
+import { GroupNavTreeService } from '../../services/navigation/group-nav-tree.service';
+import { ActivityNavTreeService, SkillNavTreeService } from '../../services/navigation/item-nav-tree.service';
 
 const activitiesTabIdx = 0;
 const skillsTabIdx = 1;
@@ -22,79 +20,56 @@ const groupsTabIdx = 2;
   templateUrl: './left-nav.component.html',
   styleUrls: [ './left-nav.component.scss' ]
 })
-export class LeftNavComponent implements OnInit, OnDestroy {
-  @Output() themeChange = new EventEmitter<string | null>(true /* async */);
-  @Output() selectId = new EventEmitter<string>();
+export class LeftNavComponent {
+  @Output() selectId = this.currentContent.content$.pipe(
+    filter((content): content is RoutedContentInfo => !!content?.route),
+    map(content => content.route.id),
+    distinctUntilChanged(), // only emit once the id changes
+    delay(0),
+  );
 
-  activeTabIndex = 0;
-  readonly dataSources: [LeftNavActivityDataSource, LeftNavSkillDataSource, LeftNavGroupDataSource] = [
-    new LeftNavActivityDataSource(this.itemNavigationService, this.itemRouter),
-    new LeftNavSkillDataSource(this.itemNavigationService, this.itemRouter),
-    new LeftNavGroupDataSource(this.groupNavigationService, this.groupRouter),
-  ];
+  private manualTabChange = new Subject<number>();
+  activeTab$ = merge(
+    this.manualTabChange,
+    this.currentContent.content$.pipe(
+      distinctUntilChanged((x,y) => x?.type === y?.type && x?.route?.id === y?.route?.id), // do not re-emit several time for a same content
+      map(content => contentToTabIndex(content)),
+      filter(isDefined),
+    )
+  ).pipe(
+    startWith(0),
+    distinctUntilChanged(),
+    map(idx => ({ index: idx })), // using object so that Angular ngIf does not ignore the "0" index
+  );
+
+  @Output() themeChange = this.activeTab$.pipe(map(tab => ({ isDark: tab.index === groupsTabIdx })), delay(0));
+
+  readonly navTreeServices = [ this.activityNavTreeService, this.skillNavTreeService, this.groupNavTreeService ];
   currentUser$ = this.sessionService.userProfile$.pipe(delay(0));
-
-  private subscription?: Subscription;
 
   constructor(
     private sessionService: UserSessionService,
     private currentContent: CurrentContentService,
-    private itemNavigationService: ItemNavigationService,
-    private groupNavigationService: GroupNavigationService,
-    private itemRouter: ItemRouter,
-    private groupRouter: GroupRouter,
+    private activityNavTreeService: ActivityNavTreeService,
+    private skillNavTreeService: SkillNavTreeService,
+    private groupNavTreeService: GroupNavTreeService,
   ) { }
 
-  ngOnInit(): void {
-    // Follow page change and trigger changes.
-    this.subscription = this.currentContent.content$.pipe(
-      // we are only interested in items and groups
-      map(content => (content !== null && (isItemInfo(content) || isGroupInfo(content)) ? content : undefined)),
-      pairwise(),
-    ).subscribe(([ prevContent, content ]) => {
-      // If the content changed (different id), clear the selection (clear all tabs as we don't really know on which tab was the selection)
-      if (prevContent?.type !== content?.type || prevContent?.route.id !== content?.route.id) {
-        this.dataSources.forEach(l => l.removeSelection());
-
-        if (content) {
-          this.selectId.emit(content.route.id);
-        }
-      }
-
-      if (!content) { // no tab and no content to select
-        this.dataSources[this.activeTabIndex]?.focus(); // if the current tab has not been initialized yet, do it now
-
-      } else if (isGroupInfo(content)) {
-        this.changeTab(groupsTabIdx);
-        this.dataSources[groupsTabIdx].showContent(content);
-
-      } else if (isActivityInfo(content)) {
-        this.changeTab(activitiesTabIdx);
-        this.dataSources[activitiesTabIdx].showContent(content);
-
-      } else {
-        this.changeTab(skillsTabIdx);
-        this.dataSources[skillsTabIdx].showContent(content);
-      }
-    });
-  }
-
-  ngOnDestroy(): void {
-    this.subscription?.unsubscribe();
-  }
-
   onSelectionChangedByIdx(e: { index: number }): void {
-    this.changeTab(e.index);
+    this.manualTabChange.next(e.index);
   }
 
-  private changeTab(index: number): void {
-    this.activeTabIndex = index;
-    this.dataSources[index]?.focus();
-    this.themeChange.emit(this.activeTabIndex === 2 ? 'dark' : null);
+  retryError(tabIndex: number): void {
+    this.navTreeServices[tabIndex]?.retry();
   }
 
-  retryError(): void {
-    this.dataSources[this.activeTabIndex]?.retry();
-  }
+}
 
+function contentToTabIndex(content: ContentInfo|null): number|undefined {
+  if (content === null) return undefined;
+  if (isGroupInfo(content)) return groupsTabIdx;
+  if (isItemInfo(content)) {
+    return isActivityInfo(content) ? activitiesTabIdx : skillsTabIdx;
+  }
+  return undefined;
 }
