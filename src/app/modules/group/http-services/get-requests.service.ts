@@ -45,18 +45,18 @@ const groupInvitationDecoder = pipe(
       type: D.literal('Class', 'Team', 'Club', 'Friends', 'Other', 'Session'),
     }),
     groupId: D.string,
-    invitingUser: D.struct({
+    invitingUser: D.nullable(D.struct({
       id: D.string,
       firstName: D.string,
       lastName: D.string,
       login: D.string,
-    })
+    })),
   })
 );
 
 export interface PendingRequest {
   at: Date|null,
-  user: {
+  user: null | {
     id: string,
     login: string,
     firstName: string|null,
@@ -140,12 +140,7 @@ export class GetRequestsService {
             description: r.group.description,
             type: r.group.type,
           },
-          user: {
-            id: r.invitingUser.id,
-            login: r.invitingUser.login,
-            firstName: r.invitingUser.firstName,
-            lastName: r.invitingUser.lastName,
-          }
+          user: r.invitingUser,
         }))),
       );
   }
