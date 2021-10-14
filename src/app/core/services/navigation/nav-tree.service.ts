@@ -23,7 +23,7 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo, Childre
   state$ = combineLatest([ this.children$, this.content$ ]).pipe(
     mergeScan((prevState: FetchState<NavTreeData>, [ children, content ]) => {
 
-      // CASE 1: the content is not of type of this menu
+      // CASE 1: the current-content does not match the type of this nav tree (so `content` has been mapped to `undefined`)
       if (!content) {
         // CASE 1A: the menu has already an element displayed -> just deselect what is selected if there was a selection
         if (prevState.isReady) return of(readyState(prevState.data.withNoSelection()));
@@ -31,7 +31,7 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo, Childre
         else return this.fetchDefaultNav();
 
       } else {
-      // CASE 2: content is of type of this menu
+      // CASE 2: the content type matches the type of this nav tree
         const route = content.route;
 
         if (prevState.isReady && prevState.data.hasElement(route)) {
