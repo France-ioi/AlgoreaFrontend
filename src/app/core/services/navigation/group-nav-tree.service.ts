@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { concat, Observable, of, OperatorFunction, pipe } from 'rxjs';
+import { EMPTY, Observable, OperatorFunction, pipe } from 'rxjs';
 import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { ContentInfo } from 'src/app/shared/models/content/content-info';
 import { GroupInfo, isGroupInfo } from 'src/app/shared/models/content/group-info';
@@ -13,7 +13,7 @@ import { NavTreeService } from './nav-tree.service';
 @Injectable({
   providedIn: 'root'
 })
-export class GroupNavTreeService extends NavTreeService<GroupInfo, GroupNavigationData> {
+export class GroupNavTreeService extends NavTreeService<GroupInfo> {
 
   constructor(
     currentContent: CurrentContentService,
@@ -23,12 +23,12 @@ export class GroupNavTreeService extends NavTreeService<GroupInfo, GroupNavigati
     super(currentContent);
   }
 
-  childrenNavigation(): OperatorFunction<GroupInfo|undefined,GroupNavigationData|undefined> {
+  childrenNavData(): OperatorFunction<GroupInfo|undefined,NavTreeElement[]> {
     return pipe(
       distinctUntilChanged((g1, g2) => g1?.route.id === g2?.route.id),
       switchMap(group => {
-        if (!group || group.route.isUser) return of(undefined);
-        return concat(of(undefined), this.groupNavigationService.getGroupNavigation(group.route.id));
+        if (!group || group.route.isUser) return EMPTY;
+        return this.groupNavigationService.getGroupNavigation(group.route.id).pipe(map(data => this.mapNavData(data).elements));
       })
     );
   }
@@ -37,11 +37,8 @@ export class GroupNavTreeService extends NavTreeService<GroupInfo, GroupNavigati
     return isGroupInfo(content);
   }
 
-  addDetailsToTreeElement(treeElement: NavTreeElement, contentInfo: GroupInfo, children?: GroupNavigationData): NavTreeElement {
-    let group = treeElement;
-    if (contentInfo.title) group = { ...group, title: contentInfo.title };
-    if (children) group = { ...group, children: children.children.map(g => this.mapChild(g)) };
-    return group;
+  addDetailsToTreeElement(treeElement: NavTreeElement, contentInfo: GroupInfo): NavTreeElement {
+    return contentInfo.title ? { ...treeElement, title: contentInfo.title } : treeElement;
   }
 
   fetchRootTreeData(): Observable<NavTreeElement[]> {

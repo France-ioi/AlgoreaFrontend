@@ -60,6 +60,16 @@ export class NavTreeData {
   }
 
   /**
+   * Return this with children added to the element from `elements` (identified by its route)
+   * If the element is not found, return this unchanged.
+   */
+  withChildren(route: ContentRoute, children: NavTreeElement[]): NavTreeData {
+    if (!arraysEqual(route.path, this.pathToElements)) return this; // the element in not in tree as their paths do not match
+    const elements = this.elements.map(e => (e.id === route.id ? { ...e, children: children } : e));
+    return new NavTreeData(elements, this.pathToElements, this.selectedElementId, this.parent);
+  }
+
+  /**
    * Remove the current selection but keep the item expanded if it has children
    * If no element is selected, return this unchanged.
    */
