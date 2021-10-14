@@ -1,4 +1,6 @@
+import { arraysEqual } from 'src/app/shared/helpers/array';
 import { ensureDefined } from 'src/app/shared/helpers/null-undefined-predicates';
+import { ContentRoute } from 'src/app/shared/routing/content-route';
 
 type Id = string;
 export enum GroupManagership { False = 'false', True = 'true', Descendant = 'descendant' }
@@ -48,8 +50,9 @@ export class NavTreeData {
    * Return this with the element from `elements` (identified by its id) replaced by the given one
    * If the element is not found, return this unchanged.
    */
-  withUpdatedElement(id: Id, update: (el:NavTreeElement)=>NavTreeElement): NavTreeData {
-    const idx = this.elements.findIndex(i => i.id === id);
+  withUpdatedElement(route: ContentRoute, update: (el:NavTreeElement)=>NavTreeElement): NavTreeData {
+    if (!arraysEqual(route.path, this.pathToElements)) return this; // the element in not in tree as their paths do not match
+    const idx = this.elements.findIndex(i => i.id === route.id);
     if (idx === -1) return this;
     const elements = [ ...this.elements ];
     elements[idx] = update(ensureDefined(elements[idx]));
@@ -69,18 +72,25 @@ export class NavTreeData {
    * Create a new sub-NavTreeData moving the child element and its siblings to `elements` and his parent as new parent.
    * If the element is not found, return this unchanged.
    */
-  subNavMenuData(childElementId: Id): NavTreeData {
-    const newParent = this.elements.find(i => i.children && i.children.some(c => c.id === childElementId));
-    if (!newParent || !newParent.children /* unexpected */) return this;
-    return new NavTreeData(newParent.children, this.pathToElements.concat([ newParent.id ]), childElementId, newParent);
+  subNavMenuData(route: ContentRoute): NavTreeData {
+    const newParent = this.elements.find(e => e.id === route.path[route.path.length-1]);
+    if (!newParent || !newParent.children /* unexpected */) throw new Error('Unexpected: subNavMenuData did not find parent');
+    return new NavTreeData(newParent.children, this.pathToElements.concat([ newParent.id ]), route.id, newParent);
   }
 
-  hasLevel1Element(id: Id): boolean {
-    return this.selectedElementId == id || this.elements.some(e => e.id === id);
+  hasElement(route: ContentRoute): boolean {
+    return this.hasLevel1Element(route) || this.hasLevel2Element(route);
   }
 
-  hasLevel2Element(id: Id): boolean {
-    return this.elements.some(e => e.children && e.children.some(c => c.id === id));
+  hasLevel1Element(route: ContentRoute): boolean {
+    return arraysEqual(route.path, this.pathToElements) && this.elements.some(e => e.id === route.id);
+  }
+
+  hasLevel2Element(route: ContentRoute): boolean {
+    if (!arraysEqual(route.path.slice(0,-1), this.pathToElements)) return false;
+    const parent = this.elements.find(e => e.id === route.path[route.path.length-1]);
+    if (!parent || !parent.children) return false;
+    return parent.children.some(c => c.id === route.id);
   }
 
   selectedElement(): NavTreeElement|undefined {
