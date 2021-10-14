@@ -85,7 +85,6 @@ export class ItemByIdComponent implements OnDestroy {
               currentScore: state.data.currentResult?.score,
               validated: state.data.currentResult?.validated,
             },
-            navData: state.data.itemNavigationData,
             score: state.data.currentResult?.score !== undefined ? {
               bestScore: state.data.item.bestScore,
               currentScore: state.data.currentResult.score,

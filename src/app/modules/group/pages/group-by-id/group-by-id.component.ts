@@ -43,7 +43,7 @@ export class GroupByIdComponent implements OnDestroy {
     this.subscriptions.push(
       this.groupDataSource.state$.pipe(
         readyData(),
-        map(({ group, route, breadcrumbs, navigation }): GroupInfo => groupInfo({
+        map(({ group, route, breadcrumbs }): GroupInfo => groupInfo({
           route: route,
           breadcrumbs: {
             category: GROUP_BREADCRUMB_CAT,
@@ -54,7 +54,6 @@ export class GroupByIdComponent implements OnDestroy {
             currentPageIdx: breadcrumbs.length - 1,
           },
           title: group.name,
-          navData: navigation,
         })),
       ).subscribe(p => this.currentContent.replace(p)),
 

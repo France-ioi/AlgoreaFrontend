@@ -1,4 +1,4 @@
-import { EMPTY, Observable, of, Subject } from 'rxjs';
+import { combineLatest, EMPTY, Observable, of, OperatorFunction, Subject } from 'rxjs';
 import { delay, distinctUntilChanged, map, shareReplay, startWith, switchScan } from 'rxjs/operators';
 import { isDefined } from 'src/app/shared/helpers/null-undefined-predicates';
 import { repeatLatestWhen } from 'src/app/shared/helpers/repeatLatestWhen';
@@ -8,17 +8,20 @@ import { mapStateData, mapToFetchState } from 'src/app/shared/operators/state';
 import { CurrentContentService } from 'src/app/shared/services/current-content.service';
 import { NavTreeData, NavTreeElement } from '../../models/left-nav-loading/nav-tree-data';
 
-export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
+export abstract class NavTreeService<ContentT extends RoutedContentInfo, ChildrenInfoT> {
 
   private reloadTrigger = new Subject<void>();
 
-  state$ = this.currentContent.content$.pipe(
+  private contentInfo$ = this.currentContent.content$.pipe( // only keep those of interest for the current nav tree
     // map those which are not of interest to `undefined`
     map(content => (this.isOfContentType(content) ? content : undefined)),
     distinctUntilChanged(), // remove multiple `undefined`
     startWith(undefined),
     repeatLatestWhen(this.reloadTrigger),
-    switchScan((prevState: FetchState<NavTreeData>, contentInfo) => {
+  );
+
+  state$ = combineLatest([ this.contentInfo$, this.contentInfo$.pipe(this.childrenNavigation()) ]).pipe(
+    switchScan((prevState: FetchState<NavTreeData>, [ contentInfo, children ]) => {
 
       if (prevState.isReady) {
         const prevData = prevState.data;
@@ -32,11 +35,11 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
         // CASE: the content is among the displayed items
         //       -> updates its data, and either select it if at root or shift the tree "to the left" otherwise
         const contentId = contentInfo.route.id;
-        const contentInMenuLev1 = prevState.data.hasLevel1Element(contentId);
-        const contentInMenuLev2 = prevState.data.hasLevel2Element(contentId);
+        const contentInMenuLev1 = prevData.hasLevel1Element(contentId);
+        const contentInMenuLev2 = prevData.hasLevel2Element(contentId);
         if (contentInMenuLev1 || contentInMenuLev2) {
           let data = contentInMenuLev1 ? prevData.withSelection(contentId) : prevData.subNavMenuData(contentId);
-          data = data.withUpdatedElement(contentId, el => this.addDetailsToTreeElement(contentInfo, el));
+          data = data.withUpdatedElement(contentId, el => this.addDetailsToTreeElement(el, contentInfo, children));
           return of(readyState(data));
         }
 
@@ -49,7 +52,7 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
       // OTHERWISE: the content is an item which is not currently displayed:
       // CASE: The current content type matches the current tab
       return this.fetchNewNav(contentInfo).pipe(
-        mapStateData(data => data.withUpdatedElement(contentInfo.route.id, el => this.addDetailsToTreeElement(contentInfo, el)))
+        mapStateData(data => data.withUpdatedElement(contentInfo.route.id, el => this.addDetailsToTreeElement(el, contentInfo, children)))
       );
     }, fetchingState<NavTreeData>() /* the switchScan seed */),
     delay(0),
@@ -64,13 +67,18 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
   protected abstract isOfContentType(content: ContentInfo|null): content is ContentT;
 
   /**
+   * Operator which emit the children (or undefined if none or not known yet) of a content stream
+   */
+  protected abstract childrenNavigation(): OperatorFunction<ContentT|undefined,ChildrenInfoT|undefined>;
+
+  /**
    * Re-play the last change
    */
   retry(): void {
     this.reloadTrigger.next();
   }
 
-  protected abstract addDetailsToTreeElement(contentInfo: ContentT, treeElement: NavTreeElement): NavTreeElement;
+  protected abstract addDetailsToTreeElement(treeElement: NavTreeElement, contentInfo: ContentT, children?: ChildrenInfoT): NavTreeElement;
   protected abstract fetchRootTreeData(): Observable<NavTreeElement[]>;
   protected abstract fetchNavDataFromChild(id: string, child: ContentT): Observable<{ parent: NavTreeElement, elements: NavTreeElement[] }>;
 
