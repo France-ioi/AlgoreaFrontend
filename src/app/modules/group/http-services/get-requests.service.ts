@@ -17,9 +17,9 @@ const userDecoder = pipe(
     D.partial({
       firstName: D.nullable(D.string),
       lastName: D.nullable(D.string),
-      grade: D.number,
-    })
-  )
+      grade: D.nullable(D.number),
+    }),
+  ),
 );
 
 const groupPendingRequestDecoder = pipe(
@@ -31,7 +31,7 @@ const groupPendingRequestDecoder = pipe(
     }),
     type: D.literal('join_request', 'leave_request'),
     user: userDecoder,
-  })
+  }),
 );
 
 const groupInvitationDecoder = pipe(
