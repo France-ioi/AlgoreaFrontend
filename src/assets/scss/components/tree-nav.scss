@@ -333,6 +333,14 @@
       }
 
       &.current {
+        .top-branch {
+          z-index: 1;
+
+          .mask-branch {
+            background: none;
+          }
+        }
+
         .node-item-content {
           border-top-left-radius: 0.5rem;
           border-bottom-left-radius: 0.5rem;

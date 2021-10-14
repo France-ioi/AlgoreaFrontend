@@ -1,32 +1,37 @@
-<alg-section i18n-label label="Parent skills" icon="fa fa-link">
+<ng-container *ngIf="state$ | async as state">
+  <alg-section i18n-label label="Parent skills" icon="fa fa-link">
 
-  <alg-loading *ngIf="state === 'loading'"></alg-loading>
+    <alg-loading *ngIf="state.isFetching"></alg-loading>
 
-  <alg-error
-    *ngIf="state === 'error'"
-    class="dark"
-    i18n-message message="Error while loading the skill parents"
-  ></alg-error>
+    <alg-error
+      *ngIf="state.isError"
+      class="dark"
+      i18n-message message="Error while loading the skill parents"
+    ></alg-error>
 
-  <p *ngIf="state === 'ready' && parents.length === 0" i18n>This skill does not have parent skills.</p>
+    <ng-container *ngIf="state.isReady && state.data as parents">
 
-  <ul *ngIf="state === 'ready' && parents.length > 0" class="data-list-container sub-skill">
-    <li *ngFor="let item of parents">
-      <div class="skill-content" (click)="click(item)" [ngClass]="{ locked: item.isLocked }">
-        <a class="skill-title alg-link">
-          {{ item.string.title }}
-        </a>
-        <span *ngIf="item.isLocked" class="skill-status">
-          <i *ngIf="item.isLocked" class="fa fa-lock"></i>
-        </span>
-        <alg-skill-progress
-          style="width: 25%;"
-          type="thick-horizontal"
-          [bestScore]="item.bestScore"
-          [currentScore]="item.result.scoreComputed"
-        ></alg-skill-progress>
-      </div>
-    </li>
-  </ul>
+      <p *ngIf="parents.length === 0" i18n>This skill does not have parent skills.</p>
 
-</alg-section>
+      <ul *ngIf="parents.length > 0" class="data-list-container sub-skill">
+        <li *ngFor="let item of parents">
+          <div class="skill-content" (click)="click(item)" [ngClass]="{ locked: item.isLocked }">
+            <a class="skill-title alg-link">
+              {{ item.string.title }}
+            </a>
+            <span *ngIf="item.isLocked" class="skill-status">
+              <i *ngIf="item.isLocked" class="fa fa-lock"></i>
+            </span>
+            <alg-skill-progress
+              style="width: 25%;"
+              type="thick-horizontal"
+              [bestScore]="item.bestScore"
+              [currentScore]="item.result.scoreComputed"
+            ></alg-skill-progress>
+          </div>
+        </li>
+      </ul>
+
+    </ng-container>
+  </alg-section>
+</ng-container>

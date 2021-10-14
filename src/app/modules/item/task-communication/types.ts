@@ -64,7 +64,7 @@ export const updateDisplayParamsDecoder = D.partial({
 export type UpdateDisplayParams = D.TypeOf<typeof updateDisplayParamsDecoder>;
 
 // Log data sent by the task
-export const taskLogDecoder = D.array(D.string);
+export const taskLogDecoder = D.UnknownArray;
 export type TaskLog = D.TypeOf<typeof taskLogDecoder>;
 
 // Currently unused

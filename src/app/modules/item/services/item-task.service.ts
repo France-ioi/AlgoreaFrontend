@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { animationFrames, merge, Observable, throwError } from 'rxjs';
-import { mapTo, switchMap, take, tap } from 'rxjs/operators';
+import { mapTo, shareReplay, switchMap, take, tap } from 'rxjs/operators';
 import { ItemNavigationService } from 'src/app/core/http-services/item-navigation.service';
 import { LocaleService } from 'src/app/core/services/localeService';
 import { openNewTab, replaceWindowUrl } from 'src/app/shared/helpers/url';
@@ -14,10 +14,11 @@ import { ItemTaskViewsService } from './item-task-views.service';
 
 @Injectable()
 export class ItemTaskService {
-  private error$ = merge(
-    this.answerService.error$,
-    this.viewsService.error$,
-  ).pipe(switchMap(error => throwError(() => error)));
+  readonly unknownError$ = merge(this.answerService.error$, this.viewsService.error$).pipe(shareReplay(1));
+  readonly initError$ = this.initService.initError$.pipe(shareReplay(1));
+  readonly urlError$ = this.initService.urlError$.pipe(shareReplay(1));
+
+  private error$ = merge(this.initError$, this.urlError$, this.unknownError$).pipe(switchMap(error => throwError(() => error)));
 
   readonly task$ = merge(this.initService.task$, this.error$);
   readonly iframeSrc$ = this.initService.iframeSrc$;
@@ -68,8 +69,9 @@ export class ItemTaskService {
       askHint: () => {
         throw new Error('unimplemented method "askHint"');
       },
-      log: () => {
-        throw new Error('unimplemented method "askHint"');
+      log: (messages: string[]) => {
+        // eslint-disable-next-line no-console
+        console.log(...messages);
       },
     };
     task.bindPlatform(platform);

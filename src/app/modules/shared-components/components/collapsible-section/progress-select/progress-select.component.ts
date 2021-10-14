@@ -1,4 +1,6 @@
-import { Component, Input, OnChanges, SimpleChanges, Output, EventEmitter, OnInit, ContentChild, TemplateRef } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges,
+  Output, EventEmitter, OnInit, ContentChild, TemplateRef, forwardRef } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 export interface ProgressSelectValue<T> {
   label: string,
@@ -9,6 +11,7 @@ export interface ProgressSelectValue<T> {
 
 /**
  * This component is to be used in a `collapsible-section` component
+ * To use inside form, just set the `formControlName`
  * ```
  * <alg-collapsible-section ... >
  *      <ng-template #content let-collapsed>
@@ -23,9 +26,16 @@ export interface ProgressSelectValue<T> {
 @Component({
   selector: 'alg-progress-select',
   templateUrl: './progress-select.component.html',
-  styleUrls: [ './progress-select.component.scss' ]
+  styleUrls: [ './progress-select.component.scss' ],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => ProgressSelectComponent),
+      multi: true,
+    }
+  ]
 })
-export class ProgressSelectComponent<T> implements OnChanges, OnInit {
+export class ProgressSelectComponent<T> implements OnChanges, OnInit, ControlValueAccessor {
 
   @Input() collapsed = false;
 
@@ -41,7 +51,21 @@ export class ProgressSelectComponent<T> implements OnChanges, OnInit {
 
   selected = 0;
 
+  private onChange: (value: T) => void = () => {};
+
   constructor() { }
+
+  writeValue(value: T): void {
+    this.value = value;
+    this.selected = Math.max(0, this.values.findIndex(item => item.value === this.value));
+  }
+
+  registerOnChange(fn: (value: T) => void): void {
+    this.onChange = fn;
+  }
+
+  registerOnTouched(_fn: (value: T) => void): void {
+  }
 
   ngOnInit(): void {
     if (this.defaultValue) this.value = this.defaultValue;
@@ -51,9 +75,9 @@ export class ProgressSelectComponent<T> implements OnChanges, OnInit {
     this.selected = Math.max(0, this.values.findIndex(item => item.value === this.value));
   }
 
-  onSet(val: T): void {
-    this.value = val;
-    this.selected = Math.max(0, this.values.findIndex(item => item.value === this.value));
-    this.valueChange.emit(this.value);
+  onSet(value: T): void {
+    this.writeValue(value);
+    this.onChange(value);
+    this.valueChange.emit(value);
   }
 }

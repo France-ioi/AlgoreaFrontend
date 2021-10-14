@@ -1,7 +1,9 @@
-import { Component, ContentChild, EventEmitter, Input, Output, TemplateRef } from '@angular/core';
+import { Component, ContentChild, EventEmitter, forwardRef, Input, Output, TemplateRef } from '@angular/core';
+import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 
 /**
- * This component is to be used in a `collapsible-section` component
+ * This component is to be used in a `collapsible-section` component.
+ * To use inside form, just set the `formControlName`
  * ```
  * <alg-collapsible-section ... >
  *      <ng-template #content let-collapsed>
@@ -16,9 +18,16 @@ import { Component, ContentChild, EventEmitter, Input, Output, TemplateRef } fro
 @Component({
   selector: 'alg-switch-field',
   templateUrl: './switch-field.component.html',
-  styleUrls: [ './switch-field.component.scss' ]
+  styleUrls: [ './switch-field.component.scss' ],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => SwitchFieldComponent),
+      multi: true,
+    }
+  ]
 })
-export class SwitchFieldComponent {
+export class SwitchFieldComponent implements ControlValueAccessor {
 
   @Input() value = false;
   @Input() collapsed = false;
@@ -28,10 +37,22 @@ export class SwitchFieldComponent {
 
   @Output() valueChange = new EventEmitter<boolean>();
 
-  constructor() { }
+  private onChange: (value: boolean) => void = () => {};
 
-  onSet(val: boolean): void {
-    this.value = val;
-    this.valueChange.emit(this.value);
+  writeValue(value: boolean): void {
+    this.value = value;
+  }
+
+  registerOnChange(fn: (value: boolean) => void): void {
+    this.onChange = fn;
+  }
+
+  registerOnTouched(_fn: (value: boolean) => void): void {
+  }
+
+  onSet(value: boolean): void {
+    this.writeValue(value);
+    this.valueChange.emit(value);
+    this.onChange(value);
   }
 }

@@ -1,13 +1,13 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { BehaviorSubject, combineLatest, merge, ReplaySubject, Subject } from 'rxjs';
-import { filter, map, switchMap, takeUntil } from 'rxjs/operators';
+import { combineLatest, merge, ReplaySubject, Subject } from 'rxjs';
+import { delayWhen, distinctUntilChanged, filter, map, switchMap, takeUntil } from 'rxjs/operators';
 import { isNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
 import { TaskViews, UpdateDisplayParams } from '../task-communication/types';
 import { ItemTaskInitService } from './item-task-init.service';
 
 @Injectable()
 export class ItemTaskViewsService implements OnDestroy {
-  private errorSubject = new Subject<void>();
+  private errorSubject = new Subject<Error>();
   readonly error$ = this.errorSubject.asObservable();
 
   private displaySubject = new ReplaySubject<UpdateDisplayParams>(1);
@@ -19,8 +19,11 @@ export class ItemTaskViewsService implements OnDestroy {
     this.display$.pipe(map(({ views }) => views), filter(isNotUndefined)),
   ).pipe(map(views => this.getAvailableViews(views)));
 
-  private activeViewSubject = new BehaviorSubject<string>('task');
-  readonly activeView$ = this.activeViewSubject.asObservable();
+  private activeViewSubject = new ReplaySubject<string>(1);
+  readonly activeView$ = this.activeViewSubject.pipe(
+    distinctUntilChanged(),
+    delayWhen(() => this.task$), // start emitting only when task is loaded since it makes no sense to emit before
+  );
 
   // By default, load 'task' view when the task is initialized
   private showViews$ = combineLatest([ this.initService.task$, this.activeView$ ]).pipe(

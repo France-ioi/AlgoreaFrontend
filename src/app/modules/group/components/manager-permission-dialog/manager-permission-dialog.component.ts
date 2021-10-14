@@ -3,9 +3,10 @@ import { Group } from '../../http-services/get-group-by-id.service';
 import { Manager } from '../../http-services/get-group-managers.service';
 import { ProgressSelectValue } from
   '../../../shared-components/components/collapsible-section/progress-select/progress-select.component';
-import { UpdateGroupManagersService } from '../../http-services/update-group-managers.service';
+import { GroupManagerPermissionChanges, UpdateGroupManagersService } from '../../http-services/update-group-managers.service';
 import { formatUser } from '../../../../shared/helpers/user';
 import { ActionFeedbackService } from '../../../../shared/services/action-feedback.service';
+import { FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'alg-manager-permission-dialog',
@@ -19,7 +20,7 @@ export class ManagerPermissionDialogComponent implements OnChanges {
 
   @Output() close = new EventEmitter<{ updated: boolean }>();
 
-  managementLevelValues: ProgressSelectValue<string>[] = [
+  managementLevelValues: ProgressSelectValue<GroupManagerPermissionChanges['canManage']>[] = [
     {
       value: 'none',
       label: $localize`Read-only`,
@@ -32,33 +33,33 @@ export class ManagerPermissionDialogComponent implements OnChanges {
     },
     {
       value: 'memberships_and_group',
-      label: $localize`Full`,
+      label: $localize`Memberships and group`,
       comment: $localize`Can manage members, managers, and change group settings`
     },
   ];
 
-  managerValues = {
-    canManage: 'none',
-    canGrantGroupAccess: false,
-    canWatchMembers: false,
-  };
-
   userCaption?: string;
   isUpdating = false;
-  valuesChanged = false;
+
+  form = this.fb.group({
+    canManage: [ 'none' ],
+    canGrantGroupAccess: [ false ],
+    canWatchMembers: [ false ],
+  });
 
   constructor(
     private updateGroupManagersService: UpdateGroupManagersService,
-    private actionFeedbackService: ActionFeedbackService
+    private actionFeedbackService: ActionFeedbackService,
+    private fb: FormBuilder,
   ) {}
 
   ngOnChanges(): void {
     if (this.manager) {
-      this.managerValues = {
+      this.form.reset({
         canManage: this.manager.canManage,
         canGrantGroupAccess: this.manager.canGrantGroupAccess,
         canWatchMembers: this.manager.canWatchMembers,
-      };
+      }, { emitEvent: false });
 
       this.userCaption = this.manager.login ? formatUser({
         login: this.manager.login,
@@ -70,7 +71,6 @@ export class ManagerPermissionDialogComponent implements OnChanges {
 
   onClose(): void {
     this.close.emit({ updated: false });
-    this.valuesChanged = false;
   }
 
   onAccept(): void {
@@ -78,22 +78,23 @@ export class ManagerPermissionDialogComponent implements OnChanges {
       throw new Error('Unexpected: Missed input component params');
     }
 
+    const managerPermissions: GroupManagerPermissionChanges = {
+      canManage: this.form.get('canManage')?.value as GroupManagerPermissionChanges['canManage'],
+      canGrantGroupAccess: this.form.get('canGrantGroupAccess')?.value as GroupManagerPermissionChanges['canGrantGroupAccess'],
+      canWatchMembers: this.form.get('canWatchMembers')?.value as GroupManagerPermissionChanges['canWatchMembers'],
+    };
+
     this.isUpdating = true;
-    this.updateGroupManagersService.update(this.group.id, this.manager.id, this.managerValues).subscribe({
+    this.updateGroupManagersService.update(this.group.id, this.manager.id, managerPermissions).subscribe({
       next: () => {
         this.isUpdating = false;
         this.actionFeedbackService.success($localize`New permissions successfully saved.`);
         this.close.emit({ updated: true });
-        this.valuesChanged = false;
       },
       error: () => {
         this.isUpdating = false;
         this.actionFeedbackService.error($localize`Failed to save permissions.`);
       }
     });
-  }
-
-  onValueChange(): void {
-    this.valuesChanged = true;
   }
 }
