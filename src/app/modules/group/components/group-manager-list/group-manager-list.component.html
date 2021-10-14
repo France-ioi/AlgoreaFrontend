@@ -117,7 +117,7 @@
             </span>
             <span class="filler"></span>
             <div class="summary-actions">
-              <span (click)="onRemove()" [class.disabled]="removalInProgress || !state.isReady || selection.length === 0">
+              <span (click)="onRemove($event)" [class.disabled]="removalInProgress || !state.isReady || selection.length === 0">
               <span i18n>Remove</span>
                 <i class="fa fa-trash-alt"></i>
               </span>
