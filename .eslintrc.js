@@ -7,9 +7,9 @@ module.exports = {
     'eslint:recommended',
     'plugin:@typescript-eslint/eslint-recommended',
     'plugin:@typescript-eslint/recommended-requiring-type-checking',
-    'plugin:@angular-eslint/recommended'
+    'plugin:@angular-eslint/recommended',
   ],
-  plugins: ['rxjs'],
+  plugins: ['rxjs', 'jest'],
   rules: {
     '@angular-eslint/directive-selector': [
       'error',
@@ -88,7 +88,8 @@ module.exports = {
     'quotes': ['error', 'single', {
       avoidEscape: true,
       allowTemplateLiterals: false
-    }]
+    }],
+    'jest/no-focused-tests': ['error']
   },
   overrides: [
     {
