@@ -22,37 +22,33 @@ const userDecoder = pipe(
   ),
 );
 
-const groupPendingRequestDecoder = pipe(
-  D.struct({
-    at: D.nullable(dateDecoder),
-    group: D.struct({
-      id: D.string,
-      name: D.string,
-    }),
-    type: D.literal('join_request', 'leave_request'),
-    user: userDecoder,
+const groupPendingRequestDecoder = D.struct({
+  at: D.nullable(dateDecoder),
+  group: D.struct({
+    id: D.string,
+    name: D.string,
   }),
-);
+  type: D.literal('join_request', 'leave_request'),
+  user: userDecoder,
+});
 
-const groupInvitationDecoder = pipe(
-  D.struct({
-    action: D.literal('invitation_created', 'join_request_created', 'join_request_refused'),
-    at: dateDecoder,
-    group: D.struct({
-      id: D.string,
-      name: D.string,
-      description: D.nullable(D.string),
-      type: D.literal('Class', 'Team', 'Club', 'Friends', 'Other', 'Session'),
-    }),
-    groupId: D.string,
-    invitingUser: D.nullable(D.struct({
-      id: D.string,
-      firstName: D.string,
-      lastName: D.string,
-      login: D.string,
-    })),
-  })
-);
+const groupInvitationDecoder = D.struct({
+  action: D.literal('invitation_created', 'join_request_created', 'join_request_refused'),
+  at: dateDecoder,
+  group: D.struct({
+    id: D.string,
+    name: D.string,
+    description: D.nullable(D.string),
+    type: D.literal('Class', 'Team', 'Club', 'Friends', 'Other', 'Session'),
+  }),
+  groupId: D.string,
+  invitingUser: D.nullable(D.struct({
+    id: D.string,
+    firstName: D.string,
+    lastName: D.string,
+    login: D.string,
+  })),
+});
 
 export interface PendingRequest {
   at: Date|null,
