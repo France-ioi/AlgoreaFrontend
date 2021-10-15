@@ -67,6 +67,10 @@ $inactive-bk-color: #d8d8d8;
         &.active {
           background-color: $base-color;
         }
+
+        &.disabled {
+          opacity: 0.5;
+        }
       }
     }
 

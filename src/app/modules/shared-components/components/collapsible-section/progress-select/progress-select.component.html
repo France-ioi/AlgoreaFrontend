@@ -26,7 +26,7 @@
           }"
         ></i>
       </span>
-      <span *ngIf="idx + 1 < values.length" class="progress-branch" [ngClass]="{active: idx < selected}"></span>
+      <span *ngIf="idx + 1 < values.length" class="progress-branch" [ngClass]="{active: idx < selected, disabled: values[idx + 1]?.disabled}"></span>
     </div>
     <div class="progress-desc">
       <div class="progress-desc-name" [ngClass]="{active: idx < selected + 1}" (click)="onSet(item.value)">{{ item.label }}</div>
