@@ -22,8 +22,8 @@ const breadcrumbItemDecoder = pipe(
   }),
   D.intersect(
     D.partial({
-      attemptId: D.string,
-      attemptNumber: D.string,
+      attemptId: D.string, // set in all but the last one if parent_attempt_id param has been given
+      attemptNumber: D.string, // set in all but the last one if parent_attempt_id param has been given
     })
   )
 );
