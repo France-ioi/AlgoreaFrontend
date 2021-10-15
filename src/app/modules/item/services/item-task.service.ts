@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { animationFrames, merge, Observable, throwError } from 'rxjs';
-import { mapTo, shareReplay, switchMap, take, tap } from 'rxjs/operators';
-import { ItemNavigationService } from 'src/app/core/http-services/item-navigation.service';
+import { map, mapTo, shareReplay, switchMap, take, tap } from 'rxjs/operators';
 import { LocaleService } from 'src/app/core/services/localeService';
+import { ActivityNavTreeService } from 'src/app/core/services/navigation/item-nav-tree.service';
 import { openNewTab, replaceWindowUrl } from 'src/app/shared/helpers/url';
 import { FullItemRoute, itemRoute } from 'src/app/shared/routing/item-route';
 import { ItemRouter } from 'src/app/shared/routing/item-router';
@@ -30,14 +30,17 @@ export class ItemTaskService {
   readonly display$ = this.viewsService.display$;
   readonly activeView$ = this.viewsService.activeView$;
 
-  private config$ = this.initService.config$;
+  private navigateToNext$ = this.activityNavTreeService.navigationNeighbors$.pipe(
+    map(neighborsState => (neighborsState.isReady ? neighborsState.data?.next?.navigateTo : undefined)),
+    shareReplay(1),
+  );
 
   constructor(
     private initService: ItemTaskInitService,
     private answerService: ItemTaskAnswerService,
     private viewsService: ItemTaskViewsService,
     private itemRouter: ItemRouter,
-    private itemNavigationService: ItemNavigationService,
+    private activityNavTreeService: ActivityNavTreeService,
     private router: Router,
     private localeService: LocaleService,
   ) {}
@@ -88,11 +91,10 @@ export class ItemTaskService {
   }
 
   private navigateToNextItem(): Observable<void> {
-    return this.config$.pipe(
+    return this.navigateToNext$.pipe(
       take(1),
-      switchMap(({ route }) => this.itemNavigationService.getNavigationNeighbors(route)),
-      tap(data => {
-        if (data.right) this.itemRouter.navigateTo(data.right);
+      tap(nav => {
+        if (nav) nav();
       }),
       mapTo(undefined),
     );

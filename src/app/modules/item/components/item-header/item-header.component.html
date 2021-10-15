@@ -17,12 +17,17 @@
       <span *ngIf="itemData.item.string.subtitle">{{itemData.item.string.subtitle}}</span>
     </div>
     <alg-page-navigator
+      *ngIf="navigationNeighbors$ | async as navigationNeighbors"
       [allowEditing]="itemData.item.permissions.canEdit !== 'none'"
       [allowFullScreen]="false"
-      [navigationMode]="{parent: navigationNeighbors?.parent !== null, left: navigationNeighbors?.left !== null, right: navigationNeighbors?.right !== null}"
-      (parent)="onParentClicked()"
-      (left)="onLeftClicked()"
-      (right)="onRightClicked()"
+      [navigationMode]="{
+        parent: !!navigationNeighbors?.isReady && !!navigationNeighbors?.data?.parent,
+        left: !!navigationNeighbors?.isReady && !!navigationNeighbors?.data?.previous,
+        right: !!navigationNeighbors?.isReady && !!navigationNeighbors?.data?.next
+      }"
+      (parent)="navigationNeighbors?.data?.parent?.navigateTo()"
+      (left)="navigationNeighbors?.data?.previous?.navigateTo()"
+      (right)="navigationNeighbors?.data?.next?.navigateTo()"
       (edit)="onEditButtonClicked()"
     ></alg-page-navigator>
   </div>

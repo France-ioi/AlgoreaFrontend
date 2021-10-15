@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { bestAttemptFromResults } from 'src/app/shared/helpers/attempts';
-import { isRouteWithSelfAttempt, FullItemRoute, ItemRoute, fullItemRoute } from 'src/app/shared/routing/item-route';
+import { isRouteWithSelfAttempt, FullItemRoute } from 'src/app/shared/routing/item-route';
 import { appConfig } from 'src/app/shared/helpers/config';
-import { isSkill, ItemTypeCategory, typeCategoryOfItem } from 'src/app/shared/helpers/item-type';
+import { isSkill, ItemTypeCategory } from 'src/app/shared/helpers/item-type';
 import { decodeSnakeCase } from 'src/app/shared/operators/decode';
 import { pipe } from 'fp-ts/function';
 import * as D from 'io-ts/Decoder';
@@ -152,38 +151,4 @@ export class ItemNavigationService {
       this.getRootActivities().pipe(map(groups => groups.map(g => ({ ...g, item: g.activity }))));
   }
 
-  getNavigationNeighbors(itemRoute: FullItemRoute):
-    Observable<{ parent: FullItemRoute|null, left: FullItemRoute|null, right: FullItemRoute|null }> {
-
-    const parentId = itemRoute.path[itemRoute.path.length - 1];
-
-    // Root activity => no parent/left/right activity
-    if (!parentId) return of({ parent: null, left: null, right: null });
-
-    return this.getItemNavigationFromChildRoute(parentId, itemRoute).pipe(map(nav => {
-      const index = nav.children.findIndex(item => item.id === itemRoute.id);
-      if (index === -1) throw new Error('Unexpected: item is missing from its parent children list');
-
-      const leftItem = nav.children[index - 1];
-      const left = leftItem ? siblingRoute(leftItem, nav.attemptId, itemRoute) : null;
-
-      const rightItem = nav.children[index + 1];
-      const right = rightItem ? siblingRoute(rightItem, nav.attemptId, itemRoute) : null;
-
-      const parent = {
-        id: parentId,
-        contentType: typeCategoryOfItem(nav),
-        path: itemRoute.path.slice(0, -1),
-        attemptId: nav.attemptId,
-      };
-
-      return { parent, left, right };
-    }));
-  }
-
-}
-
-function siblingRoute(child: ItemNavigationChild, parentAttemptId: string, itemRoute: ItemRoute): FullItemRoute {
-  const bestResult = bestAttemptFromResults(child.results);
-  return fullItemRoute(typeCategoryOfItem(child), child.id, itemRoute.path, { attemptId: bestResult?.attemptId, parentAttemptId });
 }
