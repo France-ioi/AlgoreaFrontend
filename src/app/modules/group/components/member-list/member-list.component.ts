@@ -120,6 +120,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
   ngOnDestroy(): void {
     this.dataFetching.complete();
     this.refresh$.complete();
+    this.removalInProgress$.complete();
   }
 
   ngOnChanges(_changes: SimpleChanges): void {
