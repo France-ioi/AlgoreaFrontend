@@ -8,6 +8,7 @@ import { formatUser } from '../../../../shared/helpers/user';
 import { ActionFeedbackService } from '../../../../shared/services/action-feedback.service';
 import { FormBuilder } from '@angular/forms';
 import { ConfirmationService } from 'primeng/api';
+import { UserSessionService } from '../../../../shared/services/user-session.service';
 
 @Component({
   selector: 'alg-manager-permission-dialog',
@@ -49,6 +50,7 @@ export class ManagerPermissionDialogComponent implements OnChanges {
   });
 
   constructor(
+    private sessionService: UserSessionService,
     private updateGroupManagersService: UpdateGroupManagersService,
     private actionFeedbackService: ActionFeedbackService,
     private fb: FormBuilder,
@@ -80,22 +82,30 @@ export class ManagerPermissionDialogComponent implements OnChanges {
       throw new Error('Unexpected: Missed manager data');
     }
 
-    const canManageValue = this.form.get('canManage')?.value as GroupManagerPermissionChanges['canManage'];
+    const currentUserId = this.sessionService.session$.value?.user.groupId;
 
-    if (this.manager.canManage === 'memberships_and_group' && canManageValue !== 'memberships_and_group') {
-      this.confirmationService.confirm({
-        message: $localize`Are you sure to remove from yourself the permission to edit group settings and edit managers ? 
+    if (!currentUserId) {
+      throw new Error('Unexpected: Missed current used ID');
+    }
+
+    if (this.manager.id === currentUserId) {
+      const canManageValue = this.form.get('canManage')?.value as GroupManagerPermissionChanges['canManage'];
+
+      if (this.manager.canManage === 'memberships_and_group' && canManageValue !== 'memberships_and_group') {
+        this.confirmationService.confirm({
+          message: $localize`Are you sure to remove from yourself the permission to edit group settings and edit managers ? 
           You may lose manager access and not be able to restore it.`,
-        header: $localize`Confirm Action`,
-        icon: 'pi pi-exclamation-triangle',
-        acceptLabel: $localize`Yes, save these changes.`,
-        acceptButtonStyleClass: 'p-button-danger',
-        accept: () => {
-          this.update();
-        },
-        rejectLabel: $localize`No`,
-      });
-      return;
+          header: $localize`Confirm Action`,
+          icon: 'pi pi-exclamation-triangle',
+          acceptLabel: $localize`Yes, save these changes.`,
+          acceptButtonStyleClass: 'p-button-danger',
+          accept: () => {
+            this.update();
+          },
+          rejectLabel: $localize`No`,
+        });
+        return;
+      }
     }
 
     this.update();
