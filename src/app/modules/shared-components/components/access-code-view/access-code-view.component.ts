@@ -31,13 +31,11 @@ export class AccessCodeViewComponent {
     this.joinByCodeService.checkCodeValidity(this.code).subscribe(response => {
       this.state = 'ready';
 
-      if (!response.valid && response.reason) {
-        this.actionFeedbackService.error(this.invalidCodeReasonToString(response.reason));
+      if (!response.valid) {
+        this.actionFeedbackService.error(
+          response.reason ? this.invalidCodeReasonToString(response.reason): $localize`The provided code is invalid`
+        );
         return;
-      }
-
-      if (!response.valid && !response.reason) {
-        this.actionFeedbackService.error($localize`Unknown error: missed reason for invalid state`);
       }
 
       if (!response.group) {
