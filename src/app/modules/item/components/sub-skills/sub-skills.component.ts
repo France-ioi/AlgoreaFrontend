@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
-import { ReplaySubject } from 'rxjs';
+import { ReplaySubject, Subject } from 'rxjs';
 import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { bestAttemptFromResults } from 'src/app/shared/helpers/attempts';
 import { isASkill, typeCategoryOfItem } from 'src/app/shared/helpers/item-type';
@@ -26,6 +26,7 @@ export class SubSkillsComponent implements OnChanges, OnDestroy {
   @Input() itemData?: ItemData;
 
   private readonly params$ = new ReplaySubject<{ id: string, attemptId: string }>(1);
+  private refresh$ = new Subject<void>();
   readonly state$ = this.params$.pipe(
     distinctUntilChanged((a, b) => a.id === b.id && a.attemptId === b.attemptId),
     switchMap(({ id, attemptId }) => this.getItemChildrenService.get(id, attemptId)),
@@ -44,7 +45,7 @@ export class SubSkillsComponent implements OnChanges, OnDestroy {
           };
         })
     ),
-    mapToFetchState(),
+    mapToFetchState({ resetter: this.refresh$ }),
   );
 
   constructor(
@@ -76,5 +77,10 @@ export class SubSkillsComponent implements OnChanges, OnDestroy {
 
   ngOnDestroy(): void {
     this.params$.complete();
+    this.refresh$.complete();
+  }
+
+  refresh(): void {
+    this.refresh$.next();
   }
 }

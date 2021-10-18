@@ -5,7 +5,13 @@
         <alg-loading size="medium"></alg-loading>
       </div>
 
-      <alg-error *ngIf="rootActivityState.isError" i18n-message message="Error while loading the root activity."></alg-error>
+      <alg-error
+        *ngIf="rootActivityState.isError"
+        i18n-message message="Error while loading the root activity."
+        [showRefreshButton]="true"
+        refreshButtonType="refresh"
+        (refresh)="refresh()"
+      ></alg-error>
 
       <ng-container *ngIf="rootActivityState.isReady">
         <ng-container *ngIf="rootActivityState.data; else noActivity">

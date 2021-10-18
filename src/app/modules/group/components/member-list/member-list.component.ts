@@ -91,6 +91,8 @@ export class MemberListComponent implements OnChanges, OnDestroy {
   private dataFetching = new Subject<{ route: GroupRoute, filter: Filter, sort: string[] }>();
   removalInProgress$ = new ReplaySubject<boolean>();
 
+  private refresh$ = new Subject<void>();
+
   constructor(
     private getGroupMembersService: GetGroupMembersService,
     private getGroupChildrenService: GetGroupChildrenService,
@@ -102,7 +104,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
     private removeGroupService: RemoveGroupService,
   ) {
     this.dataFetching.pipe(
-      switchMap(params => this.getData(params.route, params.filter, params.sort).pipe(mapToFetchState())),
+      switchMap(params => this.getData(params.route, params.filter, params.sort).pipe(mapToFetchState({ resetter: this.refresh$ }))),
     ).subscribe({
       next: state => {
         this.state = state.tag;
@@ -117,6 +119,8 @@ export class MemberListComponent implements OnChanges, OnDestroy {
 
   ngOnDestroy(): void {
     this.dataFetching.complete();
+    this.refresh$.complete();
+    this.removalInProgress$.complete();
   }
 
   ngOnChanges(_changes: SimpleChanges): void {

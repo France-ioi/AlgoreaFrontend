@@ -81,6 +81,13 @@
 
   <alg-loading *ngIf="state.isFetching && !state.data"></alg-loading>
 
-  <alg-error *ngIf="state.isError" class="dark" i18n-message message="Error while loading the group info"></alg-error>
+  <alg-error
+    *ngIf="state.isError"
+    class="dark"
+    i18n-message message="Error while loading the group info"
+    [showRefreshButton]="true"
+    refreshButtonType="refresh"
+    (refresh)="onGroupRefreshRequired()"
+  ></alg-error>
 
 </ng-container>

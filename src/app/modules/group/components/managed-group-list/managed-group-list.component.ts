@@ -17,6 +17,11 @@ export class ManagedGroupListComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.fetchData();
+  }
+
+  fetchData(): void {
+    this.state = 'fetching';
     this.managedGroupService.getManagedGroups().subscribe({
       next: data => {
         this.state = 'ready';

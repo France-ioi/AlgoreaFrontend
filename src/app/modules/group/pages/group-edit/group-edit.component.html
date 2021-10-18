@@ -2,7 +2,14 @@
 
   <alg-loading *ngIf="state.isFetching"></alg-loading>
 
-  <alg-error *ngIf="state.isError" class="dark" i18n-message message="Error while loading the group"></alg-error>
+  <alg-error
+    *ngIf="state.isError"
+    class="dark"
+    i18n-message message="Error while loading the group"
+    [showRefreshButton]="true"
+    refreshButtonType="refresh"
+    (refresh)="refreshGroup()"
+  ></alg-error>
 
   <ng-container *ngIf="state.isReady">
     <form class="group-edition" [formGroup]="groupForm" *ngIf="state.data.isCurrentUserManager; else notAuthorized">

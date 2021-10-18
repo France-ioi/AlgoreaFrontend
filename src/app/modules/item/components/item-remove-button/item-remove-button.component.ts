@@ -1,5 +1,5 @@
-import { Component, Input, OnChanges } from '@angular/core';
-import { ReplaySubject } from 'rxjs';
+import { Component, Input, OnChanges, OnDestroy } from '@angular/core';
+import { ReplaySubject, Subject } from 'rxjs';
 import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { mapToFetchState } from '../../../../shared/operators/state';
 import { GetItemChildrenService, ItemChild } from '../../http-services/get-item-children.service';
@@ -14,11 +14,12 @@ import { Router } from '@angular/router';
   templateUrl: './item-remove-button.component.html',
   styleUrls: [ './item-remove-button.component.scss' ],
 })
-export class ItemRemoveButtonComponent implements OnChanges {
+export class ItemRemoveButtonComponent implements OnChanges, OnDestroy {
   @Input() item?: Item;
   @Input() attemptId?: string;
 
   private readonly params$ = new ReplaySubject<{ id: string, attemptId: string }>(1);
+  private refresh$ = new Subject<void>();
   readonly state$ = this.params$.pipe(
     distinctUntilChanged((a, b) => a.id === b.id && a.attemptId === b.attemptId),
     switchMap(({ id, attemptId }) =>
@@ -26,7 +27,7 @@ export class ItemRemoveButtonComponent implements OnChanges {
         map((itemChildren: ItemChild[]) => itemChildren.length > 0)
       )
     ),
-    mapToFetchState(),
+    mapToFetchState({ resetter: this.refresh$ }),
   );
 
   deletionInProgress = false;
@@ -47,6 +48,10 @@ export class ItemRemoveButtonComponent implements OnChanges {
         attemptId: this.attemptId,
       });
     }
+  }
+
+  ngOnDestroy(): void {
+    this.refresh$.complete();
   }
 
   onDeleteItem(): void {
@@ -92,5 +97,9 @@ export class ItemRemoveButtonComponent implements OnChanges {
 
   navigateToMyRoot(): void {
     void this.router.navigate([ '/' ]);
+  }
+
+  refresh(): void {
+    this.refresh$.next();
   }
 }

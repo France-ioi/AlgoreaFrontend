@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy } from '@angular/core';
 import { Group } from '../../http-services/get-group-by-id.service';
 import { distinct, switchMap, map } from 'rxjs/operators';
 import { Observable, ReplaySubject, Subject } from 'rxjs';
@@ -14,16 +14,17 @@ import { mapToFetchState } from '../../../../shared/operators/state';
   templateUrl: './group-remove-button.component.html',
   styleUrls: [ './group-remove-button.component.scss' ]
 })
-export class GroupRemoveButtonComponent implements OnChanges {
+export class GroupRemoveButtonComponent implements OnChanges, OnDestroy {
   @Input() group?: Group;
 
   deletionInProgress$ = new Subject<boolean>();
 
   private readonly id$ = new ReplaySubject<string>(1);
+  private refresh$ = new Subject<void>();
   readonly state$ = this.id$.pipe(
     distinct(),
     switchMap(id => this.hasGroupChildren$(id)),
-    mapToFetchState(),
+    mapToFetchState({ resetter: this.refresh$ }),
   );
 
   constructor(
@@ -38,6 +39,11 @@ export class GroupRemoveButtonComponent implements OnChanges {
     if (this.group) {
       this.id$.next(this.group.id);
     }
+  }
+
+  ngOnDestroy(): void {
+    this.id$.complete();
+    this.refresh$.complete();
   }
 
   hasGroupChildren$(groupId: string): Observable<boolean> {
@@ -88,6 +94,10 @@ export class GroupRemoveButtonComponent implements OnChanges {
 
   navigateToMyGroups(): void {
     void this.router.navigate([ '/groups/mine' ]);
+  }
+
+  refresh(): void {
+    this.refresh$.next();
   }
 
 }

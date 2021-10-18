@@ -2,7 +2,13 @@
   <div class="spinner-container" *ngIf="state.isFetching">
     <alg-loading size="small"></alg-loading>
   </div>
-  <alg-error *ngIf="state.isError" i18n-message message="Error while loading the activities"></alg-error>
+  <alg-error
+    *ngIf="state.isError"
+    i18n-message message="Error while loading the activities"
+    [showRefreshButton]="true"
+    refreshButtonType="refresh"
+    (refresh)="refresh()"
+  ></alg-error>
   <div *ngIf="state.isReady && state.data.length === 0" i18n>
     There are no activities
   </div>

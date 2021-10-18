@@ -5,6 +5,8 @@
   class="error dark"
   i18n-message message="Error while loading the group members"
   icon="fa fa-exclamation-triangle"
+  [showRefreshButton]="true"
+  (refresh)="fetchData()"
 ></alg-error>
 
 <ng-template #noError>

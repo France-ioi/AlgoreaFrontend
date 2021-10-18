@@ -116,4 +116,8 @@ export class GroupEditComponent implements OnDestroy, PendingChangesComponent {
     });
     this.groupForm.enable();
   }
+
+  refreshGroup(): void {
+    this.groupDataSource.refetchGroup();
+  }
 }

@@ -4,6 +4,9 @@
     class="dark"
     icon="fa fa-exclamation-triangle"
     i18n-message message="Error while loading the group you joined"
+    [showRefreshButton]="true"
+    refreshButtonType="refresh"
+    (refresh)="refresh()"
   ></alg-error>
 
   <p-table

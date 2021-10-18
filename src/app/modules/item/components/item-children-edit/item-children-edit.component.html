@@ -111,7 +111,13 @@
 
       <alg-loading *ngIf="state.isFetching"></alg-loading>
 
-      <alg-error *ngIf="state.isError" class="dark" i18n-message message="Error while loading the children item"></alg-error>
+      <alg-error
+        *ngIf="state.isError"
+        class="dark"
+        i18n-message message="Error while loading the children item"
+        [showRefreshButton]="true"
+        (refresh)="reloadData()"
+      ></alg-error>
     </alg-section>
   </ng-container>
 </ng-container>

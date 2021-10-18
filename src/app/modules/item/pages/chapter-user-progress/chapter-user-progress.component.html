@@ -3,7 +3,12 @@
     <alg-loading size="medium"></alg-loading>
   </div>
 
-  <alg-error *ngIf="state.isError" i18n-message message="Error while loading the user progress"></alg-error>
+  <alg-error
+    *ngIf="state.isError"
+    i18n-message message="Error while loading the user progress"
+    [showRefreshButton]="true"
+    (refresh)="refresh()"
+  ></alg-error>
 
   <div *ngIf="state.data">
     <p-table class="alg-table alg-table chapter-user-progress" [columns]="columns" [value]="state.data" [loading]="state.isFetching">
