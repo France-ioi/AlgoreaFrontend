@@ -8,7 +8,7 @@ import { errorState, fetchingState, FetchState } from 'src/app/shared/helpers/st
 import { ResultActionsService } from 'src/app/shared/http-services/result-actions.service';
 import { CurrentContentService } from 'src/app/shared/services/current-content.service';
 import { breadcrumbServiceTag } from '../../http-services/get-breadcrumb.service';
-import { GetItemPathService } from '../../http-services/get-item-path';
+import { GetItemPathService } from '../../http-services/get-item-path.service';
 import { ItemDataSource, ItemData } from '../../services/item-datasource.service';
 import { errorHasTag, errorIsHTTPForbidden } from 'src/app/shared/helpers/errors';
 import { ItemRouter } from 'src/app/shared/routing/item-router';

@@ -1,24 +1,36 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { appConfig } from 'src/app/shared/helpers/config';
+import { pipe } from 'fp-ts/function';
+import * as D from 'io-ts/Decoder';
+import { manageTypeDecoder } from '../../../core/http-services/managed-groups.service';
+import { decodeSnakeCase } from '../../../shared/operators/decode';
 
-type GroupType = 'Class'|'Team'|'Club'|'Friends'|'Other'|'User'|'Session'|'Base';
+const typeDecoder = D.literal('Class', 'Team', 'Club', 'Friends', 'Other', 'User','Session', 'Base');
 
-interface RawGroupChild {
-  id: string,
-  name: string,
-  type: GroupType,
-  user_count: number,
-}
+const groupChildDecoder = pipe(
+  D.struct({
+    currentUserIsManager: D.boolean,
+    grade: D.number,
+    id: D.string,
+    isOpen: D.boolean,
+    isPublic: D.boolean,
+    name: D.string,
+    type: typeDecoder,
+  }),
+  D.intersect(
+    D.partial({
+      currentUserCanGrantGroupAccess: D.boolean,
+      currentUserCanManage: manageTypeDecoder,
+      currentUserCanWatchMembers: D.boolean,
+      userCount: D.number,
+    })
+  )
+);
 
-export interface GroupChild {
-  id: string,
-  name: string,
-  type: GroupType,
-  userCount: number,
-}
+export type GroupChild = D.TypeOf<typeof groupChildDecoder>;
+export type GroupType = D.TypeOf<typeof typeDecoder>;
 
 @Injectable({
   providedIn: 'root'
@@ -38,14 +50,9 @@ export class GetGroupChildrenService {
     if (typesInclude.length > 0) params = params.set('types_include', typesInclude.join(','));
     if (typesExclude.length > 0) params = params.set('types_exclude', typesExclude.join(','));
     return this.http
-      .get<RawGroupChild[]>(`${appConfig.apiUrl}/groups/${groupId}/children`, { params: params })
+      .get<unknown>(`${appConfig.apiUrl}/groups/${groupId}/children`, { params: params })
       .pipe(
-        map(rawGroupChildren => rawGroupChildren.map(c => ({
-          id: c.id,
-          name: c.name,
-          type: c.type,
-          userCount: c.user_count,
-        })))
+        decodeSnakeCase(D.array(groupChildDecoder))
       );
   }
 }

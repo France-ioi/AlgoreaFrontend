@@ -32,8 +32,14 @@ export class AccessCodeViewComponent {
       this.state = 'ready';
 
       if (!response.valid) {
-        this.actionFeedbackService.error(this.invalidCodeReasonToString(response.reason));
+        this.actionFeedbackService.error(
+          response.reason ? this.invalidCodeReasonToString(response.reason): $localize`The provided code is invalid`
+        );
         return;
+      }
+
+      if (!response.group) {
+        throw new Error('Unexpected: Missed group for invalid state');
       }
 
       let message = $localize`Are you sure you want to join the group "${response.group.name}"?`;

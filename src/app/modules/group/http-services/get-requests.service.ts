@@ -3,10 +3,56 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { appConfig } from 'src/app/shared/helpers/config';
 import { map } from 'rxjs/operators';
+import { pipe } from 'fp-ts/function';
+import * as D from 'io-ts/Decoder';
+import { decodeSnakeCase } from '../../../shared/operators/decode';
+import { dateDecoder } from '../../../shared/helpers/decoders';
+
+const userDecoder = pipe(
+  D.struct({
+    groupId: D.string,
+    login: D.string,
+  }),
+  D.intersect(
+    D.partial({
+      firstName: D.nullable(D.string),
+      lastName: D.nullable(D.string),
+      grade: D.nullable(D.number),
+    }),
+  ),
+);
+
+const groupPendingRequestDecoder = D.struct({
+  at: D.nullable(dateDecoder),
+  group: D.struct({
+    id: D.string,
+    name: D.string,
+  }),
+  type: D.literal('join_request', 'leave_request'),
+  user: userDecoder,
+});
+
+const groupInvitationDecoder = D.struct({
+  action: D.literal('invitation_created', 'join_request_created', 'join_request_refused'),
+  at: dateDecoder,
+  group: D.struct({
+    id: D.string,
+    name: D.string,
+    description: D.nullable(D.string),
+    type: D.literal('Class', 'Team', 'Club', 'Friends', 'Other', 'Session'),
+  }),
+  groupId: D.string,
+  invitingUser: D.nullable(D.struct({
+    id: D.string,
+    firstName: D.string,
+    lastName: D.string,
+    login: D.string,
+  })),
+});
 
 export interface PendingRequest {
   at: Date|null,
-  user: {
+  user: null | {
     id: string,
     login: string,
     firstName: string|null,
@@ -15,21 +61,6 @@ export interface PendingRequest {
   group: {
     id: string,
     name: string,
-  },
-}
-
-interface RawGroupPendingRequest {
-  at: string|null,
-  group: {
-    id: string,
-    name: string,
-  },
-  user: {
-    group_id: string,
-    login: string,
-    first_name: string|null,
-    last_name: string|null,
-    grade: number|null,
   },
 }
 
@@ -43,55 +74,14 @@ export interface GroupPendingRequest extends PendingRequest {
   },
 }
 
-interface RawGroupInvitationRequest {
-  at: string,
-  action: 'invitation_created' | 'join_request_created' | 'join_request_refused',
-  group: {
-    name: string,
-    description: string|null,
-    id: string,
-    type: 'Class' | 'Team' | 'Club' | 'Friends' | 'Other',
-  },
-  group_id: string,
-  inviting_user: {
-    id: string,
-    login: string,
-    first_name: string|null,
-    last_name: string|null,
-  }|null,
-}
-
-interface RawGroupInvitation {
-  at: string,
-  action: 'invitation_created',
-  group: {
-    name: string,
-    description: string|null,
-    id: string,
-    type: 'Class' | 'Team' | 'Club' | 'Friends' | 'Other',
-  },
-  group_id: string,
-  inviting_user: {
-    id: string,
-    login: string,
-    first_name: string|null,
-    last_name: string|null,
-  },
-}
-
 export interface GroupInvitation extends PendingRequest {
   group: {
     id: string,
     name: string,
     description: string|null,
-    type: 'Class' | 'Team' | 'Club' | 'Friends' | 'Other',
+    type: 'Class' | 'Team' | 'Club' | 'Friends' | 'Other' | 'Session',
   },
 }
-
-function isInvitation(invitation: RawGroupInvitationRequest): invitation is RawGroupInvitation {
-  return invitation.action === 'invitation_created';
-}
-
 
 @Injectable({
   providedIn: 'root'
@@ -112,23 +102,22 @@ export class GetRequestsService {
     }
     if (sort.length > 0) params = params.set('sort', sort.join(','));
     return this.http
-      .get<RawGroupPendingRequest[]>(`${appConfig.apiUrl}/groups/user-requests`, { params: params })
+      .get<unknown>(`${appConfig.apiUrl}/groups/user-requests`, { params: params })
       .pipe(
+        decodeSnakeCase(D.array(groupPendingRequestDecoder)),
         map(pendingRequests => pendingRequests.map(r => ({
-          at: r.at === null ? null : new Date(r.at),
+          at: r.at,
           group: r.group,
           user: {
-            id: r.user.group_id,
+            id: r.user.groupId,
             login: r.user.login,
-            firstName: r.user.first_name,
-            lastName: r.user.last_name,
-            grade: r.user.grade,
+            firstName: r.user.firstName || null,
+            lastName: r.user.lastName || null,
+            grade: r.user.grade || null,
           }
         })))
       );
   }
-
-
 
   getGroupInvitations(
     sort: string[] = [],
@@ -136,23 +125,19 @@ export class GetRequestsService {
     let params = new HttpParams();
     if (sort.length > 0) params = params.set('sort', sort.join(','));
     return this.http
-      .get<RawGroupInvitationRequest[]>(`${appConfig.apiUrl}/current-user/group-invitations`, { params: params })
+      .get<unknown>(`${appConfig.apiUrl}/current-user/group-invitations`, { params: params })
       .pipe(
-        map(groupInvitations => groupInvitations.filter(isInvitation).map(r => ({
-          at: r.at === null ? null : new Date(r.at),
+        decodeSnakeCase(D.array(groupInvitationDecoder)),
+        map(groupInvitations => groupInvitations.filter(invitation => invitation.action === 'invitation_created').map(r => ({
+          at: r.at,
           group: {
             id: r.group.id,
             name: r.group.name,
             description: r.group.description,
             type: r.group.type,
           },
-          user: {
-            id: r.inviting_user.id,
-            login: r.inviting_user.login,
-            firstName: r.inviting_user.first_name,
-            lastName: r.inviting_user.last_name,
-          }
-        })))
+          user: r.invitingUser,
+        }))),
       );
   }
 }

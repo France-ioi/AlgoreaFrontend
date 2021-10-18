@@ -4,14 +4,10 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { isRouteWithSelfAttempt, FullItemRoute } from 'src/app/shared/routing/item-route';
 import { appConfig } from 'src/app/shared/helpers/config';
-
-interface RawResult {
-  id: string, // attempt id
-  latest_activity_at: string,
-  started_at: string|null,
-  score_computed: number,
-  validated: boolean,
-}
+import { decodeSnakeCase } from '../../../shared/operators/decode';
+import { pipe } from 'fp-ts/function';
+import * as D from 'io-ts/Decoder';
+import { dateDecoder } from '../../../shared/helpers/decoders';
 
 export interface Result {
   attemptId: string,
@@ -20,6 +16,37 @@ export interface Result {
   score: number,
   validated: boolean,
 }
+
+const userDecoder = pipe(
+  D.struct({
+    groupId: D.string,
+    login: D.string,
+  }),
+  D.intersect(
+    D.partial({
+      firstName: D.string,
+      lastName: D.string,
+    })
+  ),
+);
+
+const resultDecoder = pipe(
+  D.struct({
+    id: D.string,
+    allowsSubmissionsUntil: dateDecoder,
+    createdAt: dateDecoder,
+    endedAt: D.nullable(dateDecoder),
+    latestActivityAt: dateDecoder,
+    scoreComputed: D.number,
+    startedAt: D.nullable(dateDecoder),
+    validated: D.boolean,
+  }),
+  D.intersect(
+    D.partial({
+      userCreator: userDecoder,
+    }),
+  ),
+);
 
 @Injectable({
   providedIn: 'root'
@@ -30,15 +57,16 @@ export class GetResultsService {
 
   getResults(item: FullItemRoute): Observable<Result[]> {
     return this.http
-      .get<RawResult[]>(`${appConfig.apiUrl}/items/${item.id}/attempts`, {
+      .get<unknown>(`${appConfig.apiUrl}/items/${item.id}/attempts`, {
         params: isRouteWithSelfAttempt(item) ? { attempt_id: item.attemptId } : { parent_attempt_id: item.parentAttemptId }
       })
       .pipe(
+        decodeSnakeCase(D.array(resultDecoder)),
         map(results => results.map(r => ({
           attemptId: r.id,
-          latestActivityAt: new Date(r.latest_activity_at),
-          startedAt: r.started_at === null ? null : new Date(r.started_at),
-          score: r.score_computed,
+          latestActivityAt: r.latestActivityAt,
+          startedAt: r.startedAt,
+          score: r.scoreComputed,
           validated: r.validated,
         }))),
       );
