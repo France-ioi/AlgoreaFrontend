@@ -82,18 +82,18 @@
         <source>Activities</source><target state="translated">Activités</target>
 
         <note priority="1" from="description">Tab name</note>
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-nav/left-nav.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="4342625008558026850" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-nav/left-nav.component.html</context><context context-type="linenumber">14</context></context-group></trans-unit><trans-unit id="4342625008558026850" datatype="html">
         <source>Skills</source><target state="translated">Compétences</target>
 
         <note priority="1" from="description">Tab name</note>
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-nav/left-nav.component.html</context><context context-type="linenumber">20</context></context-group></trans-unit><trans-unit id="5944812089887969249" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-nav/left-nav.component.html</context><context context-type="linenumber">22</context></context-group></trans-unit><trans-unit id="5944812089887969249" datatype="html">
         <source>Groups</source><target state="translated">Groupes</target>
 
         <note priority="1" from="description">Tab name</note>
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-nav/left-nav.component.html</context><context context-type="linenumber">28</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/group-by-id/group-by-id.component.ts</context><context context-type="linenumber">14</context></context-group></trans-unit><trans-unit id="2192178401851161061" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-nav/left-nav.component.html</context><context context-type="linenumber">30</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/group-by-id/group-by-id.component.ts</context><context context-type="linenumber">14</context></context-group></trans-unit><trans-unit id="2192178401851161061" datatype="html">
         <source>Unable to load the list.</source><target state="translated">Erreur lors du chargement de la liste.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-nav/left-nav.component.html</context><context context-type="linenumber">43</context></context-group></trans-unit><trans-unit id="6599854887630038646" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-nav/left-nav.component.html</context><context context-type="linenumber">45</context></context-group></trans-unit><trans-unit id="6599854887630038646" datatype="html">
         <source>Retry now</source><target state="translated">Réessayer</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/error/error.component.html</context><context context-type="linenumber">13</context></context-group></trans-unit><trans-unit id="4219108310098283044" datatype="html">
@@ -328,7 +328,13 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/group-progress-grid/group-progress-grid.component.html</context><context context-type="linenumber">25</context></context-group></trans-unit><trans-unit id="6825329815737519497" datatype="html">
         <source>Export as CSV</source><target state="new">Export as CSV</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/group-progress-grid/group-progress-grid.component.html</context><context context-type="linenumber">43</context></context-group></trans-unit><trans-unit id="3768927257183755959" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/group-progress-grid/group-progress-grid.component.html</context><context context-type="linenumber">43</context></context-group></trans-unit><trans-unit id="8373240794331669576" datatype="html">
+        <source>The permissions cannot be retrieved. If the problem persists, please contact us.</source><target state="new">The permissions cannot be retrieved. If the problem persists, please contact us.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/pages/group-progress-grid/group-progress-grid.component.ts</context>
+          <context context-type="linenumber">276</context>
+        </context-group>
+      </trans-unit><trans-unit id="3768927257183755959" datatype="html">
         <source>Save</source><target state="translated">Sauvegarder</target>
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/manager-permission-dialog/manager-permission-dialog.component.html</context><context context-type="linenumber">101</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/floating-save/floating-save.component.html</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="4675865183684903475" datatype="html">
