@@ -36,6 +36,10 @@ export class AccessCodeViewComponent {
         return;
       }
 
+      if (!response.valid && !response.reason) {
+        this.actionFeedbackService.error($localize`Unknown error: missed reason for invalid state`);
+      }
+
       if (!response.group) {
         throw new Error('Unexpected: Missed group for invalid state');
       }
