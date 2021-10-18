@@ -1,12 +1,10 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { combineLatest, EMPTY, forkJoin, fromEvent, interval, Observable, of, Subject, throwError, timer } from 'rxjs';
+import { combineLatest, EMPTY, forkJoin, fromEvent, interval, Observable, of, Subject } from 'rxjs';
 import {
   catchError,
   delayWhen,
   distinctUntilChanged,
   mapTo,
-  mergeMap,
-  retryWhen,
   shareReplay,
   skip,
   switchMap,
@@ -17,6 +15,7 @@ import {
 import { SECONDS } from 'src/app/shared/helpers/duration';
 import { errorIsHTTPForbidden } from 'src/app/shared/helpers/errors';
 import { repeatLatestWhen } from 'src/app/shared/helpers/repeatLatestWhen';
+import { retryAfter } from 'src/app/shared/operators/retry-after';
 import { AnswerTokenService } from '../http-services/answer-token.service';
 import { Answer, CurrentAnswerService } from '../http-services/current-answer.service';
 import { GradeService } from '../http-services/grade.service';
@@ -70,11 +69,7 @@ export class ItemTaskAnswerService implements OnDestroy {
     withLatestFrom(this.config$),
     repeatLatestWhen(fromEvent(globalThis, 'online')),
     switchMap(([{ answer, state }, { route, attemptId }]) => this.currentAnswerService.update(route.id, attemptId, { answer, state }).pipe(
-      retryWhen(errors => errors.pipe(mergeMap((error, index) => {
-        const count = index + 1;
-        if (count > answerAndStateSaveRetries) return throwError(() => error);
-        return timer(answerAndStateSaveRetryDelay);
-      }))),
+      retryAfter({ delay: answerAndStateSaveRetryDelay, maxAttempts: answerAndStateSaveRetries }),
       catchError(() => {
         this.saveIntervalErrorSubject.next();
         return EMPTY;
