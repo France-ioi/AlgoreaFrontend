@@ -12,6 +12,7 @@ import { ItemTaskViewsService } from '../../services/item-task-views.service';
 import { FullItemRoute } from 'src/app/shared/routing/item-route';
 import { DomSanitizer } from '@angular/platform-browser';
 import { PermissionsInfo } from '../../helpers/item-permissions';
+import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
 
 const initialHeight = 0;
 const additionalHeightToPreventInnerScrollIssues = 40;
@@ -58,7 +59,12 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
   constructor(
     private taskService: ItemTaskService,
     private sanitizer: DomSanitizer,
-  ) {}
+    private actionFeedback: ActionFeedbackService,
+  ) {
+    this.taskService.saveIntervalError$.subscribe(() => {
+      this.actionFeedback.error($localize`The answer could not be saved, are you connected to the internet?`);
+    });
+  }
 
   ngOnInit(): void {
     this.taskService.configure(this.route, this.url, this.attemptId);

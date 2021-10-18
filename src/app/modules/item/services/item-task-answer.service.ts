@@ -26,6 +26,8 @@ const answerAndStateSaveInterval = 1*SECONDS;
 export class ItemTaskAnswerService implements OnDestroy {
   private errorSubject = new Subject<Error>();
   readonly error$ = this.errorSubject.asObservable();
+  private saveIntervalErrorSubject = new Subject<void>();
+  readonly saveIntervalError$ = this.saveIntervalErrorSubject.asObservable();
 
   private task$ = this.taskInitService.task$.pipe(takeUntil(this.error$));
   private config$ = this.taskInitService.config$.pipe(takeUntil(this.error$));

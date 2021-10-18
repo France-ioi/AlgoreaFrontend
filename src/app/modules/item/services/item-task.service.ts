@@ -17,6 +17,7 @@ export class ItemTaskService {
   readonly unknownError$ = merge(this.answerService.error$, this.viewsService.error$).pipe(shareReplay(1));
   readonly initError$ = this.initService.initError$.pipe(shareReplay(1));
   readonly urlError$ = this.initService.urlError$.pipe(shareReplay(1));
+  readonly saveIntervalError$ = this.answerService.saveIntervalError$;
 
   private error$ = merge(this.initError$, this.urlError$, this.unknownError$).pipe(switchMap(error => throwError(() => error)));
 
