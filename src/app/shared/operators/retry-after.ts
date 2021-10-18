@@ -9,7 +9,7 @@ export function retryAfter<T>({ maxAttempts, delay }: Options): OperatorFunction
   return pipe(
     retryWhen(errors => errors.pipe(mergeMap((error, index) => {
       const count = index + 1;
-      if (count > maxAttempts) return throwError(() => error);
+      if (count > maxAttempts) return throwError(error);
       return timer(delay);
     }))),
   );
