@@ -1,10 +1,12 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { combineLatest, forkJoin, interval, Observable, of, Subject } from 'rxjs';
+import { combineLatest, EMPTY, forkJoin, fromEvent, interval, Observable, of, Subject, throwError, timer } from 'rxjs';
 import {
   catchError,
   delayWhen,
   distinctUntilChanged,
   mapTo,
+  mergeMap,
+  retryWhen,
   shareReplay,
   skip,
   switchMap,
@@ -21,6 +23,8 @@ import { GradeService } from '../http-services/grade.service';
 import { ItemTaskInitService } from './item-task-init.service';
 
 const answerAndStateSaveInterval = 1*SECONDS;
+const answerAndStateSaveRetries = 3;
+const answerAndStateSaveRetryDelay = 10*SECONDS;
 
 @Injectable()
 export class ItemTaskAnswerService implements OnDestroy {
@@ -64,13 +68,24 @@ export class ItemTaskAnswerService implements OnDestroy {
     distinctUntilChanged((a, b) => a.answer === b.answer && a.state === b.state),
     skip(1), // avoid saving an answer right after fetching it
     withLatestFrom(this.config$),
-    switchMap(([{ answer, state }, { route, attemptId }]) => this.currentAnswerService.update(route.id, attemptId, { answer, state })),
+    repeatLatestWhen(fromEvent(globalThis, 'online')),
+    switchMap(([{ answer, state }, { route, attemptId }]) => this.currentAnswerService.update(route.id, attemptId, { answer, state }).pipe(
+      retryWhen(errors => errors.pipe(mergeMap((error, index) => {
+        const count = index + 1;
+        if (count > answerAndStateSaveRetries) return throwError(() => error);
+        return timer(answerAndStateSaveRetryDelay);
+      }))),
+      catchError(() => {
+        this.saveIntervalErrorSubject.next();
+        return EMPTY;
+      }),
+    )),
   );
 
   private subscriptions = [
     this.initializedTaskAnswer$.subscribe({ error: err => this.errorSubject.next(err) }),
     this.initializedTaskState$.subscribe({ error: err => this.errorSubject.next(err) }),
-    this.saveAnswerAndStateInterval$.subscribe({ error: err => this.errorSubject.next(err) }),
+    this.saveAnswerAndStateInterval$.subscribe(),
   ];
 
   constructor(
