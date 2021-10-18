@@ -15,7 +15,7 @@
 
     <alg-user-header [user]="user" *ngIf="!(fullFrameContent$ | async)"></alg-user-header>
 
-    <nav class="nav-tab" *ngIf="(currentUserGroupId$ | async) === user.groupId || isInitPagePersonal">
+    <nav class="nav-tab" *ngIf="(currentUserGroupId$ | async) === user.groupId || (activeRoute$ | async) === 'personal-data'">
       <a
           class="nav-tab-item"
           [routerLink]="'./'"
@@ -38,30 +38,31 @@
       </a>
     </nav>
 
-    <ng-container *ngIf="progress?.isActive || !progress">
-      <div class="bg-white">
-        <alg-section icon="fa fa-chart-line" i18n-label label="Progress">
-          <alg-group-log-view
-              [groupId]="user.groupId"
-              [showUserColumn]="false"
-          ></alg-group-log-view>
-        </alg-section>
-      </div>
-    </ng-container>
-
-    <ng-container *ngIf="personalData?.isActive">
-      <ng-container *ngIf="(currentUserGroupId$ | async) === user.groupId; then currentUser; else forbidden"></ng-container>
-
-      <ng-template #currentUser>
-        <alg-current-user></alg-current-user>
-      </ng-template>
-
-      <ng-template #forbidden>
+    <ng-container *ngIf="activeRoute$ | async as activeRoute">
+      <ng-container *ngIf="activeRoute === 'progress'">
         <div class="bg-white">
-          <p class="no-access" i18n>You cannot access this page for this user</p>
+          <alg-section icon="fa fa-chart-line" i18n-label label="Progress">
+            <alg-group-log-view
+                [groupId]="user.groupId"
+                [showUserColumn]="false"
+            ></alg-group-log-view>
+          </alg-section>
         </div>
-      </ng-template>
-    </ng-container>
+      </ng-container>
 
+      <ng-container *ngIf="activeRoute === 'personal-data'">
+        <ng-container *ngIf="(currentUserGroupId$ | async) === user.groupId; then currentUser; else forbidden"></ng-container>
+
+        <ng-template #currentUser>
+          <alg-current-user></alg-current-user>
+        </ng-template>
+
+        <ng-template #forbidden>
+          <div class="bg-white">
+            <p class="no-access" i18n>You cannot access this page for this user</p>
+          </div>
+        </ng-template>
+      </ng-container>
+    </ng-container>
   </ng-container>
 </ng-container>
