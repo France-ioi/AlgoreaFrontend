@@ -8,6 +8,16 @@ import { mapStateData, mapToFetchState } from 'src/app/shared/operators/state';
 import { CurrentContentService } from 'src/app/shared/services/current-content.service';
 import { NavTreeData, NavTreeElement } from '../../models/left-nav-loading/nav-tree-data';
 
+export interface NeighborInfo {
+  navigateTo: () => void,
+}
+
+export interface NavigationNeighbors {
+  parent: NeighborInfo|null,
+  previous: NeighborInfo|null,
+  next: NeighborInfo|null,
+}
+
 export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
 
   private reloadTrigger = new Subject<void>();
@@ -64,6 +74,25 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
     }, fetchingState<NavTreeData>() /* the switchScan seed */, 1 /* concurrency = 1 so that we can always use the last state*/),
     delay(0),
     shareReplay(1),
+  );
+
+  navigationNeighbors$: Observable<FetchState<NavigationNeighbors|undefined>> = this.state$.pipe(
+    mapStateData(navData => {
+      if (!navData.selectedElementId) return undefined;
+      const idx = navData.elements.findIndex(e => e.id === navData.selectedElementId);
+      if (idx < 0) return undefined;
+
+      const parent = navData.parent;
+      if (parent && navData.pathToElements.length < 1) throw new Error('Unexpected: empty path with a parent');
+      const prev = navData.elements[idx-1];
+      const next = navData.elements[idx+1];
+
+      return {
+        parent: parent ? { navigateTo: (): void => parent.navigateTo(navData.pathToElements.slice(0,-1)) } : null,
+        previous: prev ? { navigateTo: (): void => prev.navigateTo(navData.pathToElements) } : null,
+        next: next ? { navigateTo: (): void => next.navigateTo(navData.pathToElements) } : null,
+      };
+    }),
   );
 
   constructor(private currentContent: CurrentContentService) {}
