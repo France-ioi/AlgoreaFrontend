@@ -1,9 +1,9 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { GetUserService } from '../../http-services/get-user.service';
 import { mapToFetchState } from '../../../../shared/operators/state';
-import { combineLatest, of, Subject, Subscription, throwError } from 'rxjs';
+import { combineLatest, Observable, of, Subject, Subscription, throwError } from 'rxjs';
 import { ActivatedRoute, NavigationEnd, Router, RouterLinkActive } from '@angular/router';
-import { delay, switchMap, map, startWith, filter, share } from 'rxjs/operators';
+import { delay, switchMap, map, startWith, filter, share, distinctUntilChanged } from 'rxjs/operators';
 import { contentInfo } from '../../../../shared/models/content/content-info';
 import { CurrentContentService } from '../../../../shared/services/current-content.service';
 import { UserSessionService } from '../../../../shared/services/user-session.service';
@@ -34,7 +34,17 @@ export class UserComponent implements OnInit, OnDestroy {
     map(userProfile => userProfile.groupId),
   );
 
-  fullFrameContent$ = this.layoutService.fullFrameContent$;
+  readonly fullFrameContent$ = this.layoutService.fullFrameContent$;
+
+  private url$ = this.router.events.pipe(
+    filter(event => event instanceof NavigationEnd),
+    map(() => this.router.url),
+    startWith(this.router.url),
+    distinctUntilChanged(),
+  );
+  readonly activeRoute$: Observable<'progress' | 'personal-data'> = this.url$.pipe(
+    map(url => (this.isPersonalDataRoute(url) ? 'personal-data' : 'progress')),
+  );
 
   private readonly breadcrumbs$ = this.route.paramMap.pipe(
     switchMap(params => {
@@ -48,8 +58,6 @@ export class UserComponent implements OnInit, OnDestroy {
 
   private subscription?: Subscription;
 
-  isInitPagePersonal = false;
-
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -62,20 +70,12 @@ export class UserComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.subscription = combineLatest([
-      this.router.events
-        .pipe(
-          filter(event => event instanceof NavigationEnd),
-          startWith(null),
-        ),
-      this.state$,
-      this.breadcrumbs$,
-    ])
+    this.subscription = combineLatest([ this.url$, this.state$, this.breadcrumbs$ ])
       .pipe(
-        map(([ , state, breadcrumbs ]) => {
+        map(([ url, state, breadcrumbs ]) => {
           const title = state.isFetching || state.isError ? '...' : formatUser(state.data);
           const lastPath = {
-            title: this.router.url.includes('personal-data') ? $localize`Personal info` : $localize`Progress`,
+            title: this.isPersonalDataRoute(url) ? $localize`Personal info` : $localize`Progress`,
           };
 
           return contentInfo({
@@ -105,8 +105,6 @@ export class UserComponent implements OnInit, OnDestroy {
       .subscribe(contentInfo => {
         this.currentContent.replace(contentInfo);
       });
-
-    this.isInitPagePersonal = this.router.url.includes('personal-data');
   }
 
   ngOnDestroy(): void {
@@ -117,5 +115,9 @@ export class UserComponent implements OnInit, OnDestroy {
 
   refresh(): void {
     this.refresh$.next();
+  }
+
+  private isPersonalDataRoute(url: string): boolean {
+    return url.endsWith('/personal-data');
   }
 }
