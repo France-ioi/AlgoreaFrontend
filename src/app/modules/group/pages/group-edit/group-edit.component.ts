@@ -1,7 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { mapStateData, readyData } from 'src/app/shared/operators/state';
-import { Mode, ModeService } from 'src/app/shared/services/mode.service';
+import { ModeService } from 'src/app/shared/services/mode.service';
 import { of, Subscription } from 'rxjs';
 import { concatMap } from 'rxjs/operators';
 import { CreateItemService } from 'src/app/modules/item/http-services/create-item.service';
@@ -40,7 +40,7 @@ export class GroupEditComponent implements OnDestroy, PendingChangesComponent {
     private groupUpdateService: GroupUpdateService,
     private createItemService: CreateItemService,
   ) {
-    this.modeService.mode$.next(Mode.Editing);
+    this.modeService.startEditing();
 
     this.subscription = this.state$
       .pipe(readyData())
@@ -51,7 +51,7 @@ export class GroupEditComponent implements OnDestroy, PendingChangesComponent {
   }
 
   ngOnDestroy(): void {
-    this.modeService.mode$.next(Mode.Normal);
+    this.modeService.stopEditing();
     this.subscription?.unsubscribe();
   }
 

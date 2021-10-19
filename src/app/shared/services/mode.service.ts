@@ -37,6 +37,15 @@ export class ModeService implements OnDestroy {
     this.mode$.next(Mode.Normal);
   }
 
+  startEditing(): void {
+    this.session.stopGroupWatching();
+    this.mode$.next(Mode.Editing);
+  }
+
+  stopEditing(): void {
+    this.mode$.next(Mode.Normal);
+  }
+
   ngOnDestroy(): void {
     this.mode$.complete();
     this.modeActions$.complete();

@@ -10,7 +10,7 @@ import { Item } from '../../http-services/get-item-by-id.service';
 import { ItemEditContentComponent } from '../item-edit-content/item-edit-content.component';
 import { PendingChangesComponent } from 'src/app/shared/guards/pending-changes-guard';
 import { CreateItemService, NewItem } from '../../http-services/create-item.service';
-import { Mode, ModeService } from 'src/app/shared/services/mode.service';
+import { ModeService } from 'src/app/shared/services/mode.service';
 import { readyData } from 'src/app/shared/operators/state';
 import { Duration } from '../../../../shared/helpers/duration';
 import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
@@ -88,7 +88,7 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
     private updateItemStringService: UpdateItemStringService,
     private actionFeedbackService: ActionFeedbackService,
   ) {
-    this.modeService.mode$.next(Mode.Editing);
+    this.modeService.startEditing();
     this.subscription = this.fetchState$
       .pipe(readyData(), map(data => ({
         ...data.item,
@@ -103,7 +103,7 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
   }
 
   ngOnDestroy(): void {
-    this.modeService.mode$.next(Mode.Normal);
+    this.modeService.stopEditing();
     this.subscription?.unsubscribe();
   }
 
