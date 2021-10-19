@@ -256,13 +256,17 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
 
     this.permissionsFetchingSubscription?.unsubscribe();
     this.permissionsFetchingSubscription = this.groupPermissionsService.getPermissions(this.group.id, targetGroupId, itemId)
-      .subscribe(permissions => {
-        this.dialogPermissions = {
-          itemId: itemId,
-          targetGroupId: targetGroupId,
-          permissions: permissions.granted,
-        };
-        this.dialog = 'opened';
+      .subscribe({
+        next: permissions => {
+          this.dialogPermissions = {
+            itemId: itemId,
+            targetGroupId: targetGroupId,
+            permissions: permissions.granted,
+          };
+          this.dialog = 'opened';
+        },
+        error: () =>
+          this.actionFeedbackService.error($localize`The permissions cannot be retrieved. If the problem persists, please contact us.`),
       });
   }
 
