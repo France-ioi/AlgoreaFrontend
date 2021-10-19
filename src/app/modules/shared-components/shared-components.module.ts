@@ -60,6 +60,7 @@ import { LogActionDisplayPipe } from '../../shared/pipes/logActionDisplay';
 import { ErrorComponent } from './components/error/error.component';
 import { LoadingComponent } from './components/loading/loading.component';
 import { CollapsibleSectionComponent } from './components/collapsible-section/collapsible-section.component';
+import { NeighborWidgetComponent } from './components/neighbor-widget/neighbor-widget.component';
 
 @NgModule({
   declarations: [
@@ -98,6 +99,7 @@ import { CollapsibleSectionComponent } from './components/collapsible-section/co
     ErrorComponent,
     LoadingComponent,
     CollapsibleSectionComponent,
+    NeighborWidgetComponent,
   ],
   imports: [
     CommonModule,
@@ -165,6 +167,7 @@ import { CollapsibleSectionComponent } from './components/collapsible-section/co
     ErrorComponent,
     LoadingComponent,
     CollapsibleSectionComponent,
+    NeighborWidgetComponent,
   ],
   providers: [],
   entryComponents: [

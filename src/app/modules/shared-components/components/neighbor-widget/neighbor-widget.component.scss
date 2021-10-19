@@ -1,0 +1,41 @@
+@import 'src/colors.scss';
+@import 'src/geometry.scss';
+
+.neighbor-widget {
+  display: flex;
+  align-items: center;
+  height: 2.2rem;
+}
+
+.neighbor-widget-button {
+  background-color: $base-color;
+  color: #fff;
+  border: none;
+  outline: none;
+  border-radius: 0;
+  width: 2.6rem;
+  height: 100%;
+  cursor: pointer;
+
+  &:hover:not(:disabled) {
+    background-color: $base-dark-color-hover;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+
+  &:first-child {
+    padding-left: .2rem;
+    border-radius: 50% 0 0 50%;
+
+    &:not(:disabled) {
+      background-color: $dark-base-color;
+    }
+  }
+
+  &:last-child {
+    padding-right: .2rem;
+    border-radius: 0 50% 50% 0;
+  }
+}
