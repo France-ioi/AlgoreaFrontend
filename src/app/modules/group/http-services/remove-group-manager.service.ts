@@ -1,11 +1,19 @@
 import { Injectable } from '@angular/core';
-import { concat, Observable, of, forkJoin } from 'rxjs';
+import { merge, Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { appConfig } from '../../../shared/helpers/config';
 import { SimpleActionResponse } from '../../../shared/http-services/action-response';
+import { reduce, map, switchMap, catchError } from 'rxjs/operators';
 import { Result } from '../components/member-list/group-removal-response-handling';
-import { catchError, map, reduce } from 'rxjs/operators';
-import { parseResults } from './remove-group.service';
+
+export function parseResults(data: SimpleActionResponse[]): Result {
+  return {
+    countRequests: data.length,
+    countSuccess: data.filter(state => state.success).length,
+  };
+}
+
+const failedState = { success: false, message: $localize`Failed to delete manager` };
 
 @Injectable({
   providedIn: 'root',
@@ -18,16 +26,21 @@ export class RemoveGroupManagerService {
     return this.http.delete<SimpleActionResponse>(`${appConfig.apiUrl}/groups/${groupId}/managers/${managerId}`);
   }
 
-  removeBatch(parentGroupId: string, ids: string[]): Observable<Result> {
-    return forkJoin([
-      concat(...ids.map(id => this.remove(parentGroupId, id))).pipe(
-        catchError(() => of({ success: false, message: $localize`Failed to delete manager` })),
-        reduce<SimpleActionResponse, SimpleActionResponse[]>((removedManagers, removedManager) =>
-          [ ...removedManagers, removedManager ], []
-        ),
+  removeBatch(parentGroupId: string, ids: string[], ownManagerId?: string): Observable<Result> {
+    return merge(...ids.map(id => this.remove(parentGroupId, id))).pipe(
+      catchError(() => of(failedState)),
+      reduce<SimpleActionResponse, SimpleActionResponse[]>((removedManagers, removedManager) =>
+        [ ...removedManagers, removedManager ], []
       ),
-    ]).pipe(
-      map(([ removedManagers ]) => parseResults(removedManagers)),
+      switchMap(removedManagers =>
+        (ownManagerId
+          ? this.remove(parentGroupId, ownManagerId).pipe(
+            catchError(() => of(failedState)),
+            map(removedManager => [ ...removedManagers, removedManager ]),
+          ) : of(removedManagers))
+      ),
+    ).pipe(
+      map(parseResults),
     );
   }
 }

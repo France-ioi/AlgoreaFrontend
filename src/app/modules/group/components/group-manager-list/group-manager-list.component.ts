@@ -122,23 +122,25 @@ export class GroupManagerListComponent implements OnChanges, OnDestroy {
       throw new Error('Unexpected: Missed current user ID');
     }
 
-    if (this.selection.some(manager => manager.id === currentUserId)) {
-      const foundIndex = this.selection.findIndex(manager => manager.id === currentUserId);
-      const currentUser = this.selection.splice(foundIndex, 1);
-      this.selection = [ ...this.selection, ...currentUser ];
-    }
-
     const groupId = this.groupData.group.id;
+    const ownManagerId = this.selection.find(manager => manager.id === currentUserId)?.id;
 
     this.removalInProgress = true;
 
-    this.removeGroupManagerService.removeBatch(groupId, this.selection.map(manager => manager.id))
+    this.removeGroupManagerService.removeBatch(
+      groupId,
+      this.selection.filter(manager => manager.id !== ownManagerId).map(manager => manager.id),
+      ownManagerId,
+    )
       .subscribe({
-        next: response => {
-          displayGroupManagerRemovalResponseToast(this.actionFeedbackService, response);
+        next: result => {
+          displayGroupManagerRemovalResponseToast(this.actionFeedbackService, result);
           this.removalInProgress = false;
-          this.selection = [];
-          this.reloadData();
+
+          if (result.countSuccess > 0) {
+            this.selection = [];
+            this.reloadData();
+          }
         },
         error: () => {
           this.removalInProgress = false;
