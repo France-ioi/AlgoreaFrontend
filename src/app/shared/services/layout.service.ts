@@ -3,7 +3,7 @@ import { BehaviorSubject, of, Subject, timer } from 'rxjs';
 import { delay, distinctUntilChanged, mapTo, shareReplay, startWith, switchMap } from 'rxjs/operators';
 import { HOURS } from '../helpers/duration';
 
-const delayUntilReactivateAutoToggle = 2*HOURS;
+const delayUntilReactivateAutoToggle = (): number => (globalThis as unknown as Record<string, number>).__DELAY ?? 2*HOURS;
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +19,7 @@ export class LayoutService {
   /** This observable last value (`withLatestFrom()`) determines whether a task is allowed to auto toggle full frame or not */
   readonly canAutoToggle$ = this.toggledManually$.pipe(
     switchMap(toggledManually => (toggledManually
-      ? timer(delayUntilReactivateAutoToggle).pipe(mapTo(true), startWith(false))
+      ? timer(delayUntilReactivateAutoToggle()).pipe(mapTo(true), startWith(false))
       : of(true)
     )),
     startWith(true),
