@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
 import { GetGroupManagersService, Manager } from '../../http-services/get-group-managers.service';
-import { GroupData } from '../../services/group-datasource.service';
+import { GroupData, GroupDataSource } from '../../services/group-datasource.service';
 import { RemoveGroupManagerService } from '../../http-services/remove-group-manager.service';
 import { ActionFeedbackService } from '../../../../shared/services/action-feedback.service';
 import { concat, ReplaySubject, Subject } from 'rxjs';
@@ -41,6 +41,7 @@ export class GroupManagerListComponent implements OnChanges, OnDestroy {
     private removeGroupManagerService: RemoveGroupManagerService,
     private actionFeedbackService: ActionFeedbackService,
     private feedbackService: ActionFeedbackService,
+    private groupDataSource: GroupDataSource,
     private userService: UserSessionService,
     private confirmationService: ConfirmationService,
   ) {}
@@ -157,6 +158,7 @@ export class GroupManagerListComponent implements OnChanges, OnDestroy {
 
     if (event.updated) {
       this.reloadData();
+      this.groupDataSource.refetchGroup();
     }
   }
 }
