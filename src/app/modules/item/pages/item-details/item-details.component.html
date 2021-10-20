@@ -2,7 +2,9 @@
 
   <ng-container *ngIf="state.isReady && state.data as itemData">
 
-    <alg-item-header [itemData]="itemData" *ngIf="!(fullFrameContent$ | async)"></alg-item-header>
+    <ng-container *ngIf="content$ | async as content">
+      <alg-item-header [itemData]="itemData" [score]="content.score" *ngIf="!(fullFrameContent$ | async)"></alg-item-header>
+    </ng-container>
 
     <alg-access-code-view
         *ngIf="itemData.showAccessCodeField"

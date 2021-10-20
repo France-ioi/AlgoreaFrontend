@@ -1,9 +1,7 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { filter } from 'rxjs/operators';
 import { ActivityNavTreeService, SkillNavTreeService } from 'src/app/core/services/navigation/item-nav-tree.service';
 import { isASkill } from 'src/app/shared/helpers/item-type';
-import { isItemInfo } from 'src/app/shared/models/content/item-info';
-import { CurrentContentService } from 'src/app/shared/services/current-content.service';
+import { ItemInfo } from 'src/app/shared/models/content/item-info';
 import { ModeAction, ModeService } from 'src/app/shared/services/mode.service';
 import { ItemData } from '../../services/item-datasource.service';
 
@@ -14,18 +12,16 @@ import { ItemData } from '../../services/item-datasource.service';
 })
 export class ItemHeaderComponent implements OnChanges {
   @Input() itemData?: ItemData;
+  @Input() score?: ItemInfo['score'];
 
-  private activityNavigationNeighbors$ = this.activitiyNavTreeService.navigationNeighbors$;
+  private activityNavigationNeighbors$ = this.activityNavTreeService.navigationNeighbors$;
   private skillNavigationNeighbors$ = this.skillNavTreeService.navigationNeighbors$;
   navigationNeighbors$ = this.activityNavigationNeighbors$;
 
-  content$ = this.currentContentService.content$.pipe(filter(isItemInfo));
-
   constructor(
     private modeService: ModeService,
-    private activitiyNavTreeService: ActivityNavTreeService,
+    private activityNavTreeService: ActivityNavTreeService,
     private skillNavTreeService: SkillNavTreeService,
-    private currentContentService: CurrentContentService,
   ) {}
 
   ngOnChanges(_changes: SimpleChanges): void {

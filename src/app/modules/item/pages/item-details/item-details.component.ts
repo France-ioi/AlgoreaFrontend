@@ -6,6 +6,9 @@ import { mapStateData } from 'src/app/shared/operators/state';
 import { LayoutService } from '../../../../shared/services/layout.service';
 import { RouterLinkActive } from '@angular/router';
 import { TaskTab } from '../item-display/item-display.component';
+import { CurrentContentService } from 'src/app/shared/services/current-content.service';
+import { filter } from 'rxjs/operators';
+import { isItemInfo } from 'src/app/shared/models/content/item-info';
 
 @Component({
   selector: 'alg-item-details',
@@ -23,8 +26,9 @@ export class ItemDetailsComponent implements OnDestroy {
   taskTabs: TaskTab[] = [];
   taskView?: TaskTab['view'];
 
-  fullFrameContent$ = this.layoutService.fullFrameContent$;
+  readonly fullFrameContent$ = this.layoutService.fullFrameContent$;
   readonly watchedGroup$ = this.userService.watchedGroup$;
+  readonly content$ = this.currentContentService.content$.pipe(filter(isItemInfo));
 
   private subscription = this.itemDataSource.state$.subscribe(state => {
     if (state.isFetching) this.taskTabs = []; // reset task tabs when item changes.
@@ -34,6 +38,7 @@ export class ItemDetailsComponent implements OnDestroy {
     private userService: UserSessionService,
     private itemDataSource: ItemDataSource,
     private layoutService: LayoutService,
+    private currentContentService: CurrentContentService,
   ) {}
 
   ngOnDestroy(): void {
