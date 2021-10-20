@@ -1,6 +1,6 @@
 import { AfterViewChecked, Component, ElementRef, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { interval, merge, Observable } from 'rxjs';
-import { filter, map, startWith, switchMap } from 'rxjs/operators';
+import { filter, map, startWith, switchMap, take, withLatestFrom } from 'rxjs/operators';
 import { SECONDS } from 'src/app/shared/helpers/duration';
 import { isNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
 import { ItemTaskService } from '../../services/item-task.service';
@@ -12,6 +12,7 @@ import { ItemTaskViewsService } from '../../services/item-task-views.service';
 import { FullItemRoute } from 'src/app/shared/routing/item-route';
 import { DomSanitizer } from '@angular/platform-browser';
 import { PermissionsInfo } from '../../helpers/item-permissions';
+import { LayoutService } from 'src/app/shared/services/layout.service';
 
 const initialHeight = 0;
 const additionalHeightToPreventInnerScrollIssues = 40;
@@ -58,11 +59,17 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
   constructor(
     private taskService: ItemTaskService,
     private sanitizer: DomSanitizer,
+    private layoutService: LayoutService,
   ) {}
 
   ngOnInit(): void {
     this.taskService.configure(this.route, this.url, this.attemptId);
     this.taskService.showView(this.view ?? 'task');
+    this.layoutService.fullFrameContent$.pipe(
+      take(1),
+      withLatestFrom(this.layoutService.canAutoToggle$),
+      filter(([ fullFrameContent, canAutoToggle ]) => canAutoToggle && !fullFrameContent),
+    ).subscribe(() => this.layoutService.toggleFullFrameContent(true, false));
   }
 
   ngAfterViewChecked(): void {
