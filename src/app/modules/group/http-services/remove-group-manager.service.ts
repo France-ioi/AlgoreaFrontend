@@ -27,13 +27,14 @@ export class RemoveGroupManagerService {
   }
 
   removeBatch(parentGroupId: string, ids: string[], ownManagerId?: string): Observable<Result> {
-    return merge(...ids.map(id => this.remove(parentGroupId, id))).pipe(
-      catchError(() => of(failedState)),
+    return merge(
+      ...ids.map(id => this.remove(parentGroupId, id).pipe(catchError(() => of(failedState)))),
+    ).pipe(
       reduce<SimpleActionResponse, SimpleActionResponse[]>((removedManagers, removedManager) =>
         [ ...removedManagers, removedManager ], []
       ),
       switchMap(removedManagers =>
-        (ownManagerId
+        (ownManagerId && !removedManagers.some(removedManager => !removedManager.success)
           ? this.remove(parentGroupId, ownManagerId).pipe(
             catchError(() => of(failedState)),
             map(removedManager => [ ...removedManagers, removedManager ]),
