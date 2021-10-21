@@ -31,7 +31,7 @@ export class ItemTaskService {
   readonly activeView$ = this.viewsService.activeView$;
 
   private navigateToNext$ = this.activityNavTreeService.navigationNeighbors$.pipe(
-    map(neighborsState => (neighborsState.isReady ? neighborsState.data?.next?.navigateTo : undefined)),
+    map(neighborsState => (neighborsState.isReady ? (neighborsState.data?.next ?? neighborsState.data?.parent)?.navigateTo : undefined)),
     shareReplay(1),
   );
 
