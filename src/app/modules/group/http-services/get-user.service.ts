@@ -14,15 +14,19 @@ export const userDecoder = pipe(
     webSite: D.nullable(D.string),
     freeText: D.nullable(D.string),
     isCurrentUser: D.boolean,
-    currentUserCanWatchUser: D.boolean,
-    currentUserCanGrantUserAccess: D.boolean,
+    ancestorsCurrentUserIsManagerOf: D.array(D.struct({
+      id: D.string,
+      name: D.string,
+    })),
   }),
   D.intersect(
     D.partial({
       firstName: D.nullable(D.string),
       lastName: D.nullable(D.string),
-    })
-  )
+      currentUserCanWatchUser: D.boolean,
+      currentUserCanGrantUserAccess: D.boolean,
+    }),
+  ),
 );
 
 export type User = D.TypeOf<typeof userDecoder>;
