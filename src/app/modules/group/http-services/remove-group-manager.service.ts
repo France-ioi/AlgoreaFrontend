@@ -34,11 +34,13 @@ export class RemoveGroupManagerService {
         [ ...removedManagers, removedManager ], []
       ),
       switchMap(removedManagers =>
-        (ownManagerId && !removedManagers.some(removedManager => !removedManager.success)
-          ? this.remove(parentGroupId, ownManagerId).pipe(
-            catchError(() => of(failedState)),
-            map(removedManager => [ ...removedManagers, removedManager ]),
-          ) : of(removedManagers))
+        (ownManagerId ?
+          removedManagers.some(removedManager => !removedManager.success) ?
+            of([ ...removedManagers, failedState ]) : this.remove(parentGroupId, ownManagerId).pipe(
+              catchError(() => of(failedState)),
+              map(removedManager => [ ...removedManagers, removedManager ]),
+            )
+          : of(removedManagers))
       ),
     ).pipe(
       map(parseResults),
