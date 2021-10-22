@@ -10,6 +10,12 @@ import {
   generateCanEditValues
 } from '../components/permissions-edit-dialog/permissions-edit-dialog-texts';
 
+const youNeedToBeOwnerText = $localize`You need to be owner of this item`;
+const youNeedText = $localize`You need`;
+const thisUserNeedsText = $localize`This user needs`;
+const toBeText = $localize`to be`;
+const toBeAtLeastText = $localize`to be at least`;
+
 function atLeast<T extends readonly string[]>(values: T, val: T[number], ref: T[number]): boolean {
   return values.indexOf(val) >= values.indexOf(ref);
 }
@@ -18,19 +24,31 @@ function validateCanView(receiverPermissions: GroupPermissions, giverPermissions
 
   if (receiverPermissions.canView === 'info' &&
   !atLeast(canGrantViewValues, giverPermissions.canGrantView, 'enter')) {
-    return { canView: [ 'You need at least can_grant_view >= enter' ] };
+    return { canView: [
+      `${youNeedText} ${permissionsInfoString.canGrantView.string} ${toBeAtLeastText} ${
+        permissionsInfoString.canGrantView.enter}`
+    ] };
   }
   if (receiverPermissions.canView === 'content' &&
   !atLeast(canGrantViewValues, giverPermissions.canGrantView, 'content')) {
-    return { canView: [ 'You need at least can_grant_view >= content' ] };
+    return { canView: [
+      `${youNeedText} ${permissionsInfoString.canGrantView.string} ${toBeAtLeastText} ${
+        permissionsInfoString.canGrantView.content}`
+    ] };
   }
   if (receiverPermissions.canView === 'content_with_descendants' &&
   !atLeast(canGrantViewValues, giverPermissions.canGrantView, 'content_with_descendants')) {
-    return { canView: [ 'You need at least can_grant_view >= content_with_descendants' ] };
+    return { canView: [
+      `${youNeedText} ${permissionsInfoString.canGrantView.string} ${toBeAtLeastText} ${
+        permissionsInfoString.canGrantView.content_with_descendants}`
+    ] };
   }
   if (receiverPermissions.canView === 'solution' &&
   !atLeast(canGrantViewValues, giverPermissions.canGrantView, 'solution')) {
-    return { canView: [ 'You need at least can_grant_view >= solution' ] };
+    return { canView: [
+      `${youNeedText} ${permissionsInfoString.canGrantView.string} ${toBeAtLeastText} ${
+        permissionsInfoString.canGrantView.solution}`
+    ] };
   }
   return {};
 }
@@ -42,27 +60,37 @@ function validateCanGrantView(receiverPermissions: GroupPermissions, giverPermis
   const errors: string[] = [];
 
   if (receiverPermissions.canGrantView === 'solution_with_grant') {
-    if (!giverPermissions.isOwner) errors.push('You need to be owner of this item');
-    if (!atLeast(canViewValues, receiverPermissions.canView, 'solution')) errors.push('This user needs at least can_view >= solution');
+    if (!giverPermissions.isOwner) {
+      errors.push(youNeedToBeOwnerText);
+    }
+    if (!atLeast(canViewValues, receiverPermissions.canView, 'solution')) {
+      errors.push(`${thisUserNeedsText} ${permissionsInfoString.canView.string} ${toBeAtLeastText} ${
+        permissionsInfoString.canView.solution}`);
+    }
   } else {
 
     if (!(giverPermissions.canGrantView === 'solution_with_grant')) {
-      errors.push('You need can_grant_view = solution_with_grant');
+      errors.push(`${youNeedText} ${permissionsInfoString.canGrantView.string} ${toBeText} ${
+        permissionsInfoString.canGrantView.solution_with_grant}`);
     }
 
     if (receiverPermissions.canGrantView === 'enter' && !atLeast(canViewValues, receiverPermissions.canView, 'info')) {
-      errors.push('This user needs at least can_view >= info');
+      errors.push(`${thisUserNeedsText} ${permissionsInfoString.canView.string} ${toBeAtLeastText} ${
+        permissionsInfoString.canView.info}`);
     }
 
     if (receiverPermissions.canGrantView === 'content' && !atLeast(canViewValues, receiverPermissions.canView, 'content')) {
-      errors.push('This user needs at least content');
+      errors.push(`${thisUserNeedsText} ${permissionsInfoString.canView.string} ${toBeAtLeastText} ${
+        permissionsInfoString.canView.content}`);
     }
     if (receiverPermissions.canGrantView === 'content_with_descendants' &&
         !atLeast(canViewValues, receiverPermissions.canView, 'content_with_descendants')) {
-      errors.push('This user needs at least content_with_descendants');
+      errors.push(`${thisUserNeedsText} ${permissionsInfoString.canView.string} ${toBeAtLeastText} ${
+        permissionsInfoString.canView.content_with_descendants}`);
     }
     if (receiverPermissions.canGrantView === 'solution' && !atLeast(canViewValues, receiverPermissions.canView, 'solution')) {
-      errors.push('This user needs at least solution');
+      errors.push(`${thisUserNeedsText} ${permissionsInfoString.canView.string} ${toBeText} ${
+        permissionsInfoString.canView.solution}`);
     }
   }
 
@@ -77,16 +105,18 @@ function validateCanWatch(receiverPermissions: GroupPermissions, giverPermission
 
   // For all canWatch except 'none'
   if (!atLeast(canViewValues, receiverPermissions.canView, 'content')) {
-    errors.push('This user needs at least canView >= content');
+    errors.push(`${thisUserNeedsText} ${permissionsInfoString.canView.string} ${toBeAtLeastText} ${
+      permissionsInfoString.canView.content}`);
   }
 
   if (receiverPermissions.canWatch === 'answer_with_grant' && !giverPermissions.isOwner) {
-    errors.push('You need to be owner of this item');
+    errors.push(youNeedToBeOwnerText);
   } else {
 
     // if receiverPermissions.canWatch is 'result' or 'answer'
     if (!(giverPermissions.canWatch === 'answer_with_grant')) {
-      errors.push('You need at canWatch == answer_with_grant');
+      errors.push(`${youNeedText} ${permissionsInfoString.canWatch.string} ${toBeText} ${
+        permissionsInfoString.canWatch.answer_with_grant}`);
     }
   }
 
@@ -101,16 +131,18 @@ function validateCanEdit(receiverPermissions: GroupPermissions, giverPermissions
 
   // For all can_edit except 'none'
   if (!atLeast(canViewValues, receiverPermissions.canView, 'content')) {
-    errors.push('This user needs at least canView >= content');
+    errors.push(`${thisUserNeedsText} ${permissionsInfoString.canView.string} ${toBeAtLeastText} ${
+      permissionsInfoString.canView.content}`);
   }
 
   if (receiverPermissions.canEdit === 'all_with_grant' && !giverPermissions.isOwner) {
-    errors.push('You need to be owner of this item');
+    errors.push(youNeedToBeOwnerText);
   } else {
 
     // if receiverPermissions.canEdit is 'children' or 'all_with_grant'
     if (!(giverPermissions.canEdit === 'all_with_grant')) {
-      errors.push('You need at canEdit == all_with_grant');
+      errors.push(`${youNeedText} ${permissionsInfoString.canEdit.string} ${toBeText} ${
+        permissionsInfoString.canEdit.all_with_grant}`);
     }
   }
 
@@ -126,14 +158,15 @@ function validateCanMakeSessionOfficial(
 
   if (receiverPermissions.canMakeSessionOfficial && !previousValue) {
     if (!giverPermissions.isOwner) {
-      errors.push('You need to be owner of this item');
+      errors.push(youNeedToBeOwnerText);
     }
     if (!atLeast(canViewValues, receiverPermissions.canView, 'content')) {
-      errors.push('This user needs can_view >= content');
+      errors.push(`${thisUserNeedsText} ${permissionsInfoString.canView.string} ${toBeAtLeastText} ${
+        permissionsInfoString.canView.content}`);
     }
   }
 
-  return { canMakeSessionOfficial: errors.length === 0 ? undefined : errors };
+  return errors.length === 0 ? {} : { canMakeSessionOfficial: errors };
 }
 
 function validateIsOwner(
@@ -143,11 +176,10 @@ function validateIsOwner(
 ): { isOwner?: string[] } {
 
   if (receiverPermissions.isOwner && !previousValue && !giverPermissions.isOwner) {
-    return { isOwner: [ 'You need to be owner of this item' ] };
+    return { isOwner: [ youNeedToBeOwnerText ] };
   }
   return {};
 }
-
 
 export function permissionsConstraintsValidator(
   receiverPermissions: GroupPermissions,
