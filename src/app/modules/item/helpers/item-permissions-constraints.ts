@@ -1,12 +1,20 @@
 import { ValidationErrors, ValidatorFn, AbstractControl } from '@angular/forms';
 import { GroupPermissions } from 'src/app/shared/http-services/group-permissions.service';
-import { PermissionsInfo, canGrantViewValues, canViewValues } from './item-permissions';
+import { PermissionsInfo, canGrantViewValues, canViewValues, permissionsInfoString } from './item-permissions';
+import { TypeFilter } from '../components/composition-filter/composition-filter.component';
+import { PermissionsDialogData } from '../components/permissions-edit-dialog/permissions-edit-dialog.component';
+import {
+  generateCanViewValues,
+  generateCanGrantViewValues,
+  generateCanWatchValues,
+  generateCanEditValues
+} from '../components/permissions-edit-dialog/permissions-edit-dialog-texts';
 
 function atLeast<T extends readonly string[]>(values: T, val: T[number], ref: T[number]): boolean {
   return values.indexOf(val) >= values.indexOf(ref);
 }
 
-function validateCanView(receiverPermissions: GroupPermissions, giverPermissions: PermissionsInfo): ValidationErrors {
+function validateCanView(receiverPermissions: GroupPermissions, giverPermissions: PermissionsInfo): { canView?: string[] } {
 
   if (receiverPermissions.canView === 'info' &&
   !atLeast(canGrantViewValues, giverPermissions.canGrantView, 'enter')) {
@@ -27,7 +35,7 @@ function validateCanView(receiverPermissions: GroupPermissions, giverPermissions
   return {};
 }
 
-function validateCanGrantView(receiverPermissions: GroupPermissions, giverPermissions: PermissionsInfo): ValidationErrors {
+function validateCanGrantView(receiverPermissions: GroupPermissions, giverPermissions: PermissionsInfo): { canGrantView?: string[] } {
 
   if (receiverPermissions.canGrantView === 'none') return {};
 
@@ -61,7 +69,7 @@ function validateCanGrantView(receiverPermissions: GroupPermissions, giverPermis
   return { canGrantView: errors.length === 0 ? undefined : errors };
 }
 
-function validateCanWatch(receiverPermissions: GroupPermissions, giverPermissions: PermissionsInfo): ValidationErrors {
+function validateCanWatch(receiverPermissions: GroupPermissions, giverPermissions: PermissionsInfo): { canWatch?: string[] } {
 
   if (receiverPermissions.canWatch === 'none') return {};
 
@@ -85,7 +93,7 @@ function validateCanWatch(receiverPermissions: GroupPermissions, giverPermission
   return { canWatch: errors.length === 0 ? undefined : errors };
 }
 
-function validateCanEdit(receiverPermissions: GroupPermissions, giverPermissions: PermissionsInfo): ValidationErrors {
+function validateCanEdit(receiverPermissions: GroupPermissions, giverPermissions: PermissionsInfo): { canEdit?: string[] } {
 
   if (receiverPermissions.canEdit === 'none') return {};
 
@@ -113,7 +121,7 @@ function validateCanMakeSessionOfficial(
   previousValue: boolean,
   receiverPermissions: GroupPermissions,
   giverPermissions: PermissionsInfo
-): ValidationErrors {
+): { canMakeSessionOfficial?: string[] } {
   const errors: string[] = [];
 
   if (receiverPermissions.canMakeSessionOfficial && !previousValue) {
@@ -132,7 +140,7 @@ function validateIsOwner(
   previousValue: boolean,
   receiverPermissions: GroupPermissions,
   giverPermissions: PermissionsInfo
-): ValidationErrors {
+): { isOwner?: string[] } {
 
   if (receiverPermissions.isOwner && !previousValue && !giverPermissions.isOwner) {
     return { isOwner: [ 'You need to be owner of this item' ] };
@@ -169,5 +177,34 @@ export function permissionsConstraintsValidator(
     };
 
     return Object.keys(errors).length > 0 ? errors : null;
+  };
+}
+
+export function generateValues(
+  targetType: TypeFilter,
+  receiverPermissions: GroupPermissions,
+  giverPermissions: PermissionsInfo
+): PermissionsDialogData {
+
+  return {
+    canViewValues: generateCanViewValues(targetType).map(val => {
+      const errors = validateCanView({ ...receiverPermissions, canView: val.value }, giverPermissions);
+      return errors.canView ? { ...val, disabled: true, tooltip: errors.canView } : val;
+    }),
+
+    canGrantViewValues: generateCanGrantViewValues(targetType).map(val => {
+      const errors = validateCanGrantView({ ...receiverPermissions, canGrantView: val.value }, giverPermissions);
+      return errors.canGrantView ? { ...val, disabled: true, tooltip: errors.canGrantView } : val;
+    }),
+
+    canWatchValues: generateCanWatchValues(targetType).map(val => {
+      const errors = validateCanWatch({ ...receiverPermissions, canWatch: val.value }, giverPermissions);
+      return errors.canWatch ? { ...val, disabled: true, tooltip: errors.canWatch } : val;
+    }),
+
+    canEditValues: generateCanEditValues(targetType).map(val => {
+      const errors = validateCanEdit({ ...receiverPermissions, canEdit: val.value }, giverPermissions);
+      return errors.canEdit ? { ...val, disabled: true, tooltip: errors.canEdit } : val;
+    })
   };
 }

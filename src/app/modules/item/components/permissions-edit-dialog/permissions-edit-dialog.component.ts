@@ -4,10 +4,15 @@ import { ProgressSelectValue } from
   'src/app/modules/shared-components/components/collapsible-section/progress-select/progress-select.component';
 import { GroupPermissions } from 'src/app/shared/http-services/group-permissions.service';
 import { PermissionsInfo } from '../../helpers/item-permissions';
-import { permissionsConstraintsValidator } from '../../helpers/item-permissions-constraints';
+import { generateValues, permissionsConstraintsValidator } from '../../helpers/item-permissions-constraints';
 import { TypeFilter } from '../composition-filter/composition-filter.component';
-import { generateCanEditValues, generateCanGrantViewValues,
-  generateCanViewValues, generateCanWatchValues } from './permissions-edit-dialog-texts';
+
+export interface PermissionsDialogData {
+  canViewValues: ProgressSelectValue<string>[],
+  canGrantViewValues: ProgressSelectValue<string>[],
+  canWatchValues: ProgressSelectValue<string>[],
+  canEditValues: ProgressSelectValue<string>[],
+}
 
 @Component({
   selector: 'alg-permissions-edit-dialog',
@@ -26,10 +31,12 @@ export class PermissionsEditDialogComponent implements OnChanges {
 
   targetTypeString = '';
 
-  canViewValues: ProgressSelectValue<string>[] = [];
-  canGrantViewValues: ProgressSelectValue<string>[] = [];
-  canWatchValues: ProgressSelectValue<string>[] = [];
-  canEditValues: ProgressSelectValue<string>[] = [];
+  progressSelectValues: PermissionsDialogData = {
+    canViewValues: [],
+    canGrantViewValues: [],
+    canEditValues: [],
+    canWatchValues: [],
+  };
 
   form = this.fb.group({
     canView: [ 'none' ],
@@ -40,16 +47,17 @@ export class PermissionsEditDialogComponent implements OnChanges {
     isOwner: [ true ],
   });
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder) {
+    this.form.valueChanges.subscribe(formValue => {
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if ('targetType' in changes) {
-      this.canViewValues = generateCanViewValues(this.targetType);
-      this.canGrantViewValues = generateCanGrantViewValues(this.targetType);
-      this.canWatchValues = generateCanWatchValues(this.targetType);
-      this.canEditValues = generateCanEditValues(this.targetType);
-    }
+      if (this.permissions && this.giverPermissions) {
+        const receiverPermissions = formValue as GroupPermissions;
+        this.progressSelectValues = generateValues(this.targetType, receiverPermissions, this.giverPermissions);
+      }
+    });
+  }
 
+  ngOnChanges(_changes: SimpleChanges): void {
     if (this.permissions && this.giverPermissions) {
       this.form.setValidators(permissionsConstraintsValidator(this.permissions, this.giverPermissions));
       this.form.updateValueAndValidity();

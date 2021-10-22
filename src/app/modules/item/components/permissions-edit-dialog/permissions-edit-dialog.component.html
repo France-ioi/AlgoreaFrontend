@@ -30,7 +30,7 @@
             <alg-progress-select
               [collapsed]="collapsed"
               formControlName="canView"
-              [values]="canViewValues"
+              [values]="progressSelectValues.canViewValues"
               [validationErrors]="form.errors?.canView"
             ></alg-progress-select>
           </ng-template>
@@ -52,7 +52,7 @@
             <alg-progress-select
               [collapsed]="collapsed"
               formControlName="canGrantView"
-              [values]="canGrantViewValues"
+              [values]="progressSelectValues.canGrantViewValues"
               [validationErrors]="form.errors?.canGrantView"
             ></alg-progress-select>
           </ng-template>
@@ -66,7 +66,7 @@
             <alg-progress-select
               [collapsed]="collapsed"
               formControlName="canWatch"
-              [values]="canWatchValues"
+              [values]="progressSelectValues.canWatchValues"
               [validationErrors]="form.errors?.canWatch"
             ></alg-progress-select>
           </ng-template>
@@ -80,7 +80,7 @@
             <alg-progress-select
               [collapsed]="collapsed"
               formControlName="canEdit"
-              [values]="canEditValues"
+              [values]="progressSelectValues.canEditValues"
               [validationErrors]="form.errors?.canEdit"
             ></alg-progress-select>
           </ng-template>
