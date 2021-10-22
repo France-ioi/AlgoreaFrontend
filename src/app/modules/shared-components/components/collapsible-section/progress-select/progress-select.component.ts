@@ -7,6 +7,7 @@ export interface ProgressSelectValue<T> {
   comment: string,
   value: T,
   disabled?: boolean,
+  tooltip?: string[],
 }
 
 /**

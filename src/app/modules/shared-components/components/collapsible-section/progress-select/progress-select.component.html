@@ -32,7 +32,11 @@
       <div class="progress-desc-name" [ngClass]="{active: idx < selected + 1}" (click)="onSet(item.value)">{{ item.label }}</div>
       <div class="progress-desc-comment">{{ item.comment }}</div>
     </div>
-    <div *ngIf="item.disabled" class="gray-overlay"></div>
+    <div *ngIf="item.disabled" class="gray-overlay tool"
+      [pTooltip]="item.tooltip?.join('\n') || ''"
+      tooltipPosition="top"
+      tooltipStyleClass="permissions-dialog"
+    ></div>
   </div>
   <div class="progress-select-item error" *ngIf="validationErrors">
     <i class="icon" [ngClass]="'fa fa-exclamation-triangle'"></i>
