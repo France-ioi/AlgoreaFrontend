@@ -10,7 +10,7 @@ import {
   generateCanEditValues
 } from '../components/permissions-edit-dialog/permissions-edit-dialog-texts';
 
-const youNeedToBeOwnerText = $localize`You need to be owner of this item`;
+const youNeedToBeOwnerText = $localize`You need to be <b>owner</b> of this item`;
 const youNeedText = $localize`You need`;
 const thisUserNeedsText = $localize`This user needs`;
 const toBeText = $localize`to be`;
@@ -25,29 +25,29 @@ function validateCanView(receiverPermissions: GroupPermissions, giverPermissions
   if (receiverPermissions.canView === 'info' &&
   !atLeast(canGrantViewValues, giverPermissions.canGrantView, 'enter')) {
     return { canView: [
-      `${youNeedText} ${permissionsInfoString.canGrantView.string} ${toBeAtLeastText} ${
-        permissionsInfoString.canGrantView.enter}`
+      `${youNeedText} <b>${permissionsInfoString.canGrantView.string}</b> ${toBeAtLeastText} <b>${
+        permissionsInfoString.canGrantView.enter}</b>`
     ] };
   }
   if (receiverPermissions.canView === 'content' &&
   !atLeast(canGrantViewValues, giverPermissions.canGrantView, 'content')) {
     return { canView: [
-      `${youNeedText} ${permissionsInfoString.canGrantView.string} ${toBeAtLeastText} ${
-        permissionsInfoString.canGrantView.content}`
+      `${youNeedText} <b>${permissionsInfoString.canGrantView.string}</b> ${toBeAtLeastText} <b>${
+        permissionsInfoString.canGrantView.content}</b>`
     ] };
   }
   if (receiverPermissions.canView === 'content_with_descendants' &&
   !atLeast(canGrantViewValues, giverPermissions.canGrantView, 'content_with_descendants')) {
     return { canView: [
-      `${youNeedText} ${permissionsInfoString.canGrantView.string} ${toBeAtLeastText} ${
-        permissionsInfoString.canGrantView.content_with_descendants}`
+      `${youNeedText} <b>${permissionsInfoString.canGrantView.string}</b> ${toBeAtLeastText} <b>${
+        permissionsInfoString.canGrantView.content_with_descendants}</b>`
     ] };
   }
   if (receiverPermissions.canView === 'solution' &&
   !atLeast(canGrantViewValues, giverPermissions.canGrantView, 'solution')) {
     return { canView: [
-      `${youNeedText} ${permissionsInfoString.canGrantView.string} ${toBeAtLeastText} ${
-        permissionsInfoString.canGrantView.solution}`
+      `${youNeedText} <b>${permissionsInfoString.canGrantView.string}</b> ${toBeAtLeastText} <b>${
+        permissionsInfoString.canGrantView.solution}</b>`
     ] };
   }
   return {};
@@ -64,33 +64,33 @@ function validateCanGrantView(receiverPermissions: GroupPermissions, giverPermis
       errors.push(youNeedToBeOwnerText);
     }
     if (!atLeast(canViewValues, receiverPermissions.canView, 'solution')) {
-      errors.push(`${thisUserNeedsText} ${permissionsInfoString.canView.string} ${toBeAtLeastText} ${
-        permissionsInfoString.canView.solution}`);
+      errors.push(`${thisUserNeedsText} <b>${permissionsInfoString.canView.string}</b> ${toBeAtLeastText} <b>${
+        permissionsInfoString.canView.solution}</b>`);
     }
   } else {
 
     if (!(giverPermissions.canGrantView === 'solution_with_grant')) {
-      errors.push(`${youNeedText} ${permissionsInfoString.canGrantView.string} ${toBeText} ${
-        permissionsInfoString.canGrantView.solution_with_grant}`);
+      errors.push(`${youNeedText} <b>${permissionsInfoString.canGrantView.string}</b> ${toBeText} <b>${
+        permissionsInfoString.canGrantView.solution_with_grant}</b>`);
     }
 
     if (receiverPermissions.canGrantView === 'enter' && !atLeast(canViewValues, receiverPermissions.canView, 'info')) {
-      errors.push(`${thisUserNeedsText} ${permissionsInfoString.canView.string} ${toBeAtLeastText} ${
-        permissionsInfoString.canView.info}`);
+      errors.push(`${thisUserNeedsText} <b>${permissionsInfoString.canView.string}</b> ${toBeAtLeastText} <b>${
+        permissionsInfoString.canView.info}</b>`);
     }
 
     if (receiverPermissions.canGrantView === 'content' && !atLeast(canViewValues, receiverPermissions.canView, 'content')) {
-      errors.push(`${thisUserNeedsText} ${permissionsInfoString.canView.string} ${toBeAtLeastText} ${
-        permissionsInfoString.canView.content}`);
+      errors.push(`${thisUserNeedsText} <b>${permissionsInfoString.canView.string}</b> ${toBeAtLeastText} <b>${
+        permissionsInfoString.canView.content}</b>`);
     }
     if (receiverPermissions.canGrantView === 'content_with_descendants' &&
         !atLeast(canViewValues, receiverPermissions.canView, 'content_with_descendants')) {
-      errors.push(`${thisUserNeedsText} ${permissionsInfoString.canView.string} ${toBeAtLeastText} ${
-        permissionsInfoString.canView.content_with_descendants}`);
+      errors.push(`${thisUserNeedsText} <b>${permissionsInfoString.canView.string}</b> ${toBeAtLeastText} <b>${
+        permissionsInfoString.canView.content_with_descendants}</b>`);
     }
     if (receiverPermissions.canGrantView === 'solution' && !atLeast(canViewValues, receiverPermissions.canView, 'solution')) {
-      errors.push(`${thisUserNeedsText} ${permissionsInfoString.canView.string} ${toBeText} ${
-        permissionsInfoString.canView.solution}`);
+      errors.push(`${thisUserNeedsText} <b>${permissionsInfoString.canView.string}</b> ${toBeText} <b>${
+        permissionsInfoString.canView.solution}</b>`);
     }
   }
 
@@ -105,8 +105,8 @@ function validateCanWatch(receiverPermissions: GroupPermissions, giverPermission
 
   // For all canWatch except 'none'
   if (!atLeast(canViewValues, receiverPermissions.canView, 'content')) {
-    errors.push(`${thisUserNeedsText} ${permissionsInfoString.canView.string} ${toBeAtLeastText} ${
-      permissionsInfoString.canView.content}`);
+    errors.push(`${thisUserNeedsText} <b>${permissionsInfoString.canView.string}</b> ${toBeAtLeastText} <b>${
+      permissionsInfoString.canView.content}</b>`);
   }
 
   if (receiverPermissions.canWatch === 'answer_with_grant' && !giverPermissions.isOwner) {
@@ -115,8 +115,8 @@ function validateCanWatch(receiverPermissions: GroupPermissions, giverPermission
 
     // if receiverPermissions.canWatch is 'result' or 'answer'
     if (!(giverPermissions.canWatch === 'answer_with_grant')) {
-      errors.push(`${youNeedText} ${permissionsInfoString.canWatch.string} ${toBeText} ${
-        permissionsInfoString.canWatch.answer_with_grant}`);
+      errors.push(`${youNeedText} <b>${permissionsInfoString.canWatch.string}</b> ${toBeText} <b>${
+        permissionsInfoString.canWatch.answer_with_grant}</b>`);
     }
   }
 
@@ -131,8 +131,8 @@ function validateCanEdit(receiverPermissions: GroupPermissions, giverPermissions
 
   // For all can_edit except 'none'
   if (!atLeast(canViewValues, receiverPermissions.canView, 'content')) {
-    errors.push(`${thisUserNeedsText} ${permissionsInfoString.canView.string} ${toBeAtLeastText} ${
-      permissionsInfoString.canView.content}`);
+    errors.push(`${thisUserNeedsText} <b>${permissionsInfoString.canView.string}</b> ${toBeAtLeastText} <b>${
+      permissionsInfoString.canView.content}</b>`);
   }
 
   if (receiverPermissions.canEdit === 'all_with_grant' && !giverPermissions.isOwner) {
@@ -141,8 +141,8 @@ function validateCanEdit(receiverPermissions: GroupPermissions, giverPermissions
 
     // if receiverPermissions.canEdit is 'children' or 'all_with_grant'
     if (!(giverPermissions.canEdit === 'all_with_grant')) {
-      errors.push(`${youNeedText} ${permissionsInfoString.canEdit.string} ${toBeText} ${
-        permissionsInfoString.canEdit.all_with_grant}`);
+      errors.push(`${youNeedText} <b>${permissionsInfoString.canEdit.string}</b> ${toBeText} <b>${
+        permissionsInfoString.canEdit.all_with_grant}</b>`);
     }
   }
 
@@ -161,8 +161,8 @@ function validateCanMakeSessionOfficial(
       errors.push(youNeedToBeOwnerText);
     }
     if (!atLeast(canViewValues, receiverPermissions.canView, 'content')) {
-      errors.push(`${thisUserNeedsText} ${permissionsInfoString.canView.string} ${toBeAtLeastText} ${
-        permissionsInfoString.canView.content}`);
+      errors.push(`${thisUserNeedsText} <b>${permissionsInfoString.canView.string}</b> ${toBeAtLeastText} <b>${
+        permissionsInfoString.canView.content}</b>`);
     }
   }
 

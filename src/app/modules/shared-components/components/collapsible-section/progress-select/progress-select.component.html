@@ -36,12 +36,13 @@
       [pTooltip]="item.tooltip?.join('\n') || ''"
       tooltipPosition="top"
       tooltipStyleClass="permissions-dialog"
+      [escape]="false"
     ></div>
   </div>
   <div class="progress-select-item error" *ngIf="validationErrors">
     <i class="icon" [ngClass]="'fa fa-exclamation-triangle'"></i>
     <div class="errors">
-      <p *ngFor="let error of validationErrors">{{error}}</p>
+      <p *ngFor="let error of validationErrors" [innerHTML]="error"></p>
     </div>
   </div>
 </div>
