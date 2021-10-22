@@ -26,3 +26,37 @@ export function canCurrentUserViewItemContent(item: ItemPermissionsInfo): boolea
 export function canCurrentUserViewItem (item: ItemPermissionsInfo): boolean {
   return item.permissions.canView !== 'none';
 }
+
+export const permissionsInfoString = {
+  canView: {
+    string: $localize`Can view`,
+    none: $localize`Nothing`,
+    info: $localize`Info`,
+    content: $localize`Content`,
+    content_with_descendants: $localize`Content and descendants`,
+    solution: $localize`Solution`,
+  },
+  canGrantView: {
+    string: $localize`Can grant view`,
+    none: $localize`Nothing`,
+    enter: $localize`Info & enter`,
+    content: $localize`Content`,
+    content_with_descendants: $localize`Content and descendants`,
+    solution: $localize`Solution`,
+    solution_with_grant: $localize`Solution and grant`,
+  },
+  canWatch: {
+    string: $localize`Can watch`,
+    none: $localize`Nothing`,
+    result: $localize`Result`,
+    answer: $localize`Answer`,
+    answer_with_grant: $localize`Answer and grant`,
+  },
+  canEdit: {
+    string: $localize`Can edit`,
+    none: $localize`Nothing`,
+    children: $localize`Children`,
+    all: $localize`All`,
+    all_with_grant: $localize`All and grant`,
+  }
+};
