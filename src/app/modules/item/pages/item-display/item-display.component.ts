@@ -1,7 +1,7 @@
 import { AfterViewChecked, Component, ElementRef, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { interval, merge, Observable } from 'rxjs';
-import { filter, map, startWith, switchMap } from 'rxjs/operators';
-import { SECONDS } from 'src/app/shared/helpers/duration';
+import { filter, map, pairwise, startWith, switchMap } from 'rxjs/operators';
+import { HOURS, SECONDS } from 'src/app/shared/helpers/duration';
 import { isNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
 import { ItemTaskService } from '../../services/item-task.service';
 import { mapToFetchState } from 'src/app/shared/operators/state';
@@ -12,6 +12,7 @@ import { ItemTaskViewsService } from '../../services/item-task-views.service';
 import { FullItemRoute } from 'src/app/shared/routing/item-route';
 import { DomSanitizer } from '@angular/platform-browser';
 import { PermissionsInfo } from '../../helpers/item-permissions';
+import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
 
 const initialHeight = 0;
 const additionalHeightToPreventInnerScrollIssues = 40;
@@ -58,11 +59,25 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
   constructor(
     private taskService: ItemTaskService,
     private sanitizer: DomSanitizer,
+    private actionFeedbackService: ActionFeedbackService,
   ) {}
 
   ngOnInit(): void {
     this.taskService.configure(this.route, this.url, this.attemptId);
     this.taskService.showView(this.view ?? 'task');
+    this.taskService.saveAnswerAndStateInterval$
+      .pipe(startWith({ success: true }), pairwise())
+      .subscribe(([ previous, next ]) => {
+        this.actionFeedbackService.hide();
+        if (!next.success) {
+          const message = $localize`Your current progress could not have been saved. Are you connected to the internet ?`;
+          this.actionFeedbackService.error(message, { life: 24*HOURS });
+          return;
+        }
+        if (!previous.success && next.success) {
+          this.actionFeedbackService.success($localize`Progress saved!`);
+        }
+      });
   }
 
   ngAfterViewChecked(): void {
