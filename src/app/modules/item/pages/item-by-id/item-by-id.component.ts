@@ -1,7 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, ParamMap, UrlTree } from '@angular/router';
-import { of, Subscription } from 'rxjs';
-import { filter, map, switchMap } from 'rxjs/operators';
+import { combineLatest, of, Subject, Subscription } from 'rxjs';
+import { filter, map, startWith, switchMap } from 'rxjs/operators';
 import { defaultAttemptId } from 'src/app/shared/helpers/attempts';
 import { appDefaultItemRoute } from 'src/app/shared/routing/item-route';
 import { errorState, fetchingState, FetchState } from 'src/app/shared/helpers/state';
@@ -40,6 +40,7 @@ export class ItemByIdComponent implements OnDestroy {
 
   readonly defaultItemRoute = this.itemRouter.url(appDefaultItemRoute).toString();
 
+  private scoreChange$ = new Subject<number | undefined>(); // reinitialised to undefined when item id changes
   private scoreSubscription?: Subscription;
   private subscriptions: Subscription[] = []; // subscriptions to be freed up on destroy
 
@@ -62,11 +63,15 @@ export class ItemByIdComponent implements OnDestroy {
     this.subscriptions.push(
 
       // on datasource state change, update current state and current content page info
-      this.itemDataSource.state$.subscribe(state => {
+      combineLatest([ this.itemDataSource.state$, this.scoreChange$.pipe(startWith(undefined)) ]).subscribe(([ state, newScore ]) => {
         this.state = state;
 
         if (state.isReady) {
           this.hasRedirected = false;
+          const currentScore = newScore ?? state.data.currentResult?.score ?? 0;
+          const bestScore = Math.max(state.data.item.bestScore, currentScore);
+          const isValidated = newScore ? bestScore === 100 : state.data.currentResult?.validated;
+
           this.currentContent.replace(itemInfo({
             breadcrumbs: {
               category: itemBreadcrumbCat,
@@ -83,14 +88,14 @@ export class ItemByIdComponent implements OnDestroy {
               title: state.data.item.string.title,
               type: state.data.item.type,
               attemptId: state.data.currentResult?.attemptId,
-              bestScore: state.data.item.bestScore,
-              currentScore: state.data.currentResult?.score,
-              validated: state.data.currentResult?.validated,
+              bestScore,
+              currentScore,
+              validated: isValidated,
             },
-            score: state.data.currentResult?.score !== undefined ? {
-              bestScore: state.data.item.bestScore,
-              currentScore: state.data.currentResult.score,
-              isValidated: state.data.currentResult.validated,
+            score: state.data.currentResult?.score !== undefined && isValidated !== undefined ? {
+              bestScore,
+              currentScore,
+              isValidated,
             } : undefined,
           }));
 
@@ -122,12 +127,14 @@ export class ItemByIdComponent implements OnDestroy {
 
   onActivate(elementRef: ItemByIdComponent | unknown): void {
     this.scoreSubscription?.unsubscribe();
+    this.scoreChange$.next(undefined);
     if (elementRef instanceof ItemDetailsComponent) {
-      this.scoreSubscription = elementRef.scoreChange.subscribe(score => this.updateCurrentContentScore(score));
+      this.scoreSubscription = elementRef.scoreChange.subscribe(score => this.scoreChange$.next(score));
     }
   }
   onDeactivate(): void {
     this.scoreSubscription?.unsubscribe();
+    this.scoreChange$.next(undefined);
   }
 
   reloadContent(): void {
@@ -174,29 +181,6 @@ export class ItemByIdComponent implements OnDestroy {
         this.state = errorState(err);
       }
     });
-  }
-
-  private updateCurrentContentScore(currentScore: number): void {
-    const content = this.currentContent.current();
-    if (!content) throw new Error('unexpected: no content to update');
-    if (!isItemInfo(content)) throw new Error('unexpected: content is not item info');
-
-    const bestScore = Math.max(content.score?.bestScore ?? 0, currentScore);
-    const isValidated = bestScore === 100;
-    this.currentContent.replace(itemInfo({
-      ...content,
-      details: content.details ? {
-        ...content.details,
-        bestScore,
-        currentScore,
-        validated: isValidated,
-      } : undefined,
-      score: {
-        bestScore,
-        currentScore,
-        isValidated,
-      },
-    }));
   }
 
 }
