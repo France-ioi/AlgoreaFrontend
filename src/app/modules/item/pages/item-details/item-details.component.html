@@ -55,6 +55,7 @@
         [itemData]="itemData"
         [(taskView)]="taskView"
         (taskTabsChange)="setTaskTabs($event)"
+        (scoreChange)="scoreChange.emit($event)"
       ></alg-item-content>
       <alg-item-progress
         *ngIf="progressTab?.isActive || !!(watchedGroup$ | async) && !contentTab.isActive"

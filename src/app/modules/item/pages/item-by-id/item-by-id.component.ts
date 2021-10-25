@@ -18,6 +18,7 @@ import { isItemInfo, itemInfo } from 'src/app/shared/models/content/item-info';
 import { repeatLatestWhen } from 'src/app/shared/helpers/repeatLatestWhen';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
 import { isItemRouteError, itemRouteFromParams } from './item-route-validation';
+import { ItemDetailsComponent } from '../item-details/item-details.component';
 
 const itemBreadcrumbCat = $localize`Items`;
 
@@ -39,6 +40,7 @@ export class ItemByIdComponent implements OnDestroy {
 
   readonly defaultItemRoute = this.itemRouter.url(appDefaultItemRoute).toString();
 
+  private scoreSubscription?: Subscription;
   private subscriptions: Subscription[] = []; // subscriptions to be freed up on destroy
 
   constructor(
@@ -115,6 +117,17 @@ export class ItemByIdComponent implements OnDestroy {
   ngOnDestroy(): void {
     this.currentContent.clear();
     this.subscriptions.forEach(s => s.unsubscribe());
+    this.scoreSubscription?.unsubscribe();
+  }
+
+  onActivate(elementRef: ItemByIdComponent | unknown): void {
+    this.scoreSubscription?.unsubscribe();
+    if (elementRef instanceof ItemDetailsComponent) {
+      this.scoreSubscription = elementRef.scoreChange.subscribe(score => this.updateCurrentContentScore(score));
+    }
+  }
+  onDeactivate(): void {
+    this.scoreSubscription?.unsubscribe();
   }
 
   reloadContent(): void {
@@ -161,6 +174,29 @@ export class ItemByIdComponent implements OnDestroy {
         this.state = errorState(err);
       }
     });
+  }
+
+  private updateCurrentContentScore(currentScore: number): void {
+    const content = this.currentContent.current();
+    if (!content) throw new Error('unexpected: no content to update');
+    if (!isItemInfo(content)) throw new Error('unexpected: content is not item info');
+
+    const bestScore = Math.max(content.score?.bestScore ?? 0, currentScore);
+    const isValidated = bestScore === 100;
+    this.currentContent.replace(itemInfo({
+      ...content,
+      details: content.details ? {
+        ...content.details,
+        bestScore,
+        currentScore,
+        validated: isValidated,
+      } : undefined,
+      score: {
+        bestScore,
+        currentScore,
+        isValidated,
+      },
+    }));
   }
 
 }

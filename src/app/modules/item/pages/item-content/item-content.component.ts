@@ -14,6 +14,7 @@ export class ItemContentComponent implements OnChanges {
 
   @Output() taskTabsChange = new EventEmitter<TaskTab[]>();
   @Output() taskViewChange = new EventEmitter<TaskTab['view']>();
+  @Output() scoreChange = new EventEmitter<number>();
 
   attemptId?: string;
 

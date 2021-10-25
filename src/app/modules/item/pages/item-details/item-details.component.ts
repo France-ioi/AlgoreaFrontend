@@ -1,4 +1,4 @@
-import { Component, OnDestroy, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, Output, ViewChild } from '@angular/core';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
 import { canCurrentUserViewItemContent } from '../../helpers/item-permissions';
 import { ItemDataSource } from '../../services/item-datasource.service';
@@ -17,6 +17,7 @@ import { isItemInfo } from 'src/app/shared/models/content/item-info';
 })
 export class ItemDetailsComponent implements OnDestroy {
   @ViewChild('progressTab') progressTab?: RouterLinkActive;
+  @Output() scoreChange = new EventEmitter<number>();
 
   itemLoadingState$ = this.itemDataSource.state$.pipe(
     mapStateData(data => ({ ...data, showAccessCodeField: data.item.promptToJoinGroupByCode &&
