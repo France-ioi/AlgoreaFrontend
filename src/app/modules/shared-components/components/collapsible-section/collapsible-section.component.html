@@ -14,7 +14,7 @@
     </span>
   </div>
   <ng-container
-    *ngIf="contentTemplate && !collapsed"
+    *ngIf="contentTemplate && (!collapsed || !collapsible)"
     [ngTemplateOutlet]="contentTemplate"
     [ngTemplateOutletContext]="{ $implicit: false }"
   ></ng-container>
