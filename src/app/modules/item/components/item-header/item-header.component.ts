@@ -1,7 +1,6 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { ActivityNavTreeService, SkillNavTreeService } from 'src/app/core/services/navigation/item-nav-tree.service';
 import { isASkill } from 'src/app/shared/helpers/item-type';
-import { ItemInfo } from 'src/app/shared/models/content/item-info';
 import { ModeAction, ModeService } from 'src/app/shared/services/mode.service';
 import { ItemData } from '../../services/item-datasource.service';
 
@@ -12,7 +11,6 @@ import { ItemData } from '../../services/item-datasource.service';
 })
 export class ItemHeaderComponent implements OnChanges {
   @Input() itemData?: ItemData;
-  @Input() score?: ItemInfo['score'];
 
   private activityNavigationNeighbors$ = this.activityNavTreeService.navigationNeighbors$;
   private skillNavigationNeighbors$ = this.skillNavTreeService.navigationNeighbors$;
