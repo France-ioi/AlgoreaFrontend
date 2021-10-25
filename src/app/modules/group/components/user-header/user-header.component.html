@@ -17,7 +17,7 @@
   <alg-page-navigator
     *ngIf="true"
     [allowEditing]="false"
-    [allowWatching]="user.currentUserCanWatchUser && !user.isCurrentUser"
+    [allowWatching]="!!user.currentUserCanWatchUser && !user.isCurrentUser"
     [isWatched]="!!(isCurrentGroupWatched$ | async)"
     [allowFullScreen]="false"
     (edit)="onEditButtonClicked()"
