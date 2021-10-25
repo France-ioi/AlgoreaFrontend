@@ -12,13 +12,13 @@ import { ItemData } from '../../services/item-datasource.service';
 export class ItemHeaderComponent implements OnChanges {
   @Input() itemData?: ItemData;
 
-  private activityNavigationNeighbors$ = this.activitiyNavTreeService.navigationNeighbors$;
+  private activityNavigationNeighbors$ = this.activityNavTreeService.navigationNeighbors$;
   private skillNavigationNeighbors$ = this.skillNavTreeService.navigationNeighbors$;
   navigationNeighbors$ = this.activityNavigationNeighbors$;
 
   constructor(
     private modeService: ModeService,
-    private activitiyNavTreeService: ActivityNavTreeService,
+    private activityNavTreeService: ActivityNavTreeService,
     private skillNavTreeService: SkillNavTreeService,
   ) {}
 
