@@ -5,6 +5,7 @@ import { Observable, of } from 'rxjs';
 import { CurrentContentService } from '../../../shared/services/current-content.service';
 import { delay, switchMap } from 'rxjs/operators';
 import { ActivityNavTreeService, SkillNavTreeService } from '../../services/navigation/item-nav-tree.service';
+import { isItemInfo } from '../../../shared/models/content/item-info';
 
 @Component({
   selector: 'alg-content-top-bar',
@@ -23,7 +24,7 @@ export class ContentTopBarComponent {
 
   navigationNeighbors$ = this.currentContent.content$.pipe(
     switchMap(content => {
-      if (content?.type !== 'item' || !content.route?.contentType) {
+      if (!isItemInfo(content) || !content.route?.contentType) {
         return of(undefined);
       }
 
