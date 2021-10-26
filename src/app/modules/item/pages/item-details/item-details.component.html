@@ -49,7 +49,8 @@
     </nav>
     <div class="bg-white">
       <alg-item-content
-        *ngIf="contentTab.isActive"
+        *ngIf="contentTab.isActive || taskTabs.length > 0"
+        [hidden]="!contentTab.isActive"
         [itemData]="itemData"
         [(taskView)]="taskView"
         (taskTabsChange)="setTaskTabs($event)"
