@@ -1,29 +1,29 @@
-import { Injectable } from '@angular/core';
-import { Message, MessageService } from 'primeng/api';
-import { animationFrames } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { Injectable, OnDestroy } from '@angular/core';
+import { MessageService } from 'primeng/api';
 import { SECONDS } from '../helpers/duration';
 
 const DISPLAY_DURATION = 5*SECONDS;
 interface FeedbackOptions {
   life?: number,
-  key?: string,
 }
-type Feedback = Message & { key: string };
 
 @Injectable({
   providedIn: 'root'
 })
-export class ActionFeedbackService {
-  readonly feedbacks: Feedback[] = [];
+export class ActionFeedbackService implements OnDestroy {
+  hasFeedback = false;
+
+  private subscriptions = [
+    this.messageService.clearObserver.subscribe(() => (this.hasFeedback = false)),
+    this.messageService.messageObserver.subscribe(() => (this.hasFeedback = true)),
+  ];
 
   constructor(
     private messageService: MessageService,
-  ) {
-    this.messageService.clearObserver.subscribe(cleared => {
-      const index = this.feedbacks.findIndex(({ key }) => key === cleared);
-      if (index > -1) this.feedbacks.splice(index, 1);
-    });
+  ) {}
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
   error(txt: string, options?: FeedbackOptions): void {
@@ -46,30 +46,8 @@ export class ActionFeedbackService {
     this.messageService.clear(key);
   }
 
-  hasFeedback(key: string): boolean {
-    return this.feedbacks.some(feedback => feedback.key === key);
-  }
-
   private message(severity: 'success'|'info'|'warn'|'error', summary: string, detail: string, options?: FeedbackOptions): void {
-    const key = options?.key ?? this.createKey();
-    if (this.keyExists(key)) throw new Error(`key "${key}" already exists, pick another one`);
-    const life = options?.life ?? DISPLAY_DURATION;
-    const feedback = { severity, summary, detail, key, life };
-    this.feedbacks.push(feedback);
-
-    // Wait for app to render toast in the DOM
-    animationFrames().pipe(take(1)).subscribe(() => {
-      this.messageService.add(feedback);
-    });
-  }
-
-  private keyExists(key: string): boolean {
-    return this.feedbacks.some(feedback => feedback.key === key);
-  }
-
-  private createKey(): string {
-    const key = `feedback-${Math.floor(Math.random() * 1000000)}`
-    return this.keyExists(key) ? this.createKey() : key
+    this.messageService.add({ severity, summary, detail, life: DISPLAY_DURATION, ...options });
   }
 
 }
