@@ -32,7 +32,9 @@ export class ItemTaskAnswerService implements OnDestroy {
   private taskToken$ = this.taskInitService.taskToken$.pipe(takeUntil(this.error$));
 
   private initialAnswer$: Observable<Answer | null> = this.config$.pipe(
-    switchMap(({ route, attemptId }) => this.currentAnswerService.get(route.id, attemptId)),
+    switchMap(({ route, attemptId, shouldReloadAnswer }) => (
+      shouldReloadAnswer ? this.currentAnswerService.get(route.id, attemptId) : of(null)
+    )),
     catchError(error => {
       // currently, the backend returns a 403 status when no current answer exist for user+item+attempt
       if (errorIsHTTPForbidden(error)) return of(null);

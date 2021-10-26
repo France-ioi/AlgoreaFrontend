@@ -7,6 +7,7 @@ import { ActivityNavTreeService } from 'src/app/core/services/navigation/item-na
 import { openNewTab, replaceWindowUrl } from 'src/app/shared/helpers/url';
 import { FullItemRoute, itemRoute } from 'src/app/shared/routing/item-route';
 import { ItemRouter } from 'src/app/shared/routing/item-router';
+import { Mode, ModeService } from 'src/app/shared/services/mode.service';
 import { Task, TaskPlatform } from '../task-communication/task-proxy';
 import { ItemTaskAnswerService } from './item-task-answer.service';
 import { ItemTaskInitService } from './item-task-init.service';
@@ -43,10 +44,12 @@ export class ItemTaskService {
     private activityNavTreeService: ActivityNavTreeService,
     private router: Router,
     private localeService: LocaleService,
+    private modeService: ModeService,
   ) {}
 
   configure(route: FullItemRoute, url: string, attemptId: string): void {
-    this.initService.configure(route, url, attemptId);
+    const shouldReloadAnswer = this.modeService.mode$.value !== Mode.Watching;
+    this.initService.configure(route, url, attemptId, shouldReloadAnswer);
   }
 
   initTask(iframe: HTMLIFrameElement): void {
@@ -60,7 +63,14 @@ export class ItemTaskService {
   private bindPlatform(task: Task): void {
     const platform: TaskPlatform = {
       validate: mode => this.validate(mode).pipe(mapTo(undefined)),
-      getTaskParams: () => ({ minScore: 0, maxScore: 100, randomSeed: 0, noScore: 0, readOnly: false, options: {} }),
+      getTaskParams: () => ({
+        minScore: 0,
+        maxScore: 100,
+        randomSeed: 0,
+        noScore: 0,
+        readOnly: this.modeService.mode$.value === Mode.Watching,
+        options: {},
+      }),
       updateHeight: height => platform.updateDisplay({ height }),
       updateDisplay: display => this.viewsService.updateDisplay(display),
       showView: view => this.viewsService.showView(view),

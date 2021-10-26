@@ -14,6 +14,7 @@ export interface ItemTaskConfig {
   route: FullItemRoute,
   url: string,
   attemptId: string,
+  shouldReloadAnswer: boolean,
 }
 
 @Injectable()
@@ -69,11 +70,11 @@ export class ItemTaskInitService implements OnDestroy {
     if (!this.configFromIframe$.closed) this.configFromIframe$.complete();
   }
 
-  configure(route: FullItemRoute, url: string, attemptId: string): void {
+  configure(route: FullItemRoute, url: string, attemptId: string, shouldReloadAnswer = true): void {
     if (this.configured) throw new Error('task init service can be configured once only');
     this.configured = true;
 
-    this.configFromItem$.next({ route, url, attemptId });
+    this.configFromItem$.next({ route, url, attemptId, shouldReloadAnswer });
     this.configFromItem$.complete();
   }
 
