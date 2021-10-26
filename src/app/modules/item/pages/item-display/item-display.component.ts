@@ -1,4 +1,15 @@
-import { AfterViewChecked, Component, ElementRef, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import {
+  AfterViewChecked,
+  Component,
+  ElementRef,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
 import { interval, merge, Observable } from 'rxjs';
 import { filter, map, pairwise, startWith, switchMap } from 'rxjs/operators';
 import { HOURS, SECONDS } from 'src/app/shared/helpers/duration';
@@ -29,7 +40,7 @@ export interface TaskTab {
   styleUrls: [ './item-display.component.scss' ],
   providers: [ ItemTaskService, ItemTaskInitService, ItemTaskAnswerService, ItemTaskViewsService ],
 })
-export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges {
+export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges, OnDestroy {
   @Input() route!: FullItemRoute;
   @Input() url!: string;
   @Input() canEdit: PermissionsInfo['canEdit'] = 'none';
@@ -100,6 +111,10 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
     if (changes.attemptId && !changes.attemptId.firstChange) {
       throw new Error('this component does not support changing its attemptId input');
     }
+  }
+
+  ngOnDestroy(): void {
+    if (this.actionFeedbackService.hasFeedback) this.actionFeedbackService.clear();
   }
 
   private getTabNameByView(view: string): string {
