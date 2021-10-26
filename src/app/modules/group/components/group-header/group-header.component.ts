@@ -7,6 +7,7 @@ import { map } from 'rxjs/operators';
 import { OverlayPanel } from 'primeng/overlaypanel';
 import { GroupData } from '../../services/group-datasource.service';
 import { ReplaySubject, combineLatest } from 'rxjs';
+import { GroupNavTreeService } from '../../../../core/services/navigation/group-nav-tree.service';
 
 @Component({
   selector: 'alg-group-header',
@@ -25,9 +26,12 @@ export class GroupHeaderComponent implements OnChanges, OnDestroy {
     map(([ watchedGroup, group ]) => !!(watchedGroup && watchedGroup.route.id === group.id)),
   );
 
+  navigationNeighbors$ = this.groupNavTreeService.navigationNeighbors$;
+
   constructor(
     private modeService: ModeService,
     private userSessionService: UserSessionService,
+    private groupNavTreeService: GroupNavTreeService,
   ) {}
 
   ngOnChanges(): void {
