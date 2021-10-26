@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { ModeAction, ModeService } from '../shared/services/mode.service';
 import { LocaleService } from './services/localeService';
 import { LayoutService } from '../shared/services/layout.service';
+import { ActionFeedbackService } from '../shared/services/action-feedback.service';
 
 @Component({
   selector: 'alg-root',
@@ -27,6 +28,8 @@ export class AppComponent implements OnInit, OnDestroy {
   contentFooter$ = this.layoutService.contentFooter$;
   scrolled = false;
 
+  readonly toasts = this.actionFeedbackService.feedbacks;
+
   private subscription?: Subscription;
 
   constructor(
@@ -37,6 +40,7 @@ export class AppComponent implements OnInit, OnDestroy {
     private localeService: LocaleService,
     private layoutService: LayoutService,
     private ngZone: NgZone,
+    private actionFeedbackService: ActionFeedbackService,
   ) {}
 
   ngOnInit(): void {
