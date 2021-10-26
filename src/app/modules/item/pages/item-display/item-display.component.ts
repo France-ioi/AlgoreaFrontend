@@ -65,16 +65,18 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
   ngOnInit(): void {
     this.taskService.configure(this.route, this.url, this.attemptId);
     this.taskService.showView(this.view ?? 'task');
+
     this.taskService.saveAnswerAndStateInterval$
       .pipe(startWith({ success: true }), pairwise())
       .subscribe(([ previous, next ]) => {
-        this.actionFeedbackService.hide();
-        if (!next.success) {
+        const shouldDisplayError = !next.success && !this.actionFeedbackService.hasFeedback;
+        const shouldDisplaySuccess = !previous.success && next.success;
+        if (shouldDisplayError) {
           const message = $localize`Your current progress could not have been saved. Are you connected to the internet ?`;
           this.actionFeedbackService.error(message, { life: 24*HOURS });
-          return;
         }
-        if (!previous.success && next.success) {
+        if (shouldDisplaySuccess) {
+          this.actionFeedbackService.clear();
           this.actionFeedbackService.success($localize`Progress saved!`);
         }
       });
