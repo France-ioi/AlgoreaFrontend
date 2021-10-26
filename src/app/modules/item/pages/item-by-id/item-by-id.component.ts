@@ -1,7 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, ParamMap, UrlTree } from '@angular/router';
 import { of, Subscription } from 'rxjs';
-import { filter, map, switchMap } from 'rxjs/operators';
+import { distinctUntilChanged, filter, map, pairwise, switchMap } from 'rxjs/operators';
 import { defaultAttemptId } from 'src/app/shared/helpers/attempts';
 import { appDefaultItemRoute } from 'src/app/shared/routing/item-route';
 import { errorState, fetchingState, FetchState } from 'src/app/shared/helpers/state';
@@ -13,7 +13,7 @@ import { ItemDataSource, ItemData } from '../../services/item-datasource.service
 import { errorHasTag, errorIsHTTPForbidden } from 'src/app/shared/helpers/errors';
 import { ItemRouter } from 'src/app/shared/routing/item-router';
 import { ItemTypeCategory } from 'src/app/shared/helpers/item-type';
-import { ModeAction, ModeService } from 'src/app/shared/services/mode.service';
+import { Mode, ModeAction, ModeService } from 'src/app/shared/services/mode.service';
 import { isItemInfo, itemInfo } from 'src/app/shared/models/content/item-info';
 import { repeatLatestWhen } from 'src/app/shared/helpers/repeatLatestWhen';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
@@ -109,6 +109,13 @@ export class ItemByIdComponent implements OnDestroy {
         if (!isItemInfo(current)) throw new Error('Unexpected: in item-by-id but the current content is not an item');
         this.itemRouter.navigateTo(current.route, { page: action === ModeAction.StartEditing ? 'edit' : 'details' });
       }),
+
+      this.modeService.mode$.pipe(
+        distinctUntilChanged(),
+        filter(mode => [ Mode.Normal, Mode.Watching ].includes(mode)),
+        pairwise(),
+        filter(([ previous, current ]) => previous !== current),
+      ).subscribe(() => this.reloadContent()),
     );
   }
 
