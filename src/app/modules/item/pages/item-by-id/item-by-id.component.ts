@@ -125,7 +125,7 @@ export class ItemByIdComponent implements OnDestroy {
     this.scoreSubscription?.unsubscribe();
   }
 
-  onActivate(elementRef: ItemByIdComponent | unknown): void {
+  onActivate(elementRef: ItemDetailsComponent | unknown): void {
     this.scoreSubscription?.unsubscribe();
     this.scoreChange$.next(undefined);
     if (elementRef instanceof ItemDetailsComponent) {
