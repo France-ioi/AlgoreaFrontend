@@ -1,6 +1,6 @@
 <ng-container *ngIf="itemData">
   <ng-container *ngIf="itemData.item.permissions.canView !== 'info'; else notAllowToWatch">
-    <ng-container *ngIf="itemData.currentResult">
+    <ng-container *ngIf="itemData.currentResult; else noCurrentResult">
 
       <alg-section icon="fa fa-book" i18n-label label="Description" *ngIf="itemData.item.string.description">
         <p>{{ itemData.item.string.description }} </p>
@@ -11,7 +11,7 @@
       <ng-container *ngIf="(itemData.item.type === 'Task' || itemData.item.type === 'Course')">
         <ng-container *ngIf="itemData.item.url; else noUrl">
           <alg-item-display
-            *ngIf="attemptId; else noAttemptId"
+            *ngIf="attemptId; else noCurrentResult"
             [route]="itemData.route"
             [canEdit]="itemData.item.permissions.canEdit"
             [url]="itemData.item.url"
@@ -22,17 +22,6 @@
             (tabsChange)="taskTabsChange.emit($event)"
             (scoreChange)="scoreChange.emit($event)"
           ></alg-item-display>
-
-          <ng-template #noAttemptId>
-            <p class="validation-text">
-              <span *ngIf="itemData.item.requiresExplicitEntry; else noRequiresExplicitEntry" i18n>
-                This activity requires explicit entry (not implemented).
-              </span>
-              <ng-template #noRequiresExplicitEntry>
-                <span i18n>Unable to start this activity, if the problem persists, please contact us.</span>
-              </ng-template>
-            </p>
-          </ng-template>
         </ng-container>
 
         <ng-template #noUrl>
@@ -63,6 +52,19 @@
       <ng-container *ngIf="itemData.item.type === 'Skill'">
         <span i18n>Your current access rights do not allow you to list the content of this skill.</span>
       </ng-container>
+    </p>
+  </ng-template>
+
+  <ng-template #noCurrentResult>
+    <p class="validation-text">
+      <span *ngIf="itemData.item.requiresExplicitEntry; else noRequiresExplicitEntry" i18n>
+        This activity requires explicit entry (not implemented).
+      </span>
+      <ng-template #noRequiresExplicitEntry>
+        <span i18n>
+          Starting the activity ... (if you are stuck on this message, please retry and contact us if the problem persists)
+        </span>
+      </ng-template>
     </p>
   </ng-template>
 </ng-container>
