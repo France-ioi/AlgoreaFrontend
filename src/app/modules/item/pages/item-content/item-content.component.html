@@ -24,8 +24,13 @@
           ></alg-item-display>
 
           <ng-template #noAttemptId>
-            <p class="validation-text" i18n>
-              {{ itemData.item.requiresExplicitEntry ? 'This activity requires explicit entry (not implemented).' : 'Unable to start this activity, if the problem persists, please contact us.' }}
+            <p class="validation-text">
+              <span *ngIf="itemData.item.requiresExplicitEntry; else noRequiresExplicitEntry" i18n>
+                This activity requires explicit entry (not implemented).
+              </span>
+              <ng-template #noRequiresExplicitEntry>
+                <span i18n>Unable to start this activity, if the problem persists, please contact us.</span>
+              </ng-template>
             </p>
           </ng-template>
         </ng-container>

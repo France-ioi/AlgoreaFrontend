@@ -65,7 +65,7 @@
         <source>Your current access rights do not allow you to list the content of this skill.</source><target state="new">Your current access rights do not allow you to list the content of this skill.</target>
         
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-nav-tree/left-nav-tree.component.html</context><context context-type="linenumber">138</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-content/item-content.component.html</context><context context-type="linenumber">57</context></context-group></trans-unit><trans-unit id="187187500641108332" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-nav-tree/left-nav-tree.component.html</context><context context-type="linenumber">138</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-content/item-content.component.html</context><context context-type="linenumber">62</context></context-group></trans-unit><trans-unit id="187187500641108332" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ 'Your current access rights do not allow you to list the content of this chapter.' }}"/></source><target state="new"><x id="INTERPOLATION" equiv-text="{{ node.data.element.currentUserManagership === 'descendant' ? 'You are a manager of one of the descendant of the group' : 'You are a manager of the group' }}"/></target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-nav-tree/left-nav-tree.component.html</context><context context-type="linenumber">59</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-nav-tree/left-nav-tree.component.html</context><context context-type="linenumber">184</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/member-list/member-list.component.html</context><context context-type="linenumber">100</context></context-group></trans-unit><trans-unit id="1298975301426242340" datatype="html">
@@ -75,7 +75,7 @@
         <source>Your current access rights do not allow you to start the activity.</source><target state="new">Your current access rights do not allow you to start the activity.</target>
         
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-nav-tree/left-nav-tree.component.html</context><context context-type="linenumber">239</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-content/item-content.component.html</context><context context-type="linenumber">53</context></context-group></trans-unit><trans-unit id="2309808536212982229" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-nav-tree/left-nav-tree.component.html</context><context context-type="linenumber">239</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-content/item-content.component.html</context><context context-type="linenumber">58</context></context-group></trans-unit><trans-unit id="2309808536212982229" datatype="html">
         <source>Activities</source><target state="translated">Activités</target>
 
         <note priority="1" from="description">Tab name</note>
@@ -676,7 +676,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/services/action-feedback.service.ts</context><context context-type="linenumber">28</context></context-group></trans-unit><trans-unit id="7708270344948043036" datatype="html">
         <source> <x id="INTERPOLATION" equiv-text="{{ item.type === 'Chapter' ? 'Only empty chapters can be deleted.' : 'Only empty skills can be deleted.' }}"/> </source><target state="new"> <x id="INTERPOLATION" equiv-text="{{ item.type === 'Chapter' ? 'Only empty chapters can be deleted.' : 'Only empty skills can be deleted.' }}"/> </target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-remove-button/item-remove-button.component.html</context><context context-type="linenumber">5</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-content/item-content.component.html</context><context context-type="linenumber">25</context></context-group></trans-unit><trans-unit id="5302971017875260731" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-remove-button/item-remove-button.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit><trans-unit id="5302971017875260731" datatype="html">
         <source>Only owner can delete items</source><target state="new">Only owner can delete items</target>
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-remove-button/item-remove-button.component.html</context><context context-type="linenumber">10</context></context-group></trans-unit><trans-unit id="970391649916938978" datatype="html">
@@ -744,22 +744,28 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-details/item-details.component.html</context><context context-type="linenumber">10</context></context-group></trans-unit><trans-unit id="6162691442834560200" datatype="html">
         <source>Items</source><target state="translated">Élements</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-by-id.component.ts</context><context context-type="linenumber">22</context></context-group></trans-unit><trans-unit id="5441429049165852521" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-by-id.component.ts</context><context context-type="linenumber">22</context></context-group></trans-unit><trans-unit id="2875135670849639672" datatype="html">
+        <source> This activity requires explicit entry (not implemented). </source><target state="new"> This activity requires explicit entry (not implemented). </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/pages/item-content/item-content.component.html</context>
+          <context context-type="linenumber">27,28</context>
+        </context-group>
+      </trans-unit><trans-unit id="3938091459009039294" datatype="html">
+        <source>Unable to start this activity, if the problem persists, please contact us.</source><target state="new">Unable to start this activity, if the problem persists, please contact us.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/pages/item-content/item-content.component.html</context>
+          <context context-type="linenumber">30</context>
+        </context-group>
+      </trans-unit><trans-unit id="5441429049165852521" datatype="html">
         <source> This activity has not been correctly configured. </source><target state="new"> This activity has not been correctly configured. </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/item/pages/item-content/item-content.component.html</context>
-          <context context-type="linenumber">33,34</context>
-        </context-group>
-      </trans-unit><trans-unit id="7327354999532189308" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-content/item-content.component.html</context><context context-type="linenumber">38</context></context-group></trans-unit><trans-unit id="7327354999532189308" datatype="html">
         <source> You need to set a url in editing mode. </source><target state="new"> You need to set a url in editing mode. </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/item/pages/item-content/item-content.component.html</context>
-          <context context-type="linenumber">36,37</context>
-        </context-group>
-      </trans-unit><trans-unit id="7493155057912125679" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-content/item-content.component.html</context><context context-type="linenumber">41</context></context-group></trans-unit><trans-unit id="7493155057912125679" datatype="html">
         <source>Your current access rights do not allow you to list the content of this chapter.</source><target state="new">Your current access rights do not allow you to list the content of this chapter.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-content/item-content.component.html</context><context context-type="linenumber">49</context></context-group></trans-unit><trans-unit id="6518315916537207134" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-content/item-content.component.html</context><context context-type="linenumber">54</context></context-group></trans-unit><trans-unit id="6518315916537207134" datatype="html">
         <source> home page </source><target state="translated"> page d'accueil </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-by-id.component.html</context>
