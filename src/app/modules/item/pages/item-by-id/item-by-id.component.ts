@@ -70,7 +70,7 @@ export class ItemByIdComponent implements OnDestroy {
           this.hasRedirected = false;
           const currentScore = newScore ?? state.data.currentResult?.score ?? 0;
           const bestScore = Math.max(state.data.item.bestScore, currentScore);
-          const isValidated = newScore ? bestScore === 100 : state.data.currentResult?.validated;
+          const isValidated = newScore ? newScore >= 100 : !!state.data.currentResult?.validated;
 
           this.currentContent.replace(itemInfo({
             breadcrumbs: {
@@ -92,7 +92,7 @@ export class ItemByIdComponent implements OnDestroy {
               currentScore,
               validated: isValidated,
             },
-            score: state.data.currentResult?.score !== undefined && isValidated !== undefined ? {
+            score: state.data.currentResult !== undefined || newScore !== undefined ? {
               bestScore,
               currentScore,
               isValidated,
