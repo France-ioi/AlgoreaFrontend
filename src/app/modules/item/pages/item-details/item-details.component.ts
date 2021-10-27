@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnDestroy, Output, ViewChild } from '@angular/core';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
 import { canCurrentUserViewItemContent } from '../../helpers/item-permissions';
 import { ItemDataSource } from '../../services/item-datasource.service';
