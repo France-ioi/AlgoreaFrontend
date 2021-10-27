@@ -39,7 +39,6 @@ export class ItemByIdComponent implements OnDestroy {
 
   readonly defaultItemRoute = this.itemRouter.url(appDefaultItemRoute).toString();
 
-  private scoreSubscription?: Subscription;
   private subscriptions: Subscription[] = []; // subscriptions to be freed up on destroy
 
   constructor(
@@ -116,7 +115,6 @@ export class ItemByIdComponent implements OnDestroy {
   ngOnDestroy(): void {
     this.currentContent.clear();
     this.subscriptions.forEach(s => s.unsubscribe());
-    this.scoreSubscription?.unsubscribe();
   }
 
   reloadContent(): void {
