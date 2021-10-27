@@ -33,7 +33,7 @@ export class ItemTaskService {
   readonly scoreChange$ = this.answerService.scoreChange$;
 
   private navigateToNext$ = this.activityNavTreeService.navigationNeighbors$.pipe(
-    map(neighborsState => (neighborsState.isReady ? neighborsState.data?.next?.navigateTo : undefined)),
+    map(neighborsState => (neighborsState.isReady ? (neighborsState.data?.next ?? neighborsState.data?.parent)?.navigateTo : undefined)),
     shareReplay(1),
   );
 
@@ -62,7 +62,7 @@ export class ItemTaskService {
   private bindPlatform(task: Task): void {
     const platform: TaskPlatform = {
       validate: mode => this.validate(mode).pipe(mapTo(undefined)),
-      getTaskParams: () => ({ minScore: -3, maxScore: 10, randomSeed: 0, noScore: 0, readOnly: false, options: {} }),
+      getTaskParams: () => ({ minScore: 0, maxScore: 100, randomSeed: 0, noScore: 0, readOnly: false, options: {} }),
       updateHeight: height => platform.updateDisplay({ height }),
       updateDisplay: display => this.viewsService.updateDisplay(display),
       showView: view => this.viewsService.showView(view),

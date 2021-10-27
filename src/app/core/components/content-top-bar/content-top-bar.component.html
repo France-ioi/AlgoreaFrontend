@@ -19,5 +19,17 @@
     <div class="right-pane-title">
       <p *ngIf="currentContent && currentContent.title">{{ currentContent.title }}</p>
     </div>
+    <alg-neighbor-widget
+      class="neighbor-widget"
+      *ngIf="navigationNeighbors$ | async as navigationNeighbors"
+      [navigationMode]="{
+        parent: !!navigationNeighbors?.isReady && !!navigationNeighbors?.data?.parent,
+        left: !!navigationNeighbors?.isReady && !!navigationNeighbors?.data?.previous,
+        right: !!navigationNeighbors?.isReady && !!navigationNeighbors?.data?.next
+      }"
+      (parent)="navigationNeighbors?.data?.parent?.navigateTo()"
+      (left)="navigationNeighbors?.data?.previous?.navigateTo()"
+      (right)="navigationNeighbors?.data?.next?.navigateTo()"
+    ></alg-neighbor-widget>
   </div>
 </ng-container>

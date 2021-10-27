@@ -1,9 +1,11 @@
 import { Component, Input } from '@angular/core';
 import { ModeAction, ModeService } from '../../../shared/services/mode.service';
 import { ContentInfo } from '../../../shared/models/content/content-info';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { CurrentContentService } from '../../../shared/services/current-content.service';
-import { delay } from 'rxjs/operators';
+import { delay, switchMap } from 'rxjs/operators';
+import { ActivityNavTreeService, SkillNavTreeService } from '../../services/navigation/item-nav-tree.service';
+import { isItemInfo } from '../../../shared/models/content/item-info';
 
 @Component({
   selector: 'alg-content-top-bar',
@@ -20,9 +22,23 @@ export class ContentTopBarComponent {
     delay(0),
   );
 
+  navigationNeighbors$ = this.currentContent.content$.pipe(
+    switchMap(content => {
+      if (!isItemInfo(content) || !content.route?.contentType) {
+        return of(undefined);
+      }
+
+      return content.route.contentType === 'activity' ?
+        this.activityNavTreeService.navigationNeighbors$ : this.skillNavTreeService.navigationNeighbors$;
+    }),
+  );
+
   constructor(
     private modeService: ModeService,
     private currentContentService: CurrentContentService,
+    private activityNavTreeService: ActivityNavTreeService,
+    private skillNavTreeService: SkillNavTreeService,
+    private currentContent: CurrentContentService,
   ) {
   }
 
