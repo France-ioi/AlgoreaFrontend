@@ -111,10 +111,8 @@ export class ItemByIdComponent implements OnDestroy {
       }),
 
       this.modeService.mode$.pipe(
-        distinctUntilChanged(),
         filter(mode => [ Mode.Normal, Mode.Watching ].includes(mode)),
-        pairwise(),
-        filter(([ previous, current ]) => previous !== current),
+        distinctUntilChanged(),
       ).subscribe(() => this.reloadContent()),
     );
   }
