@@ -1,11 +1,9 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { MessageService } from 'primeng/api';
+import { Message, MessageService } from 'primeng/api';
 import { SECONDS } from '../helpers/duration';
 
 const DISPLAY_DURATION = 5*SECONDS;
-interface FeedbackOptions {
-  life?: number,
-}
+type FeedbackOptions = Omit<Message, 'key' | 'detail' | 'severity'>;
 
 @Injectable({
   providedIn: 'root'
