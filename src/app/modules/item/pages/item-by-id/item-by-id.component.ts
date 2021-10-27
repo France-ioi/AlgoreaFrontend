@@ -1,7 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, ParamMap, UrlTree } from '@angular/router';
-import { combineLatest, of, Subject, Subscription } from 'rxjs';
-import { filter, map, startWith, switchMap } from 'rxjs/operators';
+import { of, Subject, Subscription } from 'rxjs';
+import { filter, map, switchMap } from 'rxjs/operators';
 import { defaultAttemptId } from 'src/app/shared/helpers/attempts';
 import { appDefaultItemRoute } from 'src/app/shared/routing/item-route';
 import { errorState, fetchingState, FetchState } from 'src/app/shared/helpers/state';
@@ -63,15 +63,11 @@ export class ItemByIdComponent implements OnDestroy {
     this.subscriptions.push(
 
       // on datasource state change, update current state and current content page info
-      combineLatest([ this.itemDataSource.state$, this.scoreChange$.pipe(startWith(undefined)) ]).subscribe(([ state, newScore ]) => {
+      this.itemDataSource.state$.subscribe(state => {
         this.state = state;
 
         if (state.isReady) {
           this.hasRedirected = false;
-          const currentScore = newScore ?? state.data.currentResult?.score ?? 0;
-          const bestScore = Math.max(state.data.item.bestScore, currentScore);
-          const isValidated = newScore ? newScore >= 100 : !!state.data.currentResult?.validated;
-
           this.currentContent.replace(itemInfo({
             breadcrumbs: {
               category: itemBreadcrumbCat,
@@ -88,14 +84,14 @@ export class ItemByIdComponent implements OnDestroy {
               title: state.data.item.string.title,
               type: state.data.item.type,
               attemptId: state.data.currentResult?.attemptId,
-              bestScore,
-              currentScore,
-              validated: isValidated,
+              bestScore: state.data.item.bestScore,
+              currentScore: state.data.currentResult?.score,
+              validated: state.data.currentResult?.validated,
             },
-            score: state.data.currentResult !== undefined || newScore !== undefined ? {
-              bestScore,
-              currentScore,
-              isValidated,
+            score: state.data.currentResult !== undefined ? {
+              bestScore: state.data.item.bestScore,
+              currentScore: state.data.currentResult.score,
+              isValidated: state.data.currentResult.validated,
             } : undefined,
           }));
 
