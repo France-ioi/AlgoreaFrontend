@@ -124,9 +124,9 @@ export class ItemDataSource implements OnDestroy {
 
   private patchState(state: FetchState<ItemData>, patch?: ItemDataPatch): FetchState<ItemData> {
     if (!state.isReady || !patch) return state;
-    const score = patch.score ?? state.data.currentResult?.score ?? 0;
+    const score = Math.max(patch.score ?? 0, state.data.currentResult?.score ?? 0);
     const bestScore = Math.max(state.data.item.bestScore, score);
-    const validated = patch.score ? patch.score >= 100 : !!state.data.currentResult?.validated;
+    const validated = !!((patch.score && patch.score >= 100) || state.data.currentResult?.validated);
     return {
       ...state,
       data: {
