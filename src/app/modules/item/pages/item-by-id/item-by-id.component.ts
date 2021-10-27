@@ -1,6 +1,6 @@
 import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, ParamMap, UrlTree } from '@angular/router';
-import { of, Subject, Subscription } from 'rxjs';
+import { of, Subscription } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
 import { defaultAttemptId } from 'src/app/shared/helpers/attempts';
 import { appDefaultItemRoute } from 'src/app/shared/routing/item-route';
@@ -18,7 +18,6 @@ import { isItemInfo, itemInfo } from 'src/app/shared/models/content/item-info';
 import { repeatLatestWhen } from 'src/app/shared/helpers/repeatLatestWhen';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
 import { isItemRouteError, itemRouteFromParams } from './item-route-validation';
-import { ItemDetailsComponent } from '../item-details/item-details.component';
 
 const itemBreadcrumbCat = $localize`Items`;
 
@@ -40,7 +39,6 @@ export class ItemByIdComponent implements OnDestroy {
 
   readonly defaultItemRoute = this.itemRouter.url(appDefaultItemRoute).toString();
 
-  private scoreChange$ = new Subject<number | undefined>(); // reinitialised to undefined when item id changes
   private scoreSubscription?: Subscription;
   private subscriptions: Subscription[] = []; // subscriptions to be freed up on destroy
 
@@ -119,18 +117,6 @@ export class ItemByIdComponent implements OnDestroy {
     this.currentContent.clear();
     this.subscriptions.forEach(s => s.unsubscribe());
     this.scoreSubscription?.unsubscribe();
-  }
-
-  onActivate(elementRef: ItemDetailsComponent | unknown): void {
-    this.scoreSubscription?.unsubscribe();
-    this.scoreChange$.next(undefined);
-    if (elementRef instanceof ItemDetailsComponent) {
-      this.scoreSubscription = elementRef.scoreChange.subscribe(score => this.scoreChange$.next(score));
-    }
-  }
-  onDeactivate(): void {
-    this.scoreSubscription?.unsubscribe();
-    this.scoreChange$.next(undefined);
   }
 
   reloadContent(): void {

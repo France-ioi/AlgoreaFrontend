@@ -1,5 +1,5 @@
 
-<router-outlet *ngIf="state.isReady" (activate)="onActivate($event)" (deactivate)="onDeactivate()"></router-outlet>
+<router-outlet *ngIf="state.isReady"></router-outlet>
 
 <alg-loading *ngIf="state.isFetching"></alg-loading>
 
