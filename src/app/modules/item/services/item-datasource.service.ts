@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { EMPTY, forkJoin, merge, Observable, of, ReplaySubject, Subject } from 'rxjs';
-import { combineLatestWith, map, shareReplay, startWith, switchMap } from 'rxjs/operators';
+import { combineLatestWith, map, scan, shareReplay, startWith, switchMap } from 'rxjs/operators';
 import { bestAttemptFromResults, implicitResultStart } from 'src/app/shared/helpers/attempts';
 import { isRouteWithSelfAttempt, FullItemRoute } from 'src/app/shared/routing/item-route';
 import { ResultActionsService } from 'src/app/shared/http-services/result-actions.service';
@@ -21,10 +21,6 @@ export interface ItemData {
   currentResult?: Result,
 }
 
-interface ItemDataPatch {
-  score?: number,
-}
-
 /**
  * A datasource which allows fetching a item using a proper state and sharing it among several components.
  * The only interactions with this class are:
@@ -36,19 +32,25 @@ export class ItemDataSource implements OnDestroy {
 
   private readonly fetchOperation$ = new ReplaySubject<FullItemRoute>(1); // trigger item fetching
   private readonly refresh$ = new Subject<void>();
-  private readonly itemDataPatch$ = new Subject<ItemDataPatch | undefined>();
+  private readonly scorePatch$ = new Subject<number | undefined>();
+  private readonly maxScorePatch$ = this.scorePatch$.pipe(
+    // Keep max score of all emitted scores **for current item**
+    // maxScorePatch is resetted to undefined at each refresh OR item change (see subscriptions below)
+    scan<number | undefined, number | undefined>((max, score) => (score ? Math.max(score, max ?? 0) : undefined), undefined),
+    startWith(undefined),
+  );
 
   /* state to put outputted */
   readonly state$ = this.fetchOperation$.pipe(
     switchMap(item => this.fetchItemData(item).pipe(mapToFetchState({ resetter: this.refresh$ }))),
-    combineLatestWith(this.itemDataPatch$.pipe(startWith(undefined))),
-    map(([ state, patch ]) => this.patchState(state, patch)),
+    combineLatestWith(this.maxScorePatch$.pipe(startWith(undefined))),
+    map(([ state, score ]) => this.patchScore(state, score)),
     shareReplay(1),
   );
 
   private subscriptions = [
     this.userSessionService.userChanged$.subscribe(_s => this.refreshItem()),
-    merge(this.fetchOperation$, this.refresh$).subscribe(() => this.itemDataPatch$.next(undefined)),
+    merge(this.fetchOperation$, this.refresh$).subscribe(() => this.scorePatch$.next(undefined)),
   ];
 
   constructor(
@@ -67,8 +69,8 @@ export class ItemDataSource implements OnDestroy {
     this.refresh$.next();
   }
 
-  patchItemData(patch: ItemDataPatch): void {
-    this.itemDataPatch$.next(patch);
+  patchItemScore(score: number): void {
+    this.scorePatch$.next(score);
   }
 
   ngOnDestroy(): void {
@@ -122,11 +124,11 @@ export class ItemDataSource implements OnDestroy {
     );
   }
 
-  private patchState(state: FetchState<ItemData>, patch?: ItemDataPatch): FetchState<ItemData> {
-    if (!state.isReady || !patch) return state;
-    const score = Math.max(patch.score ?? 0, state.data.currentResult?.score ?? 0);
+  private patchScore(state: FetchState<ItemData>, newScore?: number): FetchState<ItemData> {
+    if (!state.isReady || newScore === undefined) return state;
+    const score = Math.max(newScore ?? 0, state.data.currentResult?.score ?? 0);
     const bestScore = Math.max(state.data.item.bestScore, score);
-    const validated = !!((patch.score && patch.score >= 100) || state.data.currentResult?.validated);
+    const validated = newScore >= 100 || !!state.data.currentResult?.validated;
     return {
       ...state,
       data: {

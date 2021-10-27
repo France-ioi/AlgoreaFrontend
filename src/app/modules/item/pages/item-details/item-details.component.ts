@@ -50,7 +50,7 @@ export class ItemDetailsComponent implements OnDestroy {
   }
 
   patchStateWithScore(score: number): void {
-    this.itemDataSource.patchItemData({ score });
+    this.itemDataSource.patchItemScore(score);
   }
 
   setTaskTabs(taskTabs: TaskTab[]): void {
