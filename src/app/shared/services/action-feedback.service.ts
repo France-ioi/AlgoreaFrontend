@@ -42,8 +42,8 @@ export class ActionFeedbackService implements OnDestroy {
     this.message('success', $localize`Success`, txt, options);
   }
 
-  clear(key?: string): void {
-    this.messageService.clear(key);
+  clear(): void {
+    this.messageService.clear();
   }
 
   private message(severity: 'success'|'info'|'warn'|'error', summary: string, detail: string, options?: FeedbackOptions): void {
