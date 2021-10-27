@@ -66,6 +66,7 @@ export class ItemTaskAnswerService implements OnDestroy {
       mapTo({ success: true }),
       catchError(() => of({ success: false })),
     )),
+    shareReplay(1),
   );
 
   private subscriptions = [
