@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { EMPTY, forkJoin, Observable, of, ReplaySubject, Subject, Subscription } from 'rxjs';
-import { map, shareReplay, switchMap } from 'rxjs/operators';
+import { EMPTY, forkJoin, merge, Observable, of, ReplaySubject, Subject } from 'rxjs';
+import { combineLatestWith, map, shareReplay, startWith, switchMap } from 'rxjs/operators';
 import { bestAttemptFromResults, implicitResultStart } from 'src/app/shared/helpers/attempts';
 import { isRouteWithSelfAttempt, FullItemRoute } from 'src/app/shared/routing/item-route';
 import { ResultActionsService } from 'src/app/shared/http-services/result-actions.service';
@@ -11,6 +11,7 @@ import { GetResultsService, Result } from '../http-services/get-results.service'
 import { canCurrentUserViewItemContent } from 'src/app/modules/item/helpers/item-permissions';
 import { mapToFetchState } from 'src/app/shared/operators/state';
 import { buildUp } from 'src/app/shared/operators/build-up';
+import { FetchState } from 'src/app/shared/helpers/state';
 
 export interface ItemData {
   route: FullItemRoute,
@@ -18,6 +19,10 @@ export interface ItemData {
   breadcrumbs: BreadcrumbItem[],
   results?: Result[],
   currentResult?: Result,
+}
+
+interface ItemDataPatch {
+  score?: number,
 }
 
 /**
@@ -31,14 +36,20 @@ export class ItemDataSource implements OnDestroy {
 
   private readonly fetchOperation$ = new ReplaySubject<FullItemRoute>(1); // trigger item fetching
   private readonly refresh$ = new Subject<void>();
+  private readonly itemDataPatch$ = new Subject<ItemDataPatch | undefined>();
 
   /* state to put outputted */
   readonly state$ = this.fetchOperation$.pipe(
     switchMap(item => this.fetchItemData(item).pipe(mapToFetchState({ resetter: this.refresh$ }))),
+    combineLatestWith(this.itemDataPatch$.pipe(startWith(undefined))),
+    map(([ state, patch ]) => this.patchState(state, patch)),
     shareReplay(1),
   );
 
-  private subscription: Subscription;
+  private subscriptions = [
+    this.userSessionService.userChanged$.subscribe(_s => this.refreshItem()),
+    merge(this.fetchOperation$, this.refresh$).subscribe(() => this.itemDataPatch$.next(undefined)),
+  ];
 
   constructor(
     private getBreadcrumbService: GetBreadcrumbService,
@@ -46,9 +57,7 @@ export class ItemDataSource implements OnDestroy {
     private resultActionsService: ResultActionsService,
     private getResultsService: GetResultsService,
     private userSessionService: UserSessionService,
-  ) {
-    this.subscription = this.userSessionService.userChanged$.subscribe(_s => this.refreshItem());
-  }
+  ) {}
 
   fetchItem(item: FullItemRoute): void {
     this.fetchOperation$.next(item);
@@ -58,10 +67,14 @@ export class ItemDataSource implements OnDestroy {
     this.refresh$.next();
   }
 
+  patchItemData(patch: ItemDataPatch): void {
+    this.itemDataPatch$.next(patch);
+  }
+
   ngOnDestroy(): void {
     this.refresh$.complete();
     this.fetchOperation$.complete();
-    this.subscription.unsubscribe();
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
   /**
@@ -107,6 +120,21 @@ export class ItemDataSource implements OnDestroy {
         );
       }),
     );
+  }
+
+  private patchState(state: FetchState<ItemData>, patch?: ItemDataPatch): FetchState<ItemData> {
+    if (!state.isReady || !patch) return state;
+    const score = patch.score ?? state.data.currentResult?.score ?? 0;
+    const bestScore = Math.max(state.data.item.bestScore, score);
+    const validated = bestScore === 100;
+    return {
+      ...state,
+      data: {
+        ...state.data,
+        item: { ...state.data.item, bestScore },
+        currentResult: state.data.currentResult ? { ...state.data.currentResult, score, validated } : undefined,
+      },
+    };
   }
 
 }
