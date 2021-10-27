@@ -3,7 +3,7 @@ import { interval, merge, Observable } from 'rxjs';
 import { filter, map, startWith, switchMap } from 'rxjs/operators';
 import { SECONDS } from 'src/app/shared/helpers/duration';
 import { isNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
-import { ItemTaskService } from '../../services/item-task.service';
+import { ConfigureTaskOptions, ItemTaskService } from '../../services/item-task.service';
 import { mapToFetchState } from 'src/app/shared/operators/state';
 import { capitalize } from 'src/app/shared/helpers/case_conversion';
 import { ItemTaskInitService } from '../../services/item-task-init.service';
@@ -34,6 +34,7 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
   @Input() canEdit: PermissionsInfo['canEdit'] = 'none';
   @Input() attemptId!: string;
   @Input() view?: TaskTab['view'];
+  @Input() taskOptions: ConfigureTaskOptions = { readOnly: false, shouldReloadAnswer: true };
 
   @ViewChild('iframe') iframe?: ElementRef<HTMLIFrameElement>;
 
@@ -61,7 +62,7 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
   ) {}
 
   ngOnInit(): void {
-    this.taskService.configure(this.route, this.url, this.attemptId);
+    this.taskService.configure(this.route, this.url, this.attemptId, this.taskOptions);
     this.taskService.showView(this.view ?? 'task');
   }
 

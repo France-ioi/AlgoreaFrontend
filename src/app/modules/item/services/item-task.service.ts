@@ -7,11 +7,15 @@ import { ActivityNavTreeService } from 'src/app/core/services/navigation/item-na
 import { openNewTab, replaceWindowUrl } from 'src/app/shared/helpers/url';
 import { FullItemRoute, itemRoute } from 'src/app/shared/routing/item-route';
 import { ItemRouter } from 'src/app/shared/routing/item-router';
-import { Mode, ModeService } from 'src/app/shared/services/mode.service';
 import { Task, TaskPlatform } from '../task-communication/task-proxy';
 import { ItemTaskAnswerService } from './item-task-answer.service';
 import { ItemTaskInitService } from './item-task-init.service';
 import { ItemTaskViewsService } from './item-task-views.service';
+
+export interface ConfigureTaskOptions {
+  readOnly: boolean,
+  shouldReloadAnswer: boolean,
+}
 
 @Injectable()
 export class ItemTaskService {
@@ -36,6 +40,8 @@ export class ItemTaskService {
     shareReplay(1),
   );
 
+  private readOnly = false;
+
   constructor(
     private initService: ItemTaskInitService,
     private answerService: ItemTaskAnswerService,
@@ -44,12 +50,11 @@ export class ItemTaskService {
     private activityNavTreeService: ActivityNavTreeService,
     private router: Router,
     private localeService: LocaleService,
-    private modeService: ModeService,
   ) {}
 
-  configure(route: FullItemRoute, url: string, attemptId: string): void {
-    const shouldReloadAnswer = this.modeService.mode$.value !== Mode.Watching;
-    this.initService.configure(route, url, attemptId, shouldReloadAnswer);
+  configure(route: FullItemRoute, url: string, attemptId: string, options: ConfigureTaskOptions): void {
+    this.readOnly = options.readOnly;
+    this.initService.configure(route, url, attemptId, options.shouldReloadAnswer);
   }
 
   initTask(iframe: HTMLIFrameElement): void {
@@ -68,7 +73,7 @@ export class ItemTaskService {
         maxScore: 100,
         randomSeed: 0,
         noScore: 0,
-        readOnly: this.modeService.mode$.value === Mode.Watching,
+        readOnly: this.readOnly,
         options: {},
       }),
       updateHeight: height => platform.updateDisplay({ height }),
