@@ -15,7 +15,6 @@ import { map } from 'rxjs/operators';
 })
 export class ItemDetailsComponent implements OnDestroy {
   @ViewChild('progressTab') progressTab?: RouterLinkActive;
-  @Output() scoreChange = new EventEmitter<number>();
 
   itemData$ = this.itemDataSource.state$;
 
@@ -32,12 +31,9 @@ export class ItemDetailsComponent implements OnDestroy {
   readonly fullFrameContent$ = this.layoutService.fullFrameContent$;
   readonly watchedGroup$ = this.userService.watchedGroup$;
 
-  private subscriptions = [
-    this.itemDataSource.state$.subscribe(state => {
-      if (state.isFetching) this.taskTabs = []; // reset task tabs when item changes.
-    }),
-    this.scoreChange.subscribe(score => this.itemDataSource.patchItemData({ score })),
-  ];
+  private subscription = this.itemDataSource.state$.subscribe(state => {
+    if (state.isFetching) this.taskTabs = []; // reset task tabs when item changes.
+  });
 
   constructor(
     private userService: UserSessionService,
@@ -46,11 +42,15 @@ export class ItemDetailsComponent implements OnDestroy {
   ) {}
 
   ngOnDestroy(): void {
-    this.subscriptions.forEach(subscription => subscription.unsubscribe());
+    this.subscription.unsubscribe();
   }
 
   reloadItem(): void {
     this.itemDataSource.refreshItem();
+  }
+
+  patchStateWithScore(score: number): void {
+    this.itemDataSource.patchItemData({ score });
   }
 
   setTaskTabs(taskTabs: TaskTab[]): void {
