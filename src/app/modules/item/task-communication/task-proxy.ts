@@ -175,7 +175,16 @@ export class Task {
     return this.chan.call({
       method: 'task.getAnswer',
       timeout: 2000
-    }).pipe(map(([ answer ]) => decode(D.string)(answer)));
+    }).pipe(
+      // Receiving a `[]` result from a channel call is the  equivalent of a void function return
+      // Since getAnswer is not supposed to be void, we omit those results
+      // filter(result => result.length > 0),
+      map(([ answer ]) => {
+        console.info({ answer });
+        return decode(D.string)(answer);
+      }),
+      // retryWhen(errors => errors.pipe(delay(250))),
+    );
   }
 
   reloadAnswer(answer: string): Observable<unknown> {
@@ -190,7 +199,13 @@ export class Task {
     return this.chan.call({
       method: 'task.getState',
       timeout: 2000
-    }).pipe(map(([ state ]) => decode(D.string)(state)));
+    }).pipe(
+      map(([ state ]) => {
+        console.info({ state });
+        return decode(D.string)(state);
+      }),
+      // retryWhen(errors => errors.pipe(delay(250))),
+    );
   }
 
   reloadState(state: string): Observable<unknown> {

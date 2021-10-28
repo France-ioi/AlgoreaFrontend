@@ -58,9 +58,12 @@ export class ItemTaskAnswerService implements OnDestroy {
   );
 
   readonly saveAnswerAndStateInterval$ = this.task$.pipe(
-    delayWhen(() => combineLatest([ this.initializedTaskState$, this.initializedTaskAnswer$ ])),
+    delayWhen(() => combineLatest([
+      this.initializedTaskState$,
+      this.initializedTaskAnswer$,
+    ])),
     repeatLatestWhen(interval(answerAndStateSaveInterval)),
-    switchMap(task => forkJoin({ answer: task.getAnswer(), state: task.getState() })),
+    switchMap(task => forkJoin({ answer: task.getAnswer(), state: task.getState() })/*.pipe(catchError(() => EMPTY))*/),
     distinctUntilChanged((a, b) => a.answer === b.answer && a.state === b.state),
     skip(1), // avoid saving an answer right after fetching it
     withLatestFrom(this.config$),
