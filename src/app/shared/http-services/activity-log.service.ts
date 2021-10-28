@@ -26,6 +26,7 @@ const activityLogDecoder = pipe(
   }),
   D.intersect(
     D.partial({
+      answerId: D.string,
       score: D.number,
       user: pipe(
         D.struct({

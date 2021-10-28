@@ -100,12 +100,10 @@ export function itemCategoryFromPrefix(prefix: string): ItemTypeCategory|null {
 /**
  * Return a url array (`commands` array) to the given item, on the given page.
  */
-export function urlArrayForItemRoute(route: RawItemRoute, page: string|string[] = 'details', answerId?: AnswerId): UrlCommand {
+export function urlArrayForItemRoute(route: RawItemRoute, page: string|string[] = 'details', answerId = route.answerId): UrlCommand {
   const params = route.path ? pathAsParameter(route.path) : {};
   if (route.attemptId) params[attemptParamName] = route.attemptId;
   else if (route.parentAttemptId) params[parentAttemptParamName] = route.parentAttemptId;
-
-  answerId = answerId ?? route.answerId;
   if (answerId) params[answerParamName] = answerId;
 
   const prefix = route.contentType === 'activity' ? activityPrefix : skillPrefix;
