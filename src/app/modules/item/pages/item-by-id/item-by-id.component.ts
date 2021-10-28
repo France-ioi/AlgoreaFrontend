@@ -134,7 +134,7 @@ export class ItemByIdComponent implements OnDestroy {
     if (isItemRouteError(item)) {
       if (item.id) {
         this.state = fetchingState();
-        this.solveMissingPathAttempt(item.contentType, item.id, item.path);
+        this.solveMissingPathAttempt(item.contentType, item.id, item.path, item.answerId);
       } else this.state = errorState(new Error('No id in url'));
       return;
     }
@@ -148,16 +148,16 @@ export class ItemByIdComponent implements OnDestroy {
    * Called when either path or attempt is missing. Will fetch the path if missing, then will be fetch the attempt.
    * Will redirect when relevant data has been fetched.
    */
-  private solveMissingPathAttempt(contentType: ItemTypeCategory, id: string, path?: string[]): void {
+  private solveMissingPathAttempt(contentType: ItemTypeCategory, id: string, path?: string[], answerId?: string): void {
 
     const pathObservable = path ? of(path) : this.getItemPathService.getItemPath(id);
     pathObservable.pipe(
       switchMap(path => {
         // for empty path (root items), consider the item has a (fake) parent attempt id 0
-        if (path.length === 0) return of({ contentType: contentType, id: id, path: path, parentAttemptId: defaultAttemptId });
+        if (path.length === 0) return of({ contentType, id, path, parentAttemptId: defaultAttemptId, answerId });
         // else, will start all path but the current item
         return this.resultActionsService.startWithoutAttempt(path).pipe(
-          map(attemptId => ({ contentType: contentType, id: id, path: path, parentAttemptId: attemptId }))
+          map(attemptId => ({ contentType, id, path, parentAttemptId: attemptId, answerId }))
         );
       })
     ).subscribe({
