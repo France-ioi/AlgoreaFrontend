@@ -15,13 +15,15 @@ interface ItemRouteError {
 export function itemRouteFromParams(prefix: string, params: ParamMap): FullItemRoute|ItemRouteError {
   const cat = itemCategoryFromPrefix(prefix);
   if (cat === null) throw new Error('Unexpected item path prefix');
-  const { id, path, attemptId, parentAttemptId } = decodeItemRouterParameters(params);
+  const { id, path, attemptId, parentAttemptId, answerId } = decodeItemRouterParameters(params);
 
   if (!id) return { contentType: cat, tag: 'error', id: undefined }; // null or empty
   if (path === null) return { contentType: cat, tag: 'error', id: id };
   const pathList = path === '' ? [] : path.split(',');
-  if (attemptId) return { contentType: cat, id: id, path: pathList, attemptId: attemptId }; // not null nor empty
-  if (parentAttemptId) return { contentType: cat, id: id, path: pathList, parentAttemptId: parentAttemptId }; // not null nor empty
+  if (attemptId) return { contentType: cat, id: id, path: pathList, attemptId, answerId: answerId ?? undefined }; // not null nor empty
+  if (parentAttemptId) {
+    return { contentType: cat, id: id, path: pathList, parentAttemptId, answerId: answerId ?? undefined }; // not null nor empty
+  }
   return { contentType: cat, tag: 'error', id: id, path: pathList };
 }
 

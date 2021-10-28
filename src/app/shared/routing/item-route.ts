@@ -11,10 +11,12 @@ const activityPrefix = 'activities';
 const skillPrefix = 'skills';
 const parentAttemptParamName = 'parentAttempId';
 const attemptParamName = 'attempId';
+const answerParamName = 'answerId';
 
 // alias for better readibility
 type ItemId = string;
 type AttemptId = string;
+type AnswerId = string;
 
 /* **********************************************************************************************************
  * Item Route: Object storing information required to navigate to an item without need for fetching a path
@@ -30,6 +32,7 @@ export interface ItemRoute extends ContentRoute {
   contentType: ItemTypeCategory,
   attemptId?: AttemptId,
   parentAttemptId?: AttemptId,
+  answerId?: AnswerId,
 }
 type ItemRouteWithSelfAttempt = ItemRoute & { attemptId: AttemptId };
 type ItemRouteWithParentAttempt = ItemRoute & { parentAttemptId: AttemptId };
@@ -71,12 +74,14 @@ export function decodeItemRouterParameters(params: ParamMap): {
   path: string|null,
   attemptId: string|null,
   parentAttemptId: string|null,
+  answerId: string|null,
 } {
   return {
     id: params.get('id'),
     path: pathFromRouterParameters(params),
     attemptId: params.get(attemptParamName),
-    parentAttemptId: params.get(parentAttemptParamName)
+    parentAttemptId: params.get(parentAttemptParamName),
+    answerId: params.get(answerParamName),
   };
 }
 
@@ -95,10 +100,13 @@ export function itemCategoryFromPrefix(prefix: string): ItemTypeCategory|null {
 /**
  * Return a url array (`commands` array) to the given item, on the given page.
  */
-export function urlArrayForItemRoute(route: RawItemRoute, page: string|string[] = 'details'): UrlCommand {
+export function urlArrayForItemRoute(route: RawItemRoute, page: string|string[] = 'details', answerId?: AnswerId): UrlCommand {
   const params = route.path ? pathAsParameter(route.path) : {};
   if (route.attemptId) params[attemptParamName] = route.attemptId;
   else if (route.parentAttemptId) params[parentAttemptParamName] = route.parentAttemptId;
+
+  answerId = answerId ?? route.answerId;
+  if (answerId) params[answerParamName] = answerId;
 
   const prefix = route.contentType === 'activity' ? activityPrefix : skillPrefix;
   const pagePath = isString(page) ? [ page ] : page;
