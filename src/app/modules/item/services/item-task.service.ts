@@ -43,6 +43,7 @@ export class ItemTaskService {
   );
 
   private readOnly = false;
+  private attemptId?: string;
 
   constructor(
     private initService: ItemTaskInitService,
@@ -56,6 +57,7 @@ export class ItemTaskService {
 
   configure(route: FullItemRoute, url: string, attemptId: string, options: ConfigureTaskOptions): void {
     this.readOnly = options.readOnly;
+    this.attemptId = attemptId;
     this.initService.configure(route, url, attemptId, options.shouldReloadAnswer);
   }
 
@@ -68,12 +70,16 @@ export class ItemTaskService {
   }
 
   private bindPlatform(task: Task): void {
+    if (!this.attemptId) throw new Error('attemptId must be defined');
+    const randomSeed = Number(this.attemptId);
+    if (Number.isNaN(randomSeed)) throw new Error('random seed must be a number');
+
     const platform: TaskPlatform = {
       validate: mode => this.validate(mode).pipe(mapTo(undefined)),
       getTaskParams: () => ({
         minScore: 0,
         maxScore: 100,
-        randomSeed: 0,
+        randomSeed,
         noScore: 0,
         readOnly: this.readOnly,
         options: {},
