@@ -12,6 +12,11 @@ import { ItemTaskAnswerService } from './item-task-answer.service';
 import { ItemTaskInitService } from './item-task-init.service';
 import { ItemTaskViewsService } from './item-task-views.service';
 
+export interface ConfigureTaskOptions {
+  readOnly: boolean,
+  shouldReloadAnswer: boolean,
+}
+
 @Injectable()
 export class ItemTaskService {
   readonly unknownError$ = merge(this.answerService.error$, this.viewsService.error$).pipe(shareReplay(1));
@@ -35,6 +40,8 @@ export class ItemTaskService {
     shareReplay(1),
   );
 
+  private readOnly = false;
+
   constructor(
     private initService: ItemTaskInitService,
     private answerService: ItemTaskAnswerService,
@@ -45,8 +52,9 @@ export class ItemTaskService {
     private localeService: LocaleService,
   ) {}
 
-  configure(route: FullItemRoute, url: string, attemptId: string): void {
-    this.initService.configure(route, url, attemptId);
+  configure(route: FullItemRoute, url: string, attemptId: string, options: ConfigureTaskOptions): void {
+    this.readOnly = options.readOnly;
+    this.initService.configure(route, url, attemptId, options.shouldReloadAnswer);
   }
 
   initTask(iframe: HTMLIFrameElement): void {
@@ -60,7 +68,14 @@ export class ItemTaskService {
   private bindPlatform(task: Task): void {
     const platform: TaskPlatform = {
       validate: mode => this.validate(mode).pipe(mapTo(undefined)),
-      getTaskParams: () => ({ minScore: 0, maxScore: 100, randomSeed: 0, noScore: 0, readOnly: false, options: {} }),
+      getTaskParams: () => ({
+        minScore: 0,
+        maxScore: 100,
+        randomSeed: 0,
+        noScore: 0,
+        readOnly: this.readOnly,
+        options: {},
+      }),
       updateHeight: height => platform.updateDisplay({ height }),
       updateDisplay: display => this.viewsService.updateDisplay(display),
       showView: view => this.viewsService.showView(view),
