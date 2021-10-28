@@ -61,7 +61,7 @@
       <alg-item-progress
         *ngIf="progressTab?.isActive || !!(watchedGroup$ | async) && !contentTab.isActive"
         [itemData]="itemData"
-        [showSubmissionLoadLinks]="(showSubmissionLoadLinks$ | async) ?? false"
+        [enableLoadSubmission]="(enableLoadSubmission$ | async) ?? false"
       ></alg-item-progress>
     </div>
 

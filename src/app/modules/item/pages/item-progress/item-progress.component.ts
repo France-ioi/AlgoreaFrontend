@@ -12,7 +12,7 @@ import { ItemType } from '../../../../shared/helpers/item-type';
 export class ItemProgressComponent implements OnChanges {
 
   @Input() itemData?: ItemData;
-  @Input() showSubmissionLoadLinks = false;
+  @Input() enableLoadSubmission = false;
 
   @ViewChild('historyTab') historyTab?: RouterLinkActive;
   @ViewChild('chapterGroupProgressTab') chapterGroupProgressTab?: RouterLinkActive;

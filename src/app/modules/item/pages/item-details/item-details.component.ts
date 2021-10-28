@@ -34,7 +34,7 @@ export class ItemDetailsComponent implements OnDestroy {
     shouldReloadAnswer: mode === Mode.Normal,
   })));
 
-  readonly showSubmissionLoadLinks$ = this.modeService.mode$.pipe(map(mode => mode === Mode.Normal));
+  readonly enableLoadSubmission$ = this.modeService.mode$.pipe(map(mode => mode === Mode.Normal));
 
   private subscription = this.itemDataSource.state$.subscribe(state => {
     if (state.isFetching) this.taskTabs = []; // reset task tabs when item changes.
