@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { EMPTY, forkJoin, merge, Observable, of, ReplaySubject, Subject } from 'rxjs';
-import { combineLatestWith, map, scan, shareReplay, startWith, switchMap } from 'rxjs/operators';
+import { combineLatestWith, distinctUntilChanged, map, scan, shareReplay, startWith, switchMap } from 'rxjs/operators';
 import { bestAttemptFromResults, implicitResultStart } from 'src/app/shared/helpers/attempts';
 import { isRouteWithSelfAttempt, FullItemRoute } from 'src/app/shared/routing/item-route';
 import { ResultActionsService } from 'src/app/shared/http-services/result-actions.service';
@@ -38,6 +38,7 @@ export class ItemDataSource implements OnDestroy {
     // maxScorePatch is resetted to undefined at each refresh OR item change (see subscriptions below)
     scan<number | undefined, number | undefined>((max, score) => (score ? Math.max(score, max ?? 0) : undefined), undefined),
     startWith(undefined),
+    distinctUntilChanged(),
   );
 
   /* state to put outputted */
@@ -125,7 +126,7 @@ export class ItemDataSource implements OnDestroy {
   }
 
   private patchScore(state: FetchState<ItemData>, newScore?: number): FetchState<ItemData> {
-    if (!state.isReady || newScore === undefined) return state;
+    if (!state.data || newScore === undefined) return state;
     const score = Math.max(newScore ?? 0, state.data.currentResult?.score ?? 0);
     const bestScore = Math.max(state.data.item.bestScore, score);
     const validated = newScore >= 100 || !!state.data.currentResult?.validated;
