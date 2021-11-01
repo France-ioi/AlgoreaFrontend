@@ -20,6 +20,10 @@ export interface Environment {
   // To add a default/fallback language, use a config with path = "/" and place it at the end.
   languages: LanguageConfig[],
 
+  // Name for the website (on top of the left menu)
+  defaultTitle: string,
+  languageSpecificTitles?: { [key: string]: string },
+
   allowForcedToken: boolean, // for dev: allow devs to define 'forced_token' in storage so that this token is used in any case
   // The authType used with API is either 'tokens' or 'cookies'.
 
