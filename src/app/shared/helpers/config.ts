@@ -20,7 +20,7 @@ export interface Environment {
   // To add a default/fallback language, use a config with path = "/" and place it at the end.
   languages: LanguageConfig[],
 
-  // Name for the website (on top of the left menu)
+  // Name for the website (on top of the left menu and as html 'title')
   defaultTitle: string,
   languageSpecificTitles?: { [key: string]: string },
 

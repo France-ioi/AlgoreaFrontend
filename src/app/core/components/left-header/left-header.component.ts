@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { AuthService } from 'src/app/shared/auth/auth.service';
 import { LayoutService } from 'src/app/shared/services/layout.service';
-import { LocaleService } from '../../services/localeService';
 
 @Component({
   selector: 'alg-left-header',
@@ -13,12 +13,12 @@ export class LeftHeaderComponent {
   @Input() compactMode = false;
 
   showHeaders = true;
-  title = this.localeService.localizedTitle;
+  title = this.titleService.getTitle();
 
   constructor(
     private authService: AuthService,
     private layoutService: LayoutService,
-    private localeService: LocaleService,
+    private titleService: Title,
   ) { }
 
   setFullFrameContent(): void {
