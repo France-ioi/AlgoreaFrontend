@@ -12,6 +12,9 @@ export const environment: Environment = {
     { tag: 'fr', path: '/fr/' },
     { tag: 'en', path: '/en/' },
   ],
+  defaultTitle: 'Algorea Platform',
+  languageSpecificTitles: { fr: 'Plateforme Algoréa' },
+
   allowForcedToken: true,
   authType: 'cookies',
 
