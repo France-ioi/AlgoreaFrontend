@@ -34,8 +34,8 @@ export class ItemDataSource implements OnDestroy {
   private readonly refresh$ = new Subject<void>();
   private readonly scorePatch$ = new Subject<number | undefined>();
   private readonly maxScorePatch$ = this.scorePatch$.pipe(
-    // Keep max score of all emitted scores **for current item**
-    // maxScorePatch is resetted to undefined at each refresh (see subscriptions below)
+    // Keep max score of all emitted scores. NB: adding operators to a subject makes it COLD.
+    // Since it is cold, mean of max scores is ONLY computed for values emitted during the lifetime of the subscription
     scan<number | undefined, number | undefined>((max, score) => (score !== undefined ? Math.max(score, max ?? 0) : undefined), undefined),
     startWith(undefined),
     distinctUntilChanged(),
@@ -44,8 +44,8 @@ export class ItemDataSource implements OnDestroy {
   /* state to put outputted */
   readonly state$ = this.fetchOperation$.pipe(
     switchMap(item => this.fetchItemData(item).pipe(mapToFetchState({ resetter: this.refresh$ }))),
-    // maxScorePatch$ is a _new and cold_ observable. Switching to its values only _after_ we have an item is a way
-    // to ensure we only listen to score updates that match the current datasource item
+    // maxScorePatch is a cold observable, and switchMap operator acts a subscriber here
+    // so the max score patch is only valid for current item
     switchMap(state => this.maxScorePatch$.pipe(map(score => this.patchScore(state, score)))),
     shareReplay(1),
   );
