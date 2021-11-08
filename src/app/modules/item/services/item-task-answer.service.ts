@@ -35,7 +35,9 @@ export class ItemTaskAnswerService implements OnDestroy {
   private taskToken$ = this.taskInitService.taskToken$.pipe(takeUntil(this.error$));
 
   private initialAnswer$: Observable<Answer | null> = this.config$.pipe(
-    switchMap(({ route, attemptId }) => this.currentAnswerService.get(route.id, attemptId)),
+    switchMap(({ route, attemptId, shouldReloadAnswer }) => (
+      shouldReloadAnswer ? this.currentAnswerService.get(route.id, attemptId) : of(null)
+    )),
     catchError(error => {
       // currently, the backend returns a 403 status when no current answer exist for user+item+attempt
       if (errorIsHTTPForbidden(error)) return of(null);
@@ -58,20 +60,23 @@ export class ItemTaskAnswerService implements OnDestroy {
     shareReplay(1),
   );
 
-  private saveAnswerAndStateInterval$ = this.task$.pipe(
+  readonly saveAnswerAndStateInterval$ = this.task$.pipe(
     delayWhen(() => combineLatest([ this.initializedTaskState$, this.initializedTaskAnswer$ ])),
     repeatLatestWhen(interval(answerAndStateSaveInterval)),
     switchMap(task => forkJoin({ answer: task.getAnswer(), state: task.getState() })),
     distinctUntilChanged((a, b) => a.answer === b.answer && a.state === b.state),
     skip(1), // avoid saving an answer right after fetching it
     withLatestFrom(this.config$),
-    switchMap(([{ answer, state }, { route, attemptId }]) => this.currentAnswerService.update(route.id, attemptId, { answer, state })),
+    switchMap(([{ answer, state }, { route, attemptId }]) => this.currentAnswerService.update(route.id, attemptId, { answer, state }).pipe(
+      mapTo({ success: true }),
+      catchError(() => of({ success: false })),
+    )),
+    shareReplay(1),
   );
 
   private subscriptions = [
     this.initializedTaskAnswer$.subscribe({ error: err => this.errorSubject.next(err) }),
     this.initializedTaskState$.subscribe({ error: err => this.errorSubject.next(err) }),
-    this.saveAnswerAndStateInterval$.subscribe({ error: err => this.errorSubject.next(err) }),
   ];
 
   constructor(

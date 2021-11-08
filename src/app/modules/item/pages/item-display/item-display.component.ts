@@ -1,9 +1,20 @@
-import { AfterViewChecked, Component, ElementRef, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import {
+  AfterViewChecked,
+  Component,
+  ElementRef,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
 import { interval, merge, Observable } from 'rxjs';
-import { filter, map, startWith, switchMap } from 'rxjs/operators';
-import { SECONDS } from 'src/app/shared/helpers/duration';
+import { filter, map, pairwise, startWith, switchMap } from 'rxjs/operators';
+import { HOURS, SECONDS } from 'src/app/shared/helpers/duration';
 import { isNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
-import { ItemTaskService } from '../../services/item-task.service';
+import { ConfigureTaskOptions, ItemTaskService } from '../../services/item-task.service';
 import { mapToFetchState } from 'src/app/shared/operators/state';
 import { capitalize } from 'src/app/shared/helpers/case_conversion';
 import { ItemTaskInitService } from '../../services/item-task-init.service';
@@ -12,6 +23,7 @@ import { ItemTaskViewsService } from '../../services/item-task-views.service';
 import { FullItemRoute } from 'src/app/shared/routing/item-route';
 import { DomSanitizer } from '@angular/platform-browser';
 import { PermissionsInfo } from '../../helpers/item-permissions';
+import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
 
 const initialHeight = 0;
 const additionalHeightToPreventInnerScrollIssues = 40;
@@ -28,12 +40,13 @@ export interface TaskTab {
   styleUrls: [ './item-display.component.scss' ],
   providers: [ ItemTaskService, ItemTaskInitService, ItemTaskAnswerService, ItemTaskViewsService ],
 })
-export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges {
+export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges, OnDestroy {
   @Input() route!: FullItemRoute;
   @Input() url!: string;
   @Input() canEdit: PermissionsInfo['canEdit'] = 'none';
   @Input() attemptId!: string;
   @Input() view?: TaskTab['view'];
+  @Input() taskOptions: ConfigureTaskOptions = { readOnly: false, shouldReloadAnswer: true };
 
   @Output() scoreChange = this.taskService.scoreChange$;
 
@@ -60,11 +73,27 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
   constructor(
     private taskService: ItemTaskService,
     private sanitizer: DomSanitizer,
+    private actionFeedbackService: ActionFeedbackService,
   ) {}
 
   ngOnInit(): void {
-    this.taskService.configure(this.route, this.url, this.attemptId);
+    this.taskService.configure(this.route, this.url, this.attemptId, this.taskOptions);
     this.taskService.showView(this.view ?? 'task');
+
+    this.taskService.saveAnswerAndStateInterval$
+      .pipe(startWith({ success: true }), pairwise())
+      .subscribe(([ previous, next ]) => {
+        const shouldDisplayError = !next.success && !this.actionFeedbackService.hasFeedback;
+        const shouldDisplaySuccess = !previous.success && next.success;
+        if (shouldDisplayError) {
+          const message = $localize`Your current progress could not have been saved. Are you connected to the internet ?`;
+          this.actionFeedbackService.error(message, { life: 24*HOURS });
+        }
+        if (shouldDisplaySuccess) {
+          this.actionFeedbackService.clear();
+          this.actionFeedbackService.success($localize`Progress saved!`);
+        }
+      });
   }
 
   ngAfterViewChecked(): void {
@@ -85,6 +114,10 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
     if (changes.attemptId && !changes.attemptId.firstChange) {
       throw new Error('this component does not support changing its attemptId input');
     }
+  }
+
+  ngOnDestroy(): void {
+    if (this.actionFeedbackService.hasFeedback) this.actionFeedbackService.clear();
   }
 
   private getTabNameByView(view: string): string {

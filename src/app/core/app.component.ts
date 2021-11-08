@@ -7,6 +7,8 @@ import { Router } from '@angular/router';
 import { ModeAction, ModeService } from '../shared/services/mode.service';
 import { LocaleService } from './services/localeService';
 import { LayoutService } from '../shared/services/layout.service';
+import { Title } from '@angular/platform-browser';
+import { appConfig } from '../shared/helpers/config';
 
 @Component({
   selector: 'alg-root',
@@ -36,8 +38,13 @@ export class AppComponent implements OnInit, OnDestroy {
     private modeService: ModeService,
     private localeService: LocaleService,
     private layoutService: LayoutService,
+    private titleService: Title,
     private ngZone: NgZone,
-  ) {}
+  ) {
+    const title = appConfig.languageSpecificTitles && this.localeService.currentLang ?
+      appConfig.languageSpecificTitles[this.localeService.currentLang.tag] : undefined;
+    this.titleService.setTitle(title ?? appConfig.defaultTitle);
+  }
 
   ngOnInit(): void {
     // if user changes, navigate back to the root

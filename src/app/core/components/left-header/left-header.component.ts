@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { AuthService } from 'src/app/shared/auth/auth.service';
 import { LayoutService } from 'src/app/shared/services/layout.service';
 
@@ -12,10 +13,12 @@ export class LeftHeaderComponent {
   @Input() compactMode = false;
 
   showHeaders = true;
+  title = this.titleService.getTitle();
 
   constructor(
     private authService: AuthService,
-    private layoutService: LayoutService
+    private layoutService: LayoutService,
+    private titleService: Title,
   ) { }
 
   setFullFrameContent(): void {

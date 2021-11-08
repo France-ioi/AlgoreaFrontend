@@ -48,13 +48,17 @@
       </a>
     </nav>
     <div class="bg-white">
-      <alg-item-content
-        *ngIf="contentTab.isActive"
-        [itemData]="itemData"
-        [(taskView)]="taskView"
-        (taskTabsChange)="setTaskTabs($event)"
-        (scoreChange)="patchStateWithScore($event)"
-      ></alg-item-content>
+      <ng-container *ngIf="taskOptions$ | async as taskOptions">
+        <alg-item-content
+          *ngIf="contentTab.isActive || taskTabs.length > 0"
+          [hidden]="!contentTab.isActive"
+          [itemData]="itemData"
+          [taskOptions]="taskOptions"
+          [(taskView)]="taskView"
+          (taskTabsChange)="setTaskTabs($event)"
+          (scoreChange)="patchStateWithScore($event)"
+        ></alg-item-content>
+      </ng-container>
       <alg-item-progress
         *ngIf="progressTab?.isActive || !!(watchedGroup$ | async) && !contentTab.isActive"
         [itemData]="itemData"
