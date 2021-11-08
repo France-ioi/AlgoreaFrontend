@@ -50,9 +50,7 @@ export class ItemDataSource implements OnDestroy {
     shareReplay(1),
   );
 
-  private subscriptions = [
-    this.userSessionService.userChanged$.subscribe(_s => this.refreshItem()),
-  ];
+  private subscription = this.userSessionService.userChanged$.subscribe(_s => this.refreshItem());
 
   constructor(
     private getBreadcrumbService: GetBreadcrumbService,
@@ -77,7 +75,7 @@ export class ItemDataSource implements OnDestroy {
   ngOnDestroy(): void {
     this.refresh$.complete();
     this.fetchOperation$.complete();
-    this.subscriptions.forEach(subscription => subscription.unsubscribe());
+    this.subscription.unsubscribe();
   }
 
   /**
