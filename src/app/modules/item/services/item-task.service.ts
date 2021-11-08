@@ -22,8 +22,14 @@ export class ItemTaskService {
   readonly unknownError$ = merge(this.answerService.error$, this.viewsService.error$).pipe(shareReplay(1));
   readonly initError$ = this.initService.initError$.pipe(shareReplay(1));
   readonly urlError$ = this.initService.urlError$.pipe(shareReplay(1));
+  readonly loadAnswerByIdError$ = this.answerService.loadAnswerByIdError$.pipe(shareReplay(1));
 
-  private error$ = merge(this.initError$, this.urlError$, this.unknownError$).pipe(switchMap(error => throwError(() => error)));
+  private error$ = merge(
+    this.initError$,
+    this.urlError$,
+    this.loadAnswerByIdError$,
+    this.unknownError$,
+  ).pipe(switchMap(error => throwError(() => error)));
 
   readonly task$ = merge(this.initService.task$, this.error$);
   readonly iframeSrc$ = this.initService.iframeSrc$;

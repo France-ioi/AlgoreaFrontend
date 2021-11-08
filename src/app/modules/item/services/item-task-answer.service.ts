@@ -4,6 +4,7 @@ import {
   catchError,
   delayWhen,
   distinctUntilChanged,
+  filter,
   mapTo,
   shareReplay,
   skip,
@@ -22,11 +23,13 @@ import { GradeService } from '../http-services/grade.service';
 import { ItemTaskInitService } from './item-task-init.service';
 
 const answerAndStateSaveInterval = 1*SECONDS;
+const loadAnswerError = new Error('load answer forbidden');
 
 @Injectable()
 export class ItemTaskAnswerService implements OnDestroy {
   private errorSubject = new Subject<Error>();
-  readonly error$ = this.errorSubject.asObservable();
+  readonly error$ = this.errorSubject.pipe(filter(error => error !== loadAnswerError));
+  readonly loadAnswerByIdError$ = this.errorSubject.pipe(filter(error => error === loadAnswerError));
 
   private task$ = this.taskInitService.task$.pipe(takeUntil(this.error$));
   private config$ = this.taskInitService.config$.pipe(takeUntil(this.error$));
@@ -35,7 +38,15 @@ export class ItemTaskAnswerService implements OnDestroy {
   private initialAnswer$: Observable<Answer | null> = this.config$.pipe(
     switchMap(({ route, attemptId, shouldLoadAnswer }) => {
       if (!shouldLoadAnswer) return of(null);
-      if (route.answerId) return this.getAnswerService.get(route.answerId);
+      if (route.answerId) {
+        return this.getAnswerService.get(route.answerId).pipe(
+          catchError(error => {
+            if (errorIsHTTPForbidden(error)) throw loadAnswerError;
+            throw error;
+          }),
+        );
+      }
+
       return this.currentAnswerService.get(route.id, attemptId).pipe(
         catchError(error => {
           // currently, the backend returns a 403 status when no current answer exist for user+item+attempt
