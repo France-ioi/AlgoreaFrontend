@@ -70,7 +70,9 @@ export class ItemTaskService {
   }
 
   private bindPlatform(task: Task): void {
-    if (!this.attemptId) throw new Error('attemptId must be defined');
+    if (!this.attemptId) throw new Error('attemptId must be defined. The "configure" method has probably not been called as expected');
+    // attempt id can be used as a seed as these are currently assigned incrementally by participant id
+    // If this changes, this needs to be adapted.
     const randomSeed = Number(this.attemptId);
     if (Number.isNaN(randomSeed)) throw new Error('random seed must be a number');
 
