@@ -33,8 +33,8 @@ export class ItemTaskAnswerService implements OnDestroy {
   private taskToken$ = this.taskInitService.taskToken$.pipe(takeUntil(this.error$));
 
   private initialAnswer$: Observable<Answer | null> = this.config$.pipe(
-    switchMap(({ route, attemptId, shouldReloadAnswer }) => {
-      if (!shouldReloadAnswer) return of(null);
+    switchMap(({ route, attemptId, shouldLoadAnswer }) => {
+      if (!shouldLoadAnswer) return of(null);
       if (route.answerId) return this.getAnswerService.get(route.answerId);
       return this.currentAnswerService.get(route.id, attemptId).pipe(
         catchError(error => {

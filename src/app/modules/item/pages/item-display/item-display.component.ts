@@ -46,7 +46,7 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
   @Input() canEdit: PermissionsInfo['canEdit'] = 'none';
   @Input() attemptId!: string;
   @Input() view?: TaskTab['view'];
-  @Input() taskOptions: ConfigureTaskOptions = { readOnly: false, shouldReloadAnswer: true };
+  @Input() taskOptions: ConfigureTaskOptions = { readOnly: false, shouldLoadAnswer: true };
 
   @ViewChild('iframe') iframe?: ElementRef<HTMLIFrameElement>;
 

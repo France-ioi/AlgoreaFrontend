@@ -31,7 +31,7 @@ export class ItemDetailsComponent implements OnDestroy {
   readonly watchedGroup$ = this.userService.watchedGroup$;
   readonly taskOptions$: Observable<ConfigureTaskOptions> = this.modeService.mode$.pipe(map(mode => ({
     readOnly: mode === Mode.Watching,
-    shouldReloadAnswer: mode === Mode.Normal,
+    shouldLoadAnswer: mode === Mode.Normal,
   })));
 
   readonly enableLoadSubmission$ = this.modeService.mode$.pipe(map(mode => mode === Mode.Normal));

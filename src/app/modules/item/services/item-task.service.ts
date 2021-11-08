@@ -14,7 +14,7 @@ import { ItemTaskViewsService } from './item-task-views.service';
 
 export interface ConfigureTaskOptions {
   readOnly: boolean,
-  shouldReloadAnswer: boolean,
+  shouldLoadAnswer: boolean,
 }
 
 @Injectable()
@@ -56,7 +56,7 @@ export class ItemTaskService {
 
   configure(route: FullItemRoute, url: string, attemptId: string, options: ConfigureTaskOptions): void {
     this.readOnly = options.readOnly;
-    this.initService.configure(route, url, attemptId, options.shouldReloadAnswer);
+    this.initService.configure(route, url, attemptId, options.shouldLoadAnswer);
   }
 
   initTask(iframe: HTMLIFrameElement): void {
