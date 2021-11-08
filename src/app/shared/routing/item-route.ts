@@ -43,8 +43,8 @@ export function isRouteWithSelfAttempt(item: FullItemRoute): item is ItemRouteWi
   return item.attemptId !== undefined;
 }
 
-export function rawItemRoute(contentType: ItemTypeCategory, id: ItemId): RawItemRoute {
-  return { contentType, id };
+export function rawItemRoute(contentType: ItemTypeCategory, id: ItemId, answerId?: AnswerId): RawItemRoute {
+  return { contentType, id, answerId };
 }
 export function itemRoute(contentType: ItemTypeCategory, id: ItemId, path: string[]): ItemRoute {
   return { ...rawItemRoute(contentType, id), path };
@@ -100,11 +100,11 @@ export function itemCategoryFromPrefix(prefix: string): ItemTypeCategory|null {
 /**
  * Return a url array (`commands` array) to the given item, on the given page.
  */
-export function urlArrayForItemRoute(route: RawItemRoute, page: string|string[] = 'details', answerId = route.answerId): UrlCommand {
+export function urlArrayForItemRoute(route: RawItemRoute, page: string|string[] = 'details'): UrlCommand {
   const params = route.path ? pathAsParameter(route.path) : {};
   if (route.attemptId) params[attemptParamName] = route.attemptId;
   else if (route.parentAttemptId) params[parentAttemptParamName] = route.parentAttemptId;
-  if (answerId) params[answerParamName] = answerId;
+  if (route.answerId) params[answerParamName] = route.answerId;
 
   const prefix = route.contentType === 'activity' ? activityPrefix : skillPrefix;
   const pagePath = isString(page) ? [ page ] : page;

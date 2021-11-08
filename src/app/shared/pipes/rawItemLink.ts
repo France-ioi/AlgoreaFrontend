@@ -10,6 +10,6 @@ import { rawItemRoute, urlArrayForItemRoute } from '../routing/item-route';
 @Pipe({ name: 'rawItemLink', pure: true })
 export class RawItemLinkPipe implements PipeTransform {
   transform({ id, type }: {id: string, type: ItemType}, page?: string|string[], answerId?: string): UrlCommand {
-    return urlArrayForItemRoute(rawItemRoute(typeCategoryOfItem({ type }), id), page, answerId);
+    return urlArrayForItemRoute(rawItemRoute(typeCategoryOfItem({ type }), id, answerId), page);
   }
 }
