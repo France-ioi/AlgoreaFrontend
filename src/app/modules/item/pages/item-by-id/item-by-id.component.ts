@@ -124,7 +124,7 @@ export class ItemByIdComponent implements OnDestroy {
         map(({ item }) => item.type),
       ).subscribe(itemType => {
         const canActivateFullFrame = itemType === 'Course' || itemType === 'Task';
-        const activateFullFrame = canActivateFullFrame && !(history.state as Record<string, unknown>).preventFullFrame;
+        const activateFullFrame = canActivateFullFrame && !(history.state as Record<string, boolean | undefined>).preventFullFrame;
         this.layoutService.toggleFullFrameContent(activateFullFrame);
       })
     );
