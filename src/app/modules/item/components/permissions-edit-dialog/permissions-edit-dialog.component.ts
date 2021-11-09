@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
+import { BehaviorSubject, combineLatest } from 'rxjs';
 import { ProgressSelectValue } from
   'src/app/modules/shared-components/components/collapsible-section/progress-select/progress-select.component';
 import { GroupPermissions } from 'src/app/shared/http-services/group-permissions.service';
@@ -47,22 +48,27 @@ export class PermissionsEditDialogComponent implements OnChanges {
     isOwner: [ true ],
   });
 
-  constructor(private fb: FormBuilder) {
-    this.form.valueChanges.subscribe(formValue => {
+  private regenerateValues = new BehaviorSubject(undefined);
 
-      if (this.permissions && this.giverPermissions) {
-        const receiverPermissions = formValue as GroupPermissions;
-        this.progressSelectValues = generateValues(this.targetType, receiverPermissions, this.giverPermissions);
-      }
-    });
+  constructor(private fb: FormBuilder) {
+    combineLatest([ this.form.valueChanges, this.regenerateValues.asObservable() ])
+      .subscribe(() => {
+        if (this.permissions && this.giverPermissions) {
+          const receiverPermissions = this.form.value as GroupPermissions;
+          this.progressSelectValues = generateValues(this.targetType, receiverPermissions, this.giverPermissions);
+        }
+      });
   }
 
-  ngOnChanges(_changes: SimpleChanges): void {
-    if (this.permissions && this.giverPermissions) {
-      this.form.setValidators(permissionsConstraintsValidator(this.permissions, this.giverPermissions));
-      this.form.updateValueAndValidity();
-      this.form.reset({ ...this.permissions }, { emitEvent: false });
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.permissions || changes.giverPermissions) {
+      if (this.permissions && this.giverPermissions) {
+        this.form.setValidators(permissionsConstraintsValidator(this.permissions, this.giverPermissions));
+        this.form.updateValueAndValidity();
+        this.form.reset({ ...this.permissions }, { emitEvent: false });
+      }
     }
+    if (changes.targetType) this.regenerateValues.next(undefined);
   }
 
   onCancel(): void {
