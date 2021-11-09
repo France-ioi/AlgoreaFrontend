@@ -68,6 +68,21 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
     this.taskService.display$.pipe(map(({ height }) => height), filter(isNotUndefined)),
   ).pipe(map(height => height + additionalHeightToPreventInnerScrollIssues), startWith(initialHeight));
 
+  private subscription = this.taskService.saveAnswerAndStateInterval$
+    .pipe(startWith({ success: true }), pairwise())
+    .subscribe(([ previous, next ]) => {
+      const shouldDisplayError = !next.success && !this.actionFeedbackService.hasFeedback;
+      const shouldDisplaySuccess = !previous.success && next.success;
+      if (shouldDisplayError) {
+        const message = $localize`Your current progress could not have been saved. Are you connected to the internet ?`;
+        this.actionFeedbackService.error(message, { life: 24*HOURS });
+      }
+      if (shouldDisplaySuccess) {
+        this.actionFeedbackService.clear();
+        this.actionFeedbackService.success($localize`Progress saved!`);
+      }
+    });
+
   constructor(
     private taskService: ItemTaskService,
     private sanitizer: DomSanitizer,
@@ -77,21 +92,6 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
   ngOnInit(): void {
     this.taskService.configure(this.route, this.url, this.attemptId, this.taskOptions);
     this.taskService.showView(this.view ?? 'task');
-
-    this.taskService.saveAnswerAndStateInterval$
-      .pipe(startWith({ success: true }), pairwise())
-      .subscribe(([ previous, next ]) => {
-        const shouldDisplayError = !next.success && !this.actionFeedbackService.hasFeedback;
-        const shouldDisplaySuccess = !previous.success && next.success;
-        if (shouldDisplayError) {
-          const message = $localize`Your current progress could not have been saved. Are you connected to the internet ?`;
-          this.actionFeedbackService.error(message, { life: 24*HOURS });
-        }
-        if (shouldDisplaySuccess) {
-          this.actionFeedbackService.clear();
-          this.actionFeedbackService.success($localize`Progress saved!`);
-        }
-      });
   }
 
   ngAfterViewChecked(): void {
@@ -116,6 +116,7 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
 
   ngOnDestroy(): void {
     if (this.actionFeedbackService.hasFeedback) this.actionFeedbackService.clear();
+    this.subscription.unsubscribe();
   }
 
   private getTabNameByView(view: string): string {

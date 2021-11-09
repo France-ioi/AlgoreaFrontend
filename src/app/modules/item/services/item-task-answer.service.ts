@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { combineLatest, forkJoin, interval, Observable, of, Subject } from 'rxjs';
+import { combineLatest, concat, forkJoin, interval, Observable, of, Subject } from 'rxjs';
 import {
   catchError,
   delayWhen,
@@ -7,6 +7,7 @@ import {
   mapTo,
   shareReplay,
   skip,
+  startWith,
   switchMap,
   take,
   takeUntil,
@@ -14,13 +15,12 @@ import {
 } from 'rxjs/operators';
 import { SECONDS } from 'src/app/shared/helpers/duration';
 import { errorIsHTTPForbidden } from 'src/app/shared/helpers/errors';
-import { repeatLatestWhen } from 'src/app/shared/helpers/repeatLatestWhen';
 import { AnswerTokenService } from '../http-services/answer-token.service';
 import { Answer, CurrentAnswerService } from '../http-services/current-answer.service';
 import { GradeService } from '../http-services/grade.service';
 import { ItemTaskInitService } from './item-task-init.service';
 
-const answerAndStateSaveInterval = 1*SECONDS;
+const answerAndStateSaveInterval = 5*SECONDS;
 
 @Injectable()
 export class ItemTaskAnswerService implements OnDestroy {
@@ -59,15 +59,8 @@ export class ItemTaskAnswerService implements OnDestroy {
 
   readonly saveAnswerAndStateInterval$ = this.task$.pipe(
     delayWhen(() => combineLatest([ this.initializedTaskState$, this.initializedTaskAnswer$ ])),
-    repeatLatestWhen(interval(answerAndStateSaveInterval)),
     switchMap(task => forkJoin({ answer: task.getAnswer(), state: task.getState() })),
-    distinctUntilChanged((a, b) => a.answer === b.answer && a.state === b.state),
-    skip(1), // avoid saving an answer right after fetching it
-    withLatestFrom(this.config$),
-    switchMap(([{ answer, state }, { route, attemptId }]) => this.currentAnswerService.update(route.id, attemptId, { answer, state }).pipe(
-      mapTo({ success: true }),
-      catchError(() => of({ success: false })),
-    )),
+    switchMap(({ answer, state }) => this.saveAnswerAndStateInterval(answer, state)),
     shareReplay(1),
   );
 
@@ -120,5 +113,27 @@ export class ItemTaskAnswerService implements OnDestroy {
 
   clearAnswer(): Observable<unknown> {
     return this.task$.pipe(take(1), switchMap(task => task.reloadAnswer('')));
+  }
+
+  private saveAnswerAndStateInterval(savedAnswer: string, savedState: string): Observable<{ success: boolean }> {
+    return interval(answerAndStateSaveInterval).pipe(
+      switchMap(() => this.task$),
+      switchMap(task => forkJoin({ answer: task.getAnswer(), state: task.getState() })),
+      startWith({ answer: savedAnswer, state: savedState }), // start with saved answer & state to keep only changed answer & state
+      distinctUntilChanged((a, b) => a.answer === b.answer && a.state === b.state),
+      skip(1), // skip currently saved answer & state ...
+      take(1), // ... and take next unsaved one
+      withLatestFrom(this.config$),
+      switchMap(([{ answer, state }, { route, attemptId }]) =>
+        this.currentAnswerService.update(route.id, attemptId, { answer, state }).pipe(
+          mapTo({ success: true }),
+          catchError(() => of({ success: false })),
+          switchMap(result => concat(
+            of(result), // emit success state
+            this.saveAnswerAndStateInterval(answer, state)), // restart treatment
+          ),
+        )
+      ),
+    );
   }
 }
