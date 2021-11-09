@@ -177,11 +177,7 @@ export class Task {
       timeout: 2000
     }).pipe(
       map(([ answer ]) => decode(D.string)(answer)),
-      catchError(error => {
-        // eslint-disable-next-line no-console
-        console.error(error);
-        return of('');
-      }),
+      catchError(() => of('')),
     );
   }
 
@@ -199,11 +195,7 @@ export class Task {
       timeout: 2000
     }).pipe(
       map(([ state ]) => decode(D.string)(state)),
-      catchError(error => {
-        // eslint-disable-next-line no-console
-        console.error(error);
-        return of('');
-      }),
+      catchError(() => of('')),
     );
   }
 
