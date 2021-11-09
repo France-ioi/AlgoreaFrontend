@@ -60,7 +60,7 @@ export class ItemTaskAnswerService implements OnDestroy {
   readonly saveAnswerAndStateInterval$ = this.task$.pipe(
     delayWhen(() => combineLatest([ this.initializedTaskState$, this.initializedTaskAnswer$ ])),
     switchMap(task => forkJoin({ answer: task.getAnswer(), state: task.getState() })),
-    switchMap(({ answer, state }) => this.saveAnswerAndStateInterval(answer, state)),
+    switchMap(saved => this.saveAnswerAndStateInterval(saved.answer, saved.state)),
     shareReplay(1),
   );
 
@@ -121,7 +121,7 @@ export class ItemTaskAnswerService implements OnDestroy {
       switchMap(task => forkJoin({ answer: task.getAnswer(), state: task.getState() })),
       startWith({ answer: savedAnswer, state: savedState }), // start with saved answer & state to keep only changed answer & state
       distinctUntilChanged((a, b) => a.answer === b.answer && a.state === b.state),
-      skip(1), // skip currently saved answer & state ...
+      skip(1), // skip currently saved answer & state tuple ...
       take(1), // ... and take next unsaved one
       withLatestFrom(this.config$),
       switchMap(([{ answer, state }, { route, attemptId }]) =>
