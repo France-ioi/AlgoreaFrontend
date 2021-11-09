@@ -18,6 +18,8 @@ import { isItemInfo, itemInfo } from 'src/app/shared/models/content/item-info';
 import { repeatLatestWhen } from 'src/app/shared/helpers/repeatLatestWhen';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
 import { isItemRouteError, itemRouteFromParams } from './item-route-validation';
+import { LayoutService } from 'src/app/shared/services/layout.service';
+import { readyData } from 'src/app/shared/operators/state';
 
 const itemBreadcrumbCat = $localize`Items`;
 
@@ -50,6 +52,7 @@ export class ItemByIdComponent implements OnDestroy {
     private userSessionService: UserSessionService,
     private resultActionsService: ResultActionsService,
     private getItemPathService: GetItemPathService,
+    private layoutService: LayoutService,
   ) {
 
     // on route change or user change: refetch item if needed
@@ -114,6 +117,16 @@ export class ItemByIdComponent implements OnDestroy {
         filter(mode => [ Mode.Normal, Mode.Watching ].includes(mode)),
         distinctUntilChanged(),
       ).subscribe(() => this.reloadContent()),
+
+      this.itemDataSource.state$.pipe(
+        readyData(),
+        distinctUntilChanged((a, b) => a.item.id === b.item.id),
+        map(({ item }) => item.type),
+      ).subscribe(itemType => {
+        const canActivateFullFrame = itemType === 'Course' || itemType === 'Task';
+        const activateFullFrame = canActivateFullFrame && !(history.state as Record<string, unknown>).preventFullFrame;
+        this.layoutService.toggleFullFrameContent(activateFullFrame);
+      })
     );
   }
 
