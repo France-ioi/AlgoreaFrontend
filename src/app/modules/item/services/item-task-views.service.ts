@@ -32,6 +32,13 @@ export class ItemTaskViewsService implements OnDestroy {
 
   private subscriptions = [
     this.showViews$.subscribe({ error: err => this.errorSubject.next(err) }),
+    combineLatest([
+      this.initService.iframe$,
+      this.display$.pipe(map(display => display.scrollTop), filter(isNotUndefined)),
+    ]).subscribe(([ iframe, scrollTopInPx ]) => {
+      const iframeTopInPx = iframe.getBoundingClientRect().top + globalThis.scrollY;
+      globalThis.scrollTo({ behavior: 'smooth', top: iframeTopInPx + scrollTopInPx });
+    }),
   ];
 
   constructor(

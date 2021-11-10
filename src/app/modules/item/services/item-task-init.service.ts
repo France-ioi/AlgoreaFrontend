@@ -23,6 +23,7 @@ export class ItemTaskInitService implements OnDestroy {
   private configFromIframe$ = new ReplaySubject<{ iframe: HTMLIFrameElement, bindPlatform(task: Task): void }>(1);
 
   readonly config$ = this.configFromItem$.asObservable();
+  readonly iframe$ = this.configFromIframe$.pipe(map(config => config.iframe));
   readonly taskToken$: Observable<TaskToken> = this.config$.pipe(
     switchMap(({ attemptId, route }) => this.taskTokenService.generate(route.id, attemptId)),
     shareReplay(1),
