@@ -48,6 +48,8 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
   @Input() view?: TaskTab['view'];
   @Input() taskOptions: ConfigureTaskOptions = { readOnly: false, shouldLoadAnswer: true };
 
+  @Output() scoreChange = this.taskService.scoreChange$;
+
   @ViewChild('iframe') iframe?: ElementRef<HTMLIFrameElement>;
 
   state$ = this.taskService.task$.pipe(mapToFetchState());

@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { EMPTY, forkJoin, Observable, of, ReplaySubject, Subject, Subscription } from 'rxjs';
-import { map, shareReplay, switchMap } from 'rxjs/operators';
+import { EMPTY, forkJoin, Observable, of, ReplaySubject, Subject } from 'rxjs';
+import { distinctUntilChanged, map, scan, shareReplay, startWith, switchMap } from 'rxjs/operators';
 import { bestAttemptFromResults, implicitResultStart } from 'src/app/shared/helpers/attempts';
 import { isRouteWithSelfAttempt, FullItemRoute } from 'src/app/shared/routing/item-route';
 import { ResultActionsService } from 'src/app/shared/http-services/result-actions.service';
@@ -11,6 +11,7 @@ import { GetResultsService, Result } from '../http-services/get-results.service'
 import { canCurrentUserViewItemContent } from 'src/app/modules/item/helpers/item-permissions';
 import { mapToFetchState } from 'src/app/shared/operators/state';
 import { buildUp } from 'src/app/shared/operators/build-up';
+import { FetchState } from 'src/app/shared/helpers/state';
 
 export interface ItemData {
   route: FullItemRoute,
@@ -31,14 +32,25 @@ export class ItemDataSource implements OnDestroy {
 
   private readonly fetchOperation$ = new ReplaySubject<FullItemRoute>(1); // trigger item fetching
   private readonly refresh$ = new Subject<void>();
+  private readonly scorePatch$ = new Subject<number | undefined>();
+  private readonly maxScorePatch$ = this.scorePatch$.pipe(
+    // Keep max score of all emitted scores. NB: adding operators to a subject makes it COLD.
+    // Since it is cold, max score is ONLY computed for values emitted during the lifetime of the subscription
+    scan<number | undefined, number | undefined>((max, score) => (score !== undefined ? Math.max(score, max ?? 0) : undefined), undefined),
+    startWith(undefined),
+    distinctUntilChanged(),
+  );
 
   /* state to put outputted */
   readonly state$ = this.fetchOperation$.pipe(
     switchMap(item => this.fetchItemData(item).pipe(mapToFetchState({ resetter: this.refresh$ }))),
+    // maxScorePatch is a cold observable, and switchMap operator acts a subscriber here
+    // so the max score patch is only valid for current item
+    switchMap(state => this.maxScorePatch$.pipe(map(score => this.patchScore(state, score)))),
     shareReplay(1),
   );
 
-  private subscription: Subscription;
+  private subscription = this.userSessionService.userChanged$.subscribe(_s => this.refreshItem());
 
   constructor(
     private getBreadcrumbService: GetBreadcrumbService,
@@ -46,9 +58,7 @@ export class ItemDataSource implements OnDestroy {
     private resultActionsService: ResultActionsService,
     private getResultsService: GetResultsService,
     private userSessionService: UserSessionService,
-  ) {
-    this.subscription = this.userSessionService.userChanged$.subscribe(_s => this.refreshItem());
-  }
+  ) {}
 
   fetchItem(item: FullItemRoute): void {
     this.fetchOperation$.next(item);
@@ -56,6 +66,10 @@ export class ItemDataSource implements OnDestroy {
 
   refreshItem(): void {
     this.refresh$.next();
+  }
+
+  patchItemScore(score: number): void {
+    this.scorePatch$.next(score);
   }
 
   ngOnDestroy(): void {
@@ -107,6 +121,21 @@ export class ItemDataSource implements OnDestroy {
         );
       }),
     );
+  }
+
+  private patchScore(state: FetchState<ItemData>, newScore?: number): FetchState<ItemData> {
+    if (!state.data || newScore === undefined) return state;
+    const score = Math.max(newScore ?? 0, state.data.currentResult?.score ?? 0);
+    const bestScore = Math.max(state.data.item.bestScore, score);
+    const validated = newScore >= 100 || !!state.data.currentResult?.validated;
+    return {
+      ...state,
+      data: {
+        ...state.data,
+        item: { ...state.data.item, bestScore },
+        currentResult: state.data.currentResult ? { ...state.data.currentResult, score, validated } : undefined,
+      },
+    };
   }
 
 }
