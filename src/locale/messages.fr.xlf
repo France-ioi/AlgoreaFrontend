@@ -1667,35 +1667,27 @@
       </trans-unit><trans-unit id="6629094035123468873" datatype="html">
         <source>ACCESS</source><target state="translated">ACCÈS</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/user-progress-details/user-progress-details.component.html</context><context context-type="linenumber">31</context></context-group></trans-unit><trans-unit id="2035437600846010522" datatype="html">
-        <source>You need to be &lt;b&gt;owner&lt;/b&gt; of this item</source><target state="translated">Vous devez être &lt;b&gt;propriétaire&lt;/b&gt; de cet activité</target>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/user-progress-details/user-progress-details.component.html</context><context context-type="linenumber">31</context></context-group></trans-unit><trans-unit id="1346386960355422306" datatype="html">
+        <source>You need to be owner of this item</source><target state="translated">Vous devez être propriétaire de cet élément</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/item/helpers/item-permissions-constraints.ts</context>
-          <context context-type="linenumber">13</context>
+          <context context-type="linenumber">67</context>
         </context-group>
-      </trans-unit><trans-unit id="2445279236045755407" datatype="html">
-        <source>You need</source><target state="translated">Vous devez avoir</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/item/helpers/item-permissions-constraints.ts</context>
-          <context context-type="linenumber">14</context>
+          <context context-type="linenumber">118</context>
         </context-group>
-      </trans-unit><trans-unit id="3742549360822749870" datatype="html">
-        <source>This user needs</source><target state="translated">Cet utilisateur doit avoir</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/item/helpers/item-permissions-constraints.ts</context>
-          <context context-type="linenumber">15</context>
+          <context context-type="linenumber">147</context>
         </context-group>
-      </trans-unit><trans-unit id="2913790852956203897" datatype="html">
-        <source>to be</source><target state="translated">égal à</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/item/helpers/item-permissions-constraints.ts</context>
-          <context context-type="linenumber">16</context>
+          <context context-type="linenumber">169</context>
         </context-group>
-      </trans-unit><trans-unit id="4601425161855798823" datatype="html">
-        <source>to be at least</source><target state="translated">au moins égal à</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/item/helpers/item-permissions-constraints.ts</context>
-          <context context-type="linenumber">17</context>
+          <context context-type="linenumber">187</context>
         </context-group>
       </trans-unit><trans-unit id="6746605846893800788" datatype="html">
         <source>Error while loading the group progress</source><target state="new">Error while loading the group progress</target>
