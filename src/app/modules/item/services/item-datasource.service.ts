@@ -35,7 +35,7 @@ export class ItemDataSource implements OnDestroy {
   private readonly scorePatch$ = new Subject<number | undefined>();
   private readonly maxScorePatch$ = this.scorePatch$.pipe(
     // Keep max score of all emitted scores. NB: adding operators to a subject makes it COLD.
-    // Since it is cold, mean of max scores is ONLY computed for values emitted during the lifetime of the subscription
+    // Since it is cold, max score is ONLY computed for values emitted during the lifetime of the subscription
     scan<number | undefined, number | undefined>((max, score) => (score !== undefined ? Math.max(score, max ?? 0) : undefined), undefined),
     startWith(undefined),
     distinctUntilChanged(),
