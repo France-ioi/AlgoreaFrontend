@@ -4,6 +4,7 @@ import {
   catchError,
   delayWhen,
   distinctUntilChanged,
+  filter,
   mapTo,
   shareReplay,
   skip,
@@ -17,15 +18,18 @@ import { errorIsHTTPForbidden } from 'src/app/shared/helpers/errors';
 import { repeatLatestWhen } from 'src/app/shared/helpers/repeatLatestWhen';
 import { AnswerTokenService } from '../http-services/answer-token.service';
 import { Answer, CurrentAnswerService } from '../http-services/current-answer.service';
+import { GetAnswerService } from '../http-services/get-answer.service';
 import { GradeService } from '../http-services/grade.service';
 import { ItemTaskInitService } from './item-task-init.service';
 
 const answerAndStateSaveInterval = 1*SECONDS;
+const loadAnswerError = new Error('load answer forbidden');
 
 @Injectable()
 export class ItemTaskAnswerService implements OnDestroy {
   private errorSubject = new Subject<Error>();
-  readonly error$ = this.errorSubject.asObservable();
+  readonly error$ = this.errorSubject.pipe(filter(error => error !== loadAnswerError));
+  readonly loadAnswerByIdError$ = this.errorSubject.pipe(filter(error => error === loadAnswerError));
 
   private scoreChange = new Subject<number>();
   readonly scoreChange$ = this.scoreChange.asObservable();
@@ -35,13 +39,24 @@ export class ItemTaskAnswerService implements OnDestroy {
   private taskToken$ = this.taskInitService.taskToken$.pipe(takeUntil(this.error$));
 
   private initialAnswer$: Observable<Answer | null> = this.config$.pipe(
-    switchMap(({ route, attemptId, shouldReloadAnswer }) => (
-      shouldReloadAnswer ? this.currentAnswerService.get(route.id, attemptId) : of(null)
-    )),
-    catchError(error => {
-      // currently, the backend returns a 403 status when no current answer exist for user+item+attempt
-      if (errorIsHTTPForbidden(error)) return of(null);
-      throw error;
+    switchMap(({ route, attemptId, shouldLoadAnswer }) => {
+      if (!shouldLoadAnswer) return of(null);
+      if (route.answerId) {
+        return this.getAnswerService.get(route.answerId).pipe(
+          catchError(error => {
+            if (errorIsHTTPForbidden(error)) throw loadAnswerError;
+            throw error;
+          }),
+        );
+      }
+
+      return this.currentAnswerService.get(route.id, attemptId).pipe(
+        catchError(error => {
+          // currently, the backend returns a 403 status when no current answer exist for user+item+attempt
+          if (errorIsHTTPForbidden(error)) return of(null);
+          throw error;
+        })
+      );
     }),
     shareReplay(1), // avoid duplicate xhr calls on multiple subscriptions.
   );
@@ -84,6 +99,7 @@ export class ItemTaskAnswerService implements OnDestroy {
     private currentAnswerService: CurrentAnswerService,
     private answerTokenService: AnswerTokenService,
     private gradeService: GradeService,
+    private getAnswerService: GetAnswerService,
   ) {}
 
   ngOnDestroy(): void {

@@ -14,7 +14,7 @@ import { ItemTaskViewsService } from './item-task-views.service';
 
 export interface ConfigureTaskOptions {
   readOnly: boolean,
-  shouldReloadAnswer: boolean,
+  shouldLoadAnswer: boolean,
 }
 
 @Injectable()
@@ -22,8 +22,14 @@ export class ItemTaskService {
   readonly unknownError$ = merge(this.answerService.error$, this.viewsService.error$).pipe(shareReplay(1));
   readonly initError$ = this.initService.initError$.pipe(shareReplay(1));
   readonly urlError$ = this.initService.urlError$.pipe(shareReplay(1));
+  readonly loadAnswerByIdError$ = this.answerService.loadAnswerByIdError$.pipe(shareReplay(1));
 
-  private error$ = merge(this.initError$, this.urlError$, this.unknownError$).pipe(switchMap(error => throwError(() => error)));
+  private error$ = merge(
+    this.initError$,
+    this.urlError$,
+    this.loadAnswerByIdError$,
+    this.unknownError$,
+  ).pipe(switchMap(error => throwError(() => error)));
 
   readonly task$ = merge(this.initService.task$, this.error$);
   readonly iframeSrc$ = this.initService.iframeSrc$;
@@ -59,7 +65,7 @@ export class ItemTaskService {
   configure(route: FullItemRoute, url: string, attemptId: string, options: ConfigureTaskOptions): void {
     this.readOnly = options.readOnly;
     this.attemptId = attemptId;
-    this.initService.configure(route, url, attemptId, options.shouldReloadAnswer);
+    this.initService.configure(route, url, attemptId, options.shouldLoadAnswer);
   }
 
   initTask(iframe: HTMLIFrameElement): void {
