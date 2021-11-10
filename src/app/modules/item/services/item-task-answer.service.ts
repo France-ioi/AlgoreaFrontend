@@ -27,6 +27,9 @@ export class ItemTaskAnswerService implements OnDestroy {
   private errorSubject = new Subject<Error>();
   readonly error$ = this.errorSubject.asObservable();
 
+  private scoreChange = new Subject<number>();
+  readonly scoreChange$ = this.scoreChange.asObservable();
+
   private task$ = this.taskInitService.task$.pipe(takeUntil(this.error$));
   private config$ = this.taskInitService.config$.pipe(takeUntil(this.error$));
   private taskToken$ = this.taskInitService.taskToken$.pipe(takeUntil(this.error$));
@@ -107,7 +110,7 @@ export class ItemTaskAnswerService implements OnDestroy {
     );
 
     // Step 4: Save grade in backend
-    return combineLatest([ this.taskToken$, answerToken$, grade$ ]).pipe(
+    const saveGrade$ = combineLatest([ this.taskToken$, answerToken$, grade$ ]).pipe(
       take(1),
       switchMap(([ taskToken, answerToken, grade ]) => this.gradeService.save(
         taskToken,
@@ -115,7 +118,12 @@ export class ItemTaskAnswerService implements OnDestroy {
         grade.score,
         grade.scoreToken ?? undefined,
       )),
+      shareReplay(1),
     );
+    combineLatest([ grade$, saveGrade$ ]).subscribe(([ grade ]) => {
+      if (grade.score !== undefined) this.scoreChange.next(grade.score);
+    });
+    return saveGrade$;
   }
 
   clearAnswer(): Observable<unknown> {

@@ -35,6 +35,7 @@ export class ItemTaskService {
   readonly display$ = this.viewsService.display$;
   readonly activeView$ = this.viewsService.activeView$;
 
+  readonly scoreChange$ = this.answerService.scoreChange$;
   readonly saveAnswerAndStateInterval$ = this.answerService.saveAnswerAndStateInterval$;
 
   private navigateToNext$ = this.activityNavTreeService.navigationNeighbors$.pipe(
