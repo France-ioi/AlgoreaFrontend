@@ -3,6 +3,12 @@ import { NavigationExtras, Router, UrlTree } from '@angular/router';
 import { ensureDefined } from '../helpers/null-undefined-predicates';
 import { itemCategoryFromPrefix, RawItemRoute, urlArrayForItemRoute } from './item-route';
 
+interface NavigateOptions {
+  page?: string|string[],
+  preventFullFrame?: boolean,
+  navExtras?: NavigationExtras,
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -16,8 +22,8 @@ export class ItemRouter {
    * Navigate to given item, on the path page.
    * If page is not given and we are currently on an item page, use the same page. Otherwise, default to 'details'.
    */
-  navigateTo(item: RawItemRoute, options?: { page?: string|string[], navExtras?: NavigationExtras }): void {
-    void this.router.navigateByUrl(this.url(item, options?.page), options?.navExtras);
+  navigateTo(item: RawItemRoute, { page, navExtras, preventFullFrame = false }: NavigateOptions = {}): void {
+    void this.router.navigateByUrl(this.url(item, page), { ...navExtras, state: { ...navExtras?.state, preventFullFrame } });
   }
 
   /**

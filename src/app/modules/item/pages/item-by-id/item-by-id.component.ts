@@ -1,7 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, ParamMap, UrlTree } from '@angular/router';
 import { of, Subscription } from 'rxjs';
-import { distinctUntilChanged, filter, map, switchMap } from 'rxjs/operators';
+import { distinctUntilChanged, filter, map, pairwise, startWith, switchMap } from 'rxjs/operators';
 import { defaultAttemptId } from 'src/app/shared/helpers/attempts';
 import { appDefaultItemRoute } from 'src/app/shared/routing/item-route';
 import { errorState, fetchingState, FetchState } from 'src/app/shared/helpers/state';
@@ -12,12 +12,15 @@ import { GetItemPathService } from '../../http-services/get-item-path.service';
 import { ItemDataSource, ItemData } from '../../services/item-datasource.service';
 import { errorHasTag, errorIsHTTPForbidden } from 'src/app/shared/helpers/errors';
 import { ItemRouter } from 'src/app/shared/routing/item-router';
-import { ItemTypeCategory } from 'src/app/shared/helpers/item-type';
+import { isTask, ItemTypeCategory } from 'src/app/shared/helpers/item-type';
 import { Mode, ModeAction, ModeService } from 'src/app/shared/services/mode.service';
 import { isItemInfo, itemInfo } from 'src/app/shared/models/content/item-info';
 import { repeatLatestWhen } from 'src/app/shared/helpers/repeatLatestWhen';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
 import { isItemRouteError, itemRouteFromParams } from './item-route-validation';
+import { LayoutService } from 'src/app/shared/services/layout.service';
+import { readyData } from 'src/app/shared/operators/state';
+import { ensureDefined } from 'src/app/shared/helpers/null-undefined-predicates';
 
 const itemBreadcrumbCat = $localize`Items`;
 
@@ -50,6 +53,7 @@ export class ItemByIdComponent implements OnDestroy {
     private userSessionService: UserSessionService,
     private resultActionsService: ResultActionsService,
     private getItemPathService: GetItemPathService,
+    private layoutService: LayoutService,
   ) {
 
     // on route change or user change: refetch item if needed
@@ -114,6 +118,18 @@ export class ItemByIdComponent implements OnDestroy {
         filter(mode => [ Mode.Normal, Mode.Watching ].includes(mode)),
         distinctUntilChanged(),
       ).subscribe(() => this.reloadContent()),
+
+      this.itemDataSource.state$.pipe(
+        readyData(),
+        distinctUntilChanged((a, b) => a.item.id === b.item.id),
+        startWith(undefined),
+        pairwise(),
+        filter(([ previous, current ]) => (!!current && (!previous || isTask(previous.item) || isTask(current.item)))),
+        map(([ , current ]) => ensureDefined(current).item),
+      ).subscribe(item => {
+        const activateFullFrame = isTask(item) && !(history.state as Record<string, boolean | undefined>).preventFullFrame;
+        this.layoutService.toggleFullFrameContent(activateFullFrame);
+      })
     );
   }
 
