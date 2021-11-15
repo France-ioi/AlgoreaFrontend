@@ -20,7 +20,7 @@ import { UserSessionService } from 'src/app/shared/services/user-session.service
 import { isItemRouteError, itemRouteFromParams } from './item-route-validation';
 import { LayoutService } from 'src/app/shared/services/layout.service';
 import { readyData } from 'src/app/shared/operators/state';
-import { isNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
+import { ensureDefined } from 'src/app/shared/helpers/null-undefined-predicates';
 
 const itemBreadcrumbCat = $localize`Items`;
 
@@ -124,9 +124,8 @@ export class ItemByIdComponent implements OnDestroy {
         distinctUntilChanged((a, b) => a.item.id === b.item.id),
         startWith(undefined),
         pairwise(),
-        filter(([ previous, current ]) => !previous || isTask(previous.item) || !current || isTask(current?.item)),
-        map(([ , current ]) => current?.item),
-        filter(isNotUndefined),
+        filter(([ previous, current ]) => (!!current && (!previous || isTask(previous.item) || isTask(current.item)))),
+        map(([ , current ]) => ensureDefined(current).item),
       ).subscribe(item => {
         const activateFullFrame = isTask(item) && !(history.state as Record<string, boolean | undefined>).preventFullFrame;
         this.layoutService.toggleFullFrameContent(activateFullFrame);
