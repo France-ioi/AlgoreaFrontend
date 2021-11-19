@@ -5,8 +5,8 @@
  * It depends on jschannel.
  */
 
-import { Observable } from 'rxjs';
-import { delay, map, retryWhen, switchMap, take } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { catchError, delay, map, retryWhen, switchMap, take } from 'rxjs/operators';
 import { rxBuild, RxMessagingChannel } from './rxjschannel';
 import * as D from 'io-ts/Decoder';
 import {
@@ -175,7 +175,10 @@ export class Task {
     return this.chan.call({
       method: 'task.getAnswer',
       timeout: 2000
-    }).pipe(map(([ answer ]) => decode(D.string)(answer)));
+    }).pipe(
+      map(([ answer ]) => decode(D.string)(answer)),
+      catchError(() => of('')),
+    );
   }
 
   reloadAnswer(answer: string): Observable<unknown> {
@@ -190,7 +193,10 @@ export class Task {
     return this.chan.call({
       method: 'task.getState',
       timeout: 2000
-    }).pipe(map(([ state ]) => decode(D.string)(state)));
+    }).pipe(
+      map(([ state ]) => decode(D.string)(state)),
+      catchError(() => of('')),
+    );
   }
 
   reloadState(state: string): Observable<unknown> {
