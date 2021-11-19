@@ -19,20 +19,26 @@ import { ConfigureTaskOptions } from '../../services/item-task.service';
 export class ItemDetailsComponent implements OnDestroy {
   @ViewChild('progressTab') progressTab?: RouterLinkActive;
 
-  itemLoadingState$ = this.itemDataSource.state$.pipe(
-    mapStateData(data => ({ ...data, showAccessCodeField: data.item.promptToJoinGroupByCode &&
-      !canCurrentUserViewItemContent(data.item) && !this.userService.isCurrentUserTemp() }))
+  itemData$ = this.itemDataSource.state$;
+
+  showAccessCodeField$ = this.itemData$.pipe(
+    mapStateData(data =>
+      data.item.promptToJoinGroupByCode && !canCurrentUserViewItemContent(data.item) && !this.userService.isCurrentUserTemp()
+    ),
+    map(state => state.isReady && state.data),
   );
 
   taskTabs: TaskTab[] = [];
   taskView?: TaskTab['view'];
 
-  fullFrameContent$ = this.layoutService.fullFrameContent$;
+  readonly fullFrameContent$ = this.layoutService.fullFrameContent$;
   readonly watchedGroup$ = this.userService.watchedGroup$;
   readonly taskOptions$: Observable<ConfigureTaskOptions> = this.modeService.mode$.pipe(map(mode => ({
     readOnly: mode === Mode.Watching,
-    shouldReloadAnswer: mode === Mode.Normal,
+    shouldLoadAnswer: mode === Mode.Normal,
   })));
+
+  readonly enableLoadSubmission$ = this.modeService.mode$.pipe(map(mode => mode === Mode.Normal));
 
   private subscription = this.itemDataSource.state$.subscribe(state => {
     if (state.isFetching) this.taskTabs = []; // reset task tabs when item changes.
@@ -51,6 +57,10 @@ export class ItemDetailsComponent implements OnDestroy {
 
   reloadItem(): void {
     this.itemDataSource.refreshItem();
+  }
+
+  patchStateWithScore(score: number): void {
+    this.itemDataSource.patchItemScore(score);
   }
 
   setTaskTabs(taskTabs: TaskTab[]): void {

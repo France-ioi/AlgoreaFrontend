@@ -26,6 +26,7 @@ interface Data {
 export class ItemLogViewComponent implements OnChanges, OnDestroy {
 
   @Input() itemData?: ItemData;
+  @Input() enableLoadSubmission = false;
 
   private readonly refresh$ = new Subject<void>();
   private readonly item$ = new ReplaySubject<Item>(1);

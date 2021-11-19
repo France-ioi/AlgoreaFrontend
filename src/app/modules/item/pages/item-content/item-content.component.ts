@@ -12,10 +12,11 @@ export class ItemContentComponent implements OnChanges {
 
   @Input() itemData?: ItemData;
   @Input() taskView?: TaskTab['view'];
-  @Input() taskOptions: ConfigureTaskOptions = { readOnly: false, shouldReloadAnswer: true };
+  @Input() taskOptions: ConfigureTaskOptions = { readOnly: false, shouldLoadAnswer: true };
 
   @Output() taskTabsChange = new EventEmitter<TaskTab[]>();
   @Output() taskViewChange = new EventEmitter<TaskTab['view']>();
+  @Output() scoreChange = new EventEmitter<number>();
 
   attemptId?: string;
 

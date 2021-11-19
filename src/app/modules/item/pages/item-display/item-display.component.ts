@@ -20,7 +20,7 @@ import { capitalize } from 'src/app/shared/helpers/case_conversion';
 import { ItemTaskInitService } from '../../services/item-task-init.service';
 import { ItemTaskAnswerService } from '../../services/item-task-answer.service';
 import { ItemTaskViewsService } from '../../services/item-task-views.service';
-import { FullItemRoute } from 'src/app/shared/routing/item-route';
+import { FullItemRoute, urlArrayForItemRoute } from 'src/app/shared/routing/item-route';
 import { DomSanitizer } from '@angular/platform-browser';
 import { PermissionsInfo } from '../../helpers/item-permissions';
 import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
@@ -46,13 +46,18 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
   @Input() canEdit: PermissionsInfo['canEdit'] = 'none';
   @Input() attemptId!: string;
   @Input() view?: TaskTab['view'];
-  @Input() taskOptions: ConfigureTaskOptions = { readOnly: false, shouldReloadAnswer: true };
+  @Input() taskOptions: ConfigureTaskOptions = { readOnly: false, shouldLoadAnswer: true };
+
+  @Output() scoreChange = this.taskService.scoreChange$;
 
   @ViewChild('iframe') iframe?: ElementRef<HTMLIFrameElement>;
 
   state$ = this.taskService.task$.pipe(mapToFetchState());
   initError$ = this.taskService.initError$;
   urlError$ = this.taskService.urlError$;
+  answerFallbackLink$ = this.taskService.loadAnswerByIdError$.pipe(
+    map(() => urlArrayForItemRoute({ ...this.route, answerId: undefined })),
+  );
   unknownError$ = this.taskService.unknownError$;
   iframeSrc$ = this.taskService.iframeSrc$.pipe(map(url => this.sanitizer.bypassSecurityTrustResourceUrl(url)));
 

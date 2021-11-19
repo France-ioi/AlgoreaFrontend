@@ -1,7 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, ParamMap, UrlTree } from '@angular/router';
 import { of, Subscription } from 'rxjs';
-import { distinctUntilChanged, filter, map, switchMap } from 'rxjs/operators';
+import { distinctUntilChanged, filter, map, pairwise, startWith, switchMap } from 'rxjs/operators';
 import { defaultAttemptId } from 'src/app/shared/helpers/attempts';
 import { appDefaultItemRoute } from 'src/app/shared/routing/item-route';
 import { errorState, fetchingState, FetchState } from 'src/app/shared/helpers/state';
@@ -12,12 +12,15 @@ import { GetItemPathService } from '../../http-services/get-item-path.service';
 import { ItemDataSource, ItemData } from '../../services/item-datasource.service';
 import { errorHasTag, errorIsHTTPForbidden } from 'src/app/shared/helpers/errors';
 import { ItemRouter } from 'src/app/shared/routing/item-router';
-import { ItemTypeCategory } from 'src/app/shared/helpers/item-type';
+import { isTask, ItemTypeCategory } from 'src/app/shared/helpers/item-type';
 import { Mode, ModeAction, ModeService } from 'src/app/shared/services/mode.service';
 import { isItemInfo, itemInfo } from 'src/app/shared/models/content/item-info';
 import { repeatLatestWhen } from 'src/app/shared/helpers/repeatLatestWhen';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
 import { isItemRouteError, itemRouteFromParams } from './item-route-validation';
+import { LayoutService } from 'src/app/shared/services/layout.service';
+import { readyData } from 'src/app/shared/operators/state';
+import { ensureDefined } from 'src/app/shared/helpers/null-undefined-predicates';
 
 const itemBreadcrumbCat = $localize`Items`;
 
@@ -50,6 +53,7 @@ export class ItemByIdComponent implements OnDestroy {
     private userSessionService: UserSessionService,
     private resultActionsService: ResultActionsService,
     private getItemPathService: GetItemPathService,
+    private layoutService: LayoutService,
   ) {
 
     // on route change or user change: refetch item if needed
@@ -85,7 +89,7 @@ export class ItemByIdComponent implements OnDestroy {
               currentScore: state.data.currentResult?.score,
               validated: state.data.currentResult?.validated,
             },
-            score: state.data.currentResult?.score !== undefined ? {
+            score: state.data.currentResult !== undefined ? {
               bestScore: state.data.item.bestScore,
               currentScore: state.data.currentResult.score,
               isValidated: state.data.currentResult.validated,
@@ -114,6 +118,18 @@ export class ItemByIdComponent implements OnDestroy {
         filter(mode => [ Mode.Normal, Mode.Watching ].includes(mode)),
         distinctUntilChanged(),
       ).subscribe(() => this.reloadContent()),
+
+      this.itemDataSource.state$.pipe(
+        readyData(),
+        distinctUntilChanged((a, b) => a.item.id === b.item.id),
+        startWith(undefined),
+        pairwise(),
+        filter(([ previous, current ]) => (!!current && (!previous || isTask(previous.item) || isTask(current.item)))),
+        map(([ , current ]) => ensureDefined(current).item),
+      ).subscribe(item => {
+        const activateFullFrame = isTask(item) && !(history.state as Record<string, boolean | undefined>).preventFullFrame;
+        this.layoutService.toggleFullFrameContent(activateFullFrame);
+      })
     );
   }
 
@@ -134,7 +150,7 @@ export class ItemByIdComponent implements OnDestroy {
     if (isItemRouteError(item)) {
       if (item.id) {
         this.state = fetchingState();
-        this.solveMissingPathAttempt(item.contentType, item.id, item.path);
+        this.solveMissingPathAttempt(item.contentType, item.id, item.path, item.answerId);
       } else this.state = errorState(new Error('No id in url'));
       return;
     }
@@ -148,16 +164,16 @@ export class ItemByIdComponent implements OnDestroy {
    * Called when either path or attempt is missing. Will fetch the path if missing, then will be fetch the attempt.
    * Will redirect when relevant data has been fetched.
    */
-  private solveMissingPathAttempt(contentType: ItemTypeCategory, id: string, path?: string[]): void {
+  private solveMissingPathAttempt(contentType: ItemTypeCategory, id: string, path?: string[], answerId?: string): void {
 
     const pathObservable = path ? of(path) : this.getItemPathService.getItemPath(id);
     pathObservable.pipe(
       switchMap(path => {
         // for empty path (root items), consider the item has a (fake) parent attempt id 0
-        if (path.length === 0) return of({ contentType: contentType, id: id, path: path, parentAttemptId: defaultAttemptId });
+        if (path.length === 0) return of({ contentType, id, path, parentAttemptId: defaultAttemptId, answerId });
         // else, will start all path but the current item
         return this.resultActionsService.startWithoutAttempt(path).pipe(
-          map(attemptId => ({ contentType: contentType, id: id, path: path, parentAttemptId: attemptId }))
+          map(attemptId => ({ contentType, id, path, parentAttemptId: attemptId, answerId }))
         );
       })
     ).subscribe({

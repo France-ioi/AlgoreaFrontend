@@ -18,6 +18,7 @@
         [taskOptions]="taskOptions"
         (viewChange)="taskViewChange.emit($event)"
         (tabsChange)="taskTabsChange.emit($event)"
+        (scoreChange)="scoreChange.emit($event)"
       ></alg-item-display>
 
       <alg-sub-skills [itemData]="itemData" *ngIf="itemData.item.type === 'Skill'"></alg-sub-skills>

@@ -1,15 +1,15 @@
-<ng-container *ngIf="itemLoadingState$ | async as state">
+<ng-container *ngIf="itemData$ | async as state">
 
   <ng-container *ngIf="state.isReady && state.data as itemData">
 
     <alg-item-header [itemData]="itemData" *ngIf="!(fullFrameContent$ | async)"></alg-item-header>
 
     <alg-access-code-view
-        *ngIf="itemData.showAccessCodeField"
-        i18n-sectionLabel sectionLabel="Access to activity"
-        i18n-buttonLabel buttonLabel="Access"
-        [itemData]="itemData"
-        (groupJoined)="reloadItem()"
+      *ngIf="showAccessCodeField$ | async"
+      i18n-sectionLabel sectionLabel="Access to activity"
+      i18n-buttonLabel buttonLabel="Access"
+      [itemData]="itemData"
+      (groupJoined)="reloadItem()"
     ></alg-access-code-view>
 
     <nav class="nav-tab">
@@ -56,11 +56,13 @@
           [taskOptions]="taskOptions"
           [(taskView)]="taskView"
           (taskTabsChange)="setTaskTabs($event)"
+          (scoreChange)="patchStateWithScore($event)"
         ></alg-item-content>
       </ng-container>
       <alg-item-progress
         *ngIf="progressTab?.isActive || !!(watchedGroup$ | async) && !contentTab.isActive"
         [itemData]="itemData"
+        [enableLoadSubmission]="(enableLoadSubmission$ | async) ?? false"
       ></alg-item-progress>
     </div>
 

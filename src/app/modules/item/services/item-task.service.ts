@@ -14,7 +14,7 @@ import { ItemTaskViewsService } from './item-task-views.service';
 
 export interface ConfigureTaskOptions {
   readOnly: boolean,
-  shouldReloadAnswer: boolean,
+  shouldLoadAnswer: boolean,
 }
 
 @Injectable()
@@ -22,8 +22,14 @@ export class ItemTaskService {
   readonly unknownError$ = merge(this.answerService.error$, this.viewsService.error$).pipe(shareReplay(1));
   readonly initError$ = this.initService.initError$.pipe(shareReplay(1));
   readonly urlError$ = this.initService.urlError$.pipe(shareReplay(1));
+  readonly loadAnswerByIdError$ = this.answerService.loadAnswerByIdError$.pipe(shareReplay(1));
 
-  private error$ = merge(this.initError$, this.urlError$, this.unknownError$).pipe(switchMap(error => throwError(() => error)));
+  private error$ = merge(
+    this.initError$,
+    this.urlError$,
+    this.loadAnswerByIdError$,
+    this.unknownError$,
+  ).pipe(switchMap(error => throwError(() => error)));
 
   readonly task$ = merge(this.initService.task$, this.error$);
   readonly iframeSrc$ = this.initService.iframeSrc$;
@@ -35,6 +41,7 @@ export class ItemTaskService {
   readonly display$ = this.viewsService.display$;
   readonly activeView$ = this.viewsService.activeView$;
 
+  readonly scoreChange$ = this.answerService.scoreChange$;
   readonly saveAnswerAndStateInterval$ = this.answerService.saveAnswerAndStateInterval$;
 
   private navigateToNext$ = this.activityNavTreeService.navigationNeighbors$.pipe(
@@ -43,6 +50,7 @@ export class ItemTaskService {
   );
 
   private readOnly = false;
+  private attemptId?: string;
 
   constructor(
     private initService: ItemTaskInitService,
@@ -56,7 +64,8 @@ export class ItemTaskService {
 
   configure(route: FullItemRoute, url: string, attemptId: string, options: ConfigureTaskOptions): void {
     this.readOnly = options.readOnly;
-    this.initService.configure(route, url, attemptId, options.shouldReloadAnswer);
+    this.attemptId = attemptId;
+    this.initService.configure(route, url, attemptId, options.shouldLoadAnswer);
   }
 
   initTask(iframe: HTMLIFrameElement): void {
@@ -68,12 +77,18 @@ export class ItemTaskService {
   }
 
   private bindPlatform(task: Task): void {
+    if (!this.attemptId) throw new Error('attemptId must be defined. The "configure" method has probably not been called as expected');
+    // attempt id can be used as a seed as these are currently assigned incrementally by participant id
+    // If this changes, this needs to be adapted.
+    const randomSeed = Number(this.attemptId);
+    if (Number.isNaN(randomSeed)) throw new Error('random seed must be a number');
+
     const platform: TaskPlatform = {
       validate: mode => this.validate(mode).pipe(mapTo(undefined)),
       getTaskParams: () => ({
         minScore: 0,
         maxScore: 100,
-        randomSeed: 0,
+        randomSeed,
         noScore: 0,
         readOnly: this.readOnly,
         options: {},

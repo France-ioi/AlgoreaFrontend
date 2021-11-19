@@ -10,19 +10,21 @@ interface ItemRouteError {
   contentType: ItemTypeCategory,
   id?: ItemId,
   path?: ItemId[],
+  answerId?: string,
 }
 
 export function itemRouteFromParams(prefix: string, params: ParamMap): FullItemRoute|ItemRouteError {
   const cat = itemCategoryFromPrefix(prefix);
   if (cat === null) throw new Error('Unexpected item path prefix');
-  const { id, path, attemptId, parentAttemptId } = decodeItemRouterParameters(params);
+  const { id, path, attemptId, parentAttemptId, answerId: answerIdOrNull } = decodeItemRouterParameters(params);
+  const answerId = answerIdOrNull ?? undefined;
 
-  if (!id) return { contentType: cat, tag: 'error', id: undefined }; // null or empty
-  if (path === null) return { contentType: cat, tag: 'error', id: id };
+  if (!id) return { contentType: cat, tag: 'error', id: undefined, answerId }; // null or empty
+  if (path === null) return { contentType: cat, tag: 'error', id, answerId };
   const pathList = path === '' ? [] : path.split(',');
-  if (attemptId) return { contentType: cat, id: id, path: pathList, attemptId: attemptId }; // not null nor empty
-  if (parentAttemptId) return { contentType: cat, id: id, path: pathList, parentAttemptId: parentAttemptId }; // not null nor empty
-  return { contentType: cat, tag: 'error', id: id, path: pathList };
+  if (attemptId) return { contentType: cat, id: id, path: pathList, attemptId, answerId }; // not null nor empty
+  if (parentAttemptId) return { contentType: cat, id: id, path: pathList, parentAttemptId, answerId }; // not null nor empty
+  return { contentType: cat, tag: 'error', id: id, path: pathList, answerId };
 }
 
 export function isItemRouteError(route: FullItemRoute|ItemRouteError): route is ItemRouteError {

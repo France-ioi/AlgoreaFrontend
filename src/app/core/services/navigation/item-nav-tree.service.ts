@@ -62,7 +62,7 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
     return {
       ...treeElement,
       title: details.title ?? '',
-      navigateTo: (): void => this.itemRouter.navigateTo(contentInfo.route),
+      navigateTo: (_path: string[], preventFullFrame = false): void => this.itemRouter.navigateTo(contentInfo.route, { preventFullFrame }),
       score: details.bestScore !== undefined && details.currentScore !== undefined && details.validated !== undefined ? {
         bestScore: details.bestScore,
         currentScore: details.bestScore,
@@ -77,8 +77,9 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
       id: child.id,
       title: child.string.title ?? '',
       hasChildren: child.hasVisibleChildren && ![ 'none', 'info' ].includes(child.permissions.canView),
-      navigateTo: (path): void => this.itemRouter.navigateTo(
-        fullItemRoute(typeCategoryOfItem(child), child.id, path, { attemptId: currentResult?.attemptId, parentAttemptId })
+      navigateTo: (path, preventFullFrame = false): void => this.itemRouter.navigateTo(
+        fullItemRoute(typeCategoryOfItem(child), child.id, path, { attemptId: currentResult?.attemptId, parentAttemptId }),
+        { preventFullFrame },
       ),
       locked: child.permissions.canView === 'info',
       score: !child.noScore && currentResult ? {
@@ -95,8 +96,9 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
         id: data.id,
         title: data.string.title ?? '',
         hasChildren: data.children.length > 0,
-        navigateTo: (path): void => this.itemRouter.navigateTo(
-          fullItemRoute(typeCategoryOfItem(data), data.id, path, { attemptId: data.attemptId })
+        navigateTo: (path, preventFullFrame = false): void => this.itemRouter.navigateTo(
+          fullItemRoute(typeCategoryOfItem(data), data.id, path, { attemptId: data.attemptId }),
+          { preventFullFrame },
         ),
         locked: data.permissions.canView === 'info'
       },

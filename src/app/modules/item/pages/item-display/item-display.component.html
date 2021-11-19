@@ -1,6 +1,13 @@
 <div class="item-display" *ngIf="state$ | async as state">
   <div *ngIf="state.isError" class="errors">
-    <alg-error i18n-message message="Unable to load the task"></alg-error>
+    <alg-error *ngIf="answerFallbackLink$ | async as fallbackLink; else defaultErrorMessage" i18n>
+      Unable to load the answer, <a [routerLink]="fallbackLink">load your most recent answer</a>
+    </alg-error>
+
+    <ng-template #defaultErrorMessage>
+      <alg-error i18n-message message="Unable to load the task"></alg-error>
+    </ng-template>
+
     <ng-container *ngIf="['all', 'all_with_grant'].includes(canEdit)">
       <alg-error
         *ngIf="initError$ | async; else urlError"
