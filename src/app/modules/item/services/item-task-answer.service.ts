@@ -1,14 +1,16 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { combineLatest, concat, forkJoin, interval, Observable, of, Subject } from 'rxjs';
+import { combineLatest, forkJoin, interval, Observable, of, Subject } from 'rxjs';
 import {
   catchError,
   delayWhen,
   distinctUntilChanged,
+  filter,
+  map,
   mapTo,
+  repeat,
   shareReplay,
-  skip,
-  startWith,
   switchMap,
+  switchMapTo,
   take,
   takeUntil,
   withLatestFrom,
@@ -115,25 +117,25 @@ export class ItemTaskAnswerService implements OnDestroy {
     return this.task$.pipe(take(1), switchMap(task => task.reloadAnswer('')));
   }
 
-  private saveAnswerAndStateInterval(savedAnswer: string, savedState: string): Observable<{ success: boolean }> {
+  private saveAnswerAndStateInterval(initialAnswer: string, initialState: string): Observable<{ success: boolean }> {
+    const saved = { answer: initialAnswer, state: initialState };
     return interval(answerAndStateSaveInterval).pipe(
-      switchMap(() => this.task$),
+      switchMapTo(this.task$),
       switchMap(task => forkJoin({ answer: task.getAnswer(), state: task.getState() })),
-      startWith({ answer: savedAnswer, state: savedState }), // start with saved answer & state to keep only changed answer & state
       distinctUntilChanged((a, b) => a.answer === b.answer && a.state === b.state),
-      skip(1), // skip currently saved answer & state tuple ...
-      take(1), // ... and take next unsaved one
+      filter(({ answer, state }) => answer !== saved.answer || state !== saved.state),
+      take(1),
       withLatestFrom(this.config$),
       switchMap(([{ answer, state }, { route, attemptId }]) =>
         this.currentAnswerService.update(route.id, attemptId, { answer, state }).pipe(
-          mapTo({ success: true }),
+          map(() => {
+            Object.assign(saved, { answer, state });
+            return { success: true };
+          }),
           catchError(() => of({ success: false })),
-          switchMap(result => concat(
-            of(result), // emit success state
-            this.saveAnswerAndStateInterval(answer, state)), // restart treatment
-          ),
         )
       ),
+      repeat(),
     );
   }
 }
