@@ -1,4 +1,5 @@
 @import 'src/colors.scss';
+@import 'src/geometry.scss';
 
 :host {
   .item-display {
@@ -25,6 +26,26 @@
     font-size: 2em;
     opacity: 0.9;
     z-index: 10;
+  }
+  .saving-answer {
+    background-color: rgba(74,74,74,.7);
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    text-align: center;
+  }
+  .saving-answer-message {
+    margin: 0;
+    margin-top: 5rem;
+    padding: 0.5rem;
+    background: $base-bk-color;
+    border-radius: $border-radius;
+    font-size: 2em;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
 
   iframe {

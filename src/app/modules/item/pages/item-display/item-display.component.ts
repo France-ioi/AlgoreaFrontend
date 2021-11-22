@@ -73,6 +73,8 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
     this.taskService.display$.pipe(map(({ height }) => height), filter(isNotUndefined)),
   ).pipe(map(height => height + additionalHeightToPreventInnerScrollIssues), startWith(initialHeight));
 
+  savingAnswerAndState = false;
+
   private subscription?: Subscription;
 
   constructor(
@@ -128,7 +130,10 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
   saveAnswerAndState(): Observable<void> {
     this.subscription?.unsubscribe();
     this.subscription = undefined;
-    return this.taskService.saveAnswerAndState();
+    const save$ = this.taskService.saveAnswerAndState();
+    this.savingAnswerAndState = true;
+    save$.subscribe(() => this.savingAnswerAndState = false);
+    return save$;
   }
 
   private getTabNameByView(view: string): string {
