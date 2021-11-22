@@ -17,9 +17,9 @@ function hasAtLeastPermission<T extends readonly string[]>(permissionsSortedByLo
     permissionsSortedByLoosest.indexOf(permission) >= permissionsSortedByLoosest.indexOf(minimumPermission);
 }
 
-function validateCanView(
+export function validateCanView(
   receiverPermissions: Pick<GroupPermissions, 'canView'>,
-  giverPermissions: PermissionsInfo
+  giverPermissions: Pick<PermissionsInfo, 'canGrantView'>
 ): { canView?: string[] } {
 
   const giverCanAtLeastGrantView = hasAtLeastPermission(canGrantViewValues, giverPermissions.canGrantView);
@@ -50,11 +50,9 @@ function validateCanView(
   return {};
 }
 
-
-
-function validateCanGrantView(
+export function validateCanGrantView(
   receiverPermissions: Pick<GroupPermissions, 'canView' | 'canGrantView'>,
-  giverPermissions: PermissionsInfo
+  giverPermissions: Pick<PermissionsInfo, 'canGrantView' | 'isOwner'>
 ): { canGrantView?: string[] } {
 
   if (receiverPermissions.canGrantView === 'none') return {};
@@ -72,7 +70,7 @@ function validateCanGrantView(
     }
   } else {
 
-    if (!(giverPermissions.canGrantView === 'solution_with_grant')) {
+    if (giverPermissions.canGrantView !== 'solution_with_grant') {
       errors.push(`You need ${bolden(permissionsInfoString.canGrantView.string)} to be ${
         bolden(permissionsInfoString.canGrantView.solution_with_grant)}`);
     }
@@ -96,12 +94,12 @@ function validateCanGrantView(
     }
   }
 
-  return { canGrantView: errors.length === 0 ? undefined : errors };
+  return errors.length === 0 ? {} : { canGrantView: errors };
 }
 
-function validateCanWatch(
+export function validateCanWatch(
   receiverPermissions: Pick<GroupPermissions, 'canView' | 'canWatch'>,
-  giverPermissions: PermissionsInfo
+  giverPermissions: Pick<PermissionsInfo, 'canWatch' | 'isOwner'>
 ): { canWatch?: string[] } {
 
   if (receiverPermissions.canWatch === 'none') return {};
@@ -114,23 +112,25 @@ function validateCanWatch(
       bolden(permissionsInfoString.canView.content)}`);
   }
 
-  if (receiverPermissions.canWatch === 'answer_with_grant' && !giverPermissions.isOwner) {
-    errors.push($localize`You need to be owner of this item`);
+  if (receiverPermissions.canWatch === 'answer_with_grant') {
+    if (!giverPermissions.isOwner) {
+      errors.push($localize`You need to be owner of this item`);
+    }
   } else {
 
     // if receiverPermissions.canWatch is 'result' or 'answer'
-    if (!(giverPermissions.canWatch === 'answer_with_grant')) {
+    if (giverPermissions.canWatch !== 'answer_with_grant') {
       errors.push(`You need ${bolden(permissionsInfoString.canWatch.string)} to be ${
         bolden(permissionsInfoString.canWatch.answer_with_grant)}`);
     }
   }
 
-  return { canWatch: errors.length === 0 ? undefined : errors };
+  return errors.length === 0 ? {} : { canWatch: errors };
 }
 
-function validateCanEdit(
+export function validateCanEdit(
   receiverPermissions: Pick<GroupPermissions, 'canView' | 'canEdit'>,
-  giverPermissions: PermissionsInfo
+  giverPermissions: Pick<PermissionsInfo, 'canEdit' | 'isOwner'>
 ): { canEdit?: string[] } {
 
   if (receiverPermissions.canEdit === 'none') return {};
@@ -143,8 +143,10 @@ function validateCanEdit(
       bolden(permissionsInfoString.canView.content)}`);
   }
 
-  if (receiverPermissions.canEdit === 'all_with_grant' && !giverPermissions.isOwner) {
-    errors.push($localize`You need to be owner of this item`);
+  if (receiverPermissions.canEdit === 'all_with_grant') {
+    if (!giverPermissions.isOwner) {
+      errors.push($localize`You need to be owner of this item`);
+    }
   } else {
 
     // if receiverPermissions.canEdit is 'children' or 'all_with_grant'
@@ -154,13 +156,13 @@ function validateCanEdit(
     }
   }
 
-  return { canEdit: errors.length === 0 ? undefined : errors };
+  return errors.length === 0 ? {} : { canEdit: errors };
 }
 
-function validateCanMakeSessionOfficial(
+export function validateCanMakeSessionOfficial(
   previousValue: boolean,
   receiverPermissions: Pick<GroupPermissions, 'canView' | 'canMakeSessionOfficial'>,
-  giverPermissions: PermissionsInfo
+  giverPermissions: Pick<PermissionsInfo, 'isOwner'>
 ): { canMakeSessionOfficial?: string[] } {
   const errors: string[] = [];
 
@@ -177,10 +179,10 @@ function validateCanMakeSessionOfficial(
   return errors.length === 0 ? {} : { canMakeSessionOfficial: errors };
 }
 
-function validateIsOwner(
+export function validateIsOwner(
   previousValue: boolean,
   receiverPermissions: Pick<GroupPermissions, 'isOwner'>,
-  giverPermissions: PermissionsInfo
+  giverPermissions: Pick<PermissionsInfo, 'isOwner'>
 ): { isOwner?: string[] } {
 
   if (receiverPermissions.isOwner && !previousValue && !giverPermissions.isOwner) {
@@ -246,26 +248,5 @@ export function generateValues(
       const errors = validateCanEdit({ ...receiverPermissions, canEdit: val.value }, giverPermissions);
       return errors.canEdit ? { ...val, disabled: true, tooltip: errors.canEdit } : val;
     })
-  };
-}
-
-export function canViewValidator(giverPermissions: PermissionsInfo) {
-  return (control: AbstractControl): ValidationErrors | null => {
-    const receiverPermissions = {
-      canView: control.value as GroupPermissions['canView']
-    };
-    return validateCanView(receiverPermissions, giverPermissions);
-  };
-}
-
-export function canGrantViewValidator(giverPermissions: PermissionsInfo) {
-  return (control: AbstractControl): ValidationErrors | null => {
-
-    const receiverPermissions = {
-      canView: control.parent?.get('canView')?.value as GroupPermissions['canView'],
-      canGrantView: control.value as GroupPermissions['canGrantView'],
-    };
-
-    return validateCanGrantView(receiverPermissions, giverPermissions);
   };
 }
