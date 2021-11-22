@@ -34,6 +34,7 @@
       <p class="saving-answer-message">
         <span i18n>Saving answer...</span>
         <alg-loading size="medium"></alg-loading>
+        <p-button type="button" (click)="skipSave()" i18n-label label="Skip"></p-button>
       </p>
     </div>
     <iframe *ngIf="iframeSrc$ | async as iframeSrc" [style.height.px]="iframeHeight$ | async" #iframe [src]="iframeSrc"></iframe>

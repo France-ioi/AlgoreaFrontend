@@ -10,7 +10,7 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import { interval, merge, Observable, Subscription } from 'rxjs';
+import { interval, merge, Observable, race, Subject, Subscription } from 'rxjs';
 import { filter, map, pairwise, startWith, switchMap } from 'rxjs/operators';
 import { HOURS, SECONDS } from 'src/app/shared/helpers/duration';
 import { isNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
@@ -75,6 +75,7 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
 
   savingAnswerAndState = false;
 
+  private skipSave$ = new Subject<void>();
   private subscription?: Subscription;
 
   constructor(
@@ -130,10 +131,14 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
   saveAnswerAndState(): Observable<void> {
     this.subscription?.unsubscribe();
     this.subscription = undefined;
-    const save$ = this.taskService.saveAnswerAndState();
+    const save$ = race(this.taskService.saveAnswerAndState(), this.skipSave$);
     this.savingAnswerAndState = true;
     save$.subscribe(() => this.savingAnswerAndState = false);
     return save$;
+  }
+
+  skipSave(): void {
+    this.skipSave$.next();
   }
 
   private getTabNameByView(view: string): string {
