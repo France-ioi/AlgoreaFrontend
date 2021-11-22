@@ -8,9 +8,10 @@ import { RouterLinkActive } from '@angular/router';
 import { TaskTab } from '../item-display/item-display.component';
 import { Mode, ModeService } from 'src/app/shared/services/mode.service';
 import { Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { catchError, map, mapTo } from 'rxjs/operators';
 import { ConfigureTaskOptions } from '../../services/item-task.service';
 import { BeforeUnloadComponent } from 'src/app/shared/guards/before-unload-guard';
+import { ItemContentComponent } from '../item-content/item-content.component';
 
 @Component({
   selector: 'alg-item-details',
@@ -19,6 +20,7 @@ import { BeforeUnloadComponent } from 'src/app/shared/guards/before-unload-guard
 })
 export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent {
   @ViewChild('progressTab') progressTab?: RouterLinkActive;
+  @ViewChild(ItemContentComponent) itemContentComponent?: ItemContentComponent;
 
   itemData$ = this.itemDataSource.state$;
 
@@ -73,7 +75,8 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent {
   }
 
   beforeUnload(): Observable<boolean> {
-    return of(false);
+    if (!this.itemContentComponent?.itemDisplayComponent) return of(false);
+    return this.itemContentComponent.itemDisplayComponent.saveAnswerAndState().pipe(mapTo(true), catchError(() => of(false)));
   }
 
 }

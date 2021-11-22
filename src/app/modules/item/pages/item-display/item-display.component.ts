@@ -10,7 +10,7 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import { interval, merge, Observable } from 'rxjs';
+import { interval, merge, Observable, Subscription } from 'rxjs';
 import { filter, map, pairwise, startWith, switchMap } from 'rxjs/operators';
 import { HOURS, SECONDS } from 'src/app/shared/helpers/duration';
 import { isNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
@@ -73,6 +73,8 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
     this.taskService.display$.pipe(map(({ height }) => height), filter(isNotUndefined)),
   ).pipe(map(height => height + additionalHeightToPreventInnerScrollIssues), startWith(initialHeight));
 
+  private subscription?: Subscription;
+
   constructor(
     private taskService: ItemTaskService,
     private sanitizer: DomSanitizer,
@@ -83,7 +85,7 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
     this.taskService.configure(this.route, this.url, this.attemptId, this.taskOptions);
     this.taskService.showView(this.view ?? 'task');
 
-    this.taskService.saveAnswerAndStateInterval$
+    this.subscription = this.taskService.saveAnswerAndStateInterval$
       .pipe(startWith({ success: true }), pairwise())
       .subscribe(([ previous, next ]) => {
         const shouldDisplayError = !next.success && !this.actionFeedbackService.hasFeedback;
@@ -121,6 +123,12 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
 
   ngOnDestroy(): void {
     if (this.actionFeedbackService.hasFeedback) this.actionFeedbackService.clear();
+  }
+
+  saveAnswerAndState(): Observable<void> {
+    this.subscription?.unsubscribe();
+    this.subscription = undefined;
+    return this.taskService.saveAnswerAndState();
   }
 
   private getTabNameByView(view: string): string {

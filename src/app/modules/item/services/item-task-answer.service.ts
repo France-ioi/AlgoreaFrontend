@@ -1,10 +1,11 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { combineLatest, forkJoin, interval, Observable, of, Subject } from 'rxjs';
+import { combineLatest, forkJoin, interval, Observable, of, race, Subject } from 'rxjs';
 import {
   catchError,
   delayWhen,
   distinctUntilChanged,
   filter,
+  map,
   mapTo,
   shareReplay,
   skip,
@@ -75,7 +76,7 @@ export class ItemTaskAnswerService implements OnDestroy {
     shareReplay(1),
   );
 
-  readonly saveAnswerAndStateInterval$ = this.task$.pipe(
+  private savedAnswerAndState$ = this.task$.pipe(
     delayWhen(() => combineLatest([ this.initializedTaskState$, this.initializedTaskAnswer$ ])),
     repeatLatestWhen(interval(answerAndStateSaveInterval)),
     switchMap(task => forkJoin({ answer: task.getAnswer(), state: task.getState() })),
@@ -83,10 +84,13 @@ export class ItemTaskAnswerService implements OnDestroy {
     skip(1), // avoid saving an answer right after fetching it
     withLatestFrom(this.config$),
     switchMap(([{ answer, state }, { route, attemptId }]) => this.currentAnswerService.update(route.id, attemptId, { answer, state }).pipe(
-      mapTo({ success: true }),
-      catchError(() => of({ success: false })),
+      mapTo({ answer, state }),
     )),
     shareReplay(1),
+  );
+  readonly saveAnswerAndStateInterval$ = this.savedAnswerAndState$.pipe(
+    mapTo({ success: true }),
+    catchError(() => of({ success: false })),
   );
 
   private subscriptions = [
@@ -144,5 +148,26 @@ export class ItemTaskAnswerService implements OnDestroy {
 
   clearAnswer(): Observable<unknown> {
     return this.task$.pipe(take(1), switchMap(task => task.reloadAnswer('')));
+  }
+
+  saveAnswerAndState(): Observable<void> {
+    return forkJoin({
+      saved: race(
+        this.savedAnswerAndState$.pipe(take(1)),
+        this.initialAnswer$.pipe(map(initial => (initial ? { answer: initial.answer, state: initial.state } : undefined))),
+        of(undefined),
+      ),
+      current: this.task$.pipe(switchMap(task => forkJoin({ answer: task.getAnswer(), state: task.getState() }))),
+    }).pipe(
+      switchMap(({ saved, current }) => {
+        const currentIsSaved = saved && saved.answer === current.answer && saved.state === current.state;
+        if (currentIsSaved) return of(undefined);
+
+        return this.config$.pipe(
+          switchMap(({ route, attemptId }) => this.currentAnswerService.update(route.id, attemptId, current))
+        );
+      }),
+      shareReplay(1),
+    );
   }
 }
