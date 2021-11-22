@@ -7,16 +7,17 @@ import { LayoutService } from '../../../../shared/services/layout.service';
 import { RouterLinkActive } from '@angular/router';
 import { TaskTab } from '../item-display/item-display.component';
 import { Mode, ModeService } from 'src/app/shared/services/mode.service';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ConfigureTaskOptions } from '../../services/item-task.service';
+import { BeforeUnloadComponent } from 'src/app/shared/guards/before-unload-guard';
 
 @Component({
   selector: 'alg-item-details',
   templateUrl: './item-details.component.html',
   styleUrls: [ './item-details.component.scss' ],
 })
-export class ItemDetailsComponent implements OnDestroy {
+export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent {
   @ViewChild('progressTab') progressTab?: RouterLinkActive;
 
   itemData$ = this.itemDataSource.state$;
@@ -69,6 +70,10 @@ export class ItemDetailsComponent implements OnDestroy {
 
   setTaskTabActive(tab: TaskTab): void {
     this.taskView = tab.view;
+  }
+
+  beforeUnload(): Observable<boolean> {
+    return of(false);
   }
 
 }
