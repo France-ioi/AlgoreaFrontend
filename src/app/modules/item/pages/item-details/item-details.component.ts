@@ -7,8 +7,8 @@ import { LayoutService } from '../../../../shared/services/layout.service';
 import { RouterLinkActive } from '@angular/router';
 import { TaskTab } from '../item-display/item-display.component';
 import { Mode, ModeService } from 'src/app/shared/services/mode.service';
-import { Observable, of } from 'rxjs';
-import { catchError, map, takeLast } from 'rxjs/operators';
+import { fromEvent, Observable, of } from 'rxjs';
+import { catchError, map, switchMap, take, takeLast } from 'rxjs/operators';
 import { ConfigureTaskOptions } from '../../services/item-task.service';
 import { BeforeUnloadComponent } from 'src/app/shared/guards/before-unload-guard';
 import { ItemContentComponent } from '../item-content/item-content.component';
@@ -44,9 +44,14 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent {
   readonly enableLoadSubmission$ = this.modeService.mode$.pipe(map(mode => mode === Mode.Normal));
   savingAnswer = false;
 
-  private subscription = this.itemDataSource.state$.subscribe(state => {
-    if (state.isFetching) this.taskTabs = []; // reset task tabs when item changes.
-  });
+  private subscriptions = [
+    this.itemDataSource.state$.subscribe(state => {
+      if (state.isFetching) this.taskTabs = []; // reset task tabs when item changes.
+    }),
+    fromEvent<BeforeUnloadEvent>(globalThis, 'beforeunload', { capture: true })
+      .pipe(switchMap(() => this.itemContentComponent?.itemDisplayComponent?.saveAnswerAndState() ?? of(undefined)), take(1))
+      .subscribe(),
+  ];
 
   constructor(
     private userService: UserSessionService,
@@ -56,7 +61,7 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent {
   ) {}
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
   reloadItem(): void {
