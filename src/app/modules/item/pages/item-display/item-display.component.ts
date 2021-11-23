@@ -10,8 +10,8 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import { interval, merge, Observable, race, Subject, Subscription } from 'rxjs';
-import { filter, map, mapTo, pairwise, shareReplay, startWith, switchMap } from 'rxjs/operators';
+import { interval, merge, Observable, Subject, Subscription } from 'rxjs';
+import { endWith, filter, map, pairwise, shareReplay, startWith, switchMap, takeUntil } from 'rxjs/operators';
 import { HOURS, SECONDS } from 'src/app/shared/helpers/duration';
 import { isNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
 import { ConfigureTaskOptions, ItemTaskService } from '../../services/item-task.service';
@@ -132,9 +132,13 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
   saveAnswerAndState(): Observable<{ saving: boolean }> {
     this.subscription?.unsubscribe();
     this.subscription = undefined;
-    const save$ = this.taskService.saveAnswerAndState().pipe(shareReplay(1));
+    const save$ = this.taskService.saveAnswerAndState().pipe(
+      takeUntil(this.skipSave$),
+      endWith({ saving: false }),
+      shareReplay(1),
+    );
     save$.subscribe(({ saving }) => this.savingAnswerAndState = saving);
-    return race(save$, this.skipSave$.pipe(mapTo({ saving: false })));
+    return save$;
   }
 
   skipSave(): void {
