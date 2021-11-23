@@ -65,7 +65,7 @@ export class ItemTaskService {
   configure(route: FullItemRoute, url: string, attemptId: string, options: ConfigureTaskOptions): void {
     this.readOnly = options.readOnly;
     this.attemptId = attemptId;
-    this.initService.configure(route, url, attemptId, options.shouldLoadAnswer);
+    this.initService.configure(route, url, attemptId, options.shouldLoadAnswer, options.readOnly);
   }
 
   initTask(iframe: HTMLIFrameElement): void {
