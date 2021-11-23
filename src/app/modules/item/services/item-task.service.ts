@@ -76,7 +76,7 @@ export class ItemTaskService {
     this.viewsService.showView(view);
   }
 
-  saveAnswerAndState(): Observable<void> {
+  saveAnswerAndState(): Observable<{ saving: boolean }> {
     return this.answerService.saveAnswerAndState();
   }
 

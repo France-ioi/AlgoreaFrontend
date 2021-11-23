@@ -8,7 +8,7 @@ import { RouterLinkActive } from '@angular/router';
 import { TaskTab } from '../item-display/item-display.component';
 import { Mode, ModeService } from 'src/app/shared/services/mode.service';
 import { Observable, of } from 'rxjs';
-import { catchError, map, mapTo } from 'rxjs/operators';
+import { catchError, map, takeLast } from 'rxjs/operators';
 import { ConfigureTaskOptions } from '../../services/item-task.service';
 import { BeforeUnloadComponent } from 'src/app/shared/guards/before-unload-guard';
 import { ItemContentComponent } from '../item-content/item-content.component';
@@ -42,6 +42,7 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent {
   })));
 
   readonly enableLoadSubmission$ = this.modeService.mode$.pipe(map(mode => mode === Mode.Normal));
+  savingAnswer = false;
 
   private subscription = this.itemDataSource.state$.subscribe(state => {
     if (state.isFetching) this.taskTabs = []; // reset task tabs when item changes.
@@ -75,8 +76,11 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent {
   }
 
   beforeUnload(): Observable<boolean> {
-    if (!this.itemContentComponent?.itemDisplayComponent) return of(false);
-    return this.itemContentComponent.itemDisplayComponent.saveAnswerAndState().pipe(mapTo(true), catchError(() => of(false)));
+    if (!this.itemContentComponent?.itemDisplayComponent) return of(true);
+    const save$ = this.itemContentComponent.itemDisplayComponent.saveAnswerAndState();
+    save$.subscribe(({ saving }) => this.savingAnswer = saving);
+    const canUnload$ = save$.pipe(map(({ saving }) => !saving), takeLast(1), catchError(() => of(true)));
+    return canUnload$;
   }
 
 }

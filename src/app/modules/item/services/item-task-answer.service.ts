@@ -9,6 +9,7 @@ import {
   mapTo,
   shareReplay,
   skip,
+  startWith,
   switchMap,
   take,
   takeUntil,
@@ -150,7 +151,7 @@ export class ItemTaskAnswerService implements OnDestroy {
     return this.task$.pipe(take(1), switchMap(task => task.reloadAnswer('')));
   }
 
-  saveAnswerAndState(): Observable<void> {
+  saveAnswerAndState(): Observable<{ saving: boolean }> {
     return forkJoin({
       saved: race(
         this.savedAnswerAndState$.pipe(take(1)),
@@ -160,11 +161,13 @@ export class ItemTaskAnswerService implements OnDestroy {
       current: this.task$.pipe(switchMap(task => forkJoin({ answer: task.getAnswer(), state: task.getState() }))),
     }).pipe(
       switchMap(({ saved, current }) => {
-        const currentIsSaved = saved && saved.answer === current.answer && saved.state === current.state;
-        if (currentIsSaved) return of(undefined);
+        const currentIsSaved = (saved && saved.answer === current.answer && saved.state === current.state)
+        if (currentIsSaved) return of({ saving: false });
 
         return this.config$.pipe(
-          switchMap(({ route, attemptId }) => this.currentAnswerService.update(route.id, attemptId, current))
+          switchMap(({ route, attemptId }) => this.currentAnswerService.update(route.id, attemptId, current)),
+          mapTo({ saving: false }),
+          startWith({ saving: true }),
         );
       }),
       shareReplay(1),

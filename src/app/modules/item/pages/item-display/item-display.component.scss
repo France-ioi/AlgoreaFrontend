@@ -30,6 +30,7 @@
   .saving-answer {
     background-color: rgba(74,74,74,.7);
     position: absolute;
+    z-index: 10;
     top: 0;
     left: 0;
     height: 100%;
@@ -42,7 +43,7 @@
     padding: 0.5rem 2rem;
     background: $base-bk-color;
     border-radius: $border-radius;
-    font-size: 2em;
+    font-size: 1.25em;
     display: inline-flex;
     align-items: center;
     justify-content: center;

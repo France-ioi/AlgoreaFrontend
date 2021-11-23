@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, ViewChild } from '@angular/core';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
 import { ItemData } from '../../services/item-datasource.service';
 import { RouterLinkActive } from '@angular/router';
@@ -13,6 +13,9 @@ export class ItemProgressComponent implements OnChanges {
 
   @Input() itemData?: ItemData;
   @Input() enableLoadSubmission = false;
+  @Input() savingAnswer = false;
+
+  @Output() skipSave = new EventEmitter<void>();
 
   @ViewChild('historyTab') historyTab?: RouterLinkActive;
   @ViewChild('chapterGroupProgressTab') chapterGroupProgressTab?: RouterLinkActive;

@@ -11,7 +11,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { interval, merge, Observable, race, Subject, Subscription } from 'rxjs';
-import { filter, map, pairwise, startWith, switchMap } from 'rxjs/operators';
+import { filter, map, mapTo, pairwise, shareReplay, startWith, switchMap } from 'rxjs/operators';
 import { HOURS, SECONDS } from 'src/app/shared/helpers/duration';
 import { isNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
 import { ConfigureTaskOptions, ItemTaskService } from '../../services/item-task.service';
@@ -128,13 +128,12 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
     if (this.actionFeedbackService.hasFeedback) this.actionFeedbackService.clear();
   }
 
-  saveAnswerAndState(): Observable<void> {
+  saveAnswerAndState(): Observable<{ saving: boolean }> {
     this.subscription?.unsubscribe();
     this.subscription = undefined;
-    const save$ = race(this.taskService.saveAnswerAndState(), this.skipSave$);
-    this.savingAnswerAndState = true;
-    save$.subscribe(() => this.savingAnswerAndState = false);
-    return save$;
+    const save$ = this.taskService.saveAnswerAndState().pipe(shareReplay(1));
+    save$.subscribe(({ saving }) => this.savingAnswerAndState = saving);
+    return race(save$, this.skipSave$.pipe(mapTo({ saving: false })));
   }
 
   skipSave(): void {
