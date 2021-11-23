@@ -24,7 +24,7 @@ import { GetAnswerService } from '../http-services/get-answer.service';
 import { GradeService } from '../http-services/grade.service';
 import { ItemTaskInitService } from './item-task-init.service';
 
-const answerAndStateSaveInterval = 1*SECONDS;
+const answerAndStateSaveInterval = (): number => ((window as unknown as Record<string, number>).__DELAY ?? 1)*SECONDS;
 const loadAnswerError = new Error('load answer forbidden');
 
 @Injectable()
@@ -81,7 +81,7 @@ export class ItemTaskAnswerService implements OnDestroy {
 
   private savedAnswerAndStateInterval$ = this.task$.pipe(
     delayWhen(() => combineLatest([ this.initializedTaskState$, this.initializedTaskAnswer$ ])),
-    repeatLatestWhen(interval(answerAndStateSaveInterval).pipe(takeUntil(this.destroyed$))),
+    repeatLatestWhen(interval(answerAndStateSaveInterval()).pipe(takeUntil(this.destroyed$))),
     switchMap(task => forkJoin({ answer: task.getAnswer(), state: task.getState() })),
     distinctUntilChanged((a, b) => a.answer === b.answer && a.state === b.state),
     skip(1), // avoid saving an answer right after fetching it
