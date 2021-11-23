@@ -126,6 +126,7 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
 
   ngOnDestroy(): void {
     if (this.actionFeedbackService.hasFeedback) this.actionFeedbackService.clear();
+    this.subscription?.unsubscribe();
   }
 
   saveAnswerAndState(): Observable<{ saving: boolean }> {

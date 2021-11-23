@@ -24,11 +24,13 @@ import { GetAnswerService } from '../http-services/get-answer.service';
 import { GradeService } from '../http-services/grade.service';
 import { ItemTaskInitService } from './item-task-init.service';
 
-const answerAndStateSaveInterval = 1*SECONDS;
+const answerAndStateSaveInterval = 10*SECONDS;
 const loadAnswerError = new Error('load answer forbidden');
 
 @Injectable()
 export class ItemTaskAnswerService implements OnDestroy {
+  private destroyed$ = new Subject<void>();
+
   private errorSubject = new Subject<Error>();
   readonly error$ = this.errorSubject.pipe(filter(error => error !== loadAnswerError));
   readonly loadAnswerByIdError$ = this.errorSubject.pipe(filter(error => error === loadAnswerError));
@@ -79,7 +81,7 @@ export class ItemTaskAnswerService implements OnDestroy {
 
   private savedAnswerAndState$ = this.task$.pipe(
     delayWhen(() => combineLatest([ this.initializedTaskState$, this.initializedTaskAnswer$ ])),
-    repeatLatestWhen(interval(answerAndStateSaveInterval)),
+    repeatLatestWhen(interval(answerAndStateSaveInterval).pipe(takeUntil(this.destroyed$))),
     switchMap(task => forkJoin({ answer: task.getAnswer(), state: task.getState() })),
     distinctUntilChanged((a, b) => a.answer === b.answer && a.state === b.state),
     skip(1), // avoid saving an answer right after fetching it
@@ -110,6 +112,8 @@ export class ItemTaskAnswerService implements OnDestroy {
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
     this.errorSubject.complete();
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 
   submitAnswer(): Observable<unknown> {
@@ -158,14 +162,14 @@ export class ItemTaskAnswerService implements OnDestroy {
         this.initialAnswer$.pipe(map(initial => (initial ? { answer: initial.answer, state: initial.state } : undefined))),
         of(undefined),
       ),
-      current: this.task$.pipe(switchMap(task => forkJoin({ answer: task.getAnswer(), state: task.getState() }))),
+      current: this.task$.pipe(take(1), switchMap(task => forkJoin({ answer: task.getAnswer(), state: task.getState() }))),
     }).pipe(
-      switchMap(({ saved, current }) => {
-        const currentIsSaved = (saved && saved.answer === current.answer && saved.state === current.state)
+      withLatestFrom(this.config$),
+      switchMap(([{ saved, current }, { route, attemptId }]) => {
+        const currentIsSaved = (saved && saved.answer === current.answer && saved.state === current.state);
         if (currentIsSaved) return of({ saving: false });
 
-        return this.config$.pipe(
-          switchMap(({ route, attemptId }) => this.currentAnswerService.update(route.id, attemptId, current)),
+        return this.currentAnswerService.update(route.id, attemptId, current).pipe(
           mapTo({ saving: false }),
           startWith({ saving: true }),
         );
