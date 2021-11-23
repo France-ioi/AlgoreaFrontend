@@ -24,7 +24,7 @@ import { GetAnswerService } from '../http-services/get-answer.service';
 import { GradeService } from '../http-services/grade.service';
 import { ItemTaskInitService } from './item-task-init.service';
 
-const answerAndStateSaveInterval = 10*SECONDS;
+const answerAndStateSaveInterval = 1*SECONDS;
 const loadAnswerError = new Error('load answer forbidden');
 
 @Injectable()
