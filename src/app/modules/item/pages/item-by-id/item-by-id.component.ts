@@ -1,7 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, ParamMap, UrlTree } from '@angular/router';
 import { of, Subscription } from 'rxjs';
-import { distinctUntilChanged, filter, map, pairwise, startWith, switchMap } from 'rxjs/operators';
+import { distinctUntilChanged, filter, map, pairwise, startWith, switchMap, take } from 'rxjs/operators';
 import { defaultAttemptId } from 'src/app/shared/helpers/attempts';
 import { appDefaultItemRoute } from 'src/app/shared/routing/item-route';
 import { errorState, fetchingState, FetchState } from 'src/app/shared/helpers/state';
@@ -136,6 +136,9 @@ export class ItemByIdComponent implements OnDestroy {
   ngOnDestroy(): void {
     this.currentContent.clear();
     this.subscriptions.forEach(s => s.unsubscribe());
+    this.layoutService.fullFrameContent$
+      .pipe(take(1), filter(Boolean)) // if layout is in full frame and we quit an item page => disable full frame
+      .subscribe(() => this.layoutService.toggleFullFrameContent(false));
   }
 
   reloadContent(): void {

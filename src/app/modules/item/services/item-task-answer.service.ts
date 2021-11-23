@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { combineLatest, forkJoin, interval, merge, Observable, of, race, Subject } from 'rxjs';
+import { combineLatest, EMPTY, forkJoin, interval, merge, Observable, of, race, Subject } from 'rxjs';
 import {
   catchError,
   delayWhen,
@@ -80,7 +80,8 @@ export class ItemTaskAnswerService implements OnDestroy {
     shareReplay(1),
   );
 
-  private savedAnswerAndStateInterval$ = this.task$.pipe(
+  private savedAnswerAndStateInterval$ = this.config$.pipe(
+    switchMap(({ readOnly }) => (readOnly ? EMPTY : this.task$)),
     delayWhen(() => combineLatest([ this.initializedTaskState$, this.initializedTaskAnswer$ ])),
     repeatLatestWhen(interval(answerAndStateSaveInterval()).pipe(takeUntil(this.destroyed$))),
     switchMap(task => forkJoin({ answer: task.getAnswer(), state: task.getState() })),
