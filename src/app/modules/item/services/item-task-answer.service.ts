@@ -1,16 +1,16 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { combineLatest, forkJoin, interval, Observable, of, race, Subject } from 'rxjs';
+import { combineLatest, forkJoin, interval, merge, Observable, of, race, Subject } from 'rxjs';
 import {
   catchError,
   delayWhen,
   distinctUntilChanged,
   filter,
-  map,
   mapTo,
   shareReplay,
   skip,
   startWith,
   switchMap,
+  switchMapTo,
   take,
   takeUntil,
   withLatestFrom,
@@ -79,7 +79,7 @@ export class ItemTaskAnswerService implements OnDestroy {
     shareReplay(1),
   );
 
-  private savedAnswerAndState$ = this.task$.pipe(
+  private savedAnswerAndStateInterval$ = this.task$.pipe(
     delayWhen(() => combineLatest([ this.initializedTaskState$, this.initializedTaskAnswer$ ])),
     repeatLatestWhen(interval(answerAndStateSaveInterval).pipe(takeUntil(this.destroyed$))),
     switchMap(task => forkJoin({ answer: task.getAnswer(), state: task.getState() })),
@@ -91,7 +91,19 @@ export class ItemTaskAnswerService implements OnDestroy {
     )),
     shareReplay(1),
   );
-  readonly saveAnswerAndStateInterval$ = this.savedAnswerAndState$.pipe(
+
+  private savedAnswerAndState$ = merge(
+    this.savedAnswerAndStateInterval$,
+    this.initialAnswer$.pipe(
+      filter(initialAnswer => initialAnswer === null),
+      switchMapTo(this.task$),
+      switchMap(task => forkJoin({ answer: task.getAnswer(), state: task.getState() })),
+      withLatestFrom(this.config$),
+      switchMap(([ body, { route, attemptId }]) => this.currentAnswerService.update(route.id, attemptId, body).pipe(mapTo(body))),
+      shareReplay(1),
+    ),
+  );
+  readonly saveAnswerAndStateInterval$ = this.savedAnswerAndStateInterval$.pipe(
     mapTo({ success: true }),
     catchError(() => of({ success: false })),
   );
@@ -99,6 +111,7 @@ export class ItemTaskAnswerService implements OnDestroy {
   private subscriptions = [
     this.initializedTaskAnswer$.subscribe({ error: err => this.errorSubject.next(err) }),
     this.initializedTaskState$.subscribe({ error: err => this.errorSubject.next(err) }),
+    this.savedAnswerAndState$.subscribe({ error: err => this.errorSubject.next(err) }),
   ];
 
   constructor(
@@ -157,11 +170,7 @@ export class ItemTaskAnswerService implements OnDestroy {
 
   saveAnswerAndState(): Observable<{ saving: boolean }> {
     return forkJoin({
-      saved: race(
-        this.savedAnswerAndState$.pipe(take(1)),
-        this.initialAnswer$.pipe(map(initial => (initial ? { answer: initial.answer, state: initial.state } : undefined))),
-        of(undefined),
-      ),
+      saved: race(this.savedAnswerAndState$.pipe(take(1)), of(undefined)),
       current: this.task$.pipe(take(1), switchMap(task => forkJoin({ answer: task.getAnswer(), state: task.getState() }))),
     }).pipe(
       withLatestFrom(this.config$),
