@@ -5,6 +5,7 @@ import {
   delayWhen,
   distinctUntilChanged,
   filter,
+  map,
   mapTo,
   shareReplay,
   skip,
@@ -100,9 +101,9 @@ export class ItemTaskAnswerService implements OnDestroy {
       switchMap(task => forkJoin({ answer: task.getAnswer(), state: task.getState() })),
       withLatestFrom(this.config$),
       switchMap(([ body, { route, attemptId }]) => this.currentAnswerService.update(route.id, attemptId, body).pipe(mapTo(body))),
-      shareReplay(1),
     ),
-  );
+    this.initialAnswer$.pipe(map(initial => (initial ? { answer: initial.answer, state: initial.state } : undefined))),
+  ).pipe(shareReplay(1));
   readonly saveAnswerAndStateInterval$ = this.savedAnswerAndStateInterval$.pipe(
     mapTo({ success: true }),
     catchError(() => of({ success: false })),
