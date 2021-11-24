@@ -12,7 +12,7 @@ import { canCurrentUserViewItemContent } from 'src/app/modules/item/helpers/item
 import { mapToFetchState } from 'src/app/shared/operators/state';
 import { buildUp } from 'src/app/shared/operators/build-up';
 import { FetchState } from 'src/app/shared/helpers/state';
-import { LocaleService } from 'src/app/core/services/localeService'
+import { LocaleService } from 'src/app/core/services/localeService';
 
 export interface ItemData {
   route: FullItemRoute,
