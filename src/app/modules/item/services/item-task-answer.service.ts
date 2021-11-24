@@ -13,6 +13,7 @@ import {
   switchMapTo,
   take,
   takeUntil,
+  tap,
   withLatestFrom,
 } from 'rxjs/operators';
 import { SECONDS } from 'src/app/shared/helpers/duration';
@@ -151,10 +152,8 @@ export class ItemTaskAnswerService implements OnDestroy {
       withLatestFrom(this.config$),
       switchMap(([{ answer, state }, { route, attemptId }]) =>
         this.currentAnswerService.update(route.id, attemptId, { answer, state }).pipe(
-          map(() => {
-            Object.assign(saved, { answer, state });
-            return { success: true };
-          }),
+          tap(() => Object.assign(saved, { answer, state })),
+          map(() => ({ success: true })),
           catchError(() => of({ success: false })),
         )
       ),
