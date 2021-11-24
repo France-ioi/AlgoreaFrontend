@@ -1,6 +1,6 @@
 import { Component, OnDestroy } from '@angular/core';
-import { EMPTY } from 'rxjs';
-import { catchError, filter, map, retry, switchMap, takeUntil } from 'rxjs/operators';
+import { EMPTY, merge, Subject } from 'rxjs';
+import { catchError, defaultIfEmpty, filter, map, retry, shareReplay, switchMap, take, takeUntil } from 'rxjs/operators';
 import { mapPending } from 'src/app/shared/operators/map-pending';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
 import { LocaleService } from '../../services/localeService';
@@ -24,13 +24,26 @@ export class LanguageMismatchComponent implements OnDestroy {
   );
   updating = false;
 
-  private updateTempUserLanguage = this.sessionService.userProfile$.pipe(
+  private updateTempUserLanguage$ = this.sessionService.userProfile$.pipe(
     filter(profile => profile.tempUser && profile.defaultLanguage !== this.currentLanguage),
     switchMap(() => (this.currentLanguage ? this.sessionService.updateCurrentUser({ default_language: this.currentLanguage }) : EMPTY)),
     retry(3),
     // An error is not that problematic, no need to break the app for the language of a temp user.
     catchError(() => EMPTY),
-  ).subscribe();
+    shareReplay(1),
+  );
+
+  private updatedAuthenticatedUserLanguage$ = new Subject<void>();
+  private canStartSession$ = merge(
+    this.sessionService.userProfile$.pipe(filter(profile => profile.defaultLanguage === this.currentLanguage)),
+    this.updatedAuthenticatedUserLanguage$,
+    this.updateTempUserLanguage$.pipe(defaultIfEmpty(undefined)),
+  );
+
+  private subscriptions = [
+    this.updateTempUserLanguage$.subscribe(),
+    this.canStartSession$.pipe(take(1)).subscribe({ complete: () => this.sessionService.startSession() }),
+  ];
 
   constructor(
     private localeService: LocaleService,
@@ -41,7 +54,10 @@ export class LanguageMismatchComponent implements OnDestroy {
     if (!language) throw new Error('language should be defined');
     this.sessionService.updateCurrentUser({ default_language: language })
       .pipe(mapPending())
-      .subscribe(updating => (this.updating = updating));
+      .subscribe({
+        next: updating => this.updating = updating,
+        complete: () => this.updatedAuthenticatedUserLanguage$.next(),
+      });
   }
 
   onVisitPlatformInUserLanguage(language: string): void {
@@ -49,7 +65,8 @@ export class LanguageMismatchComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.updateTempUserLanguage.unsubscribe();
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
+    this.updatedAuthenticatedUserLanguage$.complete();
   }
 
 }

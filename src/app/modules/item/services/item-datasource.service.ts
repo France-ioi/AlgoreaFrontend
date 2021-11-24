@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { EMPTY, forkJoin, Observable, of, ReplaySubject, Subject } from 'rxjs';
-import { distinctUntilChanged, map, scan, shareReplay, startWith, switchMap } from 'rxjs/operators';
+import { delayWhen, distinctUntilChanged, map, scan, shareReplay, startWith, switchMap } from 'rxjs/operators';
 import { bestAttemptFromResults, implicitResultStart } from 'src/app/shared/helpers/attempts';
 import { isRouteWithSelfAttempt, FullItemRoute } from 'src/app/shared/routing/item-route';
 import { ResultActionsService } from 'src/app/shared/http-services/result-actions.service';
@@ -43,6 +43,7 @@ export class ItemDataSource implements OnDestroy {
 
   /* state to put outputted */
   readonly state$ = this.fetchOperation$.pipe(
+    delayWhen(() => this.userSessionService.canStartSession$),
     switchMap(item => this.fetchItemData(item).pipe(mapToFetchState({ resetter: this.refresh$ }))),
     // maxScorePatch is a cold observable, and switchMap operator acts a subscriber here
     // so the max score patch is only valid for current item

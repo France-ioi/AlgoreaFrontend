@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { BehaviorSubject, Subscription, Observable, Subject, of } from 'rxjs';
+import { BehaviorSubject, Subscription, Observable, Subject, of, ReplaySubject } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
-import { switchMap, distinctUntilChanged, map, filter, mapTo, skip, shareReplay, retry } from 'rxjs/operators';
+import { switchMap, distinctUntilChanged, map, filter, mapTo, skip, shareReplay, retry, take } from 'rxjs/operators';
 import { CurrentUserHttpService, UpdateUserBody, UserProfile } from '../http-services/current-user.service';
 import { isNotUndefined } from '../helpers/null-undefined-predicates';
 import { repeatLatestWhen } from '../helpers/repeatLatestWhen';
@@ -41,6 +41,8 @@ export class UserSessionService implements OnDestroy {
 
   private subscription?: Subscription;
   private userProfileUpdated$ = new Subject<void>();
+  private canStartSession = new ReplaySubject<void>();
+  readonly canStartSession$ = this.canStartSession.pipe(take(1));
 
   constructor(
     private authService: AuthService,
@@ -63,6 +65,7 @@ export class UserSessionService implements OnDestroy {
     this.subscription?.unsubscribe();
     this.session$.complete();
     this.userProfileUpdated$.complete();
+    if (!this.canStartSession.closed) this.canStartSession.complete();
   }
 
   startGroupWatching(group: WatchedGroup): void {
@@ -86,6 +89,13 @@ export class UserSessionService implements OnDestroy {
     const update$ = this.currentUserService.update(changes).pipe(shareReplay(1));
     update$.subscribe(() => this.userProfileUpdated$.next());
     return update$;
+  }
+
+  startSession(): void {
+    const isAlreadyStarted = this.canStartSession.closed;
+    if (isAlreadyStarted) throw new Error('session is already started');
+    this.canStartSession.next();
+    this.canStartSession.complete();
   }
 
   login(): void {
