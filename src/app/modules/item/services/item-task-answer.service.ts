@@ -113,7 +113,6 @@ export class ItemTaskAnswerService implements OnDestroy {
   private subscriptions = [
     this.initializedTaskAnswer$.subscribe({ error: err => this.errorSubject.next(err) }),
     this.initializedTaskState$.subscribe({ error: err => this.errorSubject.next(err) }),
-    this.savedAnswerAndState$.subscribe({ error: err => this.errorSubject.next(err) }),
   ];
 
   constructor(
