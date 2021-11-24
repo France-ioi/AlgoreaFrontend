@@ -10,7 +10,7 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import { interval, merge, Observable, Subject, Subscription } from 'rxjs';
+import { interval, merge, Observable, Subject } from 'rxjs';
 import { endWith, filter, map, pairwise, shareReplay, startWith, switchMap, takeUntil } from 'rxjs/operators';
 import { HOURS, SECONDS } from 'src/app/shared/helpers/duration';
 import { isNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
@@ -76,7 +76,20 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
   savingAnswerAndState = false;
 
   private skipSave$ = new Subject<void>();
-  private subscription?: Subscription;
+  private subscription = this.taskService.saveAnswerAndStateInterval$
+    .pipe(startWith({ success: true }), pairwise())
+    .subscribe(([ previous, next ]) => {
+      const shouldDisplayError = !next.success && !this.actionFeedbackService.hasFeedback;
+      const shouldDisplaySuccess = !previous.success && next.success;
+      if (shouldDisplayError) {
+        const message = $localize`Your current progress could not have been saved. Are you connected to the internet ?`;
+        this.actionFeedbackService.error(message, { life: 24*HOURS });
+      }
+      if (shouldDisplaySuccess) {
+        this.actionFeedbackService.clear();
+        this.actionFeedbackService.success($localize`Progress saved!`);
+      }
+    });
 
   constructor(
     private taskService: ItemTaskService,
@@ -87,21 +100,6 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
   ngOnInit(): void {
     this.taskService.configure(this.route, this.url, this.attemptId, this.taskOptions);
     this.taskService.showView(this.view ?? 'task');
-
-    this.subscription = this.taskService.saveAnswerAndStateInterval$
-      .pipe(startWith({ success: true }), pairwise())
-      .subscribe(([ previous, next ]) => {
-        const shouldDisplayError = !next.success && !this.actionFeedbackService.hasFeedback;
-        const shouldDisplaySuccess = !previous.success && next.success;
-        if (shouldDisplayError) {
-          const message = $localize`Your current progress could not have been saved. Are you connected to the internet ?`;
-          this.actionFeedbackService.error(message, { life: 24*HOURS });
-        }
-        if (shouldDisplaySuccess) {
-          this.actionFeedbackService.clear();
-          this.actionFeedbackService.success($localize`Progress saved!`);
-        }
-      });
   }
 
   ngAfterViewChecked(): void {
@@ -126,12 +124,11 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
 
   ngOnDestroy(): void {
     if (this.actionFeedbackService.hasFeedback) this.actionFeedbackService.clear();
-    this.subscription?.unsubscribe();
+    this.subscription.unsubscribe();
   }
 
   saveAnswerAndState(): Observable<{ saving: boolean }> {
-    this.subscription?.unsubscribe();
-    this.subscription = undefined;
+    this.subscription.unsubscribe();
     const save$ = this.taskService.saveAnswerAndState().pipe(
       takeUntil(this.skipSave$),
       endWith({ saving: false }),
