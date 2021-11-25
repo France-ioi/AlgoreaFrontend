@@ -25,7 +25,7 @@ import { GetAnswerService } from '../http-services/get-answer.service';
 import { GradeService } from '../http-services/grade.service';
 import { ItemTaskInitService } from './item-task-init.service';
 
-const answerAndStateSaveInterval = (): number => ((window as unknown as Record<string, number>).__DELAY ?? 5)*SECONDS;
+const answerAndStateSaveInterval = 5*SECONDS;
 const loadAnswerError = new Error('load answer forbidden');
 
 @Injectable()
@@ -90,7 +90,8 @@ export class ItemTaskAnswerService implements OnDestroy {
     delayWhen(() => combineLatest([ this.saved$, this.initializedTaskState$, this.initializedTaskAnswer$ ])),
   );
 
-  private answerOrStateChange$ = interval(answerAndStateSaveInterval()).pipe(
+  private refreshAnswerAndStateInterval$ = interval(Math.max(answerAndStateSaveInterval, window.taskSaveIntervalInSec ?? 0));
+  private answerOrStateChange$ = this.refreshAnswerAndStateInterval$.pipe(
     takeUntil(this.destroyed$),
     switchMapTo(this.task$),
     switchMap(task => forkJoin({ answer: task.getAnswer(), state: task.getState() })),
@@ -210,3 +211,10 @@ export class ItemTaskAnswerService implements OnDestroy {
     );
   }
 }
+
+declare global {
+  interface Window {
+    taskSaveIntervalInSec?: number,
+  }
+}
+
