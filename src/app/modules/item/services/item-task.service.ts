@@ -76,6 +76,10 @@ export class ItemTaskService {
     this.viewsService.showView(view);
   }
 
+  saveAnswerAndState(): Observable<{ saving: boolean }> {
+    return this.answerService.saveAnswerAndState();
+  }
+
   private bindPlatform(task: Task): void {
     if (!this.attemptId) throw new Error('attemptId must be defined. The "configure" method has probably not been called as expected');
     // attempt id can be used as a seed as these are currently assigned incrementally by participant id

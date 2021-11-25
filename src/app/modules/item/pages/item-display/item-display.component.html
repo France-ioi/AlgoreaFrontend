@@ -30,6 +30,13 @@
     </ng-container>
   </div>
   <div class="iframe-container" [style.height.px]="iframeHeight$ | async" *ngIf="!state.isError">
+    <div class="saving-answer" *ngIf="savingAnswerAndState">
+      <p class="saving-answer-message">
+        <span i18n>Saving answer...</span>
+        <alg-loading size="medium"></alg-loading>
+        <p-button type="button" (click)="skipSave()" i18n-label label="Skip"></p-button>
+      </p>
+    </div>
     <iframe *ngIf="iframeSrc$ | async as iframeSrc" [style.height.px]="iframeHeight$ | async" #iframe [src]="iframeSrc"></iframe>
     <div *ngIf="state.isFetching" class="loading">
       <alg-loading></alg-loading>

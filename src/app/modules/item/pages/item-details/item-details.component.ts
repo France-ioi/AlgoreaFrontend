@@ -7,17 +7,20 @@ import { LayoutService } from '../../../../shared/services/layout.service';
 import { RouterLinkActive } from '@angular/router';
 import { TaskTab } from '../item-display/item-display.component';
 import { Mode, ModeService } from 'src/app/shared/services/mode.service';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { fromEvent, Observable, of, Subject } from 'rxjs';
+import { catchError, endWith, last, map, shareReplay, switchMap, take, takeUntil } from 'rxjs/operators';
 import { ConfigureTaskOptions } from '../../services/item-task.service';
+import { BeforeUnloadComponent } from 'src/app/shared/guards/before-unload-guard';
+import { ItemContentComponent } from '../item-content/item-content.component';
 
 @Component({
   selector: 'alg-item-details',
   templateUrl: './item-details.component.html',
   styleUrls: [ './item-details.component.scss' ],
 })
-export class ItemDetailsComponent implements OnDestroy {
+export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent {
   @ViewChild('progressTab') progressTab?: RouterLinkActive;
+  @ViewChild(ItemContentComponent) itemContentComponent?: ItemContentComponent;
 
   itemData$ = this.itemDataSource.state$;
 
@@ -40,9 +43,20 @@ export class ItemDetailsComponent implements OnDestroy {
 
   readonly enableLoadSubmission$ = this.modeService.mode$.pipe(map(mode => mode === Mode.Normal));
 
-  private subscription = this.itemDataSource.state$.subscribe(state => {
-    if (state.isFetching) this.taskTabs = []; // reset task tabs when item changes.
-  });
+  // When navigating elsewhere but the current answer is unsaved, navigation is blocked until the save is performed.
+  // savingAnswer indicates the loading state while blocking navigation because of the save request.
+  savingAnswer = false;
+  // Any value emitted in skipBeforeUnload$ resumes navigation WITHOUT cancelling the save request.
+  private skipBeforeUnload$ = new Subject<void>();
+
+  private subscriptions = [
+    this.itemDataSource.state$.subscribe(state => {
+      if (state.isFetching) this.taskTabs = []; // reset task tabs when item changes.
+    }),
+    fromEvent<BeforeUnloadEvent>(globalThis, 'beforeunload', { capture: true })
+      .pipe(switchMap(() => this.itemContentComponent?.itemDisplayComponent?.saveAnswerAndState() ?? of(undefined)), take(1))
+      .subscribe(),
+  ];
 
   constructor(
     private userService: UserSessionService,
@@ -52,7 +66,7 @@ export class ItemDetailsComponent implements OnDestroy {
   ) {}
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
   reloadItem(): void {
@@ -69,6 +83,22 @@ export class ItemDetailsComponent implements OnDestroy {
 
   setTaskTabActive(tab: TaskTab): void {
     this.taskView = tab.view;
+  }
+
+  beforeUnload(): Observable<boolean> {
+    if (!this.itemContentComponent?.itemDisplayComponent) return of(true);
+    const save$ = this.itemContentComponent.itemDisplayComponent.saveAnswerAndState().pipe(
+      takeUntil(this.skipBeforeUnload$),
+      endWith({ saving: false }),
+      shareReplay(1),
+    );
+    save$.subscribe(({ saving }) => this.savingAnswer = saving);
+    const canUnload$ = save$.pipe(map(({ saving }) => !saving), last(), catchError(() => of(true)));
+    return canUnload$;
+  }
+
+  skipBeforeUnload(): void {
+    this.skipBeforeUnload$.next();
   }
 
 }

@@ -46,7 +46,15 @@
         </div>
       </div>
 
-      <div>
+      <div class="container">
+        <div *ngIf="savingAnswer" class="save-answer-loader">
+          <p class="save-answer-loader-message">
+            <span i18n>Saving answer before loading submission...</span>
+            <alg-loading size="medium"></alg-loading>
+            <p-button type="button" (click)="skipSave.emit()" i18n-label label="Skip"></p-button>
+          </p>
+        </div>
+
         <alg-item-log-view
           *ngIf="!!historyTab?.isActive"
           [itemData]="itemData"

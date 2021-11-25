@@ -10,8 +10,8 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import { interval, merge, Observable } from 'rxjs';
-import { filter, map, pairwise, startWith, switchMap } from 'rxjs/operators';
+import { interval, merge, Observable, Subject } from 'rxjs';
+import { endWith, filter, map, pairwise, shareReplay, startWith, switchMap, takeUntil } from 'rxjs/operators';
 import { HOURS, SECONDS } from 'src/app/shared/helpers/duration';
 import { isNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
 import { ConfigureTaskOptions, ItemTaskService } from '../../services/item-task.service';
@@ -73,6 +73,9 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
     this.taskService.display$.pipe(map(({ height }) => height), filter(isNotUndefined)),
   ).pipe(map(height => height + additionalHeightToPreventInnerScrollIssues), startWith(initialHeight));
 
+  savingAnswerAndState = false;
+
+  private skipSave$ = new Subject<void>();
   private subscription = this.taskService.saveAnswerAndStateInterval$
     .pipe(startWith({ success: true }), pairwise())
     .subscribe(([ previous, next ]) => {
@@ -122,6 +125,21 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
   ngOnDestroy(): void {
     if (this.actionFeedbackService.hasFeedback) this.actionFeedbackService.clear();
     this.subscription.unsubscribe();
+  }
+
+  saveAnswerAndState(): Observable<{ saving: boolean }> {
+    this.subscription.unsubscribe();
+    const save$ = this.taskService.saveAnswerAndState().pipe(
+      takeUntil(this.skipSave$),
+      endWith({ saving: false }),
+      shareReplay(1),
+    );
+    save$.subscribe(({ saving }) => this.savingAnswerAndState = saving);
+    return save$;
+  }
+
+  skipSave(): void {
+    this.skipSave$.next();
   }
 
   private getTabNameByView(view: string): string {

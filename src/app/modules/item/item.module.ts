@@ -36,6 +36,7 @@ import { UserProgressDetailsComponent } from './components/user-progress-details
 import { PropagationEditMenuComponent } from './components/propagation-edit-menu/propagation-edit-menu.component';
 import { ItemDisplayComponent } from './pages/item-display/item-display.component';
 import { ItemRemoveButtonComponent } from './components/item-remove-button/item-remove-button.component';
+import { BeforeUnloadGuard } from 'src/app/shared/guards/before-unload-guard';
 
 @NgModule({
   declarations: [
@@ -83,6 +84,7 @@ import { ItemRemoveButtonComponent } from './components/item-remove-button/item-
   exports: [],
   providers: [
     PendingChangesGuard,
+    BeforeUnloadGuard,
   ]
 })
 export class ItemModule { }

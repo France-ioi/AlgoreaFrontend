@@ -1,23 +1,23 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { combineLatest, EMPTY, forkJoin, interval, Observable, of, Subject } from 'rxjs';
+import { combineLatest, EMPTY, forkJoin, interval, merge, Observable, of, ReplaySubject, Subject } from 'rxjs';
 import {
   catchError,
   delayWhen,
   distinctUntilChanged,
   filter,
-  map,
   mapTo,
-  repeat,
   shareReplay,
+  startWith,
   switchMap,
   switchMapTo,
   take,
   takeUntil,
-  tap,
+  timeout,
   withLatestFrom,
 } from 'rxjs/operators';
 import { SECONDS } from 'src/app/shared/helpers/duration';
 import { errorIsHTTPForbidden } from 'src/app/shared/helpers/errors';
+import { repeatLatestWhen } from 'src/app/shared/helpers/repeatLatestWhen';
 import { AnswerTokenService } from '../http-services/answer-token.service';
 import { Answer, CurrentAnswerService } from '../http-services/current-answer.service';
 import { GetAnswerService } from '../http-services/get-answer.service';
@@ -29,12 +29,17 @@ const loadAnswerError = new Error('load answer forbidden');
 
 @Injectable()
 export class ItemTaskAnswerService implements OnDestroy {
+  private destroyed$ = new Subject<void>();
+
   private errorSubject = new Subject<Error>();
   readonly error$ = this.errorSubject.pipe(filter(error => error !== loadAnswerError));
   readonly loadAnswerByIdError$ = this.errorSubject.pipe(filter(error => error === loadAnswerError));
 
   private scoreChange = new Subject<number>();
   readonly scoreChange$ = this.scoreChange.asObservable();
+
+  private saved$ = new ReplaySubject<{ answer: string, state: string }>();
+  private saveError$ = new Subject<Error>();
 
   private task$ = this.taskInitService.task$.pipe(takeUntil(this.error$));
   private config$ = this.taskInitService.config$.pipe(takeUntil(this.error$));
@@ -77,17 +82,49 @@ export class ItemTaskAnswerService implements OnDestroy {
     shareReplay(1),
   );
 
-  readonly saveAnswerAndStateInterval$ = this.config$.pipe(
-    switchMap(({ readOnly }) => (readOnly ? EMPTY : this.task$)),
-    delayWhen(() => combineLatest([ this.initializedTaskState$, this.initializedTaskAnswer$ ])),
+  private canStartSaveInterval$: Observable<void> = this.config$.pipe(
+    take(1),
+    filter(({ readOnly }) => !readOnly),
+    mapTo(undefined),
+    delayWhen(() => combineLatest([ this.saved$, this.initializedTaskState$, this.initializedTaskAnswer$ ])),
+  );
+
+  private refreshAnswerAndStatePeriod = Math.max(answerAndStateSaveInterval, (window.taskSaveIntervalInSec ?? 0)*SECONDS);
+  private answerOrStateChange$ = interval(this.refreshAnswerAndStatePeriod).pipe(
+    takeUntil(this.destroyed$),
+    switchMapTo(this.task$),
     switchMap(task => forkJoin({ answer: task.getAnswer(), state: task.getState() })),
-    switchMap(saved => this.saveAnswerAndStateInterval(saved.answer, saved.state)),
-    shareReplay(1),
+    distinctUntilChanged((a, b) => a.answer === b.answer && a.state === b.state),
+  );
+
+  private autoSaveInterval$: Observable<{ answer: string, state: string } | Error> = this.canStartSaveInterval$.pipe(
+    switchMapTo(this.saved$),
+    repeatLatestWhen(this.saveError$),
+    switchMap(saved => this.answerOrStateChange$.pipe(
+      filter(current => current.answer !== saved.answer || current.state !== saved.state),
+      take(1),
+    )),
+    withLatestFrom(this.config$),
+    switchMap(([ current, { route, attemptId }]) => this.currentAnswerService.update(route.id, attemptId, current).pipe(
+      mapTo(current),
+      catchError(() => of(new Error('auto save failed'))),
+    )),
+  );
+
+  readonly saveAnswerAndStateInterval$ = merge(
+    this.saved$.pipe(mapTo({ success: true })),
+    this.saveError$.pipe(mapTo({ success: false })),
   );
 
   private subscriptions = [
     this.initializedTaskAnswer$.subscribe({ error: err => this.errorSubject.next(err) }),
     this.initializedTaskState$.subscribe({ error: err => this.errorSubject.next(err) }),
+    this.initialAnswer$
+      .subscribe(initial => this.saved$.next({ answer: initial?.answer ?? '', state: initial?.state ?? '' })),
+    this.autoSaveInterval$.subscribe(savedOrError => {
+      if (savedOrError instanceof Error) this.saveError$.next(savedOrError);
+      else this.saved$.next(savedOrError);
+    }),
   ];
 
   constructor(
@@ -101,6 +138,8 @@ export class ItemTaskAnswerService implements OnDestroy {
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
     this.errorSubject.complete();
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 
   submitAnswer(): Observable<unknown> {
@@ -142,23 +181,38 @@ export class ItemTaskAnswerService implements OnDestroy {
     return this.task$.pipe(take(1), switchMap(task => task.reloadAnswer('')));
   }
 
-  private saveAnswerAndStateInterval(initialAnswer: string, initialState: string): Observable<{ success: boolean }> {
-    const saved = { answer: initialAnswer, state: initialState };
-    return interval(answerAndStateSaveInterval).pipe(
-      switchMapTo(this.task$),
-      switchMap(task => forkJoin({ answer: task.getAnswer(), state: task.getState() })),
-      distinctUntilChanged((a, b) => a.answer === b.answer && a.state === b.state),
-      filter(({ answer, state }) => answer !== saved.answer || state !== saved.state),
+  saveAnswerAndState(): Observable<{ saving: boolean }> {
+    return combineLatest([ this.saved$, this.task$, this.config$ ]).pipe(
       take(1),
-      withLatestFrom(this.config$),
-      switchMap(([{ answer, state }, { route, attemptId }]) =>
-        this.currentAnswerService.update(route.id, attemptId, { answer, state }).pipe(
-          tap(() => Object.assign(saved, { answer, state })),
-          map(() => ({ success: true })),
-          catchError(() => of({ success: false })),
-        )
-      ),
-      repeat(),
+      // save action must applied straight away ONLY if there is an available config & task & saved-value couple
+      // if such couple is not available straight away, it means the user has navigated so quickly that the task could not be initialized
+      // therefore, no user action on the task could have been made, so there's no treatment to apply (catchError -> Empty)
+      timeout(1),
+      catchError(() => EMPTY),
+
+      switchMap(([ saved, task, config ]) => forkJoin({
+        config: of(config),
+        saved: of(saved),
+        current: forkJoin({ answer: task.getAnswer(), state: task.getState() }),
+      })),
+
+      switchMap(({ saved, current, config: { route, attemptId } }) => {
+        const currentIsSaved = saved.answer === current.answer && saved.state === current.state;
+        if (currentIsSaved) return of({ saving: false });
+
+        return this.currentAnswerService.update(route.id, attemptId, current).pipe(
+          mapTo({ saving: false }),
+          startWith({ saving: true }),
+        );
+      }),
+      shareReplay(1),
     );
   }
 }
+
+declare global {
+  interface Window {
+    taskSaveIntervalInSec?: number,
+  }
+}
+

@@ -1,7 +1,7 @@
-import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, ViewChild } from '@angular/core';
 import { ItemData } from '../../services/item-datasource.service';
 import { ConfigureTaskOptions } from '../../services/item-task.service';
-import { TaskTab } from '../item-display/item-display.component';
+import { ItemDisplayComponent, TaskTab } from '../item-display/item-display.component';
 
 @Component({
   selector: 'alg-item-content',
@@ -9,6 +9,7 @@ import { TaskTab } from '../item-display/item-display.component';
   styleUrls: [ './item-content.component.scss' ]
 })
 export class ItemContentComponent implements OnChanges {
+  @ViewChild(ItemDisplayComponent) itemDisplayComponent?: ItemDisplayComponent;
 
   @Input() itemData?: ItemData;
   @Input() taskView?: TaskTab['view'];
