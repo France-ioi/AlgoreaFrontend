@@ -58,7 +58,8 @@ export class ItemByIdComponent implements OnDestroy {
 
     // on route change or user change: refetch item if needed
     this.activatedRoute.paramMap.pipe(
-      repeatLatestWhen(this.userSessionService.userChanged$)
+      repeatLatestWhen(this.userSessionService.userChanged$),
+      filter(() => !(history.state as Record<string, boolean>).preventRefetch),
     ).subscribe(params => this.fetchItemAtRoute(params)),
 
     this.subscriptions.push(
@@ -161,6 +162,15 @@ export class ItemByIdComponent implements OnDestroy {
     this.currentContent.replace(itemInfo({ route: item, breadcrumbs: { category: itemBreadcrumbCat, path: [], currentPageIdx: -1 } }));
     // trigger the fetch of the item (which will itself re-update the current content)
     this.itemDataSource.fetchItem(item);
+    if (item.answerId) {
+      this.itemRouter.navigateTo(
+        { ...item, answerId: undefined },
+        {
+          preventFullFrame: (history.state as Record<string, boolean>).preventFullFrame,
+          navExtras: { replaceUrl: true, state: { preventRefetch: true } },
+        },
+      );
+    }
   }
 
   /**
