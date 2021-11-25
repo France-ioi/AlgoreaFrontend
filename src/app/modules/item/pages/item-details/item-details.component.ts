@@ -42,8 +42,11 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent {
   })));
 
   readonly enableLoadSubmission$ = this.modeService.mode$.pipe(map(mode => mode === Mode.Normal));
-  savingAnswer = false;
 
+  // When navigating elsewhere but the current answer is unsaved, navigation is blocked until the save is performed.
+  // savingAnswer indicates the loading state while blocking navigation because of the save request.
+  savingAnswer = false;
+  // Any value emitted in skipBeforeUnload$ resumes navigation WITHOUT cancelling the save request.
   private skipBeforeUnload$ = new Subject<void>();
 
   private subscriptions = [
