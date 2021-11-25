@@ -125,7 +125,6 @@ export class ItemTaskAnswerService implements OnDestroy {
       if (savedOrError instanceof Error) this.saveError$.next(savedOrError);
       else this.saved$.next(savedOrError);
     }),
-    this.saved$.subscribe(saved => console.info('saved', saved)),
   ];
 
   constructor(
