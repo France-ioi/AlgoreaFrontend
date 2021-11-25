@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { NavigationExtras, Router, UrlTree } from '@angular/router';
 import { ensureDefined } from '../helpers/null-undefined-predicates';
-import { UrlCommand } from '../helpers/url';
 import { itemCategoryFromPrefix, RawItemRoute, urlArrayForItemRoute } from './item-route';
 
 interface NavigateOptions {
@@ -43,10 +42,6 @@ export class ItemRouter {
    */
   url(item: RawItemRoute, page?: string|string[]): UrlTree {
     return this.router.createUrlTree(urlArrayForItemRoute(item, page ?? this.currentItemPage()));
-  }
-
-  urlArray(route: RawItemRoute, page?: string[]): UrlCommand {
-    return urlArrayForItemRoute(route, page ?? this.currentItemPage());
   }
 
   /**

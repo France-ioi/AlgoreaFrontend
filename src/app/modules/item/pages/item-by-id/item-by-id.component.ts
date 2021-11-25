@@ -3,7 +3,6 @@ import { ActivatedRoute, ParamMap, UrlTree } from '@angular/router';
 import { of, Subscription } from 'rxjs';
 import { distinctUntilChanged, filter, map, pairwise, startWith, switchMap, take } from 'rxjs/operators';
 import { defaultAttemptId } from 'src/app/shared/helpers/attempts';
-import { appDefaultItemRoute } from 'src/app/shared/routing/item-route';
 import { errorState, fetchingState, FetchState } from 'src/app/shared/helpers/state';
 import { ResultActionsService } from 'src/app/shared/http-services/result-actions.service';
 import { CurrentContentService } from 'src/app/shared/services/current-content.service';
@@ -39,8 +38,6 @@ export class ItemByIdComponent implements OnDestroy {
   state: FetchState<ItemData> = fetchingState();
   // to prevent looping indefinitely in case of bug in services (wrong path > item without path > fetch path > item with path > wrong path)
   hasRedirected = false;
-
-  readonly defaultItemRoute = this.itemRouter.urlArray(appDefaultItemRoute);
 
   private subscriptions: Subscription[] = []; // subscriptions to be freed up on destroy
 
