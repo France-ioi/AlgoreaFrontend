@@ -17,7 +17,6 @@ import {
 } from 'rxjs/operators';
 import { SECONDS } from 'src/app/shared/helpers/duration';
 import { errorIsHTTPForbidden } from 'src/app/shared/helpers/errors';
-import { isNotNull } from 'src/app/shared/helpers/null-undefined-predicates';
 import { repeatLatestWhen } from 'src/app/shared/helpers/repeatLatestWhen';
 import { AnswerTokenService } from '../http-services/answer-token.service';
 import { Answer, CurrentAnswerService } from '../http-services/current-answer.service';
@@ -90,8 +89,8 @@ export class ItemTaskAnswerService implements OnDestroy {
     delayWhen(() => combineLatest([ this.saved$, this.initializedTaskState$, this.initializedTaskAnswer$ ])),
   );
 
-  private refreshAnswerAndStateInterval$ = interval(Math.max(answerAndStateSaveInterval, window.taskSaveIntervalInSec ?? 0));
-  private answerOrStateChange$ = this.refreshAnswerAndStateInterval$.pipe(
+  private refreshAnswerAndStatePeriod = Math.max(answerAndStateSaveInterval, (window.taskSaveIntervalInSec ?? 0)*SECONDS);
+  private answerOrStateChange$ = interval(this.refreshAnswerAndStatePeriod).pipe(
     takeUntil(this.destroyed$),
     switchMapTo(this.task$),
     switchMap(task => forkJoin({ answer: task.getAnswer(), state: task.getState() })),
@@ -121,12 +120,12 @@ export class ItemTaskAnswerService implements OnDestroy {
     this.initializedTaskAnswer$.subscribe({ error: err => this.errorSubject.next(err) }),
     this.initializedTaskState$.subscribe({ error: err => this.errorSubject.next(err) }),
     this.initialAnswer$
-      .pipe(filter(isNotNull))
-      .subscribe(initial => this.saved$.next({ answer: initial.answer ?? '', state: initial.state ?? '' })),
+      .subscribe(initial => this.saved$.next({ answer: initial?.answer ?? '', state: initial?.state ?? '' })),
     this.autoSaveInterval$.subscribe(savedOrError => {
       if (savedOrError instanceof Error) this.saveError$.next(savedOrError);
       else this.saved$.next(savedOrError);
     }),
+    this.saved$.subscribe(saved => console.info('saved', saved)),
   ];
 
   constructor(
