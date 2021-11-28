@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, SimpleChanges, ViewChild, ElementRef } from '@angular/core';
 
 enum ScoreRingColor {
-  Success = '#B8E986',
+  Success = 'rgb(105, 206, 77)',
   Initial = '#F90223',
   DefaultText = '#4A4A4A',
   DarkText = '#FFF',
@@ -86,7 +86,6 @@ export class ScoreRingComponent implements OnChanges {
       this.icon = undefined;
     }
 
-
-    this.fontSize = this.forTree ? 1 : Math.floor((2 * this.diameter) / 64);
+    this.fontSize = (2 * this.diameter) / 56;
   }
 }
