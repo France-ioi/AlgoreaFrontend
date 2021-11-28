@@ -4,7 +4,12 @@ import { HttpClient } from '@angular/common/http';
 import { appConfig } from '../../../shared/helpers/config';
 import { assertSuccess, SimpleActionResponse } from '../../../shared/http-services/action-response';
 import { reduce, map, switchMap, catchError } from 'rxjs/operators';
-import { Result } from '../components/group-manager-list/group-manager-removal-response-handling';
+
+export interface Result {
+  countRequests: number,
+  countSuccess: number,
+  errorText?: string,
+}
 
 export function parseResults(data: boolean[]): Result {
   return {

@@ -1,10 +1,5 @@
 import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
-
-export interface Result {
-  countRequests: number,
-  countSuccess: number,
-  errorText?: string,
-}
+import { Result } from '../../http-services/remove-group-manager.service';
 
 export function displayGroupManagerRemovalResponseToast(feedbackService: ActionFeedbackService, result: Result): void {
   if (result.countSuccess === result.countRequests) {
