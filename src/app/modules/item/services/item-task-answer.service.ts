@@ -51,7 +51,7 @@ export class ItemTaskAnswerService implements OnDestroy {
   private initialAnswer$: Observable<Answer | null> = this.config$.pipe(
     switchMap(({ route, attemptId, shouldLoadAnswer }) => {
       if (!shouldLoadAnswer) return of(null);
-      if (route.answerId) return this.loadFormerAnswer(route.id, attemptId, route.answerId);
+      if (route.answerId) return this.loadFormerAsNewCurrentAnswer(route.id, attemptId, route.answerId);
 
       return this.currentAnswerService.get(route.id, attemptId).pipe(
         catchError(error => {
@@ -206,8 +206,8 @@ export class ItemTaskAnswerService implements OnDestroy {
     );
   }
 
-  private loadFormerAnswer(itemId: string, attemptId: string, answerId: string): Observable<Answer | null> {
-    const saveCurrent$ = this.currentAnswerService.get(itemId, attemptId).pipe(
+  private loadFormerAsNewCurrentAnswer(itemId: string, attemptId: string, answerId: string): Observable<Answer | null> {
+    const savedCurrentAnswer$ = this.currentAnswerService.get(itemId, attemptId).pipe(
       catchError(error => {
         // currently, the backend returns a 403 status when no current answer exist for user+item+attempt
         if (errorIsHTTPForbidden(error)) return of(null);
@@ -218,13 +218,13 @@ export class ItemTaskAnswerService implements OnDestroy {
       defaultIfEmpty(undefined),
     );
 
-    const former$ = this.getAnswerService.get(answerId).pipe(
+    const formerAnswer$ = this.getAnswerService.get(answerId).pipe(
       catchError(error => {
         if (errorIsHTTPForbidden(error)) throw loadAnswerError;
         throw error;
       }),
     );
-    return combineLatest([ former$, saveCurrent$ ]).pipe(
+    return combineLatest([ formerAnswer$, savedCurrentAnswer$ ]).pipe(
       switchMap(([ former ]) => {
         if (!former) return of(null);
         const body = { answer: former.answer ?? '', state: former.state ?? '' };
