@@ -11,7 +11,7 @@
   <p [style.visibility]="(backToHome.isActive)?'hidden':'visible'">
     <span i18n>Go back to the </span>
     <a
-      [routerLink]="defaultItemRoute"
+      routerLink="/"
       [routerLinkActiveOptions]="{exact: true}"
       routerLinkActive #backToHome="routerLinkActive"
       i18n

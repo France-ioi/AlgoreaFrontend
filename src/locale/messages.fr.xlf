@@ -106,7 +106,7 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="569741268651615075" datatype="html">
-        <source>Go back to the </source><target state="translated">Retour à la page d'</target>
+        <source>Go back to the </source><target state="translated">Retour à la </target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/pages/page-not-found/page-not-found.component.html</context><context context-type="linenumber">3</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-by-id.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="4465003478966998593" datatype="html">
         <source>home page</source><target state="translated">accueil</target>
