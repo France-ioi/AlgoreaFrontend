@@ -3,11 +3,12 @@ import { GetGroupManagersService, Manager } from '../../http-services/get-group-
 import { GroupData, GroupDataSource } from '../../services/group-datasource.service';
 import { RemoveGroupManagerService } from '../../http-services/remove-group-manager.service';
 import { ActionFeedbackService } from '../../../../shared/services/action-feedback.service';
-import { concat, ReplaySubject, Subject } from 'rxjs';
+import { ReplaySubject, Subject } from 'rxjs';
 import { switchMap, map, distinctUntilChanged } from 'rxjs/operators';
 import { mapToFetchState } from '../../../../shared/operators/state';
 import { UserSessionService } from '../../../../shared/services/user-session.service';
 import { ConfirmationService } from 'primeng/api';
+import { displayGroupManagerRemovalResponseToast } from './group-manager-removal-response-handling';
 
 @Component({
   selector: 'alg-group-manager-list',
@@ -40,7 +41,6 @@ export class GroupManagerListComponent implements OnChanges, OnDestroy {
     private getGroupManagersService: GetGroupManagersService,
     private removeGroupManagerService: RemoveGroupManagerService,
     private actionFeedbackService: ActionFeedbackService,
-    private feedbackService: ActionFeedbackService,
     private groupDataSource: GroupDataSource,
     private userService: UserSessionService,
     private confirmationService: ConfirmationService,
@@ -122,23 +122,25 @@ export class GroupManagerListComponent implements OnChanges, OnDestroy {
       throw new Error('Unexpected: Missed current user ID');
     }
 
-    if (this.selection.some(manager => manager.id === currentUserId)) {
-      const foundIndex = this.selection.findIndex(manager => manager.id === currentUserId);
-      const currentUser = this.selection.splice(foundIndex, 1);
-      this.selection = [ ...this.selection, ...currentUser ];
-    }
-
     const groupId = this.groupData.group.id;
+    const ownManagerId = this.selection.find(manager => manager.id === currentUserId)?.id;
 
     this.removalInProgress = true;
 
-    concat(...this.selection.map(manager => this.removeGroupManagerService.remove(groupId, manager.id)))
+    this.removeGroupManagerService.removeBatch(
+      groupId,
+      this.selection.filter(manager => manager.id !== ownManagerId).map(manager => manager.id),
+      ownManagerId,
+    )
       .subscribe({
-        complete: () => {
+        next: result => {
+          displayGroupManagerRemovalResponseToast(this.actionFeedbackService, result);
           this.removalInProgress = false;
-          this.feedbackService.success($localize`Selected managers have been removed.`);
-          this.selection = [];
-          this.reloadData();
+
+          if (result.countSuccess > 0) {
+            this.selection = [];
+            this.reloadData();
+          }
         },
         error: () => {
           this.removalInProgress = false;
