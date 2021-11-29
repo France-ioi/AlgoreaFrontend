@@ -32,6 +32,7 @@ describe('Algorea Frontend', () => {
       await retry(() => expect(page.getRightElement().getAttribute('class')).not.toMatch('collapsed'));
 
       await page.getCollapseButtonElement().click();
+      await browser.sleep(500);
 
       await retry(() => expect(page.getLeftElement().getAttribute('class')).toMatch('collapsed'));
       await retry(() => expect(page.getTopBarElement().getAttribute('class')).toMatch('collapsed'));
