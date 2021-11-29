@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { ActivityLog } from '../http-services/activity-log.service'
+import { ActivityLog } from '../http-services/activity-log.service';
 
 function formatLogAction (type: ActivityLog['activityType'], score?: number): string {
   switch (type) {
