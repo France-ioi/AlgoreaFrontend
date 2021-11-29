@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { EMPTY, forkJoin, Observable, of, ReplaySubject, Subject } from 'rxjs';
-import { distinctUntilChanged, map, scan, shareReplay, startWith, switchMap } from 'rxjs/operators';
+import { delayWhen, distinctUntilChanged, filter, map, scan, shareReplay, startWith, switchMap } from 'rxjs/operators';
 import { bestAttemptFromResults, implicitResultStart } from 'src/app/shared/helpers/attempts';
 import { isRouteWithSelfAttempt, FullItemRoute } from 'src/app/shared/routing/item-route';
 import { ResultActionsService } from 'src/app/shared/http-services/result-actions.service';
@@ -12,6 +12,7 @@ import { canCurrentUserViewItemContent } from 'src/app/modules/item/helpers/item
 import { mapToFetchState } from 'src/app/shared/operators/state';
 import { buildUp } from 'src/app/shared/operators/build-up';
 import { FetchState } from 'src/app/shared/helpers/state';
+import { LocaleService } from 'src/app/core/services/localeService';
 
 export interface ItemData {
   route: FullItemRoute,
@@ -41,8 +42,13 @@ export class ItemDataSource implements OnDestroy {
     distinctUntilChanged(),
   );
 
+  private readonly profileLanguageMatchesAppLanguage$ = this.userSessionService.userProfile$.pipe(
+    filter(profile => profile.defaultLanguage === this.localeService.currentLang?.tag),
+  );
+
   /* state to put outputted */
   readonly state$ = this.fetchOperation$.pipe(
+    delayWhen(() => this.profileLanguageMatchesAppLanguage$),
     switchMap(item => this.fetchItemData(item).pipe(mapToFetchState({ resetter: this.refresh$ }))),
     // maxScorePatch is a cold observable, and switchMap operator acts a subscriber here
     // so the max score patch is only valid for current item
@@ -58,6 +64,7 @@ export class ItemDataSource implements OnDestroy {
     private resultActionsService: ResultActionsService,
     private getResultsService: GetResultsService,
     private userSessionService: UserSessionService,
+    private localeService: LocaleService,
   ) {}
 
   fetchItem(item: FullItemRoute): void {
