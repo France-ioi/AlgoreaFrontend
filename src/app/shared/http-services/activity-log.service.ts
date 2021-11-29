@@ -9,7 +9,7 @@ import { dateDecoder } from '../helpers/decoders';
 
 const activityLogDecoder = pipe(
   D.struct({
-    activityType: D.literal('result_started', 'submission', 'result_validated'),
+    activityType: D.literal('result_started', 'submission', 'result_validated', 'saved_answer', 'current_answer'),
     at: dateDecoder,
     item: D.struct({
       id: D.string,

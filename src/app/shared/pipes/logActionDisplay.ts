@@ -1,16 +1,14 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import { ActivityLog } from '../http-services/activity-log.service'
 
-function formatLogAction (type: 'result_started'|'submission'|'result_validated', score?: number): string {
-  if (type === 'submission' && score === undefined) {
-    return $localize`Submission`;
-  } else if (type === 'submission' && score !== undefined) {
-    return $localize`Submission (score: ${ score })`;
-  } else if (type === 'result_started') {
-    return $localize`Activity started`;
-  } else if (type === 'result_validated') {
-    return $localize`Activity validated`;
-  } else {
-    return type;
+function formatLogAction (type: ActivityLog['activityType'], score?: number): string {
+  switch (type) {
+    case 'submission': return score === undefined ? $localize`Submission` : $localize`Submission (score: ${ score })`;
+    case 'result_started': return $localize`Activity started`;
+    case 'result_validated': return $localize`Activity validated`;
+    case 'current_answer': return $localize`Current answer`;
+    case 'saved_answer': return $localize`Saved answer`;
+    default: return type;
   }
 }
 
