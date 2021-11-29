@@ -2,6 +2,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { combineLatest, EMPTY, forkJoin, interval, merge, Observable, of, ReplaySubject, Subject } from 'rxjs';
 import {
   catchError,
+  defaultIfEmpty,
   delayWhen,
   distinctUntilChanged,
   filter,
@@ -17,8 +18,10 @@ import {
 } from 'rxjs/operators';
 import { SECONDS } from 'src/app/shared/helpers/duration';
 import { errorIsHTTPForbidden } from 'src/app/shared/helpers/errors';
+import { isNotNull } from 'src/app/shared/helpers/null-undefined-predicates';
 import { repeatLatestWhen } from 'src/app/shared/helpers/repeatLatestWhen';
 import { AnswerTokenService } from '../http-services/answer-token.service';
+import { AnswerService } from '../http-services/answer.service';
 import { Answer, CurrentAnswerService } from '../http-services/current-answer.service';
 import { GetAnswerService } from '../http-services/get-answer.service';
 import { GradeService } from '../http-services/grade.service';
@@ -48,14 +51,7 @@ export class ItemTaskAnswerService implements OnDestroy {
   private initialAnswer$: Observable<Answer | null> = this.config$.pipe(
     switchMap(({ route, attemptId, shouldLoadAnswer }) => {
       if (!shouldLoadAnswer) return of(null);
-      if (route.answerId) {
-        return this.getAnswerService.get(route.answerId).pipe(
-          catchError(error => {
-            if (errorIsHTTPForbidden(error)) throw loadAnswerError;
-            throw error;
-          }),
-        );
-      }
+      if (route.answerId) return this.loadFormerAsNewCurrentAnswer(route.id, attemptId, route.answerId);
 
       return this.currentAnswerService.get(route.id, attemptId).pipe(
         catchError(error => {
@@ -130,6 +126,7 @@ export class ItemTaskAnswerService implements OnDestroy {
   constructor(
     private taskInitService: ItemTaskInitService,
     private currentAnswerService: CurrentAnswerService,
+    private answerService: AnswerService,
     private answerTokenService: AnswerTokenService,
     private gradeService: GradeService,
     private getAnswerService: GetAnswerService,
@@ -206,6 +203,33 @@ export class ItemTaskAnswerService implements OnDestroy {
         );
       }),
       shareReplay(1),
+    );
+  }
+
+  private loadFormerAsNewCurrentAnswer(itemId: string, attemptId: string, answerId: string): Observable<Answer | null> {
+    const savedCurrentAnswer$ = this.currentAnswerService.get(itemId, attemptId).pipe(
+      catchError(error => {
+        // currently, the backend returns a 403 status when no current answer exist for user+item+attempt
+        if (errorIsHTTPForbidden(error)) return of(null);
+        throw error;
+      }),
+      filter(isNotNull),
+      switchMap(current => this.answerService.save(itemId, attemptId, { answer: current.answer ?? '', state: current.state ?? '' })),
+      defaultIfEmpty(undefined),
+    );
+
+    const formerAnswer$ = this.getAnswerService.get(answerId).pipe(
+      catchError(error => {
+        if (errorIsHTTPForbidden(error)) throw loadAnswerError;
+        throw error;
+      }),
+    );
+    return combineLatest([ formerAnswer$, savedCurrentAnswer$ ]).pipe(
+      switchMap(([ former ]) => {
+        if (!former) return of(null);
+        const body = { answer: former.answer ?? '', state: former.state ?? '' };
+        return this.currentAnswerService.update(itemId, attemptId, body).pipe(mapTo(former));
+      }),
     );
   }
 }

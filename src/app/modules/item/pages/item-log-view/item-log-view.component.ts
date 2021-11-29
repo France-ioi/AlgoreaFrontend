@@ -64,7 +64,7 @@ export class ItemLogViewComponent implements OnChanges, OnDestroy {
     return this.activityLogService.getActivityLog(item.id, watchingGroup?.route.id).pipe(
       map((data: ActivityLog[]) => ({
         columns: this.getLogColumns(item.type, watchingGroup),
-        rowData: data
+        rowData: data.filter(activity => activity.activityType !== 'current_answer'),
       }))
     );
   }

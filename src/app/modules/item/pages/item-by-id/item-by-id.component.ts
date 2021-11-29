@@ -55,7 +55,11 @@ export class ItemByIdComponent implements OnDestroy {
 
     // on route change or user change: refetch item if needed
     this.activatedRoute.paramMap.pipe(
-      repeatLatestWhen(this.userSessionService.userChanged$)
+      repeatLatestWhen(this.userSessionService.userChanged$),
+      // When loading a task with a former answerId, we need to remove the answerId from the url to avoid reloading
+      // a former answer if the user refreshes the page
+      // However, replacing the url should not retrigger an item fetch either, thus the use of history.state.preventRefetch
+      filter(() => !(history.state as Record<string, boolean>).preventRefetch),
     ).subscribe(params => this.fetchItemAtRoute(params)),
 
     this.subscriptions.push(
@@ -158,6 +162,15 @@ export class ItemByIdComponent implements OnDestroy {
     this.currentContent.replace(itemInfo({ route: item, breadcrumbs: { category: itemBreadcrumbCat, path: [], currentPageIdx: -1 } }));
     // trigger the fetch of the item (which will itself re-update the current content)
     this.itemDataSource.fetchItem(item);
+    if (item.answerId) {
+      this.itemRouter.navigateTo(
+        { ...item, answerId: undefined },
+        {
+          preventFullFrame: (history.state as Record<string, boolean>).preventFullFrame,
+          navExtras: { replaceUrl: true, state: { preventRefetch: true } },
+        },
+      );
+    }
   }
 
   /**

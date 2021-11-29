@@ -56,7 +56,7 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
   initError$ = this.taskService.initError$;
   urlError$ = this.taskService.urlError$;
   answerFallbackLink$ = this.taskService.loadAnswerByIdError$.pipe(
-    map(() => urlArrayForItemRoute({ ...this.route, answerId: undefined })),
+    map(() => urlArrayForItemRoute({ ...this.route, attemptId: undefined, parentAttemptId: undefined, answerId: undefined })),
   );
   unknownError$ = this.taskService.unknownError$;
   iframeSrc$ = this.taskService.iframeSrc$.pipe(map(url => this.sanitizer.bypassSecurityTrustResourceUrl(url)));
