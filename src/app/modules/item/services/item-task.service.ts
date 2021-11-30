@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { animationFrames, merge, Observable, throwError } from 'rxjs';
+import { animationFrames, EMPTY, merge, Observable, throwError } from 'rxjs';
 import { map, mapTo, shareReplay, switchMap, take, tap } from 'rxjs/operators';
 import { LocaleService } from 'src/app/core/services/localeService';
 import { ActivityNavTreeService } from 'src/app/core/services/navigation/item-nav-tree.service';
