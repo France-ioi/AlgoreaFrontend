@@ -10,7 +10,7 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import { interval, merge, Observable, Subject } from 'rxjs';
+import { EMPTY, interval, merge, Observable, Subject } from 'rxjs';
 import { endWith, filter, map, pairwise, shareReplay, startWith, switchMap, takeUntil } from 'rxjs/operators';
 import { HOURS, SECONDS } from 'src/app/shared/helpers/duration';
 import { isNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
@@ -126,6 +126,8 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
 
   saveAnswerAndState(): Observable<{ saving: boolean }> {
     this.subscription.unsubscribe();
+    if (this.taskConfig.readOnly) return EMPTY;
+
     const save$ = this.taskService.saveAnswerAndState().pipe(
       takeUntil(this.skipSave$),
       endWith({ saving: false }),
