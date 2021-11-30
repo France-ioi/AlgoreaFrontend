@@ -88,7 +88,7 @@ export class ItemTaskService {
     if (Number.isNaN(randomSeed)) throw new Error('random seed must be a number');
 
     const platform: TaskPlatform = {
-      validate: mode => this.validate(mode).pipe(mapTo(undefined)),
+      validate: mode => (this.readOnly ? this.validateReadOnly(mode) : this.validate(mode)).pipe(mapTo(undefined)),
       getTaskParams: () => ({
         minScore: 0,
         maxScore: 100,
@@ -123,6 +123,16 @@ export class ItemTaskService {
       case 'next': return this.answerService.submitAnswer().pipe(switchMap(() => this.navigateToNextItem()));
       case 'top': return this.answerService.submitAnswer().pipe(switchMap(() => this.scrollTop()));
       default: return this.answerService.submitAnswer();
+    }
+  }
+
+  private validateReadOnly(mode: string): Observable<unknown> {
+    switch (mode) {
+      case 'cancel': return EMPTY;
+      case 'nextImmediate': return this.navigateToNextItem();
+      case 'next': return this.navigateToNextItem();
+      case 'top': return this.scrollTop();
+      default: return EMPTY;
     }
   }
 
