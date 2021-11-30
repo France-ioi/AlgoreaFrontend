@@ -37,6 +37,7 @@ import { PropagationEditMenuComponent } from './components/propagation-edit-menu
 import { ItemDisplayComponent } from './pages/item-display/item-display.component';
 import { ItemRemoveButtonComponent } from './components/item-remove-button/item-remove-button.component';
 import { BeforeUnloadGuard } from 'src/app/shared/guards/before-unload-guard';
+import { AnswerAuthorIndicatorComponent } from './components/answer-author-indicator/answer-author-indicator.component';
 
 @NgModule({
   declarations: [
@@ -67,6 +68,7 @@ import { BeforeUnloadGuard } from 'src/app/shared/guards/before-unload-guard';
     PropagationEditMenuComponent,
     ItemDisplayComponent,
     ItemRemoveButtonComponent,
+    AnswerAuthorIndicatorComponent,
   ],
   imports: [
     CommonModule,
