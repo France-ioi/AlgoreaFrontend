@@ -15,7 +15,7 @@ interface Column {
 
 interface Data {
   columns: Column[],
-  rowData: ActivityLog[],
+  rowData: (ActivityLog & { displayLoadButton: boolean })[],
 }
 
 @Component({
@@ -26,7 +26,7 @@ interface Data {
 export class ItemLogViewComponent implements OnChanges, OnDestroy {
 
   @Input() itemData?: ItemData;
-  @Input() enableLoadSubmission = false;
+  @Input() isTaskReadOnly = false;
 
   private readonly refresh$ = new Subject<void>();
   private readonly item$ = new ReplaySubject<Item>(1);
@@ -61,12 +61,36 @@ export class ItemLogViewComponent implements OnChanges, OnDestroy {
   }
 
   private getData$(item: Item, watchingGroup?: WatchedGroup): Observable<Data> {
-    return this.activityLogService.getActivityLog(item.id, watchingGroup?.route.id).pipe(
-      map((data: ActivityLog[]) => ({
+    return combineLatest([
+      this.activityLogService.getActivityLog(item.id, watchingGroup?.route.id),
+      this.sessionService.userProfile$,
+    ]).pipe(
+      map(([ data, profile ]) => ({
         columns: this.getLogColumns(item.type, watchingGroup),
-        rowData: data.filter(activity => activity.activityType !== 'current_answer'),
+        rowData: data
+          .filter(log => !this.isSelfCurrentAnswer(log, profile.groupId))
+          .map(log => ({ ...log, displayLoadButton: this.canDisplayLoadButton(log, profile.groupId) })),
       }))
     );
+  }
+  private isSelfCurrentAnswer(log: ActivityLog, profileId: string): boolean {
+    return log.activityType === 'current_answer' && log.participant.id === profileId;
+  }
+
+  private canDisplayLoadButton(log: ActivityLog, profileId: string): boolean {
+    if (!this.itemData) throw new Error('itemData must be defined');
+    if (!log.answerId) return false;
+
+    // Can load other user answer only in read-only mode and with correct permissions
+    if (this.isTaskReadOnly) {
+      const hasPermissionToLoadAnyAnswer = [ 'answer', 'answer_with_grant' ].includes(this.itemData.item.permissions.canWatch);
+      return hasPermissionToLoadAnyAnswer && [ 'submission', 'saved_answer', 'current_answer' ].includes(log.activityType);
+    }
+
+    // If answer author is self, we can always load it
+    if (log.user?.id === profileId) return [ 'submission', 'saved_answer' ].includes(log.activityType);
+
+    return false;
   }
 
   private getLogColumns(type: ItemType, watchingGroup?: WatchedGroup): Column[] {

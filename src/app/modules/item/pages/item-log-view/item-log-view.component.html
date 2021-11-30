@@ -41,7 +41,7 @@
             <ng-container [ngSwitch]="col.field">
               <ng-container *ngSwitchCase="'activityType'">
                 {{ rowData.activityType | logActionDisplay : rowData.score }}
-                <ng-container *ngIf="enableLoadSubmission && [ 'submission', 'saved_answer' ].includes(rowData.activityType) && rowData.answerId">
+                <ng-container *ngIf="rowData.displayLoadButton">
                   &nbsp;(<a class="alg-link" [routerLink]="rowData.item | rawItemLink:'details':rowData.answerId" i18n>Load</a>)
                 </ng-container>
               </ng-container>

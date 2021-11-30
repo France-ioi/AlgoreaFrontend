@@ -77,7 +77,7 @@
       <alg-item-progress
         *ngIf="progressTab?.isActive || !!(watchedGroup$ | async) && !contentTab.isActive"
         [itemData]="itemData"
-        [enableLoadSubmission]="(enableLoadSubmission$ | async) ?? false"
+        [isTaskReadOnly]="(taskReadOnly$ | async) ?? false"
         [savingAnswer]="savingAnswer"
         (skipSave)="skipBeforeUnload()"
       ></alg-item-progress>
