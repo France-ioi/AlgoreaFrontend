@@ -129,7 +129,7 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
 
   saveAnswerAndState(): Observable<{ saving: boolean }> {
     this.subscription.unsubscribe();
-    if (this.taskConfig.readOnly) return EMPTY;
+    if (this.taskOptions.readOnly) return EMPTY;
 
     const save$ = this.taskService.saveAnswerAndState().pipe(
       takeUntil(this.skipSave$),
