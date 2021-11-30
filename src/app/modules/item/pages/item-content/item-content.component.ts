@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnChanges, Output, ViewChild } from '@angular/core';
 import { ItemData } from '../../services/item-datasource.service';
-import { ConfigureTaskOptions } from '../../services/item-task.service';
+import { TaskConfig } from '../../services/item-task.service';
 import { ItemDisplayComponent, TaskTab } from '../item-display/item-display.component';
 
 @Component({
@@ -13,7 +13,7 @@ export class ItemContentComponent implements OnChanges {
 
   @Input() itemData?: ItemData;
   @Input() taskView?: TaskTab['view'];
-  @Input() taskOptions: ConfigureTaskOptions = { readOnly: false, shouldLoadAnswer: true };
+  @Input() taskConfig: TaskConfig = { readOnly: false, formerAnswer: null };
 
   @Output() taskTabsChange = new EventEmitter<TaskTab[]>();
   @Output() taskViewChange = new EventEmitter<TaskTab['view']>();

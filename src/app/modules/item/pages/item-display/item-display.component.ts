@@ -14,13 +14,13 @@ import { interval, merge, Observable, Subject } from 'rxjs';
 import { endWith, filter, map, pairwise, shareReplay, startWith, switchMap, takeUntil } from 'rxjs/operators';
 import { HOURS, SECONDS } from 'src/app/shared/helpers/duration';
 import { isNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
-import { ConfigureTaskOptions, ItemTaskService } from '../../services/item-task.service';
+import { TaskConfig, ItemTaskService } from '../../services/item-task.service';
 import { mapToFetchState } from 'src/app/shared/operators/state';
 import { capitalize } from 'src/app/shared/helpers/case_conversion';
 import { ItemTaskInitService } from '../../services/item-task-init.service';
 import { ItemTaskAnswerService } from '../../services/item-task-answer.service';
 import { ItemTaskViewsService } from '../../services/item-task-views.service';
-import { FullItemRoute, urlArrayForItemRoute } from 'src/app/shared/routing/item-route';
+import { FullItemRoute } from 'src/app/shared/routing/item-route';
 import { DomSanitizer } from '@angular/platform-browser';
 import { PermissionsInfo } from '../../helpers/item-permissions';
 import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
@@ -46,7 +46,7 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
   @Input() canEdit: PermissionsInfo['canEdit'] = 'none';
   @Input() attemptId!: string;
   @Input() view?: TaskTab['view'];
-  @Input() taskOptions: ConfigureTaskOptions = { readOnly: false, shouldLoadAnswer: true };
+  @Input() taskConfig: TaskConfig = { readOnly: false, formerAnswer: null };
 
   @Output() scoreChange = this.taskService.scoreChange$;
 
@@ -55,9 +55,6 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
   state$ = this.taskService.task$.pipe(mapToFetchState());
   initError$ = this.taskService.initError$;
   urlError$ = this.taskService.urlError$;
-  answerFallbackLink$ = this.taskService.loadAnswerByIdError$.pipe(
-    map(() => urlArrayForItemRoute({ ...this.route, attemptId: undefined, parentAttemptId: undefined, answerId: undefined })),
-  );
   unknownError$ = this.taskService.unknownError$;
   iframeSrc$ = this.taskService.iframeSrc$.pipe(map(url => this.sanitizer.bypassSecurityTrustResourceUrl(url)));
 
@@ -98,7 +95,7 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
   ) {}
 
   ngOnInit(): void {
-    this.taskService.configure(this.route, this.url, this.attemptId, this.taskOptions);
+    this.taskService.configure(this.route, this.url, this.attemptId, this.taskConfig);
     this.taskService.showView(this.view ?? 'task');
   }
 

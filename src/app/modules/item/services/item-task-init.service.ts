@@ -4,6 +4,7 @@ import { catchError, delayWhen, filter, map, mapTo, shareReplay, switchMap, time
 import { appConfig } from 'src/app/shared/helpers/config';
 import { SECONDS } from 'src/app/shared/helpers/duration';
 import { FullItemRoute } from 'src/app/shared/routing/item-route';
+import { Answer } from '../http-services/get-answer.service';
 import { TaskTokenService, TaskToken } from '../http-services/task-token.service';
 import { Task, taskProxyFromIframe, taskUrlWithParameters } from '../task-communication/task-proxy';
 
@@ -14,7 +15,7 @@ export interface ItemTaskConfig {
   route: FullItemRoute,
   url: string,
   attemptId: string,
-  shouldLoadAnswer: boolean,
+  formerAnswer: Answer | null,
   readOnly: boolean,
 }
 
@@ -72,11 +73,11 @@ export class ItemTaskInitService implements OnDestroy {
     if (!this.configFromIframe$.closed) this.configFromIframe$.complete();
   }
 
-  configure(route: FullItemRoute, url: string, attemptId: string, shouldLoadAnswer = true, readOnly = false): void {
+  configure(route: FullItemRoute, url: string, attemptId: string, formerAnswer: Answer | null, readOnly = false): void {
     if (this.configured) throw new Error('task init service can be configured once only');
     this.configured = true;
 
-    this.configFromItem$.next({ route, url, attemptId, shouldLoadAnswer, readOnly });
+    this.configFromItem$.next({ route, url, attemptId, formerAnswer, readOnly });
     this.configFromItem$.complete();
   }
 
