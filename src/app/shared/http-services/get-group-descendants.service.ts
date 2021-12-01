@@ -31,8 +31,8 @@ const userDecoder = pipe(
   }),
   D.intersect(
     D.partial({
-      firstName: D.string,
-      lastName: D.string,
+      firstName: D.nullable(D.string),
+      lastName: D.nullable(D.string),
     })
   )
 );
