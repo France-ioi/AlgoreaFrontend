@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, SimpleChanges, ViewChild, ElementRef } from '@angular/core';
 
 enum ScoreRingColor {
-  Success = 'rgb(105, 206, 77)',
+  Success = '#69ce4d',
   Initial = '#F90223',
   DefaultText = '#4A4A4A',
   DarkText = '#FFF',
