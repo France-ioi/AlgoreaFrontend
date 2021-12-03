@@ -1,9 +1,8 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { combineLatest, EMPTY, forkJoin, interval, merge, Observable, of, ReplaySubject, Subject } from 'rxjs';
+import { combineLatest, concat, EMPTY, forkJoin, interval, merge, Observable, of, ReplaySubject, Subject } from 'rxjs';
 import {
   catchError,
   defaultIfEmpty,
-  delayWhen,
   distinctUntilChanged,
   filter,
   mapTo,
@@ -47,6 +46,7 @@ export class ItemTaskAnswerService implements OnDestroy {
 
   private initialAnswer$: Observable<Answer | null> = this.config$.pipe(
     switchMap(({ route, attemptId, formerAnswer, readOnly }) => {
+      console.log('get initial answer', { id: route.id, formerAnswer, readOnly });
       if (route.answerId) {
         return readOnly ? of(formerAnswer) : this.loadFormerAsNewCurrentAnswer(route.id, attemptId, formerAnswer);
       }
@@ -56,25 +56,17 @@ export class ItemTaskAnswerService implements OnDestroy {
     shareReplay(1), // avoid duplicate xhr calls on multiple subscriptions.
   );
 
-  private initializedTaskState$ = combineLatest([ this.initialAnswer$, this.task$ ]).pipe(
-    switchMap(([ initialAnswer, task ]) =>
-      (initialAnswer?.state ? task.reloadState(initialAnswer.state).pipe(mapTo(undefined)) : of(undefined))
-    ),
-    shareReplay(1),
-  );
-  private initializedTaskAnswer$ = combineLatest([ this.initialAnswer$, this.task$ ]).pipe(
-    delayWhen(() => this.initializedTaskState$),
-    switchMap(([ initialAnswer, task ]) =>
-      (initialAnswer?.answer ? task.reloadAnswer(initialAnswer.answer).pipe(mapTo(undefined)) : of(undefined))
-    ),
+  private initializedTask$ = combineLatest([ this.initialAnswer$, this.task$ ]).pipe(
+    switchMap(([ initialAnswer, task ]) => concat(
+      initialAnswer?.state ? task.reloadState(initialAnswer.state) : EMPTY,
+      initialAnswer?.answer ? task.reloadAnswer(initialAnswer.answer) : EMPTY,
+    )),
+    mapTo(undefined),
     shareReplay(1),
   );
 
-  private canStartSaveInterval$: Observable<void> = this.config$.pipe(
-    take(1),
-    filter(({ readOnly }) => !readOnly),
-    mapTo(undefined),
-    delayWhen(() => combineLatest([ this.saved$, this.initializedTaskState$, this.initializedTaskAnswer$ ])),
+  private canStartSaveInterval$: Observable<boolean> = this.config$.pipe(
+    switchMap(({ readOnly }) => this.initializedTask$.pipe(mapTo(!readOnly))),
   );
 
   private refreshAnswerAndStatePeriod = Math.max(answerAndStateSaveInterval, (window.taskSaveIntervalInSec ?? 0)*SECONDS);
@@ -86,7 +78,7 @@ export class ItemTaskAnswerService implements OnDestroy {
   );
 
   private autoSaveInterval$: Observable<{ answer: string, state: string } | Error> = this.canStartSaveInterval$.pipe(
-    switchMapTo(this.saved$),
+    switchMap(canStart => (canStart ? this.saved$ : EMPTY)),
     repeatLatestWhen(this.saveError$),
     switchMap(saved => this.answerOrStateChange$.pipe(
       filter(current => current.answer !== saved.answer || current.state !== saved.state),
@@ -105,8 +97,7 @@ export class ItemTaskAnswerService implements OnDestroy {
   );
 
   private subscriptions = [
-    this.initializedTaskAnswer$.subscribe({ error: err => this.errorSubject.next(err) }),
-    this.initializedTaskState$.subscribe({ error: err => this.errorSubject.next(err) }),
+    this.initializedTask$.subscribe({ error: err => this.errorSubject.next(err) }),
     this.initialAnswer$
       .subscribe(initial => this.saved$.next({ answer: initial?.answer ?? '', state: initial?.state ?? '' })),
     this.autoSaveInterval$.subscribe(savedOrError => {

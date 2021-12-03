@@ -1,7 +1,10 @@
+<router-outlet *ngIf="state.data"></router-outlet>
 
-<router-outlet *ngIf="state.isReady"></router-outlet>
+<ng-container *ngIf="state.isFetching && !state.data">
+  <alg-loading></alg-loading>
+  <h1 style="font-size: 7rem; line-height: 0.6">Fucking loading…</h1>
+</ng-container>
 
-<alg-loading *ngIf="state.isFetching"></alg-loading>
 
 <ng-container *ngIf="state.isError">
   <p *ngIf="$any(state).error && ($any(state).error.status === 403 || $any(state).error.status === 404); else unknownError" i18n>

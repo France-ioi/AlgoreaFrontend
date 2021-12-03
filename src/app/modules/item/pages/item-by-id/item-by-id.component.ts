@@ -35,7 +35,15 @@ const itemBreadcrumbCat = $localize`Items`;
 export class ItemByIdComponent implements OnDestroy {
 
   // datasource state re-used with fetching/error states of route resolution
-  state: FetchState<ItemData> = fetchingState();
+  // state: FetchState<ItemData> = fetchingState();
+  private _state: FetchState<ItemData> = fetchingState();
+  get state(): FetchState<ItemData> {
+    return this._state;
+  }
+  set state(state) {
+    console.log('state', { tag: state.tag, data: state.data, currentResult: state.data?.currentResult });
+    this._state = state;
+  }
   // to prevent looping indefinitely in case of bug in services (wrong path > item without path > fetch path > item with path > wrong path)
   hasRedirected = false;
 
@@ -135,6 +143,7 @@ export class ItemByIdComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
+    console.log('ItemById destroy');
     this.currentContent.clear();
     this.subscriptions.forEach(s => s.unsubscribe());
     this.layoutService.fullFrameContent$
@@ -153,7 +162,7 @@ export class ItemByIdComponent implements OnDestroy {
     const item = itemRouteFromParams(snapshot.parent.url[0].path, params);
     if (isItemRouteError(item)) {
       if (item.id) {
-        this.state = fetchingState();
+        this.state = fetchingState(this.state.data?.item.id === item.id ? this.state.data : undefined);
         this.solveMissingPathAttempt(item.contentType, item.id, item.path, item.answerId);
       } else this.state = errorState(new Error('No id in url'));
       return;

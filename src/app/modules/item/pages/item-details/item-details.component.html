@@ -1,6 +1,6 @@
 <ng-container *ngIf="itemData$ | async as state">
 
-  <ng-container *ngIf="state.isReady && state.data as itemData">
+  <ng-container *ngIf="state.data as itemData">
 
     <alg-item-header [itemData]="itemData" *ngIf="!(fullFrameContent$ | async)"></alg-item-header>
 

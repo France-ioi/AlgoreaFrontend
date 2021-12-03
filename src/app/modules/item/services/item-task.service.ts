@@ -64,6 +64,7 @@ export class ItemTaskService {
   configure(route: FullItemRoute, url: string, attemptId: string, options: TaskConfig): void {
     this.readOnly = options.readOnly;
     this.attemptId = attemptId;
+    console.log('[ItemTask] configure', options);
     this.initService.configure(route, url, attemptId, options.formerAnswer, options.readOnly);
   }
 

@@ -10,7 +10,6 @@ import { GetItemByIdService, Item } from '../http-services/get-item-by-id.servic
 import { GetResultsService, Result } from '../http-services/get-results.service';
 import { canCurrentUserViewItemContent } from 'src/app/modules/item/helpers/item-permissions';
 import { mapToFetchState } from 'src/app/shared/operators/state';
-import { buildUp } from 'src/app/shared/operators/build-up';
 import { FetchState } from 'src/app/shared/helpers/state';
 import { LocaleService } from 'src/app/core/services/localeService';
 
@@ -49,7 +48,8 @@ export class ItemDataSource implements OnDestroy {
   /* state to put outputted */
   readonly state$ = this.fetchOperation$.pipe(
     delayWhen(() => this.profileLanguageMatchesAppLanguage$),
-    switchMap(item => this.fetchItemData(item).pipe(mapToFetchState({ resetter: this.refresh$ }))),
+    switchMap(item => this.fetchItemData(item)),
+    mapToFetchState({ resetter: this.refresh$ }),
     // maxScorePatch is a cold observable, and switchMap operator acts a subscriber here
     // so the max score patch is only valid for current item
     switchMap(state => this.maxScorePatch$.pipe(map(score => this.patchScore(state, score)))),
@@ -65,7 +65,11 @@ export class ItemDataSource implements OnDestroy {
     private getResultsService: GetResultsService,
     private userSessionService: UserSessionService,
     private localeService: LocaleService,
-  ) {}
+  ) {
+    // this.state$.subscribe(state => {
+    //   console.log('really:', { status: state.tag, data: state.data, isFetching: state.isFetching });
+    // });
+  }
 
   fetchItem(item: FullItemRoute): void {
     this.fetchOperation$.next(item);
@@ -90,12 +94,19 @@ export class ItemDataSource implements OnDestroy {
    * In parallel: breadcrumb and (in serial: get info and start result)
    */
   private fetchItemData(itemRoute: FullItemRoute): Observable<ItemData> {
+    const item$ = this.getItemByIdService.get(itemRoute.id);
+    const results$ = item$.pipe(switchMap(item => {
+      if (canCurrentUserViewItemContent(item)) return this.fetchResults(itemRoute, item);
+      return of({ results: undefined, currentResult: undefined });
+    }));
     return forkJoin({
       route: of(itemRoute),
-      item: this.getItemByIdService.get(itemRoute.id),
+      item: item$,
       breadcrumbs: this.getBreadcrumbService.getBreadcrumb(itemRoute),
+      results: results$,
     }).pipe(
-      buildUp(data => (canCurrentUserViewItemContent(data.item) ? this.fetchResults(data.route, data.item) : EMPTY)),
+      map(({ route, item, breadcrumbs, results }) => ({ route, item, breadcrumbs, ...results })),
+      // buildUp(data => (canCurrentUserViewItemContent(data.item) ? this.fetchResults(data.route, data.item) : EMPTY)),
     );
   }
 

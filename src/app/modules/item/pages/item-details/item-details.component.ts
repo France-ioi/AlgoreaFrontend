@@ -8,7 +8,7 @@ import { RouterLinkActive } from '@angular/router';
 import { TaskTab } from '../item-display/item-display.component';
 import { Mode, ModeService } from 'src/app/shared/services/mode.service';
 import { combineLatest, fromEvent, Observable, of, Subject } from 'rxjs';
-import { catchError, distinctUntilChanged, endWith, filter, last, map, shareReplay, switchMap, take, takeUntil } from 'rxjs/operators';
+import { catchError, distinctUntilChanged, endWith, filter, last, map, shareReplay, switchMap, take, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
 import { TaskConfig } from '../../services/item-task.service';
 import { BeforeUnloadComponent } from 'src/app/shared/guards/before-unload-guard';
 import { ItemContentComponent } from '../item-content/item-content.component';
@@ -47,7 +47,11 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent {
   readonly formerAnswer$ = this.itemData$.pipe(
     map(state => state.data?.route.answerId),
     distinctUntilChanged(),
-    switchMap(answerId => (answerId ? this.getAnswerService.get(answerId) : of(null))),
+    switchMap(answerId => {
+      console.log('[ItemDisplay] answerId', answerId);
+      return answerId ? this.getAnswerService.get(answerId) : of(null);
+    }),
+    tap(answer => console.log('[ItemDisplay] answer', answer)),
     shareReplay(1),
   );
 
@@ -61,10 +65,13 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent {
   );
 
   readonly taskReadOnly$ = this.modeService.mode$.pipe(map(mode => mode === Mode.Watching));
-  readonly taskConfig$: Observable<TaskConfig> = combineLatest([
-    this.formerAnswer$,
-    this.taskReadOnly$,
-  ]).pipe(map(([ formerAnswer, readOnly ]) => ({ readOnly, formerAnswer })));
+  readonly taskConfig$: Observable<TaskConfig> = this.formerAnswer$.pipe(
+    withLatestFrom(this.taskReadOnly$),
+    map(([ formerAnswer, readOnly ]) => {
+      console.log({ formerAnswer, readOnly });
+      return { readOnly, formerAnswer };
+    }),
+  );
 
   // When navigating elsewhere but the current answer is unsaved, navigation is blocked until the save is performed.
   // savingAnswer indicates the loading state while blocking navigation because of the save request.
@@ -94,6 +101,7 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent {
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
+    console.log('ItemDetails destroy');
   }
 
   reloadItem(): void {

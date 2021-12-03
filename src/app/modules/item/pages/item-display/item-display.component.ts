@@ -5,7 +5,6 @@ import {
   Input,
   OnChanges,
   OnDestroy,
-  OnInit,
   Output,
   SimpleChanges,
   ViewChild,
@@ -40,7 +39,7 @@ export interface TaskTab {
   styleUrls: [ './item-display.component.scss' ],
   providers: [ ItemTaskService, ItemTaskInitService, ItemTaskAnswerService, ItemTaskViewsService ],
 })
-export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges, OnDestroy {
+export class ItemDisplayComponent implements AfterViewChecked, OnChanges, OnDestroy {
   @Input() route!: FullItemRoute;
   @Input() url!: string;
   @Input() canEdit: PermissionsInfo['canEdit'] = 'none';
@@ -94,10 +93,6 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
     private actionFeedbackService: ActionFeedbackService,
   ) {}
 
-  ngOnInit(): void {
-    this.taskService.configure(this.route, this.url, this.attemptId, this.taskConfig);
-    this.taskService.showView(this.view ?? 'task');
-  }
 
   ngAfterViewChecked(): void {
     if (!this.iframe || this.taskService.initialized) return;
@@ -106,22 +101,28 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.view && this.view) this.taskService.showView(this.view);
-    if (
-      changes.route &&
-      !changes.route.firstChange &&
-      (changes.route.previousValue as FullItemRoute | undefined)?.id !== (changes.route.currentValue as FullItemRoute | undefined)?.id
-    ) {
-      throw new Error('this component does not support changing its route input');
+    if (changes.taskConfig) {
+      console.log('[ItemDislay] route changed', { route: this.route, config: this.taskConfig });
+      this.taskService.configure(this.route, this.url, this.attemptId, this.taskConfig);
+      this.taskService.showView(this.view ?? 'task');
     }
-    if (changes.url && !changes.url.firstChange) throw new Error('this component does not support changing its url input');
-    if (changes.attemptId && !changes.attemptId.firstChange) {
-      throw new Error('this component does not support changing its attemptId input');
-    }
+    // if (
+    //   changes.route &&
+    //   !changes.route.firstChange &&
+    //   (changes.route.previousValue as FullItemRoute | undefined)?.id !== (changes.route.currentValue as FullItemRoute | undefined)?.id
+    // ) {
+    //   throw new Error('this component does not support changing its route input');
+    // }
+    // if (changes.url && !changes.url.firstChange) throw new Error('this component does not support changing its url input');
+    // if (changes.attemptId && !changes.attemptId.firstChange) {
+    //   throw new Error('this component does not support changing its attemptId input');
+    // }
   }
 
   ngOnDestroy(): void {
     if (this.actionFeedbackService.hasFeedback) this.actionFeedbackService.clear();
     this.subscription.unsubscribe();
+    console.log('[ItemDisplay] destroy');
   }
 
   saveAnswerAndState(): Observable<{ saving: boolean }> {

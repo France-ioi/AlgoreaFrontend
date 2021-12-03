@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { fromEvent, Observable, of, ReplaySubject, TimeoutError } from 'rxjs';
-import { catchError, delayWhen, filter, map, mapTo, shareReplay, switchMap, timeout, withLatestFrom } from 'rxjs/operators';
+import { catchError, delayWhen, distinctUntilChanged, filter, map, mapTo, shareReplay, startWith, switchMap, timeout, withLatestFrom } from 'rxjs/operators';
 import { appConfig } from 'src/app/shared/helpers/config';
 import { SECONDS } from 'src/app/shared/helpers/duration';
 import { FullItemRoute } from 'src/app/shared/routing/item-route';
@@ -23,10 +23,13 @@ export interface ItemTaskConfig {
 export class ItemTaskInitService implements OnDestroy {
   private configFromItem$ = new ReplaySubject<ItemTaskConfig>(1);
   private configFromIframe$ = new ReplaySubject<{ iframe: HTMLIFrameElement, bindPlatform(task: Task): void }>(1);
+  private task = new ReplaySubject<Task>(1);
+  readonly task$ = this.task.asObservable();
 
   readonly config$ = this.configFromItem$.asObservable();
   readonly iframe$ = this.configFromIframe$.pipe(map(config => config.iframe));
   readonly taskToken$: Observable<TaskToken> = this.config$.pipe(
+    distinctUntilChanged((a, b) => a.route.id === b.route.id && a.attemptId === b.attemptId),
     switchMap(({ attemptId, route }) => this.taskTokenService.generate(route.id, attemptId)),
     shareReplay(1),
   );
@@ -37,18 +40,22 @@ export class ItemTaskInitService implements OnDestroy {
     shareReplay(1), // avoid duplicate xhr calls
   );
 
-  readonly task$ = this.configFromIframe$.pipe(
+  private subscription = this.configFromIframe$.pipe(
     delayWhen(({ iframe }) => fromEvent(iframe, 'load')), // triggered for good & bad url, not for not responding servers
-    switchMap(({ iframe, bindPlatform }) => taskProxyFromIframe(iframe).pipe(
-      switchMap(task => {
-        bindPlatform(task);
-        const initialViews = { task: true, solution: true, editor: true, hints: true, grader: true, metadata: true };
-        return task.load(initialViews).pipe(mapTo(task));
-      }),
-      timeout(loadTaskTimeout), // after the iframe has loaded, if no connection to jschannel is made, consider the task broken
-    )),
+    withLatestFrom(this.task$.pipe(startWith(undefined))),
+    switchMap(([{ iframe, bindPlatform }, previousTask ]) => {
+      if (previousTask) previousTask.destroy();
+      return taskProxyFromIframe(iframe).pipe(
+        switchMap(task => {
+          bindPlatform(task);
+          const initialViews = { task: true, solution: true, editor: true, hints: true, grader: true, metadata: true };
+          return task.load(initialViews).pipe(mapTo(task));
+        }),
+        timeout(loadTaskTimeout), // after the iframe has loaded, if no connection to jschannel is made, consider the task broken
+      );
+    }),
     shareReplay(1),
-  );
+  ).subscribe(task => this.task.next(task));
 
   readonly initError$ = this.task$.pipe(
     catchError(timeoutError => of(timeoutError)),
@@ -60,7 +67,6 @@ export class ItemTaskInitService implements OnDestroy {
   ) as Observable<Error>;
 
   initialized = false;
-  configured = false;
 
   constructor(
     private taskTokenService: TaskTokenService,
@@ -69,16 +75,17 @@ export class ItemTaskInitService implements OnDestroy {
   ngOnDestroy(): void {
     // task is a one replayed value observable. If a task has been emitted, destroy it ; else nothing to do.
     this.task$.pipe(timeout(0)).subscribe(task => task.destroy());
-    if (!this.configFromItem$.closed) this.configFromItem$.complete();
+    this.configFromItem$.complete();
+    this.subscription.unsubscribe();
     if (!this.configFromIframe$.closed) this.configFromIframe$.complete();
+    console.log('[ItemTaskInit] destroy');
   }
 
   configure(route: FullItemRoute, url: string, attemptId: string, formerAnswer: Answer | null, readOnly = false): void {
-    if (this.configured) throw new Error('task init service can be configured once only');
-    this.configured = true;
-
+    console.log('[ItemTaskInit] configure', { route, formerAnswer, readOnly });
+    // if (this.configured) throw new Error('task init service can be configured once only');
+    // this.configured = true;
     this.configFromItem$.next({ route, url, attemptId, formerAnswer, readOnly });
-    this.configFromItem$.complete();
   }
 
   initTask(iframe: HTMLIFrameElement, bindPlatform: (task: Task) => void): void {

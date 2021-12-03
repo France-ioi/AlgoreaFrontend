@@ -26,4 +26,8 @@ export class ItemContentComponent implements OnChanges {
     this.attemptId = this.itemData.route.attemptId || this.itemData.currentResult?.attemptId;
   }
 
+  ngOnDestroy(): void {
+    console.log('[ItemContent] destroy');
+  }
+
 }

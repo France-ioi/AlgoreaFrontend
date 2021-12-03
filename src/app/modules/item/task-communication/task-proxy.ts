@@ -182,6 +182,7 @@ export class Task {
   }
 
   reloadAnswer(answer: string): Observable<unknown> {
+    console.log('reload answwer');
     return this.chan.call({
       method: 'task.reloadAnswer',
       params: answer,
@@ -200,6 +201,7 @@ export class Task {
   }
 
   reloadState(state: string): Observable<unknown> {
+    console.log('reload state');
     return this.chan.call({
       method: 'task.reloadState',
       params: state,
