@@ -1,15 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { EMPTY, forkJoin, Observable, of, ReplaySubject, Subject } from 'rxjs';
-import {
-  delayWhen,
-  distinctUntilChanged,
-  filter,
-  map,
-  scan,
-  shareReplay,
-  startWith,
-  switchMap,
-} from 'rxjs/operators';
+import { delayWhen, distinctUntilChanged, filter, map, scan, shareReplay, startWith, switchMap, } from 'rxjs/operators';
 import { bestAttemptFromResults, implicitResultStart } from 'src/app/shared/helpers/attempts';
 import { isRouteWithSelfAttempt, FullItemRoute } from 'src/app/shared/routing/item-route';
 import { ResultActionsService } from 'src/app/shared/http-services/result-actions.service';
