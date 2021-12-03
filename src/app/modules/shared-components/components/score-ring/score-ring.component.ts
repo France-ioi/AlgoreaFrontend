@@ -2,6 +2,7 @@ import { Component, Input, OnChanges, SimpleChanges, ViewChild, ElementRef } fro
 
 enum ScoreRingColor {
   Success = '#69ce4d',
+  DarkSuccess = '#B8E986',
   Initial = '#F90223',
   DefaultText = '#4A4A4A',
   DarkText = '#FFF',
@@ -22,6 +23,7 @@ export class ScoreRingComponent implements OnChanges {
   @Input() icon?: string; // a font-awesome icon identifier
   @Input() scoreFillColor?: string;
   @Input() forTree = false;
+  @Input() isDarkBg = false;
 
   @ViewChild('svg') svg?: ElementRef;
 
@@ -67,7 +69,11 @@ export class ScoreRingComponent implements OnChanges {
     this.greyedPath = this.pathFromScore(this.currentScore);
     this.scorePath = this.pathFromScore(this.bestScore);
     if (this.currentScore === 100) {
-      this.greyedFill = ScoreRingColor.Success;
+      if (this.isDarkBg) {
+        this.greyedFill = ScoreRingColor.DarkSuccess;
+      } else {
+        this.greyedFill = ScoreRingColor.Success;
+      }
     } else if (!this.scoreFillColor) {
       this.greyedFill = `hsl(${this.currentScore * 0.4 }, 100%, 50%)`;
       this.scoreFill = '#8E8E8E';
@@ -81,7 +87,11 @@ export class ScoreRingComponent implements OnChanges {
       }
     } else if (this.isValidated) {
       this.icon = 'check';
-      this.iconFill = ScoreRingColor.Success;
+      if (this.isDarkBg) {
+        this.iconFill = ScoreRingColor.DarkSuccess;
+      } else {
+        this.iconFill = ScoreRingColor.Success;
+      }
     } else {
       this.icon = undefined;
     }
