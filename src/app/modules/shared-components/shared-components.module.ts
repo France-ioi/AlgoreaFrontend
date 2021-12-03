@@ -61,6 +61,7 @@ import { ErrorComponent } from './components/error/error.component';
 import { LoadingComponent } from './components/loading/loading.component';
 import { CollapsibleSectionComponent } from './components/collapsible-section/collapsible-section.component';
 import { NeighborWidgetComponent } from './components/neighbor-widget/neighbor-widget.component';
+import { GroupPermissionCaptionPipe } from '../../shared/pipes/groupPermissionCaption';
 
 @NgModule({
   declarations: [
@@ -87,6 +88,7 @@ import { NeighborWidgetComponent } from './components/neighbor-widget/neighbor-w
     GroupLinkPipe,
     UserCaptionPipe,
     LogActionDisplayPipe,
+    GroupPermissionCaptionPipe,
     SubSectionComponent,
     AddContentComponent,
     FloatingSaveComponent,
@@ -155,6 +157,7 @@ import { NeighborWidgetComponent } from './components/neighbor-widget/neighbor-w
     GroupLinkPipe,
     UserCaptionPipe,
     LogActionDisplayPipe,
+    GroupPermissionCaptionPipe,
     SubSectionComponent,
     AddContentComponent,
     FloatingSaveComponent,

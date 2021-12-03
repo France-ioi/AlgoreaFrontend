@@ -16,13 +16,62 @@
       <ng-container *ngIf="rootActivityState.isReady">
         <ng-container *ngIf="rootActivityState.data; else noActivity">
           <div class="item">
-            <i class="icon fa fa-folder"></i>
-            <strong i18n>Root activity: {{ rootActivityState.data.string.title }}</strong>
+            <div>
+              <i class="icon fa fa-folder"></i>
+              <strong i18n>Root activity: {{ rootActivityState.data.string.title }}</strong>
+            </div>
           </div>
         </ng-container>
 
         <ng-template #noActivity>
           <div i18n>This group has no activity.</div>
+        </ng-template>
+      </ng-container>
+    </ng-container>
+  </alg-section>
+
+  <alg-section
+    icon="fa fa-book"
+    i18n-label label="Specific permissions given to the group on content"
+  >
+    <ng-container *ngIf="permissionState$ | async as permissionState">
+      <div class="spinner" *ngIf="permissionState.isFetching">
+        <alg-loading size="medium"></alg-loading>
+      </div>
+
+      <alg-error
+        *ngIf="permissionState.isError"
+        i18n-message message="Error while loading permissions."
+        [showRefreshButton]="true"
+        refreshButtonType="refresh"
+        (refresh)="refreshPermissions()"
+      ></alg-error>
+
+      <ng-container *ngIf="permissionState.isReady">
+        <ng-container *ngIf="permissionState.data.length > 1; else noPermissions">
+          <div class="item" *ngFor="let grantedPermission of permissionState.data">
+          <div>
+            <i class="icon fa fa-folder"></i>
+            <strong>
+              {{ grantedPermission.item.title }}.
+            </strong>
+            <span i18n>Given by</span>
+            <span
+              class="alg-link"
+              (click)="onGroupClick(grantedPermission.sourceGroup.id)"
+              *ngIf="grantedPermission.sourceGroup.id !== group?.id; else currentGroup">
+                {{ grantedPermission.sourceGroup.name }}
+            </span>
+            <ng-template #currentGroup>
+              <span i18n> this group</span>
+            </ng-template>
+          </div>
+          <alg-group-permissions [permissions]="grantedPermission.permissions"></alg-group-permissions>
+        </div>
+        </ng-container>
+
+        <ng-template #noPermissions>
+          <div i18n>This group has no permissions.</div>
         </ng-template>
       </ng-container>
     </ng-container>
