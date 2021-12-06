@@ -27,6 +27,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   fullFrameContent$ = this.layoutService.fullFrameContent$;
   contentFooter$ = this.layoutService.contentFooter$;
+  hideLeftMenu = this.layoutService.hideLeftMenu;
   scrolled = false;
 
   private subscription?: Subscription;

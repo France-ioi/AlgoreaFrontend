@@ -1,7 +1,9 @@
 <div class="container">
-  <div class="left" *ngrxLet="fullFrameContent$ as fullFrameContent" [ngClass]="{ collapsed: fullFrameContent }">
-    <alg-left-menu></alg-left-menu>
-  </div>
+  <ng-container *ngIf="!hideLeftMenu">
+    <div class="left" *ngrxLet="fullFrameContent$ as fullFrameContent" [ngClass]="{ collapsed: fullFrameContent }">
+      <alg-left-menu></alg-left-menu>
+    </div>
+  </ng-container>
   <ng-container *ngIf="currentMode$ | async as currentMode">
     <alg-top-bar
       class="top-bar"
@@ -10,6 +12,7 @@
       [scrolled]="scrolled"
       [currentMode]="currentMode"
       [fullFrameContent]="!!fullFrameContent"
+      [hideLeftHeader]="hideLeftMenu"
     ></alg-top-bar>
     <div
       class="right"

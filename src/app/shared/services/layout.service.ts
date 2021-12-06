@@ -1,16 +1,22 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { delay } from 'rxjs/operators';
+import { delay, distinctUntilChanged, map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LayoutService {
   // Service allowing modifications of the layout
+  private platformAsLTIProvider = location.hash.includes('asLTIProvider');
+  readonly hideLeftMenu = this.platformAsLTIProvider;
 
   private fullFrameContent = new BehaviorSubject<boolean>(false);
   /** Expands the content by hiding the left menu and select headers */
-  fullFrameContent$ = this.fullFrameContent.asObservable().pipe(delay(0));
+  fullFrameContent$ = this.fullFrameContent.asObservable().pipe(
+    delay(0),
+    map(fullFrame => this.hideLeftMenu || fullFrame),
+    distinctUntilChanged(),
+  );
 
   private contentFooter = new BehaviorSubject<boolean>(true);
   /**

@@ -10,4 +10,5 @@ export class TopBarComponent {
   @Input() scrolled = false;
   @Input() currentMode?: Mode;
   @Input() fullFrameContent = false;
+  @Input() hideLeftHeader = false;
 }
