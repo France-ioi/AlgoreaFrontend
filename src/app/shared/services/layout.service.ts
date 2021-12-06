@@ -9,6 +9,7 @@ export class LayoutService {
   // Service allowing modifications of the layout
   private platformAsLTIProvider = location.hash.includes('asLTIProvider');
   readonly hideLeftMenu = this.platformAsLTIProvider;
+  readonly hideTopRightControls = this.platformAsLTIProvider;
 
   private fullFrameContent = new BehaviorSubject<boolean>(false);
   /** Expands the content by hiding the left menu and select headers */

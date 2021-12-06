@@ -11,4 +11,5 @@ export class TopBarComponent {
   @Input() currentMode?: Mode;
   @Input() fullFrameContent = false;
   @Input() hideLeftHeader = false;
+  @Input() hideTopRightControls = false;
 }
