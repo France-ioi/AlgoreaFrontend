@@ -64,7 +64,7 @@
         </alg-error>
 
         <ng-container *ngIf="taskConfig$ | async as taskConfig">
-          <div *ngIf="taskConfig.readOnly" class="indicator">
+          <div *ngIf="taskConfig.readOnly && contentTab.isActive" class="indicator">
             <alg-answer-author-indicator *ngIf="formerAnswer$ | async as answer" [answer]="answer"></alg-answer-author-indicator>
           </div>
           <alg-item-content
