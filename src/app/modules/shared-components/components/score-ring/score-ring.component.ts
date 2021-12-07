@@ -23,7 +23,7 @@ export class ScoreRingComponent implements OnChanges {
   @Input() icon?: string; // a font-awesome icon identifier
   @Input() scoreFillColor?: string;
   @Input() forTree = false;
-  @Input() isDarkBg = false;
+  @Input() forDarkBg = false;
 
   @ViewChild('svg') svg?: ElementRef;
 
@@ -69,7 +69,7 @@ export class ScoreRingComponent implements OnChanges {
     this.greyedPath = this.pathFromScore(this.currentScore);
     this.scorePath = this.pathFromScore(this.bestScore);
     if (this.currentScore === 100) {
-      if (this.isDarkBg) {
+      if (this.forDarkBg) {
         this.greyedFill = ScoreRingColor.DarkSuccess;
       } else {
         this.greyedFill = ScoreRingColor.Success;
@@ -87,7 +87,7 @@ export class ScoreRingComponent implements OnChanges {
       }
     } else if (this.isValidated) {
       this.icon = 'check';
-      if (this.isDarkBg) {
+      if (this.forDarkBg) {
         this.iconFill = ScoreRingColor.DarkSuccess;
       } else {
         this.iconFill = ScoreRingColor.Success;

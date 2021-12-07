@@ -42,7 +42,7 @@
             [forTree]="true"
             [isDark]="true"
             [icon]="node.expanded ? 'folder-open' : 'folder'"
-            [isDarkBg]="!node.partialSelected"
+            [forDarkBg]="!node.partialSelected"
           ></alg-score-ring>
           <ng-template #folderNoScore>
             <i class="fa" [ngClass]="{ 'fa-folder': !node.expanded, 'fa-folder-open': node.expanded }"></i>
@@ -222,7 +222,7 @@
             [diameter]="30"
             [forTree]="true"
             [isDark]="true"
-            [isDarkBg]="!node.partialSelected"
+            [forDarkBg]="!node.partialSelected"
           ></alg-score-ring>
           <ng-template #leafNoScore>
             <i class="pi" [class.pi-circle-on]="!node.partialSelected" style="font-size: 0.6rem;"></i>
