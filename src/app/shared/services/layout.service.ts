@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { delay, distinctUntilChanged, map } from 'rxjs/operators';
+import { delay } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -11,13 +11,9 @@ export class LayoutService {
   readonly hideLeftMenu = this.platformAsLTIProvider;
   readonly hideTopRightControls = this.platformAsLTIProvider;
 
-  private fullFrameContent = new BehaviorSubject<boolean>(false);
+  private fullFrameContent = new BehaviorSubject<boolean>(this.hideLeftMenu);
   /** Expands the content by hiding the left menu and select headers */
-  fullFrameContent$ = this.fullFrameContent.asObservable().pipe(
-    delay(0),
-    map(fullFrame => this.hideLeftMenu || fullFrame),
-    distinctUntilChanged(),
-  );
+  fullFrameContent$ = this.fullFrameContent.asObservable().pipe(delay(0));
 
   private contentFooter = new BehaviorSubject<boolean>(true);
   /**
@@ -27,6 +23,7 @@ export class LayoutService {
 
   /** Set fullFrameContent, which expands the content by hiding the left menu and select headers */
   toggleFullFrameContent(shown: boolean): void {
+    if (this.hideLeftMenu) return;
     this.fullFrameContent.next(shown);
   }
 
