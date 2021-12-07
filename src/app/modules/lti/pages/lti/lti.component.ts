@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { forkJoin, Observable } from 'rxjs';
 import { catchError, map, shareReplay, switchMap } from 'rxjs/operators';
+import { ActivityNavTreeService } from 'src/app/core/services/navigation/item-nav-tree.service';
 import { GetItemChildrenService, ItemChild } from 'src/app/modules/item/http-services/get-item-children.service';
 import { GetItemPathService } from 'src/app/modules/item/http-services/get-item-path.service';
 import { errorIsHTTPForbidden } from 'src/app/shared/helpers/errors';
@@ -24,14 +25,17 @@ const noChildError = new Error(LTIError.NoChild);
   templateUrl: './lti.component.html',
   styleUrls: [ './lti.component.scss' ],
 })
-export class LTIComponent {
+export class LTIComponent implements OnDestroy {
 
-  readonly navigationData$ = this.activatedRoute.paramMap.pipe(
-    switchMap(params => {
+  private contentId$ = this.activatedRoute.paramMap.pipe(
+    map(params => {
       const contentId = params.get('contentId');
       if (!contentId) throw new Error('unexpected: contentId should be defined');
-      return this.getNavigationData(contentId).pipe(mapToFetchState());
+      return contentId;
     }),
+  );
+  readonly navigationData$ = this.contentId$.pipe(
+    switchMap(contentId => this.getNavigationData(contentId).pipe(mapToFetchState())),
     shareReplay(1),
   );
   readonly error$ = this.navigationData$.pipe(
@@ -45,23 +49,31 @@ export class LTIComponent {
     })
   );
 
+  private subscriptions = [
+    this.contentId$.subscribe(contentId => this.activityNavTreeService.setNavigationRootElement(contentId)),
+    this.navigationData$.pipe(readyData()).subscribe({
+      next: ({ firstChild, path, attemptId }) => {
+        const itemRoute = fullItemRoute('activity', firstChild.id, path, { parentAttemptId: attemptId });
+        this.itemRouter.navigateTo(itemRoute, { navExtras: { replaceUrl: true } });
+      },
+    }),
+  ];
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private itemRouter: ItemRouter,
     private layoutService: LayoutService,
+    private activityNavTreeService: ActivityNavTreeService,
     private getItemPathService: GetItemPathService,
     private resultActionsService: ResultActionsService,
     private getItemChildrenService: GetItemChildrenService,
   ) {
     this.layoutService.toggleTopRightControls(false);
     this.layoutService.toggleFullFrameContent(true, false);
+  }
 
-    this.navigationData$.pipe(readyData()).subscribe({
-      next: ({ firstChild, path, attemptId }) => {
-        const itemRoute = fullItemRoute('activity', firstChild.id, path, { parentAttemptId: attemptId });
-        this.itemRouter.navigateTo(itemRoute, { navExtras: { replaceUrl: true } });
-      },
-    });
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
   private getNavigationData(itemId: string): Observable<{ firstChild: ItemChild, path: string[], attemptId: string }> {
