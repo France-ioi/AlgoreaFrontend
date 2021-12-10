@@ -1,7 +1,5 @@
 :host {
   display: flex;
-  // width: 100%;
-  // height: 100%;
 }
 
 .ring-container {
@@ -9,23 +7,30 @@
   display: flex;
   width: 100%;
   height: 100%;
+  justify-content: center;
+  align-items: center;
 
   svg {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
+    z-index: 1;
   }
 
-  .ring-icon {
-    position: absolute;
-    left: 0;
-    top: -.1rem;
-    bottom: 0;
-    right: 0;
+  .ring-data {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 1.2rem;
-    font-weight: 700;
+    font-weight: 400;
     font-family: "titillium";
+    z-index: 2;
+  }
+
+  .ring-digits {
+    line-height: 1rem;
   }
 }
