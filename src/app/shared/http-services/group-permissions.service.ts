@@ -51,7 +51,14 @@ export class GroupPermissionsService {
 
   updatePermissions(sourceGroupId: string, groupId: string, itemId: string, permissions: Permissions): Observable<void> {
     return this.http
-      .put<SimpleActionResponse>(`${appConfig.apiUrl}/groups/${sourceGroupId}/permissions/${groupId}/${itemId}`, permissions)
+      .put<SimpleActionResponse>(`${appConfig.apiUrl}/groups/${sourceGroupId}/permissions/${groupId}/${itemId}`, {
+        can_edit: permissions.canEdit,
+        can_grant_view: permissions.canGrantView,
+        can_make_session_official: permissions.canMakeSessionOfficial,
+        can_view: permissions.canView,
+        can_watch: permissions.canWatch,
+        is_owner: permissions.isOwner,
+      })
       .pipe(map(assertSuccess));
   }
 }
