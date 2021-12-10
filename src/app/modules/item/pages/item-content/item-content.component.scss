@@ -1,6 +1,9 @@
 @import 'src/colors.scss';
 
 .validation-text {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   margin: 0;
   padding: 1rem;
   color: $base-color;
