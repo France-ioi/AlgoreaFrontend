@@ -1,6 +1,6 @@
 <div class="ring-container" [ngStyle]="{width: forTree ? '100%' : diameter / 12 + 'rem', height: forTree ? '100%' : diameter / 12 + 'rem'}">
   <svg
-    viewBox="0 0 64 64"
+    viewBox="0 0 65 65"
   >
     <path
       stroke="black"
@@ -32,8 +32,10 @@
       fill-opacity="0.4"
     />
   </svg>
-  <span class="ring-icon" [ngStyle]="{color: icon ? iconFill : textFill}">
+  <span class="ring-data" [ngStyle]="{color: icon ? iconFill : textFill}">
     <i *ngIf="icon" class="fa fa-{{icon}}" [ngStyle]="{'font-size.rem': fontSize}"></i>
-    <ng-container *ngIf="!icon">{{currentScore | number:'1.0-0'}}</ng-container>
+    <ng-container *ngIf="!icon">
+      <span class="ring-digits" [ngStyle]="{'font-size.rem': fontSize}">{{currentScore | number:'1.0-0'}}</span>
+    </ng-container>
   </span>
 </div>
