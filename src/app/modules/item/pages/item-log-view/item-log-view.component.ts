@@ -7,6 +7,8 @@ import { mapToFetchState } from 'src/app/shared/operators/state';
 import { ItemType } from '../../../../shared/helpers/item-type';
 import { Item } from '../../http-services/get-item-by-id.service';
 import { UserSessionService, WatchedGroup } from '../../../../shared/services/user-session.service';
+import { GroupRouter } from '../../../../shared/routing/group-router';
+import { rawGroupRoute } from '../../../../shared/routing/group-route';
 
 interface Column {
   field: string,
@@ -41,6 +43,7 @@ export class ItemLogViewComponent implements OnChanges, OnDestroy {
   constructor(
     private activityLogService: ActivityLogService,
     private sessionService: UserSessionService,
+    private groupRouter: GroupRouter,
   ) {}
 
   ngOnChanges(): void {
@@ -121,6 +124,10 @@ export class ItemLogViewComponent implements OnChanges, OnDestroy {
       field: item.field,
       header: item.header,
     }));
+  }
+
+  onUserClick(id: string): void {
+    this.groupRouter.navigateTo(rawGroupRoute({ id, isUser: true }));
   }
 
 }
