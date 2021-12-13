@@ -4,10 +4,10 @@
 </ng-container>
 
 <ng-container *ngIf="currentContent$ | async as currentContent">
-  <div class="breadcrumb-bar" *ngIf="!fullFrameContent && !scrolled">
+  <div class="breadcrumb-bar" *ngIf="!fullFrameContent?.expanded && !scrolled">
     <alg-breadcrumb [contentBreadcrumb]="currentContent?.breadcrumbs"></alg-breadcrumb>
   </div>
-  <div class="full-frame-content-top-bar" *ngIf="fullFrameContent || scrolled">
+  <div class="full-frame-content-top-bar" *ngIf="fullFrameContent?.expanded || scrolled">
     <ng-container *ngIf="currentContent.score">
       <alg-score-ring
         [bestScore]="currentContent.score.bestScore"

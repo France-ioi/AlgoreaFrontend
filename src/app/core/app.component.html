@@ -1,24 +1,20 @@
 <div class="container">
-  <ng-container *ngIf="!hideLeftMenu">
-    <div class="left" *ngrxLet="fullFrameContent$ as fullFrameContent" [ngClass]="{ collapsed: fullFrameContent }">
-      <alg-left-menu></alg-left-menu>
-    </div>
-  </ng-container>
+  <div class="left" *ngIf="fullFrameContent$ | async as fullFrameContent" [ngClass]="{ collapsed: fullFrameContent.expanded }">
+    <alg-left-menu></alg-left-menu>
+  </div>
   <ng-container *ngIf="currentMode$ | async as currentMode">
     <alg-top-bar
       class="top-bar"
-      *ngrxLet="fullFrameContent$ as fullFrameContent"
-      [ngClass]="{ 'with-mode-bar': currentMode !== 'normal', collapsed: fullFrameContent }"
+      *ngIf="fullFrameContent$ | async as fullFrameContent"
+      [ngClass]="{ 'with-mode-bar': currentMode !== 'normal', collapsed: fullFrameContent.expanded }"
       [scrolled]="scrolled"
       [currentMode]="currentMode"
-      [fullFrameContent]="!!fullFrameContent"
-      [hideLeftHeader]="hideLeftMenu"
-      [hideTopRightControls]="hideTopRightControls"
+      [fullFrameContent]="fullFrameContent"
     ></alg-top-bar>
     <div
       class="right"
-      *ngrxLet="fullFrameContent$ as fullFrameContent"
-      [ngClass]="{ collapsed: fullFrameContent, 'with-mode-bar': currentMode !== 'normal', 'with-footer': contentFooter$ | async }"
+      *ngIf="fullFrameContent$ | async as fullFrameContent"
+      [ngClass]="{ collapsed: fullFrameContent.expanded, 'with-mode-bar': currentMode !== 'normal', 'with-footer': contentFooter$ | async }"
       >
       <div class="main-content">
         <router-outlet></router-outlet>

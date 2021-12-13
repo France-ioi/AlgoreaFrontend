@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { FullFrameContent } from 'src/app/shared/services/layout.service';
 import { Mode } from '../../../shared/services/mode.service';
 
 @Component({
@@ -9,7 +10,5 @@ import { Mode } from '../../../shared/services/mode.service';
 export class TopBarComponent {
   @Input() scrolled = false;
   @Input() currentMode?: Mode;
-  @Input() fullFrameContent = false;
-  @Input() hideLeftHeader = false;
-  @Input() hideTopRightControls = false;
+  @Input() fullFrameContent?: FullFrameContent;
 }
