@@ -6,6 +6,7 @@ import { CurrentContentService } from '../../../shared/services/current-content.
 import { delay, switchMap } from 'rxjs/operators';
 import { ActivityNavTreeService, SkillNavTreeService } from '../../services/navigation/item-nav-tree.service';
 import { isItemInfo } from '../../../shared/models/content/item-info';
+import { FullFrameContent } from 'src/app/shared/services/layout.service';
 
 @Component({
   selector: 'alg-content-top-bar',
@@ -13,7 +14,7 @@ import { isItemInfo } from '../../../shared/models/content/item-info';
   styleUrls: [ './content-top-bar.component.scss' ],
 })
 export class ContentTopBarComponent {
-  @Input() fullFrameContent = false;
+  @Input() fullFrameContent?: FullFrameContent;
   @Input() scrolled = false;
 
   currentMode$ = this.modeService.mode$.asObservable();

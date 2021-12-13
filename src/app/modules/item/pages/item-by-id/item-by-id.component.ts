@@ -147,7 +147,7 @@ export class ItemByIdComponent implements OnDestroy {
     this.currentContent.clear();
     this.subscriptions.forEach(s => s.unsubscribe());
     this.layoutService.fullFrameContent$
-      .pipe(take(1), filter(Boolean)) // if layout is in full frame and we quit an item page => disable full frame
+      .pipe(take(1), filter(fullFrame => fullFrame.expanded)) // if layout is in full frame and we quit an item page => disable full frame
       .subscribe(() => this.layoutService.toggleFullFrameContent(false));
   }
 
