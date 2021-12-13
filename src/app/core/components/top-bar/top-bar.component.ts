@@ -11,4 +11,5 @@ export class TopBarComponent {
   @Input() scrolled = false;
   @Input() currentMode?: Mode;
   @Input() fullFrameContent?: FullFrameContent;
+  @Input() showTopRightControls = true;
 }

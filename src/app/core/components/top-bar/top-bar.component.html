@@ -5,5 +5,5 @@
     [fullFrameContent]="fullFrameContent"
     [scrolled]="scrolled"
   ></alg-content-top-bar>
-  <alg-top-right-controls *ngIf="fullFrameContent?.showTopRightControls" [drawLeftBorder]="currentMode === 'normal'"></alg-top-right-controls>
+  <alg-top-right-controls *ngIf="showTopRightControls" [drawLeftBorder]="currentMode === 'normal'"></alg-top-right-controls>
 </ng-container>

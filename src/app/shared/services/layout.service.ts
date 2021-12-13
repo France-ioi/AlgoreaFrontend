@@ -5,7 +5,6 @@ import { delay } from 'rxjs/operators';
 export interface FullFrameContent {
   expanded: boolean,
   canToggle: boolean,
-  showTopRightControls: boolean,
 }
 
 @Injectable({
@@ -17,11 +16,13 @@ export class LayoutService {
 
   private fullFrameContent = new BehaviorSubject<FullFrameContent>(
     this.platformAsLTIProvider
-      ? { expanded: true, canToggle: false, showTopRightControls: false }
-      : { expanded: false, canToggle: true, showTopRightControls: true }
+      ? { expanded: true, canToggle: false }
+      : { expanded: false, canToggle: true }
   );
   /** Expands the content by hiding the left menu and select headers */
   fullFrameContent$ = this.fullFrameContent.asObservable().pipe(delay(0));
+
+  readonly showTopRightControls = !this.platformAsLTIProvider;
 
   private contentFooter = new BehaviorSubject<boolean>(true);
   /**
