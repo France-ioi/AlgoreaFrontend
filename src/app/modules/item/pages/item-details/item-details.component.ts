@@ -2,16 +2,21 @@ import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
 import { canCurrentUserViewItemContent } from '../../helpers/item-permissions';
 import { ItemDataSource } from '../../services/item-datasource.service';
-import { mapStateData } from 'src/app/shared/operators/state';
+import { mapStateData, readyData } from 'src/app/shared/operators/state';
 import { LayoutService } from '../../../../shared/services/layout.service';
 import { RouterLinkActive } from '@angular/router';
 import { TaskTab } from '../item-display/item-display.component';
 import { Mode, ModeService } from 'src/app/shared/services/mode.service';
-import { fromEvent, Observable, of, Subject } from 'rxjs';
-import { catchError, endWith, last, map, shareReplay, switchMap, take, takeUntil } from 'rxjs/operators';
-import { ConfigureTaskOptions } from '../../services/item-task.service';
+import { combineLatest, fromEvent, Observable, of, Subject } from 'rxjs';
+import { catchError, distinctUntilChanged, endWith, filter, last, map, shareReplay, switchMap, take, takeUntil } from 'rxjs/operators';
+import { TaskConfig } from '../../services/item-task.service';
 import { BeforeUnloadComponent } from 'src/app/shared/guards/before-unload-guard';
 import { ItemContentComponent } from '../item-content/item-content.component';
+import { errorIsHTTPForbidden } from 'src/app/shared/helpers/errors';
+import { urlArrayForItemRoute } from 'src/app/shared/routing/item-route';
+import { GetAnswerService } from '../../http-services/get-answer.service';
+
+const loadForbiddenAnswerError = new Error('load answer forbidden');
 
 @Component({
   selector: 'alg-item-details',
@@ -36,12 +41,30 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent {
 
   readonly fullFrameContent$ = this.layoutService.fullFrameContent$;
   readonly watchedGroup$ = this.userService.watchedGroup$;
-  readonly taskOptions$: Observable<ConfigureTaskOptions> = this.modeService.mode$.pipe(map(mode => ({
-    readOnly: mode === Mode.Watching,
-    shouldLoadAnswer: mode === Mode.Normal,
-  })));
 
-  readonly enableLoadSubmission$ = this.modeService.mode$.pipe(map(mode => mode === Mode.Normal));
+  unknownError?: Error;
+
+  readonly formerAnswer$ = this.itemData$.pipe(
+    map(state => state.data?.route.answerId),
+    distinctUntilChanged(),
+    switchMap(answerId => (answerId ? this.getAnswerService.get(answerId) : of(null))),
+    shareReplay(1),
+  );
+
+  readonly formerAnswerError$ = this.formerAnswer$.pipe(
+    catchError(error => of(errorIsHTTPForbidden(error) ? loadForbiddenAnswerError : new Error(error))),
+    filter((error): error is Error => error instanceof Error),
+  );
+  readonly formerAnswerLoadForbidden$ = this.formerAnswerError$.pipe(filter(error => error === loadForbiddenAnswerError));
+  readonly answerFallbackLink$ = combineLatest([ this.itemData$.pipe(readyData()), this.formerAnswerLoadForbidden$ ]).pipe(
+    map(([{ route }]) => urlArrayForItemRoute({ ...route, attemptId: undefined, parentAttemptId: undefined, answerId: undefined })),
+  );
+
+  readonly taskReadOnly$ = this.modeService.mode$.pipe(map(mode => mode === Mode.Watching));
+  readonly taskConfig$: Observable<TaskConfig> = combineLatest([
+    this.formerAnswer$,
+    this.taskReadOnly$,
+  ]).pipe(map(([ formerAnswer, readOnly ]) => ({ readOnly, formerAnswer })));
 
   // When navigating elsewhere but the current answer is unsaved, navigation is blocked until the save is performed.
   // savingAnswer indicates the loading state while blocking navigation because of the save request.
@@ -56,6 +79,9 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent {
     fromEvent<BeforeUnloadEvent>(globalThis, 'beforeunload', { capture: true })
       .pipe(switchMap(() => this.itemContentComponent?.itemDisplayComponent?.saveAnswerAndState() ?? of(undefined)), take(1))
       .subscribe(),
+    this.formerAnswerError$.subscribe(caught => {
+      if (caught !== loadForbiddenAnswerError) this.unknownError = caught;
+    }),
   ];
 
   constructor(
@@ -63,6 +89,7 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent {
     private itemDataSource: ItemDataSource,
     private layoutService: LayoutService,
     private modeService: ModeService,
+    private getAnswerService: GetAnswerService,
   ) {}
 
   ngOnDestroy(): void {

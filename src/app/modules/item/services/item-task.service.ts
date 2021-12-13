@@ -1,20 +1,21 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { animationFrames, merge, Observable, throwError } from 'rxjs';
+import { animationFrames, EMPTY, merge, Observable, throwError } from 'rxjs';
 import { map, mapTo, shareReplay, switchMap, take, tap } from 'rxjs/operators';
 import { LocaleService } from 'src/app/core/services/localeService';
 import { ActivityNavTreeService } from 'src/app/core/services/navigation/item-nav-tree.service';
 import { openNewTab, replaceWindowUrl } from 'src/app/shared/helpers/url';
 import { FullItemRoute, itemRoute } from 'src/app/shared/routing/item-route';
 import { ItemRouter } from 'src/app/shared/routing/item-router';
+import { Answer } from '../http-services/get-answer.service';
 import { Task, TaskPlatform } from '../task-communication/task-proxy';
 import { ItemTaskAnswerService } from './item-task-answer.service';
 import { ItemTaskInitService } from './item-task-init.service';
 import { ItemTaskViewsService } from './item-task-views.service';
 
-export interface ConfigureTaskOptions {
+export interface TaskConfig {
   readOnly: boolean,
-  shouldLoadAnswer: boolean,
+  formerAnswer: Answer | null,
 }
 
 @Injectable()
@@ -22,12 +23,10 @@ export class ItemTaskService {
   readonly unknownError$ = merge(this.answerService.error$, this.viewsService.error$).pipe(shareReplay(1));
   readonly initError$ = this.initService.initError$.pipe(shareReplay(1));
   readonly urlError$ = this.initService.urlError$.pipe(shareReplay(1));
-  readonly loadAnswerByIdError$ = this.answerService.loadAnswerByIdError$.pipe(shareReplay(1));
 
   private error$ = merge(
     this.initError$,
     this.urlError$,
-    this.loadAnswerByIdError$,
     this.unknownError$,
   ).pipe(switchMap(error => throwError(() => error)));
 
@@ -62,10 +61,10 @@ export class ItemTaskService {
     private localeService: LocaleService,
   ) {}
 
-  configure(route: FullItemRoute, url: string, attemptId: string, options: ConfigureTaskOptions): void {
+  configure(route: FullItemRoute, url: string, attemptId: string, options: TaskConfig): void {
     this.readOnly = options.readOnly;
     this.attemptId = attemptId;
-    this.initService.configure(route, url, attemptId, options.shouldLoadAnswer, options.readOnly);
+    this.initService.configure(route, url, attemptId, options.formerAnswer, options.readOnly);
   }
 
   initTask(iframe: HTMLIFrameElement): void {
@@ -88,7 +87,7 @@ export class ItemTaskService {
     if (Number.isNaN(randomSeed)) throw new Error('random seed must be a number');
 
     const platform: TaskPlatform = {
-      validate: mode => this.validate(mode).pipe(mapTo(undefined)),
+      validate: mode => (this.readOnly ? this.validateReadOnly(mode) : this.validate(mode)).pipe(mapTo(undefined)),
       getTaskParams: () => ({
         minScore: 0,
         maxScore: 100,
@@ -123,6 +122,16 @@ export class ItemTaskService {
       case 'next': return this.answerService.submitAnswer().pipe(switchMap(() => this.navigateToNextItem()));
       case 'top': return this.answerService.submitAnswer().pipe(switchMap(() => this.scrollTop()));
       default: return this.answerService.submitAnswer();
+    }
+  }
+
+  private validateReadOnly(mode: string): Observable<unknown> {
+    switch (mode) {
+      case 'cancel': return EMPTY;
+      case 'nextImmediate': return this.navigateToNextItem();
+      case 'next': return this.navigateToNextItem();
+      case 'top': return this.scrollTop();
+      default: return EMPTY;
     }
   }
 

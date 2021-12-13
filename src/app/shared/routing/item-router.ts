@@ -22,19 +22,13 @@ export class ItemRouter {
    * Navigate to given item, on the path page.
    * If page is not given and we are currently on an item page, use the same page. Otherwise, default to 'details'.
    */
-  navigateTo(item: RawItemRoute, { page, navExtras, preventFullFrame = false }: NavigateOptions = {}): void {
+  navigateTo(item: RawItemRoute, {
+    page,
+    navExtras,
+    preventFullFrame = (history.state as Record<string, boolean>).preventFullFrame ?? false,
+  }: NavigateOptions = {}): void {
     void this.router.navigateByUrl(this.url(item, page), { ...navExtras, state: { ...navExtras?.state, preventFullFrame } });
   }
-
-  /**
-   * Navigate to the current page without path and attempt if we are on an item page.
-   * If we are not on an item page, do nothing.
-   */
-  navigateToRawItemOfCurrentPage(): void {
-    const currentPage = this.currentItemPagePath();
-    if (currentPage) void this.router.navigate(currentPage);
-  }
-
 
   /**
    * Return a url to the given item, on the given page.

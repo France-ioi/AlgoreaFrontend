@@ -97,11 +97,20 @@ export class ItemByIdComponent implements OnDestroy {
             } : undefined,
           }));
 
+          if (state.data.route.answerId) {
+            this.itemRouter.navigateTo(
+              { ...state.data.route, answerId: undefined },
+              { navExtras: { replaceUrl: true, state: { preventRefetch: true } } },
+            );
+          }
+
         } else if (state.isError) {
           if (errorHasTag(state.error, breadcrumbServiceTag) && errorIsHTTPForbidden(state.error)) {
             if (this.hasRedirected) throw new Error('Too many redirections (unexpected)');
             this.hasRedirected = true;
-            this.itemRouter.navigateToRawItemOfCurrentPage();
+            const { contentType, id, answerId } = this.getItemRoute();
+            if (!id) throw new Error('Unexpected: item id should exist');
+            this.itemRouter.navigateTo({ contentType, id, answerId }, { navExtras: { replaceUrl: true } });
           }
           this.currentContent.clear();
         }
@@ -146,11 +155,15 @@ export class ItemByIdComponent implements OnDestroy {
     this.fetchItemAtRoute(this.activatedRoute.snapshot.paramMap);
   }
 
-  private fetchItemAtRoute(params: ParamMap): void {
+  private getItemRoute(params?: ParamMap): ReturnType<typeof itemRouteFromParams> {
     const snapshot = this.activatedRoute.snapshot;
     if (!snapshot.parent) throw new Error('Unexpected: activated route snapshot has no parent');
     if (!snapshot.parent.url[0]) throw new Error('Unexpected: activated route snapshot parent has no url');
-    const item = itemRouteFromParams(snapshot.parent.url[0].path, params);
+    return itemRouteFromParams(snapshot.parent.url[0].path, params ?? snapshot.paramMap);
+  }
+
+  private fetchItemAtRoute(params: ParamMap): void {
+    const item = this.getItemRoute(params);
     if (isItemRouteError(item)) {
       if (item.id) {
         this.state = fetchingState();
@@ -162,15 +175,6 @@ export class ItemByIdComponent implements OnDestroy {
     this.currentContent.replace(itemInfo({ route: item, breadcrumbs: { category: itemBreadcrumbCat, path: [], currentPageIdx: -1 } }));
     // trigger the fetch of the item (which will itself re-update the current content)
     this.itemDataSource.fetchItem(item);
-    if (item.answerId) {
-      this.itemRouter.navigateTo(
-        { ...item, answerId: undefined },
-        {
-          preventFullFrame: (history.state as Record<string, boolean>).preventFullFrame,
-          navExtras: { replaceUrl: true, state: { preventRefetch: true } },
-        },
-      );
-    }
   }
 
   /**

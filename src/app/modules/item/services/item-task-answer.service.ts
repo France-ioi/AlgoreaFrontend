@@ -23,20 +23,17 @@ import { repeatLatestWhen } from 'src/app/shared/helpers/repeatLatestWhen';
 import { AnswerTokenService } from '../http-services/answer-token.service';
 import { AnswerService } from '../http-services/answer.service';
 import { Answer, CurrentAnswerService } from '../http-services/current-answer.service';
-import { GetAnswerService } from '../http-services/get-answer.service';
 import { GradeService } from '../http-services/grade.service';
 import { ItemTaskInitService } from './item-task-init.service';
 
 const answerAndStateSaveInterval = 5*SECONDS;
-const loadAnswerError = new Error('load answer forbidden');
 
 @Injectable()
 export class ItemTaskAnswerService implements OnDestroy {
   private destroyed$ = new Subject<void>();
 
   private errorSubject = new Subject<Error>();
-  readonly error$ = this.errorSubject.pipe(filter(error => error !== loadAnswerError));
-  readonly loadAnswerByIdError$ = this.errorSubject.pipe(filter(error => error === loadAnswerError));
+  readonly error$ = this.errorSubject.asObservable();
 
   private scoreChange = new Subject<number>();
   readonly scoreChange$ = this.scoreChange.asObservable();
@@ -49,17 +46,12 @@ export class ItemTaskAnswerService implements OnDestroy {
   private taskToken$ = this.taskInitService.taskToken$.pipe(takeUntil(this.error$));
 
   private initialAnswer$: Observable<Answer | null> = this.config$.pipe(
-    switchMap(({ route, attemptId, shouldLoadAnswer }) => {
-      if (!shouldLoadAnswer) return of(null);
-      if (route.answerId) return this.loadFormerAsNewCurrentAnswer(route.id, attemptId, route.answerId);
+    switchMap(({ route, attemptId, formerAnswer, readOnly }) => {
+      if (route.answerId) {
+        return readOnly ? of(formerAnswer) : this.loadFormerAsNewCurrentAnswer(route.id, attemptId, formerAnswer);
+      }
 
-      return this.currentAnswerService.get(route.id, attemptId).pipe(
-        catchError(error => {
-          // currently, the backend returns a 403 status when no current answer exist for user+item+attempt
-          if (errorIsHTTPForbidden(error)) return of(null);
-          throw error;
-        })
-      );
+      return this.getCurrentAnswer(route.id, attemptId);
     }),
     shareReplay(1), // avoid duplicate xhr calls on multiple subscriptions.
   );
@@ -129,7 +121,6 @@ export class ItemTaskAnswerService implements OnDestroy {
     private answerService: AnswerService,
     private answerTokenService: AnswerTokenService,
     private gradeService: GradeService,
-    private getAnswerService: GetAnswerService,
   ) {}
 
   ngOnDestroy(): void {
@@ -206,30 +197,29 @@ export class ItemTaskAnswerService implements OnDestroy {
     );
   }
 
-  private loadFormerAsNewCurrentAnswer(itemId: string, attemptId: string, answerId: string): Observable<Answer | null> {
-    const savedCurrentAnswer$ = this.currentAnswerService.get(itemId, attemptId).pipe(
-      catchError(error => {
-        // currently, the backend returns a 403 status when no current answer exist for user+item+attempt
-        if (errorIsHTTPForbidden(error)) return of(null);
-        throw error;
-      }),
+  private loadFormerAsNewCurrentAnswer(itemId: string, attemptId: string, formerAnswer: Answer | null): Observable<Answer | null> {
+    const savedCurrentAnswer$ = this.getCurrentAnswer(itemId, attemptId).pipe(
       filter(isNotNull),
       switchMap(current => this.answerService.save(itemId, attemptId, { answer: current.answer ?? '', state: current.state ?? '' })),
       defaultIfEmpty(undefined),
     );
 
-    const formerAnswer$ = this.getAnswerService.get(answerId).pipe(
-      catchError(error => {
-        if (errorIsHTTPForbidden(error)) throw loadAnswerError;
-        throw error;
+    return savedCurrentAnswer$.pipe(
+      switchMap(() => {
+        if (!formerAnswer) return of(null);
+        const body = { answer: formerAnswer.answer ?? '', state: formerAnswer.state ?? '' };
+        return this.currentAnswerService.update(itemId, attemptId, body).pipe(mapTo(formerAnswer));
       }),
     );
-    return combineLatest([ formerAnswer$, savedCurrentAnswer$ ]).pipe(
-      switchMap(([ former ]) => {
-        if (!former) return of(null);
-        const body = { answer: former.answer ?? '', state: former.state ?? '' };
-        return this.currentAnswerService.update(itemId, attemptId, body).pipe(mapTo(former));
-      }),
+  }
+
+  private getCurrentAnswer(itemId: string, attemptId: string): Observable<Answer | null> {
+    return this.currentAnswerService.get(itemId, attemptId).pipe(
+      catchError(error => {
+        // currently, the backend returns a 403 status when no current answer exist for user+item+attempt
+        if (errorIsHTTPForbidden(error)) return of(null);
+        throw error;
+      })
     );
   }
 }

@@ -1,0 +1,11 @@
+<div class="container" *ngIf="author$ | async as author">
+  <alg-loading *ngIf="author.isFetching && !author.data" size="small"></alg-loading>
+  <alg-error *ngIf="author.isError" i18n-message message="Error while fetching author info"></alg-error>
+
+  <div class="content" *ngIf="author.isReady && author.data as author" i18n>
+    Submitted by
+    <a [routerLink]="groupLink$ | async" class="alg-link links">{{ author | userCaption }}</a>
+    on {{ answer.createdAt | date:'short' }}.
+    <span *ngIf="answer.score || answer.score === 0" class="score">Score: {{ answer.score }} points.</span>
+  </div>
+</div>

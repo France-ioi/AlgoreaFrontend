@@ -12,7 +12,7 @@ import { ItemType } from '../../../../shared/helpers/item-type';
 export class ItemProgressComponent implements OnChanges {
 
   @Input() itemData?: ItemData;
-  @Input() enableLoadSubmission = false;
+  @Input() isTaskReadOnly = false;
   @Input() savingAnswer = false;
 
   @Output() skipSave = new EventEmitter<void>();
