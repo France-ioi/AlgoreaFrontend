@@ -55,15 +55,17 @@
             <strong>
               {{ grantedPermission.item.title }}.
             </strong>
-            <span i18n>Given by</span>
-            <span
-              class="alg-link"
-              (click)="onGroupClick(grantedPermission.sourceGroup.id)"
-              *ngIf="grantedPermission.sourceGroup.id !== group?.id && grantedPermission.group.id !== group?.id; else currentGroup">
+            <ng-container *ngIf="grantedPermission.sourceGroup.id !== group?.id && grantedPermission.group.id !== group?.id; else currentGroup">
+              <span i18n>Given by</span>
+              <span
+                class="alg-link"
+                (click)="onGroupClick(grantedPermission.sourceGroup.id)"
+              >
                 {{ grantedPermission.sourceGroup.name }}
-            </span>
+              </span>
+            </ng-container>
             <ng-template #currentGroup>
-              <span i18n> this group</span>
+              <span i18n>Given by this group</span>
             </ng-template>
           </div>
           <alg-group-permissions [permissions]="grantedPermission.permissions"></alg-group-permissions>
