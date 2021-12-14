@@ -26,7 +26,7 @@ export class LTIComponent {
     this.layoutService.toggleTopRightControls(false);
     this.layoutService.toggleFullFrameContent(true, false);
 
-    const contentId = this.activatedRoute.snapshot.paramMap.get('contentId');
+    const contentId = this.activatedRoute.snapshot.queryParamMap.get('content_id');
     if (!contentId) {
       this.error = 'no content id';
       return;
