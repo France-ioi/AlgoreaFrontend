@@ -47,6 +47,9 @@ export class GroupWatchingService implements OnDestroy {
     }),
     shareReplay(1),
   );
+  isWatching$ = this.watchedGroup$.pipe(
+    map(g => g !== null)
+  );
 
   constructor(
     private route: ActivatedRoute,

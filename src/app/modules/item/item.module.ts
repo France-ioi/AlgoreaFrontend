@@ -30,7 +30,6 @@ import { ItemEditAdvancedParametersComponent } from './pages/item-edit-advanced-
 import { CalendarModule } from 'primeng/calendar';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { ChapterUserProgressComponent } from './pages/chapter-user-progress/chapter-user-progress.component';
-import { ItemProgressLabelPipe } from './pages/item-progress/itemProgressLabel';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { UserProgressDetailsComponent } from './components/user-progress-details/user-progress-details.component';
 import { PropagationEditMenuComponent } from './components/propagation-edit-menu/propagation-edit-menu.component';
@@ -64,7 +63,6 @@ import { ItemPermissionsComponent } from './components/item-permissions/item-per
     AddItemComponent,
     ItemEditAdvancedParametersComponent,
     ChapterUserProgressComponent,
-    ItemProgressLabelPipe,
     UserProgressDetailsComponent,
     PropagationEditMenuComponent,
     ItemDisplayComponent,

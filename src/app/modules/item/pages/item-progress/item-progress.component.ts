@@ -1,8 +1,10 @@
 import { Component, EventEmitter, Input, OnChanges, Output, ViewChild } from '@angular/core';
-import { UserSessionService } from 'src/app/shared/services/user-session.service';
 import { ItemData } from '../../services/item-datasource.service';
 import { RouterLinkActive } from '@angular/router';
-import { ItemType } from '../../../../shared/helpers/item-type';
+import { isATask } from '../../../../shared/helpers/item-type';
+import { GroupWatchingService } from 'src/app/core/services/group-watching.service';
+import { map } from 'rxjs/operators';
+import { combineLatest, ReplaySubject } from 'rxjs';
 
 @Component({
   selector: 'alg-item-progress',
@@ -21,29 +23,29 @@ export class ItemProgressComponent implements OnChanges {
   @ViewChild('chapterGroupProgressTab') chapterGroupProgressTab?: RouterLinkActive;
   @ViewChild('chapterUserProgressTab') chapterUserProgressTab?: RouterLinkActive;
 
-  readonly session$ = this.sessionService.session$;
+  private itemData$ = new ReplaySubject<ItemData>();
+  selectors$ = combineLatest([ this.itemData$, this.groupWatchingService.watchedGroup$ ]).pipe(
+    map(([ itemData, watchedGroup ]) => {
+      if (!watchedGroup || watchedGroup.route.isUser) {
+        return isATask(itemData.item) ? 'none' : 'withUserProgress';
+      } else {
+        return 'withUserProgress';
+      }
+    }),
+  );
 
-  selectors: 'none' | 'withUserProgress' | 'withGroupProgress' = 'withUserProgress';
+  sectionLabel$ = this.groupWatchingService.watchedGroup$.pipe(
+    map(g => (g ? $localize`Situation of ${ g.name }` : $localize`Your situation`))
+  );
 
-  constructor(private sessionService: UserSessionService) {}
+  isWatching$ = this.groupWatchingService.isWatching$;
+
+  constructor(
+    private groupWatchingService: GroupWatchingService,
+  ) {}
 
   ngOnChanges(): void {
-    if (!this.itemData) {
-      return;
-    }
-
-    this.recomputeSelector(this.itemData.item.type);
+    if (this.itemData) this.itemData$.next(this.itemData);
   }
 
-  private recomputeSelector(type: ItemType): void {
-    const watchedGroup = this.sessionService.session$.value?.watchedGroup;
-
-    if ((!watchedGroup || watchedGroup.login) && [ 'Task', 'Course' ].includes(type)) {
-      this.selectors = 'none';
-    } else if ((!watchedGroup || watchedGroup.login) && ![ 'Task', 'Course' ].includes(type)) {
-      this.selectors = 'withUserProgress';
-    } else {
-      this.selectors = 'withGroupProgress';
-    }
-  }
 }

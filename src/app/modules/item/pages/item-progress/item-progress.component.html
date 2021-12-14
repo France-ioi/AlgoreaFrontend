@@ -1,50 +1,49 @@
-<ng-container *ngIf="session$ | async as session">
   <alg-section
       icon="fa fa-list"
-      *ngIf="itemData"
-      [label]="session?.watchedGroup | itemProgressLabel"
+      [label]="(sectionLabel$ | async) || ''"
   >
 
-    <p class="not-allow-caption" *ngIf="!!session?.watchedGroup && itemData.item.permissions.canWatch === 'none'; else content" i18n>
-      You are not allowed to watch the progress of other users on this content.
-    </p>
+  <ng-container *ngIf="!(isWatching$ | async) && itemData?.item?.permissions?.canWatch !== 'none'; else unallowed">
 
-    <ng-template #content>
+    <ng-container *ngIf="selectors$ | async as selectors">
 
       <div [hidden]="selectors === 'none'">
         <div class="selection-center">
           <nav class="tab-rounded">
             <a class="tab-rounded-item"
-               [ngClass]="{'active': !!historyTab.isActive, 'prev': !!chapterGroupProgressTab?.isActive || !!chapterUserProgressTab?.isActive}"
-               [routerLink]="'./progress/history'"
-               routerLinkActive #historyTab="routerLinkActive"
-               i18n
+              [ngClass]="{'active': !!historyTab.isActive, 'prev': !!chapterGroupProgressTab?.isActive || !!chapterUserProgressTab?.isActive}"
+              [routerLink]="'./progress/history'"
+              routerLinkActive #historyTab="routerLinkActive"
+              i18n
             >
               History
             </a>
 
             <a class="tab-rounded-item"
-               [ngClass]="{'active': !!chapterGroupProgressTab.isActive, 'prev': !!chapterUserProgressTab?.isActive}"
-               [routerLink]="'./progress/chapter'"
-               routerLinkActive #chapterGroupProgressTab="routerLinkActive"
-               *ngIf="selectors === 'withGroupProgress'"
-               i18n
+              [ngClass]="{'active': !!chapterGroupProgressTab.isActive, 'prev': !!chapterUserProgressTab?.isActive}"
+              [routerLink]="'./progress/chapter'"
+              routerLinkActive #chapterGroupProgressTab="routerLinkActive"
+              *ngIf="selectors === 'withGroupProgress'"
+              i18n
             >
               Chapter view
             </a>
 
             <a class="tab-rounded-item"
-               [ngClass]="{'active': !!chapterUserProgressTab?.isActive}"
-               [routerLink]="'./progress/chapter-user-progress'"
-               routerLinkActive #chapterUserProgressTab="routerLinkActive"
-               *ngIf="selectors === 'withUserProgress'"
-               i18n
+              [ngClass]="{'active': !!chapterUserProgressTab?.isActive}"
+              [routerLink]="'./progress/chapter-user-progress'"
+              routerLinkActive #chapterUserProgressTab="routerLinkActive"
+              *ngIf="selectors === 'withUserProgress'"
+              i18n
             >
               Chapter view
             </a>
           </nav>
         </div>
       </div>
+    </ng-container>
+
+
 
       <div class="container">
         <div *ngIf="savingAnswer" class="save-answer-loader">
@@ -74,6 +73,10 @@
         ></alg-chapter-user-progress>
       </div>
 
-    </ng-template>
+  </ng-container>
+
+  <ng-template #unallowed>
+    <p class="not-allow-caption" i18n>You are not allowed to watch the progress of other users on this content.</p>
+  </ng-template>
+
   </alg-section>
-</ng-container>

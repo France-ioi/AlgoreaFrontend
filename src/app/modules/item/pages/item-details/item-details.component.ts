@@ -27,6 +27,7 @@ import { errorIsHTTPForbidden } from 'src/app/shared/helpers/errors';
 import { urlArrayForItemRoute } from 'src/app/shared/routing/item-route';
 import { GetAnswerService } from '../../http-services/get-answer.service';
 import { appConfig } from 'src/app/shared/helpers/config';
+import { GroupWatchingService } from 'src/app/core/services/group-watching.service';
 
 const loadForbiddenAnswerError = new Error('load answer forbidden');
 
@@ -60,13 +61,13 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent {
     startWith(this.isProgressPage() ? [{ view: 'progress', name: 'Progress' }] : []),
   );
   readonly taskTabs$ = this.tabs$.pipe(map(tabs => tabs.filter(tab => tab.view !== 'progress')));
-  readonly showProgressTab$ = combineLatest([ this.userService.watchedGroup$, this.tabs$ ]).pipe(
+  readonly showProgressTab$ = combineLatest([ this.groupWatchingService.watchedGroup$, this.tabs$ ]).pipe(
     map(([ watchedGroup, tabs ]) => !!watchedGroup || tabs.some(tab => tab.view === 'progress')),
   );
   taskView?: TaskTab['view'];
 
   readonly fullFrameContent$ = this.layoutService.fullFrameContent$;
-  readonly watchedGroup$ = this.userService.watchedGroup$;
+  readonly watchedGroup$ = this.groupWatchingService.watchedGroup$;
 
   unknownError?: Error;
 
@@ -134,6 +135,7 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent {
 
   constructor(
     private userService: UserSessionService,
+    private groupWatchingService: GroupWatchingService,
     private itemDataSource: ItemDataSource,
     private layoutService: LayoutService,
     private modeService: ModeService,
