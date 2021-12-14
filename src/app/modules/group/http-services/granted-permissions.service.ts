@@ -5,17 +5,18 @@ import { decodeSnakeCase } from '../../../shared/operators/decode';
 import { dateDecoder } from '../../../shared/helpers/decoders';
 import { appConfig } from '../../../shared/helpers/config';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { permissionsDecoder } from '../../../shared/http-services/group-permissions.service';
+import { pipe } from 'fp-ts/function';
 
-const groupPermissionsDecoder = D.struct({
-  canEdit: D.literal('none', 'children', 'all', 'all_with_grant'),
-  canEnterFrom: dateDecoder,
-  canEnterUntil: dateDecoder,
-  canGrantView: D.literal('none', 'enter', 'content', 'content_with_descendants', 'solution', 'solution_with_grant'),
-  canMakeSessionOfficial: D.boolean,
-  canView: D.literal('none', 'info', 'content', 'content_with_descendants', 'solution'),
-  canWatch: D.literal('none', 'result', 'answer', 'answer_with_grant'),
-  isOwner: D.boolean,
-});
+const groupPermissionsDecoder = pipe(
+  permissionsDecoder,
+  D.intersect(
+    D.struct({
+      canEnterFrom: dateDecoder,
+      canEnterUntil: dateDecoder,
+    })
+  ),
+);
 
 const grantedPermissionsDecoder = D.struct({
   group: D.struct({

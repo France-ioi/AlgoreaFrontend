@@ -8,7 +8,7 @@ import * as D from 'io-ts/Decoder';
 import { pipe } from 'fp-ts/function';
 import { decodeSnakeCase } from 'src/app/shared/operators/decode';
 
-const permissionsDecoder = pipe(
+export const permissionsDecoder = pipe(
   D.struct({
     canView: D.literal('none','info','content','content_with_descendants','solution'),
     canWatch: D.literal('none','result','answer','answer_with_grant'),
