@@ -10,6 +10,7 @@ import { LayoutService } from '../shared/services/layout.service';
 import { Title } from '@angular/platform-browser';
 import { appConfig } from '../shared/helpers/config';
 import { urlToRedirectTo } from '../shared/helpers/redirect-to-sub-path-at-init';
+import { GroupWatchingService } from './services/group-watching.service';
 
 @Component({
   selector: 'alg-root',
@@ -30,12 +31,14 @@ export class AppComponent implements OnInit, OnDestroy {
   showTopRightControls$ = this.layoutService.showTopRightControls$.pipe(delay(0));
   contentFooter$ = this.layoutService.contentFooter$.pipe(delay(0));
   scrolled = false;
+  isWatching$ = this.groupWatchingService.isWatching$;
 
   private subscription?: Subscription;
 
   constructor(
     private router: Router,
     private sessionService: UserSessionService,
+    private groupWatchingService: GroupWatchingService,
     private authService: AuthService,
     private modeService: ModeService,
     private localeService: LocaleService,

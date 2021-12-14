@@ -7,6 +7,7 @@ import { delay, switchMap, filter } from 'rxjs/operators';
 import { ActivityNavTreeService, SkillNavTreeService } from '../../services/navigation/item-nav-tree.service';
 import { isItemInfo } from '../../../shared/models/content/item-info';
 import { FullFrameContent } from 'src/app/shared/services/layout.service';
+import { GroupWatchingService } from '../../services/group-watching.service';
 
 @Component({
   selector: 'alg-content-top-bar',
@@ -18,6 +19,7 @@ export class ContentTopBarComponent {
   @Input() scrolled = false;
 
   currentMode$ = this.modeService.mode$.asObservable();
+  watchedGroup$ = this.groupWatchingService.watchedGroup$;
 
   currentContent$: Observable<ContentInfo | null> = this.currentContentService.content$.pipe(
     delay(0),
@@ -37,6 +39,7 @@ export class ContentTopBarComponent {
 
   constructor(
     private modeService: ModeService,
+    private groupWatchingService: GroupWatchingService,
     private currentContentService: CurrentContentService,
     private activityNavTreeService: ActivityNavTreeService,
     private skillNavTreeService: SkillNavTreeService,

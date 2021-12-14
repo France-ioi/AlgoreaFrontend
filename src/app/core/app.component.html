@@ -6,16 +6,16 @@
     <alg-top-bar
       class="top-bar"
       *ngIf="fullFrameContent$ | async as fullFrameContent"
-      [ngClass]="{ 'with-mode-bar': currentMode !== 'normal', collapsed: fullFrameContent.expanded, animated: fullFrameContent.canToggle }"
+      [ngClass]="{ 'with-mode-bar': currentMode !== 'normal' || (isWatching$ | async), collapsed: fullFrameContent.expanded, animated: fullFrameContent.canToggle }"
       [scrolled]="scrolled"
-      [currentMode]="currentMode"
+      [modeBarDisplayed]="currentMode !== 'normal' || !!(isWatching$ | async)"
       [fullFrameContent]="fullFrameContent"
       [showTopRightControls]="(showTopRightControls$ | async) ?? true"
     ></alg-top-bar>
     <div
       class="right"
       *ngIf="fullFrameContent$ | async as fullFrameContent"
-      [ngClass]="{ collapsed: fullFrameContent.expanded, animated: fullFrameContent.canToggle, 'with-mode-bar': currentMode !== 'normal', 'with-footer': contentFooter$ | async }"
+      [ngClass]="{ collapsed: fullFrameContent.expanded, animated: fullFrameContent.canToggle, 'with-mode-bar': currentMode !== 'normal'  || (isWatching$ | async), 'with-footer': contentFooter$ | async }"
       >
       <div class="main-content">
         <router-outlet></router-outlet>
