@@ -49,10 +49,12 @@ a:hover {
     background-color: $nav-bk-color;
     height: 100%;
 
-    transition: left 1s;
-    -webkit-transition: left 1s;
-    -moz-transition: left 1s;
-    -o-transition: left 1s;
+    &.animated {
+      transition: left 1s;
+      -webkit-transition: left 1s;
+      -moz-transition: left 1s;
+      -o-transition: left 1s;
+    }
 
     &.collapsed {
       left: calc(0rem - #{$left-panel-size});
@@ -71,10 +73,12 @@ a:hover {
     background-color: $base-bk-color;
     z-index: 900;
 
-    transition: left 1s;
-    -webkit-transition: left 1s;
-    -moz-transition: left 1s;
-    -o-transition: left 1s;
+    &.animated {
+      transition: left 1s;
+      -webkit-transition: left 1s;
+      -moz-transition: left 1s;
+      -o-transition: left 1s;
+    }
 
     &.with-mode-bar {
       height: 7.5rem;
@@ -90,10 +94,12 @@ a:hover {
     padding-top: 3.75rem;
     padding-bottom: 0;
     position: relative;
-    transition: margin-left 1s;
-    -webkit-transition: margin-left 1s;
-    -moz-transition: margin-left 1s;
-    -o-transition: margin-left 1s;
+    &.animated {
+      transition: margin-left 1s;
+      -webkit-transition: margin-left 1s;
+      -moz-transition: margin-left 1s;
+      -o-transition: margin-left 1s;
+    }
 
     &.with-mode-bar {
       padding-top: 7.5rem;
