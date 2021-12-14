@@ -5,8 +5,6 @@ import { ReplaySubject, of, Subject } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { mapToFetchState } from '../../../../shared/operators/state';
 import { GrantedPermissionsService } from '../../http-services/granted-permissions.service';
-import { GroupRouter } from '../../../../shared/routing/group-router';
-import { rawGroupRoute } from '../../../../shared/routing/group-route';
 
 @Component({
   selector: 'alg-group-access',
@@ -38,7 +36,6 @@ export class GroupAccessComponent implements OnChanges, OnDestroy {
   constructor(
     private getItemByIdService: GetItemByIdService,
     private grantedPermissionsService: GrantedPermissionsService,
-    private groupRouter: GroupRouter,
   ) {
   }
 
@@ -55,10 +52,6 @@ export class GroupAccessComponent implements OnChanges, OnDestroy {
 
   refresh(): void {
     this.refresh$.next();
-  }
-
-  onGroupClick(groupId: string): void {
-    this.groupRouter.navigateTo(rawGroupRoute({ id: groupId, isUser: false }));
   }
 
   refreshPermissions(): void {
