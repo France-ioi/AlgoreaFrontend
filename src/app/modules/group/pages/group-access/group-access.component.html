@@ -59,7 +59,7 @@
             <span
               class="alg-link"
               (click)="onGroupClick(grantedPermission.sourceGroup.id)"
-              *ngIf="grantedPermission.sourceGroup.id !== group?.id; else currentGroup">
+              *ngIf="grantedPermission.sourceGroup.id !== group?.id && grantedPermission.group.id !== group?.id; else currentGroup">
                 {{ grantedPermission.sourceGroup.name }}
             </span>
             <ng-template #currentGroup>
