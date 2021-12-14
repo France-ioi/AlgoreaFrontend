@@ -20,7 +20,7 @@ const PERMISSION_CAPTIONS = {
 export class GroupPermissionCaptionPipe implements PipeTransform {
   constructor() {}
 
-  transform(value: string): string {
-    return new Map<string, string>(Object.entries(PERMISSION_CAPTIONS)).get(value) || $localize`No caption`;
+  transform(value: keyof typeof PERMISSION_CAPTIONS): string {
+    return PERMISSION_CAPTIONS[value] ?? $localize`No caption`;
   }
 }
