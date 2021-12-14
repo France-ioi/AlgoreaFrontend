@@ -18,16 +18,16 @@ import { appConfig } from '../shared/helpers/config';
 export class AppComponent implements OnInit, OnDestroy {
 
   // the delay(0) is used to prevent the UI to update itself (when the content is loaded) (ExpressionChangedAfterItHasBeenCheckedError)
-  readonly currentMode$ = this.modeService.mode$.asObservable().pipe(delay(0));
+  readonly currentMode$ = this.modeService.mode$.asObservable().pipe(delay(10));
   fatalError$ = merge(
     this.authService.failure$,
     this.sessionService.userProfileError$,
     this.localeService.currentLangError$,
   );
 
-  fullFrameContent$ = this.layoutService.fullFrameContent$;
-  showTopRightControls = this.layoutService.showTopRightControls;
-  contentFooter$ = this.layoutService.contentFooter$;
+  fullFrameContent$ = this.layoutService.fullFrameContent$.pipe(delay(0));
+  showTopRightControls$ = this.layoutService.showTopRightControls$.pipe(delay(0));
+  contentFooter$ = this.layoutService.contentFooter$.pipe(delay(0));
   scrolled = false;
 
   private subscription?: Subscription;

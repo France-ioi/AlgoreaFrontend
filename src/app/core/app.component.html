@@ -10,7 +10,7 @@
       [scrolled]="scrolled"
       [currentMode]="currentMode"
       [fullFrameContent]="fullFrameContent"
-      [showTopRightControls]="showTopRightControls"
+      [showTopRightControls]="(showTopRightControls$ | async) ?? true"
     ></alg-top-bar>
     <div
       class="right"

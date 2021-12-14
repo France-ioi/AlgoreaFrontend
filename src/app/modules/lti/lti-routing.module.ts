@@ -9,7 +9,7 @@ import { LTIComponent } from './pages/lti/lti.component';
   ],
   imports: [ RouterModule.forChild([
     {
-      path: '',
+      path: ':contentId',
       pathMatch: 'full',
       component: LTIComponent,
     },

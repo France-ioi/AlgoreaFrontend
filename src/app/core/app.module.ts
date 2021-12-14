@@ -45,7 +45,6 @@ import { ObservationBarComponent } from './components/observation-bar/observatio
 import { LanguageMismatchComponent } from './components/language-mismatch/language-mismatch.component';
 import { TopBarComponent } from './components/top-bar/top-bar.component';
 import { ContentTopBarComponent } from './components/content-top-bar/content-top-bar.component';
-import { LTIService } from './services/lti.service';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: false,
@@ -89,7 +88,6 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   providers: [
     ConfirmationService,
     MessageService,
-    LTIService,
     {
       provide: PERFECT_SCROLLBAR_CONFIG,
       useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG,
