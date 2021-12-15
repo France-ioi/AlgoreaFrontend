@@ -64,7 +64,6 @@ export class LTIComponent {
         if (!state.isReady) return;
         const { firstChild, path, result } = state.data;
         const itemRoute = fullItemRoute('activity', firstChild.id, [ ...path, state.data.itemId ], { attemptId: result.attemptId });
-        console.log({ itemRoute });
         this.itemRouter.navigateTo(itemRoute, { navExtras: { replaceUrl: true } });
       },
     });
