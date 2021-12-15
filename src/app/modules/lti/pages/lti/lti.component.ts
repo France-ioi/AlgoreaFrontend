@@ -42,18 +42,18 @@ export class LTIComponent {
     this.layoutService.toggleFullFrameContent(true, false);
 
     this.activatedRoute.queryParamMap.pipe(
-      map(queryParams => {
+      switchMap(queryParams => {
         const contentId = queryParams.get('content_id');
-        if (!contentId) throw noContentIdError;
-        return contentId;
+        if (!contentId) return of(noContentIdError);
+        return this.getNavigationData(contentId).pipe(
+          catchError(err => of(err instanceof Error ? err : fetchError)),
+        );
       }),
-      switchMap(contentId => this.getNavigationData(contentId).pipe(
-        catchError(err => of(err instanceof Error ? err : fetchError)),
-      )),
     ).subscribe({
       next: dataOrError => {
         if (dataOrError instanceof Error) {
-          if (dataOrError === noChildError) this.error = 'no child';
+          if (dataOrError === noContentIdError) this.error = 'no content id';
+          else if (dataOrError === noChildError) this.error = 'no child';
           else if (dataOrError === explicitEntryWithNoResultError) this.error = 'explicit entry with no result';
           else this.error = 'fetch error';
           return;
