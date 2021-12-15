@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { isRouteWithSelfAttempt, FullItemRoute } from 'src/app/shared/routing/item-route';
@@ -55,13 +55,10 @@ export class GetResultsService {
 
   constructor(private http: HttpClient) {}
 
-  get(
-    itemId: string,
-    params?: { attempt_id?: string, parent_attempt_id?: string, limit?: number, sort?: Array<'id' | '-id'> },
-  ): Observable<Result[]> {
+  getResults(item: FullItemRoute): Observable<Result[]> {
     return this.http
-      .get<unknown>(`${appConfig.apiUrl}/items/${itemId}/attempts`, {
-        params: new HttpParams({ fromObject: params }),
+      .get<unknown>(`${appConfig.apiUrl}/items/${item.id}/attempts`, {
+        params: isRouteWithSelfAttempt(item) ? { attempt_id: item.attemptId } : { parent_attempt_id: item.parentAttemptId },
       })
       .pipe(
         decodeSnakeCase(D.array(resultDecoder)),
@@ -73,10 +70,6 @@ export class GetResultsService {
           validated: r.validated,
         }))),
       );
-  }
-
-  getResults(item: FullItemRoute): Observable<Result[]> {
-    return this.get(item.id, isRouteWithSelfAttempt(item) ? { attempt_id: item.attemptId } : { parent_attempt_id: item.parentAttemptId });
   }
 
 }

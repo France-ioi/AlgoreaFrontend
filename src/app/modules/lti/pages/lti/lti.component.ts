@@ -1,13 +1,12 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { forkJoin, Observable, of } from 'rxjs';
-import { map, shareReplay, switchMap, switchMapTo } from 'rxjs/operators';
-import { GetItemByIdService, Item } from 'src/app/modules/item/http-services/get-item-by-id.service';
+import { catchError, map, mapTo, shareReplay, switchMap } from 'rxjs/operators';
 import { GetItemChildrenService, ItemChild } from 'src/app/modules/item/http-services/get-item-children.service';
 import { GetItemPathService } from 'src/app/modules/item/http-services/get-item-path.service';
 import { GetResultsService, Result } from 'src/app/modules/item/http-services/get-results.service';
-import { bestAttemptFromResults, implicitResultStart } from 'src/app/shared/helpers/attempts';
-import { ensureDefined } from 'src/app/shared/helpers/null-undefined-predicates';
+import { bestAttemptFromResults, defaultAttemptId } from 'src/app/shared/helpers/attempts';
+import { errorIsHTTPForbidden } from 'src/app/shared/helpers/errors';
 import { errorState } from 'src/app/shared/helpers/state';
 import { ResultActionsService } from 'src/app/shared/http-services/result-actions.service';
 import { mapToFetchState } from 'src/app/shared/operators/state';
@@ -33,6 +32,7 @@ export class LTIComponent {
       if (!contentId) return of(errorState(noContentIdError));
       return this.getNavigationData(contentId).pipe(mapToFetchState());
     }),
+    shareReplay(1),
   );
   readonly error$ = this.navigationData$.pipe(
     map((state): LTIError | undefined => {
@@ -50,7 +50,6 @@ export class LTIComponent {
     private activatedRoute: ActivatedRoute,
     private itemRouter: ItemRouter,
     private layoutService: LayoutService,
-    private getItemByIdService: GetItemByIdService,
     private getResultsService: GetResultsService,
     private getItemPathService: GetItemPathService,
     private resultActionsService: ResultActionsService,
@@ -70,36 +69,37 @@ export class LTIComponent {
   }
 
   private getNavigationData(itemId: string): Observable<{ itemId: string, firstChild: ItemChild, path: string[], result: Result }> {
-    const item$ = this.getItemByIdService.get(itemId).pipe(shareReplay(1));
     const path$ = this.getItemPathService.getItemPath(itemId).pipe(shareReplay(1));
-    const results$ = this.getResultsService.get(itemId, { attempt_id: '0' });
 
-    const bestResult$ = forkJoin([ item$, results$ ]).pipe(
-      switchMap(([ item, results ]) => {
-        if (results.length === 0 && !implicitResultStart(item)) throw explicitEntryWithNoResultError;
-        return path$.pipe(switchMap(path => this.getBestResultOrStartOne(item, results, path)));
+    const result$ = path$.pipe(
+      switchMap(path => this.resultActionsService.startWithoutAttempt(path).pipe(mapTo(path))),
+      catchError(err => {
+        // If error is http forbidden, it PROBABLY means the item requires explicit entry.
+        throw errorIsHTTPForbidden(err) ? explicitEntryWithNoResultError : err;
+      }),
+      switchMap(path => this.getResultsService.getResults(fullItemRoute('activity', itemId, path, { attemptId: defaultAttemptId }))),
+      map(results => {
+        const result = bestAttemptFromResults(results);
+        if (!result) throw explicitEntryWithNoResultError;
+        return result;
       }),
       shareReplay(1),
     );
 
-    const children$ = bestResult$.pipe(switchMapTo(this.getItemChildrenService.get(itemId, '0')));
-
-    return children$.pipe(
-      switchMap(([ firstChild ]) => {
+    const firstChild$ = result$.pipe(
+      switchMap(result => this.getItemChildrenService.get(itemId, result.attemptId)),
+      map(([ firstChild ]) => {
         if (!firstChild) throw noChildError;
-        return forkJoin([ path$, bestResult$ ]).pipe(map(([ path, result ]) => ({ itemId, firstChild, path, result })));
+        return firstChild;
       }),
     );
-  }
 
-  private getBestResultOrStartOne(item: Item, results: Result[], path: string[]): Observable<Result> {
-    const bestResult = bestAttemptFromResults(results);
-    if (bestResult) return of(bestResult);
-
-    return this.resultActionsService.startWithoutAttempt([ ...path, item.id ]).pipe(
-      switchMap(() => this.getResultsService.get(item.id, { attempt_id: '0' })),
-      map(([ first ]) => ensureDefined(first, 'unexpected: there should be a result after its creation')),
-    );
+    return forkJoin({
+      itemId: of(itemId),
+      result: result$,
+      path: path$,
+      firstChild: firstChild$,
+    });
   }
 
 }
