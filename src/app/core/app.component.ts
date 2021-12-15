@@ -18,7 +18,7 @@ import { appConfig } from '../shared/helpers/config';
 export class AppComponent implements OnInit, OnDestroy {
 
   // the delay(0) is used to prevent the UI to update itself (when the content is loaded) (ExpressionChangedAfterItHasBeenCheckedError)
-  readonly currentMode$ = this.modeService.mode$.asObservable().pipe(delay(10));
+  readonly currentMode$ = this.modeService.mode$.asObservable().pipe(delay(0));
   fatalError$ = merge(
     this.authService.failure$,
     this.sessionService.userProfileError$,
