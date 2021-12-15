@@ -1,17 +1,19 @@
-<alg-loading *ngIf="!error" size="large"></alg-loading>
-<alg-error
-  *ngIf="error === 'no content id'"
-  i18n-message message="This task is not correctly configured (expected a content id)"
-></alg-error>
-<alg-error
-  *ngIf="error === 'fetch error'"
-  i18n-message message="Unable to load this task. Either you have a connexion issue or this task is not correctly configured. Please retry, if the problem persists, contact us."
-></alg-error>
-<alg-error
-  *ngIf="error === 'no child'"
-  i18n-message message="This task is not correctly configured (chapter with task expected)."
-></alg-error>
-<alg-error
-  *ngIf="error === 'explicit entry with no result'"
-  i18n-message message="This task is not correctly configured (explicit entry but no result)"
-></alg-error>
+<alg-loading *ngIf="(navigationData$ | async)?.isFetching" size="large"></alg-loading>
+<ng-container *ngIf="error$ | async as error">
+  <alg-error
+    *ngIf="error === 'no content id'"
+    i18n-message message="This task is not correctly configured (expected a content id)"
+  ></alg-error>
+  <alg-error
+    *ngIf="error === 'fetch error'"
+    i18n-message message="Unable to load this task. Either you have a connexion issue or this task is not correctly configured. Please retry, if the problem persists, contact us."
+  ></alg-error>
+  <alg-error
+    *ngIf="error === 'no child'"
+    i18n-message message="This task is not correctly configured (chapter with task expected)."
+  ></alg-error>
+  <alg-error
+    *ngIf="error === 'explicit entry with no result'"
+    i18n-message message="This task is not correctly configured (explicit entry but no result)"
+  ></alg-error>
+</ng-container>

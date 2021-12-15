@@ -1,14 +1,16 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { forkJoin, Observable, of } from 'rxjs';
-import { catchError, map, shareReplay, switchMap, switchMapTo } from 'rxjs/operators';
+import { map, shareReplay, switchMap, switchMapTo } from 'rxjs/operators';
 import { GetItemByIdService, Item } from 'src/app/modules/item/http-services/get-item-by-id.service';
 import { GetItemChildrenService, ItemChild } from 'src/app/modules/item/http-services/get-item-children.service';
 import { GetItemPathService } from 'src/app/modules/item/http-services/get-item-path.service';
 import { GetResultsService, Result } from 'src/app/modules/item/http-services/get-results.service';
 import { bestAttemptFromResults, implicitResultStart } from 'src/app/shared/helpers/attempts';
 import { ensureDefined } from 'src/app/shared/helpers/null-undefined-predicates';
+import { errorState } from 'src/app/shared/helpers/state';
 import { ResultActionsService } from 'src/app/shared/http-services/result-actions.service';
+import { mapToFetchState } from 'src/app/shared/operators/state';
 import { fullItemRoute } from 'src/app/shared/routing/item-route';
 import { ItemRouter } from 'src/app/shared/routing/item-router';
 import { LayoutService } from 'src/app/shared/services/layout.service';
@@ -16,7 +18,6 @@ import { LayoutService } from 'src/app/shared/services/layout.service';
 const explicitEntryWithNoResultError = new Error('no result');
 const noChildError = new Error('no first child');
 const noContentIdError = new Error('no content id');
-const fetchError = new Error('fetch error');
 type LTIError = 'no content id' | 'fetch error' | 'explicit entry with no result' | 'no child';
 
 @Component({
@@ -26,7 +27,24 @@ type LTIError = 'no content id' | 'fetch error' | 'explicit entry with no result
 })
 export class LTIComponent {
 
-  error?: LTIError;
+  readonly navigationData$ = this.activatedRoute.queryParamMap.pipe(
+    switchMap(queryParams => {
+      const contentId = queryParams.get('content_id');
+      if (!contentId) return of(errorState(noContentIdError));
+      return this.getNavigationData(contentId).pipe(mapToFetchState());
+    }),
+  );
+  readonly error$ = this.navigationData$.pipe(
+    map((state): LTIError | undefined => {
+      if (!state.isError) return undefined;
+      switch (state.error) {
+        case noContentIdError: return 'no content id';
+        case noChildError: return 'no child';
+        case explicitEntryWithNoResultError: return 'explicit entry with no result';
+        default: return 'fetch error';
+      }
+    })
+  );
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -41,24 +59,10 @@ export class LTIComponent {
     this.layoutService.toggleTopRightControls(false);
     this.layoutService.toggleFullFrameContent(true, false);
 
-    this.activatedRoute.queryParamMap.pipe(
-      switchMap(queryParams => {
-        const contentId = queryParams.get('content_id');
-        if (!contentId) return of(noContentIdError);
-        return this.getNavigationData(contentId).pipe(
-          catchError(err => of(err instanceof Error ? err : fetchError)),
-        );
-      }),
-    ).subscribe({
-      next: dataOrError => {
-        if (dataOrError instanceof Error) {
-          if (dataOrError === noContentIdError) this.error = 'no content id';
-          else if (dataOrError === noChildError) this.error = 'no child';
-          else if (dataOrError === explicitEntryWithNoResultError) this.error = 'explicit entry with no result';
-          else this.error = 'fetch error';
-          return;
-        }
-        const { firstChild , path, result } = dataOrError;
+    this.navigationData$.subscribe({
+      next: state => {
+        if (!state.isReady) return;
+        const { firstChild , path, result } = state.data;
         const itemRoute = fullItemRoute('activity', firstChild.id, path, { attemptId: result.attemptId });
         this.itemRouter.navigateTo(itemRoute, { navExtras: { replaceUrl: true } });
       },
