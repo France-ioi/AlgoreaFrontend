@@ -62,14 +62,15 @@ export class LTIComponent {
     this.navigationData$.subscribe({
       next: state => {
         if (!state.isReady) return;
-        const { firstChild , path, result } = state.data;
-        const itemRoute = fullItemRoute('activity', firstChild.id, path, { attemptId: result.attemptId });
+        const { firstChild, path, result } = state.data;
+        const itemRoute = fullItemRoute('activity', firstChild.id, [ ...path, state.data.itemId ], { attemptId: result.attemptId });
+        console.log({ itemRoute });
         this.itemRouter.navigateTo(itemRoute, { navExtras: { replaceUrl: true } });
       },
     });
   }
 
-  private getNavigationData(itemId: string): Observable<{ firstChild: ItemChild, path: string[], result: Result }> {
+  private getNavigationData(itemId: string): Observable<{ itemId: string, firstChild: ItemChild, path: string[], result: Result }> {
     const item$ = this.getItemByIdService.get(itemId).pipe(shareReplay(1));
     const path$ = this.getItemPathService.getItemPath(itemId).pipe(shareReplay(1));
     const results$ = this.getResultsService.get(itemId, { attempt_id: '0' });
@@ -87,7 +88,7 @@ export class LTIComponent {
     return children$.pipe(
       switchMap(([ firstChild ]) => {
         if (!firstChild) throw noChildError;
-        return forkJoin([ path$, bestResult$ ]).pipe(map(([ path, result ]) => ({ firstChild, path, result })));
+        return forkJoin([ path$, bestResult$ ]).pipe(map(([ path, result ]) => ({ itemId, firstChild, path, result })));
       }),
     );
   }
