@@ -9,7 +9,7 @@
     i18n-message message="This task is not correctly configured (chapter with task expected)."
   ></alg-error>
   <alg-error
-    *ngIf="error === 'explicit_entry_with_no_result'"
-    i18n-message message="This task is not correctly configured (explicit entry but no result)"
+    *ngIf="error === 'no_item_or_explicit_entry_with_no_result'"
+    i18n-message message="This task is not correctly configured (item not found or explicit entry but no result)"
   ></alg-error>
 </ng-container>

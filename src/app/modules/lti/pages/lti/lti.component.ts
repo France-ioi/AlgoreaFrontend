@@ -13,10 +13,10 @@ import { LayoutService } from 'src/app/shared/services/layout.service';
 
 enum LTIError {
   FetchError = 'fetch_error',
-  ExplicitEntryWithNoResult = 'explicit_entry_with_no_result',
+  NoItemOrExplicitEntryWithNoResult = 'no_item_or_explicit_entry_with_no_result',
   NoChild = 'no_child',
 }
-const explicitEntryWithNoResultError = new Error(LTIError.ExplicitEntryWithNoResult);
+const noItemOrExplicitEntryWithNoResultError = new Error(LTIError.NoItemOrExplicitEntryWithNoResult);
 const noChildError = new Error(LTIError.NoChild);
 
 @Component({
@@ -39,7 +39,7 @@ export class LTIComponent {
       if (!state.isError) return undefined;
       switch (state.error) {
         case noChildError: return LTIError.NoChild;
-        case explicitEntryWithNoResultError: return LTIError.ExplicitEntryWithNoResult;
+        case noItemOrExplicitEntryWithNoResultError: return LTIError.NoItemOrExplicitEntryWithNoResult;
         default: return LTIError.FetchError;
       }
     })
@@ -71,7 +71,7 @@ export class LTIComponent {
       switchMap(path => this.resultActionsService.startWithoutAttempt(path)),
       catchError(err => {
         // If error is http forbidden, it PROBABLY means the item requires explicit entry.
-        throw errorIsHTTPForbidden(err) ? explicitEntryWithNoResultError : err;
+        throw errorIsHTTPForbidden(err) ? noItemOrExplicitEntryWithNoResultError : err;
       }),
       shareReplay(1),
     );
