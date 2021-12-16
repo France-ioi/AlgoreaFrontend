@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from
 import { FormBuilder } from '@angular/forms';
 import { ProgressSelectValue } from
   'src/app/modules/shared-components/components/collapsible-section/progress-select/progress-select.component';
-import { Permissions } from 'src/app/shared/http-services/group-permissions.service';
+import { Permissions } from 'src/app/shared/helpers/group-permissions';
 import { TypeFilter } from '../composition-filter/composition-filter.component';
 import { generateCanEditValues, generateCanGrantViewValues,
   generateCanViewValues, generateCanWatchValues } from './permissions-edit-dialog-texts';

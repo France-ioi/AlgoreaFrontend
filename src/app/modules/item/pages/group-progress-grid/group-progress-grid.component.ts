@@ -7,7 +7,8 @@ import { GetGroupChildrenService } from 'src/app/modules/group/http-services/get
 import { formatUser } from 'src/app/shared/helpers/user';
 import { GetGroupDescendantsService } from 'src/app/shared/http-services/get-group-descendants.service';
 import { GetGroupProgressService, TeamUserProgress } from 'src/app/shared/http-services/get-group-progress.service';
-import { GroupPermissionsService, Permissions } from 'src/app/shared/http-services/group-permissions.service';
+import { GroupPermissionsService } from 'src/app/shared/http-services/group-permissions.service';
+import { Permissions } from 'src/app/shared/helpers/group-permissions';
 import { progressiveObservableFromList } from 'src/app/shared/operators/progressive-observable-from-list';
 import { mapToFetchState } from 'src/app/shared/operators/state';
 import { withPreviousFetchState } from 'src/app/shared/operators/with-previous-fetch-state';

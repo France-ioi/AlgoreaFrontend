@@ -5,7 +5,7 @@ import { decodeSnakeCase } from '../../../shared/operators/decode';
 import { dateDecoder } from '../../../shared/helpers/decoders';
 import { appConfig } from '../../../shared/helpers/config';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { permissionsDecoder } from '../../../shared/http-services/group-permissions.service';
+import { permissionsDecoder } from '../../../shared/helpers/group-permissions';
 import { pipe } from 'fp-ts/function';
 
 const groupPermissionsDecoder = pipe(
