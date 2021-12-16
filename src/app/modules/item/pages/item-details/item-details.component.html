@@ -24,7 +24,7 @@
           class="nav-tab-item"
           [routerLink]="'./'"
           routerLinkActive #contentTab="routerLinkActive"
-          [routerLinkActiveOptions]="{exact: true}"
+          [routerLinkActiveOptions]="{ matrixParams: 'ignored', queryParams: 'ignored', paths: 'exact', fragment: 'ignored'}"
           [class.active]="contentTab.isActive"
           [hidden]="taskTabs.length > 1"
           i18n

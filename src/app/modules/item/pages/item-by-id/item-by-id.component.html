@@ -12,7 +12,7 @@
     <span i18n>Go back to the </span>
     <a
       routerLink="/"
-      [routerLinkActiveOptions]="{exact: true}"
+      [routerLinkActiveOptions]="{ matrixParams: 'ignored', queryParams: 'ignored', paths: 'exact', fragment: 'ignored'}"
       routerLinkActive #backToHome="routerLinkActive"
       i18n
     >
