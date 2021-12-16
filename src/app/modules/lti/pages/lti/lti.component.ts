@@ -59,7 +59,6 @@ export class LTIComponent {
     this.navigationData$.pipe(readyData()).subscribe({
       next: ({ firstChild, path, attemptId }) => {
         const itemRoute = fullItemRoute('activity', firstChild.id, path, { parentAttemptId: attemptId });
-        console.log(itemRoute);
         this.itemRouter.navigateTo(itemRoute, { navExtras: { replaceUrl: true } });
       },
     });
