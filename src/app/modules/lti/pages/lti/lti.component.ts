@@ -12,10 +12,15 @@ import { fullItemRoute } from 'src/app/shared/routing/item-route';
 import { ItemRouter } from 'src/app/shared/routing/item-router';
 import { LayoutService } from 'src/app/shared/services/layout.service';
 
-const explicitEntryWithNoResultError = new Error('no result');
-const noChildError = new Error('no first child');
-const noContentIdError = new Error('no content id');
-type LTIError = 'no content id' | 'fetch error' | 'explicit entry with no result' | 'no child';
+enum LTIError {
+  NoContentId = 'no_content_id',
+  FetchError = 'fetch_error',
+  ExplicitEntryWithNoResult = 'explicit_entry_with_no_result',
+  NoChild = 'no_child',
+}
+const explicitEntryWithNoResultError = new Error(LTIError.ExplicitEntryWithNoResult);
+const noChildError = new Error(LTIError.NoChild);
+const noContentIdError = new Error(LTIError.NoContentId);
 
 @Component({
   selector: 'alg-lti',
@@ -36,10 +41,10 @@ export class LTIComponent {
     map((state): LTIError | undefined => {
       if (!state.isError) return undefined;
       switch (state.error) {
-        case noContentIdError: return 'no content id';
-        case noChildError: return 'no child';
-        case explicitEntryWithNoResultError: return 'explicit entry with no result';
-        default: return 'fetch error';
+        case noContentIdError: return LTIError.NoContentId;
+        case noChildError: return LTIError.NoChild;
+        case explicitEntryWithNoResultError: return LTIError.ExplicitEntryWithNoResult;
+        default: return LTIError.FetchError;
       }
     })
   );
