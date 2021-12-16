@@ -55,14 +55,16 @@
             <strong>
               {{ grantedPermission.item.title }}.
             </strong>
-            <ng-container *ngIf="grantedPermission.sourceGroup.id !== group?.id && grantedPermission.group.id !== group?.id; else currentGroup">
-              <span i18n>Given by</span>
-              <a
-                class="alg-link"
-                [routerLink]="{ id: grantedPermission.sourceGroup.id, isUser: false } | groupLink"
-              >
-                {{ grantedPermission.sourceGroup.name }}
-              </a>
+            <ng-container
+              *ngIf="grantedPermission.sourceGroup.id !== group?.id && grantedPermission.group.id !== group?.id; else currentGroup"
+              i18n>
+                <span>Given by</span>
+                <a
+                  class="alg-link"
+                  [routerLink]="{ id: grantedPermission.sourceGroup.id, isUser: false } | groupLink"
+                >
+                  {{ grantedPermission.sourceGroup.name }}
+                </a>
             </ng-container>
             <ng-template #currentGroup>
               <span i18n>Given by this group</span>
