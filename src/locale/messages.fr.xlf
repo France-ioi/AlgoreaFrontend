@@ -624,19 +624,19 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/services/item-task-init.service.ts</context><context context-type="linenumber">98</context></context-group></trans-unit><trans-unit id="4370087843628009533" datatype="html">
         <source>Invalid url, please provide a secure task url (https)</source><target state="new">Invalid url, please provide a secure task url (https)</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/services/item-task-init.service.ts</context><context context-type="linenumber">103</context></context-group></trans-unit><trans-unit id="647087147089052514" datatype="html">
-        <source>This task is not correctly configured (expected a content id)</source><target state="new">This task is not correctly configured (expected a content id)</target>
-        
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/lti/pages/lti/lti.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit><trans-unit id="6202345244999431296" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/services/item-task-init.service.ts</context><context context-type="linenumber">103</context></context-group></trans-unit><trans-unit id="6202345244999431296" datatype="html">
         <source>Unable to load this task. Either you have a connexion issue or this task is not correctly configured. Please retry, if the problem persists, contact us.</source><target state="new">Unable to load this task. Either you have a connexion issue or this task is not correctly configured. Please retry, if the problem persists, contact us.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/lti/pages/lti/lti.component.html</context><context context-type="linenumber">9</context></context-group></trans-unit><trans-unit id="3494909424140166619" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/lti/pages/lti/lti.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit><trans-unit id="3494909424140166619" datatype="html">
         <source>This task is not correctly configured (chapter with task expected).</source><target state="new">This task is not correctly configured (chapter with task expected).</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/lti/pages/lti/lti.component.html</context><context context-type="linenumber">13</context></context-group></trans-unit><trans-unit id="4459915718892579442" datatype="html">
-        <source>This task is not correctly configured (explicit entry but no result)</source><target state="new">This task is not correctly configured (explicit entry but no result)</target>
-        
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/lti/pages/lti/lti.component.html</context><context context-type="linenumber">17</context></context-group></trans-unit><trans-unit id="5402924068010392760" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/lti/pages/lti/lti.component.html</context><context context-type="linenumber">9</context></context-group></trans-unit><trans-unit id="6099099963678196110" datatype="html">
+        <source>This task is not correctly configured (item not found or explicit entry but no result)</source><target state="new">This task is not correctly configured (item not found or explicit entry but no result)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/lti/pages/lti/lti.component.html</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+      </trans-unit><trans-unit id="5402924068010392760" datatype="html">
         <source>Join the group "<x id="PH" equiv-text="response.group.name"/>"</source><target state="translated">Rejoindre le groupe "<x id="PH" equiv-text="response.group.name"/>"</target>
 
       <source>The code does not correspond to the group attached to this page. Are you sure you want to join the group "
