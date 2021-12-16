@@ -1,15 +1,13 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { forkJoin, Observable, of } from 'rxjs';
-import { catchError, map, mapTo, shareReplay, switchMap } from 'rxjs/operators';
+import { catchError, map, shareReplay, switchMap } from 'rxjs/operators';
 import { GetItemChildrenService, ItemChild } from 'src/app/modules/item/http-services/get-item-children.service';
 import { GetItemPathService } from 'src/app/modules/item/http-services/get-item-path.service';
-import { GetResultsService, Result } from 'src/app/modules/item/http-services/get-results.service';
-import { bestAttemptFromResults, defaultAttemptId } from 'src/app/shared/helpers/attempts';
 import { errorIsHTTPForbidden } from 'src/app/shared/helpers/errors';
 import { errorState } from 'src/app/shared/helpers/state';
 import { ResultActionsService } from 'src/app/shared/http-services/result-actions.service';
-import { mapToFetchState } from 'src/app/shared/operators/state';
+import { mapToFetchState, readyData } from 'src/app/shared/operators/state';
 import { fullItemRoute } from 'src/app/shared/routing/item-route';
 import { ItemRouter } from 'src/app/shared/routing/item-router';
 import { LayoutService } from 'src/app/shared/services/layout.service';
@@ -50,7 +48,6 @@ export class LTIComponent {
     private activatedRoute: ActivatedRoute,
     private itemRouter: ItemRouter,
     private layoutService: LayoutService,
-    private getResultsService: GetResultsService,
     private getItemPathService: GetItemPathService,
     private resultActionsService: ResultActionsService,
     private getItemChildrenService: GetItemChildrenService,
@@ -58,36 +55,28 @@ export class LTIComponent {
     this.layoutService.toggleTopRightControls(false);
     this.layoutService.toggleFullFrameContent(true, false);
 
-    this.navigationData$.subscribe({
-      next: state => {
-        if (!state.isReady) return;
-        const { firstChild, path, result } = state.data;
-        const itemRoute = fullItemRoute('activity', firstChild.id, [ ...path, state.data.itemId ], { attemptId: result.attemptId });
+    this.navigationData$.pipe(readyData()).subscribe({
+      next: ({ itemId, firstChild, path, attemptId }) => {
+        const itemRoute = fullItemRoute('activity', firstChild.id, [ ...path, itemId ], { attemptId });
         this.itemRouter.navigateTo(itemRoute, { navExtras: { replaceUrl: true } });
       },
     });
   }
 
-  private getNavigationData(itemId: string): Observable<{ itemId: string, firstChild: ItemChild, path: string[], result: Result }> {
+  private getNavigationData(itemId: string): Observable<{ itemId: string, firstChild: ItemChild, path: string[], attemptId: string }> {
     const path$ = this.getItemPathService.getItemPath(itemId).pipe(shareReplay(1));
 
-    const result$ = path$.pipe(
-      switchMap(path => this.resultActionsService.startWithoutAttempt(path).pipe(mapTo(path))),
+    const attemptId$ = path$.pipe(
+      switchMap(path => this.resultActionsService.startWithoutAttempt(path)),
       catchError(err => {
         // If error is http forbidden, it PROBABLY means the item requires explicit entry.
         throw errorIsHTTPForbidden(err) ? explicitEntryWithNoResultError : err;
       }),
-      switchMap(path => this.getResultsService.getResults(fullItemRoute('activity', itemId, path, { attemptId: defaultAttemptId }))),
-      map(results => {
-        const result = bestAttemptFromResults(results);
-        if (!result) throw explicitEntryWithNoResultError;
-        return result;
-      }),
       shareReplay(1),
     );
 
-    const firstChild$ = result$.pipe(
-      switchMap(result => this.getItemChildrenService.get(itemId, result.attemptId)),
+    const firstChild$ = attemptId$.pipe(
+      switchMap(attemptId => this.getItemChildrenService.get(itemId, attemptId)),
       map(([ firstChild ]) => {
         if (!firstChild) throw noChildError;
         return firstChild;
@@ -96,7 +85,7 @@ export class LTIComponent {
 
     return forkJoin({
       itemId: of(itemId),
-      result: result$,
+      attemptId: attemptId$,
       path: path$,
       firstChild: firstChild$,
     });
