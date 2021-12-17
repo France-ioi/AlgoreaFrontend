@@ -4,6 +4,7 @@ import { GetItemByIdService } from '../../../item/http-services/get-item-by-id.s
 import { ReplaySubject, of, Subject } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { mapToFetchState } from '../../../../shared/operators/state';
+import { GrantedPermissionsService } from '../../http-services/granted-permissions.service';
 
 @Component({
   selector: 'alg-group-access',
@@ -13,11 +14,11 @@ import { mapToFetchState } from '../../../../shared/operators/state';
 export class GroupAccessComponent implements OnChanges, OnDestroy {
   @Input() group?: Group;
 
-  private readonly rootActivityId$ = new ReplaySubject<string | null>(1);
+  private readonly group$ = new ReplaySubject<Group>(1);
 
   private refresh$ = new Subject<void>();
-  rootActivityState$ = this.rootActivityId$.pipe(
-    switchMap(rootActivityId => {
+  rootActivityState$ = this.group$.pipe(
+    switchMap(({ rootActivityId }) => {
       if (!rootActivityId) {
         return of(null);
       }
@@ -26,17 +27,26 @@ export class GroupAccessComponent implements OnChanges, OnDestroy {
     mapToFetchState({ resetter: this.refresh$ }),
   );
 
-  constructor(private getItemByIdService: GetItemByIdService) {
+  private permissionsRefresh$ = new Subject<void>();
+  permissionState$ = this.group$.pipe(
+    switchMap(group => this.grantedPermissionsService.get(group.id)),
+    mapToFetchState({ resetter: this.permissionsRefresh$ }),
+  );
+
+  constructor(
+    private getItemByIdService: GetItemByIdService,
+    private grantedPermissionsService: GrantedPermissionsService,
+  ) {
   }
 
   ngOnChanges(): void {
     if (this.group) {
-      this.rootActivityId$.next(this.group.rootActivityId);
+      this.group$.next(this.group);
     }
   }
 
   ngOnDestroy(): void {
-    this.rootActivityId$.complete();
+    this.group$.complete();
     this.refresh$.complete();
   }
 
@@ -44,4 +54,7 @@ export class GroupAccessComponent implements OnChanges, OnDestroy {
     this.refresh$.next();
   }
 
+  refreshPermissions(): void {
+    this.permissionsRefresh$.next();
+  }
 }

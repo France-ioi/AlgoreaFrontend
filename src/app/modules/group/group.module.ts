@@ -48,6 +48,7 @@ import { GroupAccessComponent } from './pages/group-access/group-access.componen
 import { GroupManagersComponent } from './pages/group-managers/group-managers.component';
 import { DialogModule } from 'primeng/dialog';
 import { ManagerPermissionDialogComponent } from './components/manager-permission-dialog/manager-permission-dialog.component';
+import { GroupPermissionsComponent } from './components/group-permissions/group-permissions.component';
 
 @NgModule({
   declarations: [
@@ -85,6 +86,7 @@ import { ManagerPermissionDialogComponent } from './components/manager-permissio
     SuggestionOfActivitiesComponent,
     GroupAccessComponent,
     ManagerPermissionDialogComponent,
+    GroupPermissionsComponent,
   ],
   imports: [
     CommonModule,

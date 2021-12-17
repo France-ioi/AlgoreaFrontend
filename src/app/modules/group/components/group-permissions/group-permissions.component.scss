@@ -1,0 +1,22 @@
+@import "src/colors.scss";
+@import "src/geometry.scss";
+
+.captions {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.caption-item {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  color: $secondary-color;
+  font-weight: bold;
+}
+
+.caption {
+  flex: 1;
+  margin-right: 2rem;
+  text-align: right;
+}
