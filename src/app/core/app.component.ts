@@ -25,9 +25,9 @@ export class AppComponent implements OnInit, OnDestroy {
     this.localeService.currentLangError$,
   );
 
-  fullFrameContent$ = this.layoutService.fullFrameContent$;
-  showTopRightControls = this.layoutService.showTopRightControls;
-  contentFooter$ = this.layoutService.contentFooter$;
+  fullFrameContent$ = this.layoutService.fullFrameContent$.pipe(delay(0));
+  showTopRightControls$ = this.layoutService.showTopRightControls$.pipe(delay(0));
+  contentFooter$ = this.layoutService.contentFooter$.pipe(delay(0));
   scrolled = false;
 
   private subscription?: Subscription;

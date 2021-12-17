@@ -23,6 +23,10 @@ const routes: Routes = [
     loadChildren: (): Promise<any> => import('../modules/item/item.module').then(m => m.ItemModule)
   },
   {
+    path: 'lti/:contentId',
+    loadChildren: (): Promise<any> => import('../modules/lti/lti.module').then(m => m.LTIModule),
+  },
+  {
     path: '**',
     component: PageNotFoundComponent,
   }

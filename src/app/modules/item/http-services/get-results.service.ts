@@ -58,7 +58,7 @@ export class GetResultsService {
   getResults(item: FullItemRoute): Observable<Result[]> {
     return this.http
       .get<unknown>(`${appConfig.apiUrl}/items/${item.id}/attempts`, {
-        params: isRouteWithSelfAttempt(item) ? { attempt_id: item.attemptId } : { parent_attempt_id: item.parentAttemptId }
+        params: isRouteWithSelfAttempt(item) ? { attempt_id: item.attemptId } : { parent_attempt_id: item.parentAttemptId },
       })
       .pipe(
         decodeSnakeCase(D.array(resultDecoder)),
