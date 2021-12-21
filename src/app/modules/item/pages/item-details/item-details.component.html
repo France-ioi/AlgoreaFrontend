@@ -34,20 +34,28 @@
           <ng-container
             *ngIf="itemData.item.permissions.canView === 'none'"
             i18n>
-              The {{ watchedGroup.route.isUser ? 'user' : 'group' }} cannot currently view this content.
+              The <ng-container *ngIf="watchedGroup.route.isUser; else group">user</ng-container>
+              <ng-template #group>group</ng-template> cannot currently view this content.
           </ng-container>
 
           <ng-container
             *ngIf="itemData.item.permissions.canView === 'info'"
             i18n>
-              The {{ watchedGroup.route.isUser ? 'user' : 'group' }} can list this {{ itemData.item.type === 'Skill' ? 'skill' : 'activity' }}
-              but cannot {{ itemData.item.type === 'Skill' || itemData.item.type === 'Chapter' ? 'list its content.' : 'view its content.' }}
+              The <ng-container *ngIf="watchedGroup.route.isUser; else group">user</ng-container>
+              <ng-template #group>group</ng-template> can list this
+              <ng-container *ngIf="itemData.item.type === 'Skill'; else activity">skill</ng-container>
+              <ng-template #activity>activity</ng-template> but cannot
+              <ng-container *ngIf="itemData.item.type === 'Skill' || itemData.item.type === 'Chapter'; else viewContent">
+                list its content.
+              </ng-container>
+            <ng-template #viewContent>view its content.</ng-template>
           </ng-container>
 
           <ng-container
-            *ngIf="['content', 'content_with_descendants', 'solution'].includes(itemData.item.permissions.canView)"
+            *ngIf="['content_with_descendants', 'solution'].includes(itemData.item.permissions.canView)"
             i18n>
-              The {{ watchedGroup.route.isUser ? 'user' : 'group' }} can view this activity.
+              The <ng-container *ngIf="watchedGroup.route.isUser; else group">user</ng-container>
+              <ng-template #group>group</ng-template> can view this activity.
           </ng-container>
         </p>
 
