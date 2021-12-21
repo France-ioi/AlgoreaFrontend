@@ -16,10 +16,20 @@
       <alg-section-paragraph
         [theme]="'warning'"
         icon="fa fa-flag"
-        i18n-label label="{{ watchedGroup.name }} {{ ['content', 'content_with_descendants', 'solution'].includes(itemData.item.permissions.canView) ? 'can' : 'can\'t' }} access this {{ itemData.item.type === 'Skill' ? 'skill' : 'activity' }}"
         [collapsible]="true"
         [collapsed]="true"
       >
+        <ng-container label-section i18n>
+          {{ watchedGroup.name }}
+          <ng-container
+            *ngIf="['content', 'content_with_descendants', 'solution'].includes(itemData.item.permissions.canView); else cantBlock">
+            can
+          </ng-container>
+          <ng-template #cantBlock>can't</ng-template> access this
+          <ng-container *ngIf="itemData.item.type === 'Skill'; else activity">skill</ng-container>
+          <ng-template #activity>activity</ng-template>
+        </ng-container>
+
         <p>
           <ng-container
             *ngIf="itemData.item.permissions.canView === 'none'"
