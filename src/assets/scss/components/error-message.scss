@@ -1,8 +1,11 @@
+@import 'src/colors';
+
 .alg-error-message {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: medium;
+  font-size: 1.6rem;
+  color: $base-text-color;
   > * + * {
     margin-left: 0.25rem;
   }
