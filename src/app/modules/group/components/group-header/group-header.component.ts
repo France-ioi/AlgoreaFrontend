@@ -60,6 +60,7 @@ export class GroupHeaderComponent implements OnChanges, OnDestroy {
   }
 
   onStopWatchButtonClicked(): void {
+    this.op?.hide();
     this.modeService.stopObserving();
   }
 
