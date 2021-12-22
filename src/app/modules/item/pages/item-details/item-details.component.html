@@ -52,7 +52,7 @@
           </ng-container>
 
           <ng-container
-            *ngIf="['content_with_descendants', 'solution'].includes(itemData.item.permissions.canView)"
+            *ngIf="['content', 'content_with_descendants', 'solution'].includes(itemData.item.permissions.canView)"
             i18n>
               The <ng-container *ngIf="watchedGroup.route.isUser; else group">user</ng-container>
               <ng-template #group>group</ng-template> can view this activity.
