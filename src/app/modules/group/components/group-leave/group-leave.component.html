@@ -1,0 +1,18 @@
+<p i18n>
+  <ng-container *ngIf="locked; else allow">
+    You are currently not allowed to leave this group.
+  </ng-container>
+  <ng-template #allow>
+    You can freely leave this group. Note that you may lose access to content if this group was granting some permissions to its members.
+  </ng-template>
+</p>
+
+<div class="button">
+  <alg-button
+    class="p-button-rounded-full"
+    icon="fa fa-times"
+    i18n-label label="Ask to leave"
+    (click)="leaveGroup()"
+    [disabled]="locked"
+  ></alg-button>
+</div>

@@ -17,6 +17,10 @@ $danger-color: #ff001f;
     &.p-button-rounded {
       border-radius: 1.5rem;
     }
+
+    &.p-button-rounded-full {
+      border-radius: 3rem;
+    }
   }
 
   .p-button {

@@ -49,6 +49,7 @@ import { GroupManagersComponent } from './pages/group-managers/group-managers.co
 import { DialogModule } from 'primeng/dialog';
 import { ManagerPermissionDialogComponent } from './components/manager-permission-dialog/manager-permission-dialog.component';
 import { GroupPermissionsComponent } from './components/group-permissions/group-permissions.component';
+import { GroupLeaveComponent } from './components/group-leave/group-leave.component';
 
 @NgModule({
   declarations: [
@@ -87,6 +88,7 @@ import { GroupPermissionsComponent } from './components/group-permissions/group-
     GroupAccessComponent,
     ManagerPermissionDialogComponent,
     GroupPermissionsComponent,
+    GroupLeaveComponent,
   ],
   imports: [
     CommonModule,
