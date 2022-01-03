@@ -50,7 +50,7 @@ export class LTIComponent implements OnDestroy {
   );
 
   private subscriptions = [
-    this.contentId$.subscribe(contentId => this.activityNavTreeService.setNavigationRootElement(contentId)),
+    this.contentId$.subscribe(contentId => this.activityNavTreeService.navigationNeighborsRestrictedToDescendantOfElementId = contentId),
     this.navigationData$.pipe(readyData()).subscribe({
       next: ({ firstChild, path, attemptId }) => {
         const itemRoute = fullItemRoute('activity', firstChild.id, path, { parentAttemptId: attemptId });

@@ -1,4 +1,4 @@
-import { BehaviorSubject, combineLatest, merge, Observable, of, OperatorFunction, Subject } from 'rxjs';
+import { combineLatest, merge, Observable, of, OperatorFunction, Subject } from 'rxjs';
 import { delay, distinctUntilChanged, map, mapTo, mergeScan, shareReplay, startWith } from 'rxjs/operators';
 import { isDefined } from 'src/app/shared/helpers/null-undefined-predicates';
 import { repeatLatestWhen } from 'src/app/shared/helpers/repeatLatestWhen';
@@ -76,12 +76,10 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
     shareReplay(1),
   );
 
-  private navigationRootElementId$ = new BehaviorSubject<string | undefined>(undefined);
+  navigationNeighborsRestrictedToDescendantOfElementId: string | undefined = undefined;
   navigationNeighbors$: Observable<FetchState<NavigationNeighbors|undefined>> = this.state$.pipe(
-    repeatLatestWhen(this.navigationRootElementId$), // refresh when navigation root element changes
     mapStateData(navData => {
-      const navigationRootElementId = this.navigationRootElementId$.value;
-      if (!navData.selectedElementId || navData.selectedElementId === navigationRootElementId) return undefined;
+      if (!navData.selectedElementId) return undefined;
       const idx = navData.elements.findIndex(e => e.id === navData.selectedElementId);
       if (idx < 0) return undefined;
 
@@ -91,7 +89,9 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
       const next = navData.elements[idx+1];
 
       return {
-        parent: parent ? { navigateTo: (): void => parent.navigateTo(navData.pathToElements.slice(0,-1)) } : null,
+        parent: parent && parent.id !== this.navigationNeighborsRestrictedToDescendantOfElementId
+          ? { navigateTo: (): void => parent.navigateTo(navData.pathToElements.slice(0,-1)) }
+          : null,
         previous: prev ? { navigateTo: (): void => prev.navigateTo(navData.pathToElements) } : null,
         next: next ? { navigateTo: (): void => next.navigateTo(navData.pathToElements) } : null,
       };
@@ -115,10 +115,6 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
    */
   retry(): void {
     this.reloadTrigger.next();
-  }
-
-  setNavigationRootElement(id: string): void {
-    this.navigationRootElementId$.next(id);
   }
 
   protected abstract addDetailsToTreeElement(treeElement: NavTreeElement, contentInfo: ContentT): NavTreeElement;
