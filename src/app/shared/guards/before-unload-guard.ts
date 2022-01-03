@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanDeactivate, RouterStateSnapshot } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 export interface BeforeUnloadComponent {
   /**
@@ -15,12 +15,12 @@ export class BeforeUnloadGuard implements CanDeactivate<BeforeUnloadComponent> {
   constructor() {}
 
   canDeactivate(
-    component: BeforeUnloadComponent,
+    component: BeforeUnloadComponent | null,
     _currentRoute: ActivatedRouteSnapshot,
     _currentState: RouterStateSnapshot,
     _nextState: RouterStateSnapshot
   ): Observable<boolean> {
-    return component.beforeUnload();
+    return component ? component.beforeUnload() : of(true);
   }
 
 }
