@@ -20,7 +20,7 @@
         [collapsed]="true"
       >
         <ng-container label-section i18n>
-          {{ watchedGroup.name }}
+          «{{ watchedGroup.name }}»
           <ng-container
             *ngIf="['content', 'content_with_descendants', 'solution'].includes(itemData.item.permissions.canView); else cantBlock">
             can
