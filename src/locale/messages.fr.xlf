@@ -1636,8 +1636,8 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-leave/group-leave-page.component.html</context><context context-type="linenumber">14</context></context-group></trans-unit><trans-unit id="5683126619387156920" datatype="html">
         <source>You've left group</source><target state="new">You've left group</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-leave/group-leave.component.ts</context><context context-type="linenumber">29</context></context-group></trans-unit><trans-unit id="690250592654745090" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-leave/group-leave-page.component.ts</context><context context-type="linenumber">29</context></context-group></trans-unit><trans-unit id="690250592654745090" datatype="html">
         <source>, and</source><target state="new">, and</target>
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-links/group-links.component.html</context><context context-type="linenumber">14</context></context-group></trans-unit><trans-unit id="9128077364077202523" datatype="html">
