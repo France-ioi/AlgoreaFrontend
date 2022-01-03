@@ -73,6 +73,7 @@ jobs:
           <<: *CACHEKEY
           paths:
             - ./node_modules
+            - ./.angular
 
   lint:
     docker: *node_image
