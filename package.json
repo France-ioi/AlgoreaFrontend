@@ -82,6 +82,6 @@
     "ngx-i18nsupport": "^0.17.1",
     "protractor": "~7.0.0",
     "ts-node": "~7.0.0",
-    "typescript": "~4.2.4"
+    "typescript": "~4.4.0"
   }
 }
