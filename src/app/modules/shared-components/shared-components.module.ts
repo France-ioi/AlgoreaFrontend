@@ -173,7 +173,5 @@ import { GroupPermissionCaptionPipe } from '../../shared/pipes/groupPermissionCa
     NeighborWidgetComponent,
   ],
   providers: [],
-  entryComponents: [
-  ]
 })
 export class SharedComponentsModule { }
