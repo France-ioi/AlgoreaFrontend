@@ -24,7 +24,7 @@ export class UserComponent implements OnInit, OnDestroy {
 
   private refresh$ = new Subject<void>();
   readonly state$ = this.route.params.pipe(
-    switchMap(({ id }) => this.getUserService.getForId(id)),
+    switchMap(({ id }) => this.getUserService.getForId(id as string)),
     mapToFetchState({ resetter: this.refresh$ }),
     share(),
   );

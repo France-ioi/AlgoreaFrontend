@@ -195,7 +195,7 @@ export class ItemByIdComponent implements OnDestroy {
       })
     ).subscribe({
       next: itemRoute => this.itemRouter.navigateTo(itemRoute, { navExtras: { replaceUrl: true } }),
-      error: err => {
+      error: (err: Error) => {
         this.state = errorState(err);
       }
     });

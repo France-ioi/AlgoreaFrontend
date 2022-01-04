@@ -2,7 +2,7 @@ import { AfterViewInit, OnDestroy, SimpleChanges } from '@angular/core';
 import { Component, EventEmitter, Input, Output, ViewChild, OnChanges } from '@angular/core';
 import { OverlayPanel } from 'primeng/overlaypanel';
 import { animationFrames, merge, ReplaySubject, Subscription } from 'rxjs';
-import { filter, mapTo, startWith, switchMap, take, withLatestFrom } from 'rxjs/operators';
+import { filter, map, startWith, switchMap, take, withLatestFrom } from 'rxjs/operators';
 import { ensureDefined } from 'src/app/shared/helpers/null-undefined-predicates';
 import { TeamUserProgress } from 'src/app/shared/http-services/get-group-progress.service';
 
@@ -34,21 +34,21 @@ export class UserProgressDetailsComponent implements OnChanges, OnDestroy, After
     filter(({ previousTarget, nextTarget }) => !!nextTarget && !!previousTarget && previousTarget !== nextTarget),
   );
   private hiddenOverlayToReopen$ = this.openedOverlayToReopen$.pipe(
-    switchMap(data => ensureDefined(this.panel).onHide.asObservable().pipe(mapTo(data), take(1))),
+    switchMap(data => ensureDefined(this.panel).onHide.asObservable().pipe(map(() => data), take(1))),
   );
   private hiddenOverlay$ = merge(
     this.overlay$.pipe(filter(({ nextTarget }) => !nextTarget)),
     this.openedOverlayToReopen$,
-  ).pipe(switchMap(data => animationFrames().pipe(take(1), mapTo(data))));
+  ).pipe(switchMap(data => animationFrames().pipe(take(1), map(() => data))));
 
   openedOverlay$ = merge(
     this.hiddenOverlayToOpen$,
     this.hiddenOverlayToReopen$,
-  ).pipe(switchMap(data => animationFrames().pipe(take(1), mapTo(data))));
+  ).pipe(switchMap(data => animationFrames().pipe(take(1), map(() => data))));
 
   private overlayIsReopening$ = merge(
-    this.openedOverlayToReopen$.pipe(mapTo(true)),
-    this.hiddenOverlayToReopen$.pipe(mapTo(false)),
+    this.openedOverlayToReopen$.pipe(map(() => true)),
+    this.hiddenOverlayToReopen$.pipe(map(() => false)),
   ).pipe(startWith(false));
 
   private onHideSubscription?: Subscription;

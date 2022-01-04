@@ -68,7 +68,7 @@ export class ProgressSelectComponent<T> implements OnChanges, OnInit, ControlVal
   }
 
   ngOnInit(): void {
-    if (this.defaultValue) this.value = this.defaultValue;
+    if (this.defaultValue !== undefined) this.value = this.defaultValue;
   }
 
   ngOnChanges(_changes: SimpleChanges): void {

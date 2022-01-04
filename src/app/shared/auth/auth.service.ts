@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { catchError, switchMap, retry, mapTo } from 'rxjs/operators';
+import { catchError, switchMap, retry, map } from 'rxjs/operators';
 import { BehaviorSubject, of, timer, Subject, EMPTY } from 'rxjs';
 import { OAuthService } from './oauth.service';
 import { AuthHttpService } from '../http-services/auth.http-service';
@@ -78,7 +78,7 @@ export class AuthService implements OnDestroy {
         // Refresh if the token is valid < `minTokenLifetime` or when it will have reached 50% of its lifetime. Retry every minute.
         const refreshIn = auth.expiration.getTime() - Date.now() <= minTokenLifetime ? 0 :
           Math.max((auth.expiration.getTime() + auth.creation.getTime())/2 - Date.now(), 0);
-        return timer(Math.min(refreshIn, maxDelay), 1*MINUTES).pipe(mapTo(auth));
+        return timer(Math.min(refreshIn, maxDelay), 1*MINUTES).pipe(map(() => auth));
       }),
       switchMap(auth =>
         this.authHttp.refreshAuth(auth)

@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Subscription, Observable, Subject, of } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
-import { switchMap, distinctUntilChanged, map, filter, mapTo, skip, shareReplay, retry } from 'rxjs/operators';
+import { switchMap, distinctUntilChanged, map, filter, skip, shareReplay, retry } from 'rxjs/operators';
 import { CurrentUserHttpService, UpdateUserBody, UserProfile } from '../http-services/current-user.service';
 import { isNotUndefined } from '../helpers/null-undefined-predicates';
 import { repeatLatestWhen } from '../helpers/repeatLatestWhen';
@@ -37,7 +37,7 @@ export class UserSessionService implements OnDestroy {
   );
 
   /** triggered when the user identity changes (but skipping first user value), which happens when auth token is invalidated */
-  userChanged$ = this.userProfile$.pipe(distinctUntilChanged((u1, u2) => u1.groupId === u2.groupId), mapTo(undefined), skip(1));
+  userChanged$ = this.userProfile$.pipe(distinctUntilChanged((u1, u2) => u1.groupId === u2.groupId), map(() => undefined), skip(1));
 
   private subscription?: Subscription;
   private userProfileUpdated$ = new Subject<void>();
