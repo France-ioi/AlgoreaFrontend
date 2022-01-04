@@ -36,10 +36,7 @@ module.exports = {
     'rxjs/no-nested-subscribe': 'error',
     'rxjs/no-unbound-methods': 'error',
     'rxjs/throw-error': 'error',
-    'rxjs/suffix-subjects': [
-      'error',
-      { suffix: '$' }
-    ],
+    'rxjs/suffix-subjects': 'off',
     '@typescript-eslint/semi': ['error'],
     'max-len': [
       'error',
