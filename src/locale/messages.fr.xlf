@@ -672,11 +672,11 @@
           <context context-type="sourcefile">src/app/modules/lti/pages/lti/lti.component.html</context>
           <context context-type="linenumber">13</context>
         </context-group>
-      </trans-unit><trans-unit id="8053477814844632887" datatype="html">
-        <source>Login failed</source><target state="new">Login failed</target>
+      </trans-unit><trans-unit id="2205921893315386228" datatype="html">
+        <source> Something wrong occurred during the login process, please <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;alg-link&quot; (click)=&quot;restartProcess()&quot;>"/>retry<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"/>. <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br>"/> If the problem persists, please contact us. </source><target state="new"> Something wrong occurred during the login process, please <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;alg-link&quot; (click)=&quot;restartProcess()&quot;>"/>retry<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"/>. <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br>"/> If the problem persists, please contact us. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/lti/pages/lti/lti.component.html</context>
-          <context context-type="linenumber">17</context>
+          <context context-type="linenumber">16,19</context>
         </context-group>
       </trans-unit><trans-unit id="5402924068010392760" datatype="html">
         <source>Join the group "<x id="PH" equiv-text="response.group.name"/>"</source><target state="translated">Rejoindre le groupe "<x id="PH" equiv-text="response.group.name"/>"</target>
