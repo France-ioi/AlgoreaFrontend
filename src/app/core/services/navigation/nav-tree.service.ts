@@ -80,10 +80,10 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
    * In some cases (ie LTI), the user visits the app only to work on an exercise, chapter or task and then returns to the original platform.
    * For that purpose, we want to be able to restrict in-app navigation to a specific chapter.
    * This is done by hiding the left menu and allowing only neighbor navigation while disabling others.
-   * When this variable is undefined, no restriction is applied.
+   * When this variable is null, no restriction is applied.
    * When it is populated with an element id, the neighbor navigation will only be restricted to its descendants _not including self_.
    */
-  navigationNeighborsRestrictedToDescendantOfElementId: string | undefined = undefined;
+  navigationNeighborsRestrictedToDescendantOfElementId: string | null = null;
   navigationNeighbors$: Observable<FetchState<NavigationNeighbors|undefined>> = this.state$.pipe(
     mapStateData(navData => {
       if (!navData.selectedElementId) return undefined;
