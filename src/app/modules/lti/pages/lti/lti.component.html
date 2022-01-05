@@ -12,8 +12,9 @@
     *ngIf="error === 'no_item_or_explicit_entry_with_no_result'"
     i18n-message message="This task is not correctly configured (item not found or explicit entry but no result)"
   ></alg-error>
-  <alg-error
-    *ngIf="error === 'login_error'"
-    i18n-message message="Login failed"
-  ></alg-error>
+  <alg-error *ngIf="error === 'login_error'" i18n>
+    Something wrong occurred during the login process, please <span class="alg-link" (click)="restartProcess()">retry</span>.
+    <br>
+    If the problem persists, please contact us.
+  </alg-error>
 </ng-container>

@@ -7,7 +7,7 @@ import { GetItemChildrenService, ItemChild } from 'src/app/modules/item/http-ser
 import { GetItemPathService } from 'src/app/modules/item/http-services/get-item-path.service';
 import { errorIsHTTPForbidden } from 'src/app/shared/helpers/errors';
 import { isNotNull } from 'src/app/shared/helpers/null-undefined-predicates';
-import { setRedirectToSubPathAtInit } from 'src/app/shared/helpers/redirect-to-sub-path-at-init';
+import { removeSubPathRedirectionAtInit, setRedirectToSubPathAtInit } from 'src/app/shared/helpers/redirect-to-sub-path-at-init';
 import { ResultActionsService } from 'src/app/shared/http-services/result-actions.service';
 import { mapToFetchState, readyData } from 'src/app/shared/operators/state';
 import { fullItemRoute } from 'src/app/shared/routing/item-route';
@@ -98,6 +98,7 @@ export class LTIComponent implements OnDestroy {
       const itemRoute = fullItemRoute('activity', firstChild.id, path, { parentAttemptId: attemptId });
       this.itemRouter.navigateTo(itemRoute, { navExtras: { replaceUrl: true } });
     }),
+
   ];
 
   constructor(
@@ -116,6 +117,16 @@ export class LTIComponent implements OnDestroy {
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
+  }
+
+  restartProcess(): void {
+    combineLatest([
+      this.contentId$,
+      this.userId$.pipe(filter(isNotNull)),
+    ]).subscribe(([ contentId, userId ]) => {
+      removeSubPathRedirectionAtInit();
+      window.location.href = `./#/lti/${contentId}?${userIdParam}=${userId}`;
+    });
   }
 
   private getNavigationData(itemId: string): Observable<{ firstChild: ItemChild, path: string[], attemptId: string }> {
