@@ -7,12 +7,14 @@ export const environment: Environment = {
   oauthClientId: '43',
 
   defaultActivityId: '4702',
-  defaultSkillId: '3000',
 
   languages: [
     { tag: 'fr', path: '/fr/' },
     { tag: 'en', path: '/' },
   ],
+  defaultTitle: 'Algorea Platform',
   allowForcedToken: true,
   authType: 'tokens',
+
+  itemPlatformId: 'http://algorea.pem.dev',
 };
