@@ -111,6 +111,15 @@
                   "maximumWarning": "6kb"
                 }
               ]
+            },
+            "e2e": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.e2e.ts"
+                }
+              ],
+              "localize": false
             }
           }
         },
@@ -122,6 +131,9 @@
           "configurations": {
             "production-en": {
               "browserTarget": "algorea:build:production-en"
+            },
+            "e2e": {
+              "browserTarget": "algorea:build:e2e"
             },
             "fr": {
               "browserTarget": "algorea:build:fr"
@@ -173,7 +185,7 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "algorea:serve"
+            "devServerTarget": "algorea:serve:e2e"
           },
           "configurations": {
             "production-en": {
