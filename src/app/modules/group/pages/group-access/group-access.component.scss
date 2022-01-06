@@ -2,7 +2,13 @@
 
 .item {
   display: flex;
-  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 0;
+  border-bottom: 0.1rem solid rgba(74, 74, 74, 0.1);
+
+  &:last-child {
+    border-bottom: none;
+  }
 }
 
 .icon {

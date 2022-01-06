@@ -1,0 +1,16 @@
+<ng-container *ngIf="permissions">
+  <ul class="captions">
+    <li class="caption-item">
+      <div class="caption">Can View: {{ permissions.canView | groupPermissionCaption }}</div>
+    </li>
+    <li class="caption-item">
+      <div class="caption">Can Grant View: {{ permissions.canGrantView | groupPermissionCaption }}</div>
+    </li>
+    <li class="caption-item">
+      <div class="caption">Can Enter From: {{ permissions.canEnterFrom | date:'d/MM/y' }}</div>
+    </li>
+    <li class="caption-item">
+      <div class="caption">Until: {{ permissions.canEnterUntil | date:'d/MM/y' }}</div>
+    </li>
+  </ul>
+</ng-container>
