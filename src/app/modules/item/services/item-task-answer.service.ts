@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { combineLatest, EMPTY, forkJoin, interval, merge, Observable, of, ReplaySubject, Subject, throwError, timer } from 'rxjs';
+import { combineLatest, EMPTY, forkJoin, interval, merge, Observable, of, ReplaySubject, Subject } from 'rxjs';
 import {
   catchError,
   defaultIfEmpty,
@@ -26,8 +26,7 @@ import { Answer, CurrentAnswerService } from '../http-services/current-answer.se
 import { GradeService } from '../http-services/grade.service';
 import { ItemTaskInitService } from './item-task-init.service';
 
-const answerAndStateSaveInterval = 5000*SECONDS;
-let saveTries = 0;
+const answerAndStateSaveInterval = 5*SECONDS;
 
 @Injectable()
 export class ItemTaskAnswerService implements OnDestroy {
@@ -189,14 +188,6 @@ export class ItemTaskAnswerService implements OnDestroy {
         if (readOnly) return of({ saving: false });
         const currentIsSaved = saved.answer === current.answer && saved.state === current.state;
         if (currentIsSaved) return of({ saving: false });
-
-        saveTries += 1;
-        if (saveTries % 3 !== 0) {
-          return timer(1000).pipe(
-            switchMap(() => throwError(() => new Error('Oops'))),
-            startWith({ saving: true }),
-          );
-        }
 
         return this.currentAnswerService.update(route.id, attemptId, current).pipe(
           mapTo({ saving: false }),
