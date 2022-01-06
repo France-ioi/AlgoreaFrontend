@@ -31,7 +31,9 @@ export class ItemTaskViewsService implements OnDestroy {
   );
 
   private subscriptions = [
-    this.showViews$.subscribe({ error: (err: Error) => this.errorSubject.next(err) }),
+    this.showViews$.subscribe({
+      error: err => this.errorSubject.next(err instanceof Error ? err : new Error('unknown error')),
+    }),
     combineLatest([
       this.initService.iframe$,
       this.display$.pipe(map(display => display.scrollTop), filter(isNotUndefined)),

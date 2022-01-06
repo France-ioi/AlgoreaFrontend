@@ -52,7 +52,10 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent {
   );
 
   readonly formerAnswerError$ = this.formerAnswer$.pipe(
-    catchError((error: string) => of(errorIsHTTPForbidden(error) ? loadForbiddenAnswerError : new Error(error))),
+    catchError(error => {
+      if (errorIsHTTPForbidden(error)) return of(loadForbiddenAnswerError);
+      return of(error instanceof Error ? error : new Error('unknown error'));
+    }),
     filter((error): error is Error => error instanceof Error),
   );
   readonly formerAnswerLoadForbidden$ = this.formerAnswerError$.pipe(filter(error => error === loadForbiddenAnswerError));

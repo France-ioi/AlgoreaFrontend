@@ -105,8 +105,12 @@ export class ItemTaskAnswerService implements OnDestroy {
   );
 
   private subscriptions = [
-    this.initializedTaskAnswer$.subscribe({ error: (err: Error) => this.errorSubject.next(err) }),
-    this.initializedTaskState$.subscribe({ error: (err: Error) => this.errorSubject.next(err) }),
+    this.initializedTaskAnswer$.subscribe({
+      error: err => this.errorSubject.next(err instanceof Error ? err : new Error('unknown error')),
+    }),
+    this.initializedTaskState$.subscribe({
+      error: err => this.errorSubject.next(err instanceof Error ? err : new Error('unknown error')),
+    }),
     this.initialAnswer$
       .subscribe(initial => this.saved$.next({ answer: initial?.answer ?? '', state: initial?.state ?? '' })),
     this.autoSaveInterval$.subscribe(savedOrError => {
