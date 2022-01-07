@@ -2,6 +2,7 @@ import {
   AfterViewChecked,
   Component,
   ElementRef,
+  EventEmitter,
   Input,
   OnChanges,
   OnDestroy,
@@ -10,8 +11,8 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import { EMPTY, interval, merge, Observable, Subject } from 'rxjs';
-import { endWith, filter, map, pairwise, shareReplay, startWith, switchMap, takeUntil } from 'rxjs/operators';
+import { interval, merge, Observable } from 'rxjs';
+import { filter, map, pairwise, startWith, switchMap } from 'rxjs/operators';
 import { HOURS, SECONDS } from 'src/app/shared/helpers/duration';
 import { isNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
 import { TaskConfig, ItemTaskService } from '../../services/item-task.service';
@@ -47,8 +48,10 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
   @Input() attemptId!: string;
   @Input() view?: TaskTab['view'];
   @Input() taskConfig: TaskConfig = { readOnly: false, formerAnswer: null };
+  @Input() savingAnswer = false;
 
   @Output() scoreChange = this.taskService.scoreChange$;
+  @Output() skipSave = new EventEmitter<void>();
 
   @ViewChild('iframe') iframe?: ElementRef<HTMLIFrameElement>;
 
@@ -70,9 +73,6 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
     this.taskService.display$.pipe(map(({ height }) => height), filter(isNotUndefined)),
   ).pipe(map(height => height + additionalHeightToPreventInnerScrollIssues), startWith(initialHeight));
 
-  savingAnswerAndState = false;
-
-  private skipSave$ = new Subject<void>();
   private subscription = this.taskService.saveAnswerAndStateInterval$
     .pipe(startWith({ success: true }), pairwise())
     .subscribe(([ previous, next ]) => {
@@ -126,19 +126,7 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
 
   saveAnswerAndState(): Observable<{ saving: boolean }> {
     this.subscription.unsubscribe();
-    if (this.taskConfig.readOnly) return EMPTY;
-
-    const save$ = this.taskService.saveAnswerAndState().pipe(
-      takeUntil(this.skipSave$),
-      endWith({ saving: false }),
-      shareReplay(1),
-    );
-    save$.subscribe(({ saving }) => this.savingAnswerAndState = saving);
-    return save$;
-  }
-
-  skipSave(): void {
-    this.skipSave$.next();
+    return this.taskService.saveAnswerAndState();
   }
 
   private getTabNameByView(view: string): string {

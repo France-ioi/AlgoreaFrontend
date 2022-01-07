@@ -71,9 +71,11 @@
             [hidden]="!contentTab.isActive"
             [itemData]="itemData"
             [taskConfig]="taskConfig"
+            [savingAnswer]="(savingAnswer$ | async) ?? false"
             [(taskView)]="taskView"
             (taskTabsChange)="setTaskTabs($event)"
             (scoreChange)="patchStateWithScore($event)"
+            (skipSave)="skipBeforeUnload()"
           ></alg-item-content>
         </ng-container>
       </ng-container>
@@ -81,7 +83,7 @@
         *ngIf="progressTab?.isActive || !!(watchedGroup$ | async) && !contentTab.isActive"
         [itemData]="itemData"
         [isTaskReadOnly]="(taskReadOnly$ | async) ?? false"
-        [savingAnswer]="savingAnswer"
+        [savingAnswer]="(savingAnswer$ | async) ?? false"
         (skipSave)="skipBeforeUnload()"
       ></alg-item-progress>
     </div>
@@ -89,3 +91,27 @@
   </ng-container>
 
 </ng-container>
+
+<p-dialog
+  *ngIf="saveBeforeUnloadError$ | async"
+  [visible]="true"
+  [modal]="true"
+  [closeOnEscape]="false"
+  [closable]="false"
+  i18n-header header="Leave unsaved task"
+>
+  <p i18n>You do not appear to be connected to the Internet, if you leave this task you may loose your progress. Are you sure you want to continue?</p>
+  <ng-template pTemplate="footer">
+    <button
+      pButton
+      class="p-button-danger"
+      i18n-label label="Loose progress and leave the task"
+      (click)="skipBeforeUnload()"
+    ></button>
+    <button
+      pButton
+      i18n-label label="Retry"
+      (click)="retryBeforeUnload()"
+    ></button>
+  </ng-template>
+</p-dialog>

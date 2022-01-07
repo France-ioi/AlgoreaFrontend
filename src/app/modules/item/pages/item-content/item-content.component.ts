@@ -14,10 +14,12 @@ export class ItemContentComponent implements OnChanges {
   @Input() itemData?: ItemData;
   @Input() taskView?: TaskTab['view'];
   @Input() taskConfig: TaskConfig = { readOnly: false, formerAnswer: null };
+  @Input() savingAnswer = false;
 
   @Output() taskTabsChange = new EventEmitter<TaskTab[]>();
   @Output() taskViewChange = new EventEmitter<TaskTab['view']>();
   @Output() scoreChange = new EventEmitter<number>();
+  @Output() skipSave = new EventEmitter<void>();
 
   attemptId?: string;
 
