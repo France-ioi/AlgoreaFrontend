@@ -81,21 +81,13 @@
 
   <alg-loading *ngIf="state.isFetching && !state.data"></alg-loading>
 
-  <alg-error
-    *ngIf="state.isError"
-    class="dark"
-    [showRefreshButton]="true"
-    refreshButtonType="refresh"
-    (refresh)="onGroupRefreshRequired()"
-  >
-    <ng-container i18n>
-      <ng-container *ngIf="state.error.status === 403; else otherError;">
-        You are not allowed to view this group page.
-      </ng-container>
-      <ng-template #otherError>
-        Error while loading the group info
-      </ng-template>
+  <alg-error *ngIf="state.isError" class="dark">
+    <ng-container *ngIf="state.error.status === 403; else otherError;" i18n>
+      You are not allowed to view this group page.
     </ng-container>
+    <ng-template #otherError>
+      <ng-container i18n>Error while loading the group info</ng-container>
+    </ng-template>
   </alg-error>
 
 </ng-container>

@@ -1839,19 +1839,16 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/group-details/group-details.component.html</context><context context-type="linenumber">47</context></context-group></trans-unit><trans-unit id="4426319772533875265" datatype="html">
         <source> Settings </source><target state="translated"> Paramètres </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/group-details/group-details.component.html</context><context context-type="linenumber">67</context></context-group></trans-unit><trans-unit id="3203594491960864197" datatype="html">
-        <source><x id="START_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;ng-container *ngIf=&quot;state.error.status === 403; else otherError;&quot;>"/> You are not allowed to view this group page. <x id="CLOSE_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;/ng-container>"/><x id="START_TAG_NG_TEMPLATE" ctype="x-ng_template" equiv-text="&lt;ng-template #otherError>"/> Error while loading the group info <x id="CLOSE_TAG_NG_TEMPLATE" ctype="x-ng_template" equiv-text="&lt;/ng-template>"/></source><target state="new"><x id="START_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;ng-container *ngIf=&quot;state.error.status === 403; else otherError;&quot;>"/> You are not allowed to view this group page. <x id="CLOSE_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;/ng-container>"/><x id="START_TAG_NG_TEMPLATE" ctype="x-ng_template" equiv-text="&lt;ng-template #otherError>"/> Error while loading the group info <x id="CLOSE_TAG_NG_TEMPLATE" ctype="x-ng_template" equiv-text="&lt;/ng-template>"/></target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/pages/group-details/group-details.component.html</context>
-          <context context-type="linenumber">92,97</context>
-        </context-group>
-      </trans-unit><trans-unit id="7288998356732151629" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/group-details/group-details.component.html</context><context context-type="linenumber">67</context></context-group></trans-unit><trans-unit id="4710139977652705392" datatype="html">
+        <source> You are not allowed to view this group page. </source><target state="new"> You are not allowed to view this group page. </target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/group-details/group-details.component.html</context><context context-type="linenumber">86</context></context-group></trans-unit><trans-unit id="7288998356732151629" datatype="html">
         <source> Access </source><target state="new"> Access </target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/group-details/group-details.component.html</context><context context-type="linenumber">57</context></context-group></trans-unit><trans-unit id="80384927579662477" datatype="html">
         <source>Error while loading the group info</source><target state="translated">Error lors du chargement du groupe</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-remove-button/group-remove-button.component.html</context><context context-type="linenumber">11</context></context-group></trans-unit><trans-unit id="3835604152936342866" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-remove-button/group-remove-button.component.html</context><context context-type="linenumber">11</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/group-details/group-details.component.html</context><context context-type="linenumber">89</context></context-group></trans-unit><trans-unit id="3835604152936342866" datatype="html">
         <source>Delete this group</source><target state="new">Delete this group</target>
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-remove-button/group-remove-button.component.html</context><context context-type="linenumber">20</context></context-group></trans-unit><trans-unit id="8675432263399119284" datatype="html">
