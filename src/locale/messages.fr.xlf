@@ -849,28 +849,71 @@
       </trans-unit><trans-unit id="5278627882107105833" datatype="html">
         <source>Access</source><target state="translated">Rejoindre</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-details/item-details.component.html</context><context context-type="linenumber">10</context></context-group></trans-unit><trans-unit id="7430406203627058047" datatype="html">
-        <source> «<x id="INTERPOLATION" equiv-text="{{ watchedGroup.name }}"/>» <x id="START_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;ng-container
-            *ngIf=&quot;['content', 'content_with_descendants', 'solution'].includes(itemData.item.permissions.canView); else cantBlock&quot;>"/> can <x id="CLOSE_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;/ng-container>"/><x id="START_TAG_NG_TEMPLATE" ctype="x-ng_template" equiv-text="&lt;ng-template #cantBlock>"/>can't<x id="CLOSE_TAG_NG_TEMPLATE" ctype="x-ng_template" equiv-text="&lt;/ng-template>"/> access this <x id="START_TAG_NG_CONTAINER_1" ctype="x-ng_container_1" equiv-text="&lt;ng-container *ngIf=&quot;itemData.item.type === 'Skill'; else activity&quot;>"/>skill<x id="CLOSE_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;/ng-container>"/><x id="START_TAG_NG_TEMPLATE_1" ctype="x-ng_template_1" equiv-text="&lt;ng-template #activity>"/>activity<x id="CLOSE_TAG_NG_TEMPLATE" ctype="x-ng_template" equiv-text="&lt;/ng-template>"/></source><target state="new"> «<x id="INTERPOLATION" equiv-text="{{ watchedGroup.name }}"/>» <x id="START_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;ng-container
-            *ngIf=&quot;['content', 'content_with_descendants', 'solution'].includes(itemData.item.permissions.canView); else cantBlock&quot;>"/> can <x id="CLOSE_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;/ng-container>"/><x id="START_TAG_NG_TEMPLATE" ctype="x-ng_template" equiv-text="&lt;ng-template #cantBlock>"/>can't<x id="CLOSE_TAG_NG_TEMPLATE" ctype="x-ng_template" equiv-text="&lt;/ng-template>"/> access this <x id="START_TAG_NG_CONTAINER_1" ctype="x-ng_container_1" equiv-text="&lt;ng-container *ngIf=&quot;itemData.item.type === 'Skill'; else activity&quot;>"/>skill<x id="CLOSE_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;/ng-container>"/><x id="START_TAG_NG_TEMPLATE_1" ctype="x-ng_template_1" equiv-text="&lt;ng-template #activity>"/>activity<x id="CLOSE_TAG_NG_TEMPLATE" ctype="x-ng_template" equiv-text="&lt;/ng-template>"/></target>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-details/item-details.component.html</context><context context-type="linenumber">10</context></context-group></trans-unit><trans-unit id="8309054658706496987" datatype="html">
+        <source> «<x id="INTERPOLATION" equiv-text="{{ watchedGroup.name }}"/>» <x id="INTERPOLATION_1" equiv-text="{{ ['content', 'content_with_descendants', 'solution'].includes(permissions.canView).toString() | i18nSelect : {
+              true: 'can',
+              other: 'can\'t'
+            } }}"/> access this <x id="INTERPOLATION_2" equiv-text="{{ itemData.item.type | i18nSelect : {
+              Skill: 'skill',
+              other: 'activity'
+            } }}"/> </source><target state="new"> «<x id="INTERPOLATION" equiv-text="{{ watchedGroup.name }}"/>» <x id="INTERPOLATION_1" equiv-text="{{ ['content', 'content_with_descendants', 'solution'].includes(permissions.canView).toString() | i18nSelect : {
+              true: 'can',
+              other: 'can\'t'
+            } }}"/> access this <x id="INTERPOLATION_2" equiv-text="{{ itemData.item.type | i18nSelect : {
+              Skill: 'skill',
+              other: 'activity'
+            } }}"/> </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/item/pages/item-details/item-details.component.html</context>
-          <context context-type="linenumber">22,30</context>
+          <context context-type="linenumber">23,34</context>
         </context-group>
-      </trans-unit><trans-unit id="5149021877340796070" datatype="html">
-        <source> The <x id="START_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;ng-container *ngIf=&quot;watchedGroup.route.isUser; else group&quot;>"/>user<x id="CLOSE_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;/ng-container>"/><x id="START_TAG_NG_TEMPLATE" ctype="x-ng_template" equiv-text="&lt;ng-template #group>"/>group<x id="CLOSE_TAG_NG_TEMPLATE" ctype="x-ng_template" equiv-text="&lt;/ng-template>"/> cannot currently view this content. </source><target state="new"> The <x id="START_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;ng-container *ngIf=&quot;watchedGroup.route.isUser; else group&quot;>"/>user<x id="CLOSE_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;/ng-container>"/><x id="START_TAG_NG_TEMPLATE" ctype="x-ng_template" equiv-text="&lt;ng-template #group>"/>group<x id="CLOSE_TAG_NG_TEMPLATE" ctype="x-ng_template" equiv-text="&lt;/ng-template>"/> cannot currently view this content. </target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-details/item-details.component.html</context><context context-type="linenumber">37</context></context-group></trans-unit><trans-unit id="5441325183628437002" datatype="html">
-        <source> The <x id="START_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;ng-container *ngIf=&quot;watchedGroup.route.isUser; else group&quot;>"/>user<x id="CLOSE_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;/ng-container>"/><x id="START_TAG_NG_TEMPLATE" ctype="x-ng_template" equiv-text="&lt;ng-template #group>"/>group<x id="CLOSE_TAG_NG_TEMPLATE" ctype="x-ng_template" equiv-text="&lt;/ng-template>"/> can list this <x id="START_TAG_NG_CONTAINER_1" ctype="x-ng_container_1" equiv-text="&lt;ng-container *ngIf=&quot;itemData.item.type === 'Skill'; else activity&quot;>"/>skill<x id="CLOSE_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;/ng-container>"/><x id="START_TAG_NG_TEMPLATE_1" ctype="x-ng_template_1" equiv-text="&lt;ng-template #activity>"/>activity<x id="CLOSE_TAG_NG_TEMPLATE" ctype="x-ng_template" equiv-text="&lt;/ng-template>"/> but cannot <x id="START_TAG_NG_CONTAINER_2" ctype="x-ng_container_2" equiv-text="&lt;ng-container *ngIf=&quot;itemData.item.type === 'Skill' || itemData.item.type === 'Chapter'; else viewContent&quot;>"/> list its content. <x id="CLOSE_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;/ng-container>"/><x id="START_TAG_NG_TEMPLATE_2" ctype="x-ng_template_2" equiv-text="&lt;ng-template #viewContent>"/>view its content.<x id="CLOSE_TAG_NG_TEMPLATE" ctype="x-ng_template" equiv-text="&lt;/ng-template>"/></source><target state="new"> The <x id="START_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;ng-container *ngIf=&quot;watchedGroup.route.isUser; else group&quot;>"/>user<x id="CLOSE_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;/ng-container>"/><x id="START_TAG_NG_TEMPLATE" ctype="x-ng_template" equiv-text="&lt;ng-template #group>"/>group<x id="CLOSE_TAG_NG_TEMPLATE" ctype="x-ng_template" equiv-text="&lt;/ng-template>"/> can list this <x id="START_TAG_NG_CONTAINER_1" ctype="x-ng_container_1" equiv-text="&lt;ng-container *ngIf=&quot;itemData.item.type === 'Skill'; else activity&quot;>"/>skill<x id="CLOSE_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;/ng-container>"/><x id="START_TAG_NG_TEMPLATE_1" ctype="x-ng_template_1" equiv-text="&lt;ng-template #activity>"/>activity<x id="CLOSE_TAG_NG_TEMPLATE" ctype="x-ng_template" equiv-text="&lt;/ng-template>"/> but cannot <x id="START_TAG_NG_CONTAINER_2" ctype="x-ng_container_2" equiv-text="&lt;ng-container *ngIf=&quot;itemData.item.type === 'Skill' || itemData.item.type === 'Chapter'; else viewContent&quot;>"/> list its content. <x id="CLOSE_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;/ng-container>"/><x id="START_TAG_NG_TEMPLATE_2" ctype="x-ng_template_2" equiv-text="&lt;ng-template #viewContent>"/>view its content.<x id="CLOSE_TAG_NG_TEMPLATE" ctype="x-ng_template" equiv-text="&lt;/ng-template>"/></target>
+      </trans-unit><trans-unit id="7210234374199239920" datatype="html">
+        <source> The <x id="INTERPOLATION" equiv-text="{{ watchedGroup.route.isUser.toString() | i18nSelect : {
+                true: 'user',
+                other: 'group'
+              } }}"/> cannot currently view this content. </source><target state="new"> The <x id="INTERPOLATION" equiv-text="{{ watchedGroup.route.isUser.toString() | i18nSelect : {
+                true: 'user',
+                other: 'group'
+              } }}"/> cannot currently view this content. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/item/pages/item-details/item-details.component.html</context>
-          <context context-type="linenumber">44,51</context>
+          <context context-type="linenumber">37,42</context>
         </context-group>
-      </trans-unit><trans-unit id="5649960655846695745" datatype="html">
-        <source> The <x id="START_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;ng-container *ngIf=&quot;watchedGroup.route.isUser; else group&quot;>"/>user<x id="CLOSE_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;/ng-container>"/><x id="START_TAG_NG_TEMPLATE" ctype="x-ng_template" equiv-text="&lt;ng-template #group>"/>group<x id="CLOSE_TAG_NG_TEMPLATE" ctype="x-ng_template" equiv-text="&lt;/ng-template>"/> can view this activity. </source><target state="new"> The <x id="START_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;ng-container *ngIf=&quot;watchedGroup.route.isUser; else group&quot;>"/>user<x id="CLOSE_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;/ng-container>"/><x id="START_TAG_NG_TEMPLATE" ctype="x-ng_template" equiv-text="&lt;ng-template #group>"/>group<x id="CLOSE_TAG_NG_TEMPLATE" ctype="x-ng_template" equiv-text="&lt;/ng-template>"/> can view this activity. </target>
+      </trans-unit><trans-unit id="3905090940376140689" datatype="html">
+        <source> The <x id="INTERPOLATION" equiv-text="{{ watchedGroup.route.isUser.toString() | i18nSelect : {
+                true: 'user',
+                other: 'group'
+              } }}"/> can list this <x id="INTERPOLATION_1" equiv-text="{{ itemData.item.type | i18nSelect : {
+                Skill: 'skill',
+                other: 'activity'
+              } }}"/> but cannot <x id="INTERPOLATION_2" equiv-text="{{ ['Skill', 'Chapter'].includes(itemData.item.type).toString() | i18nSelect : {
+                true: 'list its content.',
+                other: 'view its content.'
+              } }}"/> </source><target state="new"> The <x id="INTERPOLATION" equiv-text="{{ watchedGroup.route.isUser.toString() | i18nSelect : {
+                true: 'user',
+                other: 'group'
+              } }}"/> can list this <x id="INTERPOLATION_1" equiv-text="{{ itemData.item.type | i18nSelect : {
+                Skill: 'skill',
+                other: 'activity'
+              } }}"/> but cannot <x id="INTERPOLATION_2" equiv-text="{{ ['Skill', 'Chapter'].includes(itemData.item.type).toString() | i18nSelect : {
+                true: 'list its content.',
+                other: 'view its content.'
+              } }}"/> </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/item/pages/item-details/item-details.component.html</context>
-          <context context-type="linenumber">57,59</context>
+          <context context-type="linenumber">44,59</context>
+        </context-group>
+      </trans-unit><trans-unit id="5268813630599686558" datatype="html">
+        <source> The <x id="INTERPOLATION" equiv-text="{{ watchedGroup.route.isUser.toString() | i18nSelect : {
+                true: 'user',
+                other: 'group'
+              } }}"/> can view this activity. </source><target state="new"> The <x id="INTERPOLATION" equiv-text="{{ watchedGroup.route.isUser.toString() | i18nSelect : {
+                true: 'user',
+                other: 'group'
+              } }}"/> can view this activity. </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/pages/item-details/item-details.component.html</context>
+          <context context-type="linenumber">64,69</context>
         </context-group>
       </trans-unit><trans-unit id="6629702976113303770" datatype="html">
         <source> Note that some subgroups or users of the groups may have higher permissions. </source><target state="new"> Note that some subgroups or users of the groups may have higher permissions. </target>
