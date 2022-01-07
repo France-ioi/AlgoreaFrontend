@@ -5,7 +5,7 @@ import { ActionFeedbackService } from '../../../../shared/services/action-feedba
 @Component({
   selector: 'alg-group-leave',
   templateUrl: './group-leave.component.html',
-  styleUrls: ['./group-leave.component.scss'],
+  styleUrls: [ './group-leave.component.scss' ],
 })
 export class GroupLeaveComponent {
   @Output() leave = new EventEmitter<void>();
