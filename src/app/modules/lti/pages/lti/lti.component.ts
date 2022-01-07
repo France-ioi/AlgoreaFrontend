@@ -1,7 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { combineLatest, EMPTY, forkJoin, Observable } from 'rxjs';
-import { catchError, filter, map, shareReplay, switchMap, take } from 'rxjs/operators';
+import { catchError, filter, map, shareReplay, switchMap } from 'rxjs/operators';
 import { ActivityNavTreeService } from 'src/app/core/services/navigation/item-nav-tree.service';
 import { GetItemChildrenService, ItemChild } from 'src/app/modules/item/http-services/get-item-children.service';
 import { GetItemPathService } from 'src/app/modules/item/http-services/get-item-path.service';
@@ -26,7 +26,7 @@ const noChildError = new Error(LTIError.NoChild);
 const loginError = new Error(LTIError.LoginError);
 
 const isRedirectionParam = 'is_redirection';
-const userIdParam = 'user_id';
+const loginIdParam = 'login_id';
 
 @Component({
   selector: 'alg-lti',
@@ -35,8 +35,8 @@ const userIdParam = 'user_id';
 })
 export class LTIComponent implements OnDestroy {
 
-  private userId$ = this.activatedRoute.queryParamMap.pipe(
-    map(queryParams => queryParams.get(userIdParam)),
+  private loginId$ = this.activatedRoute.queryParamMap.pipe(
+    map(queryParams => queryParams.get(loginIdParam)),
   );
 
   private isRedirection$ = this.activatedRoute.queryParamMap.pipe(
@@ -51,9 +51,8 @@ export class LTIComponent implements OnDestroy {
     }),
   );
 
-  private isLoggedIn$ = combineLatest([ this.userSession.userProfile$, this.userId$ ]).pipe(
-    map(([ profile, userId ]) => !!userId && profile.groupId === userId),
-    take(1),
+  private isLoggedIn$ = combineLatest([ this.userSession.userProfile$, this.loginId$ ]).pipe(
+    map(([ profile, loginId ]) => !!loginId && profile.login === loginId),
   );
 
   readonly navigationData$ = combineLatest([ this.isLoggedIn$, this.isRedirection$ ]).pipe(
@@ -84,9 +83,9 @@ export class LTIComponent implements OnDestroy {
   private subscriptions = [
     combineLatest([
       this.contentId$,
-      this.userId$.pipe(filter(isNotNull)),
-    ]).subscribe(([ contentId, userId ]) => {
-      setRedirectToSubPathAtInit(`/lti/${contentId}?${userIdParam}=${userId}&${isRedirectionParam}=`);
+      this.loginId$.pipe(filter(isNotNull)),
+    ]).subscribe(([ contentId, loginId ]) => {
+      setRedirectToSubPathAtInit(`/lti/${contentId}?${loginIdParam}=${loginId}&${isRedirectionParam}=`);
       this.activityNavTreeService.navigationNeighborsRestrictedToDescendantOfElementId = contentId;
     }),
 
@@ -122,10 +121,10 @@ export class LTIComponent implements OnDestroy {
   restartProcess(): void {
     combineLatest([
       this.contentId$,
-      this.userId$.pipe(filter(isNotNull)),
-    ]).subscribe(([ contentId, userId ]) => {
+      this.loginId$.pipe(filter(isNotNull)),
+    ]).subscribe(([ contentId, loginId ]) => {
       removeSubPathRedirectionAtInit();
-      window.location.href = `./#/lti/${contentId}?${userIdParam}=${userId}`;
+      window.location.href = `./#/lti/${contentId}?${loginIdParam}=${loginId}`;
     });
   }
 
