@@ -108,7 +108,7 @@
       </trans-unit><trans-unit id="569741268651615075" datatype="html">
         <source>Go back to the </source><target state="translated">Retour à la </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/pages/page-not-found/page-not-found.component.html</context><context context-type="linenumber">3</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-by-id.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit><trans-unit id="4465003478966998593" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/pages/page-not-found/page-not-found.component.html</context><context context-type="linenumber">3</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-by-id.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="4465003478966998593" datatype="html">
         <source>home page</source><target state="translated">accueil</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/pages/page-not-found/page-not-found.component.html</context>
@@ -126,21 +126,11 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/grid/grid.component.html</context><context context-type="linenumber">67</context></context-group></trans-unit><trans-unit id="4449471207584645508" datatype="html">
         <source>Permissions successfully updated.</source><target state="translated">Permissions mises à jour avec succès.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/group-progress-grid/group-progress-grid.component.ts</context><context context-type="linenumber">284</context></context-group></trans-unit><trans-unit id="8539005737773857870" datatype="html">
-        <source> This content does not exist or you are not allowed to view it. <x id="START_TAG_P_BUTTON" ctype="x-p_button" equiv-text="&lt;p-button
-      class=&quot;refresh-button&quot;
-      icon=&quot;pi pi-refresh&quot;
-      (click)=&quot;reloadContent()&quot;
-      styleClass=&quot;p-button-sm&quot;
-    >"/><x id="CLOSE_TAG_P_BUTTON" ctype="x-p_button" equiv-text="&lt;/p-button>"/></source><target state="new"> This content does not exist or you are not allowed to view it. <x id="START_TAG_P_BUTTON" ctype="x-p_button" equiv-text="&lt;p-button
-      class=&quot;refresh-button&quot;
-      icon=&quot;pi pi-refresh&quot;
-      (click)=&quot;reloadContent()&quot;
-      styleClass=&quot;p-button-sm&quot;
-    >"/><x id="CLOSE_TAG_P_BUTTON" ctype="x-p_button" equiv-text="&lt;/p-button>"/></target>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/group-progress-grid/group-progress-grid.component.ts</context><context context-type="linenumber">284</context></context-group></trans-unit><trans-unit id="7463044993322326313" datatype="html">
+        <source> This content does not exist or you are not allowed to view it. </source><target state="new"> This content does not exist or you are not allowed to view it. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-by-id.component.html</context>
-          <context context-type="linenumber">8,14</context>
+          <context context-type="linenumber">8,9</context>
         </context-group>
       </trans-unit><trans-unit id="5199111763891627410" datatype="html">
         <source>This page has unsaved changes. Do you want to leave this page and lose its changes?</source><target state="translated">Cette page comporte des changements non sauvegardés. Voulez-vous quitter cette page et perdre les changements ?</target>
@@ -873,8 +863,8 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-content/item-content.component.html</context><context context-type="linenumber">67</context></context-group></trans-unit><trans-unit id="6518315916537207134" datatype="html">
         <source> home page </source><target state="translated"> page d'accueil </target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-by-id.component.html</context><context context-type="linenumber">25</context></context-group></trans-unit><trans-unit id="569741268651615075" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-by-id.component.html</context><context context-type="linenumber">19</context></context-group></trans-unit><trans-unit id="569741268651615075" datatype="html">
         <source>Go back to the </source><target state="translated">Retour à la </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-by-id.component.html</context>
@@ -889,7 +879,7 @@
       </trans-unit><trans-unit id="9041444757418829014" datatype="html">
         <source>Error while loading the item.</source><target state="translated">Erreur lors du chargement du contenu.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-by-id.component.html</context><context context-type="linenumber">16</context></context-group></trans-unit><trans-unit id="3249513483374643425" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-by-id.component.html</context><context context-type="linenumber">10</context></context-group></trans-unit><trans-unit id="3249513483374643425" datatype="html">
         <source>Add</source><target state="translated">Ajouter</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/add-content/add-content.component.ts</context><context context-type="linenumber">35</context></context-group></trans-unit><trans-unit id="5932939510039092507" datatype="html">
