@@ -6,12 +6,6 @@
 <ng-container *ngIf="state.isError">
   <p class="alg-error-message" *ngIf="$any(state).error && ($any(state).error.status === 403 || $any(state).error.status === 404); else unknownError" i18n>
     This content does not exist or you are not allowed to view it.
-    <p-button
-      class="refresh-button"
-      icon="pi pi-refresh"
-      (click)="reloadContent()"
-      styleClass="p-button-sm"
-    ></p-button>
   </p>
   <ng-template #unknownError><p i18n>Error while loading the item.</p></ng-template>
   <p class="alg-error-message" [style.visibility]="(backToHome.isActive)?'hidden':'visible'">
