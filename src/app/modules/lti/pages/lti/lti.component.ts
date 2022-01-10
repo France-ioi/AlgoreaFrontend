@@ -1,6 +1,6 @@
 import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { combineLatest, EMPTY, forkJoin, Observable } from 'rxjs';
+import { combineLatest, EMPTY, forkJoin, Observable, of } from 'rxjs';
 import { catchError, filter, map, shareReplay, switchMap } from 'rxjs/operators';
 import { ActivityNavTreeService } from 'src/app/core/services/navigation/item-nav-tree.service';
 import { GetItemChildrenService, ItemChild } from 'src/app/modules/item/http-services/get-item-children.service';
@@ -8,6 +8,7 @@ import { GetItemPathService } from 'src/app/modules/item/http-services/get-item-
 import { errorIsHTTPForbidden } from 'src/app/shared/helpers/errors';
 import { isNotNull } from 'src/app/shared/helpers/null-undefined-predicates';
 import { removeSubPathRedirectionAtInit, setRedirectToSubPathAtInit } from 'src/app/shared/helpers/redirect-to-sub-path-at-init';
+import { CheckLoginService } from 'src/app/shared/http-services/check-login.service';
 import { ResultActionsService } from 'src/app/shared/http-services/result-actions.service';
 import { mapToFetchState, readyData } from 'src/app/shared/operators/state';
 import { fullItemRoute } from 'src/app/shared/routing/item-route';
@@ -26,7 +27,7 @@ const noChildError = new Error(LTIError.NoChild);
 const loginError = new Error(LTIError.LoginError);
 
 const isRedirectionParam = 'is_redirection';
-const loginIdParam = 'login_id';
+const loginIdParam = 'user_id';
 
 @Component({
   selector: 'alg-lti',
@@ -36,7 +37,11 @@ const loginIdParam = 'login_id';
 export class LTIComponent implements OnDestroy {
 
   private loginId$ = this.activatedRoute.queryParamMap.pipe(
-    map(queryParams => queryParams.get(loginIdParam)),
+    map(queryParams => {
+      const loginId = Number(queryParams.get(loginIdParam) ?? NaN);
+      if (Number.isNaN(loginId)) throw new Error('login id must be a number');
+      return loginId;
+    }),
   );
 
   private isRedirection$ = this.activatedRoute.queryParamMap.pipe(
@@ -51,8 +56,11 @@ export class LTIComponent implements OnDestroy {
     }),
   );
 
-  private isLoggedIn$ = combineLatest([ this.userSession.userProfile$, this.loginId$ ]).pipe(
-    map(([ profile, loginId ]) => !!loginId && profile.login === loginId),
+  private isLoggedIn$ = combineLatest([ this.loginId$, this.userSession.userProfile$ ]).pipe(
+    switchMap(([ loginId, profile ]) => {
+      if (profile.tempUser) return of(false);
+      return this.checkLoginService.check(loginId);
+    }),
   );
 
   readonly navigationData$ = combineLatest([ this.isLoggedIn$, this.isRedirection$ ]).pipe(
@@ -104,6 +112,7 @@ export class LTIComponent implements OnDestroy {
     private activatedRoute: ActivatedRoute,
     private itemRouter: ItemRouter,
     private userSession: UserSessionService,
+    private checkLoginService: CheckLoginService,
     private layoutService: LayoutService,
     private activityNavTreeService: ActivityNavTreeService,
     private getItemPathService: GetItemPathService,
