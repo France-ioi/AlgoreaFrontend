@@ -12,69 +12,11 @@
       (groupJoined)="reloadItem()"
     ></alg-access-code-view>
 
-    <ng-container *ngIf="watchedGroup$ | async as watchedGroup">
-      <ng-container *ngIf="itemData.item?.watchedGroup?.permissions as permissions">
-        <alg-section-paragraph
-          [theme]="'warning'"
-          icon="fa fa-flag"
-          [collapsible]="true"
-          [collapsed]="true"
-        >
-          <ng-container label-section i18n>
-            «{{ watchedGroup.name }}»
-            {{ ['content', 'content_with_descendants', 'solution'].includes(permissions.canView).toString() | i18nSelect : {
-              true: 'can',
-              other: 'can\'t'
-            } }}
-            access this
-            {{ itemData.item.type | i18nSelect : {
-              Skill: 'skill',
-              other: 'activity'
-            } }}
-          </ng-container>
-
-          <p>
-            <ng-container *ngIf="permissions.canView === 'none'" i18n>
-              The {{ watchedGroup.route.isUser.toString() | i18nSelect : {
-                true: 'user',
-                other: 'group'
-              } }} cannot currently view this content.
-            </ng-container>
-
-            <ng-container *ngIf="permissions.canView === 'info'" i18n>
-              The {{ watchedGroup.route.isUser.toString() | i18nSelect : {
-                true: 'user',
-                other: 'group'
-              } }}
-              can list this
-              {{ itemData.item.type | i18nSelect : {
-                Skill: 'skill',
-                other: 'activity'
-              } }}
-              but cannot
-              {{ ['Skill', 'Chapter'].includes(itemData.item.type).toString() | i18nSelect : {
-                true: 'list its content.',
-                other: 'view its content.'
-              } }}
-            </ng-container>
-
-            <ng-container
-              *ngIf="['content', 'content_with_descendants', 'solution'].includes(permissions.canView)"
-              i18n
-            >
-              The {{ watchedGroup.route.isUser.toString() | i18nSelect : {
-                true: 'user',
-                other: 'group'
-              } }} can view this activity.
-            </ng-container>
-          </p>
-
-          <div *ngIf="!watchedGroup.route.isUser" i18n>
-            Note that some subgroups or users of the groups may have higher permissions.
-          </div>
-        </alg-section-paragraph>
-      </ng-container>
-    </ng-container>
+    <alg-item-permissions
+      *ngIf="watchedGroup$ | async as watchedGroup"
+      [itemData]="itemData"
+      [watchedGroup]="watchedGroup"
+    ></alg-item-permissions>
 
     <nav class="nav-tab">
       <a
