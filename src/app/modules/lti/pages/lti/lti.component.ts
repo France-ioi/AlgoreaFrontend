@@ -1,7 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { combineLatest, EMPTY, forkJoin, Observable } from 'rxjs';
-import { catchError, filter, map, shareReplay, switchMap } from 'rxjs/operators';
+import { catchError, filter, map, shareReplay, switchMap, withLatestFrom } from 'rxjs/operators';
 import { ActivityNavTreeService } from 'src/app/core/services/navigation/item-nav-tree.service';
 import { GetItemChildrenService, ItemChild } from 'src/app/modules/item/http-services/get-item-children.service';
 import { GetItemPathService } from 'src/app/modules/item/http-services/get-item-path.service';
@@ -15,6 +15,7 @@ import { fullItemRoute } from 'src/app/shared/routing/item-route';
 import { ItemRouter } from 'src/app/shared/routing/item-router';
 import { LayoutService } from 'src/app/shared/services/layout.service';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
+import { LTIDataSource } from '../../services/lti-datasource.service';
 
 enum LTIError {
   FetchError = 'fetch_error',
@@ -96,8 +97,9 @@ export class LTIComponent implements OnDestroy {
       filter(([ isLoggedIn, isRedirection ]) => !isLoggedIn && !isRedirection),
     ).subscribe(() => this.userSession.login()), // will redirect outside the platform
 
-    this.navigationData$.pipe(readyData()).subscribe(({ firstChild, path, attemptId }) => {
+    this.navigationData$.pipe(readyData(), withLatestFrom(this.contentId$)).subscribe(([{ firstChild, path, attemptId }, contentId ]) => {
       const itemRoute = fullItemRoute('activity', firstChild.id, path, { parentAttemptId: attemptId });
+      this.ltiDataSource.data = { contentId, attemptId };
       this.itemRouter.navigateTo(itemRoute, { navExtras: { replaceUrl: true } });
     }),
   ];
@@ -112,6 +114,7 @@ export class LTIComponent implements OnDestroy {
     private getItemPathService: GetItemPathService,
     private resultActionsService: ResultActionsService,
     private getItemChildrenService: GetItemChildrenService,
+    private ltiDataSource: LTIDataSource,
   ) {
     this.layoutService.toggleTopRightControls(false);
     this.layoutService.toggleFullFrameContent(true, false);
