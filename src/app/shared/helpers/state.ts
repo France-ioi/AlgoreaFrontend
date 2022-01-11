@@ -12,6 +12,6 @@ export function fetchingState<T = undefined>(data?: T): Fetching<T> {
   return { tag: 'fetching', isReady: false, data: data, isFetching: true, isError: false };
 }
 
-export function errorState(error: Error & { status?: number }): FetchError {
+export function errorState(error: Error): FetchError {
   return { tag: 'error', isReady: false, isFetching: false, isError: true, error: error };
 }
