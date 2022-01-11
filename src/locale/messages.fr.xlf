@@ -890,11 +890,8 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-permissions/item-permissions.component.html</context><context context-type="linenumber">58</context></context-group></trans-unit><trans-unit id="3792349936860674133" datatype="html">
         <source> You cannot view the results or submissions of the group </source><target state="new"> You cannot view the results or submissions of the group </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/item/components/item-permissions/item-permissions.component.html</context>
-          <context context-type="linenumber">68,69</context>
-        </context-group>
-      </trans-unit><trans-unit id="6629702976113303770" datatype="html">
+
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-permissions/item-permissions.component.html</context><context context-type="linenumber">66</context></context-group></trans-unit><trans-unit id="6629702976113303770" datatype="html">
         <source> Note that some subgroups or users of the groups may have higher permissions. </source><target state="new"> Note that some subgroups or users of the groups may have higher permissions. </target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-details/item-details.component.html</context><context context-type="linenumber">63</context></context-group></trans-unit><trans-unit id="6162691442834560200" datatype="html">
@@ -1262,23 +1259,23 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-children-edit/item-children-edit.component.html</context><context context-type="linenumber">100</context></context-group></trans-unit><trans-unit id="8904528007363649896" datatype="html">
         <source>Error while loading the children item</source><target state="new">Error while loading the children item</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-children-edit/item-children-edit.component.html</context><context context-type="linenumber">117</context></context-group></trans-unit><trans-unit id="431454409956358922" datatype="html">
-        <source><x id="START_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;ng-container *ngIf=&quot;itemData.item?.watchedGroup?.permissions as permissions; else noPermissionToWatchLabel&quot;>"/> «<x id="INTERPOLATION" equiv-text="{{ watchedGroup.name }}"/>» <x id="INTERPOLATION_1" equiv-text="{{ ['content', 'content_with_descendants', 'solution'].includes(permissions.canView).toString() | i18nSelect : {
-            true: 'can',
-            other: 'can\'t'
-          } }}"/> access this <x id="INTERPOLATION_2" equiv-text="{{ itemData.item.type | i18nSelect : {
-            Skill: 'skill',
-            other: 'activity'
-          } }}"/> <x id="CLOSE_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;/ng-container>"/></source><target state="new"><x id="START_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;ng-container *ngIf=&quot;itemData.item?.watchedGroup?.permissions as permissions; else noPermissionToWatchLabel&quot;>"/> «<x id="INTERPOLATION" equiv-text="{{ watchedGroup.name }}"/>» <x id="INTERPOLATION_1" equiv-text="{{ ['content', 'content_with_descendants', 'solution'].includes(permissions.canView).toString() | i18nSelect : {
-            true: 'can',
-            other: 'can\'t'
-          } }}"/> access this <x id="INTERPOLATION_2" equiv-text="{{ itemData.item.type | i18nSelect : {
-            Skill: 'skill',
-            other: 'activity'
-          } }}"/> <x id="CLOSE_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;/ng-container>"/></target>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-children-edit/item-children-edit.component.html</context><context context-type="linenumber">117</context></context-group></trans-unit><trans-unit id="8309054658706496987" datatype="html">
+        <source> «<x id="INTERPOLATION" equiv-text="{{ watchedGroup.name }}"/>» <x id="INTERPOLATION_1" equiv-text="{{ ['content', 'content_with_descendants', 'solution'].includes(permissions.canView).toString() | i18nSelect : {
+          true: 'can',
+          other: 'can\'t'
+        } }}"/> access this <x id="INTERPOLATION_2" equiv-text="{{ itemData.item.type | i18nSelect : {
+          Skill: 'skill',
+          other: 'activity'
+        } }}"/> </source><target state="new"> «<x id="INTERPOLATION" equiv-text="{{ watchedGroup.name }}"/>» <x id="INTERPOLATION_1" equiv-text="{{ ['content', 'content_with_descendants', 'solution'].includes(permissions.canView).toString() | i18nSelect : {
+          true: 'can',
+          other: 'can\'t'
+        } }}"/> access this <x id="INTERPOLATION_2" equiv-text="{{ itemData.item.type | i18nSelect : {
+          Skill: 'skill',
+          other: 'activity'
+        } }}"/> </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/item/components/item-permissions/item-permissions.component.html</context>
-          <context context-type="linenumber">10,21</context>
+          <context context-type="linenumber">9,20</context>
         </context-group>
       </trans-unit><trans-unit id="1633175305056804241" datatype="html">
         <source>You cannot watch this <x id="INTERPOLATION" equiv-text="{{ itemData.item.type | i18nSelect : {
@@ -1288,11 +1285,8 @@
             Skill: 'skill',
             other: 'activity'
           } }}"/> </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/item/components/item-permissions/item-permissions.component.html</context>
-          <context context-type="linenumber">25,29</context>
-        </context-group>
-      </trans-unit><trans-unit id="1519954996184640001" datatype="html">
+
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-permissions/item-permissions.component.html</context><context context-type="linenumber">23</context></context-group></trans-unit><trans-unit id="1519954996184640001" datatype="html">
         <source>Error</source><target state="translated">Erreur</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-children-edit/item-children-edit.component.html</context><context context-type="linenumber">88</context></context-group></trans-unit><trans-unit id="429958371655094287" datatype="html">
