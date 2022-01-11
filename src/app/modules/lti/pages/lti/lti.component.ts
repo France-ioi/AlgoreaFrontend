@@ -7,7 +7,7 @@ import { GetItemChildrenService, ItemChild } from 'src/app/modules/item/http-ser
 import { GetItemPathService } from 'src/app/modules/item/http-services/get-item-path.service';
 import { errorIsHTTPForbidden } from 'src/app/shared/helpers/errors';
 import { isNotNull } from 'src/app/shared/helpers/null-undefined-predicates';
-import { removeSubPathRedirectionAtInit, setRedirectToSubPathAtInit } from 'src/app/shared/helpers/redirect-to-sub-path-at-init';
+import { setRedirectToSubPathAtInit } from 'src/app/shared/helpers/redirect-to-sub-path-at-init';
 import { CheckLoginService } from 'src/app/shared/http-services/check-login.service';
 import { ResultActionsService } from 'src/app/shared/http-services/result-actions.service';
 import { mapToFetchState, readyData } from 'src/app/shared/operators/state';
@@ -122,16 +122,6 @@ export class LTIComponent implements OnDestroy {
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
-  }
-
-  restartProcess(): void {
-    combineLatest([
-      this.contentId$,
-      this.loginId$.pipe(filter(isNotNull)),
-    ]).subscribe(([ contentId, loginId ]) => {
-      removeSubPathRedirectionAtInit();
-      window.location.href = `./#/lti/${contentId}?${loginIdParam}=${loginId}`;
-    });
   }
 
   private getNavigationData(itemId: string): Observable<{ firstChild: ItemChild, path: string[], attemptId: string }> {
