@@ -68,7 +68,10 @@ export const taskLogDecoder = D.UnknownArray;
 export type TaskLog = D.TypeOf<typeof taskLogDecoder>;
 
 // Currently unused
-export type TaskMetaData = unknown;
+export const metadataDecoder = D.struct({
+  autoHeight: D.boolean,
+});
+export type TaskMetaData = D.TypeOf<typeof metadataDecoder>;
 export type TaskResources = unknown;
 
 export const openUrlParamsDecoder = D.union(

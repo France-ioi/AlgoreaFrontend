@@ -11,10 +11,10 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import { interval, merge, Observable } from 'rxjs';
-import { filter, map, pairwise, startWith, switchMap } from 'rxjs/operators';
+import { fromEvent, interval, merge, Observable, ReplaySubject } from 'rxjs';
+import { distinctUntilChanged, filter, map, pairwise, startWith, switchMap } from 'rxjs/operators';
 import { HOURS, SECONDS } from 'src/app/shared/helpers/duration';
-import { isNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
+import { isNotNull, isNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
 import { TaskConfig, ItemTaskService } from '../../services/item-task.service';
 import { mapToFetchState } from 'src/app/shared/operators/state';
 import { capitalize } from 'src/app/shared/helpers/case_conversion';
@@ -27,7 +27,7 @@ import { PermissionsInfo } from '../../helpers/item-permissions';
 import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
 
 const initialHeight = 0;
-const additionalHeightToPreventInnerScrollIssues = 40;
+const appMainSectionPaddingBottom = '6rem';
 const heightSyncInterval = 0.2*SECONDS;
 
 export interface TaskTab {
@@ -67,11 +67,24 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
   );
 
 
+  private computeIframeOffsetTop$ = new ReplaySubject<void>(1);
+  private iframeOffsetTop$ = merge(fromEvent(globalThis, 'resize'), this.computeIframeOffsetTop$).pipe(
+    map(() => (this.iframe ? this.iframe.nativeElement.getBoundingClientRect().top + globalThis.scrollY : null)),
+    filter(isNotNull),
+    distinctUntilChanged(),
+  );
   // Start updating the iframe height to match the task's height
-  iframeHeight$ = merge(
-    this.taskService.task$.pipe(switchMap(task => interval(heightSyncInterval).pipe(switchMap(() => task.getHeight())))),
-    this.taskService.display$.pipe(map(({ height }) => height), filter(isNotUndefined)),
-  ).pipe(map(height => height + additionalHeightToPreventInnerScrollIssues), startWith(initialHeight));
+  iframeHeight$ = this.taskService.task$.pipe(
+    switchMap(task => task.getMetaData()),
+    switchMap(({ autoHeight }) => {
+      if (autoHeight) return this.iframeOffsetTop$.pipe(map(top => `calc(100vh - ${top}px - ${appMainSectionPaddingBottom})`));
+      return merge(
+        this.taskService.task$.pipe(switchMap(task => interval(heightSyncInterval).pipe(switchMap(() => task.getHeight())))),
+        this.taskService.display$.pipe(map(({ height }) => height), filter(isNotUndefined)),
+      ).pipe(startWith(initialHeight), map(height => `${height}px`));
+    }),
+    distinctUntilChanged(),
+  );
 
   private subscription = this.taskService.saveAnswerAndStateInterval$
     .pipe(startWith({ success: true }), pairwise())
@@ -101,6 +114,7 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
 
   ngAfterViewChecked(): void {
     if (!this.iframe || this.taskService.initialized) return;
+    this.computeIframeOffsetTop$.next();
     this.taskService.initTask(this.iframe.nativeElement);
   }
 
@@ -121,6 +135,7 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
 
   ngOnDestroy(): void {
     if (this.actionFeedbackService.hasFeedback) this.actionFeedbackService.clear();
+    this.computeIframeOffsetTop$.complete();
     this.subscription.unsubscribe();
   }
 
