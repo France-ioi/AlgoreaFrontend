@@ -6,19 +6,17 @@
       [collapsible]="true"
       [collapsed]="true"
     >
-      <ng-container label-section i18n>
-        <ng-container *ngIf="itemData.item?.watchedGroup?.permissions as permissions; else noPermissionToWatchLabel">
-          «{{ watchedGroup.name }}»
-          {{ ['content', 'content_with_descendants', 'solution'].includes(permissions.canView).toString() | i18nSelect : {
-            true: 'can',
-            other: 'can\'t'
-          } }}
-          access this
-          {{ itemData.item.type | i18nSelect : {
-            Skill: 'skill',
-            other: 'activity'
-          } }}
-        </ng-container>
+      <ng-container *ngIf="itemData.item?.watchedGroup?.permissions as permissions; else noPermissionToWatchLabel" label-section i18n>
+        «{{ watchedGroup.name }}»
+        {{ ['content', 'content_with_descendants', 'solution'].includes(permissions.canView).toString() | i18nSelect : {
+          true: 'can',
+          other: 'can\'t'
+        } }}
+        access this
+        {{ itemData.item.type | i18nSelect : {
+          Skill: 'skill',
+          other: 'activity'
+        } }}
       </ng-container>
 
       <ng-template #noPermissionToWatchLabel>
