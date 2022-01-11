@@ -1,6 +1,6 @@
 import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { combineLatest, EMPTY, forkJoin, Observable, of } from 'rxjs';
+import { combineLatest, EMPTY, forkJoin, Observable } from 'rxjs';
 import { catchError, filter, map, shareReplay, switchMap } from 'rxjs/operators';
 import { ActivityNavTreeService } from 'src/app/core/services/navigation/item-nav-tree.service';
 import { GetItemChildrenService, ItemChild } from 'src/app/modules/item/http-services/get-item-children.service';
@@ -51,7 +51,10 @@ export class LTIComponent implements OnDestroy {
   );
 
   private isLoggedIn$ = this.loginId$.pipe(
-    switchMap(loginId => (loginId ? this.checkLoginService.check(loginId) : of(false))),
+    switchMap(loginId => {
+      if (!loginId) throw loginError;
+      return this.checkLoginService.check(loginId);
+    }),
     shareReplay(1),
   );
 
