@@ -1,6 +1,6 @@
 import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { combineLatest, EMPTY, forkJoin, Observable, of } from 'rxjs';
+import { combineLatest, EMPTY, forkJoin, Observable } from 'rxjs';
 import { catchError, filter, map, shareReplay, switchMap } from 'rxjs/operators';
 import { ActivityNavTreeService } from 'src/app/core/services/navigation/item-nav-tree.service';
 import { GetItemChildrenService, ItemChild } from 'src/app/modules/item/http-services/get-item-children.service';
@@ -56,11 +56,9 @@ export class LTIComponent implements OnDestroy {
     }),
   );
 
-  private isLoggedIn$ = combineLatest([ this.loginId$, this.userSession.userProfile$ ]).pipe(
-    switchMap(([ loginId, profile ]) => {
-      if (profile.tempUser) return of(false);
-      return this.checkLoginService.check(loginId);
-    }),
+  private isLoggedIn$ = this.loginId$.pipe(
+    switchMap(loginId => this.checkLoginService.check(loginId)),
+    shareReplay(1),
   );
 
   readonly navigationData$ = combineLatest([ this.isLoggedIn$, this.isRedirection$ ]).pipe(
@@ -105,7 +103,6 @@ export class LTIComponent implements OnDestroy {
       const itemRoute = fullItemRoute('activity', firstChild.id, path, { parentAttemptId: attemptId });
       this.itemRouter.navigateTo(itemRoute, { navExtras: { replaceUrl: true } });
     }),
-
   ];
 
   constructor(
