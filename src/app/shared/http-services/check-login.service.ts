@@ -17,7 +17,7 @@ export class CheckLoginService {
 
   constructor(private http: HttpClient) {}
 
-  check(loginId: number): Observable<boolean> {
+  check(loginId: string): Observable<boolean> {
     const params = new HttpParams({ fromObject: { login_id: loginId } });
 
     return this.http

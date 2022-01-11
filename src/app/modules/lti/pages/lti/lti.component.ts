@@ -1,6 +1,6 @@
 import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { combineLatest, EMPTY, forkJoin, Observable } from 'rxjs';
+import { combineLatest, EMPTY, forkJoin, Observable, of } from 'rxjs';
 import { catchError, filter, map, shareReplay, switchMap } from 'rxjs/operators';
 import { ActivityNavTreeService } from 'src/app/core/services/navigation/item-nav-tree.service';
 import { GetItemChildrenService, ItemChild } from 'src/app/modules/item/http-services/get-item-children.service';
@@ -36,13 +36,7 @@ const loginIdParam = 'user_id';
 })
 export class LTIComponent implements OnDestroy {
 
-  private loginId$ = this.activatedRoute.queryParamMap.pipe(
-    map(queryParams => {
-      const loginId = Number(queryParams.get(loginIdParam) ?? NaN);
-      if (Number.isNaN(loginId)) throw new Error('login id must be a number');
-      return loginId;
-    }),
-  );
+  private loginId$ = this.activatedRoute.queryParamMap.pipe(map(queryParams => queryParams.get(loginIdParam)));
 
   private isRedirection$ = this.activatedRoute.queryParamMap.pipe(
     map(queryParams => queryParams.has(isRedirectionParam)),
@@ -57,7 +51,7 @@ export class LTIComponent implements OnDestroy {
   );
 
   private isLoggedIn$ = this.loginId$.pipe(
-    switchMap(loginId => this.checkLoginService.check(loginId)),
+    switchMap(loginId => (loginId ? this.checkLoginService.check(loginId) : of(false))),
     shareReplay(1),
   );
 
