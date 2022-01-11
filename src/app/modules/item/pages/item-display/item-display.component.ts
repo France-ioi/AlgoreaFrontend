@@ -12,7 +12,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { fromEvent, interval, merge, Observable, ReplaySubject } from 'rxjs';
-import { distinctUntilChanged, filter, map, pairwise, startWith, switchMap } from 'rxjs/operators';
+import { delay, distinctUntilChanged, filter, map, pairwise, startWith, switchMap } from 'rxjs/operators';
 import { HOURS, SECONDS } from 'src/app/shared/helpers/duration';
 import { isNotNull, isNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
 import { TaskConfig, ItemTaskService } from '../../services/item-task.service';
@@ -25,6 +25,7 @@ import { FullItemRoute } from 'src/app/shared/routing/item-route';
 import { DomSanitizer } from '@angular/platform-browser';
 import { PermissionsInfo } from '../../helpers/item-permissions';
 import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
+import { LayoutService } from 'src/app/shared/services/layout.service';
 
 const initialHeight = 0;
 const appMainSectionPaddingBottom = '6rem';
@@ -68,7 +69,11 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
 
 
   private computeIframeOffsetTop$ = new ReplaySubject<void>(1);
-  private iframeOffsetTop$ = merge(fromEvent(globalThis, 'resize'), this.computeIframeOffsetTop$).pipe(
+  private iframeOffsetTop$ = merge(
+    fromEvent(globalThis, 'resize'),
+    this.layoutService.fullFrameContent$.pipe(delay(1000)), // time for the animation be complete
+    this.computeIframeOffsetTop$,
+  ).pipe(
     map(() => (this.iframe ? this.iframe.nativeElement.getBoundingClientRect().top + globalThis.scrollY : null)),
     filter(isNotNull),
     distinctUntilChanged(),
@@ -105,6 +110,7 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
     private taskService: ItemTaskService,
     private sanitizer: DomSanitizer,
     private actionFeedbackService: ActionFeedbackService,
+    private layoutService: LayoutService,
   ) {}
 
   ngOnInit(): void {

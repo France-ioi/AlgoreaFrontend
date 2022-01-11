@@ -25,7 +25,7 @@
       </ng-template>
     </ng-container>
   </div>
-  <div class="iframe-container" [style.height]="iframeHeight$ | async" *ngIf="!state.isError">
+  <div class="iframe-container" *ngIf="!state.isError">
     <div class="saving-answer" *ngIf="savingAnswer">
       <p class="saving-answer-message">
         <span i18n>Saving answer...</span>
