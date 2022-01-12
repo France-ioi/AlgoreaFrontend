@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { GroupLeaveService } from '../../../../core/http-services/group-leave.service';
 import { ActionFeedbackService } from '../../../../shared/services/action-feedback.service';
+import { Group } from '../../http-services/get-group-by-id.service';
 
 @Component({
   selector: 'alg-group-leave',
@@ -10,8 +11,7 @@ import { ActionFeedbackService } from '../../../../shared/services/action-feedba
 export class GroupLeaveComponent {
   @Output() leave = new EventEmitter<void>();
 
-  @Input() groupId?: string;
-  @Input() locked = false;
+  @Input() group?: Group;
 
   constructor(
     private groupLeaveService: GroupLeaveService,
@@ -20,11 +20,11 @@ export class GroupLeaveComponent {
   }
 
   leaveGroup(): void {
-    if (!this.groupId) {
-      throw new Error('Unexpected: missed group id');
+    if (!this.group) {
+      throw new Error('Unexpected: missed group');
     }
 
-    this.groupLeaveService.leave(this.groupId).subscribe({
+    this.groupLeaveService.leave(this.group.id).subscribe({
       next: () => {
         this.actionFeedbackService.success($localize`You've left group`);
         this.leave.emit();
