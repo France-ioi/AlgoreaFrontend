@@ -1,9 +1,11 @@
-<p i18n>
-  <ng-container *ngIf="locked; else allow">
+<p>
+  <ng-container *ngIf="locked; else allow" i18n>
     You are currently not allowed to leave this group.
   </ng-container>
   <ng-template #allow>
-    You can freely leave this group. Note that you may lose access to content if this group was granting some permissions to its members.
+    <ng-container i18n>
+      You can freely leave this group. Note that you may lose access to content if this group was granting some permissions to its members.
+    </ng-container>
   </ng-template>
 </p>
 
