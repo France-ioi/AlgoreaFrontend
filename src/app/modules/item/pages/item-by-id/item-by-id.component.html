@@ -4,11 +4,11 @@
 <alg-loading *ngIf="state.isFetching"></alg-loading>
 
 <ng-container *ngIf="state.isError">
-  <p *ngIf="$any(state).error && ($any(state).error.status === 403 || $any(state).error.status === 404); else unknownError" i18n>
+  <p class="alg-error-message" *ngIf="$any(state).error && ($any(state).error.status === 403 || $any(state).error.status === 404); else unknownError" i18n>
     This content does not exist or you are not allowed to view it.
   </p>
   <ng-template #unknownError><p i18n>Error while loading the item.</p></ng-template>
-  <p [style.visibility]="(backToHome.isActive)?'hidden':'visible'">
+  <p class="alg-error-message" [style.visibility]="(backToHome.isActive)?'hidden':'visible'">
     <span i18n>Go back to the </span>
     <a
       routerLink="/"
@@ -19,5 +19,4 @@
       home page
     </a>
   </p>
-  <p><a [routerLink]="" (click)="reloadContent()" i18n>Retry loading it</a></p>
 </ng-container>
