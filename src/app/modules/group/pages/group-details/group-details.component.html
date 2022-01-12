@@ -84,10 +84,16 @@
   <alg-error
     *ngIf="state.isError"
     class="dark"
-    i18n-message message="Error while loading the group info"
-    [showRefreshButton]="true"
+    [showRefreshButton]="$any(state.error).status !== 403"
     refreshButtonType="refresh"
     (refresh)="onGroupRefreshRequired()"
-  ></alg-error>
+  >
+    <ng-container *ngIf="$any(state.error).status === 403; else otherError;" i18n>
+      You are not allowed to view this group page.
+    </ng-container>
+    <ng-template #otherError>
+      <ng-container i18n>Error while loading the group info</ng-container>
+    </ng-template>
+  </alg-error>
 
 </ng-container>
