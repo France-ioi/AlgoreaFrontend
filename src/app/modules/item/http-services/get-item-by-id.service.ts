@@ -45,15 +45,10 @@ export const itemDecoder = pipe(
     D.partial({
       url: D.nullable(D.string),
       usesApi: D.nullable(D.boolean),
-      watchedGroup: pipe(
-        D.struct({}),
-        D.intersect(
-          D.partial({
-            averageScore: D.number,
-            permissions: permissionsDecoder,
-          })
-        )
-      ),
+      watchedGroup: D.partial({
+        averageScore: D.number,
+        permissions: permissionsDecoder,
+      }),
     })
   )
 );
