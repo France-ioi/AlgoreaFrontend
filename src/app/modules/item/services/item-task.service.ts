@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { animationFrames, EMPTY, merge, Observable, throwError } from 'rxjs';
-import { map, mapTo, shareReplay, switchMap, take, tap } from 'rxjs/operators';
+import { animationFrames, combineLatest, EMPTY, merge, Observable, Subject, throwError } from 'rxjs';
+import { catchError, map, mapTo, shareReplay, switchMap, take, tap } from 'rxjs/operators';
 import { LocaleService } from 'src/app/core/services/localeService';
 import { ActivityNavTreeService } from 'src/app/core/services/navigation/item-nav-tree.service';
 import { openNewTab, replaceWindowUrl } from 'src/app/shared/helpers/url';
 import { FullItemRoute, itemRoute } from 'src/app/shared/routing/item-route';
 import { ItemRouter } from 'src/app/shared/routing/item-router';
+import { AskHintService } from '../http-services/ask-hint.service';
 import { Answer } from '../http-services/get-answer.service';
 import { Task, TaskPlatform } from '../task-communication/task-proxy';
 import { ItemTaskAnswerService } from './item-task-answer.service';
@@ -24,6 +25,7 @@ export class ItemTaskService {
   readonly unknownError$ = merge(this.answerService.error$, this.viewsService.error$).pipe(shareReplay(1));
   readonly initError$ = this.initService.initError$.pipe(shareReplay(1));
   readonly urlError$ = this.initService.urlError$.pipe(shareReplay(1));
+  readonly hintError$ = new Subject<void>();
 
   private error$ = merge(
     this.initError$,
@@ -50,6 +52,7 @@ export class ItemTaskService {
   );
 
   private readOnly = false;
+  private itemId?: string;
   private attemptId?: string;
 
   constructor(
@@ -60,9 +63,11 @@ export class ItemTaskService {
     private activityNavTreeService: ActivityNavTreeService,
     private router: Router,
     private localeService: LocaleService,
+    private askHintService: AskHintService,
   ) {}
 
   configure(route: FullItemRoute, url: string, attemptId: string, options: TaskConfig): void {
+    this.itemId = route.id;
     this.readOnly = options.readOnly;
     this.attemptId = attemptId;
     this.initService.configure(route, url, attemptId, options.formerAnswer, options.locale, options.readOnly);
@@ -105,9 +110,12 @@ export class ItemTaskService {
         if ('path' in params) return this.navigateToItem(params.path, params.newTab);
         return this.navigate(params.url, params.newTab);
       },
-      askHint: () => {
-        throw new Error('unimplemented method "askHint"');
-      },
+      askHint: (hintToken: string) => combineLatest([ this.askHint(hintToken), this.task$ ]).pipe(
+        take(1),
+        switchMap(([ taskToken, task ]) => task.updateToken(taskToken)),
+        map(() => undefined),
+        shareReplay(1),
+      ),
       log: (messages: string[]) => {
         // eslint-disable-next-line no-console
         console.log(...messages);
@@ -163,5 +171,20 @@ export class ItemTaskService {
   private navigate(href: string, newTab = false): void {
     if (newTab) openNewTab(href, this.localeService.currentLang);
     else replaceWindowUrl(href, this.localeService.currentLang);
+  }
+
+  private askHint(hintToken: string): Observable<string> {
+    const { itemId, attemptId } = this;
+    if (!itemId) throw new Error('cannot ask hint without item id');
+    if (!attemptId) throw new Error('cannot ask hint without attempt id');
+
+    return this.initService.taskToken$.pipe(
+      switchMap(taskToken => this.askHintService.ask(itemId, attemptId, taskToken, hintToken)),
+      map(data => data.taskToken),
+      catchError(() => {
+        this.hintError$.next();
+        return EMPTY;
+      }),
+    );
   }
 }
