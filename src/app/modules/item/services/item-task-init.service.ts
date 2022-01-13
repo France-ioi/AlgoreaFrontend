@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { fromEvent, Observable, of, ReplaySubject, Subject, TimeoutError } from 'rxjs';
-import { catchError, delayWhen, filter, map, mapTo, mergeWith, shareReplay, switchMap, timeout, withLatestFrom } from 'rxjs/operators';
+import { fromEvent, Observable, of, ReplaySubject, TimeoutError } from 'rxjs';
+import { catchError, delayWhen, filter, map, mapTo, shareReplay, switchMap, timeout, withLatestFrom } from 'rxjs/operators';
 import { appConfig } from 'src/app/shared/helpers/config';
 import { SECONDS } from 'src/app/shared/helpers/duration';
 import { FullItemRoute } from 'src/app/shared/routing/item-route';
@@ -24,13 +24,11 @@ export interface ItemTaskConfig {
 export class ItemTaskInitService implements OnDestroy {
   private configFromItem$ = new ReplaySubject<ItemTaskConfig>(1);
   private configFromIframe$ = new ReplaySubject<{ iframe: HTMLIFrameElement, bindPlatform(task: Task): void }>(1);
-  private taskToken = new Subject<string>();
 
   readonly config$ = this.configFromItem$.asObservable();
   readonly iframe$ = this.configFromIframe$.pipe(map(config => config.iframe));
   readonly taskToken$: Observable<TaskToken> = this.config$.pipe(
     switchMap(({ attemptId, route }) => this.taskTokenService.generate(route.id, attemptId)),
-    mergeWith(this.taskToken),
     shareReplay(1),
   );
 
