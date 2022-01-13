@@ -198,6 +198,7 @@ export class ItemTaskAnswerService implements OnDestroy {
           startWith({ saving: true }),
         );
       }),
+      defaultIfEmpty({ saving: false }), // when a timeout is caught, the observable is empty
       shareReplay(1),
     );
   }
