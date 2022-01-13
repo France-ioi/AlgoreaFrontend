@@ -2,6 +2,7 @@ import {
   AfterViewChecked,
   Component,
   ElementRef,
+  EventEmitter,
   Input,
   OnChanges,
   OnDestroy,
@@ -10,10 +11,10 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import { EMPTY, interval, merge, Observable, Subject } from 'rxjs';
-import { endWith, filter, map, pairwise, shareReplay, startWith, switchMap, takeUntil } from 'rxjs/operators';
+import { fromEvent, interval, merge, Observable, ReplaySubject } from 'rxjs';
+import { delay, distinctUntilChanged, filter, map, pairwise, startWith, switchMap } from 'rxjs/operators';
 import { HOURS, SECONDS } from 'src/app/shared/helpers/duration';
-import { isNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
+import { isNotNull, isNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
 import { TaskConfig, ItemTaskService } from '../../services/item-task.service';
 import { mapToFetchState } from 'src/app/shared/operators/state';
 import { capitalize } from 'src/app/shared/helpers/case_conversion';
@@ -24,9 +25,10 @@ import { FullItemRoute } from 'src/app/shared/routing/item-route';
 import { DomSanitizer } from '@angular/platform-browser';
 import { PermissionsInfo } from '../../helpers/item-permissions';
 import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
+import { LayoutService } from 'src/app/shared/services/layout.service';
 
 const initialHeight = 0;
-const additionalHeightToPreventInnerScrollIssues = 40;
+const appMainSectionPaddingBottom = '6rem';
 const heightSyncInterval = 0.2*SECONDS;
 
 export interface TaskTab {
@@ -47,8 +49,10 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
   @Input() attemptId!: string;
   @Input() view?: TaskTab['view'];
   @Input() taskConfig: TaskConfig = { readOnly: false, formerAnswer: null };
+  @Input() savingAnswer = false;
 
   @Output() scoreChange = this.taskService.scoreChange$;
+  @Output() skipSave = new EventEmitter<void>();
 
   @ViewChild('iframe') iframe?: ElementRef<HTMLIFrameElement>;
 
@@ -64,15 +68,29 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
   );
 
 
+  private computeIframeOffsetTop$ = new ReplaySubject<void>(1);
+  private iframeOffsetTop$ = merge(
+    fromEvent(globalThis, 'resize'),
+    this.layoutService.fullFrameContent$.pipe(delay(1000)), // time for the animation be complete
+    this.computeIframeOffsetTop$,
+  ).pipe(
+    map(() => (this.iframe ? this.iframe.nativeElement.getBoundingClientRect().top + globalThis.scrollY : null)),
+    filter(isNotNull),
+    distinctUntilChanged(),
+  );
   // Start updating the iframe height to match the task's height
-  iframeHeight$ = merge(
-    this.taskService.task$.pipe(switchMap(task => interval(heightSyncInterval).pipe(switchMap(() => task.getHeight())))),
-    this.taskService.display$.pipe(map(({ height }) => height), filter(isNotUndefined)),
-  ).pipe(map(height => height + additionalHeightToPreventInnerScrollIssues), startWith(initialHeight));
+  iframeHeight$ = this.taskService.task$.pipe(
+    switchMap(task => task.getMetaData()),
+    switchMap(({ autoHeight }) => {
+      if (autoHeight) return this.iframeOffsetTop$.pipe(map(top => `calc(100vh - ${top}px - ${appMainSectionPaddingBottom})`));
+      return merge(
+        this.taskService.task$.pipe(switchMap(task => interval(heightSyncInterval).pipe(switchMap(() => task.getHeight())))),
+        this.taskService.display$.pipe(map(({ height }) => height), filter(isNotUndefined)),
+      ).pipe(startWith(initialHeight), map(height => `${height}px`));
+    }),
+    distinctUntilChanged(),
+  );
 
-  savingAnswerAndState = false;
-
-  private skipSave$ = new Subject<void>();
   private subscription = this.taskService.saveAnswerAndStateInterval$
     .pipe(startWith({ success: true }), pairwise())
     .subscribe(([ previous, next ]) => {
@@ -92,6 +110,7 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
     private taskService: ItemTaskService,
     private sanitizer: DomSanitizer,
     private actionFeedbackService: ActionFeedbackService,
+    private layoutService: LayoutService,
   ) {}
 
   ngOnInit(): void {
@@ -101,6 +120,7 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
 
   ngAfterViewChecked(): void {
     if (!this.iframe || this.taskService.initialized) return;
+    this.computeIframeOffsetTop$.next();
     this.taskService.initTask(this.iframe.nativeElement);
   }
 
@@ -121,24 +141,13 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
 
   ngOnDestroy(): void {
     if (this.actionFeedbackService.hasFeedback) this.actionFeedbackService.clear();
+    this.computeIframeOffsetTop$.complete();
     this.subscription.unsubscribe();
   }
 
   saveAnswerAndState(): Observable<{ saving: boolean }> {
     this.subscription.unsubscribe();
-    if (this.taskConfig.readOnly) return EMPTY;
-
-    const save$ = this.taskService.saveAnswerAndState().pipe(
-      takeUntil(this.skipSave$),
-      endWith({ saving: false }),
-      shareReplay(1),
-    );
-    save$.subscribe(({ saving }) => this.savingAnswerAndState = saving);
-    return save$;
-  }
-
-  skipSave(): void {
-    this.skipSave$.next();
+    return this.taskService.saveAnswerAndState();
   }
 
   private getTabNameByView(view: string): string {

@@ -15,6 +15,9 @@
     position: relative;
     min-height: 12rem;
     background-color: white;
+    iframe {
+      display: block;
+    }
   }
 
   .loading {

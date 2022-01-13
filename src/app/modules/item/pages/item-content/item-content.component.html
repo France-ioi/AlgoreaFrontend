@@ -18,9 +18,11 @@
             [attemptId]="attemptId"
             [view]="taskView"
             [taskConfig]="taskConfig"
+            [savingAnswer]="savingAnswer"
             (viewChange)="taskViewChange.emit($event)"
             (tabsChange)="taskTabsChange.emit($event)"
             (scoreChange)="scoreChange.emit($event)"
+            (skipSave)="skipSave.emit()"
           ></alg-item-display>
         </ng-container>
 

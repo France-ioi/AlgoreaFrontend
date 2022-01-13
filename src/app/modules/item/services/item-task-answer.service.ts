@@ -188,7 +188,8 @@ export class ItemTaskAnswerService implements OnDestroy {
         current: forkJoin({ answer: task.getAnswer(), state: task.getState() }),
       })),
 
-      switchMap(({ saved, current, config: { route, attemptId } }) => {
+      switchMap(({ saved, current, config: { route, attemptId, readOnly } }) => {
+        if (readOnly) return of({ saving: false });
         const currentIsSaved = saved.answer === current.answer && saved.state === current.state;
         if (currentIsSaved) return of({ saving: false });
 

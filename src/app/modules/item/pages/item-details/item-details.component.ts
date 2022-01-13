@@ -7,8 +7,19 @@ import { LayoutService } from '../../../../shared/services/layout.service';
 import { RouterLinkActive } from '@angular/router';
 import { TaskTab } from '../item-display/item-display.component';
 import { Mode, ModeService } from 'src/app/shared/services/mode.service';
-import { combineLatest, fromEvent, Observable, of, Subject } from 'rxjs';
-import { catchError, distinctUntilChanged, endWith, filter, last, map, shareReplay, switchMap, take, takeUntil } from 'rxjs/operators';
+import { combineLatest, fromEvent, merge, Observable, of, Subject } from 'rxjs';
+import {
+  catchError,
+  distinctUntilChanged,
+  filter,
+  map,
+  mapTo,
+  mergeWith,
+  shareReplay,
+  switchMap,
+  take,
+  takeUntil,
+} from 'rxjs/operators';
 import { TaskConfig } from '../../services/item-task.service';
 import { BeforeUnloadComponent } from 'src/app/shared/guards/before-unload-guard';
 import { ItemContentComponent } from '../item-content/item-content.component';
@@ -69,11 +80,25 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent {
     this.taskReadOnly$,
   ]).pipe(map(([ formerAnswer, readOnly ]) => ({ readOnly, formerAnswer })));
 
-  // When navigating elsewhere but the current answer is unsaved, navigation is blocked until the save is performed.
-  // savingAnswer indicates the loading state while blocking navigation because of the save request.
-  savingAnswer = false;
   // Any value emitted in skipBeforeUnload$ resumes navigation WITHOUT cancelling the save request.
   private skipBeforeUnload$ = new Subject<void>();
+  private retryBeforeUnload$ = new Subject<void>();
+  private beforeUnload$ = new Subject<void>();
+  private saveBeforeUnload$: Observable<{ saving: boolean, error?: Error }> = merge(this.beforeUnload$, this.retryBeforeUnload$).pipe(
+    switchMap(() => {
+      if (!this.itemContentComponent?.itemDisplayComponent) return of({ saving: false });
+      return this.itemContentComponent.itemDisplayComponent.saveAnswerAndState().pipe(
+        catchError(() => of({ saving: false, error: new Error('fail') })),
+      );
+    }),
+    takeUntil(this.skipBeforeUnload$),
+    mergeWith(this.skipBeforeUnload$.pipe(mapTo({ saving: false }))),
+    shareReplay(1),
+  );
+  // When navigating elsewhere but the current answer is unsaved, navigation is blocked until the save is performed.
+  // savingAnswer$ indicates the loading state while blocking navigation because of the save request.
+  readonly savingAnswer$ = this.saveBeforeUnload$.pipe(map(({ saving }) => saving));
+  readonly saveBeforeUnloadError$ = this.saveBeforeUnload$.pipe(map(({ error }) => error));
 
   private subscriptions = [
     this.itemDataSource.state$.subscribe(state => {
@@ -116,15 +141,16 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent {
   }
 
   beforeUnload(): Observable<boolean> {
-    if (!this.itemContentComponent?.itemDisplayComponent) return of(true);
-    const save$ = this.itemContentComponent.itemDisplayComponent.saveAnswerAndState().pipe(
-      takeUntil(this.skipBeforeUnload$),
-      endWith({ saving: false }),
-      shareReplay(1),
+    this.beforeUnload$.next();
+    return this.saveBeforeUnload$.pipe(
+      map(({ saving, error }) => !saving && !error),
+      filter(saved => saved),
+      take(1),
     );
-    save$.subscribe(({ saving }) => this.savingAnswer = saving);
-    const canUnload$ = save$.pipe(map(({ saving }) => !saving), last(), catchError(() => of(true)));
-    return canUnload$;
+  }
+
+  retryBeforeUnload(): void {
+    this.retryBeforeUnload$.next();
   }
 
   skipBeforeUnload(): void {
