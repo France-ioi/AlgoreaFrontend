@@ -8,18 +8,7 @@ import { RouterLinkActive } from '@angular/router';
 import { TaskTab } from '../item-display/item-display.component';
 import { Mode, ModeService } from 'src/app/shared/services/mode.service';
 import { combineLatest, fromEvent, merge, Observable, of, Subject } from 'rxjs';
-import {
-  catchError,
-  distinctUntilChanged,
-  filter,
-  map,
-  mapTo,
-  mergeWith,
-  shareReplay,
-  switchMap,
-  take,
-  takeUntil,
-} from 'rxjs/operators';
+import { catchError, distinctUntilChanged, filter, map, mergeWith, shareReplay, switchMap, take, takeUntil } from 'rxjs/operators';
 import { TaskConfig } from '../../services/item-task.service';
 import { BeforeUnloadComponent } from 'src/app/shared/guards/before-unload-guard';
 import { ItemContentComponent } from '../item-content/item-content.component';
@@ -92,7 +81,7 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent {
       );
     }),
     takeUntil(this.skipBeforeUnload$),
-    mergeWith(this.skipBeforeUnload$.pipe(mapTo({ saving: false }))),
+    mergeWith(this.skipBeforeUnload$.pipe(map(() => ({ saving: false })))),
     shareReplay(1),
   );
   // When navigating elsewhere but the current answer is unsaved, navigation is blocked until the save is performed.
