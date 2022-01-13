@@ -56,17 +56,17 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     itemId: string,
     targetGroupId: string,
   } = {
-    itemId: '',
-    targetGroupId: '',
-    permissions: {
-      canView: 'none',
-      canGrantView: 'none',
-      canWatch: 'none',
-      canEdit: 'none',
-      canMakeSessionOfficial: false,
-      isOwner: true,
-    }
-  };
+      itemId: '',
+      targetGroupId: '',
+      permissions: {
+        canView: 'none',
+        canGrantView: 'none',
+        canWatch: 'none',
+        canEdit: 'none',
+        canMakeSessionOfficial: false,
+        isOwner: true,
+      }
+    };
 
   progressOverlay?: {
     progress: TeamUserProgress,

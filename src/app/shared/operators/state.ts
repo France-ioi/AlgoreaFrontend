@@ -55,6 +55,6 @@ export function mapStateData<T, U>(dataMapper: (data: T) => U): OperatorFunction
  */
 export function mapErrorToState<T>(): OperatorFunction<FetchState<T>,FetchState<T>> {
   return pipe(
-    catchError(e => of(errorState(e))),
+    catchError(e => of(errorState(e instanceof Error ? e : new Error('unknown error')))),
   );
 }

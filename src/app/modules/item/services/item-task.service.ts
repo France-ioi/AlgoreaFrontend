@@ -141,12 +141,12 @@ export class ItemTaskService {
       tap(nav => {
         if (nav) nav();
       }),
-      mapTo(undefined),
+      map(() => undefined),
     );
   }
 
   private scrollTop(): Observable<void> {
-    return animationFrames().pipe(take(1), tap(() => window.scrollTo({ behavior: 'smooth', top: 0 })), mapTo(undefined));
+    return animationFrames().pipe(take(1), tap(() => window.scrollTo({ behavior: 'smooth', top: 0 })), map(() => undefined));
   }
 
   private navigateToItem(path: string, newTab = false): void {

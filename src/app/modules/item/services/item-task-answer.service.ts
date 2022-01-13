@@ -6,11 +6,11 @@ import {
   delayWhen,
   distinctUntilChanged,
   filter,
+  map,
   mapTo,
   shareReplay,
   startWith,
   switchMap,
-  switchMapTo,
   take,
   takeUntil,
   timeout,
@@ -73,20 +73,20 @@ export class ItemTaskAnswerService implements OnDestroy {
   private canStartSaveInterval$: Observable<void> = this.config$.pipe(
     take(1),
     filter(({ readOnly }) => !readOnly),
-    mapTo(undefined),
+    map(() => undefined),
     delayWhen(() => combineLatest([ this.saved$, this.initializedTaskState$, this.initializedTaskAnswer$ ])),
   );
 
   private refreshAnswerAndStatePeriod = Math.max(answerAndStateSaveInterval, (window.taskSaveIntervalInSec ?? 0)*SECONDS);
   private answerOrStateChange$ = interval(this.refreshAnswerAndStatePeriod).pipe(
     takeUntil(this.destroyed$),
-    switchMapTo(this.task$),
+    switchMap(() => this.task$),
     switchMap(task => forkJoin({ answer: task.getAnswer(), state: task.getState() })),
     distinctUntilChanged((a, b) => a.answer === b.answer && a.state === b.state),
   );
 
   private autoSaveInterval$: Observable<{ answer: string, state: string } | Error> = this.canStartSaveInterval$.pipe(
-    switchMapTo(this.saved$),
+    switchMap(() => this.saved$),
     repeatLatestWhen(this.saveError$),
     switchMap(saved => this.answerOrStateChange$.pipe(
       filter(current => current.answer !== saved.answer || current.state !== saved.state),
@@ -94,19 +94,23 @@ export class ItemTaskAnswerService implements OnDestroy {
     )),
     withLatestFrom(this.config$),
     switchMap(([ current, { route, attemptId }]) => this.currentAnswerService.update(route.id, attemptId, current).pipe(
-      mapTo(current),
+      map(() => current),
       catchError(() => of(new Error('auto save failed'))),
     )),
   );
 
   readonly saveAnswerAndStateInterval$ = merge(
-    this.saved$.pipe(mapTo({ success: true })),
-    this.saveError$.pipe(mapTo({ success: false })),
+    this.saved$.pipe(map(() => ({ success: true }))),
+    this.saveError$.pipe(map(() => ({ success: false }))),
   );
 
   private subscriptions = [
-    this.initializedTaskAnswer$.subscribe({ error: err => this.errorSubject.next(err) }),
-    this.initializedTaskState$.subscribe({ error: err => this.errorSubject.next(err) }),
+    this.initializedTaskAnswer$.subscribe({
+      error: err => this.errorSubject.next(err instanceof Error ? err : new Error('unknown error')),
+    }),
+    this.initializedTaskState$.subscribe({
+      error: err => this.errorSubject.next(err instanceof Error ? err : new Error('unknown error')),
+    }),
     this.initialAnswer$
       .subscribe(initial => this.saved$.next({ answer: initial?.answer ?? '', state: initial?.state ?? '' })),
     this.autoSaveInterval$.subscribe(savedOrError => {
@@ -190,7 +194,7 @@ export class ItemTaskAnswerService implements OnDestroy {
         if (currentIsSaved) return of({ saving: false });
 
         return this.currentAnswerService.update(route.id, attemptId, current).pipe(
-          mapTo({ saving: false }),
+          map(() => ({ saving: false })),
           startWith({ saving: true }),
         );
       }),
@@ -209,7 +213,7 @@ export class ItemTaskAnswerService implements OnDestroy {
       switchMap(() => {
         if (!formerAnswer) return of(null);
         const body = { answer: formerAnswer.answer ?? '', state: formerAnswer.state ?? '' };
-        return this.currentAnswerService.update(itemId, attemptId, body).pipe(mapTo(formerAnswer));
+        return this.currentAnswerService.update(itemId, attemptId, body).pipe(map(() => formerAnswer));
       }),
     );
   }
