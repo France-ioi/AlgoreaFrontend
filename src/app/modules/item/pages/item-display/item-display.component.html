@@ -25,7 +25,7 @@
       </ng-template>
     </ng-container>
   </div>
-  <div class="iframe-container" [style.height.px]="iframeHeight$ | async" *ngIf="!state.isError">
+  <div class="iframe-container" *ngIf="!state.isError">
     <div class="saving-answer" *ngIf="savingAnswer">
       <p class="saving-answer-message">
         <span i18n>Saving answer...</span>
@@ -33,7 +33,7 @@
         <p-button type="button" (click)="skipSave.emit()" i18n-label label="Skip"></p-button>
       </p>
     </div>
-    <iframe *ngIf="iframeSrc$ | async as iframeSrc" [style.height.px]="iframeHeight$ | async" #iframe [src]="iframeSrc"></iframe>
+    <iframe *ngIf="iframeSrc$ | async as iframeSrc" [style.height]="iframeHeight$ | async" #iframe [src]="iframeSrc"></iframe>
     <div *ngIf="state.isFetching" class="loading">
       <alg-loading></alg-loading>
     </div>
