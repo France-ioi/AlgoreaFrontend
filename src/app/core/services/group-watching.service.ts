@@ -40,10 +40,10 @@ export class GroupWatchingService implements OnDestroy {
 
   watchedGroup$ = this.watchedGroupParams.pipe(
     withLatestFrom(this.cachedGroupInfo),
-    switchMap(([ id, cachedGroup ]) => {
-      if (id === null) return of(null);
-      if (cachedGroup && id.groupId === cachedGroup.route.id) return of(cachedGroup);
-      return id.isUser ? this.fetchUser(id.groupId) : this.fetchGroup(id.groupId);
+    switchMap(([ watchedGroupParams, cachedGroup ]) => {
+      if (watchedGroupParams === null) return of(null);
+      if (cachedGroup && watchedGroupParams.groupId === cachedGroup.route.id) return of(cachedGroup);
+      return watchedGroupParams.isUser ? this.fetchUser(watchedGroupParams.groupId) : this.fetchGroup(watchedGroupParams.groupId);
     }),
     shareReplay(1),
   );
