@@ -29,8 +29,7 @@
 
     <alg-user-progress-details
       [canEditPermissions]="state.data?.can_access"
-      [progress]="progressOverlay?.progress"
-      [target]="progressOverlay?.target"
+      [progressData]="progressOverlay"
       (hide)="hideProgressDetail()"
       (editPermissions)="onAccessPermissions()"
     ></alg-user-progress-details>

@@ -22,6 +22,7 @@ import { typeCategoryOfItem } from '../../../../shared/helpers/item-type';
 import { ItemRouter } from '../../../../shared/routing/item-router';
 import { GroupRouter } from '../../../../shared/routing/group-router';
 import { rawGroupRoute } from '../../../../shared/routing/group-route';
+import { ProgressData } from '../../components/user-progress-details/user-progress-details.component';
 
 interface Data {
   type: TypeFilter,
@@ -68,15 +69,7 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
       }
     };
 
-  progressOverlay?: {
-    progress: TeamUserProgress,
-    target: Element,
-    accessPermissions: {
-      title: string,
-      groupId: string,
-      itemId: string,
-    },
-  };
+  progressOverlay?: ProgressData;
 
   dialog: 'loading'|'opened'|'closed' = 'closed';
   dialogTitle = '';
@@ -144,6 +137,7 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
   }
 
   showProgressDetail(target: HTMLElement, userProgress: TeamUserProgress, row: Data['rows'][number], col: Data['items'][number]): void {
+    if (this.progressOverlay?.target === target) return;
     this.progressOverlay = {
       accessPermissions: {
         title: row.header,
