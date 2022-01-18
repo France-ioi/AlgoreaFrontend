@@ -1,80 +1,68 @@
-import { AfterViewInit, OnDestroy, SimpleChanges } from '@angular/core';
+import { AfterViewInit, SimpleChanges } from '@angular/core';
 import { Component, EventEmitter, Input, Output, ViewChild, OnChanges } from '@angular/core';
 import { OverlayPanel } from 'primeng/overlaypanel';
-import { animationFrames, merge, ReplaySubject, Subscription } from 'rxjs';
-import { filter, map, startWith, switchMap, take, withLatestFrom } from 'rxjs/operators';
-import { ensureDefined } from 'src/app/shared/helpers/null-undefined-predicates';
+import { delay, take } from 'rxjs';
 import { TeamUserProgress } from 'src/app/shared/http-services/get-group-progress.service';
+
+export interface ProgressData {
+  progress: TeamUserProgress,
+  target: Element,
+  accessPermissions: {
+    title: string,
+    groupId: string,
+    itemId: string,
+  },
+}
 
 @Component({
   selector: 'alg-user-progress-details',
   templateUrl: './user-progress-details.component.html',
   styleUrls: [ './user-progress-details.component.scss' ],
 })
-export class UserProgressDetailsComponent implements OnChanges, OnDestroy, AfterViewInit {
+export class UserProgressDetailsComponent implements OnChanges, AfterViewInit {
 
-  @Input() progress?: TeamUserProgress;
+  @Input() progressData?: ProgressData;
   @Input() canEditPermissions?: boolean;
-  @Input() target?: Element;
 
   @Output() editPermissions = new EventEmitter<void>();
   @Output() hide = new EventEmitter<void>();
 
   @ViewChild('panel') panel?: OverlayPanel;
 
-  private overlay$ = new ReplaySubject<{ previousTarget?: Element, nextTarget?: Element, progress?: TeamUserProgress }>(1);
-
-  private overlayWithProgress$ = this.overlay$.pipe(
-    filter(({ progress }) => !!progress),
-  );
-  private hiddenOverlayToOpen$ = this.overlayWithProgress$.pipe(
-    filter(({ previousTarget, nextTarget }) => !previousTarget && !!nextTarget)
-  );
-  private openedOverlayToReopen$ = this.overlayWithProgress$.pipe(
-    filter(({ previousTarget, nextTarget }) => !!nextTarget && !!previousTarget && previousTarget !== nextTarget),
-  );
-  private hiddenOverlayToReopen$ = this.openedOverlayToReopen$.pipe(
-    switchMap(data => ensureDefined(this.panel).onHide.asObservable().pipe(map(() => data), take(1))),
-  );
-  private hiddenOverlay$ = merge(
-    this.overlay$.pipe(filter(({ nextTarget }) => !nextTarget)),
-    this.openedOverlayToReopen$,
-  ).pipe(switchMap(data => animationFrames().pipe(take(1), map(() => data))));
-
-  openedOverlay$ = merge(
-    this.hiddenOverlayToOpen$,
-    this.hiddenOverlayToReopen$,
-  ).pipe(switchMap(data => animationFrames().pipe(take(1), map(() => data))));
-
-  private overlayIsReopening$ = merge(
-    this.openedOverlayToReopen$.pipe(map(() => true)),
-    this.hiddenOverlayToReopen$.pipe(map(() => false)),
-  ).pipe(startWith(false));
-
-  private onHideSubscription?: Subscription;
+  progress?: ProgressData['progress'];
 
   ngAfterViewInit(): void {
-    this.hiddenOverlay$.subscribe(() => this.panel?.hide());
-    this.openedOverlay$.subscribe(({ nextTarget }) => ensureDefined(this.panel).show(null, nextTarget));
-    this.onHideSubscription = ensureDefined(this.panel).onHide.pipe(
-      withLatestFrom(this.overlayIsReopening$),
-      filter(([ , isReopening ]) => !isReopening),
-    ).subscribe(() => this.hide.emit());
+    if (this.progressData) this.showOverlay();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.target) {
-      this.overlay$.next({
-        previousTarget: changes.target.previousValue as Element,
-        nextTarget: this.target,
-        progress: this.progress,
-      });
+    if (changes.progressData && !changes.progressData.firstChange) {
+      this.progress = this.progressData?.progress;
+      this.toggleOverlay();
     }
   }
 
-  ngOnDestroy(): void {
-    this.overlay$.complete();
-    this.onHideSubscription?.unsubscribe();
+  private toggleOverlay(): void {
+    const shouldReopen = this.panel?.overlayVisible && !!this.progressData;
+    if (shouldReopen) return this.reopenOverlay();
+    this.progressData ? this.showOverlay() : this.hideOverlay();
+  }
+
+  private showOverlay(): void {
+    if (!this.panel) throw new Error('panel not available');
+    if (!this.progressData) throw new Error('no progress to render');
+    this.panel.show(null, this.progressData.target);
+  }
+
+  private hideOverlay(): void {
+    if (!this.panel) throw new Error('panel not available');
+    this.panel.hide();
+  }
+
+  private reopenOverlay(): void {
+    if (!this.panel) throw new Error('no panel available');
+    this.panel.onHide.pipe(delay(0), take(1)).subscribe(() => this.showOverlay());
+    this.hideOverlay();
   }
 
 }
