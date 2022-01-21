@@ -141,6 +141,7 @@
       *ngIf="groupData?.group?.currentUserCanManage === 'memberships_and_group'"
       [groupData]="groupData"
       [managers]="managers"
+      (added)="onAdded()"
     ></alg-group-manager-add>
   </ng-container>
 

@@ -163,4 +163,8 @@ export class GroupManagerListComponent implements OnChanges, OnDestroy {
       this.groupDataSource.refetchGroup();
     }
   }
+
+  onAdded(): void {
+    this.reloadData();
+  }
 }
