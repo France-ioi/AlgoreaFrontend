@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { GroupData } from '../../services/group-datasource.service';
 import { catchError, switchMap } from 'rxjs/operators';
 import { EMPTY } from 'rxjs';
@@ -13,6 +13,8 @@ import { ActionFeedbackService } from '../../../../shared/services/action-feedba
   styleUrls: [ './group-manager-add.component.scss' ]
 })
 export class GroupManagerAddComponent {
+
+  @Output() added = new EventEmitter<void>();
 
   @Input() groupData?: GroupData;
   @Input() managers?: Manager[];
@@ -55,6 +57,7 @@ export class GroupManagerAddComponent {
         this.state = 'ready';
         this.actionFeedbackService.success($localize`Manager added!`);
         this.login = '';
+        this.added.emit();
       },
       error: () => {
         this.state = 'error';
