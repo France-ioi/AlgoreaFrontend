@@ -137,6 +137,11 @@
         </div>
       </ng-template>
     </alg-section>
+    <alg-group-manager-add
+      *ngIf="groupData?.group?.currentUserCanManage === 'memberships_and_group'"
+      [groupData]="groupData"
+      [managers]="managers"
+    ></alg-group-manager-add>
   </ng-container>
 
   <alg-manager-permission-dialog

@@ -1,0 +1,22 @@
+<alg-section-paragraph icon="fa fa-sign-in-alt" i18n-label label="Add a manager">
+  <div class="input-wrapper">
+    <input
+      #input
+      type="text"
+      i18n-placeholder placeholder="Login of a user"
+      (keyup)="0"
+      [(ngModel)]="login"
+      [disabled]="state === 'loading'"
+    >
+    <span class="icon">
+      <i class="fa fa-font"></i>
+    </span>
+    <alg-button
+      icon="fa fa-plus"
+      i18n-label label="Add"
+      class="p-button-rounded"
+      [disabled]="input.value === '' || state === 'loading'"
+      (click)="onClick()"
+    ></alg-button>
+  </div>
+</alg-section-paragraph>
