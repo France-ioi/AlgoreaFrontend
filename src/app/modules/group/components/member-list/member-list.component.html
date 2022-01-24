@@ -71,7 +71,9 @@
               </a>
             </ng-container>
             <ng-container *ngSwitchCase="'member_since'">
-              {{ rowData.memberSince | date:'short' }}
+              <ng-container *ngIf="rowData.memberSince">
+                {{ rowData.memberSince | date:'short' }}
+              </ng-container>
             </ng-container>
             <ng-container *ngSwitchDefault>
               {{ rowData[col.field] }}

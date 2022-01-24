@@ -185,7 +185,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
             .pipe(
               map(members => ({
                 columns: usersColumns,
-                rowData: members.filter(member => !!member.user).map(member => ({
+                rowData: members.map(member => ({
                   ...member,
                   route: groupRoute({ id: member.id, isUser: true }, [ ...route.path, route.id ]),
                 })),

@@ -21,12 +21,18 @@ export const userDecoder = pipe(
   ),
 );
 
-const memberDecoder = D.struct({
-  id: D.string,
-  memberSince: D.nullable(dateDecoder),
-  action: D.literal('', 'invitation_accepted', 'join_request_accepted', 'joined_by_code', 'added_directly'),
-  user: D.nullable(userDecoder),
-});
+const memberDecoder = pipe(
+  D.struct({
+    id: D.string,
+    user: userDecoder,
+  }),
+  D.intersect(
+    D.partial({
+      action: D.literal('invitation_accepted', 'join_request_accepted', 'joined_by_code', 'added_directly'),
+      memberSince: dateDecoder,
+    })
+  )
+);
 
 export type Member = D.TypeOf<typeof memberDecoder>;
 
