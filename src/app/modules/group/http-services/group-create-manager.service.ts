@@ -6,9 +6,9 @@ import { Observable } from 'rxjs';
 import { GroupManagerPermissionChanges } from './update-group-managers.service';
 
 const defaultPermissions: GroupManagerPermissionChanges = {
-  canGrantGroupAccess: true,
+  canGrantGroupAccess: false,
   canManage: 'none',
-  canWatchMembers: true
+  canWatchMembers: false,
 };
 
 @Injectable({
