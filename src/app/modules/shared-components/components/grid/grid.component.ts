@@ -62,7 +62,6 @@ export class GridComponent implements OnChanges {
   @Output() sort = new EventEmitter<SortEvent>();
   @Output() selectionChange = new EventEmitter<any[]>();
 
-  @ContentChild('colgroupTemplate') colgroupTemplate?: TemplateRef<any>;
   @ContentChild('headerTemplate') headerTemplate?: TemplateRef<any>;
   @ContentChild('bodyTemplate') bodyTemplate?: TemplateRef<any>;
   @ContentChild('footerTemplate') footerTemplate?: TemplateRef<any>;

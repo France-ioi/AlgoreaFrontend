@@ -23,7 +23,7 @@
         dataKey="id"
       >
         <ng-template #headerTemplate let-columns>
-          <tr style="border: none;">
+          <tr style="border: none; height: 100%">
             <th class="thin" *ngIf="groupData?.group?.currentUserCanManage === 'memberships_and_group'"></th>
             <th style="min-width: 160px;">
               <div class="slanted-header">
@@ -39,21 +39,21 @@
                 </div>
               </div>
             </th>
-            <th style="width: 5rem;">
+            <th style="width: 5rem; max-width: 5rem;">
               <div class="slanted-header">
                 <div class="slanted-header-content" i18n>
                   Can grant group access
                 </div>
               </div>
             </th>
-            <th style="width: 5rem;">
+            <th style="width: 5rem; max-width: 5rem;">
               <div class="slanted-header">
                 <div class="slanted-header-content" i18n>
                   Can watch members
                 </div>
               </div>
             </th>
-            <th style="width: 11rem;"></th>
+            <th style="width: 11rem; max-width: 11rem;"></th>
           </tr>
         </ng-template>
 
@@ -68,7 +68,7 @@
               <p-tableCheckbox class="p-chkbox" [value]="rowData"></p-tableCheckbox>
             </td>
             <td
-              style="text-align: left;min-width: 160px;padding-left: 0.5rem;"
+              style="text-align: left; min-width: 160px; padding-left: 0.5rem; justify-content: left"
               tooltipPosition="top"
               tooltipStyleClass="tooltip-custom"
             >
@@ -81,7 +81,7 @@
             <td style="min-width: 110px;">
               {{ rowData.canManageAsText }}
             </td>
-            <td style="width: 5rem;">
+            <td style="width: 5rem; max-width: 5rem;">
               <span class="table-icon"
                 [ngClass]="{
                   locked: rowData.canGrantGroupAccess,
@@ -91,7 +91,7 @@
                 <i *ngIf="rowData.canGrantGroupAccess" class="fa fa-check"></i>
               </span>
             </td>
-            <td style="width: 5rem;">
+            <td style="width: 5rem; max-width: 5rem;">
               <span class="table-icon"
                 [ngClass]="{
                   locked: rowData.canWatchMembers,
@@ -101,7 +101,7 @@
                 <i *ngIf="rowData.canWatchMembers" class="fa fa-check"></i>
               </span>
             </td>
-            <td style="width: 11rem;">
+            <td style="width: 11rem; max-width: 11rem;">
               <button
                 pButton
                 type="button"
