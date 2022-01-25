@@ -7,6 +7,7 @@ export interface ProgressSelectValue<T> {
   comment: string,
   value: T,
   disabled?: boolean,
+  tooltip?: string[],
 }
 
 /**
@@ -42,6 +43,8 @@ export class ProgressSelectComponent<T> implements OnChanges, OnInit, ControlVal
   @Input() values: ProgressSelectValue<T>[] = [];
   @Input() defaultValue?: T;
   @Input() value?: T;
+
+  @Input() validationErrors?: string[];
 
   @Input() type: 'simple' | 'checksWithLock' = 'checksWithLock';
 

@@ -55,5 +55,23 @@ $inactive-bk-color: #d8d8d8;
         }
       }
     }
+
+    &.error {
+      color: #a94442;
+      padding-left: 1rem;
+      display: flex;
+      align-items: center;
+      font-size: medium;
+      height: auto;
+
+
+      .errors {
+        margin-left: 2rem;
+
+        p {
+          margin: 0;
+        }
+      }
+    }
   }
 }
