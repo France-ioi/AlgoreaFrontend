@@ -1,5 +1,7 @@
 import { ProgressSelectValue } from
   'src/app/modules/shared-components/components/collapsible-section/progress-select/progress-select.component';
+import { GroupPermissions } from 'src/app/shared/http-services/group-permissions.service';
+import { permissionsInfoString } from '../../helpers/item-permissions';
 import { TypeFilter } from '../composition-filter/composition-filter.component';
 
 function getTargetTypeString(targetType: TypeFilter): string {
@@ -13,125 +15,133 @@ function getTargetTypeString(targetType: TypeFilter): string {
   }
 }
 
-export function generateCanViewValues(targetType: TypeFilter): ProgressSelectValue<string>[]{
+export function generateCanViewValues(
+  targetType: TypeFilter,
+): ProgressSelectValue<GroupPermissions['canView']>[]{
   const targetTypeString = getTargetTypeString(targetType);
   return [
     {
       value: 'none',
-      label: $localize`Nothing`,
+      label: permissionsInfoString.canView.none,
       comment: $localize`${targetTypeString} can\'t see the item`
     },
     {
       value: 'info',
-      label: $localize`Info`,
-      comment: $localize`${targetTypeString} can see the item title and description, but not its content`
+      label: permissionsInfoString.canView.info,
+      comment: $localize`${targetTypeString} can see the item title and description, but not its content`,
     },
     {
       value: 'content',
-      label: $localize`Content`,
-      comment: $localize`${targetTypeString} can see the content of this item`
+      label: permissionsInfoString.canView.content,
+      comment: $localize`${targetTypeString} can see the content of this item`,
     },
     {
       value: 'content_with_descendants',
-      label: $localize`Content and descendants`,
-      comment: $localize`${targetTypeString} can also see the content of this items descendants (when possible for this group)`
+      label: permissionsInfoString.canView.content_with_descendants,
+      comment: $localize`${targetTypeString} can also see the content of this items descendants (when possible for this group)`,
     },
     {
       value: 'solution',
-      label: $localize`Solution`,
-      comment: $localize`${targetTypeString} can also see the solution of this items and its descendants (when possible for this group)`
+      label: permissionsInfoString.canView.solution,
+      comment: $localize`${targetTypeString} can also see the solution of this items and its descendants (when possible for this group)`,
     }
   ];
 }
 
-export function generateCanGrantViewValues(targetType: TypeFilter): ProgressSelectValue<string>[]{
+export function generateCanGrantViewValues(
+  targetType: TypeFilter,
+): ProgressSelectValue<GroupPermissions['canGrantView']>[]{
   const targetTypeString = getTargetTypeString(targetType);
+
   return [
     {
       value: 'none',
-      label: $localize`Nothing`,
+      label: permissionsInfoString.canGrantView.none,
       comment: $localize`${targetTypeString} can\'t grant any access to this item`
     },
     {
       value: 'enter',
-      label: $localize`Info & enter`,
-      comment: $localize`${targetTypeString} can grant \'Can view: info\' and  \'Can enter\' access`
+      label: permissionsInfoString.canGrantView.enter,
+      comment: $localize`${targetTypeString} can grant \'Can view: info\' and  \'Can enter\' access`,
     },
     {
       value: 'content',
-      label: $localize`Content`,
-      comment: $localize`${targetTypeString} can also grant \'Can view: content\' access`
+      label: permissionsInfoString.canGrantView.content,
+      comment: $localize`${targetTypeString} can also grant \'Can view: content\' access`,
     },
     {
       value: 'content_with_descendants',
-      label: $localize`Content and descendants`,
-      comment: $localize`${targetTypeString} can also grant \'Can view: content and descendants\' access`
+      label: permissionsInfoString.canGrantView.content_with_descendants,
+      comment: $localize`${targetTypeString} can also grant \'Can view: content and descendants\' access`,
     },
     {
       value: 'solution',
-      label: $localize`Solution`,
+      label: permissionsInfoString.canGrantView.solution,
       comment: $localize`${targetTypeString} can also grant \'Can view: solution\' access`,
-      disabled: true
     },
     {
       value: 'solution_with_grant',
-      label: $localize`Solution and grant`,
+      label: permissionsInfoString.canGrantView.solution_with_grant,
       comment: $localize`${targetTypeString} can also grant \'Can grant view\' access`,
-      disabled: true
     }
   ];
 }
 
-
-export function generateCanWatchValues(targetType: TypeFilter): ProgressSelectValue<string>[]{
+export function generateCanWatchValues(
+  targetType: TypeFilter,
+): ProgressSelectValue<GroupPermissions['canWatch']>[]{
   const targetTypeString = getTargetTypeString(targetType);
+
   return [
     {
       value: 'none',
-      label: $localize`Nothing`,
+      label: permissionsInfoString.canWatch.none,
       comment: $localize`${targetTypeString} can\'t watch the activity of others on this item`
     },
     {
       value: 'result',
-      label: $localize`Result`,
+      label: permissionsInfoString.canWatch.result,
       comment:
-        $localize`${targetTypeString} can view information about submissions and scores of others on this item, but not their answers`
+        $localize`${targetTypeString} can view information about submissions and scores of others on this item, but not their answers`,
     },
     {
       value: 'answer',
-      label: $localize`Answer`,
-      comment: $localize`${targetTypeString} can also look at other people\'s answers on this item`
+      label: permissionsInfoString.canWatch.answer,
+      comment: $localize`${targetTypeString} can also look at other people\'s answers on this item`,
     },
     {
       value: 'answer_with_grant',
-      label: $localize`Answer and grant`,
-      comment: $localize`${targetTypeString} can also grant \'Can watch\' access to others`
+      label: permissionsInfoString.canWatch.answer_with_grant,
+      comment: $localize`${targetTypeString} can also grant \'Can watch\' access to others`,
     }
   ];
 }
 
-export function generateCanEditValues(targetType: TypeFilter): ProgressSelectValue<string>[]{
+export function generateCanEditValues(
+  targetType: TypeFilter,
+): ProgressSelectValue<GroupPermissions['canEdit']>[]{
   const targetTypeString = getTargetTypeString(targetType);
+
   return [
     {
       value: 'none',
-      label: $localize`Nothing`,
+      label: permissionsInfoString.canEdit.none,
       comment: $localize`${targetTypeString} can\'t make any changes to this item`
     },
     {
       value: 'children',
-      label: $localize`Children`,
-      comment: $localize`${targetTypeString} can add children to this item and edit how permissions propagate to them`
+      label: permissionsInfoString.canEdit.children,
+      comment: $localize`${targetTypeString} can add children to this item and edit how permissions propagate to them`,
     },
     {
       value: 'all',
-      label: $localize`All`,
-      comment: $localize`${targetTypeString} can also edit the content of the item itself, but may not delete it`
+      label: permissionsInfoString.canEdit.all,
+      comment: $localize`${targetTypeString} can also edit the content of the item itself, but may not delete it`,
     },
     {
       value: 'all_with_grant',
-      label: $localize`All and grant`,
-      comment: $localize`${targetTypeString} can also give \'Can edit\' access to others`
+      label: permissionsInfoString.canEdit.all_with_grant,
+      comment: $localize`${targetTypeString} can also give \'Can edit\' access to others`,
     }
   ];
 }
