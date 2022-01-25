@@ -7,8 +7,7 @@ import { GetGroupChildrenService } from 'src/app/modules/group/http-services/get
 import { formatUser } from 'src/app/shared/helpers/user';
 import { GetGroupDescendantsService } from 'src/app/shared/http-services/get-group-descendants.service';
 import { GetGroupProgressService, TeamUserProgress } from 'src/app/shared/http-services/get-group-progress.service';
-import { GroupPermissionsService } from 'src/app/shared/http-services/group-permissions.service';
-import { Permissions } from 'src/app/shared/helpers/group-permissions';
+import { GroupPermissionsService, GroupPermissions } from 'src/app/shared/http-services/group-permissions.service';
 import { progressiveObservableFromList } from 'src/app/shared/operators/progressive-observable-from-list';
 import { mapToFetchState } from 'src/app/shared/operators/state';
 import { withPreviousFetchState } from 'src/app/shared/operators/with-previous-fetch-state';
@@ -53,7 +52,7 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
   currentFilter = this.defaultFilter;
 
   dialogPermissions: {
-    permissions: Permissions,
+    permissions: GroupPermissions,
     itemId: string,
     targetGroupId: string,
   } = {
@@ -66,6 +65,8 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
         canEdit: 'none',
         canMakeSessionOfficial: false,
         isOwner: true,
+        canEnterFrom: new Date(),
+        canEnterUntil: new Date(),
       }
     };
 
@@ -269,7 +270,7 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     this.dialog = 'closed';
   }
 
-  onDialogSave(permissions: Permissions): void {
+  onDialogSave(permissions: Partial<GroupPermissions>): void {
     if (!this.group) return;
 
     this.groupPermissionsService.updatePermissions(this.group.id, this.dialogPermissions.targetGroupId,
