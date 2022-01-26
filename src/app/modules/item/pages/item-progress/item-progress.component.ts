@@ -29,7 +29,7 @@ export class ItemProgressComponent implements OnChanges {
       if (!watchedGroup || watchedGroup.route.isUser) {
         return isATask(itemData.item) ? 'none' : 'withUserProgress';
       } else {
-        return 'withUserProgress';
+        return 'withGroupProgress';
       }
     }),
   );
