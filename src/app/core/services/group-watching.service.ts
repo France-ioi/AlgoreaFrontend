@@ -5,6 +5,7 @@ import { distinctUntilChanged, filter, map, shareReplay, startWith, switchMap, w
 import { GetGroupByIdService, Group } from 'src/app/modules/group/http-services/get-group-by-id.service';
 import { GetUserService, User } from 'src/app/modules/group/http-services/get-user.service';
 import { isNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
+import { boolFromParamMap, boolToQueryParamValue } from 'src/app/shared/helpers/url';
 import { rawGroupRoute, RawGroupRoute } from 'src/app/shared/routing/group-route';
 
 const watchedGroupQueryParam = 'watchedGroupId';
@@ -28,7 +29,7 @@ export class GroupWatchingService implements OnDestroy {
   private watchedGroupParams = this.route.queryParamMap.pipe(
     map(params => {
       const groupId = params.get(watchedGroupQueryParam);
-      const isUser = params.get(watchedGroupIsUserQueryParam) === '1';
+      const isUser = boolFromParamMap(params, watchedGroupIsUserQueryParam);
       if (groupId === noWatchingValue) return null; // `noWatchingValue` => forced 'not watching'
       if (!groupId) return undefined; // missing/empty parameter => unchanged from previous value
       return { groupId, isUser };
@@ -82,7 +83,7 @@ export class GroupWatchingService implements OnDestroy {
   private setWatchedGroupInUrlParams(wg: { groupId: string, isUser: boolean }|null): void {
     const params: Params = {};
     params[watchedGroupQueryParam] = wg?.groupId ?? noWatchingValue;
-    params[watchedGroupIsUserQueryParam] = wg?.isUser ? 1 : 0;
+    params[watchedGroupIsUserQueryParam] = boolToQueryParamValue(wg !== null && wg.isUser);
     void this.router.navigate(this.route.snapshot.url, { queryParams: params, queryParamsHandling: 'merge' });
   }
 

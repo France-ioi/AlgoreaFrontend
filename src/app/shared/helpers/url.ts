@@ -1,3 +1,4 @@
+import { ParamMap } from '@angular/router';
 import { LanguageConfig } from './config';
 import { isString } from './type-checkers';
 
@@ -93,3 +94,18 @@ export function openNewTab(href: string, currentLang?: LanguageConfig): void {
   window.open(formatUrl(href, currentLang), '_blank');
 }
 
+/**
+ * Return the value of the given field as a boolean (or null if not set)
+ * Interprets any value as true except "0" (if `boolToQueryParamValue` was used) or "false" (in case the boolean value was used directly
+ * in url)
+ */
+export function boolFromParamMap(paramMap: ParamMap, field: string): boolean|null {
+  const val = paramMap.get(field);
+  if (val === null) return null;
+  if (val === '0' || val === 'false') return false;
+  return true;
+}
+
+export function boolToQueryParamValue(value: boolean): string {
+  return value ? '1' : '0';
+}
