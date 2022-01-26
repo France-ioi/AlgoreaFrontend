@@ -1,11 +1,11 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { GroupData } from '../../services/group-datasource.service';
-import { catchError, switchMap } from 'rxjs/operators';
-import { EMPTY } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 import { Manager } from '../../http-services/get-group-managers.service';
 import { GetUserByLoginService } from '../../../../core/http-services/get-user-by-login.service';
 import { GroupCreateManagerService } from '../../http-services/group-create-manager.service';
 import { ActionFeedbackService } from '../../../../shared/services/action-feedback.service';
+import { errorIsHTTPInternalServer, errorIsHTTPNotFound } from '../../../../shared/helpers/errors';
 
 @Component({
   selector: 'alg-group-manager-add',
@@ -46,11 +46,6 @@ export class GroupManagerAddComponent {
 
     this.state = 'loading';
     this.getUserByLoginService.get(this.login).pipe(
-      catchError(() => {
-        this.state = 'error';
-        this.actionFeedbackService.error($localize`The login you entered does not exist or is not visible to you.`);
-        return EMPTY;
-      }),
       switchMap(user => this.groupCreateManagerService.create(groupId, user.groupId)),
     ).subscribe({
       next: () => {
@@ -59,9 +54,16 @@ export class GroupManagerAddComponent {
         this.login = '';
         this.added.emit();
       },
-      error: () => {
+      error: error => {
         this.state = 'error';
-        this.actionFeedbackService.error($localize`Unable to add this manager.`);
+
+        if (errorIsHTTPNotFound(error)) {
+          this.actionFeedbackService.error($localize`The login you entered does not exist or is not visible to you.`);
+        } else if (errorIsHTTPInternalServer(error)) {
+          this.actionFeedbackService.unexpectedError();
+        } else {
+          this.actionFeedbackService.error($localize`Unable to add this manager.`);
+        }
       },
     });
   }

@@ -29,3 +29,7 @@ export function errorIsHTTPForbidden(error: any): boolean {
 export function errorIsHTTPNotFound(error: any): boolean {
   return 'status' in error && (error as HttpErrorResponse).status === 404;
 }
+
+export function errorIsHTTPInternalServer(error: any): boolean {
+  return 'status' in error && (error as HttpErrorResponse).status === 500;
+}
