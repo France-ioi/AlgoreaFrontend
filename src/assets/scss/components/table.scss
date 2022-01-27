@@ -45,7 +45,8 @@
     border: 0.1rem solid #eeeeee;
   }
 
-  .p-datatable-tbody > tr > td {
+  .p-datatable-tbody > tr > td,
+  .p-datatable-tfoot > tr > td {
     border: 0.1rem solid #f0f0f0;
     color: $base-text-color;
     height: 4rem;

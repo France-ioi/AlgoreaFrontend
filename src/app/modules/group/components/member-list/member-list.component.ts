@@ -2,7 +2,7 @@ import { Component, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild } from
 import { ConfirmationService, SortEvent } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { Observable, ReplaySubject, Subject } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { map, switchMap, withLatestFrom } from 'rxjs/operators';
 import { GetGroupDescendantsService } from 'src/app/shared/http-services/get-group-descendants.service';
 import { mapToFetchState } from 'src/app/shared/operators/state';
 import { GroupRoute, groupRoute, rawGroupRoute, RawGroupRoute } from 'src/app/shared/routing/group-route';
@@ -16,6 +16,8 @@ import { displayResponseToast } from './user-removal-response-handling';
 import { displayGroupRemovalResponseToast } from './group-removal-response-handling';
 import { RemoveSubgroupService } from '../../http-services/remove-subgroup.service';
 import { RemoveGroupService } from '../../http-services/remove-group.service';
+import { FetchState } from 'src/app/shared/helpers/state';
+import { canLoadMoreItems } from 'src/app/shared/helpers/load-more';
 
 function getSelectedGroupChildCaptions(selection: GroupChild[]): string {
   return selection.map(selected => selected.name).join(', ');
@@ -54,12 +56,21 @@ const descendantTeamsColumns: Column[] = [
   { field: 'members', header: $localize`Member(s)` },
 ];
 
+const membersLimit = 25;
+
 interface Data {
   columns: Column[],
   rowData: (
     (Member|GroupChild|{ login: string, parentGroups: string }|{ name: string, parentGroups: string, members: string }) &
     { route: RawGroupRoute }
   )[],
+}
+
+interface DataFetching {
+  route: GroupRoute,
+  filter: Filter,
+  sort: string[],
+  fromId?: string,
 }
 
 @Component({
@@ -88,8 +99,9 @@ export class MemberListComponent implements OnChanges, OnDestroy {
   @ViewChild('table') private table?: Table;
   @ViewChild('compositionFilter') private compositionFilter?: GroupCompositionFilterComponent;
 
-  private dataFetching = new Subject<{ route: GroupRoute, filter: Filter, sort: string[] }>();
+  private dataFetching = new Subject<DataFetching>();
   removalInProgress$ = new ReplaySubject<boolean>();
+  loadMore: { fromId: string } | null = null;
 
   private refresh$ = new Subject<void>();
 
@@ -104,11 +116,24 @@ export class MemberListComponent implements OnChanges, OnDestroy {
     private removeGroupService: RemoveGroupService,
   ) {
     this.dataFetching.pipe(
-      switchMap(params => this.getData(params.route, params.filter, params.sort).pipe(mapToFetchState({ resetter: this.refresh$ }))),
+      switchMap(params => this.getData(params).pipe(mapToFetchState({ resetter: this.refresh$ }))),
+      withLatestFrom(this.dataFetching),
     ).subscribe({
-      next: state => {
+      next: ([ state, dataFetching ]) => {
+        if (state.isError && dataFetching.fromId) {
+          this.actionFeedbackService.error($localize`Could not load more members, are you connected to the internet?`);
+          this.state = 'ready';
+          return;
+        }
         this.state = state.tag;
-        if (state.isReady) this.data = state.data;
+
+        if (state.isReady) {
+          const isLoadMore = !!dataFetching.fromId;
+          this.data = isLoadMore
+            ? { ...this.data, rowData: [ ...this.data.rowData, ...state.data.rowData ] }
+            : state.data;
+        }
+        this.loadMore = this.getLoadMore(state, dataFetching);
         this.unselectAll();
       },
       error: _err => {
@@ -125,18 +150,19 @@ export class MemberListComponent implements OnChanges, OnDestroy {
 
   ngOnChanges(_changes: SimpleChanges): void {
     if (!this.groupData) return;
+
     this.currentFilter = { ...this.defaultFilter };
     this.currentSort = [];
     this.table?.clear();
     this.dataFetching.next({ route: this.groupData.route, filter: this.currentFilter, sort: this.currentSort });
   }
 
-  fetchData(): void {
+  fetchData(fromId?: string): void {
     if (!this.groupData) return;
-    this.dataFetching.next({ route: this.groupData.route, filter: this.currentFilter, sort: this.currentSort });
+    this.dataFetching.next({ route: this.groupData.route, filter: this.currentFilter, sort: this.currentSort, fromId });
   }
 
-  getData(route: GroupRoute, filter: Filter, sort: string[]): Observable<Data> {
+  getData({ route, filter, sort, fromId }: DataFetching): Observable<Data> {
     switch (filter.type) {
       case TypeFilter.Groups:
         return this.getGroupChildrenService.getGroupChildren(route.id, sort, [], [ 'Team', 'Session', 'User' ])
@@ -181,7 +207,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
         }
       case TypeFilter.Users:
         if (filter.directChildren) {
-          return this.getGroupMembersService.getGroupMembers(route.id, sort)
+          return this.getGroupMembersService.getGroupMembers(route.id, sort, membersLimit, fromId)
             .pipe(
               map(members => ({
                 columns: usersColumns,
@@ -355,5 +381,20 @@ export class MemberListComponent implements OnChanges, OnDestroy {
         }, 250);
       }
     });
+  }
+
+  private getLoadMore(state: FetchState<Data>, dataFetching: DataFetching): { fromId: string } | null {
+    const { filter } = dataFetching;
+    const isListWithLoadMore = filter.type === TypeFilter.Users && filter.directChildren;
+    if (!isListWithLoadMore) return null;
+
+    if (state.isError) return null;
+    if (!state.data) return this.loadMore;
+
+    const rows = state.data.rowData as Member[];
+    const last = rows[rows.length - 1];
+    return last && canLoadMoreItems(rows, membersLimit)
+      ? { fromId: last.id }
+      : null;
   }
 }
