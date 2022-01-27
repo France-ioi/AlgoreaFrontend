@@ -39,13 +39,13 @@ const groupInvitationDecoder = D.struct({
     id: D.string,
     name: D.string,
     description: D.nullable(D.string),
-    type: D.literal('Class', 'Team', 'Club', 'Friends', 'Other', 'Session'),
+    type: D.literal('Class', 'Team', 'Club', 'Friends', 'Other', 'Session', 'Base'),
   }),
   groupId: D.string,
   invitingUser: D.nullable(D.struct({
     id: D.string,
-    firstName: D.string,
-    lastName: D.string,
+    firstName: D.nullable(D.string),
+    lastName: D.nullable(D.string),
     login: D.string,
   })),
 });
@@ -79,7 +79,7 @@ export interface GroupInvitation extends PendingRequest {
     id: string,
     name: string,
     description: string|null,
-    type: 'Class' | 'Team' | 'Club' | 'Friends' | 'Other' | 'Session',
+    type: 'Class' | 'Team' | 'Club' | 'Friends' | 'Other' | 'Session' | 'Base',
   },
 }
 
