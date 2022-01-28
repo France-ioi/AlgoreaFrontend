@@ -6,7 +6,7 @@ interface WithErrorTag { errorTag: string }
  * Add a tag to an error object so it can be recognized later (using the errorHasTag function)
  */
 export function tagError<T>(error: T, tag: string): T & WithErrorTag {
-  return { ...error, errorTag: tag };
+  return Object.assign(error, { errorTag: tag });
 }
 
 export function errorHasTag(error: any, tag: string): boolean {

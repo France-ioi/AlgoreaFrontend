@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { EMPTY, noop, Observable, of, OperatorFunction, pipe } from 'rxjs';
 import { catchError, filter, map, startWith, switchMapTo } from 'rxjs/operators';
 import { errorState, fetchingState, FetchState, Ready, readyState } from 'src/app/shared/helpers/state';
@@ -55,6 +56,6 @@ export function mapStateData<T, U>(dataMapper: (data: T) => U): OperatorFunction
  */
 export function mapErrorToState<T>(): OperatorFunction<FetchState<T>,FetchState<T>> {
   return pipe(
-    catchError(e => of(errorState(e instanceof Error ? e : new Error('unknown error')))),
+    catchError(e => of(errorState(e instanceof Error || e instanceof HttpErrorResponse ? e : new Error('unknown error')))),
   );
 }
