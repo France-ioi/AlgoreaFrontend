@@ -115,13 +115,13 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
         if (!this.ltiDataSource.data) return EMPTY;
         return this.publishResultService.publish(this.ltiDataSource.data.contentId, this.ltiDataSource.data.attemptId);
       }),
-      mapToFetchState(),
-    ).subscribe(state => {
-      if (!state.isError) return;
-      const message = errorIsHTTPForbidden(state.error)
-        ? $localize`You might be unauthenticated anymore, please try relaunching the exercise. If the problem persits contact us.`
-        : $localize`An unknown error occurred while publishing your result`;
-      this.actionFeedbackService.error(message, { life: 10*SECONDS });
+    ).subscribe({
+      error: err => {
+        const message = errorIsHTTPForbidden(err)
+          ? $localize`You might be unauthenticated anymore, please try relaunching the exercise. If the problem persits contact us.`
+          : $localize`An unknown error occurred while publishing your result`;
+        this.actionFeedbackService.error(message, { life: 10*SECONDS });
+      }
     }),
   ];
 
