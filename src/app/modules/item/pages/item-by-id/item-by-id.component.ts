@@ -105,6 +105,7 @@ export class ItemByIdComponent implements OnDestroy {
           }
 
         } else if (state.isError) {
+          // If path is incorrect, redirect to same page without path to trigger the solve missing path at next navigation
           if (errorHasTag(state.error, breadcrumbServiceTag) && errorIsHTTPForbidden(state.error)) {
             if (this.hasRedirected) throw new Error('Too many redirections (unexpected)');
             this.hasRedirected = true;
