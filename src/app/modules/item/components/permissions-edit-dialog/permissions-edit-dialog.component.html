@@ -30,7 +30,7 @@
             <alg-progress-select
               [collapsed]="collapsed"
               formControlName="canView"
-              [values]="progressSelectValues.canViewValues"
+              [values]="permissionsDialogData.canViewValues"
               [validationErrors]="form.errors?.canView"
             ></alg-progress-select>
           </ng-template>
@@ -52,7 +52,7 @@
             <alg-progress-select
               [collapsed]="collapsed"
               formControlName="canGrantView"
-              [values]="progressSelectValues.canGrantViewValues"
+              [values]="permissionsDialogData.canGrantViewValues"
               [validationErrors]="form.errors?.canGrantView"
             ></alg-progress-select>
           </ng-template>
@@ -66,7 +66,7 @@
             <alg-progress-select
               [collapsed]="collapsed"
               formControlName="canWatch"
-              [values]="progressSelectValues.canWatchValues"
+              [values]="permissionsDialogData.canWatchValues"
               [validationErrors]="form.errors?.canWatch"
             ></alg-progress-select>
           </ng-template>
@@ -80,7 +80,7 @@
             <alg-progress-select
               [collapsed]="collapsed"
               formControlName="canEdit"
-              [values]="progressSelectValues.canEditValues"
+              [values]="permissionsDialogData.canEditValues"
               [validationErrors]="form.errors?.canEdit"
             ></alg-progress-select>
           </ng-template>
@@ -95,6 +95,7 @@
               [collapsed]="collapsed"
               formControlName="canMakeSessionOfficial"
               [validationErrors]="form.errors?.canMakeSessionOfficial"
+              [disabledTooltip]="permissionsDialogData.canMakeSessionOfficialDisabledTooltip"
             >
               <ng-template #label>
                 <span i18n>{{targetTypeString}} may attach official sessions to this item, that will be visible to everyone in the content tab of the item</span>
@@ -112,6 +113,7 @@
               [collapsed]="collapsed"
               formControlName="isOwner"
               [validationErrors]="form.errors?.isOwner"
+              [disabledTooltip]="permissionsDialogData.isOwnerDisabledTooltip"
             >
               <ng-template #label>
                 <span i18n>{{targetTypeString}} own this item, and get the maximum access in all categories above, and may also delete this item</span>

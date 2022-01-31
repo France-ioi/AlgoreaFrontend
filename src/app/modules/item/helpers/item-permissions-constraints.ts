@@ -247,6 +247,12 @@ export function generateValues(
     canEditValues: generateCanEditValues(targetType).map(val => {
       const errors = validateCanEdit({ ...receiverPermissions, canEdit: val.value }, giverPermissions);
       return errors.canEdit ? { ...val, disabled: true, tooltip: errors.canEdit } : val;
-    })
+    }),
+
+    isOwnerDisabledTooltip: validateIsOwner({ ...receiverPermissions, isOwner: true }, giverPermissions).isOwner,
+
+    canMakeSessionOfficialDisabledTooltip: validateCanMakeSessionOfficial(
+      { ...receiverPermissions, canMakeSessionOfficial: true }, giverPermissions
+    ).canMakeSessionOfficial,
   };
 }

@@ -56,6 +56,16 @@ $inactive-bk-color: #d8d8d8;
       }
     }
 
+    .gray-overlay {
+      position: absolute;
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      opacity: 0.5;
+      background-color: white;
+    }
+
     &.error {
       color: #a94442;
       padding-left: 1rem;

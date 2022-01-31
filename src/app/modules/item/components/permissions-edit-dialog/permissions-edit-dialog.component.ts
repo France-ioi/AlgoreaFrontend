@@ -13,6 +13,8 @@ export interface PermissionsDialogData {
   canGrantViewValues: ProgressSelectValue<string>[],
   canWatchValues: ProgressSelectValue<string>[],
   canEditValues: ProgressSelectValue<string>[],
+  isOwnerDisabledTooltip?: string[],
+  canMakeSessionOfficialDisabledTooltip?: string[],
 }
 
 @Component({
@@ -32,7 +34,7 @@ export class PermissionsEditDialogComponent implements OnChanges {
 
   targetTypeString = '';
 
-  progressSelectValues: PermissionsDialogData = {
+  permissionsDialogData: PermissionsDialogData = {
     canViewValues: [],
     canGrantViewValues: [],
     canEditValues: [],
@@ -55,7 +57,7 @@ export class PermissionsEditDialogComponent implements OnChanges {
       .subscribe(() => {
         if (this.permissions && this.giverPermissions) {
           const receiverPermissions = this.form.value as GroupPermissions;
-          this.progressSelectValues = generateValues(this.targetType, receiverPermissions, this.giverPermissions);
+          this.permissionsDialogData = generateValues(this.targetType, receiverPermissions, this.giverPermissions);
         }
       });
   }
