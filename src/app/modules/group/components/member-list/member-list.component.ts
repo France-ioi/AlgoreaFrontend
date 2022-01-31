@@ -218,10 +218,11 @@ export class MemberListComponent implements OnChanges, OnDestroy {
               }))
             );
         } else {
-          return this.getGroupDescendantsService.getUserDescendants(route.id, sort)
+          return this.getGroupDescendantsService.getUserDescendants(route.id, sort, membersLimit, fromId)
             .pipe(map(descendantUsers => ({
               columns: descendantUsersColumns,
               rowData: descendantUsers.map(descendantUser => ({
+                id: descendantUser.id,
                 login: descendantUser.user.login,
                 user: descendantUser.user,
                 parentGroups: descendantUser.parents.map(parent => parent.name).join(', '),
@@ -385,7 +386,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
 
   private getLoadMore(state: FetchState<Data>, dataFetching: DataFetching): { fromId: string } | null {
     const { filter } = dataFetching;
-    const isListWithLoadMore = filter.type === TypeFilter.Users && filter.directChildren;
+    const isListWithLoadMore = filter.type === TypeFilter.Users;
     if (!isListWithLoadMore) return null;
 
     if (state.isError) return null;
