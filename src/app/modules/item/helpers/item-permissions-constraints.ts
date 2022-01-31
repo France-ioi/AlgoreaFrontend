@@ -160,39 +160,39 @@ export function validateCanEdit(
 }
 
 export function validateCanMakeSessionOfficial(
-  previousValue: boolean,
   receiverPermissions: Pick<GroupPermissions, 'canView' | 'canMakeSessionOfficial'>,
   giverPermissions: Pick<PermissionsInfo, 'isOwner'>
 ): { canMakeSessionOfficial?: string[] } {
+
+  if (!receiverPermissions.canMakeSessionOfficial) return {};
+
   const errors: string[] = [];
 
-  if (receiverPermissions.canMakeSessionOfficial && !previousValue) {
-    if (!giverPermissions.isOwner) {
-      errors.push($localize`You need to be owner of this item`);
-    }
-    if (!hasAtLeastPermission(canViewValues, receiverPermissions.canView)('info')) {
-      errors.push(`This user needs ${bolden(permissionsInfoString.canView.string)} to be at least ${
-        bolden(permissionsInfoString.canView.info)}`);
-    }
+  if (!giverPermissions.isOwner) {
+    errors.push($localize`You need to be owner of this item`);
+  }
+  if (!hasAtLeastPermission(canViewValues, receiverPermissions.canView)('info')) {
+    errors.push(`This user needs ${bolden(permissionsInfoString.canView.string)} to be at least ${
+      bolden(permissionsInfoString.canView.info)}`);
   }
 
   return errors.length === 0 ? {} : { canMakeSessionOfficial: errors };
 }
 
 export function validateIsOwner(
-  previousValue: boolean,
   receiverPermissions: Pick<GroupPermissions, 'isOwner'>,
   giverPermissions: Pick<PermissionsInfo, 'isOwner'>
 ): { isOwner?: string[] } {
 
-  if (receiverPermissions.isOwner && !previousValue && !giverPermissions.isOwner) {
+  if (!receiverPermissions.isOwner) return {};
+
+  if (!giverPermissions.isOwner) {
     return { isOwner: [ $localize`You need to be owner of this item` ] };
   }
   return {};
 }
 
 export function permissionsConstraintsValidator(
-  receiverPermissions: GroupPermissions,
   giverPermissions: PermissionsInfo
 ): ValidatorFn {
 
@@ -209,14 +209,19 @@ export function permissionsConstraintsValidator(
       canEnterUntil: new Date(),
     };
 
-    const errors: ValidationErrors = {
+    let errors: ValidationErrors = {
       ...validateCanView(value, giverPermissions),
       ...validateCanGrantView(value, giverPermissions),
       ...validateCanWatch(value, giverPermissions),
       ...validateCanEdit(value, giverPermissions),
-      ...validateCanMakeSessionOfficial(receiverPermissions.canMakeSessionOfficial, value, giverPermissions),
-      ...validateIsOwner(receiverPermissions.canMakeSessionOfficial, value, giverPermissions),
     };
+
+    if (group.get('isOwner')?.dirty) {
+      errors = { ...errors, ...validateIsOwner(value, giverPermissions) };
+    }
+    if (group.get('canMakeSessionOfficial')?.dirty) {
+      errors = { ...errors, ...validateCanMakeSessionOfficial(value, giverPermissions) };
+    }
 
     return Object.keys(errors).length > 0 ? errors : null;
   };

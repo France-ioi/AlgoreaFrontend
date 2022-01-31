@@ -65,7 +65,7 @@ export class PermissionsEditDialogComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.permissions || changes.giverPermissions) {
       if (this.permissions && this.giverPermissions) {
-        this.form.setValidators(permissionsConstraintsValidator(this.permissions, this.giverPermissions));
+        this.form.setValidators(permissionsConstraintsValidator(this.giverPermissions));
         this.form.updateValueAndValidity();
         this.form.reset({ ...this.permissions }, { emitEvent: false });
       }
