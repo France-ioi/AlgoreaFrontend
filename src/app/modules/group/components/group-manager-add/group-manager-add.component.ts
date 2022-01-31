@@ -5,7 +5,7 @@ import { Manager } from '../../http-services/get-group-managers.service';
 import { GetUserByLoginService } from '../../../../core/http-services/get-user-by-login.service';
 import { GroupCreateManagerService } from '../../http-services/group-create-manager.service';
 import { ActionFeedbackService } from '../../../../shared/services/action-feedback.service';
-import { errorIsHTTPInternalServer, errorIsHTTPNotFound } from '../../../../shared/helpers/errors';
+import { errorIsHTTPForbidden, errorIsHTTPNotFound } from '../../../../shared/helpers/errors';
 
 @Component({
   selector: 'alg-group-manager-add',
@@ -59,10 +59,10 @@ export class GroupManagerAddComponent {
 
         if (errorIsHTTPNotFound(error)) {
           this.actionFeedbackService.error($localize`The login you entered does not exist or is not visible to you.`);
-        } else if (errorIsHTTPInternalServer(error)) {
-          this.actionFeedbackService.unexpectedError();
-        } else {
+        } else if (errorIsHTTPForbidden(error)) {
           this.actionFeedbackService.error($localize`Unable to add this manager.`);
+        } else {
+          this.actionFeedbackService.unexpectedError();
         }
       },
     });
