@@ -20,7 +20,10 @@ export class ItemPage {
     await browser.wait(ExpectedConditions.visibilityOf(element), threshold, message);
   }
 
-  getActivityTitle(): ElementFinder {
-    return element(by.css('alg-item-header .task-title'));
+  getActivityTitle(text?: string): ElementFinder {
+    const cssSelector = 'alg-item-header .task-title';
+    return text
+      ? element(by.cssContainingText(cssSelector, text))
+      : element(by.css(cssSelector));
   }
 }

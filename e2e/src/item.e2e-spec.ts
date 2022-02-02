@@ -19,7 +19,7 @@ describe('item page', () => {
     for (const useCase of pageLoadUseCases) {
       it(`should load ${useCase.label}`, async () => {
         await page.navigateToActivity(motifArt.id, useCase.path);
-        const taskTitle = page.getActivityTitle();
+        const taskTitle = page.getActivityTitle(motifArt.title);
         await page.waitForElement(taskTitle);
         await retry(() => expect(taskTitle.getText()).toBe(motifArt.title));
       });
