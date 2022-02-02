@@ -18,5 +18,5 @@ export const environment: Environment = {
   allowForcedToken: true,
   authType: 'cookies',
 
-  itemPlatformId: 'http://algorea.pem.dev',
+  itemPlatformId: 'algorea_backend',
 };
