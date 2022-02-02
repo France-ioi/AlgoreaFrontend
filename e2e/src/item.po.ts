@@ -21,6 +21,6 @@ export class ItemPage {
   }
 
   getActivityTitle(): ElementFinder {
-    return element(by.css('.task-title'));
+    return element(by.css('alg-item-header .task-title'));
   }
 }
