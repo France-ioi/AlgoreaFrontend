@@ -13,6 +13,15 @@ export function errorHasTag(error: any, tag: string): boolean {
   return (error as WithErrorTag).errorTag === tag;
 }
 
+export function implementsError(value: unknown): value is Error {
+  if (value === null || typeof value !== 'object') return false;
+  const error = value as Record<string, unknown>;
+  if (typeof error.name !== 'string') return false;
+  if (typeof error.message !== 'string') return false;
+  if (error.stack !== undefined && typeof error.stack !== 'string') return false;
+  return true;
+}
+
 export function errorIsHTTPForbidden(error: any): boolean {
   return 'status' in error && (error as HttpErrorResponse).status === 403;
 }
