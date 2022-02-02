@@ -101,4 +101,8 @@
   &.danger {
     @include section-format($section-danger-color, $section-danger-handle-color, $section-danger-handle-border-color)
   }
+
+  &.warning {
+    @include section-format($section-warning-color, $section-warning-handle-color, $section-warning-handle-border-color)
+  }
 }

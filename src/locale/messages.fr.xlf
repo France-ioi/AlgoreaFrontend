@@ -128,7 +128,7 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/group-progress-grid/group-progress-grid.component.ts</context><context context-type="linenumber">278</context></context-group></trans-unit><trans-unit id="7463044993322326313" datatype="html">
         <source> This content does not exist or you are not allowed to view it. </source><target state="new"> This content does not exist or you are not allowed to view it. </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-by-id.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="5199111763891627410" datatype="html">
         <source>This page has unsaved changes. Do you want to leave this page and lose its changes?</source><target state="translated">Cette page comporte des changements non sauvegardés. Voulez-vous quitter cette page et perdre les changements ?</target>
         <context-group purpose="location">
@@ -481,10 +481,10 @@
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-display/item-display.component.ts</context><context context-type="linenumber">109</context></context-group></trans-unit><trans-unit id="1555021161449604077" datatype="html">
         <source>You might be unauthenticated anymore, please try relaunching the exercise. If the problem persits contact us.</source><target state="new">You might be unauthenticated anymore, please try relaunching the exercise. If the problem persits contact us.</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-display/item-display.component.ts</context><context context-type="linenumber">122</context></context-group></trans-unit><trans-unit id="2164874882400763735" datatype="html">
         <source>An unknown error occurred while publishing your result</source><target state="new">An unknown error occurred while publishing your result</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-display/item-display.component.ts</context><context context-type="linenumber">123</context></context-group></trans-unit><trans-unit id="3742657416068781599" datatype="html">
         <source>Editor</source><target state="new">Editor</target>
 
@@ -713,7 +713,7 @@
         </context-group>
       </trans-unit><trans-unit id="4554929922442695846" datatype="html">
         <source> Something wrong occurred during the login process, please retry after closing this tab or window. <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br>"/> If the problem persists, please contact us. </source><target state="new"> Something wrong occurred during the login process, please retry after closing this tab or window. <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br>"/> If the problem persists, please contact us. </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/lti/pages/lti/lti.component.html</context><context context-type="linenumber">15</context></context-group></trans-unit><trans-unit id="5402924068010392760" datatype="html">
         <source>Join the group "<x id="PH" equiv-text="response.group.name"/>"</source><target state="translated">Rejoindre le groupe "<x id="PH" equiv-text="response.group.name"/>"</target>
 
@@ -825,10 +825,10 @@
         </context-group>
       </trans-unit><trans-unit id="807906988305504107" datatype="html">
         <source>Given by this group</source><target state="new">Given by this group</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/group-access/group-access.component.html</context><context context-type="linenumber">70</context></context-group></trans-unit><trans-unit id="4471978812071001025" datatype="html">
         <source>This group has no permissions.</source><target state="new">This group has no permissions.</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/group-access/group-access.component.html</context><context context-type="linenumber">78</context></context-group></trans-unit><trans-unit id="4611536703147831594" datatype="html">
         <source>You are not allowed to manage permissions of this group.</source><target state="new">You are not allowed to manage permissions of this group.</target>
 
@@ -849,7 +849,52 @@
       </trans-unit><trans-unit id="5278627882107105833" datatype="html">
         <source>Access</source><target state="translated">Rejoindre</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-details/item-details.component.html</context><context context-type="linenumber">10</context></context-group></trans-unit><trans-unit id="6162691442834560200" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-details/item-details.component.html</context><context context-type="linenumber">10</context></context-group></trans-unit><trans-unit id="7210234374199239920" datatype="html">
+        <source> The <x id="INTERPOLATION" equiv-text="{{ watchedGroup.route.isUser.toString() | i18nSelect : {
+              true: 'user',
+              other: 'group'
+            } }}"/> cannot currently view this content. </source><target state="new"> The <x id="INTERPOLATION" equiv-text="{{ watchedGroup.route.isUser.toString() | i18nSelect : {
+                true: 'user',
+                other: 'group'
+              } }}"/> cannot currently view this content. </target>
+
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-permissions/item-permissions.component.html</context><context context-type="linenumber">34</context></context-group></trans-unit><trans-unit id="3905090940376140689" datatype="html">
+        <source> The <x id="INTERPOLATION" equiv-text="{{ watchedGroup.route.isUser.toString() | i18nSelect : {
+              true: 'user',
+              other: 'group'
+            } }}"/> can list this <x id="INTERPOLATION_1" equiv-text="{{ itemData.item.type | i18nSelect : {
+              Skill: 'skill',
+              other: 'activity'
+            } }}"/> but cannot <x id="INTERPOLATION_2" equiv-text="{{ ['Skill', 'Chapter'].includes(itemData.item.type).toString() | i18nSelect : {
+              true: 'list its content.',
+              other: 'view its content.'
+            } }}"/> </source><target state="new"> The <x id="INTERPOLATION" equiv-text="{{ watchedGroup.route.isUser.toString() | i18nSelect : {
+                true: 'user',
+                other: 'group'
+              } }}"/> can list this <x id="INTERPOLATION_1" equiv-text="{{ itemData.item.type | i18nSelect : {
+                Skill: 'skill',
+                other: 'activity'
+              } }}"/> but cannot <x id="INTERPOLATION_2" equiv-text="{{ ['Skill', 'Chapter'].includes(itemData.item.type).toString() | i18nSelect : {
+                true: 'list its content.',
+                other: 'view its content.'
+              } }}"/> </target>
+
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-permissions/item-permissions.component.html</context><context context-type="linenumber">41</context></context-group></trans-unit><trans-unit id="5268813630599686558" datatype="html">
+        <source> The <x id="INTERPOLATION" equiv-text="{{ watchedGroup.route.isUser.toString() | i18nSelect : {
+              true: 'user',
+              other: 'group'
+            } }}"/> can view this activity. </source><target state="new"> The <x id="INTERPOLATION" equiv-text="{{ watchedGroup.route.isUser.toString() | i18nSelect : {
+                true: 'user',
+                other: 'group'
+              } }}"/> can view this activity. </target>
+
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-permissions/item-permissions.component.html</context><context context-type="linenumber">58</context></context-group></trans-unit><trans-unit id="3792349936860674133" datatype="html">
+        <source> You cannot view the results or submissions of the group </source><target state="new"> You cannot view the results or submissions of the group </target>
+
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-permissions/item-permissions.component.html</context><context context-type="linenumber">66</context></context-group></trans-unit><trans-unit id="6629702976113303770" datatype="html">
+        <source> Note that some subgroups or users of the groups may have higher permissions. </source><target state="new"> Note that some subgroups or users of the groups may have higher permissions. </target>
+
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-details/item-details.component.html</context><context context-type="linenumber">63</context></context-group></trans-unit><trans-unit id="6162691442834560200" datatype="html">
         <source>Items</source><target state="translated">Élements</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-by-id.component.ts</context><context context-type="linenumber">24</context></context-group></trans-unit><trans-unit id="5441429049165852521" datatype="html">
@@ -893,7 +938,7 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/add-content/add-content.component.ts</context><context context-type="linenumber">36</context></context-group></trans-unit><trans-unit id="3766035158759769347" datatype="html">
         <source> Edit Mode </source><target state="new"> Edit Mode </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/editor-bar/editor-bar.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit><trans-unit id="111064207711013124" datatype="html">
        <source>Pending requests</source><target state="translated">Demandes en attente</target>
 
@@ -1106,13 +1151,13 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog.component.html</context><context context-type="linenumber">43</context></context-group></trans-unit><trans-unit id="5086832329438229437" datatype="html">
         <source> User(s) can give and revoke members access to some content </source><target state="new"> User(s) can give and revoke members access to some content </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/manager-permission-dialog/manager-permission-dialog.component.html</context><context context-type="linenumber">57</context></context-group></trans-unit><trans-unit id="7308369809380680356" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/manager-permission-dialog/manager-permission-dialog.component.html</context><context context-type="linenumber">58</context></context-group></trans-unit><trans-unit id="7308369809380680356" datatype="html">
         <source>Can watch members</source><target state="new">Can watch members</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/manager-permission-dialog/manager-permission-dialog.component.html</context><context context-type="linenumber">67</context></context-group></trans-unit><trans-unit id="731959018199918793" datatype="html">
         <source> User(s) can watch the members' activity on some content </source><target state="new"> User(s) can watch the members' activity on some content </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/manager-permission-dialog/manager-permission-dialog.component.html</context><context context-type="linenumber">73</context></context-group></trans-unit><trans-unit id="6674111336491636600" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/manager-permission-dialog/manager-permission-dialog.component.html</context><context context-type="linenumber">74</context></context-group></trans-unit><trans-unit id="6674111336491636600" datatype="html">
         <source>Can watch</source><target state="translated">Droit d'observation</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog.component.html</context><context context-type="linenumber">53</context></context-group></trans-unit><trans-unit id="1898683424750626599" datatype="html">
@@ -1143,7 +1188,7 @@
         <source>Can manage members, managers, and change group settings</source><target state="new">Can manage members, managers, and change group settings</target>
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/manager-permission-dialog/manager-permission-dialog.component.ts</context><context context-type="linenumber">39</context></context-group></trans-unit><trans-unit id="1774407921639110803" datatype="html">
-        <source>Are you sure to remove from yourself the permission to edit group settings and edit managers ? 
+        <source>Are you sure to remove from yourself the permission to edit group settings and edit managers ?
         You may lose manager access and not be able to restore it.</source><target state="new">Are you sure to remove from yourself the permission to edit group settings and edit managers ?
         You may lose manager access and not be able to restore it.</target>
         <context-group purpose="location">
@@ -1214,7 +1259,34 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-children-edit/item-children-edit.component.html</context><context context-type="linenumber">100</context></context-group></trans-unit><trans-unit id="8904528007363649896" datatype="html">
         <source>Error while loading the children item</source><target state="new">Error while loading the children item</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-children-edit/item-children-edit.component.html</context><context context-type="linenumber">117</context></context-group></trans-unit><trans-unit id="1519954996184640001" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-children-edit/item-children-edit.component.html</context><context context-type="linenumber">117</context></context-group></trans-unit><trans-unit id="8309054658706496987" datatype="html">
+        <source> «<x id="INTERPOLATION" equiv-text="{{ watchedGroup.name }}"/>» <x id="INTERPOLATION_1" equiv-text="{{ ['content', 'content_with_descendants', 'solution'].includes(permissions.canView).toString() | i18nSelect : {
+          true: 'can',
+          other: 'can\'t'
+        } }}"/> access this <x id="INTERPOLATION_2" equiv-text="{{ itemData.item.type | i18nSelect : {
+          Skill: 'skill',
+          other: 'activity'
+        } }}"/> </source><target state="new"> «<x id="INTERPOLATION" equiv-text="{{ watchedGroup.name }}"/>» <x id="INTERPOLATION_1" equiv-text="{{ ['content', 'content_with_descendants', 'solution'].includes(permissions.canView).toString() | i18nSelect : {
+          true: 'can',
+          other: 'can\'t'
+        } }}"/> access this <x id="INTERPOLATION_2" equiv-text="{{ itemData.item.type | i18nSelect : {
+          Skill: 'skill',
+          other: 'activity'
+        } }}"/> </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/components/item-permissions/item-permissions.component.html</context>
+          <context context-type="linenumber">9,20</context>
+        </context-group>
+      </trans-unit><trans-unit id="1633175305056804241" datatype="html">
+        <source>You cannot watch this <x id="INTERPOLATION" equiv-text="{{ itemData.item.type | i18nSelect : {
+            Skill: 'skill',
+            other: 'activity'
+          } }}"/> </source><target state="new">You cannot watch this <x id="INTERPOLATION" equiv-text="{{ itemData.item.type | i18nSelect : {
+            Skill: 'skill',
+            other: 'activity'
+          } }}"/> </target>
+
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-permissions/item-permissions.component.html</context><context context-type="linenumber">23</context></context-group></trans-unit><trans-unit id="1519954996184640001" datatype="html">
         <source>Error</source><target state="translated">Erreur</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-children-edit/item-children-edit.component.html</context><context context-type="linenumber">88</context></context-group></trans-unit><trans-unit id="429958371655094287" datatype="html">
@@ -1401,19 +1473,19 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-composition-filter/group-composition-filter.component.ts</context><context context-type="linenumber">63</context></context-group></trans-unit><trans-unit id="2778681880262367513" datatype="html">
         <source> You are a member of this group. </source><target state="new"> You are a member of this group. </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-indicator/group-indicator.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit><trans-unit id="6350999595816280001" datatype="html">
         <source> As a member of <x id="START_TAG_ALG_GROUP_LINKS" ctype="x-alg_group_links" equiv-text="&lt;alg-group-links class=&quot;links&quot; [items]=&quot;group?.descendantsCurrentUserIsMemberOf&quot;>"/><x id="CLOSE_TAG_ALG_GROUP_LINKS" ctype="x-alg_group_links" equiv-text="&lt;/alg-group-links>"/> you are a member of this group. </source><target state="new"> As a member of <x id="START_TAG_ALG_GROUP_LINKS" ctype="x-alg_group_links" equiv-text="&lt;alg-group-links class=&quot;links&quot; [items]=&quot;group?.descendantsCurrentUserIsMemberOf&quot;>"/><x id="CLOSE_TAG_ALG_GROUP_LINKS" ctype="x-alg_group_links" equiv-text="&lt;/alg-group-links>"/> you are a member of this group. </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-indicator/group-indicator.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="5584293246930466315" datatype="html">
         <source> You are a manager of this group. </source><target state="new"> You are a manager of this group. </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-indicator/group-indicator.component.html</context><context context-type="linenumber">14</context></context-group></trans-unit><trans-unit id="1193892629199537758" datatype="html">
         <source> As a manager of <x id="START_TAG_ALG_GROUP_LINKS" ctype="x-alg_group_links" equiv-text="&lt;alg-group-links class=&quot;links&quot; [items]=&quot;group?.ancestorsCurrentUserIsManagerOf&quot;>"/><x id="CLOSE_TAG_ALG_GROUP_LINKS" ctype="x-alg_group_links" equiv-text="&lt;/alg-group-links>"/> you can manage this group. </source><target state="new"> As a manager of <x id="START_TAG_ALG_GROUP_LINKS" ctype="x-alg_group_links" equiv-text="&lt;alg-group-links class=&quot;links&quot; [items]=&quot;group?.ancestorsCurrentUserIsManagerOf&quot;>"/><x id="CLOSE_TAG_ALG_GROUP_LINKS" ctype="x-alg_group_links" equiv-text="&lt;/alg-group-links>"/> you can manage this group. </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-indicator/group-indicator.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit><trans-unit id="4376807115786522489" datatype="html">
         <source> As a manager of <x id="START_TAG_ALG_GROUP_LINKS" ctype="x-alg_group_links" equiv-text="&lt;alg-group-links class=&quot;links&quot; [items]=&quot;group?.descendantsCurrentUserIsManagerOf&quot;>"/><x id="CLOSE_TAG_ALG_GROUP_LINKS" ctype="x-alg_group_links" equiv-text="&lt;/alg-group-links>"/> you can view this group. </source><target state="new"> As a manager of <x id="START_TAG_ALG_GROUP_LINKS" ctype="x-alg_group_links" equiv-text="&lt;alg-group-links class=&quot;links&quot; [items]=&quot;group?.descendantsCurrentUserIsManagerOf&quot;>"/><x id="CLOSE_TAG_ALG_GROUP_LINKS" ctype="x-alg_group_links" equiv-text="&lt;/alg-group-links>"/> you can view this group. </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-indicator/group-indicator.component.html</context><context context-type="linenumber">23</context></context-group></trans-unit><trans-unit id="8953033926734869941" datatype="html">
         <source>Name</source><target state="translated">Nom</target>
 
@@ -1625,10 +1697,10 @@
         </context-group>
       </trans-unit><trans-unit id="5744148860872137225" datatype="html">
         <source>Leave this group</source><target state="new">Leave this group</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-leave/group-leave.component.html</context><context context-type="linenumber">17</context></context-group></trans-unit><trans-unit id="5683126619387156920" datatype="html">
         <source>You've left group</source><target state="new">You've left group</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-leave/group-leave.component.ts</context><context context-type="linenumber">29</context></context-group></trans-unit><trans-unit id="690250592654745090" datatype="html">
         <source>, and</source><target state="new">, and</target>
         
@@ -1763,7 +1835,7 @@
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-log-view/item-log-view.component.html</context><context context-type="linenumber">69</context></context-group></trans-unit><trans-unit id="6358863421707082858" datatype="html">
         <source> You are not allowed to watch the progress of other users on this content. </source><target state="new"> You are not allowed to watch the progress of other users on this content. </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-progress/item-progress.component.html</context><context context-type="linenumber">8</context></context-group></trans-unit><trans-unit id="3139978144476033891" datatype="html">
         <source>You do not have the permissions to edit this content.</source><target state="translated">Vous n'avez pas les permissions d'éditer ce contenu.</target>
 

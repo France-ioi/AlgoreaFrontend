@@ -38,6 +38,7 @@ import { ItemDisplayComponent } from './pages/item-display/item-display.componen
 import { ItemRemoveButtonComponent } from './components/item-remove-button/item-remove-button.component';
 import { BeforeUnloadGuard } from 'src/app/shared/guards/before-unload-guard';
 import { AnswerAuthorIndicatorComponent } from './components/answer-author-indicator/answer-author-indicator.component';
+import { ItemPermissionsComponent } from './components/item-permissions/item-permissions.component';
 
 @NgModule({
   declarations: [
@@ -69,6 +70,7 @@ import { AnswerAuthorIndicatorComponent } from './components/answer-author-indic
     ItemDisplayComponent,
     ItemRemoveButtonComponent,
     AnswerAuthorIndicatorComponent,
+    ItemPermissionsComponent,
   ],
   imports: [
     CommonModule,
