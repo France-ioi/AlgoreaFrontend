@@ -11,7 +11,7 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import { fromEvent, interval, merge, Observable, ReplaySubject } from 'rxjs';
+import { EMPTY, fromEvent, interval, merge, Observable, ReplaySubject } from 'rxjs';
 import { delay, distinctUntilChanged, filter, map, pairwise, startWith, switchMap } from 'rxjs/operators';
 import { HOURS, SECONDS } from 'src/app/shared/helpers/duration';
 import { isNotNull, isNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
@@ -26,6 +26,9 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { PermissionsInfo } from '../../helpers/item-permissions';
 import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
 import { LayoutService } from 'src/app/shared/services/layout.service';
+import { LTIDataSource } from 'src/app/modules/lti/services/lti-datasource.service';
+import { PublishResultsService } from '../../http-services/publish-result.service';
+import { errorIsHTTPForbidden } from 'src/app/shared/helpers/errors';
 
 const initialHeight = 0;
 const appMainSectionPaddingBottom = '6rem';
@@ -91,26 +94,44 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
     distinctUntilChanged(),
   );
 
-  private subscription = this.taskService.saveAnswerAndStateInterval$
-    .pipe(startWith({ success: true }), pairwise())
-    .subscribe(([ previous, next ]) => {
-      const shouldDisplayError = !next.success && !this.actionFeedbackService.hasFeedback;
-      const shouldDisplaySuccess = !previous.success && next.success;
-      if (shouldDisplayError) {
-        const message = $localize`Your current progress could not have been saved. Are you connected to the internet ?`;
-        this.actionFeedbackService.error(message, { life: 24*HOURS });
+  private subscriptions = [
+    this.taskService.saveAnswerAndStateInterval$
+      .pipe(startWith({ success: true }), pairwise())
+      .subscribe(([ previous, next ]) => {
+        const shouldDisplayError = !next.success && !this.actionFeedbackService.hasFeedback;
+        const shouldDisplaySuccess = !previous.success && next.success;
+        if (shouldDisplayError) {
+          const message = $localize`Your current progress could not have been saved. Are you connected to the internet ?`;
+          this.actionFeedbackService.error(message, { life: 24*HOURS });
+        }
+        if (shouldDisplaySuccess) {
+          this.actionFeedbackService.clear();
+          this.actionFeedbackService.success($localize`Progress saved!`);
+        }
+      }),
+
+    this.scoreChange.pipe(
+      switchMap(() => {
+        if (!this.ltiDataSource.data) return EMPTY;
+        return this.publishResultService.publish(this.ltiDataSource.data.contentId, this.ltiDataSource.data.attemptId);
+      }),
+    ).subscribe({
+      error: err => {
+        const message = errorIsHTTPForbidden(err)
+          ? $localize`You might be unauthenticated anymore, please try relaunching the exercise. If the problem persits contact us.`
+          : $localize`An unknown error occurred while publishing your result`;
+        this.actionFeedbackService.error(message, { life: 10*SECONDS });
       }
-      if (shouldDisplaySuccess) {
-        this.actionFeedbackService.clear();
-        this.actionFeedbackService.success($localize`Progress saved!`);
-      }
-    });
+    }),
+  ];
 
   constructor(
     private taskService: ItemTaskService,
     private sanitizer: DomSanitizer,
     private actionFeedbackService: ActionFeedbackService,
     private layoutService: LayoutService,
+    private publishResultService: PublishResultsService,
+    private ltiDataSource: LTIDataSource,
   ) {}
 
   ngOnInit(): void {
@@ -142,11 +163,11 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
   ngOnDestroy(): void {
     if (this.actionFeedbackService.hasFeedback) this.actionFeedbackService.clear();
     this.computeIframeOffsetTop$.complete();
-    this.subscription.unsubscribe();
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
   saveAnswerAndState(): Observable<{ saving: boolean }> {
-    this.subscription.unsubscribe();
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
     return this.taskService.saveAnswerAndState();
   }
 
