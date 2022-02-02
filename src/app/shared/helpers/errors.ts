@@ -16,3 +16,7 @@ export function errorHasTag(error: any, tag: string): boolean {
 export function errorIsHTTPForbidden(error: any): boolean {
   return 'status' in error && (error as HttpErrorResponse).status === 403;
 }
+
+export function errorIsHTTPNotFound(error: any): boolean {
+  return 'status' in error && (error as HttpErrorResponse).status === 404;
+}
