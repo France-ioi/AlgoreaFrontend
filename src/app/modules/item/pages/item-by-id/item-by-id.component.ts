@@ -9,7 +9,7 @@ import { CurrentContentService } from 'src/app/shared/services/current-content.s
 import { breadcrumbServiceTag } from '../../http-services/get-breadcrumb.service';
 import { GetItemPathService } from '../../http-services/get-item-path.service';
 import { ItemDataSource, ItemData } from '../../services/item-datasource.service';
-import { errorHasTag, errorIsHTTPForbidden } from 'src/app/shared/helpers/errors';
+import { errorHasTag, errorIsHTTPForbidden, errorIsHTTPNotFound } from 'src/app/shared/helpers/errors';
 import { ItemRouter } from 'src/app/shared/routing/item-router';
 import { isTask, ItemTypeCategory } from 'src/app/shared/helpers/item-type';
 import { Mode, ModeAction, ModeService } from 'src/app/shared/services/mode.service';
@@ -105,7 +105,8 @@ export class ItemByIdComponent implements OnDestroy {
           }
 
         } else if (state.isError) {
-          if (errorHasTag(state.error, breadcrumbServiceTag) && errorIsHTTPForbidden(state.error)) {
+          // If path is incorrect, redirect to same page without path to trigger the solve missing path at next navigation
+          if (errorHasTag(state.error, breadcrumbServiceTag) && (errorIsHTTPForbidden(state.error) || errorIsHTTPNotFound(state.error))) {
             if (this.hasRedirected) throw new Error('Too many redirections (unexpected)');
             this.hasRedirected = true;
             const { contentType, id, answerId } = this.getItemRoute();
