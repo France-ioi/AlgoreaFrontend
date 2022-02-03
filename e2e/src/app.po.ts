@@ -60,8 +60,4 @@ export class AppPage {
     return element(by.css('.left .tab-left-nav [role=tab][aria-selected=true]'));
   }
 
-  getMainContent(): ElementFinder {
-    return element(by.css('.right .main-content'));
-  }
-
 }

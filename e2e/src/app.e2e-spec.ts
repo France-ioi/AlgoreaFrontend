@@ -19,10 +19,6 @@ describe('Algorea Frontend', () => {
       const firstActivity = page.getLeftNavFirstActivity();
       await page.waitUntilClickable(firstActivity);
       await retry(() => firstActivity.click());
-
-      const mainContent = page.getMainContent();
-      await page.waitUntilTextIsPresent(mainContent, 'Parcours officiels');
-      await retry(() => expect(mainContent.getText()).toBeTruthy());
     });
 
     it('should have a working collapse button', async () => {
