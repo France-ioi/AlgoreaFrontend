@@ -1,0 +1,42 @@
+import { retry } from './helpers/retry';
+import { GroupPage } from './group-page.po';
+
+describe('groups/users page', () => {
+  const page = new GroupPage();
+
+  describe('user page', () => {
+    const user = {
+      id: '670968966872011405',
+      name: 'arbonenfant',
+    };
+    beforeEach(async () => {
+      await page.navigateToUser(user.id);
+    });
+
+    it('should display default activities in the left nav', async () => {
+      const firstActivityLabel = page.getLeftNavFirstActivity();
+      await page.waitUntilTextIsPresent(firstActivityLabel, 'Parcours officiels');
+      await retry(() => expect(firstActivityLabel.getText()).toContain('Parcours officiels'));
+    });
+  });
+
+  describe('group page', () => {
+    const group = {
+      id: '672913018859223173',
+      name: 'Pixal',
+    };
+    beforeEach(async () => {
+      await page.navigateToGroup(group.id);
+      await page.authenticate();
+    });
+    afterEach(async () => {
+      await page.logout();
+    });
+
+    it('should present nav bar with active tab "groups"', async () => {
+      const activeGroupTab = page.getLeftNavActiveTab();
+      await page.waitUntilTextIsPresent(activeGroupTab, 'GROUPS');
+      await retry(async () => expect(activeGroupTab.getText()).toBe('GROUPS'));
+    });
+  });
+});
