@@ -33,7 +33,7 @@
         <p-button type="button" (click)="skipSave.emit()" i18n-label label="Skip"></p-button>
       </p>
     </div>
-    <iframe *ngIf="iframeSrc$ | async as iframeSrc" [style.height]="iframeHeight$ | async" #iframe [src]="iframeSrc" allowfullscreen></iframe>
+    <iframe *ngIf="iframeSrc$ | async as iframeSrc" #iframe [src]="iframeSrc" algFullHeightContent allowfullscreen></iframe>
     <div *ngIf="state.isFetching" class="loading">
       <alg-loading></alg-loading>
     </div>
