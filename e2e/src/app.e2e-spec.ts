@@ -15,10 +15,10 @@ describe('Algorea Frontend', () => {
       await expect(titleElement.getText()).toEqual('ALGOREA PLATFORM');
     });
 
-    it('should have clickable activity that loads the activity on click', async () => {
+    it('should have clickable activity', async () => {
       const firstActivity = page.getLeftNavFirstActivity();
       await page.waitUntilClickable(firstActivity);
-      await retry(() => firstActivity.click());
+      await retry(() => expect(() => firstActivity.click()).not.toThrow());
     });
 
     it('should have a working collapse button', async () => {

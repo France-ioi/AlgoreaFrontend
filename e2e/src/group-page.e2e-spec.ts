@@ -34,9 +34,9 @@ describe('groups/users page', () => {
     });
 
     it('should present nav bar with active tab "groups"', async () => {
-      const activeGroupTab = page.getLeftNavActiveTab();
-      await page.waitUntilTextIsPresent(activeGroupTab, 'GROUPS');
-      await retry(async () => expect(activeGroupTab.getText()).toBe('GROUPS'));
+      const activeTab = page.getLeftNavActiveTab();
+      await page.waitUntilTextIsPresent(activeTab, 'GROUPS');
+      await retry(() => expect(activeTab.getText()).toBe('GROUPS'));
     });
   });
 });
