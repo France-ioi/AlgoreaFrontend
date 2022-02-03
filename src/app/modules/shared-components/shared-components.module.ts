@@ -62,6 +62,7 @@ import { LoadingComponent } from './components/loading/loading.component';
 import { CollapsibleSectionComponent } from './components/collapsible-section/collapsible-section.component';
 import { NeighborWidgetComponent } from './components/neighbor-widget/neighbor-widget.component';
 import { GroupPermissionCaptionPipe } from '../../shared/pipes/groupPermissionCaption';
+import { FullHeightContentDirective } from '../../shared/directives/full-height-content.directive';
 
 @NgModule({
   declarations: [
@@ -102,6 +103,7 @@ import { GroupPermissionCaptionPipe } from '../../shared/pipes/groupPermissionCa
     LoadingComponent,
     CollapsibleSectionComponent,
     NeighborWidgetComponent,
+    FullHeightContentDirective,
   ],
   imports: [
     CommonModule,
@@ -171,6 +173,7 @@ import { GroupPermissionCaptionPipe } from '../../shared/pipes/groupPermissionCa
     LoadingComponent,
     CollapsibleSectionComponent,
     NeighborWidgetComponent,
+    FullHeightContentDirective,
   ],
   providers: [],
 })

@@ -11,10 +11,10 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import { EMPTY, fromEvent, interval, merge, Observable, ReplaySubject } from 'rxjs';
+import { EMPTY, fromEvent, merge, Observable, ReplaySubject } from 'rxjs';
 import { delay, distinctUntilChanged, filter, map, pairwise, startWith, switchMap } from 'rxjs/operators';
 import { HOURS, SECONDS } from 'src/app/shared/helpers/duration';
-import { isNotNull, isNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
+import { isNotNull } from 'src/app/shared/helpers/null-undefined-predicates';
 import { TaskConfig, ItemTaskService } from '../../services/item-task.service';
 import { mapToFetchState } from 'src/app/shared/operators/state';
 import { capitalize } from 'src/app/shared/helpers/case_conversion';
@@ -29,10 +29,6 @@ import { LayoutService } from 'src/app/shared/services/layout.service';
 import { LTIDataSource } from 'src/app/modules/lti/services/lti-datasource.service';
 import { PublishResultsService } from '../../http-services/publish-result.service';
 import { errorIsHTTPForbidden } from 'src/app/shared/helpers/errors';
-
-const initialHeight = 0;
-const appMainSectionPaddingBottom = '6rem';
-const heightSyncInterval = 0.2*SECONDS;
 
 export interface TaskTab {
   name: string,
@@ -82,15 +78,8 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
     distinctUntilChanged(),
   );
   // Start updating the iframe height to match the task's height
-  iframeHeight$ = this.taskService.task$.pipe(
-    switchMap(task => task.getMetaData()),
-    switchMap(({ autoHeight }) => {
-      if (autoHeight) return this.iframeOffsetTop$.pipe(map(top => `calc(100vh - ${top}px - ${appMainSectionPaddingBottom})`));
-      return merge(
-        this.taskService.task$.pipe(switchMap(task => interval(heightSyncInterval).pipe(switchMap(() => task.getHeight())))),
-        this.taskService.display$.pipe(map(({ height }) => height), filter(isNotUndefined)),
-      ).pipe(startWith(initialHeight), map(height => `${height}px`));
-    }),
+  iframeHeight$ = this.iframeOffsetTop$.pipe(
+    map(top => `calc(100vh - ${top}px)`),
     distinctUntilChanged(),
   );
 

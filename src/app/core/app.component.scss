@@ -111,10 +111,6 @@ a:hover {
       }
     }
 
-    &.with-footer {
-      padding-bottom: 5rem;
-    }
-
     .main-content {
       padding-left: 1.6667rem;
     }
@@ -124,6 +120,7 @@ a:hover {
 
       .main-content {
         margin-top: 1rem;
+        padding-left: 0 !important;
       }
     }
   }
