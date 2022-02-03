@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
-import { forkJoin, Observable, of, ReplaySubject, Subject, Subscription } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { forkJoin, Observable, ReplaySubject, Subscription } from 'rxjs';
+import { filter, map, startWith, switchMap, withLatestFrom } from 'rxjs/operators';
 import { canCurrentUserGrantGroupAccess } from 'src/app/modules/group/helpers/group-management';
 import { Group } from 'src/app/modules/group/http-services/get-group-by-id.service';
 import { GetGroupChildrenService } from 'src/app/modules/group/http-services/get-group-children.service';
@@ -9,9 +9,7 @@ import { GetGroupDescendantsService } from 'src/app/shared/http-services/get-gro
 import { GetGroupProgressService, TeamUserProgress } from 'src/app/shared/http-services/get-group-progress.service';
 import { GroupPermissionsService } from 'src/app/shared/http-services/group-permissions.service';
 import { Permissions } from 'src/app/shared/helpers/group-permissions';
-import { progressiveObservableFromList } from 'src/app/shared/operators/progressive-observable-from-list';
-import { mapToFetchState } from 'src/app/shared/operators/state';
-import { withPreviousFetchState } from 'src/app/shared/operators/with-previous-fetch-state';
+import { mapToFetchState, readyData } from 'src/app/shared/operators/state';
 import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
 import { TypeFilter } from '../../components/composition-filter/composition-filter.component';
 import { GetItemChildrenService } from '../../http-services/get-item-children.service';
@@ -23,6 +21,10 @@ import { ItemRouter } from '../../../../shared/routing/item-router';
 import { GroupRouter } from '../../../../shared/routing/group-router';
 import { rawGroupRoute } from '../../../../shared/routing/group-route';
 import { ProgressData } from '../../components/user-progress-details/user-progress-details.component';
+import { canLoadMoreItems } from 'src/app/shared/helpers/load-more';
+import { readyState } from 'src/app/shared/helpers/state';
+
+const progressListLimit = 25;
 
 interface Data {
   type: TypeFilter,
@@ -36,6 +38,14 @@ interface Data {
     data: (TeamUserProgress|undefined)[],
   }[],
   can_access: boolean,
+}
+interface DataFetching {
+  groupId: string,
+  itemId: string,
+  attemptId: string,
+  filter: TypeFilter,
+  title: string | null,
+  fromId?: string,
 }
 
 @Component({
@@ -76,30 +86,43 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
 
   isCSVDataFetching = false;
 
-  private dataFetching$ = new ReplaySubject<{
-    groupId: string,
-    itemId: string,
-    attemptId: string,
-    filter: TypeFilter,
-    title: string | null,
-  }>(1);
+  private dataFetching$ = new ReplaySubject<DataFetching>(1);
   private permissionsFetchingSubscription?: Subscription;
-  private refresh$ = new Subject<void>();
 
-  state$ = this.dataFetching$.pipe(
-    switchMap(({ itemId, groupId, attemptId, filter, title }) =>
-      this.getData(itemId, groupId, attemptId, filter, title).pipe(
-        mapToFetchState({ resetter: this.refresh$ })
-      )
-    ),
-    withPreviousFetchState(),
-    switchMap(([ previousState, state ]) => {
-      if (!state.data) return of(state);
-      return progressiveObservableFromList(state.data.rows, { initialIncrementSize: previousState.data?.rows.length }).pipe(
-        map(rows => ({ ...state, data: { ...state.data, rows } })),
-      );
+  private lastFetched$ = this.dataFetching$.pipe(
+    switchMap(dataFetching => this.getData(dataFetching).pipe(mapToFetchState())),
+  );
+  private previousData$ = this.lastFetched$.pipe(readyData(), startWith(undefined));
+  state$ = this.lastFetched$.pipe(
+    withLatestFrom(this.dataFetching$, this.previousData$),
+    map(([ state, { fromId }, previousData ]) => {
+      if (!fromId) return state; // Not load more => normal treatment
+
+      if (!previousData) throw new Error('impossible: must have previous data when loading more items');
+      if (state.isFetching) return { ...state, data: previousData };
+      if (state.isError) return readyState(previousData);
+
+      if (!previousData?.rows.length) return state;
+      // When loaded more rows, prepend old rows to new state
+      state.data.rows.unshift(...previousData.rows);
+      return state;
     }),
   );
+  loadMore$: Observable<{ fromId: string } | null> = this.lastFetched$.pipe(
+    readyData(),
+    map(fetchedData => {
+      const last = fetchedData.rows[fetchedData.rows.length-1];
+      if (!last || !canLoadMoreItems(fetchedData.rows, progressListLimit)) return null;
+      return { fromId: last.id };
+    }),
+  );
+
+  private loadMoreErrorSubscription = this.lastFetched$.pipe(
+    withLatestFrom(this.dataFetching$),
+    filter(([ state, { fromId }]) => state.isError && !!fromId),
+  ).subscribe(() => {
+    this.actionFeedbackService.error($localize`Could not load more results, are you connected to the internet?`);
+  });
 
   constructor(
     private getItemChildrenService: GetItemChildrenService,
@@ -116,20 +139,12 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
   ngOnDestroy(): void {
     this.dataFetching$.complete();
     this.permissionsFetchingSubscription?.unsubscribe();
-    this.refresh$.complete();
+    this.loadMoreErrorSubscription.unsubscribe();
   }
 
   ngOnChanges(_changes: SimpleChanges): void {
-    if (!this.itemData || !this.itemData.currentResult || !this.group) throw new Error('properties are missing');
-
     this.dialog = 'closed';
-    this.dataFetching$.next({
-      groupId: this.group.id,
-      itemId: this.itemData.item.id,
-      attemptId: this.itemData.currentResult.attemptId,
-      filter: this.currentFilter,
-      title: this.itemData.item.string.title,
-    });
+    this.fetchData();
   }
 
   trackByRow(_index: number, row: Data['rows'][number]): string {
@@ -154,13 +169,13 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
   }
 
   refresh(): void {
-    this.refresh$.next();
+    this.fetchData();
   }
 
-  private getProgress(itemId: string, groupId: string, filter: TypeFilter): Observable<TeamUserProgress[]> {
+  private getProgress(itemId: string, groupId: string, filter: TypeFilter, fromId?: string): Observable<TeamUserProgress[]> {
     switch (filter) {
       case 'Users':
-        return this.getGroupUsersProgressService.getUsersProgress(groupId, [ itemId ]);
+        return this.getGroupUsersProgressService.getUsersProgress(groupId, [ itemId ], progressListLimit, fromId);
       case 'Teams':
         return this.getGroupUsersProgressService.getTeamsProgress(groupId, [ itemId ]);
       case 'Groups':
@@ -192,11 +207,11 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     }
   }
 
-  private getData(itemId: string, groupId: string, attemptId: string, filter: TypeFilter, title: string | null): Observable<Data> {
+  private getData({ itemId, groupId, attemptId, filter, title, fromId }: DataFetching): Observable<Data> {
     return forkJoin({
       items: this.getItemChildrenService.get(itemId, attemptId),
       rows: this.getRows(groupId, filter),
-      progress: this.getProgress(itemId, groupId, filter),
+      progress: this.getProgress(itemId, groupId, filter, fromId),
     }).pipe(
       map(data => ({
         type: filter,
@@ -227,18 +242,22 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
   }
 
   onFilterChange(typeFilter: TypeFilter): void {
-    if (!this.itemData || !this.itemData.currentResult || !this.group) throw new Error('properties are missing');
-
     if (typeFilter !== this.currentFilter) {
       this.currentFilter = typeFilter;
-      this.dataFetching$.next({
-        groupId: this.group.id,
-        itemId: this.itemData.item.id,
-        attemptId: this.itemData.currentResult.attemptId,
-        filter: this.currentFilter,
-        title: this.itemData.item.string.title,
-      });
+      this.fetchData();
     }
+  }
+
+  fetchData(fromId?: string): void {
+    if (!this.group || !this.itemData || !this.itemData.currentResult) throw new Error('properties are missing');
+    this.dataFetching$.next({
+      groupId: this.group.id,
+      itemId: this.itemData.item.id,
+      attemptId: this.itemData.currentResult.attemptId,
+      filter: this.currentFilter,
+      title: this.itemData.item.string.title,
+      fromId,
+    });
   }
 
   onAccessPermissions(): void {

@@ -41,8 +41,13 @@ export class GetGroupProgressService {
   getUsersProgress(
     groupId: string,
     parentItemIds: string[],
+    limit?: number,
+    fromId?: string,
   ): Observable<TeamUserProgress[]> {
-    const params = new HttpParams().set('parent_item_ids', parentItemIds.join(','));
+    let params = new HttpParams().set('parent_item_ids', parentItemIds.join(','));
+    if (limit !== undefined) params = params.set('limit', limit);
+    if (fromId !== undefined) params = params.set('from.id', fromId);
+
     return this.http
       .get<unknown>(`${appConfig.apiUrl}/groups/${groupId}/user-progress`, { params: params })
       .pipe(

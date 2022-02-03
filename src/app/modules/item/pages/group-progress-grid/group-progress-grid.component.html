@@ -91,6 +91,22 @@
             </td>
           </tr>
         </ng-template>
+        <ng-template pTemplate="footer">
+          <ng-container *ngIf="currentFilter === 'Users'">
+            <tr *ngIf="loadMore$ | async as loadMore">
+              <td [colSpan]="state.data.items.length">
+                <div class="text-center">
+                  <alg-button
+                    class="p-button-rounded"
+                    i18n-label label="Load more"
+                    (click)="fetchData(loadMore.fromId)"
+                    [disabled]="state.isFetching"
+                  ></alg-button>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+        </ng-template>
       </p-table>
     </ng-container>
 
