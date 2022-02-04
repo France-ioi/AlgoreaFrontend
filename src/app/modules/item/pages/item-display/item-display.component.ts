@@ -11,8 +11,8 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import { EMPTY, Observable } from 'rxjs';
-import { map, pairwise, startWith, switchMap } from 'rxjs/operators';
+import { EMPTY, interval, Observable, merge, of } from 'rxjs';
+import { distinctUntilChanged, filter, map, pairwise, startWith, switchMap } from 'rxjs/operators';
 import { HOURS, SECONDS } from 'src/app/shared/helpers/duration';
 import { TaskConfig, ItemTaskService } from '../../services/item-task.service';
 import { mapToFetchState } from 'src/app/shared/operators/state';
@@ -27,11 +27,14 @@ import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.s
 import { LTIDataSource } from 'src/app/modules/lti/services/lti-datasource.service';
 import { PublishResultsService } from '../../http-services/publish-result.service';
 import { errorIsHTTPForbidden } from 'src/app/shared/helpers/errors';
+import { isNotUndefined } from '../../../../shared/helpers/null-undefined-predicates';
 
 export interface TaskTab {
   name: string,
   view: string,
 }
+
+const heightSyncInterval = 0.2*SECONDS;
 
 @Component({
   selector: 'alg-item-display[url][attemptId][route]',
@@ -58,6 +61,18 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
   urlError$ = this.taskService.urlError$;
   unknownError$ = this.taskService.unknownError$;
   iframeSrc$ = this.taskService.iframeSrc$.pipe(map(url => this.sanitizer.bypassSecurityTrustResourceUrl(url)));
+
+  iframeHeight$ = this.taskService.task$.pipe(
+    switchMap(task => task.getMetaData()),
+    switchMap(({ autoHeight }) => {
+      if (autoHeight) return of(undefined);
+      return merge(
+        this.taskService.task$.pipe(switchMap(task => interval(heightSyncInterval).pipe(switchMap(() => task.getHeight())))),
+        this.taskService.display$.pipe(map(({ height }) => height), filter(isNotUndefined)),
+      ).pipe(map(height => `${height}px`));
+    }),
+    distinctUntilChanged(),
+  );
 
   @Output() viewChange = this.taskService.activeView$;
   @Output() tabsChange: Observable<TaskTab[]> = this.taskService.views$.pipe(
