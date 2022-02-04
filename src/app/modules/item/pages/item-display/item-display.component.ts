@@ -11,10 +11,9 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import { EMPTY, fromEvent, interval, merge, Observable, ReplaySubject } from 'rxjs';
-import { delay, distinctUntilChanged, filter, map, pairwise, startWith, switchMap } from 'rxjs/operators';
+import { EMPTY, interval, Observable, merge, of } from 'rxjs';
+import { distinctUntilChanged, filter, map, pairwise, startWith, switchMap } from 'rxjs/operators';
 import { HOURS, SECONDS } from 'src/app/shared/helpers/duration';
-import { isNotNull, isNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
 import { TaskConfig, ItemTaskService } from '../../services/item-task.service';
 import { mapToFetchState } from 'src/app/shared/operators/state';
 import { capitalize } from 'src/app/shared/helpers/case_conversion';
@@ -25,19 +24,17 @@ import { FullItemRoute } from 'src/app/shared/routing/item-route';
 import { DomSanitizer } from '@angular/platform-browser';
 import { PermissionsInfo } from '../../helpers/item-permissions';
 import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
-import { LayoutService } from 'src/app/shared/services/layout.service';
 import { LTIDataSource } from 'src/app/modules/lti/services/lti-datasource.service';
 import { PublishResultsService } from '../../http-services/publish-result.service';
 import { errorIsHTTPForbidden } from 'src/app/shared/helpers/errors';
-
-const initialHeight = 0;
-const appMainSectionPaddingBottom = '6rem';
-const heightSyncInterval = 0.2*SECONDS;
+import { isNotUndefined } from '../../../../shared/helpers/null-undefined-predicates';
 
 export interface TaskTab {
   name: string,
   view: string,
 }
+
+const heightSyncInterval = 0.2*SECONDS;
 
 @Component({
   selector: 'alg-item-display[url][attemptId][route]',
@@ -65,33 +62,21 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
   unknownError$ = this.taskService.unknownError$;
   iframeSrc$ = this.taskService.iframeSrc$.pipe(map(url => this.sanitizer.bypassSecurityTrustResourceUrl(url)));
 
-  @Output() viewChange = this.taskService.activeView$;
-  @Output() tabsChange: Observable<TaskTab[]> = this.taskService.views$.pipe(
-    map(views => views.map(view => ({ view, name: this.getTabNameByView(view) }))),
-  );
-
-
-  private computeIframeOffsetTop$ = new ReplaySubject<void>(1);
-  private iframeOffsetTop$ = merge(
-    fromEvent(globalThis, 'resize'),
-    this.layoutService.fullFrameContent$.pipe(delay(1000)), // time for the animation be complete
-    this.computeIframeOffsetTop$,
-  ).pipe(
-    map(() => (this.iframe ? this.iframe.nativeElement.getBoundingClientRect().top + globalThis.scrollY : null)),
-    filter(isNotNull),
-    distinctUntilChanged(),
-  );
-  // Start updating the iframe height to match the task's height
   iframeHeight$ = this.taskService.task$.pipe(
     switchMap(task => task.getMetaData()),
     switchMap(({ autoHeight }) => {
-      if (autoHeight) return this.iframeOffsetTop$.pipe(map(top => `calc(100vh - ${top}px - ${appMainSectionPaddingBottom})`));
+      if (autoHeight) return of(undefined);
       return merge(
         this.taskService.task$.pipe(switchMap(task => interval(heightSyncInterval).pipe(switchMap(() => task.getHeight())))),
         this.taskService.display$.pipe(map(({ height }) => height), filter(isNotUndefined)),
-      ).pipe(startWith(initialHeight), map(height => `${height}px`));
+      ).pipe(map(height => `${height}px`));
     }),
     distinctUntilChanged(),
+  );
+
+  @Output() viewChange = this.taskService.activeView$;
+  @Output() tabsChange: Observable<TaskTab[]> = this.taskService.views$.pipe(
+    map(views => views.map(view => ({ view, name: this.getTabNameByView(view) }))),
   );
 
   private subscriptions = [
@@ -129,7 +114,6 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
     private taskService: ItemTaskService,
     private sanitizer: DomSanitizer,
     private actionFeedbackService: ActionFeedbackService,
-    private layoutService: LayoutService,
     private publishResultService: PublishResultsService,
     private ltiDataSource: LTIDataSource,
   ) {}
@@ -141,7 +125,6 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
 
   ngAfterViewChecked(): void {
     if (!this.iframe || this.taskService.initialized) return;
-    this.computeIframeOffsetTop$.next();
     this.taskService.initTask(this.iframe.nativeElement);
   }
 
@@ -162,7 +145,6 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
 
   ngOnDestroy(): void {
     if (this.actionFeedbackService.hasFeedback) this.actionFeedbackService.clear();
-    this.computeIframeOffsetTop$.complete();
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 

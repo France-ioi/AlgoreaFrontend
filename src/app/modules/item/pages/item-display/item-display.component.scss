@@ -4,7 +4,6 @@
 :host {
   .item-display {
     background-color: $base-bk-color;
-    padding-right: 2rem;
   }
 
   .errors {
@@ -17,6 +16,7 @@
     background-color: white;
     iframe {
       display: block;
+      min-height: 100%;
     }
   }
 
