@@ -18,24 +18,25 @@ export function validateCanView(
 
   if (receiverPermissions.canView === 'info' && !giverCanAtLeastGrantView('enter')) {
     return { canView: [
-      `You need ${bolden(permissionsInfoString.canGrantView.string)} to be at least ${bolden(permissionsInfoString.canGrantView.enter)}`
+      $localize`You need ${bolden(permissionsInfoString.canGrantView.string)} to be at least ${
+        bolden(permissionsInfoString.canGrantView.enter)}`
     ] };
   }
   if (receiverPermissions.canView === 'content' && !giverCanAtLeastGrantView('content')) {
     return { canView: [
-      `You need ${bolden(permissionsInfoString.canGrantView.string)} to be at least ${
+      $localize`You need ${bolden(permissionsInfoString.canGrantView.string)} to be at least ${
         bolden(permissionsInfoString.canGrantView.content)}`
     ] };
   }
   if (receiverPermissions.canView === 'content_with_descendants' && !giverCanAtLeastGrantView('content_with_descendants')) {
     return { canView: [
-      `You need ${bolden(permissionsInfoString.canGrantView.string)} to be at least ${
+      $localize`You need ${bolden(permissionsInfoString.canGrantView.string)} to be at least ${
         bolden(permissionsInfoString.canGrantView.content_with_descendants)}`
     ] };
   }
   if (receiverPermissions.canView === 'solution' && !giverCanAtLeastGrantView('solution')) {
     return { canView: [
-      `You need ${bolden(permissionsInfoString.canGrantView.string)} to be at least ${
+      $localize`You need ${bolden(permissionsInfoString.canGrantView.string)} to be at least ${
         bolden(permissionsInfoString.canGrantView.solution)}`
     ] };
   }
@@ -57,31 +58,31 @@ export function validateCanGrantView(
       errors.push($localize`You need to be owner of this item`);
     }
     if (!receiverCanAtLeastView('solution')) {
-      errors.push(`This user needs ${bolden(permissionsInfoString.canView.string)} to be at least ${
+      errors.push($localize`This user needs ${bolden(permissionsInfoString.canView.string)} to be at least ${
         bolden(permissionsInfoString.canView.solution)}`);
     }
   } else {
 
     if (giverPermissions.canGrantView !== 'solution_with_grant') {
-      errors.push(`You need ${bolden(permissionsInfoString.canGrantView.string)} to be ${
+      errors.push($localize`You need ${bolden(permissionsInfoString.canGrantView.string)} to be ${
         bolden(permissionsInfoString.canGrantView.solution_with_grant)}`);
     }
 
     if (receiverPermissions.canGrantView === 'enter' && !receiverCanAtLeastView('info')) {
-      errors.push(`This user needs ${bolden(permissionsInfoString.canView.string)} to be at least ${
+      errors.push($localize`This user needs ${bolden(permissionsInfoString.canView.string)} to be at least ${
         bolden(permissionsInfoString.canView.info)}`);
     }
 
     if (receiverPermissions.canGrantView === 'content' && !receiverCanAtLeastView('content')) {
-      errors.push(`This user needs ${bolden(permissionsInfoString.canView.string)} to be at least ${
+      errors.push($localize`This user needs ${bolden(permissionsInfoString.canView.string)} to be at least ${
         bolden(permissionsInfoString.canView.content)}`);
     }
     if (receiverPermissions.canGrantView === 'content_with_descendants' && !receiverCanAtLeastView('content_with_descendants')) {
-      errors.push(`This user needs ${bolden(permissionsInfoString.canView.string)} to be at least ${
+      errors.push($localize`This user needs ${bolden(permissionsInfoString.canView.string)} to be at least ${
         bolden(permissionsInfoString.canView.content_with_descendants)}`);
     }
     if (receiverPermissions.canGrantView === 'solution' && !receiverCanAtLeastView('solution')) {
-      errors.push(`This user needs ${bolden(permissionsInfoString.canView.string)} to be ${
+      errors.push($localize`This user needs ${bolden(permissionsInfoString.canView.string)} to be ${
         bolden(permissionsInfoString.canView.solution)}`);
     }
   }
@@ -100,7 +101,7 @@ export function validateCanWatch(
 
   // For all canWatch except 'none'
   if (!hasAtLeastPermission(canViewValues, receiverPermissions.canView)('content')) {
-    errors.push(`This user needs ${bolden(permissionsInfoString.canView.string)} to be at least ${
+    errors.push($localize`This user needs ${bolden(permissionsInfoString.canView.string)} to be at least ${
       bolden(permissionsInfoString.canView.content)}`);
   }
 
@@ -112,7 +113,7 @@ export function validateCanWatch(
 
     // if receiverPermissions.canWatch is 'result' or 'answer'
     if (giverPermissions.canWatch !== 'answer_with_grant') {
-      errors.push(`You need ${bolden(permissionsInfoString.canWatch.string)} to be ${
+      errors.push($localize`You need ${bolden(permissionsInfoString.canWatch.string)} to be ${
         bolden(permissionsInfoString.canWatch.answer_with_grant)}`);
     }
   }
@@ -131,7 +132,7 @@ export function validateCanEdit(
 
   // For all can_edit except 'none'
   if (!hasAtLeastPermission(canViewValues, receiverPermissions.canView)('content')) {
-    errors.push(`This user needs ${bolden(permissionsInfoString.canView.string)} to be at least ${
+    errors.push($localize`This user needs ${bolden(permissionsInfoString.canView.string)} to be at least ${
       bolden(permissionsInfoString.canView.content)}`);
   }
 
@@ -143,7 +144,7 @@ export function validateCanEdit(
 
     // if receiverPermissions.canEdit is 'children' or 'all_with_grant'
     if (giverPermissions.canEdit !== 'all_with_grant') {
-      errors.push(`You need ${bolden(permissionsInfoString.canEdit.string)} to be ${
+      errors.push($localize`You need ${bolden(permissionsInfoString.canEdit.string)} to be ${
         bolden(permissionsInfoString.canEdit.all_with_grant)}`);
     }
   }
@@ -164,7 +165,7 @@ export function validateCanMakeSessionOfficial(
     errors.push($localize`You need to be owner of this item`);
   }
   if (!hasAtLeastPermission(canViewValues, receiverPermissions.canView)('info')) {
-    errors.push(`This user needs ${bolden(permissionsInfoString.canView.string)} to be at least ${
+    errors.push($localize`This user needs ${bolden(permissionsInfoString.canView.string)} to be at least ${
       bolden(permissionsInfoString.canView.info)}`);
   }
 
