@@ -1,5 +1,12 @@
-import { canGrantViewValues, canViewValues } from './item-permissions';
-import { validateCanGrantView, validateCanView } from './item-permissions-constraints';
+import { canEditValues, canGrantViewValues, canViewValues, canWatchValues } from './item-permissions';
+import {
+  validateCanEdit,
+  validateCanGrantView,
+  validateCanMakeSessionOfficial,
+  validateCanView,
+  validateCanWatch,
+  validateIsOwner
+} from './item-permissions-constraints';
 
 function flatMap<T>(arr: T[][]) {
   return arr.reduce((acc, val) => acc.concat(val), []);
@@ -342,5 +349,284 @@ describe('"can_grant_view" permissions constraints', () => {
     })) {
       expect(validateCanGrantView(p.receiverPermissions, p.giverPermissions).canGrantView).toBeDefined();
     }
+  });
+});
+
+describe('"can_watch" permissions constraints', () => {
+
+  it('should be a able to set to "none" ', () => {
+    for (const p of combinations({
+      receiverPermissions: combinations({
+        canWatch: [ 'none' ] as const,
+        canView: canViewValues,
+      }),
+      giverPermissions: combinations({
+        canWatch: canWatchValues,
+        isOwner: [ true, false ] as const,
+      }),
+    })) {
+      expect(validateCanWatch(p.receiverPermissions, p.giverPermissions)).toEqual({});
+    }
+  });
+
+  const values = [ 'result', 'answer' ] as const;
+
+  values.forEach(value => {
+    it(`should be a able to set to "${value}" `, () => {
+
+      // giver can_watch == 'answer_with_grant' && receiver can_view >= 'content'
+      for (const p of combinations({
+        receiverPermissions: combinations({
+          canWatch: [ value ],
+          canView: [ 'content', 'content_with_descendants', 'solution' ] as const,
+        }),
+        giverPermissions: combinations({
+          canWatch: [ 'answer_with_grant' ] as const,
+          isOwner: [ true, false ] as const,
+        }),
+      })) {
+        expect(validateCanWatch(p.receiverPermissions, p.giverPermissions)).toEqual({});
+      }
+
+      // receiver can_view < 'content'
+      for (const p of combinations({
+        receiverPermissions: combinations({
+          canWatch: [ value ],
+          canView: [ 'none', 'info' ] as const,
+        }),
+        giverPermissions: combinations({
+          canWatch: canWatchValues,
+          isOwner: [ true, false ] as const,
+        }),
+      })) {
+        expect(validateCanWatch(p.receiverPermissions, p.giverPermissions)).toBeDefined();
+      }
+
+      // giver can_watch !== 'answer_with_grant'
+      for (const p of combinations({
+        receiverPermissions: combinations({
+          canWatch: [ value ],
+          canView: canViewValues,
+        }),
+        giverPermissions: combinations({
+          canWatch: [ 'none', 'result', 'answer' ] as const,
+          isOwner: [ true, false ] as const,
+        }),
+      })) {
+        expect(validateCanWatch(p.receiverPermissions, p.giverPermissions)).toBeDefined();
+      }
+    });
+  });
+
+  it('should be a able to set to "answer_with_grant" ', () => {
+    for (const p of combinations({
+      receiverPermissions: combinations({
+        canWatch: [ 'answer_with_grant' ] as const,
+        canView: [ 'content', 'content_with_descendants', 'solution' ] as const,
+      }),
+      giverPermissions: combinations({
+        canWatch: canWatchValues,
+        isOwner: [ true ] as const,
+      }),
+    })) {
+      expect(validateCanWatch(p.receiverPermissions, p.giverPermissions)).toEqual({});
+    }
+
+    // receiver can_view < 'content'
+    for (const p of combinations({
+      receiverPermissions: combinations({
+        canWatch: [ 'answer_with_grant' ] as const,
+        canView: [ 'none', 'info' ] as const,
+      }),
+      giverPermissions: combinations({
+        canWatch: canWatchValues,
+        isOwner: [ true, false ] as const,
+      }),
+    })) {
+      expect(validateCanWatch(p.receiverPermissions, p.giverPermissions)).toBeDefined();
+    }
+
+    // giver not owner
+    for (const p of combinations({
+      receiverPermissions: combinations({
+        canWatch: [ 'answer_with_grant' ] as const,
+        canView: canViewValues,
+      }),
+      giverPermissions: combinations({
+        canWatch: canWatchValues,
+        isOwner: [ false ] as const,
+      }),
+    })) {
+      expect(validateCanWatch(p.receiverPermissions, p.giverPermissions)).toBeDefined();
+    }
+  });
+
+});
+
+describe('"can_edit" permissions constraints', () => {
+
+  it('should be a able to set to "none" ', () => {
+    for (const p of combinations({
+      receiverPermissions: combinations({
+        canEdit: [ 'none' ] as const,
+        canView: canViewValues,
+      }),
+      giverPermissions: combinations({
+        canEdit: canEditValues,
+        isOwner: [ true, false ] as const,
+      }),
+    })) {
+      expect(validateCanEdit(p.receiverPermissions, p.giverPermissions)).toEqual({});
+    }
+  });
+
+  const values = [ 'children', 'all' ] as const;
+
+  values.forEach(value => {
+    it(`should be a able to set to "${value}" `, () => {
+
+      // giver can_edit == 'all_with_grant' && receiver can_view >= 'content'
+      for (const p of combinations({
+        receiverPermissions: combinations({
+          canEdit: [ value ],
+          canView: [ 'content', 'content_with_descendants', 'solution' ] as const,
+        }),
+        giverPermissions: combinations({
+          canEdit: [ 'all_with_grant' ] as const,
+          isOwner: [ true, false ] as const,
+        }),
+      })) {
+        expect(validateCanEdit(p.receiverPermissions, p.giverPermissions)).toEqual({});
+      }
+
+      // receiver can_view < 'content'
+      for (const p of combinations({
+        receiverPermissions: combinations({
+          canEdit: [ value ],
+          canView: [ 'none', 'info' ] as const,
+        }),
+        giverPermissions: combinations({
+          canEdit: canEditValues,
+          isOwner: [ true, false ] as const,
+        }),
+      })) {
+        expect(validateCanEdit(p.receiverPermissions, p.giverPermissions)).toBeDefined();
+      }
+
+      // giver can_edit !== 'all_with_grant'
+      for (const p of combinations({
+        receiverPermissions: combinations({
+          canEdit: [ value ],
+          canView: canViewValues,
+        }),
+        giverPermissions: combinations({
+          canEdit: [ 'none','children','all' ] as const,
+          isOwner: [ true, false ] as const,
+        }),
+      })) {
+        expect(validateCanEdit(p.receiverPermissions, p.giverPermissions)).toBeDefined();
+      }
+    });
+  });
+
+  it('should be a able to set to "all_with_grant" ', () => {
+    for (const p of combinations({
+      receiverPermissions: combinations({
+        canEdit: [ 'all_with_grant' ] as const,
+        canView: [ 'content', 'content_with_descendants', 'solution' ] as const,
+      }),
+      giverPermissions: combinations({
+        canEdit: canEditValues,
+        isOwner: [ true ] as const,
+      }),
+    })) {
+      expect(validateCanEdit(p.receiverPermissions, p.giverPermissions)).toEqual({});
+    }
+
+    // receiver can_view < 'content'
+    for (const p of combinations({
+      receiverPermissions: combinations({
+        canEdit: [ 'all_with_grant' ] as const,
+        canView: [ 'none', 'info' ] as const,
+      }),
+      giverPermissions: combinations({
+        canEdit: canEditValues,
+        isOwner: [ true, false ] as const,
+      }),
+    })) {
+      expect(validateCanEdit(p.receiverPermissions, p.giverPermissions)).toBeDefined();
+    }
+
+    // giver not owner
+    for (const p of combinations({
+      receiverPermissions: combinations({
+        canEdit: [ 'all_with_grant' ] as const,
+        canView: canViewValues,
+      }),
+      giverPermissions: combinations({
+        canEdit: canEditValues,
+        isOwner: [ false ] as const,
+      }),
+    })) {
+      expect(validateCanEdit(p.receiverPermissions, p.giverPermissions)).toBeDefined();
+    }
+  });
+
+});
+
+describe('"can_make_session_official" permissions constraints', () => {
+  it('should be a able to set to "false" ', () => {
+    for (const p of combinations({
+      receiverPermissions: combinations({
+        canMakeSessionOfficial: [ false ] as const,
+        canView: canViewValues,
+      }),
+      giverPermissions: combinations({
+        isOwner: [ true, false ] as const,
+      }),
+    })) {
+      expect(validateCanMakeSessionOfficial(p.receiverPermissions, p.giverPermissions)).toEqual({});
+    }
+  });
+
+  it('should be a able to set to "true" ', () => {
+
+    // giver is owner and receiver can_view >= 'info'
+    for (const receiverPermissions of combinations({
+      canMakeSessionOfficial: [ true ] as const,
+      canView: [ 'info', 'content', 'content_with_descendants', 'solution' ] as const,
+    })) {
+      expect(validateCanMakeSessionOfficial(receiverPermissions, { isOwner: true })).toEqual({});
+    }
+
+    // receiver can_view < 'info'
+    for (const giverPermissions of combinations({
+      isOwner: [ true, false ] as const,
+    })) {
+      expect(validateCanMakeSessionOfficial({
+        canMakeSessionOfficial: true ,
+        canView: 'none' ,
+      }, giverPermissions)).toBeDefined();
+    }
+
+    // giver not owner
+    for (const receiverPermissions of combinations({
+      canMakeSessionOfficial: [ true ] as const,
+      canView: canViewValues,
+    })) {
+      expect(validateCanMakeSessionOfficial(receiverPermissions, { isOwner: false })).toBeDefined();
+    }
+  });
+});
+
+describe('"is_owner" permissions constraints', () => {
+  it('should be a able to set to "false" ', () => {
+    expect(validateIsOwner({ isOwner: false }, { isOwner: true })).toEqual({});
+    expect(validateIsOwner({ isOwner: false }, { isOwner: false })).toEqual({});
+  });
+
+  it('should be a able to set to "true" ', () => {
+    expect(validateIsOwner({ isOwner: true }, { isOwner: true })).toEqual({});
+    expect(validateIsOwner({ isOwner: true }, { isOwner: false })).toBeDefined();
   });
 });
