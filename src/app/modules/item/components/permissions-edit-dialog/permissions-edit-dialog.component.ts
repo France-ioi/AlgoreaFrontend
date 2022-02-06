@@ -3,17 +3,9 @@ import { FormBuilder } from '@angular/forms';
 import { merge, Subject, Subscription } from 'rxjs';
 import { GroupPermissions } from 'src/app/shared/http-services/group-permissions.service';
 import { PermissionsInfo } from '../../helpers/item-permissions';
-import { generateValues, permissionsConstraintsValidator } from '../../helpers/item-permissions-constraints';
+import { permissionsConstraintsValidator } from '../../helpers/item-permissions-constraints';
 import { TypeFilter } from '../composition-filter/composition-filter.component';
-
-export interface PermissionsDialogData {
-  canViewValues: ProgressSelectValue<string>[],
-  canGrantViewValues: ProgressSelectValue<string>[],
-  canWatchValues: ProgressSelectValue<string>[],
-  canEditValues: ProgressSelectValue<string>[],
-  isOwnerDisabledTooltip?: string[],
-  canMakeSessionOfficialDisabledTooltip?: string[],
-}
+import { generateValues, PermissionsDialogData } from './permissions-edit-dialog-texts';
 
 @Component({
   selector: 'alg-permissions-edit-dialog',
@@ -56,11 +48,11 @@ export class PermissionsEditDialogComponent implements OnChanges, OnDestroy {
       this.form.valueChanges,
       this.regenerateValues.asObservable()
     ).subscribe(() => {
-        if (this.permissions && this.giverPermissions) {
-          const receiverPermissions = this.form.value as GroupPermissions;
-          this.permissionsDialogData = generateValues(this.targetType, receiverPermissions, this.giverPermissions);
-        }
-      });
+      if (this.permissions && this.giverPermissions) {
+        const receiverPermissions = this.form.value as GroupPermissions;
+        this.permissionsDialogData = generateValues(this.targetType, receiverPermissions, this.giverPermissions);
+      }
+    });
   }
 
   ngOnDestroy(): void {

@@ -1,14 +1,6 @@
 import { ValidationErrors, ValidatorFn, AbstractControl } from '@angular/forms';
 import { GroupPermissions } from 'src/app/shared/http-services/group-permissions.service';
 import { PermissionsInfo, canGrantViewValues, canViewValues, permissionsInfoString } from './item-permissions';
-import { TypeFilter } from '../components/composition-filter/composition-filter.component';
-import { PermissionsDialogData } from '../components/permissions-edit-dialog/permissions-edit-dialog.component';
-import {
-  generateCanViewValues,
-  generateCanGrantViewValues,
-  generateCanWatchValues,
-  generateCanEditValues
-} from '../components/permissions-edit-dialog/permissions-edit-dialog-texts';
 
 const bolden = (text: string): string => `<b>${text}</b>`;
 
@@ -224,40 +216,5 @@ export function permissionsConstraintsValidator(
     }
 
     return Object.keys(errors).length > 0 ? errors : null;
-  };
-}
-
-export function generateValues(
-  targetType: TypeFilter,
-  receiverPermissions: GroupPermissions,
-  giverPermissions: PermissionsInfo
-): PermissionsDialogData {
-
-  return {
-    canViewValues: generateCanViewValues(targetType).map(val => {
-      const errors = validateCanView({ ...receiverPermissions, canView: val.value }, giverPermissions);
-      return errors.canView ? { ...val, disabled: true, tooltip: errors.canView } : val;
-    }),
-
-    canGrantViewValues: generateCanGrantViewValues(targetType).map(val => {
-      const errors = validateCanGrantView({ ...receiverPermissions, canGrantView: val.value }, giverPermissions);
-      return errors.canGrantView ? { ...val, disabled: true, tooltip: errors.canGrantView } : val;
-    }),
-
-    canWatchValues: generateCanWatchValues(targetType).map(val => {
-      const errors = validateCanWatch({ ...receiverPermissions, canWatch: val.value }, giverPermissions);
-      return errors.canWatch ? { ...val, disabled: true, tooltip: errors.canWatch } : val;
-    }),
-
-    canEditValues: generateCanEditValues(targetType).map(val => {
-      const errors = validateCanEdit({ ...receiverPermissions, canEdit: val.value }, giverPermissions);
-      return errors.canEdit ? { ...val, disabled: true, tooltip: errors.canEdit } : val;
-    }),
-
-    isOwnerDisabledTooltip: validateIsOwner({ ...receiverPermissions, isOwner: true }, giverPermissions).isOwner,
-
-    canMakeSessionOfficialDisabledTooltip: validateCanMakeSessionOfficial(
-      { ...receiverPermissions, canMakeSessionOfficial: true }, giverPermissions
-    ).canMakeSessionOfficial,
   };
 }

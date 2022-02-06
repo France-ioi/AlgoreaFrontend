@@ -1,8 +1,25 @@
 import { ProgressSelectValue } from
   'src/app/modules/shared-components/components/collapsible-section/progress-select/progress-select.component';
 import { GroupPermissions } from 'src/app/shared/http-services/group-permissions.service';
-import { permissionsInfoString } from '../../helpers/item-permissions';
+import { PermissionsInfo, permissionsInfoString } from '../../helpers/item-permissions';
 import { TypeFilter } from '../composition-filter/composition-filter.component';
+import {
+  validateCanView,
+  validateCanGrantView,
+  validateCanWatch,
+  validateCanEdit,
+  validateIsOwner,
+  validateCanMakeSessionOfficial
+} from '../../helpers/item-permissions-constraints';
+
+export interface PermissionsDialogData {
+  canViewValues: ProgressSelectValue<string>[],
+  canGrantViewValues: ProgressSelectValue<string>[],
+  canWatchValues: ProgressSelectValue<string>[],
+  canEditValues: ProgressSelectValue<string>[],
+  isOwnerDisabledTooltip?: string[],
+  canMakeSessionOfficialDisabledTooltip?: string[],
+}
 
 function getTargetTypeString(targetType: TypeFilter): string {
   switch (targetType) {
@@ -15,7 +32,7 @@ function getTargetTypeString(targetType: TypeFilter): string {
   }
 }
 
-export function generateCanViewValues(
+function generateCanViewValues(
   targetType: TypeFilter,
 ): ProgressSelectValue<GroupPermissions['canView']>[]{
   const targetTypeString = getTargetTypeString(targetType);
@@ -48,7 +65,7 @@ export function generateCanViewValues(
   ];
 }
 
-export function generateCanGrantViewValues(
+function generateCanGrantViewValues(
   targetType: TypeFilter,
 ): ProgressSelectValue<GroupPermissions['canGrantView']>[]{
   const targetTypeString = getTargetTypeString(targetType);
@@ -87,7 +104,7 @@ export function generateCanGrantViewValues(
   ];
 }
 
-export function generateCanWatchValues(
+function generateCanWatchValues(
   targetType: TypeFilter,
 ): ProgressSelectValue<GroupPermissions['canWatch']>[]{
   const targetTypeString = getTargetTypeString(targetType);
@@ -117,7 +134,7 @@ export function generateCanWatchValues(
   ];
 }
 
-export function generateCanEditValues(
+function generateCanEditValues(
   targetType: TypeFilter,
 ): ProgressSelectValue<GroupPermissions['canEdit']>[]{
   const targetTypeString = getTargetTypeString(targetType);
@@ -144,4 +161,39 @@ export function generateCanEditValues(
       comment: $localize`${targetTypeString} can also give \'Can edit\' access to others`,
     }
   ];
+}
+
+export function generateValues(
+  targetType: TypeFilter,
+  receiverPermissions: GroupPermissions,
+  giverPermissions: PermissionsInfo
+): PermissionsDialogData {
+
+  return {
+    canViewValues: generateCanViewValues(targetType).map(val => {
+      const errors = validateCanView({ ...receiverPermissions, canView: val.value }, giverPermissions);
+      return errors.canView ? { ...val, disabled: true, tooltip: errors.canView } : val;
+    }),
+
+    canGrantViewValues: generateCanGrantViewValues(targetType).map(val => {
+      const errors = validateCanGrantView({ ...receiverPermissions, canGrantView: val.value }, giverPermissions);
+      return errors.canGrantView ? { ...val, disabled: true, tooltip: errors.canGrantView } : val;
+    }),
+
+    canWatchValues: generateCanWatchValues(targetType).map(val => {
+      const errors = validateCanWatch({ ...receiverPermissions, canWatch: val.value }, giverPermissions);
+      return errors.canWatch ? { ...val, disabled: true, tooltip: errors.canWatch } : val;
+    }),
+
+    canEditValues: generateCanEditValues(targetType).map(val => {
+      const errors = validateCanEdit({ ...receiverPermissions, canEdit: val.value }, giverPermissions);
+      return errors.canEdit ? { ...val, disabled: true, tooltip: errors.canEdit } : val;
+    }),
+
+    isOwnerDisabledTooltip: validateIsOwner({ ...receiverPermissions, isOwner: true }, giverPermissions).isOwner,
+
+    canMakeSessionOfficialDisabledTooltip: validateCanMakeSessionOfficial(
+      { ...receiverPermissions, canMakeSessionOfficial: true }, giverPermissions
+    ).canMakeSessionOfficial,
+  };
 }
