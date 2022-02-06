@@ -52,7 +52,7 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
   currentFilter = this.defaultFilter;
 
   dialogPermissions: {
-    permissions: GroupPermissions,
+    permissions: Omit<GroupPermissions,'canEnterFrom'|'canEnterUntil'>,
     itemId: string,
     targetGroupId: string,
   } = {
@@ -65,8 +65,6 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
         canEdit: 'none',
         canMakeSessionOfficial: false,
         isOwner: true,
-        canEnterFrom: new Date(),
-        canEnterUntil: new Date(),
       }
     };
 

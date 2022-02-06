@@ -150,7 +150,7 @@ export function validateCanEdit(
   } else {
 
     // if receiverPermissions.canEdit is 'children' or 'all_with_grant'
-    if (!(giverPermissions.canEdit === 'all_with_grant')) {
+    if (giverPermissions.canEdit !== 'all_with_grant') {
       errors.push(`You need ${bolden(permissionsInfoString.canEdit.string)} to be ${
         bolden(permissionsInfoString.canEdit.all_with_grant)}`);
     }

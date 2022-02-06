@@ -44,7 +44,7 @@ export class GroupPermissionsService {
 
   getPermissions(sourceGroupId: string, groupId: string, itemId: string): Observable<GroupPermissionsInfo> {
     return this.http
-      .get<GroupPermissionsInfo>(`${appConfig.apiUrl}/groups/${sourceGroupId}/permissions/${groupId}/${itemId}`).pipe(
+      .get<unknown>(`${appConfig.apiUrl}/groups/${sourceGroupId}/permissions/${groupId}/${itemId}`).pipe(
         decodeSnakeCase(groupPermissionsInfoDecoder),
       );
   }
@@ -59,8 +59,6 @@ export class GroupPermissionsService {
       can_edit: permissions.canEdit,
       can_make_session_official: permissions.canMakeSessionOfficial,
       is_owner: permissions.isOwner,
-      can_enter_from: undefined,
-      can_enter_until: undefined,
     };
     return this.http
       .put<SimpleActionResponse>(`${appConfig.apiUrl}/groups/${sourceGroupId}/permissions/${groupId}/${itemId}`, body)

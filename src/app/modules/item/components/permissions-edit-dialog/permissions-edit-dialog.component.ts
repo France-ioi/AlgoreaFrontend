@@ -24,7 +24,7 @@ export class PermissionsEditDialogComponent implements OnChanges, OnDestroy {
 
   @Input() visible?: boolean;
   @Input() title?: string;
-  @Input() permissions?: GroupPermissions;
+  @Input() permissions?: Omit<GroupPermissions,'canEnterFrom'|'canEnterUntil'>;
   @Input() giverPermissions?: PermissionsInfo;
   @Input() targetType: TypeFilter = 'Users';
   @Output() close = new EventEmitter<void>();
