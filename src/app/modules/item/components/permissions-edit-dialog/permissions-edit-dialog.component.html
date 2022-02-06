@@ -23,7 +23,7 @@
 
       <form [formGroup]="form">
         <alg-collapsible-section
-          i18n-title title="Can view" icon="fa fa-eye"
+          i18n-header header="Can view" icon="fa fa-eye"
           [collapsible]="!form.errors?.canView"
         >
           <ng-template #content let-collapsed>
@@ -45,7 +45,7 @@
         </alg-switch-field>-->
 
         <alg-collapsible-section
-          i18n-title title="Can grant view" icon="fa fa-key"
+          i18n-header header="Can grant view" icon="fa fa-key"
           [collapsible]="!form.errors?.canGrantView"
         >
           <ng-template #content let-collapsed>
@@ -59,7 +59,7 @@
         </alg-collapsible-section>
 
         <alg-collapsible-section
-          i18n-title title="Can watch" icon="fa fa-binoculars"
+          i18n-header header="Can watch" icon="fa fa-binoculars"
           [collapsible]="!form.errors?.canWatch"
         >
           <ng-template #content let-collapsed>
@@ -73,7 +73,7 @@
         </alg-collapsible-section>
 
         <alg-collapsible-section
-          i18n-title title="Can edit" icon="fa fa-pencil-alt"
+          i18n-header header="Can edit" icon="fa fa-pencil-alt"
           [collapsible]="!form.errors?.canEdit"
         >
           <ng-template #content let-collapsed>
@@ -87,7 +87,7 @@
         </alg-collapsible-section>
 
         <alg-collapsible-section
-          i18n-title title="Can attach official sessions" icon="fa fa-paperclip"
+          i18n-header header="Can attach official sessions" icon="fa fa-paperclip"
           [collapsible]="!form.errors?.canMakeSessionOfficial"
         >
           <ng-template #content let-collapsed>
@@ -105,7 +105,7 @@
         </alg-collapsible-section>
 
         <alg-collapsible-section
-          i18n-title title="Is owner" icon="fa fa-user-tie"
+          i18n-header header="Is owner" icon="fa fa-user-tie"
           [collapsible]="!form.errors?.isOwner"
         >
           <ng-template #content let-collapsed>

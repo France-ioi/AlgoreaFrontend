@@ -3,7 +3,7 @@
     <span class="header-icon">
       <i class="{{ icon }}"></i>
     </span>
-    <span class="header-title">{{ title }}</span>
+    <span class="header-title">{{ header }}</span>
     <ng-container *ngIf="contentTemplate && collapsed && collapsible"
       [ngTemplateOutlet]="contentTemplate"
       [ngTemplateOutletContext]="{ $implicit: true }"

@@ -7,7 +7,7 @@ import { Component, ContentChild, Input, TemplateRef } from '@angular/core';
 })
 export class CollapsibleSectionComponent {
 
-  @Input() title = '';
+  @Input() header = '';
   @Input() icon = '';
 
   @Input() disabled = false;
