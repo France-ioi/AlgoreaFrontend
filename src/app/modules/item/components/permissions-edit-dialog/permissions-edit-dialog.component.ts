@@ -1,8 +1,6 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { BehaviorSubject, combineLatest } from 'rxjs';
-import { ProgressSelectValue } from
-  'src/app/modules/shared-components/components/collapsible-section/progress-select/progress-select.component';
+import { merge, Subject, Subscription } from 'rxjs';
 import { GroupPermissions } from 'src/app/shared/http-services/group-permissions.service';
 import { PermissionsInfo } from '../../helpers/item-permissions';
 import { generateValues, permissionsConstraintsValidator } from '../../helpers/item-permissions-constraints';
@@ -22,7 +20,7 @@ export interface PermissionsDialogData {
   templateUrl: './permissions-edit-dialog.component.html',
   styleUrls: [ './permissions-edit-dialog.component.scss' ]
 })
-export class PermissionsEditDialogComponent implements OnChanges {
+export class PermissionsEditDialogComponent implements OnChanges, OnDestroy {
 
   @Input() visible?: boolean;
   @Input() title?: string;
@@ -50,16 +48,24 @@ export class PermissionsEditDialogComponent implements OnChanges {
     isOwner: [ true ],
   });
 
-  private regenerateValues = new BehaviorSubject(undefined);
+  private regenerateValues = new Subject<void>();
+  private subscription?: Subscription;
 
   constructor(private fb: FormBuilder) {
-    combineLatest([ this.form.valueChanges, this.regenerateValues.asObservable() ])
-      .subscribe(() => {
+    this.subscription = merge(
+      this.form.valueChanges,
+      this.regenerateValues.asObservable()
+    ).subscribe(() => {
         if (this.permissions && this.giverPermissions) {
           const receiverPermissions = this.form.value as GroupPermissions;
           this.permissionsDialogData = generateValues(this.targetType, receiverPermissions, this.giverPermissions);
         }
       });
+  }
+
+  ngOnDestroy(): void {
+    this.subscription?.unsubscribe();
+    this.regenerateValues.complete();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -70,7 +76,7 @@ export class PermissionsEditDialogComponent implements OnChanges {
         this.form.reset({ ...this.permissions }, { emitEvent: false });
       }
     }
-    if (changes.targetType) this.regenerateValues.next(undefined);
+    if (changes.targetType) this.regenerateValues.next();
   }
 
   onCancel(): void {
