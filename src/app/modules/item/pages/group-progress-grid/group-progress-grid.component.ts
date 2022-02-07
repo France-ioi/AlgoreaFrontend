@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
 import { forkJoin, Observable, ReplaySubject, Subscription } from 'rxjs';
-import { filter, map, pairwise, shareReplay, startWith, switchMap, withLatestFrom } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { canCurrentUserGrantGroupAccess } from 'src/app/modules/group/helpers/group-management';
 import { Group } from 'src/app/modules/group/http-services/get-group-by-id.service';
 import { GetGroupChildrenService } from 'src/app/modules/group/http-services/get-group-children.service';
@@ -9,7 +9,6 @@ import { GetGroupDescendantsService } from 'src/app/shared/http-services/get-gro
 import { GetGroupProgressService, TeamUserProgress } from 'src/app/shared/http-services/get-group-progress.service';
 import { GroupPermissionsService } from 'src/app/shared/http-services/group-permissions.service';
 import { Permissions } from 'src/app/shared/helpers/group-permissions';
-import { mapToFetchState, readyData } from 'src/app/shared/operators/state';
 import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
 import { TypeFilter } from '../../components/composition-filter/composition-filter.component';
 import { GetItemChildrenService } from '../../http-services/get-item-children.service';
@@ -21,22 +20,22 @@ import { ItemRouter } from '../../../../shared/routing/item-router';
 import { GroupRouter } from '../../../../shared/routing/group-router';
 import { rawGroupRoute } from '../../../../shared/routing/group-route';
 import { ProgressData } from '../../components/user-progress-details/user-progress-details.component';
-import { canLoadMoreItems } from 'src/app/shared/helpers/load-more';
-import { fetchingState, readyState } from 'src/app/shared/helpers/state';
+import { withLoadMore } from 'src/app/shared/operators/with-load-more';
 
 const progressListLimit = 25;
 
+interface DataRow {
+  header: string,
+  id: string,
+  data: (TeamUserProgress|undefined)[],
+}
 interface Data {
   type: TypeFilter,
   items: {
     id: string,
     title: string|null,
   }[],
-  rows: {
-    header: string,
-    id: string,
-    data: (TeamUserProgress|undefined)[],
-  }[],
+  rows: DataRow[],
   can_access: boolean,
 }
 interface DataFetching {
@@ -89,51 +88,19 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
   private dataFetching$ = new ReplaySubject<DataFetching>(1);
   private permissionsFetchingSubscription?: Subscription;
 
-  private lastFetchedData$ = this.dataFetching$.pipe(
-    switchMap(dataFetching => this.getData(dataFetching).pipe(
-      mapToFetchState(),
-      map(state => ({ state, dataFetching })),
-    )),
-    shareReplay(1),
-  );
-  private thunkedData$ = this.lastFetchedData$.pipe(
-    map(({ state }) => state),
-    readyData(),
-    startWith(undefined),
-    pairwise(),
-  ) as Observable<[Data | undefined, Data]>;
+  private data = withLoadMore<DataFetching, Data, DataRow>({
+    trigger$: this.dataFetching$,
+    fetcher: dataFetching => this.getData(dataFetching),
+    limit: progressListLimit,
+    mapIdFromListItem: item => item.id,
+    mapListFromData: data => data.rows,
+    mapListToData: (data, list) => ({ ...data, rows: list })
+  });
 
-  state$ = this.lastFetchedData$.pipe(
-    withLatestFrom(this.thunkedData$),
-    map(([{ state, dataFetching }, [ previousData, currentData ] ]) => {
-      const { fromId } = dataFetching;
-      if (!fromId) return state; // Not load more => normal treatment
+  state$ = this.data.state$;
+  loadMore$ = this.data.loadMore$;
 
-      if (state.isFetching) return fetchingState(currentData);
-      if (state.isError) return readyState(currentData);
-
-      if (!previousData) throw new Error('impossible: must have previous data when loading more items');
-      if (previousData.rows.length === 0) return state;
-      // When loaded more rows, prepend old rows to new state
-      return readyState({
-        ...state.data,
-        rows: [ ...previousData.rows, ...state.data.rows ],
-      });
-    }),
-  );
-  loadMore$: Observable<{ fromId: string } | null> = this.lastFetchedData$.pipe(
-    map(({ state }) => state),
-    readyData(),
-    map(fetchedData => {
-      const last = fetchedData.rows[fetchedData.rows.length-1];
-      if (!last || !canLoadMoreItems(fetchedData.rows, progressListLimit)) return null;
-      return { fromId: last.id };
-    }),
-  );
-
-  private loadMoreErrorSubscription = this.lastFetchedData$.pipe(
-    filter(({ state, dataFetching: { fromId } }) => state.isError && !!fromId),
-  ).subscribe(() => {
+  private loadMoreErrorSubscription = this.data.loadMoreError$.subscribe(() => {
     this.actionFeedbackService.error($localize`Could not load more results, are you connected to the internet?`);
   });
 
@@ -147,11 +114,7 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     private progressCSVService: ProgressCSVService,
     private itemRouter: ItemRouter,
     private groupRouter: GroupRouter,
-  ) {
-    this.dataFetching$.subscribe(dataFetching => {
-      console.info({ dataFetching });
-    });
-  }
+  ) {}
 
   ngOnDestroy(): void {
     this.dataFetching$.complete();
