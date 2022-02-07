@@ -45,10 +45,14 @@ export class GetGroupMembersService {
 
   getGroupMembers(
     groupId: string,
-    sort: string[] = []
+    sort: string[] = [],
+    limit?: number,
+    fromId?: string,
   ): Observable<Member[]> {
     let params = new HttpParams();
     if (sort.length > 0) params = params.set('sort', sort.join(','));
+    if (limit !== undefined) params = params.set('limit', limit.toString());
+    if (fromId !== undefined) params = params.set('from.id', fromId);
     return this.http
       .get<unknown>(`${appConfig.apiUrl}/groups/${groupId}/members`, { params: params })
       .pipe(
