@@ -1,4 +1,4 @@
-import { environment } from 'src/environments/environment';
+import { environment, presets, getPresetNameByOrigin } from 'src/environments/environment';
 
 export interface LanguageConfig {
   tag: string,
@@ -34,4 +34,23 @@ export interface Environment {
 
 type Config = Environment; // config may be someday an extension of the environment
 
-export const appConfig: Config = environment;
+const presetQueryParam = 'config_preset';
+/**
+ * Escape hatch to start the platform with the provided configuration preset. (presets are declared in each environment file)
+ * @example `http://dev.algorea.org/#/?config_preset=demo`
+ * @example `http://dev.algorea.org/#/activities/etc/?config_preset=demo`
+ * Should be used only by Algorea teams, for testing or demo purposes only.
+ */
+function getPresetNameFromQuery(): string | null {
+  const url = globalThis.location.href;
+  const search = url.includes('?') ? new URLSearchParams(url.slice(url.indexOf('?'))) : null;
+  return search?.get(presetQueryParam) ?? null;
+}
+
+const origin = `${globalThis.location.protocol}//${globalThis.location.hostname}`;
+const presetName = getPresetNameByOrigin(origin) ?? getPresetNameFromQuery();
+
+export const appConfig: Config = {
+  ...environment,
+  ...(presetName ? presets[presetName as keyof typeof presets] : undefined),
+};

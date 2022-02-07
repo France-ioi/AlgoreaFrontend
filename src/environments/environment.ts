@@ -24,6 +24,22 @@ export const environment: Environment = {
   itemPlatformId: 'algorea_backend',
 };
 
+type Preset = 'demo';
+export const presets: Record<Preset, Partial<Environment>> = {
+  demo: {
+    defaultActivityId: '1352246428241737349', // SNT
+    defaultTitle: 'Demo app',
+    authType: 'cookies',
+  },
+};
+
+export function getPresetNameByOrigin(origin: string): Preset | null {
+  switch (origin) {
+    case 'http://demo.localhost': return 'demo';
+    default: return null;
+  }
+}
+
 /*
  * For easier debugging in development mode, you can import the following file
  * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.
