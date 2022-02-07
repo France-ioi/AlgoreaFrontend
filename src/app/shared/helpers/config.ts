@@ -1,4 +1,4 @@
-import { environment } from 'src/environments/environment';
+import { environment, presets, getPresetNameByDomain } from 'src/environments/environment';
 
 export interface LanguageConfig {
   tag: string,
@@ -33,48 +33,17 @@ export interface Environment {
 }
 
 type Config = Environment; // config may be someday an extension of the environment
-type ConfigOverride = Omit<Config, 'production' | 'allowForcedToken'>;
-const presetNames = [ 'example', 'demo' ] as const;
-type Preset = typeof presetNames[number];
-const isPreset = (value: any): value is Preset => presetNames.includes(value as Preset);
-const presetQueryParam = 'config_preset';
 
-const presets: Record<Preset, Partial<ConfigOverride>> = {
-  example: {
-    defaultActivityId: '1625159049301502151', // Motif Art
-    defaultTitle: 'Example app',
-    authType: 'tokens',
-    itemPlatformId: 'Example',
-  },
-  demo: {
-    defaultActivityId: '1352246428241737349', // SNT
-    defaultTitle: 'Demo app'
-  },
-};
+const presetQueryParam = 'config_preset';
+function getPresetNameFromQuery(): string | null {
+  const url = globalThis.location.href;
+  const search = url.includes('?') ? new URLSearchParams(url.slice(url.indexOf('?'))) : null;
+  return search?.get(presetQueryParam) ?? null;
+}
+
+const presetName = getPresetNameByDomain(globalThis.location.hostname) ?? getPresetNameFromQuery();
 
 export const appConfig: Config = {
   ...environment,
-  ...getPresetConfigFromUrl(), // spreading `null` is fine
+  ...(presetName ? presets[presetName] : undefined),
 };
-
-function getPresetConfigFromUrl(): Partial<ConfigOverride> | null {
-  const preset = getPresetFromDomain() ?? getPresetFromQuery();
-  return preset && presets[preset];
-}
-
-function getPresetFromQuery(): Preset | null {
-  const url = globalThis.location.href;
-  const search = url.includes('?') ? new URLSearchParams(url.slice(url.indexOf('?'))) : null;
-  const preset = search?.get(presetQueryParam) ?? null;
-  if (!preset) return null;
-  if (!isPreset(preset)) throw new Error(`Unknown preset "${preset}", expected one of: ${presetNames.join(', ')}`);
-  return preset;
-}
-
-function getPresetFromDomain(): Preset | null {
-  switch (window.location.hostname) {
-    case 'demo.algorea.org': return 'demo';
-    case 'example.algorea.org': return 'example';
-    default: return null;
-  }
-}
