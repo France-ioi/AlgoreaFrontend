@@ -33,5 +33,48 @@ export interface Environment {
 }
 
 type Config = Environment; // config may be someday an extension of the environment
+type ConfigOverride = Omit<Config, 'production' | 'allowForcedToken'>;
+const presetNames = [ 'example', 'demo' ] as const;
+type Preset = typeof presetNames[number];
+const isPreset = (value: any): value is Preset => presetNames.includes(value as Preset);
+const presetQueryParam = 'config_preset';
 
-export const appConfig: Config = environment;
+const presets: Record<Preset, Partial<ConfigOverride>> = {
+  example: {
+    defaultActivityId: '1625159049301502151', // Motif Art
+    defaultTitle: 'Example app',
+    authType: 'tokens',
+    itemPlatformId: 'Example',
+  },
+  demo: {
+    defaultActivityId: '1352246428241737349', // SNT
+    defaultTitle: 'Demo app'
+  },
+};
+
+export const appConfig: Config = {
+  ...environment,
+  ...getPresetConfigFromUrl(), // spreading `null` is fine
+};
+
+function getPresetConfigFromUrl(): Partial<ConfigOverride> | null {
+  const preset = getPresetFromDomain() ?? getPresetFromQuery();
+  return preset && presets[preset];
+}
+
+function getPresetFromQuery(): Preset | null {
+  const url = globalThis.location.href;
+  const search = url.includes('?') ? new URLSearchParams(url.slice(url.indexOf('?'))) : null;
+  const preset = search?.get(presetQueryParam) ?? null;
+  if (!preset) return null;
+  if (!isPreset(preset)) throw new Error(`Unknown preset "${preset}", expected one of: ${presetNames.join(', ')}`);
+  return preset;
+}
+
+function getPresetFromDomain(): Preset | null {
+  switch (window.location.hostname) {
+    case 'demo.algorea.org': return 'demo';
+    case 'example.algorea.org': return 'example';
+    default: return null;
+  }
+}
