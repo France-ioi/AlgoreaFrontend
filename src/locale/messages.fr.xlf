@@ -126,7 +126,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/grid/grid.component.html</context><context context-type="linenumber">67</context></context-group></trans-unit><trans-unit id="4449471207584645508" datatype="html">
         <source>Permissions successfully updated.</source><target state="translated">Permissions mises à jour avec succès.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/group-progress-grid/group-progress-grid.component.ts</context><context context-type="linenumber">278</context></context-group></trans-unit><trans-unit id="7463044993322326313" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/group-progress-grid/group-progress-grid.component.ts</context><context context-type="linenumber">279</context></context-group></trans-unit><trans-unit id="7463044993322326313" datatype="html">
         <source> This content does not exist or you are not allowed to view it. </source><target state="new"> This content does not exist or you are not allowed to view it. </target>
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-by-id.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="5199111763891627410" datatype="html">
@@ -339,10 +339,16 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/group-progress-grid/group-progress-grid.component.html</context><context context-type="linenumber">25</context></context-group></trans-unit><trans-unit id="6825329815737519497" datatype="html">
         <source>Export as CSV</source><target state="new">Export as CSV</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/group-progress-grid/group-progress-grid.component.html</context><context context-type="linenumber">42</context></context-group></trans-unit><trans-unit id="8373240794331669576" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/group-progress-grid/group-progress-grid.component.html</context><context context-type="linenumber">42</context></context-group></trans-unit><trans-unit id="1601880004921589799" datatype="html">
+        <source>Could not load more results, are you connected to the internet?</source><target state="new">Could not load more results, are you connected to the internet?</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/pages/group-progress-grid/group-progress-grid.component.ts</context>
+          <context context-type="linenumber">104</context>
+        </context-group>
+      </trans-unit><trans-unit id="8373240794331669576" datatype="html">
         <source>The permissions cannot be retrieved. If the problem persists, please contact us.</source><target state="new">The permissions cannot be retrieved. If the problem persists, please contact us.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/group-progress-grid/group-progress-grid.component.ts</context><context context-type="linenumber">264</context></context-group></trans-unit><trans-unit id="3768927257183755959" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/group-progress-grid/group-progress-grid.component.ts</context><context context-type="linenumber">265</context></context-group></trans-unit><trans-unit id="3768927257183755959" datatype="html">
         <source>Save</source><target state="translated">Sauvegarder</target>
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/manager-permission-dialog/manager-permission-dialog.component.html</context><context context-type="linenumber">99</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/floating-save/floating-save.component.html</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="4675865183684903475" datatype="html">
@@ -1578,11 +1584,8 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/member-list/member-list.component.html</context><context context-type="linenumber">6</context></context-group></trans-unit><trans-unit id="33149636091572968" datatype="html">
         <source>Load more</source><target state="new">Load more</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/components/member-list/member-list.component.html</context>
-          <context context-type="linenumber">92</context>
-        </context-group>
-      </trans-unit><trans-unit id="5077586677126527379" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/member-list/member-list.component.html</context><context context-type="linenumber">92</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/group-progress-grid/group-progress-grid.component.html</context><context context-type="linenumber">101</context></context-group></trans-unit><trans-unit id="5077586677126527379" datatype="html">
         <source>This list is empty. Check below the different ways to add members or sub-groups.</source><target state="translated">La liste est vide. Voyez ci-dessous comment vous pouvez ajouter des membres et sous-groupes.</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/member-list/member-list.component.html</context><context context-type="linenumber">104</context></context-group></trans-unit><trans-unit id="1916930465370171483" datatype="html">
