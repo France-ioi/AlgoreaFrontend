@@ -12,6 +12,12 @@
       (groupJoined)="reloadItem()"
     ></alg-access-code-view>
 
+    <alg-item-permissions
+      *ngIf="watchedGroup$ | async as watchedGroup"
+      [itemData]="itemData"
+      [watchedGroup]="watchedGroup"
+    ></alg-item-permissions>
+
     <nav class="nav-tab">
       <a
         class="nav-tab-item"
