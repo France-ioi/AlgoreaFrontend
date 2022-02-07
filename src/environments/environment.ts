@@ -24,7 +24,8 @@ export const environment: Environment = {
   itemPlatformId: 'algorea_backend',
 };
 
-export const presets: Record<string, Partial<Environment>> = {
+type Preset = 'demo';
+export const presets: Record<Preset, Partial<Environment>> = {
   demo: {
     defaultActivityId: '1352246428241737349', // SNT
     defaultTitle: 'Demo app',
@@ -32,9 +33,9 @@ export const presets: Record<string, Partial<Environment>> = {
   },
 };
 
-export function getPresetNameByDomain(domain: string): string | null {
-  switch (domain) {
-    case 'demo.localhost': return 'demo';
+export function getPresetNameByOrigin(origin: string): Preset | null {
+  switch (origin) {
+    case 'http://demo.localhost': return 'demo';
     default: return null;
   }
 }

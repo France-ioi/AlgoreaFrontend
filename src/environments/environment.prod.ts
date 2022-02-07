@@ -21,7 +21,8 @@ export const environment: Environment = {
   itemPlatformId: 'algorea_backend',
 };
 
-export const presets: Record<string, Partial<Environment>> = {
+type Preset = 'example' | 'demo';
+export const presets: Record<Preset, Partial<Environment>> = {
   example: {
     defaultActivityId: '1625159049301502151', // Motif Art
     defaultTitle: 'Example app',
@@ -34,9 +35,9 @@ export const presets: Record<string, Partial<Environment>> = {
   },
 };
 
-export function getPresetNameByDomain(domain: string): string | null {
-  switch (domain) {
-    case 'example.algorea.org': return 'example';
+export function getPresetNameByOrigin(origin: string): Preset | null {
+  switch (origin) {
+    case 'http://example.algorea.org': return 'example';
     default: return null;
   }
 }

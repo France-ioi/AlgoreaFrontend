@@ -1,4 +1,4 @@
-import { environment, presets, getPresetNameByDomain } from 'src/environments/environment';
+import { environment, presets, getPresetNameByOrigin } from 'src/environments/environment';
 
 export interface LanguageConfig {
   tag: string,
@@ -41,9 +41,10 @@ function getPresetNameFromQuery(): string | null {
   return search?.get(presetQueryParam) ?? null;
 }
 
-const presetName = getPresetNameByDomain(globalThis.location.hostname) ?? getPresetNameFromQuery();
+const origin = `${globalThis.location.protocol}//${globalThis.location.hostname}`;
+const presetName = getPresetNameByOrigin(origin) ?? getPresetNameFromQuery();
 
 export const appConfig: Config = {
   ...environment,
-  ...(presetName ? presets[presetName] : undefined),
+  ...(presetName ? presets[presetName as keyof typeof presets] : undefined),
 };
