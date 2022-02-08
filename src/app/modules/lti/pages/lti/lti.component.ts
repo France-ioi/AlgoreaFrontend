@@ -46,7 +46,7 @@ export class LTIComponent implements OnDestroy {
   private loginId$ = this.activatedRoute.queryParamMap.pipe(map(queryParams => queryParams.get(loginIdParam)));
 
   private isRedirection$ = this.activatedRoute.queryParamMap.pipe(
-    map(queryParams => queryParams.has(isRedirectionParam)),
+    map(queryParams => queryParams.get(isRedirectionParam) === '1'),
   );
 
   private fromPath$ = this.activatedRoute.queryParamMap.pipe(
@@ -99,7 +99,7 @@ export class LTIComponent implements OnDestroy {
       this.contentId$,
       this.loginId$.pipe(filter(isNotNull)),
     ]).subscribe(([ contentId, loginId ]) => {
-      setRedirectToSubPathAtInit(`/lti/${contentId}?${loginIdParam}=${loginId}&${isRedirectionParam}=`);
+      setRedirectToSubPathAtInit(`/lti/${contentId}?${loginIdParam}=${loginId}&${isRedirectionParam}=1`);
       this.activityNavTreeService.navigationNeighborsRestrictedToDescendantOfElementId = contentId;
     }),
 
