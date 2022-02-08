@@ -15,14 +15,8 @@ export function removeSubPathRedirectionAtInit(): void {
   storage.removeItem(redirectToSubPathKey);
 }
 
-export function getUrlWithFromPath(currentUrl: string, fromPath: string): string {
+export function appendUrlWithQuery(currentUrl: string, query: string, value: string): string {
   const url = new URL(currentUrl, location.origin);
-  url.searchParams.set(fromPathKey, fromPath);
-  return url.pathname + url.search;
-}
-
-export function getUrlWithAllowFromPath(currentUrl: string): string {
-  const url = new URL(currentUrl, location.origin);
-  url.searchParams.set(allowFromPathKey, '1');
+  url.searchParams.set(query, value);
   return url.pathname + url.search;
 }

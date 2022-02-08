@@ -9,9 +9,9 @@ import { errorIsHTTPForbidden } from 'src/app/shared/helpers/errors';
 import { isNotNull } from 'src/app/shared/helpers/null-undefined-predicates';
 import {
   allowFromPathKey,
+  appendUrlWithQuery,
   fromPathKey,
   getRedirectToSubPathAtInit,
-  getUrlWithAllowFromPath,
   setRedirectToSubPathAtInit,
 } from 'src/app/shared/helpers/redirect-to-sub-path-at-init';
 import { CheckLoginService } from 'src/app/shared/http-services/check-login.service';
@@ -114,7 +114,7 @@ export class LTIComponent implements OnDestroy {
 
         const redirectUrl = getRedirectToSubPathAtInit();
         if (!redirectUrl) throw new Error('redirect url should be set by now');
-        setRedirectToSubPathAtInit(getUrlWithAllowFromPath(redirectUrl));
+        setRedirectToSubPathAtInit(appendUrlWithQuery(redirectUrl, allowFromPathKey, '1'));
 
         if (fromPath) {
           void this.router.navigateByUrl(fromPath);
