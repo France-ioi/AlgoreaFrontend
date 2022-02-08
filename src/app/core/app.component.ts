@@ -9,7 +9,11 @@ import { LocaleService } from './services/localeService';
 import { LayoutService } from '../shared/services/layout.service';
 import { Title } from '@angular/platform-browser';
 import { appConfig } from '../shared/helpers/config';
-import { getRedirectToSubPathAtInit, removeSubPathRedirectionAtInit } from '../shared/helpers/redirect-to-sub-path-at-init';
+import {
+  getRedirectToSubPathAtInit,
+  getUrlWithFromPath,
+  removeSubPathRedirectionAtInit,
+} from '../shared/helpers/redirect-to-sub-path-at-init';
 
 @Component({
   selector: 'alg-root',
@@ -50,7 +54,7 @@ export class AppComponent implements OnInit, OnDestroy {
     const subPathToRedirectTo = getRedirectToSubPathAtInit();
     if (subPathToRedirectTo) {
       removeSubPathRedirectionAtInit();
-      void this.router.navigateByUrl(subPathToRedirectTo, { replaceUrl: true });
+      void this.router.navigateByUrl(getUrlWithFromPath(subPathToRedirectTo, location.hash.slice(1)), { replaceUrl: true });
     }
   }
 

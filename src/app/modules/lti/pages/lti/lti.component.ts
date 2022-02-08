@@ -1,5 +1,5 @@
 import { Component, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { combineLatest, EMPTY, forkJoin, Observable } from 'rxjs';
 import { catchError, filter, map, shareReplay, switchMap, withLatestFrom } from 'rxjs/operators';
 import { ActivityNavTreeService } from 'src/app/core/services/navigation/item-nav-tree.service';
@@ -7,7 +7,13 @@ import { GetItemChildrenService, ItemChild } from 'src/app/modules/item/http-ser
 import { GetItemPathService } from 'src/app/modules/item/http-services/get-item-path.service';
 import { errorIsHTTPForbidden } from 'src/app/shared/helpers/errors';
 import { isNotNull } from 'src/app/shared/helpers/null-undefined-predicates';
-import { setRedirectToSubPathAtInit } from 'src/app/shared/helpers/redirect-to-sub-path-at-init';
+import {
+  allowFromPathKey,
+  fromPathKey,
+  getRedirectToSubPathAtInit,
+  getUrlWithAllowFromPath,
+  setRedirectToSubPathAtInit,
+} from 'src/app/shared/helpers/redirect-to-sub-path-at-init';
 import { CheckLoginService } from 'src/app/shared/http-services/check-login.service';
 import { ResultActionsService } from 'src/app/shared/http-services/result-actions.service';
 import { mapToFetchState, readyData } from 'src/app/shared/operators/state';
@@ -41,6 +47,10 @@ export class LTIComponent implements OnDestroy {
 
   private isRedirection$ = this.activatedRoute.queryParamMap.pipe(
     map(queryParams => queryParams.has(isRedirectionParam)),
+  );
+
+  private fromPath$ = this.activatedRoute.queryParamMap.pipe(
+    map(queryParams => (queryParams.get(allowFromPathKey) === '1' ? queryParams.get(fromPathKey) : null)),
   );
 
   private contentId$ = this.activatedRoute.paramMap.pipe(
@@ -97,16 +107,28 @@ export class LTIComponent implements OnDestroy {
       filter(([ isLoggedIn, isRedirection ]) => !isLoggedIn && !isRedirection),
     ).subscribe(() => this.userSession.login()), // will redirect outside the platform
 
-    this.navigationData$.pipe(readyData(), withLatestFrom(this.contentId$)).subscribe(([{ firstChild, path, attemptId }, contentId ]) => {
-      const itemRoute = fullItemRoute('activity', firstChild.id, path, { parentAttemptId: attemptId });
-      this.ltiDataSource.data = { contentId, attemptId };
-      this.itemRouter.navigateTo(itemRoute, { navExtras: { replaceUrl: true } });
-    }),
+    this.navigationData$
+      .pipe(readyData(), withLatestFrom(this.contentId$, this.fromPath$))
+      .subscribe(([{ firstChild, path, attemptId }, contentId, fromPath ]) => {
+        this.ltiDataSource.data = { contentId, attemptId };
+
+        const redirectUrl = getRedirectToSubPathAtInit();
+        if (!redirectUrl) throw new Error('redirect url should be set by now');
+        setRedirectToSubPathAtInit(getUrlWithAllowFromPath(redirectUrl));
+
+        if (fromPath) {
+          void this.router.navigateByUrl(fromPath);
+          return;
+        }
+        const itemRoute = fullItemRoute('activity', firstChild.id, path, { parentAttemptId: attemptId });
+        this.itemRouter.navigateTo(itemRoute, { navExtras: { replaceUrl: true } });
+      }),
   ];
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private itemRouter: ItemRouter,
+    private router: Router,
     private userSession: UserSessionService,
     private checkLoginService: CheckLoginService,
     private layoutService: LayoutService,
