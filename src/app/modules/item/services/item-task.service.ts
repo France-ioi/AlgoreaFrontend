@@ -52,7 +52,6 @@ export class ItemTaskService {
   );
 
   private readOnly = false;
-  private itemId?: string;
   private attemptId?: string;
 
   constructor(
@@ -67,7 +66,6 @@ export class ItemTaskService {
   ) {}
 
   configure(route: FullItemRoute, url: string, attemptId: string, options: TaskConfig): void {
-    this.itemId = route.id;
     this.readOnly = options.readOnly;
     this.attemptId = attemptId;
     this.initService.configure(route, url, attemptId, options.formerAnswer, options.locale, options.readOnly);
@@ -174,12 +172,8 @@ export class ItemTaskService {
   }
 
   private askHint(hintToken: string): Observable<string> {
-    const { itemId, attemptId } = this;
-    if (!itemId) throw new Error('cannot ask hint without item id');
-    if (!attemptId) throw new Error('cannot ask hint without attempt id');
-
     return this.initService.taskToken$.pipe(
-      switchMap(taskToken => this.askHintService.ask(itemId, attemptId, taskToken, hintToken)),
+      switchMap(taskToken => this.askHintService.ask(taskToken, hintToken)),
       map(data => data.taskToken),
       catchError(() => {
         this.hintError$.next();
