@@ -5,7 +5,9 @@
       type="button"
       icon="fa fa-arrow-up"
       class="neighbor-widget-button"
-      (click)="parent.emit()" [disabled]="!navigationMode.parent"
+      (click)="parent.emit()"
+      *ngIf="navigationMode.parent"
+      @buttonAnimation
     ></button>
     <button
       pButton
@@ -14,6 +16,7 @@
       class="neighbor-widget-button"
       (click)="left.emit()"
       [disabled]="!navigationMode.left"
+      [@borderAnimation]="navigationMode.parent ? 'roundOff' : 'roundOn'"
     ></button>
     <button
       pButton
