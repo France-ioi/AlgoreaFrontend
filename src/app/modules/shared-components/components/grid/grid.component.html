@@ -26,9 +26,6 @@
   <ng-template *ngIf="frozenBodyTemplate && frozenWidth && frozenWidth.length > 0" pTemplate="frozenbody" let-rowIndex="rowIndex">
     <ng-container [ngTemplateOutlet]="frozenBodyTemplate" [ngTemplateOutletContext]="{ $implicit: rowIndex }"></ng-container>
   </ng-template>
-  <ng-template *ngIf="colgroupTemplate" pTemplate="colgroup" let-columns>
-    <ng-container [ngTemplateOutlet]="colgroupTemplate" [ngTemplateOutletContext]="{ $implicit: columns }"></ng-container>
-  </ng-template>
   <ng-template *ngIf="headerTemplate" pTemplate="header" let-columns>
     <ng-container [ngTemplateOutlet]="headerTemplate" [ngTemplateOutletContext]="{ $implicit: columns }"></ng-container>
   </ng-template>
