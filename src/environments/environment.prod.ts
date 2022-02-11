@@ -23,9 +23,7 @@ export const environment: Environment = {
 
 type Preset = 'telecomParis';
 export const presets: Record<Preset, Partial<Environment>> = {
-  telecomParis: {
-    authType: 'tokens',
-  },
+  telecomParis: {},
 };
 
 export function getPresetNameByOrigin(origin: string): Preset | null {
