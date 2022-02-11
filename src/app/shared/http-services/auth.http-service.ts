@@ -20,7 +20,7 @@ const longAuthServicesTimeout = 10000;
 export class AuthHttpService {
 
   private http: HttpClient; // an http client specific to this class, skipping all http interceptors
-  private apiUrl = new URL(appConfig.apiUrl);
+  private apiUrl = new URL(appConfig.apiUrl, location.origin /* act as base when the url is relative, ignored otherwise */);
   private cookieParams = appConfig.authType === 'cookies' ? {
     use_cookie: '1',
     cookie_secure: this.apiUrl.protocol === 'https:' || this.apiUrl.hostname === 'localhost' ? '1' : '0',
