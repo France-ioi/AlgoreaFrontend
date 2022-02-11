@@ -24,7 +24,7 @@ export const environment: Environment = {
 type Preset = 'telecomParis';
 export const presets: Record<Preset, Partial<Environment>> = {
   telecomParis: {
-    authType: 'tokens',
+    apiUrl: 'https://telecom-paris.france-ioi.org/api',
   },
 };
 
