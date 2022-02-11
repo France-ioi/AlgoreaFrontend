@@ -21,16 +21,10 @@ export const environment: Environment = {
   itemPlatformId: 'algorea_backend',
 };
 
-type Preset = 'telecomParis';
-export const presets: Record<Preset, Partial<Environment>> = {
-  telecomParis: {
-    authType: 'tokens',
-  },
-};
+type Preset = void;
 
 export function getPresetNameByOrigin(origin: string): Preset | null {
   switch (origin) {
-    case 'https://telecom-paris.france-ioi.org': return 'telecomParis';
     default: return null;
   }
 }
