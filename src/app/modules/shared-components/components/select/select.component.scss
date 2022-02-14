@@ -2,7 +2,7 @@
 
 .select-value {
   border-radius: 9rem;
-  background-color: $base-color;
+  background-color: var(--base-color);
   display: flex;
   align-items: center;
   height: 2rem;
@@ -32,7 +32,7 @@
     list-style: none;
     padding-left: 0;
     margin: 0;
-    background-color: $base-color;
+    background-color: var(--base-color);
     border-radius: 1rem;
     width: 100%;
     position: absolute;

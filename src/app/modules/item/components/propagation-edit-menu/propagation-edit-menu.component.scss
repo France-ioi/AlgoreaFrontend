@@ -7,7 +7,7 @@
 }
 
 .menu-header {
-  background-color: $dark-color;
+  background-color: var(--dark-color);
 }
 
 .menu-item {
@@ -21,7 +21,7 @@
   color: #fff;
 
   &:not(.no-hover):hover {
-    background-color: $base-dark-color-hover;
+    background-color: var(--base-dark-color-hover);
   }
 
   &.active {

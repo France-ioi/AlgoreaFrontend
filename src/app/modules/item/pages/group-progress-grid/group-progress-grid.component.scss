@@ -23,7 +23,7 @@
 
   .slanted-grid {
 
-    font-family: 'titillium', sans-serif;
+    font-family: var(--font-family);
 
     tr  {
       border: none;
@@ -39,7 +39,7 @@
         z-index: 1;
 
         &:nth-child(2) {
-          background-color: $base-color !important;
+          background-color: var(--base-color) !important;
 
           .slanted-header {
             color: #fff !important;

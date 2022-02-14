@@ -8,7 +8,7 @@
 }
 
 .neighbor-widget-button {
-  background-color: $base-color;
+  background-color: var(--base-color);
   color: #fff;
   border: none;
   outline: none;
@@ -18,7 +18,7 @@
   cursor: pointer;
 
   &:hover:not(:disabled) {
-    background-color: $base-dark-color-hover;
+    background-color: var(--base-dark-color-hover);
   }
 
   &:disabled {
@@ -30,7 +30,7 @@
     border-radius: 50% 0 0 50%;
 
     &:not(:disabled) {
-      background-color: $dark-base-color;
+      background-color: var(--dark-base-color);
     }
   }
 

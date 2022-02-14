@@ -8,13 +8,13 @@
     display: flex;
     align-items: center;
     height: 3rem;
-    background-color: $base-color;
+    background-color: var(--base-color);
     justify-content: center;
     color: white;
     cursor: pointer;
 
     &.watched {
-      background-color: $secondary-color;
+      background-color: var(--secondary-color);
     }
   }
 
@@ -25,9 +25,9 @@
     margin-left: 1rem;
 
     &.watch {
-      color: $base-color;
+      color: var(--base-color);
       background-color: #fff;
-      border: 1px solid $light-border-color;
+      border: 1px solid var(--light-border-color);
     }
   }
 
@@ -55,7 +55,7 @@
 
   .top-bar-expand {
       border-left: .1rem solid #E0E1E5;
-      color: $base-color;
+      color: var(--base-color);
       font-size: 1.5rem;
       padding-left: 1rem;
       margin-left: 1rem;
@@ -68,7 +68,7 @@
 
   .top-bar-menu {
       color: white;
-      background-color: $base-color;
+      background-color: var(--base-color);
       border-top-left-radius: 2.3333rem;
       border-bottom-left-radius: 2.3333rem;
       padding-left: 1.25rem;

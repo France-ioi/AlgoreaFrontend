@@ -6,8 +6,8 @@
   flex-wrap: nowrap;
   flex-direction: column;
   justify-content: center;
-  color: $base-color;
-  background-color: $section-color;
+  color: var(--base-color);
+  background-color: var(--section-color);
   border-radius: $border-radius;
 }
 

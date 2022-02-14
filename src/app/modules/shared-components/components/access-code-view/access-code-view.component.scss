@@ -15,11 +15,11 @@
     font-size: 1.2rem;
     height: 1rem;
     line-height: 1rem;
-    color: $base-text-color;
+    color: var(--base-text-color);
   }
 
   input {
-    font-family: "titillium", sans-serif;
+    font-family: var(--font-family);
     width: 100%;
     display: flex;
     background-color: #D3DBE7;
@@ -30,7 +30,7 @@
     margin-right: 2rem;
     font-size: 1.2rem;
     line-height: 3rem;
-    color: $base-text-color;
+    color: var(--base-text-color);
 
     &:focus {
       outline: none;

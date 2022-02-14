@@ -8,15 +8,15 @@
     display: flex;
     width: 1rem;
     height: 1rem;
-    background-color: $base-text-color;
+    background-color: var(--base-text-color);
     border-radius: 1rem;
 
     &.active {
-      background-color: $base-color;
+      background-color: var(--base-color);
     }
 
     &.revert {
-      background-color: $dark-base-color;
+      background-color: var(--dark-base-color);
 
       &.active {
         background-color: white;
@@ -27,14 +27,14 @@
       display: flex;
       width: 0.5833rem;
       height: 0.25rem;
-      background-color: $base-text-color;
+      background-color: var(--base-text-color);
 
       &.active {
-        background-color: $base-color;
+        background-color: var(--base-color);
       }
 
       &.revert {
-        background-color: $dark-base-color;
+        background-color: var(--dark-base-color);
   
         &.active {
           background-color: white;

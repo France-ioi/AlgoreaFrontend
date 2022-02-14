@@ -22,6 +22,8 @@ export const environment: Environment = {
   authType: 'tokens',
 
   itemPlatformId: 'algorea_backend',
+
+  theme: 'client-demo',
 };
 
 type Preset = 'demo';

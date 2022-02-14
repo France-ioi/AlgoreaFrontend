@@ -1,4 +1,4 @@
-import { Component, NgZone, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, NgZone, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { UserSessionService } from '../shared/services/user-session.service';
 import { delay, switchMap } from 'rxjs/operators';
 import { merge, Subscription } from 'rxjs';
@@ -10,6 +10,7 @@ import { LayoutService } from '../shared/services/layout.service';
 import { Title } from '@angular/platform-browser';
 import { appConfig } from '../shared/helpers/config';
 import { getRedirectToSubPathAtInit, removeSubPathRedirectionAtInit } from '../shared/helpers/redirect-to-sub-path-at-init';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'alg-root',
@@ -42,6 +43,8 @@ export class AppComponent implements OnInit, OnDestroy {
     private layoutService: LayoutService,
     private titleService: Title,
     private ngZone: NgZone,
+    private renderer: Renderer2,
+    private el: ElementRef,
   ) {
     const title = appConfig.languageSpecificTitles && this.localeService.currentLang ?
       appConfig.languageSpecificTitles[this.localeService.currentLang.tag] : undefined;
@@ -52,6 +55,7 @@ export class AppComponent implements OnInit, OnDestroy {
       removeSubPathRedirectionAtInit();
       void this.router.navigateByUrl(subPathToRedirectTo, { replaceUrl: true });
     }
+    this.renderer.setAttribute(this.el.nativeElement, 'data-theme', `${environment.theme}`);
   }
 
   ngOnInit(): void {

@@ -7,7 +7,7 @@
   min-height: unset !important;
 
   .content {
-    background-color: $base-color;
+    background-color: var(--base-color);
     color: white;
     width: 100%;
     border-radius: $border-radius;
@@ -17,7 +17,7 @@
     flex-direction: column;
 
     &.validated {
-      background-color: $dark-base-color;
+      background-color: var(--dark-base-color);
     }
 
     & > span {
@@ -46,7 +46,7 @@
         padding-bottom: 1rem;
         padding-top: 1rem;
         border-bottom: .1rem solid #295485;
-        background-color: $base-color;
+        background-color: var(--base-color);
         margin-left: -0.4167rem;
         margin-right: -0.4167rem;
         padding-left: 1rem;

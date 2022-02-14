@@ -1,11 +1,11 @@
 @import 'src/colors.scss';
 @import 'src/geometry.scss';
 
-$secondary-color: #4a4a4a;
-$warning-color: #f5a623;
-$danger-color: #ff001f;
-
 .alg-button {
+  --secondary-color: #4a4a4a;
+  --warning-color: #f5a623;
+  --danger-color: #ff001f;
+
   width: 100%;
 
   .p-button {
@@ -24,8 +24,8 @@ $danger-color: #ff001f;
   }
 
   .p-button {
-    background-color: $base-color;
-    border-color: $base-color;
+    background-color: var(--base-color);
+    border-color: var(--base-color);
     font-size: 1.2rem;
 
     &.p-fit-parent {
@@ -89,8 +89,8 @@ $danger-color: #ff001f;
     }
 
     &.p-button-secondary {
-      background-color: $secondary-color;
-      border-color: $secondary-color;
+      background-color: var(--secondary-color);
+      border-color: var(--secondary-color);
       color: white;
 
       &:enabled:focus {
@@ -100,8 +100,8 @@ $danger-color: #ff001f;
     }
 
     &.p-button-info {
-      background-color: $base-color;
-      border-color: $base-color;
+      background-color: var(--base-color);
+      border-color: var(--base-color);
 
       &:enabled:focus {
         outline: none;
@@ -110,8 +110,8 @@ $danger-color: #ff001f;
     }
 
     &.p-button-warning {
-      background-color: $warning-color;
-      border-color: $warning-color;
+      background-color: var(--warning-color);
+      border-color: var(--warning-color);
       color: white;
 
       &:enabled:hover {
@@ -124,8 +124,8 @@ $danger-color: #ff001f;
     }
 
     &.p-button-danger {
-      background-color: $danger-color;
-      border-color: $danger-color;
+      background-color: var(--danger-color);
+      border-color: var(--danger-color);
 
       &:enabled:focus {
         outline: none;
@@ -136,11 +136,11 @@ $danger-color: #ff001f;
         background-color: unset;
 
         .p-button-label {
-          color: $danger-color;
+          color: var(--danger-color);
         }
 
         &:hover {
-          background-color: $danger-color;
+          background-color: var(--danger-color);
 
           .p-button-label {
             color: #fff;

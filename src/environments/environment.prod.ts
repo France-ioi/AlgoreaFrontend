@@ -19,6 +19,8 @@ export const environment: Environment = {
   authType: 'cookies',
 
   itemPlatformId: 'algorea_backend',
+
+  theme: 'client-demo',
 };
 
 type Preset = 'telecomParis';

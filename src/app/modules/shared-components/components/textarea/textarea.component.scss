@@ -8,7 +8,7 @@
 
 textarea {
   width: 100%;
-  background-color: $input-transparency-color;
+  background-color: var(--input-transparency-color);
   box-shadow: .1rem .1rem #00000019 inset;
   border-radius: $border-radius;
   border: none;
@@ -16,7 +16,7 @@ textarea {
   padding-left: 2.5rem;
   padding-top: 0.5rem;
 
-  color: $nav-bk-color;
+  color: var(--nav-bk-color);
 
   &::placeholder {
     font-style: italic;
@@ -33,7 +33,7 @@ textarea {
   position: absolute;
   left: 0.6667rem;
   top: 0.6667rem;
-  color: $base-text-color;
+  color: var(--base-text-color);
   font-size: 1.2rem;
 }
 

@@ -4,7 +4,7 @@
 .tab-left-nav {
   &.p-tabview {
     padding: 0;
-    background-color: $base-bk-color;
+    background-color: var(--base-bk-color);
     border-radius: 0;
 
     &.dark {
@@ -115,7 +115,7 @@
             height: 0;
             border-left: 0.6667rem solid transparent;
             border-right: 0.6667rem solid transparent;
-            border-top: 0.4167rem solid $base-bk-color;
+            border-top: 0.4167rem solid var(--base-bk-color);
 
             &.dark {
               border-top: 0.4167rem solid  #4E4E4E;
@@ -132,7 +132,7 @@
     .p-tabview-panels {
       padding: 0;
       border: none;
-      font-family: "titillium";
+      font-family: var(--font-family);
     }
   }
 }

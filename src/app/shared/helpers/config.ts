@@ -30,6 +30,8 @@ export interface Environment {
   authType: 'tokens' | 'cookies',
 
   itemPlatformId: string,
+
+  theme: string,
 }
 
 type Config = Environment; // config may be someday an extension of the environment

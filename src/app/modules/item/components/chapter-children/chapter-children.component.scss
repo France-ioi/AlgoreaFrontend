@@ -2,7 +2,7 @@
 @import 'src/geometry.scss';
 
 .validation-text {
-  color: $base-color;
+  color: var(--base-color);
   font-size: 1.6rem;
   padding: 0 0 2rem 0;
   text-align: center;
@@ -15,7 +15,7 @@
 .data-list-container {
   list-style: none;
   padding-left: 0;
-  color: $dark-text-color;
+  color: var(--dark-text-color);
 
   &.activity {
     padding: 1.6667rem;
@@ -36,11 +36,11 @@
         flex: 1;
         box-sizing: border-box;
         height: 4rem;
-        border-bottom: .1rem solid $light-border-color;
+        border-bottom: .1rem solid var(--light-border-color);
         cursor: pointer;
 
         &.locked {
-          color: $light-text-color;
+          color: var(--light-text-color);
           cursor: default;
         }
 
