@@ -55,7 +55,9 @@ export class AppComponent implements OnInit, OnDestroy {
       removeSubPathRedirectionAtInit();
       void this.router.navigateByUrl(subPathToRedirectTo, { replaceUrl: true });
     }
-    this.renderer.setAttribute(this.el.nativeElement, 'data-theme', `${environment.theme}`);
+    if (environment.theme !== 'default') {
+      this.renderer.setAttribute(this.el.nativeElement, 'data-theme', `${environment.theme}`);
+    }
   }
 
   ngOnInit(): void {

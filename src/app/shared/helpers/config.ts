@@ -31,7 +31,7 @@ export interface Environment {
 
   itemPlatformId: string,
 
-  theme: string,
+  theme: 'default' | 'client-demo',
 }
 
 type Config = Environment; // config may be someday an extension of the environment
