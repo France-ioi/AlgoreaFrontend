@@ -123,7 +123,8 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent {
 
   setTaskTabs(taskTabs: TaskTab[]): void {
     this.itemData$.pipe(readyData(), take(1)).subscribe(data => {
-      this.taskTabs = data.item.permissions.canView === 'solution'
+      const canShowSolution = data.item.permissions.canView === 'solution' || !!data.currentResult?.validated;
+      this.taskTabs = canShowSolution
         ? taskTabs
         : taskTabs.filter(tab => tab.view !== 'solution');
     });
