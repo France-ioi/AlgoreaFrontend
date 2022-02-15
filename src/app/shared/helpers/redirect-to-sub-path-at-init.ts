@@ -1,7 +1,6 @@
 const storage = globalThis.sessionStorage;
 const redirectToSubPathKey = 'redirect_to_sub_path';
 export const fromPathKey = 'from_path';
-export const allowFromPathKey = 'allow_from_path';
 
 export function setRedirectToSubPathAtInit(subPath: string): void {
   storage.setItem(redirectToSubPathKey, subPath);

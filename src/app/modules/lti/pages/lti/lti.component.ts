@@ -8,7 +8,6 @@ import { GetItemPathService } from 'src/app/modules/item/http-services/get-item-
 import { errorIsHTTPForbidden } from 'src/app/shared/helpers/errors';
 import { isNotNull } from 'src/app/shared/helpers/null-undefined-predicates';
 import {
-  allowFromPathKey,
   appendUrlWithQuery,
   fromPathKey,
   getRedirectToSubPathAtInit,
@@ -34,6 +33,7 @@ const noChildError = new Error(LTIError.NoChild);
 const loginError = new Error(LTIError.LoginError);
 
 const isRedirectionParam = 'is_redirection';
+const useFromPathKey = 'lti_use_from_path';
 const loginIdParam = 'user_id';
 
 @Component({
@@ -50,7 +50,7 @@ export class LTIComponent implements OnDestroy {
   );
 
   private fromPath$ = this.activatedRoute.queryParamMap.pipe(
-    map(queryParams => (queryParams.get(allowFromPathKey) === '1' ? queryParams.get(fromPathKey) : null)),
+    map(queryParams => (queryParams.get(useFromPathKey) === '1' ? queryParams.get(fromPathKey) : null)),
   );
 
   private contentId$ = this.activatedRoute.paramMap.pipe(
@@ -114,7 +114,7 @@ export class LTIComponent implements OnDestroy {
 
         const redirectUrl = getRedirectToSubPathAtInit();
         if (!redirectUrl) throw new Error('redirect url should be set by now');
-        setRedirectToSubPathAtInit(appendUrlWithQuery(redirectUrl, allowFromPathKey, '1'));
+        setRedirectToSubPathAtInit(appendUrlWithQuery(redirectUrl, useFromPathKey, '1'));
 
         if (fromPath) {
           void this.router.navigateByUrl(fromPath);
