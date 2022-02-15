@@ -17,6 +17,7 @@ export interface ItemTaskConfig {
   attemptId: string,
   formerAnswer: Answer | null,
   readOnly: boolean,
+  locale?: string,
 }
 
 @Injectable()
@@ -33,7 +34,9 @@ export class ItemTaskInitService implements OnDestroy {
 
   readonly iframeSrc$ = this.taskToken$.pipe(
     withLatestFrom(this.config$),
-    map(([ taskToken, { url }]) => taskUrlWithParameters(this.checkUrl(url), taskToken, appConfig.itemPlatformId, taskChannelIdPrefix)),
+    map(([ taskToken, { url, locale }]) =>
+      taskUrlWithParameters(this.checkUrl(url), taskToken, appConfig.itemPlatformId, taskChannelIdPrefix, locale)
+    ),
     shareReplay(1), // avoid duplicate xhr calls
   );
 
@@ -73,11 +76,11 @@ export class ItemTaskInitService implements OnDestroy {
     if (!this.configFromIframe$.closed) this.configFromIframe$.complete();
   }
 
-  configure(route: FullItemRoute, url: string, attemptId: string, formerAnswer: Answer | null, readOnly = false): void {
+  configure(route: FullItemRoute, url: string, attemptId: string, formerAnswer: Answer | null, locale?: string, readOnly = false): void {
     if (this.configured) throw new Error('task init service can be configured once only');
     this.configured = true;
 
-    this.configFromItem$.next({ route, url, attemptId, formerAnswer, readOnly });
+    this.configFromItem$.next({ route, url, attemptId, formerAnswer, locale, readOnly });
     this.configFromItem$.complete();
   }
 
