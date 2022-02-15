@@ -122,7 +122,11 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent {
   }
 
   setTaskTabs(taskTabs: TaskTab[]): void {
-    this.taskTabs = taskTabs;
+    this.itemData$.pipe(readyData(), take(1)).subscribe(data => {
+      this.taskTabs = data.item.permissions.canView === 'solution'
+        ? taskTabs
+        : taskTabs.filter(tab => tab.view !== 'solution');
+    });
   }
 
   setTaskTabActive(tab: TaskTab): void {
