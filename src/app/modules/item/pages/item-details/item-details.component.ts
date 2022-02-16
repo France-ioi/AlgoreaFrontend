@@ -8,7 +8,18 @@ import { RouterLinkActive } from '@angular/router';
 import { TaskTab } from '../item-display/item-display.component';
 import { Mode, ModeService } from 'src/app/shared/services/mode.service';
 import { combineLatest, fromEvent, merge, Observable, of, Subject } from 'rxjs';
-import { catchError, distinctUntilChanged, filter, map, mergeWith, shareReplay, switchMap, take, takeUntil } from 'rxjs/operators';
+import {
+  catchError,
+  distinctUntilChanged,
+  filter,
+  map,
+  mergeWith,
+  shareReplay,
+  startWith,
+  switchMap,
+  take,
+  takeUntil,
+} from 'rxjs/operators';
 import { TaskConfig } from '../../services/item-task.service';
 import { BeforeUnloadComponent } from 'src/app/shared/guards/before-unload-guard';
 import { ItemContentComponent } from '../item-content/item-content.component';
@@ -36,7 +47,16 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent {
     map(state => state.isReady && state.data),
   );
 
-  taskTabs: TaskTab[] = [];
+  private taskTabs = new Subject<TaskTab[]>();
+  taskTabs$ = combineLatest([ this.taskTabs, this.itemData$.pipe(readyData()) ]).pipe(
+    map(([ tabs, data ]) => {
+      const canShowSolution = data.item.permissions.canView === 'solution' || !!data.currentResult?.validated;
+      return canShowSolution
+        ? tabs
+        : tabs.filter(tab => tab.view !== 'solution');
+    }),
+    startWith([]),
+  );
   taskView?: TaskTab['view'];
 
   readonly fullFrameContent$ = this.layoutService.fullFrameContent$;
@@ -91,7 +111,7 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent {
 
   private subscriptions = [
     this.itemDataSource.state$.subscribe(state => {
-      if (state.isFetching) this.taskTabs = []; // reset task tabs when item changes.
+      if (state.isFetching) this.taskTabs.next([]); // reset task tabs when item changes.
     }),
     fromEvent<BeforeUnloadEvent>(globalThis, 'beforeunload', { capture: true })
       .pipe(switchMap(() => this.itemContentComponent?.itemDisplayComponent?.saveAnswerAndState() ?? of(undefined)), take(1))
@@ -111,6 +131,7 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent {
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
+    this.taskTabs.complete();
   }
 
   reloadItem(): void {
@@ -122,7 +143,7 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent {
   }
 
   setTaskTabs(taskTabs: TaskTab[]): void {
-    this.taskTabs = taskTabs;
+    this.taskTabs.next(taskTabs);
   }
 
   setTaskTabActive(tab: TaskTab): void {
