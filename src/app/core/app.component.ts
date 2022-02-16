@@ -10,7 +10,6 @@ import { LayoutService } from '../shared/services/layout.service';
 import { Title } from '@angular/platform-browser';
 import { appConfig } from '../shared/helpers/config';
 import { getRedirectToSubPathAtInit, removeSubPathRedirectionAtInit } from '../shared/helpers/redirect-to-sub-path-at-init';
-import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'alg-root',
@@ -55,8 +54,8 @@ export class AppComponent implements OnInit, OnDestroy {
       removeSubPathRedirectionAtInit();
       void this.router.navigateByUrl(subPathToRedirectTo, { replaceUrl: true });
     }
-    if (environment.theme !== 'default') {
-      this.renderer.setAttribute(this.el.nativeElement, 'data-theme', `${environment.theme}`);
+    if (appConfig.theme !== 'default') {
+      this.renderer.setAttribute(this.el.nativeElement, 'data-theme', `${appConfig.theme}`);
     }
   }
 

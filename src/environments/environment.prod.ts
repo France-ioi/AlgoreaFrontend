@@ -20,13 +20,14 @@ export const environment: Environment = {
 
   itemPlatformId: 'algorea_backend',
 
-  theme: 'client-demo',
+  theme: 'default',
 };
 
 type Preset = 'telecomParis';
 export const presets: Record<Preset, Partial<Environment>> = {
   telecomParis: {
     authType: 'tokens',
+    theme: 'coursera-pt',
   },
 };
 

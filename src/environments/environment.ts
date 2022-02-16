@@ -23,7 +23,7 @@ export const environment: Environment = {
 
   itemPlatformId: 'algorea_backend',
 
-  theme: 'client-demo',
+  theme: 'default',
 };
 
 type Preset = 'demo';
@@ -32,6 +32,7 @@ export const presets: Record<Preset, Partial<Environment>> = {
     defaultActivityId: '1352246428241737349', // SNT
     defaultTitle: 'Demo app',
     authType: 'cookies',
+    theme: 'coursera-pt',
   },
 };
 
