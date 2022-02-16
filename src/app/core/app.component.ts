@@ -9,7 +9,7 @@ import { LocaleService } from './services/localeService';
 import { LayoutService } from '../shared/services/layout.service';
 import { Title } from '@angular/platform-browser';
 import { appConfig } from '../shared/helpers/config';
-import { getRedirectToSubPathAtInit, removeSubPathRedirectionAtInit } from '../shared/helpers/redirect-to-sub-path-at-init';
+import { urlToRedirectTo } from '../shared/helpers/redirect-to-sub-path-at-init';
 
 @Component({
   selector: 'alg-root',
@@ -49,10 +49,10 @@ export class AppComponent implements OnInit, OnDestroy {
       appConfig.languageSpecificTitles[this.localeService.currentLang.tag] : undefined;
     this.titleService.setTitle(title ?? appConfig.defaultTitle);
 
-    const subPathToRedirectTo = getRedirectToSubPathAtInit();
-    if (subPathToRedirectTo) {
-      removeSubPathRedirectionAtInit();
-      void this.router.navigateByUrl(subPathToRedirectTo, { replaceUrl: true });
+    const currentUrl = location.hash.slice(1); // omit leading "#"
+    const redirectTo = urlToRedirectTo(currentUrl);
+    if (redirectTo) {
+      void this.router.navigateByUrl(redirectTo, { replaceUrl: true });
     }
     if (appConfig.theme !== 'default') {
       this.renderer.setAttribute(this.el.nativeElement, 'data-theme', `${appConfig.theme}`);
