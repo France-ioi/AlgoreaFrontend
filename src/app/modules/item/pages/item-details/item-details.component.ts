@@ -60,8 +60,11 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent {
     startWith([]),
   );
   taskView?: TaskTab['view'];
-  readonly showProgressTab = this.router.url.endsWith('/progress/history') ||
-    !appConfig.featureFlags.hideActivityProgressTab;
+  readonly showProgressTab$ = this.router.events.pipe(
+    startWith(null),
+    map(() => this.router.url.endsWith('/progress/history') || !appConfig.featureFlags.hideActivityProgressTab),
+    distinctUntilChanged(),
+  );
 
   readonly fullFrameContent$ = this.layoutService.fullFrameContent$;
   readonly watchedGroup$ = this.userService.watchedGroup$;

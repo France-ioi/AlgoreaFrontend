@@ -43,7 +43,7 @@
           </a>
         </ng-container>
         <a
-          *ngIf="(showProgressTab || progressTab?.isActive) && (!(watchedGroup$ | async) || itemData.item.permissions.canWatch !== 'none' || !contentTab.isActive)"
+          *ngIf="(showProgressTab$ | async) && (!(watchedGroup$ | async) || itemData.item.permissions.canWatch !== 'none' || !contentTab.isActive)"
           class="nav-tab-item"
           [routerLink]="'./progress'"
           routerLinkActive #progressTab="routerLinkActive"
