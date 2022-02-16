@@ -1,4 +1,4 @@
-import { Environment } from 'src/app/shared/helpers/config';
+import { Environment, PartialDeep } from 'src/app/shared/helpers/config';
 
 export const environment: Environment = {
   production: true,
@@ -23,13 +23,17 @@ export const environment: Environment = {
   theme: 'default',
   featureFlags: {
     hideTaskTabs: [ 'hints' ],
+    hideActivityProgressTab: false,
   }
 };
 
 type Preset = 'telecomParis';
-export const presets: Record<Preset, Partial<Environment>> = {
+export const presets: Record<Preset, PartialDeep<Environment>> = {
   telecomParis: {
     theme: 'coursera-pt',
+    featureFlags: {
+      hideActivityProgressTab: true,
+    }
   },
 };
 

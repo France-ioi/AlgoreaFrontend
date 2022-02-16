@@ -35,10 +35,14 @@ export interface Environment {
 
   featureFlags: {
     hideTaskTabs: string[],
+    hideActivityProgressTab: boolean,
   },
 }
 
 type Config = Environment; // config may be someday an extension of the environment
+export type PartialDeep<T> = T extends Record<string, any>
+  ? { [Key in keyof T]?: PartialDeep<T[Key]> }
+  : T;
 
 const presetQueryParam = 'config_preset';
 /**
@@ -55,12 +59,10 @@ function getPresetNameFromQuery(): string | null {
 
 const origin = `${globalThis.location.protocol}//${globalThis.location.hostname}`;
 const presetName = getPresetNameByOrigin(origin) ?? getPresetNameFromQuery();
+const preset = presetName ? presets[presetName as keyof typeof presets] : undefined;
 
-export const appConfig: Config = {
-  ...environment,
-  ...(presetName ? presets[presetName as keyof typeof presets] : undefined),
-  featureFlags: {
-    ...environment.featureFlags,
-    ...(presetName ? presets[presetName as keyof typeof presets].featureFlags : undefined)
-  }
-};
+export const appConfig: Config = Object.assign(
+  environment,
+  preset,
+  { featureFlags: Object.assign(environment.featureFlags, preset?.featureFlags) },
+);
