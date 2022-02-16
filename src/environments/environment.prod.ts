@@ -2,7 +2,7 @@ import { Environment } from 'src/app/shared/helpers/config';
 
 export const environment: Environment = {
   production: true,
-  apiUrl: 'https://dev.algorea.org/api',
+  apiUrl: '/api',
   oauthServerUrl: 'https://login.france-ioi.org',
   oauthClientId: '43',
 
@@ -26,7 +26,6 @@ export const environment: Environment = {
 type Preset = 'telecomParis';
 export const presets: Record<Preset, Partial<Environment>> = {
   telecomParis: {
-    authType: 'tokens',
     theme: 'coursera-pt',
   },
 };
