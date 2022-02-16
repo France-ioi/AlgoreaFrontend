@@ -33,6 +33,7 @@ const noChildError = new Error(LTIError.NoChild);
 const loginError = new Error(LTIError.LoginError);
 
 const isRedirectionParam = 'is_redirection';
+// Only handle `?from_path` query when `?lti_use_from_path=1`, ignore it otherwise
 const useFromPathKey = 'lti_use_from_path';
 const loginIdParam = 'user_id';
 
