@@ -155,12 +155,12 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
 
   private getTabNameByView(view: string): string {
     switch (view) {
-      case 'editor': return $localize`Editor`;
+      case 'editor': return $localize`Solve`;
       case 'forum': return $localize`Forum`;
       case 'hints': return $localize`Hints`;
       case 'solution': return $localize`Solution`;
       case 'submission': return $localize`Submission`;
-      case 'task': return $localize`Task`;
+      case 'task': return $localize`Statement`;
       default: return capitalize(view);
     }
   }
