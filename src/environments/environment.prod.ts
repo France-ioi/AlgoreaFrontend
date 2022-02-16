@@ -19,11 +19,15 @@ export const environment: Environment = {
   authType: 'cookies',
 
   itemPlatformId: 'algorea_backend',
+
+  theme: 'default',
 };
 
 type Preset = 'telecomParis';
 export const presets: Record<Preset, Partial<Environment>> = {
-  telecomParis: {},
+  telecomParis: {
+    theme: 'coursera-pt',
+  },
 };
 
 export function getPresetNameByOrigin(origin: string): Preset | null {

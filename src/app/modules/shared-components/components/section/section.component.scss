@@ -4,7 +4,7 @@
 
 .section-container {
   padding-top: 2rem;
-  border-bottom: 0.1rem solid $light-border-color;
+  border-bottom: 0.1rem solid var(--light-border-color);
 
   &.no-border {
     border-bottom: none;
@@ -19,7 +19,7 @@
     @include section-header;
 
     .section-handler {
-      @include section-handler($base-color,$dark-color);
+      @include section-handler(var(--base-color),var(--dark-color));
 
       // i {
       //   color: white;
@@ -35,6 +35,6 @@
   .section-content {
     // padding: 1.25rem 2rem 3rem 5.8333rem;
     padding: 2rem 2rem 3rem 5.8333rem;
-    color: $base-text-color;
+    color: var(--base-text-color);
   }
 }

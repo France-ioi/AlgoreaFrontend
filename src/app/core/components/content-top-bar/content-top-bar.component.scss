@@ -37,7 +37,7 @@
     min-width: 0;
 
     p {
-      color: $base-text-color;
+      color: var(--base-text-color);
       text-overflow: ellipsis;
       overflow: hidden;
       white-space: nowrap;

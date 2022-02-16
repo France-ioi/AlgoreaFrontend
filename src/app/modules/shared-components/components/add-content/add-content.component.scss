@@ -30,7 +30,7 @@
 }
 
 .type {
-  color: $base-color;
+  color: var(--base-color);
 }
 
 .new-content-container {
@@ -65,7 +65,7 @@
       justify-content: center;
       width: 7.0833rem;
       height: 7.0833rem;
-      background-color: $base-color;
+      background-color: var(--base-color);
       color: white;
       border-radius: 7.0833rem;
       font-size: 3.3333rem;
@@ -75,25 +75,25 @@
   .item-title {
     font-size: 1.1667rem;
     font-weight: bold;
-    color: $dark-text-color;
+    color: var(--dark-text-color);
     margin-bottom: 1rem;
     margin-top: 1rem;
   }
 
   .item-description {
     font-size: 1.2rem;
-    color: $base-text-color;
+    color: var(--base-text-color);
     text-align: center;
     flex: 1;
     overflow: hidden;
   }
 
   &:hover {
-    background-color: $base-color;
+    background-color: var(--base-color);
     .item-image-wrapper {
       span {
         background-color: white;
-        color: $base-color;
+        color: var(--base-color);
       }
     }
 
@@ -108,7 +108,7 @@
 }
 
 .more-items {
-  color: $base-text-color;
+  color: var(--base-text-color);
   font-size: 1.2rem;
 }
 

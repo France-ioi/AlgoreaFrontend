@@ -1,7 +1,7 @@
 @import "src/colors.scss";
 
 .controls-zone {
-  background-color: $nav-bk-color;
+  background-color: var(--nav-bk-color);
   color: #fff;
   height: 3.75rem;
   display: flex;

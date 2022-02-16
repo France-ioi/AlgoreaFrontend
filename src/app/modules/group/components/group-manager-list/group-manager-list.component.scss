@@ -5,7 +5,7 @@
   align-items: center;
   justify-content: center;
   padding: 2rem 0;
-  background-color: $light-color;
+  background-color: var(--light-color);
   margin: 2rem -1.6667rem -3rem -5.8333rem;
   position: relative;
 
@@ -95,7 +95,7 @@
       }
 
       &.edit {
-        color: $base-color;
+        color: var(--base-color);
       }
 
       &.locked {
@@ -103,7 +103,7 @@
       }
 
       &.unlocked {
-        color: $notify-error-color;
+        color: var(--notify-error-color);
       }
     }
 
@@ -128,7 +128,7 @@
 }
 
 .validation-text {
-  color: $base-color;
+  color: var(--base-color);
   font-size: 1.6rem;
   text-align: center;
 }

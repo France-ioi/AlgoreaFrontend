@@ -11,7 +11,7 @@
     justify-content: center;
     align-items: center;
     width: 8rem;
-    color: $base-color;
+    color: var(--base-color);
     cursor: pointer;
 
   }
@@ -26,14 +26,14 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    font-family: "titillium", sans-serif;
+    font-family: var(--font-family);
     font-weight: 100;
 
     &.clickable {
       cursor: pointer;
 
       &:hover {
-        color: $base-color;
+        color: var(--base-color);
       }
     }
   }

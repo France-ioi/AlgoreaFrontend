@@ -1,4 +1,4 @@
-import { Component, NgZone, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, NgZone, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { UserSessionService } from '../shared/services/user-session.service';
 import { delay, switchMap } from 'rxjs/operators';
 import { merge, Subscription } from 'rxjs';
@@ -42,6 +42,8 @@ export class AppComponent implements OnInit, OnDestroy {
     private layoutService: LayoutService,
     private titleService: Title,
     private ngZone: NgZone,
+    private renderer: Renderer2,
+    private el: ElementRef,
   ) {
     const title = appConfig.languageSpecificTitles && this.localeService.currentLang ?
       appConfig.languageSpecificTitles[this.localeService.currentLang.tag] : undefined;
@@ -51,6 +53,9 @@ export class AppComponent implements OnInit, OnDestroy {
     if (subPathToRedirectTo) {
       removeSubPathRedirectionAtInit();
       void this.router.navigateByUrl(subPathToRedirectTo, { replaceUrl: true });
+    }
+    if (appConfig.theme !== 'default') {
+      this.renderer.setAttribute(this.el.nativeElement, 'data-theme', `${appConfig.theme}`);
     }
   }
 

@@ -4,7 +4,7 @@
 .alg-table {
   .p-datatable {
     margin-bottom: 1rem;
-    font-family: 'titillium', sans-serif;
+    font-family: var(--font-family);
 
     table {
       width: 100%;
@@ -53,7 +53,7 @@
   .p-datatable-tbody > tr > td,
   .p-datatable-tfoot > tr > td {
     border: 0.1rem solid #f0f0f0;
-    color: $base-text-color;
+    color: var(--base-text-color);
     height: 4rem;
     max-height: 4rem;
     overflow: hidden;
@@ -80,7 +80,7 @@
     height: 1.0833rem;
 
     .p-checkbox-box {
-      background-color: $dark-transparency-color;
+      background-color: var(--dark-transparency-color);
       box-shadow: 0 .1rem #bbb inset;
       width: 1.0833rem;
       height: 1.0833rem;
@@ -165,7 +165,7 @@
 
   &.--group-manager-list {
     .p-datatable-tbody > tr.p-highlight > td {
-      color: $base-text-color !important;
+      color: var(--base-text-color) !important;
     }
   }
 
@@ -230,7 +230,7 @@
     }
 
     .p-datatable-tbody > tr > td {
-      color: $base-text-color;
+      color: var(--base-text-color);
       border: none;
       background-color: transparent;
       display: flex;
@@ -262,7 +262,7 @@
         height: 13rem;
 
         > td {
-          border-bottom-color: $section-border-color;
+          border-bottom-color: var(--section-border-color);
 
           &:last-child {
             border-left: $border-filet;
@@ -271,7 +271,7 @@
         }
 
         &:last-child {
-          border-bottom: 0.1rem solid $section-border-color;
+          border-bottom: 0.1rem solid var(--section-border-color);
         }
 
         &:nth-child(even) {
@@ -279,7 +279,7 @@
         }
 
         &.p-highlight {
-          background-color: $base-color;
+          background-color: var(--base-color);
         }
       }
     }
@@ -347,7 +347,7 @@
   .summary-actions {
     display: flex;
     align-items: center;
-    color: $base-color;
+    color: var(--base-color);
     font-size: 1.2rem;
 
     > span {

@@ -4,12 +4,12 @@
   &.base {
     &.p-dropdown {
       .p-dropdown-label {
-        color: $base-color;
+        color: var(--base-color);
       }
 
       .p-dropdown-item {
         &:not(.p-highlight) {
-          color: $base-text-color;
+          color: var(--base-text-color);
           background-color: white;
         }
       }
@@ -22,7 +22,7 @@
     width: 4.1rem;
 
     &:hover {
-      background-color: $hover-mask;
+      background-color: var(--hover-mask);
     }
 
     .p-dropdown-label {
@@ -32,10 +32,10 @@
     }
 
     .p-dropdown-panel {
-      background-color: $nav-bk-color;
+      background-color: var(--nav-bk-color);
 
       .p-highlight {
-        background-color: $base-color;
+        background-color: var(--base-color);
       }
     }
 
@@ -46,7 +46,7 @@
 
       &:not(.p-highlight):not(.p-disabled):hover {
         color: white;
-        background: $base-color-hover;
+        background: var(--base-color-hover);
       }
     }
   }

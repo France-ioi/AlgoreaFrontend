@@ -5,6 +5,6 @@
 @mixin h2-title {
   font-size : 2rem;
   margin-left: 1.25rem;
-  color: $dark-text-color;
+  color: var(--dark-text-color);
   font-family: inherit;
 }

@@ -18,7 +18,7 @@ $nav-control-border: #5c5c5c;
   align-items: flex-start;
 
   &.alt {
-    background-color: $nav-bk-color;
+    background-color: var(--nav-bk-color);
   }
 
   span {

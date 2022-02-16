@@ -22,6 +22,8 @@ export const environment: Environment = {
   authType: 'tokens',
 
   itemPlatformId: 'algorea_backend',
+
+  theme: 'default',
 };
 
 type Preset = 'demo';
@@ -30,6 +32,7 @@ export const presets: Record<Preset, Partial<Environment>> = {
     defaultActivityId: '1352246428241737349', // SNT
     defaultTitle: 'Demo app',
     authType: 'cookies',
+    theme: 'coursera-pt',
   },
 };
 

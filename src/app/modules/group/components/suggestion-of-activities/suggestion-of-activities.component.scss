@@ -1,7 +1,7 @@
 @import 'src/colors';
 
 .type {
-  color: $base-color;
+  color: var(--base-color);
 }
 
 .spinner-container {

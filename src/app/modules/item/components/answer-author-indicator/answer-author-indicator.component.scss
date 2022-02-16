@@ -6,8 +6,8 @@
   flex-wrap: nowrap;
   flex-direction: column;
   justify-content: center;
-  color: $base-text-color;
-  background-color: $section-color;
+  color: var(--base-text-color);
+  background-color: var(--section-color);
   border-radius: $border-radius;
 }
 
@@ -19,8 +19,8 @@
 
 .links, .score {
   margin: 0 .4rem;
-  color: $base-color;
+  color: var(--base-color);
   &:hover {
-    color: $base-color-hover;
+    color: var(--base-color-hover);
   }
 }
