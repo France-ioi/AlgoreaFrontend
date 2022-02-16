@@ -26,6 +26,7 @@ import { ItemContentComponent } from '../item-content/item-content.component';
 import { errorIsHTTPForbidden } from 'src/app/shared/helpers/errors';
 import { urlArrayForItemRoute } from 'src/app/shared/routing/item-route';
 import { GetAnswerService } from '../../http-services/get-answer.service';
+import { appConfig } from 'src/app/shared/helpers/config';
 
 const loadForbiddenAnswerError = new Error('load answer forbidden');
 
@@ -55,6 +56,7 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent {
         ? tabs
         : tabs.filter(tab => tab.view !== 'solution');
     }),
+    map(tabs => tabs.filter(tab => !appConfig.featureFlags.hideTaskTabs.includes(tab.view))),
     startWith([]),
   );
   taskView?: TaskTab['view'];

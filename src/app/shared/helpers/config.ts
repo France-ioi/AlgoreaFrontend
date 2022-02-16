@@ -32,6 +32,10 @@ export interface Environment {
   itemPlatformId: string,
 
   theme: 'default' | 'coursera-pt',
+
+  featureFlags: {
+    hideTaskTabs: string[],
+  },
 }
 
 type Config = Environment; // config may be someday an extension of the environment
@@ -55,4 +59,8 @@ const presetName = getPresetNameByOrigin(origin) ?? getPresetNameFromQuery();
 export const appConfig: Config = {
   ...environment,
   ...(presetName ? presets[presetName as keyof typeof presets] : undefined),
+  featureFlags: {
+    ...environment.featureFlags,
+    ...(presetName ? presets[presetName as keyof typeof presets].featureFlags : undefined)
+  }
 };

@@ -24,6 +24,9 @@ export const environment: Environment = {
   itemPlatformId: 'algorea_backend',
 
   theme: 'default',
+  featureFlags: {
+    hideTaskTabs: [],
+  },
 };
 
 type Preset = 'demo';
