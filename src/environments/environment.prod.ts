@@ -21,6 +21,9 @@ export const environment: Environment = {
   itemPlatformId: 'algorea_backend',
 
   theme: 'default',
+  featureFlags: {
+    hideTaskTabs: [ 'hints' ],
+  }
 };
 
 type Preset = 'telecomParis';
