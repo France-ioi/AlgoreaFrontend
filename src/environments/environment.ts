@@ -2,7 +2,7 @@
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
-import { Environment } from 'src/app/shared/helpers/config';
+import { Environment, PartialDeep } from 'src/app/shared/helpers/config';
 
 export const environment: Environment = {
   production: false,
@@ -26,16 +26,20 @@ export const environment: Environment = {
   theme: 'default',
   featureFlags: {
     hideTaskTabs: [],
+    hideActivityProgressTab: false,
   },
 };
 
 type Preset = 'demo';
-export const presets: Record<Preset, Partial<Environment>> = {
+export const presets: Record<Preset, PartialDeep<Environment>> = {
   demo: {
     defaultActivityId: '1352246428241737349', // SNT
     defaultTitle: 'Demo app',
     authType: 'cookies',
     theme: 'coursera-pt',
+    featureFlags: {
+      hideActivityProgressTab: true,
+    }
   },
 };
 

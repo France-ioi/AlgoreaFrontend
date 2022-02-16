@@ -4,7 +4,7 @@ import { canCurrentUserViewItemContent } from '../../helpers/item-permissions';
 import { ItemDataSource } from '../../services/item-datasource.service';
 import { mapStateData, readyData } from 'src/app/shared/operators/state';
 import { LayoutService } from '../../../../shared/services/layout.service';
-import { RouterLinkActive } from '@angular/router';
+import { Router, RouterLinkActive } from '@angular/router';
 import { TaskTab } from '../item-display/item-display.component';
 import { Mode, ModeService } from 'src/app/shared/services/mode.service';
 import { combineLatest, fromEvent, merge, Observable, of, Subject } from 'rxjs';
@@ -60,6 +60,8 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent {
     startWith([]),
   );
   taskView?: TaskTab['view'];
+  readonly showProgressTab = this.router.url.endsWith('/progress/history') ||
+    !appConfig.featureFlags.hideActivityProgressTab;
 
   readonly fullFrameContent$ = this.layoutService.fullFrameContent$;
   readonly watchedGroup$ = this.userService.watchedGroup$;
@@ -130,6 +132,7 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent {
     private layoutService: LayoutService,
     private modeService: ModeService,
     private getAnswerService: GetAnswerService,
+    private router: Router,
   ) {}
 
   ngOnDestroy(): void {
