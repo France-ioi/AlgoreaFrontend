@@ -54,7 +54,7 @@
           <span i18n>Progress</span>
         </a>
       </nav>
-      <div class="bg-white">
+      <div class="bg-white" [ngClass]="{ 'compensate-margin':  !(showProgressTab$ | async) && taskTabs.length <= 1 }">
         <alg-error
           *ngIf="unknownError"
           i18n-message message="An unknown error occurred. If this problem persists, please contact us."
