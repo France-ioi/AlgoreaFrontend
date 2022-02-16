@@ -87,7 +87,8 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent {
   readonly taskConfig$: Observable<TaskConfig> = combineLatest([
     this.formerAnswer$,
     this.taskReadOnly$,
-  ]).pipe(map(([ formerAnswer, readOnly ]) => ({ readOnly, formerAnswer })));
+    this.itemData$.pipe(readyData()),
+  ]).pipe(map(([ formerAnswer, readOnly, data ]) => ({ readOnly, formerAnswer, locale: data.item.string.languageTag })));
 
   // Any value emitted in skipBeforeUnload$ resumes navigation WITHOUT cancelling the save request.
   private skipBeforeUnload$ = new Subject<void>();

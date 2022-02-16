@@ -15,6 +15,7 @@ export const itemDecoder = pipe(
     string: pipe(
       D.struct({
         title: D.nullable(D.string),
+        languageTag: D.string,
       }),
       D.intersect(
         D.partial({

@@ -16,6 +16,7 @@ import { ItemTaskViewsService } from './item-task-views.service';
 export interface TaskConfig {
   readOnly: boolean,
   formerAnswer: Answer | null,
+  locale?: string,
 }
 
 @Injectable()
@@ -64,7 +65,7 @@ export class ItemTaskService {
   configure(route: FullItemRoute, url: string, attemptId: string, options: TaskConfig): void {
     this.readOnly = options.readOnly;
     this.attemptId = attemptId;
-    this.initService.configure(route, url, attemptId, options.formerAnswer, options.readOnly);
+    this.initService.configure(route, url, attemptId, options.formerAnswer, options.locale, options.readOnly);
   }
 
   initTask(iframe: HTMLIFrameElement): void {
