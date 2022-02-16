@@ -63,8 +63,9 @@
 
   <ng-template #noCurrentResult>
     <p class="validation-text">
-      <span *ngIf="itemData.item.requiresExplicitEntry; else noRequiresExplicitEntry" i18n>
-        This activity requires explicit entry (not implemented).
+      <span *ngIf="itemData.item.requiresExplicitEntry; else noRequiresExplicitEntry">
+        <ng-container i18n>This activity requires explicit entry</ng-container>&nbsp;
+        <ng-container i18n="@@notImplemented">(not implemented)</ng-container>.
       </span>
       <ng-template #noRequiresExplicitEntry>
         <span i18n>

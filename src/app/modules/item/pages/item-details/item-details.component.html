@@ -8,7 +8,7 @@
       <alg-access-code-view
         *ngIf="showAccessCodeField$ | async"
         i18n-sectionLabel sectionLabel="Access to activity"
-        i18n-buttonLabel buttonLabel="Access"
+        i18n-buttonLabel="Button label for joining an item by (group) code" buttonLabel="Access"
         [itemData]="itemData"
         (groupJoined)="reloadItem()"
       ></alg-access-code-view>
