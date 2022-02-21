@@ -38,12 +38,14 @@ export class GroupJoinByCodeComponent implements OnChanges {
     {
       label: $localize`Custom`,
       value: 'custom',
-      tooltip: $localize`:@@expireDuration:This code will expire after the given duration ` + $localize`:@@resetCurrentExpiration:(reset current expiration)`,
+      tooltip: $localize`:@@expireDuration:This code will expire after the given duration ` +
+        $localize`:@@resetCurrentExpiration:(reset current expiration)`,
     },
   ];
   customCodeLifetimeOption = this.codeLifetimeOptions.findIndex(({ value }) => value === 'custom');
   selectedCodeLifetimeOption = 0;
-  durationTooltip = $localize`:@@expireDuration:This code will expire after the given duration ` + $localize`:@@resetCurrentExpiration:(reset current expiration)`;
+  durationTooltip = $localize`:@@expireDuration:This code will expire after the given duration ` +
+    $localize`:@@resetCurrentExpiration:(reset current expiration)`;
 
   constructor(
     private groupActionsService: GroupActionsService,
