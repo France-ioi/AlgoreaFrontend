@@ -107,7 +107,6 @@ describe('UserGroupInvitationsComponent', () => {
     expect(getRequestsService.getGroupInvitations).toHaveBeenCalledTimes(1); // the initial one
 
     // step 2: success response received
-    // serviceResponder$.next([ new Map([ [ '12', 'success' ] ]) ]);
     serviceResponder$.next([{ changed: true }]);
     serviceResponder$.complete();
 
@@ -136,42 +135,32 @@ describe('UserGroupInvitationsComponent', () => {
     expect(getRequestsService.getGroupInvitations).toHaveBeenCalledTimes(2);
   });
 
-/*  it('should consider "unchanged" in response as success', () => {
-    component.onProcessRequests({ type: Action.Accept, data: [ MOCK_RESPONSE_2 ] });
-
-    serviceResponder$.next([ new Map([ [ '12', 'unchanged' ] ]) ]);
-    serviceResponder$.complete();
-
-    expect(actionFeedbackService.success).toHaveBeenCalledWith('1 request(s) have been accepted');
-  });*/
-
   it('should display an appropriate message on partial success', () => {
 
+    // step 1: select one and 'accept'
     component.onProcessRequests({ type: Action.Accept, data: MOCK_RESPONSE }); // select 10, 11 and 12
 
-    serviceResponder$.next([
-      { changed: true },
-      { changed: true },
-      // new Map([ [ '11', 'invalid' ] ]),
-      // new Map([ [ '12', 'success' ] ]),
-      // new Map([ [ '10', 'success' ] ]),
-    ]);
+    expect(component.state).toEqual('processing');
+
+    // step 2: success response received
+    serviceResponder$.next([{ changed: true }, { changed: false }]);
     serviceResponder$.complete();
 
     expect(component.state).toEqual('ready');
     expect(actionFeedbackService.partial).toHaveBeenCalledTimes(1);
-    expect(actionFeedbackService.partial).toHaveBeenCalledWith('2 request(s) have been accepted, 1 could not be executed');
+    expect(actionFeedbackService.partial).toHaveBeenCalledWith('1 request(s) have been accepted, 1 could not be executed');
     expect(getRequestsService.getGroupInvitations).toHaveBeenCalledTimes(2);
   });
 
-/*
   it('should display an appropriate error message when all accept requests failed', () => {
 
     component.onProcessRequests({ type: Action.Accept, data: MOCK_RESPONSE }); // select 10, 11 and 12
 
+    expect(component.state).toEqual('processing');
+
     serviceResponder$.next([
-      new Map([ [ '11', 'invalid' ] ]),
-      new Map([ [ '12', 'cycle' ] ]),
+      { changed: false },
+      { changed: false },
     ]);
     serviceResponder$.complete();
 
@@ -185,9 +174,11 @@ describe('UserGroupInvitationsComponent', () => {
 
     component.onProcessRequests({ type: Action.Reject, data: MOCK_RESPONSE }); // select 10, 11 and 12
 
+    expect(component.state).toEqual('processing');
+
     serviceResponder$.next([
-      new Map([ [ '11', 'invalid' ] ]),
-      new Map([ [ '12', 'cycle' ] ]),
+      { changed: false },
+      { changed: false },
     ]);
     serviceResponder$.complete();
 
@@ -196,7 +187,6 @@ describe('UserGroupInvitationsComponent', () => {
     expect(actionFeedbackService.error).toHaveBeenCalledWith('Unable to reject the selected request(s).');
     expect(getRequestsService.getGroupInvitations).toHaveBeenCalledTimes(2);
   });
-*/
 
   it('should display an appropriate error message when the service fails', () => {
 
