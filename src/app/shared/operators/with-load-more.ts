@@ -1,4 +1,4 @@
-import { combineLatest, filter, map, Observable, shareReplay, startWith, Subject, switchMap } from 'rxjs';
+import { combineLatest, filter, map, Observable, shareReplay, startWith, switchMap } from 'rxjs';
 import { canLoadMoreItems } from '../helpers/load-more';
 import { fetchingState, FetchState, readyState } from '../helpers/state';
 import { mapToFetchState, readyData } from './state';
@@ -11,8 +11,8 @@ interface WithLoadMore<Data> {
   loadMoreError$: Observable<FetchState<Data>>,
 }
 
-interface WithLoadMoreOptions<Trigger extends { fromId?: FromId }, Data extends any, T extends any> {
-  trigger$: Subject<Trigger>,
+interface WithLoadMoreOptions<Trigger extends { fromId?: FromId | undefined }, Data extends any, T extends any> {
+  trigger$: Observable<Trigger>,
   fetcher: (trigger: Trigger) => Observable<Data>,
   limit: number,
   mapIdFromListItem: (item: T) => FromId,

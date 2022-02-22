@@ -4,11 +4,14 @@ import { GroupData, GroupDataSource } from '../../services/group-datasource.serv
 import { RemoveGroupManagerService } from '../../http-services/remove-group-manager.service';
 import { ActionFeedbackService } from '../../../../shared/services/action-feedback.service';
 import { ReplaySubject, Subject } from 'rxjs';
-import { switchMap, map, distinctUntilChanged } from 'rxjs/operators';
-import { mapToFetchState } from '../../../../shared/operators/state';
+import { switchMap, map, distinctUntilChanged, startWith } from 'rxjs/operators';
+import { mapStateData } from '../../../../shared/operators/state';
 import { UserSessionService } from '../../../../shared/services/user-session.service';
 import { ConfirmationService } from 'primeng/api';
 import { displayGroupManagerRemovalResponseToast } from './group-manager-removal-response-handling';
+import { withLoadMore } from 'src/app/shared/operators/with-load-more';
+
+const managersLimit = 25;
 
 @Component({
   selector: 'alg-group-manager-list',
@@ -24,18 +27,35 @@ export class GroupManagerListComponent implements OnChanges, OnDestroy {
   isPermissionsEditDialogOpened = false;
   dialogManager?: Manager & { canManageAsText: string };
 
-  private refresh$ = new Subject<void>();
+  private fromId$ = new Subject<string | undefined>();
+
   private readonly groupId$ = new ReplaySubject<string>(1);
-  readonly state$ = this.groupId$.pipe(
-    distinctUntilChanged(),
-    switchMap(id => this.getGroupManagersService.getGroupManagers(id).pipe(
-      map(managers => managers.map(manager => ({
-        ...manager,
-        canManageAsText: this.getManagerLevel(manager),
-      }))),
-    )),
-    mapToFetchState({ resetter: this.refresh$ }),
+  private data = withLoadMore({
+    fetcher: ({ id, fromId }) => this.getGroupManagersService.getGroupManagers(id, [], managersLimit, fromId),
+    limit: managersLimit,
+    trigger$: this.groupId$.pipe(
+      distinctUntilChanged(),
+      switchMap(id => this.fromId$.pipe(
+        startWith(undefined),
+        map(fromId => ({ fromId, id }))
+      )),
+    ),
+    mapListFromData: (data: Manager[]) => data,
+    mapListToData: (_data, list) => list,
+    mapIdFromListItem: manager => manager.id,
+  });
+
+  readonly state$ = this.data.state$.pipe(
+    mapStateData(managers => managers.map(manager => ({
+      ...manager,
+      canManageAsText: this.getManagerLevel(manager),
+    }))),
   );
+  readonly loadMore$ = this.data.loadMore$;
+
+  private subscription = this.data.loadMoreError$.subscribe(() => {
+    this.actionFeedbackService.error($localize`Could not load more results, are you connected to the internet?`);
+  });
 
   constructor(
     private getGroupManagersService: GetGroupManagersService,
@@ -53,8 +73,9 @@ export class GroupManagerListComponent implements OnChanges, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.refresh$.complete();
+    this.fromId$.complete();
     this.groupId$.complete();
+    this.subscription.unsubscribe();
   }
 
   private getManagerLevel(manager: Manager): string {
@@ -69,7 +90,10 @@ export class GroupManagerListComponent implements OnChanges, OnDestroy {
   }
 
   reloadData(): void {
-    this.refresh$.next();
+    this.fromId$.next(undefined);
+  }
+  fetchData(fromId: string): void {
+    this.fromId$.next(fromId);
   }
 
   onSelectAll(managers: Manager[]): void {

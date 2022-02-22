@@ -1,5 +1,5 @@
 <ng-container *ngIf="state$ | async as state">
-  <alg-loading size="medium" *ngIf="state.isFetching"></alg-loading>
+  <alg-loading size="medium" *ngIf="state.isFetching && !state.data"></alg-loading>
 
   <alg-error
     *ngIf="state.isError"
@@ -8,13 +8,13 @@
     (refresh)="reloadData()"
   ></alg-error>
 
-  <ng-container *ngIf="state.isReady && state.data as managers">
+  <ng-container *ngIf="state.data as managers">
     <alg-section icon="fa fa-users" i18n-label label="Managers of this group">
       <alg-grid
         tableStyle="--group-manager-list"
         class="slanted-grid"
         *ngIf="managers.length > 0; else noManagers"
-        [loading]="removalInProgress"
+        [loading]="removalInProgress || state.isFetching"
         [data]="managers"
         [(selection)]="selection"
         sortMode="single"
@@ -110,6 +110,21 @@
                 (click)="openPermissionsEditDialog(rowData)"
                 *ngIf="groupData?.group?.currentUserCanManage === 'memberships_and_group'"
               ></button>
+            </td>
+          </tr>
+        </ng-template>
+
+        <ng-template #footerTemplate>
+          <tr *ngIf="loadMore$ | async as loadMore">
+            <td [colSpan]="6">
+              <div class="text-center">
+                <alg-button
+                  class="p-button-rounded"
+                  i18n-label label="Load more"
+                  (click)="fetchData(loadMore.fromId)"
+                  [disabled]="state.isFetching"
+                ></alg-button>
+              </div>
             </td>
           </tr>
         </ng-template>
