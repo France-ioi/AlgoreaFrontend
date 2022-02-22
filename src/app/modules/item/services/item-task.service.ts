@@ -175,9 +175,9 @@ export class ItemTaskService {
     return this.initService.taskToken$.pipe(
       switchMap(taskToken => this.askHintService.ask(taskToken, hintToken)),
       map(data => data.taskToken),
-      catchError(() => {
+      catchError(err => {
         this.hintError$.next();
-        return EMPTY;
+        throw err;
       }),
     );
   }
