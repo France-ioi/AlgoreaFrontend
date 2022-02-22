@@ -108,6 +108,8 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
         this.actionFeedbackService.error(message, { life: 10*SECONDS });
       }
     }),
+
+    this.taskService.hintError$.subscribe(() => this.actionFeedbackService.error($localize`Hint request failed`)),
   ];
 
   constructor(
