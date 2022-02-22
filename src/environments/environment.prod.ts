@@ -22,7 +22,7 @@ export const environment: Environment = {
 
   theme: 'default',
   featureFlags: {
-    hideTaskTabs: [ 'hints' ],
+    hideTaskTabs: [],
     hideActivityProgressTab: false,
   }
 };
