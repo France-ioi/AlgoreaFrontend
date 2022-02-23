@@ -18,6 +18,7 @@ export class MyGroupsComponent implements OnDestroy {
     private currentContent: CurrentContentService,
     private layoutService: LayoutService,
   ) {
+    this.layoutService.initialize(false, true, true);
     this.currentContent.replace(contentInfo({
       title: $localize`My groups`,
       breadcrumbs: {

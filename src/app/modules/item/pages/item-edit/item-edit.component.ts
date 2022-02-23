@@ -15,6 +15,7 @@ import { readyData } from 'src/app/shared/operators/state';
 import { Duration } from '../../../../shared/helpers/duration';
 import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
 import { isNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
+import { LayoutService } from 'src/app/shared/services/layout.service';
 
 export const DEFAULT_ENTERING_TIME_MIN = '1000-01-01T00:00:00Z';
 export const DEFAULT_ENTERING_TIME_MAX = '9999-12-31T23:59:59Z';
@@ -81,6 +82,7 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
 
   constructor(
     private modeService: ModeService,
+    private layoutService: LayoutService,
     private itemDataSource: ItemDataSource,
     private formBuilder: FormBuilder,
     private createItemService: CreateItemService,
@@ -88,6 +90,7 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
     private updateItemStringService: UpdateItemStringService,
     private actionFeedbackService: ActionFeedbackService,
   ) {
+    this.layoutService.initialize(false, true, true);
     this.modeService.startEditing();
     this.subscription = this.fetchState$
       .pipe(readyData(), map(data => ({

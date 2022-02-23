@@ -139,8 +139,7 @@ export class LTIComponent implements OnDestroy {
     private getItemChildrenService: GetItemChildrenService,
     private ltiDataSource: LTIDataSource,
   ) {
-    this.layoutService.toggleTopRightControls(false);
-    this.layoutService.toggleFullFrameContent(true, false);
+    this.layoutService.initialize(true, false, false);
   }
 
   ngOnDestroy(): void {

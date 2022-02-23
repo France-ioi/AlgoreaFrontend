@@ -70,7 +70,9 @@ export class UserComponent implements OnInit, OnDestroy {
     private layoutService: LayoutService,
     private groupRouter: GroupRouter,
     private getGroupBreadcrumbsService: GetGroupBreadcrumbsService,
-  ) {}
+  ) {
+    this.layoutService.initialize(false, true, true);
+  }
 
   ngOnInit(): void {
     this.subscription = combineLatest([ this.url$, this.state$, this.breadcrumbs$ ])
