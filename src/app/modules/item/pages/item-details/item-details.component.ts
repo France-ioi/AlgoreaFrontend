@@ -130,7 +130,7 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent {
   ];
 
   errorMessage = $localize`:@@unknownError:An unknown error occurred. ` +
-    $localize`:@@contactUs:If this problem persists, please contact us.`;
+    $localize`:@@contactUs:If the problem persists, please contact us.`;
 
   constructor(
     private userService: UserSessionService,
