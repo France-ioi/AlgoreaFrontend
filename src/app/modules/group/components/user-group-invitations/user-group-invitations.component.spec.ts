@@ -143,12 +143,12 @@ describe('UserGroupInvitationsComponent', () => {
     expect(component.state).toEqual('processing');
 
     // step 2: success response received
-    serviceResponder$.next([{ changed: true }, { changed: false }]);
+    serviceResponder$.next([{ changed: true }, { changed: true }, { changed: false }]);
     serviceResponder$.complete();
 
     expect(component.state).toEqual('ready');
     expect(actionFeedbackService.partial).toHaveBeenCalledTimes(1);
-    expect(actionFeedbackService.partial).toHaveBeenCalledWith('1 request(s) have been accepted, 1 could not be executed');
+    expect(actionFeedbackService.partial).toHaveBeenCalledWith('2 request(s) have been accepted, 1 could not be executed');
     expect(getRequestsService.getGroupInvitations).toHaveBeenCalledTimes(2);
   });
 
