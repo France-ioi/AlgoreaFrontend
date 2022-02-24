@@ -38,7 +38,7 @@
       [style.height]="iframeHeight$ | async"
       [src]="iframeSrc"
       #iframe
-      algFullHeightContent
+      [algFullHeightContent]="state.isReady"
       allowfullscreen
     ></iframe>
     <div *ngIf="state.isFetching" class="loading">

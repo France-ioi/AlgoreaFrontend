@@ -9,7 +9,7 @@
       <alg-chapter-children
         [itemData]="itemData"
         *ngIf="itemData.item.type === 'Chapter'"
-        algFullHeightContent
+        [algFullHeightContent]="true"
       ></alg-chapter-children>
 
       <ng-container *ngIf="(itemData.item.type === 'Task' || itemData.item.type === 'Course')">
