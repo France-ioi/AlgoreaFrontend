@@ -28,6 +28,13 @@ export class LayoutService {
 
   private initialized = false;
 
+  /**
+   * This method allows to defer layout initialization to any consumer, expectedly routes.
+   * Only first call in taken into account, later calls are ignored.
+   * @param expanded initial expanded value
+   * @param canToggle Defines for the lifetime of the app if the left menu can be toggled or not
+   * @param showTopRightControls Defines for the lifetime of the app if the top right controls are shown
+   */
   initialize(expanded: boolean, canToggle: boolean, showTopRightControls: boolean): void {
     if (this.initialized) return;
     this.fullFrameContent.next({ expanded, canToggle, animated: false });
