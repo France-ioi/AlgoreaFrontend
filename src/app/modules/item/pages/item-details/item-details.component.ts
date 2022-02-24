@@ -27,7 +27,6 @@ import { errorIsHTTPForbidden } from 'src/app/shared/helpers/errors';
 import { urlArrayForItemRoute } from 'src/app/shared/routing/item-route';
 import { GetAnswerService } from '../../http-services/get-answer.service';
 import { appConfig } from 'src/app/shared/helpers/config';
-import { isTask } from 'src/app/shared/helpers/item-type';
 
 const loadForbiddenAnswerError = new Error('load answer forbidden');
 
@@ -127,10 +126,6 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent {
       .subscribe(),
     this.formerAnswerError$.subscribe(caught => {
       if (caught !== loadForbiddenAnswerError) this.unknownError = caught;
-    }),
-
-    this.itemData$.pipe(readyData(), take(1)).subscribe(data => {
-      this.layoutService.initialize(isTask(data.item), true, true);
     }),
   ];
 
