@@ -48,8 +48,8 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent {
     map(state => state.isReady && state.data),
   );
 
-  private taskTabs = new Subject<TaskTab[]>();
-  taskTabs$ = combineLatest([ this.taskTabs, this.itemData$.pipe(readyData()) ]).pipe(
+  private tabs = new Subject<TaskTab[]>();
+  tabs$ = combineLatest([ this.tabs, this.itemData$.pipe(readyData()) ]).pipe(
     map(([ tabs, data ]) => {
       const canShowSolution = data.item.permissions.canView === 'solution' || !!data.currentResult?.validated;
       return canShowSolution
@@ -57,14 +57,13 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent {
         : tabs.filter(tab => tab.view !== 'solution');
     }),
     map(tabs => tabs.filter(tab => !appConfig.featureFlags.hideTaskTabs.includes(tab.view))),
-    startWith([]),
+    startWith(this.router.url.endsWith('/progress/history') ? [{ view: 'progress', name: 'Progress' }] : []),
+  );
+  readonly taskTabs$ = this.tabs$.pipe(map(tabs => tabs.filter(tab => tab.view !== 'progress')));
+  readonly showProgressTab$ = combineLatest([ this.userService.watchedGroup$, this.tabs$ ]).pipe(
+    map(([ watchedGroup, tabs ]) => !watchedGroup || tabs.some(tab => tab.view === 'progress')),
   );
   taskView?: TaskTab['view'];
-  readonly showProgressTab$ = this.router.events.pipe(
-    startWith(null),
-    map(() => this.router.url.endsWith('/progress/history') || !appConfig.featureFlags.hideActivityProgressTab),
-    distinctUntilChanged(),
-  );
 
   readonly fullFrameContent$ = this.layoutService.fullFrameContent$;
   readonly watchedGroup$ = this.userService.watchedGroup$;
@@ -119,7 +118,8 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent {
 
   private subscriptions = [
     this.itemDataSource.state$.subscribe(state => {
-      if (state.isFetching) this.taskTabs.next([]); // reset task tabs when item changes.
+      // reset task tabs when item changes.
+      if (state.isFetching) this.tabs.next(this.router.url.endsWith('/progress/history') ? [{ view: 'progress', name: 'Progress' }] : []);
     }),
     fromEvent<BeforeUnloadEvent>(globalThis, 'beforeunload', { capture: true })
       .pipe(switchMap(() => this.itemContentComponent?.itemDisplayComponent?.saveAnswerAndState() ?? of(undefined)), take(1))
@@ -140,7 +140,7 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent {
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
-    this.taskTabs.complete();
+    this.tabs.complete();
   }
 
   reloadItem(): void {
@@ -151,8 +151,8 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent {
     this.itemDataSource.patchItemScore(score);
   }
 
-  setTaskTabs(taskTabs: TaskTab[]): void {
-    this.taskTabs.next(taskTabs);
+  setTaskTabs(tabs: TaskTab[]): void {
+    this.tabs.next(tabs);
   }
 
   setTaskTabActive(tab: TaskTab): void {

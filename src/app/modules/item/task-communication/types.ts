@@ -70,6 +70,7 @@ export type TaskLog = D.TypeOf<typeof taskLogDecoder>;
 // Currently unused
 export const metadataDecoder = D.partial({
   autoHeight: D.boolean,
+  disablePlatformProgress: D.boolean,
 });
 export type TaskMetaData = D.TypeOf<typeof metadataDecoder>;
 export type TaskResources = unknown;
