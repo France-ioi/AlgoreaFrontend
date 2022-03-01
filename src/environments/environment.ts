@@ -26,7 +26,6 @@ export const environment: Environment = {
   theme: 'default',
   featureFlags: {
     hideTaskTabs: [],
-    hideActivityProgressTab: false,
   },
 };
 
@@ -37,9 +36,6 @@ export const presets: Record<Preset, PartialDeep<Environment>> = {
     defaultTitle: 'Demo app',
     authType: 'cookies',
     theme: 'coursera-pt',
-    featureFlags: {
-      hideActivityProgressTab: true,
-    }
   },
 };
 

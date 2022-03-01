@@ -35,7 +35,6 @@ export interface Environment {
 
   featureFlags: {
     hideTaskTabs: string[],
-    hideActivityProgressTab: boolean,
   },
 }
 

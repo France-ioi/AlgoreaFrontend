@@ -23,7 +23,6 @@ export const environment: Environment = {
   theme: 'default',
   featureFlags: {
     hideTaskTabs: [],
-    hideActivityProgressTab: false,
   }
 };
 
@@ -31,9 +30,6 @@ type Preset = 'telecomParis';
 export const presets: Record<Preset, PartialDeep<Environment>> = {
   telecomParis: {
     theme: 'coursera-pt',
-    featureFlags: {
-      hideActivityProgressTab: true,
-    }
   },
 };
 

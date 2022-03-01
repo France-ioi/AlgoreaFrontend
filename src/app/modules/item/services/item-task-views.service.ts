@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { combineLatest, merge, ReplaySubject, Subject } from 'rxjs';
-import { delayWhen, distinctUntilChanged, filter, map, switchMap, takeUntil } from 'rxjs/operators';
+import { combineLatestWith, delayWhen, distinctUntilChanged, filter, map, switchMap, takeUntil } from 'rxjs/operators';
 import { isNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
 import { TaskViews, UpdateDisplayParams } from '../task-communication/types';
 import { ItemTaskInitService } from './item-task-init.service';
@@ -17,7 +17,13 @@ export class ItemTaskViewsService implements OnDestroy {
   readonly views$ = merge(
     this.task$.pipe(switchMap(task => task.getViews())),
     this.display$.pipe(map(({ views }) => views), filter(isNotUndefined)),
-  ).pipe(map(views => this.getAvailableViews(views)));
+  ).pipe(
+    combineLatestWith(this.task$.pipe(switchMap(task => task.getMetaData()))),
+    map(([ views, { disablePlatformProgress }]) => {
+      const availableViews = this.getAvailableViews(views);
+      return disablePlatformProgress ? availableViews : [ ...availableViews, 'progress' ];
+    }),
+  );
 
   private activeViewSubject = new ReplaySubject<string>(1);
   readonly activeView$ = this.activeViewSubject.pipe(
