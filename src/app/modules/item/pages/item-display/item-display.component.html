@@ -1,10 +1,10 @@
 <div class="item-display" *ngIf="state$ | async as state">
-  <div *ngIf="state.isError" class="errors">
+  <div *ngIf="state.isError && !showTaskAnyway" class="errors">
     <ng-template #defaultErrorMessage>
       <alg-error i18n-message message="Unable to load the task"></alg-error>
     </ng-template>
 
-    <ng-container *ngIf="['all', 'all_with_grant'].includes(canEdit)">
+    <ng-container *ngIf="['all', 'all_with_grant'].includes(canEdit); else defaultErrorMessage">
       <alg-error
         *ngIf="initError$ | async; else urlError"
         i18n-message message="It usually occurs when task url is invalid, if the task url is valid and the problem persists, please contact us."
@@ -23,9 +23,18 @@
           i18n-message message="An unknown error occurred. If this problem persists, please contact us."
         ></alg-error>
       </ng-template>
+
+      <div class="text-center">
+        <a class="alg-link error-message" (click)="showTaskAnyway = true" i18n>
+          Show task anyway (for debugging)
+        </a>
+      </div>
     </ng-container>
   </div>
-  <div class="iframe-container" *ngIf="!state.isError">
+  <div
+    class="iframe-container" *ngIf="!state.isError || ['all', 'all_with_grant'].includes(canEdit)"
+    [style.display]="state.isError && !showTaskAnyway ? 'none' : 'block'"
+  >
     <div class="saving-answer" *ngIf="savingAnswer">
       <p class="saving-answer-message">
         <span i18n>Saving answer...</span>

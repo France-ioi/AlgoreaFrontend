@@ -52,6 +52,12 @@
     justify-content: center;
   }
 
+  .error-message {
+    display: inline-block;
+    padding: 1rem;
+    font-size: 1.6rem;
+  }
+
   iframe {
     height: 0;
     width: 100%;
