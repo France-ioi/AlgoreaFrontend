@@ -57,7 +57,7 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent {
         : tabs.filter(tab => tab.view !== 'solution');
     }),
     map(tabs => tabs.filter(tab => !appConfig.featureFlags.hideTaskTabs.includes(tab.view))),
-    startWith(this.router.url.endsWith('/progress/history') ? [{ view: 'progress', name: 'Progress' }] : []),
+    startWith(this.isProgressPage() ? [{ view: 'progress', name: 'Progress' }] : []),
   );
   readonly taskTabs$ = this.tabs$.pipe(map(tabs => tabs.filter(tab => tab.view !== 'progress')));
   readonly showProgressTab$ = combineLatest([ this.userService.watchedGroup$, this.tabs$ ]).pipe(
@@ -119,7 +119,7 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent {
   private subscriptions = [
     this.itemDataSource.state$.subscribe(state => {
       // reset task tabs when item changes.
-      if (state.isFetching) this.tabs.next(this.router.url.endsWith('/progress/history') ? [{ view: 'progress', name: 'Progress' }] : []);
+      if (state.isFetching) this.tabs.next(this.isProgressPage() ? [{ view: 'progress', name: 'Progress' }] : []);
     }),
     fromEvent<BeforeUnloadEvent>(globalThis, 'beforeunload', { capture: true })
       .pipe(switchMap(() => this.itemContentComponent?.itemDisplayComponent?.saveAnswerAndState() ?? of(undefined)), take(1))
@@ -174,6 +174,10 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent {
 
   skipBeforeUnload(): void {
     this.skipBeforeUnload$.next();
+  }
+
+  private isProgressPage(): boolean {
+    return this.router.url.includes('/progress/history');
   }
 
 }
