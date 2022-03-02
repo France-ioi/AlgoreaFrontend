@@ -23,17 +23,18 @@
           i18n-message message="An unknown error occurred. If this problem persists, please contact us."
         ></alg-error>
       </ng-template>
-
-      <div class="text-center">
-        <a class="alg-link error-message" (click)="showTaskAnyway = true" i18n>
-          Show task anyway (for debugging)
-        </a>
-      </div>
     </ng-container>
+
+    <div class="text-center">
+      <a class="alg-link error-message" (click)="showTaskAnyway = true" i18n>
+        Show task anyway (for debugging)
+      </a>
+    </div>
   </div>
   <div
-    class="iframe-container" *ngIf="!state.isError || ['all', 'all_with_grant'].includes(canEdit)"
+    class="iframe-container"
     [style.display]="state.isError && !showTaskAnyway ? 'none' : 'block'"
+    [algFullHeightContent]="true"
   >
     <div class="saving-answer" *ngIf="savingAnswer">
       <p class="saving-answer-message">
@@ -47,7 +48,7 @@
       [style.height]="iframeHeight$ | async"
       [src]="iframeSrc"
       #iframe
-      [algFullHeightContent]="state.isReady"
+      [algFullHeightContent]="state.isReady || showTaskAnyway"
       allowfullscreen
     ></iframe>
     <div *ngIf="state.isFetching" class="loading">
