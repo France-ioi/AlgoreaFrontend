@@ -26,9 +26,10 @@
     </ng-container>
 
     <div class="text-center">
-      <a class="alg-link error-message" (click)="showTaskAnyway = true" i18n>
-        Show task anyway (for debugging)
-      </a>
+      <alg-button
+        i18n-label label="Show task anyway (for debugging)"
+        (click)="showTaskAnyway = true"
+      ></alg-button>
     </div>
   </div>
   <div
