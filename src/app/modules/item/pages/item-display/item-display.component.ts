@@ -74,6 +74,8 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
     distinctUntilChanged(),
   );
 
+  showTaskAnyway = false;
+
   @Output() viewChange = this.taskService.activeView$;
   @Output() tabsChange: Observable<TaskTab[]> = this.taskService.views$.pipe(
     map(views => views.map(view => ({ view, name: this.getTabNameByView(view) }))),

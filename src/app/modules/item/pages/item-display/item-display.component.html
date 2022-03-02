@@ -1,10 +1,10 @@
 <div class="item-display" *ngIf="state$ | async as state">
-  <div *ngIf="state.isError" class="errors">
+  <div *ngIf="state.isError && !showTaskAnyway" class="errors">
     <ng-template #defaultErrorMessage>
       <alg-error i18n-message message="Unable to load the task"></alg-error>
     </ng-template>
 
-    <ng-container *ngIf="['all', 'all_with_grant'].includes(canEdit)">
+    <ng-container *ngIf="['all', 'all_with_grant'].includes(canEdit); else defaultErrorMessage">
       <alg-error
         *ngIf="initError$ | async; else urlError"
         i18n-message message="It usually occurs when task url is invalid, if the task url is valid and the problem persists, please contact us."
@@ -24,8 +24,19 @@
         ></alg-error>
       </ng-template>
     </ng-container>
+
+    <div class="text-center">
+      <alg-button
+        i18n-label label="Show task anyway (for debugging)"
+        (click)="showTaskAnyway = true"
+      ></alg-button>
+    </div>
   </div>
-  <div class="iframe-container" *ngIf="!state.isError">
+  <div
+    class="iframe-container"
+    [style.display]="state.isError && !showTaskAnyway ? 'none' : 'block'"
+    [algFullHeightContent]="true"
+  >
     <div class="saving-answer" *ngIf="savingAnswer">
       <p class="saving-answer-message">
         <span i18n>Saving answer...</span>
@@ -38,7 +49,7 @@
       [style.height]="iframeHeight$ | async"
       [src]="iframeSrc"
       #iframe
-      [algFullHeightContent]="state.isReady"
+      [algFullHeightContent]="state.isReady || showTaskAnyway"
       allowfullscreen
     ></iframe>
     <div *ngIf="state.isFetching" class="loading">
