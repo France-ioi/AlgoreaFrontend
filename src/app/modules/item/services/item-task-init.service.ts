@@ -98,7 +98,7 @@ export class ItemTaskInitService implements OnDestroy {
       throw new Error($localize`Maformed url: "${url}"`);
     }
 
-    if (!url.startsWith('http')) throw new Error($localize`Invalid url "${url}": please provide an http link`);
+    if (!url.startsWith('http')) throw new Error($localize`Invalid url "${url}": please provide an http(s) link`);
 
     // Avoid mixed-content error: https://developer.mozilla.org/en-US/docs/Web/Security/Mixed_content/How_to_fix_website_with_mixed_content
     // mixed-content is when an https website tries to load an http content, ie: iframe.src, script.src, etc.

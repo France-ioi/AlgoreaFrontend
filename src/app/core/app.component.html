@@ -36,6 +36,9 @@
   [closable]="false"
 >
   <p i18n="@@auth-error-modal-context">Oops, we are unable to make the site work properly. Are you connected to the Internet?</p>
-  <p i18n="@@auth-error-modal-todo">Try to refresh the page. If this problem persists, please contact us.</p>
+  <p>
+    <ng-container i18n="@@auth-error-modal-todo">Try to refresh the page.</ng-container>&nbsp;
+    <ng-container i18n="@@contactUs">If the problem persists, please contact us.</ng-container>
+  </p>
 </p-dialog>
 <alg-language-mismatch></alg-language-mismatch>

@@ -82,7 +82,7 @@ export class GroupRemoveButtonComponent implements OnChanges, OnDestroy {
       .subscribe({
         next: () => {
           this.deletionInProgress$.next(false);
-          this.actionFeedbackService.success($localize`You have delete "${groupName}"`);
+          this.actionFeedbackService.success($localize`You have deleted "${groupName}"`);
           this.navigateToMyGroups();
         },
         error: _err => {

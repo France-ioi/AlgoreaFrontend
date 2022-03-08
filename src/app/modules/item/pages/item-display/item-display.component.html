@@ -7,7 +7,7 @@
     <ng-container *ngIf="['all', 'all_with_grant'].includes(canEdit); else defaultErrorMessage">
       <alg-error
         *ngIf="initError$ | async; else urlError"
-        i18n-message message="It usually occurs when task url is invalid, if the task url is valid and the problem persists, please contact us."
+        i18n-message message="It usually occurs when task url is invalid. If the task url is valid and the problem persists, please contact us."
       ></alg-error>
 
       <ng-template #urlError>
@@ -20,7 +20,7 @@
       <ng-template #unknownError>
         <alg-error
           *ngIf="unknownError$ | async as error"
-          i18n-message message="An unknown error occurred. If this problem persists, please contact us."
+          [message]="errorMessage"
         ></alg-error>
       </ng-template>
     </ng-container>
