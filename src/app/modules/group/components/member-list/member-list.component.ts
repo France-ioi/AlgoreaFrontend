@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { ConfirmationService, SortEvent } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { Observable, ReplaySubject, Subject } from 'rxjs';
@@ -81,6 +81,8 @@ interface DataFetching {
 export class MemberListComponent implements OnChanges, OnDestroy {
 
   @Input() groupData? : GroupData;
+
+  @Output() removedGroup = new EventEmitter<void>();
 
   state: 'error' | 'ready' | 'fetching' = 'fetching';
 
@@ -342,6 +344,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
         this.unselectAll();
         this.fetchData();
         this.removalInProgress$.next(false);
+        this.removedGroup.emit();
       },
       error: _err => {
         this.removalInProgress$.next(false);
