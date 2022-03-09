@@ -1,8 +1,8 @@
-import { combineLatest, merge, Observable, of, OperatorFunction, Subject } from 'rxjs';
-import { delay, distinctUntilChanged, map, mergeScan, shareReplay, startWith } from 'rxjs/operators';
+import { merge, Observable, of, OperatorFunction, Subject } from 'rxjs';
+import { delay, distinctUntilChanged, map, mergeScan, shareReplay, startWith, withLatestFrom } from 'rxjs/operators';
 import { isDefined } from 'src/app/shared/helpers/null-undefined-predicates';
 import { repeatLatestWhen } from 'src/app/shared/helpers/repeatLatestWhen';
-import { fetchingState, FetchState, readyState } from 'src/app/shared/helpers/state';
+import { errorState, fetchingState, FetchState, readyState } from 'src/app/shared/helpers/state';
 import { ContentInfo, RoutedContentInfo } from 'src/app/shared/models/content/content-info';
 import { mapStateData, mapToFetchState } from 'src/app/shared/operators/state';
 import { CurrentContentService } from 'src/app/shared/services/current-content.service';
@@ -21,13 +21,16 @@ export interface NavigationNeighbors {
 export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
 
   private reloadTrigger = new Subject<void>();
+  protected reload$ = merge(
+    this.reloadTrigger,
+    this.currentContent.reload$,
+  );
 
   private content$ = this.currentContent.content$.pipe( // only keep those of interest for the current nav tree
     // map those which are not of interest to `undefined`
     map(content => (this.isOfContentType(content) ? content : undefined)),
     distinctUntilChanged(), // remove multiple `undefined`
     startWith(undefined),
-    repeatLatestWhen(this.reloadTrigger),
   );
   private children$ = merge(
     // emit `undefined` each time the content change
@@ -36,10 +39,15 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
       distinctUntilChanged(),
       map(() => undefined),
     ),
-    this.content$.pipe(this.childrenNavData())
+    this.content$.pipe(
+      repeatLatestWhen(this.reload$),
+      this.childrenNavData(),
+    ),
   );
-  state$ = combineLatest([ this.children$, this.content$ ]).pipe(
+  state$ = this.children$.pipe(
+    withLatestFrom(this.content$), // When children$ has emitted once, content$ has always emitted at least once too.
     mergeScan((prevState: FetchState<NavTreeData>, [ children, content ]) => {
+      if (children instanceof Error) return of(errorState(children));
 
       // CASE 1: the current-content does not match the type of this nav tree (so `content` has been mapped to `undefined`)
       if (!content) {
@@ -115,7 +123,7 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
   /**
    * Operator which emit the children of a content stream
    */
-  protected abstract childrenNavData(): OperatorFunction<ContentT|undefined,NavTreeElement[]>;
+  protected abstract childrenNavData(): OperatorFunction<ContentT|undefined,NavTreeElement[]|Error>;
 
   /**
    * Re-play the last change

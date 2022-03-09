@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { EMPTY, Observable, OperatorFunction, pipe } from 'rxjs';
-import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
+import { EMPTY, of, Observable, OperatorFunction, pipe } from 'rxjs';
+import { catchError, distinctUntilChanged, map, switchMap } from 'rxjs/operators';
+import { repeatLatestWhen } from 'src/app/shared/helpers/repeatLatestWhen';
 import { ContentInfo } from 'src/app/shared/models/content/content-info';
 import { GroupInfo, isGroupInfo } from 'src/app/shared/models/content/group-info';
 import { groupRoute } from 'src/app/shared/routing/group-route';
@@ -23,13 +24,17 @@ export class GroupNavTreeService extends NavTreeService<GroupInfo> {
     super(currentContent);
   }
 
-  childrenNavData(): OperatorFunction<GroupInfo|undefined,NavTreeElement[]> {
+  childrenNavData(): OperatorFunction<GroupInfo|undefined,NavTreeElement[]|Error> {
     return pipe(
       distinctUntilChanged((g1, g2) => g1?.route.id === g2?.route.id),
+      repeatLatestWhen(this.reload$),
       switchMap(group => {
         if (!group || group.route.isUser) return EMPTY;
-        return this.groupNavigationService.getGroupNavigation(group.route.id).pipe(map(data => this.mapNavData(data).elements));
-      })
+        return this.groupNavigationService.getGroupNavigation(group.route.id).pipe(
+          map(data => this.mapNavData(data).elements),
+          catchError(() => of(new Error('group nav fetch error'))),
+        );
+      }),
     );
   }
 

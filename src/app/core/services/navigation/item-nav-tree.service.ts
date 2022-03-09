@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { EMPTY, Observable, OperatorFunction, pipe } from 'rxjs';
-import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
+import { EMPTY, of, Observable, OperatorFunction, pipe } from 'rxjs';
+import { catchError, distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { bestAttemptFromResults, defaultAttemptId } from 'src/app/shared/helpers/attempts';
 import { isSkill, ItemTypeCategory, typeCategoryOfItem } from 'src/app/shared/helpers/item-type';
+import { repeatLatestWhen } from 'src/app/shared/helpers/repeatLatestWhen';
 import { ContentInfo } from 'src/app/shared/models/content/content-info';
 import { isActivityInfo, isItemInfo, ItemInfo } from 'src/app/shared/models/content/item-info';
 import { fullItemRoute } from 'src/app/shared/routing/item-route';
@@ -23,7 +24,7 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
     super(currentContent);
   }
 
-  childrenNavData(): OperatorFunction<ItemInfo|undefined,NavTreeElement[]> {
+  childrenNavData(): OperatorFunction<ItemInfo|undefined,NavTreeElement[]|Error> {
     return pipe(
       map(content => {
         if (!content) return undefined;
@@ -32,10 +33,12 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
         return attemptId ? { ...content.route, attemptId } : undefined;
       }),
       distinctUntilChanged((x, y) => x?.id === y?.id),
+      repeatLatestWhen(this.reload$),
       switchMap(route => {
         if (!route) return EMPTY;
         return this.itemNavService.getItemNavigation(route.id, route.attemptId, isSkill(route.contentType)).pipe(
-          map(data => this.mapNavData(data).elements)
+          map(data => this.mapNavData(data).elements),
+          catchError(() => of(new Error('group nav fetch error'))),
         );
       }),
     );
