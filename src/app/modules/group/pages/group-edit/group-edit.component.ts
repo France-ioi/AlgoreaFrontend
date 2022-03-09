@@ -13,6 +13,7 @@ import { GroupUpdateService } from '../../http-services/group-update.service';
 import { GroupDataSource } from '../../services/group-datasource.service';
 import { withManagementAdditions } from '../../helpers/group-management';
 import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
+import { CurrentContentService } from 'src/app/shared/services/current-content.service';
 
 @Component({
   selector: 'alg-group-edit',
@@ -34,6 +35,7 @@ export class GroupEditComponent implements OnDestroy, PendingChangesComponent {
 
   constructor(
     private modeService: ModeService,
+    private currentContentService: CurrentContentService,
     private groupDataSource: GroupDataSource,
     private actionFeedbackService: ActionFeedbackService,
     private formBuilder: FormBuilder,
@@ -91,6 +93,7 @@ export class GroupEditComponent implements OnDestroy, PendingChangesComponent {
       next: () => {
         this.groupDataSource.refetchGroup(); // will re-enable the form
         this.actionFeedbackService.success($localize`Changes successfully saved.`);
+        this.currentContentService.forceReload();
       },
       error: _err => {
         this.groupForm.enable();
