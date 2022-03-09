@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { ContentInfo } from '../models/content/content-info';
 
 /**
@@ -15,6 +15,9 @@ export class CurrentContentService implements OnDestroy {
   private content = new BehaviorSubject<ContentInfo|null>(null);
   content$ = this.content.asObservable();
 
+  private reload = new Subject<void>();
+  reload$ = this.reload.asObservable();
+
   /**
    * The current content
    */
@@ -27,6 +30,10 @@ export class CurrentContentService implements OnDestroy {
    */
   replace(content: ContentInfo): void {
     this.content.next(content);
+  }
+
+  forceReload(): void {
+    this.reload.next();
   }
 
   /**
