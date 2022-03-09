@@ -15,6 +15,7 @@ import { readyData } from 'src/app/shared/operators/state';
 import { Duration } from '../../../../shared/helpers/duration';
 import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
 import { isNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
+import { CurrentContentService } from 'src/app/shared/services/current-content.service';
 
 export const DEFAULT_ENTERING_TIME_MIN = '1000-01-01T00:00:00Z';
 export const DEFAULT_ENTERING_TIME_MAX = '9999-12-31T23:59:59Z';
@@ -81,6 +82,7 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
 
   constructor(
     private modeService: ModeService,
+    private currentContentService: CurrentContentService,
     private itemDataSource: ItemDataSource,
     private formBuilder: FormBuilder,
     private createItemService: CreateItemService,
@@ -346,6 +348,7 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
       next: _status => {
         this.actionFeedbackService.success($localize`Changes successfully saved.`);
         this.itemDataSource.refreshItem(); // which will re-enable the form
+        this.currentContentService.forceReload();
       },
       error: _err => {
         this.actionFeedbackService.unexpectedError();
