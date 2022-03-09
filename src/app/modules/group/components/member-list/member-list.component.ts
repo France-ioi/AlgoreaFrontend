@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { ConfirmationService, SortEvent } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { Observable, ReplaySubject } from 'rxjs';
@@ -69,6 +69,7 @@ type Row = (Member|GroupChild|{ login: string, parentGroups: string }|{ name: st
 export class MemberListComponent implements OnChanges, OnDestroy {
 
   @Input() groupData? : GroupData;
+  @Output() removedGroup = new EventEmitter<void>();
 
   defaultFilter: Filter = { type: TypeFilter.Users, directChildren: true };
 
@@ -303,6 +304,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
         this.unselectAll();
         this.fetchRows();
         this.removalInProgress$.next(false);
+        this.removedGroup.emit();
       },
       error: err => {
         this.removalInProgress$.next(false);
