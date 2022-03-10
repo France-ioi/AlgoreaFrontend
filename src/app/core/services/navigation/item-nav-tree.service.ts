@@ -38,7 +38,7 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
         if (!route) return EMPTY;
         return this.itemNavService.getItemNavigation(route.id, route.attemptId, isSkill(route.contentType)).pipe(
           map(data => this.mapNavData(data).elements),
-          catchError(() => of(new Error('group nav fetch error'))),
+          catchError(() => of(new Error('item nav fetch error'))),
         );
       }),
     );
