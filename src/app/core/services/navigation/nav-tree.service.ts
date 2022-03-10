@@ -1,7 +1,6 @@
 import { combineLatest, merge, Observable, of, OperatorFunction, Subject } from 'rxjs';
 import { delay, distinctUntilChanged, map, mergeScan, shareReplay, startWith } from 'rxjs/operators';
 import { isDefined } from 'src/app/shared/helpers/null-undefined-predicates';
-import { repeatLatestWhen } from 'src/app/shared/helpers/repeatLatestWhen';
 import { errorState, fetchingState, FetchState, readyState } from 'src/app/shared/helpers/state';
 import { ContentInfo, RoutedContentInfo } from 'src/app/shared/models/content/content-info';
 import { mapStateData, mapToFetchState } from 'src/app/shared/operators/state';
@@ -39,10 +38,7 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
       distinctUntilChanged(),
       map(() => undefined),
     ),
-    this.content$.pipe(
-      repeatLatestWhen(this.reload$),
-      this.childrenNavData(),
-    ),
+    this.content$.pipe(this.childrenNavData()),
   );
   state$ = combineLatest([ this.children$, this.content$ ]).pipe(
     mergeScan((prevState: FetchState<NavTreeData>, [ children, content ]) => {
