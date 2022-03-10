@@ -1,5 +1,5 @@
-import { merge, Observable, of, OperatorFunction, Subject } from 'rxjs';
-import { delay, distinctUntilChanged, map, mergeScan, shareReplay, startWith, withLatestFrom } from 'rxjs/operators';
+import { combineLatest, merge, Observable, of, OperatorFunction, Subject } from 'rxjs';
+import { delay, distinctUntilChanged, map, mergeScan, shareReplay, startWith } from 'rxjs/operators';
 import { isDefined } from 'src/app/shared/helpers/null-undefined-predicates';
 import { repeatLatestWhen } from 'src/app/shared/helpers/repeatLatestWhen';
 import { errorState, fetchingState, FetchState, readyState } from 'src/app/shared/helpers/state';
@@ -44,8 +44,7 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
       this.childrenNavData(),
     ),
   );
-  state$ = this.children$.pipe(
-    withLatestFrom(this.content$), // When children$ has emitted once, content$ has always emitted at least once too.
+  state$ = combineLatest([ this.children$, this.content$ ]).pipe(
     mergeScan((prevState: FetchState<NavTreeData>, [ children, content ]) => {
       if (children instanceof Error) return of(errorState(children));
 
