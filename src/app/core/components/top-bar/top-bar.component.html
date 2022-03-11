@@ -1,9 +1,7 @@
-<ng-container *ngIf="currentMode">
-  <alg-left-header *ngIf="fullFrameContent?.expanded && fullFrameContent?.canToggle" [compactMode]="true"></alg-left-header>
-  <alg-content-top-bar
-    class="content-top-bar"
-    [fullFrameContent]="fullFrameContent"
-    [scrolled]="scrolled"
-  ></alg-content-top-bar>
-  <alg-top-right-controls *ngIf="showTopRightControls" [drawLeftBorder]="currentMode === 'normal'"></alg-top-right-controls>
-</ng-container>
+<alg-left-header *ngIf="fullFrameContent?.expanded && fullFrameContent?.canToggle" [compactMode]="true"></alg-left-header>
+<alg-content-top-bar
+  class="content-top-bar"
+  [fullFrameContent]="fullFrameContent"
+  [scrolled]="scrolled"
+></alg-content-top-bar>
+<alg-top-right-controls *ngIf="showTopRightControls" [drawLeftBorder]="!modeBarDisplayed"></alg-top-right-controls>

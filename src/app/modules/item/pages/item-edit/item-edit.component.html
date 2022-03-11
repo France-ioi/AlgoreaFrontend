@@ -13,7 +13,7 @@
            class="nav-tab-item"
            [routerLink]="'./'"
            routerLinkActive #rla1="routerLinkActive"
-           [routerLinkActiveOptions]="{exact: true}"
+           [routerLinkActiveOptions]="{ matrixParams: 'ignored', queryParams: 'ignored', paths: 'exact', fragment: 'ignored'}"
            [class.active]="rla1.isActive"
            i18n
         >
@@ -24,7 +24,7 @@
           class="nav-tab-item"
           [routerLink]="'./advanced-parameters'"
           routerLinkActive #rla2="routerLinkActive"
-          [routerLinkActiveOptions]="{exact: true}"
+          [routerLinkActiveOptions]="{ matrixParams: 'ignored', queryParams: 'ignored', paths: 'exact', fragment: 'ignored'}"
           [class.active]="rla2.isActive"
           i18n
         >

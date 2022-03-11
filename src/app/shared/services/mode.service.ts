@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { UserSessionService, WatchedGroup } from './user-session.service';
+import { UserSessionService } from './user-session.service';
 
 export enum Mode {
   Normal = 'normal',
@@ -27,18 +27,7 @@ export class ModeService implements OnDestroy {
     });
   }
 
-  startObserving(group: WatchedGroup): void {
-    this.mode$.next(Mode.Watching);
-    this.session.startGroupWatching(group);
-  }
-
-  stopObserving(): void {
-    this.session.stopGroupWatching();
-    this.mode$.next(Mode.Normal);
-  }
-
   startEditing(): void {
-    this.session.stopGroupWatching();
     this.mode$.next(Mode.Editing);
   }
 

@@ -1,10 +1,10 @@
 import { Component, OnDestroy } from '@angular/core';
 import { ItemNavigationService } from '../../../../core/http-services/item-navigation.service';
-import { UserSessionService } from '../../../../shared/services/user-session.service';
 import { switchMap, filter, map } from 'rxjs/operators';
-import { isNotUndefined } from '../../../../shared/helpers/null-undefined-predicates';
+import { isNotNull } from '../../../../shared/helpers/null-undefined-predicates';
 import { mapToFetchState } from '../../../../shared/operators/state';
 import { Subject } from 'rxjs';
+import { GroupWatchingService } from 'src/app/core/services/group-watching.service';
 
 @Component({
   selector: 'alg-suggestion-of-activities',
@@ -13,8 +13,8 @@ import { Subject } from 'rxjs';
 })
 export class SuggestionOfActivitiesComponent implements OnDestroy {
   private refresh$ = new Subject<void>();
-  readonly state$ = this.sessionService.watchedGroup$.pipe(
-    filter(isNotUndefined),
+  readonly state$ = this.groupWatchingService.watchedGroup$.pipe(
+    filter(isNotNull),
     switchMap(watchedGroup =>
       this.itemNavigationService.getRootActivities(watchedGroup.route.id).pipe(
         map(rootActivity =>
@@ -26,7 +26,7 @@ export class SuggestionOfActivitiesComponent implements OnDestroy {
   );
 
   constructor(
-    private sessionService: UserSessionService,
+    private groupWatchingService: GroupWatchingService,
     private itemNavigationService: ItemNavigationService) {
   }
 
