@@ -5,7 +5,7 @@ import { distinctUntilChanged, filter, map, shareReplay, startWith, switchMap, w
 import { GetGroupByIdService, Group } from 'src/app/modules/group/http-services/get-group-by-id.service';
 import { GetUserService, User } from 'src/app/modules/group/http-services/get-user.service';
 import { isNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
-import { boolFromParamMap, boolToQueryParamValue } from 'src/app/shared/helpers/url';
+import { boolToQueryParamValue, queryParamValueToBool } from 'src/app/shared/helpers/url';
 import { rawGroupRoute, RawGroupRoute } from 'src/app/shared/routing/group-route';
 
 const watchedGroupQueryParam = 'watchedGroupId';
@@ -29,7 +29,7 @@ export class GroupWatchingService implements OnDestroy {
   private watchedGroupParams = this.route.queryParamMap.pipe(
     map(params => {
       const groupId = params.get(watchedGroupQueryParam);
-      const isUser = boolFromParamMap(params, watchedGroupIsUserQueryParam);
+      const isUser = queryParamValueToBool(params.get(watchedGroupIsUserQueryParam));
       if (groupId === noWatchingValue) return null; // `noWatchingValue` => forced 'not watching'
       if (!groupId) return undefined; // missing/empty parameter => unchanged from previous value
       return { groupId, isUser };

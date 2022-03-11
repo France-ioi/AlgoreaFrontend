@@ -1,5 +1,5 @@
 import { convertToParamMap, Params } from '@angular/router';
-import { boolFromParamMap, boolToQueryParamValue, urlStringFromArray } from './url';
+import { boolToQueryParamValue, queryParamValueToBool, urlStringFromArray } from './url';
 
 describe('urlStringFromArray', () => {
   it('should convert correctly a complex absolute case', () => {
@@ -21,19 +21,19 @@ describe('bool value in url processing', () => {
     const params: Params = {};
     params[field] = boolToQueryParamValue(true);
     const map = convertToParamMap(params);
-    expect(boolFromParamMap(map, field)).toBeTrue();
+    expect(queryParamValueToBool(map.get(field))).toBeTrue();
   });
 
   it('should encode correctly a falsy value', () => {
     const params: Params = {};
     params[field] = boolToQueryParamValue(false);
     const map = convertToParamMap(params);
-    expect(boolFromParamMap(map, field)).toBeFalse();
+    expect(queryParamValueToBool(map.get(field))).toBeFalse();
   });
 
   it('should correctly handle field not set', () => {
     const map = convertToParamMap({ 'anotherField': 1 });
-    expect(boolFromParamMap(map, field)).toBeNull();
+    expect(queryParamValueToBool(map.get(field))).toBeNull();
   });
 
 });
