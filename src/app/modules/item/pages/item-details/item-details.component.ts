@@ -61,8 +61,8 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent {
     startWith(this.isProgressPage() ? [{ view: 'progress', name: 'Progress' }] : []),
   );
   readonly taskTabs$ = this.tabs$.pipe(map(tabs => tabs.filter(tab => tab.view !== 'progress')));
-  readonly showProgressTab$ = combineLatest([ this.groupWatchingService.watchedGroup$, this.tabs$ ]).pipe(
-    map(([ watchedGroup, tabs ]) => !!watchedGroup || tabs.some(tab => tab.view === 'progress')),
+  readonly showProgressTab$ = combineLatest([ this.groupWatchingService.isWatching$, this.tabs$ ]).pipe(
+    map(([ isWatching, tabs ]) => isWatching || tabs.some(tab => tab.view === 'progress')),
   );
   taskView?: TaskTab['view'];
 
