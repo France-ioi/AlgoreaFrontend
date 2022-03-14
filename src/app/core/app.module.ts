@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, ErrorHandler, NgModule } from '@angular/core';
 
 import { SharedComponentsModule } from '../modules/shared-components/shared-components.module';
 
@@ -45,10 +45,32 @@ import { ObservationBarComponent } from './components/observation-bar/observatio
 import { LanguageMismatchComponent } from './components/language-mismatch/language-mismatch.component';
 import { TopBarComponent } from './components/top-bar/top-bar.component';
 import { ContentTopBarComponent } from './components/content-top-bar/content-top-bar.component';
+import * as Sentry from '@sentry/angular';
+import { Router } from '@angular/router';
+import { appConfig } from '../shared/helpers/config';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: false,
 };
+
+const sentryProviders = appConfig.sentryDsn ? [
+  {
+    provide: ErrorHandler,
+    useValue: Sentry.createErrorHandler({
+      showDialog: true,
+    }),
+  },
+  {
+    provide: Sentry.TraceService,
+    deps: [ Router ],
+  },
+  {
+    provide: APP_INITIALIZER,
+    useFactory: () => (): void => {},
+    deps: [ Sentry.TraceService ],
+    multi: true,
+  },
+] : [];
 
 @NgModule({
   declarations: [
@@ -116,6 +138,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
       provide: DEFAULT_TIMEOUT,
       useValue: 3000,
     },
+    ...sentryProviders
   ],
   exports: [],
   bootstrap: [ AppComponent ]

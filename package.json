@@ -38,6 +38,8 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.28",
     "@fortawesome/free-solid-svg-icons": "^5.13.0",
     "@ngrx/component": "^13.0.2",
+    "@sentry/angular": "^6.18.2",
+    "@sentry/tracing": "^6.18.2",
     "fp-ts": "^2.9.5",
     "io-ts": "^2.2.16",
     "jschannel": "^1.0.2",
