@@ -15,7 +15,6 @@ import {
   map,
   mergeWith,
   shareReplay,
-  startWith,
   switchMap,
   take,
   takeUntil,
@@ -28,6 +27,7 @@ import { urlArrayForItemRoute } from 'src/app/shared/routing/item-route';
 import { GetAnswerService } from '../../http-services/get-answer.service';
 import { appConfig } from 'src/app/shared/helpers/config';
 import { GroupWatchingService } from 'src/app/core/services/group-watching.service';
+import { isTask } from 'src/app/shared/helpers/item-type';
 
 const loadForbiddenAnswerError = new Error('load answer forbidden');
 
@@ -58,7 +58,7 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent {
         : tabs.filter(tab => tab.view !== 'solution');
     }),
     map(tabs => tabs.filter(tab => !appConfig.featureFlags.hideTaskTabs.includes(tab.view))),
-    startWith(this.isProgressPage() ? [{ view: 'progress', name: 'Progress' }] : []),
+    shareReplay(1),
   );
   readonly taskTabs$ = this.tabs$.pipe(map(tabs => tabs.filter(tab => tab.view !== 'progress')));
   readonly showProgressTab$ = combineLatest([ this.groupWatchingService.isWatching$, this.tabs$ ]).pipe(
@@ -121,6 +121,7 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent {
     this.itemDataSource.state$.subscribe(state => {
       // reset task tabs when item changes.
       if (state.isFetching) this.tabs.next(this.isProgressPage() ? [{ view: 'progress', name: 'Progress' }] : []);
+      if (state.isReady) this.tabs.next(isTask(state.data.item) ? [] : [{ view: 'progress', name: 'Progress' }]);
     }),
     fromEvent<BeforeUnloadEvent>(globalThis, 'beforeunload', { capture: true })
       .pipe(switchMap(() => this.itemContentComponent?.itemDisplayComponent?.saveAnswerAndState() ?? of(undefined)), take(1))
