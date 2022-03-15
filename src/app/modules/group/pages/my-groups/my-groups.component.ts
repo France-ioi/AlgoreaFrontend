@@ -34,6 +34,7 @@ export class MyGroupsComponent implements OnDestroy {
 
   onGroupJoined(): void {
     this.joinedGroupList?.refresh();
+    this.currentContent.forceReload();
   }
 
 }
