@@ -119,9 +119,9 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent {
 
   private subscriptions = [
     this.itemDataSource.state$.subscribe(state => {
-      // reset task tabs when item changes. By default do not display it unless we currently are on progress page
+      // reset tabs when item changes. By default do not display it unless we currently are on progress page
       if (state.isFetching) this.tabs.next(this.isProgressPage() ? [{ view: 'progress', name: 'Progress' }] : []);
-      // update task tabs when item is fetched
+      // update tabs when item is fetched
       // Case 1: item is not a task: display the progress tab anyway
       // Case 2: item is a task: delegate tab display to item task service, start with no tabs
       if (state.isReady) this.tabs.next(isTask(state.data.item) && !this.isProgressPage() ? [] : [{ view: 'progress', name: 'Progress' }]);
