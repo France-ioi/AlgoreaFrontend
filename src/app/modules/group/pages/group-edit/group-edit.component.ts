@@ -15,6 +15,7 @@ import { withManagementAdditions } from '../../helpers/group-management';
 import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
 import { PendingChangesService } from '../../../../shared/services/pending-changes-service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { CurrentContentService } from 'src/app/shared/services/current-content.service';
 
 @Component({
   selector: 'alg-group-edit',
@@ -36,6 +37,7 @@ export class GroupEditComponent implements OnDestroy, PendingChangesComponent {
 
   constructor(
     private modeService: ModeService,
+    private currentContentService: CurrentContentService,
     private groupDataSource: GroupDataSource,
     private actionFeedbackService: ActionFeedbackService,
     private formBuilder: FormBuilder,
@@ -101,6 +103,10 @@ export class GroupEditComponent implements OnDestroy, PendingChangesComponent {
         if (!(err instanceof HttpErrorResponse)) throw err;
       }
     });
+  }
+
+  refreshNav(): void {
+    this.currentContentService.forceReload();
   }
 
   resetForm(): void {

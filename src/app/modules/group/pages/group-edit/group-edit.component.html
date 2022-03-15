@@ -33,7 +33,7 @@
       <alg-associated-activity formControlName="rootActivity"></alg-associated-activity>
 
       <div class="remove-button-section">
-        <alg-group-remove-button [group]="state.data"></alg-group-remove-button>
+        <alg-group-remove-button [group]="state.data" (groupDeleted)="refreshNav()"></alg-group-remove-button>
       </div>
     </form>
 
