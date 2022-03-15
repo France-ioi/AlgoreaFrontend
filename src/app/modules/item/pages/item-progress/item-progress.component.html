@@ -1,4 +1,4 @@
-<ng-container *ngIf="isWatching$ | async as isWatching">
+<ng-container *ngrxLet="isWatching$ as isWatching">
   <alg-section
       icon="fa fa-list"
       *ngIf="itemData"

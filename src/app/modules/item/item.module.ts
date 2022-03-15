@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ReactiveComponentModule } from '@ngrx/component';
 import { ItemRoutingModule } from './item-routing.module';
 import { SharedComponentsModule } from '../shared-components/shared-components.module';
 import { ItemDetailsComponent } from './pages/item-details/item-details.component';
@@ -75,6 +76,7 @@ import { ItemPermissionsComponent } from './components/item-permissions/item-per
     ItemRoutingModule,
     SharedComponentsModule,
     ReactiveFormsModule,
+    ReactiveComponentModule,
     FormsModule,
     TooltipModule,
     DialogModule,
