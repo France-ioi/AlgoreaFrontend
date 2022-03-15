@@ -1,5 +1,5 @@
 import { combineLatest, merge, Observable, of, OperatorFunction, Subject } from 'rxjs';
-import { delay, distinctUntilChanged, map, mergeScan, shareReplay, startWith } from 'rxjs/operators';
+import { delay, distinctUntilChanged, filter, map, mergeScan, shareReplay, startWith } from 'rxjs/operators';
 import { isDefined } from 'src/app/shared/helpers/null-undefined-predicates';
 import { errorState, fetchingState, FetchState, readyState } from 'src/app/shared/helpers/state';
 import { ContentInfo, RoutedContentInfo } from 'src/app/shared/models/content/content-info';
@@ -44,18 +44,25 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
     mergeScan((prevState: FetchState<NavTreeData>, [ children, content ]) => {
       if (children instanceof Error) return of(errorState(children));
 
+      const isReload = prevState.isReady && prevState.data.selectedElementId === content?.route.id;
+
       // CASE 1: the current-content does not match the type of this nav tree (so `content` has been mapped to `undefined`)
       if (!content) {
         // CASE 1A: the menu has already an element displayed -> just deselect what is selected if there was a selection
-        if (prevState.isReady) return of(readyState(prevState.data.withNoSelection()));
+        if (prevState.isReady && !isReload) return of(readyState(prevState.data.withNoSelection()));
         // CASE 1B: the menu has nothing displayed yet -> load item root
-        else return this.fetchDefaultNav();
+        else {
+          const defaultNav$ = this.fetchDefaultNav();
+          return isReload
+            ? defaultNav$.pipe(filter(state => !state.isFetching), startWith(fetchingState(prevState.data)))
+            : defaultNav$;
+        }
 
       } else {
       // CASE 2: the content type matches the type of this nav tree
         const route = content.route;
 
-        if (prevState.isReady && prevState.data.hasElement(route)) {
+        if (prevState.isReady && prevState.data.hasElement(route) && !isReload) {
           // CASE 2A : the content is among the displayed elements -> either select it if at root or shift the tree "to the left" otherwise
           const prevData = prevState.data;
           let data = prevData.hasLevel1Element(route) ? prevData.withSelection(route.id) : prevData.subNavMenuData(route);
@@ -65,13 +72,16 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
 
           // CASE 2B: the content is not among the displayed elements -> fetch all nav
         } else {
-          return this.fetchNewNav(content).pipe(
+          const newNav$ = this.fetchNewNav(content).pipe(
             mapStateData(data => {
               if (children) data = data.withChildren(route, children);
               data = data.withUpdatedElement(route, el => this.addDetailsToTreeElement(el, content));
               return data;
             })
           );
+          return isReload
+            ? newNav$.pipe(filter(state => !state.isFetching), startWith(fetchingState(prevState.data)))
+            : newNav$;
         }
       }
     }, fetchingState<NavTreeData>() /* the switchScan seed */, 1 /* concurrency = 1 so that we can always use the last state*/),

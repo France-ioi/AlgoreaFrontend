@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { EMPTY, of, Observable, OperatorFunction, pipe } from 'rxjs';
+import { of, Observable, OperatorFunction, pipe } from 'rxjs';
 import { catchError, distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { repeatLatestWhen } from 'src/app/shared/helpers/repeatLatestWhen';
 import { ContentInfo } from 'src/app/shared/models/content/content-info';
@@ -29,7 +29,7 @@ export class GroupNavTreeService extends NavTreeService<GroupInfo> {
       distinctUntilChanged((g1, g2) => g1?.route.id === g2?.route.id),
       repeatLatestWhen(this.reload$),
       switchMap(group => {
-        if (!group || group.route.isUser) return EMPTY;
+        if (!group || group.route.isUser) return of([]);
         return this.groupNavigationService.getGroupNavigation(group.route.id).pipe(
           map(data => this.mapNavData(data).elements),
           catchError(() => of(new Error('group nav fetch error'))),
