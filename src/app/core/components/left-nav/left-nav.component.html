@@ -35,7 +35,7 @@
 
   <ng-container *ngIf="navTreeServices[activeTab.index]!.state$ | async as state">
 
-    <div class="spinner" *ngIf="state.isFetching">
+    <div class="spinner" *ngIf="state.isFetching && !state.data">
       <alg-loading size="medium"></alg-loading>
     </div>
 
@@ -49,7 +49,7 @@
     ></alg-error>
 
     <alg-left-nav-tree
-      *ngIf="state.isReady"
+      *ngIf="state.data"
       [data]="state.data"
       [elementType]="$any(['activity', 'skill', 'group'][activeTab.index])"
     ></alg-left-nav-tree>
