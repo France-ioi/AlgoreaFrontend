@@ -93,13 +93,17 @@ export class GroupEditComponent implements OnDestroy, PendingChangesComponent {
       next: () => {
         this.groupDataSource.refetchGroup(); // will re-enable the form
         this.actionFeedbackService.success($localize`Changes successfully saved.`);
-        this.currentContentService.forceReload();
+        this.refreshNav();
       },
       error: _err => {
         this.groupForm.enable();
         this.actionFeedbackService.unexpectedError();
       }
     });
+  }
+
+  refreshNav(): void {
+    this.currentContentService.forceReload();
   }
 
   resetForm(): void {

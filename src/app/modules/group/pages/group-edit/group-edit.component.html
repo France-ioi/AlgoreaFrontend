@@ -35,7 +35,7 @@
     </form>
 
     <div class="delete-button" *ngIf="state.data.isCurrentUserManager">
-      <alg-group-remove-button [group]="state.data"></alg-group-remove-button>
+      <alg-group-remove-button [group]="state.data" (groupDeleted)="refreshNav()"></alg-group-remove-button>
     </div>
 
     <alg-floating-save *ngIf="groupForm.dirty" [saving]="groupForm.disabled" (save)="save()" (cancel)="resetForm()"></alg-floating-save>
