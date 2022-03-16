@@ -8,6 +8,12 @@ export interface FullFrameContent {
   animated: boolean,
 }
 
+interface ConfigureOptions {
+  expanded: boolean,
+  canToggle?: boolean,
+  showTopRightControls?: boolean,
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -26,25 +32,26 @@ export class LayoutService {
    * Disabled for instance for displaying a task, as the task iframe is set to fill the screen to the bottom */
   contentFooter$ = this.contentFooter.asObservable();
 
-  private initialized = false;
+  private configured = false;
 
   /**
    * This method allows to defer layout initialization to any consumer, expectedly routes.
    * Only first call in taken into account, later calls are ignored.
-   * @param expanded initial expanded value
-   * @param canToggle Defines for the lifetime of the app if the left menu can be toggled or not
-   * @param showTopRightControls Defines for the lifetime of the app if the top right controls are shown
+   * @param {object} options
+   * @param options.expanded initial expanded value
+   * @param options.canToggle Defines for the lifetime of the app if the left menu can be toggled or not
+   * @param options.showTopRightControls Defines for the lifetime of the app if the top right controls are shown
    */
-  initialize(expanded: boolean, canToggle: boolean, showTopRightControls: boolean): void {
-    if (this.initialized) return;
+  configure({ expanded, showTopRightControls = true, canToggle = true }: ConfigureOptions): void {
+    if (this.configured) return;
     this.fullFrameContent.next({ expanded, canToggle, animated: false });
     this.showTopRightControls.next(showTopRightControls);
-    this.initialized = true;
+    this.configured = true;
   }
 
   /** Set fullFrameContent, which expands the content by hiding the left menu and select headers */
   toggleFullFrameContent(expanded: boolean): void {
-    if (!this.fullFrameContent.value.canToggle) return;
+    if (!this.configured || !this.fullFrameContent.value.canToggle) return;
     const canToggle = this.fullFrameContent.value.canToggle;
     this.fullFrameContent.next({ expanded, canToggle, animated: true });
   }

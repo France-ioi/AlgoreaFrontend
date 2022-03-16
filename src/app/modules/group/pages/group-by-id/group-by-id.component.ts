@@ -37,7 +37,7 @@ export class GroupByIdComponent implements OnDestroy {
     private groupRouter: GroupRouter,
     private getGroupPath: GetGroupPathService,
   ) {
-    this.layoutService.initialize(false, true, true);
+    this.layoutService.configure({ expanded: false });
 
     // on route change: refetch group if needed
     this.activatedRoute.paramMap.subscribe(params => this.fetchGroupAtRoute(params));

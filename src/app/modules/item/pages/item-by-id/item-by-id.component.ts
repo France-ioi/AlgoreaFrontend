@@ -64,7 +64,7 @@ export class ItemByIdComponent implements OnDestroy {
 
     this.subscriptions.push(
       this.itemDataSource.state$.pipe(readyData(), take(1)).subscribe(data => {
-        this.layoutService.initialize(isTask(data.item), true, true);
+        this.layoutService.configure({ expanded: isTask(data.item) });
       }),
 
       // on datasource state change, update current state and current content page info
