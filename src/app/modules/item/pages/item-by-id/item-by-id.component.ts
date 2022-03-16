@@ -63,8 +63,8 @@ export class ItemByIdComponent implements OnDestroy {
     ).subscribe(params => this.fetchItemAtRoute(params)),
 
     this.subscriptions.push(
-      this.itemDataSource.state$.pipe(filter(state => !state.isFetching), take(1)).subscribe(state => {
-        this.layoutService.configure({ expanded: state.isReady && isTask(state.data.item) });
+      this.itemDataSource.state$.pipe(readyData(), take(1)).subscribe(data => {
+        this.layoutService.configure({ expanded: isTask(data.item) });
       }),
 
       // on datasource state change, update current state and current content page info
