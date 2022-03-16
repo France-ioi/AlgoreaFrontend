@@ -8,12 +8,6 @@ export interface FullFrameContent {
   animated: boolean,
 }
 
-interface ConfigureOptions {
-  expanded: boolean,
-  canToggle?: boolean,
-  showTopRightControls?: boolean,
-}
-
 @Injectable({
   providedIn: 'root'
 })
@@ -42,7 +36,11 @@ export class LayoutService {
    * @param options.canToggle Defines for the lifetime of the app if the left menu can be toggled or not
    * @param options.showTopRightControls Defines for the lifetime of the app if the top right controls are shown
    */
-  configure({ expanded, showTopRightControls = true, canToggle = true }: ConfigureOptions): void {
+  configure({ expanded, showTopRightControls = true, canToggle = true }: {
+    expanded: boolean,
+    canToggle?: boolean,
+    showTopRightControls?: boolean,
+  }): void {
     if (this.configured) return;
     this.fullFrameContent.next({ expanded, canToggle, animated: false });
     this.showTopRightControls.next(showTopRightControls);
