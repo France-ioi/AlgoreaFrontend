@@ -36,13 +36,13 @@ export class LayoutService {
    * @param options.canToggle Defines for the lifetime of the app if the left menu can be toggled or not
    * @param options.showTopRightControls Defines for the lifetime of the app if the top right controls are shown
    */
-  configure({ expanded, showTopRightControls = true, canToggle = true }: {
+  configure({ expanded, showTopRightControls = true, canToggleFullFrameContent = true }: {
     expanded: boolean,
-    canToggle?: boolean,
+    canToggleFullFrameContent?: boolean,
     showTopRightControls?: boolean,
   }): void {
     if (this.configured) return;
-    this.fullFrameContent.next({ expanded, canToggle, animated: false });
+    this.fullFrameContent.next({ expanded, canToggle: canToggleFullFrameContent, animated: false });
     this.showTopRightControls.next(showTopRightControls);
     this.configured = true;
   }
