@@ -5,6 +5,7 @@ export const environment: Environment = {
   apiUrl: '/api',
   oauthServerUrl: 'https://login.france-ioi.org',
   oauthClientId: '43',
+  sentryDsn: 'https://6295834d69104f54b55cc0ebe4ada310@o1167067.ingest.sentry.io/6257761',
 
   defaultActivityId: '4702',
 
