@@ -75,6 +75,20 @@ export class ItemTaskViewsService implements OnDestroy {
         const isIncludedInOtherView = entries.some(([ , otherView ]) => !!otherView.includes?.includes(name));
         return !requiresOtherView && !isIncludedInOtherView;
       })
-      .map(([ name ]) => name);
+      .map(([ name ]) => name)
+      .sort((a, b) => this.sortView(a, b));
+  }
+
+  private sortView(a: string, b: string): number {
+    const weights: Record<string, number> = {
+      task: 0,
+      solution: 1,
+      hints: 2,
+      editor: 3,
+      forum: 4,
+      submission: 5,
+    };
+    const unknownViewWeight = Math.max(...Object.values(weights)) + 1;
+    return (weights[a] ?? unknownViewWeight) - (weights[b] ?? unknownViewWeight);
   }
 }
