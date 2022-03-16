@@ -81,12 +81,12 @@ export class ItemTaskViewsService implements OnDestroy {
 
   private sortView(a: string, b: string): number {
     const weights: Record<string, number> = {
-      task: 0,
-      solution: 1,
-      hints: 2,
-      editor: 3,
-      forum: 4,
-      submission: 5,
+      task: 0, // Statement
+      editor: 1, // Solve
+      hints: 2, // Hints
+      solution: 3,// Solution
+      forum: 4, // Forum
+      submission: 5, // Submission
     };
     const unknownViewWeight = Math.max(...Object.values(weights)) + 1;
     return (weights[a] ?? unknownViewWeight) - (weights[b] ?? unknownViewWeight);
