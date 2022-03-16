@@ -1,9 +1,9 @@
-import { AfterViewChecked, Directive, ElementRef, HostListener, Input, Renderer2 } from '@angular/core';
+import { AfterViewChecked, Directive, ElementRef, HostListener, Input, OnChanges, Renderer2, SimpleChanges } from '@angular/core';
 
 @Directive({
   selector: '[algFullHeightContent]',
 })
-export class FullHeightContentDirective implements AfterViewChecked {
+export class FullHeightContentDirective implements AfterViewChecked, OnChanges {
   @Input() algFullHeightContent = true;
 
   @HostListener('window:resize')
@@ -16,17 +16,23 @@ export class FullHeightContentDirective implements AfterViewChecked {
 
   ngAfterViewChecked(): void {
     this.renderer.setStyle(this.el.nativeElement, 'display', 'block');
-    this.setHeight();
+    if (this.algFullHeightContent) this.setHeight();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.algFullHeightContent && !changes.algFullHeightContent.firstChange) {
+      this.algFullHeightContent ? this.setHeight() : this.unsetHeight();
+    }
+  }
+
+  unsetHeight(): void {
+    this.renderer.removeStyle(this.el.nativeElement, 'min-height');
+    this.renderer.removeStyle(this.el.nativeElement, 'height');
   }
 
   setHeight(): void {
-    if (!this.algFullHeightContent) {
-      this.renderer.setStyle(this.el.nativeElement, 'min-height', '0');
-      this.renderer.setStyle(this.el.nativeElement, 'height', '0');
-      return;
-    }
     const top = this.el.nativeElement.getBoundingClientRect().top + globalThis.scrollY;
-    this.renderer.setStyle(this.el.nativeElement, 'height', null);
+    this.renderer.removeStyle(this.el.nativeElement, 'height');
     this.renderer.setStyle(this.el.nativeElement, 'min-height', `calc(100vh - ${top}px)`);
   }
 }
