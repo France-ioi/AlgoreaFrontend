@@ -44,4 +44,10 @@ $inactive-bk-color: #d8d8d8;
       height: 2.0833rem;
     }
   }
+
+  &.warning {
+    .section-header {
+      background-color: var(--section-warning-handle-color);
+    }
+  }
 }

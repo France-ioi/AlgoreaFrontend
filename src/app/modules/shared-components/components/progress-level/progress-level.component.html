@@ -1,4 +1,4 @@
-<div class="progress-level-container">
+<div class="progress-level-container" [class]="colorTheme">
   <ng-container *ngFor="let i of totalArray">
     <span class="progress-level-item" [ngClass]="{active: i < value, revert: theme === 'revert'}"></span>
     <span *ngIf="i + 1 < maximum" class="progress-level-item-link" [ngClass]="{active: i + 1 < value, revert: theme === 'revert'}"></span>

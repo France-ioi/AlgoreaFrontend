@@ -1,10 +1,10 @@
-<div class="section-container">
+<div class="section-container" [ngClass]="theme">
   <div class="section-header" [ngClass]="{disabled: disabled, 'cursor-pointer': collapsible}" (click)="onCollapse()">
     <span class="header-icon">
       <i class="{{ icon }}"></i>
     </span>
     <span class="header-title">{{ title }}</span>
-    <ng-container *ngIf="contentTemplate && collapsed && collapsible"
+    <ng-container *ngIf="contentTemplate && collapsed"
       [ngTemplateOutlet]="contentTemplate"
       [ngTemplateOutletContext]="{ $implicit: true }"
     ></ng-container>
@@ -14,7 +14,7 @@
     </span>
   </div>
   <ng-container
-    *ngIf="contentTemplate && (!collapsed || !collapsible)"
+    *ngIf="contentTemplate && !collapsed"
     [ngTemplateOutlet]="contentTemplate"
     [ngTemplateOutletContext]="{ $implicit: false }"
   ></ng-container>

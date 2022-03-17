@@ -38,10 +38,12 @@ export interface ProgressSelectValue<T> {
 export class ProgressSelectComponent<T> implements OnChanges, OnInit, ControlValueAccessor {
 
   @Input() collapsed = false;
+  @Input() collapsable = false;
 
   @Input() values: ProgressSelectValue<T>[] = [];
   @Input() defaultValue?: T;
   @Input() value?: T;
+  @Input() theme: 'success' | 'warning' | 'danger' = 'success';
 
   @Input() type: 'simple' | 'checksWithLock' = 'checksWithLock';
 
@@ -56,6 +58,7 @@ export class ProgressSelectComponent<T> implements OnChanges, OnInit, ControlVal
   constructor() { }
 
   writeValue(value: T): void {
+    console.log('writeValue', value);
     this.value = value;
     this.selected = Math.max(0, this.values.findIndex(item => item.value === this.value));
   }
