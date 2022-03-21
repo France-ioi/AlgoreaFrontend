@@ -162,6 +162,7 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent {
 
   setTaskTabs(tabs: TaskTab[]): void {
     this.tabs.next(tabs);
+    if (tabs.every(tab => tab.view !== this.taskView)) this.taskView = tabs[0]?.view;
   }
 
   setTaskTabActive(tab: TaskTab): void {
