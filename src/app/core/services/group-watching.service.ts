@@ -15,6 +15,7 @@ const noWatchingValue = 'none'; // value of `watchedGroupQueryParam` which means
 export interface WatchedGroup {
   route: RawGroupRoute,
   name: string,
+  currentUserCanGrantGroupAccess?: boolean,
 }
 
 @Injectable({
@@ -69,7 +70,11 @@ export class GroupWatchingService implements OnDestroy {
   }
 
   startGroupWatching(group: Group): void {
-    this.cachedGroupInfo.next({ route: rawGroupRoute(group), name: group.name });
+    this.cachedGroupInfo.next({
+      route: rawGroupRoute(group),
+      name: group.name,
+      currentUserCanGrantGroupAccess: group.currentUserCanGrantGroupAccess
+    });
     this.setWatchedGroupInUrlParams({ groupId: group.id, isUser: false });
   }
 
