@@ -65,6 +65,7 @@ import { NeighborWidgetComponent } from './components/neighbor-widget/neighbor-w
 import { GroupPermissionCaptionPipe } from '../../shared/pipes/groupPermissionCaption';
 import { FullHeightContentDirective } from '../../shared/directives/full-height-content.directive';
 import { SectionHeaderComponent } from './components/section-header/section-header.component';
+import { PathSuggestionComponent } from './components/path-suggestion/path-suggestion.component';
 
 @NgModule({
   declarations: [
@@ -107,6 +108,7 @@ import { SectionHeaderComponent } from './components/section-header/section-head
     NeighborWidgetComponent,
     FullHeightContentDirective,
     SectionHeaderComponent,
+    PathSuggestionComponent,
   ],
   imports: [
     CommonModule,
@@ -179,6 +181,7 @@ import { SectionHeaderComponent } from './components/section-header/section-head
     NeighborWidgetComponent,
     FullHeightContentDirective,
     SectionHeaderComponent,
+    PathSuggestionComponent,
   ],
   providers: [],
 })
