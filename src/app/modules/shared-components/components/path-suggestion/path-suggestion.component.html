@@ -1,0 +1,31 @@
+<ng-container *ngIf="state$ | async as state">
+  <div class="spinner-container" *ngIf="state.isFetching">
+    <alg-loading size="small"></alg-loading>
+  </div>
+  <alg-error
+      *ngIf="state.isError"
+      class="dark"
+      icon="fa fa-exclamation-triangle"
+      i18n-message message="Error while loading path suggestion"
+      [showRefreshButton]="true"
+      (refresh)="refresh()"
+  ></alg-error>
+  <ng-container *ngIf="state.isReady">
+    <div *ngIf="state.data.length > 0; else noData">
+      <ng-container *ngFor="let group of state.data">
+        <ul class="breadcrumbs">
+          <ng-container *ngFor="let item of group | slice : 0 :group.length - 1">
+            <li class="breadcrumbs-item">
+              <a class="alg-link" routerLinkActive="base-color" [routerLink]="['/activities', 'by-id', item.id ]">
+                {{ item.title }}
+              </a>
+            </li>
+          </ng-container>
+        </ul>
+      </ng-container>
+    </div>
+    <ng-template #noData>
+      <span i18n>You have no path to this content.</span>
+    </ng-template>
+  </ng-container>
+</ng-container>

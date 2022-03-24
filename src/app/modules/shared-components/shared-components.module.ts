@@ -63,6 +63,7 @@ import { CollapsibleSectionComponent } from './components/collapsible-section/co
 import { NeighborWidgetComponent } from './components/neighbor-widget/neighbor-widget.component';
 import { GroupPermissionCaptionPipe } from '../../shared/pipes/groupPermissionCaption';
 import { FullHeightContentDirective } from '../../shared/directives/full-height-content.directive';
+import { PathSuggestionComponent } from './components/path-suggestion/path-suggestion.component';
 
 @NgModule({
   declarations: [
@@ -104,6 +105,7 @@ import { FullHeightContentDirective } from '../../shared/directives/full-height-
     CollapsibleSectionComponent,
     NeighborWidgetComponent,
     FullHeightContentDirective,
+    PathSuggestionComponent,
   ],
   imports: [
     CommonModule,
@@ -174,6 +176,7 @@ import { FullHeightContentDirective } from '../../shared/directives/full-height-
     CollapsibleSectionComponent,
     NeighborWidgetComponent,
     FullHeightContentDirective,
+    PathSuggestionComponent,
   ],
   providers: [],
 })
