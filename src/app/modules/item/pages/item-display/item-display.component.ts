@@ -56,7 +56,7 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
 
   @ViewChild('iframe') iframe?: ElementRef<HTMLIFrameElement>;
 
-  state$ = this.taskService.task$.pipe(mapToFetchState());
+  state$ = merge(this.taskService.task$, this.taskService.error$).pipe(mapToFetchState());
   initError$ = this.taskService.initError$;
   urlError$ = this.taskService.urlError$;
   unknownError$ = this.taskService.unknownError$;

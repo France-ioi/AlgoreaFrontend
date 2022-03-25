@@ -27,13 +27,13 @@ export class ItemTaskService {
   readonly urlError$ = this.initService.urlError$.pipe(shareReplay(1));
   readonly hintError$ = new Subject<void>();
 
-  private error$ = merge(
+  readonly error$ = merge(
     this.initError$,
     this.urlError$,
     this.unknownError$,
   ).pipe(switchMap(error => throwError(() => error)));
 
-  readonly task$ = merge(this.initService.task$, this.error$);
+  readonly task$ = this.initService.task$;
   readonly iframeSrc$ = this.initService.iframeSrc$;
   get initialized(): boolean {
     return this.initService.initialized;
