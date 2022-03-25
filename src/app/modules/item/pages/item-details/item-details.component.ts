@@ -7,7 +7,7 @@ import { LayoutService } from '../../../../shared/services/layout.service';
 import { Router, RouterLinkActive } from '@angular/router';
 import { TaskTab } from '../item-display/item-display.component';
 import { Mode, ModeService } from 'src/app/shared/services/mode.service';
-import { combineLatest, fromEvent, merge, Observable, of, Subject } from 'rxjs';
+import { combineLatest, fromEvent, merge, Observable, of, ReplaySubject, Subject } from 'rxjs';
 import {
   catchError,
   distinctUntilChanged,
@@ -49,7 +49,7 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent {
     map(state => state.isReady && state.data),
   );
 
-  private tabs = new Subject<TaskTab[]>();
+  private tabs = new ReplaySubject<TaskTab[]>(1);
   tabs$ = combineLatest([ this.tabs, this.itemData$.pipe(readyData()) ]).pipe(
     map(([ tabs, data ]) => {
       const canShowSolution = data.item.permissions.canView === 'solution' || !!data.currentResult?.validated;
