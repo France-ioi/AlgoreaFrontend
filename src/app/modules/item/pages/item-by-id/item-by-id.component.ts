@@ -12,7 +12,7 @@ import { ItemDataSource, ItemData } from '../../services/item-datasource.service
 import { errorHasTag, errorIsHTTPForbidden, errorIsHTTPNotFound } from 'src/app/shared/helpers/errors';
 import { ItemRouter } from 'src/app/shared/routing/item-router';
 import { isTask, ItemTypeCategory } from 'src/app/shared/helpers/item-type';
-import { Mode, ModeAction, ModeService } from 'src/app/shared/services/mode.service';
+import { ModeAction, ModeService } from 'src/app/shared/services/mode.service';
 import { isItemInfo, itemInfo } from 'src/app/shared/models/content/item-info';
 import { repeatLatestWhen } from 'src/app/shared/helpers/repeatLatestWhen';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
@@ -124,11 +124,6 @@ export class ItemByIdComponent implements OnDestroy {
         if (!isItemInfo(current)) throw new Error('Unexpected: in item-by-id but the current content is not an item');
         this.itemRouter.navigateTo(current.route, { page: action === ModeAction.StartEditing ? 'edit' : 'details' });
       }),
-
-      this.modeService.mode$.pipe(
-        filter(mode => [ Mode.Normal, Mode.Watching ].includes(mode)),
-        distinctUntilChanged(),
-      ).subscribe(() => this.reloadContent()),
 
       this.itemDataSource.state$.pipe(
         readyData(),
