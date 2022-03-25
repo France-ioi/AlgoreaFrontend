@@ -147,10 +147,6 @@ export class ItemByIdComponent implements OnDestroy {
       .subscribe(() => this.layoutService.toggleFullFrameContent(false));
   }
 
-  reloadContent(): void {
-    this.fetchItemAtRoute(this.activatedRoute.snapshot.paramMap);
-  }
-
   private getItemRoute(params?: ParamMap): ReturnType<typeof itemRouteFromParams> {
     const snapshot = this.activatedRoute.snapshot;
     if (!snapshot.parent) throw new Error('Unexpected: activated route snapshot has no parent');
