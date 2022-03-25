@@ -12,7 +12,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { EMPTY, interval, Observable, merge, of } from 'rxjs';
-import { distinctUntilChanged, filter, map, pairwise, shareReplay, startWith, switchMap } from 'rxjs/operators';
+import { catchError, distinctUntilChanged, filter, map, pairwise, shareReplay, startWith, switchMap } from 'rxjs/operators';
 import { HOURS, SECONDS } from 'src/app/shared/helpers/duration';
 import { TaskConfig, ItemTaskService } from '../../services/item-task.service';
 import { mapToFetchState } from 'src/app/shared/operators/state';
@@ -60,7 +60,10 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
   initError$ = this.taskService.initError$;
   urlError$ = this.taskService.urlError$;
   unknownError$ = this.taskService.unknownError$;
-  iframeSrc$ = this.taskService.iframeSrc$.pipe(map(url => this.sanitizer.bypassSecurityTrustResourceUrl(url)));
+  iframeSrc$ = this.taskService.iframeSrc$.pipe(
+    map(url => this.sanitizer.bypassSecurityTrustResourceUrl(url)),
+    catchError(() => EMPTY),
+  );
 
   metadata$ =this.taskService.task$.pipe(switchMap(task => task.getMetaData()), shareReplay(1));
   iframeHeight$ = this.metadata$.pipe(
