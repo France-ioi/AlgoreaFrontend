@@ -6,7 +6,6 @@ import { mapStateData, readyData } from 'src/app/shared/operators/state';
 import { LayoutService } from '../../../../shared/services/layout.service';
 import { Router, RouterLinkActive } from '@angular/router';
 import { TaskTab } from '../item-display/item-display.component';
-import { Mode, ModeService } from 'src/app/shared/services/mode.service';
 import { combineLatest, fromEvent, merge, Observable, of, Subject } from 'rxjs';
 import {
   catchError,
@@ -90,7 +89,7 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent {
     map(([{ route }]) => urlArrayForItemRoute({ ...route, attemptId: undefined, parentAttemptId: undefined, answerId: undefined })),
   );
 
-  readonly taskReadOnly$ = this.modeService.mode$.pipe(map(mode => mode === Mode.Watching));
+  readonly taskReadOnly$ = this.groupWatchingService.isWatching$;
   readonly taskConfig$: Observable<TaskConfig> = combineLatest([
     this.formerAnswer$,
     this.taskReadOnly$,
@@ -142,7 +141,6 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent {
     private groupWatchingService: GroupWatchingService,
     private itemDataSource: ItemDataSource,
     private layoutService: LayoutService,
-    private modeService: ModeService,
     private getAnswerService: GetAnswerService,
     private router: Router,
   ) {}
