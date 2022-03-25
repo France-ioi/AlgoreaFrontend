@@ -89,7 +89,7 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent {
     map(([{ route }]) => urlArrayForItemRoute({ ...route, attemptId: undefined, parentAttemptId: undefined, answerId: undefined })),
   );
 
-  readonly taskReadOnly$ = this.watchedGroup$.pipe(map(watched => watched !== null));
+  readonly taskReadOnly$ = this.groupWatchingService.isWatching$;
   readonly taskConfig$: Observable<TaskConfig> = combineLatest([
     this.formerAnswer$,
     this.taskReadOnly$,
