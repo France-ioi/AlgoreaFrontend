@@ -5,7 +5,6 @@ import { UserSessionService } from './user-session.service';
 export enum Mode {
   Normal = 'normal',
   Editing = 'editing',
-  Watching = 'watching',
 }
 export enum ModeAction { StartEditing, StopEditing }
 
