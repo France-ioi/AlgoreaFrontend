@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { fromEvent, Observable, of, ReplaySubject, TimeoutError } from 'rxjs';
+import { EMPTY, fromEvent, Observable, of, ReplaySubject, TimeoutError } from 'rxjs';
 import { catchError, delayWhen, filter, map, mapTo, shareReplay, switchMap, timeout, withLatestFrom } from 'rxjs/operators';
 import { appConfig } from 'src/app/shared/helpers/config';
 import { SECONDS } from 'src/app/shared/helpers/duration';
@@ -48,12 +48,13 @@ export class ItemTaskInitService implements OnDestroy {
         const initialViews = { task: true, solution: true, editor: true, hints: true, grader: true, metadata: true };
         return task.load(initialViews).pipe(mapTo(task));
       }),
-      timeout(loadTaskTimeout), // after the iframe has loaded, if no connection to jschannel is made, consider the task broken
     )),
     shareReplay(1),
   );
 
-  readonly initError$ = this.task$.pipe(
+  readonly initError$ = this.configFromIframe$.pipe(switchMap(({ iframe }) => fromEvent(iframe, 'load'))).pipe(
+    switchMap(() => this.task$),
+    timeout(loadTaskTimeout), // after the iframe has loaded, if no connection to jschannel is made, consider the task broken
     catchError(timeoutError => of(timeoutError)),
     filter(error => error instanceof TimeoutError),
   ) as Observable<TimeoutError>;
@@ -71,7 +72,7 @@ export class ItemTaskInitService implements OnDestroy {
 
   ngOnDestroy(): void {
     // task is a one replayed value observable. If a task has been emitted, destroy it ; else nothing to do.
-    this.task$.pipe(timeout(0)).subscribe(task => task.destroy());
+    this.task$.pipe(timeout(0), catchError(() => EMPTY)).subscribe(task => task.destroy());
     if (!this.configFromItem$.closed) this.configFromItem$.complete();
     if (!this.configFromIframe$.closed) this.configFromIframe$.complete();
   }
