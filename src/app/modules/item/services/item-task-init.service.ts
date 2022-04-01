@@ -54,7 +54,7 @@ export class ItemTaskInitService implements OnDestroy {
 
   readonly initError$ = this.configFromIframe$.pipe(switchMap(({ iframe }) => fromEvent(iframe, 'load'))).pipe(
     switchMap(() => this.task$),
-    timeout(loadTaskTimeout), // after the iframe has loaded, if no connection to jschannel is made, consider the task broken
+    timeout({ first: loadTaskTimeout }), // after the iframe has loaded, if no connection to jschannel is made, consider the task broken
     catchError(timeoutError => of(timeoutError)),
     filter(error => error instanceof TimeoutError),
   ) as Observable<TimeoutError>;
