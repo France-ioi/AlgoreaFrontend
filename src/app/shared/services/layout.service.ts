@@ -44,9 +44,9 @@ export class LayoutService {
   }
 
   /** Set fullFrameContent, which expands the content by hiding the left menu and select headers */
-  toggleFullFrameContent(expanded: boolean): void {
+  toggleFullFrameContent(active: boolean): void {
     if (!this.configured || !this.fullFrameContent.value.canToggle) return;
-    this.fullFrameContent.next({ active: expanded, canToggle: true, animated: true });
+    this.fullFrameContent.next({ active, canToggle: true, animated: true });
   }
 
   /** Set contentFooter, which adds a blank footer to the content side */
