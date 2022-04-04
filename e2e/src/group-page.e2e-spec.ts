@@ -49,7 +49,7 @@ describe('groups/users page', () => {
       await page.logout();
     });
 
-    it('should fail gracefully with an error message and retry cta', async () => {
+    it('should have an empty left nav with an error message and retry cta', async () => {
       // the lines below assert the state is correct and will fail otherwise, no "expect()" is required here.
       await Promise.all([
         page.waitUntilVisible(page.getLeftNavErrorMessage()),
