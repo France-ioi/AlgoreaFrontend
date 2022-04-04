@@ -3,7 +3,7 @@ import { BehaviorSubject } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 
 export interface FullFrameContent {
-  expanded: boolean,
+  active: boolean,
   canToggle: boolean,
   animated: boolean,
 }
@@ -13,9 +13,9 @@ export interface FullFrameContent {
 })
 export class LayoutService {
   // Service allowing modifications of the layout
-  private fullFrameContent = new BehaviorSubject<FullFrameContent>({ expanded: true, canToggle: false, animated: false });
+  private fullFrameContent = new BehaviorSubject<FullFrameContent>({ active: true, canToggle: false, animated: false });
   /** Expands the content by hiding the left menu and select headers */
-  fullFrameContent$ = this.fullFrameContent.pipe(distinctUntilChanged((a, b) => a.expanded === b.expanded && a.canToggle === b.canToggle));
+  fullFrameContent$ = this.fullFrameContent.pipe(distinctUntilChanged((a, b) => a.active === b.active && a.canToggle === b.canToggle));
 
   private showTopRightControls = new BehaviorSubject(false);
   readonly showTopRightControls$ = this.showTopRightControls.pipe(distinctUntilChanged());
@@ -31,18 +31,14 @@ export class LayoutService {
   /**
    * This method allows to defer layout initialization to any consumer, expectedly routes.
    * Only first call in taken into account, later calls are ignored.
-   * @param {object} options
-   * @param options.expanded initial expanded value
-   * @param options.canToggle Defines for the lifetime of the app if the left menu can be toggled or not
-   * @param options.showTopRightControls Defines for the lifetime of the app if the top right controls are shown
    */
-  configure({ expanded, showTopRightControls = true, canToggleFullFrameContent = true }: {
-    expanded: boolean,
-    canToggleFullFrameContent?: boolean,
-    showTopRightControls?: boolean,
+  configure({ fullFrameInitiallyActive, showTopRightControls = true, canToggleFullFrameContent = true }: {
+    fullFrameInitiallyActive: boolean, // initial fullFrame "enabled" value
+    canToggleFullFrameContent?: boolean, // Defines for the lifetime of the app if the left menu can be toggled or not
+    showTopRightControls?: boolean, // Defines for the lifetime of the app if the top right controls are shown
   }): void {
     if (this.configured) return;
-    this.fullFrameContent.next({ expanded, canToggle: canToggleFullFrameContent, animated: false });
+    this.fullFrameContent.next({ active: fullFrameInitiallyActive, canToggle: canToggleFullFrameContent, animated: false });
     this.showTopRightControls.next(showTopRightControls);
     this.configured = true;
   }
@@ -50,8 +46,7 @@ export class LayoutService {
   /** Set fullFrameContent, which expands the content by hiding the left menu and select headers */
   toggleFullFrameContent(expanded: boolean): void {
     if (!this.configured || !this.fullFrameContent.value.canToggle) return;
-    const canToggle = this.fullFrameContent.value.canToggle;
-    this.fullFrameContent.next({ expanded, canToggle, animated: true });
+    this.fullFrameContent.next({ active: expanded, canToggle: true, animated: true });
   }
 
   /** Set contentFooter, which adds a blank footer to the content side */

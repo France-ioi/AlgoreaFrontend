@@ -71,7 +71,7 @@ export class UserComponent implements OnInit, OnDestroy {
     private groupRouter: GroupRouter,
     private getGroupBreadcrumbsService: GetGroupBreadcrumbsService,
   ) {
-    this.layoutService.configure({ expanded: false });
+    this.layoutService.configure({ fullFrameInitiallyActive: false });
   }
 
   ngOnInit(): void {

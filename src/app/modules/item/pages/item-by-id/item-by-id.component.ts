@@ -64,7 +64,7 @@ export class ItemByIdComponent implements OnDestroy {
 
     this.subscriptions.push(
       this.itemDataSource.state$.pipe(readyData(), take(1)).subscribe(data => {
-        this.layoutService.configure({ expanded: isTask(data.item) });
+        this.layoutService.configure({ fullFrameInitiallyActive: isTask(data.item) });
       }),
 
       // on datasource state change, update current state and current content page info
@@ -151,7 +151,7 @@ export class ItemByIdComponent implements OnDestroy {
     this.currentContent.clear();
     this.subscriptions.forEach(s => s.unsubscribe());
     this.layoutService.fullFrameContent$
-      .pipe(take(1), filter(fullFrame => fullFrame.expanded)) // if layout is in full frame and we quit an item page => disable full frame
+      .pipe(take(1), filter(fullFrame => fullFrame.active)) // if layout is in full frame and we quit an item page => disable full frame
       .subscribe(() => this.layoutService.toggleFullFrameContent(false));
   }
 
@@ -201,7 +201,7 @@ export class ItemByIdComponent implements OnDestroy {
       next: itemRoute => this.itemRouter.navigateTo(itemRoute, { navExtras: { replaceUrl: true } }),
       error: err => {
         this.state = errorState(err instanceof Error ? err : new Error('unknown error'));
-        this.layoutService.configure({ expanded: false });
+        this.layoutService.configure({ fullFrameInitiallyActive: false });
       }
     });
   }
