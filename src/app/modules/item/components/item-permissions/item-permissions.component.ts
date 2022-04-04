@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { ItemData } from '../../services/item-datasource.service';
 import { WatchedGroup } from 'src/app/core/services/group-watching.service';
 import {
@@ -16,6 +16,8 @@ import { PermissionsInfo } from '../../helpers/item-permissions';
   styleUrls: [ './item-permissions.component.scss' ],
 })
 export class ItemPermissionsComponent implements OnChanges {
+  @Output() changed = new EventEmitter<void>();
+
   @Input() itemData?: ItemData;
   @Input() watchedGroup?: WatchedGroup;
 
@@ -49,7 +51,10 @@ export class ItemPermissionsComponent implements OnChanges {
     this.groupPermissionsService.updatePermissions(this.watchedGroup.route.id, this.watchedGroup.route.id,
       this.itemData.item.id, permissions)
       .subscribe({
-        next: _res => this.actionFeedbackService.success($localize`:@@permissionsUpdated:Permissions successfully updated.`),
+        next: _res => {
+          this.changed.next();
+          this.actionFeedbackService.success($localize`:@@permissionsUpdated:Permissions successfully updated.`);
+        },
         error: _err => this.actionFeedbackService.unexpectedError(),
       });
   }

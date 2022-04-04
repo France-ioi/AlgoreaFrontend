@@ -17,6 +17,7 @@
         *ngIf="watchedGroup$ | async as watchedGroup"
         [itemData]="itemData"
         [watchedGroup]="watchedGroup"
+        (changed)="reloadItem()"
       ></alg-item-permissions>
 
       <nav class="nav-tab" [hidden]="!(showProgressTab$ | async) && taskTabs.length <= 1">
