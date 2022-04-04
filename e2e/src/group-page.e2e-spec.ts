@@ -39,4 +39,22 @@ describe('groups/users page', () => {
       await retry(() => expect(activeTab.getText()).toBe('GROUPS'));
     });
   });
+
+  describe('unexisting group page', () => {
+    beforeEach(async () => {
+      await page.navigateToGroup('1234');
+      await page.authenticate();
+    });
+    afterEach(async () => {
+      await page.logout();
+    });
+
+    it('should fail gracefully with an error message and retry cta', async () => {
+      // the lines below assert the state is correct and will fail otherwise, no "expect()" is required here.
+      await Promise.all([
+        page.waitUntilVisible(page.getLeftNavErrorMessage()),
+        page.waitUntilVisible(page.getLeftNavErrorRetryCta()),
+      ]);
+    });
+  });
 });
