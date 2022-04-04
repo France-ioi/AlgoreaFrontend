@@ -46,6 +46,7 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
       map(groups => groups.map(g => ({
         ...this.mapChild(g.item, defaultAttemptId),
         associatedGroupName: g.name,
+        associatedGroupType: g.type,
       })))
     );
   }

@@ -85,7 +85,7 @@ export class GroupManagerListComponent implements OnChanges, OnDestroy {
       return;
     }
 
-    const currentUserId = this.userService.session$.getValue()?.user.groupId;
+    const currentUserId = this.userService.session$.getValue()?.groupId;
 
     if (!currentUserId) {
       throw new Error('Unexpected: Missed current user ID');
@@ -96,7 +96,7 @@ export class GroupManagerListComponent implements OnChanges, OnDestroy {
         target: event.target || undefined,
         key: 'commonPopup',
         icon: 'pi pi-exclamation-triangle',
-        message: $localize`Are you sure to remove yourself from the managers of this group? You may lose manager access and 
+        message: $localize`Are you sure to remove yourself from the managers of this group? You may lose manager access and
           not be able to restore it.`,
         acceptLabel: $localize`Yes, remove me from the group managers`,
         acceptButtonStyleClass: 'p-button-danger',
@@ -116,7 +116,7 @@ export class GroupManagerListComponent implements OnChanges, OnDestroy {
       throw new Error('Unexpected: Missed groupData');
     }
 
-    const currentUserId = this.userService.session$.getValue()?.user.groupId;
+    const currentUserId = this.userService.session$.getValue()?.groupId;
 
     if (!currentUserId) {
       throw new Error('Unexpected: Missed current user ID');

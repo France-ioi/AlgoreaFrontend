@@ -12,7 +12,7 @@ import { ItemDataSource, ItemData } from '../../services/item-datasource.service
 import { errorHasTag, errorIsHTTPForbidden, errorIsHTTPNotFound } from 'src/app/shared/helpers/errors';
 import { ItemRouter } from 'src/app/shared/routing/item-router';
 import { isTask, ItemTypeCategory } from 'src/app/shared/helpers/item-type';
-import { Mode, ModeAction, ModeService } from 'src/app/shared/services/mode.service';
+import { ModeAction, ModeService } from 'src/app/shared/services/mode.service';
 import { isItemInfo, itemInfo } from 'src/app/shared/models/content/item-info';
 import { repeatLatestWhen } from 'src/app/shared/helpers/repeatLatestWhen';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
@@ -128,11 +128,6 @@ export class ItemByIdComponent implements OnDestroy {
         this.itemRouter.navigateTo(current.route, { page: action === ModeAction.StartEditing ? 'edit' : 'details' });
       }),
 
-      this.modeService.mode$.pipe(
-        filter(mode => [ Mode.Normal, Mode.Watching ].includes(mode)),
-        distinctUntilChanged(),
-      ).subscribe(() => this.reloadContent()),
-
       this.itemDataSource.state$.pipe(
         readyData(),
         distinctUntilChanged((a, b) => a.item.id === b.item.id),
@@ -153,10 +148,6 @@ export class ItemByIdComponent implements OnDestroy {
     this.layoutService.fullFrameContent$
       .pipe(take(1), filter(fullFrame => fullFrame.active)) // if layout is in full frame and we quit an item page => disable full frame
       .subscribe(() => this.layoutService.toggleFullFrameContent(false));
-  }
-
-  reloadContent(): void {
-    this.fetchItemAtRoute(this.activatedRoute.snapshot.paramMap);
   }
 
   private getItemRoute(params?: ParamMap): ReturnType<typeof itemRouteFromParams> {

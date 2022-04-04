@@ -8,7 +8,7 @@
       <alg-access-code-view
         *ngIf="showAccessCodeField$ | async"
         i18n-sectionLabel sectionLabel="Access to activity"
-        i18n-buttonLabel buttonLabel="Access"
+        i18n-buttonLabel="Button label for joining an item by (group) code" buttonLabel="Access"
         [itemData]="itemData"
         (groupJoined)="reloadItem()"
       ></alg-access-code-view>
@@ -24,7 +24,7 @@
           class="nav-tab-item"
           [routerLink]="'./'"
           routerLinkActive #contentTab="routerLinkActive"
-          [routerLinkActiveOptions]="{exact: true}"
+          [routerLinkActiveOptions]="{ matrixParams: 'ignored', queryParams: 'ignored', paths: 'exact', fragment: 'ignored'}"
           [class.active]="contentTab.isActive"
           [hidden]="taskTabs.length > 1"
           i18n
@@ -57,7 +57,7 @@
       <div class="bg-white" [ngClass]="{ 'compensate-margin':  !(showProgressTab$ | async) && taskTabs.length <= 1 }">
         <alg-error
           *ngIf="unknownError"
-          i18n-message message="An unknown error occurred. If this problem persists, please contact us."
+          [message]="errorMessage"
         ></alg-error>
 
         <ng-container *ngIf="contentTab.isActive || taskTabs.length > 0">

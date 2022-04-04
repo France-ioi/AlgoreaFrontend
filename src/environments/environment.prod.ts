@@ -5,6 +5,7 @@ export const environment: Environment = {
   apiUrl: '/api',
   oauthServerUrl: 'https://login.france-ioi.org',
   oauthClientId: '43',
+  sentryDsn: 'https://6295834d69104f54b55cc0ebe4ada310@o1167067.ingest.sentry.io/6257761',
 
   defaultActivityId: '4702',
 
@@ -23,7 +24,6 @@ export const environment: Environment = {
   theme: 'default',
   featureFlags: {
     hideTaskTabs: [],
-    hideActivityProgressTab: false,
   }
 };
 
@@ -31,9 +31,6 @@ type Preset = 'telecomParis';
 export const presets: Record<Preset, PartialDeep<Environment>> = {
   telecomParis: {
     theme: 'coursera-pt',
-    featureFlags: {
-      hideActivityProgressTab: true,
-    }
   },
 };
 

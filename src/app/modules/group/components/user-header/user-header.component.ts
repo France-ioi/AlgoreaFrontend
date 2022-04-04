@@ -1,10 +1,8 @@
 import { Input, Component } from '@angular/core';
 import { User } from '../../http-services/get-user.service';
 import { map } from 'rxjs/operators';
-import { UserSessionService } from '../../../../shared/services/user-session.service';
 import { ModeAction, ModeService } from '../../../../shared/services/mode.service';
-import { formatUser } from '../../../../shared/helpers/user';
-import { rawGroupRoute } from 'src/app/shared/routing/group-route';
+import { GroupWatchingService } from 'src/app/core/services/group-watching.service';
 
 @Component({
   selector: 'alg-user-header',
@@ -14,12 +12,12 @@ import { rawGroupRoute } from 'src/app/shared/routing/group-route';
 export class UserHeaderComponent {
   @Input() user?: User;
 
-  isCurrentGroupWatched$ = this.userSessionService.watchedGroup$.pipe(
+  isCurrentGroupWatched$ = this.groupWatchingService.watchedGroup$.pipe(
     map(watchedGroup => !!(watchedGroup && watchedGroup.route.id === this.user?.groupId)),
   );
 
   constructor(
-    private userSessionService: UserSessionService,
+    private groupWatchingService: GroupWatchingService,
     private modeService: ModeService,
   ) {
   }
@@ -30,14 +28,10 @@ export class UserHeaderComponent {
 
   onStartWatchButtonClicked(): void {
     if (!this.user) throw new Error("unexpected user not set in 'onWatchButtonClicked'");
-    this.modeService.startObserving({
-      route: rawGroupRoute(this.user),
-      name: formatUser(this.user),
-      login: this.user.login,
-    });
+    this.groupWatchingService.startUserWatching(this.user);
   }
 
   onStopWatchButtonClicked(): void {
-    this.modeService.stopObserving();
+    this.groupWatchingService.stopWatching();
   }
 }

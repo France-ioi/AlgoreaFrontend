@@ -20,7 +20,7 @@
           class="nav-tab-item"
           [routerLink]="'./'"
           routerLinkActive #overviewTab="routerLinkActive"
-          [routerLinkActiveOptions]="{exact: true}"
+          [routerLinkActiveOptions]="{ matrixParams: 'ignored', queryParams: 'ignored', paths: 'exact', fragment: 'ignored'}"
           [class.active]="overviewTab.isActive"
           i18n
         >

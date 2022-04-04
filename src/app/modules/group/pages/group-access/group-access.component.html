@@ -18,13 +18,13 @@
           <div class="item">
             <div>
               <i class="icon fa fa-folder"></i>
-              <strong i18n>Root activity: {{ rootActivityState.data.string.title }}</strong>
+              <strong><ng-container i18n>Root activity:</ng-container> {{ rootActivityState.data.string.title }}</strong>
             </div>
           </div>
         </ng-container>
 
         <ng-template #noActivity>
-          <div i18n>This group has no activity.</div>
+          <div i18n>This group has no root activity.</div>
         </ng-template>
       </ng-container>
     </ng-container>
@@ -56,9 +56,8 @@
               {{ grantedPermission.item.title }}.
             </strong>
             <ng-container
-              *ngIf="grantedPermission.sourceGroup.id !== group?.id && grantedPermission.group.id !== group?.id; else currentGroup"
-              i18n>
-                <span>Given by</span>
+              *ngIf="grantedPermission.sourceGroup.id !== group?.id && grantedPermission.group.id !== group?.id; else currentGroup">
+                <span i18n>Given by</span>
                 <a
                   class="alg-link"
                   [routerLink]="{ id: grantedPermission.sourceGroup.id, isUser: false } | groupLink"
@@ -75,7 +74,7 @@
         </ng-container>
 
         <ng-template #noPermissions>
-          <div i18n>This group has no permissions.</div>
+          <div i18n>This group has no specific permissions.</div>
         </ng-template>
       </ng-container>
     </ng-container>

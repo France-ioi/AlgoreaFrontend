@@ -93,3 +93,15 @@ export function openNewTab(href: string, currentLang?: LanguageConfig): void {
   window.open(formatUrl(href, currentLang), '_blank');
 }
 
+/**
+ * Interprets a query param value as a boolean (or null if not set)
+ * Consider any value as true except "0". Assume `boolToQueryParamValue` was used to encode.
+ */
+export function queryParamValueToBool(value: string | null): boolean | null {
+  if (value === null) return null;
+  return value !== '0';
+}
+
+export function boolToQueryParamValue(value: boolean): string {
+  return value ? '1' : '0';
+}

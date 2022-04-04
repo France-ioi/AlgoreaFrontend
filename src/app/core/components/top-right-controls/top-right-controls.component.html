@@ -1,7 +1,7 @@
 <div class="controls-zone" [ngClass]="drawLeftBorder ? 'with-left-border' : 'no-left-border'" *ngrxLet="session$ as session">
 
   <ng-container
-    *ngIf="session && !session.user.tempUser; then authenticated else notAuthenticated"
+    *ngIf="session && !session.tempUser; then authenticated else notAuthenticated"
   ></ng-container>
 
   <ng-template #authenticated>

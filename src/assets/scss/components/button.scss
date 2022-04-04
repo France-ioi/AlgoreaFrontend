@@ -2,10 +2,6 @@
 @import 'src/geometry.scss';
 
 .alg-button {
-  --secondary-color: #4a4a4a;
-  --warning-color: #f5a623;
-  --danger-color: #ff001f;
-
   width: 100%;
 
   .p-button {
@@ -89,8 +85,8 @@
     }
 
     &.p-button-secondary {
-      background-color: var(--secondary-color);
-      border-color: var(--secondary-color);
+      background-color: var(--secondary-btn-color);
+      border-color: var(--secondary-btn-color);
       color: white;
 
       &:enabled:focus {

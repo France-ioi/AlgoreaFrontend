@@ -13,6 +13,8 @@ export interface Environment {
   oauthServerUrl: string, // full url (not including the trailing slash) of the oauth server
   oauthClientId: string,
 
+  sentryDsn?: string, // if not set, tracing not enabled; if set, the dsn to the sentry-compatible dsn
+
   // the id of the item to be loaded by default on home page (if no specific path is given) and in nav menu (if no other item is visited)
   // this item MUST be on one of all users' root and be implicitely startable
   defaultActivityId: string,
@@ -35,7 +37,6 @@ export interface Environment {
 
   featureFlags: {
     hideTaskTabs: string[],
-    hideActivityProgressTab: boolean,
   },
 }
 

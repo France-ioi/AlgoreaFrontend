@@ -20,7 +20,7 @@
           class="nav-tab-item"
           [routerLink]="'./'"
           routerLinkActive #progress="routerLinkActive"
-          [routerLinkActiveOptions]="{exact: true}"
+          [routerLinkActiveOptions]="{ matrixParams: 'ignored', queryParams: 'ignored', paths: 'exact', fragment: 'ignored'}"
           [class.active]="progress.isActive"
           i18n
       >
@@ -30,7 +30,7 @@
           class="nav-tab-item"
           [routerLink]="'./personal-data'"
           routerLinkActive #personalData="routerLinkActive"
-          [routerLinkActiveOptions]="{exact: true}"
+          [routerLinkActiveOptions]="{ matrixParams: 'ignored', queryParams: 'ignored', paths: 'exact', fragment: 'ignored'}"
           [class.active]="personalData.isActive"
           i18n
       >

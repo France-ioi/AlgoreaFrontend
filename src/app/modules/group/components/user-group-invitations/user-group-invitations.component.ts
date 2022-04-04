@@ -8,7 +8,7 @@ import {
 } from 'src/app/modules/group/components/pending-request/pending-request-response-handling';
 import { fetchingState, readyState } from 'src/app/shared/helpers/state';
 import { GetRequestsService, PendingRequest } from '../../http-services/get-requests.service';
-import { Action, parseResults, RequestActionsService } from '../../http-services/request-actions.service';
+import { Action, parseGroupInvitationResults, RequestActionsService } from '../../http-services/request-actions.service';
 import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
 
 @Component({
@@ -70,7 +70,7 @@ export class UserGroupInvitationsComponent implements OnDestroy, OnInit {
       .subscribe({
         next: result => {
           this.state = 'ready';
-          displayResponseToast(this.actionFeedbackService, parseResults(result), params.type);
+          displayResponseToast(this.actionFeedbackService, parseGroupInvitationResults(result), params.type);
           this.dataFetching.next({ sort: this.currentSort });
         },
         error: _err => {

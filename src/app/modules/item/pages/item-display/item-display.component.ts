@@ -12,7 +12,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { EMPTY, interval, Observable, merge, of } from 'rxjs';
-import { distinctUntilChanged, filter, map, pairwise, startWith, switchMap } from 'rxjs/operators';
+import { catchError, distinctUntilChanged, filter, map, pairwise, shareReplay, startWith, switchMap } from 'rxjs/operators';
 import { HOURS, SECONDS } from 'src/app/shared/helpers/duration';
 import { TaskConfig, ItemTaskService } from '../../services/item-task.service';
 import { mapToFetchState } from 'src/app/shared/operators/state';
@@ -56,14 +56,17 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
 
   @ViewChild('iframe') iframe?: ElementRef<HTMLIFrameElement>;
 
-  state$ = this.taskService.task$.pipe(mapToFetchState());
+  state$ = merge(this.taskService.task$, this.taskService.error$).pipe(mapToFetchState());
   initError$ = this.taskService.initError$;
   urlError$ = this.taskService.urlError$;
   unknownError$ = this.taskService.unknownError$;
-  iframeSrc$ = this.taskService.iframeSrc$.pipe(map(url => this.sanitizer.bypassSecurityTrustResourceUrl(url)));
+  iframeSrc$ = this.taskService.iframeSrc$.pipe(
+    map(url => this.sanitizer.bypassSecurityTrustResourceUrl(url)),
+    catchError(() => EMPTY),
+  );
 
-  iframeHeight$ = this.taskService.task$.pipe(
-    switchMap(task => task.getMetaData()),
+  metadata$ =this.taskService.task$.pipe(switchMap(task => task.getMetaData()), shareReplay(1));
+  iframeHeight$ = this.metadata$.pipe(
     switchMap(({ autoHeight }) => {
       if (autoHeight) return of(undefined);
       return merge(
@@ -73,6 +76,8 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
     }),
     distinctUntilChanged(),
   );
+
+  showTaskAnyway = false;
 
   @Output() viewChange = this.taskService.activeView$;
   @Output() tabsChange: Observable<TaskTab[]> = this.taskService.views$.pipe(
@@ -86,7 +91,7 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
         const shouldDisplayError = !next.success && !this.actionFeedbackService.hasFeedback;
         const shouldDisplaySuccess = !previous.success && next.success;
         if (shouldDisplayError) {
-          const message = $localize`Your current progress could not have been saved. Are you connected to the internet ?`;
+          const message = $localize`Your current progress could not have been saved. Are you connected to the internet?`;
           this.actionFeedbackService.error(message, { life: 24*HOURS });
         }
         if (shouldDisplaySuccess) {
@@ -111,6 +116,9 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
 
     this.taskService.hintError$.subscribe(() => this.actionFeedbackService.error($localize`Hint request failed`)),
   ];
+
+  errorMessage = $localize`:@@unknownError:An unknown error occurred. ` +
+    $localize`:@@contactUs:If the problem persists, please contact us.`;
 
   constructor(
     private taskService: ItemTaskService,

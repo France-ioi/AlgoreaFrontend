@@ -2,12 +2,12 @@ import { Component, Input, OnChanges, OnDestroy, ViewChild } from '@angular/core
 import { ModeAction, ModeService } from 'src/app/shared/services/mode.service';
 import { Group } from '../../http-services/get-group-by-id.service';
 import { withManagementAdditions, ManagementAdditions } from '../../helpers/group-management';
-import { UserSessionService } from 'src/app/shared/services/user-session.service';
 import { map } from 'rxjs/operators';
 import { OverlayPanel } from 'primeng/overlaypanel';
 import { GroupData } from '../../services/group-datasource.service';
 import { ReplaySubject, combineLatest } from 'rxjs';
 import { GroupNavTreeService } from '../../../../core/services/navigation/group-nav-tree.service';
+import { GroupWatchingService } from 'src/app/core/services/group-watching.service';
 
 @Component({
   selector: 'alg-group-header',
@@ -22,7 +22,7 @@ export class GroupHeaderComponent implements OnChanges, OnDestroy {
   private readonly group$ = new ReplaySubject<Group>(1);
 
   groupWithManagement?: Group & ManagementAdditions;
-  isCurrentGroupWatched$ = combineLatest([ this.userSessionService.watchedGroup$, this.group$ ]).pipe(
+  isCurrentGroupWatched$ = combineLatest([ this.groupWatchingService.watchedGroup$, this.group$ ]).pipe(
     map(([ watchedGroup, group ]) => !!(watchedGroup && watchedGroup.route.id === group.id)),
   );
 
@@ -30,7 +30,7 @@ export class GroupHeaderComponent implements OnChanges, OnDestroy {
 
   constructor(
     private modeService: ModeService,
-    private userSessionService: UserSessionService,
+    private groupWatchingService: GroupWatchingService,
     private groupNavTreeService: GroupNavTreeService,
   ) {}
 
@@ -52,16 +52,13 @@ export class GroupHeaderComponent implements OnChanges, OnDestroy {
 
   onStartWatchButtonClicked(event: Event): void {
     if (!this.groupData?.group) throw new Error("unexpected group not set in 'onWatchButtonClicked'");
-    this.modeService.startObserving({
-      route: this.groupData.route,
-      name: this.groupData.group.name,
-    });
+    this.groupWatchingService.startGroupWatching(this.groupData.group);
     this.openSuggestionOfActivitiesOverlayPanel(event);
   }
 
   onStopWatchButtonClicked(): void {
     this.op?.hide();
-    this.modeService.stopObserving();
+    this.groupWatchingService.stopWatching();
   }
 
   openSuggestionOfActivitiesOverlayPanel(event: Event): void {

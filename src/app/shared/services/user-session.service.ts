@@ -5,35 +5,18 @@ import { switchMap, distinctUntilChanged, map, filter, skip, shareReplay, retry 
 import { CurrentUserHttpService, UpdateUserBody, UserProfile } from '../http-services/current-user.service';
 import { isNotUndefined } from '../helpers/null-undefined-predicates';
 import { repeatLatestWhen } from '../helpers/repeatLatestWhen';
-import { RawGroupRoute } from '../routing/group-route';
-
-export interface WatchedGroup {
-  route: RawGroupRoute,
-  name: string,
-  login?: string,
-}
-
-export interface UserSession {
-  user: UserProfile,
-  watchedGroup?: WatchedGroup,
-}
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserSessionService implements OnDestroy {
 
-  session$ = new BehaviorSubject<UserSession|undefined>(undefined);
+  session$ = new BehaviorSubject<UserProfile|undefined>(undefined);
   userProfileError$ = new Subject<void>();
-  watchedGroup$ = this.session$.pipe(
-    map(session => session?.watchedGroup),
-    distinctUntilChanged(), // filter out repeated undefined values
-  );
 
   /** currently-connected user profile, temporary or not, excluding transient (undefined) states */
   userProfile$ = this.session$.pipe(
     filter(isNotUndefined),
-    map(session => session.user),
   );
 
   /** triggered when the user identity changes (but skipping first user value), which happens when auth token is invalidated */
@@ -54,7 +37,7 @@ export class UserSessionService implements OnDestroy {
       }),
       distinctUntilChanged(), // skip two undefined values in a row
     ).subscribe({
-      next: profile => this.session$.next(profile ? { user: profile } : undefined),
+      next: profile => this.session$.next(profile),
       error: () => this.userProfileError$.next()
     });
   }
@@ -65,21 +48,9 @@ export class UserSessionService implements OnDestroy {
     this.userProfileUpdated$.complete();
   }
 
-  startGroupWatching(group: WatchedGroup): void {
-    const user = this.session$.value?.user;
-    if (!user) return; // unexpected
-    this.session$.next({ user: user, watchedGroup: group });
-  }
-
-  stopGroupWatching(): void {
-    const user = this.session$.value?.user;
-    if (!user) return; // unexpected
-    this.session$.next({ user: user });
-  }
-
   isCurrentUserTemp(): boolean {
     const session = this.session$.value;
-    return !session || session.user.tempUser;
+    return !session || session.tempUser;
   }
 
   updateCurrentUser(changes: UpdateUserBody): Observable<void> {
