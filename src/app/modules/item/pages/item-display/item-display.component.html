@@ -8,6 +8,8 @@
       <alg-error
         *ngIf="initError$ | async; else urlError"
         i18n-message message="It usually occurs when task url is invalid. If the task url is valid and the problem persists, please contact us."
+        [showRefreshButton]="true"
+        (refresh)="refresh.emit()"
       ></alg-error>
 
       <ng-template #urlError>
@@ -21,6 +23,8 @@
         <alg-error
           *ngIf="unknownError$ | async as error"
           [message]="errorMessage"
+          [showRefreshButton]="true"
+          (refresh)="refresh.emit()"
         ></alg-error>
       </ng-template>
     </ng-container>

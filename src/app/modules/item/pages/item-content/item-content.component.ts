@@ -20,6 +20,7 @@ export class ItemContentComponent implements OnChanges {
   @Output() taskViewChange = new EventEmitter<TaskTab['view']>();
   @Output() scoreChange = new EventEmitter<number>();
   @Output() skipSave = new EventEmitter<void>();
+  @Output() refresh = new EventEmitter<void>();
 
   attemptId?: string;
 
