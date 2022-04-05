@@ -1,8 +1,8 @@
 import { combineLatest, merge, Observable, of, OperatorFunction, Subject } from 'rxjs';
-import { delay, distinctUntilChanged, map, mergeScan, shareReplay, startWith } from 'rxjs/operators';
+import { catchError, delay, distinctUntilChanged, map, mergeScan, shareReplay, startWith } from 'rxjs/operators';
 import { isDefined } from 'src/app/shared/helpers/null-undefined-predicates';
 import { repeatLatestWhen } from 'src/app/shared/helpers/repeatLatestWhen';
-import { fetchingState, FetchState, readyState } from 'src/app/shared/helpers/state';
+import { errorState, fetchingState, FetchState, readyState } from 'src/app/shared/helpers/state';
 import { ContentInfo, RoutedContentInfo } from 'src/app/shared/models/content/content-info';
 import { mapStateData, mapToFetchState } from 'src/app/shared/operators/state';
 import { CurrentContentService } from 'src/app/shared/services/current-content.service';
@@ -36,10 +36,14 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
       distinctUntilChanged(),
       map(() => undefined),
     ),
-    this.content$.pipe(this.childrenNavData())
+    this.content$.pipe(
+      this.childrenNavData(),
+      catchError(() => of(new Error('fetch error'))),
+    ),
   );
   state$ = combineLatest([ this.children$, this.content$ ]).pipe(
     mergeScan((prevState: FetchState<NavTreeData>, [ children, content ]) => {
+      if (children instanceof Error) return of(errorState(children));
 
       // CASE 1: the current-content does not match the type of this nav tree (so `content` has been mapped to `undefined`)
       if (!content) {
