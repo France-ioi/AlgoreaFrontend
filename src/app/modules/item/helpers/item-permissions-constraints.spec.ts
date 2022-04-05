@@ -399,7 +399,7 @@ describe('"can_watch" permissions constraints', () => {
           isOwner: [ true, false ] as const,
         }),
       })) {
-        expect(validateCanWatch(p.receiverPermissions, p.giverPermissions)).toBeDefined();
+        expect(validateCanWatch(p.receiverPermissions, p.giverPermissions).canWatch).toBeDefined();
       }
 
       // giver can_watch !== 'answer_with_grant'
@@ -413,7 +413,7 @@ describe('"can_watch" permissions constraints', () => {
           isOwner: [ true, false ] as const,
         }),
       })) {
-        expect(validateCanWatch(p.receiverPermissions, p.giverPermissions)).toBeDefined();
+        expect(validateCanWatch(p.receiverPermissions, p.giverPermissions).canWatch).toBeDefined();
       }
     });
   });
@@ -443,7 +443,7 @@ describe('"can_watch" permissions constraints', () => {
         isOwner: [ true, false ] as const,
       }),
     })) {
-      expect(validateCanWatch(p.receiverPermissions, p.giverPermissions)).toBeDefined();
+      expect(validateCanWatch(p.receiverPermissions, p.giverPermissions).canWatch).toBeDefined();
     }
 
     // giver not owner
@@ -457,7 +457,7 @@ describe('"can_watch" permissions constraints', () => {
         isOwner: [ false ] as const,
       }),
     })) {
-      expect(validateCanWatch(p.receiverPermissions, p.giverPermissions)).toBeDefined();
+      expect(validateCanWatch(p.receiverPermissions, p.giverPermissions).canWatch).toBeDefined();
     }
   });
 
@@ -510,7 +510,7 @@ describe('"can_edit" permissions constraints', () => {
           isOwner: [ true, false ] as const,
         }),
       })) {
-        expect(validateCanEdit(p.receiverPermissions, p.giverPermissions)).toBeDefined();
+        expect(validateCanEdit(p.receiverPermissions, p.giverPermissions).canEdit).toBeDefined();
       }
 
       // giver can_edit !== 'all_with_grant'
@@ -524,7 +524,7 @@ describe('"can_edit" permissions constraints', () => {
           isOwner: [ true, false ] as const,
         }),
       })) {
-        expect(validateCanEdit(p.receiverPermissions, p.giverPermissions)).toBeDefined();
+        expect(validateCanEdit(p.receiverPermissions, p.giverPermissions).canEdit).toBeDefined();
       }
     });
   });
@@ -554,7 +554,7 @@ describe('"can_edit" permissions constraints', () => {
         isOwner: [ true, false ] as const,
       }),
     })) {
-      expect(validateCanEdit(p.receiverPermissions, p.giverPermissions)).toBeDefined();
+      expect(validateCanEdit(p.receiverPermissions, p.giverPermissions).canEdit).toBeDefined();
     }
 
     // giver not owner
@@ -568,7 +568,7 @@ describe('"can_edit" permissions constraints', () => {
         isOwner: [ false ] as const,
       }),
     })) {
-      expect(validateCanEdit(p.receiverPermissions, p.giverPermissions)).toBeDefined();
+      expect(validateCanEdit(p.receiverPermissions, p.giverPermissions).canEdit).toBeDefined();
     }
   });
 
@@ -606,7 +606,7 @@ describe('"can_make_session_official" permissions constraints', () => {
       expect(validateCanMakeSessionOfficial({
         canMakeSessionOfficial: true ,
         canView: 'none' ,
-      }, giverPermissions)).toBeDefined();
+      }, giverPermissions).canMakeSessionOfficial).toBeDefined();
     }
 
     // giver not owner
@@ -614,7 +614,7 @@ describe('"can_make_session_official" permissions constraints', () => {
       canMakeSessionOfficial: [ true ] as const,
       canView: canViewValues,
     })) {
-      expect(validateCanMakeSessionOfficial(receiverPermissions, { isOwner: false })).toBeDefined();
+      expect(validateCanMakeSessionOfficial(receiverPermissions, { isOwner: false }).canMakeSessionOfficial).toBeDefined();
     }
   });
 });
@@ -627,6 +627,6 @@ describe('"is_owner" permissions constraints', () => {
 
   it('should be a able to set to "true" ', () => {
     expect(validateIsOwner({ isOwner: true }, { isOwner: true })).toEqual({});
-    expect(validateIsOwner({ isOwner: true }, { isOwner: false })).toBeDefined();
+    expect(validateIsOwner({ isOwner: true }, { isOwner: false }).isOwner).toBeDefined();
   });
 });

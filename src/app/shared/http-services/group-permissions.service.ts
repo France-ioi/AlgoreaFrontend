@@ -6,7 +6,7 @@ import { appConfig } from '../helpers/config';
 import { assertSuccess, SimpleActionResponse } from './action-response';
 import * as D from 'io-ts/Decoder';
 import { permissionsDecoder } from 'src/app/modules/item/helpers/item-permissions';
-import { pipe } from 'fp-ts/lib/function';
+import { pipe } from 'fp-ts/function';
 import { decodeSnakeCase } from '../operators/decode';
 import { dateDecoder } from '../helpers/decoders';
 
