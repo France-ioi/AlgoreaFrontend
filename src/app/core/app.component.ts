@@ -11,6 +11,7 @@ import { Title } from '@angular/platform-browser';
 import { appConfig } from '../shared/helpers/config';
 import { urlToRedirectTo } from '../shared/helpers/redirect-to-sub-path-at-init';
 import { GroupWatchingService } from './services/group-watching.service';
+import { version } from 'src/version';
 
 @Component({
   selector: 'alg-root',
@@ -60,6 +61,8 @@ export class AppComponent implements OnInit, OnDestroy {
     if (appConfig.theme !== 'default') {
       this.renderer.setAttribute(this.el.nativeElement, 'data-theme', `${appConfig.theme}`);
     }
+    // eslint-disable-next-line no-console
+    console.log(`App version: ${version}`);
   }
 
   ngOnInit(): void {
