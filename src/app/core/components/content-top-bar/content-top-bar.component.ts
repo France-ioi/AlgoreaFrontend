@@ -3,10 +3,11 @@ import { ModeAction, ModeService } from '../../../shared/services/mode.service';
 import { ContentInfo } from '../../../shared/models/content/content-info';
 import { Observable, of } from 'rxjs';
 import { CurrentContentService } from '../../../shared/services/current-content.service';
-import { delay, switchMap } from 'rxjs/operators';
+import { delay, switchMap, filter } from 'rxjs/operators';
 import { ActivityNavTreeService, SkillNavTreeService } from '../../services/navigation/item-nav-tree.service';
 import { isItemInfo } from '../../../shared/models/content/item-info';
 import { FullFrameContent } from 'src/app/shared/services/layout.service';
+import { GroupWatchingService } from '../../services/group-watching.service';
 
 @Component({
   selector: 'alg-content-top-bar',
@@ -18,6 +19,7 @@ export class ContentTopBarComponent {
   @Input() scrolled = false;
 
   currentMode$ = this.modeService.mode$.asObservable();
+  watchedGroup$ = this.groupWatchingService.watchedGroup$;
 
   currentContent$: Observable<ContentInfo | null> = this.currentContentService.content$.pipe(
     delay(0),
@@ -32,10 +34,12 @@ export class ContentTopBarComponent {
       return content.route.contentType === 'activity' ?
         this.activityNavTreeService.navigationNeighbors$ : this.skillNavTreeService.navigationNeighbors$;
     }),
+    filter(navigationNeighbors => !!navigationNeighbors?.isReady),
   );
 
   constructor(
     private modeService: ModeService,
+    private groupWatchingService: GroupWatchingService,
     private currentContentService: CurrentContentService,
     private activityNavTreeService: ActivityNavTreeService,
     private skillNavTreeService: SkillNavTreeService,

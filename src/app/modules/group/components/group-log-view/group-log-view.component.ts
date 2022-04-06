@@ -73,7 +73,7 @@ export class GroupLogViewComponent implements OnChanges, OnDestroy {
       },
       {
         field: 'item.user',
-        header: $localize`User`,
+        header: $localize`:User column label:User`,
         disabled: !this.showUserColumn,
       },
       {

@@ -251,7 +251,8 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
           this.dialog = 'opened';
         },
         error: () =>
-          this.actionFeedbackService.error($localize`The permissions cannot be retrieved. If the problem persists, please contact us.`),
+          this.actionFeedbackService.error($localize`The permissions cannot be retrieved. ` +
+            $localize`:@@contactUs:If the problem persists, please contact us.`),
       });
   }
 

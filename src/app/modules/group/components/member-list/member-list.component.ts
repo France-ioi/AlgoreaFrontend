@@ -89,7 +89,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
   currentSort: string[] = [];
   currentFilter: Filter = this.defaultFilter;
 
-  selection: (Member | GroupChild)[] = [];
+  selection: (Member | (GroupChild & { isEmpty: boolean }))[] = [];
 
   data: Data = {
     columns: [],
@@ -165,7 +165,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
   getData({ route, filter, sort, fromId }: DataFetching): Observable<Data> {
     switch (filter.type) {
       case TypeFilter.Groups:
-        return this.getGroupChildrenService.getGroupChildren(route.id, sort, [], [ 'Team', 'Session', 'User' ])
+        return this.getGroupChildrenService.getGroupChildrenWithSubgroupCount(route.id, sort, [], [ 'Team', 'Session', 'User' ])
           .pipe(map(children => ({
             columns: groupsColumns,
             rowData: children.map(child => ({
@@ -174,7 +174,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
             })),
           })));
       case TypeFilter.Sessions:
-        return this.getGroupChildrenService.getGroupChildren(route.id, sort, [ 'Session' ])
+        return this.getGroupChildrenService.getGroupChildrenWithSubgroupCount(route.id, sort, [ 'Session' ])
           .pipe(map(children => ({
             columns: nameUserCountColumns,
             rowData: children.map(child => ({
@@ -196,7 +196,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
               })),
             })));
         } else {
-          return this.getGroupChildrenService.getGroupChildren(route.id, sort, [ 'Team' ])
+          return this.getGroupChildrenService.getGroupChildrenWithSubgroupCount(route.id, sort, [ 'Team' ])
             .pipe(map(children => ({
               columns: nameUserCountColumns,
               rowData: children.map(child => ({
@@ -264,7 +264,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
     if (this.selection.length === this.data.rowData.length) {
       this.selection = [];
     } else {
-      this.selection = this.data.rowData as (Member | GroupChild)[];
+      this.selection = this.data.rowData as (Member | (GroupChild & { isEmpty: boolean }))[];
     }
   }
 
@@ -362,11 +362,20 @@ export class MemberListComponent implements OnChanges, OnDestroy {
       return;
     }
 
+    const isSubgroupsEmpty = !(this.selection as (GroupChild & { isEmpty: boolean })[]).some(g => !g.isEmpty);
+
+    if (!isSubgroupsEmpty) {
+      this.onRemoveSubgroups(event, groupId);
+      return;
+    }
+
     this.confirmationService.confirm({
       target: event.target || undefined,
       key: 'commonPopup',
       icon: 'pi pi-question-circle',
-      message: $localize`Do you want to also delete the selected group(s)? (will only work if those are empty)`,
+      message: this.selection.length === 1 ?
+        $localize`Do you also want to delete the group?` :
+        $localize`These groups are all empty. Do you also want to delete them?`,
       acceptLabel: $localize`Yes`,
       acceptIcon: 'fa fa-check',
       rejectLabel: $localize`No`,

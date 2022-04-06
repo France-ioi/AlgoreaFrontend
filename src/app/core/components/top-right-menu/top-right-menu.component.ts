@@ -26,7 +26,7 @@ export class TopRightMenuComponent {
     ]))
   );
 
-  userLogin$ = this.sessionService.session$.pipe(map(session => session?.user.login), distinctUntilChanged());
+  userLogin$ = this.sessionService.session$.pipe(map(session => session?.login), distinctUntilChanged());
 
   constructor(
     private sessionService: UserSessionService,

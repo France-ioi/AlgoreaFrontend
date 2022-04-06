@@ -18,7 +18,7 @@
   }
 
   &.in-progress {
-    background-color: $secondary-color;
+    background-color: var(--secondary-color);
   }
 
   &.no-score {

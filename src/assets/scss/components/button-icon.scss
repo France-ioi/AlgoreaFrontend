@@ -6,7 +6,7 @@
 
   &.base-color {
     i {
-      color: $base-color;
+      color: var(--base-color);
     }
   }
 

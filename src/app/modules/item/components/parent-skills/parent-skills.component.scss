@@ -4,7 +4,7 @@
 .data-list-container {
   list-style: none;
   padding-left: 0;
-  color: $dark-text-color;
+  color: var(--dark-text-color);
 
   &.sub-skill {
     li {
@@ -21,11 +21,11 @@
         display: flex;
         flex: 1;
         padding: 0.5833rem 0;
-        border-bottom: .1rem solid $light-border-color;
+        border-bottom: .1rem solid var(--light-border-color);
         cursor: pointer;
 
         &.locked {
-          color: $light-text-color;
+          color: var(--light-text-color);
           cursor: default;
         }
 

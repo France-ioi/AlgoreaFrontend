@@ -61,7 +61,7 @@
                   </td>
                 </ng-container>
                 <ng-template #invisibleChildCells>
-                  <td class="flex-1" i18n>Non-visible content ({{ rowData.id }})</td>
+                  <td class="flex-1"><ng-container i18n>Non-visible content</ng-container> ({{ rowData.id }})</td>
                 </ng-template>
 
                 <td>
@@ -114,7 +114,7 @@
       <alg-error
         *ngIf="state.isError"
         class="dark"
-        i18n-message message="Error while loading the children item"
+        i18n-message message="Error while loading the children items"
         [showRefreshButton]="true"
         (refresh)="reloadData()"
       ></alg-error>

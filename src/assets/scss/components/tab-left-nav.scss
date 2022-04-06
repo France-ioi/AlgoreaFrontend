@@ -4,7 +4,7 @@
 .tab-left-nav {
   &.p-tabview {
     padding: 0;
-    background-color: $base-bk-color;
+    background-color: var(--base-bk-color);
     border-radius: 0;
 
     &.dark {
@@ -27,6 +27,7 @@
         top: 0;
         background-color: var(--nav-bg-secondary-color);
         border-radius: 0;
+        position: relative;
         // color: white !important;
 
         /* override properties from ngprime that we do not want */
@@ -86,27 +87,6 @@
         &.p-highlight {
           background-color: var(--nav-bg-color);
 
-          &:before {
-            content:" ";
-            display: block;
-            background-image: url('/assets/images/corner.svg');
-            background-repeat: no-repeat;
-            background-position: right;
-            background-size: cover;
-            width: 1rem;
-            height: 1rem;
-            position: absolute;
-            bottom:0;
-            right:-1rem;
-            z-index: 1;
-          }
-
-          &:last-child:before {
-            right:auto;
-            left:-1rem;
-            background-position: left;
-          }
-
           .indicator {
             position: absolute;
             left: calc(50% - 0.3333rem);
@@ -115,7 +95,7 @@
             height: 0;
             border-left: 0.6667rem solid transparent;
             border-right: 0.6667rem solid transparent;
-            border-top: 0.4167rem solid $base-bk-color;
+            border-top: 0.4167rem solid var(--base-bk-color);
 
             &.dark {
               border-top: 0.4167rem solid  #4E4E4E;
@@ -132,7 +112,7 @@
     .p-tabview-panels {
       padding: 0;
       border: none;
-      font-family: "titillium";
+      font-family: var(--font-family);
     }
   }
 }

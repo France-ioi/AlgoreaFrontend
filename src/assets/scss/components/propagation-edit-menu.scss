@@ -2,15 +2,15 @@
 @import 'src/geometry';
 
 .alg-propagation-edit-menu {
-  background: $base-color;
+  background: var(--base-color);
 
   &:after {
-    border-bottom-color: $base-color;
+    border-bottom-color: var(--base-color);
   }
 
   &.p-overlaypanel-flipped {
     &:after {
-      border-top-color: $base-color;
+      border-top-color: var(--base-color);
     }
   }
 

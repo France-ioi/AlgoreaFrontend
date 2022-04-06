@@ -20,7 +20,7 @@
       align-items: center;
       justify-content: center;
       flex-direction: row;
-      color: $base-text-color;
+      color: var(--base-text-color);
       cursor: pointer;
       transition: .2s;
       font-size: 1.2rem;
@@ -28,8 +28,8 @@
       padding: 0 1rem;
 
       &.active {
-        background-color: $base-color;
-        box-shadow: 0 .1rem $dark-base-color inset;
+        background-color: var(--base-color);
+        box-shadow: 0 .1rem var(--dark-base-color) inset;
         color: white;
       }
 
@@ -46,7 +46,7 @@
 
       li {
         flex-direction: column;
-        border-right: 0.1rem solid $dark-transparency-color;
+        border-right: 0.1rem solid var(--dark-transparency-color);
 
         &.active {
           border-right: none;
@@ -69,10 +69,10 @@
     }
 
     &.rounded {
-      background-color: $dark-transparency-color;
+      background-color: var(--dark-transparency-color);
       border-radius: 9rem;
       height: 3rem;
-      box-shadow: 0 .1rem $dark-transparency-color inset;
+      box-shadow: 0 .1rem var(--dark-transparency-color) inset;
       // margin-left: 1rem;
       // margin-right: 1rem;
 
@@ -89,14 +89,14 @@
           }
 
           &.active {
-            background-color: $base-color;
+            background-color: var(--base-color);
             color: white;
           }
         }
       }
 
       &.dark {
-        background-color: $dark-base-color;
+        background-color: var(--dark-base-color);
         box-shadow: 0 .1rem #295485 inset;
 
         li {
@@ -109,7 +109,7 @@
           }
 
           &.active {
-            background-color: $secondary-color;
+            background-color: var(--secondary-color);
             color: white;
           }
         }

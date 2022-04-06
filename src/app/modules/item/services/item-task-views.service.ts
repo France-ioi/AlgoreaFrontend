@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { combineLatest, merge, ReplaySubject, Subject } from 'rxjs';
-import { delayWhen, distinctUntilChanged, filter, map, switchMap, takeUntil } from 'rxjs/operators';
+import { combineLatestWith, delayWhen, distinctUntilChanged, filter, map, switchMap, takeUntil } from 'rxjs/operators';
 import { isNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
 import { TaskViews, UpdateDisplayParams } from '../task-communication/types';
 import { ItemTaskInitService } from './item-task-init.service';
@@ -17,7 +17,13 @@ export class ItemTaskViewsService implements OnDestroy {
   readonly views$ = merge(
     this.task$.pipe(switchMap(task => task.getViews())),
     this.display$.pipe(map(({ views }) => views), filter(isNotUndefined)),
-  ).pipe(map(views => this.getAvailableViews(views)));
+  ).pipe(
+    combineLatestWith(this.task$.pipe(switchMap(task => task.getMetaData()))),
+    map(([ views, { disablePlatformProgress }]) => {
+      const availableViews = this.getAvailableViews(views);
+      return disablePlatformProgress ? availableViews : [ ...availableViews, 'progress' ];
+    }),
+  );
 
   private activeViewSubject = new ReplaySubject<string>(1);
   readonly activeView$ = this.activeViewSubject.pipe(
@@ -69,6 +75,20 @@ export class ItemTaskViewsService implements OnDestroy {
         const isIncludedInOtherView = entries.some(([ , otherView ]) => !!otherView.includes?.includes(name));
         return !requiresOtherView && !isIncludedInOtherView;
       })
-      .map(([ name ]) => name);
+      .map(([ name ]) => name)
+      .sort((a, b) => this.sortView(a, b));
+  }
+
+  private sortView(a: string, b: string): number {
+    const weights: Record<string, number> = {
+      task: 0, // Statement
+      editor: 1, // Solve
+      submission: 2, // Submission
+      hints: 3, // Hints
+      forum: 4, // Forum
+      solution: 5,// Solution
+    };
+    const unknownViewWeight = Math.max(...Object.values(weights)) + 1;
+    return (weights[a] ?? unknownViewWeight) - (weights[b] ?? unknownViewWeight);
   }
 }

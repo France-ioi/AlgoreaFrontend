@@ -13,6 +13,7 @@ import { mapToFetchState } from 'src/app/shared/operators/state';
 import { buildUp } from 'src/app/shared/operators/build-up';
 import { FetchState } from 'src/app/shared/helpers/state';
 import { LocaleService } from 'src/app/core/services/localeService';
+import { GroupWatchingService } from 'src/app/core/services/group-watching.service';
 
 export interface ItemData {
   route: FullItemRoute,
@@ -49,7 +50,7 @@ export class ItemDataSource implements OnDestroy {
   /* state to put outputted */
   readonly state$ = combineLatest([
     this.fetchOperation$,
-    this.userSessionService.watchedGroup$,
+    this.groupWatchingService.watchedGroup$,
   ]).pipe(
     delayWhen(() => this.profileLanguageMatchesAppLanguage$),
     switchMap(([ item, watchedGroup ]) =>
@@ -69,6 +70,7 @@ export class ItemDataSource implements OnDestroy {
     private resultActionsService: ResultActionsService,
     private getResultsService: GetResultsService,
     private userSessionService: UserSessionService,
+    private groupWatchingService: GroupWatchingService,
     private localeService: LocaleService,
   ) {}
 

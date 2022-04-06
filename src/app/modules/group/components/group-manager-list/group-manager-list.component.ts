@@ -95,7 +95,7 @@ export class GroupManagerListComponent implements OnChanges {
       return;
     }
 
-    const currentUserId = this.userService.session$.getValue()?.user.groupId;
+    const currentUserId = this.userService.session$.getValue()?.groupId;
 
     if (!currentUserId) {
       throw new Error('Unexpected: Missed current user ID');
@@ -126,7 +126,7 @@ export class GroupManagerListComponent implements OnChanges {
       throw new Error('Unexpected: Missed groupData');
     }
 
-    const currentUserId = this.userService.session$.getValue()?.user.groupId;
+    const currentUserId = this.userService.session$.getValue()?.groupId;
 
     if (!currentUserId) {
       throw new Error('Unexpected: Missed current user ID');

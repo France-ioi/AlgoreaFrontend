@@ -9,6 +9,11 @@ export function isASkill(item: ItemWithType): boolean {
   return item.type === 'Skill';
 }
 
+export function isATask(item: ItemWithType): boolean {
+  // courses are now considered the same way as tasks (both will be merged soon)
+  return item.type === 'Task' || item.type === 'Course';
+}
+
 export function mayHaveChildren(item: ItemWithType): boolean {
   return item.type === 'Chapter' || item.type === 'Skill';
 }

@@ -9,7 +9,7 @@
       <alg-chapter-children
         [itemData]="itemData"
         *ngIf="itemData.item.type === 'Chapter'"
-        algFullHeightContent
+        [algFullHeightContent]="true"
       ></alg-chapter-children>
 
       <ng-container *ngIf="(itemData.item.type === 'Task' || itemData.item.type === 'Course')">
@@ -63,8 +63,9 @@
 
   <ng-template #noCurrentResult>
     <p class="validation-text">
-      <span *ngIf="itemData.item.requiresExplicitEntry; else noRequiresExplicitEntry" i18n>
-        This activity requires explicit entry (not implemented).
+      <span *ngIf="itemData.item.requiresExplicitEntry; else noRequiresExplicitEntry">
+        <ng-container i18n>This activity requires explicit entry</ng-container>&nbsp;
+        <ng-container i18n="@@notImplemented">(not implemented)</ng-container>.
       </span>
       <ng-template #noRequiresExplicitEntry>
         <span i18n>

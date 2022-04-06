@@ -1,79 +1,81 @@
-<ng-container *ngIf="session$ | async as session">
+<ng-container *ngrxLet="isWatching$ as isWatching">
   <alg-section
       icon="fa fa-list"
       *ngIf="itemData"
-      [label]="session?.watchedGroup | itemProgressLabel"
+      [label]="(sectionLabel$ | async) || ''"
   >
 
-    <p class="not-allow-caption" *ngIf="!!session?.watchedGroup && itemData.item.permissions.canWatch === 'none'; else content" i18n>
-      You are not allowed to watch the progress of other users on this content.
-    </p>
+    <ng-container *ngIf="!isWatching || itemData?.item?.permissions?.canWatch !== 'none'; else unallowed">
 
-    <ng-template #content>
+      <ng-container *ngIf="selectors$ | async as selectors">
 
-      <div [hidden]="selectors === 'none'">
-        <div class="selection-center">
-          <nav class="tab-rounded">
-            <a class="tab-rounded-item"
-               [ngClass]="{'active': !!historyTab.isActive, 'prev': !!chapterGroupProgressTab?.isActive || !!chapterUserProgressTab?.isActive}"
-               [routerLink]="'./progress/history'"
-               routerLinkActive #historyTab="routerLinkActive"
-               i18n
-            >
-              History
-            </a>
+        <div [hidden]="selectors === 'none'">
+          <div class="selection-center">
+            <nav class="tab-rounded">
+              <a class="tab-rounded-item"
+                [ngClass]="{'active': !!historyTab.isActive, 'prev': !!chapterGroupProgressTab?.isActive || !!chapterUserProgressTab?.isActive}"
+                [routerLink]="'./progress/history'"
+                routerLinkActive #historyTab="routerLinkActive"
+                i18n
+              >
+                History
+              </a>
 
-            <a class="tab-rounded-item"
-               [ngClass]="{'active': !!chapterGroupProgressTab.isActive, 'prev': !!chapterUserProgressTab?.isActive}"
-               [routerLink]="'./progress/chapter'"
-               routerLinkActive #chapterGroupProgressTab="routerLinkActive"
-               *ngIf="selectors === 'withGroupProgress'"
-               i18n
-            >
-              Chapter view
-            </a>
+              <a class="tab-rounded-item"
+                [ngClass]="{'active': !!chapterGroupProgressTab.isActive, 'prev': !!chapterUserProgressTab?.isActive}"
+                [routerLink]="'./progress/chapter'"
+                routerLinkActive #chapterGroupProgressTab="routerLinkActive"
+                *ngIf="selectors === 'withGroupProgress'"
+                i18n
+              >
+                Chapter view
+              </a>
 
-            <a class="tab-rounded-item"
-               [ngClass]="{'active': !!chapterUserProgressTab?.isActive}"
-               [routerLink]="'./progress/chapter-user-progress'"
-               routerLinkActive #chapterUserProgressTab="routerLinkActive"
-               *ngIf="selectors === 'withUserProgress'"
-               i18n
-            >
-              Chapter view
-            </a>
-          </nav>
-        </div>
-      </div>
-
-      <div class="container">
-        <div *ngIf="savingAnswer" class="save-answer-loader">
-          <p class="save-answer-loader-message">
-            <span i18n>Saving answer before loading submission...</span>
-            <alg-loading size="medium"></alg-loading>
-            <p-button type="button" (click)="skipSave.emit()" i18n-label label="Skip"></p-button>
-          </p>
+              <a class="tab-rounded-item"
+                [ngClass]="{'active': !!chapterUserProgressTab?.isActive}"
+                [routerLink]="'./progress/chapter-user-progress'"
+                routerLinkActive #chapterUserProgressTab="routerLinkActive"
+                *ngIf="selectors === 'withUserProgress'"
+                i18n
+              >
+                Chapter view
+              </a>
+            </nav>
+          </div>
         </div>
 
-        <alg-item-log-view
-          *ngIf="!!historyTab?.isActive"
-          [itemData]="itemData"
-          [isTaskReadOnly]="isTaskReadOnly"
-        ></alg-item-log-view>
+        <div class="container">
+          <div *ngIf="savingAnswer" class="save-answer-loader">
+            <p class="save-answer-loader-message">
+              <span i18n>Saving answer before loading submission...</span>
+              <alg-loading size="medium"></alg-loading>
+              <p-button type="button" (click)="skipSave.emit()" i18n-label label="Skip"></p-button>
+            </p>
+          </div>
 
-        <div class="chapter-group-progress">
-          <alg-chapter-group-progress
-            *ngIf="!!chapterGroupProgressTab?.isActive"
+          <alg-item-log-view
+            *ngIf="!!historyTab?.isActive"
             [itemData]="itemData"
-          ></alg-chapter-group-progress>
+            [isTaskReadOnly]="isTaskReadOnly"
+          ></alg-item-log-view>
+
+          <div class="chapter-group-progress">
+            <alg-chapter-group-progress
+              *ngIf="!!chapterGroupProgressTab?.isActive"
+              [itemData]="itemData"
+            ></alg-chapter-group-progress>
+          </div>
+
+          <alg-chapter-user-progress
+              *ngIf="!!chapterUserProgressTab?.isActive"
+              [itemData]="itemData"
+          ></alg-chapter-user-progress>
         </div>
 
-        <alg-chapter-user-progress
-            *ngIf="!!chapterUserProgressTab?.isActive"
-            [itemData]="itemData"
-        ></alg-chapter-user-progress>
-      </div>
-
+      </ng-container>
+    </ng-container>
+    <ng-template #unallowed>
+      <p class="not-allow-caption" i18n>You are not allowed to watch the progress of other users on this content.</p>
     </ng-template>
   </alg-section>
 </ng-container>

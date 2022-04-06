@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { ItemData } from '../../services/item-datasource.service';
-import { WatchedGroup } from '../../../../shared/services/user-session.service';
+import { WatchedGroup } from 'src/app/core/services/group-watching.service';
 
 @Component({
   selector: 'alg-item-permissions',

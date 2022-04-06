@@ -3,15 +3,15 @@
 
 @mixin input-base {
   input {
-    font-family: "titillium", sans-serif;
+    font-family: var(--font-family);
     width: 100%;
     display: flex;
-    background-color: $input-transparency-color;
+    background-color: var(--input-transparency-color);
     border: none;
     box-shadow: 0 .1rem #00000019 inset;
     border-radius: $border-radius;
     font-size: 1.2rem;
-    color: $base-text-color;
+    color: var(--base-text-color);
 
     &:focus, &:active {
       outline: none;
@@ -25,7 +25,7 @@
   }
 
   .p-button {
-    background-color: $base-color;
-    border-color: $base-color;
+    background-color: var(--base-color);
+    border-color: var(--base-color);
   }
 }

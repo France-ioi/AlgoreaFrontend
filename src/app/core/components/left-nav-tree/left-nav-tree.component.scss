@@ -62,7 +62,7 @@
 }
 
 .tree-header.selected-header {
-  background-color: $base-bk-color;
+  background-color: var(--base-bk-color);
 
   .tree-header-title {
     color: var(--nav-bg-secondary-color);

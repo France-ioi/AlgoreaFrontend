@@ -254,7 +254,7 @@ export interface TaskPlatform {
    */
   validate(mode: string): Observable<void>,
   showView(views: string): void,
-  askHint(platformToken: string): Observable<void>,
+  askHint(hintToken: string): Observable<void>,
   updateHeight(height: number): void,
   updateDisplay(data: UpdateDisplayParams): void,
   openUrl(url: OpenUrlParams): void,
