@@ -30,9 +30,8 @@ export class LayoutService {
     canToggleFullFrame?: boolean,
     showTopRightControls?: boolean,
   }): void {
-    const canToggle = !this.initialized && canToggleFullFrame === undefined
-      ? true
-      : canToggleFullFrame ?? this.fullFrame.value.canToggle;
+    const canToggleFallback = this.initialized ? this.fullFrame.value.canToggle : true;
+    const canToggle = canToggleFullFrame ?? canToggleFallback;
     this.fullFrame.next({
       canToggle,
       active: canToggle ? fullFrameActive : this.fullFrame.value.active,
@@ -40,8 +39,8 @@ export class LayoutService {
     });
 
 
-    if (!this.initialized) this.showTopRightControls.next(showTopRightControls ?? true);
-    else if (showTopRightControls !== undefined) this.showTopRightControls.next(showTopRightControls);
+    if (showTopRightControls !== undefined) this.showTopRightControls.next(showTopRightControls);
+    else if (!this.initialized) this.showTopRightControls.next(true);
 
     if (!this.initialized) this.initialized = true;
   }
