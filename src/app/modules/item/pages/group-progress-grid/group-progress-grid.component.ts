@@ -129,7 +129,7 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
 
   ngOnChanges(changes: SimpleChanges): void {
     this.dialog = 'closed';
-    if (changes.itemData && this.itemData) this.itemData$.next(this.itemData)
+    if (changes.itemData && this.itemData) this.itemData$.next(this.itemData);
     if (changes.group) this.fetchRows();
     this.canAccess = (this.group && canCurrentUserGrantGroupAccess(this.group)
       && this.itemData?.item.permissions.canGrantView !== 'none') || false;
@@ -203,7 +203,7 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
       progress: this.getProgress(itemId, groupId, filter, fromId),
     }).pipe(
       combineLatestWith(this.columns$.pipe(readyData())),
-      map(([{ rows, progress }, items]) =>
+      map(([{ rows, progress }, items ]) =>
         rows
           .filter(row => progress.find(progress => progress.groupId === row.id)) // only keep rows with a defined progress
           .map(row => ({
