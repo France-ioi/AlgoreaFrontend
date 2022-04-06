@@ -2,7 +2,7 @@ import { map, Observable, ReplaySubject, shareReplay, switchMap } from 'rxjs';
 import { fetchingState, FetchState, readyState } from './state';
 import { mapToFetchState } from '../operators/state';
 
-export function canLoadPagedData<T>(list: T[], limit: number): boolean {
+export function canLoadMorePagedData<T>(list: T[], limit: number): boolean {
   /**
    * If list length is same as limit, it means we can still fetch.
    * For the edge case when the list length is same as limit but there's no more items, it will be
@@ -67,7 +67,7 @@ export class DataPager<Data, T, Args = any> {
 
   private accumulate(data: Data): void {
     const newItems = this.options.dataToList(data);
-    this.acc = canLoadPagedData(newItems, this.options.batchSize)
+    this.acc = canLoadMorePagedData(newItems, this.options.batchSize)
       ? { data, lastElement: newItems[newItems.length-1] }
       : undefined;
     this.canLoadMore = !!this.acc;
