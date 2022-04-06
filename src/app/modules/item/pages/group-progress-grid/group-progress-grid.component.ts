@@ -326,7 +326,7 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     this.groupRouter.navigateTo(rawGroupRoute({ id: row.id, isUser: this.currentFilter === 'Users' }));
   }
 
-  private getColumns(itemData: ItemData) {
+  private getColumns(itemData: ItemData): Observable<DataColumn[]> {
     if (!itemData.currentResult?.attemptId) throw new Error('unexpected');
     return this.getItemChildrenService.get(itemData.item.id, itemData.currentResult.attemptId).pipe(
       map(items => [
