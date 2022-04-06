@@ -1,15 +1,13 @@
-import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { GetGroupManagersService, Manager } from '../../http-services/get-group-managers.service';
 import { GroupData, GroupDataSource } from '../../services/group-datasource.service';
 import { RemoveGroupManagerService } from '../../http-services/remove-group-manager.service';
 import { ActionFeedbackService } from '../../../../shared/services/action-feedback.service';
-import { ReplaySubject, Subject } from 'rxjs';
-import { switchMap, map, distinctUntilChanged, startWith } from 'rxjs/operators';
 import { mapStateData } from '../../../../shared/operators/state';
 import { UserSessionService } from '../../../../shared/services/user-session.service';
 import { ConfirmationService } from 'primeng/api';
 import { displayGroupManagerRemovalResponseToast } from './group-manager-removal-response-handling';
-import { withLoadMore } from 'src/app/shared/operators/with-load-more';
+import { DataPager } from 'src/app/shared/helpers/data-pager';
 
 const managersLimit = 25;
 
@@ -18,7 +16,7 @@ const managersLimit = 25;
   templateUrl: './group-manager-list.component.html',
   styleUrls: [ './group-manager-list.component.scss' ]
 })
-export class GroupManagerListComponent implements OnChanges, OnDestroy {
+export class GroupManagerListComponent implements OnChanges {
 
   @Input() groupData?: GroupData;
 
@@ -27,35 +25,25 @@ export class GroupManagerListComponent implements OnChanges, OnDestroy {
   isPermissionsEditDialogOpened = false;
   dialogManager?: Manager & { canManageAsText: string };
 
-  private fromId$ = new Subject<string | undefined>();
-
-  private readonly groupId$ = new ReplaySubject<string>(1);
-  private data = withLoadMore({
-    fetcher: ({ id, fromId }) => this.getGroupManagersService.getGroupManagers(id, [], managersLimit, fromId),
-    limit: managersLimit,
-    trigger$: this.groupId$.pipe(
-      distinctUntilChanged(),
-      switchMap(id => this.fromId$.pipe(
-        startWith(undefined),
-        map(fromId => ({ fromId, id }))
-      )),
-    ),
-    mapListFromData: (data: Manager[]) => data,
-    mapListToData: (_data, list) => list,
-    mapIdFromListItem: manager => manager.id,
+  /* eslint-disable @typescript-eslint/explicit-function-return-type */
+  readonly datapager = new DataPager({
+    fetch: ({ groupId }: { groupId: string }, lastManager?: Manager) =>
+      this.getGroupManagersService.getGroupManagers(groupId, [], managersLimit, lastManager?.id),
+    batchSize: managersLimit,
+    dataToList: data => data,
+    listToData: (_data, list) => list,
+    onLoadMoreError: () => {
+      this.actionFeedbackService.error($localize`Could not load more results, are you connected to the internet?`);
+    },
+    /* eslint-enable @typescript-eslint/explicit-function-return-type */
   });
 
-  readonly state$ = this.data.state$.pipe(
+  readonly state$ = this.datapager.state$.pipe(
     mapStateData(managers => managers.map(manager => ({
       ...manager,
       canManageAsText: this.getManagerLevel(manager),
     }))),
   );
-  readonly loadMore$ = this.data.loadMore$;
-
-  private subscription = this.data.loadMoreError$.subscribe(() => {
-    this.actionFeedbackService.error($localize`Could not load more results, are you connected to the internet?`);
-  });
 
   constructor(
     private getGroupManagersService: GetGroupManagersService,
@@ -66,16 +54,12 @@ export class GroupManagerListComponent implements OnChanges, OnDestroy {
     private confirmationService: ConfirmationService,
   ) {}
 
-  ngOnChanges(_changes: SimpleChanges): void {
+  ngOnChanges(changes: SimpleChanges): void {
     if (this.groupData) {
-      this.groupId$.next(this.groupData.group.id);
+      (changes.groupData?.previousValue as GroupData | undefined)?.group.id !== this.groupData?.group.id
+        ? this.reloadData()
+        : this.fetchData();
     }
-  }
-
-  ngOnDestroy(): void {
-    this.fromId$.complete();
-    this.groupId$.complete();
-    this.subscription.unsubscribe();
   }
 
   private getManagerLevel(manager: Manager): string {
@@ -90,10 +74,12 @@ export class GroupManagerListComponent implements OnChanges, OnDestroy {
   }
 
   reloadData(): void {
-    this.fromId$.next(undefined);
+    this.datapager.reset();
+    this.fetchData();
   }
-  fetchData(fromId: string): void {
-    this.fromId$.next(fromId);
+  fetchData(): void {
+    if (!this.groupData) throw new Error('unexpected');
+    this.datapager.load({ groupId: this.groupData.group.id });
   }
 
   onSelectAll(managers: Manager[]): void {
@@ -120,7 +106,7 @@ export class GroupManagerListComponent implements OnChanges, OnDestroy {
         target: event.target || undefined,
         key: 'commonPopup',
         icon: 'pi pi-exclamation-triangle',
-        message: $localize`Are you sure to remove yourself from the managers of this group? You may lose manager access and 
+        message: $localize`Are you sure to remove yourself from the managers of this group? You may lose manager access and
           not be able to restore it.`,
         acceptLabel: $localize`Yes, remove me from the group managers`,
         acceptButtonStyleClass: 'p-button-danger',

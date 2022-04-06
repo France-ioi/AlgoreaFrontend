@@ -17,7 +17,7 @@ import { displayGroupRemovalResponseToast } from './group-removal-response-handl
 import { RemoveSubgroupService } from '../../http-services/remove-subgroup.service';
 import { RemoveGroupService } from '../../http-services/remove-group.service';
 import { FetchState } from 'src/app/shared/helpers/state';
-import { canLoadMoreItems } from 'src/app/shared/helpers/load-more';
+import { canLoadPagedData } from 'src/app/shared/helpers/data-pager';
 
 function getSelectedGroupChildCaptions(selection: GroupChild[]): string {
   return selection.map(selected => selected.name).join(', ');
@@ -394,7 +394,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
 
     const rows = state.data.rowData as Member[];
     const last = rows[rows.length - 1];
-    return last && canLoadMoreItems(rows, membersLimit)
+    return last && canLoadPagedData(rows, membersLimit)
       ? { fromId: last.id }
       : null;
   }

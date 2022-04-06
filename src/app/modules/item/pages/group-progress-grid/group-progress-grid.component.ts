@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
-import { forkJoin, Observable, ReplaySubject, Subscription } from 'rxjs';
+import { forkJoin, Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { canCurrentUserGrantGroupAccess } from 'src/app/modules/group/helpers/group-management';
 import { Group } from 'src/app/modules/group/http-services/get-group-by-id.service';
@@ -20,7 +20,7 @@ import { ItemRouter } from '../../../../shared/routing/item-router';
 import { GroupRouter } from '../../../../shared/routing/group-router';
 import { rawGroupRoute } from '../../../../shared/routing/group-route';
 import { ProgressData } from '../../components/user-progress-details/user-progress-details.component';
-import { withLoadMore } from 'src/app/shared/operators/with-load-more';
+import { DataPager } from 'src/app/shared/helpers/data-pager';
 
 const progressListLimit = 25;
 
@@ -44,7 +44,6 @@ interface DataFetching {
   attemptId: string,
   filter: TypeFilter,
   title: string | null,
-  fromId?: string,
 }
 
 @Component({
@@ -85,24 +84,21 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
 
   isCSVDataFetching = false;
 
-  private dataFetching$ = new ReplaySubject<DataFetching>(1);
   private permissionsFetchingSubscription?: Subscription;
 
-  private data = withLoadMore<DataFetching, Data, DataRow>({
-    trigger$: this.dataFetching$,
-    fetcher: dataFetching => this.getData(dataFetching),
-    limit: progressListLimit,
-    mapIdFromListItem: item => item.id,
-    mapListFromData: data => data.rows,
-    mapListToData: (data, list) => ({ ...data, rows: list })
+  /* eslint-disable @typescript-eslint/explicit-function-return-type */
+  readonly datapager = new DataPager({
+    batchSize: progressListLimit,
+    fetch: (args: DataFetching, lastRow) => this.getData(args, lastRow),
+    dataToList: (data: Data) => data.rows,
+    listToData: (data, list) => ({ ...data, rows: list }),
+    onLoadMoreError: () => {
+      this.actionFeedbackService.error($localize`Could not load more results, are you connected to the internet?`);
+    },
   });
+  /* eslint-enable @typescript-eslint/explicit-function-return-type */
 
-  state$ = this.data.state$;
-  loadMore$ = this.data.loadMore$;
-
-  private loadMoreErrorSubscription = this.data.loadMoreError$.subscribe(() => {
-    this.actionFeedbackService.error($localize`Could not load more results, are you connected to the internet?`);
-  });
+  state$ = this.datapager.state$;
 
   constructor(
     private getItemChildrenService: GetItemChildrenService,
@@ -117,9 +113,7 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
   ) {}
 
   ngOnDestroy(): void {
-    this.dataFetching$.complete();
     this.permissionsFetchingSubscription?.unsubscribe();
-    this.loadMoreErrorSubscription.unsubscribe();
   }
 
   ngOnChanges(_changes: SimpleChanges): void {
@@ -149,6 +143,7 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
   }
 
   refresh(): void {
+    this.datapager.reset();
     this.fetchData();
   }
 
@@ -187,11 +182,11 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     }
   }
 
-  private getData({ itemId, groupId, attemptId, filter, title, fromId }: DataFetching): Observable<Data> {
+  private getData({ itemId, groupId, attemptId, filter, title }: DataFetching, lastRow?: DataRow): Observable<Data> {
     return forkJoin({
       items: this.getItemChildrenService.get(itemId, attemptId),
       rows: this.getRows(groupId, filter),
-      progress: this.getProgress(itemId, groupId, filter, fromId),
+      progress: this.getProgress(itemId, groupId, filter, lastRow?.id),
     }).pipe(
       map(data => ({
         type: filter,
@@ -230,15 +225,14 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     }
   }
 
-  fetchData(fromId?: string): void {
+  fetchData(): void {
     if (!this.group || !this.itemData || !this.itemData.currentResult) throw new Error('properties are missing');
-    this.dataFetching$.next({
+    this.datapager.load({
       groupId: this.group.id,
       itemId: this.itemData.item.id,
       attemptId: this.itemData.currentResult.attemptId,
       filter: this.currentFilter,
       title: this.itemData.item.string.title,
-      fromId,
     });
   }
 

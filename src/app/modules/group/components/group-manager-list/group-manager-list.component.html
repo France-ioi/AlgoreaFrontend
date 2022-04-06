@@ -115,13 +115,13 @@
         </ng-template>
 
         <ng-template #footerTemplate>
-          <tr *ngIf="loadMore$ | async as loadMore">
+          <tr *ngIf="datapager.canLoadMore">
             <td [colSpan]="6">
               <div class="text-center">
                 <alg-button
                   class="p-button-rounded"
                   i18n-label label="Load more"
-                  (click)="fetchData(loadMore.fromId)"
+                  (click)="fetchData()"
                   [disabled]="state.isFetching"
                 ></alg-button>
               </div>
