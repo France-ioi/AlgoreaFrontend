@@ -45,7 +45,6 @@ export class DataPager<Data, T, Args = any> {
         if (state.isFetching) return fetchingState(this.options.listToData(this.acc.data, this.list));
         // Case 2b: error -> Mark state as ready with previous data to avoid breaking the ui state but trigger the on error callback
         if (state.isError) {
-          // Let the previous list available but allow to handle the error via a callback.
           this.options.onLoadMoreError(state.error);
           return readyState(this.options.listToData(this.acc.data, this.list));
         }
