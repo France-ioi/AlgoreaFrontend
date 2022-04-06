@@ -63,10 +63,6 @@ export class ItemByIdComponent implements OnDestroy {
     ).subscribe(params => this.fetchItemAtRoute(params)),
 
     this.subscriptions.push(
-      this.itemDataSource.state$.pipe(readyData(), take(1)).subscribe(data => {
-        this.layoutService.configure({ fullFrameInitiallyActive: isTask(data.item) });
-      }),
-
       // on datasource state change, update current state and current content page info
       this.itemDataSource.state$.subscribe(state => {
         this.state = state;
@@ -137,7 +133,7 @@ export class ItemByIdComponent implements OnDestroy {
         map(([ , current ]) => ensureDefined(current).item),
       ).subscribe(item => {
         const activateFullFrame = isTask(item) && !(history.state as Record<string, boolean | undefined>).preventFullFrame;
-        this.layoutService.toggleFullFrameContent(activateFullFrame);
+        this.layoutService.configure({ fullFrameActive: activateFullFrame });
       })
     );
   }
@@ -145,9 +141,9 @@ export class ItemByIdComponent implements OnDestroy {
   ngOnDestroy(): void {
     this.currentContent.clear();
     this.subscriptions.forEach(s => s.unsubscribe());
-    this.layoutService.fullFrameContent$
+    this.layoutService.fullFrame$
       .pipe(take(1), filter(fullFrame => fullFrame.active)) // if layout is in full frame and we quit an item page => disable full frame
-      .subscribe(() => this.layoutService.toggleFullFrameContent(false));
+      .subscribe(() => this.layoutService.configure({ fullFrameActive: false }));
   }
 
   private getItemRoute(params?: ParamMap): ReturnType<typeof itemRouteFromParams> {
@@ -192,7 +188,7 @@ export class ItemByIdComponent implements OnDestroy {
       next: itemRoute => this.itemRouter.navigateTo(itemRoute, { navExtras: { replaceUrl: true } }),
       error: err => {
         this.state = errorState(err instanceof Error ? err : new Error('unknown error'));
-        this.layoutService.configure({ fullFrameInitiallyActive: false });
+        this.layoutService.configure({ fullFrameActive: false });
       }
     });
   }

@@ -16,7 +16,7 @@ export class GroupDetailsComponent {
     ...state,
     group: withManagementAdditions(state.group),
   })));
-  fullFrameContent$ = this.layoutService.fullFrameContent$;
+  fullFrame$ = this.layoutService.fullFrame$;
 
   // use of ViewChild required as these elements are shown under some conditions, so may be undefined
   @ViewChild('overviewTab') overviewTab?: RouterLinkActive;
