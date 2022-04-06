@@ -27,11 +27,11 @@ export class GroupManagerListComponent implements OnChanges {
 
   /* eslint-disable @typescript-eslint/explicit-function-return-type */
   readonly datapager = new DataPager({
-    fetch: ({ groupId }: { groupId: string }, lastManager?: Manager) =>
-      this.getGroupManagersService.getGroupManagers(groupId, [], managersLimit, lastManager?.id),
+    fetch: (lastManager?: Manager) => {
+      if (!this.groupData) throw new Error('unexpected');
+      return this.getGroupManagersService.getGroupManagers(this.groupData.group.id, [], managersLimit, lastManager?.id);
+    },
     batchSize: managersLimit,
-    dataToList: data => data,
-    listToData: (_data, list) => list,
     onLoadMoreError: () => {
       this.actionFeedbackService.error($localize`Could not load more results, are you connected to the internet?`);
     },
@@ -79,7 +79,7 @@ export class GroupManagerListComponent implements OnChanges {
   }
   fetchData(): void {
     if (!this.groupData) throw new Error('unexpected');
-    this.datapager.load({ groupId: this.groupData.group.id });
+    this.datapager.load();
   }
 
   onSelectAll(managers: Manager[]): void {

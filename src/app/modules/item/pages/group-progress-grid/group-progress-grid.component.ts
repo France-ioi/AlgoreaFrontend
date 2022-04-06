@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
-import { forkJoin, Observable, Subscription } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { forkJoin, Observable, ReplaySubject, Subject, Subscription } from 'rxjs';
+import { combineLatestWith, map, shareReplay, switchMap } from 'rxjs/operators';
 import { canCurrentUserGrantGroupAccess } from 'src/app/modules/group/helpers/group-management';
 import { Group } from 'src/app/modules/group/http-services/get-group-by-id.service';
 import { GetGroupChildrenService } from 'src/app/modules/group/http-services/get-group-children.service';
@@ -21,6 +21,8 @@ import { GroupRouter } from '../../../../shared/routing/group-router';
 import { rawGroupRoute } from '../../../../shared/routing/group-route';
 import { ProgressData } from '../../components/user-progress-details/user-progress-details.component';
 import { DataPager } from 'src/app/shared/helpers/data-pager';
+import { mapToFetchState, readyData } from 'src/app/shared/operators/state';
+import { FetchState } from 'src/app/shared/helpers/state';
 
 const progressListLimit = 25;
 
@@ -29,21 +31,15 @@ interface DataRow {
   id: string,
   data: (TeamUserProgress|undefined)[],
 }
-interface Data {
-  type: TypeFilter,
-  items: {
-    id: string,
-    title: string|null,
-  }[],
-  rows: DataRow[],
-  can_access: boolean,
+interface DataColumn {
+  id: string,
+  title: string|null,
 }
 interface DataFetching {
   groupId: string,
   itemId: string,
-  attemptId: string,
   filter: TypeFilter,
-  title: string | null,
+  fromId?: string,
 }
 
 @Component({
@@ -83,22 +79,37 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
   dialogTitle = '';
 
   isCSVDataFetching = false;
+  canAccess = false;
+
+  private itemData$ = new ReplaySubject<ItemData>(1);
+  private refresh$ = new Subject<void>();
+  readonly columns$: Observable<FetchState<DataColumn[]>> = this.itemData$.pipe(
+    switchMap(itemData => this.getColumns(itemData)),
+    mapToFetchState({ resetter: this.refresh$ }),
+    shareReplay(1),
+  );
 
   private permissionsFetchingSubscription?: Subscription;
 
   /* eslint-disable @typescript-eslint/explicit-function-return-type */
-  readonly datapager = new DataPager({
+  readonly datapager = new DataPager<DataRow>({
     batchSize: progressListLimit,
-    fetch: (args: DataFetching, lastRow) => this.getData(args, lastRow),
-    dataToList: (data: Data) => data.rows,
-    listToData: (data, list) => ({ ...data, rows: list }),
+    fetch: lastRow => {
+      if (!this.group || !this.itemData) throw new Error('properties are missing');
+      return this.getRowsWithProgress({
+        groupId: this.group.id,
+        itemId: this.itemData.item.id,
+        filter: this.currentFilter,
+        fromId: lastRow?.id,
+      });
+    },
     onLoadMoreError: () => {
       this.actionFeedbackService.error($localize`Could not load more results, are you connected to the internet?`);
     },
   });
   /* eslint-enable @typescript-eslint/explicit-function-return-type */
 
-  state$ = this.datapager.state$;
+  rows$ = this.datapager.state$;
 
   constructor(
     private getItemChildrenService: GetItemChildrenService,
@@ -116,16 +127,19 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     this.permissionsFetchingSubscription?.unsubscribe();
   }
 
-  ngOnChanges(_changes: SimpleChanges): void {
+  ngOnChanges(changes: SimpleChanges): void {
     this.dialog = 'closed';
-    this.fetchData();
+    if (changes.itemData && this.itemData) this.itemData$.next(this.itemData)
+    if (changes.group) this.fetchRows();
+    this.canAccess = (this.group && canCurrentUserGrantGroupAccess(this.group)
+      && this.itemData?.item.permissions.canGrantView !== 'none') || false;
   }
 
-  trackByRow(_index: number, row: Data['rows'][number]): string {
+  trackByRow(_index: number, row: DataRow): string {
     return row.id;
   }
 
-  showProgressDetail(target: HTMLElement, userProgress: TeamUserProgress, row: Data['rows'][number], col: Data['items'][number]): void {
+  showProgressDetail(target: HTMLElement, userProgress: TeamUserProgress, row: DataRow, col: DataColumn): void {
     if (this.progressOverlay?.target === target) return;
     this.progressOverlay = {
       accessPermissions: {
@@ -144,7 +158,8 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
 
   refresh(): void {
     this.datapager.reset();
-    this.fetchData();
+    this.refresh$.next();
+    this.fetchRows();
   }
 
   private getProgress(itemId: string, groupId: string, filter: TypeFilter, fromId?: string): Observable<TeamUserProgress[]> {
@@ -168,10 +183,10 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     }
   }
 
-  private getRows(groupId: string, filter: TypeFilter): Observable<{id :string, value: string}[]> {
+  private getRows(groupId: string, filter: TypeFilter, fromId?: string): Observable<{id :string, value: string}[]> {
     switch (filter) {
       case 'Users':
-        return this.getGroupDescendantsService.getUserDescendants(groupId)
+        return this.getGroupDescendantsService.getUserDescendants(groupId, [], progressListLimit, fromId)
           .pipe(map(users => users.map(user => ({ id: user.id, value: formatUser(user.user) }))));
       case 'Teams':
         return this.getGroupDescendantsService.getTeamDescendants(groupId)
@@ -182,58 +197,38 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     }
   }
 
-  private getData({ itemId, groupId, attemptId, filter, title }: DataFetching, lastRow?: DataRow): Observable<Data> {
+  private getRowsWithProgress({ itemId, groupId, filter, fromId }: DataFetching): Observable<DataRow[]> {
     return forkJoin({
-      items: this.getItemChildrenService.get(itemId, attemptId),
-      rows: this.getRows(groupId, filter),
-      progress: this.getProgress(itemId, groupId, filter, lastRow?.id),
+      rows: this.getRows(groupId, filter, fromId),
+      progress: this.getProgress(itemId, groupId, filter, fromId),
     }).pipe(
-      map(data => ({
-        type: filter,
-        items: [
-          {
-            id: itemId,
-            title: title,
-          },
-          ...data.items.map(item => ({
-            id: item.id,
-            title: item.string.title,
-          }))
-        ],
-        rows: data.rows
-          .filter(row => data.progress.find(progress => progress.groupId === row.id)) // only keep rows with a defined progress
+      combineLatestWith(this.columns$.pipe(readyData())),
+      map(([{ rows, progress }, items]) =>
+        rows
+          .filter(row => progress.find(progress => progress.groupId === row.id)) // only keep rows with a defined progress
           .map(row => ({
             header: row.value,
             id: row.id,
             data: [
-              data.progress.find(progress => progress.itemId === itemId && progress.groupId === row.id),
-              ...data.items.map(item =>
-                data.progress.find(progress => progress.itemId === item.id && progress.groupId === row.id)
-              )
+              progress.find(progress => progress.itemId === itemId && progress.groupId === row.id),
+              ...items.map(item =>
+                progress.find(progress => progress.itemId === item.id && progress.groupId === row.id)
+              ),
             ],
           })),
-        can_access: (this.group && canCurrentUserGrantGroupAccess(this.group)
-          && this.itemData?.item.permissions.canGrantView !== 'none') || false,
-      }))
+      )
     );
   }
 
   onFilterChange(typeFilter: TypeFilter): void {
     if (typeFilter !== this.currentFilter) {
       this.currentFilter = typeFilter;
-      this.fetchData();
+      this.fetchRows();
     }
   }
 
-  fetchData(): void {
-    if (!this.group || !this.itemData || !this.itemData.currentResult) throw new Error('properties are missing');
-    this.datapager.load({
-      groupId: this.group.id,
-      itemId: this.itemData.item.id,
-      attemptId: this.itemData.currentResult.attemptId,
-      filter: this.currentFilter,
-      title: this.itemData.item.string.title,
-    });
+  fetchRows(): void {
+    this.datapager.load();
   }
 
   onAccessPermissions(): void {
@@ -328,5 +323,21 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
 
   navigateToGroup(row: { header: string, id: string, data: (TeamUserProgress|undefined)[] }): void {
     this.groupRouter.navigateTo(rawGroupRoute({ id: row.id, isUser: this.currentFilter === 'Users' }));
+  }
+
+  private getColumns(itemData: ItemData) {
+    if (!itemData.currentResult?.attemptId) throw new Error('unexpected');
+    return this.getItemChildrenService.get(itemData.item.id, itemData.currentResult.attemptId).pipe(
+      map(items => [
+        {
+          id: itemData.item.id,
+          title: itemData.item.string.title,
+        },
+        ...items.map(item => ({
+          id: item.id,
+          title: item.string.title,
+        }))
+      ]),
+    );
   }
 }
