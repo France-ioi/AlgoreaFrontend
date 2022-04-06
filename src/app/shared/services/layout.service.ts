@@ -30,7 +30,7 @@ export class LayoutService {
     canToggleFullFrame?: boolean,
     showTopRightControls?: boolean,
   }): void {
-    const canToggleFallback = this.initialized ? this.fullFrame.value.canToggle : true;
+    const canToggleFallback = !this.initialized || this.fullFrame.value.canToggle;
     const canToggle = canToggleFullFrame ?? canToggleFallback;
     this.fullFrame.next({
       canToggle,
