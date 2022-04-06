@@ -92,20 +92,18 @@
           </tr>
         </ng-template>
         <ng-template pTemplate="footer">
-          <ng-container *ngIf="currentFilter === 'Users'">
-            <tr *ngIf="datapager.canLoadMore">
-              <td [colSpan]="state.data.items.length">
-                <div class="text-center">
-                  <alg-button
-                    class="p-button-rounded"
-                    i18n-label label="Load more"
-                    (click)="fetchData()"
-                    [disabled]="state.isFetching"
-                  ></alg-button>
-                </div>
-              </td>
-            </tr>
-          </ng-container>
+          <tr *ngIf="currentFilter === 'Users' && datapager.canLoadMore">
+            <td [colSpan]="state.data.items.length">
+              <div class="text-center">
+                <alg-button
+                  class="p-button-rounded"
+                  i18n-label label="Load more"
+                  (click)="fetchData()"
+                  [disabled]="state.isFetching"
+                ></alg-button>
+              </div>
+            </td>
+          </tr>
         </ng-template>
       </p-table>
     </ng-container>
