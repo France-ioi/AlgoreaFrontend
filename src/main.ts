@@ -5,10 +5,13 @@ import { BrowserTracing } from '@sentry/tracing';
 
 import { AppModule } from './app/core/app.module';
 import { appConfig } from './app/shared/helpers/config';
+import { version } from './version';
 
 if (appConfig.sentryDsn) {
   Sentry.init({
     dsn: appConfig.sentryDsn,
+    environment: appConfig.production ? 'prod' : 'dev',
+    release: version,
     integrations: [
       new BrowserTracing({
         tracingOrigins: [ appConfig.apiUrl, appConfig.oauthServerUrl ],
