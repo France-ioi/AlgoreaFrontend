@@ -14,9 +14,9 @@ export function canLoadPagedData<T>(list: T[], limit: number): boolean {
 interface PagerOptions<Data extends any, T extends any, Args = any> {
   fetch: (args: Args, lastElement?: T) => Observable<Data>,
   batchSize: number,
-  /** function to extract list from the data, allows to accumulate it in an accumulator. */
+  /** function to extract list from the data to accumulate it. In an accumulator. */
   dataToList: (data: Data) => T[],
-  /** function to enhance data with a progressively to accumulated list. */
+  /** function to enhance data with the accumulated list. */
   listToData: (data: Data, list: T[]) => Data,
   /**
    * If an error occurs while loading more elements, we do not want the list to appear as broken.
@@ -28,23 +28,28 @@ interface PagerOptions<Data extends any, T extends any, Args = any> {
 export class DataPager<Data, T, Args = any> {
   private trigger$ = new ReplaySubject<{ args: Args, lastElement?: T }>(1);
 
+  canLoadMore = true;
   state$: Observable<FetchState<Data>> = this.trigger$.pipe(
     switchMap(({ args, lastElement }) => this.options.fetch(args, lastElement).pipe(
       mapToFetchState(),
       map(state => {
-        // initial fetch: return state as is, and when ready populate our accumulator
+        // Case 1: First fetch -> return state as is, and when ready populate our accumulator in prevision of further fetches
         if (!this.acc) {
           if (!state.isReady) return state;
           this.accumulate(state.data);
           return state;
         }
 
+        // Case 2: Additional fetch -> when loading more items
+        // Case 2a: fetching -> pass previous data with previous list
         if (state.isFetching) return fetchingState(this.options.listToData(this.acc.data, this.list));
+        // Case 2b: error -> Mark state as ready with previous data to avoid breaking the ui state but trigger the on error callback
         if (state.isError) {
           // Let the previous list available but allow to handle the error via a callback.
           this.options.onLoadMoreError(state.error);
           return readyState(this.options.listToData(this.acc.data, this.list));
         }
+        // Case 2c: ready -> accumulate list and return data enhanced with accumulated list (instead of only the fetch result)
         if (state.isReady) {
           this.accumulate(state.data);
           return readyState(this.options.listToData(state.data, this.list));
@@ -54,7 +59,6 @@ export class DataPager<Data, T, Args = any> {
     )),
     shareReplay(1),
   );
-  canLoadMore = true;
 
   private acc?: { lastElement?: T, data: Data };
   private list: T[] = [];
