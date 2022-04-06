@@ -8,7 +8,6 @@ import { generateCanViewValues } from '../../helpers/permissions-edit-dialog-tex
 import { Permissions } from '../../../../shared/helpers/group-permissions';
 import { GroupPermissionsService } from '../../../../shared/http-services/group-permissions.service';
 import { ActionFeedbackService } from '../../../../shared/services/action-feedback.service';
-import { PermissionsInfo } from '../../helpers/item-permissions';
 
 @Component({
   selector: 'alg-item-permissions',
@@ -23,7 +22,7 @@ export class ItemPermissionsComponent implements OnChanges {
 
   canViewValues: ProgressSelectValue<string>[] = generateCanViewValues('Groups');
   isPermissionsDialogOpened = false;
-  watchedGroupPermissions?: PermissionsInfo & {canMakeSessionOfficial: boolean};
+  watchedGroupPermissions?: Permissions;
 
   constructor(private groupPermissionsService: GroupPermissionsService, private actionFeedbackService: ActionFeedbackService) {
   }
