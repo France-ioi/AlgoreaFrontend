@@ -67,10 +67,8 @@ export class DataPager<Data, T, Args = any> {
 
   private accumulate(data: Data): void {
     const newItems = this.options.dataToList(data);
-    this.acc = canLoadMorePagedData(newItems, this.options.batchSize)
-      ? { data, lastElement: newItems[newItems.length-1] }
-      : undefined;
-    this.canLoadMore = !!this.acc;
+    this.canLoadMore = canLoadMorePagedData(newItems, this.options.batchSize);
+    this.acc = { data, lastElement: this.canLoadMore ? newItems[newItems.length-1] : undefined };
     this.list.push(...newItems);
   }
 
