@@ -22,7 +22,7 @@ export class ItemPermissionsComponent implements OnChanges {
   @Input() watchedGroup?: WatchedGroup;
 
   canViewValues: ProgressSelectValue<string>[] = generateCanViewValues('Groups');
-  permissionsDialog: 'closed' | 'opened' = 'closed';
+  isPermissionsDialogOpened = false;
   watchedGroupPermissions?: PermissionsInfo & {canMakeSessionOfficial: boolean};
 
   constructor(private groupPermissionsService: GroupPermissionsService, private actionFeedbackService: ActionFeedbackService) {
@@ -36,11 +36,11 @@ export class ItemPermissionsComponent implements OnChanges {
   }
 
   openPermissionsDialog(): void {
-    this.permissionsDialog = 'opened';
+    this.isPermissionsDialogOpened = true;
   }
 
   closePermissionsDialog(): void {
-    this.permissionsDialog = 'closed';
+    this.isPermissionsDialogOpened = false;
   }
 
   onPermissionsDialogSave(permissions: Permissions): void {
