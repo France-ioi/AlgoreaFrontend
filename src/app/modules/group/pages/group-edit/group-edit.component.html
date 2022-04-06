@@ -1,5 +1,4 @@
 <ng-container *ngIf="state$ | async as state">
-
   <alg-loading *ngIf="state.isFetching"></alg-loading>
 
   <alg-error
@@ -34,15 +33,26 @@
       <alg-associated-activity formControlName="rootActivity"></alg-associated-activity>
     </form>
 
-    <div class="delete-button" *ngIf="state.data.isCurrentUserManager">
-      <alg-group-remove-button [group]="state.data"></alg-group-remove-button>
+    <div class="operations">
+      <alg-group-remove-button [group]="state.data" *ngIf="state.data.isCurrentUserManager"></alg-group-remove-button>
+      <div class="right-buttons" *ngIf="groupForm.dirty">
+        <alg-button
+          i18n-label label="Save"
+          class="p-button-rounded p-button-success save"
+          [disabled]="groupForm.disabled"
+          (click)="save()"
+        ></alg-button>
+        <alg-button
+          i18n-label label="Cancel Changes"
+          class="p-button-rounded p-button-outlined p-button-danger cancel"
+          [disabled]="groupForm.disabled"
+          (click)="resetForm()"
+        ></alg-button>
+      </div>
     </div>
-
-    <alg-floating-save *ngIf="groupForm.dirty" [saving]="groupForm.disabled" (save)="save()" (cancel)="resetForm()"></alg-floating-save>
 
     <ng-template #notAuthorized>
       <p i18n>You do not have the permissions to edit this content.</p>
     </ng-template>
   </ng-container>
-
 </ng-container>

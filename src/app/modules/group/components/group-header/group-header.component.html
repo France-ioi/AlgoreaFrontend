@@ -8,7 +8,6 @@
     <ng-container *ngIf="navigationNeighbors$ | async as navigationNeighbors">
       <alg-page-navigator
         *ngIf="!!groupWithManagement"
-        [allowEditing]="groupWithManagement.isCurrentUserManager"
         [allowWatching]="!!groupWithManagement.currentUserCanWatchMembers"
         [isWatched]="!!(isCurrentGroupWatched$ | async)"
         [allowFullScreen]="false"

@@ -2,9 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { MyGroupsComponent } from './pages/my-groups/my-groups.component';
 import { GroupDetailsComponent } from './pages/group-details/group-details.component';
-import { GroupEditComponent } from './pages/group-edit/group-edit.component';
 import { GroupByIdComponent } from './pages/group-by-id/group-by-id.component';
-import { PendingChangesGuard } from 'src/app/shared/guards/pending-changes-guard';
 import { UserComponent } from './pages/user/user.component';
 
 const routes: Routes = [
@@ -48,11 +46,6 @@ const routes: Routes = [
             path: 'access',
           },
         ]
-      },
-      {
-        path: 'edit',
-        component: GroupEditComponent,
-        canDeactivate: [ PendingChangesGuard ]
       },
     ],
   },

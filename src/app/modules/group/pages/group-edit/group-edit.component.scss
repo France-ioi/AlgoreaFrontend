@@ -1,9 +1,7 @@
 .group-edition {
-  margin: 1rem;
   background-color: white;
 
   .field {
-
     display: flex;
 
     .field-name {
@@ -25,7 +23,17 @@
   }
 }
 
-.delete-button {
-  margin-top: 1rem;
+.operations {
+  padding: 1rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.right-buttons {
+  display: flex;
+}
+
+.save {
   margin-right: 1rem;
 }
