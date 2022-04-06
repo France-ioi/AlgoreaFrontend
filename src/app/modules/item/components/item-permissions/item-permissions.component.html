@@ -106,7 +106,7 @@
 
           <alg-permissions-edit-dialog
               [visible]="isPermissionsDialogOpened"
-              [title]="'dialogTitle'"
+              [title]="watchedGroup.name"
               [targetType]="'Groups'"
               [permissions]="permissions"
               (close)="closePermissionsDialog()"
