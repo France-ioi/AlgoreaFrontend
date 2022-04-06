@@ -40,8 +40,6 @@ export class GroupEditComponent implements OnDestroy, PendingChangesComponent {
     private groupUpdateService: GroupUpdateService,
     private createItemService: CreateItemService,
   ) {
-    this.modeService.startEditing();
-
     this.subscription = this.state$
       .pipe(readyData())
       .subscribe(item => {
