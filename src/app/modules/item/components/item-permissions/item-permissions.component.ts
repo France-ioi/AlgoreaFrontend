@@ -4,7 +4,7 @@ import { WatchedGroup } from 'src/app/core/services/group-watching.service';
 import {
   ProgressSelectValue
 } from '../../../shared-components/components/collapsible-section/progress-select/progress-select.component';
-import { generateCanViewValues } from '../../helpers/permissions-edit-dialog-texts';
+import { generateCanViewValues } from '../../helpers/permissions-texts';
 import { Permissions } from '../../../../shared/helpers/group-permissions';
 import { GroupPermissionsService } from '../../../../shared/http-services/group-permissions.service';
 import { ActionFeedbackService } from '../../../../shared/services/action-feedback.service';

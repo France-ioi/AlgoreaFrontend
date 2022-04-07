@@ -5,7 +5,7 @@ import { ProgressSelectValue } from
 import { Permissions } from 'src/app/shared/helpers/group-permissions';
 import { TypeFilter } from '../composition-filter/composition-filter.component';
 import { generateCanEditValues, generateCanGrantViewValues,
-  generateCanViewValues, generateCanWatchValues } from '../../helpers/permissions-edit-dialog-texts';
+  generateCanViewValues, generateCanWatchValues } from '../../helpers/permissions-texts';
 
 @Component({
   selector: 'alg-permissions-edit-dialog',
