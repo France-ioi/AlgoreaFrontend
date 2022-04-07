@@ -7,6 +7,7 @@ import { GetUserService, User } from 'src/app/modules/group/http-services/get-us
 import { isNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
 import { boolToQueryParamValue, queryParamValueToBool } from 'src/app/shared/helpers/url';
 import { rawGroupRoute, RawGroupRoute } from 'src/app/shared/routing/group-route';
+import { formatUser } from '../../shared/helpers/user';
 
 const watchedGroupQueryParam = 'watchedGroupId';
 const watchedGroupIsUserQueryParam = 'watchUser';
@@ -65,7 +66,7 @@ export class GroupWatchingService implements OnDestroy {
   }
 
   startUserWatching(user: User): void {
-    this.cachedGroupInfo.next({ route: rawGroupRoute(user), name: user.login });
+    this.cachedGroupInfo.next({ route: rawGroupRoute(user), name: formatUser(user) });
     this.setWatchedGroupInUrlParams({ groupId: user.groupId, isUser: true });
   }
 
