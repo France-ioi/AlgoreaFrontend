@@ -154,10 +154,10 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     this.progressOverlay = undefined;
   }
 
-  refresh(): void {
+  fetchRows(): void {
     this.datapager.reset();
-    this.refresh$.next();
-    this.fetchRows();
+    this.refresh$.next(); // refreshes the columns.
+    this.fetchMoreRows();
   }
 
   private getProgress(itemId: string, groupId: string, filter: TypeFilter, fromId?: string): Observable<TeamUserProgress[]> {
@@ -228,7 +228,7 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     }
   }
 
-  fetchRows(): void {
+  fetchMoreRows(): void {
     this.datapager.load();
   }
 

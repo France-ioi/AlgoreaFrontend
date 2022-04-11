@@ -11,7 +11,7 @@
       i18n-message message="Error while loading the data"
       icon="fa fa-exclamation-triangle"
       [showRefreshButton]="true"
-      (refresh)="refresh()"
+      (refresh)="fetchRows()"
     ></alg-error>
 
     <ng-template #noError>
@@ -25,7 +25,7 @@
           <span *ngSwitchCase="'Teams'" i18n>This group has no teams</span>
           <span *ngSwitchCase="'Groups'" i18n>This group has no sub-groups</span>
         </ng-container>
-        <p-button icon="pi pi-refresh" (click)="refresh()" styleClass="p-button-sm"></p-button>
+        <p-button icon="pi pi-refresh" (click)="fetchRows()" styleClass="p-button-sm"></p-button>
       </p>
 
       <alg-user-progress-details
@@ -58,7 +58,7 @@
           <ng-template pTemplate="header" let-columns>
             <tr>
               <th class="empty first header-refresh">
-                <p-button icon="pi pi-refresh" (click)="refresh()"></p-button>
+                <p-button icon="pi pi-refresh" (click)="fetchRows()"></p-button>
               </th>
               <th *ngFor="let col of columns">
                 <div class="slanted-header">
@@ -99,7 +99,7 @@
                   <alg-button
                     class="p-button-rounded"
                     i18n-label label="Load more"
-                    (click)="fetchRows()"
+                    (click)="fetchMoreRows()"
                     [disabled]="rowsState.isFetching"
                   ></alg-button>
                 </div>
