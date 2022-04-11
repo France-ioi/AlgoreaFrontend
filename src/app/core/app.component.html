@@ -1,21 +1,21 @@
 <div class="container">
-  <div class="left" *ngIf="fullFrameContent$ | async as fullFrameContent" [ngClass]="{ collapsed: fullFrameContent.expanded, animated: fullFrameContent.canToggle }">
+  <div class="left" *ngIf="fullFrame$ | async as fullFrame" [ngClass]="{ collapsed: fullFrame.active, animated: fullFrame.animated }">
     <alg-left-menu></alg-left-menu>
   </div>
   <ng-container *ngIf="currentMode$ | async as currentMode">
     <alg-top-bar
       class="top-bar"
-      *ngIf="fullFrameContent$ | async as fullFrameContent"
-      [ngClass]="{ 'with-mode-bar': currentMode !== 'normal' || (isWatching$ | async), collapsed: fullFrameContent.expanded, animated: fullFrameContent.canToggle }"
+      *ngIf="fullFrame$ | async as fullFrame"
+      [ngClass]="{ 'with-mode-bar': currentMode !== 'normal' || (isWatching$ | async), collapsed: fullFrame.active, animated: fullFrame.animated }"
       [scrolled]="scrolled"
       [modeBarDisplayed]="currentMode !== 'normal' || !!(isWatching$ | async)"
-      [fullFrameContent]="fullFrameContent"
-      [showTopRightControls]="(showTopRightControls$ | async) ?? true"
+      [fullFrameContent]="fullFrame"
+      [showTopRightControls]="!!(showTopRightControls$ | async)"
     ></alg-top-bar>
     <div
       class="right"
-      *ngIf="fullFrameContent$ | async as fullFrameContent"
-      [ngClass]="{ collapsed: fullFrameContent.expanded, animated: fullFrameContent.canToggle, 'with-mode-bar': currentMode !== 'normal'  || (isWatching$ | async), 'with-footer': contentFooter$ | async }"
+      *ngIf="fullFrame$ | async as fullFrame"
+      [ngClass]="{ collapsed: fullFrame.active, animated: fullFrame.animated, 'with-mode-bar': currentMode !== 'normal' || (isWatching$ | async) }"
       >
       <div class="main-content">
         <router-outlet></router-outlet>

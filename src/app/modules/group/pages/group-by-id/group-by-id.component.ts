@@ -8,6 +8,7 @@ import { readyData } from 'src/app/shared/operators/state';
 import { groupRoute, groupRouteFromParams, isGroupRouteError } from 'src/app/shared/routing/group-route';
 import { GroupRouter } from 'src/app/shared/routing/group-router';
 import { CurrentContentService } from 'src/app/shared/services/current-content.service';
+import { LayoutService } from 'src/app/shared/services/layout.service';
 import { ModeAction, ModeService } from 'src/app/shared/services/mode.service';
 import { GroupDataSource } from '../../services/group-datasource.service';
 
@@ -31,10 +32,12 @@ export class GroupByIdComponent implements OnDestroy {
     private activatedRoute: ActivatedRoute,
     private currentContent: CurrentContentService,
     private modeService: ModeService,
+    private layoutService: LayoutService,
     private groupDataSource: GroupDataSource,
     private groupRouter: GroupRouter,
     private getGroupPath: GetGroupPathService,
   ) {
+    this.layoutService.configure({ fullFrameActive: false });
 
     // on route change: refetch group if needed
     this.activatedRoute.paramMap.subscribe(params => this.fetchGroupAtRoute(params));

@@ -65,7 +65,7 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent {
   );
   taskView?: TaskTab['view'];
 
-  readonly fullFrameContent$ = this.layoutService.fullFrameContent$;
+  readonly fullFrame$ = this.layoutService.fullFrame$;
   readonly watchedGroup$ = this.groupWatchingService.watchedGroup$;
 
   unknownError?: Error;

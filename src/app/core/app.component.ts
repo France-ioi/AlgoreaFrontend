@@ -28,9 +28,8 @@ export class AppComponent implements OnInit, OnDestroy {
     this.localeService.currentLangError$,
   );
 
-  fullFrameContent$ = this.layoutService.fullFrameContent$.pipe(delay(0));
+  fullFrame$ = this.layoutService.fullFrame$.pipe(delay(0));
   showTopRightControls$ = this.layoutService.showTopRightControls$.pipe(delay(0));
-  contentFooter$ = this.layoutService.contentFooter$.pipe(delay(0));
   scrolled = false;
   isWatching$ = this.groupWatchingService.isWatching$;
 
