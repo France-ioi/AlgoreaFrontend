@@ -129,8 +129,8 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     this.dialog = 'closed';
     if (changes.itemData && this.itemData) this.itemData$.next(this.itemData);
     if (changes.group) this.fetchRows();
-    this.canAccess = (this.group && canCurrentUserGrantGroupAccess(this.group)
-      && this.itemData?.item.permissions.canGrantView !== 'none') || false;
+    this.canAccess = !!(this.group && canCurrentUserGrantGroupAccess(this.group)
+      && this.itemData?.item.permissions.canGrantView !== 'none');
   }
 
   trackByRow(_index: number, row: DataRow): string {
