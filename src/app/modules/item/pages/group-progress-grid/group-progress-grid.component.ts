@@ -93,13 +93,13 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
 
   readonly datapager = new DataPager<DataRow>({
     pageSize: progressListLimit,
-    fetch: (lastRow?: DataRow): Observable<DataRow[]> => {
+    fetch: (latestRow?: DataRow): Observable<DataRow[]> => {
       if (!this.group || !this.itemData) throw new Error('properties are missing');
       return this.getRowsWithProgress({
         groupId: this.group.id,
         itemId: this.itemData.item.id,
         filter: this.currentFilter,
-        fromId: lastRow?.id,
+        fromId: latestRow?.id,
       });
     },
     onLoadMoreError: (): void => {
