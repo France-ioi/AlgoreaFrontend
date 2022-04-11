@@ -59,8 +59,8 @@ export class GroupManagerListComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (this.groupData) {
       (changes.groupData?.previousValue as GroupData | undefined)?.group.id !== this.groupData?.group.id
-        ? this.reloadData()
-        : this.fetchData();
+        ? this.fetchData()
+        : this.fetchMoreData();
     }
   }
 
@@ -75,11 +75,11 @@ export class GroupManagerListComponent implements OnChanges {
     }
   }
 
-  reloadData(): void {
-    this.datapager.reset();
-    this.fetchData();
-  }
   fetchData(): void {
+    this.datapager.reset();
+    this.fetchMoreData();
+  }
+  fetchMoreData(): void {
     if (!this.groupData) throw new Error('unexpected');
     this.datapager.load();
   }
@@ -151,7 +151,7 @@ export class GroupManagerListComponent implements OnChanges {
 
           if (result.countSuccess > 0) {
             this.selection = [];
-            this.reloadData();
+            this.fetchData();
           }
         },
         error: () => {
@@ -171,12 +171,12 @@ export class GroupManagerListComponent implements OnChanges {
     this.dialogManager = undefined;
 
     if (event.updated) {
-      this.reloadData();
+      this.fetchData();
       this.groupDataSource.refetchGroup();
     }
   }
 
   onAdded(): void {
-    this.reloadData();
+    this.fetchData();
   }
 }

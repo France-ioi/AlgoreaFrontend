@@ -5,7 +5,7 @@
     *ngIf="state.isError"
     i18n-message message="Error while loading the group managers"
     [showRefreshButton]="true"
-    (refresh)="reloadData()"
+    (refresh)="fetchData()"
   ></alg-error>
 
   <ng-container *ngIf="state.data as managers">
@@ -121,7 +121,7 @@
                 <alg-button
                   class="p-button-rounded"
                   i18n-label label="Load more"
-                  (click)="fetchData()"
+                  (click)="fetchMoreData()"
                   [disabled]="state.isFetching"
                 ></alg-button>
               </div>
