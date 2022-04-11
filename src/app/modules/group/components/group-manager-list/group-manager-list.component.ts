@@ -29,7 +29,10 @@ export class GroupManagerListComponent implements OnChanges {
   readonly datapager = new DataPager({
     fetch: (latestManager?: Manager): Observable<Manager[]> => {
       if (!this.groupData) throw new Error('unexpected');
-      return this.getGroupManagersService.getGroupManagers(this.groupData.group.id, [], managersLimit, latestManager?.id);
+      return this.getGroupManagersService.getGroupManagers(this.groupData.group.id, {
+        limit: managersLimit,
+        fromId: latestManager?.id,
+      });
     },
     pageSize: managersLimit,
     onLoadMoreError: (): void => {
