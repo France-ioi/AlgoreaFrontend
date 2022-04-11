@@ -163,7 +163,10 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
   private getProgress(itemId: string, groupId: string, filter: TypeFilter, fromId?: string): Observable<TeamUserProgress[]> {
     switch (filter) {
       case 'Users':
-        return this.getGroupUsersProgressService.getUsersProgress(groupId, [ itemId ], progressListLimit, fromId);
+        return this.getGroupUsersProgressService.getUsersProgress(groupId, [ itemId ], {
+          limit: progressListLimit,
+          fromId,
+        });
       case 'Teams':
         return this.getGroupUsersProgressService.getTeamsProgress(groupId, [ itemId ]);
       case 'Groups':
