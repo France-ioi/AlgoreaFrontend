@@ -59,6 +59,12 @@ export class UserSessionService implements OnDestroy {
     return update$;
   }
 
+  refresh(): Observable<void> {
+    const refresh$ = this.currentUserService.refresh().pipe(shareReplay(1));
+    refresh$.subscribe(() => this.userProfileUpdated$.next());
+    return refresh$;
+  }
+
   login(): void {
     this.authService.startAuthLogin();
   }

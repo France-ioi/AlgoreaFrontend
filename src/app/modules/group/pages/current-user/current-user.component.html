@@ -1,5 +1,18 @@
 <ng-container *ngIf="currentUser$ | async as currentUser">
   <div class="bg-white">
+    <div class="modify-section">
+      <div class="flex-1" i18n>
+        The following information is what what receive from France-IOI login platform.
+      </div>
+      <button
+        pButton
+        type="button"
+        class="modify-button alg-button p-button-rounded p-button-info"
+        i18n-label label="Modify"
+        icon="pi pi-pencil"
+        (click)="onModify()"
+      ></button>
+    </div>
     <alg-section i18n-label label="Parameters" icon="fa fa-cog">
       <ul class="alg-data-list">
         <li class="alg-data-list-item">
