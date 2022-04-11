@@ -31,7 +31,7 @@ export class GroupManagerListComponent implements OnChanges {
       if (!this.groupData) throw new Error('unexpected');
       return this.getGroupManagersService.getGroupManagers(this.groupData.group.id, [], managersLimit, lastManager?.id);
     },
-    batchSize: managersLimit,
+    pageSize: managersLimit,
     onLoadMoreError: () => {
       this.actionFeedbackService.error($localize`Could not load more results, are you connected to the internet?`);
     },

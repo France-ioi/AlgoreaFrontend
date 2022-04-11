@@ -13,7 +13,7 @@ export function canLoadMorePagedData<T>(list: T[], limit: number): boolean {
 
 interface PagerOptions<T> {
   fetch: (lastElement?: T) => Observable<T[]>,
-  batchSize: number,
+  pageSize: number,
   /**
    * If an error occurs while loading more elements, we do not want the list to appear as broken.
    * The state will remain ready with old data and this callback will be triggered, allowing to display feedback
@@ -62,7 +62,7 @@ export class DataPager<T> {
 
   private accumulate(data: T[]): void {
     const newItems = data;
-    this.canLoadMore = canLoadMorePagedData(newItems, this.options.batchSize);
+    this.canLoadMore = canLoadMorePagedData(newItems, this.options.pageSize);
     this.lastElement = this.canLoadMore ? newItems[newItems.length-1] : undefined;
     this.acc.push(...newItems);
   }
