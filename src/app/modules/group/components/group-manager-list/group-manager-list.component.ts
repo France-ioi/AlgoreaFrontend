@@ -1,4 +1,5 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Observable } from 'rxjs';
 import { GetGroupManagersService, Manager } from '../../http-services/get-group-managers.service';
 import { GroupData, GroupDataSource } from '../../services/group-datasource.service';
 import { RemoveGroupManagerService } from '../../http-services/remove-group-manager.service';
@@ -25,17 +26,15 @@ export class GroupManagerListComponent implements OnChanges {
   isPermissionsEditDialogOpened = false;
   dialogManager?: Manager & { canManageAsText: string };
 
-  /* eslint-disable @typescript-eslint/explicit-function-return-type */
   readonly datapager = new DataPager({
-    fetch: (lastManager?: Manager) => {
+    fetch: (lastManager?: Manager): Observable<Manager[]> => {
       if (!this.groupData) throw new Error('unexpected');
       return this.getGroupManagersService.getGroupManagers(this.groupData.group.id, [], managersLimit, lastManager?.id);
     },
     pageSize: managersLimit,
-    onLoadMoreError: () => {
+    onLoadMoreError: (): void => {
       this.actionFeedbackService.error($localize`Could not load more results, are you connected to the internet?`);
     },
-    /* eslint-enable @typescript-eslint/explicit-function-return-type */
   });
 
   readonly state$ = this.datapager.state$.pipe(

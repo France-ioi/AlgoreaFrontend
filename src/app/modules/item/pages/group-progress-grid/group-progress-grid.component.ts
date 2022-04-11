@@ -91,10 +91,9 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
 
   private permissionsFetchingSubscription?: Subscription;
 
-  /* eslint-disable @typescript-eslint/explicit-function-return-type */
   readonly datapager = new DataPager<DataRow>({
     pageSize: progressListLimit,
-    fetch: lastRow => {
+    fetch: (lastRow?: DataRow): Observable<DataRow[]> => {
       if (!this.group || !this.itemData) throw new Error('properties are missing');
       return this.getRowsWithProgress({
         groupId: this.group.id,
@@ -103,11 +102,10 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
         fromId: lastRow?.id,
       });
     },
-    onLoadMoreError: () => {
+    onLoadMoreError: (): void => {
       this.actionFeedbackService.error($localize`Could not load more results, are you connected to the internet?`);
     },
   });
-  /* eslint-enable @typescript-eslint/explicit-function-return-type */
 
   rows$ = this.datapager.state$;
 
