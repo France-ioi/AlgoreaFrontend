@@ -60,4 +60,16 @@ export class AppPage {
     return element(by.css('.left .tab-left-nav [role=tab][aria-selected=true]'));
   }
 
+  getLeftNavError(): ElementFinder {
+    return element(by.css('.left alg-left-nav alg-error'));
+  }
+
+  getLeftNavErrorMessage(): ElementFinder {
+    return this.getLeftNavError().element(by.css('.message'));
+  }
+
+  getLeftNavErrorRetryCta(): ElementFinder {
+    return this.getLeftNavError().element(by.css('.retry'));
+  }
+
 }
