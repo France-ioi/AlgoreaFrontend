@@ -38,7 +38,6 @@ export interface ProgressSelectValue<T> {
 export class ProgressSelectComponent<T> implements OnChanges, OnInit, ControlValueAccessor {
 
   @Input() collapsed = false;
-  @Input() collapsable = false;
 
   @Input() values: ProgressSelectValue<T>[] = [];
   @Input() defaultValue?: T;

@@ -74,22 +74,20 @@
 
       <ng-container *ngIf="watchedGroupPermissions as permissions">
         <div class="permission-indicator-section">
-          <alg-collapsible-section
-              i18n-title title="Can view"
-              icon="fa fa-eye"
-              [collapsible]="false"
-              [collapsed]="true"
-              theme="warning"
+          <alg-section-header
+            i18n-title title="Can view"
+            icon="fa fa-eye"
+            theme="warning"
           >
-            <ng-template #content let-collapsed>
+            <ng-template #content>
               <alg-progress-select
-                  [collapsed]="collapsed"
-                  [(ngModel)]="permissions.canView"
-                  [values]="canViewValues"
-                  theme="warning"
+                [collapsed]="true"
+                [(ngModel)]="permissions.canView"
+                [values]="canViewValues"
+                theme="warning"
               ></alg-progress-select>
             </ng-template>
-          </alg-collapsible-section>
+          </alg-section-header>
         </div>
 
         <ng-container *ngIf="permissions.canGrantView !== 'none' && watchedGroup.currentUserCanGrantGroupAccess">
