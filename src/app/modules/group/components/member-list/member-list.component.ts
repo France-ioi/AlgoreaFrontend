@@ -1,11 +1,10 @@
 import { Component, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild } from '@angular/core';
 import { ConfirmationService, SortEvent } from 'primeng/api';
 import { Table } from 'primeng/table';
-import { Observable, ReplaySubject, Subject } from 'rxjs';
-import { map, switchMap, withLatestFrom } from 'rxjs/operators';
+import { Observable, ReplaySubject } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { GetGroupDescendantsService } from 'src/app/shared/http-services/get-group-descendants.service';
-import { mapToFetchState } from 'src/app/shared/operators/state';
-import { GroupRoute, groupRoute, rawGroupRoute, RawGroupRoute } from 'src/app/shared/routing/group-route';
+import { groupRoute, rawGroupRoute, RawGroupRoute } from 'src/app/shared/routing/group-route';
 import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
 import { GetGroupChildrenService, GroupChild } from '../../http-services/get-group-children.service';
 import { GetGroupMembersService, Member } from '../../http-services/get-group-members.service';
@@ -17,7 +16,7 @@ import { displayGroupRemovalResponseToast } from './group-removal-response-handl
 import { RemoveSubgroupService } from '../../http-services/remove-subgroup.service';
 import { RemoveGroupService } from '../../http-services/remove-group.service';
 import { FetchState } from 'src/app/shared/helpers/state';
-import { canLoadMorePagedData } from 'src/app/shared/helpers/data-pager';
+import { DataPager } from 'src/app/shared/helpers/data-pager';
 
 function getSelectedGroupChildCaptions(selection: GroupChild[]): string {
   return selection.map(selected => selected.name).join(', ');
@@ -58,20 +57,8 @@ const descendantTeamsColumns: Column[] = [
 
 const membersLimit = 25;
 
-interface Data {
-  columns: Column[],
-  rowData: (
-    (Member|GroupChild|{ login: string, parentGroups: string }|{ name: string, parentGroups: string, members: string }) &
-    { route: RawGroupRoute }
-  )[],
-}
-
-interface DataFetching {
-  route: GroupRoute,
-  filter: Filter,
-  sort: string[],
-  fromId?: string,
-}
+type Row = (Member|GroupChild|{ login: string, parentGroups: string }|{ name: string, parentGroups: string, members: string }) &
+ { route: RawGroupRoute };
 
 @Component({
   selector: 'alg-member-list',
@@ -82,8 +69,6 @@ export class MemberListComponent implements OnChanges, OnDestroy {
 
   @Input() groupData? : GroupData;
 
-  state: 'error' | 'ready' | 'fetching' = 'fetching';
-
   defaultFilter: Filter = { type: TypeFilter.Users, directChildren: true };
 
   currentSort: string[] = [];
@@ -91,19 +76,20 @@ export class MemberListComponent implements OnChanges, OnDestroy {
 
   selection: (Member | (GroupChild & { isEmpty: boolean }))[] = [];
 
-  data: Data = {
-    columns: [],
-    rowData: [],
-  };
+  columns: Column[] = [];
+  datapager = new DataPager({
+    fetch: (latestRow?: Row): Observable<Row[]> => this.getRows(latestRow),
+    pageSize: membersLimit,
+    onLoadMoreError: (): void => {
+      this.actionFeedbackService.error($localize`Could not load more members, are you connected to the internet?`);
+    },
+  });
+  rows$: Observable<FetchState<Row[]>> = this.datapager.state$;
 
   @ViewChild('table') private table?: Table;
   @ViewChild('compositionFilter') private compositionFilter?: GroupCompositionFilterComponent;
 
-  private dataFetching = new Subject<DataFetching>();
   removalInProgress$ = new ReplaySubject<boolean>();
-  loadMore: { fromId: string } | null = null;
-
-  private refresh$ = new Subject<void>();
 
   constructor(
     private getGroupMembersService: GetGroupMembersService,
@@ -114,37 +100,9 @@ export class MemberListComponent implements OnChanges, OnDestroy {
     private removeSubgroupService: RemoveSubgroupService,
     private confirmationService: ConfirmationService,
     private removeGroupService: RemoveGroupService,
-  ) {
-    this.dataFetching.pipe(
-      switchMap(params => this.getData(params).pipe(mapToFetchState({ resetter: this.refresh$ }))),
-      withLatestFrom(this.dataFetching),
-    ).subscribe({
-      next: ([ state, dataFetching ]) => {
-        if (state.isError && dataFetching.fromId) {
-          this.actionFeedbackService.error($localize`Could not load more members, are you connected to the internet?`);
-          this.state = 'ready';
-          return;
-        }
-        this.state = state.tag;
-
-        if (state.isReady) {
-          const isLoadMore = !!dataFetching.fromId;
-          this.data = isLoadMore
-            ? { ...this.data, rowData: [ ...this.data.rowData, ...state.data.rowData ] }
-            : state.data;
-        }
-        this.loadMore = this.getLoadMore(state, dataFetching);
-        this.unselectAll();
-      },
-      error: _err => {
-        this.state = 'error';
-      }
-    });
-  }
+  ) { }
 
   ngOnDestroy(): void {
-    this.dataFetching.complete();
-    this.refresh$.complete();
     this.removalInProgress$.complete();
   }
 
@@ -152,83 +110,84 @@ export class MemberListComponent implements OnChanges, OnDestroy {
     if (!this.groupData) return;
 
     this.currentFilter = { ...this.defaultFilter };
+    this.columns = this.getColumns(this.currentFilter);
     this.currentSort = [];
     this.table?.clear();
-    this.dataFetching.next({ route: this.groupData.route, filter: this.currentFilter, sort: this.currentSort });
+    this.fetchRows();
   }
 
-  fetchData(fromId?: string): void {
-    if (!this.groupData) return;
-    this.dataFetching.next({ route: this.groupData.route, filter: this.currentFilter, sort: this.currentSort, fromId });
+  fetchRows(): void {
+    this.datapager.reset();
+    this.datapager.load();
   }
 
-  getData({ route, filter, sort, fromId }: DataFetching): Observable<Data> {
-    switch (filter.type) {
+  fetchMoreRows(): void {
+    this.datapager.load();
+  }
+
+  getRows(latestRow?: Row): Observable<Row[]> {
+    if (!this.groupData) throw new Error('group data must be defined to fetch data');
+    const route = this.groupData.route;
+
+    switch (this.currentFilter.type) {
       case TypeFilter.Groups:
-        return this.getGroupChildrenService.getGroupChildrenWithSubgroupCount(route.id, sort, [], [ 'Team', 'Session', 'User' ])
-          .pipe(map(children => ({
-            columns: groupsColumns,
-            rowData: children.map(child => ({
-              ...child,
-              route: groupRoute(child, [ ...route.path, route.id ]),
-            })),
-          })));
+        return this.getGroupChildrenService.getGroupChildrenWithSubgroupCount(
+          route.id,
+          this.currentSort,
+          [],
+          [ 'Team', 'Session', 'User' ],
+        ).pipe(map(children => children.map(child => ({
+          ...child,
+          route: groupRoute(child, [ ...route.path, route.id ]),
+        }))));
       case TypeFilter.Sessions:
-        return this.getGroupChildrenService.getGroupChildrenWithSubgroupCount(route.id, sort, [ 'Session' ])
-          .pipe(map(children => ({
-            columns: nameUserCountColumns,
-            rowData: children.map(child => ({
+        return this.getGroupChildrenService.getGroupChildrenWithSubgroupCount(route.id, this.currentSort, [ 'Session' ])
+          .pipe(map(children => children.map(child => ({
+            ...child,
+            route: groupRoute(child, [ ...route.path, route.id ]),
+          }))));
+      case TypeFilter.Teams:
+        if (!this.currentFilter.directChildren) {
+          return this.getGroupDescendantsService.getTeamDescendants(route.id, this.currentSort)
+            .pipe(map(descendantTeams => descendantTeams.map(descendantTeam => ({
+              id: descendantTeam.id,
+              name: descendantTeam.name,
+              parentGroups: descendantTeam.parents.map(parent => parent.name).join(', '),
+              members: descendantTeam.members.map(member => member.login).join(', '),
+              route: rawGroupRoute({ id: descendantTeam.id, isUser: false }),
+            }))));
+        } else {
+          return this.getGroupChildrenService.getGroupChildrenWithSubgroupCount(route.id, this.currentSort, [ 'Team' ])
+            .pipe(map(children => children.map(child => ({
               ...child,
               route: groupRoute(child, [ ...route.path, route.id ]),
-            })),
-          })));
-      case TypeFilter.Teams:
-        if (!filter.directChildren) {
-          return this.getGroupDescendantsService.getTeamDescendants(route.id, sort)
-            .pipe(map(descendantTeams => ({
-              columns: descendantTeamsColumns,
-              rowData: descendantTeams.map(descendantTeam => ({
-                id: descendantTeam.id,
-                name: descendantTeam.name,
-                parentGroups: descendantTeam.parents.map(parent => parent.name).join(', '),
-                members: descendantTeam.members.map(member => member.login).join(', '),
-                route: rawGroupRoute({ id: descendantTeam.id, isUser: false }),
-              })),
-            })));
-        } else {
-          return this.getGroupChildrenService.getGroupChildrenWithSubgroupCount(route.id, sort, [ 'Team' ])
-            .pipe(map(children => ({
-              columns: nameUserCountColumns,
-              rowData: children.map(child => ({
-                ...child,
-                route: groupRoute(child, [ ...route.path, route.id ]),
-              })),
-            })));
+            }))));
         }
       case TypeFilter.Users:
-        if (filter.directChildren) {
-          return this.getGroupMembersService.getGroupMembers(route.id, sort, membersLimit, fromId)
-            .pipe(
-              map(members => ({
-                columns: usersColumns,
-                rowData: members.map(member => ({
-                  ...member,
-                  route: groupRoute({ id: member.id, isUser: true }, [ ...route.path, route.id ]),
-                })),
-              }))
-            );
+        if (this.currentFilter.directChildren) {
+          return this.getGroupMembersService.getGroupMembers(
+            route.id,
+            this.currentSort,
+            membersLimit,
+            (latestRow as Member|undefined)?.id,
+          ).pipe(
+            map(members => members.map(member => ({
+              ...member,
+              route: groupRoute({ id: member.id, isUser: true }, [ ...route.path, route.id ]),
+            }))));
         } else {
-          return this.getGroupDescendantsService.getUserDescendants(route.id, sort, membersLimit, fromId)
-            .pipe(map(descendantUsers => ({
-              columns: descendantUsersColumns,
-              rowData: descendantUsers.map(descendantUser => ({
-                id: descendantUser.id,
-                login: descendantUser.user.login,
-                user: descendantUser.user,
-                parentGroups: descendantUser.parents.map(parent => parent.name).join(', '),
-                route: rawGroupRoute({ id: descendantUser.id, isUser: true }),
-              }))
-            })));
+          return this.getGroupDescendantsService.getUserDescendants(
+            route.id,
+            this.currentSort,
+            membersLimit,
+            (latestRow as Member|undefined)?.id,
+          ).pipe(map(descendantUsers => descendantUsers.map(descendantUser => ({
+            id: descendantUser.id,
+            login: descendantUser.user.login,
+            user: descendantUser.user,
+            parentGroups: descendantUser.parents.map(parent => parent.name).join(', '),
+            route: rawGroupRoute({ id: descendantUser.id, isUser: true }),
+          }))));
         }
     }
   }
@@ -240,7 +199,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
 
     if (sortMeta && JSON.stringify(sortMeta) !== JSON.stringify(this.currentSort)) {
       this.currentSort = sortMeta;
-      this.dataFetching.next({ route: this.groupData.route, filter: this.currentFilter, sort: this.currentSort });
+      this.fetchRows();
     }
   }
 
@@ -249,9 +208,10 @@ export class MemberListComponent implements OnChanges, OnDestroy {
 
     if (filter !== this.currentFilter) {
       this.currentFilter = { ...filter };
-      this.currentSort = [];
+      this.columns = this.getColumns(filter);
       this.table?.clear();
-      this.dataFetching.next({ route: this.groupData.route, filter: this.currentFilter, sort: this.currentSort });
+      this.currentSort = [];
+      this.fetchRows();
     }
   }
 
@@ -260,11 +220,11 @@ export class MemberListComponent implements OnChanges, OnDestroy {
     this.onFilterChange(filter);
   }
 
-  onSelectAll(): void {
-    if (this.selection.length === this.data.rowData.length) {
+  onSelectAll(rows: Row[]): void {
+    if (this.selection.length === rows.length) {
       this.selection = [];
     } else {
-      this.selection = this.data.rowData as (Member | (GroupChild & { isEmpty: boolean }))[];
+      this.selection = rows as (Member | (GroupChild & { isEmpty: boolean }))[];
     }
   }
 
@@ -286,7 +246,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
           displayResponseToast(this.actionFeedbackService, parseResults(result));
           this.table?.clear();
           this.unselectAll();
-          this.fetchData();
+          this.fetchRows();
           this.removalInProgress$.next(false);
         },
         error: _err => {
@@ -340,7 +300,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
         displayGroupRemovalResponseToast(this.actionFeedbackService, response);
         this.table?.clear();
         this.unselectAll();
-        this.fetchData();
+        this.fetchRows();
         this.removalInProgress$.next(false);
       },
       error: _err => {
@@ -393,18 +353,12 @@ export class MemberListComponent implements OnChanges, OnDestroy {
     });
   }
 
-  private getLoadMore(state: FetchState<Data>, dataFetching: DataFetching): { fromId: string } | null {
-    const { filter } = dataFetching;
-    const isListWithLoadMore = filter.type === TypeFilter.Users;
-    if (!isListWithLoadMore) return null;
-
-    if (state.isError) return null;
-    if (!state.data) return this.loadMore;
-
-    const rows = state.data.rowData as Member[];
-    const last = rows[rows.length - 1];
-    return last && canLoadMorePagedData(rows, membersLimit)
-      ? { fromId: last.id }
-      : null;
+  private getColumns(filter: Filter): Column[] {
+    switch (filter.type) {
+      case TypeFilter.Groups: return groupsColumns;
+      case TypeFilter.Sessions: return nameUserCountColumns;
+      case TypeFilter.Teams: return this.currentFilter.directChildren ? nameUserCountColumns : descendantTeamsColumns;
+      case TypeFilter.Users: return this.currentFilter.directChildren ? usersColumns : descendantUsersColumns;
+    }
   }
 }

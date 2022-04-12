@@ -2,7 +2,7 @@ import { map, Observable, ReplaySubject, shareReplay, switchMap } from 'rxjs';
 import { fetchingState, FetchState, readyState } from './state';
 import { mapToFetchState } from '../operators/state';
 
-export function canLoadMorePagedData<T>(list: T[], limit: number): boolean {
+function canLoadMorePagedData<T>(list: T[], limit: number): boolean {
   /**
    * If list length is same as limit, it means we can still fetch.
    * For the edge case when the list length is same as limit but there's no more items, it will be
