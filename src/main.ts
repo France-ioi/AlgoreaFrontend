@@ -10,7 +10,7 @@ import { version } from './version';
 if (appConfig.sentryDsn) {
   Sentry.init({
     dsn: appConfig.sentryDsn,
-    environment: appConfig.production ? 'prod' : 'dev',
+    environment: appConfig.production ? `prod-${window.location.hostname}` : 'dev',
     release: version,
     integrations: [
       new BrowserTracing({
