@@ -3,8 +3,6 @@
     <ng-template #defaultErrorMessage>
       <alg-error
         i18n-message message="Unable to load the task"
-        [showRefreshButton]="true"
-        (refresh)="refresh.emit()"
       ></alg-error>
     </ng-template>
 
@@ -12,8 +10,6 @@
       <alg-error
         *ngIf="initError$ | async; else urlError"
         i18n-message message="It usually occurs when task url is invalid. If the task url is valid and the problem persists, please contact us."
-        [showRefreshButton]="true"
-        (refresh)="refresh.emit()"
       ></alg-error>
 
       <ng-template #urlError>
@@ -27,16 +23,20 @@
         <alg-error
           *ngIf="unknownError$ | async as error"
           [message]="errorMessage"
-          [showRefreshButton]="true"
-          (refresh)="refresh.emit()"
         ></alg-error>
       </ng-template>
     </ng-container>
 
-    <div class="text-center">
+    <div class="text-center error-buttons">
       <alg-button
+        class="error-button"
         i18n-label label="Show task anyway (for debugging)"
         (click)="showTaskAnyway = true"
+      ></alg-button>
+      <alg-button
+        class="error-button"
+        i18n-label label="Retry"
+        (click)="refresh.emit()"
       ></alg-button>
     </div>
   </div>
