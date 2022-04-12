@@ -11,6 +11,7 @@
   <p class="alg-error-message" [style.visibility]="(backToHome.isActive)?'hidden':'visible'">
     <span i18n>Go back to the </span>
     <a
+      class="alg-link base-color"
       routerLink="/"
       [routerLinkActiveOptions]="{ matrixParams: 'ignored', queryParams: 'ignored', paths: 'exact', fragment: 'ignored'}"
       routerLinkActive #backToHome="routerLinkActive"
