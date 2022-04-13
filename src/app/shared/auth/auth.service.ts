@@ -23,6 +23,8 @@ export const minTokenLifetime = 5*MINUTES;
 // (useful to prevent infinite loop of requesting a new token -> token does not work  -> requesting a new token --> ...)
 export const maxInvalidToken = 6;
 
+const refreshExpiredTokenError = new Error('expired token');
+
 /**
  * This service manages the authentication workflow (login, logout, ...) for authenticated and temp sessions.
  * In this service, we use the following terms:
@@ -84,13 +86,17 @@ export class AuthService implements OnDestroy {
       switchMap(auth =>
         this.authHttp.refreshAuth(auth).pipe(
           catchError(() => {
-            this.invalidToken(auth);
-            return EMPTY;
+            const tokenIsExpired = auth.expiration.valueOf() < Date.now();
+            return of(tokenIsExpired ? refreshExpiredTokenError : new Error('unknown error while refreshing token'));
           })
         )
       )
-    ).subscribe(auth => {
-      this.status$.next(auth);
+    ).subscribe(authOrError => {
+      if (authOrError instanceof Error) {
+        authOrError === refreshExpiredTokenError && this.status$.value.authenticated
+          ? this.invalidToken(this.status$.value)
+          : this.failure$.next();
+      } else this.status$.next(authOrError);
     });
   }
 
