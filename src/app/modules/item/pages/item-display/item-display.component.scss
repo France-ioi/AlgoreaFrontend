@@ -57,4 +57,16 @@
     width: 100%;
     border: none;
   }
+
+  .error-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .error-button {
+    &:first-child {
+      margin-right: 1rem;
+    }
+  }
 }

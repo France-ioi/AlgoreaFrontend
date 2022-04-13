@@ -53,6 +53,7 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
 
   @Output() scoreChange = this.taskService.scoreChange$;
   @Output() skipSave = new EventEmitter<void>();
+  @Output() refresh = new EventEmitter<void>();
 
   @ViewChild('iframe') iframe?: ElementRef<HTMLIFrameElement>;
 
