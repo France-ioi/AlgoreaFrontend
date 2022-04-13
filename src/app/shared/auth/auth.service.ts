@@ -82,15 +82,15 @@ export class AuthService implements OnDestroy {
         return timer(Math.min(refreshIn, maxDelay), 1*MINUTES).pipe(map(() => auth));
       }),
       switchMap(auth =>
-        this.authHttp.refreshAuth(auth)
+        this.authHttp.refreshAuth(auth).pipe(
+          catchError(() => {
+            this.invalidToken(auth);
+            return EMPTY;
+          })
+        )
       )
-    ).subscribe({
-      next: auth => {
-        this.status$.next(auth);
-      },
-      error: () => {
-        this.failure$.next();
-      },
+    ).subscribe(auth => {
+      this.status$.next(auth);
     });
   }
 
