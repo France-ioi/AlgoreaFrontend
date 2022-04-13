@@ -84,8 +84,13 @@ export class AuthService implements OnDestroy {
       switchMap(auth =>
         this.authHttp.refreshAuth(auth)
       )
-    ).subscribe(auth => {
-      this.status$.next(auth);
+    ).subscribe({
+      next: auth => {
+        this.status$.next(auth);
+      },
+      error: () => {
+        this.failure$.next();
+      },
     });
   }
 
