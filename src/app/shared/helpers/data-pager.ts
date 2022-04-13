@@ -1,4 +1,4 @@
-import { map, Observable, ReplaySubject, shareReplay, switchMap } from 'rxjs';
+import { map, Observable, ReplaySubject, shareReplay, switchScan } from 'rxjs';
 import { fetchingState, FetchState, readyState } from './state';
 import { mapToFetchState } from '../operators/state';
 
@@ -22,60 +22,47 @@ interface PagerOptions<T> {
 }
 
 export class DataPager<T> {
-  private trigger$ = new ReplaySubject<void>(1);
+  private trigger$ = new ReplaySubject<{ reset: boolean }>(1);
 
-  canLoadMore = true;
-  state$: Observable<FetchState<T[]>> = this.trigger$.pipe(
-    switchMap(() => this.options.fetch(this.lastElement).pipe(
-      mapToFetchState(),
-      map(state => {
-        // Case 1: First fetch -> return state as is, and when ready populate our accumulator in prevision of further fetches
-        if (this.acc.length === 0) {
-          if (!state.isReady) return state;
-          this.accumulate(state.data);
-          return state;
-        }
+  state$ : Observable<FetchState<T[]>> = this.trigger$.pipe(
+    switchScan<{ reset: boolean }, FetchState<T[]>, Observable<FetchState<T[]>>>(
+      (prev, { reset }) => {
+        prev = reset ? fetchingState() : prev;
+        const latestElement = prev.data !== undefined ? prev.data[prev.data.length-1] : undefined;
+        return this.options.fetch(latestElement).pipe(
+          mapToFetchState(),
+          map<FetchState<T[]>, FetchState<T[]>>(state => {
+            // Case 1: First fetch -> return state as is
+            if (prev.data === undefined) return state;
 
-        // Case 2: Additional fetch -> when loading more items
-        // Case 2a: fetching -> pass previous data with previous list
-        if (state.isFetching) return fetchingState(this.acc);
-        // Case 2b: error -> Mark state as ready with previous data to avoid breaking the ui state but trigger the on error callback
-        if (state.isError) {
-          this.options.onLoadMoreError(state.error);
-          return readyState(this.acc);
-        }
-        // Case 2c: ready -> accumulate list and return data enhanced with accumulated list (instead of only the fetch result)
-        if (state.isReady) {
-          this.accumulate(state.data);
-          return readyState(this.acc);
-        }
-        throw new Error('unhandled use case');
-      }),
-    )),
+            // Case 2: Additional fetch -> when loading more items
+            // Case 2a: fetching -> pass previous data with previous list
+            if (state.isFetching) return fetchingState(prev.data);
+            // Case 2b: error -> Mark state as ready with previous data to avoid breaking the ui state but trigger the on error callback
+            else if (state.isError) {
+              this.options.onLoadMoreError(state.error);
+              return readyState(prev.data);
+            // Case 2c: ready -> accumulate list and return data enhanced with accumulated list (instead of only the fetch result)
+            // if (state.isReady) {
+            } else {
+              return readyState([ ...prev.data, ...state.data ]);
+            }
+          })
+        );
+      }, fetchingState() /* switchScan seed */
+    ),
     shareReplay(1),
   );
-
-  private lastElement?: T;
-  private acc: T[] = [];
+  canLoadMore$ = this.state$.pipe(map(state => state.data === undefined || canLoadMorePagedData(state.data, this.options.pageSize)));
 
   constructor(private options: PagerOptions<T>) {}
 
-  private accumulate(data: T[]): void {
-    const newItems = data;
-    this.canLoadMore = canLoadMorePagedData(newItems, this.options.pageSize);
-    this.lastElement = this.canLoadMore ? newItems[newItems.length-1] : undefined;
-    this.acc.push(...newItems);
-  }
-
-
   load(): void {
-    if (!this.canLoadMore) return;
-    this.trigger$.next();
+    this.trigger$.next({ reset: false });
   }
 
   reset(): void {
-    this.lastElement = undefined;
-    this.canLoadMore = true;
-    this.acc = [];
+    this.trigger$.next({ reset: true });
   }
+
 }
