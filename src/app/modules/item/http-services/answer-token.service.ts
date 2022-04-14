@@ -29,7 +29,13 @@ export class AnswerTokenService {
       map(successData),
       decodeSnakeCase(answerTokenDataDecoder),
       map(data => data.answerToken),
+      map(data => {
+        if (++i <= 3) throw new Error('oopsy');
+        return data;
+      })
     );
   }
 
 }
+
+let i = 0;
