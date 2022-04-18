@@ -59,10 +59,6 @@
         </ng-container>
       </ng-template>
 
-      <div *ngIf="watchedGroupPermissions && !watchedGroup.route.isUser" i18n>
-        Note that some subgroups or users of the groups may have higher permissions.
-      </div>
-
       <ng-container *ngIf="watchedGroupPermissions as permissions">
         <div class="permission-indicator-section">
           <alg-section-header
@@ -79,6 +75,10 @@
               ></alg-progress-select>
             </ng-template>
           </alg-section-header>
+        </div>
+
+        <div class="text-center note-caption" *ngIf="!watchedGroup.route.isUser" i18n>
+          Note that some subgroups or users of the groups may have higher permissions.
         </div>
 
         <ng-container *ngIf="permissions.canGrantView !== 'none' && watchedGroup.currentUserCanGrantGroupAccess">
