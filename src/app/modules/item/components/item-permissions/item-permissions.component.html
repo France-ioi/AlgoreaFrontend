@@ -27,46 +27,37 @@
         </ng-container>
       </ng-template>
 
-      <p>
-        <ng-container *ngIf="watchedGroupPermissions as permissions; else noPermissionToWatchContent">
-          <ng-container *ngIf="permissions.canView === 'none'" i18n>
-            The {{ watchedGroup.route.isUser.toString() | i18nSelect : {
-              true: 'user',
-              other: 'group'
-            } }} cannot currently view this content.
-          </ng-container>
-
-          <ng-container *ngIf="permissions.canView === 'info'" i18n>
-            The {{ watchedGroup.route.isUser.toString() | i18nSelect : {
-              true: 'user',
-              other: 'group'
-            } }}
-            can list this
-            {{ itemData.item.type | i18nSelect : {
-              Skill: 'skill',
-              other: 'activity'
-            } }}
-            but cannot
-            {{ ['Skill', 'Chapter'].includes(itemData.item.type).toString() | i18nSelect : {
-              true: 'list its content.',
-              other: 'view its content.'
-            } }}
-          </ng-container>
-
-          <ng-container *ngIf="['content', 'content_with_descendants', 'solution'].includes(permissions.canView)" i18n>
-            The {{ watchedGroup.route.isUser.toString() | i18nSelect : {
-              true: 'user',
-              other: 'group'
-            } }} can view this activity.
-          </ng-container>
+      <ng-container *ngIf="watchedGroupPermissions as permissions; else noPermissionToWatchContent">
+        <ng-container *ngIf="permissions.canView === 'none'" i18n>
+          The {{ watchedGroup.route.isUser.toString() | i18nSelect : {
+            true: 'user',
+            other: 'group'
+          } }} cannot currently view this content.
         </ng-container>
 
-        <ng-template #noPermissionToWatchContent>
-          <ng-container i18n>
-            You cannot view the results or submissions of the group
-          </ng-container>
-        </ng-template>
-      </p>
+        <ng-container *ngIf="permissions.canView === 'info'" i18n>
+          The {{ watchedGroup.route.isUser.toString() | i18nSelect : {
+            true: 'user',
+            other: 'group'
+          } }}
+          can list this
+          {{ itemData.item.type | i18nSelect : {
+            Skill: 'skill',
+            other: 'activity'
+          } }}
+          but cannot
+          {{ ['Skill', 'Chapter'].includes(itemData.item.type).toString() | i18nSelect : {
+            true: 'list its content.',
+            other: 'view its content.'
+          } }}
+        </ng-container>
+      </ng-container>
+
+      <ng-template #noPermissionToWatchContent>
+        <ng-container i18n>
+          You cannot view the results or submissions of the group
+        </ng-container>
+      </ng-template>
 
       <div *ngIf="watchedGroupPermissions && !watchedGroup.route.isUser" i18n>
         Note that some subgroups or users of the groups may have higher permissions.
