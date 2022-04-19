@@ -163,9 +163,11 @@ export class ItemTaskAnswerService implements OnDestroy {
       )),
       shareReplay(1),
     );
-    combineLatest([ grade$, saveGrade$ ]).subscribe(([ grade ]) => {
-      if (grade.score !== undefined) this.scoreChange.next(grade.score);
-    });
+    combineLatest([ grade$, saveGrade$ ])
+      .pipe(catchError(() => EMPTY)) // error is handled elsewhere by returning saveGrade$
+      .subscribe(([ grade ]) => {
+        if (grade.score !== undefined) this.scoreChange.next(grade.score);
+      });
     return saveGrade$;
   }
 
