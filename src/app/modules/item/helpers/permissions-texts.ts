@@ -1,6 +1,7 @@
-import { ProgressSelectValue } from
-  'src/app/modules/shared-components/components/collapsible-section/progress-select/progress-select.component';
-import { TypeFilter } from '../composition-filter/composition-filter.component';
+import {
+  ProgressSelectValue
+} from 'src/app/modules/shared-components/components/collapsible-section/progress-select/progress-select.component';
+import { TypeFilter } from '../components/composition-filter/composition-filter.component';
 
 function getTargetTypeString(targetType: TypeFilter): string {
   switch (targetType) {
