@@ -23,8 +23,6 @@ export const minTokenLifetime = 5*MINUTES;
 // (useful to prevent infinite loop of requesting a new token -> token does not work  -> requesting a new token --> ...)
 export const maxInvalidToken = 6;
 
-const refreshExpiredTokenError = new Error('expired token');
-
 /**
  * This service manages the authentication workflow (login, logout, ...) for authenticated and temp sessions.
  * In this service, we use the following terms:
@@ -83,20 +81,17 @@ export class AuthService implements OnDestroy {
         const refreshIn = 5000;
         return timer(Math.min(refreshIn, maxDelay), 1*MINUTES).pipe(map(() => auth));
       }),
-      switchMap(auth =>
-        this.authHttp.refreshAuth(auth).pipe(
-          catchError(() => {
-            const tokenIsExpired = auth.expiration.valueOf() < Date.now();
-            return of(tokenIsExpired ? refreshExpiredTokenError : new Error('unknown error while refreshing token'));
-          })
-        )
-      )
-    ).subscribe(authOrError => {
-      if (authOrError instanceof Error) {
-        authOrError === refreshExpiredTokenError && this.status$.value.authenticated
-          ? this.invalidToken(this.status$.value)
-          : this.failure$.next();
-      } else this.status$.next(authOrError);
+      switchMap(auth => {
+        const tokenIsExpired = auth.expiration.valueOf() < Date.now();
+        if (tokenIsExpired) return of({ auth, tokenIsExpired }); // don't even try to refresh the token if it is expired
+        return this.authHttp.refreshAuth(auth).pipe(
+          catchError(() => EMPTY), // ignore the error since the token is valid. Another try will occur the next minute.
+          map(auth => ({ auth, tokenIsExpired })),
+        );
+      })
+    ).subscribe(result => {
+      if (result.tokenIsExpired) this.invalidToken(result.auth);
+      else this.status$.next(result.auth);
     });
   }
 
