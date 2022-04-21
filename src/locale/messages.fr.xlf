@@ -145,8 +145,17 @@
       </trans-unit><trans-unit id="6673660887182833564" datatype="html">
         <source>Customize</source><target state="translated">Personnaliser</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/grid/grid.component.html</context><context context-type="linenumber">64</context></context-group></trans-unit><trans-unit id="7463044993322326313" datatype="html">
-        <source> This content does not exist or you are not allowed to view it. </source><target state="new"> This content does not exist or you are not allowed to view it. </target>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/grid/grid.component.html</context><context context-type="linenumber">64</context></context-group></trans-unit><trans-unit id="797234192640170277" datatype="html">
+        <source>You are not allowed to view path suggestion.</source><target state="new">You are not allowed to view path suggestion.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/shared-components/components/path-suggestion/path-suggestion.component.html</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+      </trans-unit><trans-unit id="4449471207584645508" datatype="html">
+        <source>Permissions successfully updated.</source><target state="translated">Permissions mises à jour avec succès.</target>
+
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/group-progress-grid/group-progress-grid.component.ts</context><context context-type="linenumber">279</context></context-group></trans-unit><trans-unit id="7463044993322326313" datatype="html">
+        <source> This content does not exist or you are not allowed to view it. </source><target state="translated"> Ce contenu n'existe pas ou vous n'êtes pas autorisé à le voir. </target>
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-by-id.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="5199111763891627410" datatype="html">
         <source>This page has unsaved changes. Do you want to leave this page and lose its changes?</source><target state="translated">Cette page comporte des changements non sauvegardés. Voulez-vous quitter cette page et perdre les changements ?</target>
@@ -1343,11 +1352,23 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/parent-skills/parent-skills.component.html</context><context context-type="linenumber">16</context></context-group></trans-unit><trans-unit id="7599176768250828782" datatype="html">
         <source>Error while loading path suggestion</source><target state="new">Error while loading path suggestion</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/path-suggestion/path-suggestion.component.html</context><context context-type="linenumber">9</context></context-group></trans-unit><trans-unit id="7136816175934806999" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/path-suggestion/path-suggestion.component.html</context><context context-type="linenumber">16</context></context-group></trans-unit><trans-unit id="7182192298964223312" datatype="html">
+        <source>via</source><target state="new">via</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/shared-components/components/path-suggestion/path-suggestion.component.html</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+      </trans-unit><trans-unit id="7136816175934806999" datatype="html">
         <source>You have no path to this content.</source><target state="new">You have no path to this content.</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/path-suggestion/path-suggestion.component.html</context><context context-type="linenumber">28</context></context-group></trans-unit><trans-unit id="4475993768283951722" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/path-suggestion/path-suggestion.component.html</context><context context-type="linenumber">35</context></context-group></trans-unit><trans-unit id="4039557800195759728" datatype="html">
+        <source>This content is one of your root activity/skill</source><target state="new">This content is one of your root activity/skill</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/shared-components/components/path-suggestion/path-suggestion.component.html</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+      </trans-unit><trans-unit id="4475993768283951722" datatype="html">
         <source>Sub-skills</source><target state="translated">Sous-compétences</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/sub-skills/sub-skills.component.html</context><context context-type="linenumber">2</context></context-group></trans-unit><trans-unit id="3303008548461857588" datatype="html">
@@ -1846,7 +1867,7 @@
         <source>(reset current expiration)</source><target state="new">(reset current expiration)</target>
         
         
-        
+
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.ts</context><context context-type="linenumber">32</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.ts</context><context context-type="linenumber">37</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.ts</context><context context-type="linenumber">43</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.ts</context><context context-type="linenumber">49</context></context-group></trans-unit><trans-unit id="3604869065785906427" datatype="html">
         <source>Usable once</source><target state="new">Usable once</target>
