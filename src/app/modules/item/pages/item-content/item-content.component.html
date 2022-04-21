@@ -63,17 +63,16 @@
   </ng-template>
 
   <ng-template #noCurrentResult>
-    <p class="validation-text">
-      <span *ngIf="itemData.item.requiresExplicitEntry; else noRequiresExplicitEntry">
+    <p class="validation-text" *ngIf="itemData.item.requiresExplicitEntry; else noRequiresExplicitEntry">
+      <span>
         <ng-container i18n>This activity requires explicit entry</ng-container>&nbsp;
         <ng-container i18n="@@notImplemented">(not implemented)</ng-container>.
       </span>
-      <ng-template #noRequiresExplicitEntry>
-        <span i18n>
-          Starting the activity ... (if you are stuck on this message, please retry and contact us if the problem persists)
-        </span>
-        <alg-loading size="medium"></alg-loading>
-      </ng-template>
     </p>
+    <ng-template #noRequiresExplicitEntry>
+      <alg-task-loader
+        i18n-label label="Starting the activity"
+      ></alg-task-loader>
+    </ng-template>
   </ng-template>
 </ng-container>

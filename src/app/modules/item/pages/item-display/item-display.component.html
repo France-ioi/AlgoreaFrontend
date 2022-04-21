@@ -60,8 +60,10 @@
       [algFullHeightContent]="!!(metadata$ | async)?.autoHeight && (state.isReady || showTaskAnyway)"
       allowfullscreen
     ></iframe>
-    <div *ngIf="state.isFetching" class="loading">
-      <alg-loading></alg-loading>
-    </div>
+
+    <alg-task-loader
+      *ngIf="state.isFetching"
+      i18n-label label="Loading the task"
+    ></alg-task-loader>
   </div>
 </div>
