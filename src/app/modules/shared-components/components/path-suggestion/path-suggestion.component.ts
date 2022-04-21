@@ -1,8 +1,13 @@
 import { Component, Input, OnChanges, OnDestroy } from '@angular/core';
-import { GetBreadcrumbsFromRootsService } from '../../../item/http-services/get-breadcrumbs-from-roots.service';
+import {
+  BreadcrumbsFromRoot,
+  GetBreadcrumbsFromRootsService
+} from '../../../item/http-services/get-breadcrumbs-from-roots.service';
 import { ReplaySubject, Subject, switchMap } from 'rxjs';
 import { mapToFetchState } from '../../../../shared/operators/state';
 import { map } from 'rxjs/operators';
+import { itemRoute } from '../../../../shared/routing/item-route';
+import { ItemRouter } from '../../../../shared/routing/item-router';
 
 @Component({
   selector: 'alg-path-suggestion',
@@ -36,7 +41,7 @@ export class PathSuggestionComponent implements OnDestroy, OnChanges {
     mapToFetchState({ resetter: this.refresh$ }),
   );
 
-  constructor(private getBreadcrumbsFromRootsService: GetBreadcrumbsFromRootsService) {
+  constructor(private getBreadcrumbsFromRootsService: GetBreadcrumbsFromRootsService, private itemRouter: ItemRouter) {
   }
 
   ngOnChanges(): void {
@@ -52,5 +57,10 @@ export class PathSuggestionComponent implements OnDestroy, OnChanges {
 
   refresh(): void {
     this.refresh$.next();
+  }
+
+  navigateToItem(id: string, breadcrumbs: BreadcrumbsFromRoot[], index: number): void {
+    const path = breadcrumbs.slice(0, index).map(item => item.id);
+    this.itemRouter.navigateTo(itemRoute('activity', id, path));
   }
 }

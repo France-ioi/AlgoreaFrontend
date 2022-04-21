@@ -19,11 +19,11 @@
   <ng-container *ngIf="state.isReady">
     <ng-container *ngIf="state.data; else noPath">
       <ng-container *ngIf="state.data.length > 0; else emptyPath">
-        <div class="breadcrumbs-container" *ngFor="let group of state.data">
+        <div class="breadcrumbs-container" *ngFor="let breadcrumbs of state.data">
           <span class="breadcrumbs-prefix" i18n>via</span>
           <ul class="breadcrumbs">
-            <li class="breadcrumbs-item" *ngFor="let item of group">
-              <a class="alg-link" routerLinkActive="base-color" [routerLink]="['/activities', 'by-id', item.id ]">
+            <li class="breadcrumbs-item" *ngFor="let item of breadcrumbs; let i = index">
+              <a class="alg-link" (click)="navigateToItem(item.id, breadcrumbs, i)">
                 {{ item.title }}
               </a>
             </li>
