@@ -40,6 +40,7 @@ interface DataFetching {
   itemId: string,
   filter: TypeFilter,
   fromId?: string,
+  pageSize: number,
 }
 
 @Component({
@@ -93,13 +94,14 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
 
   readonly datapager = new DataPager<DataRow>({
     pageSize: progressListLimit,
-    fetch: (latestRow?: DataRow): Observable<DataRow[]> => {
+    fetch: (pageSize, latestRow?: DataRow): Observable<DataRow[]> => {
       if (!this.group || !this.itemData) throw new Error('properties are missing');
       return this.getRowsWithProgress({
         groupId: this.group.id,
         itemId: this.itemData.item.id,
         filter: this.currentFilter,
         fromId: latestRow?.id,
+        pageSize,
       });
     },
     onLoadMoreError: (): void => {
@@ -107,7 +109,7 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     },
   });
 
-  rows$ = this.datapager.state$;
+  rows$ = this.datapager.list$;
 
   constructor(
     private getItemChildrenService: GetItemChildrenService,
@@ -160,13 +162,10 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     this.fetchMoreRows();
   }
 
-  private getProgress(itemId: string, groupId: string, filter: TypeFilter, fromId?: string): Observable<TeamUserProgress[]> {
+  private getProgress({ itemId, groupId, filter, pageSize, fromId }: DataFetching): Observable<TeamUserProgress[]> {
     switch (filter) {
       case 'Users':
-        return this.getGroupUsersProgressService.getUsersProgress(groupId, [ itemId ], {
-          limit: progressListLimit,
-          fromId,
-        });
+        return this.getGroupUsersProgressService.getUsersProgress(groupId, [ itemId ], { limit: pageSize, fromId });
       case 'Teams':
         return this.getGroupUsersProgressService.getTeamsProgress(groupId, [ itemId ]);
       case 'Groups':
@@ -184,10 +183,10 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     }
   }
 
-  private getRows(groupId: string, filter: TypeFilter, fromId?: string): Observable<{id :string, value: string}[]> {
+  private getRows({ groupId, filter, pageSize, fromId }: Omit<DataFetching, 'itemId'>): Observable<{id :string, value: string}[]> {
     switch (filter) {
       case 'Users':
-        return this.getGroupDescendantsService.getUserDescendants(groupId, [], progressListLimit, fromId)
+        return this.getGroupDescendantsService.getUserDescendants(groupId, { limit: pageSize, fromId })
           .pipe(map(users => users.map(user => ({ id: user.id, value: formatUser(user.user) }))));
       case 'Teams':
         return this.getGroupDescendantsService.getTeamDescendants(groupId)
@@ -198,10 +197,10 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     }
   }
 
-  private getRowsWithProgress({ itemId, groupId, filter, fromId }: DataFetching): Observable<DataRow[]> {
+  private getRowsWithProgress({ itemId, groupId, filter, fromId, pageSize }: DataFetching): Observable<DataRow[]> {
     return forkJoin({
-      rows: this.getRows(groupId, filter, fromId),
-      progress: this.getProgress(itemId, groupId, filter, fromId),
+      rows: this.getRows({ groupId, filter, pageSize, fromId }),
+      progress: this.getProgress({ itemId, groupId, filter, pageSize, fromId }),
     }).pipe(
       combineLatestWith(this.columns$.pipe(readyData())),
       map(([{ rows, progress }, items ]) =>

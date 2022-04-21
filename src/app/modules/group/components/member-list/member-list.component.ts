@@ -218,7 +218,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
               }))
             );
         } else {
-          return this.getGroupDescendantsService.getUserDescendants(route.id, sort, membersLimit, fromId)
+          return this.getGroupDescendantsService.getUserDescendants(route.id, { sort, limit: membersLimit, fromId })
             .pipe(map(descendantUsers => ({
               columns: descendantUsersColumns,
               rowData: descendantUsers.map(descendantUser => ({
