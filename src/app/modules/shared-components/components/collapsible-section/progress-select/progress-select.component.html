@@ -1,5 +1,5 @@
 <div *ngIf="collapsed" class="header-content">
-  <alg-progress-level [maximum]="values.length" [value]="selected + 1" theme="revert"></alg-progress-level>
+  <alg-progress-level [maximum]="values.length" [value]="selected + 1" theme="revert" [colorTheme]="theme"></alg-progress-level>
   <span class="selected-progress-level">{{ values[selected]?.label }}</span>
 </div>
 

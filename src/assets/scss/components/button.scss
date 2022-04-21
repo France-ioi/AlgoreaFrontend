@@ -2,9 +2,7 @@
 @import 'src/geometry.scss';
 
 .alg-button {
-  width: 100%;
-
-  .p-button {
+  &.p-button {
     height: 3rem;
     font-weight: 700;
     font-size: inherit;
@@ -19,7 +17,7 @@
     }
   }
 
-  .p-button {
+  &.p-button {
     background-color: var(--base-color);
     border-color: var(--base-color);
     font-size: 1.2rem;
@@ -108,7 +106,10 @@
     &.p-button-warning {
       background-color: var(--warning-color);
       border-color: var(--warning-color);
-      color: white;
+
+      .p-button-icon, .p-button-label {
+        color: white;
+      }
 
       &:enabled:hover {
         color: white;
