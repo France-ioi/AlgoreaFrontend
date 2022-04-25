@@ -77,9 +77,8 @@ export class AuthService implements OnDestroy {
         const maxDelay = 2147483647; // 2^31-1
         if (!auth.authenticated) return EMPTY;
         // Refresh if the token is valid < `minTokenLifetime` or when it will have reached 50% of its lifetime. Retry every minute.
-        // const refreshIn = auth.expiration.getTime() - Date.now() <= minTokenLifetime ? 0 :
-        //   Math.max((auth.expiration.getTime() + auth.creation.getTime())/2 - Date.now(), 0);
-        const refreshIn = 5000;
+        const refreshIn = auth.expiration.getTime() - Date.now() <= minTokenLifetime ? 0 :
+          Math.max((auth.expiration.getTime() + auth.creation.getTime())/2 - Date.now(), 0);
         return timer(Math.min(refreshIn, maxDelay), 1*MINUTES).pipe(map(() => auth));
       }),
       switchMap(auth => {
