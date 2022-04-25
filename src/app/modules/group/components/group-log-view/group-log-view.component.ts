@@ -47,7 +47,7 @@ export class GroupLogViewComponent implements OnChanges, OnInit, OnDestroy {
     mapToFetchState({ resetter: this.refresh$ }),
   );
   private readonly showOverlaySubject$ = new BehaviorSubject<{ event: Event, itemId: string, target: HTMLElement }|undefined>(undefined);
-  showOverlay$ = this.showOverlaySubject$.asObservable().pipe(debounceTime(750), shareReplay());
+  showOverlay$ = this.showOverlaySubject$.asObservable().pipe(debounceTime(750), shareReplay(1));
 
   constructor(
     private activityLogService: ActivityLogService,
