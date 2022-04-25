@@ -22,21 +22,9 @@ export class PathSuggestionComponent implements OnDestroy, OnChanges {
 
   state$ = this.itemId$.pipe(
     switchMap(itemId => this.getBreadcrumbsFromRootsService.get(itemId).pipe(
-      map(group => {
-        if (group.length === 0) {
-          return undefined;
-        }
-
-        const allBreadcrumbs = group
-          .map(items => items.slice(0, items.length - 1))
-          .reduce((state, items) => [ ...state, ...items ], []);
-
-        if (allBreadcrumbs.length === 0) {
-          return [];
-        }
-
-        return group.map(items => items.slice(0, items.length - 1)).filter(items => items.length > 0);
-      }),
+      map(group =>
+        (group.length > 0 ? group.map(items => items.slice(0, items.length - 1)).filter(items => items.length > 0) : undefined)
+      ),
     )),
     mapToFetchState({ resetter: this.refresh$ }),
   );
