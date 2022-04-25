@@ -83,15 +83,15 @@ export class AuthService implements OnDestroy {
         return timer(Math.min(refreshIn, maxDelay), 1*MINUTES).pipe(map(() => auth));
       }),
       switchMap(auth => {
-        const tokenIsExpired = auth.expiration.valueOf() < Date.now();
-        if (tokenIsExpired) return of({ auth, tokenIsExpired }); // don't even try to refresh the token if it is expired
+        const isExpired = auth.expiration.valueOf() < Date.now();
+        if (isExpired) return of({ auth, tokenIsExpired: true }); // don't even try to refresh the token if it is expired
         return this.authHttp.refreshAuth(auth).pipe(
           catchError(err => {
             // For any http error, ignore it since the token is valid. Another try will occur the next minute.
             if (err instanceof HttpErrorResponse) return EMPTY;
             else throw err; // rethrow any JS error to let our error monitor catch it.
           }),
-          map(auth => ({ auth, tokenIsExpired })),
+          map(auth => ({ auth, tokenIsExpired: false })),
         );
       })
     ).subscribe(result => {
