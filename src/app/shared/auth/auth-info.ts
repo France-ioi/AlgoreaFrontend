@@ -19,9 +19,8 @@ function tokenAuthenticated(accessToken: string, expiration: Date, creation: Dat
 }
 
 /* Cookie-specific functions */
-export function cookieAuthFromServiceResp(_expiresIn: number): CookieAuthenticated {
-  return cookieAuthenticated(expiresInToDate(3)); // expires in 3 seconds
-  // return cookieAuthenticated(expiresInToDate(expiresIn));
+export function cookieAuthFromServiceResp(expiresIn: number): CookieAuthenticated {
+  return cookieAuthenticated(expiresInToDate(expiresIn));
 }
 
 /* Token-specific functions */
