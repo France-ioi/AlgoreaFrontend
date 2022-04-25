@@ -78,8 +78,8 @@
 </ng-container>
 
 <p-overlayPanel
+    styleClass="alg-path-suggestion-overlay"
     #op
-    [style]="{ minWidth: '30rem', maxWidth: '50rem' }"
 >
   <ng-container *ngIf="op.overlayVisible">
     <alg-path-suggestion [itemId]="(showOverlay$ | async)?.itemId"></alg-path-suggestion>
