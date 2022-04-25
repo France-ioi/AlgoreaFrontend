@@ -115,7 +115,7 @@ export class GroupLogViewComponent implements OnChanges, OnInit, OnDestroy {
     }));
   }
 
-  onMouseenter(event: Event, itemId: string, index: number): void {
+  onMouseEnter(event: Event, itemId: string, index: number): void {
     const targetRef = this.contentRef?.get(index);
     if (!targetRef) {
       throw new Error('Unexpected: Target is not found');
@@ -123,7 +123,7 @@ export class GroupLogViewComponent implements OnChanges, OnInit, OnDestroy {
     this.showOverlaySubject$.next({ event, itemId, target: targetRef.nativeElement });
   }
 
-  onMouseleave(): void {
+  onMouseLeave(): void {
     this.showOverlaySubject$.next(undefined);
   }
 

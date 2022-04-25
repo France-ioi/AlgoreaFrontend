@@ -37,7 +37,7 @@
           let-columns="columns"
           let-index="rowIndex"
       >
-        <tr (mouseenter)="onMouseenter($event, rowData.item.id, index)" (mouseleave)="onMouseleave()">
+        <tr (mouseenter)="onMouseEnter($event, rowData.item.id, index)" (mouseleave)="onMouseLeave()">
           <td *ngFor="let col of columns">
             <ng-container [ngSwitch]="col.field">
               <ng-container *ngSwitchCase="'activityType'">
