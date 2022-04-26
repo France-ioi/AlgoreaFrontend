@@ -6,8 +6,14 @@ import {
 import { ReplaySubject, Subject, switchMap } from 'rxjs';
 import { mapToFetchState } from '../../../../shared/operators/state';
 import { map } from 'rxjs/operators';
-import { itemRoute } from '../../../../shared/routing/item-route';
-import { ItemRouter } from '../../../../shared/routing/item-router';
+import { itemRoute, urlArrayForItemRoute } from '../../../../shared/routing/item-route';
+import { UrlCommand } from '../../../../shared/helpers/url';
+
+const getItemRouteUrl = (id: string, breadcrumbs: BreadcrumbsFromRoot[]): UrlCommand => {
+  const index = breadcrumbs.findIndex(item => item.id === id);
+  const path = breadcrumbs.slice(0, index).map(item => item.id);
+  return urlArrayForItemRoute(itemRoute('activity', id, path));
+};
 
 @Component({
   selector: 'alg-path-suggestion',
@@ -23,13 +29,18 @@ export class PathSuggestionComponent implements OnDestroy, OnChanges {
   state$ = this.itemId$.pipe(
     switchMap(itemId => this.getBreadcrumbsFromRootsService.get(itemId).pipe(
       map(group =>
-        (group.length > 0 ? group.map(items => items.slice(0, items.length - 1)).filter(items => items.length > 0) : undefined)
+        (group.length > 0 ? group.map(breadcrumbs =>
+          breadcrumbs.slice(0, breadcrumbs.length - 1).map(item => ({
+            ...item,
+            url: getItemRouteUrl(item.id, breadcrumbs),
+          }))
+        ).filter(group => group.length > 0) : undefined)
       ),
     )),
     mapToFetchState({ resetter: this.refresh$ }),
   );
 
-  constructor(private getBreadcrumbsFromRootsService: GetBreadcrumbsFromRootsService, private itemRouter: ItemRouter) {
+  constructor(private getBreadcrumbsFromRootsService: GetBreadcrumbsFromRootsService) {
   }
 
   ngOnChanges(): void {
@@ -45,10 +56,5 @@ export class PathSuggestionComponent implements OnDestroy, OnChanges {
 
   refresh(): void {
     this.refresh$.next();
-  }
-
-  navigateToItem(id: string, breadcrumbs: BreadcrumbsFromRoot[], index: number): void {
-    const path = breadcrumbs.slice(0, index).map(item => item.id);
-    this.itemRouter.navigateTo(itemRoute('activity', id, path));
   }
 }
