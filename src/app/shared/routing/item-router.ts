@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { NavigationExtras, Router, UrlTree } from '@angular/router';
-import { ensureDefined } from '../helpers/null-undefined-predicates';
+import { ensureDefined } from '../helpers/assert';
 import { itemCategoryFromPrefix, RawItemRoute, urlArrayForItemRoute } from './item-route';
 
 interface NavigateOptions {
