@@ -9,8 +9,8 @@ import {
   ViewChild,
   ViewChildren
 } from '@angular/core';
-import { BehaviorSubject, debounceTime, Observable, ReplaySubject, Subject } from 'rxjs';
-import { filter, map, shareReplay, switchMap, takeUntil } from 'rxjs/operators';
+import { BehaviorSubject, debounceTime, Observable, ReplaySubject, Subject, Subscription } from 'rxjs';
+import { filter, map, shareReplay, switchMap } from 'rxjs/operators';
 import { mapToFetchState } from '../../../../shared/operators/state';
 import { ActivityLog, ActivityLogService } from '../../../../shared/http-services/activity-log.service';
 import { isNotUndefined } from '../../../../shared/helpers/null-undefined-predicates';
@@ -39,7 +39,8 @@ export class GroupLogViewComponent implements OnChanges, OnInit, OnDestroy {
   @ViewChild('op') op?: OverlayPanel;
   @ViewChildren('contentRef') contentRef?: QueryList<ElementRef<HTMLElement>>;
 
-  private readonly unsubscribe$ = new Subject<void>();
+  showOverlaySubscription?: Subscription;
+
   private readonly groupId$ = new ReplaySubject<string>(1);
   private readonly refresh$ = new Subject<void>();
   readonly state$ = this.groupId$.pipe(
@@ -54,7 +55,7 @@ export class GroupLogViewComponent implements OnChanges, OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.showOverlay$.pipe(filter(isNotUndefined), takeUntil(this.unsubscribe$)).subscribe(data =>
+    this.showOverlaySubscription = this.showOverlay$.pipe(filter(isNotUndefined)).subscribe(data =>
       this.op?.toggle(data.event, data.target)
     );
   }
@@ -71,8 +72,7 @@ export class GroupLogViewComponent implements OnChanges, OnInit, OnDestroy {
     this.groupId$.complete();
     this.refresh$.complete();
     this.showOverlaySubject$.complete();
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
+    this.showOverlaySubscription?.unsubscribe();
   }
 
   refresh(): void {
