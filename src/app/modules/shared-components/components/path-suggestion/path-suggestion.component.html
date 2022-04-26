@@ -23,7 +23,7 @@
           <span class="breadcrumbs-prefix" i18n>via</span>
           <ul class="breadcrumbs">
             <li class="breadcrumbs-item" *ngFor="let item of breadcrumbs; let i = index">
-              <a class="alg-link" (click)="navigateToItem(item.id, breadcrumbs, i)">
+              <a class="alg-link" [routerLink]="item.url">
                 {{ item.title }}
               </a>
             </li>
