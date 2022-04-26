@@ -54,7 +54,7 @@
     </div>
     <iframe
       *ngIf="iframeSrc$ | async as iframeSrc"
-      [style.height]="iframeHeight$ | async"
+      [style.height]="(state.isReady || showTaskAnyway) ? (iframeHeight$ | async) : undefined"
       [src]="iframeSrc"
       #iframe
       [algFullHeightContent]="!!(metadata$ | async)?.autoHeight && (state.isReady || showTaskAnyway)"
