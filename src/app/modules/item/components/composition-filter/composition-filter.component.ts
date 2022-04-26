@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { ensureDefined } from 'src/app/shared/helpers/null-undefined-predicates';
+import { ensureDefined } from 'src/app/shared/helpers/assert';
 
 export type TypeFilter = 'Groups'|'Teams'|'Users';
 

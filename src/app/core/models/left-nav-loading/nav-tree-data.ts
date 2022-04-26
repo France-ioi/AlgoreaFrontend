@@ -1,5 +1,5 @@
 import { arraysEqual } from 'src/app/shared/helpers/array';
-import { ensureDefined } from 'src/app/shared/helpers/null-undefined-predicates';
+import { ensureDefined } from 'src/app/shared/helpers/assert';
 import { ContentRoute } from 'src/app/shared/routing/content-route';
 import { RootItem } from '../../http-services/item-navigation.service';
 

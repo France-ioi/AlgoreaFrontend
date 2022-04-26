@@ -19,7 +19,7 @@ import { UserSessionService } from 'src/app/shared/services/user-session.service
 import { isItemRouteError, itemRouteFromParams } from './item-route-validation';
 import { LayoutService } from 'src/app/shared/services/layout.service';
 import { readyData } from 'src/app/shared/operators/state';
-import { ensureDefined } from 'src/app/shared/helpers/null-undefined-predicates';
+import { ensureDefined } from 'src/app/shared/helpers/assert';
 
 const itemBreadcrumbCat = $localize`Items`;
 

@@ -5,7 +5,7 @@ import { catchError, map } from 'rxjs/operators';
 import { isRouteWithSelfAttempt, FullItemRoute } from 'src/app/shared/routing/item-route';
 import { appConfig } from 'src/app/shared/helpers/config';
 import { tagError } from 'src/app/shared/helpers/errors';
-import { ensureDefined } from 'src/app/shared/helpers/null-undefined-predicates';
+import { ensureDefined } from 'src/app/shared/helpers/assert';
 import { typeCategoryOfItem } from '../../../shared/helpers/item-type';
 import { pipe } from 'fp-ts/function';
 import * as D from 'io-ts/Decoder';
