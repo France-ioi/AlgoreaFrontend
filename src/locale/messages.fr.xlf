@@ -1033,8 +1033,8 @@
      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/user-group-invitations/user-group-invitations.component.ts</context><context context-type="linenumber">22</context></context-group></trans-unit><trans-unit id="544102334421307622" datatype="html">
         <source>The group(s) must be empty</source><target state="new">The group(s) must be empty</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/http-services/remove-group.service.ts</context><context context-type="linenumber">13</context></context-group></trans-unit><trans-unit id="4499029844951802274" datatype="html">
-        <source> The following information is what what receive from France-IOI login platform. </source><target state="new"> The following information is what what receive from France-IOI login platform. </target>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/http-services/remove-group.service.ts</context><context context-type="linenumber">13</context></context-group></trans-unit><trans-unit id="5132273078121257617" datatype="html">
+        <source> The following information is what we receive from France-IOI login platform. </source><target state="new"> The following information is what we receive from France-IOI login platform. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/group/pages/current-user/current-user.component.html</context>
           <context context-type="linenumber">4,6</context>
