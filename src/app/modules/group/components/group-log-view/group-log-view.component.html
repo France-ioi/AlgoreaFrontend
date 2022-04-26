@@ -37,7 +37,7 @@
           let-columns="columns"
           let-index="rowIndex"
       >
-        <tr (mouseenter)="onMouseEnter($event, rowData.item.id, index)" (mouseleave)="onMouseLeave()">
+        <tr>
           <td *ngFor="let col of columns">
             <ng-container [ngSwitch]="col.field">
               <ng-container *ngSwitchCase="'activityType'">
@@ -48,6 +48,8 @@
                   class="alg-link"
                   [ngClass]="{'disabled': !rowData.item}"
                   [routerLink]="rowData.item | rawItemLink"
+                  (mouseenter)="onMouseEnter($event, rowData.item.id, index)"
+                  (mouseleave)="onMouseLeave()"
                   #contentRef
                 >
                   {{ rowData.item.string.title }}
