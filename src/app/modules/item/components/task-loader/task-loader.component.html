@@ -2,6 +2,8 @@
   <div class="loading text-center">
     <div *ngIf="label" class="label">{{ label }}</div>
     <alg-loading></alg-loading>
-    <div class="sub-label" [style.visibility]="showDelayedLabel ? undefined : 'hidden'">{{ delayedLabel }}</div>
+    <div *ngIf="delayedLabel" class="sub-label" [style.visibility]="showDelayedLabel ? undefined : 'hidden'">
+      {{ delayedLabel }}
+    </div>
   </div>
 </div>

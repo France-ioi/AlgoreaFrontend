@@ -10,7 +10,9 @@ import { SECONDS } from 'src/app/shared/helpers/duration';
 export class TaskLoaderComponent implements OnInit, OnDestroy {
 
   @Input() label = '';
-  @Input() delayedLabel = '';
+  /** label displayed after a delay (by default 5s) */
+  @Input() delayedLabel?: string;
+  /** delay in seconds after which the delayedLabel is displayed */
   @Input() delay = 5;
 
   showDelayedLabel = false;
@@ -19,9 +21,9 @@ export class TaskLoaderComponent implements OnInit, OnDestroy {
   constructor() { }
 
   ngOnInit(): void {
-    this.subscription = timer(this.delay*SECONDS).subscribe(() => {
-      this.showDelayedLabel = true;
-    });
+    if (this.delayedLabel) {
+      this.subscription = timer(this.delay*SECONDS).subscribe(() => this.showDelayedLabel = true);
+    }
   }
 
   ngOnDestroy(): void {
