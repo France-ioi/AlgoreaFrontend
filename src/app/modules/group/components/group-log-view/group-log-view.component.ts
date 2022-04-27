@@ -123,8 +123,34 @@ export class GroupLogViewComponent implements OnChanges, OnInit, OnDestroy {
     this.showOverlaySubject$.next({ event, itemId, target: targetRef.nativeElement });
   }
 
-  onMouseLeave(): void {
+  onMouseLeave(event: MouseEvent, field: string): void {
+    if (field !== 'item.string.title') {
+      return;
+    }
+
+    const target = event.target;
+    const relatedTarget = event.relatedTarget;
+    let closeOverlay = true;
+
+    if (target instanceof HTMLElement && relatedTarget instanceof HTMLElement) {
+      let currentElement = relatedTarget;
+      while (currentElement.parentElement) {
+        if (currentElement.classList.contains('alg-path-suggestion-overlay')) {
+          closeOverlay = false;
+          break;
+        }
+        currentElement = currentElement.parentElement;
+      }
+    }
+
+    if (closeOverlay) {
+      this.closeOverlay();
+    }
+  }
+
+  closeOverlay(): void {
     this.showOverlaySubject$.next(undefined);
+    this.op?.hide();
   }
 
 }
