@@ -1,21 +1,23 @@
-import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Observable } from 'rxjs';
 import { GetGroupManagersService, Manager } from '../../http-services/get-group-managers.service';
 import { GroupData, GroupDataSource } from '../../services/group-datasource.service';
 import { RemoveGroupManagerService } from '../../http-services/remove-group-manager.service';
 import { ActionFeedbackService } from '../../../../shared/services/action-feedback.service';
-import { ReplaySubject, Subject } from 'rxjs';
-import { switchMap, map, distinctUntilChanged } from 'rxjs/operators';
-import { mapToFetchState } from '../../../../shared/operators/state';
+import { mapStateData } from '../../../../shared/operators/state';
 import { UserSessionService } from '../../../../shared/services/user-session.service';
 import { ConfirmationService } from 'primeng/api';
 import { displayGroupManagerRemovalResponseToast } from './group-manager-removal-response-handling';
+import { DataPager } from 'src/app/shared/helpers/data-pager';
+
+const managersLimit = 25;
 
 @Component({
   selector: 'alg-group-manager-list',
   templateUrl: './group-manager-list.component.html',
   styleUrls: [ './group-manager-list.component.scss' ]
 })
-export class GroupManagerListComponent implements OnChanges, OnDestroy {
+export class GroupManagerListComponent implements OnChanges {
 
   @Input() groupData?: GroupData;
 
@@ -24,17 +26,22 @@ export class GroupManagerListComponent implements OnChanges, OnDestroy {
   isPermissionsEditDialogOpened = false;
   dialogManager?: Manager & { canManageAsText: string };
 
-  private refresh$ = new Subject<void>();
-  private readonly groupId$ = new ReplaySubject<string>(1);
-  readonly state$ = this.groupId$.pipe(
-    distinctUntilChanged(),
-    switchMap(id => this.getGroupManagersService.getGroupManagers(id).pipe(
-      map(managers => managers.map(manager => ({
-        ...manager,
-        canManageAsText: this.getManagerLevel(manager),
-      }))),
-    )),
-    mapToFetchState({ resetter: this.refresh$ }),
+  readonly datapager = new DataPager({
+    fetch: (pageSize, latestManager?: Manager): Observable<Manager[]> => {
+      if (!this.groupData) throw new Error('unexpected');
+      return this.getGroupManagersService.getGroupManagers(this.groupData.group.id, { limit: pageSize, fromId: latestManager?.id });
+    },
+    pageSize: managersLimit,
+    onLoadMoreError: (): void => {
+      this.actionFeedbackService.error($localize`Could not load more results, are you connected to the internet?`);
+    },
+  });
+
+  readonly state$ = this.datapager.list$.pipe(
+    mapStateData(managers => managers.map(manager => ({
+      ...manager,
+      canManageAsText: this.getManagerLevel(manager),
+    }))),
   );
 
   constructor(
@@ -46,15 +53,12 @@ export class GroupManagerListComponent implements OnChanges, OnDestroy {
     private confirmationService: ConfirmationService,
   ) {}
 
-  ngOnChanges(_changes: SimpleChanges): void {
+  ngOnChanges(changes: SimpleChanges): void {
     if (this.groupData) {
-      this.groupId$.next(this.groupData.group.id);
+      (changes.groupData?.previousValue as GroupData | undefined)?.group.id !== this.groupData?.group.id
+        ? this.fetchData()
+        : this.fetchMoreData();
     }
-  }
-
-  ngOnDestroy(): void {
-    this.refresh$.complete();
-    this.groupId$.complete();
   }
 
   private getManagerLevel(manager: Manager): string {
@@ -68,8 +72,13 @@ export class GroupManagerListComponent implements OnChanges, OnDestroy {
     }
   }
 
-  reloadData(): void {
-    this.refresh$.next();
+  fetchData(): void {
+    this.datapager.reset();
+    this.fetchMoreData();
+  }
+  fetchMoreData(): void {
+    if (!this.groupData) throw new Error('unexpected');
+    this.datapager.load();
   }
 
   onSelectAll(managers: Manager[]): void {
@@ -139,7 +148,7 @@ export class GroupManagerListComponent implements OnChanges, OnDestroy {
 
           if (result.countSuccess > 0) {
             this.selection = [];
-            this.reloadData();
+            this.fetchData();
           }
         },
         error: () => {
@@ -159,12 +168,12 @@ export class GroupManagerListComponent implements OnChanges, OnDestroy {
     this.dialogManager = undefined;
 
     if (event.updated) {
-      this.reloadData();
+      this.fetchData();
       this.groupDataSource.refetchGroup();
     }
   }
 
   onAdded(): void {
-    this.reloadData();
+    this.fetchData();
   }
 }
