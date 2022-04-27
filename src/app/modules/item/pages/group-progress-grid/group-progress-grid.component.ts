@@ -266,7 +266,7 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     this.groupPermissionsService.updatePermissions(this.group.id, this.dialogPermissions.targetGroupId,
       this.dialogPermissions.itemId, permissions)
       .subscribe({
-        next: _res => this.actionFeedbackService.success($localize`Permissions successfully updated.`),
+        next: _res => this.actionFeedbackService.success($localize`:@@permissionsUpdated:Permissions successfully updated.`),
         error: _err => this.actionFeedbackService.unexpectedError(),
       });
   }

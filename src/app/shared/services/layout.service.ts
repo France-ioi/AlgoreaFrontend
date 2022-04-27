@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { distinctUntilChanged } from 'rxjs/operators';
+import { BehaviorSubject, distinctUntilChanged } from 'rxjs';
 
 export interface FullFrameContent {
-  expanded: boolean,
+  active: boolean,
   canToggle: boolean,
+  animated: boolean,
 }
 
 @Injectable({
@@ -12,31 +12,37 @@ export interface FullFrameContent {
 })
 export class LayoutService {
   // Service allowing modifications of the layout
-  private fullFrameContent = new BehaviorSubject<FullFrameContent>({ expanded: false, canToggle: true });
+
+  private initialized = false;
+
   /** Expands the content by hiding the left menu and select headers */
-  fullFrameContent$ = this.fullFrameContent.pipe(distinctUntilChanged((a, b) => a.expanded === b.expanded && a.canToggle === b.canToggle));
+  private fullFrame = new BehaviorSubject<FullFrameContent>({ active: true, canToggle: false, animated: false });
+  fullFrame$ = this.fullFrame.pipe(distinctUntilChanged((a, b) => a.active === b.active && a.canToggle === b.canToggle));
 
-  private showTopRightControls = new BehaviorSubject(true);
-  readonly showTopRightControls$ = this.showTopRightControls.pipe(distinctUntilChanged());
+  private showTopRightControls = new BehaviorSubject(false);
+  showTopRightControls$ = this.showTopRightControls.pipe(distinctUntilChanged());
 
-  private contentFooter = new BehaviorSubject<boolean>(true);
   /**
-   * Adds a blank footer to the content area
-   * Disabled for instance for displaying a task, as the task iframe is set to fill the screen to the bottom */
-  contentFooter$ = this.contentFooter.asObservable();
+   * Configure layout, expectedly called by routes.
+   */
+  configure({ fullFrameActive, showTopRightControls, canToggleFullFrame }: {
+    fullFrameActive: boolean,
+    canToggleFullFrame?: boolean,
+    showTopRightControls?: boolean,
+  }): void {
+    const canToggleFallback = !this.initialized || this.fullFrame.value.canToggle;
+    const canToggle = canToggleFullFrame ?? canToggleFallback;
+    this.fullFrame.next({
+      canToggle,
+      active: canToggle ? fullFrameActive : this.fullFrame.value.active,
+      animated: this.initialized,
+    });
 
-  /** Set fullFrameContent, which expands the content by hiding the left menu and select headers */
-  toggleFullFrameContent(expanded: boolean, canToggle = this.fullFrameContent.value.canToggle): void {
-    if (!this.fullFrameContent.value.canToggle) return;
-    this.fullFrameContent.next({ expanded, canToggle });
+
+    if (showTopRightControls !== undefined) this.showTopRightControls.next(showTopRightControls);
+    else if (!this.initialized) this.showTopRightControls.next(true);
+
+    if (!this.initialized) this.initialized = true;
   }
 
-  /** Set contentFooter, which adds a blank footer to the content side */
-  toggleContentFooter(shown: boolean): void {
-    this.contentFooter.next(shown);
-  }
-
-  toggleTopRightControls(shown: boolean): void {
-    this.showTopRightControls.next(shown);
-  }
 }

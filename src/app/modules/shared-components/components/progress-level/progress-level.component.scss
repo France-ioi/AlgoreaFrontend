@@ -42,4 +42,12 @@
       }
     }
   }
+
+  &.warning {
+    .progress-level-item, .progress-level-item-link {
+      &.revert:not(&.active) {
+        background-color: var(--section-warning-handle-border-color);
+      }
+    }
+  }
 }

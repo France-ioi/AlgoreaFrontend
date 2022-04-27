@@ -39,6 +39,7 @@ import { ItemRemoveButtonComponent } from './components/item-remove-button/item-
 import { BeforeUnloadGuard } from 'src/app/shared/guards/before-unload-guard';
 import { AnswerAuthorIndicatorComponent } from './components/answer-author-indicator/answer-author-indicator.component';
 import { ItemPermissionsComponent } from './components/item-permissions/item-permissions.component';
+import { TaskLoaderComponent } from './components/task-loader/task-loader.component';
 
 @NgModule({
   declarations: [
@@ -70,6 +71,7 @@ import { ItemPermissionsComponent } from './components/item-permissions/item-per
     ItemRemoveButtonComponent,
     AnswerAuthorIndicatorComponent,
     ItemPermissionsComponent,
+    TaskLoaderComponent,
   ],
   imports: [
     CommonModule,
