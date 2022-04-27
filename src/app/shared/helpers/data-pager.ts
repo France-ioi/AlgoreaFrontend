@@ -1,5 +1,5 @@
 import { map, Observable, ReplaySubject, shareReplay, switchScan } from 'rxjs';
-import { fetchingState, FetchState, readyState } from './state';
+import { errorState, fetchingState, FetchState, readyState } from './state';
 import { mapStateData, mapToFetchState } from '../operators/state';
 
 export function canLoadMorePagedData<T>(list: T[], limit: number): boolean {
@@ -29,17 +29,19 @@ interface PagedData<T> {
 export class DataPager<T> {
   private trigger$ = new ReplaySubject<{ reset: boolean }>(1);
 
-  private state$ : Observable<FetchState<PagedData<T>>> = this.trigger$.pipe(
-    switchScan<{ reset: boolean }, FetchState<PagedData<T>>, Observable<FetchState<PagedData<T>>>>(
-      (prev, { reset }) => {
+  private state$ = this.trigger$.pipe(
+    switchScan(
+      (prev, { reset }): Observable<FetchState<PagedData<T>>> => {
         prev = reset ? fetchingState() : prev;
         const latestElement = prev.data?.list[prev.data.list.length-1];
         return this.options.fetch(this.options.pageSize, latestElement).pipe(
           mapToFetchState(),
-          map((state): FetchState<PagedData<T>> => {
+          map(state => {
             // Case 1: First fetch
             if (prev.data === undefined) {
-              return state.isReady ? readyState({ list: state.data, newItems: state.data }) : state as FetchState<PagedData<T>>;
+              if (state.isReady) return readyState({ list: state.data, newItems: state.data });
+              else if (state.error) return errorState(state.error);
+              else return fetchingState();
             }
 
             // Case 2: Additional fetch -> when loading more items
@@ -55,7 +57,7 @@ export class DataPager<T> {
             }
           })
         );
-      }, fetchingState() /* switchScan seed */
+      }, fetchingState() as FetchState<PagedData<T>> /* switchScan seed */
     ),
     shareReplay(1),
   );
