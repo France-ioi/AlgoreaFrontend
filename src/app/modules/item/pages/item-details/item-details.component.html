@@ -3,7 +3,7 @@
   <ng-container *ngIf="state.isReady && state.data as itemData">
 
     <ng-container *ngIf="taskTabs$ | async as taskTabs">
-      <alg-item-header [itemData]="itemData" *ngIf="!(fullFrameContent$ | async)?.expanded"></alg-item-header>
+      <alg-item-header [itemData]="itemData" *ngIf="!(fullFrame$ | async)?.active"></alg-item-header>
 
       <alg-access-code-view
         *ngIf="showAccessCodeField$ | async"
@@ -17,6 +17,7 @@
         *ngIf="watchedGroup$ | async as watchedGroup"
         [itemData]="itemData"
         [watchedGroup]="watchedGroup"
+        (changed)="reloadItem()"
       ></alg-item-permissions>
 
       <nav class="nav-tab" [hidden]="!(showProgressTab$ | async) && taskTabs.length <= 1">
@@ -83,6 +84,7 @@
               (taskTabsChange)="setTaskTabs($event)"
               (scoreChange)="patchStateWithScore($event)"
               (skipSave)="skipBeforeUnload()"
+              (refresh)="reloadItem()"
             ></alg-item-content>
           </ng-container>
         </ng-container>

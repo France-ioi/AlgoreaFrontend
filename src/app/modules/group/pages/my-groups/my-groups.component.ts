@@ -12,12 +12,13 @@ import { LayoutService } from '../../../../shared/services/layout.service';
 export class MyGroupsComponent implements OnDestroy {
   @ViewChild('joinedGroupList') joinedGroupList?: JoinedGroupListComponent;
 
-  fullFrameContent$ = this.layoutService.fullFrameContent$;
+  fullFrame$ = this.layoutService.fullFrame$;
 
   constructor(
     private currentContent: CurrentContentService,
     private layoutService: LayoutService,
   ) {
+    this.layoutService.configure({ fullFrameActive: false });
     this.currentContent.replace(contentInfo({
       title: $localize`My groups`,
       breadcrumbs: {

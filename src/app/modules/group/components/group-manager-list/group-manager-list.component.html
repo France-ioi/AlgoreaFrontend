@@ -115,7 +115,7 @@
         </ng-template>
 
         <ng-template #footerTemplate>
-          <tr *ngIf="datapager.canLoadMore">
+          <tr *ngIf="datapager.canLoadMore$ | async">
             <td [colSpan]="6">
               <div class="text-center">
                 <alg-button

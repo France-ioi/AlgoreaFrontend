@@ -55,16 +55,11 @@ export class GetGroupDescendantsService {
 
   constructor(private http: HttpClient) { }
 
-  getUserDescendants(
-    groupId: string,
-    sort: string[] = [],
-    limit?: number,
-    fromId?: string,
-  ): Observable<UserDescendant[]> {
+  getUserDescendants(groupId: string, options: { sort?: string[], limit?: number, fromId?: string }): Observable<UserDescendant[]> {
     let params = new HttpParams();
-    if (sort.length > 0) params = params.set('sort', sort.join(','));
-    if (limit !== undefined) params = params.set('limit', limit);
-    if (fromId !== undefined) params = params.set('from.id', fromId);
+    if (options.sort) params = params.set('sort', options.sort.join(','));
+    if (options.limit !== undefined) params = params.set('limit', options.limit);
+    if (options.fromId !== undefined) params = params.set('from.id', options.fromId);
     return this.http
       .get<unknown>(`${appConfig.apiUrl}/groups/${groupId}/user-descendants`, { params: params })
       .pipe(

@@ -15,6 +15,7 @@ import {
   forcedTokenAuthFromStorage
 } from './auth-info';
 import { LocaleService } from 'src/app/core/services/localeService';
+import { HttpErrorResponse } from '@angular/common/http';
 
 // Lifetime under which we refresh the token.
 export const minTokenLifetime = 5*MINUTES;
@@ -80,11 +81,21 @@ export class AuthService implements OnDestroy {
           Math.max((auth.expiration.getTime() + auth.creation.getTime())/2 - Date.now(), 0);
         return timer(Math.min(refreshIn, maxDelay), 1*MINUTES).pipe(map(() => auth));
       }),
-      switchMap(auth =>
-        this.authHttp.refreshAuth(auth)
-      )
-    ).subscribe(auth => {
-      this.status$.next(auth);
+      switchMap(auth => {
+        const isExpired = auth.expiration.valueOf() < Date.now();
+        if (isExpired) return of({ auth, tokenIsExpired: true }); // don't even try to refresh the token if it is expired
+        return this.authHttp.refreshAuth(auth).pipe(
+          catchError(err => {
+            // For any http error, ignore it since the token is valid. Another try will occur the next minute.
+            if (err instanceof HttpErrorResponse) return EMPTY;
+            else throw err; // rethrow any JS error to let our error monitor catch it.
+          }),
+          map(auth => ({ auth, tokenIsExpired: false })),
+        );
+      })
+    ).subscribe(result => {
+      if (result.tokenIsExpired) this.invalidToken(result.auth);
+      else this.status$.next(result.auth);
     });
   }
 

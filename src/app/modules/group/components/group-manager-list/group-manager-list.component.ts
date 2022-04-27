@@ -27,12 +27,9 @@ export class GroupManagerListComponent implements OnChanges {
   dialogManager?: Manager & { canManageAsText: string };
 
   readonly datapager = new DataPager({
-    fetch: (latestManager?: Manager): Observable<Manager[]> => {
+    fetch: (pageSize, latestManager?: Manager): Observable<Manager[]> => {
       if (!this.groupData) throw new Error('unexpected');
-      return this.getGroupManagersService.getGroupManagers(this.groupData.group.id, {
-        limit: managersLimit,
-        fromId: latestManager?.id,
-      });
+      return this.getGroupManagersService.getGroupManagers(this.groupData.group.id, { limit: pageSize, fromId: latestManager?.id });
     },
     pageSize: managersLimit,
     onLoadMoreError: (): void => {
@@ -40,7 +37,7 @@ export class GroupManagerListComponent implements OnChanges {
     },
   });
 
-  readonly state$ = this.datapager.state$.pipe(
+  readonly state$ = this.datapager.list$.pipe(
     mapStateData(managers => managers.map(manager => ({
       ...manager,
       canManageAsText: this.getManagerLevel(manager),

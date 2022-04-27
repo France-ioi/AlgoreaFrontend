@@ -12,8 +12,3 @@ export function isNotUndefined<T>(e: T|undefined): e is T {
 }
 
 export const isDefined = isNotUndefined;
-
-export function ensureDefined<T>(value: T | undefined, message = 'expected value not to be undefined'): T {
-  if (isNotUndefined(value)) return value;
-  throw new Error(message);
-}

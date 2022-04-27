@@ -16,7 +16,7 @@ import {
   processRequestError
 } from 'src/app/modules/group/components/pending-request/pending-request-response-handling';
 import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
-import { ensureDefined } from 'src/app/shared/helpers/null-undefined-predicates';
+import { ensureDefined } from 'src/app/shared/helpers/assert';
 
 const groupColumn = { field: 'group.name', header: $localize`GROUP` };
 

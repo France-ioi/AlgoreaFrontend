@@ -37,7 +37,7 @@ export class UserComponent implements OnInit, OnDestroy {
     map(userProfile => userProfile.groupId),
   );
 
-  readonly fullFrameContent$ = this.layoutService.fullFrameContent$;
+  readonly fullFrame$ = this.layoutService.fullFrame$;
 
   private url$ = this.router.events.pipe(
     filter(event => event instanceof NavigationEnd),
@@ -70,7 +70,9 @@ export class UserComponent implements OnInit, OnDestroy {
     private layoutService: LayoutService,
     private groupRouter: GroupRouter,
     private getGroupBreadcrumbsService: GetGroupBreadcrumbsService,
-  ) {}
+  ) {
+    this.layoutService.configure({ fullFrameActive: false });
+  }
 
   ngOnInit(): void {
     this.subscription = combineLatest([ this.url$, this.state$, this.breadcrumbs$ ])

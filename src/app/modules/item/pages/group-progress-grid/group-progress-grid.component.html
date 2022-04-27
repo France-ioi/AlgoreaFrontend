@@ -93,8 +93,8 @@
             </tr>
           </ng-template>
           <ng-template pTemplate="footer">
-            <tr *ngIf="currentFilter === 'Users' && datapager.canLoadMore">
-              <td [colSpan]="columnsState.data.length">
+            <tr *ngIf="currentFilter === 'Users' && (datapager.canLoadMore$ | async)">
+              <td [colSpan]="columnsState.data.length + 1">
                 <div class="text-center">
                   <alg-button
                     class="p-button-rounded"

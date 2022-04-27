@@ -1,7 +1,9 @@
 <div class="item-display" *ngIf="state$ | async as state">
   <div *ngIf="state.isError && !showTaskAnyway" class="errors">
     <ng-template #defaultErrorMessage>
-      <alg-error i18n-message message="Unable to load the task"></alg-error>
+      <alg-error
+        i18n-message message="Unable to load the task"
+      ></alg-error>
     </ng-template>
 
     <ng-container *ngIf="['all', 'all_with_grant'].includes(canEdit); else defaultErrorMessage">
@@ -25,10 +27,16 @@
       </ng-template>
     </ng-container>
 
-    <div class="text-center">
+    <div class="error-buttons">
       <alg-button
+        class="error-button"
         i18n-label label="Show task anyway (for debugging)"
         (click)="showTaskAnyway = true"
+      ></alg-button>
+      <alg-button
+        class="error-button"
+        i18n-label label="Retry"
+        (click)="refresh.emit()"
       ></alg-button>
     </div>
   </div>
@@ -46,14 +54,17 @@
     </div>
     <iframe
       *ngIf="iframeSrc$ | async as iframeSrc"
-      [style.height]="iframeHeight$ | async"
+      [style.height]="(state.isReady || showTaskAnyway) ? (iframeHeight$ | async) : undefined"
       [src]="iframeSrc"
       #iframe
       [algFullHeightContent]="!!(metadata$ | async)?.autoHeight && (state.isReady || showTaskAnyway)"
       allowfullscreen
     ></iframe>
-    <div *ngIf="state.isFetching" class="loading">
-      <alg-loading></alg-loading>
-    </div>
+
+    <alg-task-loader
+      *ngIf="state.isFetching"
+      i18n-label label="Loading the task"
+      i18n-delayedLabel delayedLabel="The task is taking an unexpected long time to load... please wait..."
+    ></alg-task-loader>
   </div>
 </div>

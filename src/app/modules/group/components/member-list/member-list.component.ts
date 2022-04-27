@@ -78,13 +78,13 @@ export class MemberListComponent implements OnChanges, OnDestroy {
 
   columns: Column[] = [];
   datapager = new DataPager({
-    fetch: (latestRow?: Row): Observable<Row[]> => this.getRows(latestRow),
+    fetch: (pageSize, latestRow?: Row): Observable<Row[]> => this.getRows(pageSize, latestRow),
     pageSize: membersLimit,
     onLoadMoreError: (): void => {
       this.actionFeedbackService.error($localize`Could not load more members, are you connected to the internet?`);
     },
   });
-  rows$: Observable<FetchState<Row[]>> = this.datapager.state$;
+  rows$: Observable<FetchState<Row[]>> = this.datapager.list$;
 
   @ViewChild('table') private table?: Table;
   @ViewChild('compositionFilter') private compositionFilter?: GroupCompositionFilterComponent;
@@ -125,7 +125,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
     this.datapager.load();
   }
 
-  getRows(latestRow?: Row): Observable<Row[]> {
+  getRows(pageSize: number, latestRow?: Row): Observable<Row[]> {
     if (!this.groupData) throw new Error('group data must be defined to fetch data');
     const route = this.groupData.route;
 
@@ -176,12 +176,11 @@ export class MemberListComponent implements OnChanges, OnDestroy {
               route: groupRoute({ id: member.id, isUser: true }, [ ...route.path, route.id ]),
             }))));
         } else {
-          return this.getGroupDescendantsService.getUserDescendants(
-            route.id,
-            this.currentSort,
-            membersLimit,
-            (latestRow as Member|undefined)?.id,
-          ).pipe(map(descendantUsers => descendantUsers.map(descendantUser => ({
+          return this.getGroupDescendantsService.getUserDescendants(route.id, {
+            sort: this.currentSort,
+            limit: pageSize,
+            fromId: (latestRow as Member|undefined)?.id,
+          }).pipe(map(descendantUsers => descendantUsers.map(descendantUser => ({
             id: descendantUser.id,
             login: descendantUser.user.login,
             user: descendantUser.user,
