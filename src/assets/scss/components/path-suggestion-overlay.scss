@@ -2,6 +2,10 @@
   min-width: 30rem;
   max-width: 50rem;
 
+  .p-overlaypanel-content {
+    padding: 0;
+  }
+
   @media screen and (max-width: 1100px) {
     max-width: 40rem;
   }

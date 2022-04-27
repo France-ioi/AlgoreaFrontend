@@ -38,7 +38,7 @@
           let-index="rowIndex"
       >
         <tr>
-          <td *ngFor="let col of columns">
+          <td *ngFor="let col of columns" (mouseleave)="onMouseLeave($event, col.field)">
             <ng-container [ngSwitch]="col.field">
               <ng-container *ngSwitchCase="'activityType'">
                 {{ rowData.activityType | logActionDisplay : rowData.score }}
@@ -49,7 +49,6 @@
                   [ngClass]="{'disabled': !rowData.item}"
                   [routerLink]="rowData.item | rawItemLink"
                   (mouseenter)="onMouseEnter($event, rowData.item.id, index)"
-                  (mouseleave)="onMouseLeave()"
                   #contentRef
                 >
                   {{ rowData.item.string.title }}
@@ -84,6 +83,6 @@
     #op
 >
   <ng-container *ngIf="op.overlayVisible">
-    <alg-path-suggestion [itemId]="(showOverlay$ | async)?.itemId"></alg-path-suggestion>
+    <alg-path-suggestion [itemId]="(showOverlay$ | async)?.itemId" (mouseleave)="closeOverlay()"></alg-path-suggestion>
   </ng-container>
 </p-overlayPanel>
