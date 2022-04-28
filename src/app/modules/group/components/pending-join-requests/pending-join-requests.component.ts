@@ -11,12 +11,10 @@ import { GridColumn } from '../../../shared-components/components/grid/grid.comp
 import { merge, of, Subject } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { fetchingState, readyState } from 'src/app/shared/helpers/state';
-import {
-  displayResponseToast,
-  processRequestError
-} from 'src/app/modules/group/components/pending-request/pending-request-response-handling';
+import { displayResponseToast } from 'src/app/modules/group/components/pending-request/pending-request-response-handling';
 import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
 import { ensureDefined } from 'src/app/shared/helpers/assert';
+import { HttpErrorResponse } from '@angular/common/http';
 
 const groupColumn = { field: 'group.name', header: $localize`GROUP` };
 
@@ -109,9 +107,10 @@ export class PendingJoinRequestsComponent implements OnChanges, OnDestroy {
           displayResponseToast(this.actionFeedbackService, parseResults(result), params.type);
           this.dataFetching.next({ groupId: this.groupId, includeSubgroup: this.includeSubgroup, sort: this.currentSort });
         },
-        error: _err => {
+        error: err => {
           this.state = 'ready';
-          processRequestError(this.actionFeedbackService);
+          this.actionFeedbackService.unexpectedError();
+          if (!(err instanceof HttpErrorResponse)) throw err;
         }
       });
   }
