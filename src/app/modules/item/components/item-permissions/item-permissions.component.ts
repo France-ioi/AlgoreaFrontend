@@ -8,6 +8,7 @@ import { generateCanViewValues } from '../../helpers/permissions-texts';
 import { Permissions } from '../../../../shared/helpers/group-permissions';
 import { GroupPermissionsService } from '../../../../shared/http-services/group-permissions.service';
 import { ActionFeedbackService } from '../../../../shared/services/action-feedback.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'alg-item-permissions',
@@ -54,7 +55,10 @@ export class ItemPermissionsComponent implements OnChanges {
           this.changed.next();
           this.actionFeedbackService.success($localize`:@@permissionsUpdated:Permissions successfully updated.`);
         },
-        error: _err => this.actionFeedbackService.unexpectedError(),
+        error: err => {
+          this.actionFeedbackService.unexpectedError();
+          if (!(err instanceof HttpErrorResponse)) throw err;
+        },
       });
   }
 

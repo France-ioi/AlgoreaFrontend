@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, EventEmitter, Input, OnChanges, Output, ViewChild } from '@angular/core';
 import { forkJoin, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
@@ -58,9 +59,10 @@ export class GroupCompositionComponent implements OnChanges {
         this.memberList?.setFilter({ directChildren: true, type: TypeFilter.Groups });
         this.state = 'ready';
       },
-      error: _err => {
-        this.actionFeedbackService.unexpectedError();
+      error: err => {
         this.state = 'ready';
+        this.actionFeedbackService.unexpectedError();
+        if (!(err instanceof HttpErrorResponse)) throw err;
       }
     });
   }

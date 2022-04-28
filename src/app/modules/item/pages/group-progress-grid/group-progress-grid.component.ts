@@ -23,6 +23,7 @@ import { ProgressData } from '../../components/user-progress-details/user-progre
 import { DataPager } from 'src/app/shared/helpers/data-pager';
 import { mapToFetchState, readyData } from 'src/app/shared/operators/state';
 import { FetchState } from 'src/app/shared/helpers/state';
+import { HttpErrorResponse } from '@angular/common/http';
 
 const progressListLimit = 25;
 
@@ -267,7 +268,10 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
       this.dialogPermissions.itemId, permissions)
       .subscribe({
         next: _res => this.actionFeedbackService.success($localize`:@@permissionsUpdated:Permissions successfully updated.`),
-        error: _err => this.actionFeedbackService.unexpectedError(),
+        error: err => {
+          this.actionFeedbackService.unexpectedError();
+          if (!(err instanceof HttpErrorResponse)) throw err;
+        },
       });
   }
 
@@ -298,9 +302,10 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
           this.isCSVDataFetching = false;
           downloadFile([ data ], `${parentItemId}-${new Date().toDateString()}.csv`, 'text/csv');
         },
-        error: () => {
+        error: err => {
           this.isCSVDataFetching = false;
           this.actionFeedbackService.unexpectedError();
+          if (!(err instanceof HttpErrorResponse)) throw err;
         },
       });
   }

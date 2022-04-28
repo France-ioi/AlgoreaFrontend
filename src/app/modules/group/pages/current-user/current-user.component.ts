@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ActionFeedbackService } from '../../../../shared/services/action-feedback.service';
 import { LocaleService } from '../../../../core/services/localeService';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'alg-current-user',
@@ -30,8 +31,9 @@ export class CurrentUserComponent {
           this.localeService.navigateTo(changes.default_language);
         }
       },
-      error: _err => {
+      error: err => {
         this.actionFeedbackService.unexpectedError();
+        if (!(err instanceof HttpErrorResponse)) throw err;
       }
     });
   }

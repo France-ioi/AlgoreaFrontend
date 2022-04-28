@@ -9,6 +9,7 @@ import { UserSessionService } from '../../../../shared/services/user-session.ser
 import { ConfirmationService } from 'primeng/api';
 import { displayGroupManagerRemovalResponseToast } from './group-manager-removal-response-handling';
 import { DataPager } from 'src/app/shared/helpers/data-pager';
+import { HttpErrorResponse } from '@angular/common/http';
 
 const managersLimit = 25;
 
@@ -151,9 +152,10 @@ export class GroupManagerListComponent implements OnChanges {
             this.fetchData();
           }
         },
-        error: () => {
+        error: err => {
           this.removalInProgress = false;
           this.actionFeedbackService.unexpectedError();
+          if (!(err instanceof HttpErrorResponse)) throw err;
         }
       });
   }

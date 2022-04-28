@@ -6,6 +6,7 @@ import { GetUserByLoginService } from '../../../../core/http-services/get-user-b
 import { GroupCreateManagerService } from '../../http-services/group-create-manager.service';
 import { ActionFeedbackService } from '../../../../shared/services/action-feedback.service';
 import { errorIsHTTPForbidden, errorIsHTTPNotFound } from '../../../../shared/helpers/errors';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'alg-group-manager-add',
@@ -63,6 +64,7 @@ export class GroupManagerAddComponent {
           this.actionFeedbackService.error($localize`Unable to add this manager.`);
         } else {
           this.actionFeedbackService.unexpectedError();
+          if (!(error instanceof HttpErrorResponse)) throw error;
         }
       },
     });

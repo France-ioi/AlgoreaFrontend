@@ -17,6 +17,7 @@ import { RemoveSubgroupService } from '../../http-services/remove-subgroup.servi
 import { RemoveGroupService } from '../../http-services/remove-group.service';
 import { FetchState } from 'src/app/shared/helpers/state';
 import { DataPager } from 'src/app/shared/helpers/data-pager';
+import { HttpErrorResponse } from '@angular/common/http';
 
 function getSelectedGroupChildCaptions(selection: GroupChild[]): string {
   return selection.map(selected => selected.name).join(', ');
@@ -248,9 +249,10 @@ export class MemberListComponent implements OnChanges, OnDestroy {
           this.fetchRows();
           this.removalInProgress$.next(false);
         },
-        error: _err => {
+        error: err => {
           this.removalInProgress$.next(false);
           this.actionFeedbackService.unexpectedError();
+          if (!(err instanceof HttpErrorResponse)) throw err;
         }
       });
   }
@@ -302,9 +304,10 @@ export class MemberListComponent implements OnChanges, OnDestroy {
         this.fetchRows();
         this.removalInProgress$.next(false);
       },
-      error: _err => {
+      error: err => {
         this.removalInProgress$.next(false);
         this.actionFeedbackService.unexpectedError();
+        if (!(err instanceof HttpErrorResponse)) throw err;
       }
     });
   }
