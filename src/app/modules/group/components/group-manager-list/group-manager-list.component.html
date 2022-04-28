@@ -118,12 +118,13 @@
           <tr *ngIf="datapager.canLoadMore$ | async">
             <td [colSpan]="6">
               <div class="text-center">
-                <alg-button
+                <button
+                  pButton
                   class="p-button-rounded"
                   i18n-label label="Load more"
                   (click)="fetchMoreData()"
                   [disabled]="state.isFetching"
-                ></alg-button>
+                ></button>
               </div>
             </td>
           </tr>
