@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { appConfig } from 'src/app/shared/helpers/config';
 import { ActionResponse, assertSuccess, SimpleActionResponse, successData } from 'src/app/shared/http-services/action-response';
@@ -17,6 +17,7 @@ export class GroupCreationService {
   constructor(private http: HttpClient) { }
 
   create(name: string, type: 'Class'|'Team'|'Club'|'Friends'|'Other'|'Session'): Observable<string> {
+    if (type === 'Class') return throwError(() => new Error('oopsie'));
     const body = {
       name: name,
       type: type
