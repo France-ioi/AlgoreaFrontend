@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { GroupLeaveService } from '../../../../core/http-services/group-leave.service';
 import { ActionFeedbackService } from '../../../../shared/services/action-feedback.service';
@@ -29,7 +30,10 @@ export class GroupLeaveComponent {
         this.actionFeedbackService.success($localize`You've left group`);
         this.leave.emit();
       },
-      error: () => this.actionFeedbackService.unexpectedError(),
+      error: err => {
+        this.actionFeedbackService.unexpectedError();
+        if (!(err instanceof HttpErrorResponse)) throw err;
+      },
     });
   }
 }

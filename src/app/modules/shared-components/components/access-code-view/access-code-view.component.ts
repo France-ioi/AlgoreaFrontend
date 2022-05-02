@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ConfirmationService } from 'primeng/api';
 import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
@@ -73,7 +74,10 @@ export class AccessCodeViewComponent {
         this.actionFeedbackService.success($localize`Changes successfully saved.`);
         this.groupJoined.emit();
       },
-      error: _err => this.actionFeedbackService.unexpectedError()
+      error: err => {
+        this.actionFeedbackService.unexpectedError();
+        if (!(err instanceof HttpErrorResponse)) throw err;
+      },
     });
   }
 

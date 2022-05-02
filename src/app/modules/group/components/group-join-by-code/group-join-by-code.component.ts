@@ -8,6 +8,7 @@ import { CodeActionsService } from '../../http-services/code-actions.service';
 import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
 import { of } from 'rxjs';
 import { CodeLifetime } from '../../helpers/code-lifetime';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'alg-group-join-by-code',
@@ -92,9 +93,10 @@ export class GroupJoinByCodeComponent implements OnChanges {
           this.processing = false;
           this.refreshRequired.emit();
         },
-        error: () => {
-          this.actionFeedbackService.unexpectedError();
+        error: err => {
           this.processing = false;
+          this.actionFeedbackService.unexpectedError();
+          if (!(err instanceof HttpErrorResponse)) throw err;
         },
       });
   }
@@ -118,9 +120,10 @@ export class GroupJoinByCodeComponent implements OnChanges {
         this.processing = false;
         this.refreshRequired.emit();
       },
-      error: () => {
-        this.actionFeedbackService.unexpectedError();
+      error: err => {
         this.processing = false;
+        this.actionFeedbackService.unexpectedError();
+        if (!(err instanceof HttpErrorResponse)) throw err;
       },
     });
   }
@@ -147,9 +150,10 @@ export class GroupJoinByCodeComponent implements OnChanges {
           this.processing = false;
           this.refreshRequired.emit();
         },
-        error: () => {
-          this.actionFeedbackService.unexpectedError();
+        error: err => {
           this.processing = false;
+          this.actionFeedbackService.unexpectedError();
+          if (!(err instanceof HttpErrorResponse)) throw err;
         },
       });
   }
