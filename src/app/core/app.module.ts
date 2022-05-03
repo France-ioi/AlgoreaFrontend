@@ -48,7 +48,7 @@ import { ContentTopBarComponent } from './components/content-top-bar/content-top
 import * as Sentry from '@sentry/angular';
 import { Router } from '@angular/router';
 import { appConfig } from '../shared/helpers/config';
-import { LocationStrategy, PathLocationStrategy } from '@angular/common';
+import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: false,
@@ -113,9 +113,12 @@ const sentryProviders = appConfig.sentryDsn ? [
     MessageService,
     {
       provide: LocationStrategy,
-      useClass: class extends PathLocationStrategy {
+      useClass: class extends HashLocationStrategy {
         override getBaseHref(): string {
-          return new URL(document.baseURI).pathname;
+          console.info('1', this);
+          console.info('2', super.getBaseHref());
+          return super.getBaseHref();
+          // return new URL(document.baseURI + '/').pathname + '#/';
         }
       }
     },
