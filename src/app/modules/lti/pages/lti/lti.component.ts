@@ -105,7 +105,10 @@ export class LTIComponent implements OnDestroy {
       this.activityNavTreeService.navigationNeighborsRestrictedToDescendantOfElementId = contentId;
     }),
 
-    combineLatest([ this.isLoggedIn$, this.isRedirection$ ]).pipe(
+    combineLatest([
+      this.isLoggedIn$.pipe(catchError(() => EMPTY)), // error is handled elsewhere
+      this.isRedirection$,
+    ]).pipe(
       filter(([ isLoggedIn, isRedirection ]) => !isLoggedIn && !isRedirection),
     ).subscribe(() => this.userSession.login()), // will redirect outside the platform
 
