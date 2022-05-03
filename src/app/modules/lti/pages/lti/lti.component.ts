@@ -13,6 +13,7 @@ import {
   getRedirectToSubPathAtInit,
   setRedirectToSubPathAtInit,
 } from 'src/app/shared/helpers/redirect-to-sub-path-at-init';
+import { boolToQueryParamValue, queryParamValueToBool } from 'src/app/shared/helpers/url';
 import { CheckLoginService } from 'src/app/shared/http-services/check-login.service';
 import { ResultActionsService } from 'src/app/shared/http-services/result-actions.service';
 import { mapToFetchState, readyData } from 'src/app/shared/operators/state';
@@ -47,11 +48,11 @@ export class LTIComponent implements OnDestroy {
   private loginId$ = this.activatedRoute.queryParamMap.pipe(map(queryParams => queryParams.get(loginIdParam)));
 
   private isRedirection$ = this.activatedRoute.queryParamMap.pipe(
-    map(queryParams => queryParams.get(isRedirectionParam) === '1'),
+    map(queryParams => queryParamValueToBool(queryParams.get(isRedirectionParam))),
   );
 
   private fromPath$ = this.activatedRoute.queryParamMap.pipe(
-    map(queryParams => (queryParams.get(useFromPathKey) === '1' ? queryParams.get(fromPathKey) : null)),
+    map(queryParams => (queryParamValueToBool(queryParams.get(useFromPathKey)) ? queryParams.get(fromPathKey) : null)),
   );
 
   private contentId$ = this.activatedRoute.paramMap.pipe(
@@ -100,7 +101,7 @@ export class LTIComponent implements OnDestroy {
       this.contentId$,
       this.loginId$.pipe(filter(isNotNull)),
     ]).subscribe(([ contentId, loginId ]) => {
-      setRedirectToSubPathAtInit(`/lti/${contentId}?${loginIdParam}=${loginId}&${isRedirectionParam}=1`);
+      setRedirectToSubPathAtInit(`/lti/${contentId}?${loginIdParam}=${loginId}&${isRedirectionParam}=${boolToQueryParamValue(true)}`);
       this.activityNavTreeService.navigationNeighborsRestrictedToDescendantOfElementId = contentId;
     }),
 
@@ -115,7 +116,7 @@ export class LTIComponent implements OnDestroy {
 
         const redirectUrl = getRedirectToSubPathAtInit();
         if (!redirectUrl) throw new Error('redirect url should be set by now');
-        setRedirectToSubPathAtInit(appendUrlWithQuery(redirectUrl, useFromPathKey, '1'));
+        setRedirectToSubPathAtInit(appendUrlWithQuery(redirectUrl, useFromPathKey, boolToQueryParamValue(true)));
 
         if (fromPath) {
           void this.router.navigateByUrl(fromPath);
