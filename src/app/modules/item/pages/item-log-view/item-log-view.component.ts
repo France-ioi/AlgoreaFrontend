@@ -2,7 +2,7 @@ import { Component, Input, OnChanges, OnDestroy } from '@angular/core';
 import { ItemData } from '../../services/item-datasource.service';
 import { ActivityLog, ActivityLogService } from 'src/app/shared/http-services/activity-log.service';
 import { combineLatest, Observable, ReplaySubject, Subject } from 'rxjs';
-import { distinct, switchMap, map } from 'rxjs/operators';
+import { distinctUntilChanged, switchMap, map } from 'rxjs/operators';
 import { mapToFetchState } from 'src/app/shared/operators/state';
 import { ItemType } from '../../../../shared/helpers/item-type';
 import { Item } from '../../http-services/get-item-by-id.service';
@@ -32,7 +32,7 @@ export class ItemLogViewComponent implements OnChanges, OnDestroy {
   private readonly refresh$ = new Subject<void>();
   private readonly item$ = new ReplaySubject<Item>(1);
   readonly state$ = combineLatest([
-    this.item$.pipe(distinct()),
+    this.item$.pipe(distinctUntilChanged()),
     this.groupWatchingService.watchedGroup$,
   ]).pipe(
     switchMap(([ item, watchedGroup ]) => this.getData$(item, watchedGroup)),
