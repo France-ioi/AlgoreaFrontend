@@ -113,7 +113,7 @@ const sentryProviders = appConfig.sentryDsn ? [
     MessageService,
     {
       provide: APP_BASE_HREF,
-      useValue: globalThis.location.pathname,
+      useValue: new URL(globalThis.location.pathname, globalThis.location.href).href,
     },
     {
       provide: PERFECT_SCROLLBAR_CONFIG,
