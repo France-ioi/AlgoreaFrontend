@@ -59,7 +59,7 @@ export class ItemByIdComponent implements OnDestroy {
       // When loading a task with a former answerId, we need to remove the answerId from the url to avoid reloading
       // a former answer if the user refreshes the page
       // However, replacing the url should not retrigger an item fetch either, thus the use of history.state.preventRefetch
-      filter(() => !(history.state as Record<string, boolean>).preventRefetch),
+      filter(() => !(history.state as Record<string, boolean> | null)?.preventRefetch),
     ).subscribe(params => this.fetchItemAtRoute(params)),
 
     this.subscriptions.push(
