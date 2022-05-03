@@ -28,6 +28,7 @@ module.exports = function (config) {
     logLevel: config.LOG_INFO,
     autoWatch: false,
     browsers: ['Chrome'],
+    concurrency: 1,
     customLaunchers: {
       ChromeHeadlessCI: {
         base: 'ChromeHeadless',
