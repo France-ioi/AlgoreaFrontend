@@ -52,7 +52,7 @@ commands:
         type: string
     steps:
       - run: echo "export const version = '`git describe --always`';" > ./src/version.ts
-      - run: npx ng build --configuration production-<< parameters.lang >> --base-href //assets.algorea.org<< parameters.path >>/ --progress=false
+      - run: npx ng build --configuration production-<< parameters.lang >> --base-href //assets.algorea.org<< parameters.path >> --progress=false
 
 jobs:
   # deps has to be run before the other jobs and basically run "npm install" and cache it
