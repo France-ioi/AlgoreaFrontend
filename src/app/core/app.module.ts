@@ -48,7 +48,7 @@ import { ContentTopBarComponent } from './components/content-top-bar/content-top
 import * as Sentry from '@sentry/angular';
 import { Router } from '@angular/router';
 import { appConfig } from '../shared/helpers/config';
-import { APP_BASE_HREF } from '@angular/common';
+import { LocationStrategy, PathLocationStrategy } from '@angular/common';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: false,
@@ -112,8 +112,12 @@ const sentryProviders = appConfig.sentryDsn ? [
     ConfirmationService,
     MessageService,
     {
-      provide: APP_BASE_HREF,
-      useValue: new URL(globalThis.location.pathname, globalThis.location.href).href,
+      provide: LocationStrategy,
+      useClass: class extends PathLocationStrategy {
+        override getBaseHref(): string {
+          return new URL(document.baseURI).pathname;
+        }
+      }
     },
     {
       provide: PERFECT_SCROLLBAR_CONFIG,
