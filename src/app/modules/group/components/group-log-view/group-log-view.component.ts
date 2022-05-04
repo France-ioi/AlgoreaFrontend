@@ -1,20 +1,10 @@
-import {
-  Component,
-  ElementRef,
-  Input,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  QueryList,
-  ViewChild,
-  ViewChildren
-} from '@angular/core';
-import { BehaviorSubject, debounceTime, Observable, ReplaySubject, Subject, Subscription } from 'rxjs';
-import { filter, map, shareReplay, switchMap } from 'rxjs/operators';
+import { Component, Input, OnChanges, OnDestroy, ViewChild } from '@angular/core';
+import { BehaviorSubject, debounceTime, fromEvent, merge, Observable, ReplaySubject, Subject, Subscription } from 'rxjs';
+import { distinctUntilChanged, filter, map, shareReplay, switchMap, take, takeUntil } from 'rxjs/operators';
 import { mapToFetchState } from '../../../../shared/operators/state';
 import { ActivityLog, ActivityLogService } from '../../../../shared/http-services/activity-log.service';
-import { isNotUndefined } from '../../../../shared/helpers/null-undefined-predicates';
 import { OverlayPanel } from 'primeng/overlaypanel';
+import { isNotNull } from 'src/app/shared/helpers/null-undefined-predicates';
 
 interface Column {
   field: string,
@@ -31,15 +21,12 @@ interface Data {
   templateUrl: './group-log-view.component.html',
   styleUrls: [ './group-log-view.component.scss' ],
 })
-export class GroupLogViewComponent implements OnChanges, OnInit, OnDestroy {
+export class GroupLogViewComponent implements OnChanges, OnDestroy {
 
   @Input() groupId?: string;
   @Input() showUserColumn = true;
 
   @ViewChild('op') op?: OverlayPanel;
-  @ViewChildren('contentRef') contentRef?: QueryList<ElementRef<HTMLElement>>;
-
-  showOverlaySubscription?: Subscription;
 
   private readonly groupId$ = new ReplaySubject<string>(1);
   private readonly refresh$ = new Subject<void>();
@@ -48,17 +35,16 @@ export class GroupLogViewComponent implements OnChanges, OnInit, OnDestroy {
     mapToFetchState({ resetter: this.refresh$ }),
   );
   private readonly showOverlaySubject$ = new BehaviorSubject<{ event: Event, itemId: string, target: HTMLElement }|undefined>(undefined);
-  showOverlay$ = this.showOverlaySubject$.asObservable().pipe(debounceTime(750), shareReplay(1));
+  readonly showOverlay$ = this.showOverlaySubject$.pipe(debounceTime(100), distinctUntilChanged(), shareReplay(1));
+
+  private showOverlaySubscription = this.showOverlay$.subscribe(data => {
+    data ? this.op?.toggle(data.event, data.target) : this.op?.hide();
+  });
+  private closeOverlaySubscription?: Subscription;
 
   constructor(
     private activityLogService: ActivityLogService,
   ) {}
-
-  ngOnInit(): void {
-    this.showOverlaySubscription = this.showOverlay$.pipe(filter(isNotUndefined)).subscribe(data =>
-      this.op?.toggle(data.event, data.target)
-    );
-  }
 
   ngOnChanges(): void {
     if (!this.groupId) {
@@ -72,7 +58,8 @@ export class GroupLogViewComponent implements OnChanges, OnInit, OnDestroy {
     this.groupId$.complete();
     this.refresh$.complete();
     this.showOverlaySubject$.complete();
-    this.showOverlaySubscription?.unsubscribe();
+    this.showOverlaySubscription.unsubscribe();
+    this.closeOverlaySubscription?.unsubscribe();
   }
 
   refresh(): void {
@@ -115,42 +102,39 @@ export class GroupLogViewComponent implements OnChanges, OnInit, OnDestroy {
     }));
   }
 
-  onMouseEnter(event: Event, itemId: string, index: number): void {
-    const targetRef = this.contentRef?.get(index);
-    if (!targetRef) {
-      throw new Error('Unexpected: Target is not found');
-    }
-    this.showOverlaySubject$.next({ event, itemId, target: targetRef.nativeElement });
-  }
+  onMouseEnter(event: Event, itemId: string): void {
+    const td = event.target instanceof HTMLElement ? event.target.closest('td') : null;
 
-  onMouseLeave(event: MouseEvent, field: string): void {
-    if (field !== 'item.string.title') {
-      return;
-    }
-
-    const target = event.target;
-    const relatedTarget = event.relatedTarget;
-    let closeOverlay = true;
-
-    if (target instanceof HTMLElement && relatedTarget instanceof HTMLElement) {
-      let currentElement = relatedTarget;
-      while (currentElement.parentElement) {
-        if (currentElement.classList.contains('alg-path-suggestion-overlay')) {
-          closeOverlay = false;
-          break;
-        }
-        currentElement = currentElement.parentElement;
-      }
-    }
-
-    if (closeOverlay) {
-      this.closeOverlay();
-    }
-  }
-
-  closeOverlay(): void {
+    if (td === this.showOverlaySubject$.value?.target) return;
+    this.closeOverlaySubscription?.unsubscribe();
     this.showOverlaySubject$.next(undefined);
-    this.op?.hide();
+
+
+    const overlay = (this.op?.el.nativeElement as HTMLElement | undefined);
+    if (!td || !(event.target instanceof HTMLElement) || !this.op || !overlay) throw new Error('unexpected');
+    this.showOverlaySubject$.next({ event, itemId, target: td });
+
+    const op = this.op;
+    this.closeOverlaySubscription = this.op.onShow.pipe(
+      take(1),
+      map(() => overlay.querySelector<HTMLElement>('alg-path-suggestion')),
+      filter(isNotNull),
+      switchMap(pathSuggestion => {
+        const closeOnTdMouseLeave$ = merge(
+          fromEvent(td, 'mouseleave').pipe(map(() => true)),
+          fromEvent(pathSuggestion, 'mouseenter').pipe(map(() => false)), // cancel if mouse enters pathSuggestion
+        ).pipe(distinctUntilChanged(), debounceTime(100), filter(Boolean));
+
+        const closeOnOverlayMouseLeave$ = merge(
+          fromEvent(pathSuggestion, 'mouseleave').pipe(map(() => true)),
+          fromEvent(td, 'mouseenter').pipe(map(() => false)), // cancel if mouse re-enters target
+        ).pipe(distinctUntilChanged(), debounceTime(100), filter(Boolean));
+
+        return merge(closeOnTdMouseLeave$, closeOnOverlayMouseLeave$).pipe(takeUntil(op.onHide), take(1));
+      }),
+    ).subscribe(() => {
+      this.showOverlaySubject$.next(undefined);
+    });
   }
 
 }
