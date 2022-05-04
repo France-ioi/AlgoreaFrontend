@@ -59,7 +59,8 @@ export class ItemByIdComponent implements OnDestroy {
       // When loading a task with a former answerId, we need to remove the answerId from the url to avoid reloading
       // a former answer if the user refreshes the page
       // However, replacing the url should not retrigger an item fetch either, thus the use of history.state.preventRefetch
-      filter(() => !(history.state as Record<string, boolean> | null)?.preventRefetch),
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,@typescript-eslint/strict-boolean-expressions
+      filter(() => !(typeof history.state === 'object' && history.state?.preventRefetch)),
     ).subscribe(params => this.fetchItemAtRoute(params)),
 
     this.subscriptions.push(
@@ -132,7 +133,8 @@ export class ItemByIdComponent implements OnDestroy {
         filter(([ previous, current ]) => (!!current && (!previous || isTask(previous.item) || isTask(current.item)))),
         map(([ , current ]) => ensureDefined(current).item),
       ).subscribe(item => {
-        const activateFullFrame = isTask(item) && !(history.state as Record<string, boolean | undefined>).preventFullFrame;
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,@typescript-eslint/strict-boolean-expressions
+        const activateFullFrame = isTask(item) && !(typeof history.state === 'object' && history.state?.preventFullFrame);
         this.layoutService.configure({ fullFrameActive: activateFullFrame });
       })
     );
