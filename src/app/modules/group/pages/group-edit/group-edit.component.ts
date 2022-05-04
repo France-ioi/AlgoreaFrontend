@@ -13,6 +13,7 @@ import { GroupUpdateService } from '../../http-services/group-update.service';
 import { GroupDataSource } from '../../services/group-datasource.service';
 import { withManagementAdditions } from '../../helpers/group-management';
 import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'alg-group-edit',
@@ -92,9 +93,10 @@ export class GroupEditComponent implements OnDestroy, PendingChangesComponent {
         this.groupDataSource.refetchGroup(); // will re-enable the form
         this.actionFeedbackService.success($localize`Changes successfully saved.`);
       },
-      error: _err => {
+      error: err => {
         this.groupForm.enable();
         this.actionFeedbackService.unexpectedError();
+        if (!(err instanceof HttpErrorResponse)) throw err;
       }
     });
   }

@@ -30,6 +30,9 @@
 @import 'assets/scss/components/block-ui';
 @import 'assets/scss/components/tooltip';
 
+/* Custom themes */
+@import 'assets/scss/themes/coursera-pt';
+
 html {
   height: 100%;
   font-size: 62.5%;
@@ -38,12 +41,15 @@ html {
 body {
   font-size: 1.2rem;
   margin: 0;
-  background-color: $base-bk-color;
+  background-color: var(--base-bk-color);
   min-height: 100%;
+
+  --font-family: "titillium", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif,
+  "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 }
 
 body .p-component {
-  font-family: "titillium", sans-serif;
+  font-family: var(--font-family);
   font-size: inherit;
 }
 
@@ -72,7 +78,7 @@ body .p-component {
 
   &.p-overlaypanel-flipped {
     &:before {
-      border-top-color: $base-color;
+      border-top-color: var(--base-color);
     }
 
     &:after {
@@ -88,46 +94,33 @@ body .p-component {
 .p-tooltip.tooltip-custom {
 
   .p-tooltip-text {
-    background-color: $base-color;
+    background-color: var(--base-color);
     border-radius: 1rem;
     padding: 1rem 2rem;
   }
 
   &.p-tooltip-top {
     .p-tooltip-arrow {
-      border-top-color: $base-color;
+      border-top-color: var(--base-color);
     }
   }
 
 }
 
 .left-nav-theme {
-  --nav-bg-color: #{$nav-bg-color};
-  --nav-bg-secondary-color: #{$nav-bg-secondary-color};
-  --nav-bg-child-color: #{$nav-bg-child-color};
-  --nav-child-border-color: #{$nav-child-border-color};
-  --nav-bg-handle-color: #{$nav-bg-handle-color};
-  --nav-border-color: #{$nav-border-color};
-  --nav-border-secondary-color: #{$nav-border-secondary-color};
-  --nav-branch-border-color: #{$nav-branch-border-color};
-  --nav-handle-icon-color: #{$nav-handle-icon-color};
-  --nav-bg-hover-color: #{$nav-bg-hover-color};
-  --nav-bg-hover-secondary-color: #{$nav-bg-hover-secondary-color};
-  --nav-text-color: #{$nav-text-color};
-
   &.dark {
-    --nav-bg-color: #{$nav-dark-bg-color};
-    --nav-bg-secondary-color: #{$nav-dark-bg-secondary-color};
-    --nav-bg-child-color: #{$nav-dark-bg-child-color};
-    --nav-child-border-color: #{$nav-dark-child-border-color};
-    --nav-bg-handle-color: #{$nav-dark-bg-handle-color};
-    --nav-border-color: #{$nav-dark-border-color};
-    --nav-border-secondary-color: #{$nav-dark-border-secondary-color};
-    --nav-branch-border-color: #{$nav-dark-branch-border-color};
-    --nav-handle-icon-color: #{$nav-dark-handle-icon-color};
-    --nav-bg-hover-color: #{$nav-dark-bg-hover-color};
-    --nav-bg-hover-secondary-color: #{$nav-dark-bg-hover-secondary-color};
-    --nav-text-color: #{$nav-dark-text-color};
+    --nav-bg-color: var(--nav-dark-bg-color);
+    --nav-bg-secondary-color: var(--nav-dark-bg-secondary-color);
+    --nav-bg-child-color: var(--nav-dark-bg-child-color);
+    --nav-child-border-color: var(--nav-dark-child-border-color);
+    --nav-bg-handle-color: var(--nav-dark-bg-handle-color);
+    --nav-border-color: var(--nav-dark-border-color);
+    --nav-border-secondary-color: var(--nav-dark-border-secondary-color);
+    --nav-branch-border-color: var(--nav-dark-branch-border-color);
+    --nav-handle-icon-color: var(--nav-dark-handle-icon-color);
+    --nav-bg-hover-color: var(--nav-dark-bg-hover-color);
+    --nav-bg-hover-secondary-color: var(--nav-dark-bg-hover-secondary-color);
+    --nav-text-color: var(--nav-dark-text-color);
   }
 }
 

@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ReactiveComponentModule } from '@ngrx/component';
 import { ItemRoutingModule } from './item-routing.module';
 import { SharedComponentsModule } from '../shared-components/shared-components.module';
 import { ItemDetailsComponent } from './pages/item-details/item-details.component';
@@ -30,7 +31,6 @@ import { ItemEditAdvancedParametersComponent } from './pages/item-edit-advanced-
 import { CalendarModule } from 'primeng/calendar';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { ChapterUserProgressComponent } from './pages/chapter-user-progress/chapter-user-progress.component';
-import { ItemProgressLabelPipe } from './pages/item-progress/itemProgressLabel';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { UserProgressDetailsComponent } from './components/user-progress-details/user-progress-details.component';
 import { PropagationEditMenuComponent } from './components/propagation-edit-menu/propagation-edit-menu.component';
@@ -38,6 +38,8 @@ import { ItemDisplayComponent } from './pages/item-display/item-display.componen
 import { ItemRemoveButtonComponent } from './components/item-remove-button/item-remove-button.component';
 import { BeforeUnloadGuard } from 'src/app/shared/guards/before-unload-guard';
 import { AnswerAuthorIndicatorComponent } from './components/answer-author-indicator/answer-author-indicator.component';
+import { ItemPermissionsComponent } from './components/item-permissions/item-permissions.component';
+import { TaskLoaderComponent } from './components/task-loader/task-loader.component';
 
 @NgModule({
   declarations: [
@@ -63,18 +65,20 @@ import { AnswerAuthorIndicatorComponent } from './components/answer-author-indic
     AddItemComponent,
     ItemEditAdvancedParametersComponent,
     ChapterUserProgressComponent,
-    ItemProgressLabelPipe,
     UserProgressDetailsComponent,
     PropagationEditMenuComponent,
     ItemDisplayComponent,
     ItemRemoveButtonComponent,
     AnswerAuthorIndicatorComponent,
+    ItemPermissionsComponent,
+    TaskLoaderComponent,
   ],
   imports: [
     CommonModule,
     ItemRoutingModule,
     SharedComponentsModule,
     ReactiveFormsModule,
+    ReactiveComponentModule,
     FormsModule,
     TooltipModule,
     DialogModule,

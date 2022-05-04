@@ -1,0 +1,22 @@
+:host {
+  position: relative;
+  display: block;
+}
+
+.loading {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  width: 100%;
+  opacity: 0.9;
+  z-index: 10;
+}
+
+.label {
+  font-size: 1.6rem;
+  color: var(--base-color);
+}
+.sub-label {
+  color: var(--base-text-color);
+}

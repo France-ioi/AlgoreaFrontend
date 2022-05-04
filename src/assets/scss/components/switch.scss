@@ -14,10 +14,10 @@ $circular: 1.2rem;
       @extend %custom-pattern;
     }
     .p-inputswitch-slider {
-      background-color: $dark-transparency-color;
+      background-color: var(--dark-transparency-color);
 
       &::before {
-        background-color: $base-color;
+        background-color: var(--base-color);
         width: $handler-width;
         border-radius: 9rem;
         height: $handler-height;
@@ -73,7 +73,7 @@ $circular: 1.2rem;
     width: 5rem;
     height: 1.2rem;
 
-    @include custom-switch($dark-transparency-color, #DADADA, $dark-base-color, 5rem, 2.5rem, 1.2rem);
+    @include custom-switch(var(--dark-transparency-color), #DADADA, var(--dark-base-color), 5rem, 2.5rem, 1.2rem);
   }
 
   &.dark .p-inputswitch {
@@ -87,14 +87,14 @@ $circular: 1.2rem;
     width: 2.4rem;
     height: 1.2rem;
 
-    @include custom-switch($dark-transparency-color, #DADADA, $dark-base-color, 2.5rem, $circular, $circular);
+    @include custom-switch(var(--dark-transparency-color), #DADADA, var(--dark-base-color), 2.5rem, $circular, $circular);
   }
 
   &.dark-circular .p-inputswitch {
     width: 2.4rem;
     height: 1.2rem;
 
-    @include custom-switch(#2C5687, #152A43, $dark-base-color, 2.5rem, $circular, $circular);
+    @include custom-switch(#2C5687, #152A43, var(--dark-base-color), 2.5rem, $circular, $circular);
 
     .p-inputswitch-slider {
       &::before {

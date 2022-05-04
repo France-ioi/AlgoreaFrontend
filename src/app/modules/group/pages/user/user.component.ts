@@ -1,9 +1,9 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { GetUserService } from '../../http-services/get-user.service';
 import { mapToFetchState } from '../../../../shared/operators/state';
-import { combineLatest, Observable, of, Subject, Subscription, throwError } from 'rxjs';
+import { combineLatest, EMPTY, Observable, of, Subject, Subscription, throwError } from 'rxjs';
 import { ActivatedRoute, NavigationEnd, Router, RouterLinkActive } from '@angular/router';
-import { delay, switchMap, map, startWith, filter, share, distinctUntilChanged } from 'rxjs/operators';
+import { catchError, delay, switchMap, map, startWith, filter, share, distinctUntilChanged } from 'rxjs/operators';
 import { contentInfo } from '../../../../shared/models/content/content-info';
 import { CurrentContentService } from '../../../../shared/services/current-content.service';
 import { UserSessionService } from '../../../../shared/services/user-session.service';
@@ -37,7 +37,7 @@ export class UserComponent implements OnInit, OnDestroy {
     map(userProfile => userProfile.groupId),
   );
 
-  readonly fullFrameContent$ = this.layoutService.fullFrameContent$;
+  readonly fullFrame$ = this.layoutService.fullFrame$;
 
   private url$ = this.router.events.pipe(
     filter(event => event instanceof NavigationEnd),
@@ -70,10 +70,16 @@ export class UserComponent implements OnInit, OnDestroy {
     private layoutService: LayoutService,
     private groupRouter: GroupRouter,
     private getGroupBreadcrumbsService: GetGroupBreadcrumbsService,
-  ) {}
+  ) {
+    this.layoutService.configure({ fullFrameActive: false });
+  }
 
   ngOnInit(): void {
-    this.subscription = combineLatest([ this.url$, this.state$, this.breadcrumbs$ ])
+    this.subscription = combineLatest([
+      this.url$,
+      this.state$,
+      this.breadcrumbs$.pipe(catchError(() => EMPTY)), // error is handled elsewhere
+    ])
       .pipe(
         map(([ url, state, breadcrumbs ]) => {
           const title = state.isFetching || state.isError ? '...' : formatUser(state.data);

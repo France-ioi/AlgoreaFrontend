@@ -82,7 +82,7 @@ export class ManagerPermissionDialogComponent implements OnChanges {
       throw new Error('Unexpected: Missed manager data');
     }
 
-    const currentUserId = this.sessionService.session$.value?.user.groupId;
+    const currentUserId = this.sessionService.session$.value?.groupId;
 
     if (!currentUserId) {
       throw new Error('Unexpected: Missed current used ID');
@@ -97,7 +97,7 @@ export class ManagerPermissionDialogComponent implements OnChanges {
     }
 
     this.confirmationService.confirm({
-      message: $localize`Are you sure to remove from yourself the permission to edit group settings and edit managers ? 
+      message: $localize`Are you sure to remove from yourself the permission to edit group settings and edit managers?
         You may lose manager access and not be able to restore it.`,
       header: $localize`Confirm Action`,
       icon: 'pi pi-exclamation-triangle',

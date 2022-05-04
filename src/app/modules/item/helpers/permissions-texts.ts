@@ -1,9 +1,10 @@
-import { ProgressSelectValue } from
-  'src/app/modules/shared-components/components/collapsible-section/progress-select/progress-select.component';
+import {
+  ProgressSelectValue
+} from 'src/app/modules/shared-components/components/collapsible-section/progress-select/progress-select.component';
 import { GroupPermissions } from 'src/app/shared/http-services/group-permissions.service';
-import { PermissionsInfo } from '../../helpers/item-permissions';
-import { generateErrorMessage, permissionsInfoString } from '../../helpers/permissions-string';
-import { TypeFilter } from '../composition-filter/composition-filter.component';
+import { PermissionsInfo } from './item-permissions';
+import { generateErrorMessage, permissionsInfoString } from './permissions-string';
+import { TypeFilter } from '../components/composition-filter/composition-filter.component';
 import {
   validateCanView,
   validateCanGrantView,
@@ -12,7 +13,7 @@ import {
   validateIsOwner,
   validateCanMakeSessionOfficial,
   ConstraintError,
-} from '../../helpers/item-permissions-constraints';
+} from './item-permissions-constraints';
 
 export interface PermissionsDialogData {
   canViewValues: ProgressSelectValue<string>[],
@@ -34,7 +35,7 @@ function getTargetTypeString(targetType: TypeFilter): string {
   }
 }
 
-function generateCanViewValues(
+export function generateCanViewValues(
   targetType: TypeFilter,
 ): ProgressSelectValue<GroupPermissions['canView']>[] {
   const targetTypeString = getTargetTypeString(targetType);

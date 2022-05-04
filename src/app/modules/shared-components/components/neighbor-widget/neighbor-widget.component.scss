@@ -7,8 +7,13 @@
   height: 2.2rem;
 }
 
+.neighbor-widget-wrapper {
+  border-radius: 2.2rem;
+  overflow: hidden;
+}
+
 .neighbor-widget-button {
-  background-color: $base-color;
+  background-color: var(--base-color);
   color: #fff;
   border: none;
   outline: none;
@@ -16,26 +21,29 @@
   width: 2.6rem;
   height: 100%;
   cursor: pointer;
+  position: relative;
+  z-index: 2;
 
   &:hover:not(:disabled) {
-    background-color: $base-dark-color-hover;
+    background-color: var(--base-dark-color-hover);
   }
 
   &:disabled {
     cursor: not-allowed;
+    background: #a1c1ee;
+    opacity: 1;
   }
 
   &:first-child {
     padding-left: .2rem;
-    border-radius: 50% 0 0 50%;
-
-    &:not(:disabled) {
-      background-color: $dark-base-color;
-    }
+    z-index: 1;
   }
 
   &:last-child {
     padding-right: .2rem;
-    border-radius: 0 50% 50% 0;
   }
+}
+
+.up-button {
+  background-color: var(--dark-base-color);
 }

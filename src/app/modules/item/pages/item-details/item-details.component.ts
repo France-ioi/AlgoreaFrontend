@@ -4,17 +4,29 @@ import { canCurrentUserViewItemContent } from '../../helpers/item-permissions';
 import { ItemDataSource } from '../../services/item-datasource.service';
 import { mapStateData, readyData } from 'src/app/shared/operators/state';
 import { LayoutService } from '../../../../shared/services/layout.service';
-import { RouterLinkActive } from '@angular/router';
+import { Router, RouterLinkActive } from '@angular/router';
 import { TaskTab } from '../item-display/item-display.component';
-import { Mode, ModeService } from 'src/app/shared/services/mode.service';
-import { combineLatest, fromEvent, merge, Observable, of, Subject } from 'rxjs';
-import { catchError, distinctUntilChanged, filter, map, mergeWith, shareReplay, switchMap, take, takeUntil } from 'rxjs/operators';
+import { combineLatest, fromEvent, merge, Observable, of, ReplaySubject, Subject } from 'rxjs';
+import {
+  catchError,
+  distinctUntilChanged,
+  filter,
+  map,
+  mergeWith,
+  shareReplay,
+  switchMap,
+  take,
+  takeUntil,
+} from 'rxjs/operators';
 import { TaskConfig } from '../../services/item-task.service';
 import { BeforeUnloadComponent } from 'src/app/shared/guards/before-unload-guard';
 import { ItemContentComponent } from '../item-content/item-content.component';
 import { errorIsHTTPForbidden } from 'src/app/shared/helpers/errors';
 import { urlArrayForItemRoute } from 'src/app/shared/routing/item-route';
 import { GetAnswerService } from '../../http-services/get-answer.service';
+import { appConfig } from 'src/app/shared/helpers/config';
+import { GroupWatchingService } from 'src/app/core/services/group-watching.service';
+import { isTask } from 'src/app/shared/helpers/item-type';
 
 const loadForbiddenAnswerError = new Error('load answer forbidden');
 
@@ -36,11 +48,25 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent {
     map(state => state.isReady && state.data),
   );
 
-  taskTabs: TaskTab[] = [];
+  private tabs = new ReplaySubject<TaskTab[]>(1);
+  tabs$ = combineLatest([ this.tabs, this.itemData$.pipe(readyData()) ]).pipe(
+    map(([ tabs, data ]) => {
+      const canShowSolution = data.item.permissions.canView === 'solution' || !!data.currentResult?.validated;
+      return canShowSolution
+        ? tabs
+        : tabs.filter(tab => tab.view !== 'solution');
+    }),
+    map(tabs => tabs.filter(tab => !appConfig.featureFlags.hideTaskTabs.includes(tab.view))),
+    shareReplay(1),
+  );
+  readonly taskTabs$ = this.tabs$.pipe(map(tabs => tabs.filter(tab => tab.view !== 'progress')));
+  readonly showProgressTab$ = combineLatest([ this.groupWatchingService.isWatching$, this.tabs$ ]).pipe(
+    map(([ isWatching, tabs ]) => isWatching || tabs.some(tab => tab.view === 'progress')),
+  );
   taskView?: TaskTab['view'];
 
-  readonly fullFrameContent$ = this.layoutService.fullFrameContent$;
-  readonly watchedGroup$ = this.userService.watchedGroup$;
+  readonly fullFrame$ = this.layoutService.fullFrame$;
+  readonly watchedGroup$ = this.groupWatchingService.watchedGroup$;
 
   unknownError?: Error;
 
@@ -63,11 +89,12 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent {
     map(([{ route }]) => urlArrayForItemRoute({ ...route, attemptId: undefined, parentAttemptId: undefined, answerId: undefined })),
   );
 
-  readonly taskReadOnly$ = this.modeService.mode$.pipe(map(mode => mode === Mode.Watching));
+  readonly taskReadOnly$ = this.groupWatchingService.isWatching$;
   readonly taskConfig$: Observable<TaskConfig> = combineLatest([
     this.formerAnswer$,
     this.taskReadOnly$,
-  ]).pipe(map(([ formerAnswer, readOnly ]) => ({ readOnly, formerAnswer })));
+    this.itemData$.pipe(readyData()),
+  ]).pipe(map(([ formerAnswer, readOnly, data ]) => ({ readOnly, formerAnswer, locale: data.item.string.languageTag })));
 
   // Any value emitted in skipBeforeUnload$ resumes navigation WITHOUT cancelling the save request.
   private skipBeforeUnload$ = new Subject<void>();
@@ -91,7 +118,12 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent {
 
   private subscriptions = [
     this.itemDataSource.state$.subscribe(state => {
-      if (state.isFetching) this.taskTabs = []; // reset task tabs when item changes.
+      // reset tabs when item changes. By default do not display it unless we currently are on progress page
+      if (state.isFetching) this.tabs.next(this.isProgressPage() ? [{ view: 'progress', name: 'Progress' }] : []);
+      // update tabs when item is fetched
+      // Case 1: item is not a task: display the progress tab anyway
+      // Case 2: item is a task: delegate tab display to item task service, start with no tabs
+      if (state.isReady) this.tabs.next(isTask(state.data.item) && !this.isProgressPage() ? [] : [{ view: 'progress', name: 'Progress' }]);
     }),
     fromEvent<BeforeUnloadEvent>(globalThis, 'beforeunload', { capture: true })
       .pipe(switchMap(() => this.itemContentComponent?.itemDisplayComponent?.saveAnswerAndState() ?? of(undefined)), take(1))
@@ -101,16 +133,21 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent {
     }),
   ];
 
+  errorMessage = $localize`:@@unknownError:An unknown error occurred. ` +
+    $localize`:@@contactUs:If the problem persists, please contact us.`;
+
   constructor(
     private userService: UserSessionService,
+    private groupWatchingService: GroupWatchingService,
     private itemDataSource: ItemDataSource,
     private layoutService: LayoutService,
-    private modeService: ModeService,
     private getAnswerService: GetAnswerService,
+    private router: Router,
   ) {}
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
+    this.tabs.complete();
   }
 
   reloadItem(): void {
@@ -121,8 +158,9 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent {
     this.itemDataSource.patchItemScore(score);
   }
 
-  setTaskTabs(taskTabs: TaskTab[]): void {
-    this.taskTabs = taskTabs;
+  setTaskTabs(tabs: TaskTab[]): void {
+    this.tabs.next(tabs);
+    if (tabs.every(tab => tab.view !== this.taskView)) this.taskView = tabs[0]?.view;
   }
 
   setTaskTabActive(tab: TaskTab): void {
@@ -144,6 +182,10 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent {
 
   skipBeforeUnload(): void {
     this.skipBeforeUnload$.next();
+  }
+
+  private isProgressPage(): boolean {
+    return this.router.url.includes('/progress/history');
   }
 
 }

@@ -13,14 +13,14 @@
 
   <ng-container *ngIf="state.isReady && state.data as user">
 
-    <alg-user-header [user]="user" *ngIf="!(fullFrameContent$ | async)?.expanded"></alg-user-header>
+    <alg-user-header [user]="user" *ngIf="!(fullFrame$ | async)?.active"></alg-user-header>
 
     <nav class="nav-tab" *ngIf="(currentUserGroupId$ | async) === user.groupId || (activeRoute$ | async) === 'personal-data'">
       <a
           class="nav-tab-item"
           [routerLink]="'./'"
           routerLinkActive #progress="routerLinkActive"
-          [routerLinkActiveOptions]="{exact: true}"
+          [routerLinkActiveOptions]="{ matrixParams: 'ignored', queryParams: 'ignored', paths: 'exact', fragment: 'ignored'}"
           [class.active]="progress.isActive"
           i18n
       >
@@ -30,7 +30,7 @@
           class="nav-tab-item"
           [routerLink]="'./personal-data'"
           routerLinkActive #personalData="routerLinkActive"
-          [routerLinkActiveOptions]="{exact: true}"
+          [routerLinkActiveOptions]="{ matrixParams: 'ignored', queryParams: 'ignored', paths: 'exact', fragment: 'ignored'}"
           [class.active]="personalData.isActive"
           i18n
       >

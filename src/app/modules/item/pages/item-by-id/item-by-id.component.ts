@@ -9,17 +9,17 @@ import { CurrentContentService } from 'src/app/shared/services/current-content.s
 import { breadcrumbServiceTag } from '../../http-services/get-breadcrumb.service';
 import { GetItemPathService } from '../../http-services/get-item-path.service';
 import { ItemDataSource, ItemData } from '../../services/item-datasource.service';
-import { errorHasTag, errorIsHTTPForbidden } from 'src/app/shared/helpers/errors';
+import { errorHasTag, errorIsHTTPForbidden, errorIsHTTPNotFound } from 'src/app/shared/helpers/errors';
 import { ItemRouter } from 'src/app/shared/routing/item-router';
 import { isTask, ItemTypeCategory } from 'src/app/shared/helpers/item-type';
-import { Mode, ModeAction, ModeService } from 'src/app/shared/services/mode.service';
+import { ModeAction, ModeService } from 'src/app/shared/services/mode.service';
 import { isItemInfo, itemInfo } from 'src/app/shared/models/content/item-info';
 import { repeatLatestWhen } from 'src/app/shared/helpers/repeatLatestWhen';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
 import { isItemRouteError, itemRouteFromParams } from './item-route-validation';
 import { LayoutService } from 'src/app/shared/services/layout.service';
 import { readyData } from 'src/app/shared/operators/state';
-import { ensureDefined } from 'src/app/shared/helpers/null-undefined-predicates';
+import { ensureDefined } from 'src/app/shared/helpers/assert';
 
 const itemBreadcrumbCat = $localize`Items`;
 
@@ -63,7 +63,6 @@ export class ItemByIdComponent implements OnDestroy {
     ).subscribe(params => this.fetchItemAtRoute(params)),
 
     this.subscriptions.push(
-
       // on datasource state change, update current state and current content page info
       this.itemDataSource.state$.subscribe(state => {
         this.state = state;
@@ -105,7 +104,8 @@ export class ItemByIdComponent implements OnDestroy {
           }
 
         } else if (state.isError) {
-          if (errorHasTag(state.error, breadcrumbServiceTag) && errorIsHTTPForbidden(state.error)) {
+          // If path is incorrect, redirect to same page without path to trigger the solve missing path at next navigation
+          if (errorHasTag(state.error, breadcrumbServiceTag) && (errorIsHTTPForbidden(state.error) || errorIsHTTPNotFound(state.error))) {
             if (this.hasRedirected) throw new Error('Too many redirections (unexpected)');
             this.hasRedirected = true;
             const { contentType, id, answerId } = this.getItemRoute();
@@ -124,11 +124,6 @@ export class ItemByIdComponent implements OnDestroy {
         this.itemRouter.navigateTo(current.route, { page: action === ModeAction.StartEditing ? 'edit' : 'details' });
       }),
 
-      this.modeService.mode$.pipe(
-        filter(mode => [ Mode.Normal, Mode.Watching ].includes(mode)),
-        distinctUntilChanged(),
-      ).subscribe(() => this.reloadContent()),
-
       this.itemDataSource.state$.pipe(
         readyData(),
         distinctUntilChanged((a, b) => a.item.id === b.item.id),
@@ -138,7 +133,7 @@ export class ItemByIdComponent implements OnDestroy {
         map(([ , current ]) => ensureDefined(current).item),
       ).subscribe(item => {
         const activateFullFrame = isTask(item) && !(history.state as Record<string, boolean | undefined>).preventFullFrame;
-        this.layoutService.toggleFullFrameContent(activateFullFrame);
+        this.layoutService.configure({ fullFrameActive: activateFullFrame });
       })
     );
   }
@@ -146,13 +141,9 @@ export class ItemByIdComponent implements OnDestroy {
   ngOnDestroy(): void {
     this.currentContent.clear();
     this.subscriptions.forEach(s => s.unsubscribe());
-    this.layoutService.fullFrameContent$
-      .pipe(take(1), filter(fullFrame => fullFrame.expanded)) // if layout is in full frame and we quit an item page => disable full frame
-      .subscribe(() => this.layoutService.toggleFullFrameContent(false));
-  }
-
-  reloadContent(): void {
-    this.fetchItemAtRoute(this.activatedRoute.snapshot.paramMap);
+    this.layoutService.fullFrame$
+      .pipe(take(1), filter(fullFrame => fullFrame.active)) // if layout is in full frame and we quit an item page => disable full frame
+      .subscribe(() => this.layoutService.configure({ fullFrameActive: false }));
   }
 
   private getItemRoute(params?: ParamMap): ReturnType<typeof itemRouteFromParams> {
@@ -197,6 +188,7 @@ export class ItemByIdComponent implements OnDestroy {
       next: itemRoute => this.itemRouter.navigateTo(itemRoute, { navExtras: { replaceUrl: true } }),
       error: err => {
         this.state = errorState(err instanceof Error ? err : new Error('unknown error'));
+        this.layoutService.configure({ fullFrameActive: false });
       }
     });
   }

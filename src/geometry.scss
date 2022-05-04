@@ -2,7 +2,7 @@
 
 $border-radius: 0.5rem;
 $drop-shadow: 0 0.1rem rgba(0, 0, 0, 0.2);
-$border-filet: solid 0.1rem $dark-transparency-color;
+$border-filet: solid 0.1rem var(--dark-transparency-color);
 $left-panel-size: 34rem;
 
 /*
@@ -30,7 +30,7 @@ $left-panel-size: 34rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: $light-color;
+  background-color: var(--light-color);
   position: relative;
 }
 
@@ -38,7 +38,7 @@ $left-panel-size: 34rem;
 @mixin dialog-close {
   width: 4rem;
   height: 4rem;
-  color: $base-color;
+  color: var(--base-color);
   cursor: pointer;
   position: absolute;
   right: 2rem;
@@ -53,7 +53,7 @@ $left-panel-size: 34rem;
   width: 2.5rem;
   height: 2rem;
   font-size: 1.2rem;
-  color: $secondary-color;
+  color: var(--secondary-color);
   background-color: white;
   display: flex;
   align-items: center;
@@ -84,7 +84,7 @@ $left-panel-size: 34rem;
 //Main p-datatable-footer
 @mixin main-tabs {
   font-family: inherit;
-  border-right: 0.1rem solid $light-border-color;
+  border-right: 0.1rem solid var(--light-border-color);
   font-size: 1.2rem;
   height: 5rem;
   line-height: 5rem;
@@ -100,8 +100,8 @@ $left-panel-size: 34rem;
 @mixin main-tab-active {
   background-color: white;
   border-right-color: transparent;
-  color: $base-color;
-  border-top: 0.3rem solid $base-color;
+  color: var(--base-color);
+  border-top: 0.3rem solid var(--base-color);
   overflow: visible;
 
   // &:before {
@@ -139,7 +139,7 @@ $left-panel-size: 34rem;
 }
 
 .bg-section {
-  background-color: $section-color;
+  background-color: var(--section-color);
 }
 
 // If browser does not support -webkit-line-clamp

@@ -1,7 +1,7 @@
 import { Component, forwardRef, OnDestroy } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Observable, of, ReplaySubject, Subject } from 'rxjs';
-import { catchError, distinct, map, switchMap } from 'rxjs/operators';
+import { catchError, distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { GetItemByIdService } from 'src/app/modules/item/http-services/get-item-by-id.service';
 import { rawItemRoute, urlArrayForItemRoute } from 'src/app/shared/routing/item-route';
 import { SearchItemService } from 'src/app/modules/item/http-services/search-item.service';
@@ -35,7 +35,7 @@ export class AssociatedActivityComponent implements ControlValueAccessor, OnDest
 
   private refresh$ = new Subject<void>();
   readonly state$ = this.activityChanges$.pipe(
-    distinct(),
+    distinctUntilChanged(),
     switchMap(data => {
       if (data.triggerChange) this.onChange(data.activity);
 

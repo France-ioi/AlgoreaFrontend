@@ -2,11 +2,12 @@ import { Component, Input, OnChanges, OnDestroy } from '@angular/core';
 import { ItemData } from '../../services/item-datasource.service';
 import { ActivityLog, ActivityLogService } from 'src/app/shared/http-services/activity-log.service';
 import { combineLatest, Observable, ReplaySubject, Subject } from 'rxjs';
-import { distinct, switchMap, map } from 'rxjs/operators';
+import { distinctUntilChanged, switchMap, map } from 'rxjs/operators';
 import { mapToFetchState } from 'src/app/shared/operators/state';
 import { ItemType } from '../../../../shared/helpers/item-type';
 import { Item } from '../../http-services/get-item-by-id.service';
-import { UserSessionService, WatchedGroup } from '../../../../shared/services/user-session.service';
+import { GroupWatchingService, WatchedGroup } from 'src/app/core/services/group-watching.service';
+import { UserSessionService } from 'src/app/shared/services/user-session.service';
 
 interface Column {
   field: string,
@@ -31,8 +32,8 @@ export class ItemLogViewComponent implements OnChanges, OnDestroy {
   private readonly refresh$ = new Subject<void>();
   private readonly item$ = new ReplaySubject<Item>(1);
   readonly state$ = combineLatest([
-    this.item$.pipe(distinct()),
-    this.sessionService.watchedGroup$,
+    this.item$.pipe(distinctUntilChanged()),
+    this.groupWatchingService.watchedGroup$,
   ]).pipe(
     switchMap(([ item, watchedGroup ]) => this.getData$(item, watchedGroup)),
     mapToFetchState({ resetter: this.refresh$ }),
@@ -40,6 +41,7 @@ export class ItemLogViewComponent implements OnChanges, OnDestroy {
 
   constructor(
     private activityLogService: ActivityLogService,
+    private groupWatchingService: GroupWatchingService,
     private sessionService: UserSessionService,
   ) {}
 
@@ -60,7 +62,7 @@ export class ItemLogViewComponent implements OnChanges, OnDestroy {
     this.refresh$.next();
   }
 
-  private getData$(item: Item, watchingGroup?: WatchedGroup): Observable<Data> {
+  private getData$(item: Item, watchingGroup: WatchedGroup|null): Observable<Data> {
     return combineLatest([
       this.activityLogService.getActivityLog(item.id, watchingGroup?.route.id),
       this.sessionService.userProfile$,
@@ -93,7 +95,7 @@ export class ItemLogViewComponent implements OnChanges, OnDestroy {
     return false;
   }
 
-  private getLogColumns(type: ItemType, watchingGroup?: WatchedGroup): Column[] {
+  private getLogColumns(type: ItemType, watchingGroup: WatchedGroup|null): Column[] {
     const columns = [
       {
         field: 'activityType',
@@ -108,7 +110,7 @@ export class ItemLogViewComponent implements OnChanges, OnDestroy {
       {
         field: 'item.user',
         header: $localize`User`,
-        enabled: watchingGroup && !watchingGroup.login, // only if in watching mode and watch group is not a user
+        enabled: watchingGroup && !watchingGroup.route.isUser,
       },
       {
         field: 'at',

@@ -1,21 +1,21 @@
 <div class="container">
-  <div class="left" *ngIf="fullFrameContent$ | async as fullFrameContent" [ngClass]="{ collapsed: fullFrameContent.expanded, animated: fullFrameContent.canToggle }">
+  <div class="left" *ngIf="fullFrame$ | async as fullFrame" [ngClass]="{ collapsed: fullFrame.active, animated: fullFrame.animated }">
     <alg-left-menu></alg-left-menu>
   </div>
   <ng-container *ngIf="currentMode$ | async as currentMode">
     <alg-top-bar
       class="top-bar"
-      *ngIf="fullFrameContent$ | async as fullFrameContent"
-      [ngClass]="{ 'with-mode-bar': currentMode !== 'normal', collapsed: fullFrameContent.expanded, animated: fullFrameContent.canToggle }"
+      *ngIf="fullFrame$ | async as fullFrame"
+      [ngClass]="{ 'with-mode-bar': currentMode !== 'normal' || (isWatching$ | async), collapsed: fullFrame.active, animated: fullFrame.animated }"
       [scrolled]="scrolled"
-      [currentMode]="currentMode"
-      [fullFrameContent]="fullFrameContent"
-      [showTopRightControls]="(showTopRightControls$ | async) ?? true"
+      [modeBarDisplayed]="currentMode !== 'normal' || !!(isWatching$ | async)"
+      [fullFrameContent]="fullFrame"
+      [showTopRightControls]="!!(showTopRightControls$ | async)"
     ></alg-top-bar>
     <div
       class="right"
-      *ngIf="fullFrameContent$ | async as fullFrameContent"
-      [ngClass]="{ collapsed: fullFrameContent.expanded, animated: fullFrameContent.canToggle, 'with-mode-bar': currentMode !== 'normal', 'with-footer': contentFooter$ | async }"
+      *ngIf="fullFrame$ | async as fullFrame"
+      [ngClass]="{ collapsed: fullFrame.active, animated: fullFrame.animated, 'with-mode-bar': currentMode !== 'normal' || (isWatching$ | async) }"
       >
       <div class="main-content">
         <router-outlet></router-outlet>
@@ -36,6 +36,9 @@
   [closable]="false"
 >
   <p i18n="@@auth-error-modal-context">Oops, we are unable to make the site work properly. Are you connected to the Internet?</p>
-  <p i18n="@@auth-error-modal-todo">Try to refresh the page. If this problem persists, please contact us.</p>
+  <p>
+    <ng-container i18n="@@auth-error-modal-todo">Try to refresh the page.</ng-container>&nbsp;
+    <ng-container i18n="@@contactUs">If the problem persists, please contact us.</ng-container>
+  </p>
 </p-dialog>
 <alg-language-mismatch></alg-language-mismatch>

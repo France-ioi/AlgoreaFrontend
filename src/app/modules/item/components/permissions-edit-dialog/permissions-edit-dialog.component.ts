@@ -4,8 +4,8 @@ import { merge, Subject, Subscription } from 'rxjs';
 import { GroupPermissions } from 'src/app/shared/http-services/group-permissions.service';
 import { PermissionsInfo } from '../../helpers/item-permissions';
 import { permissionsConstraintsValidator } from '../../helpers/permissions-constraints-validator';
+import { PermissionsDialogData, generateValues } from '../../helpers/permissions-texts';
 import { TypeFilter } from '../composition-filter/composition-filter.component';
-import { generateValues, PermissionsDialogData } from './permissions-edit-dialog-texts';
 
 @Component({
   selector: 'alg-permissions-edit-dialog',

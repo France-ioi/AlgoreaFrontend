@@ -75,7 +75,7 @@ export class ChapterUserProgressComponent implements OnChanges, OnDestroy {
     },
     {
       field: 'submissions',
-      header: $localize`# subm.`,
+      header: $localize`:Truncated title (little space available) for 'number of submissions':# subm.`,
     },
     {
       field: 'score',

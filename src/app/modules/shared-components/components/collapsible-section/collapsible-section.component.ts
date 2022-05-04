@@ -14,6 +14,7 @@ export class CollapsibleSectionComponent {
   @Input() disabled = false;
   @Input() collapsed = true;
   @Input() collapsible = true;
+  @Input() theme: 'success' | 'warning' | 'danger' = 'success';
 
   @ContentChild('content') contentTemplate?: TemplateRef<any>;
 

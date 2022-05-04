@@ -51,7 +51,7 @@ export class ItemTaskAnswerService implements OnDestroy {
         return readOnly ? of(formerAnswer) : this.loadFormerAsNewCurrentAnswer(route.id, attemptId, formerAnswer);
       }
 
-      return this.getCurrentAnswer(route.id, attemptId);
+      return readOnly ? of(formerAnswer) : this.getCurrentAnswer(route.id, attemptId);
     }),
     shareReplay(1), // avoid duplicate xhr calls on multiple subscriptions.
   );
@@ -163,9 +163,11 @@ export class ItemTaskAnswerService implements OnDestroy {
       )),
       shareReplay(1),
     );
-    combineLatest([ grade$, saveGrade$ ]).subscribe(([ grade ]) => {
-      if (grade.score !== undefined) this.scoreChange.next(grade.score);
-    });
+    combineLatest([ grade$, saveGrade$ ])
+      .pipe(catchError(() => EMPTY)) // error is handled elsewhere by returning saveGrade$
+      .subscribe(([ grade ]) => {
+        if (grade.score !== undefined) this.scoreChange.next(grade.score);
+      });
     return saveGrade$;
   }
 

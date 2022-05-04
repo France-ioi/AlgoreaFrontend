@@ -4,6 +4,7 @@ import { GroupCreationService } from '../../http-services/group-creation.service
 import { ActionFeedbackService } from '../../../../shared/services/action-feedback.service';
 import { GroupRouter } from 'src/app/shared/routing/group-router';
 import { rawGroupRoute } from 'src/app/shared/routing/group-route';
+import { HttpErrorResponse } from '@angular/common/http';
 
 type GroupType = 'Class'|'Team'|'Club'|'Friends'|'Other'|'Session';
 
@@ -56,9 +57,10 @@ export class AddGroupComponent {
         this.actionFeedbackService.success($localize`Group successfully created`);
         this.groupRouter.navigateTo(rawGroupRoute({ ...group, id: createdId }));
       },
-      error: () => {
+      error: err => {
         this.state = 'ready';
         this.actionFeedbackService.unexpectedError();
+        if (!(err instanceof HttpErrorResponse)) throw err;
       }
     });
   }

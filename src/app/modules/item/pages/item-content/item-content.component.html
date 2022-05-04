@@ -6,7 +6,11 @@
         <p>{{ itemData.item.string.description }} </p>
       </alg-section>
 
-      <alg-chapter-children [itemData]="itemData" *ngIf="itemData.item.type === 'Chapter'"></alg-chapter-children>
+      <alg-chapter-children
+        [itemData]="itemData"
+        *ngIf="itemData.item.type === 'Chapter'"
+        [algFullHeightContent]="true"
+      ></alg-chapter-children>
 
       <ng-container *ngIf="(itemData.item.type === 'Task' || itemData.item.type === 'Course')">
         <ng-container *ngIf="itemData.item.url; else noUrl">
@@ -23,6 +27,7 @@
             (tabsChange)="taskTabsChange.emit($event)"
             (scoreChange)="scoreChange.emit($event)"
             (skipSave)="skipSave.emit()"
+            (refresh)="refresh.emit()"
           ></alg-item-display>
         </ng-container>
 
@@ -58,16 +63,16 @@
   </ng-template>
 
   <ng-template #noCurrentResult>
-    <p class="validation-text">
-      <span *ngIf="itemData.item.requiresExplicitEntry; else noRequiresExplicitEntry" i18n>
-        This activity requires explicit entry (not implemented).
+    <p class="validation-text" *ngIf="itemData.item.requiresExplicitEntry; else noRequiresExplicitEntry">
+      <span>
+        <ng-container i18n>This activity requires explicit entry</ng-container>&nbsp;
+        <ng-container i18n="@@notImplemented">(not implemented)</ng-container>.
       </span>
-      <ng-template #noRequiresExplicitEntry>
-        <span i18n>
-          Starting the activity ... (if you are stuck on this message, please retry and contact us if the problem persists)
-        </span>
-        <alg-loading size="medium"></alg-loading>
-      </ng-template>
     </p>
+    <ng-template #noRequiresExplicitEntry>
+      <alg-task-loader
+        i18n-label label="Starting the activity"
+      ></alg-task-loader>
+    </ng-template>
   </ng-template>
 </ng-container>

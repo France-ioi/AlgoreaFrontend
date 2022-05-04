@@ -47,7 +47,7 @@ $inactive-bk-color: #d8d8d8;
         cursor: pointer;
 
         &.active {
-          background-color: $base-color;
+          background-color: var(--base-color);
         }
 
         &.last {
@@ -65,7 +65,7 @@ $inactive-bk-color: #d8d8d8;
         flex: 1;
 
         &.active {
-          background-color: $base-color;
+          background-color: var(--base-color);
         }
 
         &.disabled {
@@ -79,7 +79,7 @@ $inactive-bk-color: #d8d8d8;
       display: flex;
       flex-direction: column;
       font-size: 1.2rem;
-      color: $base-text-color;
+      color: var(--base-text-color);
       min-height: 2.5rem;
 
       &.header-comment {
@@ -87,19 +87,19 @@ $inactive-bk-color: #d8d8d8;
       }
 
       .progress-desc-name {
-        color: $dark-text-color;
+        color: var(--dark-text-color);
         font-weight: bold;
         // margin-bottom: 0.4167rem;
         cursor: pointer;
 
         &.active {
-          color: $base-color;
+          color: var(--base-color);
         }
       }
 
       .progress-desc-comment {
         font-style: italic;
-        color: $base-text-color;
+        color: var(--base-text-color);
         margin-bottom: 1rem;
       }
     }

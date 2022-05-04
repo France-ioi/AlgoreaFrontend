@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { of } from 'rxjs';
@@ -198,7 +199,7 @@ describe('PendingJoinRequestsComponent', () => {
   it('should display an appropriate error message when the service fails', () => {
     component.onProcessRequests({ type: Action.Accept, data: [ MOCK_RESPONSE_2 ] });
 
-    serviceResponder$.error(new Error('...'));
+    serviceResponder$.error(new HttpErrorResponse({}));
     serviceResponder$.complete();
 
     expect(component.state).toEqual('ready');

@@ -10,11 +10,11 @@
 
   &.undefined {
     .state-icon {
-      background-color: $dark-base-color;
+      background-color: var(--dark-base-color);
     }
 
     .state-label {
-      background-color: $base-color;
+      background-color: var(--base-color);
     }
   }
 
@@ -65,7 +65,7 @@
     height: 100%;
     width: 3rem;
     line-height: 100%;
-    background-color: $dark-base-color;
+    background-color: var(--dark-base-color);
     border-top-left-radius: 9rem;
     border-bottom-left-radius: 9rem;
 
@@ -78,7 +78,7 @@
   .state-label {
     flex: 1;
     display: block;
-    background-color: $base-color;
+    background-color: var(--base-color);
     border-top-right-radius: 9rem;
     border-bottom-right-radius: 9rem;
     font-size: 0.9rem;

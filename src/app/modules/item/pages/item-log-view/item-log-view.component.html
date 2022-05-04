@@ -42,7 +42,15 @@
               <ng-container *ngSwitchCase="'activityType'">
                 {{ rowData.activityType | logActionDisplay : rowData.score }}
                 <ng-container *ngIf="rowData.displayLoadButton">
-                  &nbsp;(<a class="alg-link" [routerLink]="rowData.item | rawItemLink:'details':rowData.answerId" i18n>Load</a>)
+                  &nbsp;(
+                  <a
+                    class="alg-link"
+                    [routerLink]="rowData.item | rawItemLink:'details':rowData.answerId"
+                    i18n="text on button to load a submission"
+                  >
+                    Load
+                  </a>
+                  )
                 </ng-container>
               </ng-container>
               <ng-container *ngSwitchCase="'item.string.title'">

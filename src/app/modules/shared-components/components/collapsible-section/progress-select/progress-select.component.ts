@@ -43,6 +43,7 @@ export class ProgressSelectComponent<T> implements OnChanges, OnInit, ControlVal
   @Input() values: ProgressSelectValue<T>[] = [];
   @Input() defaultValue?: T;
   @Input() value?: T;
+  @Input() theme: 'success' | 'warning' | 'danger' = 'success';
 
   @Input() type: 'simple' | 'checksWithLock' = 'checksWithLock';
 

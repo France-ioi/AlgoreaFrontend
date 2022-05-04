@@ -1,5 +1,5 @@
 import { Component, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { combineLatest, EMPTY, forkJoin, Observable } from 'rxjs';
 import { catchError, filter, map, shareReplay, switchMap, withLatestFrom } from 'rxjs/operators';
 import { ActivityNavTreeService } from 'src/app/core/services/navigation/item-nav-tree.service';
@@ -7,7 +7,13 @@ import { GetItemChildrenService, ItemChild } from 'src/app/modules/item/http-ser
 import { GetItemPathService } from 'src/app/modules/item/http-services/get-item-path.service';
 import { errorIsHTTPForbidden } from 'src/app/shared/helpers/errors';
 import { isNotNull } from 'src/app/shared/helpers/null-undefined-predicates';
-import { setRedirectToSubPathAtInit } from 'src/app/shared/helpers/redirect-to-sub-path-at-init';
+import {
+  appendUrlWithQuery,
+  fromPathKey,
+  getRedirectToSubPathAtInit,
+  setRedirectToSubPathAtInit,
+} from 'src/app/shared/helpers/redirect-to-sub-path-at-init';
+import { boolToQueryParamValue, queryParamValueToBool } from 'src/app/shared/helpers/url';
 import { CheckLoginService } from 'src/app/shared/http-services/check-login.service';
 import { ResultActionsService } from 'src/app/shared/http-services/result-actions.service';
 import { mapToFetchState, readyData } from 'src/app/shared/operators/state';
@@ -28,6 +34,8 @@ const noChildError = new Error(LTIError.NoChild);
 const loginError = new Error(LTIError.LoginError);
 
 const isRedirectionParam = 'is_redirection';
+// Only handle `?from_path` query when `?lti_use_from_path=1`, ignore it otherwise
+const useFromPathKey = 'lti_use_from_path';
 const loginIdParam = 'user_id';
 
 @Component({
@@ -40,7 +48,11 @@ export class LTIComponent implements OnDestroy {
   private loginId$ = this.activatedRoute.queryParamMap.pipe(map(queryParams => queryParams.get(loginIdParam)));
 
   private isRedirection$ = this.activatedRoute.queryParamMap.pipe(
-    map(queryParams => queryParams.has(isRedirectionParam)),
+    map(queryParams => queryParamValueToBool(queryParams.get(isRedirectionParam))),
+  );
+
+  private fromPath$ = this.activatedRoute.queryParamMap.pipe(
+    map(queryParams => (queryParamValueToBool(queryParams.get(useFromPathKey)) ? queryParams.get(fromPathKey) : null)),
   );
 
   private contentId$ = this.activatedRoute.paramMap.pipe(
@@ -89,24 +101,39 @@ export class LTIComponent implements OnDestroy {
       this.contentId$,
       this.loginId$.pipe(filter(isNotNull)),
     ]).subscribe(([ contentId, loginId ]) => {
-      setRedirectToSubPathAtInit(`/lti/${contentId}?${loginIdParam}=${loginId}&${isRedirectionParam}=`);
+      setRedirectToSubPathAtInit(`/lti/${contentId}?${loginIdParam}=${loginId}&${isRedirectionParam}=${boolToQueryParamValue(true)}`);
       this.activityNavTreeService.navigationNeighborsRestrictedToDescendantOfElementId = contentId;
     }),
 
-    combineLatest([ this.isLoggedIn$, this.isRedirection$ ]).pipe(
+    combineLatest([
+      this.isLoggedIn$.pipe(catchError(() => EMPTY)), // error is handled elsewhere
+      this.isRedirection$,
+    ]).pipe(
       filter(([ isLoggedIn, isRedirection ]) => !isLoggedIn && !isRedirection),
     ).subscribe(() => this.userSession.login()), // will redirect outside the platform
 
-    this.navigationData$.pipe(readyData(), withLatestFrom(this.contentId$)).subscribe(([{ firstChild, path, attemptId }, contentId ]) => {
-      const itemRoute = fullItemRoute('activity', firstChild.id, path, { parentAttemptId: attemptId });
-      this.ltiDataSource.data = { contentId, attemptId };
-      this.itemRouter.navigateTo(itemRoute, { navExtras: { replaceUrl: true } });
-    }),
+    this.navigationData$
+      .pipe(readyData(), withLatestFrom(this.contentId$, this.fromPath$))
+      .subscribe(([{ firstChild, path, attemptId }, contentId, fromPath ]) => {
+        this.ltiDataSource.data = { contentId, attemptId };
+
+        const redirectUrl = getRedirectToSubPathAtInit();
+        if (!redirectUrl) throw new Error('redirect url should be set by now');
+        setRedirectToSubPathAtInit(appendUrlWithQuery(redirectUrl, useFromPathKey, boolToQueryParamValue(true)));
+
+        if (fromPath) {
+          void this.router.navigateByUrl(fromPath);
+          return;
+        }
+        const itemRoute = fullItemRoute('activity', firstChild.id, path, { parentAttemptId: attemptId });
+        this.itemRouter.navigateTo(itemRoute, { navExtras: { replaceUrl: true } });
+      }),
   ];
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private itemRouter: ItemRouter,
+    private router: Router,
     private userSession: UserSessionService,
     private checkLoginService: CheckLoginService,
     private layoutService: LayoutService,
@@ -116,8 +143,7 @@ export class LTIComponent implements OnDestroy {
     private getItemChildrenService: GetItemChildrenService,
     private ltiDataSource: LTIDataSource,
   ) {
-    this.layoutService.toggleTopRightControls(false);
-    this.layoutService.toggleFullFrameContent(true, false);
+    this.layoutService.configure({ fullFrameActive: true, showTopRightControls: false, canToggleFullFrame: false });
   }
 
   ngOnDestroy(): void {
