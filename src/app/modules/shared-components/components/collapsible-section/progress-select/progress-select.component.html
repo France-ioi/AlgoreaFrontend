@@ -20,8 +20,7 @@
           *ngIf="idx === selected"
           class="fa"
           [ngClass]="{
-            'fa-lock': validationErrors && type === 'checksWithLock',
-            'fa-lock-open': !validationErrors && type === 'checksWithLock',
+            'fa-lock': type === 'checksWithLock',
             'fa-check': type === 'simple'
           }"
         ></i>
@@ -38,11 +37,5 @@
       tooltipStyleClass="permissions-dialog"
       [escape]="false"
     ></div>
-  </div>
-  <div class="progress-select-item error" *ngIf="validationErrors">
-    <i class="icon" [ngClass]="'fa fa-exclamation-triangle'"></i>
-    <div class="errors">
-      <p *ngFor="let error of validationErrors" [innerHTML]="error"></p>
-    </div>
   </div>
 </div>

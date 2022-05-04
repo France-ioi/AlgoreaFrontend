@@ -18,6 +18,7 @@ import { MessagesModule } from 'primeng/messages';
 import { TabViewModule } from 'primeng/tabview';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ToastModule } from 'primeng/toast';
+import { TagModule } from 'primeng/tag';
 
 
 import { ClickOutsideModule } from 'ng-click-outside';
@@ -122,6 +123,7 @@ import { GroupPermissionCaptionPipe } from '../../shared/pipes/groupPermissionCa
     TabViewModule,
     ProgressSpinnerModule,
     ToastModule,
+    TagModule,
 
     ClickOutsideModule,
     ReactiveFormsModule,

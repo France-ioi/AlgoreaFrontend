@@ -22,17 +22,11 @@
         ></ng-container>
       </div>
     </div>
-    <div *ngIf="!validationErrors && disabledTooltip" class="gray-overlay tool"
-      [pTooltip]="disabledTooltip?.join('\n') || ''"
+    <div *ngIf="disabledTooltip.length" class="gray-overlay tool"
+      [pTooltip]="disabledTooltip.join('\n') || ''"
       tooltipPosition="top"
       tooltipStyleClass="permissions-dialog"
       [escape]="false"
     ></div>
-  </div>
-  <div class="item error" *ngIf="validationErrors">
-    <i class="icon" [ngClass]="'fa fa-exclamation-triangle'"></i>
-    <div class="errors">
-      <p *ngFor="let error of validationErrors" [innerHtml]="error"></p>
-    </div>
   </div>
 </div>
