@@ -32,14 +32,10 @@ function flatMap<T>(arr: T[][]) {
  * ]
  * ```
  */
-function combinations<T>(object: { [e in keyof T]: readonly T[e][] }): T[] {
-  return Object.keys(object).reduce(
+function combinations<T extends object>(object: { [e in keyof T]: readonly T[e][] }): T[] {
+  return Object.keys(object).reduce<T[]>(
     (res, key) => flatMap(res.map(t =>
-      object[key as keyof T].map(value => {
-        const element: T = { ...t };
-        element[key as keyof T] = value;
-        return element;
-      })
+      object[key as keyof T].map(value => ({ ...t, [key as keyof T]: value }))
     )), [{}] as T[]);
 }
 
@@ -47,7 +43,7 @@ describe('"can_view" permissions constraints', () => {
 
   it('should be a able to set to "none" ', () => {
     for (const giverPermissions of combinations({ canGrantView: canGrantViewValues })) {
-      expect(validateCanView({ canView: 'none' }, giverPermissions)).toEqual({});
+      expect(validateCanView({ canView: 'none' }, giverPermissions)).toEqual([]);
     }
   });
 
@@ -55,13 +51,13 @@ describe('"can_view" permissions constraints', () => {
     for (const giverPermissions of combinations({
       canGrantView: [ 'enter', 'content', 'content_with_descendants', 'solution', 'solution_with_grant' ] as const
     })) {
-      expect(validateCanView({ canView: 'info' }, giverPermissions)).toEqual({});
+      expect(validateCanView({ canView: 'info' }, giverPermissions)).toEqual([]);
     }
 
     for (const giverPermissions of combinations({
       canGrantView: [ 'none' ] as const
     })) {
-      expect(validateCanView({ canView: 'info' }, giverPermissions).canView).toBeDefined();
+      expect(validateCanView({ canView: 'info' }, giverPermissions)[0]).toBeDefined();
     }
   });
 
@@ -69,13 +65,13 @@ describe('"can_view" permissions constraints', () => {
     for (const giverPermissions of combinations({
       canGrantView: [ 'content', 'content_with_descendants', 'solution', 'solution_with_grant' ] as const
     })) {
-      expect(validateCanView({ canView: 'content' }, giverPermissions)).toEqual({});
+      expect(validateCanView({ canView: 'content' }, giverPermissions)).toEqual([]);
     }
 
     for (const giverPermissions of combinations({
       canGrantView: [ 'none', 'enter' ] as const
     })) {
-      expect(validateCanView({ canView: 'content' }, giverPermissions).canView).toBeDefined();
+      expect(validateCanView({ canView: 'content' }, giverPermissions)[0]).toBeDefined();
     }
   });
 
@@ -83,13 +79,13 @@ describe('"can_view" permissions constraints', () => {
     for (const giverPermissions of combinations({
       canGrantView: [ 'content_with_descendants', 'solution', 'solution_with_grant' ] as const
     })) {
-      expect(validateCanView({ canView: 'content_with_descendants' }, giverPermissions)).toEqual({});
+      expect(validateCanView({ canView: 'content_with_descendants' }, giverPermissions)).toEqual([]);
     }
 
     for (const giverPermissions of combinations({
       canGrantView: [ 'none', 'enter', 'content' ] as const
     })) {
-      expect(validateCanView({ canView: 'content_with_descendants' }, giverPermissions).canView).toBeDefined();
+      expect(validateCanView({ canView: 'content_with_descendants' }, giverPermissions)[0]).toBeDefined();
     }
   });
 
@@ -97,13 +93,13 @@ describe('"can_view" permissions constraints', () => {
     for (const giverPermissions of combinations({
       canGrantView: [ 'solution', 'solution_with_grant' ] as const
     })) {
-      expect(validateCanView({ canView: 'solution' }, giverPermissions)).toEqual({});
+      expect(validateCanView({ canView: 'solution' }, giverPermissions)).toEqual([]);
     }
 
     for (const giverPermissions of combinations({
       canGrantView: [ 'none', 'enter', 'content', 'content_with_descendants' ] as const
     })) {
-      expect(validateCanView({ canView: 'solution' }, giverPermissions).canView).toBeDefined();
+      expect(validateCanView({ canView: 'solution' }, giverPermissions)[0]).toBeDefined();
     }
   });
 
@@ -122,7 +118,7 @@ describe('"can_grant_view" permissions constraints', () => {
         isOwner: [ true, false ] as const,
       }),
     })) {
-      expect(validateCanGrantView(p.receiverPermissions, p.giverPermissions)).toEqual({});
+      expect(validateCanGrantView(p.receiverPermissions, p.giverPermissions)).toEqual([]);
     }
   });
 
@@ -139,7 +135,7 @@ describe('"can_grant_view" permissions constraints', () => {
         isOwner: [ true, false ] as const,
       }),
     })) {
-      expect(validateCanGrantView(p.receiverPermissions, p.giverPermissions)).toEqual({});
+      expect(validateCanGrantView(p.receiverPermissions, p.giverPermissions)).toEqual([]);
     }
 
     // receiver can_view < 'info'
@@ -153,7 +149,7 @@ describe('"can_grant_view" permissions constraints', () => {
         isOwner: [ true, false ] as const,
       }),
     })) {
-      expect(validateCanGrantView(p.receiverPermissions, p.giverPermissions).canGrantView).toBeDefined();
+      expect(validateCanGrantView(p.receiverPermissions, p.giverPermissions)[0]).toBeDefined();
     }
 
     // giver can_grant_view !== 'solution_with_grant'
@@ -167,7 +163,7 @@ describe('"can_grant_view" permissions constraints', () => {
         isOwner: [ true, false ] as const,
       }),
     })) {
-      expect(validateCanGrantView(p.receiverPermissions, p.giverPermissions).canGrantView).toBeDefined();
+      expect(validateCanGrantView(p.receiverPermissions, p.giverPermissions)[0]).toBeDefined();
     }
   });
 
@@ -184,7 +180,7 @@ describe('"can_grant_view" permissions constraints', () => {
         isOwner: [ true, false ] as const,
       }),
     })) {
-      expect(validateCanGrantView(p.receiverPermissions, p.giverPermissions)).toEqual({});
+      expect(validateCanGrantView(p.receiverPermissions, p.giverPermissions)).toEqual([]);
     }
 
     // receiver can_view < 'content'
@@ -198,7 +194,7 @@ describe('"can_grant_view" permissions constraints', () => {
         isOwner: [ true, false ] as const,
       }),
     })) {
-      expect(validateCanGrantView(p.receiverPermissions, p.giverPermissions).canGrantView).toBeDefined();
+      expect(validateCanGrantView(p.receiverPermissions, p.giverPermissions)[0]).toBeDefined();
     }
 
     // giver can_grant_view !== 'solution_with_grant'
@@ -212,7 +208,7 @@ describe('"can_grant_view" permissions constraints', () => {
         isOwner: [ true, false ] as const,
       }),
     })) {
-      expect(validateCanGrantView(p.receiverPermissions, p.giverPermissions).canGrantView).toBeDefined();
+      expect(validateCanGrantView(p.receiverPermissions, p.giverPermissions)[0]).toBeDefined();
     }
   });
 
@@ -229,7 +225,7 @@ describe('"can_grant_view" permissions constraints', () => {
         isOwner: [ true, false ] as const,
       }),
     })) {
-      expect(validateCanGrantView(p.receiverPermissions, p.giverPermissions)).toEqual({});
+      expect(validateCanGrantView(p.receiverPermissions, p.giverPermissions)).toEqual([]);
     }
 
     // receiver can_view < 'content_with_descendants'
@@ -243,7 +239,7 @@ describe('"can_grant_view" permissions constraints', () => {
         isOwner: [ true, false ] as const,
       }),
     })) {
-      expect(validateCanGrantView(p.receiverPermissions, p.giverPermissions).canGrantView).toBeDefined();
+      expect(validateCanGrantView(p.receiverPermissions, p.giverPermissions)[0]).toBeDefined();
     }
 
     // giver can_grant_view !== 'solution_with_grant'
@@ -257,7 +253,7 @@ describe('"can_grant_view" permissions constraints', () => {
         isOwner: [ true, false ] as const,
       }),
     })) {
-      expect(validateCanGrantView(p.receiverPermissions, p.giverPermissions).canGrantView).toBeDefined();
+      expect(validateCanGrantView(p.receiverPermissions, p.giverPermissions)[0]).toBeDefined();
     }
   });
 
@@ -274,7 +270,7 @@ describe('"can_grant_view" permissions constraints', () => {
         isOwner: [ true, false ] as const,
       }),
     })) {
-      expect(validateCanGrantView(p.receiverPermissions, p.giverPermissions)).toEqual({});
+      expect(validateCanGrantView(p.receiverPermissions, p.giverPermissions)).toEqual([]);
     }
 
     // receiver can_view < 'solution'
@@ -288,7 +284,7 @@ describe('"can_grant_view" permissions constraints', () => {
         isOwner: [ true, false ] as const,
       }),
     })) {
-      expect(validateCanGrantView(p.receiverPermissions, p.giverPermissions).canGrantView).toBeDefined();
+      expect(validateCanGrantView(p.receiverPermissions, p.giverPermissions)[0]).toBeDefined();
     }
 
     // giver can_grant_view !== 'solution_with_grant'
@@ -302,7 +298,7 @@ describe('"can_grant_view" permissions constraints', () => {
         isOwner: [ true, false ] as const,
       }),
     })) {
-      expect(validateCanGrantView(p.receiverPermissions, p.giverPermissions).canGrantView).toBeDefined();
+      expect(validateCanGrantView(p.receiverPermissions, p.giverPermissions)[0]).toBeDefined();
     }
   });
 
@@ -319,7 +315,7 @@ describe('"can_grant_view" permissions constraints', () => {
         isOwner: [ true ] as const,
       }),
     })) {
-      expect(validateCanGrantView(p.receiverPermissions, p.giverPermissions)).toEqual({});
+      expect(validateCanGrantView(p.receiverPermissions, p.giverPermissions)).toEqual([]);
     }
 
     // receiver can_view < 'solution'
@@ -333,7 +329,7 @@ describe('"can_grant_view" permissions constraints', () => {
         isOwner: [ true, false ] as const,
       }),
     })) {
-      expect(validateCanGrantView(p.receiverPermissions, p.giverPermissions).canGrantView).toBeDefined();
+      expect(validateCanGrantView(p.receiverPermissions, p.giverPermissions)[0]).toBeDefined();
     }
 
     // giver is_owner !== true
@@ -347,7 +343,7 @@ describe('"can_grant_view" permissions constraints', () => {
         isOwner: [ false ] as const,
       }),
     })) {
-      expect(validateCanGrantView(p.receiverPermissions, p.giverPermissions).canGrantView).toBeDefined();
+      expect(validateCanGrantView(p.receiverPermissions, p.giverPermissions)[0]).toBeDefined();
     }
   });
 });
@@ -365,7 +361,7 @@ describe('"can_watch" permissions constraints', () => {
         isOwner: [ true, false ] as const,
       }),
     })) {
-      expect(validateCanWatch(p.receiverPermissions, p.giverPermissions)).toEqual({});
+      expect(validateCanWatch(p.receiverPermissions, p.giverPermissions)).toEqual([]);
     }
   });
 
@@ -385,7 +381,7 @@ describe('"can_watch" permissions constraints', () => {
           isOwner: [ true, false ] as const,
         }),
       })) {
-        expect(validateCanWatch(p.receiverPermissions, p.giverPermissions)).toEqual({});
+        expect(validateCanWatch(p.receiverPermissions, p.giverPermissions)).toEqual([]);
       }
 
       // receiver can_view < 'content'
@@ -399,7 +395,7 @@ describe('"can_watch" permissions constraints', () => {
           isOwner: [ true, false ] as const,
         }),
       })) {
-        expect(validateCanWatch(p.receiverPermissions, p.giverPermissions).canWatch).toBeDefined();
+        expect(validateCanWatch(p.receiverPermissions, p.giverPermissions)[0]).toBeDefined();
       }
 
       // giver can_watch !== 'answer_with_grant'
@@ -413,7 +409,7 @@ describe('"can_watch" permissions constraints', () => {
           isOwner: [ true, false ] as const,
         }),
       })) {
-        expect(validateCanWatch(p.receiverPermissions, p.giverPermissions).canWatch).toBeDefined();
+        expect(validateCanWatch(p.receiverPermissions, p.giverPermissions)[0]).toBeDefined();
       }
     });
   });
@@ -429,7 +425,7 @@ describe('"can_watch" permissions constraints', () => {
         isOwner: [ true ] as const,
       }),
     })) {
-      expect(validateCanWatch(p.receiverPermissions, p.giverPermissions)).toEqual({});
+      expect(validateCanWatch(p.receiverPermissions, p.giverPermissions)).toEqual([]);
     }
 
     // receiver can_view < 'content'
@@ -443,7 +439,7 @@ describe('"can_watch" permissions constraints', () => {
         isOwner: [ true, false ] as const,
       }),
     })) {
-      expect(validateCanWatch(p.receiverPermissions, p.giverPermissions).canWatch).toBeDefined();
+      expect(validateCanWatch(p.receiverPermissions, p.giverPermissions)[0]).toBeDefined();
     }
 
     // giver not owner
@@ -457,7 +453,7 @@ describe('"can_watch" permissions constraints', () => {
         isOwner: [ false ] as const,
       }),
     })) {
-      expect(validateCanWatch(p.receiverPermissions, p.giverPermissions).canWatch).toBeDefined();
+      expect(validateCanWatch(p.receiverPermissions, p.giverPermissions)[0]).toBeDefined();
     }
   });
 
@@ -476,7 +472,7 @@ describe('"can_edit" permissions constraints', () => {
         isOwner: [ true, false ] as const,
       }),
     })) {
-      expect(validateCanEdit(p.receiverPermissions, p.giverPermissions)).toEqual({});
+      expect(validateCanEdit(p.receiverPermissions, p.giverPermissions)).toEqual([]);
     }
   });
 
@@ -496,7 +492,7 @@ describe('"can_edit" permissions constraints', () => {
           isOwner: [ true, false ] as const,
         }),
       })) {
-        expect(validateCanEdit(p.receiverPermissions, p.giverPermissions)).toEqual({});
+        expect(validateCanEdit(p.receiverPermissions, p.giverPermissions)).toEqual([]);
       }
 
       // receiver can_view < 'content'
@@ -510,7 +506,7 @@ describe('"can_edit" permissions constraints', () => {
           isOwner: [ true, false ] as const,
         }),
       })) {
-        expect(validateCanEdit(p.receiverPermissions, p.giverPermissions).canEdit).toBeDefined();
+        expect(validateCanEdit(p.receiverPermissions, p.giverPermissions)[0]).toBeDefined();
       }
 
       // giver can_edit !== 'all_with_grant'
@@ -524,7 +520,7 @@ describe('"can_edit" permissions constraints', () => {
           isOwner: [ true, false ] as const,
         }),
       })) {
-        expect(validateCanEdit(p.receiverPermissions, p.giverPermissions).canEdit).toBeDefined();
+        expect(validateCanEdit(p.receiverPermissions, p.giverPermissions)[0]).toBeDefined();
       }
     });
   });
@@ -540,7 +536,7 @@ describe('"can_edit" permissions constraints', () => {
         isOwner: [ true ] as const,
       }),
     })) {
-      expect(validateCanEdit(p.receiverPermissions, p.giverPermissions)).toEqual({});
+      expect(validateCanEdit(p.receiverPermissions, p.giverPermissions)).toEqual([]);
     }
 
     // receiver can_view < 'content'
@@ -554,7 +550,7 @@ describe('"can_edit" permissions constraints', () => {
         isOwner: [ true, false ] as const,
       }),
     })) {
-      expect(validateCanEdit(p.receiverPermissions, p.giverPermissions).canEdit).toBeDefined();
+      expect(validateCanEdit(p.receiverPermissions, p.giverPermissions)[0]).toBeDefined();
     }
 
     // giver not owner
@@ -568,7 +564,7 @@ describe('"can_edit" permissions constraints', () => {
         isOwner: [ false ] as const,
       }),
     })) {
-      expect(validateCanEdit(p.receiverPermissions, p.giverPermissions).canEdit).toBeDefined();
+      expect(validateCanEdit(p.receiverPermissions, p.giverPermissions)[0]).toBeDefined();
     }
   });
 
@@ -585,7 +581,7 @@ describe('"can_make_session_official" permissions constraints', () => {
         isOwner: [ true, false ] as const,
       }),
     })) {
-      expect(validateCanMakeSessionOfficial(p.receiverPermissions, p.giverPermissions)).toEqual({});
+      expect(validateCanMakeSessionOfficial(p.receiverPermissions, p.giverPermissions)).toEqual([]);
     }
   });
 
@@ -596,7 +592,7 @@ describe('"can_make_session_official" permissions constraints', () => {
       canMakeSessionOfficial: [ true ] as const,
       canView: [ 'info', 'content', 'content_with_descendants', 'solution' ] as const,
     })) {
-      expect(validateCanMakeSessionOfficial(receiverPermissions, { isOwner: true })).toEqual({});
+      expect(validateCanMakeSessionOfficial(receiverPermissions, { isOwner: true })).toEqual([]);
     }
 
     // receiver can_view < 'info'
@@ -606,7 +602,7 @@ describe('"can_make_session_official" permissions constraints', () => {
       expect(validateCanMakeSessionOfficial({
         canMakeSessionOfficial: true ,
         canView: 'none' ,
-      }, giverPermissions).canMakeSessionOfficial).toBeDefined();
+      }, giverPermissions)[0]).toBeDefined();
     }
 
     // giver not owner
@@ -614,19 +610,19 @@ describe('"can_make_session_official" permissions constraints', () => {
       canMakeSessionOfficial: [ true ] as const,
       canView: canViewValues,
     })) {
-      expect(validateCanMakeSessionOfficial(receiverPermissions, { isOwner: false }).canMakeSessionOfficial).toBeDefined();
+      expect(validateCanMakeSessionOfficial(receiverPermissions, { isOwner: false })[0]).toBeDefined();
     }
   });
 });
 
 describe('"is_owner" permissions constraints', () => {
   it('should be a able to set to "false" ', () => {
-    expect(validateIsOwner({ isOwner: false }, { isOwner: true })).toEqual({});
-    expect(validateIsOwner({ isOwner: false }, { isOwner: false })).toEqual({});
+    expect(validateIsOwner({ isOwner: false }, { isOwner: true })).toEqual([]);
+    expect(validateIsOwner({ isOwner: false }, { isOwner: false })).toEqual([]);
   });
 
   it('should be a able to set to "true" ', () => {
-    expect(validateIsOwner({ isOwner: true }, { isOwner: true })).toEqual({});
-    expect(validateIsOwner({ isOwner: true }, { isOwner: false }).isOwner).toBeDefined();
+    expect(validateIsOwner({ isOwner: true }, { isOwner: true })).toEqual([]);
+    expect(validateIsOwner({ isOwner: true }, { isOwner: false })[0]).toBeDefined();
   });
 });

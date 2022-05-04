@@ -3,7 +3,7 @@ import { FormBuilder } from '@angular/forms';
 import { merge, Subject, Subscription } from 'rxjs';
 import { GroupPermissions } from 'src/app/shared/http-services/group-permissions.service';
 import { PermissionsInfo } from '../../helpers/item-permissions';
-import { permissionsConstraintsValidator } from '../../helpers/item-permissions-constraints';
+import { permissionsConstraintsValidator } from '../../helpers/permissions-constraints-validator';
 import { TypeFilter } from '../composition-filter/composition-filter.component';
 import { generateValues, PermissionsDialogData } from './permissions-edit-dialog-texts';
 
@@ -63,7 +63,7 @@ export class PermissionsEditDialogComponent implements OnChanges, OnDestroy {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.permissions || changes.giverPermissions) {
       if (this.permissions && this.giverPermissions) {
-        this.form.setValidators(permissionsConstraintsValidator(this.giverPermissions));
+        this.form.setValidators(permissionsConstraintsValidator(this.giverPermissions, this.targetType));
         this.form.updateValueAndValidity();
         this.form.reset({ ...this.permissions }, { emitEvent: false });
       }

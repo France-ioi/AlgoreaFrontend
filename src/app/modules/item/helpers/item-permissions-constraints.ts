@@ -1,8 +1,29 @@
-import { ValidationErrors, ValidatorFn, AbstractControl } from '@angular/forms';
 import { GroupPermissions } from 'src/app/shared/http-services/group-permissions.service';
-import { PermissionsInfo, canGrantViewValues, canViewValues, permissionsInfoString } from './item-permissions';
+import { PermissionsInfo, canGrantViewValues, canViewValues } from './item-permissions';
 
-const bolden = (text: string): string => `<b>${text}</b>`;
+/**
+ * The permissions that are subject to a constraint
+ */
+export type ConstrainedPermissions = Omit<GroupPermissions, 'canEnterUntil' | 'canEnterFrom'>;
+
+export interface ConstraintError<Permission extends keyof ConstrainedPermissions = keyof ConstrainedPermissions> {
+  permission: Permission,
+  expectedValue: ConstrainedPermissions[Permission],
+  constraintType: 'atLeast' | 'equals',
+  on: 'giver' | 'receiver',
+}
+
+function genError<Permission extends keyof ConstrainedPermissions>(permission: Permission) {
+  return (
+    expectedValue: ConstrainedPermissions[Permission],
+    on: 'giver' | 'receiver',
+    constraintType?: ConstrainedPermissions[Permission] extends boolean ? never : 'atLeast',
+  ): ConstraintError<Permission> => ({
+    permission, expectedValue, constraintType: constraintType ?? 'equals', on
+  });
+}
+
+// const bolden = (text: string): string => `<b>${text}</b>`;
 
 function hasAtLeastPermission<T extends readonly string[]>(permissionsSortedByLoosest: T, permission: T[number]) {
   return (minimumPermission: T[number]): boolean =>
@@ -12,210 +33,153 @@ function hasAtLeastPermission<T extends readonly string[]>(permissionsSortedByLo
 export function validateCanView(
   receiverPermissions: Pick<GroupPermissions, 'canView'>,
   giverPermissions: Pick<PermissionsInfo, 'canGrantView'>
-): { canView?: string[] } {
+): ConstraintError[] {
 
   const giverCanAtLeastGrantView = hasAtLeastPermission(canGrantViewValues, giverPermissions.canGrantView);
 
   if (receiverPermissions.canView === 'info' && !giverCanAtLeastGrantView('enter')) {
-    return { canView: [
-      $localize`You need ${bolden(permissionsInfoString.canGrantView.string)} to be at least ${
-        bolden(permissionsInfoString.canGrantView.enter)}`
-    ] };
+    return [ genError('canGrantView')('enter', 'giver', 'atLeast') ];
   }
   if (receiverPermissions.canView === 'content' && !giverCanAtLeastGrantView('content')) {
-    return { canView: [
-      $localize`You need ${bolden(permissionsInfoString.canGrantView.string)} to be at least ${
-        bolden(permissionsInfoString.canGrantView.content)}`
-    ] };
+    return [ genError('canGrantView')('content', 'giver', 'atLeast') ];
   }
   if (receiverPermissions.canView === 'content_with_descendants' && !giverCanAtLeastGrantView('content_with_descendants')) {
-    return { canView: [
-      $localize`You need ${bolden(permissionsInfoString.canGrantView.string)} to be at least ${
-        bolden(permissionsInfoString.canGrantView.content_with_descendants)}`
-    ] };
+    return [ genError('canGrantView')('content_with_descendants', 'giver', 'atLeast') ];
   }
   if (receiverPermissions.canView === 'solution' && !giverCanAtLeastGrantView('solution')) {
-    return { canView: [
-      $localize`You need ${bolden(permissionsInfoString.canGrantView.string)} to be at least ${
-        bolden(permissionsInfoString.canGrantView.solution)}`
-    ] };
+    return [ genError('canGrantView')('solution', 'giver', 'atLeast') ];
   }
-  return {};
+  return [];
 }
 
 export function validateCanGrantView(
   receiverPermissions: Pick<GroupPermissions, 'canView' | 'canGrantView'>,
   giverPermissions: Pick<PermissionsInfo, 'canGrantView' | 'isOwner'>
-): { canGrantView?: string[] } {
+): ConstraintError[] {
 
-  if (receiverPermissions.canGrantView === 'none') return {};
+  if (receiverPermissions.canGrantView === 'none') return [];
 
-  const errors: string[] = [];
+  const errors: ConstraintError[] = [];
   const receiverCanAtLeastView = hasAtLeastPermission(canViewValues, receiverPermissions.canView);
 
   if (receiverPermissions.canGrantView === 'solution_with_grant') {
     if (!giverPermissions.isOwner) {
-      errors.push($localize`You need to be owner of this item`);
+      errors.push(genError('isOwner')(true, 'giver'));
     }
     if (!receiverCanAtLeastView('solution')) {
-      errors.push($localize`This user needs ${bolden(permissionsInfoString.canView.string)} to be at least ${
-        bolden(permissionsInfoString.canView.solution)}`);
+      errors.push(genError('canView')('solution', 'receiver', 'atLeast'));
     }
   } else {
 
     if (giverPermissions.canGrantView !== 'solution_with_grant') {
-      errors.push($localize`You need ${bolden(permissionsInfoString.canGrantView.string)} to be ${
-        bolden(permissionsInfoString.canGrantView.solution_with_grant)}`);
+      errors.push(genError('canGrantView')('solution_with_grant', 'giver'));
     }
 
     if (receiverPermissions.canGrantView === 'enter' && !receiverCanAtLeastView('info')) {
-      errors.push($localize`This user needs ${bolden(permissionsInfoString.canView.string)} to be at least ${
-        bolden(permissionsInfoString.canView.info)}`);
+      errors.push(genError('canView')('info', 'receiver', 'atLeast'));
     }
 
     if (receiverPermissions.canGrantView === 'content' && !receiverCanAtLeastView('content')) {
-      errors.push($localize`This user needs ${bolden(permissionsInfoString.canView.string)} to be at least ${
-        bolden(permissionsInfoString.canView.content)}`);
+      errors.push(genError('canView')('content', 'receiver', 'atLeast'));
     }
     if (receiverPermissions.canGrantView === 'content_with_descendants' && !receiverCanAtLeastView('content_with_descendants')) {
-      errors.push($localize`This user needs ${bolden(permissionsInfoString.canView.string)} to be at least ${
-        bolden(permissionsInfoString.canView.content_with_descendants)}`);
+      errors.push(genError('canView')('content_with_descendants', 'receiver', 'atLeast'));
     }
     if (receiverPermissions.canGrantView === 'solution' && !receiverCanAtLeastView('solution')) {
-      errors.push($localize`This user needs ${bolden(permissionsInfoString.canView.string)} to be ${
-        bolden(permissionsInfoString.canView.solution)}`);
+      errors.push(genError('canView')('solution', 'receiver', 'atLeast'));
     }
   }
 
-  return errors.length === 0 ? {} : { canGrantView: errors };
+  return errors;
 }
 
 export function validateCanWatch(
   receiverPermissions: Pick<GroupPermissions, 'canView' | 'canWatch'>,
   giverPermissions: Pick<PermissionsInfo, 'canWatch' | 'isOwner'>
-): { canWatch?: string[] } {
+): ConstraintError[] {
 
-  if (receiverPermissions.canWatch === 'none') return {};
+  if (receiverPermissions.canWatch === 'none') return [];
 
-  const errors: string[] = [];
+  const errors: ConstraintError[] = [];
 
   // For all canWatch except 'none'
   if (!hasAtLeastPermission(canViewValues, receiverPermissions.canView)('content')) {
-    errors.push($localize`This user needs ${bolden(permissionsInfoString.canView.string)} to be at least ${
-      bolden(permissionsInfoString.canView.content)}`);
+    errors.push(genError('canView')('content', 'receiver', 'atLeast'));
   }
 
   if (receiverPermissions.canWatch === 'answer_with_grant') {
     if (!giverPermissions.isOwner) {
-      errors.push($localize`You need to be owner of this item`);
+      errors.push(genError('isOwner')(true, 'giver'));
     }
   } else {
 
     // if receiverPermissions.canWatch is 'result' or 'answer'
     if (giverPermissions.canWatch !== 'answer_with_grant') {
-      errors.push($localize`You need ${bolden(permissionsInfoString.canWatch.string)} to be ${
-        bolden(permissionsInfoString.canWatch.answer_with_grant)}`);
+      errors.push(genError('canWatch')('answer_with_grant', 'giver'));
     }
   }
 
-  return errors.length === 0 ? {} : { canWatch: errors };
+  return errors;
 }
 
 export function validateCanEdit(
   receiverPermissions: Pick<GroupPermissions, 'canView' | 'canEdit'>,
   giverPermissions: Pick<PermissionsInfo, 'canEdit' | 'isOwner'>
-): { canEdit?: string[] } {
+): ConstraintError[] {
 
-  if (receiverPermissions.canEdit === 'none') return {};
+  if (receiverPermissions.canEdit === 'none') return [];
 
-  const errors: string[] = [];
+  const errors: ConstraintError[] = [];
 
   // For all can_edit except 'none'
   if (!hasAtLeastPermission(canViewValues, receiverPermissions.canView)('content')) {
-    errors.push($localize`This user needs ${bolden(permissionsInfoString.canView.string)} to be at least ${
-      bolden(permissionsInfoString.canView.content)}`);
+    errors.push(genError('canView')('content', 'receiver', 'atLeast'));
   }
 
   if (receiverPermissions.canEdit === 'all_with_grant') {
     if (!giverPermissions.isOwner) {
-      errors.push($localize`You need to be owner of this item`);
+      errors.push(genError('isOwner')(true, 'giver'));
     }
   } else {
 
     // if receiverPermissions.canEdit is 'children' or 'all_with_grant'
     if (giverPermissions.canEdit !== 'all_with_grant') {
-      errors.push($localize`You need ${bolden(permissionsInfoString.canEdit.string)} to be ${
-        bolden(permissionsInfoString.canEdit.all_with_grant)}`);
+      errors.push(genError('canEdit')('all_with_grant', 'giver'));
     }
   }
 
-  return errors.length === 0 ? {} : { canEdit: errors };
+  return errors;
 }
 
 export function validateCanMakeSessionOfficial(
   receiverPermissions: Pick<GroupPermissions, 'canView' | 'canMakeSessionOfficial'>,
   giverPermissions: Pick<PermissionsInfo, 'isOwner'>
-): { canMakeSessionOfficial?: string[] } {
+): ConstraintError[] {
 
-  if (!receiverPermissions.canMakeSessionOfficial) return {};
+  if (!receiverPermissions.canMakeSessionOfficial) return [];
 
-  const errors: string[] = [];
+  const errors: ConstraintError[] = [];
 
   if (!giverPermissions.isOwner) {
-    errors.push($localize`You need to be owner of this item`);
+    errors.push(genError('isOwner')(true, 'giver'));
   }
   if (!hasAtLeastPermission(canViewValues, receiverPermissions.canView)('info')) {
-    errors.push($localize`This user needs ${bolden(permissionsInfoString.canView.string)} to be at least ${
-      bolden(permissionsInfoString.canView.info)}`);
+    errors.push(genError('canView')('info', 'receiver', 'atLeast'));
   }
 
-  return errors.length === 0 ? {} : { canMakeSessionOfficial: errors };
+  return errors;
 }
 
 export function validateIsOwner(
   receiverPermissions: Pick<GroupPermissions, 'isOwner'>,
   giverPermissions: Pick<PermissionsInfo, 'isOwner'>
-): { isOwner?: string[] } {
+): ConstraintError[] {
 
-  if (!receiverPermissions.isOwner) return {};
+  if (!receiverPermissions.isOwner) return [];
 
   if (!giverPermissions.isOwner) {
-    return { isOwner: [ $localize`You need to be owner of this item` ] };
+    return [ genError('isOwner')(true, 'giver') ];
   }
-  return {};
+  return [];
 }
 
-export function permissionsConstraintsValidator(
-  giverPermissions: PermissionsInfo
-): ValidatorFn {
-
-  return (group: AbstractControl): ValidationErrors|null => {
-
-    const value: GroupPermissions = {
-      canView: group.get('canView')?.value as GroupPermissions['canView'],
-      canGrantView: group.get('canGrantView')?.value as GroupPermissions['canGrantView'],
-      canWatch: group.get('canWatch')?.value as GroupPermissions['canWatch'],
-      canEdit: group.get('canEdit')?.value as GroupPermissions['canEdit'],
-      canMakeSessionOfficial: group.get('canMakeSessionOfficial')?.value as GroupPermissions['canMakeSessionOfficial'],
-      isOwner: group.get('isOwner')?.value as GroupPermissions['isOwner'],
-      canEnterFrom: new Date(),
-      canEnterUntil: new Date(),
-    };
-
-    let errors: ValidationErrors = {
-      ...validateCanView(value, giverPermissions),
-      ...validateCanGrantView(value, giverPermissions),
-      ...validateCanWatch(value, giverPermissions),
-      ...validateCanEdit(value, giverPermissions),
-    };
-
-    if (group.get('isOwner')?.dirty) {
-      errors = { ...errors, ...validateIsOwner(value, giverPermissions) };
-    }
-    if (group.get('canMakeSessionOfficial')?.dirty) {
-      errors = { ...errors, ...validateCanMakeSessionOfficial(value, giverPermissions) };
-    }
-
-    return Object.keys(errors).length > 0 ? errors : null;
-  };
-}

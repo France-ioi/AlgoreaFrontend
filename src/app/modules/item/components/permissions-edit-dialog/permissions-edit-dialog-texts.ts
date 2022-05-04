@@ -1,7 +1,8 @@
 import { ProgressSelectValue } from
   'src/app/modules/shared-components/components/collapsible-section/progress-select/progress-select.component';
 import { GroupPermissions } from 'src/app/shared/http-services/group-permissions.service';
-import { PermissionsInfo, permissionsInfoString } from '../../helpers/item-permissions';
+import { PermissionsInfo } from '../../helpers/item-permissions';
+import { generateErrorMessage, permissionsInfoString } from '../../helpers/permissions-string';
 import { TypeFilter } from '../composition-filter/composition-filter.component';
 import {
   validateCanView,
@@ -9,7 +10,8 @@ import {
   validateCanWatch,
   validateCanEdit,
   validateIsOwner,
-  validateCanMakeSessionOfficial
+  validateCanMakeSessionOfficial,
+  ConstraintError,
 } from '../../helpers/item-permissions-constraints';
 
 export interface PermissionsDialogData {
@@ -34,7 +36,7 @@ function getTargetTypeString(targetType: TypeFilter): string {
 
 function generateCanViewValues(
   targetType: TypeFilter,
-): ProgressSelectValue<GroupPermissions['canView']>[]{
+): ProgressSelectValue<GroupPermissions['canView']>[] {
   const targetTypeString = getTargetTypeString(targetType);
   return [
     {
@@ -67,7 +69,7 @@ function generateCanViewValues(
 
 function generateCanGrantViewValues(
   targetType: TypeFilter,
-): ProgressSelectValue<GroupPermissions['canGrantView']>[]{
+): ProgressSelectValue<GroupPermissions['canGrantView']>[] {
   const targetTypeString = getTargetTypeString(targetType);
 
   return [
@@ -106,7 +108,7 @@ function generateCanGrantViewValues(
 
 function generateCanWatchValues(
   targetType: TypeFilter,
-): ProgressSelectValue<GroupPermissions['canWatch']>[]{
+): ProgressSelectValue<GroupPermissions['canWatch']>[] {
   const targetTypeString = getTargetTypeString(targetType);
 
   return [
@@ -136,7 +138,7 @@ function generateCanWatchValues(
 
 function generateCanEditValues(
   targetType: TypeFilter,
-): ProgressSelectValue<GroupPermissions['canEdit']>[]{
+): ProgressSelectValue<GroupPermissions['canEdit']>[] {
   const targetTypeString = getTargetTypeString(targetType);
 
   return [
@@ -169,31 +171,36 @@ export function generateValues(
   giverPermissions: PermissionsInfo
 ): PermissionsDialogData {
 
+  const formatErrors = (errors: ConstraintError[]): string[] | undefined => {
+    const errorMessages = errors.map(error => generateErrorMessage(targetType)(error));
+    return errorMessages.length ? errorMessages : undefined;
+  };
+
   return {
     canViewValues: generateCanViewValues(targetType).map(val => {
-      const errors = validateCanView({ ...receiverPermissions, canView: val.value }, giverPermissions);
-      return errors.canView ? { ...val, disabled: true, tooltip: errors.canView } : val;
+      const errors = formatErrors(validateCanView({ ...receiverPermissions, canView: val.value }, giverPermissions));
+      return errors ? { ...val, disabled: true, tooltip: errors } : val;
     }),
 
     canGrantViewValues: generateCanGrantViewValues(targetType).map(val => {
-      const errors = validateCanGrantView({ ...receiverPermissions, canGrantView: val.value }, giverPermissions);
-      return errors.canGrantView ? { ...val, disabled: true, tooltip: errors.canGrantView } : val;
+      const errors = formatErrors(validateCanGrantView({ ...receiverPermissions, canGrantView: val.value }, giverPermissions));
+      return errors ? { ...val, disabled: true, tooltip: errors } : val;
     }),
 
     canWatchValues: generateCanWatchValues(targetType).map(val => {
-      const errors = validateCanWatch({ ...receiverPermissions, canWatch: val.value }, giverPermissions);
-      return errors.canWatch ? { ...val, disabled: true, tooltip: errors.canWatch } : val;
+      const errors = formatErrors(validateCanWatch({ ...receiverPermissions, canWatch: val.value }, giverPermissions));
+      return errors ? { ...val, disabled: true, tooltip: errors } : val;
     }),
 
     canEditValues: generateCanEditValues(targetType).map(val => {
-      const errors = validateCanEdit({ ...receiverPermissions, canEdit: val.value }, giverPermissions);
-      return errors.canEdit ? { ...val, disabled: true, tooltip: errors.canEdit } : val;
+      const errors = formatErrors(validateCanEdit({ ...receiverPermissions, canEdit: val.value }, giverPermissions));
+      return errors ? { ...val, disabled: true, tooltip: errors } : val;
     }),
 
-    isOwnerDisabledTooltip: validateIsOwner({ ...receiverPermissions, isOwner: true }, giverPermissions).isOwner,
+    isOwnerDisabledTooltip: formatErrors(validateIsOwner({ ...receiverPermissions, isOwner: true }, giverPermissions)) || undefined,
 
-    canMakeSessionOfficialDisabledTooltip: validateCanMakeSessionOfficial(
+    canMakeSessionOfficialDisabledTooltip: formatErrors(validateCanMakeSessionOfficial(
       { ...receiverPermissions, canMakeSessionOfficial: true }, giverPermissions
-    ).canMakeSessionOfficial,
+    )) || undefined,
   };
 }
