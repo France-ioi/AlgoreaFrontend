@@ -1,5 +1,5 @@
 <div class="section-container" [ngClass]="theme">
-  <div class="section-header">
+  <div class="section-header" [ngClass]="styleClass">
     <span class="header-icon">
       <i class="{{ icon }}"></i>
     </span>
@@ -8,5 +8,9 @@
                   [ngTemplateOutlet]="contentTemplate"
                   [ngTemplateOutletContext]="{ $implicit: true }"
     ></ng-container>
+    <span class="toggle-expand" *ngIf="collapsible">
+      <i *ngIf="collapsed" class="fa fa-caret-down"></i>
+      <i *ngIf="!collapsed" class="fa fa-caret-up"></i>
+    </span>
   </div>
 </div>
