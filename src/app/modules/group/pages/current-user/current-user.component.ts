@@ -40,13 +40,17 @@ export class CurrentUserComponent {
   }
 
   onModify(): void {
-    window.open(
+    const winRef = window.open(
       `${ environment.oauthServerUrl }?redirect_uri=${ location.origin }`,
       'updateProfileWindow',
       'popup,width=800,height=640'
     );
 
     const onProfileUpdated = (): void => {
+      if (!winRef) {
+        throw new Error('Unexpected: missed winRef');
+      }
+      winRef.close();
       this.userSessionService.refresh().subscribe();
       window.removeEventListener('profileUpdated', onProfileUpdated);
     };

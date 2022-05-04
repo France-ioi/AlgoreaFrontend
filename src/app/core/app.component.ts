@@ -50,7 +50,6 @@ export class AppComponent implements OnInit, OnDestroy {
   ) {
     if (window.name === 'updateProfileWindow') {
       (window.opener as Window).dispatchEvent(new Event('profileUpdated'));
-      window.close();
     }
 
     const title = appConfig.languageSpecificTitles && this.localeService.currentLang ?
