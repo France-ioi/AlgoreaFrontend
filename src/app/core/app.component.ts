@@ -12,6 +12,10 @@ import { appConfig } from '../shared/helpers/config';
 import { urlToRedirectTo } from '../shared/helpers/redirect-to-sub-path-at-init';
 import { GroupWatchingService } from './services/group-watching.service';
 import { version } from 'src/version';
+import {
+  notifyWindowOpener,
+  subWindowUserDataUpdated
+} from '../modules/group/helpers/update-user-in-sub-window';
 
 @Component({
   selector: 'alg-root',
@@ -48,9 +52,9 @@ export class AppComponent implements OnInit, OnDestroy {
     private renderer: Renderer2,
     private el: ElementRef,
   ) {
-    if (window.name === 'updateProfileWindow') {
-      (window.opener as Window).dispatchEvent(new Event('profileUpdated'));
-    }
+    subWindowUserDataUpdated(window.name, () =>
+      notifyWindowOpener(window.opener as Window)
+    );
 
     const title = appConfig.languageSpecificTitles && this.localeService.currentLang ?
       appConfig.languageSpecificTitles[this.localeService.currentLang.tag] : undefined;
