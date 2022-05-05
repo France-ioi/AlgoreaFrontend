@@ -38,6 +38,7 @@ a:hover {
 .container {
   width: 100%;
   position: relative;
+  overflow: hidden;
 
   .left {
     width: $left-panel-size;
