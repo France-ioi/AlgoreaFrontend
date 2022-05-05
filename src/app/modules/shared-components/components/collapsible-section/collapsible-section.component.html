@@ -3,8 +3,6 @@
       [title]="header"
       [icon]="icon"
       [theme]="theme"
-      [collapsible]="collapsible"
-      [collapsed]="collapsed"
       [styleClass]="{disabled: disabled, 'cursor-pointer': collapsible}"
       (click)="onCollapse()"
   >
@@ -19,6 +17,10 @@
                     [ngTemplateOutlet]="contentTemplate"
                     [ngTemplateOutletContext]="{ $implicit: true }"
       ></ng-container>
+      <span class="toggle-expand" *ngIf="collapsible">
+        <i *ngIf="collapsed" class="fa fa-caret-down"></i>
+        <i *ngIf="!collapsed" class="fa fa-caret-up"></i>
+      </span>
     </ng-template>
   </alg-section-header>
 

@@ -11,8 +11,6 @@ export class SectionHeaderComponent {
   @Input() icon = '';
   @Input() theme: 'success' | 'warning' | 'danger' = 'success';
   @Input() styleClass: string | string[] | Set<string> | { [klass: string]: boolean } = '';
-  @Input() collapsed = true;
-  @Input() collapsible = false;
 
   @ContentChild('content') contentTemplate?: TemplateRef<any>;
 
