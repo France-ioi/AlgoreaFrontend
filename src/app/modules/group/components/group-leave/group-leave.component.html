@@ -11,12 +11,12 @@
   </p>
 
   <div class="button">
-    <alg-button
-      class="p-button-rounded-full"
+    <p-button
+      styleClass="alg-button p-button-rounded-full"
       icon="fa fa-times"
       i18n-label label="Leave this group"
       (click)="leaveGroup()"
       [disabled]="group.isMembershipLocked"
-    ></alg-button>
+    ></p-button>
   </div>
 </ng-container>
