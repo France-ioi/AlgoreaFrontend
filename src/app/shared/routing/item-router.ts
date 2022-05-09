@@ -25,7 +25,8 @@ export class ItemRouter {
   navigateTo(item: RawItemRoute, {
     page,
     navExtras,
-    preventFullFrame = (history.state as Record<string, boolean>).preventFullFrame ?? false,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    preventFullFrame = Boolean(typeof history.state === 'object' && history.state?.preventFullFrame),
   }: NavigateOptions = {}): void {
     void this.router.navigateByUrl(this.url(item, page), { ...navExtras, state: { ...navExtras?.state, preventFullFrame } });
   }
