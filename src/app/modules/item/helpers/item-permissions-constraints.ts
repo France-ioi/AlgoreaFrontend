@@ -23,8 +23,6 @@ function genError<Permission extends keyof ConstrainedPermissions>(permission: P
   });
 }
 
-// const bolden = (text: string): string => `<b>${text}</b>`;
-
 function hasAtLeastPermission<T extends readonly string[]>(permissionsSortedByLoosest: T, permission: T[number]) {
   return (minimumPermission: T[number]): boolean =>
     permissionsSortedByLoosest.indexOf(permission) >= permissionsSortedByLoosest.indexOf(minimumPermission);
