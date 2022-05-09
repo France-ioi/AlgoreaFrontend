@@ -185,7 +185,7 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent {
   }
 
   private isProgressPage(): boolean {
-    return this.router.url.includes('/progress/history');
+    return this.router.url.includes('/progress/');
   }
 
 }
