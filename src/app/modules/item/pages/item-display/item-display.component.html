@@ -28,16 +28,18 @@
     </ng-container>
 
     <div class="error-buttons">
-      <alg-button
+      <p-button
         class="error-button"
+        styleClass="alg-button"
         i18n-label label="Show task anyway (for debugging)"
         (click)="showTaskAnyway = true"
-      ></alg-button>
-      <alg-button
+      ></p-button>
+      <p-button
         class="error-button"
+        styleClass="alg-button"
         i18n-label label="Retry"
         (click)="refresh.emit()"
-      ></alg-button>
+      ></p-button>
     </div>
   </div>
   <div
