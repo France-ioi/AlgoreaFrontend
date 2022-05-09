@@ -7,8 +7,7 @@ import { GetGroupChildrenService } from 'src/app/modules/group/http-services/get
 import { formatUser } from 'src/app/shared/helpers/user';
 import { GetGroupDescendantsService } from 'src/app/shared/http-services/get-group-descendants.service';
 import { GetGroupProgressService, TeamUserProgress } from 'src/app/shared/http-services/get-group-progress.service';
-import { GroupPermissionsService } from 'src/app/shared/http-services/group-permissions.service';
-import { Permissions } from 'src/app/shared/helpers/group-permissions';
+import { GroupPermissionsService, GroupPermissions } from 'src/app/shared/http-services/group-permissions.service';
 import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
 import { TypeFilter } from '../../components/composition-filter/composition-filter.component';
 import { GetItemChildrenService } from '../../http-services/get-item-children.service';
@@ -59,7 +58,7 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
   currentFilter = this.defaultFilter;
 
   dialogPermissions: {
-    permissions: Permissions,
+    permissions: Omit<GroupPermissions,'canEnterFrom'|'canEnterUntil'>,
     itemId: string,
     targetGroupId: string,
   } = {
@@ -261,7 +260,7 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     this.dialog = 'closed';
   }
 
-  onDialogSave(permissions: Permissions): void {
+  onDialogSave(permissions: Partial<GroupPermissions>): void {
     if (!this.group) return;
 
     this.groupPermissionsService.updatePermissions(this.group.id, this.dialogPermissions.targetGroupId,

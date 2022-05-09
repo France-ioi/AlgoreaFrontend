@@ -1,10 +1,15 @@
 import * as D from 'io-ts/Decoder';
 
+export const canViewValues = [ 'none', 'info', 'content', 'content_with_descendants', 'solution' ] as const;
+export const canWatchValues = [ 'none','result','answer','answer_with_grant' ] as const;
+export const canEditValues = [ 'none','children','all','all_with_grant' ] as const;
+export const canGrantViewValues = [ 'none','enter','content','content_with_descendants','solution','solution_with_grant' ] as const;
+
 export const permissionsDecoder = D.struct({
-  canView: D.literal('none','info','content','content_with_descendants','solution'),
-  canWatch: D.literal('none','result','answer','answer_with_grant'),
-  canEdit: D.literal('none','children','all','all_with_grant'),
-  canGrantView: D.literal('none','enter','content','content_with_descendants','solution','solution_with_grant'),
+  canView: D.literal(...canViewValues),
+  canWatch: D.literal(...canWatchValues),
+  canEdit: D.literal(...canEditValues),
+  canGrantView: D.literal(...canGrantViewValues),
   isOwner: D.boolean,
 });
 

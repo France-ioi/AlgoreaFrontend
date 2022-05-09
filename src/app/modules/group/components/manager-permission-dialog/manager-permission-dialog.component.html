@@ -29,7 +29,7 @@
       <form [formGroup]="form">
         <alg-collapsible-section
           [collapsible]="false"
-          i18n-title title="Management level"
+          i18n-header header="Management level"
           icon="fa fa-users-cog"
         >
           <ng-template #content let-collapsed>
@@ -48,7 +48,7 @@
 
         <alg-collapsible-section
           [collapsible]="false"
-          i18n-title title="Can grant access"
+          i18n-header header="Can grant access"
           icon="fa fa-key"
         >
           <ng-template #content let-collapsed>
@@ -64,7 +64,7 @@
 
         <alg-collapsible-section
           [collapsible]="false"
-          i18n-title title="Can watch members"
+          i18n-header header="Can watch members"
           icon="fa fa-binoculars"
         >
           <ng-template #content let-collapsed>

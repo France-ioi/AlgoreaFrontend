@@ -3,7 +3,13 @@
     <span class="header-icon">
       <i class="{{ icon }}"></i>
     </span>
-    <span class="header-title">{{ title }}</span>
+    <span class="header-title">{{ header }}</span>
+    <p-tag
+      *ngIf="!(collapsed && collapsible) && errorMessage"
+      styleClass="mr-2"
+      severity="danger"
+      [value]="errorMessage"
+    ></p-tag>
     <ng-container *ngIf="contentTemplate && collapsed && collapsible"
       [ngTemplateOutlet]="contentTemplate"
       [ngTemplateOutletContext]="{ $implicit: true }"

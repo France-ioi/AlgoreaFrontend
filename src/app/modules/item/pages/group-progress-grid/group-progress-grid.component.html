@@ -110,14 +110,14 @@
         </p-table>
       </ng-container>
 
-      <alg-permissions-edit-dialog
-        [visible]="dialog === 'opened'"
-        [title]="dialogTitle"
-        [targetType]="currentFilter"
-        [permissions]="dialogPermissions.permissions"
-        (close)="onDialogClose()"
-        (save)="onDialogSave($event)"
-      ></alg-permissions-edit-dialog>
-    </ng-template>
-  </ng-container>
+    <alg-permissions-edit-dialog
+      [visible]="dialog === 'opened'"
+      [title]="dialogTitle"
+      [targetType]="currentFilter"
+      [permissions]="dialogPermissions.permissions"
+      [giverPermissions]="itemData?.item?.permissions"
+      (close)="onDialogClose()"
+      (save)="onDialogSave($event)"
+    ></alg-permissions-edit-dialog>
+  </ng-template>
 </ng-container>

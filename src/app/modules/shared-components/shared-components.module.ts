@@ -18,6 +18,7 @@ import { MessagesModule } from 'primeng/messages';
 import { TabViewModule } from 'primeng/tabview';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ToastModule } from 'primeng/toast';
+import { TagModule } from 'primeng/tag';
 
 
 import { ClickOutsideModule } from 'ng-click-outside';
@@ -126,6 +127,7 @@ import { SectionHeaderComponent } from './components/section-header/section-head
     TabViewModule,
     ProgressSpinnerModule,
     ToastModule,
+    TagModule,
 
     ClickOutsideModule,
     ReactiveFormsModule,

@@ -43,7 +43,7 @@ export class ItemPermissionsComponent implements OnChanges {
     this.isPermissionsDialogOpened = false;
   }
 
-  onPermissionsDialogSave(permissions: Permissions): void {
+  onPermissionsDialogSave(permissions: Partial<Permissions>): void {
     if (!this.itemData || !this.watchedGroup) {
       throw new Error('Unexpected: Missed input data');
     }
