@@ -55,13 +55,13 @@
           <td><span class="type">{{ item.type }}</span></td>
           <td class="main">{{ item.title }}</td>
           <td>
-            <alg-button
-              class="p-small-button p-button-rounded"
-              [icon]="addedIds.includes(item.id) ? 'fa fa-check' : selectExistingText === 'Add' ? 'fa fa-plus' : undefined"
+            <p-button
+              styleClass="alg-button p-small-button p-button-rounded"
+              [icon]="addedIds.includes(item.id) ? 'fa fa-check' : selectExistingText === 'Add' ? 'fa fa-plus' : ''"
               [label]="addedIds.includes(item.id) ? addedText : selectExistingText"
               [disabled]="addedIds.includes(item.id)"
-              (click)="addExisting(item)"
-            ></alg-button>
+              (onClick)="addExisting(item)"
+            ></p-button>
           </td>
         </tr>
       </ng-template>
