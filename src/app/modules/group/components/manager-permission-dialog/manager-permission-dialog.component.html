@@ -88,19 +88,19 @@
         </ng-container>
 
         <ng-template #buttons>
-          <alg-button
-              icon="fa fa-times"
-              i18n-label label="Cancel"
-              class="p-button-rounded p-button-danger"
-              (click)="onClose()"
-          ></alg-button>
-          <alg-button
-              icon="fa fa-check"
-              i18n-label label="Save"
-              class="p-button-rounded"
-              (click)="onAccept()"
-              [disabled]="!form.dirty"
-          ></alg-button>
+          <p-button
+            icon="fa fa-times"
+            i18n-label label="Cancel"
+            styleClass="alg-button p-button-rounded p-button-danger"
+            (onClick)="onClose()"
+          ></p-button>
+          <p-button
+            icon="fa fa-check"
+            i18n-label label="Save"
+            styleClass="alg-button p-button-rounded"
+            (onClick)="onAccept()"
+            [disabled]="!form.dirty"
+          ></p-button>
         </ng-template>
       </div>
     </p-footer>
