@@ -99,7 +99,7 @@
               [title]="watchedGroup.name"
               [targetType]="'Groups'"
               [permissions]="permissions"
-              [giverPermissions]="itemData?.item?.permissions"
+              [giverPermissions]="itemData.item.permissions"
               (close)="closePermissionsDialog()"
               (save)="onPermissionsDialogSave($event)"
           ></alg-permissions-edit-dialog>

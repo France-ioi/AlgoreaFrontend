@@ -8,7 +8,7 @@ import { PermissionsDialogData, generateValues } from '../../helpers/permissions
 import { TypeFilter } from '../composition-filter/composition-filter.component';
 
 @Component({
-  selector: 'alg-permissions-edit-dialog',
+  selector: 'alg-permissions-edit-dialog[giverPermissions]',
   templateUrl: './permissions-edit-dialog.component.html',
   styleUrls: [ './permissions-edit-dialog.component.scss' ]
 })
@@ -17,7 +17,7 @@ export class PermissionsEditDialogComponent implements OnChanges, OnDestroy {
   @Input() visible?: boolean;
   @Input() title?: string;
   @Input() permissions?: Omit<GroupPermissions,'canEnterFrom'|'canEnterUntil'>;
-  @Input() giverPermissions?: PermissionsInfo;
+  @Input() giverPermissions!: PermissionsInfo;
   @Input() targetType: TypeFilter = 'Users';
   @Output() close = new EventEmitter<void>();
   @Output() save = new EventEmitter<Partial<GroupPermissions>>();
@@ -48,7 +48,7 @@ export class PermissionsEditDialogComponent implements OnChanges, OnDestroy {
       this.form.valueChanges,
       this.regenerateValues.asObservable()
     ).subscribe(() => {
-      if (this.permissions && this.giverPermissions) {
+      if (this.permissions) {
         const receiverPermissions = this.form.value as GroupPermissions;
         this.permissionsDialogData = generateValues(this.targetType, receiverPermissions, this.giverPermissions);
       }
@@ -62,7 +62,7 @@ export class PermissionsEditDialogComponent implements OnChanges, OnDestroy {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.permissions || changes.giverPermissions) {
-      if (this.permissions && this.giverPermissions) {
+      if (this.permissions) {
         this.form.setValidators(permissionsConstraintsValidator(this.giverPermissions, this.targetType));
         this.form.updateValueAndValidity();
         this.form.reset({ ...this.permissions }, { emitEvent: false });
