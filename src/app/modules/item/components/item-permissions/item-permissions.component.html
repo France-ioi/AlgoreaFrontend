@@ -81,7 +81,7 @@
           Note that some subgroups or users of the groups may have higher permissions.
         </div>
 
-        <ng-container *ngIf="permissions.canGrantView !== 'none' && watchedGroup.currentUserCanGrantGroupAccess">
+        <ng-container *ngIf="permissions.canGrantView !== 'none' && watchedGroup.currentUserCanGrantGroupAccess && itemData?.item?.permissions">
           <div class="give-access-button">
             <button
                 pButton
@@ -98,6 +98,7 @@
               [title]="watchedGroup.name"
               [targetType]="'Groups'"
               [permissions]="permissions"
+              [giverPermissions]="itemData?.item?.permissions"
               (close)="closePermissionsDialog()"
               (save)="onPermissionsDialogSave($event)"
           ></alg-permissions-edit-dialog>
