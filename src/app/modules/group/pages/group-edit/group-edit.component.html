@@ -35,20 +35,13 @@
 
     <div class="operations">
       <alg-group-remove-button [group]="state.data" *ngIf="state.data.isCurrentUserManager"></alg-group-remove-button>
-      <div class="right-buttons" *ngIf="groupForm.dirty">
-        <alg-button
-          i18n-label label="Save"
-          class="p-button-rounded p-button-success save"
-          [disabled]="groupForm.disabled"
-          (click)="save()"
-        ></alg-button>
-        <alg-button
-          i18n-label label="Cancel Changes"
-          class="p-button-rounded p-button-outlined p-button-danger cancel"
-          [disabled]="groupForm.disabled"
-          (click)="resetForm()"
-        ></alg-button>
-      </div>
+
+      <alg-floating-save
+          *ngIf="groupForm.dirty"
+          [saving]="groupForm.disabled"
+          (save)="save()"
+          (cancel)="resetForm()"
+      ></alg-floating-save>
     </div>
 
     <ng-template #notAuthorized>
