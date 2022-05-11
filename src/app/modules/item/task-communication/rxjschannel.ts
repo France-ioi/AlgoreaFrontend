@@ -23,6 +23,8 @@ export function rxBuild(config: Omit<ChannelConfiguration, 'onReady'>): Observab
 }
 
 export class RxMessagingChannel {
+  private destroyed = false;
+
   constructor(private channel: MessagingChannel) {
     Object.assign(window, {
       destroyChan: () => {
@@ -38,8 +40,8 @@ export class RxMessagingChannel {
   /** Bind a local method, allowing the remote task to call it */
   bind<T extends Observable<any> | any>(method: string, mapper?: (params: unknown) => T, doNotPublish?: boolean): MessagingChannel {
     // Create a callback wrapping the observable bound
-    function callback(transaction: MessageTransaction, params: unknown): void {
-      if (!mapper) return;
+    const callback = (transaction: MessageTransaction, params: unknown): void => {
+      if (!mapper || this.destroyed) return;
 
       const forwardError = (error: unknown): void => transaction.error(error, error instanceof Error ? error.toString() : '');
       try {
@@ -50,13 +52,15 @@ export class RxMessagingChannel {
         result
           .pipe(take(1))
           .subscribe({
-            next: data => transaction.complete(data),
+            next: data => {
+              if (!this.destroyed) transaction.complete(data);
+            },
             error: forwardError,
           });
       } catch (error) {
         forwardError(error);
       }
-    }
+    };
     return this.channel.bind(method, callback, doNotPublish);
   }
 
@@ -81,7 +85,8 @@ export class RxMessagingChannel {
     this.channel.notify(message);
   }
 
-  destroy(): void{
+  destroy(): void {
+    this.destroyed = true;
     this.channel.destroy();
   }
 }
