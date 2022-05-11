@@ -10,6 +10,7 @@ export class SectionHeaderComponent {
   @Input() title = '';
   @Input() icon = '';
   @Input() theme: 'success' | 'warning' | 'danger' = 'success';
+  @Input() styleClass: string | string[] | Set<string> | { [klass: string]: boolean } = '';
 
   @ContentChild('content') contentTemplate?: TemplateRef<any>;
 

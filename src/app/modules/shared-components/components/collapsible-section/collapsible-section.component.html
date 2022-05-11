@@ -1,24 +1,29 @@
 <div class="section-container" [ngClass]="theme">
-  <div class="section-header" [ngClass]="{disabled: disabled, 'cursor-pointer': collapsible}" (click)="onCollapse()">
-    <span class="header-icon">
-      <i class="{{ icon }}"></i>
-    </span>
-    <span class="header-title">{{ header }}</span>
-    <p-tag
-      *ngIf="!(collapsed && collapsible) && errorMessage"
-      styleClass="mr-2"
-      severity="danger"
-      [value]="errorMessage"
-    ></p-tag>
-    <ng-container *ngIf="contentTemplate && collapsed && collapsible"
-      [ngTemplateOutlet]="contentTemplate"
-      [ngTemplateOutletContext]="{ $implicit: true }"
-    ></ng-container>
-    <span class="toggle-expand" *ngIf="collapsible">
-      <i *ngIf="collapsed" class="fa fa-caret-down"></i>
-      <i *ngIf="!collapsed" class="fa fa-caret-up"></i>
-    </span>
-  </div>
+  <alg-section-header
+      [title]="header"
+      [icon]="icon"
+      [theme]="theme"
+      [styleClass]="{disabled: disabled, 'cursor-pointer': collapsible}"
+      (click)="onCollapse()"
+  >
+    <ng-template #content>
+      <p-tag
+        *ngIf="!(collapsed && collapsible) && errorMessage"
+        styleClass="mr-2"
+        severity="danger"
+        [value]="errorMessage"
+      ></p-tag>
+      <ng-container *ngIf="contentTemplate && collapsed && collapsible"
+                    [ngTemplateOutlet]="contentTemplate"
+                    [ngTemplateOutletContext]="{ $implicit: true }"
+      ></ng-container>
+      <span class="toggle-expand" *ngIf="collapsible">
+        <i *ngIf="collapsed" class="fa fa-caret-down"></i>
+        <i *ngIf="!collapsed" class="fa fa-caret-up"></i>
+      </span>
+    </ng-template>
+  </alg-section-header>
+
   <ng-container
     *ngIf="contentTemplate && (!collapsed || !collapsible)"
     [ngTemplateOutlet]="contentTemplate"
