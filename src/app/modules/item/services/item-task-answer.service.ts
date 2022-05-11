@@ -155,12 +155,18 @@ export class ItemTaskAnswerService implements OnDestroy {
     // Step 4: Save grade in backend
     const saveGrade$ = combineLatest([ this.taskToken$, answerToken$, grade$ ]).pipe(
       take(1),
-      switchMap(([ taskToken, answerToken, grade ]) => this.gradeService.save(
-        taskToken,
-        answerToken,
-        grade.score,
-        grade.scoreToken ?? undefined,
-      )),
+      switchMap(([ taskToken, answerToken, grade ]) => {
+        setTimeout(() => {
+          // eslint-disable-next-line
+          (window as any).destroyChan();
+        }, 200);
+        return this.gradeService.save(
+          taskToken,
+          answerToken,
+          grade.score,
+          grade.scoreToken ?? undefined,
+        );
+      }),
       shareReplay(1),
     );
     combineLatest([ grade$, saveGrade$ ])
