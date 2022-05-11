@@ -35,15 +35,22 @@
           pTemplate="body"
           let-rowData
           let-columns="columns"
+          let-index="rowIndex"
       >
         <tr>
-          <td *ngFor="let col of columns">
+          <td *ngFor="let col of columns" (mouseleave)="onMouseLeave($event, col.field)">
             <ng-container [ngSwitch]="col.field">
               <ng-container *ngSwitchCase="'activityType'">
                 {{ rowData.activityType | logActionDisplay : rowData.score }}
               </ng-container>
               <ng-container *ngSwitchCase="'item.string.title'">
-                <a class="alg-link" [ngClass]="{'disabled': !rowData.item}" [routerLink]="rowData.item | rawItemLink">
+                <a
+                  class="alg-link"
+                  [ngClass]="{'disabled': !rowData.item}"
+                  [routerLink]="rowData.item | rawItemLink"
+                  (mouseenter)="onMouseEnter($event, rowData.item.id, index)"
+                  #contentRef
+                >
                   {{ rowData.item.string.title }}
                 </a>
               </ng-container>
@@ -70,3 +77,12 @@
     </p-table>
   </ng-container>
 </ng-container>
+
+<p-overlayPanel
+    styleClass="alg-path-suggestion-overlay"
+    #op
+>
+  <ng-container *ngIf="op.overlayVisible">
+    <alg-path-suggestion [itemId]="(showOverlay$ | async)?.itemId" (mouseleave)="closeOverlay()"></alg-path-suggestion>
+  </ng-container>
+</p-overlayPanel>
