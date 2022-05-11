@@ -4,7 +4,7 @@
   </div>
   <alg-error
       *ngIf="state.isError"
-      class="dark"
+      class="dark small"
       icon="fa fa-exclamation-triangle"
       [showRefreshButton]="$any(state.error).status !== 403"
       (refresh)="refresh()"
@@ -32,10 +32,14 @@
       </ng-container>
     </ng-container>
     <ng-template #noPath>
-      <span i18n>You have no path to this content.</span>
+      <alg-error class="dark small">
+        <span i18n>You have no path to this content.</span>
+      </alg-error>
     </ng-template>
     <ng-template #emptyPath>
-      <span i18n>This content is one of your root activity/skill</span>
+      <alg-error class="dark small">
+        <span i18n>This content is one of your root activity/skill</span>
+      </alg-error>
     </ng-template>
   </ng-container>
 </ng-container>
