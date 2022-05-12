@@ -25,13 +25,7 @@ export function rxBuild(config: Omit<ChannelConfiguration, 'onReady'>): Observab
 export class RxMessagingChannel {
   private destroyed = false;
 
-  constructor(private channel: MessagingChannel) {
-    Object.assign(window, {
-      destroyChan: () => {
-        this.destroy();
-      }
-    });
-  }
+  constructor(private channel: MessagingChannel) {}
 
   unbind(method: string, doNotPublish?: boolean): boolean {
     if (this.destroyed) return true;
