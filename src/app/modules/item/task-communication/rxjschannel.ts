@@ -34,6 +34,7 @@ export class RxMessagingChannel {
   }
 
   unbind(method: string, doNotPublish?: boolean): boolean {
+    if (this.destroyed) return true;
     return this.channel.unbind(method, doNotPublish);
   }
 
@@ -68,7 +69,7 @@ export class RxMessagingChannel {
   call(message: RxMessage): Observable<unknown[]> {
     // Create an Observable wrapping the inner jschannel call
     return new Observable<unknown[]>(subscriber => {
-
+      if (this.destroyed) return;
       const innerMessage = {
         ...message,
         success: (...results: unknown[]): void => {
@@ -82,6 +83,7 @@ export class RxMessagingChannel {
   }
 
   notify(message: RxMessage): void {
+    if (this.destroyed) return;
     this.channel.notify(message);
   }
 
