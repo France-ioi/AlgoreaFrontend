@@ -12,10 +12,7 @@ import { appConfig } from '../shared/helpers/config';
 import { urlToRedirectTo } from '../shared/helpers/redirect-to-sub-path-at-init';
 import { GroupWatchingService } from './services/group-watching.service';
 import { version } from 'src/version';
-import {
-  notifyWindowOpener,
-  subWindowUserDataUpdated
-} from '../modules/group/helpers/update-user-in-sub-window';
+import { isOpenerWindow, isWindowProfileUpdate, notifyWindowOpener } from '../modules/group/helpers/update-user-in-sub-window';
 
 @Component({
   selector: 'alg-root',
@@ -52,9 +49,12 @@ export class AppComponent implements OnInit, OnDestroy {
     private renderer: Renderer2,
     private el: ElementRef,
   ) {
-    subWindowUserDataUpdated(window.name, () =>
-      notifyWindowOpener(window.opener as Window)
-    );
+
+    // Special case for detect if user profile was updated via login-module in sub window and redirected after a close/save
+    if (isWindowProfileUpdate(window.name) && isOpenerWindow(window, window.opener)) {
+      // Notify opener/parent window so main app could refresh user data and close sub window
+      notifyWindowOpener(window.opener);
+    }
 
     const title = appConfig.languageSpecificTitles && this.localeService.currentLang ?
       appConfig.languageSpecificTitles[this.localeService.currentLang.tag] : undefined;
