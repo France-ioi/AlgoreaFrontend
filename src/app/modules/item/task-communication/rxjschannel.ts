@@ -23,34 +23,45 @@ export function rxBuild(config: Omit<ChannelConfiguration, 'onReady'>): Observab
 }
 
 export class RxMessagingChannel {
+  private destroyed = false;
+
   constructor(private channel: MessagingChannel) {}
 
   unbind(method: string, doNotPublish?: boolean): boolean {
+    if (this.destroyed) return true;
     return this.channel.unbind(method, doNotPublish);
   }
 
   /** Bind a local method, allowing the remote task to call it */
   bind<T extends Observable<any> | any>(method: string, mapper?: (params: unknown) => T, doNotPublish?: boolean): MessagingChannel {
     // Create a callback wrapping the observable bound
-    function callback(transaction: MessageTransaction, params: unknown): void {
-      if (!mapper) return;
+    const callback = (transaction: MessageTransaction, params: unknown): void => {
+      if (!mapper || this.destroyed) return;
 
-      const forwardError = (error: unknown): void => transaction.error(error, error instanceof Error ? error.toString() : '');
+      const forwardError = (error: unknown): void => {
+        if (!this.destroyed) transaction.error(error, error instanceof Error ? error.toString() : '');
+      };
       try {
         const result = mapper(params);
         if (!isObservable(result)) return transaction.complete(result);
 
         transaction.delayReturn(true);
+
+        // This class is intended to be used with functions returning finite observables, either resolving or failing.
         result
           .pipe(take(1))
           .subscribe({
-            next: data => transaction.complete(data),
+            next: data => {
+              // If the channel is destroyed before an observable completes, let it the observable finish since it might be
+              // an xhr request saving data, and avoid notifying the channel since it's been destroyed
+              if (!this.destroyed) transaction.complete(data);
+            },
             error: forwardError,
           });
       } catch (error) {
         forwardError(error);
       }
-    }
+    };
     return this.channel.bind(method, callback, doNotPublish);
   }
 
@@ -58,7 +69,7 @@ export class RxMessagingChannel {
   call(message: RxMessage): Observable<unknown[]> {
     // Create an Observable wrapping the inner jschannel call
     return new Observable<unknown[]>(subscriber => {
-
+      if (this.destroyed) return;
       const innerMessage = {
         ...message,
         success: (...results: unknown[]): void => {
@@ -72,10 +83,12 @@ export class RxMessagingChannel {
   }
 
   notify(message: RxMessage): void {
+    if (this.destroyed) return;
     this.channel.notify(message);
   }
 
-  destroy(): void{
+  destroy(): void {
+    this.destroyed = true;
     this.channel.destroy();
   }
 }
