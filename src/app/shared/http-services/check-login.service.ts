@@ -21,7 +21,7 @@ export class CheckLoginService {
     const params = new HttpParams({ fromObject: { login_id: loginId } });
 
     return this.http
-      .get<unknown>(`${appConfig.apiUrl}/current-user/check-login-id`, { params, headers: ++count <= 2 ? { timeout: '50' } : {} })
+      .get<unknown>(`${appConfig.apiUrl}/current-user/check-login-id`, { params })
       .pipe(
         decodeSnakeCase(dataDecoder),
         map(data => data.loginIdMatched),
@@ -29,5 +29,3 @@ export class CheckLoginService {
   }
 
 }
-
-let count = 0;
