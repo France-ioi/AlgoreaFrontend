@@ -44,16 +44,22 @@ export class RxMessagingChannel {
     const callback = (transaction: MessageTransaction, params: unknown): void => {
       if (!mapper || this.destroyed) return;
 
-      const forwardError = (error: unknown): void => transaction.error(error, error instanceof Error ? error.toString() : '');
+      const forwardError = (error: unknown): void => {
+        if (!this.destroyed) transaction.error(error, error instanceof Error ? error.toString() : '');
+      };
       try {
         const result = mapper(params);
         if (!isObservable(result)) return transaction.complete(result);
 
         transaction.delayReturn(true);
+
+        // This class is intended to be used with functions returning finite observables, either resolving or failing.
         result
           .pipe(take(1))
           .subscribe({
             next: data => {
+              // If the channel is destroyed before an observable completes, let it the observable finish since it might be
+              // an xhr request saving data, and avoid notifying the channel since it's been destroyed
               if (!this.destroyed) transaction.complete(data);
             },
             error: forwardError,
