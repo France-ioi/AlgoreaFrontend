@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title>Update profile</title>
+</head>
+<body>
+<script>
+  // Special case for detect if user profile was updated via login-module in sub window and redirected after a close/save
+  if (window.opener) {
+    // Notify opener/parent window so main app could refresh user data and close sub window
+    window.opener.dispatchEvent(new Event('profileUpdated'));
+    window.close();
+  }
+</script>
+</body>
+</html>

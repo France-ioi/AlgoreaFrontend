@@ -39,18 +39,14 @@ export class CurrentUserComponent {
     });
   }
 
-  onModify(): void {
-    const winRef = window.open(
-      `${ environment.oauthServerUrl }?redirect_uri=${ location.origin }`,
-      'updateProfileWindow',
+  onModify(userId: string): void {
+    window.open(
+      `${ environment.oauthServerUrl }?all=1&client_id=${ userId }&redirect_uri=${encodeURI(`${ location.origin }/update-profile.html`)}`,
+      undefined,
       'popup,width=800,height=640'
     );
 
     const onProfileUpdated = (): void => {
-      if (!winRef) {
-        throw new Error('Unexpected: missed winRef');
-      }
-      winRef.close();
       this.userSessionService.refresh().subscribe();
       window.removeEventListener('profileUpdated', onProfileUpdated);
     };
