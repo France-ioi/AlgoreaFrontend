@@ -13,7 +13,6 @@ import { GroupUpdateService } from '../../http-services/group-update.service';
 import { GroupDataSource } from '../../services/group-datasource.service';
 import { withManagementAdditions } from '../../helpers/group-management';
 import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
-import { PendingChangesService } from '../../../../shared/services/pending-changes-service';
 
 @Component({
   selector: 'alg-group-edit',
@@ -40,7 +39,6 @@ export class GroupEditComponent implements OnDestroy, PendingChangesComponent {
     private formBuilder: FormBuilder,
     private groupUpdateService: GroupUpdateService,
     private createItemService: CreateItemService,
-    private pendingChangesService: PendingChangesService
   ) {
     this.subscription = this.state$
       .pipe(readyData())
@@ -48,13 +46,11 @@ export class GroupEditComponent implements OnDestroy, PendingChangesComponent {
         this.initialFormData = item;
         this.resetFormWith(item);
       });
-    this.pendingChangesService.set(this);
   }
 
   ngOnDestroy(): void {
     this.modeService.stopEditing();
     this.subscription?.unsubscribe();
-    this.pendingChangesService.clear();
   }
 
   isDirty(): boolean {

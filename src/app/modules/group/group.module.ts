@@ -51,6 +51,7 @@ import { ManagerPermissionDialogComponent } from './components/manager-permissio
 import { GroupPermissionsComponent } from './components/group-permissions/group-permissions.component';
 import { GroupLeaveComponent } from './components/group-leave/group-leave.component';
 import { GroupManagerAddComponent } from './components/group-manager-add/group-manager-add.component';
+import { ReactiveComponentModule } from '@ngrx/component';
 
 @NgModule({
   declarations: [
@@ -103,6 +104,7 @@ import { GroupManagerAddComponent } from './components/group-manager-add/group-m
     TooltipModule,
     OverlayPanelModule,
     DialogModule,
+    ReactiveComponentModule,
   ],
   exports: [
     GroupIndicatorComponent

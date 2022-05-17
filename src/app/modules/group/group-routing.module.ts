@@ -5,6 +5,7 @@ import { GroupDetailsComponent } from './pages/group-details/group-details.compo
 import { GroupByIdComponent } from './pages/group-by-id/group-by-id.component';
 import { UserComponent } from './pages/user/user.component';
 import { PendingChangesGuard } from '../../shared/guards/pending-changes-guard';
+import { GroupSettingsComponent } from './pages/group-settings/group-settings.component';
 
 const routes: Routes = [
   {
@@ -40,6 +41,7 @@ const routes: Routes = [
           {
             path: 'settings',
             canDeactivate: [ PendingChangesGuard ],
+            component: GroupSettingsComponent,
           },
           {
             path: 'access',

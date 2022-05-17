@@ -77,8 +77,8 @@
       ></alg-group-overview>
       <alg-group-composition *ngIf="!!compositionTab?.isActive" [groupData]="state.data" (groupRefreshRequired)="onGroupRefreshRequired()"></alg-group-composition>
       <alg-group-managers *ngIf="!!adminTab?.isActive" [groupData]="state.data"></alg-group-managers>
-      <alg-group-settings *ngIf="!!settingsTab?.isActive" [group]="group" (groupRefreshRequired)="onGroupRefreshRequired()"></alg-group-settings>
       <alg-group-access *ngIf="!!accessTab?.isActive" [group]="group"></alg-group-access>
+      <router-outlet></router-outlet>
     </div>
 
   </ng-container>
