@@ -40,8 +40,13 @@ export class CurrentUserComponent {
   }
 
   onModify(userId: string): void {
+    const backUrl = new URL(
+      './update-profile.html',
+      location.href
+    ).href;
+
     window.open(
-      `${ environment.oauthServerUrl }?all=1&client_id=${ userId }&redirect_uri=${encodeURI(`${ location.origin }/update-profile.html`)}`,
+      `${ environment.oauthServerUrl }?all=1&client_id=${ userId }&redirect_uri=${encodeURI(backUrl)}`,
       undefined,
       'popup,width=800,height=640'
     );
