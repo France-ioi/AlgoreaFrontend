@@ -4,7 +4,7 @@ import { merge, Subject } from 'rxjs';
 import { delay, distinctUntilChanged, filter, map, startWith } from 'rxjs/operators';
 import { isDefined } from 'src/app/shared/helpers/null-undefined-predicates';
 import { ContentInfo, RoutedContentInfo } from 'src/app/shared/models/content/content-info';
-import { isGroupInfo } from 'src/app/shared/models/content/group-info';
+import { isGroupInfo, isMyGroupsInfo } from 'src/app/shared/models/content/group-info';
 import { isActivityInfo, isItemInfo } from 'src/app/shared/models/content/item-info';
 import { CurrentContentService } from 'src/app/shared/services/current-content.service';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
@@ -67,7 +67,7 @@ export class LeftNavComponent {
 
 function contentToTabIndex(content: ContentInfo|null): number|undefined {
   if (content === null) return undefined;
-  if (isGroupInfo(content)) return groupsTabIdx;
+  if (isGroupInfo(content) || isMyGroupsInfo(content)) return groupsTabIdx;
   if (isItemInfo(content)) {
     return isActivityInfo(content) ? activitiesTabIdx : skillsTabIdx;
   }

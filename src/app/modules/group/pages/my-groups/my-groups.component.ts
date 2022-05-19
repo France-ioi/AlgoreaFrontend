@@ -1,5 +1,5 @@
 import { Component, OnDestroy, ViewChild } from '@angular/core';
-import { contentInfo } from 'src/app/shared/models/content/content-info';
+import { myGroupsInfo } from 'src/app/shared/models/content/group-info';
 import { CurrentContentService } from 'src/app/shared/services/current-content.service';
 import { JoinedGroupListComponent } from '../../components/joined-group-list/joined-group-list.component';
 import { LayoutService } from '../../../../shared/services/layout.service';
@@ -19,7 +19,7 @@ export class MyGroupsComponent implements OnDestroy {
     private layoutService: LayoutService,
   ) {
     this.layoutService.configure({ fullFrameActive: false });
-    this.currentContent.replace(contentInfo({
+    this.currentContent.replace(myGroupsInfo({
       title: $localize`My groups`,
       breadcrumbs: {
         category: $localize`My groups`,
