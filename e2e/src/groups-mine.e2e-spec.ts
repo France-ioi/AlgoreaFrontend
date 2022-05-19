@@ -8,8 +8,8 @@ describe('groups mine page', () => {
   });
 
   it('should display default activities in the left nav', async () => {
-    const activityLabel = page.getLeftNavFirstActivity();
-    await page.waitUntilTextIsPresent(activityLabel, 'Parcours officiels');
-    await retry(() => expect(activityLabel.getText()).toContain('Parcours officiels'));
+    const activeTab = page.getLeftNavActiveTab();
+    await page.waitUntilTextIsPresent(activeTab, 'GROUPS');
+    await retry(() => expect(activeTab.getText()).toContain('GROUPS'));
   });
 });
