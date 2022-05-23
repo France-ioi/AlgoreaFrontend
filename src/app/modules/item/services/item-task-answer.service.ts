@@ -8,6 +8,7 @@ import {
   filter,
   map,
   mapTo,
+  retry,
   shareReplay,
   startWith,
   switchMap,
@@ -17,7 +18,7 @@ import {
   withLatestFrom,
 } from 'rxjs/operators';
 import { SECONDS } from 'src/app/shared/helpers/duration';
-import { errorIsHTTPForbidden } from 'src/app/shared/helpers/errors';
+import { errorIsHTTPForbidden, implementsError } from 'src/app/shared/helpers/errors';
 import { isNotNull } from 'src/app/shared/helpers/null-undefined-predicates';
 import { repeatLatestWhen } from 'src/app/shared/helpers/repeatLatestWhen';
 import { AnswerTokenService } from '../http-services/answer-token.service';
@@ -53,16 +54,23 @@ export class ItemTaskAnswerService implements OnDestroy {
       window.alert('hook before fetching current answer');
       return readOnly ? of(formerAnswer) : this.getCurrentAnswer(route.id, attemptId);
     }),
+    retry(3),
     shareReplay(1), // avoid duplicate xhr calls on multiple subscriptions.
   );
 
-  private initializedTaskState$ = combineLatest([ this.initialAnswer$, this.task$ ]).pipe(
+  private initializedTaskState$ = combineLatest([
+    this.initialAnswer$.pipe(catchError(() => EMPTY)), // error is handled elsewhere
+    this.task$,
+  ]).pipe(
     switchMap(([ initialAnswer, task ]) =>
       (initialAnswer?.state ? task.reloadState(initialAnswer.state).pipe(mapTo(undefined)) : of(undefined))
     ),
     shareReplay(1),
   );
-  private initializedTaskAnswer$ = combineLatest([ this.initialAnswer$, this.task$ ]).pipe(
+  private initializedTaskAnswer$ = combineLatest([
+    this.initialAnswer$.pipe(catchError(() => EMPTY)), // error is handled elsewhere
+    this.task$,
+  ]).pipe(
     delayWhen(() => this.initializedTaskState$),
     switchMap(([ initialAnswer, task ]) =>
       (initialAnswer?.answer ? task.reloadAnswer(initialAnswer.answer).pipe(mapTo(undefined)) : of(undefined))
@@ -112,7 +120,10 @@ export class ItemTaskAnswerService implements OnDestroy {
       error: err => this.errorSubject.next(err instanceof Error ? err : new Error('unknown error')),
     }),
     this.initialAnswer$
-      .subscribe(initial => this.saved$.next({ answer: initial?.answer ?? '', state: initial?.state ?? '' })),
+      .subscribe({
+        next: initial => this.saved$.next({ answer: initial?.answer ?? '', state: initial?.state ?? '' }),
+        error: err => this.errorSubject.next(implementsError(err) ? err : new Error('unknown error')),
+      }),
     this.autoSaveInterval$.subscribe(savedOrError => {
       if (savedOrError instanceof Error) this.saveError$.next(savedOrError);
       else this.saved$.next(savedOrError);
