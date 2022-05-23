@@ -5,7 +5,7 @@
 </head>
 <body>
 <script>
-  // Special case for detect if user profile was updated via login-module in sub window and redirected after a close/save
+  // This page is supposed to be called (only!) as a callback from login-module after a profile update (on save or close) in a subwindow (popup). 
   if (window.opener) {
     // Notify opener/parent window so main app could refresh user data and close sub window
     window.opener.dispatchEvent(new Event('profileUpdated'));
