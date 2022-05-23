@@ -388,13 +388,10 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-manager-list/group-manager-list.component.ts</context><context context-type="linenumber">37</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/group-progress-grid/group-progress-grid.component.ts</context><context context-type="linenumber">108</context></context-group></trans-unit><trans-unit id="3768927257183755959" datatype="html">
         <source>Save</source><target state="translated">Sauvegarder</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/manager-permission-dialog/manager-permission-dialog.component.html</context><context context-type="linenumber">99</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/floating-save/floating-save.component.html</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="4675865183684903475" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/manager-permission-dialog/manager-permission-dialog.component.html</context><context context-type="linenumber">99</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/floating-save/floating-save.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit><trans-unit id="4675865183684903475" datatype="html">
         <source>Cancel Changes</source><target state="translated">Annuler les changements</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/shared-components/components/floating-save/floating-save.component.html</context>
-          <context context-type="linenumber">2</context>
-        </context-group>
-      </trans-unit><trans-unit id="7488290912485772924" datatype="html">
+
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/floating-save/floating-save.component.html</context><context context-type="linenumber">11</context></context-group></trans-unit><trans-unit id="7488290912485772924" datatype="html">
         <source>You don't have access to this activity.</source><target state="translated">Vous n'avez pas accès à cette activité.</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/associated-activity/associated-activity.component.ts</context><context context-type="linenumber">57</context></context-group></trans-unit><trans-unit id="2513427646305861995" datatype="html">
@@ -485,7 +482,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-details/item-details.component.html</context><context context-type="linenumber">118</context></context-group></trans-unit><trans-unit id="7934833136974560675" datatype="html">
         <source>Retry</source><target state="new">Retry</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-details/item-details.component.html</context><context context-type="linenumber">123</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-display/item-display.component.html</context><context context-type="linenumber">38</context></context-group></trans-unit><trans-unit id="unknownError" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-details/item-details.component.html</context><context context-type="linenumber">123</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-display/item-display.component.html</context><context context-type="linenumber">40</context></context-group></trans-unit><trans-unit id="unknownError" datatype="html">
         <source>An unknown error occurred. </source><target state="new">An unknown error occurred. </target>
         
         
@@ -497,30 +494,24 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-display/item-display.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="4031874298525415345" datatype="html">
         <source>Show task anyway (for debugging)</source><target state="new">Show task anyway (for debugging)</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-display/item-display.component.html</context><context context-type="linenumber">33</context></context-group></trans-unit><trans-unit id="4586682462895822504" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-display/item-display.component.html</context><context context-type="linenumber">34</context></context-group></trans-unit><trans-unit id="4586682462895822504" datatype="html">
         <source>Unable to load the answer</source><target state="new">Unable to load the answer</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-details/item-details.component.html</context><context context-type="linenumber">66</context></context-group></trans-unit><trans-unit id="3142808599136977164" datatype="html">
         <source>Saving answer...</source><target state="new">Saving answer...</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-display/item-display.component.html</context><context context-type="linenumber">50</context></context-group></trans-unit><trans-unit id="4563965495368336177" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-display/item-display.component.html</context><context context-type="linenumber">52</context></context-group></trans-unit><trans-unit id="4563965495368336177" datatype="html">
         <source>Skip</source><target state="new">Skip</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-display/item-display.component.html</context><context context-type="linenumber">52</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-progress/item-progress.component.html</context><context context-type="linenumber">52</context></context-group></trans-unit><trans-unit id="2251952288611071461" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-display/item-display.component.html</context><context context-type="linenumber">54</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-progress/item-progress.component.html</context><context context-type="linenumber">52</context></context-group></trans-unit><trans-unit id="2251952288611071461" datatype="html">
         <source>Loading the task</source><target state="new">Loading the task</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/item/pages/item-display/item-display.component.html</context>
-          <context context-type="linenumber">66</context>
-        </context-group>
-      </trans-unit><trans-unit id="8703959562849056209" datatype="html">
+
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-display/item-display.component.html</context><context context-type="linenumber">68</context></context-group></trans-unit><trans-unit id="8703959562849056209" datatype="html">
         <source>The task is taking an unexpected long time to load... please wait...</source><target state="new">The task is taking an unexpected long time to load... please wait...</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/item/pages/item-display/item-display.component.html</context>
-          <context context-type="linenumber">67</context>
-        </context-group>
-      </trans-unit><trans-unit id="7005243353550317116" datatype="html">
+
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-display/item-display.component.html</context><context context-type="linenumber">69</context></context-group></trans-unit><trans-unit id="7005243353550317116" datatype="html">
         <source>Your current progress could not have been saved. Are you connected to the internet?</source><target state="new">Your current progress could not have been saved. Are you connected to the internet?</target>
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-display/item-display.component.ts</context><context context-type="linenumber">95</context></context-group></trans-unit><trans-unit id="4373686826857756108" datatype="html">
@@ -814,7 +805,10 @@
         <source>Error</source><target state="translated">Erreur</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/services/action-feedback.service.ts</context><context context-type="linenumber">28</context></context-group></trans-unit><trans-unit id="7708270344948043036" datatype="html">
-        <source> <x id="INTERPOLATION" equiv-text="{{ item.type | i18nSelect : {           Chapter: 'Only empty chapters can be deleted.',           other: 'Only empty skills can be deleted.'         } }}"/> </source><target state="new"> <x id="INTERPOLATION" equiv-text="{{ item.type === 'Chapter' ? 'Only empty chapters can be deleted.' : 'Only empty skills can be deleted.' }}"/> </target>
+        <source> <x id="INTERPOLATION" equiv-text="{{ item.type | i18nSelect : {
+          Chapter: 'Only empty chapters can be deleted.',
+          other: 'Only empty skills can be deleted.'
+        } }}"/> </source><target state="new"> <x id="INTERPOLATION" equiv-text="{{ item.type === 'Chapter' ? 'Only empty chapters can be deleted.' : 'Only empty skills can be deleted.' }}"/> </target>
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-remove-button/item-remove-button.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit><trans-unit id="5302971017875260731" datatype="html">
         <source>Only owner can delete items</source><target state="new">Only owner can delete items</target>
@@ -1309,13 +1303,22 @@
           <context context-type="linenumber">117</context>
         </context-group>
       </trans-unit><trans-unit id="8309054658706496987" datatype="html">
-        <source> «<x id="INTERPOLATION" equiv-text="{{ watchedGroup.name }}"/>» <x id="INTERPOLATION_1" equiv-text="{{ ['content', 'content_with_descendants', 'solution'].includes(permissions.canView).toString() | i18nSelect : {           true: 'can',           other: 'can\'t'         } }}"/> access this <x id="INTERPOLATION_2" equiv-text="{{ itemData.item.type | i18nSelect : {           Skill: 'skill',           other: 'activity'         } }}"/> </source><target state="new"> «<x id="INTERPOLATION" equiv-text="{{ watchedGroup.name }}"/>» <x id="INTERPOLATION_1" equiv-text="{{ ['content', 'content_with_descendants', 'solution'].includes(permissions.canView).toString() | i18nSelect : {           true: 'can',           other: 'can\'t'         } }}"/> access this <x id="INTERPOLATION_2" equiv-text="{{ itemData.item.type | i18nSelect : {           Skill: 'skill',           other: 'activity'         } }}"/> </target>
+        <source> «<x id="INTERPOLATION" equiv-text="{{ watchedGroup.name }}"/>» <x id="INTERPOLATION_1" equiv-text="{{ ['content', 'content_with_descendants', 'solution'].includes(permissions.canView).toString() | i18nSelect : {
+          true: 'can',
+          other: 'can\'t'
+        } }}"/> access this <x id="INTERPOLATION_2" equiv-text="{{ itemData.item.type | i18nSelect : {
+          Skill: 'skill',
+          other: 'activity'
+        } }}"/> </source><target state="new"> «<x id="INTERPOLATION" equiv-text="{{ watchedGroup.name }}"/>» <x id="INTERPOLATION_1" equiv-text="{{ ['content', 'content_with_descendants', 'solution'].includes(permissions.canView).toString() | i18nSelect : {           true: 'can',           other: 'can\'t'         } }}"/> access this <x id="INTERPOLATION_2" equiv-text="{{ itemData.item.type | i18nSelect : {           Skill: 'skill',           other: 'activity'         } }}"/> </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/item/components/item-permissions/item-permissions.component.html</context>
           <context context-type="linenumber">9,20</context>
         </context-group>
       </trans-unit><trans-unit id="1633175305056804241" datatype="html">
-        <source>You cannot watch this <x id="INTERPOLATION" equiv-text="{{ itemData.item.type | i18nSelect : {             Skill: 'skill',             other: 'activity'           } }}"/> </source><target state="new">You cannot watch this <x id="INTERPOLATION" equiv-text="{{ itemData.item.type | i18nSelect : {             Skill: 'skill',             other: 'activity'           } }}"/> </target>
+        <source>You cannot watch this <x id="INTERPOLATION" equiv-text="{{ itemData.item.type | i18nSelect : {
+            Skill: 'skill',
+            other: 'activity'
+          } }}"/> </source><target state="new">You cannot watch this <x id="INTERPOLATION" equiv-text="{{ itemData.item.type | i18nSelect : {             Skill: 'skill',             other: 'activity'           } }}"/> </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/item/components/item-permissions/item-permissions.component.html</context>
           <context context-type="linenumber">23,27</context>
@@ -1352,7 +1355,7 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/parent-skills/parent-skills.component.html</context><context context-type="linenumber">16</context></context-group></trans-unit><trans-unit id="7599176768250828782" datatype="html">
         <source>Error while loading path suggestion</source><target state="new">Error while loading path suggestion</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/path-suggestion/path-suggestion.component.html</context><context context-type="linenumber">16</context></context-group></trans-unit><trans-unit id="7182192298964223312" datatype="html">
         <source>via</source><target state="new">via</target>
         <context-group purpose="location">
@@ -1361,7 +1364,7 @@
         </context-group>
       </trans-unit><trans-unit id="7136816175934806999" datatype="html">
         <source>You have no path to this content.</source><target state="new">You have no path to this content.</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/path-suggestion/path-suggestion.component.html</context><context context-type="linenumber">35</context></context-group></trans-unit><trans-unit id="4039557800195759728" datatype="html">
         <source>This content is one of your root activity/skill</source><target state="new">This content is one of your root activity/skill</target>
         <context-group purpose="location">
@@ -1784,11 +1787,8 @@
         </context-group>
       </trans-unit><trans-unit id="3463797202358605584" datatype="html">
         <source>Invite</source><target state="translated">Inviter</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/components/group-invite-users/group-invite-users.component.html</context>
-          <context context-type="linenumber">11</context>
-        </context-group>
-      </trans-unit><trans-unit id="4106690181112187643" datatype="html">
+
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-invite-users/group-invite-users.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="4106690181112187643" datatype="html">
         <source>A new code has been generated</source><target state="translated">Un nouveau code a été généré</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.ts</context><context context-type="linenumber">92</context></context-group></trans-unit><trans-unit id="2868875466439101736" datatype="html">
@@ -1851,7 +1851,13 @@
       </trans-unit><trans-unit id="2565482429239064406" datatype="html">
         <source> This code has expired on <x id="INTERPOLATION" equiv-text="{{ codeInfo.codeExpiration | date:'medium' }}"/> </source><target state="translated"> Ce code a expiré le <x id="INTERPOLATION" equiv-text="ired on {{ groupExt.codeExpiration | date:'m"/></target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.html</context><context context-type="linenumber">23</context></context-group></trans-unit><trans-unit id="8186013988289067040" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.html</context><context context-type="linenumber">23</context></context-group></trans-unit><trans-unit id="8019333697666942316" datatype="html">
+        <source>Generate a code</source><target state="new">Generate a code</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.html</context>
+          <context context-type="linenumber">27</context>
+        </context-group>
+      </trans-unit><trans-unit id="8186013988289067040" datatype="html">
         <source>Code</source><target state="translated">Code</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-join-by-code/group-join-by-code.component.html</context><context context-type="linenumber">38</context></context-group></trans-unit><trans-unit id="6912849366309653724" datatype="html">
@@ -2144,3 +2150,4 @@
     </body>
   </file>
 </xliff>
+

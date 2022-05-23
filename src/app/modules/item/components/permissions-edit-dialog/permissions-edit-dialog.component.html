@@ -127,19 +127,19 @@
 
   <p-footer>
     <div class="footer">
-      <alg-button
+      <p-button
         icon="fa fa-times"
         i18n-label label="Cancel"
-        class="p-button-rounded p-button-danger"
-        (click)="onCancel()"
-      ></alg-button>
-      <alg-button
+        styleClass="alg-button p-button-rounded p-button-danger"
+        (onClick)="onCancel()"
+      ></p-button>
+      <p-button
         icon="fa fa-check"
         i18n-label label="Proceed"
-        class="p-button-rounded"
-        (click)="onAccept()"
+        styleClass="alg-button p-button-rounded"
+        (onClick)="onAccept()"
         [disabled]="!form.dirty || form.invalid"
-      ></alg-button>
+      ></p-button>
     </div>
   </p-footer>
 </p-dialog>

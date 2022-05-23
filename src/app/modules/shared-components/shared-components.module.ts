@@ -23,7 +23,6 @@ import { TagModule } from 'primeng/tag';
 
 import { ClickOutsideModule } from 'ng-click-outside';
 
-import { ButtonComponent } from './components/button/button.component';
 import { SectionComponent } from './components/section/section.component';
 import { PageNavigatorComponent } from './components/page-navigator/page-navigator.component';
 import { SkillProgressComponent } from './components/skill-progress/skill-progress.component';
@@ -69,7 +68,6 @@ import { PathSuggestionComponent } from './components/path-suggestion/path-sugge
 
 @NgModule({
   declarations: [
-    ButtonComponent,
     SectionComponent,
     PageNavigatorComponent,
     SkillProgressComponent,
@@ -139,7 +137,6 @@ import { PathSuggestionComponent } from './components/path-suggestion/path-sugge
     InputMaskModule,
   ],
   exports: [
-    ButtonComponent,
     SectionComponent,
     PageNavigatorComponent,
     SkillProgressComponent,

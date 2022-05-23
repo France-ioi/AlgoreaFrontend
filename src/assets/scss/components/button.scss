@@ -3,37 +3,26 @@
 
 .alg-button {
   &.p-button {
+    padding: 0 1.5rem;
     height: 3rem;
     font-weight: 700;
-    font-size: inherit;
-    padding: 0 1.5rem;
+    font-size: 1.2rem;
+    background-color: var(--base-color);
+    border-color: var(--base-color);
 
-    &.p-button-rounded {
-      border-radius: 1.5rem;
+    &:enabled:focus {
+      outline: none;
+      box-shadow: none;
     }
 
+    // Custom
     &.p-button-rounded-full {
       border-radius: 3rem;
     }
-  }
 
-  &.p-button {
-    background-color: var(--base-color);
-    border-color: var(--base-color);
-    font-size: 1.2rem;
-
-    &.p-fit-parent {
-      width: 100%;
-    }
-
+    // PrimeNG
     &.p-button-rounded {
       border-radius: 1rem;
-    }
-
-    &.no-uppercase {
-      .p-button-label {
-        text-transform: unset;
-      }
     }
 
     &.p-small-button {
@@ -41,66 +30,8 @@
       font-size: 1rem;
     }
 
-    &.p-medium-button {
-      font-size: 1rem;
-    }
-
-    &.diagonal-rounded {
-      border-top-left-radius: 1rem;
-      border-top-right-radius: unset;
-      border-bottom-left-radius: unset;
-      border-bottom-right-radius: $border-radius;
-    }
-
-    &:enabled:focus {
-      outline: none;
-      box-shadow: none;
-    }
-
     .p-button-label {
       text-transform: uppercase;
-    }
-
-    &.p-button-icon-left {
-      .p-button-label {
-        padding: 0;
-        padding-left: 1.5rem;
-      }
-    }
-
-    &.p-button-icon-right {
-      .p-button-label {
-        padding-right: 1.5rem;
-      }
-    }
-
-    .p-button-icon-left {
-      left: 1rem;
-    }
-
-    .p-button-icon-right {
-      right: 1rem;
-    }
-
-    &.p-button-secondary {
-      background-color: var(--secondary-btn-color);
-      border-color: var(--secondary-btn-color);
-      color: white;
-
-      &:enabled:focus {
-        outline: none;
-        box-shadow: none;
-      }
-    }
-
-    &.p-button-info {
-      background-color: var(--base-color);
-      border-color: var(--base-color);
-
-      &:enabled:focus {
-        outline: none;
-        box-shadow: none;
-      }
     }
 
     &.p-button-warning {
@@ -114,6 +45,7 @@
       &:enabled:hover {
         color: white;
       }
+
       &:enabled:focus {
         outline: none;
         box-shadow: none;
@@ -144,24 +76,6 @@
           }
         }
       }
-    }
-
-    &.p-top-rounded {
-      border-radius: 0;
-      border-top-left-radius: 0.6667rem;
-      border-top-right-radius: 0.6667rem;
-    }
-
-    &.p-diag-rounded {
-      border-radius: 0;
-      border-top-left-radius: 0.6667rem;
-      border-bottom-right-radius: 0.6667rem;
-    }
-
-    &.p-button-success {
-      color: #ffffff;
-      background: #90C45F;
-      border: 1px solid #90C45F;
     }
   }
 }

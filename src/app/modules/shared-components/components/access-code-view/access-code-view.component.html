@@ -11,12 +11,12 @@
     <span class="icon">
       <i class="fa fa-font"></i>
     </span>
-    <alg-button
+    <p-button
+      styleClass="alg-button p-button-rounded"
       icon="fa fa-check"
       [label]="buttonLabel"
-      class="p-button-rounded"
       [disabled]="input.value === '' || state === 'loading'"
-      (click)="onClickAccess()"
-    ></alg-button>
+      (onClick)="onClickAccess()"
+    ></p-button>
   </div>
 </alg-section-paragraph>

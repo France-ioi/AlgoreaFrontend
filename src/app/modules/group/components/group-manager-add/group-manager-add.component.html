@@ -9,12 +9,12 @@
     <span class="icon">
       <i class="fa fa-font"></i>
     </span>
-    <alg-button
-      icon="fa fa-plus"
+    <p-button
+      styleClass="alg-button p-button-rounded"
       i18n-label label="Add"
-      class="p-button-rounded"
+      icon="fa fa-plus"
       [disabled]="login === '' || state === 'loading'"
-      (click)="onClick()"
-    ></alg-button>
+      (onClick)="onClick()"
+    ></p-button>
   </div>
 </alg-section-paragraph>
