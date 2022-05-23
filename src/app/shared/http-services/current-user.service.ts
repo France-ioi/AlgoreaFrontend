@@ -60,4 +60,11 @@ export class CurrentUserHttpService {
       );
   }
 
+  refresh(): Observable<void> {
+    return this.http.put<SimpleActionResponse>(`${appConfig.apiUrl}/current-user/refresh`, null)
+      .pipe(
+        map(assertSuccess)
+      );
+  }
+
 }

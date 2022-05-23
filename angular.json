@@ -38,6 +38,7 @@
               "src/favicon-32x32.png",
               "src/favicon.ico",
               "src/site.webmanifest",
+              "src/update-profile.html",
               "src/assets"
             ],
             "styles": [
