@@ -27,8 +27,11 @@ export class ItemTaskInitService implements OnDestroy {
 
   readonly config$ = this.configFromItem$.asObservable();
   readonly iframe$ = this.configFromIframe$.pipe(map(config => config.iframe));
-  readonly taskToken$: Observable<TaskToken> = this.config$.pipe(
-    switchMap(({ attemptId, route }) => this.taskTokenService.generate(route.id, attemptId)),
+  readonly taskToken$: Observable<TaskToken> = this.configFromItem$.pipe(
+    switchMap(({ attemptId, route }) => {
+      window.alert('hook do un-throttle network');
+      return this.taskTokenService.generate(route.id, attemptId);
+    }),
     shareReplay(1),
   );
 

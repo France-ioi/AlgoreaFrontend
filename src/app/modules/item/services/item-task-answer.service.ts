@@ -50,7 +50,7 @@ export class ItemTaskAnswerService implements OnDestroy {
       if (route.answerId) {
         return readOnly ? of(formerAnswer) : this.loadFormerAsNewCurrentAnswer(route.id, attemptId, formerAnswer);
       }
-
+      window.alert('hook before fetching current answer');
       return readOnly ? of(formerAnswer) : this.getCurrentAnswer(route.id, attemptId);
     }),
     shareReplay(1), // avoid duplicate xhr calls on multiple subscriptions.
