@@ -140,16 +140,17 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
   }
 
   showProgressDetail(target: HTMLElement, userProgress: TeamUserProgress, row: DataRow, col: DataColumn): void {
-    if (this.progressOverlay?.target === target) return;
-    this.progressOverlay = {
-      accessPermissions: {
-        title: row.header,
-        groupId: row.id,
-        itemId: col.id,
-      },
-      target,
-      progress: userProgress,
-    };
+    requestAnimationFrame(() => {
+      this.progressOverlay = {
+        accessPermissions: {
+          title: row.header,
+          groupId: row.id,
+          itemId: col.id,
+        },
+        target,
+        progress: userProgress,
+      };
+    });
   }
 
   hideProgressDetail(): void {
