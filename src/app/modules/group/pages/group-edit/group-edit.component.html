@@ -33,19 +33,19 @@
       <alg-associated-activity formControlName="rootActivity"></alg-associated-activity>
     </form>
 
-    <div class="operations">
-      <alg-group-remove-button [group]="state.data" *ngIf="state.data.isCurrentUserManager"></alg-group-remove-button>
-
-      <alg-floating-save
-          *ngIf="groupForm.dirty"
-          [saving]="groupForm.disabled"
-          (save)="save()"
-          (cancel)="resetForm()"
-      ></alg-floating-save>
+    <div class="remove-button-section" *ngIf="state.data.isCurrentUserManager">
+      <alg-group-remove-button [group]="state.data"></alg-group-remove-button>
     </div>
 
+    <alg-floating-save
+      *ngIf="groupForm.dirty"
+      [saving]="groupForm.disabled"
+      (save)="save()"
+      (cancel)="resetForm()"
+    ></alg-floating-save>
+
     <ng-template #notAuthorized>
-      <p i18n>You do not have the permissions to edit this content.</p>
+      <alg-error i18n-message message="You do not have the permissions to edit this content."></alg-error>
     </ng-template>
   </ng-container>
 </ng-container>
