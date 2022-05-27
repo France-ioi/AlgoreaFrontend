@@ -45,8 +45,8 @@ export class UserComponent implements OnInit, OnDestroy {
     startWith(this.router.url),
     distinctUntilChanged(),
   );
-  readonly activeRoute$: Observable<'progress' | 'personal-data'> = this.url$.pipe(
-    map(url => (this.isPersonalDataRoute(url) ? 'personal-data' : 'progress')),
+  readonly activeRoute$: Observable<'progress' | 'personal-data' | 'settings'> = this.url$.pipe(
+    map(url => this.getCurrentRoute(url)),
   );
 
   private readonly breadcrumbs$ = this.route.paramMap.pipe(
@@ -84,7 +84,8 @@ export class UserComponent implements OnInit, OnDestroy {
         map(([ url, state, breadcrumbs ]) => {
           const title = state.isFetching || state.isError ? '...' : formatUser(state.data);
           const lastPath = {
-            title: this.isPersonalDataRoute(url) ? $localize`Personal info` : $localize`Progress`,
+            title: this.getCurrentRoute(url) === 'personal-data' ? $localize`Personal info` :
+              this.getCurrentRoute(url) === 'settings' ? $localize`Settings` : $localize`Progress`,
           };
 
           return contentInfo({
@@ -126,7 +127,12 @@ export class UserComponent implements OnInit, OnDestroy {
     this.refresh$.next();
   }
 
-  private isPersonalDataRoute(url: string): boolean {
-    return url.endsWith('/personal-data');
+  private getCurrentRoute(url: string): 'progress' | 'personal-data' | 'settings' {
+    if (url.endsWith('/personal-data')) {
+      return 'personal-data';
+    } else if (url.endsWith('/settings')) {
+      return 'settings';
+    }
+    return 'progress';
   }
 }

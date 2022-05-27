@@ -1,8 +1,5 @@
 import { Component } from '@angular/core';
-import { ActionFeedbackService } from '../../../../shared/services/action-feedback.service';
-import { LocaleService } from '../../../../core/services/localeService';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
-import { HttpErrorResponse } from '@angular/common/http';
 import { environment } from '../../../../../environments/environment';
 
 @Component({
@@ -15,29 +12,7 @@ export class CurrentUserComponent {
 
   constructor(
     private userSessionService: UserSessionService,
-    private actionFeedbackService: ActionFeedbackService,
-    private localeService: LocaleService,
   ) {}
-
-  onChangeLang(event: string): void {
-    this.update({ default_language: event });
-  }
-
-  update(changes: { default_language: string }): void {
-    this.userSessionService.updateCurrentUser(changes).subscribe({
-      next: () => {
-        this.actionFeedbackService.success($localize`Changes successfully saved.`);
-
-        if (changes.default_language) {
-          this.localeService.navigateTo(changes.default_language);
-        }
-      },
-      error: err => {
-        this.actionFeedbackService.unexpectedError();
-        if (!(err instanceof HttpErrorResponse)) throw err;
-      }
-    });
-  }
 
   onModify(userId: string): void {
     const backUrl = new URL(

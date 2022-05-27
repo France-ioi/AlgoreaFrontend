@@ -1,0 +1,19 @@
+<ng-container *ngIf="currentUser$ | async as currentUser">
+  <div class="bg-white">
+    <alg-section i18n-label label="Platform settings" icon="fa fa-cog">
+      <ul class="alg-data-list">
+        <li class="alg-data-list-item">
+          <span class="alg-data-list-item-caption" i18n>Platform language</span>
+          <span class="alg-data-list-item-value">
+            <alg-language-picker
+                styleClass="alg-language-picker-dropdown base"
+                [defaultLang]="currentUser.defaultLanguage"
+                [redirectOnChange]="false"
+                (changeLang)="onChangeLang($event)"
+            ></alg-language-picker>
+          </span>
+        </li>
+      </ul>
+    </alg-section>
+  </div>
+</ng-container>

@@ -18,6 +18,9 @@ const routes: Routes = [
     children: [
       {
         path: 'personal-data'
+      },
+      {
+        path: 'settings'
       }
     ]
   },

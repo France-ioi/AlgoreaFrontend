@@ -51,6 +51,7 @@ import { ManagerPermissionDialogComponent } from './components/manager-permissio
 import { GroupPermissionsComponent } from './components/group-permissions/group-permissions.component';
 import { GroupLeaveComponent } from './components/group-leave/group-leave.component';
 import { GroupManagerAddComponent } from './components/group-manager-add/group-manager-add.component';
+import { PlatformSettingsComponent } from './pages/platform-settings/platform-settings.component';
 
 @NgModule({
   declarations: [
@@ -91,6 +92,7 @@ import { GroupManagerAddComponent } from './components/group-manager-add/group-m
     GroupPermissionsComponent,
     GroupLeaveComponent,
     GroupManagerAddComponent,
+    PlatformSettingsComponent,
   ],
   imports: [
     CommonModule,

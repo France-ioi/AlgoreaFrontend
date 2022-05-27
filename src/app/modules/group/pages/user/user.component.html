@@ -15,7 +15,7 @@
 
     <alg-user-header [user]="user" *ngIf="!(fullFrame$ | async)?.active"></alg-user-header>
 
-    <nav class="nav-tab" *ngIf="(currentUserGroupId$ | async) === user.groupId || (activeRoute$ | async) === 'personal-data'">
+    <nav class="nav-tab" *ngIf="(currentUserGroupId$ | async) === user.groupId || (activeRoute$ | async) === 'personal-data' || (activeRoute$ | async) === 'settings'">
       <a
           class="nav-tab-item"
           [routerLink]="'./'"
@@ -36,6 +36,16 @@
       >
         Personal data
       </a>
+      <a
+          class="nav-tab-item"
+          [routerLink]="'./settings'"
+          routerLinkActive #settings="routerLinkActive"
+          [routerLinkActiveOptions]="{ matrixParams: 'ignored', queryParams: 'ignored', paths: 'exact', fragment: 'ignored'}"
+          [class.active]="settings.isActive"
+          i18n
+      >
+        Settings
+      </a>
     </nav>
 
     <ng-container *ngIf="activeRoute$ | async as activeRoute">
@@ -51,18 +61,22 @@
       </ng-container>
 
       <ng-container *ngIf="activeRoute === 'personal-data'">
-        <ng-container *ngIf="(currentUserGroupId$ | async) === user.groupId; then currentUser; else forbidden"></ng-container>
-
-        <ng-template #currentUser>
+        <ng-container *ngIf="(currentUserGroupId$ | async) === user.groupId; else forbidden">
           <alg-current-user></alg-current-user>
-        </ng-template>
-
-        <ng-template #forbidden>
-          <div class="bg-white">
-            <p class="no-access" i18n>You cannot access this page for this user</p>
-          </div>
-        </ng-template>
+        </ng-container>
       </ng-container>
+
+      <ng-container *ngIf="activeRoute === 'settings'">
+        <ng-container *ngIf="(currentUserGroupId$ | async) === user.groupId; else forbidden">
+          <alg-platform-settings></alg-platform-settings>
+        </ng-container>
+      </ng-container>
+
+      <ng-template #forbidden>
+        <div class="bg-white">
+          <alg-error i18n-message message="You cannot access this page for this user"></alg-error>
+        </div>
+      </ng-template>
     </ng-container>
   </ng-container>
 </ng-container>
