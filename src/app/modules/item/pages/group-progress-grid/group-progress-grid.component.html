@@ -80,15 +80,17 @@
                 <span class="alg-link cursor-pointer" (click)="navigateToGroup(row)">{{ row.header }}</span>
               </td>
               <td
-                class="cursor-pointer"
+                class="cursor-pointer user-progress"
                 *ngFor="let col of columns; let colIndex = index"
-                #overlayTarget
                 (click)="showProgressDetail(overlayTarget, row.data[colIndex], row, col)"
               >
                 <alg-user-progress
                   *ngIf="row.data[colIndex]"
                   [userProgress]="row.data[colIndex]"
                 ></alg-user-progress>
+                <div class="overlay-target">
+                  <span class="overlay-position" #overlayTarget></span>
+                </div>
               </td>
             </tr>
           </ng-template>
