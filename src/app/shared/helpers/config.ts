@@ -38,6 +38,8 @@ export interface Environment {
   featureFlags: {
     hideTaskTabs: string[],
   },
+
+  skillsDisabled: boolean,
 }
 
 type Config = Environment; // config may be someday an extension of the environment

@@ -36,6 +36,10 @@
           border-width: 0px;
         }
 
+        &.hidden {
+          display: none;
+        }
+
         &:first-child {
           border-top-left-radius: $border-radius;
           a {
