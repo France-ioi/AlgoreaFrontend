@@ -27,6 +27,7 @@ export const environment: Environment = {
   featureFlags: {
     hideTaskTabs: [],
   },
+  skillsDisabled: true,
 };
 
 type Preset = 'demo';

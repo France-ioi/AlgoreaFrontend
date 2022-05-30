@@ -1,37 +1,41 @@
 <ng-container *ngIf="activeTab$ | async as activeTab;">
 
-  <p-tabView
-    styleClass="dark tab-left-nav"
-    (onChange)="onSelectionChangedByIdx($event)"
-    [activeIndex]="activeTab.index"
-    *ngIf="currentUser$|async as currentUser"
-  >
+  <ng-container *ngIf="currentUser$ | async as currentUser">
 
-    <p-tabPanel>
-      <ng-template pTemplate="header" tabindex="5">
-        <span class="indicator dark"></span>
-        <i class="fa fa-hand-paper"></i>
-        <span class="p-tabview-title" i18n="|Tab name">Activities</span>
-      </ng-template>
-    </p-tabPanel>
+    <p-tabView
+      styleClass="dark tab-left-nav"
+      (onChange)="onSelectionChangedByIdx($event)"
+      [activeIndex]="activeTab.index"
+      *ngIf="!skillsDisabled || activeTab.index === 2 || !currentUser.tempUser"
+    >
 
-    <p-tabPanel>
-      <ng-template pTemplate="header" tabindex="6">
-        <span class="indicator dark"></span>
-        <i class="fa fa-graduation-cap"></i>
-        <span class="p-tabview-title" i18n="|Tab name">Skills</span>
-      </ng-template>
-    </p-tabPanel>
+      <p-tabPanel>
+        <ng-template pTemplate="header" tabindex="5">
+          <span class="indicator dark"></span>
+          <i class="fa fa-hand-paper"></i>
+          <span class="p-tabview-title" i18n="|Tab name">Activities</span>
+        </ng-template>
+      </p-tabPanel>
 
-    <p-tabPanel *ngIf="activeTab.index === 2 || !currentUser.tempUser">
-      <ng-template pTemplate="header" tabindex="7">
-        <span class="indicator dark"></span>
-        <i class="fa fa-users"></i>
-        <span class="p-tabview-title" i18n="|Tab name">Groups</span>
-      </ng-template>
-    </p-tabPanel>
+      <p-tabPanel [headerStyleClass]="skillsDisabled ? 'hidden' : ''">
+        <ng-template pTemplate="header" tabindex="6">
+          <span class="indicator dark"></span>
+          <i class="fa fa-graduation-cap"></i>
+          <span class="p-tabview-title" i18n="|Tab name">Skills</span>
+        </ng-template>
+      </p-tabPanel>
 
-  </p-tabView>
+      <p-tabPanel *ngIf="activeTab.index === 2 || !currentUser.tempUser">
+        <ng-template pTemplate="header" tabindex="7">
+          <span class="indicator dark"></span>
+          <i class="fa fa-users"></i>
+          <span class="p-tabview-title" i18n="|Tab name">Groups</span>
+        </ng-template>
+      </p-tabPanel>
+
+    </p-tabView>
+
+  </ng-container>
 
   <ng-container *ngIf="navTreeServices[activeTab.index]!.state$ | async as state">
 
