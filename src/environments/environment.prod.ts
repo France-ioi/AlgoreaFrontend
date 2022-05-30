@@ -25,7 +25,7 @@ export const environment: Environment = {
   featureFlags: {
     hideTaskTabs: [],
   },
-  skillsDisabled: false,
+  skillsDisabled: true,
 };
 
 type Preset = 'telecomParis';
