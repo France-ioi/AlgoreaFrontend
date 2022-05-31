@@ -33,6 +33,7 @@
           [routerLinkActiveOptions]="{ matrixParams: 'ignored', queryParams: 'ignored', paths: 'exact', fragment: 'ignored'}"
           [class.active]="personalData.isActive"
           i18n
+          [hidden]="(currentUserGroupId$ | async) !== user.groupId && (activeRoute$ | async) !== 'personal-data'"
       >
         Personal data
       </a>
@@ -43,6 +44,7 @@
           [routerLinkActiveOptions]="{ matrixParams: 'ignored', queryParams: 'ignored', paths: 'exact', fragment: 'ignored'}"
           [class.active]="settings.isActive"
           i18n
+          [hidden]="(currentUserGroupId$ | async) !== user.groupId && (activeRoute$ | async) !== 'settings'"
       >
         Settings
       </a>
