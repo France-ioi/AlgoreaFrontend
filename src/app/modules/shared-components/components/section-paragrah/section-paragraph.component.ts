@@ -20,6 +20,9 @@ export class SectionParagraphComponent {
   @ContentChild('headerTemplate') headerTemplate?: TemplateRef<any>;
 
   toggleContent(): void {
+    if (!this.collapsible) {
+      return;
+    }
     this.collapsed = !this.collapsed;
     this.collapse.emit(this.collapsed);
   }
