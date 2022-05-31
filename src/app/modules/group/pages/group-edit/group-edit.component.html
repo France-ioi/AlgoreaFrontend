@@ -11,7 +11,7 @@
   ></alg-error>
 
   <ng-container *ngIf="state.isReady">
-    <form class="group-edition" [formGroup]="groupForm" *ngIf="state.data.isCurrentUserManager; else notAuthorized">
+    <form class="group-edition" [formGroup]="groupForm" *ngIf="state.data.isCurrentUserManager && state.data.canCurrentUserManageGroup; else notAuthorized">
       <alg-section icon="fa fa-cog" i18n-label label="Group information">
         <div class="field">
           <div class="field-name">
@@ -31,11 +31,11 @@
         </div>
       </alg-section>
       <alg-associated-activity formControlName="rootActivity"></alg-associated-activity>
-    </form>
 
-    <div class="remove-button-section" *ngIf="state.data.isCurrentUserManager">
-      <alg-group-remove-button [group]="state.data"></alg-group-remove-button>
-    </div>
+      <div class="remove-button-section">
+        <alg-group-remove-button [group]="state.data"></alg-group-remove-button>
+      </div>
+    </form>
 
     <alg-floating-save
       *ngIf="groupForm.dirty"
