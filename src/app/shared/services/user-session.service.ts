@@ -63,6 +63,7 @@ export class UserSessionService implements OnDestroy {
     const refresh$ = this.currentUserService.refresh().pipe(shareReplay(1));
     refresh$.subscribe({
       next: () => this.userProfileUpdated$.next(),
+      // Required for avoid to show Sentry modal
       error: () => {},
     });
     return refresh$;
