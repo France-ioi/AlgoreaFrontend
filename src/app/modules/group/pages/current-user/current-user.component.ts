@@ -27,7 +27,12 @@ export class CurrentUserComponent {
     );
 
     const onProfileUpdated = (): void => {
-      this.userSessionService.refresh().subscribe();
+      this.userSessionService.refresh().subscribe({
+        error: err => {
+          this.actionFeedbackService.unexpectedError();
+          if (!(err instanceof HttpErrorResponse)) throw err;
+        }
+      });
       window.removeEventListener('profileUpdated', onProfileUpdated);
     };
 
