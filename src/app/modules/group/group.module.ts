@@ -10,7 +10,6 @@ import { GroupNoPermissionComponent } from './components/group-no-permission/gro
 import { GroupJoinByCodeComponent } from './components/group-join-by-code/group-join-by-code.component';
 
 import { GroupOverviewComponent } from './pages/group-overview/group-overview.component';
-import { GroupSettingsComponent } from './pages/group-settings/group-settings.component';
 import { GroupCompositionComponent } from './pages/group-composition/group-composition.component';
 import { MyGroupsComponent } from './pages/my-groups/my-groups.component';
 import { GroupDetailsComponent } from './pages/group-details/group-details.component';
@@ -60,7 +59,6 @@ import { PlatformSettingsComponent } from './pages/platform-settings/platform-se
     GroupCompositionComponent,
     MyGroupsComponent,
     GroupDetailsComponent,
-    GroupSettingsComponent,
     GroupNoPermissionComponent,
     GroupJoinByCodeComponent,
     DurationToMinPipe,
