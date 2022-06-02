@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
 import { environment } from '../../../../../environments/environment';
+import { ActionFeedbackService } from '../../../../shared/services/action-feedback.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'alg-current-user',
@@ -12,6 +14,7 @@ export class CurrentUserComponent {
 
   constructor(
     private userSessionService: UserSessionService,
+    private actionFeedbackService: ActionFeedbackService,
   ) {}
 
   onModify(userId: string): void {
@@ -27,7 +30,12 @@ export class CurrentUserComponent {
     );
 
     const onProfileUpdated = (): void => {
-      this.userSessionService.refresh().subscribe();
+      this.userSessionService.refresh().subscribe({
+        error: err => {
+          this.actionFeedbackService.unexpectedError();
+          if (!(err instanceof HttpErrorResponse)) throw err;
+        }
+      });
       window.removeEventListener('profileUpdated', onProfileUpdated);
     };
 

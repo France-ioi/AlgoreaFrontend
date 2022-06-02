@@ -61,7 +61,11 @@ export class UserSessionService implements OnDestroy {
 
   refresh(): Observable<void> {
     const refresh$ = this.currentUserService.refresh().pipe(shareReplay(1));
-    refresh$.subscribe(() => this.userProfileUpdated$.next());
+    refresh$.subscribe({
+      next: () => this.userProfileUpdated$.next(),
+      // error has to be handled in the caller of the `refresh()` function
+      error: () => {},
+    });
     return refresh$;
   }
 
