@@ -1990,7 +1990,7 @@
         <source>Description</source><target state="translated">Description</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/group-edit/group-edit.component.html</context><context context-type="linenumber">27</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-content/item-content.component.html</context><context context-type="linenumber">5</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-edit-content/item-edit-content.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit><trans-unit id="5521027790445234919" datatype="html">
-        <source>Unable to load the recent activity</source><target state="translated">Impossible to charger les activités récentes</target>
+        <source>Unable to load the recent activity</source><target state="translated">Erreur lors du chargement les activités récentes</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-log-view/group-log-view.component.html</context><context context-type="linenumber">8</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-log-view/item-log-view.component.html</context><context context-type="linenumber">8</context></context-group></trans-unit><trans-unit id="8115085152478832979" datatype="html">
         <source>There is no progress to report for this group/user.</source><target state="new">There is no progress to report for this group/user.</target>
