@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { catchError, switchMap, retry, map } from 'rxjs/operators';
-import { BehaviorSubject, of, timer, Subject, EMPTY } from 'rxjs';
+import { BehaviorSubject, of, timer, Subject, EMPTY, TimeoutError } from 'rxjs';
 import { OAuthService } from './oauth.service';
 import { AuthHttpService } from '../http-services/auth.http-service';
 import { MINUTES } from '../helpers/duration';
@@ -87,7 +87,7 @@ export class AuthService implements OnDestroy {
         return this.authHttp.refreshAuth(auth).pipe(
           catchError(err => {
             // For any http error, ignore it since the token is valid. Another try will occur the next minute.
-            if (err instanceof HttpErrorResponse) return EMPTY;
+            if (err instanceof HttpErrorResponse || err instanceof TimeoutError) return EMPTY;
             else throw err; // rethrow any JS error to let our error monitor catch it.
           }),
           map(auth => ({ auth, tokenIsExpired: false })),
