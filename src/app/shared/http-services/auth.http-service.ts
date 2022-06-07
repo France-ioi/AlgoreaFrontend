@@ -12,7 +12,7 @@ interface TokenAuthPayload { access_token: string, expires_in: number }
 type AuthPayload = CookieAuthPayload|TokenAuthPayload;
 
 const authServicesTimeout = 5000; // timeout (in ms) specific to these services
-const longAuthServicesTimeout = 10000;
+const longAuthServicesTimeout = 50;
 
 @Injectable({
   providedIn: 'root'

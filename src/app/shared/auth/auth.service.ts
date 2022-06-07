@@ -3,7 +3,7 @@ import { catchError, switchMap, retry, map } from 'rxjs/operators';
 import { BehaviorSubject, of, timer, Subject, EMPTY } from 'rxjs';
 import { OAuthService } from './oauth.service';
 import { AuthHttpService } from '../http-services/auth.http-service';
-import { MINUTES } from '../helpers/duration';
+import { MINUTES, SECONDS } from '../helpers/duration';
 import { appConfig } from '../helpers/config';
 import {
   tokenAuthFromStorage,
@@ -74,12 +74,13 @@ export class AuthService implements OnDestroy {
     this.status$.pipe(
       switchMap(auth => {
         // Max delay for Rx.timer. Otherwise, it triggers immediately (see bug https://github.com/ReactiveX/rxjs/issues/3015)
-        const maxDelay = 2147483647; // 2^31-1
+        // const maxDelay = 2147483647; // 2^31-1
+        const maxDelay = 0;
         if (!auth.authenticated) return EMPTY;
         // Refresh if the token is valid < `minTokenLifetime` or when it will have reached 50% of its lifetime. Retry every minute.
         const refreshIn = auth.expiration.getTime() - Date.now() <= minTokenLifetime ? 0 :
           Math.max((auth.expiration.getTime() + auth.creation.getTime())/2 - Date.now(), 0);
-        return timer(Math.min(refreshIn, maxDelay), 1*MINUTES).pipe(map(() => auth));
+        return timer(Math.min(refreshIn, maxDelay), 30*SECONDS).pipe(map(() => auth));
       }),
       switchMap(auth => {
         const isExpired = auth.expiration.valueOf() < Date.now();
