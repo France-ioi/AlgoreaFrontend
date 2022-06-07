@@ -52,10 +52,10 @@
 
     <ng-container *ngIf="activeRoute$ | async as activeRoute">
       <ng-container *ngIf="activeRoute === 'progress'">
-        <div class="bg-white">
+        <div class="bg-white" *ngIf="currentUserGroupId$ | async as currentUserGroupId">
           <alg-section icon="fa fa-chart-line" i18n-label label="Progress">
             <alg-group-log-view
-                [groupId]="user.groupId"
+                [groupId]="currentUserGroupId !== user.groupId ? user.groupId : undefined"
                 [showUserColumn]="false"
             ></alg-group-log-view>
           </alg-section>
