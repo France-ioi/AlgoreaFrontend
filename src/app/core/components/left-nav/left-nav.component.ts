@@ -48,7 +48,7 @@ export class LeftNavComponent {
   readonly navTreeServices = [ this.activityNavTreeService, this.skillNavTreeService, this.groupNavTreeService ];
   currentUser$ = this.sessionService.userProfile$.pipe(delay(0));
 
-  skillsDisabled = environment.skillsDisabled;
+  skillsDisabled = environment.featureFlags.skillsDisabled;
 
   constructor(
     private sessionService: UserSessionService,
