@@ -28,10 +28,10 @@ export class GroupLogViewComponent implements OnChanges, OnDestroy {
   @ViewChild('op') op?: OverlayPanel;
   @ViewChildren('contentRef') contentRef?: QueryList<ElementRef<HTMLElement>>;
 
-  private readonly groupId$ = new ReplaySubject<string>(1);
+  private readonly groupId$ = new ReplaySubject<string | undefined>(1);
   private readonly refresh$ = new Subject<void>();
   readonly state$ = this.groupId$.pipe(
-    switchMap((groupId: string) => this.getData$(groupId)),
+    switchMap((groupId: string | undefined) => this.getData$(groupId)),
     mapToFetchState({ resetter: this.refresh$ }),
   );
   private readonly showOverlaySubject$ = new BehaviorSubject<{ event: Event, itemId: string, target: HTMLElement }|undefined>(undefined);
@@ -49,10 +49,6 @@ export class GroupLogViewComponent implements OnChanges, OnDestroy {
   ) {}
 
   ngOnChanges(): void {
-    if (!this.groupId) {
-      return;
-    }
-
     this.groupId$.next(this.groupId);
   }
 
@@ -67,7 +63,7 @@ export class GroupLogViewComponent implements OnChanges, OnDestroy {
     this.refresh$.next();
   }
 
-  private getData$(groupId: string): Observable<Data> {
+  private getData$(groupId?: string): Observable<Data> {
     return this.activityLogService.getAllActivityLog(groupId).pipe(
       map((data: ActivityLog[]) => ({
         columns: this.getLogColumns(),
