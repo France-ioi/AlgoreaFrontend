@@ -24,6 +24,7 @@ export class ItemPermissionsComponent implements OnChanges {
   canViewValues: ProgressSelectValue<string>[] = generateCanViewValues('Groups');
   isPermissionsDialogOpened = false;
   watchedGroupPermissions?: Permissions;
+  lockEdit?: 'content' | 'group' | 'contentGroup';
 
   constructor(private groupPermissionsService: GroupPermissionsService, private actionFeedbackService: ActionFeedbackService) {
   }
@@ -33,6 +34,17 @@ export class ItemPermissionsComponent implements OnChanges {
       ...this.itemData.item.watchedGroup.permissions,
       canMakeSessionOfficial: false,
     } : undefined;
+
+    const currentUserCanGrantGroupAccess = this.watchedGroup?.currentUserCanGrantGroupAccess;
+    const currentUserCanGivePermissions = this.watchedGroupPermissions &&
+      (this.watchedGroupPermissions.canGrantView !== 'none' ||
+        this.watchedGroupPermissions.canWatch === 'answer_with_grant' ||
+        this.watchedGroupPermissions.canEdit === 'all_with_grant');
+
+    this.lockEdit = currentUserCanGrantGroupAccess && !currentUserCanGivePermissions ? 'content' :
+      !currentUserCanGrantGroupAccess && currentUserCanGivePermissions ? 'group' :
+        !currentUserCanGrantGroupAccess && !currentUserCanGivePermissions ? 'contentGroup' : undefined;
+
   }
 
   openPermissionsDialog(): void {
