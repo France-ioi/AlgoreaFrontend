@@ -20,10 +20,10 @@ export function decode<T>(decoder: D.Decoder<unknown, T>) {
  * Decoder for Date type
  */
 export const dateDecoder: D.Decoder<unknown, Date> = pipe(
-  D.string,
-  D.parse(s => {
-    const date = Date.parse(s);
-    return isNaN(date) ? D.failure(s, 'DateFromString') : D.success(new Date(date));
+  D.union(D.string, D.number),
+  D.parse(stringOrNumber => {
+    const date = new Date(stringOrNumber);
+    return Number.isNaN(date.valueOf()) ? D.failure(stringOrNumber, 'DateFromString') : D.success(date);
   })
 );
 

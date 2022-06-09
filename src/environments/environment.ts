@@ -8,6 +8,7 @@ export const environment: Environment = {
   production: false,
   apiUrl: 'https://dev.algorea.org/api',
   oauthServerUrl: 'https://login.france-ioi.org',
+  forumServerUrl: 'ws://localhost:3001',
   oauthClientId: '43',
 
   defaultActivityId: '4702',
