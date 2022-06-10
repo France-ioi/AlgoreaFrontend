@@ -63,9 +63,6 @@ export class ThreadService {
       scan((oldEvents, newEvents) => [ ...oldEvents, ...newEvents ]),
       catchError(() => EMPTY), // ignore undecoded messages
     );
-    this.socket.subscribe({
-      error: e => console.error('thread error', e)
-    });
   }
 
   init(tokenData: TokenData): void {
