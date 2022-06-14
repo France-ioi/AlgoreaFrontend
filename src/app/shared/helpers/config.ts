@@ -37,6 +37,7 @@ export interface Environment {
 
   featureFlags: {
     hideTaskTabs: string[],
+    skillsDisabled: boolean,
   },
 }
 
