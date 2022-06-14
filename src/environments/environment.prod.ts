@@ -24,7 +24,7 @@ export const environment: Environment = {
   theme: 'default',
   featureFlags: {
     hideTaskTabs: [],
-    skillsDisabled: true,
+    skillsDisabled: false,
   },
 };
 
