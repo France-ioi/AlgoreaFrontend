@@ -50,11 +50,9 @@ describe('groups/users page', () => {
     });
 
     it('should have an empty left nav with an error message and retry cta', async () => {
-      // the lines below assert the state is correct and will fail otherwise, no "expect()" is required here.
-      await Promise.all([
-        page.waitUntilVisible(page.getLeftNavErrorMessage()),
-        page.waitUntilVisible(page.getLeftNavErrorRetryCta()),
-      ]);
+      const activeTab = page.getLeftNavActiveTab();
+      await page.waitUntilTextIsPresent(activeTab, 'GROUPS');
+      await retry(() => expect(activeTab.getText()).toBe('GROUPS'));
     });
   });
 });
