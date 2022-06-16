@@ -99,16 +99,8 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
       // CASE 2: the content type matches the type of this nav tree
         const route = content.route;
 
-        if (prevState.isReady && prevState.data.hasElement(route)) {
-          // CASE 2A : the content is among the displayed elements -> either select it if at root or shift the tree "to the left" otherwise
-          const prevData = prevState.data;
-          let data = prevData.hasLevel1Element(route) ? prevData.withSelection(route.id) : prevData.subNavMenuData(route);
-          if (childrenState?.isReady) data = data.withChildren(route, childrenState.data);
-          data = data.withUpdatedElement(route, el => this.addDetailsToTreeElement(el, content));
-          return of(readyState(data));
-
-          // CASE 2B: the content is not among the displayed elements -> fetch all nav
-        } else {
+        // CASE 2A: the content is not among the displayed elements -> fetch all nav
+        if (!(prevState.isReady && prevState.data.hasElement(route))) {
           return this.fetchNewNav(content).pipe(
             mapStateData(data => {
               if (childrenState?.isReady) data = data.withChildren(route, childrenState.data);
@@ -116,7 +108,16 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
               return data;
             })
           );
+
+        // CASE 2B : the content is among the displayed elements -> either select it if at root or shift the tree "to the left" otherwise
+        } else {
+          const prevData = prevState.data;
+          let data = prevData.hasLevel1Element(route) ? prevData.withSelection(route.id) : prevData.subNavMenuData(route);
+          if (childrenState?.isReady) data = data.withChildren(route, childrenState.data);
+          data = data.withUpdatedElement(route, el => this.addDetailsToTreeElement(el, content));
+          return of(readyState(data));
         }
+
       }
     }, fetchingState<NavTreeData>() /* mergeScan seed */, 1 /* concurrency = 1 so that we can always use the last state*/),
 
