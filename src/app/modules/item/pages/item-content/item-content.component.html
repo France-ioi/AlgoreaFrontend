@@ -7,7 +7,7 @@
       </alg-section>
 
       <ng-container *ngIf="['Chapter', 'Skill'].includes(itemData.item.type)">
-        <div class="edit">
+        <div class="edit" *ngIf="['all','all_with_grant', 'children'].includes(itemData.item.permissions.canEdit) || editModeEnabled">
           <label class="edit-label">
             <b>Edit the list</b>
             <alg-switch

@@ -33,13 +33,12 @@
       </nav>
 
       <div class="bg-white">
-<!--        <alg-item-edit-content #content
+        <alg-item-edit-content
           *ngIf="rla1.isActive"
           [parentForm]="itemForm"
           [itemData]="fetchState.data"
-          (childrenChanges)="updateItemChanges($event)"
         >
-        </alg-item-edit-content>-->
+        </alg-item-edit-content>
         <ng-container *ngIf="attemptId$ | async as attemptId">
           <alg-item-edit-advanced-parameters #advancedParameters
             *ngIf="(fetchState.data.item.permissions | allowsEditingAll) && rla2.isActive"
