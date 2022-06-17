@@ -1,0 +1,11 @@
+<ng-container *ngIf="itemData">
+  <alg-item-children-edit
+    #childrenEdit
+    (childrenChanges)="updateItemChanges($event)"
+    [itemData]="itemData"
+    [ngClass]="{disabled: disabled}"
+  ></alg-item-children-edit>
+
+  <alg-floating-save *ngIf="dirty" [saving]="disabled" (save)="save()" (cancel)="onCancel()"></alg-floating-save>
+</ng-container>
+

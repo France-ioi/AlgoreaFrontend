@@ -3,6 +3,7 @@ import { appConfig } from 'src/app/shared/helpers/config';
 import { ItemData } from '../../services/item-datasource.service';
 import { TaskConfig } from '../../services/item-task.service';
 import { ItemDisplayComponent, TaskTab } from '../item-display/item-display.component';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'alg-item-content',
@@ -25,10 +26,25 @@ export class ItemContentComponent implements OnChanges {
 
   showItemThreadWidget = !!appConfig.forumServerUrl;
   attemptId?: string;
+  editModeEnabled = false;
+
+  constructor(private router: Router, private route: ActivatedRoute) {
+  }
 
   ngOnChanges(): void {
+    this.editModeEnabled = this.isEditChildrenPage();
     if (!this.itemData) return;
     this.attemptId = this.itemData.route.attemptId || this.itemData.currentResult?.attemptId;
+  }
+
+  onEditModeEnableChange(): void {
+    void this.router.navigate([ this.editModeEnabled ? './edit-children' : './' ], {
+      relativeTo: this.route,
+    });
+  }
+
+  private isEditChildrenPage(): boolean {
+    return this.router.url.includes('/edit-children');
   }
 
 }
