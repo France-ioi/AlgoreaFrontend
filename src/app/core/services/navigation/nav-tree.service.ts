@@ -1,4 +1,4 @@
-import { Observable, of, Subject } from 'rxjs';
+import { merge, Observable, of, Subject } from 'rxjs';
 import { delay, distinctUntilChanged, map, switchMap, mergeScan, shareReplay, startWith, scan } from 'rxjs/operators';
 import { isDefined } from 'src/app/shared/helpers/null-undefined-predicates';
 import { fetchingState, FetchState, readyState } from 'src/app/shared/helpers/state';
@@ -21,6 +21,10 @@ export interface NavigationNeighbors {
 export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
 
   private reloadTrigger = new Subject<void>();
+  private reload$ = merge(
+    this.reloadTrigger,
+    this.currentContent.reload$,
+  );
 
   state$ = this.currentContent.content$.pipe(
 
@@ -32,7 +36,7 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
     distinctUntilChanged(), // remove multiple `undefined`
     startWith(undefined),
     // emits the content+reload:false immediately, emit content+reload:true when/if `reloadTrigger` emits
-    switchMap(content => this.reloadTrigger.pipe(map(() => ({ content, reload: true })), startWith({ content, reload: false }))),
+    switchMap(content => this.reload$.pipe(map(() => ({ content, reload: true })), startWith({ content, reload: false }))),
 
     /**
      * PART 2 - ADDING CHILDREN
