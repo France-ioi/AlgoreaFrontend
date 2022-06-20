@@ -27,13 +27,12 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
   canFetchChildren(content: ItemInfo): boolean {
     if (!content.details) return false; // no item detail yet -> no children
     if (!mayHaveChildren(content.details)) return false; // only chapters or skills may have children
-    return !!(content.route.attemptId || content.details.attemptId); // an attempt is required to fetch children
+    return !!content.route.attemptId; // an attempt is required to fetch children
   }
 
   fetchNavData(content: ItemInfo): Observable<{ parent: NavTreeElement, elements: NavTreeElement[] }> {
-    const attemptId = content.route.attemptId ?? content.details?.attemptId;
-    if (!attemptId) throw new Error('attemptId cannot be determined (should have been checked by canFetchChildren)');
-    return this.itemNavService.getItemNavigation(content.route.id, attemptId, isSkill(content.route.contentType)).pipe(
+    if (!content.route.attemptId) throw new Error('attemptId cannot be determined (should have been checked by canFetchChildren)');
+    return this.itemNavService.getItemNavigation(content.route.id, content.route.attemptId, isSkill(content.route.contentType)).pipe(
       map(data => this.mapNavData(data)),
     );
   }

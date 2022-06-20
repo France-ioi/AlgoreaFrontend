@@ -56,6 +56,13 @@ export function fullItemRoute(contentType: ItemTypeCategory, id: ItemId, path: s
 }
 
 /**
+ * Add to the given route, the given self attempt id (if any) (used when only the parent id was know until now)
+ */
+export function routeWithSelfAttempt(route: FullItemRoute, attemptId: string|undefined): FullItemRoute {
+  return isRouteWithSelfAttempt(route) ? route : { ...route, attemptId };
+}
+
+/**
  * The route to the app default (see config) item
  */
 export const appDefaultItemRoute: FullItemRoute = {
