@@ -12,7 +12,7 @@ export interface NavTreeElement {
   title: string,
   hasChildren: boolean,
   children?: this[],
-  navigateTo: (path: Id[], preventFullFrame?: boolean) => void,
+  navigateTo: (preventFullFrame?: boolean) => void,
   route: ContentRoute,
 
   // specific uses

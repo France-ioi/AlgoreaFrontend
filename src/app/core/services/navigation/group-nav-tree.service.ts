@@ -60,7 +60,7 @@ export class GroupNavTreeService extends NavTreeService<GroupInfo> {
       id: child.id,
       title: child.name,
       hasChildren: child.type !== 'User',
-      navigateTo: (_path): void => this.groupRouter.navigateTo(route),
+      navigateTo: (): void => this.groupRouter.navigateTo(route),
       route: route,
       groupRelation: { isMember: child.currentUserMembership !== 'none', managership: child.currentUserManagership }
     };
@@ -73,7 +73,7 @@ export class GroupNavTreeService extends NavTreeService<GroupInfo> {
         id: data.id,
         title: data.name,
         hasChildren: data.children.length > 0,
-        navigateTo: (_path): void => this.groupRouter.navigateTo(parentRoute),
+        navigateTo: (): void => this.groupRouter.navigateTo(parentRoute),
         route: parentRoute,
       },
       elements: data.children.map(g => this.mapChild(g, [ ...pathToParent, data.id ]))

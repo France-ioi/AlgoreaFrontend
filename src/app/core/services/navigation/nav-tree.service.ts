@@ -152,10 +152,10 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
 
       return {
         parent: parent && parent.id !== this.navigationNeighborsRestrictedToDescendantOfElementId
-          ? { navigateTo: (): void => parent.navigateTo(navData.pathToElements.slice(0,-1)) }
+          ? { navigateTo: (): void => parent.navigateTo() }
           : null,
-        previous: prev ? { navigateTo: (): void => prev.navigateTo(navData.pathToElements) } : null,
-        next: next ? { navigateTo: (): void => next.navigateTo(navData.pathToElements) } : null,
+        previous: prev ? { navigateTo: (): void => prev.navigateTo() } : null,
+        next: next ? { navigateTo: (): void => next.navigateTo() } : null,
       };
     }),
   );
