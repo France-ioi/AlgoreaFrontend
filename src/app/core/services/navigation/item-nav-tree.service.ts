@@ -30,11 +30,11 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
     return !!(content.route.attemptId || content.details.attemptId); // an attempt is required to fetch children
   }
 
-  fetchChildren(content: ItemInfo): Observable<NavTreeElement[]> {
+  fetchNavData(content: ItemInfo): Observable<{ parent: NavTreeElement, elements: NavTreeElement[] }> {
     const attemptId = content.route.attemptId ?? content.details?.attemptId;
     if (!attemptId) throw new Error('attemptId cannot be determined (should have been checked by canFetchChildren)');
     return this.itemNavService.getItemNavigation(content.route.id, attemptId, isSkill(content.route.contentType)).pipe(
-      map(data => this.mapNavData(data).elements),
+      map(data => this.mapNavData(data)),
     );
   }
 

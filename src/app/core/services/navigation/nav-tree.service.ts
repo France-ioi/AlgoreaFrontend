@@ -184,11 +184,11 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
    */
    protected abstract canFetchChildren(content: ContentInfo): boolean;
 
-  /**
-   * Emits children of the given content
-   * Must be called after ensuring that `canFetchChildren` return `true`.
-   */
-  protected abstract fetchChildren(content: ContentInfo): Observable<NavTreeElement[]>;
+  protected abstract fetchNavData(content: ContentInfo): Observable<{ parent: NavTreeElement, elements: NavTreeElement[] }>;
+
+  private fetchChildren(content: ContentInfo): Observable<NavTreeElement[]> {
+    return this.fetchNavData(content).pipe(map(navData => navData.elements));
+  }
 
   private fetchDefaultNav(): Observable<FetchState<NavTreeData>> {
     return this.fetchRootTreeData().pipe(

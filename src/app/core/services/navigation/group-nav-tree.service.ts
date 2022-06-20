@@ -27,9 +27,9 @@ export class GroupNavTreeService extends NavTreeService<GroupInfo> {
     return !content.route.isUser;
   }
 
-  fetchChildren(content: GroupInfo): Observable<NavTreeElement[]> {
+  fetchNavData(content: GroupInfo): Observable<{ parent: NavTreeElement, elements: NavTreeElement[] }> {
     return this.groupNavigationService.getGroupNavigation(content.route.id).pipe(
-      map(data => this.mapNavData(data).elements)
+      map(data => this.mapNavData(data))
     );
   }
 
@@ -49,12 +49,6 @@ export class GroupNavTreeService extends NavTreeService<GroupInfo> {
 
   fetchNavDataFromChild(id: string, _child: GroupInfo): Observable<{ parent: NavTreeElement, elements: NavTreeElement[] }> {
     return this.groupNavigationService.getGroupNavigation(id).pipe(
-      map(data => this.mapNavData(data))
-    );
-  }
-
-  fetchNavData(el: NavTreeElement): Observable<{ parent: NavTreeElement, elements: NavTreeElement[] }> {
-    return this.groupNavigationService.getGroupNavigation(el.id).pipe(
       map(data => this.mapNavData(data))
     );
   }
