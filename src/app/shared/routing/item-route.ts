@@ -39,6 +39,14 @@ type ItemRouteWithParentAttempt = ItemRoute & { parentAttemptId: AttemptId };
 export type FullItemRoute = ItemRouteWithSelfAttempt | ItemRouteWithParentAttempt;
 export type RawItemRoute = Omit<ItemRoute, 'path'> & Partial<Pick<ItemRoute, 'path'>>;
 
+export function isItemRoute(route: ContentRoute): route is ItemRoute {
+  return ([ 'activity', 'skill' ].includes(route.contentType));
+}
+
+export function isFullItemRoute(route: ItemRoute): route is FullItemRoute {
+  return !!route.attemptId || !!route.parentAttemptId;
+}
+
 export function isRouteWithSelfAttempt(item: FullItemRoute): item is ItemRouteWithSelfAttempt {
   return item.attemptId !== undefined;
 }

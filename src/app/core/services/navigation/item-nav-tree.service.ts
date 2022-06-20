@@ -33,14 +33,14 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
   fetchNavData(content: ItemInfo): Observable<{ parent: NavTreeElement, elements: NavTreeElement[] }> {
     if (!content.route.attemptId) throw new Error('attemptId cannot be determined (should have been checked by canFetchChildren)');
     return this.itemNavService.getItemNavigation(content.route.id, content.route.attemptId, isSkill(content.route.contentType)).pipe(
-      map(data => this.mapNavData(data)),
+      map(data => this.mapNavData(data, content.route.path)),
     );
   }
 
   fetchRootTreeData(): Observable<NavTreeElement[]> {
     return this.itemNavService.getRoots(this.category).pipe(
       map(groups => groups.map(g => ({
-        ...this.mapChild(g.item, defaultAttemptId),
+        ...this.mapChild(g.item, defaultAttemptId, []),
         associatedGroupName: g.name,
         associatedGroupType: g.type,
       })))
@@ -48,8 +48,9 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
   }
 
   fetchNavDataFromChild(id: string, child: ItemInfo): Observable<{ parent: NavTreeElement, elements: NavTreeElement[] }> {
+    if (child.route.path.length === 0) throw new Error('unexpected empty path for child (fetchNavDataFromChild)');
     return this.itemNavService.getItemNavigationFromChildRoute(id, child.route, isSkill(this.category)).pipe(
-      map(data => this.mapNavData(data))
+      map(data => this.mapNavData(data, child.route.path.slice(0, -1)))
     );
   }
 
@@ -68,38 +69,36 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
     };
   }
 
-  private mapChild(child: ItemNavigationChild, parentAttemptId: string): NavTreeElement {
+  private mapChild(child: ItemNavigationChild, parentAttemptId: string, path: string[]): NavTreeElement {
     const currentResult = bestAttemptFromResults(child.results);
+    const route = fullItemRoute(typeCategoryOfItem(child), child.id, path, { attemptId: currentResult?.attemptId, parentAttemptId });
     return {
       id: child.id,
       title: child.string.title ?? '',
       hasChildren: child.hasVisibleChildren && ![ 'none', 'info' ].includes(child.permissions.canView),
-      navigateTo: (path, preventFullFrame = false): void => this.itemRouter.navigateTo(
-        fullItemRoute(typeCategoryOfItem(child), child.id, path, { attemptId: currentResult?.attemptId, parentAttemptId }),
-        { preventFullFrame },
-      ),
+      navigateTo: (_path, preventFullFrame = false): void => this.itemRouter.navigateTo(route, { preventFullFrame }),
       locked: child.permissions.canView === 'info',
       score: !child.noScore && currentResult ? {
         bestScore: child.bestScore,
         currentScore: currentResult.scoreComputed,
         validated: currentResult.validated
       } : undefined,
+      route
     };
   }
 
-  private mapNavData(data: ItemNavigationData): { parent: NavTreeElement, elements: NavTreeElement[] } {
+  private mapNavData(data: ItemNavigationData, pathToParent: string[]): { parent: NavTreeElement, elements: NavTreeElement[] } {
+    const parentRoute = fullItemRoute(typeCategoryOfItem(data), data.id, pathToParent, { attemptId: data.attemptId });
     return {
       parent: {
         id: data.id,
         title: data.string.title ?? '',
         hasChildren: data.children.length > 0,
-        navigateTo: (path, preventFullFrame = false): void => this.itemRouter.navigateTo(
-          fullItemRoute(typeCategoryOfItem(data), data.id, path, { attemptId: data.attemptId }),
-          { preventFullFrame },
-        ),
-        locked: data.permissions.canView === 'info'
+        navigateTo: (_path, preventFullFrame = false): void => this.itemRouter.navigateTo(parentRoute, { preventFullFrame }),
+        locked: data.permissions.canView === 'info',
+        route: parentRoute
       },
-      elements: data.children.map(c => this.mapChild(c, data.attemptId))
+      elements: data.children.map(c => this.mapChild(c, data.attemptId, [ ...pathToParent, data.id ])),
     };
   }
 

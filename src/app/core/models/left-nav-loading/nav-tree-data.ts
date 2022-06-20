@@ -13,6 +13,7 @@ export interface NavTreeElement {
   hasChildren: boolean,
   children?: this[],
   navigateTo: (path: Id[], preventFullFrame?: boolean) => void,
+  route: ContentRoute,
 
   // specific uses
   locked?: boolean, // considering 'not set' as false
