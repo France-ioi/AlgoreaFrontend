@@ -142,7 +142,7 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
   navigationNeighbors$: Observable<FetchState<NavigationNeighbors|undefined>> = this.state$.pipe(
     mapStateData(navData => {
       if (!navData.selectedElementId) return undefined;
-      const idx = navData.elements.findIndex(e => e.id === navData.selectedElementId);
+      const idx = navData.elements.findIndex(e => e.route.id === navData.selectedElementId);
       if (idx < 0) return undefined;
 
       const parent = navData.parent;
@@ -151,7 +151,7 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
       const next = navData.elements[idx+1];
 
       return {
-        parent: parent && parent.id !== this.navigationNeighborsRestrictedToDescendantOfElementId
+        parent: parent && parent.route.id !== this.navigationNeighborsRestrictedToDescendantOfElementId
           ? { navigateTo: (): void => parent.navigateTo() }
           : null,
         previous: prev ? { navigateTo: (): void => prev.navigateTo() } : null,

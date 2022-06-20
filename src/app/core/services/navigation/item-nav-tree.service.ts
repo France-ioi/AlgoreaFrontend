@@ -73,7 +73,7 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
     const currentResult = bestAttemptFromResults(child.results);
     const route = fullItemRoute(typeCategoryOfItem(child), child.id, path, { attemptId: currentResult?.attemptId, parentAttemptId });
     return {
-      id: child.id,
+      route,
       title: child.string.title ?? '',
       hasChildren: child.hasVisibleChildren && ![ 'none', 'info' ].includes(child.permissions.canView),
       navigateTo: (preventFullFrame = false): void => this.itemRouter.navigateTo(route, { preventFullFrame }),
@@ -83,7 +83,6 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
         currentScore: currentResult.scoreComputed,
         validated: currentResult.validated
       } : undefined,
-      route
     };
   }
 
@@ -91,12 +90,11 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
     const parentRoute = fullItemRoute(typeCategoryOfItem(data), data.id, pathToParent, { attemptId: data.attemptId });
     return {
       parent: {
-        id: data.id,
+        route: parentRoute,
         title: data.string.title ?? '',
         hasChildren: data.children.length > 0,
         navigateTo: (preventFullFrame = false): void => this.itemRouter.navigateTo(parentRoute, { preventFullFrame }),
         locked: data.permissions.canView === 'info',
-        route: parentRoute
       },
       elements: data.children.map(c => this.mapChild(c, data.attemptId, [ ...pathToParent, data.id ])),
     };

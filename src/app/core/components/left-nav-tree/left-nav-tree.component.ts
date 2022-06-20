@@ -20,8 +20,8 @@ export class LeftNavTreeComponent implements OnChanges {
 
   private mapItemToNodes(data: NavTreeData): TreeNode<NavTreeElement>[] {
     return data.elements.map(e => {
-      const isSelected = !!data.selectedElementId && data.selectedElementId === e.id;
-      const pathToChildren = data.pathToElements.concat([ e.id ]);
+      const isSelected = !!data.selectedElementId && data.selectedElementId === e.route.id;
+      const pathToChildren = data.pathToElements.concat([ e.route.id ]);
       return {
         data: e,
         label: e.title,

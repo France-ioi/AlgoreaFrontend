@@ -57,11 +57,10 @@ export class GroupNavTreeService extends NavTreeService<GroupInfo> {
   private mapChild(child: GroupNavigationChild, path: string[]): NavTreeElement {
     const route = groupRoute({ id: child.id, isUser: false }, path);
     return {
-      id: child.id,
+      route: route,
       title: child.name,
       hasChildren: child.type !== 'User',
       navigateTo: (): void => this.groupRouter.navigateTo(route),
-      route: route,
       groupRelation: { isMember: child.currentUserMembership !== 'none', managership: child.currentUserManagership }
     };
   }
@@ -70,11 +69,10 @@ export class GroupNavTreeService extends NavTreeService<GroupInfo> {
     const parentRoute = groupRoute({ id: data.id, isUser: false }, pathToParent);
     return {
       parent: {
-        id: data.id,
+        route: parentRoute,
         title: data.name,
         hasChildren: data.children.length > 0,
         navigateTo: (): void => this.groupRouter.navigateTo(parentRoute),
-        route: parentRoute,
       },
       elements: data.children.map(g => this.mapChild(g, [ ...pathToParent, data.id ]))
     };
