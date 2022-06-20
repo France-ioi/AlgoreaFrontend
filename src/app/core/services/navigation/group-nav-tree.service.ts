@@ -2,8 +2,9 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ContentInfo } from 'src/app/shared/models/content/content-info';
-import { GroupInfo, isGroupInfo } from 'src/app/shared/models/content/group-info';
-import { groupRoute } from 'src/app/shared/routing/group-route';
+import { groupInfo, GroupInfo, isGroupInfo } from 'src/app/shared/models/content/group-info';
+import { ContentRoute } from 'src/app/shared/routing/content-route';
+import { groupRoute, isGroupRoute } from 'src/app/shared/routing/group-route';
 import { GroupRouter } from 'src/app/shared/routing/group-router';
 import { CurrentContentService } from 'src/app/shared/services/current-content.service';
 import { GroupNavigationService, GroupNavigationChild, GroupNavigationData } from '../../http-services/group-navigation.service';
@@ -23,13 +24,18 @@ export class GroupNavTreeService extends NavTreeService<GroupInfo> {
     super(currentContent);
   }
 
+  contentInfoFromNavTreeParent(e: NavTreeElement): GroupInfo {
+    if (!isGroupRoute(e.route)) throw new Error('expect group nav tree to use group routes');
+    return groupInfo({ route: e.route });
+  }
+
   canFetchChildren(content: GroupInfo): boolean {
     return !content.route.isUser;
   }
 
-  fetchNavData(content: GroupInfo): Observable<{ parent: NavTreeElement, elements: NavTreeElement[] }> {
-    return this.groupNavigationService.getGroupNavigation(content.route.id).pipe(
-      map(data => this.mapNavData(data, content.route.path))
+  fetchNavData(route: ContentRoute): Observable<{ parent: NavTreeElement, elements: NavTreeElement[] }> {
+    return this.groupNavigationService.getGroupNavigation(route.id).pipe(
+      map(data => this.mapNavData(data, route.path))
     );
   }
 

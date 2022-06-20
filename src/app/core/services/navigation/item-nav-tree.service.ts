@@ -4,8 +4,9 @@ import { map } from 'rxjs/operators';
 import { bestAttemptFromResults, defaultAttemptId } from 'src/app/shared/helpers/attempts';
 import { isSkill, ItemTypeCategory, typeCategoryOfItem } from 'src/app/shared/helpers/item-type';
 import { ContentInfo } from 'src/app/shared/models/content/content-info';
-import { isActivityInfo, isItemInfo, ItemInfo } from 'src/app/shared/models/content/item-info';
-import { fullItemRoute } from 'src/app/shared/routing/item-route';
+import { ContentRoute } from 'src/app/shared/routing/content-route';
+import { isActivityInfo, isItemInfo, itemInfo, ItemInfo } from 'src/app/shared/models/content/item-info';
+import { fullItemRoute, isItemRoute, isFullItemRoute, isRouteWithSelfAttempt } from 'src/app/shared/routing/item-route';
 import { mayHaveChildren } from 'src/app/shared/helpers/item-type';
 import { ItemRouter } from 'src/app/shared/routing/item-router';
 import { CurrentContentService } from 'src/app/shared/services/current-content.service';
@@ -24,16 +25,27 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
     super(currentContent);
   }
 
+  /**
+   * Guess content info from the nav tree parent. (yypically so that we can fetch nav)
+   * The element MUST have an attempt already, which should be the case for the parent.
+   */
+  contentInfoFromNavTreeParent(e: NavTreeElement): ItemInfo {
+    if (!isItemRoute(e.route) || !isFullItemRoute(e.route)) throw new Error('expecting an item route in an item nav tree element');
+    if (!isRouteWithSelfAttempt(e.route)) throw new Error('expecting nav menu parent route to have a self attempt');
+    return itemInfo({ route: e.route });
+  }
+
   canFetchChildren(content: ItemInfo): boolean {
     if (!content.details) return false; // no item detail yet -> no children
     if (!mayHaveChildren(content.details)) return false; // only chapters or skills may have children
     return !!content.route.attemptId; // an attempt is required to fetch children
   }
 
-  fetchNavData(content: ItemInfo): Observable<{ parent: NavTreeElement, elements: NavTreeElement[] }> {
-    if (!content.route.attemptId) throw new Error('attemptId cannot be determined (should have been checked by canFetchChildren)');
-    return this.itemNavService.getItemNavigation(content.route.id, content.route.attemptId, isSkill(content.route.contentType)).pipe(
-      map(data => this.mapNavData(data, content.route.path)),
+  fetchNavData(route: ContentRoute): Observable<{ parent: NavTreeElement, elements: NavTreeElement[] }> {
+    if (!isItemRoute(route)) throw new Error('expect requesting nav data with a route which is an item route');
+    if (!route.attemptId) throw new Error('attemptId cannot be determined (should have been checked by canFetchChildren)');
+    return this.itemNavService.getItemNavigation(route.id, route.attemptId, isSkill(route.contentType)).pipe(
+      map(data => this.mapNavData(data, route.path)),
     );
   }
 

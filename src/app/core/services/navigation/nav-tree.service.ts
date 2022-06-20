@@ -4,6 +4,7 @@ import { isDefined } from 'src/app/shared/helpers/null-undefined-predicates';
 import { fetchingState, FetchState, readyState } from 'src/app/shared/helpers/state';
 import { ContentInfo, RoutedContentInfo } from 'src/app/shared/models/content/content-info';
 import { mapStateData, mapToFetchState } from 'src/app/shared/operators/state';
+import { ContentRoute } from 'src/app/shared/routing/content-route';
 import { CurrentContentService } from 'src/app/shared/services/current-content.service';
 import { NavTreeData, NavTreeElement } from '../../models/left-nav-loading/nav-tree-data';
 
@@ -79,7 +80,7 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
       //         or reload case -> create a new fetching for children
       //         (the `shareReplay(1)` is important as it allows a future emission to reuse this fetch state just keeping its latest value)
       if (!prev.content || content.route.id !== prev.content.route.id || !this.canFetchChildren(prev.content) || reload)
-        return { content, childrenState$: this.fetchChildren(content).pipe(mapToFetchState(), shareReplay(1)), reload };
+        return { content, childrenState$: this.fetchChildren(content.route).pipe(mapToFetchState(), shareReplay(1)), reload };
 
       // CASE c: the previous emission had already created a fetching state (possibly still fetching, or ready/error) that can be reuse here
       return { content, childrenState$: prev.childrenState$, reload };
@@ -97,7 +98,8 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
       // CASE 1: the current-content does not match the type of this nav tree (so `content` has been mapped to `undefined`)
       if (!content) {
         // CASE 1A: the menu has already an element displayed -> just deselect what is selected if there was a selection
-        if (prevState.isReady) return of(readyState(prevState.data.withNoSelection()));
+        //          (or reload the same if reloading)
+        if (prevState.isReady) return reload ? this.refetchNav(prevState.data) : of(readyState(prevState.data.withNoSelection()));
         // CASE 1B: the menu has nothing displayed yet -> load item root
         else return this.fetchDefaultNav();
 
@@ -177,6 +179,7 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
   protected abstract addDetailsToTreeElement(treeElement: NavTreeElement, contentInfo: ContentT): NavTreeElement;
   protected abstract fetchRootTreeData(): Observable<NavTreeElement[]>;
   protected abstract fetchNavDataFromChild(id: string, child: ContentT): Observable<{ parent: NavTreeElement, elements: NavTreeElement[] }>;
+  protected abstract contentInfoFromNavTreeParent(e: NavTreeElement): ContentInfo;
 
   /**
    * Returns whether the given content may have children which can be fetched.
@@ -184,10 +187,10 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
    */
    protected abstract canFetchChildren(content: ContentInfo): boolean;
 
-  protected abstract fetchNavData(content: ContentInfo): Observable<{ parent: NavTreeElement, elements: NavTreeElement[] }>;
+  protected abstract fetchNavData(route: ContentRoute): Observable<{ parent: NavTreeElement, elements: NavTreeElement[] }>;
 
-  private fetchChildren(content: ContentInfo): Observable<NavTreeElement[]> {
-    return this.fetchNavData(content).pipe(map(navData => navData.elements));
+  private fetchChildren(route: ContentRoute): Observable<NavTreeElement[]> {
+    return this.fetchNavData(route).pipe(map(navData => navData.elements));
   }
 
   private fetchDefaultNav(): Observable<FetchState<NavTreeData>> {
@@ -211,6 +214,19 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
         mapToFetchState(),
       );
     }
+  }
+
+  /**
+   * Refetch the same content as previous navigation data with no selection
+   */
+  private refetchNav(prevNav: NavTreeData): Observable<FetchState<NavTreeData>> {
+    // if no parent, we were at the root, reload the root
+    if (!prevNav.parent) return this.fetchDefaultNav();
+    // as the nav was previously loaded with a parent, we are sure it has children
+    return this.fetchNavData(prevNav.parent.route).pipe(
+      map(data => new NavTreeData(data.elements, prevNav.pathToElements, undefined, data.parent)),
+      mapToFetchState(),
+    );
   }
 
 }
