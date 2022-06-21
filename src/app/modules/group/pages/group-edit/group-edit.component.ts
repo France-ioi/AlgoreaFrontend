@@ -106,7 +106,7 @@ export class GroupEditComponent implements OnDestroy, PendingChangesComponent {
   }
 
   refreshNav(): void {
-    this.currentContentService.forceReload();
+    this.currentContentService.forceNavMenuReload();
   }
 
   resetForm(): void {

@@ -349,7 +349,7 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
       next: _status => {
         this.actionFeedbackService.success($localize`Changes successfully saved.`);
         this.itemDataSource.refreshItem(); // which will re-enable the form
-        this.currentContentService.forceReload();
+        this.currentContentService.forceNavMenuReload();
       },
       error: err => {
         this.itemForm.enable();

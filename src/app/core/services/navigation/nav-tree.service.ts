@@ -23,7 +23,7 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
   private reloadTrigger = new Subject<void>();
   private reload$ = merge(
     this.reloadTrigger,
-    this.currentContent.reload$,
+    this.currentContent.navMenuReload$,
   );
 
   state$ = this.currentContent.content$.pipe(

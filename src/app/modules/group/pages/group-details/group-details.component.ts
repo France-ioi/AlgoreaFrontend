@@ -33,7 +33,7 @@ export class GroupDetailsComponent {
   ) {}
 
   refreshNav(): void {
-    this.currentContentService.forceReload();
+    this.currentContentService.forceNavMenuReload();
   }
 
   onGroupRefreshRequired(): void {

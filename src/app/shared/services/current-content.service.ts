@@ -15,8 +15,8 @@ export class CurrentContentService implements OnDestroy {
   private content = new BehaviorSubject<ContentInfo|null>(null);
   content$ = this.content.asObservable();
 
-  private reload = new Subject<void>();
-  reload$ = this.reload.asObservable();
+  private navMenuReload = new Subject<void>();
+  navMenuReload$ = this.navMenuReload.asObservable();
 
   /**
    * The current content
@@ -32,8 +32,11 @@ export class CurrentContentService implements OnDestroy {
     this.content.next(content);
   }
 
-  forceReload(): void {
-    this.reload.next();
+  /**
+   * Order the nav menu to full reload. To be used when more than the current content has changed.
+   */
+  forceNavMenuReload(): void {
+    this.navMenuReload.next();
   }
 
   /**
