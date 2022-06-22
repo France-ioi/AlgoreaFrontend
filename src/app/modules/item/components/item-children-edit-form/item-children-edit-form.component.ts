@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, Input, OnDestroy, ViewChild } from '@angular/core';
 import { ItemData, ItemDataSource } from '../../services/item-datasource.service';
 import {
   ChildDataWithId,
@@ -12,13 +12,15 @@ import { map, switchMap } from 'rxjs/operators';
 import { ActionFeedbackService } from '../../../../shared/services/action-feedback.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ItemChanges, UpdateItemService } from '../../http-services/update-item.service';
+import { PendingChangesComponent } from '../../../../shared/guards/pending-changes-guard';
+import { PendingChangesService } from '../../../../shared/services/pending-changes-service';
 
 @Component({
   selector: 'alg-item-children-edit-form',
   templateUrl: './item-children-edit-form.component.html',
   styleUrls: [ './item-children-edit-form.component.scss' ],
 })
-export class ItemChildrenEditFormComponent {
+export class ItemChildrenEditFormComponent implements PendingChangesComponent, OnDestroy {
   @Input() itemData?: ItemData;
 
   @ViewChild('childrenEdit') private childrenEdit?: ItemChildrenEditComponent;
@@ -27,12 +29,23 @@ export class ItemChildrenEditFormComponent {
   dirty = false;
   itemChanges: { children?: PossiblyInvisibleChildData[] } = {};
 
+  isDirty(): boolean {
+    return this.dirty;
+  }
+
   constructor(
     private createItemService: CreateItemService,
     private updateItemService: UpdateItemService,
     private itemDataSource: ItemDataSource,
     private actionFeedbackService: ActionFeedbackService,
-  ) {}
+    private pendingChangesService: PendingChangesService,
+  ) {
+    this.pendingChangesService.set(this);
+  }
+
+  ngOnDestroy(): void {
+    this.pendingChangesService.clear();
+  }
 
   updateItemChanges(children: PossiblyInvisibleChildData[]): void {
     this.dirty = true;

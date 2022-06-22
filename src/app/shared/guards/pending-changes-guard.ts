@@ -34,7 +34,7 @@ export class PendingChangesGuard implements CanDeactivate<PendingChangesComponen
       throw new Error('Unexpected: Component is not defined in router');
     }
 
-    if (!pendingChangesComponent.isDirty()) return of(true) ;
+    if (!pendingChangesComponent || !pendingChangesComponent.isDirty()) return of(true) ;
     this.confirmationService.confirm({
       message: $localize`This page has unsaved changes. Do you want to leave this page and lose its changes?`,
       header: $localize`Confirm Navigation`,

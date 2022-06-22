@@ -7,39 +7,41 @@
       </alg-section>
 
       <ng-container *ngIf="['Chapter', 'Skill'].includes(itemData.item.type)">
-        <div class="edit" *ngIf="['all','all_with_grant', 'children'].includes(itemData.item.permissions.canEdit) || editModeEnabled">
-          <label class="edit-label">
-            <b>Edit the list</b>
-            <alg-switch
-              class="edit-switch"
-              mode="white"
-              [(ngModel)]="editModeEnabled"
-              (ngModelChange)="onEditModeEnableChange()"
-            ></alg-switch>
-          </label>
-        </div>
+        <ng-container *ngrxLet="editModeEnabled$; let editModeEnabled">
+          <div class="edit" *ngIf="['all','all_with_grant', 'children'].includes(itemData.item.permissions.canEdit) || editModeEnabled">
+            <label class="edit-label">
+              <b>Edit the list</b>
+              <alg-switch
+                class="edit-switch"
+                mode="white"
+                [checked]="editModeEnabled"
+                (change)="onEditModeEnableChange($event)"
+              ></alg-switch>
+            </label>
+          </div>
 
-        <ng-container *ngIf="editModeEnabled">
-          <ng-container *ngIf="['all','all_with_grant', 'children'].includes(itemData.item.permissions.canEdit); else notAuthorized">
-            <alg-item-children-edit-form
-                [itemData]="itemData"
-            ></alg-item-children-edit-form>
+          <ng-container *ngIf="editModeEnabled">
+            <ng-container *ngIf="['all','all_with_grant', 'children'].includes(itemData.item.permissions.canEdit); else notAuthorized">
+              <alg-item-children-edit-form
+                  [itemData]="itemData"
+              ></alg-item-children-edit-form>
+            </ng-container>
+            <ng-template #notAuthorized>
+              <p class="validation-text">
+                You do not have the permissions to edit this content.
+              </p>
+            </ng-template>
           </ng-container>
-          <ng-template #notAuthorized>
-            <p class="validation-text">
-              You do not have the permissions to edit this content.
-            </p>
-          </ng-template>
+
+          <alg-chapter-children
+            [itemData]="itemData"
+            [algFullHeightContent]="true"
+            *ngIf="itemData.item.type === 'Chapter' && !editModeEnabled"
+          ></alg-chapter-children>
+
+          <alg-sub-skills [itemData]="itemData" *ngIf="itemData.item.type === 'Skill' && !editModeEnabled"></alg-sub-skills>
+          <alg-parent-skills [itemData]="itemData" *ngIf="itemData.item.type === 'Skill'"></alg-parent-skills>
         </ng-container>
-
-        <alg-chapter-children
-          [itemData]="itemData"
-          [algFullHeightContent]="true"
-          *ngIf="itemData.item.type === 'Chapter' && !editModeEnabled"
-        ></alg-chapter-children>
-
-        <alg-sub-skills [itemData]="itemData" *ngIf="itemData.item.type === 'Skill' && !editModeEnabled"></alg-sub-skills>
-        <alg-parent-skills [itemData]="itemData" *ngIf="itemData.item.type === 'Skill'"></alg-parent-skills>
       </ng-container>
 
       <ng-container *ngIf="(itemData.item.type === 'Task' || itemData.item.type === 'Course')">
