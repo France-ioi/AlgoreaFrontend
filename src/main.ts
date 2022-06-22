@@ -1,7 +1,6 @@
 import { enableProdMode } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import * as Sentry from '@sentry/angular';
-import { BrowserTracing } from '@sentry/tracing';
 
 import { AppModule } from './app/core/app.module';
 import { appConfig } from './app/shared/helpers/config';
@@ -12,17 +11,7 @@ if (appConfig.sentryDsn) {
     dsn: appConfig.sentryDsn,
     environment: appConfig.production ? `prod-${window.location.hostname}` : 'dev',
     release: version,
-    integrations: [
-      new BrowserTracing({
-        tracingOrigins: [ appConfig.apiUrl, appConfig.oauthServerUrl ],
-        routingInstrumentation: Sentry.routingInstrumentation,
-      }),
-    ],
-
-    // Set tracesSampleRate to 1.0 to capture 100%
-    // of transactions for performance monitoring.
-    // We recommend adjusting this value in production
-    tracesSampleRate: 0.1,
+    integrations: [],
   });
 }
 
