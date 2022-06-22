@@ -6,9 +6,9 @@
       [collapsible]="true"
       [collapsed]="true"
     >
-      <ng-container *ngIf="watchedGroupPermissions as permissions; else noPermissionToWatchLabel" label-section i18n>
+      <ng-container *ngIf="watchedGroupPermissions; else noPermissionToWatchLabel" label-section i18n>
         «{{ watchedGroup.name }}»
-        {{ ['content', 'content_with_descendants', 'solution'].includes(permissions.canView).toString() | i18nSelect : {
+        {{ ['content', 'content_with_descendants', 'solution'].includes(watchedGroupPermissions.canView).toString() | i18nSelect : {
           true: 'can',
           other: 'can\'t'
         } }}
@@ -27,15 +27,15 @@
         </ng-container>
       </ng-template>
 
-      <ng-container *ngIf="watchedGroupPermissions as permissions; else noPermissionToWatchContent">
-        <ng-container *ngIf="permissions.canView === 'none'" i18n>
+      <ng-container *ngIf="watchedGroupPermissions; else noPermissionToWatchContent">
+        <ng-container *ngIf="watchedGroupPermissions.canView === 'none'" i18n>
           The {{ watchedGroup.route.isUser.toString() | i18nSelect : {
             true: 'user',
             other: 'group'
           } }} cannot currently view this content.
         </ng-container>
 
-        <ng-container *ngIf="permissions.canView === 'info'" i18n>
+        <ng-container *ngIf="watchedGroupPermissions.canView === 'info'" i18n>
           The {{ watchedGroup.route.isUser.toString() | i18nSelect : {
             true: 'user',
             other: 'group'
@@ -59,7 +59,7 @@
         </ng-container>
       </ng-template>
 
-      <ng-container *ngIf="watchedGroupPermissions as permissions">
+      <ng-container *ngIf="watchedGroupPermissions">
         <div class="permission-indicator-section">
           <alg-section-header
             i18n-title title="Can view"
@@ -69,7 +69,7 @@
             <ng-template #content>
               <alg-progress-select
                 [collapsed]="true"
-                [(ngModel)]="permissions.canView"
+                [(ngModel)]="watchedGroupPermissions.canView"
                 [values]="canViewValues"
                 theme="warning"
               ></alg-progress-select>
@@ -81,7 +81,7 @@
           Note that some subgroups or users of the groups may have higher permissions.
         </div>
 
-        <ng-container *ngIf="permissions.canGrantView !== 'none' && watchedGroup.currentUserCanGrantGroupAccess && itemData?.item?.permissions">
+        <ng-container *ngIf="watchedGroup.currentUserCanGrantGroupAccess && itemData?.item?.permissions && itemData.item.permissions.canGrantView !== 'none'">
           <div class="give-access-button">
             <button
                 pButton
@@ -97,7 +97,7 @@
               [visible]="isPermissionsDialogOpened"
               [title]="watchedGroup.name"
               [targetType]="'Groups'"
-              [permissions]="permissions"
+              [permissions]="watchedGroupPermissions"
               [giverPermissions]="itemData.item.permissions"
               (close)="closePermissionsDialog()"
               (save)="onPermissionsDialogSave($event)"
