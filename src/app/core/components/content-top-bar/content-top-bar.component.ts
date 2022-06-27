@@ -1,8 +1,8 @@
-import { Component, Input, OnDestroy, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { ContentInfo } from '../../../shared/models/content/content-info';
-import { combineLatest, map, Observable, of } from 'rxjs';
+import { map, Observable, of } from 'rxjs';
 import { CurrentContentService } from '../../../shared/services/current-content.service';
-import { delay, switchMap, filter, distinctUntilChanged } from 'rxjs/operators';
+import { delay, switchMap, filter } from 'rxjs/operators';
 import { ActivityNavTreeService, SkillNavTreeService } from '../../services/navigation/item-nav-tree.service';
 import { isItemInfo } from '../../../shared/models/content/item-info';
 import { FullFrameContent } from 'src/app/shared/services/layout.service';
@@ -17,7 +17,7 @@ import { OverlayPanel } from 'primeng/overlaypanel';
   templateUrl: './content-top-bar.component.html',
   styleUrls: [ './content-top-bar.component.scss' ],
 })
-export class ContentTopBarComponent implements OnDestroy {
+export class ContentTopBarComponent {
   @Input() fullFrameContent?: FullFrameContent;
   @Input() scrolled = false;
 
@@ -29,6 +29,10 @@ export class ContentTopBarComponent implements OnDestroy {
 
   currentContent$: Observable<ContentInfo | null> = this.currentContentService.content$.pipe(
     delay(0),
+  );
+
+  groupInfo$ = this.currentContentService.content$.pipe(
+    filter(isGroupInfo),
   );
 
   navigationNeighbors$ = this.currentContentService.content$.pipe(
@@ -51,23 +55,6 @@ export class ContentTopBarComponent implements OnDestroy {
     map(currentContent => isGroupInfo(currentContent) && currentContent.currentUserCanWatchMembers),
   );
 
-  isCurrentGroupWatched$ = combineLatest([
-    this.groupWatchingService.watchedGroup$,
-    this.currentContent$.pipe(filter(isGroupInfo)),
-  ]).pipe(
-    map(([ watchedGroup, group ]) => !!(watchedGroup && watchedGroup.route.id === group.route.id)),
-  );
-
-  subscription = this.currentContent$.pipe(
-    distinctUntilChanged((prevCurrentContent, currentContent) =>
-      prevCurrentContent?.route?.id === currentContent?.route?.id
-    ),
-  ).subscribe(() => {
-    if (this.op?.overlayVisible) {
-      this.op?.hide();
-    }
-  });
-
   constructor(
     private groupWatchingService: GroupWatchingService,
     private currentContentService: CurrentContentService,
@@ -77,41 +64,8 @@ export class ContentTopBarComponent implements OnDestroy {
     private discussionService: DiscussionService
   ) {}
 
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
-  }
-
   toggleThreadVisibility(visible: boolean): void {
     this.discussionService.toggleVisibility(visible);
   }
 
-  toggleWatchingMode(event: Event, contentInfo: ContentInfo, isWatching: boolean): void {
-    if (!isGroupInfo(contentInfo)) {
-      throw new Error('Unexpected: content is not a group');
-    }
-
-    if (isWatching) {
-      this.op?.hide();
-      this.groupWatchingService.stopWatching();
-      return;
-    }
-
-    this.groupWatchingService.startGroupWatching(contentInfo.route, {
-      id: contentInfo.route.id,
-      name: contentInfo.title || '',
-      currentUserCanGrantGroupAccess: !!contentInfo.currentUserCanGrantGroupAccess,
-    });
-    this.openSuggestionOfActivitiesOverlayPanel(event);
-  }
-
-  openSuggestionOfActivitiesOverlayPanel(event: Event): void {
-    this.op?.show(event);
-
-    // Align method needs to be called because top banner of observing group
-    // changes position of the page and as result we have a bug with wrong tooltip positioning.
-    // Async function/wrapper setTimeout - guarantees to call align method after position of page changed
-    setTimeout(() => {
-      this.op?.align();
-    });
-  }
 }

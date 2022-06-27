@@ -1,0 +1,17 @@
+<button
+  class="p-button-raised p-button-rounded alg-round-button-icon top-bar-size"
+  [ngClass]="{ 'active-secondary': isCurrentGroupWatched }"
+  pButton
+  type="button"
+  icon="fa fa-eye"
+  (click)="toggleWatchingMode($event, isCurrentGroupWatched)"
+  *ngrxLet="isCurrentGroupWatched$; let isCurrentGroupWatched"
+></button>
+
+<p-overlayPanel
+  #op
+  [style]="{ width: '450px' }"
+  appendTo="body"
+>
+  <alg-suggestion-of-activities *ngIf="op.overlayVisible"></alg-suggestion-of-activities>
+</p-overlayPanel>

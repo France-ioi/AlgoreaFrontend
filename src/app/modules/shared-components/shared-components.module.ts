@@ -74,6 +74,9 @@ import { HasHTMLDirective } from '../../shared/directives/has-html.directive';
 import { ItemRouteLinkPipe } from 'src/app/shared/pipes/itemRouteLink';
 import { AllowDisplayCodeSnippet } from '../../shared/pipes/allowDisplayCodeSnippet';
 import { SuggestionOfActivitiesComponent } from './components/suggestion-of-activities/suggestion-of-activities.component';
+import { WatchButtonComponent } from './components/watch-button/watch-button.component';
+import { LetModule } from '@ngrx/component';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
 
 @NgModule({
   declarations: [
@@ -127,6 +130,7 @@ import { SuggestionOfActivitiesComponent } from './components/suggestion-of-acti
     AllowDisplayCodeSnippet,
     MessageInfoComponent,
     SuggestionOfActivitiesComponent,
+    WatchButtonComponent,
   ],
   imports: [
     CommonModule,
@@ -154,6 +158,8 @@ import { SuggestionOfActivitiesComponent } from './components/suggestion-of-acti
     TooltipModule,
     InputNumberModule,
     InputMaskModule,
+    LetModule,
+    OverlayPanelModule,
   ],
   exports: [
     SectionComponent,
@@ -209,6 +215,7 @@ import { SuggestionOfActivitiesComponent } from './components/suggestion-of-acti
     MessageInfoComponent,
     AllowDisplayCodeSnippet,
     SuggestionOfActivitiesComponent,
+    WatchButtonComponent,
   ],
   providers: [],
 })
