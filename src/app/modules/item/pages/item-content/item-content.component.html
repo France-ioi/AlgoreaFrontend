@@ -10,7 +10,7 @@
         <ng-container *ngrxLet="editModeEnabled$; let editModeEnabled">
           <div class="edit" *ngIf="['all','all_with_grant', 'children'].includes(itemData.item.permissions.canEdit) || editModeEnabled">
             <label class="edit-label">
-              <b>Edit the list</b>
+              <b i18n>Edit the list</b>
               <alg-switch
                 class="edit-switch"
                 mode="white"
@@ -27,7 +27,7 @@
               ></alg-item-children-edit-form>
             </ng-container>
             <ng-template #notAuthorized>
-              <p class="validation-text">
+              <p class="validation-text" i18n>
                 You do not have the permissions to edit this content.
               </p>
             </ng-template>
