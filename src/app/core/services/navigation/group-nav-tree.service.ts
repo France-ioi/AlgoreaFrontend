@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { EMPTY, Observable, OperatorFunction, pipe } from 'rxjs';
-import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { ContentInfo } from 'src/app/shared/models/content/content-info';
 import { GroupInfo, isGroupInfo } from 'src/app/shared/models/content/group-info';
 import { groupRoute } from 'src/app/shared/routing/group-route';
@@ -23,13 +23,13 @@ export class GroupNavTreeService extends NavTreeService<GroupInfo> {
     super(currentContent);
   }
 
-  childrenNavData(): OperatorFunction<GroupInfo|undefined,NavTreeElement[]> {
-    return pipe(
-      distinctUntilChanged((g1, g2) => g1?.route.id === g2?.route.id),
-      switchMap(group => {
-        if (!group || group.route.isUser) return EMPTY;
-        return this.groupNavigationService.getGroupNavigation(group.route.id).pipe(map(data => this.mapNavData(data).elements));
-      })
+  canFetchChildren(content: GroupInfo): boolean {
+    return !content.route.isUser;
+  }
+
+  fetchChildren(content: GroupInfo): Observable<NavTreeElement[]> {
+    return this.groupNavigationService.getGroupNavigation(content.route.id).pipe(
+      map(data => this.mapNavData(data).elements)
     );
   }
 

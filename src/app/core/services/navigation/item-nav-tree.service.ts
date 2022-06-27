@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
-import { EMPTY, Observable, OperatorFunction, pipe } from 'rxjs';
-import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { bestAttemptFromResults, defaultAttemptId } from 'src/app/shared/helpers/attempts';
 import { isSkill, ItemTypeCategory, typeCategoryOfItem } from 'src/app/shared/helpers/item-type';
 import { ContentInfo } from 'src/app/shared/models/content/content-info';
 import { isActivityInfo, isItemInfo, ItemInfo } from 'src/app/shared/models/content/item-info';
 import { fullItemRoute } from 'src/app/shared/routing/item-route';
+import { mayHaveChildren } from 'src/app/shared/helpers/item-type';
 import { ItemRouter } from 'src/app/shared/routing/item-router';
 import { CurrentContentService } from 'src/app/shared/services/current-content.service';
 import { ItemNavigationChild, ItemNavigationData, ItemNavigationService } from '../../http-services/item-navigation.service';
@@ -23,21 +24,17 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
     super(currentContent);
   }
 
-  childrenNavData(): OperatorFunction<ItemInfo|undefined,NavTreeElement[]> {
-    return pipe(
-      map(content => {
-        if (!content) return undefined;
-        if (!content.details || ![ 'Chapter', 'Skill' ].includes(content.details?.type)) return undefined;
-        const attemptId = content.route.attemptId ? content.route.attemptId : content.details?.attemptId;
-        return attemptId ? { ...content.route, attemptId } : undefined;
-      }),
-      distinctUntilChanged((x, y) => x?.id === y?.id),
-      switchMap(route => {
-        if (!route) return EMPTY;
-        return this.itemNavService.getItemNavigation(route.id, route.attemptId, isSkill(route.contentType)).pipe(
-          map(data => this.mapNavData(data).elements)
-        );
-      }),
+  canFetchChildren(content: ItemInfo): boolean {
+    if (!content.details) return false; // no item detail yet -> no children
+    if (!mayHaveChildren(content.details)) return false; // only chapters or skills may have children
+    return !!(content.route.attemptId || content.details.attemptId); // an attempt is required to fetch children
+  }
+
+  fetchChildren(content: ItemInfo): Observable<NavTreeElement[]> {
+    const attemptId = content.route.attemptId ?? content.details?.attemptId;
+    if (!attemptId) throw new Error('attemptId cannot be determined (should have been checked by canFetchChildren)');
+    return this.itemNavService.getItemNavigation(content.route.id, attemptId, isSkill(content.route.contentType)).pipe(
+      map(data => this.mapNavData(data).elements),
     );
   }
 
