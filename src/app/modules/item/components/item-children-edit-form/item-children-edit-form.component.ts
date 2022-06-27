@@ -97,7 +97,6 @@ export class ItemChildrenEditFormComponent implements PendingChangesComponent, O
           upper_view_levels_propagation: child.upperViewLevelsPropagation,
           watch_propagation: child.watchPropagation,
         }));
-        if (!Object.keys(changes).length) return of(undefined);
         return this.updateItemService.updateItem(this.itemData.item.id, changes);
       }),
     );
