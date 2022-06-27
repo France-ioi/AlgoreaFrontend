@@ -1314,7 +1314,13 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-permissions/item-permissions.component.html</context><context context-type="linenumber">57</context></context-group></trans-unit><trans-unit id="6629702976113303770" datatype="html">
         <source> Note that some subgroups or users of the groups may have higher permissions. </source><target state="new"> Note that some subgroups or users of the groups may have higher permissions. </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-permissions/item-permissions.component.html</context><context context-type="linenumber">80</context></context-group></trans-unit><trans-unit id="permissionsUpdated" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-permissions/item-permissions.component.html</context><context context-type="linenumber">80</context></context-group></trans-unit><trans-unit id="1946660694635960249" datatype="html">
+        <source>Edit permissions</source><target state="new">Edit permissions</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/components/item-permissions/item-permissions.component.html</context>
+          <context context-type="linenumber">99</context>
+        </context-group>
+      </trans-unit><trans-unit id="permissionsUpdated" datatype="html">
         <source>Permissions successfully updated.</source><target state="new">Permissions successfully updated.</target>
 
 
