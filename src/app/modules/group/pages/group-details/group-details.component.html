@@ -14,7 +14,7 @@
     >
     </alg-group-indicator>
     <!-- tabs -- if only the first tab is visible, do not show the tab bar -->
-    <div [hidden]="!group.isCurrentUserManager && group.currentUserMembership === 'none' && !adminTab.isActive && !accessTab?.isActive">
+    <div [hidden]="!group.isCurrentUserManager && group.currentUserMembership === 'none' && !adminTab.isActive && !accessTab?.isActive && !compositionTab.isActive && !settingsTab.isActive">
       <div class="nav-tab">
         <a
           class="nav-tab-item"
