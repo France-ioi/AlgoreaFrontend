@@ -3,12 +3,18 @@
 
   <alg-error
     *ngIf="state.isError"
-    class="dark"
-    icon="fa fa-exclamation-triangle"
-    i18n-message message="Unable to load the recent activity"
-    [showRefreshButton]="true"
+    [class.dark]="$any(state).error.status !== 403"
+    [icon]="$any(state).error.status !== 403 ? 'fa fa-exclamation-triangle' : undefined"
+    [showRefreshButton]="$any(state).error.status !== 403"
     (refresh)="refresh()"
-  ></alg-error>
+  >
+    <span i18n *ngIf="$any(state).error.status === 403; else unknownError">
+      You are not allowed to see activities of this user.
+    </span>
+    <ng-template #unknownError>
+      <span i18n>Unable to load the recent activity</span>
+    </ng-template>
+  </alg-error>
 
   <ng-container *ngIf="state.data">
     <p-table class="alg-table" [columns]="state.data.columns" [value]="state.data.rowData" [loading]="state.isFetching">
