@@ -117,7 +117,10 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent {
   readonly saveBeforeUnloadError$ = this.saveBeforeUnload$.pipe(map(({ error }) => error));
 
   private subscriptions = [
-    this.itemDataSource.state$.subscribe(state => {
+    this.itemDataSource.state$.pipe(
+      // submission reloads the item data. Here we handle the progress tab existence only when the item loads, not when it reloads.
+      distinctUntilChanged((a, b) => a.data?.route.id === b.data?.route.id),
+    ).subscribe(state => {
       // reset tabs when item changes. By default do not display it unless we currently are on progress page
       if (state.isFetching) this.tabs.next(this.isProgressPage() ? [{ view: 'progress', name: 'Progress' }] : []);
       // update tabs when item is fetched
