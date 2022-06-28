@@ -10,7 +10,7 @@
         <ng-container *ngrxLet="editModeEnabled$; let editModeEnabled">
           <div class="edit" *ngIf="['all','all_with_grant', 'children'].includes(itemData.item.permissions.canEdit) || editModeEnabled">
             <label class="edit-label">
-              <b i18n>Edit the list</b>
+              <b i18n>Edit content</b>
               <alg-switch
                 class="edit-switch"
                 mode="white"
