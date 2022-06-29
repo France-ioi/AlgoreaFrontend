@@ -9,6 +9,7 @@ export interface Environment {
   production: boolean,
 
   apiUrl: string, // full url (not including the trailing slash) of the backend
+  forumServerUrl: string | null,
 
   oauthServerUrl: string, // full url (not including the trailing slash) of the oauth server
   oauthClientId: string,

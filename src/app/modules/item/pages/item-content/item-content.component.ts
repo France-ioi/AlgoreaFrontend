@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, Output, ViewChild } from '@angular/core';
+import { appConfig } from 'src/app/shared/helpers/config';
 import { ItemData } from '../../services/item-datasource.service';
 import { TaskConfig } from '../../services/item-task.service';
 import { ItemDisplayComponent, TaskTab } from '../item-display/item-display.component';
@@ -22,6 +23,7 @@ export class ItemContentComponent implements OnChanges {
   @Output() skipSave = new EventEmitter<void>();
   @Output() refresh = new EventEmitter<void>();
 
+  showItemThreadWidget = !!appConfig.forumServerUrl;
   attemptId?: string;
 
   ngOnChanges(): void {

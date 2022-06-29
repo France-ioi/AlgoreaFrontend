@@ -40,6 +40,7 @@ import { BeforeUnloadGuard } from 'src/app/shared/guards/before-unload-guard';
 import { AnswerAuthorIndicatorComponent } from './components/answer-author-indicator/answer-author-indicator.component';
 import { ItemPermissionsComponent } from './components/item-permissions/item-permissions.component';
 import { TaskLoaderComponent } from './components/task-loader/task-loader.component';
+import { ThreadComponent } from './components/thread/thread.component';
 
 @NgModule({
   declarations: [
@@ -72,6 +73,7 @@ import { TaskLoaderComponent } from './components/task-loader/task-loader.compon
     AnswerAuthorIndicatorComponent,
     ItemPermissionsComponent,
     TaskLoaderComponent,
+    ThreadComponent,
   ],
   imports: [
     CommonModule,

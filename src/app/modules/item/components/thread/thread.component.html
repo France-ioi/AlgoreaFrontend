@@ -1,0 +1,13 @@
+<div class="widget" *ngIf="messages$ | async as messages">
+  <div *ngFor="let message of messages">
+    <div>{{ message | json }}</div>
+  </div>
+  <div>
+    <button (click)="closeThread()" [disabled]="threadClosed$ | async">
+      Close thread
+    </button>
+  </div>
+</div>
+<div *ngIf="!(messages$ | async)" class="widget" (click)="openThread()">
+  Open thread
+</div>
