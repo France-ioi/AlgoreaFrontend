@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 import * as D from 'io-ts/Decoder';
 import { pipe } from 'fp-ts/function';
-import { environment } from 'src/environments/environment';
+import { appConfig } from 'src/app/shared/helpers/config';
 import { dateDecoder } from 'src/app/shared/helpers/decoders';
 import { catchError, EMPTY, Observable, scan } from 'rxjs';
 import { decodeSnakeCase } from 'src/app/shared/operators/decode';
@@ -56,8 +56,8 @@ export class ThreadService {
   messages$: Observable<ThreadEvent[]>;
 
   constructor() {
-    if (!environment.forumServerUrl) throw new Error('cannot instantiate threads service when no forum server url');
-    this.socket = webSocket(environment.forumServerUrl);
+    if (!appConfig.forumServerUrl) throw new Error('cannot instantiate threads service when no forum server url');
+    this.socket = webSocket(appConfig.forumServerUrl);
     this.messages$ = this.socket.pipe(
       decodeSnakeCase(D.array(threadEventDecoder)),
       scan((oldEvents, newEvents) => [ ...oldEvents, ...newEvents ]),

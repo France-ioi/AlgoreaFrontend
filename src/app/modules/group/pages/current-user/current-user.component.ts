@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
-import { environment } from '../../../../../environments/environment';
+import { appConfig } from 'src/app/shared/helpers/config';
 import { ActionFeedbackService } from '../../../../shared/services/action-feedback.service';
 import { HttpErrorResponse } from '@angular/common/http';
 
@@ -24,7 +24,7 @@ export class CurrentUserComponent {
     ).href;
 
     window.open(
-      `${ environment.oauthServerUrl }?all=1&client_id=${ userId }&redirect_uri=${encodeURI(backUrl)}`,
+      `${ appConfig.oauthServerUrl }?all=1&client_id=${ userId }&redirect_uri=${encodeURI(backUrl)}`,
       undefined,
       'popup,width=800,height=640'
     );
