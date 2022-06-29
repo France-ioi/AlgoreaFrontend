@@ -52,6 +52,7 @@ commands:
         type: string
     steps:
       - run: echo "export const version = '`git describe --always`';" > ./src/version.ts
+      - run: npm run injectDeployUrlForAssets --url='//assets.algorea.org<< parameters.path >><< parameters.lang >>/'
       - run: npx ng build --configuration production-<< parameters.lang >> --base-href << parameters.path >> --deploy-url //assets.algorea.org<< parameters.path >><< parameters.lang >>/ --progress=false
 
 jobs:
