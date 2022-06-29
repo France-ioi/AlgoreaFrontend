@@ -20,8 +20,8 @@ export class LeftNavTreeComponent implements OnChanges {
 
   private mapItemToNodes(data: NavTreeData): TreeNode<NavTreeElement>[] {
     return data.elements.map(e => {
-      const isSelected = !!data.selectedElementId && data.selectedElementId === e.id;
-      const pathToChildren = data.pathToElements.concat([ e.id ]);
+      const isSelected = !!data.selectedElementId && data.selectedElementId === e.route.id;
+      const pathToChildren = data.pathToElements.concat([ e.route.id ]);
       return {
         data: e,
         label: e.title,
@@ -38,17 +38,12 @@ export class LeftNavTreeComponent implements OnChanges {
     if (!this.data) throw new Error('Unexpected: missing data for left nav tree (navigateToParent)');
     if (!this.data.parent) throw new Error('Unexpected: missing parent when navigating to parent');
     const parent = this.data.parent;
-    parent.navigateTo(this.data.pathToElements.slice(0, -1), true);
+    parent.navigateTo(true);
   }
 
   selectNode(node: TreeNode<NavTreeElement>): void {
     if (!this.data) throw new Error('Unexpected: missing data for left nav tree (selectNode)');
-    let path = this.data.pathToElements;
-    if (node.parent) {
-      if (!node.parent.data) throw new Error('Unexpected: missing data in parent for left nav tree (selectNode)');
-      path = [ ...path, node.parent.data.id ];
-    }
-    node.data?.navigateTo(path, true);
+    node.data?.navigateTo(true);
   }
 
   private typeForElement(e: NavTreeElement): string {

@@ -26,6 +26,9 @@ export class GroupCompositionComponent implements OnChanges {
   @Input() groupData?: GroupData;
 
   @Output() groupRefreshRequired = new EventEmitter<void>();
+  @Output() addedGroup = new EventEmitter<void>();
+  @Output() removedGroup = new EventEmitter<void>();
+
   groupWithPermissions?: Group & ManagementAdditions;
 
   @ViewChild('memberList') private memberList?: MemberListComponent;
@@ -58,6 +61,7 @@ export class GroupCompositionComponent implements OnChanges {
         this.actionFeedbackService.success($localize`Group successfully added as child group`);
         this.memberList?.setFilter({ directChildren: true, type: TypeFilter.Groups });
         this.state = 'ready';
+        this.addedGroup.emit();
       },
       error: err => {
         this.state = 'ready';

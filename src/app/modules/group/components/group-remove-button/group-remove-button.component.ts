@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from '@angular/core';
 import { Group } from '../../http-services/get-group-by-id.service';
 import { distinctUntilChanged, switchMap, map } from 'rxjs/operators';
 import { Observable, ReplaySubject, Subject } from 'rxjs';
@@ -16,6 +16,8 @@ import { mapToFetchState } from '../../../../shared/operators/state';
 })
 export class GroupRemoveButtonComponent implements OnChanges, OnDestroy {
   @Input() group?: Group;
+
+  @Output() groupDeleted = new EventEmitter<void>();
 
   deletionInProgress$ = new Subject<boolean>();
 
@@ -83,6 +85,7 @@ export class GroupRemoveButtonComponent implements OnChanges, OnDestroy {
         next: () => {
           this.deletionInProgress$.next(false);
           this.actionFeedbackService.success($localize`You have deleted "${groupName}"`);
+          this.groupDeleted.emit();
           this.navigateToMyGroups();
         },
         error: _err => {

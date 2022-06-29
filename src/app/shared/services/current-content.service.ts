@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { ContentInfo } from '../models/content/content-info';
 
 /**
@@ -15,6 +15,9 @@ export class CurrentContentService implements OnDestroy {
   private content = new BehaviorSubject<ContentInfo|null>(null);
   content$ = this.content.asObservable();
 
+  private navMenuReload = new Subject<void>();
+  navMenuReload$ = this.navMenuReload.asObservable();
+
   /**
    * The current content
    */
@@ -27,6 +30,13 @@ export class CurrentContentService implements OnDestroy {
    */
   replace(content: ContentInfo): void {
     this.content.next(content);
+  }
+
+  /**
+   * Order the nav menu to full reload. To be used when more than the current content has changed.
+   */
+  forceNavMenuReload(): void {
+    this.navMenuReload.next();
   }
 
   /**

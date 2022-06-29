@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 })
 export class GroupOverviewComponent {
   @Output() groupRefreshRequired = new EventEmitter<void>();
+  @Output() leftGroup = new EventEmitter<void>();
 
   @Input() group?: Group;
 
@@ -19,6 +20,7 @@ export class GroupOverviewComponent {
       this.groupRefreshRequired.emit();
       return;
     }
+    this.leftGroup.emit();
     void this.router.navigate([ '/groups/mine' ]);
   }
 

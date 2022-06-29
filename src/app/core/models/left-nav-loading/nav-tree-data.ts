@@ -8,11 +8,11 @@ export enum GroupManagership { False = 'false', True = 'true', Descendant = 'des
 
 export interface NavTreeElement {
   // generic
-  id: Id,
+  route: ContentRoute,
   title: string,
   hasChildren: boolean,
   children?: this[],
-  navigateTo: (path: Id[], preventFullFrame?: boolean) => void,
+  navigateTo: (preventFullFrame?: boolean) => void,
 
   // specific uses
   locked?: boolean, // considering 'not set' as false
@@ -54,7 +54,7 @@ export class NavTreeData {
    */
   withUpdatedElement(route: ContentRoute, update: (el:NavTreeElement)=>NavTreeElement): NavTreeData {
     if (!arraysEqual(route.path, this.pathToElements)) return this; // the element in not in tree as their paths do not match
-    const idx = this.elements.findIndex(i => i.id === route.id);
+    const idx = this.elements.findIndex(i => i.route.id === route.id);
     if (idx === -1) return this;
     const elements = [ ...this.elements ];
     elements[idx] = update(ensureDefined(elements[idx]));
@@ -67,7 +67,7 @@ export class NavTreeData {
    */
   withChildren(route: ContentRoute, children: NavTreeElement[]): NavTreeData {
     if (!arraysEqual(route.path, this.pathToElements)) return this; // the element in not in tree as their paths do not match
-    const elements = this.elements.map(e => (e.id === route.id ? { ...e, children: children } : e));
+    const elements = this.elements.map(e => (e.route.id === route.id ? { ...e, children: children } : e));
     return new NavTreeData(elements, this.pathToElements, this.selectedElementId, this.parent);
   }
 
@@ -85,9 +85,9 @@ export class NavTreeData {
    * If the element is not found, return this unchanged.
    */
   subNavMenuData(route: ContentRoute): NavTreeData {
-    const newParent = this.elements.find(e => e.id === route.path[route.path.length-1]);
+    const newParent = this.elements.find(e => e.route.id === route.path[route.path.length-1]);
     if (!newParent || !newParent.children /* unexpected */) throw new Error('Unexpected: subNavMenuData did not find parent');
-    return new NavTreeData(newParent.children, this.pathToElements.concat([ newParent.id ]), route.id, newParent);
+    return new NavTreeData(newParent.children, this.pathToElements.concat([ newParent.route.id ]), route.id, newParent);
   }
 
   hasElement(route: ContentRoute): boolean {
@@ -95,26 +95,26 @@ export class NavTreeData {
   }
 
   hasLevel1Element(route: ContentRoute): boolean {
-    return arraysEqual(route.path, this.pathToElements) && this.elements.some(e => e.id === route.id);
+    return arraysEqual(route.path, this.pathToElements) && this.elements.some(e => e.route.id === route.id);
   }
 
   hasLevel2Element(route: ContentRoute): boolean {
     if (!arraysEqual(route.path.slice(0,-1), this.pathToElements)) return false;
-    const parent = this.elements.find(e => e.id === route.path[route.path.length-1]);
+    const parent = this.elements.find(e => e.route.id === route.path[route.path.length-1]);
     if (!parent || !parent.children) return false;
-    return parent.children.some(c => c.id === route.id);
+    return parent.children.some(c => c.route.id === route.id);
   }
 
   selectedElement(): NavTreeElement|undefined {
     if (this.selectedElement === undefined) return undefined;
-    return this.elements.find(e => e.id === this.selectedElementId);
+    return this.elements.find(e => e.route.id === this.selectedElementId);
   }
 
   /**
    * Search among the elements (level 1) for the given id
    */
   elementWithId(id: Id): NavTreeElement|undefined {
-    return this.elements.find(i => i.id === id);
+    return this.elements.find(i => i.route.id === id);
   }
 
 }

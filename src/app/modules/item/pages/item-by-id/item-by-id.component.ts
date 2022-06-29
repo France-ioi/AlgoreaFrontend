@@ -20,6 +20,7 @@ import { isItemRouteError, itemRouteFromParams } from './item-route-validation';
 import { LayoutService } from 'src/app/shared/services/layout.service';
 import { readyData } from 'src/app/shared/operators/state';
 import { ensureDefined } from 'src/app/shared/helpers/assert';
+import { routeWithSelfAttempt } from 'src/app/shared/routing/item-route';
 
 const itemBreadcrumbCat = $localize`Items`;
 
@@ -81,7 +82,7 @@ export class ItemByIdComponent implements OnDestroy {
               currentPageIdx: state.data.breadcrumbs.length - 1,
             },
             title: state.data.item.string.title === null ? undefined : state.data.item.string.title,
-            route: state.data.route,
+            route: routeWithSelfAttempt(state.data.route, state.data.currentResult?.attemptId),
             details: {
               title: state.data.item.string.title,
               type: state.data.item.type,

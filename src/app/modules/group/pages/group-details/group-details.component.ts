@@ -4,6 +4,7 @@ import { withManagementAdditions } from '../../helpers/group-management';
 import { RouterLinkActive } from '@angular/router';
 import { mapStateData } from 'src/app/shared/operators/state';
 import { LayoutService } from '../../../../shared/services/layout.service';
+import { CurrentContentService } from 'src/app/shared/services/current-content.service';
 
 @Component({
   selector: 'alg-group-details',
@@ -28,9 +29,15 @@ export class GroupDetailsComponent {
   constructor(
     private groupDataSource: GroupDataSource,
     private layoutService: LayoutService,
+    private currentContentService: CurrentContentService,
   ) {}
+
+  refreshNav(): void {
+    this.currentContentService.forceNavMenuReload();
+  }
 
   onGroupRefreshRequired(): void {
     this.groupDataSource.refetchGroup();
+    this.refreshNav();
   }
 }

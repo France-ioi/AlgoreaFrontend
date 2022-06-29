@@ -1,10 +1,10 @@
-import { Observable, of, Subject } from 'rxjs';
+import { merge, Observable, of, Subject } from 'rxjs';
 import { delay, distinctUntilChanged, map, switchMap, mergeScan, shareReplay, startWith, scan } from 'rxjs/operators';
 import { isDefined } from 'src/app/shared/helpers/null-undefined-predicates';
-import { repeatLatestWhen } from 'src/app/shared/helpers/repeatLatestWhen';
 import { fetchingState, FetchState, readyState } from 'src/app/shared/helpers/state';
 import { ContentInfo, RoutedContentInfo } from 'src/app/shared/models/content/content-info';
 import { mapStateData, mapToFetchState } from 'src/app/shared/operators/state';
+import { ContentRoute } from 'src/app/shared/routing/content-route';
 import { CurrentContentService } from 'src/app/shared/services/current-content.service';
 import { NavTreeData, NavTreeElement } from '../../models/left-nav-loading/nav-tree-data';
 
@@ -21,6 +21,10 @@ export interface NavigationNeighbors {
 export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
 
   private reloadTrigger = new Subject<void>();
+  private reload$ = merge(
+    this.reloadTrigger,
+    this.currentContent.navMenuReload$,
+  );
 
   state$ = this.currentContent.content$.pipe(
 
@@ -31,16 +35,17 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
     map(content => (this.isOfContentType(content) ? content : undefined)), // map those which are not of interest to `undefined`
     distinctUntilChanged(), // remove multiple `undefined`
     startWith(undefined),
-    repeatLatestWhen(this.reloadTrigger),
+    // emits the content+reload:false immediately, emit content+reload:true when/if `reloadTrigger` emits
+    switchMap(content => this.reload$.pipe(map(() => ({ content, reload: true })), startWith({ content, reload: false }))),
 
     /**
      * PART 2 - ADDING CHILDREN
      * For each content, "attach his children" (if any).
      * Attaching the children is combining each content with the fetching of its children, which goes through a fetching state, emitted
      * immediately, and a ready/error state. Difficulties/constraints are that:
-     * - for each emitted (content, children state) pair by this "PART 2", the children state should correspond to the content at any
+     * - for each emitted (content, children state, reload) by this "PART 2", the children state should correspond to the content at any
      *   moment
-     * - these 2 successive children fetching states have to end up in 2 emissions of (content, children state) pairs, not more, not less
+     * - these 2 successive children fetching states have to end up in 2 emissions of (content, children state, reload), not more, not less
      * - the content may not have the required information to fetch its children initially, this information may come up with an update
      * - the content gets updated, so it is emitted several time with more data... when children fetching has been started, it has not to
      *   be cancelled by the next content update (as a classic `switchMap` would do)
@@ -66,32 +71,39 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
      * We have to make sure the behavior is correct when the children fetching response arrives after attempts, and the other way around
      */
 
-    // First, we generate a (content, observable-for-fetching-children) pair using a `scan` as we need to be able to reuse/share the
+    // First, we generate (content, observable-for-fetching-children, reload) using a `scan` as we need to be able to reuse/share the
     // observable from the previous emission (so without cancelling it).
-    scan((prev: { content: ContentT|undefined, childrenState$: Observable<FetchState<NavTreeElement[]> | undefined> }, content) => {
+    scan((
+      prev: { content: ContentT|undefined, childrenState$: Observable<FetchState<NavTreeElement[]> | undefined>, reload: boolean },
+      { content, reload }
+    ) => {
       // CASE a: there is no content selected, or it may not have children, or it miss data to fetch its children -> `undefined` state
-      if (!content || !this.canFetchChildren(content)) return { content, childrenState$: of(undefined) };
+      if (!content || !this.canFetchChildren(content)) return { content, childrenState$: of(undefined), reload };
 
-      // CASE b: the current content has children to be fetched while the previous one did not or was related to another content
-      //         -> create a new fetching for children
+      // CASE b: the current content has children to be fetched while the previous one did not or was related to another content,
+      //         or reload case -> create a new fetching for children
       //         (the `shareReplay(1)` is important as it allows a future emission to reuse this fetch state just keeping its latest value)
-      if (!prev.content || content.route.id !== prev.content.route.id || !this.canFetchChildren(prev.content))
-        return { content, childrenState$: this.fetchChildren(content).pipe(mapToFetchState(), shareReplay(1)) };
+      if (!prev.content || content.route.id !== prev.content.route.id || !this.canFetchChildren(prev.content) || reload)
+        return { content, childrenState$: this.fetchChildren(content.route).pipe(mapToFetchState(), shareReplay(1)), reload };
 
       // CASE c: the previous emission had already created a fetching state (possibly still fetching, or ready/error) that can be reuse here
-      return { content, childrenState$: prev.childrenState$ };
-    }, ({ content: undefined, childrenState$: of(undefined) })),
+      return { content, childrenState$: prev.childrenState$, reload };
+    }, ({ content: undefined, childrenState$: of(undefined), reload: false })),
     // Here we "play" the observable-for-fetching-children in a `switchMap` so that the next part can use the children state.
-    switchMap(({ content, childrenState$ }) => childrenState$.pipe(map(childrenState => ({ content, childrenState })))),
+    switchMap(({ content, childrenState$, reload }) => childrenState$.pipe(
+      // Build (content, children state, reload) based on fetching. Only send reload if the first state change
+      map((childrenState, idx) => ({ content, childrenState, reload: idx === 0 ? reload : false }))
+    )),
 
     /**
-     * PART 3 - Apply the current (content, children state) on the previous version of the nav tree
+     * PART 3 - Apply the current (content, children state, reload) on the previous version of the nav tree
      */
-    mergeScan((prevState: FetchState<NavTreeData>, { content, childrenState }) => {
+    mergeScan((prevState: FetchState<NavTreeData>, { content, childrenState, reload }) => {
       // CASE 1: the current-content does not match the type of this nav tree (so `content` has been mapped to `undefined`)
       if (!content) {
         // CASE 1A: the menu has already an element displayed -> just deselect what is selected if there was a selection
-        if (prevState.isReady) return of(readyState(prevState.data.withNoSelection()));
+        //          (or reload the same if reloading)
+        if (prevState.isReady) return reload ? this.refetchNav(prevState.data) : of(readyState(prevState.data.withNoSelection()));
         // CASE 1B: the menu has nothing displayed yet -> load item root
         else return this.fetchDefaultNav();
 
@@ -99,16 +111,8 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
       // CASE 2: the content type matches the type of this nav tree
         const route = content.route;
 
-        if (prevState.isReady && prevState.data.hasElement(route)) {
-          // CASE 2A : the content is among the displayed elements -> either select it if at root or shift the tree "to the left" otherwise
-          const prevData = prevState.data;
-          let data = prevData.hasLevel1Element(route) ? prevData.withSelection(route.id) : prevData.subNavMenuData(route);
-          if (childrenState?.isReady) data = data.withChildren(route, childrenState.data);
-          data = data.withUpdatedElement(route, el => this.addDetailsToTreeElement(el, content));
-          return of(readyState(data));
-
-          // CASE 2B: the content is not among the displayed elements -> fetch all nav
-        } else {
+        // CASE 2A: reload or the content is not among the displayed elements -> fetch all nav
+        if (reload || !prevState.isReady || !prevState.data.hasElement(route)) {
           return this.fetchNewNav(content).pipe(
             mapStateData(data => {
               if (childrenState?.isReady) data = data.withChildren(route, childrenState.data);
@@ -116,7 +120,16 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
               return data;
             })
           );
+
+        // CASE 2B : the content is among the displayed elements -> either select it if at root or shift the tree "to the left" otherwise
+        } else {
+          const prevData = prevState.data;
+          let data = prevData.hasLevel1Element(route) ? prevData.withSelection(route.id) : prevData.subNavMenuData(route);
+          if (childrenState?.isReady) data = data.withChildren(route, childrenState.data);
+          data = data.withUpdatedElement(route, el => this.addDetailsToTreeElement(el, content));
+          return of(readyState(data));
         }
+
       }
     }, fetchingState<NavTreeData>() /* mergeScan seed */, 1 /* concurrency = 1 so that we can always use the last state*/),
 
@@ -135,7 +148,7 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
   navigationNeighbors$: Observable<FetchState<NavigationNeighbors|undefined>> = this.state$.pipe(
     mapStateData(navData => {
       if (!navData.selectedElementId) return undefined;
-      const idx = navData.elements.findIndex(e => e.id === navData.selectedElementId);
+      const idx = navData.elements.findIndex(e => e.route.id === navData.selectedElementId);
       if (idx < 0) return undefined;
 
       const parent = navData.parent;
@@ -144,11 +157,11 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
       const next = navData.elements[idx+1];
 
       return {
-        parent: parent && parent.id !== this.navigationNeighborsRestrictedToDescendantOfElementId
-          ? { navigateTo: (): void => parent.navigateTo(navData.pathToElements.slice(0,-1)) }
+        parent: parent && parent.route.id !== this.navigationNeighborsRestrictedToDescendantOfElementId
+          ? { navigateTo: (): void => parent.navigateTo() }
           : null,
-        previous: prev ? { navigateTo: (): void => prev.navigateTo(navData.pathToElements) } : null,
-        next: next ? { navigateTo: (): void => next.navigateTo(navData.pathToElements) } : null,
+        previous: prev ? { navigateTo: (): void => prev.navigateTo() } : null,
+        next: next ? { navigateTo: (): void => next.navigateTo() } : null,
       };
     }),
   );
@@ -170,6 +183,7 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
   protected abstract addDetailsToTreeElement(treeElement: NavTreeElement, contentInfo: ContentT): NavTreeElement;
   protected abstract fetchRootTreeData(): Observable<NavTreeElement[]>;
   protected abstract fetchNavDataFromChild(id: string, child: ContentT): Observable<{ parent: NavTreeElement, elements: NavTreeElement[] }>;
+  protected abstract contentInfoFromNavTreeParent(e: NavTreeElement): ContentInfo;
 
   /**
    * Returns whether the given content may have children which can be fetched.
@@ -177,11 +191,11 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
    */
    protected abstract canFetchChildren(content: ContentInfo): boolean;
 
-  /**
-   * Emits children of the given content
-   * Must be called after ensuring that `canFetchChildren` return `true`.
-   */
-  protected abstract fetchChildren(content: ContentInfo): Observable<NavTreeElement[]>;
+  protected abstract fetchNavData(route: ContentRoute): Observable<{ parent: NavTreeElement, elements: NavTreeElement[] }>;
+
+  private fetchChildren(route: ContentRoute): Observable<NavTreeElement[]> {
+    return this.fetchNavData(route).pipe(map(navData => navData.elements));
+  }
 
   private fetchDefaultNav(): Observable<FetchState<NavTreeData>> {
     return this.fetchRootTreeData().pipe(
@@ -204,6 +218,19 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
         mapToFetchState(),
       );
     }
+  }
+
+  /**
+   * Refetch the same content as previous navigation data with no selection
+   */
+  private refetchNav(prevNav: NavTreeData): Observable<FetchState<NavTreeData>> {
+    // if no parent, we were at the root, reload the root
+    if (!prevNav.parent) return this.fetchDefaultNav();
+    // as the nav was previously loaded with a parent, we are sure it has children
+    return this.fetchNavData(prevNav.parent.route).pipe(
+      map(data => new NavTreeData(data.elements, prevNav.pathToElements, undefined, data.parent)),
+      mapToFetchState(),
+    );
   }
 
 }
