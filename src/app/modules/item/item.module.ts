@@ -41,6 +41,7 @@ import { AnswerAuthorIndicatorComponent } from './components/answer-author-indic
 import { ItemPermissionsComponent } from './components/item-permissions/item-permissions.component';
 import { TaskLoaderComponent } from './components/task-loader/task-loader.component';
 import { ThreadComponent } from './components/thread/thread.component';
+import { ItemDependenciesComponent } from './components/item-dependencies/item-dependencies.component';
 
 @NgModule({
   declarations: [
@@ -74,6 +75,7 @@ import { ThreadComponent } from './components/thread/thread.component';
     ItemPermissionsComponent,
     TaskLoaderComponent,
     ThreadComponent,
+    ItemDependenciesComponent,
   ],
   imports: [
     CommonModule,
