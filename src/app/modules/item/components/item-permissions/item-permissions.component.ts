@@ -9,6 +9,7 @@ import { Permissions } from '../../../../shared/helpers/group-permissions';
 import { GroupPermissionsService } from '../../../../shared/http-services/group-permissions.service';
 import { ActionFeedbackService } from '../../../../shared/services/action-feedback.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { canGivePermissions } from '../../helpers/item-permissions';
 
 @Component({
   selector: 'alg-item-permissions',
@@ -24,6 +25,7 @@ export class ItemPermissionsComponent implements OnChanges {
   canViewValues: ProgressSelectValue<string>[] = generateCanViewValues('Groups');
   isPermissionsDialogOpened = false;
   watchedGroupPermissions?: Permissions;
+  lockEdit?: 'content' | 'group' | 'contentGroup';
 
   constructor(private groupPermissionsService: GroupPermissionsService, private actionFeedbackService: ActionFeedbackService) {
   }
@@ -33,6 +35,14 @@ export class ItemPermissionsComponent implements OnChanges {
       ...this.itemData.item.watchedGroup.permissions,
       canMakeSessionOfficial: false,
     } : undefined;
+
+    const currentUserCanGrantGroupAccess = this.watchedGroup?.currentUserCanGrantGroupAccess;
+    const currentUserCanGivePermissions = this.watchedGroupPermissions && canGivePermissions(this.watchedGroupPermissions);
+
+    this.lockEdit = currentUserCanGrantGroupAccess && !currentUserCanGivePermissions ? 'content' :
+      !currentUserCanGrantGroupAccess && currentUserCanGivePermissions ? 'group' :
+        !currentUserCanGrantGroupAccess && !currentUserCanGivePermissions ? 'contentGroup' : undefined;
+
   }
 
   openPermissionsDialog(): void {

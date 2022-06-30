@@ -81,16 +81,27 @@
           Note that some subgroups or users of the groups may have higher permissions.
         </div>
 
-        <ng-container *ngIf="watchedGroup.currentUserCanGrantGroupAccess && itemData?.item?.permissions && itemData.item.permissions.canGrantView !== 'none'">
+        <ng-container *ngIf="itemData?.item?.permissions">
           <div class="give-access-button">
-            <button
-                pButton
-                type="button"
-                class="alg-button p-button-rounded-full p-button-warning"
-                label="Edit permissions"
-                icon="fa fa-lock"
-                (click)="openPermissionsDialog()"
-            ></button>
+            <span
+              [pTooltip]="lockEdit | i18nSelect : {
+                content: 'You are not allowed to give permissions on this content',
+                group: 'You are not allowed to give permissions to this group',
+                contentGroup: 'You are not allowed to give permissions on this content and to this group'
+              }"
+              tooltipPosition="bottom"
+              tooltipStyleClass="permissions-dialog"
+              [tooltipDisabled]="!lockEdit"
+            >
+             <button
+               pButton
+               type="button"
+               class="alg-button p-button-rounded-full p-button-warning"
+               i18n-label label="Edit permissions"
+               [disabled]="lockEdit"
+               (click)="openPermissionsDialog()"
+             ></button>
+            </span>
           </div>
 
           <alg-permissions-edit-dialog

@@ -1,4 +1,5 @@
 import * as D from 'io-ts/Decoder';
+import { Permissions } from '../../../shared/helpers/group-permissions';
 
 export const canViewValues = [ 'none', 'info', 'content', 'content_with_descendants', 'solution' ] as const;
 export const canWatchValues = [ 'none','result','answer','answer_with_grant' ] as const;
@@ -25,4 +26,10 @@ export function canCurrentUserViewItemContent(item: ItemPermissionsInfo): boolea
 
 export function canCurrentUserViewItem (item: ItemPermissionsInfo): boolean {
   return item.permissions.canView !== 'none';
+}
+
+export function canGivePermissions(watchedGroupPermissions: Permissions): boolean {
+  return watchedGroupPermissions.canGrantView !== 'none' ||
+    watchedGroupPermissions.canWatch === 'answer_with_grant' ||
+    watchedGroupPermissions.canEdit === 'all_with_grant';
 }
