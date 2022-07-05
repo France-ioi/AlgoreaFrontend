@@ -17,9 +17,10 @@ export class SuggestionOfActivitiesComponent implements OnDestroy {
     filter(isNotNull),
     switchMap(watchedGroup =>
       this.itemNavigationService.getRootActivities(watchedGroup.route.id).pipe(
-        map(rootActivity =>
-          rootActivity.sort(item => (item.groupId === watchedGroup.route.id ? -1 : 1)).slice(0, 4)
-        ),
+        map(rootActivities => [
+          ...rootActivities.filter(act => act.groupId === watchedGroup.route.id),
+          ...rootActivities.filter(act => act.groupId !== watchedGroup.route.id),
+        ].slice(0, 4))
       )
     ),
     mapToFetchState({ resetter: this.refresh$ }),
