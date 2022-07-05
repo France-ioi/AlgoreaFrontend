@@ -16,7 +16,7 @@ const noWatchingValue = 'none'; // value of `watchedGroupQueryParam` which means
 export interface WatchedGroup {
   route: RawGroupRoute,
   name: string,
-  currentUserCanGrantGroupAccess?: boolean,
+  currentUserCanGrantAccess: boolean,
 }
 
 @Injectable({
@@ -66,7 +66,11 @@ export class GroupWatchingService implements OnDestroy {
   }
 
   startUserWatching(user: User): void {
-    this.cachedGroupInfo.next({ route: rawGroupRoute(user), name: formatUser(user) });
+    this.cachedGroupInfo.next({
+      route: rawGroupRoute(user),
+      name: formatUser(user),
+      currentUserCanGrantAccess: user.currentUserCanGrantUserAccess || false,
+    });
     this.setWatchedGroupInUrlParams({ groupId: user.groupId, isUser: true });
   }
 
@@ -74,7 +78,7 @@ export class GroupWatchingService implements OnDestroy {
     this.cachedGroupInfo.next({
       route: rawGroupRoute(group),
       name: group.name,
-      currentUserCanGrantGroupAccess: group.currentUserCanGrantGroupAccess
+      currentUserCanGrantAccess: group.currentUserCanGrantGroupAccess || false,
     });
     this.setWatchedGroupInUrlParams({ groupId: group.id, isUser: false });
   }
@@ -98,6 +102,7 @@ export class GroupWatchingService implements OnDestroy {
       map(user => ({
         route: rawGroupRoute(user),
         name: user.login,
+        currentUserCanGrantAccess: user.currentUserCanGrantUserAccess || false,
       }))
     );
   }
@@ -107,6 +112,7 @@ export class GroupWatchingService implements OnDestroy {
       map(g => ({
         route: rawGroupRoute(g),
         name: g.name,
+        currentUserCanGrantAccess: g.currentUserCanGrantGroupAccess || false,
       }))
     );
   }
