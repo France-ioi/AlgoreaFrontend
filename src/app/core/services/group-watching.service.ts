@@ -1,7 +1,8 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { BehaviorSubject, Observable, of } from 'rxjs';
-import { distinctUntilChanged, filter, map, shareReplay, startWith, switchMap, withLatestFrom } from 'rxjs/operators';
+import { catchError, distinctUntilChanged, filter, map, shareReplay, startWith, switchMap, withLatestFrom } from 'rxjs/operators';
 import { GetGroupByIdService, Group } from 'src/app/modules/group/http-services/get-group-by-id.service';
 import { GetUserService, User } from 'src/app/modules/group/http-services/get-user.service';
 import { isNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
@@ -41,15 +42,25 @@ export class GroupWatchingService implements OnDestroy {
     distinctUntilChanged((prev,cur) => prev?.groupId === cur?.groupId && prev?.isUser === cur?.isUser),
   );
 
-  watchedGroup$ = this.watchedGroupParams.pipe(
+  private watchedGroupOrError$ = this.watchedGroupParams.pipe(
     withLatestFrom(this.cachedGroupInfo),
     switchMap(([ watchedGroupParams, cachedGroup ]) => {
       if (watchedGroupParams === null) return of(null);
       if (cachedGroup && watchedGroupParams.groupId === cachedGroup.route.id) return of(cachedGroup);
       return watchedGroupParams.isUser ? this.fetchUser(watchedGroupParams.groupId) : this.fetchGroup(watchedGroupParams.groupId);
     }),
+    catchError(err => {
+      // if the user/group does not exist, we consider we cannot watch it and thus exit watch mode.
+      if (err instanceof HttpErrorResponse) return of(err);
+      else throw err; // if it's a JS error, let it bubble, our error monitoring tool will catch it.
+    }),
     shareReplay(1),
   );
+  watchedGroup$ = this.watchedGroupOrError$
+    .pipe(map((result): WatchedGroup | null => (result instanceof HttpErrorResponse ? null : result)));
+  watchedGroupError$ = this.watchedGroupOrError$
+    .pipe(filter((result): result is HttpErrorResponse => result instanceof HttpErrorResponse));
+
   isWatching$ = this.watchedGroup$.pipe(
     map(g => g !== null)
   );
