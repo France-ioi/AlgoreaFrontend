@@ -68,6 +68,7 @@ import { PathSuggestionComponent } from './components/path-suggestion/path-sugge
 import { AllowsViewingItemContentPipe, AllowsViewingItemInfoPipe } from 'src/app/shared/models/domain/item-view-permission';
 import { AllowsGrantingContentViewItemPipe, AllowsGrantingViewItemPipe } from 'src/app/shared/models/domain/item-grant-view-permission';
 import { AllowsEditingAllItemPipe, AllowsEditingChildrenItemPipe } from 'src/app/shared/models/domain/item-edit-permission';
+import { AllowsWatchingItemResultsPipe } from 'src/app/shared/models/domain/item-watch-permission';
 
 @NgModule({
   declarations: [
@@ -116,6 +117,7 @@ import { AllowsEditingAllItemPipe, AllowsEditingChildrenItemPipe } from 'src/app
     AllowsGrantingContentViewItemPipe,
     AllowsEditingAllItemPipe,
     AllowsEditingChildrenItemPipe,
+    AllowsWatchingItemResultsPipe,
   ],
   imports: [
     CommonModule,
@@ -194,6 +196,7 @@ import { AllowsEditingAllItemPipe, AllowsEditingChildrenItemPipe } from 'src/app
     AllowsGrantingContentViewItemPipe,
     AllowsEditingAllItemPipe,
     AllowsEditingChildrenItemPipe,
+    AllowsWatchingItemResultsPipe,
   ],
   providers: [],
 })

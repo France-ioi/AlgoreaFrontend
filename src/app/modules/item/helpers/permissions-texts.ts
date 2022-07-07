@@ -35,6 +35,12 @@ import {
   ITEMEDITPERM_CHILDREN,
   ITEMEDITPERM_NONE
 } from 'src/app/shared/models/domain/item-edit-permission';
+import {
+  ITEMWATCHPERM_NONE,
+  ITEMWATCHPERM_RESULT,
+  ITEMWATCHPERM_ANSWER,
+  ITEMWATCHPERM_ANSWER_WITH_GRANT
+} from 'src/app/shared/models/domain/item-watch-permission';
 
 export interface PermissionsDialogData {
   canViewValues: ProgressSelectValue<string>[],
@@ -135,23 +141,23 @@ function generateCanWatchValues(
 
   return [
     {
-      value: 'none',
+      value: ITEMWATCHPERM_NONE,
       label: permissionsInfoString.canWatch.none,
       comment: $localize`${targetTypeString} can\'t watch the activity of others on this item`
     },
     {
-      value: 'result',
+      value: ITEMWATCHPERM_RESULT,
       label: permissionsInfoString.canWatch.result,
       comment:
         $localize`${targetTypeString} can view information about submissions and scores of others on this item, but not their answers`,
     },
     {
-      value: 'answer',
+      value: ITEMWATCHPERM_ANSWER,
       label: permissionsInfoString.canWatch.answer,
       comment: $localize`${targetTypeString} can also look at other people\'s answers on this item`,
     },
     {
-      value: 'answer_with_grant',
+      value: ITEMWATCHPERM_ANSWER_WITH_GRANT,
       label: permissionsInfoString.canWatch.answer_with_grant,
       comment: $localize`${targetTypeString} can also grant \'Can watch\' access to others`,
     }

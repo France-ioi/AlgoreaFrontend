@@ -5,6 +5,7 @@ import { GroupPermissions } from 'src/app/shared/http-services/group-permissions
 import { ITEMEDITPERM_NONE } from 'src/app/shared/models/domain/item-edit-permission';
 import { ITEMGRANTVIEWPERM_NONE } from 'src/app/shared/models/domain/item-grant-view-permission';
 import { ITEMVIEWPERM_NONE } from 'src/app/shared/models/domain/item-view-permission';
+import { ITEMWATCHPERM_NONE } from 'src/app/shared/models/domain/item-watch-permission';
 import { PermissionsInfo } from '../../helpers/item-permissions';
 import { permissionsConstraintsValidator } from '../../helpers/permissions-constraints-validator';
 import { PermissionsDialogData, generateValues } from '../../helpers/permissions-texts';
@@ -37,7 +38,7 @@ export class PermissionsEditDialogComponent implements OnChanges, OnDestroy {
   form = this.fb.group({
     canView: [ ITEMVIEWPERM_NONE ],
     canGrantView: [ ITEMGRANTVIEWPERM_NONE ],
-    canWatch: [ 'none' ],
+    canWatch: [ ITEMWATCHPERM_NONE ],
     canEdit: [ ITEMEDITPERM_NONE ],
     canMakeSessionOfficial: [ false ],
     isOwner: [ true ],

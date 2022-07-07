@@ -15,6 +15,7 @@ import {
   ITEMVIEWPERM_INFO,
   ITEMVIEWPERM_SOLUTION,
   itemViewPermValues } from 'src/app/shared/models/domain/item-view-permission';
+import { ITEMWATCHPERM_ANSWER_WITH_GRANT, ITEMWATCHPERM_NONE } from 'src/app/shared/models/domain/item-watch-permission';
 import { PermissionsInfo } from './item-permissions';
 
 /**
@@ -114,7 +115,7 @@ export function validateCanWatch(
   giverPermissions: Pick<PermissionsInfo, 'canWatch' | 'isOwner'>
 ): ConstraintError[] {
 
-  if (receiverPermissions.canWatch === 'none') return [];
+  if (receiverPermissions.canWatch === ITEMWATCHPERM_NONE) return [];
 
   const errors: ConstraintError[] = [];
 
@@ -123,15 +124,15 @@ export function validateCanWatch(
     errors.push(genError('canView')(ITEMVIEWPERM_CONTENT, 'receiver', 'atLeast'));
   }
 
-  if (receiverPermissions.canWatch === 'answer_with_grant') {
+  if (receiverPermissions.canWatch === ITEMWATCHPERM_ANSWER_WITH_GRANT) {
     if (!giverPermissions.isOwner) {
       errors.push(genError('isOwner')(true, 'giver'));
     }
   } else {
 
     // if receiverPermissions.canWatch is 'result' or 'answer'
-    if (giverPermissions.canWatch !== 'answer_with_grant') {
-      errors.push(genError('canWatch')('answer_with_grant', 'giver'));
+    if (giverPermissions.canWatch !== ITEMWATCHPERM_ANSWER_WITH_GRANT) {
+      errors.push(genError('canWatch')(ITEMWATCHPERM_ANSWER_WITH_GRANT, 'giver'));
     }
   }
 

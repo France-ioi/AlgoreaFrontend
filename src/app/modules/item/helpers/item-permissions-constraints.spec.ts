@@ -1,7 +1,7 @@
 import { itemGrantViewPermValues } from 'src/app/shared/models/domain/item-grant-view-permission';
 import { itemViewPermValues } from 'src/app/shared/models/domain/item-view-permission';
 import { itemEditPermValues } from 'src/app/shared/models/domain/item-edit-permission';
-import { canWatchValues } from './item-permissions';
+import { itemWatchPermValues } from 'src/app/shared/models/domain/item-watch-permission';
 import {
   validateCanEdit,
   validateCanGrantView,
@@ -360,7 +360,7 @@ describe('"can_watch" permissions constraints', () => {
         canView: itemViewPermValues,
       }),
       giverPermissions: combinations({
-        canWatch: canWatchValues,
+        canWatch: itemWatchPermValues,
         isOwner: [ true, false ] as const,
       }),
     })) {
@@ -394,7 +394,7 @@ describe('"can_watch" permissions constraints', () => {
           canView: [ 'none', 'info' ] as const,
         }),
         giverPermissions: combinations({
-          canWatch: canWatchValues,
+          canWatch: itemWatchPermValues,
           isOwner: [ true, false ] as const,
         }),
       })) {
@@ -424,7 +424,7 @@ describe('"can_watch" permissions constraints', () => {
         canView: [ 'content', 'content_with_descendants', 'solution' ] as const,
       }),
       giverPermissions: combinations({
-        canWatch: canWatchValues,
+        canWatch: itemWatchPermValues,
         isOwner: [ true ] as const,
       }),
     })) {
@@ -438,7 +438,7 @@ describe('"can_watch" permissions constraints', () => {
         canView: [ 'none', 'info' ] as const,
       }),
       giverPermissions: combinations({
-        canWatch: canWatchValues,
+        canWatch: itemWatchPermValues,
         isOwner: [ true, false ] as const,
       }),
     })) {
@@ -452,7 +452,7 @@ describe('"can_watch" permissions constraints', () => {
         canView: itemViewPermValues,
       }),
       giverPermissions: combinations({
-        canWatch: canWatchValues,
+        canWatch: itemWatchPermValues,
         isOwner: [ false ] as const,
       }),
     })) {
