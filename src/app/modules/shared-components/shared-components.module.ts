@@ -66,6 +66,7 @@ import { FullHeightContentDirective } from '../../shared/directives/full-height-
 import { SectionHeaderComponent } from './components/section-header/section-header.component';
 import { PathSuggestionComponent } from './components/path-suggestion/path-suggestion.component';
 import { AllowsViewingItemContentPipe, AllowsViewingItemInfoPipe } from 'src/app/shared/models/domain/item-view-permission';
+import { AllowsGrantingContentViewItemPipe, AllowsGrantingViewItemPipe } from 'src/app/shared/models/domain/item-grant-view-permission';
 
 @NgModule({
   declarations: [
@@ -110,6 +111,8 @@ import { AllowsViewingItemContentPipe, AllowsViewingItemInfoPipe } from 'src/app
     PathSuggestionComponent,
     AllowsViewingItemContentPipe,
     AllowsViewingItemInfoPipe,
+    AllowsGrantingViewItemPipe,
+    AllowsGrantingContentViewItemPipe,
   ],
   imports: [
     CommonModule,
@@ -184,6 +187,8 @@ import { AllowsViewingItemContentPipe, AllowsViewingItemInfoPipe } from 'src/app
     PathSuggestionComponent,
     AllowsViewingItemContentPipe,
     AllowsViewingItemInfoPipe,
+    AllowsGrantingViewItemPipe,
+    AllowsGrantingContentViewItemPipe,
   ],
   providers: [],
 })

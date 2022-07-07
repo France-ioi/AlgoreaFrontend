@@ -1,5 +1,6 @@
+import { itemGrantViewPermValues } from 'src/app/shared/models/domain/item-grant-view-permission';
 import { itemViewPermValues } from 'src/app/shared/models/domain/item-view-permission';
-import { canEditValues, canGrantViewValues, canWatchValues } from './item-permissions';
+import { canEditValues, canWatchValues } from './item-permissions';
 import {
   validateCanEdit,
   validateCanGrantView,
@@ -43,7 +44,7 @@ function combinations<T extends object>(object: { [e in keyof T]: readonly T[e][
 describe('"can_view" permissions constraints', () => {
 
   it('should be a able to set to "none" ', () => {
-    for (const giverPermissions of combinations({ canGrantView: canGrantViewValues })) {
+    for (const giverPermissions of combinations({ canGrantView: itemGrantViewPermValues })) {
       expect(validateCanView({ canView: 'none' }, giverPermissions)).toEqual([]);
     }
   });
@@ -115,7 +116,7 @@ describe('"can_grant_view" permissions constraints', () => {
         canView: itemViewPermValues,
       }),
       giverPermissions: combinations({
-        canGrantView: canGrantViewValues,
+        canGrantView: itemGrantViewPermValues,
         isOwner: [ true, false ] as const,
       }),
     })) {
@@ -146,7 +147,7 @@ describe('"can_grant_view" permissions constraints', () => {
         canView: [ 'none' ] as const,
       }),
       giverPermissions: combinations({
-        canGrantView: canGrantViewValues,
+        canGrantView: itemGrantViewPermValues,
         isOwner: [ true, false ] as const,
       }),
     })) {
@@ -191,7 +192,7 @@ describe('"can_grant_view" permissions constraints', () => {
         canView: [ 'none', 'info' ] as const,
       }),
       giverPermissions: combinations({
-        canGrantView: canGrantViewValues,
+        canGrantView: itemGrantViewPermValues,
         isOwner: [ true, false ] as const,
       }),
     })) {
@@ -236,7 +237,7 @@ describe('"can_grant_view" permissions constraints', () => {
         canView: [ 'none', 'info', 'content' ] as const,
       }),
       giverPermissions: combinations({
-        canGrantView: canGrantViewValues,
+        canGrantView: itemGrantViewPermValues,
         isOwner: [ true, false ] as const,
       }),
     })) {
@@ -281,7 +282,7 @@ describe('"can_grant_view" permissions constraints', () => {
         canView: [ 'none', 'info', 'content', 'content_with_descendants' ] as const,
       }),
       giverPermissions: combinations({
-        canGrantView: canGrantViewValues,
+        canGrantView: itemGrantViewPermValues,
         isOwner: [ true, false ] as const,
       }),
     })) {
@@ -312,7 +313,7 @@ describe('"can_grant_view" permissions constraints', () => {
         canView: [ 'solution' ] as const,
       }),
       giverPermissions: combinations({
-        canGrantView: canGrantViewValues,
+        canGrantView: itemGrantViewPermValues,
         isOwner: [ true ] as const,
       }),
     })) {
@@ -326,7 +327,7 @@ describe('"can_grant_view" permissions constraints', () => {
         canView: [ 'none', 'info', 'content', 'content_with_descendants' ] as const,
       }),
       giverPermissions: combinations({
-        canGrantView: canGrantViewValues,
+        canGrantView: itemGrantViewPermValues,
         isOwner: [ true, false ] as const,
       }),
     })) {
@@ -340,7 +341,7 @@ describe('"can_grant_view" permissions constraints', () => {
         canView: itemViewPermValues,
       }),
       giverPermissions: combinations({
-        canGrantView: canGrantViewValues,
+        canGrantView: itemGrantViewPermValues,
         isOwner: [ false ] as const,
       }),
     })) {

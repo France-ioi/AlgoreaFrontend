@@ -13,6 +13,7 @@ import { OverlayPanel } from 'primeng/overlaypanel';
 import { mapToFetchState, readyData } from '../../../../shared/operators/state';
 import { FetchState } from '../../../../shared/helpers/state';
 import { ITEMVIEWPERM_MAX } from 'src/app/shared/models/domain/item-view-permission';
+import { allowsGrantingView, ITEMGRANTVIEWPERM_MAX } from 'src/app/shared/models/domain/item-grant-view-permission';
 
 interface BaseChildData {
   contentViewPropagation?: 'none' | 'as_info' | 'as_content',
@@ -150,7 +151,7 @@ export class ItemChildrenEditComponent implements OnInit, OnDestroy, OnChanges {
       canView: ITEMVIEWPERM_MAX,
       canWatch: 'answer_with_grant',
       canEdit: 'all_with_grant',
-      canGrantView: 'solution_with_grant',
+      canGrantView: ITEMGRANTVIEWPERM_MAX,
       isOwner: true,
     };
 
@@ -158,7 +159,7 @@ export class ItemChildrenEditComponent implements OnInit, OnDestroy, OnChanges {
       ...child,
       scoreWeight: DEFAULT_SCORE_WEIGHT,
       isVisible: true,
-      contentViewPropagation: (child.permissions ?? permissionsForCreatedItem).canGrantView === 'none' ? 'none' : 'as_info',
+      contentViewPropagation: !allowsGrantingView(child.permissions ?? permissionsForCreatedItem) ? 'none' : 'as_info',
       permissions: child.permissions ?? permissionsForCreatedItem,
     });
     this.onChildrenListUpdate();

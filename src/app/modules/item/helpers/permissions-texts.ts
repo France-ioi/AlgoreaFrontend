@@ -21,6 +21,14 @@ import {
   ITEMVIEWPERM_NONE,
   ITEMVIEWPERM_SOLUTION
 } from 'src/app/shared/models/domain/item-view-permission';
+import {
+  ITEMGRANTVIEWPERM_CONTENT,
+  ITEMGRANTVIEWPERM_CONTENT_WITH_DESCENDANTS,
+  ITEMGRANTVIEWPERM_ENTER,
+  ITEMGRANTVIEWPERM_NONE,
+  ITEMGRANTVIEWPERM_SOLUTION,
+  ITEMGRANTVIEWPERM_SOLUTION_WITH_GRANT
+} from 'src/app/shared/models/domain/item-grant-view-permission';
 
 export interface PermissionsDialogData {
   canViewValues: ProgressSelectValue<string>[],
@@ -82,32 +90,32 @@ function generateCanGrantViewValues(
 
   return [
     {
-      value: 'none',
+      value: ITEMGRANTVIEWPERM_NONE,
       label: permissionsInfoString.canGrantView.none,
       comment: $localize`${targetTypeString} can\'t grant any access to this item`
     },
     {
-      value: 'enter',
+      value: ITEMGRANTVIEWPERM_ENTER,
       label: permissionsInfoString.canGrantView.enter,
       comment: $localize`${targetTypeString} can grant \'Can view: info\' and  \'Can enter\' access`,
     },
     {
-      value: 'content',
+      value: ITEMGRANTVIEWPERM_CONTENT,
       label: permissionsInfoString.canGrantView.content,
       comment: $localize`${targetTypeString} can also grant \'Can view: content\' access`,
     },
     {
-      value: 'content_with_descendants',
+      value: ITEMGRANTVIEWPERM_CONTENT_WITH_DESCENDANTS,
       label: permissionsInfoString.canGrantView.content_with_descendants,
       comment: $localize`${targetTypeString} can also grant \'Can view: content and descendants\' access`,
     },
     {
-      value: 'solution',
+      value: ITEMGRANTVIEWPERM_SOLUTION,
       label: permissionsInfoString.canGrantView.solution,
       comment: $localize`${targetTypeString} can also grant \'Can view: solution\' access`,
     },
     {
-      value: 'solution_with_grant',
+      value: ITEMGRANTVIEWPERM_SOLUTION_WITH_GRANT,
       label: permissionsInfoString.canGrantView.solution_with_grant,
       comment: $localize`${targetTypeString} can also grant \'Can grant view\' access`,
     }

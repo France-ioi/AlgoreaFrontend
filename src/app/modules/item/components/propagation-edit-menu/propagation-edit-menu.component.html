@@ -14,7 +14,7 @@
       class="menu-item active cursor-pointer"
       [ngClass]="{'active': childData?.contentViewPropagation === 'as_info'}"
       (click)="onClick('as_info')"
-      *ngIf="childData?.permissions?.canGrantView !== 'none' || [ 'as_info', 'as_content' ].includes(childData?.contentViewPropagation || '')"
+      *ngIf="(childData?.permissions && (childData!.permissions! | allowsGrantingView)) || [ 'as_info', 'as_content' ].includes(childData?.contentViewPropagation || '')"
   >
     <div class="menu-item-title" i18n>Locked</div>
     <div class="menu-item-icon">
@@ -25,7 +25,7 @@
       class="menu-item cursor-pointer"
       [ngClass]="{'active': childData?.contentViewPropagation === 'as_content'}"
       (click)="onClick('as_content')"
-      *ngIf="['content', 'content_with_descendants', 'solution', 'solution_with_grant'].includes(childData?.permissions?.canGrantView || '') || childData?.contentViewPropagation === 'as_content'"
+      *ngIf="(childData?.permissions && (childData!.permissions! | allowsGrantingContentView)) || childData?.contentViewPropagation === 'as_content'"
   >
     <div class="menu-item-title" i18n>Open</div>
     <div class="menu-item-icon">

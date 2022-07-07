@@ -1,11 +1,20 @@
 import { GroupPermissions } from 'src/app/shared/http-services/group-permissions.service';
 import {
+  itemGrantViewPermValues,
+  ITEMGRANTVIEWPERM_CONTENT,
+  ITEMGRANTVIEWPERM_CONTENT_WITH_DESCENDANTS,
+  ITEMGRANTVIEWPERM_ENTER,
+  ITEMGRANTVIEWPERM_NONE,
+  ITEMGRANTVIEWPERM_SOLUTION,
+  ITEMGRANTVIEWPERM_SOLUTION_WITH_GRANT
+} from 'src/app/shared/models/domain/item-grant-view-permission';
+import {
   ITEMVIEWPERM_CONTENT,
   ITEMVIEWPERM_CONTENT_WITH_DESCENDANTS,
   ITEMVIEWPERM_INFO,
   ITEMVIEWPERM_SOLUTION,
   itemViewPermValues } from 'src/app/shared/models/domain/item-view-permission';
-import { PermissionsInfo, canGrantViewValues } from './item-permissions';
+import { PermissionsInfo } from './item-permissions';
 
 /**
  * The permissions that are subject to a constraint
@@ -39,19 +48,20 @@ export function validateCanView(
   giverPermissions: Pick<PermissionsInfo, 'canGrantView'>
 ): ConstraintError[] {
 
-  const giverCanAtLeastGrantView = hasAtLeastPermission(canGrantViewValues, giverPermissions.canGrantView);
+  const giverCanAtLeastGrantView = hasAtLeastPermission(itemGrantViewPermValues, giverPermissions.canGrantView);
 
-  if (receiverPermissions.canView === ITEMVIEWPERM_INFO && !giverCanAtLeastGrantView('enter')) {
-    return [ genError('canGrantView')('enter', 'giver', 'atLeast') ];
+  if (receiverPermissions.canView === ITEMVIEWPERM_INFO && !giverCanAtLeastGrantView(ITEMGRANTVIEWPERM_ENTER)) {
+    return [ genError('canGrantView')(ITEMGRANTVIEWPERM_ENTER, 'giver', 'atLeast') ];
   }
-  if (receiverPermissions.canView === ITEMVIEWPERM_CONTENT && !giverCanAtLeastGrantView('content')) {
-    return [ genError('canGrantView')('content', 'giver', 'atLeast') ];
+  if (receiverPermissions.canView === ITEMVIEWPERM_CONTENT && !giverCanAtLeastGrantView(ITEMGRANTVIEWPERM_CONTENT)) {
+    return [ genError('canGrantView')(ITEMGRANTVIEWPERM_CONTENT, 'giver', 'atLeast') ];
   }
-  if (receiverPermissions.canView === ITEMVIEWPERM_CONTENT_WITH_DESCENDANTS && !giverCanAtLeastGrantView('content_with_descendants')) {
-    return [ genError('canGrantView')('content_with_descendants', 'giver', 'atLeast') ];
+  if (receiverPermissions.canView === ITEMVIEWPERM_CONTENT_WITH_DESCENDANTS &&
+    !giverCanAtLeastGrantView(ITEMGRANTVIEWPERM_CONTENT_WITH_DESCENDANTS)) {
+    return [ genError('canGrantView')(ITEMGRANTVIEWPERM_CONTENT_WITH_DESCENDANTS, 'giver', 'atLeast') ];
   }
-  if (receiverPermissions.canView === ITEMVIEWPERM_SOLUTION && !giverCanAtLeastGrantView(ITEMVIEWPERM_SOLUTION)) {
-    return [ genError('canGrantView')('solution', 'giver', 'atLeast') ];
+  if (receiverPermissions.canView === ITEMVIEWPERM_SOLUTION && !giverCanAtLeastGrantView(ITEMGRANTVIEWPERM_SOLUTION)) {
+    return [ genError('canGrantView')(ITEMGRANTVIEWPERM_SOLUTION, 'giver', 'atLeast') ];
   }
   return [];
 }
@@ -61,12 +71,12 @@ export function validateCanGrantView(
   giverPermissions: Pick<PermissionsInfo, 'canGrantView' | 'isOwner'>
 ): ConstraintError[] {
 
-  if (receiverPermissions.canGrantView === 'none') return [];
+  if (receiverPermissions.canGrantView === ITEMGRANTVIEWPERM_NONE) return [];
 
   const errors: ConstraintError[] = [];
   const receiverCanAtLeastView = hasAtLeastPermission(itemViewPermValues, receiverPermissions.canView);
 
-  if (receiverPermissions.canGrantView === 'solution_with_grant') {
+  if (receiverPermissions.canGrantView === ITEMGRANTVIEWPERM_SOLUTION_WITH_GRANT) {
     if (!giverPermissions.isOwner) {
       errors.push(genError('isOwner')(true, 'giver'));
     }
@@ -75,21 +85,22 @@ export function validateCanGrantView(
     }
   } else {
 
-    if (giverPermissions.canGrantView !== 'solution_with_grant') {
-      errors.push(genError('canGrantView')('solution_with_grant', 'giver'));
+    if (giverPermissions.canGrantView !== ITEMGRANTVIEWPERM_SOLUTION_WITH_GRANT) {
+      errors.push(genError('canGrantView')(ITEMGRANTVIEWPERM_SOLUTION_WITH_GRANT, 'giver'));
     }
 
-    if (receiverPermissions.canGrantView === 'enter' && !receiverCanAtLeastView(ITEMVIEWPERM_INFO)) {
+    if (receiverPermissions.canGrantView === ITEMGRANTVIEWPERM_ENTER && !receiverCanAtLeastView(ITEMVIEWPERM_INFO)) {
       errors.push(genError('canView')(ITEMVIEWPERM_INFO, 'receiver', 'atLeast'));
     }
 
-    if (receiverPermissions.canGrantView === 'content' && !receiverCanAtLeastView(ITEMVIEWPERM_CONTENT)) {
+    if (receiverPermissions.canGrantView === ITEMGRANTVIEWPERM_CONTENT && !receiverCanAtLeastView(ITEMVIEWPERM_CONTENT)) {
       errors.push(genError('canView')(ITEMVIEWPERM_CONTENT, 'receiver', 'atLeast'));
     }
-    if (receiverPermissions.canGrantView === 'content_with_descendants' && !receiverCanAtLeastView(ITEMVIEWPERM_CONTENT_WITH_DESCENDANTS)) {
+    if (receiverPermissions.canGrantView === ITEMGRANTVIEWPERM_CONTENT_WITH_DESCENDANTS &&
+      !receiverCanAtLeastView(ITEMVIEWPERM_CONTENT_WITH_DESCENDANTS)) {
       errors.push(genError('canView')(ITEMVIEWPERM_CONTENT_WITH_DESCENDANTS, 'receiver', 'atLeast'));
     }
-    if (receiverPermissions.canGrantView === 'solution' && !receiverCanAtLeastView(ITEMVIEWPERM_SOLUTION)) {
+    if (receiverPermissions.canGrantView === ITEMGRANTVIEWPERM_SOLUTION && !receiverCanAtLeastView(ITEMVIEWPERM_SOLUTION)) {
       errors.push(genError('canView')(ITEMVIEWPERM_SOLUTION, 'receiver', 'atLeast'));
     }
   }
