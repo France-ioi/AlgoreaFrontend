@@ -2,10 +2,11 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { appConfig } from 'src/app/shared/helpers/config';
-import { canCurrentUserViewItem, ItemPermissionsInfo, permissionsDecoder } from '../helpers/item-permissions';
+import { ItemPermissionsInfo, permissionsDecoder } from '../helpers/item-permissions';
 import * as D from 'io-ts/Decoder';
 import { decodeSnakeCase } from 'src/app/shared/operators/decode';
 import { dateDecoder } from 'src/app/shared/helpers/decoders';
+import { canCurrentUserViewInfo } from 'src/app/shared/models/domain/item-view-permission';
 
 const baseItemChildDecoder = D.struct({
   id: D.string,
@@ -49,7 +50,7 @@ export type InvisibleItemChild = D.TypeOf<typeof invisibleItemChildDecoder>;
 type PossiblyInvisibleItemChild = D.TypeOf<typeof possiblyInvisibleItemChild>;
 
 export function isVisibleItemChild(item: ItemPermissionsInfo): item is ItemChild {
-  return canCurrentUserViewItem(item);
+  return canCurrentUserViewInfo(item);
 }
 
 

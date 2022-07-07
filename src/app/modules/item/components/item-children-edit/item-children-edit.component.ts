@@ -12,6 +12,7 @@ import { isNotUndefined } from '../../../../shared/helpers/null-undefined-predic
 import { OverlayPanel } from 'primeng/overlaypanel';
 import { mapToFetchState, readyData } from '../../../../shared/operators/state';
 import { FetchState } from '../../../../shared/helpers/state';
+import { ITEMVIEWPERM_MAX } from 'src/app/shared/models/domain/item-view-permission';
 
 interface BaseChildData {
   contentViewPropagation?: 'none' | 'as_info' | 'as_content',
@@ -146,7 +147,7 @@ export class ItemChildrenEditComponent implements OnInit, OnDestroy, OnChanges {
 
   addChild(child: AddedContent<ItemType>): void {
     const permissionsForCreatedItem: PermissionsInfo = {
-      canView: 'solution',
+      canView: ITEMVIEWPERM_MAX,
       canWatch: 'answer_with_grant',
       canEdit: 'all_with_grant',
       canGrantView: 'solution_with_grant',

@@ -23,6 +23,7 @@ import { DataPager } from 'src/app/shared/helpers/data-pager';
 import { mapToFetchState, readyData } from 'src/app/shared/operators/state';
 import { FetchState } from 'src/app/shared/helpers/state';
 import { HttpErrorResponse } from '@angular/common/http';
+import { ITEMVIEWPERM_NONE } from 'src/app/shared/models/domain/item-view-permission';
 
 const progressListLimit = 25;
 
@@ -65,7 +66,7 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
       itemId: '',
       targetGroupId: '',
       permissions: {
-        canView: 'none',
+        canView: ITEMVIEWPERM_NONE,
         canGrantView: 'none',
         canWatch: 'none',
         canEdit: 'none',

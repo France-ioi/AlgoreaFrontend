@@ -1,4 +1,5 @@
-import { canEditValues, canGrantViewValues, canViewValues, canWatchValues } from './item-permissions';
+import { itemViewPermValues } from 'src/app/shared/models/domain/item-view-permission';
+import { canEditValues, canGrantViewValues, canWatchValues } from './item-permissions';
 import {
   validateCanEdit,
   validateCanGrantView,
@@ -111,7 +112,7 @@ describe('"can_grant_view" permissions constraints', () => {
     for (const p of combinations({
       receiverPermissions: combinations({
         canGrantView: [ 'none' ] as const,
-        canView: canViewValues,
+        canView: itemViewPermValues,
       }),
       giverPermissions: combinations({
         canGrantView: canGrantViewValues,
@@ -156,7 +157,7 @@ describe('"can_grant_view" permissions constraints', () => {
     for (const p of combinations({
       receiverPermissions: combinations({
         canGrantView: [ 'enter' ] as const,
-        canView: canViewValues,
+        canView: itemViewPermValues,
       }),
       giverPermissions: combinations({
         canGrantView: [ 'none', 'enter', 'content', 'content_with_descendants', 'solution' ] as const,
@@ -201,7 +202,7 @@ describe('"can_grant_view" permissions constraints', () => {
     for (const p of combinations({
       receiverPermissions: combinations({
         canGrantView: [ 'content' ] as const,
-        canView: canViewValues,
+        canView: itemViewPermValues,
       }),
       giverPermissions: combinations({
         canGrantView: [ 'none', 'enter', 'content', 'content_with_descendants', 'solution' ] as const,
@@ -246,7 +247,7 @@ describe('"can_grant_view" permissions constraints', () => {
     for (const p of combinations({
       receiverPermissions: combinations({
         canGrantView: [ 'content_with_descendants' ] as const,
-        canView: canViewValues,
+        canView: itemViewPermValues,
       }),
       giverPermissions: combinations({
         canGrantView: [ 'none', 'enter', 'content', 'content_with_descendants', 'solution' ] as const,
@@ -291,7 +292,7 @@ describe('"can_grant_view" permissions constraints', () => {
     for (const p of combinations({
       receiverPermissions: combinations({
         canGrantView: [ 'solution' ] as const,
-        canView: canViewValues,
+        canView: itemViewPermValues,
       }),
       giverPermissions: combinations({
         canGrantView: [ 'none', 'enter', 'content', 'content_with_descendants', 'solution' ] as const,
@@ -336,7 +337,7 @@ describe('"can_grant_view" permissions constraints', () => {
     for (const p of combinations({
       receiverPermissions: combinations({
         canGrantView: [ 'solution_with_grant' ] as const,
-        canView: canViewValues,
+        canView: itemViewPermValues,
       }),
       giverPermissions: combinations({
         canGrantView: canGrantViewValues,
@@ -354,7 +355,7 @@ describe('"can_watch" permissions constraints', () => {
     for (const p of combinations({
       receiverPermissions: combinations({
         canWatch: [ 'none' ] as const,
-        canView: canViewValues,
+        canView: itemViewPermValues,
       }),
       giverPermissions: combinations({
         canWatch: canWatchValues,
@@ -402,7 +403,7 @@ describe('"can_watch" permissions constraints', () => {
       for (const p of combinations({
         receiverPermissions: combinations({
           canWatch: [ value ],
-          canView: canViewValues,
+          canView: itemViewPermValues,
         }),
         giverPermissions: combinations({
           canWatch: [ 'none', 'result', 'answer' ] as const,
@@ -446,7 +447,7 @@ describe('"can_watch" permissions constraints', () => {
     for (const p of combinations({
       receiverPermissions: combinations({
         canWatch: [ 'answer_with_grant' ] as const,
-        canView: canViewValues,
+        canView: itemViewPermValues,
       }),
       giverPermissions: combinations({
         canWatch: canWatchValues,
@@ -465,7 +466,7 @@ describe('"can_edit" permissions constraints', () => {
     for (const p of combinations({
       receiverPermissions: combinations({
         canEdit: [ 'none' ] as const,
-        canView: canViewValues,
+        canView: itemViewPermValues,
       }),
       giverPermissions: combinations({
         canEdit: canEditValues,
@@ -513,7 +514,7 @@ describe('"can_edit" permissions constraints', () => {
       for (const p of combinations({
         receiverPermissions: combinations({
           canEdit: [ value ],
-          canView: canViewValues,
+          canView: itemViewPermValues,
         }),
         giverPermissions: combinations({
           canEdit: [ 'none','children','all' ] as const,
@@ -557,7 +558,7 @@ describe('"can_edit" permissions constraints', () => {
     for (const p of combinations({
       receiverPermissions: combinations({
         canEdit: [ 'all_with_grant' ] as const,
-        canView: canViewValues,
+        canView: itemViewPermValues,
       }),
       giverPermissions: combinations({
         canEdit: canEditValues,
@@ -575,7 +576,7 @@ describe('"can_make_session_official" permissions constraints', () => {
     for (const p of combinations({
       receiverPermissions: combinations({
         canMakeSessionOfficial: [ false ] as const,
-        canView: canViewValues,
+        canView: itemViewPermValues,
       }),
       giverPermissions: combinations({
         isOwner: [ true, false ] as const,
@@ -608,7 +609,7 @@ describe('"can_make_session_official" permissions constraints', () => {
     // giver not owner
     for (const receiverPermissions of combinations({
       canMakeSessionOfficial: [ true ] as const,
-      canView: canViewValues,
+      canView: itemViewPermValues,
     })) {
       expect(validateCanMakeSessionOfficial(receiverPermissions, { isOwner: false })[0]).toBeDefined();
     }

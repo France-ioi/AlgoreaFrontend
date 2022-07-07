@@ -65,6 +65,7 @@ import { GroupPermissionCaptionPipe } from '../../shared/pipes/groupPermissionCa
 import { FullHeightContentDirective } from '../../shared/directives/full-height-content.directive';
 import { SectionHeaderComponent } from './components/section-header/section-header.component';
 import { PathSuggestionComponent } from './components/path-suggestion/path-suggestion.component';
+import { AllowsViewingItemContentPipe, AllowsViewingItemInfoPipe } from 'src/app/shared/models/domain/item-view-permission';
 
 @NgModule({
   declarations: [
@@ -107,6 +108,8 @@ import { PathSuggestionComponent } from './components/path-suggestion/path-sugge
     FullHeightContentDirective,
     SectionHeaderComponent,
     PathSuggestionComponent,
+    AllowsViewingItemContentPipe,
+    AllowsViewingItemInfoPipe,
   ],
   imports: [
     CommonModule,
@@ -179,6 +182,8 @@ import { PathSuggestionComponent } from './components/path-suggestion/path-sugge
     FullHeightContentDirective,
     SectionHeaderComponent,
     PathSuggestionComponent,
+    AllowsViewingItemContentPipe,
+    AllowsViewingItemInfoPipe,
   ],
   providers: [],
 })

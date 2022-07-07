@@ -1,6 +1,5 @@
 import { ReplaySubject, Subject } from 'rxjs';
 import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
-import { canCurrentUserViewItemContent } from '../../helpers/item-permissions';
 import { GetItemChildrenService, ItemChild } from '../../http-services/get-item-children.service';
 import { ItemData } from '../../services/item-datasource.service';
 import { bestAttemptFromResults } from 'src/app/shared/helpers/attempts';
@@ -8,6 +7,7 @@ import { ItemRouter } from 'src/app/shared/routing/item-router';
 import { typeCategoryOfItem } from 'src/app/shared/helpers/item-type';
 import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { mapToFetchState } from '../../../../shared/operators/state';
+import { canCurrentUserViewContent } from 'src/app/shared/models/domain/item-view-permission';
 
 interface ItemChildAdditions {
   isLocked: boolean,
@@ -36,7 +36,7 @@ export class ChapterChildrenComponent implements OnChanges, OnDestroy {
         const res = bestAttemptFromResults(child.results);
         return {
           ...child,
-          isLocked: !canCurrentUserViewItemContent(child),
+          isLocked: !canCurrentUserViewContent(child),
           result: res === null ? undefined : {
             attemptId: res.attemptId,
             validated: res.validated,

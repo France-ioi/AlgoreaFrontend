@@ -10,6 +10,7 @@ import { pipe } from 'fp-ts/function';
 import * as D from 'io-ts/Decoder';
 import { permissionsDecoder } from 'src/app/modules/item/helpers/item-permissions';
 import { dateDecoder } from 'src/app/shared/helpers/decoders';
+import { itemViewPermDecoder } from 'src/app/shared/models/domain/item-view-permission';
 
 const itemNavigationChildDecoderBase = pipe(
   D.struct({
@@ -42,9 +43,7 @@ const itemNavigationChildDecoder = pipe(
   D.intersect(
     D.partial({
       watchedGroup: pipe(
-        D.struct({
-          canView: D.literal('none','info','content','content_with_descendants','solution'),
-        }),
+        itemViewPermDecoder,
         D.intersect(
           D.partial({
             allValidated: D.boolean,

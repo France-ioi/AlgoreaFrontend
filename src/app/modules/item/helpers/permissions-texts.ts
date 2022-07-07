@@ -14,6 +14,13 @@ import {
   validateCanMakeSessionOfficial,
   ConstraintError,
 } from './item-permissions-constraints';
+import {
+  ITEMVIEWPERM_CONTENT,
+  ITEMVIEWPERM_CONTENT_WITH_DESCENDANTS,
+  ITEMVIEWPERM_INFO,
+  ITEMVIEWPERM_NONE,
+  ITEMVIEWPERM_SOLUTION
+} from 'src/app/shared/models/domain/item-view-permission';
 
 export interface PermissionsDialogData {
   canViewValues: ProgressSelectValue<string>[],
@@ -41,27 +48,27 @@ export function generateCanViewValues(
   const targetTypeString = getTargetTypeString(targetType);
   return [
     {
-      value: 'none',
+      value: ITEMVIEWPERM_NONE,
       label: permissionsInfoString.canView.none,
       comment: $localize`${targetTypeString} can\'t see the item`
     },
     {
-      value: 'info',
+      value: ITEMVIEWPERM_INFO,
       label: permissionsInfoString.canView.info,
       comment: $localize`${targetTypeString} can see the item title and description, but not its content`,
     },
     {
-      value: 'content',
+      value: ITEMVIEWPERM_CONTENT,
       label: permissionsInfoString.canView.content,
       comment: $localize`${targetTypeString} can see the content of this item`,
     },
     {
-      value: 'content_with_descendants',
+      value: ITEMVIEWPERM_CONTENT_WITH_DESCENDANTS,
       label: permissionsInfoString.canView.content_with_descendants,
       comment: $localize`${targetTypeString} can also see the content of this items descendants (when possible for this group)`,
     },
     {
-      value: 'solution',
+      value: ITEMVIEWPERM_SOLUTION,
       label: permissionsInfoString.canView.solution,
       comment: $localize`${targetTypeString} can also see the solution of this items and its descendants (when possible for this group)`,
     }
