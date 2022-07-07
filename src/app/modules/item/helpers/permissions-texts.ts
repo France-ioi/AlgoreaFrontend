@@ -29,6 +29,12 @@ import {
   ITEMGRANTVIEWPERM_SOLUTION,
   ITEMGRANTVIEWPERM_SOLUTION_WITH_GRANT
 } from 'src/app/shared/models/domain/item-grant-view-permission';
+import {
+  ITEMEDITPERM_ALL,
+  ITEMEDITPERM_ALL_WITH_GRANT,
+  ITEMEDITPERM_CHILDREN,
+  ITEMEDITPERM_NONE
+} from 'src/app/shared/models/domain/item-edit-permission';
 
 export interface PermissionsDialogData {
   canViewValues: ProgressSelectValue<string>[],
@@ -159,22 +165,22 @@ function generateCanEditValues(
 
   return [
     {
-      value: 'none',
+      value: ITEMEDITPERM_NONE,
       label: permissionsInfoString.canEdit.none,
       comment: $localize`${targetTypeString} can\'t make any changes to this item`
     },
     {
-      value: 'children',
+      value: ITEMEDITPERM_CHILDREN,
       label: permissionsInfoString.canEdit.children,
       comment: $localize`${targetTypeString} can add children to this item and edit how permissions propagate to them`,
     },
     {
-      value: 'all',
+      value: ITEMEDITPERM_ALL,
       label: permissionsInfoString.canEdit.all,
       comment: $localize`${targetTypeString} can also edit the content of the item itself, but may not delete it`,
     },
     {
-      value: 'all_with_grant',
+      value: ITEMEDITPERM_ALL_WITH_GRANT,
       label: permissionsInfoString.canEdit.all_with_grant,
       comment: $localize`${targetTypeString} can also give \'Can edit\' access to others`,
     }

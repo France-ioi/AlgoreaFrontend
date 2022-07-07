@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleCha
 import { FormBuilder } from '@angular/forms';
 import { merge, Subject, Subscription } from 'rxjs';
 import { GroupPermissions } from 'src/app/shared/http-services/group-permissions.service';
+import { ITEMEDITPERM_NONE } from 'src/app/shared/models/domain/item-edit-permission';
 import { ITEMGRANTVIEWPERM_NONE } from 'src/app/shared/models/domain/item-grant-view-permission';
 import { ITEMVIEWPERM_NONE } from 'src/app/shared/models/domain/item-view-permission';
 import { PermissionsInfo } from '../../helpers/item-permissions';
@@ -37,7 +38,7 @@ export class PermissionsEditDialogComponent implements OnChanges, OnDestroy {
     canView: [ ITEMVIEWPERM_NONE ],
     canGrantView: [ ITEMGRANTVIEWPERM_NONE ],
     canWatch: [ 'none' ],
-    canEdit: [ 'none' ],
+    canEdit: [ ITEMEDITPERM_NONE ],
     canMakeSessionOfficial: [ false ],
     isOwner: [ true ],
   });

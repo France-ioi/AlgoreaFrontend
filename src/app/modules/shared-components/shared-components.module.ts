@@ -67,6 +67,7 @@ import { SectionHeaderComponent } from './components/section-header/section-head
 import { PathSuggestionComponent } from './components/path-suggestion/path-suggestion.component';
 import { AllowsViewingItemContentPipe, AllowsViewingItemInfoPipe } from 'src/app/shared/models/domain/item-view-permission';
 import { AllowsGrantingContentViewItemPipe, AllowsGrantingViewItemPipe } from 'src/app/shared/models/domain/item-grant-view-permission';
+import { AllowsEditingAllItemPipe, AllowsEditingChildrenItemPipe } from 'src/app/shared/models/domain/item-edit-permission';
 
 @NgModule({
   declarations: [
@@ -113,6 +114,8 @@ import { AllowsGrantingContentViewItemPipe, AllowsGrantingViewItemPipe } from 's
     AllowsViewingItemInfoPipe,
     AllowsGrantingViewItemPipe,
     AllowsGrantingContentViewItemPipe,
+    AllowsEditingAllItemPipe,
+    AllowsEditingChildrenItemPipe,
   ],
   imports: [
     CommonModule,
@@ -189,6 +192,8 @@ import { AllowsGrantingContentViewItemPipe, AllowsGrantingViewItemPipe } from 's
     AllowsViewingItemInfoPipe,
     AllowsGrantingViewItemPipe,
     AllowsGrantingContentViewItemPipe,
+    AllowsEditingAllItemPipe,
+    AllowsEditingChildrenItemPipe,
   ],
   providers: [],
 })

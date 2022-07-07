@@ -6,7 +6,7 @@
       ></alg-error>
     </ng-template>
 
-    <ng-container *ngIf="['all', 'all_with_grant'].includes(canEdit); else defaultErrorMessage">
+    <ng-container *ngIf="editingPermission | allowsEditingAll; else defaultErrorMessage">
       <alg-error
         *ngIf="initError$ | async; else urlError"
         i18n-message message="It usually occurs when task url is invalid. If the task url is valid and the problem persists, please contact us."

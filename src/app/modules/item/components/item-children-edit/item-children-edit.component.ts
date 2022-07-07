@@ -14,6 +14,7 @@ import { mapToFetchState, readyData } from '../../../../shared/operators/state';
 import { FetchState } from '../../../../shared/helpers/state';
 import { ITEMVIEWPERM_MAX } from 'src/app/shared/models/domain/item-view-permission';
 import { allowsGrantingView, ITEMGRANTVIEWPERM_MAX } from 'src/app/shared/models/domain/item-grant-view-permission';
+import { ITEMEDITPERM_MAX } from 'src/app/shared/models/domain/item-edit-permission';
 
 interface BaseChildData {
   contentViewPropagation?: 'none' | 'as_info' | 'as_content',
@@ -150,7 +151,7 @@ export class ItemChildrenEditComponent implements OnInit, OnDestroy, OnChanges {
     const permissionsForCreatedItem: PermissionsInfo = {
       canView: ITEMVIEWPERM_MAX,
       canWatch: 'answer_with_grant',
-      canEdit: 'all_with_grant',
+      canEdit: ITEMEDITPERM_MAX,
       canGrantView: ITEMGRANTVIEWPERM_MAX,
       isOwner: true,
     };

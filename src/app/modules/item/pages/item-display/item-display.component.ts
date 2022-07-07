@@ -22,12 +22,12 @@ import { ItemTaskAnswerService } from '../../services/item-task-answer.service';
 import { ItemTaskViewsService } from '../../services/item-task-views.service';
 import { FullItemRoute } from 'src/app/shared/routing/item-route';
 import { DomSanitizer } from '@angular/platform-browser';
-import { PermissionsInfo } from '../../helpers/item-permissions';
 import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
 import { LTIDataSource } from 'src/app/modules/lti/services/lti-datasource.service';
 import { PublishResultsService } from '../../http-services/publish-result.service';
 import { errorIsHTTPForbidden } from 'src/app/shared/helpers/errors';
 import { isNotUndefined } from '../../../../shared/helpers/null-undefined-predicates';
+import { ItemEditPerm, ITEMEDITPERM_NONE } from 'src/app/shared/models/domain/item-edit-permission';
 
 export interface TaskTab {
   name: string,
@@ -45,7 +45,7 @@ const heightSyncInterval = 0.2*SECONDS;
 export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges, OnDestroy {
   @Input() route!: FullItemRoute;
   @Input() url!: string;
-  @Input() canEdit: PermissionsInfo['canEdit'] = 'none';
+  @Input() editingPermission: ItemEditPerm = { canEdit: ITEMEDITPERM_NONE };
   @Input() attemptId!: string;
   @Input() view?: TaskTab['view'];
   @Input() taskConfig: TaskConfig = { readOnly: false, formerAnswer: null };

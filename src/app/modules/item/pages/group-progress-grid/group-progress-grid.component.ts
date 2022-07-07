@@ -26,6 +26,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ITEMVIEWPERM_NONE } from 'src/app/shared/models/domain/item-view-permission';
 import { ITEMGRANTVIEWPERM_NONE } from 'src/app/shared/models/domain/item-grant-view-permission';
 import { canGivePermissions } from '../../helpers/item-permissions';
+import { ITEMEDITPERM_NONE } from 'src/app/shared/models/domain/item-edit-permission';
 
 const progressListLimit = 25;
 
@@ -71,7 +72,7 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
         canView: ITEMVIEWPERM_NONE,
         canGrantView: ITEMGRANTVIEWPERM_NONE,
         canWatch: 'none',
-        canEdit: 'none',
+        canEdit: ITEMEDITPERM_NONE,
         canMakeSessionOfficial: false,
         isOwner: true,
       }

@@ -1,6 +1,7 @@
 import { itemGrantViewPermValues } from 'src/app/shared/models/domain/item-grant-view-permission';
 import { itemViewPermValues } from 'src/app/shared/models/domain/item-view-permission';
-import { canEditValues, canWatchValues } from './item-permissions';
+import { itemEditPermValues } from 'src/app/shared/models/domain/item-edit-permission';
+import { canWatchValues } from './item-permissions';
 import {
   validateCanEdit,
   validateCanGrantView,
@@ -470,7 +471,7 @@ describe('"can_edit" permissions constraints', () => {
         canView: itemViewPermValues,
       }),
       giverPermissions: combinations({
-        canEdit: canEditValues,
+        canEdit: itemEditPermValues,
         isOwner: [ true, false ] as const,
       }),
     })) {
@@ -504,7 +505,7 @@ describe('"can_edit" permissions constraints', () => {
           canView: [ 'none', 'info' ] as const,
         }),
         giverPermissions: combinations({
-          canEdit: canEditValues,
+          canEdit: itemEditPermValues,
           isOwner: [ true, false ] as const,
         }),
       })) {
@@ -534,7 +535,7 @@ describe('"can_edit" permissions constraints', () => {
         canView: [ 'content', 'content_with_descendants', 'solution' ] as const,
       }),
       giverPermissions: combinations({
-        canEdit: canEditValues,
+        canEdit: itemEditPermValues,
         isOwner: [ true ] as const,
       }),
     })) {
@@ -548,7 +549,7 @@ describe('"can_edit" permissions constraints', () => {
         canView: [ 'none', 'info' ] as const,
       }),
       giverPermissions: combinations({
-        canEdit: canEditValues,
+        canEdit: itemEditPermValues,
         isOwner: [ true, false ] as const,
       }),
     })) {
@@ -562,7 +563,7 @@ describe('"can_edit" permissions constraints', () => {
         canView: itemViewPermValues,
       }),
       giverPermissions: combinations({
-        canEdit: canEditValues,
+        canEdit: itemEditPermValues,
         isOwner: [ false ] as const,
       }),
     })) {

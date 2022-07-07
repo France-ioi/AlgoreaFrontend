@@ -1,4 +1,5 @@
 import { GroupPermissions } from 'src/app/shared/http-services/group-permissions.service';
+import { ITEMEDITPERM_ALL_WITH_GRANT, ITEMEDITPERM_NONE } from 'src/app/shared/models/domain/item-edit-permission';
 import {
   itemGrantViewPermValues,
   ITEMGRANTVIEWPERM_CONTENT,
@@ -142,7 +143,7 @@ export function validateCanEdit(
   giverPermissions: Pick<PermissionsInfo, 'canEdit' | 'isOwner'>
 ): ConstraintError[] {
 
-  if (receiverPermissions.canEdit === 'none') return [];
+  if (receiverPermissions.canEdit === ITEMEDITPERM_NONE) return [];
 
   const errors: ConstraintError[] = [];
 
@@ -151,15 +152,15 @@ export function validateCanEdit(
     errors.push(genError('canView')(ITEMVIEWPERM_CONTENT, 'receiver', 'atLeast'));
   }
 
-  if (receiverPermissions.canEdit === 'all_with_grant') {
+  if (receiverPermissions.canEdit === ITEMEDITPERM_ALL_WITH_GRANT) {
     if (!giverPermissions.isOwner) {
       errors.push(genError('isOwner')(true, 'giver'));
     }
   } else {
 
     // if receiverPermissions.canEdit is 'children' or 'all_with_grant'
-    if (giverPermissions.canEdit !== 'all_with_grant') {
-      errors.push(genError('canEdit')('all_with_grant', 'giver'));
+    if (giverPermissions.canEdit !== ITEMEDITPERM_ALL_WITH_GRANT) {
+      errors.push(genError('canEdit')(ITEMEDITPERM_ALL_WITH_GRANT, 'giver'));
     }
   }
 
