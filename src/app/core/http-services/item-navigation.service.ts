@@ -102,10 +102,10 @@ export class ItemNavigationService {
 
   getItemNavigation(
     itemId: string,
-    options: ({ attemptId: string} | { childRoute: FullItemRoute }) & { skillOnly?: boolean }
+    options: ({ attemptId: string} | { childRoute: FullItemRoute }) & { skillOnly?: boolean, watchedGroupId?: string }
   ): Observable<ItemNavigationData> {
 
-    let params = new HttpParams();
+    let params = new HttpParams({ fromObject: options.watchedGroupId ? { watched_group_id: options.watchedGroupId } : {} });
     if ('attemptId' in options) params = params.set('attempt_id', options.attemptId);
     else if (isRouteWithSelfAttempt(options.childRoute)) params = params.set('child_attempt_id', options.childRoute.attemptId);
     else params = params.set('attempt_id', options.childRoute.parentAttemptId);
