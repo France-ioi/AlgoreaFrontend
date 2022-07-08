@@ -2,20 +2,21 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import * as D from 'io-ts/Decoder';
 import { decodeSnakeCase } from '../../../shared/operators/decode';
-import { dateDecoder } from '../../../shared/helpers/decoders';
 import { appConfig } from '../../../shared/helpers/config';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { permissionsDecoder } from '../../../shared/helpers/group-permissions';
 import { pipe } from 'fp-ts/function';
+import {
+  itemCorePermDecoder,
+  itemEntryTimePermDecoder,
+  itemOwnerPermDecoder,
+  itemSessionPermDecoder
+} from 'src/app/shared/models/domain/item-permissions';
 
 const groupPermissionsDecoder = pipe(
-  permissionsDecoder,
-  D.intersect(
-    D.struct({
-      canEnterFrom: dateDecoder,
-      canEnterUntil: dateDecoder,
-    })
-  ),
+  itemCorePermDecoder,
+  D.intersect(itemOwnerPermDecoder),
+  D.intersect(itemSessionPermDecoder),
+  D.intersect(itemEntryTimePermDecoder),
 );
 
 const grantedPermissionsDecoder = D.struct({
