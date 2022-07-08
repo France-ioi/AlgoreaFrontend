@@ -5,16 +5,10 @@ import { decodeSnakeCase } from '../../../shared/operators/decode';
 import { appConfig } from '../../../shared/helpers/config';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { pipe } from 'fp-ts/function';
-import {
-  itemCorePermDecoder,
-  itemEntryTimePermDecoder,
-  itemOwnerPermDecoder,
-  itemSessionPermDecoder
-} from 'src/app/shared/models/domain/item-permissions';
+import { itemCorePermDecoder, itemEntryTimePermDecoder, itemSessionPermDecoder } from 'src/app/shared/models/domain/item-permissions';
 
 const groupPermissionsDecoder = pipe(
   itemCorePermDecoder,
-  D.intersect(itemOwnerPermDecoder),
   D.intersect(itemSessionPermDecoder),
   D.intersect(itemEntryTimePermDecoder),
 );

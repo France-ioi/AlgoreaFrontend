@@ -6,13 +6,13 @@ import * as D from 'io-ts/Decoder';
 import { decodeSnakeCase } from 'src/app/shared/operators/decode';
 import { dateDecoder } from 'src/app/shared/helpers/decoders';
 import { canCurrentUserViewInfo, ItemWithViewPerm } from 'src/app/shared/models/domain/item-view-permission';
-import { itemCorePermDecoder, itemOwnerPermDecoder } from 'src/app/shared/models/domain/item-permissions';
+import { itemCorePermDecoder } from 'src/app/shared/models/domain/item-permissions';
 
 const baseItemChildDecoder = D.struct({
   id: D.string,
   order: D.number,
   category: D.literal('Undefined', 'Discovery', 'Application', 'Validation', 'Challenge'),
-  permissions: D.intersect(itemCorePermDecoder)(itemOwnerPermDecoder),
+  permissions: itemCorePermDecoder,
   scoreWeight: D.number,
   contentViewPropagation: D.literal('none', 'as_info', 'as_content'),
   editPropagation: D.boolean,

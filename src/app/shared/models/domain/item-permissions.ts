@@ -27,6 +27,7 @@ export const itemCorePermDecoder = pipe(
   D.intersect(itemGrantViewPermDecoder),
   D.intersect(itemEditPermDecoder),
   D.intersect(itemWatchPermDecoder),
+  D.intersect(itemOwnerPermDecoder),
 );
 export type ItemCorePerm = D.TypeOf<typeof itemCorePermDecoder>;
 
