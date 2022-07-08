@@ -9,7 +9,7 @@ import { Permissions } from '../../../../shared/helpers/group-permissions';
 import { GroupPermissionsService } from '../../../../shared/http-services/group-permissions.service';
 import { ActionFeedbackService } from '../../../../shared/services/action-feedback.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { canGivePermissions } from '../../helpers/item-permissions';
+import { allowsGivingPermToItem } from 'src/app/shared/models/domain/item-permissions';
 
 @Component({
   selector: 'alg-item-permissions',
@@ -37,7 +37,7 @@ export class ItemPermissionsComponent implements OnChanges {
     } : undefined;
 
     const currentUserCanGrantGroupAccess = this.watchedGroup?.currentUserCanGrantGroupAccess;
-    const currentUserCanGivePermissions = this.itemData && canGivePermissions(this.itemData.item.permissions);
+    const currentUserCanGivePermissions = this.itemData && allowsGivingPermToItem(this.itemData.item.permissions);
 
     this.lockEdit = currentUserCanGrantGroupAccess && !currentUserCanGivePermissions ? 'content' :
       !currentUserCanGrantGroupAccess && currentUserCanGivePermissions ? 'group' :
