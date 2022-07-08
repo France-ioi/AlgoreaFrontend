@@ -18,7 +18,3 @@ export const permissionsDecoder = pipe(
 );
 
 export type PermissionsInfo = D.TypeOf<typeof permissionsDecoder>;
-
-export interface ItemPermissionsInfo {
-  permissions: PermissionsInfo,
-}
