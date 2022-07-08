@@ -7,7 +7,6 @@ import { ItemType, typeCategoryOfItem } from '../../../../shared/helpers/item-ty
 import { AddedContent } from '../../../shared-components/components/add-content/add-content.component';
 import { ItemRouter } from '../../../../shared/routing/item-router';
 import { bestAttemptFromResults } from '../../../../shared/helpers/attempts';
-import { PermissionsInfo } from '../../helpers/item-permissions';
 import { isNotUndefined } from '../../../../shared/helpers/null-undefined-predicates';
 import { OverlayPanel } from 'primeng/overlaypanel';
 import { mapToFetchState, readyData } from '../../../../shared/operators/state';
@@ -16,6 +15,7 @@ import { ITEMVIEWPERM_MAX } from 'src/app/shared/models/domain/item-view-permiss
 import { allowsGrantingView, ITEMGRANTVIEWPERM_MAX } from 'src/app/shared/models/domain/item-grant-view-permission';
 import { ITEMEDITPERM_MAX } from 'src/app/shared/models/domain/item-edit-permission';
 import { ITEMWATCHPERM_MAX } from 'src/app/shared/models/domain/item-watch-permission';
+import { ItemCorePerm } from 'src/app/shared/models/domain/item-permissions';
 
 interface BaseChildData {
   contentViewPropagation?: 'none' | 'as_info' | 'as_content',
@@ -24,7 +24,7 @@ interface BaseChildData {
   upperViewLevelsPropagation?: 'use_content_view_propagation' | 'as_content_with_descendants' | 'as_is',
   scoreWeight: number,
   watchPropagation?: boolean,
-  permissions?: PermissionsInfo,
+  permissions?: ItemCorePerm,
 }
 interface InvisibleChildData extends BaseChildData {
   id: string,
@@ -149,7 +149,7 @@ export class ItemChildrenEditComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   addChild(child: AddedContent<ItemType>): void {
-    const permissionsForCreatedItem: PermissionsInfo = {
+    const permissionsForCreatedItem: ItemCorePerm = {
       canView: ITEMVIEWPERM_MAX,
       canWatch: ITEMWATCHPERM_MAX,
       canEdit: ITEMEDITPERM_MAX,

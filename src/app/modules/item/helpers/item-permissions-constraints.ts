@@ -1,6 +1,7 @@
 import { GroupPermissions } from 'src/app/shared/http-services/group-permissions.service';
-import { ITEMEDITPERM_ALL_WITH_GRANT, ITEMEDITPERM_NONE } from 'src/app/shared/models/domain/item-edit-permission';
+import { ItemEditPerm, ITEMEDITPERM_ALL_WITH_GRANT, ITEMEDITPERM_NONE } from 'src/app/shared/models/domain/item-edit-permission';
 import {
+  ItemGrantViewPerm,
   itemGrantViewPermValues,
   ITEMGRANTVIEWPERM_CONTENT,
   ITEMGRANTVIEWPERM_CONTENT_WITH_DESCENDANTS,
@@ -9,14 +10,16 @@ import {
   ITEMGRANTVIEWPERM_SOLUTION,
   ITEMGRANTVIEWPERM_SOLUTION_WITH_GRANT
 } from 'src/app/shared/models/domain/item-grant-view-permission';
+import { ItemOwnerPerm, ItemSessionPerm } from 'src/app/shared/models/domain/item-permissions';
 import {
   ITEMVIEWPERM_CONTENT,
   ITEMVIEWPERM_CONTENT_WITH_DESCENDANTS,
   ITEMVIEWPERM_INFO,
   ITEMVIEWPERM_SOLUTION,
-  itemViewPermValues } from 'src/app/shared/models/domain/item-view-permission';
-import { ITEMWATCHPERM_ANSWER_WITH_GRANT, ITEMWATCHPERM_NONE } from 'src/app/shared/models/domain/item-watch-permission';
-import { PermissionsInfo } from './item-permissions';
+  itemViewPermValues,
+  ItemViewPerm
+} from 'src/app/shared/models/domain/item-view-permission';
+import { ItemWatchPerm, ITEMWATCHPERM_ANSWER_WITH_GRANT, ITEMWATCHPERM_NONE } from 'src/app/shared/models/domain/item-watch-permission';
 
 /**
  * The permissions that are subject to a constraint
@@ -45,10 +48,7 @@ function hasAtLeastPermission<T extends readonly string[]>(permissionsSortedByLo
     permissionsSortedByLoosest.indexOf(permission) >= permissionsSortedByLoosest.indexOf(minimumPermission);
 }
 
-export function validateCanView(
-  receiverPermissions: Pick<GroupPermissions, 'canView'>,
-  giverPermissions: Pick<PermissionsInfo, 'canGrantView'>
-): ConstraintError[] {
+export function validateCanView(receiverPermissions: ItemViewPerm, giverPermissions: ItemGrantViewPerm): ConstraintError[] {
 
   const giverCanAtLeastGrantView = hasAtLeastPermission(itemGrantViewPermValues, giverPermissions.canGrantView);
 
@@ -69,8 +69,8 @@ export function validateCanView(
 }
 
 export function validateCanGrantView(
-  receiverPermissions: Pick<GroupPermissions, 'canView' | 'canGrantView'>,
-  giverPermissions: Pick<PermissionsInfo, 'canGrantView' | 'isOwner'>
+  receiverPermissions: ItemViewPerm & ItemGrantViewPerm,
+  giverPermissions: ItemGrantViewPerm & ItemOwnerPerm
 ): ConstraintError[] {
 
   if (receiverPermissions.canGrantView === ITEMGRANTVIEWPERM_NONE) return [];
@@ -111,8 +111,8 @@ export function validateCanGrantView(
 }
 
 export function validateCanWatch(
-  receiverPermissions: Pick<GroupPermissions, 'canView' | 'canWatch'>,
-  giverPermissions: Pick<PermissionsInfo, 'canWatch' | 'isOwner'>
+  receiverPermissions: ItemViewPerm & ItemWatchPerm,
+  giverPermissions: ItemWatchPerm & ItemOwnerPerm
 ): ConstraintError[] {
 
   if (receiverPermissions.canWatch === ITEMWATCHPERM_NONE) return [];
@@ -140,8 +140,8 @@ export function validateCanWatch(
 }
 
 export function validateCanEdit(
-  receiverPermissions: Pick<GroupPermissions, 'canView' | 'canEdit'>,
-  giverPermissions: Pick<PermissionsInfo, 'canEdit' | 'isOwner'>
+  receiverPermissions: ItemViewPerm & ItemEditPerm,
+  giverPermissions: ItemEditPerm & ItemOwnerPerm
 ): ConstraintError[] {
 
   if (receiverPermissions.canEdit === ITEMEDITPERM_NONE) return [];
@@ -169,8 +169,8 @@ export function validateCanEdit(
 }
 
 export function validateCanMakeSessionOfficial(
-  receiverPermissions: Pick<GroupPermissions, 'canView' | 'canMakeSessionOfficial'>,
-  giverPermissions: Pick<PermissionsInfo, 'isOwner'>
+  receiverPermissions: ItemViewPerm & ItemSessionPerm,
+  giverPermissions: ItemOwnerPerm
 ): ConstraintError[] {
 
   if (!receiverPermissions.canMakeSessionOfficial) return [];
@@ -187,10 +187,7 @@ export function validateCanMakeSessionOfficial(
   return errors;
 }
 
-export function validateIsOwner(
-  receiverPermissions: Pick<GroupPermissions, 'isOwner'>,
-  giverPermissions: Pick<PermissionsInfo, 'isOwner'>
-): ConstraintError[] {
+export function validateIsOwner(receiverPermissions: ItemOwnerPerm, giverPermissions: ItemOwnerPerm): ConstraintError[] {
 
   if (!receiverPermissions.isOwner) return [];
 

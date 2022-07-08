@@ -5,25 +5,23 @@ import { map } from 'rxjs/operators';
 import { appConfig } from '../helpers/config';
 import { assertSuccess, SimpleActionResponse } from './action-response';
 import * as D from 'io-ts/Decoder';
-import { permissionsDecoder } from 'src/app/modules/item/helpers/item-permissions';
 import { pipe } from 'fp-ts/function';
 import { decodeSnakeCase } from '../operators/decode';
-import { dateDecoder } from '../helpers/decoders';
+import {
+  itemCorePermDecoder,
+  itemEntryFromPermDecoder,
+  itemEntryUntilPermDecoder,
+  itemSessionPermDecoder
+} from '../models/domain/item-permissions';
 
 const groupPermissionsDecoder = pipe(
-  permissionsDecoder,
-  D.intersect(
-    D.struct({
-      canMakeSessionOfficial: D.boolean,
-      canEnterFrom: dateDecoder
-    })
-  )
+  itemCorePermDecoder,
+  D.intersect(itemSessionPermDecoder),
+  D.intersect(itemEntryFromPermDecoder),
 );
 
 const groupPermissionsInfoDecoder = D.struct({
-  granted: pipe(groupPermissionsDecoder, D.intersect(D.struct({
-    canEnterUntil: dateDecoder
-  }))),
+  granted: D.intersect(groupPermissionsDecoder)(itemEntryUntilPermDecoder),
   computed: groupPermissionsDecoder,
   grantedViaGroupMembership: groupPermissionsDecoder,
   grantedViaItemUnlocking: groupPermissionsDecoder,

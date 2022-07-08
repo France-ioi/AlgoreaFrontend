@@ -5,8 +5,8 @@ import { appConfig } from 'src/app/shared/helpers/config';
 import * as D from 'io-ts/Decoder';
 import { pipe } from 'fp-ts/function';
 import { decodeSnakeCase } from 'src/app/shared/operators/decode';
-import { permissionsDecoder } from '../helpers/item-permissions';
 import { dateDecoder, durationDecoder } from 'src/app/shared/helpers/decoders';
+import { itemCorePermDecoder } from 'src/app/shared/models/domain/item-permissions';
 
 export const itemDecoder = pipe(
   D.struct({
@@ -25,7 +25,7 @@ export const itemDecoder = pipe(
       )
     ),
     bestScore: D.number,
-    permissions: permissionsDecoder,
+    permissions: itemCorePermDecoder,
     type: D.literal('Chapter','Task','Course','Skill'),
     promptToJoinGroupByCode: D.boolean,
     textId: D.nullable(D.string),
@@ -48,7 +48,7 @@ export const itemDecoder = pipe(
       usesApi: D.nullable(D.boolean),
       watchedGroup: D.partial({
         averageScore: D.number,
-        permissions: permissionsDecoder,
+        permissions: itemCorePermDecoder,
       }),
     })
   )

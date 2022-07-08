@@ -2,7 +2,6 @@ import {
   ProgressSelectValue
 } from 'src/app/modules/shared-components/components/collapsible-section/progress-select/progress-select.component';
 import { GroupPermissions } from 'src/app/shared/http-services/group-permissions.service';
-import { PermissionsInfo } from './item-permissions';
 import { generateErrorMessage, permissionsInfoString } from './permissions-string';
 import { TypeFilter } from '../components/composition-filter/composition-filter.component';
 import {
@@ -41,6 +40,7 @@ import {
   ITEMWATCHPERM_ANSWER,
   ITEMWATCHPERM_ANSWER_WITH_GRANT
 } from 'src/app/shared/models/domain/item-watch-permission';
+import { ItemCorePerm } from 'src/app/shared/models/domain/item-permissions';
 
 export interface PermissionsDialogData {
   canViewValues: ProgressSelectValue<string>[],
@@ -196,7 +196,7 @@ function generateCanEditValues(
 export function generateValues(
   targetType: TypeFilter,
   receiverPermissions: GroupPermissions,
-  giverPermissions: PermissionsInfo
+  giverPermissions: ItemCorePerm
 ): PermissionsDialogData {
 
   const formatErrors = (errors: ConstraintError[]): string[] | undefined => {

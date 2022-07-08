@@ -16,10 +16,13 @@ export const itemSessionPermDecoder = D.struct({
 });
 export type ItemSessionPerm = D.TypeOf<typeof itemSessionPermDecoder>;
 
-export const itemEntryTimePermDecoder = D.struct({
+export const itemEntryFromPermDecoder = D.struct({
   canEnterFrom: dateDecoder,
+});
+export const itemEntryUntilPermDecoder = D.struct({
   canEnterUntil: dateDecoder,
 });
+export const itemEntryTimePermDecoder = D.intersect(itemEntryFromPermDecoder)(itemEntryUntilPermDecoder);
 export type ItemEntryTimePerm = D.TypeOf<typeof itemEntryTimePermDecoder>;
 
 export const itemCorePermDecoder = pipe(
