@@ -452,22 +452,28 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/add-content/add-content.component.html</context><context context-type="linenumber">70</context></context-group></trans-unit><trans-unit id="5928181193903168495" datatype="html">
         <source> Content </source><target state="translated"> Contenu </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-details/item-details.component.html</context><context context-type="linenumber">32</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-edit/item-edit.component.html</context><context context-type="linenumber">19</context></context-group></trans-unit><trans-unit id="7319979892477125831" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-details/item-details.component.html</context><context context-type="linenumber">32</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-edit/item-edit.component.html</context><context context-type="linenumber">19</context></context-group></trans-unit><trans-unit id="4045087308145757242" datatype="html">
+        <source>Dependencies</source><target state="new">Dependencies</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/pages/item-details/item-details.component.html</context>
+          <context context-type="linenumber">65</context>
+        </context-group>
+      </trans-unit><trans-unit id="7319979892477125831" datatype="html">
         <source> Unable to load the answer, <x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;fallbackLink&quot; class=&quot;alg-link&quot;>"/>load your most recent answer<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/></source><target state="translated"> Erreur lors du chargement de la réponse, <x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;fallbackLink&quot;>"/>charger votre dernière réponse<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/></target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-details/item-details.component.html</context><context context-type="linenumber">68</context></context-group></trans-unit><trans-unit id="887257604747944910" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-details/item-details.component.html</context><context context-type="linenumber">78</context></context-group></trans-unit><trans-unit id="887257604747944910" datatype="html">
         <source>Leave unsaved task</source><target state="translated">Ne pas sauvegarder la réponse</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-details/item-details.component.html</context><context context-type="linenumber">111</context></context-group></trans-unit><trans-unit id="6669833589802408443" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-details/item-details.component.html</context><context context-type="linenumber">125</context></context-group></trans-unit><trans-unit id="6669833589802408443" datatype="html">
         <source>You do not appear to be connected to the Internet, if you leave this task you may loose your progress. Are you sure you want to continue?</source><target state="translated">Vous ne semblez pas être connecté à Internet, si vous quittez cette tâche, vous perdrez vos changements. Êtes-vous sûr de vouloir continuer ?</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-details/item-details.component.html</context><context context-type="linenumber">113</context></context-group></trans-unit><trans-unit id="8127788667268693950" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-details/item-details.component.html</context><context context-type="linenumber">127</context></context-group></trans-unit><trans-unit id="8127788667268693950" datatype="html">
         <source>Loose progress and leave the task</source><target state="translated">Perdre les changement et quitter la tâche</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-details/item-details.component.html</context><context context-type="linenumber">118</context></context-group></trans-unit><trans-unit id="7934833136974560675" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-details/item-details.component.html</context><context context-type="linenumber">132</context></context-group></trans-unit><trans-unit id="7934833136974560675" datatype="html">
         <source>Retry</source><target state="translated">Réessayer</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-details/item-details.component.html</context><context context-type="linenumber">123</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-display/item-display.component.html</context><context context-type="linenumber">40</context></context-group></trans-unit><trans-unit id="unknownError" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-details/item-details.component.html</context><context context-type="linenumber">137</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-display/item-display.component.html</context><context context-type="linenumber">40</context></context-group></trans-unit><trans-unit id="unknownError" datatype="html">
         <source>An unknown error occurred. </source><target state="translated">Une erreur est survenue. </target>
         
         
@@ -483,7 +489,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-display/item-display.component.html</context><context context-type="linenumber">34</context></context-group></trans-unit><trans-unit id="4586682462895822504" datatype="html">
         <source>Unable to load the answer</source><target state="new">Unable to load the answer</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-details/item-details.component.html</context><context context-type="linenumber">66</context></context-group></trans-unit><trans-unit id="3142808599136977164" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-details/item-details.component.html</context><context context-type="linenumber">76</context></context-group></trans-unit><trans-unit id="3142808599136977164" datatype="html">
         <source>Saving answer...</source><target state="new">Saving answer...</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-display/item-display.component.html</context><context context-type="linenumber">52</context></context-group></trans-unit><trans-unit id="4563965495368336177" datatype="html">
@@ -795,6 +801,11 @@
 
         <source>Error</source><target state="translated">Erreur</target>
 
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/services/action-feedback.service.ts</context><context context-type="linenumber">28</context></context-group></trans-unit><trans-unit id="7708270344948043036" datatype="html">
+        <source> <x id="INTERPOLATION" equiv-text="{{ item.type | i18nSelect : {
+          Chapter: 'Only empty chapters can be deleted.',
+          other: 'Only empty skills can be deleted.'
+        } }}"/> </source><target state="new"> <x id="INTERPOLATION" equiv-text="{{ item.type === 'Chapter' ? 'Only empty chapters can be deleted.' : 'Only empty skills can be deleted.' }}"/> </target>
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/app.component.html</context><context context-type="linenumber">47</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/services/action-feedback.service.ts</context><context context-type="linenumber">28</context></context-group></trans-unit><trans-unit id="8286483904887493596" datatype="html">
         <source>You are not allowed to watch the group for which you have requested watching.</source><target state="new">You are not allowed to watch the group for which you have requested watching.</target>
         <context-group purpose="location">
@@ -818,7 +829,7 @@
           Chapter: 'Only empty chapters can be deleted.',
           other: 'Only empty skills can be deleted.'
         } }}"/> </source><target state="new"> <x id="INTERPOLATION" equiv-text="{{ item.type === 'Chapter' ? 'Only empty chapters can be deleted.' : 'Only empty skills can be deleted.' }}"/> </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-remove-button/item-remove-button.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit><trans-unit id="5302971017875260731" datatype="html">
         <source>Only owner can delete items</source><target state="new">Only owner can delete items</target>
         
@@ -936,7 +947,7 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-content/item-content.component.html</context><context context-type="linenumber">70</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-edit-advanced-parameters/item-edit-advanced-parameters.component.html</context><context context-type="linenumber">53</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-edit-advanced-parameters/item-edit-advanced-parameters.component.html</context><context context-type="linenumber">68</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-edit-advanced-parameters/item-edit-advanced-parameters.component.html</context><context context-type="linenumber">80</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-edit-advanced-parameters/item-edit-advanced-parameters.component.html</context><context context-type="linenumber">101</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-edit-advanced-parameters/item-edit-advanced-parameters.component.html</context><context context-type="linenumber">181</context></context-group></trans-unit><trans-unit id="8227500063765912187" datatype="html">
         <source>Starting the activity</source><target state="new">Starting the activity</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-content/item-content.component.html</context><context context-type="linenumber">75</context></context-group></trans-unit><trans-unit id="7493155057912125679" datatype="html">
         <source>Your current access rights do not allow you to list the content of this chapter.</source><target state="new">Your current access rights do not allow you to list the content of this chapter.</target>
         
@@ -1099,7 +1110,7 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-remove-button/group-remove-button.component.ts</context><context context-type="linenumber">66</context></context-group></trans-unit><trans-unit id="4498209255906772178" datatype="html">
         <source>You have deleted "<x id="PH" equiv-text="groupName"/>"</source><target state="new">You have deleted "<x id="PH" equiv-text="groupName"/>"</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-remove-button/group-remove-button.component.ts</context><context context-type="linenumber">87</context></context-group></trans-unit><trans-unit id="194816385249516309" datatype="html">
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/joined-group-list/joined-group-list.component.ts</context><context context-type="linenumber">47</context></context-group></trans-unit><trans-unit id="6260891589219088351" datatype="html">
@@ -1305,6 +1316,56 @@
           <context context-type="sourcefile">src/app/modules/item/components/item-children-edit/item-children-edit.component.html</context>
           <context context-type="linenumber">117</context>
         </context-group>
+      </trans-unit><trans-unit id="4605864425009617908" datatype="html">
+        <source>Prerequisites</source><target state="new">Prerequisites</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/components/item-dependencies/item-dependencies.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit><trans-unit id="7731242626827304298" datatype="html">
+        <source>Unable to load the dependencies</source><target state="new">Unable to load the dependencies</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/components/item-dependencies/item-dependencies.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+      </trans-unit><trans-unit id="9045659846963395136" datatype="html">
+        <source> Users will unlock access to this content if they solve <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>at least one<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/> of the content below. </source><target state="new"> Users will unlock access to this content if they solve <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>at least one<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/> of the content below. </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/components/item-dependencies/item-dependencies.component.html</context>
+          <context context-type="linenumber">18,20</context>
+        </context-group>
+      </trans-unit><trans-unit id="3586651421960732095" datatype="html">
+        <source> Users will see the list of dependencies on the "content" tab only when they do not have access to the content yet. They will only see dependencies they are allowed to view already. </source><target state="new"> Users will see the list of dependencies on the "content" tab only when they do not have access to the content yet. They will only see dependencies they are allowed to view already. </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/components/item-dependencies/item-dependencies.component.html</context>
+          <context context-type="linenumber">37,40</context>
+        </context-group>
+      </trans-unit><trans-unit id="2926423520956948326" datatype="html">
+        <source> There are no prerequisites for this <x id="INTERPOLATION" equiv-text="{{ itemData.item.type | i18nSelect : {
+        Skill: 'skill',
+        other: 'activity'
+      } }}"/>. Users will have access to it only if they are given access manually or if the "default access" is configured as "open" in its parent <x id="INTERPOLATION_1" equiv-text="{{ itemData.item.type | i18nSelect : {
+        Skill: 'skill',
+        Chapter: 'chapter',
+        other: 'activity'
+    } }}"/>. </source><target state="new"> There are no prerequisites for this <x id="INTERPOLATION" equiv-text="{{ itemData.item.type | i18nSelect : {
+        Skill: 'skill',
+        other: 'activity'
+      } }}"/>. Users will have access to it only if they are given access manually or if the "default access" is configured as "open" in its parent <x id="INTERPOLATION_1" equiv-text="{{ itemData.item.type | i18nSelect : {
+        Skill: 'skill',
+        Chapter: 'chapter',
+        other: 'activity'
+    } }}"/>. </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/components/item-dependencies/item-dependencies.component.html</context>
+          <context context-type="linenumber">48,61</context>
+        </context-group>
+      </trans-unit><trans-unit id="5415563544456194521" datatype="html">
+        <source>You are not allowed to view this content</source><target state="new">You are not allowed to view this content</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/components/item-dependencies/item-dependencies.component.html</context>
+          <context context-type="linenumber">65</context>
+        </context-group>
       </trans-unit><trans-unit id="8309054658706496987" datatype="html">
         <source> «<x id="INTERPOLATION" equiv-text="{{ watchedGroup.name }}"/>» <x id="INTERPOLATION_1" equiv-text="{{ ['content', 'content_with_descendants', 'solution'].includes(watchedGroupPermissions.canView).toString() | i18nSelect : {
           true: 'can',
@@ -1352,12 +1413,12 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-permissions/item-permissions.component.html</context><context context-type="linenumber">80</context></context-group></trans-unit><trans-unit id="1946660694635960249" datatype="html">
         <source>Edit permissions</source><target state="new">Edit permissions</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-permissions/item-permissions.component.html</context><context context-type="linenumber">100</context></context-group></trans-unit><trans-unit id="permissionsUpdated" datatype="html">
         <source>Permissions successfully updated.</source><target state="new">Permissions successfully updated.</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-permissions/item-permissions.component.ts</context><context context-type="linenumber">66</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/group-progress-grid/group-progress-grid.component.ts</context><context context-type="linenumber">270</context></context-group></trans-unit><trans-unit id="1519954996184640001" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-permissions/item-permissions.component.ts</context><context context-type="linenumber">65</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/group-progress-grid/group-progress-grid.component.ts</context><context context-type="linenumber">270</context></context-group></trans-unit><trans-unit id="1519954996184640001" datatype="html">
         <source>Error</source><target state="translated">Erreur</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-children-edit/item-children-edit.component.html</context><context context-type="linenumber">88</context></context-group></trans-unit><trans-unit id="429958371655094287" datatype="html">
