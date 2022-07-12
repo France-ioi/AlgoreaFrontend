@@ -1,10 +1,10 @@
 import { pipe } from 'fp-ts/lib/function';
 import * as D from 'io-ts/Decoder';
 import { dateDecoder } from '../../helpers/decoders';
-import { allowsGrantingEdition, ItemEditPerm, itemEditPermDecoder } from './item-edit-permission';
-import { allowsGrantingView, ItemGrantViewPerm, itemGrantViewPermDecoder } from './item-grant-view-permission';
+import { allowsGrantingEdition, ItemPermWithEdit, itemEditPermDecoder } from './item-edit-permission';
+import { allowsGrantingView, ItemPermWithGrantView, itemGrantViewPermDecoder } from './item-grant-view-permission';
 import { itemViewPermDecoder } from './item-view-permission';
-import { allowsGrantingWatch, ItemWatchPerm, itemWatchPermDecoder } from './item-watch-permission';
+import { allowsGrantingWatch, ItemPermWithWatch, itemWatchPermDecoder } from './item-watch-permission';
 
 export const itemOwnerPermDecoder = D.struct({
   isOwner: D.boolean
@@ -38,6 +38,6 @@ export type ItemCorePerm = D.TypeOf<typeof itemCorePermDecoder>;
  * Whether the item permissions allows giving some permissions on the item to groups/users.
  * (warning: it requires also permissions on the receiving group/user!)
  */
-export function allowsGivingPermToItem(p: ItemGrantViewPerm & ItemWatchPerm & ItemEditPerm): boolean {
+export function allowsGivingPermToItem(p: ItemPermWithGrantView & ItemPermWithWatch & ItemPermWithEdit): boolean {
   return allowsGrantingView(p) || allowsGrantingWatch(p) || allowsGrantingEdition(p);
 }

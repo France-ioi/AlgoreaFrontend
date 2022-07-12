@@ -23,11 +23,11 @@ import { DataPager } from 'src/app/shared/helpers/data-pager';
 import { mapToFetchState, readyData } from 'src/app/shared/operators/state';
 import { FetchState } from 'src/app/shared/helpers/state';
 import { HttpErrorResponse } from '@angular/common/http';
-import { ITEMVIEWPERM_NONE } from 'src/app/shared/models/domain/item-view-permission';
-import { ITEMGRANTVIEWPERM_NONE } from 'src/app/shared/models/domain/item-grant-view-permission';
-import { ITEMEDITPERM_NONE } from 'src/app/shared/models/domain/item-edit-permission';
-import { ITEMWATCHPERM_NONE } from 'src/app/shared/models/domain/item-watch-permission';
+import { ItemViewPerm } from 'src/app/shared/models/domain/item-view-permission';
+import { ItemGrantViewPerm } from 'src/app/shared/models/domain/item-grant-view-permission';
+import { ItemWatchPerm } from 'src/app/shared/models/domain/item-watch-permission';
 import { allowsGivingPermToItem } from 'src/app/shared/models/domain/item-permissions';
+import { ItemEditPerm } from 'src/app/shared/models/domain/item-edit-permission';
 
 const progressListLimit = 25;
 
@@ -70,10 +70,10 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
       itemId: '',
       targetGroupId: '',
       permissions: {
-        canView: ITEMVIEWPERM_NONE,
-        canGrantView: ITEMGRANTVIEWPERM_NONE,
-        canWatch: ITEMWATCHPERM_NONE,
-        canEdit: ITEMEDITPERM_NONE,
+        canView: ItemViewPerm.None,
+        canGrantView: ItemGrantViewPerm.None,
+        canWatch: ItemWatchPerm.None,
+        canEdit: ItemEditPerm.None,
         canMakeSessionOfficial: false,
         isOwner: true,
       }

@@ -27,7 +27,7 @@ import { LTIDataSource } from 'src/app/modules/lti/services/lti-datasource.servi
 import { PublishResultsService } from '../../http-services/publish-result.service';
 import { errorIsHTTPForbidden } from 'src/app/shared/helpers/errors';
 import { isNotUndefined } from '../../../../shared/helpers/null-undefined-predicates';
-import { ItemEditPerm, ITEMEDITPERM_NONE } from 'src/app/shared/models/domain/item-edit-permission';
+import { ItemPermWithEdit, ItemEditPerm } from 'src/app/shared/models/domain/item-edit-permission';
 
 export interface TaskTab {
   name: string,
@@ -45,7 +45,7 @@ const heightSyncInterval = 0.2*SECONDS;
 export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges, OnDestroy {
   @Input() route!: FullItemRoute;
   @Input() url!: string;
-  @Input() editingPermission: ItemEditPerm = { canEdit: ITEMEDITPERM_NONE };
+  @Input() editingPermission: ItemPermWithEdit = { canEdit: ItemEditPerm.None };
   @Input() attemptId!: string;
   @Input() view?: TaskTab['view'];
   @Input() taskConfig: TaskConfig = { readOnly: false, formerAnswer: null };

@@ -1,37 +1,31 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import * as D from 'io-ts/Decoder';
 
-// short versions, not for export
-const
-  NONE = 'none',
-  ENTER = 'enter',
-  CONTENT = 'content',
-  CONTENT_WITH_DESCENDANTS = 'content_with_descendants',
-  SOLUTION = 'solution',
-  SOLUTION_WITH_GRANT = 'solution_with_grant';
+export enum ItemGrantViewPerm {
+  None = 'none',
+  Enter = 'enter',
+  Content = 'content',
+  ContentWithDescendants = 'content_with_descendants',
+  Solution = 'solution',
+  SolutionWithGrant = 'solution_with_grant',
+}
+export const itemGrantViewPermMax = ItemGrantViewPerm.SolutionWithGrant;
 
-export const
-  ITEMGRANTVIEWPERM_NONE = NONE,
-  ITEMGRANTVIEWPERM_ENTER = ENTER,
-  ITEMGRANTVIEWPERM_CONTENT = CONTENT,
-  ITEMGRANTVIEWPERM_CONTENT_WITH_DESCENDANTS = CONTENT_WITH_DESCENDANTS,
-  ITEMGRANTVIEWPERM_SOLUTION = SOLUTION,
-  ITEMGRANTVIEWPERM_SOLUTION_WITH_GRANT = SOLUTION_WITH_GRANT,
-  ITEMGRANTVIEWPERM_MAX = SOLUTION_WITH_GRANT;
+const P = ItemGrantViewPerm; // non-exported shorthand
 
-export const itemGrantViewPermValues = [ NONE, ENTER, CONTENT, CONTENT_WITH_DESCENDANTS, SOLUTION, SOLUTION_WITH_GRANT ] as const;
+export const itemGrantViewPermValues = [ P.None, P.Enter, P.Content, P.ContentWithDescendants, P.Solution, P.SolutionWithGrant ] as const;
 export const itemGrantViewPermDecoder = D.struct({
   canGrantView: D.literal(...itemGrantViewPermValues)
 });
-export type ItemGrantViewPerm = D.TypeOf<typeof itemGrantViewPermDecoder>;
-export interface ItemWithGrantViewPerm { permissions: ItemGrantViewPerm }
+export type ItemPermWithGrantView = D.TypeOf<typeof itemGrantViewPermDecoder>;
+export interface ItemWithGrantViewPerm { permissions: ItemPermWithGrantView }
 
-export function allowsGrantingView(p: ItemGrantViewPerm): boolean {
-  return [ ENTER, CONTENT, CONTENT_WITH_DESCENDANTS, SOLUTION, SOLUTION_WITH_GRANT ].includes(p.canGrantView);
+export function allowsGrantingView(p: ItemPermWithGrantView): boolean {
+  return [ P.Enter, P.Content, P.ContentWithDescendants, P.Solution, P.SolutionWithGrant ].includes(p.canGrantView);
 }
 
-export function allowsGrantingContentView(p: ItemGrantViewPerm): boolean {
-  return [ CONTENT, CONTENT_WITH_DESCENDANTS, SOLUTION, SOLUTION_WITH_GRANT ].includes(p.canGrantView);
+export function allowsGrantingContentView(p: ItemPermWithGrantView): boolean {
+  return [ P.Content, P.ContentWithDescendants, P.Solution, P.SolutionWithGrant ].includes(p.canGrantView);
 }
 
 // ********************************************

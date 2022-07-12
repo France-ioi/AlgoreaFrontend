@@ -1,7 +1,7 @@
-import { itemGrantViewPermValues } from 'src/app/shared/models/domain/item-grant-view-permission';
-import { itemViewPermValues } from 'src/app/shared/models/domain/item-view-permission';
-import { itemEditPermValues } from 'src/app/shared/models/domain/item-edit-permission';
-import { itemWatchPermValues } from 'src/app/shared/models/domain/item-watch-permission';
+import { ItemGrantViewPerm, itemGrantViewPermValues } from 'src/app/shared/models/domain/item-grant-view-permission';
+import { ItemViewPerm, itemViewPermValues } from 'src/app/shared/models/domain/item-view-permission';
+import { ItemEditPerm, itemEditPermValues } from 'src/app/shared/models/domain/item-edit-permission';
+import { ItemWatchPerm, itemWatchPermValues } from 'src/app/shared/models/domain/item-watch-permission';
 import {
   validateCanEdit,
   validateCanGrantView,
@@ -46,63 +46,79 @@ describe('"can_view" permissions constraints', () => {
 
   it('should be a able to set to "none" ', () => {
     for (const giverPermissions of combinations({ canGrantView: itemGrantViewPermValues })) {
-      expect(validateCanView({ canView: 'none' }, giverPermissions)).toEqual([]);
+      expect(validateCanView({ canView: ItemViewPerm.None }, giverPermissions)).toEqual([]);
     }
   });
 
   it('should be a able to set to "info" ', () => {
     for (const giverPermissions of combinations({
-      canGrantView: [ 'enter', 'content', 'content_with_descendants', 'solution', 'solution_with_grant' ] as const
+      canGrantView: [
+        ItemGrantViewPerm.Enter,
+        ItemGrantViewPerm.Content,
+        ItemGrantViewPerm.ContentWithDescendants,
+        ItemGrantViewPerm.Solution,
+        ItemGrantViewPerm.SolutionWithGrant
+      ] as const
     })) {
-      expect(validateCanView({ canView: 'info' }, giverPermissions)).toEqual([]);
+      expect(validateCanView({ canView: ItemViewPerm.Info }, giverPermissions)).toEqual([]);
     }
 
     for (const giverPermissions of combinations({
-      canGrantView: [ 'none' ] as const
+      canGrantView: [ ItemGrantViewPerm.None ] as const
     })) {
-      expect(validateCanView({ canView: 'info' }, giverPermissions)[0]).toBeDefined();
+      expect(validateCanView({ canView: ItemViewPerm.Info }, giverPermissions)[0]).toBeDefined();
     }
   });
 
   it('should be a able to set to "content" ', () => {
     for (const giverPermissions of combinations({
-      canGrantView: [ 'content', 'content_with_descendants', 'solution', 'solution_with_grant' ] as const
+      canGrantView: [
+        ItemGrantViewPerm.Content,
+        ItemGrantViewPerm.ContentWithDescendants,
+        ItemGrantViewPerm.Solution,
+        ItemGrantViewPerm.SolutionWithGrant
+      ] as const
     })) {
-      expect(validateCanView({ canView: 'content' }, giverPermissions)).toEqual([]);
+      expect(validateCanView({ canView: ItemViewPerm.Content }, giverPermissions)).toEqual([]);
     }
 
     for (const giverPermissions of combinations({
-      canGrantView: [ 'none', 'enter' ] as const
+      canGrantView: [ ItemGrantViewPerm.None, ItemGrantViewPerm.Enter ] as const
     })) {
-      expect(validateCanView({ canView: 'content' }, giverPermissions)[0]).toBeDefined();
+      expect(validateCanView({ canView: ItemViewPerm.Content }, giverPermissions)[0]).toBeDefined();
     }
   });
 
   it('should be a able to set to "content_with_descendants" ', () => {
     for (const giverPermissions of combinations({
-      canGrantView: [ 'content_with_descendants', 'solution', 'solution_with_grant' ] as const
+      canGrantView: [ ItemGrantViewPerm.ContentWithDescendants, ItemGrantViewPerm.Solution, ItemGrantViewPerm.SolutionWithGrant ] as const
     })) {
-      expect(validateCanView({ canView: 'content_with_descendants' }, giverPermissions)).toEqual([]);
+      expect(validateCanView({ canView: ItemViewPerm.ContentWithDescendants }, giverPermissions)).toEqual([]);
     }
 
     for (const giverPermissions of combinations({
-      canGrantView: [ 'none', 'enter', 'content' ] as const
+      canGrantView: [ ItemGrantViewPerm.None, ItemGrantViewPerm.Enter, ItemGrantViewPerm.Content ] as const
     })) {
-      expect(validateCanView({ canView: 'content_with_descendants' }, giverPermissions)[0]).toBeDefined();
+      expect(validateCanView({ canView: ItemViewPerm.ContentWithDescendants }, giverPermissions)[0]).toBeDefined();
     }
   });
 
   it('should be a able to set to "solution" ', () => {
     for (const giverPermissions of combinations({
-      canGrantView: [ 'solution', 'solution_with_grant' ] as const
+      canGrantView: [ ItemGrantViewPerm.Solution, ItemGrantViewPerm.SolutionWithGrant ] as const
     })) {
-      expect(validateCanView({ canView: 'solution' }, giverPermissions)).toEqual([]);
+      expect(validateCanView({ canView: ItemViewPerm.Solution }, giverPermissions)).toEqual([]);
     }
 
     for (const giverPermissions of combinations({
-      canGrantView: [ 'none', 'enter', 'content', 'content_with_descendants' ] as const
+      canGrantView: [
+        ItemGrantViewPerm.None,
+        ItemGrantViewPerm.Enter,
+        ItemGrantViewPerm.Content,
+        ItemGrantViewPerm.ContentWithDescendants
+      ] as const
     })) {
-      expect(validateCanView({ canView: 'solution' }, giverPermissions)[0]).toBeDefined();
+      expect(validateCanView({ canView: ItemViewPerm.Solution }, giverPermissions)[0]).toBeDefined();
     }
   });
 
@@ -113,7 +129,7 @@ describe('"can_grant_view" permissions constraints', () => {
   it('should be a able to set to "none" ', () => {
     for (const p of combinations({
       receiverPermissions: combinations({
-        canGrantView: [ 'none' ] as const,
+        canGrantView: [ ItemGrantViewPerm.None ] as const,
         canView: itemViewPermValues,
       }),
       giverPermissions: combinations({
@@ -127,25 +143,25 @@ describe('"can_grant_view" permissions constraints', () => {
 
   it('should be a able to set to "enter" ', () => {
 
-    // giver can_grant_view == 'solution_with_grant' && receiver can_view >= 'info'
+    // giver can_grant_view == ItemGrantViewPerm.SolutionWithGrant && receiver can_view >= ItemViewPerm.Info
     for (const p of combinations({
       receiverPermissions: combinations({
-        canGrantView: [ 'enter' ] as const,
-        canView: [ 'info', 'content', 'content_with_descendants', 'solution' ] as const,
+        canGrantView: [ ItemGrantViewPerm.Enter ] as const,
+        canView: [ ItemViewPerm.Info, ItemViewPerm.Content, ItemViewPerm.ContentWithDescendants, ItemViewPerm.Solution ] as const,
       }),
       giverPermissions: combinations({
-        canGrantView: [ 'solution_with_grant' ] as const,
+        canGrantView: [ ItemGrantViewPerm.SolutionWithGrant ] as const,
         isOwner: [ true, false ] as const,
       }),
     })) {
       expect(validateCanGrantView(p.receiverPermissions, p.giverPermissions)).toEqual([]);
     }
 
-    // receiver can_view < 'info'
+    // receiver can_view < ItemViewPerm.Info
     for (const p of combinations({
       receiverPermissions: combinations({
-        canGrantView: [ 'enter' ] as const,
-        canView: [ 'none' ] as const,
+        canGrantView: [ ItemGrantViewPerm.Enter ] as const,
+        canView: [ ItemViewPerm.None ] as const,
       }),
       giverPermissions: combinations({
         canGrantView: itemGrantViewPermValues,
@@ -155,14 +171,20 @@ describe('"can_grant_view" permissions constraints', () => {
       expect(validateCanGrantView(p.receiverPermissions, p.giverPermissions)[0]).toBeDefined();
     }
 
-    // giver can_grant_view !== 'solution_with_grant'
+    // giver can_grant_view !== ItemGrantViewPerm.SolutionWithGrant
     for (const p of combinations({
       receiverPermissions: combinations({
-        canGrantView: [ 'enter' ] as const,
+        canGrantView: [ ItemGrantViewPerm.Enter ] as const,
         canView: itemViewPermValues,
       }),
       giverPermissions: combinations({
-        canGrantView: [ 'none', 'enter', 'content', 'content_with_descendants', 'solution' ] as const,
+        canGrantView: [
+          ItemGrantViewPerm.None,
+          ItemGrantViewPerm.Enter,
+          ItemGrantViewPerm.Content,
+          ItemGrantViewPerm.ContentWithDescendants,
+          ItemGrantViewPerm.Solution
+        ] as const,
         isOwner: [ true, false ] as const,
       }),
     })) {
@@ -172,25 +194,25 @@ describe('"can_grant_view" permissions constraints', () => {
 
   it('should be a able to set to "content" ', () => {
 
-    // giver can_grant_view == 'solution_with_grant' && receiver can_view >= 'content'
+    // giver can_grant_view == ItemGrantViewPerm.SolutionWithGrant && receiver can_view >= ItemViewPerm.Content
     for (const p of combinations({
       receiverPermissions: combinations({
-        canGrantView: [ 'content' ] as const,
-        canView: [ 'content', 'content_with_descendants', 'solution' ] as const,
+        canGrantView: [ ItemGrantViewPerm.Content ] as const,
+        canView: [ ItemViewPerm.Content, ItemViewPerm.ContentWithDescendants, ItemViewPerm.Solution ] as const,
       }),
       giverPermissions: combinations({
-        canGrantView: [ 'solution_with_grant' ] as const,
+        canGrantView: [ ItemGrantViewPerm.SolutionWithGrant ] as const,
         isOwner: [ true, false ] as const,
       }),
     })) {
       expect(validateCanGrantView(p.receiverPermissions, p.giverPermissions)).toEqual([]);
     }
 
-    // receiver can_view < 'content'
+    // receiver can_view < ItemViewPerm.Content
     for (const p of combinations({
       receiverPermissions: combinations({
-        canGrantView: [ 'content' ] as const,
-        canView: [ 'none', 'info' ] as const,
+        canGrantView: [ ItemGrantViewPerm.Content ] as const,
+        canView: [ ItemViewPerm.None, ItemViewPerm.Info ] as const,
       }),
       giverPermissions: combinations({
         canGrantView: itemGrantViewPermValues,
@@ -200,14 +222,20 @@ describe('"can_grant_view" permissions constraints', () => {
       expect(validateCanGrantView(p.receiverPermissions, p.giverPermissions)[0]).toBeDefined();
     }
 
-    // giver can_grant_view !== 'solution_with_grant'
+    // giver can_grant_view !== ItemGrantViewPerm.SolutionWithGrant
     for (const p of combinations({
       receiverPermissions: combinations({
-        canGrantView: [ 'content' ] as const,
+        canGrantView: [ ItemGrantViewPerm.Content ] as const,
         canView: itemViewPermValues,
       }),
       giverPermissions: combinations({
-        canGrantView: [ 'none', 'enter', 'content', 'content_with_descendants', 'solution' ] as const,
+        canGrantView: [
+          ItemGrantViewPerm.None,
+          ItemGrantViewPerm.Enter,
+          ItemGrantViewPerm.Content,
+          ItemGrantViewPerm.ContentWithDescendants,
+          ItemGrantViewPerm.Solution
+        ] as const,
         isOwner: [ true, false ] as const,
       }),
     })) {
@@ -217,25 +245,25 @@ describe('"can_grant_view" permissions constraints', () => {
 
   it('should be a able to set to "content_with_descendants" ', () => {
 
-    // giver can_grant_view == 'solution_with_grant' && receiver can_view >= 'content_with_descendants'
+    // giver can_grant_view == ItemGrantViewPerm.SolutionWithGrant && receiver can_view >= ItemViewPerm.ContentWithDescendants
     for (const p of combinations({
       receiverPermissions: combinations({
-        canGrantView: [ 'content_with_descendants' ] as const,
-        canView: [ 'content_with_descendants', 'solution' ] as const,
+        canGrantView: [ ItemGrantViewPerm.ContentWithDescendants ] as const,
+        canView: [ ItemViewPerm.ContentWithDescendants, ItemViewPerm.Solution ] as const,
       }),
       giverPermissions: combinations({
-        canGrantView: [ 'solution_with_grant' ] as const,
+        canGrantView: [ ItemGrantViewPerm.SolutionWithGrant ] as const,
         isOwner: [ true, false ] as const,
       }),
     })) {
       expect(validateCanGrantView(p.receiverPermissions, p.giverPermissions)).toEqual([]);
     }
 
-    // receiver can_view < 'content_with_descendants'
+    // receiver can_view < ItemViewPerm.ContentWithDescendants
     for (const p of combinations({
       receiverPermissions: combinations({
-        canGrantView: [ 'content_with_descendants' ] as const,
-        canView: [ 'none', 'info', 'content' ] as const,
+        canGrantView: [ ItemGrantViewPerm.ContentWithDescendants ] as const,
+        canView: [ ItemViewPerm.None, ItemViewPerm.Info, ItemViewPerm.Content ] as const,
       }),
       giverPermissions: combinations({
         canGrantView: itemGrantViewPermValues,
@@ -245,14 +273,20 @@ describe('"can_grant_view" permissions constraints', () => {
       expect(validateCanGrantView(p.receiverPermissions, p.giverPermissions)[0]).toBeDefined();
     }
 
-    // giver can_grant_view !== 'solution_with_grant'
+    // giver can_grant_view !== ItemGrantViewPerm.SolutionWithGrant
     for (const p of combinations({
       receiverPermissions: combinations({
-        canGrantView: [ 'content_with_descendants' ] as const,
+        canGrantView: [ ItemGrantViewPerm.ContentWithDescendants ] as const,
         canView: itemViewPermValues,
       }),
       giverPermissions: combinations({
-        canGrantView: [ 'none', 'enter', 'content', 'content_with_descendants', 'solution' ] as const,
+        canGrantView: [
+          ItemGrantViewPerm.None,
+          ItemGrantViewPerm.Enter,
+          ItemGrantViewPerm.Content,
+          ItemGrantViewPerm.ContentWithDescendants,
+          ItemGrantViewPerm.Solution
+        ] as const,
         isOwner: [ true, false ] as const,
       }),
     })) {
@@ -262,25 +296,25 @@ describe('"can_grant_view" permissions constraints', () => {
 
   it('should be a able to set to "solution" ', () => {
 
-    // giver can_grant_view == 'solution_with_grant' && receiver can_view >= 'solution'
+    // giver can_grant_view == ItemGrantViewPerm.SolutionWithGrant && receiver can_view >= ItemViewPerm.Solution
     for (const p of combinations({
       receiverPermissions: combinations({
-        canGrantView: [ 'solution' ] as const,
-        canView: [ 'solution' ] as const,
+        canGrantView: [ ItemGrantViewPerm.Solution ] as const,
+        canView: [ ItemViewPerm.Solution ] as const,
       }),
       giverPermissions: combinations({
-        canGrantView: [ 'solution_with_grant' ] as const,
+        canGrantView: [ ItemGrantViewPerm.SolutionWithGrant ] as const,
         isOwner: [ true, false ] as const,
       }),
     })) {
       expect(validateCanGrantView(p.receiverPermissions, p.giverPermissions)).toEqual([]);
     }
 
-    // receiver can_view < 'solution'
+    // receiver can_view < ItemViewPerm.Solution
     for (const p of combinations({
       receiverPermissions: combinations({
-        canGrantView: [ 'solution' ] as const,
-        canView: [ 'none', 'info', 'content', 'content_with_descendants' ] as const,
+        canGrantView: [ ItemGrantViewPerm.Solution ] as const,
+        canView: [ ItemViewPerm.None, ItemViewPerm.Info, ItemViewPerm.Content, ItemViewPerm.ContentWithDescendants ] as const,
       }),
       giverPermissions: combinations({
         canGrantView: itemGrantViewPermValues,
@@ -290,14 +324,20 @@ describe('"can_grant_view" permissions constraints', () => {
       expect(validateCanGrantView(p.receiverPermissions, p.giverPermissions)[0]).toBeDefined();
     }
 
-    // giver can_grant_view !== 'solution_with_grant'
+    // giver can_grant_view !== ItemGrantViewPerm.SolutionWithGrant
     for (const p of combinations({
       receiverPermissions: combinations({
-        canGrantView: [ 'solution' ] as const,
+        canGrantView: [ ItemGrantViewPerm.Solution ] as const,
         canView: itemViewPermValues,
       }),
       giverPermissions: combinations({
-        canGrantView: [ 'none', 'enter', 'content', 'content_with_descendants', 'solution' ] as const,
+        canGrantView: [
+          ItemGrantViewPerm.None,
+          ItemGrantViewPerm.Enter,
+          ItemGrantViewPerm.Content,
+          ItemGrantViewPerm.ContentWithDescendants,
+          ItemGrantViewPerm.Solution
+        ] as const,
         isOwner: [ true, false ] as const,
       }),
     })) {
@@ -307,11 +347,11 @@ describe('"can_grant_view" permissions constraints', () => {
 
   it('should be a able to set to "solution_with_grant" ', () => {
 
-    // giver is_owner == true && receiver can_view >= 'solution'
+    // giver is_owner == true && receiver can_view >= ItemViewPerm.Solution
     for (const p of combinations({
       receiverPermissions: combinations({
-        canGrantView: [ 'solution_with_grant' ] as const,
-        canView: [ 'solution' ] as const,
+        canGrantView: [ ItemGrantViewPerm.SolutionWithGrant ] as const,
+        canView: [ ItemViewPerm.Solution ] as const,
       }),
       giverPermissions: combinations({
         canGrantView: itemGrantViewPermValues,
@@ -321,11 +361,11 @@ describe('"can_grant_view" permissions constraints', () => {
       expect(validateCanGrantView(p.receiverPermissions, p.giverPermissions)).toEqual([]);
     }
 
-    // receiver can_view < 'solution'
+    // receiver can_view < ItemViewPerm.Solution
     for (const p of combinations({
       receiverPermissions: combinations({
-        canGrantView: [ 'solution_with_grant' ] as const,
-        canView: [ 'none', 'info', 'content', 'content_with_descendants' ] as const,
+        canGrantView: [ ItemGrantViewPerm.SolutionWithGrant ] as const,
+        canView: [ ItemViewPerm.None, ItemViewPerm.Info, ItemViewPerm.Content, ItemViewPerm.ContentWithDescendants ] as const,
       }),
       giverPermissions: combinations({
         canGrantView: itemGrantViewPermValues,
@@ -338,7 +378,7 @@ describe('"can_grant_view" permissions constraints', () => {
     // giver is_owner !== true
     for (const p of combinations({
       receiverPermissions: combinations({
-        canGrantView: [ 'solution_with_grant' ] as const,
+        canGrantView: [ ItemGrantViewPerm.SolutionWithGrant ] as const,
         canView: itemViewPermValues,
       }),
       giverPermissions: combinations({
@@ -356,7 +396,7 @@ describe('"can_watch" permissions constraints', () => {
   it('should be a able to set to "none" ', () => {
     for (const p of combinations({
       receiverPermissions: combinations({
-        canWatch: [ 'none' ] as const,
+        canWatch: [ ItemWatchPerm.None ] as const,
         canView: itemViewPermValues,
       }),
       giverPermissions: combinations({
@@ -368,30 +408,30 @@ describe('"can_watch" permissions constraints', () => {
     }
   });
 
-  const values = [ 'result', 'answer' ] as const;
+  const values = [ ItemWatchPerm.Result, ItemWatchPerm.Answer ] as const;
 
   values.forEach(value => {
     it(`should be a able to set to "${value}" `, () => {
 
-      // giver can_watch == 'answer_with_grant' && receiver can_view >= 'content'
+      // giver can_watch == ItemWatchPerm.AnswerWithGrant && receiver can_view >= ItemViewPerm.Content
       for (const p of combinations({
         receiverPermissions: combinations({
           canWatch: [ value ],
-          canView: [ 'content', 'content_with_descendants', 'solution' ] as const,
+          canView: [ ItemViewPerm.Content, ItemViewPerm.ContentWithDescendants, ItemViewPerm.Solution ] as const,
         }),
         giverPermissions: combinations({
-          canWatch: [ 'answer_with_grant' ] as const,
+          canWatch: [ ItemWatchPerm.AnswerWithGrant ] as const,
           isOwner: [ true, false ] as const,
         }),
       })) {
         expect(validateCanWatch(p.receiverPermissions, p.giverPermissions)).toEqual([]);
       }
 
-      // receiver can_view < 'content'
+      // receiver can_view < ItemViewPerm.Content
       for (const p of combinations({
         receiverPermissions: combinations({
           canWatch: [ value ],
-          canView: [ 'none', 'info' ] as const,
+          canView: [ ItemViewPerm.None, ItemViewPerm.Info ] as const,
         }),
         giverPermissions: combinations({
           canWatch: itemWatchPermValues,
@@ -401,14 +441,14 @@ describe('"can_watch" permissions constraints', () => {
         expect(validateCanWatch(p.receiverPermissions, p.giverPermissions)[0]).toBeDefined();
       }
 
-      // giver can_watch !== 'answer_with_grant'
+      // giver can_watch !== ItemWatchPerm.AnswerWithGrant
       for (const p of combinations({
         receiverPermissions: combinations({
           canWatch: [ value ],
           canView: itemViewPermValues,
         }),
         giverPermissions: combinations({
-          canWatch: [ 'none', 'result', 'answer' ] as const,
+          canWatch: [ ItemWatchPerm.None, ItemWatchPerm.Result, ItemWatchPerm.Answer ] as const,
           isOwner: [ true, false ] as const,
         }),
       })) {
@@ -420,8 +460,8 @@ describe('"can_watch" permissions constraints', () => {
   it('should be a able to set to "answer_with_grant" ', () => {
     for (const p of combinations({
       receiverPermissions: combinations({
-        canWatch: [ 'answer_with_grant' ] as const,
-        canView: [ 'content', 'content_with_descendants', 'solution' ] as const,
+        canWatch: [ ItemWatchPerm.AnswerWithGrant ] as const,
+        canView: [ ItemViewPerm.Content, ItemViewPerm.ContentWithDescendants, ItemViewPerm.Solution ] as const,
       }),
       giverPermissions: combinations({
         canWatch: itemWatchPermValues,
@@ -431,11 +471,11 @@ describe('"can_watch" permissions constraints', () => {
       expect(validateCanWatch(p.receiverPermissions, p.giverPermissions)).toEqual([]);
     }
 
-    // receiver can_view < 'content'
+    // receiver can_view < ItemViewPerm.Content
     for (const p of combinations({
       receiverPermissions: combinations({
-        canWatch: [ 'answer_with_grant' ] as const,
-        canView: [ 'none', 'info' ] as const,
+        canWatch: [ ItemWatchPerm.AnswerWithGrant ] as const,
+        canView: [ ItemViewPerm.None, ItemViewPerm.Info ] as const,
       }),
       giverPermissions: combinations({
         canWatch: itemWatchPermValues,
@@ -448,7 +488,7 @@ describe('"can_watch" permissions constraints', () => {
     // giver not owner
     for (const p of combinations({
       receiverPermissions: combinations({
-        canWatch: [ 'answer_with_grant' ] as const,
+        canWatch: [ ItemWatchPerm.AnswerWithGrant ] as const,
         canView: itemViewPermValues,
       }),
       giverPermissions: combinations({
@@ -467,7 +507,7 @@ describe('"can_edit" permissions constraints', () => {
   it('should be a able to set to "none" ', () => {
     for (const p of combinations({
       receiverPermissions: combinations({
-        canEdit: [ 'none' ] as const,
+        canEdit: [ ItemEditPerm.None ] as const,
         canView: itemViewPermValues,
       }),
       giverPermissions: combinations({
@@ -479,30 +519,30 @@ describe('"can_edit" permissions constraints', () => {
     }
   });
 
-  const values = [ 'children', 'all' ] as const;
+  const values = [ ItemEditPerm.Children, ItemEditPerm.All ] as const;
 
   values.forEach(value => {
     it(`should be a able to set to "${value}" `, () => {
 
-      // giver can_edit == 'all_with_grant' && receiver can_view >= 'content'
+      // giver can_edit == ItemEditPerm.AllWithGrant && receiver can_view >= ItemViewPerm.Content
       for (const p of combinations({
         receiverPermissions: combinations({
           canEdit: [ value ],
-          canView: [ 'content', 'content_with_descendants', 'solution' ] as const,
+          canView: [ ItemViewPerm.Content, ItemViewPerm.ContentWithDescendants, ItemViewPerm.Solution ] as const,
         }),
         giverPermissions: combinations({
-          canEdit: [ 'all_with_grant' ] as const,
+          canEdit: [ ItemEditPerm.AllWithGrant ] as const,
           isOwner: [ true, false ] as const,
         }),
       })) {
         expect(validateCanEdit(p.receiverPermissions, p.giverPermissions)).toEqual([]);
       }
 
-      // receiver can_view < 'content'
+      // receiver can_view < ItemViewPerm.Content
       for (const p of combinations({
         receiverPermissions: combinations({
           canEdit: [ value ],
-          canView: [ 'none', 'info' ] as const,
+          canView: [ ItemViewPerm.None, ItemViewPerm.Info ] as const,
         }),
         giverPermissions: combinations({
           canEdit: itemEditPermValues,
@@ -512,14 +552,14 @@ describe('"can_edit" permissions constraints', () => {
         expect(validateCanEdit(p.receiverPermissions, p.giverPermissions)[0]).toBeDefined();
       }
 
-      // giver can_edit !== 'all_with_grant'
+      // giver can_edit !== ItemEditPerm.AllWithGrant
       for (const p of combinations({
         receiverPermissions: combinations({
           canEdit: [ value ],
           canView: itemViewPermValues,
         }),
         giverPermissions: combinations({
-          canEdit: [ 'none','children','all' ] as const,
+          canEdit: [ ItemEditPerm.None, ItemEditPerm.Children, ItemEditPerm.All ] as const,
           isOwner: [ true, false ] as const,
         }),
       })) {
@@ -531,8 +571,8 @@ describe('"can_edit" permissions constraints', () => {
   it('should be a able to set to "all_with_grant" ', () => {
     for (const p of combinations({
       receiverPermissions: combinations({
-        canEdit: [ 'all_with_grant' ] as const,
-        canView: [ 'content', 'content_with_descendants', 'solution' ] as const,
+        canEdit: [ ItemEditPerm.AllWithGrant ] as const,
+        canView: [ ItemViewPerm.Content, ItemViewPerm.ContentWithDescendants, ItemViewPerm.Solution ] as const,
       }),
       giverPermissions: combinations({
         canEdit: itemEditPermValues,
@@ -542,11 +582,11 @@ describe('"can_edit" permissions constraints', () => {
       expect(validateCanEdit(p.receiverPermissions, p.giverPermissions)).toEqual([]);
     }
 
-    // receiver can_view < 'content'
+    // receiver can_view < ItemViewPerm.Content
     for (const p of combinations({
       receiverPermissions: combinations({
-        canEdit: [ 'all_with_grant' ] as const,
-        canView: [ 'none', 'info' ] as const,
+        canEdit: [ ItemEditPerm.AllWithGrant ] as const,
+        canView: [ ItemViewPerm.None, ItemViewPerm.Info ] as const,
       }),
       giverPermissions: combinations({
         canEdit: itemEditPermValues,
@@ -559,7 +599,7 @@ describe('"can_edit" permissions constraints', () => {
     // giver not owner
     for (const p of combinations({
       receiverPermissions: combinations({
-        canEdit: [ 'all_with_grant' ] as const,
+        canEdit: [ ItemEditPerm.AllWithGrant ] as const,
         canView: itemViewPermValues,
       }),
       giverPermissions: combinations({
@@ -590,21 +630,21 @@ describe('"can_make_session_official" permissions constraints', () => {
 
   it('should be a able to set to "true" ', () => {
 
-    // giver is owner and receiver can_view >= 'info'
+    // giver is owner and receiver can_view >= ItemViewPerm.Info
     for (const receiverPermissions of combinations({
       canMakeSessionOfficial: [ true ] as const,
-      canView: [ 'info', 'content', 'content_with_descendants', 'solution' ] as const,
+      canView: [ ItemViewPerm.Info, ItemViewPerm.Content, ItemViewPerm.ContentWithDescendants, ItemViewPerm.Solution ] as const,
     })) {
       expect(validateCanMakeSessionOfficial(receiverPermissions, { isOwner: true })).toEqual([]);
     }
 
-    // receiver can_view < 'info'
+    // receiver can_view < ItemViewPerm.Info
     for (const giverPermissions of combinations({
       isOwner: [ true, false ] as const,
     })) {
       expect(validateCanMakeSessionOfficial({
         canMakeSessionOfficial: true ,
-        canView: 'none' ,
+        canView: ItemViewPerm.None,
       }, giverPermissions)[0]).toBeDefined();
     }
 

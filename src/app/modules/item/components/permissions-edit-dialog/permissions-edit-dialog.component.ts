@@ -2,11 +2,11 @@ import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleCha
 import { FormBuilder } from '@angular/forms';
 import { merge, Subject, Subscription } from 'rxjs';
 import { GroupPermissions } from 'src/app/shared/http-services/group-permissions.service';
-import { ITEMEDITPERM_NONE } from 'src/app/shared/models/domain/item-edit-permission';
-import { ITEMGRANTVIEWPERM_NONE } from 'src/app/shared/models/domain/item-grant-view-permission';
+import { ItemEditPerm } from 'src/app/shared/models/domain/item-edit-permission';
+import { ItemGrantViewPerm } from 'src/app/shared/models/domain/item-grant-view-permission';
 import { ItemCorePerm } from 'src/app/shared/models/domain/item-permissions';
-import { ITEMVIEWPERM_NONE } from 'src/app/shared/models/domain/item-view-permission';
-import { ITEMWATCHPERM_NONE } from 'src/app/shared/models/domain/item-watch-permission';
+import { ItemViewPerm } from 'src/app/shared/models/domain/item-view-permission';
+import { ItemWatchPerm } from 'src/app/shared/models/domain/item-watch-permission';
 import { permissionsConstraintsValidator } from '../../helpers/permissions-constraints-validator';
 import { PermissionsDialogData, generateValues } from '../../helpers/permissions-texts';
 import { TypeFilter } from '../composition-filter/composition-filter.component';
@@ -36,10 +36,10 @@ export class PermissionsEditDialogComponent implements OnChanges, OnDestroy {
   };
 
   form = this.fb.group({
-    canView: [ ITEMVIEWPERM_NONE ],
-    canGrantView: [ ITEMGRANTVIEWPERM_NONE ],
-    canWatch: [ ITEMWATCHPERM_NONE ],
-    canEdit: [ ITEMEDITPERM_NONE ],
+    canView: [ ItemViewPerm.None ],
+    canGrantView: [ ItemGrantViewPerm.None ],
+    canWatch: [ ItemWatchPerm.None ],
+    canEdit: [ ItemEditPerm.None ],
     canMakeSessionOfficial: [ false ],
     isOwner: [ true ],
   });

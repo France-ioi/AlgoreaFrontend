@@ -11,11 +11,11 @@ import { isNotUndefined } from '../../../../shared/helpers/null-undefined-predic
 import { OverlayPanel } from 'primeng/overlaypanel';
 import { mapToFetchState, readyData } from '../../../../shared/operators/state';
 import { FetchState } from '../../../../shared/helpers/state';
-import { ITEMVIEWPERM_MAX } from 'src/app/shared/models/domain/item-view-permission';
-import { allowsGrantingView, ITEMGRANTVIEWPERM_MAX } from 'src/app/shared/models/domain/item-grant-view-permission';
-import { ITEMEDITPERM_MAX } from 'src/app/shared/models/domain/item-edit-permission';
-import { ITEMWATCHPERM_MAX } from 'src/app/shared/models/domain/item-watch-permission';
+import { itemViewPermMax } from 'src/app/shared/models/domain/item-view-permission';
+import { allowsGrantingView, itemGrantViewPermMax } from 'src/app/shared/models/domain/item-grant-view-permission';
+import { itemWatchPermMax } from 'src/app/shared/models/domain/item-watch-permission';
 import { ItemCorePerm } from 'src/app/shared/models/domain/item-permissions';
+import { itemEditPermMax } from 'src/app/shared/models/domain/item-edit-permission';
 
 interface BaseChildData {
   contentViewPropagation?: 'none' | 'as_info' | 'as_content',
@@ -150,10 +150,10 @@ export class ItemChildrenEditComponent implements OnInit, OnDestroy, OnChanges {
 
   addChild(child: AddedContent<ItemType>): void {
     const permissionsForCreatedItem: ItemCorePerm = {
-      canView: ITEMVIEWPERM_MAX,
-      canWatch: ITEMWATCHPERM_MAX,
-      canEdit: ITEMEDITPERM_MAX,
-      canGrantView: ITEMGRANTVIEWPERM_MAX,
+      canView: itemViewPermMax,
+      canWatch: itemWatchPermMax,
+      canEdit: itemEditPermMax,
+      canGrantView: itemGrantViewPermMax,
       isOwner: true,
     };
 

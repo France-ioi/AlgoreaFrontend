@@ -1,4 +1,4 @@
-import { canCurrentUserViewContent, ItemViewPerm } from '../models/domain/item-view-permission';
+import { canCurrentUserViewContent, ItemPermWithView } from '../models/domain/item-view-permission';
 
 export const defaultAttemptId = '0'; // to be used as parent attempt for root items
 
@@ -20,7 +20,7 @@ export function bestAttemptFromResults<T extends Result>(results: T[]): T|null {
 
 interface Item {
   requiresExplicitEntry: boolean,
-  permissions: ItemViewPerm,
+  permissions: ItemPermWithView,
 }
 
 export function implicitResultStart(item: Item): boolean {
