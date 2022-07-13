@@ -79,7 +79,7 @@
       <alg-group-composition *ngIf="!!compositionTab?.isActive" [groupData]="state.data" (groupRefreshRequired)="onGroupRefreshRequired()" (addedGroup)="refreshNav()" (removedGroup)="refreshNav()"></alg-group-composition>
       <alg-group-managers *ngIf="!!adminTab?.isActive" [groupData]="state.data"></alg-group-managers>
       <alg-group-access *ngIf="!!accessTab?.isActive" [group]="group"></alg-group-access>
-      <alg-group-edit *ngIf="!!settingsTab?.isActive"></alg-group-edit>
+      <alg-group-edit *ngIf="!!settingsTab?.isActive" #groupEdit></alg-group-edit>
     </div>
 
   </ng-container>
