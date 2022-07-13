@@ -56,8 +56,10 @@ export class GroupWatchingService implements OnDestroy {
     }),
     shareReplay(1),
   );
-  watchedGroup$ = this.watchedGroupOrError$
-    .pipe(map((result): WatchedGroup | null => (result instanceof HttpErrorResponse ? null : result)));
+  watchedGroup$ = this.watchedGroupOrError$.pipe(
+    map((result): WatchedGroup | null => (result instanceof HttpErrorResponse ? null : result)),
+    distinctUntilChanged(),
+  );
   watchedGroupError$ = this.watchedGroupOrError$
     .pipe(filter((result): result is HttpErrorResponse => result instanceof HttpErrorResponse));
 
