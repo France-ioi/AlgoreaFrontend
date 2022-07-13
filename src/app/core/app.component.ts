@@ -32,6 +32,8 @@ export class AppComponent implements OnInit, OnDestroy {
   showTopRightControls$ = this.layoutService.showTopRightControls$.pipe(delay(0));
   scrolled = false;
   isWatching$ = this.groupWatchingService.isWatching$;
+  watchedGroupError$ = this.groupWatchingService.watchedGroupError$;
+  showWatchedGroupErrorDialog = true;
 
   private subscription?: Subscription;
 
@@ -95,6 +97,11 @@ export class AppComponent implements OnInit, OnDestroy {
 
   onEditCancel() : void{
     this.modeService.modeActions$.next(ModeAction.StopEditing);
+  }
+
+  closeWatchGroupErrorDialog(): void {
+    this.showWatchedGroupErrorDialog = false;
+    this.groupWatchingService.stopWatching();
   }
 
 }
