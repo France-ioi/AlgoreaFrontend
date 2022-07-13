@@ -2,7 +2,11 @@ import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleCha
 import { FormBuilder } from '@angular/forms';
 import { merge, Subject, Subscription } from 'rxjs';
 import { GroupPermissions } from 'src/app/shared/http-services/group-permissions.service';
-import { PermissionsInfo } from '../../helpers/item-permissions';
+import { ItemEditPerm } from 'src/app/shared/models/domain/item-edit-permission';
+import { ItemGrantViewPerm } from 'src/app/shared/models/domain/item-grant-view-permission';
+import { ItemCorePerm } from 'src/app/shared/models/domain/item-permissions';
+import { ItemViewPerm } from 'src/app/shared/models/domain/item-view-permission';
+import { ItemWatchPerm } from 'src/app/shared/models/domain/item-watch-permission';
 import { permissionsConstraintsValidator } from '../../helpers/permissions-constraints-validator';
 import { PermissionsDialogData, generateValues } from '../../helpers/permissions-texts';
 import { TypeFilter } from '../composition-filter/composition-filter.component';
@@ -17,7 +21,7 @@ export class PermissionsEditDialogComponent implements OnChanges, OnDestroy {
   @Input() visible?: boolean;
   @Input() title?: string;
   @Input() permissions?: Omit<GroupPermissions,'canEnterFrom'|'canEnterUntil'>;
-  @Input() giverPermissions!: PermissionsInfo;
+  @Input() giverPermissions!: ItemCorePerm;
   @Input() targetType: TypeFilter = 'Users';
   @Output() close = new EventEmitter<void>();
   @Output() save = new EventEmitter<Partial<GroupPermissions>>();
@@ -32,10 +36,10 @@ export class PermissionsEditDialogComponent implements OnChanges, OnDestroy {
   };
 
   form = this.fb.group({
-    canView: [ 'none' ],
-    canGrantView: [ 'none' ],
-    canWatch: [ 'none' ],
-    canEdit: [ 'none' ],
+    canView: [ ItemViewPerm.None ],
+    canGrantView: [ ItemGrantViewPerm.None ],
+    canWatch: [ ItemWatchPerm.None ],
+    canEdit: [ ItemEditPerm.None ],
     canMakeSessionOfficial: [ false ],
     isOwner: [ true ],
   });

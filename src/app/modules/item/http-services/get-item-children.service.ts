@@ -2,16 +2,17 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { appConfig } from 'src/app/shared/helpers/config';
-import { canCurrentUserViewItem, ItemPermissionsInfo, permissionsDecoder } from '../helpers/item-permissions';
 import * as D from 'io-ts/Decoder';
 import { decodeSnakeCase } from 'src/app/shared/operators/decode';
 import { dateDecoder } from 'src/app/shared/helpers/decoders';
+import { canCurrentUserViewInfo, ItemWithViewPerm } from 'src/app/shared/models/domain/item-view-permission';
+import { itemCorePermDecoder } from 'src/app/shared/models/domain/item-permissions';
 
 const baseItemChildDecoder = D.struct({
   id: D.string,
   order: D.number,
   category: D.literal('Undefined', 'Discovery', 'Application', 'Validation', 'Challenge'),
-  permissions: permissionsDecoder,
+  permissions: itemCorePermDecoder,
   scoreWeight: D.number,
   contentViewPropagation: D.literal('none', 'as_info', 'as_content'),
   editPropagation: D.boolean,
@@ -48,8 +49,8 @@ export type ItemChild = D.TypeOf<typeof itemChildDecoder>;
 export type InvisibleItemChild = D.TypeOf<typeof invisibleItemChildDecoder>;
 type PossiblyInvisibleItemChild = D.TypeOf<typeof possiblyInvisibleItemChild>;
 
-export function isVisibleItemChild(item: ItemPermissionsInfo): item is ItemChild {
-  return canCurrentUserViewItem(item);
+export function isVisibleItemChild(item: ItemWithViewPerm): item is ItemChild {
+  return canCurrentUserViewInfo(item);
 }
 
 

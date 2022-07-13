@@ -2,7 +2,6 @@ import {
   ProgressSelectValue
 } from 'src/app/modules/shared-components/components/collapsible-section/progress-select/progress-select.component';
 import { GroupPermissions } from 'src/app/shared/http-services/group-permissions.service';
-import { PermissionsInfo } from './item-permissions';
 import { generateErrorMessage, permissionsInfoString } from './permissions-string';
 import { TypeFilter } from '../components/composition-filter/composition-filter.component';
 import {
@@ -14,6 +13,11 @@ import {
   validateCanMakeSessionOfficial,
   ConstraintError,
 } from './item-permissions-constraints';
+import { ItemViewPerm } from 'src/app/shared/models/domain/item-view-permission';
+import { ItemGrantViewPerm } from 'src/app/shared/models/domain/item-grant-view-permission';
+import { ItemEditPerm } from 'src/app/shared/models/domain/item-edit-permission';
+import { ItemWatchPerm } from 'src/app/shared/models/domain/item-watch-permission';
+import { ItemCorePerm } from 'src/app/shared/models/domain/item-permissions';
 
 export interface PermissionsDialogData {
   canViewValues: ProgressSelectValue<string>[],
@@ -41,27 +45,27 @@ export function generateCanViewValues(
   const targetTypeString = getTargetTypeString(targetType);
   return [
     {
-      value: 'none',
+      value: ItemViewPerm.None,
       label: permissionsInfoString.canView.none,
       comment: $localize`${targetTypeString} can\'t see the item`
     },
     {
-      value: 'info',
+      value: ItemViewPerm.Info,
       label: permissionsInfoString.canView.info,
       comment: $localize`${targetTypeString} can see the item title and description, but not its content`,
     },
     {
-      value: 'content',
+      value: ItemViewPerm.Content,
       label: permissionsInfoString.canView.content,
       comment: $localize`${targetTypeString} can see the content of this item`,
     },
     {
-      value: 'content_with_descendants',
+      value: ItemViewPerm.ContentWithDescendants,
       label: permissionsInfoString.canView.content_with_descendants,
       comment: $localize`${targetTypeString} can also see the content of this items descendants (when possible for this group)`,
     },
     {
-      value: 'solution',
+      value: ItemViewPerm.Solution,
       label: permissionsInfoString.canView.solution,
       comment: $localize`${targetTypeString} can also see the solution of this items and its descendants (when possible for this group)`,
     }
@@ -75,32 +79,32 @@ function generateCanGrantViewValues(
 
   return [
     {
-      value: 'none',
+      value: ItemGrantViewPerm.None,
       label: permissionsInfoString.canGrantView.none,
       comment: $localize`${targetTypeString} can\'t grant any access to this item`
     },
     {
-      value: 'enter',
+      value: ItemGrantViewPerm.Enter,
       label: permissionsInfoString.canGrantView.enter,
       comment: $localize`${targetTypeString} can grant \'Can view: info\' and  \'Can enter\' access`,
     },
     {
-      value: 'content',
+      value: ItemGrantViewPerm.Content,
       label: permissionsInfoString.canGrantView.content,
       comment: $localize`${targetTypeString} can also grant \'Can view: content\' access`,
     },
     {
-      value: 'content_with_descendants',
+      value: ItemGrantViewPerm.ContentWithDescendants,
       label: permissionsInfoString.canGrantView.content_with_descendants,
       comment: $localize`${targetTypeString} can also grant \'Can view: content and descendants\' access`,
     },
     {
-      value: 'solution',
+      value: ItemGrantViewPerm.Solution,
       label: permissionsInfoString.canGrantView.solution,
       comment: $localize`${targetTypeString} can also grant \'Can view: solution\' access`,
     },
     {
-      value: 'solution_with_grant',
+      value: ItemGrantViewPerm.SolutionWithGrant,
       label: permissionsInfoString.canGrantView.solution_with_grant,
       comment: $localize`${targetTypeString} can also grant \'Can grant view\' access`,
     }
@@ -114,23 +118,23 @@ function generateCanWatchValues(
 
   return [
     {
-      value: 'none',
+      value: ItemWatchPerm.None,
       label: permissionsInfoString.canWatch.none,
       comment: $localize`${targetTypeString} can\'t watch the activity of others on this item`
     },
     {
-      value: 'result',
+      value: ItemWatchPerm.Result,
       label: permissionsInfoString.canWatch.result,
       comment:
         $localize`${targetTypeString} can view information about submissions and scores of others on this item, but not their answers`,
     },
     {
-      value: 'answer',
+      value: ItemWatchPerm.Answer,
       label: permissionsInfoString.canWatch.answer,
       comment: $localize`${targetTypeString} can also look at other people\'s answers on this item`,
     },
     {
-      value: 'answer_with_grant',
+      value: ItemWatchPerm.AnswerWithGrant,
       label: permissionsInfoString.canWatch.answer_with_grant,
       comment: $localize`${targetTypeString} can also grant \'Can watch\' access to others`,
     }
@@ -144,22 +148,22 @@ function generateCanEditValues(
 
   return [
     {
-      value: 'none',
+      value: ItemEditPerm.None,
       label: permissionsInfoString.canEdit.none,
       comment: $localize`${targetTypeString} can\'t make any changes to this item`
     },
     {
-      value: 'children',
+      value: ItemEditPerm.Children,
       label: permissionsInfoString.canEdit.children,
       comment: $localize`${targetTypeString} can add children to this item and edit how permissions propagate to them`,
     },
     {
-      value: 'all',
+      value: ItemEditPerm.All,
       label: permissionsInfoString.canEdit.all,
       comment: $localize`${targetTypeString} can also edit the content of the item itself, but may not delete it`,
     },
     {
-      value: 'all_with_grant',
+      value: ItemEditPerm.AllWithGrant,
       label: permissionsInfoString.canEdit.all_with_grant,
       comment: $localize`${targetTypeString} can also give \'Can edit\' access to others`,
     }
@@ -169,7 +173,7 @@ function generateCanEditValues(
 export function generateValues(
   targetType: TypeFilter,
   receiverPermissions: GroupPermissions,
-  giverPermissions: PermissionsInfo
+  giverPermissions: ItemCorePerm
 ): PermissionsDialogData {
 
   const formatErrors = (errors: ConstraintError[]): string[] | undefined => {

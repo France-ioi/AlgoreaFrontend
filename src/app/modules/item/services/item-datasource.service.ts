@@ -8,12 +8,12 @@ import { UserSessionService } from 'src/app/shared/services/user-session.service
 import { BreadcrumbItem, GetBreadcrumbService } from '../http-services/get-breadcrumb.service';
 import { GetItemByIdService, Item } from '../http-services/get-item-by-id.service';
 import { GetResultsService, Result } from '../http-services/get-results.service';
-import { canCurrentUserViewItemContent } from 'src/app/modules/item/helpers/item-permissions';
 import { mapToFetchState } from 'src/app/shared/operators/state';
 import { buildUp } from 'src/app/shared/operators/build-up';
 import { FetchState } from 'src/app/shared/helpers/state';
 import { LocaleService } from 'src/app/core/services/localeService';
 import { GroupWatchingService } from 'src/app/core/services/group-watching.service';
+import { canCurrentUserViewContent } from 'src/app/shared/models/domain/item-view-permission';
 
 export interface ItemData {
   route: FullItemRoute,
@@ -102,7 +102,7 @@ export class ItemDataSource implements OnDestroy {
       item: this.getItemByIdService.get(itemRoute.id, watchedGroupId),
       breadcrumbs: this.getBreadcrumbService.getBreadcrumb(itemRoute),
     }).pipe(
-      buildUp(data => (canCurrentUserViewItemContent(data.item) ? this.fetchResults(data.route, data.item) : EMPTY)),
+      buildUp(data => (canCurrentUserViewContent(data.item) ? this.fetchResults(data.route, data.item) : EMPTY)),
     );
   }
 

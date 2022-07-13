@@ -23,6 +23,11 @@ import { DataPager } from 'src/app/shared/helpers/data-pager';
 import { mapToFetchState, readyData } from 'src/app/shared/operators/state';
 import { FetchState } from 'src/app/shared/helpers/state';
 import { HttpErrorResponse } from '@angular/common/http';
+import { ItemViewPerm } from 'src/app/shared/models/domain/item-view-permission';
+import { ItemGrantViewPerm } from 'src/app/shared/models/domain/item-grant-view-permission';
+import { ItemWatchPerm } from 'src/app/shared/models/domain/item-watch-permission';
+import { allowsGivingPermToItem } from 'src/app/shared/models/domain/item-permissions';
+import { ItemEditPerm } from 'src/app/shared/models/domain/item-edit-permission';
 
 const progressListLimit = 25;
 
@@ -65,10 +70,10 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
       itemId: '',
       targetGroupId: '',
       permissions: {
-        canView: 'none',
-        canGrantView: 'none',
-        canWatch: 'none',
-        canEdit: 'none',
+        canView: ItemViewPerm.None,
+        canGrantView: ItemGrantViewPerm.None,
+        canWatch: ItemWatchPerm.None,
+        canEdit: ItemEditPerm.None,
         canMakeSessionOfficial: false,
         isOwner: true,
       }
@@ -132,7 +137,7 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     if (changes.itemData && this.itemData) this.itemData$.next(this.itemData);
     if (changes.group) this.fetchRows();
     this.canAccess = !!(this.group && canCurrentUserGrantGroupAccess(this.group)
-      && this.itemData?.item.permissions.canGrantView !== 'none');
+      && this.itemData && allowsGivingPermToItem(this.itemData.item.permissions));
   }
 
   trackByRow(_index: number, row: DataRow): string {

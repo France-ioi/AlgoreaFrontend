@@ -1,5 +1,5 @@
 <ng-container *ngIf="itemData">
-  <ng-container *ngIf="itemData.item.permissions.canView !== 'info'; else notAllowToWatch">
+  <ng-container *ngIf="itemData.item.permissions | allowsViewingContent; else notAllowToWatch">
     <ng-container *ngIf="itemData.currentResult; else noCurrentResult">
 
       <alg-section icon="fa fa-book" i18n-label label="Description" *ngIf="itemData.item.string.description">
@@ -17,7 +17,7 @@
           <alg-item-display
             *ngIf="attemptId; else noCurrentResult"
             [route]="itemData.route"
-            [canEdit]="itemData.item.permissions.canEdit"
+            [editingPermission]="itemData.item.permissions"
             [url]="itemData.item.url"
             [attemptId]="attemptId"
             [view]="taskView"
@@ -36,7 +36,7 @@
           <p class="validation-text" i18n>
             This activity has not been correctly configured.
           </p>
-          <p class="validation-text" *ngIf="itemData.item.permissions.canEdit !== 'none'" i18n>
+          <p class="validation-text" *ngIf="itemData.item.permissions | allowsEditingChildren" i18n>
             You need to set a url in editing mode.
           </p>
         </ng-template>

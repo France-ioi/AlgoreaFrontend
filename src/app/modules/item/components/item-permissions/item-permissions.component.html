@@ -8,7 +8,7 @@
     >
       <ng-container *ngIf="watchedGroupPermissions; else noPermissionToWatchLabel" label-section i18n>
         «{{ watchedGroup.name }}»
-        {{ ['content', 'content_with_descendants', 'solution'].includes(watchedGroupPermissions.canView).toString() | i18nSelect : {
+        {{ (watchedGroupPermissions | allowsViewingContent).toString() | i18nSelect : {
           true: 'can',
           other: 'can\'t'
         } }}
@@ -28,14 +28,14 @@
       </ng-template>
 
       <ng-container *ngIf="watchedGroupPermissions; else noPermissionToWatchContent">
-        <ng-container *ngIf="watchedGroupPermissions.canView === 'none'" i18n>
+        <ng-container *ngIf="!(watchedGroupPermissions | allowsViewingInfo)" i18n>
           The {{ watchedGroup.route.isUser.toString() | i18nSelect : {
             true: 'user',
             other: 'group'
           } }} cannot currently view this content.
         </ng-container>
 
-        <ng-container *ngIf="watchedGroupPermissions.canView === 'info'" i18n>
+        <ng-container *ngIf="(watchedGroupPermissions | allowsViewingInfo) && !(watchedGroupPermissions | allowsViewingContent)" i18n>
           The {{ watchedGroup.route.isUser.toString() | i18nSelect : {
             true: 'user',
             other: 'group'

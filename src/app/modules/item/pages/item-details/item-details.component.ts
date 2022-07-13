@@ -1,6 +1,5 @@
 import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
-import { canCurrentUserViewItemContent } from '../../helpers/item-permissions';
 import { ItemDataSource } from '../../services/item-datasource.service';
 import { mapStateData, readyData } from 'src/app/shared/operators/state';
 import { LayoutService } from '../../../../shared/services/layout.service';
@@ -27,6 +26,7 @@ import { GetAnswerService } from '../../http-services/get-answer.service';
 import { appConfig } from 'src/app/shared/helpers/config';
 import { GroupWatchingService } from 'src/app/core/services/group-watching.service';
 import { isTask } from 'src/app/shared/helpers/item-type';
+import { canCurrentUserViewContent, canCurrentUserViewSolution } from 'src/app/shared/models/domain/item-view-permission';
 
 const loadForbiddenAnswerError = new Error('load answer forbidden');
 
@@ -43,19 +43,16 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent {
 
   showAccessCodeField$ = this.itemData$.pipe(
     mapStateData(data =>
-      data.item.promptToJoinGroupByCode && !canCurrentUserViewItemContent(data.item) && !this.userService.isCurrentUserTemp()
+      data.item.promptToJoinGroupByCode && !canCurrentUserViewContent(data.item) && !this.userService.isCurrentUserTemp()
     ),
     map(state => state.isReady && state.data),
   );
 
   private tabs = new ReplaySubject<TaskTab[]>(1);
   tabs$ = combineLatest([ this.tabs, this.itemData$.pipe(readyData()) ]).pipe(
-    map(([ tabs, data ]) => {
-      const canShowSolution = data.item.permissions.canView === 'solution' || !!data.currentResult?.validated;
-      return canShowSolution
-        ? tabs
-        : tabs.filter(tab => tab.view !== 'solution');
-    }),
+    map(([ tabs, data ]) => (
+      canCurrentUserViewSolution(data.item, data.currentResult) ? tabs : tabs.filter(tab => tab.view !== 'solution')
+    )),
     map(tabs => tabs.filter(tab => !appConfig.featureFlags.hideTaskTabs.includes(tab.view))),
     shareReplay(1),
   );
