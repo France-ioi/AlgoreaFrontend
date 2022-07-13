@@ -8,6 +8,7 @@ import { ItemType } from '../../../../shared/helpers/item-type';
 import { Item } from '../../http-services/get-item-by-id.service';
 import { GroupWatchingService, WatchedGroup } from 'src/app/core/services/group-watching.service';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
+import { allowsWatchingAnswers } from 'src/app/shared/models/domain/item-watch-permission';
 
 interface Column {
   field: string,
@@ -85,8 +86,8 @@ export class ItemLogViewComponent implements OnChanges, OnDestroy {
 
     // Can load other user answer only in read-only mode and with correct permissions
     if (this.isTaskReadOnly) {
-      const hasPermissionToLoadAnyAnswer = [ 'answer', 'answer_with_grant' ].includes(this.itemData.item.permissions.canWatch);
-      return hasPermissionToLoadAnyAnswer && [ 'submission', 'saved_answer', 'current_answer' ].includes(log.activityType);
+      return allowsWatchingAnswers(this.itemData.item.permissions) &&
+        [ 'submission', 'saved_answer', 'current_answer' ].includes(log.activityType);
     }
 
     // If answer author is self, we can always load it

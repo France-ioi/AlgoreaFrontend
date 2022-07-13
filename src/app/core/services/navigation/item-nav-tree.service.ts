@@ -13,6 +13,7 @@ import { CurrentContentService } from 'src/app/shared/services/current-content.s
 import { ItemNavigationChild, ItemNavigationData, ItemNavigationService } from '../../http-services/item-navigation.service';
 import { NavTreeElement } from '../../models/left-nav-loading/nav-tree-data';
 import { NavTreeService } from './nav-tree.service';
+import { canCurrentUserViewContent } from 'src/app/shared/models/domain/item-view-permission';
 
 abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
 
@@ -87,9 +88,9 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
     return {
       route,
       title: child.string.title ?? '',
-      hasChildren: child.hasVisibleChildren && ![ 'none', 'info' ].includes(child.permissions.canView),
+      hasChildren: child.hasVisibleChildren && canCurrentUserViewContent(child),
       navigateTo: (preventFullFrame = false): void => this.itemRouter.navigateTo(route, { preventFullFrame }),
-      locked: child.permissions.canView === 'info',
+      locked: !canCurrentUserViewContent(child),
       score: !child.noScore && currentResult ? {
         bestScore: child.bestScore,
         currentScore: currentResult.scoreComputed,
@@ -106,7 +107,7 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
         title: data.string.title ?? '',
         hasChildren: data.children.length > 0,
         navigateTo: (preventFullFrame = false): void => this.itemRouter.navigateTo(parentRoute, { preventFullFrame }),
-        locked: data.permissions.canView === 'info',
+        locked: !canCurrentUserViewContent(data),
       },
       elements: data.children.map(c => this.mapChild(c, data.attemptId, [ ...pathToParent, data.id ])),
     };

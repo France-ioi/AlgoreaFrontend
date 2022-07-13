@@ -3,10 +3,10 @@ import { ReplaySubject, Subject } from 'rxjs';
 import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { typeCategoryOfItem } from 'src/app/shared/helpers/item-type';
 import { ItemRouter } from 'src/app/shared/routing/item-router';
-import { canCurrentUserViewItemContent } from '../../helpers/item-permissions';
 import { GetItemParentsService, ItemParent } from '../../http-services/get-item-parents.service';
 import { ItemData } from '../../services/item-datasource.service';
 import { mapToFetchState } from '../../../../shared/operators/state';
+import { canCurrentUserViewContent } from 'src/app/shared/models/domain/item-view-permission';
 
 interface ParentSkillAdditions {
   isLocked: boolean,
@@ -25,7 +25,7 @@ export class ParentSkillsComponent implements OnChanges, OnDestroy {
   readonly state$ = this.params$.pipe(
     distinctUntilChanged((a, b) => a.id === b.id && a.attemptId === b.attemptId),
     switchMap(({ id, attemptId }) => this.getItemParentsService.get(id, attemptId)),
-    map(parents => parents.map(parent => ({ ...parent, isLocked: !canCurrentUserViewItemContent(parent) }))),
+    map(parents => parents.map(parent => ({ ...parent, isLocked: !canCurrentUserViewContent(parent) }))),
     mapToFetchState({ resetter: this.refresh$ }),
   );
 

@@ -5,7 +5,7 @@
       [label]="(sectionLabel$ | async) || ''"
   >
 
-    <ng-container *ngIf="!isWatching || itemData?.item?.permissions?.canWatch !== 'none'; else unallowed">
+    <ng-container *ngIf="!isWatching || (itemData?.item?.permissions && (itemData!.item!.permissions | allowsWatchingResults)) ; else unallowed">
 
       <ng-container *ngIf="selectors$ | async as selectors">
 

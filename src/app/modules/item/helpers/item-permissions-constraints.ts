@@ -1,5 +1,9 @@
 import { GroupPermissions } from 'src/app/shared/http-services/group-permissions.service';
-import { PermissionsInfo, canGrantViewValues, canViewValues } from './item-permissions';
+import { ItemEditPerm, ItemPermWithEdit } from 'src/app/shared/models/domain/item-edit-permission';
+import { ItemPermWithGrantView, itemGrantViewPermValues, ItemGrantViewPerm } from 'src/app/shared/models/domain/item-grant-view-permission';
+import { ItemOwnerPerm, ItemSessionPerm } from 'src/app/shared/models/domain/item-permissions';
+import { ItemViewPerm, itemViewPermValues, ItemPermWithView } from 'src/app/shared/models/domain/item-view-permission';
+import { ItemPermWithWatch, ItemWatchPerm } from 'src/app/shared/models/domain/item-watch-permission';
 
 /**
  * The permissions that are subject to a constraint
@@ -28,63 +32,62 @@ function hasAtLeastPermission<T extends readonly string[]>(permissionsSortedByLo
     permissionsSortedByLoosest.indexOf(permission) >= permissionsSortedByLoosest.indexOf(minimumPermission);
 }
 
-export function validateCanView(
-  receiverPermissions: Pick<GroupPermissions, 'canView'>,
-  giverPermissions: Pick<PermissionsInfo, 'canGrantView'>
-): ConstraintError[] {
+export function validateCanView(receiverPermissions: ItemPermWithView, giverPermissions: ItemPermWithGrantView): ConstraintError[] {
 
-  const giverCanAtLeastGrantView = hasAtLeastPermission(canGrantViewValues, giverPermissions.canGrantView);
+  const giverCanAtLeastGrantView = hasAtLeastPermission(itemGrantViewPermValues, giverPermissions.canGrantView);
 
-  if (receiverPermissions.canView === 'info' && !giverCanAtLeastGrantView('enter')) {
-    return [ genError('canGrantView')('enter', 'giver', 'atLeast') ];
+  if (receiverPermissions.canView === ItemViewPerm.Info && !giverCanAtLeastGrantView(ItemGrantViewPerm.Enter)) {
+    return [ genError('canGrantView')(ItemGrantViewPerm.Enter, 'giver', 'atLeast') ];
   }
-  if (receiverPermissions.canView === 'content' && !giverCanAtLeastGrantView('content')) {
-    return [ genError('canGrantView')('content', 'giver', 'atLeast') ];
+  if (receiverPermissions.canView === ItemViewPerm.Content && !giverCanAtLeastGrantView(ItemGrantViewPerm.Content)) {
+    return [ genError('canGrantView')(ItemGrantViewPerm.Content, 'giver', 'atLeast') ];
   }
-  if (receiverPermissions.canView === 'content_with_descendants' && !giverCanAtLeastGrantView('content_with_descendants')) {
-    return [ genError('canGrantView')('content_with_descendants', 'giver', 'atLeast') ];
+  if (receiverPermissions.canView === ItemViewPerm.ContentWithDescendants &&
+    !giverCanAtLeastGrantView(ItemGrantViewPerm.ContentWithDescendants)) {
+    return [ genError('canGrantView')(ItemGrantViewPerm.ContentWithDescendants, 'giver', 'atLeast') ];
   }
-  if (receiverPermissions.canView === 'solution' && !giverCanAtLeastGrantView('solution')) {
-    return [ genError('canGrantView')('solution', 'giver', 'atLeast') ];
+  if (receiverPermissions.canView === ItemViewPerm.Solution && !giverCanAtLeastGrantView(ItemGrantViewPerm.Solution)) {
+    return [ genError('canGrantView')(ItemGrantViewPerm.Solution, 'giver', 'atLeast') ];
   }
   return [];
 }
 
 export function validateCanGrantView(
-  receiverPermissions: Pick<GroupPermissions, 'canView' | 'canGrantView'>,
-  giverPermissions: Pick<PermissionsInfo, 'canGrantView' | 'isOwner'>
+  receiverPermissions: ItemPermWithView & ItemPermWithGrantView,
+  giverPermissions: ItemPermWithGrantView & ItemOwnerPerm
 ): ConstraintError[] {
 
-  if (receiverPermissions.canGrantView === 'none') return [];
+  if (receiverPermissions.canGrantView === ItemGrantViewPerm.None) return [];
 
   const errors: ConstraintError[] = [];
-  const receiverCanAtLeastView = hasAtLeastPermission(canViewValues, receiverPermissions.canView);
+  const receiverCanAtLeastView = hasAtLeastPermission(itemViewPermValues, receiverPermissions.canView);
 
-  if (receiverPermissions.canGrantView === 'solution_with_grant') {
+  if (receiverPermissions.canGrantView === ItemGrantViewPerm.SolutionWithGrant) {
     if (!giverPermissions.isOwner) {
       errors.push(genError('isOwner')(true, 'giver'));
     }
-    if (!receiverCanAtLeastView('solution')) {
-      errors.push(genError('canView')('solution', 'receiver', 'atLeast'));
+    if (!receiverCanAtLeastView(ItemViewPerm.Solution)) {
+      errors.push(genError('canView')(ItemViewPerm.Solution, 'receiver', 'atLeast'));
     }
   } else {
 
-    if (giverPermissions.canGrantView !== 'solution_with_grant') {
-      errors.push(genError('canGrantView')('solution_with_grant', 'giver'));
+    if (giverPermissions.canGrantView !== ItemGrantViewPerm.SolutionWithGrant) {
+      errors.push(genError('canGrantView')(ItemGrantViewPerm.SolutionWithGrant, 'giver'));
     }
 
-    if (receiverPermissions.canGrantView === 'enter' && !receiverCanAtLeastView('info')) {
-      errors.push(genError('canView')('info', 'receiver', 'atLeast'));
+    if (receiverPermissions.canGrantView === ItemGrantViewPerm.Enter && !receiverCanAtLeastView(ItemViewPerm.Info)) {
+      errors.push(genError('canView')(ItemViewPerm.Info, 'receiver', 'atLeast'));
     }
 
-    if (receiverPermissions.canGrantView === 'content' && !receiverCanAtLeastView('content')) {
-      errors.push(genError('canView')('content', 'receiver', 'atLeast'));
+    if (receiverPermissions.canGrantView === ItemGrantViewPerm.Content && !receiverCanAtLeastView(ItemViewPerm.Content)) {
+      errors.push(genError('canView')(ItemViewPerm.Content, 'receiver', 'atLeast'));
     }
-    if (receiverPermissions.canGrantView === 'content_with_descendants' && !receiverCanAtLeastView('content_with_descendants')) {
-      errors.push(genError('canView')('content_with_descendants', 'receiver', 'atLeast'));
+    if (receiverPermissions.canGrantView === ItemGrantViewPerm.ContentWithDescendants &&
+      !receiverCanAtLeastView(ItemViewPerm.ContentWithDescendants)) {
+      errors.push(genError('canView')(ItemViewPerm.ContentWithDescendants, 'receiver', 'atLeast'));
     }
-    if (receiverPermissions.canGrantView === 'solution' && !receiverCanAtLeastView('solution')) {
-      errors.push(genError('canView')('solution', 'receiver', 'atLeast'));
+    if (receiverPermissions.canGrantView === ItemGrantViewPerm.Solution && !receiverCanAtLeastView(ItemViewPerm.Solution)) {
+      errors.push(genError('canView')(ItemViewPerm.Solution, 'receiver', 'atLeast'));
     }
   }
 
@@ -92,28 +95,28 @@ export function validateCanGrantView(
 }
 
 export function validateCanWatch(
-  receiverPermissions: Pick<GroupPermissions, 'canView' | 'canWatch'>,
-  giverPermissions: Pick<PermissionsInfo, 'canWatch' | 'isOwner'>
+  receiverPermissions: ItemPermWithView & ItemPermWithWatch,
+  giverPermissions: ItemPermWithWatch & ItemOwnerPerm
 ): ConstraintError[] {
 
-  if (receiverPermissions.canWatch === 'none') return [];
+  if (receiverPermissions.canWatch === ItemWatchPerm.None) return [];
 
   const errors: ConstraintError[] = [];
 
   // For all canWatch except 'none'
-  if (!hasAtLeastPermission(canViewValues, receiverPermissions.canView)('content')) {
-    errors.push(genError('canView')('content', 'receiver', 'atLeast'));
+  if (!hasAtLeastPermission(itemViewPermValues, receiverPermissions.canView)(ItemViewPerm.Content)) {
+    errors.push(genError('canView')(ItemViewPerm.Content, 'receiver', 'atLeast'));
   }
 
-  if (receiverPermissions.canWatch === 'answer_with_grant') {
+  if (receiverPermissions.canWatch === ItemWatchPerm.AnswerWithGrant) {
     if (!giverPermissions.isOwner) {
       errors.push(genError('isOwner')(true, 'giver'));
     }
   } else {
 
     // if receiverPermissions.canWatch is 'result' or 'answer'
-    if (giverPermissions.canWatch !== 'answer_with_grant') {
-      errors.push(genError('canWatch')('answer_with_grant', 'giver'));
+    if (giverPermissions.canWatch !== ItemWatchPerm.AnswerWithGrant) {
+      errors.push(genError('canWatch')(ItemWatchPerm.AnswerWithGrant, 'giver'));
     }
   }
 
@@ -121,28 +124,28 @@ export function validateCanWatch(
 }
 
 export function validateCanEdit(
-  receiverPermissions: Pick<GroupPermissions, 'canView' | 'canEdit'>,
-  giverPermissions: Pick<PermissionsInfo, 'canEdit' | 'isOwner'>
+  receiverPermissions: ItemPermWithView & ItemPermWithEdit,
+  giverPermissions: ItemPermWithEdit & ItemOwnerPerm
 ): ConstraintError[] {
 
-  if (receiverPermissions.canEdit === 'none') return [];
+  if (receiverPermissions.canEdit === ItemEditPerm.None) return [];
 
   const errors: ConstraintError[] = [];
 
   // For all can_edit except 'none'
-  if (!hasAtLeastPermission(canViewValues, receiverPermissions.canView)('content')) {
-    errors.push(genError('canView')('content', 'receiver', 'atLeast'));
+  if (!hasAtLeastPermission(itemViewPermValues, receiverPermissions.canView)(ItemViewPerm.Content)) {
+    errors.push(genError('canView')(ItemViewPerm.Content, 'receiver', 'atLeast'));
   }
 
-  if (receiverPermissions.canEdit === 'all_with_grant') {
+  if (receiverPermissions.canEdit === ItemEditPerm.AllWithGrant) {
     if (!giverPermissions.isOwner) {
       errors.push(genError('isOwner')(true, 'giver'));
     }
   } else {
 
     // if receiverPermissions.canEdit is 'children' or 'all_with_grant'
-    if (giverPermissions.canEdit !== 'all_with_grant') {
-      errors.push(genError('canEdit')('all_with_grant', 'giver'));
+    if (giverPermissions.canEdit !== ItemEditPerm.AllWithGrant) {
+      errors.push(genError('canEdit')(ItemEditPerm.AllWithGrant, 'giver'));
     }
   }
 
@@ -150,8 +153,8 @@ export function validateCanEdit(
 }
 
 export function validateCanMakeSessionOfficial(
-  receiverPermissions: Pick<GroupPermissions, 'canView' | 'canMakeSessionOfficial'>,
-  giverPermissions: Pick<PermissionsInfo, 'isOwner'>
+  receiverPermissions: ItemPermWithView & ItemSessionPerm,
+  giverPermissions: ItemOwnerPerm
 ): ConstraintError[] {
 
   if (!receiverPermissions.canMakeSessionOfficial) return [];
@@ -161,17 +164,14 @@ export function validateCanMakeSessionOfficial(
   if (!giverPermissions.isOwner) {
     errors.push(genError('isOwner')(true, 'giver'));
   }
-  if (!hasAtLeastPermission(canViewValues, receiverPermissions.canView)('info')) {
-    errors.push(genError('canView')('info', 'receiver', 'atLeast'));
+  if (!hasAtLeastPermission(itemViewPermValues, receiverPermissions.canView)(ItemViewPerm.Info)) {
+    errors.push(genError('canView')(ItemViewPerm.Info, 'receiver', 'atLeast'));
   }
 
   return errors;
 }
 
-export function validateIsOwner(
-  receiverPermissions: Pick<GroupPermissions, 'isOwner'>,
-  giverPermissions: Pick<PermissionsInfo, 'isOwner'>
-): ConstraintError[] {
+export function validateIsOwner(receiverPermissions: ItemOwnerPerm, giverPermissions: ItemOwnerPerm): ConstraintError[] {
 
   if (!receiverPermissions.isOwner) return [];
 

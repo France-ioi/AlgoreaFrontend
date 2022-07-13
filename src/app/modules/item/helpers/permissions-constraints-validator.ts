@@ -1,7 +1,7 @@
 import { ValidationErrors, ValidatorFn, AbstractControl } from '@angular/forms';
 import { GroupPermissions } from 'src/app/shared/http-services/group-permissions.service';
+import { ItemCorePerm } from 'src/app/shared/models/domain/item-permissions';
 import { TypeFilter } from '../components/composition-filter/composition-filter.component';
-import { PermissionsInfo } from './item-permissions';
 import {
   validateCanView,
   validateCanGrantView,
@@ -16,7 +16,7 @@ import { generateErrorMessage } from './permissions-string';
 
 
 export function permissionsConstraintsValidator(
-  giverPermissions: PermissionsInfo,
+  giverPermissions: ItemCorePerm,
   targetType: TypeFilter
 ): ValidatorFn {
 

@@ -5,11 +5,10 @@ import {
   ProgressSelectValue
 } from '../../../shared-components/components/collapsible-section/progress-select/progress-select.component';
 import { generateCanViewValues } from '../../helpers/permissions-texts';
-import { Permissions } from '../../../../shared/helpers/group-permissions';
 import { GroupPermissionsService } from '../../../../shared/http-services/group-permissions.service';
 import { ActionFeedbackService } from '../../../../shared/services/action-feedback.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { canGivePermissions } from '../../helpers/item-permissions';
+import { allowsGivingPermToItem, ItemCorePerm, ItemOwnerPerm, ItemSessionPerm } from 'src/app/shared/models/domain/item-permissions';
 
 @Component({
   selector: 'alg-item-permissions',
@@ -24,7 +23,7 @@ export class ItemPermissionsComponent implements OnChanges {
 
   canViewValues: ProgressSelectValue<string>[] = generateCanViewValues('Groups');
   isPermissionsDialogOpened = false;
-  watchedGroupPermissions?: Permissions;
+  watchedGroupPermissions?: ItemCorePerm & ItemOwnerPerm & ItemSessionPerm;
   lockEdit?: 'content' | 'group' | 'contentGroup';
 
   constructor(private groupPermissionsService: GroupPermissionsService, private actionFeedbackService: ActionFeedbackService) {
@@ -37,12 +36,11 @@ export class ItemPermissionsComponent implements OnChanges {
     } : undefined;
 
     const currentUserCanGrantAccess = this.watchedGroup?.currentUserCanGrantAccess;
-    const currentUserCanGivePermissions = this.watchedGroupPermissions && canGivePermissions(this.watchedGroupPermissions);
+    const currentUserCanGivePermissions = this.itemData && allowsGivingPermToItem(this.itemData.item.permissions);
 
     this.lockEdit = currentUserCanGrantAccess && !currentUserCanGivePermissions ? 'content' :
       !currentUserCanGrantAccess && currentUserCanGivePermissions ? 'group' :
         !currentUserCanGrantAccess && !currentUserCanGivePermissions ? 'contentGroup' : undefined;
-
   }
 
   openPermissionsDialog(): void {
@@ -53,7 +51,7 @@ export class ItemPermissionsComponent implements OnChanges {
     this.isPermissionsDialogOpened = false;
   }
 
-  onPermissionsDialogSave(permissions: Partial<Permissions>): void {
+  onPermissionsDialogSave(permissions: Partial<ItemCorePerm & ItemOwnerPerm & ItemSessionPerm>): void {
     if (!this.itemData || !this.watchedGroup) {
       throw new Error('Unexpected: Missed input data');
     }

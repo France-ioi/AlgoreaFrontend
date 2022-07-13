@@ -8,8 +8,9 @@ import { isSkill, ItemTypeCategory } from 'src/app/shared/helpers/item-type';
 import { decodeSnakeCase } from 'src/app/shared/operators/decode';
 import { pipe } from 'fp-ts/function';
 import * as D from 'io-ts/Decoder';
-import { permissionsDecoder } from 'src/app/modules/item/helpers/item-permissions';
 import { dateDecoder } from 'src/app/shared/helpers/decoders';
+import { itemViewPermDecoder } from 'src/app/shared/models/domain/item-view-permission';
+import { itemCorePermDecoder } from 'src/app/shared/models/domain/item-permissions';
 
 const itemNavigationChildDecoderBase = pipe(
   D.struct({
@@ -18,7 +19,7 @@ const itemNavigationChildDecoderBase = pipe(
     hasVisibleChildren: D.boolean,
     id: D.string,
     noScore: D.boolean,
-    permissions: permissionsDecoder,
+    permissions: itemCorePermDecoder,
     requiresExplicitEntry: D.boolean,
     results: D.array(D.struct({
       attemptAllowsSubmissionsUntil: dateDecoder,
@@ -42,9 +43,7 @@ const itemNavigationChildDecoder = pipe(
   D.intersect(
     D.partial({
       watchedGroup: pipe(
-        D.struct({
-          canView: D.literal('none','info','content','content_with_descendants','solution'),
-        }),
+        itemViewPermDecoder,
         D.intersect(
           D.partial({
             allValidated: D.boolean,
@@ -61,7 +60,7 @@ export type ItemNavigationChild = D.TypeOf<typeof itemNavigationChildDecoder>;
 const itemNavigationDataDecoder = D.struct({
   id: D.string,
   attemptId: D.string,
-  permissions: permissionsDecoder,
+  permissions: itemCorePermDecoder,
   string: D.struct({
     languageTag: D.string,
     title: D.nullable(D.string),
