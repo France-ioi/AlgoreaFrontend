@@ -48,9 +48,9 @@
   [visible]="showWatchedGroupErrorDialog"
   [modal]="true"
 >
-  <ng-container *ngIf="watchedGroupError.status === 403; else defaultErrorMessage" i18n>You are not allowed to watch the group for which you have requested watching</ng-container>
+  <ng-container *ngIf="watchedGroupError.status === 403; else defaultErrorMessage" i18n>You are not allowed to watch the group for which you have requested watching.</ng-container>
   <ng-template #defaultErrorMessage>
-    <ng-container i18n>Something went wrong while enabling group watching. If the problem persists, please contact us</ng-container>
+    <ng-container i18n>Something went wrong while enabling group watching. If the problem persists, please contact us.</ng-container>
   </ng-template>
 
   <ng-template pTemplate="footer">
