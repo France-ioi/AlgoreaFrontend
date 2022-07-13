@@ -48,6 +48,7 @@ export class ItemDependenciesComponent implements OnChanges, OnDestroy {
   ngOnDestroy(): void {
     this.itemId$.complete();
     this.showOverlaySubject$.complete();
+    this.refresh$.complete();
     this.showOverlaySubscription.unsubscribe();
   }
 
