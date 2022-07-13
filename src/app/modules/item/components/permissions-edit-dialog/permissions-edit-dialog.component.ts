@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { UntypedFormBuilder } from '@angular/forms';
 import { merge, Subject, Subscription } from 'rxjs';
 import { GroupPermissions } from 'src/app/shared/http-services/group-permissions.service';
 import { ItemEditPerm } from 'src/app/shared/models/domain/item-edit-permission';
@@ -47,7 +47,7 @@ export class PermissionsEditDialogComponent implements OnChanges, OnDestroy {
   private regenerateValues = new Subject<void>();
   private subscription?: Subscription;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: UntypedFormBuilder) {
     this.subscription = merge(
       this.form.valueChanges,
       this.regenerateValues.asObservable()

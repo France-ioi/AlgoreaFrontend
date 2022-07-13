@@ -2,7 +2,7 @@ import { Component, EventEmitter, forwardRef, Injector, Input, OnChanges, OnInit
 import {
   AbstractControl,
   ControlValueAccessor,
-  FormGroup,
+  UntypedFormGroup,
   NgControl,
   NG_VALIDATORS,
   NG_VALUE_ACCESSOR,
@@ -36,7 +36,7 @@ export class DurationComponent implements OnInit, OnChanges, ControlValueAccesso
   @Output() change = new EventEmitter<Duration | null>();
 
   @Input() name = '';
-  @Input() parentForm?: FormGroup;
+  @Input() parentForm?: UntypedFormGroup;
   @Input() layout: 'DHM' | 'HMS' = 'HMS';
   /**
    * Currently, the backend stores duration values with 2 distinct formats:

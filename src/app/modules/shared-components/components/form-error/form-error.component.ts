@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges } from '@angular/core';
-import { AbstractControl, FormGroup } from '@angular/forms';
+import { AbstractControl, UntypedFormGroup } from '@angular/forms';
 
 @Component({
   selector: 'alg-input-error',
@@ -7,7 +7,7 @@ import { AbstractControl, FormGroup } from '@angular/forms';
   styleUrls: [ './form-error.component.scss' ],
 })
 export class FormErrorComponent implements OnChanges {
-  @Input() form?: FormGroup;
+  @Input() form?: UntypedFormGroup;
   @Input() inputName = '';
   @Input() control?: AbstractControl;
 

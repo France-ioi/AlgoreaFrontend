@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 
 @Component({
   selector: 'alg-textarea',
@@ -8,7 +8,7 @@ import { FormGroup } from '@angular/forms';
 })
 export class TextareaComponent {
   @Input() inputName = ''; // name of the input in the parent form
-  @Input() parentForm?: FormGroup;
+  @Input() parentForm?: UntypedFormGroup;
 
   @Input() icon = '';
   @Input() placeholder = '';

@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormGroup, Validators } from '@angular/forms';
+import { UntypedFormGroup, Validators } from '@angular/forms';
 import { DropdownOption } from 'src/app/modules/shared-components/components/dropdown/dropdown.component';
 import { Item } from '../../http-services/get-item-by-id.service';
 import { HOURS } from 'src/app/shared/helpers/duration';
@@ -12,7 +12,7 @@ import { DEFAULT_ENTERING_TIME_MAX, DEFAULT_ENTERING_TIME_MIN } from '../item-ed
 })
 export class ItemEditAdvancedParametersComponent implements OnInit {
   @Input() item?: Item;
-  @Input() parentForm?: FormGroup;
+  @Input() parentForm?: UntypedFormGroup;
   @Input() attemptId?: string;
 
   validationCritireaOptions: DropdownOption[] = [{
