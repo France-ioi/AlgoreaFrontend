@@ -4,6 +4,7 @@ import { distinctUntilChanged, filter, map, shareReplay, switchMap } from 'rxjs/
 import { mapToFetchState } from '../../../../shared/operators/state';
 import { ActivityLog, ActivityLogService } from '../../../../shared/http-services/activity-log.service';
 import { OverlayPanel } from 'primeng/overlaypanel';
+import { canCloseOverlay } from '../../../../shared/helpers/overlay';
 
 interface Column {
   field: string,
@@ -108,17 +109,7 @@ export class GroupLogViewComponent implements OnChanges, OnDestroy {
   }
 
   onMouseLeave(event: MouseEvent, field: string): void {
-    if (field !== 'item.string.title') {
-      return;
-    }
-
-    const target = event.target;
-    const relatedTarget = event.relatedTarget;
-    const keepOverlayOpened = target instanceof HTMLElement &&
-      relatedTarget instanceof HTMLElement &&
-      !!relatedTarget.closest('.alg-path-suggestion-overlay');
-
-    if (!keepOverlayOpened) {
+    if (field === 'item.string.title' && canCloseOverlay(event)) {
       this.closeOverlay();
     }
   }

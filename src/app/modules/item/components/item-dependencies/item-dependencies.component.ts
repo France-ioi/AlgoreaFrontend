@@ -5,6 +5,7 @@ import { mapToFetchState } from '../../../../shared/operators/state';
 import { distinctUntilChanged, filter, map, shareReplay } from 'rxjs/operators';
 import { OverlayPanel } from 'primeng/overlaypanel';
 import { ItemData } from '../../services/item-datasource.service';
+import { canCloseOverlay } from '../../../../shared/helpers/overlay';
 
 @Component({
   selector: 'alg-item-dependencies',
@@ -61,13 +62,7 @@ export class ItemDependenciesComponent implements OnChanges, OnDestroy {
   }
 
   onMouseLeave(event: MouseEvent): void {
-    const target = event.target;
-    const relatedTarget = event.relatedTarget;
-    const keepOverlayOpened = target instanceof HTMLElement &&
-      relatedTarget instanceof HTMLElement &&
-      !!relatedTarget.closest('.alg-path-suggestion-overlay');
-
-    if (!keepOverlayOpened) {
+    if (canCloseOverlay(event)) {
       this.closeOverlay();
     }
   }
