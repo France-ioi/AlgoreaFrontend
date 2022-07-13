@@ -35,12 +35,12 @@ export class ItemPermissionsComponent implements OnChanges {
       canMakeSessionOfficial: false,
     } : undefined;
 
-    const currentUserCanGrantGroupAccess = this.watchedGroup?.currentUserCanGrantGroupAccess;
+    const currentUserCanGrantAccess = this.watchedGroup?.currentUserCanGrantAccess;
     const currentUserCanGivePermissions = this.itemData && allowsGivingPermToItem(this.itemData.item.permissions);
 
-    this.lockEdit = currentUserCanGrantGroupAccess && !currentUserCanGivePermissions ? 'content' :
-      !currentUserCanGrantGroupAccess && currentUserCanGivePermissions ? 'group' :
-        !currentUserCanGrantGroupAccess && !currentUserCanGivePermissions ? 'contentGroup' : undefined;
+    this.lockEdit = currentUserCanGrantAccess && !currentUserCanGivePermissions ? 'content' :
+      !currentUserCanGrantAccess && currentUserCanGivePermissions ? 'group' :
+        !currentUserCanGrantAccess && !currentUserCanGivePermissions ? 'contentGroup' : undefined;
   }
 
   openPermissionsDialog(): void {
