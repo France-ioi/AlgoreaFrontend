@@ -34,7 +34,6 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
      */
     map(content => (this.isOfContentType(content) ? content : undefined)), // map those which are not of interest to `undefined`
     distinctUntilChanged(), // remove multiple `undefined`
-    startWith(undefined),
     // emits the content+reload:false immediately, emit content+reload:true when/if `reloadTrigger` emits
     switchMap(content => this.reload$.pipe(map(() => ({ content, reload: true })), startWith({ content, reload: false }))),
 

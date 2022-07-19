@@ -1,7 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, ParamMap, UrlTree } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
+import { combineLatestWith, filter, map } from 'rxjs/operators';
 import { GetGroupPathService } from 'src/app/modules/group/http-services/get-group-path.service';
 import { groupInfo, GroupInfo, isGroupInfo } from 'src/app/shared/models/content/group-info';
 import { readyData } from 'src/app/shared/operators/state';
@@ -61,11 +61,10 @@ export class GroupByIdComponent implements OnDestroy {
       ).subscribe(p => this.currentContent.replace(p)),
 
       this.modeService.modeActions$.pipe(
-        filter(action => [ ModeAction.StartEditing, ModeAction.StopEditing ].includes(action))
-      ).subscribe(action => {
-        const currentInfo = this.currentContent.current();
-        if (!isGroupInfo(currentInfo)) throw new Error('Unexpected: in group-by-id but the current content is not a group');
-        this.groupRouter.navigateTo(currentInfo.route, { page: [ action === ModeAction.StartEditing ? 'edit' : 'details' ] });
+        filter(action => [ ModeAction.StartEditing, ModeAction.StopEditing ].includes(action)),
+        combineLatestWith(this.currentContent.content$.pipe(filter(isGroupInfo))),
+      ).subscribe(([ action, content ]) => {
+        this.groupRouter.navigateTo(content.route, { page: [ action === ModeAction.StartEditing ? 'edit' : 'details' ] });
       })
     );
   }

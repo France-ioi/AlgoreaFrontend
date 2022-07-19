@@ -1,7 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, ParamMap, UrlTree } from '@angular/router';
 import { of, Subscription } from 'rxjs';
-import { distinctUntilChanged, filter, map, pairwise, startWith, switchMap, take } from 'rxjs/operators';
+import { combineLatestWith, distinctUntilChanged, filter, map, pairwise, startWith, switchMap, take } from 'rxjs/operators';
 import { defaultAttemptId } from 'src/app/shared/helpers/attempts';
 import { errorState, fetchingState, FetchState } from 'src/app/shared/helpers/state';
 import { ResultActionsService } from 'src/app/shared/http-services/result-actions.service';
@@ -119,11 +119,10 @@ export class ItemByIdComponent implements OnDestroy {
       }),
 
       this.modeService.modeActions$.pipe(
-        filter(action => [ ModeAction.StartEditing, ModeAction.StopEditing ].includes(action))
-      ).subscribe(action => {
-        const current = this.currentContent.current();
-        if (!isItemInfo(current)) throw new Error('Unexpected: in item-by-id but the current content is not an item');
-        this.itemRouter.navigateTo(current.route, { page: action === ModeAction.StartEditing ? 'edit' : 'details' });
+        filter(action => [ ModeAction.StartEditing, ModeAction.StopEditing ].includes(action)),
+        combineLatestWith(this.currentContent.content$.pipe(filter(isItemInfo))),
+      ).subscribe(([ action, content ]) => {
+        this.itemRouter.navigateTo(content.route, { page: action === ModeAction.StartEditing ? 'edit' : 'details' });
       }),
 
       this.itemDataSource.state$.pipe(
