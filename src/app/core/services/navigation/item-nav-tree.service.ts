@@ -45,7 +45,7 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
   fetchNavData(route: ContentRoute): Observable<{ parent: NavTreeElement, elements: NavTreeElement[] }> {
     if (!isItemRoute(route)) throw new Error('expect requesting nav data with a route which is an item route');
     if (!route.attemptId) throw new Error('attemptId cannot be determined (should have been checked by canFetchChildren)');
-    return this.itemNavService.getItemNavigation(route.id, route.attemptId, isSkill(route.contentType)).pipe(
+    return this.itemNavService.getItemNavigation(route.id, { attemptId: route.attemptId, skillOnly: isSkill(route.contentType) }).pipe(
       map(data => this.mapNavData(data, route.path)),
     );
   }
@@ -62,7 +62,7 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
 
   fetchNavDataFromChild(id: string, child: ItemInfo): Observable<{ parent: NavTreeElement, elements: NavTreeElement[] }> {
     if (child.route.path.length === 0) throw new Error('unexpected empty path for child (fetchNavDataFromChild)');
-    return this.itemNavService.getItemNavigationFromChildRoute(id, child.route, isSkill(this.category)).pipe(
+    return this.itemNavService.getItemNavigation(id, { childRoute: child.route, skillOnly: isSkill(this.category) }).pipe(
       map(data => this.mapNavData(data, child.route.path.slice(0, -1)))
     );
   }
