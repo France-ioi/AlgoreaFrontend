@@ -198,7 +198,7 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
 
   private fetchDefaultNav(): Observable<FetchState<NavTreeData>> {
     return this.fetchRootTreeData().pipe(
-      map(elements => new NavTreeData(elements, [], undefined, undefined)),
+      map(elements => new NavTreeData(elements, [])),
       mapToFetchState(),
     );
   }
@@ -208,12 +208,12 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
     const parentId = route.path[route.path.length-1];
     if (isDefined(parentId)) {
       return this.fetchNavDataFromChild(parentId, content).pipe(
-        map(data => new NavTreeData(data.elements, route.path, route.id, data.parent)),
+        map(data => new NavTreeData(data.elements, route.path, data.parent, route.id)),
         mapToFetchState(),
       );
     } else {
       return this.fetchRootTreeData().pipe(
-        map(items => new NavTreeData(items, route.path, route.id)),
+        map(items => new NavTreeData(items, route.path, undefined, route.id)),
         mapToFetchState(),
       );
     }
@@ -227,7 +227,7 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
     if (!prevNav.parent) return this.fetchDefaultNav();
     // as the nav was previously loaded with a parent, we are sure it has children
     return this.fetchNavData(prevNav.parent.route).pipe(
-      map(data => new NavTreeData(data.elements, prevNav.pathToElements, undefined, data.parent)),
+      map(data => new NavTreeData(data.elements, prevNav.pathToElements, data.parent)),
       mapToFetchState(),
     );
   }
