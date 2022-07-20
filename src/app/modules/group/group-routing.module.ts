@@ -30,6 +30,7 @@ const routes: Routes = [
       {
         path: 'details',
         component: GroupDetailsComponent,
+        canDeactivate: [ PendingChangesGuard ],
         children: [
           {
             path: '',

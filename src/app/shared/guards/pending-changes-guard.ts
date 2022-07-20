@@ -20,14 +20,19 @@ export class PendingChangesGuard implements CanDeactivate<PendingChangesComponen
   ) {}
 
   canDeactivate(
-    component: PendingChangesComponent,
+    component: PendingChangesComponent | null,
     _currentRoute: ActivatedRouteSnapshot,
     _currentState: RouterStateSnapshot,
     _nextState: RouterStateSnapshot
   ): Observable<boolean> {
     const dialogResponse = new Subject<boolean>();
 
-    const pendingChangesComponent = this.pendingChangesService.component || component;
+    const pendingChangesComponent = component || this.pendingChangesService.component;
+
+    // If a component is not defined in router, need to use the PendingChangesService as alternative approach
+    if (!pendingChangesComponent) {
+      throw new Error('Unexpected: Component is not defined in router');
+    }
 
     if (!pendingChangesComponent.isDirty()) return of(true) ;
     this.confirmationService.confirm({
