@@ -4,7 +4,7 @@ import { appConfig } from '../../../shared/helpers/config';
 import { HttpClient } from '@angular/common/http';
 import * as D from 'io-ts/Decoder';
 import { decodeSnakeCase } from '../../../shared/operators/decode';
-import { permissionsDecoder } from '../helpers/item-permissions';
+import { itemCorePermDecoder } from 'src/app/shared/models/domain/item-permissions';
 import { pipe } from 'fp-ts/function';
 
 const itemPrerequisitesDecoder = pipe(
@@ -19,7 +19,7 @@ const itemPrerequisitesDecoder = pipe(
     entryParticipantType: D.literal('User', 'Team'),
     id: D.string,
     noScore: D.boolean,
-    permissions: permissionsDecoder,
+    permissions: itemCorePermDecoder,
     requiresExplicitEntry: D.boolean,
     string: pipe(
       D.struct({
