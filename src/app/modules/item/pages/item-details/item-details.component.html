@@ -54,6 +54,16 @@
           &nbsp;
           <span i18n>Progress</span>
         </a>
+        <a
+          [hidden]="!['all','all_with_grant'].includes(itemData.item.permissions.canEdit) && !dependenciesTab.isActive"
+          class="nav-tab-item"
+          [routerLink]="'./dependencies'"
+          routerLinkActive #dependenciesTab="routerLinkActive"
+          [routerLinkActiveOptions]="{ matrixParams: 'ignored', queryParams: 'ignored', paths: 'exact', fragment: 'ignored'}"
+          [class.active]="dependenciesTab.isActive"
+        >
+          <span i18n>Dependencies</span>
+        </a>
       </nav>
       <div class="bg-white" [ngClass]="{ 'compensate-margin':  !(showProgressTab$ | async) && taskTabs.length <= 1 }">
         <alg-error
@@ -95,6 +105,10 @@
           [savingAnswer]="(savingAnswer$ | async) ?? false"
           (skipSave)="skipBeforeUnload()"
         ></alg-item-progress>
+
+        <ng-container *ngIf="dependenciesTab.isActive">
+          <alg-item-dependencies [itemData]="itemData"></alg-item-dependencies>
+        </ng-container>
       </div>
     </ng-container>
 

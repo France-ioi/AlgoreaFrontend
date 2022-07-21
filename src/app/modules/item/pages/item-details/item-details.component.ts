@@ -119,11 +119,11 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent {
       distinctUntilChanged((a, b) => a.data?.route.id === b.data?.route.id),
     ).subscribe(state => {
       // reset tabs when item changes. By default do not display it unless we currently are on progress page
-      if (state.isFetching) this.tabs.next(this.isProgressPage() ? [{ view: 'progress', name: 'Progress' }] : []);
+      if (state.isFetching) this.tabs.next(this.showTaskTab() ? [] : [{ view: 'progress', name: 'Progress' }]);
       // update tabs when item is fetched
       // Case 1: item is not a task: display the progress tab anyway
       // Case 2: item is a task: delegate tab display to item task service, start with no tabs
-      if (state.isReady) this.tabs.next(isTask(state.data.item) && !this.isProgressPage() ? [] : [{ view: 'progress', name: 'Progress' }]);
+      if (state.isReady) this.tabs.next(isTask(state.data.item) && this.showTaskTab() ? [] : [{ view: 'progress', name: 'Progress' }]);
     }),
     fromEvent<BeforeUnloadEvent>(globalThis, 'beforeunload', { capture: true })
       .pipe(switchMap(() => this.itemContentComponent?.itemDisplayComponent?.saveAnswerAndState() ?? of(undefined)), take(1))
@@ -184,8 +184,16 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent {
     this.skipBeforeUnload$.next();
   }
 
+  private showTaskTab(): boolean {
+    return !this.isProgressPage() && !this.isDependenciesPage();
+  }
+
   private isProgressPage(): boolean {
     return this.router.url.includes('/progress/');
+  }
+
+  private isDependenciesPage(): boolean {
+    return this.router.url.includes('/dependencies');
   }
 
 }
