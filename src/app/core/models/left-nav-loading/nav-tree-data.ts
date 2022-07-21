@@ -53,7 +53,7 @@ export class NavTreeData {
    * If the element is not found, return this unchanged.
    */
   withUpdatedElement(route: ContentRoute, update: (el:NavTreeElement)=>NavTreeElement): NavTreeData {
-    if (!arraysEqual(route.path, this.pathToElements)) return this; // the element in not in tree as their paths do not match
+    if (!arraysEqual(route.path, this.pathToElements)) throw new Error('unexpected: updated element not among tree elements');
     const idx = this.elements.findIndex(i => i.route.id === route.id);
     if (idx === -1) return this;
     const elements = [ ...this.elements ];
@@ -66,7 +66,7 @@ export class NavTreeData {
    * If the element is not found, return this unchanged.
    */
   withChildren(route: ContentRoute, children: NavTreeElement[]): NavTreeData {
-    if (!arraysEqual(route.path, this.pathToElements)) return this; // the element in not in tree as their paths do not match
+    if (!arraysEqual(route.path, this.pathToElements)) throw new Error('unexpected: children parent not among tree elements');
     const elements = this.elements.map(e => (e.route.id === route.id ? { ...e, children: children } : e));
     return new NavTreeData(elements, this.pathToElements, this.parent, this.selectedElementId);
   }
