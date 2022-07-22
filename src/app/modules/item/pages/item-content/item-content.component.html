@@ -29,7 +29,10 @@
             (skipSave)="skipSave.emit()"
             (refresh)="refresh.emit()"
           ></alg-item-display>
-          <alg-thread *ngIf="showItemThreadWidget" [itemData]="itemData"></alg-thread>
+          <alg-thread
+            *ngIf="showItemThreadWidget"
+            [itemData]="itemData"
+          ></alg-thread>
         </ng-container>
 
         <ng-template #noUrl>

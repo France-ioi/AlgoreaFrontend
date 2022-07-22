@@ -1,6 +1,7 @@
 import { Component, Input, OnChanges, OnDestroy } from '@angular/core';
-import { catchError, combineLatest, EMPTY, map, ReplaySubject } from 'rxjs';
+import { catchError, combineLatest, EMPTY, filter, fromEvent, map, ReplaySubject, switchMap, take } from 'rxjs';
 import { GroupWatchingService } from 'src/app/core/services/group-watching.service';
+import { isNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
 import { ItemData } from '../../services/item-datasource.service';
 import { ThreadService } from '../../services/threads.service';
@@ -13,8 +14,17 @@ import { ThreadService } from '../../services/threads.service';
 export class ThreadComponent implements OnChanges, OnDestroy {
   @Input() itemData?: ItemData;
 
-  messages$ = this.threadService.messages$;
-  threadClosed$ = this.messages$.pipe(map(messages => messages.some(message => message.eventType === 'thread_closed')));
+  messageToSend = '';
+  openingThread = false;
+
+  events$ = this.threadService.events$;
+  threadStatus$ = this.threadService.status$;
+  canOpenThread$ = combineLatest([ this.groupWatchingService.isWatching$, this.threadStatus$ ]).pipe(
+    map(([ isWatching, status ]) => !isWatching && status !== 'opened'),
+  );
+  canCloseThread$ = combineLatest([ this.groupWatchingService.isWatching$, this.threadStatus$ ]).pipe(
+    map(([ isWatching, status ]) => !isWatching && status === 'opened'),
+  );
 
   private itemData$ = new ReplaySubject<ItemData>(1);
 
@@ -30,6 +40,11 @@ export class ThreadComponent implements OnChanges, OnDestroy {
           canWatchParticipant: !!watchedGroup,
         });
       }),
+    this.itemData$
+      .pipe(switchMap(() => this.threadStatus$), take(1), filter(status => status === 'opened'))
+      .subscribe(() => this.threadService.follow()),
+
+    fromEvent(window, 'beforeunload').subscribe(() => this.threadService.unfollow()),
   ];
 
   constructor(
@@ -45,14 +60,26 @@ export class ThreadComponent implements OnChanges, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
+    this.threadService.unfollow();
   }
 
   openThread(): void {
-    this.threadService.send('open-thread');
+    this.openingThread = true;
+    this.threadService.open();
+    this.events$
+      .pipe(map(events => events.find(event => event.eventType === 'thread_opened')), filter(isNotUndefined), take(1))
+      .subscribe(() => this.openingThread = false);
   }
 
   closeThread(): void {
-    this.threadService.send('close-thread');
+    this.threadService.close();
+  }
+
+  sendMessage(): void {
+    const messageToSend = this.messageToSend.trim();
+    if (!messageToSend) return;
+    this.threadService.sendMessage(messageToSend);
+    this.messageToSend = '';
   }
 
 }

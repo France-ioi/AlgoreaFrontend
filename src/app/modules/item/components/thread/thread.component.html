@@ -1,13 +1,35 @@
-<div class="widget" *ngIf="messages$ | async as messages">
-  <div *ngFor="let message of messages">
-    <div>{{ message | json }}</div>
+<div class="widget">
+  <ng-container *ngIf="events$ | async as events">
+    <div *ngIf="events.length > 0" class="widget-body">
+      <div *ngFor="let event of events">
+        <div>{{ event | json }}</div>
+      </div>
+      <div *ngIf="(threadStatus$ | async) === 'opened'">
+        <textarea
+          [(ngModel)]="messageToSend"
+          placeholder="Send a message..."
+        ></textarea>
+        <p-button
+          label="Submit"
+          (click)="sendMessage()"
+          [disabled]="!messageToSend.trim()"
+          ></p-button>
+      </div>
+    </div>
+  </ng-container>
+
+  <div class="widget-footer" *ngIf="canOpenThread$ | async">
+    <p-button
+      label="Open thread"
+      (click)="openThread()"
+      [disabled]="openingThread"
+    ></p-button>
   </div>
-  <div>
-    <button (click)="closeThread()" [disabled]="threadClosed$ | async">
-      Close thread
-    </button>
+
+  <div class="widget-footer" *ngIf="canCloseThread$ | async">
+    <p-button
+      label="Close thread"
+      (click)="closeThread()"
+    ></p-button>
   </div>
-</div>
-<div *ngIf="!(messages$ | async)" class="widget" (click)="openThread()">
-  Open thread
 </div>
