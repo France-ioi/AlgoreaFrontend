@@ -23,6 +23,7 @@ import { ItemEditComponent } from './pages/item-edit/item-edit.component';
             {
               path: 'edit-children',
               canDeactivate: [ PendingChangesGuard ],
+              children: [],
             },
             {
               path: 'progress',
