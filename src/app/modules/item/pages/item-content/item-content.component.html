@@ -20,18 +20,10 @@
             </label>
           </div>
 
-          <ng-container *ngIf="editModeEnabled">
-            <ng-container *ngIf="['all','all_with_grant', 'children'].includes(itemData.item.permissions.canEdit); else notAuthorized">
-              <alg-item-children-edit-form
-                  [itemData]="itemData"
-              ></alg-item-children-edit-form>
-            </ng-container>
-            <ng-template #notAuthorized>
-              <p class="validation-text" i18n>
-                You do not have the permissions to edit this content.
-              </p>
-            </ng-template>
-          </ng-container>
+          <alg-item-children-edit-form
+            [itemData]="itemData"
+            *ngIf="editModeEnabled"
+          ></alg-item-children-edit-form>
 
           <alg-chapter-children
             [itemData]="itemData"
