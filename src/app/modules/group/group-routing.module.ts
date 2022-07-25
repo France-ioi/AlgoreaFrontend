@@ -16,10 +16,12 @@ const routes: Routes = [
     component: UserComponent,
     children: [
       {
-        path: 'personal-data'
+        path: 'personal-data',
+        children: [],
       },
       {
-        path: 'settings'
+        path: 'settings',
+        children: [],
       }
     ]
   },
@@ -34,19 +36,24 @@ const routes: Routes = [
         children: [
           {
             path: '',
+            children: [],
           },
           {
             path: 'members',
+            children: [],
           },
           {
             path: 'managers',
+            children: [],
           },
           {
             path: 'settings',
             canDeactivate: [ PendingChangesGuard ],
+            children: [],
           },
           {
             path: 'access',
+            children: [],
           },
         ]
       },

@@ -1,6 +1,6 @@
 import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { ItemDataSource } from '../../services/item-datasource.service';
-import { AbstractControl, FormBuilder, ValidatorFn, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, ValidatorFn, Validators } from '@angular/forms';
 import { forkJoin, Observable, of, Subscription, throwError } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { ItemStringChanges, UpdateItemStringService } from '../../http-services/update-item-string.service';
@@ -85,7 +85,7 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
     private modeService: ModeService,
     private currentContentService: CurrentContentService,
     private itemDataSource: ItemDataSource,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private createItemService: CreateItemService,
     private updateItemService: UpdateItemService,
     private updateItemStringService: UpdateItemStringService,

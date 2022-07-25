@@ -6,7 +6,7 @@ import { ProgressSelectValue } from
 import { GroupManagerPermissionChanges, UpdateGroupManagersService } from '../../http-services/update-group-managers.service';
 import { formatUser } from '../../../../shared/helpers/user';
 import { ActionFeedbackService } from '../../../../shared/services/action-feedback.service';
-import { FormBuilder } from '@angular/forms';
+import { UntypedFormBuilder } from '@angular/forms';
 import { ConfirmationService } from 'primeng/api';
 import { UserSessionService } from '../../../../shared/services/user-session.service';
 
@@ -53,7 +53,7 @@ export class ManagerPermissionDialogComponent implements OnChanges {
     private sessionService: UserSessionService,
     private updateGroupManagersService: UpdateGroupManagersService,
     private actionFeedbackService: ActionFeedbackService,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private confirmationService: ConfirmationService,
   ) {}
 

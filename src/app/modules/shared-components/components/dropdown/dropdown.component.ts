@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 
 export interface DropdownOption {
   label: string,
@@ -14,16 +14,16 @@ export interface DropdownOption {
 export class DropdownComponent implements OnInit {
   @Input() options: DropdownOption[] = [];
   @Input() placeholder = '';
-  @Input() parentForm?: FormGroup;
+  @Input() parentForm?: UntypedFormGroup;
   @Input() name = '';
 
-  formControl?: FormControl;
+  formControl?: UntypedFormControl;
 
   constructor() {}
 
   ngOnInit(): void {
     if (this.parentForm && this.parentForm.get(this.name)) {
-      this.formControl = this.parentForm.get(this.name) as FormControl;
+      this.formControl = this.parentForm.get(this.name) as UntypedFormControl;
     }
   }
 }

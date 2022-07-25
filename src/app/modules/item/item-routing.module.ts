@@ -19,28 +19,32 @@ import { ItemEditComponent } from './pages/item-edit/item-edit.component';
           canDeactivate: [ BeforeUnloadGuard ],
           // Children below do not use routing but there are defined here so that the router can validate the route exists
           children: [
-            { path: '', pathMatch: 'full', },
+            { path: '', pathMatch: 'full', children: [] },
             {
               path: 'progress',
               children: [
                 {
                   path: '',
                   redirectTo: 'history',
-                  pathMatch: 'full'
+                  pathMatch: 'full',
                 },
                 {
                   path: 'history',
+                  children: [],
                 },
                 {
                   path: 'chapter',
+                  children: [],
                 },
                 {
                   path: 'chapter-user-progress',
+                  children: [],
                 }
               ]
             },
             {
-              path: 'dependencies'
+              path: 'dependencies',
+              children: [],
             },
           ]
         },
@@ -49,8 +53,8 @@ import { ItemEditComponent } from './pages/item-edit/item-edit.component';
           component: ItemEditComponent,
           canDeactivate: [ PendingChangesGuard ],
           children: [
-            { path: '', pathMatch: 'full' },
-            { path: 'advanced-parameters' },
+            { path: '', pathMatch: 'full', children: [] },
+            { path: 'advanced-parameters', children: [] }
           ]
         },
       ]

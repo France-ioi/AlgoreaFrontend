@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Observable, Subscription, merge, of } from 'rxjs';
 import { map, filter, switchMap, delay } from 'rxjs/operators';
 import { fetchingState, readyState } from 'src/app/shared/helpers/state';
@@ -43,14 +43,14 @@ export class AddContentComponent<Type> implements OnInit, OnDestroy {
 
   state: 'fetching' | 'ready' = 'fetching';
   resultsFromSearch: AddedContent<Type>[] = [];
-  addContentForm: FormGroup = this.formBuilder.group(defaultFormValues);
+  addContentForm: UntypedFormGroup = this.formBuilder.group(defaultFormValues);
   trimmedInputsValue = defaultFormValues;
 
   focused?: 'create' | 'searchExisting';
 
   private subscriptions: Subscription[] = [];
 
-  constructor(private formBuilder: FormBuilder) {}
+  constructor(private formBuilder: UntypedFormBuilder) {}
 
   ngOnInit(): void {
     if (!this.searchFunction && this.showSearchUI) throw new Error('The input \'searchFunction\' is required');

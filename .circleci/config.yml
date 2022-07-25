@@ -157,7 +157,7 @@ jobs:
           command: |
             npx webdriver-manager clean
             npx webdriver-manager update --versions.chrome=$(google-chrome --version | cut -d ' ' -f 3)
-      - run: npx ng e2e --protractor-config=e2e/protractor-ci.conf.js --webdriverUpdate=false
+      - run: npx ng e2e --protractor-config=e2e/protractor-ci.conf.js --webdriver-update=false
 
 
   deploy-branch:

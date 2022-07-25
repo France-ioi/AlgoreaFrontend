@@ -1,5 +1,5 @@
 import { Component, OnDestroy } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { mapStateData, readyData } from 'src/app/shared/operators/state';
 import { ModeService } from 'src/app/shared/services/mode.service';
 import { of, Subscription } from 'rxjs';
@@ -40,7 +40,7 @@ export class GroupEditComponent implements OnDestroy, PendingChangesComponent {
     private currentContentService: CurrentContentService,
     private groupDataSource: GroupDataSource,
     private actionFeedbackService: ActionFeedbackService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private groupUpdateService: GroupUpdateService,
     private createItemService: CreateItemService,
     private pendingChangesService: PendingChangesService

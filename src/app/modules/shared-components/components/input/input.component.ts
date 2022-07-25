@@ -4,7 +4,7 @@ import {
   Output,
   EventEmitter,
 } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 
 @Component({
   selector: 'alg-input',
@@ -13,7 +13,7 @@ import { FormGroup } from '@angular/forms';
 })
 export class InputComponent {
   @Input() name = ''; // name of the input in the parent form
-  @Input() parentForm?: FormGroup;
+  @Input() parentForm?: UntypedFormGroup;
 
   @Input() placeholder = ''; // avoid 'undefined' if no placeholder specified
   @Input() isDark = true;
