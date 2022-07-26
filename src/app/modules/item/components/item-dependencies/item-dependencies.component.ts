@@ -1,11 +1,16 @@
 import { Component, ElementRef, Input, OnChanges, OnDestroy, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { GetItemPrerequisitesService } from '../../http-services/get-item-prerequisites.service';
 import { BehaviorSubject, debounceTime, merge, ReplaySubject, Subject, switchMap } from 'rxjs';
-import { mapToFetchState } from '../../../../shared/operators/state';
-import { distinctUntilChanged, filter, map, shareReplay } from 'rxjs/operators';
+import { mapToFetchState, readyData } from '../../../../shared/operators/state';
+import { distinctUntilChanged, filter, map, share, shareReplay } from 'rxjs/operators';
 import { OverlayPanel } from 'primeng/overlaypanel';
 import { ItemData } from '../../services/item-datasource.service';
 import { canCloseOverlay } from '../../../../shared/helpers/overlay';
+import { AddedContent } from '../../../shared-components/components/add-content/add-content.component';
+import { ItemType } from '../../../../shared/helpers/item-type';
+import { AddItemPrerequisiteService } from '../../http-services/add-item-prerequisite.service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { ActionFeedbackService } from '../../../../shared/services/action-feedback.service';
 
 @Component({
   selector: 'alg-item-dependencies',
@@ -18,15 +23,16 @@ export class ItemDependenciesComponent implements OnChanges, OnDestroy {
   @ViewChild('op') op?: OverlayPanel;
   @ViewChildren('contentRef') contentRef?: QueryList<ElementRef<HTMLElement>>;
 
-  private readonly itemId$ = new ReplaySubject<string>(1);
+  readonly itemId$ = new ReplaySubject<string>(1);
   private readonly refresh$ = new Subject<void>();
 
   state$ = this.itemId$.pipe(
     switchMap(itemId => this.getItemPrerequisitesService.get(itemId)),
     map(items => items.filter(item => item.dependencyGrantContentView)),
     mapToFetchState({ resetter: this.refresh$ }),
+    share(),
   );
-
+  addedIds$ = this.state$.pipe(readyData(), map(data => data.map(dependency => dependency.id)));
   private readonly showOverlaySubject$ = new BehaviorSubject<{ event: Event, itemId: string, target: HTMLElement }|undefined>(undefined);
   showOverlay$ = merge(
     this.showOverlaySubject$.pipe(debounceTime(750)),
@@ -37,7 +43,13 @@ export class ItemDependenciesComponent implements OnChanges, OnDestroy {
     data ? this.op?.toggle(data.event, data.target) : this.op?.hide();
   });
 
-  constructor(private getItemPrerequisitesService: GetItemPrerequisitesService) {
+  createInProgress$ = new BehaviorSubject<boolean>(false);
+
+  constructor(
+    private getItemPrerequisitesService: GetItemPrerequisitesService,
+    private addItemPrerequisiteService: AddItemPrerequisiteService,
+    private actionFeedbackService: ActionFeedbackService,
+  ) {
   }
 
   ngOnChanges(): void {
@@ -73,5 +85,28 @@ export class ItemDependenciesComponent implements OnChanges, OnDestroy {
 
   refresh(): void {
     this.refresh$.next();
+  }
+
+  addDependency(item: AddedContent<ItemType>): void {
+    if (!item.id) {
+      throw new Error('Unexpected: Missed item ID');
+    }
+    const dependentItemId = this.itemData?.item.id;
+    if (!dependentItemId) {
+      throw new Error('Unexpected: Missed dependent item id');
+    }
+    this.createInProgress$.next(true);
+    this.addItemPrerequisiteService.create(dependentItemId, item.id).subscribe({
+      next: () => {
+        this.createInProgress$.next(false);
+        this.actionFeedbackService.success('The new dependency has been added');
+        this.refresh();
+      },
+      error: err => {
+        this.createInProgress$.next(false);
+        this.actionFeedbackService.unexpectedError();
+        if (!(err instanceof HttpErrorResponse)) throw err;
+      }
+    });
   }
 }

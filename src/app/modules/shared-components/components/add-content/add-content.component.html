@@ -11,9 +11,10 @@
     tooltipEvent="focus"
     tooltipPosition="bottom"
     [tooltipDisabled]="trimmedInputsValue.create.length >= minInputLength"
+    *ngIf="showCreateUI"
   >
   </alg-input>
-  <span class="label" i18n *ngIf="showSearchUI">or</span>
+  <span class="label" i18n *ngIf="showCreateUI && showSearchUI">or</span>
   <alg-input
     [parentForm]="addContentForm"
     [hasClearButton]="true"
