@@ -57,7 +57,7 @@ export class ThreadComponent implements OnChanges, OnDestroy {
   ngOnChanges(changes: SimpleChanges): void {
     if (!this.itemData || !changes.itemData) return;
     const previousValue = changes.itemData.previousValue as ItemData | undefined;
-    if (this.itemData.route.id !== previousValue?.route.id) this.threadService.unfollow();
+    if (previousValue && this.itemData.route.id !== previousValue.route.id) this.threadService.unfollow();
     this.itemData$.next(this.itemData);
   }
 
