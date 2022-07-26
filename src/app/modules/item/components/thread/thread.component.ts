@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
 import { catchError, combineLatest, EMPTY, filter, fromEvent, map, ReplaySubject, switchMap, take } from 'rxjs';
 import { GroupWatchingService } from 'src/app/core/services/group-watching.service';
 import { isNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
@@ -53,8 +53,10 @@ export class ThreadComponent implements OnChanges, OnDestroy {
     private groupWatchingService: GroupWatchingService,
   ) {}
 
-  ngOnChanges(): void {
-    if (!this.itemData) return;
+  ngOnChanges(changes: SimpleChanges): void {
+    if (!this.itemData || !changes.itemData) return;
+    const previousValue = changes.itemData.previousValue as ItemData | undefined;
+    if (this.itemData.route.id !== previousValue?.route.id) this.threadService.unfollow();
     this.itemData$.next(this.itemData);
   }
 
