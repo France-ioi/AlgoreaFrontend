@@ -128,7 +128,9 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent, P
     }),
     fromEvent<BeforeUnloadEvent>(globalThis, 'beforeunload', { capture: true })
       .pipe(switchMap(() => this.itemContentComponent?.itemDisplayComponent?.saveAnswerAndState() ?? of(undefined)), take(1))
-      .subscribe(),
+      .subscribe({
+        error: () => { /* Errors cannot be handled before unloading page. */ },
+      }),
     this.formerAnswerError$.subscribe(caught => {
       if (caught !== loadForbiddenAnswerError) this.unknownError = caught;
     }),
