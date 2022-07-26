@@ -1,6 +1,6 @@
 <div class="widget">
   <ng-container *ngIf="events$ | async as events">
-    <div *ngIf="events.length > 0" class="widget-body">
+    <div *ngIf="widgetOpened && events.length > 0" class="widget-body">
       <div *ngFor="let event of events">
         <div>{{ event | json }}</div>
       </div>
@@ -18,18 +18,30 @@
     </div>
   </ng-container>
 
-  <div class="widget-footer" *ngIf="canOpenThread$ | async">
+  <div class="widget-footer">
     <p-button
+      *ngIf="canOpenThread$ | async"
       label="Open thread"
       (click)="openThread()"
       [disabled]="openingThread"
     ></p-button>
-  </div>
 
-  <div class="widget-footer" *ngIf="canCloseThread$ | async">
     <p-button
+      *ngIf="canCloseThread$ | async"
       label="Close thread"
       (click)="closeThread()"
+    ></p-button>
+
+    <p-button
+      *ngIf="widgetOpened"
+      label="Hide thread"
+      (click)="toggleWidget(false)"
+    ></p-button>
+
+    <p-button
+      *ngIf="!widgetOpened"
+      label="Show thread"
+      (click)="toggleWidget(true)"
     ></p-button>
   </div>
 </div>

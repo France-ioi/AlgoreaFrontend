@@ -4,7 +4,19 @@ import * as D from 'io-ts/Decoder';
 import { pipe } from 'fp-ts/function';
 import { appConfig } from 'src/app/shared/helpers/config';
 import { dateDecoder } from 'src/app/shared/helpers/decoders';
-import { catchError, distinctUntilChanged, EMPTY, filter, map, mergeWith, Observable, scan, Subject, Subscription } from 'rxjs';
+import {
+  catchError,
+  distinctUntilChanged,
+  EMPTY,
+  filter,
+  map,
+  mergeWith,
+  Observable,
+  scan,
+  shareReplay,
+  Subject,
+  Subscription,
+} from 'rxjs';
 import { decodeSnakeCase } from 'src/app/shared/operators/decode';
 import { ActivityLog, ActivityLogService } from 'src/app/shared/http-services/activity-log.service';
 import { isNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
@@ -131,6 +143,7 @@ export class ThreadService implements OnDestroy {
       map(messages => messages.find(isThreadStatusMessage)?.status),
       filter(isNotUndefined),
       distinctUntilChanged(),
+      shareReplay(1),
     );
 
     this.subscriptions.push(

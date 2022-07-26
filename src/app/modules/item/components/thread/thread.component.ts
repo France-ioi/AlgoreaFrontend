@@ -16,6 +16,7 @@ export class ThreadComponent implements OnChanges, OnDestroy {
 
   messageToSend = '';
   openingThread = false;
+  widgetOpened = false;
 
   events$ = this.threadService.events$;
   threadStatus$ = this.threadService.status$;
@@ -67,6 +68,7 @@ export class ThreadComponent implements OnChanges, OnDestroy {
 
   openThread(): void {
     this.openingThread = true;
+    this.widgetOpened = true;
     this.threadService.open();
     this.events$
       .pipe(map(events => events.find(event => event.eventType === 'thread_opened')), filter(isNotUndefined), take(1))
@@ -74,7 +76,12 @@ export class ThreadComponent implements OnChanges, OnDestroy {
   }
 
   closeThread(): void {
+    this.widgetOpened = false;
     this.threadService.close();
+  }
+
+  toggleWidget(opened: boolean): void {
+    this.widgetOpened = opened;
   }
 
   sendMessage(): void {
