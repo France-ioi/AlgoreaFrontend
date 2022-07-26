@@ -28,7 +28,7 @@
           [routerLinkActiveOptions]="{
             matrixParams: 'ignored',
             queryParams: 'ignored',
-            paths: progressTab?.isActive ? 'exact' : 'subset',
+            paths: (progressTab?.isActive || dependenciesTab?.isActive) ? 'exact' : 'subset',
             fragment: 'ignored'
           }"
           [class.active]="contentTab.isActive"
