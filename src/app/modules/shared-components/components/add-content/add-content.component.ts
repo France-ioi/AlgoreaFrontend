@@ -1,9 +1,9 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { Observable, Subscription, merge, of } from 'rxjs';
-import { map, filter, switchMap, delay } from 'rxjs/operators';
-import { fetchingState, readyState } from 'src/app/shared/helpers/state';
+import { Observable, Subscription } from 'rxjs';
+import { map, filter, switchMap, debounceTime } from 'rxjs/operators';
 import { ItemCorePerm } from 'src/app/shared/models/domain/item-permissions';
+import { mapToFetchState } from 'src/app/shared/operators/state';
 
 export interface AddedContent<T> {
   id?: string,
@@ -41,7 +41,7 @@ export class AddContentComponent<Type> implements OnInit, OnDestroy {
 
   readonly minInputLength = 3;
 
-  state: 'fetching' | 'ready' = 'fetching';
+  state: 'fetching' | 'ready' | 'error' = 'fetching';
   resultsFromSearch: AddedContent<Type>[] = [];
   addContentForm: UntypedFormGroup = this.formBuilder.group(defaultFormValues);
   trimmedInputsValue = defaultFormValues;
@@ -74,11 +74,8 @@ export class AddContentComponent<Type> implements OnInit, OnDestroy {
       existingTitleControl.pipe(
         map(value => value.trim()),
         filter(value => this.checkLength(value)),
-        switchMap(value => merge(
-          of(fetchingState()),
-          of(value).pipe(delay(300), switchMap(value => searchFunction(value).pipe(map(readyState)),
-          ))
-        ))
+        debounceTime(300),
+        switchMap(value => searchFunction(value).pipe(mapToFetchState())),
       ).subscribe(state => {
         this.state = state.tag;
         if (state.isReady) this.resultsFromSearch = state.data;
