@@ -1,6 +1,6 @@
 import { Component, ElementRef, NgZone, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { UserSessionService } from '../shared/services/user-session.service';
-import { delay, switchMap } from 'rxjs/operators';
+import { delay, switchMap, tap } from 'rxjs/operators';
 import { merge, Subscription } from 'rxjs';
 import { AuthService } from '../shared/auth/auth.service';
 import { Router } from '@angular/router';
@@ -27,6 +27,9 @@ export class AppComponent implements OnInit, OnDestroy {
     this.authService.failure$,
     this.sessionService.userProfileError$,
     this.localeService.currentLangError$,
+  ).pipe(
+    // eslint-disable-next-line no-console
+    tap(err => console.error(`fatal: ${err.message}`))
   );
 
   fullFrame$ = this.layoutService.fullFrame$.pipe(delay(0));
