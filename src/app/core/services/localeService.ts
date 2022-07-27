@@ -1,3 +1,4 @@
+import { Location } from '@angular/common';
 import { Injectable, OnDestroy } from '@angular/core';
 import { EMPTY, Observable, of, Subject } from 'rxjs';
 import { appConfig, LanguageConfig } from 'src/app/shared/helpers/config';
@@ -15,9 +16,11 @@ export class LocaleService implements OnDestroy {
   private navigating$ = new Subject<void>();
   readonly navigatingToNewLanguage$ = this.navigating$.asObservable();
 
-  constructor() {
+  constructor(
+    private location: Location,
+  ) {
     this.languages = appConfig.languages;
-    this.currentLang = this.languages.find(l => window.location.pathname.endsWith(l.path));
+    this.currentLang = this.languages.find(l => this.location.prepareExternalUrl('').endsWith(l.path));
     this.currentLangError$ = this.currentLang ? EMPTY : of(new Error('unable to set current lang'));
   }
 
@@ -25,7 +28,8 @@ export class LocaleService implements OnDestroy {
     const nextLang = this.languages.find(l => l.tag === langTag);
     if (!nextLang || !this.currentLang) throw new Error('Cannot find new or current lang in configured languages');
     this.navigating$.next();
-    window.location.href = `${window.location.pathname.replace(this.currentLang.path, nextLang.path)}${window.location.hash}`;
+    const newRootPath = this.location.prepareExternalUrl('').replace(new RegExp(`${this.currentLang.path}$`), nextLang.path);
+    window.location.href = `${newRootPath}${this.location.path().substring(1)}`;
   }
 
   ngOnDestroy(): void {
