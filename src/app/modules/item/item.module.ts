@@ -40,6 +40,7 @@ import { BeforeUnloadGuard } from 'src/app/shared/guards/before-unload-guard';
 import { AnswerAuthorIndicatorComponent } from './components/answer-author-indicator/answer-author-indicator.component';
 import { ItemPermissionsComponent } from './components/item-permissions/item-permissions.component';
 import { TaskLoaderComponent } from './components/task-loader/task-loader.component';
+import { ItemChildrenEditFormComponent } from './components/item-children-edit-form/item-children-edit-form.component';
 import { ThreadComponent } from './components/thread/thread.component';
 import { ItemDependenciesComponent } from './components/item-dependencies/item-dependencies.component';
 
@@ -74,6 +75,7 @@ import { ItemDependenciesComponent } from './components/item-dependencies/item-d
     AnswerAuthorIndicatorComponent,
     ItemPermissionsComponent,
     TaskLoaderComponent,
+    ItemChildrenEditFormComponent,
     ThreadComponent,
     ItemDependenciesComponent,
   ],

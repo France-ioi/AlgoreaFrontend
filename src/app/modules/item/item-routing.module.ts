@@ -16,10 +16,15 @@ import { ItemEditComponent } from './pages/item-edit/item-edit.component';
         {
           path: 'details',
           component: ItemDetailsComponent,
-          canDeactivate: [ BeforeUnloadGuard ],
+          canDeactivate: [ BeforeUnloadGuard, PendingChangesGuard ],
           // Children below do not use routing but there are defined here so that the router can validate the route exists
           children: [
             { path: '', pathMatch: 'full', children: [] },
+            {
+              path: 'edit-children',
+              canDeactivate: [ PendingChangesGuard ],
+              children: [],
+            },
             {
               path: 'progress',
               children: [
