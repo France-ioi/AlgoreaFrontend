@@ -71,7 +71,7 @@ export class OAuthService {
   }
 
   private appRedirectUri(): string {
-    return `${window.location.protocol}//${window.location.host}${window.location.pathname}#/`;
+    return `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
   }
 
   private parseState(state: string): {nonce: string, userState: string} {
