@@ -3,6 +3,7 @@ import { UserSessionService } from 'src/app/shared/services/user-session.service
 import { appConfig } from 'src/app/shared/helpers/config';
 import { ActionFeedbackService } from '../../../../shared/services/action-feedback.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'alg-current-user',
@@ -15,14 +16,11 @@ export class CurrentUserComponent {
   constructor(
     private userSessionService: UserSessionService,
     private actionFeedbackService: ActionFeedbackService,
+    private location: Location,
   ) {}
 
   onModify(userId: string): void {
-    const backUrl = new URL(
-      './update-profile.html',
-      location.href
-    ).href;
-
+    const backUrl = window.location.origin + this.location.prepareExternalUrl('update-profile.html');
     window.open(
       `${ appConfig.oauthServerUrl }?all=1&client_id=${ userId }&redirect_uri=${encodeURI(backUrl)}`,
       undefined,
