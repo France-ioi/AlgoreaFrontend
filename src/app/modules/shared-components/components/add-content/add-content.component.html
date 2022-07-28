@@ -47,7 +47,11 @@
     </div>
   </div>
 
-  <div *ngIf="trimmedInputsValue.searchExisting.length >= minInputLength">
+  <div *ngIf="state === 'error'">
+    <div i18n>Failed to search for contents, please retry. If the problem persists, contact us.</div>
+  </div>
+
+  <div *ngIf="trimmedInputsValue.searchExisting.length >= minInputLength && state !== 'error'">
     <h3 i18n>Select a Content</h3>
     <p-table class="alg-table --add-content" [value]="resultsFromSearch | slice : 0 : 4" [loading]="state === 'fetching'">
       <ng-template pTemplate="body" let-item>
