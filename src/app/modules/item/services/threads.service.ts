@@ -136,7 +136,7 @@ export class ThreadService implements OnDestroy {
 
     this.events$ = this.clearEvents$.pipe(
       startWith(undefined),
-      switchMap(() => this.newEvents$.pipe(scan((oldEvents, newEvents) => [...oldEvents, ...newEvents]))),
+      switchMap(() => this.newEvents$.pipe(scan((oldEvents, newEvents) => [ ...oldEvents, ...newEvents ]))),
       map(messages => messages.sort((a, b) => a.time.valueOf() - b.time.valueOf())), // sort by date ascending
     );
 
