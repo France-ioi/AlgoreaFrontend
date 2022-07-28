@@ -10,12 +10,13 @@ import {
   EMPTY,
   filter,
   map,
-  mergeWith,
   Observable,
   scan,
   shareReplay,
+  startWith,
   Subject,
   Subscription,
+  switchMap,
 } from 'rxjs';
 import { decodeSnakeCase } from 'src/app/shared/operators/decode';
 import { ActivityLog, ActivityLogService } from 'src/app/shared/http-services/activity-log.service';
@@ -133,9 +134,9 @@ export class ThreadService implements OnDestroy {
 
     this.newEvents$ = this.incomingMessages$.pipe(map(messages => messages.filter(isThreadEventMessage)));
 
-    this.events$ = this.newEvents$.pipe(
-      scan((oldEvents, newEvents) => [ ...oldEvents, ...newEvents ]),
-      mergeWith(this.clearEvents$.pipe(map(() => []))),
+    this.events$ = this.clearEvents$.pipe(
+      startWith(undefined),
+      switchMap(() => this.newEvents$.pipe(scan((oldEvents, newEvents) => [...oldEvents, ...newEvents]))),
       map(messages => messages.sort((a, b) => a.time.valueOf() - b.time.valueOf())), // sort by date ascending
     );
 
