@@ -20,9 +20,9 @@ export function appendUrlWithQuery(currentUrl: string, query: string, value: str
   return url.pathname + url.search;
 }
 
-export function urlToRedirectTo(currentUrl: string): string | null {
+export function urlToRedirectTo(options: { from: string }): string | null {
   const url = getRedirectToSubPathAtInit();
   if (!url) return null;
   removeSubPathRedirectionAtInit();
-  return appendUrlWithQuery(url, fromPathKey, currentUrl);
+  return appendUrlWithQuery(url, fromPathKey, options.from);
 }

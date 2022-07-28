@@ -13,6 +13,7 @@ import { urlToRedirectTo } from '../shared/helpers/redirect-to-sub-path-at-init'
 import { GroupWatchingService } from './services/group-watching.service';
 import { version } from 'src/version';
 import { CrashReportingService } from './services/crash-reporting.service';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'alg-root',
@@ -50,6 +51,7 @@ export class AppComponent implements OnInit, OnDestroy {
     private localeService: LocaleService,
     private layoutService: LayoutService,
     private crashReportingService: CrashReportingService,
+    private location: Location,
     private titleService: Title,
     private ngZone: NgZone,
     private renderer: Renderer2,
@@ -59,11 +61,10 @@ export class AppComponent implements OnInit, OnDestroy {
       appConfig.languageSpecificTitles[this.localeService.currentLang.tag] : undefined;
     this.titleService.setTitle(title ?? appConfig.defaultTitle);
 
-    const currentUrl = location.hash.slice(1); // omit leading "#"
-    const redirectTo = urlToRedirectTo(currentUrl);
-    if (redirectTo) {
-      void this.router.navigateByUrl(redirectTo, { replaceUrl: true });
-    }
+    // Handle a redirect to sub path which can be used to redirect to a specific page when coming back on the app
+    const redirectTo = urlToRedirectTo({ from: this.location.path() });
+    if (redirectTo) void this.router.navigateByUrl(redirectTo, { replaceUrl: true });
+
     if (appConfig.theme !== 'default') {
       this.renderer.setAttribute(this.el.nativeElement, 'data-theme', `${appConfig.theme}`);
     }
