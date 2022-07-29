@@ -44,7 +44,7 @@ export class ThreadComponent implements OnChanges, OnDestroy {
     this.itemData$
       .pipe(switchMap(() => this.threadStatus$), take(1))
       .subscribe(status => {
-        if (status !== 'none') this.threadService.follow();
+        this.threadService.follow();
         this.widgetOpened = status === 'opened';
       }),
 
