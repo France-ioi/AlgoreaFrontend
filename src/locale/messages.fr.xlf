@@ -18,24 +18,24 @@
 
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/app.component.html</context><context context-type="linenumber">41</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/group-progress-grid/group-progress-grid.component.ts</context><context context-type="linenumber">261</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-details/item-details.component.ts</context><context context-type="linenumber">140</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-display/item-display.component.ts</context><context context-type="linenumber">122</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/lti/pages/lti/lti.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit><trans-unit id="727030606410719950" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/app.component.html</context><context context-type="linenumber">41</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/group-progress-grid/group-progress-grid.component.ts</context><context context-type="linenumber">261</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-details/item-details.component.ts</context><context context-type="linenumber">137</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-display/item-display.component.ts</context><context context-type="linenumber">122</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/lti/pages/lti/lti.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit><trans-unit id="727030606410719950" datatype="html">
         <source>Language mismatch</source><target state="translated">Mauvaise langue?</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/language-mismatch/language-mismatch.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit><trans-unit id="6895619751331935307" datatype="html">
         <source> The current language "<x id="INTERPOLATION" equiv-text="{{ currentLanguage }}"/>" does not correspond to your account's default language "<x id="INTERPOLATION_1" equiv-text="{{ languageMismatch.userDefaultLanguage }}"/>". Do you want to continue in this language? </source><target state="translated"> La langue actuelle "<x id="INTERPOLATION" equiv-text="{{ currentLanguage }}"/>" ne correspond pas à la langue par défaut de ce compte "<x id="INTERPOLATION_1" equiv-text="{{ languageMismatch.userDefaultLanguage }}"/>". Voulez-vous continuer dans cette langue ? </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/language-mismatch/language-mismatch.component.html</context><context context-type="linenumber">17</context></context-group></trans-unit><trans-unit id="7315659703556830393" datatype="html">
         <source> Continue in "<x id="INTERPOLATION" equiv-text="{{ currentLanguage }}"/>" and change my default language to "<x id="INTERPOLATION" equiv-text="{{ currentLanguage }}"/>" for this platform </source><target state="translated"> Continuer en "<x id="INTERPOLATION" equiv-text="{{ currentLanguage }}"/>" et changer ma langue par défaut par "<x id="INTERPOLATION" equiv-text="{{ currentLanguage }}"/>" pour cette plateforme </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/language-mismatch/language-mismatch.component.html</context><context context-type="linenumber">28</context></context-group></trans-unit><trans-unit id="1322996304320353097" datatype="html">
         <source> Visit the platform in "<x id="INTERPOLATION" equiv-text="{{ languageMismatch.userDefaultLanguage }}"/>" </source><target state="translated"> Visiter la plateforme en "<x id="INTERPOLATION" equiv-text="{{ languageMismatch.userDefaultLanguage }}"/>" </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/language-mismatch/language-mismatch.component.html</context><context context-type="linenumber">37</context></context-group></trans-unit><trans-unit id="4151110848592267180" datatype="html">
         <source> The platform does not exist in your default language "<x id="INTERPOLATION" equiv-text="{{ languageMismatch.userDefaultLanguage }}"/>". </source><target state="translated"> La plateforme n'existe pas dans votre langue par défaut "<x id="INTERPOLATION" equiv-text="{{ languageMismatch.userDefaultLanguage }}"/>". </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/language-mismatch/language-mismatch.component.html</context><context context-type="linenumber">45</context></context-group></trans-unit><trans-unit id="1587172593494014939" datatype="html">
         <source> Continue in "<x id="INTERPOLATION" equiv-text="{{ currentLanguage }}"/>" and change my default language to "<x id="INTERPOLATION" equiv-text="{{ currentLanguage }}"/>" for this platform. </source><target state="translated"> Continuer en "<x id="INTERPOLATION" equiv-text="{{ currentLanguage }}"/>" et changer ma langue par défaut par "<x id="INTERPOLATION" equiv-text="{{ currentLanguage }}"/>" pour cette plateforme. </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/language-mismatch/language-mismatch.component.html</context><context context-type="linenumber">53</context></context-group></trans-unit><trans-unit id="7605133703064965893" datatype="html">
         <source>The language can always be modified through your profile page.</source><target state="translated">La langue peut toujours être modifiée via votre page de profil.</target>
 
@@ -422,10 +422,10 @@
         <source>Enter at least 3 characters</source><target state="translated">Entrez au moins 3 caractères</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/add-content/add-content.component.html</context><context context-type="linenumber">10</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/add-content/add-content.component.html</context><context context-type="linenumber">25</context></context-group></trans-unit><trans-unit id="6627551976444260400" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/add-content/add-content.component.html</context><context context-type="linenumber">10</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/add-content/add-content.component.html</context><context context-type="linenumber">26</context></context-group></trans-unit><trans-unit id="6627551976444260400" datatype="html">
         <source>or</source><target state="translated">ou</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/add-content/add-content.component.html</context><context context-type="linenumber">16</context></context-group></trans-unit><trans-unit id="7032654202544735620" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/add-content/add-content.component.html</context><context context-type="linenumber">17</context></context-group></trans-unit><trans-unit id="7032654202544735620" datatype="html">
         <source>Search for existing content</source><target state="translated">Chercher parmi les contenus existants</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/add-content/add-content.component.html</context><context context-type="linenumber">24</context></context-group></trans-unit><trans-unit id="6293459454443511886" datatype="html">
@@ -445,7 +445,7 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-details/item-details.component.html</context><context context-type="linenumber">38</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-edit/item-edit.component.html</context><context context-type="linenumber">20</context></context-group></trans-unit><trans-unit id="4045087308145757242" datatype="html">
         <source>Dependencies</source><target state="new">Dependencies</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-details/item-details.component.html</context><context context-type="linenumber">70</context></context-group></trans-unit><trans-unit id="7319979892477125831" datatype="html">
         <source> Unable to load the answer, <x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;fallbackLink&quot; class=&quot;alg-link&quot;>"/>load your most recent answer<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/></source><target state="translated"> Erreur lors du chargement de la réponse, <x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;fallbackLink&quot;>"/>charger votre dernière réponse<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/></target>
 
@@ -465,7 +465,7 @@
         <source>An unknown error occurred. </source><target state="translated">Une erreur est survenue. </target>
         
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-details/item-details.component.ts</context><context context-type="linenumber">139</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-display/item-display.component.ts</context><context context-type="linenumber">121</context></context-group></trans-unit><trans-unit id="6885936620581271929" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-details/item-details.component.ts</context><context context-type="linenumber">136</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-display/item-display.component.ts</context><context context-type="linenumber">121</context></context-group></trans-unit><trans-unit id="6885936620581271929" datatype="html">
         <source>Unable to load the task</source><target state="new">Unable to load the task</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-display/item-display.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit><trans-unit id="8679237608788920660" datatype="html">
@@ -811,7 +811,7 @@
         </context-group>
       </trans-unit><trans-unit id="7819314041543176992" datatype="html">
         <source>Close</source><target state="new">Close</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/app.component.html</context><context context-type="linenumber">59</context></context-group></trans-unit><trans-unit id="7708270344948043036" datatype="html">
         <source> <x id="INTERPOLATION" equiv-text="{{ item.type | i18nSelect : {
           Chapter: 'Only empty chapters can be deleted.',
@@ -930,7 +930,7 @@
         </context-group>
       </trans-unit><trans-unit id="7250343758473458577" datatype="html">
         <source> You do not have the permissions to edit this content. </source><target state="new"> You do not have the permissions to edit this content. </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-children-edit-form/item-children-edit-form.component.html</context><context context-type="linenumber">13</context></context-group></trans-unit><trans-unit id="5441429049165852521" datatype="html">
         <source> This activity has not been correctly configured. </source><target state="new"> This activity has not been correctly configured. </target>
 
@@ -1055,7 +1055,7 @@
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/http-services/remove-group.service.ts</context><context context-type="linenumber">13</context></context-group></trans-unit><trans-unit id="5132273078121257617" datatype="html">
         <source> The following information is what we receive from France-IOI login platform. </source><target state="new"> The following information is what we receive from France-IOI login platform. </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/current-user/current-user.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit><trans-unit id="3251759404563225821" datatype="html">
         <source>Modify</source><target state="new">Modify</target>
         
@@ -1297,7 +1297,7 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-children-edit/item-children-edit.component.html</context><context context-type="linenumber">9</context></context-group></trans-unit><trans-unit id="3453601508060500845" datatype="html">
         <source>Non-visible content</source><target state="new">Non-visible content</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-children-edit/item-children-edit.component.html</context><context context-type="linenumber">63</context></context-group></trans-unit><trans-unit id="1494518490116523821" datatype="html">
         <source>Select all</source><target state="translated">Sélectionner tout</target>
 
@@ -1309,7 +1309,7 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-children-edit/item-children-edit.component.html</context><context context-type="linenumber">99</context></context-group></trans-unit><trans-unit id="8390631426570727629" datatype="html">
         <source>Error while loading the children items</source><target state="new">Error while loading the children items</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-children-edit/item-children-edit.component.html</context><context context-type="linenumber">118</context></context-group></trans-unit><trans-unit id="4605864425009617908" datatype="html">
         <source>Prerequisites</source><target state="new">Prerequisites</target>
         <context-group purpose="location">
@@ -1318,16 +1318,13 @@
         </context-group>
       </trans-unit><trans-unit id="7731242626827304298" datatype="html">
         <source>Unable to load the dependencies</source><target state="new">Unable to load the dependencies</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/item/components/item-dependencies/item-dependencies.component.html</context>
-          <context context-type="linenumber">11</context>
-        </context-group>
-      </trans-unit><trans-unit id="9045659846963395136" datatype="html">
+
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-dependencies/item-dependencies.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="9045659846963395136" datatype="html">
         <source> Users will unlock access to this content if they solve <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>at least one<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/> of the content below. </source><target state="new"> Users will unlock access to this content if they solve <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>at least one<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/> of the content below. </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-dependencies/item-dependencies.component.html</context><context context-type="linenumber">19</context></context-group></trans-unit><trans-unit id="4862743093134382333" datatype="html">
         <source> Users will see the list of dependencies on the "content" tab and only when they do not have access to the content yet. They will only see dependencies they are allowed to view already. </source><target state="new"> Users will see the list of dependencies on the "content" tab and only when they do not have access to the content yet. They will only see dependencies they are allowed to view already. </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-dependencies/item-dependencies.component.html</context><context context-type="linenumber">38</context></context-group></trans-unit><trans-unit id="2926423520956948326" datatype="html">
         <source> There are no prerequisites for this <x id="INTERPOLATION" equiv-text="{{ itemData.item.type | i18nSelect : {
         Skill: 'skill',
@@ -1344,7 +1341,7 @@
         Chapter: 'chapter',
         other: 'activity'
     } }}"/>. </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-dependencies/item-dependencies.component.html</context><context context-type="linenumber">49</context></context-group></trans-unit><trans-unit id="7423100881808748596" datatype="html">
         <source>You are not allowed to view dependencies for this content</source><target state="new">You are not allowed to view dependencies for this content</target>
         <context-group purpose="location">
@@ -1884,7 +1881,7 @@
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-links/group-links.component.html</context><context context-type="linenumber">16</context></context-group></trans-unit><trans-unit id="5605464836149047548" datatype="html">
         <source> You are not allowed to see activities of this user. </source><target state="new"> You are not allowed to see activities of this user. </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-log-view/group-log-view.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="3968289428248654764" datatype="html">
         <source>Let user join using a code</source><target state="translated">Rejoindre le groupe par code</target>
 
@@ -2017,7 +2014,7 @@
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-edit/item-edit.component.html</context><context context-type="linenumber">31</context></context-group></trans-unit><trans-unit id="1373156324893977078" datatype="html">
         <source> Load </source><target state="new"> Load </target>
-        
+
         <note priority="1" from="description">text on button to load a submission</note>
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-log-view/item-log-view.component.html</context><context context-type="linenumber">51</context></context-group></trans-unit><trans-unit id="1734171097636944073" datatype="html">
         <source>There is no progress to report for this item.</source><target state="new">There is no progress to report for this item.</target>
@@ -2170,7 +2167,13 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/user/user.component.html</context><context context-type="linenumber">79</context></context-group></trans-unit><trans-unit id="4555457172864212828" datatype="html">
         <source>Users</source><target state="new">Users</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/user/user.component.ts</context><context context-type="linenumber">94</context></context-group></trans-unit><trans-unit id="2618743771935093938" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/user/user.component.ts</context><context context-type="linenumber">94</context></context-group></trans-unit><trans-unit id="3796559375439217278" datatype="html">
+        <source>Create a new dependency</source><target state="new">Create a new dependency</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/components/add-dependency/add-dependency.component.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="2618743771935093938" datatype="html">
         <source>Personal info</source><target state="new">Personal info</target>
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/user/user.component.ts</context><context context-type="linenumber">87</context></context-group></trans-unit><trans-unit id="1758440051293769579" datatype="html">
