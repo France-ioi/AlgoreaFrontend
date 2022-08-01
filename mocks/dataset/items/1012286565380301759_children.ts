@@ -1,4 +1,4 @@
-import type { definitions, NullableValues } from '../../../../types';
+import type { definitions, NullableValues } from '../../types';
 
 export const children1012286565380301759: NullableValues<definitions['childItem'][]> = [
   {

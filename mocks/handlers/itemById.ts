@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import { definitions, NullableValues } from '../../../types';
-import { item1012286565380301759 } from './1012286565380301759_chapter';
-import { item4102 } from './4102_parcours-officiel_chapter';
-import { childrenByItemId } from './children/handler';
+import { definitions, NullableValues } from '../types';
+import { item1012286565380301759 } from '../dataset/items/1012286565380301759_chapter';
+import { item4102 } from '../dataset/items/4102_parcours-officiel_chapter';
+import { childrenByItemId } from './itemChildren';
 
 const router = Router();
 
@@ -26,7 +26,7 @@ router.put('/api/items/:itemId', (req, res, next) => {
   const item = items[req.params.itemId];
   if (!item && !childrenByItemId[req.params.itemId]) return next();
 
-  Object.assign(item, req.body);
+  Object.assign(item as any, req.body);
 
   res
     .operation('/items/{item_id}', 'put')

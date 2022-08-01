@@ -1,9 +1,9 @@
-import type { definitions, NullableValues } from '../../../types';
+import type { definitions, NullableValues } from '../../types';
 
-export const item1012286565380301759: NullableValues<definitions['itemResponse']> = {
-  id: '1012286565380301759',
+export const item4102: NullableValues<definitions['itemResponse']> = {
+  id: '4102',
   type: 'Chapter',
-  display_details_in_parent: true,
+  display_details_in_parent: false,
   validation_type: 'All',
   requires_explicit_entry: false,
   allows_multiple_attempts: false,
@@ -12,31 +12,32 @@ export const item1012286565380301759: NullableValues<definitions['itemResponse']
   no_score: false,
   default_language_tag: 'fr',
   permissions: {
-    can_view: 'solution',
-    can_grant_view: 'solution_with_grant',
-    can_watch: 'answer_with_grant',
-    can_edit: 'all_with_grant',
-    is_owner: true,
+    can_view: 'content',
+    can_grant_view: 'none',
+    can_watch: 'none',
+    can_edit: 'none',
+    is_owner: false
   },
   entry_min_admitted_members_ratio: 'None',
   entry_frozen_teams: true,
   entry_max_team_size: 0,
   prompt_to_join_group_by_code: false,
   title_bar_visible: true,
-  text_id: '',
+  text_id: 'Chapter_35y',
   read_only: false,
   full_screen: 'default',
   show_user_infos: false,
-  entering_time_min: '2021-04-29T07:18:19Z',
+  entering_time_min: '1000-01-01T00:00:00Z',
   entering_time_max: '9999-12-31T23:59:59Z',
-  supported_language_tags: [ 'fr' ],
-  best_score: 70,
+  supported_language_tags: [
+    'fr'
+  ],
+  best_score: 39.5997,
   string: {
     language_tag: 'fr',
-    title: 'Tas de sable',
+    title: 'Parcours officieux',
     image_url: null,
-    subtitle: null,
-    description: null,
-    edu_comment: '',
+    subtitle: '',
+    description: '',
   },
 };

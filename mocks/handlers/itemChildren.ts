@@ -1,7 +1,7 @@
-import '../../../../middlewares/operation';
+import '../middlewares/operation';
 import { Router } from 'express';
-import { definitions, NullableValues } from '../../../../types';
-import { children1012286565380301759 } from './1012286565380301759_children';
+import { definitions, NullableValues } from '../types';
+import { children1012286565380301759 } from '../dataset/items/1012286565380301759_children';
 
 const router = Router();
 

@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import { definitions, NullableValues } from '../../types';
-import { devUser } from './devUser';
-import { tempUser } from './tempUser';
+import { definitions, NullableValues } from '../types';
+import { devUser } from '../dataset/users/devUser';
+import { tempUser } from '../dataset/users/tempUser';
 
 const router = Router();
 
@@ -18,7 +18,7 @@ router.get('/api/current-user', (req, res, next) => {
 });
 
 router.put('/api/current-user', (req, res, next) => {
-  Object.assign(currentUser, req.body);
+  Object.assign(currentUser as any, req.body);
   res
     .operation('/current-user', 'put')
     .status(200)
