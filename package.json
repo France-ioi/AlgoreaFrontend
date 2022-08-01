@@ -5,7 +5,7 @@
     "ng": "ng",
     "serve": "ng serve",
     "mock": "nodemon --exec \"ts-node -P ./tsconfig.mocks.json\" --watch ./mocks mocks/server.ts",
-    "generate-types-from-swagger": "npx openapi-typescript https://franceioi-algorea.s3.eu-west-3.amazonaws.com/spec/swagger.yaml --output mocks/types/schema.ts",
+    "generate-types-from-swagger": "npx openapi-typescript https://franceioi-algorea.s3.eu-west-3.amazonaws.com/spec/swagger-v1.2.0.yaml --output mocks/types/schema.ts",
     "postgenerate-types-from-swagger": "{ echo \"/* eslint-disable */\"; cat mocks/types/schema.ts; } > mocks/types/schema.tmp.ts && mv mocks/types/schema.tmp.ts mocks/types/schema.ts",
     "start": "concurrently --kill-others -n \"mock,serve\" -c \"yellow.bold,green.bold\" \"npm run mock\" \"npm run serve\"",
     "build": "ng build core && npm run copyColor && npm run copyGeo",
