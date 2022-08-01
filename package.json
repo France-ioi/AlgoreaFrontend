@@ -46,7 +46,7 @@
     "ng-click-outside": "^6.0.0",
     "ngx-perfect-scrollbar": "^8.0.0",
     "primeicons": "^5.0.0",
-    "primeng": "^14.0.0-rc.1",
+    "primeng": "^14.0.0",
     "rxjs": "~7.5.1",
     "scss-bundle": "^3.1.1",
     "tslib": "^2.3.1",
