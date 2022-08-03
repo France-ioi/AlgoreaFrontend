@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
-import { catchError, combineLatest, EMPTY, fromEvent, map, pairwise, ReplaySubject, switchMap, take } from 'rxjs';
+import { catchError, combineLatest, EMPTY, fromEvent, map, ReplaySubject, skip, switchMap, take } from 'rxjs';
 import { GroupWatchingService } from 'src/app/core/services/group-watching.service';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
 import { ThreadService } from '../../services/threads.service';
@@ -46,7 +46,7 @@ export class ThreadComponent implements OnChanges, OnDestroy {
         this.widgetOpened = status === 'opened';
       }),
 
-    this.itemId$.pipe(pairwise()).subscribe(() => this.threadService.unfollow()),
+    this.itemId$.pipe(skip(1)).subscribe(() => this.threadService.unfollow()),
 
     fromEvent(window, 'beforeunload').subscribe(() => this.threadService.unfollow()),
   ];
