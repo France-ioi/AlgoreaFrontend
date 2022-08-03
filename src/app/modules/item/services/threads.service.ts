@@ -21,7 +21,7 @@ import { decodeSnakeCase } from 'src/app/shared/operators/decode';
 import { ActivityLog, ActivityLogService } from 'src/app/shared/http-services/activity-log.service';
 import { isNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
 import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
-import { HttpErrorResponse } from '@angular/common/http'
+import { HttpErrorResponse } from '@angular/common/http';
 
 const threadOpenedEventDecoder = D.struct({
   eventType: D.literal('thread_opened'),
