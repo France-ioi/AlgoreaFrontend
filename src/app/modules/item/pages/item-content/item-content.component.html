@@ -31,7 +31,7 @@
           ></alg-item-display>
           <alg-thread
             *ngIf="showItemThreadWidget"
-            [itemData]="itemData"
+            [itemId]="itemData.route.id"
           ></alg-thread>
         </ng-container>
 

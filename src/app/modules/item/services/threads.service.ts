@@ -11,16 +11,17 @@ import {
   filter,
   map,
   Observable,
+  ReplaySubject,
   scan,
   shareReplay,
-  startWith,
-  Subject,
   Subscription,
   switchMap,
 } from 'rxjs';
 import { decodeSnakeCase } from 'src/app/shared/operators/decode';
 import { ActivityLog, ActivityLogService } from 'src/app/shared/http-services/activity-log.service';
 import { isNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
+import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
+import { HttpErrorResponse } from '@angular/common/http'
 
 const threadOpenedEventDecoder = D.struct({
   eventType: D.literal('thread_opened'),
@@ -115,7 +116,7 @@ export class ThreadService implements OnDestroy {
   status$: Observable<ThreadStatusMessage['status']>;
 
   private newEvents$: Observable<ThreadEventMessage[]>;
-  private clearEvents$ = new Subject<void>();
+  private clearEvents$ = new ReplaySubject<void>(1);
   private tokenData?: TokenData;
   private socket: WebSocketSubject<unknown>;
   private incomingMessages$: Observable<ThreadMessage[]>;
@@ -123,6 +124,7 @@ export class ThreadService implements OnDestroy {
 
   constructor(
     private activityLogService: ActivityLogService,
+    private actionFeedbackService: ActionFeedbackService,
   ) {
     if (!appConfig.forumServerUrl) throw new Error('cannot instantiate threads service when no forum server url');
     this.socket = webSocket(appConfig.forumServerUrl);
@@ -135,7 +137,6 @@ export class ThreadService implements OnDestroy {
     this.newEvents$ = this.incomingMessages$.pipe(map(messages => messages.filter(isThreadEventMessage)));
 
     this.events$ = this.clearEvents$.pipe(
-      startWith(undefined),
       switchMap(() => this.newEvents$.pipe(scan((oldEvents, newEvents) => [ ...oldEvents, ...newEvents ]))),
       map(messages => messages.sort((a, b) => a.time.valueOf() - b.time.valueOf())), // sort by date ascending
     );
@@ -175,7 +176,7 @@ export class ThreadService implements OnDestroy {
     });
   }
 
-  open(): void {
+  open(onDoneOrError: () => void): void {
     if (!this.tokenData) throw new Error('cannot open thread without token data');
 
     const { participantId, userId, itemId } = this.tokenData;
@@ -183,8 +184,15 @@ export class ThreadService implements OnDestroy {
 
     this.clearEvents$.next();
     this.activityLogService.getActivityLog(itemId, watchedGroupId).subscribe({
-      next: history => this.send({ action: 'open-thread', history }),
-      error: () => { /* FIXME: What to do? */ }
+      next: history => {
+        this.send({ action: 'open-thread', history });
+        onDoneOrError();
+      },
+      error: err => {
+        onDoneOrError();
+        this.actionFeedbackService.error($localize`We could not open a thread, please retry. If the problem persists, contact us`);
+        if (!(err instanceof HttpErrorResponse)) throw err;
+      },
     });
   }
 
