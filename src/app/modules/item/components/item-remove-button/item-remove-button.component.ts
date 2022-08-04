@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from '@angular/core';
 import { ReplaySubject, Subject } from 'rxjs';
 import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { mapToFetchState } from '../../../../shared/operators/state';
@@ -15,6 +15,8 @@ import { Router } from '@angular/router';
   styleUrls: [ './item-remove-button.component.scss' ],
 })
 export class ItemRemoveButtonComponent implements OnChanges, OnDestroy {
+  @Output() removeApprove = new EventEmitter<void>();
+
   @Input() item?: Item;
   @Input() attemptId?: string;
 
@@ -66,6 +68,7 @@ export class ItemRemoveButtonComponent implements OnChanges, OnDestroy {
       acceptLabel: $localize`Yes`,
       acceptButtonStyleClass: 'p-button-danger',
       accept: () => {
+        this.removeApprove.emit();
         this.deleteItem();
       },
       rejectLabel: $localize`No`,

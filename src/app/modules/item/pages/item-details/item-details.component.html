@@ -28,7 +28,7 @@
           [routerLinkActiveOptions]="{
             matrixParams: 'ignored',
             queryParams: 'ignored',
-            paths: (progressTab?.isActive || dependenciesTab?.isActive) ? 'exact' : 'subset',
+            paths: (progressTab?.isActive || dependenciesTab?.isActive || parametersTab.isActive) ? 'exact' : 'subset',
             fragment: 'ignored'
           }"
           [class.active]="contentTab.isActive"
@@ -68,6 +68,16 @@
           [class.active]="dependenciesTab.isActive"
         >
           <span i18n>Dependencies</span>
+        </a>
+        <a
+            [hidden]="!['all','all_with_grant'].includes(itemData.item.permissions.canEdit) && !parametersTab.isActive"
+            class="nav-tab-item"
+            [routerLink]="'./parameters'"
+            routerLinkActive #parametersTab="routerLinkActive"
+            [routerLinkActiveOptions]="{ matrixParams: 'ignored', queryParams: 'ignored', paths: 'exact', fragment: 'ignored'}"
+            [class.active]="parametersTab.isActive"
+        >
+          <span i18n>Parameters</span>
         </a>
       </nav>
       <div class="bg-white" [ngClass]="{ 'compensate-margin': !(showProgressTab$ | async) && taskTabs.length <= 1 }">
@@ -113,6 +123,10 @@
 
         <ng-container *ngIf="dependenciesTab.isActive">
           <alg-item-dependencies [itemData]="itemData"></alg-item-dependencies>
+        </ng-container>
+
+        <ng-container *ngIf="parametersTab.isActive">
+          <alg-item-edit-wrapper [itemData]="itemData"></alg-item-edit-wrapper>
         </ng-container>
       </div>
     </ng-container>

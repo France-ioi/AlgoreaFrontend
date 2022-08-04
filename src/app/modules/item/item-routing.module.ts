@@ -26,6 +26,11 @@ import { ItemEditComponent } from './pages/item-edit/item-edit.component';
               children: [],
             },
             {
+              path: 'parameters',
+              canDeactivate: [ PendingChangesGuard ],
+              children: [],
+            },
+            {
               path: 'progress',
               children: [
                 {

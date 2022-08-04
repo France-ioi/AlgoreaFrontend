@@ -18,7 +18,7 @@
     </div>
     <alg-page-navigator
       *ngIf="navigationNeighbors$ | async as navigationNeighbors"
-      [allowEditing]="itemData.item.permissions | allowsEditingChildren"
+      [allowEditing]="false"
       [allowFullScreen]="false"
       [navigationMode]="{
         parent: !!navigationNeighbors?.isReady && !!navigationNeighbors?.data?.parent,

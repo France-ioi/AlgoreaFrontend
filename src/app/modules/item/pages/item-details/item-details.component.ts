@@ -28,6 +28,7 @@ import { GroupWatchingService } from 'src/app/core/services/group-watching.servi
 import { isTask } from 'src/app/shared/helpers/item-type';
 import { PendingChangesComponent } from '../../../../shared/guards/pending-changes-guard';
 import { canCurrentUserViewContent, canCurrentUserViewSolution } from 'src/app/shared/models/domain/item-view-permission';
+import { ItemEditWrapperComponent } from '../../components/item-edit-wrapper/item-edit-wrapper.component';
 
 const loadForbiddenAnswerError = new Error('load answer forbidden');
 
@@ -39,6 +40,7 @@ const loadForbiddenAnswerError = new Error('load answer forbidden');
 export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent, PendingChangesComponent {
   @ViewChild('progressTab') progressTab?: RouterLinkActive;
   @ViewChild(ItemContentComponent) itemContentComponent?: ItemContentComponent;
+  @ViewChild(ItemEditWrapperComponent) itemEditWrapperComponent?: ItemEditWrapperComponent;
 
   itemData$ = this.itemDataSource.state$;
 
@@ -140,7 +142,7 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent, P
     $localize`:@@contactUs:If the problem persists, please contact us.`;
 
   isDirty(): boolean {
-    return !!this.itemContentComponent?.isDirty();
+    return !!this.itemContentComponent?.isDirty() || !!this.itemEditWrapperComponent?.isDirty();
   }
 
   constructor(

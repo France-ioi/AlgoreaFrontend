@@ -29,7 +29,7 @@
       <span class="form-item-label" i18n>Validation criteria</span>
       <div class="form-item-control">
         <alg-dropdown
-          [options]="validationCritireaOptions"
+          [options]="validationCriteriaOptions"
           [parentForm]="parentForm"
           inputName="validation_type"
           name="validation_type"
@@ -195,7 +195,7 @@
         <span class="form-item-label" i18n>Maximum team size</span>
         <div class="form-item-control">
           <p-inputNumber class="alg-input-number" formControlName="entry_max_team_size"></p-inputNumber>
-          <alg-input-error [form]="this.parentForm" inputName="entry_max_team_size"></alg-input-error>
+          <alg-input-error [form]="parentForm" inputName="entry_max_team_size"></alg-input-error>
         </div>
       </div>
       <div class="form-item-view">
@@ -214,7 +214,7 @@
 </form>
 
 <div class="delete-button">
-  <alg-item-remove-button [item]="item" [attemptId]="attemptId"></alg-item-remove-button>
+  <alg-item-remove-button [item]="item" [attemptId]="attemptId" (removeApprove)="onRemoveApprove()"></alg-item-remove-button>
 </div>
 
 
