@@ -10,18 +10,18 @@ import {
   EMPTY,
   filter,
   map,
+  merge,
   Observable,
   ReplaySubject,
   scan,
   shareReplay,
-  Subscription,
   switchMap,
 } from 'rxjs';
 import { decodeSnakeCase } from 'src/app/shared/operators/decode';
 import { ActivityLog, ActivityLogService } from 'src/app/shared/http-services/activity-log.service';
 import { isNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
 import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
 const threadOpenedEventDecoder = D.struct({
   eventType: D.literal('thread_opened'),
@@ -78,18 +78,12 @@ const threadEventDecoder = pipe(
     messageEventDecoder,
   )),
 );
-type ThreadEventMessage = D.TypeOf<typeof threadEventDecoder>;
-const isThreadEventMessage = (value: unknown): value is ThreadEventMessage => typeof value === 'object' && !!value && 'eventType' in value;
+type ThreadEvent = D.TypeOf<typeof threadEventDecoder>;
 
 const threadStatusDecoder = D.struct({
   status: D.literal('none', 'closed', 'opened'),
 });
-
-type ThreadStatusMessage = D.TypeOf<typeof threadStatusDecoder>;
-const isThreadStatusMessage = (message: ThreadMessage): message is ThreadStatusMessage => !isThreadEventMessage(message);
-
-const threadMessageDecoder = D.union(threadEventDecoder, threadStatusDecoder);
-export type ThreadMessage = D.TypeOf<typeof threadMessageDecoder>;
+type ThreadStatus = D.TypeOf<typeof threadStatusDecoder>;
 
 interface TokenData {
   participantId: string,
@@ -112,60 +106,61 @@ type ThreadAction =
 })
 export class ThreadService implements OnDestroy {
 
-  events$: Observable<ThreadEventMessage[]>;
-  status$: Observable<ThreadStatusMessage['status']>;
+  events$: Observable<ThreadEvent[]>;
+  status$: Observable<ThreadStatus['status']>;
 
-  private newEvents$: Observable<ThreadEventMessage[]>;
+  private newEvents$: Observable<ThreadEvent[]>;
   private clearEvents$ = new ReplaySubject<void>(1);
   private tokenData?: TokenData;
   private socket: WebSocketSubject<unknown>;
-  private incomingMessages$: Observable<ThreadMessage[]>;
-  private subscriptions: Subscription[] = [];
 
   constructor(
     private activityLogService: ActivityLogService,
     private actionFeedbackService: ActionFeedbackService,
+    private http: HttpClient,
   ) {
     if (!appConfig.forumServerUrl) throw new Error('cannot instantiate threads service when no forum server url');
     this.socket = webSocket(appConfig.forumServerUrl);
 
-    this.incomingMessages$ = this.socket.pipe(
-      decodeSnakeCase(D.array(threadMessageDecoder)),
+    this.newEvents$ = this.socket.pipe(
+      decodeSnakeCase(D.array(threadEventDecoder)),
       catchError(() => EMPTY), // ignore undecoded messages
     );
 
-    this.newEvents$ = this.incomingMessages$.pipe(map(messages => messages.filter(isThreadEventMessage)));
-
     this.events$ = this.clearEvents$.pipe(
       switchMap(() => this.newEvents$.pipe(scan((oldEvents, newEvents) => [ ...oldEvents, ...newEvents ]))),
-      map(messages => messages.sort((a, b) => a.time.valueOf() - b.time.valueOf())), // sort by date ascending
+      map(events => events.sort((a, b) => a.time.valueOf() - b.time.valueOf())), // sort by date ascending
     );
 
-    this.status$ = this.incomingMessages$.pipe(
-      map(messages => messages.find(isThreadStatusMessage)?.status),
-      filter(isNotUndefined),
+    this.status$ = merge(
+      // When re-initializing a thread, fetch the status since the last 20 events might not contain any thread-status related event.
+      this.clearEvents$.pipe(switchMap(() => this.getStatus())),
+      this.newEvents$.pipe(
+        // when receiving a thread-status related event, we consider the first one since the list is ordered by event time DESCendings
+        map(events => events.find(event => event.eventType === 'thread_opened' || event.eventType === 'thread_closed')),
+        // Then we map the new status
+        map((event): ThreadStatus['status'] | undefined => {
+          switch (event?.eventType) {
+            case 'thread_closed': return 'closed';
+            case 'thread_opened': return 'opened';
+            default: return undefined;
+          }
+        }),
+        filter(isNotUndefined),
+      ),
+    ).pipe(
       distinctUntilChanged(),
       shareReplay(1),
-    );
-
-    this.subscriptions.push(
-      // Every time we receive an event related to thread status, refetch the status.
-      this.newEvents$.pipe(
-        map(events => events.find(event => event.eventType === 'thread_opened' || event.eventType === 'thread_closed')),
-        filter(isNotUndefined),
-      ).subscribe(() => this.getStatus()),
     );
   }
 
   ngOnDestroy(): void {
     this.socket.complete();
-    this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
   init(tokenData: TokenData): void {
     this.tokenData = tokenData;
-    this.clearEvents$.next(); // when re-initializing the service, clear event list.
-    this.getStatus();
+    this.clearEvents$.next();
   }
 
   private send(action: ThreadAction): void {
@@ -213,8 +208,14 @@ export class ThreadService implements OnDestroy {
     this.send({ action: 'send-message', message });
   }
 
-  private getStatus(): void {
-    this.send({ action: 'thread-status' });
+  private getStatus(): Observable<ThreadStatus['status']> {
+    if (!appConfig.forumApiUrl) throw new Error('cannot call forum api');
+
+    return this.http.post(`${appConfig.forumApiUrl}/thread-status`, { token: this.tokenData }).pipe(
+      decodeSnakeCase(threadStatusDecoder),
+      catchError(() => EMPTY),
+      map(result => result.status),
+    );
   }
 
 }
