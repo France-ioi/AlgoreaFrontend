@@ -70,7 +70,7 @@
           <span i18n>Dependencies</span>
         </a>
       </nav>
-      <div class="bg-white" [ngClass]="{ 'compensate-margin':  !(showProgressTab$ | async) && taskTabs.length <= 1 }">
+      <div class="bg-white" [ngClass]="{ 'compensate-margin': !(showProgressTab$ | async) && taskTabs.length <= 1 }">
         <alg-error
           *ngIf="unknownError"
           [message]="errorMessage"

@@ -11,6 +11,7 @@ import { ItemType } from '../../../../shared/helpers/item-type';
 import { AddItemPrerequisiteService } from '../../http-services/add-item-prerequisite.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ActionFeedbackService } from '../../../../shared/services/action-feedback.service';
+import { RemoveItemPrerequisiteService } from '../../http-services/remove-item-prerequisite.service';
 
 @Component({
   selector: 'alg-item-dependencies',
@@ -44,10 +45,12 @@ export class ItemDependenciesComponent implements OnChanges, OnDestroy {
   });
 
   createInProgress = false;
+  removeInProgress = false;
 
   constructor(
     private getItemPrerequisitesService: GetItemPrerequisitesService,
     private addItemPrerequisiteService: AddItemPrerequisiteService,
+    private removeItemPrerequisiteService: RemoveItemPrerequisiteService,
     private actionFeedbackService: ActionFeedbackService,
   ) {
   }
@@ -87,7 +90,7 @@ export class ItemDependenciesComponent implements OnChanges, OnDestroy {
     this.refresh$.next();
   }
 
-  addDependency(item: AddedContent<ItemType>): void {
+  onAdd(item: AddedContent<ItemType>): void {
     if (!item.id) {
       throw new Error('Unexpected: item id is missing');
     }
@@ -104,6 +107,26 @@ export class ItemDependenciesComponent implements OnChanges, OnDestroy {
       },
       error: err => {
         this.createInProgress = false;
+        this.actionFeedbackService.unexpectedError();
+        if (!(err instanceof HttpErrorResponse)) throw err;
+      }
+    });
+  }
+
+  onRemove(id: string): void {
+    const dependentItemId = this.itemData?.item.id;
+    if (!dependentItemId) {
+      throw new Error('Unexpected: Missed dependent item id');
+    }
+    this.removeInProgress = true;
+    this.removeItemPrerequisiteService.delete(dependentItemId, id).subscribe({
+      next: () => {
+        this.removeInProgress = false;
+        this.actionFeedbackService.success('The dependency has been removed');
+        this.refresh();
+      },
+      error: err => {
+        this.removeInProgress = false;
         this.actionFeedbackService.unexpectedError();
         if (!(err instanceof HttpErrorResponse)) throw err;
       }
