@@ -17,7 +17,7 @@ export class LeftMenuComponent implements OnDestroy {
 
   isNavThemeDark = false;
 
-  subscription = merge(
+  private subscription = merge(
     this.activityNavTreeService.state$,
     this.skillNavTreeService.state$,
     this.groupNavTreeService.state$,
