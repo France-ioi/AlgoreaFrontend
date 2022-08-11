@@ -23,7 +23,7 @@ export class ItemDependenciesComponent implements OnChanges, OnDestroy {
   @ViewChild('op') op?: OverlayPanel;
   @ViewChildren('contentRef') contentRef?: QueryList<ElementRef<HTMLElement>>;
 
-  readonly itemId$ = new ReplaySubject<string>(1);
+  private readonly itemId$ = new ReplaySubject<string>(1);
   private readonly refresh$ = new Subject<void>();
 
   state$ = this.itemId$.pipe(
