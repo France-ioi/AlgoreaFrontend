@@ -89,11 +89,11 @@ export class ItemDependenciesComponent implements OnChanges, OnDestroy {
 
   addDependency(item: AddedContent<ItemType>): void {
     if (!item.id) {
-      throw new Error('Unexpected: Missed item ID');
+      throw new Error('Unexpected: item id is missing');
     }
     const dependentItemId = this.itemData?.item.id;
     if (!dependentItemId) {
-      throw new Error('Unexpected: Missed dependent item id');
+      throw new Error('Unexpected: dependent item id is missing');
     }
     this.createInProgress$.next(true);
     this.addItemPrerequisiteService.create(dependentItemId, item.id).subscribe({
