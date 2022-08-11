@@ -127,6 +127,12 @@
           <context context-type="sourcefile">src/app/modules/group/components/add-group/add-group.component.html</context>
           <context context-type="linenumber">1</context>
         </context-group>
+      </trans-unit><trans-unit id="4567003064913663922" datatype="html">
+        <source>Enter a title to create a new group</source><target state="new">Enter a title to create a new group</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/add-group/add-group.component.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
       </trans-unit><trans-unit id="6673660887182833564" datatype="html">
         <source>Customize</source><target state="translated">Personnaliser</target>
 
@@ -2172,6 +2178,12 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/item/components/add-dependency/add-dependency.component.html</context>
           <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="4139147089479340367" datatype="html">
+        <source>Enter a title to create a new dependency</source><target state="new">Enter a title to create a new dependency</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/components/add-dependency/add-dependency.component.html</context>
+          <context context-type="linenumber">9</context>
         </context-group>
       </trans-unit><trans-unit id="2618743771935093938" datatype="html">
         <source>Personal info</source><target state="new">Personal info</target>
