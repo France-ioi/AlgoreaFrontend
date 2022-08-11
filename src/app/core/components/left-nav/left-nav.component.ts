@@ -3,7 +3,7 @@ import { Component, Output } from '@angular/core';
 import { merge, Subject } from 'rxjs';
 import { delay, distinctUntilChanged, filter, map, startWith } from 'rxjs/operators';
 import { isDefined } from 'src/app/shared/helpers/null-undefined-predicates';
-import { ContentInfo, RoutedContentInfo } from 'src/app/shared/models/content/content-info';
+import { ContentInfo } from 'src/app/shared/models/content/content-info';
 import { isGroupInfo, isMyGroupsInfo } from 'src/app/shared/models/content/group-info';
 import { isActivityInfo, isItemInfo } from 'src/app/shared/models/content/item-info';
 import { CurrentContentService } from 'src/app/shared/services/current-content.service';
@@ -22,12 +22,6 @@ const groupsTabIdx = 2;
   styleUrls: [ './left-nav.component.scss' ]
 })
 export class LeftNavComponent {
-  @Output() selectId = this.currentContent.content$.pipe(
-    filter((content): content is RoutedContentInfo => !!content?.route),
-    map(content => content.route.id),
-    distinctUntilChanged(), // only emit once the id changes
-    delay(0),
-  );
 
   private manualTabChange = new Subject<number>();
   activeTab$ = merge(
