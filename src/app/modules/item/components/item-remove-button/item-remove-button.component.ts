@@ -15,7 +15,7 @@ import { Router } from '@angular/router';
   styleUrls: [ './item-remove-button.component.scss' ],
 })
 export class ItemRemoveButtonComponent implements OnChanges, OnDestroy {
-  @Output() removeApprove = new EventEmitter<void>();
+  @Output() confirmRemoval = new EventEmitter<void>();
 
   @Input() item?: Item;
   @Input() attemptId?: string;
@@ -68,7 +68,7 @@ export class ItemRemoveButtonComponent implements OnChanges, OnDestroy {
       acceptLabel: $localize`Yes`,
       acceptButtonStyleClass: 'p-button-danger',
       accept: () => {
-        this.removeApprove.emit();
+        this.confirmRemoval.emit();
         this.deleteItem();
       },
       rejectLabel: $localize`No`,

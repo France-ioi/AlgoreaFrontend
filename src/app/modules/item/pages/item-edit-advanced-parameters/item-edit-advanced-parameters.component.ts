@@ -11,7 +11,7 @@ import { DEFAULT_ENTERING_TIME_MAX, DEFAULT_ENTERING_TIME_MIN } from '../item-ed
   styleUrls: [ './item-edit-advanced-parameters.component.scss' ]
 })
 export class ItemEditAdvancedParametersComponent implements OnInit {
-  @Output() removeApprove = new EventEmitter<void>();
+  @Output() confirmRemoval = new EventEmitter<void>();
 
   @Input() item?: Item;
   @Input() parentForm?: UntypedFormGroup;
@@ -126,8 +126,8 @@ export class ItemEditAdvancedParametersComponent implements OnInit {
       new Date(Math.min(enteringTimeMin.getTime(), enteringTimeMax.getTime())) : new Date();
   }
 
-  onRemoveApprove(): void {
-    this.removeApprove.emit();
+  onConfirmRemoval(): void {
+    this.confirmRemoval.emit();
   }
 
 }

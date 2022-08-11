@@ -296,7 +296,7 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
     this.resetForm();
   }
 
-  onRemoveApprove(): void {
+  onConfirmRemoval(): void {
     this.resetForm();
   }
 
