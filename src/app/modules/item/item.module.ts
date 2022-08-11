@@ -45,6 +45,9 @@ import { ThreadComponent } from './components/thread/thread.component';
 import { ItemDependenciesComponent } from './components/item-dependencies/item-dependencies.component';
 import { ItemEditWrapperComponent } from './components/item-edit-wrapper/item-edit-wrapper.component';
 import { AddDependencyComponent } from './components/add-dependency/add-dependency.component';
+import {
+  PermissionsEditFormComponent
+} from './components/permissions-edit-dialog-form/permissions-edit-form.component';
 
 @NgModule({
   declarations: [
@@ -67,6 +70,7 @@ import { AddDependencyComponent } from './components/add-dependency/add-dependen
     UserProgressComponent,
     DurationToReadable,
     PermissionsEditDialogComponent,
+    PermissionsEditFormComponent,
     AddItemComponent,
     ItemEditAdvancedParametersComponent,
     ChapterUserProgressComponent,

@@ -5,9 +5,6 @@ import {
   ProgressSelectValue
 } from '../../../shared-components/components/collapsible-section/progress-select/progress-select.component';
 import { generateCanViewValues } from '../../helpers/permissions-texts';
-import { GroupPermissionsService } from '../../../../shared/http-services/group-permissions.service';
-import { ActionFeedbackService } from '../../../../shared/services/action-feedback.service';
-import { HttpErrorResponse } from '@angular/common/http';
 import { allowsGivingPermToItem, ItemCorePerm, ItemOwnerPerm, ItemSessionPerm } from 'src/app/shared/models/domain/item-permissions';
 
 @Component({
@@ -26,7 +23,7 @@ export class ItemPermissionsComponent implements OnChanges {
   watchedGroupPermissions?: ItemCorePerm & ItemOwnerPerm & ItemSessionPerm;
   lockEdit?: 'content' | 'group' | 'contentGroup';
 
-  constructor(private groupPermissionsService: GroupPermissionsService, private actionFeedbackService: ActionFeedbackService) {
+  constructor() {
   }
 
   ngOnChanges(): void {
@@ -47,27 +44,10 @@ export class ItemPermissionsComponent implements OnChanges {
     this.isPermissionsDialogOpened = true;
   }
 
-  closePermissionsDialog(): void {
+  closePermissionsDialog(changed: boolean): void {
     this.isPermissionsDialogOpened = false;
-  }
-
-  onPermissionsDialogSave(permissions: Partial<ItemCorePerm & ItemOwnerPerm & ItemSessionPerm>): void {
-    if (!this.itemData || !this.watchedGroup) {
-      throw new Error('Unexpected: Missed input data');
+    if (changed) {
+      this.changed.emit();
     }
-
-    this.groupPermissionsService.updatePermissions(this.watchedGroup.route.id, this.watchedGroup.route.id,
-      this.itemData.item.id, permissions)
-      .subscribe({
-        next: _res => {
-          this.changed.next();
-          this.actionFeedbackService.success($localize`:@@permissionsUpdated:Permissions successfully updated.`);
-        },
-        error: err => {
-          this.actionFeedbackService.unexpectedError();
-          if (!(err instanceof HttpErrorResponse)) throw err;
-        },
-      });
   }
-
 }

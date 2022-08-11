@@ -28,7 +28,7 @@ export interface PermissionsDialogData {
   canMakeSessionOfficialDisabledTooltip?: string[],
 }
 
-function getTargetTypeString(targetType: TypeFilter): string {
+export function getTargetTypeString(targetType: TypeFilter): string {
   switch (targetType) {
     case 'Users':
       return $localize`The user`;

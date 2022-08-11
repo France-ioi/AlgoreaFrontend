@@ -112,15 +112,15 @@
         </p-table>
       </ng-container>
 
-    <alg-permissions-edit-dialog
-      *ngIf="itemData"
-      [visible]="dialog === 'opened'"
-      [title]="dialogTitle"
-      [targetType]="currentFilter"
-      [permissions]="dialogPermissions.permissions"
-      [giverPermissions]="itemData.item.permissions"
-      (close)="onDialogClose()"
-      (save)="onDialogSave($event)"
-    ></alg-permissions-edit-dialog>
-  </ng-template>
+      <alg-permissions-edit-dialog
+        [currentUserPermissions]="itemData.item.permissions"
+        [item]="{ id: progressDataDialog.itemId, string: { title: progressDataDialog.title } }"
+        [group]="progressDataDialog.group"
+        [sourceGroup]="sourceGroup"
+        [targetType]="currentFilter"
+        (close)="onDialogClose()"
+        *ngIf="dialog === 'opened' && itemData && progressDataDialog && sourceGroup"
+      ></alg-permissions-edit-dialog>
+    </ng-template>
+  </ng-container>
 </ng-container>
