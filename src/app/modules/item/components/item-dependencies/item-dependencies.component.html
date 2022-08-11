@@ -1,48 +1,46 @@
 <ng-container *ngIf="itemData">
   <alg-section icon="fa fa-list" i18n-label label="Prerequisites">
     <ng-container *ngIf="['all','all_with_grant'].includes(itemData.item.permissions.canEdit); else notAllowToView">
-      <ng-container *ngrxLet="createInProgress$; let createInProgress">
-        <div *ngIf="state$ | async as state">
-          <alg-loading size="medium" *ngIf="state.isFetching || createInProgress"></alg-loading>
+      <div *ngIf="state$ | async as state">
+        <alg-loading size="medium" *ngIf="state.isFetching || createInProgress"></alg-loading>
 
-          <alg-error
-            *ngIf="state.isError"
-            class="dark"
-            icon="fa fa-exclamation-triangle"
-            i18n-message message="Unable to load the dependencies"
-            [showRefreshButton]="true"
-            (refresh)="refresh()"
-          ></alg-error>
+        <alg-error
+          *ngIf="state.isError"
+          class="dark"
+          icon="fa fa-exclamation-triangle"
+          i18n-message message="Unable to load the dependencies"
+          [showRefreshButton]="true"
+          (refresh)="refresh()"
+        ></alg-error>
 
-          <ng-container *ngIf="!state.isFetching && !createInProgress && state.data">
-            <ng-container *ngIf="state.data.length > 0; else emptyList">
-              <p class="explanation" i18n>
-                Users will unlock access to this content if they solve <strong>at least one</strong> of the content below.
-              </p>
-              <ul class="list">
-                <li
-                  class="list-item"
-                  *ngFor="let item of state.data; let i = index"
-                  (mouseleave)="onMouseLeave($event)"
+        <ng-container *ngIf="!state.isFetching && !createInProgress && state.data">
+          <ng-container *ngIf="state.data.length > 0; else emptyList">
+            <p class="explanation" i18n>
+              Users will unlock access to this content if they solve <strong>at least one</strong> of the content below.
+            </p>
+            <ul class="list">
+              <li
+                class="list-item"
+                *ngFor="let item of state.data; let i = index"
+                (mouseleave)="onMouseLeave($event)"
+              >
+                <a
+                  class="alg-link"
+                  [routerLink]="item | rawItemLink"
+                  (mouseenter)="onMouseEnter($event, item.id, i)"
+                  #contentRef
                 >
-                  <a
-                    class="alg-link"
-                    [routerLink]="item | rawItemLink"
-                    (mouseenter)="onMouseEnter($event, item.id, i)"
-                    #contentRef
-                  >
-                    {{ item.string.title }}
-                  </a>
-                </li>
-              </ul>
-              <p class="note-caption" i18n>
-                Users will see the list of dependencies on the "content" tab and only when they do not have access to the content yet.
-                They will only see dependencies they are allowed to view already.
-              </p>
-            </ng-container>
+                  {{ item.string.title }}
+                </a>
+              </li>
+            </ul>
+            <p class="note-caption" i18n>
+              Users will see the list of dependencies on the "content" tab and only when they do not have access to the content yet.
+              They will only see dependencies they are allowed to view already.
+            </p>
           </ng-container>
-        </div>
-      </ng-container>
+        </ng-container>
+      </div>
     </ng-container>
   </alg-section>
 
