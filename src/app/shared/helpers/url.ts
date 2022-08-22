@@ -79,17 +79,18 @@ export function urlStringFromArray(urlAsArray: UrlCommand): string {
 }
 
 /**
- * Convert an absolute or relative href to a full url string
+ * Convert an absolute or relative path to a full url string
  */
-function hrefToUrl(href: string, location: Location): string {
-  return new RegExp('^(?:[a-z+]+:)?//', 'i').test(href) ? href : window.location.origin + location.prepareExternalUrl(href);
+function pathToUrl(href: string, location: Location): string {
+  const isAbsolute = new RegExp('^(?:[a-z+]+:)?//', 'i').test(href);
+  return isAbsolute ? href : window.location.origin + location.prepareExternalUrl(href);
 }
 
 export function replaceWindowUrl(href: string, location: Location): void {
-  window.location.href = hrefToUrl(href, location);
+  window.location.href = pathToUrl(href, location);
 }
 export function openNewTab(href: string, location: Location): void {
-  window.open(hrefToUrl(href, location), '_blank');
+  window.open(pathToUrl(href, location), '_blank');
 }
 
 /**
