@@ -30,7 +30,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.localeService.currentLangError$,
   ).pipe(
     // eslint-disable-next-line no-console
-    tap(err => console.error(`fatal: ${err.message}`))
+    tap(err => console.error('fatal:', err))
   );
 
   fullFrame$ = this.layoutService.fullFrame$.pipe(delay(0));
