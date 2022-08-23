@@ -6,6 +6,7 @@ import * as D from 'io-ts/Decoder';
 import { decodeSnakeCase } from '../../../shared/operators/decode';
 import { itemCorePermDecoder } from 'src/app/shared/models/domain/item-permissions';
 import { pipe } from 'fp-ts/function';
+import { durationDecoder } from '../../../shared/helpers/decoders';
 
 const itemPrerequisitesDecoder = pipe(
   D.struct({
@@ -15,7 +16,7 @@ const itemPrerequisitesDecoder = pipe(
     dependencyGrantContentView: D.boolean,
     dependencyRequiredScore: D.number,
     displayDetailsInParent: D.boolean,
-    duration: D.nullable(D.number),
+    duration: D.nullable(durationDecoder),
     entryParticipantType: D.literal('User', 'Team'),
     id: D.string,
     noScore: D.boolean,
@@ -52,7 +53,7 @@ const itemPrerequisitesDecoder = pipe(
   ),
 );
 
-export type ItemPrerequisites = D.TypeOf<typeof itemPrerequisitesDecoder>;
+export type ItemPrerequisite = D.TypeOf<typeof itemPrerequisitesDecoder>;
 
 @Injectable({
   providedIn: 'root',
@@ -61,7 +62,7 @@ export class GetItemPrerequisitesService {
 
   constructor(private http: HttpClient) {}
 
-  get(itemId: string): Observable<ItemPrerequisites[]> {
+  get(itemId: string): Observable<ItemPrerequisite[]> {
     return this.http
       .get<unknown[]>(`${appConfig.apiUrl}/items/${ itemId }/prerequisites`)
       .pipe(

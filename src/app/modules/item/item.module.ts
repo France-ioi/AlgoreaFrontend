@@ -43,6 +43,7 @@ import { TaskLoaderComponent } from './components/task-loader/task-loader.compon
 import { ItemChildrenEditFormComponent } from './components/item-children-edit-form/item-children-edit-form.component';
 import { ThreadComponent } from './components/thread/thread.component';
 import { ItemDependenciesComponent } from './components/item-dependencies/item-dependencies.component';
+import { AddDependencyComponent } from './components/add-dependency/add-dependency.component';
 
 @NgModule({
   declarations: [
@@ -78,6 +79,7 @@ import { ItemDependenciesComponent } from './components/item-dependencies/item-d
     ItemChildrenEditFormComponent,
     ThreadComponent,
     ItemDependenciesComponent,
+    AddDependencyComponent,
   ],
   imports: [
     CommonModule,
