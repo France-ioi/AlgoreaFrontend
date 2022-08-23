@@ -194,7 +194,7 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent, P
   }
 
   private showTaskTab(): boolean {
-    return !this.isProgressPage() && !this.isDependenciesPage();
+    return !this.isProgressPage() && !this.isDependenciesPage() && !this.isParametersPage();
   }
 
   private isProgressPage(): boolean {
@@ -203,6 +203,10 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent, P
 
   private isDependenciesPage(): boolean {
     return this.router.url.includes('/dependencies');
+  }
+
+  private isParametersPage(): boolean {
+    return this.router.url.includes('/parameters');
   }
 
 }
