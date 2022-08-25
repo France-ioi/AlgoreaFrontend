@@ -20,7 +20,7 @@
         (changed)="reloadItem()"
       ></alg-item-permissions>
 
-      <nav class="nav-tab" [hidden]="!(showProgressTab$ | async) && taskTabs.length <= 1">
+      <nav class="nav-tab" [hidden]="!(showProgressTab$ | async) && taskTabs.length <= 1 && !['all','all_with_grant'].includes(itemData.item.permissions.canEdit)">
         <a
           class="nav-tab-item"
           [routerLink]="'./'"
@@ -80,7 +80,7 @@
           <span i18n>Parameters</span>
         </a>
       </nav>
-      <div class="bg-white" [ngClass]="{ 'compensate-margin': !(showProgressTab$ | async) && taskTabs.length <= 1 }">
+      <div class="bg-white" [ngClass]="{ 'compensate-margin': !(showProgressTab$ | async) && taskTabs.length <= 1 && !['all','all_with_grant'].includes(itemData.item.permissions.canEdit) }">
         <alg-error
           *ngIf="unknownError"
           [message]="errorMessage"
