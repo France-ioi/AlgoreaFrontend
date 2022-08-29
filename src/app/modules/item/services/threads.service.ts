@@ -15,6 +15,7 @@ import {
   ReplaySubject,
   scan,
   shareReplay,
+  startWith,
   switchMap,
 } from 'rxjs';
 import { decodeSnakeCase } from 'src/app/shared/operators/decode';
@@ -128,7 +129,10 @@ export class ThreadService implements OnDestroy {
     );
 
     this.events$ = this.clearEvents$.pipe(
-      switchMap(() => this.newEvents$.pipe(scan((oldEvents, newEvents) => [ ...oldEvents, ...newEvents ]))),
+      switchMap(() => this.newEvents$.pipe(
+        startWith([]),
+        scan((oldEvents, newEvents) => [ ...oldEvents, ...newEvents ]),
+      )),
       map(events => events.sort((a, b) => a.time.valueOf() - b.time.valueOf())), // sort by date ascending
     );
 
