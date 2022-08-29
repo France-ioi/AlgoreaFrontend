@@ -11,6 +11,7 @@ const activityLogDecoder = pipe(
   D.struct({
     activityType: D.literal('result_started', 'submission', 'result_validated', 'saved_answer', 'current_answer'),
     at: dateDecoder,
+    attemptId: D.string,
     item: D.struct({
       id: D.string,
       string: D.struct({
