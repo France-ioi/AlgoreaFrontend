@@ -19,7 +19,7 @@
   <!-- "chapter" type -->
   <ng-template let-node pTemplate="chapter">
     <span
-      id="nav-{{ node.data.id }}"
+      id="nav-{{ node.data.route.id }}"
       class="node-tree-item folder"
       [ngClass]="{ expanded: node.expanded, locked: node.data.locked, current: node.partialSelected }"
     >
@@ -72,7 +72,7 @@
   <!-- "skill-folder" type -->
   <ng-template let-node pTemplate="skill-folder">
     <span
-      id="nav-{{ node.data.id }}"
+      id="nav-{{ node.data.route.id }}"
       class="node-tree-item folder"
       [ngClass]="{ expanded: node.expanded, locked: node.data.locked, current: node.partialSelected }"
     >
@@ -114,7 +114,7 @@
   <!-- 'skill-leaf' type -->
   <ng-template let-node pTemplate="skill-leaf">
     <span
-      id="nav-{{ node.data.id }}"
+      id="nav-{{ node.data.route.id }}"
       class="node-tree-item folder"
       [ngClass]="{ locked: node.data.locked, current: node.partialSelected }"
     >
@@ -161,7 +161,7 @@
   <!-- "group-folder" type -->
   <ng-template let-node pTemplate="group">
     <span
-      id="nav-{{ node.data.id }}"
+      id="nav-{{ node.data.route.id }}"
       class="node-tree-item folder"
       [ngClass]="{ expanded: node.expanded, locked: node.data.locked, current: node.data && node.partialSelected }"
     >
@@ -206,7 +206,7 @@
   <!-- 'task-course' type -->
   <ng-template let-node pTemplate="task-course">
     <span
-      id="nav-{{ node.data.id }}"
+      id="nav-{{ node.data.route.id }}"
       class="node-tree-item folder"
       [ngClass]="{ locked: node.data.locked, current: node.partialSelected }"
     >

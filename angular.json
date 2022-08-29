@@ -30,13 +30,6 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "assets": [
-              "src/android-chrome-192x192.png",
-              "src/android-chrome-512x512.png",
-              "src/apple-touch-icon.png",
-              "src/favicon-16x16.png",
-              "src/favicon-32x32.png",
-              "src/favicon.ico",
-              "src/site.webmanifest",
               "src/update-profile.html",
               "src/assets"
             ],
@@ -203,6 +196,5 @@
         }
       }
     }
-  },
-  "defaultProject": "algorea"
+  }
 }

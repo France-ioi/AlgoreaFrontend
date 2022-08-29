@@ -26,6 +26,7 @@ import { GetAnswerService } from '../../http-services/get-answer.service';
 import { appConfig } from 'src/app/shared/helpers/config';
 import { GroupWatchingService } from 'src/app/core/services/group-watching.service';
 import { isTask } from 'src/app/shared/helpers/item-type';
+import { PendingChangesComponent } from '../../../../shared/guards/pending-changes-guard';
 import { canCurrentUserViewContent, canCurrentUserViewSolution } from 'src/app/shared/models/domain/item-view-permission';
 
 const loadForbiddenAnswerError = new Error('load answer forbidden');
@@ -35,7 +36,7 @@ const loadForbiddenAnswerError = new Error('load answer forbidden');
   templateUrl: './item-details.component.html',
   styleUrls: [ './item-details.component.scss' ],
 })
-export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent {
+export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent, PendingChangesComponent {
   @ViewChild('progressTab') progressTab?: RouterLinkActive;
   @ViewChild(ItemContentComponent) itemContentComponent?: ItemContentComponent;
 
@@ -127,7 +128,9 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent {
     }),
     fromEvent<BeforeUnloadEvent>(globalThis, 'beforeunload', { capture: true })
       .pipe(switchMap(() => this.itemContentComponent?.itemDisplayComponent?.saveAnswerAndState() ?? of(undefined)), take(1))
-      .subscribe(),
+      .subscribe({
+        error: () => { /* Errors cannot be handled before unloading page. */ },
+      }),
     this.formerAnswerError$.subscribe(caught => {
       if (caught !== loadForbiddenAnswerError) this.unknownError = caught;
     }),
@@ -135,6 +138,10 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent {
 
   errorMessage = $localize`:@@unknownError:An unknown error occurred. ` +
     $localize`:@@contactUs:If the problem persists, please contact us.`;
+
+  isDirty(): boolean {
+    return !!this.itemContentComponent?.isDirty();
+  }
 
   constructor(
     private userService: UserSessionService,

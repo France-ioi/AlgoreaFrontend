@@ -82,6 +82,10 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
     };
   }
 
+  dummyRootContent(): ItemInfo {
+    return itemInfo({ route: fullItemRoute(this.category, 'dummy', [], { parentAttemptId: defaultAttemptId }) });
+  }
+
   private mapChild(child: ItemNavigationChild, parentAttemptId: string, path: string[]): NavTreeElement {
     const currentResult = bestAttemptFromResults(child.results);
     const route = fullItemRoute(typeCategoryOfItem(child), child.id, path, { attemptId: currentResult?.attemptId, parentAttemptId });

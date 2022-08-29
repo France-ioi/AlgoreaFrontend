@@ -60,6 +60,10 @@ export class GroupNavTreeService extends NavTreeService<GroupInfo> {
     );
   }
 
+  dummyRootContent(): GroupInfo {
+    return groupInfo({ route: groupRoute({ id: 'dummy', isUser: false }, []) });
+  }
+
   private mapChild(child: GroupNavigationChild, path: string[]): NavTreeElement {
     const route = groupRoute({ id: child.id, isUser: false }, path);
     return {
