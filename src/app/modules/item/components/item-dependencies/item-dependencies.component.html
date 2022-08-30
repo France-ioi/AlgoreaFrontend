@@ -2,7 +2,7 @@
   <alg-section icon="fa fa-list" i18n-label label="Prerequisites">
     <ng-container *ngIf="['all','all_with_grant'].includes(itemData.item.permissions.canEdit); else notAllowToView">
       <div *ngIf="state$ | async as state">
-        <alg-loading size="medium" *ngIf="state.isFetching || createInProgress || removeInProgress"></alg-loading>
+        <alg-loading size="medium" *ngIf="state.isFetching || changeInProgress"></alg-loading>
 
         <alg-error
           *ngIf="state.isError"
@@ -13,7 +13,7 @@
           (refresh)="refresh()"
         ></alg-error>
 
-        <ng-container *ngIf="!state.isFetching && !createInProgress && !removeInProgress && state.data">
+        <ng-container *ngIf="!state.isFetching && !changeInProgress && state.data">
           <ng-container *ngIf="state.data.length > 0; else emptyList">
             <p class="explanation" i18n>
               Users will unlock access to this content if they solve <strong>at least one</strong> of the content below.
