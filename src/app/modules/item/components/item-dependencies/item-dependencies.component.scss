@@ -17,7 +17,7 @@
 
 .list-item {
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
   height: 4rem;
   border-bottom: .1rem solid var(--light-border-color);

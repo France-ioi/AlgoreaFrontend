@@ -11,6 +11,7 @@ import { ItemType } from '../../../../shared/helpers/item-type';
 import { AddItemPrerequisiteService } from '../../http-services/add-item-prerequisite.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ActionFeedbackService } from '../../../../shared/services/action-feedback.service';
+import { RemoveItemPrerequisiteService } from '../../http-services/remove-item-prerequisite.service';
 
 @Component({
   selector: 'alg-item-dependencies',
@@ -43,11 +44,13 @@ export class ItemDependenciesComponent implements OnChanges, OnDestroy {
     data ? this.op?.toggle(data.event, data.target) : this.op?.hide();
   });
 
-  createInProgress = false;
+
+  changeInProgress = false;
 
   constructor(
     private getItemPrerequisitesService: GetItemPrerequisitesService,
     private addItemPrerequisiteService: AddItemPrerequisiteService,
+    private removeItemPrerequisiteService: RemoveItemPrerequisiteService,
     private actionFeedbackService: ActionFeedbackService,
   ) {
   }
@@ -87,7 +90,7 @@ export class ItemDependenciesComponent implements OnChanges, OnDestroy {
     this.refresh$.next();
   }
 
-  addDependency(item: AddedContent<ItemType>): void {
+  onAdd(item: AddedContent<ItemType>): void {
     if (!item.id) {
       throw new Error('Unexpected: item id is missing');
     }
@@ -95,15 +98,35 @@ export class ItemDependenciesComponent implements OnChanges, OnDestroy {
     if (!dependentItemId) {
       throw new Error('Unexpected: dependent item id is missing');
     }
-    this.createInProgress = true;
+    this.changeInProgress = true;
     this.addItemPrerequisiteService.create(dependentItemId, item.id).subscribe({
       next: () => {
-        this.createInProgress = false;
+        this.changeInProgress = false;
         this.actionFeedbackService.success('The new dependency has been added');
         this.refresh();
       },
       error: err => {
-        this.createInProgress = false;
+        this.changeInProgress = false;
+        this.actionFeedbackService.unexpectedError();
+        if (!(err instanceof HttpErrorResponse)) throw err;
+      }
+    });
+  }
+
+  onRemove(id: string): void {
+    const dependentItemId = this.itemData?.item.id;
+    if (!dependentItemId) {
+      throw new Error('Unexpected: Missed dependent item id');
+    }
+    this.changeInProgress = true;
+    this.removeItemPrerequisiteService.delete(dependentItemId, id).subscribe({
+      next: () => {
+        this.changeInProgress = false;
+        this.actionFeedbackService.success('The dependency has been removed');
+        this.refresh();
+      },
+      error: err => {
+        this.changeInProgress = false;
         this.actionFeedbackService.unexpectedError();
         if (!(err instanceof HttpErrorResponse)) throw err;
       }
