@@ -7,33 +7,31 @@
       </alg-section>
 
       <ng-container *ngIf="['Chapter', 'Skill'].includes(itemData.item.type)">
-        <ng-container *ngrxLet="editModeEnabled$; let editModeEnabled">
-          <div class="edit" *ngIf="['all','all_with_grant', 'children'].includes(itemData.item.permissions.canEdit) || editModeEnabled">
-            <label class="edit-label">
-              <span class="alg-base-text-color" i18n>Edit content</span>
-              <alg-switch
-                class="edit-switch"
-                mode="white"
-                [checked]="editModeEnabled"
-                (change)="onEditModeEnableChange($event)"
-              ></alg-switch>
-            </label>
-          </div>
+        <div class="edit" *ngIf="['all','all_with_grant', 'children'].includes(itemData.item.permissions.canEdit) || editModeEnabled">
+          <label class="edit-label">
+            <span class="alg-base-text-color" i18n>Edit content</span>
+            <alg-switch
+              class="edit-switch"
+              mode="white"
+              [checked]="editModeEnabled"
+              (change)="onEditModeEnableChange($event)"
+            ></alg-switch>
+          </label>
+        </div>
 
-          <alg-item-children-edit-form
-            [itemData]="itemData"
-            *ngIf="editModeEnabled"
-          ></alg-item-children-edit-form>
+        <alg-item-children-edit-form
+          [itemData]="itemData"
+          *ngIf="editModeEnabled"
+        ></alg-item-children-edit-form>
 
-          <alg-chapter-children
-            [itemData]="itemData"
-            [algFullHeightContent]="true"
-            *ngIf="itemData.item.type === 'Chapter' && !editModeEnabled"
-          ></alg-chapter-children>
+        <alg-chapter-children
+          [itemData]="itemData"
+          [algFullHeightContent]="true"
+          *ngIf="itemData.item.type === 'Chapter' && !editModeEnabled"
+        ></alg-chapter-children>
 
-          <alg-sub-skills [itemData]="itemData" *ngIf="itemData.item.type === 'Skill' && !editModeEnabled"></alg-sub-skills>
-          <alg-parent-skills [itemData]="itemData" *ngIf="itemData.item.type === 'Skill'"></alg-parent-skills>
-        </ng-container>
+        <alg-sub-skills [itemData]="itemData" *ngIf="itemData.item.type === 'Skill' && !editModeEnabled"></alg-sub-skills>
+        <alg-parent-skills [itemData]="itemData" *ngIf="itemData.item.type === 'Skill'"></alg-parent-skills>
       </ng-container>
 
       <ng-container *ngIf="(itemData.item.type === 'Task' || itemData.item.type === 'Course')">

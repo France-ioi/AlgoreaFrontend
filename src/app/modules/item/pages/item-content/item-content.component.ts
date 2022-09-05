@@ -3,9 +3,7 @@ import { appConfig } from 'src/app/shared/helpers/config';
 import { ItemData } from '../../services/item-datasource.service';
 import { TaskConfig } from '../../services/item-task.service';
 import { ItemDisplayComponent, TaskTab } from '../item-display/item-display.component';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { distinctUntilChanged, filter, map, startWith } from 'rxjs/operators';
-import { Subscription } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
   ItemChildrenEditFormComponent
 } from '../../components/item-children-edit-form/item-children-edit-form.component';
@@ -26,6 +24,7 @@ export class ItemContentComponent implements OnChanges, PendingChangesComponent 
   @Input() taskView?: TaskTab['view'];
   @Input() taskConfig: TaskConfig = { readOnly: false, formerAnswer: null };
   @Input() savingAnswer = false;
+  @Input() editModeEnabled = false;
 
   @Output() taskTabsChange = new EventEmitter<TaskTab[]>();
   @Output() taskViewChange = new EventEmitter<TaskTab['view']>();
@@ -39,15 +38,6 @@ export class ItemContentComponent implements OnChanges, PendingChangesComponent 
 
   showItemThreadWidget = !!appConfig.forumServerUrl;
   attemptId?: string;
-  subscription?: Subscription;
-
-  editModeEnabled$ = this.router.events.pipe(
-    filter(event => event instanceof NavigationEnd),
-    map(() => this.router.url),
-    startWith(this.router.url),
-    distinctUntilChanged(),
-    map(url => url.includes('/edit-children')),
-  );
 
   constructor(private router: Router, private route: ActivatedRoute) {
   }
