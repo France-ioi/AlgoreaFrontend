@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UntypedFormGroup, Validators } from '@angular/forms';
 import { DropdownOption } from 'src/app/modules/shared-components/components/dropdown/dropdown.component';
 import { Item } from '../../http-services/get-item-by-id.service';
@@ -11,11 +11,13 @@ import { DEFAULT_ENTERING_TIME_MAX, DEFAULT_ENTERING_TIME_MIN } from '../item-ed
   styleUrls: [ './item-edit-advanced-parameters.component.scss' ]
 })
 export class ItemEditAdvancedParametersComponent implements OnInit {
+  @Output() confirmRemoval = new EventEmitter<void>();
+
   @Input() item?: Item;
   @Input() parentForm?: UntypedFormGroup;
   @Input() attemptId?: string;
 
-  validationCritireaOptions: DropdownOption[] = [{
+  validationCriteriaOptions: DropdownOption[] = [{
     label: $localize`Never`,
     value: 'None'
   }, {
@@ -122,6 +124,10 @@ export class ItemEditAdvancedParametersComponent implements OnInit {
 
     this.minEnteringTimeMaxDate = enteringTimeMinEnabled ?
       new Date(Math.min(enteringTimeMin.getTime(), enteringTimeMax.getTime())) : new Date();
+  }
+
+  onConfirmRemoval(): void {
+    this.confirmRemoval.emit();
   }
 
 }

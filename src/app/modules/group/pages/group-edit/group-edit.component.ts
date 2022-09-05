@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { mapStateData, readyData } from 'src/app/shared/operators/state';
 import { ModeService } from 'src/app/shared/services/mode.service';
@@ -22,7 +22,7 @@ import { CurrentContentService } from 'src/app/shared/services/current-content.s
   templateUrl: './group-edit.component.html',
   styleUrls: [ './group-edit.component.scss' ]
 })
-export class GroupEditComponent implements OnDestroy, PendingChangesComponent {
+export class GroupEditComponent implements OnInit, OnDestroy, PendingChangesComponent {
   groupForm = this.formBuilder.group({
     // eslint-disable-next-line @typescript-eslint/unbound-method
     name: [ '', [ Validators.required, Validators.minLength(3) ] ],
@@ -51,6 +51,9 @@ export class GroupEditComponent implements OnDestroy, PendingChangesComponent {
         this.initialFormData = item;
         this.resetFormWith(item);
       });
+  }
+
+  ngOnInit(): void {
     this.pendingChangesService.set(this);
   }
 

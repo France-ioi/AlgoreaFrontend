@@ -1,0 +1,24 @@
+.error {
+  padding: 1rem 0;
+}
+
+.field {
+  display: flex;
+
+  .field-name {
+    float: left;
+    width: 20%;
+    margin-top: 6px;
+
+    label {
+      padding: 12px 12px 12px 0;
+      display: inline-block;
+    }
+  }
+
+  .field-value {
+    float: left;
+    width: 80%;
+    margin-top: 6px;
+  }
+}
