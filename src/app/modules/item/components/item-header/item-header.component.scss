@@ -14,10 +14,6 @@
   margin-bottom: .5rem;
   justify-content: center;
 
-  alg-score-ring {
-    padding-right: 1rem;
-  }
-
   alg-skill-progress {
     position: absolute;
     left:0;
@@ -160,6 +156,27 @@
         color: var(--light-text-color);
       }
     }
+  }
+
+  .task-score-ring {
+    width: 5.83333rem;
+    height: 5.83333rem;
+    margin-right: 1rem;
+  }
+
+  .lock-icon {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    color: var(--base-text-color);
+    font-size: 1.6rem;
+
+    border: 4px solid var(--lock-border-color);
+    border-radius: 50%;
   }
 
   .team-count {
