@@ -114,12 +114,11 @@
 
       <alg-permissions-edit-dialog
         [currentUserPermissions]="itemData.item.permissions"
-        [item]="{ id: progressDataDialog.itemId, string: { title: progressDataDialog.title } }"
+        [item]="progressDataDialog.item"
         [group]="progressDataDialog.group"
         [sourceGroup]="sourceGroup"
-        [targetType]="currentFilter"
         (close)="onDialogClose()"
-        *ngIf="dialog === 'opened' && itemData && progressDataDialog && sourceGroup"
+        *ngIf="isPermissionsDialogOpened && itemData && progressDataDialog && sourceGroup"
       ></alg-permissions-edit-dialog>
     </ng-template>
   </ng-container>

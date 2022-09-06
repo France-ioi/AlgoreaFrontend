@@ -108,7 +108,6 @@
             [currentUserPermissions]="itemData.item.permissions"
             [item]="itemData.item"
             [group]="watchedGroup.route"
-            [targetType]="'Groups'"
             (close)="closePermissionsDialog($event)"
             *ngIf="isPermissionsDialogOpened"
           ></alg-permissions-edit-dialog>

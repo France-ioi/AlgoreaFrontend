@@ -44,8 +44,12 @@ interface DataFetching {
 }
 
 interface ProgressDataDialog {
-  title: string,
-  itemId: string,
+  item: {
+    id: string,
+    string: {
+      title: string | null,
+    },
+  },
   group: RawGroupRoute,
 }
 
@@ -67,8 +71,7 @@ export class GroupProgressGridComponent implements OnChanges {
   progressDataDialog?: ProgressDataDialog;
   sourceGroup?: RawGroupRoute;
 
-  dialog: 'loading'|'opened'|'closed' = 'closed';
-  dialogTitle = '';
+  isPermissionsDialogOpened = false;
 
   isCSVDataFetching = false;
   canAccess = false;
@@ -112,7 +115,7 @@ export class GroupProgressGridComponent implements OnChanges {
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.dialog = 'closed';
+    this.isPermissionsDialogOpened = false;
     if (changes.itemData && this.itemData) this.itemData$.next(this.itemData);
     if (this.group) {
       this.fetchRows();
@@ -132,8 +135,12 @@ export class GroupProgressGridComponent implements OnChanges {
       progress: userProgress,
     };
     this.progressDataDialog = {
-      title: row.header,
-      itemId: col.id,
+      item: {
+        id: col.id,
+        string: {
+          title: row.header,
+        },
+      },
       group: rawGroupRoute({ id: row.id, isUser: this.currentFilter === 'Users' }),
     };
   }
@@ -219,11 +226,11 @@ export class GroupProgressGridComponent implements OnChanges {
 
   onAccessPermissions(): void {
     this.hideProgressDetail();
-    this.dialog = 'opened';
+    this.isPermissionsDialogOpened = true;
   }
 
   onDialogClose(): void {
-    this.dialog = 'closed';
+    this.isPermissionsDialogOpened = false;
     this.progressDataDialog = undefined;
   }
 
