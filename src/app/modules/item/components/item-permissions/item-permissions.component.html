@@ -106,7 +106,7 @@
 
           <alg-permissions-edit-dialog
             [currentUserPermissions]="itemData.item.permissions"
-            [item]="{ id: itemData.item.id, string: { title: itemData.item.string.title } }"
+            [item]="itemData.item"
             [group]="watchedGroup.route"
             [targetType]="'Groups'"
             (close)="closePermissionsDialog($event)"
