@@ -78,9 +78,9 @@ export class GroupWatchingService implements OnDestroy {
     this.cachedGroupInfo.complete();
   }
 
-  startUserWatching(user: User): void {
+  startUserWatching(route: RawGroupRoute, user: User): void {
     this.cachedGroupInfo.next({
-      route: rawGroupRoute(user),
+      route: route,
       name: formatUser(user),
       currentUserCanGrantAccess: user.currentUserCanGrantUserAccess || false,
     });
