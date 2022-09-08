@@ -1,4 +1,4 @@
-<form [formGroup]="form" *ngIf="form && permissionsDialogData">
+<form [formGroup]="form" *ngIf="form">
   <alg-collapsible-section
       i18n-header header="Can view" icon="fa fa-eye"
       [collapsible]="!form.errors?.canView"
@@ -98,4 +98,22 @@
       </alg-switch-field>
     </ng-template>
   </alg-collapsible-section>
+
+  <div class="buttons">
+    <p-button
+      class="button"
+      icon="fa fa-times"
+      i18n-label label="Cancel"
+      styleClass="alg-button p-button-rounded p-button-danger"
+      (onClick)="onCancel()"
+    ></p-button>
+    <p-button
+      class="button"
+      icon="fa fa-check"
+      i18n-label label="Proceed"
+      styleClass="alg-button p-button-rounded"
+      (onClick)="onAccept()"
+      [disabled]="!form.dirty || form.invalid || form.disabled || acceptButtonDisabled"
+    ></p-button>
+  </div>
 </form>

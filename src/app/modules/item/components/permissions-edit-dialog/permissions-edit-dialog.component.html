@@ -34,29 +34,13 @@
       <div class="dialog-content">
         <alg-permissions-edit-form
           (save)="onPermissionsDialogSave($event)"
+          (cancel)="onCancel()"
           [targetType]="targetType"
           [permissions]="state.data"
           [giverPermissions]="currentUserPermissions"
+          [acceptButtonDisabled]="updateInProcess"
         ></alg-permissions-edit-form>
       </div>
     </div>
-
-    <p-footer>
-      <div class="footer" [hidden]="state.isFetching || state.isError || group.isUser">
-        <p-button
-          icon="fa fa-times"
-          i18n-label label="Cancel"
-          styleClass="alg-button p-button-rounded p-button-danger"
-          (onClick)="onCancel()"
-        ></p-button>
-        <p-button
-          icon="fa fa-check"
-          i18n-label label="Proceed"
-          styleClass="alg-button p-button-rounded"
-          (onClick)="onAccept()"
-          [disabled]="disabled || state.isFetching || state.isError || group.isUser || updateInProcess"
-        ></p-button>
-      </div>
-    </p-footer>
   </p-dialog>
 </ng-container>

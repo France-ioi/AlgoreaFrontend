@@ -42,10 +42,6 @@ export class PermissionsEditDialogComponent implements OnDestroy, OnChanges {
   updateInProcess = false;
   targetType: TypeFilter = 'Users';
 
-  get disabled(): boolean {
-    return !this.permissionsEditForm?.form.dirty || !!this.permissionsEditForm?.form.invalid;
-  }
-
   constructor(
     private groupPermissionsService: GroupPermissionsService,
     private actionFeedbackService: ActionFeedbackService,
@@ -103,10 +99,6 @@ export class PermissionsEditDialogComponent implements OnDestroy, OnChanges {
           if (!(err instanceof HttpErrorResponse)) throw err;
         },
       });
-  }
-
-  onAccept(): void {
-    this.permissionsEditForm?.accept();
   }
 
   onCancel(): void {

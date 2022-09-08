@@ -20,7 +20,9 @@ export class PermissionsEditFormComponent implements OnDestroy, OnChanges {
   @Input() permissions?: Omit<GroupPermissions,'canEnterFrom'|'canEnterUntil'>;
   @Input() giverPermissions!: ItemCorePerm;
   @Input() targetType: TypeFilter = 'Users';
+  @Input() acceptButtonDisabled = false;
   @Output() save = new EventEmitter<Partial<GroupPermissions>>();
+  @Output() cancel = new EventEmitter<void>();
 
   targetTypeString = '';
 
@@ -70,7 +72,7 @@ export class PermissionsEditFormComponent implements OnDestroy, OnChanges {
     if (changes.targetType) this.regenerateValues.next();
   }
 
-  accept(): void {
+  onAccept(): void {
     if (!this.form.dirty || this.form.invalid) return;
 
     const groupPermissions: Partial<GroupPermissions> = {
@@ -83,5 +85,9 @@ export class PermissionsEditFormComponent implements OnDestroy, OnChanges {
     };
 
     this.save.emit(groupPermissions);
+  }
+
+  onCancel(): void {
+    this.cancel.emit();
   }
 }
