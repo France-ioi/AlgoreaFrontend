@@ -88,7 +88,7 @@ export class PermissionsEditDialogComponent implements OnDestroy, OnChanges {
       permissions,
     )
       .subscribe({
-        next: _res => {
+        next: () => {
           this.updateInProcess = false;
           this.actionFeedbackService.success($localize`:@@permissionsUpdated:Permissions successfully updated.`);
           this.closeDialog(true);
