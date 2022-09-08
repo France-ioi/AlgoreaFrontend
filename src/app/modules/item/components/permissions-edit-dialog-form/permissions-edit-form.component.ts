@@ -3,7 +3,7 @@ import { UntypedFormBuilder } from '@angular/forms';
 import { generateValues, getTargetTypeString, PermissionsDialogData } from '../../helpers/permissions-texts';
 import { GroupPermissions } from '../../../../shared/http-services/group-permissions.service';
 import { ItemCorePerm } from '../../../../shared/models/domain/item-permissions';
-import { TypeFilter } from '../composition-filter/composition-filter.component';
+import { TypeFilter } from '../../helpers/composition-filter';
 import { ItemViewPerm } from '../../../../shared/models/domain/item-view-permission';
 import { ItemGrantViewPerm } from '../../../../shared/models/domain/item-grant-view-permission';
 import { ItemWatchPerm } from '../../../../shared/models/domain/item-watch-permission';

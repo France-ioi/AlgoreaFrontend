@@ -8,7 +8,7 @@ import { formatUser } from 'src/app/shared/helpers/user';
 import { GetGroupDescendantsService } from 'src/app/shared/http-services/get-group-descendants.service';
 import { GetGroupProgressService, TeamUserProgress } from 'src/app/shared/http-services/get-group-progress.service';
 import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
-import { TypeFilter } from '../../components/composition-filter/composition-filter.component';
+import { TypeFilter } from '../../helpers/composition-filter';
 import { GetItemChildrenService } from '../../http-services/get-item-children.service';
 import { ItemData } from '../../services/item-datasource.service';
 import { ProgressCSVService } from '../../../../shared/http-services/progress-csv.service';

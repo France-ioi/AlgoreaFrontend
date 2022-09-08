@@ -6,7 +6,7 @@ import { ReplaySubject, switchMap } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 import { ActionFeedbackService } from '../../../../shared/services/action-feedback.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { TypeFilter } from '../composition-filter/composition-filter.component';
+import { TypeFilter } from '../../helpers/composition-filter';
 import { PermissionsEditFormComponent } from '../permissions-edit-dialog-form/permissions-edit-form.component';
 import { mapToFetchState } from '../../../../shared/operators/state';
 
