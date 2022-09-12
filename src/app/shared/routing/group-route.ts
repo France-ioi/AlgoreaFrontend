@@ -36,8 +36,8 @@ export function groupRoute(group: GroupLike, path: string[]): GroupRoute {
   return { ...rawGroupRoute(group), path };
 }
 
-export function isGroupRoute(route: ContentRoute): route is GroupRoute {
-  return route.contentType === 'group';
+export function isGroupRoute(route: ContentRoute | RawGroupRoute): route is GroupRoute {
+  return route.contentType === 'group' && route.path !== undefined;
 }
 
 export function isRawGroupRoute(route?: unknown): route is RawGroupRoute {

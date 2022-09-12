@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { GetUserService } from '../../http-services/get-user.service';
-import { mapToFetchState } from '../../../../shared/operators/state';
-import { combineLatest, EMPTY, Observable, of, Subject, Subscription, throwError } from 'rxjs';
+import { mapToFetchState, readyData } from '../../../../shared/operators/state';
+import { combineLatest, Observable, of, Subject, Subscription } from 'rxjs';
 import { ActivatedRoute, NavigationEnd, Router, RouterLinkActive } from '@angular/router';
 import { catchError, delay, switchMap, map, startWith, filter, share, distinctUntilChanged } from 'rxjs/operators';
 import { contentInfo } from '../../../../shared/models/content/content-info';
@@ -10,7 +10,7 @@ import { UserSessionService } from '../../../../shared/services/user-session.ser
 import { formatUser } from '../../../../shared/helpers/user';
 import { LayoutService } from '../../../../shared/services/layout.service';
 import { GetGroupBreadcrumbsService } from '../../http-services/get-group-breadcrumbs.service';
-import { groupRoute, groupRouteFromParams, rawGroupRoute } from 'src/app/shared/routing/group-route';
+import { groupRoute, groupRouteFromParams, isGroupRoute, rawGroupRoute } from 'src/app/shared/routing/group-route';
 import { GroupRouter } from 'src/app/shared/routing/group-router';
 
 @Component({
@@ -23,11 +23,17 @@ export class UserComponent implements OnInit, OnDestroy {
   @ViewChild('personalData') personalData?: RouterLinkActive;
 
   private refresh$ = new Subject<void>();
-  readonly state$ = this.route.params.pipe(
-    switchMap(({ id }) => {
-      if (typeof id !== 'string') throw new Error('id must be a string');
-      return this.getUserService.getForId(id);
-    }),
+  private readonly userRoute$ = this.route.paramMap.pipe(
+    map(params => {
+      const { id, path } = groupRouteFromParams(params);
+      if (!id) throw new Error('expected user id is user page path');
+      const group = { id, isUser: true };
+      return path ? groupRoute(group, path) : rawGroupRoute(group);
+    })
+  );
+
+  readonly state$ = this.userRoute$.pipe(
+    switchMap(route => this.getUserService.getForId(route.id).pipe(map(user => ({ route: route, user: user })))),
     mapToFetchState({ resetter: this.refresh$ }),
     share(),
   );
@@ -49,14 +55,8 @@ export class UserComponent implements OnInit, OnDestroy {
     map(url => this.getCurrentRoute(url)),
   );
 
-  private readonly breadcrumbs$ = this.route.paramMap.pipe(
-    switchMap(params => {
-      const { id, path } = groupRouteFromParams(params);
-      if (!id) return throwError(new Error('user id must be defined'));
-      return path
-        ? this.getGroupBreadcrumbsService.getBreadcrumbs(groupRoute({ id, isUser: true }, path))
-        : of(undefined);
-    })
+  private readonly breadcrumbs$ = this.userRoute$.pipe(
+    switchMap(route => (isGroupRoute(route) ? this.getGroupBreadcrumbsService.getBreadcrumbs(route) : of(undefined)))
   );
 
   private subscription?: Subscription;
@@ -76,43 +76,25 @@ export class UserComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.subscription = combineLatest([
-      this.url$,
-      this.state$,
-      this.breadcrumbs$.pipe(catchError(() => EMPTY)), // error is handled elsewhere
+      this.userRoute$,
+      this.activeRoute$.pipe(map(p => this.pageTitle(p))),
+      this.state$.pipe(readyData()),
+      this.breadcrumbs$.pipe(catchError(() => of(undefined))), // error is handled elsewhere
     ])
       .pipe(
-        map(([ url, state, breadcrumbs ]) => {
-          const title = state.isFetching || state.isError ? '...' : formatUser(state.data);
-          const lastPath = {
-            title: this.getCurrentRoute(url) === 'personal-data' ? $localize`Personal info` :
-              this.getCurrentRoute(url) === 'settings' ? $localize`Settings` : $localize`Progress`,
-          };
-
-          return contentInfo({
-            title,
-            breadcrumbs: {
-              category: $localize`Users`,
-              path: breadcrumbs ? [
-                ...breadcrumbs.map(breadcrumb => ({
-                  title: breadcrumb.type === 'User' && breadcrumb.id === state.data?.groupId
-                    ? formatUser(state.data)
-                    : breadcrumb.name,
-                  navigateTo: this.groupRouter.url(breadcrumb.route),
-                })),
-                lastPath,
-              ] : [
-                {
-                  title,
-                  navigateTo: this.groupRouter.url(rawGroupRoute({ id: this.route.snapshot.params.id as string, isUser: true })),
-                },
-                lastPath,
-              ],
-              currentPageIdx: breadcrumbs ? breadcrumbs.length : 1,
-            }
-          });
-        })
-      )
-      .subscribe(contentInfo => {
+        map(([ currentUserRoute, currentPageTitle, data, breadcrumbs ]) => contentInfo({
+          title: formatUser(data.user),
+          breadcrumbs: {
+            category: $localize`Users`,
+            path: [
+              ...(breadcrumbs?.slice(0,-1) ?? []).map(b => ({ title: b.name, navigateTo: this.groupRouter.url(b.route) })),
+              { title: formatUser(data.user), navigateTo: this.groupRouter.url(currentUserRoute) },
+              { title: currentPageTitle }
+            ],
+            currentPageIdx: breadcrumbs ? breadcrumbs.length : 1,
+          }
+        }))
+      ).subscribe(contentInfo => {
         this.currentContent.replace(contentInfo);
       });
   }
@@ -125,6 +107,17 @@ export class UserComponent implements OnInit, OnDestroy {
 
   refresh(): void {
     this.refresh$.next();
+  }
+
+  /**
+   * Return the i18n title of a page
+   */
+  private pageTitle(page: 'progress' | 'personal-data' | 'settings'): string {
+    switch (page) {
+      case 'progress': return $localize`Progress`;
+      case 'personal-data': return $localize`Personal info`;
+      case 'settings': return $localize`Settings`;
+    }
   }
 
   private getCurrentRoute(url: string): 'progress' | 'personal-data' | 'settings' {
