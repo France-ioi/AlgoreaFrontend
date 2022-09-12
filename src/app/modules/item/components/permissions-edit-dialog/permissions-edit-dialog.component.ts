@@ -53,13 +53,12 @@ export class PermissionsEditDialogComponent implements OnDestroy, OnChanges {
   }
 
   ngOnChanges(): void {
-    if (this.sourceGroup?.isUser) {
-      throw new Error('Unexpected: Source group must not be a user');
+    if (this.group.isUser && !this.sourceGroup) {
+      return;
     }
 
-    if (this.group.isUser && !this.sourceGroup) {
-      this.actionFeedbackService.unexpectedError();
-      return;
+    if (this.sourceGroup?.isUser) {
+      throw new Error('Unexpected: Source group must not be a user');
     }
 
     this.targetType = this.group.isUser ? 'Users' : 'Groups';

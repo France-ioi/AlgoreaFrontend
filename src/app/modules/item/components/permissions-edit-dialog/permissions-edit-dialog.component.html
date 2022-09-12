@@ -1,46 +1,49 @@
-<ng-container *ngIf="state$ | async as state">
-  <p-dialog
-    [visible]="visible"
-    [modal]="true"
-    [draggable]="false"
-    [closable]="false"
-    styleClass="alg-permissions-edit-dialog"
-  >
-    <p-header>
-      <div class="dialog-header">
-        <span class="dialog-handler">
-          <i class="fa fa-lock"></i>
-        </span>
-        <span class="dialog-title" i18n>{{ title }}</span>
-        <span class="dialog-close" (click)="onCancel()">
-          <img src="assets/images/close.svg" alt="close">
-        </span>
-      </div>
-    </p-header>
+<p-dialog
+  [visible]="visible"
+  [modal]="true"
+  [draggable]="false"
+  [closable]="false"
+  styleClass="alg-permissions-edit-dialog"
+>
+  <p-header>
+    <div class="dialog-header">
+      <span class="dialog-handler">
+        <i class="fa fa-lock"></i>
+      </span>
+      <span class="dialog-title" i18n>{{ title }}</span>
+      <span class="dialog-close" (click)="onCancel()">
+        <img src="assets/images/close.svg" alt="close">
+      </span>
+    </div>
+  </p-header>
 
-    <alg-loading *ngIf="state.isFetching"></alg-loading>
+  <alg-error
+    i18n-message message="User permissions cannot be changed via this page for the moment"
+    *ngIf="group.isUser && !sourceGroup; else stateBlock"
+  ></alg-error>
 
-    <alg-error *ngIf="state.isError || state.isReady && !!group.isUser">
-      <ng-container *ngIf="state.isError">
+  <ng-template #stateBlock>
+    <ng-container *ngIf="state$ | async as state">
+      <alg-loading *ngIf="state.isFetching"></alg-loading>
+
+      <alg-error *ngIf="state.isError">
         <span i18n>The permissions cannot be retrieved.</span>
         <span i18n="@@contactUs">If the problem persists, please contact us.</span>
-      </ng-container>
-      <ng-container *ngIf="!state.isError && !!group.isUser" i18n>
-        User permissions cannot be changed via this page for the moment
-      </ng-container>
-    </alg-error>
+      </alg-error>
 
-    <div class="dialog-container" *ngIf="state.isReady && !group.isUser">
-      <div class="dialog-content">
-        <alg-permissions-edit-form
-          (save)="onPermissionsDialogSave($event)"
-          (cancel)="onCancel()"
-          [targetType]="targetType"
-          [permissions]="state.data"
-          [giverPermissions]="currentUserPermissions"
-          [acceptButtonDisabled]="updateInProcess"
-        ></alg-permissions-edit-form>
+      <div class="dialog-container" *ngIf="state.isReady">
+        <div class="dialog-content">
+          <alg-permissions-edit-form
+            (save)="onPermissionsDialogSave($event)"
+            (cancel)="onCancel()"
+            [targetType]="targetType"
+            [permissions]="state.data"
+            [giverPermissions]="currentUserPermissions"
+            [acceptButtonDisabled]="updateInProcess"
+          ></alg-permissions-edit-form>
+        </div>
       </div>
-    </div>
-  </p-dialog>
-</ng-container>
+    </ng-container>
+  </ng-template>
+</p-dialog>
+
