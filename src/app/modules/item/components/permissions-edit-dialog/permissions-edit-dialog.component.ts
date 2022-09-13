@@ -25,7 +25,7 @@ export class PermissionsEditDialogComponent implements OnDestroy, OnChanges {
 
   @ViewChild(PermissionsEditFormComponent) permissionsEditForm?: PermissionsEditFormComponent;
 
-  params$ = new ReplaySubject<{ sourceGroupId: string, groupId: string, itemId: string }>(1);
+  private params$ = new ReplaySubject<{ sourceGroupId: string, groupId: string, itemId: string }>(1);
   state$ = this.params$.pipe(
     switchMap(params =>
       this.groupPermissionsService.getPermissions(params.sourceGroupId, params.groupId, params.itemId).pipe(
