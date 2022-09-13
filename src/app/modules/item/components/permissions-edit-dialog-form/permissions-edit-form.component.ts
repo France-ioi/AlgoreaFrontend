@@ -62,12 +62,10 @@ export class PermissionsEditFormComponent implements OnDestroy, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     this.targetTypeString = getTargetTypeString(this.targetType);
-    if (changes.permissions || changes.giverPermissions) {
-      if (this.permissions) {
-        this.form.setValidators(permissionsConstraintsValidator(this.giverPermissions, this.targetType));
-        this.form.updateValueAndValidity();
-        this.form.reset({ ...this.permissions }, { emitEvent: false });
-      }
+    if ((changes.permissions || changes.giverPermissions) && this.permissions) {
+      this.form.setValidators(permissionsConstraintsValidator(this.giverPermissions, this.targetType));
+      this.form.updateValueAndValidity();
+      this.form.reset({ ...this.permissions }, { emitEvent: false });
     }
     if (changes.targetType) this.regenerateValues.next();
   }
