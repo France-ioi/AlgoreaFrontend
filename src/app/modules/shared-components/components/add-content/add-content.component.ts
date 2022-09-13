@@ -4,6 +4,7 @@ import { Observable, Subscription } from 'rxjs';
 import { map, filter, switchMap, debounceTime } from 'rxjs/operators';
 import { ItemCorePerm } from 'src/app/shared/models/domain/item-permissions';
 import { mapToFetchState } from 'src/app/shared/operators/state';
+import { FetchState } from '../../../../shared/helpers/state';
 
 export interface AddedContent<T> {
   id?: string,
@@ -27,7 +28,6 @@ const defaultFormValues = { create: '', searchExisting: '' };
   styleUrls: [ './add-content.component.scss' ],
 })
 export class AddContentComponent<Type> implements OnInit, OnDestroy {
-
   @Input() allowedTypesForNewContent: NewContentType<Type>[] = [];
   @Input() searchFunction?: (searchValue: string) => Observable<AddedContent<Type>[]>;
   @Input() loading = false;
@@ -42,8 +42,7 @@ export class AddContentComponent<Type> implements OnInit, OnDestroy {
 
   readonly minInputLength = 3;
 
-  state: 'fetching' | 'ready' | 'error' = 'fetching';
-  resultsFromSearch: AddedContent<Type>[] = [];
+  state?: FetchState<AddedContent<Type>[]>;
   addContentForm: UntypedFormGroup = this.formBuilder.group(defaultFormValues);
   trimmedInputsValue = defaultFormValues;
 
@@ -77,10 +76,9 @@ export class AddContentComponent<Type> implements OnInit, OnDestroy {
         filter(value => this.checkLength(value)),
         debounceTime(300),
         switchMap(value => searchFunction(value).pipe(mapToFetchState())),
-      ).subscribe(state => {
-        this.state = state.tag;
-        if (state.isReady) this.resultsFromSearch = state.data;
-      })
+      ).subscribe(state =>
+        this.state = state
+      )
     );
   }
 
