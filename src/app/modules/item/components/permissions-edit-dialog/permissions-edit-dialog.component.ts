@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from '@angular/core';
 import { ItemCorePerm } from 'src/app/shared/models/domain/item-permissions';
 import { RawGroupRoute } from '../../../../shared/routing/group-route';
 import { GroupPermissions, GroupPermissionsService } from '../../../../shared/http-services/group-permissions.service';
@@ -7,7 +7,6 @@ import { map, shareReplay } from 'rxjs/operators';
 import { ActionFeedbackService } from '../../../../shared/services/action-feedback.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { TypeFilter } from '../../helpers/composition-filter';
-import { PermissionsEditFormComponent } from '../permissions-edit-dialog-form/permissions-edit-form.component';
 import { mapToFetchState } from '../../../../shared/operators/state';
 
 @Component({
@@ -22,8 +21,6 @@ export class PermissionsEditDialogComponent implements OnDestroy, OnChanges {
   @Input() item!: { id: string, string: { title: string | null } };
   @Input() group!: RawGroupRoute;
   @Input() sourceGroup?: RawGroupRoute;
-
-  @ViewChild(PermissionsEditFormComponent) permissionsEditForm?: PermissionsEditFormComponent;
 
   private params$ = new ReplaySubject<{ sourceGroupId: string, groupId: string, itemId: string }>(1);
   state$ = this.params$.pipe(
