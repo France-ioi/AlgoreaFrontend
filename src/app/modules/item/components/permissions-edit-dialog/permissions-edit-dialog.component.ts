@@ -36,7 +36,6 @@ export class PermissionsEditDialogComponent implements OnDestroy, OnChanges {
     shareReplay(1),
   );
 
-  title = 'Permission editor';
   permissions?: Omit<GroupPermissions,'canEnterFrom'|'canEnterUntil'>;
   updateInProcess = false;
   targetType: TypeFilter = 'Users';
