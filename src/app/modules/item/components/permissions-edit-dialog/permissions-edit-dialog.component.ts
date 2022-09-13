@@ -18,7 +18,6 @@ import { mapToFetchState } from '../../../../shared/operators/state';
 export class PermissionsEditDialogComponent implements OnDestroy, OnChanges {
   @Output() close = new EventEmitter<boolean>();
 
-  @Input() visible = true;
   @Input() currentUserPermissions!: ItemCorePerm;
   @Input() item!: { id: string, string: { title: string | null } };
   @Input() group!: RawGroupRoute;
