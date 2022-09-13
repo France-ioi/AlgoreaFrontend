@@ -70,8 +70,7 @@ export class PermissionsEditDialogComponent implements OnDestroy, OnChanges {
     }
 
     if (this.group.isUser && !this.sourceGroup) {
-      this.actionFeedbackService.unexpectedError();
-      return;
+      throw new Error('Unexpected: A user group must be provided with source group');
     }
 
     this.updateInProcess = true;
