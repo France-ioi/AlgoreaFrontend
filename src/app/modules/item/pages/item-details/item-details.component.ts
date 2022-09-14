@@ -29,6 +29,7 @@ import { isTask } from 'src/app/shared/helpers/item-type';
 import { PendingChangesComponent } from '../../../../shared/guards/pending-changes-guard';
 import { canCurrentUserViewContent, canCurrentUserViewSolution } from 'src/app/shared/models/domain/item-view-permission';
 import { ItemEditWrapperComponent } from '../../components/item-edit-wrapper/item-edit-wrapper.component';
+import { HttpErrorResponse } from '@angular/common/http';
 
 const loadForbiddenAnswerError = new Error('load answer forbidden');
 
@@ -73,7 +74,17 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent, P
   readonly formerAnswer$ = this.itemData$.pipe(
     map(state => state.data?.route.answerId),
     distinctUntilChanged(),
-    switchMap(answerId => (answerId ? this.getAnswerService.get(answerId) : of(null))),
+    switchMap(answerId => (
+      answerId
+        ? this.getAnswerService.get(answerId).pipe(
+          catchError(err => {
+            // if receiving an http error below 500, consider that we don't have a former answer from the user point of view.
+            // else, the error is unexpected, so we rethrow it to put the app in error state.
+            if (err instanceof HttpErrorResponse && err.status < 500) return of(null);
+            throw err;
+          })
+        )
+        : of(null))),
     shareReplay(1),
   );
 
