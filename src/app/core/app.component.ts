@@ -12,6 +12,7 @@ import { appConfig } from '../shared/helpers/config';
 import { urlToRedirectTo } from '../shared/helpers/redirect-to-sub-path-at-init';
 import { GroupWatchingService } from './services/group-watching.service';
 import { version } from 'src/version';
+import { CrashReportingService } from './services/crash-reporting.service';
 
 @Component({
   selector: 'alg-root',
@@ -45,6 +46,7 @@ export class AppComponent implements OnInit, OnDestroy {
     private modeService: ModeService,
     private localeService: LocaleService,
     private layoutService: LayoutService,
+    private crashReportingService: CrashReportingService,
     private titleService: Title,
     private ngZone: NgZone,
     private renderer: Renderer2,
@@ -64,6 +66,8 @@ export class AppComponent implements OnInit, OnDestroy {
     }
     // eslint-disable-next-line no-console
     console.log(`App version: ${version}`);
+
+    this.crashReportingService.init();
   }
 
   ngOnInit(): void {
