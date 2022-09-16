@@ -39,7 +39,6 @@
     "@fortawesome/free-solid-svg-icons": "^5.13.0",
     "@ngrx/component": "^14.0.2",
     "@sentry/angular": "^7.6.0",
-    "@sentry/tracing": "^7.6.0",
     "fp-ts": "^2.9.5",
     "io-ts": "^2.2.16",
     "jschannel": "^1.0.2",
