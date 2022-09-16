@@ -115,7 +115,6 @@ export class AddContentComponent<Type> implements OnInit, OnDestroy {
 
   addExisting(item: AddedContent<Type>): void {
     this.contentAdded.emit(item);
-    this.reset();
   }
 
   private checkLength(s: string): boolean {
