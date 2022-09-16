@@ -5,7 +5,7 @@ import { mapStateData, readyData } from 'src/app/shared/operators/state';
 import { LayoutService } from '../../../../shared/services/layout.service';
 import { Router, RouterLinkActive } from '@angular/router';
 import { TaskTab } from '../item-display/item-display.component';
-import { combineLatest, fromEvent, merge, Observable, of, ReplaySubject, Subject } from 'rxjs';
+import { combineLatest, EMPTY, fromEvent, merge, Observable, of, ReplaySubject, Subject } from 'rxjs';
 import {
   catchError,
   distinctUntilChanged,
@@ -91,7 +91,7 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent, P
 
   readonly taskReadOnly$ = this.groupWatchingService.isWatching$;
   readonly taskConfig$: Observable<TaskConfig> = combineLatest([
-    this.formerAnswer$,
+    this.formerAnswer$.pipe(catchError(() => EMPTY)), // error is handled by formerAnswerError$
     this.taskReadOnly$,
     this.itemData$.pipe(readyData()),
   ]).pipe(map(([ formerAnswer, readOnly, data ]) => ({ readOnly, formerAnswer, locale: data.item.string.languageTag })));
