@@ -6,14 +6,12 @@ import { AppModule } from './app/core/app.module';
 import { appConfig } from './app/shared/helpers/config';
 import { version } from './version';
 
-if (appConfig.sentryDsn) {
-  Sentry.init({
-    dsn: appConfig.sentryDsn,
-    environment: appConfig.production ? `prod-${window.location.hostname}` : 'dev',
-    release: version,
-    integrations: [],
-  });
-}
+Sentry.init({
+  dsn: appConfig.sentryDsn,
+  environment: appConfig.production ? `prod-${window.location.hostname}` : 'dev',
+  release: version,
+  integrations: [],
+});
 
 if (appConfig.production) {
   enableProdMode();
