@@ -7,11 +7,6 @@ import { TeamUserProgress } from 'src/app/shared/http-services/get-group-progres
 export interface ProgressData {
   progress: TeamUserProgress,
   target: Element,
-  accessPermissions: {
-    title: string,
-    groupId: string,
-    itemId: string,
-  },
 }
 
 @Component({

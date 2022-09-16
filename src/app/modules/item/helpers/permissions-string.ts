@@ -1,4 +1,4 @@
-import { TypeFilter } from '../components/composition-filter/composition-filter.component';
+import { TypeFilter } from './composition-filter';
 import { ConstraintError } from './item-permissions-constraints';
 
 export const permissionsInfoString = {

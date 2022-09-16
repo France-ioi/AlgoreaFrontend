@@ -3,7 +3,7 @@ import {
 } from 'src/app/modules/shared-components/components/collapsible-section/progress-select/progress-select.component';
 import { GroupPermissions } from 'src/app/shared/http-services/group-permissions.service';
 import { generateErrorMessage, permissionsInfoString } from './permissions-string';
-import { TypeFilter } from '../components/composition-filter/composition-filter.component';
+import { TypeFilter } from './composition-filter';
 import {
   validateCanView,
   validateCanGrantView,
@@ -28,7 +28,7 @@ export interface PermissionsDialogData {
   canMakeSessionOfficialDisabledTooltip?: string[],
 }
 
-function getTargetTypeString(targetType: TypeFilter): string {
+export function getTargetTypeString(targetType: TypeFilter): string {
   switch (targetType) {
     case 'Users':
       return $localize`The user`;

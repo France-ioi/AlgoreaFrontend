@@ -1,5 +1,5 @@
-import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
-import { forkJoin, Observable, ReplaySubject, Subject, Subscription } from 'rxjs';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { forkJoin, Observable, ReplaySubject, Subject } from 'rxjs';
 import { combineLatestWith, map, shareReplay, switchMap } from 'rxjs/operators';
 import { canCurrentUserGrantGroupAccess } from 'src/app/modules/group/helpers/group-management';
 import { Group } from 'src/app/modules/group/http-services/get-group-by-id.service';
@@ -7,9 +7,8 @@ import { GetGroupChildrenService } from 'src/app/modules/group/http-services/get
 import { formatUser } from 'src/app/shared/helpers/user';
 import { GetGroupDescendantsService } from 'src/app/shared/http-services/get-group-descendants.service';
 import { GetGroupProgressService, TeamUserProgress } from 'src/app/shared/http-services/get-group-progress.service';
-import { GroupPermissionsService, GroupPermissions } from 'src/app/shared/http-services/group-permissions.service';
 import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
-import { TypeFilter } from '../../components/composition-filter/composition-filter.component';
+import { TypeFilter } from '../../helpers/composition-filter';
 import { GetItemChildrenService } from '../../http-services/get-item-children.service';
 import { ItemData } from '../../services/item-datasource.service';
 import { ProgressCSVService } from '../../../../shared/http-services/progress-csv.service';
@@ -17,17 +16,13 @@ import { downloadFile } from '../../../../shared/helpers/download-file';
 import { typeCategoryOfItem } from '../../../../shared/helpers/item-type';
 import { ItemRouter } from '../../../../shared/routing/item-router';
 import { GroupRouter } from '../../../../shared/routing/group-router';
-import { rawGroupRoute } from '../../../../shared/routing/group-route';
+import { RawGroupRoute, rawGroupRoute } from '../../../../shared/routing/group-route';
 import { ProgressData } from '../../components/user-progress-details/user-progress-details.component';
 import { DataPager } from 'src/app/shared/helpers/data-pager';
 import { mapToFetchState, readyData } from 'src/app/shared/operators/state';
 import { FetchState } from 'src/app/shared/helpers/state';
 import { HttpErrorResponse } from '@angular/common/http';
-import { ItemViewPerm } from 'src/app/shared/models/domain/item-view-permission';
-import { ItemGrantViewPerm } from 'src/app/shared/models/domain/item-grant-view-permission';
-import { ItemWatchPerm } from 'src/app/shared/models/domain/item-watch-permission';
 import { allowsGivingPermToItem } from 'src/app/shared/models/domain/item-permissions';
-import { ItemEditPerm } from 'src/app/shared/models/domain/item-edit-permission';
 
 const progressListLimit = 25;
 
@@ -48,12 +43,22 @@ interface DataFetching {
   pageSize: number,
 }
 
+interface ProgressDataDialog {
+  item: {
+    id: string,
+    string: {
+      title: string | null,
+    },
+  },
+  group: RawGroupRoute,
+}
+
 @Component({
   selector: 'alg-group-progress-grid',
   templateUrl: './group-progress-grid.component.html',
   styleUrls: [ './group-progress-grid.component.scss' ]
 })
-export class GroupProgressGridComponent implements OnChanges, OnDestroy {
+export class GroupProgressGridComponent implements OnChanges {
 
   @Input() group?: Group;
   @Input() itemData?: ItemData;
@@ -62,27 +67,11 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
 
   currentFilter = this.defaultFilter;
 
-  dialogPermissions: {
-    permissions: Omit<GroupPermissions,'canEnterFrom'|'canEnterUntil'>,
-    itemId: string,
-    targetGroupId: string,
-  } = {
-      itemId: '',
-      targetGroupId: '',
-      permissions: {
-        canView: ItemViewPerm.None,
-        canGrantView: ItemGrantViewPerm.None,
-        canWatch: ItemWatchPerm.None,
-        canEdit: ItemEditPerm.None,
-        canMakeSessionOfficial: false,
-        isOwner: true,
-      }
-    };
-
   progressOverlay?: ProgressData;
+  progressDataDialog?: ProgressDataDialog;
+  sourceGroup?: RawGroupRoute;
 
-  dialog: 'loading'|'opened'|'closed' = 'closed';
-  dialogTitle = '';
+  isPermissionsDialogOpened = false;
 
   isCSVDataFetching = false;
   canAccess = false;
@@ -94,8 +83,6 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     mapToFetchState({ resetter: this.refresh$ }),
     shareReplay(1),
   );
-
-  private permissionsFetchingSubscription?: Subscription;
 
   readonly datapager = new DataPager<DataRow>({
     pageSize: progressListLimit,
@@ -121,21 +108,19 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     private getGroupDescendantsService: GetGroupDescendantsService,
     private getGroupUsersProgressService: GetGroupProgressService,
     private getGroupChildrenService: GetGroupChildrenService,
-    private groupPermissionsService: GroupPermissionsService,
     private actionFeedbackService: ActionFeedbackService,
     private progressCSVService: ProgressCSVService,
     private itemRouter: ItemRouter,
     private groupRouter: GroupRouter,
   ) {}
 
-  ngOnDestroy(): void {
-    this.permissionsFetchingSubscription?.unsubscribe();
-  }
-
   ngOnChanges(changes: SimpleChanges): void {
-    this.dialog = 'closed';
+    this.isPermissionsDialogOpened = false;
     if (changes.itemData && this.itemData) this.itemData$.next(this.itemData);
-    if (changes.group) this.fetchRows();
+    if (this.group) {
+      this.fetchRows();
+      this.sourceGroup = rawGroupRoute(this.group);
+    }
     this.canAccess = !!(this.group && canCurrentUserGrantGroupAccess(this.group)
       && this.itemData && allowsGivingPermToItem(this.itemData.item.permissions));
   }
@@ -145,17 +130,19 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
   }
 
   showProgressDetail(target: HTMLElement, userProgress: TeamUserProgress, row: DataRow, col: DataColumn): void {
-    requestAnimationFrame(() => {
-      this.progressOverlay = {
-        accessPermissions: {
+    this.progressOverlay = {
+      target,
+      progress: userProgress,
+    };
+    this.progressDataDialog = {
+      item: {
+        id: col.id,
+        string: {
           title: row.header,
-          groupId: row.id,
-          itemId: col.id,
         },
-        target,
-        progress: userProgress,
-      };
-    });
+      },
+      group: rawGroupRoute({ id: row.id, isUser: this.currentFilter === 'Users' }),
+    };
   }
 
   hideProgressDetail(): void {
@@ -238,46 +225,13 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
   }
 
   onAccessPermissions(): void {
-    if (!this.group || !this.progressOverlay) return;
-    const { title, groupId: targetGroupId, itemId } = this.progressOverlay.accessPermissions;
-
     this.hideProgressDetail();
-    this.dialogTitle = title;
-    this.dialog = 'loading';
-
-    this.permissionsFetchingSubscription?.unsubscribe();
-    this.permissionsFetchingSubscription = this.groupPermissionsService.getPermissions(this.group.id, targetGroupId, itemId)
-      .subscribe({
-        next: permissions => {
-          this.dialogPermissions = {
-            itemId: itemId,
-            targetGroupId: targetGroupId,
-            permissions: permissions.granted,
-          };
-          this.dialog = 'opened';
-        },
-        error: () =>
-          this.actionFeedbackService.error($localize`The permissions cannot be retrieved. ` +
-            $localize`:@@contactUs:If the problem persists, please contact us.`),
-      });
+    this.isPermissionsDialogOpened = true;
   }
 
   onDialogClose(): void {
-    this.dialog = 'closed';
-  }
-
-  onDialogSave(permissions: Partial<GroupPermissions>): void {
-    if (!this.group) return;
-
-    this.groupPermissionsService.updatePermissions(this.group.id, this.dialogPermissions.targetGroupId,
-      this.dialogPermissions.itemId, permissions)
-      .subscribe({
-        next: _res => this.actionFeedbackService.success($localize`:@@permissionsUpdated:Permissions successfully updated.`),
-        error: err => {
-          this.actionFeedbackService.unexpectedError();
-          if (!(err instanceof HttpErrorResponse)) throw err;
-        },
-      });
+    this.isPermissionsDialogOpened = false;
+    this.progressDataDialog = undefined;
   }
 
   getCSVDownloadTypeByFilter(): 'group' | 'team' | 'user' {

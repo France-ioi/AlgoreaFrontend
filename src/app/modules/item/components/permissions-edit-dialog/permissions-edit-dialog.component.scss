@@ -52,3 +52,7 @@
 .dialog-close {
   @include dialog-close;
 }
+
+.error-message {
+  margin-right: .3rem;
+}

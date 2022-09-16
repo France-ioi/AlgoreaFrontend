@@ -105,13 +105,11 @@
           </div>
 
           <alg-permissions-edit-dialog
-              [visible]="isPermissionsDialogOpened"
-              [title]="watchedGroup.name"
-              [targetType]="'Groups'"
-              [permissions]="watchedGroupPermissions"
-              [giverPermissions]="itemData.item.permissions"
-              (close)="closePermissionsDialog()"
-              (save)="onPermissionsDialogSave($event)"
+            [currentUserPermissions]="itemData.item.permissions"
+            [item]="itemData.item"
+            [group]="watchedGroup.route"
+            (close)="closePermissionsDialog($event)"
+            *ngIf="isPermissionsDialogOpened"
           ></alg-permissions-edit-dialog>
         </ng-container>
       </ng-container>

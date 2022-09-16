@@ -1,6 +1,5 @@
 <p-dialog
-  *ngIf="permissions && giverPermissions"
-  [visible]="visible"
+  [visible]="true"
   [modal]="true"
   [draggable]="false"
   [closable]="false"
@@ -11,135 +10,40 @@
       <span class="dialog-handler">
         <i class="fa fa-lock"></i>
       </span>
-      <span class="dialog-title" *ngIf="title" i18n> Access given to {{ title }}</span>
+      <span class="dialog-title" i18n>Permission editor</span>
       <span class="dialog-close" (click)="onCancel()">
         <img src="assets/images/close.svg" alt="close">
       </span>
     </div>
   </p-header>
 
-  <div class="dialog-container">
-    <div class="dialog-content">
+  <alg-error
+    i18n-message message="User permissions cannot be changed via this page for the moment"
+    *ngIf="group.isUser && !sourceGroup; else stateBlock"
+  ></alg-error>
 
-      <form [formGroup]="form">
-        <alg-collapsible-section
-          i18n-header header="Can view" icon="fa fa-eye"
-          [collapsible]="!form.errors?.canView"
-          [errorMessage]="form.errors?.canView?.[0]"
-        >
-          <ng-template #content let-collapsed>
-            <alg-progress-select
-              [collapsed]="collapsed"
-              formControlName="canView"
-              [values]="permissionsDialogData.canViewValues"
-            ></alg-progress-select>
-          </ng-template>
-        </alg-collapsible-section>
+  <ng-template #stateBlock>
+    <ng-container *ngIf="state$ | async as state">
+      <alg-loading *ngIf="state.isFetching"></alg-loading>
 
-        <!--<alg-switch-field
-          i18n-title title="Can Enter"
-          icon="fa fa-door-open"
-          [(value)]="permissions.can_enter_from"
-        >
-          <ng-template #label i18n>{{targetTypeString}} may enter this item (a contest or time-limited chapter)</ng-template>
-        </alg-switch-field>-->
+      <alg-error *ngIf="state.isError">
+        <span class="error-message" i18n>The permissions cannot be retrieved.</span>
+        <span i18n="@@contactUs">If the problem persists, please contact us.</span>
+      </alg-error>
 
-        <alg-collapsible-section
-          i18n-header header="Can grant view" icon="fa fa-key"
-          [collapsible]="!form.errors?.canGrantView"
-          [errorMessage]="form.errors?.canGrantView?.[0]"
-        >
-          <ng-template #content let-collapsed>
-            <alg-progress-select
-              [collapsed]="collapsed"
-              formControlName="canGrantView"
-              [values]="permissionsDialogData.canGrantViewValues"
-            ></alg-progress-select>
-          </ng-template>
-        </alg-collapsible-section>
-
-        <alg-collapsible-section
-          i18n-header header="Can watch" icon="fa fa-binoculars"
-          [collapsible]="!form.errors?.canWatch"
-          [errorMessage]="form.errors?.canWatch?.[0]"
-        >
-          <ng-template #content let-collapsed>
-            <alg-progress-select
-              [collapsed]="collapsed"
-              formControlName="canWatch"
-              [values]="permissionsDialogData.canWatchValues"
-            ></alg-progress-select>
-          </ng-template>
-        </alg-collapsible-section>
-
-        <alg-collapsible-section
-          i18n-header header="Can edit" icon="fa fa-pencil-alt"
-          [collapsible]="!form.errors?.canEdit"
-          [errorMessage]="form.errors?.canEdit?.[0]"
-        >
-          <ng-template #content let-collapsed>
-            <alg-progress-select
-              [collapsed]="collapsed"
-              formControlName="canEdit"
-              [values]="permissionsDialogData.canEditValues"
-            ></alg-progress-select>
-          </ng-template>
-        </alg-collapsible-section>
-
-        <alg-collapsible-section
-          i18n-header header="Can attach official sessions" icon="fa fa-paperclip"
-          [collapsible]="!form.errors?.canMakeSessionOfficial"
-          [errorMessage]="form.errors?.canMakeSessionOfficial?.[0]"
-        >
-          <ng-template #content let-collapsed>
-            <alg-switch-field
-              [collapsed]="collapsed"
-              formControlName="canMakeSessionOfficial"
-              [disabledTooltip]="permissionsDialogData.canMakeSessionOfficialDisabledTooltip ?? []"
-            >
-              <ng-template #label>
-                <span i18n>{{targetTypeString}} may attach official sessions to this item, that will be visible to everyone in the content tab of the item</span>
-              </ng-template>
-            </alg-switch-field>
-          </ng-template>
-        </alg-collapsible-section>
-
-        <alg-collapsible-section
-          i18n-header header="Is owner" icon="fa fa-user-tie"
-          [collapsible]="!form.errors?.isOwner"
-          [errorMessage]="form.errors?.isOwner?.[0]"
-        >
-          <ng-template #content let-collapsed>
-            <alg-switch-field
-              [collapsed]="collapsed"
-              formControlName="isOwner"
-              [disabledTooltip]="permissionsDialogData.isOwnerDisabledTooltip ?? []"
-            >
-              <ng-template #label>
-                <span i18n>{{targetTypeString}} own this item, and get the maximum access in all categories above, and may also delete this item</span>
-              </ng-template>
-            </alg-switch-field>
-          </ng-template>
-        </alg-collapsible-section>
-      </form>
-    </div>
-  </div>
-
-  <p-footer>
-    <div class="footer">
-      <p-button
-        icon="fa fa-times"
-        i18n-label label="Cancel"
-        styleClass="alg-button p-button-rounded p-button-danger"
-        (onClick)="onCancel()"
-      ></p-button>
-      <p-button
-        icon="fa fa-check"
-        i18n-label label="Proceed"
-        styleClass="alg-button p-button-rounded"
-        (onClick)="onAccept()"
-        [disabled]="!form.dirty || form.invalid"
-      ></p-button>
-    </div>
-  </p-footer>
+      <div class="dialog-container" *ngIf="state.isReady">
+        <div class="dialog-content">
+          <alg-permissions-edit-form
+            (save)="onPermissionsDialogSave($event)"
+            (cancel)="onCancel()"
+            [targetType]="targetType"
+            [permissions]="state.data"
+            [giverPermissions]="currentUserPermissions"
+            [acceptButtonDisabled]="updateInProcess"
+          ></alg-permissions-edit-form>
+        </div>
+      </div>
+    </ng-container>
+  </ng-template>
 </p-dialog>
+
