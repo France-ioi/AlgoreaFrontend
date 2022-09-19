@@ -8,6 +8,7 @@ import { CodeActionsService } from '../../http-services/code-actions.service';
 import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
 import { of } from 'rxjs';
 import { CodeLifetime } from '../../helpers/code-lifetime';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'alg-group-join-by-code',
@@ -28,21 +29,24 @@ export class GroupJoinByCodeComponent implements OnChanges {
     {
       label: $localize`Infinite`,
       value: 'infinite',
-      tooltip: $localize`This code will never expire (reset current expiration)`,
+      tooltip: $localize`This code will never expire ` + $localize`:@@resetCurrentExpiration:(reset current expiration)`,
     },
     {
       label: $localize`Usable once`,
       value: 'usable_once',
-      tooltip: $localize`This code will be usable only once (reset current expiration)`,
+      tooltip: $localize`This code will be usable only once ` + $localize`:@@resetCurrentExpiration:(reset current expiration)`,
     },
     {
       label: $localize`Custom`,
       value: 'custom',
-      tooltip: $localize`This code will expire after the given duration (reset current expiration)`,
+      tooltip: $localize`:@@expireDuration:This code will expire after the given duration ` +
+        $localize`:@@resetCurrentExpiration:(reset current expiration)`,
     },
   ];
   customCodeLifetimeOption = this.codeLifetimeOptions.findIndex(({ value }) => value === 'custom');
   selectedCodeLifetimeOption = 0;
+  durationTooltip = $localize`:@@expireDuration:This code will expire after the given duration ` +
+    $localize`:@@resetCurrentExpiration:(reset current expiration)`;
 
   constructor(
     private groupActionsService: GroupActionsService,
@@ -89,9 +93,10 @@ export class GroupJoinByCodeComponent implements OnChanges {
           this.processing = false;
           this.refreshRequired.emit();
         },
-        error: () => {
-          this.actionFeedbackService.unexpectedError();
+        error: err => {
           this.processing = false;
+          this.actionFeedbackService.unexpectedError();
+          if (!(err instanceof HttpErrorResponse)) throw err;
         },
       });
   }
@@ -115,9 +120,10 @@ export class GroupJoinByCodeComponent implements OnChanges {
         this.processing = false;
         this.refreshRequired.emit();
       },
-      error: () => {
-        this.actionFeedbackService.unexpectedError();
+      error: err => {
         this.processing = false;
+        this.actionFeedbackService.unexpectedError();
+        if (!(err instanceof HttpErrorResponse)) throw err;
       },
     });
   }
@@ -144,9 +150,10 @@ export class GroupJoinByCodeComponent implements OnChanges {
           this.processing = false;
           this.refreshRequired.emit();
         },
-        error: () => {
-          this.actionFeedbackService.unexpectedError();
+        error: err => {
           this.processing = false;
+          this.actionFeedbackService.unexpectedError();
+          if (!(err instanceof HttpErrorResponse)) throw err;
         },
       });
   }

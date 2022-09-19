@@ -1,0 +1,11 @@
+.buttons {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.button {
+  &:first-child {
+    margin-right: .5rem;
+  }
+}

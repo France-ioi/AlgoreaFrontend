@@ -1,14 +1,5 @@
 <ng-container *ngIf="itemData && itemData.currentResult">
-
-  <alg-section icon="fa fa-book" i18n-label label="Description" *ngIf="['all', 'all_with_grant'].includes(itemData.item.permissions.canEdit)">
+  <alg-section icon="fa fa-book" i18n-label label="Description" *ngIf="itemData.item.permissions | allowsEditingAll">
     <alg-textarea [parentForm]="parentForm" inputName="description"></alg-textarea>
   </alg-section>
-
-  <alg-item-children-edit
-    #childrenEdit
-    (childrenChanges)="childrenChanges.emit($event)"
-    [itemData]="itemData" *ngIf="['Chapter', 'Skill'].includes(itemData.item.type)"
-    [ngClass]="{disabled: parentForm?.disabled}"
-  ></alg-item-children-edit>
-
 </ng-container>

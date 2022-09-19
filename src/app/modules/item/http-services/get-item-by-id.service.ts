@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { appConfig } from 'src/app/shared/helpers/config';
 import * as D from 'io-ts/Decoder';
 import { pipe } from 'fp-ts/function';
 import { decodeSnakeCase } from 'src/app/shared/operators/decode';
-import { permissionsDecoder } from '../helpers/item-permissions';
 import { dateDecoder, durationDecoder } from 'src/app/shared/helpers/decoders';
+import { itemCorePermDecoder } from 'src/app/shared/models/domain/item-permissions';
 
 export const itemDecoder = pipe(
   D.struct({
@@ -15,6 +15,7 @@ export const itemDecoder = pipe(
     string: pipe(
       D.struct({
         title: D.nullable(D.string),
+        languageTag: D.string,
       }),
       D.intersect(
         D.partial({
@@ -24,7 +25,7 @@ export const itemDecoder = pipe(
       )
     ),
     bestScore: D.number,
-    permissions: permissionsDecoder,
+    permissions: itemCorePermDecoder,
     type: D.literal('Chapter','Task','Course','Skill'),
     promptToJoinGroupByCode: D.boolean,
     textId: D.nullable(D.string),
@@ -45,6 +46,10 @@ export const itemDecoder = pipe(
     D.partial({
       url: D.nullable(D.string),
       usesApi: D.nullable(D.boolean),
+      watchedGroup: D.partial({
+        averageScore: D.number,
+        permissions: itemCorePermDecoder,
+      }),
     })
   )
 );
@@ -58,8 +63,12 @@ export class GetItemByIdService {
 
   constructor(private http: HttpClient) {}
 
-  get(id: string): Observable<Item> {
-    return this.http.get<unknown>(`${appConfig.apiUrl}/items/${id}`).pipe(
+  get(id: string, watchedGroupId?: string): Observable<Item> {
+    let params = new HttpParams();
+    if (watchedGroupId) {
+      params = params.set('watched_group_id', watchedGroupId);
+    }
+    return this.http.get<unknown>(`${appConfig.apiUrl}/items/${id}`, { params }).pipe(
       decodeSnakeCase(itemDecoder),
     );
   }

@@ -1,12 +1,21 @@
 <div class="task-header-container" *ngIf="itemData">
   <div class="task-header">
-    <alg-score-ring
-      *ngIf="itemData.item.type !== 'Skill' && itemData.currentResult"
-      [bestScore]="itemData.item.bestScore"
-      [currentScore]="itemData.currentResult.score"
-      [isValidated]="itemData.currentResult.validated"
-      [diameter]="70"
-    ></alg-score-ring>
+    <div class="task-score-ring" *ngIf="itemData.item.type !== 'Skill'">
+      <ng-container *ngIf="itemData.item.permissions | allowsViewingContent; else lock">
+        <alg-score-ring
+          *ngIf="itemData.currentResult"
+          [bestScore]="itemData.item.bestScore"
+          [currentScore]="itemData.currentResult.score"
+          [isValidated]="itemData.currentResult.validated"
+          [diameter]="70"
+        ></alg-score-ring>
+      </ng-container>
+      <ng-template #lock>
+        <span class="lock-icon">
+            <i class="fa fa-lock"></i>
+        </span>
+      </ng-template>
+    </div>
     <alg-skill-progress
       *ngIf="itemData.item.type === 'Skill' && itemData.currentResult"
       [bestScore]="itemData.item.bestScore"
@@ -18,7 +27,7 @@
     </div>
     <alg-page-navigator
       *ngIf="navigationNeighbors$ | async as navigationNeighbors"
-      [allowEditing]="itemData.item.permissions.canEdit !== 'none'"
+      [allowEditing]="false"
       [allowFullScreen]="false"
       [navigationMode]="{
         parent: !!navigationNeighbors?.isReady && !!navigationNeighbors?.data?.parent,

@@ -2,12 +2,14 @@
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
-import { Environment } from 'src/app/shared/helpers/config';
+import { Environment, PartialDeep } from 'src/app/shared/helpers/config';
 
 export const environment: Environment = {
   production: false,
   apiUrl: 'http://localhost:3000/api',
   oauthServerUrl: 'https://login.france-ioi.org',
+  forumServerUrl: 'ws://localhost:3001',
+  forumApiUrl: 'http://localhost:3000',
   oauthClientId: '43',
 
   defaultActivityId: '4702',
@@ -21,8 +23,31 @@ export const environment: Environment = {
   allowForcedToken: true,
   authType: 'tokens',
 
-  itemPlatformId: 'http://algorea.pem.dev',
+  itemPlatformId: 'algorea_backend',
+
+  theme: 'default',
+  featureFlags: {
+    hideTaskTabs: [],
+    skillsDisabled: false,
+  },
 };
+
+type Preset = 'demo';
+export const presets: Record<Preset, PartialDeep<Environment>> = {
+  demo: {
+    defaultActivityId: '1352246428241737349', // SNT
+    defaultTitle: 'Demo app',
+    authType: 'cookies',
+    theme: 'coursera-pt',
+  },
+};
+
+export function getPresetNameByOrigin(origin: string): Preset | null {
+  switch (origin) {
+    case 'http://demo.localhost': return 'demo';
+    default: return null;
+  }
+}
 
 /*
  * For easier debugging in development mode, you can import the following file

@@ -7,12 +7,14 @@ import { Component, ContentChild, Input, TemplateRef } from '@angular/core';
 })
 export class CollapsibleSectionComponent {
 
-  @Input() title = '';
+  @Input() header = '';
+  @Input() errorMessage?: string;
   @Input() icon = '';
 
   @Input() disabled = false;
   @Input() collapsed = true;
   @Input() collapsible = true;
+  @Input() theme: 'success' | 'warning' | 'danger' = 'success';
 
   @ContentChild('content') contentTemplate?: TemplateRef<any>;
 

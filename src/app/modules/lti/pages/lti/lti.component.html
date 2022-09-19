@@ -2,14 +2,19 @@
 <ng-container *ngIf="error$ | async as error">
   <alg-error
     *ngIf="error === 'fetch_error'"
-    i18n-message message="Unable to load this task. Either you have a connexion issue or this task is not correctly configured. Please retry, if the problem persists, contact us."
+    i18n-message message="Unable to load this task. Either you have a connection issue or this task is not correctly configured. Please retry, if the problem persists, contact us."
   ></alg-error>
   <alg-error
     *ngIf="error === 'no_child'"
-    i18n-message message="This task is not correctly configured (chapter with task expected)."
+    i18n-message message="This task is not correctly configured (chapter with tasks expected)."
   ></alg-error>
   <alg-error
     *ngIf="error === 'no_item_or_explicit_entry_with_no_result'"
     i18n-message message="This task is not correctly configured (item not found or explicit entry but no result)"
   ></alg-error>
+  <alg-error *ngIf="error === 'login_error'">
+    <ng-container i18n>Something wrong occurred during the login process, please retry after closing this tab or window.</ng-container>
+    <br>
+    <ng-container i18n="@@contactUs">If the problem persists, please contact us.</ng-container>
+  </alg-error>
 </ng-container>

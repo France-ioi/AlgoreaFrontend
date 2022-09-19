@@ -4,10 +4,10 @@ import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { bestAttemptFromResults } from 'src/app/shared/helpers/attempts';
 import { isASkill, typeCategoryOfItem } from 'src/app/shared/helpers/item-type';
 import { ItemRouter } from 'src/app/shared/routing/item-router';
-import { canCurrentUserViewItemContent } from '../../helpers/item-permissions';
 import { GetItemChildrenService, ItemChild } from '../../http-services/get-item-children.service';
 import { ItemData } from '../../services/item-datasource.service';
 import { mapToFetchState } from '../../../../shared/operators/state';
+import { canCurrentUserViewContent } from 'src/app/shared/models/domain/item-view-permission';
 
 interface SubSkillAdditions {
   isLocked: boolean,
@@ -37,7 +37,7 @@ export class SubSkillsComponent implements OnChanges, OnDestroy {
           const res = bestAttemptFromResults(child.results);
           return {
             ...child,
-            isLocked: !canCurrentUserViewItemContent(child),
+            isLocked: !canCurrentUserViewContent(child),
             result: res === null ? undefined : {
               attemptId: res.attemptId,
               score: res.scoreComputed,

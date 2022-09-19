@@ -1,0 +1,91 @@
+<ng-container *ngIf="itemData">
+  <alg-section icon="fa fa-list" i18n-label label="Prerequisites">
+    <ng-container *ngIf="['all','all_with_grant'].includes(itemData.item.permissions.canEdit); else notAllowToView">
+      <div *ngIf="state$ | async as state">
+        <alg-loading size="medium" *ngIf="state.isFetching || changeInProgress"></alg-loading>
+
+        <alg-error
+          *ngIf="state.isError"
+          class="dark"
+          icon="fa fa-exclamation-triangle"
+          i18n-message message="Unable to load the dependencies"
+          [showRefreshButton]="true"
+          (refresh)="refresh()"
+        ></alg-error>
+
+        <ng-container *ngIf="!state.isFetching && !changeInProgress && state.data">
+          <ng-container *ngIf="state.data.length > 0; else emptyList">
+            <p class="explanation" i18n>
+              Users will unlock access to this content if they solve <strong>at least one</strong> of the content below.
+            </p>
+            <ul class="list">
+              <li
+                class="list-item"
+                *ngFor="let item of state.data; let i = index"
+                (mouseleave)="onMouseLeave($event)"
+              >
+                <a
+                  class="alg-link"
+                  [routerLink]="item | rawItemLink"
+                  (mouseenter)="onMouseEnter($event, item.id, i)"
+                  #contentRef
+                >
+                  {{ item.string.title }}
+                </a>
+                <button
+                  pButton
+                  type="button"
+                  icon="fa fa-trash-alt"
+                  class="p-button-text"
+                  (click)="onRemove(item.id)"
+                ></button>
+              </li>
+            </ul>
+            <p class="note-caption" i18n>
+              Users will see the list of dependencies on the "content" tab and only when they do not have access to the content yet.
+              They will only see dependencies they are allowed to view already.
+            </p>
+          </ng-container>
+        </ng-container>
+      </div>
+    </ng-container>
+  </alg-section>
+
+  <ng-container *ngIf="addedIds$ | async as addedIds">
+    <alg-add-dependency
+      *ngIf="['all','all_with_grant'].includes(itemData.item.permissions.canEdit)"
+      (contentAdded)="onAdd($event)"
+      [addedIds]="addedIds"
+    ></alg-add-dependency>
+  </ng-container>
+
+  <ng-template #emptyList>
+    <p class="alg-error-text" i18n>
+      There are no prerequisites for this
+      {{ itemData.item.type | i18nSelect : {
+        Skill: 'skill',
+        other: 'activity'
+      } }}.
+      Users will have access to it only if they are given access manually or if the "default access" is configured as
+      "open" in its parent
+      {{ itemData.item.type | i18nSelect : {
+        Skill: 'skill',
+        Chapter: 'chapter',
+        other: 'activity'
+    } }}.
+    </p>
+  </ng-template>
+
+  <ng-template #notAllowToView>
+    <div class="alg-error-text" i18n>You are not allowed to view dependencies for this content</div>
+  </ng-template>
+
+  <p-overlayPanel
+    styleClass="alg-path-suggestion-overlay"
+    #op
+  >
+    <ng-container *ngIf="op.overlayVisible">
+      <alg-path-suggestion [itemId]="(showOverlay$ | async)?.itemId" (mouseleave)="closeOverlay()"></alg-path-suggestion>
+    </ng-container>
+  </p-overlayPanel>
+</ng-container>

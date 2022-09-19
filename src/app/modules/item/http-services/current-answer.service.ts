@@ -5,7 +5,7 @@ import { appConfig } from 'src/app/shared/helpers/config';
 import * as D from 'io-ts/Decoder';
 import { decodeSnakeCase } from 'src/app/shared/operators/decode';
 import { ActionResponse, assertSuccess } from 'src/app/shared/http-services/action-response';
-import { map, mapTo } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 export const answerDecoder = D.struct({
   answer: D.nullable(D.string),
@@ -47,7 +47,7 @@ export class CurrentAnswerService {
     });
     return this.http
       .put<ActionResponse<unknown>>(`${appConfig.apiUrl}/items/${itemId}/attempts/${attemptId}/answers/current`, body, { params })
-      .pipe(map(assertSuccess), mapTo(undefined));
+      .pipe(map(assertSuccess), map(() => undefined));
   }
 
 }

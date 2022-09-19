@@ -1,6 +1,5 @@
 <p-dialog
-  *ngIf="permissions"
-  [visible]="visible"
+  [visible]="true"
   [modal]="true"
   [draggable]="false"
   [closable]="false"
@@ -11,104 +10,40 @@
       <span class="dialog-handler">
         <i class="fa fa-lock"></i>
       </span>
-      <span class="dialog-title" *ngIf="title" i18n> Access given to {{ title }}</span>
+      <span class="dialog-title" i18n>Permission editor</span>
       <span class="dialog-close" (click)="onCancel()">
         <img src="assets/images/close.svg" alt="close">
       </span>
     </div>
   </p-header>
 
-  <div class="dialog-container">
-    <div class="dialog-content">
+  <alg-error
+    i18n-message message="User permissions cannot be changed via this page for the moment"
+    *ngIf="group.isUser && !sourceGroup; else stateBlock"
+  ></alg-error>
 
-      <form [formGroup]="form">
-        <alg-collapsible-section i18n-title title="Can view" icon="fa fa-eye">
-          <ng-template #content let-collapsed>
-            <alg-progress-select
-              [collapsed]="collapsed"
-              formControlName="canView"
-              [values]="canViewValues"
-            ></alg-progress-select>
-          </ng-template>
-        </alg-collapsible-section>
+  <ng-template #stateBlock>
+    <ng-container *ngIf="state$ | async as state">
+      <alg-loading *ngIf="state.isFetching"></alg-loading>
 
-        <!--<alg-switch-field
-          i18n-title title="Can Enter"
-          icon="fa fa-door-open"
-          [(value)]="permissions.can_enter_from"
-        >
-          <ng-template #label i18n>{{targetTypeString}} may enter this item (a contest or time-limited chapter)</ng-template>
-        </alg-switch-field>-->
+      <alg-error *ngIf="state.isError">
+        <span class="error-message" i18n>The permissions cannot be retrieved.</span>
+        <span i18n="@@contactUs">If the problem persists, please contact us.</span>
+      </alg-error>
 
-        <alg-collapsible-section i18n-title title="Can grant view" icon="fa fa-key">
-          <ng-template #content let-collapsed>
-            <alg-progress-select
-              [collapsed]="collapsed"
-              formControlName="canGrantView"
-              [values]="canGrantViewValues"
-            ></alg-progress-select>
-          </ng-template>
-        </alg-collapsible-section>
-
-        <alg-collapsible-section i18n-title title="Can watch" icon="fa fa-binoculars">
-          <ng-template #content let-collapsed>
-            <alg-progress-select
-              [collapsed]="collapsed"
-              formControlName="canWatch"
-              [values]="canWatchValues"
-            ></alg-progress-select>
-          </ng-template>
-        </alg-collapsible-section>
-
-        <alg-collapsible-section i18n-title title="Can edit" icon="fa fa-pencil-alt">
-          <ng-template #content let-collapsed>
-            <alg-progress-select
-              [collapsed]="collapsed"
-              formControlName="canEdit"
-              [values]="canEditValues"
-            ></alg-progress-select>
-          </ng-template>
-        </alg-collapsible-section>
-
-        <alg-collapsible-section i18n-title title="Can attach official sessions" icon="fa fa-paperclip">
-          <ng-template #content let-collapsed>
-            <alg-switch-field [collapsed]="collapsed" formControlName="canMakeSessionOfficial">
-              <ng-template #label>
-                <span i18n>{{targetTypeString}} may attach official sessions to this item, that will be visible to everyone in the content tab of the item</span>
-              </ng-template>
-            </alg-switch-field>
-          </ng-template>
-        </alg-collapsible-section>
-
-        <alg-collapsible-section i18n-title title="Is owner" icon="fa fa-user-tie">
-          <ng-template #content let-collapsed>
-            <alg-switch-field [collapsed]="collapsed" formControlName="isOwner">
-              <ng-template #label>
-                <span i18n>{{targetTypeString}} own this item, and get the maximum access in all categories above, and may also delete this item</span>
-              </ng-template>
-            </alg-switch-field>
-          </ng-template>
-        </alg-collapsible-section>
-      </form>
-
-    </div>
-  </div>
-
-  <p-footer>
-    <div class="footer">
-      <alg-button
-        icon="fa fa-times"
-        i18n-label label="Cancel"
-        class="p-button-rounded p-button-danger"
-        (click)="onCancel()"
-      ></alg-button>
-      <alg-button
-        icon="fa fa-check"
-        i18n-label label="Proceed"
-        class="p-button-rounded"
-        (click)="onAccept()"
-        [disabled]="!form.dirty"
-      ></alg-button>
-    </div>
-  </p-footer>
+      <div class="dialog-container" *ngIf="state.isReady">
+        <div class="dialog-content">
+          <alg-permissions-edit-form
+            (save)="onPermissionsDialogSave($event)"
+            (cancel)="onCancel()"
+            [targetType]="targetType"
+            [permissions]="state.data"
+            [giverPermissions]="currentUserPermissions"
+            [acceptButtonDisabled]="updateInProcess"
+          ></alg-permissions-edit-form>
+        </div>
+      </div>
+    </ng-container>
+  </ng-template>
 </p-dialog>
+

@@ -10,7 +10,6 @@ import { GroupNoPermissionComponent } from './components/group-no-permission/gro
 import { GroupJoinByCodeComponent } from './components/group-join-by-code/group-join-by-code.component';
 
 import { GroupOverviewComponent } from './pages/group-overview/group-overview.component';
-import { GroupSettingsComponent } from './pages/group-settings/group-settings.component';
 import { GroupCompositionComponent } from './pages/group-composition/group-composition.component';
 import { MyGroupsComponent } from './pages/my-groups/my-groups.component';
 import { GroupDetailsComponent } from './pages/group-details/group-details.component';
@@ -49,6 +48,9 @@ import { GroupManagersComponent } from './pages/group-managers/group-managers.co
 import { DialogModule } from 'primeng/dialog';
 import { ManagerPermissionDialogComponent } from './components/manager-permission-dialog/manager-permission-dialog.component';
 import { GroupPermissionsComponent } from './components/group-permissions/group-permissions.component';
+import { GroupLeaveComponent } from './components/group-leave/group-leave.component';
+import { GroupManagerAddComponent } from './components/group-manager-add/group-manager-add.component';
+import { PlatformSettingsComponent } from './pages/platform-settings/platform-settings.component';
 
 @NgModule({
   declarations: [
@@ -57,7 +59,6 @@ import { GroupPermissionsComponent } from './components/group-permissions/group-
     GroupCompositionComponent,
     MyGroupsComponent,
     GroupDetailsComponent,
-    GroupSettingsComponent,
     GroupNoPermissionComponent,
     GroupJoinByCodeComponent,
     DurationToMinPipe,
@@ -87,6 +88,9 @@ import { GroupPermissionsComponent } from './components/group-permissions/group-
     GroupAccessComponent,
     ManagerPermissionDialogComponent,
     GroupPermissionsComponent,
+    GroupLeaveComponent,
+    GroupManagerAddComponent,
+    PlatformSettingsComponent,
   ],
   imports: [
     CommonModule,

@@ -57,15 +57,14 @@ export class RequestActionsService {
     );
   }
 
-  processGroupInvitations(groupIds: string[], action: Action): Observable<Map<string, Status>[]> {
+  processGroupInvitations(groupIds: string[], action: Action): Observable<{ changed: boolean }[]> {
     const type = action === Action.Accept ? 'accept' : 'reject';
     return forkJoin(
       groupIds.map(groupId =>
         this.http
-          .post<ActionResponse<{[user: string]: Status}>>(`${appConfig.apiUrl}/current-user/group-invitations/${groupId}/${type}`, null)
+          .post<ActionResponse<{ changed: boolean }>>(`${appConfig.apiUrl}/current-user/group-invitations/${groupId}/${type}`, null)
           .pipe(
             map(successData),
-            map(data => new Map(Object.entries(data)))
           )
       )
     );
@@ -81,4 +80,11 @@ export function parseResults(data: Map<string, Status>[]): { countRequests: numb
       .reduce((acc, res) => acc + res, 0);
   });
   return res;
+}
+
+export function parseGroupInvitationResults(data: { changed: boolean }[]): { countRequests: number, countSuccess: number } {
+  return {
+    countRequests: data.length,
+    countSuccess: data.filter(state => state.changed).length,
+  };
 }

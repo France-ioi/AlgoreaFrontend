@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { ReplaySubject, Subject } from 'rxjs';
 import { ContentInfo } from '../models/content/content-info';
 
 /**
@@ -12,21 +12,24 @@ import { ContentInfo } from '../models/content/content-info';
 })
 export class CurrentContentService implements OnDestroy {
 
-  private content = new BehaviorSubject<ContentInfo|null>(null);
+  private content = new ReplaySubject<ContentInfo | null>(1);
   content$ = this.content.asObservable();
 
-  /**
-   * The current content
-   */
-  current(): ContentInfo|null {
-    return this.content.value;
-  }
+  private navMenuReload = new Subject<void>();
+  navMenuReload$ = this.navMenuReload.asObservable();
 
   /**
    * Replace the current content by the given content.
    */
   replace(content: ContentInfo): void {
     this.content.next(content);
+  }
+
+  /**
+   * Order the nav menu to full reload. To be used when more than the current content has changed.
+   */
+  forceNavMenuReload(): void {
+    this.navMenuReload.next();
   }
 
   /**

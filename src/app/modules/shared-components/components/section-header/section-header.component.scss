@@ -1,0 +1,43 @@
+@import "src/colors.scss";
+
+$inactive-bk-color: #d8d8d8;
+
+.section-container {
+  display: flex;
+  flex-direction: column;
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    height: 3rem;
+    border-radius: 2.5rem;
+    color: white;
+    background-color: var(--base-color);
+    padding: 0 2rem 0 1rem;
+
+    &.disabled {
+      opacity: 0.5;
+    }
+
+    .header-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.0833rem;
+      height: 2.0833rem;
+      margin-right: 1rem;
+      font-size: 1.1667rem;
+    }
+
+    .header-title {
+      font-weight: bold;
+      flex: 1;
+    }
+  }
+
+  &.warning {
+    .section-header {
+      background-color: var(--section-warning-handle-color);
+    }
+  }
+}

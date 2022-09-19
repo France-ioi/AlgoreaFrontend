@@ -11,10 +11,9 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import { interval, merge, Observable } from 'rxjs';
-import { filter, map, pairwise, startWith, switchMap } from 'rxjs/operators';
+import { EMPTY, interval, Observable, merge, of } from 'rxjs';
+import { catchError, distinctUntilChanged, filter, map, pairwise, shareReplay, startWith, switchMap } from 'rxjs/operators';
 import { HOURS, SECONDS } from 'src/app/shared/helpers/duration';
-import { isNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
 import { TaskConfig, ItemTaskService } from '../../services/item-task.service';
 import { mapToFetchState } from 'src/app/shared/operators/state';
 import { capitalize } from 'src/app/shared/helpers/case_conversion';
@@ -23,17 +22,19 @@ import { ItemTaskAnswerService } from '../../services/item-task-answer.service';
 import { ItemTaskViewsService } from '../../services/item-task-views.service';
 import { FullItemRoute } from 'src/app/shared/routing/item-route';
 import { DomSanitizer } from '@angular/platform-browser';
-import { PermissionsInfo } from '../../helpers/item-permissions';
 import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
-
-const initialHeight = 0;
-const additionalHeightToPreventInnerScrollIssues = 40;
-const heightSyncInterval = 0.2*SECONDS;
+import { LTIDataSource } from 'src/app/modules/lti/services/lti-datasource.service';
+import { PublishResultsService } from '../../http-services/publish-result.service';
+import { errorIsHTTPForbidden } from 'src/app/shared/helpers/errors';
+import { isNotUndefined } from '../../../../shared/helpers/null-undefined-predicates';
+import { ItemPermWithEdit, ItemEditPerm } from 'src/app/shared/models/domain/item-edit-permission';
 
 export interface TaskTab {
   name: string,
   view: string,
 }
+
+const heightSyncInterval = 0.2*SECONDS;
 
 @Component({
   selector: 'alg-item-display[url][attemptId][route]',
@@ -44,7 +45,7 @@ export interface TaskTab {
 export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges, OnDestroy {
   @Input() route!: FullItemRoute;
   @Input() url!: string;
-  @Input() canEdit: PermissionsInfo['canEdit'] = 'none';
+  @Input() editingPermission: ItemPermWithEdit = { canEdit: ItemEditPerm.None };
   @Input() attemptId!: string;
   @Input() view?: TaskTab['view'];
   @Input() taskConfig: TaskConfig = { readOnly: false, formerAnswer: null };
@@ -52,46 +53,80 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
 
   @Output() scoreChange = this.taskService.scoreChange$;
   @Output() skipSave = new EventEmitter<void>();
+  @Output() refresh = new EventEmitter<void>();
 
   @ViewChild('iframe') iframe?: ElementRef<HTMLIFrameElement>;
 
-  state$ = this.taskService.task$.pipe(mapToFetchState());
+  state$ = merge(this.taskService.task$, this.taskService.error$).pipe(mapToFetchState());
   initError$ = this.taskService.initError$;
   urlError$ = this.taskService.urlError$;
   unknownError$ = this.taskService.unknownError$;
-  iframeSrc$ = this.taskService.iframeSrc$.pipe(map(url => this.sanitizer.bypassSecurityTrustResourceUrl(url)));
+  iframeSrc$ = this.taskService.iframeSrc$.pipe(
+    map(url => this.sanitizer.bypassSecurityTrustResourceUrl(url)),
+    catchError(() => EMPTY),
+  );
+
+  metadata$ =this.taskService.task$.pipe(switchMap(task => task.getMetaData()), shareReplay(1));
+  iframeHeight$ = this.metadata$.pipe(
+    switchMap(({ autoHeight }) => {
+      if (autoHeight) return of(undefined);
+      return merge(
+        this.taskService.task$.pipe(switchMap(task => interval(heightSyncInterval).pipe(switchMap(() => task.getHeight())))),
+        this.taskService.display$.pipe(map(({ height }) => height), filter(isNotUndefined)),
+      ).pipe(map(height => `${height}px`));
+    }),
+    distinctUntilChanged(),
+  );
+
+  showTaskAnyway = false;
 
   @Output() viewChange = this.taskService.activeView$;
   @Output() tabsChange: Observable<TaskTab[]> = this.taskService.views$.pipe(
     map(views => views.map(view => ({ view, name: this.getTabNameByView(view) }))),
   );
 
+  private subscriptions = [
+    this.taskService.saveAnswerAndStateInterval$
+      .pipe(startWith({ success: true }), pairwise())
+      .subscribe(([ previous, next ]) => {
+        const shouldDisplayError = !next.success && !this.actionFeedbackService.hasFeedback;
+        const shouldDisplaySuccess = !previous.success && next.success;
+        if (shouldDisplayError) {
+          const message = $localize`Your current progress could not have been saved. Are you connected to the internet?`;
+          this.actionFeedbackService.error(message, { life: 24*HOURS });
+        }
+        if (shouldDisplaySuccess) {
+          this.actionFeedbackService.clear();
+          this.actionFeedbackService.success($localize`Progress saved!`);
+        }
+      }),
 
-  // Start updating the iframe height to match the task's height
-  iframeHeight$ = merge(
-    this.taskService.task$.pipe(switchMap(task => interval(heightSyncInterval).pipe(switchMap(() => task.getHeight())))),
-    this.taskService.display$.pipe(map(({ height }) => height), filter(isNotUndefined)),
-  ).pipe(map(height => height + additionalHeightToPreventInnerScrollIssues), startWith(initialHeight));
+    this.scoreChange.pipe(
+      switchMap(() => {
+        if (!this.ltiDataSource.data) return EMPTY;
+        return this.publishResultService.publish(this.ltiDataSource.data.contentId, this.ltiDataSource.data.attemptId);
+      }),
+    ).subscribe({
+      error: err => {
+        const message = errorIsHTTPForbidden(err)
+          ? $localize`You might be unauthenticated anymore, please try relaunching the exercise. If the problem persits contact us.`
+          : $localize`An unknown error occurred while publishing your result`;
+        this.actionFeedbackService.error(message, { life: 10*SECONDS });
+      }
+    }),
 
-  private subscription = this.taskService.saveAnswerAndStateInterval$
-    .pipe(startWith({ success: true }), pairwise())
-    .subscribe(([ previous, next ]) => {
-      const shouldDisplayError = !next.success && !this.actionFeedbackService.hasFeedback;
-      const shouldDisplaySuccess = !previous.success && next.success;
-      if (shouldDisplayError) {
-        const message = $localize`Your current progress could not have been saved. Are you connected to the internet ?`;
-        this.actionFeedbackService.error(message, { life: 24*HOURS });
-      }
-      if (shouldDisplaySuccess) {
-        this.actionFeedbackService.clear();
-        this.actionFeedbackService.success($localize`Progress saved!`);
-      }
-    });
+    this.taskService.hintError$.subscribe(() => this.actionFeedbackService.error($localize`Hint request failed`)),
+  ];
+
+  errorMessage = $localize`:@@unknownError:An unknown error occurred. ` +
+    $localize`:@@contactUs:If the problem persists, please contact us.`;
 
   constructor(
     private taskService: ItemTaskService,
     private sanitizer: DomSanitizer,
     private actionFeedbackService: ActionFeedbackService,
+    private publishResultService: PublishResultsService,
+    private ltiDataSource: LTIDataSource,
   ) {}
 
   ngOnInit(): void {
@@ -121,22 +156,22 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
 
   ngOnDestroy(): void {
     if (this.actionFeedbackService.hasFeedback) this.actionFeedbackService.clear();
-    this.subscription.unsubscribe();
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
   saveAnswerAndState(): Observable<{ saving: boolean }> {
-    this.subscription.unsubscribe();
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
     return this.taskService.saveAnswerAndState();
   }
 
   private getTabNameByView(view: string): string {
     switch (view) {
-      case 'editor': return $localize`Editor`;
+      case 'editor': return $localize`Solve`;
       case 'forum': return $localize`Forum`;
       case 'hints': return $localize`Hints`;
       case 'solution': return $localize`Solution`;
       case 'submission': return $localize`Submission`;
-      case 'task': return $localize`Task`;
+      case 'task': return $localize`Statement`;
       default: return capitalize(view);
     }
   }

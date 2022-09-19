@@ -2,7 +2,7 @@
 
   <ng-container *ngIf="state.data?.group as group">
     <div *ngIf="state.isFetching" class="block-ui"></div>
-    <alg-group-header [groupData]="state.data" *ngIf="!(fullFrameContent$ | async)?.expanded"></alg-group-header>
+    <alg-group-header [groupData]="state.data" *ngIf="!(fullFrame$ | async)?.active"></alg-group-header>
     <alg-pending-join-requests
         *ngIf="group.isCurrentUserManager && group.currentUserCanManage !== 'none'"
         [groupId]="group.id"
@@ -14,13 +14,13 @@
     >
     </alg-group-indicator>
     <!-- tabs -- if only the first tab is visible, do not show the tab bar -->
-    <div [hidden]="!group.isCurrentUserManager && group.currentUserMembership === 'none' && !adminTab.isActive && !accessTab?.isActive">
+    <div [hidden]="!group.isCurrentUserManager && group.currentUserMembership === 'none' && !adminTab.isActive && !accessTab?.isActive && !compositionTab.isActive && !settingsTab.isActive">
       <div class="nav-tab">
         <a
           class="nav-tab-item"
           [routerLink]="'./'"
           routerLinkActive #overviewTab="routerLinkActive"
-          [routerLinkActiveOptions]="{exact: true}"
+          [routerLinkActiveOptions]="{ matrixParams: 'ignored', queryParams: 'ignored', paths: 'exact', fragment: 'ignored'}"
           [class.active]="overviewTab.isActive"
           i18n
         >
@@ -70,11 +70,16 @@
     </div>
 
     <div class="bg-white">
-      <alg-group-overview *ngIf="overviewTab?.isActive || !overviewTab && group.currentUserManagership === 'none' && group.currentUserMembership === 'none'" [group]="group"></alg-group-overview>
-      <alg-group-composition *ngIf="!!compositionTab?.isActive" [groupData]="state.data" (groupRefreshRequired)="onGroupRefreshRequired()"></alg-group-composition>
+      <alg-group-overview
+        *ngIf="overviewTab?.isActive || !overviewTab && group.currentUserManagership === 'none' && group.currentUserMembership === 'none'"
+        [group]="group"
+        (groupRefreshRequired)="onGroupRefreshRequired()"
+        (leftGroup)="refreshNav()"
+      ></alg-group-overview>
+      <alg-group-composition *ngIf="!!compositionTab?.isActive" [groupData]="state.data" (groupRefreshRequired)="onGroupRefreshRequired()" (addedGroup)="refreshNav()" (removedGroup)="refreshNav()"></alg-group-composition>
       <alg-group-managers *ngIf="!!adminTab?.isActive" [groupData]="state.data"></alg-group-managers>
-      <alg-group-settings *ngIf="!!settingsTab?.isActive" [group]="group" (groupRefreshRequired)="onGroupRefreshRequired()"></alg-group-settings>
       <alg-group-access *ngIf="!!accessTab?.isActive" [group]="group"></alg-group-access>
+      <alg-group-edit *ngIf="!!settingsTab?.isActive" #groupEdit></alg-group-edit>
     </div>
 
   </ng-container>
@@ -84,10 +89,16 @@
   <alg-error
     *ngIf="state.isError"
     class="dark"
-    i18n-message message="Error while loading the group info"
-    [showRefreshButton]="true"
+    [showRefreshButton]="$any(state.error).status !== 403"
     refreshButtonType="refresh"
     (refresh)="onGroupRefreshRequired()"
-  ></alg-error>
+  >
+    <ng-container *ngIf="$any(state.error).status === 403; else otherError;" i18n>
+      You are not allowed to view this group page.
+    </ng-container>
+    <ng-template #otherError>
+      <ng-container i18n>Error while loading the group info</ng-container>
+    </ng-template>
+  </alg-error>
 
 </ng-container>

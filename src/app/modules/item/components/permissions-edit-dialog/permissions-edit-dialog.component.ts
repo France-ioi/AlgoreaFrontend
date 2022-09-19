@@ -1,79 +1,104 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
-import { ProgressSelectValue } from
-  'src/app/modules/shared-components/components/collapsible-section/progress-select/progress-select.component';
-import { Permissions } from 'src/app/shared/helpers/group-permissions';
-import { TypeFilter } from '../composition-filter/composition-filter.component';
-import { generateCanEditValues, generateCanGrantViewValues,
-  generateCanViewValues, generateCanWatchValues } from './permissions-edit-dialog-texts';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from '@angular/core';
+import { ItemCorePerm } from 'src/app/shared/models/domain/item-permissions';
+import { RawGroupRoute } from '../../../../shared/routing/group-route';
+import { GroupPermissions, GroupPermissionsService } from '../../../../shared/http-services/group-permissions.service';
+import { ReplaySubject, switchMap } from 'rxjs';
+import { map, shareReplay } from 'rxjs/operators';
+import { ActionFeedbackService } from '../../../../shared/services/action-feedback.service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { TypeFilter } from '../../helpers/composition-filter';
+import { mapToFetchState } from '../../../../shared/operators/state';
 
 @Component({
-  selector: 'alg-permissions-edit-dialog',
+  selector: 'alg-permissions-edit-dialog[currentUserPermissions][item][group]',
   templateUrl: './permissions-edit-dialog.component.html',
   styleUrls: [ './permissions-edit-dialog.component.scss' ]
 })
-export class PermissionsEditDialogComponent implements OnChanges {
+export class PermissionsEditDialogComponent implements OnDestroy, OnChanges {
+  @Output() close = new EventEmitter<boolean>();
 
-  @Input() visible?: boolean;
-  @Input() title?: string;
-  @Input() permissions?: Permissions;
-  @Input() targetType: TypeFilter = 'Users';
-  @Output() close = new EventEmitter<void>();
-  @Output() save = new EventEmitter<Permissions>();
+  @Input() currentUserPermissions!: ItemCorePerm;
+  @Input() item!: { id: string, string: { title: string | null } };
+  @Input() group!: RawGroupRoute;
+  @Input() sourceGroup?: RawGroupRoute;
 
-  targetTypeString = '';
+  private params$ = new ReplaySubject<{ sourceGroupId: string, groupId: string, itemId: string }>(1);
+  state$ = this.params$.pipe(
+    switchMap(params =>
+      this.groupPermissionsService.getPermissions(params.sourceGroupId, params.groupId, params.itemId).pipe(
+        map(permissions => permissions.granted),
+      )
+    ),
+    mapToFetchState(),
+    shareReplay(1),
+  );
 
-  canViewValues: ProgressSelectValue<string>[] = [];
-  canGrantViewValues: ProgressSelectValue<string>[] = [];
-  canWatchValues: ProgressSelectValue<string>[] = [];
-  canEditValues: ProgressSelectValue<string>[] = [];
+  permissions?: Omit<GroupPermissions,'canEnterFrom'|'canEnterUntil'>;
+  updateInProcess = false;
+  targetType: TypeFilter = 'Users';
 
-  form = this.fb.group({
-    canView: [ 'none' ],
-    canGrantView: [ 'none' ],
-    canWatch: [ 'none' ],
-    canEdit: [ 'none' ],
-    canMakeSessionOfficial: [ false ],
-    isOwner: [ true ],
-  });
+  constructor(
+    private groupPermissionsService: GroupPermissionsService,
+    private actionFeedbackService: ActionFeedbackService,
+  ) {
+  }
 
-  constructor(private fb: FormBuilder) {}
+  ngOnDestroy(): void {
+    this.params$.complete();
+  }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if ('targetType' in changes) {
-      this.canViewValues = generateCanViewValues(this.targetType);
-      this.canGrantViewValues = generateCanGrantViewValues(this.targetType);
-      this.canWatchValues = generateCanWatchValues(this.targetType);
-      this.canEditValues = generateCanEditValues(this.targetType);
+  ngOnChanges(): void {
+    if (this.group.isUser && !this.sourceGroup) {
+      return;
     }
 
-    if (this.permissions) {
-      this.form.reset({
-        canView: this.permissions.canView,
-        canGrantView: this.permissions.canGrantView,
-        canWatch: this.permissions.canWatch,
-        canEdit: this.permissions.canEdit,
-        canMakeSessionOfficial: this.permissions.canMakeSessionOfficial,
-        isOwner: this.permissions.isOwner,
-      }, { emitEvent: false });
+    if (this.sourceGroup?.isUser) {
+      throw new Error('Unexpected: Source group must not be a user');
     }
+
+    this.targetType = this.group.isUser ? 'Users' : 'Groups';
+    this.params$.next({
+      sourceGroupId: this.sourceGroup?.id ?? this.group.id,
+      groupId: this.group.id,
+      itemId: this.item.id,
+    });
+  }
+
+  onPermissionsDialogSave(permissions: Partial<GroupPermissions>): void {
+    if (this.sourceGroup?.isUser) {
+      throw new Error('Unexpected: Source group must not be a user');
+    }
+
+    if (this.group.isUser && !this.sourceGroup) {
+      throw new Error('Unexpected: A user group must be provided with source group');
+    }
+
+    this.updateInProcess = true;
+    this.groupPermissionsService.updatePermissions(
+      this.sourceGroup?.id ?? this.group.id,
+      this.group.id,
+      this.item.id,
+      permissions,
+    )
+      .subscribe({
+        next: () => {
+          this.updateInProcess = false;
+          this.actionFeedbackService.success($localize`:@@permissionsUpdated:Permissions successfully updated.`);
+          this.closeDialog(true);
+        },
+        error: err => {
+          this.updateInProcess = false;
+          this.actionFeedbackService.unexpectedError();
+          if (!(err instanceof HttpErrorResponse)) throw err;
+        },
+      });
   }
 
   onCancel(): void {
-    this.close.emit();
+    this.closeDialog();
   }
 
-  onAccept(): void {
-    const permissions: Permissions = {
-      canView: this.form.get('canView')?.value as Permissions['canView'],
-      canGrantView: this.form.get('canGrantView')?.value as Permissions['canGrantView'],
-      canWatch: this.form.get('canWatch')?.value as Permissions['canWatch'],
-      canEdit: this.form.get('canEdit')?.value as Permissions['canEdit'],
-      canMakeSessionOfficial: this.form.get('canMakeSessionOfficial')?.value as Permissions['canMakeSessionOfficial'],
-      isOwner: this.form.get('isOwner')?.value as Permissions['isOwner'],
-    };
-
-    this.save.emit(permissions);
-    this.close.emit();
+  closeDialog(changed = false): void {
+    this.close.emit(changed);
   }
 }

@@ -1,0 +1,43 @@
+<ng-container *ngIf="itemData">
+  <form [formGroup]="itemForm" *ngIf="itemData.item.permissions | allowsEditingChildren; else notAuthorized">
+    <alg-section icon="fa fa-cog" i18n-label label="Information" *ngIf="itemData.item.permissions | allowsEditingAll">
+      <div class="field">
+        <div class="field-name">
+          <label i18n>Item title</label>
+        </div>
+        <div class="field-value">
+          <alg-input [parentForm]="itemForm" name="title" size="large"></alg-input>
+        </div>
+      </div>
+      <div class="field">
+        <div class="field-name">
+          <label i18n>Item subtitle</label>
+        </div>
+        <div class="field-value">
+          <alg-input [parentForm]="itemForm" name="subtitle" size="large"></alg-input>
+        </div>
+      </div>
+    </alg-section>
+    <alg-item-edit-content
+      [parentForm]="itemForm"
+      [itemData]="itemData"
+    >
+    </alg-item-edit-content>
+    <ng-container *ngIf="attemptId">
+      <alg-item-edit-advanced-parameters
+        *ngIf="itemData.item.permissions | allowsEditingAll"
+        [parentForm]="itemForm"
+        [item]="initialFormData"
+        [attemptId]="attemptId"
+        (confirmRemoval)="onConfirmRemoval()"
+      >
+      </alg-item-edit-advanced-parameters>
+    </ng-container>
+  </form>
+</ng-container>
+
+<alg-floating-save *ngIf="itemForm.dirty" [saving]="itemForm.disabled" (save)="save()" (cancel)="onCancel()"></alg-floating-save>
+
+<ng-template #notAuthorized>
+  <div class="error alg-error-text" i18n>You do not have the permissions to edit this content.</div>
+</ng-template>

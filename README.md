@@ -18,6 +18,8 @@ The rest of the project follow the recommended structure of an Angular project.
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
+If you use the mock server - via `npm start`, copy mocks/environment.dev.ts to mocks/enviromnent.ts and update the dev token value.
+
 ## Code Style
 
 Run `npm run lint` to launch the linter checks on the code.
@@ -45,7 +47,7 @@ Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.
 
 ### Running end-to-end tests
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+Run `E2E_AUTH_USER=[sessionStorageKey],[sessionStorageTokenValue] ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
 
 ## Internationalization
 

@@ -6,7 +6,7 @@ import { ProgressSelectValue } from
 import { GroupManagerPermissionChanges, UpdateGroupManagersService } from '../../http-services/update-group-managers.service';
 import { formatUser } from '../../../../shared/helpers/user';
 import { ActionFeedbackService } from '../../../../shared/services/action-feedback.service';
-import { FormBuilder } from '@angular/forms';
+import { UntypedFormBuilder } from '@angular/forms';
 import { ConfirmationService } from 'primeng/api';
 import { UserSessionService } from '../../../../shared/services/user-session.service';
 
@@ -53,7 +53,7 @@ export class ManagerPermissionDialogComponent implements OnChanges {
     private sessionService: UserSessionService,
     private updateGroupManagersService: UpdateGroupManagersService,
     private actionFeedbackService: ActionFeedbackService,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private confirmationService: ConfirmationService,
   ) {}
 
@@ -82,7 +82,7 @@ export class ManagerPermissionDialogComponent implements OnChanges {
       throw new Error('Unexpected: Missed manager data');
     }
 
-    const currentUserId = this.sessionService.session$.value?.user.groupId;
+    const currentUserId = this.sessionService.session$.value?.groupId;
 
     if (!currentUserId) {
       throw new Error('Unexpected: Missed current used ID');
@@ -97,7 +97,7 @@ export class ManagerPermissionDialogComponent implements OnChanges {
     }
 
     this.confirmationService.confirm({
-      message: $localize`Are you sure to remove from yourself the permission to edit group settings and edit managers ? 
+      message: $localize`Are you sure to remove from yourself the permission to edit group settings and edit managers?
         You may lose manager access and not be able to restore it.`,
       header: $localize`Confirm Action`,
       icon: 'pi pi-exclamation-triangle',

@@ -10,7 +10,7 @@
   display: flex;
   align-items: flex-start;
   border-bottom: 0.1rem solid #e0e1e5;
-  background-color: $base-bk-color;
+  background-color: var(--base-bk-color);
   z-index: 900;
 }
 
@@ -20,6 +20,6 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: start;
   overflow: hidden;
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { NavigationExtras, Router, UrlTree } from '@angular/router';
-import { ensureDefined } from '../helpers/null-undefined-predicates';
+import { ensureDefined } from '../helpers/assert';
 import { itemCategoryFromPrefix, RawItemRoute, urlArrayForItemRoute } from './item-route';
 
 interface NavigateOptions {
@@ -25,7 +25,8 @@ export class ItemRouter {
   navigateTo(item: RawItemRoute, {
     page,
     navExtras,
-    preventFullFrame = (history.state as Record<string, boolean>).preventFullFrame ?? false,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    preventFullFrame = Boolean(typeof history.state === 'object' && history.state?.preventFullFrame),
   }: NavigateOptions = {}): void {
     void this.router.navigateByUrl(this.url(item, page), { ...navExtras, state: { ...navExtras?.state, preventFullFrame } });
   }

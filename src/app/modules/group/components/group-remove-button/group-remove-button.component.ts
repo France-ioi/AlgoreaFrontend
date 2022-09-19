@@ -1,6 +1,6 @@
-import { Component, Input, OnChanges, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from '@angular/core';
 import { Group } from '../../http-services/get-group-by-id.service';
-import { distinct, switchMap, map } from 'rxjs/operators';
+import { distinctUntilChanged, switchMap, map } from 'rxjs/operators';
 import { Observable, ReplaySubject, Subject } from 'rxjs';
 import { GetGroupChildrenService, GroupChild } from '../../http-services/get-group-children.service';
 import { ConfirmationService } from 'primeng/api';
@@ -17,12 +17,14 @@ import { mapToFetchState } from '../../../../shared/operators/state';
 export class GroupRemoveButtonComponent implements OnChanges, OnDestroy {
   @Input() group?: Group;
 
+  @Output() groupDeleted = new EventEmitter<void>();
+
   deletionInProgress$ = new Subject<boolean>();
 
   private readonly id$ = new ReplaySubject<string>(1);
   private refresh$ = new Subject<void>();
   readonly state$ = this.id$.pipe(
-    distinct(),
+    distinctUntilChanged(),
     switchMap(id => this.hasGroupChildren$(id)),
     mapToFetchState({ resetter: this.refresh$ }),
   );
@@ -82,7 +84,8 @@ export class GroupRemoveButtonComponent implements OnChanges, OnDestroy {
       .subscribe({
         next: () => {
           this.deletionInProgress$.next(false);
-          this.actionFeedbackService.success($localize`You have delete "${groupName}"`);
+          this.actionFeedbackService.success($localize`You have deleted "${groupName}"`);
+          this.groupDeleted.emit();
           this.navigateToMyGroups();
         },
         error: _err => {

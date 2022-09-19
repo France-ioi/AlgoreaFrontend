@@ -3,8 +3,10 @@ alg-group-join-by-code {
     border-radius: $border-radius;
   }
 
-  .alg-button .p-button {
-    height: 2.574rem;
+  .alg-button {
+    &.p-button {
+      height: 2.574rem;
+    }
   }
 }
 

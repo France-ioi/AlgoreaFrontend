@@ -1,0 +1,118 @@
+<ng-container *ngIf="watchedGroup">
+  <ng-container *ngIf="itemData">
+    <alg-section-paragraph
+      [theme]="'warning'"
+      icon="fa fa-flag"
+      [collapsible]="true"
+      [collapsed]="true"
+    >
+      <ng-container *ngIf="watchedGroupPermissions; else noPermissionToWatchLabel" label-section i18n>
+        «{{ watchedGroup.name }}»
+        {{ (watchedGroupPermissions | allowsViewingContent).toString() | i18nSelect : {
+          true: 'can',
+          other: 'can\'t'
+        } }}
+        access this
+        {{ itemData.item.type | i18nSelect : {
+          Skill: 'skill',
+          other: 'activity'
+        } }}
+      </ng-container>
+
+      <ng-template #noPermissionToWatchLabel>
+        <ng-container i18n>You cannot watch this {{ itemData.item.type | i18nSelect : {
+            Skill: 'skill',
+            other: 'activity'
+          } }}
+        </ng-container>
+      </ng-template>
+
+      <ng-container *ngIf="watchedGroupPermissions; else noPermissionToWatchContent">
+        <ng-container *ngIf="!(watchedGroupPermissions | allowsViewingInfo)" i18n>
+          The {{ watchedGroup.route.isUser.toString() | i18nSelect : {
+            true: 'user',
+            other: 'group'
+          } }} cannot currently view this content.
+        </ng-container>
+
+        <ng-container *ngIf="(watchedGroupPermissions | allowsViewingInfo) && !(watchedGroupPermissions | allowsViewingContent)" i18n>
+          The {{ watchedGroup.route.isUser.toString() | i18nSelect : {
+            true: 'user',
+            other: 'group'
+          } }}
+          can list this
+          {{ itemData.item.type | i18nSelect : {
+            Skill: 'skill',
+            other: 'activity'
+          } }}
+          but cannot
+          {{ ['Skill', 'Chapter'].includes(itemData.item.type).toString() | i18nSelect : {
+            true: 'list its content.',
+            other: 'view its content.'
+          } }}
+        </ng-container>
+      </ng-container>
+
+      <ng-template #noPermissionToWatchContent>
+        <ng-container i18n>
+          You cannot view the results or submissions of the group
+        </ng-container>
+      </ng-template>
+
+      <ng-container *ngIf="watchedGroupPermissions">
+        <div class="permission-indicator-section">
+          <alg-section-header
+            i18n-title title="Can view"
+            icon="fa fa-eye"
+            theme="warning"
+          >
+            <ng-template #content>
+              <alg-progress-select
+                [collapsed]="true"
+                [(ngModel)]="watchedGroupPermissions.canView"
+                [values]="canViewValues"
+                theme="warning"
+              ></alg-progress-select>
+            </ng-template>
+          </alg-section-header>
+        </div>
+
+        <div class="text-center note-caption" *ngIf="!watchedGroup.route.isUser" i18n>
+          Note that some subgroups or users of the groups may have higher permissions.
+        </div>
+
+        <ng-container *ngIf="itemData?.item?.permissions">
+          <div class="give-access-button">
+            <span
+              [pTooltip]="lockEdit | i18nSelect : {
+                content: 'You are not allowed to give permissions on this content',
+                group: 'You are not allowed to give permissions to this group',
+                contentGroup: 'You are not allowed to give permissions on this content and to this group'
+              }"
+              tooltipPosition="bottom"
+              tooltipStyleClass="permissions-dialog"
+              [tooltipDisabled]="!lockEdit"
+            >
+             <button
+               pButton
+               type="button"
+               class="alg-button p-button-rounded-full p-button-warning"
+               i18n-label label="Edit permissions"
+               [disabled]="lockEdit"
+               (click)="openPermissionsDialog()"
+             ></button>
+            </span>
+          </div>
+
+          <alg-permissions-edit-dialog
+            [currentUserPermissions]="itemData.item.permissions"
+            [item]="itemData.item"
+            [group]="watchedGroup.route"
+            (close)="closePermissionsDialog($event)"
+            *ngIf="isPermissionsDialogOpened"
+          ></alg-permissions-edit-dialog>
+        </ng-container>
+      </ng-container>
+    </alg-section-paragraph>
+  </ng-container>
+</ng-container>

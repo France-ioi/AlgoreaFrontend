@@ -3,8 +3,7 @@
 
 :host {
   .item-display {
-    background-color: $base-bk-color;
-    padding-right: 2rem;
+    background-color: var(--base-bk-color);
   }
 
   .errors {
@@ -15,18 +14,12 @@
     position: relative;
     min-height: 12rem;
     background-color: white;
+    iframe {
+      display: block;
+      min-height: 100%;
+    }
   }
 
-  .loading {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    font-size: 2em;
-    opacity: 0.9;
-    z-index: 10;
-  }
   .saving-answer {
     background-color: rgba(74,74,74,.7);
     position: absolute;
@@ -41,7 +34,7 @@
     margin: 0;
     margin-top: 5rem;
     padding: 0.5rem 2rem;
-    background: $base-bk-color;
+    background: var(--base-bk-color);
     border-radius: $border-radius;
     font-size: 1.25em;
     display: inline-flex;
@@ -53,5 +46,17 @@
     height: 0;
     width: 100%;
     border: none;
+  }
+
+  .error-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .error-button {
+    &:first-child {
+      margin-right: 1rem;
+    }
   }
 }

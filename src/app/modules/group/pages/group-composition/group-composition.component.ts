@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, EventEmitter, Input, OnChanges, Output, ViewChild } from '@angular/core';
 import { forkJoin, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
@@ -25,6 +26,9 @@ export class GroupCompositionComponent implements OnChanges {
   @Input() groupData?: GroupData;
 
   @Output() groupRefreshRequired = new EventEmitter<void>();
+  @Output() addedGroup = new EventEmitter<void>();
+  @Output() removedGroup = new EventEmitter<void>();
+
   groupWithPermissions?: Group & ManagementAdditions;
 
   @ViewChild('memberList') private memberList?: MemberListComponent;
@@ -57,10 +61,12 @@ export class GroupCompositionComponent implements OnChanges {
         this.actionFeedbackService.success($localize`Group successfully added as child group`);
         this.memberList?.setFilter({ directChildren: true, type: TypeFilter.Groups });
         this.state = 'ready';
+        this.addedGroup.emit();
       },
-      error: _err => {
-        this.actionFeedbackService.unexpectedError();
+      error: err => {
         this.state = 'ready';
+        this.actionFeedbackService.unexpectedError();
+        if (!(err instanceof HttpErrorResponse)) throw err;
       }
     });
   }

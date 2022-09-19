@@ -1,7 +1,7 @@
 @import "src/colors.scss";
 
 :host {
-  background-color: $base-bk-color;
+  background-color: var(--base-bk-color);
 }
 
 .task-header-container {
@@ -13,10 +13,6 @@
   margin-top: 1rem;
   margin-bottom: .5rem;
   justify-content: center;
-
-  alg-score-ring {
-    padding-right: 1rem;
-  }
 
   alg-skill-progress {
     position: absolute;
@@ -31,7 +27,7 @@
     // padding-top: 1.6667rem;
     display: flex;
     align-items: center;
-    // background-color: $base-bk-color;
+    // background-color: var(--base-bk-color);
     // padding-bottom: 1rem;
     margin-bottom: 2rem;
 
@@ -54,12 +50,12 @@
           flex: 1;
 
           .parent-link {
-            color: $base-color;
+            color: var(--base-color);
           }
 
           .parent-item {
             margin-left: 1rem;
-            color: $base-text-color;
+            color: var(--base-text-color);
             font-size: 1.2rem;
           }
         }
@@ -67,7 +63,7 @@
         .actions {
           display: flex;
           align-items: center;
-          color: $base-color;
+          color: var(--base-color);
           font-size: 1.2rem;
 
           span {
@@ -115,7 +111,7 @@
         // margin-bottom: -.4rem;
       }
       span {
-        color: $base-text-color;
+        color: var(--base-text-color);
         font-size: 1.6rem;
       }
     }
@@ -133,7 +129,7 @@
         }
 
         &.user-id {
-          color: $base-color;
+          color: var(--base-color);
           font-size: 1.6667rem;
           font-weight: bold;
         }
@@ -141,31 +137,52 @@
     }
 
     .clock-icon {
-      color: $dark-text-color;
+      color: var(--dark-text-color);
       font-size: 2rem;
       font-weight: bold;
       margin-right: 0.4167rem;
 
       &.finished {
-        color: $light-text-color;
+        color: var(--light-text-color);
       }
     }
 
     .remaining-time {
-      color: $dark-text-color;
+      color: var(--dark-text-color);
       font-size: 2rem;
       font-weight: bold;
 
       &.finished {
-        color: $light-text-color;
+        color: var(--light-text-color);
       }
     }
+  }
+
+  .task-score-ring {
+    width: 5.83333rem;
+    height: 5.83333rem;
+    margin-right: 1rem;
+  }
+
+  .lock-icon {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    color: var(--base-text-color);
+    font-size: 1.6rem;
+
+    border: 4px solid var(--lock-border-color);
+    border-radius: 50%;
   }
 
   .team-count {
     margin-left: 1.6667rem;
     font-size: 1.6667rem;
-    color: $dark-text-color;
+    color: var(--dark-text-color);
   }
 
   .team-view-container {
@@ -197,7 +214,7 @@
     display: flex;
     flex-direction: column;
     font-size: 1.2rem;
-    color: $base-text-color;
+    color: var(--base-text-color);
 
     &-title {
       font-weight: bold;
@@ -219,13 +236,13 @@
           display: flex;
           align-items: center;
           justify-content: center;
-          color: $base-color;
+          color: var(--base-color);
           height: 1.6667rem;
           width: 2.0833rem;
           margin-right: .5rem;
 
           &.danger {
-            color: $section-danger-handle-color;
+            color: var(--section-danger-handle-color);
           }
         }
 
@@ -233,7 +250,7 @@
           flex: 1;
 
           &.danger {
-            color: $section-danger-handle-color;
+            color: var(--section-danger-handle-color);
             font-weight: bold;
           }
         }

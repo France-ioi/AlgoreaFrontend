@@ -5,7 +5,7 @@
   align-items: center;
   justify-content: center;
   padding: 2rem 0;
-  background-color: $light-color;
+  background-color: var(--light-color);
   margin: 2rem -1.6667rem -3rem -5.8333rem;
   position: relative;
 
@@ -17,6 +17,14 @@
 :host .slanted-grid {
   margin-left: -4.8rem;
 
+  .p-datatable-wrapper {
+    overflow: hidden;
+  }
+
+  .p-datatable-thead > tr {
+    height: 100%;
+  }
+
   tr > th {
     border-left: none;
     border-right: none;
@@ -26,6 +34,7 @@
     position: relative;
     background-color: #f8f8f8;
     min-width: 3.3333rem;
+    flex: auto;
 
     .slanted-header {
       position: absolute;
@@ -63,6 +72,9 @@
     padding: 0;
     text-align: center;
     font-size: 1.2rem;
+    justify-content: center;
+    height: auto;
+    max-height: none;
 
     &:nth-child(odd) {
       background-color: white;
@@ -83,7 +95,7 @@
       }
 
       &.edit {
-        color: $base-color;
+        color: var(--base-color);
       }
 
       &.locked {
@@ -91,7 +103,7 @@
       }
 
       &.unlocked {
-        color: $notify-error-color;
+        color: var(--notify-error-color);
       }
     }
 
@@ -116,7 +128,7 @@
 }
 
 .validation-text {
-  color: $base-color;
+  color: var(--base-color);
   font-size: 1.6rem;
   text-align: center;
 }

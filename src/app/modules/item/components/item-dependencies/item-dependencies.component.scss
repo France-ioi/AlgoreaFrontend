@@ -1,0 +1,24 @@
+.explanation {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.note-caption {
+  margin: 1rem 0;
+  font-size: 1rem;
+  text-align: center;
+}
+
+.list {
+  list-style-type: none;
+  margin: 1rem 0 0 0;
+  padding: 0;
+}
+
+.list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 4rem;
+  border-bottom: .1rem solid var(--light-border-color);
+}

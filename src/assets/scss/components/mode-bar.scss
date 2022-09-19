@@ -6,7 +6,7 @@
   align-items: center;
   color: white;
   font-size: 1.1667rem;
-  background-color: $base-color;
+  background-color: var(--base-color);
   padding-left: 1.6667rem;
   position: relative;
 
@@ -42,7 +42,7 @@
     width: 1rem;
     height: 100%;
     border-bottom-left-radius: 1rem;
-    background-color: $nav-bk-color;
+    background-color: var(--nav-bk-color);
   }
 }
 

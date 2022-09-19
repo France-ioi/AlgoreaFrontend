@@ -1,0 +1,22 @@
+<ng-container *ngIf="group">
+  <p>
+    <ng-container *ngIf="group.isMembershipLocked; else allow" i18n>
+      You are currently not allowed to leave this group.
+    </ng-container>
+    <ng-template #allow>
+      <ng-container i18n>
+        You can freely leave this group. Note that you may lose access to content if this group was granting some permissions to its members.
+      </ng-container>
+    </ng-template>
+  </p>
+
+  <div class="button">
+    <p-button
+      styleClass="alg-button p-button-rounded-full"
+      icon="fa fa-times"
+      i18n-label label="Leave this group"
+      (onClick)="leaveGroup()"
+      [disabled]="group.isMembershipLocked"
+    ></p-button>
+  </div>
+</ng-container>

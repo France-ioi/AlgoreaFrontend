@@ -22,11 +22,11 @@ export class LeftHeaderComponent {
   ) { }
 
   setFullFrameContent(): void {
-    this.layoutService.toggleFullFrameContent(true);
+    this.layoutService.configure({ fullFrameActive: true });
   }
 
   unsetFullFrameContent(): void {
-    this.layoutService.toggleFullFrameContent(false);
+    this.layoutService.configure({ fullFrameActive: false });
   }
 
   login(): void {

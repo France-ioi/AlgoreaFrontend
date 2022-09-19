@@ -7,4 +7,8 @@
   <alg-section icon="fa fa-chart-line" i18n-label label="Progress" *ngIf="group.currentUserCanWatchMembers">
     <alg-group-log-view [groupId]="group.id"></alg-group-log-view>
   </alg-section>
+
+  <alg-section icon="fa fa-sign-out-alt" i18n-label label="Leave the group?" *ngIf="group.currentUserMembership !== 'none'">
+    <alg-group-leave [group]="group" (leave)="onLeave()"></alg-group-leave>
+  </alg-section>
 </ng-container>

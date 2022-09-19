@@ -3,22 +3,22 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { appConfig } from '../../../shared/helpers/config';
 import { ItemType } from '../../../shared/helpers/item-type';
-import { permissionsDecoder, PermissionsInfo } from '../helpers/item-permissions';
 import * as D from 'io-ts/Decoder';
 import { decodeSnakeCase } from '../../../shared/operators/decode';
+import { ItemCorePerm, itemCorePermDecoder } from 'src/app/shared/models/domain/item-permissions';
 
 export interface ItemFound<T> {
   id: string,
   title: string,
   type: T,
-  permissions: PermissionsInfo,
+  permissions: ItemCorePerm,
 }
 
 export const itemFoundDecoder = D.struct({
   id: D.string,
   title: D.string,
   type: D.literal('Chapter','Task','Course','Skill'),
-  permissions: permissionsDecoder,
+  permissions: itemCorePermDecoder,
 });
 
 @Injectable({

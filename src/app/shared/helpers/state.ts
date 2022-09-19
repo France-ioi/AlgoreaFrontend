@@ -1,4 +1,3 @@
-
 export type FetchState<T> = Ready<T>|Fetching<T>|FetchError;
 export type Ready<T> = Readonly<{ tag: 'ready', isReady: true, data: T, isFetching: false, isError: false, error?: undefined }>;
 export type Fetching<T> = Readonly<{ tag: 'fetching', isReady: false, data?: T, isFetching: true, isError: false, error?: undefined }>;

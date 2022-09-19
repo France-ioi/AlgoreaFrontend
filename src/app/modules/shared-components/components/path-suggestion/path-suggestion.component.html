@@ -1,0 +1,45 @@
+<ng-container *ngIf="state$ | async as state">
+  <div class="spinner-container" *ngIf="state.isFetching">
+    <alg-loading size="small"></alg-loading>
+  </div>
+  <alg-error
+      *ngIf="state.isError"
+      class="dark small"
+      icon="fa fa-exclamation-triangle"
+      [showRefreshButton]="$any(state.error).status !== 403"
+      (refresh)="refresh()"
+  >
+    <ng-container *ngIf="$any(state.error).status === 403; else otherError;">
+      <span i18n>You are not allowed to view path suggestion.</span>
+    </ng-container>
+    <ng-template #otherError>
+      <span i18n>Error while loading path suggestion</span>
+    </ng-template>
+  </alg-error>
+  <ng-container *ngIf="state.isReady">
+    <ng-container *ngIf="state.data; else noPath">
+      <ng-container *ngIf="state.data.length > 0; else emptyPath">
+        <div class="breadcrumbs-container" *ngFor="let breadcrumbs of state.data">
+          <span class="breadcrumbs-prefix" i18n>via</span>
+          <ul class="breadcrumbs">
+            <li class="breadcrumbs-item" *ngFor="let item of breadcrumbs; let i = index">
+              <a class="alg-link" [routerLink]="item.url">
+                {{ item.title }}
+              </a>
+            </li>
+          </ul>
+        </div>
+      </ng-container>
+    </ng-container>
+    <ng-template #noPath>
+      <alg-error class="dark small">
+        <span i18n>You have no path to this content.</span>
+      </alg-error>
+    </ng-template>
+    <ng-template #emptyPath>
+      <alg-error class="dark small">
+        <span i18n>This content is one of your root activity/skill</span>
+      </alg-error>
+    </ng-template>
+  </ng-container>
+</ng-container>

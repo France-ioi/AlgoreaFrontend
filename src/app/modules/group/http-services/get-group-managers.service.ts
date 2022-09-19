@@ -34,12 +34,17 @@ export class GetGroupManagersService {
 
   getGroupManagers(
     groupId: string,
-    sort: string[] = [],
+    options?: {
+      sort?: string[],
+      limit?: number,
+      fromId?: string,
+    },
   ): Observable<Manager[]> {
     let params = new HttpParams();
-    if (sort.length > 0) {
-      params = params.set('sort', sort.join(','));
-    }
+    if (options?.sort) params = params.set('sort', options.sort.join(','));
+    if (options?.limit !== undefined) params = params.set('limit', options.limit);
+    if (options?.fromId !== undefined) params = params.set('from.id', options.fromId);
+
     return this.http
       .get<unknown>(`${appConfig.apiUrl}/groups/${groupId}/managers`, { params: params }).pipe(
         decodeSnakeCase(D.array(managerDecoder)),

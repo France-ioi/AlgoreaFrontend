@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { ensureDefined } from 'src/app/shared/helpers/null-undefined-predicates';
-
-export type TypeFilter = 'Groups'|'Teams'|'Users';
+import { ensureDefined } from 'src/app/shared/helpers/assert';
+import { TypeFilter } from '../../helpers/composition-filter';
 
 @Component({
   selector: 'alg-composition-filter',

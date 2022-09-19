@@ -2,7 +2,7 @@
 
 .alg-top-right-menu {
   &.p-menu.p-menu-overlay {
-    background-color: $nav-bk-color;
+    background-color: var(--nav-bk-color);
     padding-top: 0.5rem;
     width: 10rem;
     border: none;
@@ -21,7 +21,7 @@
 
       &:not(.p-disabled):hover {
 
-        background: $hover-mask;
+        background: var(--hover-mask);
 
         .p-menuitem-text, .p-menuitem-icon {
           color: white;

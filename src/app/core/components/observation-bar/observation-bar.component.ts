@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { UserSessionService } from '../../../shared/services/user-session.service';
-import { ModeService } from '../../../shared/services/mode.service';
+import { GroupWatchingService } from '../../services/group-watching.service';
 
 @Component({
   selector: 'alg-observation-bar',
@@ -10,16 +9,14 @@ import { ModeService } from '../../../shared/services/mode.service';
 export class ObservationBarComponent {
   @Output() cancel = new EventEmitter<void>();
 
-  watchedGroup$ = this.sessionService.watchedGroup$;
+  watchedGroup$ = this.groupWatchingService.watchedGroup$;
 
   constructor(
-    private sessionService: UserSessionService,
-    private modeService: ModeService,
-  ) {
-  }
+    private groupWatchingService: GroupWatchingService,
+  ) {}
 
   onCancelClick(): void {
-    this.modeService.stopObserving();
+    this.groupWatchingService.stopWatching();
   }
 
 }

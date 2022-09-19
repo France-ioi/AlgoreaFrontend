@@ -1,5 +1,5 @@
 <div *ngIf="collapsed" class="header-content">
-  <alg-progress-level [maximum]="values.length" [value]="selected + 1" theme="revert"></alg-progress-level>
+  <alg-progress-level [maximum]="values.length" [value]="selected + 1" theme="revert" [colorTheme]="theme"></alg-progress-level>
   <span class="selected-progress-level">{{ values[selected]?.label }}</span>
 </div>
 
@@ -19,15 +19,23 @@
         <i
           *ngIf="idx === selected"
           class="fa"
-          [ngClass]="{'fa-lock-open': type === 'checksWithLock', 'fa-check': type === 'simple'}"
+          [ngClass]="{
+            'fa-lock': type === 'checksWithLock',
+            'fa-check': type === 'simple'
+          }"
         ></i>
       </span>
-      <span *ngIf="idx + 1 < values.length" class="progress-branch" [ngClass]="{active: idx < selected}"></span>
+      <span *ngIf="idx + 1 < values.length" class="progress-branch" [ngClass]="{active: idx < selected, disabled: values[idx + 1]?.disabled}"></span>
     </div>
     <div class="progress-desc">
       <div class="progress-desc-name" [ngClass]="{active: idx < selected + 1}" (click)="onSet(item.value)">{{ item.label }}</div>
       <div class="progress-desc-comment">{{ item.comment }}</div>
     </div>
-    <div *ngIf="item.disabled" class="gray-overlay"></div>
+    <div *ngIf="item.disabled" class="gray-overlay tool"
+      [pTooltip]="item.tooltip?.join('\n') || ''"
+      tooltipPosition="top"
+      tooltipStyleClass="permissions-dialog"
+      [escape]="false"
+    ></div>
   </div>
 </div>

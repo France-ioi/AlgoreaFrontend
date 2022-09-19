@@ -1,5 +1,5 @@
-import { Component, OnDestroy } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { mapStateData, readyData } from 'src/app/shared/operators/state';
 import { ModeService } from 'src/app/shared/services/mode.service';
 import { of, Subscription } from 'rxjs';
@@ -13,13 +13,16 @@ import { GroupUpdateService } from '../../http-services/group-update.service';
 import { GroupDataSource } from '../../services/group-datasource.service';
 import { withManagementAdditions } from '../../helpers/group-management';
 import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
+import { PendingChangesService } from '../../../../shared/services/pending-changes-service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { CurrentContentService } from 'src/app/shared/services/current-content.service';
 
 @Component({
   selector: 'alg-group-edit',
   templateUrl: './group-edit.component.html',
   styleUrls: [ './group-edit.component.scss' ]
 })
-export class GroupEditComponent implements OnDestroy, PendingChangesComponent {
+export class GroupEditComponent implements OnInit, OnDestroy, PendingChangesComponent {
   groupForm = this.formBuilder.group({
     // eslint-disable-next-line @typescript-eslint/unbound-method
     name: [ '', [ Validators.required, Validators.minLength(3) ] ],
@@ -34,14 +37,14 @@ export class GroupEditComponent implements OnDestroy, PendingChangesComponent {
 
   constructor(
     private modeService: ModeService,
+    private currentContentService: CurrentContentService,
     private groupDataSource: GroupDataSource,
     private actionFeedbackService: ActionFeedbackService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private groupUpdateService: GroupUpdateService,
     private createItemService: CreateItemService,
+    private pendingChangesService: PendingChangesService
   ) {
-    this.modeService.startEditing();
-
     this.subscription = this.state$
       .pipe(readyData())
       .subscribe(item => {
@@ -50,9 +53,14 @@ export class GroupEditComponent implements OnDestroy, PendingChangesComponent {
       });
   }
 
+  ngOnInit(): void {
+    this.pendingChangesService.set(this);
+  }
+
   ngOnDestroy(): void {
     this.modeService.stopEditing();
     this.subscription?.unsubscribe();
+    this.pendingChangesService.clear();
   }
 
   isDirty(): boolean {
@@ -90,13 +98,19 @@ export class GroupEditComponent implements OnDestroy, PendingChangesComponent {
     ).subscribe({
       next: () => {
         this.groupDataSource.refetchGroup(); // will re-enable the form
+        this.refreshNav();
         this.actionFeedbackService.success($localize`Changes successfully saved.`);
       },
-      error: _err => {
+      error: err => {
         this.groupForm.enable();
         this.actionFeedbackService.unexpectedError();
+        if (!(err instanceof HttpErrorResponse)) throw err;
       }
     });
+  }
+
+  refreshNav(): void {
+    this.currentContentService.forceNavMenuReload();
   }
 
   resetForm(): void {

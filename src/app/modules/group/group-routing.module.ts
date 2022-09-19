@@ -2,10 +2,9 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { MyGroupsComponent } from './pages/my-groups/my-groups.component';
 import { GroupDetailsComponent } from './pages/group-details/group-details.component';
-import { GroupEditComponent } from './pages/group-edit/group-edit.component';
 import { GroupByIdComponent } from './pages/group-by-id/group-by-id.component';
-import { PendingChangesGuard } from 'src/app/shared/guards/pending-changes-guard';
 import { UserComponent } from './pages/user/user.component';
+import { PendingChangesGuard } from '../../shared/guards/pending-changes-guard';
 
 const routes: Routes = [
   {
@@ -17,7 +16,12 @@ const routes: Routes = [
     component: UserComponent,
     children: [
       {
-        path: 'personal-data'
+        path: 'personal-data',
+        children: [],
+      },
+      {
+        path: 'settings',
+        children: [],
       }
     ]
   },
@@ -28,28 +32,30 @@ const routes: Routes = [
       {
         path: 'details',
         component: GroupDetailsComponent,
+        canDeactivate: [ PendingChangesGuard ],
         children: [
           {
             path: '',
+            children: [],
           },
           {
             path: 'members',
+            children: [],
           },
           {
             path: 'managers',
+            children: [],
           },
           {
             path: 'settings',
+            canDeactivate: [ PendingChangesGuard ],
+            children: [],
           },
           {
             path: 'access',
+            children: [],
           },
         ]
-      },
-      {
-        path: 'edit',
-        component: GroupEditComponent,
-        canDeactivate: [ PendingChangesGuard ]
       },
     ],
   },

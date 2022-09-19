@@ -5,8 +5,9 @@
   height: 4rem;
   z-index: 900;
   display: flex;
+  align-items: center;
+}
 
-  .save {
-    margin-right: 0.2rem;
-  }
+.save {
+  margin-right: 0.2rem;
 }

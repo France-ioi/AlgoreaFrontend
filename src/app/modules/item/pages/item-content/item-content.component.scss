@@ -6,7 +6,24 @@
   align-items: center;
   margin: 0;
   padding: 1rem;
-  color: $base-color;
+  color: var(--base-color);
   font-size: 1.6rem;
   text-align: center;
+}
+
+.edit {
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.edit-label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.edit-switch {
+  margin-left: 1rem;
 }

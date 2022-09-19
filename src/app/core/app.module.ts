@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { ErrorHandler, NgModule } from '@angular/core';
 
 import { SharedComponentsModule } from '../modules/shared-components/shared-components.module';
 
@@ -45,6 +45,7 @@ import { ObservationBarComponent } from './components/observation-bar/observatio
 import { LanguageMismatchComponent } from './components/language-mismatch/language-mismatch.component';
 import { TopBarComponent } from './components/top-bar/top-bar.component';
 import { ContentTopBarComponent } from './components/content-top-bar/content-top-bar.component';
+import * as Sentry from '@sentry/angular';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: false,
@@ -115,6 +116,12 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     {
       provide: DEFAULT_TIMEOUT,
       useValue: 3000,
+    },
+    {
+      provide: ErrorHandler,
+      useValue: Sentry.createErrorHandler({
+        showDialog: true,
+      }),
     },
   ],
   exports: [],

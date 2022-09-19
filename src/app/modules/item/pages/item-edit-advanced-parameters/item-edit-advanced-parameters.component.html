@@ -29,7 +29,7 @@
       <span class="form-item-label" i18n>Validation criteria</span>
       <div class="form-item-control">
         <alg-dropdown
-          [options]="validationCritireaOptions"
+          [options]="validationCriteriaOptions"
           [parentForm]="parentForm"
           inputName="validation_type"
           name="validation_type"
@@ -48,7 +48,10 @@
   <alg-section icon="fa fa-desktop" i18n-label label="Display"
     *ngIf="item.type !== 'Skill'">
     <div class="form-item-view">
-      <span class="form-item-label" i18n>Display header (not implemented)</span>
+      <span class="form-item-label">
+        <ng-container i18n>Display header</ng-container>&nbsp;
+        <ng-container i18n="@@notImplemented">(not implemented)</ng-container>
+      </span>
       <div class="form-item-control">
         <alg-switch formControlName="title_bar_visible" mode="white"></alg-switch>
       </div>
@@ -60,7 +63,10 @@
       </div>
     </div>
     <div class="form-item-view">
-      <span class="form-item-label" i18n>Full screen (not implemented)</span>
+      <span class="form-item-label">
+        <ng-container i18n>Full screen</ng-container>&nbsp;
+        <ng-container i18n="@@notImplemented">(not implemented)</ng-container>
+      </span>
       <div class="form-item-control">
         <alg-selection formControlName="full_screen" [items]="fullScreenOptions"></alg-selection>
       </div>
@@ -69,7 +75,10 @@
 
   <alg-section icon="fa fa-desktop" i18n-label label="Participation" *ngIf="item.type !== 'Skill'">
     <div class="form-item-view">
-      <span class="form-item-label" i18n>Allow multiple attempts (not implemented)</span>
+      <span class="form-item-label">
+        <ng-container i18n>Allow multiple attempts</ng-container>&nbsp;
+        <ng-container i18n="@@notImplemented">(not implemented)</ng-container>
+      </span>
       <div class="form-item-control">
         <alg-switch formControlName="allows_multiple_attempts" mode="white"></alg-switch>
       </div>
@@ -87,7 +96,10 @@
     </div>
     <ng-container *ngIf="!!parentForm.get('requires_explicit_entry')?.value">
       <div class="form-item-view form-item-duration">
-        <span class="form-item-label" i18n>Duration (not implemented)</span>
+        <span class="form-item-label">
+          <ng-container i18n>Duration</ng-container>&nbsp;
+          <ng-container i18n="@@notImplemented">(not implemented)</ng-container>
+        </span>
         <div class="form-item-control another-input">
           <alg-switch
               class="first-child"
@@ -164,7 +176,10 @@
 
   <alg-section icon="fa fa-users" i18n-label label="Team" *ngIf="item.type !== 'Skill'">
     <div class="form-item-view">
-      <span class="form-item-label" i18n>Participation as a team (only) (not implemented)</span>
+      <span class="form-item-label">
+        <ng-container i18n>Participation as a team (only)</ng-container>&nbsp;
+        <ng-container i18n="@@notImplemented">(not implemented)</ng-container>
+      </span>
       <div class="form-item-control">
         <alg-switch formControlName="entry_participant_type" mode="white"></alg-switch>
       </div>
@@ -180,7 +195,7 @@
         <span class="form-item-label" i18n>Maximum team size</span>
         <div class="form-item-control">
           <p-inputNumber class="alg-input-number" formControlName="entry_max_team_size"></p-inputNumber>
-          <alg-input-error [form]="this.parentForm" inputName="entry_max_team_size"></alg-input-error>
+          <alg-input-error [form]="parentForm" inputName="entry_max_team_size"></alg-input-error>
         </div>
       </div>
       <div class="form-item-view">
@@ -199,7 +214,7 @@
 </form>
 
 <div class="delete-button">
-  <alg-item-remove-button [item]="item" [attemptId]="attemptId"></alg-item-remove-button>
+  <alg-item-remove-button [item]="item" [attemptId]="attemptId" (confirmRemoval)="onConfirmRemoval()"></alg-item-remove-button>
 </div>
 
 

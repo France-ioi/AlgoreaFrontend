@@ -32,6 +32,9 @@ export class SwitchFieldComponent implements ControlValueAccessor {
   @Input() value = false;
   @Input() collapsed = false;
 
+  // If this is not empty, the switch will be disabled, and the content of this array will appear as a tooltip
+  @Input() disabledTooltip: string[] = [];
+
   @ContentChild('description') descriptionTemplate?: TemplateRef<any>;
   @ContentChild('label') labelTemplate?: TemplateRef<any>;
 

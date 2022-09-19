@@ -18,11 +18,11 @@ import { MessagesModule } from 'primeng/messages';
 import { TabViewModule } from 'primeng/tabview';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ToastModule } from 'primeng/toast';
+import { TagModule } from 'primeng/tag';
 
 
 import { ClickOutsideModule } from 'ng-click-outside';
 
-import { ButtonComponent } from './components/button/button.component';
 import { SectionComponent } from './components/section/section.component';
 import { PageNavigatorComponent } from './components/page-navigator/page-navigator.component';
 import { SkillProgressComponent } from './components/skill-progress/skill-progress.component';
@@ -62,10 +62,16 @@ import { LoadingComponent } from './components/loading/loading.component';
 import { CollapsibleSectionComponent } from './components/collapsible-section/collapsible-section.component';
 import { NeighborWidgetComponent } from './components/neighbor-widget/neighbor-widget.component';
 import { GroupPermissionCaptionPipe } from '../../shared/pipes/groupPermissionCaption';
+import { FullHeightContentDirective } from '../../shared/directives/full-height-content.directive';
+import { SectionHeaderComponent } from './components/section-header/section-header.component';
+import { PathSuggestionComponent } from './components/path-suggestion/path-suggestion.component';
+import { AllowsViewingItemContentPipe, AllowsViewingItemInfoPipe } from 'src/app/shared/models/domain/item-view-permission';
+import { AllowsGrantingContentViewItemPipe, AllowsGrantingViewItemPipe } from 'src/app/shared/models/domain/item-grant-view-permission';
+import { AllowsEditingAllItemPipe, AllowsEditingChildrenItemPipe } from 'src/app/shared/models/domain/item-edit-permission';
+import { AllowsWatchingItemResultsPipe } from 'src/app/shared/models/domain/item-watch-permission';
 
 @NgModule({
   declarations: [
-    ButtonComponent,
     SectionComponent,
     PageNavigatorComponent,
     SkillProgressComponent,
@@ -102,6 +108,16 @@ import { GroupPermissionCaptionPipe } from '../../shared/pipes/groupPermissionCa
     LoadingComponent,
     CollapsibleSectionComponent,
     NeighborWidgetComponent,
+    FullHeightContentDirective,
+    SectionHeaderComponent,
+    PathSuggestionComponent,
+    AllowsViewingItemContentPipe,
+    AllowsViewingItemInfoPipe,
+    AllowsGrantingViewItemPipe,
+    AllowsGrantingContentViewItemPipe,
+    AllowsEditingAllItemPipe,
+    AllowsEditingChildrenItemPipe,
+    AllowsWatchingItemResultsPipe,
   ],
   imports: [
     CommonModule,
@@ -122,6 +138,7 @@ import { GroupPermissionCaptionPipe } from '../../shared/pipes/groupPermissionCa
     TabViewModule,
     ProgressSpinnerModule,
     ToastModule,
+    TagModule,
 
     ClickOutsideModule,
     ReactiveFormsModule,
@@ -131,7 +148,6 @@ import { GroupPermissionCaptionPipe } from '../../shared/pipes/groupPermissionCa
     InputMaskModule,
   ],
   exports: [
-    ButtonComponent,
     SectionComponent,
     PageNavigatorComponent,
     SkillProgressComponent,
@@ -171,9 +187,17 @@ import { GroupPermissionCaptionPipe } from '../../shared/pipes/groupPermissionCa
     LoadingComponent,
     CollapsibleSectionComponent,
     NeighborWidgetComponent,
+    FullHeightContentDirective,
+    SectionHeaderComponent,
+    PathSuggestionComponent,
+    AllowsViewingItemContentPipe,
+    AllowsViewingItemInfoPipe,
+    AllowsGrantingViewItemPipe,
+    AllowsGrantingContentViewItemPipe,
+    AllowsEditingAllItemPipe,
+    AllowsEditingChildrenItemPipe,
+    AllowsWatchingItemResultsPipe,
   ],
   providers: [],
-  entryComponents: [
-  ]
 })
 export class SharedComponentsModule { }

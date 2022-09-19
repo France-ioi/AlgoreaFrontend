@@ -3,105 +3,123 @@
   (change)="onFilterChange($event)"
 ></alg-composition-filter>
 
-<ng-container *ngIf="state$ | async as state">
-  <alg-error
-    *ngIf="state.isError; else noError"
-    class="dark"
-    i18n-message message="Error while loading the data"
-    icon="fa fa-exclamation-triangle"
-    [showRefreshButton]="true"
-    (refresh)="refresh()"
-  ></alg-error>
+<ng-container *ngIf="columns$ | async as columnsState">
+  <ng-container *ngIf="rows$ | async as rowsState">
+    <alg-error
+      *ngIf="rowsState.isError || columnsState.isError; else noError"
+      class="dark"
+      i18n-message message="Error while loading the data"
+      icon="fa fa-exclamation-triangle"
+      [showRefreshButton]="true"
+      (refresh)="fetchRows()"
+    ></alg-error>
 
-  <ng-template #noError>
-    <div class="loader" *ngIf="state.isFetching && (!state.data || state.data.rows.length === 0)">
-      <alg-loading></alg-loading>
-    </div>
-
-    <p class="empty-message" *ngIf="state.isReady && state.data.rows.length === 0">
-      <ng-container [ngSwitch]="state.data.type">
-        <span *ngSwitchCase="'Users'" i18n>This group has no users</span>
-        <span *ngSwitchCase="'Teams'" i18n>This group has no teams</span>
-        <span *ngSwitchCase="'Groups'" i18n>This group has no sub-groups</span>
-      </ng-container>
-      <p-button icon="pi pi-refresh" (click)="refresh()" styleClass="p-button-sm"></p-button>
-    </p>
-
-    <alg-user-progress-details
-      [canEditPermissions]="state.data?.can_access"
-      [progress]="progressOverlay?.progress"
-      [target]="progressOverlay?.target"
-      (hide)="hideProgressDetail()"
-      (editPermissions)="onAccessPermissions()"
-    ></alg-user-progress-details>
-
-    <ng-container *ngIf="state.data && state.data.items && state.data.rows.length > 0">
-      <div class="operations">
-        <button
-          pButton
-          type="button"
-          i18n-label label="Export as CSV"
-          icon="fa fa-file-download"
-          class="p-button-sm"
-          (click)="onCSVExport()"
-          [disabled]="isCSVDataFetching"
-        ></button>
+    <ng-template #noError>
+      <div class="loader" *ngIf="rowsState.isFetching && (!rowsState.data || rowsState.data.length === 0)">
+        <alg-loading></alg-loading>
       </div>
 
-      <p-table #table
-        [columns]="state.data.items"
-        [value]="state.data.rows"
-        class="slanted-grid"
-        [rowTrackBy]="trackByRow"
-        [loading]="state.isFetching"
-      >
-        <ng-template pTemplate="header" let-columns>
-          <tr>
-            <th class="empty first header-refresh">
-              <p-button icon="pi pi-refresh" (click)="refresh()"></p-button>
-            </th>
-            <th *ngFor="let col of state.data.items">
-              <div class="slanted-header">
-                <div class="slanted-header-content" pTooltip="{{ col.title }}" tooltipPosition="top" [showDelay]="100">
-                  <span class="slanted-header-link alg-link cursor-pointer" (click)="navigateToItem(col)">{{ col.title }}</span>
-                </div>
-              </div>
-            </th>
-            <th class="empty last"></th>
-          </tr>
-        </ng-template>
-        <ng-template
-          pTemplate="body"
-          let-row
-          let-columns="columns"
-        >
-          <tr>
-            <td class="users" pTooltip="{{ row.header }}" tooltipPosition="left" [showDelay]="100">
-              <span class="alg-link cursor-pointer" (click)="navigateToGroup(row)">{{ row.header }}</span>
-            </td>
-            <td
-              class="cursor-pointer"
-              *ngFor="let col of columns; let colIndex = index"
-              #overlayTarget
-              (click)="showProgressDetail(overlayTarget, row.data[colIndex], row, col)"
-            >
-              <alg-user-progress
-                *ngIf="row.data[colIndex]"
-                [userProgress]="row.data[colIndex]"
-              ></alg-user-progress>
-            </td>
-          </tr>
-        </ng-template>
-      </p-table>
-    </ng-container>
+      <p class="empty-message" *ngIf="rowsState.isReady && rowsState.data.length === 0">
+        <ng-container [ngSwitch]="currentFilter">
+          <span *ngSwitchCase="'Users'" i18n>This group has no users</span>
+          <span *ngSwitchCase="'Teams'" i18n>This group has no teams</span>
+          <span *ngSwitchCase="'Groups'" i18n>This group has no sub-groups</span>
+        </ng-container>
+        <p-button icon="pi pi-refresh" (click)="fetchRows()" styleClass="p-button-sm"></p-button>
+      </p>
 
-    <alg-permissions-edit-dialog
-      [visible]="dialog === 'opened'"
-      [title]="dialogTitle"
-      [targetType]="currentFilter"
-      [permissions]="dialogPermissions.permissions"
-      (close)="onDialogClose()"
-      (save)="onDialogSave($event)"
-    ></alg-permissions-edit-dialog>
-  </ng-template>
+      <alg-user-progress-details
+        [canEditPermissions]="canAccess"
+        [progressData]="progressOverlay"
+        (hide)="hideProgressDetail()"
+        (editPermissions)="onAccessPermissions()"
+      ></alg-user-progress-details>
+
+      <ng-container *ngIf="rowsState.data && columnsState.data && rowsState.data.length > 0">
+        <div class="operations">
+          <button
+            pButton
+            type="button"
+            i18n-label label="Export as CSV"
+            icon="fa fa-file-download"
+            class="p-button-sm"
+            (click)="onCSVExport()"
+            [disabled]="isCSVDataFetching"
+          ></button>
+        </div>
+
+        <p-table #table
+          [columns]="columnsState.data"
+          [value]="rowsState.data"
+          class="slanted-grid"
+          [rowTrackBy]="trackByRow"
+          [loading]="rowsState.isFetching"
+        >
+          <ng-template pTemplate="header" let-columns>
+            <tr>
+              <th class="empty first header-refresh">
+                <p-button icon="pi pi-refresh" (click)="fetchRows()"></p-button>
+              </th>
+              <th *ngFor="let col of columns">
+                <div class="slanted-header">
+                  <div class="slanted-header-content" pTooltip="{{ col.title }}" tooltipPosition="top" [showDelay]="100">
+                    <span class="slanted-header-link alg-link cursor-pointer" (click)="navigateToItem(col)">{{ col.title }}</span>
+                  </div>
+                </div>
+              </th>
+              <th class="empty last"></th>
+            </tr>
+          </ng-template>
+          <ng-template
+            pTemplate="body"
+            let-row
+            let-columns="columns"
+          >
+            <tr>
+              <td class="users" pTooltip="{{ row.header }}" tooltipPosition="left" [showDelay]="100">
+                <span class="alg-link cursor-pointer" (click)="navigateToGroup(row)">{{ row.header }}</span>
+              </td>
+              <td
+                class="cursor-pointer user-progress"
+                *ngFor="let col of columns; let colIndex = index"
+                (click)="showProgressDetail(overlayTarget, row.data[colIndex], row, col)"
+              >
+                <alg-user-progress
+                  *ngIf="row.data[colIndex]"
+                  [userProgress]="row.data[colIndex]"
+                ></alg-user-progress>
+                <div class="overlay-target">
+                  <span class="overlay-position" #overlayTarget></span>
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="footer">
+            <tr *ngIf="currentFilter === 'Users' && (datapager.canLoadMore$ | async)">
+              <td [colSpan]="columnsState.data.length + 1">
+                <div class="text-center">
+                  <button
+                    pButton
+                    class="p-button-rounded"
+                    i18n-label label="Load more"
+                    (click)="fetchMoreRows()"
+                    [disabled]="rowsState.isFetching"
+                  ></button>
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </ng-container>
+
+      <alg-permissions-edit-dialog
+        [currentUserPermissions]="itemData.item.permissions"
+        [item]="progressDataDialog.item"
+        [group]="progressDataDialog.group"
+        [sourceGroup]="sourceGroup"
+        (close)="onDialogClose()"
+        *ngIf="isPermissionsDialogOpened && itemData && progressDataDialog && sourceGroup"
+      ></alg-permissions-edit-dialog>
+    </ng-template>
+  </ng-container>
 </ng-container>

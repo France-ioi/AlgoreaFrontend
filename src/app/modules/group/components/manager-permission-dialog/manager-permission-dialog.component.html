@@ -29,7 +29,7 @@
       <form [formGroup]="form">
         <alg-collapsible-section
           [collapsible]="false"
-          i18n-title title="Management level"
+          i18n-header header="Management level"
           icon="fa fa-users-cog"
         >
           <ng-template #content let-collapsed>
@@ -39,16 +39,16 @@
               [collapsed]="collapsed"
               type="simple"
             >
-              <ng-container #description>
-                <span description i18n>The permissions that the user(s) has on this group</span>
-              </ng-container>
+              <ng-template #description>
+                <span i18n>The permissions that the user(s) has on this group</span>
+              </ng-template>
             </alg-progress-select>
           </ng-template>
         </alg-collapsible-section>
 
         <alg-collapsible-section
           [collapsible]="false"
-          i18n-title title="Can grant access"
+          i18n-header header="Can grant access"
           icon="fa fa-key"
         >
           <ng-template #content let-collapsed>
@@ -64,7 +64,7 @@
 
         <alg-collapsible-section
           [collapsible]="false"
-          i18n-title title="Can watch members"
+          i18n-header header="Can watch members"
           icon="fa fa-binoculars"
         >
           <ng-template #content let-collapsed>
@@ -88,19 +88,19 @@
         </ng-container>
 
         <ng-template #buttons>
-          <alg-button
-              icon="fa fa-times"
-              i18n-label label="Cancel"
-              class="p-button-rounded p-button-danger"
-              (click)="onClose()"
-          ></alg-button>
-          <alg-button
-              icon="fa fa-check"
-              i18n-label label="Save"
-              class="p-button-rounded"
-              (click)="onAccept()"
-              [disabled]="!form.dirty"
-          ></alg-button>
+          <p-button
+            icon="fa fa-times"
+            i18n-label label="Cancel"
+            styleClass="alg-button p-button-rounded p-button-danger"
+            (onClick)="onClose()"
+          ></p-button>
+          <p-button
+            icon="fa fa-check"
+            i18n-label label="Save"
+            styleClass="alg-button p-button-rounded"
+            (onClick)="onAccept()"
+            [disabled]="!form.dirty"
+          ></p-button>
         </ng-template>
       </div>
     </p-footer>

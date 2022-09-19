@@ -1,5 +1,14 @@
 @import "src/colors.scss";
 
+.section-chapter-wrapper {
+  padding: 0 2rem;
+}
+
+.add-item-container {
+  padding-left: 5.8333rem;
+  padding-right: 1.6667rem;
+}
+
 .reorder-handle {
   cursor: grab;
 }
@@ -9,7 +18,7 @@
 }
 
 .type {
-  color: $base-color;
+  color: var(--base-color);
 }
 
 .spacer {

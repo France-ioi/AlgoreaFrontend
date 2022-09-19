@@ -1,3 +1,5 @@
+import '../middlewares/auth';
+import '../middlewares/operation';
 import { Router } from 'express';
 import { definitions, NullableValues } from '../types';
 import { devUser } from '../dataset/users/devUser';
@@ -38,4 +40,4 @@ router.delete('/api/current-user', (_req, res, next) => {
   next();
 });
 
-export { router as currentUserHandler };
+export default router;

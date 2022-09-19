@@ -7,11 +7,15 @@ import { ItemType, typeCategoryOfItem } from '../../../../shared/helpers/item-ty
 import { AddedContent } from '../../../shared-components/components/add-content/add-content.component';
 import { ItemRouter } from '../../../../shared/routing/item-router';
 import { bestAttemptFromResults } from '../../../../shared/helpers/attempts';
-import { PermissionsInfo } from '../../helpers/item-permissions';
 import { isNotUndefined } from '../../../../shared/helpers/null-undefined-predicates';
 import { OverlayPanel } from 'primeng/overlaypanel';
 import { mapToFetchState, readyData } from '../../../../shared/operators/state';
 import { FetchState } from '../../../../shared/helpers/state';
+import { itemViewPermMax } from 'src/app/shared/models/domain/item-view-permission';
+import { allowsGrantingView, itemGrantViewPermMax } from 'src/app/shared/models/domain/item-grant-view-permission';
+import { itemWatchPermMax } from 'src/app/shared/models/domain/item-watch-permission';
+import { ItemCorePerm } from 'src/app/shared/models/domain/item-permissions';
+import { itemEditPermMax } from 'src/app/shared/models/domain/item-edit-permission';
 
 interface BaseChildData {
   contentViewPropagation?: 'none' | 'as_info' | 'as_content',
@@ -20,7 +24,7 @@ interface BaseChildData {
   upperViewLevelsPropagation?: 'use_content_view_propagation' | 'as_content_with_descendants' | 'as_is',
   scoreWeight: number,
   watchPropagation?: boolean,
-  permissions?: PermissionsInfo,
+  permissions?: ItemCorePerm,
 }
 interface InvisibleChildData extends BaseChildData {
   id: string,
@@ -145,11 +149,11 @@ export class ItemChildrenEditComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   addChild(child: AddedContent<ItemType>): void {
-    const permissionsForCreatedItem: PermissionsInfo = {
-      canView: 'solution',
-      canWatch: 'answer_with_grant',
-      canEdit: 'all_with_grant',
-      canGrantView: 'solution_with_grant',
+    const permissionsForCreatedItem: ItemCorePerm = {
+      canView: itemViewPermMax,
+      canWatch: itemWatchPermMax,
+      canEdit: itemEditPermMax,
+      canGrantView: itemGrantViewPermMax,
       isOwner: true,
     };
 
@@ -157,7 +161,7 @@ export class ItemChildrenEditComponent implements OnInit, OnDestroy, OnChanges {
       ...child,
       scoreWeight: DEFAULT_SCORE_WEIGHT,
       isVisible: true,
-      contentViewPropagation: (child.permissions ?? permissionsForCreatedItem).canGrantView === 'none' ? 'none' : 'as_info',
+      contentViewPropagation: !allowsGrantingView(child.permissions ?? permissionsForCreatedItem) ? 'none' : 'as_info',
       permissions: child.permissions ?? permissionsForCreatedItem,
     });
     this.onChildrenListUpdate();

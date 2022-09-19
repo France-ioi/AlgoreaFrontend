@@ -55,7 +55,7 @@
   }
 
   .p-datatable-tbody > tr > td {
-    color: $base-text-color;
+    color: var(--base-text-color);
     border: none;
     background-color: transparent;
     display: flex;

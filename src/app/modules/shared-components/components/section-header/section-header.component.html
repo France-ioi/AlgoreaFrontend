@@ -1,0 +1,12 @@
+<div class="section-container" [ngClass]="theme">
+  <div class="section-header" [ngClass]="styleClass">
+    <span class="header-icon">
+      <i class="{{ icon }}"></i>
+    </span>
+    <span class="header-title">{{ title }}</span>
+    <ng-container *ngIf="contentTemplate"
+                  [ngTemplateOutlet]="contentTemplate"
+                  [ngTemplateOutletContext]="{ $implicit: true }"
+    ></ng-container>
+  </div>
+</div>

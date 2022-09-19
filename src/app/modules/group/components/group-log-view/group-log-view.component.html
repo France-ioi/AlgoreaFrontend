@@ -3,12 +3,18 @@
 
   <alg-error
     *ngIf="state.isError"
-    class="dark"
-    icon="fa fa-exclamation-triangle"
-    i18n-message message="Unable to load the recent activity"
-    [showRefreshButton]="true"
+    [class.dark]="$any(state).error.status !== 403"
+    [icon]="$any(state).error.status !== 403 ? 'fa fa-exclamation-triangle' : undefined"
+    [showRefreshButton]="$any(state).error.status !== 403"
     (refresh)="refresh()"
-  ></alg-error>
+  >
+    <span i18n *ngIf="$any(state).error.status === 403; else unknownError">
+      You are not allowed to see activities of this user.
+    </span>
+    <ng-template #unknownError>
+      <span i18n>Unable to load the recent activity</span>
+    </ng-template>
+  </alg-error>
 
   <ng-container *ngIf="state.data">
     <p-table class="alg-table" [columns]="state.data.columns" [value]="state.data.rowData" [loading]="state.isFetching">
@@ -35,15 +41,22 @@
           pTemplate="body"
           let-rowData
           let-columns="columns"
+          let-index="rowIndex"
       >
         <tr>
-          <td *ngFor="let col of columns">
+          <td *ngFor="let col of columns" (mouseleave)="onMouseLeave($event, col.field)">
             <ng-container [ngSwitch]="col.field">
               <ng-container *ngSwitchCase="'activityType'">
                 {{ rowData.activityType | logActionDisplay : rowData.score }}
               </ng-container>
               <ng-container *ngSwitchCase="'item.string.title'">
-                <a class="alg-link" [ngClass]="{'disabled': !rowData.item}" [routerLink]="rowData.item | rawItemLink">
+                <a
+                  class="alg-link"
+                  [ngClass]="{'disabled': !rowData.item}"
+                  [routerLink]="rowData.item | rawItemLink"
+                  (mouseenter)="onMouseEnter($event, rowData.item.id, index)"
+                  #contentRef
+                >
                   {{ rowData.item.string.title }}
                 </a>
               </ng-container>
@@ -70,3 +83,12 @@
     </p-table>
   </ng-container>
 </ng-container>
+
+<p-overlayPanel
+    styleClass="alg-path-suggestion-overlay"
+    #op
+>
+  <ng-container *ngIf="op.overlayVisible">
+    <alg-path-suggestion [itemId]="(showOverlay$ | async)?.itemId" (mouseleave)="closeOverlay()"></alg-path-suggestion>
+  </ng-container>
+</p-overlayPanel>

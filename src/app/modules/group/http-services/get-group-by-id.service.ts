@@ -20,6 +20,7 @@ const decoder = pipe(
     type: D.literal('Class', 'Team', 'Club', 'Friends', 'Other', 'Session', 'Base'),
     name: D.string,
     description: D.nullable(D.string),
+    isMembershipLocked: D.boolean,
     isOpen: D.boolean,
     isPublic: D.boolean,
     createdAt: D.nullable(dateDecoder),

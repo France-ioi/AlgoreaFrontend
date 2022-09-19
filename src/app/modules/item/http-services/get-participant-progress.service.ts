@@ -5,11 +5,11 @@ import { appConfig } from '../../../shared/helpers/config';
 import { decodeSnakeCase } from '../../../shared/operators/decode';
 import * as D from 'io-ts/Decoder';
 import { dateDecoder } from 'src/app/shared/helpers/decoders';
-import { permissionsDecoder } from '../helpers/item-permissions';
+import { itemCorePermDecoder } from 'src/app/shared/models/domain/item-permissions';
 
 const participantProgressDecoder = D.struct({
   children: D.array(D.struct({
-    currentUserPermissions: permissionsDecoder,
+    currentUserPermissions: itemCorePermDecoder,
     hintsRequested: D.number,
     itemId: D.string,
     latestActivityAt: D.nullable(dateDecoder),

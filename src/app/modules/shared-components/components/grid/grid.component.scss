@@ -16,7 +16,7 @@
   width: 3rem;
   height: 3rem;
   color: white;
-  background-color: $dark-black-color;
+  background-color: var(--dark-black-color);
   border-radius: $border-radius 1.5rem 1.5rem $border-radius;
 }
 
@@ -54,7 +54,7 @@
   }
 
   .column-group {
-    border-bottom: .1rem solid $light-border-color;
+    border-bottom: .1rem solid var(--light-border-color);
 
     p {
       // font-size: 1rem;
@@ -96,7 +96,7 @@
   width: 4.5833rem;
   height: 3rem;
   color: white;
-  background-color: $dark-black-color;
+  background-color: var(--dark-black-color);
   display: flex;
   align-items: center;
   border-top-left-radius: $border-radius;

@@ -1,7 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, ParamMap, UrlTree } from '@angular/router';
 import { of, Subscription } from 'rxjs';
-import { distinctUntilChanged, filter, map, pairwise, startWith, switchMap, take } from 'rxjs/operators';
+import { combineLatestWith, distinctUntilChanged, filter, map, pairwise, startWith, switchMap, take } from 'rxjs/operators';
 import { defaultAttemptId } from 'src/app/shared/helpers/attempts';
 import { errorState, fetchingState, FetchState } from 'src/app/shared/helpers/state';
 import { ResultActionsService } from 'src/app/shared/http-services/result-actions.service';
@@ -9,17 +9,18 @@ import { CurrentContentService } from 'src/app/shared/services/current-content.s
 import { breadcrumbServiceTag } from '../../http-services/get-breadcrumb.service';
 import { GetItemPathService } from '../../http-services/get-item-path.service';
 import { ItemDataSource, ItemData } from '../../services/item-datasource.service';
-import { errorHasTag, errorIsHTTPForbidden } from 'src/app/shared/helpers/errors';
+import { errorHasTag, errorIsHTTPForbidden, errorIsHTTPNotFound } from 'src/app/shared/helpers/errors';
 import { ItemRouter } from 'src/app/shared/routing/item-router';
 import { isTask, ItemTypeCategory } from 'src/app/shared/helpers/item-type';
-import { Mode, ModeAction, ModeService } from 'src/app/shared/services/mode.service';
+import { ModeAction, ModeService } from 'src/app/shared/services/mode.service';
 import { isItemInfo, itemInfo } from 'src/app/shared/models/content/item-info';
 import { repeatLatestWhen } from 'src/app/shared/helpers/repeatLatestWhen';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
 import { isItemRouteError, itemRouteFromParams } from './item-route-validation';
 import { LayoutService } from 'src/app/shared/services/layout.service';
 import { readyData } from 'src/app/shared/operators/state';
-import { ensureDefined } from 'src/app/shared/helpers/null-undefined-predicates';
+import { ensureDefined } from 'src/app/shared/helpers/assert';
+import { routeWithSelfAttempt } from 'src/app/shared/routing/item-route';
 
 const itemBreadcrumbCat = $localize`Items`;
 
@@ -59,11 +60,11 @@ export class ItemByIdComponent implements OnDestroy {
       // When loading a task with a former answerId, we need to remove the answerId from the url to avoid reloading
       // a former answer if the user refreshes the page
       // However, replacing the url should not retrigger an item fetch either, thus the use of history.state.preventRefetch
-      filter(() => !(history.state as Record<string, boolean>).preventRefetch),
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,@typescript-eslint/strict-boolean-expressions
+      filter(() => !(typeof history.state === 'object' && history.state?.preventRefetch)),
     ).subscribe(params => this.fetchItemAtRoute(params)),
 
     this.subscriptions.push(
-
       // on datasource state change, update current state and current content page info
       this.itemDataSource.state$.subscribe(state => {
         this.state = state;
@@ -81,7 +82,7 @@ export class ItemByIdComponent implements OnDestroy {
               currentPageIdx: state.data.breadcrumbs.length - 1,
             },
             title: state.data.item.string.title === null ? undefined : state.data.item.string.title,
-            route: state.data.route,
+            route: routeWithSelfAttempt(state.data.route, state.data.currentResult?.attemptId),
             details: {
               title: state.data.item.string.title,
               type: state.data.item.type,
@@ -105,7 +106,8 @@ export class ItemByIdComponent implements OnDestroy {
           }
 
         } else if (state.isError) {
-          if (errorHasTag(state.error, breadcrumbServiceTag) && errorIsHTTPForbidden(state.error)) {
+          // If path is incorrect, redirect to same page without path to trigger the solve missing path at next navigation
+          if (errorHasTag(state.error, breadcrumbServiceTag) && (errorIsHTTPForbidden(state.error) || errorIsHTTPNotFound(state.error))) {
             if (this.hasRedirected) throw new Error('Too many redirections (unexpected)');
             this.hasRedirected = true;
             const { contentType, id, answerId } = this.getItemRoute();
@@ -117,17 +119,11 @@ export class ItemByIdComponent implements OnDestroy {
       }),
 
       this.modeService.modeActions$.pipe(
-        filter(action => [ ModeAction.StartEditing, ModeAction.StopEditing ].includes(action))
-      ).subscribe(action => {
-        const current = this.currentContent.current();
-        if (!isItemInfo(current)) throw new Error('Unexpected: in item-by-id but the current content is not an item');
-        this.itemRouter.navigateTo(current.route, { page: action === ModeAction.StartEditing ? 'edit' : 'details' });
+        filter(action => [ ModeAction.StartEditing, ModeAction.StopEditing ].includes(action)),
+        combineLatestWith(this.currentContent.content$.pipe(filter(isItemInfo))),
+      ).subscribe(([ action, content ]) => {
+        this.itemRouter.navigateTo(content.route, { page: action === ModeAction.StartEditing ? 'edit' : 'details' });
       }),
-
-      this.modeService.mode$.pipe(
-        filter(mode => [ Mode.Normal, Mode.Watching ].includes(mode)),
-        distinctUntilChanged(),
-      ).subscribe(() => this.reloadContent()),
 
       this.itemDataSource.state$.pipe(
         readyData(),
@@ -137,8 +133,9 @@ export class ItemByIdComponent implements OnDestroy {
         filter(([ previous, current ]) => (!!current && (!previous || isTask(previous.item) || isTask(current.item)))),
         map(([ , current ]) => ensureDefined(current).item),
       ).subscribe(item => {
-        const activateFullFrame = isTask(item) && !(history.state as Record<string, boolean | undefined>).preventFullFrame;
-        this.layoutService.toggleFullFrameContent(activateFullFrame);
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,@typescript-eslint/strict-boolean-expressions
+        const activateFullFrame = isTask(item) && !(typeof history.state === 'object' && history.state?.preventFullFrame);
+        this.layoutService.configure({ fullFrameActive: activateFullFrame });
       })
     );
   }
@@ -146,13 +143,9 @@ export class ItemByIdComponent implements OnDestroy {
   ngOnDestroy(): void {
     this.currentContent.clear();
     this.subscriptions.forEach(s => s.unsubscribe());
-    this.layoutService.fullFrameContent$
-      .pipe(take(1), filter(fullFrame => fullFrame.expanded)) // if layout is in full frame and we quit an item page => disable full frame
-      .subscribe(() => this.layoutService.toggleFullFrameContent(false));
-  }
-
-  reloadContent(): void {
-    this.fetchItemAtRoute(this.activatedRoute.snapshot.paramMap);
+    this.layoutService.fullFrame$
+      .pipe(take(1), filter(fullFrame => fullFrame.active)) // if layout is in full frame and we quit an item page => disable full frame
+      .subscribe(() => this.layoutService.configure({ fullFrameActive: false }));
   }
 
   private getItemRoute(params?: ParamMap): ReturnType<typeof itemRouteFromParams> {
@@ -196,7 +189,8 @@ export class ItemByIdComponent implements OnDestroy {
     ).subscribe({
       next: itemRoute => this.itemRouter.navigateTo(itemRoute, { navExtras: { replaceUrl: true } }),
       error: err => {
-        this.state = errorState(err);
+        this.state = errorState(err instanceof Error ? err : new Error('unknown error'));
+        this.layoutService.configure({ fullFrameActive: false });
       }
     });
   }

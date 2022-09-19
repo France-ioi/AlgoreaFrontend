@@ -23,14 +23,14 @@
       <span class="label red" *ngIf="!codeInfo.hasCodeNotSet && codeInfo.hasCodeExpired" i18n>
         This code has expired on {{ codeInfo.codeExpiration | date:'medium' }}
       </span>
-      <alg-button
-        label="Generate a code"
+      <p-button
+        i18n-label label="Generate a code"
         icon="fa fa-plus"
-        class="p-button-rounded"
-        (click)="generateNewCode()"
+        styleClass="alg-button p-button-rounded"
+        (onClick)="generateNewCode()"
         [disabled]="processing"
         *ngIf="codeInfo.hasCodeNotSet"
-      ></alg-button>
+      ></p-button>
     </div>
 
     <div class="code-info" *ngIf="group && group.code">
@@ -61,15 +61,15 @@
             #control="ngModel"
             required
           ></alg-duration>
-          <alg-button
+          <p-button
             icon="fa fa-check"
-            class="submit-duration-button"
-            (click)="codeLifetimeControlValue && submitCodeLifetime(codeLifetimeControlValue.ms)"
+            styleClass="alg-button submit-duration-button"
+            (onClick)="codeLifetimeControlValue && submitCodeLifetime(codeLifetimeControlValue.ms)"
             [disabled]="processing || !codeLifetimeControlValue || !control.dirty || codeLifetimeControlValue.ms === group.codeLifetime?.ms"
-            i18n-pTooltip pTooltip="This code will expire after the given duration (reset current expiration)"
+            [pTooltip]="durationTooltip"
             tooltipPosition="right"
             tooltipEvent="hover"
-          ></alg-button>
+          ></p-button>
         </div>
       </div>
     </div>

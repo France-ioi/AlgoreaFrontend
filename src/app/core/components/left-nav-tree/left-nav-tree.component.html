@@ -2,7 +2,7 @@
 <div class="tree-header" *ngIf="data && data.parent" (click)="navigateToParent()">
   <span class="tree-header-handle">
     <i class="fa fa-chevron-left"></i>
-    <div class="icon-folder"><img src="/assets/images/tree-folder.svg" alt=""></div>
+    <div class="icon-folder"><img src="assets/images/tree-folder.svg" alt=""></div>
   </span>
   <span class="tree-header-title">{{ data.parent.title }}</span>
 </div>
@@ -19,7 +19,7 @@
   <!-- "chapter" type -->
   <ng-template let-node pTemplate="chapter">
     <span
-      id="nav-{{ node.data.id }}"
+      id="nav-{{ node.data.route.id }}"
       class="node-tree-item folder"
       [ngClass]="{ expanded: node.expanded, locked: node.data.locked, current: node.partialSelected }"
     >
@@ -52,12 +52,14 @@
           <span class="label-container">
             <span class="node-label-title">
               {{ node.label }}
-              <span *ngIf="node.data.associatedGroupName">(via group "{{ node.data.associatedGroupName }}")</span>
+              <span *ngIf="!['Base', 'ContestParticipants'].includes(node.data.associatedGroupType) && node.data.associatedGroupName">
+                (<span i18n="@@viaGroup">via group</span> "{{ node.data.associatedGroupName }}")
+              </span>
             </span>
             <span
               class="node-state"
               *ngIf="node.data.locked"
-              i18n-pTooltip pTooltip="{{ 'Your current access rights do not allow you to list the content of this chapter.' }}"
+              i18n-pTooltip pTooltip="Your current access rights do not allow you to list the content of this chapter."
             >
               <i class="fa fa-lock"></i>
             </span>
@@ -70,7 +72,7 @@
   <!-- "skill-folder" type -->
   <ng-template let-node pTemplate="skill-folder">
     <span
-      id="nav-{{ node.data.id }}"
+      id="nav-{{ node.data.route.id }}"
       class="node-tree-item folder"
       [ngClass]="{ expanded: node.expanded, locked: node.data.locked, current: node.partialSelected }"
     >
@@ -90,7 +92,9 @@
           <span class="label-container">
             <span class="node-label-title">
               {{ node.label }}
-              <span *ngIf="node.data.associatedGroupName">(<span i18n>via group</span> "{{ node.data.associatedGroupName }}")</span>
+              <span *ngIf="!['Base', 'ContestParticipants'].includes(node.data.associatedGroupType) && node.data.associatedGroupName">
+                (<span i18n="@@viaGroup">via group</span> "{{ node.data.associatedGroupName }}")
+              </span>
             </span>
             <span class="node-state" *ngIf="node.data.locked">
               <i class="fa fa-lock"></i>
@@ -110,7 +114,7 @@
   <!-- 'skill-leaf' type -->
   <ng-template let-node pTemplate="skill-leaf">
     <span
-      id="nav-{{ node.data.id }}"
+      id="nav-{{ node.data.route.id }}"
       class="node-tree-item folder"
       [ngClass]="{ locked: node.data.locked, current: node.partialSelected }"
     >
@@ -131,7 +135,9 @@
           <span class="label-container">
             <span class="node-label-title">
               {{ node.data.title }}
-              <span *ngIf="node.data.associatedGroupName">(via group "{{ node.data.associatedGroupName }}")</span>
+              <span *ngIf="!['Base', 'ContestParticipants'].includes(node.data.associatedGroupType) && node.data.associatedGroupName">
+                (<span i18n="@@viaGroup">via group</span> "{{ node.data.associatedGroupName }}")
+              </span>
             </span>
             <span
               class="node-state"
@@ -155,7 +161,7 @@
   <!-- "group-folder" type -->
   <ng-template let-node pTemplate="group">
     <span
-      id="nav-{{ node.data.id }}"
+      id="nav-{{ node.data.route.id }}"
       class="node-tree-item folder"
       [ngClass]="{ expanded: node.expanded, locked: node.data.locked, current: node.data && node.partialSelected }"
     >
@@ -200,7 +206,7 @@
   <!-- 'task-course' type -->
   <ng-template let-node pTemplate="task-course">
     <span
-      id="nav-{{ node.data.id }}"
+      id="nav-{{ node.data.route.id }}"
       class="node-tree-item folder"
       [ngClass]="{ locked: node.data.locked, current: node.partialSelected }"
     >
@@ -233,7 +239,9 @@
           <span class="label-container">
             <span class="node-label-title">
               {{ node.data.title }}
-              <span *ngIf="node.data.associatedGroupName">(via group "{{ node.data.associatedGroupName }}")</span>
+              <span *ngIf="!['Base', 'ContestParticipants'].includes(node.data.associatedGroupType) && node.data.associatedGroupName">
+                (<span i18n="@@viaGroup">via group</span> "{{ node.data.associatedGroupName }}")
+              </span>
             </span>
             <span
               class="node-state"

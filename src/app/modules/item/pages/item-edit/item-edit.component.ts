@@ -1,20 +1,19 @@
-import { Component, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { ItemDataSource } from '../../services/item-datasource.service';
-import { AbstractControl, FormBuilder, ValidatorFn, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, ValidatorFn, Validators } from '@angular/forms';
 import { forkJoin, Observable, of, Subscription, throwError } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { ItemStringChanges, UpdateItemStringService } from '../../http-services/update-item-string.service';
 import { ItemChanges, UpdateItemService } from '../../http-services/update-item.service';
-import { PossiblyInvisibleChildData, ChildDataWithId, hasId } from '../../components/item-children-edit/item-children-edit.component';
 import { Item } from '../../http-services/get-item-by-id.service';
-import { ItemEditContentComponent } from '../item-edit-content/item-edit-content.component';
 import { PendingChangesComponent } from 'src/app/shared/guards/pending-changes-guard';
-import { CreateItemService, NewItem } from '../../http-services/create-item.service';
 import { ModeService } from 'src/app/shared/services/mode.service';
 import { readyData } from 'src/app/shared/operators/state';
 import { Duration } from '../../../../shared/helpers/duration';
 import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
 import { isNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
+import { HttpErrorResponse } from '@angular/common/http';
+import { CurrentContentService } from 'src/app/shared/services/current-content.service';
 
 export const DEFAULT_ENTERING_TIME_MIN = '1000-01-01T00:00:00Z';
 export const DEFAULT_ENTERING_TIME_MAX = '9999-12-31T23:59:59Z';
@@ -30,7 +29,7 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
     title: [ '', [ Validators.required, Validators.minLength(3), Validators.maxLength(200) ] ],
     subtitle: [ '', Validators.maxLength(200) ],
     description: [ '' ],
-    url: [ '', Validators.maxLength(200) ],
+    url: [ '', Validators.maxLength(2000) ],
     text_id: [ '', Validators.maxLength(200) ],
     uses_api: [ false ],
     validation_type: [ '' ],
@@ -53,7 +52,6 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
   }, {
     validators: [ this.maxTeamSizeValidator() ],
   });
-  itemChanges: { children?: PossiblyInvisibleChildData[] } = {};
 
   fetchState$ = this.itemDataSource.state$;
   initialFormData?: Item & {durationEnabled?: boolean, enteringTimeMinEnabled?: boolean, enteringTimeMaxEnabled?: boolean};
@@ -77,13 +75,11 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
     return this.initialFormData?.type !== 'Skill';
   }
 
-  @ViewChild('content') private editContent?: ItemEditContentComponent;
-
   constructor(
     private modeService: ModeService,
+    private currentContentService: CurrentContentService,
     private itemDataSource: ItemDataSource,
-    private formBuilder: FormBuilder,
-    private createItemService: CreateItemService,
+    private formBuilder: UntypedFormBuilder,
     private updateItemService: UpdateItemService,
     private updateItemStringService: UpdateItemStringService,
     private actionFeedbackService: ActionFeedbackService,
@@ -109,38 +105,6 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
 
   isDirty(): boolean {
     return this.itemForm.dirty;
-  }
-
-  updateItemChanges(children: PossiblyInvisibleChildData[]): void {
-    this.itemForm.markAsDirty();
-    this.itemChanges.children = children;
-  }
-
-  // Update Item
-  private createChildren(): Observable<ChildDataWithId[] | undefined>{
-    if (!this.itemChanges.children) return of(undefined);
-
-    if (this.itemChanges.children.length === 0) {
-      return of([]);
-    }
-
-    return forkJoin(
-      this.itemChanges.children.map(child => {
-        if (!this.initialFormData) return throwError(new Error('Invalid form'));
-        if (hasId(child) || !child.isVisible) return of(child);
-        // the child doesnt have an id so we create it
-        if (!child.title) return throwError(new Error('Something went wrong, the new child is missing his title'));
-        const newChild: NewItem = {
-          title: child.title,
-          type: child.type,
-          languageTag: 'en',
-          parent: this.initialFormData.id
-        };
-        return this.createItemService
-          .create(newChild)
-          .pipe(map(res => ({ id: res, ...child })));
-      })
-    );
   }
 
   private getItemChanges(): ItemChanges | undefined {
@@ -273,30 +237,11 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
   }
 
   private updateItem(): Observable<void> {
-    return this.createChildren().pipe(
-      switchMap(res => {
-        if (!this.initialFormData) return throwError(new Error('Invalid initial data'));
-        const changes = this.getItemChanges();
-        if (!changes) return throwError(new Error('Invalid form'));
-        if (res) {
-          // @TODO: Avoid affecting component vars in Observable Operator
-          // save the new children (their ids) to prevent recreating them in case of error
-          this.itemChanges.children = res;
-          changes.children = res.map((child, idx) => ({
-            item_id: child.id,
-            order: idx,
-            score_weight: child.scoreWeight,
-            content_view_propagation: child.contentViewPropagation,
-            edit_propagation: child.editPropagation,
-            grant_view_propagation: child.grantViewPropagation,
-            upper_view_levels_propagation: child.upperViewLevelsPropagation,
-            watch_propagation: child.watchPropagation,
-          }));
-        }
-        if (!Object.keys(changes).length) return of(undefined);
-        return this.updateItemService.updateItem(this.initialFormData.id, changes);
-      }),
-    );
+    if (!this.initialFormData) return throwError(new Error('Invalid initial data'));
+    const changes = this.getItemChanges();
+    if (!changes) return throwError(new Error('Invalid form'));
+    if (!Object.keys(changes).length) return of(undefined);
+    return this.updateItemService.updateItem(this.initialFormData.id, changes);
   }
 
   // Item string changes
@@ -346,10 +291,12 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
       next: _status => {
         this.actionFeedbackService.success($localize`Changes successfully saved.`);
         this.itemDataSource.refreshItem(); // which will re-enable the form
+        this.currentContentService.forceNavMenuReload();
       },
-      error: _err => {
-        this.actionFeedbackService.unexpectedError();
+      error: err => {
         this.itemForm.enable();
+        this.actionFeedbackService.unexpectedError();
+        if (!(err instanceof HttpErrorResponse)) throw err;
       }
     });
   }
@@ -394,9 +341,7 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
         entry_min_admitted_members_ratio: item.entryMinAdmittedMembersRatio,
       } : {}),
     });
-    this.itemChanges = {};
     this.itemForm.enable();
-    this.editContent?.reset();
   }
 
   private maxTeamSizeValidator(): ValidatorFn {

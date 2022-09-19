@@ -22,5 +22,11 @@
         ></ng-container>
       </div>
     </div>
+    <div *ngIf="disabledTooltip.length" class="gray-overlay tool"
+      [pTooltip]="disabledTooltip.join('\n') || ''"
+      tooltipPosition="top"
+      tooltipStyleClass="permissions-dialog"
+      [escape]="false"
+    ></div>
   </div>
 </div>

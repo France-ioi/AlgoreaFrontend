@@ -1,9 +1,10 @@
 import { Component, Input, Output, EventEmitter, OnDestroy, OnInit } from '@angular/core';
 import { CreateGroupInvitationsService, InvitationResult } from '../../http-services/create-group-invitations.service';
 import { Group } from '../../http-services/get-group-by-id.service';
-import { FormBuilder } from '@angular/forms';
+import { UntypedFormBuilder } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 interface Message
 {
@@ -33,7 +34,7 @@ export class GroupInviteUsersComponent implements OnInit, OnDestroy {
   constructor(
     private createGroupInvitationsService: CreateGroupInvitationsService,
     private actionFeedbackService: ActionFeedbackService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
   ) {
   }
 
@@ -130,9 +131,10 @@ export class GroupInviteUsersComponent implements OnInit, OnDestroy {
 
         this.setState('empty');
       },
-      error: _err => {
-        this.actionFeedbackService.unexpectedError();
+      error: err => {
         this.setState('ready');
+        this.actionFeedbackService.unexpectedError();
+        if (!(err instanceof HttpErrorResponse)) throw err;
       }
     });
   }

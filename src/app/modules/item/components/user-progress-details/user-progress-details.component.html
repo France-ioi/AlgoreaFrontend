@@ -1,8 +1,8 @@
 <p-overlayPanel #panel appendTo="body" styleClass="user-progress-overlay-panel" hideTransitionOptions="0s">
-  <ng-container *ngIf="openedOverlay$ | async as overlay">
-    <div class="user-progress-info" *ngIf="overlay?.progress as progress">
+  <ng-template pTemplate>
+    <div class="user-progress-info">
       <div class="content validated">
-        <ng-container *ngIf="progress.timeSpent > 0 || progress.score > 0; else notStarted">
+        <ng-container *ngIf="progress && (progress.timeSpent > 0 || progress.score > 0); else notStarted">
           <span>
             <i class="fa fa-clock"></i>
             <span class="menu-label" i18n>Time spent</span>
@@ -20,7 +20,7 @@
           </span>
         </ng-container>
         <ng-template #notStarted>
-          <span class="not-started" i18n>Not started</span>
+          <span class="not-started" i18n="In progress matrix, explanation when cell is empty">Not started</span>
         </ng-template>
         <span
           *ngIf="canEditPermissions"
@@ -32,5 +32,5 @@
         </span>
       </div>
     </div>
-  </ng-container>
+  </ng-template>
 </p-overlayPanel>

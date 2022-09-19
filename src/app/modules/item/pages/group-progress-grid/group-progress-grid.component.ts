@@ -1,19 +1,14 @@
-import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
-import { forkJoin, Observable, of, ReplaySubject, Subject, Subscription } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { forkJoin, Observable, ReplaySubject, Subject } from 'rxjs';
+import { combineLatestWith, map, shareReplay, switchMap } from 'rxjs/operators';
 import { canCurrentUserGrantGroupAccess } from 'src/app/modules/group/helpers/group-management';
 import { Group } from 'src/app/modules/group/http-services/get-group-by-id.service';
 import { GetGroupChildrenService } from 'src/app/modules/group/http-services/get-group-children.service';
 import { formatUser } from 'src/app/shared/helpers/user';
 import { GetGroupDescendantsService } from 'src/app/shared/http-services/get-group-descendants.service';
 import { GetGroupProgressService, TeamUserProgress } from 'src/app/shared/http-services/get-group-progress.service';
-import { GroupPermissionsService } from 'src/app/shared/http-services/group-permissions.service';
-import { Permissions } from 'src/app/shared/helpers/group-permissions';
-import { progressiveObservableFromList } from 'src/app/shared/operators/progressive-observable-from-list';
-import { mapToFetchState } from 'src/app/shared/operators/state';
-import { withPreviousFetchState } from 'src/app/shared/operators/with-previous-fetch-state';
 import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
-import { TypeFilter } from '../../components/composition-filter/composition-filter.component';
+import { TypeFilter } from '../../helpers/composition-filter';
 import { GetItemChildrenService } from '../../http-services/get-item-children.service';
 import { ItemData } from '../../services/item-datasource.service';
 import { ProgressCSVService } from '../../../../shared/http-services/progress-csv.service';
@@ -21,20 +16,41 @@ import { downloadFile } from '../../../../shared/helpers/download-file';
 import { typeCategoryOfItem } from '../../../../shared/helpers/item-type';
 import { ItemRouter } from '../../../../shared/routing/item-router';
 import { GroupRouter } from '../../../../shared/routing/group-router';
-import { rawGroupRoute } from '../../../../shared/routing/group-route';
+import { RawGroupRoute, rawGroupRoute } from '../../../../shared/routing/group-route';
+import { ProgressData } from '../../components/user-progress-details/user-progress-details.component';
+import { DataPager } from 'src/app/shared/helpers/data-pager';
+import { mapToFetchState, readyData } from 'src/app/shared/operators/state';
+import { FetchState } from 'src/app/shared/helpers/state';
+import { HttpErrorResponse } from '@angular/common/http';
+import { allowsGivingPermToItem } from 'src/app/shared/models/domain/item-permissions';
 
-interface Data {
-  type: TypeFilter,
-  items: {
+const progressListLimit = 25;
+
+interface DataRow {
+  header: string,
+  id: string,
+  data: (TeamUserProgress|undefined)[],
+}
+interface DataColumn {
+  id: string,
+  title: string|null,
+}
+interface DataFetching {
+  groupId: string,
+  itemId: string,
+  filter: TypeFilter,
+  fromId?: string,
+  pageSize: number,
+}
+
+interface ProgressDataDialog {
+  item: {
     id: string,
-    title: string|null,
-  }[],
-  rows: {
-    header: string,
-    id: string,
-    data: (TeamUserProgress|undefined)[],
-  }[],
-  can_access: boolean,
+    string: {
+      title: string | null,
+    },
+  },
+  group: RawGroupRoute,
 }
 
 @Component({
@@ -42,7 +58,7 @@ interface Data {
   templateUrl: './group-progress-grid.component.html',
   styleUrls: [ './group-progress-grid.component.scss' ]
 })
-export class GroupProgressGridComponent implements OnChanges, OnDestroy {
+export class GroupProgressGridComponent implements OnChanges {
 
   @Input() group?: Group;
   @Input() itemData?: ItemData;
@@ -51,107 +67,81 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
 
   currentFilter = this.defaultFilter;
 
-  dialogPermissions: {
-    permissions: Permissions,
-    itemId: string,
-    targetGroupId: string,
-  } = {
-    itemId: '',
-    targetGroupId: '',
-    permissions: {
-      canView: 'none',
-      canGrantView: 'none',
-      canWatch: 'none',
-      canEdit: 'none',
-      canMakeSessionOfficial: false,
-      isOwner: true,
-    }
-  };
+  progressOverlay?: ProgressData;
+  progressDataDialog?: ProgressDataDialog;
+  sourceGroup?: RawGroupRoute;
 
-  progressOverlay?: {
-    progress: TeamUserProgress,
-    target: Element,
-    accessPermissions: {
-      title: string,
-      groupId: string,
-      itemId: string,
-    },
-  };
-
-  dialog: 'loading'|'opened'|'closed' = 'closed';
-  dialogTitle = '';
+  isPermissionsDialogOpened = false;
 
   isCSVDataFetching = false;
+  canAccess = false;
 
-  private dataFetching$ = new ReplaySubject<{
-    groupId: string,
-    itemId: string,
-    attemptId: string,
-    filter: TypeFilter,
-    title: string | null,
-  }>(1);
-  private permissionsFetchingSubscription?: Subscription;
+  private itemData$ = new ReplaySubject<ItemData>(1);
   private refresh$ = new Subject<void>();
-
-  state$ = this.dataFetching$.pipe(
-    switchMap(({ itemId, groupId, attemptId, filter, title }) =>
-      this.getData(itemId, groupId, attemptId, filter, title).pipe(
-        mapToFetchState({ resetter: this.refresh$ })
-      )
-    ),
-    withPreviousFetchState(),
-    switchMap(([ previousState, state ]) => {
-      if (!state.data) return of(state);
-      return progressiveObservableFromList(state.data.rows, { initialIncrementSize: previousState.data?.rows.length }).pipe(
-        map(rows => ({ ...state, data: { ...state.data, rows } })),
-      );
-    }),
+  readonly columns$: Observable<FetchState<DataColumn[]>> = this.itemData$.pipe(
+    switchMap(itemData => this.getColumns(itemData)),
+    mapToFetchState({ resetter: this.refresh$ }),
+    shareReplay(1),
   );
+
+  readonly datapager = new DataPager<DataRow>({
+    pageSize: progressListLimit,
+    fetch: (pageSize, latestRow?: DataRow): Observable<DataRow[]> => {
+      if (!this.group || !this.itemData) throw new Error('properties are missing');
+      return this.getRowsWithProgress({
+        groupId: this.group.id,
+        itemId: this.itemData.item.id,
+        filter: this.currentFilter,
+        fromId: latestRow?.id,
+        pageSize,
+      });
+    },
+    onLoadMoreError: (): void => {
+      this.actionFeedbackService.error($localize`Could not load more results, are you connected to the internet?`);
+    },
+  });
+
+  rows$ = this.datapager.list$;
 
   constructor(
     private getItemChildrenService: GetItemChildrenService,
     private getGroupDescendantsService: GetGroupDescendantsService,
     private getGroupUsersProgressService: GetGroupProgressService,
     private getGroupChildrenService: GetGroupChildrenService,
-    private groupPermissionsService: GroupPermissionsService,
     private actionFeedbackService: ActionFeedbackService,
     private progressCSVService: ProgressCSVService,
     private itemRouter: ItemRouter,
     private groupRouter: GroupRouter,
   ) {}
 
-  ngOnDestroy(): void {
-    this.dataFetching$.complete();
-    this.permissionsFetchingSubscription?.unsubscribe();
-    this.refresh$.complete();
+  ngOnChanges(changes: SimpleChanges): void {
+    this.isPermissionsDialogOpened = false;
+    if (changes.itemData && this.itemData) this.itemData$.next(this.itemData);
+    if (this.group) {
+      this.fetchRows();
+      this.sourceGroup = rawGroupRoute(this.group);
+    }
+    this.canAccess = !!(this.group && canCurrentUserGrantGroupAccess(this.group)
+      && this.itemData && allowsGivingPermToItem(this.itemData.item.permissions));
   }
 
-  ngOnChanges(_changes: SimpleChanges): void {
-    if (!this.itemData || !this.itemData.currentResult || !this.group) throw new Error('properties are missing');
-
-    this.dialog = 'closed';
-    this.dataFetching$.next({
-      groupId: this.group.id,
-      itemId: this.itemData.item.id,
-      attemptId: this.itemData.currentResult.attemptId,
-      filter: this.currentFilter,
-      title: this.itemData.item.string.title,
-    });
-  }
-
-  trackByRow(_index: number, row: Data['rows'][number]): string {
+  trackByRow(_index: number, row: DataRow): string {
     return row.id;
   }
 
-  showProgressDetail(target: HTMLElement, userProgress: TeamUserProgress, row: Data['rows'][number], col: Data['items'][number]): void {
+  showProgressDetail(target: HTMLElement, userProgress: TeamUserProgress, row: DataRow, col: DataColumn): void {
     this.progressOverlay = {
-      accessPermissions: {
-        title: row.header,
-        groupId: row.id,
-        itemId: col.id,
-      },
       target,
       progress: userProgress,
+    };
+    this.progressDataDialog = {
+      item: {
+        id: col.id,
+        string: {
+          title: row.header,
+        },
+      },
+      group: rawGroupRoute({ id: row.id, isUser: this.currentFilter === 'Users' }),
     };
   }
 
@@ -159,14 +149,16 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     this.progressOverlay = undefined;
   }
 
-  refresh(): void {
-    this.refresh$.next();
+  fetchRows(): void {
+    this.datapager.reset();
+    this.refresh$.next(); // refreshes the columns.
+    this.fetchMoreRows();
   }
 
-  private getProgress(itemId: string, groupId: string, filter: TypeFilter): Observable<TeamUserProgress[]> {
+  private getProgress({ itemId, groupId, filter, pageSize, fromId }: DataFetching): Observable<TeamUserProgress[]> {
     switch (filter) {
       case 'Users':
-        return this.getGroupUsersProgressService.getUsersProgress(groupId, [ itemId ]);
+        return this.getGroupUsersProgressService.getUsersProgress(groupId, [ itemId ], { limit: pageSize, fromId });
       case 'Teams':
         return this.getGroupUsersProgressService.getTeamsProgress(groupId, [ itemId ]);
       case 'Groups':
@@ -184,10 +176,10 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     }
   }
 
-  private getRows(groupId: string, filter: TypeFilter): Observable<{id :string, value: string}[]> {
+  private getRows({ groupId, filter, pageSize, fromId }: Omit<DataFetching, 'itemId'>): Observable<{id :string, value: string}[]> {
     switch (filter) {
       case 'Users':
-        return this.getGroupDescendantsService.getUserDescendants(groupId)
+        return this.getGroupDescendantsService.getUserDescendants(groupId, { limit: pageSize, fromId })
           .pipe(map(users => users.map(user => ({ id: user.id, value: formatUser(user.user) }))));
       case 'Teams':
         return this.getGroupDescendantsService.getTeamDescendants(groupId)
@@ -198,92 +190,48 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     }
   }
 
-  private getData(itemId: string, groupId: string, attemptId: string, filter: TypeFilter, title: string | null): Observable<Data> {
+  private getRowsWithProgress({ itemId, groupId, filter, fromId, pageSize }: DataFetching): Observable<DataRow[]> {
     return forkJoin({
-      items: this.getItemChildrenService.get(itemId, attemptId),
-      rows: this.getRows(groupId, filter),
-      progress: this.getProgress(itemId, groupId, filter),
+      rows: this.getRows({ groupId, filter, pageSize, fromId }),
+      progress: this.getProgress({ itemId, groupId, filter, pageSize, fromId }),
     }).pipe(
-      map(data => ({
-        type: filter,
-        items: [
-          {
-            id: itemId,
-            title: title,
-          },
-          ...data.items.map(item => ({
-            id: item.id,
-            title: item.string.title,
-          }))
-        ],
-        rows: data.rows.map(row => ({
-          header: row.value,
-          id: row.id,
-          data: [
-            data.progress.find(progress => progress.itemId === itemId && progress.groupId === row.id),
-            ...data.items.map(item =>
-              data.progress.find(progress => progress.itemId === item.id && progress.groupId === row.id)
-            )
-          ],
-        })),
-        can_access: (this.group && canCurrentUserGrantGroupAccess(this.group)
-          && this.itemData?.item.permissions.canGrantView !== 'none') || false,
-      }))
+      combineLatestWith(this.columns$.pipe(readyData())),
+      map(([{ rows, progress }, items ]) =>
+        rows
+          .filter(row => progress.find(progress => progress.groupId === row.id)) // only keep rows with a defined progress
+          .map(row => ({
+            header: row.value,
+            id: row.id,
+            data: [
+              progress.find(progress => progress.itemId === itemId && progress.groupId === row.id),
+              ...items.map(item =>
+                progress.find(progress => progress.itemId === item.id && progress.groupId === row.id)
+              ),
+            ],
+          })),
+      )
     );
   }
 
   onFilterChange(typeFilter: TypeFilter): void {
-    if (!this.itemData || !this.itemData.currentResult || !this.group) throw new Error('properties are missing');
-
     if (typeFilter !== this.currentFilter) {
       this.currentFilter = typeFilter;
-      this.dataFetching$.next({
-        groupId: this.group.id,
-        itemId: this.itemData.item.id,
-        attemptId: this.itemData.currentResult.attemptId,
-        filter: this.currentFilter,
-        title: this.itemData.item.string.title,
-      });
+      this.fetchRows();
     }
   }
 
+  fetchMoreRows(): void {
+    this.datapager.load();
+  }
+
   onAccessPermissions(): void {
-    if (!this.group || !this.progressOverlay) return;
-    const { title, groupId: targetGroupId, itemId } = this.progressOverlay.accessPermissions;
-
     this.hideProgressDetail();
-    this.dialogTitle = title;
-    this.dialog = 'loading';
-
-    this.permissionsFetchingSubscription?.unsubscribe();
-    this.permissionsFetchingSubscription = this.groupPermissionsService.getPermissions(this.group.id, targetGroupId, itemId)
-      .subscribe({
-        next: permissions => {
-          this.dialogPermissions = {
-            itemId: itemId,
-            targetGroupId: targetGroupId,
-            permissions: permissions.granted,
-          };
-          this.dialog = 'opened';
-        },
-        error: () =>
-          this.actionFeedbackService.error($localize`The permissions cannot be retrieved. If the problem persists, please contact us.`),
-      });
+    this.isPermissionsDialogOpened = true;
   }
 
   onDialogClose(): void {
-    this.dialog = 'closed';
-  }
-
-  onDialogSave(permissions: Permissions): void {
-    if (!this.group) return;
-
-    this.groupPermissionsService.updatePermissions(this.group.id, this.dialogPermissions.targetGroupId,
-      this.dialogPermissions.itemId, permissions)
-      .subscribe({
-        next: _res => this.actionFeedbackService.success($localize`Permissions successfully updated.`),
-        error: _err => this.actionFeedbackService.unexpectedError(),
-      });
+    this.isPermissionsDialogOpened = false;
+    this.progressDataDialog = undefined;
   }
 
   getCSVDownloadTypeByFilter(): 'group' | 'team' | 'user' {
@@ -313,9 +261,10 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
           this.isCSVDataFetching = false;
           downloadFile([ data ], `${parentItemId}-${new Date().toDateString()}.csv`, 'text/csv');
         },
-        error: () => {
+        error: err => {
           this.isCSVDataFetching = false;
           this.actionFeedbackService.unexpectedError();
+          if (!(err instanceof HttpErrorResponse)) throw err;
         },
       });
   }
@@ -339,5 +288,21 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
 
   navigateToGroup(row: { header: string, id: string, data: (TeamUserProgress|undefined)[] }): void {
     this.groupRouter.navigateTo(rawGroupRoute({ id: row.id, isUser: this.currentFilter === 'Users' }));
+  }
+
+  private getColumns(itemData: ItemData): Observable<DataColumn[]> {
+    if (!itemData.currentResult?.attemptId) throw new Error('unexpected');
+    return this.getItemChildrenService.get(itemData.item.id, itemData.currentResult.attemptId).pipe(
+      map(items => [
+        {
+          id: itemData.item.id,
+          title: itemData.item.string.title,
+        },
+        ...items.map(item => ({
+          id: item.id,
+          title: item.string.title,
+        }))
+      ]),
+    );
   }
 }

@@ -15,7 +15,7 @@
   }
   &::before {
     content: "";
-    background: $base-text-color;
+    background: var(--base-text-color);
     opacity: 0.25;
   }
 }

@@ -10,6 +10,7 @@ import { catchError, delay, map, retryWhen, switchMap, take } from 'rxjs/operato
 import { rxBuild, RxMessagingChannel } from './rxjschannel';
 import * as D from 'io-ts/Decoder';
 import {
+  metadataDecoder,
   OpenUrlParams,
   openUrlParamsDecoder,
   TaskGrade,
@@ -164,11 +165,10 @@ export class Task {
   }
 
   getMetaData(): Observable<TaskMetaData> {
-    // TODO: validator (currently unused)
     return this.chan.call({
       method: 'task.getMetaData',
-      timeout: 2000
-    });
+      timeout: 2000,
+    }).pipe(map(([ metadata ]) => decode(metadataDecoder)(metadata)));
   }
 
   getAnswer(): Observable<string> {
@@ -254,7 +254,7 @@ export interface TaskPlatform {
    */
   validate(mode: string): Observable<void>,
   showView(views: string): void,
-  askHint(platformToken: string): Observable<void>,
+  askHint(hintToken: string): Observable<void>,
   updateHeight(height: number): void,
   updateDisplay(data: UpdateDisplayParams): void,
   openUrl(url: OpenUrlParams): void,

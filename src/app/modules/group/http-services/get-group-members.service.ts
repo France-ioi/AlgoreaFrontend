@@ -21,12 +21,18 @@ export const userDecoder = pipe(
   ),
 );
 
-const memberDecoder = D.struct({
-  id: D.string,
-  memberSince: D.nullable(dateDecoder),
-  action: D.literal('', 'invitation_accepted', 'join_request_accepted', 'joined_by_code', 'added_directly'),
-  user: D.nullable(userDecoder),
-});
+const memberDecoder = pipe(
+  D.struct({
+    id: D.string,
+    user: userDecoder,
+  }),
+  D.intersect(
+    D.partial({
+      action: D.literal('invitation_accepted', 'join_request_accepted', 'joined_by_code', 'added_directly'),
+      memberSince: dateDecoder,
+    })
+  )
+);
 
 export type Member = D.TypeOf<typeof memberDecoder>;
 
@@ -39,10 +45,14 @@ export class GetGroupMembersService {
 
   getGroupMembers(
     groupId: string,
-    sort: string[] = []
+    sort: string[] = [],
+    limit?: number,
+    fromId?: string,
   ): Observable<Member[]> {
     let params = new HttpParams();
     if (sort.length > 0) params = params.set('sort', sort.join(','));
+    if (limit !== undefined) params = params.set('limit', limit.toString());
+    if (fromId !== undefined) params = params.set('from.id', fromId);
     return this.http
       .get<unknown>(`${appConfig.apiUrl}/groups/${groupId}/members`, { params: params })
       .pipe(

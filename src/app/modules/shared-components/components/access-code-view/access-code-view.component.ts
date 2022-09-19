@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ConfirmationService } from 'primeng/api';
 import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
@@ -28,41 +29,46 @@ export class AccessCodeViewComponent {
   onClickAccess(): void {
     this.state = 'loading';
 
-    this.joinByCodeService.checkCodeValidity(this.code).subscribe(response => {
-      this.state = 'ready';
+    this.joinByCodeService.checkCodeValidity(this.code).subscribe({
+      error: () => {
+        this.actionFeedbackService.error($localize`Failed to check code validity, please retry. If the problem persists, contact us.`);
+      },
+      next: response => {
+        this.state = 'ready';
 
-      if (!response.valid) {
-        this.actionFeedbackService.error(
-          response.reason ? this.invalidCodeReasonToString(response.reason): $localize`The provided code is invalid`
-        );
-        return;
-      }
-
-      if (!response.group) {
-        throw new Error('Unexpected: Missed group for invalid state');
-      }
-
-      let message = $localize`Are you sure you want to join the group "${response.group.name}"?`;
-
-      if (this.itemData) {
-        const id = this.itemData.item.type === 'Skill' ? response.group.rootSkillId : response.group.rootActivityId;
-
-        if (this.itemData.item.id !== id) {
-          message = $localize`The code does not correspond to the group attached to this page. Are you sure you want to join the group "
-          ${response.group.name}"?`;
+        if (!response.valid) {
+          this.actionFeedbackService.error(
+            response.reason ? this.invalidCodeReasonToString(response.reason): $localize`The provided code is invalid`
+          );
+          return;
         }
-      }
 
-      this.confirmationService.confirm({
-        header: $localize`Join the group "${response.group.name}"`,
-        message: message,
-        acceptLabel: $localize`Join`,
-        acceptIcon: 'fa fa-check',
-        rejectLabel: $localize`Cancel`,
-        accept: () => {
-          this.joinGroup(this.code);
+        if (!response.group) {
+          throw new Error('Unexpected: Missed group for invalid state');
         }
-      });
+
+        let message = $localize`Are you sure you want to join the group "${response.group.name}"?`;
+
+        if (this.itemData) {
+          const id = this.itemData.item.type === 'Skill' ? response.group.rootSkillId : response.group.rootActivityId;
+
+          if (this.itemData.item.id !== id) {
+            message = $localize`The code does not correspond to the group attached to this page. Are you sure you want to join the group "
+            ${response.group.name}"?`;
+          }
+        }
+
+        this.confirmationService.confirm({
+          header: $localize`Join the group "${response.group.name}"`,
+          message: message,
+          acceptLabel: $localize`Join`,
+          acceptIcon: 'fa fa-check',
+          rejectLabel: $localize`Cancel`,
+          accept: () => {
+            this.joinGroup(this.code);
+          }
+        });
+      },
     });
   }
 
@@ -73,7 +79,10 @@ export class AccessCodeViewComponent {
         this.actionFeedbackService.success($localize`Changes successfully saved.`);
         this.groupJoined.emit();
       },
-      error: _err => this.actionFeedbackService.unexpectedError()
+      error: err => {
+        this.actionFeedbackService.unexpectedError();
+        if (!(err instanceof HttpErrorResponse)) throw err;
+      },
     });
   }
 

@@ -23,7 +23,7 @@
 
   .slanted-grid {
 
-    font-family: 'titillium', sans-serif;
+    font-family: var(--font-family);
 
     tr  {
       border: none;
@@ -39,7 +39,7 @@
         z-index: 1;
 
         &:nth-child(2) {
-          background-color: $base-color !important;
+          background-color: var(--base-color) !important;
 
           .slanted-header {
             color: #fff !important;
@@ -132,4 +132,25 @@
   justify-content: flex-end;
   align-items: center;
   margin-bottom: 1rem;
+}
+
+.user-progress {
+  position: relative;
+}
+
+.overlay-target {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: end;
+}
+
+.overlay-position {
+  width: 0;
+  height: 100%;
+  margin-left: -2.3rem;
 }

@@ -1,13 +1,14 @@
 import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, ParamMap, UrlTree } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
+import { combineLatestWith, filter, map } from 'rxjs/operators';
 import { GetGroupPathService } from 'src/app/modules/group/http-services/get-group-path.service';
 import { groupInfo, GroupInfo, isGroupInfo } from 'src/app/shared/models/content/group-info';
 import { readyData } from 'src/app/shared/operators/state';
 import { groupRoute, groupRouteFromParams, isGroupRouteError } from 'src/app/shared/routing/group-route';
 import { GroupRouter } from 'src/app/shared/routing/group-router';
 import { CurrentContentService } from 'src/app/shared/services/current-content.service';
+import { LayoutService } from 'src/app/shared/services/layout.service';
 import { ModeAction, ModeService } from 'src/app/shared/services/mode.service';
 import { GroupDataSource } from '../../services/group-datasource.service';
 
@@ -31,10 +32,12 @@ export class GroupByIdComponent implements OnDestroy {
     private activatedRoute: ActivatedRoute,
     private currentContent: CurrentContentService,
     private modeService: ModeService,
+    private layoutService: LayoutService,
     private groupDataSource: GroupDataSource,
     private groupRouter: GroupRouter,
     private getGroupPath: GetGroupPathService,
   ) {
+    this.layoutService.configure({ fullFrameActive: false });
 
     // on route change: refetch group if needed
     this.activatedRoute.paramMap.subscribe(params => this.fetchGroupAtRoute(params));
@@ -58,11 +61,10 @@ export class GroupByIdComponent implements OnDestroy {
       ).subscribe(p => this.currentContent.replace(p)),
 
       this.modeService.modeActions$.pipe(
-        filter(action => [ ModeAction.StartEditing, ModeAction.StopEditing ].includes(action))
-      ).subscribe(action => {
-        const currentInfo = this.currentContent.current();
-        if (!isGroupInfo(currentInfo)) throw new Error('Unexpected: in group-by-id but the current content is not a group');
-        this.groupRouter.navigateTo(currentInfo.route, { page: [ action === ModeAction.StartEditing ? 'edit' : 'details' ] });
+        filter(action => [ ModeAction.StartEditing, ModeAction.StopEditing ].includes(action)),
+        combineLatestWith(this.currentContent.content$.pipe(filter(isGroupInfo))),
+      ).subscribe(([ action, content ]) => {
+        this.groupRouter.navigateTo(content.route, { page: [ action === ModeAction.StartEditing ? 'edit' : 'details' ] });
       })
     );
   }

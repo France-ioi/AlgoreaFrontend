@@ -7,6 +7,7 @@ export interface ProgressSelectValue<T> {
   comment: string,
   value: T,
   disabled?: boolean,
+  tooltip?: string[],
 }
 
 /**
@@ -42,6 +43,7 @@ export class ProgressSelectComponent<T> implements OnChanges, OnInit, ControlVal
   @Input() values: ProgressSelectValue<T>[] = [];
   @Input() defaultValue?: T;
   @Input() value?: T;
+  @Input() theme: 'success' | 'warning' | 'danger' = 'success';
 
   @Input() type: 'simple' | 'checksWithLock' = 'checksWithLock';
 
@@ -68,7 +70,7 @@ export class ProgressSelectComponent<T> implements OnChanges, OnInit, ControlVal
   }
 
   ngOnInit(): void {
-    if (this.defaultValue) this.value = this.defaultValue;
+    if (this.defaultValue !== undefined) this.value = this.defaultValue;
   }
 
   ngOnChanges(_changes: SimpleChanges): void {

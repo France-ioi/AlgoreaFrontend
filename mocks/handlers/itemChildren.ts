@@ -24,4 +24,4 @@ router.get('/api/items/:itemId/children', (req, res, next) => {
   next();
 });
 
-export { router as itemIdChildrenHandler };
+export default router;

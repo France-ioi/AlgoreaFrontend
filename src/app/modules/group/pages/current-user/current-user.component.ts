@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
-import { ActionFeedbackService } from '../../../../shared/services/action-feedback.service';
-import { LocaleService } from '../../../../core/services/localeService';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
+import { appConfig } from 'src/app/shared/helpers/config';
+import { ActionFeedbackService } from '../../../../shared/services/action-feedback.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'alg-current-user',
@@ -14,26 +15,31 @@ export class CurrentUserComponent {
   constructor(
     private userSessionService: UserSessionService,
     private actionFeedbackService: ActionFeedbackService,
-    private localeService: LocaleService,
   ) {}
 
-  onChangeLang(event: string): void {
-    this.update({ default_language: event });
-  }
+  onModify(userId: string): void {
+    const backUrl = new URL(
+      './update-profile.html',
+      location.href
+    ).href;
 
-  update(changes: { default_language: string }): void {
-    this.userSessionService.updateCurrentUser(changes).subscribe({
-      next: () => {
-        this.actionFeedbackService.success($localize`Changes successfully saved.`);
+    window.open(
+      `${ appConfig.oauthServerUrl }?all=1&client_id=${ userId }&redirect_uri=${encodeURI(backUrl)}`,
+      undefined,
+      'popup,width=800,height=640'
+    );
 
-        if (changes.default_language) {
-          this.localeService.navigateTo(changes.default_language);
+    const onProfileUpdated = (): void => {
+      this.userSessionService.refresh().subscribe({
+        error: err => {
+          this.actionFeedbackService.unexpectedError();
+          if (!(err instanceof HttpErrorResponse)) throw err;
         }
-      },
-      error: _err => {
-        this.actionFeedbackService.unexpectedError();
-      }
-    });
+      });
+      window.removeEventListener('profileUpdated', onProfileUpdated);
+    };
+
+    window.addEventListener('profileUpdated', onProfileUpdated);
   }
 
 }

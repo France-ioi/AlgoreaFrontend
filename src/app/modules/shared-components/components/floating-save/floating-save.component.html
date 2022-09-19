@@ -1,2 +1,14 @@
-<alg-button i18n-label label="Save" class="p-button-rounded p-button-success save" (click)="onSave()" [disabled]="saving"></alg-button>
-<alg-button i18n-label label="Cancel Changes" class="p-button-rounded p-button-outlined p-button-danger cancel" [disabled]="saving" (click)="onCancel()"></alg-button>
+<p-button
+    class="save"
+    styleClass="p-button-rounded p-button-success"
+    i18n-label label="Save"
+    [disabled]="saving"
+    (onClick)="onSave()"
+></p-button>
+
+<p-button
+    styleClass="p-button-rounded p-button-outlined p-button-danger"
+    i18n-label label="Cancel Changes"
+    [disabled]="saving"
+    (onClick)="onCancel()"
+></p-button>

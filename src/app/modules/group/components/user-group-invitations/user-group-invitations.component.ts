@@ -2,14 +2,12 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { merge, of, Subject } from 'rxjs';
 import { switchMap, map } from 'rxjs/operators';
 import { GridColumn } from 'src/app/modules/shared-components/components/grid/grid.component';
-import {
-  displayResponseToast,
-  processRequestError
-} from 'src/app/modules/group/components/pending-request/pending-request-response-handling';
+import { displayResponseToast } from 'src/app/modules/group/components/pending-request/pending-request-response-handling';
 import { fetchingState, readyState } from 'src/app/shared/helpers/state';
 import { GetRequestsService, PendingRequest } from '../../http-services/get-requests.service';
-import { Action, parseResults, RequestActionsService } from '../../http-services/request-actions.service';
+import { Action, parseGroupInvitationResults, RequestActionsService } from '../../http-services/request-actions.service';
 import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'alg-user-group-invitations',
@@ -70,12 +68,13 @@ export class UserGroupInvitationsComponent implements OnDestroy, OnInit {
       .subscribe({
         next: result => {
           this.state = 'ready';
-          displayResponseToast(this.actionFeedbackService, parseResults(result), params.type);
+          displayResponseToast(this.actionFeedbackService, parseGroupInvitationResults(result), params.type);
           this.dataFetching.next({ sort: this.currentSort });
         },
-        error: _err => {
+        error: err => {
           this.state = 'ready';
-          processRequestError(this.actionFeedbackService);
+          this.actionFeedbackService.unexpectedError();
+          if (!(err instanceof HttpErrorResponse)) throw err;
         }
       });
   }

@@ -47,4 +47,4 @@ router.delete('/api/items/:itemId', (req, res, next) => {
   next();
 });
 
-export { router as itemIdHandler };
+export default router;

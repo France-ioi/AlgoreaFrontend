@@ -21,7 +21,3 @@ export function displayResponseToast(feedbackService: ActionFeedbackService, res
     feedbackService.partial($localize`${result.countSuccess} request(s) have been ${msg}, ${errCnt} could not be executed`);
   }
 }
-
-export function processRequestError(feedbackService: ActionFeedbackService): void {
-  feedbackService.unexpectedError();
-}

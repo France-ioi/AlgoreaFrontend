@@ -1,0 +1,19 @@
+.widget {
+  display: block;
+  position: fixed;
+  bottom: 0;
+  right: 2rem;
+  background: var(--base-color);
+  color: var(--base-bk-color);
+  border-radius: 0.25rem;
+  z-index: 30;
+  max-height: 25rem;
+  overflow-y: auto;
+}
+.widget-body, .widget-footer {
+  padding: 0.75rem 1rem;
+}
+.widget-footer > * + * {
+  margin-left: 0.5rem;
+}
+

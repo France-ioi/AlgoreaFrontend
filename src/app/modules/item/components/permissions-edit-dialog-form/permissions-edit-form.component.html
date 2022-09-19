@@ -1,0 +1,119 @@
+<form [formGroup]="form" *ngIf="form">
+  <alg-collapsible-section
+      i18n-header header="Can view" icon="fa fa-eye"
+      [collapsible]="!form.errors?.canView"
+      [errorMessage]="form.errors?.canView?.[0]"
+  >
+    <ng-template #content let-collapsed>
+      <alg-progress-select
+          [collapsed]="collapsed"
+          formControlName="canView"
+          [values]="permissionsDialogData.canViewValues"
+      ></alg-progress-select>
+    </ng-template>
+  </alg-collapsible-section>
+
+  <!--<alg-switch-field
+    i18n-title title="Can Enter"
+    icon="fa fa-door-open"
+    [(value)]="permissions.can_enter_from"
+  >
+    <ng-template #label i18n>{{targetTypeString}} may enter this item (a contest or time-limited chapter)</ng-template>
+  </alg-switch-field>-->
+
+  <alg-collapsible-section
+      i18n-header header="Can grant view" icon="fa fa-key"
+      [collapsible]="!form.errors?.canGrantView"
+      [errorMessage]="form.errors?.canGrantView?.[0]"
+  >
+    <ng-template #content let-collapsed>
+      <alg-progress-select
+          [collapsed]="collapsed"
+          formControlName="canGrantView"
+          [values]="permissionsDialogData.canGrantViewValues"
+      ></alg-progress-select>
+    </ng-template>
+  </alg-collapsible-section>
+
+  <alg-collapsible-section
+      i18n-header header="Can watch" icon="fa fa-binoculars"
+      [collapsible]="!form.errors?.canWatch"
+      [errorMessage]="form.errors?.canWatch?.[0]"
+  >
+    <ng-template #content let-collapsed>
+      <alg-progress-select
+          [collapsed]="collapsed"
+          formControlName="canWatch"
+          [values]="permissionsDialogData.canWatchValues"
+      ></alg-progress-select>
+    </ng-template>
+  </alg-collapsible-section>
+
+  <alg-collapsible-section
+      i18n-header header="Can edit" icon="fa fa-pencil-alt"
+      [collapsible]="!form.errors?.canEdit"
+      [errorMessage]="form.errors?.canEdit?.[0]"
+  >
+    <ng-template #content let-collapsed>
+      <alg-progress-select
+          [collapsed]="collapsed"
+          formControlName="canEdit"
+          [values]="permissionsDialogData.canEditValues"
+      ></alg-progress-select>
+    </ng-template>
+  </alg-collapsible-section>
+
+  <alg-collapsible-section
+      i18n-header header="Can attach official sessions" icon="fa fa-paperclip"
+      [collapsible]="!form.errors?.canMakeSessionOfficial"
+      [errorMessage]="form.errors?.canMakeSessionOfficial?.[0]"
+  >
+    <ng-template #content let-collapsed>
+      <alg-switch-field
+          [collapsed]="collapsed"
+          formControlName="canMakeSessionOfficial"
+          [disabledTooltip]="permissionsDialogData.canMakeSessionOfficialDisabledTooltip ?? []"
+      >
+        <ng-template #label>
+          <span i18n>{{targetTypeString}} may attach official sessions to this item, that will be visible to everyone in the content tab of the item</span>
+        </ng-template>
+      </alg-switch-field>
+    </ng-template>
+  </alg-collapsible-section>
+
+  <alg-collapsible-section
+      i18n-header header="Is owner" icon="fa fa-user-tie"
+      [collapsible]="!form.errors?.isOwner"
+      [errorMessage]="form.errors?.isOwner?.[0]"
+  >
+    <ng-template #content let-collapsed>
+      <alg-switch-field
+          [collapsed]="collapsed"
+          formControlName="isOwner"
+          [disabledTooltip]="permissionsDialogData.isOwnerDisabledTooltip ?? []"
+      >
+        <ng-template #label>
+          <span i18n>{{targetTypeString}} own this item, and get the maximum access in all categories above, and may also delete this item</span>
+        </ng-template>
+      </alg-switch-field>
+    </ng-template>
+  </alg-collapsible-section>
+
+  <div class="buttons">
+    <p-button
+      class="button"
+      icon="fa fa-times"
+      i18n-label label="Cancel"
+      styleClass="alg-button p-button-rounded p-button-danger"
+      (onClick)="onCancel()"
+    ></p-button>
+    <p-button
+      class="button"
+      icon="fa fa-check"
+      i18n-label label="Proceed"
+      styleClass="alg-button p-button-rounded"
+      (onClick)="onAccept()"
+      [disabled]="!form.dirty || form.invalid || form.disabled || acceptButtonDisabled"
+    ></p-button>
+  </div>
+</form>

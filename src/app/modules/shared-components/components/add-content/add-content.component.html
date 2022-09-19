@@ -11,9 +11,10 @@
     tooltipEvent="focus"
     tooltipPosition="bottom"
     [tooltipDisabled]="trimmedInputsValue.create.length >= minInputLength"
+    *ngIf="showCreateUI"
   >
   </alg-input>
-  <span class="label" i18n *ngIf="showSearchUI">or</span>
+  <span class="label" i18n *ngIf="showCreateUI && showSearchUI">or</span>
   <alg-input
     [parentForm]="addContentForm"
     [hasClearButton]="true"
@@ -47,7 +48,11 @@
     </div>
   </div>
 
-  <div *ngIf="trimmedInputsValue.searchExisting.length >= minInputLength">
+  <div *ngIf="state === 'error'">
+    <div i18n>Failed to search for contents, please retry. If the problem persists, contact us.</div>
+  </div>
+
+  <div *ngIf="trimmedInputsValue.searchExisting.length >= minInputLength && state !== 'error'">
     <h3 i18n>Select a Content</h3>
     <p-table class="alg-table --add-content" [value]="resultsFromSearch | slice : 0 : 4" [loading]="state === 'fetching'">
       <ng-template pTemplate="body" let-item>
@@ -55,13 +60,13 @@
           <td><span class="type">{{ item.type }}</span></td>
           <td class="main">{{ item.title }}</td>
           <td>
-            <alg-button
-              class="p-small-button p-button-rounded"
-              [icon]="addedIds.includes(item.id) ? 'fa fa-check' : selectExistingText === 'Add' ? 'fa fa-plus' : undefined"
+            <p-button
+              styleClass="alg-button p-small-button p-button-rounded"
+              [icon]="addedIds.includes(item.id) ? 'fa fa-check' : selectExistingText === 'Add' ? 'fa fa-plus' : ''"
               [label]="addedIds.includes(item.id) ? addedText : selectExistingText"
               [disabled]="addedIds.includes(item.id)"
-              (click)="addExisting(item)"
-            ></alg-button>
+              (onClick)="addExisting(item)"
+            ></p-button>
           </td>
         </tr>
       </ng-template>

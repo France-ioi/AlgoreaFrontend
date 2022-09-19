@@ -3,13 +3,14 @@ import { Component, Output } from '@angular/core';
 import { merge, Subject } from 'rxjs';
 import { delay, distinctUntilChanged, filter, map, startWith } from 'rxjs/operators';
 import { isDefined } from 'src/app/shared/helpers/null-undefined-predicates';
-import { ContentInfo, RoutedContentInfo } from 'src/app/shared/models/content/content-info';
-import { isGroupInfo } from 'src/app/shared/models/content/group-info';
+import { ContentInfo } from 'src/app/shared/models/content/content-info';
+import { isGroupInfo, isMyGroupsInfo } from 'src/app/shared/models/content/group-info';
 import { isActivityInfo, isItemInfo } from 'src/app/shared/models/content/item-info';
 import { CurrentContentService } from 'src/app/shared/services/current-content.service';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
 import { GroupNavTreeService } from '../../services/navigation/group-nav-tree.service';
 import { ActivityNavTreeService, SkillNavTreeService } from '../../services/navigation/item-nav-tree.service';
+import { environment } from '../../../../environments/environment';
 
 const activitiesTabIdx = 0;
 const skillsTabIdx = 1;
@@ -21,12 +22,6 @@ const groupsTabIdx = 2;
   styleUrls: [ './left-nav.component.scss' ]
 })
 export class LeftNavComponent {
-  @Output() selectId = this.currentContent.content$.pipe(
-    filter((content): content is RoutedContentInfo => !!content?.route),
-    map(content => content.route.id),
-    distinctUntilChanged(), // only emit once the id changes
-    delay(0),
-  );
 
   private manualTabChange = new Subject<number>();
   activeTab$ = merge(
@@ -46,6 +41,8 @@ export class LeftNavComponent {
 
   readonly navTreeServices = [ this.activityNavTreeService, this.skillNavTreeService, this.groupNavTreeService ];
   currentUser$ = this.sessionService.userProfile$.pipe(delay(0));
+
+  skillsDisabled = environment.featureFlags.skillsDisabled;
 
   constructor(
     private sessionService: UserSessionService,
@@ -67,7 +64,7 @@ export class LeftNavComponent {
 
 function contentToTabIndex(content: ContentInfo|null): number|undefined {
   if (content === null) return undefined;
-  if (isGroupInfo(content)) return groupsTabIdx;
+  if (isGroupInfo(content) || isMyGroupsInfo(content)) return groupsTabIdx;
   if (isItemInfo(content)) {
     return isActivityInfo(content) ? activitiesTabIdx : skillsTabIdx;
   }

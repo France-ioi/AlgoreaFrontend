@@ -9,7 +9,7 @@ export class SectionParagraphComponent {
   @Input() icon?: string;
   @Input() label = '';
   @Input() collapsible = false;
-  @Input() theme = 'success';
+  @Input() theme: 'success' | 'warning' | 'danger' = 'success';
   @Input() hasBorder = false;
   @Input() data: any;
   @Input() remainOrigin = true;
@@ -20,6 +20,9 @@ export class SectionParagraphComponent {
   @ContentChild('headerTemplate') headerTemplate?: TemplateRef<any>;
 
   toggleContent(): void {
+    if (!this.collapsible) {
+      return;
+    }
     this.collapsed = !this.collapsed;
     this.collapse.emit(this.collapsed);
   }

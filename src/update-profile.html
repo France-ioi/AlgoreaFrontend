@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title>Updating profile...</title>
+</head>
+<body>
+<script>
+  // This page is supposed to be called (only!) as a callback from login-module after a profile update (on save or close) in a subwindow (popup). 
+  if (window.opener) {
+    // Notify the opener/parent window so that the main app can refresh the user data and close the sub-window
+    window.opener.dispatchEvent(new Event('profileUpdated'));
+    window.close();
+  }
+</script>
+</body>
+</html>

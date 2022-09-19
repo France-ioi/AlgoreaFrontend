@@ -1,0 +1,31 @@
+.breadcrumbs-container {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  padding: 0.571rem 1rem;
+}
+
+.breadcrumbs-prefix {
+  color: var(--base-text-color);
+}
+
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+  margin: 0 0 0 .5rem;
+  padding: 0;
+  list-style-type: none;
+  overflow: hidden;
+}
+
+.breadcrumbs-item {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  &:not(:first-child):before {
+    content: '/';
+    display: inline;
+    margin: 0 .3rem;
+  }
+}

@@ -1,5 +1,5 @@
 import { Component, OnDestroy, ViewChild } from '@angular/core';
-import { contentInfo } from 'src/app/shared/models/content/content-info';
+import { myGroupsInfo } from 'src/app/shared/models/content/group-info';
 import { CurrentContentService } from 'src/app/shared/services/current-content.service';
 import { JoinedGroupListComponent } from '../../components/joined-group-list/joined-group-list.component';
 import { LayoutService } from '../../../../shared/services/layout.service';
@@ -12,13 +12,14 @@ import { LayoutService } from '../../../../shared/services/layout.service';
 export class MyGroupsComponent implements OnDestroy {
   @ViewChild('joinedGroupList') joinedGroupList?: JoinedGroupListComponent;
 
-  fullFrameContent$ = this.layoutService.fullFrameContent$;
+  fullFrame$ = this.layoutService.fullFrame$;
 
   constructor(
     private currentContent: CurrentContentService,
     private layoutService: LayoutService,
   ) {
-    this.currentContent.replace(contentInfo({
+    this.layoutService.configure({ fullFrameActive: false });
+    this.currentContent.replace(myGroupsInfo({
       title: $localize`My groups`,
       breadcrumbs: {
         category: $localize`My groups`,
@@ -34,6 +35,7 @@ export class MyGroupsComponent implements OnDestroy {
 
   onGroupJoined(): void {
     this.joinedGroupList?.refresh();
+    this.currentContent.forceNavMenuReload();
   }
 
 }

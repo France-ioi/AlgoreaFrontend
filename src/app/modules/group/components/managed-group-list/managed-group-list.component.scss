@@ -19,7 +19,7 @@
   }
 
   &.edit {
-    color: $base-color;
+    color: var(--base-color);
   }
 
   &.locked {
@@ -27,6 +27,6 @@
   }
 
   &.unlocked {
-    color: $notify-error-color;
+    color: var(--notify-error-color);
   }
 }

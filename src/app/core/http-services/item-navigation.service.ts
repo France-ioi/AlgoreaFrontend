@@ -8,8 +8,9 @@ import { isSkill, ItemTypeCategory } from 'src/app/shared/helpers/item-type';
 import { decodeSnakeCase } from 'src/app/shared/operators/decode';
 import { pipe } from 'fp-ts/function';
 import * as D from 'io-ts/Decoder';
-import { permissionsDecoder } from 'src/app/modules/item/helpers/item-permissions';
 import { dateDecoder } from 'src/app/shared/helpers/decoders';
+import { itemViewPermDecoder } from 'src/app/shared/models/domain/item-view-permission';
+import { itemCorePermDecoder } from 'src/app/shared/models/domain/item-permissions';
 
 const itemNavigationChildDecoderBase = pipe(
   D.struct({
@@ -18,7 +19,7 @@ const itemNavigationChildDecoderBase = pipe(
     hasVisibleChildren: D.boolean,
     id: D.string,
     noScore: D.boolean,
-    permissions: permissionsDecoder,
+    permissions: itemCorePermDecoder,
     requiresExplicitEntry: D.boolean,
     results: D.array(D.struct({
       attemptAllowsSubmissionsUntil: dateDecoder,
@@ -42,9 +43,7 @@ const itemNavigationChildDecoder = pipe(
   D.intersect(
     D.partial({
       watchedGroup: pipe(
-        D.struct({
-          canView: D.literal('none','info','content','content_with_descendants','solution'),
-        }),
+        itemViewPermDecoder,
         D.intersect(
           D.partial({
             allValidated: D.boolean,
@@ -61,7 +60,7 @@ export type ItemNavigationChild = D.TypeOf<typeof itemNavigationChildDecoder>;
 const itemNavigationDataDecoder = D.struct({
   id: D.string,
   attemptId: D.string,
-  permissions: permissionsDecoder,
+  permissions: itemCorePermDecoder,
   string: D.struct({
     languageTag: D.string,
     title: D.nullable(D.string),
@@ -100,24 +99,19 @@ export class ItemNavigationService {
 
   constructor(private http: HttpClient) {}
 
-  getItemNavigation(itemId: string, attemptId: string, skillsOnly = false): Observable<ItemNavigationData> {
-    return this.getItemNavigationGeneric(itemId, new HttpParams({ fromObject: { attempt_id: attemptId } }), skillsOnly);
-  }
+  getItemNavigation(
+    itemId: string,
+    options: ({ attemptId: string} | { childRoute: FullItemRoute }) & { skillOnly?: boolean, watchedGroupId?: string }
+  ): Observable<ItemNavigationData> {
 
-  getItemNavigationFromChildRoute(itemId: string, childRoute: FullItemRoute, skillsOnly = false): Observable<ItemNavigationData> {
-    return this.getItemNavigationGeneric(
-      itemId,
-      new HttpParams({ fromObject:
-        isRouteWithSelfAttempt(childRoute) ? { child_attempt_id: childRoute.attemptId } : { attempt_id: childRoute.parentAttemptId }
-      }),
-      skillsOnly
-    );
-  }
+    let params = new HttpParams({ fromObject: options.watchedGroupId ? { watched_group_id: options.watchedGroupId } : {} });
+    if ('attemptId' in options) params = params.set('attempt_id', options.attemptId);
+    else if (isRouteWithSelfAttempt(options.childRoute)) params = params.set('child_attempt_id', options.childRoute.attemptId);
+    else params = params.set('attempt_id', options.childRoute.parentAttemptId);
 
-  private getItemNavigationGeneric(itemId: string, params: HttpParams, skillsOnly = false): Observable<ItemNavigationData> {
     return this.http.get<unknown>(`${appConfig.apiUrl}/items/${itemId}/navigation`, { params: params }).pipe(
       decodeSnakeCase(itemNavigationDataDecoder),
-      map(data => (skillsOnly ? { ...data, children: data.children.filter(c => c.type === 'Skill') } : data))
+      map(data => (options.skillOnly ? { ...data, children: data.children.filter(c => c.type === 'Skill') } : data))
     );
   }
 

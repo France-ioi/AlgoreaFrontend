@@ -40,15 +40,19 @@
 }
 
 .dialog-handler {
-  @include section-handler($base-color,$dark-color);
+  @include section-handler(var(--base-color),var(--dark-color));
 }
 
 .dialog-title {
   @include h2-title;
-  font-family: "titillium";
+  font-family: var(--font-family);
   flex: 1;
 }
 
 .dialog-close {
   @include dialog-close;
+}
+
+.error-message {
+  margin-right: .3rem;
 }
