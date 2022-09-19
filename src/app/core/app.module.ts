@@ -16,7 +16,6 @@ import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.componen
 
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 
-import { AuthTokenInjector } from '../shared/interceptors/auth_token_injector.interceptor';
 import { CredentialsInterceptor } from '../shared/interceptors/credentials.interceptor';
 import { TimeoutInterceptor } from '../shared/interceptors/timeout.interceptor';
 
@@ -24,7 +23,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { TreeModule } from 'primeng/tree';
 import { LeftNavTreeComponent } from './components/left-nav-tree/left-nav-tree.component';
-import { UnauthorizedResponseInterceptor } from '../shared/interceptors/unauthorized_response.interceptor';
 import { ReactiveComponentModule } from '@ngrx/component';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { TooltipModule } from 'primeng/tooltip';
@@ -43,6 +41,7 @@ import { LanguageMismatchComponent } from './components/language-mismatch/langua
 import { TopBarComponent } from './components/top-bar/top-bar.component';
 import { ContentTopBarComponent } from './components/content-top-bar/content-top-bar.component';
 import * as Sentry from '@sentry/angular';
+import { AuthenticationInterceptor } from '../shared/interceptors/authentication.interceptor';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: false,
@@ -97,17 +96,12 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     },
     {
       provide: HTTP_INTERCEPTORS,
-      useClass: AuthTokenInjector,
+      useClass: AuthenticationInterceptor,
       multi: true,
     },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: CredentialsInterceptor,
-      multi: true,
-    },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: UnauthorizedResponseInterceptor,
       multi: true,
     },
     {
