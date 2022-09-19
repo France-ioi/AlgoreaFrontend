@@ -18,10 +18,7 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 
 import { AuthTokenInjector } from '../shared/interceptors/auth_token_injector.interceptor';
 import { CredentialsInterceptor } from '../shared/interceptors/credentials.interceptor';
-import {
-  TimeoutInterceptor,
-  DEFAULT_TIMEOUT,
-} from '../shared/interceptors/timeout.interceptor';
+import { TimeoutInterceptor } from '../shared/interceptors/timeout.interceptor';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -112,10 +109,6 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
       provide: HTTP_INTERCEPTORS,
       useClass: UnauthorizedResponseInterceptor,
       multi: true,
-    },
-    {
-      provide: DEFAULT_TIMEOUT,
-      useValue: 3000,
     },
     {
       provide: ErrorHandler,
