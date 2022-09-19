@@ -16,7 +16,7 @@ import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.componen
 
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 
-import { CredentialsInterceptor } from '../shared/interceptors/credentials.interceptor';
+import { WithCredentialsInterceptor } from '../shared/interceptors/with_credentials.interceptor';
 import { TimeoutInterceptor } from '../shared/interceptors/timeout.interceptor';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -101,7 +101,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     },
     {
       provide: HTTP_INTERCEPTORS,
-      useClass: CredentialsInterceptor,
+      useClass: WithCredentialsInterceptor,
       multi: true,
     },
     {
