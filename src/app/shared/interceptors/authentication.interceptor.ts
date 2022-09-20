@@ -3,9 +3,8 @@ import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor } from '@angular/c
 import { Observable } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
 import { switchMap, filter, take, catchError } from 'rxjs/operators';
-import { headersForAuth } from '../helpers/auth';
 import { AuthResult, AuthStatus } from '../auth/auth-info';
-import { isRequestToApi, useAuthInterceptor } from './interceptor_common';
+import { isRequestToApi, retryOnceOn401, useAuthInterceptor } from './interceptor_common';
 import { errorIsHTTPUnauthenticated } from '../helpers/errors';
 
 /**
@@ -37,12 +36,14 @@ export class AuthenticationInterceptor implements HttpInterceptor {
           if (errorIsHTTPUnauthenticated(err)) {
             this.auth.invalidToken(auth); // inform that "auth" is invalid (if still in use)
             // auth has changed in the meantime -> retry
-            if (auth !== currentAuth && currentAuth.authenticated) return this.callNextWithAuth(req, next, currentAuth).pipe(
-              catchError(err => {
-                if (errorIsHTTPUnauthenticated(err)) this.auth.invalidToken(currentAuth); // inform the token is invalid (if still in use)
-                throw err; // rethrow the error anyway (401 or not)
-              })
-            );
+            if (req.context.get(retryOnceOn401) && auth !== currentAuth && currentAuth.authenticated) {
+              return this.callNextWithAuth(req, next, currentAuth).pipe(
+                catchError(err => {
+                  if (errorIsHTTPUnauthenticated(err)) this.auth.invalidToken(currentAuth); // inform the token is invalid (if still in use)
+                  throw err; // rethrow the error anyway (401 or not)
+                })
+              );
+            }
           }
           throw err;
         }),
@@ -51,6 +52,14 @@ export class AuthenticationInterceptor implements HttpInterceptor {
   }
 
   private callNextWithAuth(req: HttpRequest<unknown>, next: HttpHandler, auth: AuthResult): Observable<HttpEvent<unknown>> {
-    return next.handle(auth.useCookie ? req : req.clone({ setHeaders: headersForAuth(auth.accessToken) }));
+    return next.handle(auth.useCookie ? req : req.clone({ setHeaders: this.headersForTokenAuth(auth.accessToken) }));
+  }
+
+  private headersForTokenAuth(token: string): { [name: string]: string | string[] } {
+    return {
+      // "Authorization" is name to be used in http header
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      Authorization: `Bearer ${token}`,
+    };
   }
 }

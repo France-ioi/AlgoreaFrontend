@@ -8,6 +8,7 @@ const defaultTimeout = 3000;
  */
 export const requestTimeout = new HttpContextToken(() => defaultTimeout);
 export const useAuthInterceptor = new HttpContextToken(() => true);
+export const retryOnceOn401 = new HttpContextToken(() => true);
 
 export function isRequestToApi(req: HttpRequest<unknown>): boolean {
   return req.url.toLowerCase().startsWith(appConfig.apiUrl);
