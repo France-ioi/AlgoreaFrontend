@@ -50,7 +50,7 @@
 
   <ng-container *ngIf="state">
     <div *ngIf="state.isError">
-      <div class="text-center" i18n>Failed to search for contents, please retry. If the problem persists, contact us.</div>
+      <div class="text-center" i18n>An error occurred while searching. If the problem persists, please contact us.</div>
     </div>
 
     <div *ngIf="trimmedInputsValue.searchExisting.length >= minInputLength && !state.isError">
