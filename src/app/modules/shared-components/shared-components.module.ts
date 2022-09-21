@@ -65,7 +65,11 @@ import { GroupPermissionCaptionPipe } from '../../shared/pipes/groupPermissionCa
 import { FullHeightContentDirective } from '../../shared/directives/full-height-content.directive';
 import { SectionHeaderComponent } from './components/section-header/section-header.component';
 import { PathSuggestionComponent } from './components/path-suggestion/path-suggestion.component';
-import { AllowsViewingItemContentPipe, AllowsViewingItemInfoPipe } from 'src/app/shared/models/domain/item-view-permission';
+import {
+  AllowsViewingItemContentPipe,
+  AllowsViewingItemInfoPipe,
+  AllowsViewingItemOnlyInfoPipe
+} from 'src/app/shared/models/domain/item-view-permission';
 import { AllowsGrantingContentViewItemPipe, AllowsGrantingViewItemPipe } from 'src/app/shared/models/domain/item-grant-view-permission';
 import { AllowsEditingAllItemPipe, AllowsEditingChildrenItemPipe } from 'src/app/shared/models/domain/item-edit-permission';
 import { AllowsWatchingItemResultsPipe } from 'src/app/shared/models/domain/item-watch-permission';
@@ -113,6 +117,7 @@ import { AllowsWatchingItemResultsPipe } from 'src/app/shared/models/domain/item
     PathSuggestionComponent,
     AllowsViewingItemContentPipe,
     AllowsViewingItemInfoPipe,
+    AllowsViewingItemOnlyInfoPipe,
     AllowsGrantingViewItemPipe,
     AllowsGrantingContentViewItemPipe,
     AllowsEditingAllItemPipe,
@@ -197,6 +202,7 @@ import { AllowsWatchingItemResultsPipe } from 'src/app/shared/models/domain/item
     AllowsEditingAllItemPipe,
     AllowsEditingChildrenItemPipe,
     AllowsWatchingItemResultsPipe,
+    AllowsViewingItemOnlyInfoPipe,
   ],
   providers: [],
 })

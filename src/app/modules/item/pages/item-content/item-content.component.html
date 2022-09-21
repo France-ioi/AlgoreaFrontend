@@ -83,6 +83,11 @@
         <span i18n>Your current access rights do not allow you to list the content of this skill.</span>
       </ng-container>
     </p>
+
+    <alg-item-unlock-access
+      [itemData]="itemData"
+      *ngIf="itemData.item.permissions | allowsViewingOnlyInfo"
+    ></alg-item-unlock-access>
   </ng-template>
 
   <ng-template #noCurrentResult>

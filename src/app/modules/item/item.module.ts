@@ -48,6 +48,7 @@ import { AddDependencyComponent } from './components/add-dependency/add-dependen
 import {
   PermissionsEditFormComponent
 } from './components/permissions-edit-dialog-form/permissions-edit-form.component';
+import { ItemUnlockAccessComponent } from './components/item-unlock-access/item-unlock-access.component';
 
 @NgModule({
   declarations: [
@@ -86,6 +87,7 @@ import {
     ItemDependenciesComponent,
     ItemEditWrapperComponent,
     AddDependencyComponent,
+    ItemUnlockAccessComponent,
   ],
   imports: [
     CommonModule,
