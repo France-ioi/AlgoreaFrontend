@@ -2,13 +2,6 @@
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
   "newProjectRoot": "projects",
-  "cli": {
-    "cache": {
-      "enabled": true,
-      "path": ".angular/cache",
-      "environment": "all"
-    }
-  },
   "projects": {
     "algorea": {
       "projectType": "application",
@@ -30,7 +23,14 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "assets": [
-              "src/update-profile.html",
+              "src/favicon.ico",
+              "src/android-chrome-192x192.png",
+              "src/android-chrome-512x512.png",
+              "src/apple-touch-icon.png",
+              "src/favicon-16x16.png",
+              "src/favicon-32x32.png",
+              "src/favicon.ico",
+              "src/site.webmanifest",
               "src/assets"
             ],
             "styles": [
@@ -39,8 +39,7 @@
               "node_modules/primeng/resources/primeng.min.css",
               "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
               "src/styles.scss",
-              "src/assets/fonts/titillium/stylesheet.css",
-              "src/assets/fonts/source-sans-pro/stylesheet.css"
+              "src/assets/fonts/titillium/stylesheet.css"
             ],
             "localize": true,
             "i18nMissingTranslation": "error",
@@ -69,7 +68,7 @@
               ],
               "optimization": true,
               "outputHashing": "all",
-              "sourceMap": true,
+              "sourceMap": false,
               "namedChunks": false,
               "extractLicenses": true,
               "vendorChunk": false,
@@ -96,7 +95,7 @@
               ],
               "optimization": true,
               "outputHashing": "all",
-              "sourceMap": true,
+              "sourceMap": false,
               "namedChunks": false,
               "extractLicenses": true,
               "vendorChunk": false,
@@ -208,5 +207,6 @@
         }
       }
     }
-  }
+  },
+  "defaultProject": "algorea"
 }
