@@ -6,7 +6,7 @@ import { Environment, PartialDeep } from 'src/app/shared/helpers/config';
 
 export const environment: Environment = {
   production: false,
-  apiUrl: 'http://localhost:3000/api',
+  apiUrl: 'https://dev.algorea.org/api', // 'http://localhost:3000/api',
   oauthServerUrl: 'https://login.france-ioi.org',
   forumServerUrl: 'ws://localhost:3001',
   forumApiUrl: 'http://localhost:3000',
