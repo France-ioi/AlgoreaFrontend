@@ -48,36 +48,39 @@
     </div>
   </div>
 
-  <div *ngIf="state === 'error'">
-    <div i18n>Failed to search for contents, please retry. If the problem persists, contact us.</div>
-  </div>
+  <ng-container *ngIf="state">
+    <div *ngIf="state.isError">
+      <div class="text-center" i18n>An error occurred while searching. If the problem persists, please contact us.</div>
+    </div>
 
-  <div *ngIf="trimmedInputsValue.searchExisting.length >= minInputLength && state !== 'error'">
-    <h3 i18n>Select a Content</h3>
-    <p-table class="alg-table --add-content" [value]="resultsFromSearch | slice : 0 : 4" [loading]="state === 'fetching'">
-      <ng-template pTemplate="body" let-item>
-        <tr style="background-color: #dfe7f4">
-          <td><span class="type">{{ item.type }}</span></td>
-          <td class="main">{{ item.title }}</td>
-          <td>
-            <p-button
-              styleClass="alg-button p-small-button p-button-rounded"
-              [icon]="addedIds.includes(item.id) ? 'fa fa-check' : selectExistingText === 'Add' ? 'fa fa-plus' : ''"
-              [label]="addedIds.includes(item.id) ? addedText : selectExistingText"
-              [disabled]="addedIds.includes(item.id)"
-              (onClick)="addExisting(item)"
-            ></p-button>
-          </td>
-        </tr>
-      </ng-template>
-      <ng-template pTemplate="emptymessage">
-        <tr>
-          <td [attr.colspan]="1" i18n>No records found</td>
-        </tr>
-      </ng-template>
-    </p-table>
-    <p class="more-items text-center" *ngIf="resultsFromSearch.length > 4">
-      More than 4 results match your search terms. If you have not found what you are looking for, make your search more specific.
-    </p>
-  </div>
+    <div *ngIf="trimmedInputsValue.searchExisting.length >= minInputLength && !state.isError">
+      <h3 i18n>Select a Content</h3>
+      <p-table class="alg-table --add-content" [value]="(state.data || []) | slice : 0 : 4" [loading]="state.isFetching">
+        <ng-template pTemplate="body" let-item>
+          <tr style="background-color: #dfe7f4">
+            <td><span class="type">{{ item.type }}</span></td>
+            <td class="main">{{ item.title }}</td>
+            <td>
+              <p-button
+                styleClass="alg-button p-small-button p-button-rounded"
+                [icon]="addedIds.includes(item.id) ? 'fa fa-check' : selectExistingText === 'Add' ? 'fa fa-plus' : ''"
+                [label]="addedIds.includes(item.id) ? addedText : selectExistingText"
+                [disabled]="addedIds.includes(item.id)"
+                (onClick)="addExisting(item)"
+              ></p-button>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td [attr.colspan]="1" i18n>No records found</td>
+          </tr>
+        </ng-template>
+      </p-table>
+      <p class="more-items text-center" *ngIf="(state.data || []).length > 4">
+        More than 4 results match your search terms. If you have not found what you are looking for, make your search more specific.
+      </p>
+    </div>
+  </ng-container>
 </ng-template>
+
