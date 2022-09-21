@@ -1,8 +1,8 @@
+import { Location } from '@angular/common';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { animationFrames, combineLatest, EMPTY, merge, Observable, Subject, throwError } from 'rxjs';
 import { catchError, map, mapTo, shareReplay, switchMap, take, tap } from 'rxjs/operators';
-import { LocaleService } from 'src/app/core/services/localeService';
 import { ActivityNavTreeService } from 'src/app/core/services/navigation/item-nav-tree.service';
 import { openNewTab, replaceWindowUrl } from 'src/app/shared/helpers/url';
 import { FullItemRoute, itemRoute } from 'src/app/shared/routing/item-route';
@@ -61,7 +61,7 @@ export class ItemTaskService {
     private itemRouter: ItemRouter,
     private activityNavTreeService: ActivityNavTreeService,
     private router: Router,
-    private localeService: LocaleService,
+    private location: Location,
     private askHintService: AskHintService,
   ) {}
 
@@ -167,8 +167,8 @@ export class ItemTaskService {
   }
 
   private navigate(href: string, newTab = false): void {
-    if (newTab) openNewTab(href, this.localeService.currentLang);
-    else replaceWindowUrl(href, this.localeService.currentLang);
+    if (newTab) openNewTab(href, this.location);
+    else replaceWindowUrl(href, this.location);
   }
 
   private askHint(hintToken: string): Observable<string> {

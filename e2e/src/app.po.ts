@@ -13,7 +13,7 @@ export class AppPage {
   }
 
   async navigateTo(relativeUrl: string): Promise<void> {
-    const url = new URL(`/#${relativeUrl}`, browser.baseUrl);
+    const url = new URL(relativeUrl, browser.baseUrl);
     await browser.get(url.href);
     await browser.refresh(); // avoid stateful traumas
   }

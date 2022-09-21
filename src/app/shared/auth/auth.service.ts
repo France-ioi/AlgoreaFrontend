@@ -36,7 +36,7 @@ export const maxInvalidToken = 6;
 export class AuthService implements OnDestroy {
 
   status$ = new BehaviorSubject<AuthStatus>(notAuthenticated());
-  failure$ = new Subject<void>();
+  failure$ = new Subject<Error>();
 
   private countInvalidToken = 0;
 
@@ -66,7 +66,7 @@ export class AuthService implements OnDestroy {
       },
       error: _e => {
         // if temp user creation fails, there is not much we can do
-        this.failure$.next();
+        this.failure$.next(new Error('temp user creation failed (1)'));
       }
     });
 
@@ -139,7 +139,7 @@ export class AuthService implements OnDestroy {
     this.countInvalidToken ++;
     this.status$.next(notAuthenticated());
     if (this.countInvalidToken > maxInvalidToken) {
-      this.failure$.next();
+      this.failure$.next(new Error('too many invalid token'));
       return;
     }
 
@@ -152,7 +152,7 @@ export class AuthService implements OnDestroy {
         this.status$.next(auth);
       },
       error: _e => {
-        this.failure$.next(); // if temp user creation fails, there is not much we can do
+        this.failure$.next(new Error('temp user creation failed (2)')); // if temp user creation fails, there is not much we can do
       }
     });
 

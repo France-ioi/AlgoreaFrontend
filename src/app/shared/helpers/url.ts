@@ -1,4 +1,4 @@
-import { LanguageConfig } from './config';
+import { Location } from '@angular/common';
 import { isString } from './type-checkers';
 
 // Url array (`command` array used in some api of angular)
@@ -78,19 +78,19 @@ export function urlStringFromArray(urlAsArray: UrlCommand): string {
   }).join('');
 }
 
-function formatUrl(href: string, currentLang?: LanguageConfig): string {
-  const isAbsoluteHref = href.startsWith('http');
-  if (isAbsoluteHref) return href;
-  const url = new URL(currentLang?.path ?? '/', window.location.href);
-  url.hash = href;
-  return url.href;
+/**
+ * Convert an absolute or relative path to a full url string
+ */
+function pathToUrl(href: string, location: Location): string {
+  const isAbsolute = new RegExp('^(?:[a-z+]+:)?//', 'i').test(href);
+  return isAbsolute ? href : window.location.origin + location.prepareExternalUrl(href);
 }
 
-export function replaceWindowUrl(href: string, currentLang?: LanguageConfig): void {
-  window.location.href = formatUrl(href, currentLang);
+export function replaceWindowUrl(href: string, location: Location): void {
+  window.location.href = pathToUrl(href, location);
 }
-export function openNewTab(href: string, currentLang?: LanguageConfig): void {
-  window.open(formatUrl(href, currentLang), '_blank');
+export function openNewTab(href: string, location: Location): void {
+  window.open(pathToUrl(href, location), '_blank');
 }
 
 /**

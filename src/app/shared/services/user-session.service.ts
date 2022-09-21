@@ -12,7 +12,7 @@ import { repeatLatestWhen } from '../helpers/repeatLatestWhen';
 export class UserSessionService implements OnDestroy {
 
   session$ = new BehaviorSubject<UserProfile|undefined>(undefined);
-  userProfileError$ = new Subject<void>();
+  userProfileError$ = new Subject<Error>();
 
   /** currently-connected user profile, temporary or not, excluding transient (undefined) states */
   userProfile$ = this.session$.pipe(
@@ -38,7 +38,7 @@ export class UserSessionService implements OnDestroy {
       distinctUntilChanged(), // skip two undefined values in a row
     ).subscribe({
       next: profile => this.session$.next(profile),
-      error: () => this.userProfileError$.next()
+      error: () => this.userProfileError$.next(new Error('unable to fetch user profile'))
     });
   }
 

@@ -5,6 +5,7 @@ import { AuthHttpService } from '../http-services/auth.http-service';
 import { base64UrlEncode } from '../helpers/base64';
 import { appConfig } from '../helpers/config';
 import { AuthResult } from './auth-info';
+import { Location } from '@angular/common';
 
 // Use localStorage for nonce if possible localStorage is the only storage who survives a redirect in ALL browsers (also IE)
 const nonceStorage = localStorage;
@@ -15,7 +16,10 @@ const nonceStorageKey = 'oauth_nonce';
 })
 export class OAuthService {
 
-  constructor(private authHttp: AuthHttpService) {}
+  constructor(
+    private authHttp: AuthHttpService,
+    private location: Location,
+  ) {}
 
   /**
    * Init authorization code flow login anf redirect the user to the auth server login url.
@@ -71,7 +75,7 @@ export class OAuthService {
   }
 
   private appRedirectUri(): string {
-    return `${window.location.protocol}//${window.location.host}${window.location.pathname}#/`;
+    return `${window.location.origin}${this.location.prepareExternalUrl('')}`;
   }
 
   private parseState(state: string): {nonce: string, userState: string} {
