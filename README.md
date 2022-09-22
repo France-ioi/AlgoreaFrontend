@@ -18,6 +18,8 @@ The rest of the project follow the recommended structure of an Angular project.
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
+If you use the mock server - via `npm start`, copy mocks/environment.dev.ts to mocks/enviromnent.ts and update the dev token value.
+
 ## Code Style
 
 Run `npm run lint` to launch the linter checks on the code.
