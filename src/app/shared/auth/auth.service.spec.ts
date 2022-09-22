@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { AuthService } from './auth.service';
 import { AuthHttpService } from '../http-services/auth.http-service';
-import { HttpBackend } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 
 describe('AuthService', () => {
   let authService: AuthService;
@@ -12,7 +12,7 @@ describe('AuthService', () => {
     TestBed.configureTestingModule({
       providers: [
         {
-          provide: HttpBackend,
+          provide: HttpClient,
           useValue: {}
         }
       ]

@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { AuthHttpService } from '../http-services/auth.http-service';
-import { HttpBackend } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 
 describe('OauthService', () => {
   let authHttp: AuthHttpService;
@@ -9,7 +9,7 @@ describe('OauthService', () => {
     TestBed.configureTestingModule({
       providers: [
         {
-          provide: HttpBackend,
+          provide: HttpClient,
           useValue: {}
         }
       ]
