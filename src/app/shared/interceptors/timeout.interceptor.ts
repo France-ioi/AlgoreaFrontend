@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
-import { Observable, TimeoutError } from 'rxjs';
-import { catchError, timeout } from 'rxjs/operators';
+import { noop, Observable, of, TimeoutError } from 'rxjs';
+import { catchError, retry, timeout } from 'rxjs/operators';
 import { requestTimeout } from './interceptor_common';
 
 @Injectable()
@@ -13,6 +13,13 @@ export class TimeoutInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<any>> {
     return next.handle(req).pipe(
       timeout(req.context.get(requestTimeout)),
+      retry({ // retry once GET requests which get a timeout error
+        count: 1,
+        delay: err => {
+          if (err instanceof TimeoutError && req.method === 'GET') return of(noop);
+          throw err;
+        }
+      }),
       catchError(err => {
         if (err instanceof TimeoutError) {
           throw new HttpErrorResponse({
