@@ -51,7 +51,7 @@ export class AuthService implements OnDestroy {
         // (2) use the ongoing authentication if any
         if (appConfig.allowForcedToken && hasForcedToken()) return of(forcedTokenAuthFromStorage());
         else if (appConfig.authType === 'tokens') return of(tokenAuthFromStorage());
-        else return this.authHttp.refreshCookie(); // will fail if the browser has no cookie
+        else return this.authHttp.refreshAuth(); // will fail if the browser has no cookie
       }),
       catchError(_e => {
         // (3) otherwise, create a temp session
@@ -84,7 +84,7 @@ export class AuthService implements OnDestroy {
       switchMap(auth => {
         const isExpired = auth.expiration.valueOf() < Date.now();
         if (isExpired) return of({ auth, tokenIsExpired: true }); // don't even try to refresh the token if it is expired
-        return this.authHttp.refreshAuth(auth).pipe(
+        return this.authHttp.refreshAuth().pipe(
           catchError(err => {
             // For any http error, ignore it since the token is valid. Another try will occur the next minute.
             if (err instanceof HttpErrorResponse || err instanceof TimeoutError) return EMPTY;
@@ -117,14 +117,15 @@ export class AuthService implements OnDestroy {
   logoutAuthUser(): void {
     const currentauth = this.status$.value;
     if (!currentauth.authenticated) throw new Error('unable to logout while no user is logged in');
-    this.status$.next(notAuthenticated());
 
-    if (appConfig.authType === 'tokens') clearTokenFromStorage();
-    this.authHttp.revokeAuth(currentauth).pipe(
+    this.authHttp.revokeAuth().pipe(
       catchError(_e => of(undefined)), // continue next step even if token revocation failed
     ).subscribe(() => {
       this.oauthService.logoutOnAuthServer();
     });
+
+    this.status$.next(notAuthenticated());
+    if (appConfig.authType === 'tokens') clearTokenFromStorage();
   }
 
   /**

@@ -22,6 +22,10 @@ export function implementsError(value: unknown): value is Error {
   return true;
 }
 
+export function errorIsHTTPUnauthenticated(error: any): boolean {
+  return 'status' in error && (error as HttpErrorResponse).status === 401;
+}
+
 export function errorIsHTTPForbidden(error: any): boolean {
   return 'status' in error && (error as HttpErrorResponse).status === 403;
 }

@@ -1,25 +1,23 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpBackend, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpContext, HttpParams } from '@angular/common/http';
 import { ActionResponse, SimpleActionResponse, successData, assertSuccess } from './action-response';
-import { map, timeout } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { headersForAuth } from '../helpers/auth';
 import { appConfig } from '../helpers/config';
 import { AuthResult, cookieAuthFromServiceResp, tokenAuthFromServiceResp } from '../auth/auth-info';
+import { requestTimeout, retryOnceOn401, useAuthInterceptor } from '../interceptors/interceptor_common';
 
 interface CookieAuthPayload { expires_in: number }
 interface TokenAuthPayload { access_token: string, expires_in: number }
 type AuthPayload = CookieAuthPayload|TokenAuthPayload;
 
-const authServicesTimeout = 5000; // timeout (in ms) specific to these services
-const longAuthServicesTimeout = 10000;
+const longAuthServicesTimeout = 6000;
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthHttpService {
 
-  private http: HttpClient; // an http client specific to this class, skipping all http interceptors
   private apiUrl = new URL(appConfig.apiUrl, location.origin /* act as base when the url is relative, ignored otherwise */);
   private cookieParams = appConfig.authType === 'cookies' ? {
     use_cookie: '1',
@@ -55,24 +53,14 @@ export class AuthHttpService {
      */
   } : undefined;
 
-  private requestConfig = appConfig.authType === 'cookies' ? {
-    withCredentials: true, // adds appropriate cookies to the request
-  } : undefined;
-
-  constructor(
-    private handler: HttpBackend,
-  ) {
-    this.http = new HttpClient(this.handler);
-  }
+  constructor(private http: HttpClient) {}
 
   createTempUser(defaultLanguage: string): Observable<AuthResult> {
     return this.http
       .post<ActionResponse<AuthPayload>>(`${appConfig.apiUrl}/auth/temp-user`, null, {
         params: new HttpParams({ fromObject: { ...this.cookieParams, default_language: defaultLanguage } }),
-        ...this.requestConfig,
-      })
-      .pipe(
-        timeout(authServicesTimeout),
+        context: new HttpContext().set(useAuthInterceptor, false),
+      }).pipe(
         map(successData),
         map(p => this.authPayloadToResult(p))
       );
@@ -83,48 +71,32 @@ export class AuthHttpService {
       .post<ActionResponse<AuthPayload>>(
         `${appConfig.apiUrl}/auth/token`,
         { code: code, redirect_uri: redirectUri }, // payload data
-        { params: new HttpParams({ fromObject: this.cookieParams }), ...this.requestConfig }
+        {
+          params: new HttpParams({ fromObject: this.cookieParams }),
+          context: new HttpContext().set(useAuthInterceptor, false).set(requestTimeout, longAuthServicesTimeout),
+        }
       ).pipe(
-        timeout(longAuthServicesTimeout),
         map(successData),
         map(p => this.authPayloadToResult(p))
       );
   }
 
-  refreshAuth(auth: AuthResult): Observable<AuthResult> {
-    return auth.useCookie ? this.refreshCookie() : this.refreshToken(auth.accessToken);
-  }
-
-  refreshToken(token: string): Observable<AuthResult> {
-    if (appConfig.authType !== 'tokens') throw new Error('try to refresh token while app does not use token');
+  refreshAuth(): Observable<AuthResult> {
     return this.http
-      .post<ActionResponse<TokenAuthPayload>>(`${appConfig.apiUrl}/auth/token`, null, { headers: headersForAuth(token) }).pipe(
-        timeout(longAuthServicesTimeout),
-        map(successData),
-        map(p => this.authPayloadToResult(p))
-      );
-  }
-
-  refreshCookie(): Observable<AuthResult> {
-    if (appConfig.authType !== 'cookies') throw new Error('try not to provide token while app uses token');
-    return this.http
-      .post<ActionResponse<CookieAuthPayload>>(`${appConfig.apiUrl}/auth/token`, null, {
+      .post<ActionResponse<TokenAuthPayload>>(`${appConfig.apiUrl}/auth/token`, null, {
         params: new HttpParams({ fromObject: this.cookieParams }),
-        ...this.requestConfig,
+        context: new HttpContext().set(requestTimeout, longAuthServicesTimeout).set(retryOnceOn401, false),
       }).pipe(
-        timeout(longAuthServicesTimeout),
         map(successData),
         map(p => this.authPayloadToResult(p))
       );
   }
 
-  revokeAuth(auth: AuthResult): Observable<void> {
+  revokeAuth(): Observable<void> {
     return this.http
-      .post<SimpleActionResponse>(
-        `${appConfig.apiUrl}/auth/logout`,
-        null, // payload data
-        !auth.useCookie ? { headers: headersForAuth(auth.accessToken) } : this.requestConfig // options
-      ).pipe(
+      .post<SimpleActionResponse>(`${appConfig.apiUrl}/auth/logout`, null, {
+        context: new HttpContext().set(retryOnceOn401, false),
+      }).pipe(
         map(assertSuccess)
       );
   }
