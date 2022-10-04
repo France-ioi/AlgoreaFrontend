@@ -28,7 +28,7 @@ const memberDecoder = pipe(
   }),
   D.intersect(
     D.partial({
-      action: D.literal('invitation_accepted', 'join_request_accepted', 'joined_by_code', 'added_directly'),
+      action: D.literal('invitation_accepted', 'join_request_accepted', 'joined_by_code', 'joined_by_badge', 'added_directly'),
       memberSince: dateDecoder,
     })
   )

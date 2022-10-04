@@ -11,7 +11,7 @@ import { map } from 'rxjs/operators';
 
 const groupMembershipDecoder = pipe(
   D.struct({
-    action: D.literal('invitation_accepted', 'join_request_accepted', 'joined_by_code', 'added_directly'),
+    action: D.literal('invitation_accepted', 'join_request_accepted', 'joined_by_code', 'joined_by_badge', 'added_directly'),
     group: D.struct({
       description: D.nullable(D.string),
       id: D.string,
