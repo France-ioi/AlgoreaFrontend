@@ -2,8 +2,8 @@ import { Component, ElementRef, Input, QueryList, ViewChild, ViewChildren } from
 import { ItemData } from '../../services/item-datasource.service';
 import { OverlayPanel } from 'primeng/overlaypanel';
 import { BehaviorSubject, debounceTime, merge, ReplaySubject, Subject, switchMap } from 'rxjs';
-import { distinctUntilChanged, filter, map, share, shareReplay } from 'rxjs/operators';
-import { mapToFetchState, readyData } from '../../../../shared/operators/state';
+import { distinctUntilChanged, filter, share, shareReplay } from 'rxjs/operators';
+import { mapToFetchState } from '../../../../shared/operators/state';
 import { GetItemPrerequisitesService } from '../../http-services/get-item-prerequisites.service';
 import { canCloseOverlay } from '../../../../shared/helpers/overlay';
 
@@ -26,7 +26,6 @@ export class ItemUnlockAccessComponent {
     mapToFetchState({ resetter: this.refresh$ }),
     share(),
   );
-  addedIds$ = this.state$.pipe(readyData(), map(data => data.map(dependency => dependency.id)));
   private readonly showOverlaySubject$ = new BehaviorSubject<{ event: Event, itemId: string, target: HTMLElement }|undefined>(undefined);
   showOverlay$ = merge(
     this.showOverlaySubject$.pipe(debounceTime(750)),
