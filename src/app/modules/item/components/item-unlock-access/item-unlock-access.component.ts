@@ -2,10 +2,11 @@ import { Component, ElementRef, Input, QueryList, ViewChild, ViewChildren } from
 import { ItemData } from '../../services/item-datasource.service';
 import { OverlayPanel } from 'primeng/overlaypanel';
 import { BehaviorSubject, debounceTime, merge, ReplaySubject, Subject, switchMap } from 'rxjs';
-import { distinctUntilChanged, filter, share, shareReplay } from 'rxjs/operators';
+import { distinctUntilChanged, filter, map, share, shareReplay } from 'rxjs/operators';
 import { mapToFetchState } from '../../../../shared/operators/state';
 import { GetItemPrerequisitesService } from '../../http-services/get-item-prerequisites.service';
 import { canCloseOverlay } from '../../../../shared/helpers/overlay';
+import { canCurrentUserViewContent } from '../../../../shared/models/domain/item-view-permission';
 
 @Component({
   selector: 'alg-item-unlock-access',
@@ -23,6 +24,10 @@ export class ItemUnlockAccessComponent {
 
   state$ = this.itemId$.pipe(
     switchMap(itemId => this.getItemPrerequisitesService.get(itemId)),
+    map(data => data.map(item => ({
+      ...item,
+      isLocked: !canCurrentUserViewContent(item),
+    }))),
     mapToFetchState({ resetter: this.refresh$ }),
     share(),
   );

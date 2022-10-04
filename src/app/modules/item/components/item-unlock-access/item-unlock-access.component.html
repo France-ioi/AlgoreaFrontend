@@ -37,7 +37,7 @@
               {{ item.string.title }}
             </a>
           </div>
-          <i class="lock-icon fa fa-lock"></i>
+          <i class="lock-icon fa fa-lock" *ngIf="item.isLocked"></i>
         </li>
       </ul>
     </alg-section>
