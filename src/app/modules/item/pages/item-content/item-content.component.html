@@ -88,7 +88,7 @@
 
     <alg-item-unlock-access
       [itemData]="itemData"
-      *ngIf="itemData.item.permissions | allowsViewingOnlyInfo"
+      *ngIf="(itemData.item.permissions | allowsViewingInfo) && !(itemData.item.permissions | allowsViewingContent)"
     ></alg-item-unlock-access>
   </ng-template>
 

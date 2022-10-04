@@ -24,11 +24,6 @@ export interface ItemWithViewPerm { permissions: ItemPermWithView }
 export function allowsViewingInfo(p: ItemPermWithView): boolean {
   return [ P.Info, P.Content, P.ContentWithDescendants, P.Solution ].includes(p.canView);
 }
-
-export function allowsViewingOnlyInfo(p: ItemPermWithView): boolean {
-  return p.canView === P.Info;
-}
-
 /**
  * Permission required for starting an attempt and so, for a
  * - task, to load the task itself
@@ -55,10 +50,6 @@ export function canCurrentUserViewInfo(i: ItemWithViewPerm): boolean {
   return allowsViewingInfo(i.permissions);
 }
 
-export function canCurrentUserViewOnlyInfo(i: ItemWithViewPerm): boolean {
-  return allowsViewingOnlyInfo(i.permissions);
-}
-
 export function canCurrentUserViewContent(i: ItemWithViewPerm): boolean {
   return allowsViewingContent(i.permissions);
 }
@@ -74,10 +65,6 @@ export function canCurrentUserViewSolution(i: ItemWithViewPerm, result?: { valid
 @Pipe({ name: 'allowsViewingInfo', pure: true })
 export class AllowsViewingItemInfoPipe implements PipeTransform {
   transform = allowsViewingInfo;
-}
-@Pipe({ name: 'allowsViewingOnlyInfo', pure: true })
-export class AllowsViewingItemOnlyInfoPipe implements PipeTransform {
-  transform = allowsViewingOnlyInfo;
 }
 @Pipe({ name: 'allowsViewingContent', pure: true })
 export class AllowsViewingItemContentPipe implements PipeTransform {

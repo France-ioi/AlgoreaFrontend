@@ -68,7 +68,6 @@ import { PathSuggestionComponent } from './components/path-suggestion/path-sugge
 import {
   AllowsViewingItemContentPipe,
   AllowsViewingItemInfoPipe,
-  AllowsViewingItemOnlyInfoPipe
 } from 'src/app/shared/models/domain/item-view-permission';
 import { AllowsGrantingContentViewItemPipe, AllowsGrantingViewItemPipe } from 'src/app/shared/models/domain/item-grant-view-permission';
 import { AllowsEditingAllItemPipe, AllowsEditingChildrenItemPipe } from 'src/app/shared/models/domain/item-edit-permission';
@@ -118,7 +117,6 @@ import { MessageInfoComponent } from './components/message-info/message-info.com
     PathSuggestionComponent,
     AllowsViewingItemContentPipe,
     AllowsViewingItemInfoPipe,
-    AllowsViewingItemOnlyInfoPipe,
     AllowsGrantingViewItemPipe,
     AllowsGrantingContentViewItemPipe,
     AllowsEditingAllItemPipe,
@@ -204,7 +202,6 @@ import { MessageInfoComponent } from './components/message-info/message-info.com
     AllowsEditingAllItemPipe,
     AllowsEditingChildrenItemPipe,
     AllowsWatchingItemResultsPipe,
-    AllowsViewingItemOnlyInfoPipe,
     MessageInfoComponent,
   ],
   providers: [],
