@@ -1,0 +1,19 @@
+.container {
+  padding: .4rem;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  background-color: var(--warning-color);
+  border-radius: 1rem;
+}
+
+.message-icon {
+  margin: 0 1rem;
+  color: #ffffff;
+  font-size: 1.4rem;
+}
+
+.message-text {
+  color: #ffffff;
+  font-size: 1.4rem;
+}

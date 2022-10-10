@@ -70,19 +70,26 @@
   </ng-container>
 
   <ng-template #notAllowToWatch>
-    <p class="validation-text">
-      <ng-container *ngIf="itemData.item.type === 'Chapter'">
-        <span i18n>Your current access rights do not allow you to list the content of this chapter.</span>
-      </ng-container>
+    <div class="message-info">
+      <alg-message-info>
+        <span *ngIf="itemData.item.type === 'Chapter'" i18n>
+          Your current access rights do not allow you to list the content of this chapter.
+        </span>
 
-      <ng-container *ngIf="['Task', 'Course'].includes(itemData.item.type)">
-        <span i18n>Your current access rights do not allow you to start the activity.</span>
-      </ng-container>
+        <span *ngIf="itemData.item.type === 'Skill'" i18n>
+          Your current access rights do not allow you to list the content of this skill.
+        </span>
 
-      <ng-container *ngIf="itemData.item.type === 'Skill'">
-        <span i18n>Your current access rights do not allow you to list the content of this skill.</span>
-      </ng-container>
-    </p>
+        <span *ngIf="['Task', 'Course'].includes(itemData.item.type)" i18n>
+          Your current access rights do not allow you to start the activity.
+        </span>
+      </alg-message-info>
+    </div>
+
+    <alg-item-unlock-access
+      [itemData]="itemData"
+      *ngIf="(itemData.item.permissions | allowsViewingInfo) && !(itemData.item.permissions | allowsViewingContent)"
+    ></alg-item-unlock-access>
   </ng-template>
 
   <ng-template #noCurrentResult>

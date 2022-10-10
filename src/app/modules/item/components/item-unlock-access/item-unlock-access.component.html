@@ -1,0 +1,54 @@
+<ng-container *ngIf="state$ | async as state">
+  <alg-loading size="medium" *ngIf="state.isFetching"></alg-loading>
+
+  <alg-error
+    *ngIf="state.isError"
+    class="dark"
+    icon="fa fa-exclamation-triangle"
+    i18n-message message="Unable to load the dependencies"
+    [showRefreshButton]="true"
+    (refresh)="refresh()"
+  ></alg-error>
+
+  <ng-container *ngIf="!state.isFetching && (state.data || []).length > 0">
+    <alg-section icon="fa fa-list" i18n-label label="Prerequisites">
+      <p i18n>You can unlock access by validating one of the following content.</p>
+
+      <ul class="list">
+        <li
+          class="list-item"
+          *ngFor="let item of state.data; let i = index"
+          (mouseleave)="onMouseLeave($event)"
+        >
+          <div class="list-item-left">
+            <span class="activity-progress">
+              <alg-score-ring
+                [diameter]="30"
+                [bestScore]="item.bestScore"
+                [currentScore]="item.bestScore"
+              ></alg-score-ring>
+            </span>
+            <a
+              class="alg-link"
+              [routerLink]="item | rawItemLink"
+              (mouseenter)="onMouseEnter($event, item.id, i)"
+              #contentRef
+            >
+              {{ item.string.title }}
+            </a>
+          </div>
+          <i class="lock-icon fa fa-lock" *ngIf="item.isLocked"></i>
+        </li>
+      </ul>
+    </alg-section>
+
+    <p-overlayPanel
+      styleClass="alg-path-suggestion-overlay"
+      #op
+    >
+      <ng-container *ngIf="op.overlayVisible">
+        <alg-path-suggestion [itemId]="(showOverlay$ | async)?.itemId" (mouseleave)="closeOverlay()"></alg-path-suggestion>
+      </ng-container>
+    </p-overlayPanel>
+  </ng-container>
+</ng-container>

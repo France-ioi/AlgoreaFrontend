@@ -24,7 +24,6 @@ export interface ItemWithViewPerm { permissions: ItemPermWithView }
 export function allowsViewingInfo(p: ItemPermWithView): boolean {
   return [ P.Info, P.Content, P.ContentWithDescendants, P.Solution ].includes(p.canView);
 }
-
 /**
  * Permission required for starting an attempt and so, for a
  * - task, to load the task itself
