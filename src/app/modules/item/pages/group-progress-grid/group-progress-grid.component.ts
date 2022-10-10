@@ -203,11 +203,9 @@ export class GroupProgressGridComponent implements OnChanges {
           .map(row => ({
             header: row.value,
             id: row.id,
-            data: [
-              ...items.map(item =>
-                progress.find(progress => progress.itemId === item.id && progress.groupId === row.id)
-              ),
-            ],
+            data: items.map(item =>
+              progress.find(progress => progress.itemId === item.id && progress.groupId === row.id)
+            ),
           })),
       )
     );
