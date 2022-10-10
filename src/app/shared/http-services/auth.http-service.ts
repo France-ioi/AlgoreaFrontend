@@ -73,7 +73,9 @@ export class AuthHttpService {
         { code: code, redirect_uri: redirectUri }, // payload data
         {
           params: new HttpParams({ fromObject: this.cookieParams }),
-          context: new HttpContext().set(useAuthInterceptor, false).set(requestTimeout, longAuthServicesTimeout),
+          context: new HttpContext()
+            .set(useAuthInterceptor, false)
+            .set(requestTimeout, longAuthServicesTimeout),
         }
       ).pipe(
         map(successData),
@@ -85,7 +87,10 @@ export class AuthHttpService {
     return this.http
       .post<ActionResponse<TokenAuthPayload>>(`${appConfig.apiUrl}/auth/token`, null, {
         params: new HttpParams({ fromObject: this.cookieParams }),
-        context: new HttpContext().set(requestTimeout, longAuthServicesTimeout).set(retryOnceOn401, false),
+        context: new HttpContext()
+          .set(requestTimeout, longAuthServicesTimeout)
+          .set(retryOnceOn401, false)
+          .set(useAuthInterceptor, false),
       }).pipe(
         map(successData),
         map(p => this.authPayloadToResult(p))
@@ -95,7 +100,9 @@ export class AuthHttpService {
   revokeAuth(): Observable<void> {
     return this.http
       .post<SimpleActionResponse>(`${appConfig.apiUrl}/auth/logout`, null, {
-        context: new HttpContext().set(retryOnceOn401, false),
+        context: new HttpContext()
+          .set(retryOnceOn401, false)
+          .set(useAuthInterceptor, false),
       }).pipe(
         map(assertSuccess)
       );
