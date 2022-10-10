@@ -78,6 +78,7 @@ export class GroupProgressGridComponent implements OnChanges {
 
   private itemData$ = new ReplaySubject<ItemData>(1);
   private refresh$ = new Subject<void>();
+  // columns containing results, including the first "chapter summary" one
   readonly columns$: Observable<FetchState<DataColumn[]>> = this.itemData$.pipe(
     switchMap(itemData => this.getColumns(itemData)),
     mapToFetchState({ resetter: this.refresh$ }),
@@ -202,12 +203,9 @@ export class GroupProgressGridComponent implements OnChanges {
           .map(row => ({
             header: row.value,
             id: row.id,
-            data: [
-              progress.find(progress => progress.itemId === itemId && progress.groupId === row.id),
-              ...items.map(item =>
-                progress.find(progress => progress.itemId === item.id && progress.groupId === row.id)
-              ),
-            ],
+            data: items.map(item =>
+              progress.find(progress => progress.itemId === item.id && progress.groupId === row.id)
+            ),
           })),
       )
     );
