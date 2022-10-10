@@ -8,6 +8,7 @@ export interface ProgressSelectValue<T> {
   value: T,
   disabled?: boolean,
   tooltip?: string[],
+  selected?: boolean,
 }
 
 /**

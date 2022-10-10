@@ -37,7 +37,8 @@
             (save)="onPermissionsDialogSave($event)"
             (cancel)="onCancel()"
             [targetType]="targetType"
-            [permissions]="state.data"
+            [permissions]="state.data.granted"
+            [computedPermissions]="state.data.computed"
             [giverPermissions]="currentUserPermissions"
             [acceptButtonDisabled]="updateInProcess"
           ></alg-permissions-edit-form>

@@ -14,8 +14,16 @@
   </div>
   <div *ngFor="let item of values; let idx = index;" class="progress-select-item">
     <div class="progress-control">
-      <span class="progress-point" [ngClass]="{active: idx < selected + 1, last: idx + 1 == selected + 1}" (click)="onSet(item.value)">
-        <i *ngIf="type === 'checksWithLock' && idx < selected" class="fa fa-check"></i>
+      <span
+        class="progress-point"
+        [ngClass]="{active: idx < selected + 1, last: idx + 1 == selected + 1, 'active-light': item.selected}"
+        (click)="onSet(item.value)"
+        [pTooltip]="item.tooltip?.join('\n') || ''"
+        tooltipPosition="right"
+        tooltipStyleClass="permissions-dialog"
+        [escape]="false"
+      >
+        <i *ngIf="type === 'checksWithLock' && (idx < selected || item.selected)" class="fa fa-check"></i>
         <i
           *ngIf="idx === selected"
           class="fa"

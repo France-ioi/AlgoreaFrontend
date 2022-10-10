@@ -32,6 +32,7 @@ const groupPermissionsInfoDecoder = D.struct({
 export type GroupPermissionsInfo = D.TypeOf<typeof groupPermissionsInfoDecoder>;
 
 export type GroupPermissions = GroupPermissionsInfo['granted'];
+export type GroupComputedPermissions = GroupPermissionsInfo['computed'];
 
 @Injectable({
   providedIn: 'root'
