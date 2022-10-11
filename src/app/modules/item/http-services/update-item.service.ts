@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpContext } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { assertSuccess, SimpleActionResponse } from '../../../shared/http-services/action-response';
 import { appConfig } from '../../../shared/helpers/config';
 import { map } from 'rxjs/operators';
+import { requestTimeout } from 'src/app/shared/interceptors/interceptor_common';
+import { SECONDS } from 'src/app/shared/helpers/duration';
 
 export interface ItemChanges {
   children?: {
@@ -34,6 +36,8 @@ export interface ItemChanges {
   entry_min_admitted_members_ratio?: 'All' | 'Half' | 'One' | 'None',
 }
 
+const serviceTimeout = 5*SECONDS;
+
 @Injectable({
   providedIn: 'root',
 })
@@ -46,11 +50,9 @@ export class UpdateItemService {
     itemId: string,
     changes: ItemChanges,
   ): Observable<void> {
-    return this.http.put<SimpleActionResponse>(
-      `${appConfig.apiUrl}/items/${itemId}`,
-      changes,
-      { headers: { timeout: '20000' } },
-    ).pipe(
+    return this.http.put<SimpleActionResponse>(`${appConfig.apiUrl}/items/${itemId}`, changes, {
+      context: new HttpContext().set(requestTimeout, serviceTimeout),
+    }).pipe(
       map(assertSuccess),
     );
   }
