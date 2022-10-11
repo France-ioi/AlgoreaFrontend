@@ -14,6 +14,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ItemChanges, UpdateItemService } from '../../http-services/update-item.service';
 import { PendingChangesComponent } from '../../../../shared/guards/pending-changes-guard';
 import { PendingChangesService } from '../../../../shared/services/pending-changes-service';
+import { CurrentContentService } from 'src/app/shared/services/current-content.service';
 
 @Component({
   selector: 'alg-item-children-edit-form',
@@ -39,6 +40,7 @@ export class ItemChildrenEditFormComponent implements OnInit, PendingChangesComp
     private itemDataSource: ItemDataSource,
     private actionFeedbackService: ActionFeedbackService,
     private pendingChangesService: PendingChangesService,
+    private currentContentService: CurrentContentService,
   ) {}
 
   ngOnInit(): void {
@@ -110,10 +112,12 @@ export class ItemChildrenEditFormComponent implements OnInit, PendingChangesComp
       next: _status => {
         this.actionFeedbackService.success($localize`Changes successfully saved.`);
         this.itemDataSource.refreshItem(); // which will re-enable the form
+        this.currentContentService.forceNavMenuReload();
       },
       error: err => {
         this.disabled = false;
         this.actionFeedbackService.unexpectedError();
+        this.currentContentService.forceNavMenuReload();
         if (!(err instanceof HttpErrorResponse)) throw err;
       },
     });
