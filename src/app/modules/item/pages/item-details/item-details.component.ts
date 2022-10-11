@@ -27,8 +27,13 @@ import { appConfig } from 'src/app/shared/helpers/config';
 import { GroupWatchingService } from 'src/app/core/services/group-watching.service';
 import { isTask } from 'src/app/shared/helpers/item-type';
 import { PendingChangesComponent } from '../../../../shared/guards/pending-changes-guard';
-import { canCurrentUserViewContent, canCurrentUserViewSolution } from 'src/app/shared/models/domain/item-view-permission';
+import {
+  allowsViewingContent,
+  canCurrentUserViewContent,
+  canCurrentUserViewSolution,
+} from 'src/app/shared/models/domain/item-view-permission';
 import { ItemEditWrapperComponent } from '../../components/item-edit-wrapper/item-edit-wrapper.component';
+import { allowsWatchingResults } from 'src/app/shared/models/domain/item-watch-permission';
 
 const loadForbiddenAnswerError = new Error('load answer forbidden');
 
@@ -60,8 +65,11 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent, P
     shareReplay(1),
   );
   readonly taskTabs$ = this.tabs$.pipe(map(tabs => tabs.filter(tab => tab.view !== 'progress')));
-  readonly showProgressTab$ = combineLatest([ this.groupWatchingService.isWatching$, this.tabs$ ]).pipe(
-    map(([ isWatching, tabs ]) => isWatching || tabs.some(tab => tab.view === 'progress')),
+  readonly showProgressTab$ = combineLatest([ this.itemData$.pipe(readyData()), this.groupWatchingService.isWatching$, this.tabs$ ]).pipe(
+    map(([ itemData, isWatching, tabs ]) =>
+      (!isWatching && allowsViewingContent(itemData.item.permissions) && tabs.some(tab => tab.view === 'progress')) ||
+      (isWatching && allowsWatchingResults(itemData.item.permissions))
+    ),
   );
   taskView?: TaskTab['view'];
 

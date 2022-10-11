@@ -20,7 +20,7 @@
         (changed)="reloadItem()"
       ></alg-item-permissions>
 
-      <nav class="nav-tab" [hidden]="!(showProgressTab$ | async) && taskTabs.length <= 1 && !(itemData.item.permissions | allowsEditingAll)">
+      <nav class="nav-tab" [hidden]="!(showProgressTab$ | async) && taskTabs.length <= 1 && !(itemData.item.permissions | allowsEditingAll) && !progressTab.isActive && !dependenciesTab.isActive && !parametersTab.isActive">
         <a
           class="nav-tab-item"
           [routerLink]="'./'"
@@ -55,7 +55,7 @@
           </a>
         </ng-container>
         <a
-          *ngIf="(showProgressTab$ | async) && (!(watchedGroup$ | async) || (itemData.item.permissions | allowsWatchingResults) || !contentTab.isActive)"
+          [hidden]="!(showProgressTab$ | async) && !progressTab.isActive"
           class="nav-tab-item"
           [routerLink]="'./progress'"
           routerLinkActive #progressTab="routerLinkActive"
