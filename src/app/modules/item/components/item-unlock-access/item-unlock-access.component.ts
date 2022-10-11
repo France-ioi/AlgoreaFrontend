@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { Component, ElementRef, Input, OnChanges, OnDestroy, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { ItemData } from '../../services/item-datasource.service';
 import { OverlayPanel } from 'primeng/overlaypanel';
 import { BehaviorSubject, debounceTime, merge, ReplaySubject, Subject, switchMap } from 'rxjs';
@@ -13,7 +13,7 @@ import { canCurrentUserViewContent } from '../../../../shared/models/domain/item
   templateUrl: './item-unlock-access.component.html',
   styleUrls: [ './item-unlock-access.component.scss' ],
 })
-export class ItemUnlockAccessComponent {
+export class ItemUnlockAccessComponent implements OnChanges, OnDestroy {
   @Input() itemData?: ItemData;
 
   @ViewChild('op') op?: OverlayPanel;
