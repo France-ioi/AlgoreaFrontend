@@ -1,5 +1,4 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 import * as D from 'io-ts/Decoder';
 import { pipe } from 'fp-ts/function';
 import { appConfig } from 'src/app/shared/helpers/config';
@@ -23,6 +22,7 @@ import { ActivityLog, ActivityLogService } from 'src/app/shared/http-services/ac
 import { isNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
 import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { ForumService } from './forum.service';
 
 const threadOpenedEventDecoder = D.struct({
   eventType: D.literal('thread_opened'),
@@ -109,21 +109,19 @@ export class ThreadService implements OnDestroy {
 
   events$: Observable<ThreadEvent[]>;
   status$: Observable<ThreadStatus['status']>;
+  error$ = this.forumService.error$;
 
   private newEvents$: Observable<ThreadEvent[]>;
   private clearEvents$ = new ReplaySubject<void>(1);
   private tokenData?: TokenData;
-  private socket: WebSocketSubject<unknown>;
 
   constructor(
+    private forumService: ForumService,
     private activityLogService: ActivityLogService,
     private actionFeedbackService: ActionFeedbackService,
     private http: HttpClient,
   ) {
-    if (!appConfig.forumServerUrl) throw new Error('cannot instantiate threads service when no forum server url');
-    this.socket = webSocket(appConfig.forumServerUrl);
-
-    this.newEvents$ = this.socket.pipe(
+    this.newEvents$ = this.forumService.multiplex(() => undefined, () => undefined, () => true).pipe(
       decodeSnakeCase(D.array(threadEventDecoder)),
       catchError(() => EMPTY), // ignore undecoded messages
     );
@@ -159,7 +157,7 @@ export class ThreadService implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.socket.complete();
+    this.clearEvents$.complete();
   }
 
   init(tokenData: TokenData): void {
@@ -169,7 +167,7 @@ export class ThreadService implements OnDestroy {
 
   private send(action: ThreadAction): void {
     if (!this.tokenData) throw new Error('service must be initialized');
-    this.socket.next({
+    this.forumService.send({
       token: this.tokenData,
       ...action,
     });
