@@ -18,7 +18,7 @@
 
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/app.component.html</context><context context-type="linenumber">41</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog.component.html</context><context context-type="linenumber">31</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-details/item-details.component.ts</context><context context-type="linenumber">146</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-display/item-display.component.ts</context><context context-type="linenumber">122</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/lti/pages/lti/lti.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit><trans-unit id="727030606410719950" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/app.component.html</context><context context-type="linenumber">41</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog.component.html</context><context context-type="linenumber">31</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-details/item-details.component.ts</context><context context-type="linenumber">150</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-display/item-display.component.ts</context><context context-type="linenumber">122</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/lti/pages/lti/lti.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit><trans-unit id="727030606410719950" datatype="html">
         <source>Language mismatch</source><target state="translated">Mauvaise langue?</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/language-mismatch/language-mismatch.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit><trans-unit id="6895619751331935307" datatype="html">
@@ -479,7 +479,7 @@
         <source>An unknown error occurred. </source><target state="translated">Une erreur est survenue. </target>
         
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-details/item-details.component.ts</context><context context-type="linenumber">145</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-display/item-display.component.ts</context><context context-type="linenumber">121</context></context-group></trans-unit><trans-unit id="6885936620581271929" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-details/item-details.component.ts</context><context context-type="linenumber">149</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-display/item-display.component.ts</context><context context-type="linenumber">121</context></context-group></trans-unit><trans-unit id="6885936620581271929" datatype="html">
         <source>Unable to load the task</source><target state="new">Unable to load the task</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-display/item-display.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit><trans-unit id="8679237608788920660" datatype="html">
@@ -1453,7 +1453,7 @@
         <source>Permissions successfully updated.</source><target state="new">Permissions successfully updated.</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog.component.ts</context><context context-type="linenumber">86</context></context-group></trans-unit><trans-unit id="1519954996184640001" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog.component.ts</context><context context-type="linenumber">84</context></context-group></trans-unit><trans-unit id="1519954996184640001" datatype="html">
         <source>Error</source><target state="translated">Erreur</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-children-edit/item-children-edit.component.html</context><context context-type="linenumber">88</context></context-group></trans-unit><trans-unit id="429958371655094287" datatype="html">
@@ -2121,7 +2121,19 @@
       <note from="description" priority="1">In progress matrix, explanation when cell is empty</note></trans-unit><trans-unit id="6629094035123468873" datatype="html">
         <source>ACCESS</source><target state="translated">ACCÈS</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/user-progress-details/user-progress-details.component.html</context><context context-type="linenumber">31</context></context-group></trans-unit><trans-unit id="6746605846893800788" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/user-progress-details/user-progress-details.component.html</context><context context-type="linenumber">31</context></context-group></trans-unit><trans-unit id="6284712106854193940" datatype="html">
+        <source>This user has this permission via one of the other group he is member of, or one of their ancestors.</source><target state="new">This user has this permission via one of the other group he is member of, or one of their ancestors.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/helpers/computed-permissions.ts</context>
+          <context context-type="linenumber">34</context>
+        </context-group>
+      </trans-unit><trans-unit id="1019652748880096752" datatype="html">
+        <source>This group has this permission via one of one of its ancestor group.</source><target state="new">This group has this permission via one of one of its ancestor group.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/helpers/computed-permissions.ts</context>
+          <context context-type="linenumber">35</context>
+        </context-group>
+      </trans-unit><trans-unit id="6746605846893800788" datatype="html">
         <source>Error while loading the group progress</source><target state="new">Error while loading the group progress</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/chapter-group-progress/chapter-group-progress.component.html</context><context context-type="linenumber">15</context></context-group></trans-unit><trans-unit id="8897571869263582585" datatype="html">
