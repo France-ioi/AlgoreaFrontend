@@ -4,7 +4,7 @@
       <div *ngFor="let event of events">
         <div>{{ event | json }}</div>
       </div>
-      <div *ngIf="(threadStatus$ | async) === 'opened'">
+      <div *ngIf="(threadState$ | async) === 'thread_opened'">
         <textarea
           [(ngModel)]="messageToSend"
           placeholder="Send a message..."
@@ -40,7 +40,7 @@
 
     <p-button
       *ngIf="!widgetOpened"
-      [disabled]="!(threadStatus$ | async) || (threadStatus$ | async) === 'none'"
+      [disabled]="(threadState$ | async) === 'connection_intializing' || (threadState$ | async) === 'connection_closed'"
       label="Show thread"
       (click)="toggleWidget(true)"
     ></p-button>

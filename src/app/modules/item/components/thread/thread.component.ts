@@ -2,7 +2,7 @@ import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/
 import { catchError, combineLatest, EMPTY, fromEvent, map, ReplaySubject, skip, switchMap, take } from 'rxjs';
 import { GroupWatchingService } from 'src/app/core/services/group-watching.service';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
-import { ThreadService } from '../../services/threads.service';
+import { ThreadService, ThreadState } from '../../services/threads.service';
 
 @Component({
   selector: 'alg-thread',
@@ -17,12 +17,12 @@ export class ThreadComponent implements OnChanges, OnDestroy {
   widgetOpened = false;
 
   events$ = this.threadService.events$;
-  threadStatus$ = this.threadService.status$;
-  canOpenThread$ = combineLatest([ this.groupWatchingService.isWatching$, this.threadStatus$ ]).pipe(
-    map(([ isWatching, status ]) => !isWatching && status !== 'opened'),
+  threadState$ = this.threadService.state$;
+  canOpenThread$ = combineLatest([ this.groupWatchingService.isWatching$, this.threadState$ ]).pipe(
+    map(([ isWatching, status ]) => !isWatching && status === ThreadState.ThreadClosed),
   );
-  canCloseThread$ = combineLatest([ this.groupWatchingService.isWatching$, this.threadStatus$ ]).pipe(
-    map(([ isWatching, status ]) => !isWatching && status === 'opened'),
+  canCloseThread$ = combineLatest([ this.groupWatchingService.isWatching$, this.threadState$ ]).pipe(
+    map(([ isWatching, status ]) => !isWatching && status === ThreadState.ThreadOpened),
   );
 
   private itemId$ = new ReplaySubject<string>(1);
@@ -31,7 +31,7 @@ export class ThreadComponent implements OnChanges, OnDestroy {
     combineLatest([ this.itemId$, this.userSession.userProfile$, this.groupWatchingService.watchedGroup$ ])
       .pipe(catchError(() => EMPTY)) // error is handled elsewhere
       .subscribe(([ itemId, profile, watchedGroup ]) => {
-        this.threadService.init({
+        this.threadService.setThread({
           participantId: watchedGroup?.route.id || profile.groupId,
           itemId,
           userId: profile.groupId,
@@ -40,15 +40,14 @@ export class ThreadComponent implements OnChanges, OnDestroy {
         });
       }),
     this.itemId$
-      .pipe(switchMap(() => this.threadStatus$), take(1))
-      .subscribe(status => {
-        this.threadService.follow();
-        this.widgetOpened = status === 'opened';
+      .pipe(switchMap(() => this.threadState$.pipe(take(1))))
+      .subscribe(state => {
+        this.widgetOpened = state === ThreadState.ThreadOpened;
       }),
 
-    this.itemId$.pipe(skip(1)).subscribe(() => this.threadService.unfollow()),
+    this.itemId$.pipe(skip(1)).subscribe(() => this.threadService.leaveThread()),
 
-    fromEvent(window, 'beforeunload').subscribe(() => this.threadService.unfollow()),
+    fromEvent(window, 'beforeunload').subscribe(() => this.threadService.leaveThread()),
   ];
 
   constructor(
@@ -66,7 +65,7 @@ export class ThreadComponent implements OnChanges, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
-    this.threadService.unfollow();
+    this.threadService.leaveThread();
   }
 
   openThread(): void {

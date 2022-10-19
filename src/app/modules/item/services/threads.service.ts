@@ -5,6 +5,7 @@ import { appConfig } from 'src/app/shared/helpers/config';
 import { dateDecoder } from 'src/app/shared/helpers/decoders';
 import {
   catchError,
+  combineLatest,
   distinctUntilChanged,
   EMPTY,
   filter,
@@ -15,14 +16,16 @@ import {
   scan,
   shareReplay,
   startWith,
+  SubscriptionLike,
   switchMap,
+  take,
 } from 'rxjs';
 import { decodeSnakeCase } from 'src/app/shared/operators/decode';
 import { ActivityLog, ActivityLogService } from 'src/app/shared/http-services/activity-log.service';
 import { isNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
 import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { ForumService } from './forum.service';
+import { ForumService, WsStatus } from './forum.service';
 
 const threadOpenedEventDecoder = D.struct({
   eventType: D.literal('thread_opened'),
@@ -84,7 +87,6 @@ type ThreadEvent = D.TypeOf<typeof threadEventDecoder>;
 const threadStatusDecoder = D.struct({
   status: D.literal('none', 'closed', 'opened'),
 });
-type ThreadStatus = D.TypeOf<typeof threadStatusDecoder>;
 
 interface TokenData {
   participantId: string,
@@ -102,67 +104,99 @@ type ThreadAction =
   | { action: 'thread-status' }
   | { action: 'send-message', message: string };
 
+export enum ThreadState {
+  ConnectionInitializing = 'connection_intializing',
+  ConnectionClosed = 'connection_closed',
+  ThreadStatusPending = 'thread_status_pending',
+  ThreadOpened = 'thread_opened',
+  ThreadClosed = 'thread_closed',
+}
+
 @Injectable({
   providedIn: 'root',
 })
 export class ThreadService implements OnDestroy {
 
-  events$: Observable<ThreadEvent[]>;
-  status$: Observable<ThreadStatus['status']>;
-  error$ = this.forumService.error$;
-
-  private newEvents$: Observable<ThreadEvent[]>;
   private clearEvents$ = new ReplaySubject<void>(1);
   private tokenData?: TokenData;
+
+  private threadSub?: SubscriptionLike;
+
+  events$ = this.clearEvents$.pipe(
+    switchMap(() => this.newEvents$.pipe(
+      startWith([]),
+      scan((oldEvents, newEvents) => [ ...oldEvents, ...newEvents ]),
+    )),
+    map(events => events.sort((a, b) => a.time.valueOf() - b.time.valueOf())), // sort by date ascending
+  );
+
+  private newEvents$: Observable<ThreadEvent[]> = this.forumService.inputMessages$.pipe(
+    decodeSnakeCase(D.array(threadEventDecoder)),
+    catchError(() => EMPTY), // ignore undecoded messages
+  );
+
+  private threadStatus$ = merge(
+    // When re-initializing a thread, fetch the status since the last 20 events might not contain any thread-status related event.
+    this.clearEvents$.pipe(switchMap(() => this.getStatus().pipe(startWith('initializing' as const)))),
+    this.newEvents$.pipe(
+      // when receiving a thread-status related event, we consider the first one since the list is ordered by event time DESCendings
+      map(events => events.find(event => event.eventType === 'thread_opened' || event.eventType === 'thread_closed')),
+      // Then we map the new status
+      map((event): 'closed' | 'opened' | undefined => {
+        switch (event?.eventType) {
+          case 'thread_closed': return 'closed' as const;
+          case 'thread_opened': return 'opened' as const;
+          default: return undefined;
+        }
+      }),
+      filter(isNotUndefined),
+    ),
+  ).pipe(
+    distinctUntilChanged(),
+    shareReplay(1),
+  );
+
+  state$: Observable<ThreadState> = combineLatest([ this.forumService.wsStatus$, this.threadStatus$ ]).pipe(
+    map(([ wsStatus, threadStatus ]) => {
+      if (wsStatus === WsStatus.Closed) return ThreadState.ConnectionClosed;
+      if (wsStatus === WsStatus.Initializing) return ThreadState.ConnectionInitializing;
+      if (threadStatus === 'initializing') return ThreadState.ThreadStatusPending;
+      if (threadStatus === 'closed') return ThreadState.ThreadClosed;
+      return ThreadState.ThreadOpened;
+    })
+  );
 
   constructor(
     private forumService: ForumService,
     private activityLogService: ActivityLogService,
     private actionFeedbackService: ActionFeedbackService,
     private http: HttpClient,
-  ) {
-    this.newEvents$ = this.forumService.multiplex(() => undefined, () => undefined, () => true).pipe(
-      decodeSnakeCase(D.array(threadEventDecoder)),
-      catchError(() => EMPTY), // ignore undecoded messages
-    );
-
-    this.events$ = this.clearEvents$.pipe(
-      switchMap(() => this.newEvents$.pipe(
-        startWith([]),
-        scan((oldEvents, newEvents) => [ ...oldEvents, ...newEvents ]),
-      )),
-      map(events => events.sort((a, b) => a.time.valueOf() - b.time.valueOf())), // sort by date ascending
-    );
-
-    this.status$ = merge(
-      // When re-initializing a thread, fetch the status since the last 20 events might not contain any thread-status related event.
-      this.clearEvents$.pipe(switchMap(() => this.getStatus())),
-      this.newEvents$.pipe(
-        // when receiving a thread-status related event, we consider the first one since the list is ordered by event time DESCendings
-        map(events => events.find(event => event.eventType === 'thread_opened' || event.eventType === 'thread_closed')),
-        // Then we map the new status
-        map((event): ThreadStatus['status'] | undefined => {
-          switch (event?.eventType) {
-            case 'thread_closed': return 'closed';
-            case 'thread_opened': return 'opened';
-            default: return undefined;
-          }
-        }),
-        filter(isNotUndefined),
-      ),
-    ).pipe(
-      distinctUntilChanged(),
-      shareReplay(1),
-    );
-  }
+  ) {}
 
   ngOnDestroy(): void {
     this.clearEvents$.complete();
+    this.threadSub?.unsubscribe();
   }
 
-  init(tokenData: TokenData): void {
+  setThread(tokenData: TokenData): void {
+    if (this.tokenData) throw new Error('"leaveThread" should be called before setThread when changing thread');
     this.tokenData = tokenData;
     this.clearEvents$.next();
+    this.threadSub?.unsubscribe();
+    this.threadSub = this.forumService.wsStatus$.pipe(
+      filter(status => status === WsStatus.Opened)
+    ).subscribe(() => this.sendFollow());
+  }
+
+  leaveThread(): void {
+    this.threadSub?.unsubscribe();
+    this.threadSub = this.forumService.wsStatus$.pipe(
+      take(1),
+      filter(status => status === WsStatus.Opened)
+    ).subscribe(() => {
+      this.sendUnfollow();
+      this.tokenData = undefined;
+    });
   }
 
   private send(action: ThreadAction): void {
@@ -197,11 +231,11 @@ export class ThreadService implements OnDestroy {
     this.send({ action: 'close-thread' });
   }
 
-  follow(): void {
+  private sendFollow(): void {
     this.send({ action: 'follow' });
   }
 
-  unfollow(): void {
+  private sendUnfollow(): void {
     this.send({ action: 'unfollow' });
   }
 
@@ -210,13 +244,13 @@ export class ThreadService implements OnDestroy {
     this.send({ action: 'send-message', message });
   }
 
-  private getStatus(): Observable<ThreadStatus['status']> {
+  private getStatus(): Observable<'closed' | 'opened'> {
     if (!appConfig.forumApiUrl) throw new Error('cannot call forum api');
 
     return this.http.post(`${appConfig.forumApiUrl}/thread-status`, { token: this.tokenData }).pipe(
       decodeSnakeCase(threadStatusDecoder),
       catchError(() => EMPTY),
-      map(result => result.status),
+      map(result => (result.status === 'opened' ? 'opened' as const : 'closed' as const)),
     );
   }
 
