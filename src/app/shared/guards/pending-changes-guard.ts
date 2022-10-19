@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanDeactivate, RouterStateSnapshot } from '@angular/router';
 import { ConfirmationService } from 'primeng/api';
-import { Observable, of, Subject } from 'rxjs';
+import { BehaviorSubject, delay, Observable, of, take } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
 import { PendingChangesService } from '../services/pending-changes-service';
 
 export interface PendingChangesComponent {
@@ -10,6 +11,9 @@ export interface PendingChangesComponent {
    */
   isDirty(): boolean,
 }
+
+const dialogResponse = new BehaviorSubject<'pending' | 'accepted' | 'declined'>('pending');
+const dialogResponse$ = dialogResponse.asObservable();
 
 @Injectable()
 export class PendingChangesGuard implements CanDeactivate<PendingChangesComponent> {
@@ -25,8 +29,6 @@ export class PendingChangesGuard implements CanDeactivate<PendingChangesComponen
     _currentState: RouterStateSnapshot,
     _nextState: RouterStateSnapshot
   ): Observable<boolean> {
-    const dialogResponse = new Subject<boolean>();
-
     // If a component is not defined in router, need to use the PendingChangesService as alternative approach
     const pendingChangesComponent = component || this.pendingChangesService.component;
 
@@ -44,16 +46,26 @@ export class PendingChangesGuard implements CanDeactivate<PendingChangesComponen
       icon: 'pi pi-exclamation-triangle',
       acceptLabel: $localize`Yes, leave page`,
       accept: () => {
-        dialogResponse.next(true);
-        dialogResponse.complete();
+        dialogResponse.next('accepted');
       },
       rejectLabel: $localize`No`,
       reject: () => {
-        dialogResponse.next(false);
-        dialogResponse.complete();
+        dialogResponse.next('declined');
       },
     });
-    return dialogResponse;
+
+    dialogResponse$.pipe(
+      filter(status => status !== 'pending'),
+      take(1),
+      delay(0),
+    ).subscribe(() =>
+      dialogResponse.next('pending')
+    );
+
+    return dialogResponse$.pipe(
+      filter(status => status !== 'pending'),
+      map(status => status === 'accepted'),
+    );
   }
 
 }
