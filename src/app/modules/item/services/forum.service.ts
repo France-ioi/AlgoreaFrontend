@@ -1,9 +1,10 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { appConfig } from 'src/app/shared/helpers/config';
-import { combineLatest, filter, map, merge, noop, of, shareReplay, Subject, switchMap, take } from 'rxjs';
+import { map, merge, retry, shareReplay, startWith, Subject } from 'rxjs';
 import { webSocket } from 'rxjs/webSocket';
+import { SECONDS } from 'src/app/shared/helpers/duration';
 
-export enum WsStatus { Closed, Opened, Initializing }
+const wsRetryDelay = 5*SECONDS;
 
 @Injectable({
   providedIn: 'root',
@@ -12,34 +13,33 @@ export class ForumService implements OnDestroy {
 
   private openEvents$ = new Subject<Event>();
   private closeEvents$ = new Subject<CloseEvent>();
-  private ws$ = merge(of(noop), this.closeEvents$).pipe(
-    map(() => {
-      if (!appConfig.forumServerUrl) throw new Error('cannot instantiate forum service without forum server url');
-      return webSocket<unknown>({ url: appConfig.forumServerUrl, openObserver: this.openEvents$, closeObserver: this.closeEvents$ });
-    }),
+  private ws$ = webSocket<unknown>({ url: appConfig.forumServerUrl!, openObserver: this.openEvents$, closeObserver: this.closeEvents$ });
+
+  isWsOpen$ = merge(
+    this.openEvents$.pipe(map(() => true)),
+    this.closeEvents$.pipe(map(() => false)),
+  ).pipe(
+    startWith(false),
     shareReplay(1)
   );
-  wsStatus$ = merge(
-    this.ws$.pipe(map(() => WsStatus.Initializing)),
-    this.openEvents$.pipe(map(() => WsStatus.Opened)),
-    this.closeEvents$.pipe(map(() => WsStatus.Closed)),
-  ).pipe(shareReplay(1));
 
-  inputMessages$ = this.ws$.pipe(switchMap(ws => ws));
+  inputMessages$ = this.ws$.pipe(retry({ delay: wsRetryDelay }));
+
+  // subscribe to the ws so that it stays open until 'destroy'
+  private subscription = this.inputMessages$.subscribe();
 
   constructor() {}
 
   ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+    this.ws$.complete();
     this.openEvents$.complete();
     this.closeEvents$.complete();
   }
 
   send(msg: unknown): void {
-    combineLatest([ this.wsStatus$, this.ws$ ]).pipe(
-      take(1),
-      filter(([ wsStatus ]) => wsStatus === WsStatus.Opened),
-      map(([ _st, ws ]) => ws),
-    ).subscribe(ws => ws.next(msg));
+    // the websocket will queue the messages while the connection is not established
+    this.ws$.next(msg);
   }
 
 }

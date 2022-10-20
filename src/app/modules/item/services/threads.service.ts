@@ -25,7 +25,7 @@ import { ActivityLog, ActivityLogService } from 'src/app/shared/http-services/ac
 import { isNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
 import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { ForumService, WsStatus } from './forum.service';
+import { ForumService } from './forum.service';
 
 const threadOpenedEventDecoder = D.struct({
   eventType: D.literal('thread_opened'),
@@ -105,7 +105,6 @@ type ThreadAction =
   | { action: 'send-message', message: string };
 
 export enum ThreadState {
-  ConnectionInitializing = 'connection_intializing',
   ConnectionClosed = 'connection_closed',
   ThreadStatusPending = 'thread_status_pending',
   ThreadOpened = 'thread_opened',
@@ -156,10 +155,9 @@ export class ThreadService implements OnDestroy {
     shareReplay(1),
   );
 
-  state$: Observable<ThreadState> = combineLatest([ this.forumService.wsStatus$, this.threadStatus$ ]).pipe(
-    map(([ wsStatus, threadStatus ]) => {
-      if (wsStatus === WsStatus.Closed) return ThreadState.ConnectionClosed;
-      if (wsStatus === WsStatus.Initializing) return ThreadState.ConnectionInitializing;
+  state$: Observable<ThreadState> = combineLatest([ this.forumService.isWsOpen$, this.threadStatus$ ]).pipe(
+    map(([ wsOpened, threadStatus ]) => {
+      if (!wsOpened) return ThreadState.ConnectionClosed;
       if (threadStatus === 'initializing') return ThreadState.ThreadStatusPending;
       if (threadStatus === 'closed') return ThreadState.ThreadClosed;
       return ThreadState.ThreadOpened;
@@ -183,20 +181,15 @@ export class ThreadService implements OnDestroy {
     this.tokenData = tokenData;
     this.clearEvents$.next();
     this.threadSub?.unsubscribe();
-    this.threadSub = this.forumService.wsStatus$.pipe(
-      filter(status => status === WsStatus.Opened)
-    ).subscribe(() => this.sendFollow());
+    // send 'follow' each time the ws is reopened
+    this.threadSub = this.forumService.isWsOpen$.pipe(filter(open => open)).subscribe(() => this.sendFollow());
   }
 
   leaveThread(): void {
     this.threadSub?.unsubscribe();
-    this.threadSub = this.forumService.wsStatus$.pipe(
-      take(1),
-      filter(status => status === WsStatus.Opened)
-    ).subscribe(() => {
-      this.sendUnfollow();
-      this.tokenData = undefined;
-    });
+    this.tokenData = undefined;
+    // send 'unfollow' only if the ws is open
+    this.threadSub = this.forumService.isWsOpen$.pipe(take(1), filter(open => open)).subscribe(() => this.sendUnfollow());
   }
 
   private send(action: ThreadAction): void {

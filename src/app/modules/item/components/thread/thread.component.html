@@ -40,7 +40,7 @@
 
     <p-button
       *ngIf="!widgetOpened"
-      [disabled]="(threadState$ | async) === 'connection_intializing' || (threadState$ | async) === 'connection_closed'"
+      [disabled]="(threadState$ | async) === 'connection_closed'"
       label="Show thread"
       (click)="toggleWidget(true)"
     ></p-button>
