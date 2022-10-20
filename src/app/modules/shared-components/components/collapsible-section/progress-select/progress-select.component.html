@@ -23,7 +23,7 @@
         tooltipStyleClass="permissions-dialog"
         [escape]="false"
       >
-        <i *ngIf="type === 'checksWithLock' && (idx < selected || item.selected)" class="fa fa-check"></i>
+        <i *ngIf="idx < selected || item.selected" class="fa fa-check"></i>
         <i
           *ngIf="idx === selected"
           class="fa"
