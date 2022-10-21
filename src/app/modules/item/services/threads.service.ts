@@ -37,13 +37,13 @@ const threadClosedEventDecoder = D.struct({
   byUserId: D.string,
 });
 
-const followEventDecoder = D.struct({
-  eventType: D.literal('follow'),
+const subscribeEventDecoder = D.struct({
+  eventType: D.literal('subscribe'),
   userId: D.string,
 });
 
-const unfollowEventDecoder = D.struct({
-  eventType: D.literal('unfollow'),
+const unsubscribeEventDecoder = D.struct({
+  eventType: D.literal('unsubscribe'),
   userId: D.string,
 });
 
@@ -75,10 +75,10 @@ const threadEventDecoder = pipe(
   D.intersect(D.union(
     threadOpenedEventDecoder,
     threadClosedEventDecoder,
-    followEventDecoder,
+    subscribeEventDecoder,
     attemptStartedEventDecoder,
     submissionEventDecoder,
-    unfollowEventDecoder,
+    unsubscribeEventDecoder,
     messageEventDecoder,
   )),
 );
@@ -99,8 +99,8 @@ interface TokenData {
 type ThreadAction =
   | { action: 'open-thread', history: ActivityLog[] }
   | { action: 'close-thread' }
-  | { action: 'follow' }
-  | { action: 'unfollow' }
+  | { action: 'subscribe' }
+  | { action: 'unsubscribe' }
   | { action: 'thread-status' }
   | { action: 'send-message', message: string };
 
@@ -181,15 +181,15 @@ export class ThreadService implements OnDestroy {
     this.tokenData = tokenData;
     this.clearEvents$.next();
     this.threadSub?.unsubscribe();
-    // send 'follow' each time the ws is reopened
-    this.threadSub = this.forumService.isWsOpen$.pipe(filter(open => open)).subscribe(() => this.sendFollow());
+    // send 'subscribe' each time the ws is reopened
+    this.threadSub = this.forumService.isWsOpen$.pipe(filter(open => open)).subscribe(() => this.sendSubscribe());
   }
 
   leaveThread(): void {
     this.threadSub?.unsubscribe();
     this.tokenData = undefined;
-    // send 'unfollow' only if the ws is open
-    this.threadSub = this.forumService.isWsOpen$.pipe(take(1), filter(open => open)).subscribe(() => this.sendUnfollow());
+    // send 'unsubscribe' only if the ws is open
+    this.threadSub = this.forumService.isWsOpen$.pipe(take(1), filter(open => open)).subscribe(() => this.sendUnsubscribe());
   }
 
   private send(action: ThreadAction): void {
@@ -224,12 +224,12 @@ export class ThreadService implements OnDestroy {
     this.send({ action: 'close-thread' });
   }
 
-  private sendFollow(): void {
-    this.send({ action: 'follow' });
+  private sendSubscribe(): void {
+    this.send({ action: 'subscribe' });
   }
 
-  private sendUnfollow(): void {
-    this.send({ action: 'unfollow' });
+  private sendUnsubscribe(): void {
+    this.send({ action: 'unsubscribe' });
   }
 
   sendMessage(message: string): void {
