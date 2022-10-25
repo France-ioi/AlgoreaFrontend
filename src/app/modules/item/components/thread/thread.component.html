@@ -1,6 +1,7 @@
 <div class="widget">
   <ng-container *ngIf="events$ | async as events">
-    <div *ngIf="widgetOpened && events.length > 0" class="widget-body">
+    <div *ngIf="widgetOpened" class="widget-body">
+      <span *ngIf="events.length === 0">There are currently no events</span>
       <div *ngFor="let event of events">
         <div>{{ event | json }}</div>
       </div>

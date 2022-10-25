@@ -178,18 +178,18 @@ export class ThreadService implements OnDestroy {
 
   setThread(tokenData: TokenData): void {
     if (this.tokenData) throw new Error('"leaveThread" should be called before setThread when changing thread');
+    if (this.threadSub && !this.threadSub.closed) throw new Error('unexpected: threadSub has not been closed');
     this.tokenData = tokenData;
     this.clearEvents$.next();
-    this.threadSub?.unsubscribe();
     // send 'subscribe' each time the ws is reopened
     this.threadSub = this.forumService.isWsOpen$.pipe(filter(open => open)).subscribe(() => this.sendSubscribe());
   }
 
   leaveThread(): void {
-    this.threadSub?.unsubscribe();
-    this.tokenData = undefined;
+    this.threadSub?.unsubscribe(); // stop sending subscribes on ws open
     // send 'unsubscribe' only if the ws is open
-    this.threadSub = this.forumService.isWsOpen$.pipe(take(1), filter(open => open)).subscribe(() => this.sendUnsubscribe());
+    this.forumService.isWsOpen$.pipe(take(1), filter(open => open)).subscribe(() => this.sendUnsubscribe());
+    this.tokenData = undefined;
   }
 
   private send(action: ThreadAction): void {
