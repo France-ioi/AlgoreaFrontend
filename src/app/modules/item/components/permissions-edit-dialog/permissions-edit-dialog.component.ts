@@ -3,7 +3,7 @@ import { ItemCorePerm } from 'src/app/shared/models/domain/item-permissions';
 import { RawGroupRoute } from '../../../../shared/routing/group-route';
 import { GroupPermissions, GroupPermissionsService } from '../../../../shared/http-services/group-permissions.service';
 import { ReplaySubject, switchMap } from 'rxjs';
-import { map, shareReplay } from 'rxjs/operators';
+import { shareReplay } from 'rxjs/operators';
 import { ActionFeedbackService } from '../../../../shared/services/action-feedback.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { TypeFilter } from '../../helpers/composition-filter';
@@ -25,9 +25,7 @@ export class PermissionsEditDialogComponent implements OnDestroy, OnChanges {
   private params$ = new ReplaySubject<{ sourceGroupId: string, groupId: string, itemId: string }>(1);
   state$ = this.params$.pipe(
     switchMap(params =>
-      this.groupPermissionsService.getPermissions(params.sourceGroupId, params.groupId, params.itemId).pipe(
-        map(permissions => permissions.granted),
-      )
+      this.groupPermissionsService.getPermissions(params.sourceGroupId, params.groupId, params.itemId)
     ),
     mapToFetchState(),
     shareReplay(1),

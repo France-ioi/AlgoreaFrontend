@@ -27,7 +27,7 @@ function genError<Permission extends keyof ConstrainedPermissions>(permission: P
   });
 }
 
-function hasAtLeastPermission<T extends readonly string[]>(permissionsSortedByLoosest: T, permission: T[number]) {
+export function hasAtLeastPermission<T extends readonly string[]>(permissionsSortedByLoosest: T, permission: T[number]) {
   return (minimumPermission: T[number]): boolean =>
     permissionsSortedByLoosest.indexOf(permission) >= permissionsSortedByLoosest.indexOf(minimumPermission);
 }

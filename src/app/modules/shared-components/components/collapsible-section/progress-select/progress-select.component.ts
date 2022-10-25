@@ -8,6 +8,7 @@ export interface ProgressSelectValue<T> {
   value: T,
   disabled?: boolean,
   tooltip?: string[],
+  selected?: boolean,
 }
 
 /**
@@ -44,8 +45,6 @@ export class ProgressSelectComponent<T> implements OnChanges, OnInit, ControlVal
   @Input() defaultValue?: T;
   @Input() value?: T;
   @Input() theme: 'success' | 'warning' | 'danger' = 'success';
-
-  @Input() type: 'simple' | 'checksWithLock' = 'checksWithLock';
 
   @ContentChild('description') descriptionTemplate?: TemplateRef<any>;
 

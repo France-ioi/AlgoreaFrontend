@@ -1,15 +1,18 @@
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges } from '@angular/core';
 import { UntypedFormBuilder } from '@angular/forms';
 import { generateValues, getTargetTypeString, PermissionsDialogData } from '../../helpers/permissions-texts';
-import { GroupPermissions } from '../../../../shared/http-services/group-permissions.service';
+import { GroupComputedPermissions, GroupPermissions } from '../../../../shared/http-services/group-permissions.service';
 import { ItemCorePerm } from '../../../../shared/models/domain/item-permissions';
 import { TypeFilter } from '../../helpers/composition-filter';
 import { ItemViewPerm } from '../../../../shared/models/domain/item-view-permission';
-import { ItemGrantViewPerm } from '../../../../shared/models/domain/item-grant-view-permission';
+import {
+  ItemGrantViewPerm,
+} from '../../../../shared/models/domain/item-grant-view-permission';
 import { ItemWatchPerm } from '../../../../shared/models/domain/item-watch-permission';
 import { ItemEditPerm } from '../../../../shared/models/domain/item-edit-permission';
 import { merge, Subject } from 'rxjs';
 import { permissionsConstraintsValidator } from '../../helpers/permissions-constraints-validator';
+import { withComputePermissions } from '../../helpers/computed-permissions';
 
 @Component({
   selector: 'alg-permissions-edit-form[giverPermissions]',
@@ -18,6 +21,7 @@ import { permissionsConstraintsValidator } from '../../helpers/permissions-const
 })
 export class PermissionsEditFormComponent implements OnDestroy, OnChanges {
   @Input() permissions?: Omit<GroupPermissions,'canEnterFrom'|'canEnterUntil'>;
+  @Input() computedPermissions?: Omit<GroupComputedPermissions,'canEnterFrom'|'canEnterUntil'>;
   @Input() giverPermissions!: ItemCorePerm;
   @Input() targetType: TypeFilter = 'Users';
   @Input() acceptButtonDisabled = false;
@@ -50,6 +54,16 @@ export class PermissionsEditFormComponent implements OnDestroy, OnChanges {
     if (this.permissions) {
       const receiverPermissions = this.form.value as GroupPermissions;
       this.permissionsDialogData = generateValues(this.targetType, receiverPermissions, this.giverPermissions);
+
+      if (this.computedPermissions) {
+        this.permissionsDialogData = withComputePermissions(
+          this.permissionsDialogData,
+          this.permissions,
+          receiverPermissions,
+          this.computedPermissions,
+          this.targetType,
+        );
+      }
     }
   });
 
