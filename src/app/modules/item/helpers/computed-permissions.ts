@@ -50,7 +50,7 @@ export function withComputePermissions(
   targetType: TypeFilter,
 ): PermissionsDialogData {
   const giverCanAtLeastView = hasHigherPermission(itemViewPermValues, computedPermissions.canView);
-  const giverCanAtLeastGrandView = hasHigherPermission(itemGrantViewPermValues, computedPermissions.canGrantView);
+  const giverCanAtLeastGrantView = hasHigherPermission(itemGrantViewPermValues, computedPermissions.canGrantView);
   const giverCanAtLeastWatch = hasHigherPermission(itemWatchPermValues, computedPermissions.canWatch);
   const giverCanAtLeastEdit = hasHigherPermission(itemEditPermValues, computedPermissions.canEdit);
 
@@ -63,7 +63,7 @@ export function withComputePermissions(
     );
   }
 
-  if (giverCanAtLeastGrandView(permissions.canGrantView)) {
+  if (giverCanAtLeastGrantView(permissions.canGrantView)) {
     permissionsDialogData.canGrantViewValues = getComputeValues(
       permissionsDialogData.canGrantViewValues,
       receiverPermissions.canGrantView,
