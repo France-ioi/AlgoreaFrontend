@@ -24,14 +24,7 @@
         [escape]="false"
       >
         <i *ngIf="idx < selected || item.selected" class="fa fa-check"></i>
-        <i
-          *ngIf="idx === selected"
-          class="fa"
-          [ngClass]="{
-            'fa-lock': type === 'checksWithLock',
-            'fa-check': type === 'simple'
-          }"
-        ></i>
+        <i *ngIf="idx === selected" class="fa fa-check"></i>
       </span>
       <span *ngIf="idx + 1 < values.length" class="progress-branch" [ngClass]="{active: idx < selected, disabled: values[idx + 1]?.disabled}"></span>
     </div>

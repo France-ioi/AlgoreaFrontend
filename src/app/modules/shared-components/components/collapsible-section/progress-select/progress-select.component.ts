@@ -46,8 +46,6 @@ export class ProgressSelectComponent<T> implements OnChanges, OnInit, ControlVal
   @Input() value?: T;
   @Input() theme: 'success' | 'warning' | 'danger' = 'success';
 
-  @Input() type: 'simple' | 'checksWithLock' = 'checksWithLock';
-
   @ContentChild('description') descriptionTemplate?: TemplateRef<any>;
 
   @Output() valueChange = new EventEmitter<T>();
