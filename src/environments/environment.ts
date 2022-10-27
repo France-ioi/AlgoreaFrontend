@@ -8,8 +8,8 @@ export const environment: Environment = {
   production: false,
   apiUrl: 'https://dev.algorea.org/api', // 'http://localhost:3000/api',
   oauthServerUrl: 'https://login.france-ioi.org',
-  forumServerUrl: 'ws://localhost:3001',
-  forumApiUrl: 'http://localhost:3000',
+  forumServerUrl: 'wss://iv4uwoi5v6.execute-api.eu-west-3.amazonaws.com/dev',
+  forumApiUrl: 'https://auzzz5e6epgnnewy4k37lvjvsq0fofiu.lambda-url.eu-west-3.on.aws',
   oauthClientId: '43',
 
   defaultActivityId: '4702',

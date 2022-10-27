@@ -1,10 +1,13 @@
-<div class="widget">
-  <ng-container *ngIf="events$ | async as events">
-    <div *ngIf="widgetOpened && events.length > 0" class="widget-body">
-      <div *ngFor="let event of events">
-        <div>{{ event | json }}</div>
-      </div>
-      <div *ngIf="(threadStatus$ | async) === 'opened'">
+<ng-container *ngrxLet="widgetOpened$ | async as widgetOpened">
+  <div class="widget" *ngIf="state$ | async as state">
+    <ng-container *ngIf="widgetOpened">
+      <div *ngIf="state.isFetching">Loading...</div>
+      <div *ngIf="state.isError">Error!</div>
+      <div *ngIf="state.isReady" class="widget-body">
+        <div *ngIf="state.data.length === 0">There are currently no events</div>
+        <div *ngFor="let event of state.data">
+          <div>{{ event | json }}</div>
+        </div>
         <textarea
           [(ngModel)]="messageToSend"
           placeholder="Send a message..."
@@ -15,34 +18,21 @@
           [disabled]="!messageToSend.trim()"
           ></p-button>
       </div>
+    </ng-container>
+
+    <div class="widget-footer" *ngrxLet="unreadCount$ | async as unreadCount">
+      <p-button
+        *ngIf="widgetOpened"
+        label="Hide thread"
+        (click)="toggleWidget(false)"
+      ></p-button>
+
+      <p-button
+        *ngIf="!widgetOpened"
+        label="Show thread {{ unreadCount && unreadCount > 0 ? '('+unreadCount+')' : '' }}"
+        (click)="toggleWidget(true)"
+      ></p-button>
     </div>
-  </ng-container>
-
-  <div class="widget-footer">
-    <p-button
-      *ngIf="canOpenThread$ | async"
-      label="Open thread"
-      (click)="openThread()"
-      [disabled]="openingThread"
-    ></p-button>
-
-    <p-button
-      *ngIf="canCloseThread$ | async"
-      label="Close thread"
-      (click)="closeThread()"
-    ></p-button>
-
-    <p-button
-      *ngIf="widgetOpened"
-      label="Hide thread"
-      (click)="toggleWidget(false)"
-    ></p-button>
-
-    <p-button
-      *ngIf="!widgetOpened"
-      [disabled]="!(threadStatus$ | async) || (threadStatus$ | async) === 'none'"
-      label="Show thread"
-      (click)="toggleWidget(true)"
-    ></p-button>
   </div>
-</div>
+
+</ng-container>

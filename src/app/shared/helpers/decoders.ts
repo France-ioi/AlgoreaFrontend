@@ -15,6 +15,15 @@ export function decode<T>(decoder: D.Decoder<unknown, T>) {
   ));
 }
 
+export function decodeOrNull<T>(decoder: D.Decoder<unknown, T>) {
+  return (input: unknown): T | null => pipe(
+    decoder.decode(input),
+    fold(
+      () => null,
+      decoded => decoded,
+    ),
+  );
+}
 
 /**
  * Decoder for Date type

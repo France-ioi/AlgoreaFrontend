@@ -1,6 +1,21 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
-import { catchError, combineLatest, EMPTY, fromEvent, map, ReplaySubject, skip, switchMap, take } from 'rxjs';
+import {
+  BehaviorSubject,
+  catchError,
+  combineLatest,
+  combineLatestWith,
+  EMPTY,
+  filter,
+  fromEvent,
+  map,
+  ReplaySubject,
+  SubscriptionLike,
+  switchMap,
+  take
+} from 'rxjs';
 import { GroupWatchingService } from 'src/app/core/services/group-watching.service';
+import { readyData } from 'src/app/shared/operators/state';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
 import { ThreadService } from '../../services/threads.service';
 
@@ -13,17 +28,9 @@ export class ThreadComponent implements OnChanges, OnDestroy {
   @Input() itemId?: string;
 
   messageToSend = '';
-  openingThread = false;
-  widgetOpened = false;
+  widgetOpened$ = new BehaviorSubject<boolean>(false);
 
-  events$ = this.threadService.events$;
-  threadStatus$ = this.threadService.status$;
-  canOpenThread$ = combineLatest([ this.groupWatchingService.isWatching$, this.threadStatus$ ]).pipe(
-    map(([ isWatching, status ]) => !isWatching && status !== 'opened'),
-  );
-  canCloseThread$ = combineLatest([ this.groupWatchingService.isWatching$, this.threadStatus$ ]).pipe(
-    map(([ isWatching, status ]) => !isWatching && status === 'opened'),
-  );
+  state$ = this.threadService.state$;
 
   private itemId$ = new ReplaySubject<string>(1);
 
@@ -31,25 +38,31 @@ export class ThreadComponent implements OnChanges, OnDestroy {
     combineLatest([ this.itemId$, this.userSession.userProfile$, this.groupWatchingService.watchedGroup$ ])
       .pipe(catchError(() => EMPTY)) // error is handled elsewhere
       .subscribe(([ itemId, profile, watchedGroup ]) => {
-        this.threadService.init({
+        this.threadService.leaveThread();
+        this.widgetOpened$.next(false);
+        this.threadService.setThread({
           participantId: watchedGroup?.route.id || profile.groupId,
           itemId,
           userId: profile.groupId,
           isMine: !watchedGroup,
           canWatchParticipant: !!watchedGroup,
         });
-      }),
-    this.itemId$
-      .pipe(switchMap(() => this.threadStatus$), take(1))
-      .subscribe(status => {
-        this.threadService.follow();
-        this.widgetOpened = status === 'opened';
+        // this.latestRead = new Date();
       }),
 
-    this.itemId$.pipe(skip(1)).subscribe(() => this.threadService.unfollow()),
-
-    fromEvent(window, 'beforeunload').subscribe(() => this.threadService.unfollow()),
+    fromEvent(window, 'beforeunload').subscribe(() => this.threadService.leaveThread()),
   ];
+
+  unreadCount$ = this.widgetOpened$.pipe(
+    map(open => (open ? Number.MAX_SAFE_INTEGER : Date.now())),
+    combineLatestWith(this.state$),
+    map(([ lastOpen, state ]) => {
+      if (lastOpen === Number.MAX_SAFE_INTEGER || !state.isReady) return 0;
+      return state.data.filter(e => e.time.valueOf() > lastOpen).length;
+    })
+  );
+
+  private syncSub?: SubscriptionLike;
 
   constructor(
     private threadService: ThreadService,
@@ -65,23 +78,26 @@ export class ThreadComponent implements OnChanges, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.syncSub?.unsubscribe();
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
-    this.threadService.unfollow();
-  }
-
-  openThread(): void {
-    this.openingThread = true;
-    this.widgetOpened = true;
-    this.threadService.open(() => this.openingThread = false);
-  }
-
-  closeThread(): void {
-    this.widgetOpened = false;
-    this.threadService.close();
+    this.threadService.leaveThread();
   }
 
   toggleWidget(opened: boolean): void {
-    this.widgetOpened = opened;
+    this.widgetOpened$.next(opened);
+    // when opening widget, if the event list is empty, send the event log from the backend
+    if (opened) {
+      this.syncSub = this.state$.pipe(
+        readyData(),
+        take(1),
+        filter(events => events.length === 0),
+        switchMap(() => this.threadService.syncEvents()),
+      ).subscribe({
+        error: err => {
+          if (!(err instanceof HttpErrorResponse)) throw err;
+        }
+      });
+    }
   }
 
   sendMessage(): void {
