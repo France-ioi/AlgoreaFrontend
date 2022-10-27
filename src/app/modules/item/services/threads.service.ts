@@ -1,16 +1,11 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import * as D from 'io-ts/Decoder';
-import { pipe } from 'fp-ts/function';
-import { appConfig } from 'src/app/shared/helpers/config';
-import { dateDecoder } from 'src/app/shared/helpers/decoders';
+import { decode, decodeOrNull } from 'src/app/shared/helpers/decoders';
 import {
   catchError,
-  combineLatest,
-  distinctUntilChanged,
   EMPTY,
   filter,
   map,
-  merge,
   Observable,
   ReplaySubject,
   scan,
@@ -19,74 +14,15 @@ import {
   SubscriptionLike,
   switchMap,
   take,
+  tap
 } from 'rxjs';
-import { decodeSnakeCase } from 'src/app/shared/operators/decode';
-import { ActivityLog, ActivityLogService } from 'src/app/shared/http-services/activity-log.service';
-import { isNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
-import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { ActivityLogService } from 'src/app/shared/http-services/activity-log.service';
+import { isNotNull } from 'src/app/shared/helpers/null-undefined-predicates';
 import { ForumService } from './forum.service';
-
-const threadOpenedEventDecoder = D.struct({
-  eventType: D.literal('thread_opened'),
-  byUserId: D.string,
-});
-
-const threadClosedEventDecoder = D.struct({
-  eventType: D.literal('thread_closed'),
-  byUserId: D.string,
-});
-
-const subscribeEventDecoder = D.struct({
-  eventType: D.literal('subscribe'),
-  userId: D.string,
-});
-
-const unsubscribeEventDecoder = D.struct({
-  eventType: D.literal('unsubscribe'),
-  userId: D.string,
-});
-
-const attemptStartedEventDecoder = D.struct({
-  eventType: D.literal('attempt_started'),
-  attemptId: D.string,
-});
-
-const submissionEventDecoder = pipe(
-  D.struct({
-    eventType: D.literal('submission'),
-    attemptId: D.string,
-    answerId: D.string,
-  }),
-  D.intersect(D.partial({
-    score: D.number,
-    validated: D.boolean,
-  }))
-);
-
-const messageEventDecoder = D.struct({
-  eventType: D.literal('message'),
-  userId: D.string,
-  content: D.string,
-});
-
-const threadEventDecoder = pipe(
-  D.struct({ time: dateDecoder }),
-  D.intersect(D.union(
-    threadOpenedEventDecoder,
-    threadClosedEventDecoder,
-    subscribeEventDecoder,
-    attemptStartedEventDecoder,
-    submissionEventDecoder,
-    unsubscribeEventDecoder,
-    messageEventDecoder,
-  )),
-);
-type ThreadEvent = D.TypeOf<typeof threadEventDecoder>;
-
-const threadStatusDecoder = D.struct({
-  status: D.literal('none', 'closed', 'opened'),
-});
+import { publishEventsAction, SUBSCRIBE, ThreadAction, UNSUBSCRIBE } from './threads-outbound-actions';
+import { mapToFetchState } from 'src/app/shared/operators/state';
+import { messageEvent } from './threads-events';
+import { IncomingThreadEvent, incomingThreadEventDecoder } from './threads-inbound-events';
 
 interface TokenData {
   participantId: string,
@@ -94,21 +30,6 @@ interface TokenData {
   userId: string,
   isMine: boolean,
   canWatchParticipant: boolean,
-}
-
-type ThreadAction =
-  | { action: 'open-thread', history: ActivityLog[] }
-  | { action: 'close-thread' }
-  | { action: 'subscribe' }
-  | { action: 'unsubscribe' }
-  | { action: 'thread-status' }
-  | { action: 'send-message', message: string };
-
-export enum ThreadState {
-  ConnectionClosed = 'connection_closed',
-  ThreadStatusPending = 'thread_status_pending',
-  ThreadOpened = 'thread_opened',
-  ThreadClosed = 'thread_closed',
 }
 
 @Injectable({
@@ -121,54 +42,25 @@ export class ThreadService implements OnDestroy {
 
   private threadSub?: SubscriptionLike;
 
-  events$ = this.clearEvents$.pipe(
-    switchMap(() => this.newEvents$.pipe(
-      startWith([]),
-      scan((oldEvents, newEvents) => [ ...oldEvents, ...newEvents ]),
-    )),
-    map(events => events.sort((a, b) => a.time.valueOf() - b.time.valueOf())), // sort by date ascending
-  );
-
-  private newEvents$: Observable<ThreadEvent[]> = this.forumService.inputMessages$.pipe(
-    decodeSnakeCase(D.array(threadEventDecoder)),
+  private incomingEvents$: Observable<IncomingThreadEvent[]> = this.forumService.inputMessages$.pipe(
+    // if the incoming message is not array, just ignore it. Otherwise return a list of messages which we were able to decode as events
+    map(message => decode(D.UnknownArray)(message).map(e => decodeOrNull(incomingThreadEventDecoder)(e)).filter(isNotNull)),
     catchError(() => EMPTY), // ignore undecoded messages
   );
 
-  private threadStatus$ = merge(
-    // When re-initializing a thread, fetch the status since the last 20 events might not contain any thread-status related event.
-    this.clearEvents$.pipe(switchMap(() => this.getStatus().pipe(startWith('initializing' as const)))),
-    this.newEvents$.pipe(
-      // when receiving a thread-status related event, we consider the first one since the list is ordered by event time DESCendings
-      map(events => events.find(event => event.eventType === 'thread_opened' || event.eventType === 'thread_closed')),
-      // Then we map the new status
-      map((event): 'closed' | 'opened' | undefined => {
-        switch (event?.eventType) {
-          case 'thread_closed': return 'closed' as const;
-          case 'thread_opened': return 'opened' as const;
-          default: return undefined;
-        }
-      }),
-      filter(isNotUndefined),
-    ),
-  ).pipe(
-    distinctUntilChanged(),
+  state$ = this.clearEvents$.pipe(
+    startWith(undefined),
+    switchMap(() => this.incomingEvents$.pipe(
+      scan((acc, newEvents) => [ ...acc, ...newEvents ]),
+      map(events => events.sort((a, b) => a.time.valueOf() - b.time.valueOf())), // sort by date ascending
+      mapToFetchState(),
+    )),
     shareReplay(1),
-  );
-
-  state$: Observable<ThreadState> = combineLatest([ this.forumService.isWsOpen$, this.threadStatus$ ]).pipe(
-    map(([ wsOpened, threadStatus ]) => {
-      if (!wsOpened) return ThreadState.ConnectionClosed;
-      if (threadStatus === 'initializing') return ThreadState.ThreadStatusPending;
-      if (threadStatus === 'closed') return ThreadState.ThreadClosed;
-      return ThreadState.ThreadOpened;
-    })
   );
 
   constructor(
     private forumService: ForumService,
     private activityLogService: ActivityLogService,
-    private actionFeedbackService: ActionFeedbackService,
-    private http: HttpClient,
   ) {}
 
   ngOnDestroy(): void {
@@ -180,15 +72,17 @@ export class ThreadService implements OnDestroy {
     if (this.tokenData) throw new Error('"leaveThread" should be called before setThread when changing thread');
     if (this.threadSub && !this.threadSub.closed) throw new Error('unexpected: threadSub has not been closed');
     this.tokenData = tokenData;
-    this.clearEvents$.next();
     // send 'subscribe' each time the ws is reopened
-    this.threadSub = this.forumService.isWsOpen$.pipe(filter(open => open)).subscribe(() => this.sendSubscribe());
+    this.threadSub = this.forumService.isWsOpen$.pipe(filter(open => open)).subscribe(() => {
+      this.clearEvents$.next();
+      this.send(SUBSCRIBE);
+    });
   }
 
   leaveThread(): void {
     this.threadSub?.unsubscribe(); // stop sending subscribes on ws open
     // send 'unsubscribe' only if the ws is open
-    this.forumService.isWsOpen$.pipe(take(1), filter(open => open)).subscribe(() => this.sendUnsubscribe());
+    this.forumService.isWsOpen$.pipe(take(1), filter(open => open)).subscribe(() => this.send(UNSUBSCRIBE));
     this.tokenData = undefined;
   }
 
@@ -200,51 +94,33 @@ export class ThreadService implements OnDestroy {
     });
   }
 
-  open(onDoneOrError: () => void): void {
+  syncEvents(): Observable<void> {
     if (!this.tokenData) throw new Error('cannot open thread without token data');
-
     const { participantId, userId, itemId } = this.tokenData;
     const watchedGroupId = participantId === userId ? undefined : participantId;
 
-    this.clearEvents$.next();
-    this.activityLogService.getActivityLog(itemId, watchedGroupId).subscribe({
-      next: history => {
-        this.send({ action: 'open-thread', history });
-        onDoneOrError();
-      },
-      error: err => {
-        onDoneOrError();
-        this.actionFeedbackService.error($localize`We could not open a thread, please retry. If the problem persists, contact us`);
-        if (!(err instanceof HttpErrorResponse)) throw err;
-      },
-    });
-  }
-
-  close(): void {
-    this.send({ action: 'close-thread' });
-  }
-
-  private sendSubscribe(): void {
-    this.send({ action: 'subscribe' });
-  }
-
-  private sendUnsubscribe(): void {
-    this.send({ action: 'unsubscribe' });
+    return this.activityLogService.getActivityLog(itemId, watchedGroupId).pipe(
+      map(log => log.map(e => {
+        switch (e.activityType) {
+          case 'result_started': return { label: 'result_started' as const, time: e.at.valueOf(), data: { attemptId: e.attemptId } };
+          case 'submission': {
+            if (!e.answerId) return null;
+            const { attemptId, answerId, at, score } = e;
+            return { label: 'submission' as const, time: at.valueOf(), data: { attemptId, answerId, score } };
+          }
+          default: return null;
+        }
+      }).filter(isNotNull)),
+      tap(events => {
+        this.send(publishEventsAction(events));
+      }),
+      map(() => undefined)
+    );
   }
 
   sendMessage(message: string): void {
     if (!message) throw new Error('Cannot send an empty message');
-    this.send({ action: 'send-message', message });
-  }
-
-  private getStatus(): Observable<'closed' | 'opened'> {
-    if (!appConfig.forumApiUrl) throw new Error('cannot call forum api');
-
-    return this.http.post(`${appConfig.forumApiUrl}/thread-status`, { token: this.tokenData }).pipe(
-      decodeSnakeCase(threadStatusDecoder),
-      catchError(() => EMPTY),
-      map(result => (result.status === 'opened' ? 'opened' as const : 'closed' as const)),
-    );
+    this.send(publishEventsAction([ messageEvent(message) ]));
   }
 
 }

@@ -1,8 +1,10 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
-import { catchError, combineLatest, EMPTY, fromEvent, map, ReplaySubject, skip, switchMap, take } from 'rxjs';
+import { catchError, combineLatest, EMPTY, filter, fromEvent, ReplaySubject, skip, SubscriptionLike, switchMap, take } from 'rxjs';
 import { GroupWatchingService } from 'src/app/core/services/group-watching.service';
+import { readyData } from 'src/app/shared/operators/state';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
-import { ThreadService, ThreadState } from '../../services/threads.service';
+import { ThreadService } from '../../services/threads.service';
 
 @Component({
   selector: 'alg-thread',
@@ -13,17 +15,9 @@ export class ThreadComponent implements OnChanges, OnDestroy {
   @Input() itemId?: string;
 
   messageToSend = '';
-  openingThread = false;
   widgetOpened = false;
 
-  events$ = this.threadService.events$;
-  threadState$ = this.threadService.state$;
-  canOpenThread$ = combineLatest([ this.groupWatchingService.isWatching$, this.threadState$ ]).pipe(
-    map(([ isWatching, status ]) => !isWatching && status === ThreadState.ThreadClosed),
-  );
-  canCloseThread$ = combineLatest([ this.groupWatchingService.isWatching$, this.threadState$ ]).pipe(
-    map(([ isWatching, status ]) => !isWatching && status === ThreadState.ThreadOpened),
-  );
+  state$ = this.threadService.state$;
 
   private itemId$ = new ReplaySubject<string>(1);
 
@@ -39,16 +33,13 @@ export class ThreadComponent implements OnChanges, OnDestroy {
           canWatchParticipant: !!watchedGroup,
         });
       }),
-    this.itemId$
-      .pipe(switchMap(() => this.threadState$.pipe(take(1))))
-      .subscribe(state => {
-        this.widgetOpened = state === ThreadState.ThreadOpened;
-      }),
 
     this.itemId$.pipe(skip(1)).subscribe(() => this.threadService.leaveThread()),
 
     fromEvent(window, 'beforeunload').subscribe(() => this.threadService.leaveThread()),
   ];
+
+  private syncSub?: SubscriptionLike;
 
   constructor(
     private threadService: ThreadService,
@@ -64,23 +55,26 @@ export class ThreadComponent implements OnChanges, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.syncSub?.unsubscribe();
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
     this.threadService.leaveThread();
   }
 
-  openThread(): void {
-    this.openingThread = true;
-    this.widgetOpened = true;
-    this.threadService.open(() => this.openingThread = false);
-  }
-
-  closeThread(): void {
-    this.widgetOpened = false;
-    this.threadService.close();
-  }
-
   toggleWidget(opened: boolean): void {
     this.widgetOpened = opened;
+    // when opening widget, if the event list is empty, send the event log from the backend
+    if (opened) {
+      this.syncSub = this.state$.pipe(
+        readyData(),
+        take(1),
+        filter(events => events.length === 0),
+        switchMap(() => this.threadService.syncEvents()),
+      ).subscribe({
+        error: err => {
+          if (!(err instanceof HttpErrorResponse)) throw err;
+        }
+      });
+    }
   }
 
   sendMessage(): void {
