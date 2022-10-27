@@ -82,7 +82,7 @@ export class ThreadService implements OnDestroy {
   leaveThread(): void {
     this.threadSub?.unsubscribe(); // stop sending subscribes on ws open
     // send 'unsubscribe' only if the ws is open
-    this.forumService.isWsOpen$.pipe(take(1), filter(open => open)).subscribe(() => this.send(UNSUBSCRIBE));
+    if (this.tokenData) this.forumService.isWsOpen$.pipe(take(1), filter(open => open)).subscribe(() => this.send(UNSUBSCRIBE));
     this.tokenData = undefined;
   }
 
@@ -95,7 +95,7 @@ export class ThreadService implements OnDestroy {
   }
 
   syncEvents(): Observable<void> {
-    if (!this.tokenData) throw new Error('cannot open thread without token data');
+    if (!this.tokenData) throw new Error('cannot sync thread without token data');
     const { participantId, userId, itemId } = this.tokenData;
     const watchedGroupId = participantId === userId ? undefined : participantId;
 
