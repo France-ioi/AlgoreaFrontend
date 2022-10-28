@@ -3,7 +3,7 @@ import { Environment, PartialDeep } from 'src/app/shared/helpers/config';
 export const environment: Environment = {
   production: true,
   apiUrl: '/api',
-  forumServerUrl: null,
+  forumServerUrl: 'wss://iv4uwoi5v6.execute-api.eu-west-3.amazonaws.com/dev',
   oauthServerUrl: 'https://login.france-ioi.org',
   oauthClientId: '43',
   sentryDsn: 'https://6295834d69104f54b55cc0ebe4ada310@o1167067.ingest.sentry.io/6257761',
