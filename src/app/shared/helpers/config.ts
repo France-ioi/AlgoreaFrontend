@@ -10,7 +10,6 @@ export interface Environment {
 
   apiUrl: string, // full url (not including the trailing slash) of the backend
   forumServerUrl: string | null,
-  forumApiUrl: string | null,
 
   oauthServerUrl: string, // full url (not including the trailing slash) of the oauth server
   oauthClientId: string,
