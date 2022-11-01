@@ -101,6 +101,7 @@ export class ItemTaskAnswerService implements OnDestroy {
       take(1),
     )),
     withLatestFrom(this.config$),
+    catchError(() => EMPTY),
     switchMap(([ current, { route, attemptId }]) => this.currentAnswerService.update(route.id, attemptId, current).pipe(
       map(() => current),
       catchError(() => of(new Error('auto save failed'))),
