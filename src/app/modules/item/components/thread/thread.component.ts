@@ -107,4 +107,12 @@ export class ThreadComponent implements OnChanges, OnDestroy {
     this.messageToSend = '';
   }
 
+  newActivityOnTask(): void {
+    this.syncSub = this.threadService.syncEvents().subscribe({
+      error: err => {
+        if (!(err instanceof HttpErrorResponse)) throw err;
+      }
+    });
+  }
+
 }
