@@ -52,7 +52,10 @@ export class ThreadService implements OnDestroy {
     startWith(undefined),
     switchMap(() => this.incomingEvents$.pipe(
       scan((acc, newEvents) => [ ...acc, ...newEvents ]),
-      map(events => events.sort((a, b) => a.time.valueOf() - b.time.valueOf())), // sort by date ascending
+      map(events => events
+        .sort((a, b) => a.time.valueOf() - b.time.valueOf()) // sort by date ascending
+        .filter((el, i, list) => el.time.valueOf() !== list[i-1]?.time.valueOf()) // remove duplicate (using time as differentiator)
+      ),
       mapToFetchState(),
     )),
     shareReplay(1),
