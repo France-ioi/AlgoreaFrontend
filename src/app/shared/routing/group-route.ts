@@ -1,7 +1,6 @@
 import { ParamMap } from '@angular/router';
 import { Group } from 'src/app/modules/group/http-services/get-group-by-id.service';
 import { User } from 'src/app/modules/group/http-services/get-user.service';
-import { isNotUndefined } from '../helpers/null-undefined-predicates';
 import { UrlCommand } from '../helpers/url';
 import { ContentRoute, pathAsParameter, pathFromRouterParameters } from './content-route';
 
@@ -52,16 +51,17 @@ export function urlArrayForGroupRoute(
   page?: string[],
 ): UrlCommand {
   const path = route.path ? pathAsParameter(route.path) : {};
-  return route.isUser
-    ? [ '/', 'groups', 'users', route.id, path, ...(page && isUserPage(page) ? page : []) ].filter(isNotUndefined)
-    : [ '/', 'groups', 'by-id', route.id, path, ...(page && isGroupPage(page) ? page : [ 'details' ]) ];
+  const actualPage = page && ((route.isUser && isUserPage(page)) || (!route.isUser && isGroupPage(page))) ? page : [];
+  return [ '/', 'groups', route.isUser ? 'users' : 'by-id', route.id, path, ...actualPage ];
 }
 
 function isUserPage(page: string[]): boolean {
-  return !isGroupPage(page);
+  if (!page[0]) return false;
+  return [ 'personal-data', 'settings' ].includes(page[0]);
 }
 function isGroupPage(page: string[]): boolean {
-  return page[0] === 'edit' || page[0] === 'details';
+  if (!page[0]) return false;
+  return [ 'members', 'managers', 'settings', 'access' ].includes(page[0]);
 }
 
 export function decodeGroupRouterParameters(params: ParamMap): { id: string | null, path: string | null } {

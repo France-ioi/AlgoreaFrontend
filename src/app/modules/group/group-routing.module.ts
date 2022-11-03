@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { MyGroupsComponent } from './pages/my-groups/my-groups.component';
-import { GroupDetailsComponent } from './pages/group-details/group-details.component';
 import { GroupByIdComponent } from './pages/group-by-id/group-by-id.component';
 import { UserComponent } from './pages/user/user.component';
 import { PendingChangesGuard } from '../../shared/guards/pending-changes-guard';
@@ -14,7 +13,7 @@ const routes: Routes = [
   {
     path: 'users/:id',
     component: UserComponent,
-    children: [
+    children: [ /* if you change routes here, update `isUserPage` as well! */
       {
         path: 'personal-data',
         children: [],
@@ -28,34 +27,28 @@ const routes: Routes = [
   {
     path: 'by-id/:id',
     component: GroupByIdComponent,
-    children: [
+    canDeactivate: [ PendingChangesGuard ],
+    children: [ /* if you change routes here, update `isGroupPage` as well! */
       {
-        path: 'details',
-        component: GroupDetailsComponent,
+        path: '',
+        children: [],
+      },
+      {
+        path: 'members',
+        children: [],
+      },
+      {
+        path: 'managers',
+        children: [],
+      },
+      {
+        path: 'settings',
         canDeactivate: [ PendingChangesGuard ],
-        children: [
-          {
-            path: '',
-            children: [],
-          },
-          {
-            path: 'members',
-            children: [],
-          },
-          {
-            path: 'managers',
-            children: [],
-          },
-          {
-            path: 'settings',
-            canDeactivate: [ PendingChangesGuard ],
-            children: [],
-          },
-          {
-            path: 'access',
-            children: [],
-          },
-        ]
+        children: [],
+      },
+      {
+        path: 'access',
+        children: [],
       },
     ],
   },

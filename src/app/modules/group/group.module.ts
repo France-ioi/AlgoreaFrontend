@@ -12,7 +12,6 @@ import { GroupJoinByCodeComponent } from './components/group-join-by-code/group-
 import { GroupOverviewComponent } from './pages/group-overview/group-overview.component';
 import { GroupCompositionComponent } from './pages/group-composition/group-composition.component';
 import { MyGroupsComponent } from './pages/my-groups/my-groups.component';
-import { GroupDetailsComponent } from './pages/group-details/group-details.component';
 import { DurationToMinPipe } from 'src/app/shared/pipes/duration';
 import { GroupInviteUsersComponent } from './components/group-invite-users/group-invite-users.component';
 import { GroupManagerListComponent } from './components/group-manager-list/group-manager-list.component';
@@ -58,7 +57,6 @@ import { PlatformSettingsComponent } from './pages/platform-settings/platform-se
     GroupOverviewComponent,
     GroupCompositionComponent,
     MyGroupsComponent,
-    GroupDetailsComponent,
     GroupNoPermissionComponent,
     GroupJoinByCodeComponent,
     DurationToMinPipe,

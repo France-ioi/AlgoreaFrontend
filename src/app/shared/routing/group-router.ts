@@ -14,7 +14,7 @@ export class GroupRouter {
 
   /**
    * Navigate to given group, on the path page.
-   * If page is not given and we are currently on a group page, use the same page. Otherwise, default to 'details'.
+   * If page is not given and we are currently on a group page, use the same page. Otherwise, default to '/'.
    */
   navigateTo(route: RawGroupRoute, options?: { page?: string[], navExtras?: NavigationExtras }): void {
     void this.router.navigateByUrl(this.url(route, options?.page), options?.navExtras);
@@ -32,7 +32,7 @@ export class GroupRouter {
 
   /**
    * Return a url to the given group, on the `path` page.
-   * If page is not given and we are currently on a group page, use the same page. Otherwise, default to 'details'.
+   * If page is not given and we are currently on a group page, use the same page. Otherwise, default to '/'.
    */
   url(route: RawGroupRoute, page?: string[]): UrlTree {
     return this.router.createUrlTree(this.urlArray(route, page));
@@ -40,7 +40,7 @@ export class GroupRouter {
 
   /**
    * Return a url array (`commands` array) to the given group, on the `path` page.
-   * If page is not given and we are currently on a group page, use the same page. Otherwise, default to 'details'.
+   * If page is not given and we are currently on a group page, use the same page. Otherwise, default to '/'.
    */
   urlArray(route: RawGroupRoute, page?: string[]): UrlCommand {
     return urlArrayForGroupRoute(route, page ?? this.currentGroupPage());
