@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanDeactivate, RouterStateSnapshot } from '@angular/router';
 import { ConfirmationService } from 'primeng/api';
-import { BehaviorSubject, delay, Observable, of, take } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
+import { Observable, of, Subject } from 'rxjs';
 import { PendingChangesService } from '../services/pending-changes-service';
 
 export interface PendingChangesComponent {
@@ -12,11 +11,12 @@ export interface PendingChangesComponent {
   isDirty(): boolean,
 }
 
-const dialogResponse = new BehaviorSubject<'pending' | 'accepted' | 'declined'>('pending');
-const dialogResponse$ = dialogResponse.asObservable();
-
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class PendingChangesGuard implements CanDeactivate<PendingChangesComponent> {
+
+  private dialogResponse = new Subject<boolean>();
 
   constructor(
     private confirmationService: ConfirmationService,
@@ -46,26 +46,15 @@ export class PendingChangesGuard implements CanDeactivate<PendingChangesComponen
       icon: 'pi pi-exclamation-triangle',
       acceptLabel: $localize`Yes, leave page`,
       accept: () => {
-        dialogResponse.next('accepted');
+        this.dialogResponse.next(true);
       },
       rejectLabel: $localize`No`,
       reject: () => {
-        dialogResponse.next('declined');
+        this.dialogResponse.next(false);
       },
     });
 
-    dialogResponse$.pipe(
-      filter(status => status !== 'pending'),
-      take(1),
-      delay(0),
-    ).subscribe(() =>
-      dialogResponse.next('pending')
-    );
-
-    return dialogResponse$.pipe(
-      filter(status => status !== 'pending'),
-      map(status => status === 'accepted'),
-    );
+    return this.dialogResponse;
   }
 
 }
