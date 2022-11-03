@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { ActivatedRouteSnapshot, CanDeactivate, RouterStateSnapshot } from '@angular/router';
 import { ConfirmationService } from 'primeng/api';
 import { Observable, of, Subject } from 'rxjs';
@@ -11,13 +11,21 @@ export interface PendingChangesComponent {
   isDirty(): boolean,
 }
 
-@Injectable()
-export class PendingChangesGuard implements CanDeactivate<PendingChangesComponent> {
+@Injectable({
+  providedIn: 'root'
+})
+export class PendingChangesGuard implements CanDeactivate<PendingChangesComponent>, OnDestroy {
+
+  private dialogResponse = new Subject<boolean>();
 
   constructor(
     private confirmationService: ConfirmationService,
     private pendingChangesService: PendingChangesService,
   ) {}
+
+  ngOnDestroy(): void {
+    this.dialogResponse.complete();
+  }
 
   canDeactivate(
     component: PendingChangesComponent | null,
@@ -25,8 +33,6 @@ export class PendingChangesGuard implements CanDeactivate<PendingChangesComponen
     _currentState: RouterStateSnapshot,
     _nextState: RouterStateSnapshot
   ): Observable<boolean> {
-    const dialogResponse = new Subject<boolean>();
-
     // If a component is not defined in router, need to use the PendingChangesService as alternative approach
     const pendingChangesComponent = component || this.pendingChangesService.component;
 
@@ -44,16 +50,15 @@ export class PendingChangesGuard implements CanDeactivate<PendingChangesComponen
       icon: 'pi pi-exclamation-triangle',
       acceptLabel: $localize`Yes, leave page`,
       accept: () => {
-        dialogResponse.next(true);
-        dialogResponse.complete();
+        this.dialogResponse.next(true);
       },
       rejectLabel: $localize`No`,
       reject: () => {
-        dialogResponse.next(false);
-        dialogResponse.complete();
+        this.dialogResponse.next(false);
       },
     });
-    return dialogResponse;
+
+    return this.dialogResponse;
   }
 
 }
