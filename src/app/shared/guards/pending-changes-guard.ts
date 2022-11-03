@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { ActivatedRouteSnapshot, CanDeactivate, RouterStateSnapshot } from '@angular/router';
 import { ConfirmationService } from 'primeng/api';
 import { Observable, of, Subject } from 'rxjs';
@@ -14,7 +14,7 @@ export interface PendingChangesComponent {
 @Injectable({
   providedIn: 'root'
 })
-export class PendingChangesGuard implements CanDeactivate<PendingChangesComponent> {
+export class PendingChangesGuard implements CanDeactivate<PendingChangesComponent>, OnDestroy {
 
   private dialogResponse = new Subject<boolean>();
 
@@ -22,6 +22,10 @@ export class PendingChangesGuard implements CanDeactivate<PendingChangesComponen
     private confirmationService: ConfirmationService,
     private pendingChangesService: PendingChangesService,
   ) {}
+
+  ngOnDestroy(): void {
+    this.dialogResponse.complete();
+  }
 
   canDeactivate(
     component: PendingChangesComponent | null,
