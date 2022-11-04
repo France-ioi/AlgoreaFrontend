@@ -7,7 +7,7 @@ import { ItemTaskInitService } from './item-task-init.service';
 
 @Injectable()
 export class ItemTaskViewsService implements OnDestroy {
-  private errorSubject = new Subject<Error>();
+  private errorSubject = new Subject<unknown>();
   readonly error$ = this.errorSubject.asObservable();
 
   private displaySubject = new ReplaySubject<UpdateDisplayParams>(1);
@@ -38,7 +38,7 @@ export class ItemTaskViewsService implements OnDestroy {
 
   private subscriptions = [
     this.showViews$.subscribe({
-      error: err => this.errorSubject.next(err instanceof Error ? err : new Error('unknown error')),
+      error: err => this.errorSubject.next(err),
     }),
     combineLatest([
       this.initService.iframe$,

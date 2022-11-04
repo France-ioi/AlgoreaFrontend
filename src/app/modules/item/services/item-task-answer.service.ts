@@ -18,7 +18,7 @@ import {
   withLatestFrom,
 } from 'rxjs/operators';
 import { SECONDS } from 'src/app/shared/helpers/duration';
-import { errorIsHTTPForbidden, implementsError } from 'src/app/shared/helpers/errors';
+import { errorIsHTTPForbidden } from 'src/app/shared/helpers/errors';
 import { isNotNull } from 'src/app/shared/helpers/null-undefined-predicates';
 import { repeatLatestWhen } from 'src/app/shared/helpers/repeatLatestWhen';
 import { AnswerTokenService } from '../http-services/answer-token.service';
@@ -33,7 +33,7 @@ const answerAndStateSaveInterval = 5*SECONDS;
 export class ItemTaskAnswerService implements OnDestroy {
   private destroyed$ = new Subject<void>();
 
-  private errorSubject = new Subject<Error>();
+  private errorSubject = new Subject<unknown>();
   readonly error$ = this.errorSubject.asObservable();
 
   private scoreChange = new Subject<number>();
@@ -115,15 +115,15 @@ export class ItemTaskAnswerService implements OnDestroy {
 
   private subscriptions = [
     this.initializedTaskAnswer$.subscribe({
-      error: err => this.errorSubject.next(err instanceof Error ? err : new Error('unknown error')),
+      error: err => this.errorSubject.next(err),
     }),
     this.initializedTaskState$.subscribe({
-      error: err => this.errorSubject.next(err instanceof Error ? err : new Error('unknown error')),
+      error: err => this.errorSubject.next(err),
     }),
     this.initialAnswer$
       .subscribe({
         next: initial => this.saved$.next({ answer: initial?.answer ?? '', state: initial?.state ?? '' }),
-        error: err => this.errorSubject.next(implementsError(err) ? err : new Error('unknown error')),
+        error: err => this.errorSubject.next(err),
       }),
     this.autoSaveInterval$.subscribe(savedOrError => {
       if (savedOrError instanceof Error) this.saveError$.next(savedOrError);

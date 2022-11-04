@@ -10,7 +10,7 @@
       (refresh)="refresh()"
   >
     <ng-container *ngIf="$any(state.error).status === 403; else otherError;">
-      <span i18n>You are not allowed to view path suggestion.</span>
+      <span i18n>There is currently no way for you to access this content.</span>
     </ng-container>
     <ng-template #otherError>
       <span i18n>Error while loading path suggestion</span>
