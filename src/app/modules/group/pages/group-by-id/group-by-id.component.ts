@@ -1,77 +1,93 @@
-import { Component, OnDestroy } from '@angular/core';
-import { ActivatedRoute, ParamMap, UrlTree } from '@angular/router';
-import { Subscription } from 'rxjs';
-import { combineLatestWith, filter, map } from 'rxjs/operators';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute, ParamMap, RouterLinkActive, UrlTree } from '@angular/router';
+import { map } from 'rxjs/operators';
 import { GetGroupPathService } from 'src/app/modules/group/http-services/get-group-path.service';
-import { groupInfo, GroupInfo, isGroupInfo } from 'src/app/shared/models/content/group-info';
-import { readyData } from 'src/app/shared/operators/state';
+import { groupInfo, GroupInfo } from 'src/app/shared/models/content/group-info';
+import { mapStateData, readyData } from 'src/app/shared/operators/state';
 import { groupRoute, groupRouteFromParams, isGroupRouteError } from 'src/app/shared/routing/group-route';
 import { GroupRouter } from 'src/app/shared/routing/group-router';
 import { CurrentContentService } from 'src/app/shared/services/current-content.service';
 import { LayoutService } from 'src/app/shared/services/layout.service';
-import { ModeAction, ModeService } from 'src/app/shared/services/mode.service';
+import { withManagementAdditions } from '../../helpers/group-management';
 import { GroupDataSource } from '../../services/group-datasource.service';
+import { GroupEditComponent } from '../group-edit/group-edit.component';
 
 const GROUP_BREADCRUMB_CAT = $localize`Groups`;
 
-/**
- * GroupByIdComponent is just a container for detail or edit page but manages the fetching on id change and (un)setting the current content.
- */
 @Component({
   selector: 'alg-group-by-id',
   templateUrl: './group-by-id.component.html',
   styleUrls: [ './group-by-id.component.scss' ],
   providers: [ GroupDataSource ],
 })
-export class GroupByIdComponent implements OnDestroy {
+export class GroupByIdComponent implements OnInit, OnDestroy {
 
-  private subscriptions: Subscription[] = []; // subscriptions to be freed up on destroy
+  state$ = this.groupDataSource.state$.pipe(mapStateData(state => ({
+    ...state,
+    group: withManagementAdditions(state.group),
+  })));
+  fullFrame$ = this.layoutService.fullFrame$;
+
+  // use of ViewChild required as these elements are shown under some conditions, so may be undefined
+  @ViewChild('overviewTab') overviewTab?: RouterLinkActive;
+  @ViewChild('compositionTab') compositionTab?: RouterLinkActive;
+  @ViewChild('adminTab') adminTab?: RouterLinkActive;
+  @ViewChild('settingsTab') settingsTab?: RouterLinkActive;
+  @ViewChild('accessTab') accessTab?: RouterLinkActive;
+  @ViewChild('groupEdit') groupEdit?: GroupEditComponent;
+
+  // on state change, update current content page info (for breadcrumb)
+  private groupToCurrentContentSubscription = this.groupDataSource.state$.pipe(
+    readyData(),
+    map(({ group, route, breadcrumbs }): GroupInfo => groupInfo({
+      route: route,
+      breadcrumbs: {
+        category: GROUP_BREADCRUMB_CAT,
+        path: breadcrumbs.map(breadcrumb => ({
+          title: breadcrumb.name,
+          navigateTo: (): UrlTree => this.groupRouter.url(breadcrumb.route),
+        })),
+        currentPageIdx: breadcrumbs.length - 1,
+      },
+      title: group.name,
+    })),
+  ).subscribe(p => this.currentContent.replace(p));
+
   private hasRedirected = false;
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private currentContent: CurrentContentService,
-    private modeService: ModeService,
     private layoutService: LayoutService,
     private groupDataSource: GroupDataSource,
     private groupRouter: GroupRouter,
     private getGroupPath: GetGroupPathService,
+    private currentContentService: CurrentContentService,
   ) {
-    this.layoutService.configure({ fullFrameActive: false });
-
     // on route change: refetch group if needed
     this.activatedRoute.paramMap.subscribe(params => this.fetchGroupAtRoute(params));
+  }
 
-    // on state change, update current content page info (for breadcrumb)
-    this.subscriptions.push(
-      this.groupDataSource.state$.pipe(
-        readyData(),
-        map(({ group, route, breadcrumbs }): GroupInfo => groupInfo({
-          route: route,
-          breadcrumbs: {
-            category: GROUP_BREADCRUMB_CAT,
-            path: breadcrumbs.map(breadcrumb => ({
-              title: breadcrumb.name,
-              navigateTo: (): UrlTree => this.groupRouter.url(breadcrumb.route),
-            })),
-            currentPageIdx: breadcrumbs.length - 1,
-          },
-          title: group.name,
-        })),
-      ).subscribe(p => this.currentContent.replace(p)),
-
-      this.modeService.modeActions$.pipe(
-        filter(action => [ ModeAction.StartEditing, ModeAction.StopEditing ].includes(action)),
-        combineLatestWith(this.currentContent.content$.pipe(filter(isGroupInfo))),
-      ).subscribe(([ action, content ]) => {
-        this.groupRouter.navigateTo(content.route, { page: [ action === ModeAction.StartEditing ? 'edit' : 'details' ] });
-      })
-    );
+  ngOnInit(): void {
+    this.layoutService.configure({ fullFrameActive: false });
   }
 
   ngOnDestroy(): void {
     this.currentContent.clear();
-    this.subscriptions.forEach(s => s.unsubscribe());
+    this.groupToCurrentContentSubscription.unsubscribe();
+  }
+
+  isDirty(): boolean {
+    return !!this.groupEdit?.isDirty();
+  }
+
+  refreshNav(): void {
+    this.currentContentService.forceNavMenuReload();
+  }
+
+  onGroupRefreshRequired(): void {
+    this.groupDataSource.refetchGroup();
+    this.refreshNav();
   }
 
   private fetchGroupAtRoute(params: ParamMap): void {

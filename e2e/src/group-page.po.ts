@@ -2,7 +2,7 @@ import { AppPage } from './app.po';
 
 export class GroupPage extends AppPage {
   async navigateToGroup(groupId: string): Promise<void> {
-    await this.navigateTo(`/groups/by-id/${groupId}/details`);
+    await this.navigateTo(`/groups/by-id/${groupId}`);
   }
 
   async navigateToUser(userId: string): Promise<void> {
