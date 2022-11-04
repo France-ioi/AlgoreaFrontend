@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { GetUserService } from '../../http-services/get-user.service';
-import { mapToFetchState, readyData } from '../../../../shared/operators/state';
+import { mapToFetchState } from '../../../../shared/operators/state';
 import { combineLatest, Observable, of, Subject, Subscription } from 'rxjs';
 import { ActivatedRoute, NavigationEnd, Router, RouterLinkActive } from '@angular/router';
 import { catchError, delay, switchMap, map, startWith, filter, share, distinctUntilChanged } from 'rxjs/operators';
@@ -12,6 +12,8 @@ import { LayoutService } from '../../../../shared/services/layout.service';
 import { GetGroupBreadcrumbsService } from '../../http-services/get-group-breadcrumbs.service';
 import { groupRoute, groupRouteFromParams, isGroupRoute, rawGroupRoute } from 'src/app/shared/routing/group-route';
 import { GroupRouter } from 'src/app/shared/routing/group-router';
+
+const breadcrumbHeader = $localize`Users`;
 
 @Component({
   selector: 'alg-user',
@@ -78,21 +80,22 @@ export class UserComponent implements OnInit, OnDestroy {
     this.subscription = combineLatest([
       this.userRoute$,
       this.activeRoute$.pipe(map(p => this.pageTitle(p))),
-      this.state$.pipe(readyData()),
+      this.state$,
       this.breadcrumbs$.pipe(catchError(() => of(undefined))), // error is handled elsewhere
     ])
       .pipe(
-        map(([ currentUserRoute, currentPageTitle, data, breadcrumbs ]) => contentInfo({
-          title: formatUser(data.user),
+        map(([ currentUserRoute, currentPageTitle, state, breadcrumbs ]) => contentInfo({
+          title: state.isReady ? formatUser(state.data.user) : undefined,
           breadcrumbs: {
-            category: $localize`Users`,
-            path: [
+            category: breadcrumbHeader,
+            path: state.isReady ? [
               ...(breadcrumbs?.slice(0,-1) ?? []).map(b => ({ title: b.name, navigateTo: this.groupRouter.url(b.route) })),
-              { title: formatUser(data.user), navigateTo: this.groupRouter.url(currentUserRoute) },
+              { title: formatUser(state.data.user), navigateTo: this.groupRouter.url(currentUserRoute) },
               { title: currentPageTitle }
-            ],
+            ] : [],
             currentPageIdx: breadcrumbs ? breadcrumbs.length : 1,
-          }
+          },
+          route: isGroupRoute(currentUserRoute) ? currentUserRoute : undefined,
         }))
       ).subscribe(contentInfo => {
         this.currentContent.replace(contentInfo);
