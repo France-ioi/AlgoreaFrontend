@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { CurrentContentService } from 'src/app/shared/services/current-content.service';
 import { LayoutService } from '../../../shared/services/layout.service';
 
 @Component({
@@ -9,7 +10,9 @@ import { LayoutService } from '../../../shared/services/layout.service';
 export class PageNotFoundComponent {
   constructor(
     private layoutService: LayoutService,
+    private currentContentService: CurrentContentService,
   ) {
     this.layoutService.configure({ fullFrameActive: false });
+    this.currentContentService.clear();
   }
 }
