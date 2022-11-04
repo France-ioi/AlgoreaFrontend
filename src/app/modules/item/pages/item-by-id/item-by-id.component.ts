@@ -191,6 +191,7 @@ export class ItemByIdComponent implements OnDestroy {
       error: err => {
         this.state = errorState(err instanceof Error ? err : new Error('unknown error'));
         this.layoutService.configure({ fullFrameActive: false });
+        this.currentContent.clear();
       }
     });
   }
