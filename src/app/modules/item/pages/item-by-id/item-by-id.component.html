@@ -4,7 +4,7 @@
 <alg-loading *ngIf="state.isFetching"></alg-loading>
 
 <ng-container *ngIf="state.isError">
-  <p class="alg-error-message" *ngIf="$any(state).error && ($any(state).error.status === 403 || $any(state).error.status === 404); else unknownError" i18n>
+  <p class="alg-error-message" *ngIf="state.error && ($any(state.error).status === 403 || $any(state.error).status === 404); else unknownError" i18n>
     This content does not exist or you are not allowed to view it.
   </p>
   <ng-template #unknownError><p class="alg-error-message" i18n>Error while loading the item.</p></ng-template>

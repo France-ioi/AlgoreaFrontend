@@ -76,7 +76,7 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent, P
   readonly fullFrame$ = this.layoutService.fullFrame$;
   readonly watchedGroup$ = this.groupWatchingService.watchedGroup$;
 
-  unknownError?: Error;
+  unknownError?: unknown;
 
   readonly formerAnswer$ = this.itemData$.pipe(
     map(state => state.data?.route.answerId),
@@ -86,11 +86,7 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent, P
   );
 
   readonly formerAnswerError$ = this.formerAnswer$.pipe(
-    catchError(error => {
-      if (errorIsHTTPForbidden(error)) return of(loadForbiddenAnswerError);
-      return of(error instanceof Error ? error : new Error('unknown error'));
-    }),
-    filter((error): error is Error => error instanceof Error),
+    catchError(error => of(errorIsHTTPForbidden(error) ? loadForbiddenAnswerError : error))
   );
   readonly formerAnswerLoadForbidden$ = this.formerAnswerError$.pipe(filter(error => error === loadForbiddenAnswerError));
   readonly answerFallbackLink$ = combineLatest([ this.itemData$.pipe(readyData()), this.formerAnswerLoadForbidden$ ]).pipe(

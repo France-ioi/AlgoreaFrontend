@@ -1,7 +1,6 @@
 import { EMPTY, noop, Observable, of, OperatorFunction, pipe } from 'rxjs';
 import { catchError, filter, map, startWith, switchMapTo } from 'rxjs/operators';
 import { errorState, fetchingState, FetchState, Ready, readyState } from 'src/app/shared/helpers/state';
-import { implementsError } from '../helpers/errors';
 
 /**
  * Rx operator which first emits a loading state and then emit a ready or error state depending on the source. Never fails.
@@ -56,6 +55,6 @@ export function mapStateData<T, U>(dataMapper: (data: T) => U): OperatorFunction
  */
 export function mapErrorToState<T>(): OperatorFunction<FetchState<T>,FetchState<T>> {
   return pipe(
-    catchError(e => of(errorState(implementsError(e) ? e : new Error('unknown error')))),
+    catchError(e => of(errorState(e))),
   );
 }

@@ -18,7 +18,7 @@ interface PagerOptions<T> {
    * If an error occurs while loading more elements, we do not want the list to appear as broken.
    * The state will remain ready with old data and this callback will be triggered, allowing to display feedback
    */
-  onLoadMoreError: (error: Error) => void,
+  onLoadMoreError: (error: unknown) => void,
 }
 
 interface PagedData<T> {
@@ -40,7 +40,7 @@ export class DataPager<T> {
             // Case 1: First fetch
             if (prev.data === undefined) {
               if (state.isReady) return readyState({ list: state.data, newItems: state.data });
-              else if (state.error) return errorState(state.error);
+              else if (state.isError) return errorState(state.error);
               else return fetchingState();
             }
 
