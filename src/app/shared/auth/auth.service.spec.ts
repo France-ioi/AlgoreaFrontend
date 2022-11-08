@@ -2,7 +2,8 @@ import { TestBed } from '@angular/core/testing';
 
 import { AuthService } from './auth.service';
 import { AuthHttpService } from '../http-services/auth.http-service';
-import { HttpClient } from '@angular/common/http';
+import { LocaleService } from 'src/app/core/services/localeService';
+import { EMPTY } from 'rxjs';
 
 describe('AuthService', () => {
   let authService: AuthService;
@@ -12,13 +13,25 @@ describe('AuthService', () => {
     TestBed.configureTestingModule({
       providers: [
         {
-          provide: HttpClient,
-          useValue: {}
+          provide: AuthHttpService,
+          useValue: {
+            createTempUser: () => EMPTY
+          }
+        },
+        {
+          provide: LocaleService,
+          useValue: {
+            currentLang: { tag: 'fr' }
+          }
         }
       ]
     });
     authService = TestBed.inject(AuthService);
     authHttp = TestBed.inject(AuthHttpService);
+  });
+
+  afterEach(() => {
+    authService.ngOnDestroy();
   });
 
   it('should be created', () => {
