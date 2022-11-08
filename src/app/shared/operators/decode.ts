@@ -10,6 +10,13 @@ import { snakeToCamelKeys } from '../helpers/case_conversion';
 export function decodeSnakeCase<T>(decoder: D.Decoder<unknown, T>): OperatorFunction<unknown,T> {
   return rxpipe(
     map(snakeToCamelKeys),
-    map(decode(decoder)),
+    map(input => {
+      try {
+        return decode(decoder)(input);
+      } catch (err) {
+        reportError(err);
+        throw err;
+      }
+    }),
   );
 }
