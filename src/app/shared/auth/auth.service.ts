@@ -64,9 +64,10 @@ export class AuthService implements OnDestroy {
       next: (auth: AuthResult) => {
         this.status$.next(auth);
       },
-      error: _e => {
+      error: err => {
         // if temp user creation fails, there is not much we can do
         this.failure$.next(new Error('temp user creation failed (1)'));
+        if (!(err instanceof HttpErrorResponse)) throw err;
       }
     });
 
