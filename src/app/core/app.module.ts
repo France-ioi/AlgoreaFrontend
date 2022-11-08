@@ -40,8 +40,8 @@ import { ObservationBarComponent } from './components/observation-bar/observatio
 import { LanguageMismatchComponent } from './components/language-mismatch/language-mismatch.component';
 import { TopBarComponent } from './components/top-bar/top-bar.component';
 import { ContentTopBarComponent } from './components/content-top-bar/content-top-bar.component';
-import * as Sentry from '@sentry/angular';
 import { AuthenticationInterceptor } from '../shared/interceptors/authentication.interceptor';
+import { AlgErrorHandler } from '../shared/error-handling/error-handler';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: false,
@@ -106,9 +106,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     },
     {
       provide: ErrorHandler,
-      useValue: Sentry.createErrorHandler({
-        showDialog: true,
-      }),
+      useClass: AlgErrorHandler,
     },
   ],
   exports: [],
