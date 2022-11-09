@@ -34,13 +34,50 @@ import {
 } from 'src/app/shared/models/domain/item-view-permission';
 import { ItemEditWrapperComponent } from '../../components/item-edit-wrapper/item-edit-wrapper.component';
 import { allowsWatchingResults } from 'src/app/shared/models/domain/item-watch-permission';
+import { ThreadWrapperService } from '../../services/thread-wrapper.service';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 
 const loadForbiddenAnswerError = new Error('load answer forbidden');
+const animationTiming = '.6s .2s ease-in-out';
 
 @Component({
   selector: 'alg-item-details',
   templateUrl: './item-details.component.html',
   styleUrls: [ './item-details.component.scss' ],
+  animations: [
+    trigger('threadItemContentAnimation', [
+      state('open', style({
+        paddingRight: '25rem',
+      })),
+      state('close', style({
+        paddingRight: 0,
+      })),
+      transition('open => close', [
+        animate(animationTiming)
+      ]),
+      transition('close => open', [
+        animate(animationTiming)
+      ]),
+    ]),
+    trigger('threadWrapperAnimation', [
+      transition(':leave', [
+        style({
+          right: 0,
+        }),
+        animate(animationTiming, style({
+          right: '-25rem',
+        })),
+      ]),
+      transition(':enter', [
+        style({
+          right: '-25rem',
+        }),
+        animate(animationTiming, style({
+          right: 0,
+        })),
+      ]),
+    ]),
+  ],
 })
 export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent, PendingChangesComponent {
   @ViewChild('progressTab') progressTab?: RouterLinkActive;
@@ -146,6 +183,10 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent, P
   errorMessage = $localize`:@@unknownError:An unknown error occurred. ` +
     $localize`:@@contactUs:If the problem persists, please contact us.`;
 
+  showItemThreadWidget = !!appConfig.forumServerUrl;
+
+  threadOpened$ = this.threadWrapperService.opened$;
+
   isDirty(): boolean {
     return !!this.itemContentComponent?.isDirty() || !!this.itemEditWrapperComponent?.isDirty();
   }
@@ -157,11 +198,13 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent, P
     private layoutService: LayoutService,
     private getAnswerService: GetAnswerService,
     private router: Router,
+    private threadWrapperService: ThreadWrapperService,
   ) {}
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
     this.tabs.complete();
+    this.threadWrapperService.close();
   }
 
   reloadItem(): void {

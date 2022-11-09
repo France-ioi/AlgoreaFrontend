@@ -1,6 +1,7 @@
 import { ContentBreadcrumb } from './content-breadcrumb';
 import { ContentRoute } from '../../routing/content-route';
 import { arraysEqual } from '../../helpers/array';
+import { ItemDetails } from './item-info';
 
 export interface ContentInfo {
   type: string,
@@ -8,6 +9,7 @@ export interface ContentInfo {
   title?: string, // page title
   route?: ContentRoute,
   score?: { currentScore: number, bestScore: number, isValidated: boolean },
+  details?: ItemDetails,
 }
 
 export interface RoutedContentInfo extends ContentInfo {

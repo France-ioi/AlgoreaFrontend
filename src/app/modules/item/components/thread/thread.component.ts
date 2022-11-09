@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import {
   BehaviorSubject,
   catchError,
@@ -24,7 +24,7 @@ import { ThreadService } from '../../services/threads.service';
   templateUrl: './thread.component.html',
   styleUrls: [ './thread.component.scss' ],
 })
-export class ThreadComponent implements OnChanges, OnDestroy {
+export class ThreadComponent implements OnInit, OnChanges, OnDestroy {
   @Input() itemId?: string;
 
   messageToSend = '';
@@ -75,6 +75,10 @@ export class ThreadComponent implements OnChanges, OnDestroy {
       const previousItemId = changes.itemId?.previousValue as string | undefined;
       if (this.itemId !== previousItemId) this.itemId$.next(this.itemId);
     }
+  }
+
+  ngOnInit(): void {
+    this.toggleWidget(true);
   }
 
   ngOnDestroy(): void {

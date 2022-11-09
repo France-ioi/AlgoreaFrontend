@@ -25,6 +25,17 @@
       <p>{{itemData.item.string.title}}</p>
       <span *ngIf="itemData.item.string.subtitle">{{itemData.item.string.subtitle}}</span>
     </div>
+    <ng-container *ngIf="showItemThreadWidget">
+      <button
+        class="p-button-raised p-button-rounded alg-round-button-icon"
+        [ngClass]="{'active': !!(threadOpened$ | async)}"
+        pButton
+        type="button"
+        icon="pi pi-comments"
+        *ngIf="showThreadButton$ | async"
+        (click)="toggleThread()"
+      ></button>
+    </ng-container>
     <alg-page-navigator
       *ngIf="navigationNeighbors$ | async as navigationNeighbors"
       [allowEditing]="false"

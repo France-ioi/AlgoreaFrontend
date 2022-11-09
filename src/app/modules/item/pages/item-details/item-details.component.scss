@@ -8,3 +8,18 @@
 .compensate-margin {
   margin-top: -1rem;
 }
+
+.item-content-wrapper {
+  display: flex;
+}
+
+.item-content {
+  flex: 1;
+}
+
+.item-thread-wrapper {
+  position: fixed;
+  right: 0;
+  width: 25rem;
+  background-color: var(--base-color);
+}
