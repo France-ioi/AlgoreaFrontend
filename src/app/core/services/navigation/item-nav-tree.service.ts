@@ -13,7 +13,7 @@ import { CurrentContentService } from 'src/app/shared/services/current-content.s
 import { ItemNavigationChild, ItemNavigationData, ItemNavigationService } from '../../http-services/item-navigation.service';
 import { NavTreeElement } from '../../models/left-nav-loading/nav-tree-data';
 import { NavTreeService } from './nav-tree.service';
-import { canCurrentUserViewContent } from 'src/app/shared/models/domain/item-view-permission';
+import { allowsViewingContent, canCurrentUserViewContent } from 'src/app/shared/models/domain/item-view-permission';
 import { GroupWatchingService } from '../group-watching.service';
 
 abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
@@ -108,17 +108,27 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
   private mapChild(child: ItemNavigationChild, parentAttemptId: string, path: string[]): NavTreeElement {
     const currentResult = bestAttemptFromResults(child.results);
     const route = fullItemRoute(typeCategoryOfItem(child), child.id, path, { attemptId: currentResult?.attemptId, parentAttemptId });
+    let score = undefined;
+    if (!child.noScore) {
+      if (child.watchedGroup && child.watchedGroup.avgScore && child.watchedGroup.allValidated) score = {
+        bestScore: child.watchedGroup.avgScore,
+        currentScore: child.watchedGroup.avgScore,
+        validated: child.watchedGroup.allValidated
+      };
+      if (currentResult) score = {
+        bestScore: child.bestScore,
+        currentScore: currentResult.scoreComputed,
+        validated: currentResult.validated
+      };
+    }
+
     return {
       route,
       title: child.string.title ?? '',
       hasChildren: child.hasVisibleChildren && canCurrentUserViewContent(child),
       navigateTo: (preventFullFrame = false): void => this.itemRouter.navigateTo(route, { preventFullFrame }),
-      locked: !canCurrentUserViewContent(child),
-      score: !child.noScore && currentResult ? {
-        bestScore: child.bestScore,
-        currentScore: currentResult.scoreComputed,
-        validated: currentResult.validated
-      } : undefined,
+      locked: !allowsViewingContent(child.watchedGroup ?? child.permissions),
+      score,
     };
   }
 
