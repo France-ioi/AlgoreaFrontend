@@ -11,6 +11,7 @@ import { UserSessionService } from 'src/app/shared/services/user-session.service
 import { GroupNavTreeService } from '../../services/navigation/group-nav-tree.service';
 import { ActivityNavTreeService, SkillNavTreeService } from '../../services/navigation/item-nav-tree.service';
 import { environment } from '../../../../environments/environment';
+import { GroupWatchingService } from '../../services/group-watching.service';
 
 const activitiesTabIdx = 0;
 const skillsTabIdx = 1;
@@ -42,11 +43,14 @@ export class LeftNavComponent {
   readonly navTreeServices = [ this.activityNavTreeService, this.skillNavTreeService, this.groupNavTreeService ];
   currentUser$ = this.sessionService.userProfile$.pipe(delay(0));
 
+  isWatching$ = this.groupWatchingService.isWatching$;
+
   skillsDisabled = environment.featureFlags.skillsDisabled;
 
   constructor(
     private sessionService: UserSessionService,
     private currentContent: CurrentContentService,
+    private groupWatchingService: GroupWatchingService,
     private activityNavTreeService: ActivityNavTreeService,
     private skillNavTreeService: SkillNavTreeService,
     private groupNavTreeService: GroupNavTreeService,

@@ -1,4 +1,5 @@
 @import 'src/colors';
+@import "src/geometry";
 
 $border-radius: .5rem;
 
@@ -10,4 +11,22 @@ $border-radius: .5rem;
   display: flex;
   justify-content: center;
   padding: 1rem;
+}
+
+.watching-warning {
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: column;
+  justify-content: center;
+  color: var(--dark-secondary-color);
+  background-color: var(--section-warning-color);
+  border-radius: $border-radius;
+  margin: 1rem;
+
+  .content {
+    display: flex;
+    align-items: center;
+    padding: .5rem 1rem;
+  }
+
 }
