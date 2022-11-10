@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, ParamMap, RouterLinkActive, UrlTree } from '@angular/router';
 import { map } from 'rxjs/operators';
 import { GetGroupPathService } from 'src/app/modules/group/http-services/get-group-path.service';
+import { appConfig } from 'src/app/shared/helpers/config';
 import { groupInfo, GroupInfo } from 'src/app/shared/models/content/group-info';
 import { mapStateData, readyData } from 'src/app/shared/operators/state';
 import { groupRoute, groupRouteFromParams, isGroupRouteError } from 'src/app/shared/routing/group-route';
@@ -27,6 +28,7 @@ export class GroupByIdComponent implements OnInit, OnDestroy {
     group: withManagementAdditions(state.group),
   })));
   fullFrame$ = this.layoutService.fullFrame$;
+  hideAccessTab = !appConfig.featureFlags.showGroupAccessTab;
 
   // use of ViewChild required as these elements are shown under some conditions, so may be undefined
   @ViewChild('overviewTab') overviewTab?: RouterLinkActive;

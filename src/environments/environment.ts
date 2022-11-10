@@ -28,6 +28,7 @@ export const environment: Environment = {
   featureFlags: {
     hideTaskTabs: [],
     skillsDisabled: false,
+    showGroupAccessTab: true,
   },
 };
 

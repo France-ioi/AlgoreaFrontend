@@ -47,7 +47,7 @@
           Managers
         </a>
         <a
-            [hidden]="!group.currentUserCanGrantGroupAccess && !accessTab?.isActive"
+            [hidden]="(hideAccessTab || !group.currentUserCanGrantGroupAccess) && !accessTab?.isActive"
             class="nav-tab-item"
             [routerLink]="'./access'"
             routerLinkActive #accessTab="routerLinkActive"
