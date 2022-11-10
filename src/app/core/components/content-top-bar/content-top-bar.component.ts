@@ -48,7 +48,7 @@ export class ContentTopBarComponent {
     this.currentContent$,
   ]).pipe(
     map(([ session, currentContent ]) =>
-      session && !session.tempUser && currentContent?.details?.type === 'Task'
+      session && !session.tempUser && currentContent?.details?.type && [ 'Task', 'Course' ].includes(currentContent.details.type)
     ),
   );
   threadOpened$ = this.threadWrapperService.opened$;

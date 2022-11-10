@@ -139,14 +139,17 @@
               <alg-item-edit-wrapper [itemData]="itemData"></alg-item-edit-wrapper>
             </ng-container>
           </div>
-          <div
-            class="item-thread-wrapper"
-            [style]="'top: ' + itemWrapper.offsetTop + '; height: calc(100vh - ' + itemWrapper.offsetTop + 'px)'"
-            *ngIf="showItemThreadWidget && itemData.item.type === 'Task' && !!(threadOpened$ | async)"
-            @threadWrapperAnimation
-          >
-            <alg-thread [itemId]="itemData.route.id" #thread></alg-thread>
-          </div>
+          <ng-container *ngIf="showItemThreadWidget && ['Task', 'Course'].includes(itemData.item.type)">
+            <div
+              class="item-thread-wrapper"
+              [style.top.px]="itemWrapper.offsetTop"
+              [style.height]="'calc(100vh - ' + itemWrapper.offsetTop + 'px)'"
+              *ngIf="!!(threadOpened$ | async)"
+              @threadWrapperAnimation
+            >
+              <alg-thread [itemId]="itemData.route.id"></alg-thread>
+            </div>
+          </ng-container>
         </div>
       </div>
     </ng-container>

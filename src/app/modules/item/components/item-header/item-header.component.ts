@@ -28,7 +28,7 @@ export class ItemHeaderComponent implements OnChanges, OnDestroy {
     this.itemData$,
   ]).pipe(
     map(([ session, itemData ]) =>
-      session && !session.tempUser && itemData.item.type === 'Task'
+      session && !session.tempUser && [ 'Task', 'Course' ].includes(itemData.item.type)
     ),
   );
 
