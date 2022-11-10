@@ -48,14 +48,10 @@
               [savingAnswer]="savingAnswer"
               (viewChange)="taskViewChange.emit($event)"
               (tabsChange)="taskTabsChange.emit($event)"
-              (scoreChange)="thread.newActivityOnTask(); scoreChange.emit($event)"
+              (scoreChange)="scoreChange.emit($event)"
               (skipSave)="skipSave.emit()"
               (refresh)="refresh.emit()"
             ></alg-item-display>
-            <alg-thread
-              #thread
-              [itemId]="itemData.route.id"
-            ></alg-thread>
           </ng-container>
           <ng-template #nothread> <!-- repeating the same as above but without the thread so that we can have a reference between item-display and thread (bit hacky) -->
             <alg-item-display

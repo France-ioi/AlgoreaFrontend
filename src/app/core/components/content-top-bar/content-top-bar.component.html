@@ -22,7 +22,7 @@
     <ng-container *ngIf="showItemThreadWidget">
       <button
         class="p-button-raised p-button-rounded alg-round-button-icon top-bar-size"
-        [ngClass]="{'active': !!(threadOpened$ | async)}"
+        [ngClass]="{'active': !!(threadOpened$ | async), 'margin-right': !(navigationNeighbors$ | async)}"
         pButton
         type="button"
         icon="pi pi-comments"

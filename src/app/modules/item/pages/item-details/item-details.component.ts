@@ -36,6 +36,7 @@ import { ItemEditWrapperComponent } from '../../components/item-edit-wrapper/ite
 import { allowsWatchingResults } from 'src/app/shared/models/domain/item-watch-permission';
 import { ThreadWrapperService } from '../../services/thread-wrapper.service';
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import { ThreadComponent } from '../../components/thread/thread.component';
 
 const loadForbiddenAnswerError = new Error('load answer forbidden');
 const animationTiming = '.6s .2s ease-in-out';
@@ -83,6 +84,7 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent, P
   @ViewChild('progressTab') progressTab?: RouterLinkActive;
   @ViewChild(ItemContentComponent) itemContentComponent?: ItemContentComponent;
   @ViewChild(ItemEditWrapperComponent) itemEditWrapperComponent?: ItemEditWrapperComponent;
+  @ViewChild(ThreadComponent) threadComponent?: ThreadComponent;
 
   itemData$ = this.itemDataSource.state$;
 
@@ -213,6 +215,11 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent, P
 
   patchStateWithScore(score: number): void {
     this.itemDataSource.patchItemScore(score);
+  }
+
+  onScoreChange(score: number): void {
+    this.threadComponent?.newActivityOnTask();
+    this.patchStateWithScore(score);
   }
 
   setTaskTabs(tabs: TaskTab[]): void {

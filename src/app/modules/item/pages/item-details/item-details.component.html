@@ -116,7 +116,7 @@
                   [(taskView)]="taskView"
                   [editModeEnabled]="editChildrenTab.isActive"
                   (taskTabsChange)="setTaskTabs($event)"
-                  (scoreChange)="patchStateWithScore($event)"
+                  (scoreChange)="onScoreChange($event)"
                   (skipSave)="skipBeforeUnload()"
                   (refresh)="reloadItem()"
                 ></alg-item-content>
@@ -145,7 +145,7 @@
             *ngIf="showItemThreadWidget && itemData.item.type === 'Task' && !!(threadOpened$ | async)"
             @threadWrapperAnimation
           >
-            <alg-thread [itemId]="itemData.route.id"></alg-thread>
+            <alg-thread [itemId]="itemData.route.id" #thread></alg-thread>
           </div>
         </div>
       </div>
