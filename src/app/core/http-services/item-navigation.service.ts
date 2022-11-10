@@ -139,10 +139,10 @@ export class ItemNavigationService {
     );
   }
 
-  getRoots(type: ItemTypeCategory): Observable<RootItem[]> {
+  getRoots(type: ItemTypeCategory, watchedGroupId?: string): Observable<RootItem[]> {
     return isSkill(type) ?
-      this.getRootSkills().pipe(map(groups => groups.map(g => ({ ...g, item: g.skill })))) :
-      this.getRootActivities().pipe(map(groups => groups.map(g => ({ ...g, item: g.activity }))));
+      this.getRootSkills(watchedGroupId).pipe(map(groups => groups.map(g => ({ ...g, item: g.skill })))) :
+      this.getRootActivities(watchedGroupId).pipe(map(groups => groups.map(g => ({ ...g, item: g.activity }))));
   }
 
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, skip, switchMap, take } from 'rxjs/operators';
 import { bestAttemptFromResults, defaultAttemptId } from 'src/app/shared/helpers/attempts';
 import { isSkill, ItemTypeCategory, typeCategoryOfItem } from 'src/app/shared/helpers/item-type';
 import { ContentInfo } from 'src/app/shared/models/content/content-info';
@@ -14,16 +14,24 @@ import { ItemNavigationChild, ItemNavigationData, ItemNavigationService } from '
 import { NavTreeElement } from '../../models/left-nav-loading/nav-tree-data';
 import { NavTreeService } from './nav-tree.service';
 import { canCurrentUserViewContent } from 'src/app/shared/models/domain/item-view-permission';
+import { GroupWatchingService } from '../group-watching.service';
 
 abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
 
   constructor(
     private category: ItemTypeCategory,
     currentContent: CurrentContentService,
+    private groupWatchingService: GroupWatchingService,
     private itemNavService: ItemNavigationService,
     private itemRouter: ItemRouter,
   ) {
     super(currentContent);
+    /* reload the item menus when watching changes */
+    this.groupWatchingService.watchedGroup$.pipe(
+      skip(1),
+    ).subscribe(() => {
+      this.retry();
+    });
   }
 
   /**
@@ -44,14 +52,21 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
 
   fetchNavData(route: ContentRoute): Observable<{ parent: NavTreeElement, elements: NavTreeElement[] }> {
     if (!isItemRoute(route)) throw new Error('expect requesting nav data with a route which is an item route');
-    if (!route.attemptId) throw new Error('attemptId cannot be determined (should have been checked by canFetchChildren)');
-    return this.itemNavService.getItemNavigation(route.id, { attemptId: route.attemptId, skillOnly: isSkill(route.contentType) }).pipe(
+    const attemptId = route.attemptId;
+    if (!attemptId) throw new Error('attemptId cannot be determined (should have been checked by canFetchChildren)');
+    return this.groupWatchingService.watchedGroup$.pipe(
+      take(1),
+      switchMap(watchedGroup => this.itemNavService.getItemNavigation(route.id,
+        { attemptId, skillOnly: isSkill(route.contentType), watchedGroupId: watchedGroup?.route.id }
+      )),
       map(data => this.mapNavData(data, route.path)),
     );
   }
 
   fetchRootTreeData(): Observable<NavTreeElement[]> {
-    return this.itemNavService.getRoots(this.category).pipe(
+    return this.groupWatchingService.watchedGroup$.pipe(
+      take(1),
+      switchMap(watchedGroup => this.itemNavService.getRoots(this.category, watchedGroup?.route.id)),
       map(groups => groups.map(g => ({
         ...this.mapChild(g.item, defaultAttemptId, []),
         associatedGroupName: g.name,
@@ -62,7 +77,11 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
 
   fetchNavDataFromChild(id: string, child: ItemInfo): Observable<{ parent: NavTreeElement, elements: NavTreeElement[] }> {
     if (child.route.path.length === 0) throw new Error('unexpected empty path for child (fetchNavDataFromChild)');
-    return this.itemNavService.getItemNavigation(id, { childRoute: child.route, skillOnly: isSkill(this.category) }).pipe(
+    return this.groupWatchingService.watchedGroup$.pipe(
+      take(1),
+      switchMap(watchedGroup => this.itemNavService.getItemNavigation(id,
+        { childRoute: child.route, skillOnly: isSkill(this.category), watchedGroupId: watchedGroup?.route.id }
+      )),
       map(data => this.mapNavData(data, child.route.path.slice(0, -1)))
     );
   }
@@ -123,8 +142,13 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
   providedIn: 'root'
 })
 export class ActivityNavTreeService extends ItemNavTreeService {
-  constructor(currentContent: CurrentContentService, itemNavService: ItemNavigationService, itemRouter: ItemRouter) {
-    super('activity', currentContent, itemNavService, itemRouter);
+  constructor(
+    currentContent: CurrentContentService,
+    groupWatchingService: GroupWatchingService,
+    itemNavService: ItemNavigationService,
+    itemRouter: ItemRouter
+  ) {
+    super('activity', currentContent ,groupWatchingService, itemNavService, itemRouter);
   }
 
   isOfContentType(content: ContentInfo|null): content is ItemInfo {
@@ -136,8 +160,13 @@ export class ActivityNavTreeService extends ItemNavTreeService {
   providedIn: 'root'
 })
 export class SkillNavTreeService extends ItemNavTreeService {
-  constructor(currentContent: CurrentContentService, itemNavService: ItemNavigationService, itemRouter: ItemRouter) {
-    super('skill', currentContent, itemNavService, itemRouter);
+  constructor(
+    currentContent: CurrentContentService,
+    groupWatchingService: GroupWatchingService,
+    itemNavService: ItemNavigationService,
+    itemRouter: ItemRouter
+  ) {
+    super('skill', currentContent, groupWatchingService, itemNavService, itemRouter);
   }
 
   isOfContentType(content: ContentInfo|null): content is ItemInfo {
