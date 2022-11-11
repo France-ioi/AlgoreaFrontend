@@ -4,7 +4,6 @@ import {
   catchError,
   combineLatest,
   EMPTY,
-  filter,
   fromEvent,
   ReplaySubject,
   SubscriptionLike,
@@ -67,7 +66,6 @@ export class ThreadComponent implements OnInit, OnChanges, OnDestroy {
     this.syncSub = this.state$.pipe(
       readyData(),
       take(1),
-      filter(events => events.length === 0),
       switchMap(() => this.threadService.syncEvents()),
     ).subscribe({
       error: err => {
