@@ -1,7 +1,4 @@
-<ng-container *ngIf="currentMode$ | async as currentMode">
-  <alg-editor-bar *ngIf="currentMode === 'editing'" (cancel)="onEditCancel()"></alg-editor-bar>
-  <alg-observation-bar *ngIf="currentMode !== 'editing' && (watchedGroup$ | async)"></alg-observation-bar>
-</ng-container>
+<alg-observation-bar *ngIf="!!(watchedGroup$ | async)"></alg-observation-bar>
 
 <ng-container *ngIf="currentContent$ | async as currentContent">
   <div class="breadcrumb-bar" *ngIf="!fullFrameContent?.active && !scrolled">

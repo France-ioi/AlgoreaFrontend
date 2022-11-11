@@ -1,7 +1,6 @@
 import { Input, Component } from '@angular/core';
 import { User } from '../../http-services/get-user.service';
 import { map } from 'rxjs/operators';
-import { ModeAction, ModeService } from '../../../../shared/services/mode.service';
 import { GroupWatchingService } from 'src/app/core/services/group-watching.service';
 import { RawGroupRoute } from 'src/app/shared/routing/group-route';
 
@@ -20,13 +19,7 @@ export class UserHeaderComponent {
 
   constructor(
     private groupWatchingService: GroupWatchingService,
-    private modeService: ModeService,
-  ) {
-  }
-
-  onEditButtonClicked(): void {
-    this.modeService.modeActions$.next(ModeAction.StartEditing);
-  }
+  ) {}
 
   onStartWatchButtonClicked(): void {
     this.groupWatchingService.startUserWatching(this.route, this.user);

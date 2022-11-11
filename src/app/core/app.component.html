@@ -2,20 +2,20 @@
   <div class="left" *ngIf="fullFrame$ | async as fullFrame" [ngClass]="{ collapsed: fullFrame.active, animated: fullFrame.animated }">
     <alg-left-menu></alg-left-menu>
   </div>
-  <ng-container *ngIf="currentMode$ | async as currentMode">
+  <ng-container *ngrxLet="isWatching$ as isWatching">
     <alg-top-bar
       class="top-bar"
       *ngIf="fullFrame$ | async as fullFrame"
-      [ngClass]="{ 'with-mode-bar': currentMode !== 'normal' || (isWatching$ | async), collapsed: fullFrame.active, animated: fullFrame.animated }"
+      [ngClass]="{ 'with-mode-bar': isWatching, collapsed: fullFrame.active, animated: fullFrame.animated }"
       [scrolled]="scrolled"
-      [modeBarDisplayed]="currentMode !== 'normal' || !!(isWatching$ | async)"
+      [modeBarDisplayed]="isWatching"
       [fullFrameContent]="fullFrame"
       [showTopRightControls]="!!(showTopRightControls$ | async)"
     ></alg-top-bar>
     <div
       class="right"
       *ngIf="fullFrame$ | async as fullFrame"
-      [ngClass]="{ collapsed: fullFrame.active, animated: fullFrame.animated, 'with-mode-bar': currentMode !== 'normal' || (isWatching$ | async) }"
+      [ngClass]="{ collapsed: fullFrame.active, animated: fullFrame.animated, 'with-mode-bar': isWatching }"
       >
       <div class="main-content">
         <router-outlet></router-outlet>
